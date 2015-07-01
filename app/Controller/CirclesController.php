@@ -75,7 +75,8 @@ class CirclesController extends AppController
         $query = $this->request->query;
         $res = [];
         if (isset($query['term']) && $query['term'] && isset($query['page_limit']) && $query['page_limit']) {
-            $res = $this->Circle->CircleMember->getNonCircleMemberSelect2($circle_id, $query['term'], $query['page_limit']);
+            $res = $this->Circle->CircleMember->getNonCircleMemberSelect2($circle_id, $query['term'],
+                                                                          $query['page_limit']);
         }
         return $this->_ajaxGetResponse($res);
     }
@@ -257,9 +258,10 @@ class CirclesController extends AppController
 
         // ajaxで返すデータ
         $result = array(
-            'error'   => false, // エラーの有無
-            'result'  => [],    // 更新されたデータ
-            'message' => [
+            'error'       => false,  // エラーの有無
+            'result'      => [],     // 更新されたデータ
+            'self_update' => false,  // 操作者自身が更新されたか
+            'message'     => [
                 'title' => __d('notify', "成功"),
                 'text'  => '',
             ],
@@ -271,11 +273,12 @@ class CirclesController extends AppController
             if (!$this->Circle->exists()) {
                 throw new RuntimeException(__d('gl', "このサークルは存在しません。"));
             }
-            if ($this->Auth->user('id') == $this->request->data['CircleMember']['user_id']) {
-                throw new RuntimeException(__d('gl', "自分自身をサークル管理者から外すことは出来ません。"));
-            }
             if (!$this->Circle->CircleMember->isAdmin($this->Auth->user('id'), $this->Circle->id)) {
                 throw new RuntimeException(__d('gl', "サークルの変更ができるのはサークル管理者のみです。"));
+            }
+            $admin_list = $this->Circle->CircleMember->getAdminMemberList($this->Circle->id, true);
+            if (!$this->request->data['CircleMember']['admin_flg'] && count($admin_list) == 1) {
+                throw new RuntimeException(__d('gl', "サークルの管理者を１人以上設定する必要があります。"));
             }
         } catch (RuntimeException $e) {
             $result['error'] = true;
@@ -294,6 +297,9 @@ class CirclesController extends AppController
                 'user_id'   => $this->request->data['CircleMember']['user_id'],
                 'admin_flg' => $this->request->data['CircleMember']['admin_flg'],
             ];
+            if ($this->Auth->user('id') == $this->request->data['CircleMember']['user_id']) {
+                $result['self_update'] = true;
+            }
             if ($this->request->data['CircleMember']['admin_flg']) {
                 $result['message']['text'] = __d('gl', "管理者に設定しました。");
             }
@@ -320,9 +326,10 @@ class CirclesController extends AppController
 
         // ajaxで返すデータ
         $result = array(
-            'error'   => false, // エラーの有無
-            'result'  => [],    // 更新されたデータ
-            'message' => [
+            'error'       => false,  // エラーの有無
+            'result'      => [],     // 更新されたデータ
+            'self_update' => false,  // 操作者自身が更新されたか
+            'message'     => [
                 'title' => __d('notify', "成功"),
                 'text'  => '',
             ],
@@ -334,11 +341,12 @@ class CirclesController extends AppController
             if (!$this->Circle->exists()) {
                 throw new RuntimeException(__d('gl', "このサークルは存在しません。"));
             }
-            if ($this->Auth->user('id') == $this->request->data['CircleMember']['user_id']) {
-                throw new RuntimeException(__d('gl', "自分自身をサークルから削除する事はできません。"));
-            }
             if (!$this->Circle->CircleMember->isAdmin($this->Auth->user('id'), $this->Circle->id)) {
                 throw new RuntimeException(__d('gl', "サークルの変更ができるのはサークル管理者のみです。"));
+            }
+            $admin_list = $this->Circle->CircleMember->getAdminMemberList($this->Circle->id, true);
+            if (count($admin_list) == 1) {
+                throw new RuntimeException(__d('gl', "サークルの管理者を１人以上設定する必要があります。"));
             }
         } catch (RuntimeException $e) {
             $result['error'] = true;
@@ -353,8 +361,11 @@ class CirclesController extends AppController
         // 処理成功
         if ($res) {
             $result['result'] = [
-                'user_id'   => $this->request->data['CircleMember']['user_id'],
+                'user_id' => $this->request->data['CircleMember']['user_id'],
             ];
+            if ($this->Auth->user('id') == $this->request->data['CircleMember']['user_id']) {
+                $result['self_update'] = true;
+            }
             $result['message']['text'] = __d('gl', "サークルから外しました。");
         }
         // 処理失敗

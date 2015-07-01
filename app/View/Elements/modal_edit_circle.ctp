@@ -167,14 +167,35 @@
                                             <?= $this->Form->hidden('user_id', ['value' => $user['User']['id']]) ?>
                                             <?= $this->Form->hidden('admin_flg', ['value' => 0]) ?>
                                             <?= $this->Form->end() ?>
+
+                                            <?php
+                                            // 操作者自身を管理者から外す際はアラートを出す
+                                            $onclick = "$('#EditAdminStatusForm2_{$user['User']['id']}').submit(); return false;";
+                                            if ($this->Session->read('Auth.User.id') == $user['User']['id']) {
+                                                $onclick =
+                                                    "if (confirm('" .
+                                                    __d('gl', '自分自身を管理者から外すとサークル情報の編集が出来なくなりますが、よろしいですか？') .
+                                                    "')) { $('#EditAdminStatusForm2_{$user['User']['id']}').submit(); } return false;";
+                                            }
+                                            ?>
                                             <?= $this->Html->link(__d('gl', "管理者から外す"), '#',
                                                                   ['class'   => 'item-for-admin',
                                                                    'style'   => $user['CircleMember']['admin_flg'] ? '' : 'display:none',
-                                                                   'onclick' => "$('#EditAdminStatusForm2_{$user['User']['id']}').submit(); return false;"]) ?>
+                                                                   'onclick' => $onclick]); ?>
 
                                         </li>
                                         <?php if (!$this->request->data['Circle']['team_all_flg']): ?>
                                             <li>
+                                                <?php
+                                                // 操作者自身をサークルから外す際はアラートを出す
+                                                $onclick = "$('#LeaveCircleForm_{$user['User']['id']}').submit(); return false;";
+                                                if ($this->Session->read('Auth.User.id') == $user['User']['id']) {
+                                                    $onclick =
+                                                        "if (confirm('" .
+                                                        __d('gl', '自分自身をサークルから外すとサークル情報の編集が出来なくなりますが、よろしいですか？') .
+                                                        "')) { $('#LeaveCircleForm_{$user['User']['id']}').submit(); } return false;";
+                                                }
+                                                ?>
                                                 <?=
                                                 // サークルから外す 設定フォーム
                                                 $this->Form->create('CircleMember', [
@@ -188,8 +209,7 @@
                                                 ]); ?>
                                                 <?= $this->Form->hidden('user_id', ['value' => $user['User']['id']]) ?>
                                                 <?= $this->Form->end() ?>
-                                                <?= $this->Html->link(__d('gl', "サークルから外す"), '#',
-                                                                      ['onclick' => "$('#LeaveCircleForm_{$user['User']['id']}').submit(); return false;"]) ?>
+                                                <?= $this->Html->link(__d('gl', "サークルから外す"), '#', ['onclick' => $onclick]) ?>
                                             </li>
                                         <?php endif ?>
                                     </ul>

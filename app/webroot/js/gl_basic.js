@@ -2632,16 +2632,25 @@ function evAjaxEditCircleAdminStatus(e)
                     delay: 2000,
                     mouse_reset: false
                 });
-                var $member_row = $('#edit-circle-member-row-' + user_id);
-                // 非管理者 -> 管理者 の場合
-                if (data.result.admin_flg == "1") {
-                    $member_row.find('.item-for-non-admin').hide();
-                    $member_row.find('.item-for-admin').show();
+
+                // 操作者自身を情報を更新した場合
+                if (data.self_update) {
+                    window.location.href = '/';
+                    return;
                 }
-                // 管理者 -> 非管理者 の場合
+                // 操作者以外の情報を更新した場合
                 else {
-                    $member_row.find('.item-for-admin').hide();
-                    $member_row.find('.item-for-non-admin').show();
+                    var $member_row = $('#edit-circle-member-row-' + user_id);
+                    // 非管理者 -> 管理者 の場合
+                    if (data.result.admin_flg == "1") {
+                        $member_row.find('.item-for-non-admin').hide();
+                        $member_row.find('.item-for-admin').show();
+                    }
+                    // 管理者 -> 非管理者 の場合
+                    else {
+                        $member_row.find('.item-for-admin').hide();
+                        $member_row.find('.item-for-non-admin').show();
+                    }
                 }
             }
         })
@@ -2691,10 +2700,18 @@ function evAjaxLeaveCircle(e)
                     delay: 2000,
                     mouse_reset: false
                 });
-                var $member_row = $('#edit-circle-member-row-' + user_id);
-                $member_row.fadeOut('fast', function () {
-                    $(this).remove();
-                });
+                // 操作者自身の情報更新した場合
+                if (data.self_update) {
+                    window.location.href = '/';
+                    return;
+                }
+                // 操作者以外の情報を更新した場合
+                else {
+                    var $member_row = $('#edit-circle-member-row-' + user_id);
+                    $member_row.fadeOut('fast', function () {
+                        $(this).remove();
+                    });
+                }
             }
         })
         .fail(function (data) {

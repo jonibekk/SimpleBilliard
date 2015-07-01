@@ -337,6 +337,7 @@ class CirclesControllerTest extends ControllerTestCase
         $this->assertEquals($json_data['error'], false);
         $this->assertEquals(['user_id' => 2, 'admin_flg' => 1], $json_data['result']);
         $this->assertArrayHasKey('message', $json_data);
+        $this->assertArrayHasKey('self_update', $json_data);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -356,6 +357,7 @@ class CirclesControllerTest extends ControllerTestCase
         $this->assertEquals($json_data['error'], false);
         $this->assertEquals(['user_id' => 2, 'admin_flg' => 0], $json_data['result']);
         $this->assertArrayHasKey('message', $json_data);
+        $this->assertArrayHasKey('self_update', $json_data);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -376,6 +378,7 @@ class CirclesControllerTest extends ControllerTestCase
         $this->assertEquals($json_data['error'], true);
         $this->assertEquals([], $json_data['result']);
         $this->assertArrayHasKey('message', $json_data);
+        $this->assertArrayHasKey('self_update', $json_data);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -395,10 +398,11 @@ class CirclesControllerTest extends ControllerTestCase
         $this->assertEquals($json_data['error'], true);
         $this->assertEquals([], $json_data['result']);
         $this->assertArrayHasKey('message', $json_data);
+        $this->assertArrayHasKey('self_update', $json_data);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
-    function testAjaxEditAdminStatusTargetSelf()
+    function testAjaxEditAdminStatusLastAdmin()
     {
         $this->_getCirclesCommonMock();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
@@ -406,7 +410,7 @@ class CirclesControllerTest extends ControllerTestCase
         $data = [
             'CircleMember' => [
                 'user_id'   => 1,
-                'admin_flg' => 1,
+                'admin_flg' => 0,
             ]
         ];
         $ret = $this->testAction('/circles/ajax_edit_admin_status/circle_id:1', ['data' => $data, 'method' => 'POST']);
@@ -414,6 +418,7 @@ class CirclesControllerTest extends ControllerTestCase
         $this->assertEquals($json_data['error'], true);
         $this->assertEquals([], $json_data['result']);
         $this->assertArrayHasKey('message', $json_data);
+        $this->assertArrayHasKey('self_update', $json_data);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -439,6 +444,7 @@ class CirclesControllerTest extends ControllerTestCase
         $this->assertEquals($json_data['error'], true);
         $this->assertEquals([], $json_data['result']);
         $this->assertArrayHasKey('message', $json_data);
+        $this->assertArrayHasKey('self_update', $json_data);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -457,6 +463,7 @@ class CirclesControllerTest extends ControllerTestCase
         $this->assertEquals($json_data['error'], false);
         $this->assertEquals(['user_id' => 2], $json_data['result']);
         $this->assertArrayHasKey('message', $json_data);
+        $this->assertArrayHasKey('self_update', $json_data);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -476,6 +483,7 @@ class CirclesControllerTest extends ControllerTestCase
         $this->assertEquals($json_data['error'], true);
         $this->assertEquals([], $json_data['result']);
         $this->assertArrayHasKey('message', $json_data);
+        $this->assertArrayHasKey('self_update', $json_data);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -494,10 +502,11 @@ class CirclesControllerTest extends ControllerTestCase
         $this->assertEquals($json_data['error'], true);
         $this->assertEquals([], $json_data['result']);
         $this->assertArrayHasKey('message', $json_data);
+        $this->assertArrayHasKey('self_update', $json_data);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
-    function testAjaxLeaveCircleTargetSelf()
+    function testAjaxLeaveCircleTargetOnlyOne()
     {
         $this->_getCirclesCommonMock();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
@@ -507,11 +516,12 @@ class CirclesControllerTest extends ControllerTestCase
                 'user_id' => 1,
             ]
         ];
-        $ret = $this->testAction('/circles/ajax_leave_circle/circle_id:1', ['data' => $data, 'method' => 'POST']);
+        $ret = $this->testAction('/circles/ajax_leave_circle/circle_id:2', ['data' => $data, 'method' => 'POST']);
         $json_data = json_decode($ret, true);
         $this->assertEquals($json_data['error'], true);
         $this->assertEquals([], $json_data['result']);
         $this->assertArrayHasKey('message', $json_data);
+        $this->assertArrayHasKey('self_update', $json_data);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -536,6 +546,7 @@ class CirclesControllerTest extends ControllerTestCase
         $this->assertEquals($json_data['error'], true);
         $this->assertEquals([], $json_data['result']);
         $this->assertArrayHasKey('message', $json_data);
+        $this->assertArrayHasKey('self_update', $json_data);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
