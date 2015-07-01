@@ -135,7 +135,7 @@
                         'rows'           => 1,
                         'required'       => true,
                         'placeholder'    => __d('gl', "アクションの説明を書く"),
-                        'class'          => 'form-control tiny-form-text blank-disable post-form feed-post-form box-align change-warning',
+                        'class'          => 'form-control blank-disable post-form feed-post-form box-align change-warning',
                         'target_show_id' => "CommonActionFormFooter",
                         'target-id'      => "CommonActionSubmit",
                         "required"       => false
@@ -188,7 +188,7 @@
                     </div>
                 </div>
                 <div class="post-panel-footer">
-                    <div class="font_12px none" id="CommonActionFormFooter">
+                    <div class="font_12px" id="CommonActionFormFooter">
                         <div class="row form-horizontal form-group post-share-range" id="CommonActionShare">
                             <?=
                             $this->Form->submit(__d('gl', "アクション登録"),
