@@ -134,7 +134,7 @@
                         'wrap'           => 'soft',
                         'rows'           => 1,
                         'required'       => true,
-                        'placeholder'    => __d('gl', "今日やったアクションを共有しよう！"),
+                        'placeholder'    => __d('gl', "アクションの説明を書く"),
                         'class'          => 'form-control tiny-form-text blank-disable post-form feed-post-form box-align change-warning',
                         'target_show_id' => "CommonActionFormFooter",
                         'target-id'      => "CommonActionSubmit",
@@ -169,7 +169,7 @@
                 <div class="panel-body post-share-range-panel-body" id="">
                     <?=
                     $this->Form->input('key_result_id', [
-                        'label'    => __d('gl', "出したい成果"),
+                        'label'    => __d('gl', "出したい成果(オプション)"),
                         'required' => false,
                         'id'       => 'KrSelectOnActionForm',
                         'options'  => [null => __d('gl', '出したい成果を選択する')],
