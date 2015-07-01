@@ -12,10 +12,10 @@
 
 <table class="table team_member_table">
     <tr ng-repeat="item in teamVisionList">
-        <td width="20%" ui-sref="vision_detail({team_vision_id:item.TeamVision.id, active_flg:1})">
+        <td width="20%" ui-sref="vision_detail({team_vision_id:item.TeamVision.id, active_flg:item.TeamVision.active_flg})">
             <img width="64px" ng-src="{{item.TeamVision.photo_path}}"/>
         </td>
-        <td ui-sref="vision_detail({team_vision_id:item.TeamVision.id, active_flg:1})">
+        <td ui-sref="vision_detail({team_vision_id:item.TeamVision.id, active_flg:item.TeamVision.active_flg})">
             <div class="row">
                 <div class="col-xs-11">
                     <p class="vision_title">{{item.TeamVision.name}}</p>
@@ -44,13 +44,6 @@
                     </div>
                 </div>
             </div>
-
-            <!--
-            <div class="row">
-                <p class="vision_description">{{item.TeamVision.description}}</p>
-            </div>
-            -->
-
         </td>
     </tr>
 </table>

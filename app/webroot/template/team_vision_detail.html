@@ -1,1 +1,11 @@
-チームビジョン詳細
+<div class="table team_member_table">
+    <p>Group Vision</p>
+    <p class="vision_title">{{detail.name}}</p>
+    <span ng-bind-html="detail.modified"></span>
+
+    <p>Description</p>
+    <p>{{detail.description}}</p>
+
+
+    <img ng-src="{{detail.photo_path}}"/>
+</div>
