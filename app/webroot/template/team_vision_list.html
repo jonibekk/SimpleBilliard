@@ -10,7 +10,7 @@
 </div>
 
 
-<table class="table team_member_table">
+<table class="table table-hover team_member_table">
     <tr ng-repeat="item in teamVisionList">
         <td width="20%" ui-sref="vision_detail({team_vision_id:item.TeamVision.id, active_flg:item.TeamVision.active_flg})">
             <img width="64px" ng-src="{{item.TeamVision.photo_path}}"/>
