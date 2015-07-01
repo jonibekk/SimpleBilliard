@@ -1322,16 +1322,19 @@ $(document).ready(function () {
 
                             if (isEmpty) {
                                 //// Update the status of callback validator for all fields
-                                validator.updateStatus('photo', validator.STATUS_NOT_VALIDATED, 'callback');
+                                validator.updateStatus('photo', validator.STATUS_INVALID, 'callback');
                                 return false;
                             }
-
+                            validator.updateStatus('photo', validator.STATUS_VALID, 'callback');
                             return true;
                         }
                     }
                 }
             }
         }
+    });
+    $('.ActionResult_input_field').on('change', function () {
+        $('#CommonActionDisplayForm').bootstrapValidator('revalidateField', 'photo');
     });
 
     //noinspection JSUnusedLocalSymbols
