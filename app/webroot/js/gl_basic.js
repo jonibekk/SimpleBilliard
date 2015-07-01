@@ -752,18 +752,26 @@ function evShowAndThisWide() {
     //クリック済みにする
     $(this).addClass('clicked');
 }
-function setSelectOptions(url, select_id) {
+function setSelectOptions(url, select_id, target_toggle_id) {
     var options_elem = '<option value="">' + cake.word.k + '</option>';
     $.get(url, function (data) {
         if (data.length == 0) {
             $("#" + select_id).empty().append('<option value="">' + cake.word.l + '</option>');
-            return;
+        } else {
+            $.each(data, function (k, v) {
+                var option = '<option value="' + k + '">' + v + '</option>';
+                options_elem += option;
+            });
+            $("#" + select_id).empty().append(options_elem);
         }
-        $.each(data, function (k, v) {
-            var option = '<option value="' + k + '">' + v + '</option>';
-            options_elem += option;
-        });
-        $("#" + select_id).empty().append(options_elem);
+        if (typeof target_toggle_id != 'undefined' && target_toggle_id != null) {
+            if (data.length == 0) {
+                $("#" + target_toggle_id).addClass('none');
+            }
+            else {
+                $("#" + target_toggle_id).removeClass('none');
+            }
+        }
     });
 }
 
@@ -772,7 +780,8 @@ function evChangeTargetSelectWithValue() {
     attrUndefinedCheck(this, 'ajax-url');
     var target_id = $(this).attr("target-id");
     var url = $(this).attr("ajax-url") + $(this).val();
-    setSelectOptions(url, target_id);
+    var target_toggle_id = $(this).attr("toggle-target-id") != undefined ? $(this).attr("toggle-target-id") : null;
+    setSelectOptions(url, target_id, target_toggle_id);
 }
 
 function evShowAndThisWideClose() {

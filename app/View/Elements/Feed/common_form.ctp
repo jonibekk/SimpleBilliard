@@ -164,11 +164,12 @@
                         'id'                       => 'GoalSelectOnActionForm',
                         'options'                  => $goal_list_for_action_option,
                         'target-id'                => 'KrSelectOnActionForm',
+                        'toggle-target-id'         => 'WrapKrSelectOnActionForm',
                         'ajax-url'                 => $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_kr_list', 'goal_id' => ""]),
                     ])
                     ?>
                 </div>
-                <div class="panel-body post-share-range-panel-body" id="">
+                <div class="panel-body post-share-range-panel-body none" id="WrapKrSelectOnActionForm">
                     <?=
                     $this->Form->input('key_result_id', [
                         'label'    => __d('gl', "出したい成果(オプション)"),
