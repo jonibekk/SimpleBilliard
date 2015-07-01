@@ -1436,11 +1436,11 @@ $(document).ready(function () {
     $('#PostDisplayForm, #CommonActionDisplayForm').change(function (e) {
         var $target = $(e.target);
         switch ($target.attr('id')) {
-            case "PostBody":
-                $('#ActionResultName').val($target.val()).autosize().trigger('autosize.resize');
+            case "CommonPostBody":
+                $('#CommonActionName').val($target.val()).autosize().trigger('autosize.resize');
                 break;
-            case "ActionResultName":
-                $('#PostBody').val($target.val()).autosize().trigger('autosize.resize');
+            case "CommonActionName":
+                $('#CommonPostBody').val($target.val()).autosize().trigger('autosize.resize');
                 break;
         }
     });
