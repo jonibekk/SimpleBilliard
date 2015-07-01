@@ -592,6 +592,58 @@ class TeamsController extends AppController
         return $this->render();
     }
 
+    /**
+     * グループビジョン一覧取得
+     * @param     $team_id
+     * @param int $active_flg
+     * @return CakeResponse
+     */
+    function ajax_get_group_vision($team_id, $active_flg = 1)
+    {
+        $this->_ajaxPreProcess();
+        $res = $this->Team->GroupVision->getGroupVision($team_id, $active_flg);
+        $group_vision_list = $this->Team->GroupVision->convertData($team_id, $res);
+        return $this->_ajaxGetResponse($group_vision_list);
+    }
+
+    /**
+     * グループビジョンアーカイブ設定
+     * @param     $group_vision_id
+     * @param int $active_flg
+     * @return CakeResponse
+     */
+    function ajax_set_group_vision_archive($group_vision_id, $active_flg = 1)
+    {
+        $this->_ajaxPreProcess();
+        $res = $this->Team->GroupVision->setGroupVisionActiveFlag($group_vision_id, $active_flg);
+        return $this->_ajaxGetResponse($res);
+    }
+
+    /**
+     * 所属のグループ情報を取得
+     * @param $team_id
+     * @param $user_id
+     * @return CakeResponse
+     */
+    function ajax_get_login_user_group_id ($team_id, $user_id)
+    {
+        $this->_ajaxPreProcess();
+        $res = $this->Team->Group->MemberGroup->getMyGroupList($team_id, $user_id);
+        return $this->_ajaxGetResponse($res);
+    }
+
+    /**
+     * グループビジョンの削除
+     * @param $group_vision_id
+     * @return CakeResponse
+     */
+    function ajax_delete_group_vision($group_vision_id)
+    {
+        $this->_ajaxPreProcess();
+        $res = $this->Team->GroupVision->deleteGroupVision($group_vision_id);
+        return $this->_ajaxGetResponse($res);
+    }
+
     function ajax_team_admin_user_check()
     {
         $this->_ajaxPreProcess();

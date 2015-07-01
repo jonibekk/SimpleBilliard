@@ -13,5 +13,12 @@
         "ARCHIVE_SUCCESS_MASSAGE": "Success.",
         "DELETE_FAILED_MASSAGE": "Failed.",
         "DELETE_SUCCESS_MASSAGE": "Success."
+    },
+
+    "GROUP_VISION": {
+        "ARCHIVE_FAILED_MASSAGE": "Failed.",
+        "ARCHIVE_SUCCESS_MASSAGE": "Success.",
+        "DELETE_FAILED_MASSAGE": "Failed.",
+        "DELETE_SUCCESS_MASSAGE": "Success."
     }
 }
