@@ -122,4 +122,16 @@ class TeamVision extends AppModel
         $this->id = $team_vision_id;
         return $this->delete();
     }
+
+    function getTeamVisionDetail($team_id, $team_vision_id, $active_flg)
+    {
+        $options = [
+            'conditions' => [
+                'id' => $team_vision_id,
+                'team_id' => $team_id,
+                'active_flg' => $active_flg
+            ]
+        ];
+        return $this->find('first', $options);
+    }
 }
