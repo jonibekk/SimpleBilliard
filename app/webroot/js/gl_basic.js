@@ -1287,7 +1287,35 @@ $(document).ready(function () {
     $('#CommonActionDisplayForm').bootstrapValidator({
         live: 'enabled',
         feedbackIcons: {},
-        fields: {}
+        fields: {
+            photo: {
+                // All the email address field have emailAddress class
+                selector: '.ActionResult_input_field',
+                validators: {
+                    callback: {
+                        callback: function (value, validator, $field) {
+                            var isEmpty = true,
+                            // Get the list of fields
+                                $fields = validator.getFieldElements('photo');
+                            for (var i = 0; i < $fields.length; i++) {
+                                if ($fields.eq(i).val() != '') {
+                                    isEmpty = false;
+                                    break;
+                                }
+                            }
+
+                            if (isEmpty) {
+                                //// Update the status of callback validator for all fields
+                                validator.updateStatus('photo', validator.STATUS_NOT_VALIDATED, 'callback');
+                                return false;
+                            }
+
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
     });
 
     //noinspection JSUnusedLocalSymbols
