@@ -342,6 +342,7 @@ body, .btn, input, button, select, textarea, h1, h2, h3, h4, h5, h6, .h1, .h2, .
 body {
     background: #e5e5e5;
     padding: 60px 0 0;
+    color: #6d6e71;
 }
 
 .avail-sub-menu {
