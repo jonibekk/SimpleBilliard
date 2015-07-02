@@ -159,6 +159,16 @@ class CircleTest extends CakeTestCase
         }
     }
 
+    function testEditFailed()
+    {
+        $this->Circle->current_team_id = 1;
+        $this->Circle->Team->TeamMember->current_team_id = 1;
+
+        $circles = $this->Circle->edit([]);
+        $this->assertFalse($circles);
+    }
+
+
     function testAddMember()
     {
         $this->Circle->current_team_id = 1;

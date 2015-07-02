@@ -167,6 +167,7 @@ class CircleMemberTest extends CakeTestCase
         );
         $this->assertTrue(isset($users[$this->CircleMember->my_uid]));
 
+        // メンバーから外す
         $res = $this->CircleMember->unjoinMember($circle_id);
         $this->assertTrue($res);
 
@@ -227,9 +228,20 @@ class CircleMemberTest extends CakeTestCase
         );
         $this->assertFalse(isset($users[$user_id]));
         $this->assertTrue(isset($users[$this->CircleMember->my_uid]));
-
-        $this->assertTrue($res);
     }
+
+    public function testUnjoinMemberWithInvalidUser()
+    {
+        $this->CircleMember->current_team_id = 1;
+        $this->CircleMember->my_uid = 1;
+        $circle_id = '1';
+        $user_id = '9999';
+
+        // ユーザーID指定でサークルから削除
+        $res = $this->CircleMember->unjoinMember($circle_id, $user_id);
+        $this->assertEmpty($res);
+    }
+
 
     public function testShowHideStats()
     {
