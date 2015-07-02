@@ -2673,9 +2673,8 @@ function evAjaxLeaveCircle(e)
 
     $.ajax({
         url: $this.attr('action'),
-        type: 'POST',
+        type: 'post',
         dataType: 'json',
-        processData: false,
         data: $this.serialize()
     })
         .done(function (data) {

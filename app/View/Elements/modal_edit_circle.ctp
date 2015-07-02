@@ -124,7 +124,7 @@
 
             <div class="tab-pane fade" id="tab2">
                 <?php if ($circle_members): ?>
-                    <div class="row borderBottom">
+                    <div class="row borderBottom" style="padding-bottom:50px">
                         <?php foreach ($circle_members as $user): ?>
                             <div class="col col-xxs-12 mpTB0" id="edit-circle-member-row-<?= h($user['User']['id']) ?>">
                                 <div class="pull-right">
@@ -169,6 +169,7 @@
                                             <?= $this->Form->end() ?>
 
                                             <?php
+                                            // 管理者から外すボタンを押した時の処理
                                             // 操作者自身を管理者から外す際はアラートを出す
                                             $onclick = "$('#EditAdminStatusForm2_{$user['User']['id']}').submit(); return false;";
                                             if ($this->Session->read('Auth.User.id') == $user['User']['id']) {
@@ -187,6 +188,7 @@
                                         <?php if (!$this->request->data['Circle']['team_all_flg']): ?>
                                             <li>
                                                 <?php
+                                                // サークルから外すボタンを押した時の処理
                                                 // 操作者自身をサークルから外す際はアラートを出す
                                                 $onclick = "$('#LeaveCircleForm_{$user['User']['id']}').submit(); return false;";
                                                 if ($this->Session->read('Auth.User.id') == $user['User']['id']) {

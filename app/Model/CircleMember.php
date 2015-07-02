@@ -173,16 +173,8 @@ class CircleMember extends AppModel
 
     public function getCircleInitMemberSelect2($circle_id, $with_admin = false)
     {
-        App::uses('UploadHelper', 'View/Helper');
-        $Upload = new UploadHelper(new View());
         $users = $this->getMembers($circle_id, $with_admin);
-        $user_res = [];
-        foreach ($users as $val) {
-            $data['id'] = 'user_' . $val['User']['id'];
-            $data['text'] = $val['User']['display_username'] . " (" . $val['User']['roman_username'] . ")";
-            $data['image'] = $Upload->uploadUrl($val, 'User.photo', ['style' => 'small']);
-            $user_res[] = $data;
-        }
+        $user_res = $this->_makeSelect2UserList($users);
         return ['results' => $user_res];
     }
 
@@ -197,9 +189,6 @@ class CircleMember extends AppModel
      */
     public function getNonCircleMemberSelect2($circle_id, $keyword, $limit = 10)
     {
-        App::uses('UploadHelper', 'View/Helper');
-        $Upload = new UploadHelper(new View());
-
         $member_list = $this->getMemberList($circle_id, true);
 
         $options = [
@@ -232,13 +221,7 @@ class CircleMember extends AppModel
             ]
         ];
         $users = $this->User->TeamMember->find('all', $options);
-        $user_res = [];
-        foreach ($users as $val) {
-            $data['id'] = 'user_' . $val['User']['id'];
-            $data['text'] = $val['User']['display_username'] . " (" . $val['User']['roman_username'] . ")";
-            $data['image'] = $Upload->uploadUrl($val, 'User.photo', ['style' => 'small']);
-            $user_res[] = $data;
-        }
+        $user_res = $this->_makeSelect2UserList($users);
         return ['results' => $user_res];
     }
 
@@ -463,5 +446,28 @@ class CircleMember extends AppModel
         ];
 
         return $this->updateAll(['CircleMember.admin_flg' => $admin_status], $conditions);
+    }
+
+    /**
+     * select2 用のユーザーリスト配列を返す
+     *
+     * @param array $users
+     *
+     * @return array
+     */
+    protected function _makeSelect2UserList(array $users)
+    {
+        App::uses('UploadHelper', 'View/Helper');
+        $Upload = new UploadHelper(new View());
+
+        $res = [];
+        foreach ($users as $val) {
+            $data = [];
+            $data['id'] = 'user_' . $val['User']['id'];
+            $data['text'] = $val['User']['display_username'] . " (" . $val['User']['roman_username'] . ")";
+            $data['image'] = $Upload->uploadUrl($val, 'User.photo', ['style' => 'small']);
+            $res[] = $data;
+        }
+        return $res;
     }
 }
