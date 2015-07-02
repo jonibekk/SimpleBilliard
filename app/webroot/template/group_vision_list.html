@@ -1,17 +1,27 @@
-<div class="pull-right" style="padding-bottom:10px;">
-    <a ng-if="archive_flag === false" ui-sref="group_vision_archive({team_id:team_id, active_flg:0})">アーカイブを見る</a>
-    <a ng-if="archive_flag === true" ui-sref="group_vision({team_id:team_id})">グループビジョン一覧に戻る</a>
+<div class="row" style="padding-bottom:10px;">
+    <div class="col-xs-4">
+        <a ng-href="/teams/add_group_vision" class="font_gargoyleGray-brownRed btn-goals-column-plus">
+            <i class="fa fa-plus-circle font_brownRed"></i>ビジョンを追加</a>
+    </div>
+
+    <div class="col-xs-offset-4 col-xs-4">
+        <a class="pull-right font_verydark" ng-if="archive_flag === false"
+           ui-sref="group_vision_archive({team_id:team_id, active_flg:0})">アーカイブを見る</a>
+    </div>
 </div>
 
-
-<table class="table table-hover team_member_table pointer">
+<table class="table table-hover team_member_table">
+    <tr>
+        <th colspan="2">グループビジョン ( {{GroupVisionCount}} )</th>
+    </tr>
     <tr ng-repeat="item in GroupVisionList">
-        <td width="20%"
+        <td class="pointer" width="20%"
             ui-sref="group_vision_detail({group_vision_id:item.GroupVision.id, active_flg:item.GroupVision.active_flg})">
             <img width="64px" ng-src="{{item.GroupVision.photo_path}}"/>
         </td>
 
-        <td ui-sref="group_vision_detail({group_vision_id:item.GroupVision.id, active_flg:item.GroupVision.active_flg})">
+        <td class="pointer"
+            ui-sref="group_vision_detail({group_vision_id:item.GroupVision.id, active_flg:item.GroupVision.active_flg})">
             <div class="row">
                 <div class="col-xs-11">
                     <p class="vision_title">{{item.GroupVision.name}} </p>

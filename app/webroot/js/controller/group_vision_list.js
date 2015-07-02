@@ -13,6 +13,7 @@ app.controller("GroupVisionController",
         });
 
         $scope.GroupVisionList = group_vision_list;
+        $scope.GroupVisionCount = group_vision_list.length;
         $scope.archive_flag = false;
 
         $scope.viewDeleteModal = function (group_vision_id, name) {
@@ -42,6 +43,7 @@ app.controller("GroupVisionArchiveController",
         });
 
         $scope.GroupVisionList = group_vision_list;
+        $scope.GroupVisionCount = group_vision_list.length;
         $scope.archive_flag = true;
     });
 
