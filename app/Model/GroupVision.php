@@ -112,6 +112,26 @@ class GroupVision extends AppModel
     }
 
     /**
+     * グループIDからアクティブなグループビジョンを取得
+     *
+     * @param      $group_ids
+     * @param bool $active_flg
+     *
+     * @return array|null
+     */
+    function getGroupVisionsByGroupIds($group_ids, $active_flg = true)
+    {
+        $options = [
+            'conditions' => [
+                'group_id'   => $group_ids,
+                'active_flg' => $active_flg
+            ]
+        ];
+        $res = $this->find('all', $options);
+        return $res;
+    }
+
+    /**
      * AngularJSのテンプレート側から処理しやすく加工
      * @param $team_id
      * @param $data
