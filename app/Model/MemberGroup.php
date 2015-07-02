@@ -71,6 +71,11 @@ class MemberGroup extends AppModel
         return $res;
     }
 
+    /**
+     * まだグループビジョンが存在しないグループのリストを返す
+     *
+     * @return array|null
+     */
     function getMyGroupListNotExistsVision()
     {
         $group_list = $this->getMyGroupList();
