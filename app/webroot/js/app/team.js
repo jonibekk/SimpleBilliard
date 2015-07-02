@@ -216,6 +216,29 @@ app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider', '$http
                     }]
                 },
                 controller: "GroupVisionDeleteController"
+            })
+            .state('group_vision_detail', {
+                url: "/group_vision_detail/:group_vision_id/:active_flg",
+                templateUrl: "/template/group_vision_detail.html",
+                controller: 'GroupVisionDetailController',
+                resolve: {
+                    groupVisionDetail: ['$stateParams', '$http', function ($stateParams, $http) {
+
+                        var active_flg = 0;
+                        if ($stateParams.active_flg === 'true') {
+                            active_flg = 1;
+                        }
+
+                        var request = {
+                            method: 'GET',
+                            url: cake.url.ad + $stateParams.group_vision_id + '/' + active_flg
+                        };
+                        return $http(request).then(function (response) {
+                            return response.data;
+                        });
+
+                    }]
+                }
             });
 
         $translateProvider.useStaticFilesLoader({

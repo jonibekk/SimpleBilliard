@@ -64,3 +64,9 @@ app.controller("GroupVisionDeleteController",
         }
         $state.go('group_vision', {team_id: $scope.team_id});
     });
+
+app.controller("GroupVisionDetailController",
+    function ($scope, $http, $translate, $sce, $modal, notificationService, groupVisionDetail) {
+        groupVisionDetail.GroupVision.modified = $sce.trustAsHtml(groupVisionDetail.GroupVision.modified);
+        $scope.detail = groupVisionDetail.GroupVision;
+    });
