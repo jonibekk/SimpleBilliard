@@ -211,7 +211,8 @@
                                                 ]); ?>
                                                 <?= $this->Form->hidden('user_id', ['value' => $user['User']['id']]) ?>
                                                 <?= $this->Form->end() ?>
-                                                <?= $this->Html->link(__d('gl', "サークルから外す"), '#', ['onclick' => $onclick]) ?>
+                                                <?= $this->Html->link(__d('gl', "サークルから外す"), '#',
+                                                                      ['onclick' => $onclick]) ?>
                                             </li>
                                         <?php endif ?>
                                     </ul>
@@ -280,7 +281,8 @@
         <div class="modal-footer tab1-footer">
             <?=
             $this->Form->button(__d('gl', "変更を保存"),
-                                ['class'   => 'btn btn-primary pull-right',
+                                ['id'      => 'EditCircleFormSubmit',
+                                 'class'   => 'btn btn-primary pull-right',
                                  'onclick' => "$(this).attr('disabled', 'disabled'); document.getElementById('EditCircleForm').submit(); return false;",
                                  'div'     => false,]) ?>
             <button type="button" class="btn btn-link design-cancel pull-right mr_8px bd-radius_4px"

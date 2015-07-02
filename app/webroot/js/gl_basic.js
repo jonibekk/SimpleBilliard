@@ -229,7 +229,8 @@ $(document).ready(function () {
                     });
                 });
 
-                $modal_elm.find('#EditCircleForm').bootstrapValidator({
+                $editCircleForm = $modal_elm.find('#EditCircleForm');
+                $editCircleForm.bootstrapValidator({
                     excluded: [':disabled'],
                     live: 'enabled',
                     feedbackIcons: {
@@ -251,6 +252,14 @@ $(document).ready(function () {
                         }
                     }
                 });
+                // submit ボタンが form 外にあるので、自力で制御する
+                $editCircleForm
+                    .on('error.field.bv', function (e) {
+                        $('#EditCircleFormSubmit').attr('disabled', 'disabled');
+                    })
+                    .on('success.field.bv', function (e) {
+                        $('#EditCircleFormSubmit').removeAttr('disabled');
+                    });
                 $modal_elm.modal();
             }).success(function () {
                 $('body').addClass('modal-open');
