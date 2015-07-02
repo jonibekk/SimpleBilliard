@@ -207,6 +207,9 @@ $(document).ready(function () {
     $(document).on("click", '.modal-ajax-get-circle-edit', function (e) {
         e.preventDefault();
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        $modal_elm.on('hidden.bs.modal', function (e) {
+            $(this).remove();
+        });
         //noinspection JSUnusedLocalSymbols,CoffeeScriptUnusedLocalSymbols
         modalFormCommonBindEvent($modal_elm);
         var url = $(this).attr('href');
@@ -2596,8 +2599,7 @@ $(document).ready(function () {
     });
 });
 
-function evAjaxEditCircleAdminStatus(e)
-{
+function evAjaxEditCircleAdminStatus(e) {
     e.preventDefault();
 
     var $this = $(this);
@@ -2656,7 +2658,7 @@ function evAjaxEditCircleAdminStatus(e)
         })
         .fail(function (data) {
             new PNotify({
-                type:'error',
+                type: 'error',
                 text: cake.message.notice.d,
                 delay: 4000,
                 mouse_reset: false
@@ -2664,8 +2666,7 @@ function evAjaxEditCircleAdminStatus(e)
         });
 }
 
-function evAjaxLeaveCircle(e)
-{
+function evAjaxLeaveCircle(e) {
     e.preventDefault();
 
     var $this = $(this);
@@ -2716,7 +2717,7 @@ function evAjaxLeaveCircle(e)
         })
         .fail(function (data) {
             new PNotify({
-                type:'error',
+                type: 'error',
                 text: cake.message.notice.d,
                 delay: 4000,
                 mouse_reset: false
