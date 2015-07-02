@@ -16,10 +16,11 @@
         <!-- Nav tabs -->
         <ul class="feed-switch clearfix plr_0px" role="tablist">
             <li class="switch-post active"><a href="#PostForm" role="tab" data-toggle="tab"
-                                              class="switch-post-anchor"><i
+                                              class="switch-post-anchor click-target-focus"
+                                              target-id="CommonPostBody"><i
                         class="fa fa-comment-o"></i><?= __d('gl', "投稿") ?></a><span class="switch-arrow"></span></li>
             <li class="switch-action"><a href="#ActionForm" role="tab" data-toggle="tab"
-                                         class="switch-action-anchor"><i
+                                         class="switch-action-anchor click-target-focus" target-id="CommonActionName"><i
                         class="fa fa-star-o"></i><?= __d('gl', "アクション") ?></a><span class="switch-arrow"></span></li>
             <li class="switch-badge"><a href="#BadgeForm" role="tab" data-toggle="tab"
                                         class="switch-badge-anchor develop--forbiddenLink"><i
@@ -46,6 +47,7 @@
             <div class="post-panel-body plr_11px ptb_7px">
                 <?=
                 $this->Form->input('body', [
+                    'id'             => 'CommonPostBody',
                     'label'          => false,
                     'type'           => 'textarea',
                     'wrap'           => 'soft',
@@ -129,16 +131,16 @@
                 <div class="post-panel-body plr_11px ptb_7px">
                     <?=
                     $this->Form->input('name', [
-                        'label'          => false,
-                        'type'           => 'textarea',
-                        'wrap'           => 'soft',
-                        'rows'           => 1,
-                        'required'       => true,
-                        'placeholder'    => __d('gl', "今日やったアクションを共有しよう！"),
-                        'class'          => 'form-control tiny-form-text blank-disable post-form feed-post-form box-align change-warning',
-                        'target_show_id' => "CommonActionFormFooter",
-                        'target-id'      => "CommonActionSubmit",
-                        "required"       => false
+                        'id'          => 'CommonActionName',
+                        'label'       => false,
+                        'type'        => 'textarea',
+                        'wrap'        => 'soft',
+                        'rows'        => 1,
+                        'required'    => true,
+                        'placeholder' => __d('gl', "アクションの説明を書く"),
+                        'class'       => 'form-control blank-disable post-form feed-post-form box-align change-warning',
+                        'target-id'   => "CommonActionSubmit",
+                        "required"    => false
                     ])
                     ?>
                     <div class="row form-group m_0px" id="CommonActionFormImage">
@@ -162,14 +164,15 @@
                         'id'                       => 'GoalSelectOnActionForm',
                         'options'                  => $goal_list_for_action_option,
                         'target-id'                => 'KrSelectOnActionForm',
+                        'toggle-target-id'         => 'WrapKrSelectOnActionForm',
                         'ajax-url'                 => $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_kr_list', 'goal_id' => ""]),
                     ])
                     ?>
                 </div>
-                <div class="panel-body post-share-range-panel-body" id="">
+                <div class="panel-body post-share-range-panel-body none" id="WrapKrSelectOnActionForm">
                     <?=
                     $this->Form->input('key_result_id', [
-                        'label'    => __d('gl', "出したい成果"),
+                        'label'    => __d('gl', "出したい成果(オプション)"),
                         'required' => false,
                         'id'       => 'KrSelectOnActionForm',
                         'options'  => [null => __d('gl', '出したい成果を選択する')],
@@ -188,7 +191,7 @@
                     </div>
                 </div>
                 <div class="post-panel-footer">
-                    <div class="font_12px none" id="CommonActionFormFooter">
+                    <div class="font_12px" id="CommonActionFormFooter">
                         <div class="row form-horizontal form-group post-share-range" id="CommonActionShare">
                             <?=
                             $this->Form->submit(__d('gl', "アクション登録"),
