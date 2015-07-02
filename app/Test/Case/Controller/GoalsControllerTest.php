@@ -135,6 +135,7 @@ class GoalsControllerTest extends ControllerTestCase
         $this->assertArrayHasKey('html', $data);
         $this->assertArrayHasKey('count', $data);
         $this->assertArrayHasKey('page_item_num', $data);
+        $this->assertArrayHasKey('start', $data);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -482,6 +483,43 @@ class GoalsControllerTest extends ControllerTestCase
                 'socket_id'     => 'hogehage'
             ]
         ];
+        $this->testAction('/goals/add_completed_action/goal_id:1', ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testAddCompletedActionSuccessFromCommon()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $data = [
+            'ActionResult' => [
+                'name'      => 'test',
+                'goal_id'   => 1,
+                'note'      => 'test',
+                'socket_id' => 'hogehage'
+            ]
+        ];
+        $this->testAction('/goals/add_completed_action/', ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testAddCompletedActionFailNoGoal()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $data = [
+            'ActionResult' => [
+                'name'      => 'test',
+                'note'      => 'test',
+                'socket_id' => 'hogehage'
+            ]
+        ];
+        $this->testAction('/goals/add_completed_action/', ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testAddCompletedActionFailNoData()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $data = [];
         $this->testAction('/goals/add_completed_action/goal_id:1', ['method' => 'POST', 'data' => $data]);
     }
 

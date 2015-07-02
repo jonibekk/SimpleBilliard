@@ -53,6 +53,13 @@ $(document).ready(function () {
     $('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
         $(this).children('.nailthumb-container').nailthumb({width: 50, height: 50, fitDirection: 'center center'});
     });
+    //tab open
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        var $target = $(e.target);
+        if ($target.hasClass('click-target-focus') && $target.attr('target-id') != undefined) {
+            $('#' + $target.attr('target-id')).focus();
+        }
+    })
 
     $('.fileinput-enabled-submit').fileinput()
         //ファイル選択時にsubmitボタンを有効化する
@@ -107,7 +114,7 @@ $(document).ready(function () {
      */
     $(document).on("blur", ".blur-height-reset", evThisHeightReset);
     $(document).on("focus", ".click-height-up", evThisHeightUp);
-    $(document).on("click", ".tiny-form-text", evShowAndThisWide);
+    $(document).on("focus", ".tiny-form-text", evShowAndThisWide);
     $(document).on("click", ".tiny-form-text-close", evShowAndThisWideClose);
     $(document).on("click", ".click-show", evShow);
     $(document).on("click", ".trigger-click", evTriggerClick);
@@ -129,6 +136,8 @@ $(document).ready(function () {
     $(document).on("click", ".click-target-enabled", evTargetEnabled);
     //noinspection JSUnresolvedVariable
     $(document).on("change", ".change-target-enabled", evTargetEnabled);
+    //noinspection JSUnresolvedVariable
+    $(document).on("change", ".change-next-select-with-value", evChangeTargetSelectWithValue);
     //noinspection JSUnresolvedVariable
     $(document).on("change", ".change-select-target-hidden", evSelectOptionTargetHidden);
     //noinspection JSUnresolvedVariable
@@ -205,6 +214,9 @@ $(document).ready(function () {
     $(document).on("click", '.modal-ajax-get-circle-edit', function (e) {
         e.preventDefault();
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        $modal_elm.on('hidden.bs.modal', function (e) {
+            $(this).remove();
+        });
         //noinspection JSUnusedLocalSymbols,CoffeeScriptUnusedLocalSymbols
         modalFormCommonBindEvent($modal_elm);
         var url = $(this).attr('href');
@@ -224,7 +236,8 @@ $(document).ready(function () {
                     });
                 });
 
-                $modal_elm.find('#EditCircleForm').bootstrapValidator({
+                $editCircleForm = $modal_elm.find('#EditCircleForm');
+                $editCircleForm.bootstrapValidator({
                     excluded: [':disabled'],
                     live: 'enabled',
                     feedbackIcons: {
@@ -246,6 +259,14 @@ $(document).ready(function () {
                         }
                     }
                 });
+                // submit ボタンが form 外にあるので、自力で制御する
+                $editCircleForm
+                    .on('error.field.bv', function (e) {
+                        $('#EditCircleFormSubmit').attr('disabled', 'disabled');
+                    })
+                    .on('success.field.bv', function (e) {
+                        $('#EditCircleFormSubmit').removeAttr('disabled');
+                    });
                 $modal_elm.modal();
             }).success(function () {
                 $('body').addClass('modal-open');
@@ -311,6 +332,10 @@ $(document).ready(function () {
         });
     });
 
+    //
+    $(document).on("submit", "form.ajax-edit-circle-admin-status", evAjaxEditCircleAdminStatus);
+    $(document).on("submit", "form.ajax-leave-circle", evAjaxLeaveCircle);
+
 
     //noinspection JSJQueryEfficiency
     $('.navbar-offcanvas').on('show.bs.offcanvas', function () {
@@ -322,6 +347,14 @@ $(document).ready(function () {
         $('#layer-black').css('display', 'none');
         $(".toggle-icon").removeClass('rotate').addClass('rotate-reverse').removeClass('fa-arrow-right').addClass('fa-navicon');
     });
+
+    // サークル編集画面のタブ切り替え
+    // タブによって footer 部分を切り替える
+    $(document).on('shown.bs.tab', '.modal-dialog.edit-circle a[data-toggle="tab"]', function (e) {
+        var $target = $(e.target);
+        var tabId = $target.attr('href').replace('#', '');
+        $target.closest('.modal-dialog').find('.modal-footer').hide().filter('.' + tabId + '-footer').show();
+    })
 
     if (cake.data.j == "0") {
         $('#FeedMoreReadLink').trigger('click');
@@ -743,16 +776,36 @@ function evShowAndThisWide() {
     //クリック済みにする
     $(this).addClass('clicked');
 }
-function setSelectOptions(url, select_id) {
-    var options_elem = null;
+function setSelectOptions(url, select_id, target_toggle_id) {
+    var options_elem = '<option value="">' + cake.word.k + '</option>';
     $.get(url, function (data) {
-        $.each(data, function (k, v) {
-            var option = '<option value="' + k + '">' + v + '</option>';
-            options_elem += option;
-        });
-
-        $("#" + select_id).append(options_elem);
+        if (data.length == 0) {
+            $("#" + select_id).empty().append('<option value="">' + cake.word.l + '</option>');
+        } else {
+            $.each(data, function (k, v) {
+                var option = '<option value="' + k + '">' + v + '</option>';
+                options_elem += option;
+            });
+            $("#" + select_id).empty().append(options_elem);
+        }
+        if (typeof target_toggle_id != 'undefined' && target_toggle_id != null) {
+            if (data.length == 0) {
+                $("#" + target_toggle_id).addClass('none');
+            }
+            else {
+                $("#" + target_toggle_id).removeClass('none');
+            }
+        }
     });
+}
+
+function evChangeTargetSelectWithValue() {
+    attrUndefinedCheck(this, 'target-id');
+    attrUndefinedCheck(this, 'ajax-url');
+    var target_id = $(this).attr("target-id");
+    var url = $(this).attr("ajax-url") + $(this).val();
+    var target_toggle_id = $(this).attr("toggle-target-id") != undefined ? $(this).attr("toggle-target-id") : null;
+    setSelectOptions(url, target_id, target_toggle_id);
 }
 
 function evShowAndThisWideClose() {
@@ -1271,6 +1324,42 @@ $(document).ready(function () {
         feedbackIcons: {},
         fields: {}
     });
+    $('#CommonActionDisplayForm').bootstrapValidator({
+        live: 'enabled',
+        feedbackIcons: {},
+        fields: {
+            photo: {
+                // All the email address field have emailAddress class
+                selector: '.ActionResult_input_field',
+                validators: {
+                    callback: {
+                        callback: function (value, validator, $field) {
+                            var isEmpty = true,
+                            // Get the list of fields
+                                $fields = validator.getFieldElements('photo');
+                            for (var i = 0; i < $fields.length; i++) {
+                                if ($fields.eq(i).val() != '') {
+                                    isEmpty = false;
+                                    break;
+                                }
+                            }
+
+                            if (isEmpty) {
+                                //// Update the status of callback validator for all fields
+                                validator.updateStatus('photo', validator.STATUS_INVALID, 'callback');
+                                return false;
+                            }
+                            validator.updateStatus('photo', validator.STATUS_VALID, 'callback');
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+    });
+    $('.ActionResult_input_field').on('change', function () {
+        $('#CommonActionDisplayForm').bootstrapValidator('revalidateField', 'photo');
+    });
 
     //noinspection JSUnusedLocalSymbols
     $('#select2Member').select2({
@@ -1329,9 +1418,41 @@ $(document).ready(function () {
         },
         containerCssClass: "select2PostCircleMember"
     });
+    $('#select2ActionCircleMember').select2({
+        multiple: true,
+        placeholder: cake.word.a,
+        minimumInputLength: 2,
+        ajax: {
+            url: cake.url.s,
+            dataType: 'json',
+            quietMillis: 100,
+            cache: true,
+            data: function (term, page) {
+                return {
+                    term: term, //search term
+                    page_limit: 10 // page size
+                };
+            },
+            results: function (data, page) {
+                return {results: data.results};
+            }
+        },
+        data: [],
+        initSelection: cake.data.l,
+        formatSelection: format,
+        formatResult: format,
+        dropdownCssClass: 's2-post-dropdown',
+        escapeMarkup: function (m) {
+            return m;
+        },
+        containerCssClass: "select2ActionCircleMember"
+    });
     $(document).on("click", '.modal-ajax-get-public-circles', function (e) {
         e.preventDefault();
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        $modal_elm.on('hidden.bs.modal', function (e) {
+            $(this).remove();
+        });
         modalFormCommonBindEvent($modal_elm);
         var url = $(this).attr('href');
         if (url.indexOf('#') == 0) {
@@ -1350,20 +1471,43 @@ $(document).ready(function () {
             });
         }
     });
+
+    $('#PostDisplayForm, #CommonActionDisplayForm').change(function (e) {
+        var $target = $(e.target);
+        switch ($target.attr('id')) {
+            case "CommonPostBody":
+                $('#CommonActionName').val($target.val()).autosize().trigger('autosize.resize');
+                break;
+            case "CommonActionName":
+                $('#CommonPostBody').val($target.val()).autosize().trigger('autosize.resize');
+                break;
+        }
+    });
 });
 
 function format(item) {
-    return "<img style='width:14px;height: 14px' class='select2-item-img' src='" + item.image + "' alt='icon' /> " + "<span class='select2-item-txt'>" + item.text + "</span";
+    if ('image' in item) {
+        return "<img style='width:14px;height: 14px' class='select2-item-img' src='" + item.image + "' alt='icon' /> " + "<span class='select2-item-txt'>" + item.text + "</span>";
+    }
+    else if ('icon' in item) {
+        return "<span class='select2-item-txt-with-i'><i class='" + item.icon + "'></i> " + item.text + "</span>";
+    }
+    else {
+        return "<span class='select2-item-txt'>" + item.text + "</span>";
+    }
 }
 function bindSelect2Members($this) {
+    var $select2elem = $this.find(".ajax_add_select2_members");
+    var url = $select2elem.attr('data-url');
+
     //noinspection JSUnusedLocalSymbols
-    $this.find(".ajax_add_select2_members").select2({
+    $select2elem.select2({
         'val': null,
         multiple: true,
         minimumInputLength: 2,
         placeholder: cake.message.notice.b,
         ajax: {
-            url: cake.url.a,
+            url: url ? url : cake.url.a,
             dataType: 'json',
             quietMillis: 100,
             cache: true,
@@ -1521,7 +1665,12 @@ function getModalPostList(e) {
     }
 }
 autoload_more = false;
-function evFeedMoreView() {
+function evFeedMoreView(options) {
+    var opt = $.extend({
+        recursive: false,
+        loader_id: null
+    }, options);
+
     attrUndefinedCheck(this, 'parent-id');
     attrUndefinedCheck(this, 'next-page-num');
     attrUndefinedCheck(this, 'get-url');
@@ -1532,11 +1681,17 @@ function evFeedMoreView() {
     var get_url = $obj.attr('get-url');
     var month_index = $obj.attr('month-index');
     var no_data_text_id = $obj.attr('no-data-text-id');
+    var oldest_post_time = $obj.attr('oldest-post-time') || 0;
+
     //リンクを無効化
     $obj.attr('disabled', 'disabled');
-    var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
+
     //ローダー表示
-    $obj.after($loader_html);
+    var $loader_html = opt.loader_id ? $('#' + opt.loader_id) : $('<i id="__feed_loader" class="fa fa-refresh fa-spin"></i>');
+    if (!opt.recursive) {
+        $obj.after($loader_html);
+    }
+
     //url生成
     var url = get_url + '/page:' + next_page_num;
     if (month_index != undefined && month_index > 0) {
@@ -1591,23 +1746,43 @@ function evFeedMoreView() {
                 });
 
                 $('.custom-radio-check').customRadioCheck();
-
-
             }
 
+            // 取得したデータ件数が、１ページの表示件数未満だった場合
             if (data.count < data.page_item_num) {
+                // 前月以前のデータを取得する必要がある場合
                 if (month_index != undefined) {
-                    //ローダーを削除
-                    $loader_html.remove();
-                    //リンクを有効化
-                    $obj.removeAttr('disabled');
                     month_index++;
                     $obj.attr('month-index', month_index);
                     //次のページ番号をセット
                     $obj.attr('next-page-num', 1);
-                    $obj.text(cake.message.info.f);
-                    $("#" + no_data_text_id).show();
+
+                    // 取得した件数が 1 件以上の場合
+                    // 「さらに読み込む」リンクを表示
+                    if (data.count > 0) {
+                        $obj.removeAttr('disabled');
+                        $loader_html.remove();
+                        $obj.text(cake.message.info.f);
+                    }
+                    // 取得したデータ件数が 0 件の場合
+                    else {
+                        // さらに古い投稿が存在する可能性がある場合は、再度同じ関数を呼び出す
+                        if (data.start && data.start > oldest_post_time) {
+                            setTimeout(function () {
+                                evFeedMoreView.call($obj[0], {recursive: true, loader_id: '__feed_loader'});
+                            }, 200);
+                            return;
+                        }
+                        // これ以上古い投稿が存在しない場合
+                        else {
+                            $loader_html.remove();
+                            $("#" + no_data_text_id).show();
+                            $obj.remove();
+                            return;
+                        }
+                    }
                 }
+                // 前月以前のデータを取得する必要がない場合
                 else {
                     //ローダーを削除
                     $loader_html.remove();
@@ -2495,3 +2670,129 @@ $(document).ready(function () {
         }
     });
 });
+
+function evAjaxEditCircleAdminStatus(e) {
+    e.preventDefault();
+
+    var $this = $(this);
+    var user_id = $this.attr('data-user-id');
+
+    $.ajax({
+        url: $this.attr('action'),
+        type: 'POST',
+        dataType: 'json',
+        processData: false,
+        data: $this.serialize()
+    })
+        .done(function (data) {
+            // 処理失敗時
+            if (data.error) {
+                new PNotify({
+                    type: 'error',
+                    title: data.message.title,
+                    text: data.message.text,
+                    icon: "fa fa-check-circle",
+                    delay: 2000,
+                    mouse_reset: false
+                });
+            }
+            // 処理成功時
+            else {
+                new PNotify({
+                    type: 'success',
+                    title: data.message.title,
+                    text: data.message.text,
+                    icon: "fa fa-exclamation-triangle",
+                    delay: 2000,
+                    mouse_reset: false
+                });
+
+                // 操作者自身を情報を更新した場合
+                if (data.self_update) {
+                    window.location.href = '/';
+                    return;
+                }
+                // 操作者以外の情報を更新した場合
+                else {
+                    var $member_row = $('#edit-circle-member-row-' + user_id);
+                    // 非管理者 -> 管理者 の場合
+                    if (data.result.admin_flg == "1") {
+                        $member_row.find('.item-for-non-admin').hide();
+                        $member_row.find('.item-for-admin').show();
+                    }
+                    // 管理者 -> 非管理者 の場合
+                    else {
+                        $member_row.find('.item-for-admin').hide();
+                        $member_row.find('.item-for-non-admin').show();
+                    }
+                }
+            }
+        })
+        .fail(function (data) {
+            new PNotify({
+                type: 'error',
+                text: cake.message.notice.d,
+                delay: 4000,
+                mouse_reset: false
+            });
+        });
+}
+
+function evAjaxLeaveCircle(e) {
+    e.preventDefault();
+
+    var $this = $(this);
+    var user_id = $this.attr('data-user-id');
+
+    $.ajax({
+        url: $this.attr('action'),
+        type: 'POST',
+        dataType: 'json',
+        processData: false,
+        data: $this.serialize()
+    })
+        .done(function (data) {
+            // 処理失敗時
+            if (data.error) {
+                new PNotify({
+                    type: 'error',
+                    title: data.message.title,
+                    text: data.message.text,
+                    icon: "fa fa-check-circle",
+                    delay: 2000,
+                    mouse_reset: false
+                });
+            }
+            // 処理成功時
+            else {
+                new PNotify({
+                    type: 'success',
+                    title: data.message.title,
+                    text: data.message.text,
+                    icon: "fa fa-exclamation-triangle",
+                    delay: 2000,
+                    mouse_reset: false
+                });
+                // 操作者自身の情報更新した場合
+                if (data.self_update) {
+                    window.location.href = '/';
+                    return;
+                }
+                // 操作者以外の情報を更新した場合
+                else {
+                    var $member_row = $('#edit-circle-member-row-' + user_id);
+                    $member_row.fadeOut('fast', function () {
+                        $(this).remove();
+                    });
+                }
+            }
+        })
+        .fail(function (data) {
+            new PNotify({
+                type: 'error',
+                text: cake.message.notice.d,
+                delay: 4000,
+                mouse_reset: false
+            });
+        });
+}

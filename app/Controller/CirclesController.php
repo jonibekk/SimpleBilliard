@@ -48,6 +48,8 @@ class CirclesController extends AppController
         $circle_id = $this->request->params['named']['circle_id'];
         $this->_ajaxPreProcess();
         $this->request->data = $this->Circle->getEditData($circle_id);
+        $circle_members = $this->Circle->CircleMember->getMembers($circle_id, true);
+        $this->set('circle_members', $circle_members);
         //htmlレンダリング結果
         $response = $this->render('modal_edit_circle');
         $html = $response->__toString();
@@ -62,21 +64,42 @@ class CirclesController extends AppController
         return $this->_ajaxGetResponse($res);
     }
 
+    /**
+     * select2のユーザ検索 （サークルメンバー追加用）
+     * サークル未参加のユーザーリストを返す
+     */
+    function ajax_select2_non_circle_member()
+    {
+        $this->_ajaxPreProcess();
+        $circle_id = $this->request->params['named']['circle_id'];
+        $query = $this->request->query;
+        $res = [];
+        if (isset($query['term']) && $query['term'] && isset($query['page_limit']) && $query['page_limit']) {
+            $res = $this->Circle->CircleMember->getNonCircleMemberSelect2($circle_id, $query['term'],
+                                                                          $query['page_limit']);
+        }
+        return $this->_ajaxGetResponse($res);
+    }
+
+    /**
+     * サークル基本情報更新
+     */
     public function edit()
     {
+        $this->request->allowMethod('put');
         $this->Circle->id = $this->request->params['named']['circle_id'];
         try {
             if (!$this->Circle->exists()) {
-                throw new RuntimeException(__('gl', "このサークルは存在しません。"));
+                throw new RuntimeException(__d('gl', "このサークルは存在しません。"));
             }
             if (!$this->Circle->CircleMember->isAdmin($this->Auth->user('id'), $this->Circle->id)) {
-                throw new RuntimeException(__('gl', "サークルの変更ができるのはサークル管理者のみです。"));
+                throw new RuntimeException(__d('gl', "サークルの変更ができるのはサークル管理者のみです。"));
             }
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
             $this->redirect($this->referer());
+            return;
         }
-        $this->request->allowMethod('put');
         $before_circle = $this->Circle->read();
         //プライバシー設定が変更されているか判定
         $is_privacy_changed = false;
@@ -86,11 +109,10 @@ class CirclesController extends AppController
         ) {
             $is_privacy_changed = true;
         }
+        // team_all_flg は変更不可
+        $this->request->data['Circle']['team_all_flg'] = $before_circle['Circle']['team_all_flg'];
+
         if ($this->Circle->edit($this->request->data)) {
-            if (!empty($this->Circle->add_new_member_list)) {
-                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_ADD_USER, $this->Circle->id,
-                                                 null, $this->Circle->add_new_member_list);
-            }
             if ($is_privacy_changed) {
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING,
                                                  $this->Circle->id);
@@ -103,15 +125,58 @@ class CirclesController extends AppController
         $this->redirect($this->referer());
     }
 
+    /**
+     * サークルメンバー追加
+     */
+    public function add_member()
+    {
+        $this->request->allowMethod('put');
+        $this->Circle->id = $this->request->params['named']['circle_id'];
+        $before_circle = null;
+        try {
+            if (!$this->Circle->exists()) {
+                throw new RuntimeException(__d('gl', "このサークルは存在しません。"));
+            }
+            if (!$this->Circle->CircleMember->isAdmin($this->Auth->user('id'), $this->Circle->id)) {
+                throw new RuntimeException(__d('gl', "サークルの変更ができるのはサークル管理者のみです。"));
+            }
+            $before_circle = $this->Circle->read();
+            if ($before_circle['Circle']['team_all_flg']) {
+                throw new RuntimeException(__d('gl', "チーム全体サークルは変更出来ません。"));
+            }
+            $this->request->data['Circle']['team_all_flg'] = $before_circle['Circle']['team_all_flg'];
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage());
+            $this->redirect($this->referer());
+            return;
+        }
+
+        if ($this->Circle->addMember($this->request->data)) {
+            $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_ADD_USER, $this->Circle->id,
+                                             null, $this->Circle->add_new_member_list);
+            $this->Pnotify->outSuccess(__d('gl', "サークルメンバーを追加しました。"));
+        }
+        else {
+            $this->Pnotify->outError(__d('gl', "サークルメンバーの追加に失敗しました。"));
+        }
+        $this->redirect($this->referer());
+    }
+
     public function delete()
     {
         $this->Circle->id = $this->request->params['named']['circle_id'];
         try {
             if (!$this->Circle->exists()) {
-                throw new RuntimeException(__('gl', "このサークルは存在しません。"));
+                throw new RuntimeException(__d('gl', "このサークルは存在しません。"));
             }
             if (!$this->Circle->CircleMember->isAdmin($this->Auth->user('id'), $this->Circle->id)) {
-                throw new RuntimeException(__('gl', "サークルの削除ができるのはサークル管理者のみです。"));
+                throw new RuntimeException(__d('gl', "サークルの削除ができるのはサークル管理者のみです。"));
+            }
+            $teamAllCircle = $this->Circle->getTeamAllCircle();
+            if (isset($teamAllCircle["Circle"]["id"]) &&
+                $teamAllCircle["Circle"]["id"] == $this->Circle->id
+            ) {
+                throw new RuntimeException(__d('gl', "チーム全体サークルは削除できません。"));
             }
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
@@ -134,6 +199,14 @@ class CirclesController extends AppController
             $this->Circle->getPublicCircles('non-joined', strtotime("-1 week"), null, 'Circle.created desc'),
             $this->Circle->getPublicCircles('non-joined', null, strtotime("-1 week"), 'Circle.modified desc')
         );
+        // チーム全体サークルを先頭に移動する
+        foreach ($joined_circles as $k => $circle) {
+            if ($circle['Circle']['team_all_flg']) {
+                $team_all_circle = array_splice($joined_circles, $k, 1);
+                array_unshift($joined_circles, $team_all_circle[0]);
+                break;
+            }
+        }
         $this->set(compact('joined_circles', 'non_joined_circles'));
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
@@ -175,4 +248,116 @@ class CirclesController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
+    /**
+     * メンバーをサークル管理者に設定/解除
+     */
+    public function ajax_edit_admin_status()
+    {
+        $this->request->allowMethod('post');
+        $this->_ajaxPreProcess();
+
+        // validate
+        $this->Circle->id = $this->request->params['named']['circle_id'];
+        if (!$this->Circle->exists()) {
+            return $this->_ajaxGetResponse($this->_makeEditErrorResult(__d('gl', "このサークルは存在しません。")));
+        }
+        if (!$this->Circle->CircleMember->isAdmin($this->Auth->user('id'), $this->Circle->id)) {
+            return $this->_ajaxGetResponse($this->_makeEditErrorResult(__d('gl', "サークルの変更ができるのはサークル管理者のみです。")));
+        }
+        // 最後の管理者を外そうとした場合
+        $admin_list = $this->Circle->CircleMember->getAdminMemberList($this->Circle->id, true);
+        if ($this->request->data['CircleMember']['admin_flg'] == "0" && count($admin_list) == 1) {
+            return $this->_ajaxGetResponse($this->_makeEditErrorResult(__d('gl', "サークルの管理者を１人以上設定する必要があります。")));
+        }
+
+        // 管理者ステータス変更処理
+        $res = $this->Circle->CircleMember->editAdminStatus($this->Circle->id,
+                                                            $this->request->data['CircleMember']['user_id'],
+                                                            $this->request->data['CircleMember']['admin_flg']);
+        // 処理失敗
+        if (!$res) {
+            return $this->_ajaxGetResponse($this->_makeEditErrorResult(__d('gl', "処理中にエラーが発生しました。")));
+        }
+
+        // 処理成功
+        $result = [
+            'error'       => false,
+            'result'      => [
+                'user_id'   => $this->request->data['CircleMember']['user_id'],
+                'admin_flg' => $this->request->data['CircleMember']['admin_flg'],
+            ],
+            'self_update' => ($this->Auth->user('id') == $this->request->data['CircleMember']['user_id']) ? true : false,
+            'message'     => [
+                'title' => __d('notify', "成功"),
+                'text'  => $this->request->data['CircleMember']['admin_flg']
+                    ? __d('gl', "管理者に設定しました。")
+                    : __d('gl', "管理者から外しました。"),
+            ],
+        ];
+        return $this->_ajaxGetResponse($result);
+    }
+
+    /**
+     * メンバーをサークルから外す
+     */
+    public function ajax_leave_circle()
+    {
+        $this->request->allowMethod('post');
+        $this->_ajaxPreProcess();
+
+        // validate
+        $this->Circle->id = $this->request->params['named']['circle_id'];
+        if (!$this->Circle->exists()) {
+            return $this->_ajaxGetResponse($this->_makeEditErrorResult(__d('gl', "このサークルは存在しません。")));
+        }
+        if (!$this->Circle->CircleMember->isAdmin($this->Auth->user('id'), $this->Circle->id)) {
+            return $this->_ajaxGetResponse($this->_makeEditErrorResult(__d('gl', "サークルの変更ができるのはサークル管理者のみです。")));
+        }
+        $admin_list = $this->Circle->CircleMember->getAdminMemberList($this->Circle->id, true);
+        if ($this->request->data['CircleMember']['user_id'] == end($admin_list) && count($admin_list) == 1) {
+            return $this->_ajaxGetResponse($this->_makeEditErrorResult(__d('gl', "サークルの管理者を１人以上設定する必要があります。")));
+        }
+
+        // サークルから外す処理
+        $res = $this->Circle->CircleMember->unjoinMember($this->Circle->id,
+                                                         $this->request->data['CircleMember']['user_id']);
+        // 処理失敗
+        if (!$res) {
+            return $this->_ajaxGetResponse($this->_makeEditErrorResult(__d('gl', "処理中にエラーが発生しました。")));
+        }
+
+        // 処理成功
+        $result = [
+            'error'       => false,
+            'result'      => [
+                'user_id' => $this->request->data['CircleMember']['user_id']
+            ],
+            'self_update' => ($this->Auth->user('id') == $this->request->data['CircleMember']['user_id']) ? true : false,
+            'message'     => [
+                'title' => __d('notify', "成功"),
+                'text'  => __d('gl', "サークルから外しました。"),
+            ],
+        ];
+        return $this->_ajaxGetResponse($result);
+    }
+
+    /**
+     * ajax エラー用レスポンスデータを返す
+     *
+     * @param $message
+     *
+     * @return array
+     */
+    private function _makeEditErrorResult($message)
+    {
+        return [
+            'error'       => true,   // エラーの有無
+            'result'      => [],     // 更新されたデータ
+            'self_update' => false,  // 操作者自身が更新されたか
+            'message'     => [
+                'title' => __d('notify', "エラー"),
+                'text'  => $message,
+            ],
+        ];
+    }
 }

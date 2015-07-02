@@ -78,7 +78,17 @@ class CircleTest extends CakeTestCase
     {
         $this->Circle->my_uid = 1;
         $this->Circle->current_team_id = 1;
-        $this->Circle->getPublicCircles($type = 'all');
+        $this->Circle->Team->TeamMember->current_team_id = 1;
+
+        $circles = $this->Circle->getPublicCircles($type = 'all');
+        // CircleMemberに含まれているのが、全員アクティブなチームメンバーか確認
+        $active_user_ids = $this->Circle->Team->TeamMember->getActiveTeamMembersList();
+        foreach ($circles as $circle) {
+            foreach ($circle['CircleMember'] as $member) {
+                $this->assertContains($member['user_id'], $active_user_ids);
+            }
+        }
+
         $this->Circle->getPublicCircles($type = 'joined');
         $this->Circle->getPublicCircles($type = 'non-joined');
         $this->Circle->my_uid = 2;
@@ -105,6 +115,10 @@ class CircleTest extends CakeTestCase
         $this->Circle->current_team_id = 1;
         $this->Circle->PostShareCircle->Post->my_uid = 1;
         $this->Circle->PostShareCircle->Post->current_team_id = 1;
+        $this->Circle->PostShareCircle->my_uid = 1;
+        $this->Circle->PostShareCircle->current_team_id = 1;
+        $this->Circle->CircleMember->my_uid = 1;
+        $this->Circle->CircleMember->current_team_id = 1;
     }
 
     function testIsSecret()
@@ -113,5 +127,119 @@ class CircleTest extends CakeTestCase
         $res = $this->Circle->isSecret($this->Circle->id);
         $this->assertTrue(empty($res));
     }
+
+    function testGetTeamAllCircle()
+    {
+        // 正常系
+        $this->Circle->current_team_id = 1;
+        $testAllCircle = $this->Circle->getTeamAllCircle();
+        $this->assertEquals(1, $testAllCircle['Circle']['team_id']);
+        $this->assertEquals(1, $testAllCircle['Circle']['team_all_flg']);
+
+        // 存在しないチームの場合
+        $this->Circle->current_team_id = 9999999;
+        $testAllCircle = $this->Circle->getTeamAllCircle();
+        $this->assertEmpty($testAllCircle);
+    }
+
+    function testGetCirclesAndMemberById()
+    {
+        $this->Circle->current_team_id = 1;
+        $this->Circle->Team->TeamMember->current_team_id = 1;
+
+        $circles = $this->Circle->getCirclesAndMemberById([1]);
+        $this->assertNotEmpty($circles);
+
+        // CircleMemberに含まれているのが、全員アクティブなチームメンバーか確認
+        $active_user_ids = $this->Circle->Team->TeamMember->getActiveTeamMembersList();
+        foreach ($circles as $circle) {
+            foreach ($circle['CircleMember'] as $member) {
+                $this->assertContains($member['user_id'], $active_user_ids);
+            }
+        }
+    }
+
+    function testEditFailed()
+    {
+        $this->Circle->current_team_id = 1;
+        $this->Circle->Team->TeamMember->current_team_id = 1;
+
+        $circles = $this->Circle->edit([]);
+        $this->assertFalse($circles);
+    }
+
+
+    function testAddMember()
+    {
+        $this->Circle->current_team_id = 1;
+        $this->Circle->CircleMember->current_team_id = 1;
+
+        $circle_id = 1;
+        $member_list = $this->Circle->CircleMember->getMemberList($circle_id);
+        $member_count = count($member_list);
+        $data = [
+            'Circle' => [
+                'id'           => 1,
+                'members'      => 'user_13',
+                'team_all_flg' => false,
+            ]
+        ];
+        $res = $this->Circle->addMember($data);
+        $this->assertTrue($res);
+
+        // メンバーが増えているか確認
+        $new_member_list = $this->Circle->CircleMember->getMemberList($circle_id);
+        $this->assertEquals($member_count + 1, count($new_member_list));
+    }
+
+    function testAddMemberFailed()
+    {
+        $this->Circle->current_team_id = 1;
+        $this->Circle->CircleMember->current_team_id = 1;
+
+        // パラメータ不正
+        $data = [
+            'Circle' => [
+                'id'           => 1,
+                'members'      => 'user_13',
+            ]
+        ];
+        $res = $this->Circle->addMember($data);
+        $this->assertFalse($res);
+
+        $data = [
+            'Circle' => [
+                'id'           => 1,
+                'members'      => 'user_',
+                'team_all_flg' => false,
+            ]
+        ];
+        $res = $this->Circle->addMember($data);
+        $this->assertFalse($res);
+
+        // チーム全体サークルはメンバー追加不可
+        $data = [
+            'Circle' => [
+                'id'           => 3,
+                'members'      => 'user_13',
+                'team_all_flg' => true,
+
+            ]
+        ];
+        $res = $this->Circle->addMember($data);
+        $this->assertFalse($res);
+
+        // 重複ユーザー
+        $data = [
+            'Circle' => [
+                'id'           => 1,
+                'members'      => 'user_2',
+                'team_all_flg' => false,
+            ]
+        ];
+        $res = $this->Circle->addMember($data);
+        $this->assertFalse($res);
+    }
+
 
 }

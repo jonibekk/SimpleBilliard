@@ -801,7 +801,7 @@ class User extends AppModel
                 'User.id'         => $user_list,
                 'User.active_flg' => true,
                 'OR'              => [
-                    'CONCAT(`User.first_name`," ",`User.last_name`) Like ?'           => "%" . $keyword . "%",
+                    'CONCAT(`User.first_name`," ",`User.last_name`) Like ?'                       => "%" . $keyword . "%",
                     'CONCAT(`SearchLocalName.first_name`," ",`SearchLocalName.last_name`) Like ?' => "%" . $keyword . "%",
                 ]
             ],
@@ -849,7 +849,8 @@ class User extends AppModel
         $circles = $this->CircleMember->Circle->getCirclesByKeyword($keyword, $limit);
         $circle_res = [];
         foreach ($circles as $val) {
-            $data['id'] = 'circle_' . $val['Circle']['id'];
+            $data = [];
+            $data['id'] = $val['Circle']['team_all_flg'] ? 'public' : 'circle_' . $val['Circle']['id'];
             $data['text'] = $val['Circle']['name'];
             $data['image'] = $Upload->uploadUrl($val, 'Circle.photo', ['style' => 'small']);
             $circle_res[] = $data;

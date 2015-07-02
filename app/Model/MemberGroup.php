@@ -45,10 +45,47 @@ class MemberGroup extends AppModel
         $options = [
             'fields'     => ['user_id'],
             'conditions' => [
-                'team_id' => $team_id,
+                'team_id'  => $team_id,
                 'group_id' => $group_id
             ]
         ];
         return $this->find('list', $options);
     }
+
+    function getMyGroupList()
+    {
+        $options = [
+            'conditions' => [
+                'MemberGroup.team_id' => $this->current_team_id,
+                'MemberGroup.user_id' => $this->my_uid,
+            ],
+            'contain'    => [
+                'Group' => [
+                    'conditions' => ['Group.active_flg' => true,],
+                    'fields'     => ['Group.id', 'Group.name'],
+                ]
+            ]
+        ];
+        $res = $this->find('all', $options);
+        $res = Hash::combine($res, '{n}.Group.id', '{n}.Group.name');
+        return $res;
+    }
+
+    /**
+     * まだグループビジョンが存在しないグループのリストを返す
+     *
+     * @return array|null
+     */
+    function getMyGroupListNotExistsVision()
+    {
+        $group_list = $this->getMyGroupList();
+        $group_ids = array_keys($group_list);
+        $group_visions = $this->Group->GroupVision->getGroupVisionsByGroupIds($group_ids, true);
+        $exists_group_ids = array_unique(Hash::extract($group_visions, '{n}.GroupVision.group_id'));
+        foreach ($exists_group_ids as $gid) {
+            unset($group_list[$gid]);
+        }
+        return $group_list;
+    }
+
 }

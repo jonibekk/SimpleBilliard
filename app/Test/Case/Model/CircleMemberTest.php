@@ -148,12 +148,100 @@ class CircleMemberTest extends CakeTestCase
 
     public function testUnjoinMember()
     {
-        $circle_id = '18';
+        $circle_id = '1';
         $this->CircleMember->my_uid = 1;
         $this->CircleMember->current_team_id = 1;
+
+        // 既存のメンバー
+        $users = $this->CircleMember->find(
+            'list',
+            [
+                'fields'     => [
+                    'CircleMember.user_id',
+                    'CircleMember.user_id'
+                ],
+                'conditions' => [
+                    'CircleMember.circle_id' => $circle_id
+                ],
+            ]
+        );
+        $this->assertTrue(isset($users[$this->CircleMember->my_uid]));
+
+        // メンバーから外す
         $res = $this->CircleMember->unjoinMember($circle_id);
-        $this->assertTrue(empty($res));
+        $this->assertTrue($res);
+
+        // 自身が消えているか確認
+        $users = $this->CircleMember->find(
+            'list',
+            [
+                'fields'     => [
+                    'CircleMember.user_id',
+                    'CircleMember.user_id'
+                ],
+                'conditions' => [
+                    'CircleMember.circle_id' => $circle_id
+                ],
+            ]
+        );
+        $this->assertFalse(isset($users[$this->CircleMember->my_uid]));
     }
+
+    public function testUnjoinMemberWithUserId()
+    {
+        $this->CircleMember->current_team_id = 1;
+        $this->CircleMember->my_uid = 1;
+        $circle_id = '1';
+        $user_id = '2';
+
+        // 既存のメンバー
+        $users = $this->CircleMember->find(
+            'list',
+            [
+                'fields'     => [
+                    'CircleMember.user_id',
+                    'CircleMember.user_id'
+                ],
+                'conditions' => [
+                    'CircleMember.circle_id' => $circle_id
+                ],
+            ]
+        );
+        $this->assertTrue(isset($users[$user_id]));
+
+        // ユーザーID指定でサークルから削除
+        $res = $this->CircleMember->unjoinMember($circle_id, $user_id);
+        $this->assertTrue($res);
+
+        // 指定ユーザーが消えているか確認
+        $users = $this->CircleMember->find(
+            'list',
+            [
+                'fields'     => [
+                    'CircleMember.user_id',
+                    'CircleMember.user_id'
+                ],
+                'conditions' => [
+                    'CircleMember.circle_id' => $circle_id
+                ],
+            ]
+        );
+        $this->assertFalse(isset($users[$user_id]));
+        $this->assertTrue(isset($users[$this->CircleMember->my_uid]));
+    }
+
+    public function testUnjoinMemberWithInvalidUser()
+    {
+        $this->CircleMember->current_team_id = 1;
+        $this->CircleMember->my_uid = 1;
+        $circle_id = '1';
+        $user_id = '9999';
+
+        // ユーザーID指定でサークルから削除
+        $res = $this->CircleMember->unjoinMember($circle_id, $user_id);
+        $this->assertEmpty($res);
+    }
+
 
     public function testShowHideStats()
     {
@@ -177,6 +265,38 @@ class CircleMemberTest extends CakeTestCase
         );
 
         $this->assertNotEquals($expected, $result);
+    }
+
+    public function testGetMyCircle()
+    {
+        $this->CircleMember->my_uid = 1;
+        $this->CircleMember->current_team_id = 1;
+        $result = $this->CircleMember->getMyCircle();
+        $this->assertNotEmpty($result);
+        // 先頭はチーム全体サークル
+        $this->assertEquals(1, $result[0]['Circle']['team_all_flg']);
+    }
+
+    public function testEditAdminStatus()
+    {
+        $this->CircleMember->current_team_id = 1;
+        $circle_id = 1;
+        $user_id = 2;
+
+        // 管理者でないことを確認
+        $this->assertEmpty($this->CircleMember->isAdmin($user_id, $circle_id));
+
+        // 管理者に変更に変更
+        $res = $this->CircleMember->editAdminStatus($circle_id, $user_id, 1);
+        $this->assertTrue($res);
+        $this->assertEquals(1, $this->CircleMember->getAffectedRows());
+        $this->assertNotEmpty($this->CircleMember->isAdmin($user_id, $circle_id));
+
+        // 通常ユーザーに変更に変更
+        $res = $this->CircleMember->editAdminStatus($circle_id, $user_id, 0);
+        $this->assertTrue($res);
+        $this->assertEquals(1, $this->CircleMember->getAffectedRows());
+        $this->assertEmpty($this->CircleMember->isAdmin($user_id, $circle_id));
     }
 
 }

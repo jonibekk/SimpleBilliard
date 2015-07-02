@@ -6,5 +6,19 @@
     "FILTER_TWO_STEP": "2 Step Auth",
     "FILTER_INVITES": "pending",
     "PLACEHOLDER_NAME_FIELD": "Please Input User Name.",
-    "PLACEHOLDER_COACH_NAME_FIELD": "Please Input Coach User Name."
+    "PLACEHOLDER_COACH_NAME_FIELD": "Please Input Coach User Name.",
+
+    "TEAM_VISION": {
+        "ARCHIVE_FAILED_MASSAGE": "Failed.",
+        "ARCHIVE_SUCCESS_MASSAGE": "Success.",
+        "DELETE_FAILED_MASSAGE": "Failed.",
+        "DELETE_SUCCESS_MASSAGE": "Success."
+    },
+
+    "GROUP_VISION": {
+        "ARCHIVE_FAILED_MASSAGE": "Failed.",
+        "ARCHIVE_SUCCESS_MASSAGE": "Success.",
+        "DELETE_FAILED_MASSAGE": "Failed.",
+        "DELETE_SUCCESS_MASSAGE": "Success."
+    }
 }

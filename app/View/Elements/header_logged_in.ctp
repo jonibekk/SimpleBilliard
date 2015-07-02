@@ -61,7 +61,7 @@
                 </li>
                 <li class="mtb_5px mtb-sm_0">
                     <a class="header-team header_l-icons <?= $current_global_menu == "team" ? "activeColumn" : null ?>"
-                       href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'member_list']) ?>">
+                       href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'main']) ?>">
                         <div class="ta-sm_c">
                             <i class="fa fa-users header-link header-icon nav-xxs-icon"></i>
 
@@ -138,6 +138,20 @@
                                     <span class="font_verydark"><?= __d('gl', "サークルを作成") ?></span>
                                 </a>
                             </li>
+                            <li>
+                                <a href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'add_group_vision']) ?>">
+                                    <i class="fa fa-plane header-drop-icons"></i>
+                                    <span class="font_verydark"><?= __d('gl', "グループビジョンを作成") ?></span>
+                                </a>
+                            </li>
+                            <?php if ($my_member_status['TeamMember']['admin_flg']): ?>
+                                <li>
+                                    <a href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'add_team_vision']) ?>">
+                                        <i class="fa fa-rocket header-drop-icons"></i>
+                                        <span class="font_verydark"><?= __d('gl', "チームビジョンを作成") ?></span>
+                                    </a>
+                                </li>
+                            <? endif; ?>
                         <?php endif; ?>
                         <li>
                             <a href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'add']) ?>">

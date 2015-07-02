@@ -79,7 +79,9 @@ echo $this->Html->script('gl_basic');
             g: "<?=__d('gl',"検索文字列が")?>",
             h: "<?=__d('gl',"文字長すぎます")?>",
             i: "<?=__d('gl',"最多で")?>",
-            j: "<?=__d('gl',"項目までしか選択できません")?>"
+            j: "<?=__d('gl',"項目までしか選択できません")?>",
+            k: "<?=__d('gl',"出したい成果を選択する")?>",
+            l: "<?=__d('gl',"出したい成果はありません")?>"
         },
         url: {
             a: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_users'])?>",
@@ -90,7 +92,6 @@ echo $this->Html->script('gl_basic');
             f: "<?=$this->Html->url(['controller'=>'notifications','action'=>'ajax_get_new_notify_count'])?>",
             g: "<?=$this->Html->url(['controller'=>'notifications','action'=>'ajax_get_latest_notify_items'])?>",
             h: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_term_start_end'])?>",
-            // ここからチームページのAngularJSの使用URL
             i: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_team_member'])?>/",
             j: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_team_member_init'])?>/",
             k: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_current_team_group_list'])?>/",
@@ -102,20 +103,34 @@ echo $this->Html->script('gl_basic');
             q: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_set_current_team_evaluation_flag'])?>/",
             r: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_term_start_end_by_edit'])?>",
             s: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_circles_users'])?>",
-            t: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_invite_member_list'])?>"
+            t: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_invite_member_list'])?>",
+            u: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_team_vision'])?>/",
+            v: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_set_team_vision_archive'])?>/",
+            w: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_delete_team_vision'])?>/",
+            x: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_team_admin_user_check'])?>/",
+            y: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_group_vision'])?>/",
+            z: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_set_group_vision_archive'])?>/",
+            aa: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_delete_group_vision'])?>/",
+            ab: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_login_user_group_id'])?>/",
+            ac: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_team_vision_detail'])?>/",
+            ad: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_group_vision_detail'])?>/"
         },
         data: {
             a: <?=isset($select2_default)?$select2_default:"[]"?>,
             b: function (element, callback) {
                 var data = [{
                     <?php if(isset($current_circle)&&!empty($current_circle)):?>
+                    <?php if($current_circle['Circle']['team_all_flg']): ?>
+                    id: "public",
+                    <?php else: ?>
                     id: "circle_<?=$current_circle['Circle']['id']?>",
+                    <?php endif ?>
                     text: "<?=h($current_circle['Circle']['name'])?>",
                     image: "<?=$this->Upload->uploadUrl($current_circle, 'Circle.photo', ['style' => 'small'])?>"
-                    <?php else:?>
+                    <?php elseif(isset($team_all_circle)&&!empty($team_all_circle)):?>
                     id: 'public',
-                    text: "<?=__d('gl',"チーム全体")?>",
-                    image: "<?=isset($my_member_status)?$this->Upload->uploadUrl($my_member_status, 'Team.photo', ['style' => 'small']):null?>"
+                    text: "<?=h($team_all_circle['Circle']['name'])?>",
+                    image: "<?=$this->Upload->uploadUrl($team_all_circle, 'Circle.photo', ['style' => 'small'])?>"
                     <?php endif;?>
                 }];
                 callback(data);
@@ -128,7 +143,30 @@ echo $this->Html->script('gl_basic');
             h: "<?=viaIsSet($circle_id)?>",
             i: "<?=$this->Session->read('current_team_id')?>",
             j: "<?= isset($posts)?count($posts):null?>",
-            k: <?=MY_PREVIOUS_GOALS_DISPLAY_NUMBER?>
+            k: <?=MY_PREVIOUS_GOALS_DISPLAY_NUMBER?>,
+            l: function (element, callback) {
+                var data = [
+                    {
+                        id: "coach",
+                        text: "<?=__d('gl',"コーチ")?>",
+                        icon: "fa fa-venus-double",
+                        locked: true
+                    },
+                    {
+                        id: "followers",
+                        text: "<?=__d('gl',"フォロワー")?>",
+                        icon: "fa fa-heart",
+                        locked: true
+                    },
+                    {
+                        id: "collaborators",
+                        text: "<?=__d('gl',"コラボレータ")?>",
+                        icon: "fa fa-child",
+                        locked: true
+                    }
+                ];
+                callback(data);
+            }
         },
         pusher: {
             key: "<?=PUSHER_KEY?>",

@@ -6,6 +6,7 @@ App::uses('AppController', 'Controller');
  *
  * @property User            $User
  * @property Invite          $Invite
+ * @property Circle          $Circle
  * @property TwoFaComponent  $TwoFa
  */
 class UsersController extends AppController
@@ -13,6 +14,7 @@ class UsersController extends AppController
     public $uses = [
         'User',
         'Invite',
+        'Circle',
     ];
     public $components = [
         'TwoFa',
@@ -809,7 +811,6 @@ class UsersController extends AppController
     {
         //トークン認証
         $invite = $this->Invite->verify($token);
-
         //チーム参加
         $this->User->TeamMember->add($this->Auth->user('id'), $invite['Invite']['team_id']);
         //デフォルトチーム設定
@@ -818,6 +819,15 @@ class UsersController extends AppController
         $this->_refreshAuth();
         //チーム切換え
         $this->_switchTeam($invite['Invite']['team_id']);
+        // 「チーム全体」サークルに追加
+        // Circle と CircleMember の current_team_id を一時的に変更
+        $tmp = $this->Circle->current_team_id;
+        $this->Circle->current_team_id = $invite['Invite']['team_id'];
+        $this->Circle->CircleMember->current_team_id = $invite['Invite']['team_id'];
+        $teamAllCircle = $this->Circle->getTeamAllCircle();
+        $this->Circle->CircleMember->joinNewMember($teamAllCircle['Circle']['id']);
+        $this->Circle->current_team_id = $tmp;
+        $this->Circle->CircleMember->current_team_id = $tmp;
         //招待者に通知
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_USER_JOINED_TO_INVITED_TEAM, $invite['Invite']['id']);
         return $this->User->TeamMember->Team->findById($invite['Invite']['team_id']);
