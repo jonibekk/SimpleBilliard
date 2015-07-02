@@ -15,6 +15,7 @@ class MemberGroupTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.group_vision',
         'app.member_group',
         'app.team',
         'app.badge',
@@ -100,20 +101,45 @@ class MemberGroupTest extends CakeTestCase
     function testGetMyGroupList()
     {
         $this->_setDefault();
-        $this->MemberGroup->Group->save(
+        $this->_saveGroup();
+        $this->assertNotEmpty($this->MemberGroup->getMyGroupList());
+    }
+
+    function testGetMyGroupListNotExistsVisionNotEmpty()
+    {
+        $this->_setDefault();
+        $this->_saveGroup();
+        $this->assertNotEmpty($this->MemberGroup->getMyGroupListNotExistsVision());
+    }
+
+    function testGetMyGroupListNotExistsVisionEmpty()
+    {
+        $this->_setDefault();
+        $this->MemberGroup->Group->deleteAll(['Group.team_id'=>1]);
+        $this->MemberGroup->deleteAll(['MemberGroup.team_id'=>1]);
+        $this->_saveGroup();
+        $group_id = $this->MemberGroup->Group->getLastInsertID();
+        $this->MemberGroup->Group->GroupVision->save(
             [
-                'name'    => 'test',
-                'team_id' => 1,
+                'name'             => 'test',
+                'group_id'         => $group_id,
+                'team_id'          => 1,
+                'create_user_id'   => 1,
+                'modified_user_id' => 1,
             ]
         );
+        $this->assertEmpty($this->MemberGroup->getMyGroupListNotExistsVision());
+    }
+
+    function _saveGroup()
+    {
+        $this->MemberGroup->Group->save(['name' => 'test', 'team_id' => 1,]);
         $this->MemberGroup->save(
             [
-                'team_id'  => 1,
-                'user_id'  => 1,
+                'team_id'  => 1, 'user_id' => 1,
                 'group_id' => $this->MemberGroup->Group->getLastInsertID()
             ]
         );
-        $this->assertNotEmpty($this->MemberGroup->getMyGroupList());
     }
 
     function _setDefault()

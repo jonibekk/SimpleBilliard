@@ -6,6 +6,7 @@ App::uses('AppModel', 'Model');
  *
  * @property Team        $Team
  * @property MemberGroup $MemberGroup
+ * @property GroupVision $GroupVision
  */
 class Group extends AppModel
 {
@@ -36,7 +37,8 @@ class Group extends AppModel
      * @var array
      */
     public $hasMany = [
-        'MemberGroup'
+        'MemberGroup',
+        'GroupVision',
     ];
 
     function getByAllName($team_id)

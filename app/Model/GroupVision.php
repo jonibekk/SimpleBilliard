@@ -96,15 +96,17 @@ class GroupVision extends AppModel
 
     /**
      * チームに所属するすべてのグループビジョンを取得
+     *
      * @param $team_id
      * @param $active_flg
+     *
      * @return array|null
      */
     function getGroupVision($team_id, $active_flg)
     {
         $options = [
             'conditions' => [
-                'team_id' => $team_id,
+                'team_id'    => $team_id,
                 'active_flg' => $active_flg,
             ]
         ];
@@ -112,9 +114,31 @@ class GroupVision extends AppModel
     }
 
     /**
+     * グループIDからアクティブなグループビジョンを取得
+     *
+     * @param      $group_ids
+     * @param bool $active_flg
+     *
+     * @return array|null
+     */
+    function getGroupVisionsByGroupIds($group_ids, $active_flg = true)
+    {
+        $options = [
+            'conditions' => [
+                'group_id'   => $group_ids,
+                'active_flg' => $active_flg
+            ]
+        ];
+        $res = $this->find('all', $options);
+        return $res;
+    }
+
+    /**
      * AngularJSのテンプレート側から処理しやすく加工
+     *
      * @param $team_id
      * @param $data
+     *
      * @return mixed
      */
     function convertData($team_id, $data)
@@ -124,7 +148,8 @@ class GroupVision extends AppModel
         $time = new TimeExHelper(new View());
 
         foreach ($data as $key => $group) {
-            $data[$key]['GroupVision']['photo_path'] = $upload->uploadUrl($group['GroupVision'], 'GroupVision.photo', ['style' => 'large']);
+            $data[$key]['GroupVision']['photo_path'] = $upload->uploadUrl($group['GroupVision'], 'GroupVision.photo',
+                                                                          ['style' => 'large']);
             $data[$key]['GroupVision']['modified'] = $time->elapsedTime(h($group['GroupVision']['modified']));
             if (isset($group_list[$group['GroupVision']['group_id']]) === true) {
                 $data[$key]['GroupVision']['group_name'] = $group_list[$group['GroupVision']['group_id']];
@@ -135,8 +160,10 @@ class GroupVision extends AppModel
 
     /**
      * アーカイブ設定
+     *
      * @param $group_vision_id
      * @param $active_flg
+     *
      * @return mixed
      * @throws Exception
      */
@@ -148,10 +175,13 @@ class GroupVision extends AppModel
 
     /**
      * 削除
+     *
      * @param $group_vision_id
+     *
      * @return bool
      */
-    function deleteGroupVision($group_vision_id){
+    function deleteGroupVision($group_vision_id)
+    {
         $this->id = $group_vision_id;
         return $this->delete();
     }

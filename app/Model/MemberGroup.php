@@ -71,4 +71,21 @@ class MemberGroup extends AppModel
         return $res;
     }
 
+    /**
+     * まだグループビジョンが存在しないグループのリストを返す
+     *
+     * @return array|null
+     */
+    function getMyGroupListNotExistsVision()
+    {
+        $group_list = $this->getMyGroupList();
+        $group_ids = array_keys($group_list);
+        $group_visions = $this->Group->GroupVision->getGroupVisionsByGroupIds($group_ids, true);
+        $exists_group_ids = array_unique(Hash::extract($group_visions, '{n}.GroupVision.group_id'));
+        foreach ($exists_group_ids as $gid) {
+            unset($group_list[$gid]);
+        }
+        return $group_list;
+    }
+
 }
