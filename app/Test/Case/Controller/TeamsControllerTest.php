@@ -630,14 +630,14 @@ class TeamsControllerTest extends ControllerTestCase
         $this->testAction('/teams/save_goal_categories', ['method' => 'POST', 'data' => $data]);
     }
 
-    function testAjaxTeamAdminUserCheckReturnTrue ()
+    function testAjaxTeamAdminUserCheckReturnTrue()
     {
         $Teams = $this->_getTeamsCommonMock();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $admin_flg = 1;
         $data = [
-            'user_id' => $Teams->Team->TeamMember->uid,
-            'team_id' => $Teams->Team->TeamMember->current_team_id,
+            'user_id'   => $Teams->Team->TeamMember->uid,
+            'team_id'   => $Teams->Team->TeamMember->current_team_id,
             'admin_flg' => $admin_flg
         ];
         $Teams->Team->TeamMember->save($data);
@@ -645,14 +645,14 @@ class TeamsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
-    function testAjaxTeamAdminUserCheckReturnFalse ()
+    function testAjaxTeamAdminUserCheckReturnFalse()
     {
         $Teams = $this->_getTeamsCommonMock();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $admin_flg = 0;
         $data = [
-            'user_id' => $Teams->Team->TeamMember->uid,
-            'team_id' => $Teams->Team->TeamMember->current_team_id,
+            'user_id'   => $Teams->Team->TeamMember->uid,
+            'team_id'   => $Teams->Team->TeamMember->current_team_id,
             'admin_flg' => $admin_flg
         ];
         $Teams->Team->TeamMember->save($data);
@@ -807,24 +807,54 @@ class TeamsControllerTest extends ControllerTestCase
         $Teams = $this->_getTeamsCommonMock();
         $Teams->Team->TeamMember->updateAll(['admin_flg' => false],
                                             ['TeamMember.user_id' => 1, 'TeamMember.team_id' => 1]);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Teams->Session->expects($this->any())->method('read')
+                       ->will($this->returnValueMap([['current_team_id', 1]]));
         $this->testAction('/teams/add_team_vision', ['method' => 'GET']);
     }
 
     function testAddTeamVisionGet()
     {
-        $this->_getTeamsCommonMock();
+        $Teams = $this->_getTeamsCommonMock();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Teams->Session->expects($this->any())->method('read')
+                       ->will($this->returnValueMap([['current_team_id', 1]]));
+        $this->testAction('/teams/add_team_vision', ['method' => 'GET']);
+    }
+
+    function testAddTeamVisionGetAlreadyExists()
+    {
+        $Teams = $this->_getTeamsCommonMock();
+        $data = [
+            'name'           => 'test',
+            'team_id'        => 1,
+            'create_user_id' => $Teams->Team->my_uid,
+            'modify_user_id' => $Teams->Team->my_uid,
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Teams->Session->expects($this->any())->method('read')
+                       ->will($this->returnValueMap([['current_team_id', 1]]));
+
+        $Teams->Team->TeamVision->create();
+        $Teams->Team->TeamVision->save($data);
         $this->testAction('/teams/add_team_vision', ['method' => 'GET']);
     }
 
     function testAddTeamVisionPostNoData()
     {
-        $this->_getTeamsCommonMock();
+        $Teams = $this->_getTeamsCommonMock();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Teams->Session->expects($this->any())->method('read')
+                       ->will($this->returnValueMap([['current_team_id', 1]]));
         $this->testAction('/teams/add_team_vision', ['method' => 'POST', 'data' => []]);
     }
 
     function testAddTeamVisionPostEmpty()
     {
-        $this->_getTeamsCommonMock();
+        $Teams = $this->_getTeamsCommonMock();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Teams->Session->expects($this->any())->method('read')
+                       ->will($this->returnValueMap([['current_team_id', 1]]));
         $this->testAction('/teams/add_team_vision',
                           ['method' => 'POST', 'data' => ['TeamVision' => ['name' => null]]]);
     }
@@ -832,6 +862,9 @@ class TeamsControllerTest extends ControllerTestCase
     function testAddTeamVisionPostSuccess()
     {
         $Teams = $this->_getTeamsCommonMock();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Teams->Session->expects($this->any())->method('read')
+                       ->will($this->returnValueMap([['current_team_id', 1]]));
         $Teams->Team->TeamMember->updateAll(['admin_flg' => true], ['user_id' => 1]);
         $data = [
             'TeamVision' => [
