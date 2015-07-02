@@ -214,6 +214,9 @@ $(document).ready(function () {
     $(document).on("click", '.modal-ajax-get-circle-edit', function (e) {
         e.preventDefault();
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        $modal_elm.on('hidden.bs.modal', function (e) {
+            $(this).remove();
+        });
         //noinspection JSUnusedLocalSymbols,CoffeeScriptUnusedLocalSymbols
         modalFormCommonBindEvent($modal_elm);
         var url = $(this).attr('href');
@@ -233,7 +236,8 @@ $(document).ready(function () {
                     });
                 });
 
-                $modal_elm.find('#EditCircleForm').bootstrapValidator({
+                $editCircleForm = $modal_elm.find('#EditCircleForm');
+                $editCircleForm.bootstrapValidator({
                     excluded: [':disabled'],
                     live: 'enabled',
                     feedbackIcons: {
@@ -255,6 +259,14 @@ $(document).ready(function () {
                         }
                     }
                 });
+                // submit ボタンが form 外にあるので、自力で制御する
+                $editCircleForm
+                    .on('error.field.bv', function (e) {
+                        $('#EditCircleFormSubmit').attr('disabled', 'disabled');
+                    })
+                    .on('success.field.bv', function (e) {
+                        $('#EditCircleFormSubmit').removeAttr('disabled');
+                    });
                 $modal_elm.modal();
             }).success(function () {
                 $('body').addClass('modal-open');
@@ -320,6 +332,10 @@ $(document).ready(function () {
         });
     });
 
+    //
+    $(document).on("submit", "form.ajax-edit-circle-admin-status", evAjaxEditCircleAdminStatus);
+    $(document).on("submit", "form.ajax-leave-circle", evAjaxLeaveCircle);
+
 
     //noinspection JSJQueryEfficiency
     $('.navbar-offcanvas').on('show.bs.offcanvas', function () {
@@ -331,6 +347,14 @@ $(document).ready(function () {
         $('#layer-black').css('display', 'none');
         $(".toggle-icon").removeClass('rotate').addClass('rotate-reverse').removeClass('fa-arrow-right').addClass('fa-navicon');
     });
+
+    // サークル編集画面のタブ切り替え
+    // タブによって footer 部分を切り替える
+    $(document).on('shown.bs.tab', '.modal-dialog.edit-circle a[data-toggle="tab"]', function (e) {
+        var $target = $(e.target);
+        var tabId = $target.attr('href').replace('#', '');
+        $target.closest('.modal-dialog').find('.modal-footer').hide().filter('.' + tabId + '-footer').show();
+    })
 
     if (cake.data.j == "0") {
         $('#FeedMoreReadLink').trigger('click');
@@ -1473,14 +1497,17 @@ function format(item) {
     }
 }
 function bindSelect2Members($this) {
+    var $select2elem = $this.find(".ajax_add_select2_members");
+    var url = $select2elem.attr('data-url');
+
     //noinspection JSUnusedLocalSymbols
-    $this.find(".ajax_add_select2_members").select2({
+    $select2elem.select2({
         'val': null,
         multiple: true,
         minimumInputLength: 2,
         placeholder: cake.message.notice.b,
         ajax: {
-            url: cake.url.a,
+            url: url ? url : cake.url.a,
             dataType: 'json',
             quietMillis: 100,
             cache: true,
@@ -2643,3 +2670,129 @@ $(document).ready(function () {
         }
     });
 });
+
+function evAjaxEditCircleAdminStatus(e) {
+    e.preventDefault();
+
+    var $this = $(this);
+    var user_id = $this.attr('data-user-id');
+
+    $.ajax({
+        url: $this.attr('action'),
+        type: 'POST',
+        dataType: 'json',
+        processData: false,
+        data: $this.serialize()
+    })
+        .done(function (data) {
+            // 処理失敗時
+            if (data.error) {
+                new PNotify({
+                    type: 'error',
+                    title: data.message.title,
+                    text: data.message.text,
+                    icon: "fa fa-check-circle",
+                    delay: 2000,
+                    mouse_reset: false
+                });
+            }
+            // 処理成功時
+            else {
+                new PNotify({
+                    type: 'success',
+                    title: data.message.title,
+                    text: data.message.text,
+                    icon: "fa fa-exclamation-triangle",
+                    delay: 2000,
+                    mouse_reset: false
+                });
+
+                // 操作者自身を情報を更新した場合
+                if (data.self_update) {
+                    window.location.href = '/';
+                    return;
+                }
+                // 操作者以外の情報を更新した場合
+                else {
+                    var $member_row = $('#edit-circle-member-row-' + user_id);
+                    // 非管理者 -> 管理者 の場合
+                    if (data.result.admin_flg == "1") {
+                        $member_row.find('.item-for-non-admin').hide();
+                        $member_row.find('.item-for-admin').show();
+                    }
+                    // 管理者 -> 非管理者 の場合
+                    else {
+                        $member_row.find('.item-for-admin').hide();
+                        $member_row.find('.item-for-non-admin').show();
+                    }
+                }
+            }
+        })
+        .fail(function (data) {
+            new PNotify({
+                type: 'error',
+                text: cake.message.notice.d,
+                delay: 4000,
+                mouse_reset: false
+            });
+        });
+}
+
+function evAjaxLeaveCircle(e) {
+    e.preventDefault();
+
+    var $this = $(this);
+    var user_id = $this.attr('data-user-id');
+
+    $.ajax({
+        url: $this.attr('action'),
+        type: 'POST',
+        dataType: 'json',
+        processData: false,
+        data: $this.serialize()
+    })
+        .done(function (data) {
+            // 処理失敗時
+            if (data.error) {
+                new PNotify({
+                    type: 'error',
+                    title: data.message.title,
+                    text: data.message.text,
+                    icon: "fa fa-check-circle",
+                    delay: 2000,
+                    mouse_reset: false
+                });
+            }
+            // 処理成功時
+            else {
+                new PNotify({
+                    type: 'success',
+                    title: data.message.title,
+                    text: data.message.text,
+                    icon: "fa fa-exclamation-triangle",
+                    delay: 2000,
+                    mouse_reset: false
+                });
+                // 操作者自身の情報更新した場合
+                if (data.self_update) {
+                    window.location.href = '/';
+                    return;
+                }
+                // 操作者以外の情報を更新した場合
+                else {
+                    var $member_row = $('#edit-circle-member-row-' + user_id);
+                    $member_row.fadeOut('fast', function () {
+                        $(this).remove();
+                    });
+                }
+            }
+        })
+        .fail(function (data) {
+            new PNotify({
+                type: 'error',
+                text: cake.message.notice.d,
+                delay: 4000,
+                mouse_reset: false
+            });
+        });
+}
