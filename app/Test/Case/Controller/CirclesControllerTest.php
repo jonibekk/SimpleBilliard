@@ -420,6 +420,44 @@ class CirclesControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
+    function testAjaxEditAdminStatusSelfUpdate()
+    {
+        // 非管理者 -> 管理者
+        $this->_getCirclesCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+
+        $data = [
+            'CircleMember' => [
+                'user_id'   => 2,
+                'admin_flg' => 1,
+            ]
+        ];
+        $ret = $this->testAction('/circles/ajax_edit_admin_status/circle_id:1', ['data' => $data, 'method' => 'POST']);
+        $json_data = json_decode($ret, true);
+        $this->assertEquals($json_data['error'], false);
+        $this->assertEquals(['user_id' => 2, 'admin_flg' => 1], $json_data['result']);
+        $this->assertArrayHasKey('message', $json_data);
+        $this->assertArrayHasKey('self_update', $json_data);
+
+        // 自分自身を管理者から外す
+        $this->_getCirclesCommonMock();
+
+        $data = [
+            'CircleMember' => [
+                'user_id'   => 1,
+                'admin_flg' => 0,
+            ]
+        ];
+        $ret = $this->testAction('/circles/ajax_edit_admin_status/circle_id:1', ['data' => $data, 'method' => 'POST']);
+        $json_data = json_decode($ret, true);
+        $this->assertEquals($json_data['error'], false);
+        $this->assertEquals(['user_id' => 1, 'admin_flg' => 0], $json_data['result']);
+        $this->assertArrayHasKey('message', $json_data);
+        $this->assertArrayHasKey('self_update', $json_data);
+
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
     function testAjaxEditAdminStatusUpdateFailed()
     {
         $Circles = $this->_getCirclesCommonMock();

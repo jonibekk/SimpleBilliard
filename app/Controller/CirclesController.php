@@ -267,25 +267,26 @@ class CirclesController extends AppController
             ],
         );
 
-        // validate
-        $this->Circle->id = $this->request->params['named']['circle_id'];
-        try {
-            if (!$this->Circle->exists()) {
-                throw new RuntimeException(__d('gl', "このサークルは存在しません。"));
-            }
-            if (!$this->Circle->CircleMember->isAdmin($this->Auth->user('id'), $this->Circle->id)) {
-                throw new RuntimeException(__d('gl', "サークルの変更ができるのはサークル管理者のみです。"));
-            }
-            // 最後の管理者を外そうとした場合
-            $admin_list = $this->Circle->CircleMember->getAdminMemberList($this->Circle->id, true);
-            if (!$this->request->data['CircleMember']['admin_flg'] && count($admin_list) == 1) {
-                throw new RuntimeException(__d('gl', "サークルの管理者を１人以上設定する必要があります。"));
-            }
-        } catch (RuntimeException $e) {
+        // エラー時のレスポンス用 共通処理 （codeclimate 対策）
+        $errorResult = function ($msg) use ($result) {
             $result['error'] = true;
             $result['message']['title'] = __d('notify', "エラー");
-            $result['message']['text'] = $e->getMessage();
-            return $this->_ajaxGetResponse($result);
+            $result['message']['text'] = $msg;
+            return $result;
+        };
+
+        // validate
+        $this->Circle->id = $this->request->params['named']['circle_id'];
+        if (!$this->Circle->exists()) {
+            return $this->_ajaxGetResponse($errorResult(__d('gl', "このサークルは存在しません。")));
+        }
+        if (!$this->Circle->CircleMember->isAdmin($this->Auth->user('id'), $this->Circle->id)) {
+            return $this->_ajaxGetResponse($errorResult(__d('gl', "サークルの変更ができるのはサークル管理者のみです。")));
+        }
+        // 最後の管理者を外そうとした場合
+        $admin_list = $this->Circle->CircleMember->getAdminMemberList($this->Circle->id, true);
+        if ($this->request->data['CircleMember']['admin_flg'] == "0" && count($admin_list) == 1) {
+            return $this->_ajaxGetResponse($errorResult(__d('gl', "サークルの管理者を１人以上設定する必要があります。")));
         }
 
         // 管理者ステータス変更
@@ -294,10 +295,7 @@ class CirclesController extends AppController
                                                             $this->request->data['CircleMember']['admin_flg']);
         // 処理失敗
         if (!$res) {
-            $result['error'] = true;
-            $result['message']['title'] = __d('notify', "エラー");
-            $result['message']['text'] = __d('gl', "処理中にエラーが発生しました。");
-            return $this->_ajaxGetResponse($result);
+            return $this->_ajaxGetResponse($errorResult(__d('gl', "処理中にエラーが発生しました。")));
         }
 
         // 処理成功
