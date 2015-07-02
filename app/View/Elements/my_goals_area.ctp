@@ -9,9 +9,38 @@
  * @var                    $my_goals
  * @var                    $collabo_goals
  * @var                    $follow_goals
+ * @var                    $vision
  */
 ?>
 <!-- START app/View/Elements/my_goals_area.ctp -->
+<?php if ($vision): ?>
+    <div class="col col-xxs-12 goals-column-head">
+    <span class="font_18px mt_5px font_gargoyleGray goals-column-title">
+        <?= __d('gl', 'ビジョン') ?> <i class="fa fa-caret-right"></i> <?= $vision['target_name'] ?>
+    </span>
+    </div>
+    <div class="col col-xxs-12 mt_5px mb_12px font_gargoyleGray">
+        <?=
+        $this->Html->image('ajax-loader.gif',
+                           [
+                               'class'         => 'lazy feed-img pull-left',
+                               'data-original' => $this->Upload->uploadUrl([$vision['model'] => $vision],
+                                                                           "{$vision['model']}.photo",
+                                                                           ['style' => 'medium'])
+                           ]
+        )
+        ?>
+        <?= $vision['name'] ?>
+        <?php
+        $method = $vision['model'] === 'TeamVision' ? 'vision_detail' : 'group_vision_detail';
+        ?>
+        <a class="pull-right"
+           href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'main', '#' => "{$method}/{$vision['id']}/true"]) ?>">
+            <?= __d('gl', '詳細へ') ?>
+        </a>
+
+    </div>
+<?php endif; ?>
 <div class="col col-xxs-12 goals-column-head">
     <span class="font_18px mt_5px font_gargoyleGray goals-column-title">
         <?= __d('gl', 'あなたのゴール') ?>(<?= $my_goals_count + $collabo_goals_count ?>)
@@ -22,7 +51,6 @@
         </i>
         <?= __d('gl', 'ゴールを作成') ?>
     </a>
-
 </div>
 <div id="LeaderGoals">
     <div class="col col-xxs-12 mt_16px font_gargoyleGray">
