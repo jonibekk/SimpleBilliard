@@ -764,9 +764,6 @@ function evChangeTargetSelectWithValue() {
     attrUndefinedCheck(this, 'target-id');
     attrUndefinedCheck(this, 'ajax-url');
     var target_id = $(this).attr("target-id");
-    if ($(this).val() == undefined || $(this).val() == 0 || $(this).val() == false) {
-        return;
-    }
     var url = $(this).attr("ajax-url") + $(this).val();
     setSelectOptions(url, target_id);
 }
@@ -909,10 +906,10 @@ $(function () {
     var goT = $("#gotop");
     goT.hover(
         function () {
-            $("#gotop-text").stop().animate({'right': '14px'}, 500);
+            $("#gotop-text").stop().animate({'right': '14px'}, 360);
         },
         function () {
-            $("#gotop-text").stop().animate({'right': '-140px'}, 500);
+            $("#gotop-text").stop().animate({'right': '-140px'}, 800);
         }
     );
 });
@@ -1287,6 +1284,11 @@ $(document).ready(function () {
         feedbackIcons: {},
         fields: {}
     });
+    $('#CommonActionDisplayForm').bootstrapValidator({
+        live: 'enabled',
+        feedbackIcons: {},
+        fields: {}
+    });
 
     //noinspection JSUnusedLocalSymbols
     $('#select2Member').select2({
@@ -1365,7 +1367,7 @@ $(document).ready(function () {
             }
         },
         data: [],
-        initSelection: cake.data.b,
+        initSelection: cake.data.l,
         formatSelection: format,
         formatResult: format,
         dropdownCssClass: 's2-post-dropdown',
@@ -1410,7 +1412,15 @@ $(document).ready(function () {
 });
 
 function format(item) {
-    return "<img style='width:14px;height: 14px' class='select2-item-img' src='" + item.image + "' alt='icon' /> " + "<span class='select2-item-txt'>" + item.text + "</span";
+    if ('image' in item) {
+        return "<img style='width:14px;height: 14px' class='select2-item-img' src='" + item.image + "' alt='icon' /> " + "<span class='select2-item-txt'>" + item.text + "</span>";
+    }
+    else if ('icon' in item) {
+        return "<span class='select2-item-txt-with-i'><i class='" + item.icon + "'></i> " + item.text + "</span>";
+    }
+    else {
+        return "<span class='select2-item-txt'>" + item.text + "</span>";
+    }
 }
 function bindSelect2Members($this) {
     //noinspection JSUnusedLocalSymbols
