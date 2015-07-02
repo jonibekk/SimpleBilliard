@@ -789,6 +789,9 @@ class TeamsController extends AppController
         $this->layout = LAYOUT_ONE_COLUMN;
         try {
             $this->Team->TeamMember->adminCheck();
+            if(!empty($this->Team->TeamVision->getTeamVision($this->Session->read('current_team_id'),true))){
+                throw new RuntimeException(__d('gl',"既にチームビジョンが存在する為、新規の追加はできません。"));
+            }
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
             return $this->redirect($this->referer());
