@@ -281,7 +281,7 @@
             <?=
             $this->Form->button(__d('gl', "変更を保存"),
                                 ['class'   => 'btn btn-primary pull-right',
-                                 'onclick' => "document.getElementById('EditCircleForm').submit(); return false;",
+                                 'onclick' => "$(this).attr('disabled', 'disabled'); document.getElementById('EditCircleForm').submit(); return false;",
                                  'div'     => false,]) ?>
             <button type="button" class="btn btn-link design-cancel pull-right mr_8px bd-radius_4px"
                     data-dismiss="modal"><?= __d('gl', "キャンセル") ?></button>
@@ -304,7 +304,7 @@
                 <?=
                 $this->Form->button(__d('gl', "メンバー追加"),
                                     ['class'   => 'btn btn-primary pull-right',
-                                     'onclick' => "document.getElementById('AddCircleMemberForm').submit(); return false;",
+                                     'onclick' => "$(this).attr('disabled', 'disabled'); document.getElementById('AddCircleMemberForm').submit(); return false;",
                                      'div'     => false,
                                     ]) ?>
             </div>

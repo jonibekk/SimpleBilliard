@@ -256,37 +256,18 @@ class CirclesController extends AppController
         $this->request->allowMethod('post');
         $this->_ajaxPreProcess();
 
-        // ajaxで返すデータ
-        $result = [
-            'error'       => false,  // エラーの有無
-            'result'      => [],     // 更新されたデータ
-            'self_update' => false,  // 操作者自身のデータが更新された場合に true
-            'message'     => [
-                'title' => __d('notify', "成功"),
-                'text'  => '',
-            ],
-        ];
-
-        // エラー時のレスポンス用 共通処理 （codeclimate 対策）
-        $errorResult = function ($msg) use ($result) {
-            $result['error'] = true;
-            $result['message']['title'] = __d('notify', "エラー");
-            $result['message']['text'] = $msg;
-            return $result;
-        };
-
         // validate
         $this->Circle->id = $this->request->params['named']['circle_id'];
         if (!$this->Circle->exists()) {
-            return $this->_ajaxGetResponse($errorResult(__d('gl', "このサークルは存在しません。")));
+            return $this->_ajaxGetResponse($this->_makeEditErrorResult(__d('gl', "このサークルは存在しません。")));
         }
         if (!$this->Circle->CircleMember->isAdmin($this->Auth->user('id'), $this->Circle->id)) {
-            return $this->_ajaxGetResponse($errorResult(__d('gl', "サークルの変更ができるのはサークル管理者のみです。")));
+            return $this->_ajaxGetResponse($this->_makeEditErrorResult(__d('gl', "サークルの変更ができるのはサークル管理者のみです。")));
         }
         // 最後の管理者を外そうとした場合
         $admin_list = $this->Circle->CircleMember->getAdminMemberList($this->Circle->id, true);
         if ($this->request->data['CircleMember']['admin_flg'] == "0" && count($admin_list) == 1) {
-            return $this->_ajaxGetResponse($errorResult(__d('gl', "サークルの管理者を１人以上設定する必要があります。")));
+            return $this->_ajaxGetResponse($this->_makeEditErrorResult(__d('gl', "サークルの管理者を１人以上設定する必要があります。")));
         }
 
         // 管理者ステータス変更処理
@@ -295,21 +276,24 @@ class CirclesController extends AppController
                                                             $this->request->data['CircleMember']['admin_flg']);
         // 処理失敗
         if (!$res) {
-            return $this->_ajaxGetResponse($errorResult(__d('gl', "処理中にエラーが発生しました。")));
+            return $this->_ajaxGetResponse($this->_makeEditErrorResult(__d('gl', "処理中にエラーが発生しました。")));
         }
 
         // 処理成功
-        $result['result'] = [
-            'user_id'   => $this->request->data['CircleMember']['user_id'],
-            'admin_flg' => $this->request->data['CircleMember']['admin_flg'],
+        $result = [
+            'error'       => false,
+            'result'      => [
+                'user_id'   => $this->request->data['CircleMember']['user_id'],
+                'admin_flg' => $this->request->data['CircleMember']['admin_flg'],
+            ],
+            'self_update' => ($this->Auth->user('id') == $this->request->data['CircleMember']['user_id']) ? true : false,
+            'message'     => [
+                'title' => __d('notify', "成功"),
+                'text'  => $this->request->data['CircleMember']['admin_flg']
+                    ? __d('gl', "管理者に設定しました。")
+                    : __d('gl', "管理者から外しました。"),
+            ],
         ];
-        // 操作者自身の情報を更新した場合
-        if ($this->Auth->user('id') == $this->request->data['CircleMember']['user_id']) {
-            $result['self_update'] = true;
-        }
-        $result['message']['text'] = $this->request->data['CircleMember']['admin_flg']
-            ? __d('gl', "管理者に設定しました。")
-            : __d('gl', "管理者から外しました。");
         return $this->_ajaxGetResponse($result);
     }
 
@@ -321,36 +305,17 @@ class CirclesController extends AppController
         $this->request->allowMethod('post');
         $this->_ajaxPreProcess();
 
-        // ajaxで返すデータ
-        $result = [
-            'error'       => false,  // エラーの有無
-            'result'      => [],     // 更新されたデータ
-            'self_update' => false,  // 操作者自身が更新されたか
-            'message'     => [
-                'title' => __d('notify', "成功"),
-                'text'  => '',
-            ],
-        ];
-
-        // エラー時のレスポンスデータ作成（codeclimate 対策）
-        $errorResult = function ($msg) use ($result) {
-            $result['error'] = true;
-            $result['message']['title'] = __d('notify', "エラー");
-            $result['message']['text'] = $msg;
-            return $result;
-        };
-
         // validate
         $this->Circle->id = $this->request->params['named']['circle_id'];
         if (!$this->Circle->exists()) {
-            return $this->_ajaxGetResponse($errorResult(__d('gl', "このサークルは存在しません。")));
+            return $this->_ajaxGetResponse($this->_makeEditErrorResult(__d('gl', "このサークルは存在しません。")));
         }
         if (!$this->Circle->CircleMember->isAdmin($this->Auth->user('id'), $this->Circle->id)) {
-            return $this->_ajaxGetResponse($errorResult(__d('gl', "サークルの変更ができるのはサークル管理者のみです。")));
+            return $this->_ajaxGetResponse($this->_makeEditErrorResult(__d('gl', "サークルの変更ができるのはサークル管理者のみです。")));
         }
         $admin_list = $this->Circle->CircleMember->getAdminMemberList($this->Circle->id, true);
         if ($this->request->data['CircleMember']['user_id'] == end($admin_list) && count($admin_list) == 1) {
-            return $this->_ajaxGetResponse($errorResult(__d('gl', "サークルの管理者を１人以上設定する必要があります。")));
+            return $this->_ajaxGetResponse($this->_makeEditErrorResult(__d('gl', "サークルの管理者を１人以上設定する必要があります。")));
         }
 
         // サークルから外す処理
@@ -358,19 +323,41 @@ class CirclesController extends AppController
                                                          $this->request->data['CircleMember']['user_id']);
         // 処理失敗
         if (!$res) {
-            return $this->_ajaxGetResponse($errorResult(__d('gl', "処理中にエラーが発生しました。")));
+            return $this->_ajaxGetResponse($this->_makeEditErrorResult(__d('gl', "処理中にエラーが発生しました。")));
         }
 
         // 処理成功
-        $result['result'] = [
-            'user_id' => $this->request->data['CircleMember']['user_id'],
+        $result = [
+            'error'       => false,
+            'result'      => [
+                'user_id' => $this->request->data['CircleMember']['user_id']
+            ],
+            'self_update' => ($this->Auth->user('id') == $this->request->data['CircleMember']['user_id']) ? true : false,
+            'message'     => [
+                'title' => __d('notify', "成功"),
+                'text'  => __d('gl', "サークルから外しました。"),
+            ],
         ];
-        // 操作者自身の情報を更新した場合
-        if ($this->Auth->user('id') == $this->request->data['CircleMember']['user_id']) {
-            $result['self_update'] = true;
-        }
-        $result['message']['text'] = __d('gl', "サークルから外しました。");
         return $this->_ajaxGetResponse($result);
     }
 
+    /**
+     * ajax エラー用レスポンスデータを返す
+     *
+     * @param $message
+     *
+     * @return array
+     */
+    private function _makeEditErrorResult($message)
+    {
+        return [
+            'error'       => true,   // エラーの有無
+            'result'      => [],     // 更新されたデータ
+            'self_update' => false,  // 操作者自身が更新されたか
+            'message'     => [
+                'title' => __d('notify', "エラー"),
+                'text'  => $message,
+            ],
+        ];
+    }
 }
