@@ -323,6 +323,7 @@ class CirclesControllerTest extends ControllerTestCase
 
     function testAjaxEditAdminStatus()
     {
+        // 非管理者 -> 管理者
         $this->_getCirclesCommonMock();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
 
@@ -338,13 +339,9 @@ class CirclesControllerTest extends ControllerTestCase
         $this->assertEquals(['user_id' => 2, 'admin_flg' => 1], $json_data['result']);
         $this->assertArrayHasKey('message', $json_data);
         $this->assertArrayHasKey('self_update', $json_data);
-        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
-    }
 
-    function testAjaxEditAdminStatusToNormal()
-    {
+        // 管理者 -> 非管理者
         $this->_getCirclesCommonMock();
-        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
 
         $data = [
             'CircleMember' => [
@@ -358,6 +355,7 @@ class CirclesControllerTest extends ControllerTestCase
         $this->assertEquals(['user_id' => 2, 'admin_flg' => 0], $json_data['result']);
         $this->assertArrayHasKey('message', $json_data);
         $this->assertArrayHasKey('self_update', $json_data);
+
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
