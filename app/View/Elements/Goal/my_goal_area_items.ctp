@@ -148,36 +148,6 @@
                     </div>
                 </div>
             </div>
-            <?php if ($type != 'follow'): ?>
-                <div class="col col-xxs-12 goalsCard-actionResult" id="AddActionFormWrapper_<?= $goal['Goal']['id'] ?>">
-                    <form action="#" id="" method="post" accept-charset="utf-8">
-                        <div class="form-group mb_5px develop--font_normal">
-                            <textarea
-                                class="form-control col-xxs-10 goalsCard-actionInput mb_12px add-select-options not-autosize click-get-ajax-form-replace"
-                                rows="1" placeholder="<?= __d('gl', "今日やったアクションを共有しよう！") ?>"
-                                cols="30" init-height="20"
-                                tmp-target-height="53"
-                                replace-elm-parent-id="AddActionFormWrapper_<?= $goal['Goal']['id'] ?>"
-                                click-target-id="ActionFormName_<?= $goal['Goal']['id'] ?>"
-                                ajax-url="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_new_action_form', 'goal_id' => $goal['Goal']['id'], 'ar_count' => $goal['Goal']['action_result_count']]) ?>"
-                                ></textarea>
-                        </div>
-                        <?php if ($goal['Goal']['action_result_count'] > 0): ?>
-                            <a class="goalsCard-activity inline-block col-xxs-2 click-show-post-modal font_gray-brownRed pointer"
-                               id="ActionListOpen_<?= $goal['Goal']['id'] ?>"
-                               href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_goal_action_feed', 'goal_id' => $goal['Goal']['id'], 'type' => Post::TYPE_ACTION]) ?>">
-                                <i class="fa fa-check-circle mr_1px font_brownRed"></i><span
-                                    class="ls_number"><?= $goal['Goal']['action_result_count'] ?></span>
-                            </a>
-                        <?php else: ?>
-                            <div class="goalsCard-activity0 inline-block col-xxs-2">
-                                <i class="fa fa-check-circle mr_1px"></i><span
-                                    class="ls_number">0</span>
-                            </div>
-                        <?php endif; ?>
-                    </form>
-                </div>
-            <?php endif; ?>
             <div class="col col-xxs-12 goalsCard-krSeek">
                 <?php if (isset($goal['Goal']['end_date']) && !empty($goal['Goal']['end_date'])): ?>
                     <div class="pull-right font_12px">
@@ -215,6 +185,20 @@
                         <i class="fa fa-caret-down feed-arrow lh_18px"></i>
                         <?= __d('gl', "出したい成果をみる") ?>(<?= count($goal['KeyResult']) ?>)
                     </a>
+                    <?php if ($goal['Goal']['action_result_count'] > 0): ?>
+                        <a class="goalsCard-activity inline-block col-xxs-2 click-show-post-modal font_gray-brownRed pointer"
+                           id="ActionListOpen_<?= $goal['Goal']['id'] ?>"
+                           href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_goal_action_feed', 'goal_id' => $goal['Goal']['id'], 'type' => Post::TYPE_ACTION]) ?>">
+                            <i class="fa fa-check-circle mr_1px font_brownRed"></i><span
+                                class="ls_number"><?= $goal['Goal']['action_result_count'] ?></span>
+                        </a>
+                    <?php else: ?>
+                        <div class="goalsCard-activity0 inline-block col-xxs-2">
+                            <i class="fa fa-check-circle mr_1px"></i><span
+                                class="ls_number">0</span>
+                        </div>
+                    <?php endif; ?>
+
                 <?php }
                 elseif ($type != "follow") { ?>
                     <a class="col col-xxs-12 bd-dash font_lightGray-gray p_10px modal-ajax-get-add-key-result"
