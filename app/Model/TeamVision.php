@@ -150,9 +150,20 @@ class TeamVision extends AppModel
 
     function getDisplayVisionRandom()
     {
-        $team_visions = $this->getTeamVision($this->current_team_id, true);
+        if (!$this->current_team_id) {
+            return null;
+        }
+        $team_name = $this->Team->getCurrentTeam()['Team']['name'];
+        $team_visions = Hash::extract($this->getTeamVision($this->current_team_id, true), '{n}.TeamVision');
+        $team_visions = Hash::insert($team_visions, '{n}.target_name', $team_name);
+        $team_visions = Hash::insert($team_visions, '{n}.model', 'TeamVision');
         $my_group_list = $this->Team->Group->MemberGroup->getMyGroupList();
-        $group_visions = $this->Team->GroupVision->getGroupVisionsByGroupIds(array_keys($my_group_list));
+        $group_visions = Hash::extract($this->Team->GroupVision->getGroupVisionsByGroupIds(array_keys($my_group_list)),
+                                       '{n}.GroupVision');
+        foreach ($group_visions as $k => $v) {
+            $group_visions[$k]['target_name'] = isset($my_group_list[$v['group_id']]) ? $my_group_list[$v['group_id']] : null;
+        }
+        $group_visions = Hash::insert($group_visions, '{n}.model', 'GroupVision');
         $visions = array_merge($team_visions, $group_visions);
         if (empty($visions)) {
             return null;
