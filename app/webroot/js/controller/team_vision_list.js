@@ -57,3 +57,9 @@ app.controller("TeamVisionSetArchiveController",
         }
         $state.go('vision', {team_id: $scope.team_id});
     });
+
+app.controller("TeamVisionDetailController",
+    function ($scope, $http, $translate, $sce, $modal, notificationService, teamVisionDetail) {
+        teamVisionDetail.TeamVision.modified = $sce.trustAsHtml(teamVisionDetail.TeamVision.modified);
+        $scope.detail = teamVisionDetail.TeamVision;
+    });

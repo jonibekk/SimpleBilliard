@@ -51,6 +51,29 @@ app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider', '$http
                 }
 
             })
+            .state('vision_detail', {
+                url: "/vision_detail/:team_vision_id/:active_flg",
+                templateUrl: "/template/team_vision_detail.html",
+                controller: 'TeamVisionDetailController',
+                resolve: {
+                    teamVisionDetail: ['$stateParams', '$http', function ($stateParams, $http) {
+
+                        var active_flg = 0;
+                        if ($stateParams.active_flg === 'true') {
+                            active_flg = 1;
+                        }
+
+                        var request = {
+                            method: 'GET',
+                            url: cake.url.ac + $stateParams.team_vision_id + '/' + active_flg
+                        };
+                        return $http(request).then(function (response) {
+                            return response.data;
+                        });
+
+                    }]
+                }
+            })
             .state('vision_archive', {
                 url: "/vision_archive/:team_id/:active_flg",
                 templateUrl: "/template/team_vision_list.html",

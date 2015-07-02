@@ -109,17 +109,37 @@ class TeamVision extends AppModel
     }
 
     function convertData($data) {
+
         $upload = new UploadHelper(new View());
         $time = new TimeExHelper(new View());
-        foreach ($data as $key => $team) {
-            $data[$key]['TeamVision']['photo_path'] = $upload->uploadUrl($team['TeamVision'], 'TeamVision.photo', ['style' => 'large']);
-            $data[$key]['TeamVision']['modified'] = $time->elapsedTime(h($team['TeamVision']['modified']));
+
+        if (isset($data['TeamVision']) === true) {
+            $data['TeamVision']['photo_path'] = $upload->uploadUrl($data['TeamVision'], 'TeamVision.photo', ['style' => 'original']);
+            $data['TeamVision']['modified'] = $time->elapsedTime(h($data['TeamVision']['modified']));
+
+        } else {
+            foreach ($data as $key => $team) {
+                $data[$key]['TeamVision']['photo_path'] = $upload->uploadUrl($team['TeamVision'], 'TeamVision.photo', ['style' => 'original']);
+                $data[$key]['TeamVision']['modified'] = $time->elapsedTime(h($team['TeamVision']['modified']));
+            }
         }
+
         return $data;
     }
 
     function deleteTeamVision($team_vision_id){
         $this->id = $team_vision_id;
         return $this->delete();
+    }
+
+    function getTeamVisionDetail($team_vision_id, $active_flg)
+    {
+        $options = [
+            'conditions' => [
+                'id' => $team_vision_id,
+                'active_flg' => $active_flg
+            ]
+        ];
+        return $this->find('first', $options);
     }
 }

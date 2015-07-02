@@ -802,6 +802,14 @@ class TeamsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
+    function testAjaxGetTeamVisionDetail()
+    {
+        $this->_getTeamsCommonMock(null, true);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/teams/ajax_get_team_vision_detail/1/1', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
     function testAddTeamVisionNotAdmin()
     {
         $Teams = $this->_getTeamsCommonMock();
