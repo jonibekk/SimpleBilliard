@@ -666,6 +666,21 @@ class TeamsController extends AppController
         return $this->_ajaxGetResponse($team_vision_detail);
     }
 
+    /**
+     * グループビジョンの詳細を取得
+     * @param $group_vision_id
+     * @param $active_flg
+     * @return CakeResponse
+     */
+    function ajax_get_group_vision_detail($group_vision_id, $active_flg)
+    {
+        $this->_ajaxPreProcess();
+        $res = $this->Team->GroupVision->getGroupVisionDetail($group_vision_id, $active_flg);
+        $team_id = $this->Session->read('current_team_id');
+        $group_vision_detail = $this->Team->GroupVision->convertData($team_id, $res);
+        return $this->_ajaxGetResponse($group_vision_detail);
+    }
+
     function ajax_team_admin_user_check()
     {
         $this->_ajaxPreProcess();

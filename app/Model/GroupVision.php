@@ -96,17 +96,15 @@ class GroupVision extends AppModel
 
     /**
      * チームに所属するすべてのグループビジョンを取得
-     *
      * @param $team_id
      * @param $active_flg
-     *
      * @return array|null
      */
     function getGroupVision($team_id, $active_flg)
     {
         $options = [
             'conditions' => [
-                'team_id'    => $team_id,
+                'team_id' => $team_id,
                 'active_flg' => $active_flg,
             ]
         ];
@@ -135,10 +133,8 @@ class GroupVision extends AppModel
 
     /**
      * AngularJSのテンプレート側から処理しやすく加工
-     *
      * @param $team_id
      * @param $data
-     *
      * @return mixed
      */
     function convertData($team_id, $data)
@@ -147,23 +143,30 @@ class GroupVision extends AppModel
         $upload = new UploadHelper(new View());
         $time = new TimeExHelper(new View());
 
-        foreach ($data as $key => $group) {
-            $data[$key]['GroupVision']['photo_path'] = $upload->uploadUrl($group['GroupVision'], 'GroupVision.photo',
-                                                                          ['style' => 'large']);
-            $data[$key]['GroupVision']['modified'] = $time->elapsedTime(h($group['GroupVision']['modified']));
-            if (isset($group_list[$group['GroupVision']['group_id']]) === true) {
-                $data[$key]['GroupVision']['group_name'] = $group_list[$group['GroupVision']['group_id']];
+        if (isset($data['GroupVision']) === true) {
+            $data['GroupVision']['photo_path'] = $upload->uploadUrl($data['GroupVision'], 'GroupVision.photo', ['style' => 'large']);
+            $data['GroupVision']['modified'] = $time->elapsedTime(h($data['GroupVision']['modified']));
+            if (isset($group_list[$data['GroupVision']['group_id']]) === true) {
+                $data['GroupVision']['group_name'] = $group_list[$data['GroupVision']['group_id']];
+            }
+
+        } else {
+            foreach ($data as $key => $group) {
+                $data[$key]['GroupVision']['photo_path'] = $upload->uploadUrl($group['GroupVision'], 'GroupVision.photo', ['style' => 'large']);
+                $data[$key]['GroupVision']['modified'] = $time->elapsedTime(h($group['GroupVision']['modified']));
+                if (isset($group_list[$group['GroupVision']['group_id']]) === true) {
+                    $data[$key]['GroupVision']['group_name'] = $group_list[$group['GroupVision']['group_id']];
+                }
             }
         }
+
         return $data;
     }
 
     /**
      * アーカイブ設定
-     *
      * @param $group_vision_id
      * @param $active_flg
-     *
      * @return mixed
      * @throws Exception
      */
@@ -175,14 +178,28 @@ class GroupVision extends AppModel
 
     /**
      * 削除
-     *
      * @param $group_vision_id
-     *
      * @return bool
      */
-    function deleteGroupVision($group_vision_id)
-    {
+    function deleteGroupVision($group_vision_id){
         $this->id = $group_vision_id;
         return $this->delete();
+    }
+
+    /**
+     * １件取得
+     * @param $group_vision_id
+     * @param $active_flg
+     * @return array|null
+     */
+    function getGroupVisionDetail($group_vision_id, $active_flg)
+    {
+        $options = [
+            'conditions' => [
+                'id' => $group_vision_id,
+                'active_flg' => $active_flg
+            ]
+        ];
+        return $this->find('first', $options);
     }
 }

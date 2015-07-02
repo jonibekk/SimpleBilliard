@@ -1,23 +1,27 @@
-<!--
-<div class="team-button pull-right" style="padding-bottom:10px">
-    <a class="btn btn-primary" style="border-radius: 10px; font-size: 13px">チームビジョン作成</a>
-</div>
--->
+<div class="row" style="padding-bottom:10px;">
+    <div class="col-xs-4">
+        <a ng-href="/teams/add_team_vision" class="font_gargoyleGray-brownRed btn-goals-column-plus">
+            <i class="fa fa-plus-circle font_brownRed"></i>ビジョンを追加</a>
+    </div>
 
-<div class="pull-right" style="padding-bottom:10px;">
-    <a ng-if="archive_flag === false" ui-sref="vision_archive({team_id:team_id, active_flg:0})">アーカイブを見る</a>
-    <a ng-if="archive_flag === true" ui-sref="vision({team_id:team_id})">チームビジョン一覧に戻る</a>
+    <div class="col-xs-offset-4 col-xs-4">
+        <a class="pull-right font_verydark" ng-if="archive_flag === false"
+           ui-sref="vision_archive({team_id:team_id, active_flg:0})"><i class="fa fa-eye"></i> アーカイブを見る</a>
+    </div>
 </div>
-
 
 <table class="table table-hover team_member_table">
+    <tr>
+        <th colspan="2"><i class="fa fa-rocket"></i> チームビジョン ( {{teamVisionCount}} )</th>
+    </tr>
     <tr ng-repeat="item in teamVisionList">
-        <td width="20%"
+        <td class="pointer" width="20%"
             ui-sref="vision_detail({team_vision_id:item.TeamVision.id, active_flg:item.TeamVision.active_flg})">
             <img width="64px" ng-src="{{item.TeamVision.photo_path}}"/>
         </td>
 
-        <td ui-sref="vision_detail({team_vision_id:item.TeamVision.id, active_flg:item.TeamVision.active_flg})">
+        <td class="pointer"
+            ui-sref="vision_detail({team_vision_id:item.TeamVision.id, active_flg:item.TeamVision.active_flg})">
             <div class="row">
                 <div class="col-xs-11">
                     <p class="vision_title">{{item.TeamVision.name}}</p>

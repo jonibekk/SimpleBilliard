@@ -6,6 +6,7 @@ app.controller("TeamVisionController",
             team_vision_list[key].TeamVision.modified = $sce.trustAsHtml(val.TeamVision.modified);
         });
         $scope.teamVisionList = team_vision_list;
+        $scope.teamVisionCount = team_vision_list.length;
         $scope.archive_flag = false;
 
         $scope.viewDeleteModal = function (team_vision_id, name) {
@@ -35,6 +36,7 @@ app.controller("TeamVisionArchiveController",
             team_vision_list[key].TeamVision.modified = $sce.trustAsHtml(val.TeamVision.modified);
         });
         $scope.teamVisionList = team_vision_list;
+        $scope.teamVisionCount = team_vision_list.length;
         $scope.archive_flag = true;
     });
 

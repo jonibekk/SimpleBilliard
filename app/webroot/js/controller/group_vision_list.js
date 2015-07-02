@@ -13,6 +13,7 @@ app.controller("GroupVisionController",
         });
 
         $scope.GroupVisionList = group_vision_list;
+        $scope.GroupVisionCount = group_vision_list.length;
         $scope.archive_flag = false;
 
         $scope.viewDeleteModal = function (group_vision_id, name) {
@@ -42,6 +43,7 @@ app.controller("GroupVisionArchiveController",
         });
 
         $scope.GroupVisionList = group_vision_list;
+        $scope.GroupVisionCount = group_vision_list.length;
         $scope.archive_flag = true;
     });
 
@@ -63,4 +65,10 @@ app.controller("GroupVisionDeleteController",
             notificationService.success($translate.instant('GROUP_VISION.DELETE_SUCCESS_MASSAGE'));
         }
         $state.go('group_vision', {team_id: $scope.team_id});
+    });
+
+app.controller("GroupVisionDetailController",
+    function ($scope, $http, $translate, $sce, $modal, notificationService, groupVisionDetail) {
+        groupVisionDetail.GroupVision.modified = $sce.trustAsHtml(groupVisionDetail.GroupVision.modified);
+        $scope.detail = groupVisionDetail.GroupVision;
     });
