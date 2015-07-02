@@ -53,6 +53,13 @@ $(document).ready(function () {
     $('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
         $(this).children('.nailthumb-container').nailthumb({width: 50, height: 50, fitDirection: 'center center'});
     });
+    //tab open
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        var $target = $(e.target);
+        if ($target.hasClass('click-target-focus') && $target.attr('target-id') != undefined) {
+            $('#' + $target.attr('target-id')).focus();
+        }
+    })
 
     $('.fileinput-enabled-submit').fileinput()
         //ファイル選択時にsubmitボタンを有効化する
@@ -107,7 +114,7 @@ $(document).ready(function () {
      */
     $(document).on("blur", ".blur-height-reset", evThisHeightReset);
     $(document).on("focus", ".click-height-up", evThisHeightUp);
-    $(document).on("click", ".tiny-form-text", evShowAndThisWide);
+    $(document).on("focus", ".tiny-form-text", evShowAndThisWide);
     $(document).on("click", ".tiny-form-text-close", evShowAndThisWideClose);
     $(document).on("click", ".click-show", evShow);
     $(document).on("click", ".trigger-click", evTriggerClick);
@@ -745,18 +752,26 @@ function evShowAndThisWide() {
     //クリック済みにする
     $(this).addClass('clicked');
 }
-function setSelectOptions(url, select_id) {
+function setSelectOptions(url, select_id, target_toggle_id) {
     var options_elem = '<option value="">' + cake.word.k + '</option>';
     $.get(url, function (data) {
         if (data.length == 0) {
             $("#" + select_id).empty().append('<option value="">' + cake.word.l + '</option>');
-            return;
+        } else {
+            $.each(data, function (k, v) {
+                var option = '<option value="' + k + '">' + v + '</option>';
+                options_elem += option;
+            });
+            $("#" + select_id).empty().append(options_elem);
         }
-        $.each(data, function (k, v) {
-            var option = '<option value="' + k + '">' + v + '</option>';
-            options_elem += option;
-        });
-        $("#" + select_id).empty().append(options_elem);
+        if (typeof target_toggle_id != 'undefined' && target_toggle_id != null) {
+            if (data.length == 0) {
+                $("#" + target_toggle_id).addClass('none');
+            }
+            else {
+                $("#" + target_toggle_id).removeClass('none');
+            }
+        }
     });
 }
 
@@ -765,7 +780,8 @@ function evChangeTargetSelectWithValue() {
     attrUndefinedCheck(this, 'ajax-url');
     var target_id = $(this).attr("target-id");
     var url = $(this).attr("ajax-url") + $(this).val();
-    setSelectOptions(url, target_id);
+    var target_toggle_id = $(this).attr("toggle-target-id") != undefined ? $(this).attr("toggle-target-id") : null;
+    setSelectOptions(url, target_id, target_toggle_id);
 }
 
 function evShowAndThisWideClose() {
@@ -1284,6 +1300,42 @@ $(document).ready(function () {
         feedbackIcons: {},
         fields: {}
     });
+    $('#CommonActionDisplayForm').bootstrapValidator({
+        live: 'enabled',
+        feedbackIcons: {},
+        fields: {
+            photo: {
+                // All the email address field have emailAddress class
+                selector: '.ActionResult_input_field',
+                validators: {
+                    callback: {
+                        callback: function (value, validator, $field) {
+                            var isEmpty = true,
+                            // Get the list of fields
+                                $fields = validator.getFieldElements('photo');
+                            for (var i = 0; i < $fields.length; i++) {
+                                if ($fields.eq(i).val() != '') {
+                                    isEmpty = false;
+                                    break;
+                                }
+                            }
+
+                            if (isEmpty) {
+                                //// Update the status of callback validator for all fields
+                                validator.updateStatus('photo', validator.STATUS_INVALID, 'callback');
+                                return false;
+                            }
+                            validator.updateStatus('photo', validator.STATUS_VALID, 'callback');
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+    });
+    $('.ActionResult_input_field').on('change', function () {
+        $('#CommonActionDisplayForm').bootstrapValidator('revalidateField', 'photo');
+    });
 
     //noinspection JSUnusedLocalSymbols
     $('#select2Member').select2({
@@ -1362,7 +1414,7 @@ $(document).ready(function () {
             }
         },
         data: [],
-        initSelection: cake.data.b,
+        initSelection: cake.data.l,
         formatSelection: format,
         formatResult: format,
         dropdownCssClass: 's2-post-dropdown',
@@ -1396,18 +1448,26 @@ $(document).ready(function () {
     $('#PostDisplayForm, #CommonActionDisplayForm').change(function (e) {
         var $target = $(e.target);
         switch ($target.attr('id')) {
-            case "PostBody":
-                $('#ActionResultName').val($target.val()).autosize().trigger('autosize.resize');
+            case "CommonPostBody":
+                $('#CommonActionName').val($target.val()).autosize().trigger('autosize.resize');
                 break;
-            case "ActionResultName":
-                $('#PostBody').val($target.val()).autosize().trigger('autosize.resize');
+            case "CommonActionName":
+                $('#CommonPostBody').val($target.val()).autosize().trigger('autosize.resize');
                 break;
         }
     });
 });
 
 function format(item) {
-    return "<img style='width:14px;height: 14px' class='select2-item-img' src='" + item.image + "' alt='icon' /> " + "<span class='select2-item-txt'>" + item.text + "</span";
+    if ('image' in item) {
+        return "<img style='width:14px;height: 14px' class='select2-item-img' src='" + item.image + "' alt='icon' /> " + "<span class='select2-item-txt'>" + item.text + "</span>";
+    }
+    else if ('icon' in item) {
+        return "<span class='select2-item-txt-with-i'><i class='" + item.icon + "'></i> " + item.text + "</span>";
+    }
+    else {
+        return "<span class='select2-item-txt'>" + item.text + "</span>";
+    }
 }
 function bindSelect2Members($this) {
     //noinspection JSUnusedLocalSymbols

@@ -594,8 +594,10 @@ class TeamsController extends AppController
 
     /**
      * グループビジョン一覧取得
+     *
      * @param     $team_id
      * @param int $active_flg
+     *
      * @return CakeResponse
      */
     function ajax_get_group_vision($team_id, $active_flg = 1)
@@ -608,8 +610,10 @@ class TeamsController extends AppController
 
     /**
      * グループビジョンアーカイブ設定
+     *
      * @param     $group_vision_id
      * @param int $active_flg
+     *
      * @return CakeResponse
      */
     function ajax_set_group_vision_archive($group_vision_id, $active_flg = 1)
@@ -621,11 +625,13 @@ class TeamsController extends AppController
 
     /**
      * 所属のグループ情報を取得
+     *
      * @param $team_id
      * @param $user_id
+     *
      * @return CakeResponse
      */
-    function ajax_get_login_user_group_id ($team_id, $user_id)
+    function ajax_get_login_user_group_id($team_id, $user_id)
     {
         $this->_ajaxPreProcess();
         $res = $this->Team->Group->MemberGroup->getMyGroupList($team_id, $user_id);
@@ -634,7 +640,9 @@ class TeamsController extends AppController
 
     /**
      * グループビジョンの削除
+     *
      * @param $group_vision_id
+     *
      * @return CakeResponse
      */
     function ajax_delete_group_vision($group_vision_id)
@@ -818,6 +826,9 @@ class TeamsController extends AppController
         $this->layout = LAYOUT_ONE_COLUMN;
         try {
             $this->Team->TeamMember->adminCheck();
+            if (!empty($this->Team->TeamVision->getTeamVision($this->Session->read('current_team_id'), true))) {
+                throw new RuntimeException(__d('gl', "既にチームビジョンが存在する為、新規の追加はできません。"));
+            }
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
             return $this->redirect($this->referer());
@@ -878,11 +889,13 @@ class TeamsController extends AppController
     function add_group_vision()
     {
         $this->layout = LAYOUT_ONE_COLUMN;
-        $group_list = $this->Team->Group->MemberGroup->getMyGroupList();
+        $group_list = $this->Team->Group->MemberGroup->getMyGroupListNotExistsVision();
+
         if (empty($group_list)) {
-            $this->Pnotify->outError(__d('gl', "グループに所属していない為、グループビジョンは作成できません。"));
+            $this->Pnotify->outError(__d('gl', "グループに所属していないか既に存在している為、グループビジョンは作成できません。"));
             return $this->redirect($this->referer());
         }
+
         $this->set(compact('group_list'));
 
         if ($this->request->is('get')) {
