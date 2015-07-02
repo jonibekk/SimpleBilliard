@@ -140,7 +140,8 @@
                         'placeholder' => __d('gl', "アクションの説明を書く"),
                         'class'       => 'form-control blank-disable post-form feed-post-form box-align change-warning',
                         'target-id'   => "CommonActionSubmit",
-                        "required"    => false
+                        "required"    => true,
+                        'data-bv-notempty-message' => __d('validate', "入力必須項目です。"),
                     ])
                     ?>
                     <div class="row form-group m_0px" id="CommonActionFormImage">
