@@ -3212,8 +3212,8 @@ Temporary Properties - YOU MUST FIX
     height: 28px;
     border-radius: 4px;
     border: 1px solid #ccc;
-    margin-left: 1.6667%;
-    width: 15%;
+    margin-left: 1.4%;
+    width: 13%;
 }
 
 .goalsCard-activity:hover,
@@ -3228,8 +3228,8 @@ Temporary Properties - YOU MUST FIX
     text-align: center;
     line-height: 24px;
     height: 28px;
-    margin-left: 1.6667%;
-    width: 15%;
+    margin-left: 1.4%;
+    width: 13%;
 }
 
 .goalsCard-actionInput {
