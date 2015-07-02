@@ -828,8 +828,16 @@ class User extends AppModel
 
     public function getUsersSelect2($keyword, $limit = 10)
     {
+        App::uses('UploadHelper', 'View/Helper');
+        $Upload = new UploadHelper(new View());
         $users = $this->getUsersByKeyword($keyword, $limit);
-        $user_res = $this->_makeSelect2UserList($users);
+        $user_res = [];
+        foreach ($users as $val) {
+            $data['id'] = 'user_' . $val['User']['id'];
+            $data['text'] = $val['User']['display_username'] . " (" . $val['User']['roman_username'] . ")";
+            $data['image'] = $Upload->uploadUrl($val, 'User.photo', ['style' => 'small']);
+            $user_res[] = $data;
+        }
         return ['results' => $user_res];
     }
 
@@ -849,7 +857,14 @@ class User extends AppModel
         }
 
         $users = $this->getUsersByKeyword($keyword, $limit);
-        $user_res = $this->_makeSelect2UserList($users);
+        $user_res = [];
+        foreach ($users as $val) {
+            $data['id'] = 'user_' . $val['User']['id'];
+            $data['text'] = $val['User']['display_username'] . " (" . $val['User']['roman_username'] . ")";
+
+            $data['image'] = $Upload->uploadUrl($val, 'User.photo', ['style' => 'small']);
+            $user_res[] = $data;
+        }
         $res = array_merge($circle_res, $user_res);
         return ['results' => $res];
     }
@@ -874,8 +889,13 @@ class User extends AppModel
         }
 
         $users = $this->getAllMember(false);
-        $user_res = $this->_makeSelect2UserList($users);
-
+        $user_res = [];
+        foreach ($users as $val) {
+            $data['id'] = 'user_' . $val['User']['id'];
+            $data['text'] = $val['User']['roman_username'] . " ( " . $val['User']['display_username'] . " )";
+            $data['image'] = $Upload->uploadUrl($val, 'User.photo', ['style' => 'small']);
+            $user_res[] = $data;
+        }
         $team_res = [];
         $team = $this->TeamMember->Team->findById($this->current_team_id);
         if (!empty($team)) {
@@ -989,28 +1009,5 @@ class User extends AppModel
         ];
         $res = $this->find('all', $options);
         return $res;
-    }
-
-    /**
-     * select2 用のユーザーリスト配列を返す
-     *
-     * @param array $users
-     *
-     * @return array
-     */
-    protected function _makeSelect2UserList(array $users)
-    {
-        App::uses('UploadHelper', 'View/Helper');
-        $Upload = new UploadHelper(new View());
-
-        $user_res = [];
-        foreach ($users as $val) {
-            $data = [];
-            $data['id'] = 'user_' . $val['User']['id'];
-            $data['text'] = $val['User']['display_username'] . " (" . $val['User']['roman_username'] . ")";
-            $data['image'] = $Upload->uploadUrl($val, 'User.photo', ['style' => 'small']);
-            $user_res[] = $data;
-        }
-        return $user_res;
     }
 }
