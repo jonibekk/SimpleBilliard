@@ -3,7 +3,10 @@
     <div class="vision_detail_block">
         <div class="">Group Vision</div>
         <div class="vision_detail_title">{{detail.name}}</div>
-        <span class="vision_detail_date" ng-bind-html="detail.modified"></span>
+        <div class="vision_detail_date" >
+            <i class="fa fa-sitemap"></i> {{detail.group_name}} <br>
+            <span ng-bind-html="detail.modified"></span>
+        </div>
     </div>
 
     <div class="vision_detail_block">

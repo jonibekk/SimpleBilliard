@@ -4,7 +4,7 @@
 </div>
 
 
-<table class="table table-hover team_member_table">
+<table class="table table-hover team_member_table pointer">
     <tr ng-repeat="item in GroupVisionList">
         <td width="20%"
             ui-sref="group_vision_detail({group_vision_id:item.GroupVision.id, active_flg:item.GroupVision.active_flg})">
@@ -14,10 +14,10 @@
         <td ui-sref="group_vision_detail({group_vision_id:item.GroupVision.id, active_flg:item.GroupVision.active_flg})">
             <div class="row">
                 <div class="col-xs-11">
-                    <p class="vision_title">{{item.GroupVision.group_name}} - {{item.GroupVision.name}} </p>
+                    <p class="vision_title">{{item.GroupVision.name}} </p>
 
                     <div class="vision_modified_date">
-                        最終更新日:
+                        <i class="fa fa-sitemap"></i> {{item.GroupVision.group_name}} <br>
                         <span ng-bind-html="item.GroupVision.modified"/>
                     </div>
                 </div>
