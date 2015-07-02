@@ -194,7 +194,7 @@ class GroupVisionTest extends CakeTestCase
             'name'=>$name,
         ];
         $this->GroupVision->save($data);
-        $res = $this->GroupVision->getGroupVisionDetail($team_id, 1);
+        $res = $this->GroupVision->getGroupVisionDetail($this->GroupVision->getLastInsertID(), 1);
         $convert_data = $this->GroupVision->convertData($team_id, $res);
 
         $this->assertEquals($group_name, $convert_data['GroupVision']['group_name']);
