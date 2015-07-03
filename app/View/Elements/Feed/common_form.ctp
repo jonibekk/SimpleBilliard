@@ -21,8 +21,8 @@
             <li class="switch-action"><a href="#ActionForm" role="tab" data-toggle="tab"
                                          class="switch-action-anchor"><i
                         class="fa fa-star-o"></i><?= __d('gl', "アクション") ?></a><span class="switch-arrow"></span></li>
-            <li class="switch-badge"><a href="#BadgeForm" role="tab" data-toggle="tab"
-                                        class="switch-badge-anchor develop--forbiddenLink"><i
+            <li class="switch-badge develop--forbiddenLink"><a href="#BadgeForm" role="tab" data-toggle="tab"
+                                        class="switch-badge-anchor"><i
                         class="fa fa-heart-o"></i><?= __d('gl', "バッジ") ?></a><span class="switch-arrow"></span></li>
         </ul>
     </div>
