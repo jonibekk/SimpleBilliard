@@ -51,6 +51,29 @@ app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider', '$http
                 }
 
             })
+            .state('vision_detail', {
+                url: "/vision_detail/:team_vision_id/:active_flg",
+                templateUrl: "/template/team_vision_detail.html",
+                controller: 'TeamVisionDetailController',
+                resolve: {
+                    teamVisionDetail: ['$stateParams', '$http', function ($stateParams, $http) {
+
+                        var active_flg = 0;
+                        if ($stateParams.active_flg === 'true') {
+                            active_flg = 1;
+                        }
+
+                        var request = {
+                            method: 'GET',
+                            url: cake.url.ac + $stateParams.team_vision_id + '/' + active_flg
+                        };
+                        return $http(request).then(function (response) {
+                            return response.data;
+                        });
+
+                    }]
+                }
+            })
             .state('vision_archive', {
                 url: "/vision_archive/:team_id/:active_flg",
                 templateUrl: "/template/team_vision_list.html",
@@ -118,16 +141,104 @@ app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider', '$http
                             });
 
                         });
-
-
                     }]
                 },
                 controller: "TeamVisionDeleteController"
             })
             .state('group_vision', {
-                url: "/group_vision",
+                url: "/group_vision/:team_id",
                 templateUrl: "/template/group_vision_list.html",
-                controller: ''
+                resolve: {
+                    LoginUserGroupId: ['$http', '$rootScope', function ($http, $rootScope) {
+                        var request = {
+                            method: 'GET',
+                            url: cake.url.ab + $rootScope.team_id + '/' + $rootScope.login_user_id
+                        };
+                        return $http(request).then(function (response) {
+                            return response.data;
+                        });
+                    }],
+                    GroupVisionList: ['$stateParams', '$http', function ($stateParams, $http) {
+                        var request = {
+                            method: 'GET',
+                            url: cake.url.y + $stateParams.team_id
+                        };
+                        return $http(request).then(function (response) {
+                            return response.data;
+                        });
+                    }]
+                },
+                controller: "GroupVisionController"
+            })
+            .state('group_vision_archive', {
+                url: "/group_vision_archive/:team_id/:active_flg",
+                templateUrl: "/template/group_vision_list.html",
+                resolve: {
+                    GroupVisionArchiveList: ['$stateParams', '$http', function ($stateParams, $http) {
+                        var request = {
+                            method: 'GET',
+                            url: cake.url.y + $stateParams.team_id + '/' + $stateParams.active_flg
+                        };
+                        return $http(request).then(function (response) {
+                            return response.data;
+                        });
+                    }]
+                },
+                controller: 'GroupVisionArchiveController'
+            })
+            .state('set_group_vision_archive', {
+                url: "/set_group_vision_archive/:group_vision_id/:active_flg",
+                resolve: {
+                    setGroupVisionArchive: ['$stateParams', '$http', function ($stateParams, $http) {
+                        var request = {
+                            method: 'GET',
+                            url: cake.url.z + $stateParams.group_vision_id + '/' + $stateParams.active_flg
+                        };
+                        return $http(request).then(function (response) {
+                            return response.data;
+                        });
+                    }]
+                },
+                controller: "GroupVisionSetArchiveController"
+            })
+            .state('group_vision_delete', {
+                url: "/group_vision_delete/:group_vision_id",
+                resolve: {
+                    deleteVision: ['$stateParams', '$http', function ($stateParams, $http) {
+                        var request02 = {
+                            method: 'GET',
+                            url: cake.url.aa + $stateParams.group_vision_id
+                        };
+                        return $http(request02).then(function (response) {
+                            return response;
+                        });
+
+                    }]
+                },
+                controller: "GroupVisionDeleteController"
+            })
+            .state('group_vision_detail', {
+                url: "/group_vision_detail/:group_vision_id/:active_flg",
+                templateUrl: "/template/group_vision_detail.html",
+                controller: 'GroupVisionDetailController',
+                resolve: {
+                    groupVisionDetail: ['$stateParams', '$http', function ($stateParams, $http) {
+
+                        var active_flg = 0;
+                        if ($stateParams.active_flg === 'true') {
+                            active_flg = 1;
+                        }
+
+                        var request = {
+                            method: 'GET',
+                            url: cake.url.ad + $stateParams.group_vision_id + '/' + active_flg
+                        };
+                        return $http(request).then(function (response) {
+                            return response.data;
+                        });
+
+                    }]
+                }
             });
 
         $translateProvider.useStaticFilesLoader({

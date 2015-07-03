@@ -173,16 +173,55 @@ class CircleMember extends AppModel
 
     public function getCircleInitMemberSelect2($circle_id, $with_admin = false)
     {
-        App::uses('UploadHelper', 'View/Helper');
-        $Upload = new UploadHelper(new View());
         $users = $this->getMembers($circle_id, $with_admin);
-        $user_res = [];
-        foreach ($users as $val) {
-            $data['id'] = 'user_' . $val['User']['id'];
-            $data['text'] = $val['User']['display_username'] . " (" . $val['User']['roman_username'] . ")";
-            $data['image'] = $Upload->uploadUrl($val, 'User.photo', ['style' => 'small']);
-            $user_res[] = $data;
-        }
+        $user_res = $this->_makeSelect2UserList($users);
+        return ['results' => $user_res];
+    }
+
+    /**
+     * サークルメンバーでないユーザーのリストを select2 用のデータ形式で返す
+     *
+     * @param     $circle_id
+     * @param     $keyword
+     * @param int $limit
+     *
+     * @return array
+     */
+    public function getNonCircleMemberSelect2($circle_id, $keyword, $limit = 10)
+    {
+        $member_list = $this->getMemberList($circle_id, true);
+
+        $options = [
+            'conditions' => [
+                'TeamMember.team_id'    => $this->current_team_id,
+                'TeamMember.active_flg' => true,
+                'NOT'                   => [
+                    'TeamMember.user_id' => $member_list
+                ],
+                'OR'                    => [
+                    'CONCAT(`User.first_name`," ",`User.last_name`) Like ?'                       => "%" . $keyword . "%",
+                    'CONCAT(`SearchLocalName.first_name`," ",`SearchLocalName.last_name`) Like ?' => "%" . $keyword . "%",
+                ]
+            ],
+            'limit'      => $limit,
+            'contain'    => [
+                'User' => [
+                    'fields' => $this->User->profileFields
+                ]
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'local_names',
+                    'alias'      => 'SearchLocalName',
+                    'conditions' => [
+                        '`SearchLocalName.user_id`=`User.id`',
+                    ],
+                ]
+            ]
+        ];
+        $users = $this->User->TeamMember->find('all', $options);
+        $user_res = $this->_makeSelect2UserList($users);
         return ['results' => $user_res];
     }
 
@@ -348,19 +387,21 @@ class CircleMember extends AppModel
         return $this->save($options);
     }
 
-    function unjoinMember($circle_id)
+    function unjoinMember($circle_id, $user_id = null)
     {
-        if (empty($this->User->CircleMember->isBelong($circle_id))) {
+        if (!$user_id) {
+            $user_id = $this->my_uid;
+        }
+        if (empty($this->User->CircleMember->isBelong($circle_id, $user_id))) {
             return;
         }
-        $this->deleteAll(
+        return $this->deleteAll(
             [
                 'CircleMember.circle_id' => $circle_id,
-                'CircleMember.user_id'   => $this->my_uid,
+                'CircleMember.user_id'   => $user_id,
                 'CircleMember.team_id'   => $this->current_team_id,
             ]
         );
-        return;
     }
 
     function show_hide_stats($userid, $circle_id)
@@ -384,6 +425,49 @@ class CircleMember extends AppModel
         ];
 
         $res = $this->updateAll(['CircleMember.show_for_all_feed_flg' => $status], $conditions);
+        return $res;
+    }
+
+    /**
+     * 管理者フラグを変更する
+     *
+     * @param $circle_id
+     * @param $user_id
+     * @param $admin_status
+     *
+     * @return bool
+     */
+    function editAdminStatus($circle_id, $user_id, $admin_status)
+    {
+        $conditions = [
+            'CircleMember.circle_id' => $circle_id,
+            'CircleMember.team_id'   => $this->current_team_id,
+            'CircleMember.user_id'   => $user_id,
+        ];
+
+        return $this->updateAll(['CircleMember.admin_flg' => $admin_status], $conditions);
+    }
+
+    /**
+     * select2 用のユーザーリスト配列を返す
+     *
+     * @param array $users
+     *
+     * @return array
+     */
+    protected function _makeSelect2UserList(array $users)
+    {
+        App::uses('UploadHelper', 'View/Helper');
+        $Upload = new UploadHelper(new View());
+
+        $res = [];
+        foreach ($users as $val) {
+            $data = [];
+            $data['id'] = 'user_' . $val['User']['id'];
+            $data['text'] = $val['User']['display_username'] . " (" . $val['User']['roman_username'] . ")";
+            $data['image'] = $Upload->uploadUrl($val, 'User.photo', ['style' => 'small']);
+            $res[] = $data;
+        }
         return $res;
     }
 }

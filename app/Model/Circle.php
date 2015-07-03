@@ -157,38 +157,69 @@ class Circle extends AppModel
         return $res;
     }
 
+    /**
+     * サークルの基本情報を変更
+     *
+     * @param $data
+     *
+     * @return bool|mixed
+     */
     function edit($data)
     {
         if (!isset($data['Circle']) || empty($data['Circle'])) {
             return false;
         }
-        // チーム全体サークルでない場合は、メンバーの編集処理を行う
-        if (!viaIsSet($data['Circle']['team_all_flg'])) {
-            //既存のメンバーを取得
-            $exists_member_list = $this->CircleMember->getMemberList($data['Circle']['id']);
-            if (isset($data['Circle']['members']) && !empty($data['Circle']['members'])) {
-                $members = explode(",", $data['Circle']['members']);
-                foreach ($members as $val) {
-                    $val = str_replace('user_', '', $val);
-                    $key = array_search($val, $exists_member_list);
-                    if ($key !== false) {
-                        unset($exists_member_list[$key]);
-                        continue;
-                    }
-                    $data['CircleMember'][] = [
-                        'team_id' => $this->current_team_id,
-                        'user_id' => $val,
-                    ];
-                    $this->add_new_member_list[] = $val;
-                }
-            }
-            //既存メンバーで指定されないメンバーがいた場合、削除
-            if (!empty($exists_member_list)) {
-                $this->CircleMember->deleteAll(['CircleMember.circle_id' => $data['Circle']['id'], 'CircleMember.user_id' => $exists_member_list]);
-            }
+        return $this->save($data);
+    }
+
+    /**
+     * サークルにメンバーを追加する
+     *
+     * @param $data
+     *
+     * @return bool
+     */
+    public function addMember($data)
+    {
+        // 必須パラメータチェック
+        if (!(isset($data['Circle']['id']) && $data['Circle']['id'] &&
+            isset($data['Circle']['members']) && $data['Circle']['members'] &&
+            isset($data['Circle']['team_all_flg']))
+        ) {
+            return false;
         }
-        if ($res = $this->saveAll($data)) {
-            $this->CircleMember->updateCounterCache(['circle_id' => $data['Circle']['id']]);
+
+        // チーム全体サークルは変更不可
+        if ($data['Circle']['team_all_flg']) {
+            return false;
+        }
+
+        // 管理者を含めたサークルメンバー全員
+        $exists_member_list = $this->CircleMember->getMemberList($data['Circle']['id'], true);
+
+        $members = explode(",", $data['Circle']['members']);
+        $new_members = [];
+        foreach ($members as $val) {
+            $user_id = str_replace('user_', '', $val);
+            if (!$user_id) {
+                continue;
+            }
+            if (isset($exists_member_list[$user_id])) {
+                continue;
+            }
+            $new_members[] = [
+                'CircleMember' => [
+                    'circle_id' => $data['Circle']['id'],
+                    'team_id'   => $this->current_team_id,
+                    'user_id'   => $user_id,
+                ]
+            ];
+            $this->add_new_member_list[] = $user_id;
+        }
+
+        $res = false;
+        if ($new_members) {
+            $res = $this->CircleMember->saveAll($new_members);
         }
         return $res;
     }
@@ -212,14 +243,6 @@ class Circle extends AppModel
     {
         $circle = $this->findById($id);
         $circle['Circle']['members'] = null;
-        $circle_members = $this->CircleMember->getMembers($id);
-        if (!empty($circle_members)) {
-            foreach ($circle_members as $val) {
-                $circle['Circle']['members'][] = 'user_' . $val['CircleMember']['user_id'];
-            }
-            $circle['Circle']['members'] = implode(',', $circle['Circle']['members']);
-        }
-
         return $circle;
     }
 
@@ -315,10 +338,10 @@ class Circle extends AppModel
                     'conditions' => [
                         'CircleMember.user_id' => $active_user_ids,
                     ],
-                    'fields' => [
+                    'fields'     => [
                         'CircleMember.id'
                     ],
-                    'User'   => [
+                    'User'       => [
                         'fields' => $this->CircleMember->User->profileFields
                     ]
                 ]

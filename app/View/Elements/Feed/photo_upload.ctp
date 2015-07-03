@@ -93,21 +93,23 @@ if (!isset($id_prefix)) {
                 }
 
                 echo $this->Form->input($field_prefix . '.photo' . $index,
-                                        ['type'                   => 'file',
-                                         'label'                  => false,
-                                         'div'                    => false,
-                                         'class'                  => false,
-                                         'wrapInput'              => false,
-                                         'errorMessage'           => false,
-                                         'required'               => false,
-                                         'id'                     => $id_prefix . $model . "_" . $model_id . '_Photo_' . $index,
-                                         'data-bv-container'      => '#' . $id_prefix . $model . "_" . $model_id . '_Photo_ValidateMessage',
-                                         'data-bv-file'           => 'true',
-                                         'data-bv-file-extension' => 'jpeg,jpg,png,gif',
-                                         'data-bv-file-type'      => 'image/jpeg,image/png,image/gif',
-                                         'data-bv-file-maxsize'   => 10485760,   // 10mb
-                                         'data-bv-message'        => __d('validate',
-                                                                         "10MB以下かつJPG、PNG、GIFのいずれかの形式を選択して下さい。")
+                                        ['type'                     => 'file',
+                                         'label'                    => false,
+                                         'div'                      => false,
+                                         'class'                    => "{$field_prefix}_input_field",
+                                         'wrapInput'                => false,
+                                         'errorMessage'             => false,
+                                         'required'                 => false,
+                                         'id'                       => $id_prefix . $model . "_" . $model_id . '_Photo_' . $index,
+                                         'data-bv-container'        => '#' . $id_prefix . $model . "_" . $model_id . '_Photo_ValidateMessage',
+                                         'data-bv-file'             => 'true',
+                                         'data-bv-file-extension'   => 'jpeg,jpg,png,gif',
+                                         'data-bv-file-type'        => 'image/jpeg,image/png,image/gif',
+                                         'data-bv-file-maxsize'     => 10485760,   // 10mb
+                                         'data-bv-message'          => __d('validate',
+                                                                           "10MB以下かつJPG、PNG、GIFのいずれかの形式を選択して下さい。"),
+                                         'data-bv-callback'         => "true",
+                                         'data-bv-callback-message' => __d('validate', "１つ以上の画像を選択してください。"),
                                         ]) ?>
             </span>
         </div>

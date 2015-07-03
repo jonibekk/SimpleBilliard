@@ -1,0 +1,21 @@
+<div class="team_member_table">
+
+    <div class="vision_detail_block">
+        <div class="">Group Vision</div>
+        <div class="vision_detail_title">{{detail.name}}</div>
+        <div class="vision_detail_date" >
+            <i class="fa fa-sitemap"></i> {{detail.group_name}} <br>
+            <span ng-bind-html="detail.modified"></span>
+        </div>
+    </div>
+
+    <div class="vision_detail_block">
+        <div>Description</div>
+        <div class="vision_modified_date">{{detail.description}}</div>
+    </div>
+
+    <div class="vision_detail_block" ng-if="detail.photo_file_name !== null">
+        <img class="vision_detail_image" ng-src="{{detail.photo_path}}"/>
+    </div>
+
+</div>

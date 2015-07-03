@@ -6,13 +6,15 @@ app.controller("TeamVisionController",
             team_vision_list[key].TeamVision.modified = $sce.trustAsHtml(val.TeamVision.modified);
         });
         $scope.teamVisionList = team_vision_list;
+        $scope.teamVisionCount = team_vision_list.length;
         $scope.archive_flag = false;
 
         $scope.viewDeleteModal = function (team_vision_id, name) {
             $modal.open({
-                templateUrl: '/template/modal/team_vision_delete.html',
+                templateUrl: '/template/modal/vision_delete.html',
                 controller: function ($scope, $state, $modalInstance) {
-                    $scope.team_vision_body = name;
+                    $scope.vision_title = 'チームビジョン';
+                    $scope.vision_body = name;
                     $scope.ok = function () {
                         $modalInstance.close();
                         $state.go('vision_delete', {team_vision_id: team_vision_id});
@@ -34,6 +36,7 @@ app.controller("TeamVisionArchiveController",
             team_vision_list[key].TeamVision.modified = $sce.trustAsHtml(val.TeamVision.modified);
         });
         $scope.teamVisionList = team_vision_list;
+        $scope.teamVisionCount = team_vision_list.length;
         $scope.archive_flag = true;
     });
 
@@ -55,4 +58,10 @@ app.controller("TeamVisionSetArchiveController",
             notificationService.success($translate.instant('TEAM_VISION.ARCHIVE_SUCCESS_MASSAGE'));
         }
         $state.go('vision', {team_id: $scope.team_id});
+    });
+
+app.controller("TeamVisionDetailController",
+    function ($scope, $http, $translate, $sce, $modal, notificationService, teamVisionDetail) {
+        teamVisionDetail.TeamVision.modified = $sce.trustAsHtml(teamVisionDetail.TeamVision.modified);
+        $scope.detail = teamVisionDetail.TeamVision;
     });

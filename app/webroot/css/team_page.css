@@ -32,3 +32,24 @@
 .disable_member {
     background-color: lightgray;
 }
+
+.vision_detail_block {
+    padding: 10px;
+}
+
+.vision_detail_title {
+    padding: 5px;
+    font-weight: bold;
+}
+
+.vision_detail_date {
+    padding: 5px;
+    font-size: 12px;
+}
+
+.vision_detail_image {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 360px;
+}
