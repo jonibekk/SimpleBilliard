@@ -347,10 +347,24 @@ class UploadBehavior extends ModelBehavior
         copy($srcFile, $destFile);
         @chmod($destFile, 0777);
         $pathinfo = UploadBehavior::_pathinfo($srcFile);
+
+        // 画像の種類を判別する（ファイルの拡張子と実際の種類が異なる場合があるため）
+        $imageInfo = getimagesize($srcFile);
+        $imageType = $pathinfo['extension'];
+        if (strpos($imageInfo['mime'], 'jpeg') !== false) {
+            $imageType = 'jpeg';
+        }
+        elseif (strpos($imageInfo['mime'], 'png') !== false) {
+            $imageType = 'png';
+        }
+        elseif (strpos($imageInfo['mime'], 'gif') !== false) {
+            $imageType = 'gif';
+        }
+
         $src = null;
         $createHandler = null;
         $outputHandler = null;
-        switch (strtolower($pathinfo['extension'])) {
+        switch (strtolower($imageType)) {
             case 'gif':
                 $createHandler = 'imagecreatefromgif';
                 $outputHandler = 'imagegif';
@@ -454,7 +468,7 @@ class UploadBehavior extends ModelBehavior
             $img = imagecreatetruecolor($destW, $destH);
 
             if ($alpha === true) {
-                switch (strtolower($pathinfo['extension'])) {
+                switch (strtolower($imageType)) {
                     case 'gif':
                         $alphaColor = imagecolortransparent($src);
                         imagefill($img, 0, 0, $alphaColor);
