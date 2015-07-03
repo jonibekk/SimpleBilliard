@@ -2,6 +2,8 @@ $.ajaxSetup({
     cache: false
 });
 $(document).ready(function () {
+
+    setDefaultFocus();
     //すべてのformで入力があった場合に行う処理
     $("select,input").change(function () {
         $(this).nextAll(".help-block" + ".text-danger").remove();
@@ -2795,4 +2797,18 @@ function evAjaxLeaveCircle(e) {
                 mouse_reset: false
             });
         });
+}
+
+function setDefaultFocus() {
+    if (cake.common_form_type == "") {
+        return;
+    }
+    switch (cake.common_form_type) {
+        case "action":
+            $('#CommonActionName').focus();
+            break;
+        case "post":
+            $('#CommonPostBody').focus();
+            break;
+    }
 }
