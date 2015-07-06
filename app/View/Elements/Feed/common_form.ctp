@@ -62,7 +62,7 @@
                         'placeholder'              => __d('gl', "アクションの説明を書く"),
                         'class'                    => 'form-control blank-disable tiny-form-text-change post-form feed-post-form box-align change-warning',
                         'target-id'                => "CommonActionSubmit",
-                        'target_show_id'           => 'CommonActionFormImage,WrapCommonActionGoal,CommonActionFooter',
+                        'target_show_id'           => 'CommonActionFormImage,WrapCommonActionGoal,CommonActionFooter,CommonActionFormShare',
                         "required"                 => true,
                         'data-bv-notempty-message' => __d('validate', "入力必須項目です。"),
                     ])
@@ -103,7 +103,7 @@
                     ])
                     ?>
                 </div>
-                <div class="panel-body post-share-range-panel-body" id="CommonActionFormShare">
+                <div class="panel-body post-share-range-panel-body none" id="CommonActionFormShare">
                     <label for="KrSelectOnActionForm"><?= __d('gl', "通知先を追加") ?></label>
 
                     <div class="col col-xxs-12 col-xs-12 post-share-range-list" id="CommonActionShareInputWrap">
