@@ -2,6 +2,8 @@ $.ajaxSetup({
     cache: false
 });
 $(document).ready(function () {
+
+    setDefaultFocus();
     //すべてのformで入力があった場合に行う処理
     $("select,input").change(function () {
         $(this).nextAll(".help-block" + ".text-danger").remove();
@@ -115,6 +117,7 @@ $(document).ready(function () {
     $(document).on("blur", ".blur-height-reset", evThisHeightReset);
     $(document).on("focus", ".click-height-up", evThisHeightUp);
     $(document).on("focus", ".tiny-form-text", evShowAndThisWide);
+    $(document).on("keyup", ".tiny-form-text-change", evShowAndThisWide);
     $(document).on("click", ".tiny-form-text-close", evShowAndThisWideClose);
     $(document).on("click", ".click-show", evShow);
     $(document).on("click", ".trigger-click", evTriggerClick);
@@ -772,7 +775,12 @@ function evShowAndThisWide() {
     $(this).autosize();
 
     //submitボタンを表示
-    $("#" + $(this).attr('target_show_id')).show();
+    var target = $(this).attr('target_show_id');
+    target = target.split(',');
+    jQuery.each(target, function () {
+        $("#" + this).show();
+    });
+
     //クリック済みにする
     $(this).addClass('clicked');
 }
@@ -2795,4 +2803,21 @@ function evAjaxLeaveCircle(e) {
                 mouse_reset: false
             });
         });
+}
+
+function setDefaultFocus() {
+    if (cake.common_form_type == "") {
+        return;
+    }
+    switch (cake.common_form_type) {
+        case "action":
+            $('#CommonFormTabs li:eq(0) a').tab('show');
+            $('#CommonActionName').focus();
+            break;
+        case "post":1
+            $('#CommonFormTabs li:eq(1) a').tab('show');
+            $('#PostForm').tab('show');
+            $('#CommonPostBody').focus();
+            break;
+    }
 }
