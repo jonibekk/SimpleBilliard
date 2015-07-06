@@ -69,13 +69,19 @@ class UploadBehavior extends ModelBehavior
                     $model->data[$model->name][$field]['size'] == 0
                 ) {
                     $log = sprintf(
-                        "Failed to upload file. name='%s' type='%s' tmp_name='%s' error='%s' size='%s'",
+                        "Failed to upload file. uid=%s name=%s type=%s tmp_name=%s error=%s size=%s",
+                        $model->my_uid,
                         $model->data[$model->name][$field]['name'],
                         $model->data[$model->name][$field]['type'],
                         $model->data[$model->name][$field]['tmp_name'],
                         $model->data[$model->name][$field]['error'],
                         $model->data[$model->name][$field]['size']);
-                    $this->log($log);
+                    CakeLog::config('upload', array(
+                        'engine' => 'File',
+                        'types'  => array('upload'),
+                        'file'   => 'upload',
+                    ));
+                    $this->log($log, 'upload');
                 }
 
                 if (!empty($model->id)) {
