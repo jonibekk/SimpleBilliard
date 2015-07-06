@@ -755,7 +755,6 @@ function evShow() {
  * 指定した要素を表示する。(一度だけ)
  */
 function evShowAndThisWide() {
-    console.log('changed');
     //クリック済みの場合は処理しない
     if ($(this).hasClass('clicked'))return;
 
@@ -776,7 +775,12 @@ function evShowAndThisWide() {
     $(this).autosize();
 
     //submitボタンを表示
-    $("#" + $(this).attr('target_show_id')).show();
+    var target = $(this).attr('target_show_id');
+    target = target.split(',');
+    jQuery.each(target, function () {
+        $("#" + this).show();
+    });
+
     //クリック済みにする
     $(this).addClass('clicked');
 }
@@ -2810,9 +2814,8 @@ function setDefaultFocus() {
             $('#CommonFormTabs li:eq(0) a').tab('show');
             $('#CommonActionName').focus();
             break;
-        case "post":
+        case "post":1
             $('#CommonFormTabs li:eq(1) a').tab('show');
-            console.log('type post');
             $('#PostForm').tab('show');
             $('#CommonPostBody').focus();
             break;

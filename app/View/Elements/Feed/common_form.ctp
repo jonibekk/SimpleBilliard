@@ -60,13 +60,14 @@
                         'rows'                     => 1,
                         'required'                 => true,
                         'placeholder'              => __d('gl', "アクションの説明を書く"),
-                        'class'                    => 'form-control blank-disable post-form feed-post-form box-align change-warning',
+                        'class'                    => 'form-control blank-disable tiny-form-text-change post-form feed-post-form box-align change-warning',
                         'target-id'                => "CommonActionSubmit",
+                        'target_show_id'           => 'CommonActionFormImage,WrapCommonActionGoal,CommonActionFooter',
                         "required"                 => true,
                         'data-bv-notempty-message' => __d('validate', "入力必須項目です。"),
                     ])
                     ?>
-                    <div class="row form-group m_0px" id="CommonActionFormImage">
+                    <div class="row form-group m_0px none" id="CommonActionFormImage">
                         <ul class="col input-images post-images">
                             <?php for ($i = 1; $i <= 5; $i++): ?>
                             <li id="WrapPhotoForm_Action_<?= $i ?>">
@@ -77,7 +78,7 @@
                         <span class="help-block" id="ActionResult__Photo_ValidateMessage"></span>
                     </div>
                 </div>
-                <div class="panel-body post-share-range-panel-body" id="">
+                <div class="panel-body post-share-range-panel-body none" id="WrapCommonActionGoal">
                     <?=
                     $this->Form->input('goal_id', [
                         'label'                    => __d('gl', "ゴール"),
@@ -113,7 +114,7 @@
                         <?php $this->Form->unlockField('socket_id') ?>
                     </div>
                 </div>
-                <div class="post-panel-footer">
+                <div class="post-panel-footer none" id="CommonActionFooter">
                     <div class="font_12px" id="CommonActionFormFooter">
                         <div class="row form-horizontal form-group post-share-range" id="CommonActionShare">
                             <?=
