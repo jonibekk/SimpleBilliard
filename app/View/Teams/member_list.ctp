@@ -11,10 +11,6 @@
         border-radius: 5px;
     }
 
-    .team_member_count_label {
-        font-size: 18px;
-        padding: 12px;
-    }
 
     .team_member_setting_btn {
         color: #ffffff;

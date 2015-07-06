@@ -44,9 +44,13 @@
 </div>
 
 <div ng-if="invite_box_show === false">
-    <div class="team_member_count_label">対象メンバー ( {{(team_list|filter:name_field).length}} )</div>
+    <section>
+        <div class="team-member-count-label">対象メンバー ( {{(team_list|filter:name_field).length}} )</div>
+        <button class="team-member-invite-btn develop--forbiddenLink">
+            <i class="fa fa-plus-circle team-member-invite-btn-icon"></i>メンバーを招待する
+        </button>
+      </section>
     <div class="col-xs-12">
-
         <section class="team_member_table">
             <div ng-repeat="item in team_list | filter:name_field"
                 ng-if="item.TeamMember.active_flg == '1' || item.TeamMember.active_flg == disp_active_flag"
@@ -135,7 +139,7 @@
 </div>
 
 <div ng-if="invite_box_show === true">
-    <div class="team_member_count_label">対象メンバー ( {{(invite_list|filter:name_field).length}} )</div>
+    <div class="team-member-count-label">対象メンバー ( {{(invite_list|filter:name_field).length}} )</div>
     <div class="col-xs-12">
         <table class="table team_member_table">
             <tr ng-repeat="item in invite_list | filter:name_field">

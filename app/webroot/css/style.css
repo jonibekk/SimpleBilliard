@@ -3008,7 +3008,8 @@ Temporary Properties - YOU MUST FIX
 }
 
 .develop--forbiddenLink__design {
-    top: 0;
+    top: 24px;
+    left: 32px;
     width: 72px;
     height: 24px;
     line-height: 12px;
