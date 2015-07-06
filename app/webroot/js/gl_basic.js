@@ -946,10 +946,10 @@ $(function () {
     var goT = $("#gotop");
     goT.hover(
         function () {
-            $("#gotop-text").stop().animate({'right': '14px'}, 500);
+            $("#gotop-text").stop().animate({'right': '14px'}, 360);
         },
         function () {
-            $("#gotop-text").stop().animate({'right': '-140px'}, 500);
+            $("#gotop-text").stop().animate({'right': '-140px'}, 800);
         }
     );
 });
