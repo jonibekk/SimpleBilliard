@@ -65,7 +65,7 @@ class UploadBehavior extends ModelBehavior
         foreach (self::$__settings[$model->name] as $field => $settings) {
             if (!empty($model->data[$model->name][$field]) && is_array($model->data[$model->name][$field]) && file_exists($model->data[$model->name][$field]['tmp_name'])) {
                 // エラーが出ているか、ファイルサイズが 0 の時にログを残す
-                if ($model->data[$model->name][$field]['error'] ||
+                if ((isset($model->data[$model->name][$field]['error']) && $model->data[$model->name][$field]['error']) ||
                     $model->data[$model->name][$field]['size'] == 0
                 ) {
                     $log = sprintf(
