@@ -1,11 +1,5 @@
 {
   "name": "status-site",
-  "repositories": [
-    {
-      "type": "pear",
-      "url": "http://pear.cakephp.org"
-    }
-  ],
   "require": {
     "cakephp/cakephp": "2.5.*",
     "phpunit/phpunit": "3.7.*",
