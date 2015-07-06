@@ -64,6 +64,24 @@ class UploadBehavior extends ModelBehavior
         $this->_reset();
         foreach (self::$__settings[$model->name] as $field => $settings) {
             if (!empty($model->data[$model->name][$field]) && is_array($model->data[$model->name][$field]) && file_exists($model->data[$model->name][$field]['tmp_name'])) {
+                // エラーが出ているか、ファイルサイズが 0 の場合
+                if ((isset($model->data[$model->name][$field]['error']) && $model->data[$model->name][$field]['error']) ||
+                    $model->data[$model->name][$field]['size'] == 0
+                ) {
+                    $log = sprintf("Error: Failed to upload file. uid=%s\n", $model->my_uid);
+                    $log .= Debugger::exportVar($model->data) . "\n";
+                    $log .= Debugger::trace();
+                    CakeLog::config('upload', array(
+                        'engine' => 'File',
+                        'types'  => array('upload'),
+                        'file'   => 'upload',
+                    ));
+                    $this->log($log, 'upload');
+
+                    // ファイルアップロードに失敗した場合は、save()自体をエラーにする
+                    return false;
+                }
+
                 if (!empty($model->id)) {
                     $this->_prepareToDeleteFiles($model, $field, true);
                 }
@@ -347,10 +365,24 @@ class UploadBehavior extends ModelBehavior
         copy($srcFile, $destFile);
         @chmod($destFile, 0777);
         $pathinfo = UploadBehavior::_pathinfo($srcFile);
+
+        // 画像の種類を判別する（ファイルの拡張子と実際の種類が異なる場合があるため）
+        $imageInfo = getimagesize($srcFile);
+        $imageType = $pathinfo['extension'];
+        if (strpos($imageInfo['mime'], 'jpeg') !== false) {
+            $imageType = 'jpeg';
+        }
+        elseif (strpos($imageInfo['mime'], 'png') !== false) {
+            $imageType = 'png';
+        }
+        elseif (strpos($imageInfo['mime'], 'gif') !== false) {
+            $imageType = 'gif';
+        }
+
         $src = null;
         $createHandler = null;
         $outputHandler = null;
-        switch (strtolower($pathinfo['extension'])) {
+        switch (strtolower($imageType)) {
             case 'gif':
                 $createHandler = 'imagecreatefromgif';
                 $outputHandler = 'imagegif';
@@ -454,7 +486,7 @@ class UploadBehavior extends ModelBehavior
             $img = imagecreatetruecolor($destW, $destH);
 
             if ($alpha === true) {
-                switch (strtolower($pathinfo['extension'])) {
+                switch (strtolower($imageType)) {
                     case 'gif':
                         $alphaColor = imagecolortransparent($src);
                         imagefill($img, 0, 0, $alphaColor);
