@@ -117,6 +117,7 @@ $(document).ready(function () {
     $(document).on("blur", ".blur-height-reset", evThisHeightReset);
     $(document).on("focus", ".click-height-up", evThisHeightUp);
     $(document).on("focus", ".tiny-form-text", evShowAndThisWide);
+    $(document).on("keyup", ".tiny-form-text-change", evShowAndThisWide);
     $(document).on("click", ".tiny-form-text-close", evShowAndThisWideClose);
     $(document).on("click", ".click-show", evShow);
     $(document).on("click", ".trigger-click", evTriggerClick);
@@ -754,6 +755,7 @@ function evShow() {
  * 指定した要素を表示する。(一度だけ)
  */
 function evShowAndThisWide() {
+    console.log('changed');
     //クリック済みの場合は処理しない
     if ($(this).hasClass('clicked'))return;
 
