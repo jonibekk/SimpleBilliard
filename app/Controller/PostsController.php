@@ -579,7 +579,7 @@ class PostsController extends AppController
         }
 
         $this->set('avail_sub_menu', true);
-        $this->set('common_form_type', 'action');
+        $this->set('common_form_type', 'post');
         $this->set(compact('feed_filter', 'circle_member_count', 'circle_id', 'user_status', 'params',
                            'circle_status'));
         try {

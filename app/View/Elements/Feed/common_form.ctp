@@ -14,10 +14,10 @@
 <div class="panel panel-default global-form">
     <div class="post-panel-heading ptb_7px plr_11px">
         <!-- Nav tabs -->
-        <ul class="feed-switch clearfix plr_0px" role="tablist">
-            <li class="switch-action active"><a href="#ActionForm" role="tab" data-toggle="tab"
-                                                class="switch-action-anchor click-target-focus"
-                                                target-id="CommonActionName"><i
+        <ul class="feed-switch clearfix plr_0px" role="tablist" id="CommonFormTabs">
+            <li class="switch-action"><a href="#ActionForm" role="tab" data-toggle="tab"
+                                         class="switch-action-anchor click-target-focus"
+                                         target-id="CommonActionName"><i
                         class="fa fa-star-o"></i><?= __d('gl', "アクション") ?></a><span class="switch-arrow"></span></li>
             <li class="switch-post"><a href="#PostForm" role="tab" data-toggle="tab"
                                        class="switch-post-anchor click-target-focus"
@@ -27,7 +27,7 @@
     </div>
     <!-- Tab panes -->
     <div class="tab-content">
-        <div class="tab-pane fade in active" id="ActionForm">
+        <div class="tab-pane fade" id="ActionForm">
             <?php if (count($goal_list_for_action_option) == 1): ?>
                 <div class="post-panel-body plr_11px ptb_7px">
                     <div class="alert alert-warning" role="alert">

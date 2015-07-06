@@ -2805,9 +2805,13 @@ function setDefaultFocus() {
     }
     switch (cake.common_form_type) {
         case "action":
+            $('#CommonFormTabs li:eq(0) a').tab('show');
             $('#CommonActionName').focus();
             break;
         case "post":
+            $('#CommonFormTabs li:eq(1) a').tab('show');
+            console.log('type post');
+            $('#PostForm').tab('show');
             $('#CommonPostBody').focus();
             break;
     }
