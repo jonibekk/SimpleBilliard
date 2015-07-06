@@ -64,6 +64,20 @@ class UploadBehavior extends ModelBehavior
         $this->_reset();
         foreach (self::$__settings[$model->name] as $field => $settings) {
             if (!empty($model->data[$model->name][$field]) && is_array($model->data[$model->name][$field]) && file_exists($model->data[$model->name][$field]['tmp_name'])) {
+                // エラーが出ているか、ファイルサイズが 0 の時にログを残す
+                if ($model->data[$model->name][$field]['error'] ||
+                    $model->data[$model->name][$field]['size'] == 0
+                ) {
+                    $log = sprintf(
+                        "Failed to upload file. name='%s' type='%s' tmp_name='%s' error='%s' size='%s'",
+                        $model->data[$model->name][$field]['name'],
+                        $model->data[$model->name][$field]['type'],
+                        $model->data[$model->name][$field]['tmp_name'],
+                        $model->data[$model->name][$field]['error'],
+                        $model->data[$model->name][$field]['size']);
+                    $this->log($log);
+                }
+
                 if (!empty($model->id)) {
                     $this->_prepareToDeleteFiles($model, $field, true);
                 }
