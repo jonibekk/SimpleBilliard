@@ -2812,12 +2812,28 @@ function setDefaultFocus() {
     switch (cake.common_form_type) {
         case "action":
             $('#CommonFormTabs li:eq(0) a').tab('show');
-            $('#CommonActionName').focus();
+            if (!isMobile()) {
+                $('#CommonActionName').focus();
+            }
             break;
-        case "post":1
+        case "post":
             $('#CommonFormTabs li:eq(1) a').tab('show');
             $('#PostForm').tab('show');
-            $('#CommonPostBody').focus();
+            if (!isMobile()) {
+                $('#CommonPostBody').focus();
+            }
             break;
     }
+}
+
+function isMobile() {
+    var agent = navigator.userAgent;
+    if (agent.search(/iPhone/) != -1 ||
+        agent.search(/iPad/) != -1 ||
+        agent.search(/iPod/) != -1 ||
+        agent.search(/Android/) != -1
+    ) {
+        return true;
+    }
+    return false;
 }
