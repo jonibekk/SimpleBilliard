@@ -294,7 +294,7 @@ class TeamMember extends AppModel
             $user_id = $this->User->MemberGroup->getGroupMemberUserId($team_id, $group_id);
             $options['conditions']['user_id'] = $user_id;
         }
-        return $this->convertMemberData($this->find('all', $options));
+        return $this->convertMemberData($this->getAllMemberDetail($options));
     }
 
     /*
@@ -304,7 +304,7 @@ class TeamMember extends AppModel
     {
         $options = $this->defineTeamMemberOption($team_id);
         $options['conditions']['User.2fa_secret'] = null;
-        return $this->convertMemberData($this->find('all', $options));
+        return $this->convertMemberData($this->getAllMemberDetail($options));
     }
 
     /*
@@ -314,7 +314,7 @@ class TeamMember extends AppModel
     {
         $options = $this->defineTeamMemberOption($team_id);
         $options['conditions']['TeamMember.admin_flg'] = 1;
-        return $this->convertMemberData($this->find('all', $options));
+        return $this->convertMemberData($this->getAllMemberDetail($options));
     }
 
     /*
@@ -322,7 +322,8 @@ class TeamMember extends AppModel
      */
     public function selectMemberInfo($team_id)
     {
-        return $this->convertMemberData($this->find('all', $this->defineTeamMemberOption($team_id)));
+        $options = $this->defineTeamMemberOption($team_id);
+        return $this->convertMemberData($this->getAllMemberDetail($options));
     }
 
     /*
@@ -393,6 +394,85 @@ class TeamMember extends AppModel
             }
 
         }
+        return $res;
+    }
+
+    /**
+     * メンバー一覧の詳細なデータ取得
+     * パフォーマンス向上の為にcontainを切り崩してデータをそれぞれ取ってマージしている
+     *
+     * TODO ロジックが煩雑なため、後ほど、containの処理を見直す
+     *
+     * @param $options
+     * @return array|null
+     */
+    function getAllMemberDetail($options)
+    {
+        $contain = null;
+        if (isset($options['contain'])) {
+            $contain = $options['contain'];
+            unset($options['contain']);
+        }
+        $options['fields'][] = 'user_id';
+        $team_members = $this->find('all', $options);
+        if (!$team_members) {
+            return $team_members;
+        }
+        $user_ids = Hash::extract($team_members, '{n}.TeamMember.user_id');
+        $team_members = Hash::combine($team_members, '{n}.TeamMember.user_id', '{n}');
+
+        //コーチ情報をまとめて取得
+        if (viaIsSet($contain['CoachUser'])) {
+            $contain['CoachUser']['conditions']['id'] = $user_ids;
+            $coach_users = $this->User->find('all', $contain['CoachUser']);
+            $coach_users = Hash::combine($coach_users, '{n}.User.id', '{n}');
+        }
+        //ユーザ情報とグループ情報を取得して、ユーザ情報にマージ
+        if (viaIsSet($contain['User'])) {
+            //ユーザ情報を取得
+            $group_options = viaIsSet($contain['User']['MemberGroup']);
+            unset($contain['User']['MemberGroup']);
+            $contain['User']['conditions']['id'] = $user_ids;
+            $users = $this->User->find('all', $contain['User']);
+            $users = Hash::combine($users, '{n}.User.id', '{n}');
+            if ($group_options) {
+                //グループ情報をまとめて取得
+                $group_options['conditions']['user_id'] = $user_ids;
+                if (viaIsSet($group_options['Group'])) {
+                    $group_options['contain']['Group'] = $group_options['Group'];
+                    unset($group_options['Group']);
+                }
+                $group_options['fields'][] = 'user_id';
+                $group_options['fields'][] = 'id';
+                $member_groups = $this->Team->Group->MemberGroup->find('all', $group_options);
+                $member_groups = Hash::combine($member_groups, '{n}.MemberGroup.id', '{n}', '{n}.MemberGroup.user_id');
+            }
+            //ユーザ情報にグループ情報をマージ
+            foreach ($users as $user_id => $val) {
+                $mg_res = [];
+                if (isset($member_groups[$user_id])) {
+                    foreach ($member_groups[$user_id] as $groups) {
+                        $groups['MemberGroup']['Group'] = $groups['Group'];
+                        $mg_res[] = $groups['MemberGroup'];
+                    }
+                }
+                $users[$user_id]['User']['MemberGroup'] = $mg_res;
+            }
+        }
+        //チームメンバー情報にユーザ情報をマージ
+        foreach ($team_members as $user_id => $val) {
+            $team_members[$user_id] = array_merge($team_members[$user_id], $users[$user_id]);
+        }
+        //チームメンバー情報にコーチ情報をマージ
+        foreach ($team_members as $user_id => $val) {
+            $coach = [];
+            if (viaIsSet($coach_users[$val['TeamMember']['coach_user_id']]['User'])) {
+                $coach = $coach_users[$val['TeamMember']['coach_user_id']]['User'];
+            }
+            $team_members[$user_id]['CoachUser'] = $coach;
+        }
+        $res = array_values($team_members);
+
         return $res;
     }
 
