@@ -292,7 +292,7 @@ class TeamMember extends AppModel
         $options = $this->defineTeamMemberOption($team_id);
         if (empty($group_id) === false) {
             $user_id = $this->User->MemberGroup->getGroupMemberUserId($team_id, $group_id);
-            $options['conditions']['user_id'] = $user_id;
+            $options['contain']['User']['conditions']['user_id'] = $user_id;
         }
         return $this->convertMemberData($this->getAllMemberDetail($options));
     }
@@ -303,7 +303,7 @@ class TeamMember extends AppModel
     public function select2faStepMemberInfo($team_id)
     {
         $options = $this->defineTeamMemberOption($team_id);
-        $options['conditions']['User.2fa_secret'] = null;
+        $options['contain']['User']['conditions']['User.2fa_secret'] = null;
         return $this->convertMemberData($this->getAllMemberDetail($options));
     }
 
@@ -400,10 +400,10 @@ class TeamMember extends AppModel
     /**
      * メンバー一覧の詳細なデータ取得
      * パフォーマンス向上の為にcontainを切り崩してデータをそれぞれ取ってマージしている
-     *
      * TODO ロジックが煩雑なため、後ほど、containの処理を見直す
      *
      * @param $options
+     *
      * @return array|null
      */
     function getAllMemberDetail($options)
@@ -461,7 +461,12 @@ class TeamMember extends AppModel
         }
         //チームメンバー情報にユーザ情報をマージ
         foreach ($team_members as $user_id => $val) {
-            $team_members[$user_id] = array_merge($team_members[$user_id], $users[$user_id]);
+            if (isset($users[$user_id])) {
+                $team_members[$user_id] = array_merge($team_members[$user_id], $users[$user_id]);
+            }
+            else {
+                unset($team_members[$user_id]);
+            }
         }
         //チームメンバー情報にコーチ情報をマージ
         foreach ($team_members as $user_id => $val) {
