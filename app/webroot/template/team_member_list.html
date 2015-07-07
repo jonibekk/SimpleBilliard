@@ -2,7 +2,7 @@
     <div id="filter_box" class="row">
       <h3>メンバー一覧</h3>
         <div class="aaa">
-            <select ng-model="filter_name" name="filter_name" class="form-control team-select-box" ng-change="changeFilter()">
+            <select ng-model="filter_name" name="filter_name" class="form-control team-select-box disable-change-warning" ng-change="changeFilter()">
                 <option ng-selected="true" value="">{{ 'FILTER_ALL' | translate}}</option>
                 <option value="coach_name">{{ 'FILTER_COACH_NAME' | translate}}</option>
                 <option value="group_name">{{ 'FILTER_GROUP_NAME' | translate}}</option>
@@ -15,17 +15,17 @@
         <div class="bbb">
             <input ng-show="name_field_show"
                    ng-model="name_field.search_user_keyword"
-                   class="form-control" placeholder="&#xF002; {{ 'PLACEHOLDER_NAME_FIELD' | translate}}">
+                   class="form-control disable-change-warning" placeholder="&#xF002; {{ 'PLACEHOLDER_NAME_FIELD' | translate}}">
 
             <input ng-show="coach_name_field_show"
                    ng-model="name_field.search_coach_name_keyword"
-                   class="form-control" placeholder="&#xF002; {{ 'PLACEHOLDER_COACH_NAME_FIELD' | translate}}">
+                   class="form-control disable-change-warning" placeholder="&#xF002; {{ 'PLACEHOLDER_COACH_NAME_FIELD' | translate}}">
 
             <select ng-show="group_field_show"
                     ng-model="group_id"
                     ng-options="num as name for (num, name) in group_list"
                     ng-change="changeGroupFilter()"
-                    class="form-control">
+                    class="form-control disable-change-warning">
                 <option ng-selected="true" value="">すべて</option>
             </select>
         </div>
