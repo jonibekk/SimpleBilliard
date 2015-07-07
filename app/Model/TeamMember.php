@@ -292,7 +292,7 @@ class TeamMember extends AppModel
         $options = $this->defineTeamMemberOption($team_id);
         if (empty($group_id) === false) {
             $user_id = $this->User->MemberGroup->getGroupMemberUserId($team_id, $group_id);
-            $options['contain']['User']['conditions']['user_id'] = $user_id;
+            $options['conditions']['user_id'] = $user_id;
         }
         return $this->convertMemberData($this->getAllMemberDetail($options));
     }
