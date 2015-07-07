@@ -419,11 +419,11 @@ class TeamMember extends AppModel
             return $team_members;
         }
         $user_ids = Hash::extract($team_members, '{n}.TeamMember.user_id');
+        $coach_user_ids = Hash::extract($team_members, '{n}.TeamMember.coach_user_id');
         $team_members = Hash::combine($team_members, '{n}.TeamMember.user_id', '{n}');
-
         //コーチ情報をまとめて取得
         if (viaIsSet($contain['CoachUser'])) {
-            $contain['CoachUser']['conditions']['id'] = $user_ids;
+            $contain['CoachUser']['conditions']['id'] = $coach_user_ids;
             $coach_users = $this->User->find('all', $contain['CoachUser']);
             $coach_users = Hash::combine($coach_users, '{n}.User.id', '{n}');
         }
