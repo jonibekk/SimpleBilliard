@@ -237,9 +237,7 @@ class Circle extends AppModel
     public function getCirclesByKeyword($keyword, $limit = 10, array $params = [])
     {
         // オプションデフォルト
-        $params += [
-            'public_flg' => null,
-        ];
+        $params = array_merge(['public_flg' => null], $params);
 
         $my_circle_list = $this->CircleMember->getMyCircleList();
         $options = [

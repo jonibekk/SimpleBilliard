@@ -216,7 +216,6 @@
                         'id'     => 'postShareRangeToggleButton',
                         'class'  => "btn btn-lightGray btn-white post-share-range-toggle-button",
                         'data-toggle-enabled' => (isset($current_circle)) ? '' : '1',
-
                     ]) ?>
                     <?= $this->Form->hidden('share_range', [
                         'id'    => 'postShareRange',
