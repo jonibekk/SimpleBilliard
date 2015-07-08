@@ -51,15 +51,11 @@
                     'class'         => 'form-feed-notify'
                 ]); ?>
                 <div class="post-panel-body plr_11px ptb_7px">
-                    <a href="#" class="target-show-target-click link-dark-gray click-this-remove"
+                    <a href="#" class="target-show-target-click btn btn-link btn-lightGray bd-radius_4px click-this-remove"
                        target-id="CommonActionFormImage,CommonActionSubmit,WrapActionFormName,WrapCommonActionGoal,CommonActionFooter,CommonActionFormShare"
                        click-target-id="ActionResult__Photo_1">
-                        <div class="row form-group m_0px font_lightgray" id="">
-                            <button type="button" class="btn pull-left">
-                                <i class="fa fa-camera"></i>
-                                <?= __d('gl', "画像を選択しよう！") ?>
-                            </button>
-                        </div>
+                        <i class="fa fa-camera"></i>
+                        <?= __d('gl', "画像を選択しよう！") ?>
                     </a>
                     <div class="row form-group m_0px none" id="CommonActionFormImage">
                         <ul class="col input-images post-images">
