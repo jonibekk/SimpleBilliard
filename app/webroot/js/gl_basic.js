@@ -1509,7 +1509,7 @@ $(document).ready(function () {
 
     $('#select2ActionCircleMember').select2({
         multiple: true,
-        placeholder: cake.word.a,
+        placeholder: cake.word.select_notify_range,
         minimumInputLength: 2,
         ajax: {
             url: cake.url.s,

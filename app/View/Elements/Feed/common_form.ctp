@@ -124,12 +124,10 @@
                     </div>
                 </div>
                 <div class="panel-body post-share-range-panel-body none" id="CommonActionFormShare">
-                    <label for="KrSelectOnActionForm"><?= __d('gl', "通知先を追加") ?></label>
-
                     <div class="col col-xxs-12 col-xs-12 post-share-range-list" id="CommonActionShareInputWrap">
                         <?=
                         $this->Form->hidden('share',
-                                            ['id' => 'select2ActionCircleMember', 'value' => "coach,followers,collaborators", 'style' => "width: 100%",]) ?>
+                                            ['id' => 'select2ActionCircleMember', 'value' => "", 'style' => "width: 100%",]) ?>
                         <?php $this->Form->unlockField('ActionResult.share') ?>
                         <?php $this->Form->unlockField('socket_id') ?>
                     </div>
