@@ -2896,6 +2896,9 @@ function setDefaultTab() {
             break;
         case "post":
             $('#CommonFormTabs li:eq(1) a').tab('show');
+            if(!isMobile()){
+                $('#CommonPostBody').focus();
+            }
             break;
     }
 }
