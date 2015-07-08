@@ -71,12 +71,42 @@ class PostsControllerTest extends ControllerTestCase
                    ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
         $data = [
             'Post' => [
-                'body'  => 'test',
-                'share' => 'public,circle_1,user_12'
+                'body'         => 'test',
+                'share_public' => 'public,circle_1,user_12',
+                'share_secret' => '',
+                'share_range'  => 'public',
             ],
         ];
         $this->testAction('/posts/add',
                           ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+
+    }
+
+    function testAddSecretCircle()
+    {
+        /**
+         * @var UsersController $Posts
+         */
+        $Posts = $this->_getPostsCommonMock();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Session->expects($this->any())->method('read')
+                       ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
+                   ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
+
+        // 秘密サークルへの投稿
+        $data = [
+            'Post' => [
+                'body'         => 'test',
+                'share_public' => '',
+                'share_secret' => 'circle_4',
+                'share_range'  => 'secret',
+            ],
+        ];
+        $this->testAction('/posts/add',
+                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+
     }
 
     function testAddOnlyCircle()
@@ -93,9 +123,11 @@ class PostsControllerTest extends ControllerTestCase
                    ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
         $data = [
             'Post' => [
-                'body'    => 'test',
-                'share'   => 'circle_1',
-                'team_id' => '1'
+                'body'         => 'test',
+                'share_public' => 'circle_1',
+                'share_secret' => '',
+                'share_range'  => 'public',
+                'team_id'      => '1'
             ],
         ];
         $this->testAction('/posts/add',
@@ -113,10 +145,12 @@ class PostsControllerTest extends ControllerTestCase
                        ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
         $data = [
             'Post' => [
-                'body'      => 'test',
-                'share'     => 'public,circle_1,user_12',
-                'socket_id' => 'hogehage',
-                'team_id'   => '1'
+                'body'         => 'test',
+                'share_public' => 'public,circle_1,user_12',
+                'share_secret' => '',
+                'share_range'  => 'public',
+                'socket_id'    => 'hogehage',
+                'team_id'      => '1'
             ],
         ];
         $this->testAction('/posts/add',

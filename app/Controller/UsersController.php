@@ -801,6 +801,20 @@ class UsersController extends AppController
         }
         return $this->_ajaxGetResponse($res);
     }
+    
+    /**
+     * select2の非公開サークル検索
+     */
+    function ajax_select2_get_secret_circles()
+    {
+        $this->_ajaxPreProcess();
+        $query = $this->request->query;
+        $res = [];
+        if (isset($query['term']) && !empty($query['term']) && isset($query['page_limit']) && !empty($query['page_limit'])) {
+            $res = $this->User->getSecretCirclesSelect2($query['term'], $query['page_limit']);
+        }
+        return $this->_ajaxGetResponse($res);
+    }
 
     /**
      * チームに参加
