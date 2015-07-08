@@ -143,18 +143,20 @@ class AppController extends Controller
                 //permission check
                 $active_team_list = $this->User->TeamMember->getActiveTeamList($login_uid);
                 $set_default_team_id = !empty($active_team_list) ? key($active_team_list) : null;
-
                 //デフォルトチームが設定されていない場合はアクティブなチームでカレントチームとデフォルトチームを書き換え
                 if (!$this->Auth->user('default_team_id')) {
                     $this->User->updateDefaultTeam($set_default_team_id, true, $login_uid);
                     $this->Session->write('current_team_id', $set_default_team_id);
+                    $this->_refreshAuth();
                 }
                 //デフォルトチームが設定されていて、カレントチームが非アクティブの場合は、デフォルトチームを書き換えてログオフ
                 elseif (!$this->User->TeamMember->isActive($login_uid)) {
                     $this->User->updateDefaultTeam($set_default_team_id, true, $login_uid);
+                    $this->Session->write('current_team_id', $set_default_team_id);
                     //ログアウト
                     $this->Pnotify->outError(__d('gl', "アクセスしたチームのアクセス権限がありません"));
                     $this->Auth->logout();
+                    return;
                 }
                 $this->_setUnApprovedCnt($login_uid);
                 $this->_setEvaluableCnt();
