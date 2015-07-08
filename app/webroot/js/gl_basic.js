@@ -3,7 +3,7 @@ $.ajaxSetup({
 });
 $(document).ready(function () {
 
-    setDefaultFocus();
+    setDefaultTab();
     //すべてのformで入力があった場合に行う処理
     $("select,input").change(function () {
         $(this).nextAll(".help-block" + ".text-danger").remove();
@@ -139,6 +139,8 @@ $(document).ready(function () {
     $(document).on("click", ".click-target-enabled", evTargetEnabled);
     //noinspection JSUnresolvedVariable
     $(document).on("change", ".change-target-enabled", evTargetEnabled);
+    //noinspection JSUnresolvedVariable
+    $(document).on("click", ".click-this-remove", evRemoveThis);
     //noinspection JSUnresolvedVariable
     $(document).on("change", ".change-next-select-with-value", evChangeTargetSelectWithValue);
     //noinspection JSUnresolvedVariable
@@ -608,6 +610,10 @@ function evTargetToggle() {
     $("#" + target_id).toggle();
     return false;
 }
+
+function evRemoveThis() {
+    $(this).remove();
+}
 function evTargetToggleClick() {
     attrUndefinedCheck(this, 'target-id');
     attrUndefinedCheck(this, 'click-target-id');
@@ -776,7 +782,7 @@ function evShowAndThisWide() {
 
     //submitボタンを表示
     var target = $(this).attr('target_show_id');
-    target = target.split(',');
+    var target = target.split(',');
     jQuery.each(target, function () {
         $("#" + this).show();
     });
@@ -1050,10 +1056,14 @@ function evTargetShowTargetClick() {
     attrUndefinedCheck(this, 'target-id');
     attrUndefinedCheck(this, 'click-target-id');
     var $obj = $(this);
-    var target_id = $obj.attr("target-id");
+
     var click_target_id = $obj.attr("click-target-id");
-    $("#" + target_id).show();
     $("#" + click_target_id).trigger('click');
+    var target = $obj.attr("target-id");
+    var target = target.split(',');
+    jQuery.each(target, function () {
+        $("#" + this).show();
+    });
     return false;
 }
 
@@ -2876,23 +2886,16 @@ function evAjaxLeaveCircle(e) {
         });
 }
 
-function setDefaultFocus() {
+function setDefaultTab() {
     if (cake.common_form_type == "") {
         return;
     }
     switch (cake.common_form_type) {
         case "action":
             $('#CommonFormTabs li:eq(0) a').tab('show');
-            if (!isMobile()) {
-                $('#CommonActionName').focus();
-            }
             break;
         case "post":
             $('#CommonFormTabs li:eq(1) a').tab('show');
-            $('#PostForm').tab('show');
-            if (!isMobile()) {
-                $('#CommonPostBody').focus();
-            }
             break;
     }
 }

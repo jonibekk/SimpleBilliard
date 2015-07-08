@@ -51,22 +51,17 @@
                     'class'         => 'form-feed-notify'
                 ]); ?>
                 <div class="post-panel-body plr_11px ptb_7px">
-                    <?=
-                    $this->Form->input('name', [
-                        'id'                       => 'CommonActionName',
-                        'label'                    => false,
-                        'type'                     => 'textarea',
-                        'wrap'                     => 'soft',
-                        'rows'                     => 1,
-                        'required'                 => true,
-                        'placeholder'              => __d('gl', "アクションの説明を書く"),
-                        'class'                    => 'form-control blank-disable tiny-form-text-change post-form feed-post-form box-align change-warning',
-                        'target-id'                => "CommonActionSubmit",
-                        'target_show_id'           => 'CommonActionFormImage,WrapCommonActionGoal,CommonActionFooter,CommonActionFormShare',
-                        "required"                 => true,
-                        'data-bv-notempty-message' => __d('validate', "入力必須項目です。"),
-                    ])
-                    ?>
+                    <a href="#" class="target-show-target-click link-dark-gray click-this-remove"
+                       target-id="CommonActionFormImage,CommonActionSubmit,WrapActionFormName,WrapCommonActionGoal,CommonActionFooter,CommonActionFormShare"
+                       click-target-id="ActionResult__Photo_1">
+                        <div class="row form-group m_0px font_lightgray" id="">
+                            <button type="button" class="btn pull-left photo-up-btn">
+                                <i class="fa fa-camera post-camera-icon"></i>
+                            </button>
+                            <?= __d('gl', "画像を選択しよう！") ?>
+                        </div>
+                    </a>
+
                     <div class="row form-group m_0px none" id="CommonActionFormImage">
                         <ul class="col input-images post-images">
                             <?php for ($i = 1; $i <= 5; $i++): ?>
@@ -78,6 +73,23 @@
                         <span class="help-block" id="ActionResult__Photo_ValidateMessage"></span>
                     </div>
                 </div>
+                <div id="WrapActionFormName" class="panel-body post-share-range-panel-body none">
+                    <?=
+                    $this->Form->input('name', [
+                        'id'                       => 'CommonActionName',
+                        'label'                    => false,
+                        'type'                     => 'textarea',
+                        'wrap'                     => 'soft',
+                        'rows'                     => 1,
+                        'required'                 => true,
+                        'placeholder'              => __d('gl', "アクションを説明しよう"),
+                        'class'                    => 'form-control change-warning',
+                        "required"                 => true,
+                        'data-bv-notempty-message' => __d('validate', "入力必須項目です。"),
+                    ])
+                    ?>
+                </div>
+
                 <div class="panel-body post-share-range-panel-body none" id="WrapCommonActionGoal">
                     <?=
                     $this->Form->input('goal_id', [
@@ -194,7 +206,8 @@
                     $secret_share_default = "circle_" . $current_circle['Circle']['id'];
                 }
                 ?>
-                <div class="col col-xxs-10 col-xs-10 post-share-range-list" id="PostPublicShareInputWrap" <?php if ($secret_share_default) : ?>style="display:none"<?php endif ?>>
+                <div class="col col-xxs-10 col-xs-10 post-share-range-list" id="PostPublicShareInputWrap"
+                     <?php if ($secret_share_default) : ?>style="display:none"<?php endif ?>>
                     <?=
                     $this->Form->hidden('share_public', [
                         'id'    => 'select2PostCircleMember',
@@ -203,7 +216,8 @@
                     ]) ?>
                     <?php $this->Form->unlockField('Post.share_public') ?>
                 </div>
-                <div class="col col-xxs-10 col-xs-10 post-share-range-list" id="PostSecretShareInputWrap" <?php if (!$secret_share_default) : ?>style="display:none"<?php endif ?>>
+                <div class="col col-xxs-10 col-xs-10 post-share-range-list" id="PostSecretShareInputWrap"
+                     <?php if (!$secret_share_default) : ?>style="display:none"<?php endif ?>>
                     <?=
                     $this->Form->hidden('share_secret', [
                         'id'    => 'select2PostSecretCircle',
@@ -213,8 +227,8 @@
                 </div>
                 <div class="col col-xxs-2 col-xs-2 text-center post-share-range-toggle-button-container">
                     <?= $this->Html->link('', '#', [
-                        'id'     => 'postShareRangeToggleButton',
-                        'class'  => "btn btn-lightGray btn-white post-share-range-toggle-button",
+                        'id'                  => 'postShareRangeToggleButton',
+                        'class'               => "btn btn-lightGray btn-white post-share-range-toggle-button",
                         'data-toggle-enabled' => (isset($current_circle)) ? '' : '1',
                     ]) ?>
                     <?= $this->Form->hidden('share_range', [
