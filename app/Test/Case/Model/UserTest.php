@@ -682,4 +682,28 @@ class UserTest extends CakeTestCase
         $res = $this->User->getUsersProf(1);
         $this->assertTrue(!empty($res));
     }
+
+    function testGetSecretCirclesSelect2()
+    {
+        $this->User->CircleMember->current_team_id = 1;
+        $this->User->CircleMember->my_uid = 1;
+        $this->User->CircleMember->Circle->current_team_id = 1;
+        $this->User->CircleMember->Circle->my_uid = 1;
+
+        // 秘密サークル
+        $res = $this->User->getSecretCirclesSelect2('秘密サークル');
+        $this->assertNotEmpty('public', $res['results']);
+
+        // 秘密サークル
+        $res = $this->User->getSecretCirclesSelect2('秘密');
+        $this->assertNotEmpty('public', $res['results']);
+
+        // 通常のサークル
+        $res = $this->User->getSecretCirclesSelect2('test');
+        $this->assertEquals(['results' => []], $res);
+
+        // チーム全体サークル
+        $res = $this->User->getSecretCirclesSelect2('チーム全体');
+        $this->assertEquals(['results' => []], $res);
+    }
 }

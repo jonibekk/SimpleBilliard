@@ -177,13 +177,53 @@
             }
             ?>
             <div class="panel-body post-share-range-panel-body" id="PostFormShare">
-                <div class="col col-xxs-12 col-xs-12 post-share-range-list" id="PostShareInputWrap">
+
+                <?php
+                // 共有範囲「公開」のデフォルト選択
+                // 「チーム全体サークル」以外のサークルフィードページの場合は、対象のサークルIDを指定。
+                // それ以外は「チーム全体サークル」(public)を指定する。
+                $public_share_default = 'public';
+                if (isset($current_circle) && $current_circle['Circle']['public_flg'] && !$current_circle['Circle']['team_all_flg']) {
+                    $public_share_default = "circle_" . $current_circle['Circle']['id'];
+                }
+
+                // 共有範囲「秘密」のデフォルト選択
+                // 秘密サークルのサークルフィードページの場合は、対象のサークルIDを指定する。
+                $secret_share_default = '';
+                if (isset($current_circle) && !$current_circle['Circle']['public_flg']) {
+                    $secret_share_default = "circle_" . $current_circle['Circle']['id'];
+                }
+                ?>
+                <div class="col col-xxs-10 col-xs-10 post-share-range-list" id="PostPublicShareInputWrap" <?php if ($secret_share_default) : ?>style="display:none"<?php endif ?>>
                     <?=
-                    $this->Form->hidden('share',
-                                        ['id' => 'select2PostCircleMember', 'value' => $current_circle && !$current_circle['Circle']['team_all_flg'] ? "circle_" . $current_circle['Circle']['id'] : "public", 'style' => "width: 100%",]) ?>
-                    <?php $this->Form->unlockField('Post.share') ?>
-                    <?php $this->Form->unlockField('socket_id') ?>
+                    $this->Form->hidden('share_public', [
+                        'id'    => 'select2PostCircleMember',
+                        'value' => $public_share_default,
+                        'style' => "width: 100%"
+                    ]) ?>
+                    <?php $this->Form->unlockField('Post.share_public') ?>
                 </div>
+                <div class="col col-xxs-10 col-xs-10 post-share-range-list" id="PostSecretShareInputWrap" <?php if (!$secret_share_default) : ?>style="display:none"<?php endif ?>>
+                    <?=
+                    $this->Form->hidden('share_secret', [
+                        'id'    => 'select2PostSecretCircle',
+                        'value' => $secret_share_default,
+                        'style' => "width: 100%;"]) ?>
+                    <?php $this->Form->unlockField('Post.share_secret') ?>
+                </div>
+                <div class="col col-xxs-2 col-xs-2 text-center post-share-range-toggle-button-container">
+                    <?= $this->Html->link('', '#', [
+                        'id'     => 'postShareRangeToggleButton',
+                        'class'  => "btn btn-lightGray btn-white post-share-range-toggle-button",
+                        'data-toggle-enabled' => (isset($current_circle)) ? '' : '1',
+                    ]) ?>
+                    <?= $this->Form->hidden('share_range', [
+                        'id'    => 'postShareRange',
+                        'value' => $secret_share_default ? 'secret' : 'public',
+                    ]) ?>
+                </div>
+                <?php $this->Form->unlockField('Post.share_range') ?>
+                <?php $this->Form->unlockField('socket_id') ?>
             </div>
             <div class="post-panel-footer">
                 <div class="font_12px none" id="PostFormFooter">

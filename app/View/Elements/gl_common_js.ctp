@@ -81,7 +81,12 @@ echo $this->Html->script('gl_basic');
             i: "<?=__d('gl',"最多で")?>",
             j: "<?=__d('gl',"項目までしか選択できません")?>",
             k: "<?=__d('gl',"出したい成果を選択する")?>",
-            l: "<?=__d('gl',"出したい成果はありません")?>"
+            l: "<?=__d('gl',"出したい成果はありません")?>",
+            public: "<?=__d('gl',"公開")?>",
+            secret: "<?=__d('gl',"秘密")?>",
+            select_public_circle: "<?=__d('gl',"公開サークルかメンバーを指定しよう")?>",
+            select_secret_circle: "<?=__d('gl',"秘密サークルを指定しよう")?>",
+            share_change_disabled: "<?=__d('gl',"サークルページでは切り替えられません")?>"
         },
         url: {
             a: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_users'])?>",
@@ -113,26 +118,45 @@ echo $this->Html->script('gl_basic');
             aa: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_delete_group_vision'])?>/",
             ab: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_login_user_group_id'])?>/",
             ac: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_team_vision_detail'])?>/",
-            ad: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_group_vision_detail'])?>/"
+            ad: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_group_vision_detail'])?>/",
+            select2_secret_circle: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_secret_circles'])?>/"
         },
         data: {
             a: <?=isset($select2_default)?$select2_default:"[]"?>,
             b: function (element, callback) {
-                var data = [{
-                    <?php if(isset($current_circle)&&!empty($current_circle)):?>
-                    <?php if($current_circle['Circle']['team_all_flg']): ?>
+                var data = [];
+                var selected_values = element.val().split(',');
+
+                var current_circle_item = {};
+                <?php if (isset($current_circle) && $current_circle) : ?>
+                current_circle_item = {
+                    <?php if ($current_circle['Circle']['team_all_flg']): ?>
                     id: "public",
                     <?php else: ?>
                     id: "circle_<?=$current_circle['Circle']['id']?>",
                     <?php endif ?>
                     text: "<?=h($current_circle['Circle']['name'])?>",
                     image: "<?=$this->Upload->uploadUrl($current_circle, 'Circle.photo', ['style' => 'small'])?>"
-                    <?php elseif(isset($team_all_circle)&&!empty($team_all_circle)):?>
+                };
+                <?php endif ?>
+
+                var team_all_circle_item = {};
+                <?php if (isset($team_all_circle) && $team_all_circle): ?>
+                team_all_circle_item = {
                     id: 'public',
                     text: "<?=h($team_all_circle['Circle']['name'])?>",
                     image: "<?=$this->Upload->uploadUrl($team_all_circle, 'Circle.photo', ['style' => 'small'])?>"
-                    <?php endif;?>
-                }];
+                };
+                <?php endif;?>
+
+                for (var i = 0; i < selected_values.length; i++) {
+                    if (selected_values[i] == current_circle_item.id) {
+                        data.push(current_circle_item);
+                    }
+                    else if (selected_values[i] == team_all_circle_item.id) {
+                        data.push(team_all_circle_item);
+                    }
+                }
                 callback(data);
             },
             c: <?=isset($my_channels_json)?$my_channels_json:"[]"?>,
@@ -165,6 +189,26 @@ echo $this->Html->script('gl_basic');
                         locked: true
                     }
                 ];
+                callback(data);
+            },
+            select2_secret_circle: function (element, callback) {
+                var data = [];
+                var selected_value = element.val();
+
+                var current_circle_item = {};
+                <?php if (isset($current_circle)) : ?>
+                current_circle_item = {
+                    id: "circle_<?=$current_circle['Circle']['id']?>",
+                    text: "<?=h($current_circle['Circle']['name'])?>",
+                    image: "<?=$this->Upload->uploadUrl($current_circle, 'Circle.photo', ['style' => 'small'])?>"
+                };
+                <?php endif ?>
+
+                // 秘密サークルのフィードページの場合
+                if (selected_value && selected_value == current_circle_item.id) {
+                    current_circle_item.locked = true;
+                    data.push(current_circle_item);
+                }
                 callback(data);
             }
         },
