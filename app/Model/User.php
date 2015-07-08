@@ -846,7 +846,7 @@ class User extends AppModel
         App::uses('UploadHelper', 'View/Helper');
         $Upload = new UploadHelper(new View());
 
-        $circles = $this->CircleMember->Circle->getCirclesByKeyword($keyword, $limit);
+        $circles = $this->CircleMember->Circle->getPublicCirclesByKeyword($keyword, $limit);
         $circle_res = [];
         foreach ($circles as $val) {
             $data = [];
@@ -867,6 +867,32 @@ class User extends AppModel
         }
         $res = array_merge($circle_res, $user_res);
         return ['results' => $res];
+    }
+
+    /**
+     * 非公開のサークル一覧を select2 用のデータ形式で返す
+     *
+     * @param     $keyword
+     * @param int $limit
+     *
+     * @return array
+     */
+    public function getSecretCirclesSelect2($keyword, $limit = 10)
+    {
+        App::uses('UploadHelper', 'View/Helper');
+        $Upload = new UploadHelper(new View());
+
+        $circles = $this->CircleMember->Circle->getSecretCirclesByKeyword($keyword, $limit);
+        $circle_res = [];
+        foreach ($circles as $val) {
+            $data = [];
+            $data['id'] = $val['Circle']['team_all_flg'] ? 'public' : 'circle_' . $val['Circle']['id'];
+            $data['text'] = $val['Circle']['name'];
+            $data['image'] = $Upload->uploadUrl($val, 'Circle.photo', ['style' => 'small']);
+            $circle_res[] = $data;
+        }
+
+        return ['results' => $circle_res];
     }
 
     /**

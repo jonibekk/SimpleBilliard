@@ -239,6 +239,54 @@ class Circle extends AppModel
         return $res;
     }
 
+    /**
+     * $keyword にマッチする公開サークル一覧を返す
+     *
+     * @param     $keyword
+     * @param int $limit
+     *
+     * @return array|null
+     */
+    public function getPublicCirclesByKeyword($keyword, $limit = 10)
+    {
+        $my_circle_list = $this->CircleMember->getMyCircleList();
+        $options = [
+            'conditions' => [
+                'id'          => $my_circle_list,
+                'name Like ?' => "%" . $keyword . "%",
+                'public_flg'  => 1,
+            ],
+            'limit'      => $limit,
+            'fields'     => ['name', 'id', 'photo_file_name', 'team_all_flg'],
+        ];
+        $res = $this->find('all', $options);
+        return $res;
+    }
+
+    /**
+     * $keyword にマッチする非公開サークル一覧を返す
+     *
+     * @param     $keyword
+     * @param int $limit
+     *
+     * @return array|null
+     */
+    public function getSecretCirclesByKeyword($keyword, $limit = 10)
+    {
+        $my_circle_list = $this->CircleMember->getMyCircleList();
+        $options = [
+            'conditions' => [
+                'id'          => $my_circle_list,
+                'name Like ?' => "%" . $keyword . "%",
+                'public_flg'  => 0,
+            ],
+            'limit'      => $limit,
+            'fields'     => ['name', 'id', 'photo_file_name', 'team_all_flg'],
+        ];
+        $res = $this->find('all', $options);
+        return $res;
+    }
+
     public function getEditData($id)
     {
         $circle = $this->findById($id);

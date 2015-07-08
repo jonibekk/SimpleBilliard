@@ -28,6 +28,11 @@ class PostsController extends AppController
         $this->request->data['Post'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Post']),
                                                              viaIsSet($this->request->data['Post']['body']));
 
+        // 公開投稿か、秘密サークルへの投稿かを判別
+        $this->request->data['Post']['share'] = ($this->request->data['Post']['share_range'])
+            ? $this->request->data['Post']['share_public']
+            : $this->request->data['Post']['share_secret'];
+
         // 投稿を保存
         $successSavedPost = $this->Post->addNormal($this->request->data);
 

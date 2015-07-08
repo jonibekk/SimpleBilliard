@@ -1399,7 +1399,7 @@ $(document).ready(function () {
     //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
     $('#select2PostCircleMember').select2({
         multiple: true,
-        placeholder: cake.word.a,
+        placeholder: cake.word.select_public_circle,
         minimumInputLength: 2,
         ajax: {
             url: cake.url.s,
@@ -1426,6 +1426,77 @@ $(document).ready(function () {
         },
         containerCssClass: "select2PostCircleMember"
     });
+
+    // select2 秘密サークル選択
+    $('#select2PostSecretCircle').select2({
+        multiple: true,
+        placeholder: cake.word.select_secret_circle,
+        minimumInputLength: 2,
+        maximumSelectionSize: 1,
+        ajax: {
+            url: cake.url.select2_secret_circle,
+            dataType: 'json',
+            quietMillis: 100,
+            cache: true,
+            data: function (term, page) {
+                return {
+                    term: term, //search term
+                    page_limit: 10 // page size
+                };
+            },
+            results: function (data, page) {
+                return {results: data.results};
+            }
+        },
+        data: [],
+        initSelection: cake.data.select2_secret_circle,
+        formatSelection: format,
+        formatResult: format,
+        dropdownCssClass: 's2-post-dropdown',
+        escapeMarkup: function (m) {
+            return m;
+        },
+        containerCssClass: "select2PostCircleMember"
+    });
+
+    // 投稿の共有範囲(公開/秘密)切り替えボタン
+    var $shareRangeToggleButton = $('#postShareRangeToggleButton');
+    var $shareRange = $('#postShareRange');
+    var publicButtonLabel = '<i class="fa fa-unlock"></i> ' + cake.word.public;
+    var secretButtonLabel = '<i class="fa fa-lock font_verydark"></i> ' + cake.word.secret;
+
+    // ボタン初期状態
+    $shareRangeToggleButton.html(($shareRange.val() == '1') ? publicButtonLabel : secretButtonLabel);
+
+    // 共有範囲切り替えボタンが有効な場合
+    if ($shareRangeToggleButton.attr('data-toggle-enabled')) {
+        $shareRangeToggleButton.on('click', function (e) {
+            e.preventDefault();
+            $shareRange.val($shareRange.val() == '1' ? '0' : '1');
+            if ($shareRange.val() == '1') {
+                $shareRangeToggleButton.html(publicButtonLabel);
+                $('#PostSecretShareInputWrap').hide();
+                $('#PostPublicShareInputWrap').show();
+            }
+            else {
+                $shareRangeToggleButton.html(secretButtonLabel);
+                $('#PostPublicShareInputWrap').hide();
+                $('#PostSecretShareInputWrap').show();
+            }
+        });
+    }
+    // 共有範囲切り替えボタンが無効な場合（サークルフィードページ）
+    else {
+        $shareRangeToggleButton.popover({
+            'data-toggle': "popover",
+            'placement': 'top',
+            'trigger': "focus",
+            'content': cake.word.share_change_disabled,
+            'container': 'body'
+        });
+    }
+
+
     $('#select2ActionCircleMember').select2({
         multiple: true,
         placeholder: cake.word.a,
