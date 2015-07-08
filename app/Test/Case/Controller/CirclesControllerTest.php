@@ -112,16 +112,27 @@ class CirclesControllerTest extends ControllerTestCase
 
     function testEditSuccessChangePrivacy()
     {
-        $this->_getCirclesCommonMock();
+        $Circles = $this->_getCirclesCommonMock();
+
+        $circle_id = 1;
+        $circle = $Circles->Circle->findById($circle_id);
+        $public_flg_orig = $circle['Circle']['public_flg'];
+
+        $name = 'name changed';
         $data = [
             'Circle' => [
-                'id'          => 1,
-                'name'        => 'xxx',
+                'id'          => $circle_id,
+                'name'        => $name,
                 'description' => 'xxx xxxxx',
-                'public_flg'  => false,
+                'public_flg'  => !$public_flg_orig,
             ],
         ];
         $this->testAction('/circles/edit/circle_id:1', ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
+
+        // 公開フラグが変更されていない事を確認
+        $circle = $Circles->Circle->findById($circle_id);
+        $this->assertEquals($name, $circle['Circle']['name']);
+        $this->assertEquals($public_flg_orig, $circle['Circle']['public_flg']);
     }
 
     function testEditTeamAll()
