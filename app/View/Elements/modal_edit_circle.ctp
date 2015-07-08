@@ -59,22 +59,26 @@
                     $privacy_option[Circle::TYPE_PUBLIC_OFF] .= '<span class="help-block font_11px">' . __d('gl',
                                                                                                             "サークル名と参加メンバー、投稿はこのサークルの参加メンバーだけに表示されます。サークル管理者だけがメンバーを追加できます。") . '</span>';
                     ?>
-                    <?php echo $this->Form->input('public_flg', array(
-                        'type'     => 'radio',
-                        'before'   => '<label class="control-label modal-label">' . __d('gl',
-                                                                                        'プライバシー') . '</label>',
-                        'legend'   => false,
-                        'class'    => false,
-                        'options'  => $privacy_option,
-                        'required' => false,
-                    )); ?>
+                    <div class="form-group">
+                        <label class="control-label modal-label"><?= __d('gl', 'プライバシー') ?></label>
+                        <div>
+                            <span class="font_14px">
+                            <?= $privacy_option[$this->request->data['Circle']['public_flg']] ?>
+                            </span>
+                        </div>
+                    </div>
                 <?php endif ?>
-                <?=
-                $this->Form->input('description',
-                                   ['label'       => __d('gl', "サークルの説明"),
-                                    'placeholder' => __d('gl', "例) 最新情報を共有しましょう。"),
-                                    'rows'        => 1,
-                                   ]) ?>
+
+                <div class="form-group">
+                    <label class="control-label modal-label"><?= __d('gl', 'サークルの説明') ?></label>
+                    <?=
+                    $this->Form->input('description',
+                                       ['label'       => false,
+                                        'placeholder' => __d('gl', "例) 最新情報を共有しましょう。"),
+                                        'rows'        => 1,
+                                       ]) ?>
+                </div>
+
                 <div class="form-group">
                     <label for="" class="control-label modal-label"><?= __d('gl', "サークル画像") ?></label>
 

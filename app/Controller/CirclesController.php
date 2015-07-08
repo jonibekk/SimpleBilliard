@@ -101,22 +101,11 @@ class CirclesController extends AppController
             return;
         }
         $before_circle = $this->Circle->read();
-        //プライバシー設定が変更されているか判定
-        $is_privacy_changed = false;
-        if (isset($before_circle['Circle']['public_flg']) &&
-            isset($this->request->data['Circle']['public_flg']) &&
-            $before_circle['Circle']['public_flg'] != $this->request->data['Circle']['public_flg']
-        ) {
-            $is_privacy_changed = true;
-        }
-        // team_all_flg は変更不可
+        // team_all_flg, public_flg は変更不可
         $this->request->data['Circle']['team_all_flg'] = $before_circle['Circle']['team_all_flg'];
+        $this->request->data['Circle']['public_flg'] = $before_circle['Circle']['public_flg'];
 
         if ($this->Circle->edit($this->request->data)) {
-            if ($is_privacy_changed) {
-                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING,
-                                                 $this->Circle->id);
-            }
             $this->Pnotify->outSuccess(__d('gl', "サークル設定を保存しました。"));
         }
         else {
