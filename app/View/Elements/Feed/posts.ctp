@@ -20,13 +20,16 @@
                 <!--START Goal Post Header -->
 
                 <?php if (isset($post['Goal']['id']) && $post['Goal']['id']): ?>
-                    <div class="panel-body pt_10px plr_11px pb_8px bd-b">
+                    <div class="post-heading-goal-area panel-body pt_10px plr_11px pb_8px bd-b">
                         <div class="col col-xxs-12">
-                            <div class="ln_contain w_88per pull-left">
+                            <div class="post-heading-goal-wrapper pull-left">
                                 <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_description_modal', 'goal_id' => $post['Goal']['id']]) ?>"
                                    class="post-heading-goal
                                     no-line font_verydark modal-ajax-get">
-                                    <i class="fa fa-flag font_gray"></i>&nbsp;<?= h($post['Goal']['name']) ?>
+                                    <p class="post-heading-goal-title">
+                                      <i class="fa fa-flag font_gray"></i>
+                                      <span><?= h($post['Goal']['name']) ?></span>
+                                    </p>
                                 </a>
                             </div>
                             <div class="pull-right">
@@ -35,7 +38,7 @@
                                     <?=
                                     $this->Html->image('ajax-loader.gif',
                                                        [
-                                                           'class'         => 'lazy media-object',
+                                                           'class'         => 'post-heading-goal-avator  lazy media-object',
                                                            'data-original' => $this->Upload->uploadUrl($post,
                                                                                                        "Goal.photo",
                                                                                                        ['style' => 'small']),
@@ -49,12 +52,15 @@
                         </div>
                     </div>
                 <?php elseif (isset($post['Circle']['id'])): ?>
-                    <div class="panel-body pt_10px plr_11px pb_8px bd-b">
+                    <div class="post-heading-circle-area panel-body pt_10px plr_11px pb_8px bd-b">
                         <div class="col col-xxs-12">
-                            <div class="ln_contain w_88per pull-left">
+                            <div class="post-heading-circle-wrapper pull-left">
                                 <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'circle_id' => $post['Circle']['id']]) ?>"
-                                   class="no-line font_verydark">
-                                    <i class="fa fa-circle-o font_gray"></i>&nbsp;<?= h($post['Circle']['name']) ?>
+                                   class="post-heading-cirlce no-line font_verydark">
+                                   <p class="post-heading-circle-title">
+                                     <i class="fa fa-circle-o font_gray"></i>
+                                     <span><?= h($post['Circle']['name']) ?></span>
+                                   </p>
                                 </a>
                             </div>
                             <div class="pull-right">
@@ -63,7 +69,7 @@
                                     <?=
                                     $this->Html->image('ajax-loader.gif',
                                                        [
-                                                           'class'         => 'lazy media-object',
+                                                           'class'         => 'post-heading-circle-avator lazy media-object',
                                                            'data-original' => $this->Upload->uploadUrl($post,
                                                                                                        "Circle.photo",
                                                                                                        ['style' => 'small']),

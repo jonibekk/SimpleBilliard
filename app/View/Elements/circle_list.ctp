@@ -32,17 +32,13 @@
                         )
                         ?>
                     </div>
-                    <div class="circle-name_box">
-                        <p title="<?= h($circle['Circle']['name']) ?>"><?= h($circle['Circle']['name']) ?></p>
-                    </div>
-                    <div class="circle-count_box">
-                        <p class="count-value">
-                            <?php if ($circle['CircleMember']['unread_count'] > 9): ?>
-                                9+
-                            <?php elseif ($circle['CircleMember']['unread_count'] > 0): ?>
-                                <?= $circle['CircleMember']['unread_count'] ?>
-                            <?php endif; ?>
-                        </p>
+                    <p  class="circle-name_box" title="<?= h($circle['Circle']['name']) ?>"><?= h($circle['Circle']['name']) ?></p>
+                    <div class="circle-count_box count-value">
+                        <?php if ($circle['CircleMember']['unread_count'] > 9): ?>
+                            9+
+                        <?php elseif ($circle['CircleMember']['unread_count'] > 0): ?>
+                            <?= $circle['CircleMember']['unread_count'] ?>
+                        <?php endif; ?>
                     </div>
                 </a>
 

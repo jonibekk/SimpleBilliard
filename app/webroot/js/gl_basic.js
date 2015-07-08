@@ -1065,20 +1065,6 @@ function enabledAllInput(selector) {
     $(selector).find('input,select,textarea').removeAttr('disabled');
 }
 
-
-$(".ln_trigger-f5").each(function () {
-    var $minHeight = 24;
-    if ($(this).height() > $minHeight) {
-        $(this).addClass('ln_2');
-    }
-});
-$(".ln_trigger-ff").each(function () {
-    var $minHeight = 24;
-    if ($(this).height() > $minHeight) {
-        $(this).addClass('ln_2-f');
-    }
-
-});
 //noinspection JSUnusedGlobalSymbols
 function ajaxAppendCount(id, url) {
     var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');

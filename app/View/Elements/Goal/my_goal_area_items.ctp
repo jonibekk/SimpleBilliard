@@ -120,12 +120,15 @@
                     </a>
                 </div>
             <?php else: ?>
-                <div class="ln_contain">
+                <div class="goal-column-title-wrap">
                     <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_description_modal', 'goal_id' => $goal['Goal']['id']]) ?>"
                        class="modal-ajax-get">
-                        <p class="ln_trigger-f5 font_gray">
-                            <i class="fa fa-flag"></i>
-                            <?= h($goal['Goal']['name']) ?></p>
+                        <p class="goal-column-title font_gray">
+                            <i class="goal-column-title-icon fa fa-flag"></i>
+                            <span class="goal-column-title-text">
+                              <?= h($goal['Goal']['name']) ?>
+                            </span>
+                        </p>
                     </a>
                 </div>
             <?php endif; ?>
