@@ -70,6 +70,9 @@
                     'default' => Circle::TYPE_PUBLIC_ON,
                     'required' => false
                 )); ?>
+                <div class="font_brownRed font_11px">
+                    <?= __d('gl', 'この設定は後で変更できません') ?>
+                </div>
                 <?=
                 $this->Form->input('description',
                                    ['label'       => __d('gl', "サークルの説明"),
