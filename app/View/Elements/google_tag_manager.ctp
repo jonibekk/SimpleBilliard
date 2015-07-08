@@ -15,7 +15,13 @@
         <iframe src="//www.googletagmanager.com/ns.html?id=<?= GOOGLE_TAG_MANAGER_ID ?>>"
                 height="0" width="0" style="display:none;visibility:hidden"></iframe>
     </noscript>
-    <script>(function (w, d, s, l, i) {
+    <script>
+        dataLayer = [{
+            "loggedIn": "<?= $this->Session->read('Auth.User.id')?"true":"false"?>",
+            "teamId": "<?= $this->Session->read('current_team_id')?>",
+            "userId": "<?= $this->Session->read('Auth.User.id')?>"
+        }];
+        (function (w, d, s, l, i) {
             w[l] = w[l] || [];
             w[l].push({
                 'gtm.start': new Date().getTime(), event: 'gtm.js'
@@ -27,13 +33,6 @@
                 '//www.googletagmanager.com/gtm.js?id=' + i + dl;
             f.parentNode.insertBefore(j, f);
         })(window, document, 'script', 'dataLayer', '<?=GOOGLE_TAG_MANAGER_ID?>');
-        window.onload = function () {
-            dataLayer.push({
-                "loggedIn": "<?= $this->Session->read('Auth.User.id')?"true":"false"?>",
-                "teamId": "<?= $this->Session->read('current_team_id')?>",
-                "userId": "<?= $this->Session->read('Auth.User.id')?>"
-            });
-        }
     </script>
     <!-- End Google Tag Manager -->
 <? endif; ?>
