@@ -206,6 +206,7 @@ echo $this->Html->script('gl_basic');
 
                 // 秘密サークルのフィードページの場合
                 if (selected_value && selected_value == current_circle_item.id) {
+                    current_circle_item.locked = true;
                     data.push(current_circle_item);
                 }
                 callback(data);

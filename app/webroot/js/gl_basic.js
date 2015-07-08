@@ -1846,7 +1846,7 @@ function evFeedMoreView(options) {
                     // 取得したデータ件数が 0 件の場合
                     else {
                         // さらに古い投稿が存在する可能性がある場合は、再度同じ関数を呼び出す
-                        if (data.start && oldest_post_time && data.start > oldest_post_time) {
+                        if (data.start && data.start > oldest_post_time) {
                             setTimeout(function () {
                                 evFeedMoreView.call($obj[0], {recursive: true, loader_id: '__feed_loader'});
                             }, 200);
