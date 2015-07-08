@@ -55,13 +55,12 @@
                        target-id="CommonActionFormImage,CommonActionSubmit,WrapActionFormName,WrapCommonActionGoal,CommonActionFooter,CommonActionFormShare"
                        click-target-id="ActionResult__Photo_1">
                         <div class="row form-group m_0px font_lightgray" id="">
-                            <button type="button" class="btn pull-left photo-up-btn">
-                                <i class="fa fa-camera post-camera-icon"></i>
+                            <button type="button" class="btn pull-left">
+                                <i class="fa fa-camera"></i>
+                                <?= __d('gl', "画像を選択しよう！") ?>
                             </button>
-                            <?= __d('gl', "画像を選択しよう！") ?>
                         </div>
                     </a>
-
                     <div class="row form-group m_0px none" id="CommonActionFormImage">
                         <ul class="col input-images post-images">
                             <?php for ($i = 1; $i <= 5; $i++): ?>
