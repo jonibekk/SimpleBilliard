@@ -1466,14 +1466,14 @@ $(document).ready(function () {
     var secretButtonLabel = '<i class="fa fa-lock font_verydark"></i> ' + cake.word.secret;
 
     // ボタン初期状態
-    $shareRangeToggleButton.html(($shareRange.val() == '1') ? publicButtonLabel : secretButtonLabel);
+    $shareRangeToggleButton.html(($shareRange.val() == 'public') ? publicButtonLabel : secretButtonLabel);
 
     // 共有範囲切り替えボタンが有効な場合
     if ($shareRangeToggleButton.attr('data-toggle-enabled')) {
         $shareRangeToggleButton.on('click', function (e) {
             e.preventDefault();
-            $shareRange.val($shareRange.val() == '1' ? '0' : '1');
-            if ($shareRange.val() == '1') {
+            $shareRange.val($shareRange.val() == 'public' ? 'secret' : 'public');
+            if ($shareRange.val() == 'public') {
                 $shareRangeToggleButton.html(publicButtonLabel);
                 $('#PostSecretShareInputWrap').hide();
                 $('#PostPublicShareInputWrap').show();
@@ -1846,7 +1846,7 @@ function evFeedMoreView(options) {
                     // 取得したデータ件数が 0 件の場合
                     else {
                         // さらに古い投稿が存在する可能性がある場合は、再度同じ関数を呼び出す
-                        if (data.start && data.start > oldest_post_time) {
+                        if (data.start && oldest_post_time && data.start > oldest_post_time) {
                             setTimeout(function () {
                                 evFeedMoreView.call($obj[0], {recursive: true, loader_id: '__feed_loader'});
                             }, 200);

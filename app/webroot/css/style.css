@@ -1976,6 +1976,17 @@ textarea.feed-post-form {
     box-shadow: none !important;
 }
 
+.post-share-range-toggle-button {
+    padding: 3px 7px !important;
+    font-size: 11px !important;
+    border:none !important;
+    width:100% !important;
+}
+
+.post-share-range-toggle-button-container {
+    border-left:1px solid #eeeeee !important;
+}
+
 .post-images {
     margin-top: 8px;
 }

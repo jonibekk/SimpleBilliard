@@ -180,15 +180,15 @@
 
                 <?php
                 // 共有範囲「公開」のデフォルト選択
-                // 「チーム全体サークル」以外のサークルフィードページの場合は、対象のサークルを選択する。
-                // それ以外は「チーム全体サークル」を選択。
+                // 「チーム全体サークル」以外のサークルフィードページの場合は、対象のサークルIDを指定。
+                // それ以外は「チーム全体サークル」(public)を指定する。
                 $public_share_default = 'public';
                 if (isset($current_circle) && $current_circle['Circle']['public_flg'] && !$current_circle['Circle']['team_all_flg']) {
                     $public_share_default = "circle_" . $current_circle['Circle']['id'];
                 }
 
                 // 共有範囲「秘密」のデフォルト選択
-                // 秘密サークルのサークルフィードページの場合は、対象のサークルを選択する。
+                // 秘密サークルのサークルフィードページの場合は、対象のサークルIDを指定する。
                 $secret_share_default = '';
                 if (isset($current_circle) && !$current_circle['Circle']['public_flg']) {
                     $secret_share_default = "circle_" . $current_circle['Circle']['id'];
@@ -211,18 +211,16 @@
                         'style' => "width: 100%;"]) ?>
                     <?php $this->Form->unlockField('Post.share_secret') ?>
                 </div>
-                <div class="col col-xxs-2 col-xs-2 text-center" style="border-left:1px solid #eeeeee">
+                <div class="col col-xxs-2 col-xs-2 text-center post-share-range-toggle-button-container">
                     <?= $this->Html->link('', '#', [
                         'id'     => 'postShareRangeToggleButton',
-                        'class'  => "btn btn-lightGray btn-white",
-                        'escape' => false,
-                        'style'  => 'padding: 3px 7px; font-size: 11px; border:none; width:100%;',
+                        'class'  => "btn btn-lightGray btn-white post-share-range-toggle-button",
                         'data-toggle-enabled' => (isset($current_circle)) ? '' : '1',
 
                     ]) ?>
                     <?= $this->Form->hidden('share_range', [
                         'id'    => 'postShareRange',
-                        'value' => $secret_share_default ? '0' : '1',
+                        'value' => $secret_share_default ? 'secret' : 'public',
                     ]) ?>
                 </div>
                 <?php $this->Form->unlockField('Post.share_range') ?>
