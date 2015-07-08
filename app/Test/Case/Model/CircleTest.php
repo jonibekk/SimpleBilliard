@@ -240,6 +240,30 @@ class CircleTest extends CakeTestCase
         $this->assertFalse($res);
     }
 
+    public function testGetCirclesByKeyword()
+    {
+        $this->Circle->current_team_id = 1;
+        $this->Circle->my_uid = 1;
+        $this->Circle->CircleMember->current_team_id = 1;
+        $this->Circle->CircleMember->my_uid = 1;
+
+        $circles = $this->Circle->getCirclesByKeyword('チーム全体');
+
+        $this->assertNotEmpty($circles);
+        $circles = $this->Circle->getCirclesByKeyword('チーム');
+        $this->assertNotEmpty($circles);
+        $circles = $this->Circle->getCirclesByKeyword('全体');
+        $this->assertNotEmpty($circles);
+
+        // 秘密サークル
+        $circles = $this->Circle->getCirclesByKeyword('秘密サークル');
+        $this->assertNotEmpty($circles);
+
+        // 存在しないサークル
+        $circles = $this->Circle->getCirclesByKeyword('存在しないサークル名');
+        $this->assertEmpty($circles);
+    }
+
     public function testGetPublicCirclesByKeyword()
     {
         $this->Circle->current_team_id = 1;
