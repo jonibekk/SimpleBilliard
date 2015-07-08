@@ -82,8 +82,8 @@ echo $this->Html->script('gl_basic');
             j: "<?=__d('gl',"項目までしか選択できません")?>",
             k: "<?=__d('gl',"出したい成果を選択する")?>",
             l: "<?=__d('gl',"出したい成果はありません")?>",
-            public: '公開',
-            secret: '秘密',
+            public: "<?=__d('gl',"公開")?>",
+            secret: "<?=__d('gl',"秘密")?>",
             select_public_circle: "<?=__d('gl',"公開サークルかメンバーを指定しよう")?>",
             select_secret_circle: "<?=__d('gl',"秘密サークルを指定しよう")?>",
             share_change_disabled: "<?=__d('gl',"サークルページでは切り替えられません")?>"
