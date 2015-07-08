@@ -90,30 +90,38 @@
                     ?>
                 </div>
 
-                <div class="panel-body post-share-range-panel-body none" id="WrapCommonActionGoal">
-                    <?=
-                    $this->Form->input('goal_id', [
-                        'label'                    => __d('gl', "ゴール"),
-                        'required'                 => true,
-                        'data-bv-notempty-message' => __d('validate', "入力必須項目です。"),
-                        'class'                    => 'form-control change-next-select-with-value',
-                        'id'                       => 'GoalSelectOnActionForm',
-                        'options'                  => $goal_list_for_action_option,
-                        'target-id'                => 'KrSelectOnActionForm',
-                        'toggle-target-id'         => 'WrapKrSelectOnActionForm',
-                        'ajax-url'                 => $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_kr_list', 'goal_id' => ""]),
-                    ])
-                    ?>
+                <div class="panel-body post-share-range-panel-body form-group none" id="WrapCommonActionGoal">
+                    <div class="input-group">
+                        <span class="input-group-addon" id=""><i class="fa fa-flag"></i></span>
+                        <?=
+                        $this->Form->input('goal_id', [
+                            'label'                    => false,
+                            'div'                      => false,
+                            'required'                 => true,
+                            'data-bv-notempty-message' => __d('validate', "入力必須項目です。"),
+                            'class'                    => 'form-control change-next-select-with-value',
+                            'id'                       => 'GoalSelectOnActionForm',
+                            'options'                  => $goal_list_for_action_option,
+                            'target-id'                => 'KrSelectOnActionForm',
+                            'toggle-target-id'         => 'WrapKrSelectOnActionForm',
+                            'ajax-url'                 => $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_kr_list', 'goal_id' => ""]),
+                        ])
+                        ?>
+                    </div>
                 </div>
                 <div class="panel-body post-share-range-panel-body none" id="WrapKrSelectOnActionForm">
-                    <?=
-                    $this->Form->input('key_result_id', [
-                        'label'    => __d('gl', "出したい成果(オプション)"),
-                        'required' => false,
-                        'id'       => 'KrSelectOnActionForm',
-                        'options'  => [null => __d('gl', '出したい成果を選択する')],
-                    ])
-                    ?>
+                    <div class="input-group">
+                        <span class="input-group-addon" id=""><i class="fa fa-key"></i></span>
+                        <?=
+                        $this->Form->input('key_result_id', [
+                            'label'    => false,
+                            'div'      => false,
+                            'required' => false,
+                            'id'       => 'KrSelectOnActionForm',
+                            'options'  => [null => __d('gl', '出したい成果を選択する')],
+                        ])
+                        ?>
+                    </div>
                 </div>
                 <div class="panel-body post-share-range-panel-body none" id="CommonActionFormShare">
                     <label for="KrSelectOnActionForm"><?= __d('gl', "通知先を追加") ?></label>
