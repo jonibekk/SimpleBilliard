@@ -67,22 +67,22 @@
 
                     <p ng-if="item.TeamMember.group_name == ''"><i class="fa fa-sitemap"></i> 所属グループはありません</p>
 
-                    <p ng-if="item.TeamMember.group_name != ''"><i class="fa fa-sitemap"></i>
+                    <p ng-if="item.TeamMember.group_name != ''"><i class="fa fa-sitemap team-members-card-filled-icon"></i>
                         {{item.TeamMember.group_name}}</p>
 
                     <p ng-if="item.TeamMember.coach_user_id == null"><i class="fa fa-venus-double"></i> コーチはいません</p>
 
                     <p ng-if="item.TeamMember.coach_user_id != null && item.TeamMember.coacha_name != ''">
-                        <i class="fa fa-venus-double"></i> {{item.TeamMember.coach_name}}</p>
+                        <i class="fa fa-venus-double team-members-card-filled-icon"></i> {{item.TeamMember.coach_name}}</p>
 
                     <p ng-if="login_user_admin_flg == true && item.User.two_step_flg == false">
                         <i class="fa fa-lock"></i> OFF</p>
 
                     <p ng-if="login_user_admin_flg == true && item.User.two_step_flg == true">
-                        <i class="fa fa-lock"></i> ON</p>
+                        <i class="fa fa-lock team-members-card-filled-icon"></i> ON</p>
 
                     <p ng-if="login_user_admin_flg == true && item.TeamMember.evaluation_enable_flg == true">
-                        <i class="fa fa-shield"></i> 評価対象者です</p>
+                        <i class="fa fa-shield team-members-card-filled-icon"></i> 評価対象者です</p>
 
                     <p ng-if="login_user_admin_flg == true && item.TeamMember.evaluation_enable_flg == false">
                         <i class="fa fa-shield"></i> 評価対象者ではありません</p>
