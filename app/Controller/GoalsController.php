@@ -1089,41 +1089,29 @@ class GoalsController extends AppController
 
     function view_followers()
     {
-        $goal_id = $this->_getRequiredGoalIdFromParams();
+        $goal_id = $this->_getRequiredParam('goal_id');
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
 
     function view_members()
     {
-        $goal_id = $this->_getRequiredGoalIdFromParams();
+        $goal_id = $this->_getRequiredParam('goal_id');
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
 
     function view_krs()
     {
-        $goal_id = $this->_getRequiredGoalIdFromParams();
+        $goal_id = $this->_getRequiredParam('goal_id');
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
 
     function view_info()
     {
-        $goal_id = $this->_getRequiredGoalIdFromParams();
+        $goal_id = $this->_getRequiredParam('goal_id');
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
-
-
-    function _getRequiredGoalIdFromParams()
-    {
-        $goal_id = viaIsSet($this->request->params['named']['goal_id']);
-        if (!$goal_id) {
-            $this->Pnotify->outError(__d('gl', "不正な画面遷移です。"));
-            return $this->redirect($this->referer());
-        }
-        return $goal_id;
-    }
-
 }

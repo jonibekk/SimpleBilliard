@@ -1002,39 +1002,29 @@ class UsersController extends AppController
 
     function view_goals()
     {
-        $user_id = $this->_getRequiredUserIdFromParams();
+        $user_id = $this->_getRequiredParam('user_id');
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
 
     function view_posts()
     {
-        $user_id = $this->_getRequiredUserIdFromParams();
+        $user_id = $this->_getRequiredParam('user_id');
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
 
     function view_actions()
     {
-        $user_id = $this->_getRequiredUserIdFromParams();
+        $user_id = $this->_getRequiredParam('user_id');
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
 
     function view_info()
     {
-        $user_id = $this->_getRequiredUserIdFromParams();
+        $user_id = $this->_getRequiredParam('user_id');
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
-    }
-
-    function _getRequiredUserIdFromParams()
-    {
-        $user_id = viaIsSet($this->request->params['named']['user_id']);
-        if(!$user_id){
-            $this->Pnotify->outError(__d('gl',"不正な画面遷移です。"));
-            return $this->redirect($this->referer());
-        }
-        return $user_id;
     }
 }
