@@ -1086,4 +1086,32 @@ class GoalsController extends AppController
         }
         return $res;
     }
+
+    function view_followers()
+    {
+        $goal_id = $this->_getRequiredParam('goal_id');
+        $this->layout = LAYOUT_ONE_COLUMN;
+        return $this->render();
+    }
+
+    function view_members()
+    {
+        $goal_id = $this->_getRequiredParam('goal_id');
+        $this->layout = LAYOUT_ONE_COLUMN;
+        return $this->render();
+    }
+
+    function view_krs()
+    {
+        $goal_id = $this->_getRequiredParam('goal_id');
+        $this->layout = LAYOUT_ONE_COLUMN;
+        return $this->render();
+    }
+
+    function view_info()
+    {
+        $goal_id = $this->_getRequiredParam('goal_id');
+        $this->layout = LAYOUT_ONE_COLUMN;
+        return $this->render();
+    }
 }
