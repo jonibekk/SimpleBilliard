@@ -1,7 +1,8 @@
-<div class="well">
+<div class="well team-members-search-card">
     <div id="filter_box" class="row">
-        <div class="col-xs-12 col-sm-4">
-            <select ng-model="filter_name" name="filter_name" class="form-control" ng-change="changeFilter()">
+      <h3>メンバー一覧</h3>
+        <div class="aaa">
+            <select ng-model="filter_name" name="filter_name" class="form-control team-select-box disable-change-warning" ng-change="changeFilter()">
                 <option ng-selected="true" value="">{{ 'FILTER_ALL' | translate}}</option>
                 <option value="coach_name">{{ 'FILTER_COACH_NAME' | translate}}</option>
                 <option value="group_name">{{ 'FILTER_GROUP_NAME' | translate}}</option>
@@ -11,20 +12,20 @@
                 <option value="invite" ng-if="login_user_admin_flg == true">{{ 'FILTER_INVITES' | translate}}</option>
             </select>
         </div>
-        <div class="col-xs-12 col-sm-8">
+        <div class="bbb">
             <input ng-show="name_field_show"
                    ng-model="name_field.search_user_keyword"
-                   class="form-control" placeholder="{{ 'PLACEHOLDER_NAME_FIELD' | translate}}">
+                   class="form-control disable-change-warning" placeholder="&#xF002; {{ 'PLACEHOLDER_NAME_FIELD' | translate}}">
 
             <input ng-show="coach_name_field_show"
                    ng-model="name_field.search_coach_name_keyword"
-                   class="form-control" placeholder="{{ 'PLACEHOLDER_COACH_NAME_FIELD' | translate}}">
+                   class="form-control disable-change-warning" placeholder="&#xF002; {{ 'PLACEHOLDER_COACH_NAME_FIELD' | translate}}">
 
             <select ng-show="group_field_show"
                     ng-model="group_id"
                     ng-options="num as name for (num, name) in group_list"
                     ng-change="changeGroupFilter()"
-                    class="form-control">
+                    class="form-control disable-change-warning">
                 <option ng-selected="true" value="">すべて</option>
             </select>
         </div>
@@ -35,55 +36,60 @@
                    ng-model="disp_active_flag"
                    ng-click="viewMemberlistChange()"
                    ng-true-value="0"
-                   ng-false-value="1"> 無効化されたメンバーも表示する
+                   ng-false-value="1"
+                   class="checkbox">
+                   <p>無効化されたメンバーも表示する</p>
         </label>
     </div>
 </div>
 
 <div ng-if="invite_box_show === false">
-    <div class="team_member_count_label">対象メンバー ( {{(team_list|filter:name_field).length}} )</div>
+    <section>
+        <div class="team-member-count-label">対象メンバー ( {{(team_list|filter:name_field).length}} )</div>
+        <button class="team-member-invite-btn develop--forbiddenLink">
+            <i class="fa fa-plus-circle team-member-invite-btn-icon"></i>メンバーを招待する
+        </button>
+      </section>
     <div class="col-xs-12">
-
-        <table class="table team_member_table">
-            <tr ng-repeat="item in team_list | filter:name_field"
+        <section class="team_member_table">
+            <div ng-repeat="item in team_list | filter:name_field"
                 ng-if="item.TeamMember.active_flg == '1' || item.TeamMember.active_flg == disp_active_flag"
-                ng-class="item.TeamMember.active_flg == '0' ? 'disable_member' : ''">
+                ng-class="item.TeamMember.active_flg == '0' ? 'disable_member' : ''" class="team-members-card">
 
-                <td width="30%">
-                    <img ng-src="{{item.User.img_url}}" class="feed-img"/>
+                <div class="team-members-card-avator-box">
+                    <img ng-src="{{item.User.img_url}}" class="feed-img avator-team-member-list"/>
+                </div>
 
-                    <p> {{item.User.display_username}} <i class="fa fa-adn"
+                <div class="team-members-card-description-box">
+                    <p class="team-members-admin-name"> {{item.User.display_username}} <i class="fa fa-adn team-members-card-admin-icon"
                                                           ng-if="item.TeamMember.admin_flg == '1'"></i></p>
-                </td>
-
-                <td>
                     <!--<p> {{item.User.e_mail}} </p>-->
 
                     <p ng-if="item.TeamMember.group_name == ''"><i class="fa fa-sitemap"></i> 所属グループはありません</p>
 
-                    <p ng-if="item.TeamMember.group_name != ''"><i class="fa fa-sitemap"></i>
+                    <p ng-if="item.TeamMember.group_name != ''"><i class="fa fa-sitemap team-members-card-filled-icon"></i>
                         {{item.TeamMember.group_name}}</p>
 
                     <p ng-if="item.TeamMember.coach_user_id == null"><i class="fa fa-venus-double"></i> コーチはいません</p>
 
                     <p ng-if="item.TeamMember.coach_user_id != null && item.TeamMember.coacha_name != ''">
-                        <i class="fa fa-venus-double"></i> {{item.TeamMember.coach_name}}</p>
+                        <i class="fa fa-venus-double team-members-card-filled-icon"></i> {{item.TeamMember.coach_name}}</p>
 
                     <p ng-if="login_user_admin_flg == true && item.User.two_step_flg == false">
                         <i class="fa fa-lock"></i> OFF</p>
 
                     <p ng-if="login_user_admin_flg == true && item.User.two_step_flg == true">
-                        <i class="fa fa-lock"></i> ON</p>
+                        <i class="fa fa-lock team-members-card-filled-icon"></i> ON</p>
 
                     <p ng-if="login_user_admin_flg == true && item.TeamMember.evaluation_enable_flg == true">
-                        <i class="fa fa-shield"></i> 評価対象者です</p>
+                        <i class="fa fa-shield team-members-card-filled-icon"></i> 評価対象者です</p>
 
                     <p ng-if="login_user_admin_flg == true && item.TeamMember.evaluation_enable_flg == false">
                         <i class="fa fa-shield"></i> 評価対象者ではありません</p>
-                </td>
+                </div>
 
-                <td width="20%" ng-if="login_user_admin_flg == true">
-                    <div class="pull-right header-function dropdown"
+                <div ng-if="login_user_admin_flg == true" class="team-members-card-function-box pull-right">
+                    <div class="pull-right header-function dropdown team-members-card-function"
                          ng-if="admin_user_cnt > 1 || login_user_id != item.User.id">
                         <button class="btn team_member_setting_btn dropdown-toggle" type="button"
                                 id="dropdownMenu1"
@@ -126,14 +132,14 @@
 
                         </ul>
                     </div>
-                </td>
-            </tr>
-        </table>
+                </div>
+            </div>
+        </section>
     </div>
 </div>
 
 <div ng-if="invite_box_show === true">
-    <div class="team_member_count_label">対象メンバー ( {{(invite_list|filter:name_field).length}} )</div>
+    <div class="team-member-count-label">対象メンバー ( {{(invite_list|filter:name_field).length}} )</div>
     <div class="col-xs-12">
         <table class="table team_member_table">
             <tr ng-repeat="item in invite_list | filter:name_field">

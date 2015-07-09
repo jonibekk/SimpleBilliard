@@ -1,0 +1,70 @@
+/*
+## 現在コメントアウト中
+いずれはフォントの文字色について優先順位をつけたいと思う。
+メイン: @fontColorMain
+サブ: @fontColorSub
+アテンション: @fontColorNote
+
+body {
+  color: @veryDark;
+}
+ */
+/* iOS Safari Hack */
+select, input {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+input[type="radio"] {
+  -webkit-appearance: radio;
+  appearance: radio;;
+}
+
+
+.checkbox {
+  background-color: @white;
+  padding-left: 0;
+}
+
+input[type=checkbox] {
+  width: 20px;
+  height: 20px;
+  border: 1px solid @lighterGray;
+  border-radius: 4px;
+  display: inline-block;
+  margin-top: 0;
+  padding-top: 0;
+  margin-left: 0 !important;
+  margin-right: 4px;
+}
+
+input[type=checkbox]:checked {
+  background-color: @white;
+  content: "\f00c";
+  /* or whatever styles you want depending on your design */
+  /* be as obvious as possible that it's a checkbox and that it's checked! */
+}
+
+input[type=checkbox]:checked::before {
+  content: "\f00c";
+  color: @lighterGray;
+  display: block;
+  text-align: center;
+  line-height: 20px;
+}
+
+input:focus {
+  outline: 0;
+}
+
+/*  Use FontAwesome with Unicode */
+
+input{
+  display: inline-block;
+  font-family:  "Helvetica Neue", Helvetica, "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", Verdana, "メイリオ", Meiryo, "ＭＳ Ｐゴシック", Roboto, "Droid Sans", FontAwesome, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

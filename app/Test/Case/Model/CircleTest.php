@@ -168,7 +168,6 @@ class CircleTest extends CakeTestCase
         $this->assertFalse($circles);
     }
 
-
     function testAddMember()
     {
         $this->Circle->current_team_id = 1;
@@ -200,8 +199,8 @@ class CircleTest extends CakeTestCase
         // パラメータ不正
         $data = [
             'Circle' => [
-                'id'           => 1,
-                'members'      => 'user_13',
+                'id'      => 1,
+                'members' => 'user_13',
             ]
         ];
         $res = $this->Circle->addMember($data);
@@ -239,6 +238,75 @@ class CircleTest extends CakeTestCase
         ];
         $res = $this->Circle->addMember($data);
         $this->assertFalse($res);
+    }
+
+    public function testGetCirclesByKeyword()
+    {
+        $this->Circle->current_team_id = 1;
+        $this->Circle->my_uid = 1;
+        $this->Circle->CircleMember->current_team_id = 1;
+        $this->Circle->CircleMember->my_uid = 1;
+
+        $circles = $this->Circle->getCirclesByKeyword('チーム全体');
+
+        $this->assertNotEmpty($circles);
+        $circles = $this->Circle->getCirclesByKeyword('チーム');
+        $this->assertNotEmpty($circles);
+        $circles = $this->Circle->getCirclesByKeyword('全体');
+        $this->assertNotEmpty($circles);
+
+        // 秘密サークル
+        $circles = $this->Circle->getCirclesByKeyword('秘密サークル');
+        $this->assertNotEmpty($circles);
+
+        // 存在しないサークル
+        $circles = $this->Circle->getCirclesByKeyword('存在しないサークル名');
+        $this->assertEmpty($circles);
+    }
+
+    public function testGetPublicCirclesByKeyword()
+    {
+        $this->Circle->current_team_id = 1;
+        $this->Circle->my_uid = 1;
+        $this->Circle->CircleMember->current_team_id = 1;
+        $this->Circle->CircleMember->my_uid = 1;
+
+        $circles = $this->Circle->getPublicCirclesByKeyword('チーム全体');
+
+        $this->assertNotEmpty($circles);
+        $circles = $this->Circle->getPublicCirclesByKeyword('チーム');
+        $this->assertNotEmpty($circles);
+        $circles = $this->Circle->getPublicCirclesByKeyword('全体');
+        $this->assertNotEmpty($circles);
+
+        // 秘密サークル
+        $circles = $this->Circle->getPublicCirclesByKeyword('秘密サークル');
+        $this->assertEmpty($circles);
+
+        // 存在しないサークル
+        $circles = $this->Circle->getPublicCirclesByKeyword('存在しないサークル名');
+        $this->assertEmpty($circles);
+    }
+
+    public function testGetSecretCirclesByKeyword()
+    {
+        $this->Circle->current_team_id = 1;
+        $this->Circle->my_uid = 1;
+        $this->Circle->CircleMember->current_team_id = 1;
+        $this->Circle->CircleMember->my_uid = 1;
+
+        $circles = $this->Circle->getSecretCirclesByKeyword('秘密サークル');
+        $this->assertNotEmpty($circles);
+        $circles = $this->Circle->getSecretCirclesByKeyword('秘密');
+        $this->assertNotEmpty($circles);
+
+        // 公開サークル
+        $circles = $this->Circle->getSecretCirclesByKeyword('チーム全体');
+        $this->assertEmpty($circles);
+
+        // 存在しないサークル
+        $circles = $this->Circle->getSecretCirclesByKeyword('存在しないサークル名');
+        $this->assertEmpty($circles);
     }
 
 

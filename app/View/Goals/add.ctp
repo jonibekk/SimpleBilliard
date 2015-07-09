@@ -62,7 +62,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                 <div class="panel-body add-team-panel-body goal-set-body">
                     <?=
                     $this->Form->input('Purpose.name',
-                                       ['before'                   => '<div class="col col-sm-3 control-label">' .
+                                       ['before'                   => '<div class="col col-sm-3 control-label goal-edit-labels">' .
                                            '<label class="no-asterisk">' . __d('gl', "目的") . '</label>' .
                                            '<div class="label-addiction">' . __d('gl', "達成したいことは？") . '</div></div>',
                                         'label'                    => false,
@@ -133,14 +133,14 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                     $this->Form->input('goal_category_id', [
                         'label'   => [
                             'text'  => __d('gl', "カテゴリ"),
-                            'class' => 'col col-sm-3 control-label'
+                            'class' => 'col col-sm-3 control-label goal-edit-labels'
                         ],
                         'type'    => 'select',
                         'options' => $goal_category_list,
                     ]) ?>
                     <?=
                     $this->Form->input('name',
-                                       ['before'                   => '<div class="col col-sm-3 control-label set-goal">' .
+                                       ['before'                   => '<div class="col col-sm-3 control-label set-goal goal-edit-labels">' .
                                            '<label class="no-asterisk">' . __d('gl', "ゴール名") . '</label>' .
                                            '<div class="label-addiction">' . __d('gl',
                                                                                  "達成の指標として<br>『なに』をどうするか？") . '</div></div>',
@@ -153,7 +153,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                                                                                                   "例）サービスAの国内市場シェアを増加させる") . '</span>'
                                        ]) ?>
                     <div class="row">
-                        <div class="col col-sm-3">
+                        <div class="col col-sm-3 goal-edit-labels">
                             <label class="control-label width100_per text-right"><?= __d('gl', "程度") ?></label>
 
                             <div class="label-addiction pull-right"><?= __d('gl', "どのくらい？") ?></div>
@@ -205,7 +205,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row goal-edit-labels">
                         <label class="col col-sm-3 control-label text-right"><?= __d('gl', "期間") ?></label>
 
                         <div class="col col-sm-7  goal-set-input">
@@ -331,7 +331,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                 <div class="panel-body add-team-panel-body">
                     <?=
                     $this->Form->input('description',
-                                       ['before'      => '<div class="col col-sm-3 control-label set-detail">' .
+                                       ['before'      => '<div class="col col-sm-3 control-label set-detail goal-edit-labels">' .
                                            '<label>' . __d('gl', "詳細") . '</label>' .
                                            '<div class="label-addiction">' . __d('gl', "内容を補足しましょう") . '</div></div>',
                                         'label'       => false,
@@ -345,7 +345,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                     ?>
                     <?=
                     $this->Form->input('Collaborator.0.priority', [
-                        'before'   => '<div class="col col-sm-3 control-label set-importance">' .
+                        'before'   => '<div class="col col-sm-3 control-label set-importance goal-edit-labels">' .
                             '<label>' . __d('gl', "重要度") . '</label>' .
                             '<div class="label-addiction">' . __d('gl', "あなたにとっての<br>このゴールの重要度") . '</div></div>',
                         'label'    => false,
@@ -357,7 +357,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                     ]) ?>
                     <?php $this->Form->unlockField('socket_id') ?>
                     <div class="form-group">
-                        <div class="col col-sm-3 control-label">
+                        <div class="col col-sm-3 control-label goal-edit-labels">
                             <label for=""><?= __d('gl', "ゴール画像") ?></label>
 
                             <div class="label-addiction pull-sm-right"><?= __d('gl', "イメージに合った画像を追加しましょう") ?></div>

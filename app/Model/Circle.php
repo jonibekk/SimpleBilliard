@@ -224,8 +224,21 @@ class Circle extends AppModel
         return $res;
     }
 
-    public function getCirclesByKeyword($keyword, $limit = 10)
+    /**
+     * $keyword にマッチする公開サークル一覧を返す
+     *
+     * @param       $keyword
+     * @param int   $limit
+     * @param array $params
+     *  'public_flg' 指定した場合は公開状態で絞り込む: default null
+     *
+     * @return array|null
+     */
+    public function getCirclesByKeyword($keyword, $limit = 10, array $params = [])
     {
+        // オプションデフォルト
+        $params = array_merge(['public_flg' => null], $params);
+
         $my_circle_list = $this->CircleMember->getMyCircleList();
         $options = [
             'conditions' => [
@@ -235,8 +248,37 @@ class Circle extends AppModel
             'limit'      => $limit,
             'fields'     => ['name', 'id', 'photo_file_name', 'team_all_flg'],
         ];
+        if ($params['public_flg'] !== null) {
+            $options['conditions']['public_flg'] = $params['public_flg'];
+        }
         $res = $this->find('all', $options);
         return $res;
+    }
+
+    /**
+     * $keyword にマッチする公開サークル一覧を返す
+     *
+     * @param     $keyword
+     * @param int $limit
+     *
+     * @return array|null
+     */
+    public function getPublicCirclesByKeyword($keyword, $limit = 10)
+    {
+        return $this->getCirclesByKeyword($keyword, $limit, ['public_flg' => 1]);
+    }
+
+    /**
+     * $keyword にマッチする非公開サークル一覧を返す
+     *
+     * @param     $keyword
+     * @param int $limit
+     *
+     * @return array|null
+     */
+    public function getSecretCirclesByKeyword($keyword, $limit = 10)
+    {
+        return $this->getCirclesByKeyword($keyword, $limit, ['public_flg' => 0]);
     }
 
     public function getEditData($id)

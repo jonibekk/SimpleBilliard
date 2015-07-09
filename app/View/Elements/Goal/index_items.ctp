@@ -27,10 +27,13 @@
                 ?></a>
         </div>
         <div class="col col-xxs-9 col-xs-10 pl_5px">
-            <div class="col col-xxs-12 ln_contain">
+            <div class="col col-xxs-12 goals-page-card-title-wrapper">
                 <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_description_modal', 'goal_id' => $goal['Goal']['id']]) ?>"
-                   class="modal-ajax-get"><p
-                        class="ln_trigger-ff font_verydark"><?= h($goal['Goal']['name']) ?></p></a>
+                   class="modal-ajax-get goals-page-card-title">
+                   <p class="font_verydark goals-page-card-title-text">
+                     <span><?= h($goal['Goal']['name']) ?></span>
+                  </p>
+                </a>
             </div>
             <div class="col col-xxs-12 font_lightgray font_12px">
                 <?php if (!empty($goal['Leader'])): ?>

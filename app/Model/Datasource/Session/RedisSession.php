@@ -35,13 +35,12 @@ class RedisSession extends DatabaseSession implements CakeSessionHandlerInterfac
     /**
      * @var Redis $store
      */
-    private static $store;
-    private static $timeout;
-    private static $key;
+    private $store;
+    private $timeout;
+    private $key;
 
     public function __construct()
     {
-        parent::__construct();
         $timeout = Configure::read('Session.timeout');
         if (empty($timeout)) {
             $timeout = 60 * 24 * 90;
@@ -49,10 +48,10 @@ class RedisSession extends DatabaseSession implements CakeSessionHandlerInterfac
         else {
             $timeout *= 60;
         }
-        self::$timeout = $timeout;
-        self::$key = Configure::read('Session.handler.key') ? Configure::read('Session.handler.key') : null;
+        $this->timeout = $timeout;
+        $this->key = Configure::read('Session.handler.key') ? Configure::read('Session.handler.key') : null;
         App::uses('ConnectionManager', 'Model');
-        self::$store = ConnectionManager::getDataSource('redis');
+        $this->store = ConnectionManager::getDataSource('redis');
     }
 
     /**
@@ -60,6 +59,10 @@ class RedisSession extends DatabaseSession implements CakeSessionHandlerInterfac
      */
     public function open()
     {
+        if (!$this->store) {
+            App::uses('ConnectionManager', 'Model');
+            $this->store = ConnectionManager::getDataSource('redis');
+        }
         return true;
     }
 
@@ -71,7 +74,7 @@ class RedisSession extends DatabaseSession implements CakeSessionHandlerInterfac
      */
     public function close()
     {
-        self::$store->close();
+        $this->store->close();
         return true;
     }
 
@@ -85,7 +88,7 @@ class RedisSession extends DatabaseSession implements CakeSessionHandlerInterfac
      */
     public function read($id)
     {
-        return self::$store->get(self::$key . $id);
+        return $this->store->get($this->key . $id);
     }
 
     /**
@@ -99,7 +102,7 @@ class RedisSession extends DatabaseSession implements CakeSessionHandlerInterfac
      */
     public function write($id, $data)
     {
-        self::$store->setex(self::$key . $id, self::$timeout, $data);
+        $this->store->setex($this->key . $id, $this->timeout, $data);
         return true;
     }
 
@@ -113,7 +116,7 @@ class RedisSession extends DatabaseSession implements CakeSessionHandlerInterfac
      */
     public function destroy($id)
     {
-        self::$store->del(self::$key . $id);
+        $this->store->del($this->key . $id);
         return true;
     }
 

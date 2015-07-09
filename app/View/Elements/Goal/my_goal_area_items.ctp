@@ -15,55 +15,51 @@
     <div class="col col-xxs-12 my-goals-column-item bd-radius_4px shadow-default mt_8px">
         <div class="col col-xxs-12">
             <?php if ($type == 'leader'): ?>
-                <div class="pull-right goals-column-function bd-radius_4px dropdown">
-                    <a href="#" class="font_lightGray-gray font_14px plr_4px pt_1px pb_2px"
-                       data-toggle="dropdown"
-                       id="download">
-                        <i class="fa fa-cog"></i><i class="fa fa-caret-down goals-column-fa-caret-down"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
-                        aria-labelledby="dropdownMenu1">
-                        <?php //目的のみの場合とそうでない場合でurlが違う
-                        $edit_url = ['controller' => 'goals', 'action' => 'add', 'mode' => 2, 'purpose_id' => $goal['Purpose']['id']];
-                        $del_url = ['controller' => 'goals', 'action' => 'delete_purpose', 'purpose_id' => $goal['Purpose']['id']];
-                        if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])) {
-                            $edit_url = ['controller' => 'goals', 'action' => 'add', 'goal_id' => $goal['Goal']['id'], 'mode' => 3];
-                            $del_url = ['controller' => 'goals', 'action' => 'delete', 'goal_id' => $goal['Goal']['id']];
-                        }
-                        ?>
-                        <?php if (!empty($goal['Goal'])): ?>
-                            <li role="presentation">
-                                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id']]) ?>"
-                                   class="modal-ajax-get-add-key-result">
-                                    <i class="fa fa-plus-circle"></i><span class="ml_2px">
-                                            <?= __d('gl', "出したい成果を追加") ?></span>
-                                </a>
-                            </li>
-                        <?php endif; ?>
-                        <?php if (!viaIsSet($goal['Evaluation'])): ?>
-                            <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                       href="<?= $this->Html->url($edit_url) ?>">
-                                    <i class="fa fa-pencil"></i><span class="ml_2px"><?= __d('gl', "ゴールを編集") ?></span>
-                                </a>
-                            </li>
-                            <li role="presentation">
-                                <?=
-                                $this->Form->postLink('<i class="fa fa-trash"></i><span class="ml_5px">' .
-                                                      __d('gl', "ゴールを削除") . '</span>',
-                                                      $del_url,
-                                                      ['escape' => false], __d('gl', "本当にこのゴールを削除しますか？")) ?>
-                            </li>
-                        <?php endif; ?>
-                    </ul>
-                </div>
+                <a class="pull-right goals-column-function bd-radius_4px dropdown font_lightGray-gray" data-toggle="dropdown"
+                id="download">
+                    <i class="fa fa-cog goals-column-function-icon"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
+                    aria-labelledby="dropdownMenu1">
+                    <?php //目的のみの場合とそうでない場合でurlが違う
+                    $edit_url = ['controller' => 'goals', 'action' => 'add', 'mode' => 2, 'purpose_id' => $goal['Purpose']['id']];
+                    $del_url = ['controller' => 'goals', 'action' => 'delete_purpose', 'purpose_id' => $goal['Purpose']['id']];
+                    if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])) {
+                        $edit_url = ['controller' => 'goals', 'action' => 'add', 'goal_id' => $goal['Goal']['id'], 'mode' => 3];
+                        $del_url = ['controller' => 'goals', 'action' => 'delete', 'goal_id' => $goal['Goal']['id']];
+                    }
+                    ?>
+                    <?php if (!empty($goal['Goal'])): ?>
+                        <li role="presentation">
+                            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id']]) ?>"
+                               class="modal-ajax-get-add-key-result">
+                                <i class="fa fa-plus-circle"></i><span class="ml_2px">
+                                        <?= __d('gl', "出したい成果を追加") ?></span>
+                            </a>
+                        </li>
+                    <?php endif; ?>
+                    <?php if (!viaIsSet($goal['Evaluation'])): ?>
+                        <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                   href="<?= $this->Html->url($edit_url) ?>">
+                                <i class="fa fa-pencil"></i><span class="ml_2px"><?= __d('gl', "ゴールを編集") ?></span>
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <?=
+                            $this->Form->postLink('<i class="fa fa-trash"></i><span class="ml_5px">' .
+                                                  __d('gl', "ゴールを削除") . '</span>',
+                                                  $del_url,
+                                                  ['escape' => false], __d('gl', "本当にこのゴールを削除しますか？")) ?>
+                        </li>
+                    <?php endif; ?>
+                </ul>
             <?php elseif
             ($type == 'collabo'
             ): ?>
-                <div class="pull-right goals-column-function bd-radius_4px dropdown">
-                    <a href="#" class="font_lightGray-gray font_14px plr_4px pt_1px pb_2px"
+                    <a href="#" class="goals-column-function pull-right goals-column-function bd-radius_4px dropdown font_lightGray-gray"
                        data-toggle="dropdown"
                        id="download">
-                        <i class="fa fa-cog"></i><i class="fa fa-caret-down goals-column-fa-caret-down"></i>
+                        <i class="fa fa-cog goals-column-function-icon"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
                         aria-labelledby="dropdownMenu1">
@@ -83,7 +79,6 @@
                             </li>
                         <?php endif; ?>
                     </ul>
-                </div>
             <?php elseif
             ($type == 'my_prev'
             ): ?>
@@ -91,7 +86,7 @@
                     <a href="#" class="font_lightGray-gray font_14px plr_4px pt_1px pb_2px"
                        data-toggle="dropdown"
                        id="download">
-                        <i class="fa fa-cog"></i><i class="fa fa-caret-down goals-column-fa-caret-down"></i>
+                        <i class="fa fa-cog"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
                         aria-labelledby="dropdownMenu1">
@@ -125,12 +120,15 @@
                     </a>
                 </div>
             <?php else: ?>
-                <div class="ln_contain w_88per">
+                <div class="goal-column-title-wrap">
                     <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_description_modal', 'goal_id' => $goal['Goal']['id']]) ?>"
                        class="modal-ajax-get">
-                        <p class="ln_trigger-f5 font_gray">
-                            <i class="fa fa-flag"></i>
-                            <?= h($goal['Goal']['name']) ?></p>
+                        <p class="goal-column-title font_gray">
+                            <i class="goal-column-title-icon fa fa-flag"></i>
+                            <span class="goal-column-title-text">
+                              <?= h($goal['Goal']['name']) ?>
+                            </span>
+                        </p>
                     </a>
                 </div>
             <?php endif; ?>

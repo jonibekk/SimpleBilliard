@@ -14,10 +14,10 @@
 <div class="panel panel-default global-form">
     <div class="post-panel-heading ptb_7px plr_11px">
         <!-- Nav tabs -->
-        <ul class="feed-switch clearfix plr_0px" role="tablist">
-            <li class="switch-action active"><a href="#ActionForm" role="tab" data-toggle="tab"
-                                                class="switch-action-anchor click-target-focus"
-                                                target-id="CommonActionName"><i
+        <ul class="feed-switch clearfix plr_0px" role="tablist" id="CommonFormTabs">
+            <li class="switch-action"><a href="#ActionForm" role="tab" data-toggle="tab"
+                                         class="switch-action-anchor click-target-focus"
+                                         target-id="CommonActionName"><i
                         class="fa fa-star-o"></i><?= __d('gl', "アクション") ?></a><span class="switch-arrow"></span></li>
             <li class="switch-post"><a href="#PostForm" role="tab" data-toggle="tab"
                                        class="switch-post-anchor click-target-focus"
@@ -27,7 +27,7 @@
     </div>
     <!-- Tab panes -->
     <div class="tab-content">
-        <div class="tab-pane fade in active" id="ActionForm">
+        <div class="tab-pane fade" id="ActionForm">
             <?php if (count($goal_list_for_action_option) == 1): ?>
                 <div class="post-panel-body plr_11px ptb_7px">
                     <div class="alert alert-warning" role="alert">
@@ -51,22 +51,15 @@
                     'class'         => 'form-feed-notify'
                 ]); ?>
                 <div class="post-panel-body plr_11px ptb_7px">
-                    <?=
-                    $this->Form->input('name', [
-                        'id'                       => 'CommonActionName',
-                        'label'                    => false,
-                        'type'                     => 'textarea',
-                        'wrap'                     => 'soft',
-                        'rows'                     => 1,
-                        'required'                 => true,
-                        'placeholder'              => __d('gl', "アクションの説明を書く"),
-                        'class'                    => 'form-control blank-disable post-form feed-post-form box-align change-warning',
-                        'target-id'                => "CommonActionSubmit",
-                        "required"                 => true,
-                        'data-bv-notempty-message' => __d('validate', "入力必須項目です。"),
-                    ])
-                    ?>
-                    <div class="row form-group m_0px" id="CommonActionFormImage">
+                    <a href="#"
+                       class="target-show-target-click btn btn-link btn-lightGray bd-radius_4px click-this-remove"
+                       target-id="CommonActionFormImage,CommonActionSubmit,WrapActionFormName,WrapCommonActionGoal,CommonActionFooter,CommonActionFormShowOptionLink"
+                       click-target-id="ActionResult__Photo_1">
+                        <i class="fa fa-camera"></i>
+                        <?= __d('gl', "画像を選択しよう！") ?>
+                    </a>
+
+                    <div class="row form-group m_0px none" id="CommonActionFormImage">
                         <ul class="col input-images post-images">
                             <?php for ($i = 1; $i <= 5; $i++): ?>
                             <li id="WrapPhotoForm_Action_<?= $i ?>">
@@ -77,43 +70,77 @@
                         <span class="help-block" id="ActionResult__Photo_ValidateMessage"></span>
                     </div>
                 </div>
-                <div class="panel-body post-share-range-panel-body" id="">
+                <div id="WrapActionFormName" class="panel-body action-form-panel-body none">
                     <?=
-                    $this->Form->input('goal_id', [
-                        'label'                    => __d('gl', "ゴール"),
+                    $this->Form->input('name', [
+                        'id'                       => 'CommonActionName',
+                        'label'                    => false,
+                        'type'                     => 'textarea',
+                        'wrap'                     => 'soft',
+                        'rows'                     => 1,
                         'required'                 => true,
+                        'placeholder'              => __d('gl', "アクションを説明しよう"),
+                        'class'                    => 'form-control change-warning',
+                        "required"                 => true,
                         'data-bv-notempty-message' => __d('validate', "入力必須項目です。"),
-                        'class'                    => 'form-control change-next-select-with-value',
-                        'id'                       => 'GoalSelectOnActionForm',
-                        'options'                  => $goal_list_for_action_option,
-                        'target-id'                => 'KrSelectOnActionForm',
-                        'toggle-target-id'         => 'WrapKrSelectOnActionForm',
-                        'ajax-url'                 => $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_kr_list', 'goal_id' => ""]),
                     ])
                     ?>
                 </div>
-                <div class="panel-body post-share-range-panel-body none" id="WrapKrSelectOnActionForm">
-                    <?=
-                    $this->Form->input('key_result_id', [
-                        'label'    => __d('gl', "出したい成果(オプション)"),
-                        'required' => false,
-                        'id'       => 'KrSelectOnActionForm',
-                        'options'  => [null => __d('gl', '出したい成果を選択する')],
-                    ])
-                    ?>
-                </div>
-                <div class="panel-body post-share-range-panel-body" id="CommonActionFormShare">
-                    <label for="KrSelectOnActionForm"><?= __d('gl', "通知先を追加") ?></label>
 
-                    <div class="col col-xxs-12 col-xs-12 post-share-range-list" id="CommonActionShareInputWrap">
+                <div class="panel-body action-form-panel-body form-group none" id="WrapCommonActionGoal">
+                    <div class="input-group">
+                        <span class="input-group-addon" id=""><i class="fa fa-flag"></i></span>
                         <?=
-                        $this->Form->hidden('share',
-                                            ['id' => 'select2ActionCircleMember', 'value' => "coach,followers,collaborators", 'style' => "width: 100%",]) ?>
-                        <?php $this->Form->unlockField('ActionResult.share') ?>
-                        <?php $this->Form->unlockField('socket_id') ?>
+                        $this->Form->input('goal_id', [
+                            'label'                    => false,
+                            'div'                      => false,
+                            'required'                 => true,
+                            'data-bv-notempty-message' => __d('validate', "入力必須項目です。"),
+                            'class'                    => 'form-control change-next-select-with-value',
+                            'id'                       => 'GoalSelectOnActionForm',
+                            'options'                  => $goal_list_for_action_option,
+                            'target-id'                => 'KrSelectOnActionForm',
+                            'toggle-target-id'         => 'WrapKrSelectOnActionForm',
+                            'ajax-url'                 => $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_kr_list', 'goal_id' => ""]),
+                        ])
+                        ?>
                     </div>
                 </div>
-                <div class="post-panel-footer">
+                <div class="panel-body action-form-panel-body none" id="WrapKrSelectOnActionForm">
+                    <div class="input-group">
+                        <span class="input-group-addon" id=""><i class="fa fa-key"></i></span>
+                        <?=
+                        $this->Form->input('key_result_id', [
+                            'label'    => false,
+                            'div'      => false,
+                            'required' => false,
+                            'id'       => 'KrSelectOnActionForm',
+                            'options'  => [null => __d('gl', '出したい成果を選択する(オプション)')],
+                        ])
+                        ?>
+                    </div>
+                </div>
+                <a href="#" class="link-dark-gray target-show click-this-remove none" target-id="ActionFormOptionFields"
+                   id="CommonActionFormShowOptionLink">
+                    <div class="panel-body action-form-panel-body font_11px font_lightgray"
+                         id="CommonActionFormShare">
+                        <p class="text-center"><?= __d('gl', "オプションを表示") ?></p>
+
+                        <p class="text-center"><i class="fa fa-chevron-down"></i></p>
+                    </div>
+                </a>
+                <div id="ActionFormOptionFields" class="none">
+                    <div class="panel-body action-form-panel-body" id="CommonActionFormShare">
+                        <div class="col col-xxs-12 col-xs-12 post-share-range-list" id="CommonActionShareInputWrap">
+                            <?=
+                            $this->Form->hidden('share',
+                                                ['id' => 'select2ActionCircleMember', 'value' => "", 'style' => "width: 100%",]) ?>
+                            <?php $this->Form->unlockField('ActionResult.share') ?>
+                            <?php $this->Form->unlockField('socket_id') ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-panel-footer none" id="CommonActionFooter">
                     <div class="font_12px" id="CommonActionFormFooter">
                         <div class="row form-horizontal form-group post-share-range" id="CommonActionShare">
                             <?=
@@ -151,7 +178,7 @@
                     'rows'           => 1,
                     'required'       => true,
                     'placeholder'    => __d('gl', "何か投稿しよう"),
-                    'class'          => 'form-control tiny-form-text blank-disable post-form feed-post-form box-align change-warning',
+                    'class'          => 'form-control tiny-form-text-change blank-disable post-form feed-post-form box-align change-warning',
                     'target_show_id' => "PostFormFooter",
                     'target-id'      => "PostSubmit",
                     "required"       => false
@@ -176,13 +203,55 @@
             }
             ?>
             <div class="panel-body post-share-range-panel-body" id="PostFormShare">
-                <div class="col col-xxs-12 col-xs-12 post-share-range-list" id="PostShareInputWrap">
+
+                <?php
+                // 共有範囲「公開」のデフォルト選択
+                // 「チーム全体サークル」以外のサークルフィードページの場合は、対象のサークルIDを指定。
+                // それ以外は「チーム全体サークル」(public)を指定する。
+                $public_share_default = 'public';
+                if (isset($current_circle) && $current_circle['Circle']['public_flg'] && !$current_circle['Circle']['team_all_flg']) {
+                    $public_share_default = "circle_" . $current_circle['Circle']['id'];
+                }
+
+                // 共有範囲「秘密」のデフォルト選択
+                // 秘密サークルのサークルフィードページの場合は、対象のサークルIDを指定する。
+                $secret_share_default = '';
+                if (isset($current_circle) && !$current_circle['Circle']['public_flg']) {
+                    $secret_share_default = "circle_" . $current_circle['Circle']['id'];
+                }
+                ?>
+                <div class="col col-xxs-10 col-xs-10 post-share-range-list" id="PostPublicShareInputWrap"
+                     <?php if ($secret_share_default) : ?>style="display:none"<?php endif ?>>
                     <?=
-                    $this->Form->hidden('share',
-                                        ['id' => 'select2PostCircleMember', 'value' => $current_circle && !$current_circle['Circle']['team_all_flg'] ? "circle_" . $current_circle['Circle']['id'] : "public", 'style' => "width: 100%",]) ?>
-                    <?php $this->Form->unlockField('Post.share') ?>
-                    <?php $this->Form->unlockField('socket_id') ?>
+                    $this->Form->hidden('share_public', [
+                        'id'    => 'select2PostCircleMember',
+                        'value' => $public_share_default,
+                        'style' => "width: 100%"
+                    ]) ?>
+                    <?php $this->Form->unlockField('Post.share_public') ?>
                 </div>
+                <div class="col col-xxs-10 col-xs-10 post-share-range-list" id="PostSecretShareInputWrap"
+                     <?php if (!$secret_share_default) : ?>style="display:none"<?php endif ?>>
+                    <?=
+                    $this->Form->hidden('share_secret', [
+                        'id'    => 'select2PostSecretCircle',
+                        'value' => $secret_share_default,
+                        'style' => "width: 100%;"]) ?>
+                    <?php $this->Form->unlockField('Post.share_secret') ?>
+                </div>
+                <div class="col col-xxs-2 col-xs-2 text-center post-share-range-toggle-button-container">
+                    <?= $this->Html->link('', '#', [
+                        'id'                  => 'postShareRangeToggleButton',
+                        'class'               => "btn btn-lightGray btn-white post-share-range-toggle-button",
+                        'data-toggle-enabled' => (isset($current_circle)) ? '' : '1',
+                    ]) ?>
+                    <?= $this->Form->hidden('share_range', [
+                        'id'    => 'postShareRange',
+                        'value' => $secret_share_default ? 'secret' : 'public',
+                    ]) ?>
+                </div>
+                <?php $this->Form->unlockField('Post.share_range') ?>
+                <?php $this->Form->unlockField('socket_id') ?>
             </div>
             <div class="post-panel-footer">
                 <div class="font_12px none" id="PostFormFooter">

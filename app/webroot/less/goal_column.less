@@ -1,0 +1,35 @@
+/**
+ * goal_column.less
+ */
+
+.goals-column-function {
+  height: 36px;
+  width: 40px;
+  text-align: center;
+  line-height: 36px;
+  border: 1px solid @dimGray;
+  color: @dimGray;
+  cursor: pointer;
+  &:hover {
+    background-color: @dimGray;
+    color: @white;
+  }
+}
+
+.goals-column-function-icon {
+  font-size: 18px;
+}
+
+.goal-column-title {
+  .line-number-limit-2(@smokyWhite);
+  .line-number-trigger;
+  font-weight: bold;
+}
+
+.goal-column-title-wrap {
+  .line-number-wrap;
+}
+
+.goal-column-title-text {
+  display: inline;
+}

@@ -4,10 +4,10 @@ App::uses('AppController', 'Controller');
 /**
  * Users Controller
  *
- * @property User            $User
- * @property Invite          $Invite
- * @property Circle          $Circle
- * @property TwoFaComponent  $TwoFa
+ * @property User           $User
+ * @property Invite         $Invite
+ * @property Circle         $Circle
+ * @property TwoFaComponent $TwoFa
  */
 class UsersController extends AppController
 {
@@ -287,7 +287,6 @@ class UsersController extends AppController
 
     /**
      * User Registration by batch set up.
-
      */
     public function registration_with_set_password()
     {
@@ -803,6 +802,20 @@ class UsersController extends AppController
     }
 
     /**
+     * select2の非公開サークル検索
+     */
+    function ajax_select2_get_secret_circles()
+    {
+        $this->_ajaxPreProcess();
+        $query = $this->request->query;
+        $res = [];
+        if (isset($query['term']) && !empty($query['term']) && isset($query['page_limit']) && !empty($query['page_limit'])) {
+            $res = $this->User->getSecretCirclesSelect2($query['term'], $query['page_limit']);
+        }
+        return $this->_ajaxGetResponse($res);
+    }
+
+    /**
      * チームに参加
      *
      * @param $token
@@ -987,4 +1000,31 @@ class UsersController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
+    function view_goals()
+    {
+        $user_id = $this->_getRequiredParam('user_id');
+        $this->layout = LAYOUT_ONE_COLUMN;
+        return $this->render();
+    }
+
+    function view_posts()
+    {
+        $user_id = $this->_getRequiredParam('user_id');
+        $this->layout = LAYOUT_ONE_COLUMN;
+        return $this->render();
+    }
+
+    function view_actions()
+    {
+        $user_id = $this->_getRequiredParam('user_id');
+        $this->layout = LAYOUT_ONE_COLUMN;
+        return $this->render();
+    }
+
+    function view_info()
+    {
+        $user_id = $this->_getRequiredParam('user_id');
+        $this->layout = LAYOUT_ONE_COLUMN;
+        return $this->render();
+    }
 }

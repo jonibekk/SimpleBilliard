@@ -10,11 +10,18 @@
 <!-- START app/View/Elements/google_tag_manager.ctp -->
 <? if (GOOGLE_TAG_MANAGER_ID): ?>
     <!-- Google Tag Manager -->
+    <!--suppress JSUnresolvedVariable -->
     <noscript>
         <iframe src="//www.googletagmanager.com/ns.html?id=<?= GOOGLE_TAG_MANAGER_ID ?>>"
                 height="0" width="0" style="display:none;visibility:hidden"></iframe>
     </noscript>
-    <script>(function (w, d, s, l, i) {
+    <script>
+        dataLayer = [{
+            "loggedIn": "<?= $this->Session->read('Auth.User.id')?"true":"false"?>",
+            "teamId": "<?= $this->Session->read('current_team_id')?>",
+            "userId": "<?= $this->Session->read('Auth.User.id')?>"
+        }];
+        (function (w, d, s, l, i) {
             w[l] = w[l] || [];
             w[l].push({
                 'gtm.start': new Date().getTime(), event: 'gtm.js'
@@ -25,7 +32,8 @@
             j.src =
                 '//www.googletagmanager.com/gtm.js?id=' + i + dl;
             f.parentNode.insertBefore(j, f);
-        })(window, document, 'script', 'dataLayer', '<?=GOOGLE_TAG_MANAGER_ID?>');</script>
+        })(window, document, 'script', 'dataLayer', '<?=GOOGLE_TAG_MANAGER_ID?>');
+    </script>
     <!-- End Google Tag Manager -->
 <? endif; ?>
 <!-- END app/View/Elements/google_tag_manager.ctp -->

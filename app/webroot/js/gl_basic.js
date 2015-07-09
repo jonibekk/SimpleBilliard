@@ -2,6 +2,8 @@ $.ajaxSetup({
     cache: false
 });
 $(document).ready(function () {
+
+    setDefaultTab();
     //すべてのformで入力があった場合に行う処理
     $("select,input").change(function () {
         $(this).nextAll(".help-block" + ".text-danger").remove();
@@ -115,6 +117,7 @@ $(document).ready(function () {
     $(document).on("blur", ".blur-height-reset", evThisHeightReset);
     $(document).on("focus", ".click-height-up", evThisHeightUp);
     $(document).on("focus", ".tiny-form-text", evShowAndThisWide);
+    $(document).on("keyup", ".tiny-form-text-change", evShowAndThisWide);
     $(document).on("click", ".tiny-form-text-close", evShowAndThisWideClose);
     $(document).on("click", ".click-show", evShow);
     $(document).on("click", ".trigger-click", evTriggerClick);
@@ -136,6 +139,8 @@ $(document).ready(function () {
     $(document).on("click", ".click-target-enabled", evTargetEnabled);
     //noinspection JSUnresolvedVariable
     $(document).on("change", ".change-target-enabled", evTargetEnabled);
+    //noinspection JSUnresolvedVariable
+    $(document).on("click", ".click-this-remove", evRemoveThis);
     //noinspection JSUnresolvedVariable
     $(document).on("change", ".change-next-select-with-value", evChangeTargetSelectWithValue);
     //noinspection JSUnresolvedVariable
@@ -605,6 +610,10 @@ function evTargetToggle() {
     $("#" + target_id).toggle();
     return false;
 }
+
+function evRemoveThis() {
+    $(this).remove();
+}
 function evTargetToggleClick() {
     attrUndefinedCheck(this, 'target-id');
     attrUndefinedCheck(this, 'click-target-id');
@@ -772,7 +781,12 @@ function evShowAndThisWide() {
     $(this).autosize();
 
     //submitボタンを表示
-    $("#" + $(this).attr('target_show_id')).show();
+    var target = $(this).attr('target_show_id');
+    var target = target.split(',');
+    jQuery.each(target, function () {
+        $("#" + this).show();
+    });
+
     //クリック済みにする
     $(this).addClass('clicked');
 }
@@ -946,10 +960,10 @@ $(function () {
     var goT = $("#gotop");
     goT.hover(
         function () {
-            $("#gotop-text").stop().animate({'right': '14px'}, 500);
+            $("#gotop-text").stop().animate({'right': '14px'}, 360);
         },
         function () {
-            $("#gotop-text").stop().animate({'right': '-140px'}, 500);
+            $("#gotop-text").stop().animate({'right': '-140px'}, 800);
         }
     );
 });
@@ -1042,10 +1056,14 @@ function evTargetShowTargetClick() {
     attrUndefinedCheck(this, 'target-id');
     attrUndefinedCheck(this, 'click-target-id');
     var $obj = $(this);
-    var target_id = $obj.attr("target-id");
+
     var click_target_id = $obj.attr("click-target-id");
-    $("#" + target_id).show();
     $("#" + click_target_id).trigger('click');
+    var target = $obj.attr("target-id");
+    var target = target.split(',');
+    jQuery.each(target, function () {
+        $("#" + this).show();
+    });
     return false;
 }
 
@@ -1057,20 +1075,6 @@ function enabledAllInput(selector) {
     $(selector).find('input,select,textarea').removeAttr('disabled');
 }
 
-
-$(".ln_trigger-f5").each(function () {
-    var $minHeight = 24;
-    if ($(this).height() > $minHeight) {
-        $(this).addClass('ln_2');
-    }
-});
-$(".ln_trigger-ff").each(function () {
-    var $minHeight = 24;
-    if ($(this).height() > $minHeight) {
-        $(this).addClass('ln_2-f');
-    }
-
-});
 //noinspection JSUnusedGlobalSymbols
 function ajaxAppendCount(id, url) {
     var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
@@ -1391,7 +1395,7 @@ $(document).ready(function () {
     //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
     $('#select2PostCircleMember').select2({
         multiple: true,
-        placeholder: cake.word.a,
+        placeholder: cake.word.select_public_circle,
         minimumInputLength: 2,
         ajax: {
             url: cake.url.s,
@@ -1418,9 +1422,80 @@ $(document).ready(function () {
         },
         containerCssClass: "select2PostCircleMember"
     });
+
+    // select2 秘密サークル選択
+    $('#select2PostSecretCircle').select2({
+        multiple: true,
+        placeholder: cake.word.select_secret_circle,
+        minimumInputLength: 2,
+        maximumSelectionSize: 1,
+        ajax: {
+            url: cake.url.select2_secret_circle,
+            dataType: 'json',
+            quietMillis: 100,
+            cache: true,
+            data: function (term, page) {
+                return {
+                    term: term, //search term
+                    page_limit: 10 // page size
+                };
+            },
+            results: function (data, page) {
+                return {results: data.results};
+            }
+        },
+        data: [],
+        initSelection: cake.data.select2_secret_circle,
+        formatSelection: format,
+        formatResult: format,
+        dropdownCssClass: 's2-post-dropdown',
+        escapeMarkup: function (m) {
+            return m;
+        },
+        containerCssClass: "select2PostCircleMember"
+    });
+
+    // 投稿の共有範囲(公開/秘密)切り替えボタン
+    var $shareRangeToggleButton = $('#postShareRangeToggleButton');
+    var $shareRange = $('#postShareRange');
+    var publicButtonLabel = '<i class="fa fa-unlock"></i> ' + cake.word.public;
+    var secretButtonLabel = '<i class="fa fa-lock font_verydark"></i> ' + cake.word.secret;
+
+    // ボタン初期状態
+    $shareRangeToggleButton.html(($shareRange.val() == 'public') ? publicButtonLabel : secretButtonLabel);
+
+    // 共有範囲切り替えボタンが有効な場合
+    if ($shareRangeToggleButton.attr('data-toggle-enabled')) {
+        $shareRangeToggleButton.on('click', function (e) {
+            e.preventDefault();
+            $shareRange.val($shareRange.val() == 'public' ? 'secret' : 'public');
+            if ($shareRange.val() == 'public') {
+                $shareRangeToggleButton.html(publicButtonLabel);
+                $('#PostSecretShareInputWrap').hide();
+                $('#PostPublicShareInputWrap').show();
+            }
+            else {
+                $shareRangeToggleButton.html(secretButtonLabel);
+                $('#PostPublicShareInputWrap').hide();
+                $('#PostSecretShareInputWrap').show();
+            }
+        });
+    }
+    // 共有範囲切り替えボタンが無効な場合（サークルフィードページ）
+    else {
+        $shareRangeToggleButton.popover({
+            'data-toggle': "popover",
+            'placement': 'top',
+            'trigger': "focus",
+            'content': cake.word.share_change_disabled,
+            'container': 'body'
+        });
+    }
+
+
     $('#select2ActionCircleMember').select2({
         multiple: true,
-        placeholder: cake.word.a,
+        placeholder: cake.word.select_notify_range,
         minimumInputLength: 2,
         ajax: {
             url: cake.url.s,
@@ -2795,4 +2870,33 @@ function evAjaxLeaveCircle(e) {
                 mouse_reset: false
             });
         });
+}
+
+function setDefaultTab() {
+    if (cake.common_form_type == "") {
+        return;
+    }
+    switch (cake.common_form_type) {
+        case "action":
+            $('#CommonFormTabs li:eq(0) a').tab('show');
+            break;
+        case "post":
+            $('#CommonFormTabs li:eq(1) a').tab('show');
+            if(!isMobile()){
+                $('#CommonPostBody').focus();
+            }
+            break;
+    }
+}
+
+function isMobile() {
+    var agent = navigator.userAgent;
+    if (agent.search(/iPhone/) != -1 ||
+        agent.search(/iPad/) != -1 ||
+        agent.search(/iPod/) != -1 ||
+        agent.search(/Android/) != -1
+    ) {
+        return true;
+    }
+    return false;
 }

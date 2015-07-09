@@ -20,24 +20,24 @@ App::uses('NotifySetting', 'Model');
  *
  * @package        app.Controller
  * @link           http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
- * @property LangComponent                             $Lang
- * @property SessionComponent                          $Session
- * @property SecurityComponent                         $Security
- * @property TimezoneComponent                         $Timezone
- * @property CookieComponent                           $Cookie
- * @property CsvComponent                              $Csv
- * @property GlEmailComponent                          $GlEmail
- * @property PnotifyComponent                          $Pnotify
- * @property MixpanelComponent                         $Mixpanel
- * @property UservoiceComponent                        $Uservoice
- * @property OgpComponent                              $Ogp
- * @property User                                      $User
- * @property Post                                      $Post
- * @property Goal                                      $Goal
- * @property Team                                      $Team
- * @property NotifyBizComponent                        $NotifyBiz
- * @property GlRedis                                   $GlRedis
- * @property BenchmarkComponent                        $Benchmark
+ * @property LangComponent      $Lang
+ * @property SessionComponent   $Session
+ * @property SecurityComponent  $Security
+ * @property TimezoneComponent  $Timezone
+ * @property CookieComponent    $Cookie
+ * @property CsvComponent       $Csv
+ * @property GlEmailComponent   $GlEmail
+ * @property PnotifyComponent   $Pnotify
+ * @property MixpanelComponent  $Mixpanel
+ * @property UservoiceComponent $Uservoice
+ * @property OgpComponent       $Ogp
+ * @property User               $User
+ * @property Post               $Post
+ * @property Goal               $Goal
+ * @property Team               $Team
+ * @property NotifyBizComponent $NotifyBiz
+ * @property GlRedis            $GlRedis
+ * @property BenchmarkComponent $Benchmark
  */
 class AppController extends Controller
 {
@@ -148,13 +148,23 @@ class AppController extends Controller
                 if (!$this->Auth->user('default_team_id')) {
                     $this->User->updateDefaultTeam($set_default_team_id, true, $login_uid);
                     $this->Session->write('current_team_id', $set_default_team_id);
+                    $this->_refreshAuth();
+                    // すでにロード済みのモデルの current_team_id 等を更新する
+                    foreach (ClassRegistry::keys() as $k) {
+                        $obj = ClassRegistry::getObject($k);
+                        if ($obj instanceof AppModel) {
+                            $obj->current_team_id = $set_default_team_id;
+                        }
+                    }
                 }
                 //デフォルトチームが設定されていて、カレントチームが非アクティブの場合は、デフォルトチームを書き換えてログオフ
                 elseif (!$this->User->TeamMember->isActive($login_uid)) {
                     $this->User->updateDefaultTeam($set_default_team_id, true, $login_uid);
+                    $this->Session->write('current_team_id', $set_default_team_id);
                     //ログアウト
                     $this->Pnotify->outError(__d('gl', "アクセスしたチームのアクセス権限がありません"));
                     $this->Auth->logout();
+                    return;
                 }
                 $this->_setUnApprovedCnt($login_uid);
                 $this->_setEvaluableCnt();
@@ -609,6 +619,17 @@ class AppController extends Controller
     {
         $new_notify_cnt = $this->NotifyBiz->getCountNewNotification();
         $this->set(compact("new_notify_cnt"));
+    }
+
+
+    function _getRequiredParam($name)
+    {
+        $id = viaIsSet($this->request->params['named'][$name]);
+        if (!$id) {
+            $this->Pnotify->outError(__d('gl', "不正な画面遷移です。"));
+            return $this->redirect($this->referer());
+        }
+        return $id;
     }
 
 }

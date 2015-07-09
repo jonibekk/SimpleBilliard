@@ -32,24 +32,20 @@
                         )
                         ?>
                     </div>
-                    <div class="circle-name_box">
-                        <p title="<?= h($circle['Circle']['name']) ?>"><?= h($circle['Circle']['name']) ?></p>
-                    </div>
-                    <div class="circle-count_box">
-                        <p class="count-value">
-                            <?php if ($circle['CircleMember']['unread_count'] > 9): ?>
-                                9+
-                            <?php elseif ($circle['CircleMember']['unread_count'] > 0): ?>
-                                <?= $circle['CircleMember']['unread_count'] ?>
-                            <?php endif; ?>
-                        </p>
+                    <p  class="circle-name_box" title="<?= h($circle['Circle']['name']) ?>"><?= h($circle['Circle']['name']) ?></p>
+                    <div class="circle-count_box count-value">
+                        <?php if ($circle['CircleMember']['unread_count'] > 9): ?>
+                            9+
+                        <?php elseif ($circle['CircleMember']['unread_count'] > 0): ?>
+                            <?= $circle['CircleMember']['unread_count'] ?>
+                        <?php endif; ?>
                     </div>
                 </a>
 
                 <div class="circle-function_box clearfix">
                     <?php if ($circle['CircleMember']['admin_flg']): ?>
                         <a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_get_edit_modal', 'circle_id' => $circle['Circle']['id']]) ?>"
-                           class="modal-ajax-get-circle-edit font_lightGray-gray develop-floatleft"><i
+                           class="modal-ajax-get-circle-edit font_lightGray-gray btn-circle-function"><i
                                 class="fa fa-cog circle-function"></i></a>
                     <?php endif; ?>
                 </div>

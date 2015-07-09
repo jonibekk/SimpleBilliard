@@ -8,7 +8,7 @@
  * @var CodeCompletionView    $this
  * @var                       $posts
  * @var                       $current_circle
- * @var                       $circle_members
+ * @var                       $circle_member_count
  * @var                       $feed_more_read_url
  * @var                       $feed_filter
  * @var                       $circle_status
@@ -49,7 +49,7 @@ else { ?>
                                                                     '...') ?></span>
                 <a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_get_circle_members', 'circle_id' => $current_circle['Circle']['id']]) ?>"
                      class="modal-ajax-get"> <span class="feed-circle-user-number"><i
-                            class="fa fa-user"></i>&nbsp;<?= count($circle_members) ?>
+                            class="fa fa-user"></i>&nbsp;<?= $circle_member_count ?>
                     </span></a>
                 <?php if ($user_status != 'admin') { ?>
                     <div class="pull-right header-function dropdown">

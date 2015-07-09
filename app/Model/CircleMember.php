@@ -470,4 +470,24 @@ class CircleMember extends AppModel
         }
         return $res;
     }
+
+    /**
+     * return active member count of circle
+     *
+     * @param $circle_id
+     *
+     * @return array|null
+     */
+    function getActiveMemberCount($circle_id)
+    {
+        $active_team_members_list = $this->Team->TeamMember->getActiveTeamMembersList();
+        $options = [
+            'conditions' => [
+                'circle_id' => $circle_id,
+                'user_id'   => $active_team_members_list,
+            ]
+        ];
+        $res = $this->find('count', $options);
+        return $res;
+    }
 }

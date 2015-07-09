@@ -144,7 +144,7 @@ class GroupVision extends AppModel
         $time = new TimeExHelper(new View());
 
         if (isset($data['GroupVision']) === true) {
-            $data['GroupVision']['photo_path'] = $upload->uploadUrl($data['GroupVision'], 'GroupVision.photo', ['style' => 'large']);
+            $data['GroupVision']['photo_path'] = $upload->uploadUrl($data['GroupVision'], 'GroupVision.photo', ['style' => 'original']);
             $data['GroupVision']['modified'] = $time->elapsedTime(h($data['GroupVision']['modified']));
             if (isset($group_list[$data['GroupVision']['group_id']]) === true) {
                 $data['GroupVision']['group_name'] = $group_list[$data['GroupVision']['group_id']];
