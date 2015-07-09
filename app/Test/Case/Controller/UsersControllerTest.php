@@ -1627,7 +1627,7 @@ class UsersControllerTest extends ControllerTestCase
         $res = $this->testAction("/users/ajax_select2_get_secret_circles?term=$keyword&page_limit=10", ['method' => 'GET']);
         $json_data = json_decode($res, true);
         $this->assertEmpty($json_data['results']);
-        
+
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -1893,6 +1893,32 @@ class UsersControllerTest extends ControllerTestCase
     {
         $Users = $this->_getUsersCommonMock();
         $Users->_setDefaultTeam(9999);
+    }
+
+    function testViewGoals()
+    {
+        $this->_getUsersCommonMock();
+        $this->testAction('/users/view_goals/user_id:1');
+    }
+    function testViewPosts()
+    {
+        $this->_getUsersCommonMock();
+        $this->testAction('/users/view_posts/user_id:1');
+    }
+    function testViewActions()
+    {
+        $this->_getUsersCommonMock();
+        $this->testAction('/users/view_actions/user_id:1');
+    }
+    function testViewInfo()
+    {
+        $this->_getUsersCommonMock();
+        $this->testAction('/users/view_info/user_id:1');
+    }
+    function testViewInfoNoParams()
+    {
+        $this->_getUsersCommonMock();
+        $this->testAction('/users/view_info/');
     }
 
     function _getUsersCommonMock()

@@ -1155,6 +1155,29 @@ class GoalsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
+
+    function testViewFollowers()
+    {
+        $this->_getGoalsCommonMock();
+        $this->testAction('/goals/view_followers/goal_id:1');
+    }
+    function testViewMembers()
+    {
+        $this->_getGoalsCommonMock();
+        $this->testAction('/goals/view_members/goal_id:1');
+    }
+    function testViewKrs()
+    {
+        $this->_getGoalsCommonMock();
+        $this->testAction('/goals/view_krs/goal_id:1');
+    }
+    function testViewInfo()
+    {
+        $this->_getGoalsCommonMock();
+        $this->testAction('/goals/view_info/goal_id:1');
+    }
+
+
     var $current_date;
     var $start_date;
     var $end_date;
