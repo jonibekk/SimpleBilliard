@@ -10,9 +10,11 @@
 ?>
 <!-- START app/View/Users/view_followers.ctp -->
 <div class="col-sm-8 col-sm-offset-2">
-    <?= $this->element('simplex_top_section') ?>
     <div class="panel panel-default">
-        フォロワー一覧
+        <?= $this->element('simplex_top_section') ?>
+        <div class="panel-body">
+            フォロワー一覧
+        </div>
     </div>
 </div>
 <!-- END app/View/Users/view_followers.ctp -->
