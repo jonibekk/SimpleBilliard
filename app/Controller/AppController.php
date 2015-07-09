@@ -152,7 +152,7 @@ class AppController extends Controller
                     foreach (ClassRegistry::keys() as $k) {
                         $obj = ClassRegistry::getObject($k);
                         if ($obj instanceof AppModel) {
-                            $obj->_setSessionVariable();
+                            $obj->current_team_id = $set_default_team_id;
                         }
                     }
                 }

@@ -559,4 +559,65 @@ class PagesControllerTest extends ControllerTestCase
         $this->testAction('/ja/features', ['return' => 'contents']);
         $this->assertTextContains("ゴールを作成する", $this->view, "ブラウザが英語の場合でも、言語で日本語を指定した場合は日本語表記される");
     }
+
+    /**
+     * testHomepage method
+     *
+     * @return void
+     */
+    public function testNonActiveMember()
+    {
+        /**
+         * @var UsersController $Pages
+         */
+        $Pages = $this->generate('Pages', [
+            'components' => [
+                'Security' => ['_validateCsrf', '_validatePost'],
+                'Session',
+                'Auth'     => ['user', 'loggedIn'],
+            ]
+        ]);
+        $value_map = [
+            [null, [
+                'id'         => '1',
+                'last_first' => true,
+                'language'   => 'jpn'
+            ]],
+            ['id', '1'],
+            ['language', 'jpn'],
+            ['auto_language_flg', true],
+            ['default_team_id', 1],
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Pages->Security
+            ->expects($this->any())
+            ->method('_validateCsrf')
+            ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Pages->Security
+            ->expects($this->any())
+            ->method('_validatePost')
+            ->will($this->returnValue(true));
+
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Pages->Auth->expects($this->any())->method('loggedIn')
+                    ->will($this->returnValue(true));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Pages->Auth->staticExpects($this->any())->method('user')
+                    ->will($this->returnValueMap($value_map)
+                    );
+
+        $TeamMember = $this->getMockForModel('TeamMember', array('isActive'));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $TeamMember->expects($this->any())->method('isActive')
+                   ->will($this->returnValue(false));
+        $Pages->User->TeamMember = $TeamMember;
+
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Pages->User->my_uid = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Pages->User->current_team_id = '1';
+
+        $this->testAction('/', ['return' => 'contents']);
+    }
 }
