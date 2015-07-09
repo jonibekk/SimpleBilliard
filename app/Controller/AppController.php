@@ -148,6 +148,13 @@ class AppController extends Controller
                     $this->User->updateDefaultTeam($set_default_team_id, true, $login_uid);
                     $this->Session->write('current_team_id', $set_default_team_id);
                     $this->_refreshAuth();
+                    // すでにロード済みのモデルの current_team_id 等を更新する
+                    foreach (ClassRegistry::keys() as $k) {
+                        $obj = ClassRegistry::getObject($k);
+                        if ($obj instanceof AppModel) {
+                            $obj->_setSessionVariable();
+                        }
+                    }
                 }
                 //デフォルトチームが設定されていて、カレントチームが非アクティブの場合は、デフォルトチームを書き換えてログオフ
                 elseif (!$this->User->TeamMember->isActive($login_uid)) {
