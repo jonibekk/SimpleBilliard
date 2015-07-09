@@ -143,6 +143,7 @@ class AppController extends Controller
                 //permission check
                 $active_team_list = $this->User->TeamMember->getActiveTeamList($login_uid);
                 $set_default_team_id = !empty($active_team_list) ? key($active_team_list) : null;
+
                 //デフォルトチームが設定されていない場合はアクティブなチームでカレントチームとデフォルトチームを書き換え
                 if (!$this->Auth->user('default_team_id')) {
                     $this->User->updateDefaultTeam($set_default_team_id, true, $login_uid);

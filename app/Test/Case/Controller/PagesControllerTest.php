@@ -192,6 +192,7 @@ class PagesControllerTest extends ControllerTestCase
             [null, $user_id],
             ['language', 'jpn'],
             ['auto_language_flg', true],
+            ['default_team_id', $team_id],
         ];
         /** @noinspection PhpUndefinedMethodInspection */
         $Pages->Auth->staticExpects($this->any())->method('user')
@@ -284,6 +285,7 @@ class PagesControllerTest extends ControllerTestCase
             [null, $user_id],
             ['language', 'jpn'],
             ['auto_language_flg', true],
+            ['default_team_id', $team_id],
         ];
         /** @noinspection PhpUndefinedMethodInspection */
         $Pages->Auth->staticExpects($this->any())->method('user')
