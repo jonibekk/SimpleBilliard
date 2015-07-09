@@ -1086,4 +1086,29 @@ class GoalsController extends AppController
         }
         return $res;
     }
+
+    function view_followers()
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
+        return $this->render();
+    }
+
+    function view_members()
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
+        return $this->render();
+    }
+
+    function view_krs()
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
+        return $this->render();
+    }
+
+    function view_info()
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
+        return $this->render();
+    }
+
 }
