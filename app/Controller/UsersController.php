@@ -4,10 +4,10 @@ App::uses('AppController', 'Controller');
 /**
  * Users Controller
  *
- * @property User            $User
- * @property Invite          $Invite
- * @property Circle          $Circle
- * @property TwoFaComponent  $TwoFa
+ * @property User           $User
+ * @property Invite         $Invite
+ * @property Circle         $Circle
+ * @property TwoFaComponent $TwoFa
  */
 class UsersController extends AppController
 {
@@ -287,7 +287,6 @@ class UsersController extends AppController
 
     /**
      * User Registration by batch set up.
-
      */
     public function registration_with_set_password()
     {
@@ -801,7 +800,7 @@ class UsersController extends AppController
         }
         return $this->_ajaxGetResponse($res);
     }
-    
+
     /**
      * select2の非公開サークル検索
      */
@@ -1001,4 +1000,27 @@ class UsersController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
+    function view_goals()
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
+        return $this->render();
+    }
+
+    function view_posts()
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
+        return $this->render();
+    }
+
+    function view_actions()
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
+        return $this->render();
+    }
+
+    function view_info()
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
+        return $this->render();
+    }
 }
