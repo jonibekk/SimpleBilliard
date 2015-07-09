@@ -51,12 +51,14 @@
                     'class'         => 'form-feed-notify'
                 ]); ?>
                 <div class="post-panel-body plr_11px ptb_7px">
-                    <a href="#" class="target-show-target-click btn btn-link btn-lightGray bd-radius_4px click-this-remove"
-                       target-id="CommonActionFormImage,CommonActionSubmit,WrapActionFormName,WrapCommonActionGoal,CommonActionFooter,CommonActionFormShare"
+                    <a href="#"
+                       class="target-show-target-click btn btn-link btn-lightGray bd-radius_4px click-this-remove"
+                       target-id="CommonActionFormImage,CommonActionSubmit,WrapActionFormName,WrapCommonActionGoal,CommonActionFooter,CommonActionFormShowOptionLink"
                        click-target-id="ActionResult__Photo_1">
                         <i class="fa fa-camera"></i>
                         <?= __d('gl', "画像を選択しよう！") ?>
                     </a>
+
                     <div class="row form-group m_0px none" id="CommonActionFormImage">
                         <ul class="col input-images post-images">
                             <?php for ($i = 1; $i <= 5; $i++): ?>
@@ -118,13 +120,24 @@
                         ?>
                     </div>
                 </div>
-                <div class="panel-body post-share-range-panel-body none" id="CommonActionFormShare">
-                    <div class="col col-xxs-12 col-xs-12 post-share-range-list" id="CommonActionShareInputWrap">
-                        <?=
-                        $this->Form->hidden('share',
-                                            ['id' => 'select2ActionCircleMember', 'value' => "", 'style' => "width: 100%",]) ?>
-                        <?php $this->Form->unlockField('ActionResult.share') ?>
-                        <?php $this->Form->unlockField('socket_id') ?>
+                <a href="#" class="link-dark-gray target-show click-this-remove none" target-id="ActionFormOptionFields"
+                   id="CommonActionFormShowOptionLink">
+                    <div class="panel-body post-share-range-panel-body font_11px font_lightgray"
+                         id="CommonActionFormShare">
+                        <p class="text-center"><?= __d('gl', "オプションを表示") ?></p>
+
+                        <p class="text-center"><i class="fa fa-chevron-down"></i></p>
+                    </div>
+                </a>
+                <div id="ActionFormOptionFields" class="none">
+                    <div class="panel-body post-share-range-panel-body" id="CommonActionFormShare">
+                        <div class="col col-xxs-12 col-xs-12 post-share-range-list" id="CommonActionShareInputWrap">
+                            <?=
+                            $this->Form->hidden('share',
+                                                ['id' => 'select2ActionCircleMember', 'value' => "", 'style' => "width: 100%",]) ?>
+                            <?php $this->Form->unlockField('ActionResult.share') ?>
+                            <?php $this->Form->unlockField('socket_id') ?>
+                        </div>
                     </div>
                 </div>
                 <div class="post-panel-footer none" id="CommonActionFooter">
