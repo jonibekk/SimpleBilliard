@@ -70,7 +70,7 @@
                         <span class="help-block" id="ActionResult__Photo_ValidateMessage"></span>
                     </div>
                 </div>
-                <div id="WrapActionFormName" class="panel-body post-share-range-panel-body none">
+                <div id="WrapActionFormName" class="panel-body action-form-panel-body none">
                     <?=
                     $this->Form->input('name', [
                         'id'                       => 'CommonActionName',
@@ -87,7 +87,7 @@
                     ?>
                 </div>
 
-                <div class="panel-body post-share-range-panel-body form-group none" id="WrapCommonActionGoal">
+                <div class="panel-body action-form-panel-body form-group none" id="WrapCommonActionGoal">
                     <div class="input-group">
                         <span class="input-group-addon" id=""><i class="fa fa-flag"></i></span>
                         <?=
@@ -106,7 +106,7 @@
                         ?>
                     </div>
                 </div>
-                <div class="panel-body post-share-range-panel-body none" id="WrapKrSelectOnActionForm">
+                <div class="panel-body action-form-panel-body none" id="WrapKrSelectOnActionForm">
                     <div class="input-group">
                         <span class="input-group-addon" id=""><i class="fa fa-key"></i></span>
                         <?=
@@ -122,7 +122,7 @@
                 </div>
                 <a href="#" class="link-dark-gray target-show click-this-remove none" target-id="ActionFormOptionFields"
                    id="CommonActionFormShowOptionLink">
-                    <div class="panel-body post-share-range-panel-body font_11px font_lightgray"
+                    <div class="panel-body action-form-panel-body font_11px font_lightgray"
                          id="CommonActionFormShare">
                         <p class="text-center"><?= __d('gl', "オプションを表示") ?></p>
 
@@ -130,7 +130,7 @@
                     </div>
                 </a>
                 <div id="ActionFormOptionFields" class="none">
-                    <div class="panel-body post-share-range-panel-body" id="CommonActionFormShare">
+                    <div class="panel-body action-form-panel-body" id="CommonActionFormShare">
                         <div class="col col-xxs-12 col-xs-12 post-share-range-list" id="CommonActionShareInputWrap">
                             <?=
                             $this->Form->hidden('share',

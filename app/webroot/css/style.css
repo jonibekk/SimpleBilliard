@@ -335,6 +335,12 @@ body, .btn, input, button, select, textarea, h1, h2, h3, h4, h5, h6, .h1, .h2, .
     margin-left: 3px;
 }
 
+.select2ActionCircleMember {
+    margin-bottom: 5px;
+    border-bottom: 1px solid;
+    border-bottom-color: lightgray;
+}
+
 /*==/ normalize select2 3.5.1 ===*/
 
 /*=== normalize css ===*/
@@ -1402,7 +1408,6 @@ textarea{
     margin-bottom: 2px;
 }
 
-
 .required label:after {
     color: #E00;
     content: " *";
@@ -1906,6 +1911,10 @@ ul.input-images > li {
     resize: none;
 }
 
+.action-form-panel-body {
+    padding: 3px 5px 0;
+}
+
 textarea.feed-post-form {
     height: 25px;
     padding-top: 0;
@@ -1980,12 +1989,12 @@ textarea.feed-post-form {
 .post-share-range-toggle-button {
     padding: 3px 7px !important;
     font-size: 11px !important;
-    border:none !important;
-    width:100% !important;
+    border: none !important;
+    width: 100% !important;
 }
 
 .post-share-range-toggle-button-container {
-    border-left:1px solid #eeeeee !important;
+    border-left: 1px solid #eeeeee !important;
 }
 
 .post-images {
@@ -2044,7 +2053,6 @@ textarea.comment-post-form {
 }
 
 /*/CommentArea*/
-
 
 /*HEADER*/
 .nav-container {
@@ -2848,7 +2856,6 @@ textarea.comment-post-form {
     .login-panel-body, .register-panel-body, .add-team-panel-body, .reset-password-panel-body, .user-setting-panel-body, .profile-setting-panel-body, .notify-setting-panel-body {
         padding: 10px;
     }
-
 
     .goal-set-buttons {
         margin-left: 46%;
