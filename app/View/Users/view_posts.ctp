@@ -10,9 +10,11 @@
 ?>
 <!-- START app/View/Users/view_posts.ctp -->
 <div class="col-sm-8 col-sm-offset-2">
-    <?= $this->element('simplex_top_section') ?>
     <div class="panel panel-default">
-        ユーザ投稿ページ
+        <?= $this->element('simplex_top_section') ?>
+        <div class="panel-body">
+            ユーザ投稿ページ
+        </div>
     </div>
 </div>
 <!-- END app/View/Users/view_posts.ctp -->

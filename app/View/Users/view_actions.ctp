@@ -10,9 +10,11 @@
 ?>
 <!-- START app/View/Users/view_actions.ctp -->
 <div class="col-sm-8 col-sm-offset-2">
-    <?= $this->element('simplex_top_section') ?>
     <div class="panel panel-default">
-        ユーザアクションページ
+        <?= $this->element('simplex_top_section') ?>
+        <div class="panel-body">
+            ユーザアクションページ
+        </div>
     </div>
 </div>
 <!-- END app/View/Users/view_actions.ctp -->
