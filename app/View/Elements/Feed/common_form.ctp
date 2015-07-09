@@ -115,7 +115,7 @@
                             'div'      => false,
                             'required' => false,
                             'id'       => 'KrSelectOnActionForm',
-                            'options'  => [null => __d('gl', '出したい成果を選択する')],
+                            'options'  => [null => __d('gl', '出したい成果を選択する(オプション)')],
                         ])
                         ?>
                     </div>
