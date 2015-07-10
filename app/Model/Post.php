@@ -1022,4 +1022,36 @@ class Post extends AppModel
         exec($all_cmd);
     }
 
+    /**
+     * 期間内のいいねの数の合計を取得
+     *
+     * @param      $user_id
+     * @param null $start_date
+     * @param null $end_date
+     *
+     * @return mixed
+     */
+    public function getLikeCountSumByUserId($user_id, $start_date = null, $end_date = null)
+    {
+        $options = [
+            'fields' => [
+                'SUM(post_like_count) as sum_like',
+            ],
+            'conditions' => [
+                'user_id' => $user_id,
+                'team_id' => $this->current_team_id,
+                'type'    => [self::TYPE_NORMAL, self::TYPE_ACTION],
+            ]
+        ];
+        //期間で絞り込む
+        if ($start_date) {
+            $options['conditions']['modified >'] = $start_date;
+        }
+        if ($end_date) {
+            $options['conditions']['modified <'] = $end_date;
+        }
+        $res = $this->find('first', $options);
+        return $res ? $res[0]['sum_like'] : 0;
+    }
+
 }

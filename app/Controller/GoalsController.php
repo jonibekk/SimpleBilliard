@@ -1090,12 +1090,11 @@ class GoalsController extends AppController
     function view_followers()
     {
         $goal_id = $this->_getRequiredParam('goal_id');
-        if (!$goal_id) {
+
+        $goal = $this->Goal->findById($goal_id);
+        if (!$this->_setUserPageHeaderInfo($goal['Goal']['user_id'])) {
             throw new NotFoundException();
         }
-        $goal = $this->Goal->findById($goal_id);
-        $this->_setUserPageHeaderInfo($goal['Goal']['user_id']);
-
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
@@ -1103,12 +1102,11 @@ class GoalsController extends AppController
     function view_members()
     {
         $goal_id = $this->_getRequiredParam('goal_id');
-        if (!$goal_id) {
+
+        $goal = $this->Goal->findById($goal_id);
+        if (!$this->_setUserPageHeaderInfo($goal['Goal']['user_id'])) {
             throw new NotFoundException();
         }
-        $goal = $this->Goal->findById($goal_id);
-        $this->_setUserPageHeaderInfo($goal['Goal']['user_id']);
-
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
@@ -1116,11 +1114,11 @@ class GoalsController extends AppController
     function view_krs()
     {
         $goal_id = $this->_getRequiredParam('goal_id');
-        if (!$goal_id) {
+
+        $goal = $this->Goal->findById($goal_id);
+        if (!$this->_setUserPageHeaderInfo($goal['Goal']['user_id'])) {
             throw new NotFoundException();
         }
-        $goal = $this->Goal->findById($goal_id);
-        $this->_setUserPageHeaderInfo($goal['Goal']['user_id']);
 
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
@@ -1129,11 +1127,11 @@ class GoalsController extends AppController
     function view_info()
     {
         $goal_id = $this->_getRequiredParam('goal_id');
-        if (!$goal_id) {
+
+        $goal = $this->Goal->findById($goal_id);
+        if (!$this->_setUserPageHeaderInfo($goal['Goal']['user_id'])) {
             throw new NotFoundException();
         }
-        $goal = $this->Goal->findById($goal_id);
-        $this->_setUserPageHeaderInfo($goal['Goal']['user_id']);
 
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
@@ -1150,6 +1148,10 @@ class GoalsController extends AppController
     {
         // ユーザー情報
         $user = $this->User->TeamMember->getByUserId($user_id);
+        if (!$user) {
+            // チームメンバーでない場合
+            return false;
+        }
         $this->set('user', $user);
 
         // 評価期間内の投稿数
@@ -1161,6 +1163,12 @@ class GoalsController extends AppController
         // 評価期間内のアクション数
         $action_count = $this->Goal->ActionResult->getCount($user_id, $term_start_date, $term_end_date);
         $this->set('action_count', $action_count);
+
+        // 投稿に対するいいねの数
+        $post_like_count = $this->Post->getLikeCountSumByUserId($user_id, $term_start_date, $term_end_date);
+        // コメントに対するいいねの数
+        $comment_like_count = $this->Post->Comment->getLikeCountSumByUserId($user_id, $term_start_date, $term_end_date);
+        $this->set('like_count', $post_like_count + $comment_like_count);
 
         return true;
     }

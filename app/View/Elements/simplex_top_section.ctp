@@ -27,6 +27,7 @@
     <div>
         アクション: <?= h($action_count) ?><br>
         投稿: <?= h($post_count) ?><br>
+        いいね: <?= h($like_count) ?><br>
         <?php if ($this->Session->read('Auth.User.id') == $user['User']['id']): ?>
             <?= $this->Html->link('プロフィール編集',
                                   [

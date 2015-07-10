@@ -1918,7 +1918,18 @@ class UsersControllerTest extends ControllerTestCase
     function testViewInfoNoParams()
     {
         $this->_getUsersCommonMock();
-        $this->testAction('/users/view_info/');
+        try {
+            $this->testAction('/users/view_info/');
+        } catch (NotFoundException $e) {
+        }
+    }
+    function testViewInfoNoTeamMember()
+    {
+        $this->_getUsersCommonMock();
+        try {
+            $this->testAction('/users/view_info/user_id:14');
+        } catch (NotFoundException $e) {
+        }
     }
 
     function _getUsersCommonMock()

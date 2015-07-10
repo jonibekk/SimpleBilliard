@@ -1003,10 +1003,9 @@ class UsersController extends AppController
     function view_goals()
     {
         $user_id = $this->_getRequiredParam('user_id');
-        if (!$user_id) {
+        if (!$this->_setUserPageHeaderInfo($user_id)) {
             throw new NotFoundException();
         }
-        $this->_setUserPageHeaderInfo($user_id);
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
@@ -1014,10 +1013,9 @@ class UsersController extends AppController
     function view_posts()
     {
         $user_id = $this->_getRequiredParam('user_id');
-        if (!$user_id) {
+        if (!$this->_setUserPageHeaderInfo($user_id)) {
             throw new NotFoundException();
         }
-        $this->_setUserPageHeaderInfo($user_id);
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
@@ -1025,10 +1023,9 @@ class UsersController extends AppController
     function view_actions()
     {
         $user_id = $this->_getRequiredParam('user_id');
-        if (!$user_id) {
+        if (!$this->_setUserPageHeaderInfo($user_id)) {
             throw new NotFoundException();
         }
-        $this->_setUserPageHeaderInfo($user_id);
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
@@ -1036,10 +1033,9 @@ class UsersController extends AppController
     function view_info()
     {
         $user_id = $this->_getRequiredParam('user_id');
-        if (!$user_id) {
+        if (!$this->_setUserPageHeaderInfo($user_id)) {
             throw new NotFoundException();
         }
-        $this->_setUserPageHeaderInfo($user_id);
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
@@ -1055,6 +1051,10 @@ class UsersController extends AppController
     {
         // ユーザー情報
         $user = $this->User->TeamMember->getByUserId($user_id);
+        if (!$user) {
+            // チームメンバーでない場合
+            return false;
+        }
         $this->set('user', $user);
 
         // 評価期間内の投稿数
@@ -1066,6 +1066,12 @@ class UsersController extends AppController
         // 評価期間内のアクション数
         $action_count = $this->Goal->ActionResult->getCount($user_id, $term_start_date, $term_end_date);
         $this->set('action_count', $action_count);
+
+        // 投稿に対するいいねの数
+        $post_like_count = $this->Post->getLikeCountSumByUserId($user_id, $term_start_date, $term_end_date);
+        // コメントに対するいいねの数
+        $comment_like_count = $this->Post->Comment->getLikeCountSumByUserId($user_id, $term_start_date, $term_end_date);
+        $this->set('like_count', $post_like_count + $comment_like_count);
 
         return true;
     }
