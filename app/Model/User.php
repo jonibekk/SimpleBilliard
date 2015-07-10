@@ -841,12 +841,20 @@ class User extends AppModel
         return ['results' => $user_res];
     }
 
-    public function getUsersCirclesSelect2($keyword, $limit = 10)
+    public function getUsersCirclesSelect2($keyword, $limit = 10, $circle_type = "all")
     {
         App::uses('UploadHelper', 'View/Helper');
         $Upload = new UploadHelper(new View());
-//        $this->CircleMember->Circle->getCirclesByKeyword($keyword, $limit)
-        $circles = $this->CircleMember->Circle->getPublicCirclesByKeyword($keyword, $limit);
+        switch ($circle_type) {
+            case "all":
+                $circles = $this->CircleMember->Circle->getCirclesByKeyword($keyword, $limit);
+                break;
+            case "public":
+                $circles = $this->CircleMember->Circle->getPublicCirclesByKeyword($keyword, $limit);
+                break;
+            case "private":
+                break;
+        }
         $circle_res = [];
         foreach ($circles as $val) {
             $data = [];

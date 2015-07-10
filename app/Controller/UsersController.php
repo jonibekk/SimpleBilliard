@@ -795,8 +795,8 @@ class UsersController extends AppController
         $this->_ajaxPreProcess();
         $query = $this->request->query;
         $res = [];
-        if (viaIsSet($query['term']) && viaIsSet($query['page_limit'])) {
-            $res = $this->User->getUsersCirclesSelect2($query['term'], $query['page_limit']);
+        if (viaIsSet($query['term']) && viaIsSet($query['page_limit']) && viaIsSet($query['circle_type'])) {
+            $res = $this->User->getUsersCirclesSelect2($query['term'], $query['page_limit'], $query['circle_type']);
         }
         return $this->_ajaxGetResponse($res);
     }

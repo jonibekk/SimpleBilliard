@@ -1398,14 +1398,15 @@ $(document).ready(function () {
         placeholder: cake.word.select_public_circle,
         minimumInputLength: 2,
         ajax: {
-            url: cake.url.s,
+            url: cake.url.select2_circle_user,
             dataType: 'json',
             quietMillis: 100,
             cache: true,
             data: function (term, page) {
                 return {
                     term: term, //search term
-                    page_limit: 10 // page size
+                    page_limit: 10, // page size
+                    circle_type: "public"
                 };
             },
             results: function (data, page) {
@@ -1498,14 +1499,15 @@ $(document).ready(function () {
         placeholder: cake.word.select_notify_range,
         minimumInputLength: 2,
         ajax: {
-            url: cake.url.s,
+            url: cake.url.select2_circle_user,
             dataType: 'json',
             quietMillis: 100,
             cache: true,
             data: function (term, page) {
                 return {
                     term: term, //search term
-                    page_limit: 10 // page size
+                    page_limit: 10, // page size
+                    circle_type: 'all'
                 };
             },
             results: function (data, page) {
@@ -2882,7 +2884,7 @@ function setDefaultTab() {
             break;
         case "post":
             $('#CommonFormTabs li:eq(1) a').tab('show');
-            if(!isMobile()){
+            if (!isMobile()) {
                 $('#CommonPostBody').focus();
             }
             break;
