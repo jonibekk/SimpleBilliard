@@ -10,6 +10,10 @@ App::uses('AppModel', 'Model');
  */
 class PostShareCircle extends AppModel
 {
+    //そのユーザのALLフィード、サークルページ両方に表示される
+    const SHARE_TYPE_SHARED = 0;
+    //そのユーザのALLフィードのみに表示される。サークルページには表示されない
+    const SHARE_TYPE_ONLY_NOTIFY = 1;
 
     /**
      * Validation rules

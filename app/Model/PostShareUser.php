@@ -10,6 +10,12 @@ App::uses('AppModel', 'Model');
  */
 class PostShareUser extends AppModel
 {
+    /**
+     * 現状、このタイプを内部的に利用しない。
+     * ユーザに共有されたものか通知されたものかを切り分ける目的。
+     */
+    const SHARE_TYPE_SHARED = 0;
+    const SHARE_TYPE_ONLY_NOTIFY = 1;
 
     /**
      * Validation rules
