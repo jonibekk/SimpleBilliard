@@ -1090,7 +1090,9 @@ class GoalsController extends AppController
     function view_followers()
     {
         $goal_id = $this->_getRequiredParam('goal_id');
-
+        if (!$goal_id) {
+            throw new NotFoundException();
+        }
         $goal = $this->Goal->findById($goal_id);
         $this->_setUserPageHeaderInfo($goal['Goal']['user_id']);
 
@@ -1101,7 +1103,9 @@ class GoalsController extends AppController
     function view_members()
     {
         $goal_id = $this->_getRequiredParam('goal_id');
-
+        if (!$goal_id) {
+            throw new NotFoundException();
+        }
         $goal = $this->Goal->findById($goal_id);
         $this->_setUserPageHeaderInfo($goal['Goal']['user_id']);
 
@@ -1112,7 +1116,9 @@ class GoalsController extends AppController
     function view_krs()
     {
         $goal_id = $this->_getRequiredParam('goal_id');
-
+        if (!$goal_id) {
+            throw new NotFoundException();
+        }
         $goal = $this->Goal->findById($goal_id);
         $this->_setUserPageHeaderInfo($goal['Goal']['user_id']);
 
@@ -1123,7 +1129,9 @@ class GoalsController extends AppController
     function view_info()
     {
         $goal_id = $this->_getRequiredParam('goal_id');
-
+        if (!$goal_id) {
+            throw new NotFoundException();
+        }
         $goal = $this->Goal->findById($goal_id);
         $this->_setUserPageHeaderInfo($goal['Goal']['user_id']);
 
@@ -1142,10 +1150,6 @@ class GoalsController extends AppController
     {
         // ユーザー情報
         $user = $this->User->TeamMember->getByUserId($user_id);
-        if (!$user) {
-            // チーム内にユーザーが存在しない
-            return false;
-        }
         $this->set('user', $user);
 
         // 評価期間内の投稿数

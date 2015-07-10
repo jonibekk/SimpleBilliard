@@ -1003,6 +1003,9 @@ class UsersController extends AppController
     function view_goals()
     {
         $user_id = $this->_getRequiredParam('user_id');
+        if (!$user_id) {
+            throw new NotFoundException();
+        }
         $this->_setUserPageHeaderInfo($user_id);
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
@@ -1011,6 +1014,9 @@ class UsersController extends AppController
     function view_posts()
     {
         $user_id = $this->_getRequiredParam('user_id');
+        if (!$user_id) {
+            throw new NotFoundException();
+        }
         $this->_setUserPageHeaderInfo($user_id);
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
@@ -1019,6 +1025,9 @@ class UsersController extends AppController
     function view_actions()
     {
         $user_id = $this->_getRequiredParam('user_id');
+        if (!$user_id) {
+            throw new NotFoundException();
+        }
         $this->_setUserPageHeaderInfo($user_id);
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
@@ -1027,6 +1036,9 @@ class UsersController extends AppController
     function view_info()
     {
         $user_id = $this->_getRequiredParam('user_id');
+        if (!$user_id) {
+            throw new NotFoundException();
+        }
         $this->_setUserPageHeaderInfo($user_id);
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
@@ -1043,10 +1055,6 @@ class UsersController extends AppController
     {
         // ユーザー情報
         $user = $this->User->TeamMember->getByUserId($user_id);
-        if (!$user) {
-            // チーム内にユーザーが存在しない
-            return false;
-        }
         $this->set('user', $user);
 
         // 評価期間内の投稿数
