@@ -40,7 +40,7 @@ class PostShareUser extends AppModel
         'Team',
     ];
 
-    public function add($post_id, $users, $team_id = null)
+    public function add($post_id, $users, $team_id = null, $share_type = self::SHARE_TYPE_SHARED)
     {
         if (empty($users)) {
             return false;
@@ -51,9 +51,10 @@ class PostShareUser extends AppModel
         $data = [];
         foreach ($users as $uid) {
             $data[] = [
-                'user_id' => $uid,
-                'post_id' => $post_id,
-                'team_id' => $team_id,
+                'user_id'    => $uid,
+                'post_id'    => $post_id,
+                'team_id'    => $team_id,
+                'share_type' => $share_type,
             ];
         }
         return $this->saveAll($data);

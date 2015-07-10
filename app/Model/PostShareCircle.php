@@ -39,7 +39,7 @@ class PostShareCircle extends AppModel
         'Team',
     ];
 
-    public function add($post_id, $circles, $team_id = null)
+    public function add($post_id, $circles, $team_id = null, $share_type = self::SHARE_TYPE_SHARED)
     {
         if (empty($circles)) {
             return false;
@@ -50,13 +50,13 @@ class PostShareCircle extends AppModel
         $data = [];
         foreach ($circles as $circle_id) {
             $data[] = [
-                'circle_id' => $circle_id,
-                'post_id'   => $post_id,
-                'team_id'   => $team_id,
+                'circle_id'  => $circle_id,
+                'post_id'    => $post_id,
+                'team_id'    => $team_id,
+                'share_type' => $share_type,
             ];
         }
         return $this->saveAll($data);
-
     }
 
     public function getMyCirclePostList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000, $my_circle_list = null)

@@ -1,5 +1,6 @@
 <?php
 App::uses('AppController', 'Controller');
+App::uses('PostShareCircle', 'Model');
 
 /**
  * Goals Controller
@@ -924,7 +925,8 @@ class GoalsController extends AppController
             //アクション追加,投稿
             if (!$this->Goal->ActionResult->addCompletedAction($this->request->data, $goal_id)
                 || !$this->Goal->Post->addGoalPost(Post::TYPE_ACTION, $goal_id, $this->Auth->user('id'), false,
-                                                   $this->Goal->ActionResult->getLastInsertID(), $share)
+                                                   $this->Goal->ActionResult->getLastInsertID(), $share,
+                                                   PostShareCircle::SHARE_TYPE_ONLY_NOTIFY)
             ) {
                 throw new RuntimeException(__d('gl', "アクションの追加に失敗しました。"));
             }
@@ -934,7 +936,6 @@ class GoalsController extends AppController
             $this->redirect($this->referer());
         }
         $this->Goal->commit();
-
         // pusherに通知
         $socket_id = viaIsSet($this->request->data['socket_id']);
         $channelName = "goal_" . $goal_id;

@@ -4,20 +4,20 @@ App::uses('AppModel', 'Model');
 /**
  * Post Model
  *
- * @property User                   $User
- * @property Team                   $Team
- * @property CommentMention         $CommentMention
- * @property Comment                $Comment
- * @property Goal                   $Goal
- * @property GivenBadge             $GivenBadge
- * @property PostLike               $PostLike
- * @property PostMention            $PostMention
- * @property PostShareUser          $PostShareUser
- * @property PostShareCircle        $PostShareCircle
- * @property PostRead               $PostRead
- * @property ActionResult           $ActionResult
- * @property KeyResult              $KeyResult
- * @property Circle                 $Circle
+ * @property User            $User
+ * @property Team            $Team
+ * @property CommentMention  $CommentMention
+ * @property Comment         $Comment
+ * @property Goal            $Goal
+ * @property GivenBadge      $GivenBadge
+ * @property PostLike        $PostLike
+ * @property PostMention     $PostMention
+ * @property PostShareUser   $PostShareUser
+ * @property PostShareCircle $PostShareCircle
+ * @property PostRead        $PostRead
+ * @property ActionResult    $ActionResult
+ * @property KeyResult       $KeyResult
+ * @property Circle          $Circle
  */
 class Post extends AppModel
 {
@@ -818,11 +818,12 @@ class Post extends AppModel
      * @param bool  $public
      * @param null  $model_id
      * @param array $share
+     * @param int   $share_type
      *
      * @return mixed
      * @throws Exception
      */
-    function addGoalPost($type, $goal_id, $uid = null, $public = true, $model_id = null, $share = null)
+    function addGoalPost($type, $goal_id, $uid = null, $public = true, $model_id = null, $share = null, $share_type = PostShareCircle::SHARE_TYPE_SHARED)
     {
         if (!$uid) {
             $uid = $this->my_uid;
@@ -849,13 +850,13 @@ class Post extends AppModel
                 return $this->PostShareCircle->add($this->getLastInsertID(), [$team_all_circle_id]);
             }
             if ($share) {
-                return $this->doShare($this->getLastInsertID(), $share);
+                return $this->doShare($this->getLastInsertID(), $share, $share_type);
             }
         }
         return $res;
     }
 
-    function doShare($post_id, $share)
+    function doShare($post_id, $share, $share_type = PostShareCircle::SHARE_TYPE_SHARED)
     {
         if (!$share) {
             return false;
@@ -887,14 +888,16 @@ class Post extends AppModel
             $circles[] = $team_all_circle_id;
         }
         //共有ユーザ保存
-        $this->PostShareUser->add($post_id, $users);
+        $this->PostShareUser->add($post_id, $users, null, $share_type);
         //共有サークル保存
-        $this->PostShareCircle->add($post_id, $circles);
-        //共有サークル指定されてた場合の未読件数更新
-        $this->User->CircleMember->incrementUnreadCount($circles);
-        //共有サークル指定されてた場合、更新日時更新
-        $this->User->CircleMember->updateModified($circles);
-        $this->PostShareCircle->Circle->updateModified($circles);
+        $this->PostShareCircle->add($post_id, $circles, null, $share_type);
+        if ($share_type == PostShareCircle::SHARE_TYPE_SHARED) {
+            //共有サークル指定されてた場合の未読件数更新
+            $this->User->CircleMember->incrementUnreadCount($circles);
+            //共有サークル指定されてた場合、更新日時更新
+            $this->User->CircleMember->updateModified($circles);
+            $this->PostShareCircle->Circle->updateModified($circles);
+        }
         return true;
     }
 
