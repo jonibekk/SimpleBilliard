@@ -6,27 +6,27 @@ App::uses('AppModel', 'Model');
 /**
  * User Model
  *
- * @property Email                $PrimaryEmail
- * @property Team                 $DefaultTeam
- * @property Badge                $Badge
- * @property CommentLike          $CommentLike
- * @property CommentMention       $CommentMention
- * @property CommentRead          $CommentRead
- * @property Comment              $Comment
- * @property Email                $Email
- * @property GivenBadge           $GivenBadge
- * @property NotifySetting        $NotifySetting
- * @property OauthToken           $OauthToken
- * @property PostLike             $PostLike
- * @property PostMention          $PostMention
- * @property PostRead             $PostRead
- * @property Post                 $Post
- * @property Goal                 $Goal
- * @property TeamMember           $TeamMember
- * @property CircleMember         $CircleMember
- * @property LocalName            $LocalName
- * @property Collaborator         $Collaborator
- * @property MemberGroup          $MemberGroup
+ * @property Email          $PrimaryEmail
+ * @property Team           $DefaultTeam
+ * @property Badge          $Badge
+ * @property CommentLike    $CommentLike
+ * @property CommentMention $CommentMention
+ * @property CommentRead    $CommentRead
+ * @property Comment        $Comment
+ * @property Email          $Email
+ * @property GivenBadge     $GivenBadge
+ * @property NotifySetting  $NotifySetting
+ * @property OauthToken     $OauthToken
+ * @property PostLike       $PostLike
+ * @property PostMention    $PostMention
+ * @property PostRead       $PostRead
+ * @property Post           $Post
+ * @property Goal           $Goal
+ * @property TeamMember     $TeamMember
+ * @property CircleMember   $CircleMember
+ * @property LocalName      $LocalName
+ * @property Collaborator   $Collaborator
+ * @property MemberGroup    $MemberGroup
  */
 class User extends AppModel
 {
@@ -845,7 +845,7 @@ class User extends AppModel
     {
         App::uses('UploadHelper', 'View/Helper');
         $Upload = new UploadHelper(new View());
-
+//        $this->CircleMember->Circle->getCirclesByKeyword($keyword, $limit)
         $circles = $this->CircleMember->Circle->getPublicCirclesByKeyword($keyword, $limit);
         $circle_res = [];
         foreach ($circles as $val) {
