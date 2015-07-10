@@ -401,7 +401,8 @@ class Post extends AppModel
                 }
                 $p_list = array_merge($p_list,
                                       $this->PostShareCircle->getMyCirclePostList($start, $end, 'modified', 'desc',
-                                                                                  1000, $this->orgParams['circle_id']));
+                                                                                  1000, $this->orgParams['circle_id'],
+                                                                                  PostShareCircle::SHARE_TYPE_SHARED));
             }
             //単独投稿指定
             elseif ($this->orgParams['post_id']) {

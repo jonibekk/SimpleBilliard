@@ -59,7 +59,7 @@ class PostShareCircle extends AppModel
         return $this->saveAll($data);
     }
 
-    public function getMyCirclePostList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000, $my_circle_list = null)
+    public function getMyCirclePostList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000, $my_circle_list = null, $share_type = null)
     {
         if (!$my_circle_list) {
             $my_circle_list = $this->Circle->CircleMember->getMyCircleList(true);
@@ -76,6 +76,9 @@ class PostShareCircle extends AppModel
             'limit'      => $limit,
             'fields'     => ['post_id'],
         ];
+        if ($share_type !== null) {
+            $options['conditions']['share_type'] = $share_type;
+        }
         $res = $this->find('list', $options);
         $this->primaryKey = $backupPrimaryKey;
         return $res;
