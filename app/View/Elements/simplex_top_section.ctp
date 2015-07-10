@@ -14,9 +14,9 @@
         <?=
         $this->Html->image('ajax-loader.gif',
                            [
-                               'class'         => 'lazy feed-img',
+                               'class'         => 'lazy',
                                'data-original' => $this->Upload->uploadUrl($user['User'], 'User.photo',
-                                                                           ['style' => 'medium']),
+                                                                           ['style' => 'large']),
                            ]
         )
         ?>

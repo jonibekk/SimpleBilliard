@@ -1090,6 +1090,10 @@ class GoalsController extends AppController
     function view_followers()
     {
         $goal_id = $this->_getRequiredParam('goal_id');
+
+        $goal = $this->Goal->findById($goal_id);
+        $this->_setUserPageHeaderInfo($goal['Goal']['user_id']);
+
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
@@ -1097,6 +1101,10 @@ class GoalsController extends AppController
     function view_members()
     {
         $goal_id = $this->_getRequiredParam('goal_id');
+
+        $goal = $this->Goal->findById($goal_id);
+        $this->_setUserPageHeaderInfo($goal['Goal']['user_id']);
+
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
@@ -1104,6 +1112,10 @@ class GoalsController extends AppController
     function view_krs()
     {
         $goal_id = $this->_getRequiredParam('goal_id');
+
+        $goal = $this->Goal->findById($goal_id);
+        $this->_setUserPageHeaderInfo($goal['Goal']['user_id']);
+
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
@@ -1111,7 +1123,41 @@ class GoalsController extends AppController
     function view_info()
     {
         $goal_id = $this->_getRequiredParam('goal_id');
+
+        $goal = $this->Goal->findById($goal_id);
+        $this->_setUserPageHeaderInfo($goal['Goal']['user_id']);
+
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
+    }
+
+    /**
+     * ユーザページの上部コンテンツの表示に必要なView変数をセット
+     *
+     * @param $user_id
+     *
+     * @return bool
+     */
+    function _setUserPageHeaderInfo($user_id)
+    {
+        // ユーザー情報
+        $user = $this->User->TeamMember->getByUserId($user_id);
+        if (!$user) {
+            // チーム内にユーザーが存在しない
+            return false;
+        }
+        $this->set('user', $user);
+
+        // 評価期間内の投稿数
+        $term_start_date = $this->Team->getCurrentTermStartDate();
+        $term_end_date = $this->Team->getCurrentTermEndDate();
+        $post_count = $this->Post->getCount($user_id, $term_start_date, $term_end_date);
+        $this->set('post_count', $post_count);
+
+        // 評価期間内のアクション数
+        $action_count = $this->Goal->ActionResult->getCount($user_id, $term_start_date, $term_end_date);
+        $this->set('action_count', $action_count);
+
+        return true;
     }
 }
