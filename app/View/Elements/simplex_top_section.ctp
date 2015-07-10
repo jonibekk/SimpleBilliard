@@ -40,7 +40,6 @@
                                   ])
             ?>
         <?php endif ?>
-        <br>
     </div>
     <div style="clear:both">
         <?= h($user['TeamMember']['comment']) ?>
