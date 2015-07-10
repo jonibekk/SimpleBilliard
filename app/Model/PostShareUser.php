@@ -10,6 +10,12 @@ App::uses('AppModel', 'Model');
  */
 class PostShareUser extends AppModel
 {
+    /**
+     * 現状、このタイプを内部的に利用しない。
+     * ユーザに共有されたものか通知されたものかを切り分ける目的。
+     */
+    const SHARE_TYPE_SHARED = 0;
+    const SHARE_TYPE_ONLY_NOTIFY = 1;
 
     /**
      * Validation rules
@@ -34,7 +40,7 @@ class PostShareUser extends AppModel
         'Team',
     ];
 
-    public function add($post_id, $users, $team_id = null)
+    public function add($post_id, $users, $team_id = null, $share_type = self::SHARE_TYPE_SHARED)
     {
         if (empty($users)) {
             return false;
@@ -45,9 +51,10 @@ class PostShareUser extends AppModel
         $data = [];
         foreach ($users as $uid) {
             $data[] = [
-                'user_id' => $uid,
-                'post_id' => $post_id,
-                'team_id' => $team_id,
+                'user_id'    => $uid,
+                'post_id'    => $post_id,
+                'team_id'    => $team_id,
+                'share_type' => $share_type,
             ];
         }
         return $this->saveAll($data);
@@ -119,7 +126,7 @@ class PostShareUser extends AppModel
                 'PostShareUser.post_id' => $post_id,
                 'PostShareUser.team_id' => $this->current_team_id,
             ],
-            'fields'     => ['PostShareUser.user_id']
+            'fields'     => ['PostShareUser.user_id', 'PostShareUser.user_id']
         ];
         $res = $this->find('list', $options);
         $this->primaryKey = $primary_backup;

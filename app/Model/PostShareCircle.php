@@ -10,6 +10,10 @@ App::uses('AppModel', 'Model');
  */
 class PostShareCircle extends AppModel
 {
+    //そのユーザのALLフィード、サークルページ両方に表示される
+    const SHARE_TYPE_SHARED = 0;
+    //そのユーザのALLフィードのみに表示される。サークルページには表示されない
+    const SHARE_TYPE_ONLY_NOTIFY = 1;
 
     /**
      * Validation rules
@@ -35,7 +39,7 @@ class PostShareCircle extends AppModel
         'Team',
     ];
 
-    public function add($post_id, $circles, $team_id = null)
+    public function add($post_id, $circles, $team_id = null, $share_type = self::SHARE_TYPE_SHARED)
     {
         if (empty($circles)) {
             return false;
@@ -46,16 +50,16 @@ class PostShareCircle extends AppModel
         $data = [];
         foreach ($circles as $circle_id) {
             $data[] = [
-                'circle_id' => $circle_id,
-                'post_id'   => $post_id,
-                'team_id'   => $team_id,
+                'circle_id'  => $circle_id,
+                'post_id'    => $post_id,
+                'team_id'    => $team_id,
+                'share_type' => $share_type,
             ];
         }
         return $this->saveAll($data);
-
     }
 
-    public function getMyCirclePostList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000, $my_circle_list = null)
+    public function getMyCirclePostList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000, $my_circle_list = null, $share_type = null)
     {
         if (!$my_circle_list) {
             $my_circle_list = $this->Circle->CircleMember->getMyCircleList(true);
@@ -72,6 +76,9 @@ class PostShareCircle extends AppModel
             'limit'      => $limit,
             'fields'     => ['post_id'],
         ];
+        if ($share_type !== null) {
+            $options['conditions']['share_type'] = $share_type;
+        }
         $res = $this->find('list', $options);
         $this->primaryKey = $backupPrimaryKey;
         return $res;
