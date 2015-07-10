@@ -797,12 +797,9 @@ class Post extends AppModel
         }
         $share_member_list = [];
         //サークル共有ユーザを追加
-        $share_member_list = array_merge($share_member_list,
-                                         $this->PostShareCircle->getShareCircleMemberList($post_id));
+        $share_member_list = $share_member_list + $this->PostShareCircle->getShareCircleMemberList($post_id);
         //メンバー共有なら
-        $share_member_list = array_merge($share_member_list,
-                                         $this->PostShareUser->getShareUserListByPost($post_id));
-
+        $share_member_list = $share_member_list + $this->PostShareUser->getShareUserListByPost($post_id);
         $share_member_list = array_unique($share_member_list);
         //自分自身を除外
         $key = array_search($this->my_uid, $share_member_list);

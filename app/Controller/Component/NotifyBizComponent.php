@@ -3,14 +3,14 @@ App::uses('ModelType', 'Model');
 
 /**
  * @author daikihirakata
- * @property SessionComponent    $Session
- * @property AuthComponent       $Auth
- * @property GlEmailComponent    $GlEmail
- * @property NotifySetting       $NotifySetting
- * @property Post                $Post
- * @property Goal                $Goal
- * @property GlRedis             $GlRedis
- * @property Team                $Team
+ * @property SessionComponent $Session
+ * @property AuthComponent    $Auth
+ * @property GlEmailComponent $GlEmail
+ * @property NotifySetting    $NotifySetting
+ * @property Post             $Post
+ * @property Goal             $Goal
+ * @property GlRedis          $GlRedis
+ * @property Team             $Team
  */
 class NotifyBizComponent extends Component
 {
@@ -337,8 +337,10 @@ class NotifyBizComponent extends Component
         $followers = $this->Goal->Follower->getFollowerListByGoalId($goal_id);
         //Coach
         $coach_id = $this->Team->TeamMember->getCoachId($this->Team->my_uid, $this->Team->current_team_id);
+        //通知先に指定されたユーザ
+        $share_members = $this->Post->getShareAllMemberList($post['Post']['id']);
 
-        $members = $collaborators + $followers + [$coach_id => $coach_id];
+        $members = $share_members + $collaborators + $followers + [$coach_id => $coach_id];
         unset($members[$this->Team->my_uid]);
 
         //対象ユーザの通知設定確認

@@ -126,7 +126,7 @@ class PostShareUser extends AppModel
                 'PostShareUser.post_id' => $post_id,
                 'PostShareUser.team_id' => $this->current_team_id,
             ],
-            'fields'     => ['PostShareUser.user_id']
+            'fields'     => ['PostShareUser.user_id', 'PostShareUser.user_id']
         ];
         $res = $this->find('list', $options);
         $this->primaryKey = $primary_backup;
