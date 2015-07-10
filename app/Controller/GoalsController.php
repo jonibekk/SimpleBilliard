@@ -1090,11 +1090,8 @@ class GoalsController extends AppController
     function view_followers()
     {
         $goal_id = $this->_getRequiredParam('goal_id');
-
         $goal = $this->Goal->findById($goal_id);
-        if (!$this->_setUserPageHeaderInfo($goal['Goal']['user_id'])) {
-            throw new NotFoundException();
-        }
+        $this->_setUserPageHeaderInfo($goal['Goal']['user_id']);
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
@@ -1102,11 +1099,8 @@ class GoalsController extends AppController
     function view_members()
     {
         $goal_id = $this->_getRequiredParam('goal_id');
-
         $goal = $this->Goal->findById($goal_id);
-        if (!$this->_setUserPageHeaderInfo($goal['Goal']['user_id'])) {
-            throw new NotFoundException();
-        }
+        $this->_setUserPageHeaderInfo($goal['Goal']['user_id']);
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
@@ -1114,12 +1108,8 @@ class GoalsController extends AppController
     function view_krs()
     {
         $goal_id = $this->_getRequiredParam('goal_id');
-
         $goal = $this->Goal->findById($goal_id);
-        if (!$this->_setUserPageHeaderInfo($goal['Goal']['user_id'])) {
-            throw new NotFoundException();
-        }
-
+        $this->_setUserPageHeaderInfo($goal['Goal']['user_id']);
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
@@ -1129,7 +1119,11 @@ class GoalsController extends AppController
         $goal_id = $this->_getRequiredParam('goal_id');
 
         $goal = $this->Goal->findById($goal_id);
+        if (!$goal) {
+            throw new NotFoundException;
+        }
         if (!$this->_setUserPageHeaderInfo($goal['Goal']['user_id'])) {
+            // 有効な user_id でない
             throw new NotFoundException();
         }
 
