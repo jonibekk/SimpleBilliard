@@ -27,16 +27,18 @@
     <div>
         アクション: <?= h($action_count) ?><br>
         投稿: <?= h($post_count) ?><br>
-        <?= $this->Html->link('プロフィール編集',
-                              [
-                                  'controller' => 'users',
-                                  'action'     => 'settings',
-                                  '#'          => 'profile'
-                              ],
-                              [
-                                  'class' => ''
-                              ])
-        ?>
+        <?php if ($this->Session->read('Auth.User.id') == $user['User']['id']): ?>
+            <?= $this->Html->link('プロフィール編集',
+                                  [
+                                      'controller' => 'users',
+                                      'action'     => 'settings',
+                                      '#'          => 'profile'
+                                  ],
+                                  [
+                                      'class' => ''
+                                  ])
+            ?>
+        <?php endif ?>
         <br>
     </div>
     <div style="clear:both">
