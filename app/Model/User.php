@@ -852,8 +852,8 @@ class User extends AppModel
             case "public":
                 $circles = $this->CircleMember->Circle->getPublicCirclesByKeyword($keyword, $limit);
                 break;
-            case "private":
-                break;
+//            case "private":
+//                break;
         }
         $circle_res = [];
         foreach ($circles as $val) {
