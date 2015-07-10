@@ -233,8 +233,21 @@ class PostTest extends CakeTestCase
 
     function testGetCount()
     {
-        $this->Post->getCount('me', 1, 1);
-        $this->Post->getCount(null, 1, 1);
+        $user_id = 999;
+
+        $this->Post->current_team_id = 1;
+        $this->Post->my_uid = $user_id;
+
+        // 自分
+        $res = $this->Post->getCount('me', null, null);
+        $this->assertEquals(2, $res);
+
+        // ユーザID指定
+        $res = $this->Post->getCount($user_id, null, null);
+        $this->assertEquals(2, $res);
+
+        $res2 = $this->Post->getCount(null, null, null);
+        $this->assertNotEquals($res, $res2);
     }
 
     function testGetShareMode()

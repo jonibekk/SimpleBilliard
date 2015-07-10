@@ -10,6 +10,37 @@
 ?>
 <!-- START app/View/Elements/simplex_top_section.ctp -->
 <div class="panel-body">
-    上部の情報はここ
+    <div style="float:left">
+        <?=
+        $this->Html->image('ajax-loader.gif',
+                           [
+                               'class'         => 'lazy feed-img',
+                               'data-original' => $this->Upload->uploadUrl($user['User'], 'User.photo',
+                                                                           ['style' => 'medium']),
+                           ]
+        )
+        ?>
+        <br>
+        <?= h($user['User']['display_username']) ?>
+    </div>
+
+    <div>
+        アクション: <?= h($action_count) ?><br>
+        投稿: <?= h($post_count) ?><br>
+        <?= $this->Html->link('プロフィール編集',
+                              [
+                                  'controller' => 'users',
+                                  'action'     => 'settings',
+                                  '#'          => 'profile'
+                              ],
+                              [
+                                  'class' => ''
+                              ])
+        ?>
+        <br>
+    </div>
+    <div style="clear:both">
+        <?= h($user['TeamMember']['comment']) ?>
+    </div>
 </div>
 <!-- END app/View/Elements/simplex_top_section.ctp -->
