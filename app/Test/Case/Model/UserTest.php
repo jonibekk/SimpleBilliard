@@ -655,6 +655,9 @@ class UserTest extends CakeTestCase
         // チーム全体サークルを取得する場合
         $res = $this->User->getUsersCirclesSelect2('チーム全体');
         $this->assertEquals('public', $res['results'][0]['id']);
+        // チーム全体サークルを取得する場合(公開サークルのみ)
+        $res = $this->User->getUsersCirclesSelect2('チーム全体', 10, 'public');
+        $this->assertEquals('public', $res['results'][0]['id']);
 
         // 通常のサークルを取得する場合
         $res = $this->User->getUsersCirclesSelect2('test');
