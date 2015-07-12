@@ -72,7 +72,6 @@ class PagesController extends AppController
         $current_global_menu = "home";
         $feed_filter = 'all';
         $this->set(compact('feed_filter', 'current_global_menu'));
-        $this->set('avail_sub_menu', true);
         $this->set('long_text', false);
         $this->set('common_form_type', 'action');
         try {

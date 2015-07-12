@@ -10,9 +10,11 @@
 ?>
 <!-- START app/View/Users/view_members.ctp -->
 <div class="col-sm-8 col-sm-offset-2">
-    <?= $this->element('simplex_top_section') ?>
     <div class="panel panel-default">
-        メンバー一覧ページ
+        <?= $this->element('simplex_top_section') ?>
+        <div class="panel-body">
+            メンバー一覧ページ
+        </div>
     </div>
 </div>
 <!-- END app/View/Users/view_members.ctp -->

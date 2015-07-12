@@ -2,30 +2,88 @@
   headerのスタイル
  */
 
-.frame-arrow-icon {
-    top: 100%;
-    .frame-arrow;
+.header-dropdowns {
+  .dropdown;
+  .navbar-nav-fix;
+  height: 48px;
+  line-height: 48px;
+  padding: 0;
 }
 
-.frame-arrow-icon::before {
-    content: "";
-    border: 8px solid transparent;
-    /*noinspection CssOverwrittenProperties*/
-    border-bottom: 8px solid #fff;
-    position: absolute;
-    right: 6%;
-    top: -15px;
-    z-index: 2;
+.nav-icons {
+  font-size: 20px;
+  height: 48px;
 }
 
-.frame-arrow-icon::after {
-    content: "";
-    border: 8px solid transparent;
-    /*noinspection CssOverwrittenProperties*/
-    border-bottom: 8px solid #ccc;
-    position: absolute;
-    right: 6%;
-    top: -16px;
+.header-dropdown-user {
+  .header-dropdowns;
+}
+
+.header-dropdown-add {
+  .header-dropdowns;
+}
+
+.header-dropdown-message {
+  .header-dropdowns;
+}
+
+.header-dropdown-notify {
+  .header-dropdowns;
+}
+
+.header-dropdown-functions {
+  .header-dropdowns;
+}
+
+.nav-icons .header-home {
+  line-height: 30px;
+}
+
+.header-dropdown-icons {
+  font-size: 20px;
+  width: 36px;
+  height: 20px;
+  text-align: center;
+  @media screen and (min-width: 768px){
+    width: 36px;
+  }
+  color: #505050;
+}
+
+.header-dropdown-icon-add {
+  .header-dropdown-icons;
+}
+
+.header-dropdown-icon-message {
+  .header-dropdown-icons;
+}
+
+.header-dropdown-icon-notify {
+  .header-dropdown-icons;
+}
+
+.header-dropdown-icon-functions {
+  .header-dropdown-icons;
+}
+
+.body {
+  padding: 100px 0 0;
+    @media screen and (min-width: 992px){
+      padding: 60px 0 0;
+    }
+}
+
+.header-nav-add-contents {
+  .frame-arrow-icon;
+}
+
+.header-nav-notify-contents {
+  .frame-arrow-icon;
+}
+
+.header-nav-function-contents {
+  .frame-arrow-icon;
+  top: 40px;
 }
 
 .header-nav-avator {
@@ -48,9 +106,14 @@
 
 .btn-function-header {
   .btn-animated;
+  padding: 0 !important;
 }
 
 .team-members-card-function-box {
   display: inline-block;
   vertical-align: middle;
+}
+
+.notify-card-list {
+  line-height: 1.4;
 }

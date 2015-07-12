@@ -13,8 +13,7 @@
     <div class="panel panel-default">
         <?= $this->element('simplex_top_section') ?>
         <div class="panel-body">
-            ユーザ情報ページ
-
+            ゴール情報ページ
         </div>
     </div>
 </div>
