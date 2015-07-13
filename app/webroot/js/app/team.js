@@ -234,7 +234,23 @@ app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider', '$http
                             url: cake.url.ad + $stateParams.group_vision_id + '/' + active_flg
                         };
                         return $http(request).then(function (response) {
-                            return response.data;
+                            var vision_detail = response.data;
+
+                            var request2 = { method: 'GET', url: cake.url.ae };
+                            if (vision_detail.GroupVision.modify_user_id !== '') {
+                                request2.url += vision_detail.GroupVision.modify_user_id
+                            } else {
+                                request2.url += vision_detail.GroupVision.create_user_id
+                            }
+
+                            $http(request2).then(function (response) {
+                                vision_detail.GroupVision.user_name = response.data.User.roman_username;
+                                if (response.data.User.local_username !== '') {
+                                    vision_detail.GroupVision.user_name = response.data.User.local_username;
+                                }
+                            });
+
+                            return vision_detail;
                         });
 
                     }]

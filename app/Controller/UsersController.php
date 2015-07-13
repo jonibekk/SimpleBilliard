@@ -993,6 +993,13 @@ class UsersController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
+    public function ajax_get_user_local_name ($user_id)
+    {
+        $this->_ajaxPreProcess();
+        $user_detail = $this->User->getDetail($user_id);
+        return $this->_ajaxGetResponse($user_detail);
+    }
+
     public function ajax_get_select2_circle_user_all()
     {
         $result = $this->User->getAllUsersCirclesSelect2();
