@@ -18,7 +18,7 @@
             <li class="switch-action"><a href="#ActionForm" role="tab" data-toggle="tab"
                                          class="switch-action-anchor click-target-focus"
                                          target-id="CommonActionName"><i
-                        class="fa fa-star-o"></i><?= __d('gl', "アクション") ?></a><span class="switch-arrow"></span></li>
+                        class="fa fa-check-circle"></i><?= __d('gl', "アクション") ?></a><span class="switch-arrow"></span></li>
             <li class="switch-post"><a href="#PostForm" role="tab" data-toggle="tab"
                                        class="switch-post-anchor click-target-focus"
                                        target-id="CommonPostBody"><i

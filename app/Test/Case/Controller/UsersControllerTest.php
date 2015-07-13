@@ -1599,7 +1599,7 @@ class UsersControllerTest extends ControllerTestCase
 
         /** @noinspection PhpUndefinedFieldInspection */
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/users/ajax_select2_get_circles_users?term=firstname&page_limit=10', ['method' => 'GET']);
+        $this->testAction('/users/ajax_select2_get_circles_users?term=firstname&page_limit=10&circle_type=all', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
