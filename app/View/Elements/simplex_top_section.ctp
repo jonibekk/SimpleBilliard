@@ -25,6 +25,36 @@
     </div>
 
     <div>
+        <?php
+        // いいね数は数字を３桁にする
+        if ($like_count < 1000) {
+            // pass
+        }
+        elseif ($like_count < 10000)  {
+            // "1.2K"
+            $like_count = sprintf("%.1fK", round($like_count / 1000, 1));
+        }
+        elseif ($like_count < 1000000) {
+            // "12K"
+            $like_count = sprintf("%dK", floor($like_count / 1000));
+        }
+        elseif ($like_count < 10000000)  {
+            // "1.2M"
+            $like_count = sprintf("%.1fM", round($like_count / 1000000, 1));
+        }
+        elseif ($like_count < 1000000000) {
+            // "12M"
+            $like_count = sprintf("%dM", floor($like_count / 1000000));
+        }
+        elseif ($like_count < 10000000000)  {
+            // "1.2G"
+            $like_count = sprintf("%.1fG", round($like_count / 1000000000, 1));
+        }
+        elseif ($like_count < 1000000000000) {
+            // "12G"
+            $like_count =  sprintf("%dG", floor($like_count / 1000000000));
+        }
+        ?>
         アクション: <?= h($action_count) ?><br>
         投稿: <?= h($post_count) ?><br>
         いいね: <?= h($like_count) ?><br>
