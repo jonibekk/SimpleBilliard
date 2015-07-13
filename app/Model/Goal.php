@@ -731,7 +731,7 @@ class Goal extends AppModel
                     'fields' => ['Purpose.name']
                 ],
                 'ActionResult'      => [
-                    'fields'     => ['ActionResult.name', 'ActionResult.photo1_file_name'],
+                    'fields'     => ['ActionResult.id', 'ActionResult.name', 'ActionResult.photo1_file_name'],
                     'limit'      => $action_limit,
                     'conditions' => ['ActionResult.user_id' => $user_id]
                 ],

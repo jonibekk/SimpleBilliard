@@ -80,6 +80,38 @@
                                 </div>
                             </div>
                         <?php endif; ?>
+                        <div class="col col-xxs-12 mt_5px">
+                            <ul class="list-inline">
+                                <?php if (!empty($goal['MyCollabo'])): ?>
+                                    <li>
+                                        <a href="/"><i class="fa fa-plus"></i><?= __d('gl', "アクションを追加") ?></a>
+                                    </li>
+                                <?php endif; ?>
+                                <?php foreach ($goal['ActionResult'] as $action): ?>
+                                    <li>
+                                        <?=
+                                        $this->Html->image('ajax-loader.gif',
+                                                           [
+                                                               'class'         => 'lazy',
+                                                               'width'         => 48,
+                                                               'height'        => 48,
+                                                               'data-original' => $this->Upload->uploadUrl($action,
+                                                                                                           'ActionResult.photo1',
+                                                                                                           ['style' => 'x_small']),
+                                                           ]
+                                        )
+                                        ?>
+                                    </li>
+                                <? endforeach ?>
+                                <?php if (count($goal['ActionResultCount']) >= 4): ?>
+                                    <li>
+                                        <a href="#"><i
+                                                class="fa fa-plus"></i><?= count($goal['ActionResultCount']) - 3 ?></a>
+                                    </li>
+
+                                <? endif; ?>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             <?php endforeach ?>
