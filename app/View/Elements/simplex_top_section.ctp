@@ -5,7 +5,10 @@
  * Date: 7/9/15
  * Time: 3:50 PM
  *
- * @var CodeCompletionView $this
+ * @var $user
+ * @var $post_count
+ * @var $action_count
+ * @var $like_count
  */
 ?>
 <!-- START app/View/Elements/simplex_top_section.ctp -->
@@ -27,7 +30,7 @@
     <div>
         <?= __d('gl', 'アクション') ?>: <?= h($action_count) ?><br>
         <?= __d('gl', '投稿') ?>: <?= h($post_count) ?><br>
-        <?= __d('gl', 'いいね') ?>: <?= h($like_count) ?><br>
+        <?= __d('gl', 'いいね') ?>: <?= h($this->NumberEx->formatHumanReadable($like_count)) ?><br>
         <?php if ($this->Session->read('Auth.User.id') == $user['User']['id']): ?>
             <?= $this->Html->link(__d('gl', 'プロフィール編集'),
                                   [
