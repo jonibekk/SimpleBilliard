@@ -44,5 +44,30 @@
     <div style="clear:both">
         <?= h($user['TeamMember']['comment']) ?>
     </div>
+    <div>
+        <?= $this->Html->link('ゴール', [
+            'controller' => 'users',
+            'action'     => 'view_goals',
+            'user_id'    => $user['User']['id'],
+        ]); ?>
+        |
+        <?= $this->Html->link('アクション', [
+            'controller' => 'users',
+            'action'     => 'view_actions',
+            'user_id'    => $user['User']['id'],
+        ]); ?>
+        |
+        <?= $this->Html->link('投稿', [
+            'controller' => 'users',
+            'action'     => 'view_posts',
+            'user_id'    => $user['User']['id'],
+        ]); ?>
+        |
+        <?= $this->Html->link('基本データ', [
+            'controller' => 'users',
+            'action'     => 'view_info',
+            'user_id'    => $user['User']['id'],
+        ]); ?>
+    </div>
 </div>
 <!-- END app/View/Elements/simplex_top_section.ctp -->
