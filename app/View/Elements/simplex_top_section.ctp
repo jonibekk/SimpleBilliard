@@ -25,11 +25,11 @@
     </div>
 
     <div>
-        アクション: <?= h($action_count) ?><br>
-        投稿: <?= h($post_count) ?><br>
-        いいね: <?= h($like_count) ?><br>
+        <?= __d('gl', 'アクション') ?>: <?= h($action_count) ?><br>
+        <?= __d('gl', '投稿') ?>: <?= h($post_count) ?><br>
+        <?= __d('gl', 'いいね') ?>: <?= h($like_count) ?><br>
         <?php if ($this->Session->read('Auth.User.id') == $user['User']['id']): ?>
-            <?= $this->Html->link('プロフィール編集',
+            <?= $this->Html->link(__d('gl', 'プロフィール編集'),
                                   [
                                       'controller' => 'users',
                                       'action'     => 'settings',
@@ -45,25 +45,25 @@
         <?= h($user['TeamMember']['comment']) ?>
     </div>
     <div>
-        <?= $this->Html->link('ゴール', [
+        <?= $this->Html->link(__d('gl', 'ゴール'), [
             'controller' => 'users',
             'action'     => 'view_goals',
             'user_id'    => $user['User']['id'],
         ]); ?>
         |
-        <?= $this->Html->link('アクション', [
+        <?= $this->Html->link(__d('gl', 'アクション'), [
             'controller' => 'users',
             'action'     => 'view_actions',
             'user_id'    => $user['User']['id'],
         ]); ?>
         |
-        <?= $this->Html->link('投稿', [
+        <?= $this->Html->link(__d('gl', '投稿'), [
             'controller' => 'users',
             'action'     => 'view_posts',
             'user_id'    => $user['User']['id'],
         ]); ?>
         |
-        <?= $this->Html->link('基本データ', [
+        <?= $this->Html->link(__d('gl', '基本データ'), [
             'controller' => 'users',
             'action'     => 'view_info',
             'user_id'    => $user['User']['id'],
