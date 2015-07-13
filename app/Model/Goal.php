@@ -6,16 +6,16 @@ App::uses('KeyResult', 'Model');
 /**
  * Goal Model
  *
- * @property User                      $User
- * @property Team                      $Team
- * @property GoalCategory              $GoalCategory
- * @property Post                      $Post
- * @property KeyResult                 $KeyResult
- * @property Collaborator              $Collaborator
- * @property Follower                  $Follower
- * @property Evaluation                $Evaluation
- * @property Purpose                   $Purpose
- * @property ActionResult              $ActionResult
+ * @property User         $User
+ * @property Team         $Team
+ * @property GoalCategory $GoalCategory
+ * @property Post         $Post
+ * @property KeyResult    $KeyResult
+ * @property Collaborator $Collaborator
+ * @property Follower     $Follower
+ * @property Evaluation   $Evaluation
+ * @property Purpose      $Purpose
+ * @property ActionResult $ActionResult
  */
 class Goal extends AppModel
 {
@@ -209,6 +209,9 @@ class Goal extends AppModel
         ],
         'ActionResult'        => [
             'dependent' => true,
+        ],
+        'ActionResultCount'   => [
+            'className' => 'ActionResult',
         ],
         'IncompleteKeyResult' => [
             'className' => 'KeyResult'
@@ -708,6 +711,36 @@ class Goal extends AppModel
         $res = $this->sortEndDate($res);
         $res = $this->sortPriority($res);
 
+        return $res;
+    }
+
+    function getGoalsWithAction($user_id, $action_limit = 4)
+    {
+        $goal_ids = $this->Collaborator->getCollaboGoalList($user_id, true);
+        $start_date = $this->Team->getCurrentTermStartDate();
+        $end_date = $this->Team->getCurrentTermEndDate();
+        $options = [
+            'conditions' => [
+                'Goal.id'            => $goal_ids,
+                'Goal.start_date >=' => $start_date,
+                'Goal.end_date <'    => $end_date,
+            ],
+            'contain'    => [
+                'Purpose'           => [
+                    'fields' => ['Purpose.name']
+                ],
+                'ActionResult'      => [
+                    'fields'     => ['Purpose.name'],
+                    'limit'      => $action_limit,
+                    'conditions' => ['ActionResult.user_id' => $user_id]
+                ],
+                'ActionResultCount' => [
+                    'fields'     => ['ActionResultCount.id'],
+                    'conditions' => ['ActionResultCount.user_id' => $user_id]
+                ]
+            ]
+        ];
+        $res = $this->find('all', $options);
         return $res;
     }
 

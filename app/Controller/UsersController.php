@@ -1005,6 +1005,8 @@ class UsersController extends AppController
         $user_id = $this->_getRequiredParam('user_id');
         $this->_setUserPageHeaderInfo($user_id);
         $this->layout = LAYOUT_ONE_COLUMN;
+        $goals = $this->Goal->getGoalsWithAction($user_id);
+        $this->set(compact('goals'));
         return $this->render();
     }
 
