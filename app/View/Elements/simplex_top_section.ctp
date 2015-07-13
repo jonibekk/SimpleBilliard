@@ -1,6 +1,10 @@
 <?php
 /**
- * @property NumberExHelper    $NumberEx
+ * Created by PhpStorm.
+ * User: bigplants
+ * Date: 7/9/15
+ * Time: 3:50 PM
+ *
  * @var $user
  * @var $post_count
  * @var $action_count
@@ -42,6 +46,31 @@
     </div>
     <div style="clear:both">
         <?= h($user['TeamMember']['comment']) ?>
+    </div>
+    <div>
+        <?= $this->Html->link(__d('gl', 'ゴール'), [
+            'controller' => 'users',
+            'action'     => 'view_goals',
+            'user_id'    => $user['User']['id'],
+        ]); ?>
+        |
+        <?= $this->Html->link(__d('gl', 'アクション'), [
+            'controller' => 'users',
+            'action'     => 'view_actions',
+            'user_id'    => $user['User']['id'],
+        ]); ?>
+        |
+        <?= $this->Html->link(__d('gl', '投稿'), [
+            'controller' => 'users',
+            'action'     => 'view_posts',
+            'user_id'    => $user['User']['id'],
+        ]); ?>
+        |
+        <?= $this->Html->link(__d('gl', '基本データ'), [
+            'controller' => 'users',
+            'action'     => 'view_info',
+            'user_id'    => $user['User']['id'],
+        ]); ?>
     </div>
 </div>
 <!-- END app/View/Elements/simplex_top_section.ctp -->
