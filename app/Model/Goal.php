@@ -725,12 +725,13 @@ class Goal extends AppModel
                 'Goal.start_date >=' => $start_date,
                 'Goal.end_date <'    => $end_date,
             ],
+            'fields'     => ['Goal.id', 'Goal.user_id', 'Goal.name', 'Goal.photo_file_name'],
             'contain'    => [
                 'Purpose'           => [
                     'fields' => ['Purpose.name']
                 ],
                 'ActionResult'      => [
-                    'fields'     => ['Purpose.name'],
+                    'fields'     => ['ActionResult.name', 'ActionResult.photo1_file_name'],
                     'limit'      => $action_limit,
                     'conditions' => ['ActionResult.user_id' => $user_id]
                 ],
