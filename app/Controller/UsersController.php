@@ -993,7 +993,7 @@ class UsersController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
-    public function ajax_get_user_local_name ($user_id)
+    public function ajax_get_user_detail ($user_id)
     {
         $this->_ajaxPreProcess();
         $user_detail = $this->User->getDetail($user_id);
