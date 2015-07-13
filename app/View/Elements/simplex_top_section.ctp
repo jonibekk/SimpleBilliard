@@ -24,15 +24,11 @@
     </div>
 
     <div>
-        <?php
-        // いいね数は数字を３桁にする
-
-        ?>
-        アクション: <?= h($action_count) ?><br>
-        投稿: <?= h($post_count) ?><br>
-        いいね: <?= h($this->NumberEx->formatHumanReadable($like_count)) ?><br>
+        <?= __d('gl', 'アクション') ?>: <?= h($action_count) ?><br>
+        <?= __d('gl', '投稿') ?>: <?= h($post_count) ?><br>
+        <?= __d('gl', 'いいね') ?>: <?= h($this->NumberEx->formatHumanReadable($like_count)) ?><br>
         <?php if ($this->Session->read('Auth.User.id') == $user['User']['id']): ?>
-            <?= $this->Html->link('プロフィール編集',
+            <?= $this->Html->link(__d('gl', 'プロフィール編集'),
                                   [
                                       'controller' => 'users',
                                       'action'     => 'settings',
