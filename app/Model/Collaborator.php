@@ -4,9 +4,9 @@ App::uses('AppModel', 'Model');
 /**
  * Collaborator Model
  *
- * @property Team      $Team
- * @property Goal      $Goal
- * @property User      $User
+ * @property Team $Team
+ * @property Goal $Goal
+ * @property User $User
  */
 class Collaborator extends AppModel
 {
@@ -26,6 +26,13 @@ class Collaborator extends AppModel
     const STATUS_HOLD = 2;
     const STATUS_MODIFY = 3;
 
+    static public $STATUS = [
+        self::STATUS_UNAPPROVED => "",
+        self::STATUS_APPROVAL   => "",
+        self::STATUS_HOLD       => "",
+        self::STATUS_MODIFY     => "",
+    ];
+
     /**
      * タイプの表示名をセット
      */
@@ -33,6 +40,17 @@ class Collaborator extends AppModel
     {
         self::$TYPE[self::TYPE_COLLABORATOR] = __d('gl', "コラボレータ");
         self::$TYPE[self::TYPE_OWNER] = __d('gl', "オーナ");
+    }
+
+    /**
+     * ステータス表示名をセット
+     */
+    private function _setStatusName()
+    {
+        self::$STATUS[self::STATUS_UNAPPROVED] = __d('gl', "認定待ち");
+        self::$STATUS[self::STATUS_APPROVAL] = __d('gl', "評価対象");
+        self::$STATUS[self::STATUS_HOLD] = __d('gl', "評価対象外");
+        self::$STATUS[self::STATUS_MODIFY] = __d('gl', "修正待ち");
     }
 
     /**
@@ -73,6 +91,7 @@ class Collaborator extends AppModel
     {
         parent::__construct($id, $table, $ds);
         $this->_setTypeName();
+        $this->_setStatusName();
     }
 
     function add($goal_id, $uid = null, $type = self::TYPE_COLLABORATOR)

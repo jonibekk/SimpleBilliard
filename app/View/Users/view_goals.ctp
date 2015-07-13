@@ -16,6 +16,7 @@
         <div class="panel-body">
             <?php foreach ($goals as $goal): ?>
                 <div class="col col-xxs-12 my-goals-item">
+                    <?= $this->element('Goal/goal_menu_on_my_page', ['goal' => $goal]) ?>
                     <div class="col col-xxs-3 col-xs-2">
                         <a href="#">
                             <?=
@@ -41,6 +42,8 @@
                             <?= __d('gl', "目的: %s", $goal['Purpose']['name']) ?>
                         </div>
                         <div class="col col-xxs-12 font_lightgray font_12px">
+                            <?= __d('gl', "認定ステータス: %s",
+                                    Collaborator::$STATUS[$goal['Collaborator'][0]['valued_flg']]) ?>
                         </div>
                         <?php if ($goal['Goal']['user_id'] != $this->Session->read('Auth.User.id') && isset($goal['Goal'])): ?>
                             <div class="col col-xxs-12 mt_5px">

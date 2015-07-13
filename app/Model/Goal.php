@@ -738,7 +738,19 @@ class Goal extends AppModel
                 'ActionResultCount' => [
                     'fields'     => ['ActionResultCount.id'],
                     'conditions' => ['ActionResultCount.user_id' => $user_id]
-                ]
+                ],
+                'Collaborator'      => [
+                    'fields'     => ['Collaborator.id', 'Collaborator.type', 'Collaborator.valued_flg'],
+                    'conditions' => ['Collaborator.user_id' => $user_id]
+                ],
+                'MyCollabo'         => [
+                    'fields'     => ['MyCollabo.id', 'MyCollabo.type'],
+                    'conditions' => ['MyCollabo.user_id' => $this->my_uid]
+                ],
+                'MyFollow'          => [
+                    'fields'     => ['MyFollow.id'],
+                    'conditions' => ['MyFollow.user_id' => $this->my_uid]
+                ],
             ]
         ];
         $res = $this->find('all', $options);
