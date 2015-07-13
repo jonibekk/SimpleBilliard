@@ -930,13 +930,13 @@ class Post extends AppModel
     /**
      * 投稿数のカウントを返却
      *
-     * @param string $type
-     * @param null   $start_date
-     * @param null   $end_date
+     * @param mixed $user_id ユーザーIDもしくは'me'を指定する。
+     * @param null  $start_date
+     * @param null  $end_date
      *
      * @return int
      */
-    function getCount($type = 'me', $start_date = null, $end_date = null)
+    function getCount($user_id = 'me', $start_date = null, $end_date = null)
     {
         $options = [
             'conditions' => [
@@ -944,14 +944,14 @@ class Post extends AppModel
                 'type'    => self::TYPE_NORMAL
             ]
         ];
-        //タイプ別に条件変更する
-        switch ($type) {
-            case 'me':
-                $options['conditions']['user_id'] = $this->my_uid;
-                break;
-            default:
-                break;
+        // ユーザーIDに'me'が指定された場合は、自分のIDをセットする
+        if ($user_id == 'me') {
+            $options['conditions']['user_id'] = $this->my_uid;
         }
+        elseif (is_numeric($user_id)) {
+            $options['conditions']['user_id'] = $user_id;
+        }
+
         //期間で絞り込む
         if ($start_date) {
             $options['conditions']['modified >'] = $start_date;
@@ -1021,6 +1021,38 @@ class Post extends AppModel
         $cmd_end = " > /dev/null &";
         $all_cmd = $set_web_env . $nohup . $cake_cmd . $cake_app . $cmd . $cmd_end;
         exec($all_cmd);
+    }
+
+    /**
+     * 期間内のいいねの数の合計を取得
+     *
+     * @param      $user_id
+     * @param null $start_date
+     * @param null $end_date
+     *
+     * @return mixed
+     */
+    public function getLikeCountSumByUserId($user_id, $start_date = null, $end_date = null)
+    {
+        $options = [
+            'fields' => [
+                'SUM(post_like_count) as sum_like',
+            ],
+            'conditions' => [
+                'user_id' => $user_id,
+                'team_id' => $this->current_team_id,
+                'type'    => [self::TYPE_NORMAL, self::TYPE_ACTION],
+            ]
+        ];
+        //期間で絞り込む
+        if ($start_date) {
+            $options['conditions']['modified >'] = $start_date;
+        }
+        if ($end_date) {
+            $options['conditions']['modified <'] = $end_date;
+        }
+        $res = $this->find('first', $options);
+        return $res ? $res[0]['sum_like'] : 0;
     }
 
 }

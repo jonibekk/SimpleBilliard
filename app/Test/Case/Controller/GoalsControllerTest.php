@@ -1176,6 +1176,22 @@ class GoalsControllerTest extends ControllerTestCase
         $this->_getGoalsCommonMock();
         $this->testAction('/goals/view_info/goal_id:1');
     }
+    function testViewInfoNoParams()
+    {
+        $this->_getGoalsCommonMock();
+        try {
+            $this->testAction('/goals/view_info/');
+        } catch (NotFoundException $e) {
+        }
+    }
+    function testViewInfoNoTeamMember()
+    {
+        $this->_getGoalsCommonMock();
+        try {
+            $this->testAction('/goals/view_info/goal_id:5');
+        } catch (NotFoundException $e) {
+        }
+    }
 
 
     var $current_date;

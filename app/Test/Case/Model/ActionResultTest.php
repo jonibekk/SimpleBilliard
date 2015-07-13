@@ -76,9 +76,16 @@ class ActionResultTest extends CakeTestCase
 
     function testGetCount()
     {
-        $this->_setDefault();
-        $this->ActionResult->getCount('me', 1, 1000000000);
-        $this->ActionResult->getCount('xxxx', 1, 1000000000);
+        $this->ActionResult->current_team_id = 1;
+        $this->ActionResult->my_uid = 101;
+
+        // 自分
+        $res = $this->ActionResult->getCount('me', null, null);
+        $this->assertEquals(2, $res);
+
+        // ユーザID指定
+        $res = $this->ActionResult->getCount(102, null, null);
+        $this->assertEquals(1, $res);
     }
 
     function testActionEdit()
