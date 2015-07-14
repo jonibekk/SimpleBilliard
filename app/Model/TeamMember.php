@@ -1357,6 +1357,32 @@ class TeamMember extends AppModel
         return $res;
     }
 
+    /**
+     * $user_id をキーにしてチームメンバー情報を取得
+     *
+     * @param      $user_id
+     * @param null $team_id
+     *
+     * @return array|null
+     */
+    function getByUserId($user_id, $team_id = null)
+    {
+        if (!$team_id) {
+            $team_id = $this->current_team_id;
+        }
+        $options = [
+            'conditions' => [
+                'team_id' => $team_id,
+                'user_id' => $user_id,
+            ],
+            'contain' => [
+                'User',
+            ]
+        ];
+        $res = $this->find('first', $options);
+        return $res;
+    }
+
     function getAllMembersCsvData($team_id = null)
     {
         if (!$team_id) {

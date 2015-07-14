@@ -1003,6 +1003,7 @@ class UsersController extends AppController
     function view_goals()
     {
         $user_id = $this->_getRequiredParam('user_id');
+        $this->_setUserPageHeaderInfo($user_id);
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
@@ -1010,6 +1011,7 @@ class UsersController extends AppController
     function view_posts()
     {
         $user_id = $this->_getRequiredParam('user_id');
+        $this->_setUserPageHeaderInfo($user_id);
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
@@ -1017,6 +1019,7 @@ class UsersController extends AppController
     function view_actions()
     {
         $user_id = $this->_getRequiredParam('user_id');
+        $this->_setUserPageHeaderInfo($user_id);
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
@@ -1024,7 +1027,49 @@ class UsersController extends AppController
     function view_info()
     {
         $user_id = $this->_getRequiredParam('user_id');
+
+        if (!$this->_setUserPageHeaderInfo($user_id)) {
+            // 有効な user_id でない
+            throw new NotFoundException;
+        }
+
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
+    }
+
+    /**
+     * ユーザページの上部コンテンツの表示に必要なView変数をセット
+     *
+     * @param $user_id
+     *
+     * @return bool
+     */
+    function _setUserPageHeaderInfo($user_id)
+    {
+        // ユーザー情報
+        $user = $this->User->TeamMember->getByUserId($user_id);
+        if (!$user) {
+            // チームメンバーでない場合
+            return false;
+        }
+        $this->set('user', $user);
+
+        // 評価期間内の投稿数
+        $term_start_date = $this->Team->getCurrentTermStartDate();
+        $term_end_date = $this->Team->getCurrentTermEndDate();
+        $post_count = $this->Post->getCount($user_id, $term_start_date, $term_end_date);
+        $this->set('post_count', $post_count);
+
+        // 評価期間内のアクション数
+        $action_count = $this->Goal->ActionResult->getCount($user_id, $term_start_date, $term_end_date);
+        $this->set('action_count', $action_count);
+
+        // 投稿に対するいいねの数
+        $post_like_count = $this->Post->getLikeCountSumByUserId($user_id, $term_start_date, $term_end_date);
+        // コメントに対するいいねの数
+        $comment_like_count = $this->Post->Comment->getLikeCountSumByUserId($user_id, $term_start_date, $term_end_date);
+        $this->set('like_count', $post_like_count + $comment_like_count);
+
+        return true;
     }
 }
