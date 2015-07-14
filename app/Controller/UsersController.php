@@ -1005,13 +1005,19 @@ class UsersController extends AppController
         $user_id = $this->_getRequiredParam('user_id');
         $this->_setUserPageHeaderInfo($user_id);
         $this->layout = LAYOUT_ONE_COLUMN;
-        $goals = $this->Goal->getGoalsWithAction($user_id);
+        $page_type = viaIsSet($this->request->params['named']['page_type']);
+        if ($page_type == "following") {
+            $goals = $this->Goal->getGoalsWithAction($user_id);
+        }
+        else {
+            $goals = $this->Goal->getGoalsWithAction($user_id);
+        }
         $is_mine = $user_id == $this->Auth->user('id') ? true : false;
         $display_action_count = MY_PAGE_ACTION_NUMBER;
         if ($is_mine) {
             $display_action_count--;
         }
-        $this->set(compact('goals', 'is_mine', 'display_action_count'));
+        $this->set(compact('page_type', 'goals', 'is_mine', 'display_action_count'));
         return $this->render();
     }
 
