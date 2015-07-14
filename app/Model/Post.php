@@ -368,7 +368,7 @@ class Post extends AppModel
                     $org_param_exists = true;
                     $this->orgParams[$key] = $params[$key];
                 }
-                elseif (array_key_exists($key, $params['named'])) {
+                elseif (isset($params['named']) && array_key_exists($key, $params['named'])) {
                     $org_param_exists = true;
                     $this->orgParams[$key] = $params['named'][$key];
                 }
@@ -433,6 +433,21 @@ class Post extends AppModel
             elseif ($this->orgParams['filter_goal']) {
                 $p_list = $this->getAllExistGoalPostList($start, $end);
             }
+            // ユーザーID指定
+            elseif ($this->orgParams['user_id']) {
+                // 自分個人に共有された投稿
+                $p_list = array_merge($p_list,
+                                      $this->PostShareUser->getShareWithMeList(
+                                          $start, $end, "PostShareUser.modified", "desc", 1000,
+                                          ['user_id' => $this->orgParams['user_id']]));
+
+                // 自分が閲覧可能なサークルへの投稿一覧
+                // （公開サークルへの投稿 + 自分が所属している秘密サークルへの投稿）
+                $p_list = array_merge($p_list,
+                                      $this->PostShareCircle->getAccessibleCirclePostList(
+                                          $start, $end, "PostShareCircle.modified", "desc", 1000,
+                                          ['user_id' => $this->orgParams['user_id']]));
+            }
         }
 
         if (!empty($this->orgParams['post_id'])) {
@@ -454,6 +469,9 @@ class Post extends AppModel
             if ($this->orgParams['type'] == self::TYPE_ACTION) {
                 $post_options['order'] = ['ActionResult.id' => 'desc'];
                 $post_options['contain'] = ['ActionResult'];
+            }
+            if ($this->orgParams['type'] == self::TYPE_NORMAL) {
+                $post_options['conditions']['Post.type'] = self::TYPE_NORMAL;
             }
             $post_list = $this->find('list', $post_options);
         }
@@ -1035,7 +1053,7 @@ class Post extends AppModel
     public function getLikeCountSumByUserId($user_id, $start_date = null, $end_date = null)
     {
         $options = [
-            'fields' => [
+            'fields'     => [
                 'SUM(post_like_count) as sum_like',
             ],
             'conditions' => [

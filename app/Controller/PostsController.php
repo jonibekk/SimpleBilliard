@@ -285,6 +285,52 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
+    /**
+     * ユーザーページの投稿一覧読み込み ajax
+     *
+     * @return CakeResponse
+     */
+    public function ajax_get_user_page_post_feed()
+    {
+        $param_named = $this->request->params['named'];
+        $this->_ajaxPreProcess();
+
+        // 表示するページ
+        $page_num = 1;
+        if (isset($param_named['page']) && !empty($param_named['page'])) {
+            $page_num = $param_named['page'];
+        }
+        // データ取得期間
+        $start = null;
+        $end = null;
+        if (isset($param_named['month_index']) && !empty($param_named['month_index'])) {
+            // 一ヶ月以前を指定された場合
+            $end_month_offset = $param_named['month_index'];
+            $start_month_offset = $end_month_offset + 1;
+            $end = strtotime("-{$end_month_offset} months", REQUEST_TIMESTAMP);
+            $start = strtotime("-{$start_month_offset} months", REQUEST_TIMESTAMP);
+        }
+        // 投稿一覧取得
+        $posts = $this->Post->get($page_num, POST_FEED_PAGE_ITEMS_NUMBER, $start, $end, [
+            'user_id' => $param_named['user_id'],
+            'type'    => Post::TYPE_NORMAL,
+        ]);
+        $this->set('posts', $posts);
+        $this->set('long_text', false);
+
+        // エレメントの出力を変数に格納する
+        // htmlレンダリング結果
+        $response = $this->render('Feed/posts');
+        $html = $response->__toString();
+        $result = array(
+            'html'          => $html,
+            'count'         => count($posts),
+            'page_item_num' => POST_FEED_PAGE_ITEMS_NUMBER,
+            'start'         => $start ? $start : REQUEST_TIMESTAMP - MONTH,
+        );
+        return $this->_ajaxGetResponse($result);
+    }
+
     public function ajax_get_goal_action_feed()
     {
         $this->_ajaxPreProcess();
