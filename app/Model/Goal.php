@@ -398,16 +398,20 @@ class Goal extends AppModel
      * @param null   $limit
      * @param int    $page
      * @param string $type
+     * @param null   $user_id
      *
      * @return array
      */
-    function getMyGoals($limit = null, $page = 1, $type = "all")
+    function getMyGoals($limit = null, $page = 1, $type = "all", $user_id = null)
     {
+        if (!$user_id) {
+            $user_id = $this->my_uid;
+        }
         $start_date = $this->Team->getCurrentTermStartDate();
         $end_date = $this->Team->getCurrentTermEndDate();
         $options = [
             'conditions' => [
-                'Goal.user_id'       => $this->my_uid,
+                'Goal.user_id'       => $user_id,
                 'Goal.team_id'       => $this->current_team_id,
                 'Goal.start_date >=' => $start_date,
                 'Goal.end_date <'    => $end_date,
@@ -428,7 +432,7 @@ class Goal extends AppModel
                 'Purpose',
                 'Evaluation' => [
                     'conditions' => [
-                        'Evaluation.evaluatee_user_id' => $this->my_uid,
+                        'Evaluation.evaluatee_user_id' => $user_id,
                     ],
                     'fields'     => ['Evaluation.id'],
                     'limit'      => 1,
@@ -697,12 +701,16 @@ class Goal extends AppModel
      * @param null   $limit
      * @param int    $page
      * @param string $type
+     * @param null   $user_id
      *
      * @return array
      */
-    function getMyCollaboGoals($limit = null, $page = 1, $type = "all")
+    function getMyCollaboGoals($limit = null, $page = 1, $type = "all", $user_id = null)
     {
-        $goal_ids = $this->Collaborator->getCollaboGoalList($this->my_uid);
+        if (!$user_id) {
+            $user_id = $this->my_uid;
+        }
+        $goal_ids = $this->Collaborator->getCollaboGoalList($user_id);
         if ($type == "count") {
             return $this->getByGoalId($goal_ids, $limit, $page, $type);
         }
@@ -764,11 +772,14 @@ class Goal extends AppModel
         return $res;
     }
 
-    function getMyFollowedGoals($limit = null, $page = 1, $type = 'all')
+    function getMyFollowedGoals($limit = null, $page = 1, $type = 'all', $user_id = null)
     {
-        $follow_goal_ids = $this->Follower->getFollowList($this->my_uid);
-        $coaching_goal_ids = $this->Team->TeamMember->getCoachingGoalList($this->my_uid);
-        $collabo_goal_ids = $this->Collaborator->getCollaboGoalList($this->my_uid, true);
+        if (!$user_id) {
+            $user_id = $this->my_uid;
+        }
+        $follow_goal_ids = $this->Follower->getFollowList($user_id);
+        $coaching_goal_ids = $this->Team->TeamMember->getCoachingGoalList($user_id);
+        $collabo_goal_ids = $this->Collaborator->getCollaboGoalList($user_id, true);
         //フォローしているゴールとコーチングしているゴールをマージして、そこからコラボしているゴールを除外したものが
         //フォロー中ゴールとなる
         $goal_ids = $follow_goal_ids + $coaching_goal_ids;

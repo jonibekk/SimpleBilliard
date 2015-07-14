@@ -10,6 +10,8 @@
  * @var                    $display_action_count
  * @var                    $is_mine
  * @var                    $page_type
+ * @var                    $my_goals_count
+ * @var                    $follow_goals_count
  */
 ?>
 <!-- START app/View/Users/view_goals.ctp -->
@@ -19,9 +21,11 @@
         <div class="panel-body">
             <div class="btn-group" role="group">
                 <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user['User']['id']]) ?>"
-                   class="btn <?= $page_type == "following" ? "btn-default" : "btn-primary" ?>">マイゴール(30)</a>
+                   class="btn <?= $page_type == "following" ? "btn-default" : "btn-primary" ?>">
+                    <?= __d('gl', "マイゴール(%s)", $my_goals_count) ?></a>
                 <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user['User']['id'], 'page_type' => 'following']) ?>"
-                   class="btn <?= $page_type == "following" ? "btn-primary" : "btn-default" ?>">フォロー中(120)</a>
+                   class="btn <?= $page_type == "following" ? "btn-primary" : "btn-default" ?>">
+                    <?= __d('gl', "フォロー中(%s)", $follow_goals_count) ?></a>
             </div>
             <?php foreach ($goals as $goal): ?>
                 <div class="col col-xxs-12 my-goals-item">
