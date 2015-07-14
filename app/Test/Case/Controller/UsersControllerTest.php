@@ -1987,6 +1987,10 @@ class UsersControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedFieldInspection */
         $Users->User->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
+        $Users->Goal->my_uid = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Users->Goal->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
         $Users->User->CircleMember->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Users->User->CircleMember->current_team_id = '1';
