@@ -91,24 +91,26 @@
                                 <?php endif; ?>
                                 <?php foreach ($goal['ActionResult'] as $action): ?>
                                     <li>
-                                        <?=
-                                        $this->Html->image('ajax-loader.gif',
-                                                           [
-                                                               'class'         => 'lazy',
-                                                               'width'         => 48,
-                                                               'height'        => 48,
-                                                               'data-original' => $this->Upload->uploadUrl($action,
-                                                                                                           'ActionResult.photo1',
-                                                                                                           ['style' => 'x_small']),
-                                                           ]
-                                        )
-                                        ?>
+                                        <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'post_id' => $action['Post'][0]['id']]) ?>">
+                                            <?=
+                                            $this->Html->image('ajax-loader.gif',
+                                                               [
+                                                                   'class'         => 'lazy',
+                                                                   'width'         => 48,
+                                                                   'height'        => 48,
+                                                                   'data-original' => $this->Upload->uploadUrl($action,
+                                                                                                               'ActionResult.photo1',
+                                                                                                               ['style' => 'x_small']),
+                                                               ]
+                                            )
+                                            ?>
+                                        </a>
                                     </li>
                                 <? endforeach ?>
                                 <?php if (count($goal['ActionResultCount']) > $display_action_count): ?>
                                     <li>
-                                        <a href="#"><i
-                                                class="fa fa-plus"></i><?= count($goal['ActionResultCount']) - $display_action_count + 1 ?>
+                                        <a href="#">
+                                            <i class="fa fa-plus"></i><?= count($goal['ActionResultCount']) - $display_action_count + 1 ?>
                                         </a>
                                     </li>
                                 <? endif; ?>
