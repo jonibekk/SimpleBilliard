@@ -18,7 +18,9 @@
         <div class="panel-body">
             <?php foreach ($goals as $goal): ?>
                 <div class="col col-xxs-12 my-goals-item">
-                    <?= $this->element('Goal/goal_menu_on_my_page', ['goal' => $goal]) ?>
+                    <?php if ($is_mine): ?>
+                        <?= $this->element('Goal/goal_menu_on_my_page', ['goal' => $goal]) ?>
+                    <?php endif; ?>
                     <div class="col col-xxs-3 col-xs-2">
                         <a href="#">
                             <?=
