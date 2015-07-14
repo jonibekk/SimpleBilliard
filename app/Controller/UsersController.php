@@ -1008,7 +1008,7 @@ class UsersController extends AppController
         $goals = $this->Goal->getGoalsWithAction($user_id);
         $is_mine = $user_id == $this->Auth->user('id') ? true : false;
         $display_action_count = MY_PAGE_ACTION_NUMBER;
-        if (!$is_mine) {
+        if ($is_mine) {
             $display_action_count--;
         }
         $this->set(compact('goals', 'is_mine', 'display_action_count'));
