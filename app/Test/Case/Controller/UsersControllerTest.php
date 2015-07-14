@@ -20,6 +20,7 @@ class UsersControllerTest extends ControllerTestCase
         'app.evaluation_setting',
         'app.member_type',
         'app.goal',
+        'app.key_result',
         'app.follower',
         'app.collaborator',
         'app.local_name',
@@ -1904,6 +1905,11 @@ class UsersControllerTest extends ControllerTestCase
     {
         $this->_getUsersCommonMock();
         $this->testAction('/users/view_goals/user_id:2');
+    }
+    function testViewGoalsOthersFollowing()
+    {
+        $this->_getUsersCommonMock();
+        $this->testAction('/users/view_goals/user_id:2/page_type:following');
     }
 
     function testViewPosts()
