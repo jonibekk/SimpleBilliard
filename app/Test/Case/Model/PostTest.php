@@ -109,6 +109,21 @@ class PostTest extends CakeTestCase
 
     }
 
+    public function testGetUserPost()
+    {
+        $this->_setDefault();
+
+        $res = $this->Post->get(1, 20, "2014-01-01", "2014-01-31",
+                                ['named' => ['user_id' => 103, 'type' => Post::TYPE_NORMAL]]);
+        
+        $this->assertNotEmpty($res);
+
+        $res = $this->Post->get(1, 20, "2014-01-01", "2014-01-31",
+                                ['named' => ['user_id' => 104, 'type' => Post::TYPE_NORMAL]]);
+        $this->assertEmpty($res);
+
+    }
+
     function testGetShareAllMemberList()
     {
         $this->_setDefault();

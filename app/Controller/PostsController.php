@@ -295,6 +295,11 @@ class PostsController extends AppController
         $param_named = $this->request->params['named'];
         $this->_ajaxPreProcess();
 
+        // user_id は必須
+        if (!(isset($param_named['user_id']) && $param_named['user_id'])) {
+            throw new NotFoundException;
+        }
+
         // 表示するページ
         $page_num = 1;
         if (isset($param_named['page']) && !empty($param_named['page'])) {
