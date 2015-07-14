@@ -714,8 +714,12 @@ class Goal extends AppModel
         return $res;
     }
 
-    function getGoalsWithAction($user_id, $action_limit = 4)
+    function getGoalsWithAction($user_id, $action_limit = MY_PAGE_ACTION_NUMBER)
     {
+        //対象が自分だった場合プラスボタンを出力する関係上、アクション件数を-1にする
+        if ($user_id == $this->my_uid) {
+            $action_limit--;
+        }
         $goal_ids = $this->Collaborator->getCollaboGoalList($user_id, true);
         $start_date = $this->Team->getCurrentTermStartDate();
         $end_date = $this->Team->getCurrentTermEndDate();
@@ -723,7 +727,7 @@ class Goal extends AppModel
             'conditions' => [
                 'Goal.id'            => $goal_ids,
                 'Goal.start_date >=' => $start_date,
-                'Goal.end_date <'    => $end_date,
+                'Goal.end_date <='   => $end_date,
             ],
             'fields'     => ['Goal.id', 'Goal.user_id', 'Goal.name', 'Goal.photo_file_name'],
             'contain'    => [

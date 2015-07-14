@@ -1006,7 +1006,12 @@ class UsersController extends AppController
         $this->_setUserPageHeaderInfo($user_id);
         $this->layout = LAYOUT_ONE_COLUMN;
         $goals = $this->Goal->getGoalsWithAction($user_id);
-        $this->set(compact('goals'));
+        $is_mine = $user_id == $this->Auth->user('id') ? true : false;
+        $display_action_count = MY_PAGE_ACTION_NUMBER;
+        if (!$is_mine) {
+            $display_action_count--;
+        }
+        $this->set(compact('goals', 'is_mine', 'display_action_count'));
         return $this->render();
     }
 
