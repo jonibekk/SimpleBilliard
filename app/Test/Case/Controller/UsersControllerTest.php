@@ -1895,11 +1895,17 @@ class UsersControllerTest extends ControllerTestCase
         $Users->_setDefaultTeam(9999);
     }
 
-    function testViewGoals()
+    function testViewGoalsMine()
     {
         $this->_getUsersCommonMock();
         $this->testAction('/users/view_goals/user_id:1');
     }
+    function testViewGoalsOthers()
+    {
+        $this->_getUsersCommonMock();
+        $this->testAction('/users/view_goals/user_id:2');
+    }
+
     function testViewPosts()
     {
         $this->_getUsersCommonMock();
