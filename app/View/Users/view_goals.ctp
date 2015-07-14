@@ -91,9 +91,20 @@
                                         <a href="/"><i class="fa fa-plus"></i><?= __d('gl', "アクションを追加") ?></a>
                                     </li>
                                 <?php endif; ?>
-                                <?php foreach ($goal['ActionResult'] as $action): ?>
+                                <?php foreach ($goal['ActionResult'] as $key => $action): ?>
+                                    <?php
+                                    $last_many = false;
+                                    //urlはアクション単体ページ
+                                    $url = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $action['Post'][0]['id']];//TODO urlはマイページのアクションリストが完成したら差し替え
+                                    //最後の場合かつアクション件数合計が表示件数以上の場合
+                                    if ($key == count($goal['ActionResult']) - 1 && count($goal['ActionResultCount']) > $display_action_count) {
+                                        $last_many = true;
+                                        //urlはゴールページの全アクションリスト
+                                        $url = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $action['Post'][0]['id']];//TODO urlはマイページのアクションリストが完成したら差し替え
+                                    }
+                                    ?>
                                     <li>
-                                        <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'post_id' => $action['Post'][0]['id']]) ?>">
+                                        <a href="<?= $this->Html->url($url) ?>">
                                             <?=
                                             $this->Html->image('ajax-loader.gif',
                                                                [
@@ -106,16 +117,12 @@
                                                                ]
                                             )
                                             ?>
+                                            <?php if ($last_many): ?>
+                                                <i class="fa fa-plus"></i><?= count($goal['ActionResultCount']) - $display_action_count + 1 ?>
+                                            <?php endif; ?>
                                         </a>
                                     </li>
                                 <? endforeach ?>
-                                <?php if (count($goal['ActionResultCount']) > $display_action_count): ?>
-                                    <li>
-                                        <a href="#">
-                                            <i class="fa fa-plus"></i><?= count($goal['ActionResultCount']) - $display_action_count + 1 ?>
-                                        </a>
-                                    </li>
-                                <? endif; ?>
                             </ul>
                         </div>
                     </div>
