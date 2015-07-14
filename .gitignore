@@ -36,6 +36,8 @@ composer.lock
 npm-debug.log
 # for Grunt
 /app/webroot/dest
+# for bower
+/bower_components
 # Docs of CSS & JS
 /docs/docco
 /docs/styledocco
