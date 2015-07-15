@@ -1060,8 +1060,18 @@ class UsersController extends AppController
     function view_actions()
     {
         $user_id = $this->_getRequiredParam('user_id');
+        $page_type = $this->_getRequiredParam('page_type');
+        if (!in_array($page_type, ['list', 'image'])) {
+            $this->Pnotify->outError(__d('gl', "不正な画面遷移です。"));
+            $this->redirect($this->referer());
+        }
         $this->_setUserPageHeaderInfo($user_id);
         $this->layout = LAYOUT_ONE_COLUMN;
+        $goal_ids = $this->Goal->Collaborator->getCollaboGoalList($user_id);
+        $goal_list = array_merge([null => '---'], $this->Goal->getGoalNameList($goal_ids));
+        $goal_id = viaIsSet($this->request->params['named']['goal_id']);
+
+        $this->set(compact('goal_list', 'goal_id'));
         return $this->render();
     }
 
