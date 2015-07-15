@@ -1,5 +1,5 @@
 app.controller("TeamVisionController",
-    function ($scope, $http, $translate, teamVisionList, $sce, $modal, notificationService) {
+    function ($scope, $http, $translate, teamVisionList, $sce, notificationService) {
 
         var team_vision_list = teamVisionList;
         angular.forEach(team_vision_list, function (val, key) {
@@ -8,6 +8,19 @@ app.controller("TeamVisionController",
         $scope.teamVisionList = team_vision_list;
         $scope.teamVisionCount = team_vision_list.length;
         $scope.archive_flag = false;
+
+    });
+
+app.controller("TeamVisionArchiveController",
+    function ($scope, $http, $translate, teamVisionArchiveList, $sce, $modal) {
+
+        var team_vision_list = teamVisionArchiveList;
+        angular.forEach(team_vision_list, function (val, key) {
+            team_vision_list[key].TeamVision.modified = $sce.trustAsHtml(val.TeamVision.modified);
+        });
+        $scope.teamVisionList = team_vision_list;
+        $scope.teamVisionCount = team_vision_list.length;
+        $scope.archive_flag = true;
 
         $scope.viewDeleteModal = function (team_vision_id, name) {
             $modal.open({
@@ -28,18 +41,6 @@ app.controller("TeamVisionController",
 
     });
 
-app.controller("TeamVisionArchiveController",
-    function ($scope, $http, $translate, teamVisionArchiveList, $sce) {
-
-        var team_vision_list = teamVisionArchiveList;
-        angular.forEach(team_vision_list, function (val, key) {
-            team_vision_list[key].TeamVision.modified = $sce.trustAsHtml(val.TeamVision.modified);
-        });
-        $scope.teamVisionList = team_vision_list;
-        $scope.teamVisionCount = team_vision_list.length;
-        $scope.archive_flag = true;
-    });
-
 app.controller("TeamVisionDeleteController",
     function ($scope, $state, deleteVision, notificationService, $translate) {
         if (deleteVision === false) {
@@ -47,7 +48,7 @@ app.controller("TeamVisionDeleteController",
         } else {
             notificationService.success($translate.instant('TEAM_VISION.DELETE_SUCCESS_MASSAGE'));
         }
-        $state.go('vision', {team_id: $scope.team_id});
+        $state.go('vision_archive', {team_id: $scope.team_id, active_flg:0});
     });
 
 app.controller("TeamVisionSetArchiveController",
