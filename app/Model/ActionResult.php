@@ -4,10 +4,10 @@ App::uses('AppModel', 'Model');
 /**
  * ActionResult Model
  *
- * @property Team         $Team
- * @property User         $User
- * @property Goal         $Goal
- * @property KeyResult    $KeyResult
+ * @property Team      $Team
+ * @property User      $User
+ * @property Goal      $Goal
+ * @property KeyResult $KeyResult
  */
 class ActionResult extends AppModel
 {
@@ -21,49 +21,54 @@ class ActionResult extends AppModel
     public $actsAs = [
         'Upload' => [
             'photo1' => [
-                'styles'  => [
+                'styles'      => [
                     'x_small' => '128l',
                     'small'   => '460l',
                     'large'   => '2048l',
                 ],
-                'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
-                'quality' => 100,
+                'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'quality'     => 100,
+                'default_url' => 'no-image.jpg',
             ],
             'photo2' => [
-                'styles'  => [
+                'styles'      => [
                     'x_small' => '128l',
                     'small'   => '460l',
                     'large'   => '2048l',
                 ],
-                'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
-                'quality' => 100,
+                'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'quality'     => 100,
+                'default_url' => 'no-image.jpg',
             ],
             'photo3' => [
-                'styles'  => [
+                'styles'      => [
                     'x_small' => '128l',
                     'small'   => '460l',
                     'large'   => '2048l',
                 ],
-                'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
-                'quality' => 100,
+                'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'quality'     => 100,
+                'default_url' => 'no-image.jpg',
             ],
             'photo4' => [
-                'styles'  => [
+                'styles'      => [
                     'x_small' => '128l',
                     'small'   => '460l',
                     'large'   => '2048l',
                 ],
-                'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
-                'quality' => 100,
+                'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'quality'     => 100,
+                'default_url' => 'no-image.jpg',
             ],
             'photo5' => [
-                'styles'  => [
+                'styles'      => [
                     'x_small' => '128l',
                     'small'   => '460l',
                     'large'   => '2048l',
                 ],
-                'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
-                'quality' => 100,
+                'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'quality'     => 100,
+                'default_url' => 'no-image.jpg',
             ],
         ],
     ];
@@ -98,8 +103,8 @@ class ActionResult extends AppModel
                 'rule' => ['boolean'],
             ],
         ],
-        'name' => [
-            'isString' => ['rule' => 'isString','message'=>'Invalid Submission']
+        'name'    => [
+            'isString' => ['rule' => 'isString', 'message' => 'Invalid Submission']
         ]
     ];
 
