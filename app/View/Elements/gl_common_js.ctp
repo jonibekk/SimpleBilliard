@@ -121,7 +121,8 @@ echo $this->Html->script('gl_basic');
             ad: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_group_vision_detail'])?>/",
             select2_secret_circle: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_secret_circles'])?>/",
             select2_circle_user: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_circles_users'])?>",
-            user_page: "<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => '']) ?>"
+            user_page: "<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => '']) ?>",
+            goal_follower_list: "<?=$this->Html->url(['controller'=>'goals','action'=>'ajax_get_follower_list'])?>"
         },
         data: {
             a: <?=isset($select2_default)?$select2_default:"[]"?>,
