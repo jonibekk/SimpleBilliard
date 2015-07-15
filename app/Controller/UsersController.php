@@ -1035,10 +1035,24 @@ class UsersController extends AppController
         return $this->render();
     }
 
+    /**
+     * ユーザーページ 投稿一覧
+     *
+     * @return CakeResponse
+     */
     function view_posts()
     {
         $user_id = $this->_getRequiredParam('user_id');
-        $this->_setUserPageHeaderInfo($user_id);
+        if (!$this->_setUserPageHeaderInfo($user_id)) {
+            throw new NotFoundException;
+        }
+        $posts = $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null, [
+            'user_id' => $user_id,
+            'type'    => Post::TYPE_NORMAL
+        ]);
+        $this->set('posts', $posts);
+        $this->set('long_text', false);
+
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
@@ -1051,6 +1065,11 @@ class UsersController extends AppController
         return $this->render();
     }
 
+    /**
+     * ユーザーページ 基本情報
+     *
+     * @return CakeResponse
+     */
     function view_info()
     {
         $user_id = $this->_getRequiredParam('user_id');

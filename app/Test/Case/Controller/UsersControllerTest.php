@@ -1921,16 +1921,28 @@ class UsersControllerTest extends ControllerTestCase
         $this->_getUsersCommonMock();
         $this->testAction('/users/view_posts/user_id:1');
     }
+
+    function testViewPostsNoTeamMember()
+    {
+        $this->_getUsersCommonMock();
+        try {
+            $this->testAction('/users/view_posts/user_id:14');
+        } catch (NotFoundException $e) {
+        }
+    }
+
     function testViewActions()
     {
         $this->_getUsersCommonMock();
         $this->testAction('/users/view_actions/user_id:1');
     }
+
     function testViewInfo()
     {
         $this->_getUsersCommonMock();
         $this->testAction('/users/view_info/user_id:1');
     }
+
     function testViewInfoNoParams()
     {
         $this->_getUsersCommonMock();
@@ -1939,6 +1951,7 @@ class UsersControllerTest extends ControllerTestCase
         } catch (NotFoundException $e) {
         }
     }
+
     function testViewInfoNoTeamMember()
     {
         $this->_getUsersCommonMock();
