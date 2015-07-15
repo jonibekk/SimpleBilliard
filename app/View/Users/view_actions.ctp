@@ -39,7 +39,7 @@
                     <li>
                         <a href="<?= $this->Html->url(array_merge($this->request->params['named'],
                                                                   ['page_type' => 'image'])) ?>">
-                            <i class="fa fa-th link-dark-gray"></i>
+                            <i class="fa fa-th-large link-dark-gray"></i>
                         </a>
                     </li>
                     <li>
@@ -50,6 +50,8 @@
                     </li>
                 </ul>
             </div>
+        </div>
+        <div class="panel-body">
         </div>
     </div>
 </div>
