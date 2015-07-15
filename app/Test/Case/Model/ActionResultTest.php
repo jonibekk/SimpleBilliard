@@ -124,6 +124,13 @@ class ActionResultTest extends CakeTestCase
         $this->assertFalse($res);
     }
 
+    function testGetCountByGoalId()
+    {
+        $this->_setDefault();
+        $res = $this->ActionResult->getCountByGoalId(6);
+        $this->assertEquals(1, $res);
+    }
+
     function _setDefault()
     {
         $this->ActionResult->current_team_id = 1;

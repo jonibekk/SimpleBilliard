@@ -77,5 +77,12 @@ class ActionResultFixture extends CakeTestFixture
             'goal_id' => '1',
             'name'    => 'test4',
         ],
+        [
+            'id'      => '5',
+            'user_id' => '1',
+            'team_id' => '1',
+            'goal_id' => '6',
+            'name'    => 'test5',
+        ],
     ];
 }
