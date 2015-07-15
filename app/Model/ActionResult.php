@@ -172,6 +172,25 @@ class ActionResult extends AppModel
         return $res;
     }
 
+    /**
+     * ゴールに紐づくアクション数をカウント
+     *
+     * @param $goal_id
+     *
+     * @return array|null
+     */
+    function getCountByGoalId($goal_id)
+    {
+        $options = [
+            'conditions' => [
+                'goal_id' => $goal_id,
+                'team_id' => $this->current_team_id,
+            ]
+        ];
+        $res = $this->find('count', $options);
+        return $res;
+    }
+
     function actionEdit($data)
     {
         if (empty($data)) {
