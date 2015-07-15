@@ -174,6 +174,15 @@ app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider', '$http
                 url: "/group_vision_archive/:team_id/:active_flg",
                 templateUrl: "/template/group_vision_list.html",
                 resolve: {
+                    LoginUserGroupId: ['$http', '$rootScope', function ($http, $rootScope) {
+                        var request = {
+                            method: 'GET',
+                            url: cake.url.ab + $rootScope.team_id + '/' + $rootScope.login_user_id
+                        };
+                        return $http(request).then(function (response) {
+                            return response.data;
+                        });
+                    }],
                     GroupVisionArchiveList: ['$stateParams', '$http', function ($stateParams, $http) {
                         var request = {
                             method: 'GET',
@@ -236,7 +245,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider', '$http
                         return $http(request).then(function (response) {
                             var vision_detail = response.data;
 
-                            var request2 = { method: 'GET', url: cake.url.ae };
+                            var request2 = {method: 'GET', url: cake.url.ae};
                             if (vision_detail.GroupVision.modify_user_id !== '') {
                                 request2.url += vision_detail.GroupVision.modify_user_id
                             } else {
@@ -245,7 +254,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider', '$http
 
                             $http(request2).then(function (response) {
                                 vision_detail.GroupVision.user_name = response.data.User.roman_username;
-                                if (response.data.User.local_username !== '') {
+                                if (response.data.User.local_username !== null) {
                                     vision_detail.GroupVision.user_name = response.data.User.local_username;
                                 }
                             });

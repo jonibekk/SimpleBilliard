@@ -1,5 +1,5 @@
 app.controller("GroupVisionController",
-    function ($rootScope, $scope, $http, $translate, GroupVisionList, LoginUserGroupId, $sce, $modal, notificationService) {
+    function ($rootScope, $scope, $http, $translate, GroupVisionList, LoginUserGroupId, $sce, notificationService) {
 
         var group_vision_list = GroupVisionList;
         angular.forEach(group_vision_list, function (val, key) {
@@ -15,6 +15,26 @@ app.controller("GroupVisionController",
         $scope.GroupVisionList = group_vision_list;
         $scope.GroupVisionCount = group_vision_list.length;
         $scope.archive_flag = false;
+
+    });
+
+app.controller("GroupVisionArchiveController",
+    function ($rootScope, $scope, $http, $translate, GroupVisionArchiveList, LoginUserGroupId, $sce, $modal) {
+
+        var group_vision_list = GroupVisionArchiveList;
+        angular.forEach(group_vision_list, function (val, key) {
+            group_vision_list[key].GroupVision.modified = $sce.trustAsHtml(val.GroupVision.modified);
+
+            group_vision_list[key].GroupVision.showSettingBox = false;
+            if (typeof LoginUserGroupId[val.GroupVision.group_id] !== "undefined"
+                || $rootScope.login_user_admin_flg === true) {
+                group_vision_list[key].GroupVision.showSettingBox = true;
+            }
+        });
+
+        $scope.GroupVisionList = group_vision_list;
+        $scope.GroupVisionCount = group_vision_list.length;
+        $scope.archive_flag = true;
 
         $scope.viewDeleteModal = function (group_vision_id, name) {
             $modal.open({
@@ -34,19 +54,6 @@ app.controller("GroupVisionController",
         };
     });
 
-app.controller("GroupVisionArchiveController",
-    function ($scope, $http, $translate, GroupVisionArchiveList, $sce) {
-
-        var group_vision_list = GroupVisionArchiveList;
-        angular.forEach(group_vision_list, function (val, key) {
-            group_vision_list[key].GroupVision.modified = $sce.trustAsHtml(val.GroupVision.modified);
-        });
-
-        $scope.GroupVisionList = group_vision_list;
-        $scope.GroupVisionCount = group_vision_list.length;
-        $scope.archive_flag = true;
-    });
-
 app.controller("GroupVisionSetArchiveController",
     function ($scope, $state, setGroupVisionArchive, notificationService, $translate) {
         if (setGroupVisionArchive === false) {
@@ -64,7 +71,7 @@ app.controller("GroupVisionDeleteController",
         } else {
             notificationService.success($translate.instant('GROUP_VISION.DELETE_SUCCESS_MASSAGE'));
         }
-        $state.go('group_vision', {team_id: $scope.team_id});
+        $state.go('group_vision_archive', {team_id: $scope.team_id, active_flg: 0});
     });
 
 app.controller("GroupVisionDetailController",
