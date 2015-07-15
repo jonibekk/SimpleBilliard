@@ -532,10 +532,6 @@ class UsersControllerTest extends ControllerTestCase
         $Users->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
                     );
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Users->Session->expects($this->any())->method('read')
-                       ->will($this->returnValueMap([['Auth.User.language', 'jpn']]));
-
         $this->testAction('/users/register', ['method' => 'GET']);
         $this->assertEquals('jpn', Configure::read('Config.language'), "自動言語設定がoffの場合は言語設定が適用される");
     }

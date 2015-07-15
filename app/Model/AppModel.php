@@ -102,7 +102,9 @@ class AppModel extends Model
         $this->me = $Session->read('Auth.User');
         $this->current_team_id = $Session->read('current_team_id');
         $this->my_uid = $Session->read('Auth.User.id');
-        Configure::write('Config.language', $Session->read('Auth.User.language'));
+        if($Session->read('Auth.User.language')){
+            Configure::write('Config.language', $Session->read('Auth.User.language'));
+        }
     }
 
     /**
