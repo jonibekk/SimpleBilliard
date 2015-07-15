@@ -62,7 +62,7 @@ app.controller("TeamVisionSetArchiveController",
     });
 
 app.controller("TeamVisionDetailController",
-    function ($scope, $http, $translate, $sce, $modal, notificationService, teamVisionDetail, $stateParams, $modal) {
+    function ($scope, $http, $translate, $sce, $modal, notificationService, teamVisionDetail, $stateParams) {
 
         $scope.archive_flag = false;
         if (Number($stateParams.active_flg) === 0) {

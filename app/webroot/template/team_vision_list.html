@@ -16,7 +16,7 @@
     </tr>
     <tr ng-repeat="item in teamVisionList">
         <td class="pointer" width="20%"
-            ui-sref="vision_detail({team_vision_id:item.TeamVision.id, active_flg:item.TeamVision.active_flg})">
+            ui-sref="vision_detail({team_vision_id:item.TeamVision.id, active_flg:item.TeamVision.active_flg === true ? 1 : 0})">
             <img width="64px" ng-src="{{item.TeamVision.photo_path}}"/>
         </td>
 

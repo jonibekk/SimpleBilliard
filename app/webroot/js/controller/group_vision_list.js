@@ -75,7 +75,36 @@ app.controller("GroupVisionDeleteController",
     });
 
 app.controller("GroupVisionDetailController",
-    function ($scope, $http, $translate, $sce, $modal, notificationService, groupVisionDetail) {
+    function ($rootScope, $scope, $http, $translate, $sce, $modal, notificationService, groupVisionDetail, LoginUserGroupId, $stateParams) {
+
+        $scope.archive_flag = false;
+        if (Number($stateParams.active_flg) === 0) {
+            $scope.archive_flag = true;
+        }
+
+        groupVisionDetail.GroupVision.showSettingBox = false;
+        if (typeof LoginUserGroupId[groupVisionDetail.GroupVision.group_id] !== "undefined"
+            || $rootScope.login_user_admin_flg === true) {
+            groupVisionDetail.GroupVision.showSettingBox = true;
+        }
+
         groupVisionDetail.GroupVision.modified = $sce.trustAsHtml(groupVisionDetail.GroupVision.modified);
         $scope.detail = groupVisionDetail.GroupVision;
+
+        $scope.viewDeleteModal = function (group_vision_id, name) {
+            $modal.open({
+                templateUrl: '/template/modal/vision_delete.html',
+                controller: function ($scope, $state, $modalInstance) {
+                    $scope.vision_title = 'グループビジョン';
+                    $scope.vision_body = name;
+                    $scope.ok = function () {
+                        $modalInstance.close();
+                        $state.go('group_vision_delete', {group_vision_id: group_vision_id});
+                    };
+                    $scope.cancel = function () {
+                        $modalInstance.dismiss();
+                    };
+                }
+            });
+        };
     });

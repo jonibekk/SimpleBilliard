@@ -16,12 +16,12 @@
     </tr>
     <tr ng-repeat="item in GroupVisionList">
         <td class="pointer" width="20%"
-            ui-sref="group_vision_detail({group_vision_id:item.GroupVision.id, active_flg:item.GroupVision.active_flg})">
+            ui-sref="group_vision_detail({group_vision_id:item.GroupVision.id, active_flg:item.GroupVision.active_flg === true ? 1 : 0})">
             <img width="64px" ng-src="{{item.GroupVision.photo_path}}"/>
         </td>
 
         <td class="pointer"
-            ui-sref="group_vision_detail({group_vision_id:item.GroupVision.id, active_flg:item.GroupVision.active_flg})">
+            ui-sref="group_vision_detail({group_vision_id:item.GroupVision.id, active_flg:item.GroupVision.active_flg === true ? 1 : 0})">
             <div class="row">
                 <div class="col-xs-11">
                     <p class="vision_title">{{item.GroupVision.name}} </p>
