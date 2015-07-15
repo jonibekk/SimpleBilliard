@@ -62,7 +62,30 @@ app.controller("TeamVisionSetArchiveController",
     });
 
 app.controller("TeamVisionDetailController",
-    function ($scope, $http, $translate, $sce, $modal, notificationService, teamVisionDetail) {
+    function ($scope, $http, $translate, $sce, $modal, notificationService, teamVisionDetail, $stateParams, $modal) {
+
+        $scope.archive_flag = false;
+        if (Number($stateParams.active_flg) === 0) {
+            $scope.archive_flag = true;
+        }
+
         teamVisionDetail.TeamVision.modified = $sce.trustAsHtml(teamVisionDetail.TeamVision.modified);
         $scope.detail = teamVisionDetail.TeamVision;
+
+        $scope.viewDeleteModal = function (team_vision_id, name) {
+            $modal.open({
+                templateUrl: '/template/modal/vision_delete.html',
+                controller: function ($scope, $state, $modalInstance) {
+                    $scope.vision_title = 'チームビジョン';
+                    $scope.vision_body = name;
+                    $scope.ok = function () {
+                        $modalInstance.close();
+                        $state.go('vision_delete', {team_vision_id: team_vision_id});
+                    };
+                    $scope.cancel = function () {
+                        $modalInstance.dismiss();
+                    };
+                }
+            });
+        };
     });

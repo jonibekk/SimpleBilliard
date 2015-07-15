@@ -57,15 +57,9 @@ app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider', '$http
                 controller: 'TeamVisionDetailController',
                 resolve: {
                     teamVisionDetail: ['$stateParams', '$http', function ($stateParams, $http) {
-
-                        var active_flg = 0;
-                        if ($stateParams.active_flg === 'true') {
-                            active_flg = 1;
-                        }
-
                         var request = {
                             method: 'GET',
-                            url: cake.url.ac + $stateParams.team_vision_id + '/' + active_flg
+                            url: cake.url.ac + $stateParams.team_vision_id + '/' + $stateParams.active_flg
                         };
                         return $http(request).then(function (response) {
                             return response.data;
