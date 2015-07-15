@@ -1115,6 +1115,11 @@ class GoalsController extends AppController
         return $res;
     }
 
+    /**
+     * フォロワー一覧
+     *
+     * @return CakeResponse
+     */
     function view_followers()
     {
         $goal_id = $this->_getRequiredParam('goal_id');

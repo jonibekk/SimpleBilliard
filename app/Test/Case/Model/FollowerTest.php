@@ -92,6 +92,24 @@ class FollowerTest extends CakeTestCase
         $this->assertEquals($expected, $actual);
     }
 
+    function testGetFollowerByGoalId()
+    {
+        $this->setDefault();
+
+        // 対象ゴールのフォロワー全員
+        $followers = $this->Follower->getFollowerByGoalId(2);
+        $this->assertNotEmpty($followers);
+
+        // limit 指定
+        $followers2 = $this->Follower->getFollowerByGoalId(2, ['limit' => 1]);
+        $this->assertCount(1, $followers2);
+
+        // limit + page 指定
+        $followers3 = $this->Follower->getFollowerByGoalId(2, ['limit' => 1, 'page' => 2]);
+        $this->assertCount(1, $followers3);
+        $this->assertNotEquals($followers2[0]['User']['id'], $followers3[0]['User']['id']);
+    }
+
     function setDefault()
     {
         $this->Follower->my_uid = 1;
