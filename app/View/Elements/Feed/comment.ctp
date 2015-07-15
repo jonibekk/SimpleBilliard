@@ -21,14 +21,18 @@
 <!-- START app/View/Elements/Feed/comment.ctp -->
 <div class="font_12px comment-box" comment-id="<?= $comment['id'] ?>">
     <div class="col col-xxs-12 pt_4px">
-        <?=
-        $this->Html->image('ajax-loader.gif',
-                           [
-                               'class'         => 'lazy comment-img',
-                               'data-original' => $this->Upload->uploadUrl($user, 'User.photo', ['style' => 'small']),
-                           ]
-        )
-        ?>
+        <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user['id']]) ?>">
+            <?=
+            $this->Html->image('ajax-loader.gif',
+                               [
+                                   'class'         => 'lazy comment-img',
+                                   'data-original' => $this->Upload->uploadUrl($user, 'User.photo',
+                                                                               ['style' => 'small']),
+                               ]
+            )
+            ?>
+        </a>
+
         <div class="comment-body">
             <div class="col col-xxs-12 comment-text comment-user">
                 <?php if ($user['id'] === $this->Session->read('Auth.User.id')): ?>
@@ -60,7 +64,9 @@
                                               ['escape' => false], __d('gl', "本当にこのコメントを削除しますか？")) ?>
                     </div>
                 <?php endif; ?>
-                <div class="mb_2px lh_12px font_bold font_verydark"><?= h($user['display_username']) ?></div>
+                <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user['id']]) ?>">
+                    <div class="mb_2px lh_12px font_bold font_verydark"><?= h($user['display_username']) ?></div>
+                </a>
             </div>
             <div
                 class="col col-xxs-12 <?= $long_text ? "showmore-comment-circle" : "showmore-comment" ?> comment-text feed-contents comment-contents font_verydark box-align"
