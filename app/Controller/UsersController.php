@@ -1060,16 +1060,29 @@ class UsersController extends AppController
     function view_actions()
     {
         $user_id = $this->_getRequiredParam('user_id');
+        $goal_id = viaIsSet($this->request->params['named']['goal_id']);
         $page_type = $this->_getRequiredParam('page_type');
         if (!in_array($page_type, ['list', 'image'])) {
             $this->Pnotify->outError(__d('gl', "不正な画面遷移です。"));
             $this->redirect($this->referer());
         }
+        switch ($page_type) {
+            case 'list':
+                $params = [
+                    'author_id' => $user_id,
+                    'type'      => Post::TYPE_ACTION,
+                    'goal_id'   => $goal_id,
+                ];
+                $posts = $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null, $params);
+                $this->set(compact('posts'));
+                break;
+            case 'image':
+                break;
+        }
         $this->_setUserPageHeaderInfo($user_id);
         $this->layout = LAYOUT_ONE_COLUMN;
-        $goal_ids = $this->Goal->Collaborator->getCollaboGoalList($user_id);
-        $goal_list = array_merge([null => '---'], $this->Goal->getGoalNameList($goal_ids));
-        $goal_id = viaIsSet($this->request->params['named']['goal_id']);
+        $goal_ids = $this->Goal->Collaborator->getCollaboGoalList($user_id, true);
+        $goal_list = [null => '---'] + $this->Goal->getGoalNameList($goal_ids);
 
         $this->set(compact('goal_list', 'goal_id'));
         return $this->render();
