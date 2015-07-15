@@ -1038,6 +1038,11 @@ class UsersController extends AppController
         return $this->render();
     }
 
+    /**
+     * ユーザーページ 基本情報
+     *
+     * @return CakeResponse
+     */
     function view_info()
     {
         $user_id = $this->_getRequiredParam('user_id');
