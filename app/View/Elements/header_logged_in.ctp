@@ -20,7 +20,8 @@
 <!-- START app/View/Elements/header_logged_in.ctp -->
 <header class="header">
     <div class="navbar navbar-fixed-top navbar-default gl-navbar" id="header">
-        <button type="button" class="navbar-toggle hamburger header-toggle-icon" data-toggle="offcanvas" data-target=".navbar-offcanvas">
+        <button type="button" class="navbar-toggle hamburger header-toggle-icon" data-toggle="offcanvas"
+                data-target=".navbar-offcanvas">
             <i class="fa fa-navicon toggle-icon"></i>
         </button>
         <div class="nav-container header-container">
@@ -32,6 +33,7 @@
                             <div class="ta-sm_c">
                                 <img src="<?= $this->Html->url('/img/logo_off.png') ?>" class="header-logo-img"
                                      alt="Goalous2.0" width="20px" height="20px">
+
                                 <p class="font_11px font_heavyGray header_icon-text hidden-xs header-link">
                                     <?= __d('gl', "ホーム") ?>
                                 </p>
@@ -44,6 +46,7 @@
                            href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'index']) ?>">
                             <div class="ta-sm_c">
                                 <i class="fa fa-flag header-link header-icon nav-xxs-icon"></i>
+
                                 <p class="font_11px header_icon-text hidden-xs header-link">
                                     <?= __d('gl', "ゴール") ?>
                                 </p>
@@ -56,6 +59,7 @@
                            href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'main']) ?>">
                             <div class="ta-sm_c">
                                 <i class="fa fa-users header-link header-icon nav-xxs-icon"></i>
+
                                 <p class="font_11px header_icon-text hidden-xs header-link">
                                     <?= __d('gl', "チーム") ?>
                                 </p>
@@ -96,9 +100,8 @@
             <div class="navbar-header navbar-right">
                 <div class="pull-right nav-icons">
                     <div class="header-dropdown-user">
-                        <a href="#"
-                           class="dropdown-toggle me-menu-image font_verydark no-line header-user-profile pull-right"
-                           data-toggle="dropdown"
+                        <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $this->Session->read('Auth.User.id')]) ?>"
+                           class="me-menu-image font_verydark no-line header-user-profile pull-right"
                            id="download">
                             <?=
                             $this->Upload->uploadImage($this->Session->read('Auth'), 'User.photo', ['style' => 'small'],
@@ -106,19 +109,17 @@
                             <span
                                 class="header-user-name font_11px hidden-xxs header-home header-link pr_5px mlr_5px ptb_5px bd-r"><?= $this->Session->read('Auth.User.display_first_name') ?></span>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-right frame-arrow-pic" aria-labelledby="download">
-                            <li class="text-align_c"><?= __d('gl', "準備中") ?></li>
-
-                        </ul>
                     </div>
                     <a href="<?= $this->Html->url('/') ?>" class="header-home header-link">
                         <?= __d('gl', "ホーム") ?>
                     </a>
+
                     <div class="header-dropdown-add">
                         <a href="#" data-toggle="dropdown" id="download" class="btn-addition-header">
                             <i class="header-dropdown-icon-add fa fa-plus-circle header-link"></i>
                         </a>
-                        <ul class="header-nav-add-contents dropdown-menu dropdown-menu-right" aria-labelledby="download">
+                        <ul class="header-nav-add-contents dropdown-menu dropdown-menu-right"
+                            aria-labelledby="download">
                             <?php if ($this->Session->read('current_team_id')): ?>
                                 <li><a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>">
                                         <i class="fa fa-flag header-drop-icons"></i>
@@ -155,18 +156,20 @@
                         </ul>
                     </div>
                     <div class="header-dropdown-message dropdown-menu-right develop--forbiddenLink">
-                      <a class="btn-message-header" href="#">
-                          <i class="header-dropdown-icon-message fa fa-envelope-o header-link"></i>
-                      </a>
+                        <a class="btn-message-header" href="#">
+                            <i class="header-dropdown-icon-message fa fa-envelope-o header-link"></i>
+                        </a>
                     </div>
                     <div class="header-dropdown-notify dropdown-menu-right">
                         <a id="click-header-bell" class="btn-notify-header" data-toggle="dropdown" href="#">
                             <i class="header-dropdown-icon-notify fa fa-flag fa-bell-o header-drop-icons header-link"></i>
+
                             <div class="btn btn-xs bell-notify-box notify-bell-numbers"
                                  id="bellNum" style="opacity: 0;">
                                 <span>0</span><sup class="notify-plus none">+</sup>
                             </div>
                         </a>
+
                         <div class="frame-arrow-notify dropdown-menu dropdown-menu-right notify-dropdown-area">
                             <ul class="header-nav-notify-contents" id="bell-dropdown" role="menu">
                                 <li class="notify-card-empty" id="notifyCardEmpty">
