@@ -781,11 +781,14 @@ function evShowAndThisWide() {
     $(this).autosize();
 
     //submitボタンを表示
-    var target = $(this).attr('target_show_id');
-    var target = target.split(',');
-    jQuery.each(target, function () {
-        $("#" + this).show();
-    });
+    if($(this).attr('target_show_id') != undefined){
+        var target = $(this).attr('target_show_id');
+
+        var target = target.split(',');
+        jQuery.each(target, function () {
+            $("#" + this).show();
+        });
+    }
 
     //クリック済みにする
     $(this).addClass('clicked');
