@@ -4,7 +4,7 @@ App::uses('AppController', 'Controller');
 /**
  * Posts Controller
  *
- * @property Post               $Post
+ * @property Post $Post
  */
 class PostsController extends AppController
 {
@@ -316,10 +316,7 @@ class PostsController extends AppController
             $start = strtotime("-{$start_month_offset} months", REQUEST_TIMESTAMP);
         }
         // 投稿一覧取得
-        $posts = $this->Post->get($page_num, POST_FEED_PAGE_ITEMS_NUMBER, $start, $end, [
-            'user_id' => $param_named['user_id'],
-            'type'    => Post::TYPE_NORMAL,
-        ]);
+        $posts = $this->Post->get($page_num, POST_FEED_PAGE_ITEMS_NUMBER, $start, $end, $param_named);
         $this->set('posts', $posts);
         $this->set('long_text', false);
 

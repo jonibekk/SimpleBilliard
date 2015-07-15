@@ -426,14 +426,15 @@ class Post extends AppModel
             elseif ($this->orgParams['goal_id']) {
                 //アクションのみの場合
                 if ($this->orgParams['type'] == self::TYPE_ACTION) {
-                    $p_list = $this->getGoalPostList($this->orgParams['goal_id'], self::TYPE_ACTION);
+                    $p_list = $this->getGoalPostList($this->orgParams['goal_id'], self::TYPE_ACTION, "modified", "desc",
+                                                     $start, $end);
                 }
             }
             //投稿主指定
             elseif ($this->orgParams['author_id']) {
                 //アクションのみの場合
                 if ($this->orgParams['type'] == self::TYPE_ACTION) {
-                    $p_list = $this->getGoalPostList(null, self::TYPE_ACTION);
+                    $p_list = $this->getGoalPostList(null, self::TYPE_ACTION, "modified", "desc", $start, $end);
                 }
             }
             //ゴールのみの場合
@@ -640,7 +641,7 @@ class Post extends AppModel
         return $res;
     }
 
-    public function getGoalPostList($goal_id = null, $type = self::TYPE_ACTION, $order = "modified", $order_direction = "desc")
+    public function getGoalPostList($goal_id = null, $type = self::TYPE_ACTION, $order = "modified", $order_direction = "desc", $start = null, $end = null)
     {
         $options = [
             'conditions' => [
@@ -650,6 +651,9 @@ class Post extends AppModel
             'order'      => [$order => $order_direction],
             'fields'     => ['id'],
         ];
+        if ($start && $end) {
+            $options['conditions']['modified BETWEEN ? AND ?'] = [$start, $end];
+        }
         if ($goal_id) {
             $options['conditions']['goal_id'] = $goal_id;
         }

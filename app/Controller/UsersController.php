@@ -1083,7 +1083,7 @@ class UsersController extends AppController
         $this->layout = LAYOUT_ONE_COLUMN;
         $goal_ids = $this->Goal->Collaborator->getCollaboGoalList($user_id, true);
         $goal_list = [null => '---'] + $this->Goal->getGoalNameList($goal_ids);
-
+        $this->set('long_text', false);
         $this->set(compact('goal_list', 'goal_id'));
         return $this->render();
     }
