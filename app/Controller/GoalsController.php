@@ -1091,6 +1091,10 @@ class GoalsController extends AppController
     function view_followers()
     {
         $goal_id = $this->_getRequiredParam('goal_id');
+        if (!$this->_setGoalPageHeaderInfo($goal_id)) {
+            // ゴールが存在しない
+            throw new NotFoundException();
+        }
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
@@ -1098,6 +1102,10 @@ class GoalsController extends AppController
     function view_members()
     {
         $goal_id = $this->_getRequiredParam('goal_id');
+        if (!$this->_setGoalPageHeaderInfo($goal_id)) {
+            // ゴールが存在しない
+            throw new NotFoundException();
+        }
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
@@ -1105,6 +1113,10 @@ class GoalsController extends AppController
     function view_krs()
     {
         $goal_id = $this->_getRequiredParam('goal_id');
+        if (!$this->_setGoalPageHeaderInfo($goal_id)) {
+            // ゴールが存在しない
+            throw new NotFoundException();
+        }
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
@@ -1112,7 +1124,53 @@ class GoalsController extends AppController
     function view_info()
     {
         $goal_id = $this->_getRequiredParam('goal_id');
+        if (!$this->_setGoalPageHeaderInfo($goal_id)) {
+            // ゴールが存在しない
+            throw new NotFoundException();
+        }
+
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
+    }
+
+    /**
+     * ゴールページの上部コンテンツの表示に必要なView変数をセット
+     *
+     * @param $goal_id
+     *
+     * @return bool
+     */
+    function _setGoalPageHeaderInfo($goal_id)
+    {
+        $goal = $this->Goal->getGoal($goal_id);
+        if (!isset($goal['Goal']['id'])) {
+            // ゴールが存在しない
+            return false;
+        }
+        $this->set('goal', $goal);
+
+        // アクション数
+        $action_count = $this->Goal->ActionResult->getCountByGoalId($goal_id);
+        $this->set('action_count', $action_count);
+
+        // メンバー数
+        $member_count = count($goal['Leader']) + count($goal['Collaborator']);
+        $this->set('member_count', $member_count);
+
+        // フォロワー数
+        $follower_count = count($goal['Follower']);
+        $this->set('follower_count', $follower_count);
+
+        // 閲覧者がゴールのリーダーかを判別
+        $is_leader = false;
+        foreach ($goal['Leader'] as $v) {
+            if ($this->Auth->user('id') == $v['User']['id']) {
+                $is_leader = true;
+                break;
+            }
+        }
+        $this->set('is_leader', $is_leader);
+
+        return true;
     }
 }

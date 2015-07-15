@@ -20,6 +20,7 @@ class UsersControllerTest extends ControllerTestCase
         'app.evaluation_setting',
         'app.member_type',
         'app.goal',
+        'app.key_result',
         'app.follower',
         'app.collaborator',
         'app.local_name',
@@ -532,6 +533,10 @@ class UsersControllerTest extends ControllerTestCase
         $Users->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
                     );
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Session->expects($this->any())->method('read')
+                       ->will($this->returnValueMap([['Auth.User.language', 'jpn']]));
+
         $this->testAction('/users/register', ['method' => 'GET']);
         $this->assertEquals('jpn', Configure::read('Config.language'), "自動言語設定がoffの場合は言語設定が適用される");
     }
@@ -1903,30 +1908,65 @@ class UsersControllerTest extends ControllerTestCase
         $Users->_setDefaultTeam(9999);
     }
 
-    function testViewGoals()
+    function testViewGoalsMine()
     {
         $this->_getUsersCommonMock();
         $this->testAction('/users/view_goals/user_id:1');
     }
+    function testViewGoalsOthers()
+    {
+        $this->_getUsersCommonMock();
+        $this->testAction('/users/view_goals/user_id:2');
+    }
+    function testViewGoalsOthersFollowing()
+    {
+        $this->_getUsersCommonMock();
+        $this->testAction('/users/view_goals/user_id:2/page_type:following');
+    }
+
     function testViewPosts()
     {
         $this->_getUsersCommonMock();
         $this->testAction('/users/view_posts/user_id:1');
     }
+
+    function testViewPostsNoTeamMember()
+    {
+        $this->_getUsersCommonMock();
+        try {
+            $this->testAction('/users/view_posts/user_id:14');
+        } catch (NotFoundException $e) {
+        }
+    }
+
     function testViewActions()
     {
         $this->_getUsersCommonMock();
         $this->testAction('/users/view_actions/user_id:1');
     }
+
     function testViewInfo()
     {
         $this->_getUsersCommonMock();
         $this->testAction('/users/view_info/user_id:1');
     }
+
     function testViewInfoNoParams()
     {
         $this->_getUsersCommonMock();
-        $this->testAction('/users/view_info/');
+        try {
+            $this->testAction('/users/view_info/');
+        } catch (NotFoundException $e) {
+        }
+    }
+
+    function testViewInfoNoTeamMember()
+    {
+        $this->_getUsersCommonMock();
+        try {
+            $this->testAction('/users/view_info/user_id:14');
+        } catch (NotFoundException $e) {
+        }
     }
 
     function _getUsersCommonMock()
@@ -1977,6 +2017,10 @@ class UsersControllerTest extends ControllerTestCase
         $Users->User->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Users->User->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Users->Goal->my_uid = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Users->Goal->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Users->User->CircleMember->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */

@@ -836,6 +836,36 @@ class PostsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
+    function testAjaxGetUserPagePostFeed()
+    {
+        $this->_getPostsCommonMock();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $res = $this->testAction('/posts/ajax_get_user_page_post_feed/user_id:2/month_index:1/page:1', ['method' => 'GET']);
+        $data = json_decode($res, true);
+        $this->assertArrayHasKey('html', $data);
+        $this->assertArrayHasKey('count', $data);
+        $this->assertArrayHasKey('page_item_num', $data);
+        $this->assertArrayHasKey('start', $data);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxGetUserPagePostFeedInvalidParam()
+    {
+        $this->_getPostsCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+
+        $catch = false;
+        try {
+            $this->testAction('/posts/ajax_get_user_page_post_feed/', ['method' => 'GET']);
+        } catch (Exception $e) {
+            $catch = true;
+        }
+        $this->assertTrue($catch);
+
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
     /**
      * testDelete method
      *

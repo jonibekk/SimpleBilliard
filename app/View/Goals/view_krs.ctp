@@ -11,7 +11,7 @@
 <!-- START app/View/Users/view_krs.ctp -->
 <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default">
-        <?= $this->element('simplex_top_section') ?>
+        <?= $this->element('Goal/simplex_top_section') ?>
         <div class="panel-body">
             キーリザルト一覧ページ
         </div>

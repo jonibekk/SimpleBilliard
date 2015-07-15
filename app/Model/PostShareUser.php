@@ -60,21 +60,42 @@ class PostShareUser extends AppModel
         return $this->saveAll($data);
     }
 
-    public function getShareWithMeList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000)
+    /**
+     * 自分に共有された投稿のID一覧を返す
+     *
+     * @param        $start
+     * @param        $end
+     * @param string $order
+     * @param string $order_direction
+     * @param int    $limit
+     * @param array  $params
+     *                 'user_id' : 指定すると投稿者で絞る
+     *
+     * @return array|null
+     */
+    public function getShareWithMeList($start, $end, $order = "PostShareUser.modified", $order_direction = "desc", $limit = 1000, array $params = [])
     {
+        // パラメータデフォルト
+        $params = array_merge(['user_id' => null], $params);
+
         $backupPrimaryKey = $this->primaryKey;
         $this->primaryKey = 'post_id';
 
         $options = [
             'conditions' => [
-                'user_id'                  => $this->my_uid,
-                'team_id'                  => $this->current_team_id,
-                'modified BETWEEN ? AND ?' => [$start, $end],
+                'PostShareUser.user_id'                  => $this->my_uid,
+                'PostShareUser.team_id'                  => $this->current_team_id,
+                'PostShareUser.modified BETWEEN ? AND ?' => [$start, $end],
             ],
             'order'      => [$order => $order_direction],
             'limit'      => $limit,
-            'fields'     => ['post_id'],
+            'fields'     => ['PostShareUser.post_id'],
+            'contain'    => [],
         ];
+        if ($params['user_id'] !== null) {
+            $options['conditions']['Post.user_id'] = $params['user_id'];
+            $options['contain'][] = 'Post';
+        }
         $res = $this->find('list', $options);
         $this->primaryKey = $backupPrimaryKey;
 

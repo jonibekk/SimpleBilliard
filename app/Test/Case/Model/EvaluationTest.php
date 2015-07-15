@@ -414,7 +414,7 @@ class EvaluationTest extends CakeTestCase
         $this->Evaluation->deleteAll(['Evaluation.id >' => 0]);
         $evaluateTermId = 1;
         $evaluateeId = 1;
-        $goalNum = 3;
+        $goalNum = 4;
 
         $records = [
             [

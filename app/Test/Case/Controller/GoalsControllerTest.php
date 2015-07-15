@@ -1161,20 +1161,88 @@ class GoalsControllerTest extends ControllerTestCase
         $this->_getGoalsCommonMock();
         $this->testAction('/goals/view_followers/goal_id:1');
     }
+    function testViewFollowersNoParams()
+    {
+        $this->_getGoalsCommonMock();
+        try {
+            $this->testAction('/goals/view_followers/');
+        } catch (NotFoundException $e) {
+        }
+    }
+    function testViewFollowersInvalidParam()
+    {
+        $this->_getGoalsCommonMock();
+        try {
+            $this->testAction('/goals/view_followers/goal_id:999');
+        } catch (NotFoundException $e) {
+        }
+    }
+
     function testViewMembers()
     {
         $this->_getGoalsCommonMock();
         $this->testAction('/goals/view_members/goal_id:1');
     }
+    function testViewMembersNoParams()
+    {
+        $this->_getGoalsCommonMock();
+        try {
+            $this->testAction('/goals/view_members/');
+        } catch (NotFoundException $e) {
+        }
+    }
+    function testViewMembersInvalidParam()
+    {
+        $this->_getGoalsCommonMock();
+        try {
+            $this->testAction('/goals/view_members/goal_id:999');
+        } catch (NotFoundException $e) {
+        }
+    }
+
+
     function testViewKrs()
     {
         $this->_getGoalsCommonMock();
         $this->testAction('/goals/view_krs/goal_id:1');
     }
+    function testViewKrsNoParams()
+    {
+        $this->_getGoalsCommonMock();
+        try {
+            $this->testAction('/goals/view_krs/');
+        } catch (NotFoundException $e) {
+        }
+    }
+    function testViewKrsInvalidParam()
+    {
+        $this->_getGoalsCommonMock();
+        try {
+            $this->testAction('/goals/view_krs/goal_id:999');
+        } catch (NotFoundException $e) {
+        }
+    }
+
     function testViewInfo()
     {
         $this->_getGoalsCommonMock();
         $this->testAction('/goals/view_info/goal_id:1');
+    }
+    function testViewInfoNoParams()
+    {
+        $this->_getGoalsCommonMock();
+        try {
+            $this->testAction('/goals/view_info/');
+        } catch (NotFoundException $e) {
+        }
+    }
+    function testViewInfoInvalidParam()
+    {
+        $this->_getGoalsCommonMock();
+        try {
+            $this->testAction('/goals/view_info/goal_id:999');
+        } catch (NotFoundException $e) {
+        }
     }
 
 

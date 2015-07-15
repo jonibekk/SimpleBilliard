@@ -1,0 +1,22 @@
+{
+  "name": "bowerForGoalous",
+  "version": "0.0.1",
+  "homepage": "https://github.com/IsaoCorp/goalous2",
+  "authors": [
+    "ISAOcorp"
+  ],
+  "description": "Package Control of Frontends",
+  "license": "Copyright (c) 2015- ISAO corp.",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "font-awesome-less": "~0.1.0",
+    "bootstrap-less": "~3.3.4",
+    "jquery": "1.11.3"
+  }
+}
