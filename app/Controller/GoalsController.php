@@ -1121,6 +1121,17 @@ class GoalsController extends AppController
         return $this->render();
     }
 
+    function view_actions()
+    {
+        $goal_id = $this->_getRequiredParam('goal_id');
+        if (!$this->_setGoalPageHeaderInfo($goal_id)) {
+            // ゴールが存在しない
+            throw new NotFoundException();
+        }
+        $this->layout = LAYOUT_ONE_COLUMN;
+        return $this->render();
+    }
+
     function view_info()
     {
         $goal_id = $this->_getRequiredParam('goal_id');

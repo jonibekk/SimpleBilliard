@@ -8,13 +8,13 @@
  * @var CodeCompletionView $this
  */
 ?>
-<!-- START app/View/Goals/view_members.ctp -->
+<!-- START app/View/Goals/view_actions.ctp -->
 <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default">
         <?= $this->element('Goal/simplex_top_section') ?>
         <div class="panel-body">
-            メンバー一覧ページ
+            アクション一覧ページ
         </div>
     </div>
 </div>
-<!-- END app/View/Goals/view_members.ctp -->
+<!-- END app/View/Goals/view_actions.ctp -->
