@@ -751,6 +751,31 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($kr_list);
     }
 
+    /**
+     * ゴールのメンバー一覧を取得
+     *
+     * @return CakeResponse
+     */
+    public function ajax_get_members()
+    {
+        $this->_ajaxPreProcess();
+        $goal_id = $this->request->params['named']['goal_id'];
+        $page = $this->request->params['named']['page'];
+        // メンバー一覧
+        $members = $this->Goal->Collaborator->getCollaboratorByGoalId($goal_id, [
+            'limit' => GOAL_PAGE_MEMBER_NUMBER,
+            'page'  => $page,
+        ]);
+        $this->set('members', $members);
+        // HTML出力
+        $response = $this->render('Goal/members');
+        $html = $response->__toString();
+        return $this->_ajaxGetResponse(['html'          => $html,
+                                        'count'         => count($members),
+                                        'page_item_num' => GOAL_PAGE_MEMBER_NUMBER,
+                                       ]);
+    }
+
     public function ajax_get_edit_action_modal()
     {
         $ar_id = $this->request->params['named']['action_result_id'];
@@ -1099,6 +1124,11 @@ class GoalsController extends AppController
         return $this->render();
     }
 
+    /**
+     * メンバー一覧
+     *
+     * @return CakeResponse
+     */
     function view_members()
     {
         $goal_id = $this->_getRequiredParam('goal_id');
@@ -1106,6 +1136,10 @@ class GoalsController extends AppController
             // ゴールが存在しない
             throw new NotFoundException();
         }
+        $members = $this->Goal->Collaborator->getCollaboratorByGoalId($goal_id, [
+            'limit' => GOAL_PAGE_MEMBER_NUMBER,
+        ]);
+        $this->set('members', $members);
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }

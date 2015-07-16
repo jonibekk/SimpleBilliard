@@ -290,6 +290,38 @@ class Collaborator extends AppModel
     }
 
     /**
+     * ゴールメンバーの一覧を返す
+     *
+     * @param       $goal_id
+     * @param array $params
+     *                'limit' : find() の limit
+     *                'page'  : find() の page
+     *                'order' : find() の order
+     *
+     * @return array|null
+     */
+    function getCollaboratorByGoalId($goal_id, array $params = [])
+    {
+        $params = array_merge(['limit' => null,
+                               'page'  => 1,
+                               'order' => ['Collaborator.created' => 'DESC'],
+                              ], $params);
+        $options = [
+            'conditions' => [
+                'goal_id' => $goal_id,
+                'team_id' => $this->current_team_id,
+            ],
+            'contain'    => ['User'],
+            'limit'      => $params['limit'],
+            'page'       => $params['page'],
+            'order'      => $params['order'],
+
+        ];
+        $res = $this->find('all', $options);
+        return $res;
+    }
+
+    /**
      * @param      $goal_id
      * @param null $type
      *
