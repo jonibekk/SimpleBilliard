@@ -1,5 +1,6 @@
 <?php
 App::uses('AppController', 'Controller');
+App::uses('Post', 'Model');
 
 /**
  * Users Controller
@@ -1060,8 +1061,8 @@ class UsersController extends AppController
     function view_actions()
     {
         $user_id = $this->_getRequiredParam('user_id');
-        $goal_id = viaIsSet($this->request->params['named']['goal_id']);
         $page_type = $this->_getRequiredParam('page_type');
+        $goal_id = viaIsSet($this->request->params['named']['goal_id']);
         if (!in_array($page_type, ['list', 'image'])) {
             $this->Pnotify->outError(__d('gl', "不正な画面遷移です。"));
             $this->redirect($this->referer());
@@ -1071,6 +1072,7 @@ class UsersController extends AppController
             'type'      => Post::TYPE_ACTION,
             'goal_id'   => $goal_id,
         ];
+        $posts = [];
         switch ($page_type) {
             case 'list':
                 $posts = $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null, $params);

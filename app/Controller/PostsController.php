@@ -319,7 +319,6 @@ class PostsController extends AppController
         $item_num = POST_FEED_PAGE_ITEMS_NUMBER;
         //エレメントpath
         $elm_path = "Feed/posts";
-        $this->log($param_named);
         if (viaIsSet($param_named['page_type']) == 'image') {
             $item_num = MY_PAGE_CUBE_ACTION_IMG_NUMBER;
             $elm_path = "cube_img_blocks";
