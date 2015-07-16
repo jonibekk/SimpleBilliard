@@ -9,7 +9,7 @@
  * @var $followers
  */
 ?>
-<!-- START app/View/Users/view_followers.ctp -->
+<!-- START app/View/Goals/view_followers.ctp -->
 <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default">
         <?= $this->element('Goal/simplex_top_section') ?>
@@ -32,4 +32,4 @@
         </div>
     </div>
 </div>
-<!-- END app/View/Users/view_followers.ctp -->
+<!-- END app/View/Goals/view_followers.ctp -->
