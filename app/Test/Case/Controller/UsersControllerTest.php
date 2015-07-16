@@ -4,7 +4,6 @@ App::uses('UsersController', 'Controller');
 /**
  * UsersController Test Case
  * @method testAction($url = '', $options = array()) ControllerTestCase::_testAction
-
  */
 class UsersControllerTest extends ControllerTestCase
 {
@@ -1604,7 +1603,8 @@ class UsersControllerTest extends ControllerTestCase
 
         /** @noinspection PhpUndefinedFieldInspection */
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/users/ajax_select2_get_circles_users?term=firstname&page_limit=10&circle_type=all', ['method' => 'GET']);
+        $this->testAction('/users/ajax_select2_get_circles_users?term=firstname&page_limit=10&circle_type=all',
+                          ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -1624,12 +1624,14 @@ class UsersControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedFieldInspection */
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $keyword = urlencode('秘密サークル');
-        $res = $this->testAction("/users/ajax_select2_get_secret_circles?term=$keyword&page_limit=10", ['method' => 'GET']);
+        $res = $this->testAction("/users/ajax_select2_get_secret_circles?term=$keyword&page_limit=10",
+                                 ['method' => 'GET']);
         $json_data = json_decode($res, true);
         $this->assertNotEmpty($json_data['results']);
 
         $keyword = urlencode('チーム全体サークル');
-        $res = $this->testAction("/users/ajax_select2_get_secret_circles?term=$keyword&page_limit=10", ['method' => 'GET']);
+        $res = $this->testAction("/users/ajax_select2_get_secret_circles?term=$keyword&page_limit=10",
+                                 ['method' => 'GET']);
         $json_data = json_decode($res, true);
         $this->assertEmpty($json_data['results']);
 
@@ -1913,11 +1915,13 @@ class UsersControllerTest extends ControllerTestCase
         $this->_getUsersCommonMock();
         $this->testAction('/users/view_goals/user_id:1');
     }
+
     function testViewGoalsOthers()
     {
         $this->_getUsersCommonMock();
         $this->testAction('/users/view_goals/user_id:2');
     }
+
     function testViewGoalsOthersFollowing()
     {
         $this->_getUsersCommonMock();
@@ -1939,10 +1943,22 @@ class UsersControllerTest extends ControllerTestCase
         }
     }
 
-    function testViewActions()
+    function testViewActionsNoPageType()
     {
         $this->_getUsersCommonMock();
         $this->testAction('/users/view_actions/user_id:1');
+    }
+
+    function testViewActionsImageSuccess()
+    {
+        $this->_getUsersCommonMock();
+        $this->testAction('/users/view_actions/user_id:1/page_type:image');
+    }
+
+    function testViewActionsListSuccess()
+    {
+        $this->_getUsersCommonMock();
+        $this->testAction('/users/view_actions/user_id:1/page_type:list');
     }
 
     function testViewInfo()

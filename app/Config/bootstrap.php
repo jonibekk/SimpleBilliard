@@ -153,6 +153,8 @@ define('POST_FEED_PAGE_ITEMS_NUMBER', 5);
 define('GOAL_INDEX_ITEMS_NUMBER', 20);
 //マイページのアクション数
 define('MY_PAGE_ACTION_NUMBER', 4);
+//キューブ表示のアイテム数
+define('MY_PAGE_CUBE_ACTION_IMG_NUMBER', 21);
 /**
  * 共通関数
  */

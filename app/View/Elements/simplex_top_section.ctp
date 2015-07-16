@@ -58,6 +58,7 @@
             'controller' => 'users',
             'action'     => 'view_actions',
             'user_id'    => $user['User']['id'],
+            'page_type' => 'image',
         ]); ?>
         |
         <?= $this->Html->link(__d('gl', '投稿'), [
