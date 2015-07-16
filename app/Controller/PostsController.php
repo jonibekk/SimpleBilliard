@@ -315,19 +315,28 @@ class PostsController extends AppController
             $end = strtotime("-{$end_month_offset} months", REQUEST_TIMESTAMP);
             $start = strtotime("-{$start_month_offset} months", REQUEST_TIMESTAMP);
         }
+        //取得件数
+        $item_num = POST_FEED_PAGE_ITEMS_NUMBER;
+        //エレメントpath
+        $elm_path = "Feed/posts";
+        $this->log($param_named);
+        if (viaIsSet($param_named['page_type']) == 'image') {
+            $item_num = MY_PAGE_CUBE_ACTION_IMG_NUMBER;
+            $elm_path = "cube_img_blocks";
+        }
         // 投稿一覧取得
-        $posts = $this->Post->get($page_num, POST_FEED_PAGE_ITEMS_NUMBER, $start, $end, $param_named);
+        $posts = $this->Post->get($page_num, $item_num, $start, $end, $param_named);
         $this->set('posts', $posts);
         $this->set('long_text', false);
 
         // エレメントの出力を変数に格納する
         // htmlレンダリング結果
-        $response = $this->render('Feed/posts');
+        $response = $this->render($elm_path);
         $html = $response->__toString();
         $result = array(
             'html'          => $html,
             'count'         => count($posts),
-            'page_item_num' => POST_FEED_PAGE_ITEMS_NUMBER,
+            'page_item_num' => $item_num,
             'start'         => $start ? $start : REQUEST_TIMESTAMP - MONTH,
         );
         return $this->_ajaxGetResponse($result);

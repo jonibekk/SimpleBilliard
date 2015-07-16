@@ -1066,19 +1066,20 @@ class UsersController extends AppController
             $this->Pnotify->outError(__d('gl', "不正な画面遷移です。"));
             $this->redirect($this->referer());
         }
+        $params = [
+            'author_id' => $user_id,
+            'type'      => Post::TYPE_ACTION,
+            'goal_id'   => $goal_id,
+        ];
         switch ($page_type) {
             case 'list':
-                $params = [
-                    'author_id' => $user_id,
-                    'type'      => Post::TYPE_ACTION,
-                    'goal_id'   => $goal_id,
-                ];
                 $posts = $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null, $params);
-                $this->set(compact('posts'));
                 break;
             case 'image':
+                $posts = $this->Post->get(1, MY_PAGE_CUBE_ACTION_IMG_NUMBER, null, null, $params);
                 break;
         }
+        $this->set(compact('posts'));
         $this->_setUserPageHeaderInfo($user_id);
         $this->layout = LAYOUT_ONE_COLUMN;
         $goal_ids = $this->Goal->Collaborator->getCollaboGoalList($user_id, true);

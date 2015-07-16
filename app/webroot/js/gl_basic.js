@@ -88,8 +88,12 @@ $(document).ready(function () {
     //マイページのゴール切替え
     $('#SwitchGoalOnMyPage').change(function () {
         var goal_id = $(this).val();
-        var url = $(this).attr('redirect-url') + "/goal_id:" + goal_id;
-        console.log(url);
+        if (goal_id == "") {
+            var url = $(this).attr('redirect-url');
+        }
+        else {
+            var url = $(this).attr('redirect-url') + "/goal_id:" + goal_id;
+        }
         location.href = url;
     });
 
@@ -1770,7 +1774,7 @@ function evFeedMoreView(options) {
     var month_index = $obj.attr('month-index');
     var no_data_text_id = $obj.attr('no-data-text-id');
     var oldest_post_time = $obj.attr('oldest-post-time') || 0;
-
+    var append_target_id = $obj.attr('append-target-id');
     //リンクを無効化
     $obj.attr('disabled', 'disabled');
 
@@ -1796,7 +1800,12 @@ function evFeedMoreView(options) {
                 var $posts = $(data.html);
                 //一旦非表示
                 $posts.hide();
-                $("#" + parent_id).before($posts);
+                if (append_target_id != undefined) {
+                    $("#" + append_target_id).append($posts);
+                }
+                else {
+                    $("#" + parent_id).before($posts);
+                }
                 //html表示
                 $posts.show("slow", function () {
                     //もっと見る
