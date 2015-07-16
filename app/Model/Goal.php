@@ -1437,4 +1437,14 @@ class Goal extends AppModel
         return $is_present_term_flag;
     }
 
+    function getGoalNameList($goal_ids)
+    {
+        $options = [
+            'conditions' => ['id' => $goal_ids],
+            'fields'     => ['id', 'name']
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
 }

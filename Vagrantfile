@@ -34,6 +34,7 @@ Vagrant.configure("2") do |config|
   if Vagrant.has_plugin?("vagrant-triggers")
     config.trigger.after [:reload, :halt], stdout: true do
       `rm .vagrant/machines/default/virtualbox/synced_folders`
+      `pkill vagrant-notify-server`
     end
   end
 

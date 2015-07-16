@@ -107,12 +107,12 @@
                                         <?php
                                         $last_many = false;
                                         //urlはアクション単体ページ
-                                        $url = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $action['Post'][0]['id']];//TODO urlはマイページのアクションリストが完成したら差し替え
+                                        $url = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $action['Post'][0]['id']];
                                         //最後の場合かつアクション件数合計が表示件数以上の場合
                                         if ($key == count($goal['ActionResult']) - 1 && count($goal['ActionResultCount']) > $display_action_count) {
                                             $last_many = true;
                                             //urlはゴールページの全アクションリスト
-                                            $url = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $action['Post'][0]['id']];//TODO urlはマイページのアクションリストが完成したら差し替え
+                                            $url = ['controller' => 'users', 'action' => 'view_actions', 'user_id' => $user['User']['id'], 'page_type' => 'image', 'goal_id' => $goal['Goal']['id']];//TODO urlはマイページのアクションリストが完成したら差し替え
                                         }
                                         ?>
                                         <li>
