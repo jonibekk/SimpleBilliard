@@ -1896,7 +1896,7 @@ function evAjaxGoalFollowerMore() {
     $obj.after($loader_html);
 
     // ajax URL
-    var url = cake.url.goal_follower_list + '/goal_id:' + goal_id + '/page:' + next_page_num;
+    var url = cake.url.goal_followers + '/goal_id:' + goal_id + '/page:' + next_page_num;
 
     $.ajax({
         type: 'GET',

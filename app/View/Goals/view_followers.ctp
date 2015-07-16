@@ -15,7 +15,7 @@
         <?= $this->element('Goal/simplex_top_section') ?>
         <div class="panel-body">
             <div class="row borderBottom" id="GoalPageFollowerContainer">
-                <?= $this->element('Goal/follower_list') ?>
+                <?= $this->element('Goal/followers') ?>
                 <?php if (!$followers): ?>
                     <?= __d('gl', 'フォロワーはいません。') ?>
                 <? endif ?>

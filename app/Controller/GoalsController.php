@@ -751,33 +751,6 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($kr_list);
     }
 
-    /**
-     * ゴールのフォロワー一覧を取得
-     *
-     * @return CakeResponse
-     */
-    public function ajax_get_follower_list()
-    {
-        $this->_ajaxPreProcess();
-        $goal_id = $this->request->params['named']['goal_id'];
-        $page = $this->request->params['named']['page'];
-
-        // フォロワー一覧
-        $followers = $this->Goal->Follower->getFollowerByGoalId($goal_id, [
-            'limit' => GOAL_PAGE_FOLLOWER_NUMBER,
-            'page'  => $page,
-        ]);
-        $this->set('followers', $followers);
-
-        // HTML出力
-        $response = $this->render('Goal/follower_list');
-        $html = $response->__toString();
-        return $this->_ajaxGetResponse(['html'          => $html,
-                                        'count'         => count($followers),
-                                        'page_item_num' => GOAL_PAGE_FOLLOWER_NUMBER,
-                                       ]);
-    }
-
     public function ajax_get_edit_action_modal()
     {
         $ar_id = $this->request->params['named']['action_result_id'];
@@ -798,6 +771,33 @@ class GoalsController extends AppController
         $response = $this->render('Goal/modal_edit_action_result');
         $html = $response->__toString();
         return $this->_ajaxGetResponse($html);
+    }
+
+    /**
+     * ゴールのフォロワー一覧を取得
+     *
+     * @return CakeResponse
+     */
+    public function ajax_get_followers()
+    {
+        $this->_ajaxPreProcess();
+        $goal_id = $this->request->params['named']['goal_id'];
+        $page = $this->request->params['named']['page'];
+
+        // フォロワー一覧
+        $followers = $this->Goal->Follower->getFollowerByGoalId($goal_id, [
+            'limit' => GOAL_PAGE_FOLLOWER_NUMBER,
+            'page'  => $page,
+        ]);
+        $this->set('followers', $followers);
+
+        // HTML出力
+        $response = $this->render('Goal/followers');
+        $html = $response->__toString();
+        return $this->_ajaxGetResponse(['html'          => $html,
+                                        'count'         => count($followers),
+                                        'page_item_num' => GOAL_PAGE_FOLLOWER_NUMBER,
+                                       ]);
     }
 
     public function edit_action()

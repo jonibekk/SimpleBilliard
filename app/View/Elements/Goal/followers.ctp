@@ -4,7 +4,7 @@
  */
 ?>
 <?php if ($followers): ?>
-    <!-- START app/View/Elements/Goal/follower_list.ctp -->
+    <!-- START app/View/Elements/Goal/followers.ctp -->
     <?php foreach ($followers as $follower): ?>
         <div class="col col-xxs-12 mpTB0">
             <?=
@@ -23,5 +23,5 @@
             </div>
         </div>
     <?php endforeach ?>
-    <!-- START app/View/Elements/Goal/follower_list.ctp -->
+    <!-- END app/View/Elements/Goal/followers.ctp -->
 <? endif ?>
