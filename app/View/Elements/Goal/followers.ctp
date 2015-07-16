@@ -6,20 +6,16 @@
 <?php if ($followers): ?>
     <!-- START app/View/Elements/Goal/followers.ctp -->
     <?php foreach ($followers as $follower): ?>
-        <div class="col col-xxs-12 mpTB0">
-            <?=
-            $this->Upload->uploadImage($follower['User'], 'User.photo', ['style' => 'small'],
-                                       ['class' => 'comment-img'])
-            ?>
-            <div class="comment-body modal-comment">
-                <div class="font_12px font_bold modalFeedTextPadding">
-                    <?= h($follower['User']['display_username']) ?></div>
-
-                <?php if ($follower['Follower']['created']): ?>
-                    <div class="font_12px font_lightgray modalFeedTextPaddingSmall">
-                        <?= $this->TimeEx->elapsedTime(h($follower['Follower']['created']), 'rough') ?>
-                    </div>
-                <?php endif; ?>
+        <div class="col col-xxs-12">
+            <div style="border:3px #ccc solid; height: 67px;">
+                <?=
+                $this->Upload->uploadImage($follower['User'], 'User.photo', ['style' => 'small'],
+                                           ['style' => 'width:64px; float:left; border-right:3px #ccc solid'])
+                ?>
+                <div class="font_bold" style="padding:3px;float:left">
+                    <?= h($follower['User']['display_username']) ?><br>
+                    <?= h($follower['Group']['name']) ?>
+                </div>
             </div>
         </div>
     <?php endforeach ?>

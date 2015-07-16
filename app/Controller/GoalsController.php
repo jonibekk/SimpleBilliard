@@ -786,8 +786,9 @@ class GoalsController extends AppController
 
         // フォロワー一覧
         $followers = $this->Goal->Follower->getFollowerByGoalId($goal_id, [
-            'limit' => GOAL_PAGE_FOLLOWER_NUMBER,
-            'page'  => $page,
+            'limit'      => GOAL_PAGE_FOLLOWER_NUMBER,
+            'page'       => $page,
+            'with_group' => true,
         ]);
         $this->set('followers', $followers);
 
@@ -1128,7 +1129,8 @@ class GoalsController extends AppController
             throw new NotFoundException();
         }
         $followers = $this->Goal->Follower->getFollowerByGoalId($goal_id, [
-            'limit' => GOAL_PAGE_FOLLOWER_NUMBER,
+            'limit'      => GOAL_PAGE_FOLLOWER_NUMBER,
+            'with_group' => true,
         ]);
         $this->set('followers', $followers);
         $this->layout = LAYOUT_ONE_COLUMN;

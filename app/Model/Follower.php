@@ -101,27 +101,57 @@ class Follower extends AppModel
      *                'limit' : find() の limit
      *                'page'  : find() の page
      *                'order' : find() の order
+     *                'with_group' : true にするとグループ１の情報を含める
      *
      * @return array|null
      */
     public function getFollowerByGoalId($goal_id, array $params = [])
     {
         // パラメータデフォルト
-        $params = array_merge(['limit' => null,
-                               'page'  => 1,
-                               'order' => ['Follower.created' => 'DESC'],
+        $params = array_merge(['limit'      => null,
+                               'page'       => 1,
+                               'order'      => ['Follower.created' => 'DESC'],
+                               'with_group' => false,
                               ], $params);
 
         $options = [
             'conditions' => [
-                'goal_id' => $goal_id,
-                'team_id' => $this->current_team_id,
+                'Follower.goal_id' => $goal_id,
+                'Follower.team_id' => $this->current_team_id,
+            ],
+            'fields'     => [
+                'Follower.*',
+                'User.*',
             ],
             'contain'    => ['User'],
             'limit'      => $params['limit'],
             'page'       => $params['page'],
             'order'      => $params['order'],
+            'joins'      => [],
         ];
+
+        if ($params['with_group']) {
+            // グループ１の情報だけ join する
+            $options['joins'][] = [
+                'type'       => 'LEFT',
+                'table'      => 'member_groups',
+                'alias'      => 'MemberGroup',
+                'conditions' => [
+                    'MemberGroup.user_id = User.id',
+                    'MemberGroup.index_num' => 0,
+                ],
+            ];
+            $options['joins'][] = [
+                'type'       => 'LEFT',
+                'table'      => 'groups',
+                'alias'      => 'Group',
+                'conditions' => [
+                    'Group.id = MemberGroup.group_id',
+                ],
+            ];
+            $options['fields'][] = 'MemberGroup.*';
+            $options['fields'][] = 'Group.*';
+        }
         $res = $this->find('all', $options);
         return $res;
     }
