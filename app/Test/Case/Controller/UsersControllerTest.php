@@ -1882,6 +1882,14 @@ class UsersControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
+    function testAjaxGetUserDetail()
+    {
+        $this->_getUsersCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/teams/ajax_get_user_detail/1', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
     function testDelete2Fa()
     {
         $this->_getUsersCommonMock();
