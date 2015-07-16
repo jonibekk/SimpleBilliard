@@ -149,7 +149,6 @@ class Follower extends AppModel
                     'Group.id = MemberGroup.group_id',
                 ],
             ];
-            $options['fields'][] = 'MemberGroup.*';
             $options['fields'][] = 'Group.*';
         }
         $res = $this->find('all', $options);
