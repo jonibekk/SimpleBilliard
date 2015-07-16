@@ -85,6 +85,14 @@ $(document).ready(function () {
             location.href = data;
         });
     });
+    //マイページのゴール切替え
+    $('#SwitchGoalOnMyPage').change(function () {
+        var goal_id = $(this).val();
+        var url = $(this).attr('redirect-url') + "/goal_id:" + goal_id;
+        console.log(url);
+        location.href = url;
+    });
+
     //autosize
     //noinspection JSJQueryEfficiency
     $('textarea:not(.not-autosize)').autosize();
@@ -781,7 +789,7 @@ function evShowAndThisWide() {
     $(this).autosize();
 
     //submitボタンを表示
-    if($(this).attr('target_show_id') != undefined){
+    if ($(this).attr('target_show_id') != undefined) {
         var target = $(this).attr('target_show_id');
 
         var target = target.split(',');

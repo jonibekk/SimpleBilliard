@@ -4,12 +4,12 @@
  * User: bigplants
  * Date: 7/9/15
  * Time: 3:33 PM
-
  *
-*@var CodeCompletionView $this
+ * @var CodeCompletionView $this
  * @var                    $goal_list
  * @var                    $goal_id
  * @var                    $posts
+ * @var                    $goal_base_url
  */
 ?>
 <!-- START app/View/Users/view_actions.ctp -->
@@ -26,10 +26,11 @@
                         'div'                      => false,
                         'required'                 => true,
                         'data-bv-notempty-message' => __d('validate', "入力必須項目です。"),
-                        'class'                    => 'form-control',
-                        'id'                       => 'GoalSelectForm',
+                        'class'                    => 'form-control disable-change-warning',
+                        'id'                       => 'SwitchGoalOnMyPage',
                         'options'                  => $goal_list,
                         'default'                  => $goal_id,
+                        'redirect-url'             => $goal_base_url,
                     ])
                     ?>
                 </div>

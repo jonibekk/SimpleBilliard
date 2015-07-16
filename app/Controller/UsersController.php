@@ -1083,8 +1083,9 @@ class UsersController extends AppController
         $this->layout = LAYOUT_ONE_COLUMN;
         $goal_ids = $this->Goal->Collaborator->getCollaboGoalList($user_id, true);
         $goal_list = [null => '---'] + $this->Goal->getGoalNameList($goal_ids);
+        $goal_base_url = Router::url(['controller' => 'users', 'action' => 'view_actions', 'user_id' => $user_id, 'page_type' => $page_type]);
         $this->set('long_text', false);
-        $this->set(compact('goal_list', 'goal_id'));
+        $this->set(compact('goal_list', 'goal_id', 'goal_base_url'));
         return $this->render();
     }
 
