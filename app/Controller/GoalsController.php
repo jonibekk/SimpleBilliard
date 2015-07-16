@@ -1128,6 +1128,30 @@ class GoalsController extends AppController
             // ゴールが存在しない
             throw new NotFoundException();
         }
+        $page_type = $this->_getRequiredParam('page_type');
+        $goal_id = viaIsSet($this->request->params['named']['goal_id']);
+        if (!in_array($page_type, ['list', 'image'])) {
+            $this->Pnotify->outError(__d('gl', "不正な画面遷移です。"));
+            $this->redirect($this->referer());
+        }
+        $params = [
+            'type'    => Post::TYPE_ACTION,
+            'goal_id' => $goal_id,
+        ];
+        $posts = [];
+        switch ($page_type) {
+            case 'list':
+                $posts = $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null, $params);
+                break;
+            case 'image':
+                $posts = $this->Post->get(1, MY_PAGE_CUBE_ACTION_IMG_NUMBER, null, null, $params);
+                break;
+        }
+        $this->set(compact('posts'));
+        $this->layout = LAYOUT_ONE_COLUMN;
+        $this->set('long_text', false);
+        $this->set(compact('goal_id'));
+
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
