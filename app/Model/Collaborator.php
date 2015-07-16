@@ -304,7 +304,7 @@ class Collaborator extends AppModel
     {
         $params = array_merge(['limit' => null,
                                'page'  => 1,
-                               'order' => ['Collaborator.created' => 'DESC'],
+                               'order' => ['Collaborator.created' => 'ASC'],
                               ], $params);
         $options = [
             'conditions' => [
