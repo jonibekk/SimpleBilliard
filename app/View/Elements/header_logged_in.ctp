@@ -156,7 +156,7 @@
                     </div>
                     <div class="header-dropdown-message dropdown-menu-right develop--forbiddenLink">
                       <a class="btn-message-header" href="#">
-                          <i class="header-dropdown-icon-message fa fa-envelope-o header-link"></i>
+                          <i class="header-dropdown-icon-message fa fa-paper-plane-o header-link"></i>
                       </a>
                     </div>
                     <div class="header-dropdown-notify dropdown-menu-right">

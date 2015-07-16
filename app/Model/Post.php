@@ -31,6 +31,7 @@ class Post extends AppModel
     const TYPE_KR_COMPLETE = 5;
     const TYPE_GOAL_COMPLETE = 6;
     const TYPE_CREATE_CIRCLE = 7;
+    const TYPE_MESSAGE = 8;
 
     static public $TYPE_MESSAGE = [
         self::TYPE_NORMAL        => null,
@@ -40,6 +41,7 @@ class Post extends AppModel
         self::TYPE_KR_COMPLETE   => null,
         self::TYPE_GOAL_COMPLETE => null,
         self::TYPE_CREATE_CIRCLE => null,
+        self::TYPE_MESSAGE       => null,
     ];
 
     function _setTypeMessage()

@@ -1456,6 +1456,70 @@ $(document).ready(function () {
         containerCssClass: "select2PostCircleMember"
     });
 
+    //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
+    $('#select2MessageCircleMember').select2({
+        multiple: true,
+        placeholder: cake.word.select_public_circle,
+        minimumInputLength: 2,
+        ajax: {
+            url: cake.url.select2_circle_user,
+            dataType: 'json',
+            quietMillis: 100,
+            cache: true,
+            data: function (term, page) {
+                return {
+                    term: term, //search term
+                    page_limit: 10, // page size
+                    circle_type: "public"
+                };
+            },
+            results: function (data, page) {
+                return {results: data.results};
+            }
+        },
+        data: [],
+        initSelection: cake.data.b,
+        formatSelection: format,
+        formatResult: format,
+        dropdownCssClass: 's2-post-dropdown',
+        escapeMarkup: function (m) {
+            return m;
+        },
+        containerCssClass: "select2MessageCircleMember"
+    });
+
+    // select2 秘密サークル選択
+    $('#select2MessageSecretCircle').select2({
+        multiple: true,
+        placeholder: cake.word.select_secret_circle,
+        minimumInputLength: 2,
+        maximumSelectionSize: 1,
+        ajax: {
+            url: cake.url.select2_secret_circle,
+            dataType: 'json',
+            quietMillis: 100,
+            cache: true,
+            data: function (term, page) {
+                return {
+                    term: term, //search term
+                    page_limit: 10 // page size
+                };
+            },
+            results: function (data, page) {
+                return {results: data.results};
+            }
+        },
+        data: [],
+        initSelection: cake.data.select2_secret_circle,
+        formatSelection: format,
+        formatResult: format,
+        dropdownCssClass: 's2-post-dropdown',
+        escapeMarkup: function (m) {
+            return m;
+        },
+        containerCssClass: "select2MessageCircleMember"
+    });
+
     // 投稿の共有範囲(公開/秘密)切り替えボタン
     var $shareRangeToggleButton = $('#postShareRangeToggleButton');
     var $shareRange = $('#postShareRange');
@@ -1492,6 +1556,58 @@ $(document).ready(function () {
             'container': 'body'
         });
     }
+
+    // メッセージの共有範囲(公開/秘密)切り替えボタン
+    var $shareMessageRangeToggleButton = $('#messageShareRangeToggleButton');
+    var $shareMessageRange = $('#messageShareRange');
+    var publicButtonLabel = '<i class="fa fa-unlock"></i> ' + cake.word.public;
+    var secretButtonLabel = '<i class="fa fa-lock font_verydark"></i> ' + cake.word.secret;
+
+    // ボタン初期状態
+    $shareMessageRangeToggleButton.html(($shareMessageRange.val() == 'public') ? publicButtonLabel : secretButtonLabel);
+
+    // 共有範囲切り替えボタンが有効な場合
+    if ($shareMessageRangeToggleButton.attr('data-toggle-enabled')) {
+        $shareMessageRangeToggleButton.on('click', function (e) {
+            e.preventDefault();
+            $shareMessageRange.val($shareMessageRange.val() == 'public' ? 'secret' : 'public');
+            if ($shareMessageRange.val() == 'public') {
+                $shareMessageRangeToggleButton.html(publicButtonLabel);
+                $('#MessageSecretShareInputWrap').hide();
+                $('#MessagePublicShareInputWrap').show();
+            }
+            else {
+                $shareMessageRangeToggleButton.html(secretButtonLabel);
+                $('#MessagePublicShareInputWrap').hide();
+                $('#MessageSecretShareInputWrap').show();
+            }
+        });
+    }
+    // 共有範囲切り替えボタンが無効な場合（サークルフィードページ）
+    else {
+        $shareMessageRangeToggleButton.popover({
+            'data-toggle': "popover",
+            'placement': 'top',
+            'trigger': "focus",
+            'content': cake.word.share_change_disabled,
+            'container': 'body'
+        });
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     $('#select2ActionCircleMember').select2({

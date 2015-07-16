@@ -1109,7 +1109,7 @@ textarea{
 /*/border  */
 
 /*切り替えスイッチ*/
-.switch-post, .switch-action, .switch-badge {
+.switch-post, .switch-action, .switch-badge, .switch-message {
     position: relative;
 }
 
@@ -1739,10 +1739,14 @@ ul.input-images > li {
 }
 
 .switch-post {
-    min-width: 44px;
+    min-width: 76px;
 }
 
 .switch-action {
+    min-width: 76px;
+}
+
+.switch-message {
     min-width: 76px;
 }
 
@@ -1752,12 +1756,14 @@ ul.input-images > li {
 
 .switch-post:hover a,
 .switch-action:hover a,
+.switch-message:hover a,
 .switch-badge:hover a {
     color: #333;
 }
 
 .switch-post-anchor,
 .switch-action-anchor,
+.switch-message-anchor,
 .switch-badge-anchor,
 .switch-post-anchor:hover,
 .switch-action-anchor:hover,

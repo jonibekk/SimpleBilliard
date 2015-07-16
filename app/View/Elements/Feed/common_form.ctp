@@ -23,7 +23,11 @@
                                        class="switch-post-anchor click-target-focus"
                                        target-id="CommonPostBody"><i
                         class="fa fa-comment-o"></i><?= __d('gl', "投稿") ?></a><span class="switch-arrow"></span></li>
-        </ul>
+            <li class="switch-message"><a href="#MessageForm" role="tab" data-toggle="tab"
+                                       class="switch-message-anchor click-target-focus"
+                                       target-id="CommonMessageBody"><i
+                        class="fa fa-paper-plane-o"></i><?= __d('gl', "メッセージ") ?></a><span class="switch-arrow"></span></li>
+        </u>
     </div>
     <!-- Tab panes -->
     <div class="tab-content">
@@ -266,6 +270,126 @@
                         <?=
                         $this->Form->submit(__d('gl', "投稿する"),
                                             ['class' => 'btn btn-primary pull-right post-submit-button', 'id' => 'PostSubmit', 'disabled' => 'disabled']) ?>
+                    </div>
+                </div>
+            </div>
+            <?= $this->Form->end() ?>
+        </div>
+
+        <div class="tab-pane fade" id="MessageForm">
+            <?=
+            $this->Form->create('Message', [
+                'url'           => ['controller' => 'posts', 'action' => 'add'],
+                'inputDefaults' => [
+                    'div'       => 'form-group',
+                    'label'     => false,
+                    'wrapInput' => '',
+                    'class'     => 'form-control',
+                ],
+                'id'            => 'MessageDisplayForm',
+                'type'          => 'file',
+                'novalidate'    => true,
+                'class'         => 'form-feed-notify'
+            ]); ?>
+            <div class="panel-body post-share-range-panel-body" id="MessageFormShare">
+
+                <?php
+                // 共有範囲「公開」のデフォルト選択
+                // 「チーム全体サークル」以外のサークルフィードページの場合は、対象のサークルIDを指定。
+                // それ以外は「チーム全体サークル」(public)を指定する。
+                $public_message_share_default = 'public';
+                if (isset($current_circle) && $current_circle['Circle']['public_flg'] && !$current_circle['Circle']['team_all_flg']) {
+                    $public_message_share_default = "circle_" . $current_circle['Circle']['id'];
+                }
+
+                // 共有範囲「秘密」のデフォルト選択
+                // 秘密サークルのサークルフィードページの場合は、対象のサークルIDを指定する。
+                $secret_message_share_default = '';
+                if (isset($current_circle) && !$current_circle['Circle']['public_flg']) {
+                    $secret_message_share_default = "circle_" . $current_circle['Circle']['id'];
+                }
+                ?>
+                <div class="col col-xxs-10 col-xs-10 post-share-range-list" id="MessagePublicShareInputWrap"
+                     <?php if ($secret_message_share_default) : ?>style="display:none"<?php endif ?>>
+                    <?=
+                    $this->Form->hidden('share_public', [
+                        'id'    => 'select2MessageCircleMember',
+                        'value' => $public_message_share_default,
+                        'style' => "width: 100%"
+                    ]) ?>
+                    <?php $this->Form->unlockField('Message.share_public') ?>
+                </div>
+                <div class="col col-xxs-10 col-xs-10 post-share-range-list" id="MessageSecretShareInputWrap"
+                     <?php if (!$secret_message_share_default) : ?>style="display:none"<?php endif ?>>
+                    <?=
+                    $this->Form->hidden('share_secret', [
+                        'id'    => 'select2MessageSecretCircle',
+                        'value' => $secret_message_share_default,
+                        'style' => "width: 100%;"]) ?>
+                    <?php $this->Form->unlockField('Message.share_secret') ?>
+                </div>
+                <div class="col col-xxs-2 col-xs-2 text-center post-share-range-toggle-button-container">
+                    <?= $this->Html->link('', '#', [
+                        'id'                  => 'messageShareRangeToggleButton',
+                        'class'               => "btn btn-lightGray btn-white post-share-range-toggle-button",
+                        'data-toggle-enabled' => (isset($current_circle)) ? '' : '1',
+                    ]) ?>
+                    <?= $this->Form->hidden('share_range', [
+                        'id'    => 'messageShareRange',
+                        'value' => $secret_message_share_default ? 'secret' : 'public',
+                    ]) ?>
+                </div>
+                <?php $this->Form->unlockField('Message.share_range') ?>
+                <?php $this->Form->unlockField('socket_id') ?>
+            </div>
+
+            <div class="post-panel-body plr_11px ptb_7px">
+                <?=
+                $this->Form->input('body', [
+                    'id'             => 'CommonMessageBody',
+                    'label'          => false,
+                    'type'           => 'textarea',
+                    'wrap'           => 'soft',
+                    'rows'           => 1,
+                    'required'       => true,
+                    'placeholder'    => __d('gl', "何か投稿しよう"),
+                    'class'          => 'form-control tiny-form-text-change blank-disable post-form feed-post-form box-align change-warning',
+                    'target_show_id' => "MessageFormFooter",
+                    'target-id'      => "MessageSubmit",
+                    "required"       => false
+                ])
+                ?>
+                <div class="row form-group m_0px none" id="MessageFormImage">
+                    <ul class="col input-images post-images">
+                        <?php for ($i = 1; $i <= 5; $i++): ?>
+                        <li id="WrapPhotoForm_Message_<?= $i ?>">
+                            <?= $this->element('Feed/photo_upload',
+                                               ['type' => 'post', 'index' => $i, 'submit_id' => 'MessageSubmit']) ?>
+                            </li><?php endfor ?>
+                    </ul>
+                    <span class="help-block" id="Message__Photo_ValidateMessage"></span>
+                </div>
+            </div>
+            <?php if (isset($this->request->params['circle_id'])) {
+                $display = "block";
+            }
+            else {
+                $display = "none";
+            }
+            ?>
+           <div class="post-panel-footer">
+                <div class="font_12px none" id="MessageFormFooter">
+                    <a href="#" class="target-show-target-click link-red" target-id="MessageFormImage"
+                       click-target-id="Message__Photo_1">
+                        <button type="button" class="btn pull-left photo-up-btn"><i
+                                class="fa fa-camera post-camera-icon"></i>
+                        </button>
+                    </a>
+
+                    <div class="row form-horizontal form-group post-share-range" id="MessageShare">
+                        <?=
+                        $this->Form->submit(__d('gl', "投稿する"),
+                                            ['class' => 'btn btn-primary pull-right post-submit-button', 'id' => 'MessageSubmit', 'disabled' => 'disabled']) ?>
                     </div>
                 </div>
             </div>
