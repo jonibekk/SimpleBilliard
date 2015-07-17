@@ -260,6 +260,29 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
+    public function ajax_get_add_action_modal()
+    {
+        $goal_id = viaIsSet($this->request->params['named']['goal_id']);
+        $this->_ajaxPreProcess();
+        try {
+            if (!$this->Goal->Collaborator->isCollaborated($goal_id)) {
+                throw new RuntimeException();
+            }
+        } catch (RuntimeException $e) {
+            return $this->_ajaxGetResponse(null);
+        }
+        $goal = $this->Goal->getGoalMinimum($goal_id);
+        $kr_list = [null => '---'] + $this->Goal->KeyResult->getKeyResults($goal_id, 'list');
+        $kr_value_unit_list = KeyResult::$UNIT;
+
+        $this->set(compact('goal', 'goal_id', 'kr_list', 'kr_value_unit_list'));
+        //htmlレンダリング結果
+        $response = $this->render('Goal/modal_add_action');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
+    }
+
     public function ajax_get_add_key_result_modal()
     {
         $goal_id = viaIsSet($this->request->params['named']['goal_id']);

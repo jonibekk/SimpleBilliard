@@ -100,7 +100,10 @@
                                 <ul class="list-inline">
                                     <?php if ($is_mine): ?>
                                         <li>
-                                            <a href="/"><i class="fa fa-plus"></i><?= __d('gl', "アクションを追加") ?></a>
+                                            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_action_modal', 'goal_id' => $goal['Goal']['id']]) ?>"
+                                               class="modal-ajax-get-add-action"><i class="fa fa-plus"></i><?= __d('gl',
+                                                                                                                   "アクションを追加") ?>
+                                            </a>
                                         </li>
                                     <?php endif; ?>
                                     <?php foreach ($goal['ActionResult'] as $key => $action): ?>

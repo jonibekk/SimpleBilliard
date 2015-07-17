@@ -228,6 +228,28 @@ $(document).ready(function () {
     $(document).on("click", '.modal-ajax-get-collabo', getModalFormFromUrl);
     //noinspection JSUnresolvedVariable
     $(document).on("click", '.modal-ajax-get-add-key-result', getModalFormFromUrl);
+    $(document).on("click", '.modal-ajax-get-add-action', function (e) {
+        e.preventDefault();
+        var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        modalFormCommonBindEvent($modal_elm);
+
+        var url = $(this).attr('href');
+        if (url.indexOf('#') == 0) {
+            $(url).modal('open');
+        } else {
+            $.get(url, function (data) {
+                $modal_elm.append(data);
+                $modal_elm.find('form').bootstrapValidator({
+                    live: 'enabled',
+                    feedbackIcons: {},
+                    fields: {}
+                });
+                $modal_elm.modal();
+                $('body').addClass('modal-open');
+            });
+        }
+    });
+
     $(document).on("click", '.modal-ajax-get-circle-edit', function (e) {
         e.preventDefault();
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
@@ -2134,7 +2156,6 @@ function getModalFormFromUrl(e) {
         });
     }
 }
-
 $(document).ready(function () {
 
     var pusher = new Pusher(cake.pusher.key);
