@@ -5,10 +5,11 @@
  * Date: 7/9/15
  * Time: 3:50 PM
  *
- * @var $user
- * @var $post_count
- * @var $action_count
- * @var $like_count
+ * @var CodeCompletionView $this
+ * @var                    $user
+ * @var                    $post_count
+ * @var                    $action_count
+ * @var                    $like_count
  */
 ?>
 <!-- START app/View/Elements/simplex_top_section.ctp -->
@@ -24,6 +25,7 @@
         )
         ?>
         <br>
+
         <p class="profile-user-name">
             <?= h($user['User']['display_username']) ?>
         </p>
@@ -71,45 +73,57 @@
         <?= $this->TextEx->autoLink($user['TeamMember']['comment']) ?>
     </div>
     <div class="profile-user-tab-group">
-        <a class="profile-user-goal-tab" href="<?= $this->Html->url([
-                'controller' => 'users',
-                'action' => 'view_goals',
-                'user_id' => $user['User']['id'],
-            ]); ?>" >
+        <a class="profile-user-goal-tab <?= $this->request->params['action'] == 'view_goals' ? "profile-user-tab-active" : null ?>"
+           href="<?= $this->Html->url(
+               [
+                   'controller' => 'users',
+                   'action'     => 'view_goals',
+                   'user_id'    => $user['User']['id'],
+               ]); ?>">
             <i class="fa fa-flag profile-user-tab-icon"></i>
+
             <p class="profile-user-tab-title">
-                <?= h(__d('gl','ゴール')) ?>
+                <?= h(__d('gl', 'ゴール')) ?>
             </p>
         </a>
-        <a class="profile-user-action-tab" href="<?= $this->Html->url([
-                'controller' => 'users',
-                'action' => 'view_actions',
-                'user_id' => $user['User']['id'],
-                'page_type' => 'image',
-            ]); ?>">
+        <a class="profile-user-action-tab <?= $this->request->params['action'] == 'view_actions' ? "profile-user-tab-active" : null ?>"
+           href="<?= $this->Html->url(
+               [
+                   'controller' => 'users',
+                   'action'     => 'view_actions',
+                   'user_id'    => $user['User']['id'],
+                   'page_type'  => 'image',
+               ]); ?>">
             <i class="fa fa-check-circle profile-user-tab-icon"></i>
+
             <p class="profile-user-tab-title">
-                <?= h(__d('gl','アクション')) ?>
+                <?= h(__d('gl', 'アクション')) ?>
             </p>
         </a>
-        <a class="profile-user-post-tab" href="<?= $this->Html->url([
-            'controller' => 'users',
-            'action'     => 'view_posts',
-            'user_id'    => $user['User']['id'],
-        ]); ?>">
+        <a class="profile-user-post-tab <?= $this->request->params['action'] == 'view_posts' ? "profile-user-tab-active" : null ?>"
+           href="<?= $this->Html->url(
+               [
+                   'controller' => 'users',
+                   'action'     => 'view_posts',
+                   'user_id'    => $user['User']['id'],
+               ]); ?>">
             <i class="fa fa-comment-o profile-user-tab-icon"></i>
+
             <p class="profile-user-tab-title">
-                <?= h(__d('gl','投稿')) ?>
+                <?= h(__d('gl', '投稿')) ?>
             </p>
         </a>
-        <a class="profile-user-status-tab" href="<?= $this->Html->url([
-            'controller' => 'users',
-            'action' => 'view_info',
-            'user_id' => $user['User']['id'],
-        ])?>">
+        <a class="profile-user-status-tab <?= $this->request->params['action'] == 'view_info' ? "profile-user-tab-active" : null ?>"
+           href="<?= $this->Html->url(
+               [
+                   'controller' => 'users',
+                   'action'     => 'view_info',
+                   'user_id'    => $user['User']['id'],
+               ]) ?>">
             <i class="fa fa-user profile-user-tab-icon"></i>
+
             <p class="profile-user-tab-title">
-                <?= h(__d('gl','基本データ')) ?>
+                <?= h(__d('gl', '基本データ')) ?>
             </p>
         </a>
     </div>
