@@ -27,7 +27,7 @@
                                        class="switch-message-anchor click-target-focus"
                                        target-id="CommonMessageBody"><i
                         class="fa fa-paper-plane-o"></i><?= __d('gl', "メッセージ") ?></a><span class="switch-arrow"></span></li>
-        </u>
+        </ul>
     </div>
     <!-- Tab panes -->
     <div class="tab-content">
