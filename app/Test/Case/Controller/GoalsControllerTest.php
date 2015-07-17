@@ -788,6 +788,15 @@ class GoalsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
+    function testAjaxGetKeyResultsWithParams()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/goals/ajax_get_key_results/page:2/view:key_result/goal_id:1', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
     function testEditKeyResultFailEmpty()
     {
         $Goals = $this->_getGoalsCommonMock();

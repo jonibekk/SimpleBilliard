@@ -113,8 +113,28 @@ class KeyResultTest extends CakeTestCase
     function testGetKeyResults()
     {
         $this->setDefault();
-        $res = $this->KeyResult->getKeyResults(1);
-        $this->assertNotEmpty($res);
+
+        // 通常呼び出し
+        $krs = $this->KeyResult->getKeyResults(1);
+        $this->assertNotEmpty($krs);
+
+        $krs = $this->KeyResult->getKeyResults(1, 'all', true);
+        $this->assertNotEmpty($krs);
+
+        // limit 指定
+        $krs2 = $this->KeyResult->getKeyResults(1, 'all', false, [
+            'limit' => 1,
+        ]);
+        $this->assertCount(1, $krs2);
+
+        // limit + page 指定
+        $krs3 = $this->KeyResult->getKeyResults(1, 'all', false, [
+            'limit' => 1,
+            'page'  => 2
+        ]);
+        $this->assertCount(1, $krs3);
+        $this->assertNotEquals($krs2[0]['KeyResult']['id'], $krs3[0]['KeyResult']['id']);
+
     }
 
     function testIsPermitted()

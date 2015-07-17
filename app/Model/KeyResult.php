@@ -177,8 +177,25 @@ class KeyResult extends AppModel
         return true;
     }
 
-    function getKeyResults($goal_id, $find_type = "all", $is_complete = false)
+    /**
+     * キーリザルトの一覧を返す
+     *
+     * @param        $goal_id
+     * @param string $find_type
+     * @param bool   $is_complete
+     * @param array  $params
+     *                 'limit' : find() の limit
+     *                 'page'  : find() の page
+     *
+     * @return array|null
+     */
+    function getKeyResults($goal_id, $find_type = "all", $is_complete = false, array $params = [])
     {
+        // パラメータデフォルト
+        $params = array_merge(['limit' => null,
+                               'page'  => 1,
+                              ], $params);
+
         $options = [
             'conditions' => [
                 'goal_id' => $goal_id,
@@ -189,7 +206,9 @@ class KeyResult extends AppModel
                 'KeyResult.start_date ASC',
                 'KeyResult.end_date ASC',
                 'KeyResult.priority DESC',
-            ]
+            ],
+            'limit'      => $params['limit'],
+            'page'       => $params['page'],
         ];
         if ($is_complete === true) {
             $options['conditions']['completed'] = null;

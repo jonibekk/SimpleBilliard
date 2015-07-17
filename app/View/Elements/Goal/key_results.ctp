@@ -1,0 +1,24 @@
+<?php
+/**
+ * @var $key_results
+ */
+?>
+<?php if ($key_results): ?>
+    <?php foreach ($key_results as $kr): ?>
+        <div style="border: 3px solid #ccc; padding:3px; margin:3px;">
+            <div class="pull-right">
+                <?php if ($kr['KeyResult']['completed']): ?>
+                    クリア<br>
+                <?php endif ?>
+
+                <i class="fa fa-check-circle"></i>
+                <?= h($kr['KeyResult']['action_result_count']) ?>
+            </div>
+
+            <div>
+                内容: <?= $kr['KeyResult']['name'] ?><br>
+                期限: <?= $this->Time->format('Y/m/d', $kr['KeyResult']['end_date']) ?>
+            </div>
+        </div>
+    <?php endforeach ?>
+<?php endif ?>

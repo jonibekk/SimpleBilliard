@@ -637,12 +637,35 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($return);
     }
 
+    /**
+     * ゴールに紐づくキーリザルト一覧を返す
+     *
+     * @param bool $kr_can_edit
+     *
+     * @return CakeResponse
+     */
     function ajax_get_key_results($kr_can_edit = false)
     {
-        $goal_id = $this->request->params['named']['goal_id'];
         $this->_ajaxPreProcess();
 
-        $key_results = $this->Goal->KeyResult->getKeyResults($goal_id);
+        $goal_id = $this->request->params['named']['goal_id'];
+
+        // テンプレを切り替える場合に指定する
+        $view = isset($this->request->params['named']['view']) ? $this->request->params['named']['view'] : null;
+
+        // ページ番号
+        // 指定しない場合は全件を返す
+        $page = 1;
+        $limit = null;
+        if (isset($this->request->params['named']['page'])) {
+            $page = $this->request->params['named']['page'];
+            $limit = GOAL_PAGE_KR_NUMBER;
+        }
+
+        $key_results = $this->Goal->KeyResult->getKeyResults($goal_id, 'all', false, [
+            'page'  => $page,
+            'limit' => $limit,
+        ]);
         $incomplete_kr_count = 0;
         foreach ($key_results as $k => $v) {
             if (empty($v['KeyResult']['completed'])) {
@@ -651,10 +674,22 @@ class GoalsController extends AppController
         }
 
         $this->set(compact('key_results', 'incomplete_kr_count', 'kr_can_edit', 'goal_id'));
-        $response = $this->render('Goal/key_result_items');
+
+        $response = null;
+        switch ($view) {
+            case "key_results":
+                $response = $this->render('Goal/key_results');
+                break;
+            default:
+                $response = $this->render('Goal/key_result_items');
+                break;
+        }
+
         $html = $response->__toString();
         $result = array(
-            'html' => $html
+            'html'          => $html,
+            'count'         => count($key_results),
+            'page_item_num' => GOAL_PAGE_KR_NUMBER,
         );
         return $this->_ajaxGetResponse($result);
     }
@@ -1117,6 +1152,11 @@ class GoalsController extends AppController
             // ゴールが存在しない
             throw new NotFoundException();
         }
+        $key_results = $this->Goal->KeyResult->getKeyResults($goal_id, 'all', false, [
+            'page'  => 1,
+            'limit' => GOAL_PAGE_KR_NUMBER,
+        ]);
+        $this->set('key_results', $key_results);
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
