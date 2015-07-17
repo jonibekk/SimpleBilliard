@@ -71,47 +71,47 @@
         <?= $this->TextEx->autoLink($user['TeamMember']['comment']) ?>
     </div>
     <div class="profile-user-tab-group">
-        <div class="profile-user-goal-tab">
+        <a class="profile-user-goal-tab" href="<?= $this->Html->url([
+                'controller' => 'users',
+                'action' => 'view_goals',
+                'user_id' => $user['User']['id'],
+            ]); ?>" >
             <i class="fa fa-flag profile-user-tab-icon"></i>
             <p class="profile-user-tab-title">
-                <?= $this->Html->link(__d('gl', 'ゴール'), [
-                    'controller' => 'users',
-                    'action'     => 'view_goals',
-                    'user_id'    => $user['User']['id'],
-                ]); ?>
+                <?= h(__d('gl','ゴール')) ?>
             </p>
-        </div>
-        <div class="profile-user-action-tab">
+        </a>
+        <a class="profile-user-action-tab" href="<?= $this->Html->url([
+                'controller' => 'users',
+                'action' => 'view_actions',
+                'user_id' => $user['User']['id'],
+                'page_type' => 'image',
+            ]); ?>">
             <i class="fa fa-check-circle profile-user-tab-icon"></i>
             <p class="profile-user-tab-title">
-                <?= $this->Html->link(__d('gl', 'アクション'), [
-                    'controller' => 'users',
-                    'action'     => 'view_actions',
-                    'user_id'    => $user['User']['id'],
-                    'page_type' => 'image',
-                ]); ?>
+                <?= h(__d('gl','アクション')) ?>
             </p>
-        </div>
-        <div class="profile-user-post-tab">
+        </a>
+        <a class="profile-user-post-tab" href="<?= $this->Html->url([
+            'controller' => 'users',
+            'action'     => 'view_posts',
+            'user_id'    => $user['User']['id'],
+        ]); ?>">
             <i class="fa fa-comment-o profile-user-tab-icon"></i>
             <p class="profile-user-tab-title">
-                <?= $this->Html->link(__d('gl', '投稿'), [
-                    'controller' => 'users',
-                    'action'     => 'view_posts',
-                    'user_id'    => $user['User']['id'],
-                ]); ?>
+                <?= h(__d('gl','投稿')) ?>
             </p>
-        </div>
-        <div class="profile-user-status-tab">
+        </a>
+        <a class="profile-user-status-tab" href="<?= $this->Html->url([
+            'controller' => 'users',
+            'action' => 'view_info',
+            'user_id' => $user['User']['id'],
+        ])?>">
             <i class="fa fa-user profile-user-tab-icon"></i>
             <p class="profile-user-tab-title">
-                <?= $this->Html->link(__d('gl', '基本データ'), [
-                    'controller' => 'users',
-                    'action'     => 'view_info',
-                    'user_id'    => $user['User']['id'],
-                ]); ?>
+                <?= h(__d('gl','基本データ')) ?>
             </p>
-        </div>
+        </a>
     </div>
 </div>
 <!-- END app/View/Elements/simplex_top_section.ctp -->

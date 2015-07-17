@@ -83,10 +83,18 @@
   width: 23%;
   display: inline-block;
   text-align: center;
+  text-decoration: none;
+  &:hover,
+  &:target,
+  &:active,
+  &:focus {
+    text-decoration: none;
+  }
+  color: @gray;
 }
 
 .profile-user-tab-title {
-  margin-top: 4px; 
+  margin-top: 4px;
   font-size: @fontSmall;
 }
 
@@ -105,4 +113,24 @@
 }
 .profile-user-status-tab {
   .profile-user-tabs;
+}
+
+.view-goals-panel {
+  background: #f6f5f1;
+}
+
+.view-actions-panel {
+  background: #f6f5f1;
+}
+
+.view-posts-panel {
+  background: #f6f5f1;
+}
+
+.view-info-panel {
+  background: #f6f5f1;
+}
+
+.profile-user-tab-active {
+  background: #f6f5f1;
 }
