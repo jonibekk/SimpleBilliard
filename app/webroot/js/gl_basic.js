@@ -1902,66 +1902,41 @@ function evFeedMoreView(options) {
 // ゴールのフォロワー一覧を取得
 function evAjaxGoalFollowerMore() {
     var $obj = $(this);
-    var goal_id = $obj.attr('goal-id');
-    var next_page_num = $obj.attr('next-page-num');
-    var $list_container = $($obj.attr('list-container'));
-
-    // さらに読み込むリンク無効化
-    $obj.attr('disabled', 'disabled');
-
-    // ローダー表示
-    var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
-    $obj.after($loader_html);
-
-    // ajax URL
-    var url = cake.url.goal_followers + '/goal_id:' + goal_id + '/page:' + next_page_num;
-
-    $.ajax({
-        type: 'GET',
-        url: url,
-        async: true,
-        dataType: 'json',
-        success: function (data) {
-            if (!$.isEmptyObject(data.html)) {
-                var $followers = $(data.html);
-                $followers.hide();
-                $list_container.append($followers);
-                $followers.show("slow");
-
-                // ページ番号インクリメント
-                next_page_num++;
-                $obj.attr('next-page-num', next_page_num);
-
-                // ローダーを削除
-                $loader_html.remove();
-
-                // リンクを有効化
-                $obj.removeAttr('disabled');
-            }
-
-            // 取得したデータ件数が、１ページの表示件数未満だった場合
-            if (data.count < data.page_item_num) {
-                // ローダーを削除
-                $loader_html.remove();
-
-                // 「さらに読みこむ」表示をやめる
-                $obj.remove();
-            }
-            autoload_more = false;
-        },
-        error: function () {
-            alert(cake.message.notice.c);
-        }
-    });
-    return false;
+    $obj.attr('ajax-url', cake.url.goal_followers + '/goal_id:' + $obj.attr('goal-id'));
+    return evBasicReadMore.call(this);
 }
 
 // ゴールのメンバー一覧を取得
 function evAjaxGoalMemberMore() {
     var $obj = $(this);
-    var goal_id = $obj.attr('goal-id');
+    $obj.attr('ajax-url', cake.url.goal_members + '/goal_id:' + $obj.attr('goal-id'));
+    return evBasicReadMore.call(this);
+}
+
+/**
+ * オートローダー シンプル版
+ *
+ * オプション
+ *   ajax_url: Ajax呼び出しURL
+ *   next-page-num: 次に読み込むページ数
+ *   list-container: Ajaxで読み込んだHTMLを挿入するコンテナのセレクタ
+ *
+ * 使用例
+ *   <a href="#"
+ *      ajax-url="{Ajax呼び出しURL}"
+ *      next-page-num="2"
+ *      list-container="#listContainerID">さらに読み込む</a>
+ *
+ * @returns {boolean}
+ */
+function evBasicReadMore() {
+    var $obj = $(this);
+    var ajax_url = $obj.attr('ajax-url');
     var next_page_num = $obj.attr('next-page-num');
     var $list_container = $($obj.attr('list-container'));
+
+    // 次ページのURL
+    ajax_url += '/page:' + next_page_num;
 
     // さらに読み込むリンク無効化
     $obj.attr('disabled', 'disabled');
@@ -1970,20 +1945,17 @@ function evAjaxGoalMemberMore() {
     var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
     $obj.after($loader_html);
 
-    // ajax URL
-    var url = cake.url.goal_members + '/goal_id:' + goal_id + '/page:' + next_page_num;
-
     $.ajax({
         type: 'GET',
-        url: url,
+        url: ajax_url,
         async: true,
         dataType: 'json',
         success: function (data) {
             if (!$.isEmptyObject(data.html)) {
-                var $followers = $(data.html);
-                $followers.hide();
-                $list_container.append($followers);
-                $followers.show("slow");
+                var $content = $(data.html);
+                $content.hide();
+                $list_container.append($content);
+                $content.show("slow");
 
                 // ページ番号インクリメント
                 next_page_num++;
@@ -2879,6 +2851,8 @@ $(document).ready(function () {
             if (!autoload_more) {
                 autoload_more = true;
                 $('#FeedMoreReadLink').trigger('click');
+                $('#GoalPageFollowerMoreLink').trigger('click');
+                $('#GoalPageMemberMoreLink').trigger('click');
             }
         }
     });
