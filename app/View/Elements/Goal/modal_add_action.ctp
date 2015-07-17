@@ -52,11 +52,34 @@
         <?= $this->Form->hidden('goal_id', ['value' => $goal_id]) ?>
         <div class="modal-body modal-circle-body">
             <div class="row">
+                <div class="form-group required">
+                    <div class="set-goal">
+                        <h5 class="modal-key-result-headings"><?= __d('gl', 'アクション画像') ?>
+                            <span class="modal-key-result-headings-description"><?= __d('gl',
+                                                                                        'アクションの結果が分かる画像を追加しよう') ?></span>
+                        </h5>
+                    </div>
+                    <div class="goal-set-input required">
+                        <div class="row form-group m_0px" id="CommonActionFormImage">
+                            <ul class="col input-images post-images">
+                                <?php for ($i = 1; $i <= 5; $i++): ?>
+                                    <li id="WrapPhotoForm_Action_<?= $i ?>">
+                                        <?= $this->element('Feed/photo_upload',
+                                                           ['type' => 'action_result', 'index' => $i, 'submit_id' => 'AddActionSubmitModal']) ?>
+                                    </li>
+                                <?php endfor ?>
+                            </ul>
+                            <span class="help-block" id="ActionResult__Photo_ValidateMessage"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
                 <?=
                 $this->Form->input('name',
                                    ['before'                   => '<div class="set-goal">' .
                                        '<h5 class="modal-key-result-headings">' .
-                                       __d('gl', "アクション") .
+                                       __d('gl', "アクションの説明") .
                                        '<span class="modal-key-result-headings-description">' .
                                        __d('gl', "やった事を書こう") . '</span></h5></div>',
                                     'label'                    => false,
@@ -85,7 +108,7 @@
         <div class="modal-footer">
             <?=
             $this->Form->submit(__d('gl', "アクションを登録"),
-                                ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
+                                ['id' => 'AddActionSubmitModal', 'class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
 
             <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('gl', "閉じる") ?></button>
         </div>

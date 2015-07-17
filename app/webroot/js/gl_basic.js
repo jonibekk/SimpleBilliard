@@ -242,7 +242,35 @@ $(document).ready(function () {
                 $modal_elm.find('form').bootstrapValidator({
                     live: 'enabled',
                     feedbackIcons: {},
-                    fields: {}
+                    fields: {
+                        photo: {
+                            // All the email address field have emailAddress class
+                            selector: '.ActionResult_input_field',
+                            validators: {
+                                callback: {
+                                    callback: function (value, validator, $field) {
+                                        var isEmpty = true,
+                                        // Get the list of fields
+                                            $fields = validator.getFieldElements('photo');
+                                        for (var i = 0; i < $fields.length; i++) {
+                                            if ($fields.eq(i).val() != '') {
+                                                isEmpty = false;
+                                                break;
+                                            }
+                                        }
+
+                                        if (isEmpty) {
+                                            //// Update the status of callback validator for all fields
+                                            validator.updateStatus('photo', validator.STATUS_INVALID, 'callback');
+                                            return false;
+                                        }
+                                        validator.updateStatus('photo', validator.STATUS_VALID, 'callback');
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 });
                 $modal_elm.modal();
                 $('body').addClass('modal-open');
