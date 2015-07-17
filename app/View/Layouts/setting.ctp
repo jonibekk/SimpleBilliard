@@ -11,7 +11,7 @@
 <!--suppress ALL -->
 <html lang="ja">
 <?= $this->element('head') ?>
-<body>
+<body class="body">
 <?php if (extension_loaded('newrelic')) {
     /** @noinspection PhpUndefinedFunctionInspection */
     echo newrelic_get_browser_timing_header();
