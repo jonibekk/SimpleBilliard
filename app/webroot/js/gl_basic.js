@@ -1665,14 +1665,20 @@ $(document).ready(function () {
         }
     });
 
-    $('#PostDisplayForm, #CommonActionDisplayForm').change(function (e) {
+    $('#PostDisplayForm, #CommonActionDisplayForm, #MessageDisplayForm').change(function (e) {
         var $target = $(e.target);
         switch ($target.attr('id')) {
             case "CommonPostBody":
                 $('#CommonActionName').val($target.val()).autosize().trigger('autosize.resize');
+                $('#CommonMessageBody').val($target.val()).autosize().trigger('autosize.resize');
                 break;
             case "CommonActionName":
                 $('#CommonPostBody').val($target.val()).autosize().trigger('autosize.resize');
+                $('#CommonMessageBody').val($target.val()).autosize().trigger('autosize.resize');
+                break;
+            case "CommonMessageBody":
+                $('#CommonPostBody').val($target.val()).autosize().trigger('autosize.resize');
+                $('#CommonActionName').val($target.val()).autosize().trigger('autosize.resize');
                 break;
         }
     });
@@ -3002,6 +3008,12 @@ function setDefaultTab() {
             $('#CommonFormTabs li:eq(1) a').tab('show');
             if (!isMobile()) {
                 $('#CommonPostBody').focus();
+            }
+            break;
+        case "message":
+            $('#CommonFormTabs li:eq(1) a').tab('show');
+            if (!isMobile()) {
+                $('#CommonMessageBody').focus();
             }
             break;
     }

@@ -14,6 +14,16 @@ class PostsController extends AppController
     }
 
     /**
+     * add message method
+     */
+    public function addMessage()
+    {
+        $this->request->data['Post']['type'] = Post::TYPE_MESSAGE;
+        $this->add();
+    }
+
+
+    /**
      * add method
      *
      * @throws RuntimeException
@@ -21,7 +31,6 @@ class PostsController extends AppController
      */
     public function add()
     {
-
         $this->request->allowMethod('post');
 
         // ogbをインサートデータに追加

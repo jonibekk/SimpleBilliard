@@ -75,7 +75,7 @@ class PostTest extends CakeTestCase
                 'body' => 'test',
             ]
         ];
-        $res = $this->Post->addNormal($postData, Post::TYPE_NORMAL, $uid, $team_id);
+        $res = $this->Post->addNormal($postData, $uid, $team_id);
         $this->assertNotEmpty($res, "[正常]投稿(uid,team_id指定)");
 
         $this->Post->my_uid = $uid;

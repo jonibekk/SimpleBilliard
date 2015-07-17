@@ -278,8 +278,8 @@
 
         <div class="tab-pane fade" id="MessageForm">
             <?=
-            $this->Form->create('Message', [
-                'url'           => ['controller' => 'posts', 'action' => 'add'],
+            $this->Form->create('Post', [
+                'url'           => ['controller' => 'posts', 'action' => 'addMessage'],
                 'inputDefaults' => [
                     'div'       => 'form-group',
                     'label'     => false,
@@ -292,7 +292,6 @@
                 'class'         => 'form-feed-notify'
             ]); ?>
             <div class="panel-body post-share-range-panel-body" id="MessageFormShare">
-
                 <?php
                 // 共有範囲「公開」のデフォルト選択
                 // 「チーム全体サークル」以外のサークルフィードページの場合は、対象のサークルIDを指定。
@@ -311,21 +310,23 @@
                 ?>
                 <div class="col col-xxs-10 col-xs-10 post-share-range-list" id="MessagePublicShareInputWrap"
                      <?php if ($secret_message_share_default) : ?>style="display:none"<?php endif ?>>
+                    <?=__d('gl', "To:")?>
                     <?=
                     $this->Form->hidden('share_public', [
                         'id'    => 'select2MessageCircleMember',
                         'value' => $public_message_share_default,
-                        'style' => "width: 100%"
+                        'style' => "width: 85%"
                     ]) ?>
                     <?php $this->Form->unlockField('Message.share_public') ?>
                 </div>
                 <div class="col col-xxs-10 col-xs-10 post-share-range-list" id="MessageSecretShareInputWrap"
                      <?php if (!$secret_message_share_default) : ?>style="display:none"<?php endif ?>>
+                    <?=__d('gl', "To:")?>
                     <?=
                     $this->Form->hidden('share_secret', [
                         'id'    => 'select2MessageSecretCircle',
                         'value' => $secret_message_share_default,
-                        'style' => "width: 100%;"]) ?>
+                        'style' => "width: 85%;"]) ?>
                     <?php $this->Form->unlockField('Message.share_secret') ?>
                 </div>
                 <div class="col col-xxs-2 col-xs-2 text-center post-share-range-toggle-button-container">
@@ -357,7 +358,7 @@
                     'target_show_id' => "MessageFormFooter",
                     'target-id'      => "MessageSubmit",
                     "required"       => false
-                ])
+                ]);
                 ?>
                 <div class="row form-group m_0px none" id="MessageFormImage">
                     <ul class="col input-images post-images">

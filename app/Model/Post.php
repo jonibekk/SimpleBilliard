@@ -218,13 +218,12 @@ class Post extends AppModel
      * 投稿
      *
      * @param      $postData
-     * @param int  $type
      * @param null $uid
      * @param null $team_id
      *
      * @return bool|mixed
      */
-    public function addNormal($postData, $type = self::TYPE_NORMAL, $uid = null, $team_id = null)
+    public function addNormal($postData, $uid = null, $team_id = null)
     {
         if (!isset($postData['Post']) || empty($postData['Post'])) {
             return false;
@@ -242,7 +241,9 @@ class Post extends AppModel
         }
         $postData['Post']['user_id'] = $this->uid;
         $postData['Post']['team_id'] = $this->team_id;
-        $postData['Post']['type'] = $type;
+        if (!isset($postData['Post']['type'])) {
+            $postData['Post']['type'] = Post::TYPE_NORMAL;
+        }
 
         $res = $this->save($postData);
 
