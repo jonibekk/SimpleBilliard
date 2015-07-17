@@ -64,6 +64,7 @@
             'controller' => 'goals',
             'action'     => 'view_actions',
             'goal_id'    => $goal['Goal']['id'],
+            'page_type'  => 'image'
         ]); ?>
         |
         <?= $this->Html->link(__d('gl', 'メンバー'), [

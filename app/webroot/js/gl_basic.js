@@ -374,6 +374,7 @@ $(document).ready(function () {
     //
     $(document).on("submit", "form.ajax-edit-circle-admin-status", evAjaxEditCircleAdminStatus);
     $(document).on("submit", "form.ajax-leave-circle", evAjaxLeaveCircle);
+    $(document).on("click", ".click-goal-follower-more", evAjaxGoalFollowerMore);
 
 
     //noinspection JSJQueryEfficiency
@@ -1919,6 +1920,63 @@ function evFeedMoreView(options) {
     return false;
 }
 
+// ゴールのフォロワー一覧を取得
+function evAjaxGoalFollowerMore() {
+    var $obj = $(this);
+    var goal_id = $obj.attr('goal-id');
+    var next_page_num = $obj.attr('next-page-num');
+    var $list_container = $($obj.attr('list-container'));
+
+    // さらに読み込むリンク無効化
+    $obj.attr('disabled', 'disabled');
+
+    // ローダー表示
+    var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
+    $obj.after($loader_html);
+
+    // ajax URL
+    var url = cake.url.goal_followers + '/goal_id:' + goal_id + '/page:' + next_page_num;
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: true,
+        dataType: 'json',
+        success: function (data) {
+            if (!$.isEmptyObject(data.html)) {
+                var $followers = $(data.html);
+                $followers.hide();
+                $list_container.append($followers);
+                $followers.show("slow");
+
+                // ページ番号インクリメント
+                next_page_num++;
+                $obj.attr('next-page-num', next_page_num);
+
+                // ローダーを削除
+                $loader_html.remove();
+
+                // リンクを有効化
+                $obj.removeAttr('disabled');
+            }
+
+            // 取得したデータ件数が、１ページの表示件数未満だった場合
+            if (data.count < data.page_item_num) {
+                // ローダーを削除
+                $loader_html.remove();
+
+                // 「さらに読みこむ」表示をやめる
+                $obj.remove();
+            }
+            autoload_more = false;
+        },
+        error: function () {
+            alert(cake.message.notice.c);
+        }
+    });
+    return false;
+}
+
 function evCommentOldView() {
     attrUndefinedCheck(this, 'parent-id');
     attrUndefinedCheck(this, 'get-url');
@@ -2784,6 +2842,7 @@ $(document).ready(function () {
             if (!autoload_more) {
                 autoload_more = true;
                 $('#FeedMoreReadLink').trigger('click');
+                $('#GoalPageFollowerMoreLink').trigger('click');
             }
         }
     });

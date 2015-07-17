@@ -796,6 +796,34 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
+    /**
+     * ゴールのフォロワー一覧を取得
+     *
+     * @return CakeResponse
+     */
+    public function ajax_get_followers()
+    {
+        $this->_ajaxPreProcess();
+        $goal_id = $this->request->params['named']['goal_id'];
+        $page = $this->request->params['named']['page'];
+
+        // フォロワー一覧
+        $followers = $this->Goal->Follower->getFollowerByGoalId($goal_id, [
+            'limit'      => GOAL_PAGE_FOLLOWER_NUMBER,
+            'page'       => $page,
+            'with_group' => true,
+        ]);
+        $this->set('followers', $followers);
+
+        // HTML出力
+        $response = $this->render('Goal/followers');
+        $html = $response->__toString();
+        return $this->_ajaxGetResponse(['html'          => $html,
+                                        'count'         => count($followers),
+                                        'page_item_num' => GOAL_PAGE_FOLLOWER_NUMBER,
+                                       ]);
+    }
+
     public function edit_action()
     {
         $ar_id = $this->request->params['named']['action_result_id'];
@@ -1111,6 +1139,11 @@ class GoalsController extends AppController
         return $res;
     }
 
+    /**
+     * フォロワー一覧
+     *
+     * @return CakeResponse
+     */
     function view_followers()
     {
         $goal_id = $this->_getRequiredParam('goal_id');
@@ -1118,6 +1151,11 @@ class GoalsController extends AppController
             // ゴールが存在しない
             throw new NotFoundException();
         }
+        $followers = $this->Goal->Follower->getFollowerByGoalId($goal_id, [
+            'limit'      => GOAL_PAGE_FOLLOWER_NUMBER,
+            'with_group' => true,
+        ]);
+        $this->set('followers', $followers);
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
@@ -1140,6 +1178,41 @@ class GoalsController extends AppController
             // ゴールが存在しない
             throw new NotFoundException();
         }
+        $this->layout = LAYOUT_ONE_COLUMN;
+        return $this->render();
+    }
+
+    function view_actions()
+    {
+        $goal_id = $this->_getRequiredParam('goal_id');
+        if (!$this->_setGoalPageHeaderInfo($goal_id)) {
+            // ゴールが存在しない
+            throw new NotFoundException();
+        }
+        $page_type = $this->_getRequiredParam('page_type');
+        $goal_id = viaIsSet($this->request->params['named']['goal_id']);
+        if (!in_array($page_type, ['list', 'image'])) {
+            $this->Pnotify->outError(__d('gl', "不正な画面遷移です。"));
+            $this->redirect($this->referer());
+        }
+        $params = [
+            'type'    => Post::TYPE_ACTION,
+            'goal_id' => $goal_id,
+        ];
+        $posts = [];
+        switch ($page_type) {
+            case 'list':
+                $posts = $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null, $params);
+                break;
+            case 'image':
+                $posts = $this->Post->get(1, MY_PAGE_CUBE_ACTION_IMG_NUMBER, null, null, $params);
+                break;
+        }
+        $this->set(compact('posts'));
+        $this->layout = LAYOUT_ONE_COLUMN;
+        $this->set('long_text', false);
+        $this->set(compact('goal_id'));
+
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }

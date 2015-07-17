@@ -850,22 +850,6 @@ class PostsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
-    function testAjaxGetUserPagePostFeedInvalidParam()
-    {
-        $this->_getPostsCommonMock();
-        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-
-        $catch = false;
-        try {
-            $this->testAction('/posts/ajax_get_user_page_post_feed/', ['method' => 'GET']);
-        } catch (Exception $e) {
-            $catch = true;
-        }
-        $this->assertTrue($catch);
-
-        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
-    }
-
     /**
      * testDelete method
      *
