@@ -57,15 +57,9 @@ app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider', '$http
                 controller: 'TeamVisionDetailController',
                 resolve: {
                     teamVisionDetail: ['$stateParams', '$http', function ($stateParams, $http) {
-
-                        var active_flg = 0;
-                        if ($stateParams.active_flg === 'true') {
-                            active_flg = 1;
-                        }
-
                         var request = {
                             method: 'GET',
-                            url: cake.url.ac + $stateParams.team_vision_id + '/' + active_flg
+                            url: cake.url.ac + $stateParams.team_vision_id + '/' + $stateParams.active_flg
                         };
                         return $http(request).then(function (response) {
                             return response.data;
@@ -174,6 +168,15 @@ app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider', '$http
                 url: "/group_vision_archive/:team_id/:active_flg",
                 templateUrl: "/template/group_vision_list.html",
                 resolve: {
+                    LoginUserGroupId: ['$http', '$rootScope', function ($http, $rootScope) {
+                        var request = {
+                            method: 'GET',
+                            url: cake.url.ab + $rootScope.team_id + '/' + $rootScope.login_user_id
+                        };
+                        return $http(request).then(function (response) {
+                            return response.data;
+                        });
+                    }],
                     GroupVisionArchiveList: ['$stateParams', '$http', function ($stateParams, $http) {
                         var request = {
                             method: 'GET',
@@ -223,20 +226,38 @@ app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider', '$http
                 controller: 'GroupVisionDetailController',
                 resolve: {
                     groupVisionDetail: ['$stateParams', '$http', function ($stateParams, $http) {
-
-                        var active_flg = 0;
-                        if ($stateParams.active_flg === 'true') {
-                            active_flg = 1;
-                        }
-
                         var request = {
                             method: 'GET',
-                            url: cake.url.ad + $stateParams.group_vision_id + '/' + active_flg
+                            url: cake.url.ad + $stateParams.group_vision_id + '/' + $stateParams.active_flg
+                        };
+                        return $http(request).then(function (response) {
+                            var vision_detail = response.data;
+
+                            var request2 = {method: 'GET', url: cake.url.ae};
+                            if (vision_detail.GroupVision.modify_user_id !== '') {
+                                request2.url += vision_detail.GroupVision.modify_user_id
+                            } else {
+                                request2.url += vision_detail.GroupVision.create_user_id
+                            }
+
+                            $http(request2).then(function (response) {
+                                vision_detail.GroupVision.user_name = response.data.User.roman_username;
+                                if (response.data.User.local_username !== null) {
+                                    vision_detail.GroupVision.user_name = response.data.User.local_username;
+                                }
+                            });
+
+                            return vision_detail;
+                        });
+                    }],
+                    LoginUserGroupId: ['$http', '$rootScope', function ($http, $rootScope) {
+                        var request = {
+                            method: 'GET',
+                            url: cake.url.ab + $rootScope.team_id + '/' + $rootScope.login_user_id
                         };
                         return $http(request).then(function (response) {
                             return response.data;
                         });
-
                     }]
                 }
             });

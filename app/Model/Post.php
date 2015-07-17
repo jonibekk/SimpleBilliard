@@ -53,6 +53,7 @@ class Post extends AppModel
     const SHARE_CIRCLE = 4;
 
     public $orgParams = [
+        'author_id'   => null,
         'circle_id'   => null,
         'user_id'     => null,
         'post_id'     => null,
@@ -374,7 +375,6 @@ class Post extends AppModel
                 }
             }
         }
-
         //独自パラメータ指定なし
         if (!$org_param_exists) {
             //自分の投稿
@@ -426,7 +426,15 @@ class Post extends AppModel
             elseif ($this->orgParams['goal_id']) {
                 //アクションのみの場合
                 if ($this->orgParams['type'] == self::TYPE_ACTION) {
-                    $p_list = $this->getGoalPostList($this->orgParams['goal_id'], self::TYPE_ACTION);
+                    $p_list = $this->getGoalPostList($this->orgParams['goal_id'], self::TYPE_ACTION, "modified", "desc",
+                                                     $start, $end);
+                }
+            }
+            //投稿主指定
+            elseif ($this->orgParams['author_id']) {
+                //アクションのみの場合
+                if ($this->orgParams['type'] == self::TYPE_ACTION) {
+                    $p_list = $this->getGoalPostList(null, self::TYPE_ACTION, "modified", "desc", $start, $end);
                 }
             }
             //ゴールのみの場合
@@ -633,19 +641,24 @@ class Post extends AppModel
         return $res;
     }
 
-    public function getGoalPostList($goal_id, $type = self::TYPE_ACTION, $order = "modified", $order_direction = "desc")
+    public function getGoalPostList($goal_id = null, $type = self::TYPE_ACTION, $order = "modified", $order_direction = "desc", $start = null, $end = null)
     {
         $options = [
             'conditions' => [
-                'goal_id' => $goal_id,
                 'type'    => $type,
                 'team_id' => $this->current_team_id,
             ],
             'order'      => [$order => $order_direction],
             'fields'     => ['id'],
         ];
-        if ($this->orgParams['user_id']) {
-            $options['conditions']['user_id'] = $this->orgParams['user_id'];
+        if ($start && $end) {
+            $options['conditions']['modified BETWEEN ? AND ?'] = [$start, $end];
+        }
+        if ($goal_id) {
+            $options['conditions']['goal_id'] = $goal_id;
+        }
+        if ($this->orgParams['author_id']) {
+            $options['conditions']['user_id'] = $this->orgParams['author_id'];
         }
         $res = $this->find('list', $options);
         return $res;
