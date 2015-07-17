@@ -18,7 +18,7 @@
 <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default">
         <?= $this->element('simplex_top_section') ?>
-        <div class="panel-body">
+        <div class="panel-body view-goals-panel">
             <div class="btn-group" role="group">
                 <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user['User']['id']]) ?>"
                    class="btn <?= $page_type == "following" ? "btn-default" : "btn-primary" ?>">

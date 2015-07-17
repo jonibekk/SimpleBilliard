@@ -16,7 +16,7 @@
 <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default">
         <?= $this->element('simplex_top_section') ?>
-        <div class="panel-body">
+        <div class="panel-body view-actions-panel">
             <div class="form-group">
                 <div class="input-group">
                     <span class="input-group-addon" id=""><i class="fa fa-flag"></i></span>
@@ -36,7 +36,7 @@
                 </div>
             </div>
         </div>
-        <div class="panel-body">
+        <div class="panel-body view-actions-panel">
             <div class="pull-right">
                 <ul class="list-inline">
                     <li>
@@ -54,14 +54,14 @@
                 </ul>
             </div>
         </div>
-        <div class="panel-body" id="UserPageContents">
+        <div class="panel-body view-actions-panel" id="UserPageContents">
             <?php if ($this->request->params['named']['page_type'] == "list"): ?>
                 <?= $this->element("Feed/posts") ?>
             <?php elseif ($this->request->params['named']['page_type'] == "image"): ?>
                 <?= $this->element('cube_img_blocks') ?>
             <?php endif; ?>
         </div>
-        <div class="panel-body">
+        <div class="panel-body view-actions-panel">
             <?php if (empty($posts)): ?>
                 <div class="panel panel-default">
                     <div class="panel-body ptb_10px plr_11px ">
