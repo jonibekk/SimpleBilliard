@@ -14,13 +14,13 @@
         <?= $this->element('Goal/simplex_top_section') ?>
         <div class="panel-body">
             <span class="font_bold"><?= h($goal['Goal']['name']) ?></span><br>
-            目的：  <?= $goal['Purpose']['name'] ?><br>
-            カテゴリー： <?= h($goal['GoalCategory']['name']) ?><br>
+            <?= __d('gl', '目的') ?>：  <?= $goal['Purpose']['name'] ?><br>
+            <?= __d('gl', 'カテゴリー') ?>： <?= h($goal['GoalCategory']['name']) ?><br>
             <?= h(round($goal['Goal']['target_value'], 1)) ?> [<?= h(KeyResult::$UNIT[$goal['Goal']['value_unit']]) ?>]
             (← <?= h(round($goal['Goal']['start_value'], 1)) ?>)<br>
             <?= $this->Time->format('Y/m/d', $goal['Goal']['end_date']) ?>
             <br>
-            Members<br>
+            <?= __d('gl', 'メンバー') ?><br>
             <?php
             $member_all = array_merge($goal['Leader'], $goal['Collaborator']);
             $member_view_num = 5;
@@ -52,7 +52,7 @@
             <?php endif ?>
 
             <br>
-            Description<br>
+            <?= __d('gl', '詳細') ?><br>
             <?= h($goal['Goal']['description']) ?>
         </div>
     </div>
