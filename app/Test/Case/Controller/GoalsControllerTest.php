@@ -793,7 +793,7 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/goals/ajax_get_key_results/page:2/view:key_result/goal_id:1', ['method' => 'GET']);
+        $this->testAction('/goals/ajax_get_key_results/page:2/view:key_results/goal_id:1', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
