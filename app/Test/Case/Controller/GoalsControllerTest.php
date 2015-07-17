@@ -148,6 +148,18 @@ class GoalsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
+    function testAjaxGetFollowers() {
+        $this->_getGoalsCommonMock();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $res = $this->testAction('/goals/ajax_get_followers/goal_id:1/page:1', ['method' => 'GET']);
+        $data = json_decode($res, true);
+        $this->assertArrayHasKey('html', $data);
+        $this->assertArrayHasKey('count', $data);
+        $this->assertArrayHasKey('page_item_num', $data);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
     function testAjaxGetMembers() {
         $this->_getGoalsCommonMock();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
