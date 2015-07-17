@@ -773,6 +773,34 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
+    /**
+     * ゴールのフォロワー一覧を取得
+     *
+     * @return CakeResponse
+     */
+    public function ajax_get_followers()
+    {
+        $this->_ajaxPreProcess();
+        $goal_id = $this->request->params['named']['goal_id'];
+        $page = $this->request->params['named']['page'];
+
+        // フォロワー一覧
+        $followers = $this->Goal->Follower->getFollowerByGoalId($goal_id, [
+            'limit'      => GOAL_PAGE_FOLLOWER_NUMBER,
+            'page'       => $page,
+            'with_group' => true,
+        ]);
+        $this->set('followers', $followers);
+
+        // HTML出力
+        $response = $this->render('Goal/followers');
+        $html = $response->__toString();
+        return $this->_ajaxGetResponse(['html'          => $html,
+                                        'count'         => count($followers),
+                                        'page_item_num' => GOAL_PAGE_FOLLOWER_NUMBER,
+                                       ]);
+    }
+
     public function edit_action()
     {
         $ar_id = $this->request->params['named']['action_result_id'];
@@ -1088,6 +1116,11 @@ class GoalsController extends AppController
         return $res;
     }
 
+    /**
+     * フォロワー一覧
+     *
+     * @return CakeResponse
+     */
     function view_followers()
     {
         $goal_id = $this->_getRequiredParam('goal_id');
@@ -1095,6 +1128,11 @@ class GoalsController extends AppController
             // ゴールが存在しない
             throw new NotFoundException();
         }
+        $followers = $this->Goal->Follower->getFollowerByGoalId($goal_id, [
+            'limit'      => GOAL_PAGE_FOLLOWER_NUMBER,
+            'with_group' => true,
+        ]);
+        $this->set('followers', $followers);
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }

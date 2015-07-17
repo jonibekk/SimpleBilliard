@@ -42,6 +42,7 @@ class FollowerTest extends CakeTestCase
         'app.oauth_token',
         'app.team_member',
         'app.group',
+        'app.member_group',
         'app.job_category',
         'app.local_name',
         'app.invite',
@@ -90,6 +91,30 @@ class FollowerTest extends CakeTestCase
         $expected = [(int)1 => '1'];
         $actual = $this->Follower->getFollowerListByGoalId(1);
         $this->assertEquals($expected, $actual);
+    }
+
+    function testGetFollowerByGoalId()
+    {
+        $this->setDefault();
+
+        // 対象ゴールのフォロワー全員
+        $followers = $this->Follower->getFollowerByGoalId(2);
+        $this->assertNotEmpty($followers);
+
+        // limit 指定
+        $followers2 = $this->Follower->getFollowerByGoalId(2, ['limit' => 1]);
+        $this->assertCount(1, $followers2);
+
+        // limit + page 指定
+        $followers3 = $this->Follower->getFollowerByGoalId(2, ['limit' => 1, 'page' => 2]);
+        $this->assertCount(1, $followers3);
+        $this->assertNotEquals($followers2[0]['User']['id'], $followers3[0]['User']['id']);
+
+        // グループ情報付き
+        $followers = $this->Follower->getFollowerByGoalId(2);
+        $this->assertArrayNotHasKey('Group', $followers[0]);
+        $followers = $this->Follower->getFollowerByGoalId(2, ['with_group' => true]);
+        $this->assertArrayHasKey('Group', $followers[0]);
     }
 
     function setDefault()
