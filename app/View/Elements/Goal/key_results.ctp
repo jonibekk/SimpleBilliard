@@ -16,7 +16,11 @@
             </div>
 
             <div>
-                内容: <?= $kr['KeyResult']['name'] ?><br>
+                内容: <?= $this->Html->link($kr['KeyResult']['name'],
+                                          ['controller'    => 'goals',
+                                           'action'        => 'ajax_get_edit_key_result_modal',
+                                           'key_result_id' => $kr['KeyResult']['id']],
+                                          ['class' => 'modal-ajax-get-add-key-result']) ?><br>
                 期限: <?= $this->Time->format('Y/m/d', $kr['KeyResult']['end_date']) ?>
             </div>
         </div>
