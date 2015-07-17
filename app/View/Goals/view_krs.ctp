@@ -14,7 +14,7 @@
     <div class="panel panel-default">
         <?= $this->element('Goal/simplex_top_section') ?>
         <div class="panel-body">
-            ゴール進捗率: <?= h($goal['Goal']['progress']) ?>%
+            <?= __d('gl', 'ゴール進捗率') ?>: <?= h($goal['Goal']['progress']) ?>%
             <div class="progress mb_0px goals-column-progress-bar">
                 <div class="progress-bar progress-bar-info" role="progressbar"
                      aria-valuenow="<?= h($goal['Goal']['progress']) ?>" aria-valuemin="0"
@@ -22,7 +22,7 @@
                     <span class="ml_12px"><?= h($goal['Goal']['progress']) ?>%</span>
                 </div>
             </div>
-            出したい成果
+            <?= __d('gl', '出したい成果') ?>
             <div class="row borderBottom" id="GoalPageKeyResultContainer">
                 <?= $this->element('Goal/key_results') ?>
                 <?php if (!$key_results): ?>
