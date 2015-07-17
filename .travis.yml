@@ -48,8 +48,6 @@ before_script:
   - wget -O /home/travis/browscap.ini http://browscap.org/stream?q=LITE_PHP_BrowsCapINI
   - echo 'browscap = "/home/travis/browscap.ini"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - sudo service apache2 restart
-  - composer self-update
-  - export COMPOSER_PROCESS_TIMEOUT=10
   - composer install --prefer-dist --no-interaction --no-dev
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE cakephp_test;'; fi"
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE cakephp;'; fi"
