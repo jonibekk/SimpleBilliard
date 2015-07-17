@@ -39,7 +39,6 @@ Cache::config('default', array(
  *     'Vendor'                    => array('/path/to/vendors/', '/next/path/to/vendors/'),
  *     'Plugin'                    => array('/path/to/plugins/', '/next/path/to/plugins/'),
  * ));
-
  */
 
 /**
@@ -47,7 +46,6 @@ Cache::config('default', array(
  * string is passed to the inflection functions
  * Inflector::rules('singular', array('rules' => array(), 'irregular' => array(), 'uninflected' => array()));
  * Inflector::rules('plural', array('rules' => array(), 'irregular' => array(), 'uninflected' => array()));
-
  */
 
 /**
@@ -56,7 +54,6 @@ Cache::config('default', array(
  * advanced ways of loading plugins
  * CakePlugin::loadAll(); // Loads all plugins at once
  * CakePlugin::load('DebugKit'); //Loads a single plugin named DebugKit
-
  */
 
 /**
@@ -154,6 +151,10 @@ define('NOTIFY_PAGE_ITEMS_NUMBER', 50);
 define('POST_FEED_PAGE_ITEMS_NUMBER', 5);
 //ゴール一覧のアイテム数
 define('GOAL_INDEX_ITEMS_NUMBER', 20);
+//マイページのアクション数
+define('MY_PAGE_ACTION_NUMBER', 4);
+//キューブ表示のアイテム数
+define('MY_PAGE_CUBE_ACTION_IMG_NUMBER', 21);
 /**
  * 共通関数
  */
