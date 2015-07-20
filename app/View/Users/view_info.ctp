@@ -12,7 +12,7 @@
 <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default">
         <?= $this->element('simplex_top_section') ?>
-        <div class="panel-body">
+        <div class="panel-body view-info-panel">
             <div class="panel panel-default">
                 <div class="panel-heading" style="background-color:#eee; font-size:100%">
                     <?= __d('gl', "プロフィール") ?>

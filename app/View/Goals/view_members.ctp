@@ -5,7 +5,8 @@
  * Date: 7/9/15
  * Time: 3:33 PM
  *
- * @var CodeCompletionView $this
+ * @var $goal
+ * @var $members
  */
 ?>
 <!-- START app/View/Goals/view_members.ctp -->
@@ -13,7 +14,18 @@
     <div class="panel panel-default">
         <?= $this->element('Goal/simplex_top_section') ?>
         <div class="panel-body">
-            メンバー一覧ページ
+            <div class="row borderBottom" id="GoalPageMemberContainer">
+                <?= $this->element('Goal/members') ?>
+            </div>
+        </div>
+        <div class="panel-body panel-read-more-body">
+            <a href="#" class="btn btn-link click-goal-member-more"
+               next-page-num="2"
+               id="GoalPageMemberMoreLink"
+               list-container="#GoalPageMemberContainer"
+               goal-id="<?= h($goal['Goal']['id']) ?>"
+                >
+                <?= __d('gl', 'さらに読み込む') ?></a>
         </div>
     </div>
 </div>
