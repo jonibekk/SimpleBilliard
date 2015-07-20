@@ -231,6 +231,10 @@ $(document).ready(function () {
     $(document).on("click", '.modal-ajax-get-add-action', function (e) {
         e.preventDefault();
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        $modal_elm.on('hidden.bs.modal', function (e) {
+            $(this).remove();
+        });
+
         modalFormCommonBindEvent($modal_elm);
 
         var url = $(this).attr('href');
