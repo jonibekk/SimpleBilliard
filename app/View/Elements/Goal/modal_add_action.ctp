@@ -4,9 +4,8 @@
  * User: bigplants
  * Date: 6/6/14
  * Time: 3:19 PM
-
  *
-*@var CodeCompletionView $this
+ * @var CodeCompletionView $this
  * @var                    $goal_id
  * @var                    $goal
  * @var                    $kr_list
@@ -49,8 +48,8 @@
             'class'         => 'form-horizontal',
             'url'           => ['controller' => 'goals', 'action' => 'add_completed_action'],
             'novalidate'    => true,
-            'id'   => 'AddActionResultForm',
-            'type' => 'file',
+            'id'            => 'AddActionResultForm',
+            'type'          => 'file',
         ]); ?>
         <?= $this->Form->hidden('goal_id', ['value' => $goal_id]) ?>
         <div class="modal-body modal-circle-body">
@@ -68,11 +67,11 @@
                                 <?php for ($i = 1; $i <= 5; $i++): ?>
                                     <li id="WrapPhotoForm_Action_<?= $i ?>">
                                         <?= $this->element('Feed/photo_upload',
-                                                           ['type' => 'action_result', 'index' => $i, 'submit_id' => 'AddActionSubmitModal']) ?>
+                                                           ['type' => 'action_result', 'index' => $i, 'submit_id' => 'AddActionSubmitModal', 'id_prefix' => 'Modal']) ?>
                                     </li>
                                 <?php endfor ?>
                             </ul>
-                            <span class="help-block" id="ActionResult__Photo_ValidateMessage"></span>
+                            <span class="help-block" id="ModalActionResult__Photo_ValidateMessage"></span>
                         </div>
                     </div>
                 </div>

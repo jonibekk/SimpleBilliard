@@ -245,7 +245,7 @@ $(document).ready(function () {
                     fields: {
                         photo: {
                             // All the email address field have emailAddress class
-                            selector: '.ActionResult_input_field',
+                            selector: '.ModalActionResult_input_field',
                             validators: {
                                 callback: {
                                     callback: function (value, validator, $field) {
@@ -277,6 +277,10 @@ $(document).ready(function () {
             });
         }
     });
+    $('.ModalActionResult_input_field').on('change', function () {
+        $('#AddActionResultForm').bootstrapValidator('revalidateField', 'photo');
+    });
+
 
     $(document).on("click", '.modal-ajax-get-circle-edit', function (e) {
         e.preventDefault();
