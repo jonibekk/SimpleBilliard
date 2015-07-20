@@ -4,11 +4,13 @@
  * User: bigplants
  * Date: 6/6/14
  * Time: 3:19 PM
+
  *
- * @var CodeCompletionView $this
+*@var CodeCompletionView $this
  * @var                    $goal_id
  * @var                    $goal
  * @var                    $kr_list
+ * @var                    $kr_value_unit_list
  */
 ?>
 <!-- START app/View/Elements/Goal/modal_add_action.ctp -->
@@ -47,7 +49,8 @@
             'class'         => 'form-horizontal',
             'url'           => ['controller' => 'goals', 'action' => 'add_completed_action'],
             'novalidate'    => true,
-            'id'            => 'AddGoalFormKeyResult',
+            'id'   => 'AddActionResultForm',
+            'type' => 'file',
         ]); ?>
         <?= $this->Form->hidden('goal_id', ['value' => $goal_id]) ?>
         <div class="modal-body modal-circle-body">
