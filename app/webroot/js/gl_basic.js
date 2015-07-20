@@ -353,6 +353,7 @@ $(document).ready(function () {
     $(document).on("submit", "form.ajax-edit-circle-admin-status", evAjaxEditCircleAdminStatus);
     $(document).on("submit", "form.ajax-leave-circle", evAjaxLeaveCircle);
     $(document).on("click", ".click-goal-follower-more", evAjaxGoalFollowerMore);
+    $(document).on("click", ".click-goal-member-more", evAjaxGoalMemberMore);
 
 
     //noinspection JSJQueryEfficiency
@@ -1901,9 +1902,41 @@ function evFeedMoreView(options) {
 // ゴールのフォロワー一覧を取得
 function evAjaxGoalFollowerMore() {
     var $obj = $(this);
-    var goal_id = $obj.attr('goal-id');
+    $obj.attr('ajax-url', cake.url.goal_followers + '/goal_id:' + $obj.attr('goal-id'));
+    return evBasicReadMore.call(this);
+}
+
+// ゴールのメンバー一覧を取得
+function evAjaxGoalMemberMore() {
+    var $obj = $(this);
+    $obj.attr('ajax-url', cake.url.goal_members + '/goal_id:' + $obj.attr('goal-id'));
+    return evBasicReadMore.call(this);
+}
+
+/**
+ * オートローダー シンプル版
+ *
+ * オプション
+ *   ajax_url: Ajax呼び出しURL
+ *   next-page-num: 次に読み込むページ数
+ *   list-container: Ajaxで読み込んだHTMLを挿入するコンテナのセレクタ
+ *
+ * 使用例
+ *   <a href="#"
+ *      ajax-url="{Ajax呼び出しURL}"
+ *      next-page-num="2"
+ *      list-container="#listContainerID">さらに読み込む</a>
+ *
+ * @returns {boolean}
+ */
+function evBasicReadMore() {
+    var $obj = $(this);
+    var ajax_url = $obj.attr('ajax-url');
     var next_page_num = $obj.attr('next-page-num');
     var $list_container = $($obj.attr('list-container'));
+
+    // 次ページのURL
+    ajax_url += '/page:' + next_page_num;
 
     // さらに読み込むリンク無効化
     $obj.attr('disabled', 'disabled');
@@ -1912,20 +1945,17 @@ function evAjaxGoalFollowerMore() {
     var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
     $obj.after($loader_html);
 
-    // ajax URL
-    var url = cake.url.goal_followers + '/goal_id:' + goal_id + '/page:' + next_page_num;
-
     $.ajax({
         type: 'GET',
-        url: url,
+        url: ajax_url,
         async: true,
         dataType: 'json',
         success: function (data) {
             if (!$.isEmptyObject(data.html)) {
-                var $followers = $(data.html);
-                $followers.hide();
-                $list_container.append($followers);
-                $followers.show("slow");
+                var $content = $(data.html);
+                $content.hide();
+                $list_container.append($content);
+                $content.show("slow");
 
                 // ページ番号インクリメント
                 next_page_num++;
@@ -2822,6 +2852,7 @@ $(document).ready(function () {
                 autoload_more = true;
                 $('#FeedMoreReadLink').trigger('click');
                 $('#GoalPageFollowerMoreLink').trigger('click');
+                $('#GoalPageMemberMoreLink').trigger('click');
             }
         }
     });

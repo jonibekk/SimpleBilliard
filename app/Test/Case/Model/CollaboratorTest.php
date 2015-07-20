@@ -329,6 +329,27 @@ class CollaboratorTest extends CakeTestCase
         $this->assertNotEmpty($actual);
     }
 
+    function testGetCollaboratorByGoalId()
+    {
+        $this->Collaborator->my_uid = 1;
+        $this->Collaborator->current_team_id = 1;
+
+        $goal_id = 1;
+
+        // ゴールに紐づくコラボレーター全て
+        $res = $this->Collaborator->getCollaboratorByGoalId($goal_id);
+        $this->assertNotEmpty($res);
+
+        // limit 指定
+        $res2 = $this->Collaborator->getCollaboratorByGoalId($goal_id, ['limit' => 1]);
+        $this->assertCount(1, $res2);
+
+        // limit + page 指定
+        $res3 = $this->Collaborator->getCollaboratorByGoalId($goal_id, ['limit' => 1, 'page' => 2]);
+        $this->assertCount(1, $res3);
+        $this->assertNotEquals($res2[0]['User']['id'], $res3[0]['User']['id']);
+    }
+
     function testGetCollaboratorOwnerTypeTrue()
     {
         $team_id = 1;

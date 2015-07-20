@@ -157,6 +157,8 @@ define('MY_PAGE_ACTION_NUMBER', 4);
 define('MY_PAGE_CUBE_ACTION_IMG_NUMBER', 21);
 //ゴールページのフォロワー数
 define('GOAL_PAGE_FOLLOWER_NUMBER', 10);
+//ゴールページのメンバー数
+define('GOAL_PAGE_MEMBER_NUMBER', 10);
 /**
  * 共通関数
  */
