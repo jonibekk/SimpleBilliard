@@ -237,6 +237,7 @@ $(document).ready(function () {
         $modal_elm.on('shown.bs.modal', function (e) {
             $addActionResultForm = $(this).find('#AddActionResultForm');
             $addActionResultForm.bootstrapValidator({
+                excluded: [':hidden'],
                 live: 'enabled',
                 feedbackIcons: {},
                 fields: {
@@ -288,6 +289,37 @@ $(document).ready(function () {
                     });
                 });
                 $modal_elm.modal();
+                $modal_elm.find('#select2ActionCircleMember').select2({
+                    multiple: true,
+                    placeholder: cake.word.select_notify_range,
+                    minimumInputLength: 2,
+                    ajax: {
+                        url: cake.url.select2_circle_user,
+                        dataType: 'json',
+                        quietMillis: 100,
+                        cache: true,
+                        data: function (term, page) {
+                            return {
+                                term: term, //search term
+                                page_limit: 10, // page size
+                                circle_type: 'all'
+                            };
+                        },
+                        results: function (data, page) {
+                            return {results: data.results};
+                        }
+                    },
+                    data: [],
+                    initSelection: cake.data.l,
+                    formatSelection: format,
+                    formatResult: format,
+                    dropdownCssClass: 's2-post-dropdown',
+                    escapeMarkup: function (m) {
+                        return m;
+                    },
+                    containerCssClass: "select2Member"
+                });
+
 
             }).success(function () {
                 $('body').addClass('modal-open');

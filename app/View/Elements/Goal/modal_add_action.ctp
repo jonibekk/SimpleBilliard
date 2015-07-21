@@ -46,7 +46,8 @@
             <div class="row">
                 <div class="form-group required">
                     <div class="set-goal">
-                        <h5 class="modal-key-result-headings"><?= __d('gl', '画像') ?>&nbsp;<i class="fa font_brownRed font_14px">*</i>
+                        <h5 class="modal-key-result-headings"><?= __d('gl', '画像') ?>&nbsp;<i
+                                class="fa font_brownRed font_14px">*</i>
                             <span class="modal-key-result-headings-description"><?= __d('gl',
                                                                                         'アクションの結果が分かる画像を追加しよう') ?></span>
                         </h5>
@@ -93,6 +94,25 @@
                     'style'    => 'width:170px',
                     'options'  => $kr_list,
                 ]) ?>
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <div class="set-goal">
+                        <h5 class="modal-key-result-headings"><?= __d('gl', '通知先') ?>
+                            <span class="modal-key-result-headings-description">
+                                <?= __d('gl', '通知したいサークル、ユーザを選択') ?></span>
+                        </h5>
+                    </div>
+                    <div class="goal-set-input">
+                        <div class="bbb" id="">
+                            <?=
+                            $this->Form->hidden('ActionResult.share',
+                                                ['id' => 'select2ActionCircleMember', 'value' => "", 'style' => "width: 100%",]) ?>
+                            <?php $this->Form->unlockField('ActionResult.share') ?>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="modal-footer">
