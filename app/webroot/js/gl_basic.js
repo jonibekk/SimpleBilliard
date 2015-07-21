@@ -228,6 +228,89 @@ $(document).ready(function () {
     $(document).on("click", '.modal-ajax-get-collabo', getModalFormFromUrl);
     //noinspection JSUnresolvedVariable
     $(document).on("click", '.modal-ajax-get-add-key-result', getModalFormFromUrl);
+    $(document).on("click", '.modal-ajax-get-add-action', function (e) {
+        e.preventDefault();
+        var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        $modal_elm.on('hidden.bs.modal', function (e) {
+            $(this).remove();
+        });
+        $modal_elm.on('shown.bs.modal', function (e) {
+            $addActionResultForm = $(this).find('#AddActionResultForm');
+            $addActionResultForm.bootstrapValidator({
+                excluded: [':hidden'],
+                live: 'enabled',
+                feedbackIcons: {},
+                fields: {
+                    "data[ActionResult][photo1]": {
+                        validators: {
+                            notEmpty: {
+                                message: cake.message.validate.g
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
+        modalFormCommonBindEvent($modal_elm);
+
+        var url = $(this).attr('href');
+        if (url.indexOf('#') == 0) {
+            $(url).modal('open');
+        } else {
+            $.get(url, function (data) {
+                $modal_elm.append(data);
+
+                //アップロード画像選択時にトリムして表示
+                $modal_elm.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
+                    $(this).children('.nailthumb-container').nailthumb({
+                        width: 50,
+                        height: 50,
+                        fitDirection: 'center center'
+                    });
+                });
+                $modal_elm.modal();
+                $modal_elm.find('#select2ActionCircleMember').select2({
+                    multiple: true,
+                    placeholder: cake.word.select_notify_range,
+                    minimumInputLength: 2,
+                    ajax: {
+                        url: cake.url.select2_circle_user,
+                        dataType: 'json',
+                        quietMillis: 100,
+                        cache: true,
+                        data: function (term, page) {
+                            return {
+                                term: term, //search term
+                                page_limit: 10, // page size
+                                circle_type: 'all'
+                            };
+                        },
+                        results: function (data, page) {
+                            return {results: data.results};
+                        }
+                    },
+                    data: [],
+                    initSelection: cake.data.l,
+                    formatSelection: format,
+                    formatResult: format,
+                    dropdownCssClass: 's2-post-dropdown',
+                    escapeMarkup: function (m) {
+                        return m;
+                    },
+                    containerCssClass: "select2Member"
+                });
+
+
+            }).success(function () {
+                $('body').addClass('modal-open');
+            });
+        }
+    });
+    $('.ModalActionResult_input_field').on('change', function () {
+        $('#AddActionResultForm').bootstrapValidator('revalidateField', 'photo');
+    });
+
     $(document).on("click", '.modal-ajax-get-circle-edit', function (e) {
         e.preventDefault();
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
@@ -2249,7 +2332,6 @@ function getModalFormFromUrl(e) {
         });
     }
 }
-
 $(document).ready(function () {
 
     var pusher = new Pusher(cake.pusher.key);

@@ -96,7 +96,7 @@ if (!isset($id_prefix)) {
                                         ['type'                     => 'file',
                                          'label'                    => false,
                                          'div'                      => false,
-                                         'class'                    => "{$field_prefix}_input_field",
+                                         'class'                    => "{$id_prefix}{$field_prefix}_input_field",
                                          'wrapInput'                => false,
                                          'errorMessage'             => false,
                                          'required'                 => false,

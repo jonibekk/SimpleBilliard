@@ -781,6 +781,25 @@ class GoalsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
+    function testAjaxGetAddActionModalSuccess()
+    {
+        $this->_getGoalsCommonMock();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/goals/ajax_get_add_action_modal/goal_id:' . 1, ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxGetAddActionModalFail()
+    {
+        $this->_getGoalsCommonMock();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/goals/ajax_get_add_action_modal/goal_id:' . 99999, ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+
     function testAjaxGetAddKeyResultModalSuccess()
     {
         $this->_getGoalsCommonMock();
