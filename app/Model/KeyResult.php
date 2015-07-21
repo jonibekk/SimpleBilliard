@@ -234,7 +234,7 @@ class KeyResult extends AppModel
      *
      * @param $goal_id
      *
-     * @return array|null
+     * @return int
      */
     function getIncompleteKrCount($goal_id)
     {

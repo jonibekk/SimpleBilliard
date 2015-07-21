@@ -1929,14 +1929,31 @@ function evAjaxGoalKeyResultMore() {
  *   next-page-num: 次に読み込むページ数
  *   list-container: Ajaxで読み込んだHTMLを挿入するコンテナのセレクタ
  *
+ * ajax_url のレスポンスJSON形式
+ *   {
+ *     html: string,         // 一覧(list-container)の末尾に挿入されるHTML
+ *     page_item_num: int,   // １ページ（１度の読み込み）で表示するアイテムの数
+ *     count: int,           // 実際に返されたアイテムの数
+ *   }
+ *
  * 使用例
- *   <a href="#"
- *      ajax-url="{Ajax呼び出しURL}"
- *      next-page-num="2"
- *      list-container="#listContainerID">さらに読み込む</a>
+ *   HTML:
+ *     <a href="#"
+ *        id="SampleReadMoreButtonID"
+ *        ajax-url="{Ajax呼び出しURL}"
+ *        next-page-num="2"
+ *        list-container="#listContainerID">さらに読み込む</a>
+ *
+ *   JavaScript:
+ *     $(document).on("click", "#SampleReadMoreButtonID", evAjaxSampleReadMore);
+ *     function evAjaxSampleReadMore() {
+ *         return evBasicReadMore.call(this);
+ *     }
  *
  * @returns {boolean}
  */
+
+
 function evBasicReadMore() {
     var $obj = $(this);
     var ajax_url = $obj.attr('ajax-url');

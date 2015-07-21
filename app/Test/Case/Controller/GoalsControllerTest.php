@@ -1286,6 +1286,15 @@ class GoalsControllerTest extends ControllerTestCase
         }
     }
 
+    function testViewInfoAsCollaborator()
+    {
+        $this->_getGoalsCommonMock();
+        try {
+            $this->testAction('/goals/view_info/goal_id:7');
+        } catch (NotFoundException $e) {
+        }
+    }
+
     var $current_date;
     var $start_date;
     var $end_date;
