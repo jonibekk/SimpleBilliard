@@ -77,18 +77,20 @@
 
 .profile-user-tab-group {
   width: 100%;
+  font-size: 0;
 }
 
 .profile-user-tabs {
-  width: 23%;
+  width: 25%;
   display: inline-block;
   text-align: center;
-  text-decoration: none;
+  padding: 8px 0 4px;
+  .no-underline;
   &:hover,
   &:target,
   &:active,
   &:focus {
-    text-decoration: none;
+    color: @basicPink;
   }
   color: @gray;
 }
@@ -115,22 +117,60 @@
   .profile-user-tabs;
 }
 
-.view-goals-panel {
+.profile-user-upper-panel {
+  padding: 10px 11px 0;
+}
+
+.profile-user-panels {
   background: #f6f5f1;
+  border-radius: 0 0 4px 4px;
+}
+
+.view-goals-panel {
+  .profile-user-panels;
 }
 
 .view-actions-panel {
-  background: #f6f5f1;
+  .profile-user-panels;
 }
 
 .view-posts-panel {
-  background: #f6f5f1;
+  .profile-user-panels;
 }
 
 .view-info-panel {
-  background: #f6f5f1;
+  .profile-user-panels;
 }
 
 .profile-user-tab-active {
   background: #f6f5f1;
+  color: @basicPink;
+}
+
+.profile-user-icons {
+  background: @white;
+}
+
+.profile-user-action-related-goal-icon {
+  font-size: @fontLarge;
+}
+
+.profile-user-action-view-switch {
+  margin: 0;
+  padding: 0 12px;
+  text-align: right;
+}
+.profile-user-action-view-switch-img {
+  display: inline-block;
+  font-size: @fontLarge;
+  margin: 0 8px 0 0;
+}
+
+.profile-user-action-view-switch-feed {
+  display: inline-block;
+  font-size: @fontLarge;
+}
+
+.profile-user-action-contents {
+  padding: 4px 11px 10px;
 }

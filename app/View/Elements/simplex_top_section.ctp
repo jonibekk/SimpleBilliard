@@ -13,7 +13,7 @@
  */
 ?>
 <!-- START app/View/Elements/simplex_top_section.ctp -->
-<div class="panel-body">
+<div class="panel-body profile-user-upper-panel">
     <div class="profile-user-avator-wrap">
         <?=
         $this->Html->image('ajax-loader.gif',
@@ -72,60 +72,60 @@
     <div class="profile-user-comments">
         <?= $this->TextEx->autoLink($user['TeamMember']['comment']) ?>
     </div>
-    <div class="profile-user-tab-group">
-        <a class="profile-user-goal-tab <?= $this->request->params['action'] == 'view_goals' ? "profile-user-tab-active" : null ?>"
-           href="<?= $this->Html->url(
-               [
-                   'controller' => 'users',
-                   'action'     => 'view_goals',
-                   'user_id'    => $user['User']['id'],
-               ]); ?>">
-            <i class="fa fa-flag profile-user-tab-icon"></i>
+</div>
+<div class="profile-user-tab-group">
+    <a class="profile-user-goal-tab <?= $this->request->params['action'] == 'view_goals' ? "profile-user-tab-active" : null ?>"
+       href="<?= $this->Html->url(
+           [
+               'controller' => 'users',
+               'action'     => 'view_goals',
+               'user_id'    => $user['User']['id'],
+           ]); ?>">
+        <i class="fa fa-flag profile-user-tab-icon"></i>
 
-            <p class="profile-user-tab-title">
-                <?= h(__d('gl', 'ゴール')) ?>
-            </p>
-        </a>
-        <a class="profile-user-action-tab <?= $this->request->params['action'] == 'view_actions' ? "profile-user-tab-active" : null ?>"
-           href="<?= $this->Html->url(
-               [
-                   'controller' => 'users',
-                   'action'     => 'view_actions',
-                   'user_id'    => $user['User']['id'],
-                   'page_type'  => 'image',
-               ]); ?>">
-            <i class="fa fa-check-circle profile-user-tab-icon"></i>
+        <p class="profile-user-tab-title">
+            <?= h(__d('gl', 'ゴール')) ?>
+        </p>
+    </a>
+    <a class="profile-user-action-tab <?= $this->request->params['action'] == 'view_actions' ? "profile-user-tab-active" : null ?>"
+       href="<?= $this->Html->url(
+           [
+               'controller' => 'users',
+               'action'     => 'view_actions',
+               'user_id'    => $user['User']['id'],
+               'page_type'  => 'image',
+           ]); ?>">
+        <i class="fa fa-check-circle profile-user-tab-icon"></i>
 
-            <p class="profile-user-tab-title">
-                <?= h(__d('gl', 'アクション')) ?>
-            </p>
-        </a>
-        <a class="profile-user-post-tab <?= $this->request->params['action'] == 'view_posts' ? "profile-user-tab-active" : null ?>"
-           href="<?= $this->Html->url(
-               [
-                   'controller' => 'users',
-                   'action'     => 'view_posts',
-                   'user_id'    => $user['User']['id'],
-               ]); ?>">
-            <i class="fa fa-comment-o profile-user-tab-icon"></i>
+        <p class="profile-user-tab-title">
+            <?= h(__d('gl', 'アクション')) ?>
+        </p>
+    </a>
+    <a class="profile-user-post-tab <?= $this->request->params['action'] == 'view_posts' ? "profile-user-tab-active" : null ?>"
+       href="<?= $this->Html->url(
+           [
+               'controller' => 'users',
+               'action'     => 'view_posts',
+               'user_id'    => $user['User']['id'],
+           ]); ?>">
+        <i class="fa fa-comment-o profile-user-tab-icon"></i>
 
-            <p class="profile-user-tab-title">
-                <?= h(__d('gl', '投稿')) ?>
-            </p>
-        </a>
-        <a class="profile-user-status-tab <?= $this->request->params['action'] == 'view_info' ? "profile-user-tab-active" : null ?>"
-           href="<?= $this->Html->url(
-               [
-                   'controller' => 'users',
-                   'action'     => 'view_info',
-                   'user_id'    => $user['User']['id'],
-               ]) ?>">
-            <i class="fa fa-user profile-user-tab-icon"></i>
+        <p class="profile-user-tab-title">
+            <?= h(__d('gl', '投稿')) ?>
+        </p>
+    </a>
+    <a class="profile-user-status-tab <?= $this->request->params['action'] == 'view_info' ? "profile-user-tab-active" : null ?>"
+       href="<?= $this->Html->url(
+           [
+               'controller' => 'users',
+               'action'     => 'view_info',
+               'user_id'    => $user['User']['id'],
+           ]) ?>">
+        <i class="fa fa-user profile-user-tab-icon"></i>
 
-            <p class="profile-user-tab-title">
-                <?= h(__d('gl', '基本データ')) ?>
-            </p>
-        </a>
-    </div>
+        <p class="profile-user-tab-title">
+            <?= h(__d('gl', '基本データ')) ?>
+        </p>
+    </a>
 </div>
 <!-- END app/View/Elements/simplex_top_section.ctp -->

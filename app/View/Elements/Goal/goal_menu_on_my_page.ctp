@@ -15,7 +15,7 @@
        class="pull-right bd-radius_4px font_lightGray-gray"
        data-toggle="dropdown"
        id="download">
-        <i class="fa fa-cog goals-column-function-icon"></i>
+        <i class="fa fa-ellipsis-h goals-column-function-icon"></i>
     </a>
     <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
         aria-labelledby="dropdownMenu1">

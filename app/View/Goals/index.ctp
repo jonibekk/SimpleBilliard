@@ -36,19 +36,18 @@
                 <?php foreach ($search_options['term'] as $key => $val): ?>
                     <?php if ($val == $search_option['term'][1]): ?>
                         <a href="<?= $this->Html->url(array_merge($search_url, ['term' => $key])) ?>"
-                           class="btn btn-default goal-search-elm selected" role="button"><?= $val ?></a>
+                           class="goals-search-terms-tab selected" role="button"><?= $val ?></a>
                     <?php else: ?>
                         <a href="<?= $this->Html->url(array_merge($search_url, ['term' => $key])) ?>"
-                           class="btn btn-default goal-search-elm" role="button"><?= $val ?></a>
+                           class="goals-search-terms-tab" role="button"><?= $val ?></a>
                     <?php endif; ?>
                 <?php endforeach; ?>
             </div>
-            <div class="goal-filter-menu btn-group btn-group-justified" role="group">
-                <div class=" btn-group" role="group">
-                    <a href="#" class="btn btn-default goal-filter-elm dropdown-toggle" data-toggle="dropdown"
-                       role="button" aria-expanded="false">
-                        <span class="caret goal-menu-caret"></span>
-                        <span class="goal_type_name"><?= $search_option['category'][1] ?></span>
+            <div class="goals-filters-menu btn-group btn-group-justified" role="group">
+                <div class="goals-search-filters-category-wrap btn-group" role="group">
+                    <a href="#" class="goals-search-filters-category dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                        <i class="goals-search-filters-tab-caret fa fa-caret-down"></i>
+                        <span class="goals-search-filters-tab-text goal_type_name"><?= $search_option['category'][1] ?></span>
                     </a>
                     <ul class="dropdown-menu" role="menu">
                         <?php foreach ($search_options['category'] as $key => $val): ?>
@@ -58,11 +57,10 @@
                         <?php endforeach; ?>
                     </ul>
                 </div>
-                <div class="btn-group" role="group">
-                    <a href="#" class="btn btn-default goal-filter-elm dropdown-toggle" data-toggle="dropdown"
-                       role="button" aria-expanded="false">
-                        <span class="caret goal-menu-caret"></span>
-                        <span class="goal_type_name"><?= $search_option['progress'][1] ?></span>
+                <div class="goals-search-filters-category-wrap btn-group" role="group">
+                    <a href="#" class="goals-search-filters-completed dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                        <i class="goals-search-filters-tab-caret fa fa-caret-down"></i>
+                        <span class="goals-search-filters-tab-text goal_type_name"><?= $search_option['progress'][1] ?></span>
                     </a>
                     <ul class="dropdown-menu" role="menu">
                         <?php foreach ($search_options['progress'] as $key => $val): ?>
@@ -72,12 +70,10 @@
                         <?php endforeach; ?>
                     </ul>
                 </div>
-                <div class="btn-group " role="group">
-                    <a href="#" class="btn btn-default goal-filter-elm dropdown-toggle" data-toggle="dropdown"
-                       role="button" aria-expanded="false">
-                        <span class="caret goal-menu-caret"></span>
-                        <span class="goal_type_name"><?= $search_option['order'][1] ?></span>
-
+                <div class="goals-search-filters-order-wrap btn-group" role="group">
+                    <a href="#" class="goals-search-filters-order goal-filter-elm dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                        <i class="goals-search-filters-tab-caret fa fa-caret-down"></i>
+                        <span class="goals-search-filters-tab-text goal_type_name"><?= $search_option['order'][1] ?></span>
                     </a>
                     <ul class="dropdown-menu pull-right" role="menu">
                         <?php foreach ($search_options['order'] as $key => $val): ?>
@@ -88,28 +84,28 @@
                 </div>
             </div>
         </div>
-        <div class="goal-search-count">
-            <p><?= __d('gl', "対象ゴール") ?><span><?= $goal_count ?><?= __d('gl', "件") ?></span></p>
+        <p class="goals-search-count"><?= __d('gl', "対象ゴール") ?><span class="goals-search-count-number"><?= $goal_count ?></span><?= __d('gl', "件") ?></p>
+        <div class="goals-page-cards">
+            <?php if (empty($goals)): ?>
+                <div class="col col-xxs-12 mt_16px">
+                    <div class="alert alert-warning fade in" role="alert">
+                        <?= __d('gl', "対象ゴールがありません。") ?>
+                    </div>
+                </div>
+            <?php else: ?>
+                <?= $this->element('Goal/index_items') ?>
+                <? $more_read_url = array_merge($search_url, ['action' => 'ajax_get_more_index_items']) ?>
+                <?php if (count($goals) == GOAL_INDEX_ITEMS_NUMBER): ?>
+                    <div class="panel-body panel-read-more-body" id="GoalMoreView">
+                        <a id="FeedMoreReadLink" href="#" class="btn btn-link click-feed-read-more"
+                           parent-id="GoalMoreView"
+                           next-page-num="2"
+                           get-url="<?= $this->Html->url($more_read_url) ?>">
+                            <?= __d('gl', "もっと見る ▼") ?></a>
+                    </div>
+                <?php endif; ?>
+            <?php endif ?>
         </div>
-        <?php if (empty($goals)): ?>
-            <div class="col col-xxs-12 mt_16px">
-                <div class="alert alert-warning fade in" role="alert">
-                    <?= __d('gl', "対象ゴールがありません。") ?>
-                </div>
-            </div>
-        <?php else: ?>
-            <?= $this->element('Goal/index_items') ?>
-            <? $more_read_url = array_merge($search_url, ['action' => 'ajax_get_more_index_items']) ?>
-            <?php if (count($goals) == GOAL_INDEX_ITEMS_NUMBER): ?>
-                <div class="panel-body panel-read-more-body" id="GoalMoreView">
-                    <a id="FeedMoreReadLink" href="#" class="btn btn-link click-feed-read-more"
-                       parent-id="GoalMoreView"
-                       next-page-num="2"
-                       get-url="<?= $this->Html->url($more_read_url) ?>">
-                        <?= __d('gl', "もっと見る ▼") ?></a>
-                </div>
-            <?php endif; ?>
-        <?php endif ?>
     </div>
 </div>
 <!-- END app/View/Goals/index.ctp -->
