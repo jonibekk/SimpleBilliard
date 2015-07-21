@@ -109,6 +109,21 @@ class PostTest extends CakeTestCase
 
     }
 
+    public function testGetUserPost()
+    {
+        $this->_setDefault();
+
+        $res = $this->Post->get(1, 20, "2014-01-01", "2014-01-31",
+                                ['named' => ['user_id' => 103, 'type' => Post::TYPE_NORMAL]]);
+        
+        $this->assertNotEmpty($res);
+
+        $res = $this->Post->get(1, 20, "2014-01-01", "2014-01-31",
+                                ['named' => ['user_id' => 104, 'type' => Post::TYPE_NORMAL]]);
+        $this->assertEmpty($res);
+
+    }
+
     function testGetShareAllMemberList()
     {
         $this->_setDefault();
@@ -233,8 +248,16 @@ class PostTest extends CakeTestCase
 
     function testGetCount()
     {
-        $this->Post->getCount('me', 1, 1);
-        $this->Post->getCount(null, 1, 1);
+        $this->Post->current_team_id = 1;
+        $this->Post->my_uid = 101;
+
+        // 自分
+        $res = $this->Post->getCount('me', null, null);
+        $this->assertEquals(2, $res);
+
+        // ユーザID指定
+        $res = $this->Post->getCount(102, null, null);
+        $this->assertEquals(1, $res);
     }
 
     function testGetShareMode()

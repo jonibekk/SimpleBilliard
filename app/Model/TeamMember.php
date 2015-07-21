@@ -6,11 +6,11 @@ App::uses('View', 'View');
 /**
  * TeamMember Model
  *
- * @property User              $User
- * @property Team              $Team
- * @property MemberType        $MemberType
- * @property User              $CoachUser
- * @property JobCategory       $JobCategory
+ * @property User        $User
+ * @property Team        $Team
+ * @property MemberType  $MemberType
+ * @property User        $CoachUser
+ * @property JobCategory $JobCategory
  */
 class TeamMember extends AppModel
 {
@@ -392,7 +392,13 @@ class TeamMember extends AppModel
             if (isset($tm_obj['User']['display_username']) === true) {
                 $res[$key]['search_user_keyword'] .= $tm_obj['User']['display_username'];
             }
-
+            //ユーザのリンク
+            $url = Router::url([
+                                   'controller' => 'users',
+                                   'action'     => 'view_goals',
+                                   'user_id'    => $tm_obj['User']['id'],
+                               ]);
+            $res[$key]['User']['user_page_url'] = $url;
         }
         return $res;
     }
@@ -1352,6 +1358,32 @@ class TeamMember extends AppModel
                 'team_id'   => $team_id,
                 'member_no' => $member_no
             ],
+        ];
+        $res = $this->find('first', $options);
+        return $res;
+    }
+
+    /**
+     * $user_id をキーにしてチームメンバー情報を取得
+     *
+     * @param      $user_id
+     * @param null $team_id
+     *
+     * @return array|null
+     */
+    function getByUserId($user_id, $team_id = null)
+    {
+        if (!$team_id) {
+            $team_id = $this->current_team_id;
+        }
+        $options = [
+            'conditions' => [
+                'team_id' => $team_id,
+                'user_id' => $user_id,
+            ],
+            'contain'    => [
+                'User',
+            ]
         ];
         $res = $this->find('first', $options);
         return $res;

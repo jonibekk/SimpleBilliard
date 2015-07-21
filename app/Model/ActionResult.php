@@ -4,10 +4,10 @@ App::uses('AppModel', 'Model');
 /**
  * ActionResult Model
  *
- * @property Team         $Team
- * @property User         $User
- * @property Goal         $Goal
- * @property KeyResult    $KeyResult
+ * @property Team      $Team
+ * @property User      $User
+ * @property Goal      $Goal
+ * @property KeyResult $KeyResult
  */
 class ActionResult extends AppModel
 {
@@ -21,49 +21,54 @@ class ActionResult extends AppModel
     public $actsAs = [
         'Upload' => [
             'photo1' => [
-                'styles'  => [
+                'styles'      => [
                     'x_small' => '128l',
                     'small'   => '460l',
                     'large'   => '2048l',
                 ],
-                'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
-                'quality' => 100,
+                'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'quality'     => 100,
+                'default_url' => 'no-image.jpg',
             ],
             'photo2' => [
-                'styles'  => [
+                'styles'      => [
                     'x_small' => '128l',
                     'small'   => '460l',
                     'large'   => '2048l',
                 ],
-                'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
-                'quality' => 100,
+                'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'quality'     => 100,
+                'default_url' => 'no-image.jpg',
             ],
             'photo3' => [
-                'styles'  => [
+                'styles'      => [
                     'x_small' => '128l',
                     'small'   => '460l',
                     'large'   => '2048l',
                 ],
-                'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
-                'quality' => 100,
+                'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'quality'     => 100,
+                'default_url' => 'no-image.jpg',
             ],
             'photo4' => [
-                'styles'  => [
+                'styles'      => [
                     'x_small' => '128l',
                     'small'   => '460l',
                     'large'   => '2048l',
                 ],
-                'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
-                'quality' => 100,
+                'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'quality'     => 100,
+                'default_url' => 'no-image.jpg',
             ],
             'photo5' => [
-                'styles'  => [
+                'styles'      => [
                     'x_small' => '128l',
                     'small'   => '460l',
                     'large'   => '2048l',
                 ],
-                'path'    => ":webroot/upload/:model/:id/:hash_:style.:extension",
-                'quality' => 100,
+                'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'quality'     => 100,
+                'default_url' => 'no-image.jpg',
             ],
         ],
     ];
@@ -98,8 +103,8 @@ class ActionResult extends AppModel
                 'rule' => ['boolean'],
             ],
         ],
-        'name' => [
-            'isString' => ['rule' => 'isString','message'=>'Invalid Submission']
+        'name'    => [
+            'isString' => ['rule' => 'isString', 'message' => 'Invalid Submission']
         ]
     ];
 
@@ -135,27 +140,27 @@ class ActionResult extends AppModel
     /**
      * アクション数のカウントを返却
      *
-     * @param string $type
-     * @param null   $start_date
-     * @param null   $end_date
+     * @param mixed $user_id ユーザーIDもしくは'me'を指定する。
+     * @param null  $start_date
+     * @param null  $end_date
      *
      * @return int
      */
-    function getCount($type = 'me', $start_date = null, $end_date = null)
+    function getCount($user_id = 'me', $start_date = null, $end_date = null)
     {
         $options = [
             'conditions' => [
                 'team_id' => $this->current_team_id,
             ]
         ];
-        //タイプ別に条件変更する
-        switch ($type) {
-            case 'me':
-                $options['conditions']['user_id'] = $this->my_uid;
-                break;
-            default:
-                break;
+        // ユーザーIDに'me'が指定された場合は、自分のIDをセットする
+        if ($user_id == 'me') {
+            $options['conditions']['user_id'] = $this->my_uid;
         }
+        elseif (is_numeric($user_id)) {
+            $options['conditions']['user_id'] = $user_id;
+        }
+
         //期間で絞り込む
         if ($start_date) {
             $options['conditions']['modified >'] = $start_date;
@@ -163,6 +168,25 @@ class ActionResult extends AppModel
         if ($end_date) {
             $options['conditions']['modified <'] = $end_date;
         }
+        $res = $this->find('count', $options);
+        return $res;
+    }
+
+    /**
+     * ゴールに紐づくアクション数をカウント
+     *
+     * @param $goal_id
+     *
+     * @return array|null
+     */
+    function getCountByGoalId($goal_id)
+    {
+        $options = [
+            'conditions' => [
+                'goal_id' => $goal_id,
+                'team_id' => $this->current_team_id,
+            ]
+        ];
         $res = $this->find('count', $options);
         return $res;
     }

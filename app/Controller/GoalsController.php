@@ -260,6 +260,29 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
+    public function ajax_get_add_action_modal()
+    {
+        $goal_id = viaIsSet($this->request->params['named']['goal_id']);
+        $this->_ajaxPreProcess();
+        try {
+            if (!$this->Goal->Collaborator->isCollaborated($goal_id)) {
+                throw new RuntimeException();
+            }
+        } catch (RuntimeException $e) {
+            return $this->_ajaxGetResponse(null);
+        }
+        $goal = $this->Goal->getGoalMinimum($goal_id);
+        $kr_list = [null => '---'] + $this->Goal->KeyResult->getKeyResults($goal_id, 'list');
+        $kr_value_unit_list = KeyResult::$UNIT;
+
+        $this->set(compact('goal', 'goal_id', 'kr_list', 'kr_value_unit_list'));
+        //htmlレンダリング結果
+        $response = $this->render('Goal/modal_add_action');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
+    }
+
     public function ajax_get_add_key_result_modal()
     {
         $goal_id = viaIsSet($this->request->params['named']['goal_id']);
@@ -637,24 +660,56 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($return);
     }
 
+    /**
+     * ゴールに紐づくキーリザルト一覧を返す
+     *
+     * @param bool $kr_can_edit
+     *
+     * @return CakeResponse
+     */
     function ajax_get_key_results($kr_can_edit = false)
     {
-        $goal_id = $this->request->params['named']['goal_id'];
         $this->_ajaxPreProcess();
 
-        $key_results = $this->Goal->KeyResult->getKeyResults($goal_id);
-        $incomplete_kr_count = 0;
-        foreach ($key_results as $k => $v) {
-            if (empty($v['KeyResult']['completed'])) {
-                $incomplete_kr_count++;
-            }
+        $goal_id = $this->request->params['named']['goal_id'];
+
+        // テンプレを切り替える場合に指定する
+        $view = isset($this->request->params['named']['view']) ? $this->request->params['named']['view'] : null;
+
+        // ページ番号
+        // 指定しない場合は全件を返す
+        $page = 1;
+        $limit = null;
+        if (isset($this->request->params['named']['page'])) {
+            $page = $this->request->params['named']['page'];
+            $limit = GOAL_PAGE_KR_NUMBER;
         }
 
+        $key_results = $this->Goal->KeyResult->getKeyResults($goal_id, 'all', false, [
+            'page'  => $page,
+            'limit' => $limit,
+        ]);
+
+        // 未完了のキーリザルト数
+        $incomplete_kr_count = $this->Goal->KeyResult->getIncompleteKrCount($goal_id);
+
         $this->set(compact('key_results', 'incomplete_kr_count', 'kr_can_edit', 'goal_id'));
-        $response = $this->render('Goal/key_result_items');
+
+        $response = null;
+        switch ($view) {
+            case "key_results":
+                $response = $this->render('Goal/key_results');
+                break;
+            default:
+                $response = $this->render('Goal/key_result_items');
+                break;
+        }
+
         $html = $response->__toString();
         $result = array(
-            'html' => $html
+            'html'          => $html,
+            'count'         => count($key_results),
+            'page_item_num' => GOAL_PAGE_KR_NUMBER,
         );
         return $this->_ajaxGetResponse($result);
     }
@@ -751,6 +806,31 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($kr_list);
     }
 
+    /**
+     * ゴールのメンバー一覧を取得
+     *
+     * @return CakeResponse
+     */
+    public function ajax_get_members()
+    {
+        $this->_ajaxPreProcess();
+        $goal_id = $this->request->params['named']['goal_id'];
+        $page = $this->request->params['named']['page'];
+        // メンバー一覧
+        $members = $this->Goal->Collaborator->getCollaboratorByGoalId($goal_id, [
+            'limit' => GOAL_PAGE_MEMBER_NUMBER,
+            'page'  => $page,
+        ]);
+        $this->set('members', $members);
+        // HTML出力
+        $response = $this->render('Goal/members');
+        $html = $response->__toString();
+        return $this->_ajaxGetResponse(['html'          => $html,
+                                        'count'         => count($members),
+                                        'page_item_num' => GOAL_PAGE_MEMBER_NUMBER,
+                                       ]);
+    }
+
     public function ajax_get_edit_action_modal()
     {
         $ar_id = $this->request->params['named']['action_result_id'];
@@ -771,6 +851,34 @@ class GoalsController extends AppController
         $response = $this->render('Goal/modal_edit_action_result');
         $html = $response->__toString();
         return $this->_ajaxGetResponse($html);
+    }
+
+    /**
+     * ゴールのフォロワー一覧を取得
+     *
+     * @return CakeResponse
+     */
+    public function ajax_get_followers()
+    {
+        $this->_ajaxPreProcess();
+        $goal_id = $this->request->params['named']['goal_id'];
+        $page = $this->request->params['named']['page'];
+
+        // フォロワー一覧
+        $followers = $this->Goal->Follower->getFollowerByGoalId($goal_id, [
+            'limit'      => GOAL_PAGE_FOLLOWER_NUMBER,
+            'page'       => $page,
+            'with_group' => true,
+        ]);
+        $this->set('followers', $followers);
+
+        // HTML出力
+        $response = $this->render('Goal/followers');
+        $html = $response->__toString();
+        return $this->_ajaxGetResponse(['html'          => $html,
+                                        'count'         => count($followers),
+                                        'page_item_num' => GOAL_PAGE_FOLLOWER_NUMBER,
+                                       ]);
     }
 
     public function edit_action()
@@ -1088,23 +1196,104 @@ class GoalsController extends AppController
         return $res;
     }
 
+    /**
+     * フォロワー一覧
+     *
+     * @return CakeResponse
+     */
     function view_followers()
     {
         $goal_id = $this->_getRequiredParam('goal_id');
+        if (!$this->_setGoalPageHeaderInfo($goal_id)) {
+            // ゴールが存在しない
+            throw new NotFoundException();
+        }
+        $followers = $this->Goal->Follower->getFollowerByGoalId($goal_id, [
+            'limit'      => GOAL_PAGE_FOLLOWER_NUMBER,
+            'with_group' => true,
+        ]);
+        $this->set('followers', $followers);
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
 
+    /**
+     * メンバー一覧
+     *
+     * @return CakeResponse
+     */
     function view_members()
     {
         $goal_id = $this->_getRequiredParam('goal_id');
+        if (!$this->_setGoalPageHeaderInfo($goal_id)) {
+            // ゴールが存在しない
+            throw new NotFoundException();
+        }
+        $members = $this->Goal->Collaborator->getCollaboratorByGoalId($goal_id, [
+            'limit' => GOAL_PAGE_MEMBER_NUMBER,
+        ]);
+        $this->set('members', $members);
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
 
+    /**
+     * キーリザルト一覧
+     *
+     * @return CakeResponse
+     */
     function view_krs()
     {
         $goal_id = $this->_getRequiredParam('goal_id');
+        if (!$this->_setGoalPageHeaderInfo($goal_id)) {
+            // ゴールが存在しない
+            throw new NotFoundException();
+        }
+        $key_results = $this->Goal->KeyResult->getKeyResults($goal_id, 'all', false, [
+            'page'  => 1,
+            'limit' => GOAL_PAGE_KR_NUMBER,
+        ]);
+        $this->set('key_results', $key_results);
+
+        // 未完了のキーリザルト数
+        $incomplete_kr_count = $this->Goal->KeyResult->getIncompleteKrCount($goal_id);
+        $this->set('incomplete_kr_count', $incomplete_kr_count);
+
+        $this->layout = LAYOUT_ONE_COLUMN;
+        return $this->render();
+    }
+
+    function view_actions()
+    {
+        $goal_id = $this->_getRequiredParam('goal_id');
+        if (!$this->_setGoalPageHeaderInfo($goal_id)) {
+            // ゴールが存在しない
+            throw new NotFoundException();
+        }
+        $page_type = $this->_getRequiredParam('page_type');
+        $goal_id = viaIsSet($this->request->params['named']['goal_id']);
+        if (!in_array($page_type, ['list', 'image'])) {
+            $this->Pnotify->outError(__d('gl', "不正な画面遷移です。"));
+            $this->redirect($this->referer());
+        }
+        $params = [
+            'type'    => Post::TYPE_ACTION,
+            'goal_id' => $goal_id,
+        ];
+        $posts = [];
+        switch ($page_type) {
+            case 'list':
+                $posts = $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null, $params);
+                break;
+            case 'image':
+                $posts = $this->Post->get(1, MY_PAGE_CUBE_ACTION_IMG_NUMBER, null, null, $params);
+                break;
+        }
+        $this->set(compact('posts'));
+        $this->layout = LAYOUT_ONE_COLUMN;
+        $this->set('long_text', false);
+        $this->set(compact('goal_id'));
+
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
@@ -1112,7 +1301,63 @@ class GoalsController extends AppController
     function view_info()
     {
         $goal_id = $this->_getRequiredParam('goal_id');
+        if (!$this->_setGoalPageHeaderInfo($goal_id)) {
+            // ゴールが存在しない
+            throw new NotFoundException();
+        }
+
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
+    }
+
+    /**
+     * ゴールページの上部コンテンツの表示に必要なView変数をセット
+     *
+     * @param $goal_id
+     *
+     * @return bool
+     */
+    function _setGoalPageHeaderInfo($goal_id)
+    {
+        $goal = $this->Goal->getGoal($goal_id);
+        if (!isset($goal['Goal']['id'])) {
+            // ゴールが存在しない
+            return false;
+        }
+        $this->set('goal', $goal);
+
+        // アクション数
+        $action_count = $this->Goal->ActionResult->getCountByGoalId($goal_id);
+        $this->set('action_count', $action_count);
+
+        // メンバー数
+        $member_count = count($goal['Leader']) + count($goal['Collaborator']);
+        $this->set('member_count', $member_count);
+
+        // フォロワー数
+        $follower_count = count($goal['Follower']);
+        $this->set('follower_count', $follower_count);
+
+        // 閲覧者がゴールのリーダーかを判別
+        $is_leader = false;
+        foreach ($goal['Leader'] as $v) {
+            if ($this->Auth->user('id') == $v['User']['id']) {
+                $is_leader = true;
+                break;
+            }
+        }
+        $this->set('is_leader', $is_leader);
+
+        // 閲覧者がゴールのコラボレーターかを判別
+        $is_collaborator = false;
+        foreach ($goal['Collaborator'] as $v) {
+            if ($this->Auth->user('id') == $v['User']['id']) {
+                $is_collaborator = true;
+                break;
+            }
+        }
+        $this->set('is_collaborator', $is_collaborator);
+
+        return true;
     }
 }

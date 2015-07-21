@@ -21,6 +21,7 @@ junit.xml
 composer.lock
 # PhpStorm設定ファイルを除外
 # ただし、プロジェクト内で共通の設定を適用すべきファイルはバージョン管理対象にする
+/.idea/php.xml
 /.idea/workspace.xml
 /.idea/dataSources.ids
 /.idea/dataSources.xml
@@ -35,6 +36,8 @@ composer.lock
 npm-debug.log
 # for Grunt
 /app/webroot/dest
+# for bower
+/bower_components
 # Docs of CSS & JS
 /docs/docco
 /docs/styledocco

@@ -113,8 +113,28 @@ class KeyResultTest extends CakeTestCase
     function testGetKeyResults()
     {
         $this->setDefault();
-        $res = $this->KeyResult->getKeyResults(1);
-        $this->assertNotEmpty($res);
+
+        // 通常呼び出し
+        $krs = $this->KeyResult->getKeyResults(1);
+        $this->assertNotEmpty($krs);
+
+        $krs = $this->KeyResult->getKeyResults(1, 'all', true);
+        $this->assertNotEmpty($krs);
+
+        // limit 指定
+        $krs2 = $this->KeyResult->getKeyResults(1, 'all', false, [
+            'limit' => 1,
+        ]);
+        $this->assertCount(1, $krs2);
+
+        // limit + page 指定
+        $krs3 = $this->KeyResult->getKeyResults(1, 'all', false, [
+            'limit' => 1,
+            'page'  => 2
+        ]);
+        $this->assertCount(1, $krs3);
+        $this->assertNotEquals($krs2[0]['KeyResult']['id'], $krs3[0]['KeyResult']['id']);
+
     }
 
     function testIsPermitted()
@@ -214,6 +234,32 @@ class KeyResultTest extends CakeTestCase
         } catch (RuntimeException $e) {
         }
         $this->assertTrue(isset($e));
+    }
+
+    function testGetIncompleteKrCount()
+    {
+        $this->setDefault();
+        $goal_id = 1;
+
+        // 現在の未完了件数
+        $count1 = $this->KeyResult->getIncompleteKrCount($goal_id);
+
+        // １件完了済に更新する
+        $row = $this->KeyResult->find('first', [
+            'conditions' => [
+                'goal_id'   => $goal_id,
+                'completed' => null,
+            ],
+        ]);
+        $this->assertNotEmpty($row);
+        $this->KeyResult->id = $row['KeyResult']['id'];
+        $this->KeyResult->read();
+        $res = $this->KeyResult->save(['completed' => 1111111], false);
+        $this->assertNotEmpty($res);
+
+        // 数が合うか確認
+        $count2 = $this->KeyResult->getIncompleteKrCount($goal_id);
+        $this->assertEquals($count1 - 1, $count2);
     }
 
     function setDefault()

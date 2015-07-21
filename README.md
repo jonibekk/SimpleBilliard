@@ -90,3 +90,9 @@ GoalousはIsao発の「チーム力向上のスパイラルを生み出す」目
 
 ## Developers
 [Goalous Developers](https://github.com/orgs/IsaoCorp/teams/goalous_developers)
+
+## browse-syncを使うためのコマンド
+
+```
+vagrant up && browser-sync start --proxy "192.168.50.4" --files "app/webroot/css/*.css, app/webroot/js/*.js, app/View/**/*ctp, app/webroot/template/*.html"
+ ```

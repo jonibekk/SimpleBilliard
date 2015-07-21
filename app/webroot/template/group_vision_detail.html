@@ -2,10 +2,36 @@
 
     <div class="vision_detail_block">
         <div class="">Group Vision</div>
+        <div ng-show="detail.showSettingBox">
+            <div class="pull-right header-function dropdown">
+                <button class="btn team_member_setting_btn dropdown-toggle" type="button"
+                        id="dropdownMenu1"
+                        data-toggle="dropdown" aria-expanded="true">
+                    <i class="fa fa-cog header-function-icon"
+                       style="color: rgb(80, 80, 80); opacity: 0.88;"></i>
+                </button>
+
+                <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
+                    aria-labelledby="dropdownMenu1">
+                    <li role="presentation">
+                        <a role="menuitem" tabindex="-1"
+                           ng-if="archive_flag === false"
+                           ui-sref="set_group_vision_archive({group_vision_id:detail.id, active_flg:0})">アーカイブ</a>
+                        <a role="menuitem" tabindex="-1"
+                           ng-if="archive_flag === false"
+                           ng-href="/teams/edit_group_vision/group_vision_id:{{detail.id}}">編集</a>
+                        <a role="menuitem" tabindex="-1"
+                           ng-if="archive_flag === true"
+                           ng-click="viewDeleteModal(detail.id, detail.name)">削除</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
         <div class="vision_detail_title">{{detail.name}}</div>
-        <div class="vision_detail_date" >
+        <div class="vision_detail_date">
             <i class="fa fa-sitemap"></i> {{detail.group_name}} <br>
-            <span ng-bind-html="detail.modified"></span>
+            <i class="fa fa-user"></i> {{detail.user_name}} <br>
+            <i class="fa  fa-clock-o"></i> <span ng-bind-html="detail.modified"></span> <br>
         </div>
     </div>
 

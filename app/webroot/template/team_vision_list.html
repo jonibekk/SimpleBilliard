@@ -16,12 +16,12 @@
     </tr>
     <tr ng-repeat="item in teamVisionList">
         <td class="pointer" width="20%"
-            ui-sref="vision_detail({team_vision_id:item.TeamVision.id, active_flg:item.TeamVision.active_flg})">
+            ui-sref="vision_detail({team_vision_id:item.TeamVision.id, active_flg:item.TeamVision.active_flg === true ? 1 : 0})">
             <img width="64px" ng-src="{{item.TeamVision.photo_path}}"/>
         </td>
 
         <td class="pointer"
-            ui-sref="vision_detail({team_vision_id:item.TeamVision.id, active_flg:item.TeamVision.active_flg})">
+            ui-sref="vision_detail({team_vision_id:item.TeamVision.id, active_flg:item.TeamVision.active_flg === true ? 1 : 0})">
             <div class="row">
                 <div class="col-xs-11">
                     <p class="vision_title">{{item.TeamVision.name}}</p>
@@ -34,7 +34,7 @@
             </div>
         </td>
 
-        <td ng-if="login_user_admin_flg === true && archive_flag === false">
+        <td ng-if="login_user_admin_flg === true">
             <div class="pull-right header-function dropdown">
                 <button class="btn team_member_setting_btn dropdown-toggle" type="button"
                         id="dropdownMenu1"
@@ -47,10 +47,13 @@
                     aria-labelledby="dropdownMenu1">
                     <li role="presentation">
                         <a role="menuitem" tabindex="-1"
+                           ng-if="archive_flag === false"
                            ui-sref="set_vision_archive({team_vision_id:item.TeamVision.id, active_flg:0})">アーカイブ</a>
                         <a role="menuitem" tabindex="-1"
+                           ng-if="archive_flag === false"
                            ng-href="/teams/edit_team_vision/team_vision_id:{{item.TeamVision.id}}">編集</a>
                         <a role="menuitem" tabindex="-1"
+                           ng-if="archive_flag === true"
                            ng-click="viewDeleteModal(item.TeamVision.id, item.TeamVision.name)">削除</a>
                     </li>
                 </ul>

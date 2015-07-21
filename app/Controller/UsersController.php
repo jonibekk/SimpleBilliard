@@ -1,5 +1,6 @@
 <?php
 App::uses('AppController', 'Controller');
+App::uses('Post', 'Model');
 
 /**
  * Users Controller
@@ -993,6 +994,13 @@ class UsersController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
+    public function ajax_get_user_detail ($user_id)
+    {
+        $this->_ajaxPreProcess();
+        $user_detail = $this->User->getDetail($user_id);
+        return $this->_ajaxGetResponse($user_detail);
+    }
+
     public function ajax_get_select2_circle_user_all()
     {
         $result = $this->User->getAllUsersCirclesSelect2();
@@ -1003,13 +1011,56 @@ class UsersController extends AppController
     function view_goals()
     {
         $user_id = $this->_getRequiredParam('user_id');
+        $this->_setUserPageHeaderInfo($user_id);
         $this->layout = LAYOUT_ONE_COLUMN;
+        $page_type = viaIsSet($this->request->params['named']['page_type']);
+
+        $my_goals_count = $this->Goal->getMyGoals(null, 1, 'count', $user_id);
+        $collabo_goals_count = $this->Goal->getMyCollaboGoals(null, 1, 'count', $user_id);
+        $my_goals_count += $collabo_goals_count;
+        $follow_goals_count = $this->Goal->getMyFollowedGoals(null, 1, 'count', $user_id);
+
+        if ($page_type == "following") {
+            $goals = $this->Goal->getMyFollowedGoals(null, 1, 'all', $user_id);
+        }
+        else {
+            $goals = $this->Goal->getGoalsWithAction($user_id);
+        }
+
+        $is_mine = $user_id == $this->Auth->user('id') ? true : false;
+        $display_action_count = MY_PAGE_ACTION_NUMBER;
+        if ($is_mine) {
+            $display_action_count--;
+        }
+        $this->set(compact(
+                       'my_goals_count',
+                       'follow_goals_count',
+                       'page_type',
+                       'goals',
+                       'is_mine',
+                       'display_action_count'
+                   ));
         return $this->render();
     }
 
+    /**
+     * ユーザーページ 投稿一覧
+     *
+     * @return CakeResponse
+     */
     function view_posts()
     {
         $user_id = $this->_getRequiredParam('user_id');
+        if (!$this->_setUserPageHeaderInfo($user_id)) {
+            throw new NotFoundException;
+        }
+        $posts = $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null, [
+            'user_id' => $user_id,
+            'type'    => Post::TYPE_NORMAL
+        ]);
+        $this->set('posts', $posts);
+        $this->set('long_text', false);
+
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
@@ -1017,14 +1068,88 @@ class UsersController extends AppController
     function view_actions()
     {
         $user_id = $this->_getRequiredParam('user_id');
+        $page_type = $this->_getRequiredParam('page_type');
+        $goal_id = viaIsSet($this->request->params['named']['goal_id']);
+        if (!in_array($page_type, ['list', 'image'])) {
+            $this->Pnotify->outError(__d('gl', "不正な画面遷移です。"));
+            $this->redirect($this->referer());
+        }
+        $params = [
+            'author_id' => $user_id,
+            'type'      => Post::TYPE_ACTION,
+            'goal_id'   => $goal_id,
+        ];
+        $posts = [];
+        switch ($page_type) {
+            case 'list':
+                $posts = $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null, $params);
+                break;
+            case 'image':
+                $posts = $this->Post->get(1, MY_PAGE_CUBE_ACTION_IMG_NUMBER, null, null, $params);
+                break;
+        }
+        $this->set(compact('posts'));
+        $this->_setUserPageHeaderInfo($user_id);
+        $this->layout = LAYOUT_ONE_COLUMN;
+        $goal_ids = $this->Goal->Collaborator->getCollaboGoalList($user_id, true);
+        $goal_list = [null => '---'] + $this->Goal->getGoalNameList($goal_ids);
+        $goal_base_url = Router::url(['controller' => 'users', 'action' => 'view_actions', 'user_id' => $user_id, 'page_type' => $page_type]);
+        $this->set('long_text', false);
+        $this->set(compact('goal_list', 'goal_id', 'goal_base_url'));
+        return $this->render();
+    }
+
+    /**
+     * ユーザーページ 基本情報
+     *
+     * @return CakeResponse
+     */
+    function view_info()
+    {
+        $user_id = $this->_getRequiredParam('user_id');
+
+        if (!$this->_setUserPageHeaderInfo($user_id)) {
+            // 有効な user_id でない
+            throw new NotFoundException;
+        }
+
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
 
-    function view_info()
+    /**
+     * ユーザページの上部コンテンツの表示に必要なView変数をセット
+     *
+     * @param $user_id
+     *
+     * @return bool
+     */
+    function _setUserPageHeaderInfo($user_id)
     {
-        $user_id = $this->_getRequiredParam('user_id');
-        $this->layout = LAYOUT_ONE_COLUMN;
-        return $this->render();
+        // ユーザー情報
+        $user = $this->User->TeamMember->getByUserId($user_id);
+        if (!$user) {
+            // チームメンバーでない場合
+            return false;
+        }
+        $this->set('user', $user);
+
+        // 評価期間内の投稿数
+        $term_start_date = $this->Team->getCurrentTermStartDate();
+        $term_end_date = $this->Team->getCurrentTermEndDate();
+        $post_count = $this->Post->getCount($user_id, $term_start_date, $term_end_date);
+        $this->set('post_count', $post_count);
+
+        // 評価期間内のアクション数
+        $action_count = $this->Goal->ActionResult->getCount($user_id, $term_start_date, $term_end_date);
+        $this->set('action_count', $action_count);
+
+        // 投稿に対するいいねの数
+        $post_like_count = $this->Post->getLikeCountSumByUserId($user_id, $term_start_date, $term_end_date);
+        // コメントに対するいいねの数
+        $comment_like_count = $this->Post->Comment->getLikeCountSumByUserId($user_id, $term_start_date, $term_end_date);
+        $this->set('like_count', $post_like_count + $comment_like_count);
+
+        return true;
     }
 }

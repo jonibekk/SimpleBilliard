@@ -85,6 +85,18 @@ $(document).ready(function () {
             location.href = data;
         });
     });
+    //マイページのゴール切替え
+    $('#SwitchGoalOnMyPage').change(function () {
+        var goal_id = $(this).val();
+        if (goal_id == "") {
+            var url = $(this).attr('redirect-url');
+        }
+        else {
+            var url = $(this).attr('redirect-url') + "/goal_id:" + goal_id;
+        }
+        location.href = url;
+    });
+
     //autosize
     //noinspection JSJQueryEfficiency
     $('textarea:not(.not-autosize)').autosize();
@@ -216,6 +228,89 @@ $(document).ready(function () {
     $(document).on("click", '.modal-ajax-get-collabo', getModalFormFromUrl);
     //noinspection JSUnresolvedVariable
     $(document).on("click", '.modal-ajax-get-add-key-result', getModalFormFromUrl);
+    $(document).on("click", '.modal-ajax-get-add-action', function (e) {
+        e.preventDefault();
+        var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        $modal_elm.on('hidden.bs.modal', function (e) {
+            $(this).remove();
+        });
+        $modal_elm.on('shown.bs.modal', function (e) {
+            $addActionResultForm = $(this).find('#AddActionResultForm');
+            $addActionResultForm.bootstrapValidator({
+                excluded: [':hidden'],
+                live: 'enabled',
+                feedbackIcons: {},
+                fields: {
+                    "data[ActionResult][photo1]": {
+                        validators: {
+                            notEmpty: {
+                                message: cake.message.validate.g
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
+        modalFormCommonBindEvent($modal_elm);
+
+        var url = $(this).attr('href');
+        if (url.indexOf('#') == 0) {
+            $(url).modal('open');
+        } else {
+            $.get(url, function (data) {
+                $modal_elm.append(data);
+
+                //アップロード画像選択時にトリムして表示
+                $modal_elm.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
+                    $(this).children('.nailthumb-container').nailthumb({
+                        width: 50,
+                        height: 50,
+                        fitDirection: 'center center'
+                    });
+                });
+                $modal_elm.modal();
+                $modal_elm.find('#select2ActionCircleMember').select2({
+                    multiple: true,
+                    placeholder: cake.word.select_notify_range,
+                    minimumInputLength: 2,
+                    ajax: {
+                        url: cake.url.select2_circle_user,
+                        dataType: 'json',
+                        quietMillis: 100,
+                        cache: true,
+                        data: function (term, page) {
+                            return {
+                                term: term, //search term
+                                page_limit: 10, // page size
+                                circle_type: 'all'
+                            };
+                        },
+                        results: function (data, page) {
+                            return {results: data.results};
+                        }
+                    },
+                    data: [],
+                    initSelection: cake.data.l,
+                    formatSelection: format,
+                    formatResult: format,
+                    dropdownCssClass: 's2-post-dropdown',
+                    escapeMarkup: function (m) {
+                        return m;
+                    },
+                    containerCssClass: "select2Member"
+                });
+
+
+            }).success(function () {
+                $('body').addClass('modal-open');
+            });
+        }
+    });
+    $('.ModalActionResult_input_field').on('change', function () {
+        $('#AddActionResultForm').bootstrapValidator('revalidateField', 'photo');
+    });
+
     $(document).on("click", '.modal-ajax-get-circle-edit', function (e) {
         e.preventDefault();
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
@@ -340,6 +435,9 @@ $(document).ready(function () {
     //
     $(document).on("submit", "form.ajax-edit-circle-admin-status", evAjaxEditCircleAdminStatus);
     $(document).on("submit", "form.ajax-leave-circle", evAjaxLeaveCircle);
+    $(document).on("click", ".click-goal-follower-more", evAjaxGoalFollowerMore);
+    $(document).on("click", ".click-goal-member-more", evAjaxGoalMemberMore);
+    $(document).on("click", ".click-goal-key-result-more", evAjaxGoalKeyResultMore);
 
 
     //noinspection JSJQueryEfficiency
@@ -781,7 +879,7 @@ function evShowAndThisWide() {
     $(this).autosize();
 
     //submitボタンを表示
-    if($(this).attr('target_show_id') != undefined){
+    if ($(this).attr('target_show_id') != undefined) {
         var target = $(this).attr('target_show_id');
 
         var target = target.split(',');
@@ -1762,7 +1860,7 @@ function evFeedMoreView(options) {
     var month_index = $obj.attr('month-index');
     var no_data_text_id = $obj.attr('no-data-text-id');
     var oldest_post_time = $obj.attr('oldest-post-time') || 0;
-
+    var append_target_id = $obj.attr('append-target-id');
     //リンクを無効化
     $obj.attr('disabled', 'disabled');
 
@@ -1788,7 +1886,12 @@ function evFeedMoreView(options) {
                 var $posts = $(data.html);
                 //一旦非表示
                 $posts.hide();
-                $("#" + parent_id).before($posts);
+                if (append_target_id != undefined) {
+                    $("#" + append_target_id).append($posts);
+                }
+                else {
+                    $("#" + parent_id).before($posts);
+                }
                 //html表示
                 $posts.show("slow", function () {
                     //もっと見る
@@ -1870,6 +1973,118 @@ function evFeedMoreView(options) {
                     //もっと読む表示をやめる
                     $obj.remove();
                 }
+            }
+            autoload_more = false;
+        },
+        error: function () {
+            alert(cake.message.notice.c);
+        }
+    });
+    return false;
+}
+
+// ゴールのフォロワー一覧を取得
+function evAjaxGoalFollowerMore() {
+    var $obj = $(this);
+    $obj.attr('ajax-url', cake.url.goal_followers + '/goal_id:' + $obj.attr('goal-id'));
+    return evBasicReadMore.call(this);
+}
+
+// ゴールのメンバー一覧を取得
+function evAjaxGoalMemberMore() {
+    var $obj = $(this);
+    $obj.attr('ajax-url', cake.url.goal_members + '/goal_id:' + $obj.attr('goal-id'));
+    return evBasicReadMore.call(this);
+}
+
+// ゴールのキーリザルト一覧を取得
+function evAjaxGoalKeyResultMore() {
+    var $obj = $(this);
+    var kr_can_edit = $obj.attr('kr-can-edit');
+    var goal_id = $obj.attr('goal-id');
+    $obj.attr('ajax-url', cake.url.goal_key_results + '/' + kr_can_edit + '/goal_id:' + goal_id + '/view:key_results');
+    return evBasicReadMore.call(this);
+}
+
+/**
+ * オートローダー シンプル版
+ *
+ * オプション
+ *   ajax_url: Ajax呼び出しURL
+ *   next-page-num: 次に読み込むページ数
+ *   list-container: Ajaxで読み込んだHTMLを挿入するコンテナのセレクタ
+ *
+ * ajax_url のレスポンスJSON形式
+ *   {
+ *     html: string,         // 一覧(list-container)の末尾に挿入されるHTML
+ *     page_item_num: int,   // １ページ（１度の読み込み）で表示するアイテムの数
+ *     count: int,           // 実際に返されたアイテムの数
+ *   }
+ *
+ * 使用例
+ *   HTML:
+ *     <a href="#"
+ *        id="SampleReadMoreButtonID"
+ *        ajax-url="{Ajax呼び出しURL}"
+ *        next-page-num="2"
+ *        list-container="#listContainerID">さらに読み込む</a>
+ *
+ *   JavaScript:
+ *     $(document).on("click", "#SampleReadMoreButtonID", evAjaxSampleReadMore);
+ *     function evAjaxSampleReadMore() {
+ *         return evBasicReadMore.call(this);
+ *     }
+ *
+ * @returns {boolean}
+ */
+
+
+function evBasicReadMore() {
+    var $obj = $(this);
+    var ajax_url = $obj.attr('ajax-url');
+    var next_page_num = $obj.attr('next-page-num');
+    var $list_container = $($obj.attr('list-container'));
+
+    // 次ページのURL
+    ajax_url += '/page:' + next_page_num;
+
+    // さらに読み込むリンク無効化
+    $obj.attr('disabled', 'disabled');
+
+    // ローダー表示
+    var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
+    $obj.after($loader_html);
+
+    $.ajax({
+        type: 'GET',
+        url: ajax_url,
+        async: true,
+        dataType: 'json',
+        success: function (data) {
+            if (!$.isEmptyObject(data.html)) {
+                var $content = $(data.html);
+                $content.hide();
+                $list_container.append($content);
+                $content.show("slow");
+
+                // ページ番号インクリメント
+                next_page_num++;
+                $obj.attr('next-page-num', next_page_num);
+
+                // ローダーを削除
+                $loader_html.remove();
+
+                // リンクを有効化
+                $obj.removeAttr('disabled');
+            }
+
+            // 取得したデータ件数が、１ページの表示件数未満だった場合
+            if (data.count < data.page_item_num) {
+                // ローダーを削除
+                $loader_html.remove();
+
+                // 「さらに読みこむ」表示をやめる
+                $obj.remove();
             }
             autoload_more = false;
         },
@@ -2117,7 +2332,6 @@ function getModalFormFromUrl(e) {
         });
     }
 }
-
 $(document).ready(function () {
 
     var pusher = new Pusher(cake.pusher.key);
@@ -2746,6 +2960,9 @@ $(document).ready(function () {
             if (!autoload_more) {
                 autoload_more = true;
                 $('#FeedMoreReadLink').trigger('click');
+                $('#GoalPageFollowerMoreLink').trigger('click');
+                $('#GoalPageMemberMoreLink').trigger('click');
+                $('#GoalPageKeyResultMoreLink').trigger('click');
             }
         }
     });

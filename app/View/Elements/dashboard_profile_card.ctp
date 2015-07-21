@@ -13,14 +13,16 @@
     <a class="dashboardProfileCard-bg col-xxs-12" tabindex="-1" href="/#"></a>
 
     <div class="dashboardProfileCard-content">
-        <a class="dashboardProfileCard-avatorLink">
+        <a class="dashboardProfileCard-avatorLink"
+           href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $this->Session->read('Auth.User.id')]) ?>">
             <?= $this->Upload->uploadImage($this->Session->read('Auth.User'), 'User.photo', ['style' => 'medium'],
                                            ['class' => 'dashboardProfileCard-avatarImage inline-block']) ?>
         </a>
-
+        <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $this->Session->read('Auth.User.id')]) ?>">
         <span class="dashboardProfileCard-userField font_bold font_verydark ln_1-f">
             <?= h($this->Session->read('Auth.User.display_first_name')) ?>
         </span>
+        </a>
 
         <div class="dashboardProfileCard-stats font_10px">
             <div class="dashboardProfileCard-point">

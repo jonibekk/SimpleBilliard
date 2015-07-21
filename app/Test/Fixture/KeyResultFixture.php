@@ -57,6 +57,20 @@ class KeyResultFixture extends CakeTestFixture
             'user_id' => '1',
             'name'    => 'Lorem ipsum dolor sit amet',
         ],
+        [
+            'id'      => '2',
+            'team_id' => '1',
+            'goal_id' => '1',
+            'user_id' => '1',
+            'name'    => 'Lorem ipsum dolor sit amet',
+        ],
+        [
+            'id'      => '3',
+            'team_id' => '1',
+            'goal_id' => '1',
+            'user_id' => '1',
+            'name'    => 'Lorem ipsum dolor sit amet',
+        ],
     ];
 
 }

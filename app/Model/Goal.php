@@ -6,16 +6,16 @@ App::uses('KeyResult', 'Model');
 /**
  * Goal Model
  *
- * @property User                      $User
- * @property Team                      $Team
- * @property GoalCategory              $GoalCategory
- * @property Post                      $Post
- * @property KeyResult                 $KeyResult
- * @property Collaborator              $Collaborator
- * @property Follower                  $Follower
- * @property Evaluation                $Evaluation
- * @property Purpose                   $Purpose
- * @property ActionResult              $ActionResult
+ * @property User         $User
+ * @property Team         $Team
+ * @property GoalCategory $GoalCategory
+ * @property Post         $Post
+ * @property KeyResult    $KeyResult
+ * @property Collaborator $Collaborator
+ * @property Follower     $Follower
+ * @property Evaluation   $Evaluation
+ * @property Purpose      $Purpose
+ * @property ActionResult $ActionResult
  */
 class Goal extends AppModel
 {
@@ -210,6 +210,9 @@ class Goal extends AppModel
         'ActionResult'        => [
             'dependent' => true,
         ],
+        'ActionResultCount'   => [
+            'className' => 'ActionResult',
+        ],
         'IncompleteKeyResult' => [
             'className' => 'KeyResult'
         ],
@@ -395,16 +398,20 @@ class Goal extends AppModel
      * @param null   $limit
      * @param int    $page
      * @param string $type
+     * @param null   $user_id
      *
      * @return array
      */
-    function getMyGoals($limit = null, $page = 1, $type = "all")
+    function getMyGoals($limit = null, $page = 1, $type = "all", $user_id = null)
     {
+        if (!$user_id) {
+            $user_id = $this->my_uid;
+        }
         $start_date = $this->Team->getCurrentTermStartDate();
         $end_date = $this->Team->getCurrentTermEndDate();
         $options = [
             'conditions' => [
-                'Goal.user_id'       => $this->my_uid,
+                'Goal.user_id'       => $user_id,
                 'Goal.team_id'       => $this->current_team_id,
                 'Goal.start_date >=' => $start_date,
                 'Goal.end_date <'    => $end_date,
@@ -425,7 +432,7 @@ class Goal extends AppModel
                 'Purpose',
                 'Evaluation' => [
                     'conditions' => [
-                        'Evaluation.evaluatee_user_id' => $this->my_uid,
+                        'Evaluation.evaluatee_user_id' => $user_id,
                     ],
                     'fields'     => ['Evaluation.id'],
                     'limit'      => 1,
@@ -694,12 +701,16 @@ class Goal extends AppModel
      * @param null   $limit
      * @param int    $page
      * @param string $type
+     * @param null   $user_id
      *
      * @return array
      */
-    function getMyCollaboGoals($limit = null, $page = 1, $type = "all")
+    function getMyCollaboGoals($limit = null, $page = 1, $type = "all", $user_id = null)
     {
-        $goal_ids = $this->Collaborator->getCollaboGoalList($this->my_uid);
+        if (!$user_id) {
+            $user_id = $this->my_uid;
+        }
+        $goal_ids = $this->Collaborator->getCollaboGoalList($user_id);
         if ($type == "count") {
             return $this->getByGoalId($goal_ids, $limit, $page, $type);
         }
@@ -711,11 +722,73 @@ class Goal extends AppModel
         return $res;
     }
 
-    function getMyFollowedGoals($limit = null, $page = 1, $type = 'all')
+    function getGoalsWithAction($user_id, $action_limit = MY_PAGE_ACTION_NUMBER)
     {
-        $follow_goal_ids = $this->Follower->getFollowList($this->my_uid);
-        $coaching_goal_ids = $this->Team->TeamMember->getCoachingGoalList($this->my_uid);
-        $collabo_goal_ids = $this->Collaborator->getCollaboGoalList($this->my_uid, true);
+        //対象が自分だった場合プラスボタンを出力する関係上、アクション件数を-1にする
+        if ($user_id == $this->my_uid) {
+            $action_limit--;
+        }
+        $goal_ids = $this->Collaborator->getCollaboGoalList($user_id, true);
+        $start_date = $this->Team->getCurrentTermStartDate();
+        $end_date = $this->Team->getCurrentTermEndDate();
+        $options = [
+            'conditions' => [
+                'Goal.id'            => $goal_ids,
+                'Goal.start_date >=' => $start_date,
+                'Goal.end_date <='   => $end_date,
+            ],
+            'fields'     => ['Goal.id', 'Goal.user_id', 'Goal.name', 'Goal.photo_file_name'],
+            'contain'    => [
+                'Purpose'           => [
+                    'fields' => ['Purpose.name']
+                ],
+                'ActionResult'      => [
+                    'fields'     => ['ActionResult.id', 'ActionResult.name', 'ActionResult.photo1_file_name'],
+                    'limit'      => $action_limit,
+                    'conditions' => ['ActionResult.user_id' => $user_id],
+                    'order'      => ['ActionResult.created desc'],
+                    'Post'       => [
+                        'fields' => ['Post.id']
+                    ]
+                ],
+                'ActionResultCount' => [
+                    'fields'     => ['ActionResultCount.id'],
+                    'conditions' => ['ActionResultCount.user_id' => $user_id]
+                ],
+                'MyCollabo'         => [
+                    'fields'     => ['MyCollabo.id', 'MyCollabo.type'],
+                    'conditions' => ['MyCollabo.user_id' => $this->my_uid]
+                ],
+                'MyFollow'          => [
+                    'fields'     => ['MyFollow.id'],
+                    'conditions' => ['MyFollow.user_id' => $this->my_uid]
+                ],
+            ]
+        ];
+        $goals = $this->find('all', $options);
+        $goals = Hash::combine($goals, '{n}.Goal.id', '{n}');
+        //再度ゴールIDを抽出(フォロー中、コーチング、コラボのゴールは期間の抽出ができない為、期間をキーにして再度抽出する必要がある)
+        $goal_ids = Hash::extract($goals, '{n}.Goal.id');
+        // getByGoalIdでは自分のゴールのみ取得するので、フォロー中のゴールのCollaborator情報はEmptyになる。
+        // そのためsetFollowGoalApprovalFlagメソッドにてCollaborator情報を取得し、認定ステータスを設定する
+        $approval_statuses = $this->Collaborator->getOwnersStatus($goal_ids);
+        //のちにゴールデータとマージしやすいように配列のキーをgoal_idに差し替える
+        $approval_statuses = Hash::combine($approval_statuses, '{n}.Collaborator.goal_id', '{n}');
+        //認定ステータスのデータをマージ
+        $goals = Hash::merge($goals, $approval_statuses);
+        $res = $this->setFollowGoalApprovalFlag($goals);
+
+        return $res;
+    }
+
+    function getMyFollowedGoals($limit = null, $page = 1, $type = 'all', $user_id = null)
+    {
+        if (!$user_id) {
+            $user_id = $this->my_uid;
+        }
+        $follow_goal_ids = $this->Follower->getFollowList($user_id);
+        $coaching_goal_ids = $this->Team->TeamMember->getCoachingGoalList($user_id);
+        $collabo_goal_ids = $this->Collaborator->getCollaboGoalList($user_id, true);
         //フォローしているゴールとコーチングしているゴールをマージして、そこからコラボしているゴールを除外したものが
         //フォロー中ゴールとなる
         $goal_ids = $follow_goal_ids + $coaching_goal_ids;
@@ -1363,6 +1436,16 @@ class Goal extends AppModel
         }
 
         return $is_present_term_flag;
+    }
+
+    function getGoalNameList($goal_ids)
+    {
+        $options = [
+            'conditions' => ['id' => $goal_ids],
+            'fields'     => ['id', 'name']
+        ];
+        $res = $this->find('list', $options);
+        return $res;
     }
 
 }

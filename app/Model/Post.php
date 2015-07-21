@@ -53,6 +53,7 @@ class Post extends AppModel
     const SHARE_CIRCLE = 4;
 
     public $orgParams = [
+        'author_id'   => null,
         'circle_id'   => null,
         'user_id'     => null,
         'post_id'     => null,
@@ -368,13 +369,12 @@ class Post extends AppModel
                     $org_param_exists = true;
                     $this->orgParams[$key] = $params[$key];
                 }
-                elseif (array_key_exists($key, $params['named'])) {
+                elseif (isset($params['named']) && array_key_exists($key, $params['named'])) {
                     $org_param_exists = true;
                     $this->orgParams[$key] = $params['named'][$key];
                 }
             }
         }
-
         //独自パラメータ指定なし
         if (!$org_param_exists) {
             //自分の投稿
@@ -426,12 +426,35 @@ class Post extends AppModel
             elseif ($this->orgParams['goal_id']) {
                 //アクションのみの場合
                 if ($this->orgParams['type'] == self::TYPE_ACTION) {
-                    $p_list = $this->getGoalPostList($this->orgParams['goal_id'], self::TYPE_ACTION);
+                    $p_list = $this->getGoalPostList($this->orgParams['goal_id'], self::TYPE_ACTION, "modified", "desc",
+                                                     $start, $end);
+                }
+            }
+            //投稿主指定
+            elseif ($this->orgParams['author_id']) {
+                //アクションのみの場合
+                if ($this->orgParams['type'] == self::TYPE_ACTION) {
+                    $p_list = $this->getGoalPostList(null, self::TYPE_ACTION, "modified", "desc", $start, $end);
                 }
             }
             //ゴールのみの場合
             elseif ($this->orgParams['filter_goal']) {
                 $p_list = $this->getAllExistGoalPostList($start, $end);
+            }
+            // ユーザーID指定
+            elseif ($this->orgParams['user_id']) {
+                // 自分個人に共有された投稿
+                $p_list = array_merge($p_list,
+                                      $this->PostShareUser->getShareWithMeList(
+                                          $start, $end, "PostShareUser.modified", "desc", 1000,
+                                          ['user_id' => $this->orgParams['user_id']]));
+
+                // 自分が閲覧可能なサークルへの投稿一覧
+                // （公開サークルへの投稿 + 自分が所属している秘密サークルへの投稿）
+                $p_list = array_merge($p_list,
+                                      $this->PostShareCircle->getAccessibleCirclePostList(
+                                          $start, $end, "PostShareCircle.modified", "desc", 1000,
+                                          ['user_id' => $this->orgParams['user_id']]));
             }
         }
 
@@ -454,6 +477,13 @@ class Post extends AppModel
             if ($this->orgParams['type'] == self::TYPE_ACTION) {
                 $post_options['order'] = ['ActionResult.id' => 'desc'];
                 $post_options['contain'] = ['ActionResult'];
+            }
+            if ($this->orgParams['type'] == self::TYPE_NORMAL) {
+                $post_options['conditions']['Post.type'] = self::TYPE_NORMAL;
+            }
+            // 独自パラメータ無しの場合（ホームフィードの場合）
+            if (!$org_param_exists) {
+                $post_options['order'] = ['Post.created' => 'desc'];
             }
             $post_list = $this->find('list', $post_options);
         }
@@ -615,19 +645,24 @@ class Post extends AppModel
         return $res;
     }
 
-    public function getGoalPostList($goal_id, $type = self::TYPE_ACTION, $order = "modified", $order_direction = "desc")
+    public function getGoalPostList($goal_id = null, $type = self::TYPE_ACTION, $order = "modified", $order_direction = "desc", $start = null, $end = null)
     {
         $options = [
             'conditions' => [
-                'goal_id' => $goal_id,
                 'type'    => $type,
                 'team_id' => $this->current_team_id,
             ],
             'order'      => [$order => $order_direction],
             'fields'     => ['id'],
         ];
-        if ($this->orgParams['user_id']) {
-            $options['conditions']['user_id'] = $this->orgParams['user_id'];
+        if ($start && $end) {
+            $options['conditions']['modified BETWEEN ? AND ?'] = [$start, $end];
+        }
+        if ($goal_id) {
+            $options['conditions']['goal_id'] = $goal_id;
+        }
+        if ($this->orgParams['author_id']) {
+            $options['conditions']['user_id'] = $this->orgParams['author_id'];
         }
         $res = $this->find('list', $options);
         return $res;
@@ -930,13 +965,13 @@ class Post extends AppModel
     /**
      * 投稿数のカウントを返却
      *
-     * @param string $type
-     * @param null   $start_date
-     * @param null   $end_date
+     * @param mixed $user_id ユーザーIDもしくは'me'を指定する。
+     * @param null  $start_date
+     * @param null  $end_date
      *
      * @return int
      */
-    function getCount($type = 'me', $start_date = null, $end_date = null)
+    function getCount($user_id = 'me', $start_date = null, $end_date = null)
     {
         $options = [
             'conditions' => [
@@ -944,14 +979,14 @@ class Post extends AppModel
                 'type'    => self::TYPE_NORMAL
             ]
         ];
-        //タイプ別に条件変更する
-        switch ($type) {
-            case 'me':
-                $options['conditions']['user_id'] = $this->my_uid;
-                break;
-            default:
-                break;
+        // ユーザーIDに'me'が指定された場合は、自分のIDをセットする
+        if ($user_id == 'me') {
+            $options['conditions']['user_id'] = $this->my_uid;
         }
+        elseif (is_numeric($user_id)) {
+            $options['conditions']['user_id'] = $user_id;
+        }
+
         //期間で絞り込む
         if ($start_date) {
             $options['conditions']['modified >'] = $start_date;
@@ -1021,6 +1056,38 @@ class Post extends AppModel
         $cmd_end = " > /dev/null &";
         $all_cmd = $set_web_env . $nohup . $cake_cmd . $cake_app . $cmd . $cmd_end;
         exec($all_cmd);
+    }
+
+    /**
+     * 期間内のいいねの数の合計を取得
+     *
+     * @param      $user_id
+     * @param null $start_date
+     * @param null $end_date
+     *
+     * @return mixed
+     */
+    public function getLikeCountSumByUserId($user_id, $start_date = null, $end_date = null)
+    {
+        $options = [
+            'fields'     => [
+                'SUM(post_like_count) as sum_like',
+            ],
+            'conditions' => [
+                'user_id' => $user_id,
+                'team_id' => $this->current_team_id,
+                'type'    => [self::TYPE_NORMAL, self::TYPE_ACTION],
+            ]
+        ];
+        //期間で絞り込む
+        if ($start_date) {
+            $options['conditions']['modified >'] = $start_date;
+        }
+        if ($end_date) {
+            $options['conditions']['modified <'] = $end_date;
+        }
+        $res = $this->find('first', $options);
+        return $res ? $res[0]['sum_like'] : 0;
     }
 
 }

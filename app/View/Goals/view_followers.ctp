@@ -5,16 +5,31 @@
  * Date: 7/9/15
  * Time: 3:33 PM
  *
- * @var CodeCompletionView $this
+ * @var $goal
+ * @var $followers
  */
 ?>
-<!-- START app/View/Users/view_followers.ctp -->
+<!-- START app/View/Goals/view_followers.ctp -->
 <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default">
-        <?= $this->element('simplex_top_section') ?>
+        <?= $this->element('Goal/simplex_top_section') ?>
         <div class="panel-body">
-            フォロワー一覧
+            <div class="row borderBottom" id="GoalPageFollowerContainer">
+                <?= $this->element('Goal/followers') ?>
+                <?php if (!$followers): ?>
+                    <?= __d('gl', 'フォロワーはいません。') ?>
+                <? endif ?>
+            </div>
+        </div>
+        <div class="panel-body panel-read-more-body">
+            <a href="#" class="btn btn-link click-goal-follower-more"
+               next-page-num="2"
+               id="GoalPageFollowerMoreLink"
+               list-container="#GoalPageFollowerContainer"
+               goal-id="<?= h($goal['Goal']['id']) ?>"
+                >
+                <?= __d('gl', 'さらに読み込む') ?></a>
         </div>
     </div>
 </div>
-<!-- END app/View/Users/view_followers.ctp -->
+<!-- END app/View/Goals/view_followers.ctp -->

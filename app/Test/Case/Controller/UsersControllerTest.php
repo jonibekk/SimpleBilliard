@@ -4,7 +4,6 @@ App::uses('UsersController', 'Controller');
 /**
  * UsersController Test Case
  * @method testAction($url = '', $options = array()) ControllerTestCase::_testAction
-
  */
 class UsersControllerTest extends ControllerTestCase
 {
@@ -20,6 +19,7 @@ class UsersControllerTest extends ControllerTestCase
         'app.evaluation_setting',
         'app.member_type',
         'app.goal',
+        'app.key_result',
         'app.follower',
         'app.collaborator',
         'app.local_name',
@@ -532,6 +532,10 @@ class UsersControllerTest extends ControllerTestCase
         $Users->Auth->staticExpects($this->any())->method('user')
                     ->will($this->returnValueMap($value_map)
                     );
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Users->Session->expects($this->any())->method('read')
+                       ->will($this->returnValueMap([['Auth.User.language', 'jpn']]));
+
         $this->testAction('/users/register', ['method' => 'GET']);
         $this->assertEquals('jpn', Configure::read('Config.language'), "自動言語設定がoffの場合は言語設定が適用される");
     }
@@ -1599,7 +1603,8 @@ class UsersControllerTest extends ControllerTestCase
 
         /** @noinspection PhpUndefinedFieldInspection */
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/users/ajax_select2_get_circles_users?term=firstname&page_limit=10&circle_type=all', ['method' => 'GET']);
+        $this->testAction('/users/ajax_select2_get_circles_users?term=firstname&page_limit=10&circle_type=all',
+                          ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -1619,12 +1624,14 @@ class UsersControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedFieldInspection */
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $keyword = urlencode('秘密サークル');
-        $res = $this->testAction("/users/ajax_select2_get_secret_circles?term=$keyword&page_limit=10", ['method' => 'GET']);
+        $res = $this->testAction("/users/ajax_select2_get_secret_circles?term=$keyword&page_limit=10",
+                                 ['method' => 'GET']);
         $json_data = json_decode($res, true);
         $this->assertNotEmpty($json_data['results']);
 
         $keyword = urlencode('チーム全体サークル');
-        $res = $this->testAction("/users/ajax_select2_get_secret_circles?term=$keyword&page_limit=10", ['method' => 'GET']);
+        $res = $this->testAction("/users/ajax_select2_get_secret_circles?term=$keyword&page_limit=10",
+                                 ['method' => 'GET']);
         $json_data = json_decode($res, true);
         $this->assertEmpty($json_data['results']);
 
@@ -1877,6 +1884,14 @@ class UsersControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
+    function testAjaxGetUserDetail()
+    {
+        $this->_getUsersCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/teams/ajax_get_user_detail/1', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
     function testDelete2Fa()
     {
         $this->_getUsersCommonMock();
@@ -1895,30 +1910,79 @@ class UsersControllerTest extends ControllerTestCase
         $Users->_setDefaultTeam(9999);
     }
 
-    function testViewGoals()
+    function testViewGoalsMine()
     {
         $this->_getUsersCommonMock();
         $this->testAction('/users/view_goals/user_id:1');
     }
+
+    function testViewGoalsOthers()
+    {
+        $this->_getUsersCommonMock();
+        $this->testAction('/users/view_goals/user_id:2');
+    }
+
+    function testViewGoalsOthersFollowing()
+    {
+        $this->_getUsersCommonMock();
+        $this->testAction('/users/view_goals/user_id:2/page_type:following');
+    }
+
     function testViewPosts()
     {
         $this->_getUsersCommonMock();
         $this->testAction('/users/view_posts/user_id:1');
     }
-    function testViewActions()
+
+    function testViewPostsNoTeamMember()
+    {
+        $this->_getUsersCommonMock();
+        try {
+            $this->testAction('/users/view_posts/user_id:14');
+        } catch (NotFoundException $e) {
+        }
+    }
+
+    function testViewActionsNoPageType()
     {
         $this->_getUsersCommonMock();
         $this->testAction('/users/view_actions/user_id:1');
     }
+
+    function testViewActionsImageSuccess()
+    {
+        $this->_getUsersCommonMock();
+        $this->testAction('/users/view_actions/user_id:1/page_type:image');
+    }
+
+    function testViewActionsListSuccess()
+    {
+        $this->_getUsersCommonMock();
+        $this->testAction('/users/view_actions/user_id:1/page_type:list');
+    }
+
     function testViewInfo()
     {
         $this->_getUsersCommonMock();
         $this->testAction('/users/view_info/user_id:1');
     }
+
     function testViewInfoNoParams()
     {
         $this->_getUsersCommonMock();
-        $this->testAction('/users/view_info/');
+        try {
+            $this->testAction('/users/view_info/');
+        } catch (NotFoundException $e) {
+        }
+    }
+
+    function testViewInfoNoTeamMember()
+    {
+        $this->_getUsersCommonMock();
+        try {
+            $this->testAction('/users/view_info/user_id:14');
+        } catch (NotFoundException $e) {
+        }
     }
 
     function _getUsersCommonMock()
@@ -1969,6 +2033,10 @@ class UsersControllerTest extends ControllerTestCase
         $Users->User->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Users->User->current_team_id = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Users->Goal->my_uid = '1';
+        /** @noinspection PhpUndefinedFieldInspection */
+        $Users->Goal->current_team_id = '1';
         /** @noinspection PhpUndefinedFieldInspection */
         $Users->User->CircleMember->my_uid = '1';
         /** @noinspection PhpUndefinedFieldInspection */
