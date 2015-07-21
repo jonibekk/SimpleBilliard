@@ -39,6 +39,7 @@ class GoalsControllerTest extends ControllerTestCase
         'app.post_mention',
         'app.comment_read',
         'app.group',
+        'app.member_group',
         'app.team_member',
         'app.job_category',
         'app.invite',
@@ -148,7 +149,8 @@ class GoalsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
-    function testAjaxGetFollowers() {
+    function testAjaxGetFollowers()
+    {
         $this->_getGoalsCommonMock();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
@@ -160,7 +162,8 @@ class GoalsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
-    function testAjaxGetMembers() {
+    function testAjaxGetMembers()
+    {
         $this->_getGoalsCommonMock();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $res = $this->testAction('/goals/ajax_get_members/goal_id:1/page:1', ['method' => 'GET']);
@@ -778,6 +781,25 @@ class GoalsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
+    function testAjaxGetAddActionModalSuccess()
+    {
+        $this->_getGoalsCommonMock();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/goals/ajax_get_add_action_modal/goal_id:' . 1, ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxGetAddActionModalFail()
+    {
+        $this->_getGoalsCommonMock();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/goals/ajax_get_add_action_modal/goal_id:' . 99999, ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+
     function testAjaxGetAddKeyResultModalSuccess()
     {
         $this->_getGoalsCommonMock();
@@ -808,6 +830,15 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals->Goal->KeyResult->save($kr);
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/goals/ajax_get_key_results/goal_id:' . $this->goal_id, ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxGetKeyResultsWithParams()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/goals/ajax_get_key_results/page:2/view:key_results/goal_id:1', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -1178,12 +1209,12 @@ class GoalsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
-
     function testViewFollowers()
     {
         $this->_getGoalsCommonMock();
         $this->testAction('/goals/view_followers/goal_id:1');
     }
+
     function testViewFollowersNoParams()
     {
         $this->_getGoalsCommonMock();
@@ -1192,6 +1223,7 @@ class GoalsControllerTest extends ControllerTestCase
         } catch (NotFoundException $e) {
         }
     }
+
     function testViewFollowersInvalidParam()
     {
         $this->_getGoalsCommonMock();
@@ -1206,6 +1238,7 @@ class GoalsControllerTest extends ControllerTestCase
         $this->_getGoalsCommonMock();
         $this->testAction('/goals/view_members/goal_id:1');
     }
+
     function testViewMembersNoParams()
     {
         $this->_getGoalsCommonMock();
@@ -1214,6 +1247,7 @@ class GoalsControllerTest extends ControllerTestCase
         } catch (NotFoundException $e) {
         }
     }
+
     function testViewMembersInvalidParam()
     {
         $this->_getGoalsCommonMock();
@@ -1223,12 +1257,12 @@ class GoalsControllerTest extends ControllerTestCase
         }
     }
 
-
     function testViewKrs()
     {
         $this->_getGoalsCommonMock();
         $this->testAction('/goals/view_krs/goal_id:1');
     }
+
     function testViewKrsNoParams()
     {
         $this->_getGoalsCommonMock();
@@ -1237,6 +1271,7 @@ class GoalsControllerTest extends ControllerTestCase
         } catch (NotFoundException $e) {
         }
     }
+
     function testViewKrsInvalidParam()
     {
         $this->_getGoalsCommonMock();
@@ -1251,6 +1286,7 @@ class GoalsControllerTest extends ControllerTestCase
         $this->_getGoalsCommonMock();
         $this->testAction('/goals/view_info/goal_id:1');
     }
+
     function testViewInfoNoParams()
     {
         $this->_getGoalsCommonMock();
@@ -1259,6 +1295,7 @@ class GoalsControllerTest extends ControllerTestCase
         } catch (NotFoundException $e) {
         }
     }
+
     function testViewInfoInvalidParam()
     {
         $this->_getGoalsCommonMock();
@@ -1268,6 +1305,14 @@ class GoalsControllerTest extends ControllerTestCase
         }
     }
 
+    function testViewInfoAsCollaborator()
+    {
+        $this->_getGoalsCommonMock();
+        try {
+            $this->testAction('/goals/view_info/goal_id:7');
+        } catch (NotFoundException $e) {
+        }
+    }
 
     var $current_date;
     var $start_date;

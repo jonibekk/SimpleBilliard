@@ -481,6 +481,10 @@ class Post extends AppModel
             if ($this->orgParams['type'] == self::TYPE_NORMAL) {
                 $post_options['conditions']['Post.type'] = self::TYPE_NORMAL;
             }
+            // 独自パラメータ無しの場合（ホームフィードの場合）
+            if (!$org_param_exists) {
+                $post_options['order'] = ['Post.created' => 'desc'];
+            }
             $post_list = $this->find('list', $post_options);
         }
 

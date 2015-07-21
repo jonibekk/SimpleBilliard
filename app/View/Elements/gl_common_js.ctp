@@ -44,7 +44,8 @@ echo $this->Html->script('gl_basic');
                 c: "<?=__d('validate', "10MB以下かつJPG、PNG、GIFのいずれかの形式を選択して下さい。")?>",
                 d: "<?=__d('validate', "利用規約に同意してください。")?>",
                 e: "<?=__d('validate', "数字、英小文字、英大文字の混在にしてください。")?>",
-                f: "<?=__d('validate', "パスワードにメールアドレスと同一のものを指定する事はできません。")?>"
+                f: "<?=__d('validate', "パスワードにメールアドレスと同一のものを指定する事はできません。")?>",
+                g: "<?=__d('validate', "必須項目です。")?>"
             },
             notice: {
                 a: "<?=__d('gl',"入力が途中です。このまま移動しますか？")?>",
@@ -124,7 +125,8 @@ echo $this->Html->script('gl_basic');
             select2_circle_user: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_circles_users'])?>",
             user_page: "<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => '']) ?>",
             goal_followers: "<?=$this->Html->url(['controller'=>'goals','action'=>'ajax_get_followers'])?>",
-            goal_members: "<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_members']) ?>"
+            goal_members: "<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_members']) ?>",
+            goal_key_results: "<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_key_results']) ?>"
         },
         data: {
             a: <?=isset($select2_default)?$select2_default:"[]"?>,

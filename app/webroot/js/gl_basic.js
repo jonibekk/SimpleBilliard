@@ -228,6 +228,89 @@ $(document).ready(function () {
     $(document).on("click", '.modal-ajax-get-collabo', getModalFormFromUrl);
     //noinspection JSUnresolvedVariable
     $(document).on("click", '.modal-ajax-get-add-key-result', getModalFormFromUrl);
+    $(document).on("click", '.modal-ajax-get-add-action', function (e) {
+        e.preventDefault();
+        var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        $modal_elm.on('hidden.bs.modal', function (e) {
+            $(this).remove();
+        });
+        $modal_elm.on('shown.bs.modal', function (e) {
+            $addActionResultForm = $(this).find('#AddActionResultForm');
+            $addActionResultForm.bootstrapValidator({
+                excluded: [':hidden'],
+                live: 'enabled',
+                feedbackIcons: {},
+                fields: {
+                    "data[ActionResult][photo1]": {
+                        validators: {
+                            notEmpty: {
+                                message: cake.message.validate.g
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
+        modalFormCommonBindEvent($modal_elm);
+
+        var url = $(this).attr('href');
+        if (url.indexOf('#') == 0) {
+            $(url).modal('open');
+        } else {
+            $.get(url, function (data) {
+                $modal_elm.append(data);
+
+                //アップロード画像選択時にトリムして表示
+                $modal_elm.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
+                    $(this).children('.nailthumb-container').nailthumb({
+                        width: 50,
+                        height: 50,
+                        fitDirection: 'center center'
+                    });
+                });
+                $modal_elm.modal();
+                $modal_elm.find('#select2ActionCircleMember').select2({
+                    multiple: true,
+                    placeholder: cake.word.select_notify_range,
+                    minimumInputLength: 2,
+                    ajax: {
+                        url: cake.url.select2_circle_user,
+                        dataType: 'json',
+                        quietMillis: 100,
+                        cache: true,
+                        data: function (term, page) {
+                            return {
+                                term: term, //search term
+                                page_limit: 10, // page size
+                                circle_type: 'all'
+                            };
+                        },
+                        results: function (data, page) {
+                            return {results: data.results};
+                        }
+                    },
+                    data: [],
+                    initSelection: cake.data.l,
+                    formatSelection: format,
+                    formatResult: format,
+                    dropdownCssClass: 's2-post-dropdown',
+                    escapeMarkup: function (m) {
+                        return m;
+                    },
+                    containerCssClass: "select2Member"
+                });
+
+
+            }).success(function () {
+                $('body').addClass('modal-open');
+            });
+        }
+    });
+    $('.ModalActionResult_input_field').on('change', function () {
+        $('#AddActionResultForm').bootstrapValidator('revalidateField', 'photo');
+    });
+
     $(document).on("click", '.modal-ajax-get-circle-edit', function (e) {
         e.preventDefault();
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
@@ -354,6 +437,7 @@ $(document).ready(function () {
     $(document).on("submit", "form.ajax-leave-circle", evAjaxLeaveCircle);
     $(document).on("click", ".click-goal-follower-more", evAjaxGoalFollowerMore);
     $(document).on("click", ".click-goal-member-more", evAjaxGoalMemberMore);
+    $(document).on("click", ".click-goal-key-result-more", evAjaxGoalKeyResultMore);
 
 
     //noinspection JSJQueryEfficiency
@@ -1913,6 +1997,15 @@ function evAjaxGoalMemberMore() {
     return evBasicReadMore.call(this);
 }
 
+// ゴールのキーリザルト一覧を取得
+function evAjaxGoalKeyResultMore() {
+    var $obj = $(this);
+    var kr_can_edit = $obj.attr('kr-can-edit');
+    var goal_id = $obj.attr('goal-id');
+    $obj.attr('ajax-url', cake.url.goal_key_results + '/' + kr_can_edit + '/goal_id:' + goal_id + '/view:key_results');
+    return evBasicReadMore.call(this);
+}
+
 /**
  * オートローダー シンプル版
  *
@@ -1921,14 +2014,31 @@ function evAjaxGoalMemberMore() {
  *   next-page-num: 次に読み込むページ数
  *   list-container: Ajaxで読み込んだHTMLを挿入するコンテナのセレクタ
  *
+ * ajax_url のレスポンスJSON形式
+ *   {
+ *     html: string,         // 一覧(list-container)の末尾に挿入されるHTML
+ *     page_item_num: int,   // １ページ（１度の読み込み）で表示するアイテムの数
+ *     count: int,           // 実際に返されたアイテムの数
+ *   }
+ *
  * 使用例
- *   <a href="#"
- *      ajax-url="{Ajax呼び出しURL}"
- *      next-page-num="2"
- *      list-container="#listContainerID">さらに読み込む</a>
+ *   HTML:
+ *     <a href="#"
+ *        id="SampleReadMoreButtonID"
+ *        ajax-url="{Ajax呼び出しURL}"
+ *        next-page-num="2"
+ *        list-container="#listContainerID">さらに読み込む</a>
+ *
+ *   JavaScript:
+ *     $(document).on("click", "#SampleReadMoreButtonID", evAjaxSampleReadMore);
+ *     function evAjaxSampleReadMore() {
+ *         return evBasicReadMore.call(this);
+ *     }
  *
  * @returns {boolean}
  */
+
+
 function evBasicReadMore() {
     var $obj = $(this);
     var ajax_url = $obj.attr('ajax-url');
@@ -2222,7 +2332,6 @@ function getModalFormFromUrl(e) {
         });
     }
 }
-
 $(document).ready(function () {
 
     var pusher = new Pusher(cake.pusher.key);
@@ -2853,6 +2962,7 @@ $(document).ready(function () {
                 $('#FeedMoreReadLink').trigger('click');
                 $('#GoalPageFollowerMoreLink').trigger('click');
                 $('#GoalPageMemberMoreLink').trigger('click');
+                $('#GoalPageKeyResultMoreLink').trigger('click');
             }
         }
     });
