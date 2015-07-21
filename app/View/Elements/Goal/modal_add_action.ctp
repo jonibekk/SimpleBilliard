@@ -21,17 +21,7 @@
             <h4 class="modal-title"><?= __d('gl', "アクションを追加する") ?></h4>
             <ul class="add-key-result-goal-info">
                 <li>
-                    <i class="fa fa-flag"></i><?= h($goal['Goal']['name']) ?>
-                </li>
-                <li>
-                    <i class="fa fa-bullseye"></i>
-                    <?= h($goal['Goal']['target_value']) ?>
-                    (← <?= h($goal['Goal']['start_value']) ?>)<?= $kr_value_unit_list[$goal['Goal']['value_unit']] ?>
-                </li>
-                <li>
-                    <i class="fa fa-calendar"></i>
-                    <?= date('Y/m/d', $goal['Goal']['end_date'] + ($this->Session->read('timezone') * 3600)) ?>
-                    (← <?= date('Y/m/d', $goal['Goal']['start_date'] + ($this->Session->read('timezone') * 3600)) ?> - )
+                    <i class="fa fa-flag"></i> <?= h($goal['Goal']['name']) ?>
                 </li>
             </ul>
         </div>
@@ -56,7 +46,7 @@
             <div class="row">
                 <div class="form-group required">
                     <div class="set-goal">
-                        <h5 class="modal-key-result-headings"><?= __d('gl', 'アクション画像') ?>
+                        <h5 class="modal-key-result-headings"><?= __d('gl', '画像') ?>&nbsp;<i class="fa font_brownRed font_14px">*</i>
                             <span class="modal-key-result-headings-description"><?= __d('gl',
                                                                                         'アクションの結果が分かる画像を追加しよう') ?></span>
                         </h5>
@@ -81,15 +71,13 @@
                 $this->Form->input('name',
                                    ['before'                   => '<div class="set-goal">' .
                                        '<h5 class="modal-key-result-headings">' .
-                                       __d('gl', "アクションの説明") .
-                                       '<span class="modal-key-result-headings-description">' .
+                                       __d('gl', "説明") .
+                                       '&nbsp;<i class="fa font_brownRed font_14px">*</i><span class="modal-key-result-headings-description">' .
                                        __d('gl', "やった事を書こう") . '</span></h5></div>',
                                     'label'                    => false,
-                                    'placeholder'              => __d('gl', "具体的に絞り込んで書く"),
+                                    'placeholder'              => __d('gl', "例）Webサイトを完成させた"),
                                     "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                                     'rows'                     => 1,
-                                    'afterInput'               =>
-                                        '<span class="help-block font_12px">' . __d('gl', "例）Webサイトを完成させた") . '</span>'
                                    ]) ?>
             </div>
             <div class="row">
@@ -98,7 +86,7 @@
                     'before'   => '<h5 class="modal-key-result-headings">' .
                         __d('gl', "出したい成果") .
                         '<span class="modal-key-result-headings-description">' .
-                        __d('gl', "紐付ける成果を選択しよう。選択しなくてもいいけどね。") . '</span></h5>',
+                        __d('gl', "紐付ける成果を選択しよう。") . '</span></h5>',
                     'label'    => false,
                     'type'     => 'select',
                     'required' => false,
