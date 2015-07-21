@@ -9,17 +9,28 @@ body {
   color: @veryDark;
 }
  */
+body {
+  background: #e5e5e5;
+  padding: 100px 0 0;
+  color: #6d6e71;
+  @media screen and (max-width: 993px) {
+    .body {
+      padding: 60px 0 0;
+    }
+  }
+}
+
 /* iOS Safari Hack */
-select, input {
+select,
+input {
   -webkit-appearance: none;
   appearance: none;
 }
 
 input[type="radio"] {
   -webkit-appearance: radio;
-  appearance: radio;;
+  appearance: radio;
 }
-
 
 .checkbox {
   background-color: @white;
@@ -58,10 +69,9 @@ input:focus {
 }
 
 /*  Use FontAwesome with Unicode */
-
-input{
+input {
   display: inline-block;
-  font-family:  "Helvetica Neue", Helvetica, "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", Verdana, "メイリオ", Meiryo, "ＭＳ Ｐゴシック", Roboto, "Droid Sans", FontAwesome, sans-serif;
+  font-family: "Helvetica Neue", Helvetica, "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", Verdana, "メイリオ", Meiryo, "ＭＳ Ｐゴシック", Roboto, "Droid Sans", FontAwesome, sans-serif;
   font-style: normal;
   font-weight: normal;
   line-height: 1;

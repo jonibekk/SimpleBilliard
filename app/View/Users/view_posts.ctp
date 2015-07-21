@@ -13,7 +13,7 @@
 <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default">
         <?= $this->element('simplex_top_section') ?>
-        <div class="panel-body">
+        <div class="panel-body view-posts-panel">
             <?= $this->element("Feed/posts") ?>
 
             <?php if (empty($posts)): ?>
