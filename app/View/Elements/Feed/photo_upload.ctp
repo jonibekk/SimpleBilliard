@@ -100,6 +100,7 @@ if (!isset($id_prefix)) {
                                          'wrapInput'                => false,
                                          'errorMessage'             => false,
                                          'required'                 => false,
+                                         'accept'                   => 'image/jpeg, image/gif, image/png',
                                          'id'                       => $id_prefix . $model . "_" . $model_id . '_Photo_' . $index,
                                          'data-bv-container'        => '#' . $id_prefix . $model . "_" . $model_id . '_Photo_ValidateMessage',
                                          'data-bv-file'             => 'true',
