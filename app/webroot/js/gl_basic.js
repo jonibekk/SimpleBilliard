@@ -243,6 +243,15 @@ $(document).ready(function () {
         } else {
             $.get(url, function (data) {
                 $modal_elm.append(data);
+                //アップロード画像選択時にトリムして表示
+                $modal_elm.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
+                    $(this).children('.nailthumb-container').nailthumb({
+                        width: 50,
+                        height: 50,
+                        fitDirection: 'center center'
+                    });
+                });
+
                 $modal_elm.find('form').bootstrapValidator({
                     live: 'enabled',
                     feedbackIcons: {},
