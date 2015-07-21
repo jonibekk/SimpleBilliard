@@ -20,7 +20,7 @@
             <div class="panel-body">
                 <div class="form-group">
                     <div class="input-group">
-                        <span class="input-group-addon profile-user-icons" id=""><i class="fa fa-flag"></i></span>
+                        <span class="input-group-addon profile-user-icons" id=""><i class="profile-user-action-related-goal-icon fa fa-flag"></i></span>
                         <?=
                         $this->Form->input('goal_id', [
                             'label'                    => false,
@@ -37,25 +37,21 @@
                     </div>
                 </div>
             </div>
-            <div class="panel-body">
-                <div class="">
-                    <ul class="list-inline">
-                        <li>
-                            <a href="<?= $this->Html->url(array_merge($this->request->params['named'],
-                                                                      ['page_type' => 'image'])) ?>">
-                                <i class="fa fa-th-large link-dark-gray"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="<?= $this->Html->url(array_merge($this->request->params['named'],
-                                                                      ['page_type' => 'list'])) ?>">
-                                <i class="fa fa-reorder link-dark-gray"></i>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="panel-body" id="UserPageContents">
+                <ul class="profile-user-action-view-switch">
+                    <li class="profile-user-action-view-switch-img">
+                        <a href="<?= $this->Html->url(array_merge($this->request->params['named'],
+                                                                  ['page_type' => 'image'])) ?>">
+                            <i class="fa fa-th-large link-dark-gray"></i>
+                        </a>
+                    </li>
+                    <li class="profile-user-action-view-switch-feed">
+                        <a href="<?= $this->Html->url(array_merge($this->request->params['named'],
+                                                                  ['page_type' => 'list'])) ?>">
+                            <i class="fa fa-reorder link-dark-gray"></i>
+                        </a>
+                    </li>
+                </ul>
+            <div class="profile-user-action-contents" id="UserPageContents">
                 <?php if ($this->request->params['named']['page_type'] == "list"): ?>
                     <?= $this->element("Feed/posts") ?>
                 <?php elseif ($this->request->params['named']['page_type'] == "image"): ?>

@@ -86,13 +86,12 @@
   text-align: center;
   padding: 8px 0 4px;
   .no-underline;
-  // text-decoration: none;
-  // &:hover,
-  // &:target,
-  // &:active,
-  // &:focus {
-  //   text-decoration: none;
-  // }
+  &:hover,
+  &:target,
+  &:active,
+  &:focus {
+    color: @basicPink;
+  }
   color: @gray;
 }
 
@@ -145,8 +144,33 @@
 
 .profile-user-tab-active {
   background: #f6f5f1;
+  color: @basicPink;
 }
 
 .profile-user-icons {
   background: @white;
+}
+
+.profile-user-action-related-goal-icon {
+  font-size: @fontLarge;
+}
+
+.profile-user-action-view-switch {
+  margin: 0;
+  padding: 0 12px;
+  text-align: right;
+}
+.profile-user-action-view-switch-img {
+  display: inline-block;
+  font-size: @fontLarge;
+  margin: 0 8px 0 0;
+}
+
+.profile-user-action-view-switch-feed {
+  display: inline-block;
+  font-size: @fontLarge;
+}
+
+.profile-user-action-contents {
+  padding: 4px 11px 10px;
 }
