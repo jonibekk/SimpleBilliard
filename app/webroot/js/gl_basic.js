@@ -1917,7 +1917,9 @@ function evAjaxGoalMemberMore() {
 // ゴールのキーリザルト一覧を取得
 function evAjaxGoalKeyResultMore() {
     var $obj = $(this);
-    $obj.attr('ajax-url', cake.url.goal_key_results + '/goal_id:' + $obj.attr('goal-id') + '/view:key_results');
+    var kr_can_edit = $obj.attr('kr-can-edit');
+    var goal_id = $obj.attr('goal-id');
+    $obj.attr('ajax-url', cake.url.goal_key_results + '/' + kr_can_edit + '/goal_id:' + goal_id + '/view:key_results');
     return evBasicReadMore.call(this);
 }
 

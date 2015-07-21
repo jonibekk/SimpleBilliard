@@ -24,8 +24,8 @@
                     <span class="ml_12px"><?= h($goal['Goal']['progress']) ?>%</span>
                 </div>
             </div>
-            <?php $edit_kr = ($is_leader || $is_collaborator); ?>
-            <?php if ($edit_kr): ?>
+            <?php $kr_can_edit = ($is_leader || $is_collaborator); ?>
+            <?php if ($kr_can_edit): ?>
                 <div>
                     <a class="col col-xxs-12 bd-dash font_lightGray-gray p_10px modal-ajax-get-add-key-result"
                        href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id']]) ?>">
@@ -36,7 +36,7 @@
             <?php endif ?>
             <?= __d('gl', '出したい成果') ?>
             <div class="row borderBottom" id="GoalPageKeyResultContainer">
-                <?= $this->element('Goal/key_results', ['edit_kr' => $edit_kr]) ?>
+                <?= $this->element('Goal/key_results', ['kr_can_edit' => $kr_can_edit]) ?>
                 <?php if (!$key_results): ?>
                     <?= __d('gl', '成果は登録されていません') ?>
                 <? endif ?>
@@ -48,6 +48,7 @@
                id="GoalPageKeyResultMoreLink"
                list-container="#GoalPageKeyResultContainer"
                goal-id="<?= h($goal['Goal']['id']) ?>"
+               kr-can-edit="<?= h((int)$kr_can_edit) ?>"
                 >
                 <?= __d('gl', 'さらに読み込む') ?></a>
         </div>

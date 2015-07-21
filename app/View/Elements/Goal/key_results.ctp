@@ -2,7 +2,7 @@
 /**
  * @var $key_results
  * @var $incomplete_kr_count
- * @var $edit_kr
+ * @var $kr_can_edit
  */
 ?>
 <?php if ($key_results): ?>
@@ -10,7 +10,7 @@
     <?php foreach ($key_results as $kr): ?>
         <div style="padding:3px; margin:3px;">
 
-            <?php if (isset($edit_kr) && $edit_kr): ?>
+            <?php if (isset($kr_can_edit) && $kr_can_edit): ?>
                 <?= $this->element('Goal/key_result_edit_button', ['kr' => $kr]) ?>
             <?php endif ?>
 
