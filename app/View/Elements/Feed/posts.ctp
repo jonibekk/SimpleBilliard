@@ -10,13 +10,15 @@
  * @var CodeCompletionView $this
  * @var                    $goal
  * @var                    $long_text
+ * @var                    $with_header
  */
+$with_header = isset($with_header) ? $with_header : true;
 ?>
 <?php if (!empty($posts)): ?>
     <!-- START app/View/Elements/Feed/posts.ctp -->
     <?php foreach ($posts as $post_key => $post): ?>
         <div class="panel panel-default">
-            <?php if ((isset($post['Goal']['id']) && $post['Goal']['id']) || isset($post['Circle']['id'])): ?>
+            <?php if ($with_header && (isset($post['Goal']['id']) && $post['Goal']['id']) || isset($post['Circle']['id'])): ?>
                 <!--START Goal Post Header -->
 
                 <?php if (isset($post['Goal']['id']) && $post['Goal']['id']): ?>
@@ -27,8 +29,8 @@
                                    class="post-heading-goal
                                     no-line font_verydark modal-ajax-get">
                                     <p class="post-heading-goal-title">
-                                      <i class="fa fa-flag font_gray"></i>
-                                      <span><?= h($post['Goal']['name']) ?></span>
+                                        <i class="fa fa-flag font_gray"></i>
+                                        <span><?= h($post['Goal']['name']) ?></span>
                                     </p>
                                 </a>
                             </div>
@@ -57,10 +59,10 @@
                             <div class="post-heading-circle-wrapper pull-left">
                                 <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'circle_id' => $post['Circle']['id']]) ?>"
                                    class="post-heading-cirlce no-line font_verydark">
-                                   <p class="post-heading-circle-title">
-                                     <i class="fa fa-circle-o font_gray"></i>
-                                     <span><?= h($post['Circle']['name']) ?></span>
-                                   </p>
+                                    <p class="post-heading-circle-title">
+                                        <i class="fa fa-circle-o font_gray"></i>
+                                        <span><?= h($post['Circle']['name']) ?></span>
+                                    </p>
                                 </a>
                             </div>
                             <div class="pull-right">
@@ -83,7 +85,6 @@
                         </div>
                     </div>
                 <?php endif; ?>
-
 
 
                 <!--END Goal Post Header -->
@@ -130,16 +131,18 @@
                             </ul>
                         </div>
                     </div>
-                    <?=
-                    $this->Html->image('ajax-loader.gif',
-                                       [
-                                           'class'         => 'lazy feed-img',
-                                           'data-original' => $this->Upload->uploadUrl($post['User'], 'User.photo',
-                                                                                       ['style' => 'medium']),
-                                       ]
-                    )
-                    ?>
-                    <div class="font_14px font_bold font_verydark"><?= h($post['User']['display_username']) ?></div>
+                    <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $post['User']['id']]) ?>">
+                        <?=
+                        $this->Html->image('ajax-loader.gif',
+                                           [
+                                               'class'         => 'lazy feed-img',
+                                               'data-original' => $this->Upload->uploadUrl($post['User'], 'User.photo',
+                                                                                           ['style' => 'medium']),
+                                           ]
+                        )
+                        ?>
+                        <div class="font_14px font_bold font_verydark"><?= h($post['User']['display_username']) ?></div>
+                    </a>
                     <?= $this->element('Feed/display_share_range', compact('post')) ?>
                 </div>
                 <?= $this->element('Feed/post_body', compact('post')) ?>

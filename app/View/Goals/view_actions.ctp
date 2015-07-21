@@ -6,37 +6,14 @@
  * Time: 3:33 PM
  *
  * @var CodeCompletionView $this
- * @var                    $goal_list
- * @var                    $goal_id
  * @var                    $posts
- * @var                    $goal_base_url
  */
 ?>
-<!-- START app/View/Users/view_actions.ctp -->
+<!-- START app/View/Goals/view_actions.ctp -->
 <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default">
-        <?= $this->element('simplex_top_section') ?>
-        <div class="panel-body view-actions-panel">
-            <div class="form-group">
-                <div class="input-group">
-                    <span class="input-group-addon" id=""><i class="fa fa-flag"></i></span>
-                    <?=
-                    $this->Form->input('goal_id', [
-                        'label'                    => false,
-                        'div'                      => false,
-                        'required'                 => true,
-                        'data-bv-notempty-message' => __d('validate', "入力必須項目です。"),
-                        'class'                    => 'form-control disable-change-warning',
-                        'id'                       => 'SwitchGoalOnMyPage',
-                        'options'                  => $goal_list,
-                        'default'                  => $goal_id,
-                        'redirect-url'             => $goal_base_url,
-                    ])
-                    ?>
-                </div>
-            </div>
-        </div>
-        <div class="panel-body view-actions-panel">
+        <?= $this->element('Goal/simplex_top_section') ?>
+        <div class="panel-body">
             <div class="pull-right">
                 <ul class="list-inline">
                     <li>
@@ -54,14 +31,14 @@
                 </ul>
             </div>
         </div>
-        <div class="panel-body view-actions-panel" id="UserPageContents">
+        <div class="panel-body" id="UserPageContents">
             <?php if ($this->request->params['named']['page_type'] == "list"): ?>
-                <?= $this->element("Feed/posts") ?>
+                <?= $this->element("Feed/posts", ['with_header' => false]) ?>
             <?php elseif ($this->request->params['named']['page_type'] == "image"): ?>
                 <?= $this->element('cube_img_blocks') ?>
             <?php endif; ?>
         </div>
-        <div class="panel-body view-actions-panel">
+        <div class="panel-body">
             <?php if (empty($posts)): ?>
                 <div class="panel panel-default">
                     <div class="panel-body ptb_10px plr_11px ">
@@ -86,9 +63,9 @@
                 $more_read_text = __d('gl', "さらにアクションを読み込む ▼");
             }
 
-            // ユーザーの登録日以前の投稿は存在しないので読み込まないようにする
-            if (isset($user['User']['created']) && $user['User']['created']) {
-                $oldest_post_time = $user['User']['created'];
+            // ゴールの登録日以前の投稿は存在しないので読み込まないようにする
+            if (isset($goal['Goal']['created']) && $goal['Goal']['created']) {
+                $oldest_post_time = $goal['Goal']['created'];
             }
             ?>
             <div class="panel panel-default feed-read-more" id="FeedMoreRead">
@@ -102,8 +79,6 @@
                        get-url="<?=
                        $this->Html->url(['controller' => 'posts',
                                          'action'     => 'ajax_get_user_page_post_feed',
-                                         'user_id'    => viaIsSet($this->request->params['named']['user_id']),
-                                         'author_id'  => viaIsSet($this->request->params['named']['user_id']),
                                          'goal_id'    => viaIsSet($this->request->params['named']['goal_id']),
                                          'type'       => Post::TYPE_ACTION,
                                          'page_type'  => viaIsSet($this->request->params['named']['page_type']),
@@ -118,4 +93,4 @@
         </div>
     </div>
 </div>
-<!-- END app/View/Users/view_actions.ctp -->
+<!-- END app/View/Goals/view_actions.ctp -->

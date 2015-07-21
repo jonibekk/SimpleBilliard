@@ -4,9 +4,9 @@ App::uses('AppModel', 'Model');
 /**
  * Collaborator Model
  *
- * @property Team      $Team
- * @property Goal      $Goal
- * @property User      $User
+ * @property Team $Team
+ * @property Goal $Goal
+ * @property User $User
  */
 class Collaborator extends AppModel
 {
@@ -26,6 +26,13 @@ class Collaborator extends AppModel
     const STATUS_HOLD = 2;
     const STATUS_MODIFY = 3;
 
+    static public $STATUS = [
+        self::STATUS_UNAPPROVED => "",
+        self::STATUS_APPROVAL   => "",
+        self::STATUS_HOLD       => "",
+        self::STATUS_MODIFY     => "",
+    ];
+
     /**
      * タイプの表示名をセット
      */
@@ -33,6 +40,17 @@ class Collaborator extends AppModel
     {
         self::$TYPE[self::TYPE_COLLABORATOR] = __d('gl', "コラボレータ");
         self::$TYPE[self::TYPE_OWNER] = __d('gl', "オーナ");
+    }
+
+    /**
+     * ステータス表示名をセット
+     */
+    private function _setStatusName()
+    {
+        self::$STATUS[self::STATUS_UNAPPROVED] = __d('gl', "認定待ち");
+        self::$STATUS[self::STATUS_APPROVAL] = __d('gl', "評価対象");
+        self::$STATUS[self::STATUS_HOLD] = __d('gl', "評価対象外");
+        self::$STATUS[self::STATUS_MODIFY] = __d('gl', "修正待ち");
     }
 
     /**
@@ -73,6 +91,7 @@ class Collaborator extends AppModel
     {
         parent::__construct($id, $table, $ds);
         $this->_setTypeName();
+        $this->_setStatusName();
     }
 
     function add($goal_id, $uid = null, $type = self::TYPE_COLLABORATOR)
@@ -268,6 +287,38 @@ class Collaborator extends AppModel
             return $res['Collaborator']['user_id'];
         }
         return null;
+    }
+
+    /**
+     * ゴールメンバーの一覧を返す
+     *
+     * @param       $goal_id
+     * @param array $params
+     *                'limit' : find() の limit
+     *                'page'  : find() の page
+     *                'order' : find() の order
+     *
+     * @return array|null
+     */
+    function getCollaboratorByGoalId($goal_id, array $params = [])
+    {
+        $params = array_merge(['limit' => null,
+                               'page'  => 1,
+                               'order' => ['Collaborator.created' => 'ASC'],
+                              ], $params);
+        $options = [
+            'conditions' => [
+                'goal_id' => $goal_id,
+                'team_id' => $this->current_team_id,
+            ],
+            'contain'    => ['User'],
+            'limit'      => $params['limit'],
+            'page'       => $params['page'],
+            'order'      => $params['order'],
+
+        ];
+        $res = $this->find('all', $options);
+        return $res;
     }
 
     /**

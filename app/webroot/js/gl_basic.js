@@ -85,6 +85,18 @@ $(document).ready(function () {
             location.href = data;
         });
     });
+    //マイページのゴール切替え
+    $('#SwitchGoalOnMyPage').change(function () {
+        var goal_id = $(this).val();
+        if (goal_id == "") {
+            var url = $(this).attr('redirect-url');
+        }
+        else {
+            var url = $(this).attr('redirect-url') + "/goal_id:" + goal_id;
+        }
+        location.href = url;
+    });
+
     //autosize
     //noinspection JSJQueryEfficiency
     $('textarea:not(.not-autosize)').autosize();
@@ -340,6 +352,8 @@ $(document).ready(function () {
     //
     $(document).on("submit", "form.ajax-edit-circle-admin-status", evAjaxEditCircleAdminStatus);
     $(document).on("submit", "form.ajax-leave-circle", evAjaxLeaveCircle);
+    $(document).on("click", ".click-goal-follower-more", evAjaxGoalFollowerMore);
+    $(document).on("click", ".click-goal-member-more", evAjaxGoalMemberMore);
 
 
     //noinspection JSJQueryEfficiency
@@ -781,11 +795,14 @@ function evShowAndThisWide() {
     $(this).autosize();
 
     //submitボタンを表示
-    var target = $(this).attr('target_show_id');
-    var target = target.split(',');
-    jQuery.each(target, function () {
-        $("#" + this).show();
-    });
+    if ($(this).attr('target_show_id') != undefined) {
+        var target = $(this).attr('target_show_id');
+
+        var target = target.split(',');
+        jQuery.each(target, function () {
+            $("#" + this).show();
+        });
+    }
 
     //クリック済みにする
     $(this).addClass('clicked');
@@ -1881,7 +1898,7 @@ function evFeedMoreView(options) {
     var month_index = $obj.attr('month-index');
     var no_data_text_id = $obj.attr('no-data-text-id');
     var oldest_post_time = $obj.attr('oldest-post-time') || 0;
-
+    var append_target_id = $obj.attr('append-target-id');
     //リンクを無効化
     $obj.attr('disabled', 'disabled');
 
@@ -1907,7 +1924,12 @@ function evFeedMoreView(options) {
                 var $posts = $(data.html);
                 //一旦非表示
                 $posts.hide();
-                $("#" + parent_id).before($posts);
+                if (append_target_id != undefined) {
+                    $("#" + append_target_id).append($posts);
+                }
+                else {
+                    $("#" + parent_id).before($posts);
+                }
                 //html表示
                 $posts.show("slow", function () {
                     //もっと見る
@@ -1989,6 +2011,92 @@ function evFeedMoreView(options) {
                     //もっと読む表示をやめる
                     $obj.remove();
                 }
+            }
+            autoload_more = false;
+        },
+        error: function () {
+            alert(cake.message.notice.c);
+        }
+    });
+    return false;
+}
+
+// ゴールのフォロワー一覧を取得
+function evAjaxGoalFollowerMore() {
+    var $obj = $(this);
+    $obj.attr('ajax-url', cake.url.goal_followers + '/goal_id:' + $obj.attr('goal-id'));
+    return evBasicReadMore.call(this);
+}
+
+// ゴールのメンバー一覧を取得
+function evAjaxGoalMemberMore() {
+    var $obj = $(this);
+    $obj.attr('ajax-url', cake.url.goal_members + '/goal_id:' + $obj.attr('goal-id'));
+    return evBasicReadMore.call(this);
+}
+
+/**
+ * オートローダー シンプル版
+ *
+ * オプション
+ *   ajax_url: Ajax呼び出しURL
+ *   next-page-num: 次に読み込むページ数
+ *   list-container: Ajaxで読み込んだHTMLを挿入するコンテナのセレクタ
+ *
+ * 使用例
+ *   <a href="#"
+ *      ajax-url="{Ajax呼び出しURL}"
+ *      next-page-num="2"
+ *      list-container="#listContainerID">さらに読み込む</a>
+ *
+ * @returns {boolean}
+ */
+function evBasicReadMore() {
+    var $obj = $(this);
+    var ajax_url = $obj.attr('ajax-url');
+    var next_page_num = $obj.attr('next-page-num');
+    var $list_container = $($obj.attr('list-container'));
+
+    // 次ページのURL
+    ajax_url += '/page:' + next_page_num;
+
+    // さらに読み込むリンク無効化
+    $obj.attr('disabled', 'disabled');
+
+    // ローダー表示
+    var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
+    $obj.after($loader_html);
+
+    $.ajax({
+        type: 'GET',
+        url: ajax_url,
+        async: true,
+        dataType: 'json',
+        success: function (data) {
+            if (!$.isEmptyObject(data.html)) {
+                var $content = $(data.html);
+                $content.hide();
+                $list_container.append($content);
+                $content.show("slow");
+
+                // ページ番号インクリメント
+                next_page_num++;
+                $obj.attr('next-page-num', next_page_num);
+
+                // ローダーを削除
+                $loader_html.remove();
+
+                // リンクを有効化
+                $obj.removeAttr('disabled');
+            }
+
+            // 取得したデータ件数が、１ページの表示件数未満だった場合
+            if (data.count < data.page_item_num) {
+                // ローダーを削除
+                $loader_html.remove();
+
+                // 「さらに読みこむ」表示をやめる
+                $obj.remove();
             }
             autoload_more = false;
         },
@@ -2865,6 +2973,8 @@ $(document).ready(function () {
             if (!autoload_more) {
                 autoload_more = true;
                 $('#FeedMoreReadLink').trigger('click');
+                $('#GoalPageFollowerMoreLink').trigger('click');
+                $('#GoalPageMemberMoreLink').trigger('click');
             }
         }
     });
