@@ -354,6 +354,7 @@ $(document).ready(function () {
     $(document).on("submit", "form.ajax-leave-circle", evAjaxLeaveCircle);
     $(document).on("click", ".click-goal-follower-more", evAjaxGoalFollowerMore);
     $(document).on("click", ".click-goal-member-more", evAjaxGoalMemberMore);
+    $(document).on("click", ".click-goal-key-result-more", evAjaxGoalKeyResultMore);
 
 
     //noinspection JSJQueryEfficiency
@@ -1913,6 +1914,15 @@ function evAjaxGoalMemberMore() {
     return evBasicReadMore.call(this);
 }
 
+// ゴールのキーリザルト一覧を取得
+function evAjaxGoalKeyResultMore() {
+    var $obj = $(this);
+    var kr_can_edit = $obj.attr('kr-can-edit');
+    var goal_id = $obj.attr('goal-id');
+    $obj.attr('ajax-url', cake.url.goal_key_results + '/' + kr_can_edit + '/goal_id:' + goal_id + '/view:key_results');
+    return evBasicReadMore.call(this);
+}
+
 /**
  * オートローダー シンプル版
  *
@@ -1921,14 +1931,31 @@ function evAjaxGoalMemberMore() {
  *   next-page-num: 次に読み込むページ数
  *   list-container: Ajaxで読み込んだHTMLを挿入するコンテナのセレクタ
  *
+ * ajax_url のレスポンスJSON形式
+ *   {
+ *     html: string,         // 一覧(list-container)の末尾に挿入されるHTML
+ *     page_item_num: int,   // １ページ（１度の読み込み）で表示するアイテムの数
+ *     count: int,           // 実際に返されたアイテムの数
+ *   }
+ *
  * 使用例
- *   <a href="#"
- *      ajax-url="{Ajax呼び出しURL}"
- *      next-page-num="2"
- *      list-container="#listContainerID">さらに読み込む</a>
+ *   HTML:
+ *     <a href="#"
+ *        id="SampleReadMoreButtonID"
+ *        ajax-url="{Ajax呼び出しURL}"
+ *        next-page-num="2"
+ *        list-container="#listContainerID">さらに読み込む</a>
+ *
+ *   JavaScript:
+ *     $(document).on("click", "#SampleReadMoreButtonID", evAjaxSampleReadMore);
+ *     function evAjaxSampleReadMore() {
+ *         return evBasicReadMore.call(this);
+ *     }
  *
  * @returns {boolean}
  */
+
+
 function evBasicReadMore() {
     var $obj = $(this);
     var ajax_url = $obj.attr('ajax-url');
@@ -2853,6 +2880,7 @@ $(document).ready(function () {
                 $('#FeedMoreReadLink').trigger('click');
                 $('#GoalPageFollowerMoreLink').trigger('click');
                 $('#GoalPageMemberMoreLink').trigger('click');
+                $('#GoalPageKeyResultMoreLink').trigger('click');
             }
         }
     });

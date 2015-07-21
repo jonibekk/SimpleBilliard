@@ -83,6 +83,11 @@ class GoalFixture extends CakeTestFixture
             'user_id' => '1',
             'team_id' => '1',
         ],
+        [
+            'id'      => '7',
+            'user_id' => '2',
+            'team_id' => '1',
+        ],
     ];
 
 }
