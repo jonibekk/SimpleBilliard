@@ -234,6 +234,41 @@ $(document).ready(function () {
         $modal_elm.on('hidden.bs.modal', function (e) {
             $(this).remove();
         });
+        $modal_elm.on('shown.bs.modal', function (e) {
+            $addActionResultForm = $(this).find('#AddActionResultForm');
+            $addActionResultForm.bootstrapValidator({
+                live: 'enabled',
+                feedbackIcons: {},
+                fields: {
+                    photo: {
+                        selector: '.ModalActionResult_input_field',
+                        validators: {
+                            callback: {
+                                callback: function (value, validator, $field) {
+                                    var isEmpty = true,
+                                    // Get the list of fields
+                                        $fields = validator.getFieldElements('photo');
+                                    for (var i = 0; i < $fields.length; i++) {
+                                        if ($fields.eq(i).val() != '') {
+                                            isEmpty = false;
+                                            break;
+                                        }
+                                    }
+
+                                    if (isEmpty) {
+                                        //// Update the status of callback validator for all fields
+                                        validator.updateStatus('photo', validator.STATUS_INVALID, 'callback');
+                                        return false;
+                                    }
+                                    validator.updateStatus('photo', validator.STATUS_VALID, 'callback');
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
 
         modalFormCommonBindEvent($modal_elm);
 
@@ -243,6 +278,7 @@ $(document).ready(function () {
         } else {
             $.get(url, function (data) {
                 $modal_elm.append(data);
+
                 //アップロード画像選択時にトリムして表示
                 $modal_elm.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
                     $(this).children('.nailthumb-container').nailthumb({
@@ -251,41 +287,9 @@ $(document).ready(function () {
                         fitDirection: 'center center'
                     });
                 });
-
-                $modal_elm.find('form').bootstrapValidator({
-                    live: 'enabled',
-                    feedbackIcons: {},
-                    fields: {
-                        photo: {
-                            // All the email address field have emailAddress class
-                            selector: '.ModalActionResult_input_field',
-                            validators: {
-                                callback: {
-                                    callback: function (value, validator, $field) {
-                                        var isEmpty = true,
-                                        // Get the list of fields
-                                            $fields = validator.getFieldElements('photo');
-                                        for (var i = 0; i < $fields.length; i++) {
-                                            if ($fields.eq(i).val() != '') {
-                                                isEmpty = false;
-                                                break;
-                                            }
-                                        }
-
-                                        if (isEmpty) {
-                                            //// Update the status of callback validator for all fields
-                                            validator.updateStatus('photo', validator.STATUS_INVALID, 'callback');
-                                            return false;
-                                        }
-                                        validator.updateStatus('photo', validator.STATUS_VALID, 'callback');
-                                        return true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
                 $modal_elm.modal();
+
+            }).success(function () {
                 $('body').addClass('modal-open');
             });
         }
@@ -293,7 +297,6 @@ $(document).ready(function () {
     $('.ModalActionResult_input_field').on('change', function () {
         $('#AddActionResultForm').bootstrapValidator('revalidateField', 'photo');
     });
-
 
     $(document).on("click", '.modal-ajax-get-circle-edit', function (e) {
         e.preventDefault();
