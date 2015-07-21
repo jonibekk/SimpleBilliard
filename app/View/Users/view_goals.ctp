@@ -19,40 +19,39 @@
     <div class="panel panel-default">
         <?= $this->element('simplex_top_section') ?>
         <div class="panel-body view-goals-panel">
-            <div class="btn-group" role="group">
+            <div class="profile-goals-select-wrap btn-group" role="group">
                 <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user['User']['id']]) ?>"
-                   class="btn <?= $page_type == "following" ? "btn-default" : "btn-primary" ?>">
+                   class="profile-goals-select btn <?= $page_type == "following" ? "btn-unselected" : "btn-selected" ?>">
                     <?= __d('gl', "マイゴール(%s)", $my_goals_count) ?></a>
                 <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user['User']['id'], 'page_type' => 'following']) ?>"
-                   class="btn <?= $page_type == "following" ? "btn-primary" : "btn-default" ?>">
+                   class="profile-goals-select btn <?= $page_type == "following" ? "btn-selected" : "btn-unselected" ?>">
                     <?= __d('gl', "フォロー中(%s)", $follow_goals_count) ?></a>
             </div>
             <?php foreach ($goals as $goal): ?>
                 <div class="col col-xxs-12 my-goals-item">
-                    <?php if ($is_mine && $page_type != "following"): ?>
-                        <?= $this->element('Goal/goal_menu_on_my_page', ['goal' => $goal]) ?>
-                    <?php endif; ?>
                     <div class="col col-xxs-3 col-xs-2">
                         <a href="#">
                             <?=
                             $this->Html->image('ajax-loader.gif',
                                                [
-                                                   'class'         => 'lazy img-rounded',
-                                                   'style'         => 'width: 48px; height: 48px;',
+                                                   'class'         => 'lazy img-rounded profile-goals-img',
                                                    'data-original' => $this->Upload->uploadUrl($goal, 'Goal.photo',
-                                                                                               ['style' => 'medium'])
+                                                                                               ['style' => 'x_large'])
                                                ]
                             )
                             ?></a>
                     </div>
                     <div class="col col-xxs-9 col-xs-10 pl_5px">
-                        <div class="col col-xxs-12 goals-page-card-title-wrapper">
+                        <div class="col col-md-11 col-xs-10 col-xxs-9 goals-page-card-title-wrapper">
                             <a href="#" class="goals-page-card-title">
                                 <p class="font_verydark goals-page-card-title-text">
                                     <span><?= h($goal['Goal']['name']) ?></span>
                                 </p>
                             </a>
                         </div>
+                        <?php if ($is_mine && $page_type != "following"): ?>
+                            <?= $this->element('Goal/goal_menu_on_my_page', ['goal' => $goal]) ?>
+                        <?php endif; ?>
                         <div class="col col-xxs-12 font_lightgray font_12px">
                             <?= __d('gl', "目的: %s", $goal['Purpose']['name']) ?>
                         </div>
@@ -61,15 +60,6 @@
                                     Collaborator::$STATUS[$goal['Collaborator']['valued_flg']]) ?>
                         </div>
                         <?php if ($page_type != "following"): ?>
-                            <?php if ($is_mine): ?>
-                                <div class="col col-xxs-6 col-xs-4 mr_5px">
-                                    <a class="btn btn-white font_verydark bd-circle_22px p_8px modal-ajax-get-add-key-result add-key-result"
-                                       href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id']]) ?>">
-                                        <i class="fa fa-key font_rougeOrange"></i>
-                                        <span class="ml_5px"><?= __d('gl', "出したい成果を追加") ?></span>
-                                    </a>
-                                </div>
-                            <?php endif; ?>
                             <?php if ($goal['Goal']['user_id'] != $this->Session->read('Auth.User.id') && isset($goal['Goal'])): //ゴールのリーダが自分以外の場合に表示?>
                                 <div class="col col-xxs-12 mt_5px">
                                     <? $follow_opt = $this->Goal->getFollowOption($goal) ?>
@@ -97,10 +87,13 @@
                                 </div>
                             <?php endif; ?>
                             <div class="col col-xxs-12 mt_5px">
-                                <ul class="list-inline">
+                                <ul class="profile-user-actions">
                                     <?php if ($is_mine): ?>
-                                        <li>
-                                            <a href="/"><i class="fa fa-plus"></i><?= __d('gl', "アクションを追加") ?></a>
+                                        <li class="profile-user-action-list">
+                                            <a class="profile-user-add-action" href="/"><i class="fa fa-plus"></i>
+                                                <p class="profile-user-add-action-text "><?= __d('gl', "アクション") ?></p>
+                                                <p class="profile-user-add-action-text "><?= __d('gl', "追加") ?></p>
+                                            </a>
                                         </li>
                                     <?php endif; ?>
                                     <?php foreach ($goal['ActionResult'] as $key => $action): ?>
@@ -115,8 +108,8 @@
                                             $url = ['controller' => 'users', 'action' => 'view_actions', 'user_id' => $user['User']['id'], 'page_type' => 'image', 'goal_id' => $goal['Goal']['id']];//TODO urlはマイページのアクションリストが完成したら差し替え
                                         }
                                         ?>
-                                        <li>
-                                            <a href="<?= $this->Html->url($url) ?>">
+                                        <li class="profile-user-action-list">
+                                            <a href="<?= $this->Html->url($url) ?>" class="profile-user-action-pic">
                                                 <?=
                                                 $this->Html->image('ajax-loader.gif',
                                                                    [
@@ -130,7 +123,10 @@
                                                 )
                                                 ?>
                                                 <?php if ($last_many): ?>
-                                                    <i class="fa fa-plus"></i><?= count($goal['ActionResultCount']) - $display_action_count + 1 ?>
+                                                    <span class="action-more-counts">
+                                                        <i class="fa fa-plus"></i>
+                                                        <?= count($goal['ActionResultCount']) - $display_action_count + 1 ?>
+                                                    </span>
                                                 <?php endif; ?>
                                             </a>
                                         </li>

@@ -117,10 +117,23 @@
 
 .btn-profile-edit {
   .btn;
+  border-color: @basicPink;
+  color: @basicPink;
   display: block;
   width: 144px;
-  margin: 12px auto 0;
+  margin: 0 auto 0;
+  @media screen and (min-width: 520px){
+    margin: 12px auto 0;
+  }
   height: 36px;
   border-radius: 20px;
   text-align: center;
+  &:hover,
+  &:target,
+  &:active,
+  &:focus {
+    color: @white;
+    background: @basicPink;
+    text-decoration: none;
+  }
 }

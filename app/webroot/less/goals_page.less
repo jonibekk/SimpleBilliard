@@ -5,7 +5,7 @@
   line-height: 16px;
 }
 .goals-page-card-title-text {
-  .line-number-limit-2;
+  .line-number-limit-2(#f6f5f1);
   height: 40px;
   font-weight: bold;
 }
@@ -115,4 +115,98 @@
 
 .goals-filters-menu .btn-group.open .dropdown-toggle {
   box-shadow: none;
+}
+
+.profile-goals-select-wrap {
+  width: 100%;
+  text-align: center;
+}
+
+.profile-goals-select {
+  width: 50%;
+}
+
+.btn-unselected {
+  border-color: @dimGray;
+  color: @dimGray;
+  &:hover,
+  &:target,
+  &:active,
+  &:focus {
+    background: @gray;
+    color: @white;
+  }
+}
+
+.btn-selected {
+  border-color: @dimGray;
+  background: @dimGray;
+  color: @white;
+  &:hover,
+  &:target,
+  &:active,
+  &:focus {
+    background: @gray;
+    color: @white;
+  }
+}
+
+.profile-user-action-pic {
+  position: relative;
+  display: block;
+  height: 48px;
+}
+
+.profile-user-actions {
+  margin: 0;
+  padding: 0;
+}
+
+.profile-user-action-list {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 0 8px;
+}
+
+.action-more-counts {
+  color: @dimGray;
+  font-size: @fontLarge;
+  font-weight: bold;
+  width: 48px;
+  height: 48px;
+  line-height: 48px;
+  text-align: center;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: rgba(180, 180, 180, .7);
+}
+
+.profile-user-add-action {
+  width: 48px;
+  height: 48px;
+  display: block;
+  text-align: center;
+  border: 1px dashed @gray;
+  border-radius: 4px;
+  color: @gray;
+  .no-underline;
+  &:hover,
+  &:target,
+  &:active,
+  &:focus {
+    border: 1px solid @dimGray;
+    color: @dimGray;
+  }
+}
+
+.profile-user-add-action-text {
+  font-size: @fontSmallest;
+  letter-spacing: -1px;
+  line-height: 12px;
+}
+
+.profile-goals-img {
+  width: 100%;
+  height: 100%;
 }
