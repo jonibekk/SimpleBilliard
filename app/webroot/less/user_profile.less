@@ -77,13 +77,15 @@
 
 .profile-user-tab-group {
   width: 100%;
+  font-size: 0;
 }
 
 .profile-user-tabs {
-  width: 23%;
+  width: 25%;
   display: inline-block;
   text-align: center;
   text-decoration: none;
+  padding: 8px 0 4px;
   &:hover,
   &:target,
   &:active,
@@ -115,22 +117,35 @@
   .profile-user-tabs;
 }
 
-.view-goals-panel {
+.profile-user-upper-panel {
+  padding: 10px 11px 0;
+}
+
+.profile-user-panels {
   background: #f6f5f1;
+  border-radius: 0 0 4px 4px;
+}
+
+.view-goals-panel {
+  .profile-user-panels;
 }
 
 .view-actions-panel {
-  background: #f6f5f1;
+  .profile-user-panels;
 }
 
 .view-posts-panel {
-  background: #f6f5f1;
+  .profile-user-panels;
 }
 
 .view-info-panel {
-  background: #f6f5f1;
+  .profile-user-panels;
 }
 
 .profile-user-tab-active {
   background: #f6f5f1;
+}
+
+.profile-user-icons {
+  background: @white;
 }
