@@ -230,6 +230,25 @@ class KeyResult extends AppModel
     }
 
     /**
+     * 未完了のキーリザルト数を返す
+     *
+     * @param $goal_id
+     *
+     * @return array|null
+     */
+    function getIncompleteKrCount($goal_id)
+    {
+        $options = [
+            'conditions' => [
+                'goal_id'   => $goal_id,
+                'completed' => null,
+            ],
+        ];
+        $res = $this->find('count', $options);
+        return $res;
+    }
+
+    /**
      * キーリザルト変更権限
      * コラボレータならtrueを返す
      *

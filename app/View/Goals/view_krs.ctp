@@ -7,6 +7,8 @@
  *
  * @var $goal
  * @var $key_results
+ * @var $is_leader
+ * @var $is_collaborator
  */
 ?>
 <!-- START app/View/Goals/view_krs.ctp -->
@@ -22,9 +24,19 @@
                     <span class="ml_12px"><?= h($goal['Goal']['progress']) ?>%</span>
                 </div>
             </div>
+            <?php $edit_kr = ($is_leader || $is_collaborator); ?>
+            <?php if ($edit_kr): ?>
+                <div>
+                    <a class="col col-xxs-12 bd-dash font_lightGray-gray p_10px modal-ajax-get-add-key-result"
+                       href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id']]) ?>">
+                        <i class="fa fa-plus-circle font_brownRed"></i>
+                        <span class="ml_2px"><?= __d('gl', "出したい成果を追加") ?></span>
+                    </a>
+                </div>
+            <?php endif ?>
             <?= __d('gl', '出したい成果') ?>
             <div class="row borderBottom" id="GoalPageKeyResultContainer">
-                <?= $this->element('Goal/key_results') ?>
+                <?= $this->element('Goal/key_results', ['edit_kr' => $edit_kr]) ?>
                 <?php if (!$key_results): ?>
                     <?= __d('gl', '成果は登録されていません') ?>
                 <? endif ?>

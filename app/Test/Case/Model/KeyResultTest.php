@@ -236,6 +236,32 @@ class KeyResultTest extends CakeTestCase
         $this->assertTrue(isset($e));
     }
 
+    function testGetIncompleteKrCount()
+    {
+        $this->setDefault();
+        $goal_id = 1;
+
+        // 現在の未完了件数
+        $count1 = $this->KeyResult->getIncompleteKrCount($goal_id);
+
+        // １件完了済に更新する
+        $row = $this->KeyResult->find('first', [
+            'conditions' => [
+                'goal_id'   => $goal_id,
+                'completed' => null,
+            ],
+        ]);
+        $this->assertNotEmpty($row);
+        $this->KeyResult->id = $row['KeyResult']['id'];
+        $this->KeyResult->read();
+        $res = $this->KeyResult->save(['completed' => 1111111], false);
+        $this->assertNotEmpty($res);
+
+        // 数が合うか確認
+        $count2 = $this->KeyResult->getIncompleteKrCount($goal_id);
+        $this->assertEquals($count1 - 1, $count2);
+    }
+
     function setDefault()
     {
         $this->KeyResult->my_uid = 1;

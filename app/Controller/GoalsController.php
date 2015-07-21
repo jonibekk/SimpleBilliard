@@ -666,12 +666,9 @@ class GoalsController extends AppController
             'page'  => $page,
             'limit' => $limit,
         ]);
-        $incomplete_kr_count = 0;
-        foreach ($key_results as $k => $v) {
-            if (empty($v['KeyResult']['completed'])) {
-                $incomplete_kr_count++;
-            }
-        }
+
+        // 未完了のキーリザルト数
+        $incomplete_kr_count = $this->Goal->KeyResult->getIncompleteKrCount($goal_id);
 
         $this->set(compact('key_results', 'incomplete_kr_count', 'kr_can_edit', 'goal_id'));
 
@@ -1217,6 +1214,11 @@ class GoalsController extends AppController
         return $this->render();
     }
 
+    /**
+     * キーリザルト一覧
+     *
+     * @return CakeResponse
+     */
     function view_krs()
     {
         $goal_id = $this->_getRequiredParam('goal_id');
@@ -1229,6 +1231,11 @@ class GoalsController extends AppController
             'limit' => GOAL_PAGE_KR_NUMBER,
         ]);
         $this->set('key_results', $key_results);
+
+        // 未完了のキーリザルト数
+        $incomplete_kr_count = $this->Goal->KeyResult->getIncompleteKrCount($goal_id);
+        $this->set('incomplete_kr_count', $incomplete_kr_count);
+
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
@@ -1317,6 +1324,16 @@ class GoalsController extends AppController
             }
         }
         $this->set('is_leader', $is_leader);
+
+        // 閲覧者がゴールのコラボレーターかを判別
+        $is_collaborator = false;
+        foreach ($goal['Collaborator'] as $v) {
+            if ($this->Auth->user('id') == $v['User']['id']) {
+                $is_collaborator = true;
+                break;
+            }
+        }
+        $this->set('is_collaborator', $is_collaborator);
 
         return true;
     }
