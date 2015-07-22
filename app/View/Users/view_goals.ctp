@@ -42,9 +42,9 @@
                             ?></a>
                     </div>
                     <div class="col col-xxs-9 col-xs-10 pl_5px">
-                        <div class="col col-md-11 col-xs-10 col-xxs-9 goals-page-card-title-wrapper">
-                            <a href="#" class="goals-page-card-title">
-                                <p class="font_verydark goals-page-card-title-text">
+                        <div class="col col-md-11 col-xs-10 col-xxs-9 profile-goals-card-title-wrapper">
+                            <a href="#" class="profile-goals-card-title">
+                                <p class="font_verydark profile-goals-card-title-text">
                                     <span><?= h($goal['Goal']['name']) ?></span>
                                 </p>
                             </a>
