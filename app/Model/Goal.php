@@ -1450,13 +1450,33 @@ class Goal extends AppModel
         return $is_present_term_flag;
     }
 
-    function getGoalNameList($goal_ids)
+    function getGoalNameList($goal_ids, $with_all_opt = false, $separate_term = false)
     {
         $options = [
             'conditions' => ['id' => $goal_ids],
-            'fields'     => ['id', 'name']
+            'fields'     => ['id', 'name'],
+            'order'      => ['created desc'],
         ];
-        $res = $this->find('list', $options);
+        if (!$separate_term) {
+            $res = $this->find('list', $options);
+            if ($with_all_opt) {
+                return [null => __d('gl', 'すべて')] + $res;
+            }
+            return $res;
+        }
+        $start_date = $this->Team->getCurrentTermStartDate();
+        $current_term_opt = $options;
+        $current_term_opt['conditions']['start_date <='] = $start_date;
+        $current_goals = $this->find('list', $current_term_opt);
+        $before_term_opt = $options;
+        $before_term_opt['conditions']['end_date >'] = $start_date;
+        $before_goals = $this->find('list', $before_term_opt);
+        $res = [];
+        $res += $with_all_opt ? [null => __d('gl', 'すべて')] : null;
+        $res += ['disable_value1' => '----------------------------------------------------------------------------------------'];
+        $res += $current_goals;
+        $res += ['disable_value2' => '----------------------------------------------------------------------------------------'];
+        $res += $before_goals;
         return $res;
     }
 
