@@ -12,7 +12,7 @@
 <!-- START app/View/Elements/Goal/goal_menu_on_my_page.ctp -->
 <div class="dropdown">
     <a href="#"
-       class="pull-right bd-radius_4px font_lightGray-gray"
+       class="bd-radius_4px font_lightGray-gray"
        data-toggle="dropdown"
        id="download">
         <i class="fa fa-ellipsis-h profile-goals-function-icon"></i>
