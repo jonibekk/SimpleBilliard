@@ -1466,10 +1466,10 @@ class Goal extends AppModel
         }
         $start_date = $this->Team->getCurrentTermStartDate();
         $current_term_opt = $options;
-        $current_term_opt['conditions']['start_date <='] = $start_date;
+        $current_term_opt['conditions']['start_date >='] = $start_date;
         $current_goals = $this->find('list', $current_term_opt);
         $before_term_opt = $options;
-        $before_term_opt['conditions']['end_date >'] = $start_date;
+        $before_term_opt['conditions']['end_date <='] = $start_date;
         $before_goals = $this->find('list', $before_term_opt);
         $res = [];
         $res += $with_all_opt ? [null => __d('gl', 'すべて')] : null;
