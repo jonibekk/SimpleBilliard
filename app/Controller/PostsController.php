@@ -13,6 +13,15 @@ class PostsController extends AppController
         parent::beforeFilter();
     }
 
+    public function message()
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
+        // グルーブの絞り込みが選択された場合
+        //$current_global_menu = "team";
+        //$this->set(compact('current_global_menu'));
+        return $this->render();
+    }
+
     /**
      * add message method
      */
