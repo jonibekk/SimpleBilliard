@@ -202,7 +202,7 @@
             </div>
             <div class="panel-body ptb_8px plr_11px comment-block">
                 <?php if ($post['Post']['comment_count'] > 3 && count($post['Comment']) == 3): ?>
-                    <a href="#" class="btn btn-link click-comment-all"
+                    <a href="#" class="btn-link click-comment-all"
                        id="ActionComments_<?= $post['Post']['id'] ?>"
                        parent-id="ActionComments_<?= $post['Post']['id'] ?>"
                        get-url="<?= $this->Html->url(["controller" => "posts", 'action' => 'ajax_get_old_comment', 'post_id' => $post['Post']['id'], $post['Post']['comment_count'] - 3]) ?>"

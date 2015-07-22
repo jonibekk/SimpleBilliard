@@ -23,7 +23,7 @@
                                        'width'      => '186',
                                        'height'      => '186',
                                        'data-original' => $this->Upload->uploadUrl($post, 'ActionResult.photo1',
-                                                                                   ['style' => 'large']),
+                                                                                   ['style' => 'small']),
                                    ]
                 )
                 ?>

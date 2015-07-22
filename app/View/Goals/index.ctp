@@ -46,8 +46,8 @@
             <div class="goals-filters-menu btn-group btn-group-justified" role="group">
                 <div class="goals-search-filters-category-wrap btn-group" role="group">
                     <a href="#" class="goals-search-filters-category dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                        <i class="goals-search-filters-tab-caret fa fa-caret-down"></i>
                         <span class="goals-search-filters-tab-text goal_type_name"><?= $search_option['category'][1] ?></span>
+                        <i class="goals-search-filters-tab-caret fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu" role="menu">
                         <?php foreach ($search_options['category'] as $key => $val): ?>
@@ -59,8 +59,8 @@
                 </div>
                 <div class="goals-search-filters-category-wrap btn-group" role="group">
                     <a href="#" class="goals-search-filters-completed dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                        <i class="goals-search-filters-tab-caret fa fa-caret-down"></i>
                         <span class="goals-search-filters-tab-text goal_type_name"><?= $search_option['progress'][1] ?></span>
+                        <i class="goals-search-filters-tab-caret fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu" role="menu">
                         <?php foreach ($search_options['progress'] as $key => $val): ?>
@@ -72,8 +72,8 @@
                 </div>
                 <div class="goals-search-filters-order-wrap btn-group" role="group">
                     <a href="#" class="goals-search-filters-order goal-filter-elm dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                        <i class="goals-search-filters-tab-caret fa fa-caret-down"></i>
                         <span class="goals-search-filters-tab-text goal_type_name"><?= $search_option['order'][1] ?></span>
+                        <i class="goals-search-filters-tab-caret fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu pull-right" role="menu">
                         <?php foreach ($search_options['order'] as $key => $val): ?>
