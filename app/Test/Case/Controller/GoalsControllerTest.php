@@ -1248,25 +1248,25 @@ class GoalsControllerTest extends ControllerTestCase
     function testViewActionsList()
     {
         $this->_getGoalsCommonMock();
-        $this->testAction('/goals/view_members/goal_id:1/page_type:list');
+        $this->testAction('/goals/view_actions/goal_id:1/page_type:list');
     }
 
     function testViewActionsImage()
     {
         $this->_getGoalsCommonMock();
-        $this->testAction('/goals/view_members/goal_id:1/page_type:image');
+        $this->testAction('/goals/view_actions/goal_id:1/page_type:image');
     }
 
     function testViewActionsNoParams()
     {
         $this->_getGoalsCommonMock();
-        $this->testAction('/goals/view_members/');
+        $this->testAction('/goals/view_actions/');
     }
 
     function testViewActionsInvalidParam()
     {
         $this->_getGoalsCommonMock();
-        $this->testAction('/goals/view_members/goal_id:999');
+        $this->testAction('/goals/view_actions/goal_id:999/page_type:list');
     }
 
     function testViewKrs()
