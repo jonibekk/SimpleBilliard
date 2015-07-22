@@ -36,7 +36,8 @@
                 </div>
                 <div class="panel-body" style="border-top: 1px solid #ddd;">
                     <?= __d('gl', '誕生日') ?>
-                    <span class="pull-right"><?= $this->Time->format('Y/m/d', $user['User']['birth_day']) ?></span>
+                    <span class="pull-right"><?= $this->Time->format($user['User']['hide_year_flg'] ? 'm/d' : 'Y/m/d',
+                                                                     $user['User']['birth_day']) ?></span>
                 </div>
                 <div class="panel-body" style="border-top: 1px solid #ddd;">
                     <?= __d('gl', '出身地') ?>

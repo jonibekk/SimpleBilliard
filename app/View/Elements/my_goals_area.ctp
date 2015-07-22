@@ -70,7 +70,7 @@
     <?php endif ?>
 </div>
 <?php if (count($my_goals) < $my_goals_count): ?>
-    <a href="#" class="click-my-goals-read-more btn btn-link" next-page-num="2"
+    <a href="#" class="click-my-goals-read-more btn-link" next-page-num="2"
        get-url="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_my_goals']) ?>"
        goal-type="leader">
         <i class="fa fa-angle-double-down"><?= __d('gl', "もっと見る") ?></i>
@@ -83,7 +83,7 @@
     <?= $this->element('Goal/my_goal_area_items', ['goals' => $collabo_goals, 'type' => 'collabo']) ?>
 </div>
 <?php if (count($collabo_goals) < $collabo_goals_count): ?>
-    <a href="#" class="click-collabo-goals-read-more btn btn-link" next-page-num="2"
+    <a href="#" class="click-collabo-goals-read-more btn-link" next-page-num="2"
        get-url="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_my_goals']) ?>"
        goal-type="collabo">
         <i class="fa fa-angle-double-down"><?= __d('gl', "もっと見る") ?></i>
@@ -103,7 +103,7 @@
     <?= $this->element('Goal/my_goal_area_items', ['goals' => $follow_goals, 'type' => 'follow']) ?>
 </div>
 <?php if (count($follow_goals) < $follow_goals_count): ?>
-    <a href="#" class="click-follow-goals-read-more btn btn-link" next-page-num="2"
+    <a href="#" class="click-follow-goals-read-more btn-link" next-page-num="2"
        get-url="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_my_goals']) ?>"
        goal-type="follow">
         <i class="fa fa-angle-double-down"><?= __d('gl', "もっと見る") ?></i>
@@ -120,7 +120,7 @@
     <?= $this->element('Goal/my_goal_area_items', ['goals' => $my_previous_goals, 'type' => 'my_prev']) ?>
 </div>
 <?php if (count($my_previous_goals) < $my_previous_goals_count): ?>
-    <a href="#" class="click-collabo-goals-read-more btn btn-link" next-page-num="2"
+    <a href="#" class="click-collabo-goals-read-more btn-link" next-page-num="2"
        get-url="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_my_goals']) ?>"
        goal-type="my_prev">
         <i class="fa fa-angle-double-down"><?= __d('gl', "もっと見る") ?></i>

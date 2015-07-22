@@ -42,9 +42,9 @@
                             ?></a>
                     </div>
                     <div class="col col-xxs-9 col-xs-10 pl_5px">
-                        <div class="col col-md-11 col-xs-10 col-xxs-9 goals-page-card-title-wrapper">
-                            <a href="#" class="goals-page-card-title">
-                                <p class="font_verydark goals-page-card-title-text">
+                        <div class="col col-md-11 col-xs-10 col-xxs-9 profile-goals-card-title-wrapper">
+                            <a href="#" class="profile-goals-card-title">
+                                <p class="font_verydark profile-goals-card-title-text">
                                     <span><?= h($goal['Goal']['name']) ?></span>
                                 </p>
                             </a>
@@ -59,6 +59,16 @@
                             <?= __d('gl', "認定ステータス: %s",
                                     Collaborator::$STATUS[$goal['Collaborator']['valued_flg']]) ?>
                         </div>
+                        <div class="col col-xxs-12">
+                            <div class="progress mb_0px goals-column-progress-bar">
+                                <div class="progress-bar progress-bar-info" role="progressbar"
+                                     aria-valuenow="<?= h($goal['Goal']['progress']) ?>" aria-valuemin="0"
+                                     aria-valuemax="100" style="width: <?= h($goal['Goal']['progress']) ?>%;">
+                                    <span class="ml_12px"><?= h($goal['Goal']['progress']) ?>%</span>
+                                </div>
+                            </div>
+                        </div>
+
                         <?php if ($page_type != "following"): ?>
                             <?php if ($goal['Goal']['user_id'] != $this->Session->read('Auth.User.id') && isset($goal['Goal'])): //ゴールのリーダが自分以外の場合に表示?>
                                 <div class="col col-xxs-12 mt_5px">
@@ -90,8 +100,12 @@
                                 <ul class="profile-user-actions">
                                     <?php if ($is_mine): ?>
                                         <li class="profile-user-action-list">
-                                            <a class="profile-user-add-action modal-ajax-get-add-action" href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_action_modal', 'goal_id' => $goal['Goal']['id']]) ?>"><i class="fa fa-plus"></i>
+                                            <a class="profile-user-add-action modal-ajax-get-add-action"
+                                               href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_action_modal', 'goal_id' => $goal['Goal']['id']]) ?>"><i
+                                                    class="fa fa-plus"></i>
+
                                                 <p class="profile-user-add-action-text "><?= __d('gl', "アクション") ?></p>
+
                                                 <p class="profile-user-add-action-text "><?= __d('gl', "追加") ?></p>
                                             </a>
                                         </li>

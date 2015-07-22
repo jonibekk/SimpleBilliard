@@ -5,7 +5,7 @@
   line-height: 16px;
 }
 .goals-page-card-title-text {
-  .line-number-limit-2(#f6f5f1);
+  .line-number-limit-2;
   height: 40px;
   font-weight: bold;
 }
@@ -209,4 +209,22 @@
 .profile-goals-img {
   width: 100%;
   height: 100%;
+}
+
+.profile-goals-function-icon {
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  border-radius: 4px;
+  border: 1px solid @lightGray;
+  color: @lightGray;
+  font-size: 24px;
+  &:hover,
+  &:target,
+  &:active,
+  &:focus {
+    background: @lightGray;
+    color: #f6f5f1;
+  }
 }

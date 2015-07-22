@@ -628,4 +628,9 @@ class GoalTest extends CakeTestCase
         $res = $this->Goal->setFollowGoalApprovalFlag($goal_list);
         $this->assertArrayNotHasKey('owner_approval_flag', $res[0]['Goal']);
     }
+
+    function testGetGoalNameList()
+    {
+        $this->Goal->getGoalNameList(1);
+    }
 }

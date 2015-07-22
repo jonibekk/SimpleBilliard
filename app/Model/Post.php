@@ -455,6 +455,11 @@ class Post extends AppModel
                                       $this->PostShareCircle->getAccessibleCirclePostList(
                                           $start, $end, "PostShareCircle.modified", "desc", 1000,
                                           ['user_id' => $this->orgParams['user_id']]));
+
+                // 自分自身の user_id が指定された場合は、自分の投稿を含める
+                if ($this->my_uid == $this->orgParams['user_id']) {
+                    $p_list = array_merge($p_list, $this->getMyPostList($start, $end));
+                }
             }
         }
 

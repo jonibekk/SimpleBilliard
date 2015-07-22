@@ -994,7 +994,7 @@ class UsersController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
-    public function ajax_get_user_detail ($user_id)
+    public function ajax_get_user_detail($user_id)
     {
         $this->_ajaxPreProcess();
         $user_detail = $this->User->getDetail($user_id);
@@ -1092,10 +1092,10 @@ class UsersController extends AppController
         $this->_setUserPageHeaderInfo($user_id);
         $this->layout = LAYOUT_ONE_COLUMN;
         $goal_ids = $this->Goal->Collaborator->getCollaboGoalList($user_id, true);
-        $goal_list = [null => '---'] + $this->Goal->getGoalNameList($goal_ids);
+        $goal_select_options = $this->Goal->getGoalNameList($goal_ids, true, true);
         $goal_base_url = Router::url(['controller' => 'users', 'action' => 'view_actions', 'user_id' => $user_id, 'page_type' => $page_type]);
         $this->set('long_text', false);
-        $this->set(compact('goal_list', 'goal_id', 'goal_base_url'));
+        $this->set(compact('goal_select_options', 'goal_id', 'goal_base_url'));
         return $this->render();
     }
 

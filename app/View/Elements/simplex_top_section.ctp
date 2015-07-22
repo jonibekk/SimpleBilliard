@@ -69,7 +69,7 @@
             ?>
         <?php endif ?>
     </div>
-    <div class="profile-user-comments">
+    <div class="profile-user-comments showmore">
         <?= $this->TextEx->autoLink($user['TeamMember']['comment']) ?>
     </div>
 </div>
