@@ -141,7 +141,9 @@ $with_header = isset($with_header) ? $with_header : true;
                                            ]
                         )
                         ?>
-                        <div class="font_14px font_bold font_verydark"><?= h($post['User']['display_username']) ?></div>
+                        <span class="font_14px font_bold font_verydark">
+                            <?= h($post['User']['display_username']) ?>
+                        </span>
                     </a>
                     <?= $this->element('Feed/display_share_range', compact('post')) ?>
                 </div>
