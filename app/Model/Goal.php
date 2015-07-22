@@ -751,6 +751,13 @@ class Goal extends AppModel
                         'fields' => ['Post.id']
                     ]
                 ],
+                'KeyResult'         => [
+                    'fields'     => ['KeyResult.id', 'KeyResult.progress', 'KeyResult.priority'],
+                    'conditions' => [
+                        'KeyResult.start_date >=' => $start_date,
+                        'KeyResult.end_date <'    => $end_date,
+                    ]
+                ],
                 'ActionResultCount' => [
                     'fields'     => ['ActionResultCount.id'],
                     'conditions' => ['ActionResultCount.user_id' => $user_id]
@@ -776,6 +783,11 @@ class Goal extends AppModel
         $approval_statuses = Hash::combine($approval_statuses, '{n}.Collaborator.goal_id', '{n}');
         //認定ステータスのデータをマージ
         $goals = Hash::merge($goals, $approval_statuses);
+        //進捗を計算
+        foreach ($goals as $key => $goal) {
+            $goals[$key]['Goal']['progress'] = $this->getProgress($goal);
+        }
+
         $res = $this->setFollowGoalApprovalFlag($goals);
 
         return $res;
