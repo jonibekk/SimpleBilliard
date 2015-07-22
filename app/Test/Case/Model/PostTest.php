@@ -122,6 +122,9 @@ class PostTest extends CakeTestCase
                                 ['named' => ['user_id' => 104, 'type' => Post::TYPE_NORMAL]]);
         $this->assertEmpty($res);
 
+        $res = $this->Post->get(1, 20, "2014-01-01", "2014-01-31",
+                                ['named' => ['user_id' => 1, 'type' => Post::TYPE_NORMAL]]);
+        $this->assertEmpty($res);
     }
 
     function testGetShareAllMemberList()
