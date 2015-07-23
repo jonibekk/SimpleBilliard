@@ -799,7 +799,6 @@ class GoalsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
-
     function testAjaxGetAddKeyResultModalSuccess()
     {
         $this->_getGoalsCommonMock();
@@ -1218,19 +1217,13 @@ class GoalsControllerTest extends ControllerTestCase
     function testViewFollowersNoParams()
     {
         $this->_getGoalsCommonMock();
-        try {
-            $this->testAction('/goals/view_followers/');
-        } catch (NotFoundException $e) {
-        }
+        $this->testAction('/goals/view_followers/');
     }
 
     function testViewFollowersInvalidParam()
     {
         $this->_getGoalsCommonMock();
-        try {
-            $this->testAction('/goals/view_followers/goal_id:999');
-        } catch (NotFoundException $e) {
-        }
+        $this->testAction('/goals/view_followers/goal_id:999');
     }
 
     function testViewMembers()
@@ -1242,19 +1235,37 @@ class GoalsControllerTest extends ControllerTestCase
     function testViewMembersNoParams()
     {
         $this->_getGoalsCommonMock();
-        try {
-            $this->testAction('/goals/view_members/');
-        } catch (NotFoundException $e) {
-        }
+        $this->testAction('/goals/view_members/');
     }
 
     function testViewMembersInvalidParam()
     {
         $this->_getGoalsCommonMock();
-        try {
-            $this->testAction('/goals/view_members/goal_id:999');
-        } catch (NotFoundException $e) {
-        }
+        $this->testAction('/goals/view_members/goal_id:999');
+    }
+
+    function testViewActionsList()
+    {
+        $this->_getGoalsCommonMock();
+        $this->testAction('/goals/view_actions/goal_id:1/page_type:list');
+    }
+
+    function testViewActionsImage()
+    {
+        $this->_getGoalsCommonMock();
+        $this->testAction('/goals/view_actions/goal_id:1/page_type:image');
+    }
+
+    function testViewActionsNoParams()
+    {
+        $this->_getGoalsCommonMock();
+        $this->testAction('/goals/view_actions/');
+    }
+
+    function testViewActionsInvalidParam()
+    {
+        $this->_getGoalsCommonMock();
+        $this->testAction('/goals/view_actions/goal_id:999/page_type:list');
     }
 
     function testViewKrs()
@@ -1266,19 +1277,13 @@ class GoalsControllerTest extends ControllerTestCase
     function testViewKrsNoParams()
     {
         $this->_getGoalsCommonMock();
-        try {
-            $this->testAction('/goals/view_krs/');
-        } catch (NotFoundException $e) {
-        }
+        $this->testAction('/goals/view_krs/');
     }
 
     function testViewKrsInvalidParam()
     {
         $this->_getGoalsCommonMock();
-        try {
-            $this->testAction('/goals/view_krs/goal_id:999');
-        } catch (NotFoundException $e) {
-        }
+        $this->testAction('/goals/view_krs/goal_id:999');
     }
 
     function testViewInfo()
@@ -1290,28 +1295,19 @@ class GoalsControllerTest extends ControllerTestCase
     function testViewInfoNoParams()
     {
         $this->_getGoalsCommonMock();
-        try {
-            $this->testAction('/goals/view_info/');
-        } catch (NotFoundException $e) {
-        }
+        $this->testAction('/goals/view_info/');
     }
 
     function testViewInfoInvalidParam()
     {
         $this->_getGoalsCommonMock();
-        try {
-            $this->testAction('/goals/view_info/goal_id:999');
-        } catch (NotFoundException $e) {
-        }
+        $this->testAction('/goals/view_info/goal_id:999');
     }
 
     function testViewInfoAsCollaborator()
     {
         $this->_getGoalsCommonMock();
-        try {
-            $this->testAction('/goals/view_info/goal_id:7');
-        } catch (NotFoundException $e) {
-        }
+        $this->testAction('/goals/view_info/goal_id:7');
     }
 
     var $current_date;

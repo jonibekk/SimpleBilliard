@@ -1206,7 +1206,8 @@ class GoalsController extends AppController
         $goal_id = $this->_getRequiredParam('goal_id');
         if (!$this->_setGoalPageHeaderInfo($goal_id)) {
             // ゴールが存在しない
-            throw new NotFoundException();
+            $this->Pnotify->outError(__d('gl', "不正な画面遷移です。"));
+            return $this->redirect($this->referer());
         }
         $followers = $this->Goal->Follower->getFollowerByGoalId($goal_id, [
             'limit'      => GOAL_PAGE_FOLLOWER_NUMBER,
@@ -1227,7 +1228,8 @@ class GoalsController extends AppController
         $goal_id = $this->_getRequiredParam('goal_id');
         if (!$this->_setGoalPageHeaderInfo($goal_id)) {
             // ゴールが存在しない
-            throw new NotFoundException();
+            $this->Pnotify->outError(__d('gl', "不正な画面遷移です。"));
+            return $this->redirect($this->referer());
         }
         $members = $this->Goal->Collaborator->getCollaboratorByGoalId($goal_id, [
             'limit' => GOAL_PAGE_MEMBER_NUMBER,
@@ -1247,7 +1249,8 @@ class GoalsController extends AppController
         $goal_id = $this->_getRequiredParam('goal_id');
         if (!$this->_setGoalPageHeaderInfo($goal_id)) {
             // ゴールが存在しない
-            throw new NotFoundException();
+            $this->Pnotify->outError(__d('gl', "不正な画面遷移です。"));
+            return $this->redirect($this->referer());
         }
         $key_results = $this->Goal->KeyResult->getKeyResults($goal_id, 'all', false, [
             'page'  => 1,
@@ -1268,7 +1271,8 @@ class GoalsController extends AppController
         $goal_id = $this->_getRequiredParam('goal_id');
         if (!$this->_setGoalPageHeaderInfo($goal_id)) {
             // ゴールが存在しない
-            throw new NotFoundException();
+            $this->Pnotify->outError(__d('gl', "不正な画面遷移です。"));
+            return $this->redirect($this->referer());
         }
         $page_type = $this->_getRequiredParam('page_type');
         $goal_id = viaIsSet($this->request->params['named']['goal_id']);
@@ -1303,7 +1307,8 @@ class GoalsController extends AppController
         $goal_id = $this->_getRequiredParam('goal_id');
         if (!$this->_setGoalPageHeaderInfo($goal_id)) {
             // ゴールが存在しない
-            throw new NotFoundException();
+            $this->Pnotify->outError(__d('gl', "不正な画面遷移です。"));
+            return $this->redirect($this->referer());
         }
 
         $this->layout = LAYOUT_ONE_COLUMN;
