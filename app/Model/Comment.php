@@ -1,5 +1,8 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('UploadHelper', 'View/Helper');
+App::uses('TimeExHelper', 'View/Helper');
+App::uses('View', 'View');
 
 /**
  * Comment Model
@@ -188,6 +191,19 @@ class Comment extends AppModel
         return $res;
     }
 
+    function convertData($data)
+    {
+        $upload = new UploadHelper(new View());
+        $time = new TimeExHelper(new View());
+
+        foreach ($data as $key => $val) {
+            $data[$key]['User']['photo_path'] = $upload->uploadUrl($val['User'], 'User.photo', ['style' => 'original']);
+            $data[$key]['Comment']['created'] = $time->elapsedTime(h($val['Comment']['created']));
+        }
+
+        return $data;
+    }
+
     public function getLatestPostsComment($post_id, $last_comment_id = 0)
     {
         //既読済みに
@@ -285,15 +301,15 @@ class Comment extends AppModel
     public function getLikeCountSumByUserId($user_id, $start_date = null, $end_date = null)
     {
         $options = [
-            'fields' => [
+            'fields'     => [
                 'SUM(Comment.comment_like_count) as sum_like',
             ],
             'conditions' => [
                 'Comment.user_id' => $user_id,
                 'Comment.team_id' => $this->current_team_id,
-                'Post.type'    => [Post::TYPE_NORMAL, Post::TYPE_ACTION],
+                'Post.type'       => [Post::TYPE_NORMAL, Post::TYPE_ACTION],
             ],
-            'contain' => [
+            'contain'    => [
                 'Post'
             ]
         ];

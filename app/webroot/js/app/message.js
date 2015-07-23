@@ -15,8 +15,20 @@ message_app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider'
         $urlRouterProvider.otherwise("/");
         $stateProvider
             .state('detail', {
-                url: "/",
+                url: "/:post_id",
                 templateUrl: "/template/message_detail.html",
+                resolve: {
+                    getMessage: ['$stateParams', '$http', function ($stateParams, $http) {
+                        var request = {
+                            method: 'GET',
+                            url: cake.url.af + $stateParams.post_id
+                        };
+
+                        return $http(request).then(function (response) {
+                            return response.data;
+                        });
+                    }]
+                },
                 controller: 'MessageDetailCtrl'
             })
 }]);

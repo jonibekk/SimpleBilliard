@@ -276,6 +276,15 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
+    public function ajax_get_message($post_id)
+    {
+        $this->_ajaxPreProcess();
+        $message_list = $this->Post->Comment->getPostsComment($post_id);
+        $convert_msg_data = $this->Post->Comment->convertData($message_list);
+        $result = ['message_list' => $convert_msg_data];
+        return $this->_ajaxGetResponse($result);
+    }
+
     public function ajax_get_action_list_more()
     {
         $param_named = $this->request->params['named'];
