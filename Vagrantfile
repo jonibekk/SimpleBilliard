@@ -11,6 +11,11 @@ required_plugins.each do |plugin|
  end
 end
 
+is_aws = false
+if ARGV.include?("--provider=aws") then
+  is_aws = true
+end
+
 Vagrant.configure("2") do |config|
   config.vm.box = "hashicorp/precise32"
   # IPアドレスは各アプリ毎に置き換える。(同じIPにしていると他とかぶって面倒)
