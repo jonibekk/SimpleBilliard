@@ -11,7 +11,7 @@
         </div>
     </div>
 
-    <div class="panel-body pt_10px plr_11px pb_8px" style="overflow:scroll;height:700px;margin:0px;">
+    <div class="panel-body pt_10px plr_11px pb_8px" style="overflow:scroll;height:620px;margin:0px;">
 
         <div ng-repeat="item in message_list">
             <div class="col col-xxs-12" style="padding-bottom: 8px">
@@ -31,17 +31,18 @@
                     <div class="comment-text font_12px">{{item.Comment.body}}</div>
 
                     <div class="font_12px">
-                        <span class="font_lightgray"> ･ </span>
                         <a href="#" class="click-like font_lightgray "
                            like_count_id="CommentLikeCount_{{item.Comment.id}}" model_id="23"
                            like_type="comment"> いいね！</a>
                         <span class="font_lightgray"> ･ </span>
                         <span>
-                            <a href="/posts/ajax_get_comment_liked_users/comment_id:{{item.Comment.id}}" class="modal-ajax-get font_lightgray">
+                            <a href="/posts/ajax_get_comment_liked_users/comment_id:{{item.Comment.id}}"
+                               class="modal-ajax-get font_lightgray">
                                 <i class="fa fa-thumbs-o-up"></i>&nbsp;<span id="PostLikeCount_23">{{item.Comment.comment_like_count}}</span>
                             </a>
                             <span class="font_lightgray"> ･ </span>
-                            <a href="/posts/ajax_get_comment_red_users/comment_id:{{item.Comment.id}}" class="modal-ajax-get font_lightgray">
+                            <a href="/posts/ajax_get_comment_red_users/comment_id:{{item.Comment.id}}"
+                               class="modal-ajax-get font_lightgray">
                                 <i class="fa fa-check"></i>&nbsp;<span>{{item.Comment.comment_read_count}}</span>
                             </a>
                         </span>
@@ -76,8 +77,9 @@
                         </div>
                     </div>
                     <div class="pull-right">
-                        <div class="submit"><input class="btn btn-primary submit-btn" id="CommentSubmit_23"
-                                                   type="submit" value="返信する" disabled="disabled"></div>
+                        <div class="submit">
+                            <input class="btn btn-primary submit-btn" type="submit" value="返信する">
+                        </div>
                     </div>
                 </form>
             </div>
