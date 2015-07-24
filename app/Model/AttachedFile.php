@@ -102,69 +102,98 @@ class AttachedFile extends AppModel
     ];
 
     /**
-     * 共通ファイル保存処理
-     * $model_type should be in self::$TYPE_FILE
-     *
-     * @param       $primary_id
-     * @param       $model_type
-     * @param array $file_hashes
-     *
-     * @return bool
-     */
-    public function saveRelatedFiles($primary_id, $model_type, $file_hashes = [])
-    {
-        if (true) {
-            return true;
-        }
-        return false;
-
-    }
-
-    /**
-     * 共通ファイル削除処理
-     * $model_type should be in self::$TYPE_FILE
-     *
-     * @param       $primary_id
-     * @param       $model_type
-     *
-     * @return bool
-     */
-    public function deleteRelatedFiles($primary_id, $model_type)
-    {
-        if (true) {
-            return true;
-        }
-        return false;
-
-    }
-
-    /**
      * ファイルの仮アップロード
      *
-     * @param $postData
+     * @param array $postData
      *
      * @return false|string
      */
     public function preUploadFile($postData)
     {
-        if (true) {
-            return $hashed_key = 'r3j21iop3ijodsa';
+        if (empty($postData)) {
+            return false;
         }
-        return false;
+        return $hashed_key = 'r3j21iop3ijodsa';
     }
 
     /**
      * ファイルアップロードのキャンセル
      *
-     * @param $hashed_key
+     * @param string $hashed_key
      *
      * @return false|string
      */
     public function cancelUploadFile($hashed_key)
     {
-        if (true) {
-            return $hashed_key = 'r3j21iop3ijodsa';
+        if (is_null($hashed_key)) {
+            return false;
         }
-        return false;
+        return $hashed_key = 'r3j21iop3ijodsa';
     }
+
+    /**
+     * 共通のファイル保存処理
+     * $model_type should be in self::$TYPE_FILE
+     *
+     * @param integer $foreign_key_id
+     * @param integer $model_type
+     * @param array   $file_hashes
+     *
+     * @return bool
+     */
+    public function saveRelatedFiles($foreign_key_id, $model_type, $file_hashes = [])
+    {
+        if ($this->isUnavailableModelType($model_type)) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 共通のファイル削除処理(全ての紐付いた画像)
+     * $model_type should be in self::$TYPE_FILE
+     *
+     * @param  integer $foreign_key_id
+     * @param  integer $model_type
+     *
+     * @return bool
+     */
+    public function deleteAllRelatedFiles($foreign_key_id, $model_type)
+    {
+        if ($this->isUnavailableModelType($model_type)) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 共通のファイル単体の削除処理
+     * $model_type should be in self::$TYPE_FILE
+     *
+     * @param integer $attached_file_id
+     * @param integer $model_type
+     *
+     * @return bool
+     */
+    public function deleteRelatedFile($attached_file_id, $model_type)
+    {
+        if ($this->isUnavailableModelType($model_type)) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 利用不可能なモデルタイプを指定されているか？
+     * $model_type should be in self::$TYPE_FILE
+     *
+     * @param $model_type
+     *
+     * @return bool
+     */
+    function isUnavailableModelType($model_type)
+    {
+        return !array_key_exists($model_type, self::$TYPE_MODEL);
+    }
+
 }
