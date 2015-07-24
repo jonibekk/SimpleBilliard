@@ -34,7 +34,7 @@
                 ?>
                 <?=
                 $this->Html->link($this->Upload->uploadImage($member['User'], 'User.photo', ['style' => 'small'],
-                                                             ['class' => 'img-circle',
+                                                             ['class' => 'goal-detail-info-avator img-circle',
                                                               'style' => 'width:38px;']),
                                   ['controller' => 'users',
                                    'action'     => 'view_goals',
