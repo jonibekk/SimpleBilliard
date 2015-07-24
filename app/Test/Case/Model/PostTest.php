@@ -15,10 +15,12 @@ class PostTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.attached_file',
         'app.action_result',
         'app.key_result',
         'app.post',
-        'app.user', 'app.notify_setting',
+        'app.user',
+        'app.notify_setting',
         'app.team',
         'app.goal',
         'app.local_name',
@@ -115,7 +117,7 @@ class PostTest extends CakeTestCase
 
         $res = $this->Post->get(1, 20, "2014-01-01", "2014-01-31",
                                 ['named' => ['user_id' => 103, 'type' => Post::TYPE_NORMAL]]);
-        
+
         $this->assertNotEmpty($res);
 
         $res = $this->Post->get(1, 20, "2014-01-01", "2014-01-31",
