@@ -77,6 +77,9 @@ class NotifyBizComponent extends Component
             case NotifySetting::TYPE_FEED_POST:
                 $this->_setFeedPostOption($model_id);
                 break;
+            case NotifySetting::TYPE_FEED_MESSAGE:
+                $this->_setFeedMessageOption($model_id);
+                break;
             case NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST:
                 $this->_setFeedCommentedOnMineOption(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST, $model_id,
                                                      $sub_model_id);
@@ -293,6 +296,31 @@ class NotifyBizComponent extends Component
         $this->notify_option['item_name'] = !empty($post['Post']['body']) ?
             json_encode([trim($post['Post']['body'])]) : null;
     }
+
+    /**
+     * 自分が閲覧可能なメッセージがあった場合
+     *
+     * @param $post_id
+     *
+     * @throws RuntimeException
+     */
+    private function _setFeedMessageOption($post_id)
+    {
+        $post = $this->Post->findById($post_id);
+        if (empty($post)) {
+            return;
+        }
+        //宛先は閲覧可能な全ユーザ
+        $members = $this->Post->getShareAllMemberList($post_id);
+
+        //対象ユーザの通知設定確認
+        $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($members, NotifySetting::TYPE_FEED_MESSAGE);
+        $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_MESSAGE;
+        $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
+        $this->notify_option['model_id'] = null;
+        $this->notify_option['item_name'] = !empty($post['Post']['body']) ? json_encode([trim($post['Post']['body'])]) : null;
+    }
+
 
     /**
      * 招待したユーザがチーム参加したときのオプション
@@ -754,6 +782,7 @@ class NotifyBizComponent extends Component
         $cmd .= " -o " . $this->Session->read('current_team_id');
         $cmd_end = " > /dev/null &";
         $all_cmd = $set_web_env . $nohup . $cake_cmd . $cake_app . $cmd . $cmd_end;
+        error_log("FURU:".$all_cmd."\n",3,"/tmp/hoge.log");
         exec($all_cmd);
     }
 
@@ -829,6 +858,76 @@ class NotifyBizComponent extends Component
     }
 
     /**
+     * get notifications form redis.
+     * return value like this.
+     * $array = [
+     * [
+     * 'User'         => [
+     * 'id'               => 1,
+     * 'display_username' => 'test taro',
+     * 'photo_file_name'  => null,
+     * ],
+     * 'Notification' => [
+     * 'title'      => 'test taroさんがあなたの投稿にコメントしました。',
+     * 'url'        => 'http://192.168.50.4/post_permanent/1/from_notification:1',
+     * 'unread_flg' => false,
+     * 'created'    => '1429643033',
+     * ]
+     * ],
+     * [
+     * 'User'         => [
+     * 'id'               => 2,
+     * 'display_username' => 'test jiro',
+     * 'photo_file_name'  => null,
+     * ],
+     * 'Notification' => [
+     * 'title'      => 'test jiroさんがあなたの投稿にコメントしました。',
+     * 'url'        => 'http://192.168.50.4/post_permanent/2/from_notification:1',
+     * 'unread_flg' => false,
+     * 'created'    => '1429643033',
+     * ]
+     * ],
+     * ];
+     *
+     * @param null|int $limit
+     * @param null|int $from_date
+     *
+     * @return array
+     */
+    function getMessageNotification($limit = null, $from_date = null)
+    {
+        $notify_from_redis = $this->GlRedis->getMessageNotifications(
+            $this->NotifySetting->current_team_id,
+            $this->NotifySetting->my_uid,
+            $limit,
+            $from_date
+        );
+        if (empty($notify_from_redis)) {
+            return [];
+        }
+        $data = [];
+        foreach ($notify_from_redis as $v) {
+            $data[]['Notification'] = $v;
+        }
+        //fetch User
+        $user_list = Hash::extract($notify_from_redis, '{n}.user_id');
+        $users = Hash::combine($this->NotifySetting->User->getUsersProf($user_list), '{n}.User.id', '{n}');
+        //merge users to notification data
+        foreach ($data as $k => $v) {
+            $user_name = null;
+            if (isset($users[$v['Notification']['user_id']])) {
+                $data[$k] = array_merge($data[$k], $users[$v['Notification']['user_id']]);
+                $user_name = $data[$k]['User']['display_username'];
+            }
+            //get title
+            $title = $this->NotifySetting->getTitle($data[$k]['Notification']['type'],
+                                                    $user_name, 1,
+                                                    $data[$k]['Notification']['body']);
+            $data[$k]['Notification']['title'] = $title;
+        }
+        return $data;
+    }
+    /**
      * set notifications
      *
      * @param array|int $to_user_ids
@@ -865,6 +964,18 @@ class NotifyBizComponent extends Component
     }
 
     /**
+     * get count of new notifications from redis.
+     *
+     * @return int
+     */
+    function getCountNewMessageNotification()
+    {
+        return $this->GlRedis->getCountOfNewMessageNotification(
+            $this->NotifySetting->current_team_id,
+            $this->NotifySetting->my_uid
+        );
+    }
+    /**
      * delete count of new notifications form redis.
      *
      * @return bool
@@ -872,6 +983,18 @@ class NotifyBizComponent extends Component
     function resetCountNewNotification()
     {
         return $this->GlRedis->deleteCountOfNewNotification(
+            $this->NotifySetting->current_team_id,
+            $this->NotifySetting->my_uid
+        );
+    }
+    /**
+     * delete count of new notifications form redis.
+     *
+     * @return bool
+     */
+    function resetCountNewMessageNotification()
+    {
+        return $this->GlRedis->deleteCountOfNewMessageNotification(
             $this->NotifySetting->current_team_id,
             $this->NotifySetting->my_uid
         );

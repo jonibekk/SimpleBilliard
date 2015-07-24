@@ -60,7 +60,11 @@ class PostsController extends AppController
             $this->redirect($this->referer());
         }
 
-        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_POST, $this->Post->getLastInsertID());
+        $notify_type = NotifySetting::TYPE_FEED_POST;
+        if (viaIsSet($this->request->data['Post']['type']) == Post::TYPE_MESSAGE) {
+            $notify_type = NotifySetting::TYPE_FEED_MESSAGE;
+        }
+        $this->NotifyBiz->execSendNotify($notify_type, $this->Post->getLastInsertID());
 
         $socketId = viaIsSet($this->request->data['socket_id']);
         $share = explode(",", viaIsSet($this->request->data['Post']['share']));

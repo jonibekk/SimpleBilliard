@@ -86,6 +86,7 @@ echo $this->Html->script('gl_basic');
             public: "<?=__d('gl',"公開")?>",
             secret: "<?=__d('gl',"秘密")?>",
             select_public_circle: "<?=__d('gl',"公開サークルかメンバーを指定しよう")?>",
+            select_public_message: "<?=__d('gl',"メンバーを指定しよう")?>",
             select_secret_circle: "<?=__d('gl',"秘密サークルを指定しよう")?>",
             share_change_disabled: "<?=__d('gl',"サークルページでは切り替えられません")?>"
         },
@@ -120,6 +121,8 @@ echo $this->Html->script('gl_basic');
             ac: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_team_vision_detail'])?>/",
             ad: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_group_vision_detail'])?>/",
             ae: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_get_user_detail'])?>/",
+            af: "<?=$this->Html->url(['controller'=>'notifications','action'=>'ajax_get_new_message_notify_count'])?>",
+            ag: "<?=$this->Html->url(['controller'=>'notifications','action'=>'ajax_get_latest_message_notify_items'])?>",
             select2_secret_circle: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_secret_circles'])?>/",
             select2_circle_user: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_circles_users'])?>",
             user_page: "<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => '']) ?>",
