@@ -127,6 +127,26 @@ class PostTest extends CakeTestCase
         $this->assertEmpty($res);
     }
 
+    public function testGetLoadedPostTime()
+    {
+        $this->_setDefault();
+
+        $res1 = $this->Post->get(1, 1, "2014-01-01", "2014-01-31");
+        $this->assertNotEmpty($res1);
+
+        $res2 = $this->Post->get(null, 1, "2014-01-01", "2014-01-31",
+                                ['named' => ['loaded_post_time' => null]]);
+        $this->assertEquals($res1[0]['Post']['id'], $res2[0]['Post']['id']);
+
+        $loaded_post_time = $res2[0]['Post']['created'];
+        $res1 = $this->Post->get(2, 1, "2014-01-01", "2014-01-31");
+        $this->assertNotEmpty($res1);
+
+        $res2 = $this->Post->get(null, 1, "2014-01-01", "2014-01-31",
+                                 ['named' => ['loaded_post_time' => $loaded_post_time]]);
+        $this->assertEquals($res1[0]['Post']['id'], $res2[0]['Post']['id']);
+    }
+
     function testGetShareAllMemberList()
     {
         $this->_setDefault();

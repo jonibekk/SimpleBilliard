@@ -151,8 +151,8 @@ class PostFixture extends CakeTestFixture
             'goal_id'         => null,
             'del_flg'         => 0,
             'deleted'         => null,
-            'created'         => 1388603000,
-            'modified'        => 1388603000,
+            'created'         => 1388603001,
+            'modified'        => 1388603001,
         ),
         array(
             'id'              => '',

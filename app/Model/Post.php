@@ -360,6 +360,14 @@ class Post extends AppModel
             $page = $params['named']['page'];
             unset($params['named']['page']);
         }
+        // フロントで最後に読み込んだ投稿の更新時間
+        // このパラメータが指定された場合、loaded_post_time より後の投稿を $limit 件読み込む
+        // page パラメータは無視される（常に１ページ目となる）
+        // 実際の値は投稿の並び順によって created か modified になる
+        $loaded_post_time = null;
+        if (isset($params['named']['loaded_post_time']) && !empty($params['named']['loaded_post_time'])) {
+            $loaded_post_time = $params['named']['loaded_post_time'];
+        }
 
         $p_list = [];
         $org_param_exists = false;
@@ -489,6 +497,12 @@ class Post extends AppModel
             // 独自パラメータ無しの場合（ホームフィードの場合）
             if (!$org_param_exists) {
                 $post_options['order'] = ['Post.created' => 'desc'];
+            }
+            // 最後に読み込んだ投稿の更新時間が指定されている場合
+            if ($loaded_post_time) {
+                $order_col = key($post_options['order']);
+                $post_options['conditions']["$order_col <"] = $loaded_post_time;
+                unset($post_options['page']);
             }
             $post_list = $this->find('list', $post_options);
         }

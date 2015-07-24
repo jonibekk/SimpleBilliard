@@ -135,15 +135,30 @@ if (!isset($this->request->params['post_id']) || empty($this->request->params['p
         $more_read_text = __d('gl', "さらに投稿を読み込む ▼");
     }
 
+    // 読み込んだ最後の投稿
+    // 次回 Ajax リクエストの際はこの投稿の更新時間より前の投稿のみを読み込む
+    // ホームフィードでは created、その他では modified を使用する
+    $last_post = end($posts);
+    $loaded_post_time = null;
+    $loaded_post_time_type = null;
+
     // circle_feed ページの場合
     // サークル作成日以前の投稿は存在しないので読み込まない
     if (isset($current_circle) && $current_circle) {
         $oldest_post_time = $current_circle['Circle']['created'];
+        if ($last_post) {
+            $loaded_post_time = $last_post['Post']['modified'];
+            $loaded_post_time_type = 'modified';
+        }
     }
     // ホーム画面の場合
     // チーム作成日以前の投稿は存在しないので読み込まない
     elseif (isset($current_team) && $current_team) {
         $oldest_post_time = $current_team['Team']['created'];
+        if ($last_post) {
+            $loaded_post_time = $last_post['Post']['created'];
+            $loaded_post_time_type = 'created';
+        }
     }
     ?>
     <div class="panel panel-default feed-read-more" id="FeedMoreRead">
@@ -158,6 +173,8 @@ if (!isset($this->request->params['post_id']) || empty($this->request->params['p
                $this->Html->url($feed_more_read_url) ?>"
                id="FeedMoreReadLink"
                oldest-post-time="<?= $oldest_post_time ?>"
+               loaded-post-time="<?= $loaded_post_time ?>"
+               loaded-post-time-type="<?= $loaded_post_time_type ?>"
                 >
                 <?= $more_read_text ?></a>
         </div>
