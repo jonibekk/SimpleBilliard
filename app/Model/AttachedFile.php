@@ -46,7 +46,6 @@ class AttachedFile extends AppModel
     static public $TYPE_MODEL = [
         self::TYPE_MODEL_POST    => [
             'intermediateModel' => 'PostFile',
-            'foreign_key'       => 'PostFile',
         ],
         self::TYPE_MODEL_COMMENT => [
             'intermediateModel' => 'CommentFile',
