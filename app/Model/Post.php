@@ -18,6 +18,7 @@ App::uses('AppModel', 'Model');
  * @property ActionResult    $ActionResult
  * @property KeyResult       $KeyResult
  * @property Circle          $Circle
+ * @property AttachedFile    $AttachedFile
  */
 class Post extends AppModel
 {
@@ -60,6 +61,10 @@ class Post extends AppModel
         'goal_id'     => null,
         'filter_goal' => null,
         'type'        => null,
+    ];
+
+    public $uses = [
+        'AttachedFile'
     ];
 
     public $actsAs = [

@@ -4,14 +4,19 @@ App::uses('AppModel', 'Model');
 /**
  * Comment Model
  *
- * @property Post        $Post
- * @property User        $User
- * @property Team        $Team
- * @property CommentLike $CommentLike
- * @property CommentRead $CommentRead
+ * @property Post         $Post
+ * @property User         $User
+ * @property Team         $Team
+ * @property CommentLike  $CommentLike
+ * @property CommentRead  $CommentRead
+ * @property AttachedFile $AttachedFile
  */
 class Comment extends AppModel
 {
+    public $uses = [
+        'AttachedFile'
+    ];
+
     public $actsAs = [
         'Upload' => [
             'photo1'     => [
@@ -285,15 +290,15 @@ class Comment extends AppModel
     public function getLikeCountSumByUserId($user_id, $start_date = null, $end_date = null)
     {
         $options = [
-            'fields' => [
+            'fields'     => [
                 'SUM(Comment.comment_like_count) as sum_like',
             ],
             'conditions' => [
                 'Comment.user_id' => $user_id,
                 'Comment.team_id' => $this->current_team_id,
-                'Post.type'    => [Post::TYPE_NORMAL, Post::TYPE_ACTION],
+                'Post.type'       => [Post::TYPE_NORMAL, Post::TYPE_ACTION],
             ],
-            'contain' => [
+            'contain'    => [
                 'Post'
             ]
         ];

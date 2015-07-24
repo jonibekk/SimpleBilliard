@@ -15,9 +15,11 @@ class CommentTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.attached_file',
         'app.comment',
         'app.post',
-        'app.user', 'app.notify_setting',
+        'app.user',
+        'app.notify_setting',
         'app.team',
         'app.comment_like',
         'app.comment_read',
