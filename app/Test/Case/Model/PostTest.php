@@ -127,6 +127,22 @@ class PostTest extends CakeTestCase
         $this->assertEmpty($res);
     }
 
+    public function testGetLoadedPostTime()
+    {
+        $this->_setDefault();
+
+        // 2ページ目のデータを読み込む
+        $res1 = $this->Post->get(2, 1, "2014-01-01", "2014-01-31");
+        $this->assertNotEmpty($res1);
+
+        $post_time_before = $res1[0]['Post']['created'];
+
+        // 時間指定ありで１ページ目を取得
+        $res2 = $this->Post->get(1, 1, "2014-01-01", "2014-01-31",
+                                 ['named' => ['post_time_before' => $post_time_before]]);
+        $this->assertEquals($res1[0]['Post']['id'], $res2[0]['Post']['id']);
+    }
+
     function testGetShareAllMemberList()
     {
         $this->_setDefault();
