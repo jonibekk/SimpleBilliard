@@ -18,7 +18,7 @@
         <?=
         $this->Html->image('ajax-loader.gif',
                            [
-                               'class'         => 'lazy',
+                               'class'         => 'goal-detail-avator lazy',
                                'data-original' => $this->Upload->uploadUrl($goal['Goal'], 'Goal.photo',
                                                                            ['style' => 'large']),
                            ]
@@ -36,26 +36,26 @@
     <div class="goal-detail-numbers-wrap">
         <div class="goal-detail-numbers-action">
             <div class="goal-detail-numbers-action-counts">
-                <?= __d('gl', 'アクション') ?>
+                <?= h($action_count) ?>
             </div>
             <span class="goal-detail-numbers-category-action">
-                 <?= h($action_count) ?>
+                <?= __d('gl', 'アクション') ?>
             </span>
         </div>
         <div class="goal-detail-numbers-member">
             <div class="goal-detail-numbers-member-counts">
-                <?= __d('gl', 'メンバー') ?>
+                <?= h($member_count) ?>
             </div>
             <span class="goal-detail-numbers-category-member">
-                 <?= h($member_count) ?>
+                <?= __d('gl', 'メンバー') ?>
             </span>
         </div>
         <div class="goal-detail-numbers-follower">
             <div class="goal-detail-numbers-follower-counts">
-                <?= __d('gl', 'フォロワー') ?>
+                <?= h($follower_count) ?>
             </div>
             <span class="goal-detail-numbers-category-follower">
-                 <?= h($follower_count) ?>
+                <?= __d('gl', 'フォロワー') ?>
             </span>
         </div>
         <?php if ($is_leader): ?>
@@ -72,68 +72,68 @@
             ?>
         <?php endif ?>
     </div>
-    <div class="goal-detail-tab-group">
-        <a class="goal-detail-info-tab"
-                href="<?= $this->Html->url(
-                    [
-                        'controller' => 'goals',
-                        'action'     => 'view_info',
-                        'goal_id'    => $goal['Goal']['id'],
-                    ]); ?>">
-                <i class="fa fa-flag goal-detail-tab-icon"></i>
-                <p class="goal-detail-tab-title">
-                    <?= h(__d('gl', '基本情報')) ?>
-                </p>
-        </a>
-        <a class="goal-detail-kr-tab"
+</div>
+<div class="goal-detail-tab-group">
+    <a class="goal-detail-info-tab <?= $this->request->params['action'] == 'view_info' ? "profile-user-tab-active" : null ?>"
             href="<?= $this->Html->url(
                 [
                     'controller' => 'goals',
-                    'action'     => 'view_krs',
+                    'action'     => 'view_info',
                     'goal_id'    => $goal['Goal']['id'],
                 ]); ?>">
             <i class="fa fa-flag goal-detail-tab-icon"></i>
             <p class="goal-detail-tab-title">
-                <?= h(__d('gl', '成果')) ?>
+                <?= h(__d('gl', '基本情報')) ?>
             </p>
-        </a>
-        <a class="goal-detail-action-tab"
-            href="<?= $this->Html->url(
-                [
-                    'controller' => 'goals',
-                    'action'     => 'view_actions',
-                    'goal_id'    => $goal['Goal']['id'],
-                    'page_type'  => 'image'
-                ]); ?>">
-            <i class="fa fa-flag goal-detail-tab-icon"></i>
-            <p class="goal-detail-tab-title">
-                <?= h(__d('gl', 'アクション')) ?>
-            </p>
-        </a>
-        <a class="goal-detail-member-tab"
-            href="<?= $this->Html->url(
-                [
-                    'controller' => 'goals',
-                    'action'     => 'view_members',
-                    'goal_id'    => $goal['Goal']['id'],
-                ]); ?>">
-            <i class="fa fa-flag goal-detail-tab-icon"></i>
-            <p class="goal-detail-tab-title">
-                <?= h(__d('gl', 'メンバー')) ?>
-            </p>
-        </a>
-        <a class="goal-detail-member-tab"
-            href="<?= $this->Html->url(
-                [
-                    'controller' => 'goals',
-                    'action'     => 'view_followers',
-                    'goal_id'    => $goal['Goal']['id'],
-                ]); ?>">
-            <i class="fa fa-flag goal-detail-tab-icon"></i>
-            <p class="goal-detail-tab-title">
-                <?= h(__d('gl', 'フォロワー')) ?>
-            </p>
-        </a>
-    </div>
+    </a>
+    <a class="goal-detail-kr-tab <?= $this->request->params['action'] == 'view_krs' ? "profile-user-tab-active" : null ?>"
+        href="<?= $this->Html->url(
+            [
+                'controller' => 'goals',
+                'action'     => 'view_krs',
+                'goal_id'    => $goal['Goal']['id'],
+            ]); ?>">
+        <i class="fa fa-key goal-detail-tab-icon"></i>
+        <p class="goal-detail-tab-title">
+            <?= h(__d('gl', '成果')) ?>
+        </p>
+    </a>
+    <a class="goal-detail-action-tab <?= $this->request->params['action'] == 'view_actions' ? "profile-user-tab-active" : null ?>"
+        href="<?= $this->Html->url(
+            [
+                'controller' => 'goals',
+                'action'     => 'view_actions',
+                'goal_id'    => $goal['Goal']['id'],
+                'page_type'  => 'image'
+            ]); ?>">
+        <i class="fa fa-check goal-detail-tab-icon"></i>
+        <p class="goal-detail-tab-title">
+            <?= h(__d('gl', 'アクション')) ?>
+        </p>
+    </a>
+    <a class="goal-detail-member-tab <?= $this->request->params['action'] == 'view_members' ? "profile-user-tab-active" : null ?>"
+        href="<?= $this->Html->url(
+            [
+                'controller' => 'goals',
+                'action'     => 'view_members',
+                'goal_id'    => $goal['Goal']['id'],
+            ]); ?>">
+        <i class="fa fa-users goal-detail-tab-icon"></i>
+        <p class="goal-detail-tab-title">
+            <?= h(__d('gl', 'メンバー')) ?>
+        </p>
+    </a>
+    <a class="goal-detail-member-tab <?= $this->request->params['action'] == 'view_followers' ? "profile-user-tab-active" : null ?>"
+        href="<?= $this->Html->url(
+            [
+                'controller' => 'goals',
+                'action'     => 'view_followers',
+                'goal_id'    => $goal['Goal']['id'],
+            ]); ?>">
+        <i class="fa fa-heart goal-detail-tab-icon"></i>
+        <p class="goal-detail-tab-title">
+            <?= h(__d('gl', 'フォロワー')) ?>
+        </p>
+    </a>
 </div>
 <!-- END app/View/Elements/simplex_top_section.ctp -->
