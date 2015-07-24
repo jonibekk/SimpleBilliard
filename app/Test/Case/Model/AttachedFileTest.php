@@ -86,4 +86,8 @@ class AttachedFileTest extends CakeTestCase
         parent::tearDown();
     }
 
+    function testDummy()
+    {
+    }
+
 }

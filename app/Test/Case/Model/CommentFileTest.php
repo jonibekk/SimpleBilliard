@@ -85,5 +85,8 @@ class CommentFileTest extends CakeTestCase
 
         parent::tearDown();
     }
+    function testDummy()
+    {
+    }
 
 }

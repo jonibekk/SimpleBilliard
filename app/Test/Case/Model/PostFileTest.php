@@ -85,5 +85,8 @@ class PostFileTest extends CakeTestCase
 
         parent::tearDown();
     }
+    function testDummy()
+    {
+    }
 
 }
