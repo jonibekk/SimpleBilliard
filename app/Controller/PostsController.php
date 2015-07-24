@@ -245,23 +245,15 @@ class PostsController extends AppController
         $posts = $this->Post->get($page_num, POST_FEED_PAGE_ITEMS_NUMBER, $start, $end, $this->request->params);
         $this->set(compact('posts'));
 
-        // 読み込んだ最後の投稿の created と modified
-        // Ajax で次の投稿を取得するときに使う
-        $last_post = end($posts);
-        $loaded_post_created = $last_post['Post']['created'];
-        $loaded_post_modified = $last_post['Post']['modified'];
-
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
         $response = $this->render('Feed/posts');
         $html = $response->__toString();
         $result = array(
-            'html'                      => $html,
-            'count'                     => count($posts),
-            'page_item_num'             => POST_FEED_PAGE_ITEMS_NUMBER,
-            'start'                     => $start ? $start : REQUEST_TIMESTAMP - MONTH,
-            'loaded_post_time_created'  => $loaded_post_created,
-            'loaded_post_time_modified' => $loaded_post_modified,
+            'html'          => $html,
+            'count'         => count($posts),
+            'page_item_num' => POST_FEED_PAGE_ITEMS_NUMBER,
+            'start'         => $start ? $start : REQUEST_TIMESTAMP - MONTH,
         );
         return $this->_ajaxGetResponse($result);
     }
@@ -279,23 +271,15 @@ class PostsController extends AppController
         $posts = $this->Post->get($page_num, POST_FEED_PAGE_ITEMS_NUMBER, null, null, $this->request->params);
         $this->set(compact('posts'));
 
-        // 読み込んだ最後の投稿の created と modified
-        // Ajax で次の投稿を取得するときに使う
-        $last_post = end($posts);
-        $loaded_post_created = $last_post['Post']['created'];
-        $loaded_post_modified = $last_post['Post']['modified'];
-
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
         $response = $this->render('Feed/action_posts');
         $html = $response->__toString();
         $result = array(
-            'html'                      => $html,
-            'count'                     => count($posts),
-            'page_item_num'             => POST_FEED_PAGE_ITEMS_NUMBER,
-            'start'                     => 0,
-            'loaded_post_time_created'  => $loaded_post_created,
-            'loaded_post_time_modified' => $loaded_post_modified,
+            'html'          => $html,
+            'count'         => count($posts),
+            'page_item_num' => POST_FEED_PAGE_ITEMS_NUMBER,
+            'start'         => 0,
         );
         return $this->_ajaxGetResponse($result);
     }
@@ -338,23 +322,15 @@ class PostsController extends AppController
         $this->set('posts', $posts);
         $this->set('long_text', false);
 
-        // 読み込んだ最後の投稿の created と modified
-        // Ajax で次の投稿を取得するときに使う
-        $last_post = end($posts);
-        $loaded_post_created = $last_post['Post']['created'];
-        $loaded_post_modified = $last_post['Post']['modified'];
-
         // エレメントの出力を変数に格納する
         // htmlレンダリング結果
         $response = $this->render($elm_path);
         $html = $response->__toString();
         $result = array(
-            'html'                      => $html,
-            'count'                     => count($posts),
-            'page_item_num'             => $item_num,
-            'start'                     => $start ? $start : REQUEST_TIMESTAMP - MONTH,
-            'loaded_post_time_created'  => $loaded_post_created,
-            'loaded_post_time_modified' => $loaded_post_modified,
+            'html'          => $html,
+            'count'         => count($posts),
+            'page_item_num' => $item_num,
+            'start'         => $start ? $start : REQUEST_TIMESTAMP - MONTH,
         );
         return $this->_ajaxGetResponse($result);
     }

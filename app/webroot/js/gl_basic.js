@@ -1861,9 +1861,9 @@ function evFeedMoreView(options) {
     var no_data_text_id = $obj.attr('no-data-text-id');
     var oldest_post_time = $obj.attr('oldest-post-time') || 0;
     var append_target_id = $obj.attr('append-target-id');
-    // 最後に読み込んだ投稿の更新時間と種類
-    var loaded_post_time = $obj.attr('loaded-post-time') || 0;
-    var loaded_post_time_type = $obj.attr('loaded-post-time-type') || '';  // created or modified
+    // この時間より前の投稿のみ読み込む
+    var post_time_before = $obj.attr('post-time-before') || 0;
+
     //リンクを無効化
     $obj.attr('disabled', 'disabled');
 
@@ -1874,16 +1874,11 @@ function evFeedMoreView(options) {
     }
 
     // URL生成
-    // 投稿の更新時間が指定されていれば、それ以前の投稿を取得する
-    // 指定されていない場合は、ページ番号指定で取得する
-    var url = get_url;
-    if (loaded_post_time && loaded_post_time_type) {
-        url += '/page:1/loaded_post_time:' + loaded_post_time;
+    // 投稿の更新時間が指定されていれば、それ以前の投稿のみを取得する
+    var url = get_url + '/page:' + next_page_num;
+    if (post_time_before) {
+        url += '/post_time_before:' + post_time_before;
     }
-    else {
-        url += '/page:' + next_page_num;
-    }
-
     if (month_index != undefined && month_index > 0) {
         url = url + '/month_index:' + month_index;
     }
@@ -1923,22 +1918,6 @@ function evFeedMoreView(options) {
                 next_page_num++;
                 //次のページ番号をセット
                 $obj.attr('next-page-num', next_page_num);
-
-                // 投稿時間指定がある場合
-                if (loaded_post_time && loaded_post_time_type) {
-                    var t;
-                    switch (loaded_post_time_type) {
-                        case 'created':
-                            t = data.loaded_post_time_created;
-                            break;
-                        case 'modified':
-                            t = data.loaded_post_time_modified;
-                            break;
-                    }
-                    if (t) {
-                        $obj.attr('loaded-post-time', t);
-                    }
-                }
                 //ローダーを削除
                 $loader_html.remove();
                 //リンクを有効化

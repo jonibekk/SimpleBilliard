@@ -131,19 +131,15 @@ class PostTest extends CakeTestCase
     {
         $this->_setDefault();
 
-        $res1 = $this->Post->get(1, 1, "2014-01-01", "2014-01-31");
-        $this->assertNotEmpty($res1);
-
-        $res2 = $this->Post->get(null, 1, "2014-01-01", "2014-01-31",
-                                ['named' => ['loaded_post_time' => null]]);
-        $this->assertEquals($res1[0]['Post']['id'], $res2[0]['Post']['id']);
-
-        $loaded_post_time = $res2[0]['Post']['created'];
+        // 2ページ目のデータを読み込む
         $res1 = $this->Post->get(2, 1, "2014-01-01", "2014-01-31");
         $this->assertNotEmpty($res1);
 
-        $res2 = $this->Post->get(null, 1, "2014-01-01", "2014-01-31",
-                                 ['named' => ['loaded_post_time' => $loaded_post_time]]);
+        $post_time_before = $res1[0]['Post']['created'];
+
+        // 時間指定ありで１ページ目を取得
+        $res2 = $this->Post->get(1, 1, "2014-01-01", "2014-01-31",
+                                 ['named' => ['post_time_before' => $post_time_before]]);
         $this->assertEquals($res1[0]['Post']['id'], $res2[0]['Post']['id']);
     }
 
