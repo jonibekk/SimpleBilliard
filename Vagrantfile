@@ -23,21 +23,21 @@ Vagrant.configure("2") do |config|
     config.omnibus.chef_version = '11.4.4'
   end
 
-  config.vm.define "local", primary: true do |local|
-    local.vm.box = "hashicorp/precise32"
+  config.vm.define "default", primary: true do |default|
+    default.vm.box = "hashicorp/precise32"
     # IPアドレスは各アプリ毎に置き換える。(同じIPにしていると他とかぶって面倒)
-    local.vm.network "private_network", ip: "192.168.50.4"
+    default.vm.network "private_network", ip: "192.168.50.4"
 
-    local.vm.provider :virtualbox do |vb|
+    default.vm.provider :virtualbox do |vb|
       vb.memory = 1024
       vb.cpus = 1
     end
     src_dir = './'
     doc_root = '/vagrant_data/app/webroot'
     app_root = '/vagrant_data/'
-    local.vm.synced_folder src_dir, "/vagrant_data", :create => true, :owner=> 'vagrant', :group=>'www-data', :mount_options => ['dmode=775,fmode=775']
+    default.vm.synced_folder src_dir, "/vagrant_data", :create => true, :owner=> 'vagrant', :group=>'www-data', :mount_options => ['dmode=775,fmode=775']
 
-    local.vm.provision :chef_solo do |chef|
+    default.vm.provision :chef_solo do |chef|
       chef.cookbooks_path = "cookbooks"
       chef.add_recipe "apt"
       chef.add_recipe "php_nginx"
@@ -49,8 +49,8 @@ Vagrant.configure("2") do |config|
       chef.json = {doc_root: doc_root,app_root: app_root, php5:{session_secure:"Off"}}
     end
     if Vagrant.has_plugin?("vagrant-triggers")
-      local.trigger.after [:reload, :halt], stdout: true do
-        `rm .vagrant/machines/local/virtualbox/synced_folders`
+      default.trigger.after [:reload, :halt], stdout: true do
+        `rm .vagrant/machines/default/virtualbox/synced_folders`
         `pkill vagrant-notify-server`
       end
     end
