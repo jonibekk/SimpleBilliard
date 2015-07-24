@@ -132,6 +132,19 @@ class AttachedFile extends AppModel
     }
 
     /**
+     * 利用不可能なモデルタイプを指定されているか？
+     * $model_type should be in self::$TYPE_FILE
+     *
+     * @param $model_type
+     *
+     * @return bool
+     */
+    function isUnavailableModelType($model_type)
+    {
+        return !array_key_exists($model_type, self::$TYPE_MODEL);
+    }
+
+    /**
      * 共通のファイル保存処理
      * $model_type should be in self::$TYPE_FILE
      *
@@ -181,19 +194,6 @@ class AttachedFile extends AppModel
             return false;
         }
         return true;
-    }
-
-    /**
-     * 利用不可能なモデルタイプを指定されているか？
-     * $model_type should be in self::$TYPE_FILE
-     *
-     * @param $model_type
-     *
-     * @return bool
-     */
-    function isUnavailableModelType($model_type)
-    {
-        return !array_key_exists($model_type, self::$TYPE_MODEL);
     }
 
 }
