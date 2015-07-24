@@ -23,14 +23,6 @@ Vagrant.configure("2") do |config|
     config.omnibus.chef_version = '11.4.4'
   end
 
-  if Vagrant.has_plugin?("vagrant-triggers")
-    config.trigger.after [:reload, :halt], stdout: true do
-      `rm .vagrant/machines/default/virtualbox/synced_folders`
-      `rm .vagrant/machines/default/aws/synced_folders`
-      `pkill vagrant-notify-server`
-    end
-  end
-
   config.vm.define "local", primary: true do |local|
     local.vm.box = "hashicorp/precise32"
     # IPアドレスは各アプリ毎に置き換える。(同じIPにしていると他とかぶって面倒)
@@ -56,6 +48,13 @@ Vagrant.configure("2") do |config|
       chef.add_recipe "deploy_cake_local"
       chef.json = {doc_root: doc_root,app_root: app_root, php5:{session_secure:"Off"}}
     end
+    if Vagrant.has_plugin?("vagrant-triggers")
+      local.trigger.after [:reload, :halt], stdout: true do
+        `rm .vagrant/machines/local/virtualbox/synced_folders`
+        `pkill vagrant-notify-server`
+      end
+    end
+
   end
 
   config.vm.define "ec2", autostart: false do |ec2|
@@ -92,5 +91,12 @@ Vagrant.configure("2") do |config|
       chef.add_recipe "deploy_cake_local"
       chef.json = {doc_root: doc_root,app_root: app_root, php5:{session_secure:"Off"}}
     end
+    if Vagrant.has_plugin?("vagrant-triggers")
+      ec2.trigger.after [:reload, :halt], stdout: true do
+        `rm .vagrant/machines/ec2/aws/synced_folders`
+        `pkill vagrant-notify-server`
+      end
+    end
+
   end
 end
