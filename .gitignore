@@ -14,6 +14,7 @@ Berksfile.lock
 /app/webroot/upload/*
 /app/Config/database_local.php
 /app/webroot/files
+/app/webroot/css/goalous.min.css
 .project
 .buildpath
 junit.xml
