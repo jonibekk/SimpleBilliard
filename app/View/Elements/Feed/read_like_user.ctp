@@ -19,7 +19,11 @@
     ?>
     <div class="comment-body modal-comment">
         <div class="font_12px font_bold modalFeedTextPadding">
-            <?= h($user['display_username']) ?></div>
+            <?= h($user['display_username']) ?>&nbsp;
+            <?php if (viaIsSet($is_admin)): ?>
+                <i class="fa fa-adn team-members-card-admin-icon"></i>
+            <?php endif; ?>
+        </div>
 
         <?php if ($created): ?>
             <div class="font_12px font_lightgray modalFeedTextPaddingSmall">
