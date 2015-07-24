@@ -43,6 +43,15 @@ class AttachedFile extends AppModel
      */
     const TYPE_MODEL_POST = 0;
     const TYPE_MODEL_COMMENT = 1;
+    static public $TYPE_MODEL = [
+        self::TYPE_MODEL_POST    => [
+            'intermediateModel' => 'PostFile',
+            'foreign_key'       => 'PostFile',
+        ],
+        self::TYPE_MODEL_COMMENT => [
+            'intermediateModel' => 'CommentFile',
+        ],
+    ];
 
     /**
      * Validation rules
@@ -92,4 +101,70 @@ class AttachedFile extends AppModel
         'PostFile',
     ];
 
+    /**
+     * 共通ファイル保存処理
+     * $model_type should be in self::$TYPE_FILE
+     *
+     * @param       $primary_id
+     * @param       $model_type
+     * @param array $file_hashes
+     *
+     * @return bool
+     */
+    public function saveRelatedFiles($primary_id, $model_type, $file_hashes = [])
+    {
+        if (true) {
+            return true;
+        }
+        return false;
+
+    }
+
+    /**
+     * 共通ファイル削除処理
+     * $model_type should be in self::$TYPE_FILE
+     *
+     * @param       $primary_id
+     * @param       $model_type
+     *
+     * @return bool
+     */
+    public function deleteRelatedFiles($primary_id, $model_type)
+    {
+        if (true) {
+            return true;
+        }
+        return false;
+
+    }
+
+    /**
+     * ファイルの仮アップロード
+     *
+     * @param $postData
+     *
+     * @return false|string
+     */
+    public function preUploadFile($postData)
+    {
+        if (true) {
+            return $hashed_key = 'r3j21iop3ijodsa';
+        }
+        return false;
+    }
+
+    /**
+     * ファイルアップロードのキャンセル
+     *
+     * @param $hashed_key
+     *
+     * @return false|string
+     */
+    public function cancelUploadFile($hashed_key)
+    {
+        if (true) {
+            return $hashed_key = 'r3j21iop3ijodsa';
+        }
+        return false;
+    }
 }
