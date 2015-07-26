@@ -86,8 +86,75 @@ class AttachedFileTest extends CakeTestCase
         parent::tearDown();
     }
 
-    function testDummy()
+    function testPreUpLoadFileSuccess()
     {
+        $res = $this->AttachedFile->preUploadFile(['test']);
+        $this->assertNotEmpty($res);
     }
 
+    function testPreUpLoadFileFail()
+    {
+        $res = $this->AttachedFile->preUploadFile([]);
+        $this->assertFalse($res);
+    }
+
+    function testCancelUploadFileSuccess()
+    {
+        $res = $this->AttachedFile->cancelUploadFile('test');
+        $this->assertNotEmpty($res);
+    }
+
+    function testCancelUploadFileFail()
+    {
+        $res = $this->AttachedFile->cancelUploadFile(null);
+        $this->assertFalse($res);
+    }
+
+    function testIsUnavailableModelTypeFalse()
+    {
+        $res = $this->AttachedFile->isUnavailableModelType(AttachedFile::TYPE_MODEL_POST);
+        $this->assertFalse($res);
+    }
+
+    function testIsUnavailableModelTypeTrue()
+    {
+        $res = $this->AttachedFile->isUnavailableModelType(1000);
+        $this->assertTrue($res);
+    }
+
+    function testSaveRelatedFilesSuccess()
+    {
+        $res = $this->AttachedFile->saveRelatedFiles(1, AttachedFile::TYPE_MODEL_POST, ['test']);
+        $this->assertTrue($res);
+    }
+
+    function testSaveRelatedFilesFail()
+    {
+        $res = $this->AttachedFile->saveRelatedFiles(1, 1000, ['test']);
+        $this->assertFalse($res);
+    }
+
+    function testDeleteAllRelatedFilesSuccess()
+    {
+        $res = $this->AttachedFile->deleteAllRelatedFiles(1, AttachedFile::TYPE_MODEL_POST);
+        $this->assertTrue($res);
+    }
+
+    function testDeleteAllRelatedFilesFail()
+    {
+        $res = $this->AttachedFile->deleteAllRelatedFiles(1, 1000);
+        $this->assertFalse($res);
+    }
+
+    function testDeleteRelatedFileSuccess()
+    {
+        $res = $this->AttachedFile->deleteRelatedFile(1, AttachedFile::TYPE_MODEL_POST);
+        $this->assertTrue($res);
+    }
+
+    function testDeleteRelatedFileFail()
+    {
+        $res = $this->AttachedFile->deleteRelatedFile(1, 1000);
+        $this->assertFalse($res);
+    }
 }
