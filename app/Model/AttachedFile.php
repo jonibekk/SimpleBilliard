@@ -109,10 +109,15 @@ class AttachedFile extends AppModel
      */
     public function preUploadFile($postData)
     {
-        if (empty($postData)) {
+        if (!$file_info = viaIsSet($postData['AttachedFile']['file'])) {
             return false;
         }
-        return $hashed_key = 'r3j21iop3ijodsa';
+        /**
+         * @var GlRedis $Redis
+         */
+        $Redis = ClassRegistry::init('GlRedis');
+        $hashed_key = $Redis->preUploadFile($file_info, $this->current_team_id, $this->my_uid);
+        return $hashed_key;
     }
 
     /**

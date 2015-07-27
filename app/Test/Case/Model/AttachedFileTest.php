@@ -88,7 +88,16 @@ class AttachedFileTest extends CakeTestCase
 
     function testPreUpLoadFileSuccess()
     {
-        $res = $this->AttachedFile->preUploadFile(['test']);
+        $data = [
+            'AttachedFile' => [
+                'file' => [
+                    'name'     => 'test',
+                    'type'     => 'image/jpeg',
+                    'tmp_name' => IMAGES . 'no-image.jpg'
+                ]
+            ]
+        ];
+        $res = $this->AttachedFile->preUploadFile($data);
         $this->assertNotEmpty($res);
     }
 
