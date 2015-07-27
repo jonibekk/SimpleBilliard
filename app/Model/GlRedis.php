@@ -473,6 +473,7 @@ class GlRedis extends AppModel
             'info'    => $file_info,
             'content' => file_get_contents($file_info['tmp_name']),
         ];
+        $file['info']['remote'] = true;
 
         $hash_key = $this->generateId();
         $key = $this->getKeyName(self::KEY_TYPE_PRE_UPLOAD_FILE, $team_id, $user_id, null, null, null, null, $hash_key);

@@ -1,12 +1,5 @@
 <?php
 App::uses('AppModel', 'Model');
-use Aws\Common\Aws;
-use Aws\S3;
-use Aws\S3\S3Client;
-use Aws\Common\Enum\Region;
-use Guzzle\Http\EntityBody;
-use Aws\S3\Enum\CannedAcl;
-use Aws\S3\Exception\S3Exception;
 
 /**
  * AttachedFile Model
@@ -61,11 +54,9 @@ class AttachedFile extends AppModel
         ],
     ];
     /**
-     * aws s3用オブジェクト
-     *
-     * @var  S3Client $s3
+     * @var array $saved_datas
      */
-    private $s3;
+    private $saved_datas;
 
     /**
      * Validation rules
@@ -94,7 +85,20 @@ class AttachedFile extends AppModel
             ],
         ],
     ];
-
+    public $actsAs = [
+        'Upload' => [
+            'attached' => [
+                'styles'      => [
+                    'x_small' => '128l',
+                    'small'   => '460l',
+                    'large'   => '2048l',
+                ],
+                'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'quality'     => 100,
+                'default_url' => 'no-image.jpg',
+            ],
+        ],
+    ];
     /**
      * belongsTo associations
      *
@@ -191,8 +195,10 @@ class AttachedFile extends AppModel
         $file_datas = [];
         foreach ($file_hashes as $hash) {
             $file = $Redis->getPreUploadedFile($this->current_team_id, $this->my_uid, $hash);
+            file_put_contents($file['info']['tmp_name'], $file['content']);
             $file_data = $attached_file_common_data;
-            $file_data['file_name'] = $file['info']['name'];
+
+            $file_data['attached'] = $file['info'];
             $file_data['file_size'] = $file['info']['size'];
             $file_data['file_ext'] = substr($file['info']['name'], strrpos($file['info']['name'], '.') + 1);
             $file_data['file_type'] = $this->getFileType($file['info']['type']);
@@ -210,9 +216,17 @@ class AttachedFile extends AppModel
                 ],
                 'AttachedFile'              => $file_data
             ];
-            if (!$this->saveAll($save_data)) {
+            if (!$res = $this->saveAll($save_data)) {
                 return false;
             }
+        }
+        return true;
+    }
+
+    function afterSave($created, $options = array())
+    {
+        if ($created) {
+            $this->saved_datas[] = $this->data[$this->name];
         }
         return true;
     }
@@ -271,64 +285,4 @@ class AttachedFile extends AppModel
         }
         return true;
     }
-
-    function _setupS3()
-    {
-        if ($this->s3) {
-            return;
-        }
-        // S3を操作するためのオブジェクトを生成（リージョンは東京）
-        $this->s3 = Aws::factory(
-            array(
-                'key'    => AWS_ACCESS_KEY,
-                'secret' => AWS_SECRET_KEY,
-                'region' => Region::AP_NORTHEAST_1
-            ))
-                       ->get('s3');
-    }
-    function s3Delete($from_path)
-    {
-        //公開環境じゃない場合は処理しない
-        if (!PUBLIC_ENV) {
-            return false;
-        }
-        $img_path_exp = explode(S3_TRIM_PATH, $from_path);
-        $to_path = $img_path_exp[1];
-        try {
-            $response = $this->s3->deleteObject(['Bucket' => S3_ASSETS_BUCKET, 'Key' => $to_path]);
-            return $response;
-        } catch (S3Exception $e) {
-        }
-        return null;
-    }
-
-    function s3Upload($from_path, $type)
-    {
-        //公開環境じゃない場合は処理しない
-        if (!PUBLIC_ENV) {
-            return false;
-        }
-
-        $path_exp = explode(S3_TRIM_PATH, $from_path);
-        $to_path = $path_exp[1];
-
-        try {
-            $response = $this->s3
-                ->putObject(
-                    array(
-                        'Bucket'               => S3_ASSETS_BUCKET,
-                        'Key'                  => $to_path,
-                        'Body'                 => EntityBody::factory(fopen($from_path, 'r')),
-                        'ContentType'          => $type,
-                        'StorageClass'         => 'STANDARD',
-                        'ServerSideEncryption' => 'AES256',
-                        'ACL'                  => CannedAcl::AUTHENTICATED_READ
-                    ));
-            return $response;
-
-        } catch (S3Exception $e) {
-        }
-        return null;
-    }
-
 }
