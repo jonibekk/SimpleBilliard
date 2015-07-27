@@ -109,7 +109,7 @@ class AttachedFile extends AppModel
      */
     public function preUploadFile($postData)
     {
-        if (!$file_info = viaIsSet($postData['AttachedFile']['file'])) {
+        if (!$file_info = viaIsSet($postData['file'])) {
             return false;
         }
         /**
