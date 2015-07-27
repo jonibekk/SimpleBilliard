@@ -12,14 +12,22 @@
 <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default">
         <?= $this->element('Goal/simplex_top_section') ?>
-        <div class="panel-body">
-            <span class="font_bold"><?= h($goal['Goal']['name']) ?></span><br>
-            <?= __d('gl', '目的') ?>：  <?= $goal['Purpose']['name'] ?><br>
-            <?= __d('gl', 'カテゴリー') ?>： <?= h($goal['GoalCategory']['name']) ?><br>
-            <?= h(round($goal['Goal']['target_value'], 1)) ?> [<?= h(KeyResult::$UNIT[$goal['Goal']['value_unit']]) ?>]
-            (← <?= h(round($goal['Goal']['start_value'], 1)) ?>)<br>
-            <?= $this->Time->format('Y/m/d', $goal['Goal']['end_date']) ?>
-            <br>
+        <div class="panel-body goal-detail-info-panel">
+            <i class="fa fa-flag"></i>
+            <div class="goal-detail-info-data">
+                <span class="font_bold"><?= h($goal['Goal']['name']) ?></span>
+                <i class="fa fa-arrow-right goal-detail-weight-5-icon"></i>
+                <p class="goal-detail-info-purpose"><?= __d('gl', '目的') ?>：  <?= $goal['Purpose']['name'] ?></p>
+                <p class="goal-detail-info-category"><?= __d('gl', 'カテゴリー') ?>： <?= h($goal['GoalCategory']['name']) ?></p>
+            </div>
+            <i class="fa-bullseye fa"></i>
+            <div class="goal-detail-info-progress">
+                <?= h(round($goal['Goal']['target_value'], 1)) ?> [<?= h(KeyResult::$UNIT[$goal['Goal']['value_unit']]) ?>]            (← <?= h(round($goal['Goal']['start_value'], 1)) ?>)
+            </div>
+            <i class="fa-calendar fa"></i>
+            <div class="goal-detail-info-date">
+                <?= $this->Time->format('Y/m/d', $goal['Goal']['end_date']) ?>
+            </div>
             <?= __d('gl', 'メンバー') ?><br>
             <?php
             $member_all = array_merge($goal['Leader'], $goal['Collaborator']);
