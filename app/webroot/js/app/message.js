@@ -1,4 +1,4 @@
-var message_app = angular.module('messageApp', ['ui.router', 'pascalprecht.translate', 'ui.bootstrap', 'jlareau.pnotify'])
+var message_app = angular.module('messageApp', ['ui.router', 'pascalprecht.translate', 'ui.bootstrap', 'jlareau.pnotify', 'pusher-angular'])
     .run(['$rootScope', '$state', '$stateParams', '$http', '$translate',
         function ($rootScope, $state, $stateParams, $http, $translate) {
             $rootScope.$state = $state;
