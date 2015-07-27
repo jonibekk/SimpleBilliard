@@ -90,6 +90,10 @@ class AttachedFileTest extends CakeTestCase
     {
         $this->AttachedFile->current_team_id = 1;
         $this->AttachedFile->my_uid = 1;
+        $this->AttachedFile->PostFile->current_team_id = 1;
+        $this->AttachedFile->PostFile->my_uid = 1;
+        $this->AttachedFile->CommentFile->current_team_id = 1;
+        $this->AttachedFile->CommentFile->my_uid = 1;
     }
 
     function testPreUpLoadFileSuccess()
@@ -145,8 +149,22 @@ class AttachedFileTest extends CakeTestCase
 
     function testSaveRelatedFilesSuccess()
     {
-        $res = $this->AttachedFile->saveRelatedFiles(1, AttachedFile::TYPE_MODEL_POST, ['test']);
+        $this->_setDefault();
+        $data = [
+            'file' => [
+                'name'     => 'test.jpg',
+                'type'     => 'image/jpeg',
+                'tmp_name' => IMAGES . 'no-image.jpg',
+                'size'     => 1000,
+
+            ]
+        ];
+        $hash = $this->AttachedFile->preUploadFile($data);
+
+        $res = $this->AttachedFile->saveRelatedFiles(1, AttachedFile::TYPE_MODEL_POST, [$hash]);
         $this->assertTrue($res);
+        $this->assertCount(1, $this->AttachedFile->find('all'));
+        $this->assertCount(1, $this->AttachedFile->PostFile->find('all'));
     }
 
     function testSaveRelatedFilesFail()
