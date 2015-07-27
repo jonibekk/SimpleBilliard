@@ -59,10 +59,9 @@
                  style="display: block;">
 
             <div class="comment-body">
-                <form action="/posts/ajax_add_comment" class="form-feed-notify ajax-add-comment bv-form"
-                      enctype="multipart/form-data" method="post" accept-charset="utf-8">
+                <div class="form-feed-notify ajax-add-comment bv-form">
                     <div class="form-group mlr_-1px required">
-                        <textarea name=""
+                        <textarea ng-model = "message"
                                   class="form-control tiny-form-text blank-disable font_12px comment-post-form box-align change-warning clicked"
                                   rows="1" placeholder="コメントする" cols="30" init-height="15"
                                   style="height: 33px; overflow: hidden; word-wrap: break-word; resize: none;"></textarea>
@@ -78,10 +77,10 @@
                     </div>
                     <div class="pull-right">
                         <div class="submit">
-                            <input class="btn btn-primary submit-btn" type="submit" value="返信する">
+                            <input ng-click="clickMessage()" class="btn btn-primary submit-btn" type="submit" value="返信する">
                         </div>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>

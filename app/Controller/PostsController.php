@@ -285,6 +285,17 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
+    public function ajax_put_message($message) {
+        //$this->request->allowMethod('post');
+        $this->_ajaxPreProcess();
+        $data = ['message' => $message];
+
+        $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
+        $pusher->trigger('test-channel', 'new_message', $data);
+
+        return $this->_ajaxGetResponse($data);
+    }
+
     public function ajax_get_action_list_more()
     {
         $param_named = $this->request->params['named'];
