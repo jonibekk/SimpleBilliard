@@ -378,6 +378,9 @@ class UploadBehavior extends ModelBehavior
         elseif (strpos($imageInfo['mime'], 'gif') !== false) {
             $imageType = 'gif';
         }
+        else{
+            return false;
+        }
 
         $src = null;
         $createHandler = null;
