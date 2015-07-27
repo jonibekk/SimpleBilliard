@@ -467,7 +467,7 @@ class GlRedis extends AppModel
         return false;
     }
 
-    function preUploadFile($file_info, $team_id, $user_id)
+    function savePreUploadFile($file_info, $team_id, $user_id)
     {
         $file = [
             'info'    => $file_info,

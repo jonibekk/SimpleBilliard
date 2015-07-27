@@ -114,7 +114,7 @@ class AttachedFile extends AppModel
         }
         /** @var GlRedis $Redis */
         $Redis = ClassRegistry::init('GlRedis');
-        $hashed_key = $Redis->preUploadFile($file_info, $this->current_team_id, $this->my_uid);
+        $hashed_key = $Redis->savePreUploadFile($file_info, $this->current_team_id, $this->my_uid);
         return $hashed_key;
     }
 
