@@ -488,5 +488,11 @@ class GlRedis extends AppModel
         return unserialize($this->Db->get($key));
     }
 
+    function delPreUploadedFile($team_id, $user_id, $hash_key)
+    {
+        $key = $this->getKeyName(self::KEY_TYPE_PRE_UPLOAD_FILE, $team_id, $user_id, null, null, null, null, $hash_key);
+        return $this->Db->del($key);
+    }
+
 }
 

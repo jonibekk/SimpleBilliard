@@ -86,15 +86,19 @@ class AttachedFileTest extends CakeTestCase
         parent::tearDown();
     }
 
+    function _setDefault()
+    {
+        $this->AttachedFile->current_team_id = 1;
+        $this->AttachedFile->my_uid = 1;
+    }
+
     function testPreUpLoadFileSuccess()
     {
         $data = [
-            'AttachedFile' => [
-                'file' => [
-                    'name'     => 'test',
-                    'type'     => 'image/jpeg',
-                    'tmp_name' => IMAGES . 'no-image.jpg'
-                ]
+            'file' => [
+                'name'     => 'test',
+                'type'     => 'image/jpeg',
+                'tmp_name' => IMAGES . 'no-image.jpg'
             ]
         ];
         $res = $this->AttachedFile->preUploadFile($data);
@@ -109,8 +113,16 @@ class AttachedFileTest extends CakeTestCase
 
     function testCancelUploadFileSuccess()
     {
-        $res = $this->AttachedFile->cancelUploadFile('test');
-        $this->assertNotEmpty($res);
+        $data = [
+            'file' => [
+                'name'     => 'test',
+                'type'     => 'image/jpeg',
+                'tmp_name' => IMAGES . 'no-image.jpg'
+            ]
+        ];
+        $hashed_key = $this->AttachedFile->preUploadFile($data);
+        $res = $this->AttachedFile->cancelUploadFile($hashed_key);
+        $this->assertTrue($res);
     }
 
     function testCancelUploadFileFail()
@@ -166,4 +178,5 @@ class AttachedFileTest extends CakeTestCase
         $res = $this->AttachedFile->deleteRelatedFile(1, 1000);
         $this->assertFalse($res);
     }
+
 }

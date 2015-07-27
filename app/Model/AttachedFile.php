@@ -112,9 +112,7 @@ class AttachedFile extends AppModel
         if (!$file_info = viaIsSet($postData['file'])) {
             return false;
         }
-        /**
-         * @var GlRedis $Redis
-         */
+        /** @var GlRedis $Redis */
         $Redis = ClassRegistry::init('GlRedis');
         $hashed_key = $Redis->preUploadFile($file_info, $this->current_team_id, $this->my_uid);
         return $hashed_key;
@@ -125,14 +123,17 @@ class AttachedFile extends AppModel
      *
      * @param string $hashed_key
      *
-     * @return false|string
+     * @return bool
      */
     public function cancelUploadFile($hashed_key)
     {
         if (is_null($hashed_key)) {
             return false;
         }
-        return $hashed_key = 'r3j21iop3ijodsa';
+        /** @var GlRedis $Redis */
+        $Redis = ClassRegistry::init('GlRedis');
+        $res = $Redis->delPreUploadedFile($this->current_team_id, $this->my_uid, $hashed_key);
+        return (bool)$res;
     }
 
     /**
