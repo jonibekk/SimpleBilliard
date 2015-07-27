@@ -1,5 +1,12 @@
 <?php
 App::uses('AppModel', 'Model');
+use Aws\Common\Aws;
+use Aws\S3;
+use Aws\S3\S3Client;
+use Aws\Common\Enum\Region;
+use Guzzle\Http\EntityBody;
+use Aws\S3\Enum\CannedAcl;
+use Aws\S3\Exception\S3Exception;
 
 /**
  * AttachedFile Model
@@ -53,6 +60,12 @@ class AttachedFile extends AppModel
             'foreign_key'       => 'post_id',
         ],
     ];
+    /**
+     * aws s3用オブジェクト
+     *
+     * @var  S3Client $s3
+     */
+    private $s3;
 
     /**
      * Validation rules
@@ -257,6 +270,65 @@ class AttachedFile extends AppModel
             return false;
         }
         return true;
+    }
+
+    function _setupS3()
+    {
+        if ($this->s3) {
+            return;
+        }
+        // S3を操作するためのオブジェクトを生成（リージョンは東京）
+        $this->s3 = Aws::factory(
+            array(
+                'key'    => AWS_ACCESS_KEY,
+                'secret' => AWS_SECRET_KEY,
+                'region' => Region::AP_NORTHEAST_1
+            ))
+                       ->get('s3');
+    }
+    function s3Delete($from_path)
+    {
+        //公開環境じゃない場合は処理しない
+        if (!PUBLIC_ENV) {
+            return false;
+        }
+        $img_path_exp = explode(S3_TRIM_PATH, $from_path);
+        $to_path = $img_path_exp[1];
+        try {
+            $response = $this->s3->deleteObject(['Bucket' => S3_ASSETS_BUCKET, 'Key' => $to_path]);
+            return $response;
+        } catch (S3Exception $e) {
+        }
+        return null;
+    }
+
+    function s3Upload($from_path, $type)
+    {
+        //公開環境じゃない場合は処理しない
+        if (!PUBLIC_ENV) {
+            return false;
+        }
+
+        $path_exp = explode(S3_TRIM_PATH, $from_path);
+        $to_path = $path_exp[1];
+
+        try {
+            $response = $this->s3
+                ->putObject(
+                    array(
+                        'Bucket'               => S3_ASSETS_BUCKET,
+                        'Key'                  => $to_path,
+                        'Body'                 => EntityBody::factory(fopen($from_path, 'r')),
+                        'ContentType'          => $type,
+                        'StorageClass'         => 'STANDARD',
+                        'ServerSideEncryption' => 'AES256',
+                        'ACL'                  => CannedAcl::AUTHENTICATED_READ
+                    ));
+            return $response;
+
+        } catch (S3Exception $e) {
+        }
+        return null;
     }
 
 }
