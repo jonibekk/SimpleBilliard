@@ -21,7 +21,7 @@ message_app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider'
                     getMessage: ['$stateParams', '$http', function ($stateParams, $http) {
                         var request = {
                             method: 'GET',
-                            url: cake.url.af + $stateParams.post_id
+                            url: cake.url.ah + $stateParams.post_id
                         };
 
                         return $http(request).then(function (response) {

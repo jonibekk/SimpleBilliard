@@ -18,7 +18,7 @@ message_app.controller("MessageDetailCtrl",
         $scope.clickMessage = function () {
             var request = {
                 method: 'GET',
-                url: cake.url.ag +$scope.message
+                url: cake.url.ai +$scope.message
             };
             $http(request).then(function(response) {
                 console.log(response);
