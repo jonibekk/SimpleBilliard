@@ -276,7 +276,7 @@ class AttachedFile extends AppModel
             'fields'     => ['attached_file_id', 'attached_file_id']
         ]);
         $this->{$model['intermediateModel']}->deleteAll(
-            [$model['intermediateModel'] . $model['foreign_key'] => $foreign_key_id]
+            [$model['intermediateModel'] . "." . $model['foreign_key'] => $foreign_key_id]
         );
         $this->deleteAll(['AttachedFile.id' => $attached_file_ids]);
         return true;
