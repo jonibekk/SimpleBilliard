@@ -365,7 +365,12 @@ class Post extends AppModel
             $page = $params['named']['page'];
             unset($params['named']['page']);
         }
-
+        // このパラメータが指定された場合、post_time_before より前の投稿のみを読み込む
+        // 実際の値は投稿の並び順によって created か modified になる
+        $post_time_before = null;
+        if (isset($params['named']['post_time_before']) && !empty($params['named']['post_time_before'])) {
+            $post_time_before = $params['named']['post_time_before'];
+        }
         $p_list = [];
         $org_param_exists = false;
         if ($params) {
@@ -494,6 +499,11 @@ class Post extends AppModel
             // 独自パラメータ無しの場合（ホームフィードの場合）
             if (!$org_param_exists) {
                 $post_options['order'] = ['Post.created' => 'desc'];
+            }
+            // 読み込む投稿の更新時間が指定されている場合
+            if ($post_time_before) {
+                $order_col = key($post_options['order']);
+                $post_options['conditions']["$order_col <="] = $post_time_before;
             }
             $post_list = $this->find('list', $post_options);
         }
