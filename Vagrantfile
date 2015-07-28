@@ -91,7 +91,7 @@ Vagrant.configure('2') do |config|
             chef.json = {
                 doc_root: doc_root,
                 app_root: app_root,
-                tmp_dir_owner: 'www-data',
+                tmp_dir_owner: 'ubuntu',
                 tmp_dir_group: 'www-data',
                 user: 'ubuntu',
                 php5: { session_secure: 'Off' },
