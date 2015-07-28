@@ -50,7 +50,7 @@ class AttachedFile extends AppModel
         ],
         self::TYPE_MODEL_COMMENT => [
             'intermediateModel' => 'CommentFile',
-            'foreign_key'       => 'post_id',
+            'foreign_key'       => 'comment_id',
         ],
     ];
     /**

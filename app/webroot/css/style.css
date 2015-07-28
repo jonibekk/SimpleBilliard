@@ -1820,6 +1820,18 @@ textarea.feed-post-form {
     box-shadow: none;
 }
 
+.post-upload-file-preview {
+    margin-top:10px;
+}
+
+.post-upload-file-drop-area {
+    text-align:center;
+    background-color:#fff;
+    opacity: 0.7;
+    border: 5px dotted #aaa;
+    z-index: 99999;
+}
+
 .post-share-range {
     margin: 0 0 0 0;
     padding: 0;
@@ -1934,6 +1946,14 @@ textarea.comment-post-form {
 /*noinspection CssInvalidPseudoSelector*/
 .comment-post-form:-moz-placeholder {
     color: #999;
+}
+
+.comment-btn {
+    border-top: 1px solid #999;
+}
+
+.comment-upload-file-preview {
+    margin: 10px 0;
 }
 
 /*/CommentArea*/
@@ -3340,4 +3360,38 @@ Temporary Properties - YOU MUST FIX
 .notify-page-cards {
     overflow: hidden;
     padding-left: 0;
+}
+
+.no-border {
+    border:none !important;
+}
+
+.dz-preview {
+    background-color: #eee;
+    margin-top:-1px;
+    padding:7px;
+    border:1px solid #ccc;
+    height:59px
+}
+.dz-thumb-container {
+    overflow:hidden;
+    max-width:40px;
+}
+.dz-thumb {
+    background-color:#ccc;
+    width:40px;
+    height:40px;
+    text-align:center;
+}
+.dz-name {
+    margin-left:6px;
+}
+.dz-size {
+    margin-left:6px;
+}
+.dz-progress {
+    height:4px;
+    margin-bottom: 0px;
+    padding-top:3px;
+    clear:both
 }

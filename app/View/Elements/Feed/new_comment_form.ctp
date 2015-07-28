@@ -39,11 +39,14 @@ $this->Form->input('body', [
     'rows'        => 1,
     'required'    => true,
     'placeholder' => __d('gl', "コメントする"),
-    'class'       => 'form-control tiny-form-text blank-disable font_12px comment-post-form box-align change-warning',
+    'class'       => 'form-control tiny-form-text blank-disable font_12px comment-post-form box-align change-warning no-border',
     'target-id'   => "{$prefix}CommentSubmit_{$post_id}",
     'required'    => 'false'
 ])
 ?>
+<div id="CommentUploadFilePreview_<?= $post_id ?>" class="comment-upload-file-preview"></div>
+<?php $this->Form->unlockField('file_id') ?>
+
 <div class="form-group" id="<?= $prefix ?>CommentFormImage_<?= $post_id ?>"
      style="display: none">
     <ul class="input-images">
@@ -60,11 +63,9 @@ $this->Form->input('body', [
 <?= $this->Form->hidden('post_id', ['value' => $post_id]) ?>
 <div class="comment-btn" id="<?= $prefix ?>Comment_<?= $post_id ?>">
     <div>
-        <a href="#" class="target-show-target-click comment-add-pic new-comment-add-pic"
-           target-id="<?= $prefix ?>CommentFormImage_<?= $post_id ?>"
-           click-target-id="<?= $prefix ?>Comment__Post_<?= $post_id ?>_Photo_1">
-            <button type="button" class="btn pull-left photo-up-btn">
-                <i class="fa fa-camera post-camera-icon"></i>
+        <a href="#" class="link-red comment-add-file new-comment-add-pic">
+            <button type="button" class="btn pull-left photo-up-btn"><i
+                    class="fa fa-camera post-camera-icon"></i>
             </button>
         </a>
     </div>

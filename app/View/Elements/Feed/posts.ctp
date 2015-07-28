@@ -405,5 +405,25 @@ $with_header = isset($with_header) ? $with_header : true;
             </div>
         </div>
     <?php endforeach ?>
+    <?=
+    $this->Form->create('AttachedFile', [
+        'url'   => ['controller' => 'posts', 'action' => 'ajax_upload_file'],
+        'id'    => 'CommentUploadFileForm',
+        'type'  => 'file',
+        'class' => 'post-upload-file-drop-area',
+        'style' => 'display:none',
+    ]); ?>
+    <?= $this->Form->end() ?>
+    <div id="CommentUploadFileButton" style="display:none"></div>
+
+    <?=
+    $this->Form->create('AttachedFile', [
+        'url'   => ['controller' => 'posts', 'action' => 'ajax_remove_file'],
+        'id'    => 'CommentRemoveFileForm',
+        'style' => 'display:none',
+    ]); ?>
+    <?= $this->Form->hidden('file_id') ?>
+    <?php $this->Form->unlockField('file_id') ?>
+    <?= $this->Form->end() ?>
     <!-- END app/View/Elements/Feed/posts.ctp -->
 <?php endif ?>

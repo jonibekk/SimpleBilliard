@@ -671,6 +671,38 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
+    /**
+     * ファイルアップロード
+     *
+     * @return CakeResponse
+     */
+    public function ajax_upload_file()
+    {
+        $this->_ajaxPreProcess();
+        $file_id = $this->Post->PostFile->AttachedFile->preUploadFile($this->request->params['form']);
+        return $this->_ajaxGetResponse(['error' => $file_id ? false : true,
+                                        'msg'   => $file_id ? "" : __d('gl', 'アップロードに失敗しました'),
+                                        'id'    => $file_id ? $file_id : "",
+                                       ]);
+    }
+
+    /**
+     * アップロードしたファイルを削除
+     *
+     * @return CakeResponse
+     */
+    public function ajax_remove_file()
+    {
+        $this->_ajaxPreProcess();
+        $success = $this->Post->PostFile->AttachedFile->cancelUploadFile($this->request->data('AttachedFile.file_id'));
+        return $this->_ajaxGetResponse(['error' => !$success,
+                                        'msg'   => $success
+                                            ? __d('gl', 'ファイルを削除しました')
+                                            : __d('gl', 'ファイルの削除に失敗しました'),
+                                        'id'    => "",
+                                       ]);
+    }
+
     function _getTotalShareUserCount($circles, $users)
     {
         $all_share_user_list = null;

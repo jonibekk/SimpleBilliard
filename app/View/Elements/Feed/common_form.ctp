@@ -18,7 +18,8 @@
             <li class="switch-action"><a href="#ActionForm" role="tab" data-toggle="tab"
                                          class="switch-action-anchor click-target-focus"
                                          target-id="CommonActionName"><i
-                        class="fa fa-check-circle"></i><?= __d('gl', "アクション") ?></a><span class="switch-arrow"></span></li>
+                        class="fa fa-check-circle"></i><?= __d('gl', "アクション") ?></a><span class="switch-arrow"></span>
+            </li>
             <li class="switch-post"><a href="#PostForm" role="tab" data-toggle="tab"
                                        class="switch-post-anchor click-target-focus"
                                        target-id="CommonPostBody"><i
@@ -68,6 +69,8 @@
                                 </li><?php endfor ?>
                         </ul>
                         <span class="help-block" id="ActionResult__Photo_ValidateMessage"></span>
+                        <div id="ActionUploadFilePreview" class="post-upload-file-preview"></div>
+                        <?php $this->Form->unlockField('file_id') ?>
                     </div>
                 </div>
                 <div id="WrapActionFormName" class="panel-body action-form-panel-body none">
@@ -142,6 +145,11 @@
                 </div>
                 <div class="post-panel-footer none" id="CommonActionFooter">
                     <div class="font_12px" id="CommonActionFormFooter">
+                        <a href="#" id="ActionUploadFileButton" class="link-red">
+                            <button type="button" class="btn pull-left photo-up-btn"><i
+                                    class="fa fa-camera post-camera-icon"></i>
+                            </button>
+                        </a>
                         <div class="row form-horizontal form-group post-share-range" id="CommonActionShare">
                             <?=
                             $this->Form->submit(__d('gl', "アクション登録"),
@@ -149,6 +157,16 @@
                         </div>
                     </div>
                 </div>
+                <?= $this->Form->end() ?>
+
+                <?=
+                $this->Form->create('AttachedFile', [
+                    'url'   => ['controller' => 'posts', 'action' => 'ajax_upload_file'],
+                    'id'    => 'ActionUploadFileForm',
+                    'type'  => 'file',
+                    'class' => 'post-upload-file-drop-area',
+                    'style' => 'display:none',
+                ]); ?>
                 <?= $this->Form->end() ?>
             <?php endif; ?>
         </div>
@@ -194,6 +212,8 @@
                     </ul>
                     <span class="help-block" id="Post__Photo_ValidateMessage"></span>
                 </div>
+                <div id="PostUploadFilePreview" class="post-upload-file-preview"></div>
+                <?php $this->Form->unlockField('file_id') ?>
             </div>
             <?php if (isset($this->request->params['circle_id'])) {
                 $display = "block";
@@ -255,8 +275,7 @@
             </div>
             <div class="post-panel-footer">
                 <div class="font_12px none" id="PostFormFooter">
-                    <a href="#" class="target-show-target-click link-red" target-id="PostFormImage"
-                       click-target-id="Post__Photo_1">
+                    <a href="#" id="PostUploadFileButton" class="link-red">
                         <button type="button" class="btn pull-left photo-up-btn"><i
                                 class="fa fa-camera post-camera-icon"></i>
                         </button>
@@ -270,6 +289,25 @@
                 </div>
             </div>
             <?= $this->Form->end() ?>
+            <?=
+            $this->Form->create('AttachedFile', [
+                'url'   => ['controller' => 'posts', 'action' => 'ajax_upload_file'],
+                'id'    => 'PostUploadFileForm',
+                'type'  => 'file',
+                'class' => 'post-upload-file-drop-area',
+                'style' => 'display:none',
+            ]); ?>
+            <?= $this->Form->end() ?>
+            <?=
+            $this->Form->create('AttachedFile', [
+                'url'   => ['controller' => 'posts', 'action' => 'ajax_remove_file'],
+                'id'    => 'PostRemoveFileForm',
+                'style' => 'display:none',
+            ]); ?>
+            <?= $this->Form->hidden('file_id') ?>
+            <?php $this->Form->unlockField('file_id') ?>
+            <?= $this->Form->end() ?>
+
         </div>
     </div>
 </div>
