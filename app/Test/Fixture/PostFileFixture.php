@@ -34,17 +34,6 @@ class PostFileFixture extends CakeTestFixture
      *
      * @var array
      */
-    public $records = array(
-        array(
-            'id'               => '',
-            'post_id'          => '',
-            'attached_file_id' => '',
-            'team_id'          => '',
-            'del_flg'          => 1,
-            'deleted'          => 1,
-            'created'          => 1,
-            'modified'         => 1
-        ),
-    );
+    public $records = array();
 
 }

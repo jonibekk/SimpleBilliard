@@ -19,16 +19,16 @@ class AttachedFile extends AppModel
     const TYPE_FILE_DOC = 2;
 
     static public $TYPE_FILE = [
-        self::TYPE_FILE_IMG   => null,
-        self::TYPE_FILE_VIDEO => null,
-        self::TYPE_FILE_DOC   => null,
+        self::TYPE_FILE_IMG   => ['name' => null, 'type' => 'image'],
+        self::TYPE_FILE_VIDEO => ['name' => null, 'type' => 'video'],
+        self::TYPE_FILE_DOC   => ['name' => null, 'type' => 'etc'],
     ];
 
     function _setFileTypeName()
     {
-        self::$TYPE_FILE[self::TYPE_FILE_IMG] = __d('gl', "画像");
-        self::$TYPE_FILE[self::TYPE_FILE_VIDEO] = __d('gl', "動画");
-        self::$TYPE_FILE[self::TYPE_FILE_DOC] = __d('gl', "ドキュメント");
+        self::$TYPE_FILE[self::TYPE_FILE_IMG]['name'] = __d('gl', "画像");
+        self::$TYPE_FILE[self::TYPE_FILE_VIDEO]['name'] = __d('gl', "動画");
+        self::$TYPE_FILE[self::TYPE_FILE_DOC]['name'] = __d('gl', "ドキュメント");
     }
 
     function __construct($id = false, $table = null, $ds = null)
@@ -46,11 +46,17 @@ class AttachedFile extends AppModel
     static public $TYPE_MODEL = [
         self::TYPE_MODEL_POST    => [
             'intermediateModel' => 'PostFile',
+            'foreign_key'       => 'post_id',
         ],
         self::TYPE_MODEL_COMMENT => [
             'intermediateModel' => 'CommentFile',
+            'foreign_key'       => 'post_id',
         ],
     ];
+    /**
+     * @var array $saved_datas
+     */
+    private $saved_datas;
 
     /**
      * Validation rules
@@ -79,7 +85,20 @@ class AttachedFile extends AppModel
             ],
         ],
     ];
-
+    public $actsAs = [
+        'Upload' => [
+            'attached' => [
+                'styles'      => [
+                    'x_small' => '128l',
+                    'small'   => '460l',
+                    'large'   => '2048l',
+                ],
+                'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'quality'     => 100,
+                'default_url' => 'no-image.jpg',
+            ],
+        ],
+    ];
     /**
      * belongsTo associations
      *
@@ -161,10 +180,76 @@ class AttachedFile extends AppModel
      */
     public function saveRelatedFiles($foreign_key_id, $model_type, $file_hashes = [])
     {
-        if ($this->isUnavailableModelType($model_type)) {
+        if ($this->isUnavailableModelType($model_type) || empty($file_hashes)) {
             return false;
         }
+        /** @var GlRedis $Redis */
+        $Redis = ClassRegistry::init('GlRedis');
+        $attached_file_common_data = [
+            'user_id'    => $this->my_uid,
+            'team_id'    => $this->current_team_id,
+            'model_type' => $model_type,
+        ];
+
+        //保存データ生成
+        $file_datas = [];
+        foreach ($file_hashes as $hash) {
+            $file = $Redis->getPreUploadedFile($this->current_team_id, $this->my_uid, $hash);
+            file_put_contents($file['info']['tmp_name'], $file['content']);
+            $file_data = $attached_file_common_data;
+
+            $file_data['attached'] = $file['info'];
+            $file_data['file_size'] = $file['info']['size'];
+            $file_data['file_ext'] = substr($file['info']['name'], strrpos($file['info']['name'], '.') + 1);
+            $file_data['file_type'] = $this->getFileType($file['info']['type']);
+            $file_datas[] = $file_data;
+        }
+        $model = self::$TYPE_MODEL[$model_type];
+        foreach ($file_datas as $file_data) {
+            $save_data = [
+                $model['intermediateModel'] => [
+                    [
+                        $model['foreign_key'] => $foreign_key_id,
+                        'user_id'             => $this->my_uid,
+                        'team_id'             => $this->current_team_id,
+                    ],
+                ],
+                'AttachedFile'              => $file_data
+            ];
+            if (!$res = $this->saveAll($save_data)) {
+                return false;
+            }
+        }
         return true;
+    }
+
+    function afterSave($created, $options = array())
+    {
+        if ($created) {
+            $this->saved_datas[] = $this->data[$this->name];
+        }
+        return true;
+    }
+
+    /**
+     * $type: (e.g.) 'image/jpeg'
+     *
+     * @param $type
+     *
+     * @return int|string
+     */
+    function getFileType($type)
+    {
+        $arr = explode('/', $type);
+        $arr[0];
+
+        foreach (self::$TYPE_FILE as $file_type => $v) {
+            if ($arr[0] == $v['type']) {
+                return $file_type;
+            }
+        }
+
+        return self::TYPE_FILE_DOC;
     }
 
     /**
@@ -200,5 +285,4 @@ class AttachedFile extends AppModel
         }
         return true;
     }
-
 }

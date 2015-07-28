@@ -90,6 +90,10 @@ class AttachedFileTest extends CakeTestCase
     {
         $this->AttachedFile->current_team_id = 1;
         $this->AttachedFile->my_uid = 1;
+        $this->AttachedFile->PostFile->current_team_id = 1;
+        $this->AttachedFile->PostFile->my_uid = 1;
+        $this->AttachedFile->CommentFile->current_team_id = 1;
+        $this->AttachedFile->CommentFile->my_uid = 1;
     }
 
     function testPreUpLoadFileSuccess()
@@ -145,8 +149,46 @@ class AttachedFileTest extends CakeTestCase
 
     function testSaveRelatedFilesSuccess()
     {
-        $res = $this->AttachedFile->saveRelatedFiles(1, AttachedFile::TYPE_MODEL_POST, ['test']);
+        $this->_setDefault();
+
+        $destDir = TMP . 'attached_file';
+        if (!file_exists($destDir)) {
+            @mkdir($destDir, 0777, true);
+            @chmod($destDir, 0777);
+        }
+        $file_1_path = TMP . 'attached_file' . DS . 'attached_file_1.jpg';
+        $file_2_path = TMP . 'attached_file' . DS . 'attached_file_2.php';
+        copy(IMAGES . 'no-image.jpg', $file_1_path);
+        copy(APP . WEBROOT_DIR . DS . 'test.php', $file_2_path);
+
+        $data = [
+            'file' => [
+                'name'     => 'test.jpg',
+                'type'     => 'image/jpeg',
+                'tmp_name' => $file_1_path,
+                'size'     => 1000,
+                'remote'   => true
+            ]
+        ];
+        $hash_1 = $this->AttachedFile->preUploadFile($data);
+        $data = [
+            'file' => [
+                'name'     => 'test.php',
+                'type'     => 'test/php',
+                'tmp_name' => $file_2_path,
+                'size'     => 1000,
+                'remote'   => true
+            ]
+        ];
+        $hash_2 = $this->AttachedFile->preUploadFile($data);
+
+        $upload_setting = $this->AttachedFile->actsAs['Upload'];
+        $upload_setting['attached']['path'] = ":webroot/upload/test/:model/:id/:hash_:style.:extension";
+        $this->AttachedFile->Behaviors->load('Upload', $upload_setting);
+        $res = $this->AttachedFile->saveRelatedFiles(1, AttachedFile::TYPE_MODEL_POST, [$hash_1, $hash_2]);
         $this->assertTrue($res);
+        $this->assertCount(2, $this->AttachedFile->find('all'));
+        $this->assertCount(2, $this->AttachedFile->PostFile->find('all'));
     }
 
     function testSaveRelatedFilesFail()
