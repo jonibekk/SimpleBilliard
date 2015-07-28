@@ -124,18 +124,22 @@
                                         ?>
                                         <li class="profile-user-action-list">
                                             <a href="<?= $this->Html->url($url) ?>" class="profile-user-action-pic">
-                                                <?=
-                                                $this->Html->image('ajax-loader.gif',
-                                                                   [
-                                                                       'class'         => 'lazy',
-                                                                       'width'         => 48,
-                                                                       'height'        => 48,
-                                                                       'data-original' => $this->Upload->uploadUrl($action,
-                                                                                                                   'ActionResult.photo1',
-                                                                                                                   ['style' => 'x_small']),
-                                                                   ]
-                                                )
-                                                ?>
+                                                <?php for ($i = 1; $i <= 5; $i++): ?>
+                                                    <?php
+                                                    if (!empty($action["photo{$i}_file_name"]) || $i == 5) {
+                                                        echo $this->Html->image('ajax-loader.gif',
+                                                                                [
+                                                                                    'class'         => 'lazy',
+                                                                                    'width'         => 48,
+                                                                                    'height'        => 48,
+                                                                                    'data-original' => $this->Upload->uploadUrl($action,
+                                                                                                                                "ActionResult.photo$i",
+                                                                                                                                ['style' => 'x_small']),
+                                                                                ]);
+                                                        break;
+                                                    }
+                                                    ?>
+                                                <?php endfor; ?>
                                                 <?php if ($last_many): ?>
                                                     <span class="action-more-counts">
                                                         <i class="fa fa-plus"></i>

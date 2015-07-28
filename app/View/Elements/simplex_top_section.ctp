@@ -24,8 +24,6 @@
                            ]
         )
         ?>
-        <br>
-
         <p class="profile-user-name">
             <?= h($user['User']['display_username']) ?>
         </p>
