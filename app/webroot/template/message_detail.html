@@ -11,34 +11,31 @@
         </div>
     </div>
 
-    <div class="panel-body pt_10px plr_11px pb_8px" style="overflow:scroll;height:620px;margin:0px;">
+    <div class="panel-body pt_10px plr_11px pb_8px" id="message_box" style="overflow-y:scroll; height:620px; margin:0px;">
 
-        <div ng-repeat="item in message_list">
-            <div class="col col-xxs-12" style="padding-bottom: 8px">
+        <div ng-repeat="(key, item) in message_list">
+            <div id="message_{{key+1}}" class="col col-xxs-12" style="padding-bottom: 8px">
                 <div class="col col-xxs-2">
                     <a href="/users/view_goals/user_id:{{item.User.id}}">
                         <img width="64px" class="lazy feed-img" ng-src="{{item.User.photo_path}}"/>
                     </a>
                 </div>
 
-                <div class="col col-xxs-10 showmore font_14px font_verydark box-align" id="PostTextBody_23">
+                <div class="col col-xxs-10 showmore font_14px font_verydark box-align">
                     <div class="font_12px font_verydark">
                         <span class="font_bold">{{item.User.display_username}}</span>
                         <span ng-bind-html="item.Comment.created" class="font_lightgray"
                               style="position:absolute; right:10px;"></span>
                     </div>
-
                     <div class="comment-text font_12px">{{item.Comment.body}}</div>
-
                     <div class="font_12px">
-                        <a href="#" class="click-like font_lightgray "
-                           like_count_id="CommentLikeCount_{{item.Comment.id}}" model_id="23"
-                           like_type="comment"> いいね！</a>
+                        <a href="#" class="click-like font_lightgray"
+                           like_count_id="CommentLikeCount_{{item.Comment.id}}" like_type="comment"> いいね！</a>
                         <span class="font_lightgray"> ･ </span>
                         <span>
                             <a href="/posts/ajax_get_comment_liked_users/comment_id:{{item.Comment.id}}"
                                class="modal-ajax-get font_lightgray">
-                                <i class="fa fa-thumbs-o-up"></i>&nbsp;<span id="PostLikeCount_23">{{item.Comment.comment_like_count}}</span>
+                                <i class="fa fa-thumbs-o-up"></i>&nbsp;<span>{{item.Comment.comment_like_count}}</span>
                             </a>
                             <span class="font_lightgray"> ･ </span>
                             <a href="/posts/ajax_get_comment_red_users/comment_id:{{item.Comment.id}}"
@@ -48,7 +45,6 @@
                         </span>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -62,18 +58,16 @@
                 <div class="form-feed-notify ajax-add-comment bv-form">
                     <div class="form-group mlr_-1px required">
                         <textarea ng-model = "message"
-                                  class="form-control tiny-form-text blank-disable font_12px comment-post-form box-align change-warning clicked"
-                                  rows="1" placeholder="コメントする" cols="30" init-height="15"
+                                  class="form-control tiny-form-text font_12px"
+                                  rows="1" placeholder="返信する" cols="30" init-height="15"
                                   style="height: 33px; overflow: hidden; word-wrap: break-word; resize: none;"></textarea>
                     </div>
-                    <div class="comment-btn" id="Comment_23">
-                        <div>
+                    <div class="comment-btn">
                             <a href="#" class="comment-add-pic new-comment-add-pic">
                                 <button type="button" class="btn pull-left photo-up-btn">
                                     <i class="fa fa-camera post-camera-icon"></i>
                                 </button>
                             </a>
-                        </div>
                     </div>
                     <div class="pull-right">
                         <div class="submit">
