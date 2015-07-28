@@ -293,14 +293,15 @@ class PostsController extends AppController
         //$this->request->allowMethod('post');
         $this->_ajaxPreProcess();
 
-        $params['Comment']['post_id'] = 0;
+        $params['Comment']['post_id'] = 23;
         $params['Comment']['body'] = $message;
         $res = $this->Post->Comment->add($params);
+        $convert_data = $this->Post->Comment->convertData($res);
 
         $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
-        $pusher->trigger('test-channel', 'new_message', $res);
+        $pusher->trigger('test-channel', 'new_message', $convert_data);
 
-        return $this->_ajaxGetResponse($res);
+        return $this->_ajaxGetResponse($convert_data);
     }
 
     public function ajax_get_action_list_more()

@@ -196,9 +196,15 @@ class Comment extends AppModel
         $upload = new UploadHelper(new View());
         $time = new TimeExHelper(new View());
 
-        foreach ($data as $key => $val) {
-            $data[$key]['User']['photo_path'] = $upload->uploadUrl($val['User'], 'User.photo', ['style' => 'original']);
-            $data[$key]['Comment']['created'] = $time->elapsedTime(h($val['Comment']['created']));
+        if (isset($data['Comment']) === true) {
+            $data['User']['photo_path'] = $upload->uploadUrl($data['User'], 'User.photo', ['style' => 'original']);
+            $data['Comment']['created'] = $time->elapsedTime(h($data['Comment']['created']));
+
+        } else {
+            foreach ($data as $key => $val) {
+                $data[$key]['User']['photo_path'] = $upload->uploadUrl($val['User'], 'User.photo', ['style' => 'original']);
+                $data[$key]['Comment']['created'] = $time->elapsedTime(h($val['Comment']['created']));
+            }
         }
 
         return $data;

@@ -9,9 +9,12 @@ message_app.controller("MessageDetailCtrl",
 
         // pusherメッセージ内容を受け取る
         var pusher = new Pusher(cake.pusher.key);
+        // TODO: Uniqueチャンネル名に指定
         var test_channel = pusher.subscribe('test-channel');
         test_channel.bind('new_message', function (data) {
-            console.log(data)
+            data.Comment.created = $sce.trustAsHtml(data.Comment.created);
+            //$scope.message_list.push(data);
+            $scope.$apply($scope.message_list.push(data));
         });
 
         // メッセージを送信する
@@ -20,8 +23,8 @@ message_app.controller("MessageDetailCtrl",
                 method: 'GET',
                 url: cake.url.ai +$scope.message
             };
-            $http(request).then(function(response) {
-                console.log(response);
-            });
-        }
+            $http(request).then(function(response) {});
+            $scope.message = "";
+        };
+
     });
