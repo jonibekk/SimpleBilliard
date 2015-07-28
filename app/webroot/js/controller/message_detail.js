@@ -13,7 +13,6 @@ message_app.controller("MessageDetailCtrl",
         var test_channel = pusher.subscribe('test-channel');
         test_channel.bind('new_message', function (data) {
             data.Comment.created = $sce.trustAsHtml(data.Comment.created);
-            //$scope.message_list.push(data);
             $scope.$apply($scope.message_list.push(data));
         });
 
