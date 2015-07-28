@@ -160,6 +160,12 @@ class AttachedFileTest extends CakeTestCase
                 'remote'   => true
             ]
         ];
+
+        $destDir = TMP . 'attached_file';
+        if (!file_exists($destDir)) {
+            @mkdir($destDir, 0777, true);
+            @chmod($destDir, 0777);
+        }
         $file_1_path = TMP . 'attached_file' . DS . 'attached_file_1.jpg';
         $file_2_path = TMP . 'attached_file' . DS . 'attached_file_2.jpg';
         copy(IMAGES . 'no-image.jpg', $file_1_path);
