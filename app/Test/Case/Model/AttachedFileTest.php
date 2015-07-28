@@ -150,7 +150,60 @@ class AttachedFileTest extends CakeTestCase
     function testSaveRelatedFilesSuccess()
     {
         $this->_setDefault();
+        $hashes = $this->_prepareTestFiles();
+        $upload_setting = $this->AttachedFile->actsAs['Upload'];
+        $upload_setting['attached']['path'] = ":webroot/upload/test/:model/:id/:hash_:style.:extension";
+        $this->AttachedFile->Behaviors->load('Upload', $upload_setting);
+        $res = $this->AttachedFile->saveRelatedFiles(1, AttachedFile::TYPE_MODEL_POST, $hashes);
+        $this->assertTrue($res);
+        $this->assertCount(2, $this->AttachedFile->find('all'));
+        $this->assertCount(2, $this->AttachedFile->PostFile->find('all'));
+    }
 
+    function testSaveRelatedFilesFail()
+    {
+        $res = $this->AttachedFile->saveRelatedFiles(1, 1000, ['test']);
+        $this->assertFalse($res);
+    }
+
+    function testDeleteAllRelatedFilesSuccess()
+    {
+        $this->_setDefault();
+        $hashes = $this->_prepareTestFiles();
+        $upload_setting = $this->AttachedFile->actsAs['Upload'];
+        $upload_setting['attached']['path'] = ":webroot/upload/test/:model/:id/:hash_:style.:extension";
+        $this->AttachedFile->Behaviors->load('Upload', $upload_setting);
+        $this->AttachedFile->saveRelatedFiles(1, AttachedFile::TYPE_MODEL_POST, $hashes);
+
+        $res = $this->AttachedFile->deleteAllRelatedFiles(1, AttachedFile::TYPE_MODEL_POST);
+        $this->assertTrue($res);
+        $this->assertCount(0, $this->AttachedFile->find('all'));
+        $this->assertCount(0, $this->AttachedFile->PostFile->find('all'));
+
+    }
+
+    function testDeleteAllRelatedFilesFail()
+    {
+        $res = $this->AttachedFile->deleteAllRelatedFiles(1, 1000);
+        $this->assertFalse($res);
+    }
+
+    function testDeleteFile()
+    {
+        $this->_setDefault();
+        $hashes = $this->_prepareTestFiles();
+        $upload_setting = $this->AttachedFile->actsAs['Upload'];
+        $upload_setting['attached']['path'] = ":webroot/upload/test/:model/:id/:hash_:style.:extension";
+        $this->AttachedFile->Behaviors->load('Upload', $upload_setting);
+        $this->AttachedFile->saveRelatedFiles(1, AttachedFile::TYPE_MODEL_POST, $hashes);
+        $id = $this->AttachedFile->getLastInsertID();
+        $this->AttachedFile->delete($id);
+        $this->assertCount(1, $this->AttachedFile->find('all'));
+        $this->assertCount(1, $this->AttachedFile->PostFile->find('all'));
+    }
+
+    function _prepareTestFiles()
+    {
         $destDir = TMP . 'attached_file';
         if (!file_exists($destDir)) {
             @mkdir($destDir, 0777, true);
@@ -182,43 +235,7 @@ class AttachedFileTest extends CakeTestCase
         ];
         $hash_2 = $this->AttachedFile->preUploadFile($data);
 
-        $upload_setting = $this->AttachedFile->actsAs['Upload'];
-        $upload_setting['attached']['path'] = ":webroot/upload/test/:model/:id/:hash_:style.:extension";
-        $this->AttachedFile->Behaviors->load('Upload', $upload_setting);
-        $res = $this->AttachedFile->saveRelatedFiles(1, AttachedFile::TYPE_MODEL_POST, [$hash_1, $hash_2]);
-        $this->assertTrue($res);
-        $this->assertCount(2, $this->AttachedFile->find('all'));
-        $this->assertCount(2, $this->AttachedFile->PostFile->find('all'));
-    }
-
-    function testSaveRelatedFilesFail()
-    {
-        $res = $this->AttachedFile->saveRelatedFiles(1, 1000, ['test']);
-        $this->assertFalse($res);
-    }
-
-    function testDeleteAllRelatedFilesSuccess()
-    {
-        $res = $this->AttachedFile->deleteAllRelatedFiles(1, AttachedFile::TYPE_MODEL_POST);
-        $this->assertTrue($res);
-    }
-
-    function testDeleteAllRelatedFilesFail()
-    {
-        $res = $this->AttachedFile->deleteAllRelatedFiles(1, 1000);
-        $this->assertFalse($res);
-    }
-
-    function testDeleteRelatedFileSuccess()
-    {
-        $res = $this->AttachedFile->deleteRelatedFile(1, AttachedFile::TYPE_MODEL_POST);
-        $this->assertTrue($res);
-    }
-
-    function testDeleteRelatedFileFail()
-    {
-        $res = $this->AttachedFile->deleteRelatedFile(1, 1000);
-        $this->assertFalse($res);
+        return [$hash_1, $hash_2];
     }
 
 }
