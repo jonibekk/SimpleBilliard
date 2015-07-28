@@ -115,8 +115,12 @@ class AttachedFile extends AppModel
      * @var array
      */
     public $hasMany = [
-        'CommentFile',
-        'PostFile',
+        'CommentFile' => [
+            'dependent' => true,
+        ],
+        'PostFile'    => [
+            'dependent' => true,
+        ],
     ];
 
     /**
@@ -266,23 +270,15 @@ class AttachedFile extends AppModel
         if ($this->isUnavailableModelType($model_type)) {
             return false;
         }
-        return true;
-    }
-
-    /**
-     * 共通のファイル単体の削除処理
-     * $model_type should be in self::$TYPE_FILE
-     *
-     * @param integer $attached_file_id
-     * @param integer $model_type
-     *
-     * @return bool
-     */
-    public function deleteRelatedFile($attached_file_id, $model_type)
-    {
-        if ($this->isUnavailableModelType($model_type)) {
-            return false;
-        }
+        $model = self::$TYPE_MODEL[$model_type];
+        $attached_file_ids = $this->{$model['intermediateModel']}->find('list', [
+            'conditions' => [$model['foreign_key'] => $foreign_key_id],
+            'fields'     => ['attached_file_id', 'attached_file_id']
+        ]);
+        $this->{$model['intermediateModel']}->deleteAll(
+            [$model['intermediateModel'] . $model['foreign_key'] => $foreign_key_id]
+        );
+        $this->deleteAll(['AttachedFile.id' => $attached_file_ids]);
         return true;
     }
 }
