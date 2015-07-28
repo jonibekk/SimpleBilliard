@@ -210,6 +210,29 @@ class Comment extends AppModel
         return $data;
     }
 
+    public function getComment($comment_id) {
+        $options = [
+            'conditions' => [
+                'Comment.id' => $comment_id,
+                'Comment.team_id' => $this->current_team_id,
+            ],
+            'contain'    => [
+                'User'          => [
+                    'fields' => $this->User->profileFields
+                ],
+                'MyCommentLike' => [
+                    'conditions' => [
+                        'MyCommentLike.user_id' => $this->my_uid,
+                        'MyCommentLike.team_id' => $this->current_team_id,
+                    ]
+                ],
+            ],
+        ];
+        $res = $this->find('first', $options);
+
+        return $res;
+    }
+
     public function getLatestPostsComment($post_id, $last_comment_id = 0)
     {
         //既読済みに
