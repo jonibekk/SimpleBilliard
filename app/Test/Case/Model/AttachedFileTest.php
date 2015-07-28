@@ -154,8 +154,7 @@ class AttachedFileTest extends CakeTestCase
         $upload_setting = $this->AttachedFile->actsAs['Upload'];
         $upload_setting['attached']['path'] = ":webroot/upload/test/:model/:id/:hash_:style.:extension";
         $this->AttachedFile->Behaviors->load('Upload', $upload_setting);
-        $this->AttachedFile->saveRelatedFiles(1, AttachedFile::TYPE_MODEL_POST, $hashes);
-        $res = $this->AttachedFile->saveRelatedFiles(1, AttachedFile::TYPE_MODEL_POST, [$hash_1, $hash_2]);
+        $res = $this->AttachedFile->saveRelatedFiles(1, AttachedFile::TYPE_MODEL_POST, $hashes);
         $this->assertTrue($res);
         $this->assertCount(2, $this->AttachedFile->find('all'));
         $this->assertCount(2, $this->AttachedFile->PostFile->find('all'));
