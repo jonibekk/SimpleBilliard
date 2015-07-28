@@ -93,6 +93,7 @@ Vagrant.configure('2') do |config|
                 app_root: app_root,
                 tmp_dir_owner: 'www-data',
                 tmp_dir_group: 'www-data',
+                user: 'ubuntu',
                 php5: { session_secure: 'Off' },
                 bash_profile: {
                     owner: 'ubuntu',
