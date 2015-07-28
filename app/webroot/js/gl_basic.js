@@ -1476,7 +1476,7 @@ $(document).ready(function () {
     //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
     $('#select2MessageCircleMember').select2({
         multiple: true,
-        placeholder: cake.word.select_public_circle,
+        placeholder: cake.word.select_public_message,
         minimumInputLength: 2,
         ajax: {
             url: cake.url.select2_circle_user,
@@ -1573,58 +1573,6 @@ $(document).ready(function () {
             'container': 'body'
         });
     }
-
-    // メッセージの共有範囲(公開/秘密)切り替えボタン
-    var $shareMessageRangeToggleButton = $('#messageShareRangeToggleButton');
-    var $shareMessageRange = $('#messageShareRange');
-    var publicButtonLabel = '<i class="fa fa-unlock"></i> ' + cake.word.public;
-    var secretButtonLabel = '<i class="fa fa-lock font_verydark"></i> ' + cake.word.secret;
-
-    // ボタン初期状態
-    $shareMessageRangeToggleButton.html(($shareMessageRange.val() == 'public') ? publicButtonLabel : secretButtonLabel);
-
-    // 共有範囲切り替えボタンが有効な場合
-    if ($shareMessageRangeToggleButton.attr('data-toggle-enabled')) {
-        $shareMessageRangeToggleButton.on('click', function (e) {
-            e.preventDefault();
-            $shareMessageRange.val($shareMessageRange.val() == 'public' ? 'secret' : 'public');
-            if ($shareMessageRange.val() == 'public') {
-                $shareMessageRangeToggleButton.html(publicButtonLabel);
-                $('#MessageSecretShareInputWrap').hide();
-                $('#MessagePublicShareInputWrap').show();
-            }
-            else {
-                $shareMessageRangeToggleButton.html(secretButtonLabel);
-                $('#MessagePublicShareInputWrap').hide();
-                $('#MessageSecretShareInputWrap').show();
-            }
-        });
-    }
-    // 共有範囲切り替えボタンが無効な場合（サークルフィードページ）
-    else {
-        $shareMessageRangeToggleButton.popover({
-            'data-toggle': "popover",
-            'placement': 'top',
-            'trigger': "focus",
-            'content': cake.word.share_change_disabled,
-            'container': 'body'
-        });
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     $('#select2ActionCircleMember').select2({
@@ -2833,6 +2781,7 @@ $(function () {
     function setIntervalToGetNotifyCnt(sec) {
         setInterval(function () {
             updateNotifyCnt();
+            updateMessageNotifyCnt();
         }, sec * 1000);
     }
 
@@ -2853,9 +2802,53 @@ $(function () {
         });
         return false;
     }
+    function updateMessageNotifyCnt() {
+
+        var url = cake.url.af;
+        $.ajax({
+            type: 'GET',
+            url: url,
+            async: true,
+            success: function (new_notify_count) {
+                if (new_notify_count != 0) {
+                    setNotifyCntToMessageAndTitle(new_notify_count);
+                }
+            },
+            error: function () {
+            }
+        });
+        return false;
+    }
 
     function setNotifyCntToBellAndTitle(cnt) {
         var $bellBox = getBellBoxSelector();
+        var $title = $("title");
+        var $originTitle = $("title").attr("origin-title");
+        var existingBellCnt = parseInt($bellBox.children('span').html());
+        var cntIsTooMuch = '20+';
+
+        if (cnt == 0) {
+            return;
+        }
+
+        // set notify number
+        if (parseInt(cnt) <= 20) {
+            $bellBox.children('span').html(cnt);
+            $bellBox.children('sup').addClass('none');
+            $title.text("(" + cnt + ")" + $originTitle);
+        } else {
+            $bellBox.children('span').html(20);
+            $bellBox.children('sup').removeClass('none');
+            $title.text("(" + cntIsTooMuch + ")" + $originTitle);
+        }
+
+        if (existingBellCnt == 0) {
+            displaySelectorFluffy($bellBox);
+        }
+        return;
+    }
+    function setNotifyCntToMessageAndTitle(cnt) {
+        var $bellBox = getMessageBoxSelector();
         var $title = $("title");
         var $originTitle = $("title").attr("origin-title");
         var existingBellCnt = parseInt($bellBox.children('span').html());
@@ -2917,10 +2910,37 @@ $(document).ready(function () {
     });
 });
 
+$(document).ready(function () {
+    var click_cnt = 0;
+    $(document).on("click", "#click-header-message", function () {
+        click_cnt++;
+        var isExistNewNotify = isExistNewMessageNotify();
+        initMessageNum();
+        initTitle();
+
+        if (isExistNewNotify || click_cnt == 1) {
+            updateMessageListBox();
+        }
+
+        function isExistNewMessageNotify() {
+            var newNotifyCnt = getMessageNotifyCnt();
+            if (newNotifyCnt > 0) {
+                return true;
+            }
+            return false;
+        }
+    });
+});
+
 function initBellNum() {
     $bellBox = getBellBoxSelector();
     $bellBox.css("opacity", 0);
     $bellBox.html("0");
+}
+function initMessageNum() {
+    var $box = getMessageBoxSelector();
+    $box.css("opacity", 0);
+    $box.html("0");
 }
 
 function initTitle() {
@@ -2931,10 +2951,18 @@ function initTitle() {
 function getBellBoxSelector() {
     return $("#bellNum");
 }
+function getMessageBoxSelector() {
+    return $("#messageNum");
+}
 
 function getNotifyCnt() {
     var $bellBox = getBellBoxSelector();
     return parseInt($bellBox.children('span').html());
+}
+
+function getMessageNotifyCnt() {
+    var $box = getMessageBoxSelector();
+    return parseInt($box.children('span').html());
 }
 
 function updateListBox() {
@@ -2953,6 +2981,32 @@ function updateListBox() {
             var $notifyItems = data;
             $loader_html.remove();
             $bellDropdown.append($notifyItems);
+            //画像をレイジーロード
+            imageLazyOn();
+        },
+        error: function () {
+            alert(cake.message.notice.c);
+        }
+    });
+    return false;
+}
+
+function updateMessageListBox() {
+    var $messageDropdown = $("#message-dropdown");
+    $messageDropdown.empty();
+    var $loader_html = $('<li class="text-align_c"><i class="fa fa-refresh fa-spin"></i></li>');
+    //ローダー表示
+    $messageDropdown.append($loader_html);
+    var url = cake.url.ag;
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: true,
+        success: function (data) {
+            //取得したhtmlをオブジェクト化
+            var $notifyItems = data;
+            $loader_html.remove();
+            $messageDropdown.append($notifyItems);
             //画像をレイジーロード
             imageLazyOn();
         },
