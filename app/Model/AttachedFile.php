@@ -271,14 +271,15 @@ class AttachedFile extends AppModel
             return false;
         }
         $model = self::$TYPE_MODEL[$model_type];
-        $attached_file_ids = $this->{$model['intermediateModel']}->find('list', [
+        $related_files = $this->{$model['intermediateModel']}->find('all', [
             'conditions' => [$model['foreign_key'] => $foreign_key_id],
-            'fields'     => ['attached_file_id', 'attached_file_id']
+            'fields'     => ['id', 'attached_file_id']
         ]);
-        $this->{$model['intermediateModel']}->deleteAll(
-            [$model['intermediateModel'] . "." . $model['foreign_key'] => $foreign_key_id]
-        );
-        $this->deleteAll(['AttachedFile.id' => $attached_file_ids]);
+        //deleteAllだとsoftDeleteされない為、foreach
+        foreach ($related_files as $related_file) {
+            $this->{$model['intermediateModel']}->delete($related_file[$model['intermediateModel']]['id']);
+            $this->delete($related_file[$model['intermediateModel']]['attached_file_id']);
+        }
         return true;
     }
 }
