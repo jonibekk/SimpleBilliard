@@ -136,7 +136,8 @@ class Comment extends AppModel
         'MyCommentLike' => [
             'className' => 'CommentLike',
             'fields'    => ['id']
-        ]
+        ],
+        'CommentFile',
     ];
 
     /**
