@@ -4,10 +4,11 @@ App::uses('AppModel', 'Model');
 /**
  * AttachedFile Model
  *
- * @property User        $User
- * @property Team        $Team
- * @property CommentFile $CommentFile
- * @property PostFile    $PostFile
+ * @property User             $User
+ * @property Team             $Team
+ * @property CommentFile      $CommentFile
+ * @property PostFile         $PostFile
+ * @property ActionResultFile $ActionResultFile
  */
 class AttachedFile extends AppModel
 {
@@ -43,14 +44,19 @@ class AttachedFile extends AppModel
      */
     const TYPE_MODEL_POST = 0;
     const TYPE_MODEL_COMMENT = 1;
+    const TYPE_MODEL_ACTION_RESULT = 2;
     static public $TYPE_MODEL = [
-        self::TYPE_MODEL_POST    => [
+        self::TYPE_MODEL_POST          => [
             'intermediateModel' => 'PostFile',
             'foreign_key'       => 'post_id',
         ],
-        self::TYPE_MODEL_COMMENT => [
+        self::TYPE_MODEL_COMMENT       => [
             'intermediateModel' => 'CommentFile',
             'foreign_key'       => 'comment_id',
+        ],
+        self::TYPE_MODEL_ACTION_RESULT => [
+            'intermediateModel' => 'ActionResultFile',
+            'foreign_key'       => 'action_result_id',
         ],
     ];
     /**
@@ -115,10 +121,13 @@ class AttachedFile extends AppModel
      * @var array
      */
     public $hasMany = [
-        'CommentFile' => [
+        'CommentFile'      => [
             'dependent' => true,
         ],
-        'PostFile'    => [
+        'PostFile'         => [
+            'dependent' => true,
+        ],
+        'ActionResultFile' => [
             'dependent' => true,
         ],
     ];
