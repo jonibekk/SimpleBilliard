@@ -19,13 +19,6 @@
                 </div>
                 <div class="goal-detail-info-data">
                     <span class="font_bold"><?= h($goal['Goal']['name']) ?></span>
-<!--  ToDo @bigplants
-    この次のアイコンのclassを条件分岐させる
-    重要度0 : goal-detail-weight-0-icon
-    重要度1 : goal-detail-weight-1-icon
-    以下、同様に重要度0~5を切り分ける。
- -->
-                    <i class="fa fa-arrow-right goal-detail-weight-0-icon"></i>
                     <p class="goal-detail-info-purpose"><?= __d('gl', '目的') ?>：  <?= $goal['Purpose']['name'] ?></p>
                     <p class="goal-detail-info-category"><?= __d('gl', 'カテゴリー') ?>： <?= h($goal['GoalCategory']['name']) ?></p>
                 </div>
