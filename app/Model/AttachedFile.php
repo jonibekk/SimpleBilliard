@@ -4,10 +4,11 @@ App::uses('AppModel', 'Model');
 /**
  * AttachedFile Model
  *
- * @property User        $User
- * @property Team        $Team
- * @property CommentFile $CommentFile
- * @property PostFile    $PostFile
+ * @property User             $User
+ * @property Team             $Team
+ * @property CommentFile      $CommentFile
+ * @property PostFile         $PostFile
+ * @property ActionResultFile $ActionResultFile
  */
 class AttachedFile extends AppModel
 {
@@ -115,10 +116,13 @@ class AttachedFile extends AppModel
      * @var array
      */
     public $hasMany = [
-        'CommentFile' => [
+        'CommentFile'      => [
             'dependent' => true,
         ],
-        'PostFile'    => [
+        'PostFile'         => [
+            'dependent' => true,
+        ],
+        'ActionResultFile' => [
             'dependent' => true,
         ],
     ];

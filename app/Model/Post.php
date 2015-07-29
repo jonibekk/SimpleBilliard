@@ -208,7 +208,8 @@ class Post extends AppModel
         'MyPostLike'      => [
             'className' => 'PostLike',
             'fields'    => ['id']
-        ]
+        ],
+        'PostFile',
     ];
 
     function __construct($id = false, $table = null, $ds = null)

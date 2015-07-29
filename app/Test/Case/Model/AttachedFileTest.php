@@ -60,7 +60,8 @@ class AttachedFileTest extends CakeTestCase
         'app.oauth_token',
         'app.local_name',
         'app.comment_file',
-        'app.post_file'
+        'app.post_file',
+        'app.action_result_file',
     );
 
     /**
