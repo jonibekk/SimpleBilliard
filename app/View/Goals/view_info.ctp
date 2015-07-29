@@ -46,10 +46,6 @@
                     - <?= $this->Time->format('Y/m/d', $goal['Goal']['end_date']) ?>
                 </div>
             </div>
-            <!--  ToDo @bigplants
-                メンバーが5人を超えたときの挙動が仕様と違うので修正お願いします。
-                6人目の画像を出していただきたい。
-             -->
             <div class="goal-detail-info-members">
                 <p class="goal-detail-info-members-head"><?= __d('gl', 'メンバー') ?></p>
                 <?php
@@ -65,8 +61,7 @@
                     ?>
                     <?=
                     $this->Html->link($this->Upload->uploadImage($member['User'], 'User.photo', ['style' => 'small'],
-                                                                 ['class' => 'goal-detail-info-avator',
-                                                                  'style' => 'width:42px;']),
+                                                                 ['class' => 'goal-detail-info-avator',]),
                                       ['controller' => 'users',
                                        'action'     => 'view_goals',
                                        'user_id'    => $member['User']['id']],
@@ -75,17 +70,14 @@
                     ?>
                 <?php endforeach ?>
                 <?php if ($over_num > 0): ?>
-                    <div class="goal-detail-members-remaining-wrap">
                         <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_members', 'goal_id' => $goal['Goal']['id']]) ?>"
                            class="goal-detail-members-remaining">
                             <?= $this->Upload->uploadImage($member_all[5]['User'], 'User.photo', ['style' => 'small'],
-                                                           ['class' => 'goal-detail-info-avator',
-                                                            'style' => 'width:42px;']) ?>
-                            <span class="goal-member-more-counts">
+                                                           ['class' => 'goal-detail-info-avator',]) ?>
+                            <span class="goal-detail-member-more-counts">
                                 <i class="fa fa-plus"></i>
                                 <?= $over_num ?></span>
                         </a>
-                    </div>
                 <?php endif ?>
             </div>
             <div class="goal-detail-info-description">

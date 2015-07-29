@@ -1,5 +1,7 @@
 .goal-detail-info-avator {
   .avator-bordered-rounded-link;
+  width: 44px;
+  height: 44px;
 }
 
 .goal-detail-avator-wrap {
@@ -153,43 +155,6 @@
   background: #f6f5f1;
 }
 
-.goal-detail-weight-icon(@bg_color, @rotate_deg) {
-  display: inline-block;
-  background: @bg_color;
-  border-radius: 50%;
-  height: 16px;
-  width: 16px;
-  text-align: center;
-  line-height: 16px;
-  font-size: 12px;
-  transform: rotate(@rotate_deg);
-  color: #f6f5f1;
-}
-
-.goal-detail-weight-5-icon {
-  .goal-detail-weight-icon(@cherryBlossomPink, -90deg);
-}
-
-.goal-detail-weight-4-icon {
-  .goal-detail-weight-icon(@cherryBlossomPink, -45deg);
-}
-
-.goal-detail-weight-3-icon {
-  .goal-detail-weight-icon(@limeGreen, 0);
-}
-
-.goal-detail-weight-2-icon {
-  .goal-detail-weight-icon(@skyBlue, 45deg);
-}
-
-.goal-detail-weight-1-icon {
-  .goal-detail-weight-icon(@skyBlue, 90deg);
-}
-
-.goal-detail-weight-0-icon {
-  display: none;
-}
-
 .goal-detail-info-due-wrap {
   margin-bottom: 12px;
 }
@@ -216,20 +181,71 @@
   display: inline-block;
 }
 
-.goal-detail-members-remaining-wrap {
-  display: inline-block;
-  position: relative;
-}
-
 .goal-detail-members-remaining {
+  position: relative;
   display: inline-block;
   text-align: center;
   line-height: 36px;
-  width: 43px;
-  height: 43px;
+  width: 44px;
+  height: 44px;
   font-weight: bold;
   font-size: 16px;
-  background: @white;
-  .avator-rounded-link;
   .no-underline;
 }
+
+.goal-detail-member-more-counts {
+  font-size: @fontLarge;
+  width: 44px;
+  height: 44px;
+  line-height: 38px;
+  text-align: center;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: rgba(180, 180, 180, .7);
+  .border-clear(3px);
+  border-radius: 50%;
+}
+
+
+/**
+ * 使わないことになった
+ *
+.goal-detail-weight-icon(@bg_color, @rotate_deg) {
+   display: inline-block;
+   background: @bg_color;
+   border-radius: 50%;
+   height: 16px;
+   width: 16px;
+   text-align: center;
+   line-height: 16px;
+   font-size: 12px;
+   transform: rotate(@rotate_deg);
+   color: #f6f5f1;
+ }
+
+ .goal-detail-weight-5-icon {
+   .goal-detail-weight-icon(@cherryBlossomPink, -90deg);
+ }
+
+ .goal-detail-weight-4-icon {
+   .goal-detail-weight-icon(@cherryBlossomPink, -45deg);
+ }
+
+ .goal-detail-weight-3-icon {
+   .goal-detail-weight-icon(@limeGreen, 0);
+ }
+
+ .goal-detail-weight-2-icon {
+   .goal-detail-weight-icon(@skyBlue, 45deg);
+ }
+
+ .goal-detail-weight-1-icon {
+   .goal-detail-weight-icon(@skyBlue, 90deg);
+ }
+
+ .goal-detail-weight-0-icon {
+   display: none;
+ }
+ *
+ */
