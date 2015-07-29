@@ -280,6 +280,14 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
+    public function ajax_get_post_message($post_id)
+    {
+        $this->_ajaxPreProcess();
+        $res = $this->Post->getPostById($post_id);
+        $result = ['message_list' => $res];
+        return $this->_ajaxGetResponse($result);
+    }
+
     public function ajax_get_message($post_id)
     {
         $this->_ajaxPreProcess();

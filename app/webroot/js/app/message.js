@@ -23,7 +23,15 @@ message_app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider'
                             method: 'GET',
                             url: cake.url.ah + $stateParams.post_id
                         };
-
+                        return $http(request).then(function (response) {
+                            return response.data;
+                        });
+                    }],
+                    getPostDetail: ['$stateParams', '$http', function ($stateParams, $http) {
+                        var request = {
+                            method: 'GET',
+                            url: cake.url.aj + $stateParams.post_id
+                        };
                         return $http(request).then(function (response) {
                             return response.data;
                         });

@@ -34,8 +34,7 @@
                         <a href="/posts/ajax_get_comment_red_users/comment_id:{{item.Comment.id}}"
                            class="modal-ajax-get font_lightgray">
                             <i class="fa fa-check"></i>&nbsp;
-                            <span ng-if="item.Comment.comment_read_count > 0">{{item.Comment.comment_read_count}}人が開封</span>
-                            <span ng-if="item.Comment.comment_read_count == 0">未開封</span>
+                            <span>{{item.Comment.comment_read_count}}人が開封</span>
                         </a>
                     </div>
                 </div>

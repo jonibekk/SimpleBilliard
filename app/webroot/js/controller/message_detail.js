@@ -5,12 +5,15 @@ message_app.controller(
         $http,
         $translate,
         notificationService,
+        getPostDetail,
         getMessage,
         $pusher,
         $stateParams,
         $anchorScroll,
         $location
     ){
+
+        //console.log(getPostDetail);
 
         var message_scroll = function () {
             var length = $scope.message_list.length;
