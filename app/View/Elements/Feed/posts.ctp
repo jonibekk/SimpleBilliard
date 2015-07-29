@@ -328,7 +328,7 @@ $with_header = isset($with_header) ? $with_header : true;
 
                 </div>
             </div>
-            <div class="panel-body ptb_8px plr_11px comment-block">
+            <div class="panel-body ptb_8px plr_11px comment-block upload-file-drop-area" data-preview-area-id="CommentUploadFilePreview_<?= $post['Post']['id'] ?>" data-submit-form-id="CommentForm_<?= $post['Post']['id'] ?>">
                 <?php if ($post['Post']['comment_count'] > 3 && count($post['Comment']) == 3): ?>
                     <a href="#" class="btn-link click-comment-all"
                        id="Comments_<?= $post['Post']['id'] ?>"
@@ -405,25 +405,5 @@ $with_header = isset($with_header) ? $with_header : true;
             </div>
         </div>
     <?php endforeach ?>
-    <?=
-    $this->Form->create('AttachedFile', [
-        'url'   => ['controller' => 'posts', 'action' => 'ajax_upload_file'],
-        'id'    => 'CommentUploadFileForm',
-        'type'  => 'file',
-        'class' => 'post-upload-file-drop-area',
-        'style' => 'display:none',
-    ]); ?>
-    <?= $this->Form->end() ?>
-    <div id="CommentUploadFileButton" style="display:none"></div>
-
-    <?=
-    $this->Form->create('AttachedFile', [
-        'url'   => ['controller' => 'posts', 'action' => 'ajax_remove_file'],
-        'id'    => 'CommentRemoveFileForm',
-        'style' => 'display:none',
-    ]); ?>
-    <?= $this->Form->hidden('file_id') ?>
-    <?php $this->Form->unlockField('file_id') ?>
-    <?= $this->Form->end() ?>
     <!-- END app/View/Elements/Feed/posts.ctp -->
 <?php endif ?>

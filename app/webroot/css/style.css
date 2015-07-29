@@ -1824,7 +1824,7 @@ textarea.feed-post-form {
     margin-top:10px;
 }
 
-.post-upload-file-drop-area {
+.upload-file-form {
     text-align:center;
     background-color:#fff;
     opacity: 0.7;

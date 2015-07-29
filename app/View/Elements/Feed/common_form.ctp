@@ -28,7 +28,8 @@
     </div>
     <!-- Tab panes -->
     <div class="tab-content">
-        <div class="tab-pane fade" id="ActionForm">
+        <div class="tab-pane fade upload-file-drop-area" id="ActionForm"  data-preview-area-id="ActionUploadFilePreview"
+             data-submit-form-id="CommonActionDisplayForm">
             <?php if (count($goal_list_for_action_option) == 1): ?>
                 <div class="post-panel-body plr_11px ptb_7px">
                     <div class="alert alert-warning" role="alert">
@@ -69,6 +70,7 @@
                                 </li><?php endfor ?>
                         </ul>
                         <span class="help-block" id="ActionResult__Photo_ValidateMessage"></span>
+
                         <div id="ActionUploadFilePreview" class="post-upload-file-preview"></div>
                         <?php $this->Form->unlockField('file_id') ?>
                     </div>
@@ -150,6 +152,7 @@
                                     class="fa fa-camera post-camera-icon"></i>
                             </button>
                         </a>
+
                         <div class="row form-horizontal form-group post-share-range" id="CommonActionShare">
                             <?=
                             $this->Form->submit(__d('gl', "アクション登録"),
@@ -158,20 +161,11 @@
                     </div>
                 </div>
                 <?= $this->Form->end() ?>
-
-                <?=
-                $this->Form->create('AttachedFile', [
-                    'url'   => ['controller' => 'posts', 'action' => 'ajax_upload_file'],
-                    'id'    => 'ActionUploadFileForm',
-                    'type'  => 'file',
-                    'class' => 'post-upload-file-drop-area',
-                    'style' => 'display:none',
-                ]); ?>
-                <?= $this->Form->end() ?>
             <?php endif; ?>
         </div>
 
-        <div class="tab-pane fade" id="PostForm">
+        <div class="tab-pane fade upload-file-drop-area" id="PostForm" data-preview-area-id="PostUploadFilePreview"
+             data-submit-form-id="PostDisplayForm">
             <?=
             $this->Form->create('Post', [
                 'url'           => ['controller' => 'posts', 'action' => 'add'],
@@ -289,26 +283,8 @@
                 </div>
             </div>
             <?= $this->Form->end() ?>
-            <?=
-            $this->Form->create('AttachedFile', [
-                'url'   => ['controller' => 'posts', 'action' => 'ajax_upload_file'],
-                'id'    => 'PostUploadFileForm',
-                'type'  => 'file',
-                'class' => 'post-upload-file-drop-area',
-                'style' => 'display:none',
-            ]); ?>
-            <?= $this->Form->end() ?>
-            <?=
-            $this->Form->create('AttachedFile', [
-                'url'   => ['controller' => 'posts', 'action' => 'ajax_remove_file'],
-                'id'    => 'PostRemoveFileForm',
-                'style' => 'display:none',
-            ]); ?>
-            <?= $this->Form->hidden('file_id') ?>
-            <?php $this->Form->unlockField('file_id') ?>
-            <?= $this->Form->end() ?>
-
         </div>
     </div>
 </div>
+<?= $this->element('file_upload_form') ?>
 <!-- END app/View/Elements/Feed/common_form.ctp -->

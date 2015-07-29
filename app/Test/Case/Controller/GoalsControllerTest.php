@@ -54,6 +54,7 @@ class GoalsControllerTest extends ControllerTestCase
         'app.key_result',
         'app.collaborator',
         'app.approval_history',
+        'app.post_file',
     );
 
     public $goal_id = null;
