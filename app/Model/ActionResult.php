@@ -4,10 +4,11 @@ App::uses('AppModel', 'Model');
 /**
  * ActionResult Model
  *
- * @property Team      $Team
- * @property User      $User
- * @property Goal      $Goal
- * @property KeyResult $KeyResult
+ * @property Team         $Team
+ * @property User         $User
+ * @property Goal         $Goal
+ * @property KeyResult    $KeyResult
+ * @property AttachedFile $AttachedFile
  */
 class ActionResult extends AppModel
 {
@@ -72,6 +73,11 @@ class ActionResult extends AppModel
             ],
         ],
     ];
+
+    public $uses = [
+        'AttachedFile'
+    ];
+
     /**
      * Validation rules
      *
