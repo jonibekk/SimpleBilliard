@@ -15,6 +15,7 @@ message_app.controller(
 
         $scope.post_detail = getPostDetail;
         console.log(getPostDetail);
+        console.log(getMessage);
 
         var message_scroll = function () {
             var length = $scope.message_list.length;
