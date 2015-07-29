@@ -4,7 +4,6 @@ message_app.controller(
         $scope,
         $http,
         $translate,
-        $sce,
         notificationService,
         getMessage,
         $pusher,
@@ -20,9 +19,6 @@ message_app.controller(
         };
 
         var message_list = getMessage.message_list;
-        angular.forEach(message_list, function (val, key) {
-            message_list[key].Comment.created = $sce.trustAsHtml(val.Comment.created);
-        });
         $scope.message_list = message_list;
         message_scroll();
 
@@ -31,7 +27,6 @@ message_app.controller(
         // TODO: Uniqueチャンネル名に指定
         var test_channel = pusher.subscribe('test-channel');
         test_channel.bind('new_message', function (data) {
-            data.Comment.created = $sce.trustAsHtml(data.Comment.created);
             $scope.$apply($scope.message_list.push(data));
             message_scroll();
         });

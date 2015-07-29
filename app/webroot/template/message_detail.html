@@ -25,8 +25,9 @@
                 <div class="col col-xxs-10 showmore font_14px font_verydark box-align">
                     <div class="font_12px font_verydark">
                         <span class="font_bold">{{item.User.display_username}}</span>
-                        <span ng-bind-html="item.Comment.created" class="font_lightgray"
-                              style="position:absolute; right:10px;"></span>
+                        <span class="font_lightgray" style="position:absolute; right:10px;">
+                            {{item.Comment.created * 1000 | date:'MM/dd HH:mm'}}
+                        </span>
                     </div>
                     <div class="comment-text font_12px">{{item.Comment.body}}</div>
                     <div class="font_12px">
@@ -34,7 +35,7 @@
                            class="modal-ajax-get font_lightgray">
                             <i class="fa fa-check"></i>&nbsp;
                             <span ng-if="item.Comment.comment_read_count > 0">{{item.Comment.comment_read_count}}人が開封</span>
-                            <span ng-if="item.Comment.comment_read_count == 0">全員未開封</span>
+                            <span ng-if="item.Comment.comment_read_count == 0">未開封</span>
                         </a>
                     </div>
                 </div>
@@ -44,8 +45,7 @@
 
     <div class="panel-body ptb_8px plr_11px comment-block">
         <div class="col-xxs-12 box-align feed-contents comment-contents">
-            <img src="/img/no-image-user.jpg" class="lazy comment-img" data-original="/img/no-image-user.jpg" alt=""
-                 style="display: block;">
+            <img src="/img/no-image-user.jpg" class="lazy comment-img" data-original="/img/no-image-user.jpg" alt="" style="display: block;">
 
             <div class="comment-body">
                 <div class="form-feed-notify ajax-add-comment bv-form">
