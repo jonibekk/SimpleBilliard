@@ -19,7 +19,13 @@
                 </div>
                 <div class="goal-detail-info-data">
                     <span class="font_bold"><?= h($goal['Goal']['name']) ?></span>
-                    <i class="fa fa-arrow-right goal-detail-weight-5-icon"></i>
+<!--  ToDo @bigplants
+    この次のアイコンのclassを条件分岐させる
+    重要度0 : goal-detail-weight-0-icon
+    重要度1 : goal-detail-weight-1-icon
+    以下、同様に重要度0~5を切り分ける。
+ -->
+                    <i class="fa fa-arrow-right goal-detail-weight-0-icon"></i>
                     <p class="goal-detail-info-purpose"><?= __d('gl', '目的') ?>：  <?= $goal['Purpose']['name'] ?></p>
                     <p class="goal-detail-info-category"><?= __d('gl', 'カテゴリー') ?>： <?= h($goal['GoalCategory']['name']) ?></p>
                 </div>
@@ -29,7 +35,8 @@
                     <i class="fa-bullseye fa"></i>
                 </div>
                 <div class="goal-detail-info-progress">
-                    <?= h(round($goal['Goal']['target_value'], 1)) ?> [<?= h(KeyResult::$UNIT[$goal['Goal']['value_unit']]) ?>]            (← <?= h(round($goal['Goal']['start_value'], 1)) ?>)
+                    <?= h(round($goal['Goal']['start_value'], 1)) ?> →
+                    <?= h(round($goal['Goal']['target_value'], 1)) ?>[<?= h(KeyResult::$UNIT[$goal['Goal']['value_unit']]) ?>]
                 </div>
             </div>
             <div class="goal-detail-info-due-wrap">
@@ -37,9 +44,14 @@
                     <i class="fa-calendar fa"></i>
                 </div>
                 <div class="goal-detail-info-due">
-                    <?= $this->Time->format('Y/m/d', $goal['Goal']['end_date']) ?>
+                    <?= $this->Time->format('Y/m/d', $goal['Goal']['start_date']) ?>
+                    - <?= $this->Time->format('Y/m/d', $goal['Goal']['end_date']) ?>
                 </div>
             </div>
+<!--  ToDo @bigplants
+    メンバーが5人を超えたときの挙動が仕様と違うので修正お願いします。
+    6人目の画像を出していただきたい。
+ -->
             <div class="goal-detail-info-members">
                 <p class="goal-detail-info-members-head"><?= __d('gl', 'メンバー') ?></p>
                 <?php
@@ -65,11 +77,15 @@
                     ?>
                 <?php endforeach ?>
                 <?php if ($over_num > 0): ?>
-                    (<?= $this->Html->link($over_num, [
-                        'controller' => 'goals',
-                        'action'     => 'view_members',
-                        'goal_id'    => $goal['Goal']['id'],
-                    ]) ?>)
+                    <div class="goal-detail-members-remaining-wrap">
+                        <?= $this->Html->link($over_num, [
+                            'controller' => 'goals',
+                            'action'     => 'view_members',
+                            'goal_id'    => $goal['Goal']['id'],
+                        ],[
+                            'class'     => 'goal-detail-members-remaining',
+                        ]) ?>
+                    </div>
                 <?php endif ?>
             </div>
             <div class="goal-detail-info-description">
