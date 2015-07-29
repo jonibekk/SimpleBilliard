@@ -353,7 +353,8 @@ class Post extends AppModel
                 'team_id' => $this->current_team_id,
             ],
             'contain'    => [
-                'User' => [],
+                'User'          => [],
+                'PostShareUser' => [],
             ]
         ];
         $res = $this->find('first', $options);

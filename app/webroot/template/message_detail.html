@@ -1,8 +1,8 @@
 <div class="panel panel-default">
     <div class="panel-heading" style="background-color: #f5f5f5;">
         <div class="row font_14px">
-            <span class=""> 吉 亨斗、他13人</span>
-            <span class="plr_11px font_brownRed"><i class="fa fa-user"></i> 14</span>
+            <span class=""> {{post_detail.User.display_username}}、他{{post_detail.PostShareUser.length}}人</span>
+            <span class="plr_11px font_brownRed"><i class="fa fa-user"></i> {{post_detail.PostShareUser.length + 1}}</span>
             <span style="float:right;">
                 <button class="team-member-invite-btn">
                     <i class="fa fa-plus-circle team-member-invite-btn-icon"></i>新しいメッセージ
@@ -54,6 +54,7 @@
                                   rows="1" placeholder="返信する" cols="30" init-height="15"
                                   style="height: 33px; overflow: hidden; word-wrap: break-word; resize: none;"></textarea>
                     </div>
+                    <!--
                     <div class="comment-btn">
                         <a href="#" class="comment-add-pic new-comment-add-pic">
                             <button type="button" class="btn pull-left photo-up-btn">
@@ -61,6 +62,7 @@
                             </button>
                         </a>
                     </div>
+                    -->
                     <div class="pull-right">
                         <div class="submit">
                             <input ng-click="clickMessage()" class="btn btn-primary submit-btn" type="submit" value="返信する">
