@@ -15,7 +15,7 @@ message_app.controller(
 
         var message_scroll = function () {
             var length = $scope.message_list.length;
-            $location.hash('message_'+length);
+            $location.hash('m_'+length);
             $anchorScroll();
         };
 

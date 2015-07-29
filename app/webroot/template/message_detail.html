@@ -14,7 +14,7 @@
     <div class="panel-body pt_10px plr_11px pb_8px" id="message_box" style="overflow-y:scroll; height:620px; margin:0px;">
 
         <div ng-repeat="(key, item) in message_list">
-            <div id="message_{{key+1}}" class="col col-xxs-12" style="padding-bottom: 8px">
+            <div id="m_{{key+1}}" class="col col-xxs-12" style="padding-bottom: 8px">
                 <div class="col col-xxs-2">
                     <a href="/users/view_goals/user_id:{{item.User.id}}">
                         <img width="64px" class="lazy feed-img" ng-src="{{item.User.photo_path}}"/>
