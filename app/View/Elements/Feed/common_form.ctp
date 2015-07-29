@@ -28,8 +28,8 @@
     </div>
     <!-- Tab panes -->
     <div class="tab-content">
-        <div class="tab-pane fade upload-file-drop-area" id="ActionForm"  data-preview-area-id="ActionUploadFilePreview"
-             data-submit-form-id="CommonActionDisplayForm">
+        <div class="tab-pane fade upload-file-drop-area" id="ActionForm" data-preview-area-id="ActionUploadFilePreview"
+             data-form-id="CommonActionDisplayForm" data-callback-after-accept="actionAfterAccept">
             <?php if (count($goal_list_for_action_option) == 1): ?>
                 <div class="post-panel-body plr_11px ptb_7px">
                     <div class="alert alert-warning" role="alert">
@@ -147,7 +147,8 @@
                 </div>
                 <div class="post-panel-footer none" id="CommonActionFooter">
                     <div class="font_12px" id="CommonActionFormFooter">
-                        <a href="#" id="ActionUploadFileButton" class="link-red">
+                        <a href="#" class="link-red upload-file-attach-button"
+                           data-preview-area-id="ActionUploadFilePreview" data-form-id="CommonActionDisplayForm">
                             <button type="button" class="btn pull-left photo-up-btn"><i
                                     class="fa fa-camera post-camera-icon"></i>
                             </button>
@@ -165,7 +166,7 @@
         </div>
 
         <div class="tab-pane fade upload-file-drop-area" id="PostForm" data-preview-area-id="PostUploadFilePreview"
-             data-submit-form-id="PostDisplayForm">
+             data-form-id="PostDisplayForm">
             <?=
             $this->Form->create('Post', [
                 'url'           => ['controller' => 'posts', 'action' => 'add'],
@@ -269,7 +270,8 @@
             </div>
             <div class="post-panel-footer">
                 <div class="font_12px none" id="PostFormFooter">
-                    <a href="#" id="PostUploadFileButton" class="link-red">
+                    <a href="#" class="link-red upload-file-attach-button" data-preview-area-id="PostUploadFilePreview"
+                       data-form-id="PostDisplayForm">
                         <button type="button" class="btn pull-left photo-up-btn"><i
                                 class="fa fa-camera post-camera-icon"></i>
                         </button>

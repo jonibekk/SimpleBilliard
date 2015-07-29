@@ -2695,13 +2695,11 @@ function initCommentNotify(notifyBox) {
 
 //bootstrapValidatorがSuccessした時
 function validatorCallback(e) {
-    switch (e.target.id) {
-        case "CommentAjaxGetNewCommentFormForm":
-            addComment(e);
-            break;
-        case "ActionCommentForm":
-            addComment(e);
-            break;
+    if (e.target.id.startsWith('CommentAjaxGetNewCommentForm_')) {
+        addComment(e);
+    }
+    else if (e.target.id == "ActionCommentForm") {
+        addComment(e);
     }
 }
 
@@ -2978,11 +2976,20 @@ $(document).ready(function () {
     /**
      * ファイルのドラッグ & ドロップ
      *
-     * <div class="upload-file-drop-area"
-     * data-preview-area-id="PreviewArea"
-     * data-submit-form-id="PostForm">
-     * <form id="PostForm"></form>
-     *     </div>
+     * ファイルをドロップさせたいエリアの要素に対して以下の属性を設定する
+     *
+     * class=upload-file-drop-area: このクラスを追加した要素がドロップ可能エリアになる
+     * data-preview-area-id: アップロードしたファイルのプレビューを表示するコンテナ要素ID
+     * data-form-id: アップロードしたファイルの識別IDを hidden で追加するフォーム
+     *
+     * 例）
+     * <div class="upload-file-drop-area" data-preview-area-id="PreviewArea" data-form-id="PostForm">
+     *    <form id="PostForm">
+     *        <div id="PreviewArea></div>
+     *        <!-- form の最後に data['file_id'][] の名前で hidden が追加される -->
+     *    </form>
+     * </div>
+     *
      */
     // ファイルアップロード用フォーム
     var $uploadFileForm = $('#UploadFileForm');
@@ -3021,6 +3028,13 @@ $(document).ready(function () {
         accept: function (file, done) {
             $uploadFileForm.hide();
             done();
+
+            // callbackAfterAccept にコールバック関数が登録してあれば実行する
+            var callbacks = $uploadFileForm.data('callbacks');
+            var callbackName = $uploadFileForm.data('callbackAfterAccept');
+            if (callbacks.hasOwnProperty(callbackName) && typeof callbacks[callbackName] == 'function') {
+                callbacks[callbackName].call(this);
+            }
         },
         // ファイルアップロード完了時
         success: function (file, res) {
@@ -3041,8 +3055,8 @@ $(document).ready(function () {
 
             // 成功
             // submit するフォームに hidden でファイルID追加
-            var $submitForm = $('#' + $uploadFileForm.data('submitFormId'));
-            $submitForm.append($('<input type=hidden name=data[file_id][]>').val(res.id).attr('id', res.id));
+            var $form = $('#' + $uploadFileForm.data('formId'));
+            $form.append($('<input type=hidden name=data[file_id][]>').val(res.id).attr('id', res.id));
 
             // プレビューエリアにファイルIDを紐付ける
             $preview.data('file_id', res.id);
@@ -3087,7 +3101,7 @@ $(document).ready(function () {
                         delay: 2000,
                         mouse_reset: false
                     });
-                    // submit するフォームの hidden 削除
+                    // ファイルIDの hidden 削除
                     $('#' + $preview.data('file_id')).remove();
                     // プレビューエリア削除
                     $preview.fadeOut();
@@ -3129,10 +3143,13 @@ $(document).ready(function () {
 
         // プレビュー用エリアのID
         $uploadFileForm.data('previewContainerId', $dropArea.attr('data-preview-area-id'));
-        // アップロードしたファイルIDを submit するフォーム（投稿フォーム等）
-        $uploadFileForm.data('submitFormId', $dropArea.attr('data-submit-form-id'));
+        // アップロード完了した後、ファイルIDをsubmitするフォーム（投稿フォーム等）
+        $uploadFileForm.data('formId', $dropArea.attr('data-form-id'));
+        // コールバック関数
+        $uploadFileForm.data('callbackAfterAccept', $dropArea.attr('data-callback-after-accept'));
 
-        // ファイルアップロード用フォーム（ドロップさせるエリア）をサイズと位置を合わせて表示させる
+        // ファイルアップロード用フォームのサイズと位置を合わせて表示させる
+        // これがドロップさせるエリアになる
         var pos = $dropArea.position();
         $uploadFileForm.appendTo($dropArea).css({
             width: $dropArea.outerWidth(),
@@ -3140,7 +3157,7 @@ $(document).ready(function () {
             top: pos.top,
             left: pos.left,
             position: 'absolute'
-        }).show();
+        }).addClass('active').show();
     });
 
     // ドロップエリアから外れた時
@@ -3156,435 +3173,29 @@ $(document).ready(function () {
         // プレビュー用エリアのID
         $uploadFileForm.data('previewContainerId', $button.attr('data-preview-area-id'));
         // アップロードしたファイルIDを submit するフォーム（投稿フォーム等）
-        $uploadFileForm.data('submitFormId', $button.attr('data-submit-form-id'));
+        $uploadFileForm.data('formId', $button.attr('data-form-id'));
+        // コールバック関数
+        $uploadFileForm.data('callbackAfterAccept', $button.attr('data-callback-after-accept'));
 
         $uploadFileAttachButton.trigger('click');
     });
+
+    // コールバック
+    $uploadFileForm.data('callbacks', {
+        'actionAfterAccept': function () {
+            var $button = $('.target-show-target-click');
+            if ($button.size()) {
+                var target = $button.attr("target-id");
+                target = target.split(',');
+                $.each(target, function () {
+                    $("#" + this).show();
+                });
+                $button.remove();
+            }
+        }
+    });
+
     $uploadFileForm.dropzone();
-
-
-    // 手動ファイル添付用ボタン
-    // プレビュー用エリアのIDをセットしてから、Dropzoneの貼付用ボタンをクリックする
-    //$(document).on('click', '.comment-add-file', function (e) {
-    //    e.preventDefault();
-    //    var $commentBlock = $(this).closest('.comment-block');
-    //    $commentUploadFileForm.data('previewContainerId',
-    //        $commentBlock.find('.comment-upload-file-preview').attr('id'));
-    //    $('#CommentUploadFileButton').trigger('click');
-    //});
-    //$commentUploadFileForm.dropzone();
-
-
-    //Dropzone.options.PostUploadFileForm = {
-    //    paramName: "file",
-    //    maxFilesize: maxFileSize,
-    //    url: cake.url.upload_file,
-    //    addRemoveLink: true,
-    //    dictFileTooBig: cake.message.validate.dropzone_file_too_big,
-    //    clickable: '#PostUploadFileButton',
-    //    previewsContainer: "#PostUploadFilePreview",
-    //    previewTemplate: previewTemplate,
-    //    // ファイルがドロップされた後
-    //    accept: function (file, done) {
-    //        $postUploadFileForm.hide();
-    //        done();
-    //    },
-    //    // ファイルアップロード完了時
-    //    success: function (file, res) {
-    //        var $preview = $(file.previewTemplate);
-    //        // エラー
-    //        if (res.error) {
-    //            $preview.remove();
-    //            new PNotify({
-    //                type: 'error',
-    //                title: cake.message.notice.d,
-    //                text: res.msg,
-    //                icon: "fa fa-check-circle",
-    //                delay: 4000,
-    //                mouse_reset: false
-    //            });
-    //            return;
-    //        }
-    //        // 成功
-    //        $postForm.append($('<input type=hidden name=data[file_id][]>').val(res.id).attr('id', res.id));
-    //        $preview.data('file_id', res.id);
-    //        setTimeout(function () {
-    //            // プログレスバーが一瞬で消えるのを防止するため１秒待つ
-    //            $preview.find('.progress').remove();
-    //        }, 1000);
-    //    },
-    //    // ファイル削除ボタン押下時
-    //    removedfile: function (file) {
-    //        var $preview = $(file.previewTemplate);
-    //        var $removeFileForm = $('#PostRemoveFileForm');
-    //        $removeFileForm.find('input[name="data[AttachedFile][file_id]"]').val($preview.data('file_id'));
-    //        $.ajax({
-    //            url: cake.url.remove_file,
-    //            type: 'POST',
-    //            dataType: 'json',
-    //            processData: false,
-    //            data: $removeFileForm.serialize()
-    //        })
-    //            .done(function (res) {
-    //                // エラー
-    //                if (res.error) {
-    //                    new PNotify({
-    //                        type: 'error',
-    //                        title: cake.message.notice.d,
-    //                        text: res.msg,
-    //                        icon: "fa fa-check-circle",
-    //                        delay: 4000,
-    //                        mouse_reset: false
-    //                    });
-    //                    return;
-    //                }
-    //                // 成功
-    //                new PNotify({
-    //                    type: 'success',
-    //                    title: cake.word.success,
-    //                    text: res.msg,
-    //                    icon: "fa fa-check-circle",
-    //                    delay: 2000,
-    //                    mouse_reset: false
-    //                });
-    //                // 投稿フォームの hidden を削除
-    //                $('#' + $preview.data('file_id')).remove();
-    //                // プレビューエリア削除
-    //                $preview.fadeOut();
-    //            })
-    //            .fail(function (res) {
-    //                new PNotify({
-    //                    type: 'error',
-    //                    title: cake.message.notice.d,
-    //                    text: cake.message.notice.d,
-    //                    icon: "fa fa-check-circle",
-    //                    delay: 4000,
-    //                    mouse_reset: false
-    //                });
-    //            });
-    //    },
-    //    // ファイルアップロード失敗
-    //    error: function (file, errorMessage) {
-    //        var $preview = $(file.previewTemplate);
-    //        // エラーと確認出来るように失敗したファイルの名前を強調して少しの間表示しておく
-    //        $preview.find('.dz-name').addClass('font_darkRed font_bold').append('(' + cake.word.error + ')');
-    //        setTimeout(function () {
-    //            $preview.remove();
-    //        }, 4000);
-    //        $postUploadFileForm.hide();
-    //        new PNotify({
-    //            type: 'error',
-    //            title: cake.message.notice.d,
-    //            text: errorMessage,
-    //            icon: "fa fa-check-circle",
-    //            delay: 8000,
-    //            mouse_reset: false
-    //        });
-    //    }
-    //};
-    //// 投稿フォームにドラッグオーバーした時
-    //$postForm.on('dragover', function () {
-    //    var $this = $(this);
-    //    var pos = $this.position();
-    //    // ファイルアップロード用フォーム（ドロップさせるエリア）をサイズと位置を合わせて表示させる
-    //    $postUploadFileForm.css({
-    //        width: $this.outerWidth(),
-    //        height: $this.outerHeight(),
-    //        top: pos.top,
-    //        left: pos.left,
-    //        position: 'absolute'
-    //    }).show();
-    //});
-    //// ファイルアップロード用フォームから外れた時
-    //$postUploadFileForm.on('dragleave', function () {
-    //    $(this).hide();
-    //});
-    //$postUploadFileForm.dropzone();
-    //
-    ////////////////////////////////////////////////////////////
-    //// アクション用ファイルアップロードフォーム
-    ////////////////////////////////////////////////////////////
-    //var $actionForm = $('#CommonActionDisplayForm');
-    //var $actionUploadFileForm = $('#ActionUploadFileForm');
-    //Dropzone.options.ActionUploadFileForm = {
-    //    paramName: "file",
-    //    maxFilesize: maxFileSize,
-    //    url: cake.url.upload_file,
-    //    addRemoveLink: true,
-    //    dictFileTooBig: cake.message.validate.dropzone_file_too_big,
-    //    clickable: '#ActionUploadFileButton',
-    //    previewsContainer: "#ActionUploadFilePreview",
-    //    previewTemplate: previewTemplate,
-    //    // ファイルがドロップされた後
-    //    accept: function (file, done) {
-    //        $actionUploadFileForm.hide();
-    //        var $button = $('.target-show-target-click');
-    //        var target = $button.attr("target-id");
-    //        target = target.split(',');
-    //        $.each(target, function () {
-    //            $("#" + this).show();
-    //        });
-    //        $button.remove();
-    //        done();
-    //    },
-    //    // ファイルアップロード完了時
-    //    success: function (file, res) {
-    //        var $preview = $(file.previewTemplate);
-    //        // エラー
-    //        if (res.error) {
-    //            $preview.remove();
-    //            new PNotify({
-    //                type: 'error',
-    //                title: cake.message.notice.d,
-    //                text: res.msg,
-    //                icon: "fa fa-check-circle",
-    //                delay: 4000,
-    //                mouse_reset: false
-    //            });
-    //            return;
-    //        }
-    //        // 成功
-    //        $actionForm.append($('<input type=hidden name=data[file_id][]>').val(res.id).attr('id', res.id));
-    //        $preview.data('file_id', res.id);
-    //        setTimeout(function () {
-    //            // プログレスバーが一瞬で消えるのを防止するため１秒待つ
-    //            $preview.find('.progress').remove();
-    //        }, 1000);
-    //    },
-    //    // ファイル削除ボタン押下時
-    //    removedfile: function (file) {
-    //        var $preview = $(file.previewTemplate);
-    //        var $removeFileForm = $('#PostRemoveFileForm');
-    //        $removeFileForm.find('input[name="data[AttachedFile][file_id]"]').val($preview.data('file_id'));
-    //        $.ajax({
-    //            url: cake.url.remove_file,
-    //            type: 'POST',
-    //            dataType: 'json',
-    //            processData: false,
-    //            data: $removeFileForm.serialize()
-    //        })
-    //            .done(function (res) {
-    //                // エラー
-    //                if (res.error) {
-    //                    new PNotify({
-    //                        type: 'error',
-    //                        title: cake.message.notice.d,
-    //                        text: res.msg,
-    //                        icon: "fa fa-check-circle",
-    //                        delay: 4000,
-    //                        mouse_reset: false
-    //                    });
-    //                    return;
-    //                }
-    //                // 成功
-    //                new PNotify({
-    //                    type: 'success',
-    //                    title: cake.word.success,
-    //                    text: res.msg,
-    //                    icon: "fa fa-check-circle",
-    //                    delay: 2000,
-    //                    mouse_reset: false
-    //                });
-    //                // 投稿フォームの hidden を削除
-    //                $('#' + $preview.data('file_id')).remove();
-    //                // プレビューエリア削除
-    //                $preview.fadeOut();
-    //            })
-    //            .fail(function (res) {
-    //                new PNotify({
-    //                    type: 'error',
-    //                    title: cake.message.notice.d,
-    //                    text: cake.message.notice.d,
-    //                    icon: "fa fa-check-circle",
-    //                    delay: 4000,
-    //                    mouse_reset: false
-    //                });
-    //            });
-    //    },
-    //    // ファイルアップロード失敗
-    //    error: function (file, errorMessage) {
-    //        var $preview = $(file.previewTemplate);
-    //        // エラーと確認出来るように失敗したファイルの名前を強調して少しの間表示しておく
-    //        $preview.find('.dz-name').addClass('font_darkRed font_bold').append('(' + cake.word.error + ')');
-    //        setTimeout(function () {
-    //            $preview.remove();
-    //        }, 4000);
-    //        $actionUploadFileForm.hide();
-    //        new PNotify({
-    //            type: 'error',
-    //            title: cake.message.notice.d,
-    //            text: errorMessage,
-    //            icon: "fa fa-check-circle",
-    //            delay: 8000,
-    //            mouse_reset: false
-    //        });
-    //    }
-    //};
-    //// 投稿フォームにドラッグオーバーした時
-    //$actionForm.on('dragover', function () {
-    //    var $this = $(this);
-    //    var pos = $this.position();
-    //    // ファイルアップロード用フォーム（ドロップさせるエリア）をサイズと位置を合わせて表示させる
-    //    $actionUploadFileForm.css({
-    //        width: $this.outerWidth(),
-    //        height: $this.outerHeight(),
-    //        top: pos.top,
-    //        left: pos.left,
-    //        position: 'absolute'
-    //    }).show();
-    //});
-    //// ファイルアップロード用フォームから外れた時
-    //$actionUploadFileForm.on('dragleave', function () {
-    //    $(this).hide();
-    //});
-    //$actionUploadFileForm.dropzone();
-    //
-    ////////////////////////////////////////////////////////////
-    //// コメント用ファイルアップロード用フォーム
-    ////////////////////////////////////////////////////////////
-    //var $commentUploadFileForm = $('#CommentUploadFileForm');
-    //Dropzone.options.CommentUploadFileForm = {
-    //    paramName: "file",
-    //    maxFilesize: maxFileSize, // MB
-    //    url: cake.url.upload_file,
-    //    addRemoveLink: true,
-    //    dictFileTooBig: cake.message.validate.dropzone_file_too_big,
-    //    clickable: '#CommentUploadFileButton',
-    //    previewTemplate: previewTemplate,
-    //    // ファイルがドロップされた時の処理
-    //    addedfile: function (file) {
-    //        this.previewsContainer = $('#' + $commentUploadFileForm.data('previewContainerId')).get(0);
-    //        this.defaultOptions.addedfile.call(this, file);
-    //    },
-    //    // ファイルがドロップされた後
-    //    accept: function (file, done) {
-    //        $commentUploadFileForm.hide();
-    //        done();
-    //    },
-    //    // ファイルアップロード完了時
-    //    success: function (file, res) {
-    //        var $preview = $(file.previewTemplate);
-    //        // エラー
-    //        if (res.error) {
-    //            $preview.remove();
-    //            new PNotify({
-    //                type: 'error',
-    //                title: cake.message.notice.d,
-    //                text: res.msg,
-    //                icon: "fa fa-check-circle",
-    //                delay: 4000,
-    //                mouse_reset: false
-    //            });
-    //            return;
-    //        }
-    //        // 成功
-    //        $preview.closest('form').append($('<input type=hidden name=data[file_id][]>').val(res.id).attr('id', res.id));
-    //        $preview.data('file_id', res.id);
-    //        setTimeout(function () {
-    //            // プログレスバーが一瞬で消えるのを防止するため１秒待つ
-    //            $preview.find('.progress').remove();
-    //        }, 1000);
-    //    },
-    //    // ファイル削除ボタン押下時
-    //    removedfile: function (file) {
-    //        var $preview = $(file.previewTemplate);
-    //        var $removeFileForm = $('#CommentRemoveFileForm');
-    //        $removeFileForm.find('input[name="data[AttachedFile][file_id]"]').val($preview.data('file_id'));
-    //        $.ajax({
-    //            url: cake.url.remove_file,
-    //            type: 'POST',
-    //            dataType: 'json',
-    //            processData: false,
-    //            data: $removeFileForm.serialize()
-    //        })
-    //            .done(function (res) {
-    //                // エラー
-    //                if (res.error) {
-    //                    new PNotify({
-    //                        type: 'error',
-    //                        title: cake.message.notice.d,
-    //                        text: res.msg,
-    //                        icon: "fa fa-check-circle",
-    //                        delay: 4000,
-    //                        mouse_reset: false
-    //                    });
-    //                    return;
-    //                }
-    //                // 成功
-    //                new PNotify({
-    //                    type: 'success',
-    //                    title: cake.word.success,
-    //                    text: res.msg,
-    //                    icon: "fa fa-check-circle",
-    //                    delay: 2000,
-    //                    mouse_reset: false
-    //                });
-    //                // コメント投稿フォームの hidden 削除
-    //                $('#' + $preview.data('file_id')).remove();
-    //                // プレビューエリア削除
-    //                $preview.fadeOut();
-    //            })
-    //            .fail(function (res) {
-    //                new PNotify({
-    //                    type: 'error',
-    //                    title: cake.message.notice.d,
-    //                    text: cake.message.notice.d,
-    //                    icon: "fa fa-check-circle",
-    //                    delay: 4000,
-    //                    mouse_reset: false
-    //                });
-    //            });
-    //    },
-    //    // ファイルアップロード失敗
-    //    error: function (file, errorMessage) {
-    //        var $preview = $(file.previewTemplate);
-    //        // エラーと確認出来るように失敗したファイルの名前を強調して少しの間表示しておく
-    //        $preview.find('.dz-name').addClass('font_darkRed font_bold').append('(' + cake.word.error + ')');
-    //        setTimeout(function () {
-    //            $preview.remove();
-    //        }, 4000);
-    //        $commentUploadFileForm.hide();
-    //        new PNotify({
-    //            type: 'error',
-    //            title: cake.message.notice.d,
-    //            text: errorMessage,
-    //            icon: "fa fa-check-circle",
-    //            delay: 8000,
-    //            mouse_reset: false
-    //        });
-    //    }
-    //};
-    //
-    //// コメントフォームにドラッグオーバーした時
-    //$(document).on('dragover', '.comment-block', function () {
-    //    var $commentBlock = $(this);
-    //    var pos = $commentBlock.position();
-    //    // ファイルアップロード用フォーム（ドロップさせるエリア）をサイズと位置を合わせて表示させる
-    //    $commentUploadFileForm.appendTo($commentBlock).css({
-    //        width: $commentBlock.outerWidth(),
-    //        height: $commentBlock.outerHeight(),
-    //        top: pos.top,
-    //        left: pos.left,
-    //        position: 'absolute'
-    //    }).show();
-    //    // プレビュー用エリアのID
-    //    $commentUploadFileForm.data('previewContainerId',
-    //        $commentBlock.find('.comment-upload-file-preview').attr('id'));
-    //});
-    //// ドロップエリアから外れた時
-    //$commentUploadFileForm.on('dragleave', function () {
-    //    $(this).hide();
-    //});
-    //// 手動ファイル添付用ボタン
-    //// プレビュー用エリアのIDをセットしてから、Dropzoneの貼付用ボタンをクリックする
-    //$(document).on('click', '.comment-add-file', function (e) {
-    //    e.preventDefault();
-    //    var $commentBlock = $(this).closest('.comment-block');
-    //    $commentUploadFileForm.data('previewContainerId',
-    //        $commentBlock.find('.comment-upload-file-preview').attr('id'));
-    //    $('#CommentUploadFileButton').trigger('click');
-    //});
-    //$commentUploadFileForm.dropzone();
 });
 
 function evAjaxEditCircleAdminStatus(e) {

@@ -1035,17 +1035,17 @@ class GoalsController extends AppController
                 || !$this->Goal->Post->addGoalPost(Post::TYPE_ACTION, $goal_id, $this->Auth->user('id'), false,
                                                    $this->Goal->ActionResult->getLastInsertID(), $share,
                                                    PostShareCircle::SHARE_TYPE_ONLY_NOTIFY)
-                || !$this->Goal->Post->PostFile->AttachedFile->saveRelatedFiles($this->Goal->Post->getLastInsertID(),
-                                                                                AttachedFile::TYPE_MODEL_POST,
+                || !$this->Goal->Post->PostFile->AttachedFile->saveRelatedFiles($this->Goal->ActionResult->getLastInsertID(),
+                                                                                AttachedFile::TYPE_MODEL_ACTION_RESULT,
                                                                                 $this->request->data('file_id'))
             ) {
                 throw new RuntimeException(__d('gl', "アクションの追加に失敗しました。"));
             }
         } catch (RuntimeException $e) {
             $this->Goal->rollback();
-            if ($post_id = $this->Goal->Post->getLastInsertID()) {
-                $this->Goal->Post->PostFile->AttachedFile->deleteAllRelatedFiles($post_id,
-                                                                                 AttachedFile::TYPE_MODEL_POST);
+            if ($action_result_id = $this->Goal->ActionResult->getLastInsertID()) {
+                $this->Goal->Post->PostFile->AttachedFile->deleteAllRelatedFiles($action_result_id,
+                                                                                 AttachedFile::TYPE_MODEL_ACTION_RESULT);
             }
             $this->Pnotify->outError($e->getMessage());
             $this->redirect($this->referer());
