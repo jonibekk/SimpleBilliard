@@ -11,7 +11,8 @@
         </div>
     </div>
 
-    <div class="panel-body pt_10px plr_11px pb_8px" id="message_box" style="overflow-y:scroll; height:620px; margin:0px;">
+    <div class="panel-body pt_10px plr_11px pb_8px" id="message_box"
+         style="overflow-y:scroll; height:620px; margin:0px;">
 
         <div ng-repeat="(key, item) in message_list">
             <div id="m_{{key+1}}" class="col col-xxs-12" style="padding-bottom: 8px">
@@ -29,20 +30,12 @@
                     </div>
                     <div class="comment-text font_12px">{{item.Comment.body}}</div>
                     <div class="font_12px">
-                        <a href="#" class="click-like font_lightgray"
-                           like_count_id="CommentLikeCount_{{item.Comment.id}}" like_type="comment"> いいね！</a>
-                        <span class="font_lightgray"> ･ </span>
-                        <span>
-                            <a href="/posts/ajax_get_comment_liked_users/comment_id:{{item.Comment.id}}"
-                               class="modal-ajax-get font_lightgray">
-                                <i class="fa fa-thumbs-o-up"></i>&nbsp;<span>{{item.Comment.comment_like_count}}</span>
-                            </a>
-                            <span class="font_lightgray"> ･ </span>
-                            <a href="/posts/ajax_get_comment_red_users/comment_id:{{item.Comment.id}}"
-                               class="modal-ajax-get font_lightgray">
-                                <i class="fa fa-check"></i>&nbsp;<span>{{item.Comment.comment_read_count}}</span>
-                            </a>
-                        </span>
+                        <a href="/posts/ajax_get_comment_red_users/comment_id:{{item.Comment.id}}"
+                           class="modal-ajax-get font_lightgray">
+                            <i class="fa fa-check"></i>&nbsp;
+                            <span ng-if="item.Comment.comment_read_count > 0">{{item.Comment.comment_read_count}}人が開封</span>
+                            <span ng-if="item.Comment.comment_read_count == 0">全員未開封</span>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -57,17 +50,17 @@
             <div class="comment-body">
                 <div class="form-feed-notify ajax-add-comment bv-form">
                     <div class="form-group mlr_-1px required">
-                        <textarea ng-model = "message"
+                        <textarea ng-model="message"
                                   class="form-control tiny-form-text font_12px"
                                   rows="1" placeholder="返信する" cols="30" init-height="15"
                                   style="height: 33px; overflow: hidden; word-wrap: break-word; resize: none;"></textarea>
                     </div>
                     <div class="comment-btn">
-                            <a href="#" class="comment-add-pic new-comment-add-pic">
-                                <button type="button" class="btn pull-left photo-up-btn">
-                                    <i class="fa fa-camera post-camera-icon"></i>
-                                </button>
-                            </a>
+                        <a href="#" class="comment-add-pic new-comment-add-pic">
+                            <button type="button" class="btn pull-left photo-up-btn">
+                                <i class="fa fa-camera post-camera-icon"></i>
+                            </button>
+                        </a>
                     </div>
                     <div class="pull-right">
                         <div class="submit">
