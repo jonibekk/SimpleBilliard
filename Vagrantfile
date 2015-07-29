@@ -88,6 +88,7 @@ Vagrant.configure('2') do |config|
             chef.add_recipe 'local_db'
             chef.add_recipe 'local_etc'
             chef.add_recipe 'deploy_cake_local'
+            chef.add_recipe 'vnc'
             chef.json = {
                 doc_root: doc_root,
                 app_root: app_root,
@@ -99,6 +100,9 @@ Vagrant.configure('2') do |config|
                     owner: 'ubuntu',
                     group: 'ubuntu',
                     dir: 'vagrant'
+                },
+                vnc: {
+                    account_username: 'ubuntu'
                 }
             }
         end
