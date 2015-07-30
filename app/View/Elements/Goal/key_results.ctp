@@ -1,8 +1,9 @@
 <?php
 /**
- * @var $key_results
- * @var $incomplete_kr_count
- * @var $kr_can_edit
+ * @var CodeCompletionView $this
+ * @var                    $key_results
+ * @var                    $incomplete_kr_count
+ * @var                    $kr_can_edit
  */
 ?>
 <?php if ($key_results): ?>
@@ -10,11 +11,39 @@
     <?php foreach ($key_results as $kr): ?>
         <div class="goal-detail-kr-card">
             <div class="goal-detail-kr-achieve-wrap">
-            <!-- todo :  押したらKRの完了機能。classの変更
-                未完了 -> 完了
-                goal-detail-kr-achieve-yet -> goal-detail-kr-achieve-already
-            -->
-                <i class="fa-check-circle fa goal-detail-kr-achieve-yet"></i>
+                <?php if ($kr['KeyResult']['completed']): ?>
+                    <?= $this->Form->postLink('<i class="fa-check-circle fa goal-detail-kr-achieve-already"></i>',
+                                              ['controller' => 'goals', 'action' => 'incomplete_kr', 'key_result_id' => $kr['KeyResult']['id']],
+                                              ['escape' => false, 'class' => 'no-line']) ?>
+                <?php else: ?>
+                    <?php //最後のKRの場合
+                    if ($incomplete_kr_count === 1):?>
+                        <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_last_kr_confirm', 'key_result_id' => $kr['KeyResult']['id']]) ?>"
+                           class="modal-ajax-get no-line">
+                            <i class="fa-check-circle fa goal-detail-kr-achieve-yet"></i>
+                        </a>
+                    <?php else: ?>
+                        <?=
+                        $this->Form->create('Goal', [
+                            'url'           => ['controller' => 'goals', 'action' => 'complete_kr', 'key_result_id' => $kr['KeyResult']['id']],
+                            'inputDefaults' => [
+                                'div'       => 'form-group',
+                                'label'     => false,
+                                'wrapInput' => '',
+                            ],
+                            'class'         => 'form-feed-notify',
+                            'name'          => 'kr_achieve_' . $kr['KeyResult']['id'],
+                            'id'            => 'kr_achieve_' . $kr['KeyResult']['id']
+                        ]); ?>
+                        <?php $this->Form->unlockField('socket_id') ?>
+                        <?= $this->Form->end() ?>
+                        <a href="#" form-id="kr_achieve_<?= $kr['KeyResult']['id'] ?>"
+                           class="kr_achieve_button no-line">
+                            <i class="fa-check-circle fa goal-detail-kr-achieve-yet"></i>
+                        </a>
+                    <?php endif; ?>
+                <?php endif; ?>
+
             </div>
             <div class="goal-detail-kr-cards-contents">
                 <h4 class="goal-detail-kr-card-title"><?= h($kr['KeyResult']['name']) ?></h4>
