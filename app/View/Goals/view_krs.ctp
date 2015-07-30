@@ -48,7 +48,7 @@
                 <? endif ?>
             </div>
         </div>
-        <div class="panel-body panel-read-more-body">
+        <div class="panel-body panel-read-more-body goal-detail-panel-read-more">
             <a href="#" class="btn btn-link click-goal-key-result-more"
                next-page-num="2"
                id="GoalPageKeyResultMoreLink"
