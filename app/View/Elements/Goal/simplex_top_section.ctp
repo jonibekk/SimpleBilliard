@@ -24,7 +24,6 @@
                            ]
         )
         ?>
-        <br>
         <p class="goal-detail-goal-name">
             <?= h($goal['Goal']['name']) ?>
         </p>
