@@ -216,7 +216,7 @@ class AttachedFile extends AppModel
             $file_data['file_ext'] = substr($file['info']['name'], strrpos($file['info']['name'], '.') + 1);
             $file_data['file_type'] = $this->getFileType($file['info']['type']);
             //アクションの場合は１枚目のファイルをファイル一覧に表示しない及び削除不可能にする
-            if ($model_type == self::TYPE_MODEL_ACTION_RESULT) {
+            if ($i === 0 && $model_type == self::TYPE_MODEL_ACTION_RESULT) {
                 $file_data['display_file_list_flg'] = false;
                 $file_data['removable_flg'] = false;
             }
