@@ -1183,10 +1183,6 @@ textarea{
     width: 100%;
 }
 
-.responsive-goal-space-width {
-    width: 92%;
-}
-
 .responsive-goal-title-width {
     width: 100%;
 }
@@ -2727,10 +2723,6 @@ textarea.comment-post-form {
         margin-left: 46%;
     }
 
-    .responsive-goal-space-width {
-        width: 95%;
-    }
-
     .responsive-goal-title-width {
         width: 100%;
     }
@@ -2797,10 +2789,6 @@ textarea.comment-post-form {
 
     .goal-set-buttons {
         margin-left: 60%;
-    }
-
-    .responsive-goal-space-width {
-        width: 93%;
     }
 
     .responsive-goal-title-width {

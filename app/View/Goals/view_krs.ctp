@@ -15,30 +15,36 @@
 <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default">
         <?= $this->element('Goal/simplex_top_section') ?>
-        <div class="panel-body">
-            <?= __d('gl', 'ゴール進捗率') ?>: <?= h($goal['Goal']['progress']) ?>%
-            <div class="progress mb_0px goals-column-progress-bar">
-                <div class="progress-bar progress-bar-info" role="progressbar"
+        <div class="panel-body goal-detail-kr-panel">
+            <p class="goal-detail-kr-progress-score">
+                <?= __d('gl', 'ゴール進捗率') ?>: <?= h($goal['Goal']['progress']) ?>%
+            </p>
+            <div class="progress mb_0px goals-column-progress-bar goal-detail-kr-progress-bar-wrap">
+                <div class="progress-bar progress-bar-info goal-detail-kr-progress-bar" role="progressbar"
                      aria-valuenow="<?= h($goal['Goal']['progress']) ?>" aria-valuemin="0"
                      aria-valuemax="100" style="width: <?= h($goal['Goal']['progress']) ?>%;">
                     <span class="ml_12px"><?= h($goal['Goal']['progress']) ?>%</span>
                 </div>
             </div>
+            <h3 class="goal-detail-kr-add-heading">
+                <i class="fa fa-key"></i>
+                <?= __d('gl', 'このゴールの達成要素') ?>
+                <!-- todo 数を追加 -->
+            </h3>
             <?php $kr_can_edit = ($is_leader || $is_collaborator); ?>
             <?php if ($kr_can_edit): ?>
                 <div>
-                    <a class="col col-xxs-12 bd-dash font_lightGray-gray p_10px modal-ajax-get-add-key-result"
+                    <a class="btn-add-kr modal-ajax-get-add-key-result"
                        href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id']]) ?>">
-                        <i class="fa fa-plus-circle font_brownRed"></i>
-                        <span class="ml_2px"><?= __d('gl', "出したい成果を追加") ?></span>
+                        <i class="fa fa-plus btn-add-kr-icon"></i>
+                        <span><?= __d('gl', "達成要素を追加") ?></span>
                     </a>
                 </div>
             <?php endif ?>
-            <?= __d('gl', '出したい成果') ?>
             <div class="row borderBottom" id="GoalPageKeyResultContainer">
                 <?= $this->element('Goal/key_results', ['kr_can_edit' => $kr_can_edit]) ?>
                 <?php if (!$key_results): ?>
-                    <?= __d('gl', '成果は登録されていません') ?>
+                    <?= __d('gl', '達成要素は登録されていません') ?>
                 <? endif ?>
             </div>
         </div>
