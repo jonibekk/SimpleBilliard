@@ -305,11 +305,10 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
-    public function ajax_put_message($message) {
+    public function ajax_put_message($post_id, $message) {
         //$this->request->allowMethod('post');
         $this->_ajaxPreProcess();
 
-        $post_id = 23;
         $params['Comment']['post_id'] = $post_id;
         $params['Comment']['body'] = $message;
         $add_comment = $this->Post->Comment->add($params);
@@ -321,6 +320,17 @@ class PostsController extends AppController
         $pusher->trigger('test-channel', 'new_message', $convert_data);
 
         return $this->_ajaxGetResponse($detail_comment);
+    }
+
+    public function ajax_put_message_read($comment_id)
+    {
+        $this->_ajaxPreProcess();
+        $res = $this->Post->Comment->CommentRead->red([$comment_id]);
+        if ($res === true) {
+            $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
+            $pusher->trigger('test-channel', 'read_message', $comment_id);
+        }
+        return $this->_ajaxGetResponse($res);
     }
 
     public function ajax_get_action_list_more()

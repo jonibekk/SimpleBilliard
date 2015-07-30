@@ -50,15 +50,32 @@ message_app.controller(
         // TODO: Uniqueチャンネル名に指定
         var test_channel = pusher.subscribe('test-channel');
         test_channel.bind('new_message', function (data) {
+            // 既読処理
+            var read_comment_id = data.Comment.id;
+            var request = {
+                method: 'GET',
+                url: cake.url.ak + read_comment_id
+            };
+            $http(request).then(function(response) {
+            });
+
+            // メッセージ表示
             $scope.$apply($scope.message_list.push(data));
             message_scroll();
+        });
+
+        // pusherから既読されたcomment_idを取得する
+        test_channel.bind('read_message', function (comment_id) {
+            var read_box = document.getElementById("mr_"+comment_id).innerText;
+            document.getElementById("mr_"+comment_id).innerText = Number(read_box) + 1;
+            //console.log(read_box);
         });
 
         // メッセージを送信する
         $scope.clickMessage = function () {
             var request = {
                 method: 'GET',
-                url: cake.url.ai +$scope.message
+                url: cake.url.ai + $stateParams.post_id + '/' +$scope.message
             };
             $http(request).then(function(response) {});
             $scope.message = "";
