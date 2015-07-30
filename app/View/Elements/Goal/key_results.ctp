@@ -71,7 +71,10 @@
                         <?php if ($is_collaborated): ?>
                             <li class="goal-detail-action-list">
                                 <a class="goal-detail-add-action modal-ajax-get-add-action"
-                                   href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_action_modal', 'goal_id' => $kr['KeyResult']['goal_id']]) ?>"><i
+                                   href="<?= $this->Html->url(['controller'    => 'goals', 'action' => 'ajax_get_add_action_modal',
+                                                               'goal_id'       => $kr['KeyResult']['goal_id'],
+                                                               'key_result_id' => $kr['KeyResult']['id'],
+                                                              ]) ?>"><i
                                         class="fa fa-plus"></i>
 
                                     <p class="goal-detail-add-action-text "><?= __d('gl', "アクション") ?></p>

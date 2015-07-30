@@ -263,9 +263,13 @@ class GoalsController extends AppController
     public function ajax_get_add_action_modal()
     {
         $goal_id = viaIsSet($this->request->params['named']['goal_id']);
+        $key_result_id = viaIsSet($this->request->params['named']['key_result_id']);
         $this->_ajaxPreProcess();
         try {
             if (!$this->Goal->Collaborator->isCollaborated($goal_id)) {
+                throw new RuntimeException();
+            }
+            if ($key_result_id && !$this->Goal->KeyResult->isPermitted($key_result_id)) {
                 throw new RuntimeException();
             }
         } catch (RuntimeException $e) {
@@ -274,8 +278,7 @@ class GoalsController extends AppController
         $goal = $this->Goal->getGoalMinimum($goal_id);
         $kr_list = [null => '---'] + $this->Goal->KeyResult->getKeyResults($goal_id, 'list');
         $kr_value_unit_list = KeyResult::$UNIT;
-
-        $this->set(compact('goal', 'goal_id', 'kr_list', 'kr_value_unit_list'));
+        $this->set(compact('goal', 'goal_id', 'kr_list', 'kr_value_unit_list', 'key_result_id'));
         //htmlレンダリング結果
         $response = $this->render('Goal/modal_add_action');
         $html = $response->__toString();
