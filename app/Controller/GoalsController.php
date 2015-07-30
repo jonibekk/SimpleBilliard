@@ -1261,6 +1261,13 @@ class GoalsController extends AppController
         // 未完了のキーリザルト数
         $incomplete_kr_count = $this->Goal->KeyResult->getIncompleteKrCount($goal_id);
         $this->set('incomplete_kr_count', $incomplete_kr_count);
+        //コラボってる？
+        $is_collaborated = $this->Goal->Collaborator->isCollaborated($goal_id);
+        $display_action_count = MY_PAGE_ACTION_NUMBER;
+        if ($is_collaborated) {
+            $display_action_count--;
+        }
+        $this->set(compact('is_collaborated', 'display_action_count'));
 
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();

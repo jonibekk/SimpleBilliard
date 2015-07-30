@@ -4,6 +4,8 @@
  * @var                    $key_results
  * @var                    $incomplete_kr_count
  * @var                    $kr_can_edit
+ * @var                    $is_collaborated
+ * @var                    $display_action_count
  */
 ?>
 <?php if ($key_results): ?>
@@ -11,39 +13,40 @@
     <?php foreach ($key_results as $kr): ?>
         <div class="goal-detail-kr-card">
             <div class="goal-detail-kr-achieve-wrap">
-                <?php if ($kr['KeyResult']['completed']): ?>
-                    <?= $this->Form->postLink('<i class="fa-check-circle fa goal-detail-kr-achieve-already"></i>',
-                                              ['controller' => 'goals', 'action' => 'incomplete_kr', 'key_result_id' => $kr['KeyResult']['id']],
-                                              ['escape' => false, 'class' => 'no-line']) ?>
-                <?php else: ?>
-                    <?php //最後のKRの場合
-                    if ($incomplete_kr_count === 1):?>
-                        <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_last_kr_confirm', 'key_result_id' => $kr['KeyResult']['id']]) ?>"
-                           class="modal-ajax-get no-line">
-                            <i class="fa-check-circle fa goal-detail-kr-achieve-yet"></i>
-                        </a>
+                <?php if ($is_collaborated): ?>
+                    <?php if ($kr['KeyResult']['completed']): ?>
+                        <?= $this->Form->postLink('<i class="fa-check-circle fa goal-detail-kr-achieve-already"></i>',
+                                                  ['controller' => 'goals', 'action' => 'incomplete_kr', 'key_result_id' => $kr['KeyResult']['id']],
+                                                  ['escape' => false, 'class' => 'no-line']) ?>
                     <?php else: ?>
-                        <?=
-                        $this->Form->create('Goal', [
-                            'url'           => ['controller' => 'goals', 'action' => 'complete_kr', 'key_result_id' => $kr['KeyResult']['id']],
-                            'inputDefaults' => [
-                                'div'       => 'form-group',
-                                'label'     => false,
-                                'wrapInput' => '',
-                            ],
-                            'class'         => 'form-feed-notify',
-                            'name'          => 'kr_achieve_' . $kr['KeyResult']['id'],
-                            'id'            => 'kr_achieve_' . $kr['KeyResult']['id']
-                        ]); ?>
-                        <?php $this->Form->unlockField('socket_id') ?>
-                        <?= $this->Form->end() ?>
-                        <a href="#" form-id="kr_achieve_<?= $kr['KeyResult']['id'] ?>"
-                           class="kr_achieve_button no-line">
-                            <i class="fa-check-circle fa goal-detail-kr-achieve-yet"></i>
-                        </a>
+                        <?php //最後のKRの場合
+                        if ($incomplete_kr_count === 1):?>
+                            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_last_kr_confirm', 'key_result_id' => $kr['KeyResult']['id']]) ?>"
+                               class="modal-ajax-get no-line">
+                                <i class="fa-check-circle fa goal-detail-kr-achieve-yet"></i>
+                            </a>
+                        <?php else: ?>
+                            <?=
+                            $this->Form->create('Goal', [
+                                'url'           => ['controller' => 'goals', 'action' => 'complete_kr', 'key_result_id' => $kr['KeyResult']['id']],
+                                'inputDefaults' => [
+                                    'div'       => 'form-group',
+                                    'label'     => false,
+                                    'wrapInput' => '',
+                                ],
+                                'class'         => 'form-feed-notify',
+                                'name'          => 'kr_achieve_' . $kr['KeyResult']['id'],
+                                'id'            => 'kr_achieve_' . $kr['KeyResult']['id']
+                            ]); ?>
+                            <?php $this->Form->unlockField('socket_id') ?>
+                            <?= $this->Form->end() ?>
+                            <a href="#" form-id="kr_achieve_<?= $kr['KeyResult']['id'] ?>"
+                               class="kr_achieve_button no-line">
+                                <i class="fa-check-circle fa goal-detail-kr-achieve-yet"></i>
+                            </a>
+                        <?php endif; ?>
                     <?php endif; ?>
                 <?php endif; ?>
-
             </div>
             <div class="goal-detail-kr-cards-contents">
                 <h4 class="goal-detail-kr-card-title"><?= h($kr['KeyResult']['name']) ?></h4>
@@ -66,25 +69,62 @@
                 <div class="goal-detail-action-wrap">
                     <!-- todo アクション画像を読み込むようにお願いします  -->
                     <ul class="goal-detail-action">
-                        <li class="goal-detail-action-list">
-                            <a class="goal-detail-add-action modal-ajax-get-add-action"
-                               href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_action_modal', 'goal_id' => $goal['Goal']['id']]) ?>"><i
-                                    class="fa fa-plus"></i>
+                        <?php if ($is_collaborated): ?>
+                            <li class="goal-detail-action-list">
+                                <a class="goal-detail-add-action modal-ajax-get-add-action"
+                                   href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_action_modal', 'goal_id' => $kr['KeyResult']['goal_id']]) ?>"><i
+                                        class="fa fa-plus"></i>
 
-                                <p class="goal-detail-add-action-text "><?= __d('gl', "アクション") ?></p>
+                                    <p class="goal-detail-add-action-text "><?= __d('gl', "アクション") ?></p>
 
-                                <p class="goal-detail-add-action-text "><?= __d('gl', "追加") ?></p>
-                            </a>
-                        </li>
-                        <li class="goal-detail-action-list">
-                            <i class="fa-plus fa"></i>
-                            <?= h($kr['KeyResult']['action_result_count']) ?>
-                        </li>
+                                    <p class="goal-detail-add-action-text "><?= __d('gl', "追加") ?></p>
+                                </a>
+                            </li>
+                        <?php endif; ?>
+                        <?php foreach ($kr['ActionResult'] as $key => $action): ?>
+                            <?php
+                            $last_many = false;
+                            //urlはアクション単体ページ
+                            $url = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $action['Post'][0]['id']];
+                            //最後の場合かつアクション件数合計が表示件数以上の場合
+                            if ($key == count($kr['ActionResult']) - 1 && $kr['KeyResult']['action_result_count'] > $display_action_count) {
+                                $last_many = true;
+                                //urlはゴールページの全アクションリスト
+                                $url = ['controller' => 'goals', 'action' => 'view_actions', 'goal_id' => $kr['KeyResult']['goal_id'], 'page_type' => 'image'];
+                            }
+                            ?>
+                            <li class="goal-detail-action-list">
+                                <a href="<?= $this->Html->url($url) ?>" class="profile-user-action-pic">
+                                    <?php for ($i = 1; $i <= 5; $i++): ?>
+                                        <?php
+                                        if (!empty($action["photo{$i}_file_name"]) || $i == 5) {
+                                            echo $this->Html->image('ajax-loader.gif',
+                                                                    [
+                                                                        'class'         => 'lazy',
+                                                                        'width'         => 48,
+                                                                        'height'        => 48,
+                                                                        'data-original' => $this->Upload->uploadUrl($action,
+                                                                                                                    "ActionResult.photo$i",
+                                                                                                                    ['style' => 'x_small']),
+                                                                    ]);
+                                            break;
+                                        }
+                                        ?>
+                                    <?php endfor; ?>
+                                    <?php if ($last_many): ?>
+                                        <span class="action-more-counts">
+                                                        <i class="fa fa-plus"></i>
+                                            <?= count($kr['KeyResult']['action_result_count']) - $display_action_count + 1 ?>
+                                                    </span>
+                                    <?php endif; ?>
+                                </a>
+                            </li>
+                        <? endforeach ?>
                     </ul>
                 </div>
             </div>
 
-            <?php if (isset($kr_can_edit) && $kr_can_edit): ?>
+            <?php if ($is_collaborated): ?>
                 <?= $this->element('Goal/key_result_edit_button', ['kr' => $kr]) ?>
             <?php endif ?>
 

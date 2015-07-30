@@ -216,6 +216,11 @@ class KeyResult extends AppModel
         if ($with_action) {
             $options['contain']['ActionResult'] = [
                 'limit' => 4,
+                'Post'  => [
+                    'fields' => [
+                        'Post.id'
+                    ]
+                ]
             ];
         }
 
