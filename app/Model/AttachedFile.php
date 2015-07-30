@@ -206,7 +206,7 @@ class AttachedFile extends AppModel
 
         //保存データ生成
         $file_datas = [];
-        foreach ($file_hashes as $hash) {
+        foreach ($file_hashes as $i => $hash) {
             $file = $Redis->getPreUploadedFile($this->current_team_id, $this->my_uid, $hash);
             file_put_contents($file['info']['tmp_name'], $file['content']);
             $file_data = $attached_file_common_data;
@@ -215,16 +215,22 @@ class AttachedFile extends AppModel
             $file_data['file_size'] = $file['info']['size'];
             $file_data['file_ext'] = substr($file['info']['name'], strrpos($file['info']['name'], '.') + 1);
             $file_data['file_type'] = $this->getFileType($file['info']['type']);
+            //アクションの場合は１枚目のファイルをファイル一覧に表示しない及び削除不可能にする
+            if ($model_type == self::TYPE_MODEL_ACTION_RESULT) {
+                $file_data['display_file_list_flg'] = false;
+                $file_data['removable_flg'] = false;
+            }
             $file_datas[] = $file_data;
         }
         $model = self::$TYPE_MODEL[$model_type];
-        foreach ($file_datas as $file_data) {
+        foreach ($file_datas as $index => $file_data) {
             $save_data = [
                 $model['intermediateModel'] => [
                     [
                         $model['foreign_key'] => $foreign_key_id,
                         'user_id'             => $this->my_uid,
                         'team_id'             => $this->current_team_id,
+                        'index_num'           => $index,
                     ],
                 ],
                 'AttachedFile'              => $file_data
