@@ -6,7 +6,7 @@
 <?php if ($members): ?>
     <!-- START app/View/Elements/Goal/members.ctp -->
     <?php foreach ($members as $member): ?>
-        <div class="col col-xxs-12">
+        <div class="goal-detail-member-card">
             <div style="height: 100px;">
                 <?=
                 $this->Upload->uploadImage($member['User'], 'User.photo', ['style' => 'small'],
@@ -14,9 +14,11 @@
                                             'style' => 'width:56px; float:left;'])
                 ?>
                 <div style="padding:3px;float:left">
-                    <span class="font_bold"><?= h($member['User']['display_username']) ?></span>
+                    <span class="goal-detail-member-name"><?= h($member['User']['display_username']) ?></span>
                     <?php if ($member['Collaborator']['type'] == Collaborator::TYPE_OWNER): ?>
-                        <i class="fa fa-star"></i>
+                        <span class="goal-detail-member-owner">
+                            <i class="fa fa-star"></i>
+                        </span>
                     <?php endif ?>
                     <br>
                     <span class="font_bold"><?= h($member['Collaborator']['role']) ?></span><br>
