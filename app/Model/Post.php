@@ -350,7 +350,6 @@ class Post extends AppModel
         $options = [
             'conditions' => [
                 'Post.id' => $post_id,
-                'user_id' => $this->my_uid,
                 'team_id' => $this->current_team_id,
             ],
             'contain'    => [
