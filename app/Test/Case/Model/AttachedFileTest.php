@@ -161,6 +161,32 @@ class AttachedFileTest extends CakeTestCase
         $this->assertCount(2, $this->AttachedFile->PostFile->find('all'));
     }
 
+    function testSaveRelatedFilesActionImgSuccess()
+    {
+        $this->_setDefault();
+        $hashes = $this->_prepareTestFiles();
+        $upload_setting = $this->AttachedFile->actsAs['Upload'];
+        $upload_setting['attached']['path'] = ":webroot/upload/test/:model/:id/:hash_:style.:extension";
+        $this->AttachedFile->Behaviors->load('Upload', $upload_setting);
+        $res = $this->AttachedFile->saveRelatedFiles(1, AttachedFile::TYPE_MODEL_ACTION_RESULT, $hashes);
+        $this->assertTrue($res);
+        $this->assertCount(2, $this->AttachedFile->find('all'));
+        $this->assertCount(2, $this->AttachedFile->ActionResultFile->find('all'));
+        $options = [
+            'conditions' => [
+                'removable_flg'         => false,
+                'display_file_list_flg' => false
+            ],
+            'contain'    => [
+                'ActionResultFile'
+            ]
+        ];
+        $main_img = $this->AttachedFile->find('all', $options);
+        $this->assertCount(1, $main_img);
+        $this->assertEquals(0, $main_img[0]['ActionResultFile'][0]['index_num']);
+
+    }
+
     function testSaveRelatedFilesFail()
     {
         $res = $this->AttachedFile->saveRelatedFiles(1, 1000, ['test']);
