@@ -280,10 +280,19 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
-    public function ajax_get_post_message($post_id)
+    public function ajax_get_message_info($post_id)
     {
         $this->_ajaxPreProcess();
-        $res = $this->Post->getPostById($post_id);
+
+        $room_info = $this->Post->getPostById($post_id);
+        $room_info['User']['photo_path'] = $this->Post->getPhotoPath($room_info['User']);
+
+        $res = [
+            'auth_info' => [
+                'photo_path' => $this->Post->getPhotoPath($this->Auth->user()),
+            ],
+            'room_info' => $room_info
+        ];
         return $this->_ajaxGetResponse($res);
     }
 

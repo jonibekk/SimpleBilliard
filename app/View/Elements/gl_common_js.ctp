@@ -125,7 +125,7 @@ echo $this->Html->script('gl_basic');
             ag: "<?=$this->Html->url(['controller'=>'notifications','action'=>'ajax_get_latest_message_notify_items'])?>",
             ah: "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_get_message'])?>/",
             ai: "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_put_message'])?>/",
-            aj: "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_get_post_message'])?>/",
+            aj: "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_get_message_info'])?>/",
             select2_secret_circle: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_secret_circles'])?>/",
             select2_circle_user: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_circles_users'])?>",
             user_page: "<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => '']) ?>",

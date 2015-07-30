@@ -13,22 +13,26 @@ message_app.controller(
         $location
     ){
 
-        $scope.post_detail = getPostDetail;
-
         // 最初のメッセージはPostテーブルから取得
+        var post_detail = getPostDetail.room_info;
         var message_list = [];
         var first_data = {
             Comment: {
-                body: getPostDetail.Post.body,
-                comment_read_count: getPostDetail.Post.post_read_count,
-                created: getPostDetail.Post.created
+                body: post_detail.Post.body,
+                comment_read_count: post_detail.Post.post_read_count,
+                created: post_detail.Post.created
             },
             User: {
-                display_username: getPostDetail.User.display_username,
-                photo_path: getPostDetail.User.photo_path
+                display_username: post_detail.User.display_username,
+                photo_path: post_detail.User.photo_path
             }
         };
         message_list.push(first_data);
+
+        // スレッド情報
+        $scope.auth_info = getPostDetail.auth_info;
+        $scope.post_detail = post_detail;
+        console.log(getPostDetail.auth_info);
 
         angular.forEach(getMessage.message_list, function (val) {
             this.push(val);
@@ -40,7 +44,6 @@ message_app.controller(
             $location.hash('m_'+length);
             $anchorScroll();
         };
-
         message_scroll();
 
         // pusherメッセージ内容を受け取る
