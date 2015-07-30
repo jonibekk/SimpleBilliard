@@ -89,12 +89,15 @@ Vagrant.configure('2') do |config|
             chef.add_recipe 'local_etc'
             chef.add_recipe 'deploy_cake_local'
             chef.add_recipe 'vnc'
+            chef.add_recipe 'java'
+            chef.add_recipe 'phpstorm'
             chef.json = {
                 doc_root: doc_root,
                 app_root: app_root,
                 tmp_dir_owner: 'ubuntu',
                 tmp_dir_group: 'www-data',
                 user: 'ubuntu',
+                group: 'ubuntu',
                 php5: { session_secure: 'Off' },
                 bash_profile: {
                     owner: 'ubuntu',
@@ -102,7 +105,11 @@ Vagrant.configure('2') do |config|
                     dir: 'vagrant'
                 },
                 vnc: {
-                    account_username: 'ubuntu'
+                    account_username: 'ubuntu',
+                    geometry: '1680x1050'
+                },
+                java: {
+                    jdk_version: '7'
                 }
             }
         end
