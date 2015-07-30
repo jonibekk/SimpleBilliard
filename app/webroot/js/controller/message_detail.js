@@ -32,7 +32,6 @@ message_app.controller(
         // スレッド情報
         $scope.auth_info = getPostDetail.auth_info;
         $scope.post_detail = post_detail;
-        console.log(getPostDetail.auth_info);
 
         angular.forEach(getMessage.message_list, function (val) {
             this.push(val);

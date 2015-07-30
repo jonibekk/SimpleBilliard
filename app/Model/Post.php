@@ -346,7 +346,6 @@ class Post extends AppModel
 
     public function getPostById($post_id)
     {
-        $upload = new UploadHelper(new View());
         $options = [
             'conditions' => [
                 'Post.id' => $post_id,
@@ -358,7 +357,6 @@ class Post extends AppModel
             ]
         ];
         $res = $this->find('first', $options);
-        $res['User']['photo_path'] = $upload->uploadUrl($res['User'], 'User.photo', ['style' => 'small']);
         return $res;
     }
 
