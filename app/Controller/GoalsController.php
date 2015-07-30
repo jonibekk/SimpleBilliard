@@ -1255,7 +1255,7 @@ class GoalsController extends AppController
         $key_results = $this->Goal->KeyResult->getKeyResults($goal_id, 'all', false, [
             'page'  => 1,
             'limit' => GOAL_PAGE_KR_NUMBER,
-        ]);
+        ], true);
         $this->set('key_results', $key_results);
 
         // 未完了のキーリザルト数

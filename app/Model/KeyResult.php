@@ -4,10 +4,10 @@ App::uses('AppModel', 'Model');
 /**
  * KeyResult Model
  *
- * @property Team              $Team
- * @property Goal              $Goal
- * @property ActionResult      $ActionResult
- * @property Post              $Post
+ * @property Team         $Team
+ * @property Goal         $Goal
+ * @property ActionResult $ActionResult
+ * @property Post         $Post
  */
 class KeyResult extends AppModel
 {
@@ -189,7 +189,7 @@ class KeyResult extends AppModel
      *
      * @return array|null
      */
-    function getKeyResults($goal_id, $find_type = "all", $is_complete = false, array $params = [])
+    function getKeyResults($goal_id, $find_type = "all", $is_complete = false, array $params = [], $with_action = false)
     {
         // パラメータデフォルト
         $params = array_merge(['limit' => null,
@@ -212,6 +212,11 @@ class KeyResult extends AppModel
         ];
         if ($is_complete === true) {
             $options['conditions']['completed'] = null;
+        }
+        if ($with_action) {
+            $options['contain']['ActionResult'] = [
+                'limit' => 4,
+            ];
         }
 
         $res = $this->find($find_type, $options);
