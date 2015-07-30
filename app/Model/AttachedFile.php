@@ -70,6 +70,9 @@ class AttachedFile extends AppModel
      * @var array
      */
     public $validate = [
+        'attached'   => [
+            'image_max_size' => ['rule' => ['attachmentMaxSize', 20971520],], //20mb
+        ],
         'file_type'  => [
             'numeric' => [
                 'rule' => ['numeric'],

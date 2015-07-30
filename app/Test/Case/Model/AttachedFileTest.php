@@ -160,6 +160,16 @@ class AttachedFileTest extends CakeTestCase
         $this->assertCount(2, $this->AttachedFile->find('all'));
         $this->assertCount(2, $this->AttachedFile->PostFile->find('all'));
     }
+    function testSaveRelatedFilesFailSizeOver()
+    {
+        $this->_setDefault();
+        $hashes = $this->_prepareTestFiles(10000000000000);
+        $upload_setting = $this->AttachedFile->actsAs['Upload'];
+        $upload_setting['attached']['path'] = ":webroot/upload/test/:model/:id/:hash_:style.:extension";
+        $this->AttachedFile->Behaviors->load('Upload', $upload_setting);
+        $res = $this->AttachedFile->saveRelatedFiles(1, AttachedFile::TYPE_MODEL_POST, $hashes);
+        $this->assertFalse($res);
+    }
 
     function testSaveRelatedFilesActionImgSuccess()
     {
@@ -184,7 +194,6 @@ class AttachedFileTest extends CakeTestCase
         $main_img = $this->AttachedFile->find('all', $options);
         $this->assertCount(1, $main_img);
         $this->assertEquals(0, $main_img[0]['ActionResultFile'][0]['index_num']);
-
     }
 
     function testSaveRelatedFilesFail()
@@ -229,7 +238,7 @@ class AttachedFileTest extends CakeTestCase
         $this->assertCount(1, $this->AttachedFile->PostFile->find('all'));
     }
 
-    function _prepareTestFiles()
+    function _prepareTestFiles($file_size = 1000)
     {
         $destDir = TMP . 'attached_file';
         if (!file_exists($destDir)) {
@@ -246,7 +255,7 @@ class AttachedFileTest extends CakeTestCase
                 'name'     => 'test.jpg',
                 'type'     => 'image/jpeg',
                 'tmp_name' => $file_1_path,
-                'size'     => 1000,
+                'size'     => $file_size,
                 'remote'   => true
             ]
         ];
