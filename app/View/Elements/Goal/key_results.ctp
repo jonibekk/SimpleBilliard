@@ -67,7 +67,6 @@
                 <?= $this->Time->format('Y/m/d',
                                         $kr['KeyResult']['end_date'] + $this->Session->read('Auth.User.timezone') * 3600) ?>
                 <div class="goal-detail-action-wrap">
-                    <!-- todo アクション画像を読み込むようにお願いします  -->
                     <ul class="goal-detail-action">
                         <?php if ($is_collaborated): ?>
                             <li class="goal-detail-action-list">
@@ -114,7 +113,7 @@
                                     <?php if ($last_many): ?>
                                         <span class="action-more-counts">
                                                         <i class="fa fa-plus"></i>
-                                            <?= count($kr['KeyResult']['action_result_count']) - $display_action_count + 1 ?>
+                                            <?= $kr['KeyResult']['action_result_count'] - $display_action_count + 1 ?>
                                                     </span>
                                     <?php endif; ?>
                                 </a>
@@ -123,11 +122,9 @@
                     </ul>
                 </div>
             </div>
-
             <?php if ($is_collaborated): ?>
                 <?= $this->element('Goal/key_result_edit_button', ['kr' => $kr]) ?>
             <?php endif ?>
-
         </div>
     <?php endforeach ?>
     <!-- END app/View/Elements/Goal/key_results.ctp -->

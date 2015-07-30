@@ -186,10 +186,13 @@ class KeyResult extends AppModel
      * @param array  $params
      *                 'limit' : find() の limit
      *                 'page'  : find() の page
+     * @param bool   $with_action
+     * @param int    $action_limit
      *
      * @return array|null
      */
-    function getKeyResults($goal_id, $find_type = "all", $is_complete = false, array $params = [], $with_action = false)
+    function getKeyResults($goal_id, $find_type = "all", $is_complete = false,
+                           array $params = [], $with_action = false, $action_limit = MY_PAGE_ACTION_NUMBER)
     {
         // パラメータデフォルト
         $params = array_merge(['limit' => null,
@@ -215,7 +218,7 @@ class KeyResult extends AppModel
         }
         if ($with_action) {
             $options['contain']['ActionResult'] = [
-                'limit' => 4,
+                'limit' => $action_limit,
                 'Post'  => [
                     'fields' => [
                         'Post.id'

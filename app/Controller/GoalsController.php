@@ -1252,15 +1252,6 @@ class GoalsController extends AppController
             $this->Pnotify->outError(__d('gl', "不正な画面遷移です。"));
             return $this->redirect($this->referer());
         }
-        $key_results = $this->Goal->KeyResult->getKeyResults($goal_id, 'all', false, [
-            'page'  => 1,
-            'limit' => GOAL_PAGE_KR_NUMBER,
-        ], true);
-        $this->set('key_results', $key_results);
-
-        // 未完了のキーリザルト数
-        $incomplete_kr_count = $this->Goal->KeyResult->getIncompleteKrCount($goal_id);
-        $this->set('incomplete_kr_count', $incomplete_kr_count);
         //コラボってる？
         $is_collaborated = $this->Goal->Collaborator->isCollaborated($goal_id);
         $display_action_count = MY_PAGE_ACTION_NUMBER;
@@ -1268,6 +1259,15 @@ class GoalsController extends AppController
             $display_action_count--;
         }
         $this->set(compact('is_collaborated', 'display_action_count'));
+        $key_results = $this->Goal->KeyResult->getKeyResults($goal_id, 'all', false, [
+            'page'  => 1,
+            'limit' => GOAL_PAGE_KR_NUMBER,
+        ], true, $display_action_count);
+        $this->set('key_results', $key_results);
+
+        // 未完了のキーリザルト数
+        $incomplete_kr_count = $this->Goal->KeyResult->getIncompleteKrCount($goal_id);
+        $this->set('incomplete_kr_count', $incomplete_kr_count);
 
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
