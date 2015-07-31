@@ -847,21 +847,35 @@ class Post extends AppModel
      */
     function getShareAllMemberList($post_id)
     {
+        error_log("FURU:memberlist1\n",3,"/tmp/hoge.log");
+
         $post = $this->findById($post_id);
         if (empty($post)) {
             return [];
         }
+        error_log("FURU:memberlist2\n",3,"/tmp/hoge.log");
         $share_member_list = [];
         //サークル共有ユーザを追加
         $share_member_list = $share_member_list + $this->PostShareCircle->getShareCircleMemberList($post_id);
         //メンバー共有なら
         $share_member_list = $share_member_list + $this->PostShareUser->getShareUserListByPost($post_id);
+        error_log("FURU:memberlist3:$this->my_uid\n",3,"/tmp/hoge.log");
+        //Postの主が自分ではないなら追加
+        $posted_user_id = viaIsSet($post['Post']['user_id']);
+        error_log("FURU:".$this->my_uid.":".$post['Post']['user_id']."\n", 3, "/tmp/hoge.log");
+        if($this->my_uid != $posted_user_id){
+            $share_member_list[] = $posted_user_id;
+        }
         $share_member_list = array_unique($share_member_list);
+
         //自分自身を除外
         $key = array_search($this->my_uid, $share_member_list);
+        error_log("FURU:aaaaa:".print_r($share_member_list,true)."\n", 3, "/tmp/hoge.log");
+        error_log("FURU:aaaaa:".$key."\n", 3, "/tmp/hoge.log");
         if ($key !== false) {
             unset($share_member_list[$key]);
         }
+        error_log("FURU:bbbbbbb:".print_r($share_member_list,true)."\n", 3, "/tmp/hoge.log");
         return $share_member_list;
     }
 

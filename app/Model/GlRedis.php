@@ -245,15 +245,21 @@ class GlRedis extends AppModel
      *
      * @return bool
      */
-    public function setNotifications($type, $team_id, $to_user_ids = [], $my_id, $body, $url, $date)
+    public function setNotifications($type, $team_id, $to_user_ids = [], $my_id, $body, $url, $date, $post_id = null)
     {
         $notify_id = $this->generateId();
+        if ($post_id) {
+            // $post_idが渡ってきている場合はメッセージ
+            // で1ポストあたり1notifyなのでnotify_idをpost_idで置き換える
+            $notify_id = $post_id;
+        }
         $data = [
             'id'      => $notify_id,
             'user_id' => $my_id,
             'body'    => $body,
             'url'     => Router::url(array_merge($url, ['notify_id' => $notify_id]), true),
             'type'    => $type,
+            'to_user_count' => count($to_user_ids),
             'created' => $date,
         ];
         /** @noinspection PhpInternalEntityUsedInspection */
@@ -580,6 +586,22 @@ class GlRedis extends AppModel
         }
         $this->Db->setTimeout($key, ACCOUNT_LOCK_TTL);
         return false;
+    }
+
+    /**
+     * delete message notify.
+     *
+     * @param $team_id
+     * @param $user_id
+     * @param $notify_id
+     *
+     * @return int
+     */
+    function deleteMessageNotify($team_id, $user_id, $notify_id)
+    {
+        error_log("FURU:redis remove!!:$team_id:$user_id:$notify_id\n", 3, "/tmp/hoge.log");
+        $key = $this->getKeyName(self::KEY_TYPE_MESSAGE_USER, $team_id, $user_id);
+        return $this->Db->zRem($key, $notify_id);
     }
 
 }

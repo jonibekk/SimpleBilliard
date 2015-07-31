@@ -140,6 +140,7 @@ class PostShareUser extends AppModel
 
     public function getShareUserListByPost($post_id)
     {
+        error_log("-----FURU:post:$post_id\n",3,"/tmp/hoge.log");
         $primary_backup = $this->primaryKey;
         $this->primaryKey = 'user_id';
         $options = [
@@ -151,6 +152,7 @@ class PostShareUser extends AppModel
         ];
         $res = $this->find('list', $options);
         $this->primaryKey = $primary_backup;
+        error_log("-----FURU:post2:".print_r($res,true)."\n",3,"/tmp/hoge.log");
         return $res;
     }
 

@@ -2913,6 +2913,7 @@ $(document).ready(function () {
 $(document).ready(function () {
     var click_cnt = 0;
     $(document).on("click", "#click-header-message", function () {
+        console.log("FURU:ここ2！");
         click_cnt++;
         var isExistNewNotify = isExistNewMessageNotify();
         initMessageNum();

@@ -8,6 +8,7 @@ App::uses('ModelType', 'Model');
  * @property GlEmailComponent $GlEmail
  * @property NotifySetting    $NotifySetting
  * @property Post             $Post
+ * @property Comment          $Comment
  * @property Goal             $Goal
  * @property GlRedis          $GlRedis
  * @property Team             $Team
@@ -53,6 +54,7 @@ class NotifyBizComponent extends Component
             CakeSession::start();
             $this->NotifySetting = ClassRegistry::init('NotifySetting');
             $this->Post = ClassRegistry::init('Post');
+            $this->Comment = ClassRegistry::init('Comment');
             $this->Goal = ClassRegistry::init('Goal');
             $this->Team = ClassRegistry::init('Team');
             $this->GlRedis = ClassRegistry::init('GlRedis');
@@ -70,6 +72,8 @@ class NotifyBizComponent extends Component
      */
     function sendNotify($notify_type, $model_id, $sub_model_id = null, $to_user_list = null, $user_id, $team_id)
     {
+        error_log("FURU:ほげ:$notify_type:$model_id:$sub_model_id\n",3,"/tmp/hoge.log");
+
         $this->notify_option['from_user_id'] = $user_id;
         $this->_setModelProperty($user_id, $team_id);
 
@@ -78,7 +82,7 @@ class NotifyBizComponent extends Component
                 $this->_setFeedPostOption($model_id);
                 break;
             case NotifySetting::TYPE_FEED_MESSAGE:
-                $this->_setFeedMessageOption($model_id);
+                $this->_setFeedMessageOption($model_id, $sub_model_id);
                 break;
             case NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST:
                 $this->_setFeedCommentedOnMineOption(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST, $model_id,
@@ -304,21 +308,38 @@ class NotifyBizComponent extends Component
      *
      * @throws RuntimeException
      */
-    private function _setFeedMessageOption($post_id)
+    private function _setFeedMessageOption($post_id, $comment_id)
     {
         $post = $this->Post->findById($post_id);
+        error_log("FURU:ほげ1:\n", 3, "/tmp/hoge.log");
+
         if (empty($post)) {
             return;
         }
+        error_log("FURU:ほげ2:" . print_r($post, true) . "\n", 3, "/tmp/hoge.log");
+        if ($comment_id) {
+            error_log("FURU:commend id=:$comment_id\n", 3, "/tmp/hoge.log");
+            $comment = $this->Comment->findById($comment_id);
+            error_log("FURU:ほげ3:" . $comment['Comment']['body'] . "\n", 3, "/tmp/hoge.log");
+        }
+
+        //基本的にnotifyにはメッセージについたコメントを表示するが、コメントが無ければ最初のメッセージ
+        $body = $comment['Comment']['body'];
+        if (empty($body)) {
+            $body = $post['Post']['body'];
+        }
+
         //宛先は閲覧可能な全ユーザ
         $members = $this->Post->getShareAllMemberList($post_id);
 
         //対象ユーザの通知設定確認
-        $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($members, NotifySetting::TYPE_FEED_MESSAGE);
+        $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($members,
+                                                                                NotifySetting::TYPE_FEED_MESSAGE);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_MESSAGE;
         $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
         $this->notify_option['model_id'] = null;
-        $this->notify_option['item_name'] = !empty($post['Post']['body']) ? json_encode([trim($post['Post']['body'])]) : null;
+        $this->notify_option['item_name'] = !empty($body) ? json_encode([trim($body)]) : null;
+        $this->notify_option['post_id'] = $post_id;
     }
 
 
@@ -703,6 +724,7 @@ class NotifyBizComponent extends Component
 
     private function _saveNotifications()
     {
+        error_log("FURU:###########-save\n",3,"/tmp/hoge.log");
         //通知onのユーザを取得
         $uids = [];
         foreach ($this->notify_settings as $user_id => $val) {
@@ -713,6 +735,7 @@ class NotifyBizComponent extends Component
         if (empty($uids)) {
             return;
         }
+        error_log("FURU:******-save\n",3,"/tmp/hoge.log");
         //to be short text
         $item = json_decode($this->notify_option['item_name']);
         foreach ($item as $k => $v) {
@@ -720,6 +743,7 @@ class NotifyBizComponent extends Component
         }
         $item = json_encode($item);
         //TODO save to redis.
+        error_log("FURU:AAAAAA",3,"/tmp/hoge.log");
         $this->GlRedis->setNotifications(
             $this->notify_option['notify_type'],
             $this->NotifySetting->current_team_id,
@@ -727,7 +751,8 @@ class NotifyBizComponent extends Component
             $this->notify_option['from_user_id'],
             $item,
             $this->notify_option['url_data'],
-            microtime(true)
+            microtime(true),
+            $this->notify_option['post_id']
         );
         return true;
     }
@@ -912,6 +937,9 @@ class NotifyBizComponent extends Component
         //fetch User
         $user_list = Hash::extract($notify_from_redis, '{n}.user_id');
         $users = Hash::combine($this->NotifySetting->User->getUsersProf($user_list), '{n}.User.id', '{n}');
+
+        error_log("FURU:count:" . print_r($notify_from_redis, true) . "\n", 3, "/tmp/hoge.log");
+
         //merge users to notification data
         foreach ($data as $k => $v) {
             $user_name = null;
@@ -919,9 +947,14 @@ class NotifyBizComponent extends Component
                 $data[$k] = array_merge($data[$k], $users[$v['Notification']['user_id']]);
                 $user_name = $data[$k]['User']['display_username'];
             }
+            //送信対象のユーザー数：2人以上に送る場合+2と表示したい。getTitle内の処理での関係で前処理する
+            $to_user_count = $data[$k]['Notification']['to_user_count'];
+            if ($to_user_count > 1) {
+                $to_user_count++;
+            }
             //get title
             $title = $this->NotifySetting->getTitle($data[$k]['Notification']['type'],
-                                                    $user_name, 1,
+                                                    $user_name, $to_user_count,
                                                     $data[$k]['Notification']['body']);
             $data[$k]['Notification']['title'] = $title;
         }
@@ -1010,6 +1043,27 @@ class NotifyBizComponent extends Component
     function changeReadStatusNotification($notify_id)
     {
         return $this->GlRedis->changeReadStatusOfNotification(
+            $this->NotifySetting->current_team_id,
+            $this->NotifySetting->my_uid,
+            $notify_id
+        );
+    }
+
+    /**
+     * remove message notification.
+     *
+     * @param int $notify_id
+     *
+     * @return bool|void
+     */
+    function removeMessageNotification($notify_id)
+    {
+        if (!$notify_id) {
+            // target none.
+            return false;
+        }
+        error_log("FURU:remove message!!\n", 3, "/tmp/hoge.log");
+        return $this->GlRedis->deleteMessageNotify(
             $this->NotifySetting->current_team_id,
             $this->NotifySetting->my_uid,
             $notify_id
