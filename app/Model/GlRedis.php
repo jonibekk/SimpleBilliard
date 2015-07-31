@@ -220,7 +220,6 @@ class GlRedis extends AppModel
                 $key_name .= $v . ":";
             }
         }
-        error_log("FURU:key=".$key_name."\n",3,"/tmp/hoge.log");
         return $key_name;
     }
 
@@ -265,13 +264,10 @@ class GlRedis extends AppModel
         /** @noinspection PhpInternalEntityUsedInspection */
         $pipe = $this->Db->multi(Redis::PIPELINE);
         //save notification
-        error_log("FURU:".$type."\n",3,"/tmp/hoge.log");
         if($type == NotifySetting::TYPE_FEED_MESSAGE){
-            error_log("FURU:message!!!".$type."\n",3,"/tmp/hoge.log");
             $pipe->hMset($this->getKeyName(self::KEY_TYPE_MESSAGE, $team_id, null, $notify_id), $data);
             $pipe->expire($this->getKeyName(self::KEY_TYPE_MESSAGE, $team_id, null, $notify_id), 60 * 60 * 24 * self::EXPIRE_DAY_OF_NOTIFICATION);
         } else {
-            error_log("FURU:post".$type."\n",3,"/tmp/hoge.log");
             $pipe->hMset($this->getKeyName(self::KEY_TYPE_NOTIFICATION, $team_id, null, $notify_id), $data);
             $pipe->expire($this->getKeyName(self::KEY_TYPE_NOTIFICATION, $team_id, null, $notify_id), 60 * 60 * 24 * self::EXPIRE_DAY_OF_NOTIFICATION);
         }
@@ -281,19 +277,27 @@ class GlRedis extends AppModel
         foreach ($to_user_ids as $uid) {
             //save notification user
             if($type == NotifySetting::TYPE_FEED_MESSAGE){
-                error_log("FURU:message2!!!".$type."\n",3,"/tmp/hoge.log");
                 $pipe->zAdd($this->getKeyName(self::KEY_TYPE_MESSAGE_USER, $team_id, $uid, null), $score, $notify_id);
                 $pipe->zAdd($this->getKeyName(self::KEY_TYPE_MESSAGE_USER, $team_id, $uid, null, 0), $score, $notify_id);
-                //increment
-                $pipe->hIncrBy($this->getKeyName(self::KEY_TYPE_COUNT_MESSAGE_BY_USER, $team_id, $uid), self::FIELD_COUNT_NEW_NOTIFY, 1);
             } else {
-                error_log("FURU:post2".$type."\n",3,"/tmp/hoge.log");
                 $pipe->zAdd($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $uid, null), $score, $notify_id);
                 $pipe->zAdd($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $uid, null, 0), $score, $notify_id);
                 //increment
                 $pipe->hIncrBy($this->getKeyName(self::KEY_TYPE_COUNT_BY_USER, $team_id, $uid), self::FIELD_COUNT_NEW_NOTIFY, 1);
             }
 
+        }
+        $pipe->exec();
+        //メッセージの通知数は1スレッドあたり1だけなのでKEY_TYPE_MESSAGE_USERのレコード数
+        //なのでredisに書き込みが終わった後じゃないとカウントできないからここでやる
+        foreach ($to_user_ids as $uid) {
+            if($type == NotifySetting::TYPE_FEED_MESSAGE){
+                $message_notify_count = $this->Db->zCard( $this->getKeyName(self::KEY_TYPE_MESSAGE_USER, $team_id, $uid));
+                $pipe->hSet(
+                    $this->getKeyName(self::KEY_TYPE_COUNT_MESSAGE_BY_USER, $team_id, $uid),
+                    self::FIELD_COUNT_NEW_NOTIFY, $message_notify_count);
+
+            }
         }
         $pipe->exec();
         return true;
