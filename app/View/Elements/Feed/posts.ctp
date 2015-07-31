@@ -355,7 +355,7 @@ $with_header = isset($with_header) ? $with_header : true;
                                    ['comment' => $comment, 'user' => $comment['User'], 'like' => $comment['MyCommentLike']]) ?>
                 <?php endforeach ?>
 
-                <a href="#" class="btn btn-link click-comment-new"
+                <a href="#" class="btn-link click-comment-new"
                    id="Comments_new_<?= $post['Post']['id'] ?>"
                    style="display:none"
                    post-id="<?= $post['Post']['id'] ?>"
