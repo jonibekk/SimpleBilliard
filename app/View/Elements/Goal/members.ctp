@@ -13,7 +13,7 @@
                                            ['class' => 'img-circle',
                                             'style' => 'width:56px; float:left;'])
                 ?>
-                <div style="padding:3px;float:left">
+                <div class="goal-detail-member-info">
                     <span class="goal-detail-member-name"><?= h($member['User']['display_username']) ?></span>
                     <?php if ($member['Collaborator']['type'] == Collaborator::TYPE_OWNER): ?>
                         <span class="goal-detail-member-owner">

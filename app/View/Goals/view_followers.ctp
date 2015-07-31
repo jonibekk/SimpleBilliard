@@ -13,8 +13,8 @@
 <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default">
         <?= $this->element('Goal/simplex_top_section') ?>
-        <div class="panel-body">
-            <div class="row borderBottom" id="GoalPageFollowerContainer">
+        <div class="panel-body goal-detail-follower-panel">
+            <div class="goal-detail-follower-cards row borderBottom" id="GoalPageFollowerContainer">
                 <?= $this->element('Goal/followers') ?>
                 <?php if (!$followers): ?>
                     <?= __d('gl', 'フォロワーはいません。') ?>
@@ -22,7 +22,7 @@
             </div>
         </div>
         <div class="panel-body panel-read-more-body">
-            <a href="#" class="btn btn-link click-goal-follower-more"
+            <a href="#" class="btn-link click-goal-follower-more goal-detail-panel-read-more"
                next-page-num="2"
                id="GoalPageFollowerMoreLink"
                list-container="#GoalPageFollowerContainer"
