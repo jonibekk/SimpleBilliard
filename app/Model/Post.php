@@ -344,6 +344,28 @@ class Post extends AppModel
         return $res;
     }
 
+    public function getPostById($post_id)
+    {
+        $options = [
+            'conditions' => [
+                'Post.id' => $post_id,
+                'team_id' => $this->current_team_id,
+            ],
+            'contain'    => [
+                'User'          => [],
+                'PostShareUser' => [],
+            ]
+        ];
+        $res = $this->find('first', $options);
+        return $res;
+    }
+
+    public function getPhotoPath($user_arr)
+    {
+        $upload = new UploadHelper(new View());
+        return $upload->uploadUrl($user_arr, 'User.photo', ['style' => 'small']);
+    }
+
     public function get($page = 1, $limit = 20, $start = null, $end = null, $params = null)
     {
         $one_month = 60 * 60 * 24 * 31;

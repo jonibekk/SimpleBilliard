@@ -13,6 +13,15 @@ class PostsController extends AppController
         parent::beforeFilter();
     }
 
+    public function message()
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
+        // グルーブの絞り込みが選択された場合
+        //$current_global_menu = "team";
+        //$this->set(compact('current_global_menu'));
+        return $this->render();
+    }
+
     /**
      * add message method
      */
@@ -269,6 +278,59 @@ class PostsController extends AppController
             'start'         => $start ? $start : REQUEST_TIMESTAMP - MONTH,
         );
         return $this->_ajaxGetResponse($result);
+    }
+
+    public function ajax_get_message_info($post_id)
+    {
+        $this->_ajaxPreProcess();
+
+        $room_info = $this->Post->getPostById($post_id);
+        $room_info['User']['photo_path'] = $this->Post->getPhotoPath($room_info['User']);
+
+        $res = [
+            'auth_info' => [
+                'photo_path' => $this->Post->getPhotoPath($this->Auth->user()),
+            ],
+            'room_info' => $room_info
+        ];
+        return $this->_ajaxGetResponse($res);
+    }
+
+    public function ajax_get_message($post_id)
+    {
+        $this->_ajaxPreProcess();
+        $message_list = $this->Post->Comment->getPostsComment($post_id);
+        $convert_msg_data = $this->Post->Comment->convertData($message_list);
+        $result = ['message_list' => $convert_msg_data];
+        return $this->_ajaxGetResponse($result);
+    }
+
+    public function ajax_put_message($post_id, $message) {
+        //$this->request->allowMethod('post');
+        $this->_ajaxPreProcess();
+
+        $params['Comment']['post_id'] = $post_id;
+        $params['Comment']['body'] = $message;
+        $add_comment = $this->Post->Comment->add($params);
+
+        $detail_comment = $this->Post->Comment->getComment($add_comment['Comment']['id']);
+        $convert_data = $this->Post->Comment->convertData($detail_comment);
+
+        $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
+        $pusher->trigger('test-channel', 'new_message', $convert_data);
+
+        return $this->_ajaxGetResponse($detail_comment);
+    }
+
+    public function ajax_put_message_read($comment_id)
+    {
+        $this->_ajaxPreProcess();
+        $res = $this->Post->Comment->CommentRead->red([$comment_id]);
+        if ($res === true) {
+            $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
+            $pusher->trigger('test-channel', 'read_message', $comment_id);
+        }
+        return $this->_ajaxGetResponse($res);
     }
 
     public function ajax_get_action_list_more()
