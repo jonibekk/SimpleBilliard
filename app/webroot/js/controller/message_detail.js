@@ -81,4 +81,8 @@ message_app.controller(
             $scope.message = "";
         };
 
+        $scope.loadMore = function () {
+            console.log('test');
+        }
+
     });
