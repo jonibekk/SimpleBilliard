@@ -366,17 +366,21 @@ class KeyResult extends AppModel
             return $res;
         }
         $incomplete_opt = $options;
-        $incomplete_opt['conditions']['completed'] = false;
+        $incomplete_opt['conditions']['completed'] = null;
         $incomplete_krs = $this->find('list', $incomplete_opt);
         $completed_opt = $options;
-        $incomplete_opt['conditions']['completed'] = false;
+        $incomplete_opt['conditions']['NOT']['completed'] = null;
         $completed_krs = $this->find('list', $completed_opt);
         $res = [];
         $res += $with_all_opt ? [null => __d('gl', 'すべて')] : null;
-        $res += ['disable_value1' => '----------------------------------------------------------------------------------------'];
-        $res += $incomplete_krs;
-        $res += ['disable_value2' => '----------------------------------------------------------------------------------------'];
-        $res += $completed_krs;
+        if (!empty($incomplete_krs)) {
+            $res += ['disable_value1' => '----------------------------------------------------------------------------------------'];
+            $res += $incomplete_krs;
+        }
+        if (!empty($completed_krs)) {
+            $res += ['disable_value2' => '----------------------------------------------------------------------------------------'];
+            $res += $completed_krs;
+        }
         return $res;
     }
 

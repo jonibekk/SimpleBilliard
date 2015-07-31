@@ -1305,7 +1305,6 @@ class GoalsController extends AppController
                 $posts = $this->Post->get(1, MY_PAGE_CUBE_ACTION_IMG_NUMBER, null, null, $params);
                 break;
         }
-        $this->layout = LAYOUT_ONE_COLUMN;
         $kr_select_options = $this->Goal->KeyResult->getKrNameList($goal_id, true, true);
         $goal_base_url = Router::url(['controller' => 'goals', 'action' => 'view_actions', 'goal_id' => $goal_id, 'page_type' => $page_type]);
         $this->set('long_text', false);
