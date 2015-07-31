@@ -10,7 +10,7 @@
  * @var                    $kr_select_options
  * @var                    $goal_id
  * @var                    $goal_base_url
- * @var                    $key_Result_id
+ * @var                    $key_result_id
  */
 ?>
 <!-- START app/View/Goals/view_actions.ctp -->
@@ -22,7 +22,7 @@
                 <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon profile-user-icons" id=""><i
-                                class="profile-user-action-related-goal-icon fa fa-flag"></i></span>
+                                class="profile-user-action-related-goal-icon fa fa-key"></i></span>
                         <?=
                         $this->Form->input('key_result_id', [
                             'label'                    => false,
