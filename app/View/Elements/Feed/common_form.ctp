@@ -254,7 +254,7 @@
                 <?php $this->Form->unlockField('socket_id') ?>
             </div>
             <div class="post-panel-footer">
-                <div class="font_12px none" id="PostFormFooter">
+                <div class="font_12px" id="PostFormFooter">
                     <a href="#" class="target-show-target-click link-red" target-id="PostFormImage"
                        click-target-id="Post__Photo_1">
                         <button type="button" class="btn pull-left photo-up-btn"><i
