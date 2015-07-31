@@ -369,7 +369,7 @@ class KeyResult extends AppModel
         $incomplete_opt['conditions']['completed'] = null;
         $incomplete_krs = $this->find('list', $incomplete_opt);
         $completed_opt = $options;
-        $incomplete_opt['conditions']['NOT']['completed'] = null;
+        $completed_opt['conditions']['NOT']['completed'] = null;
         $completed_krs = $this->find('list', $completed_opt);
         $res = [];
         $res += $with_all_opt ? [null => __d('gl', 'すべて')] : null;
