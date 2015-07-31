@@ -182,7 +182,7 @@ class NotifySetting extends AppModel
             'field_prefix'    => 'user_joined_to_invited_team',
             'icon_class'      => 'fa-users',
         ],
-        self::TYPE_FEED_MESSAGE                             => [
+        self::TYPE_FEED_MESSAGE                          => [
             'mail_template'   => "notify_basic",
             'field_real_name' => null,
             'field_prefix'    => 'feed_message',
@@ -457,6 +457,10 @@ class NotifySetting extends AppModel
                 break;
             case self::TYPE_USER_JOINED_TO_INVITED_TEAM:
                 $title = __d('gl', '%1$sがチームに参加しました。', $user_text);
+                break;
+            case self::TYPE_FEED_MESSAGE:
+                $title = __d('gl', '%1$s%2$s', $user_text,
+                             ($count_num > 0) ? __d('gl', " +%s", $count_num) : null);
                 break;
         }
         return $title;

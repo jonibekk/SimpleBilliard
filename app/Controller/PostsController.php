@@ -556,6 +556,8 @@ class PostsController extends AppController
 
     public function ajax_add_comment()
     {
+        error_log("FURU:こめんとついか！!\n", 3, "/tmp/hoge.log");
+
         $this->request->allowMethod('post');
         $this->_ajaxPreProcess();
         $result = [
@@ -589,6 +591,11 @@ class PostsController extends AppController
                                                          $this->Post->Comment->id);
                         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION,
                                                          $this->Post->id, $this->Post->Comment->id);
+                        break;
+                    case Post::TYPE_MESSAGE:
+                        error_log("FURU:メッセージのこめんと\n", 3, "/tmp/hoge.log");
+                        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MESSAGE, $this->Post->id,
+                                                         $this->Post->Comment->id);
                         break;
                 }
                 //mixpanel
@@ -652,9 +659,29 @@ class PostsController extends AppController
         $this->set('common_form_type', 'post');
         $this->set(compact('feed_filter', 'circle_member_count', 'circle_id', 'user_status', 'params',
                            'circle_status'));
+
         try {
-            $this->set(['posts' => $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null,
-                                                    $this->request->params)]);
+            $targetPosts = $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null, $this->request->params);
+            $this->set(['posts' => $targetPosts]);
+
+            error_log("FURU:kesu!\n", 3, "/tmp/hoge.log");
+            error_log("FURU\n" . print_r($this->request->params, true) . "\n", 3, "/tmp/hoge.log");
+            error_log("FURU:+++++++++++++++++++\n", 3, "/tmp/hoge.log");
+            error_log("FURU\n" . viaIsSet($targetPosts[0]['Post']['type']) . "\n", 3, "/tmp/hoge.log");
+
+            //メッセージなら該当するnotifyをredisから削除する
+            $post_type = viaIsSet($targetPosts[0]['Post']['type']);
+            if ($post_type == Post::TYPE_MESSAGE) {
+                error_log("FURU:メッセージだよ\n", 3, "/tmp/hoge.log");
+                $notify_id = viaIsSet($this->request->params['named']['notify_id']);
+                $this->NotifyBiz->removeMessageNotification($notify_id);
+            }
+
+
+
+
+
+
         } catch (RuntimeException $e) {
             //リファラとリクエストのURLが同じ場合は、メッセージを表示せず、ホームにリダイレクトする
             //サークルページに居て当該サークルから抜けた場合の対応
