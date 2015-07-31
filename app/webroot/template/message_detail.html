@@ -15,7 +15,7 @@
     <div class="panel-body pt_10px plr_11px pb_8px" id="message_box"
          style="overflow:auto; height:620px; margin:0px;">
 
-        <div infinite-scroll='loadMore()' infinite-scroll-parent="true">
+        <div infinite-scroll='loadMore()' infinite-scroll-parent="true" infinite-scroll-distance="0">
             <div ng-repeat="(key, item) in message_list">
                 <div id="m_{{key+1}}" class="col col-xxs-12" style="padding-bottom: 8px">
                     <div class="col col-xxs-2">
