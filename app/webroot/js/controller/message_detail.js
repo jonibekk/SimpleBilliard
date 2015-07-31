@@ -82,7 +82,10 @@ message_app.controller(
         };
 
         $scope.loadMore = function () {
-            console.log('test');
+
+            if (document.getElementById("message_box").scrollTop === 0) {
+                console.log('top');
+            }
         }
 
     });
