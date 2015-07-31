@@ -1011,7 +1011,11 @@ class UsersController extends AppController
     function view_goals()
     {
         $user_id = $this->_getRequiredParam('user_id');
-        $this->_setUserPageHeaderInfo($user_id);
+        if (!$this->_setUserPageHeaderInfo($user_id)) {
+            // ユーザーが存在しない
+            $this->Pnotify->outError(__d('gl', "不正な画面遷移です。"));
+            return $this->redirect($this->referer());
+        }
         $this->layout = LAYOUT_ONE_COLUMN;
         $page_type = viaIsSet($this->request->params['named']['page_type']);
 
@@ -1052,7 +1056,9 @@ class UsersController extends AppController
     {
         $user_id = $this->_getRequiredParam('user_id');
         if (!$this->_setUserPageHeaderInfo($user_id)) {
-            throw new NotFoundException;
+            // ユーザーが存在しない
+            $this->Pnotify->outError(__d('gl', "不正な画面遷移です。"));
+            return $this->redirect($this->referer());
         }
         $posts = $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null, [
             'user_id' => $user_id,
@@ -1089,7 +1095,11 @@ class UsersController extends AppController
                 break;
         }
         $this->set(compact('posts'));
-        $this->_setUserPageHeaderInfo($user_id);
+        if (!$this->_setUserPageHeaderInfo($user_id)) {
+            // ユーザーが存在しない
+            $this->Pnotify->outError(__d('gl', "不正な画面遷移です。"));
+            return $this->redirect($this->referer());
+        }
         $this->layout = LAYOUT_ONE_COLUMN;
         $goal_ids = $this->Goal->Collaborator->getCollaboGoalList($user_id, true);
         $goal_select_options = $this->Goal->getGoalNameList($goal_ids, true, true);
@@ -1109,8 +1119,9 @@ class UsersController extends AppController
         $user_id = $this->_getRequiredParam('user_id');
 
         if (!$this->_setUserPageHeaderInfo($user_id)) {
-            // 有効な user_id でない
-            throw new NotFoundException;
+            // ユーザーが存在しない
+            $this->Pnotify->outError(__d('gl', "不正な画面遷移です。"));
+            return $this->redirect($this->referer());
         }
 
         $this->layout = LAYOUT_ONE_COLUMN;

@@ -64,9 +64,11 @@
                                               ['escape' => false], __d('gl', "本当にこのコメントを削除しますか？")) ?>
                     </div>
                 <?php endif; ?>
-                <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user['id']]) ?>">
-                    <div class="mb_2px lh_12px font_bold font_verydark"><?= h($user['display_username']) ?></div>
-                </a>
+                <div class="mb_2px lh_12px">
+                    <a class="font_bold font_verydark" href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user['id']]) ?>">
+                        <?= h($user['display_username']) ?>
+                    </a>
+                </div>
             </div>
             <div
                 class="col col-xxs-12 <?= $long_text ? "showmore-comment-circle" : "showmore-comment" ?> comment-text feed-contents comment-contents font_verydark box-align"
