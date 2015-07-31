@@ -351,4 +351,33 @@ class KeyResult extends AppModel
         return $progress;
     }
 
+    function getKrNameList($goal_id, $with_all_opt = false, $separate_progress = false)
+    {
+        $options = [
+            'conditions' => ['goal_id' => $goal_id],
+            'fields'     => ['id', 'name'],
+            'order'      => ['created desc'],
+        ];
+        if (!$separate_progress) {
+            $res = $this->find('list', $options);
+            if ($with_all_opt) {
+                return [null => __d('gl', 'すべて')] + $res;
+            }
+            return $res;
+        }
+        $incomplete_opt = $options;
+        $incomplete_opt['conditions']['completed'] = false;
+        $incomplete_krs = $this->find('list', $incomplete_opt);
+        $completed_opt = $options;
+        $incomplete_opt['conditions']['completed'] = false;
+        $completed_krs = $this->find('list', $completed_opt);
+        $res = [];
+        $res += $with_all_opt ? [null => __d('gl', 'すべて')] : null;
+        $res += ['disable_value1' => '----------------------------------------------------------------------------------------'];
+        $res += $incomplete_krs;
+        $res += ['disable_value2' => '----------------------------------------------------------------------------------------'];
+        $res += $completed_krs;
+        return $res;
+    }
+
 }

@@ -1290,9 +1290,11 @@ class GoalsController extends AppController
             $this->Pnotify->outError(__d('gl', "不正な画面遷移です。"));
             $this->redirect($this->referer());
         }
+        $key_result_id = viaIsSet($this->request->params['named']['key_result_id']);
         $params = [
-            'type'    => Post::TYPE_ACTION,
-            'goal_id' => $goal_id,
+            'type'          => Post::TYPE_ACTION,
+            'goal_id'       => $goal_id,
+            'key_result_id' => $key_result_id,
         ];
         $posts = [];
         switch ($page_type) {
@@ -1303,10 +1305,11 @@ class GoalsController extends AppController
                 $posts = $this->Post->get(1, MY_PAGE_CUBE_ACTION_IMG_NUMBER, null, null, $params);
                 break;
         }
-        $this->set(compact('posts'));
         $this->layout = LAYOUT_ONE_COLUMN;
+        $kr_select_options = $this->Goal->KeyResult->getKrNameList($goal_id, true, true);
+        $goal_base_url = Router::url(['controller' => 'goals', 'action' => 'view_actions', 'goal_id' => $goal_id, 'page_type' => $page_type]);
         $this->set('long_text', false);
-        $this->set(compact('goal_id'));
+        $this->set(compact('key_result_id', 'goal_id', 'posts', 'kr_select_options', 'goal_base_url'));
 
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();

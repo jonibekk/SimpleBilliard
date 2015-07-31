@@ -10,15 +10,15 @@
  * @var CodeCompletionView $this
  * @var                    $goal
  * @var                    $long_text
- * @var                    $with_header
+ * @var                    $without_header
  */
-$with_header = isset($with_header) ? $with_header : true;
+$without_header = isset($without_header) ? $without_header : false;
 ?>
 <?php if (!empty($posts)): ?>
     <!-- START app/View/Elements/Feed/posts.ctp -->
     <?php foreach ($posts as $post_key => $post): ?>
         <div class="panel panel-default">
-            <?php if ($with_header && (isset($post['Goal']['id']) && $post['Goal']['id']) || isset($post['Circle']['id'])): ?>
+            <?php if (!$without_header && (isset($post['Goal']['id']) && $post['Goal']['id']) || isset($post['Circle']['id'])): ?>
                 <!--START Goal Post Header -->
 
                 <?php if (isset($post['Goal']['id']) && $post['Goal']['id']): ?>

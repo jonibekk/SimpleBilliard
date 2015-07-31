@@ -92,7 +92,7 @@
                             if ($key == count($kr['ActionResult']) - 1 && $kr['KeyResult']['action_result_count'] > $display_action_count) {
                                 $last_many = true;
                                 //urlはゴールページの全アクションリスト
-                                $url = ['controller' => 'goals', 'action' => 'view_actions', 'goal_id' => $kr['KeyResult']['goal_id'], 'page_type' => 'image'];
+                                $url = ['controller' => 'goals', 'action' => 'view_actions', 'goal_id' => $kr['KeyResult']['goal_id'], 'page_type' => 'image', 'key_result_id' => $kr['KeyResult']['id']];
                             }
                             ?>
                             <li class="goal-detail-action-list">

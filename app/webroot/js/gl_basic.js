@@ -96,6 +96,17 @@ $(document).ready(function () {
         }
         location.href = url;
     });
+    //ゴールページのアクション一覧のKR切替え
+    $('#SwitchKrOnMyPage').change(function () {
+        var key_result_id = $(this).val();
+        if (key_result_id == "") {
+            var url = $(this).attr('redirect-url');
+        }
+        else {
+            var url = $(this).attr('redirect-url') + "/key_result_id:" + key_result_id;
+        }
+        location.href = url;
+    });
 
     //autosize
     //noinspection JSJQueryEfficiency

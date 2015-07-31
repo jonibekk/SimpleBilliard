@@ -251,4 +251,16 @@ class ActionResult extends AppModel
         return $res;
     }
 
+    function getActionIdsByKrId($key_result_id)
+    {
+        $options = [
+            'conditions' => [
+                'key_result_id' => $key_result_id,
+            ],
+            'fields'     => ['id', 'id']
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
 }
