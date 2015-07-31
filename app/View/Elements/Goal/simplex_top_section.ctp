@@ -24,12 +24,6 @@
                            ]
         )
         ?>
-        <p class="goal-detail-goal-name">
-            <?= h($goal['Goal']['name']) ?>
-        </p>
-        <p class="goal-detail-goal-purpose">
-            <?= h($goal['Purpose']['name']) ?>
-        </p>
     </div>
 
     <div class="goal-detail-numbers-wrap">
@@ -71,6 +65,13 @@
             ?>
         <?php endif ?>
     </div>
+    <p class="goal-detail-goal-name">
+        <?= h($goal['Goal']['name']) ?>
+    </p>
+    <p class="goal-detail-goal-purpose">
+        <?= h($goal['Purpose']['name']) ?>
+    </p>
+
 </div>
 <div class="goal-detail-tab-group">
     <a class="goal-detail-info-tab <?= $this->request->params['action'] == 'view_info' ? "profile-user-tab-active" : null ?>"
