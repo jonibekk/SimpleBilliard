@@ -199,7 +199,7 @@
 
                 <?php }
                 elseif ($type != "follow") { ?>
-                    <a class="col col-xxs-12 bd-dash font_lightGray-gray p_10px modal-ajax-get-add-key-result"
+                    <a class="col-xxs-12 font_lightGray-gray modal-ajax-get-add-key-result  goals-column-add-kr-btn"
                        href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id']]) ?>">
                         <i class="fa fa-plus-circle font_brownRed"></i>
                         <span class="ml_2px"><?= __d('gl', "出したい成果を追加") ?></span>
