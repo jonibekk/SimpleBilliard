@@ -6,7 +6,7 @@ message_app.controller(
         $translate,
         notificationService,
         getPostDetail,
-        getMessage,
+        //getMessage,
         $pusher,
         $stateParams,
         $anchorScroll,
@@ -32,18 +32,18 @@ message_app.controller(
         // スレッド情報
         $scope.auth_info = getPostDetail.auth_info;
         $scope.post_detail = post_detail;
-
-        angular.forEach(getMessage.message_list, function (val) {
-            this.push(val);
-        }, message_list);
-
         $scope.message_list = message_list;
-        var message_scroll = function () {
-            var length = $scope.message_list.length;
-            $location.hash('m_'+length);
+
+        var current_id = 0;
+        var message_scroll = function (id) {
+            var message_id = id;
+            if (current_id === 0) {
+                message_id = $scope.message_list.length;
+            }
+            current_id = message_id;
+            $location.hash('m_'+ message_id);
             $anchorScroll();
         };
-        message_scroll();
 
         // pusherメッセージ内容を受け取る
         var pusher = new Pusher(cake.pusher.key);
@@ -61,14 +61,13 @@ message_app.controller(
 
             // メッセージ表示
             $scope.$apply($scope.message_list.push(data));
-            message_scroll();
+            message_scroll(current_id);
         });
 
         // pusherから既読されたcomment_idを取得する
         test_channel.bind('read_message', function (comment_id) {
             var read_box = document.getElementById("mr_"+comment_id).innerText;
             document.getElementById("mr_"+comment_id).innerText = Number(read_box) + 1;
-            //console.log(read_box);
         });
 
         // メッセージを送信する
@@ -81,11 +80,21 @@ message_app.controller(
             $scope.message = "";
         };
 
-        $scope.loadMore = function () {
 
+        $scope.loadMore = function () {
             if (document.getElementById("message_box").scrollTop === 0) {
-                console.log('top');
+                var request = {
+                    method: 'GET',
+                    url: cake.url.ah + $stateParams.post_id
+                };
+                $http(request).then(function (response) {
+                    angular.forEach(response.data.message_list, function (val) {
+                        this.push(val);
+                    }, $scope.message_list);
+                    message_scroll(current_id);
+                });
             }
         }
+
 
     });

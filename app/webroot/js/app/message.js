@@ -45,6 +45,7 @@ message_app.config([
                 url: "/:post_id",
                 templateUrl: "/template/message_detail.html",
                 resolve: {
+                    /*
                     getMessage: ['$stateParams', '$http', function ($stateParams, $http) {
                         var request = {
                             method: 'GET',
@@ -54,6 +55,7 @@ message_app.config([
                             return response.data;
                         });
                     }],
+                    */
                     getPostDetail: ['$stateParams', '$http', function ($stateParams, $http) {
                         var request = {
                             method: 'GET',
