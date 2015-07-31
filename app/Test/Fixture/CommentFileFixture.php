@@ -16,6 +16,7 @@ class CommentFileFixture extends CakeTestFixture
         'comment_id'       => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'コメントID(belongsToでCommentモデルに関連)'),
         'attached_file_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'ファイルID(belongsToでFileモデルに関連)'),
         'team_id'          => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'チームID(belongsToでTeamモデルに関連)'),
+        'index_num'        => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => true, 'comment' => '表示順'),
         'del_flg'          => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
         'deleted'          => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '削除した日付時刻'),
         'created'          => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '追加した日付時刻'),
@@ -34,17 +35,6 @@ class CommentFileFixture extends CakeTestFixture
      *
      * @var array
      */
-    public $records = array(
-        array(
-            'id'               => '',
-            'comment_id'       => '',
-            'attached_file_id' => '',
-            'team_id'          => '',
-            'del_flg'          => 1,
-            'deleted'          => 1,
-            'created'          => 1,
-            'modified'         => 1
-        ),
-    );
+    public $records = array();
 
 }
