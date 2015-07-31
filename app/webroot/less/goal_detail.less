@@ -263,6 +263,7 @@
 
 .goal-detail-member-card {
   padding: 8px;
+  min-height: 64px;
 }
 
 .goal-detail-member-name {
@@ -271,8 +272,17 @@
   color: @veryDark;
 }
 
+.goal-detail-member-avator {
+  .avator-bordered-rounded;
+  width: 64px;
+  display: inline-block;
+  vertical-align: top;
+}
+
 .goal-detail-member-info {
-  
+  display: inline-block;
+  vertical-align: top;
+  max-width: 80%;
 }
 
 .goal-detail-member-owner {
@@ -316,4 +326,8 @@
 
 .goal-detail-follower-name {
   font-weight: bold;
+}
+
+.goal-detail-member-collab-way {
+  .line-number-limit-2(#faf9f7);
 }
