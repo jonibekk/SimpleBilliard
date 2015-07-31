@@ -103,7 +103,7 @@
 
 .goal-detail-tab-title {
   margin-top: 4px;
-  font-size: @fontSmall;
+  font-size: @fontSmallest;
 }
 
 .goal-detail-tab-icon {
@@ -151,8 +151,12 @@
   font-weight: bold;
 }
 
-.goal-detail-info-panel {
+.goal-detail-panels {
   background: #f6f5f1;
+}
+
+.goal-detail-info-panel {
+  .goal-detail-panels;
 }
 
 .goal-detail-info-due-wrap {
@@ -249,6 +253,130 @@
  }
  *
  */
+
+
+/**
+ * Goal page kr
+ */
+
+ .goal-detail-kr-panel {
+   .goal-detail-panels;
+ }
+
+.goal-detail-kr-progress-score {
+  margin-bottom: 12px;
+  &::after {
+    content: "\f11d";
+    font-family: FontAwesome;
+    float: right;
+  }
+}
+
+.goal-detail-kr-progress-bar-wrap {
+  overflow: visible;
+}
+
+.goal-detail-kr-progress-bar {
+  border-radius: 4px 0 0 4px;
+  position: relative;
+  overflow: visible;
+  &::before {
+    color: @dimGray;
+    content: "\f1ae";
+    font-family: FontAwesome;
+    position: absolute;
+    top: -16px;
+    right: -4px;
+  }
+}
+
+.goal-detail-kr-add-heading {
+  font-size: @fontMedium;
+}
+
+.goal-detail-kr-card {
+  background: @white;
+  border-radius: 8px;
+  padding: 8px 0;
+  .borderBottom &:not(:last-child){
+    margin: 8px 0;
+  }
+}
+
+.goal-detail-kr-cards-contents {
+  display: inline-block;
+  width: 72%;
+}
+
+.goal-detail-kr-achieve-wrap {
+  width: 48px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.goal-detail-kr-achieve-icon(@fontColor) {
+  font-size: 32px;
+  display: block;
+  margin: auto;
+  text-align: center;
+  vertical-align: top;
+  color: @fontColor;
+}
+
+.goal-detail-kr-achieve-yet {
+  .goal-detail-kr-achieve-icon(@lightGray);
+}
+
+.goal-detail-kr-achieve-already {
+  .goal-detail-kr-achieve-icon(@basicPink);
+}
+
+.goal-detail-kr-card-title {
+  font-size: @fontMedium;
+  font-weight: bold;
+  .line-number-limit-2;
+}
+
+.goal-detail-action {
+  padding: 0;
+  margin: 8px 0;
+}
+
+.goal-detail-action-list {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 0 8px;
+}
+
+.goal-detail-add-action {
+  width: 48px;
+  height: 48px;
+  display: block;
+  text-align: center;
+  border: 1px dashed @gray;
+  border-radius: 4px;
+  color: @gray;
+  .no-underline;
+  &:hover,
+  &:target,
+  &:active,
+  &:focus {
+    border: 1px solid @dimGray;
+    color: @dimGray;
+  }
+}
+
+.goal-detail-add-action-text {
+  font-size: @fontSmallest;
+  letter-spacing: -1px;
+  line-height: 12px;
+}
+
+.goal-detail-panel-read-more {
+  background: #f6f5f1;
+  padding-bottom: 8px;
+  border-radius: 0 0 4px 4px;
+}
 
 .goal-detail-member-panel {
   .goal-detail-panels;

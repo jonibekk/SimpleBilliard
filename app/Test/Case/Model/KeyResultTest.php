@@ -262,6 +262,34 @@ class KeyResultTest extends CakeTestCase
         $this->assertEquals($count1 - 1, $count2);
     }
 
+    function testGetKrNameList()
+    {
+        $this->setDefault();
+        $goal_id = 1;
+        $team_id = 1;
+        $user_id = 1;
+        $this->KeyResult->deleteAll(['KeyResult.goal_id' => $goal_id]);
+        $this->KeyResult->saveAll(
+            [
+                [
+                    'goal_id' => $goal_id,
+                    'team_id' => $team_id,
+                    'user_id' => $user_id,
+                    'name'    => 'test1'
+                ],
+                [
+                    'goal_id'   => $goal_id,
+                    'team_id'   => $team_id,
+                    'user_id'   => $user_id,
+                    'name'      => 'test2',
+                    'completed' => time(),
+                ],
+            ]
+        );
+        $this->assertCount(3,$this->KeyResult->getKrNameList($goal_id, true));
+        $this->assertCount(5,$this->KeyResult->getKrNameList($goal_id, true,true));
+    }
+
     function setDefault()
     {
         $this->KeyResult->my_uid = 1;

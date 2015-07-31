@@ -9,6 +9,20 @@
   }
 }
 
+.btn-dash {
+  border: 1px dashed @lightGray;
+  text-decoration: none;
+  &:hover,
+  &:target,
+  &:active,
+  &:focus {
+    text-decoration: none;
+  }
+  padding: 8px;
+  text-align: center;
+  border-radius: 4px;
+}
+
 .btn-help {
   padding-right: 0;
 }
@@ -144,6 +158,46 @@
   font-size: 20px;
   color: #888;
   cursor: pointer;
+}
+
+.btn-add {
+  .btn-dash;
+}
+
+.btn-add-kr {
+  .btn-add;
+  color: @dimGray;
+  font-size: @fontLarge;
+  display: block;
+  margin: 8px 0 0;
+  width: 100%;
+  &:hover,
+  &:target,
+  &:active,
+  &:focus {
+    border-style: solid;
+    background: @white;
+  }
+}
+
+.btn-add-kr-icon {
+  color: @goalous;
+}
+
+.btn-edit-kr {
+  font-size: 24px;
+  margin: 5px 0;
+  color: @lightGray;
+  border: 1px solid @lightGray;
+  border-radius: 4px;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+}
+
+.btn-edit-kr-wrap {
+  vertical-align: top;
 }
 
 .new-comment-read {
