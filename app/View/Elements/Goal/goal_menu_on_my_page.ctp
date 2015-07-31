@@ -10,7 +10,7 @@
  */
 ?>
 <!-- START app/View/Elements/Goal/goal_menu_on_my_page.ctp -->
-<div class="dropdown">
+<div class="dropdown pull-right">
     <a href="#"
        class="bd-radius_4px font_lightGray-gray"
        data-toggle="dropdown"
