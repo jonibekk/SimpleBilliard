@@ -54,13 +54,14 @@ class Post extends AppModel
     const SHARE_CIRCLE = 4;
 
     public $orgParams = [
-        'author_id'   => null,
-        'circle_id'   => null,
-        'user_id'     => null,
-        'post_id'     => null,
-        'goal_id'     => null,
-        'filter_goal' => null,
-        'type'        => null,
+        'author_id'     => null,
+        'circle_id'     => null,
+        'user_id'       => null,
+        'post_id'       => null,
+        'goal_id'       => null,
+        'key_result_id' => null,
+        'filter_goal'   => null,
+        'type'          => null,
     ];
 
     public $uses = [
@@ -396,7 +397,6 @@ class Post extends AppModel
             $p_list = array_merge($p_list, $this->PostShareCircle->getMyCirclePostList($start, $end));
             //フォローorコラボorマイメンバーのゴール投稿を取得
             $p_list = array_merge($p_list, $this->getRelatedPostList($start, $end));
-
         }
         //パラメータ指定あり
         else {
@@ -432,6 +432,11 @@ class Post extends AppModel
                 ) {
                     $p_list = $this->orgParams['post_id'];
                 }
+            }
+            //特定のKR指定
+            elseif ($this->orgParams['key_result_id']) {
+                $p_list = $this->getKrPostList($this->orgParams['key_result_id'], self::TYPE_ACTION, "modified", "desc",
+                                               $start, $end);
             }
             //特定ゴール指定
             elseif ($this->orgParams['goal_id']) {
@@ -684,6 +689,25 @@ class Post extends AppModel
         }
         if ($this->orgParams['author_id']) {
             $options['conditions']['user_id'] = $this->orgParams['author_id'];
+        }
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
+    public function getKrPostList($key_result_id, $type, $order = "modified", $order_direction = "desc", $start = null, $end = null)
+    {
+        //まずKRのアクション一覧を取り出す
+        $action_ids = $this->ActionResult->getActionIdsByKrId($key_result_id);
+        $options = [
+            'conditions' => [
+                'action_result_id' => $action_ids,
+                'type'             => $type,
+            ],
+            'order'      => [$order => $order_direction],
+            'fields'     => ['id'],
+        ];
+        if ($start && $end) {
+            $options['conditions']['modified BETWEEN ? AND ?'] = [$start, $end];
         }
         $res = $this->find('list', $options);
         return $res;
