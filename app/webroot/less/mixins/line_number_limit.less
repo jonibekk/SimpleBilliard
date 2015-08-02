@@ -36,10 +36,12 @@
 .line-number-limit-2(@fadeColor : @white){
   background: @fadeColor;
   margin: 0;
+  overflow: hidden;
   line-break: normal;
   height: 40px;
   line-height: 1.4;
   position: relative;
+  overflow: hidden;
   &::before{
     background: @fadeColor;
     background: linear-gradient(to right, rgba(245, 245, 245, 0), @fadeColor);

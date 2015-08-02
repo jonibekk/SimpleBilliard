@@ -10,15 +10,15 @@
  * @var CodeCompletionView $this
  * @var                    $goal
  * @var                    $long_text
- * @var                    $with_header
+ * @var                    $without_header
  */
-$with_header = isset($with_header) ? $with_header : true;
+$without_header = isset($without_header) ? $without_header : false;
 ?>
 <?php if (!empty($posts)): ?>
     <!-- START app/View/Elements/Feed/posts.ctp -->
     <?php foreach ($posts as $post_key => $post): ?>
         <div class="panel panel-default">
-            <?php if ($with_header && (isset($post['Goal']['id']) && $post['Goal']['id']) || isset($post['Circle']['id'])): ?>
+            <?php if (!$without_header && (isset($post['Goal']['id']) && $post['Goal']['id']) || isset($post['Circle']['id'])): ?>
                 <!--START Goal Post Header -->
 
                 <?php if (isset($post['Goal']['id']) && $post['Goal']['id']): ?>
@@ -98,20 +98,24 @@ $with_header = isset($with_header) ? $with_header : true;
                                 <i class="fa fa-chevron-down feed-arrow"></i>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
-                                <?php if ($post['User']['id'] === $this->Session->read('Auth.User.id')
-                                    && $post['Post']['type'] != Post::TYPE_ACTION
-                                    && $post['Post']['type'] != Post::TYPE_KR_COMPLETE
-                                    && $post['Post']['type'] != Post::TYPE_GOAL_COMPLETE
-                                ): ?>
-                                    <li><a href="#" class="target-toggle-click"
-                                           target-id="PostEditForm_<?= $post['Post']['id'] ?>"
-                                           opend-text="<?= __d('gl', "編集をやめる") ?>"
-                                           closed-text="<?= __d('gl', "投稿を編集") ?>"
-                                           click-target-id="PostEditFormBody_<?= $post['Post']['id'] ?>"
-                                           hidden-target-id="PostTextBody_<?= $post['Post']['id'] ?>"
-                                           ajax-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_edit_post_form', 'post_id' => $post['Post']['id']]) ?>"
-                                            ><?= __d('gl', "投稿を編集") ?></a>
-                                    </li>
+                                <?php if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
+                                    <?php if ($post['Post']['type'] == Post::TYPE_NORMAL): ?>
+                                        <li><a href="#" class="target-toggle-click"
+                                               target-id="PostEditForm_<?= $post['Post']['id'] ?>"
+                                               opend-text="<?= __d('gl', "編集をやめる") ?>"
+                                               closed-text="<?= __d('gl', "投稿を編集") ?>"
+                                               click-target-id="PostEditFormBody_<?= $post['Post']['id'] ?>"
+                                               hidden-target-id="PostTextBody_<?= $post['Post']['id'] ?>"
+                                               ajax-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_edit_post_form', 'post_id' => $post['Post']['id']]) ?>"
+                                                ><?= __d('gl', "投稿を編集") ?></a>
+                                        </li>
+                                    <?php elseif ($post['Post']['type'] == Post::TYPE_ACTION): ?>
+                                        <li>
+                                            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_edit_action_modal', 'action_result_id' => $post['Post']['action_result_id']]) ?>"
+                                               class="modal-ajax-get"
+                                                ><?= __d('gl', "アクションを編集") ?></a>
+                                        </li>
+                                    <?php endif; ?>
                                 <?php endif ?>
                                 <?php if ($my_member_status['TeamMember']['admin_flg'] || $post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
                                     <?php if ($post['Post']['type'] != Post::TYPE_ACTION): ?>
@@ -355,7 +359,7 @@ $with_header = isset($with_header) ? $with_header : true;
                                    ['comment' => $comment, 'user' => $comment['User'], 'like' => $comment['MyCommentLike']]) ?>
                 <?php endforeach ?>
 
-                <a href="#" class="btn btn-link click-comment-new"
+                <a href="#" class="btn-link click-comment-new"
                    id="Comments_new_<?= $post['Post']['id'] ?>"
                    style="display:none"
                    post-id="<?= $post['Post']['id'] ?>"

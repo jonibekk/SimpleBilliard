@@ -96,6 +96,17 @@ $(document).ready(function () {
         }
         location.href = url;
     });
+    //ゴールページのアクション一覧のKR切替え
+    $('#SwitchKrOnMyPage').change(function () {
+        var key_result_id = $(this).val();
+        if (key_result_id == "") {
+            var url = $(this).attr('redirect-url');
+        }
+        else {
+            var url = $(this).attr('redirect-url') + "/key_result_id:" + key_result_id;
+        }
+        location.href = url;
+    });
 
     //autosize
     //noinspection JSJQueryEfficiency
@@ -1861,6 +1872,9 @@ function evFeedMoreView(options) {
     var no_data_text_id = $obj.attr('no-data-text-id');
     var oldest_post_time = $obj.attr('oldest-post-time') || 0;
     var append_target_id = $obj.attr('append-target-id');
+    // この時間より前の投稿のみ読み込む
+    var post_time_before = $obj.attr('post-time-before') || 0;
+
     //リンクを無効化
     $obj.attr('disabled', 'disabled');
 
@@ -1870,8 +1884,12 @@ function evFeedMoreView(options) {
         $obj.after($loader_html);
     }
 
-    //url生成
+    // URL生成
+    // 投稿の更新時間が指定されていれば、それ以前の投稿のみを取得する
     var url = get_url + '/page:' + next_page_num;
+    if (post_time_before) {
+        url += '/post_time_before:' + post_time_before;
+    }
     if (month_index != undefined && month_index > 0) {
         url = url + '/month_index:' + month_index;
     }

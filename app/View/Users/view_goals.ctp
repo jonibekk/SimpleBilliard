@@ -30,7 +30,7 @@
             <?php foreach ($goals as $goal): ?>
                 <div class="col col-xxs-12 my-goals-item">
                     <div class="col col-xxs-3 col-xs-2">
-                        <a href="#">
+                        <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal['Goal']['id']]) ?>">
                             <?=
                             $this->Html->image('ajax-loader.gif',
                                                [
@@ -43,7 +43,8 @@
                     </div>
                     <div class="col col-xxs-9 col-xs-10 pl_5px">
                         <div class="col col-md-11 col-xs-10 col-xxs-9 profile-goals-card-title-wrapper">
-                            <a href="#" class="profile-goals-card-title">
+                            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal['Goal']['id']]) ?>"
+                               class="profile-goals-card-title">
                                 <p class="font_verydark profile-goals-card-title-text">
                                     <span><?= h($goal['Goal']['name']) ?></span>
                                 </p>
@@ -124,18 +125,22 @@
                                         ?>
                                         <li class="profile-user-action-list">
                                             <a href="<?= $this->Html->url($url) ?>" class="profile-user-action-pic">
-                                                <?=
-                                                $this->Html->image('ajax-loader.gif',
-                                                                   [
-                                                                       'class'         => 'lazy',
-                                                                       'width'         => 48,
-                                                                       'height'        => 48,
-                                                                       'data-original' => $this->Upload->uploadUrl($action,
-                                                                                                                   'ActionResult.photo1',
-                                                                                                                   ['style' => 'x_small']),
-                                                                   ]
-                                                )
-                                                ?>
+                                                <?php for ($i = 1; $i <= 5; $i++): ?>
+                                                    <?php
+                                                    if (!empty($action["photo{$i}_file_name"]) || $i == 5) {
+                                                        echo $this->Html->image('ajax-loader.gif',
+                                                                                [
+                                                                                    'class'         => 'lazy',
+                                                                                    'width'         => 48,
+                                                                                    'height'        => 48,
+                                                                                    'data-original' => $this->Upload->uploadUrl($action,
+                                                                                                                                "ActionResult.photo$i",
+                                                                                                                                ['style' => 'x_small']),
+                                                                                ]);
+                                                        break;
+                                                    }
+                                                    ?>
+                                                <?php endfor; ?>
                                                 <?php if ($last_many): ?>
                                                     <span class="action-more-counts">
                                                         <i class="fa fa-plus"></i>

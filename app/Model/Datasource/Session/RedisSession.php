@@ -41,6 +41,7 @@ class RedisSession extends DatabaseSession implements CakeSessionHandlerInterfac
 
     public function __construct()
     {
+        parent::__construct();
         $timeout = Configure::read('Session.timeout');
         if (empty($timeout)) {
             $timeout = 60 * 24 * 90;
@@ -88,6 +89,10 @@ class RedisSession extends DatabaseSession implements CakeSessionHandlerInterfac
      */
     public function read($id)
     {
+        if (!$this->store) {
+            App::uses('ConnectionManager', 'Model');
+            $this->store = ConnectionManager::getDataSource('redis');
+        }
         return $this->store->get($this->key . $id);
     }
 

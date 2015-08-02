@@ -53,13 +53,14 @@ class Post extends AppModel
     const SHARE_CIRCLE = 4;
 
     public $orgParams = [
-        'author_id'   => null,
-        'circle_id'   => null,
-        'user_id'     => null,
-        'post_id'     => null,
-        'goal_id'     => null,
-        'filter_goal' => null,
-        'type'        => null,
+        'author_id'     => null,
+        'circle_id'     => null,
+        'user_id'       => null,
+        'post_id'       => null,
+        'goal_id'       => null,
+        'key_result_id' => null,
+        'filter_goal'   => null,
+        'type'          => null,
     ];
 
     public $actsAs = [
@@ -360,7 +361,12 @@ class Post extends AppModel
             $page = $params['named']['page'];
             unset($params['named']['page']);
         }
-
+        // このパラメータが指定された場合、post_time_before より前の投稿のみを読み込む
+        // 実際の値は投稿の並び順によって created か modified になる
+        $post_time_before = null;
+        if (isset($params['named']['post_time_before']) && !empty($params['named']['post_time_before'])) {
+            $post_time_before = $params['named']['post_time_before'];
+        }
         $p_list = [];
         $org_param_exists = false;
         if ($params) {
@@ -385,7 +391,6 @@ class Post extends AppModel
             $p_list = array_merge($p_list, $this->PostShareCircle->getMyCirclePostList($start, $end));
             //フォローorコラボorマイメンバーのゴール投稿を取得
             $p_list = array_merge($p_list, $this->getRelatedPostList($start, $end));
-
         }
         //パラメータ指定あり
         else {
@@ -421,6 +426,11 @@ class Post extends AppModel
                 ) {
                     $p_list = $this->orgParams['post_id'];
                 }
+            }
+            //特定のKR指定
+            elseif ($this->orgParams['key_result_id']) {
+                $p_list = $this->getKrPostList($this->orgParams['key_result_id'], self::TYPE_ACTION, "modified", "desc",
+                                               $start, $end);
             }
             //特定ゴール指定
             elseif ($this->orgParams['goal_id']) {
@@ -489,6 +499,11 @@ class Post extends AppModel
             // 独自パラメータ無しの場合（ホームフィードの場合）
             if (!$org_param_exists) {
                 $post_options['order'] = ['Post.created' => 'desc'];
+            }
+            // 読み込む投稿の更新時間が指定されている場合
+            if ($post_time_before) {
+                $order_col = key($post_options['order']);
+                $post_options['conditions']["$order_col <="] = $post_time_before;
             }
             $post_list = $this->find('list', $post_options);
         }
@@ -668,6 +683,25 @@ class Post extends AppModel
         }
         if ($this->orgParams['author_id']) {
             $options['conditions']['user_id'] = $this->orgParams['author_id'];
+        }
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
+    public function getKrPostList($key_result_id, $type, $order = "modified", $order_direction = "desc", $start = null, $end = null)
+    {
+        //まずKRのアクション一覧を取り出す
+        $action_ids = $this->ActionResult->getActionIdsByKrId($key_result_id);
+        $options = [
+            'conditions' => [
+                'action_result_id' => $action_ids,
+                'type'             => $type,
+            ],
+            'order'      => [$order => $order_direction],
+            'fields'     => ['id'],
+        ];
+        if ($start && $end) {
+            $options['conditions']['modified BETWEEN ? AND ?'] = [$start, $end];
         }
         $res = $this->find('list', $options);
         return $res;

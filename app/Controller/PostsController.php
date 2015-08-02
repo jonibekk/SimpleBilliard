@@ -273,7 +273,6 @@ class PostsController extends AppController
 
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
-
         $response = $this->render('Feed/action_posts');
         $html = $response->__toString();
         $result = array(
@@ -319,9 +318,11 @@ class PostsController extends AppController
             $elm_path = "cube_img_blocks";
         }
         // 投稿一覧取得
-        $posts = $this->Post->get($page_num, $item_num, $start, $end, $param_named);
+        $posts = $this->Post->get($page_num, $item_num, $start, $end, $this->request->params);
         $this->set('posts', $posts);
         $this->set('long_text', false);
+        $without_header = viaIsSet($param_named['without_header']);
+        $this->set(compact('without_header'));
 
         // エレメントの出力を変数に格納する
         // htmlレンダリング結果
