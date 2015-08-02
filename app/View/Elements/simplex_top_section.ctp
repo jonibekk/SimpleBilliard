@@ -20,7 +20,7 @@
                            [
                                'class'         => 'lazy profile-user-avator',
                                'data-original' => $this->Upload->uploadUrl($user['User'], 'User.photo',
-                                                                           ['style' => 'large']),
+                                                                           ['style' => 'x_large']),
                            ]
         )
         ?>
