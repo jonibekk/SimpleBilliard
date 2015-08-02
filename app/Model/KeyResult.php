@@ -219,6 +219,7 @@ class KeyResult extends AppModel
         if ($with_action) {
             $options['contain']['ActionResult'] = [
                 'limit' => $action_limit,
+                'order'=>['ActionResult.created desc'],
                 'Post'  => [
                     'fields' => [
                         'Post.id'

@@ -12,7 +12,7 @@
                 <div>
 
                     <?=
-                    $this->Upload->uploadImage($follower['User'], 'User.photo', ['style' => 'small'],
+                    $this->Upload->uploadImage($follower['User'], 'User.photo', ['style' => 'medium_large'],
                                                ['class' => 'goal-detail-follower-avator'])
                     ?>
                     <div class="goal-detail-follower-info" style="padding:3px;">
