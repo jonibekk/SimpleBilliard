@@ -12,7 +12,7 @@
                class="link-dark-gray">
                 <div>
                     <?=
-                    $this->Upload->uploadImage($member['User'], 'User.photo', ['style' => 'small'],
+                    $this->Upload->uploadImage($member['User'], 'User.photo', ['style' => 'medium_large'],
                                                ['class' => 'goal-detail-member-avator',])
                     ?>
                     <div class="goal-detail-member-info">

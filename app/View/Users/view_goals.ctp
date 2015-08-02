@@ -17,7 +17,7 @@
 <!-- START app/View/Users/view_goals.ctp -->
 <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default">
-        <?= $this->element('simplex_top_section') ?>
+        <?= $this->element('User/simplex_top_section') ?>
         <div class="panel-body view-goals-panel">
             <div class="profile-goals-select-wrap btn-group" role="group">
                 <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user['User']['id']]) ?>"

@@ -12,7 +12,7 @@
  * @var                    $like_count
  */
 ?>
-<!-- START app/View/Elements/simplex_top_section.ctp -->
+<!-- START app/View/Elements/User/simplex_top_section.ctp -->
 <div class="panel-body profile-user-upper-panel">
     <div class="profile-user-avator-wrap">
         <?=
@@ -20,7 +20,7 @@
                            [
                                'class'         => 'lazy profile-user-avator',
                                'data-original' => $this->Upload->uploadUrl($user['User'], 'User.photo',
-                                                                           ['style' => 'large']),
+                                                                           ['style' => 'x_large']),
                            ]
         )
         ?>
@@ -126,4 +126,4 @@
         </p>
     </a>
 </div>
-<!-- END app/View/Elements/simplex_top_section.ctp -->
+<!-- END app/View/Elements/User/simplex_top_section.ctp -->
