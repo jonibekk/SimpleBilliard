@@ -603,43 +603,9 @@ class PostsController extends AppController
 
     function feed()
     {
-        $params = $this->request->params;
-        $this->_setMyCircle();
-        $this->_setCurrentCircle();
-        $this->_setFeedMoreReadUrl();
-
-        if (isset($this->request->params['circle_id']) ||
-            isset($this->request->params['post_id'])
-        ) {
-            $this->set('long_text', true);
-        }
-        else {
-            $this->set('long_text', false);
-        }
-
-        $feed_filter = null;
-        $circle_id = viaIsSet($this->request->params['circle_id']);
-        $user_status = $this->_userCircleStatus($this->request->params['circle_id']);
-
-        $circle_status = $this->Post->Circle->CircleMember->show_hide_stats($this->Auth->user('id'),
-                                                                            $this->request->params['circle_id']);
-
+        $this->_setCircleCommonVariables();
         $this->_setViewValOnRightColumn();
-        //サークル指定の場合はメンバーリスト取得
-        if (isset($this->request->params['circle_id']) && !empty($this->request->params['circle_id'])) {
-            $circle_member_count = $this->User->CircleMember->getActiveMemberCount($this->request->params['circle_id']);
-        }
-        //抽出条件
-        if ($circle_id) {
-            $feed_filter = 'circle';
-        }
-        elseif (isset($this->request->params['named']['filter_goal'])) {
-            $feed_filter = 'goal';
-        }
 
-        $this->set('common_form_type', 'post');
-        $this->set(compact('feed_filter', 'circle_member_count', 'circle_id', 'user_status', 'params',
-                           'circle_status'));
         try {
             $this->set(['posts' => $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null,
                                                     $this->request->params)]);
@@ -654,6 +620,54 @@ class PostsController extends AppController
             $this->Pnotify->outError($e->getMessage());
             $this->redirect($this->referer());
         }
+    }
+
+    public function attached_file_list()
+    {
+        $this->_setCircleCommonVariables();
+        $this->_setViewValOnRightColumn();
+
+    }
+
+    function _setCircleCommonVariables()
+    {
+        $params = $this->request->params;
+        $params = array_merge($params, $params['named']);
+        $this->_setMyCircle();
+        $this->_setCurrentCircle();
+        $this->_setFeedMoreReadUrl();
+
+        if (isset($params['circle_id']) ||
+            isset($params['post_id'])
+        ) {
+            $this->set('long_text', true);
+        }
+        else {
+            $this->set('long_text', false);
+        }
+
+        $feed_filter = null;
+        $circle_id = viaIsSet($params['circle_id']);
+        $user_status = $this->_userCircleStatus($params['circle_id']);
+
+        $circle_status = $this->Post->Circle->CircleMember->show_hide_stats($this->Auth->user('id'),
+                                                                            $params['circle_id']);
+
+        //サークル指定の場合はメンバーリスト取得
+        if (isset($params['circle_id']) && !empty($params['circle_id'])) {
+            $circle_member_count = $this->User->CircleMember->getActiveMemberCount($params['circle_id']);
+        }
+        //抽出条件
+        if ($circle_id) {
+            $feed_filter = 'circle';
+        }
+        elseif (isset($params['filter_goal'])) {
+            $feed_filter = 'goal';
+        }
+
+        $this->set('common_form_type', 'post');
+        $this->set(compact('feed_filter', 'circle_member_count', 'circle_id', 'user_status', 'params',
+                           'circle_status'));
     }
 
     public function ajax_get_share_circles_users_modal()

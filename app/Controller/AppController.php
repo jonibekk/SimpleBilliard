@@ -317,14 +317,20 @@ class AppController extends Controller
     public function _setCurrentCircle()
     {
         $current_circle = null;
-        if (isset($this->request->params['circle_id']) && !empty($this->request->params['circle_id'])) {
+        if (isset($this->request->params['named'])) {
+            $params = array_merge($this->request->params, $this->request->params['named']);
+        }
+        else {
+            $params = $this->request->params;
+        }
+        if (isset($params['circle_id']) && !empty($params['circle_id'])) {
 
-            $is_secret = $this->User->CircleMember->Circle->isSecret($this->request->params['circle_id']);
-            $is_exists_circle = $this->User->CircleMember->Circle->isBelongCurrentTeam($this->request->params['circle_id'],
+            $is_secret = $this->User->CircleMember->Circle->isSecret($params['circle_id']);
+            $is_exists_circle = $this->User->CircleMember->Circle->isBelongCurrentTeam($params['circle_id'],
                                                                                        $this->Session->read('current_team_id'));
-            $is_belong_circle_member = $this->User->CircleMember->isBelong($this->request->params['circle_id']);
+            $is_belong_circle_member = $this->User->CircleMember->isBelong($params['circle_id']);
             if ($is_exists_circle && (!$is_secret || ($is_secret && $is_belong_circle_member))) {
-                $current_circle = $this->User->CircleMember->Circle->findById($this->request->params['circle_id']);
+                $current_circle = $this->User->CircleMember->Circle->findById($params['circle_id']);
             }
         }
         $this->set('current_circle', $current_circle);
@@ -619,7 +625,6 @@ class AppController extends Controller
         $new_notify_cnt = $this->NotifyBiz->getCountNewNotification();
         $this->set(compact("new_notify_cnt"));
     }
-
 
     function _getRequiredParam($name)
     {
