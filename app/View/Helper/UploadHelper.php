@@ -17,6 +17,15 @@ class UploadHelper extends AppHelper
     public $cache = [];
     public $helpers = array('Html');
 
+    public $office_exts = [
+        'xls',
+        'doc',
+        'ppt',
+        'xlsx',
+        'docx',
+        'pptx',
+    ];
+
     public function uploadImage($data, $path, $options = array(), $htmlOptions = array())
     {
         $options += array('urlize' => false);
@@ -28,6 +37,28 @@ class UploadHelper extends AppHelper
     {
         $urlOptions += array('style' => 'original', 'urlize' => true);
         return $this->Html->link($title, $this->uploadUrl($data, $field, $urlOptions), $htmlOptions);
+    }
+
+    /**
+     * $open_type: "viewer" or "download"
+     *
+     * @param array  $data
+     * @param string $open_type
+     *
+     * @return null|string
+     */
+    public function attachedFileUrl($data, $open_type = "viewer")
+    {
+        if (isset($data['AttachedFile'])) {
+            $data = $data['AttachedFile'];
+        }
+
+        $url = $this->uploadUrl($data, 'AttachedFile.attached');
+        //officeファイルの場合は、office viewerのリンクに変換
+        if ($open_type == "viewer" && in_array($data['file_ext'], $this->office_exts)) {
+            $url = OOV_BASE_URL . urlencode($url);
+        }
+        return $url;
     }
 
     public function uploadUrl($data, $field, $options = array())
