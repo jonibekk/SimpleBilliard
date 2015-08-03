@@ -362,10 +362,7 @@ class UploadBehavior extends ModelBehavior
 
     private function _resize($srcFile, $destFile, $geometry, $quality = 75, $alpha = false, $type)
     {
-        copy($srcFile, $destFile);
-        @chmod($destFile, 0777);
         $pathinfo = UploadBehavior::_pathinfo($srcFile);
-
         // 画像の種類を判別する（ファイルの拡張子と実際の種類が異なる場合があるため）
         $imageInfo = getimagesize($srcFile);
         $imageType = $pathinfo['extension'];
@@ -378,6 +375,11 @@ class UploadBehavior extends ModelBehavior
         elseif (strpos($imageInfo['mime'], 'gif') !== false) {
             $imageType = 'gif';
         }
+        else {
+            return false;
+        }
+        copy($srcFile, $destFile);
+        @chmod($destFile, 0777);
 
         $src = null;
         $createHandler = null;

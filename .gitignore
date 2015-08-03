@@ -4,6 +4,7 @@
 /Plugin
 Berksfile
 Berksfile.lock
+/app/tmp/attached_file/*
 /app/tmp/cache/*
 /app/tmp/logs/*
 /app/tmp/pear/*

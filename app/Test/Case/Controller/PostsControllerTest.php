@@ -4,7 +4,6 @@ App::uses('PostsController', 'Controller');
 /**
  * PostsController Test Case
  * @method testAction($url = '', $options = array()) ControllerTestCase::_testAction
-
  */
 class PostsControllerTest extends ControllerTestCase
 {
@@ -15,6 +14,7 @@ class PostsControllerTest extends ControllerTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.attached_file',
         'app.goal_category',
         'app.evaluate_term',
         'app.action_result',
@@ -841,12 +841,40 @@ class PostsControllerTest extends ControllerTestCase
         $this->_getPostsCommonMock();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $res = $this->testAction('/posts/ajax_get_user_page_post_feed/user_id:2/month_index:1/page:1', ['method' => 'GET']);
+        $res = $this->testAction('/posts/ajax_get_user_page_post_feed/user_id:2/month_index:1/page:1',
+                                 ['method' => 'GET']);
         $data = json_decode($res, true);
         $this->assertArrayHasKey('html', $data);
         $this->assertArrayHasKey('count', $data);
         $this->assertArrayHasKey('page_item_num', $data);
         $this->assertArrayHasKey('start', $data);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxUploadFile()
+    {
+        $this->_getPostsCommonMock();
+        $_FILES = ['file' => []];
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $res = $this->testAction('/posts/ajax_upload_file/', ['method' => 'POST']);
+        $data = json_decode($res, true);
+        $this->assertArrayHasKey('error', $data);
+        $this->assertArrayHasKey('msg', $data);
+        $this->assertArrayHasKey('id', $data);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxRemoveFile()
+    {
+        $this->_getPostsCommonMock();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $res = $this->testAction('/posts/ajax_remove_file/', ['method' => 'POST', 'data' => ['AttachedFile' => ['file_id' => 'xxx']]]);
+        $data = json_decode($res, true);
+        $this->assertArrayHasKey('error', $data);
+        $this->assertArrayHasKey('msg', $data);
+        $this->assertArrayHasKey('id', $data);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 

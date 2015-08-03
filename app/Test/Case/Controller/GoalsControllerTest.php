@@ -54,6 +54,7 @@ class GoalsControllerTest extends ControllerTestCase
         'app.key_result',
         'app.collaborator',
         'app.approval_history',
+        'app.action_result_file',
     );
 
     public $goal_id = null;
@@ -581,6 +582,31 @@ class GoalsControllerTest extends ControllerTestCase
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
         $data = [
+        ];
+        $this->testAction('/goals/add_completed_action/goal_id:1', ['method' => 'POST', 'data' => $data]);
+    }
+
+    function testAddCompletedActionFailFileCleanup()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $AttachedFile = $this->getMockForModel('AttachedFile', array('saveRelatedFiles', 'deleteAllRelatedFiles'));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $AttachedFile->expects($this->any())
+                     ->method('saveRelatedFiles')
+                     ->will($this->returnValue(false));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $AttachedFile->expects($this->any())
+                     ->method('deleteAllRelatedFiles')
+                     ->will($this->returnValue(true));
+        $Goals->Goal->Post->PostFile->AttachedFile = $AttachedFile;
+        $this->_setDefault($Goals);
+        $data = [
+            'ActionResult' => [
+                'name'          => 'test',
+                'key_result_id' => 0,
+                'note'          => 'test',
+                'socket_id'     => 'hogehage'
+            ]
         ];
         $this->testAction('/goals/add_completed_action/goal_id:1', ['method' => 'POST', 'data' => $data]);
     }
