@@ -46,14 +46,13 @@ message_app.controller(
 
         // pusherメッセージ内容を受け取る
         var pusher = new Pusher(cake.pusher.key);
-        // TODO: Uniqueチャンネル名に指定
-        var test_channel = pusher.subscribe('test-channel');
+        var test_channel = pusher.subscribe('message-channel-' + $stateParams.post_id);
         test_channel.bind('new_message', function (data) {
             // 既読処理
             var read_comment_id = data.Comment.id;
             var request = {
                 method: 'GET',
-                url: cake.url.ak + read_comment_id
+                url: cake.url.ak + $stateParams.post_id + '/' + read_comment_id
             };
             $http(request).then(function(response) {
             });
@@ -75,8 +74,10 @@ message_app.controller(
                 method: 'GET',
                 url: cake.url.ai + $stateParams.post_id + '/' +$scope.message
             };
-            $http(request).then(function(response) {});
-            $scope.message = "";
+            $http(request).then(function(response) {
+                message_scroll($scope.message_list.length);
+                $scope.message = "";
+            });
         };
 
         var limit = 10;
