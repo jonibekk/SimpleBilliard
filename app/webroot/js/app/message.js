@@ -45,17 +45,6 @@ message_app.config([
                 url: "/:post_id",
                 templateUrl: "/template/message_detail.html",
                 resolve: {
-                    /*
-                    getMessage: ['$stateParams', '$http', function ($stateParams, $http) {
-                        var request = {
-                            method: 'GET',
-                            url: cake.url.ah + $stateParams.post_id
-                        };
-                        return $http(request).then(function (response) {
-                            return response.data;
-                        });
-                    }],
-                    */
                     getPostDetail: ['$stateParams', '$http', function ($stateParams, $http) {
                         var request = {
                             method: 'GET',
