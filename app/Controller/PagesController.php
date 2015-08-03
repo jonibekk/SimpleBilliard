@@ -59,6 +59,8 @@ class PagesController extends AppController
             $this->Session->delete('add_new_mode');
             $this->set('mode_view', MODE_VIEW_TUTORIAL);
         }
+        $AttachedFile = ClassRegistry::init('AttachedFile');
+        $this->set('attached_files', $AttachedFile->find('all', ['contain' => ['User']]));
 
         // ビュー変数のセット
         $this->_setMyCircle();

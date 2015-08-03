@@ -14,6 +14,15 @@
  */
 $without_header = isset($without_header) ? $without_header : false;
 ?>
+<div class="panel panel-default">
+    <?php foreach ($attached_files as $file): ?>
+        <div class="panel-body pt_10px plr_11px pb_8px">
+            <?= $this->element('Feed/attached_file_item',
+                               ['data' => $file, 'page_type' => 'file_list', 'post_id' => 1]) ?>
+        </div>
+    <?php endforeach ?>
+
+</div>
 <?php if (!empty($posts)): ?>
     <!-- START app/View/Elements/Feed/posts.ctp -->
     <?php foreach ($posts as $post_key => $post): ?>
@@ -300,8 +309,16 @@ $without_header = isset($without_header) ? $without_header : false;
                     </div>
                 <?php endif; ?>
 
-
-
+                <div class="col col-xxs-12">
+                    <?php foreach ($attached_files as $file): ?>
+                        <div class="panel panel-default" style="background-color: #f5f5f5;">
+                            <div class="panel-body pt_10px plr_11px pb_8px">
+                                <?= $this->element('Feed/attached_file_item',
+                                                   ['data' => $file, 'page_type' => 'feed', 'post_id' => 1]) ?>
+                            </div>
+                        </div>
+                    <?php endforeach ?>
+                </div>
                 <?php if ($post['Post']['type'] == Post::TYPE_ACTION && isset($post['ActionResult']['KeyResult']['name'])): ?>
                     <div class="col col-xxs-12 pt_6px feed-contents">
                         <i class="fa fa-key disp_i"></i>&nbsp;<?= h($post['ActionResult']['KeyResult']['name']) ?>

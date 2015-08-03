@@ -30,10 +30,23 @@ class UploadHelper extends AppHelper
         'xls'  => 'fa-file-excel-o file-excel-icon',
         'doc'  => 'fa-file-word-o file-word-icon',
         'ppt'  => 'fa-file-powerpoint-o file-powerpoint-icon',
-        'pdf'  => 'fa-file-pdf-o',
+        'pdf'  => 'fa-file-pdf-o file-other-icon',
         'xlsx' => 'fa-file-excel-o file-excel-icon',
         'docx' => 'fa-file-word-o file-word-icon',
         'pptx' => 'fa-file-powerpoint-o file-powerpoint-icon',
+    ];
+    public $can_preview_exts = [
+        'xls',
+        'doc',
+        'ppt',
+        'xlsx',
+        'docx',
+        'pptx',
+        'pdf',
+        'jpeg',
+        'png',
+        'jpg',
+        'gif',
     ];
 
     public function uploadImage($data, $path, $options = array(), $htmlOptions = array())
@@ -80,7 +93,19 @@ class UploadHelper extends AppHelper
         if ($class = viaIsSet($this->file_icons[$ext])) {
             return $class;
         }
-        return 'fa-file-o';
+        return 'fa-file-o file-other-icon';
+    }
+
+    public function isCanPreview($data)
+    {
+        if (isset($data['AttachedFile'])) {
+            $data = $data['AttachedFile'];
+        }
+        $ext = $data['file_ext'];
+        if (in_array($ext, $this->can_preview_exts)) {
+            return true;
+        }
+        return false;
     }
 
     public function uploadUrl($data, $field, $options = array())
