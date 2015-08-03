@@ -27,13 +27,13 @@ class UploadHelper extends AppHelper
     ];
 
     public $file_icons = [
-        'xls'  => 'fa-file-excel-o',
-        'doc'  => 'fa-file-word-o',
-        'ppt'  => 'fa-file-powerpoint-o',
+        'xls'  => 'fa-file-excel-o file-excel-icon',
+        'doc'  => 'fa-file-word-o file-word-icon',
+        'ppt'  => 'fa-file-powerpoint-o file-powerpoint-icon',
         'pdf'  => 'fa-file-pdf-o',
-        'xlsx' => 'fa-file-excel-o',
-        'docx' => 'fa-file-word-o',
-        'pptx' => 'fa-file-powerpoint-o',
+        'xlsx' => 'fa-file-excel-o file-excel-icon',
+        'docx' => 'fa-file-word-o file-word-icon',
+        'pptx' => 'fa-file-powerpoint-o file-powerpoint-icon',
     ];
 
     public function uploadImage($data, $path, $options = array(), $htmlOptions = array())
