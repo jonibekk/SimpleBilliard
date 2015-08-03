@@ -3045,7 +3045,7 @@ $(document).ready(function () {
         dictInvalidFileType: cake.message.validate.dropzone_invalid_file_type,
         clickable: '#' + $uploadFileAttachButton.attr('id'),
         previewTemplate: previewTemplateDefault,
-        thumbnailWidth: 240,
+        thumbnailWidth: null,
         thumbnailHeight: 240,
         // ファイルがドロップされた時の処理
         addedfile: function (file) {
