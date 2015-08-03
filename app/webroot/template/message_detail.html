@@ -2,8 +2,12 @@
     <div class="panel-heading" style="background-color: #f5f5f5;">
         <div class="row font_14px">
             <span class=""> {{post_detail.User.display_username}}、他{{post_detail.PostShareUser.length}}人</span>
-            <span class="plr_11px font_brownRed"><i
-                class="fa fa-user"></i> {{post_detail.PostShareUser.length + 1}}</span>
+            <span class="plr_11px font_brownRed">
+                <a href="/posts/ajax_get_share_circles_users_modal/post_id:{{post_detail.Post.id}}"
+                   class="modal-ajax-get-share-circles-users">
+                    <i class="fa fa-user"></i> {{post_detail.PostShareUser.length + 1}}
+                </a>
+            </span>
             <span style="float:right;">
                 <button class="team-member-invite-btn">
                     <i class="fa fa-plus-circle team-member-invite-btn-icon"></i>新しいメッセージ
