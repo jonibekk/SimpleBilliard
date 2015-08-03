@@ -26,6 +26,16 @@ class UploadHelper extends AppHelper
         'pptx',
     ];
 
+    public $file_icons = [
+        'xls'  => 'fa-file-excel-o',
+        'doc'  => 'fa-file-word-o',
+        'ppt'  => 'fa-file-powerpoint-o',
+        'pdf'  => 'fa-file-pdf-o',
+        'xlsx' => 'fa-file-excel-o',
+        'docx' => 'fa-file-word-o',
+        'pptx' => 'fa-file-powerpoint-o',
+    ];
+
     public function uploadImage($data, $path, $options = array(), $htmlOptions = array())
     {
         $options += array('urlize' => false);
@@ -59,6 +69,18 @@ class UploadHelper extends AppHelper
             $url = OOV_BASE_URL . urlencode($url);
         }
         return $url;
+    }
+
+    public function getCssOfFileIcon($data)
+    {
+        if (isset($data['AttachedFile'])) {
+            $data = $data['AttachedFile'];
+        }
+        $ext = $data['file_ext'];
+        if ($class = viaIsSet($this->file_icons[$ext])) {
+            return $class;
+        }
+        return 'fa-file-o';
     }
 
     public function uploadUrl($data, $field, $options = array())
