@@ -851,6 +851,33 @@ class PostsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
+    function testAjaxUploadFile()
+    {
+        $this->_getPostsCommonMock();
+        $_FILES = ['file' => []];
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $res = $this->testAction('/posts/ajax_upload_file/', ['method' => 'POST']);
+        $data = json_decode($res, true);
+        $this->assertArrayHasKey('error', $data);
+        $this->assertArrayHasKey('msg', $data);
+        $this->assertArrayHasKey('id', $data);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxRemoveFile()
+    {
+        $this->_getPostsCommonMock();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $res = $this->testAction('/posts/ajax_remove_file/', ['method' => 'POST', 'data' => ['AttachedFile' => ['file_id' => 'xxx']]]);
+        $data = json_decode($res, true);
+        $this->assertArrayHasKey('error', $data);
+        $this->assertArrayHasKey('msg', $data);
+        $this->assertArrayHasKey('id', $data);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
     /**
      * testDelete method
      *
