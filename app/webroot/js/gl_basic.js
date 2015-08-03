@@ -3188,7 +3188,7 @@ $(document).ready(function () {
      *   afterRemoveFile: function  コールバック関数
      *   afterSuccess: function   コールバック関数
      * }
-     * dzOptions {
+     * dzOptions: object {
      *    ...   Dropzone のオプション（デフォルトの設定を上書きする場合に指定）
      * }
      */
