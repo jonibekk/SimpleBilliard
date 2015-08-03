@@ -79,21 +79,23 @@ message_app.controller(
             $scope.message = "";
         };
 
-
+        var limit = 10;
+        var page_num = 1;
         $scope.loadMore = function () {
             if (document.getElementById("message_box").scrollTop === 0) {
                 var request = {
                     method: 'GET',
-                    url: cake.url.ah + $stateParams.post_id
+                    url: cake.url.ah + $stateParams.post_id + '/' + limit + '/' + page_num
                 };
                 $http(request).then(function (response) {
                     angular.forEach(response.data.message_list, function (val) {
                         this.push(val);
                     }, $scope.message_list);
-                    message_scroll(current_id);
+                    if (response.data.message_list.length > 0) {
+                        message_scroll(current_id);
+                    }
+                    page_num = page_num + 1;
                 });
             }
         }
-
-
     });
