@@ -17,37 +17,37 @@ class UploadHelper extends AppHelper
     public $cache = [];
     public $helpers = array('Html');
 
-    public $office_exts = [
-        'xls',
-        'doc',
-        'ppt',
-        'xlsx',
-        'docx',
-        'pptx',
+    private $ext_settings = [
+        'xls'  => [
+            'viewer'     => 'office_viewer',
+            'icon_class' => 'fa-file-excel-o file-excel-icon',
+        ],
+        'doc'  => [
+            'viewer'     => 'office_viewer',
+            'icon_class' => 'fa-file-word-o file-word-icon',
+        ],
+        'ppt'  => [
+            'viewer'     => 'office_viewer',
+            'icon_class' => 'fa-file-powerpoint-o file-powerpoint-icon',
+        ],
+        'xlsx' => [
+            'viewer'     => 'office_viewer',
+            'icon_class' => 'fa-file-excel-o file-excel-icon',
+        ],
+        'docx' => [
+            'viewer'     => 'office_viewer',
+            'icon_class' => 'fa-file-word-o file-word-icon',
+        ],
+        'pptx' => [
+            'viewer'     => 'office_viewer',
+            'icon_class' => 'fa-file-powerpoint-o file-powerpoint-icon',
+        ],
+        'pdf'  => [
+            'viewer'     => 'normal',
+            'icon_class' => 'fa-file-pdf-o file-other-icon',
+        ]
     ];
 
-    public $file_icons = [
-        'xls'  => 'fa-file-excel-o file-excel-icon',
-        'doc'  => 'fa-file-word-o file-word-icon',
-        'ppt'  => 'fa-file-powerpoint-o file-powerpoint-icon',
-        'pdf'  => 'fa-file-pdf-o file-other-icon',
-        'xlsx' => 'fa-file-excel-o file-excel-icon',
-        'docx' => 'fa-file-word-o file-word-icon',
-        'pptx' => 'fa-file-powerpoint-o file-powerpoint-icon',
-    ];
-    public $can_preview_exts = [
-        'xls',
-        'doc',
-        'ppt',
-        'xlsx',
-        'docx',
-        'pptx',
-        'pdf',
-        'jpeg',
-        'png',
-        'jpg',
-        'gif',
-    ];
 
     public function uploadImage($data, $path, $options = array(), $htmlOptions = array())
     {
@@ -78,7 +78,7 @@ class UploadHelper extends AppHelper
 
         $url = $this->uploadUrl($data, 'AttachedFile.attached');
         //officeファイルの場合は、office viewerのリンクに変換
-        if ($open_type == "viewer" && in_array($data['file_ext'], $this->office_exts)) {
+        if ($open_type == "viewer" && viaIsSet($this->ext_settings[$data['file_ext']]['viewer']) == 'office_viewer') {
             $url = OOV_BASE_URL . urlencode($url);
         }
         return $url;
@@ -90,7 +90,7 @@ class UploadHelper extends AppHelper
             $data = $data['AttachedFile'];
         }
         $ext = $data['file_ext'];
-        if ($class = viaIsSet($this->file_icons[$ext])) {
+        if ($class = viaIsSet($this->ext_settings[$ext]['icon_class'])) {
             return $class;
         }
         return 'fa-file-o file-other-icon';
@@ -102,7 +102,7 @@ class UploadHelper extends AppHelper
             $data = $data['AttachedFile'];
         }
         $ext = $data['file_ext'];
-        if (in_array($ext, $this->can_preview_exts)) {
+        if (viaIsSet($this->ext_settings[$ext]['viewer'])) {
             return true;
         }
         return false;
