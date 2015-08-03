@@ -21,7 +21,7 @@ $this->Form->create('Comment', [
         'wrapInput' => '',
         'class'     => 'form-control'
     ],
-    'id'              => "CommentAjaxGetNewCommentForm_{$post_id}",
+    'id'              => "{$prefix}CommentAjaxGetNewCommentForm_{$post_id}",
     'class'           => 'form-feed-notify ajax-add-comment',
     'type'            => 'file',
     'novalidate'      => true,
@@ -45,7 +45,7 @@ $this->Form->input('body', [
     'required'    => 'false'
 ])
 ?>
-<div id="CommentUploadFilePreview_<?= $post_id ?>" class="comment-upload-file-preview"></div>
+<div id="<?= $prefix ?>CommentUploadFilePreview_<?= $post_id ?>" class="comment-upload-file-preview"></div>
 <?php $this->Form->unlockField('file_id') ?>
 
 <div class="form-group" id="<?= $prefix ?>CommentFormImage_<?= $post_id ?>"
@@ -64,9 +64,12 @@ $this->Form->input('body', [
 <?= $this->Form->hidden('post_id', ['value' => $post_id]) ?>
 <div class="comment-btn" id="<?= $prefix ?>Comment_<?= $post_id ?>">
     <div>
-        <a href="#" class="link-red new-comment-add-pic upload-file-attach-button" data-preview-area-id="CommentUploadFilePreview_<?= $post_id ?>" data-form-id="CommentAjaxGetNewCommentForm_<?= $post_id ?>">
+        <a href="#" class="link-red new-comment-add-pic comment-file-attach-button"
+           id="CommentUploadFileButton_<?= $post_id ?>"
+           data-preview-container-id="CommentUploadFilePreview_<?= $post_id ?>"
+           data-form-id="CommentAjaxGetNewCommentForm_<?= $post_id ?>">
             <button type="button" class="btn pull-left photo-up-btn"><i
-                    class="fa fa-camera post-camera-icon"></i>
+                    class="fa fa-paperclip post-camera-icon"></i>
             </button>
         </a>
     </div>

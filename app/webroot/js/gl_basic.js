@@ -567,6 +567,7 @@ function getAjaxFormReplaceElm() {
     var click_target_id = $obj.attr("click-target-id");
     var ajax_url = $obj.attr("ajax-url");
     var tmp_target_height = $obj.attr("tmp-target-height");
+    var post_id = $obj.attr("post-id");
     replace_elm.children().toggle();
     replace_elm.height(tmp_target_height + "px");
     //noinspection JSJQueryEfficiency
@@ -586,6 +587,19 @@ function getAjaxFormReplaceElm() {
                     validatorCallback(e)
                 });
                 $('#' + click_target_id).trigger('click').focus();
+
+                // コメントフォームをドラッグ＆ドロップ対象エリアにする
+                var commentParams = {
+                    formID: function () {
+                        return $(this).attr('data-form-id');
+                    },
+                    previewContainerID: function () {
+                        return $(this).attr('data-preview-container-id');
+                    }
+                };
+                var $uploadFileForm = $(document).data('uploadFileForm');
+                $uploadFileForm.registerDragDropArea('#CommentBlock_' + post_id, commentParams);
+                $uploadFileForm.registerAttachFileButton('#CommentUploadFileButton_' + post_id, commentParams);
             }
         }
     });
@@ -1150,24 +1164,6 @@ function evTargetShow() {
     return false;
 }
 
-//noinspection JSUnresolvedVariable
-$(document).on("click", ".target-show-target-click", evTargetShowTargetClick);
-
-function evTargetShowTargetClick() {
-    attrUndefinedCheck(this, 'target-id');
-    attrUndefinedCheck(this, 'click-target-id');
-    var $obj = $(this);
-
-    var click_target_id = $obj.attr("click-target-id");
-    $("#" + click_target_id).trigger('click');
-    var target = $obj.attr("target-id");
-    var target = target.split(',');
-    jQuery.each(target, function () {
-        $("#" + this).show();
-    });
-    return false;
-}
-
 function disabledAllInput(selector) {
     $(selector).find("input,select,textarea").attr('disabled', 'disabled');
 }
@@ -1619,7 +1615,7 @@ $(document).ready(function () {
         initSelection: cake.data.l,
         formatSelection: format,
         formatResult: format,
-        dropdownCssClass: 's2-post-dropdown',
+        dropdownCssClass: 's2-post-dropdown aaaa',
         escapeMarkup: function (m) {
             return m;
         },
@@ -2974,21 +2970,27 @@ $(document).ready(function () {
 
 
     /**
-     * ファイルのドラッグ & ドロップ
+     * ファイルのドラッグ & ドロップ 設定
      *
-     * ファイルをドロップさせたいエリアの要素に対して以下の属性を設定する
+     * 設定例）
+     * HTML側:
+     *   <div id="DragDropArea">
+     *      <form id="PostForm">
+     *         <div id="PreviewArea></div>
+     *         <!-- form の最後に data['file_id'][] の名前で hidden が追加される -->
+     *      </form>
+     *      <a href="#" id="UploadButton">ファイルを添付</a>
+     *   </div>
+     *   <?= $this->element('file_upload_form') ?>
      *
-     * class=upload-file-drop-area: このクラスを追加した要素がドロップ可能エリアになる
-     * data-preview-area-id: アップロードしたファイルのプレビューを表示するコンテナ要素ID
-     * data-form-id: アップロードしたファイルの識別IDを hidden で追加するフォーム
-     *
-     * 例）
-     * <div class="upload-file-drop-area" data-preview-area-id="PreviewArea" data-form-id="PostForm">
-     *    <form id="PostForm">
-     *        <div id="PreviewArea></div>
-     *        <!-- form の最後に data['file_id'][] の名前で hidden が追加される -->
-     *    </form>
-     * </div>
+     * JavaScript側:
+     *   var postParams = {
+     *     formID: 'PostForm',
+     *     previewContainerID: 'PreviewArea'
+     *   };
+     *   var $uploadFileForm = $(document).data('uploadFileForm');
+     *   $uploadFileForm.registerDragDropArea('#DragDropArea', postParams);
+     *   $uploadFileForm.registerAttachFileButton('#UploadButton', postParams);
      *
      */
     // ファイルアップロード用フォーム
@@ -2998,8 +3000,8 @@ $(document).ready(function () {
     // 手動ファイル添付用ボタン
     var $uploadFileAttachButton = $('#UploadFileAttachButton');
     // プレビューエリアのテンプレート
-    var previewTemplate =
-        '<div class="dz-preview dz-file-preview">' +
+    var previewTemplateDefault =
+        '<div class="dz-preview dz-default-preview">' +
         '  <div class="dz-details">' +
         '    <a href="#" class="pull-right font_lightgray" data-dz-remove><i class="fa fa-times"></i></a>' +
         '    <div class="dz-thumb-container pull-left"><img class="dz-thumb" data-dz-thumbnail /></div>' +
@@ -3010,31 +3012,52 @@ $(document).ready(function () {
         '    <div class="progress-bar progress-bar-info" role="progressbar"  data-dz-uploadprogress></div>' +
         '  </div>' +
         '</div>';
+
+    // アクションのメイン画像表示部分のテンプレート
+    var previewTemplateActionImage =
+        '<div class="dz-preview dz-action-photo-preview action-photo-preview upload-file-attach-button">' +
+        '  <div class="dz-action-photo-details">' +
+        '    <div class="dz-action-photo-thumb-container pull-left"><img class="dz-action-photo-thumb" data-dz-thumbnail /></div>' +
+        '  </div>' +
+        '  <div class="dz-action-photo-progress progress">' +
+        '    <div class="progress-bar progress-bar-info" role="progressbar"  data-dz-uploadprogress></div>' +
+        '  </div>' +
+        '</div>';
+
     Dropzone.autoDiscover = false;
     Dropzone.options.UploadFileForm = {
         paramName: "file",
-        maxFilesize: 2, // MB
+        maxFilesize: 5, // MB
         url: cake.url.upload_file,
         addRemoveLink: true,
         dictFileTooBig: cake.message.validate.dropzone_file_too_big,
+        dictInvalidFileType: cake.message.validate.dropzone_invalid_file_type,
         clickable: '#' + $uploadFileAttachButton.attr('id'),
-        previewTemplate: previewTemplate,
+        previewTemplate: previewTemplateDefault,
+        thumbnailWidth: 240,
+        thumbnailHeight: 240,
         // ファイルがドロップされた時の処理
         addedfile: function (file) {
-            this.previewsContainer = $('#' + $uploadFileForm.data('previewContainerId')).get(0);
+            var previewContainerID = $uploadFileForm.data('previewContainerID');
+            this.previewsContainer = $('#' + previewContainerID).get(0);
+
+            // コールバック関数実行 (beforeAddedFile)
+            $uploadFileForm._callbacks[previewContainerID].beforeAddedFile.call(this, file);
+
+            // Dropzone デフォルトの処理を実行
             this.defaultOptions.addedfile.call(this, file);
         },
         // ファイルがドロップされた後
         accept: function (file, done) {
+            // コールバック関数実行 (beforeAccept)
+            var previewContainerID = $uploadFileForm.data('previewContainerID');
+            $uploadFileForm._callbacks[previewContainerID].beforeAccept.call(this, file);
+
             $uploadFileForm.hide();
             done();
 
-            // callbackAfterAccept にコールバック関数が登録してあれば実行する
-            var callbacks = $uploadFileForm.data('callbacks');
-            var callbackName = $uploadFileForm.data('callbackAfterAccept');
-            if (callbacks.hasOwnProperty(callbackName) && typeof callbacks[callbackName] == 'function') {
-                callbacks[callbackName].call(this);
-            }
+            // コールバック関数実行 (afterAccept)
+            $uploadFileForm._callbacks[previewContainerID].afterAccept.call(this, file);
         },
         // ファイルアップロード完了時
         success: function (file, res) {
@@ -3053,9 +3076,9 @@ $(document).ready(function () {
                 return;
             }
 
-            // 成功
+            // 処理成功
             // submit するフォームに hidden でファイルID追加
-            var $form = $('#' + $uploadFileForm.data('formId'));
+            var $form = $('#' + $uploadFileForm.data('formID'));
             $form.append($('<input type=hidden name=data[file_id][]>').val(res.id).attr('id', res.id));
 
             // プレビューエリアにファイルIDを紐付ける
@@ -3064,8 +3087,12 @@ $(document).ready(function () {
             // プログレスバー消す
             // 一瞬で消えるのを防止するため１秒待つ
             setTimeout(function () {
-                $preview.find('.progress').remove();
+                $preview.find('.progress').css('visibility', 'hidden');
             }, 1000);
+
+            // コールバック関数（afterSuccess）
+            var previewContainerID = $uploadFileForm.data('previewContainerID');
+            $uploadFileForm._callbacks[previewContainerID].afterSuccess.call(this, file);
         },
         // ファイル削除ボタン押下時
         removedfile: function (file) {
@@ -3103,8 +3130,12 @@ $(document).ready(function () {
                     });
                     // ファイルIDの hidden 削除
                     $('#' + $preview.data('file_id')).remove();
-                    // プレビューエリア削除
-                    $preview.fadeOut();
+
+                    $preview.fadeOut('fast', function () {
+                        // コールバック関数実行 (afterRemoveFile)
+                        var previewContainerID = $preview.parent().attr('id');
+                        $uploadFileForm._callbacks[previewContainerID].afterRemoveFile.call(this, file);
+                    });
                 })
                 .fail(function (res) {
                     new PNotify({
@@ -3137,65 +3168,194 @@ $(document).ready(function () {
         }
     };
 
-    // ドロップ可能エリアにドラッグオーバーした時
-    $(document).on('dragover', '.upload-file-drop-area', function () {
-        var $dropArea = $(this);
+    // コールバック関数
+    $uploadFileForm._callbacks = {};
 
-        // プレビュー用エリアのID
-        $uploadFileForm.data('previewContainerId', $dropArea.attr('data-preview-area-id'));
-        // アップロード完了した後、ファイルIDをsubmitするフォーム（投稿フォーム等）
-        $uploadFileForm.data('formId', $dropArea.attr('data-form-id'));
-        // コールバック関数
-        $uploadFileForm.data('callbackAfterAccept', $dropArea.attr('data-callback-after-accept'));
+    // 登録済ドロップエリアとアップロードボタン
+    $uploadFileForm._dragDropArea = {};
+    $uploadFileForm._attacheFileButton = {};
 
-        // ファイルアップロード用フォームのサイズと位置を合わせて表示させる
-        // これがドロップさせるエリアになる
-        var pos = $dropArea.position();
-        $uploadFileForm.appendTo($dropArea).css({
-            width: $dropArea.outerWidth(),
-            height: $dropArea.outerHeight(),
-            top: pos.top,
-            left: pos.left,
-            position: 'absolute'
-        }).addClass('active').show();
-    });
+    /**
+     * ドラッグ＆ドロップ対象エリアを設定する
+     *
+     * selector : string  ドロップエリアにする要素のセレクタ
+     * params: object {
+     *   formID: string|function  *必須 アップロードしたファイルIDを hidden で追加するフォームのID
+     *   previewContainerID: string|function  *必須  プレビューを表示するコンテナ要素のID
+     *   beforeAddedFile: function  コールバック関数
+     *   beforeAccept: function   コールバック関数
+     *   afterAccept: function  コールバック関数
+     *   afterRemoveFile: function  コールバック関数
+     *   afterSuccess: function   コールバック関数
+     * }
+     * dzOptions {
+     *    ...   Dropzone のオプション（デフォルトの設定を上書きする場合に指定）
+     * }
+     */
+    $uploadFileForm.registerDragDropArea = function (selector, params, dzOptions) {
+        if ($uploadFileForm._dragDropArea[selector]) {
+            return true;
+        }
+        $uploadFileForm._dragDropArea[selector] = true;
+        $(document).on('dragover', selector, function (e) {
+            e.preventDefault();
+            $uploadFileForm._setParams(this, params, dzOptions);
+
+            // ファイルアップロード用フォームのサイズと位置を合わせて重ねて表示させる
+            var $dropArea = $(this);
+            var pos = $dropArea.position();
+            $uploadFileForm.appendTo($dropArea).css({
+                width: $dropArea.outerWidth(),
+                height: $dropArea.outerHeight(),
+                top: pos.top,
+                left: pos.left,
+                position: 'absolute'
+            }).addClass('active').show();
+        });
+    };
+
+    /**
+     * ファイル添付用ボタンを登録する
+     *
+     * 引数は registerDragDropArea と同じ
+     */
+    $uploadFileForm.registerAttachFileButton = function (selector, params, dzOptions) {
+        if ($uploadFileForm._attacheFileButton[selector]) {
+            return true;
+        }
+        $uploadFileForm._attacheFileButton[selector] = true;
+        $(document).on('click', selector, function (e) {
+            e.preventDefault();
+            $uploadFileForm._setParams(this, params, dzOptions);
+            $uploadFileAttachButton.trigger('click');
+        });
+    };
+
+    $uploadFileForm._setParams = function (target, params, dzOptions) {
+        var formID = (typeof params.formID == 'function') ? params.formID.call(target) : params.formID;
+        var previewContainerID = (typeof params.previewContainerID == 'function') ? params.previewContainerID.call(target) : params.previewContainerID;
+        $uploadFileForm.data('formID', formID);
+        $uploadFileForm.data('previewContainerID', previewContainerID);
+
+        // Dropzone 設定
+        // （Dropzone インスタンスは常に１つ）
+        Dropzone.instances[0].options = $.extend({}, $uploadFileForm.data('dzDefaultOptions'), dzOptions || {});
+
+        // コールバック関数登録
+        $uploadFileForm._callbacks[previewContainerID] = {
+            beforeAddedFile: params.beforeAddedFile ? params.beforeAddedFile : function (){},
+            beforeAccept: params.beforeAccept ? params.beforeAccept : function (){},
+            afterAccept: params.afterAccept ? params.afterAccept : function (){},
+            afterRemoveFile: params.afterRemoveFile ? params.afterRemoveFile : function (){},
+            afterSuccess: params.afterSuccess ? params.afterSuccess : function (){},
+        };
+    };
 
     // ドロップエリアから外れた時
-    $uploadFileForm.on('dragleave', function () {
+    $uploadFileForm.on('dragleave', function (e) {
         $(this).hide();
     });
 
-    // 手動ファイル添付ボタン
-    // プレビュー用エリアのIDをセットしてから、Dropzoneの貼付用ボタンをクリックする
-    $(document).on('click', '.upload-file-attach-button', function (e) {
-        e.preventDefault();
-        var $button = $(this);
-        // プレビュー用エリアのID
-        $uploadFileForm.data('previewContainerId', $button.attr('data-preview-area-id'));
-        // アップロードしたファイルIDを submit するフォーム（投稿フォーム等）
-        $uploadFileForm.data('formId', $button.attr('data-form-id'));
-        // コールバック関数
-        $uploadFileForm.data('callbackAfterAccept', $button.attr('data-callback-after-accept'));
+    //////////////////////////////////////////////////
+    // ドロップエリアとファイル添付ボタンの登録
+    //////////////////////////////////////////////////
 
-        $uploadFileAttachButton.trigger('click');
-    });
+    // 投稿フォーム
+    var postParams = {
+        formID: 'PostDisplayForm',
+        previewContainerID: 'PostUploadFilePreview'
+    };
+    $uploadFileForm.registerDragDropArea('#PostForm', postParams);
+    $uploadFileForm.registerAttachFileButton('#PostUploadFileButton', postParams);
 
-    // コールバック
-    $uploadFileForm.data('callbacks', {
-        'actionAfterAccept': function () {
-            var $button = $('.target-show-target-click');
+    // アクションメイン画像
+    var actionImageParams = {
+        formID: 'CommonActionDisplayForm',
+        previewContainerID: 'ActionUploadFilePhotoPreview',
+        afterAccept: function (file) {
+            var $button = $('.action-image-add-button');
             if ($button.size()) {
                 var target = $button.attr("target-id");
                 target = target.split(',');
                 $.each(target, function () {
                     $("#" + this).show();
                 });
-                $button.remove();
+                $button.hide();
+            }
+            $(file.previewTemplate).show();
+        },
+    };
+    var actionImageDzOptions = {
+        acceptedFiles: "image/*",
+        previewTemplate: previewTemplateActionImage,
+    };
+    $uploadFileForm.registerDragDropArea('#ActionImageAddButton', actionImageParams, actionImageDzOptions);
+    $uploadFileForm.registerAttachFileButton('#ActionImageAddButton', actionImageParams, actionImageDzOptions);
+
+    // アクションメイン画像 入れ替え時
+    var actionImage2Params = {
+        formID: 'CommonActionDisplayForm',
+        previewContainerID: 'ActionUploadFilePhotoPreview',
+        beforeAccept: function (file) {
+            var $oldPreview = $('#' + $uploadFileForm.data('previewContainerID')).find('.dz-preview:visible');
+            var file_id = $oldPreview.data('file_id');
+            $removeFileForm.find('input[name="data[AttachedFile][file_id]"]').val(file_id);
+
+            // hidden を削除
+            $('#' + file_id).remove();
+            // プレビュー画像を削除
+            $oldPreview.hide();
+
+            // サーバ上から削除
+            $.ajax({
+                url: cake.url.remove_file,
+                type: 'POST',
+                dataType: 'json',
+                processData: false,
+                data: $removeFileForm.serialize()
+            })
+                .done(function (res) {
+                    // pass
+                })
+                .fail(function (res) {
+                    // pass
+                });
+        },
+        afterAccept: function (file) {
+            $(file.previewTemplate).show();
+        },
+        afterSuccess: function (file) {
+            // メイン画像の hidden を先頭に持ってくる
+            // DB内の index 番号を 0 にするため
+            var $form = $('#' + $uploadFileForm.data('formID'));
+            var file_id = $(file.previewTemplate).data('file_id');
+            var $firstHidden = $form.find('input[name="data[file_id][]"]:first');
+            if ($firstHidden.val() != file_id) {
+                $('#' + file_id).insertBefore($firstHidden);
             }
         }
-    });
+    };
+    var actionImage2DzOptions = {
+        acceptedFiles: "image/*",
+        previewTemplate: previewTemplateActionImage,
+    };
+    $uploadFileForm.registerDragDropArea('.action-photo-preview', actionImage2Params, actionImage2DzOptions);
+    $uploadFileForm.registerAttachFileButton('.action-photo-preview', actionImage2Params, actionImage2DzOptions);
 
+    // アクション添付ファイル
+    var actionParams = {
+        formID: 'CommonActionDisplayForm',
+        previewContainerID: 'ActionUploadFilePreview',
+        afterAccept: actionImageParams.afterAccept,
+    };
+    $uploadFileForm.registerDragDropArea('#ActionUploadFileDropArea', actionParams);
+    $uploadFileForm.registerAttachFileButton('#ActionFileAttachButton', actionParams);
+
+    // dropzone
     $uploadFileForm.dropzone();
+    $uploadFileForm.data('dzDefaultOptions', $.extend({}, Dropzone.instances[0].options));
+    $(document).data('uploadFileForm', $uploadFileForm);
+
 });
 
 function evAjaxEditCircleAdminStatus(e) {

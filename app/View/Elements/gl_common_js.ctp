@@ -47,7 +47,8 @@ echo $this->Html->script('gl_basic');
                 e: "<?=__d('validate', "数字、英小文字、英大文字の混在にしてください。")?>",
                 f: "<?=__d('validate', "パスワードにメールアドレスと同一のものを指定する事はできません。")?>",
                 g: "<?=__d('validate', "必須項目です。")?>",
-                dropzone_file_too_big: "<?=__d('gl', 'アップロード出来るファイルサイズは{{maxFilesize}}MBまでです。')?>"
+                dropzone_file_too_big: "<?=__d('gl', 'アップロード出来るファイルサイズは{{maxFilesize}}MBまでです。')?>",
+                dropzone_invalid_file_type: "<?=__d('gl', '画像ファイルを選択してください。')?>"
             },
             notice: {
                 a: "<?=__d('gl',"入力が途中です。このまま移動しますか？")?>",
