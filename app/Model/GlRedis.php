@@ -252,11 +252,14 @@ class GlRedis extends AppModel
             // で1ポストあたり1notifyなのでnotify_idをpost_idで置き換える
             $notify_id = $post_id;
         }
+        if ($type != NotifySetting::TYPE_FEED_MESSAGE) {
+            array_merge($url, ['notify_id' => $notify_id]);
+        }
         $data = [
             'id'      => $notify_id,
             'user_id' => $my_id,
             'body'    => $body,
-            'url'     => Router::url(array_merge($url, ['notify_id' => $notify_id]), true),
+            'url'     => Router::url($url),
             'type'    => $type,
             'to_user_count' => count($to_user_ids),
             'created' => $date,
@@ -603,7 +606,6 @@ class GlRedis extends AppModel
      */
     function deleteMessageNotify($team_id, $user_id, $notify_id)
     {
-        error_log("FURU:redis remove!!:$team_id:$user_id:$notify_id\n", 3, "/tmp/hoge.log");
         $key = $this->getKeyName(self::KEY_TYPE_MESSAGE_USER, $team_id, $user_id);
         return $this->Db->zRem($key, $notify_id);
     }

@@ -618,8 +618,6 @@ class PostsController extends AppController
 
     public function ajax_add_comment()
     {
-        error_log("FURU:こめんとついか！!\n", 3, "/tmp/hoge.log");
-
         $this->request->allowMethod('post');
         $this->_ajaxPreProcess();
         $result = [
@@ -655,7 +653,6 @@ class PostsController extends AppController
                                                          $this->Post->id, $this->Post->Comment->id);
                         break;
                     case Post::TYPE_MESSAGE:
-                        error_log("FURU:メッセージのこめんと\n", 3, "/tmp/hoge.log");
                         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MESSAGE, $this->Post->id,
                                                          $this->Post->Comment->id);
                         break;
@@ -726,23 +723,14 @@ class PostsController extends AppController
             $targetPosts = $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null, $this->request->params);
             $this->set(['posts' => $targetPosts]);
 
-            error_log("FURU:kesu!\n", 3, "/tmp/hoge.log");
-            error_log("FURU\n" . print_r($this->request->params, true) . "\n", 3, "/tmp/hoge.log");
-            error_log("FURU:+++++++++++++++++++\n", 3, "/tmp/hoge.log");
             error_log("FURU\n" . viaIsSet($targetPosts[0]['Post']['type']) . "\n", 3, "/tmp/hoge.log");
 
             //メッセージなら該当するnotifyをredisから削除する
             $post_type = viaIsSet($targetPosts[0]['Post']['type']);
             if ($post_type == Post::TYPE_MESSAGE) {
-                error_log("FURU:メッセージだよ\n", 3, "/tmp/hoge.log");
                 $notify_id = viaIsSet($this->request->params['named']['notify_id']);
                 $this->NotifyBiz->removeMessageNotification($notify_id);
             }
-
-
-
-
-
 
         } catch (RuntimeException $e) {
             //リファラとリクエストのURLが同じ場合は、メッセージを表示せず、ホームにリダイレクトする

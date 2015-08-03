@@ -71,7 +71,6 @@ class NotificationsController extends AppController
         if ($this->Auth->user('id')) {
             $notify_count = $this->NotifyBiz->getCountNewMessageNotification();
         }
-        error_log("FURU:ajax message:count#####:".$notify_count ."\n", 3, "/tmp/hoge.log");
         return $this->_ajaxGetResponse($notify_count);
     }
 

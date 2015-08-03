@@ -72,8 +72,6 @@ class NotifyBizComponent extends Component
      */
     function sendNotify($notify_type, $model_id, $sub_model_id = null, $to_user_list = null, $user_id, $team_id)
     {
-        error_log("FURU:ほげ:$notify_type:$model_id:$sub_model_id\n",3,"/tmp/hoge.log");
-
         $this->notify_option['from_user_id'] = $user_id;
         $this->_setModelProperty($user_id, $team_id);
 
@@ -311,16 +309,12 @@ class NotifyBizComponent extends Component
     private function _setFeedMessageOption($post_id, $comment_id)
     {
         $post = $this->Post->findById($post_id);
-        error_log("FURU:ほげ1:\n", 3, "/tmp/hoge.log");
 
         if (empty($post)) {
             return;
         }
-        error_log("FURU:ほげ2:" . print_r($post, true) . "\n", 3, "/tmp/hoge.log");
         if ($comment_id) {
-            error_log("FURU:commend id=:$comment_id\n", 3, "/tmp/hoge.log");
             $comment = $this->Comment->findById($comment_id);
-            error_log("FURU:ほげ3:" . $comment['Comment']['body'] . "\n", 3, "/tmp/hoge.log");
         }
 
         //基本的にnotifyにはメッセージについたコメントを表示するが、コメントが無ければ最初のメッセージ
@@ -336,7 +330,7 @@ class NotifyBizComponent extends Component
         $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($members,
                                                                                 NotifySetting::TYPE_FEED_MESSAGE);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_MESSAGE;
-        $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
+        $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'message#', $post['Post']['id']];
         $this->notify_option['model_id'] = null;
         $this->notify_option['item_name'] = !empty($body) ? json_encode([trim($body)]) : null;
         $this->notify_option['post_id'] = $post_id;
@@ -724,7 +718,6 @@ class NotifyBizComponent extends Component
 
     private function _saveNotifications()
     {
-        error_log("FURU:###########-save\n",3,"/tmp/hoge.log");
         //通知onのユーザを取得
         $uids = [];
         foreach ($this->notify_settings as $user_id => $val) {
@@ -735,7 +728,6 @@ class NotifyBizComponent extends Component
         if (empty($uids)) {
             return;
         }
-        error_log("FURU:******-save\n",3,"/tmp/hoge.log");
         //to be short text
         $item = json_decode($this->notify_option['item_name']);
         foreach ($item as $k => $v) {
@@ -743,7 +735,6 @@ class NotifyBizComponent extends Component
         }
         $item = json_encode($item);
         //TODO save to redis.
-        error_log("FURU:AAAAAA",3,"/tmp/hoge.log");
         $this->GlRedis->setNotifications(
             $this->notify_option['notify_type'],
             $this->NotifySetting->current_team_id,
@@ -807,7 +798,6 @@ class NotifyBizComponent extends Component
         $cmd .= " -o " . $this->Session->read('current_team_id');
         $cmd_end = " > /dev/null &";
         $all_cmd = $set_web_env . $nohup . $cake_cmd . $cake_app . $cmd . $cmd_end;
-        error_log("FURU:".$all_cmd."\n",3,"/tmp/hoge.log");
         exec($all_cmd);
     }
 
@@ -938,8 +928,6 @@ class NotifyBizComponent extends Component
         $user_list = Hash::extract($notify_from_redis, '{n}.user_id');
         $users = Hash::combine($this->NotifySetting->User->getUsersProf($user_list), '{n}.User.id', '{n}');
 
-        error_log("FURU:count:" . print_r($notify_from_redis, true) . "\n", 3, "/tmp/hoge.log");
-
         //merge users to notification data
         foreach ($data as $k => $v) {
             $user_name = null;
@@ -1062,7 +1050,6 @@ class NotifyBizComponent extends Component
             // target none.
             return false;
         }
-        error_log("FURU:remove message!!\n", 3, "/tmp/hoge.log");
         return $this->GlRedis->deleteMessageNotify(
             $this->NotifySetting->current_team_id,
             $this->NotifySetting->my_uid,
