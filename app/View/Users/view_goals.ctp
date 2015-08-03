@@ -17,7 +17,7 @@
 <!-- START app/View/Users/view_goals.ctp -->
 <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default">
-        <?= $this->element('simplex_top_section') ?>
+        <?= $this->element('User/simplex_top_section') ?>
         <div class="panel-body view-goals-panel">
             <div class="profile-goals-select-wrap btn-group" role="group">
                 <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user['User']['id']]) ?>"
@@ -30,7 +30,7 @@
             <?php foreach ($goals as $goal): ?>
                 <div class="col col-xxs-12 my-goals-item">
                     <div class="col col-xxs-3 col-xs-2">
-                        <a href="#">
+                        <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal['Goal']['id']]) ?>">
                             <?=
                             $this->Html->image('ajax-loader.gif',
                                                [
@@ -43,7 +43,8 @@
                     </div>
                     <div class="col col-xxs-9 col-xs-10 pl_5px">
                         <div class="col col-md-11 col-xs-10 col-xxs-9 profile-goals-card-title-wrapper">
-                            <a href="#" class="profile-goals-card-title">
+                            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal['Goal']['id']]) ?>"
+                               class="profile-goals-card-title">
                                 <p class="font_verydark profile-goals-card-title-text">
                                     <span><?= h($goal['Goal']['name']) ?></span>
                                 </p>

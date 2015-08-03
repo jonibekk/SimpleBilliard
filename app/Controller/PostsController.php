@@ -321,6 +321,8 @@ class PostsController extends AppController
         $posts = $this->Post->get($page_num, $item_num, $start, $end, $this->request->params);
         $this->set('posts', $posts);
         $this->set('long_text', false);
+        $without_header = viaIsSet($param_named['without_header']);
+        $this->set(compact('without_header'));
 
         // エレメントの出力を変数に格納する
         // htmlレンダリング結果

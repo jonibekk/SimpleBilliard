@@ -4,10 +4,10 @@ App::uses('AppModel', 'Model');
 /**
  * KeyResult Model
  *
- * @property Team              $Team
- * @property Goal              $Goal
- * @property ActionResult      $ActionResult
- * @property Post              $Post
+ * @property Team         $Team
+ * @property Goal         $Goal
+ * @property ActionResult $ActionResult
+ * @property Post         $Post
  */
 class KeyResult extends AppModel
 {
@@ -186,10 +186,13 @@ class KeyResult extends AppModel
      * @param array  $params
      *                 'limit' : find() の limit
      *                 'page'  : find() の page
+     * @param bool   $with_action
+     * @param int    $action_limit
      *
      * @return array|null
      */
-    function getKeyResults($goal_id, $find_type = "all", $is_complete = false, array $params = [])
+    function getKeyResults($goal_id, $find_type = "all", $is_complete = false,
+                           array $params = [], $with_action = false, $action_limit = MY_PAGE_ACTION_NUMBER)
     {
         // パラメータデフォルト
         $params = array_merge(['limit' => null,
@@ -212,6 +215,17 @@ class KeyResult extends AppModel
         ];
         if ($is_complete === true) {
             $options['conditions']['completed'] = null;
+        }
+        if ($with_action) {
+            $options['contain']['ActionResult'] = [
+                'limit' => $action_limit,
+                'order'=>['ActionResult.created desc'],
+                'Post'  => [
+                    'fields' => [
+                        'Post.id'
+                    ]
+                ]
+            ];
         }
 
         $res = $this->find($find_type, $options);
@@ -336,6 +350,39 @@ class KeyResult extends AppModel
             return 0;
         }
         return $progress;
+    }
+
+    function getKrNameList($goal_id, $with_all_opt = false, $separate_progress = false)
+    {
+        $options = [
+            'conditions' => ['goal_id' => $goal_id],
+            'fields'     => ['id', 'name'],
+            'order'      => ['created desc'],
+        ];
+        if (!$separate_progress) {
+            $res = $this->find('list', $options);
+            if ($with_all_opt) {
+                return [null => __d('gl', 'すべて')] + $res;
+            }
+            return $res;
+        }
+        $incomplete_opt = $options;
+        $incomplete_opt['conditions']['completed'] = null;
+        $incomplete_krs = $this->find('list', $incomplete_opt);
+        $completed_opt = $options;
+        $completed_opt['conditions']['NOT']['completed'] = null;
+        $completed_krs = $this->find('list', $completed_opt);
+        $res = [];
+        $res += $with_all_opt ? [null => __d('gl', 'すべて')] : null;
+        if (!empty($incomplete_krs)) {
+            $res += ['disable_value1' => '----------------------------------------------------------------------------------------'];
+            $res += $incomplete_krs;
+        }
+        if (!empty($completed_krs)) {
+            $res += ['disable_value2' => '----------------------------------------------------------------------------------------'];
+            $res += $completed_krs;
+        }
+        return $res;
     }
 
 }

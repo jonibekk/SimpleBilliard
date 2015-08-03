@@ -1282,6 +1282,18 @@ class GoalsControllerTest extends ControllerTestCase
         $this->testAction('/goals/view_actions/goal_id:1/page_type:image');
     }
 
+    function testViewActionsInvalidPageType()
+    {
+        $this->_getGoalsCommonMock();
+        $this->testAction('/goals/view_actions/goal_id:1/page_type:test');
+    }
+
+    function testViewActionsWithKrImage()
+    {
+        $this->_getGoalsCommonMock();
+        $this->testAction('/goals/view_actions/goal_id:1/page_type:image/key_result_id:1');
+    }
+
     function testViewActionsNoParams()
     {
         $this->_getGoalsCommonMock();

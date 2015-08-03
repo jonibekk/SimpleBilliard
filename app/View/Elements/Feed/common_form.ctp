@@ -28,8 +28,7 @@
     </div>
     <!-- Tab panes -->
     <div class="tab-content">
-        <div class="tab-pane fade" id="ActionForm"
-            >
+        <div class="tab-pane fade" id="ActionForm">
             <?php if (count($goal_list_for_action_option) == 1): ?>
                 <div class="post-panel-body plr_11px ptb_7px">
                     <div class="alert alert-warning" role="alert">
