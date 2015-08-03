@@ -18,7 +18,8 @@
             <li class="switch-action"><a href="#ActionForm" role="tab" data-toggle="tab"
                                          class="switch-action-anchor click-target-focus"
                                          target-id="CommonActionName"><i
-                        class="fa fa-check-circle"></i><?= __d('gl', "アクション") ?></a><span class="switch-arrow"></span></li>
+                        class="fa fa-check-circle"></i><?= __d('gl', "アクション") ?></a><span class="switch-arrow"></span>
+            </li>
             <li class="switch-post"><a href="#PostForm" role="tab" data-toggle="tab"
                                        class="switch-post-anchor click-target-focus"
                                        target-id="CommonPostBody"><i
@@ -52,25 +53,20 @@
                 ]); ?>
                 <div class="post-panel-body plr_11px ptb_7px">
                     <a href="#"
-                       class="target-show-target-click btn btn-link btn-lightGray bd-radius_4px click-this-remove"
-                       target-id="CommonActionFormImage,CommonActionSubmit,WrapActionFormName,WrapCommonActionGoal,CommonActionFooter,CommonActionFormShowOptionLink"
-                       click-target-id="ActionResult__Photo_1">
-                        <i class="fa fa-camera"></i>
-                        <?= __d('gl', "画像を選択しよう！") ?>
-                    </a>
+                       id="ActionImageAddButton"
+                       class="font_lightgray action-image-add-button"
+                       target-id="CommonActionFormImage,CommonActionSubmit,WrapActionFormName,WrapCommonActionGoal,CommonActionFooter,CommonActionFormShowOptionLink,ActionUploadFileDropArea"
+                        >
+                        <span class="action-image-add-button-text"><i
+                                class="fa fa-image action-image-add-button-icon"></i> <span>ここに画像をドロップ</span></span>
 
-                    <div class="row form-group m_0px none" id="CommonActionFormImage">
-                        <ul class="col input-images post-images">
-                            <?php for ($i = 1; $i <= 5; $i++): ?>
-                            <li id="WrapPhotoForm_Action_<?= $i ?>">
-                                <?= $this->element('Feed/photo_upload',
-                                                   ['type' => 'action_result', 'index' => $i, 'submit_id' => 'CommonActionSubmit']) ?>
-                                </li><?php endfor ?>
-                        </ul>
-                        <span class="help-block" id="ActionResult__Photo_ValidateMessage"></span>
-                    </div>
+                    </a>
                 </div>
-                <div id="WrapActionFormName" class="panel-body action-form-panel-body none">
+
+                <div id="ActionUploadFilePhotoPreview" class="pull-left action-upload-main-image-preview"></div>
+                <?php $this->Form->unlockField('file_id') ?>
+
+                <div id="WrapActionFormName" class="panel-body action-form-panel-body none pull-left action-input-name">
                     <?=
                     $this->Form->input('name', [
                         'id'                       => 'CommonActionName',
@@ -87,65 +83,84 @@
                     ?>
                 </div>
 
-                <div class="panel-body action-form-panel-body form-group none" id="WrapCommonActionGoal">
-                    <div class="input-group">
-                        <span class="input-group-addon" id=""><i class="fa fa-flag"></i></span>
-                        <?=
-                        $this->Form->input('goal_id', [
-                            'label'                    => false,
-                            'div'                      => false,
-                            'required'                 => true,
-                            'data-bv-notempty-message' => __d('validate', "入力必須項目です。"),
-                            'class'                    => 'form-control change-next-select-with-value',
-                            'id'                       => 'GoalSelectOnActionForm',
-                            'options'                  => $goal_list_for_action_option,
-                            'target-id'                => 'KrSelectOnActionForm',
-                            'toggle-target-id'         => 'WrapKrSelectOnActionForm',
-                            'ajax-url'                 => $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_kr_list', 'goal_id' => ""]),
-                        ])
-                        ?>
-                    </div>
-                </div>
-                <div class="panel-body action-form-panel-body none" id="WrapKrSelectOnActionForm">
-                    <div class="input-group">
-                        <span class="input-group-addon" id=""><i class="fa fa-key"></i></span>
-                        <?=
-                        $this->Form->input('key_result_id', [
-                            'label'    => false,
-                            'div'      => false,
-                            'required' => false,
-                            'id'       => 'KrSelectOnActionForm',
-                            'options'  => [null => __d('gl', '出したい成果を選択する(オプション)')],
-                        ])
-                        ?>
-                    </div>
-                </div>
-                <a href="#" class="link-dark-gray target-show click-this-remove none" target-id="ActionFormOptionFields"
-                   id="CommonActionFormShowOptionLink">
-                    <div class="panel-body action-form-panel-body font_11px font_lightgray"
-                         id="CommonActionFormShare">
-                        <p class="text-center"><?= __d('gl', "オプションを表示") ?></p>
-
-                        <p class="text-center"><i class="fa fa-chevron-down"></i></p>
-                    </div>
-                </a>
-                <div id="ActionFormOptionFields" class="none">
-                    <div class="panel-body action-form-panel-body" id="CommonActionFormShare">
-                        <div class="col col-xxs-12 col-xs-12 post-share-range-list" id="CommonActionShareInputWrap">
+                <div id="ActionUploadFileDropArea" class="action-upload-file-drop-area">
+                    <div class="panel-body action-form-panel-body form-group none" id="WrapCommonActionGoal">
+                        <div class="input-group">
+                            <span class="input-group-addon" id=""><i class="fa fa-flag"></i></span>
                             <?=
-                            $this->Form->hidden('share',
-                                                ['id' => 'select2ActionCircleMember', 'value' => "", 'style' => "width: 100%",]) ?>
-                            <?php $this->Form->unlockField('ActionResult.share') ?>
-                            <?php $this->Form->unlockField('socket_id') ?>
+                            $this->Form->input('goal_id', [
+                                'label'                    => false,
+                                'div'                      => false,
+                                'required'                 => true,
+                                'data-bv-notempty-message' => __d('validate', "入力必須項目です。"),
+                                'class'                    => 'form-control change-next-select-with-value',
+                                'id'                       => 'GoalSelectOnActionForm',
+                                'options'                  => $goal_list_for_action_option,
+                                'target-id'                => 'KrSelectOnActionForm',
+                                'toggle-target-id'         => 'WrapKrSelectOnActionForm',
+                                'ajax-url'                 => $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_kr_list', 'goal_id' => ""]),
+                            ])
+                            ?>
                         </div>
                     </div>
-                </div>
-                <div class="post-panel-footer none" id="CommonActionFooter">
-                    <div class="font_12px" id="CommonActionFormFooter">
-                        <div class="row form-horizontal form-group post-share-range" id="CommonActionShare">
+                    <div class="panel-body action-form-panel-body none" id="WrapKrSelectOnActionForm">
+                        <div class="input-group">
+                            <span class="input-group-addon" id=""><i class="fa fa-key"></i></span>
                             <?=
-                            $this->Form->submit(__d('gl', "アクション登録"),
-                                                ['class' => 'btn btn-primary pull-right post-submit-button', 'id' => 'CommonActionSubmit', 'disabled' => 'disabled']) ?>
+                            $this->Form->input('key_result_id', [
+                                'label'    => false,
+                                'div'      => false,
+                                'required' => false,
+                                'id'       => 'KrSelectOnActionForm',
+                                'options'  => [null => __d('gl', '出したい成果を選択する(オプション)')],
+                            ])
+                            ?>
+                        </div>
+                    </div>
+                    <a href="#" class="graylink-dark- target-show click-this-remove none"
+                       target-id="ActionFormOptionFields"
+                       id="CommonActionFormShowOptionLink">
+                        <div class="panel-body action-form-panel-body font_11px font_lightgray"
+                             id="CommonActionFormShare">
+                            <p class="text-center"><?= __d('gl', "オプションを表示") ?></p>
+
+                            <p class="text-center"><i class="fa fa-chevron-down"></i></p>
+                        </div>
+                    </a>
+
+                    <div id="ActionFormOptionFields" class="none">
+                        <div class="panel-body action-form-panel-body" id="CommonActionFormShare">
+                            <div class="col col-xxs-12 col-xs-12 post-share-range-list" id="CommonActionShareInputWrap">
+                                <div class="input-group action-form-share-input-group">
+                                    <span class="input-group-addon" id=""><i class="fa fa-bullhorn"></i></span>
+
+                                    <div class="form-control">
+                                        <?=
+                                        $this->Form->hidden('share',
+                                                            ['id' => 'select2ActionCircleMember', 'value' => "", 'style' => "width: 100%",]) ?>
+                                        <?php $this->Form->unlockField('ActionResult.share') ?>
+                                        <?php $this->Form->unlockField('socket_id') ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="ActionUploadFilePreview" class="action-upload-file-preview">
+                    </div>
+                    <?php $this->Form->unlockField('file_id') ?>
+                    <div class="post-panel-footer none" id="CommonActionFooter">
+                        <div class="font_12px" id="CommonActionFormFooter">
+                            <a href="#" class="link-red" id="ActionFileAttachButton">
+                                <button type="button" class="btn pull-left photo-up-btn"><i
+                                        class="fa fa-paperclip post-camera-icon"></i>
+                                </button>
+                            </a>
+
+                            <div class="row form-horizontal form-group post-share-range" id="CommonActionShare">
+                                <?=
+                                $this->Form->submit(__d('gl', "アクション登録"),
+                                                    ['class' => 'btn btn-primary pull-right post-submit-button', 'id' => 'CommonActionSubmit', 'disabled' => 'disabled']) ?>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -184,16 +199,8 @@
                     "required"       => false
                 ])
                 ?>
-                <div class="row form-group m_0px none" id="PostFormImage">
-                    <ul class="col input-images post-images">
-                        <?php for ($i = 1; $i <= 5; $i++): ?>
-                        <li id="WrapPhotoForm_Post_<?= $i ?>">
-                            <?= $this->element('Feed/photo_upload',
-                                               ['type' => 'post', 'index' => $i, 'submit_id' => 'PostSubmit']) ?>
-                            </li><?php endfor ?>
-                    </ul>
-                    <span class="help-block" id="Post__Photo_ValidateMessage"></span>
-                </div>
+                <div id="PostUploadFilePreview" class="post-upload-file-preview"></div>
+                <?php $this->Form->unlockField('file_id') ?>
             </div>
             <?php if (isset($this->request->params['circle_id'])) {
                 $display = "block";
@@ -254,11 +261,10 @@
                 <?php $this->Form->unlockField('socket_id') ?>
             </div>
             <div class="post-panel-footer">
-                <div class="font_12px" id="PostFormFooter">
-                    <a href="#" class="target-show-target-click link-red" target-id="PostFormImage"
-                       click-target-id="Post__Photo_1">
+                <div class="font_12px none" id="PostFormFooter">
+                    <a href="#" class="link-red" id="PostUploadFileButton">
                         <button type="button" class="btn pull-left photo-up-btn"><i
-                                class="fa fa-camera post-camera-icon"></i>
+                                class="fa fa-paperclip post-camera-icon"></i>
                         </button>
                     </a>
 
@@ -273,4 +279,5 @@
         </div>
     </div>
 </div>
+<?= $this->element('file_upload_form') ?>
 <!-- END app/View/Elements/Feed/common_form.ctp -->

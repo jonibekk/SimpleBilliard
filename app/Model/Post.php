@@ -19,6 +19,7 @@ App::uses('AppModel', 'Model');
  * @property KeyResult       $KeyResult
  * @property Circle          $Circle
  * @property AttachedFile    $AttachedFile
+ * @property PostFile        $PostFile
  */
 class Post extends AppModel
 {
@@ -250,10 +251,20 @@ class Post extends AppModel
         $postData['Post']['team_id'] = $this->team_id;
         $postData['Post']['type'] = $type;
 
+        $this->begin();
         $res = $this->save($postData);
-
         if (empty($res)) {
+            $this->rollback();
             return false;
+        }
+
+        $post_id = $this->getLastInsertID();
+        $results = [];
+        // ファイルが添付されている場合
+        if (isset($postData['file_id']) && is_array($postData['file_id'])) {
+            $results[] = $this->PostFile->AttachedFile->saveRelatedFiles($post_id,
+                                                                         AttachedFile::TYPE_MODEL_POST,
+                                                                         $postData['file_id']);
         }
         if (!empty($share)) {
             //ユーザとサークルに分割
@@ -269,18 +280,30 @@ class Post extends AppModel
                     $circles[] = str_replace('circle_', '', $val);
                 }
             }
-            //共有ユーザ保存
-            $this->PostShareUser->add($this->getLastInsertID(), $users);
-            //共有サークル保存
-            $this->PostShareCircle->add($this->getLastInsertID(), $circles);
-            //共有サークル指定されてた場合の未読件数更新
-            $this->User->CircleMember->incrementUnreadCount($circles);
-            //共有サークル指定されてた場合、更新日時更新
-            $this->User->CircleMember->updateModified($circles);
-            $this->PostShareCircle->Circle->updateModified($circles);
-
+            if ($users) {
+                //共有ユーザ保存
+                $results[] = $this->PostShareUser->add($this->getLastInsertID(), $users);
+            }
+            if ($circles) {
+                //共有サークル保存
+                $results[] = $this->PostShareCircle->add($this->getLastInsertID(), $circles);
+                //共有サークル指定されてた場合の未読件数更新
+                $results[] = $this->User->CircleMember->incrementUnreadCount($circles);
+                //共有サークル指定されてた場合、更新日時更新
+                $results[] = $this->User->CircleMember->updateModified($circles);
+                $results[] = $this->PostShareCircle->Circle->updateModified($circles);
+            }
         }
-        return $res;
+        // どこかでエラーが発生した場合は rollback
+        foreach ($results as $r) {
+            if (!$r) {
+                $this->rollback();
+                $this->PostFile->AttachedFile->deleteAllRelatedFiles($post_id, AttachedFile::TYPE_MODEL_POST);
+                return false;
+            }
+        }
+        $this->commit();
+        return true;
     }
 
     /**

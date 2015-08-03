@@ -15,16 +15,6 @@
         <?= $this->element('User/simplex_top_section') ?>
         <div class="panel-body view-posts-panel">
             <?= $this->element("Feed/posts") ?>
-
-            <?php if (empty($posts)): ?>
-                <div class="panel panel-default">
-                    <div class="panel-body ptb_10px plr_11px ">
-                        <div class="col col-xxs-12">
-                            <?= __d('gl', "投稿がありません。") ?>
-                        </div>
-                    </div>
-                </div>
-            <?php endif; ?>
             <?php
             $next_page_num = 2;
             $month_index = 0;

@@ -328,7 +328,10 @@ $without_header = isset($without_header) ? $without_header : false;
 
                 </div>
             </div>
-            <div class="panel-body ptb_8px plr_11px comment-block">
+            <div class="panel-body ptb_8px plr_11px comment-block"
+                 id="CommentBlock_<?= $post['Post']['id'] ?>"
+                 data-preview-container-id="CommentUploadFilePreview_<?= $post['Post']['id'] ?>"
+                 data-form-id="CommentAjaxGetNewCommentForm_<?= $post['Post']['id'] ?>">
                 <?php if ($post['Post']['comment_count'] > 3 && count($post['Comment']) == 3): ?>
                     <a href="#" class="btn-link click-comment-all"
                        id="Comments_<?= $post['Post']['id'] ?>"
@@ -392,6 +395,7 @@ $without_header = isset($without_header) ? $without_header : false;
                                     class="form-control font_12px comment-post-form box-align not-autosize click-get-ajax-form-replace"
                                     replace-elm-parent-id="NewCommentForm_<?= $post['Post']['id'] ?>"
                                     click-target-id="CommentFormBody_<?= $post['Post']['id'] ?>"
+                                    post-id="<?= $post['Post']['id'] ?>"
                                     tmp-target-height="32"
                                     ajax-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_new_comment_form', 'post_id' => $post['Post']['id']]) ?>"
                                     wrap="soft" rows="1"
@@ -405,5 +409,6 @@ $without_header = isset($without_header) ? $without_header : false;
             </div>
         </div>
     <?php endforeach ?>
+    <?= $this->element('file_upload_form') ?>
     <!-- END app/View/Elements/Feed/posts.ctp -->
 <?php endif ?>

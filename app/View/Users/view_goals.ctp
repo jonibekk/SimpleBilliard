@@ -29,7 +29,7 @@
             </div>
             <?php foreach ($goals as $goal): ?>
                 <div class="col col-xxs-12 my-goals-item">
-                    <div class="col col-xxs-3 col-xs-2">
+                    <div class="col col-xxs-2 col-xs-2">
                         <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal['Goal']['id']]) ?>">
                             <?=
                             $this->Html->image('ajax-loader.gif',
@@ -41,7 +41,7 @@
                             )
                             ?></a>
                     </div>
-                    <div class="col col-xxs-9 col-xs-10 pl_5px">
+                    <div class="col col-xxs-10 col-xs-10 pl_5px">
                         <div class="col col-md-11 col-xs-10 col-xxs-9 profile-goals-card-title-wrapper">
                             <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal['Goal']['id']]) ?>"
                                class="profile-goals-card-title">

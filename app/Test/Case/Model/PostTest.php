@@ -87,6 +87,46 @@ class PostTest extends CakeTestCase
         $this->assertNotEmpty($res, "[正常]投稿(uid,team_id指定なし)");
     }
 
+    public function testAddWithFile()
+    {
+        $uid = '1';
+        $team_id = '1';
+        $this->Post->my_uid = $uid;
+        $this->Post->current_team_id = $team_id;
+        $postData = [
+            'Post' => [
+                'body' => 'test',
+            ],
+            'file_id' => ['aaaaaa']
+        ];
+        $this->Post->PostFile->AttachedFile = $this->getMockForModel('AttachedFile', array('saveRelatedFiles'));
+        $this->Post->PostFile->AttachedFile->expects($this->any())
+                                                 ->method('saveRelatedFiles')
+                                                 ->will($this->returnValue(true));
+        $res = $this->Post->addNormal($postData, Post::TYPE_NORMAL, $uid, $team_id);
+        $this->assertNotEmpty($res, "[正常]投稿(uid,team_id指定)");
+    }
+
+    public function testAddError()
+    {
+        $uid = '1';
+        $team_id = '1';
+        $this->Post->my_uid = $uid;
+        $this->Post->current_team_id = $team_id;
+        $postData = [
+            'Post' => [
+                'body' => 'test',
+            ],
+            'file_id' => ['aaaaaa']
+        ];
+        $this->Post->PostFile->AttachedFile = $this->getMockForModel('AttachedFile', array('saveRelatedFiles'));
+        $this->Post->PostFile->AttachedFile->expects($this->any())
+                                           ->method('saveRelatedFiles')
+                                           ->will($this->returnValue(false));
+        $res = $this->Post->addNormal($postData, Post::TYPE_NORMAL, $uid, $team_id);
+        $this->assertFalse($res);
+    }
+
     public function testGetNormal()
     {
         $this->_setDefault();
