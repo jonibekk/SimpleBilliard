@@ -4,7 +4,6 @@
  * @var                    $key_results
  * @var                    $incomplete_kr_count
  * @var                    $kr_can_edit
- * @var                    $is_collaborated
  * @var                    $display_action_count
  */
 ?>
@@ -13,7 +12,7 @@
     <?php foreach ($key_results as $kr): ?>
         <div class="goal-detail-kr-card">
             <div class="goal-detail-kr-achieve-wrap">
-                <?php if ($is_collaborated): ?>
+                <?php if ($kr_can_edit): ?>
                     <?php if ($kr['KeyResult']['completed']): ?>
                         <?= $this->Form->postLink('<i class="fa-check-circle fa goal-detail-kr-achieve-already"></i>',
                                                   ['controller' => 'goals', 'action' => 'incomplete_kr', 'key_result_id' => $kr['KeyResult']['id']],
@@ -68,7 +67,7 @@
                                         $kr['KeyResult']['end_date'] + $this->Session->read('Auth.User.timezone') * 3600) ?>
                 <div class="goal-detail-action-wrap">
                     <ul class="goal-detail-action">
-                        <?php if ($is_collaborated): ?>
+                        <?php if ($kr_can_edit): ?>
                             <li class="goal-detail-action-list">
                                 <a class="goal-detail-add-action modal-ajax-get-add-action"
                                    href="<?= $this->Html->url(['controller'    => 'goals', 'action' => 'ajax_get_add_action_modal',
@@ -125,7 +124,7 @@
                     </ul>
                 </div>
             </div>
-            <?php if ($is_collaborated): ?>
+            <?php if ($kr_can_edit): ?>
                 <?= $this->element('Goal/key_result_edit_button', ['kr' => $kr]) ?>
             <?php endif ?>
         </div>
