@@ -47,8 +47,8 @@ message_app.controller(
         // pusherメッセージ内容を受け取る
         var pusher = new Pusher(cake.pusher.key);
         // TODO: Uniqueチャンネル名に指定
-        var message_channel = pusher.subscribe('test-channel');
-        message_channel.bind('new_message', function (data) {
+        var test_channel = pusher.subscribe('test-channel');
+        test_channel.bind('new_message', function (data) {
             // 既読処理
             var read_comment_id = data.Comment.id;
             var request = {
@@ -64,7 +64,7 @@ message_app.controller(
         });
 
         // pusherから既読されたcomment_idを取得する
-        message_channel.bind('read_message', function (comment_id) {
+        test_channel.bind('read_message', function (comment_id) {
             var read_box = document.getElementById("mr_"+comment_id).innerText;
             document.getElementById("mr_"+comment_id).innerText = Number(read_box) + 1;
         });

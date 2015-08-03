@@ -16,7 +16,7 @@
          style="overflow:auto; height:620px; margin:0px;">
 
         <div infinite-scroll='loadMore()' infinite-scroll-parent="true" infinite-scroll-distance="0">
-            <div ng-repeat="(key, item) in message_list">
+            <div ng-repeat="(key, item) in message_list | orderBy:'Comment.created'">
                 <div id="m_{{key+1}}" class="col col-xxs-12" style="padding-bottom: 8px">
                     <div class="col col-xxs-2">
                         <a href="/users/view_goals/user_id:{{item.User.id}}">

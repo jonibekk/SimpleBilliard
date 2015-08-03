@@ -159,7 +159,7 @@ class Comment extends AppModel
         return $res;
     }
 
-    public function getPostsComment($post_id, $get_num = null, $page = null)
+    public function getPostsComment($post_id, $get_num = null, $page = null, $order_by = null)
     {
         $options = [
             'conditions' => [
@@ -183,6 +183,14 @@ class Comment extends AppModel
             'limit'      => $get_num,
             'page'       => $page
         ];
+
+        if (is_null($page) === false) {
+            $options['page'] = $page;
+        }
+
+        if (is_null($order_by) === false) {
+            $options['order']['Comment.created'] = $order_by;
+        }
 
         $res = $this->find('all', $options);
 
