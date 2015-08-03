@@ -131,11 +131,17 @@
                     <div id="ActionFormOptionFields" class="none">
                         <div class="panel-body action-form-panel-body" id="CommonActionFormShare">
                             <div class="col col-xxs-12 col-xs-12 post-share-range-list" id="CommonActionShareInputWrap">
-                                <?=
-                                $this->Form->hidden('share',
-                                                    ['id' => 'select2ActionCircleMember', 'value' => "", 'style' => "width: 100%",]) ?>
-                                <?php $this->Form->unlockField('ActionResult.share') ?>
-                                <?php $this->Form->unlockField('socket_id') ?>
+                                <div class="input-group action-form-share-input-group">
+                                    <span class="input-group-addon" id=""><i class="fa fa-bullhorn"></i></span>
+
+                                    <div class="form-control">
+                                        <?=
+                                        $this->Form->hidden('share',
+                                                            ['id' => 'select2ActionCircleMember', 'value' => "", 'style' => "width: 100%",]) ?>
+                                        <?php $this->Form->unlockField('ActionResult.share') ?>
+                                        <?php $this->Form->unlockField('socket_id') ?>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

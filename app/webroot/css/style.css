@@ -336,9 +336,10 @@ body, .btn, input, button, select, textarea, h1, h2, h3, h4, h5, h6, .h1, .h2, .
 }
 
 .select2ActionCircleMember {
-    margin-bottom: 5px;
-    border-bottom: 1px solid;
-    border-bottom-color: lightgray;
+}
+
+.select2ActionCircleMember input {
+    padding: 0 !important;
 }
 
 /*==/ normalize select2 3.5.1 ===*/
@@ -1778,6 +1779,10 @@ ul.input-images > li {
 
 .action-form-panel-body {
     padding: 3px 5px 0;
+}
+
+.action-form-share-input-group .form-control {
+    float:none;
 }
 
 textarea.feed-post-form {
