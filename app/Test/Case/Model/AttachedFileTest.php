@@ -160,6 +160,7 @@ class AttachedFileTest extends CakeTestCase
         $this->assertCount(2, $this->AttachedFile->find('all'));
         $this->assertCount(2, $this->AttachedFile->PostFile->find('all'));
     }
+
     function testSaveRelatedFilesFailSizeOver()
     {
         $this->_setDefault();
@@ -200,6 +201,111 @@ class AttachedFileTest extends CakeTestCase
     {
         $res = $this->AttachedFile->saveRelatedFiles(1, 1000, ['test']);
         $this->assertFalse($res);
+    }
+
+    function testUpdateRelatedFilesFail()
+    {
+        $res = $this->AttachedFile->updateRelatedFiles(1, 1000, [1, 2], ['test']);
+        $this->assertFalse($res);
+    }
+
+    function testUpdateRelatedFilesDeleteFileFail()
+    {
+        $res = $this->AttachedFile->updateRelatedFiles(1, AttachedFile::TYPE_MODEL_POST, [1, 2], ['test']);
+        $this->assertFalse($res);
+    }
+
+    /**
+     * ファイルアップデートのテスト
+     * もともと２ファイルを持っており、１ファイル削除し、２ファイル追加したときに合計３ファイルになる事を確認
+     */
+    function testUpdateRelatedFilesSuccess()
+    {
+        $this->_setDefault();
+        $hashes = $this->_prepareTestFiles();
+        $upload_setting = $this->AttachedFile->actsAs['Upload'];
+        $upload_setting['attached']['path'] = ":webroot/upload/test/:model/:id/:hash_:style.:extension";
+        $this->AttachedFile->Behaviors->load('Upload', $upload_setting);
+        $prepare_post_file_data = [
+            'AttachedFile' => [
+                'attached_file_name' => 'test.jpg',
+                'user_id'            => 1,
+                'team_id'            => 1,
+                'file_type'          => AttachedFile::TYPE_FILE_IMG,
+                'file_ext'           => 'jpg',
+                'file_size'          => '1111',
+                'model_type'         => AttachedFile::TYPE_MODEL_POST
+            ],
+            'PostFile'     => [
+                [
+                    'post_id'   => 1,
+                    'index_num' => 0,
+                    'team_id'   => 1,
+                ]
+            ]
+        ];
+        $this->AttachedFile->saveAll($prepare_post_file_data);
+        $prepare_post_file_data['PostFile']['index_num'] = 1;
+        $this->AttachedFile->saveAll($prepare_post_file_data);
+        $res = $this->AttachedFile->updateRelatedFiles(1, AttachedFile::TYPE_MODEL_POST, array_merge([1], $hashes),
+                                                       [2]);
+        $files = $this->AttachedFile->find('all');
+        $post_files = $this->AttachedFile->PostFile->find('all');
+        $this->assertTrue($res);
+        $this->assertCount(3, $files);
+        $this->assertCount(3, $post_files);
+        $this->assertEquals(4, $post_files[1]['PostFile']['id']);
+        $this->assertEquals(3, $post_files[1]['PostFile']['attached_file_id']);
+    }
+
+    /**
+     * ファイルアップデートのテスト(アクション)
+     * もともと２ファイルを持っており、１ファイル削除し、２ファイル追加したときに合計３ファイルになる事を確認
+     */
+    function testUpdateRelatedFilesActionSuccess()
+    {
+        $this->_setDefault();
+        $hashes = $this->_prepareTestFiles();
+        $upload_setting = $this->AttachedFile->actsAs['Upload'];
+        $upload_setting['attached']['path'] = ":webroot/upload/test/:model/:id/:hash_:style.:extension";
+        $this->AttachedFile->Behaviors->load('Upload', $upload_setting);
+        $prepare_post_file_data = [
+            'AttachedFile'     => [
+                'attached_file_name' => 'test_abc.jpg',
+                'user_id'            => 1,
+                'team_id'            => 1,
+                'file_type'          => AttachedFile::TYPE_FILE_IMG,
+                'file_ext'           => 'jpg',
+                'file_size'          => '1111',
+                'model_type'         => AttachedFile::TYPE_MODEL_ACTION_RESULT
+            ],
+            'ActionResultFile' => [
+                [
+                    'action_result_id' => 1,
+                    'index_num'        => 0,
+                    'team_id'          => 1,
+                ]
+            ]
+        ];
+        $this->AttachedFile->saveAll($prepare_post_file_data);
+        $prepare_post_file_data['ActionResultFile'][0]['index_num'] = 1;
+        $prepare_post_file_data['AttachedFile']['attached_file_name'] = 'test_zzz.jpg';
+        $this->AttachedFile->saveAll($prepare_post_file_data);
+        $res = $this->AttachedFile->updateRelatedFiles(1, AttachedFile::TYPE_MODEL_ACTION_RESULT,
+                                                       array_merge($hashes, [2]),
+                                                       [1]);
+        $files = $this->AttachedFile->find('all');
+        $action_res_files = $this->AttachedFile->ActionResultFile->find('all', ['order' => ['index_num asc']]);
+        $main_img = $this->AttachedFile->find('all', ['conditions' => ['display_file_list_flg' => false]]);
+        $main_img_action_res_file = $this->AttachedFile->ActionResultFile->find('first',
+                                                                                ['conditions' => ['attached_file_id' => $main_img[0]['AttachedFile']['id']]]);
+        $this->assertTrue($res);
+        $this->assertCount(3, $files);
+        $this->assertCount(3, $action_res_files);
+        $this->assertCount(1, $main_img);
+        $this->assertFalse($main_img[0]['AttachedFile']['display_file_list_flg']);
+        $this->assertFalse($main_img[0]['AttachedFile']['removable_flg']);
+        $this->assertEquals(0, $main_img_action_res_file['ActionResultFile']['index_num']);
     }
 
     function testDeleteAllRelatedFilesSuccess()

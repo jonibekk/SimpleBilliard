@@ -263,9 +263,10 @@ class AttachedFile extends AppModel
             return false;
         }
         //ファイル削除処理
-        if (!$this->deleteRelatedFile($delete_files, $model_type)) {
+        if (!empty($delete_files) && !$this->deleteRelatedFile($delete_files, $model_type)) {
             return false;
         }
+
         /** @var GlRedis $Redis */
         $Redis = ClassRegistry::init('GlRedis');
         $attached_file_common_data = [
@@ -283,11 +284,8 @@ class AttachedFile extends AppModel
                 if ($i === 0 && $model_type == self::TYPE_MODEL_ACTION_RESULT) {
                     continue;
                 }
-                $updated = $this->{$model['intermediateModel']}->updateAll(['index_num' => $i],
-                                                                           [$model['intermediateModel'] . ".attached_file_id" => $id_or_hash]);
-                if (!$updated) {
-                    return false;
-                }
+                $this->{$model['intermediateModel']}->updateAll(['index_num' => $i],
+                                                                [$model['intermediateModel'] . ".attached_file_id" => $id_or_hash]);
                 continue;
             }
 
@@ -372,6 +370,9 @@ class AttachedFile extends AppModel
             'conditions' => ['attached_file_id' => $attached_file_ids],
             'fields'     => ['id', 'attached_file_id']
         ]);
+        if (empty($related_files)) {
+            return false;
+        }
         //deleteAllだとsoftDeleteされない為、foreach
         foreach ($related_files as $related_file) {
             $this->{$model['intermediateModel']}->delete($related_file[$model['intermediateModel']]['id']);
