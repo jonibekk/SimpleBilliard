@@ -58,6 +58,16 @@
     echo $this->Html->script('vendor/angular/angular-pnotify');
 
     ?>
+    <?php if (isset($action_name) && $action_name === 'display'): //上部のタブメニューの表示切替えの為?>
+        <style>
+            @media screen and (max-width: 991px) {
+                .container {
+                    margin-top: 50px;
+                }
+            }
+        </style>
+    <?php endif; ?>
+
     <!--suppress HtmlUnknownTarget -->
     <link href="/img/apple-touch-icon.png" rel="apple-touch-icon-precomposed">
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Oswald:400,300|Pathway+Gothic+One">

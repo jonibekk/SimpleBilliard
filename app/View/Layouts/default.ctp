@@ -4,6 +4,7 @@
  * @since         CakePHP(tm) v 0.10.0.1076
  * @var string             $title_for_layout
  * @var CodeCompletionView $this
+ * @var                    $action_name
  */
 ?>
 <!-- START app/View/Layouts/default.ctp -->
@@ -26,15 +27,6 @@ else {
 ?>
 <?php if ($action_name === 'display') {
     echo $this->element('header_sp_feeds_alt');
-    echo "
-    <style>
-    @media screen and (max-width: 991px) {
-      .container {
-        margin-top : 50px;
-      }
-    }
-    </style>
-    ";
 } ?>
 <div id="container" class="container">
     <div class="row">
