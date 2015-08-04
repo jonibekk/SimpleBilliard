@@ -59,7 +59,7 @@ if (isset($data['AttachedFile'])) {
         </div>
     <?php endif; ?>
     <?
-    $icon_url = $this->Upload->attachedFileUrl($data, "preview");
+    $icon_url = $this->Upload->attachedFileUrl($data, "viewer");
     if ($data['file_type'] == AttachedFile::TYPE_FILE_IMG) {
         $icon_url = $this->Upload->uploadUrl($data, 'AttachedFile.attached');
     }
