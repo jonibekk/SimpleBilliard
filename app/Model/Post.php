@@ -612,7 +612,7 @@ class Post extends AppModel
                     ],
                 ],
                 'ActionResult'    => [
-                    'fields'    => [
+                    'fields'           => [
                         'id',
                         'note',
                         'name',
@@ -622,12 +622,20 @@ class Post extends AppModel
                         'photo4_file_name',
                         'photo5_file_name',
                     ],
-                    'KeyResult' => [
+                    'KeyResult'        => [
                         'fields' => [
                             'id',
                             'name',
                         ],
                     ],
+                    'ActionResultFile' => [
+                        'order'        => ['ActionResultFile.index_num asc'],
+                        'AttachedFile' => [
+                            'User' => [
+                                'fields' => $this->User->profileFields
+                            ]
+                        ]
+                    ]
                 ],
                 'PostFile'        => [
                     'order'        => ['PostFile.index_num asc'],
