@@ -1125,4 +1125,20 @@ class Post extends AppModel
         return $res ? $res[0]['sum_like'] : 0;
     }
 
+
+    public function getMessageList()
+    {
+        $options = [
+            'conditions' => [
+                'team_id' => $this->current_team_id,
+                'type'    => self::TYPE_MESSAGE,
+            ],
+            'contain' => [
+                'User'
+            ]
+        ];
+
+        $res = $this->find('all', $options);
+        return $res;
+    }
 }
