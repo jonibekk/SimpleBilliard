@@ -16,7 +16,7 @@ $without_header = isset($without_header) ? $without_header : false;
 ?>
 <div class="panel panel-default">
     <?php foreach ($attached_files as $file): ?>
-        <div class="panel-body pt_10px plr_11px pb_8px">
+        <div class="panel-body pt_10px plr_11px pb_8px" style="border-top: 1px solid #dddddd;">
             <?= $this->element('Feed/attached_file_item',
                                ['data' => $file, 'page_type' => 'file_list', 'post_id' => 1]) ?>
         </div>

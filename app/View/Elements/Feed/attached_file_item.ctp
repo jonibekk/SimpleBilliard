@@ -24,33 +24,39 @@ if (isset($data['AttachedFile'])) {
 ?>
 <!-- START app/View/Elements/Feed/attached_file_item.ctp -->
 <div class="col col-xxs-12">
-    <div class="pull-right">
-        <div class="dropdown">
-            <a href="#" class="font_lightGray-gray font_11px" data-toggle="dropdown" id="download">
-                <i class="fa fa-ellipsis-h"></i>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
-                <li>
-                    <a href="<?= $this->Upload->attachedFileUrl($data, "download") ?>" download>
-                        <i class="fa fa-download"></i><?= __d('gl', "ダウンロード") ?></a>
-                </li>
-                <?php if ($this->Upload->isCanPreview($data)): ?>
+    <?php if ($page_type != 'feed'): ?>
+        <div class="pull-right">
+            <div class="dropdown">
+                <a href="#" class="font_lightGray-gray font_11px" data-toggle="dropdown" id="download">
+                    <i class="fa fa-ellipsis-h"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
                     <li>
-                        <a href="<?= $this->Upload->attachedFileUrl($data, "viewer") ?>" target="_blank">
-                            <i class="fa fa-external-link-square"></i><?= __d('gl', "プレビュー") ?></a>
+                        <a href="<?= $this->Upload->attachedFileUrl($data, "download") ?>" download>
+                            <i class="fa fa-download"></i><?= __d('gl', "ダウンロード") ?></a>
                     </li>
-                <?php endif; ?>
-                <?php if ($page_type != 'feed'): ?>
+                    <?php if ($this->Upload->isCanPreview($data)): ?>
+                        <li>
+                            <a href="<?= $this->Upload->attachedFileUrl($data, "viewer") ?>" target="_blank">
+                                <i class="fa fa-external-link-square"></i><?= __d('gl', "プレビュー") ?></a>
+                        </li>
+                    <?php endif; ?>
                     <li>
                         <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'post_id' => $post_id]) ?>">
                             <i class="fa fa-eye"></i><?= __d('gl', "投稿を見る") ?></a>
                     </li>
-                <?php endif; ?>
-            </ul>
+                </ul>
+            </div>
         </div>
-    </div>
+    <?php endif; ?>
+    <?
+    $icon_url = $this->Upload->attachedFileUrl($data, "preview");
+    if ($page_type == "file_list") {
+        $icon_url = $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'post_id' => $post_id]);
+    }
+    ?>
     <div class="col col-xxs-1">
-        <a href="<?= $this->Upload->attachedFileUrl($data, "preview") ?>" target="_blank">
+        <a href="<?= $icon_url ?>" target="_blank">
             <div>
                 <?php if ($data['file_type'] == AttachedFile::TYPE_FILE_IMG): ?>
                     <?=
@@ -70,10 +76,10 @@ if (isset($data['AttachedFile'])) {
             </div>
         </a>
     </div>
-    <div class="col col-xxs-10" style="overflow: hidden">
-        <a href="<?= $this->Upload->attachedFileUrl($data, "viewer") ?>" target="_blank">
+    <div class="col col-xxs-10" style="overflow: hidden;text-overflow: ellipsis;">
+        <a href="<?= $icon_url ?>" target="_blank">
                 <span class="font_14px font_bold font_verydark">
-                    <?= $data['attached_file_name'] ?>
+                    <?= $this->Upload->getAttachedFileName($data) ?>
                 </span>
         </a>
 
@@ -83,29 +89,34 @@ if (isset($data['AttachedFile'])) {
             <span class="font_lightgray"> ･ </span>
             <span class=""><?= $data['file_ext'] ?></span>
             <?php if ($page_type == 'file_list'): ?>
-                <div>
-                    <?=
-                    $this->Html->image('ajax-loader.gif',
-                                       [
-                                           'class'         => 'lazy',
-                                           'data-original' => $this->Upload->uploadUrl($user, 'User.photo',
-                                                                                       ['style' => 'small']),
-                                           'width'         => '16px',
-                                           'error-img'     => "/img/no-image-user.png",
-                                       ]
-                    )
-                    ?>
-                    <?= h($user['display_username']) ?>
-                </div>
+                <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user['id']]) ?>"
+                   class="link-dark-gray">
+                    <div>
+                        <?=
+                        $this->Html->image('ajax-loader.gif',
+                                           [
+                                               'class'         => 'lazy',
+                                               'data-original' => $this->Upload->uploadUrl($user, 'User.photo',
+                                                                                           ['style' => 'small']),
+                                               'width'         => '16px',
+                                               'error-img'     => "/img/no-image-user.png",
+                                           ]
+                        )
+                        ?>
+                        <?= h($user['display_username']) ?>
+                    </div>
+                </a>
             <?php endif; ?>
         </div>
         <?php if ($page_type == 'feed'): ?>
-            <div class="row">
+            <div class="row" style="margin-left:-5px;margin-right:-5px;">
                 <?php if ($this->Upload->isCanPreview($data)): ?>
                     <a class="link-dark-gray" href="<?= $this->Upload->attachedFileUrl($data, "viewer") ?>"
                        target="_blank">
-                        <div class="col col-xxs-6 text-center" style="border-radius: 4px;border: 1px solid #dddddd;">
-                            <i class="fa fa-external-link-square"></i><?= __d('gl', "プレビュー") ?>
+                        <div class="col col-xxs-6 text-center" style="padding-right:5px;padding-left:5px;">
+                            <div style="border-radius: 4px;border: 1px solid #dddddd;">
+                                <i class="fa fa-external-link-square"></i><?= __d('gl', "プレビュー") ?>
+                            </div>
                         </div>
                     </a>
                 <?php else: ?>
@@ -113,8 +124,10 @@ if (isset($data['AttachedFile'])) {
                     </div>
                 <?php endif; ?>
                 <a class="link-dark-gray" href="<?= $this->Upload->attachedFileUrl($data, "download") ?>" download>
-                    <div class="col col-xxs-6 text-center" style="border-radius: 4px;border: 1px solid #dddddd;">
-                        <i class="fa fa-download"></i><?= __d('gl', "ダウンロード") ?>
+                    <div class="col col-xxs-6 text-center" style="padding-right:5px;padding-left:5px;">
+                        <div style="border-radius: 4px;border: 1px solid #dddddd;">
+                            <i class="fa fa-download"></i><?= __d('gl', "ダウンロード") ?>
+                        </div>
                     </div>
                 </a>
             </div>

@@ -48,7 +48,6 @@ class UploadHelper extends AppHelper
         ]
     ];
 
-
     public function uploadImage($data, $path, $options = array(), $htmlOptions = array())
     {
         $options += array('urlize' => false);
@@ -82,6 +81,18 @@ class UploadHelper extends AppHelper
             $url = OOV_BASE_URL . urlencode($url);
         }
         return $url;
+    }
+
+    public function getAttachedFileName($data, $exclude_ext = true)
+    {
+        if (isset($data['AttachedFile'])) {
+            $data = $data['AttachedFile'];
+        }
+        if (!$exclude_ext) {
+            return $data['attached_file_name'];
+        }
+        $file_name = pathinfo($data['attached_file_name']);
+        return $file_name['filename'];
     }
 
     public function getCssOfFileIcon($data)
