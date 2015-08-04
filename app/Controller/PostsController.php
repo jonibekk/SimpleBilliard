@@ -296,10 +296,10 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($res);
     }
 
-    public function ajax_get_message($post_id)
+    public function ajax_get_message($post_id, $limit, $page_num)
     {
         $this->_ajaxPreProcess();
-        $message_list = $this->Post->Comment->getPostsComment($post_id);
+        $message_list = $this->Post->Comment->getPostsComment($post_id, $limit, $page_num, 'desc');
         $convert_msg_data = $this->Post->Comment->convertData($message_list);
         $result = ['message_list' => $convert_msg_data];
         return $this->_ajaxGetResponse($result);
@@ -317,18 +317,18 @@ class PostsController extends AppController
         $convert_data = $this->Post->Comment->convertData($detail_comment);
 
         $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
-        $pusher->trigger('test-channel', 'new_message', $convert_data);
+        $pusher->trigger('message-channel-'. $post_id, 'new_message', $convert_data);
 
         return $this->_ajaxGetResponse($detail_comment);
     }
 
-    public function ajax_put_message_read($comment_id)
+    public function ajax_put_message_read($post_id, $comment_id)
     {
         $this->_ajaxPreProcess();
         $res = $this->Post->Comment->CommentRead->red([$comment_id]);
         if ($res === true) {
             $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
-            $pusher->trigger('test-channel', 'read_message', $comment_id);
+            $pusher->trigger('message-channel-'. $post_id, 'read_message', $comment_id);
         }
         return $this->_ajaxGetResponse($res);
     }
