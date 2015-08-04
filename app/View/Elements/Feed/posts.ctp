@@ -300,8 +300,6 @@ $without_header = isset($without_header) ? $without_header : false;
                     </div>
                 <?php endif; ?>
 
-
-
                 <?php if ($post['Post']['type'] == Post::TYPE_ACTION && isset($post['ActionResult']['KeyResult']['name'])): ?>
                     <div class="col col-xxs-12 pt_6px feed-contents">
                         <i class="fa fa-key disp_i"></i>&nbsp;<?= h($post['ActionResult']['KeyResult']['name']) ?>
@@ -325,7 +323,6 @@ $without_header = isset($without_header) ? $without_header : false;
                     class="fa fa-check"></i>&nbsp;<span><?= $post['Post']['post_read_count'] ?></span>
             </a>
             </span>
-
                 </div>
             </div>
             <div class="panel-body ptb_8px plr_11px comment-block"
