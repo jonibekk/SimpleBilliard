@@ -3370,7 +3370,9 @@ $(document).ready(function () {
 
     // dropzone
     $uploadFileForm.dropzone();
-    $uploadFileForm.data('dzDefaultOptions', $.extend({}, Dropzone.instances[0].options));
+    if (typeof Dropzone.instances[0] !== "undefined") {
+        $uploadFileForm.data('dzDefaultOptions', $.extend({}, Dropzone.instances[0].options));
+    }
     $(document).data('uploadFileForm', $uploadFileForm);
 
 });
