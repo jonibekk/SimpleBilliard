@@ -45,7 +45,19 @@ class UploadHelper extends AppHelper
         'pdf'  => [
             'viewer'     => 'normal',
             'icon_class' => 'fa-file-pdf-o file-other-icon',
-        ]
+        ],
+        'jpeg' => [
+            'viewer' => 'lightbox',
+        ],
+        'jpg'  => [
+            'viewer' => 'lightbox',
+        ],
+        'png'  => [
+            'viewer' => 'lightbox',
+        ],
+        'gif'  => [
+            'viewer' => 'lightbox',
+        ],
     ];
 
     public function uploadImage($data, $path, $options = array(), $htmlOptions = array())

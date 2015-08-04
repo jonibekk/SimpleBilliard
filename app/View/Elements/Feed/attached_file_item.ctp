@@ -32,12 +32,14 @@ if (isset($data['AttachedFile'])) {
                 </a>
                 <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
                     <li>
-                        <a href="<?= $this->Upload->attachedFileUrl($data, "download") ?>" download>
+                        <a href="<?= $this->Upload->attachedFileUrl($data, "download") ?>"
+                           download="<?= $data['attached_file_name'] ?>">
                             <i class="fa fa-download"></i><?= __d('gl', "ダウンロード") ?></a>
                     </li>
                     <?php if ($this->Upload->isCanPreview($data)): ?>
                         <li>
-                            <a href="<?= $this->Upload->attachedFileUrl($data, "viewer") ?>" target="_blank">
+                            <a href="<?= $this->Upload->attachedFileUrl($data, "viewer") ?>"
+                                <?= $data['file_type'] == AttachedFile::TYPE_FILE_IMG ? "rel='lightbox' data-lightbox='LightBoxAttachedFile_{$data['id']}'" : "target='_blank'" ?>>
                                 <i class="fa fa-external-link-square"></i><?= __d('gl', "プレビュー") ?></a>
                         </li>
                     <?php endif; ?>
@@ -51,30 +53,42 @@ if (isset($data['AttachedFile'])) {
     <?php endif; ?>
     <?
     $icon_url = $this->Upload->attachedFileUrl($data, "preview");
+    if ($data['file_type'] == AttachedFile::TYPE_FILE_IMG) {
+        $icon_url = $this->Upload->uploadUrl($data, 'AttachedFile.attached');
+    }
     if ($page_type == "file_list") {
         $icon_url = $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'post_id' => $post_id]);
     }
     ?>
     <div class="col col-xxs-1">
-        <a href="<?= $icon_url ?>" target="_blank">
-            <div>
-                <?php if ($data['file_type'] == AttachedFile::TYPE_FILE_IMG): ?>
-                    <?=
-                    $this->Html->image('ajax-loader.gif',
-                                       [
-                                           'class'         => 'lazy',
-                                           'data-original' => $this->Upload->attachedFileUrl($data, "download"),
-                                           'width'         => '25px',
-                                           'height'        => '25px',
-                                           'error-img'     => "/img/no-image-link.png",
-                                       ]
-                    )
-                    ?>
-                <?php else: ?>
+        <?php if ($data['file_type'] == AttachedFile::TYPE_FILE_IMG): ?>
+            <a href="<?= $icon_url ?>" <?= $page_type == "feed" ? "rel='lightbox' data-lightbox='LightBoxAttachedFile_{$post_id}'" : "target='_blank'" ?>>
+                <div>
+                    <?php if ($data['file_type'] == AttachedFile::TYPE_FILE_IMG): ?>
+                        <?=
+                        $this->Html->image('ajax-loader.gif',
+                                           [
+                                               'class'         => 'lazy',
+                                               'data-original' => $this->Upload->attachedFileUrl($data, "download"),
+                                               'width'         => '25px',
+                                               'height'        => '25px',
+                                               'error-img'     => "/img/no-image-link.png",
+                                           ]
+                        )
+                        ?>
+                    <?php else: ?>
+                        <i class="fa <?= $this->Upload->getCssOfFileIcon($data) ?>"></i>
+                    <?php endif; ?>
+                </div>
+            </a>
+        <?php else: ?>
+            <a href="<?= $icon_url ?>" target="_blank">
+                <div>
                     <i class="fa <?= $this->Upload->getCssOfFileIcon($data) ?>"></i>
-                <?php endif; ?>
-            </div>
-        </a>
+                </div>
+            </a>
+
+        <?php endif; ?>
     </div>
     <div class="col col-xxs-10 file-info-wrap">
         <a href="<?= $icon_url ?>" target="_blank">
@@ -112,7 +126,7 @@ if (isset($data['AttachedFile'])) {
             <div class="row file-btn-group">
                 <?php if ($this->Upload->isCanPreview($data)): ?>
                     <a class="link-dark-gray" href="<?= $this->Upload->attachedFileUrl($data, "viewer") ?>"
-                       target="_blank">
+                        <?= $data['file_type'] == AttachedFile::TYPE_FILE_IMG ? "rel='lightbox' data-lightbox='LightBoxAttachedFile_{$post_id}'" : "target='_blank'" ?>>
                         <div class="col col-xxs-6 text-center file-btn-wap">
                             <div class="file-btn">
                                 <i class="fa fa-external-link-square"></i><?= __d('gl', "プレビュー") ?>
@@ -123,7 +137,8 @@ if (isset($data['AttachedFile'])) {
                     <div class="col col-xxs-6 text-center">
                     </div>
                 <?php endif; ?>
-                <a class="link-dark-gray" href="<?= $this->Upload->attachedFileUrl($data, "download") ?>" download>
+                <a class="link-dark-gray" href="<?= $this->Upload->attachedFileUrl($data, "download") ?>"
+                   download="<?= $data['attached_file_name'] ?>">
                     <div class="col col-xxs-6 text-center file-btn-wap">
                         <div class="file-btn">
                             <i class="fa fa-download"></i><?= __d('gl', "ダウンロード") ?>
