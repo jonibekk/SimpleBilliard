@@ -226,7 +226,7 @@ $without_header = isset($without_header) ? $without_header : false;
 
                     </div>
                 <?php endif; ?>
-                <?php if ($post['Post']['type'] == Post::TYPE_ACTION): ?>
+                <?php if ($post['Post']['type'] == Post::TYPE_ACTION && isset($post['ActionResult']['ActionResultFile'][0])): ?>
                     <div class="col col-xxs-12 pt_10px">
                         <a href="<?= $this->Upload->attachedFileUrl($post['ActionResult']['ActionResultFile'][0],
                                                                     "preview") ?>"
