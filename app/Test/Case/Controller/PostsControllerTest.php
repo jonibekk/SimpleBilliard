@@ -15,6 +15,8 @@ class PostsControllerTest extends ControllerTestCase
      */
     public $fixtures = array(
         'app.attached_file',
+        'app.post_file',
+        'app.comment_file',
         'app.goal_category',
         'app.evaluate_term',
         'app.action_result',

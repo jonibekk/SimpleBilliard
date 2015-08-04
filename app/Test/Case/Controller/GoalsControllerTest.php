@@ -15,6 +15,9 @@ class GoalsControllerTest extends ControllerTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.attached_file',
+        'app.post_file',
+        'app.comment_file',
         'app.evaluate_term',
         'app.action_result',
         'app.evaluation_setting',
@@ -43,7 +46,6 @@ class GoalsControllerTest extends ControllerTestCase
         'app.team_member',
         'app.job_category',
         'app.invite',
-
         'app.thread',
         'app.message',
         'app.email',

@@ -14,6 +14,9 @@ class UsersControllerTest extends ControllerTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.attached_file',
+        'app.post_file',
+        'app.comment_file',
         'app.action_result',
         'app.evaluator',
         'app.evaluation_setting',
