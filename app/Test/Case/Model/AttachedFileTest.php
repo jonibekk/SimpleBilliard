@@ -208,13 +208,6 @@ class AttachedFileTest extends CakeTestCase
         $res = $this->AttachedFile->updateRelatedFiles(1, 1000, [1, 2], ['test']);
         $this->assertFalse($res);
     }
-
-    function testUpdateRelatedFilesDeleteFileFail()
-    {
-        $res = $this->AttachedFile->updateRelatedFiles(1, AttachedFile::TYPE_MODEL_POST, [1, 2], ['test']);
-        $this->assertFalse($res);
-    }
-
     /**
      * ファイルアップデートのテスト
      * もともと２ファイルを持っており、１ファイル削除し、２ファイル追加したときに合計３ファイルになる事を確認
