@@ -571,6 +571,14 @@ class Post extends AppModel
                             'MyCommentLike.team_id' => $this->current_team_id,
                         ]
                     ],
+                    'CommentFile'   => [
+                        'order'        => ['CommentFile.index_num asc'],
+                        'AttachedFile' => [
+                            'User' => [
+                                'fields' => $this->User->profileFields
+                            ]
+                        ]
+                    ]
                 ],
                 'CommentId',
                 'PostShareCircle' => [
@@ -620,6 +628,14 @@ class Post extends AppModel
                             'name',
                         ],
                     ],
+                ],
+                'PostFile'        => [
+                    'order'        => ['PostFile.index_num asc'],
+                    'AttachedFile' => [
+                        'User' => [
+                            'fields' => $this->User->profileFields
+                        ]
+                    ]
                 ]
             ],
         ];
