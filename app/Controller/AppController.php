@@ -177,6 +177,11 @@ class AppController extends Controller
             $this->_setMyMemberStatus();
         }
         $this->set('current_global_menu', null);
+
+        /** @noinspection PhpUndefinedFieldInspection */
+        $action_name = $this->action;
+        $this->set(compact('action_name'));
+
         //ページタイトルセット
         $this->set('title_for_layout', SERVICE_NAME);
     }
