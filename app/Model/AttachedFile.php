@@ -263,8 +263,8 @@ class AttachedFile extends AppModel
             return false;
         }
         //ファイル削除処理
-        if (!empty($delete_files) && !$this->deleteRelatedFile($delete_files, $model_type)) {
-            return false;
+        foreach($delete_files as $id){
+            $this->delete($id);
         }
 
         /** @var GlRedis $Redis */
@@ -349,36 +349,6 @@ class AttachedFile extends AppModel
         }
 
         return self::TYPE_FILE_DOC;
-    }
-
-    /**
-     * 共通のファイル単体の削除処理
-     * $model_type should be in self::$TYPE_FILE
-     *
-     * @param         $attached_file_ids
-     * @param integer $model_type
-     *
-     * @return bool
-     */
-    public function deleteRelatedFile($attached_file_ids, $model_type)
-    {
-        if ($this->isUnavailableModelType($model_type)) {
-            return false;
-        }
-        $model = self::$TYPE_MODEL[$model_type];
-        $related_files = $this->{$model['intermediateModel']}->find('all', [
-            'conditions' => ['attached_file_id' => $attached_file_ids],
-            'fields'     => ['id', 'attached_file_id']
-        ]);
-        if (empty($related_files)) {
-            return false;
-        }
-        //deleteAllだとsoftDeleteされない為、foreach
-        foreach ($related_files as $related_file) {
-            $this->{$model['intermediateModel']}->delete($related_file[$model['intermediateModel']]['id']);
-            $this->delete($related_file[$model['intermediateModel']]['attached_file_id']);
-        }
-        return true;
     }
 
     /**
