@@ -305,6 +305,16 @@ $without_header = isset($without_header) ? $without_header : false;
                         <i class="fa fa-key disp_i"></i>&nbsp;<?= h($post['ActionResult']['KeyResult']['name']) ?>
                     </div>
                 <?php endif; ?>
+                <div class="col col-xxs-12">
+                    <?php foreach ($post['PostFile'] as $file): ?>
+                        <div class="panel panel-default file-wrap-on-post">
+                            <div class="panel-body pt_10px plr_11px pb_8px">
+                                <?= $this->element('Feed/attached_file_item',
+                                                   ['data' => $file, 'page_type' => 'feed', 'post_id' => $post['Post']['id']]) ?>
+                            </div>
+                        </div>
+                    <?php endforeach ?>
+                </div>
                 <div class="col col-xxs-12 font_12px pt_8px">
                     <a href="#" class="click-like font_lightgray <?= empty($post['MyPostLike']) ? null : "liked" ?>"
                        like_count_id="PostLikeCount_<?= $post['Post']['id'] ?>"

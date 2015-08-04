@@ -65,7 +65,8 @@
                     </div>
                 <?php endif; ?>
                 <div class="mb_2px lh_12px">
-                    <a class="font_bold font_verydark" href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user['id']]) ?>">
+                    <a class="font_bold font_verydark"
+                       href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user['id']]) ?>">
                         <?= h($user['display_username']) ?>
                     </a>
                 </div>
@@ -184,8 +185,16 @@
                     </a>
                 </div>
             <?php endif; ?>
-
-
+            <div class="col col-xxs-12">
+                <?php foreach ($comment['CommentFile'] as $file): ?>
+                    <div class="panel panel-default file-wrap-on-post">
+                        <div class="panel-body pt_10px plr_11px pb_8px">
+                            <?= $this->element('Feed/attached_file_item',
+                                               ['data' => $file, 'page_type' => 'feed', 'post_id' => $comment['post_id'], 'comment_id' => $comment['id']]) ?>
+                        </div>
+                    </div>
+                <?php endforeach ?>
+            </div>
             <div class="lh_15px">
                 <?= $this->TimeEx->elapsedTime(h($comment['created'])) ?><span class="font_lightgray"> ･ </span>
                 <a href="#" class="click-like font_lightgray <?= empty($like) ? null : "liked" ?>"

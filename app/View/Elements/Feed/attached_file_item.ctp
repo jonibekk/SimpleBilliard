@@ -9,7 +9,11 @@
  * @var                    $data
  * @var                    $page_type
  * @var                    $post_id
+ * @var                    $comment_id
  */
+if (!isset($comment_id)) {
+    $comment_id = null;
+}
 if (!isset($page_type)) {
     $page_type = "feed";
 }
@@ -17,6 +21,9 @@ $user = null;
 if (isset($data['User'])) {
     $user = $data['User'];
 }
+elseif (isset($data['AttachedFile']['User'])) {
+    $user = $data['AttachedFile']['User'];
+};
 
 if (isset($data['AttachedFile'])) {
     $data = $data['AttachedFile'];
@@ -39,7 +46,7 @@ if (isset($data['AttachedFile'])) {
                     <?php if ($this->Upload->isCanPreview($data)): ?>
                         <li>
                             <a href="<?= $this->Upload->attachedFileUrl($data, "viewer") ?>"
-                                <?= $data['file_type'] == AttachedFile::TYPE_FILE_IMG ? "rel='lightbox' data-lightbox='LightBoxAttachedFile_{$data['id']}'" : "target='_blank'" ?>>
+                                <?= $data['file_type'] == AttachedFile::TYPE_FILE_IMG ? "rel='lightbox' data-lightbox='LightBoxAttachedFilePreview_{$data['id']}'" : "target='_blank'" ?>>
                                 <i class="fa fa-external-link-square"></i><?= __d('gl', "プレビュー") ?></a>
                         </li>
                     <?php endif; ?>
@@ -62,7 +69,7 @@ if (isset($data['AttachedFile'])) {
     ?>
     <div class="col col-xxs-1">
         <?php if ($data['file_type'] == AttachedFile::TYPE_FILE_IMG): ?>
-            <a href="<?= $icon_url ?>" <?= $page_type == "feed" ? "rel='lightbox' data-lightbox='LightBoxAttachedFile_{$post_id}'" : "target='_blank'" ?>>
+            <a href="<?= $icon_url ?>" <?= $page_type == "feed" ? "rel='lightbox' data-lightbox='LightBoxAttachedFileImg_Post{$post_id}_Comment_{$comment_id}'" : "target='_blank'" ?>>
                 <div>
                     <?php if ($data['file_type'] == AttachedFile::TYPE_FILE_IMG): ?>
                         <?=
@@ -91,7 +98,11 @@ if (isset($data['AttachedFile'])) {
         <?php endif; ?>
     </div>
     <div class="col col-xxs-10 file-info-wrap">
-        <a href="<?= $icon_url ?>" target="_blank">
+        <a href="<?= $icon_url ?>"
+            <?= $data['file_type'] == AttachedFile::TYPE_FILE_IMG && $page_type == "feed" ?
+                "rel='lightbox' data-lightbox='LightBoxAttachedFileName_Post{$post_id}_Comment{$comment_id}'" : "target='_blank'"
+            ?>
+           target="_blank">
                 <span class="font_14px font_bold font_verydark">
                     <?= $this->Upload->getAttachedFileName($data) ?>
                 </span>
@@ -126,7 +137,7 @@ if (isset($data['AttachedFile'])) {
             <div class="row file-btn-group">
                 <?php if ($this->Upload->isCanPreview($data)): ?>
                     <a class="link-dark-gray" href="<?= $this->Upload->attachedFileUrl($data, "viewer") ?>"
-                        <?= $data['file_type'] == AttachedFile::TYPE_FILE_IMG ? "rel='lightbox' data-lightbox='LightBoxAttachedFile_{$post_id}'" : "target='_blank'" ?>>
+                        <?= $data['file_type'] == AttachedFile::TYPE_FILE_IMG ? "rel='lightbox' data-lightbox='LightBoxAttachedFileMenu_Post{$post_id}_Comment{$comment_id}'" : "target='_blank'" ?>>
                         <div class="col col-xxs-6 text-center file-btn-wap">
                             <div class="file-btn">
                                 <i class="fa fa-external-link-square"></i><?= __d('gl', "プレビュー") ?>
