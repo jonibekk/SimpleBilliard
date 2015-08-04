@@ -24,6 +24,9 @@ else {
     echo $this->element('header_not_logged_in');
 }
 ?>
+<?php if ($action_name === 'display') {
+    echo $this->element('header_sp_feeds_alt');
+} ?>
 <div id="container" class="container">
     <div class="row">
         <div class="col-md-2 col-sm-4 col-xs-4 hidden-xxs layout-sub">
@@ -31,11 +34,13 @@ else {
             <?= $this->element('circle_list') ?>
 
         </div>
-        <div class="col-md-6 col-sm-8 col-xs-8 col-xxs-12 layout-main" role="main">
+        <div class="col-md-6 col-xs-8 col-xxs-12 layout-main" role="main">
             <?= $this->Session->flash(); ?>
+            <!-- Remark -->
             <?= $this->fetch('content'); ?>
+            <!-- /Remark -->
         </div>
-        <div class="col-md-4 visible-md visible-lg col-sm-8 col-xs-8 col-xxs-12 layout-goal" role="goal_area">
+        <div class="col-md-4 visible-md visible-lg col-xs-8 col-xxs-12 layout-goal" role="goal_area">
             <?= $this->element('my_goals_area') ?>
         </div>
     </div>
