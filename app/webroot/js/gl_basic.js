@@ -1,6 +1,12 @@
 $.ajaxSetup({
     cache: false
 });
+if (typeof String.prototype.startsWith != 'function') {
+    // see below for better implementation!
+    String.prototype.startsWith = function (str){
+        return this.indexOf(str) === 0;
+    };
+};
 $(document).ready(function () {
 
     setDefaultTab();
@@ -3364,7 +3370,9 @@ $(document).ready(function () {
 
     // dropzone
     $uploadFileForm.dropzone();
-    $uploadFileForm.data('dzDefaultOptions', $.extend({}, Dropzone.instances[0].options));
+    if (typeof Dropzone.instances[0] !== "undefined") {
+        $uploadFileForm.data('dzDefaultOptions', $.extend({}, Dropzone.instances[0].options));
+    }
     $(document).data('uploadFileForm', $uploadFileForm);
 
 });
