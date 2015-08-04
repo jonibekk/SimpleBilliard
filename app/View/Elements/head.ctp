@@ -58,7 +58,7 @@
     echo $this->Html->script('vendor/angular/angular-pnotify');
 
     ?>
-    <?php if (isset($action_name) && $action_name === 'display'): //上部のタブメニューの表示切替えの為?>
+    <?php if ($this->request->params['action'] === 'display'): //上部のタブメニューの表示切替えの為?>
         <style>
             @media screen and (max-width: 991px) {
                 .container {

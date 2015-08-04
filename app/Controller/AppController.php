@@ -178,10 +178,6 @@ class AppController extends Controller
         }
         $this->set('current_global_menu', null);
 
-        /** @noinspection PhpUndefinedFieldInspection */
-        $action_name = $this->action;
-        $this->set(compact('action_name'));
-
         //ページタイトルセット
         $this->set('title_for_layout', SERVICE_NAME);
     }
@@ -624,7 +620,6 @@ class AppController extends Controller
         $new_notify_cnt = $this->NotifyBiz->getCountNewNotification();
         $this->set(compact("new_notify_cnt"));
     }
-
 
     function _getRequiredParam($name)
     {
