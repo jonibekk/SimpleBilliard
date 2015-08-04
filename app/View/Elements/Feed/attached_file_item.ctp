@@ -71,12 +71,12 @@ if (isset($data['AttachedFile'])) {
                     )
                     ?>
                 <?php else: ?>
-                    <i style="font-size: 25px" class="fa <?= $this->Upload->getCssOfFileIcon($data) ?>"></i>
+                    <i class="fa <?= $this->Upload->getCssOfFileIcon($data) ?>"></i>
                 <?php endif; ?>
             </div>
         </a>
     </div>
-    <div class="col col-xxs-10" style="overflow: hidden;text-overflow: ellipsis;">
+    <div class="col col-xxs-10 file-info-wrap">
         <a href="<?= $icon_url ?>" target="_blank">
                 <span class="font_14px font_bold font_verydark">
                     <?= $this->Upload->getAttachedFileName($data) ?>
@@ -109,12 +109,12 @@ if (isset($data['AttachedFile'])) {
             <?php endif; ?>
         </div>
         <?php if ($page_type == 'feed'): ?>
-            <div class="row" style="margin-left:-5px;margin-right:-5px;">
+            <div class="row file-btn-group">
                 <?php if ($this->Upload->isCanPreview($data)): ?>
                     <a class="link-dark-gray" href="<?= $this->Upload->attachedFileUrl($data, "viewer") ?>"
                        target="_blank">
-                        <div class="col col-xxs-6 text-center" style="padding-right:5px;padding-left:5px;">
-                            <div style="border-radius: 4px;border: 1px solid #dddddd;">
+                        <div class="col col-xxs-6 text-center file-btn-wap">
+                            <div class="file-btn">
                                 <i class="fa fa-external-link-square"></i><?= __d('gl', "プレビュー") ?>
                             </div>
                         </div>
@@ -124,8 +124,8 @@ if (isset($data['AttachedFile'])) {
                     </div>
                 <?php endif; ?>
                 <a class="link-dark-gray" href="<?= $this->Upload->attachedFileUrl($data, "download") ?>" download>
-                    <div class="col col-xxs-6 text-center" style="padding-right:5px;padding-left:5px;">
-                        <div style="border-radius: 4px;border: 1px solid #dddddd;">
+                    <div class="col col-xxs-6 text-center file-btn-wap">
+                        <div class="file-btn">
                             <i class="fa fa-download"></i><?= __d('gl', "ダウンロード") ?>
                         </div>
                     </div>

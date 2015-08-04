@@ -16,7 +16,7 @@ $without_header = isset($without_header) ? $without_header : false;
 ?>
 <div class="panel panel-default">
     <?php foreach ($attached_files as $file): ?>
-        <div class="panel-body pt_10px plr_11px pb_8px" style="border-top: 1px solid #dddddd;">
+        <div class="panel-body pt_10px plr_11px pb_8px bd-t">
             <?= $this->element('Feed/attached_file_item',
                                ['data' => $file, 'page_type' => 'file_list', 'post_id' => 1]) ?>
         </div>
@@ -311,7 +311,7 @@ $without_header = isset($without_header) ? $without_header : false;
 
                 <div class="col col-xxs-12">
                     <?php foreach ($attached_files as $file): ?>
-                        <div class="panel panel-default" style="background-color: #f5f5f5;">
+                        <div class="panel panel-default file-wrap-on-post">
                             <div class="panel-body pt_10px plr_11px pb_8px">
                                 <?= $this->element('Feed/attached_file_item',
                                                    ['data' => $file, 'page_type' => 'feed', 'post_id' => 1]) ?>
@@ -342,7 +342,6 @@ $without_header = isset($without_header) ? $without_header : false;
                     class="fa fa-check"></i>&nbsp;<span><?= $post['Post']['post_read_count'] ?></span>
             </a>
             </span>
-
                 </div>
             </div>
             <div class="panel-body ptb_8px plr_11px comment-block"
