@@ -58,6 +58,9 @@ class UploadHelper extends AppHelper
         'gif'  => [
             'viewer' => 'lightbox',
         ],
+        'txt'  => [
+            'viewer' => 'normal',
+        ],
     ];
 
     public function uploadImage($data, $path, $options = array(), $htmlOptions = array())

@@ -177,6 +177,7 @@ class AppController extends Controller
             $this->_setMyMemberStatus();
         }
         $this->set('current_global_menu', null);
+
         //ページタイトルセット
         $this->set('title_for_layout', SERVICE_NAME);
     }
@@ -619,7 +620,6 @@ class AppController extends Controller
         $new_notify_cnt = $this->NotifyBiz->getCountNewNotification();
         $this->set(compact("new_notify_cnt"));
     }
-
 
     function _getRequiredParam($name)
     {

@@ -1,6 +1,12 @@
 $.ajaxSetup({
     cache: false
 });
+if (typeof String.prototype.startsWith != 'function') {
+    // see below for better implementation!
+    String.prototype.startsWith = function (str){
+        return this.indexOf(str) === 0;
+    };
+};
 $(document).ready(function () {
 
     setDefaultTab();
@@ -1062,12 +1068,12 @@ $(function () {
         if ($(this).scrollTop() > 1) {
             if (showNavFlag == false) {
                 showNavFlag = true;
-                subNavbar.stop().animate({"top": "-10"}, 800);
+                subNavbar.stop().animate({"top": "-60"}, 800);
             }
         } else {
             if (showNavFlag) {
                 showNavFlag = false;
-                subNavbar.stop().animate({"top": "50"}, 400);
+                subNavbar.stop().animate({"top": "0"}, 400);
             }
         }
     });
@@ -3364,7 +3370,9 @@ $(document).ready(function () {
 
     // dropzone
     $uploadFileForm.dropzone();
-    $uploadFileForm.data('dzDefaultOptions', $.extend({}, Dropzone.instances[0].options));
+    if (typeof Dropzone.instances[0] !== "undefined") {
+        $uploadFileForm.data('dzDefaultOptions', $.extend({}, Dropzone.instances[0].options));
+    }
     $(document).data('uploadFileForm', $uploadFileForm);
 
 });
