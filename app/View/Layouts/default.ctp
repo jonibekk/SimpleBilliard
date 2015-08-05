@@ -31,9 +31,10 @@ else {
 <div id="container" class="container">
     <div class="row">
         <div class="col-md-2 col-sm-4 col-xs-4 hidden-xxs layout-sub">
-            <?= $this->element('dashboard_profile_card') ?>
-            <?= $this->element('circle_list') ?>
-
+            <div class="left-side-container">
+                <?= $this->element('dashboard_profile_card') ?>
+                <?= $this->element('circle_list') ?>
+            </div>
         </div>
         <div class="col-md-6 col-xs-8 col-xxs-12 layout-main" role="main">
             <?= $this->Session->flash(); ?>
