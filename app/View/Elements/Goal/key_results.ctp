@@ -99,6 +99,20 @@
                         ?>
                         <li class="goal-detail-action-list">
                             <a href="<?= $this->Html->url($url) ?>" class="profile-user-action-pic">
+                                <?php if (viaIsSet($action['ActionResultFile'][0]['AttachedFile'])): ?>
+                                    <?= $this->Html->image('ajax-loader.gif',
+                                                           [
+                                                               'class'         => 'lazy',
+                                                               'width'         => 48,
+                                                               'height'        => 48,
+                                                               'data-original' => $this->Upload->uploadUrl($action['ActionResultFile'][0]['AttachedFile'],
+                                                                                                           "AttachedFile.attached",
+                                                                                                           ['style' => 'x_small']),
+                                                           ]
+                                    );
+                                    ?>
+
+                                <?php else: ?>
                                 <?php for ($i = 1; $i <= 5; $i++): ?>
                                     <?php
                                     if (!empty($action["photo{$i}_file_name"]) || $i == 5) {
@@ -115,6 +129,7 @@
                                     }
                                     ?>
                                 <?php endfor; ?>
+                                <?php endif;?>
                                 <?php if ($last_many): ?>
                                     <span class="action-more-counts">
                                                     <i class="fa fa-plus"></i>
