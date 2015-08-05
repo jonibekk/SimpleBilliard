@@ -626,8 +626,16 @@ class PostsController extends AppController
         $this->_setCircleCommonVariables();
         $this->_setViewValOnRightColumn();
         $circle_id = $this->_getRequiredParam('circle_id');
-        $files = $this->Post->PostFile->AttachedFile->getFilesOnCircle($circle_id);
-        $this->set(compact('files'));
+        $file_type_options = $this->Post->PostFile->AttachedFile->getFileTypeOptions();
+        $files = $this->Post->PostFile->AttachedFile->getFilesOnCircle($circle_id,
+                                                                       viaIsSet($this->request->params['named']['file_type']));
+
+        $circle_file_list_base_url = Router::url(
+            [
+                'controller' => 'posts', 'action' => 'attached_file_list', 'circle_id' => $circle_id
+            ]);
+
+        $this->set(compact('files', 'file_type_options', 'circle_file_list_base_url'));
     }
 
     function _setCircleCommonVariables()

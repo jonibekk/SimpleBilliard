@@ -3,10 +3,11 @@ $.ajaxSetup({
 });
 if (typeof String.prototype.startsWith != 'function') {
     // see below for better implementation!
-    String.prototype.startsWith = function (str){
+    String.prototype.startsWith = function (str) {
         return this.indexOf(str) === 0;
     };
-};
+}
+;
 $(document).ready(function () {
 
     setDefaultTab();
@@ -110,6 +111,17 @@ $(document).ready(function () {
         }
         else {
             var url = $(this).attr('redirect-url') + "/key_result_id:" + key_result_id;
+        }
+        location.href = url;
+    });
+    //サークルページの添付ファイルタイプ切替え
+    $('#SwitchFileType').change(function () {
+        var file_type = $(this).val();
+        if (file_type == "") {
+            var url = $(this).attr('redirect-url');
+        }
+        else {
+            var url = $(this).attr('redirect-url') + "/file_type:" + file_type;
         }
         location.href = url;
     });
@@ -3260,11 +3272,16 @@ $(document).ready(function () {
 
         // コールバック関数登録
         $uploadFileForm._callbacks[previewContainerID] = {
-            beforeAddedFile: params.beforeAddedFile ? params.beforeAddedFile : function (){},
-            beforeAccept: params.beforeAccept ? params.beforeAccept : function (){},
-            afterAccept: params.afterAccept ? params.afterAccept : function (){},
-            afterRemoveFile: params.afterRemoveFile ? params.afterRemoveFile : function (){},
-            afterSuccess: params.afterSuccess ? params.afterSuccess : function (){},
+            beforeAddedFile: params.beforeAddedFile ? params.beforeAddedFile : function () {
+            },
+            beforeAccept: params.beforeAccept ? params.beforeAccept : function () {
+            },
+            afterAccept: params.afterAccept ? params.afterAccept : function () {
+            },
+            afterRemoveFile: params.afterRemoveFile ? params.afterRemoveFile : function () {
+            },
+            afterSuccess: params.afterSuccess ? params.afterSuccess : function () {
+            },
         };
     };
 

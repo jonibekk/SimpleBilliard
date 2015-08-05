@@ -135,6 +135,26 @@ class AttachedFile extends AppModel
         ],
     ];
 
+    public function getFileTypeOptions()
+    {
+        $res = [null => __d('gl', "すべて")];
+        foreach (self::$TYPE_FILE as $v) {
+            $res[$v['type']] = $v['name'];
+        }
+        return $res;
+    }
+
+    public function getFileTypeId($file_type)
+    {
+        $res = null;
+        foreach (self::$TYPE_FILE as $k => $v) {
+            if ($file_type === $v['type']) {
+                return $k;
+            }
+        }
+        return $res;
+    }
+
     /**
      * ファイルの仮アップロード
      *
@@ -378,7 +398,7 @@ class AttachedFile extends AppModel
         return true;
     }
 
-    function getFilesOnCircle($circle_id)
+    function getFilesOnCircle($circle_id, $file_type = null)
     {
         //PostFile,CommentFile,ActionResultFileからfile_idをまず集める
         /**
@@ -430,6 +450,10 @@ class AttachedFile extends AppModel
                 ],
             ]
         ];
+        if ($file_type) {
+            $options['conditions']['AttachedFile.file_type'] = $this->getFileTypeId($file_type);
+        }
+
         $files = $this->find('all', $options);
         return $files;
     }

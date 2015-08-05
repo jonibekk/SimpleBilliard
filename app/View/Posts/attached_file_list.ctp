@@ -9,6 +9,8 @@
  * @var                    $user_status
  * @var                    $circle_member_count
  * @var                    $circle_status
+ * @var                    $file_type_options
+ * @var                    $circle_file_list_base_url
  */
 ?>
 <!-- START app/View/Posts/attached_file_list.ctp -->
@@ -29,11 +31,22 @@
     <a href="" class="alert alert-info feed-notify-box" role="alert" style="margin-bottom:5px;display:none;opacity:0;">
         <span class="num"></span><?= __d('gl', "件の新しい投稿があります。") ?></a>
     <div class="panel panel-default">
+        <?=
+        $this->Form->input('file_type', [
+            'label'        => false,
+            'div'          => false,
+            'required'     => true,
+            'class'        => 'form-control disable-change-warning file-type-select font_12px',
+            'id'           => 'SwitchFileType',
+            'options'      => $file_type_options,
+            'default'      => viaisset($this->request->params['named']['file_type']),
+            'redirect-url' => $circle_file_list_base_url,
+        ])
+        ?>
         <?php foreach ($files as $file): ?>
-            <div class="panel-body pt_10px plr_11px pb_8px bd-t">
+            <div class="panel-body pt_10px plr_11px pb_8px bd-b">
                 <?php
-                if(!$p_id = viaIsSet($file['PostFile'][0]['post_id']))
-                {
+                if (!$p_id = viaIsSet($file['PostFile'][0]['post_id'])) {
                     $p_id = viaIsSet($file['CommentFile'][0]['Comment']['post_id']);
                 }
                 ?>
