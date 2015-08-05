@@ -259,7 +259,7 @@ class GlRedis extends AppModel
             'id'      => $notify_id,
             'user_id' => $my_id,
             'body'    => $body,
-            'url'     => Router::url($url),
+            'url'     => Router::url($url,true),
             'type'    => $type,
             'to_user_count' => count($to_user_ids),
             'created' => $date,

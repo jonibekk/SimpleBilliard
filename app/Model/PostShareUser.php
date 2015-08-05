@@ -74,7 +74,7 @@ class PostShareUser extends AppModel
      *
      * @return array|null
      */
-    public function getShareWithMeList($start, $end, $order = "PostShareUser.modified", $order_direction = "desc", $limit = 1000, array $params = [], $contains_message = true)
+    public function getShareWithMeList($start, $end, $contains_message = true, $order = "PostShareUser.modified", $order_direction = "desc", $limit = 1000, array $params = [])
     {
         // パラメータデフォルト
         $params = array_merge(['user_id' => null], $params);
@@ -98,7 +98,7 @@ class PostShareUser extends AppModel
             $options['contain'][] = 'Post';
         }
         if (!$contains_message) {
-            $options['conditions']['Post.type <> '] = Post::TYPE_MESSAGE;
+            $options['conditions']['NOT']['Post.type'] = Post::TYPE_MESSAGE;
         }
 
         $res = $this->find('list', $options);

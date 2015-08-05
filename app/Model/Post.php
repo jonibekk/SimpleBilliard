@@ -328,7 +328,7 @@ class Post extends AppModel
         return false;
     }
 
-    public function getMyPostList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000, $contains_message = true)
+    public function getMyPostList($start, $end, $contains_message = true, $order = "modified", $order_direction = "desc", $limit = 1000)
     {
         $options = [
             'conditions' => [
@@ -341,7 +341,7 @@ class Post extends AppModel
             'fields'     => ['id'],
         ];
         if (!$contains_message) {
-            $options['conditions']['type <> '] = Post::TYPE_MESSAGE;
+            $options['conditions']['NOT']['Post.type'] = Post::TYPE_MESSAGE;
         }
 
         $res = $this->find('list', $options);
@@ -372,12 +372,6 @@ class Post extends AppModel
 
     public function get($page = 1, $limit = 20, $start = null, $end = null, $params = null, $contains_message = true)
     {
-        if($contains_message){
-            error_log("FURU:contains_message=true\n");
-        } else {
-            error_log("FURU:contains_message=".$contains_message);
-        }
-
         $one_month = 60 * 60 * 24 * 31;
         if (!$start) {
             $start = REQUEST_TIMESTAMP - $one_month;
@@ -413,7 +407,7 @@ class Post extends AppModel
         //独自パラメータ指定なし
         if (!$org_param_exists) {
             //自分の投稿
-            $p_list = array_merge($p_list, $this->getMyPostList($start, $end, $contains_message));
+            $p_list = array_merge($p_list, $this->getMyPostList($start, $end,$contains_message));
             //自分が共有範囲指定された投稿
             $p_list = array_merge($p_list, $this->PostShareUser->getShareWithMeList($start, $end, $contains_message));
             //自分のサークルが共有範囲指定された投稿
@@ -435,7 +429,7 @@ class Post extends AppModel
                     throw new RuntimeException(__d('gl', "サークルが存在しないか、権限がありません。"));
                 }
                 $p_list = array_merge($p_list,
-                                      $this->PostShareCircle->getMyCirclePostList($start, $end, 'modified', 'desc',
+                                      $this->PostShareCircle->getMyCirclePostList($start, $end, $contains_message, 'modified', 'desc',
                                                                                   1000, $this->orgParams['circle_id'],
                                                                                   PostShareCircle::SHARE_TYPE_SHARED));
             }
@@ -481,7 +475,7 @@ class Post extends AppModel
                 // 自分個人に共有された投稿
                 $p_list = array_merge($p_list,
                                       $this->PostShareUser->getShareWithMeList(
-                                          $start, $end, "PostShareUser.modified", "desc", 1000,
+                                          $start, $end, $contains_message, "PostShareUser.modified", "desc", 1000,
                                           ['user_id' => $this->orgParams['user_id']]));
 
                 // 自分が閲覧可能なサークルへの投稿一覧
