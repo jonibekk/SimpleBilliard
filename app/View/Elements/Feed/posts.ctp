@@ -404,7 +404,7 @@ $without_header = isset($without_header) ? $without_header : false;
                 <?php foreach ($post['Comment'] as $comment): ?>
                     <?=
                     $this->element('Feed/comment',
-                                   ['comment' => $comment, 'user' => $comment['User'], 'like' => $comment['MyCommentLike']]) ?>
+                                   ['comment' => $comment, 'comment_file' => $comment['CommentFile'], 'user' => $comment['User'], 'like' => $comment['MyCommentLike']]) ?>
                 <?php endforeach ?>
 
                 <a href="#" class="btn-link click-comment-new"
