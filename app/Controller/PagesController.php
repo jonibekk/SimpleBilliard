@@ -76,7 +76,7 @@ class PagesController extends AppController
         $this->set('common_form_type', 'action');
         try {
             $this->set(['posts' => $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null,
-                                                    $this->request->params)]);
+                                                    $this->request->params, false)]);
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
             $this->redirect($this->referer());
