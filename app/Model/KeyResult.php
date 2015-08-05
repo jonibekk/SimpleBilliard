@@ -218,12 +218,16 @@ class KeyResult extends AppModel
         }
         if ($with_action) {
             $options['contain']['ActionResult'] = [
-                'limit' => $action_limit,
-                'order'=>['ActionResult.created desc'],
-                'Post'  => [
+                'limit'            => $action_limit,
+                'order'            => ['ActionResult.created desc'],
+                'Post'             => [
                     'fields' => [
                         'Post.id'
                     ]
+                ],
+                'ActionResultFile' => [
+                    'conditions' => ['ActionResultFile.index_num' => 0],
+                    'AttachedFile'
                 ]
             ];
         }
