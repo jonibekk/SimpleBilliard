@@ -34,7 +34,8 @@ class PostsController extends AppController
     {
         $this->_ajaxPreProcess();
         $result = $this->Post->getMessageList();
-        return $this->_ajaxGetResponse($result);
+        $message_list = $this->Post->convertData($result);
+        return $this->_ajaxGetResponse($message_list);
     }
 
     /**

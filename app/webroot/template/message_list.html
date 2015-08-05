@@ -1,23 +1,10 @@
 <div class="panel panel-default">
     <div class="panel-heading">すべてのメッセージ</div>
     <div class="panel-body panel-body-notify-page">
-        <ul class="notify-page-cards" role="menu" ng-repeat="item in message_list">
+        <ul class="notify-page-cards" role="menu" ng-repeat="item in message_list | orderBy:'Post.created':'DESC'">
             <li class="notify-card-list">
-                <a href="/posts/message#/" class="col col-xxs-12 notify-card-link">
-                    <!--
-                    <?php echo
-                    $this->Html->image(
-                        $this->Upload->uploadUrl(
-                            $item,
-                            'User.photo',
-                            ['style' => 'medium_large']
-                        ),
-                        array(
-                            'class' => array('pull-left notify-card-pic')
-                        )
-                    );
-                    ?>
-                    -->
+                <a href="/posts/message#/{{item.Post.id}}" class="col col-xxs-12 notify-card-link">
+                    <img class="pull-left notify-card-pic" ng-src="{{item.User.photo_path}}"/>
                     <div class="notify-contents">
                         <div class="col col-xxs-12 notify-card-head">
                                 <span class="font-heading">{{item.User.display_username}} +{{item.PostShareUser.length}}</span>
@@ -26,7 +13,7 @@
                              id="CommentTextBody_67">
                             <i class="fa font_bold"></i> {{item.Post.body}}
                         </div>
-                        <p class="notify-card-aside">日付</p>
+                        <p class="notify-card-aside"><span ng-bind-html="item.Post.created"></span></p>
                     </div>
                 </a>
             </li>
