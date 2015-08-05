@@ -650,13 +650,13 @@ class AppController extends Controller
         ];
         $parsed_url = Router::parse($this->referer(null, true));
         $referer_url = $this->referer(null, true);
-        if ($url = viaIsSet($url_map[$parsed_url['action']]) &&
-            $names = viaIsSet($url_map[$parsed_url['action']]['named'])
-        ) {
-            unset($url['named']);
-            foreach ($names as $name) {
-                if (viaIsSet($parsed_url['named'][$name])) {
-                    $url[$name] = $parsed_url['named'][$name];
+        if ($url = viaIsSet($url_map[$parsed_url['action']])) {
+            if ($names = viaIsSet($url['named'])) {
+                unset($url['named']);
+                foreach ($names as $name) {
+                    if (viaIsSet($parsed_url['named'][$name])) {
+                        $url[$name] = $parsed_url['named'][$name];
+                    }
                 }
             }
             $referer_url = Router::url($url);
