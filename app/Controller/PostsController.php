@@ -88,8 +88,7 @@ class PostsController extends AppController
         $this->Mixpanel->trackPost($mixpanel_prop_name, $this->Post->getLastInsertID());
 
         $this->Pnotify->outSuccess(__d('gl', "投稿しました。"));
-
-        $this->redirect($this->referer());
+        $this->redirect($this->_getRedirectUrl());
     }
 
     /**

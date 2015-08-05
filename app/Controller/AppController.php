@@ -637,4 +637,31 @@ class AppController extends Controller
         return $id;
     }
 
+    function _getRedirectUrl()
+    {
+        $url_map = [
+            'attached_file_list' => [
+                'controller' => 'posts',
+                'action'     => 'feed',
+                'named'      => [
+                    'circle_id'
+                ]
+            ]
+        ];
+        $parsed_url = Router::parse($this->referer(null, true));
+        $referer_url = $this->referer(null, true);
+        if ($url = viaIsSet($url_map[$parsed_url['action']])) {
+            if ($names = viaIsSet($url['named'])) {
+                unset($url['named']);
+                foreach ($names as $name) {
+                    if (viaIsSet($parsed_url['named'][$name])) {
+                        $url[$name] = $parsed_url['named'][$name];
+                    }
+                }
+            }
+            $referer_url = Router::url($url);
+        }
+        return $referer_url;
+    }
+
 }
