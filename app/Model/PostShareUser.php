@@ -70,6 +70,7 @@ class PostShareUser extends AppModel
      * @param int    $limit
      * @param array  $params
      *                 'user_id' : 指定すると投稿者で絞る
+     * @param bool   $contains_message
      *
      * @return array|null
      */
@@ -96,6 +97,7 @@ class PostShareUser extends AppModel
             $options['conditions']['Post.user_id'] = $params['user_id'];
             $options['contain'][] = 'Post';
         }
+
         $res = $this->find('list', $options);
         $this->primaryKey = $backupPrimaryKey;
 
@@ -140,7 +142,6 @@ class PostShareUser extends AppModel
 
     public function getShareUserListByPost($post_id)
     {
-        error_log("-----FURU:post:$post_id\n",3,"/tmp/hoge.log");
         $primary_backup = $this->primaryKey;
         $this->primaryKey = 'user_id';
         $options = [
@@ -152,7 +153,6 @@ class PostShareUser extends AppModel
         ];
         $res = $this->find('list', $options);
         $this->primaryKey = $primary_backup;
-        error_log("-----FURU:post2:".print_r($res,true)."\n",3,"/tmp/hoge.log");
         return $res;
     }
 

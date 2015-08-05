@@ -366,7 +366,7 @@ class Post extends AppModel
         return $upload->uploadUrl($user_arr, 'User.photo', ['style' => 'small']);
     }
 
-    public function get($page = 1, $limit = 20, $start = null, $end = null, $params = null)
+    public function get($page = 1, $limit = 20, $start = null, $end = null, $params = null, $contains_message = true)
     {
         $one_month = 60 * 60 * 24 * 31;
         if (!$start) {
@@ -410,7 +410,6 @@ class Post extends AppModel
             $p_list = array_merge($p_list, $this->PostShareCircle->getMyCirclePostList($start, $end));
             //フォローorコラボorマイメンバーのゴール投稿を取得
             $p_list = array_merge($p_list, $this->getRelatedPostList($start, $end));
-
         }
         //パラメータ指定あり
         else {
@@ -499,13 +498,17 @@ class Post extends AppModel
                     'Post.modified' => 'desc'
                 ],
             ];
-            if ($this->orgParams['type'] == self::TYPE_ACTION) {
+           if ($this->orgParams['type'] == self::TYPE_ACTION) {
                 $post_options['order'] = ['ActionResult.id' => 'desc'];
                 $post_options['contain'] = ['ActionResult'];
             }
             if ($this->orgParams['type'] == self::TYPE_NORMAL) {
                 $post_options['conditions']['Post.type'] = self::TYPE_NORMAL;
             }
+            if ($contains_message === false) {
+                $post_options['conditions']['NOT']['Post.type'] = self::TYPE_MESSAGE;
+            }
+
             $post_list = $this->find('list', $post_options);
         }
 
@@ -583,6 +586,7 @@ class Post extends AppModel
                         'photo1_file_name',
                         'photo2_file_name',
                         'photo3_file_name',
+                        'photo4_file_name',
                         'photo4_file_name',
                         'photo5_file_name',
                     ],
@@ -847,22 +851,17 @@ class Post extends AppModel
      */
     function getShareAllMemberList($post_id)
     {
-        error_log("FURU:memberlist1\n",3,"/tmp/hoge.log");
-
         $post = $this->findById($post_id);
         if (empty($post)) {
             return [];
         }
-        error_log("FURU:memberlist2\n",3,"/tmp/hoge.log");
         $share_member_list = [];
         //サークル共有ユーザを追加
         $share_member_list = $share_member_list + $this->PostShareCircle->getShareCircleMemberList($post_id);
         //メンバー共有なら
         $share_member_list = $share_member_list + $this->PostShareUser->getShareUserListByPost($post_id);
-        error_log("FURU:memberlist3:$this->my_uid\n",3,"/tmp/hoge.log");
         //Postの主が自分ではないなら追加
         $posted_user_id = viaIsSet($post['Post']['user_id']);
-        error_log("FURU:".$this->my_uid.":".$post['Post']['user_id']."\n", 3, "/tmp/hoge.log");
         if($this->my_uid != $posted_user_id){
             $share_member_list[] = $posted_user_id;
         }
@@ -870,12 +869,9 @@ class Post extends AppModel
 
         //自分自身を除外
         $key = array_search($this->my_uid, $share_member_list);
-        error_log("FURU:aaaaa:".print_r($share_member_list,true)."\n", 3, "/tmp/hoge.log");
-        error_log("FURU:aaaaa:".$key."\n", 3, "/tmp/hoge.log");
         if ($key !== false) {
             unset($share_member_list[$key]);
         }
-        error_log("FURU:bbbbbbb:".print_r($share_member_list,true)."\n", 3, "/tmp/hoge.log");
         return $share_member_list;
     }
 

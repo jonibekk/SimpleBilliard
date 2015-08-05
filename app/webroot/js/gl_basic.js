@@ -2913,22 +2913,9 @@ $(document).ready(function () {
 $(document).ready(function () {
     var click_cnt = 0;
     $(document).on("click", "#click-header-message", function () {
-        click_cnt++;
-        var isExistNewNotify = isExistNewMessageNotify();
         initMessageNum();
         initTitle();
-
-        if (isExistNewNotify || click_cnt == 1) {
-            updateMessageListBox();
-        }
-
-        function isExistNewMessageNotify() {
-            var newNotifyCnt = getMessageNotifyCnt();
-            if (newNotifyCnt > 0) {
-                return true;
-            }
-            return false;
-        }
+        updateMessageListBox();
     });
 });
 

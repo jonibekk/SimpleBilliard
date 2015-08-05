@@ -28,9 +28,17 @@ class PostsController extends AppController
     public function addMessage()
     {
         $this->request->data['Post']['type'] = Post::TYPE_MESSAGE;
-        $this->add();
+        $this->addPost();
+        $this->log("FURU:" . $this->referer());
+        $to_url = Router::url(['controller' => 'posts', 'action' => 'message#', $this->Post->getLastInsertID()], true);
+        $this->redirect($to_url);
     }
 
+    public function add()
+    {
+        $this->addPost();
+        $this->redirect($this->referer());
+    }
 
     /**
      * add method
@@ -38,7 +46,7 @@ class PostsController extends AppController
      * @throws RuntimeException
      * @return void
      */
-    public function add()
+    public function addPost()
     {
         $this->request->allowMethod('post');
 
@@ -66,7 +74,7 @@ class PostsController extends AppController
             else {
                 $this->Pnotify->outError(__d('gl', "投稿に失敗しました。"));
             }
-            $this->redirect($this->referer());
+            return false;
         }
 
         $notify_type = NotifySetting::TYPE_FEED_POST;
@@ -80,9 +88,8 @@ class PostsController extends AppController
 
         // リクエストデータが正しくないケース
         if (!$socketId || $share[0] === "") {
-            $this->redirect($this->referer());
             $this->Pnotify->outSuccess(__d('gl', "投稿しました。"));
-            $this->redirect($this->referer());
+            return false;
         }
 
         $mixpanel_prop_name = null;
@@ -110,8 +117,7 @@ class PostsController extends AppController
         $this->Mixpanel->trackPost($mixpanel_prop_name, $this->Post->getLastInsertID());
 
         $this->Pnotify->outSuccess(__d('gl', "投稿しました。"));
-
-        $this->redirect($this->referer());
+        return true;
     }
 
     /**
@@ -264,7 +270,7 @@ class PostsController extends AppController
             $end = strtotime("-{$end_month_offset} months", REQUEST_TIMESTAMP);
             $start = strtotime("-{$start_month_offset} months", REQUEST_TIMESTAMP);
         }
-        $posts = $this->Post->get($page_num, POST_FEED_PAGE_ITEMS_NUMBER, $start, $end, $this->request->params);
+        $posts = $this->Post->get($page_num, POST_FEED_PAGE_ITEMS_NUMBER, $start, $end, $this->request->params,false);
         $this->set(compact('posts'));
 
         //エレメントの出力を変数に格納する
@@ -293,6 +299,12 @@ class PostsController extends AppController
             ],
             'room_info' => $room_info
         ];
+
+        //対象のメッセージルーム(Post)のnotifyがあれば削除する
+        //メッセージなら該当するnotifyをredisから削除する
+        //なお通知は1ルームあたりからなず1個のため、notify_id = post_id
+        $this->NotifyBiz->removeMessageNotification($post_id);
+
         return $this->_ajaxGetResponse($res);
     }
 
@@ -312,6 +324,7 @@ class PostsController extends AppController
         $params['Comment']['post_id'] = $post_id;
         $params['Comment']['body'] = $message;
         $add_comment = $this->Post->Comment->add($params);
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MESSAGE, $post_id, $add_comment['Comment']['id']);
 
         $detail_comment = $this->Post->Comment->getComment($add_comment['Comment']['id']);
         $convert_data = $this->Post->Comment->convertData($detail_comment);
@@ -618,8 +631,6 @@ class PostsController extends AppController
 
     public function ajax_add_comment()
     {
-        error_log("FURU:こめんとついか！!\n", 3, "/tmp/hoge.log");
-
         $this->request->allowMethod('post');
         $this->_ajaxPreProcess();
         $result = [
@@ -655,7 +666,6 @@ class PostsController extends AppController
                                                          $this->Post->id, $this->Post->Comment->id);
                         break;
                     case Post::TYPE_MESSAGE:
-                        error_log("FURU:メッセージのこめんと\n", 3, "/tmp/hoge.log");
                         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MESSAGE, $this->Post->id,
                                                          $this->Post->Comment->id);
                         break;
@@ -726,23 +736,12 @@ class PostsController extends AppController
             $targetPosts = $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null, $this->request->params);
             $this->set(['posts' => $targetPosts]);
 
-            error_log("FURU:kesu!\n", 3, "/tmp/hoge.log");
-            error_log("FURU\n" . print_r($this->request->params, true) . "\n", 3, "/tmp/hoge.log");
-            error_log("FURU:+++++++++++++++++++\n", 3, "/tmp/hoge.log");
-            error_log("FURU\n" . viaIsSet($targetPosts[0]['Post']['type']) . "\n", 3, "/tmp/hoge.log");
-
             //メッセージなら該当するnotifyをredisから削除する
             $post_type = viaIsSet($targetPosts[0]['Post']['type']);
             if ($post_type == Post::TYPE_MESSAGE) {
-                error_log("FURU:メッセージだよ\n", 3, "/tmp/hoge.log");
                 $notify_id = viaIsSet($this->request->params['named']['notify_id']);
                 $this->NotifyBiz->removeMessageNotification($notify_id);
             }
-
-
-
-
-
 
         } catch (RuntimeException $e) {
             //リファラとリクエストのURLが同じ場合は、メッセージを表示せず、ホームにリダイレクトする

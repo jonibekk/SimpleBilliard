@@ -372,7 +372,7 @@
 
                     <div class="row form-horizontal form-group post-share-range" id="MessageShare">
                         <?=
-                        $this->Form->submit(__d('gl', "投稿する"),
+                        $this->Form->submit(__d('gl', "メッセージする"),
                                             ['class' => 'btn btn-primary pull-right post-submit-button', 'id' => 'MessageSubmit', 'disabled' => 'disabled']) ?>
                     </div>
                 </div>
