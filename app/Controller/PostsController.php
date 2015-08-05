@@ -354,7 +354,6 @@ class PostsController extends AppController
         // データ取得期間
         $start = null;
         $end = null;
-        $this->log($param_named['month_index']);
         if (isset($param_named['month_index']) && !empty($param_named['month_index'])) {
             // 一ヶ月以前を指定された場合
             $end_month_offset = $param_named['month_index'];
@@ -682,6 +681,7 @@ class PostsController extends AppController
             ]);
 
         $this->set(compact('files', 'file_type_options', 'circle_file_list_base_url'));
+        return $this->render();
     }
 
     function _setCircleCommonVariables()

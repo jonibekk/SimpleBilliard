@@ -14,6 +14,7 @@ class PostsControllerTest extends ControllerTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.action_result_file',
         'app.attached_file',
         'app.post_file',
         'app.comment_file',
@@ -872,7 +873,8 @@ class PostsControllerTest extends ControllerTestCase
         $this->_getPostsCommonMock();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $res = $this->testAction('/posts/ajax_remove_file/', ['method' => 'POST', 'data' => ['AttachedFile' => ['file_id' => 'xxx']]]);
+        $res = $this->testAction('/posts/ajax_remove_file/',
+                                 ['method' => 'POST', 'data' => ['AttachedFile' => ['file_id' => 'xxx']]]);
         $data = json_decode($res, true);
         $this->assertArrayHasKey('error', $data);
         $this->assertArrayHasKey('msg', $data);
@@ -1455,6 +1457,15 @@ class PostsControllerTest extends ControllerTestCase
         } catch (NotFoundException $e) {
         }
         $this->assertTrue(isset($e), "Invalid Status Request");
+    }
+
+    function testAttachedFileList()
+    {
+        /**
+         * @var UsersController $Posts
+         */
+        $Posts = $this->_getPostsCommonMock();
+        $this->testAction('/posts/attached_file_list/circle_id:1', ['method' => 'GET']);
     }
 
     function _getPostsCommonMock()
