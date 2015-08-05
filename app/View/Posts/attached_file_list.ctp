@@ -31,8 +31,12 @@
     <div class="panel panel-default">
         <?php foreach ($files as $file): ?>
             <div class="panel-body pt_10px plr_11px pb_8px bd-t">
-                <?php $p_id = isset($file['PostFile'][0]['post_id']) ? $file['PostFile'][0]['post_id'] : null; ?>
-                <?php $p_id = isset($file['CommentFile'][0]['Comment']['post_id']) ? $file['CommentFile'][0]['Comment']['post_id'] : null; ?>
+                <?php
+                if(!$p_id = viaIsSet($file['PostFile'][0]['post_id']))
+                {
+                    $p_id = viaIsSet($file['CommentFile'][0]['Comment']['post_id']);
+                }
+                ?>
                 <?= $this->element('Feed/attached_file_item',
                                    ['data' => $file, 'page_type' => 'file_list', 'post_id' => $p_id]) ?>
             </div>
