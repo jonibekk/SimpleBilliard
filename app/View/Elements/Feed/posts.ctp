@@ -166,6 +166,7 @@ $without_header = isset($without_header) ? $without_header : false;
                     }
                 }
                 ?>
+                <? //TODO 古い画像表示処理なのでいずれ削除する?>
                 <?php if ($photo_count): ?>
                     <div class="col col-xxs-12 pt_10px">
                         <div id="CarouselPost_<?= $post['Post']['id'] ?>" class="carousel slide" data-ride="carousel">
@@ -225,6 +226,27 @@ $without_header = isset($without_header) ? $without_header : false;
 
                     </div>
                 <?php endif; ?>
+                <?php if ($post['Post']['type'] == Post::TYPE_ACTION && isset($post['ActionResult']['ActionResultFile'][0])): ?>
+                    <div class="col col-xxs-12 pt_10px">
+                        <a href="<?= $this->Upload->attachedFileUrl($post['ActionResult']['ActionResultFile'][0],
+                                                                    "preview") ?>"
+                           rel='lightbox' data-lightbox='LightBoxAttachedFileImgMain_Post_<?= $post['Post']['id'] ?>'
+                            >
+                            <?=
+                            $this->Html->image('ajax-loader.gif',
+                                               [
+                                                   'class'         => 'lazy bd-s',
+                                                   'data-original' => $this->Upload->uploadUrl($post['ActionResult']['ActionResultFile'][0],
+                                                                                               "AttachedFile.attached",
+                                                                                               ['style' => 'small'])
+                                               ]
+                            )
+                            ?>
+                        </a>
+                    </div>
+                <?php else: ?>
+                <?php endif; ?>
+
                 <?php if ($post['Post']['site_info']): ?>
                     <?php $site_info = json_decode($post['Post']['site_info'], true) ?>
                     <div class="col col-xxs-12 pt_10px">
@@ -300,13 +322,37 @@ $without_header = isset($without_header) ? $without_header : false;
                     </div>
                 <?php endif; ?>
 
-
-
                 <?php if ($post['Post']['type'] == Post::TYPE_ACTION && isset($post['ActionResult']['KeyResult']['name'])): ?>
                     <div class="col col-xxs-12 pt_6px feed-contents">
                         <i class="fa fa-key disp_i"></i>&nbsp;<?= h($post['ActionResult']['KeyResult']['name']) ?>
                     </div>
                 <?php endif; ?>
+                <?php if ($post['Post']['type'] == Post::TYPE_ACTION): ?>
+                    <div class="col col-xxs-12">
+                        <?php foreach ($post['ActionResult']['ActionResultFile'] as $k => $file): ?>
+                            <?php if ($k === 0) {
+                                continue;
+                            } ?>
+                            <div class="panel panel-default file-wrap-on-post">
+                                <div class="panel-body pt_10px plr_11px pb_8px">
+                                    <?= $this->element('Feed/attached_file_item',
+                                                       ['data' => $file, 'page_type' => 'feed', 'post_id' => $post['Post']['id']]) ?>
+                                </div>
+                            </div>
+                        <?php endforeach ?>
+                    </div>
+                <?php else: ?>
+                    <div class="col col-xxs-12">
+                        <?php foreach ($post['PostFile'] as $file): ?>
+                            <div class="panel panel-default file-wrap-on-post">
+                                <div class="panel-body pt_10px plr_11px pb_8px">
+                                    <?= $this->element('Feed/attached_file_item',
+                                                       ['data' => $file, 'page_type' => 'feed', 'post_id' => $post['Post']['id']]) ?>
+                                </div>
+                            </div>
+                        <?php endforeach ?>
+                    </div>
+                <? endif; ?>
                 <div class="col col-xxs-12 font_12px pt_8px">
                     <a href="#" class="click-like font_lightgray <?= empty($post['MyPostLike']) ? null : "liked" ?>"
                        like_count_id="PostLikeCount_<?= $post['Post']['id'] ?>"
@@ -325,7 +371,6 @@ $without_header = isset($without_header) ? $without_header : false;
                     class="fa fa-check"></i>&nbsp;<span><?= $post['Post']['post_read_count'] ?></span>
             </a>
             </span>
-
                 </div>
             </div>
             <div class="panel-body ptb_8px plr_11px comment-block"

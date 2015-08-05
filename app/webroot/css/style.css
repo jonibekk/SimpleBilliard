@@ -2554,32 +2554,6 @@ textarea.comment-post-form {
 
 /*/========= ゴールカラム ==========*/
 
-/*=== spFeedAlt ===*/
-
-.sp-feed-alt {
-    background: #f5f5f5;
-    position: fixed;
-    top: 50px;
-    z-index: 1;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, .15);
-}
-
-.sp-feed-active {
-    color: #231814;
-    padding-bottom: 8px;
-    border-bottom: 4px solid #6d8fce;
-}
-
-.sp-feed-link {
-    cursor: pointer;
-}
-
-.sp-feed-link:hover {
-    border-bottom: 4px solid #6d8fce;
-}
-
-/*==/ spFeedAlt ===*/
-
 /*=== メディアクエリで切り替え =======================*/
 
 #gotop {
@@ -2808,10 +2782,6 @@ textarea.comment-post-form {
 
     .nav-container {
         width: 972px;
-    }
-
-    .sp-feed-alt {
-        box-shadow: none;
     }
 
     .nav-search {

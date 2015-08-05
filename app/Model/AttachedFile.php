@@ -245,6 +245,83 @@ class AttachedFile extends AppModel
         return true;
     }
 
+    /**
+     * 共通のファイル更新処理
+     * $model_type should be in self::$TYPE_FILE
+     * $update_files: 一時ファイルハッシュ、もしくはModelのidがindex順にわたってくる
+     *
+     * @param integer $foreign_key_id
+     * @param integer $model_type
+     * @param array   $update_files
+     * @param array   $delete_files
+     *
+     * @return bool
+     */
+    public function updateRelatedFiles($foreign_key_id, $model_type, $update_files = [], $delete_files = [])
+    {
+        if ($this->isUnavailableModelType($model_type) || empty($update_files)) {
+            return false;
+        }
+        //ファイル削除処理
+        foreach($delete_files as $id){
+            $this->delete($id);
+        }
+
+        /** @var GlRedis $Redis */
+        $Redis = ClassRegistry::init('GlRedis');
+        $attached_file_common_data = [
+            'user_id'    => $this->my_uid,
+            'team_id'    => $this->current_team_id,
+            'model_type' => $model_type,
+        ];
+
+        $model = self::$TYPE_MODEL[$model_type];
+        //保存データ生成
+        foreach ($update_files as $i => $id_or_hash) {
+            //stringじゃない、つまり既存のIDの場合はindexの更新のみ
+            if (!is_string($id_or_hash)) {
+                //アクションのメイン画像の場合は更新しない
+                if ($i === 0 && $model_type == self::TYPE_MODEL_ACTION_RESULT) {
+                    continue;
+                }
+                $this->{$model['intermediateModel']}->updateAll(['index_num' => $i],
+                                                                [$model['intermediateModel'] . ".attached_file_id" => $id_or_hash]);
+                continue;
+            }
+
+            //$id_or_hashがstringつまり、新規のファイルの場合は登録処理を行う
+            $file = $Redis->getPreUploadedFile($this->current_team_id, $this->my_uid, $id_or_hash);
+            file_put_contents($file['info']['tmp_name'], $file['content']);
+            $file_data = $attached_file_common_data;
+
+            $file_data['attached'] = $file['info'];
+            $file_data['file_size'] = $file['info']['size'];
+            $file_data['file_ext'] = substr($file['info']['name'], strrpos($file['info']['name'], '.') + 1);
+            $file_data['file_type'] = $this->getFileType($file['info']['type']);
+            //アクションの場合は１枚目のファイルをファイル一覧に表示しない及び削除不可能にする
+            if ($i === 0 && $model_type == self::TYPE_MODEL_ACTION_RESULT) {
+                $file_data['display_file_list_flg'] = false;
+                $file_data['removable_flg'] = false;
+            }
+            $save_data = [
+                $model['intermediateModel'] => [
+                    [
+                        $model['foreign_key'] => $foreign_key_id,
+                        'user_id'             => $this->my_uid,
+                        'team_id'             => $this->current_team_id,
+                        'index_num'           => $i,
+                    ],
+                ],
+                'AttachedFile'              => $file_data
+            ];
+            if (!$res = $this->saveAll($save_data)) {
+                return false;
+            }
+
+        }
+        return true;
+    }
+
     function afterSave($created, $options = array())
     {
         if ($created) {
