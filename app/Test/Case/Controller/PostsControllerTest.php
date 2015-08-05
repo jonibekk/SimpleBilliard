@@ -1480,12 +1480,28 @@ class PostsControllerTest extends ControllerTestCase
         $this->testAction('/posts/attached_file_list/circle_id:1', ['method' => 'GET']);
     }
 
+    function testGetRedirectUrl()
+    {
+        $Posts = $this->_getPostsCommonMock();
+        $value_map = [
+            [
+                null, true, '/posts/attached_file_list/circle_id:1'
+            ]
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->expects($this->any())->method('referer')
+              ->will($this->returnValueMap($value_map));
+        $res = $Posts->_getRedirectUrl();
+        $this->assertEquals('/circle_feed/1',$res);
+    }
+
     function _getPostsCommonMock()
     {
         /**
          * @var PostsController $Posts
          */
         $Posts = $this->generate('Posts', [
+            'methods'    => ['referer'],
             'components' => [
                 'Session',
                 'Auth'      => ['user', 'loggedIn'],
