@@ -1226,7 +1226,8 @@ class Post extends AppModel
         $file_ids = $p_file_ids + $c_file_ids + $ar_file_ids;
         $options = [
             'conditions' => [
-                'AttachedFile.id' => $file_ids,
+                'AttachedFile.id'                    => $file_ids,
+                'AttachedFile.display_file_list_flg' => true,
             ],
             'order'      => ['AttachedFile.created desc'],
             'limit'      => $limit,

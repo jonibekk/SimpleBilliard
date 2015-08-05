@@ -366,7 +366,7 @@ class PostsController extends AppController
         //ファイル一覧取得
         $files = $this->Post->getFilesOnCircle($param_named['circle_id'],
                                                $page_num, $item_num, $start, $end,
-                                               $param_named['file_type']);
+                                               viaIsSet($param_named['file_type']));
         $this->set('files', $files);
         // エレメントの出力を変数に格納する
         // htmlレンダリング結果
