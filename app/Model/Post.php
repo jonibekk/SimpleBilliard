@@ -1182,22 +1182,14 @@ class Post extends AppModel
         return $res ? $res[0]['sum_like'] : 0;
     }
 
-    function getFilesOnCircle($circle_id, $page = 1, $limit = FILE_LIST_PAGE_NUMBER,
+    function getFilesOnCircle($circle_id, $page = 1, $limit = null,
                               $start = null, $end = null, $file_type = null)
     {
         $one_month = 60 * 60 * 24 * 31;
-        if (!$start) {
-            $start = REQUEST_TIMESTAMP - $one_month;
-        }
-        elseif (is_string($start)) {
-            $start = strtotime($start);
-        }
-        if (!$end) {
-            $end = REQUEST_TIMESTAMP;
-        }
-        elseif (is_string($end)) {
-            $end = strtotime($end);
-        }
+        $limit = $limit ? $limit : FILE_LIST_PAGE_NUMBER;
+        $start = $start ? $start : REQUEST_TIMESTAMP - $one_month;
+        $end = $end ? $end : REQUEST_TIMESTAMP;
+
         //PostFile,CommentFile,ActionResultFileからfile_idをまず集める
         /**
          * @var AttachedFile $AttachedFile
@@ -1240,18 +1232,28 @@ class Post extends AppModel
             'limit'      => $limit,
             'page'       => $page,
             'contain'    => [
-                'User'        => [
+                'User'             => [
                     'fields' => $this->User->profileFields,
                 ],
-                'PostFile'    => [
+                'PostFile'         => [
                     'fields' => ['PostFile.post_id']
                 ],
-                'CommentFile' => [
+                'CommentFile'      => [
                     'fields'  => ['CommentFile.comment_id'],
                     'Comment' => [
                         'fields' => ['Comment.post_id'],
                     ]
                 ],
+                'ActionResultFile' => [
+                    'fields'       => ['ActionResultFile.action_result_id'],
+                    'ActionResult' => [
+                        'fields' => ['ActionResult.id'],
+                        'Post'   => [
+                            'fields' => ['Post.id']
+                        ]
+                    ]
+                ],
+
             ]
         ];
         if ($file_type) {
