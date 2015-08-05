@@ -65,84 +65,81 @@
                 →
                 <?= $this->Time->format('Y/m/d',
                                         $kr['KeyResult']['end_date'] + $this->Session->read('Auth.User.timezone') * 3600) ?>
-                <div class="goal-detail-action-wrap">
-                    <ul class="goal-detail-action">
-                        <?php if ($kr_can_edit): ?>
-                            <li class="goal-detail-action-list">
-                                <a class="goal-detail-add-action modal-ajax-get-add-action"
-                                   href="<?= $this->Html->url(['controller'    => 'goals', 'action' => 'ajax_get_add_action_modal',
-                                                               'goal_id'       => $kr['KeyResult']['goal_id'],
-                                                               'key_result_id' => $kr['KeyResult']['id'],
-                                                              ]) ?>"><i
-                                        class="fa fa-plus"></i>
-
-                                    <p class="goal-detail-add-action-text "><?= __d('gl', "アクション") ?></p>
-
-                                    <p class="goal-detail-add-action-text "><?= __d('gl', "追加") ?></p>
-                                </a>
-                            </li>
-                        <?php endif; ?>
-                        <?php foreach ($kr['ActionResult'] as $key => $action): ?>
-                            <?php
-                            $last_many = false;
-                            //urlはアクション単体ページ
-                            $url = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $action['Post'][0]['id']];
-                            //最後の場合かつアクション件数合計が表示件数以上の場合
-                            if ($key == count($kr['ActionResult']) - 1 && $kr['KeyResult']['action_result_count'] > $display_action_count) {
-                                $last_many = true;
-                                //urlはゴールページの全アクションリスト
-                                $url = ['controller' => 'goals', 'action' => 'view_actions', 'goal_id' => $kr['KeyResult']['goal_id'], 'page_type' => 'image', 'key_result_id' => $kr['KeyResult']['id']];
-                            }
-                            ?>
-                            <li class="goal-detail-action-list">
-                                <a href="<?= $this->Html->url($url) ?>" class="profile-user-action-pic">
-                                    <?php if (viaIsSet($action['ActionResultFile'][0]['AttachedFile'])): ?>
-                                        <?= $this->Html->image('ajax-loader.gif',
-                                                               [
-                                                                   'class'         => 'lazy',
-                                                                   'width'         => 48,
-                                                                   'height'        => 48,
-                                                                   'data-original' => $this->Upload->uploadUrl($action['ActionResultFile'][0]['AttachedFile'],
-                                                                                                               "AttachedFile.attached",
-                                                                                                               ['style' => 'x_small']),
-                                                               ]
-                                        );
-                                        ?>
-
-                                    <?php else: ?>
-
-                                        <?php for ($i = 1; $i <= 5; $i++): ?>
-                                            <?php
-                                            if (!empty($action["photo{$i}_file_name"]) || $i == 5) {
-                                                echo $this->Html->image('ajax-loader.gif',
-                                                                        [
-                                                                            'class'         => 'lazy',
-                                                                            'width'         => 48,
-                                                                            'height'        => 48,
-                                                                            'data-original' => $this->Upload->uploadUrl($action,
-                                                                                                                        "ActionResult.photo$i",
-                                                                                                                        ['style' => 'x_small']),
-                                                                        ]);
-                                                break;
-                                            }
-                                            ?>
-                                        <?php endfor; ?>
-                                    <?php endif; ?>
-                                    <?php if ($last_many): ?>
-                                        <span class="action-more-counts">
-                                                        <i class="fa fa-plus"></i>
-                                            <?= $kr['KeyResult']['action_result_count'] - $display_action_count + 1 ?>
-                                                    </span>
-                                    <?php endif; ?>
-                                </a>
-                            </li>
-                        <? endforeach ?>
-                    </ul>
-                </div>
             </div>
             <?php if ($kr_can_edit): ?>
                 <?= $this->element('Goal/key_result_edit_button', ['kr' => $kr]) ?>
             <?php endif ?>
+                <ul class="goal-detail-action">
+                    <?php if ($kr_can_edit): ?>
+                        <li class="goal-detail-action-list">
+                            <a class="goal-detail-add-action modal-ajax-get-add-action"
+                               href="<?= $this->Html->url(['controller'    => 'goals', 'action' => 'ajax_get_add_action_modal',
+                                                           'goal_id'       => $kr['KeyResult']['goal_id'],
+                                                           'key_result_id' => $kr['KeyResult']['id'],
+                                                          ]) ?>"><i
+                                    class="fa fa-plus"></i>
+
+                                <p class="goal-detail-add-action-text "><?= __d('gl', "アクション") ?></p>
+
+                                <p class="goal-detail-add-action-text "><?= __d('gl', "追加") ?></p>
+                            </a>
+                        </li>
+                    <?php endif; ?>
+                    <?php foreach ($kr['ActionResult'] as $key => $action): ?>
+                        <?php
+                        $last_many = false;
+                        //urlはアクション単体ページ
+                        $url = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $action['Post'][0]['id']];
+                        //最後の場合かつアクション件数合計が表示件数以上の場合
+                        if ($key == count($kr['ActionResult']) - 1 && $kr['KeyResult']['action_result_count'] > $display_action_count) {
+                            $last_many = true;
+                            //urlはゴールページの全アクションリスト
+                            $url = ['controller' => 'goals', 'action' => 'view_actions', 'goal_id' => $kr['KeyResult']['goal_id'], 'page_type' => 'image', 'key_result_id' => $kr['KeyResult']['id']];
+                        }
+                        ?>
+                        <li class="goal-detail-action-list">
+                            <a href="<?= $this->Html->url($url) ?>" class="profile-user-action-pic">
+                                <?php if (viaIsSet($action['ActionResultFile'][0]['AttachedFile'])): ?>
+                                    <?= $this->Html->image('ajax-loader.gif',
+                                                           [
+                                                               'class'         => 'lazy',
+                                                               'width'         => 48,
+                                                               'height'        => 48,
+                                                               'data-original' => $this->Upload->uploadUrl($action['ActionResultFile'][0]['AttachedFile'],
+                                                                                                           "AttachedFile.attached",
+                                                                                                           ['style' => 'x_small']),
+                                                           ]
+                                    );
+                                    ?>
+
+                                <?php else: ?>
+                                <?php for ($i = 1; $i <= 5; $i++): ?>
+                                    <?php
+                                    if (!empty($action["photo{$i}_file_name"]) || $i == 5) {
+                                        echo $this->Html->image('ajax-loader.gif',
+                                                                [
+                                                                    'class'         => 'lazy',
+                                                                    'width'         => 48,
+                                                                    'height'        => 48,
+                                                                    'data-original' => $this->Upload->uploadUrl($action,
+                                                                                                                "ActionResult.photo$i",
+                                                                                                                ['style' => 'x_small']),
+                                                                ]);
+                                        break;
+                                    }
+                                    ?>
+                                <?php endfor; ?>
+                                <?php endif;?>
+                                <?php if ($last_many): ?>
+                                    <span class="action-more-counts">
+                                                    <i class="fa fa-plus"></i>
+                                        <?= $kr['KeyResult']['action_result_count'] - $display_action_count + 1 ?>
+                                                </span>
+                                <?php endif; ?>
+                            </a>
+                        </li>
+                    <? endforeach ?>
+                </ul>
         </div>
     <?php endforeach ?>
     <!-- END app/View/Elements/Goal/key_results.ctp -->
