@@ -12,7 +12,6 @@
  */
 ?>
 <!-- START app/View/Elements/Feed/circle_filter_menu.ctp -->
-<span> ･ </span>
 <span class="feed-current-filter"><?= mb_strimwidth(h($current_circle['Circle']['name']), 0, 29,
                                                     '...') ?></span>
 <a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_get_circle_members', 'circle_id' => $current_circle['Circle']['id']]) ?>"
