@@ -4,11 +4,11 @@ App::uses('AppModel', 'Model');
 /**
  * ActionResult Model
  *
- * @property Team         $Team
- * @property User         $User
- * @property Goal         $Goal
- * @property KeyResult    $KeyResult
- * @property AttachedFile $AttachedFile
+ * @property Team             $Team
+ * @property User             $User
+ * @property Goal             $Goal
+ * @property KeyResult        $KeyResult
+ * @property ActionResultFile $ActionResultFile
  */
 class ActionResult extends AppModel
 {

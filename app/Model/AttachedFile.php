@@ -136,6 +136,26 @@ class AttachedFile extends AppModel
         ],
     ];
 
+    public function getFileTypeOptions()
+    {
+        $res = [null => __d('gl', "すべて")];
+        foreach (self::$TYPE_FILE as $v) {
+            $res[$v['type']] = $v['name'];
+        }
+        return $res;
+    }
+
+    public function getFileTypeId($file_type)
+    {
+        $res = null;
+        foreach (self::$TYPE_FILE as $k => $v) {
+            if ($file_type === $v['type']) {
+                return $k;
+            }
+        }
+        return $res;
+    }
+
     /**
      * ファイルの仮アップロード
      *

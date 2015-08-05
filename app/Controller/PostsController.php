@@ -88,8 +88,7 @@ class PostsController extends AppController
         $this->Mixpanel->trackPost($mixpanel_prop_name, $this->Post->getLastInsertID());
 
         $this->Pnotify->outSuccess(__d('gl', "投稿しました。"));
-
-        $this->redirect($this->referer());
+        $this->redirect($this->_getRedirectUrl());
     }
 
     /**
@@ -331,6 +330,51 @@ class PostsController extends AppController
         $result = array(
             'html'          => $html,
             'count'         => count($posts),
+            'page_item_num' => $item_num,
+            'start'         => $start ? $start : REQUEST_TIMESTAMP - MONTH,
+        );
+        return $this->_ajaxGetResponse($result);
+    }
+
+    /**
+     * サークルのファイル一覧読み込み ajax
+     *
+     * @return CakeResponse
+     */
+    public function ajax_get_circle_files()
+    {
+        $param_named = $this->request->params['named'];
+        $this->_ajaxPreProcess();
+
+        // 表示するページ
+        $page_num = 1;
+        if (isset($param_named['page']) && !empty($param_named['page'])) {
+            $page_num = $param_named['page'];
+        }
+        // データ取得期間
+        $start = null;
+        $end = null;
+        if (isset($param_named['month_index']) && !empty($param_named['month_index'])) {
+            // 一ヶ月以前を指定された場合
+            $end_month_offset = $param_named['month_index'];
+            $start_month_offset = $end_month_offset + 1;
+            $end = strtotime("-{$end_month_offset} months", REQUEST_TIMESTAMP);
+            $start = strtotime("-{$start_month_offset} months", REQUEST_TIMESTAMP);
+        }
+        //取得件数
+        $item_num = FILE_LIST_PAGE_NUMBER;
+        //ファイル一覧取得
+        $files = $this->Post->getFilesOnCircle($param_named['circle_id'],
+                                               $page_num, $item_num, $start, $end,
+                                               viaIsSet($param_named['file_type']));
+        $this->set('files', $files);
+        // エレメントの出力を変数に格納する
+        // htmlレンダリング結果
+        $response = $this->render('Feed/attached_files');
+        $html = $response->__toString();
+        $result = array(
+            'html'          => $html,
+            'count'         => count($files),
             'page_item_num' => $item_num,
             'start'         => $start ? $start : REQUEST_TIMESTAMP - MONTH,
         );
@@ -603,43 +647,9 @@ class PostsController extends AppController
 
     function feed()
     {
-        $params = $this->request->params;
-        $this->_setMyCircle();
-        $this->_setCurrentCircle();
-        $this->_setFeedMoreReadUrl();
-
-        if (isset($this->request->params['circle_id']) ||
-            isset($this->request->params['post_id'])
-        ) {
-            $this->set('long_text', true);
-        }
-        else {
-            $this->set('long_text', false);
-        }
-
-        $feed_filter = null;
-        $circle_id = viaIsSet($this->request->params['circle_id']);
-        $user_status = $this->_userCircleStatus($this->request->params['circle_id']);
-
-        $circle_status = $this->Post->Circle->CircleMember->show_hide_stats($this->Auth->user('id'),
-                                                                            $this->request->params['circle_id']);
-
+        $this->_setCircleCommonVariables();
         $this->_setViewValOnRightColumn();
-        //サークル指定の場合はメンバーリスト取得
-        if (isset($this->request->params['circle_id']) && !empty($this->request->params['circle_id'])) {
-            $circle_member_count = $this->User->CircleMember->getActiveMemberCount($this->request->params['circle_id']);
-        }
-        //抽出条件
-        if ($circle_id) {
-            $feed_filter = 'circle';
-        }
-        elseif (isset($this->request->params['named']['filter_goal'])) {
-            $feed_filter = 'goal';
-        }
 
-        $this->set('common_form_type', 'post');
-        $this->set(compact('feed_filter', 'circle_member_count', 'circle_id', 'user_status', 'params',
-                           'circle_status'));
         try {
             $this->set(['posts' => $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null,
                                                     $this->request->params)]);
@@ -654,6 +664,65 @@ class PostsController extends AppController
             $this->Pnotify->outError($e->getMessage());
             $this->redirect($this->referer());
         }
+    }
+
+    public function attached_file_list()
+    {
+        $this->_setCircleCommonVariables();
+        $this->_setViewValOnRightColumn();
+        $circle_id = $this->_getRequiredParam('circle_id');
+        $file_type_options = $this->Post->PostFile->AttachedFile->getFileTypeOptions();
+        $files = $this->Post->getFilesOnCircle($circle_id, 1, FILE_LIST_PAGE_NUMBER, null, null,
+                                               viaIsSet($this->request->params['named']['file_type']));
+
+        $circle_file_list_base_url = Router::url(
+            [
+                'controller' => 'posts', 'action' => 'attached_file_list', 'circle_id' => $circle_id
+            ]);
+
+        $this->set(compact('files', 'file_type_options', 'circle_file_list_base_url'));
+        return $this->render();
+    }
+
+    function _setCircleCommonVariables()
+    {
+        $params = $this->request->params;
+        $params = array_merge($params, $params['named']);
+        $this->_setMyCircle();
+        $this->_setCurrentCircle();
+        $this->_setFeedMoreReadUrl();
+
+        if (isset($params['circle_id']) ||
+            isset($params['post_id'])
+        ) {
+            $this->set('long_text', true);
+        }
+        else {
+            $this->set('long_text', false);
+        }
+
+        $feed_filter = null;
+        $circle_id = viaIsSet($params['circle_id']);
+        $user_status = $this->_userCircleStatus($params['circle_id']);
+
+        $circle_status = $this->Post->Circle->CircleMember->show_hide_stats($this->Auth->user('id'),
+                                                                            $params['circle_id']);
+
+        //サークル指定の場合はメンバーリスト取得
+        if (isset($params['circle_id']) && !empty($params['circle_id'])) {
+            $circle_member_count = $this->User->CircleMember->getActiveMemberCount($params['circle_id']);
+        }
+        //抽出条件
+        if ($circle_id) {
+            $feed_filter = 'circle';
+        }
+        elseif (isset($params['filter_goal'])) {
+            $feed_filter = 'goal';
+        }
+
+        $this->set('common_form_type', 'post');
+        $this->set(compact('feed_filter', 'circle_member_count', 'circle_id', 'user_status', 'params',
+                           'circle_status'));
     }
 
     public function ajax_get_share_circles_users_modal()

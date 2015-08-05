@@ -15,6 +15,10 @@ class PostTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.goal_category',
+        'app.post_file',
+        'app.comment_file',
+        'app.action_result_file',
         'app.attached_file',
         'app.action_result',
         'app.key_result',
@@ -94,15 +98,15 @@ class PostTest extends CakeTestCase
         $this->Post->my_uid = $uid;
         $this->Post->current_team_id = $team_id;
         $postData = [
-            'Post' => [
+            'Post'    => [
                 'body' => 'test',
             ],
             'file_id' => ['aaaaaa']
         ];
         $this->Post->PostFile->AttachedFile = $this->getMockForModel('AttachedFile', array('saveRelatedFiles'));
         $this->Post->PostFile->AttachedFile->expects($this->any())
-                                                 ->method('saveRelatedFiles')
-                                                 ->will($this->returnValue(true));
+                                           ->method('saveRelatedFiles')
+                                           ->will($this->returnValue(true));
         $res = $this->Post->addNormal($postData, Post::TYPE_NORMAL, $uid, $team_id);
         $this->assertNotEmpty($res, "[正常]投稿(uid,team_id指定)");
     }
@@ -114,7 +118,7 @@ class PostTest extends CakeTestCase
         $this->Post->my_uid = $uid;
         $this->Post->current_team_id = $team_id;
         $postData = [
-            'Post' => [
+            'Post'    => [
                 'body' => 'test',
             ],
             'file_id' => ['aaaaaa']
@@ -594,6 +598,46 @@ class PostTest extends CakeTestCase
         $this->_setDefault();
         $res = $this->Post->doShare(1, "");
         $this->assertFalse($res);
+    }
+
+    function testGetFilesOnCircle()
+    {
+        $this->_setDefault();
+        App::uses('AttachedFile', 'Model');
+        $this->Post->create();
+        $this->Post->save(['user_id' => 1, 'team_id' => 1, 'body' => 'test']);
+        $p_id = $this->Post->getLastInsertID();
+        $this->Post->PostShareCircle->create();
+        $this->Post->PostShareCircle->save(['circle_id' => 1, 'post_id' => $p_id, 'team_id' => 1]);
+        $this->Post->Comment->create();
+        $this->Post->Comment->save(['post_id' => $p_id, 'team_id' => 1, 'user_id' => 1, 'body' => 'test']);
+        $c_id = $this->Post->Comment->getLastInsertID();
+        $f_ids = [];
+        for ($i = 0; $i < 2; $i++) {
+            $this->Post->PostFile->AttachedFile->create();
+            $this->Post->PostFile->AttachedFile->save(
+                [
+                    'user_id'            => 1, 'team_id' => 1,
+                    'attached_file_name' => 'test.jpg',
+                    'file_type'          => 0, 'file_ext' => 'jpg', 'file_size' => 100,
+                ]
+            );
+            $f_ids[] = $this->Post->PostFile->AttachedFile->getLastInsertID();
+        }
+        $this->Post->PostFile->create();
+        $this->Post->PostFile->save(
+            [
+                'post_id' => $p_id, 'team_id' => 1, 'attached_file_id' => $f_ids[0]
+            ]
+        );
+        $this->Post->Comment->CommentFile->create();
+        $this->Post->Comment->CommentFile->save(
+            [
+                'comment_id' => $c_id, 'team_id' => 1, 'attached_file_id' => $f_ids[1]
+            ]
+        );
+        $res = $this->Post->getFilesOnCircle(1, 1, null, 1, 100000000000, 'image');
+        $this->assertCount(2, $res);
     }
 
     function _setDefault()

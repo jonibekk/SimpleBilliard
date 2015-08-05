@@ -14,6 +14,7 @@ class PostsControllerTest extends ControllerTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.action_result_file',
         'app.attached_file',
         'app.post_file',
         'app.comment_file',
@@ -853,6 +854,21 @@ class PostsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
+    function testAjaxGetCircleFiles()
+    {
+        $this->_getPostsCommonMock();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $res = $this->testAction('/posts/ajax_get_circle_files/circle_id:1/month_index:1/page:1',
+                                 ['method' => 'GET']);
+        $data = json_decode($res, true);
+        $this->assertArrayHasKey('html', $data);
+        $this->assertArrayHasKey('count', $data);
+        $this->assertArrayHasKey('page_item_num', $data);
+        $this->assertArrayHasKey('start', $data);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
     function testAjaxUploadFile()
     {
         $this->_getPostsCommonMock();
@@ -872,7 +888,8 @@ class PostsControllerTest extends ControllerTestCase
         $this->_getPostsCommonMock();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $res = $this->testAction('/posts/ajax_remove_file/', ['method' => 'POST', 'data' => ['AttachedFile' => ['file_id' => 'xxx']]]);
+        $res = $this->testAction('/posts/ajax_remove_file/',
+                                 ['method' => 'POST', 'data' => ['AttachedFile' => ['file_id' => 'xxx']]]);
         $data = json_decode($res, true);
         $this->assertArrayHasKey('error', $data);
         $this->assertArrayHasKey('msg', $data);
@@ -1457,12 +1474,34 @@ class PostsControllerTest extends ControllerTestCase
         $this->assertTrue(isset($e), "Invalid Status Request");
     }
 
+    function testAttachedFileList()
+    {
+        $this->_getPostsCommonMock();
+        $this->testAction('/posts/attached_file_list/circle_id:1', ['method' => 'GET']);
+    }
+
+    function testGetRedirectUrl()
+    {
+        $Posts = $this->_getPostsCommonMock();
+        $value_map = [
+            [
+                null, true, '/posts/attached_file_list/circle_id:1'
+            ]
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->expects($this->any())->method('referer')
+              ->will($this->returnValueMap($value_map));
+        $res = $Posts->_getRedirectUrl();
+        $this->assertEquals('/circle_feed/1',$res);
+    }
+
     function _getPostsCommonMock()
     {
         /**
          * @var PostsController $Posts
          */
         $Posts = $this->generate('Posts', [
+            'methods'    => ['referer'],
             'components' => [
                 'Session',
                 'Auth'      => ['user', 'loggedIn'],
