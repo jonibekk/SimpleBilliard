@@ -328,7 +328,7 @@ class Post extends AppModel
         return false;
     }
 
-    public function getMyPostList($start, $end, $contains_message = true, $order = "modified", $order_direction = "desc", $limit = 1000)
+    public function getMyPostList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000)
     {
         $options = [
             'conditions' => [
@@ -340,10 +340,6 @@ class Post extends AppModel
             'limit'      => $limit,
             'fields'     => ['id'],
         ];
-        if (!$contains_message) {
-            $options['conditions']['NOT']['Post.type'] = Post::TYPE_MESSAGE;
-        }
-
         $res = $this->find('list', $options);
         return $res;
     }
@@ -407,14 +403,13 @@ class Post extends AppModel
         //独自パラメータ指定なし
         if (!$org_param_exists) {
             //自分の投稿
-            $p_list = array_merge($p_list, $this->getMyPostList($start, $end,$contains_message));
+            $p_list = array_merge($p_list, $this->getMyPostList($start, $end));
             //自分が共有範囲指定された投稿
-            $p_list = array_merge($p_list, $this->PostShareUser->getShareWithMeList($start, $end, $contains_message));
+            $p_list = array_merge($p_list, $this->PostShareUser->getShareWithMeList($start, $end));
             //自分のサークルが共有範囲指定された投稿
-            $p_list = array_merge($p_list, $this->PostShareCircle->getMyCirclePostList($start, $end, $contains_message));
+            $p_list = array_merge($p_list, $this->PostShareCircle->getMyCirclePostList($start, $end));
             //フォローorコラボorマイメンバーのゴール投稿を取得
             $p_list = array_merge($p_list, $this->getRelatedPostList($start, $end));
-
         }
         //パラメータ指定あり
         else {
@@ -429,7 +424,7 @@ class Post extends AppModel
                     throw new RuntimeException(__d('gl', "サークルが存在しないか、権限がありません。"));
                 }
                 $p_list = array_merge($p_list,
-                                      $this->PostShareCircle->getMyCirclePostList($start, $end, $contains_message, 'modified', 'desc',
+                                      $this->PostShareCircle->getMyCirclePostList($start, $end, 'modified', 'desc',
                                                                                   1000, $this->orgParams['circle_id'],
                                                                                   PostShareCircle::SHARE_TYPE_SHARED));
             }
@@ -475,7 +470,7 @@ class Post extends AppModel
                 // 自分個人に共有された投稿
                 $p_list = array_merge($p_list,
                                       $this->PostShareUser->getShareWithMeList(
-                                          $start, $end, $contains_message, "PostShareUser.modified", "desc", 1000,
+                                          $start, $end, "PostShareUser.modified", "desc", 1000,
                                           ['user_id' => $this->orgParams['user_id']]));
 
                 // 自分が閲覧可能なサークルへの投稿一覧
@@ -503,13 +498,17 @@ class Post extends AppModel
                     'Post.modified' => 'desc'
                 ],
             ];
-            if ($this->orgParams['type'] == self::TYPE_ACTION) {
+           if ($this->orgParams['type'] == self::TYPE_ACTION) {
                 $post_options['order'] = ['ActionResult.id' => 'desc'];
                 $post_options['contain'] = ['ActionResult'];
             }
             if ($this->orgParams['type'] == self::TYPE_NORMAL) {
                 $post_options['conditions']['Post.type'] = self::TYPE_NORMAL;
             }
+            if ($contains_message === false) {
+                $post_options['conditions']['NOT']['Post.type'] = self::TYPE_MESSAGE;
+            }
+
             $post_list = $this->find('list', $post_options);
         }
 
@@ -587,6 +586,7 @@ class Post extends AppModel
                         'photo1_file_name',
                         'photo2_file_name',
                         'photo3_file_name',
+                        'photo4_file_name',
                         'photo4_file_name',
                         'photo5_file_name',
                     ],
