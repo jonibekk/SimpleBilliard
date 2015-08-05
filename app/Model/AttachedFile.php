@@ -97,14 +97,15 @@ class AttachedFile extends AppModel
     public $actsAs = [
         'Upload' => [
             'attached' => [
-                'styles'      => [
+                'styles'                 => [
                     'x_small' => '128l',
                     'small'   => '460l',
                     'large'   => '2048l',
                 ],
-                'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
-                'quality'     => 100,
-                'default_url' => 'no-image.jpg',
+                'path'                   => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'quality'                => 100,
+                'default_url'            => 'no-image.jpg',
+                'addFieldNameOnFileName' => false,
             ],
         ],
     ];
@@ -263,7 +264,7 @@ class AttachedFile extends AppModel
             return false;
         }
         //ファイル削除処理
-        foreach($delete_files as $id){
+        foreach ($delete_files as $id) {
             $this->delete($id);
         }
 

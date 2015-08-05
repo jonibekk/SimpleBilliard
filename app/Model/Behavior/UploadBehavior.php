@@ -44,11 +44,12 @@ class UploadBehavior extends ModelBehavior
     public function setup(Model $model, $settings = array())
     {
         $defaults = array(
-            'path'             => ':webroot/upload/:model/:id/:basename_:style.:extension',
-            'styles'           => array(),
-            'resizeToMaxWidth' => false,
-            'quality'          => 75,
-            'alpha'            => false
+            'path'                   => ':webroot/upload/:model/:id/:basename_:style.:extension',
+            'styles'                 => array(),
+            'resizeToMaxWidth'       => false,
+            'quality'                => 75,
+            'alpha'                  => false,
+            'addFieldNameOnFileName' => true,
         );
         foreach ($settings as $field => $array) {
             self::$__settings[$model->name][$field] = array_merge($defaults, $array);
@@ -85,7 +86,7 @@ class UploadBehavior extends ModelBehavior
                 if (!empty($model->id)) {
                     $this->_prepareToDeleteFiles($model, $field, true);
                 }
-                $this->_prepareToWriteFiles($model, $field);
+                $this->_prepareToWriteFiles($model, $field, $settings);
                 unset($model->data[$model->name][$field]);
                 $model->data[$model->name][$field . '_file_name'] = $this->toWrite[$field]['name'];
                 $model->data[$model->name][$field . '_file_size'] = $this->toWrite[$field]['size'];
@@ -211,14 +212,16 @@ class UploadBehavior extends ModelBehavior
         return null;
     }
 
-    private function _prepareToWriteFiles(&$model, $field)
+    private function _prepareToWriteFiles(&$model, $field, $settings)
     {
         //ファイル名を変更(ファイル名の後にフィールド名を追加)
         $file_name = $model->data[$model->name][$field]['name'];
-        $file_name = substr($file_name, 0, strrpos($file_name, '.')) . // filename
-            "_" . $field .
-            substr($file_name, strrpos($file_name, '.') //extension
-            );
+        if ($settings['addFieldNameOnFileName']) {
+            $file_name = substr($file_name, 0, strrpos($file_name, '.')) . // filename
+                "_" . $field .
+                substr($file_name, strrpos($file_name, '.') //extension
+                );
+        }
         $model->data[$model->name][$field]['name'] = $file_name;
 
         $this->toWrite[$field] = $model->data[$model->name][$field];
