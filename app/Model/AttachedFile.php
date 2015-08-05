@@ -435,6 +435,7 @@ class AttachedFile extends AppModel
             'conditions' => [
                 'AttachedFile.id' => $file_ids,
             ],
+            'order'      => ['AttachedFile.created desc'],
             'contain'    => [
                 'User'        => [
                     'fields' => $this->User->profileFields,
