@@ -23,9 +23,18 @@ class PostsController extends AppController
     {
         $this->_setMyCircle();
         $this->_setViewValOnRightColumn();
+        /*
         $message_list = $this->Post->getMessageList();
         $this->set(compact('message_list'));
+        */
         return $this->render();
+    }
+
+    public function ajax_get_message_list()
+    {
+        $this->_ajaxPreProcess();
+        $result = $this->Post->getMessageList();
+        return $this->_ajaxGetResponse($result);
     }
 
     /**
