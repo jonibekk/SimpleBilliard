@@ -76,10 +76,13 @@ if (isset($data['AttachedFile'])) {
                         $this->Html->image('ajax-loader.gif',
                                            [
                                                'class'         => 'lazy',
-                                               'data-original' => $this->Upload->attachedFileUrl($data, "download"),
+                                               'data-original' => $this->Upload->uploadUrl($data,
+                                                                                           "AttachedFile.attached",
+                                                                                           ['style' => 'x_small']),
                                                'width'         => '25px',
                                                'height'        => '25px',
                                                'error-img'     => "/img/no-image-link.png",
+                                               'style'         => []
                                            ]
                         )
                         ?>
@@ -109,11 +112,11 @@ if (isset($data['AttachedFile'])) {
         </a>
 
         <div class="font_11px font_lightgray">
-            <?php if($page_type === 'file_list'):?>
-            <span
-                title="<?= $this->TimeEx->datetimeLocalFormat(h($data['created'])) ?>"><?= $this->TimeEx->elapsedTime(h($data['created'])) ?></span>
-            <span class="font_lightgray"> ･ </span>
-            <?php endif;?>
+            <?php if ($page_type === 'file_list'): ?>
+                <span
+                    title="<?= $this->TimeEx->datetimeLocalFormat(h($data['created'])) ?>"><?= $this->TimeEx->elapsedTime(h($data['created'])) ?></span>
+                <span class="font_lightgray"> ･ </span>
+            <?php endif; ?>
             <span class=""><?= $data['file_ext'] ?></span>
             <?php if ($page_type == 'file_list'): ?>
                 <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user['id']]) ?>"

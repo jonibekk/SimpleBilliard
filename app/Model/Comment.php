@@ -4,13 +4,13 @@ App::uses('AppModel', 'Model');
 /**
  * Comment Model
  *
- * @property Post               $Post
- * @property User               $User
- * @property Team               $Team
- * @property CommentLike        $CommentLike
- * @property CommentRead        $CommentRead
- * @property AttachedFile       $AttachedFile
- * @property CommentFile        $CommentFile
+ * @property Post         $Post
+ * @property User         $User
+ * @property Team         $Team
+ * @property CommentLike  $CommentLike
+ * @property CommentRead  $CommentRead
+ * @property AttachedFile $AttachedFile
+ * @property CommentFile  $CommentFile
  */
 class Comment extends AppModel
 {
@@ -208,6 +208,14 @@ class Comment extends AppModel
                         'MyCommentLike.team_id' => $this->current_team_id,
                     ]
                 ],
+                'CommentFile'   => [
+                    'order'        => ['CommentFile.index_num asc'],
+                    'AttachedFile' => [
+                        'User' => [
+                            'fields' => $this->User->profileFields
+                        ]
+                    ]
+                ]
             ],
             'limit'      => $get_num
         ];
@@ -242,6 +250,14 @@ class Comment extends AppModel
                         'MyCommentLike.team_id' => $this->current_team_id,
                     ]
                 ],
+                'CommentFile'   => [
+                    'order'        => ['CommentFile.index_num asc'],
+                    'AttachedFile' => [
+                        'User' => [
+                            'fields' => $this->User->profileFields
+                        ]
+                    ]
+                ]
             ],
         ];
         //表示を昇順にする

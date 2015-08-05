@@ -12,6 +12,7 @@
  * @var                    $id_prefix
  * @var CodeCompletionView $this
  * @var                    $long_text
+ * @var                    $comment_file
  */
 ?>
 <?php if (!isset($id_prefix)) {
@@ -186,7 +187,7 @@
                 </div>
             <?php endif; ?>
             <div class="col col-xxs-12">
-                <?php foreach ($comment['CommentFile'] as $file): ?>
+                <?php foreach ($comment_file as $file): ?>
                     <div class="panel panel-default file-wrap-on-post">
                         <div class="panel-body pt_10px plr_11px pb_8px">
                             <?= $this->element('Feed/attached_file_item',
