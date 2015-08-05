@@ -351,7 +351,7 @@ class AttachedFileTest extends CakeTestCase
                 'file_ext'              => 'jpg',
                 'file_size'             => '1111',
                 'model_type'            => AttachedFile::TYPE_MODEL_ACTION_RESULT,
-                'removable_flg'      => false,
+                'removable_flg'         => false,
                 'display_file_list_flg' => false,
 
             ],
@@ -417,6 +417,20 @@ class AttachedFileTest extends CakeTestCase
         $this->AttachedFile->delete($id);
         $this->assertCount(1, $this->AttachedFile->find('all'));
         $this->assertCount(1, $this->AttachedFile->PostFile->find('all'));
+    }
+
+    function testGetFileTypeOptions()
+    {
+        $res = $this->AttachedFile->getFileTypeOptions();
+        $this->assertNotEmpty($res);
+    }
+
+    function testGetFileTypeId()
+    {
+        $res = $this->AttachedFile->getFileTypeId('image');
+        $this->assertEquals(AttachedFile::TYPE_FILE_IMG, $res);
+        $res = $this->AttachedFile->getFileTypeId('not_found_item');
+        $this->assertNull($res);
     }
 
     function _prepareTestFiles($file_size = 1000)
