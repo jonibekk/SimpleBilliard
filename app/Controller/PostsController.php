@@ -336,6 +336,52 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
+    /**
+     * サークルのファイル一覧読み込み ajax
+     *
+     * @return CakeResponse
+     */
+    public function ajax_get_circle_files()
+    {
+        $param_named = $this->request->params['named'];
+        $this->_ajaxPreProcess();
+
+        // 表示するページ
+        $page_num = 1;
+        if (isset($param_named['page']) && !empty($param_named['page'])) {
+            $page_num = $param_named['page'];
+        }
+        // データ取得期間
+        $start = null;
+        $end = null;
+        $this->log($param_named['month_index']);
+        if (isset($param_named['month_index']) && !empty($param_named['month_index'])) {
+            // 一ヶ月以前を指定された場合
+            $end_month_offset = $param_named['month_index'];
+            $start_month_offset = $end_month_offset + 1;
+            $end = strtotime("-{$end_month_offset} months", REQUEST_TIMESTAMP);
+            $start = strtotime("-{$start_month_offset} months", REQUEST_TIMESTAMP);
+        }
+        //取得件数
+        $item_num = FILE_LIST_PAGE_NUMBER;
+        //ファイル一覧取得
+        $files = $this->Post->getFilesOnCircle($param_named['circle_id'],
+                                               $page_num, $item_num, $start, $end,
+                                               $param_named['file_type']);
+        $this->set('files', $files);
+        // エレメントの出力を変数に格納する
+        // htmlレンダリング結果
+        $response = $this->render('Feed/attached_files');
+        $html = $response->__toString();
+        $result = array(
+            'html'          => $html,
+            'count'         => count($files),
+            'page_item_num' => $item_num,
+            'start'         => $start ? $start : REQUEST_TIMESTAMP - MONTH,
+        );
+        return $this->_ajaxGetResponse($result);
+    }
+
     public function ajax_get_goal_action_feed()
     {
         $this->_ajaxPreProcess();
