@@ -626,7 +626,9 @@ class PostsController extends AppController
     {
         $this->_setCircleCommonVariables();
         $this->_setViewValOnRightColumn();
-
+        $circle_id = $this->_getRequiredParam('circle_id');
+        $files = $this->Post->PostFile->AttachedFile->getFilesOnCircle($circle_id);
+        $this->set(compact('files'));
     }
 
     function _setCircleCommonVariables()

@@ -28,6 +28,17 @@
                                'feed_filter')) ?>
     <a href="" class="alert alert-info feed-notify-box" role="alert" style="margin-bottom:5px;display:none;opacity:0;">
         <span class="num"></span><?= __d('gl', "件の新しい投稿があります。") ?></a>
+    <div class="panel panel-default">
+        <?php foreach ($files as $file): ?>
+            <div class="panel-body pt_10px plr_11px pb_8px bd-t">
+                <?php $p_id = isset($file['PostFile'][0]['post_id']) ? $file['PostFile'][0]['post_id'] : null; ?>
+                <?php $p_id = isset($file['CommentFile'][0]['Comment']['post_id']) ? $file['CommentFile'][0]['Comment']['post_id'] : null; ?>
+                <?= $this->element('Feed/attached_file_item',
+                                   ['data' => $file, 'page_type' => 'file_list', 'post_id' => $p_id]) ?>
+            </div>
+        <?php endforeach ?>
+
+    </div>
 
     <?= $this->element('Feed/circle_join_button', compact('current_circle', 'user_status')) ?>
 <?php else: ?>

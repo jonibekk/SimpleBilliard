@@ -263,7 +263,7 @@ class AttachedFile extends AppModel
             return false;
         }
         //ファイル削除処理
-        foreach($delete_files as $id){
+        foreach ($delete_files as $id) {
             $this->delete($id);
         }
 
@@ -376,5 +376,61 @@ class AttachedFile extends AppModel
             $this->delete($related_file[$model['intermediateModel']]['attached_file_id']);
         }
         return true;
+    }
+
+    function getFilesOnCircle($circle_id)
+    {
+        //PostFile,CommentFile,ActionResultFileからfile_idをまず集める
+        /**
+         * @var PostShareCircle $PostShareCircle
+         */
+        $PostShareCircle = ClassRegistry::init('PostShareCircle');
+        $p_ids = $PostShareCircle->find('list', [
+            'conditions' => ['circle_id' => $circle_id],
+            'fields'     => ['post_id', 'post_id']
+        ]);
+        $c_ids = $PostShareCircle->Post->Comment->find('list', [
+            'conditions' => ['post_id' => $p_ids],
+            'fields'     => ['id', 'id']
+        ]);
+        $ar_ids = $PostShareCircle->Post->find('list', [
+            'conditions' => ['id' => $p_ids, 'NOT' => ['action_result_id' => null]],
+            'fields'     => ['action_result_id', 'action_result_id']
+        ]);
+
+        $p_file_ids = $this->PostFile->find('list', [
+            'conditions' => ['post_id' => $p_ids],
+            'fields'     => ['attached_file_id', 'attached_file_id']
+        ]);
+        $c_file_ids = $this->CommentFile->find('list', [
+            'conditions' => ['comment_id' => $c_ids],
+            'fields'     => ['attached_file_id', 'attached_file_id']
+        ]);
+        $ar_file_ids = $this->ActionResultFile->find('list', [
+            'conditions' => ['action_result_id' => $ar_ids],
+            'fields'     => ['attached_file_id', 'attached_file_id']
+        ]);
+        $file_ids = $p_file_ids + $c_file_ids + $ar_file_ids;
+        $options = [
+            'conditions' => [
+                'AttachedFile.id' => $file_ids,
+            ],
+            'contain'    => [
+                'User'        => [
+                    'fields' => $this->User->profileFields,
+                ],
+                'PostFile'    => [
+                    'fields' => ['PostFile.post_id']
+                ],
+                'CommentFile' => [
+                    'fields'  => ['CommentFile.comment_id'],
+                    'Comment' => [
+                        'fields' => ['Comment.post_id'],
+                    ]
+                ],
+            ]
+        ];
+        $files = $this->find('all', $options);
+        return $files;
     }
 }
