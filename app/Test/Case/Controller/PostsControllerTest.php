@@ -1476,10 +1476,7 @@ class PostsControllerTest extends ControllerTestCase
 
     function testAttachedFileList()
     {
-        /**
-         * @var UsersController $Posts
-         */
-        $Posts = $this->_getPostsCommonMock();
+        $this->_getPostsCommonMock();
         $this->testAction('/posts/attached_file_list/circle_id:1', ['method' => 'GET']);
     }
 

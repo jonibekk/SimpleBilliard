@@ -1206,10 +1206,6 @@ class Post extends AppModel
             'conditions' => ['post_id' => $p_ids],
             'fields'     => ['id', 'id']
         ]);
-        $ar_ids = $this->find('list', [
-            'conditions' => ['id' => $p_ids, 'NOT' => ['action_result_id' => null]],
-            'fields'     => ['action_result_id', 'action_result_id']
-        ]);
 
         $p_file_ids = $AttachedFile->PostFile->find('list', [
             'conditions' => ['post_id' => $p_ids],
@@ -1219,11 +1215,7 @@ class Post extends AppModel
             'conditions' => ['comment_id' => $c_ids],
             'fields'     => ['attached_file_id', 'attached_file_id']
         ]);
-        $ar_file_ids = $AttachedFile->ActionResultFile->find('list', [
-            'conditions' => ['action_result_id' => $ar_ids],
-            'fields'     => ['attached_file_id', 'attached_file_id']
-        ]);
-        $file_ids = $p_file_ids + $c_file_ids + $ar_file_ids;
+        $file_ids = $p_file_ids + $c_file_ids;
         $options = [
             'conditions' => [
                 'AttachedFile.id'                    => $file_ids,
@@ -1233,28 +1225,18 @@ class Post extends AppModel
             'limit'      => $limit,
             'page'       => $page,
             'contain'    => [
-                'User'             => [
+                'User'        => [
                     'fields' => $this->User->profileFields,
                 ],
-                'PostFile'         => [
+                'PostFile'    => [
                     'fields' => ['PostFile.post_id']
                 ],
-                'CommentFile'      => [
+                'CommentFile' => [
                     'fields'  => ['CommentFile.comment_id'],
                     'Comment' => [
                         'fields' => ['Comment.post_id'],
                     ]
                 ],
-                'ActionResultFile' => [
-                    'fields'       => ['ActionResultFile.action_result_id'],
-                    'ActionResult' => [
-                        'fields' => ['ActionResult.id'],
-                        'Post'   => [
-                            'fields' => ['Post.id']
-                        ]
-                    ]
-                ],
-
             ]
         ];
         if ($file_type) {

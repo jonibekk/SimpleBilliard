@@ -607,21 +607,13 @@ class PostTest extends CakeTestCase
         $this->Post->create();
         $this->Post->save(['user_id' => 1, 'team_id' => 1, 'body' => 'test']);
         $p_id = $this->Post->getLastInsertID();
-        $this->Post->ActionResult->create();
-        $this->Post->ActionResult->save(['team_id' => 1, 'user_id' => 1, 'name' => 'test', 'goal_id' => 1]);
-        $ar_id = $this->Post->ActionResult->getLastInsertID();
-        $this->Post->create();
-        $this->Post->save(['user_id' => 1, 'team_id' => 1, 'body' => 'test', 'action_result_id' => $ar_id]);
-        $p_id2 = $this->Post->getLastInsertID();
         $this->Post->PostShareCircle->create();
         $this->Post->PostShareCircle->save(['circle_id' => 1, 'post_id' => $p_id, 'team_id' => 1]);
-        $this->Post->PostShareCircle->create();
-        $this->Post->PostShareCircle->save(['circle_id' => 1, 'post_id' => $p_id2, 'team_id' => 1]);
         $this->Post->Comment->create();
         $this->Post->Comment->save(['post_id' => $p_id, 'team_id' => 1, 'user_id' => 1, 'body' => 'test']);
         $c_id = $this->Post->Comment->getLastInsertID();
         $f_ids = [];
-        for ($i = 0; $i < 3; $i++) {
+        for ($i = 0; $i < 2; $i++) {
             $this->Post->PostFile->AttachedFile->create();
             $this->Post->PostFile->AttachedFile->save(
                 [
@@ -644,15 +636,8 @@ class PostTest extends CakeTestCase
                 'comment_id' => $c_id, 'team_id' => 1, 'attached_file_id' => $f_ids[1]
             ]
         );
-        $this->Post->ActionResult->ActionResultFile->create();
-        $this->Post->ActionResult->ActionResultFile->save(
-            [
-                'action_result_id' => $ar_id, 'team_id' => 1, 'attached_file_id' => $f_ids[2]
-            ]
-        );
-
         $res = $this->Post->getFilesOnCircle(1, 1, null, 1, 100000000000, AttachedFile::TYPE_FILE_IMG);
-        $this->assertCount(3, $res);
+        $this->assertCount(2, $res);
     }
 
     function _setDefault()

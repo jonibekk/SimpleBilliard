@@ -15,7 +15,6 @@
         <?php
         $p_id = viaIsSet($file['PostFile'][0]['post_id']);
         $p_id = $p_id ? $p_id : viaIsSet($file['CommentFile'][0]['Comment']['post_id']);
-        $p_id = $p_id ? $p_id : viaIsSet($file['ActionResultFile'][0]['ActionResult']['Post'][0]['id']);
         ?>
         <?= $this->element('Feed/attached_file_item',
                            ['data' => $file, 'page_type' => 'file_list', 'post_id' => $p_id]) ?>
