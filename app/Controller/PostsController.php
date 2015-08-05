@@ -23,10 +23,6 @@ class PostsController extends AppController
     {
         $this->_setMyCircle();
         $this->_setViewValOnRightColumn();
-        /*
-        $message_list = $this->Post->getMessageList();
-        $this->set(compact('message_list'));
-        */
         return $this->render();
     }
 
@@ -46,7 +42,6 @@ class PostsController extends AppController
         $this->request->data['Post']['type'] = Post::TYPE_MESSAGE;
         $this->add();
     }
-
 
     /**
      * add method
