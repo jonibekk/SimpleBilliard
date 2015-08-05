@@ -6,7 +6,6 @@ message_app.controller(
         $translate,
         notificationService,
         getPostDetail,
-        getMessage,
         $pusher,
         $stateParams,
         $anchorScroll,
@@ -32,43 +31,41 @@ message_app.controller(
         // スレッド情報
         $scope.auth_info = getPostDetail.auth_info;
         $scope.post_detail = post_detail;
-
-        angular.forEach(getMessage.message_list, function (val) {
-            this.push(val);
-        }, message_list);
-
         $scope.message_list = message_list;
-        var message_scroll = function () {
-            var length = $scope.message_list.length;
-            $location.hash('m_'+length);
+
+        var current_id = 0;
+        var message_scroll = function (id) {
+            var message_id = id;
+            if (current_id === 0) {
+                message_id = $scope.message_list.length;
+            }
+            current_id = message_id;
+            $location.hash('m_'+ message_id);
             $anchorScroll();
         };
-        message_scroll();
 
         // pusherメッセージ内容を受け取る
         var pusher = new Pusher(cake.pusher.key);
-        // TODO: Uniqueチャンネル名に指定
-        var test_channel = pusher.subscribe('test-channel');
+        var test_channel = pusher.subscribe('message-channel-' + $stateParams.post_id);
         test_channel.bind('new_message', function (data) {
             // 既読処理
             var read_comment_id = data.Comment.id;
             var request = {
                 method: 'GET',
-                url: cake.url.ak + read_comment_id
+                url: cake.url.ak + $stateParams.post_id + '/' + read_comment_id
             };
             $http(request).then(function(response) {
             });
 
             // メッセージ表示
             $scope.$apply($scope.message_list.push(data));
-            message_scroll();
+            message_scroll(current_id);
         });
 
         // pusherから既読されたcomment_idを取得する
         test_channel.bind('read_message', function (comment_id) {
             var read_box = document.getElementById("mr_"+comment_id).innerText;
             document.getElementById("mr_"+comment_id).innerText = Number(read_box) + 1;
-            //console.log(read_box);
         });
 
         // メッセージを送信する
@@ -77,8 +74,29 @@ message_app.controller(
                 method: 'GET',
                 url: cake.url.ai + $stateParams.post_id + '/' +$scope.message
             };
-            $http(request).then(function(response) {});
-            $scope.message = "";
+            $http(request).then(function(response) {
+                message_scroll($scope.message_list.length);
+                $scope.message = "";
+            });
         };
 
+        var limit = 10;
+        var page_num = 1;
+        $scope.loadMore = function () {
+            if (document.getElementById("message_box").scrollTop === 0) {
+                var request = {
+                    method: 'GET',
+                    url: cake.url.ah + $stateParams.post_id + '/' + limit + '/' + page_num
+                };
+                $http(request).then(function (response) {
+                    angular.forEach(response.data.message_list, function (val) {
+                        this.push(val);
+                    }, $scope.message_list);
+                    if (response.data.message_list.length > 0) {
+                        message_scroll(current_id);
+                    }
+                    page_num = page_num + 1;
+                });
+            }
+        }
     });

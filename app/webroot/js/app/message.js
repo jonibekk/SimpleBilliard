@@ -1,14 +1,41 @@
-var message_app = angular.module('messageApp', ['ui.router', 'pascalprecht.translate', 'ui.bootstrap', 'jlareau.pnotify', 'pusher-angular'])
-    .run(['$rootScope', '$state', '$stateParams', '$http', '$translate',
-        function ($rootScope, $state, $stateParams, $http, $translate) {
+var message_app = angular.module(
+    'messageApp', [
+        'ui.router',
+        'pascalprecht.translate',
+        'ui.bootstrap',
+        'jlareau.pnotify',
+        'pusher-angular',
+        'infinite-scroll'
+    ]).run([
+        '$rootScope',
+        '$state',
+        '$stateParams',
+        '$http',
+        '$translate',
+        function (
+            $rootScope,
+            $state,
+            $stateParams,
+            $http,
+            $translate
+        ){
             $rootScope.$state = $state;
             $rootScope.$stateParams = $stateParams;
         }]
 );
 
 
-message_app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider', '$httpProvider',
-    function ($stateProvider, $urlRouterProvider, $translateProvider, $httpProvider) {
+message_app.config([
+    '$stateProvider',
+    '$urlRouterProvider',
+    '$translateProvider',
+    '$httpProvider',
+    function (
+        $stateProvider,
+        $urlRouterProvider,
+        $translateProvider,
+        $httpProvider
+    ) {
 
         $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 
@@ -18,15 +45,6 @@ message_app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider'
                 url: "/:post_id",
                 templateUrl: "/template/message_detail.html",
                 resolve: {
-                    getMessage: ['$stateParams', '$http', function ($stateParams, $http) {
-                        var request = {
-                            method: 'GET',
-                            url: cake.url.ah + $stateParams.post_id
-                        };
-                        return $http(request).then(function (response) {
-                            return response.data;
-                        });
-                    }],
                     getPostDetail: ['$stateParams', '$http', function ($stateParams, $http) {
                         var request = {
                             method: 'GET',
