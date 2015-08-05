@@ -636,7 +636,7 @@ class PostTest extends CakeTestCase
                 'comment_id' => $c_id, 'team_id' => 1, 'attached_file_id' => $f_ids[1]
             ]
         );
-        $res = $this->Post->getFilesOnCircle(1, 1, null, 1, 100000000000, AttachedFile::TYPE_FILE_IMG);
+        $res = $this->Post->getFilesOnCircle(1, 1, null, 1, 100000000000, 'image');
         $this->assertCount(2, $res);
     }
 
