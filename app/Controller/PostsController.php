@@ -627,8 +627,8 @@ class PostsController extends AppController
         $this->_setViewValOnRightColumn();
         $circle_id = $this->_getRequiredParam('circle_id');
         $file_type_options = $this->Post->PostFile->AttachedFile->getFileTypeOptions();
-        $files = $this->Post->PostFile->AttachedFile->getFilesOnCircle($circle_id,
-                                                                       viaIsSet($this->request->params['named']['file_type']));
+        $files = $this->Post->getFilesOnCircle($circle_id, 1, FILE_LIST_PAGE_NUMBER, null, null,
+                                               viaIsSet($this->request->params['named']['file_type']));
 
         $circle_file_list_base_url = Router::url(
             [
