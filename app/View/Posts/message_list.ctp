@@ -21,7 +21,10 @@
                         ?>
                         <div class="notify-contents">
                             <div class="col col-xxs-12 notify-card-head">
-                                <span class="font-heading">topic-<?php echo $key + 1; ?></span>
+                                <span class="font-heading">
+                                    <?php echo $item['User']['display_username']; ?>
+                                    <?php if (count($item['PostShareUser']) > 0) echo '+'. count($item['PostShareUser'])?>
+                                </span>
                             </div>
                             <div class="col col-xxs-12 notify-text notify-line-number notify-card-text"
                                  id="CommentTextBody_67">
