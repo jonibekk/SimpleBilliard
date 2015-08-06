@@ -99,7 +99,7 @@ class NotificationsController extends AppController
         $notify_items = $this->NotifyBiz->getMessageNotification(NOTIFY_BELL_BOX_ITEMS_NUMBER);
         $team = $this->Team->findById($this->current_team_id);
         $this->set(compact('notify_items', 'team'));
-        $response = $this->render('Notification/notify_items_in_list_box');
+        $response = $this->render('Notification/message_notify_items_in_list_box');
         $html = $response->__toString();
         return $this->_ajaxGetResponse($html);
     }
