@@ -4,6 +4,7 @@
 /Plugin
 Berksfile
 Berksfile.lock
+/app/tmp/attached_file/*
 /app/tmp/cache/*
 /app/tmp/logs/*
 /app/tmp/pear/*
@@ -22,16 +23,7 @@ junit.xml
 composer.lock
 # PhpStorm設定ファイルを除外
 # ただし、プロジェクト内で共通の設定を適用すべきファイルはバージョン管理対象にする
-/.idea/php.xml
-/.idea/workspace.xml
-/.idea/dataSources.ids
-/.idea/dataSources.xml
-/.idea/vagrant.xml
-/.idea/watcherTasks.xml
-/.idea/inspectionProfiles
-!/.idea/inspectionProfiles/Project_Default.xml
-/.idea/dataSources.local.xml
-/.idea/jsLibraryMappings.xml
+/.idea
 # for npm
 /node_modules
 npm-debug.log

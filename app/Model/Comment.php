@@ -1,17 +1,26 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('UploadHelper', 'View/Helper');
+App::uses('TimeExHelper', 'View/Helper');
+App::uses('View', 'View');
 
 /**
  * Comment Model
  *
- * @property Post        $Post
- * @property User        $User
- * @property Team        $Team
- * @property CommentLike $CommentLike
- * @property CommentRead $CommentRead
+ * @property Post         $Post
+ * @property User         $User
+ * @property Team         $Team
+ * @property CommentLike  $CommentLike
+ * @property CommentRead  $CommentRead
+ * @property AttachedFile $AttachedFile
+ * @property CommentFile  $CommentFile
  */
 class Comment extends AppModel
 {
+    public $uses = [
+        'AttachedFile'
+    ];
+
     public $actsAs = [
         'Upload' => [
             'photo1'     => [
@@ -131,7 +140,8 @@ class Comment extends AppModel
         'MyCommentLike' => [
             'className' => 'CommentLike',
             'fields'    => ['id']
-        ]
+        ],
+        'CommentFile',
     ];
 
     /**
@@ -145,18 +155,43 @@ class Comment extends AppModel
      */
     public function add($postData, $uid = null, $team_id = null)
     {
+        $this->begin();
+
+        // コメントデータ保存
         $this->setUidAndTeamId($uid, $team_id);
         $postData['Comment']['user_id'] = $this->uid;
         $postData['Comment']['team_id'] = $this->team_id;
         $res = $this->save($postData);
-        //投稿データのmodifiedを更新
-        $this->Post->id = $postData['Comment']['post_id'];
-        $this->Post->saveField('modified', REQUEST_TIMESTAMP);
+        if (empty($res)) {
+            $this->rollback();
+            return false;
+        }
 
-        return $res;
+        $comment_id = $this->getLastInsertID();
+        $results = [];
+        // ファイルが添付されている場合
+        if (isset($postData['file_id']) && is_array($postData['file_id'])) {
+            $results[] = $this->CommentFile->AttachedFile->saveRelatedFiles($comment_id,
+                                                                            AttachedFile::TYPE_MODEL_COMMENT,
+                                                                            $postData['file_id']);
+        }
+        // 投稿データのmodifiedを更新
+        $this->Post->id = $postData['Comment']['post_id'];
+        $results[] = $this->Post->saveField('modified', REQUEST_TIMESTAMP);
+
+        // どこかでエラーが発生した場合は rollback
+        foreach ($results as $r) {
+            if (!$r) {
+                $this->rollback();
+                $this->CommentFile->AttachedFile->deleteAllRelatedFiles($comment_id, AttachedFile::TYPE_MODEL_COMMENT);
+                return false;
+            }
+        }
+        $this->commit();
+        return $comment_id;
     }
 
-    public function getPostsComment($post_id, $get_num = null)
+    public function getPostsComment($post_id, $get_num = null, $page = null, $order_by = null)
     {
         $options = [
             'conditions' => [
@@ -176,14 +211,74 @@ class Comment extends AppModel
                         'MyCommentLike.team_id' => $this->current_team_id,
                     ]
                 ],
+                'CommentFile'   => [
+                    'order'        => ['CommentFile.index_num asc'],
+                    'AttachedFile' => [
+                        'User' => [
+                            'fields' => $this->User->profileFields
+                        ]
+                    ]
+                ]
             ],
-            'limit'      => $get_num
+            'limit'      => $get_num,
+            'page'       => $page
         ];
+
+        if (is_null($page) === false) {
+            $options['page'] = $page;
+        }
+
+        if (is_null($order_by) === false) {
+            $options['order']['Comment.created'] = $order_by;
+        }
+
         $res = $this->find('all', $options);
 
         //既読済みに
         $comment_list = Hash::extract($res, '{n}.Comment.id');
         $this->CommentRead->red($comment_list);
+
+        return $res;
+    }
+
+    function convertData($data)
+    {
+        $upload = new UploadHelper(new View());
+
+        if (isset($data['Comment']) === true) {
+            $data['User']['photo_path'] = $upload->uploadUrl($data['User'], 'User.photo', ['style' => 'original']);
+
+        }
+        else {
+            foreach ($data as $key => $val) {
+                $data[$key]['User']['photo_path'] = $upload->uploadUrl($val['User'], 'User.photo',
+                                                                       ['style' => 'original']);
+            }
+        }
+
+        return $data;
+    }
+
+    public function getComment($comment_id)
+    {
+        $options = [
+            'conditions' => [
+                'Comment.id'      => $comment_id,
+                'Comment.team_id' => $this->current_team_id,
+            ],
+            'contain'    => [
+                'User'          => [
+                    'fields' => $this->User->profileFields
+                ],
+                'MyCommentLike' => [
+                    'conditions' => [
+                        'MyCommentLike.user_id' => $this->my_uid,
+                        'MyCommentLike.team_id' => $this->current_team_id,
+                    ]
+                ],
+            ],
+        ];
+        $res = $this->find('first', $options);
 
         return $res;
     }
@@ -210,6 +305,14 @@ class Comment extends AppModel
                         'MyCommentLike.team_id' => $this->current_team_id,
                     ]
                 ],
+                'CommentFile'   => [
+                    'order'        => ['CommentFile.index_num asc'],
+                    'AttachedFile' => [
+                        'User' => [
+                            'fields' => $this->User->profileFields
+                        ]
+                    ]
+                ]
             ],
         ];
         //表示を昇順にする
@@ -285,15 +388,15 @@ class Comment extends AppModel
     public function getLikeCountSumByUserId($user_id, $start_date = null, $end_date = null)
     {
         $options = [
-            'fields' => [
+            'fields'     => [
                 'SUM(Comment.comment_like_count) as sum_like',
             ],
             'conditions' => [
                 'Comment.user_id' => $user_id,
                 'Comment.team_id' => $this->current_team_id,
-                'Post.type'    => [Post::TYPE_NORMAL, Post::TYPE_ACTION],
+                'Post.type'       => [Post::TYPE_NORMAL, Post::TYPE_ACTION],
             ],
-            'contain' => [
+            'contain'    => [
                 'Post'
             ]
         ];

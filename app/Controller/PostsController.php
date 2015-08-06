@@ -13,15 +13,53 @@ class PostsController extends AppController
         parent::beforeFilter();
     }
 
+    public function message()
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
+        $this->set('without_footer', true);
+        return $this->render();
+    }
+
+    public function message_list()
+    {
+        $this->_setMyCircle();
+        $this->_setViewValOnRightColumn();
+        return $this->render();
+    }
+
+    public function ajax_get_message_list()
+    {
+        $this->_ajaxPreProcess();
+        $result = $this->Post->getMessageList();
+        $message_list = $this->Post->convertData($result);
+        return $this->_ajaxGetResponse($message_list);
+    }
+
+    /**
+     * add message method
+     */
+    public function add_message()
+    {
+        $this->request->data['Post']['type'] = Post::TYPE_MESSAGE;
+        $this->_addPost();
+        $to_url = Router::url(['controller' => 'posts', 'action' => 'message#', $this->Post->getLastInsertID()], true);
+        $this->redirect($to_url);
+    }
+
+    public function add()
+    {
+        $this->_addPost();
+        $this->redirect($this->_getRedirectUrl());
+    }
+
     /**
      * add method
      *
      * @throws RuntimeException
      * @return void
      */
-    public function add()
+    public function _addPost()
     {
-
         $this->request->allowMethod('post');
 
         // ogbをインサートデータに追加
@@ -48,19 +86,22 @@ class PostsController extends AppController
             else {
                 $this->Pnotify->outError(__d('gl', "投稿に失敗しました。"));
             }
-            $this->redirect($this->referer());
+            return false;
         }
 
-        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_POST, $this->Post->getLastInsertID());
+        $notify_type = NotifySetting::TYPE_FEED_POST;
+        if (viaIsSet($this->request->data['Post']['type']) == Post::TYPE_MESSAGE) {
+            $notify_type = NotifySetting::TYPE_FEED_MESSAGE;
+        }
+        $this->NotifyBiz->execSendNotify($notify_type, $this->Post->getLastInsertID());
 
         $socketId = viaIsSet($this->request->data['socket_id']);
         $share = explode(",", viaIsSet($this->request->data['Post']['share']));
 
-        // リクエストデータが正しくないケース
+        //何らかの原因でsocketIdが無いもしくは、共有先指定なしの場合は以降の処理(通知、イベントトラッキング)を行わない
         if (!$socketId || $share[0] === "") {
-            $this->redirect($this->referer());
             $this->Pnotify->outSuccess(__d('gl', "投稿しました。"));
-            $this->redirect($this->referer());
+            return false;
         }
 
         $mixpanel_prop_name = null;
@@ -88,8 +129,7 @@ class PostsController extends AppController
         $this->Mixpanel->trackPost($mixpanel_prop_name, $this->Post->getLastInsertID());
 
         $this->Pnotify->outSuccess(__d('gl', "投稿しました。"));
-
-        $this->redirect($this->referer());
+        return true;
     }
 
     /**
@@ -102,13 +142,15 @@ class PostsController extends AppController
     {
         $this->Post->id = viaIsSet($this->request->params['named']['post_id']);
         if (!$this->Post->exists()) {
-            throw new NotFoundException(__('gl', "この投稿は存在しません。"));
+            throw new NotFoundException(__d('gl', "この投稿は存在しません。"));
         }
         if (!$this->Post->isOwner($this->Auth->user('id')) && !$this->User->TeamMember->myStatusWithTeam['TeamMember']['admin_flg']) {
-            throw new NotFoundException(__('gl', "この投稿はあなたのものではありません。"));
+            throw new NotFoundException(__d('gl', "この投稿はあなたのものではありません。"));
         }
         $this->request->allowMethod('post', 'delete');
         $this->Post->delete();
+        $this->Post->PostFile->AttachedFile->deleteAllRelatedFiles($this->Post->id,
+                                                                   AttachedFile::TYPE_MODEL_POST);
         $this->Pnotify->outSuccess(__d('gl', "投稿を削除しました。"));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
@@ -123,32 +165,46 @@ class PostsController extends AppController
      */
     public function post_edit()
     {
-        $this->request->allowMethod('post');
         $this->Post->id = viaIsSet($this->request->params['named']['post_id']);
 
         // 例外チェック
         if (!$this->Post->exists()) {
-            throw new NotFoundException(__('gl', "この投稿は存在しません。"));
+            throw new NotFoundException(__d('gl', "この投稿は存在しません。"));
         }
         if (!$this->Post->isOwner($this->Auth->user('id'))) {
-            throw new NotFoundException(__('gl', "この投稿はあなたのものではありません。"));
+            throw new NotFoundException(__d('gl', "この投稿はあなたのものではありません。"));
         }
 
-        // ogbをインサートデータに追加
-        $this->request->data['Post'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Post']),
-                                                             viaIsSet($this->request->data['Post']['body']));
+        // フォームが submit された時
+        if ($this->request->is('put')) {
+            $this->request->data['Post']['id'] = $this->request->params['named']['post_id'];
+            // ogbをインサートデータに追加
+            $this->request->data['Post'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Post']),
+                                                                 viaIsSet($this->request->data['Post']['body']));
+            // 投稿を保存
+            if ($this->Post->postEdit($this->request->data)) {
+                $this->Pnotify->outSuccess(__d('gl', "投稿の変更を保存しました。"));
+            }
+            else {
+                $error_msg = array_shift($this->Post->validationErrors);
+                $this->Pnotify->outError($error_msg[0], ['title' => __d('gl', "投稿の変更に失敗しました。")]);
+            }
+            /** @noinspection PhpInconsistentReturnPointsInspection */
+            /** @noinspection PhpVoidFunctionResultUsedInspection */
+            return $this->redirect(
+                ['controller' => 'posts',
+                 'action'     => 'feed',
+                 'post_id'    => $this->request->params['named']['post_id']]);
+        }
 
-        // 投稿を保存
-        if ($this->Post->postEdit($this->request->data)) {
-            $this->Pnotify->outSuccess(__d('gl', "投稿の変更を保存しました。"));
-        }
-        else {
-            $error_msg = array_shift($this->Post->validationErrors);
-            $this->Pnotify->outError($error_msg[0], ['title' => __d('gl', "投稿の変更に失敗しました。")]);
-        }
-        /** @noinspection PhpInconsistentReturnPointsInspection */
-        /** @noinspection PhpVoidFunctionResultUsedInspection */
-        return $this->redirect($this->referer());
+        // 編集フォーム表示
+        $this->_setViewValOnRightColumn();
+        $this->set('common_form_type', 'post');
+        $this->set('common_form_mode', 'edit');
+        $rows = $this->Post->get(1, 1, null, null,
+                                 ['named' => ['post_id' => $this->request->params['named']['post_id']]]);
+        $this->request->data = $rows[0];
+        $this->layout = LAYOUT_ONE_COLUMN;
     }
 
     /**
@@ -169,6 +225,8 @@ class PostsController extends AppController
         }
         $this->request->allowMethod('post', 'delete');
         $this->Post->Comment->delete();
+        $this->Post->PostFile->AttachedFile->deleteAllRelatedFiles($this->Post->Comment->id,
+                                                                   AttachedFile::TYPE_MODEL_COMMENT);
         $this->Post->Comment->updateCounterCache(['post_id' => $post_id]);
 
         $this->Pnotify->outSuccess(__d('gl', "コメントを削除しました。"));
@@ -258,6 +316,66 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
+    public function ajax_get_message_info($post_id)
+    {
+        $this->_ajaxPreProcess();
+
+        $room_info = $this->Post->getPostById($post_id);
+        $room_info['User']['photo_path'] = $this->Post->getPhotoPath($room_info['User']);
+
+        $res = [
+            'auth_info' => [
+                'photo_path' => $this->Post->getPhotoPath($this->Auth->user()),
+            ],
+            'room_info' => $room_info
+        ];
+
+        //対象のメッセージルーム(Post)のnotifyがあれば削除する
+        //メッセージなら該当するnotifyをredisから削除する
+        //なお通知は1ルームあたりからなず1個のため、notify_id = post_id
+        $this->NotifyBiz->removeMessageNotification($post_id);
+
+        return $this->_ajaxGetResponse($res);
+    }
+
+    public function ajax_get_message($post_id, $limit, $page_num)
+    {
+        $this->_ajaxPreProcess();
+        $message_list = $this->Post->Comment->getPostsComment($post_id, $limit, $page_num, 'desc');
+        $convert_msg_data = $this->Post->Comment->convertData($message_list);
+        $result = ['message_list' => $convert_msg_data];
+        return $this->_ajaxGetResponse($result);
+    }
+
+    public function ajax_put_message($post_id, $message)
+    {
+        $this->_ajaxPreProcess();
+
+        $params['Comment']['post_id'] = $post_id;
+        $params['Comment']['body'] = $message;
+        $comment_id = $this->Post->Comment->add($params);
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MESSAGE, $post_id, $comment_id);
+
+        $detail_comment = $this->Post->Comment->getComment($comment_id);
+        $convert_data = $this->Post->Comment->convertData($detail_comment);
+
+        $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
+        $pusher->trigger('message-channel-' . $post_id, 'new_message', $convert_data);
+
+        return $this->_ajaxGetResponse($detail_comment);
+    }
+
+    public function ajax_put_message_read($post_id, $comment_id)
+    {
+        $this->_ajaxPreProcess();
+        $res = $this->Post->Comment->CommentRead->red([$comment_id]);
+        if ($res === true) {
+            $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
+            $pusher->trigger('message-channel-' . $post_id, 'read_message', $comment_id);
+        }
+        return $this->_ajaxGetResponse($res);
+    }
+
     public function ajax_get_action_list_more()
     {
         $param_named = $this->request->params['named'];
@@ -331,6 +449,51 @@ class PostsController extends AppController
         $result = array(
             'html'          => $html,
             'count'         => count($posts),
+            'page_item_num' => $item_num,
+            'start'         => $start ? $start : REQUEST_TIMESTAMP - MONTH,
+        );
+        return $this->_ajaxGetResponse($result);
+    }
+
+    /**
+     * サークルのファイル一覧読み込み ajax
+     *
+     * @return CakeResponse
+     */
+    public function ajax_get_circle_files()
+    {
+        $param_named = $this->request->params['named'];
+        $this->_ajaxPreProcess();
+
+        // 表示するページ
+        $page_num = 1;
+        if (isset($param_named['page']) && !empty($param_named['page'])) {
+            $page_num = $param_named['page'];
+        }
+        // データ取得期間
+        $start = null;
+        $end = null;
+        if (isset($param_named['month_index']) && !empty($param_named['month_index'])) {
+            // 一ヶ月以前を指定された場合
+            $end_month_offset = $param_named['month_index'];
+            $start_month_offset = $end_month_offset + 1;
+            $end = strtotime("-{$end_month_offset} months", REQUEST_TIMESTAMP);
+            $start = strtotime("-{$start_month_offset} months", REQUEST_TIMESTAMP);
+        }
+        //取得件数
+        $item_num = FILE_LIST_PAGE_NUMBER;
+        //ファイル一覧取得
+        $files = $this->Post->getFilesOnCircle($param_named['circle_id'],
+                                               $page_num, $item_num, $start, $end,
+                                               viaIsSet($param_named['file_type']));
+        $this->set('files', $files);
+        // エレメントの出力を変数に格納する
+        // htmlレンダリング結果
+        $response = $this->render('Feed/attached_files');
+        $html = $response->__toString();
+        $result = array(
+            'html'          => $html,
+            'count'         => count($files),
             'page_item_num' => $item_num,
             'start'         => $start ? $start : REQUEST_TIMESTAMP - MONTH,
         );
@@ -578,6 +741,10 @@ class PostsController extends AppController
                         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION,
                                                          $this->Post->id, $this->Post->Comment->id);
                         break;
+                    case Post::TYPE_MESSAGE:
+                        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MESSAGE, $this->Post->id,
+                                                         $this->Post->Comment->id);
+                        break;
                 }
                 //mixpanel
                 $this->Mixpanel->trackComment($type);
@@ -603,43 +770,9 @@ class PostsController extends AppController
 
     function feed()
     {
-        $params = $this->request->params;
-        $this->_setMyCircle();
-        $this->_setCurrentCircle();
-        $this->_setFeedMoreReadUrl();
-
-        if (isset($this->request->params['circle_id']) ||
-            isset($this->request->params['post_id'])
-        ) {
-            $this->set('long_text', true);
-        }
-        else {
-            $this->set('long_text', false);
-        }
-
-        $feed_filter = null;
-        $circle_id = viaIsSet($this->request->params['circle_id']);
-        $user_status = $this->_userCircleStatus($this->request->params['circle_id']);
-
-        $circle_status = $this->Post->Circle->CircleMember->show_hide_stats($this->Auth->user('id'),
-                                                                            $this->request->params['circle_id']);
-
+        $this->_setCircleCommonVariables();
         $this->_setViewValOnRightColumn();
-        //サークル指定の場合はメンバーリスト取得
-        if (isset($this->request->params['circle_id']) && !empty($this->request->params['circle_id'])) {
-            $circle_member_count = $this->User->CircleMember->getActiveMemberCount($this->request->params['circle_id']);
-        }
-        //抽出条件
-        if ($circle_id) {
-            $feed_filter = 'circle';
-        }
-        elseif (isset($this->request->params['named']['filter_goal'])) {
-            $feed_filter = 'goal';
-        }
 
-        $this->set('common_form_type', 'post');
-        $this->set(compact('feed_filter', 'circle_member_count', 'circle_id', 'user_status', 'params',
-                           'circle_status'));
         try {
             $this->set(['posts' => $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null,
                                                     $this->request->params)]);
@@ -654,6 +787,63 @@ class PostsController extends AppController
             $this->Pnotify->outError($e->getMessage());
             $this->redirect($this->referer());
         }
+    }
+
+    public function attached_file_list()
+    {
+        $this->_setCircleCommonVariables();
+        $this->_setViewValOnRightColumn();
+        $circle_id = $this->_getRequiredParam('circle_id');
+        $file_type_options = $this->Post->PostFile->AttachedFile->getFileTypeOptions();
+        $files = $this->Post->getFilesOnCircle($circle_id, 1, FILE_LIST_PAGE_NUMBER, null, null,
+                                               viaIsSet($this->request->params['named']['file_type']));
+
+        $circle_file_list_base_url = Router::url(
+            [
+                'controller' => 'posts', 'action' => 'attached_file_list', 'circle_id' => $circle_id
+            ]);
+
+        $this->set(compact('files', 'file_type_options', 'circle_file_list_base_url'));
+        return $this->render();
+    }
+
+    function _setCircleCommonVariables()
+    {
+        $params = $this->request->params;
+        $params = array_merge($params, $params['named']);
+        $this->_setMyCircle();
+        $this->_setCurrentCircle();
+        $this->_setFeedMoreReadUrl();
+
+        if (isset($params['circle_id']) ||
+            isset($params['post_id'])
+        ) {
+            $this->set('long_text', true);
+        }
+        else {
+            $this->set('long_text', false);
+        }
+
+        $feed_filter = null;
+        if ($circle_id = viaIsSet($params['circle_id'])) {
+            $user_status = $this->_userCircleStatus($circle_id);
+
+            $circle_status = $this->Post->Circle->CircleMember->show_hide_stats($this->Auth->user('id'),
+                                                                                $circle_id);
+            //サークル指定の場合はメンバーリスト取得
+            $circle_member_count = $this->User->CircleMember->getActiveMemberCount($params['circle_id']);
+            $this->set(compact('user_status', 'circle_status', 'circle_member_count'));
+        }
+        //抽出条件
+        if ($circle_id) {
+            $feed_filter = 'circle';
+        }
+        elseif (isset($params['filter_goal'])) {
+            $feed_filter = 'goal';
+        }
+
+        $this->set('common_form_type', 'post');
+        $this->set(compact('feed_filter', 'circle_id', 'params'));
     }
 
     public function ajax_get_share_circles_users_modal()
@@ -671,6 +861,38 @@ class PostsController extends AppController
         $html = $response->__toString();
 
         return $this->_ajaxGetResponse($html);
+    }
+
+    /**
+     * ファイルアップロード
+     *
+     * @return CakeResponse
+     */
+    public function ajax_upload_file()
+    {
+        $this->_ajaxPreProcess();
+        $file_id = $this->Post->PostFile->AttachedFile->preUploadFile($this->request->params['form']);
+        return $this->_ajaxGetResponse(['error' => $file_id ? false : true,
+                                        'msg'   => $file_id ? "" : __d('gl', 'アップロードに失敗しました'),
+                                        'id'    => $file_id ? $file_id : "",
+                                       ]);
+    }
+
+    /**
+     * アップロードしたファイルを削除
+     *
+     * @return CakeResponse
+     */
+    public function ajax_remove_file()
+    {
+        $this->_ajaxPreProcess();
+        $success = $this->Post->PostFile->AttachedFile->cancelUploadFile($this->request->data('AttachedFile.file_id'));
+        return $this->_ajaxGetResponse(['error' => !$success,
+                                        'msg'   => $success
+                                            ? __d('gl', 'ファイルを削除しました')
+                                            : __d('gl', 'ファイルの削除に失敗しました'),
+                                        'id'    => "",
+                                       ]);
     }
 
     function _getTotalShareUserCount($circles, $users)

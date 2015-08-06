@@ -155,10 +155,21 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="header-dropdown-message dropdown-menu-right develop--forbiddenLink">
-                        <a class="btn-message-header" href="#">
-                            <i class="header-dropdown-icon-message fa fa-envelope-o header-link"></i>
+                    <div class="header-dropdown-message dropdown-menu-right">
+                        <a id="click-header-message" class="btn-message-header" data-toggle="dropdown" href="#">
+                            <i class="header-dropdown-icon-message fa fa-paper-plane-o header-link"></i>
+                            <div class="btn btn-xs bell-notify-box notify-bell-numbers" id="messageNum" style="opacity: 0;">
+                                <span>0</span><sup class="notify-plus none">+</sup>
+                            </div>
                         </a>
+                        <div class="frame-arrow-notify dropdown-menu dropdown-menu-right notify-dropdown-area">
+                            <ul class="header-nav-notify-contents" id="message-dropdown" role="menu">
+                                <li class="notify-card-empty" id="messageNotifyCardEmpty">
+                                    <i class="fa fa-smile-o font_33px mr_8px"></i><span
+                                        class="notify-empty-text"><?= __d('gl', "未読のメッセージはありません。") ?></span>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="header-dropdown-notify dropdown-menu-right">
                         <a id="click-header-bell" class="btn-notify-header" data-toggle="dropdown" href="#">
@@ -243,20 +254,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="col col-xxs-12 hidden-md hidden-lg sp-feed-alt height_40px" id="SubHeaderMenu">
-        <div class="col col-xxs-6 text-align_r">
-            <a class="font_lightGray-veryDark no-line plr_18px sp-feed-link inline-block pt_12px height_40px sp-feed-active"
-               id="SubHeaderMenuFeed">
-                <?= __d('gl', "ニュースフィード") ?>
-            </a>
-        </div>
-        <div class="col col-xxs-6">
-            <a class="font_lightGray-veryDark no-line plr_18px sp-feed-link inline-block pt_12px height_40px"
-               id="SubHeaderMenuGoal">
-                <?= __d('gl', "関連ゴール") ?>
-            </a>
         </div>
     </div>
 </header>

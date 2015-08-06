@@ -62,6 +62,19 @@ class NotificationsController extends AppController
     }
 
     /**
+     * @return int
+     */
+    public function ajax_get_new_message_notify_count()
+    {
+       $this->_ajaxPreProcess();
+        $notify_count = 0;
+        if ($this->Auth->user('id')) {
+            $notify_count = $this->NotifyBiz->getCountNewMessageNotification();
+        }
+        return $this->_ajaxGetResponse($notify_count);
+    }
+
+    /**
      * @return array
      */
     public function ajax_get_latest_notify_items()
@@ -76,4 +89,18 @@ class NotificationsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
+    /**
+     * @return array
+     */
+    public function ajax_get_latest_message_notify_items()
+    {
+        $this->_ajaxPreProcess();
+        $this->NotifyBiz->resetCountNewMessageNotification();
+        $notify_items = $this->NotifyBiz->getMessageNotification(NOTIFY_BELL_BOX_ITEMS_NUMBER);
+        $team = $this->Team->findById($this->current_team_id);
+        $this->set(compact('notify_items', 'team'));
+        $response = $this->render('Notification/message_notify_items_in_list_box');
+        $html = $response->__toString();
+        return $this->_ajaxGetResponse($html);
+    }
 }

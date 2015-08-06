@@ -1,8 +1,48 @@
 $.ajaxSetup({
     cache: false
 });
-$(document).ready(function () {
+if (typeof String.prototype.startsWith != 'function') {
+    // see below for better implementation!
+    String.prototype.startsWith = function (str) {
+        return this.indexOf(str) === 0;
+    };
+};
+function bindPostBalancedGallery($obj){
+    $obj.BalancedGallery({
+        autoResize: true,                   // re-partition and resize the images when the window size changes
+        //background: '#DDD',                   // the css properties of the gallery's containing element
+        idealHeight: 150,                  // ideal row height, only used for horizontal galleries, defaults to half the containing element's height
+        //idealWidth: 100,                   // ideal column width, only used for vertical galleries, defaults to 1/4 of the containing element's width
+        maintainOrder: false,                // keeps images in their original order, setting to 'false' can create a slightly better balance between rows
+        orientation: 'horizontal',          // 'horizontal' galleries are made of rows and scroll vertically; 'vertical' galleries are made of columns and scroll horizontally
+        padding: 0,                         // pixels between images
+        shuffleUnorderedPartitions: true,   // unordered galleries tend to clump larger images at the begining, this solves that issue at a slight performance cost
+        //viewportHeight: 400,               // the assumed height of the gallery, defaults to the containing element's height
+        //viewportWidth: 482                // the assumed width of the gallery, defaults to the containing element's width
+    });
 
+};
+function bindCommentBalancedGallery($obj) {
+    $obj.BalancedGallery({
+        autoResize: true,                   // re-partition and resize the images when the window size changes
+        //background: '#DDD',                   // the css properties of the gallery's containing element
+        idealHeight: 100,                  // ideal row height, only used for horizontal galleries, defaults to half the containing element's height
+        //idealWidth: 100,                   // ideal column width, only used for vertical galleries, defaults to 1/4 of the containing element's width
+        maintainOrder: false,                // keeps images in their original order, setting to 'false' can create a slightly better balance between rows
+        orientation: 'horizontal',          // 'horizontal' galleries are made of rows and scroll vertically; 'vertical' galleries are made of columns and scroll horizontally
+        padding: 0,                         // pixels between images
+        shuffleUnorderedPartitions: true,   // unordered galleries tend to clump larger images at the begining, this solves that issue at a slight performance cost
+        //viewportHeight: 400,               // the assumed height of the gallery, defaults to the containing element's height
+        //viewportWidth: 482                // the assumed width of the gallery, defaults to the containing element's width
+    });
+};
+
+
+$('.post_gallery > img').imagesLoaded(function () {
+    bindPostBalancedGallery($('.post_gallery'));
+    bindCommentBalancedGallery($('.comment_gallery'));
+});
+$(document).ready(function () {
     setDefaultTab();
     //すべてのformで入力があった場合に行う処理
     $("select,input").change(function () {
@@ -104,6 +144,17 @@ $(document).ready(function () {
         }
         else {
             var url = $(this).attr('redirect-url') + "/key_result_id:" + key_result_id;
+        }
+        location.href = url;
+    });
+    //サークルページの添付ファイルタイプ切替え
+    $('#SwitchFileType').change(function () {
+        var file_type = $(this).val();
+        if (file_type == "") {
+            var url = $(this).attr('redirect-url');
+        }
+        else {
+            var url = $(this).attr('redirect-url') + "/file_type:" + file_type;
         }
         location.href = url;
     });
@@ -578,6 +629,7 @@ function getAjaxFormReplaceElm() {
     var click_target_id = $obj.attr("click-target-id");
     var ajax_url = $obj.attr("ajax-url");
     var tmp_target_height = $obj.attr("tmp-target-height");
+    var post_id = $obj.attr("post-id");
     replace_elm.children().toggle();
     replace_elm.height(tmp_target_height + "px");
     //noinspection JSJQueryEfficiency
@@ -597,6 +649,19 @@ function getAjaxFormReplaceElm() {
                     validatorCallback(e)
                 });
                 $('#' + click_target_id).trigger('click').focus();
+
+                // コメントフォームをドラッグ＆ドロップ対象エリアにする
+                var commentParams = {
+                    formID: function () {
+                        return $(this).attr('data-form-id');
+                    },
+                    previewContainerID: function () {
+                        return $(this).attr('data-preview-container-id');
+                    }
+                };
+                var $uploadFileForm = $(document).data('uploadFileForm');
+                $uploadFileForm.registerDragDropArea('#CommentBlock_' + post_id, commentParams);
+                $uploadFileForm.registerAttachFileButton('#CommentUploadFileButton_' + post_id, commentParams);
             }
         }
     });
@@ -774,12 +839,39 @@ function evTargetToggleClick() {
     $("#" + click_target_id).focus();
     return false;
 }
+
+/**
+ * 以下の処理を行う
+ * 1. this 要素を remove() する
+ * 2. this 要素に target-id 属性が設定されている場合
+ *    その値をカンマ区切りの要素IDリストとみなし、各IDに $(#target_id).show() を行う
+ *
+ * オプション属性
+ *   target-id: 表示する要素IDのリスト（カンマ区切り）
+ *   delete-method: 'hide' を指定すると、this 要素に対して remove() でなく hide() を行う
+ *
+ * 例:
+ * <a href="#" onclick="evTargetShowThisDelete()" target-id="box1,box2">ボタン</a>
+ * <div id="box1" style="display:none">ボタンが押されたら表示される</div>
+ * <div id="box2" style="display:none">ボタンが押されたら表示される</div>
+ *
+ * @returns {boolean}
+ */
 function evTargetShowThisDelete() {
     attrUndefinedCheck(this, 'target-id');
     var $obj = $(this);
     var target_id = $obj.attr("target-id");
-    $("#" + target_id).show();
-    $obj.remove();
+    var deleteMethod = $obj.attr("delete-method");
+    var targets = target_id.split(',');
+    if (deleteMethod == 'hide') {
+        $obj.hide();
+    }
+    else {
+        $obj.remove();
+    }
+    $.each(targets, function () {
+        $("#" + this).show();
+    });
     return false;
 }
 function evTargetShowTargetDelete() {
@@ -845,6 +937,10 @@ function evTriggerClick() {
     $("#" + target_id).trigger('click');
     //noinspection JSJQueryEfficiency
     $("#" + target_id).focus();
+    if ($(this).attr("after-replace-target-id") != undefined) {
+        $(this).attr("target-id", $(this).attr("after-replace-target-id"));
+        $(this).removeAttr("after-replace-target-id");
+    }
     return false;
 }
 /**
@@ -902,14 +998,15 @@ function evShowAndThisWide() {
     //クリック済みにする
     $(this).addClass('clicked');
 }
-function setSelectOptions(url, select_id, target_toggle_id) {
+function setSelectOptions(url, select_id, target_toggle_id, selected) {
     var options_elem = '<option value="">' + cake.word.k + '</option>';
     $.get(url, function (data) {
         if (data.length == 0) {
             $("#" + select_id).empty().append('<option value="">' + cake.word.l + '</option>');
         } else {
             $.each(data, function (k, v) {
-                var option = '<option value="' + k + '">' + v + '</option>';
+                var selected_attr = selected == k ? " selected=selected" : "";
+                var option = '<option value="' + k + '"' + selected_attr + '>' + v + '</option>';
                 options_elem += option;
             });
             $("#" + select_id).empty().append(options_elem);
@@ -931,7 +1028,8 @@ function evChangeTargetSelectWithValue() {
     var target_id = $(this).attr("target-id");
     var url = $(this).attr("ajax-url") + $(this).val();
     var target_toggle_id = $(this).attr("toggle-target-id") != undefined ? $(this).attr("toggle-target-id") : null;
-    setSelectOptions(url, target_id, target_toggle_id);
+    var selected = $(this).attr('target-value');
+    setSelectOptions(url, target_id, target_toggle_id, selected);
 }
 
 function evShowAndThisWideClose() {
@@ -1048,12 +1146,12 @@ $(function () {
         if ($(this).scrollTop() > 1) {
             if (showNavFlag == false) {
                 showNavFlag = true;
-                subNavbar.stop().animate({"top": "-10"}, 800);
+                subNavbar.stop().animate({"top": "-60"}, 800);
             }
         } else {
             if (showNavFlag) {
                 showNavFlag = false;
-                subNavbar.stop().animate({"top": "50"}, 400);
+                subNavbar.stop().animate({"top": "0"}, 400);
             }
         }
     });
@@ -1158,24 +1256,6 @@ function evTargetShow() {
     var $obj = $(this);
     var target_id = $obj.attr("target-id");
     $("#" + target_id).show();
-    return false;
-}
-
-//noinspection JSUnresolvedVariable
-$(document).on("click", ".target-show-target-click", evTargetShowTargetClick);
-
-function evTargetShowTargetClick() {
-    attrUndefinedCheck(this, 'target-id');
-    attrUndefinedCheck(this, 'click-target-id');
-    var $obj = $(this);
-
-    var click_target_id = $obj.attr("click-target-id");
-    $("#" + click_target_id).trigger('click');
-    var target = $obj.attr("target-id");
-    var target = target.split(',');
-    jQuery.each(target, function () {
-        $("#" + this).show();
-    });
     return false;
 }
 
@@ -1568,6 +1648,70 @@ $(document).ready(function () {
         containerCssClass: "select2PostCircleMember"
     });
 
+    //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
+    $('#select2MessageCircleMember').select2({
+        multiple: true,
+        placeholder: cake.word.select_public_message,
+        minimumInputLength: 2,
+        ajax: {
+            url: cake.url.select2_circle_user,
+            dataType: 'json',
+            quietMillis: 100,
+            cache: true,
+            data: function (term, page) {
+                return {
+                    term: term, //search term
+                    page_limit: 10, // page size
+                    circle_type: "public"
+                };
+            },
+            results: function (data, page) {
+                return {results: data.results};
+            }
+        },
+        data: [],
+        initSelection: cake.data.b,
+        formatSelection: format,
+        formatResult: format,
+        dropdownCssClass: 's2-post-dropdown',
+        escapeMarkup: function (m) {
+            return m;
+        },
+        containerCssClass: "select2MessageCircleMember"
+    });
+
+    // select2 秘密サークル選択
+    $('#select2MessageSecretCircle').select2({
+        multiple: true,
+        placeholder: cake.word.select_secret_circle,
+        minimumInputLength: 2,
+        maximumSelectionSize: 1,
+        ajax: {
+            url: cake.url.select2_secret_circle,
+            dataType: 'json',
+            quietMillis: 100,
+            cache: true,
+            data: function (term, page) {
+                return {
+                    term: term, //search term
+                    page_limit: 10 // page size
+                };
+            },
+            results: function (data, page) {
+                return {results: data.results};
+            }
+        },
+        data: [],
+        initSelection: cake.data.select2_secret_circle,
+        formatSelection: format,
+        formatResult: format,
+        dropdownCssClass: 's2-post-dropdown',
+        escapeMarkup: function (m) {
+            return m;
+        },
+        containerCssClass: "select2MessageCircleMember"
+    });
+
     // 投稿の共有範囲(公開/秘密)切り替えボタン
     var $shareRangeToggleButton = $('#postShareRangeToggleButton');
     var $shareRange = $('#postShareRange');
@@ -1630,7 +1774,7 @@ $(document).ready(function () {
         initSelection: cake.data.l,
         formatSelection: format,
         formatResult: format,
-        dropdownCssClass: 's2-post-dropdown',
+        dropdownCssClass: 's2-post-dropdown aaaa',
         escapeMarkup: function (m) {
             return m;
         },
@@ -1661,14 +1805,20 @@ $(document).ready(function () {
         }
     });
 
-    $('#PostDisplayForm, #CommonActionDisplayForm').change(function (e) {
+    $('#PostDisplayForm, #CommonActionDisplayForm, #MessageDisplayForm').change(function (e) {
         var $target = $(e.target);
         switch ($target.attr('id')) {
             case "CommonPostBody":
                 $('#CommonActionName').val($target.val()).autosize().trigger('autosize.resize');
+                $('#CommonMessageBody').val($target.val()).autosize().trigger('autosize.resize');
                 break;
             case "CommonActionName":
                 $('#CommonPostBody').val($target.val()).autosize().trigger('autosize.resize');
+                $('#CommonMessageBody').val($target.val()).autosize().trigger('autosize.resize');
+                break;
+            case "CommonMessageBody":
+                $('#CommonPostBody').val($target.val()).autosize().trigger('autosize.resize');
+                $('#CommonActionName').val($target.val()).autosize().trigger('autosize.resize');
                 break;
         }
     });
@@ -1937,6 +2087,18 @@ function evFeedMoreView(options) {
                 $("#ShowMoreNoData").hide();
                 //画像をレイジーロード
                 imageLazyOn();
+                //$posts.children('.post_gallery > img').imagesLoaded(function () {
+                $posts.imagesLoaded(function () {
+                    $posts.children('.post_gallery').each(function (index, element) {
+                        bindPostBalancedGallery($(element));
+                    });
+                });
+                //$posts.children('.comment_gallery > img').imagesLoaded(function () {
+                //$posts.children('.post_gallery').each(function (index, element) {
+                //    bindCommentBalancedGallery($(element));
+                //});
+                //});
+
                 //画像リサイズ
                 $posts.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
                     $(this).children('.nailthumb-container').nailthumb({
@@ -2706,13 +2868,11 @@ function initCommentNotify(notifyBox) {
 
 //bootstrapValidatorがSuccessした時
 function validatorCallback(e) {
-    switch (e.target.id) {
-        case "CommentAjaxGetNewCommentFormForm":
-            addComment(e);
-            break;
-        case "ActionCommentForm":
-            addComment(e);
-            break;
+    if (e.target.id.startsWith('CommentAjaxGetNewCommentForm_')) {
+        addComment(e);
+    }
+    else if (e.target.id == "ActionCommentForm") {
+        addComment(e);
     }
 }
 
@@ -2838,6 +2998,7 @@ $(function () {
     function setIntervalToGetNotifyCnt(sec) {
         setInterval(function () {
             updateNotifyCnt();
+            updateMessageNotifyCnt();
         }, sec * 1000);
     }
 
@@ -2858,9 +3019,53 @@ $(function () {
         });
         return false;
     }
+    function updateMessageNotifyCnt() {
+
+        var url = cake.url.af;
+        $.ajax({
+            type: 'GET',
+            url: url,
+            async: true,
+            success: function (new_notify_count) {
+                if (new_notify_count != 0) {
+                    setNotifyCntToMessageAndTitle(new_notify_count);
+                }
+            },
+            error: function () {
+            }
+        });
+        return false;
+    }
 
     function setNotifyCntToBellAndTitle(cnt) {
         var $bellBox = getBellBoxSelector();
+        var $title = $("title");
+        var $originTitle = $("title").attr("origin-title");
+        var existingBellCnt = parseInt($bellBox.children('span').html());
+        var cntIsTooMuch = '20+';
+
+        if (cnt == 0) {
+            return;
+        }
+
+        // set notify number
+        if (parseInt(cnt) <= 20) {
+            $bellBox.children('span').html(cnt);
+            $bellBox.children('sup').addClass('none');
+            $title.text("(" + cnt + ")" + $originTitle);
+        } else {
+            $bellBox.children('span').html(20);
+            $bellBox.children('sup').removeClass('none');
+            $title.text("(" + cntIsTooMuch + ")" + $originTitle);
+        }
+
+        if (existingBellCnt == 0) {
+            displaySelectorFluffy($bellBox);
+        }
+        return;
+    }
+    function setNotifyCntToMessageAndTitle(cnt) {
+        var $bellBox = getMessageBoxSelector();
         var $title = $("title");
         var $originTitle = $("title").attr("origin-title");
         var existingBellCnt = parseInt($bellBox.children('span').html());
@@ -2922,10 +3127,24 @@ $(document).ready(function () {
     });
 });
 
+$(document).ready(function () {
+    var click_cnt = 0;
+    $(document).on("click", "#click-header-message", function () {
+        initMessageNum();
+        initTitle();
+        updateMessageListBox();
+    });
+});
+
 function initBellNum() {
     $bellBox = getBellBoxSelector();
     $bellBox.css("opacity", 0);
     $bellBox.html("0");
+}
+function initMessageNum() {
+    var $box = getMessageBoxSelector();
+    $box.css("opacity", 0);
+    $box.html("0");
 }
 
 function initTitle() {
@@ -2936,10 +3155,18 @@ function initTitle() {
 function getBellBoxSelector() {
     return $("#bellNum");
 }
+function getMessageBoxSelector() {
+    return $("#messageNum");
+}
 
 function getNotifyCnt() {
     var $bellBox = getBellBoxSelector();
     return parseInt($bellBox.children('span').html());
+}
+
+function getMessageNotifyCnt() {
+    var $box = getMessageBoxSelector();
+    return parseInt($box.children('span').html());
 }
 
 function updateListBox() {
@@ -2968,6 +3195,32 @@ function updateListBox() {
     return false;
 }
 
+function updateMessageListBox() {
+    var $messageDropdown = $("#message-dropdown");
+    $messageDropdown.empty();
+    var $loader_html = $('<li class="text-align_c"><i class="fa fa-refresh fa-spin"></i></li>');
+    //ローダー表示
+    $messageDropdown.append($loader_html);
+    var url = cake.url.ag;
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: true,
+        success: function (data) {
+            //取得したhtmlをオブジェクト化
+            var $notifyItems = data;
+            $loader_html.remove();
+            $messageDropdown.append($notifyItems);
+            //画像をレイジーロード
+            imageLazyOn();
+        },
+        error: function () {
+            alert(cake.message.notice.c);
+        }
+    });
+    return false;
+}
+
 function copyToClipboard(url) {
     window.prompt("Copy to clipboard: Ctrl+C, Enter", url);
 }
@@ -2984,6 +3237,610 @@ $(document).ready(function () {
             }
         }
     });
+
+
+    /**
+     * ファイルのドラッグ & ドロップ 設定
+     *
+     * 設定例）
+     * HTML:
+     *   <div id="DragDropArea">
+     *      <form id="PostForm">
+     *         <div id="PreviewArea></div>
+     *         <!-- form の最後に data['file_id'][] の名前で hidden が追加される -->
+     *      </form>
+     *      <a href="#" id="UploadButton">ファイルを添付</a>
+     *   </div>
+     *   <?= $this->element('file_upload_form') ?>
+     *
+     * JavaScript:
+     *   var postParams = {
+     *     formID: 'PostForm',
+     *     previewContainerID: 'PreviewArea'
+     *   };
+     *   var $uploadFileForm = $(document).data('uploadFileForm');
+     *   $uploadFileForm.registerDragDropArea('#DragDropArea', postParams);
+     *   $uploadFileForm.registerAttachFileButton('#UploadButton', postParams);
+     *
+     */
+    // ファイルアップロード用フォーム
+    var $uploadFileForm = $('#UploadFileForm');
+    // ファイル削除用フォーム
+    var $removeFileForm = $('#RemoveFileForm');
+    // 手動ファイル添付用ボタン
+    var $uploadFileAttachButton = $('#UploadFileAttachButton');
+    // プレビューエリアのテンプレート
+    var previewTemplateDefault =
+        '<div class="dz-preview dz-default-preview panel">' +
+        '  <div class="dz-details">' +
+        '    <a href="#" class="pull-right font_lightgray" data-dz-remove><i class="fa fa-times"></i></a>' +
+        '    <div class="dz-thumb-container pull-left">' +
+        '      <i class="fa fa-file-o file-other-icon"></i>' +
+        '      <img class="dz-thumb none" data-dz-thumbnail /></div>' +
+        '    <span class="dz-name font_14px font_bold font_verydark pull-left" data-dz-name></span><br>' +
+        '    <span class="dz-size font_11px font_lightgray pull-left" data-dz-size></span>' +
+        '  </div>' +
+        '  <div class="dz-progress progress">' +
+        '    <div class="progress-bar progress-bar-info" role="progressbar"  data-dz-uploadprogress></div>' +
+        '  </div>' +
+        '</div>';
+
+    // アクションのメイン画像表示部分のテンプレート
+    var previewTemplateActionImage =
+        '<div class="dz-preview dz-action-photo-preview action-photo-preview upload-file-attach-button">' +
+        '  <div class="dz-action-photo-details">' +
+        '    <div class="dz-action-photo-thumb-container pull-left"><img class="dz-action-photo-thumb" data-dz-thumbnail /></div>' +
+        '  </div>' +
+        '  <div class="dz-action-photo-progress progress">' +
+        '    <div class="progress-bar progress-bar-info" role="progressbar"  data-dz-uploadprogress></div>' +
+        '  </div>' +
+        '</div>';
+
+    Dropzone.autoDiscover = false;
+    Dropzone.options.UploadFileForm = {
+        paramName: "file",
+        maxFiles: 10,
+        maxFilesize: 25, // MB
+        url: cake.url.upload_file,
+        addRemoveLink: true,
+        dictFileTooBig: cake.message.validate.dropzone_file_too_big,
+        dictInvalidFileType: cake.message.validate.dropzone_invalid_file_type,
+        dictMaxFilesExceeded: cake.message.validate.dropzone_max_files_exceeded,
+        clickable: '#' + $uploadFileAttachButton.attr('id'),
+        previewTemplate: previewTemplateDefault,
+        thumbnailWidth: null,
+        thumbnailHeight: 240,
+        // ファイルがドロップされた時の処理
+        addedfile: function (file) {
+            // previewContainer をドロップエリアに応じて入れ替える
+            this.previewsContainer = $('#' + $uploadFileForm._params.previewContainerID).get(0);
+
+            // コールバック関数実行 (beforeAddedFile)
+            $uploadFileForm._callbacks[$uploadFileForm._params.previewContainerID].beforeAddedFile.call(this, file);
+
+            // Dropzone デフォルトの処理を実行
+            this.defaultOptions.addedfile.call(this, file);
+        },
+        // ファイルがドロップされた後
+        accept: function (file, done) {
+            // コールバック関数実行 (beforeAccept)
+            $uploadFileForm._callbacks[$uploadFileForm._params.previewContainerID].beforeAccept.call(this, file);
+
+            $uploadFileForm.hide();
+            done();
+
+            // コールバック関数実行 (afterAccept)
+            $uploadFileForm._callbacks[$uploadFileForm._params.previewContainerID].afterAccept.call(this, file);
+        },
+        // ファイルアップロード完了時
+        success: function (file, res) {
+            var $preview = $(file.previewTemplate);
+            // エラー
+            if (res.error) {
+                $preview.remove();
+                new PNotify({
+                    type: 'error',
+                    title: cake.message.notice.d,
+                    text: res.msg,
+                    icon: "fa fa-check-circle",
+                    delay: 4000,
+                    mouse_reset: false
+                });
+                return;
+            }
+
+            // 処理成功
+            // submit するフォームに hidden でファイルID追加
+            var $form = $('#' + $uploadFileForm._params.formID);
+            $form.append($('<input type=hidden name=data[file_id][]>').val(res.id).attr('id', res.id));
+
+            // プレビューエリアをファイルオブジェクトにファイルIDを紐付ける
+            $preview.data('file_id', res.id);
+            file.file_id = res.id;
+
+            // プログレスバー消す
+            // 一瞬で消えるのを防止するため１秒待つ
+            setTimeout(function () {
+                $preview.find('.progress').css('visibility', 'hidden');
+            }, 1000);
+
+            // コールバック関数（afterSuccess）
+            $uploadFileForm._callbacks[$uploadFileForm._params.previewContainerID].afterSuccess.call(this, file);
+        },
+        // サムネイル
+        thumbnail: function (file, dataUrl) {
+            var $container = $(file.previewTemplate).find('.dz-thumb-container');
+            // 画像の場合はデフォルトの処理でサムネイル作成
+            if (file.type.match(/image/)) {
+                $container.find('.fa').hide();
+                $container.find('.dz-thumb').show();
+                this.defaultOptions.thumbnail.call(this, file, dataUrl);
+            }
+        },
+        // ファイル削除ボタン押下時
+        removedfile: function (file) {
+            var $preview = $(file.previewTemplate);
+
+            // 既にDBに保存済のデータの場合（投稿編集時）
+            if (file.saved_file) {
+                // フォームの hidden を削除
+                $('#AttachedFile_' + $preview.data('file_id')).remove();
+
+                // 削除済ファイルの hidden を追加
+                var $form = $('#' + $uploadFileForm._params.formID);
+                $form.append($('<input type=hidden name=data[deleted_file_id][]>').val($preview.data('file_id')));
+
+                // プレビューエリア削除
+                $preview.fadeOut();
+            }
+            // 新しくアップロードするファイルの場合
+            else {
+                $removeFileForm.find('input[name="data[AttachedFile][file_id]"]').val($preview.data('file_id'));
+                $.ajax({
+                    url: cake.url.remove_file,
+                    type: 'POST',
+                    dataType: 'json',
+                    processData: false,
+                    data: $removeFileForm.serialize()
+                })
+                    .done(function (res) {
+                        // エラー
+                        if (res.error) {
+                            new PNotify({
+                                type: 'error',
+                                title: cake.message.notice.d,
+                                text: res.msg,
+                                icon: "fa fa-check-circle",
+                                delay: 4000,
+                                mouse_reset: false
+                            });
+                            return;
+                        }
+
+                        // 成功
+                        new PNotify({
+                            type: 'success',
+                            title: cake.word.success,
+                            text: res.msg,
+                            icon: "fa fa-check-circle",
+                            delay: 2000,
+                            mouse_reset: false
+                        });
+                        // ファイルIDの hidden 削除
+                        $('#' + $preview.data('file_id')).remove();
+
+                        $preview.fadeOut('fast', function () {
+                            // コールバック関数実行 (afterRemoveFile)
+                            var previewContainerID = $preview.parent().attr('id');
+                            $uploadFileForm._callbacks[previewContainerID].afterRemoveFile.call(this, file);
+                        });
+                    })
+                    .fail(function (res) {
+                        new PNotify({
+                            type: 'error',
+                            title: cake.message.notice.d,
+                            text: cake.message.notice.d,
+                            icon: "fa fa-check-circle",
+                            delay: 4000,
+                            mouse_reset: false
+                        });
+                    });
+            }
+        },
+        // ファイルアップロード失敗
+        error: function (file, errorMessage) {
+            var $preview = $(file.previewTemplate);
+            // エラーと確認出来るように失敗したファイルの名前を強調して少しの間表示しておく
+            $preview.find('.dz-name').addClass('font_darkRed font_bold').append('(' + cake.word.error + ')');
+            setTimeout(function () {
+                $preview.remove();
+            }, 4000);
+            $uploadFileForm.hide();
+            new PNotify({
+                type: 'error',
+                title: cake.message.notice.d,
+                text: errorMessage,
+                icon: "fa fa-check-circle",
+                delay: 8000,
+                mouse_reset: false
+            });
+        }
+    };
+
+    // パラメータ
+    $uploadFileForm._params = {};
+    // コールバック関数
+    $uploadFileForm._callbacks = {};
+    // Dropzone のデフォルト設定
+    $uploadFileForm._dzDefaultOptions = {};
+
+    // 登録済ドロップエリアとアップロードボタン
+    $uploadFileForm._dragDropArea = {};
+    $uploadFileForm._attachFileButton = {};
+
+    /**
+     * ドラッグ＆ドロップ対象エリアを設定する
+     *
+     * selector : string  ドロップエリアにする要素のセレクタ
+     * params: object {
+     *   formID: string|function  *必須 アップロードしたファイルIDを hidden で追加するフォームのID
+     *   previewContainerID: string|function  *必須  プレビューを表示するコンテナ要素のID
+     *   beforeAddedFile: function  コールバック関数
+     *   beforeAccept: function   コールバック関数
+     *   afterAccept: function  コールバック関数
+     *   afterRemoveFile: function  コールバック関数
+     *   afterSuccess: function   コールバック関数
+     * }
+     * dzOptions: object {
+     *    ...   Dropzone のオプション（デフォルトの設定を上書きする場合に指定）
+     * }
+     */
+    $uploadFileForm.registerDragDropArea = function (selector, params, dzOptions) {
+        if ($uploadFileForm._dragDropArea[selector]) {
+            return true;
+        }
+        $uploadFileForm._dragDropArea[selector] = {
+            selector: selector,
+            params: params,
+            dzOptions: dzOptions
+        };
+
+        $(document).on('dragover', selector, function (e) {
+            e.preventDefault();
+            $uploadFileForm._setParams(this, params, dzOptions);
+
+            // ファイルアップロード用フォームのサイズと位置を合わせて重ねて表示させる
+            var $dropArea = $(this);
+            var pos = $dropArea.position();
+            $uploadFileForm.appendTo($dropArea).css({
+                width: $dropArea.outerWidth(),
+                height: $dropArea.outerHeight(),
+                paddingTop: $dropArea.outerHeight() / 2 - 18,
+                top: pos.top,
+                left: pos.left,
+                position: 'absolute'
+            }).addClass('drag-over').show().find('.upload-file-form-content').show();
+        });
+    };
+
+    /**
+     * ファイル添付用ボタンを登録する
+     *
+     * 引数は registerDragDropArea と同じ
+     */
+    $uploadFileForm.registerAttachFileButton = function (selector, params, dzOptions) {
+        if ($uploadFileForm._attachFileButton[selector]) {
+            return true;
+        }
+        $uploadFileForm._attachFileButton[selector] = {
+            selector: selector,
+            params: params,
+            dzOptions: dzOptions
+        };
+
+        $(document).on('click', selector, function (e) {
+            e.preventDefault();
+            $uploadFileForm._setParams(this, params, dzOptions);
+            $uploadFileAttachButton.trigger('click');
+        });
+    };
+
+    // 各ドロップエリアの設定パラメータをセットし直す
+    // ドロップエリアが切り替わる度に呼び出される
+    $uploadFileForm._setParams = function (target, params, dzOptions) {
+        var formID = (typeof params.formID == 'function') ? params.formID.call(target) : params.formID;
+        var previewContainerID = (typeof params.previewContainerID == 'function') ? params.previewContainerID.call(target) : params.previewContainerID;
+        $uploadFileForm._params.formID = formID;
+        $uploadFileForm._params.previewContainerID = previewContainerID;
+
+        // Dropzone 設定
+        // （Dropzone インスタンスは常に１つ）
+        Dropzone.instances[0].options = $.extend({}, $uploadFileForm._dzDefaultOptions, dzOptions || {});
+
+        // コールバック関数登録
+        var empty = function () {
+        };
+        $uploadFileForm._callbacks[previewContainerID] = {
+            beforeAddedFile: params.beforeAddedFile ? params.beforeAddedFile : empty,
+            beforeAccept: params.beforeAccept ? params.beforeAccept : empty,
+            afterAccept: params.afterAccept ? params.afterAccept : empty,
+            afterRemoveFile: params.afterRemoveFile ? params.afterRemoveFile : empty,
+            afterSuccess: params.afterSuccess ? params.afterSuccess : empty
+        };
+    };
+
+    // アップロードフォーム内の子要素の dragenter/dragleave イベントのチェック用
+    var uploadFileFormContentEnter = false;
+    $('.upload-file-form-content').on('dragenter', function (e) {
+        uploadFileFormContentEnter = true;
+    });
+
+    // ドロップエリアから外れた時
+    $uploadFileForm.on('dragleave', function (e) {
+        if ($(e.target).hasClass('upload-file-form-content')) {
+            uploadFileFormContentEnter = false;
+            return;
+        }
+        if (uploadFileFormContentEnter) {
+            return;
+        }
+
+        $(this).hide();
+    });
+
+    //////////////////////////////////////////////////
+    // ドロップエリアとファイル添付ボタンの登録
+    //////////////////////////////////////////////////
+
+    ///////////////////////////////
+    // 投稿フォーム
+    ///////////////////////////////
+    var postParams = {
+        formID: 'PostDisplayForm',
+        previewContainerID: 'PostUploadFilePreview'
+    };
+    $uploadFileForm.registerDragDropArea('#PostForm', postParams);
+    $uploadFileForm.registerAttachFileButton('#PostUploadFileButton', postParams);
+
+    ///////////////////////////////
+    // アクションメイン画像
+    ///////////////////////////////
+    var actionImageParams = {
+        formID: 'CommonActionDisplayForm',
+        previewContainerID: 'ActionUploadFilePhotoPreview',
+        beforeAccept: function (file) {
+            var $oldPreview = $('#' + $uploadFileForm._params.previewContainerID).find('.dz-preview:visible');
+
+            if ($oldPreview.size()) {
+                // Dropzone の管理ファイルから外す
+                var old_file = Dropzone.instances[0].files.splice(0, 1)[0];
+
+                // プレビューエリアを非表示にする
+                $oldPreview.hide();
+
+                // フォームの hidden を削除
+                $('#' + old_file.file_id).remove();
+
+                // サーバ上から削除
+                $removeFileForm.find('input[name="data[AttachedFile][file_id]"]').val(old_file.file_id);
+                $.ajax({
+                    url: cake.url.remove_file,
+                    type: 'POST',
+                    dataType: 'json',
+                    processData: false,
+                    data: $removeFileForm.serialize()
+                })
+                    .done(function (res) {
+                        // pass
+                    })
+                    .fail(function (res) {
+                        // pass
+                    });
+            }
+        },
+        afterAccept: function (file) {
+            var $button = $('.action-image-add-button');
+            if ($button.size()) {
+                evTargetShowThisDelete.call($button.get(0));
+            }
+            $(file.previewTemplate).show();
+        }
+    };
+    var actionImageDzOptions = {
+        acceptedFiles: "image/*",
+        previewTemplate: previewTemplateActionImage
+    };
+    $uploadFileForm.registerDragDropArea('#ActionImageAddButton', actionImageParams, actionImageDzOptions);
+    $uploadFileForm.registerAttachFileButton('#ActionImageAddButton', actionImageParams, actionImageDzOptions);
+
+    ///////////////////////////////
+    // アクションメイン画像 入れ替え時
+    ///////////////////////////////
+    var actionImage2Params = {
+        formID: 'CommonActionDisplayForm',
+        previewContainerID: 'ActionUploadFilePhotoPreview',
+        beforeAccept: function (file) {
+            var $oldPreview = $('#' + $uploadFileForm._params.previewContainerID).find('.dz-preview:visible');
+
+            // Dropzone の管理ファイルから外す
+            var old_file = Dropzone.instances[0].files.splice(0, 1)[0];
+
+            // プレビューエリアを非表示にする
+            $oldPreview.hide();
+
+            // 既にDBに保存済のデータの場合（アクション編集時）
+            if (old_file.saved_file) {
+                // フォームの hidden を削除
+                $('#AttachedFile_' + old_file.file_id).remove();
+
+                // 削除済ファイルの hidden を追加
+                var $form = $('#' + $uploadFileForm._params.formID);
+                $form.append($('<input type=hidden name=data[deleted_file_id][]>').val(old_file.file_id));
+            }
+            // 新しくアップロードするファイルの場合
+            else {
+                // フォームの hidden を削除
+                $('#' + old_file.file_id).remove();
+
+                // サーバ上から削除
+                $removeFileForm.find('input[name="data[AttachedFile][file_id]"]').val(old_file.file_id);
+                $.ajax({
+                    url: cake.url.remove_file,
+                    type: 'POST',
+                    dataType: 'json',
+                    processData: false,
+                    data: $removeFileForm.serialize()
+                })
+                    .done(function (res) {
+                        // pass
+                    })
+                    .fail(function (res) {
+                        // pass
+                    });
+            }
+        },
+        afterAccept: function (file) {
+            $(file.previewTemplate).show();
+        },
+        afterSuccess: function (file) {
+            // メイン画像の hidden を先頭に持ってくる
+            // DB内の index 番号を 0 にするため
+            var $form = $('#' + $uploadFileForm._params.formID);
+            var file_id = $(file.previewTemplate).data('file_id');
+            var $firstHidden = $form.find('input[name="data[file_id][]"]:first');
+            if ($firstHidden.val() != file_id) {
+                $('#' + file_id).insertBefore($firstHidden);
+            }
+        }
+    };
+    var actionImage2DzOptions = {
+        acceptedFiles: "image/*",
+        previewTemplate: previewTemplateActionImage
+    };
+    $uploadFileForm.registerDragDropArea('.action-photo-preview', actionImage2Params, actionImage2DzOptions);
+    $uploadFileForm.registerAttachFileButton('.action-photo-preview', actionImage2Params, actionImage2DzOptions);
+
+    ///////////////////////////////
+    // アクション添付ファイル
+    ///////////////////////////////
+    var actionParams = {
+        formID: 'CommonActionDisplayForm',
+        previewContainerID: 'ActionUploadFilePreview',
+        afterAccept: actionImageParams.afterAccept
+    };
+    $uploadFileForm.registerDragDropArea('#ActionUploadFileDropArea', actionParams);
+    $uploadFileForm.registerAttachFileButton('#ActionFileAttachButton', actionParams);
+
+    //////////////////////////////////////////////////
+    // Dropzone 有効化
+    //////////////////////////////////////////////////
+    $uploadFileForm.dropzone();
+    if (typeof Dropzone.instances[0] !== "undefined") {
+        $uploadFileForm._dzDefaultOptions = $.extend({}, Dropzone.instances[0].options);
+    }
+    $(document).data('uploadFileForm', $uploadFileForm);
+
+    //////////////////////////////////////////////////
+    // 投稿、アクション の編集時の処理
+    //////////////////////////////////////////////////
+
+    // DB に保存済の添付ファイルデータを Dropzone に手動で登録する
+    var dropzonePrepareEdit = function (setting) {
+        var $input = $(this);
+
+        var file = {};
+        file.saved_file = true;
+        file.name = $input.attr('data-name');
+        file.size = $input.attr('data-size');
+
+        file.upload = {
+            progress: 100,
+            total: file.size,
+            bytesSent: file.size
+        };
+        file.status = Dropzone.SUCCESS;
+
+        $uploadFileForm._setParams(setting.selector, setting.params, setting.dzOptions);
+        Dropzone.instances[0].files.push(file);
+        Dropzone.instances[0].options.addedfile.call(Dropzone.instances[0], file);
+        file.previewElement.classList.remove("dz-file-preview");
+        file.previewElement.querySelector('.progress').style.visibility = 'hidden';
+
+        switch ($input.attr('data-ext')) {
+            case 'jpg':
+            case 'jpeg':
+            case 'gif':
+            case 'png':
+                var thumb = file.previewElement.querySelectorAll("[data-dz-thumbnail]");
+                for (var i = 0, len = thumb.length; i < len; i++) {
+                    thumb[i].alt = file.name;
+                    thumb[i].src = $input.attr('data-url');
+                }
+                break;
+
+            default:
+                break;
+        }
+        file.file_id = $input.attr('value');
+        $(file.previewElement).data('file_id', file.file_id).show();
+    };
+
+    // registerDragDropArea() か registerAttachFileButton() で登録されたフォームをチェックし、
+    // <input type=hidden name=data[file_id][]> が存在すれば、Dropzone に初期データとして登録する
+    var settings = {};
+    var i, setting;
+    for (i in $uploadFileForm._dragDropArea) {
+        if (!$uploadFileForm._dragDropArea.hasOwnProperty(i)) {
+            continue;
+        }
+        setting = $uploadFileForm._dragDropArea[i];
+        settings[setting.params.previewContainerID] = setting;
+    }
+    for (i in $uploadFileForm._attachFileButton) {
+        if (!$uploadFileForm._attachFileButton.hasOwnProperty(i)) {
+            continue;
+        }
+        setting = $uploadFileForm._attachFileButton[i];
+        settings[setting.params.previewContainerID] = setting;
+    }
+    for (i in settings) {
+        if (!settings.hasOwnProperty(i)) {
+            continue;
+        }
+        var $hiddens = $('#' + settings[i].params.formID).find('input[type=hidden][name="data[file_id][]"]');
+        if (!$hiddens.size()) {
+            continue;
+        }
+
+        var previewContainerID = settings[i].params.previewContainerID;
+        // アクションのメイン画像の場合
+        // hidden の最初の１件のみ処理
+        if (previewContainerID == 'ActionUploadFilePhotoPreview') {
+            dropzonePrepareEdit.call($hiddens.eq(0).get(0), settings[i]);
+        }
+        // アクションの添付ファイルの場合
+        // hidden の最初の１件以外を処理
+        else if (previewContainerID == 'ActionUploadFilePreview') {
+            $hiddens.not(':first').each(function () {
+                dropzonePrepareEdit.call(this, settings[i]);
+            });
+        }
+        else {
+            $hiddens.each(function () {
+                dropzonePrepareEdit.call(this, settings[i]);
+            });
+        }
+    }
+
+    // アクションの編集画面の場合は、画像選択の画面をスキップし、
+    // ajax で動いている select を選択済みにする
+    var $button = $('#ActionForm').find('.action-image-add-button.skip');
+    if ($button.size()) {
+        // 画像選択の画面をスキップ
+        evTargetShowThisDelete.call($button.get(0));
+        // ゴール選択の ajax 処理を動かす
+        $('#GoalSelectOnActionForm').trigger('change');
+    }
 });
 
 function evAjaxEditCircleAdminStatus(e) {
@@ -3124,6 +3981,12 @@ function setDefaultTab() {
             $('#CommonFormTabs li:eq(1) a').tab('show');
             if (!isMobile()) {
                 $('#CommonPostBody').focus();
+            }
+            break;
+        case "message":
+            $('#CommonFormTabs li:eq(2) a').tab('show');
+            if (!isMobile()) {
+                $('#CommonMessageBody').focus();
             }
             break;
     }

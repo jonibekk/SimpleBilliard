@@ -73,7 +73,13 @@ class PagesController extends AppController
         $feed_filter = 'all';
         $this->set(compact('feed_filter', 'current_global_menu'));
         $this->set('long_text', false);
-        $this->set('common_form_type', 'action');
+        if ($form_type = viaIsSet($this->request->params['common_form_type'])) {
+            $this->set('common_form_type', $form_type);
+        }
+        else {
+            $this->set('common_form_type', 'action');
+        }
+
         try {
             $this->set(['posts' => $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null,
                                                     $this->request->params)]);

@@ -172,11 +172,11 @@ class AppController extends Controller
                 $this->_setNotifyCnt();
                 $this->_setCurrentTerm();
                 $this->_setNextTerm();
-
             }
             $this->_setMyMemberStatus();
         }
         $this->set('current_global_menu', null);
+
         //ページタイトルセット
         $this->set('title_for_layout', SERVICE_NAME);
     }
@@ -317,14 +317,20 @@ class AppController extends Controller
     public function _setCurrentCircle()
     {
         $current_circle = null;
-        if (isset($this->request->params['circle_id']) && !empty($this->request->params['circle_id'])) {
+        if (isset($this->request->params['named'])) {
+            $params = array_merge($this->request->params, $this->request->params['named']);
+        }
+        else {
+            $params = $this->request->params;
+        }
+        if (isset($params['circle_id']) && !empty($params['circle_id'])) {
 
-            $is_secret = $this->User->CircleMember->Circle->isSecret($this->request->params['circle_id']);
-            $is_exists_circle = $this->User->CircleMember->Circle->isBelongCurrentTeam($this->request->params['circle_id'],
+            $is_secret = $this->User->CircleMember->Circle->isSecret($params['circle_id']);
+            $is_exists_circle = $this->User->CircleMember->Circle->isBelongCurrentTeam($params['circle_id'],
                                                                                        $this->Session->read('current_team_id'));
-            $is_belong_circle_member = $this->User->CircleMember->isBelong($this->request->params['circle_id']);
+            $is_belong_circle_member = $this->User->CircleMember->isBelong($params['circle_id']);
             if ($is_exists_circle && (!$is_secret || ($is_secret && $is_belong_circle_member))) {
-                $current_circle = $this->User->CircleMember->Circle->findById($this->request->params['circle_id']);
+                $current_circle = $this->User->CircleMember->Circle->findById($params['circle_id']);
             }
         }
         $this->set('current_circle', $current_circle);
@@ -620,7 +626,6 @@ class AppController extends Controller
         $this->set(compact("new_notify_cnt"));
     }
 
-
     function _getRequiredParam($name)
     {
         $id = viaIsSet($this->request->params['named'][$name]);
@@ -629,6 +634,33 @@ class AppController extends Controller
             return $this->redirect($this->referer());
         }
         return $id;
+    }
+
+    function _getRedirectUrl()
+    {
+        $url_map = [
+            'attached_file_list' => [
+                'controller' => 'posts',
+                'action'     => 'feed',
+                'named'      => [
+                    'circle_id'
+                ]
+            ]
+        ];
+        $parsed_url = Router::parse($this->referer(null, true));
+        $referer_url = $this->referer(null, true);
+        if ($url = viaIsSet($url_map[$parsed_url['action']])) {
+            if ($names = viaIsSet($url['named'])) {
+                unset($url['named']);
+                foreach ($names as $name) {
+                    if (viaIsSet($parsed_url['named'][$name])) {
+                        $url[$name] = $parsed_url['named'][$name];
+                    }
+                }
+            }
+            $referer_url = Router::url($url);
+        }
+        return $referer_url;
     }
 
 }

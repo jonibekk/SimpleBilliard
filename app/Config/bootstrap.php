@@ -136,6 +136,9 @@ define('MODE_VIEW_TUTORIAL', 1);
 //aws s3のurl
 define('S3_BASE_URL', 'https://s3-ap-northeast-1.amazonaws.com');
 define('S3_TRIM_PATH', '/upload/');
+//office online viewerのbase url
+define('OOV_BASE_URL', 'https://view.officeapps.live.com/op/view.aspx?src=');
+
 //リクエストされた時点のタイムスタンプ
 define('REQUEST_TIMESTAMP', time());
 //右カラム各要素の表示数
@@ -161,6 +164,9 @@ define('GOAL_PAGE_FOLLOWER_NUMBER', 10);
 define('GOAL_PAGE_MEMBER_NUMBER', 10);
 //ゴールページのキーリザルト数
 define('GOAL_PAGE_KR_NUMBER', 10);
+//ファイル一覧ページのアイテム数
+define('FILE_LIST_PAGE_NUMBER', 20);
+
 /**
  * 共通関数
  */

@@ -4,7 +4,6 @@ App::uses('PostsController', 'Controller');
 /**
  * PostsController Test Case
  * @method testAction($url = '', $options = array()) ControllerTestCase::_testAction
-
  */
 class PostsControllerTest extends ControllerTestCase
 {
@@ -15,6 +14,10 @@ class PostsControllerTest extends ControllerTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.action_result_file',
+        'app.attached_file',
+        'app.post_file',
+        'app.comment_file',
         'app.goal_category',
         'app.evaluate_term',
         'app.action_result',
@@ -57,6 +60,58 @@ class PostsControllerTest extends ControllerTestCase
         'app.evaluation',
     );
 
+    function testMessage()
+    {
+        $this->_getPostsCommonMock();
+        $this->testAction('/posts/message/', ['method' => 'GET']);
+    }
+
+    function testMessageList()
+    {
+        $this->_getPostsCommonMock();
+        $this->testAction('/posts/message_list/', ['method' => 'GET']);
+    }
+
+    function testAjaxGetMessageList()
+    {
+        $this->_getPostsCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/posts/ajax_get_message_list/', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxGetMessageInfo()
+    {
+        $this->_getPostsCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/posts/ajax_get_message_info/1', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxGetMessage()
+    {
+        $this->_getPostsCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/posts/ajax_get_message/1/2/3', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxPutMessage()
+    {
+        $this->_getPostsCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/posts/ajax_put_message/1/2', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxPutMessageRead()
+    {
+        $this->_getPostsCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/posts/ajax_put_message_read/1/2', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
     function testAdd()
     {
         /**
@@ -78,6 +133,31 @@ class PostsControllerTest extends ControllerTestCase
             ],
         ];
         $this->testAction('/posts/add',
+                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+
+    }
+
+    function testAddMessage()
+    {
+        /**
+         * @var UsersController $Posts
+         */
+        $Posts = $this->_getPostsCommonMock();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Session->expects($this->any())->method('read')
+                       ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
+                   ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
+        $data = [
+            'Post' => [
+                'body'         => 'test',
+                'share_public' => 'public,circle_1,user_12',
+                'share_secret' => '',
+                'share_range'  => 'public',
+            ],
+        ];
+        $this->testAction('/posts/add_message',
                           ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
 
     }
@@ -129,6 +209,33 @@ class PostsControllerTest extends ControllerTestCase
                 'share_range'  => 'public',
                 'team_id'      => '1'
             ],
+            'socket_id'    => 'test',
+        ];
+        $this->testAction('/posts/add',
+                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+    }
+
+    function testAddOnlyMember()
+    {
+        /**
+         * @var UsersController $Posts
+         */
+        $Posts = $this->_getPostsCommonMock();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Session->expects($this->any())->method('read')
+                       ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
+                   ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
+        $data = [
+            'Post' => [
+                'body'         => 'test',
+                'share_public' => 'user_1',
+                'share_secret' => '',
+                'share_range'  => 'public',
+                'team_id'      => '1'
+            ],
+            'socket_id'    => 'test',
         ];
         $this->testAction('/posts/add',
                           ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
@@ -149,9 +256,9 @@ class PostsControllerTest extends ControllerTestCase
                 'share_public' => 'public,circle_1,user_12',
                 'share_secret' => '',
                 'share_range'  => 'public',
-                'socket_id'    => 'hogehage',
                 'team_id'      => '1'
             ],
+            'socket_id'=>'test',
         ];
         $this->testAction('/posts/add',
                           ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
@@ -841,12 +948,56 @@ class PostsControllerTest extends ControllerTestCase
         $this->_getPostsCommonMock();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $res = $this->testAction('/posts/ajax_get_user_page_post_feed/user_id:2/month_index:1/page:1', ['method' => 'GET']);
+        $res = $this->testAction('/posts/ajax_get_user_page_post_feed/user_id:2/month_index:1/page:1',
+                                 ['method' => 'GET']);
         $data = json_decode($res, true);
         $this->assertArrayHasKey('html', $data);
         $this->assertArrayHasKey('count', $data);
         $this->assertArrayHasKey('page_item_num', $data);
         $this->assertArrayHasKey('start', $data);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxGetCircleFiles()
+    {
+        $this->_getPostsCommonMock();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $res = $this->testAction('/posts/ajax_get_circle_files/circle_id:1/month_index:1/page:1',
+                                 ['method' => 'GET']);
+        $data = json_decode($res, true);
+        $this->assertArrayHasKey('html', $data);
+        $this->assertArrayHasKey('count', $data);
+        $this->assertArrayHasKey('page_item_num', $data);
+        $this->assertArrayHasKey('start', $data);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxUploadFile()
+    {
+        $this->_getPostsCommonMock();
+        $_FILES = ['file' => []];
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $res = $this->testAction('/posts/ajax_upload_file/', ['method' => 'POST']);
+        $data = json_decode($res, true);
+        $this->assertArrayHasKey('error', $data);
+        $this->assertArrayHasKey('msg', $data);
+        $this->assertArrayHasKey('id', $data);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxRemoveFile()
+    {
+        $this->_getPostsCommonMock();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $res = $this->testAction('/posts/ajax_remove_file/',
+                                 ['method' => 'POST', 'data' => ['AttachedFile' => ['file_id' => 'xxx']]]);
+        $data = json_decode($res, true);
+        $this->assertArrayHasKey('error', $data);
+        $this->assertArrayHasKey('msg', $data);
+        $this->assertArrayHasKey('id', $data);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -918,6 +1069,14 @@ class PostsControllerTest extends ControllerTestCase
         $this->assertFalse(isset($e), "[正常]投稿削除");
     }
 
+    public function testPostEdit()
+    {
+        $Posts = $this->_getPostsCommonMock();
+        $posts = $Posts->Post->getMyPostList(0, strtotime('2016-01-01'));
+        $post_id = array_shift($posts);
+        $this->testAction('posts/post_edit/post_id:' . $post_id , ['method' => 'GET']);
+    }
+
     /**
      * testDelete method
      *
@@ -928,7 +1087,7 @@ class PostsControllerTest extends ControllerTestCase
         $this->_getPostsCommonMock();
 
         try {
-            $this->testAction('posts/post_edit/0', ['method' => 'POST']);
+            $this->testAction('posts/post_edit/0', ['method' => 'PUT']);
         } catch (NotFoundException $e) {
         }
         $this->assertTrue(isset($e), "[異常]投稿編集");
@@ -954,7 +1113,7 @@ class PostsControllerTest extends ControllerTestCase
         $post = $Posts->Post->save($post_data);
 
         try {
-            $this->testAction('posts/post_edit/post_id:' . $post['Post']['id'], ['method' => 'POST']);
+            $this->testAction('posts/post_edit/post_id:' . $post['Post']['id'], ['method' => 'PUT']);
         } catch (NotFoundException $e) {
         }
         $this->assertTrue(isset($e), "[異常]所有していない投稿編集");
@@ -992,7 +1151,7 @@ class PostsControllerTest extends ControllerTestCase
         ];
 
         try {
-            $this->testAction('posts/post_edit/post_id:' . $post['Post']['id'], ['data' => $data, 'method' => 'POST']);
+            $this->testAction('posts/post_edit/post_id:' . $post['Post']['id'], ['data' => $data, 'method' => 'PUT']);
         } catch (NotFoundException $e) {
         }
         $this->assertFalse(isset($e), "[正常]投稿編集");
@@ -1024,7 +1183,7 @@ class PostsControllerTest extends ControllerTestCase
         ];
 
         try {
-            $this->testAction('posts/post_edit/post_id:' . $post['Post']['id'], ['data' => $data, 'method' => 'POST']);
+            $this->testAction('posts/post_edit/post_id:' . $post['Post']['id'], ['data' => $data, 'method' => 'PUT']);
         } catch (NotFoundException $e) {
         }
         $this->assertFalse(isset($e), "[異常ValidationError]投稿編集");
@@ -1427,29 +1586,52 @@ class PostsControllerTest extends ControllerTestCase
         $this->assertTrue(isset($e), "Invalid Status Request");
     }
 
+    function testAttachedFileList()
+    {
+        $this->_getPostsCommonMock();
+        $this->testAction('/posts/attached_file_list/circle_id:1', ['method' => 'GET']);
+    }
+
+    function testGetRedirectUrl()
+    {
+        $Posts = $this->_getPostsCommonMock();
+        $value_map = [
+            [
+                null, true, '/posts/attached_file_list/circle_id:1'
+            ]
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->expects($this->any())->method('referer')
+              ->will($this->returnValueMap($value_map));
+        $res = $Posts->_getRedirectUrl();
+        $this->assertEquals('/circle_feed/1', $res);
+    }
+
     function _getPostsCommonMock()
     {
         /**
          * @var PostsController $Posts
          */
         $Posts = $this->generate('Posts', [
+            'methods'    => ['referer'],
             'components' => [
                 'Session',
                 'Auth'      => ['user', 'loggedIn'],
                 'Security'  => ['_validateCsrf', '_validatePost'],
                 'Ogp',
-                'NotifyBiz' => ['sendNotify', 'commentPush']
+                'NotifyBiz' => ['sendNotify', 'commentPush','push']
             ],
         ]);
         $value_map = [
             [null, [
                 'id'         => '1',
                 'last_first' => true,
-                'language'   => 'jpn'
+                'language'   => 'jpn',
+                'photo_file_name' => ''
             ]],
             ['id', '1'],
             ['language', 'jpn'],
-            ['auto_language_flg', true],
+            ['auto_language_flg', true]
         ];
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Security

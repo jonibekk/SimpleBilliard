@@ -27,7 +27,7 @@
                     <?php endforeach ?>
                 </div>
             <?php else: ?>
-                <?= __d('gl', "まだ、この投稿を読んだ人はいません。") ?>
+                <?= __d('gl', "まだ、このコメントを読んだ人はいません。") ?>
             <?php endif ?>
         </div>
         <div class="modal-footer modal-feed-footer">

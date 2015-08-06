@@ -1,5 +1,8 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('UploadHelper', 'View/Helper');
+App::uses('TimeExHelper', 'View/Helper');
+App::uses('View', 'View');
 
 /**
  * Post Model
@@ -18,6 +21,8 @@ App::uses('AppModel', 'Model');
  * @property ActionResult    $ActionResult
  * @property KeyResult       $KeyResult
  * @property Circle          $Circle
+ * @property AttachedFile    $AttachedFile
+ * @property PostFile        $PostFile
  */
 class Post extends AppModel
 {
@@ -31,6 +36,7 @@ class Post extends AppModel
     const TYPE_KR_COMPLETE = 5;
     const TYPE_GOAL_COMPLETE = 6;
     const TYPE_CREATE_CIRCLE = 7;
+    const TYPE_MESSAGE = 8;
 
     static public $TYPE_MESSAGE = [
         self::TYPE_NORMAL        => null,
@@ -40,6 +46,7 @@ class Post extends AppModel
         self::TYPE_KR_COMPLETE   => null,
         self::TYPE_GOAL_COMPLETE => null,
         self::TYPE_CREATE_CIRCLE => null,
+        self::TYPE_MESSAGE       => null,
     ];
 
     function _setTypeMessage()
@@ -61,6 +68,10 @@ class Post extends AppModel
         'key_result_id' => null,
         'filter_goal'   => null,
         'type'          => null,
+    ];
+
+    public $uses = [
+        'AttachedFile'
     ];
 
     public $actsAs = [
@@ -204,7 +215,8 @@ class Post extends AppModel
         'MyPostLike'      => [
             'className' => 'PostLike',
             'fields'    => ['id']
-        ]
+        ],
+        'PostFile',
     ];
 
     function __construct($id = false, $table = null, $ds = null)
@@ -218,13 +230,12 @@ class Post extends AppModel
      * 投稿
      *
      * @param      $postData
-     * @param int  $type
      * @param null $uid
      * @param null $team_id
      *
      * @return bool|mixed
      */
-    public function addNormal($postData, $type = self::TYPE_NORMAL, $uid = null, $team_id = null)
+    public function addNormal($postData, $uid = null, $team_id = null)
     {
         if (!isset($postData['Post']) || empty($postData['Post'])) {
             return false;
@@ -242,12 +253,24 @@ class Post extends AppModel
         }
         $postData['Post']['user_id'] = $this->uid;
         $postData['Post']['team_id'] = $this->team_id;
-        $postData['Post']['type'] = $type;
+        if (!isset($postData['Post']['type'])) {
+            $postData['Post']['type'] = Post::TYPE_NORMAL;
+        }
 
+        $this->begin();
         $res = $this->save($postData);
-
         if (empty($res)) {
+            $this->rollback();
             return false;
+        }
+
+        $post_id = $this->getLastInsertID();
+        $results = [];
+        // ファイルが添付されている場合
+        if (isset($postData['file_id']) && is_array($postData['file_id'])) {
+            $results[] = $this->PostFile->AttachedFile->saveRelatedFiles($post_id,
+                                                                         AttachedFile::TYPE_MODEL_POST,
+                                                                         $postData['file_id']);
         }
         if (!empty($share)) {
             //ユーザとサークルに分割
@@ -263,18 +286,30 @@ class Post extends AppModel
                     $circles[] = str_replace('circle_', '', $val);
                 }
             }
-            //共有ユーザ保存
-            $this->PostShareUser->add($this->getLastInsertID(), $users);
-            //共有サークル保存
-            $this->PostShareCircle->add($this->getLastInsertID(), $circles);
-            //共有サークル指定されてた場合の未読件数更新
-            $this->User->CircleMember->incrementUnreadCount($circles);
-            //共有サークル指定されてた場合、更新日時更新
-            $this->User->CircleMember->updateModified($circles);
-            $this->PostShareCircle->Circle->updateModified($circles);
-
+            if ($users) {
+                //共有ユーザ保存
+                $results[] = $this->PostShareUser->add($this->getLastInsertID(), $users);
+            }
+            if ($circles) {
+                //共有サークル保存
+                $results[] = $this->PostShareCircle->add($this->getLastInsertID(), $circles);
+                //共有サークル指定されてた場合の未読件数更新
+                $results[] = $this->User->CircleMember->incrementUnreadCount($circles);
+                //共有サークル指定されてた場合、更新日時更新
+                $results[] = $this->User->CircleMember->updateModified($circles);
+                $results[] = $this->PostShareCircle->Circle->updateModified($circles);
+            }
         }
-        return $res;
+        // どこかでエラーが発生した場合は rollback
+        foreach ($results as $r) {
+            if (!$r) {
+                $this->rollback();
+                $this->PostFile->AttachedFile->deleteAllRelatedFiles($post_id, AttachedFile::TYPE_MODEL_POST);
+                return false;
+            }
+        }
+        $this->commit();
+        return true;
     }
 
     /**
@@ -342,7 +377,29 @@ class Post extends AppModel
         return $res;
     }
 
-    public function get($page = 1, $limit = 20, $start = null, $end = null, $params = null)
+    public function getPostById($post_id)
+    {
+        $options = [
+            'conditions' => [
+                'Post.id' => $post_id,
+                'team_id' => $this->current_team_id,
+            ],
+            'contain'    => [
+                'User'          => [],
+                'PostShareUser' => [],
+            ]
+        ];
+        $res = $this->find('first', $options);
+        return $res;
+    }
+
+    public function getPhotoPath($user_arr)
+    {
+        $upload = new UploadHelper(new View());
+        return $upload->uploadUrl($user_arr, 'User.photo', ['style' => 'small']);
+    }
+
+    public function get($page = 1, $limit = 20, $start = null, $end = null, $params = null, $contains_message = false)
     {
         $one_month = 60 * 60 * 24 * 31;
         if (!$start) {
@@ -496,6 +553,10 @@ class Post extends AppModel
             if ($this->orgParams['type'] == self::TYPE_NORMAL) {
                 $post_options['conditions']['Post.type'] = self::TYPE_NORMAL;
             }
+            if ($contains_message === false) {
+                $post_options['conditions']['NOT']['Post.type'] = self::TYPE_MESSAGE;
+            }
+
             // 独自パラメータ無しの場合（ホームフィードの場合）
             if (!$org_param_exists) {
                 $post_options['order'] = ['Post.created' => 'desc'];
@@ -542,6 +603,14 @@ class Post extends AppModel
                             'MyCommentLike.team_id' => $this->current_team_id,
                         ]
                     ],
+                    'CommentFile'   => [
+                        'order'        => ['CommentFile.index_num asc'],
+                        'AttachedFile' => [
+                            'User' => [
+                                'fields' => $this->User->profileFields
+                            ]
+                        ]
+                    ]
                 ],
                 'CommentId',
                 'PostShareCircle' => [
@@ -575,7 +644,7 @@ class Post extends AppModel
                     ],
                 ],
                 'ActionResult'    => [
-                    'fields'    => [
+                    'fields'           => [
                         'id',
                         'note',
                         'name',
@@ -583,14 +652,31 @@ class Post extends AppModel
                         'photo2_file_name',
                         'photo3_file_name',
                         'photo4_file_name',
+                        'photo4_file_name',
                         'photo5_file_name',
                     ],
-                    'KeyResult' => [
+                    'KeyResult'        => [
                         'fields' => [
                             'id',
                             'name',
                         ],
                     ],
+                    'ActionResultFile' => [
+                        'order'        => ['ActionResultFile.index_num asc'],
+                        'AttachedFile' => [
+                            'User' => [
+                                'fields' => $this->User->profileFields
+                            ]
+                        ]
+                    ]
+                ],
+                'PostFile'        => [
+                    'order'        => ['PostFile.index_num asc'],
+                    'AttachedFile' => [
+                        'User' => [
+                            'fields' => $this->User->profileFields
+                        ]
+                    ]
                 ]
             ],
         ];
@@ -844,16 +930,41 @@ class Post extends AppModel
         return $data;
     }
 
+    /**
+     * 投稿の編集
+     *
+     * @param $data
+     *
+     * @return bool
+     */
     function postEdit($data)
     {
-        if (isset($data['photo_delete']) && !empty($data['photo_delete'])) {
-            foreach ($data['photo_delete'] as $index => $val) {
-                if ($val) {
-                    $data['Post']['photo' . $index] = null;
-                }
+        $this->begin();
+        $results = [];
+
+        // 投稿データ保存
+        $results[] = $this->save($data);
+
+        // ファイルが添付されている場合
+        if ((isset($data['file_id']) && is_array($data['file_id'])) ||
+            (isset($data['deleted_file_id']) && is_array($data['deleted_file_id']))
+        ) {
+            $results[] = $this->PostFile->AttachedFile->updateRelatedFiles(
+                $data['Post']['id'],
+                AttachedFile::TYPE_MODEL_POST,
+                isset($data['file_id']) ? $data['file_id'] : [],
+                isset($data['deleted_file_id']) ? $data['deleted_file_id'] : []);
+        }
+
+        // どこかでエラーが発生した場合は rollback
+        foreach ($results as $r) {
+            if (!$r) {
+                $this->rollback();
+                return false;
             }
         }
-        return $this->save($data);
+        $this->commit();
+        return true;
     }
 
     /**
@@ -874,7 +985,13 @@ class Post extends AppModel
         $share_member_list = $share_member_list + $this->PostShareCircle->getShareCircleMemberList($post_id);
         //メンバー共有なら
         $share_member_list = $share_member_list + $this->PostShareUser->getShareUserListByPost($post_id);
+        //Postの主が自分ではないなら追加
+        $posted_user_id = viaIsSet($post['Post']['user_id']);
+        if ($this->my_uid != $posted_user_id) {
+            $share_member_list[] = $posted_user_id;
+        }
         $share_member_list = array_unique($share_member_list);
+
         //自分自身を除外
         $key = array_search($this->my_uid, $share_member_list);
         if ($key !== false) {
@@ -1129,4 +1246,132 @@ class Post extends AppModel
         return $res ? $res[0]['sum_like'] : 0;
     }
 
+    public function getMessageList()
+    {
+        $options = [
+            'conditions' => [
+                'team_id' => $this->current_team_id,
+                'type'    => self::TYPE_MESSAGE,
+            ],
+            'contain'    => [
+                'User',
+                'PostShareUser' => [
+                    'fields' => ['id']
+                ],
+                'Comment'       => [
+                    'User',
+                    'limit' => 1,
+                    'order' => [
+                        'Comment.created' => 'desc'
+                    ]
+                ],
+            ],
+        ];
+        $res = $this->find('all', $options);
+
+        return $res;
+    }
+
+    public function convertData($data)
+    {
+        $upload = new UploadHelper(new View());
+        $time = new TimeExHelper(new View());
+
+        foreach ($data as $key => $item) {
+            if (empty($item['Comment']) === false) {
+                $data[$key]['User'] = $item['Comment'][0]['User'];
+                $data[$key]['Post']['body'] = $item['Comment'][0]['body'];
+                $data[$key]['Post']['created'] = $item['Comment'][0]['created'];
+            }
+            $data[$key]['User']['photo_path'] =
+                $upload->uploadUrl($data[$key]['User'], 'User.photo', ['style' => 'medium_large']);
+            $data[$key]['Post']['created'] = $time->elapsedTime(h($data[$key]['Post']['created']));
+        }
+
+        return $data;
+    }
+
+    function getFilesOnCircle($circle_id, $page = 1, $limit = null,
+                              $start = null, $end = null, $file_type = null)
+    {
+        $one_month = 60 * 60 * 24 * 31;
+        $limit = $limit ? $limit : FILE_LIST_PAGE_NUMBER;
+        $start = $start ? $start : REQUEST_TIMESTAMP - $one_month;
+        $end = $end ? $end : REQUEST_TIMESTAMP;
+
+        //PostFile,CommentFile,ActionResultFileからfile_idをまず集める
+        /**
+         * @var AttachedFile $AttachedFile
+         */
+        $AttachedFile = ClassRegistry::init('AttachedFile');
+        $p_ids = $this->PostShareCircle->find('list', [
+            'conditions' => [
+                'circle_id'                => $circle_id,
+                'modified BETWEEN ? AND ?' => [$start, $end],
+            ],
+            'fields'     => ['post_id', 'post_id']
+        ]);
+        $c_ids = $this->Comment->find('list', [
+            'conditions' => ['post_id' => $p_ids],
+            'fields'     => ['id', 'id']
+        ]);
+
+        $p_file_ids = $AttachedFile->PostFile->find('list', [
+            'conditions' => ['post_id' => $p_ids],
+            'fields'     => ['attached_file_id', 'attached_file_id']
+        ]);
+        $c_file_ids = $AttachedFile->CommentFile->find('list', [
+            'conditions' => ['comment_id' => $c_ids],
+            'fields'     => ['attached_file_id', 'attached_file_id']
+        ]);
+        $file_ids = $p_file_ids + $c_file_ids;
+        $options = [
+            'conditions' => [
+                'AttachedFile.id'                    => $file_ids,
+                'AttachedFile.display_file_list_flg' => true,
+            ],
+            'order'      => ['AttachedFile.created desc'],
+            'limit'      => $limit,
+            'page'       => $page,
+            'contain'    => [
+                'User'        => [
+                    'fields' => $this->User->profileFields,
+                ],
+                'PostFile'    => [
+                    'fields' => ['PostFile.post_id']
+                ],
+                'CommentFile' => [
+                    'fields'  => ['CommentFile.comment_id'],
+                    'Comment' => [
+                        'fields' => ['Comment.post_id'],
+                    ]
+                ],
+            ]
+        ];
+        if ($file_type) {
+            $options['conditions']['AttachedFile.file_type'] = $AttachedFile->getFileTypeId($file_type);
+        }
+
+        $files = $AttachedFile->find('all', $options);
+        return $files;
+    }
+
+    /**
+     * $action_result_id に紐づく投稿を取得
+     *
+     * @param $action_result_id
+     *
+     * @return array|null
+     */
+    public function getByActionResultId($action_result_id)
+    {
+        $options = [
+            'conditions' => [
+                'team_id'          => $this->current_team_id,
+                'action_result_id' => $action_result_id,
+                'type'             => self::TYPE_ACTION,
+            ]
+        ];
+        return $this->find('first', $options);
+    }
 }

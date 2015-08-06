@@ -214,7 +214,7 @@
                 <?php foreach ($post['Comment'] as $comment): ?>
                     <?=
                     $this->element('Feed/comment',
-                                   ['comment' => $comment, 'user' => $comment['User'], 'like' => $comment['MyCommentLike'], 'id_prefix' => 'Action_']) ?>
+                                   ['comment' => $comment, 'comment_file' => $comment['CommentFile'], 'user' => $comment['User'], 'like' => $comment['MyCommentLike'], 'id_prefix' => 'Action_']) ?>
                 <?php endforeach ?>
                 <a href="#" class="btn btn-link click-comment-new"
                    id="ActionComments_new_<?= $post['Post']['id'] ?>"

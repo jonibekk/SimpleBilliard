@@ -90,7 +90,7 @@ $without_header = isset($without_header) ? $without_header : false;
                 <!--END Goal Post Header -->
 
             <?php endif; ?>
-            <div class="panel-body pt_10px plr_11px pb_8px">
+            <div class="posts-panel-body panel-body">
                 <div class="col col-xxs-12 feed-user">
                     <div class="pull-right">
                         <div class="dropdown">
@@ -100,19 +100,13 @@ $without_header = isset($without_header) ? $without_header : false;
                             <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
                                 <?php if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
                                     <?php if ($post['Post']['type'] == Post::TYPE_NORMAL): ?>
-                                        <li><a href="#" class="target-toggle-click"
-                                               target-id="PostEditForm_<?= $post['Post']['id'] ?>"
-                                               opend-text="<?= __d('gl', "編集をやめる") ?>"
-                                               closed-text="<?= __d('gl', "投稿を編集") ?>"
-                                               click-target-id="PostEditFormBody_<?= $post['Post']['id'] ?>"
-                                               hidden-target-id="PostTextBody_<?= $post['Post']['id'] ?>"
-                                               ajax-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_edit_post_form', 'post_id' => $post['Post']['id']]) ?>"
+                                        <li>
+                                            <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'post_edit', 'post_id' => $post['Post']['id']]) ?>"
                                                 ><?= __d('gl', "投稿を編集") ?></a>
                                         </li>
                                     <?php elseif ($post['Post']['type'] == Post::TYPE_ACTION): ?>
                                         <li>
-                                            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_edit_action_modal', 'action_result_id' => $post['Post']['action_result_id']]) ?>"
-                                               class="modal-ajax-get"
+                                            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'edit_action', 'action_result_id' => $post['Post']['action_result_id']]) ?>"
                                                 ><?= __d('gl', "アクションを編集") ?></a>
                                         </li>
                                     <?php endif; ?>
@@ -152,7 +146,13 @@ $without_header = isset($without_header) ? $without_header : false;
                     <?= $this->element('Feed/display_share_range', compact('post')) ?>
                 </div>
                 <?= $this->element('Feed/post_body', compact('post')) ?>
-                <?php $photo_count = 0;
+                <?
+                /**
+                 * 画像のurlを集める
+                 * アクションの場合は１画像
+                 * 投稿の場合は全画像を集める
+                 */
+                $imgs = [];
                 //タイプ別に切り分け
                 if ($post['Post']['type'] == Post::TYPE_ACTION) {
                     $model_name = 'ActionResult';
@@ -160,71 +160,75 @@ $without_header = isset($without_header) ? $without_header : false;
                 else {
                     $model_name = 'Post';
                 }
-                for ($i = 1; $i <= 5; $i++) {
-                    if ($post[$model_name]["photo{$i}_file_name"]) {
-                        $photo_count++;
+
+                //アクションの場合は、ActionResultFileと旧ファイルの両方を集める
+                if ($post['Post']['type'] == Post::TYPE_ACTION) {
+                    //新ファイルが存在するか確認
+                    if ($ar_img = viaIsSet($post['ActionResult']['ActionResultFile'][0])) {
+                        $img = [];
+                        $img['l'] = $this->Upload->attachedFileUrl($ar_img, "preview");
+                        $img['s'] = $this->Upload->uploadUrl($ar_img, "AttachedFile.attached",
+                                                             ['style' => 'small']);
+                        $imgs[] = $img;
+                    }
+                    else {
+                        //新ファイルが無ければ旧ファイルを確認
+                        for ($i = 1; $i <= 5; $i++) {
+                            if ($post[$model_name]["photo{$i}_file_name"]) {
+                                $img = [];
+                                $img['l'] = $this->Upload->uploadUrl($post, "{$model_name}.photo" . $i,
+                                                                     ['style' => 'large']);
+                                $img['s'] = $this->Upload->uploadUrl($post, "{$model_name}.photo" . $i,
+                                                                     ['style' => 'small']);
+                                $imgs[] = $img;
+                            }
+                        }
                     }
                 }
+                //アクション以外の場合は、新ファイル、旧ファイルの両方から集める
+                else {
+                    if (!empty($post['PostFile'])) {
+                        foreach ($post['PostFile'] as $post_file) {
+                            if (isset($post_file['AttachedFile']['id']) && $post_file['AttachedFile']['file_type'] == AttachedFile::TYPE_FILE_IMG) {
+                                $img = [];
+                                $img['l'] = $this->Upload->uploadUrl($post_file['AttachedFile'],
+                                                                     "AttachedFile.attached",
+                                                                     ['style' => 'large']);
+                                $img['s'] = $this->Upload->uploadUrl($post_file['AttachedFile'],
+                                                                     "AttachedFile.attached",
+                                                                     ['style' => 'small']);
+                                $imgs[] = $img;
+                            }
+                        }
+                    }
+                    for ($i = 1; $i <= 5; $i++) {
+                        if ($post[$model_name]["photo{$i}_file_name"]) {
+                            $img = [];
+                            $img['l'] = $this->Upload->uploadUrl($post, "{$model_name}.photo" . $i,
+                                                                 ['style' => 'large']);
+                            $img['s'] = $this->Upload->uploadUrl($post, "{$model_name}.photo" . $i,
+                                                                 ['style' => 'small']);
+                            $imgs[] = $img;
+                        }
+                    }
+
+                }
+
                 ?>
-                <?php if ($photo_count): ?>
-                    <div class="col col-xxs-12 pt_10px">
-                        <div id="CarouselPost_<?= $post['Post']['id'] ?>" class="carousel slide" data-ride="carousel">
-                            <!-- Indicators -->
-                            <?php if ($photo_count >= 2): ?>
-                                <ol class="carousel-indicators">
-                                    <?php $index = 0 ?>
-                                    <?php for ($i = 1; $i <= 5; $i++): ?>
-                                        <?php if ($post[$model_name]["photo{$i}_file_name"]): ?>
-                                            <li data-target="#CarouselPost_<?= $post[$model_name]['id'] ?>"
-                                                data-slide-to="<?= $index ?>"
-                                                class="<?= ($index === 0) ? "active" : null ?>"></li>
-                                            <?php $index++ ?>
-                                        <?php endif ?>
-                                    <?php endfor ?>
-                                </ol>
-                            <?php endif; ?>
-                            <!-- Wrapper for slides -->
-                            <div class="carousel-inner">
-                                <?php $index = 0 ?>
-                                <?php for ($i = 1; $i <= 5; $i++): ?>
-                                    <?php if ($post[$model_name]["photo{$i}_file_name"]): ?>
-                                        <div class="item <?= ($index === 0) ? "active" : null ?>">
-                                            <a href="<?=
-                                            $this->Upload->uploadUrl($post, "{$model_name}.photo" . $i,
-                                                                     ['style' => 'large']) ?>"
-                                               rel="lightbox" data-lightbox="LightBoxPost_<?= $post['Post']['id'] ?>">
-                                                <?=
-                                                $this->Html->image('ajax-loader.gif',
-                                                                   [
-                                                                       'class'         => 'lazy bd-s',
-                                                                       'data-original' => $this->Upload->uploadUrl($post,
-                                                                                                                   "{$model_name}.photo" . $i,
-                                                                                                                   ['style' => 'small'])
-                                                                   ]
-                                                )
-                                                ?>
-                                            </a>
-                                            <?php $index++ ?>
-                                        </div>
-                                    <?php endif ?>
-                                <?php endfor ?>
-                            </div>
+                <?php if (!empty($imgs)): ?>
+            </div>
+            <div class="col col-xxs-12 pt_10px <?= count($imgs) !== 1 ? "post_gallery" : 'feed_img_only_one' ?>">
+                <?php foreach ($imgs as $v): ?>
+                    <a href="<?= $v['l'] ?>" rel='lightbox' data-lightbox="FeedLightBox_<?= $post['Post']['id'] ?>">
+                        <?= $this->Html->image($v['s']) ?>
+                    </a>
+                <?php endforeach; ?>
+            </div>
+            <div class="panel-body pt_10px plr_11px pb_8px">
 
-                            <!-- Controls -->
-                            <?php if ($photo_count >= 2): ?>
-                                <a class="left carousel-control" href="#CarouselPost_<?= $post['Post']['id'] ?>"
-                                   data-slide="prev">
-                                    <span class="glyphicon glyphicon-chevron-left"></span>
-                                </a>
-                                <a class="right carousel-control" href="#CarouselPost_<?= $post['Post']['id'] ?>"
-                                   data-slide="next">
-                                    <span class="glyphicon glyphicon-chevron-right"></span>
-                                </a>
-                            <?php endif; ?>
-                        </div>
-
-                    </div>
                 <?php endif; ?>
+
+
                 <?php if ($post['Post']['site_info']): ?>
                     <?php $site_info = json_decode($post['Post']['site_info'], true) ?>
                     <div class="col col-xxs-12 pt_10px">
@@ -300,35 +304,79 @@ $without_header = isset($without_header) ? $without_header : false;
                     </div>
                 <?php endif; ?>
 
-
-
                 <?php if ($post['Post']['type'] == Post::TYPE_ACTION && isset($post['ActionResult']['KeyResult']['name'])): ?>
                     <div class="col col-xxs-12 pt_6px feed-contents">
                         <i class="fa fa-key disp_i"></i>&nbsp;<?= h($post['ActionResult']['KeyResult']['name']) ?>
                     </div>
                 <?php endif; ?>
-                <div class="col col-xxs-12 font_12px pt_8px">
-                    <a href="#" class="click-like font_lightgray <?= empty($post['MyPostLike']) ? null : "liked" ?>"
-                       like_count_id="PostLikeCount_<?= $post['Post']['id'] ?>"
-                       model_id="<?= $post['Post']['id'] ?>"
-                       like_type="post">
-                        <?= __d('gl', "いいね！") ?></a>
-                    <span class="font_lightgray"> ･ </span>
-                                <span>
-                            <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_liked_users', 'post_id' => $post['Post']['id']]) ?>"
-                               class="modal-ajax-get font_lightgray">
-                                <i class="fa fa-thumbs-o-up"></i>&nbsp;<span
-                                    id="PostLikeCount_<?= $post['Post']['id'] ?>"><?= $post['Post']['post_like_count'] ?></span>
-                            </a><span class="font_lightgray"> ･ </span>
-            <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_red_users', 'post_id' => $post['Post']['id']]) ?>"
-               class="modal-ajax-get font_lightgray"><i
-                    class="fa fa-check"></i>&nbsp;<span><?= $post['Post']['post_read_count'] ?></span>
-            </a>
-            </span>
-
+                <?php if ($post['Post']['type'] == Post::TYPE_ACTION): ?>
+                    <div class="col col-xxs-12 pt_10px">
+                        <?php foreach ($post['ActionResult']['ActionResultFile'] as $k => $file): ?>
+                            <?php if ($k === 0) {
+                                continue;
+                            } ?>
+                            <div class="panel panel-default file-wrap-on-post">
+                                <div class="panel-body pt_10px plr_11px pb_8px">
+                                    <?= $this->element('Feed/attached_file_item',
+                                                       ['data' => $file, 'page_type' => 'feed', 'post_id' => $post['Post']['id']]) ?>
+                                </div>
+                            </div>
+                        <?php endforeach ?>
+                    </div>
+                <?php else: ?>
+                    <div class="col col-xxs-12 pt_10px">
+                        <?php foreach ($post['PostFile'] as $file): ?>
+                            <?php if ($file['AttachedFile']['file_type'] == AttachedFile::TYPE_FILE_IMG) {
+                                continue;
+                            } ?>
+                            <div class="panel panel-default file-wrap-on-post">
+                                <div class="panel-body pt_10px plr_11px pb_8px">
+                                    <?= $this->element('Feed/attached_file_item',
+                                                       ['data' => $file, 'page_type' => 'feed', 'post_id' => $post['Post']['id']]) ?>
+                                </div>
+                            </div>
+                        <?php endforeach ?>
+                    </div>
+                <? endif; ?>
+                <div class="col col-xxs-12 feeds-post-btns-area">
+                    <div class="feeds-post-btns-wrap-left">
+                        <a href="#"
+                           class="click-like feeds-post-like-btn <?= empty($post['MyPostLike']) ? null : "liked" ?>"
+                           like_count_id="PostLikeCount_<?= $post['Post']['id'] ?>"
+                           model_id="<?= $post['Post']['id'] ?>"
+                           like_type="post">
+                            <i class="fa-thumbs-up fa"></i>
+                            <?= __d('gl', "いいね！") ?></a>
+                        <a href="#" class="feeds-post-comment-btn trigger-click"
+                           target-id="NewCommentDummyForm_<?= $post['Post']['id'] ?>"
+                           after-replace-target-id="CommentFormBody_<?= $post['Post']['id'] ?>"
+                            >
+                            <i class="fa-comments-o fa"></i>
+                            <?= __d('gl', "コメント") ?>
+                        </a>
+                    </div>
+                    <div class="feeds-post-btns-wrap-right">
+                        <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_liked_users', 'post_id' => $post['Post']['id']]) ?>"
+                           class="modal-ajax-get feeds-post-btn-numbers-like">
+                            <i class="fa fa-thumbs-o-up"></i>&nbsp;
+                            <span id="PostLikeCount_<?= $post['Post']['id'] ?>">
+                                <?= $post['Post']['post_like_count'] ?>
+                            </span>
+                        </a>
+                        <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_red_users', 'post_id' => $post['Post']['id']]) ?>"
+                           class="modal-ajax-get feeds-post-btn-numbers-read">
+                            <i class="fa fa-check"></i>
+                           <span>
+                               <?= $post['Post']['post_read_count'] ?>
+                           </span>
+                        </a>
+                    </div>
                 </div>
             </div>
-            <div class="panel-body ptb_8px plr_11px comment-block">
+            <div class="panel-body ptb_8px plr_11px comment-block"
+                 id="CommentBlock_<?= $post['Post']['id'] ?>"
+                 data-preview-container-id="CommentUploadFilePreview_<?= $post['Post']['id'] ?>"
+                 data-form-id="CommentAjaxGetNewCommentForm_<?= $post['Post']['id'] ?>">
                 <?php if ($post['Post']['comment_count'] > 3 && count($post['Comment']) == 3): ?>
                     <a href="#" class="btn-link click-comment-all"
                        id="Comments_<?= $post['Post']['id'] ?>"
@@ -356,7 +404,7 @@ $without_header = isset($without_header) ? $without_header : false;
                 <?php foreach ($post['Comment'] as $comment): ?>
                     <?=
                     $this->element('Feed/comment',
-                                   ['comment' => $comment, 'user' => $comment['User'], 'like' => $comment['MyCommentLike']]) ?>
+                                   ['comment' => $comment, 'comment_file' => $comment['CommentFile'], 'user' => $comment['User'], 'like' => $comment['MyCommentLike']]) ?>
                 <?php endforeach ?>
 
                 <a href="#" class="btn-link click-comment-new"
@@ -392,11 +440,13 @@ $without_header = isset($without_header) ? $without_header : false;
                                     class="form-control font_12px comment-post-form box-align not-autosize click-get-ajax-form-replace"
                                     replace-elm-parent-id="NewCommentForm_<?= $post['Post']['id'] ?>"
                                     click-target-id="CommentFormBody_<?= $post['Post']['id'] ?>"
+                                    post-id="<?= $post['Post']['id'] ?>"
                                     tmp-target-height="32"
                                     ajax-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_new_comment_form', 'post_id' => $post['Post']['id']]) ?>"
                                     wrap="soft" rows="1"
                                     placeholder="<?= __d('gl', "コメントする") ?>"
                                     cols="30"
+                                    id="NewCommentDummyForm_<?= $post['Post']['id'] ?>"
                                     init-height="15"></textarea>
                             </div>
                         </form>
@@ -405,5 +455,6 @@ $without_header = isset($without_header) ? $without_header : false;
             </div>
         </div>
     <?php endforeach ?>
+    <?= $this->element('file_upload_form') ?>
     <!-- END app/View/Elements/Feed/posts.ctp -->
 <?php endif ?>

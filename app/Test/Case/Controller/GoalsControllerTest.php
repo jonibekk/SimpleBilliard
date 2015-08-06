@@ -15,6 +15,9 @@ class GoalsControllerTest extends ControllerTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.attached_file',
+        'app.post_file',
+        'app.comment_file',
         'app.evaluate_term',
         'app.action_result',
         'app.evaluation_setting',
@@ -43,7 +46,6 @@ class GoalsControllerTest extends ControllerTestCase
         'app.team_member',
         'app.job_category',
         'app.invite',
-
         'app.thread',
         'app.message',
         'app.email',
@@ -54,6 +56,7 @@ class GoalsControllerTest extends ControllerTestCase
         'app.key_result',
         'app.collaborator',
         'app.approval_history',
+        'app.action_result_file',
     );
 
     public $goal_id = null;
@@ -585,6 +588,31 @@ class GoalsControllerTest extends ControllerTestCase
         $this->testAction('/goals/add_completed_action/goal_id:1', ['method' => 'POST', 'data' => $data]);
     }
 
+    function testAddCompletedActionFailFileCleanup()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $AttachedFile = $this->getMockForModel('AttachedFile', array('saveRelatedFiles', 'deleteAllRelatedFiles'));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $AttachedFile->expects($this->any())
+                     ->method('saveRelatedFiles')
+                     ->will($this->returnValue(false));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $AttachedFile->expects($this->any())
+                     ->method('deleteAllRelatedFiles')
+                     ->will($this->returnValue(true));
+        $Goals->Goal->Post->PostFile->AttachedFile = $AttachedFile;
+        $this->_setDefault($Goals);
+        $data = [
+            'ActionResult' => [
+                'name'          => 'test',
+                'key_result_id' => 0,
+                'note'          => 'test',
+                'socket_id'     => 'hogehage'
+            ]
+        ];
+        $this->testAction('/goals/add_completed_action/goal_id:1', ['method' => 'POST', 'data' => $data]);
+    }
+
     function testAddFollowSuccess()
     {
         $Goals = $this->_getGoalsCommonMock();
@@ -655,6 +683,34 @@ class GoalsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
+    function testAddAction()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $this->testAction('/goals/add_action/goal_id:1', ['method' => 'GET']);
+    }
+
+    function testAddActionNotCollabo()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $this->testAction('/goals/add_action/goal_id:100', ['method' => 'GET']);
+    }
+
+    function testAddActionInvalidKrId()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $this->testAction('/goals/add_action/goal_id:1/key_result_id:9999', ['method' => 'GET']);
+    }
+
+    function testEditAction()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $this->testAction('/goals/edit_action/action_result_id:1', ['method' => 'GET']);
+    }
+
     function testEditActionFailNoArId()
     {
         $Goals = $this->_getGoalsCommonMock();
@@ -675,6 +731,11 @@ class GoalsControllerTest extends ControllerTestCase
         $this->_setDefault($Goals);
         $data = [
         ];
+        $Goals->Goal->ActionResult = $this->getMockForModel('ActionResult', array('actionEdit'));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Goals->Goal->ActionResult->expects($this->any())
+                                  ->method('actionEdit')
+                                  ->will($this->returnValue(false));
         $this->testAction('/goals/edit_action/action_result_id:1', ['method' => 'PUT', 'data' => $data]);
     }
 

@@ -336,9 +336,10 @@ body, .btn, input, button, select, textarea, h1, h2, h3, h4, h5, h6, .h1, .h2, .
 }
 
 .select2ActionCircleMember {
-    margin-bottom: 5px;
-    border-bottom: 1px solid;
-    border-bottom-color: lightgray;
+}
+
+.select2ActionCircleMember input {
+    padding: 0 !important;
 }
 
 /*==/ normalize select2 3.5.1 ===*/
@@ -1103,7 +1104,7 @@ textarea{
 /*/border  */
 
 /*切り替えスイッチ*/
-.switch-post, .switch-action, .switch-badge {
+.switch-post, .switch-action, .switch-badge, .switch-message {
     position: relative;
 }
 
@@ -1218,14 +1219,6 @@ textarea{
     height: 33px;
     line-height: 19px;
     vertical-align: top;
-}
-
-.liked {
-    color: #e78e99;
-}
-
-.liked:hover {
-    color: #e78e99;
 }
 
 .post-contents a {
@@ -1707,10 +1700,14 @@ ul.input-images > li {
 }
 
 .switch-post {
-    min-width: 44px;
+    min-width: 76px;
 }
 
 .switch-action {
+    min-width: 76px;
+}
+
+.switch-message {
     min-width: 76px;
 }
 
@@ -1720,12 +1717,14 @@ ul.input-images > li {
 
 .switch-post:hover a,
 .switch-action:hover a,
+.switch-message:hover a,
 .switch-badge:hover a {
     color: #333;
 }
 
 .switch-post-anchor,
 .switch-action-anchor,
+.switch-message-anchor,
 .switch-badge-anchor,
 .switch-post-anchor:hover,
 .switch-action-anchor:hover,
@@ -1780,6 +1779,10 @@ ul.input-images > li {
     padding: 3px 5px 0;
 }
 
+.action-form-share-input-group .form-control {
+    float:none;
+}
+
 textarea.feed-post-form {
     height: 25px;
     padding-top: 0;
@@ -1792,6 +1795,81 @@ textarea.feed-post-form {
     border-left: none;
     border-color: #ddd;
     box-shadow: none;
+}
+
+.post-upload-file-preview {
+    margin-top: 10px;
+}
+
+.action-upload-file-preview {
+    margin: 10px 10px;
+}
+
+.action-upload-main-image-preview {
+    margin-left: 15px;
+    width: 29%;
+}
+
+.action-upload-file-drop-area {
+    clear: both;
+    padding-top: 10px;
+    display: none;
+}
+
+.upload-file-form {
+    display: none;
+}
+
+.upload-file-form.drag-over {
+    text-align: center;
+    background-color: #fff;
+    opacity: 0.8;
+    border: 5px dashed #029acf;
+    border-radius: 4px;
+    z-index: 99999;
+}
+
+.upload-file-form-message {
+    color: #029acf;
+    vertical-align:middle;
+}
+
+.upload-file-form-message i {
+    font-size:200%;
+}
+
+.upload-file-attach-button {
+    cursor: pointer;
+}
+
+.action-image-add-button {
+    width: 100%;
+    border: 5px dashed #bbb;
+    height: 70px;
+    display: block;
+    background-color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 4px;
+}
+
+.action-image-add-button-text {
+    margin-top: 18px;
+    display: block;
+}
+
+.action-image-add-button-icon {
+    font-size: 190%;
+    vertical-align: middle;
+}
+
+.action-input-name {
+    width: 65%;
+}
+
+.action-input-name textarea {
+    min-height:70px;
 }
 
 .post-share-range {
@@ -1828,7 +1906,6 @@ textarea.feed-post-form {
     background-image: none;
     box-shadow: none;
 }
-
 
 .post-share-range-list {
     padding-left: 0;
@@ -1908,6 +1985,14 @@ textarea.comment-post-form {
 /*noinspection CssInvalidPseudoSelector*/
 .comment-post-form:-moz-placeholder {
     color: #999;
+}
+
+.comment-btn {
+    border-top: 1px solid #999;
+}
+
+.comment-upload-file-preview {
+    margin: 10px 0;
 }
 
 /*/CommentArea*/
@@ -2460,32 +2545,6 @@ textarea.comment-post-form {
 
 /*/========= ゴールカラム ==========*/
 
-/*=== spFeedAlt ===*/
-
-.sp-feed-alt {
-    background: #f5f5f5;
-    position: fixed;
-    top: 50px;
-    z-index: 1;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, .15);
-}
-
-.sp-feed-active {
-    color: #231814;
-    padding-bottom: 8px;
-    border-bottom: 4px solid #6d8fce;
-}
-
-.sp-feed-link {
-    cursor: pointer;
-}
-
-.sp-feed-link:hover {
-    border-bottom: 4px solid #6d8fce;
-}
-
-/*==/ spFeedAlt ===*/
-
 /*=== メディアクエリで切り替え =======================*/
 
 #gotop {
@@ -2714,10 +2773,6 @@ textarea.comment-post-form {
 
     .nav-container {
         width: 972px;
-    }
-
-    .sp-feed-alt {
-        box-shadow: none;
     }
 
     .nav-search {
@@ -3228,7 +3283,6 @@ Temporary Properties - YOU MUST FIX
     border: none;
 }
 
-
 .goal_type_name {
     overflow: hidden;
     white-space: nowrap;
@@ -3306,4 +3360,78 @@ Temporary Properties - YOU MUST FIX
 .notify-page-cards {
     overflow: hidden;
     padding-left: 0;
+}
+
+.no-border {
+    border: none !important;
+}
+
+.dz-default-preview {
+    background-color: #f5f5f5;
+    margin-top: -1px;
+    padding: 7px;
+    border: 1px solid #ccc;
+    height: 59px;
+}
+
+.dz-thumb-container {
+    overflow: hidden;
+    width: 40px;
+    height:40px;
+    text-align:center;
+    vertical-align:middle;
+    line-height: 40px;
+}
+
+.dz-thumb {
+    max-width: 40px;
+    max-height: 40px;
+    vertical-align:middle;
+}
+
+.dz-name {
+    max-width:80%;
+    white-space: nowrap;
+    margin-left: 6px;
+    overflow:hidden;
+    text-overflow: ellipsis;
+}
+
+.dz-size {
+    margin-left: 6px;
+}
+
+.dz-progress {
+    height: 4px;
+    margin-bottom: 0px;
+    padding-top: 3px;
+    clear: both
+}
+
+.dz-action-photo-preview {
+    width: 100%;
+    overflow: hidden;
+    display: none;
+}
+
+.dz-action-photo-thumb-container {
+    background-color: #ddd;
+    text-align:center;
+    vertical-align:middle;
+    width: 100%;
+    height: 140px;
+    line-height: 140px;
+}
+
+.dz-action-photo-thumb {
+    max-width: 100%;
+    max-height: 140px;
+    vertical-align:middle;
+}
+
+.dz-action-photo-progress {
+    height: 4px;
+    margin-bottom: 0px;
+    padding-top: 3px;
+    clear: both
 }

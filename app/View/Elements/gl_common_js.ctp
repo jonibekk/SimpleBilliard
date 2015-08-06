@@ -32,6 +32,9 @@ echo $this->Html->script('vendor/bootstrap-datepicker.min');
 echo $this->Html->script('vendor/locales/bootstrap-datepicker.ja');
 echo $this->Html->script('vendor/moment.min');
 echo $this->Html->script('vendor/pusher.min');
+echo $this->Html->script('vendor/dropzone.js');
+echo $this->Html->script('vendor/jquery.balanced-gallery.min');
+echo $this->Html->script('vendor/imagesloaded.pkgd.min');
 echo $this->Html->script('gl_basic');
 ?>
 <!--suppress JSDuplicatedDeclaration -->
@@ -45,7 +48,10 @@ echo $this->Html->script('gl_basic');
                 d: "<?=__d('validate', "利用規約に同意してください。")?>",
                 e: "<?=__d('validate', "数字、英小文字、英大文字の混在にしてください。")?>",
                 f: "<?=__d('validate', "パスワードにメールアドレスと同一のものを指定する事はできません。")?>",
-                g: "<?=__d('validate', "必須項目です。")?>"
+                g: "<?=__d('validate', "必須項目です。")?>",
+                dropzone_file_too_big: "<?=__d('gl', 'アップロード出来るファイルサイズは{{maxFilesize}}MBまでです。')?>",
+                dropzone_invalid_file_type: "<?=__d('gl', '画像ファイルを選択してください。')?>",
+                dropzone_max_files_exceeded: "<?=__d('gl', 'アップロード出来るファイル数は{{maxFiles}}個までです。')?>"
             },
             notice: {
                 a: "<?=__d('gl',"入力が途中です。このまま移動しますか？")?>",
@@ -87,8 +93,11 @@ echo $this->Html->script('gl_basic');
             public: "<?=__d('gl',"公開")?>",
             secret: "<?=__d('gl',"秘密")?>",
             select_public_circle: "<?=__d('gl',"公開サークルかメンバーを指定しよう")?>",
+            select_public_message: "<?=__d('gl',"メンバーを指定しよう")?>",
             select_secret_circle: "<?=__d('gl',"秘密サークルを指定しよう")?>",
-            share_change_disabled: "<?=__d('gl',"サークルページでは切り替えられません")?>"
+            share_change_disabled: "<?=__d('gl',"サークルページでは切り替えられません")?>",
+            success: "<?=__d('gl',"成功")?>",
+            error: "<?=__d('gl',"エラー")?>"
         },
         url: {
             a: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_users'])?>",
@@ -121,12 +130,21 @@ echo $this->Html->script('gl_basic');
             ac: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_team_vision_detail'])?>/",
             ad: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_group_vision_detail'])?>/",
             ae: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_get_user_detail'])?>/",
+            af: "<?=$this->Html->url(['controller'=>'notifications','action'=>'ajax_get_new_message_notify_count'])?>",
+            ag: "<?=$this->Html->url(['controller'=>'notifications','action'=>'ajax_get_latest_message_notify_items'])?>",
+            ah: "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_get_message'])?>/",
+            ai: "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_put_message'])?>/",
+            aj: "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_get_message_info'])?>/",
+            ak: "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_put_message_read'])?>/",
+            al: "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_get_message_list'])?>/",
             select2_secret_circle: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_secret_circles'])?>/",
             select2_circle_user: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_circles_users'])?>",
             user_page: "<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => '']) ?>",
             goal_followers: "<?=$this->Html->url(['controller'=>'goals','action'=>'ajax_get_followers'])?>",
             goal_members: "<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_members']) ?>",
-            goal_key_results: "<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_key_results']) ?>"
+            goal_key_results: "<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_key_results']) ?>",
+            upload_file: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_upload_file']) ?>",
+            remove_file: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_remove_file']) ?>"
         },
         data: {
             a: <?=isset($select2_default)?$select2_default:"[]"?>,

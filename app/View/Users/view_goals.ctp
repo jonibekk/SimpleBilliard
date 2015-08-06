@@ -101,8 +101,8 @@
                                 <ul class="profile-user-actions">
                                     <?php if ($is_mine): ?>
                                         <li class="profile-user-action-list">
-                                            <a class="profile-user-add-action modal-ajax-get-add-action"
-                                               href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_action_modal', 'goal_id' => $goal['Goal']['id']]) ?>"><i
+                                            <a class="profile-user-add-action"
+                                               href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add_action', 'goal_id' => $goal['Goal']['id']]) ?>"><i
                                                     class="fa fa-plus"></i>
 
                                                 <p class="profile-user-add-action-text "><?= __d('gl', "アクション") ?></p>
@@ -125,22 +125,38 @@
                                         ?>
                                         <li class="profile-user-action-list">
                                             <a href="<?= $this->Html->url($url) ?>" class="profile-user-action-pic">
-                                                <?php for ($i = 1; $i <= 5; $i++): ?>
-                                                    <?php
-                                                    if (!empty($action["photo{$i}_file_name"]) || $i == 5) {
-                                                        echo $this->Html->image('ajax-loader.gif',
-                                                                                [
-                                                                                    'class'         => 'lazy',
-                                                                                    'width'         => 48,
-                                                                                    'height'        => 48,
-                                                                                    'data-original' => $this->Upload->uploadUrl($action,
-                                                                                                                                "ActionResult.photo$i",
-                                                                                                                                ['style' => 'x_small']),
-                                                                                ]);
-                                                        break;
-                                                    }
+                                                <?php if (viaIsSet($action['ActionResultFile'][0]['AttachedFile'])): ?>
+                                                    <?= $this->Html->image('ajax-loader.gif',
+                                                                           [
+                                                                               'class'         => 'lazy',
+                                                                               'width'         => 48,
+                                                                               'height'        => 48,
+                                                                               'data-original' => $this->Upload->uploadUrl($action['ActionResultFile'][0]['AttachedFile'],
+                                                                                                                           "AttachedFile.attached",
+                                                                                                                           ['style' => 'x_small']),
+                                                                           ]
+                                                    );
                                                     ?>
-                                                <?php endfor; ?>
+
+                                                <?php else: ?>
+
+                                                    <?php for ($i = 1; $i <= 5; $i++): ?>
+                                                        <?php
+                                                        if (!empty($action["photo{$i}_file_name"]) || $i == 5) {
+                                                            echo $this->Html->image('ajax-loader.gif',
+                                                                                    [
+                                                                                        'class'         => 'lazy',
+                                                                                        'width'         => 48,
+                                                                                        'height'        => 48,
+                                                                                        'data-original' => $this->Upload->uploadUrl($action,
+                                                                                                                                    "ActionResult.photo$i",
+                                                                                                                                    ['style' => 'x_small']),
+                                                                                    ]);
+                                                            break;
+                                                        }
+                                                        ?>
+                                                    <?php endfor; ?>
+                                                <?php endif; ?>
                                                 <?php if ($last_many): ?>
                                                     <span class="action-more-counts">
                                                         <i class="fa fa-plus"></i>
