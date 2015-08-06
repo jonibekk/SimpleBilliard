@@ -188,6 +188,9 @@
             <?php endif; ?>
             <div class="col col-xxs-12">
                 <?php foreach ($comment_file as $file): ?>
+                    <?php if ($file['AttachedFile']['file_type'] == AttachedFile::TYPE_FILE_IMG) {
+                        continue;
+                    } ?>
                     <div class="panel panel-default file-wrap-on-post">
                         <div class="panel-body pt_10px plr_11px pb_8px">
                             <?= $this->element('Feed/attached_file_item',
