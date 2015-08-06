@@ -975,7 +975,7 @@ class PostsControllerTest extends ControllerTestCase
         $this->_getPostsCommonMock();
 
         try {
-            $this->testAction('posts/post_edit/0', ['method' => 'POST']);
+            $this->testAction('posts/post_edit/0', ['method' => 'PUT']);
         } catch (NotFoundException $e) {
         }
         $this->assertTrue(isset($e), "[異常]投稿編集");
@@ -1001,7 +1001,7 @@ class PostsControllerTest extends ControllerTestCase
         $post = $Posts->Post->save($post_data);
 
         try {
-            $this->testAction('posts/post_edit/post_id:' . $post['Post']['id'], ['method' => 'POST']);
+            $this->testAction('posts/post_edit/post_id:' . $post['Post']['id'], ['method' => 'PUT']);
         } catch (NotFoundException $e) {
         }
         $this->assertTrue(isset($e), "[異常]所有していない投稿編集");
@@ -1039,7 +1039,7 @@ class PostsControllerTest extends ControllerTestCase
         ];
 
         try {
-            $this->testAction('posts/post_edit/post_id:' . $post['Post']['id'], ['data' => $data, 'method' => 'POST']);
+            $this->testAction('posts/post_edit/post_id:' . $post['Post']['id'], ['data' => $data, 'method' => 'PUT']);
         } catch (NotFoundException $e) {
         }
         $this->assertFalse(isset($e), "[正常]投稿編集");
@@ -1071,7 +1071,7 @@ class PostsControllerTest extends ControllerTestCase
         ];
 
         try {
-            $this->testAction('posts/post_edit/post_id:' . $post['Post']['id'], ['data' => $data, 'method' => 'POST']);
+            $this->testAction('posts/post_edit/post_id:' . $post['Post']['id'], ['data' => $data, 'method' => 'PUT']);
         } catch (NotFoundException $e) {
         }
         $this->assertFalse(isset($e), "[異常ValidationError]投稿編集");

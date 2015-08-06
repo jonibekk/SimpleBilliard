@@ -105,6 +105,13 @@ class ActionResultTest extends CakeTestCase
         $this->assertTrue(!empty($res));
     }
 
+    function testActionEditEmptyData()
+    {
+        $this->_setDefault();
+        $res = $this->ActionResult->actionEdit([]);
+        $this->assertFalse($res);
+    }
+
     function testAddCompletedAction()
     {
         $this->_setDefault();
