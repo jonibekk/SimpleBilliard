@@ -3965,7 +3965,7 @@ function setDefaultTab() {
             }
             break;
         case "message":
-            $('#CommonFormTabs li:eq(1) a').tab('show');
+            $('#CommonFormTabs li:eq(2) a').tab('show');
             if (!isMobile()) {
                 $('#CommonMessageBody').focus();
             }
