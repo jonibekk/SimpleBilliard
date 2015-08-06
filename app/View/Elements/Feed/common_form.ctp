@@ -376,7 +376,7 @@ $only_tab_post =
         <div class="tab-pane fade" id="MessageForm">
             <?=
             $this->Form->create('Post', [
-                'url'           => ['controller' => 'posts', 'action' => 'addMessage'],
+                'url'           => ['controller' => 'posts', 'action' => 'add_message'],
                 'inputDefaults' => [
                     'div'       => 'form-group',
                     'label'     => false,

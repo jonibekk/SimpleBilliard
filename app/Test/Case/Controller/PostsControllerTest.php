@@ -157,7 +157,7 @@ class PostsControllerTest extends ControllerTestCase
                 'share_range'  => 'public',
             ],
         ];
-        $this->testAction('/posts/addMessage',
+        $this->testAction('/posts/add_message',
                           ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
 
     }

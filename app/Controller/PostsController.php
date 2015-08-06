@@ -37,7 +37,7 @@ class PostsController extends AppController
     /**
      * add message method
      */
-    public function addMessage()
+    public function add_message()
     {
         $this->request->data['Post']['type'] = Post::TYPE_MESSAGE;
         $this->_addPost();
