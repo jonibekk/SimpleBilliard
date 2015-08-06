@@ -51,10 +51,20 @@ class GlRedisTest extends CakeTestCase
         $this->assertEquals(0, $this->GlRedis->getCountOfNewNotification(1, 1));
     }
 
+    function testGetCountOfNewMessageNotificationZero()
+    {
+        $this->assertEquals(0, $this->GlRedis->getCountOfNewMessageNotification(1, 1));
+    }
+
     function testGetCountOfNewNotificationOne()
     {
         $this->GlRedis->setNotifications(1, 1, [1], 2, "body", ['/'], 1234);
         $this->assertEquals(1, $this->GlRedis->getCountOfNewNotification(1, 1));
+    }
+    function testGetCountOfNewMessageNotificationOne()
+    {
+        $this->GlRedis->setNotifications(25, 1, [1], 2, "body", ['/'], 1234);
+        $this->assertEquals(1, $this->GlRedis->getCountOfNewMessageNotification(1, 1));
     }
 
     function testGetCountOfNewNotificationTwo()
@@ -63,11 +73,21 @@ class GlRedisTest extends CakeTestCase
         $this->GlRedis->setNotifications(1, 1, [1], 2, "body", ['/'], 1234);
         $this->assertEquals(2, $this->GlRedis->getCountOfNewNotification(1, 1));
     }
+    function testGetCountOfNewMessageNotificationTwo()
+    {
+        $this->GlRedis->setNotifications(25, 1, [1], 2, "body", ['/'], 1234);
+        $this->GlRedis->setNotifications(25, 1, [1], 2, "body", ['/'], 1234);
+        $this->assertEquals(2, $this->GlRedis->getCountOfNewMessageNotification(1, 1));
+    }
 
     function testDeleteCountOfNewNotificationFalse()
     {
         $this->assertFalse($this->GlRedis->deleteCountOfNewNotification(1, 1));
         $this->assertEquals(0, $this->GlRedis->getCountOfNewNotification(1, 1));
+    }
+    function testDeleteCountOfNewMessageNotificationFalse() {
+        $this->assertFalse($this->GlRedis->deleteCountOfNewMessageNotification(1, 1));
+        $this->assertEquals(0, $this->GlRedis->getCountOfNewMessageNotification(1, 1));
     }
 
     function testDeleteCountOfNewNotificationTrue()
@@ -75,6 +95,12 @@ class GlRedisTest extends CakeTestCase
         $this->GlRedis->setNotifications(1, 1, [1], 2, "body", ['/'], 1234);
         $this->assertTrue($this->GlRedis->deleteCountOfNewNotification(1, 1));
         $this->assertEquals(0, $this->GlRedis->getCountOfNewNotification(1, 1));
+    }
+    function testDeleteCountOfNewMessageNotificationTrue()
+    {
+        $this->GlRedis->setNotifications(25, 1, [1], 2, "body", ['/'], 1234);
+        $this->assertTrue($this->GlRedis->deleteCountOfNewMessageNotification(1, 1));
+        $this->assertEquals(0, $this->GlRedis->getCountOfNewMessageNotification(1, 1));
     }
 
     function testChangeReadStatusOfNotificationSuccess()
@@ -100,6 +126,14 @@ class GlRedisTest extends CakeTestCase
         $res = $this->GlRedis->getNotifications(1, 1);
         $this->assertCount(3, $res);
     }
+    function testGetMessageNotificationsFromDateNullLimitNull()
+    {
+        for ($i = 0; $i < 3; $i++) {
+            $this->GlRedis->setNotifications(25, 1, [1], 2, "body", [], 1893423600);
+        }
+        $res = $this->GlRedis->getMessageNotifications(1, 1);
+        $this->assertCount(3, $res);
+    }
 
     function testGetNotificationsFromDateNullLimited()
     {
@@ -107,6 +141,14 @@ class GlRedisTest extends CakeTestCase
             $this->GlRedis->setNotifications(1, 1, [1], 2, "body", [], 1893423600);
         }
         $res = $this->GlRedis->getNotifications(1, 1, 1);
+        $this->assertCount(1, $res);
+    }
+    function testGetMessageNotificationsFromDateNullLimited()
+    {
+        for ($i = 0; $i < 3; $i++) {
+            $this->GlRedis->setNotifications(25, 1, [1], 2, "body", [], 1893423600);
+        }
+        $res = $this->GlRedis->getMessageNotifications(1, 1, 1);
         $this->assertCount(1, $res);
     }
 
@@ -117,6 +159,14 @@ class GlRedisTest extends CakeTestCase
         }
         $res = $this->GlRedis->getNotifications(1, 1);
         $this->assertCount(2, $this->GlRedis->getNotifications(1, 1, 3, $res[0]['score']));
+    }
+    function testGetMessageNotificationsFromDateLimited()
+    {
+        for ($i = 0; $i < 3; $i++) {
+            $this->GlRedis->setNotifications(25, 1, [1], 2, "body", [], 1893423600);
+        }
+        $res = $this->GlRedis->getMessageNotifications(1, 1);
+        $this->assertCount(2, $this->GlRedis->getMessageNotifications(1, 1, 3, $res[0]['score']));
     }
 
     function testGetNotificationsNotUnread()
