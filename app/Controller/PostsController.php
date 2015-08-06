@@ -97,7 +97,7 @@ class PostsController extends AppController
         $socketId = viaIsSet($this->request->data['socket_id']);
         $share = explode(",", viaIsSet($this->request->data['Post']['share']));
 
-        // リクエストデータが正しくないケース
+        //何らかの原因でsocketIdが無いもしくは、共有先指定なしの場合は以降の処理(通知、イベントトラッキング)を行わない
         if (!$socketId || $share[0] === "") {
             $this->Pnotify->outSuccess(__d('gl', "投稿しました。"));
             return false;
