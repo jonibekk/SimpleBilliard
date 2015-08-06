@@ -186,17 +186,32 @@ $without_header = isset($without_header) ? $without_header : false;
                     }
                 }
                 //アクション以外の場合は、新ファイル、旧ファイルの両方から集める
-                elseif (!empty($post['PostFile'])) {
-                    foreach ($post['PostFile'] as $post_file) {
-                        if (isset($post_file['AttachedFile']['id']) && $post_file['AttachedFile']['file_type'] == AttachedFile::TYPE_FILE_IMG) {
+                else {
+                    if (!empty($post['PostFile'])) {
+                        foreach ($post['PostFile'] as $post_file) {
+                            if (isset($post_file['AttachedFile']['id']) && $post_file['AttachedFile']['file_type'] == AttachedFile::TYPE_FILE_IMG) {
+                                $img = [];
+                                $img['l'] = $this->Upload->uploadUrl($post_file['AttachedFile'],
+                                                                     "AttachedFile.attached",
+                                                                     ['style' => 'large']);
+                                $img['s'] = $this->Upload->uploadUrl($post_file['AttachedFile'],
+                                                                     "AttachedFile.attached",
+                                                                     ['style' => 'small']);
+                                $imgs[] = $img;
+                            }
+                        }
+                    }
+                    for ($i = 1; $i <= 5; $i++) {
+                        if ($post[$model_name]["photo{$i}_file_name"]) {
                             $img = [];
-                            $img['l'] = $this->Upload->uploadUrl($post_file['AttachedFile'], "AttachedFile.attached",
+                            $img['l'] = $this->Upload->uploadUrl($post, "{$model_name}.photo" . $i,
                                                                  ['style' => 'large']);
-                            $img['s'] = $this->Upload->uploadUrl($post_file['AttachedFile'], "AttachedFile.attached",
+                            $img['s'] = $this->Upload->uploadUrl($post, "{$model_name}.photo" . $i,
                                                                  ['style' => 'small']);
                             $imgs[] = $img;
                         }
                     }
+
                 }
 
                 ?>
