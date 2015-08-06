@@ -81,8 +81,8 @@
              * 画像のurlを集める
              */
             $imgs = [];
-            if (!empty($comment['CommentFile'])) {
-                foreach ($comment['CommentFile'] as $post_file) {
+            if (!empty($comment_file)) {
+                foreach ($comment_file as $post_file) {
                     if (isset($post_file['AttachedFile']['id']) && $post_file['AttachedFile']['file_type'] == AttachedFile::TYPE_FILE_IMG) {
                         $img = [];
                         $img['l'] = $this->Upload->uploadUrl($post_file['AttachedFile'], "AttachedFile.attached",
