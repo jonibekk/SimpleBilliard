@@ -188,7 +188,7 @@ class Comment extends AppModel
             }
         }
         $this->commit();
-        return true;
+        return $comment_id;
     }
 
     public function getPostsComment($post_id, $get_num = null, $page = null, $order_by = null)

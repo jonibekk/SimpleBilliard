@@ -348,15 +348,14 @@ class PostsController extends AppController
     }
 
     public function ajax_put_message($post_id, $message) {
-        //$this->request->allowMethod('post');
         $this->_ajaxPreProcess();
 
         $params['Comment']['post_id'] = $post_id;
         $params['Comment']['body'] = $message;
-        $add_comment = $this->Post->Comment->add($params);
-        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MESSAGE, $post_id, $add_comment['Comment']['id']);
+        $comment_id = $this->Post->Comment->add($params);
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MESSAGE, $post_id, $comment_id);
 
-        $detail_comment = $this->Post->Comment->getComment($add_comment['Comment']['id']);
+        $detail_comment = $this->Post->Comment->getComment($comment_id);
         $convert_data = $this->Post->Comment->convertData($detail_comment);
 
         $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
