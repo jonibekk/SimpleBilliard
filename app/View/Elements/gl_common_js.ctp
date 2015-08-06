@@ -34,6 +34,7 @@ echo $this->Html->script('vendor/moment.min');
 echo $this->Html->script('vendor/pusher.min');
 echo $this->Html->script('vendor/dropzone.js');
 echo $this->Html->script('vendor/jquery.balanced-gallery.min');
+echo $this->Html->script('vendor/imagesloaded.pkgd.min');
 echo $this->Html->script('gl_basic');
 ?>
 <!--suppress JSDuplicatedDeclaration -->
