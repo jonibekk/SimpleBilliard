@@ -76,75 +76,42 @@
                 class="col col-xxs-12 <?= $long_text ? "showmore-comment-circle" : "showmore-comment" ?> comment-text feed-contents comment-contents font_verydark box-align"
                 id="<?= $id_prefix ?>CommentTextBody_<?= $comment['id'] ?>"><?= $this->TextEx->autoLink($comment['body']) ?></div>
 
-            <?php $photo_count = 0;
+            <?
+            /**
+             * 画像のurlを集める
+             */
+            $imgs = [];
+            if (!empty($comment_file)) {
+                foreach ($comment_file as $post_file) {
+                    if (isset($post_file['AttachedFile']['id']) && $post_file['AttachedFile']['file_type'] == AttachedFile::TYPE_FILE_IMG) {
+                        $img = [];
+                        $img['l'] = $this->Upload->uploadUrl($post_file['AttachedFile'], "AttachedFile.attached",
+                                                             ['style' => 'large']);
+                        $img['s'] = $this->Upload->uploadUrl($post_file['AttachedFile'], "AttachedFile.attached",
+                                                             ['style' => 'small']);
+                        $imgs[] = $img;
+                    }
+                }
+            }
             for ($i = 1; $i <= 5; $i++) {
                 if ($comment["photo{$i}_file_name"]) {
-                    $photo_count++;
+                    $img = [];
+                    $img['l'] = $this->Upload->uploadUrl($comment, "Comment.photo" . $i,
+                                                         ['style' => 'large']);
+                    $img['s'] = $this->Upload->uploadUrl($comment, "Comment.photo" . $i,
+                                                         ['style' => 'small']);
+                    $imgs[] = $img;
                 }
             }
             ?>
-            <?php if ($photo_count): ?>
-                <div class="col col-xxs-12 comment-photo">
-
-                    <div id="<?= $id_prefix ?>CarouselComment_<?= $comment['id'] ?>" class="carousel slide"
-                         data-ride="carousel">
-                        <!-- Indicators -->
-                        <?php if ($photo_count >= 2): ?>
-                            <ol class="carousel-indicators">
-                                <?php $index = 0 ?>
-                                <?php for ($i = 1; $i <= 5; $i++): ?>
-                                    <?php if ($comment["photo{$i}_file_name"]): ?>
-                                        <li data-target="#<?= $id_prefix ?>CarouselComment_<?= $comment['id'] ?>"
-                                            data-slide-to="<?= $index ?>"
-                                            class="<?= ($index === 0) ? "active" : null ?>"></li>
-                                        <?php $index++ ?>
-                                    <?php endif ?>
-                                <?php endfor ?>
-                            </ol>
-                        <?php endif; ?>
-                        <!-- Wrapper for slides -->
-                        <div class="carousel-inner">
-                            <?php $index = 0 ?>
-                            <?php for ($i = 1; $i <= 5; $i++): ?>
-                                <?php if ($comment["photo{$i}_file_name"]): ?>
-                                    <div class="item <?= ($index === 0) ? "active" : null ?>">
-                                        <a href="<?=
-                                        $this->Upload->uploadUrl($comment, "Comment.photo" . $i,
-                                                                 ['style' => 'large']) ?>" rel="lightbox"
-                                           data-lightbox="<?= $id_prefix ?>LightBoxComment_<?= $comment['id'] ?>">
-                                            <?=
-                                            $this->Html->image('ajax-loader.gif',
-                                                               [
-                                                                   'class'         => 'lazy bd-s',
-                                                                   //'style'         => 'width: 50px; height: 50px;',
-                                                                   'data-original' => $this->Upload->uploadUrl($comment,
-                                                                                                               "Comment.photo" . $i,
-                                                                                                               ['style' => 'small'])
-                                                               ]
-                                            )
-                                            ?>
-                                        </a>
-                                        <?php $index++ ?>
-                                    </div>
-                                <?php endif ?>
-                            <?php endfor ?>
-                        </div>
-
-                        <!-- Controls -->
-                        <?php if ($photo_count >= 2): ?>
-                            <a class="left carousel-control"
-                               href="#<?= $id_prefix ?>CarouselComment_<?= $comment['id'] ?>"
-                               data-slide="prev">
-                                <span class="glyphicon glyphicon-chevron-left"></span>
-                            </a>
-                            <a class="right carousel-control"
-                               href="#<?= $id_prefix ?>CarouselComment_<?= $comment['id'] ?>"
-                               data-slide="next">
-                                <span class="glyphicon glyphicon-chevron-right"></span>
-                            </a>
-                        <?php endif; ?>
-                    </div>
-
+            <?php if (!empty($imgs)): ?>
+                <div class="col col-xxs-12 pt_10px <?= count($imgs) !== 1 ? "comment_gallery" : 'feed_img_only_one' ?>">
+                    <?php foreach ($imgs as $v): ?>
+                        <a href="<?= $v['l'] ?>" rel='lightbox'
+                           data-lightbox="FeedCommentLightBox_<?= $comment['id'] ?>">
+                            <?= $this->Html->image($v['s']) ?>
+                        </a>
+                    <?php endforeach; ?>
                 </div>
             <?php endif; ?>
 
@@ -186,7 +153,7 @@
                     </a>
                 </div>
             <?php endif; ?>
-            <div class="col col-xxs-12">
+            <div class="col col-xxs-12 pt_10px">
                 <?php foreach ($comment_file as $file): ?>
                     <?php if ($file['AttachedFile']['file_type'] == AttachedFile::TYPE_FILE_IMG) {
                         continue;
