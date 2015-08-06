@@ -104,6 +104,7 @@ class PostTest extends CakeTestCase
             'file_id' => ['aaaaaa']
         ];
         $this->Post->PostFile->AttachedFile = $this->getMockForModel('AttachedFile', array('saveRelatedFiles'));
+        /** @noinspection PhpUndefinedMethodInspection */
         $this->Post->PostFile->AttachedFile->expects($this->any())
                                            ->method('saveRelatedFiles')
                                            ->will($this->returnValue(true));
@@ -124,6 +125,7 @@ class PostTest extends CakeTestCase
             'file_id' => ['aaaaaa']
         ];
         $this->Post->PostFile->AttachedFile = $this->getMockForModel('AttachedFile', array('saveRelatedFiles'));
+        /** @noinspection PhpUndefinedMethodInspection */
         $this->Post->PostFile->AttachedFile->expects($this->any())
                                            ->method('saveRelatedFiles')
                                            ->will($this->returnValue(false));
@@ -638,6 +640,59 @@ class PostTest extends CakeTestCase
         );
         $res = $this->Post->getFilesOnCircle(1, 1, null, 1, 100000000000, 'image');
         $this->assertCount(2, $res);
+    }
+
+    function testPostEdit()
+    {
+        $this->_setDefault();
+        // 通常 edit
+        $data = [
+            'Post' => [
+                'id' => 1,
+                'body' => 'edit string',
+            ]
+        ];
+        $res = $this->Post->postEdit($data);
+        $this->assertTrue($res);
+        $row = $this->Post->findById(1);
+        $this->assertEquals($row['Post']['body'], $data['Post']['body']);
+
+        // 添付ファイルあり
+        $this->Post->PostFile->AttachedFile = $this->getMockForModel('AttachedFile', array('updateRelatedFiles'));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $this->Post->PostFile->AttachedFile->expects($this->any())
+                                           ->method('updateRelatedFiles')
+                                           ->will($this->returnValue(true));
+        $data = [
+            'Post' => [
+                'id' => 1,
+                'body' => 'edit string2',
+            ],
+            'file_id' => ['aaa', 'bbb']
+        ];
+        $res = $this->Post->postEdit($data);
+        $this->assertTrue($res);
+        $row = $this->Post->findById(1);
+        $this->assertEquals($row['Post']['body'], $data['Post']['body']);
+
+        // rollback
+        $this->Post->PostFile->AttachedFile = $this->getMockForModel('AttachedFile', array('updateRelatedFiles'));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $this->Post->PostFile->AttachedFile->expects($this->any())
+                                           ->method('updateRelatedFiles')
+                                           ->will($this->returnValue(false));
+        $data = [
+            'Post' => [
+                'id' => 1,
+                'body' => 'edit string3',
+            ],
+            'file_id' => ['aaa', 'bbb']
+        ];
+        $res = $this->Post->postEdit($data);
+        $this->assertFalse($res);
+        $row = $this->Post->findById(1);
+        $this->assertNotEquals($row['Post']['body'], $data['Post']['body']);
+
     }
 
     function _setDefault()
