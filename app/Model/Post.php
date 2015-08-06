@@ -1,5 +1,8 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('UploadHelper', 'View/Helper');
+App::uses('TimeExHelper', 'View/Helper');
+App::uses('View', 'View');
 
 /**
  * Post Model
@@ -1119,6 +1122,52 @@ class Post extends AppModel
         }
         $res = $this->find('first', $options);
         return $res ? $res[0]['sum_like'] : 0;
+    }
+
+    public function getMessageList()
+    {
+        $options = [
+            'conditions' => [
+                'team_id' => $this->current_team_id,
+                'type'    => self::TYPE_MESSAGE,
+            ],
+            'contain'    => [
+                'User',
+                'PostShareUser' => [
+                    'fields' => ['id']
+                ],
+                'Comment'       => [
+                    'User',
+                    'limit' => 1,
+                    'order' => [
+                        'Comment.created' => 'desc'
+                    ]
+                ],
+            ],
+        ];
+        $res = $this->find('all', $options);
+
+
+        return $res;
+    }
+
+    public function convertData($data)
+    {
+        $upload = new UploadHelper(new View());
+        $time = new TimeExHelper(new View());
+
+        foreach ($data as $key => $item) {
+            if (empty($item['Comment']) === false) {
+                $data[$key]['User'] = $item['Comment'][0]['User'];
+                $data[$key]['Post']['body'] = $item['Comment'][0]['body'];
+                $data[$key]['Post']['created'] = $item['Comment'][0]['created'];
+            }
+            $data[$key]['User']['photo_path'] =
+                $upload->uploadUrl($data[$key]['User'], 'User.photo', ['style' => 'medium_large']);
+            $data[$key]['Post']['created'] = $time->elapsedTime(h($data[$key]['Post']['created']));
+        }
+
+        return $data;
     }
 
 }

@@ -22,6 +22,9 @@ class CommentTest extends CakeTestCase
         'app.comment_like',
         'app.comment_read',
         'app.goal',
+        'app.circle',
+        'app.action_result',
+        'app.key_result',
     );
 
     /**
@@ -70,6 +73,55 @@ class CommentTest extends CakeTestCase
         $this->Comment->my_uid = 1;
         $this->Comment->current_team_id = 1;
         $this->Comment->getCommentedUniqueUsersList(1);
+    }
+
+    function testGetPostsComment()
+    {
+        $post_id = 99;
+        $this->Comment->current_team_id = 1;
+        $data = [
+            'team_id' => 1,
+            'post_id' => $post_id,
+            'body' => 'comment test.'
+        ];
+        $this->Comment->save($data);
+        $res = $this->Comment->getPostsComment($post_id, null, 1, 'DESC');
+        $this->assertNotEmpty($res);
+    }
+
+    function testConvertData()
+    {
+        $post_id = 99;
+        $this->Comment->current_team_id = 1;
+        $data = [
+            'team_id' => 1,
+            'post_id' => $post_id,
+            'body' => 'comment test.'
+        ];
+        $this->Comment->save($data);
+        $res = $this->Comment->getPostsComment($post_id, null, 1, 'DESC');
+        $this->assertNotEmpty($this->Comment->convertData($res));
+    }
+
+    function testConvertArrayData()
+    {
+        $post_id = 99;
+        $this->Comment->current_team_id = 1;
+        $data = [
+            [
+                'team_id' => 1,
+                'post_id' => $post_id,
+                'body' => 'comment test 1.'
+            ],
+            [
+                'team_id' => 1,
+                'post_id' => $post_id,
+                'body' => 'comment test 2.'
+            ]
+        ];
+        $this->Comment->saveAll($data);
+        $res = $this->Comment->getPostsComment($post_id, null, 1, 'DESC');
+        $this->assertNotEmpty($this->Comment->convertData($res));
     }
 
 }

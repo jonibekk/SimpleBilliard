@@ -16,10 +16,22 @@ class PostsController extends AppController
     public function message()
     {
         $this->layout = LAYOUT_ONE_COLUMN;
-        // グルーブの絞り込みが選択された場合
-        //$current_global_menu = "team";
-        //$this->set(compact('current_global_menu'));
         return $this->render();
+    }
+
+    public function message_list()
+    {
+        $this->_setMyCircle();
+        $this->_setViewValOnRightColumn();
+        return $this->render();
+    }
+
+    public function ajax_get_message_list()
+    {
+        $this->_ajaxPreProcess();
+        $result = $this->Post->getMessageList();
+        $message_list = $this->Post->convertData($result);
+        return $this->_ajaxGetResponse($message_list);
     }
 
     /**
