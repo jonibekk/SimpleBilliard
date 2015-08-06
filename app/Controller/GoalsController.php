@@ -889,7 +889,8 @@ class GoalsController extends AppController
      *
      * @return CakeResponse
      */
-    public function add_action() {
+    public function add_action()
+    {
         $goal_id = viaIsSet($this->request->params['named']['goal_id']);
         $key_result_id = viaIsSet($this->request->params['named']['key_result_id']);
         try {
@@ -1121,13 +1122,10 @@ class GoalsController extends AppController
 
         // push
         $this->Pnotify->outSuccess(__d('gl', "アクションを追加しました。"));
-        $url = $this->referer();
         $post = $this->Goal->Post->getByActionResultId($this->Goal->ActionResult->getLastInsertID());
-        if ($post) {
-            $url = ['controller' => 'posts',
-                    'action'     => 'feed',
-                    'post_id'    => $post['Post']['id']];
-        }
+        $url = $post ? ['controller' => 'posts',
+                        'action'     => 'feed',
+                        'post_id'    => $post['Post']['id']] : $this->referer();
         return $this->redirect($url);
 
     }
