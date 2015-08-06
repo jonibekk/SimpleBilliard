@@ -14,6 +14,7 @@ class PostsControllerTest extends ControllerTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.action_result_file',
         'app.attached_file',
         'app.post_file',
         'app.comment_file',
@@ -853,6 +854,21 @@ class PostsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
+    function testAjaxGetCircleFiles()
+    {
+        $this->_getPostsCommonMock();
+
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $res = $this->testAction('/posts/ajax_get_circle_files/circle_id:1/month_index:1/page:1',
+                                 ['method' => 'GET']);
+        $data = json_decode($res, true);
+        $this->assertArrayHasKey('html', $data);
+        $this->assertArrayHasKey('count', $data);
+        $this->assertArrayHasKey('page_item_num', $data);
+        $this->assertArrayHasKey('start', $data);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
     function testAjaxUploadFile()
     {
         $this->_getPostsCommonMock();
@@ -872,7 +888,8 @@ class PostsControllerTest extends ControllerTestCase
         $this->_getPostsCommonMock();
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $res = $this->testAction('/posts/ajax_remove_file/', ['method' => 'POST', 'data' => ['AttachedFile' => ['file_id' => 'xxx']]]);
+        $res = $this->testAction('/posts/ajax_remove_file/',
+                                 ['method' => 'POST', 'data' => ['AttachedFile' => ['file_id' => 'xxx']]]);
         $data = json_decode($res, true);
         $this->assertArrayHasKey('error', $data);
         $this->assertArrayHasKey('msg', $data);
@@ -948,6 +965,14 @@ class PostsControllerTest extends ControllerTestCase
         $this->assertFalse(isset($e), "[正常]投稿削除");
     }
 
+    public function testPostEdit()
+    {
+        $Posts = $this->_getPostsCommonMock();
+        $posts = $Posts->Post->getMyPostList(0, strtotime('2016-01-01'));
+        $post_id = array_shift($posts);
+        $this->testAction('posts/post_edit/post_id:' . $post_id , ['method' => 'GET']);
+    }
+
     /**
      * testDelete method
      *
@@ -958,7 +983,7 @@ class PostsControllerTest extends ControllerTestCase
         $this->_getPostsCommonMock();
 
         try {
-            $this->testAction('posts/post_edit/0', ['method' => 'POST']);
+            $this->testAction('posts/post_edit/0', ['method' => 'PUT']);
         } catch (NotFoundException $e) {
         }
         $this->assertTrue(isset($e), "[異常]投稿編集");
@@ -984,7 +1009,7 @@ class PostsControllerTest extends ControllerTestCase
         $post = $Posts->Post->save($post_data);
 
         try {
-            $this->testAction('posts/post_edit/post_id:' . $post['Post']['id'], ['method' => 'POST']);
+            $this->testAction('posts/post_edit/post_id:' . $post['Post']['id'], ['method' => 'PUT']);
         } catch (NotFoundException $e) {
         }
         $this->assertTrue(isset($e), "[異常]所有していない投稿編集");
@@ -1022,7 +1047,7 @@ class PostsControllerTest extends ControllerTestCase
         ];
 
         try {
-            $this->testAction('posts/post_edit/post_id:' . $post['Post']['id'], ['data' => $data, 'method' => 'POST']);
+            $this->testAction('posts/post_edit/post_id:' . $post['Post']['id'], ['data' => $data, 'method' => 'PUT']);
         } catch (NotFoundException $e) {
         }
         $this->assertFalse(isset($e), "[正常]投稿編集");
@@ -1054,7 +1079,7 @@ class PostsControllerTest extends ControllerTestCase
         ];
 
         try {
-            $this->testAction('posts/post_edit/post_id:' . $post['Post']['id'], ['data' => $data, 'method' => 'POST']);
+            $this->testAction('posts/post_edit/post_id:' . $post['Post']['id'], ['data' => $data, 'method' => 'PUT']);
         } catch (NotFoundException $e) {
         }
         $this->assertFalse(isset($e), "[異常ValidationError]投稿編集");
@@ -1457,12 +1482,34 @@ class PostsControllerTest extends ControllerTestCase
         $this->assertTrue(isset($e), "Invalid Status Request");
     }
 
+    function testAttachedFileList()
+    {
+        $this->_getPostsCommonMock();
+        $this->testAction('/posts/attached_file_list/circle_id:1', ['method' => 'GET']);
+    }
+
+    function testGetRedirectUrl()
+    {
+        $Posts = $this->_getPostsCommonMock();
+        $value_map = [
+            [
+                null, true, '/posts/attached_file_list/circle_id:1'
+            ]
+        ];
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->expects($this->any())->method('referer')
+              ->will($this->returnValueMap($value_map));
+        $res = $Posts->_getRedirectUrl();
+        $this->assertEquals('/circle_feed/1', $res);
+    }
+
     function _getPostsCommonMock()
     {
         /**
          * @var PostsController $Posts
          */
         $Posts = $this->generate('Posts', [
+            'methods'    => ['referer'],
             'components' => [
                 'Session',
                 'Auth'      => ['user', 'loggedIn'],

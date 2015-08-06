@@ -1822,33 +1822,26 @@ textarea.feed-post-form {
     display: none;
 }
 
-.upload-file-form.active {
+.upload-file-form.drag-over {
     text-align: center;
     background-color: #fff;
-    opacity: 0.7;
+    opacity: 0.8;
     border: 5px dashed #029acf;
     border-radius: 5px;
     z-index: 99999;
 }
 
-.upload-file-place-holder {
-    text-align: center;
-    background-color: #fff;
-    opacity: 0.7;
-    border: 5px dashed #aaa;
-    border-radius: 5px;
-    z-index: 1000001;
+.upload-file-form-message {
+    color: #029acf;
+    vertical-align:middle;
+}
+
+.upload-file-form-message i {
+    font-size:200%;
 }
 
 .upload-file-attach-button {
     cursor: pointer;
-}
-
-.upload-file-bg {
-    background-color: #fff;
-    opacity: 0.5;
-    z-index: 1000000;
-    display: none;
 }
 
 .action-image-add-button {
@@ -3376,7 +3369,7 @@ Temporary Properties - YOU MUST FIX
 }
 
 .dz-default-preview {
-    background-color: #eee;
+    background-color: #f5f5f5;
     margin-top: -1px;
     padding: 7px;
     border: 1px solid #ccc;
@@ -3384,7 +3377,6 @@ Temporary Properties - YOU MUST FIX
 }
 
 .dz-thumb-container {
-    background-color: #ccc;
     overflow: hidden;
     width: 40px;
     height:40px;
@@ -3394,7 +3386,6 @@ Temporary Properties - YOU MUST FIX
 }
 
 .dz-thumb {
-    background-color: #ccc;
     max-width: 40px;
     max-height: 40px;
     vertical-align:middle;

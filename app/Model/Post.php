@@ -897,16 +897,41 @@ class Post extends AppModel
         return $data;
     }
 
+    /**
+     * 投稿の編集
+     *
+     * @param $data
+     *
+     * @return bool
+     */
     function postEdit($data)
     {
-        if (isset($data['photo_delete']) && !empty($data['photo_delete'])) {
-            foreach ($data['photo_delete'] as $index => $val) {
-                if ($val) {
-                    $data['Post']['photo' . $index] = null;
-                }
+        $this->begin();
+        $results = [];
+
+        // 投稿データ保存
+        $results[] = $this->save($data);
+
+        // ファイルが添付されている場合
+        if ((isset($data['file_id']) && is_array($data['file_id'])) ||
+            (isset($data['deleted_file_id']) && is_array($data['deleted_file_id']))
+        ) {
+            $results[] = $this->PostFile->AttachedFile->updateRelatedFiles(
+                $data['Post']['id'],
+                AttachedFile::TYPE_MODEL_POST,
+                isset($data['file_id']) ? $data['file_id'] : [],
+                isset($data['deleted_file_id']) ? $data['deleted_file_id'] : []);
+        }
+
+        // どこかでエラーが発生した場合は rollback
+        foreach ($results as $r) {
+            if (!$r) {
+                $this->rollback();
+                return false;
             }
         }
-        return $this->save($data);
+        $this->commit();
+        return true;
     }
 
     /**
@@ -1182,4 +1207,87 @@ class Post extends AppModel
         return $res ? $res[0]['sum_like'] : 0;
     }
 
+    function getFilesOnCircle($circle_id, $page = 1, $limit = null,
+                              $start = null, $end = null, $file_type = null)
+    {
+        $one_month = 60 * 60 * 24 * 31;
+        $limit = $limit ? $limit : FILE_LIST_PAGE_NUMBER;
+        $start = $start ? $start : REQUEST_TIMESTAMP - $one_month;
+        $end = $end ? $end : REQUEST_TIMESTAMP;
+
+        //PostFile,CommentFile,ActionResultFileからfile_idをまず集める
+        /**
+         * @var AttachedFile $AttachedFile
+         */
+        $AttachedFile = ClassRegistry::init('AttachedFile');
+        $p_ids = $this->PostShareCircle->find('list', [
+            'conditions' => [
+                'circle_id'                => $circle_id,
+                'modified BETWEEN ? AND ?' => [$start, $end],
+            ],
+            'fields'     => ['post_id', 'post_id']
+        ]);
+        $c_ids = $this->Comment->find('list', [
+            'conditions' => ['post_id' => $p_ids],
+            'fields'     => ['id', 'id']
+        ]);
+
+        $p_file_ids = $AttachedFile->PostFile->find('list', [
+            'conditions' => ['post_id' => $p_ids],
+            'fields'     => ['attached_file_id', 'attached_file_id']
+        ]);
+        $c_file_ids = $AttachedFile->CommentFile->find('list', [
+            'conditions' => ['comment_id' => $c_ids],
+            'fields'     => ['attached_file_id', 'attached_file_id']
+        ]);
+        $file_ids = $p_file_ids + $c_file_ids;
+        $options = [
+            'conditions' => [
+                'AttachedFile.id'                    => $file_ids,
+                'AttachedFile.display_file_list_flg' => true,
+            ],
+            'order'      => ['AttachedFile.created desc'],
+            'limit'      => $limit,
+            'page'       => $page,
+            'contain'    => [
+                'User'        => [
+                    'fields' => $this->User->profileFields,
+                ],
+                'PostFile'    => [
+                    'fields' => ['PostFile.post_id']
+                ],
+                'CommentFile' => [
+                    'fields'  => ['CommentFile.comment_id'],
+                    'Comment' => [
+                        'fields' => ['Comment.post_id'],
+                    ]
+                ],
+            ]
+        ];
+        if ($file_type) {
+            $options['conditions']['AttachedFile.file_type'] = $AttachedFile->getFileTypeId($file_type);
+        }
+
+        $files = $AttachedFile->find('all', $options);
+        return $files;
+    }
+    
+    /**
+     * $action_result_id に紐づく投稿を取得
+     *
+     * @param $action_result_id
+     *
+     * @return array|null
+     */
+    public function getByActionResultId($action_result_id)
+    {
+        $options = [
+            'conditions' => [
+                'team_id'          => $this->current_team_id,
+                'action_result_id' => $action_result_id,
+                'type'             => self::TYPE_ACTION,
+            ]
+        ];
+        return $this->find('first', $options);
+    }
 }

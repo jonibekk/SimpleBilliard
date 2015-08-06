@@ -48,7 +48,8 @@ echo $this->Html->script('gl_basic');
                 f: "<?=__d('validate', "パスワードにメールアドレスと同一のものを指定する事はできません。")?>",
                 g: "<?=__d('validate', "必須項目です。")?>",
                 dropzone_file_too_big: "<?=__d('gl', 'アップロード出来るファイルサイズは{{maxFilesize}}MBまでです。')?>",
-                dropzone_invalid_file_type: "<?=__d('gl', '画像ファイルを選択してください。')?>"
+                dropzone_invalid_file_type: "<?=__d('gl', '画像ファイルを選択してください。')?>",
+                dropzone_max_files_exceeded: "<?=__d('gl', 'アップロード出来るファイル数は{{maxFiles}}個までです。')?>"
             },
             notice: {
                 a: "<?=__d('gl',"入力が途中です。このまま移動しますか？")?>",

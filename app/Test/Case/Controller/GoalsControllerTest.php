@@ -683,6 +683,13 @@ class GoalsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
+    function testEditAction()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $this->testAction('/goals/edit_action/action_result_id:1', ['method' => 'GET']);
+    }
+
     function testEditActionFailNoArId()
     {
         $Goals = $this->_getGoalsCommonMock();
@@ -703,6 +710,11 @@ class GoalsControllerTest extends ControllerTestCase
         $this->_setDefault($Goals);
         $data = [
         ];
+        $Goals->Goal->ActionResult = $this->getMockForModel('ActionResult', array('actionEdit'));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Goals->Goal->ActionResult->expects($this->any())
+                                  ->method('actionEdit')
+                                  ->will($this->returnValue(false));
         $this->testAction('/goals/edit_action/action_result_id:1', ['method' => 'PUT', 'data' => $data]);
     }
 
