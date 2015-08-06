@@ -965,6 +965,14 @@ class PostsControllerTest extends ControllerTestCase
         $this->assertFalse(isset($e), "[正常]投稿削除");
     }
 
+    public function testPostEdit()
+    {
+        $Posts = $this->_getPostsCommonMock();
+        $posts = $Posts->Post->getMyPostList(0, strtotime('2016-01-01'));
+        $post_id = array_shift($posts);
+        $this->testAction('posts/post_edit/post_id:' . $post_id , ['method' => 'GET']);
+    }
+
     /**
      * testDelete method
      *
@@ -1492,7 +1500,7 @@ class PostsControllerTest extends ControllerTestCase
         $Posts->expects($this->any())->method('referer')
               ->will($this->returnValueMap($value_map));
         $res = $Posts->_getRedirectUrl();
-        $this->assertEquals('/circle_feed/1',$res);
+        $this->assertEquals('/circle_feed/1', $res);
     }
 
     function _getPostsCommonMock()

@@ -101,10 +101,10 @@ class PostsController extends AppController
     {
         $this->Post->id = viaIsSet($this->request->params['named']['post_id']);
         if (!$this->Post->exists()) {
-            throw new NotFoundException(__('gl', "この投稿は存在しません。"));
+            throw new NotFoundException(__d('gl', "この投稿は存在しません。"));
         }
         if (!$this->Post->isOwner($this->Auth->user('id')) && !$this->User->TeamMember->myStatusWithTeam['TeamMember']['admin_flg']) {
-            throw new NotFoundException(__('gl', "この投稿はあなたのものではありません。"));
+            throw new NotFoundException(__d('gl', "この投稿はあなたのものではありません。"));
         }
         $this->request->allowMethod('post', 'delete');
         $this->Post->delete();
@@ -128,10 +128,10 @@ class PostsController extends AppController
 
         // 例外チェック
         if (!$this->Post->exists()) {
-            throw new NotFoundException(__('gl', "この投稿は存在しません。"));
+            throw new NotFoundException(__d('gl', "この投稿は存在しません。"));
         }
         if (!$this->Post->isOwner($this->Auth->user('id'))) {
-            throw new NotFoundException(__('gl', "この投稿はあなたのものではありません。"));
+            throw new NotFoundException(__d('gl', "この投稿はあなたのものではありません。"));
         }
 
         // フォームが submit された時

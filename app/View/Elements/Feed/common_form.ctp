@@ -79,7 +79,7 @@ $is_edit_mode = isset($common_form_mode) && $common_form_mode == 'edit';
                        delete-method="hide"
                         >
                         <span class="action-image-add-button-text"><i
-                                class="fa fa-image action-image-add-button-icon"></i> <span>ここに画像をドロップ</span></span>
+                                class="fa fa-image action-image-add-button-icon"></i> <span>画像を選択</span></span>
 
                     </a>
                 </div>

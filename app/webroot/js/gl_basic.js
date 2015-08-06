@@ -3058,11 +3058,11 @@ $(document).ready(function () {
     var $uploadFileAttachButton = $('#UploadFileAttachButton');
     // プレビューエリアのテンプレート
     var previewTemplateDefault =
-        '<div class="dz-preview dz-default-preview">' +
+        '<div class="dz-preview dz-default-preview panel">' +
         '  <div class="dz-details">' +
         '    <a href="#" class="pull-right font_lightgray" data-dz-remove><i class="fa fa-times"></i></a>' +
         '    <div class="dz-thumb-container pull-left"><img class="dz-thumb" data-dz-thumbnail /></div>' +
-        '    <span class="dz-name font_12px pull-left" data-dz-name></span><br>' +
+        '    <span class="dz-name font_14px font_bold font_verydark pull-left" data-dz-name></span><br>' +
         '    <span class="dz-size font_11px font_lightgray pull-left" data-dz-size></span>' +
         '  </div>' +
         '  <div class="dz-progress progress">' +
