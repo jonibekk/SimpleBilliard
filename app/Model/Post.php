@@ -399,8 +399,9 @@ class Post extends AppModel
         return $upload->uploadUrl($user_arr, 'User.photo', ['style' => 'small']);
     }
 
-    public function get($page = 1, $limit = 20, $start = null, $end = null, $params = null, $contains_message = true)
+    public function get($page = 1, $limit = 20, $start = null, $end = null, $params = null, $contains_message = false)
     {
+        $this->log('post get');
         $one_month = 60 * 60 * 24 * 31;
         if (!$start) {
             $start = REQUEST_TIMESTAMP - $one_month;
@@ -546,7 +547,7 @@ class Post extends AppModel
                     'Post.modified' => 'desc'
                 ],
             ];
-           if ($this->orgParams['type'] == self::TYPE_ACTION) {
+            if ($this->orgParams['type'] == self::TYPE_ACTION) {
                 $post_options['order'] = ['ActionResult.id' => 'desc'];
                 $post_options['contain'] = ['ActionResult'];
             }
@@ -721,6 +722,7 @@ class Post extends AppModel
         $res = $this->getShareMessages($res);
         //未読件数を取得
         $res = $this->getCommentMyUnreadCount($res);
+        $this->log(count($res));
         return $res;
     }
 
@@ -987,7 +989,7 @@ class Post extends AppModel
         $share_member_list = $share_member_list + $this->PostShareUser->getShareUserListByPost($post_id);
         //Postの主が自分ではないなら追加
         $posted_user_id = viaIsSet($post['Post']['user_id']);
-        if($this->my_uid != $posted_user_id){
+        if ($this->my_uid != $posted_user_id) {
             $share_member_list[] = $posted_user_id;
         }
         $share_member_list = array_unique($share_member_list);
@@ -1268,7 +1270,6 @@ class Post extends AppModel
             ],
         ];
         $res = $this->find('all', $options);
-
 
         return $res;
     }

@@ -300,7 +300,7 @@ class PostsController extends AppController
             $end = strtotime("-{$end_month_offset} months", REQUEST_TIMESTAMP);
             $start = strtotime("-{$start_month_offset} months", REQUEST_TIMESTAMP);
         }
-        $posts = $this->Post->get($page_num, POST_FEED_PAGE_ITEMS_NUMBER, $start, $end, $this->request->params,false);
+        $posts = $this->Post->get($page_num, POST_FEED_PAGE_ITEMS_NUMBER, $start, $end, $this->request->params);
         $this->set(compact('posts'));
 
         //エレメントの出力を変数に格納する
@@ -347,7 +347,8 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
-    public function ajax_put_message($post_id, $message) {
+    public function ajax_put_message($post_id, $message)
+    {
         $this->_ajaxPreProcess();
 
         $params['Comment']['post_id'] = $post_id;
@@ -359,7 +360,7 @@ class PostsController extends AppController
         $convert_data = $this->Post->Comment->convertData($detail_comment);
 
         $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
-        $pusher->trigger('message-channel-'. $post_id, 'new_message', $convert_data);
+        $pusher->trigger('message-channel-' . $post_id, 'new_message', $convert_data);
 
         return $this->_ajaxGetResponse($detail_comment);
     }
@@ -370,7 +371,7 @@ class PostsController extends AppController
         $res = $this->Post->Comment->CommentRead->red([$comment_id]);
         if ($res === true) {
             $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
-            $pusher->trigger('message-channel-'. $post_id, 'read_message', $comment_id);
+            $pusher->trigger('message-channel-' . $post_id, 'read_message', $comment_id);
         }
         return $this->_ajaxGetResponse($res);
     }
@@ -824,15 +825,14 @@ class PostsController extends AppController
         }
 
         $feed_filter = null;
-        $circle_id = viaIsSet($params['circle_id']);
-        $user_status = $this->_userCircleStatus($params['circle_id']);
+        if ($circle_id = viaIsSet($params['circle_id'])) {
+            $user_status = $this->_userCircleStatus($circle_id);
 
-        $circle_status = $this->Post->Circle->CircleMember->show_hide_stats($this->Auth->user('id'),
-                                                                            $params['circle_id']);
-
-        //サークル指定の場合はメンバーリスト取得
-        if (isset($params['circle_id']) && !empty($params['circle_id'])) {
+            $circle_status = $this->Post->Circle->CircleMember->show_hide_stats($this->Auth->user('id'),
+                                                                                $circle_id);
+            //サークル指定の場合はメンバーリスト取得
             $circle_member_count = $this->User->CircleMember->getActiveMemberCount($params['circle_id']);
+            $this->set(compact('user_status', 'circle_status', 'circle_member_count'));
         }
         //抽出条件
         if ($circle_id) {
@@ -843,31 +843,7 @@ class PostsController extends AppController
         }
 
         $this->set('common_form_type', 'post');
-        $this->set(compact('feed_filter', 'circle_member_count', 'circle_id', 'user_status', 'params',
-                           'circle_status'));
-
-        try {
-            $targetPosts = $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null, $this->request->params);
-            $this->set(['posts' => $targetPosts]);
-
-            //メッセージなら該当するnotifyをredisから削除する
-            $post_type = viaIsSet($targetPosts[0]['Post']['type']);
-            if ($post_type == Post::TYPE_MESSAGE) {
-                $notify_id = viaIsSet($this->request->params['named']['notify_id']);
-                $this->NotifyBiz->removeMessageNotification($notify_id);
-            }
-
-        } catch (RuntimeException $e) {
-            //リファラとリクエストのURLが同じ場合は、メッセージを表示せず、ホームにリダイレクトする
-            //サークルページに居て当該サークルから抜けた場合の対応
-            $params = $this->request->params;
-            unset($params['_Token']);
-            if ($this->referer(null, true) == Router::url($params)) {
-                $this->redirect('/');
-            }
-            $this->Pnotify->outError($e->getMessage());
-            $this->redirect($this->referer());
-        }
+        $this->set(compact('feed_filter', 'circle_id', 'params'));
     }
 
     public function ajax_get_share_circles_users_modal()
