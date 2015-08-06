@@ -3371,7 +3371,7 @@ $(document).ready(function () {
         if (uploadFileFormContentEnter) {
             return;
         }
-        
+
         $(this).hide();
     });
 
@@ -3395,6 +3395,36 @@ $(document).ready(function () {
     var actionImageParams = {
         formID: 'CommonActionDisplayForm',
         previewContainerID: 'ActionUploadFilePhotoPreview',
+        beforeAccept: function (file) {
+            var $oldPreview = $('#' + $uploadFileForm._params.previewContainerID).find('.dz-preview:visible');
+
+            if ($oldPreview.size()) {
+                // Dropzone の管理ファイルから外す
+                var old_file = Dropzone.instances[0].files.splice(0, 1)[0];
+
+                // プレビューエリアを非表示にする
+                $oldPreview.hide();
+
+                // フォームの hidden を削除
+                $('#' + old_file.file_id).remove();
+
+                // サーバ上から削除
+                $removeFileForm.find('input[name="data[AttachedFile][file_id]"]').val(old_file.file_id);
+                $.ajax({
+                    url: cake.url.remove_file,
+                    type: 'POST',
+                    dataType: 'json',
+                    processData: false,
+                    data: $removeFileForm.serialize()
+                })
+                    .done(function (res) {
+                        // pass
+                    })
+                    .fail(function (res) {
+                        // pass
+                    });
+            }
+        },
         afterAccept: function (file) {
             var $button = $('.action-image-add-button');
             if ($button.size()) {
@@ -3522,7 +3552,7 @@ $(document).ready(function () {
         Dropzone.instances[0].options.addedfile.call(Dropzone.instances[0], file);
         file.previewElement.classList.remove("dz-file-preview");
         file.previewElement.querySelector('.progress').style.visibility = 'hidden';
-        
+
         switch ($input.attr('data-ext')) {
             case 'jpg':
             case 'jpeg':
