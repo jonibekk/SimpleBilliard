@@ -361,7 +361,7 @@ $without_header = isset($without_header) ? $without_header : false;
                            like_type="post">
                            <i class="fa-thumbs-up fa"></i>
                             <?= __d('gl', "いいね！") ?></a>
-                        <a href="#" class="feeds-post-comment-btn trigger-click" target-id="NewCommentForm_<?= $post['Post']['id'] ?>">
+                        <a href="#" class="feeds-post-comment-btn trigger-click" target-id="NewCommentDummyForm_<?= $post['Post']['id'] ?>">
                             <i class="fa-comments-o fa"></i>
                             <?= __d('gl',"コメント") ?>
                         </a>
@@ -455,6 +455,7 @@ $without_header = isset($without_header) ? $without_header : false;
                                     wrap="soft" rows="1"
                                     placeholder="<?= __d('gl', "コメントする") ?>"
                                     cols="30"
+                                    id="NewCommentDummyForm_<?= $post['Post']['id']?>"
                                     init-height="15"></textarea>
                             </div>
                         </form>
