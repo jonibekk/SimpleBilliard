@@ -49,6 +49,7 @@ class ActionResultTest extends CakeTestCase
         'app.invite',
         'app.thread',
         'app.message',
+        'app.action_result_file'
     );
 
     /**
@@ -130,6 +131,66 @@ class ActionResultTest extends CakeTestCase
         $res = $this->ActionResult->getCountByGoalId(6);
         $this->assertEquals(1, $res);
     }
+
+    function testGetWithAttachedFiles()
+    {
+        $this->_setDefault();
+        $row = $this->ActionResult->getWithAttachedFiles(1);
+        $this->assertArrayHasKey('ActionResultFile', $row);
+    }
+
+    function testActionEditWithFile()
+    {
+        $this->_setDefault();
+        // 通常 edit
+        $data = [
+            'ActionResult' => [
+                'id' => 1,
+                'name' => 'edit string',
+            ]
+        ];
+        $res = $this->ActionResult->actionEdit($data);
+        $this->assertTrue($res);
+        $row = $this->ActionResult->findById(1);
+        $this->assertEquals($row['ActionResult']['name'], $data['ActionResult']['name']);
+
+        // 添付ファイルあり
+        $this->ActionResult->ActionResultFile->AttachedFile = $this->getMockForModel('AttachedFile', array('updateRelatedFiles'));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $this->ActionResult->ActionResultFile->AttachedFile->expects($this->any())
+                                           ->method('updateRelatedFiles')
+                                           ->will($this->returnValue(true));
+        $data = [
+            'ActionResult' => [
+                'id' => 1,
+                'name' => 'edit string2',
+            ],
+            'file_id' => ['aaa', 'bbb']
+        ];
+        $res = $this->ActionResult->actionEdit($data);
+        $this->assertTrue($res);
+        $row = $this->ActionResult->findById(1);
+        $this->assertEquals($row['ActionResult']['name'], $data['ActionResult']['name']);
+
+        // rollback
+        $this->ActionResult->ActionResultFile->AttachedFile = $this->getMockForModel('AttachedFile', array('updateRelatedFiles'));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $this->ActionResult->ActionResultFile->AttachedFile->expects($this->any())
+                                           ->method('updateRelatedFiles')
+                                           ->will($this->returnValue(false));
+        $data = [
+            'ActionResult' => [
+                'id' => 1,
+                'name' => 'edit string3',
+            ],
+            'file_id' => ['aaa', 'bbb']
+        ];
+        $res = $this->ActionResult->actionEdit($data);
+        $this->assertFalse($res);
+        $row = $this->ActionResult->findById(1);
+        $this->assertNotEquals($row['ActionResult']['name'], $data['ActionResult']['name']);
+    }
+
 
     function _setDefault()
     {

@@ -1,9 +1,8 @@
 <?php
 /**
  * ドラッグ＆ドロップのファイルアップロード用フォーム
- *
  * element が呼ばれる場所によっては、$(obj).show() でフォームが表示されてしまう可能性があるので
- * style に width: 0px; height: 0px; も入れておく
+ * style に width: 0; height: 0; も入れておく
  */
 ?>
 <!-- START app/View/Elements/file_upload_form.ctp -->
@@ -15,8 +14,9 @@ $this->Form->create('AttachedFile', [
     'class' => 'upload-file-form',
     'style' => 'display:none; height:0px; width:0px;',
 ]); ?>
+<span class="upload-file-form-message upload-file-form-content"><i class="fa fa-cloud-upload upload-file-form-content"></i></span>
 <?= $this->Form->end() ?>
-<div id="UploadFileAttachButton" style="display:none; height:0px; width:0px;"></div>
+<div id="UploadFileAttachButton" style="display:none; height:0; width:0;"></div>
 <?=
 $this->Form->create('AttachedFile', [
     'url'   => ['controller' => 'posts', 'action' => 'ajax_remove_file'],

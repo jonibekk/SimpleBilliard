@@ -897,16 +897,41 @@ class Post extends AppModel
         return $data;
     }
 
+    /**
+     * 投稿の編集
+     *
+     * @param $data
+     *
+     * @return bool
+     */
     function postEdit($data)
     {
-        if (isset($data['photo_delete']) && !empty($data['photo_delete'])) {
-            foreach ($data['photo_delete'] as $index => $val) {
-                if ($val) {
-                    $data['Post']['photo' . $index] = null;
-                }
+        $this->begin();
+        $results = [];
+
+        // 投稿データ保存
+        $results[] = $this->save($data);
+
+        // ファイルが添付されている場合
+        if ((isset($data['file_id']) && is_array($data['file_id'])) ||
+            (isset($data['deleted_file_id']) && is_array($data['deleted_file_id']))
+        ) {
+            $results[] = $this->PostFile->AttachedFile->updateRelatedFiles(
+                $data['Post']['id'],
+                AttachedFile::TYPE_MODEL_POST,
+                isset($data['file_id']) ? $data['file_id'] : [],
+                isset($data['deleted_file_id']) ? $data['deleted_file_id'] : []);
+        }
+
+        // どこかでエラーが発生した場合は rollback
+        foreach ($results as $r) {
+            if (!$r) {
+                $this->rollback();
+                return false;
             }
         }
-        return $this->save($data);
+        $this->commit();
+        return true;
     }
 
     /**
@@ -1245,5 +1270,24 @@ class Post extends AppModel
 
         $files = $AttachedFile->find('all', $options);
         return $files;
+    }
+    
+    /**
+     * $action_result_id に紐づく投稿を取得
+     *
+     * @param $action_result_id
+     *
+     * @return array|null
+     */
+    public function getByActionResultId($action_result_id)
+    {
+        $options = [
+            'conditions' => [
+                'team_id'          => $this->current_team_id,
+                'action_result_id' => $action_result_id,
+                'type'             => self::TYPE_ACTION,
+            ]
+        ];
+        return $this->find('first', $options);
     }
 }

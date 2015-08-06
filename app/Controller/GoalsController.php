@@ -884,34 +884,51 @@ class GoalsController extends AppController
                                        ]);
     }
 
+    /**
+     * アクションの編集
+     */
     public function edit_action()
     {
         $ar_id = $this->request->params['named']['action_result_id'];
-        $this->request->allowMethod('post', 'put');
-        try {
-            if (!$this->Goal->ActionResult->isOwner($this->Auth->user('id'), $ar_id)) {
-                throw new RuntimeException();
-            }
-            if (!$this->Goal->ActionResult->actionEdit($this->request->data)) {
-                throw new RuntimeException(__d('gl', "データの保存に失敗しました。"));
-            }
-        } catch (RuntimeException $e) {
-            $this->Pnotify->outError($e->getMessage());
+
+        if (!$this->Goal->ActionResult->isOwner($this->Auth->user('id'), $ar_id)) {
+            $this->Pnotify->outError(__('gl', "このアクションは編集できません。"));
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->redirect($this->referer());
         }
-        $this->Pnotify->outSuccess(__d('gl', "アクションを更新しました。"));
-        $action = $this->Goal->ActionResult->find('first',
-                                                  ['conditions' => ['ActionResult.id' => $ar_id]]);
-        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_ACTION,
-                                   $action['ActionResult']['goal_id'],
-                                   $action['ActionResult']['key_result_id'],
-                                   $ar_id);
-        if (isset($action['ActionResult']['goal_id']) && !empty($action['ActionResult']['goal_id'])) {
-            $this->_flashClickEvent("ActionListOpen_" . $action['ActionResult']['goal_id']);
+
+        // フォームが submit された時
+        if ($this->request->is('put')) {
+            $this->request->data['ActionResult']['id'] = $ar_id;
+            if (!$this->Goal->ActionResult->actionEdit($this->request->data)) {
+                $this->Pnotify->outError(__d('gl', "データの保存に失敗しました。"));
+                /** @noinspection PhpVoidFunctionResultUsedInspection */
+                return $this->redirect($this->referer());
+            }
+            $this->Pnotify->outSuccess(__d('gl', "アクションを更新しました。"));
+            $action = $this->Goal->ActionResult->find('first',
+                                                      ['conditions' => ['ActionResult.id' => $ar_id]]);
+            $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_ACTION,
+                                       $action['ActionResult']['goal_id'],
+                                       $action['ActionResult']['key_result_id'],
+                                       $ar_id);
+            if (isset($action['ActionResult']['goal_id']) && !empty($action['ActionResult']['goal_id'])) {
+                $this->_flashClickEvent("ActionListOpen_" . $action['ActionResult']['goal_id']);
+            }
+            /** @noinspection PhpVoidFunctionResultUsedInspection */
+            $post = $this->Goal->Post->getByActionResultId($ar_id);
+            return $this->redirect(['controller' => 'posts',
+                                    'action'     => 'feed',
+                                    'post_id'    => $post['Post']['id']]);
         }
-        /** @noinspection PhpVoidFunctionResultUsedInspection */
-        return $this->redirect($this->referer());
+
+        // 編集フォーム表示
+        $row = $this->Goal->ActionResult->getWithAttachedFiles($ar_id);
+        $this->request->data = $row;
+        $this->_setViewValOnRightColumn();
+        $this->set('common_form_type', 'action');
+        $this->set('common_form_mode', 'edit');
+        $this->layout = LAYOUT_ONE_COLUMN;
     }
 
     function download_all_goal_csv()

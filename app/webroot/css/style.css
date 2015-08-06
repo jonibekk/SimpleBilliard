@@ -1822,33 +1822,26 @@ textarea.feed-post-form {
     display: none;
 }
 
-.upload-file-form.active {
+.upload-file-form.drag-over {
     text-align: center;
     background-color: #fff;
-    opacity: 0.7;
+    opacity: 0.8;
     border: 5px dashed #029acf;
     border-radius: 5px;
     z-index: 99999;
 }
 
-.upload-file-place-holder {
-    text-align: center;
-    background-color: #fff;
-    opacity: 0.7;
-    border: 5px dashed #aaa;
-    border-radius: 5px;
-    z-index: 1000001;
+.upload-file-form-message {
+    color: #029acf;
+    vertical-align:middle;
+}
+
+.upload-file-form-message i {
+    font-size:200%;
 }
 
 .upload-file-attach-button {
     cursor: pointer;
-}
-
-.upload-file-bg {
-    background-color: #fff;
-    opacity: 0.5;
-    z-index: 1000000;
-    display: none;
 }
 
 .action-image-add-button {
