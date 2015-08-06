@@ -965,6 +965,14 @@ class PostsControllerTest extends ControllerTestCase
         $this->assertFalse(isset($e), "[正常]投稿削除");
     }
 
+    public function testPostEdit()
+    {
+        $Posts = $this->_getPostsCommonMock();
+        $posts = $Posts->Post->getMyPostList(0, strtotime('2016-01-01'));
+        $post_id = array_shift($posts);
+        $this->testAction('posts/post_edit/post_id:' . $post_id , ['method' => 'GET']);
+    }
+
     /**
      * testDelete method
      *
@@ -975,7 +983,7 @@ class PostsControllerTest extends ControllerTestCase
         $this->_getPostsCommonMock();
 
         try {
-            $this->testAction('posts/post_edit/0', ['method' => 'POST']);
+            $this->testAction('posts/post_edit/0', ['method' => 'PUT']);
         } catch (NotFoundException $e) {
         }
         $this->assertTrue(isset($e), "[異常]投稿編集");
@@ -1001,7 +1009,7 @@ class PostsControllerTest extends ControllerTestCase
         $post = $Posts->Post->save($post_data);
 
         try {
-            $this->testAction('posts/post_edit/post_id:' . $post['Post']['id'], ['method' => 'POST']);
+            $this->testAction('posts/post_edit/post_id:' . $post['Post']['id'], ['method' => 'PUT']);
         } catch (NotFoundException $e) {
         }
         $this->assertTrue(isset($e), "[異常]所有していない投稿編集");
@@ -1039,7 +1047,7 @@ class PostsControllerTest extends ControllerTestCase
         ];
 
         try {
-            $this->testAction('posts/post_edit/post_id:' . $post['Post']['id'], ['data' => $data, 'method' => 'POST']);
+            $this->testAction('posts/post_edit/post_id:' . $post['Post']['id'], ['data' => $data, 'method' => 'PUT']);
         } catch (NotFoundException $e) {
         }
         $this->assertFalse(isset($e), "[正常]投稿編集");
@@ -1071,7 +1079,7 @@ class PostsControllerTest extends ControllerTestCase
         ];
 
         try {
-            $this->testAction('posts/post_edit/post_id:' . $post['Post']['id'], ['data' => $data, 'method' => 'POST']);
+            $this->testAction('posts/post_edit/post_id:' . $post['Post']['id'], ['data' => $data, 'method' => 'PUT']);
         } catch (NotFoundException $e) {
         }
         $this->assertFalse(isset($e), "[異常ValidationError]投稿編集");
@@ -1492,7 +1500,7 @@ class PostsControllerTest extends ControllerTestCase
         $Posts->expects($this->any())->method('referer')
               ->will($this->returnValueMap($value_map));
         $res = $Posts->_getRedirectUrl();
-        $this->assertEquals('/circle_feed/1',$res);
+        $this->assertEquals('/circle_feed/1', $res);
     }
 
     function _getPostsCommonMock()

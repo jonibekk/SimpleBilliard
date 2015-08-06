@@ -280,7 +280,7 @@ class AttachedFile extends AppModel
      */
     public function updateRelatedFiles($foreign_key_id, $model_type, $update_files = [], $delete_files = [])
     {
-        if ($this->isUnavailableModelType($model_type) || empty($update_files)) {
+        if ($this->isUnavailableModelType($model_type)) {
             return false;
         }
         //ファイル削除処理
@@ -299,8 +299,8 @@ class AttachedFile extends AppModel
         $model = self::$TYPE_MODEL[$model_type];
         //保存データ生成
         foreach ($update_files as $i => $id_or_hash) {
-            //stringじゃない、つまり既存のIDの場合はindexの更新のみ
-            if (!is_string($id_or_hash)) {
+            //既存のIDの場合はindexの更新のみ
+            if (is_numeric($id_or_hash)) {
                 //アクションのメイン画像の場合は更新しない
                 if ($i === 0 && $model_type == self::TYPE_MODEL_ACTION_RESULT) {
                     continue;
