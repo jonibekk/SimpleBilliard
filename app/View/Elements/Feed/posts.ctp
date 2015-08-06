@@ -361,7 +361,7 @@ $without_header = isset($without_header) ? $without_header : false;
                            like_type="post">
                            <i class="fa-thumbs-up fa"></i>
                             <?= __d('gl', "いいね！") ?></a>
-                        <a href="NewCommentForm_<?= $post['Post']['id'] ?>" class="feeds-post-comment-btn">
+                        <a href="#" class="feeds-post-comment-btn trigger-click" target-id="NewCommentForm_<?= $post['Post']['id'] ?>">
                             <i class="fa-comments-o fa"></i>
                             <?= __d('gl',"コメント") ?>
                         </a>
