@@ -90,7 +90,7 @@ $without_header = isset($without_header) ? $without_header : false;
                 <!--END Goal Post Header -->
 
             <?php endif; ?>
-            <div class="panel-body pt_10px plr_11px pb_8px">
+            <div class="posts-panel-body panel-body">
                 <div class="col col-xxs-12 feed-user">
                     <div class="pull-right">
                         <div class="dropdown">
@@ -319,24 +319,33 @@ $without_header = isset($without_header) ? $without_header : false;
                         <?php endforeach ?>
                     </div>
                 <? endif; ?>
-                <div class="col col-xxs-12 font_12px pt_8px">
-                    <a href="#" class="click-like font_lightgray <?= empty($post['MyPostLike']) ? null : "liked" ?>"
-                       like_count_id="PostLikeCount_<?= $post['Post']['id'] ?>"
-                       model_id="<?= $post['Post']['id'] ?>"
-                       like_type="post">
-                        <?= __d('gl', "いいね！") ?></a>
-                    <span class="font_lightgray"> ･ </span>
-                                <span>
-                            <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_liked_users', 'post_id' => $post['Post']['id']]) ?>"
-                               class="modal-ajax-get font_lightgray">
-                                <i class="fa fa-thumbs-o-up"></i>&nbsp;<span
-                                    id="PostLikeCount_<?= $post['Post']['id'] ?>"><?= $post['Post']['post_like_count'] ?></span>
-                            </a><span class="font_lightgray"> ･ </span>
-            <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_red_users', 'post_id' => $post['Post']['id']]) ?>"
-               class="modal-ajax-get font_lightgray"><i
-                    class="fa fa-check"></i>&nbsp;<span><?= $post['Post']['post_read_count'] ?></span>
-            </a>
-            </span>
+                <div class="col col-xxs-12 feeds-post-btns-area">
+                    <div class="feeds-post-btns-wrap-left">
+                        <a href="#" class="click-like feeds-post-like-btn <?= empty($post['MyPostLike']) ? null : "liked" ?>"
+                           like_count_id="PostLikeCount_<?= $post['Post']['id'] ?>"
+                           model_id="<?= $post['Post']['id'] ?>"
+                           like_type="post">
+                           <i class="fa-thumbs-up fa"></i>
+                            <?= __d('gl', "いいね！") ?></a>
+                        <a href="#" class="feeds-post-comment-btn trigger-click" target-id="NewCommentDummyForm_<?= $post['Post']['id'] ?>">
+                            <i class="fa-comments-o fa"></i>
+                            <?= __d('gl',"コメント") ?>
+                        </a>
+                    </div>
+                    <div class="feeds-post-btns-wrap-right">
+                        <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_liked_users', 'post_id' => $post['Post']['id']]) ?>" class="modal-ajax-get feeds-post-btn-numbers-like">
+                            <i class="fa fa-thumbs-o-up"></i>&nbsp;
+                            <span id="PostLikeCount_<?= $post['Post']['id'] ?>">
+                                <?= $post['Post']['post_like_count'] ?>
+                            </span>
+                        </a>
+                        <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_red_users', 'post_id' => $post['Post']['id']]) ?>" class="modal-ajax-get feeds-post-btn-numbers-read">
+                           <i class="fa fa-check"></i>
+                           <span>
+                               <?= $post['Post']['post_read_count'] ?>
+                           </span>
+                        </a>
+                    </div>
                 </div>
             </div>
             <div class="panel-body ptb_8px plr_11px comment-block"
@@ -412,6 +421,7 @@ $without_header = isset($without_header) ? $without_header : false;
                                     wrap="soft" rows="1"
                                     placeholder="<?= __d('gl', "コメントする") ?>"
                                     cols="30"
+                                    id="NewCommentDummyForm_<?= $post['Post']['id']?>"
                                     init-height="15"></textarea>
                             </div>
                         </form>
