@@ -29,7 +29,6 @@ class PostsController extends AppController
     {
         $this->request->data['Post']['type'] = Post::TYPE_MESSAGE;
         $this->addPost();
-        $this->log("FURU:" . $this->referer());
         $to_url = Router::url(['controller' => 'posts', 'action' => 'message#', $this->Post->getLastInsertID()], true);
         $this->redirect($to_url);
     }

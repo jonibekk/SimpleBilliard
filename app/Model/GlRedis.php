@@ -1,6 +1,7 @@
 <?php
 App::uses('AppModel', 'Model');
 App::uses('ConnectionManager', 'Model');
+App::uses('NotifySetting', 'Model');
 
 /**
  * GlRedis Model
