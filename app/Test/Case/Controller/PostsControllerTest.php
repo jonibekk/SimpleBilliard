@@ -209,6 +209,33 @@ class PostsControllerTest extends ControllerTestCase
                 'share_range'  => 'public',
                 'team_id'      => '1'
             ],
+            'socket_id'    => 'test',
+        ];
+        $this->testAction('/posts/add',
+                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+    }
+
+    function testAddOnlyMember()
+    {
+        /**
+         * @var UsersController $Posts
+         */
+        $Posts = $this->_getPostsCommonMock();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Session->expects($this->any())->method('read')
+                       ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
+                   ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
+        $data = [
+            'Post' => [
+                'body'         => 'test',
+                'share_public' => 'user_1',
+                'share_secret' => '',
+                'share_range'  => 'public',
+                'team_id'      => '1'
+            ],
+            'socket_id'    => 'test',
         ];
         $this->testAction('/posts/add',
                           ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
@@ -229,9 +256,9 @@ class PostsControllerTest extends ControllerTestCase
                 'share_public' => 'public,circle_1,user_12',
                 'share_secret' => '',
                 'share_range'  => 'public',
-                'socket_id'    => 'hogehage',
                 'team_id'      => '1'
             ],
+            'socket_id'=>'test',
         ];
         $this->testAction('/posts/add',
                           ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
@@ -1592,7 +1619,7 @@ class PostsControllerTest extends ControllerTestCase
                 'Auth'      => ['user', 'loggedIn'],
                 'Security'  => ['_validateCsrf', '_validatePost'],
                 'Ogp',
-                'NotifyBiz' => ['sendNotify', 'commentPush']
+                'NotifyBiz' => ['sendNotify', 'commentPush','push']
             ],
         ]);
         $value_map = [

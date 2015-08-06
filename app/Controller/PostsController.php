@@ -129,7 +129,6 @@ class PostsController extends AppController
 
         $this->Pnotify->outSuccess(__d('gl', "投稿しました。"));
         return true;
-
     }
 
     /**
