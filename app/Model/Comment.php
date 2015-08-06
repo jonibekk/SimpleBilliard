@@ -7,14 +7,20 @@ App::uses('View', 'View');
 /**
  * Comment Model
  *
- * @property Post        $Post
- * @property User        $User
- * @property Team        $Team
- * @property CommentLike $CommentLike
- * @property CommentRead $CommentRead
+ * @property Post         $Post
+ * @property User         $User
+ * @property Team         $Team
+ * @property CommentLike  $CommentLike
+ * @property CommentRead  $CommentRead
+ * @property AttachedFile $AttachedFile
+ * @property CommentFile  $CommentFile
  */
 class Comment extends AppModel
 {
+    public $uses = [
+        'AttachedFile'
+    ];
+
     public $actsAs = [
         'Upload' => [
             'photo1'     => [
@@ -134,7 +140,8 @@ class Comment extends AppModel
         'MyCommentLike' => [
             'className' => 'CommentLike',
             'fields'    => ['id']
-        ]
+        ],
+        'CommentFile',
     ];
 
     /**
@@ -148,15 +155,40 @@ class Comment extends AppModel
      */
     public function add($postData, $uid = null, $team_id = null)
     {
+        $this->begin();
+
+        // コメントデータ保存
         $this->setUidAndTeamId($uid, $team_id);
         $postData['Comment']['user_id'] = $this->uid;
         $postData['Comment']['team_id'] = $this->team_id;
         $res = $this->save($postData);
-        //投稿データのmodifiedを更新
-        $this->Post->id = $postData['Comment']['post_id'];
-        $this->Post->saveField('modified', REQUEST_TIMESTAMP);
+        if (empty($res)) {
+            $this->rollback();
+            return false;
+        }
 
-        return $res;
+        $comment_id = $this->getLastInsertID();
+        $results = [];
+        // ファイルが添付されている場合
+        if (isset($postData['file_id']) && is_array($postData['file_id'])) {
+            $results[] = $this->CommentFile->AttachedFile->saveRelatedFiles($comment_id,
+                                                                            AttachedFile::TYPE_MODEL_COMMENT,
+                                                                            $postData['file_id']);
+        }
+        // 投稿データのmodifiedを更新
+        $this->Post->id = $postData['Comment']['post_id'];
+        $results[] = $this->Post->saveField('modified', REQUEST_TIMESTAMP);
+
+        // どこかでエラーが発生した場合は rollback
+        foreach ($results as $r) {
+            if (!$r) {
+                $this->rollback();
+                $this->CommentFile->AttachedFile->deleteAllRelatedFiles($comment_id, AttachedFile::TYPE_MODEL_COMMENT);
+                return false;
+            }
+        }
+        $this->commit();
+        return true;
     }
 
     public function getPostsComment($post_id, $get_num = null, $page = null, $order_by = null)
@@ -179,6 +211,14 @@ class Comment extends AppModel
                         'MyCommentLike.team_id' => $this->current_team_id,
                     ]
                 ],
+                'CommentFile'   => [
+                    'order'        => ['CommentFile.index_num asc'],
+                    'AttachedFile' => [
+                        'User' => [
+                            'fields' => $this->User->profileFields
+                        ]
+                    ]
+                ]
             ],
             'limit'      => $get_num,
             'page'       => $page
@@ -265,6 +305,14 @@ class Comment extends AppModel
                         'MyCommentLike.team_id' => $this->current_team_id,
                     ]
                 ],
+                'CommentFile'   => [
+                    'order'        => ['CommentFile.index_num asc'],
+                    'AttachedFile' => [
+                        'User' => [
+                            'fields' => $this->User->profileFields
+                        ]
+                    ]
+                ]
             ],
         ];
         //表示を昇順にする

@@ -15,10 +15,16 @@ class PostTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.goal_category',
+        'app.post_file',
+        'app.comment_file',
+        'app.action_result_file',
+        'app.attached_file',
         'app.action_result',
         'app.key_result',
         'app.post',
-        'app.user', 'app.notify_setting',
+        'app.user',
+        'app.notify_setting',
         'app.team',
         'app.goal',
         'app.local_name',
@@ -85,6 +91,48 @@ class PostTest extends CakeTestCase
         $this->assertNotEmpty($res, "[正常]投稿(uid,team_id指定なし)");
     }
 
+    public function testAddWithFile()
+    {
+        $uid = '1';
+        $team_id = '1';
+        $this->Post->my_uid = $uid;
+        $this->Post->current_team_id = $team_id;
+        $postData = [
+            'Post'    => [
+                'body' => 'test',
+            ],
+            'file_id' => ['aaaaaa']
+        ];
+        $this->Post->PostFile->AttachedFile = $this->getMockForModel('AttachedFile', array('saveRelatedFiles'));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $this->Post->PostFile->AttachedFile->expects($this->any())
+                                           ->method('saveRelatedFiles')
+                                           ->will($this->returnValue(true));
+        $res = $this->Post->addNormal($postData, Post::TYPE_NORMAL, $uid, $team_id);
+        $this->assertNotEmpty($res, "[正常]投稿(uid,team_id指定)");
+    }
+
+    public function testAddError()
+    {
+        $uid = '1';
+        $team_id = '1';
+        $this->Post->my_uid = $uid;
+        $this->Post->current_team_id = $team_id;
+        $postData = [
+            'Post'    => [
+                'body' => 'test',
+            ],
+            'file_id' => ['aaaaaa']
+        ];
+        $this->Post->PostFile->AttachedFile = $this->getMockForModel('AttachedFile', array('saveRelatedFiles'));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $this->Post->PostFile->AttachedFile->expects($this->any())
+                                           ->method('saveRelatedFiles')
+                                           ->will($this->returnValue(false));
+        $res = $this->Post->addNormal($postData, Post::TYPE_NORMAL, $uid, $team_id);
+        $this->assertFalse($res);
+    }
+
     public function testGetNormal()
     {
         $this->_setDefault();
@@ -122,6 +170,25 @@ class PostTest extends CakeTestCase
                                 ['named' => ['user_id' => 104, 'type' => Post::TYPE_NORMAL]]);
         $this->assertEmpty($res);
 
+        $res = $this->Post->get(1, 20, "2014-01-01", "2014-01-31",
+                                ['named' => ['user_id' => 1, 'type' => Post::TYPE_NORMAL]]);
+        $this->assertEmpty($res);
+    }
+
+    public function testGetLoadedPostTime()
+    {
+        $this->_setDefault();
+
+        // 2ページ目のデータを読み込む
+        $res1 = $this->Post->get(2, 1, "2014-01-01", "2014-01-31");
+        $this->assertNotEmpty($res1);
+
+        $post_time_before = $res1[0]['Post']['created'];
+
+        // 時間指定ありで１ページ目を取得
+        $res2 = $this->Post->get(1, 1, "2014-01-01", "2014-01-31",
+                                 ['named' => ['post_time_before' => $post_time_before]]);
+        $this->assertEquals($res1[0]['Post']['id'], $res2[0]['Post']['id']);
     }
 
     function testGetShareAllMemberList()
@@ -533,6 +600,99 @@ class PostTest extends CakeTestCase
         $this->_setDefault();
         $res = $this->Post->doShare(1, "");
         $this->assertFalse($res);
+    }
+
+    function testGetFilesOnCircle()
+    {
+        $this->_setDefault();
+        App::uses('AttachedFile', 'Model');
+        $this->Post->create();
+        $this->Post->save(['user_id' => 1, 'team_id' => 1, 'body' => 'test']);
+        $p_id = $this->Post->getLastInsertID();
+        $this->Post->PostShareCircle->create();
+        $this->Post->PostShareCircle->save(['circle_id' => 1, 'post_id' => $p_id, 'team_id' => 1]);
+        $this->Post->Comment->create();
+        $this->Post->Comment->save(['post_id' => $p_id, 'team_id' => 1, 'user_id' => 1, 'body' => 'test']);
+        $c_id = $this->Post->Comment->getLastInsertID();
+        $f_ids = [];
+        for ($i = 0; $i < 2; $i++) {
+            $this->Post->PostFile->AttachedFile->create();
+            $this->Post->PostFile->AttachedFile->save(
+                [
+                    'user_id'            => 1, 'team_id' => 1,
+                    'attached_file_name' => 'test.jpg',
+                    'file_type'          => 0, 'file_ext' => 'jpg', 'file_size' => 100,
+                ]
+            );
+            $f_ids[] = $this->Post->PostFile->AttachedFile->getLastInsertID();
+        }
+        $this->Post->PostFile->create();
+        $this->Post->PostFile->save(
+            [
+                'post_id' => $p_id, 'team_id' => 1, 'attached_file_id' => $f_ids[0]
+            ]
+        );
+        $this->Post->Comment->CommentFile->create();
+        $this->Post->Comment->CommentFile->save(
+            [
+                'comment_id' => $c_id, 'team_id' => 1, 'attached_file_id' => $f_ids[1]
+            ]
+        );
+        $res = $this->Post->getFilesOnCircle(1, 1, null, 1, 100000000000, 'image');
+        $this->assertCount(2, $res);
+    }
+
+    function testPostEdit()
+    {
+        $this->_setDefault();
+        // 通常 edit
+        $data = [
+            'Post' => [
+                'id' => 1,
+                'body' => 'edit string',
+            ]
+        ];
+        $res = $this->Post->postEdit($data);
+        $this->assertTrue($res);
+        $row = $this->Post->findById(1);
+        $this->assertEquals($row['Post']['body'], $data['Post']['body']);
+
+        // 添付ファイルあり
+        $this->Post->PostFile->AttachedFile = $this->getMockForModel('AttachedFile', array('updateRelatedFiles'));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $this->Post->PostFile->AttachedFile->expects($this->any())
+                                           ->method('updateRelatedFiles')
+                                           ->will($this->returnValue(true));
+        $data = [
+            'Post' => [
+                'id' => 1,
+                'body' => 'edit string2',
+            ],
+            'file_id' => ['aaa', 'bbb']
+        ];
+        $res = $this->Post->postEdit($data);
+        $this->assertTrue($res);
+        $row = $this->Post->findById(1);
+        $this->assertEquals($row['Post']['body'], $data['Post']['body']);
+
+        // rollback
+        $this->Post->PostFile->AttachedFile = $this->getMockForModel('AttachedFile', array('updateRelatedFiles'));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $this->Post->PostFile->AttachedFile->expects($this->any())
+                                           ->method('updateRelatedFiles')
+                                           ->will($this->returnValue(false));
+        $data = [
+            'Post' => [
+                'id' => 1,
+                'body' => 'edit string3',
+            ],
+            'file_id' => ['aaa', 'bbb']
+        ];
+        $res = $this->Post->postEdit($data);
+        $this->assertFalse($res);
+        $row = $this->Post->findById(1);
+        $this->assertNotEquals($row['Post']['body'], $data['Post']['body']);
+
     }
 
     function testGetMessageList()

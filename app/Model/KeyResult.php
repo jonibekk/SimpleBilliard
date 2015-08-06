@@ -4,10 +4,10 @@ App::uses('AppModel', 'Model');
 /**
  * KeyResult Model
  *
- * @property Team              $Team
- * @property Goal              $Goal
- * @property ActionResult      $ActionResult
- * @property Post              $Post
+ * @property Team         $Team
+ * @property Goal         $Goal
+ * @property ActionResult $ActionResult
+ * @property Post         $Post
  */
 class KeyResult extends AppModel
 {
@@ -177,8 +177,28 @@ class KeyResult extends AppModel
         return true;
     }
 
-    function getKeyResults($goal_id, $find_type = "all", $is_complete = false)
+    /**
+     * キーリザルトの一覧を返す
+     *
+     * @param        $goal_id
+     * @param string $find_type
+     * @param bool   $is_complete
+     * @param array  $params
+     *                 'limit' : find() の limit
+     *                 'page'  : find() の page
+     * @param bool   $with_action
+     * @param int    $action_limit
+     *
+     * @return array|null
+     */
+    function getKeyResults($goal_id, $find_type = "all", $is_complete = false,
+                           array $params = [], $with_action = false, $action_limit = MY_PAGE_ACTION_NUMBER)
     {
+        // パラメータデフォルト
+        $params = array_merge(['limit' => null,
+                               'page'  => 1,
+                              ], $params);
+
         $options = [
             'conditions' => [
                 'goal_id' => $goal_id,
@@ -189,10 +209,27 @@ class KeyResult extends AppModel
                 'KeyResult.start_date ASC',
                 'KeyResult.end_date ASC',
                 'KeyResult.priority DESC',
-            ]
+            ],
+            'limit'      => $params['limit'],
+            'page'       => $params['page'],
         ];
         if ($is_complete === true) {
             $options['conditions']['completed'] = null;
+        }
+        if ($with_action) {
+            $options['contain']['ActionResult'] = [
+                'limit'            => $action_limit,
+                'order'            => ['ActionResult.created desc'],
+                'Post'             => [
+                    'fields' => [
+                        'Post.id'
+                    ]
+                ],
+                'ActionResultFile' => [
+                    'conditions' => ['ActionResultFile.index_num' => 0],
+                    'AttachedFile'
+                ]
+            ];
         }
 
         $res = $this->find($find_type, $options);
@@ -204,6 +241,25 @@ class KeyResult extends AppModel
         $options = [
             'conditions' => [
                 'goal_id' => $goal_ids,
+            ],
+        ];
+        $res = $this->find('count', $options);
+        return $res;
+    }
+
+    /**
+     * 未完了のキーリザルト数を返す
+     *
+     * @param $goal_id
+     *
+     * @return int
+     */
+    function getIncompleteKrCount($goal_id)
+    {
+        $options = [
+            'conditions' => [
+                'goal_id'   => $goal_id,
+                'completed' => null,
             ],
         ];
         $res = $this->find('count', $options);
@@ -298,6 +354,39 @@ class KeyResult extends AppModel
             return 0;
         }
         return $progress;
+    }
+
+    function getKrNameList($goal_id, $with_all_opt = false, $separate_progress = false)
+    {
+        $options = [
+            'conditions' => ['goal_id' => $goal_id],
+            'fields'     => ['id', 'name'],
+            'order'      => ['created desc'],
+        ];
+        if (!$separate_progress) {
+            $res = $this->find('list', $options);
+            if ($with_all_opt) {
+                return [null => __d('gl', 'すべて')] + $res;
+            }
+            return $res;
+        }
+        $incomplete_opt = $options;
+        $incomplete_opt['conditions']['completed'] = null;
+        $incomplete_krs = $this->find('list', $incomplete_opt);
+        $completed_opt = $options;
+        $completed_opt['conditions']['NOT']['completed'] = null;
+        $completed_krs = $this->find('list', $completed_opt);
+        $res = [];
+        $res += $with_all_opt ? [null => __d('gl', 'すべて')] : null;
+        if (!empty($incomplete_krs)) {
+            $res += ['disable_value1' => '----------------------------------------------------------------------------------------'];
+            $res += $incomplete_krs;
+        }
+        if (!empty($completed_krs)) {
+            $res += ['disable_value2' => '----------------------------------------------------------------------------------------'];
+            $res += $completed_krs;
+        }
+        return $res;
     }
 
 }

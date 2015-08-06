@@ -14,6 +14,9 @@ class UsersControllerTest extends ControllerTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.attached_file',
+        'app.post_file',
+        'app.comment_file',
         'app.action_result',
         'app.evaluator',
         'app.evaluation_setting',
@@ -54,6 +57,8 @@ class UsersControllerTest extends ControllerTestCase
         'app.post_share_circle',
         'app.circle',
         'app.circle_member',
+        'app.purpose',
+        'app.goal_category',
     );
 
     /**
@@ -1928,6 +1933,12 @@ class UsersControllerTest extends ControllerTestCase
         $this->testAction('/users/view_goals/user_id:2/page_type:following');
     }
 
+    function testViewGoalsInvalidParam()
+    {
+        $this->_getUsersCommonMock();
+        $this->testAction('/users/view_goals/user_id:99999999');
+    }
+
     function testViewPosts()
     {
         $this->_getUsersCommonMock();
@@ -1941,6 +1952,12 @@ class UsersControllerTest extends ControllerTestCase
             $this->testAction('/users/view_posts/user_id:14');
         } catch (NotFoundException $e) {
         }
+    }
+
+    function testViewPostsInvalidParam()
+    {
+        $this->_getUsersCommonMock();
+        $this->testAction('/users/view_posts/user_id:99999999');
     }
 
     function testViewActionsNoPageType()
@@ -1959,6 +1976,12 @@ class UsersControllerTest extends ControllerTestCase
     {
         $this->_getUsersCommonMock();
         $this->testAction('/users/view_actions/user_id:1/page_type:list');
+    }
+
+    function testViewActionsInvalidParam()
+    {
+        $this->_getUsersCommonMock();
+        $this->testAction('/users/view_actions/user_id:99999999');
     }
 
     function testViewInfo()

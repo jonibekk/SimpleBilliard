@@ -10,15 +10,15 @@
  * @var CodeCompletionView $this
  * @var                    $goal
  * @var                    $long_text
- * @var                    $with_header
+ * @var                    $without_header
  */
-$with_header = isset($with_header) ? $with_header : true;
+$without_header = isset($without_header) ? $without_header : false;
 ?>
 <?php if (!empty($posts)): ?>
     <!-- START app/View/Elements/Feed/posts.ctp -->
     <?php foreach ($posts as $post_key => $post): ?>
         <div class="panel panel-default">
-            <?php if ($with_header && (isset($post['Goal']['id']) && $post['Goal']['id']) || isset($post['Circle']['id'])): ?>
+            <?php if (!$without_header && (isset($post['Goal']['id']) && $post['Goal']['id']) || isset($post['Circle']['id'])): ?>
                 <!--START Goal Post Header -->
 
                 <?php if (isset($post['Goal']['id']) && $post['Goal']['id']): ?>
@@ -98,20 +98,17 @@ $with_header = isset($with_header) ? $with_header : true;
                                 <i class="fa fa-chevron-down feed-arrow"></i>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
-                                <?php if ($post['User']['id'] === $this->Session->read('Auth.User.id')
-                                    && $post['Post']['type'] != Post::TYPE_ACTION
-                                    && $post['Post']['type'] != Post::TYPE_KR_COMPLETE
-                                    && $post['Post']['type'] != Post::TYPE_GOAL_COMPLETE
-                                ): ?>
-                                    <li><a href="#" class="target-toggle-click"
-                                           target-id="PostEditForm_<?= $post['Post']['id'] ?>"
-                                           opend-text="<?= __d('gl', "編集をやめる") ?>"
-                                           closed-text="<?= __d('gl', "投稿を編集") ?>"
-                                           click-target-id="PostEditFormBody_<?= $post['Post']['id'] ?>"
-                                           hidden-target-id="PostTextBody_<?= $post['Post']['id'] ?>"
-                                           ajax-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_edit_post_form', 'post_id' => $post['Post']['id']]) ?>"
-                                            ><?= __d('gl', "投稿を編集") ?></a>
-                                    </li>
+                                <?php if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
+                                    <?php if ($post['Post']['type'] == Post::TYPE_NORMAL): ?>
+                                        <li><a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'post_edit', 'post_id' => $post['Post']['id']]) ?>"
+                                                ><?= __d('gl', "投稿を編集") ?></a>
+                                        </li>
+                                    <?php elseif ($post['Post']['type'] == Post::TYPE_ACTION): ?>
+                                        <li>
+                                            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'edit_action', 'action_result_id' => $post['Post']['action_result_id']]) ?>"
+                                                ><?= __d('gl', "アクションを編集") ?></a>
+                                        </li>
+                                    <?php endif; ?>
                                 <?php endif ?>
                                 <?php if ($my_member_status['TeamMember']['admin_flg'] || $post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
                                     <?php if ($post['Post']['type'] != Post::TYPE_ACTION): ?>
@@ -141,7 +138,9 @@ $with_header = isset($with_header) ? $with_header : true;
                                            ]
                         )
                         ?>
-                        <div class="font_14px font_bold font_verydark"><?= h($post['User']['display_username']) ?></div>
+                        <span class="font_14px font_bold font_verydark">
+                            <?= h($post['User']['display_username']) ?>
+                        </span>
                     </a>
                     <?= $this->element('Feed/display_share_range', compact('post')) ?>
                 </div>
@@ -160,6 +159,7 @@ $with_header = isset($with_header) ? $with_header : true;
                     }
                 }
                 ?>
+                <? //TODO 古い画像表示処理なのでいずれ削除する?>
                 <?php if ($photo_count): ?>
                     <div class="col col-xxs-12 pt_10px">
                         <div id="CarouselPost_<?= $post['Post']['id'] ?>" class="carousel slide" data-ride="carousel">
@@ -219,6 +219,27 @@ $with_header = isset($with_header) ? $with_header : true;
 
                     </div>
                 <?php endif; ?>
+                <?php if ($post['Post']['type'] == Post::TYPE_ACTION && isset($post['ActionResult']['ActionResultFile'][0])): ?>
+                    <div class="col col-xxs-12 pt_10px">
+                        <a href="<?= $this->Upload->attachedFileUrl($post['ActionResult']['ActionResultFile'][0],
+                                                                    "preview") ?>"
+                           rel='lightbox' data-lightbox='LightBoxAttachedFileImgMain_Post_<?= $post['Post']['id'] ?>'
+                            >
+                            <?=
+                            $this->Html->image('ajax-loader.gif',
+                                               [
+                                                   'class'         => 'lazy bd-s',
+                                                   'data-original' => $this->Upload->uploadUrl($post['ActionResult']['ActionResultFile'][0],
+                                                                                               "AttachedFile.attached",
+                                                                                               ['style' => 'small'])
+                                               ]
+                            )
+                            ?>
+                        </a>
+                    </div>
+                <?php else: ?>
+                <?php endif; ?>
+
                 <?php if ($post['Post']['site_info']): ?>
                     <?php $site_info = json_decode($post['Post']['site_info'], true) ?>
                     <div class="col col-xxs-12 pt_10px">
@@ -294,13 +315,37 @@ $with_header = isset($with_header) ? $with_header : true;
                     </div>
                 <?php endif; ?>
 
-
-
                 <?php if ($post['Post']['type'] == Post::TYPE_ACTION && isset($post['ActionResult']['KeyResult']['name'])): ?>
                     <div class="col col-xxs-12 pt_6px feed-contents">
                         <i class="fa fa-key disp_i"></i>&nbsp;<?= h($post['ActionResult']['KeyResult']['name']) ?>
                     </div>
                 <?php endif; ?>
+                <?php if ($post['Post']['type'] == Post::TYPE_ACTION): ?>
+                    <div class="col col-xxs-12">
+                        <?php foreach ($post['ActionResult']['ActionResultFile'] as $k => $file): ?>
+                            <?php if ($k === 0) {
+                                continue;
+                            } ?>
+                            <div class="panel panel-default file-wrap-on-post">
+                                <div class="panel-body pt_10px plr_11px pb_8px">
+                                    <?= $this->element('Feed/attached_file_item',
+                                                       ['data' => $file, 'page_type' => 'feed', 'post_id' => $post['Post']['id']]) ?>
+                                </div>
+                            </div>
+                        <?php endforeach ?>
+                    </div>
+                <?php else: ?>
+                    <div class="col col-xxs-12">
+                        <?php foreach ($post['PostFile'] as $file): ?>
+                            <div class="panel panel-default file-wrap-on-post">
+                                <div class="panel-body pt_10px plr_11px pb_8px">
+                                    <?= $this->element('Feed/attached_file_item',
+                                                       ['data' => $file, 'page_type' => 'feed', 'post_id' => $post['Post']['id']]) ?>
+                                </div>
+                            </div>
+                        <?php endforeach ?>
+                    </div>
+                <? endif; ?>
                 <div class="col col-xxs-12 font_12px pt_8px">
                     <a href="#" class="click-like font_lightgray <?= empty($post['MyPostLike']) ? null : "liked" ?>"
                        like_count_id="PostLikeCount_<?= $post['Post']['id'] ?>"
@@ -319,12 +364,14 @@ $with_header = isset($with_header) ? $with_header : true;
                     class="fa fa-check"></i>&nbsp;<span><?= $post['Post']['post_read_count'] ?></span>
             </a>
             </span>
-
                 </div>
             </div>
-            <div class="panel-body ptb_8px plr_11px comment-block">
+            <div class="panel-body ptb_8px plr_11px comment-block"
+                 id="CommentBlock_<?= $post['Post']['id'] ?>"
+                 data-preview-container-id="CommentUploadFilePreview_<?= $post['Post']['id'] ?>"
+                 data-form-id="CommentAjaxGetNewCommentForm_<?= $post['Post']['id'] ?>">
                 <?php if ($post['Post']['comment_count'] > 3 && count($post['Comment']) == 3): ?>
-                    <a href="#" class="btn btn-link click-comment-all"
+                    <a href="#" class="btn-link click-comment-all"
                        id="Comments_<?= $post['Post']['id'] ?>"
                        parent-id="Comments_<?= $post['Post']['id'] ?>"
                        get-url="<?= $this->Html->url(["controller" => "posts", 'action' => 'ajax_get_old_comment', 'post_id' => $post['Post']['id'], $post['Post']['comment_count'] - 3, 'long_text' => $long_text]) ?>"
@@ -350,10 +397,10 @@ $with_header = isset($with_header) ? $with_header : true;
                 <?php foreach ($post['Comment'] as $comment): ?>
                     <?=
                     $this->element('Feed/comment',
-                                   ['comment' => $comment, 'user' => $comment['User'], 'like' => $comment['MyCommentLike']]) ?>
+                                   ['comment' => $comment, 'comment_file' => $comment['CommentFile'], 'user' => $comment['User'], 'like' => $comment['MyCommentLike']]) ?>
                 <?php endforeach ?>
 
-                <a href="#" class="btn btn-link click-comment-new"
+                <a href="#" class="btn-link click-comment-new"
                    id="Comments_new_<?= $post['Post']['id'] ?>"
                    style="display:none"
                    post-id="<?= $post['Post']['id'] ?>"
@@ -386,6 +433,7 @@ $with_header = isset($with_header) ? $with_header : true;
                                     class="form-control font_12px comment-post-form box-align not-autosize click-get-ajax-form-replace"
                                     replace-elm-parent-id="NewCommentForm_<?= $post['Post']['id'] ?>"
                                     click-target-id="CommentFormBody_<?= $post['Post']['id'] ?>"
+                                    post-id="<?= $post['Post']['id'] ?>"
                                     tmp-target-height="32"
                                     ajax-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_new_comment_form', 'post_id' => $post['Post']['id']]) ?>"
                                     wrap="soft" rows="1"
@@ -399,5 +447,6 @@ $with_header = isset($with_header) ? $with_header : true;
             </div>
         </div>
     <?php endforeach ?>
+    <?= $this->element('file_upload_form') ?>
     <!-- END app/View/Elements/Feed/posts.ctp -->
 <?php endif ?>

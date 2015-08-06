@@ -12,19 +12,9 @@
 <!-- START app/View/Users/view_posts.ctp -->
 <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default">
-        <?= $this->element('simplex_top_section') ?>
+        <?= $this->element('User/simplex_top_section') ?>
         <div class="panel-body view-posts-panel">
             <?= $this->element("Feed/posts") ?>
-
-            <?php if (empty($posts)): ?>
-                <div class="panel panel-default">
-                    <div class="panel-body ptb_10px plr_11px ">
-                        <div class="col col-xxs-12">
-                            <?= __d('gl', "投稿がありません。") ?>
-                        </div>
-                    </div>
-                </div>
-            <?php endif; ?>
             <?php
             $next_page_num = 2;
             $month_index = 0;
@@ -53,8 +43,8 @@
                        get-url="<?=
                        $this->Html->url(['controller' => 'posts',
                                          'action'     => 'ajax_get_user_page_post_feed',
-                                         'user_id' => viaIsSet($this->request->params['named']['user_id']),
-                                         'type'    => Post::TYPE_NORMAL,
+                                         'user_id'    => viaIsSet($this->request->params['named']['user_id']),
+                                         'type'       => Post::TYPE_NORMAL,
                                         ]) ?>"
                        id="FeedMoreReadLink"
                        oldest-post-time="<?= $oldest_post_time ?>"

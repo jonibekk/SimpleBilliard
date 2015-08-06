@@ -24,7 +24,7 @@
                     <?php foreach ($circle_members as $user): ?>
                         <?=
                         $this->element('Feed/read_like_user',
-                                       ['user' => $user['User'], 'created' => $user['CircleMember']['modified'], 'type' => 'rough']) ?>
+                                       ['user' => $user['User'], 'created' => $user['CircleMember']['modified'], 'is_admin' => $user['CircleMember']['admin_flg'], 'type' => 'rough']) ?>
                     <?php endforeach ?>
                 </div>
             <?php else: ?>

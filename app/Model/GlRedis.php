@@ -5,7 +5,6 @@ App::uses('NotifySetting', 'Model');
 
 /**
  * GlRedis Model
-
  */
 class GlRedis extends AppModel
 {
@@ -41,6 +40,7 @@ class GlRedis extends AppModel
     const KEY_TYPE_COUNT_BY_USER = 'count_by_user_key';
     const KEY_TYPE_COUNT_MESSAGE_BY_USER = 'count_message_by_user_key';
     const KEY_TYPE_TWO_FA_DEVICE_HASHES = 'two_fa_device_hashes_key';
+    const KEY_TYPE_PRE_UPLOAD_FILE = 'pre_upload_file_key';
 
     const FIELD_COUNT_NEW_NOTIFY = 'new_notify';
 
@@ -52,6 +52,7 @@ class GlRedis extends AppModel
         self::KEY_TYPE_COUNT_BY_USER,
         self::KEY_TYPE_COUNT_MESSAGE_BY_USER,
         self::KEY_TYPE_TWO_FA_DEVICE_HASHES,
+        self::KEY_TYPE_PRE_UPLOAD_FILE,
         self::KEY_TYPE_MESSAGE,
         self::KEY_TYPE_MESSAGE_USER,
     ];
@@ -151,6 +152,19 @@ class GlRedis extends AppModel
         'two_fa_device_hashes' => null,
     ];
 
+    /**
+     * Key Name: team:[team_id]:user:[user_id]:pre_upload_file_hash:[hash]
+     *
+     * @var array
+     */
+    private /** @noinspection PhpUnusedPrivateFieldInspection */
+        $pre_upload_file_key = [
+        'team'            => null,
+        'user'            => null,
+        'unique_id'       => null,
+        'pre_upload_file' => null,
+    ];
+
     public function changeDbSource($config_name = "redis_test")
     {
         unset($this->Db);
@@ -182,7 +196,7 @@ class GlRedis extends AppModel
      *
      * @return string
      */
-    private function getKeyName($key_type, $team_id = null, $user_id = null, $notify_id = null, $unread = null, $email = null, $device = null)
+    private function getKeyName($key_type, $team_id = null, $user_id = null, $notify_id = null, $unread = null, $email = null, $device = null, $unique_id = null)
     {
         if (!in_array($key_type, self::$KEY_TYPES)) {
             throw new RuntimeException('this is unavailable type!');
@@ -209,6 +223,9 @@ class GlRedis extends AppModel
         }
         if ($device !== null && array_key_exists('device', $this->{$key_type})) {
             $this->{$key_type}['device'] = $device;
+        }
+        if ($unique_id !== null && array_key_exists('unique_id', $this->{$key_type})) {
+            $this->{$key_type}['unique_id'] = $unique_id;
         }
         if ($notify_id && array_key_exists('message', $this->{$key_type})) {
             $this->{$key_type}['message'] = $notify_id;
@@ -609,6 +626,34 @@ class GlRedis extends AppModel
     {
         $key = $this->getKeyName(self::KEY_TYPE_MESSAGE_USER, $team_id, $user_id);
         return $this->Db->zRem($key, $notify_id);
+    }
+
+    function savePreUploadFile($file_info, $team_id, $user_id)
+    {
+        $file = [
+            'info'    => $file_info,
+            'content' => file_get_contents($file_info['tmp_name']),
+        ];
+        $file['info']['remote'] = true;
+
+        $hash_key = $this->generateId();
+        $key = $this->getKeyName(self::KEY_TYPE_PRE_UPLOAD_FILE, $team_id, $user_id, null, null, null, null, $hash_key);
+
+        $this->Db->set($key, serialize($file));
+        $this->Db->setTimeout($key, PRE_FILE_TTL);
+        return $hash_key;
+    }
+
+    function getPreUploadedFile($team_id, $user_id, $hash_key)
+    {
+        $key = $this->getKeyName(self::KEY_TYPE_PRE_UPLOAD_FILE, $team_id, $user_id, null, null, null, null, $hash_key);
+        return unserialize($this->Db->get($key));
+    }
+
+    function delPreUploadedFile($team_id, $user_id, $hash_key)
+    {
+        $key = $this->getKeyName(self::KEY_TYPE_PRE_UPLOAD_FILE, $team_id, $user_id, null, null, null, null, $hash_key);
+        return $this->Db->del($key);
     }
 
 }

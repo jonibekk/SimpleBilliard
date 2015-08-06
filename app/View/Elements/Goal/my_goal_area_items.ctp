@@ -15,8 +15,9 @@
     <div class="col col-xxs-12 my-goals-column-item bd-radius_4px shadow-default mt_8px">
         <div class="col col-xxs-12">
             <?php if ($type == 'leader'): ?>
-                <a class="pull-right goals-column-function bd-radius_4px dropdown font_lightGray-gray" data-toggle="dropdown"
-                id="download">
+                <a class="pull-right goals-column-function bd-radius_4px dropdown font_lightGray-gray"
+                   data-toggle="dropdown"
+                   id="download">
                     <i class="fa fa-cog goals-column-function-icon"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
@@ -56,29 +57,30 @@
             <?php elseif
             ($type == 'collabo'
             ): ?>
-                    <a href="#" class="goals-column-function pull-right goals-column-function bd-radius_4px dropdown font_lightGray-gray"
-                       data-toggle="dropdown"
-                       id="download">
-                        <i class="fa fa-cog goals-column-function-icon"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
-                        aria-labelledby="dropdownMenu1">
-                        <?php if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])): ?>
-                            <li role="presentation">
-                                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id']]) ?>"
-                                   class="modal-ajax-get-add-key-result"
-                                    ><i class="fa fa-plus-circle"></i><span class="ml_2px">
+                <a href="#"
+                   class="goals-column-function pull-right goals-column-function bd-radius_4px dropdown font_lightGray-gray"
+                   data-toggle="dropdown"
+                   id="download">
+                    <i class="fa fa-cog goals-column-function-icon"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
+                    aria-labelledby="dropdownMenu1">
+                    <?php if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])): ?>
+                        <li role="presentation">
+                            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id']]) ?>"
+                               class="modal-ajax-get-add-key-result"
+                                ><i class="fa fa-plus-circle"></i><span class="ml_2px">
                                     <?= __d('gl', "出したい成果を追加") ?></span></a>
-                                <a class="modal-ajax-get-collabo"
-                                   data-toggle="modal"
-                                   data-target="#ModalCollabo_<?= $goal['Goal']['id'] ?>"
-                                   href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', 'goal_id' => $goal['Goal']['id']]) ?>">
-                                    <i class="fa fa-pencil"></i>
-                                    <span class="ml_2px"><?= __d('gl', "コラボを編集") ?></span>
-                                </a>
-                            </li>
-                        <?php endif; ?>
-                    </ul>
+                            <a class="modal-ajax-get-collabo"
+                               data-toggle="modal"
+                               data-target="#ModalCollabo_<?= $goal['Goal']['id'] ?>"
+                               href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', 'goal_id' => $goal['Goal']['id']]) ?>">
+                                <i class="fa fa-pencil"></i>
+                                <span class="ml_2px"><?= __d('gl', "コラボを編集") ?></span>
+                            </a>
+                        </li>
+                    <?php endif; ?>
+                </ul>
             <?php elseif
             ($type == 'my_prev'
             ): ?>
@@ -121,8 +123,8 @@
                 </div>
             <?php else: ?>
                 <div class="goal-column-title-wrap">
-                    <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_description_modal', 'goal_id' => $goal['Goal']['id']]) ?>"
-                       class="modal-ajax-get">
+                    <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal['Goal']['id']]) ?>"
+                       class="">
                         <p class="goal-column-title font_gray">
                             <i class="goal-column-title-icon fa fa-flag"></i>
                             <span class="goal-column-title-text">
@@ -184,9 +186,9 @@
                         <?= __d('gl', "出したい成果をみる") ?>(<?= count($goal['KeyResult']) ?>)
                     </a>
                     <?php if ($goal['Goal']['action_result_count'] > 0): ?>
-                        <a class="goalsCard-activity inline-block col-xxs-2 click-show-post-modal font_gray-brownRed pointer"
+                        <a class="goalsCard-activity inline-block col-xxs-2 font_gray-brownRed pointer"
                            id="ActionListOpen_<?= $goal['Goal']['id'] ?>"
-                           href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_goal_action_feed', 'goal_id' => $goal['Goal']['id'], 'type' => Post::TYPE_ACTION]) ?>">
+                           href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_actions', 'goal_id' => $goal['Goal']['id'], 'page_type' => 'list']) ?>">
                             <i class="fa fa-check-circle mr_1px font_brownRed"></i><span
                                 class="ls_number"><?= $goal['Goal']['action_result_count'] ?></span>
                         </a>
@@ -199,7 +201,7 @@
 
                 <?php }
                 elseif ($type != "follow") { ?>
-                    <a class="col col-xxs-12 bd-dash font_lightGray-gray p_10px modal-ajax-get-add-key-result"
+                    <a class="col-xxs-12 font_lightGray-gray modal-ajax-get-add-key-result  goals-column-add-kr-btn"
                        href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id']]) ?>">
                         <i class="fa fa-plus-circle font_brownRed"></i>
                         <span class="ml_2px"><?= __d('gl', "出したい成果を追加") ?></span>

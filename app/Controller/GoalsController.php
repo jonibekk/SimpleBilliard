@@ -260,6 +260,32 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
+    public function ajax_get_add_action_modal()
+    {
+        $goal_id = viaIsSet($this->request->params['named']['goal_id']);
+        $key_result_id = viaIsSet($this->request->params['named']['key_result_id']);
+        $this->_ajaxPreProcess();
+        try {
+            if (!$this->Goal->Collaborator->isCollaborated($goal_id)) {
+                throw new RuntimeException();
+            }
+            if ($key_result_id && !$this->Goal->KeyResult->isPermitted($key_result_id)) {
+                throw new RuntimeException();
+            }
+        } catch (RuntimeException $e) {
+            return $this->_ajaxGetResponse(null);
+        }
+        $goal = $this->Goal->getGoalMinimum($goal_id);
+        $kr_list = [null => '---'] + $this->Goal->KeyResult->getKeyResults($goal_id, 'list');
+        $kr_value_unit_list = KeyResult::$UNIT;
+        $this->set(compact('goal', 'goal_id', 'kr_list', 'kr_value_unit_list', 'key_result_id'));
+        //htmlレンダリング結果
+        $response = $this->render('Goal/modal_add_action');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
+    }
+
     public function ajax_get_add_key_result_modal()
     {
         $goal_id = viaIsSet($this->request->params['named']['goal_id']);
@@ -637,24 +663,56 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($return);
     }
 
+    /**
+     * ゴールに紐づくキーリザルト一覧を返す
+     *
+     * @param bool $kr_can_edit
+     *
+     * @return CakeResponse
+     */
     function ajax_get_key_results($kr_can_edit = false)
     {
-        $goal_id = $this->request->params['named']['goal_id'];
         $this->_ajaxPreProcess();
 
-        $key_results = $this->Goal->KeyResult->getKeyResults($goal_id);
-        $incomplete_kr_count = 0;
-        foreach ($key_results as $k => $v) {
-            if (empty($v['KeyResult']['completed'])) {
-                $incomplete_kr_count++;
-            }
+        $goal_id = $this->request->params['named']['goal_id'];
+
+        // テンプレを切り替える場合に指定する
+        $view = isset($this->request->params['named']['view']) ? $this->request->params['named']['view'] : null;
+
+        // ページ番号
+        // 指定しない場合は全件を返す
+        $page = 1;
+        $limit = null;
+        if (isset($this->request->params['named']['page'])) {
+            $page = $this->request->params['named']['page'];
+            $limit = GOAL_PAGE_KR_NUMBER;
         }
 
+        $key_results = $this->Goal->KeyResult->getKeyResults($goal_id, 'all', false, [
+            'page'  => $page,
+            'limit' => $limit,
+        ]);
+
+        // 未完了のキーリザルト数
+        $incomplete_kr_count = $this->Goal->KeyResult->getIncompleteKrCount($goal_id);
+
         $this->set(compact('key_results', 'incomplete_kr_count', 'kr_can_edit', 'goal_id'));
-        $response = $this->render('Goal/key_result_items');
+
+        $response = null;
+        switch ($view) {
+            case "key_results":
+                $response = $this->render('Goal/key_results');
+                break;
+            default:
+                $response = $this->render('Goal/key_result_items');
+                break;
+        }
+
         $html = $response->__toString();
         $result = array(
-            'html' => $html
+            'html'          => $html,
+            'count'         => count($key_results),
+            'page_item_num' => GOAL_PAGE_KR_NUMBER,
         );
         return $this->_ajaxGetResponse($result);
     }
@@ -826,34 +884,56 @@ class GoalsController extends AppController
                                        ]);
     }
 
+    /**
+     * アクションの編集
+     */
     public function edit_action()
     {
         $ar_id = $this->request->params['named']['action_result_id'];
-        $this->request->allowMethod('post', 'put');
-        try {
-            if (!$this->Goal->ActionResult->isOwner($this->Auth->user('id'), $ar_id)) {
-                throw new RuntimeException();
-            }
-            if (!$this->Goal->ActionResult->actionEdit($this->request->data)) {
-                throw new RuntimeException(__d('gl', "データの保存に失敗しました。"));
-            }
-        } catch (RuntimeException $e) {
-            $this->Pnotify->outError($e->getMessage());
+
+        if (!$this->Goal->ActionResult->isOwner($this->Auth->user('id'), $ar_id)) {
+            $this->Pnotify->outError(__('gl', "このアクションは編集できません。"));
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->redirect($this->referer());
         }
-        $this->Pnotify->outSuccess(__d('gl', "アクションを更新しました。"));
-        $action = $this->Goal->ActionResult->find('first',
-                                                  ['conditions' => ['ActionResult.id' => $ar_id]]);
-        $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_ACTION,
-                                   $action['ActionResult']['goal_id'],
-                                   $action['ActionResult']['key_result_id'],
-                                   $ar_id);
-        if (isset($action['ActionResult']['goal_id']) && !empty($action['ActionResult']['goal_id'])) {
-            $this->_flashClickEvent("ActionListOpen_" . $action['ActionResult']['goal_id']);
+
+        // フォームが submit された時
+        if ($this->request->is('put')) {
+            $this->request->data['ActionResult']['id'] = $ar_id;
+            if (!$this->Goal->ActionResult->actionEdit($this->request->data)) {
+                $this->Pnotify->outError(__d('gl', "データの保存に失敗しました。"));
+                /** @noinspection PhpVoidFunctionResultUsedInspection */
+                return $this->redirect($this->referer());
+            }
+            $this->Pnotify->outSuccess(__d('gl', "アクションを更新しました。"));
+            $action = $this->Goal->ActionResult->find('first',
+                                                      ['conditions' => ['ActionResult.id' => $ar_id]]);
+            $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_ACTION,
+                                       $action['ActionResult']['goal_id'],
+                                       $action['ActionResult']['key_result_id'],
+                                       $ar_id);
+            if (isset($action['ActionResult']['goal_id']) && !empty($action['ActionResult']['goal_id'])) {
+                $this->_flashClickEvent("ActionListOpen_" . $action['ActionResult']['goal_id']);
+            }
+
+            /** @noinspection PhpVoidFunctionResultUsedInspection */
+            $url = $this->referer();
+            $post = $this->Goal->Post->getByActionResultId($ar_id);
+            if ($post) {
+                $url = ['controller' => 'posts',
+                        'action'     => 'feed',
+                        'post_id'    => $post['Post']['id']];
+            }
+            return $this->redirect($url);
         }
-        /** @noinspection PhpVoidFunctionResultUsedInspection */
-        return $this->redirect($this->referer());
+
+        // 編集フォーム表示
+        $row = $this->Goal->ActionResult->getWithAttachedFiles($ar_id);
+        $this->request->data = $row;
+        $this->_setViewValOnRightColumn();
+        $this->set('common_form_type', 'action');
+        $this->set('common_form_mode', 'edit');
+        $this->layout = LAYOUT_ONE_COLUMN;
     }
 
     function download_all_goal_csv()
@@ -980,11 +1060,18 @@ class GoalsController extends AppController
                 || !$this->Goal->Post->addGoalPost(Post::TYPE_ACTION, $goal_id, $this->Auth->user('id'), false,
                                                    $this->Goal->ActionResult->getLastInsertID(), $share,
                                                    PostShareCircle::SHARE_TYPE_ONLY_NOTIFY)
+                || !$this->Goal->Post->PostFile->AttachedFile->saveRelatedFiles($this->Goal->ActionResult->getLastInsertID(),
+                                                                                AttachedFile::TYPE_MODEL_ACTION_RESULT,
+                                                                                $this->request->data('file_id'))
             ) {
                 throw new RuntimeException(__d('gl', "アクションの追加に失敗しました。"));
             }
         } catch (RuntimeException $e) {
             $this->Goal->rollback();
+            if ($action_result_id = $this->Goal->ActionResult->getLastInsertID()) {
+                $this->Goal->Post->PostFile->AttachedFile->deleteAllRelatedFiles($action_result_id,
+                                                                                 AttachedFile::TYPE_MODEL_ACTION_RESULT);
+            }
             $this->Pnotify->outError($e->getMessage());
             $this->redirect($this->referer());
         }
@@ -1151,7 +1238,8 @@ class GoalsController extends AppController
         $goal_id = $this->_getRequiredParam('goal_id');
         if (!$this->_setGoalPageHeaderInfo($goal_id)) {
             // ゴールが存在しない
-            throw new NotFoundException();
+            $this->Pnotify->outError(__d('gl', "不正な画面遷移です。"));
+            return $this->redirect($this->referer());
         }
         $followers = $this->Goal->Follower->getFollowerByGoalId($goal_id, [
             'limit'      => GOAL_PAGE_FOLLOWER_NUMBER,
@@ -1172,7 +1260,8 @@ class GoalsController extends AppController
         $goal_id = $this->_getRequiredParam('goal_id');
         if (!$this->_setGoalPageHeaderInfo($goal_id)) {
             // ゴールが存在しない
-            throw new NotFoundException();
+            $this->Pnotify->outError(__d('gl', "不正な画面遷移です。"));
+            return $this->redirect($this->referer());
         }
         $members = $this->Goal->Collaborator->getCollaboratorByGoalId($goal_id, [
             'limit' => GOAL_PAGE_MEMBER_NUMBER,
@@ -1182,13 +1271,36 @@ class GoalsController extends AppController
         return $this->render();
     }
 
+    /**
+     * キーリザルト一覧
+     *
+     * @return CakeResponse
+     */
     function view_krs()
     {
         $goal_id = $this->_getRequiredParam('goal_id');
         if (!$this->_setGoalPageHeaderInfo($goal_id)) {
             // ゴールが存在しない
-            throw new NotFoundException();
+            $this->Pnotify->outError(__d('gl', "不正な画面遷移です。"));
+            return $this->redirect($this->referer());
         }
+        //コラボってる？
+        $is_collaborated = $this->Goal->Collaborator->isCollaborated($goal_id);
+        $display_action_count = MY_PAGE_ACTION_NUMBER;
+        if ($is_collaborated) {
+            $display_action_count--;
+        }
+        $this->set(compact('is_collaborated', 'display_action_count'));
+        $key_results = $this->Goal->KeyResult->getKeyResults($goal_id, 'all', false, [
+            'page'  => 1,
+            'limit' => GOAL_PAGE_KR_NUMBER,
+        ], true, $display_action_count);
+        $this->set('key_results', $key_results);
+
+        // 未完了のキーリザルト数
+        $incomplete_kr_count = $this->Goal->KeyResult->getIncompleteKrCount($goal_id);
+        $this->set('incomplete_kr_count', $incomplete_kr_count);
+
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
     }
@@ -1198,7 +1310,8 @@ class GoalsController extends AppController
         $goal_id = $this->_getRequiredParam('goal_id');
         if (!$this->_setGoalPageHeaderInfo($goal_id)) {
             // ゴールが存在しない
-            throw new NotFoundException();
+            $this->Pnotify->outError(__d('gl', "不正な画面遷移です。"));
+            return $this->redirect($this->referer());
         }
         $page_type = $this->_getRequiredParam('page_type');
         $goal_id = viaIsSet($this->request->params['named']['goal_id']);
@@ -1206,9 +1319,11 @@ class GoalsController extends AppController
             $this->Pnotify->outError(__d('gl', "不正な画面遷移です。"));
             $this->redirect($this->referer());
         }
+        $key_result_id = viaIsSet($this->request->params['named']['key_result_id']);
         $params = [
-            'type'    => Post::TYPE_ACTION,
-            'goal_id' => $goal_id,
+            'type'          => Post::TYPE_ACTION,
+            'goal_id'       => $goal_id,
+            'key_result_id' => $key_result_id,
         ];
         $posts = [];
         switch ($page_type) {
@@ -1219,10 +1334,10 @@ class GoalsController extends AppController
                 $posts = $this->Post->get(1, MY_PAGE_CUBE_ACTION_IMG_NUMBER, null, null, $params);
                 break;
         }
-        $this->set(compact('posts'));
-        $this->layout = LAYOUT_ONE_COLUMN;
+        $kr_select_options = $this->Goal->KeyResult->getKrNameList($goal_id, true, true);
+        $goal_base_url = Router::url(['controller' => 'goals', 'action' => 'view_actions', 'goal_id' => $goal_id, 'page_type' => $page_type]);
         $this->set('long_text', false);
-        $this->set(compact('goal_id'));
+        $this->set(compact('key_result_id', 'goal_id', 'posts', 'kr_select_options', 'goal_base_url'));
 
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
@@ -1233,7 +1348,8 @@ class GoalsController extends AppController
         $goal_id = $this->_getRequiredParam('goal_id');
         if (!$this->_setGoalPageHeaderInfo($goal_id)) {
             // ゴールが存在しない
-            throw new NotFoundException();
+            $this->Pnotify->outError(__d('gl', "不正な画面遷移です。"));
+            return $this->redirect($this->referer());
         }
 
         $this->layout = LAYOUT_ONE_COLUMN;
@@ -1277,6 +1393,16 @@ class GoalsController extends AppController
             }
         }
         $this->set('is_leader', $is_leader);
+
+        // 閲覧者がゴールのコラボレーターかを判別
+        $is_collaborator = false;
+        foreach ($goal['Collaborator'] as $v) {
+            if ($this->Auth->user('id') == $v['User']['id']) {
+                $is_collaborator = true;
+                break;
+            }
+        }
+        $this->set('is_collaborator', $is_collaborator);
 
         return true;
     }

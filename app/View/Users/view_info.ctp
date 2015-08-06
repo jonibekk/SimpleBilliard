@@ -11,7 +11,7 @@
 <!-- START app/View/Users/view_info.ctp -->
 <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default">
-        <?= $this->element('simplex_top_section') ?>
+        <?= $this->element('User/simplex_top_section') ?>
         <div class="panel-body view-info-panel">
             <div class="panel panel-default">
                 <div class="panel-heading" style="background-color:#eee; font-size:100%">
@@ -36,7 +36,8 @@
                 </div>
                 <div class="panel-body" style="border-top: 1px solid #ddd;">
                     <?= __d('gl', '誕生日') ?>
-                    <span class="pull-right"><?= $this->Time->format('Y/m/d', $user['User']['birth_day']) ?></span>
+                    <span class="pull-right"><?= $this->Time->format($user['User']['hide_year_flg'] ? 'm/d' : 'Y/m/d',
+                                                                     $user['User']['birth_day']) ?></span>
                 </div>
                 <div class="panel-body" style="border-top: 1px solid #ddd;">
                     <?= __d('gl', '出身地') ?>

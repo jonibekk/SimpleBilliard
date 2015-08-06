@@ -10,12 +10,12 @@
  */
 ?>
 <!-- START app/View/Elements/Goal/goal_menu_on_my_page.ctp -->
-<div class="dropdown">
+<div class="dropdown pull-right">
     <a href="#"
-       class="pull-right bd-radius_4px font_lightGray-gray"
+       class="bd-radius_4px font_lightGray-gray"
        data-toggle="dropdown"
        id="download">
-        <i class="fa fa-cog goals-column-function-icon"></i>
+        <i class="fa fa-ellipsis-h profile-goals-function-icon"></i>
     </a>
     <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
         aria-labelledby="dropdownMenu1">

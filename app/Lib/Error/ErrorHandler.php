@@ -84,6 +84,13 @@ class ErrorHandler
      */
     public static function handleException(Exception $exception)
     {
+        //ISAO社内のセキュリティソフトが原因でこの例外が多発する為、特定の条件のものは何も処理しない
+        if ($exception instanceof MissingControllerException) {
+            if (DEBUG_MODE === 0 && $exception->getMessage() == 'Controller class JsController could not be found.') {
+                return;
+            }
+        }
+
         $config = Configure::read('Exception');
         if (!empty($config['log'])) {
             $message = sprintf("[%s] %s\n%s",

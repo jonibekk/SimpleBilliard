@@ -4,10 +4,11 @@ App::uses('AppModel', 'Model');
 /**
  * ActionResult Model
  *
- * @property Team      $Team
- * @property User      $User
- * @property Goal      $Goal
- * @property KeyResult $KeyResult
+ * @property Team             $Team
+ * @property User             $User
+ * @property Goal             $Goal
+ * @property KeyResult        $KeyResult
+ * @property ActionResultFile $ActionResultFile
  */
 class ActionResult extends AppModel
 {
@@ -72,6 +73,11 @@ class ActionResult extends AppModel
             ],
         ],
     ];
+
+    public $uses = [
+        'AttachedFile'
+    ];
+
     /**
      * Validation rules
      *
@@ -135,7 +141,26 @@ class ActionResult extends AppModel
         'Post' => [
             'dependent' => true,
         ],
+        'ActionResultFile',
     ];
+
+    /**
+     * アクションと添付ファイルのデータを返す
+     *
+     * @param $action_result_id
+     *
+     * @return array|null
+     */
+    function getWithAttachedFiles($action_result_id)
+    {
+        return $this->find('first', [
+            'conditions' => ['ActionResult.id' => $action_result_id],
+            'contain'    => ['ActionResultFile' => [
+                'order' => ['ActionResultFile.index_num asc'],
+                'AttachedFile',
+            ]]
+        ]);
+    }
 
     /**
      * アクション数のカウントを返却
@@ -196,14 +221,33 @@ class ActionResult extends AppModel
         if (empty($data)) {
             return false;
         }
-        if (isset($data['photo_delete']) && !empty($data['photo_delete'])) {
-            foreach ($data['photo_delete'] as $index => $val) {
-                if ($val) {
-                    $data['ActionResult']['photo' . $index] = null;
-                }
+
+        $this->begin();
+        $results = [];
+
+        // アクションデータ保存
+        $results[] = $this->save($data);
+
+        // ファイルが添付されている場合
+        if ((isset($data['file_id']) && is_array($data['file_id'])) ||
+            (isset($data['deleted_file_id']) && is_array($data['deleted_file_id']))
+        ) {
+            $results[] = $this->ActionResultFile->AttachedFile->updateRelatedFiles(
+                $data['ActionResult']['id'],
+                AttachedFile::TYPE_MODEL_ACTION_RESULT,
+                isset($data['file_id']) ? $data['file_id'] : [],
+                isset($data['deleted_file_id']) ? $data['deleted_file_id'] : []);
+        }
+
+        // どこかでエラーが発生した場合は rollback
+        foreach ($results as $r) {
+            if (!$r) {
+                $this->rollback();
+                return false;
             }
         }
-        return $this->save($data);
+        $this->commit();
+        return true;
     }
 
     public function addCompletedAction($data, $goal_id)
@@ -248,6 +292,18 @@ class ActionResult extends AppModel
             ],
         ];
         $res = $this->find('count', $options);
+        return $res;
+    }
+
+    function getActionIdsByKrId($key_result_id)
+    {
+        $options = [
+            'conditions' => [
+                'key_result_id' => $key_result_id,
+            ],
+            'fields'     => ['id', 'id']
+        ];
+        $res = $this->find('list', $options);
         return $res;
     }
 
