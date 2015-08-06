@@ -1104,7 +1104,7 @@ textarea{
 /*/border  */
 
 /*切り替えスイッチ*/
-.switch-post, .switch-action, .switch-badge {
+.switch-post, .switch-action, .switch-badge, .switch-message {
     position: relative;
 }
 
@@ -1219,14 +1219,6 @@ textarea{
     height: 33px;
     line-height: 19px;
     vertical-align: top;
-}
-
-.liked {
-    color: #e78e99;
-}
-
-.liked:hover {
-    color: #e78e99;
 }
 
 .post-contents a {
@@ -1708,10 +1700,14 @@ ul.input-images > li {
 }
 
 .switch-post {
-    min-width: 44px;
+    min-width: 76px;
 }
 
 .switch-action {
+    min-width: 76px;
+}
+
+.switch-message {
     min-width: 76px;
 }
 
@@ -1721,12 +1717,14 @@ ul.input-images > li {
 
 .switch-post:hover a,
 .switch-action:hover a,
+.switch-message:hover a,
 .switch-badge:hover a {
     color: #333;
 }
 
 .switch-post-anchor,
 .switch-action-anchor,
+.switch-message-anchor,
 .switch-badge-anchor,
 .switch-post-anchor:hover,
 .switch-action-anchor:hover,
@@ -1809,7 +1807,7 @@ textarea.feed-post-form {
 
 .action-upload-main-image-preview {
     margin-left: 15px;
-    width: 30%;
+    width: 29%;
 }
 
 .action-upload-file-drop-area {
@@ -1827,7 +1825,7 @@ textarea.feed-post-form {
     background-color: #fff;
     opacity: 0.8;
     border: 5px dashed #029acf;
-    border-radius: 5px;
+    border-radius: 4px;
     z-index: 99999;
 }
 
@@ -1847,17 +1845,17 @@ textarea.feed-post-form {
 .action-image-add-button {
     width: 100%;
     border: 5px dashed #bbb;
-    height: 100px;
+    height: 70px;
     display: block;
     background-color: #fff;
-    font-size: 17px;
+    font-size: 14px;
     font-weight: bold;
     text-align: center;
-    border-radius: 5px;
+    border-radius: 4px;
 }
 
 .action-image-add-button-text {
-    margin-top: 28px;
+    margin-top: 18px;
     display: block;
 }
 
@@ -3392,7 +3390,11 @@ Temporary Properties - YOU MUST FIX
 }
 
 .dz-name {
+    max-width:80%;
+    white-space: nowrap;
     margin-left: 6px;
+    overflow:hidden;
+    text-overflow: ellipsis;
 }
 
 .dz-size {

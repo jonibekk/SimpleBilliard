@@ -1,5 +1,8 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('UploadHelper', 'View/Helper');
+App::uses('TimeExHelper', 'View/Helper');
+App::uses('View', 'View');
 
 /**
  * Post Model
@@ -33,6 +36,7 @@ class Post extends AppModel
     const TYPE_KR_COMPLETE = 5;
     const TYPE_GOAL_COMPLETE = 6;
     const TYPE_CREATE_CIRCLE = 7;
+    const TYPE_MESSAGE = 8;
 
     static public $TYPE_MESSAGE = [
         self::TYPE_NORMAL        => null,
@@ -42,6 +46,7 @@ class Post extends AppModel
         self::TYPE_KR_COMPLETE   => null,
         self::TYPE_GOAL_COMPLETE => null,
         self::TYPE_CREATE_CIRCLE => null,
+        self::TYPE_MESSAGE       => null,
     ];
 
     function _setTypeMessage()
@@ -225,13 +230,12 @@ class Post extends AppModel
      * 投稿
      *
      * @param      $postData
-     * @param int  $type
      * @param null $uid
      * @param null $team_id
      *
      * @return bool|mixed
      */
-    public function addNormal($postData, $type = self::TYPE_NORMAL, $uid = null, $team_id = null)
+    public function addNormal($postData, $uid = null, $team_id = null)
     {
         if (!isset($postData['Post']) || empty($postData['Post'])) {
             return false;
@@ -249,7 +253,9 @@ class Post extends AppModel
         }
         $postData['Post']['user_id'] = $this->uid;
         $postData['Post']['team_id'] = $this->team_id;
-        $postData['Post']['type'] = $type;
+        if (!isset($postData['Post']['type'])) {
+            $postData['Post']['type'] = Post::TYPE_NORMAL;
+        }
 
         $this->begin();
         $res = $this->save($postData);
@@ -371,7 +377,29 @@ class Post extends AppModel
         return $res;
     }
 
-    public function get($page = 1, $limit = 20, $start = null, $end = null, $params = null)
+    public function getPostById($post_id)
+    {
+        $options = [
+            'conditions' => [
+                'Post.id' => $post_id,
+                'team_id' => $this->current_team_id,
+            ],
+            'contain'    => [
+                'User'          => [],
+                'PostShareUser' => [],
+            ]
+        ];
+        $res = $this->find('first', $options);
+        return $res;
+    }
+
+    public function getPhotoPath($user_arr)
+    {
+        $upload = new UploadHelper(new View());
+        return $upload->uploadUrl($user_arr, 'User.photo', ['style' => 'small']);
+    }
+
+    public function get($page = 1, $limit = 20, $start = null, $end = null, $params = null, $contains_message = false)
     {
         $one_month = 60 * 60 * 24 * 31;
         if (!$start) {
@@ -525,6 +553,10 @@ class Post extends AppModel
             if ($this->orgParams['type'] == self::TYPE_NORMAL) {
                 $post_options['conditions']['Post.type'] = self::TYPE_NORMAL;
             }
+            if ($contains_message === false) {
+                $post_options['conditions']['NOT']['Post.type'] = self::TYPE_MESSAGE;
+            }
+
             // 独自パラメータ無しの場合（ホームフィードの場合）
             if (!$org_param_exists) {
                 $post_options['order'] = ['Post.created' => 'desc'];
@@ -619,6 +651,7 @@ class Post extends AppModel
                         'photo1_file_name',
                         'photo2_file_name',
                         'photo3_file_name',
+                        'photo4_file_name',
                         'photo4_file_name',
                         'photo5_file_name',
                     ],
@@ -952,7 +985,13 @@ class Post extends AppModel
         $share_member_list = $share_member_list + $this->PostShareCircle->getShareCircleMemberList($post_id);
         //メンバー共有なら
         $share_member_list = $share_member_list + $this->PostShareUser->getShareUserListByPost($post_id);
+        //Postの主が自分ではないなら追加
+        $posted_user_id = viaIsSet($post['Post']['user_id']);
+        if ($this->my_uid != $posted_user_id) {
+            $share_member_list[] = $posted_user_id;
+        }
         $share_member_list = array_unique($share_member_list);
+
         //自分自身を除外
         $key = array_search($this->my_uid, $share_member_list);
         if ($key !== false) {
@@ -1207,6 +1246,51 @@ class Post extends AppModel
         return $res ? $res[0]['sum_like'] : 0;
     }
 
+    public function getMessageList()
+    {
+        $options = [
+            'conditions' => [
+                'team_id' => $this->current_team_id,
+                'type'    => self::TYPE_MESSAGE,
+            ],
+            'contain'    => [
+                'User',
+                'PostShareUser' => [
+                    'fields' => ['id']
+                ],
+                'Comment'       => [
+                    'User',
+                    'limit' => 1,
+                    'order' => [
+                        'Comment.created' => 'desc'
+                    ]
+                ],
+            ],
+        ];
+        $res = $this->find('all', $options);
+
+        return $res;
+    }
+
+    public function convertData($data)
+    {
+        $upload = new UploadHelper(new View());
+        $time = new TimeExHelper(new View());
+
+        foreach ($data as $key => $item) {
+            if (empty($item['Comment']) === false) {
+                $data[$key]['User'] = $item['Comment'][0]['User'];
+                $data[$key]['Post']['body'] = $item['Comment'][0]['body'];
+                $data[$key]['Post']['created'] = $item['Comment'][0]['created'];
+            }
+            $data[$key]['User']['photo_path'] =
+                $upload->uploadUrl($data[$key]['User'], 'User.photo', ['style' => 'medium_large']);
+            $data[$key]['Post']['created'] = $time->elapsedTime(h($data[$key]['Post']['created']));
+        }
+
+        return $data;
+    }
+
     function getFilesOnCircle($circle_id, $page = 1, $limit = null,
                               $start = null, $end = null, $file_type = null)
     {
@@ -1271,7 +1355,7 @@ class Post extends AppModel
         $files = $AttachedFile->find('all', $options);
         return $files;
     }
-    
+
     /**
      * $action_result_id に紐づく投稿を取得
      *
