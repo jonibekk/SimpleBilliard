@@ -683,6 +683,27 @@ class GoalsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
+    function testAddAction()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $this->testAction('/goals/add_action/goal_id:1', ['method' => 'GET']);
+    }
+
+    function testAddActionNotCollabo()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $this->testAction('/goals/add_action/goal_id:100', ['method' => 'GET']);
+    }
+
+    function testAddActionInvalidKrId()
+    {
+        $Goals = $this->_getGoalsCommonMock();
+        $this->_setDefault($Goals);
+        $this->testAction('/goals/add_action/goal_id:1/key_result_id:9999', ['method' => 'GET']);
+    }
+
     function testEditAction()
     {
         $Goals = $this->_getGoalsCommonMock();

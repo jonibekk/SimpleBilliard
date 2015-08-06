@@ -11,7 +11,24 @@
  * @var                    $common_form_type
  */
 
+// 編集時に true
 $is_edit_mode = isset($common_form_mode) && $common_form_mode == 'edit';
+
+// 表示するタブを「アクション」のみにする
+// 以下のいずれかの場合に true
+//   1. 「アクション」の編集時
+//   2. $common_form_only_tab == 'action' が指定された場合
+$only_tab_action =
+    ($is_edit_mode && $common_form_type == 'action') ||
+    (isset($common_form_only_tab) && $common_form_only_tab == 'action');
+
+// 表示するタブを「投稿」のみにする
+// 以下のいずれかの場合に true
+//   1. 「投稿」の編集時
+//   2. $common_form_only_tab == 'post' が指定された場合
+$only_tab_post =
+    ($is_edit_mode && $common_form_type == 'post') ||
+    (isset($common_form_only_tab) && $common_form_only_tab == 'post');
 ?>
 <!-- START app/View/Elements/Feed/common_form.ctp -->
 <div class="panel panel-default global-form">
@@ -19,8 +36,8 @@ $is_edit_mode = isset($common_form_mode) && $common_form_mode == 'edit';
         <!-- Nav tabs -->
         <ul class="feed-switch clearfix plr_0px" role="tablist" id="CommonFormTabs">
             <li class="switch-action <?php
-            // 投稿編集モードの場合は非表示
-            if ($is_edit_mode && $common_form_type == 'post'): ?>
+            // ファイル上部の宣言部を参照
+            if ($only_tab_post): ?>
                 none
             <?php endif ?>">
                 <a href="#ActionForm" role="tab" data-toggle="tab"
@@ -29,8 +46,8 @@ $is_edit_mode = isset($common_form_mode) && $common_form_mode == 'edit';
                         class="fa fa-check-circle"></i><?= __d('gl', "アクション") ?></a><span class="switch-arrow"></span>
             </li>
             <li class="switch-post <?php
-            // アクション編集モードの場合は非表示
-            if ($is_edit_mode && $common_form_type == 'action'): ?>
+            // ファイル上部の宣言部を参照
+            if ($only_tab_action): ?>
                 none
             <?php endif ?>">
                 <a href="#PostForm" role="tab" data-toggle="tab"
@@ -79,7 +96,7 @@ $is_edit_mode = isset($common_form_mode) && $common_form_mode == 'edit';
                        delete-method="hide"
                         >
                         <span class="action-image-add-button-text"><i
-                                class="fa fa-image action-image-add-button-icon"></i> <span>画像を選択</span></span>
+                                class="fa fa-image action-image-add-button-icon"></i> <span>アクション画像をアップロード</span></span>
 
                     </a>
                 </div>
@@ -129,7 +146,10 @@ $is_edit_mode = isset($common_form_mode) && $common_form_mode == 'edit';
                             ?>
                         </div>
                     </div>
-                    <div class="panel-body action-form-panel-body none" id="WrapKrSelectOnActionForm">
+                    <div class="panel-body action-form-panel-body <?php
+                    if (!(isset($kr_list) && $kr_list)): ?>
+                        none
+                    <?php endif ?>" id="WrapKrSelectOnActionForm">
                         <div class="input-group">
                             <span class="input-group-addon" id=""><i class="fa fa-key"></i></span>
                             <?=
@@ -138,7 +158,7 @@ $is_edit_mode = isset($common_form_mode) && $common_form_mode == 'edit';
                                 'div'      => false,
                                 'required' => false,
                                 'id'       => 'KrSelectOnActionForm',
-                                'options'  => [null => __d('gl', '出したい成果を選択する(オプション)')],
+                                'options'  => isset($kr_list) ? $kr_list : [null => __d('gl', '出したい成果を選択する(オプション)')],
                             ])
                             ?>
                         </div>

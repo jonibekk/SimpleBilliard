@@ -72,8 +72,8 @@
                 <ul class="goal-detail-action">
                     <?php if ($kr_can_edit): ?>
                         <li class="goal-detail-action-list">
-                            <a class="goal-detail-add-action modal-ajax-get-add-action"
-                               href="<?= $this->Html->url(['controller'    => 'goals', 'action' => 'ajax_get_add_action_modal',
+                            <a class="goal-detail-add-action"
+                               href="<?= $this->Html->url(['controller'    => 'goals', 'action' => 'add_action',
                                                            'goal_id'       => $kr['KeyResult']['goal_id'],
                                                            'key_result_id' => $kr['KeyResult']['id'],
                                                           ]) ?>"><i

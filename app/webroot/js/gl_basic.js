@@ -3302,7 +3302,7 @@ $(document).ready(function () {
             $uploadFileForm.appendTo($dropArea).css({
                 width: $dropArea.outerWidth(),
                 height: $dropArea.outerHeight(),
-                paddingTop: $dropArea.outerHeight() / 2 - 22,
+                paddingTop: $dropArea.outerHeight() / 2 - 18,
                 top: pos.top,
                 left: pos.left,
                 position: 'absolute'

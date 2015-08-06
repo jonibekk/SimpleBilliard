@@ -101,8 +101,8 @@
                                 <ul class="profile-user-actions">
                                     <?php if ($is_mine): ?>
                                         <li class="profile-user-action-list">
-                                            <a class="profile-user-add-action modal-ajax-get-add-action"
-                                               href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_action_modal', 'goal_id' => $goal['Goal']['id']]) ?>"><i
+                                            <a class="profile-user-add-action"
+                                               href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add_action', 'goal_id' => $goal['Goal']['id']]) ?>"><i
                                                     class="fa fa-plus"></i>
 
                                                 <p class="profile-user-add-action-text "><?= __d('gl', "アクション") ?></p>
