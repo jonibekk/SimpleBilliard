@@ -6,9 +6,8 @@ if (typeof String.prototype.startsWith != 'function') {
     String.prototype.startsWith = function (str) {
         return this.indexOf(str) === 0;
     };
-}
-;
-function bindPostBalancedGallery($obj) {
+};
+function bindPostBalancedGallery($obj){
     $obj.BalancedGallery({
         autoResize: true,                   // re-partition and resize the images when the window size changes
         //background: '#DDD',                   // the css properties of the gallery's containing element
@@ -21,6 +20,7 @@ function bindPostBalancedGallery($obj) {
         //viewportHeight: 400,               // the assumed height of the gallery, defaults to the containing element's height
         viewportWidth: 482                // the assumed width of the gallery, defaults to the containing element's width
     });
+
 };
 function bindCommentBalancedGallery($obj) {
     $obj.BalancedGallery({
@@ -937,6 +937,10 @@ function evTriggerClick() {
     $("#" + target_id).trigger('click');
     //noinspection JSJQueryEfficiency
     $("#" + target_id).focus();
+    if ($(this).attr("after-replace-target-id") != undefined) {
+        $(this).attr("target-id", $(this).attr("after-replace-target-id"));
+        $(this).removeAttr("after-replace-target-id");
+    }
     return false;
 }
 /**
@@ -2086,6 +2090,11 @@ function evFeedMoreView(options) {
                 $posts.children('.post_gallery > img').imagesLoaded(function () {
                     $posts.children('.post_gallery').each(function (index, element) {
                         bindPostBalancedGallery($(element));
+                    });
+                });
+                $posts.children('.comment_gallery > img').imagesLoaded(function () {
+                    $posts.children('.post_gallery').each(function (index, element) {
+                        bindCommentBalancedGallery($(element));
                     });
                 });
 
@@ -3974,7 +3983,7 @@ function setDefaultTab() {
             }
             break;
         case "message":
-            $('#CommonFormTabs li:eq(1) a').tab('show');
+            $('#CommonFormTabs li:eq(2) a').tab('show');
             if (!isMobile()) {
                 $('#CommonMessageBody').focus();
             }

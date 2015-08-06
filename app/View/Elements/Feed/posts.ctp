@@ -100,7 +100,8 @@ $without_header = isset($without_header) ? $without_header : false;
                             <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
                                 <?php if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
                                     <?php if ($post['Post']['type'] == Post::TYPE_NORMAL): ?>
-                                        <li><a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'post_edit', 'post_id' => $post['Post']['id']]) ?>"
+                                        <li>
+                                            <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'post_edit', 'post_id' => $post['Post']['id']]) ?>"
                                                 ><?= __d('gl', "投稿を編集") ?></a>
                                         </li>
                                     <?php elseif ($post['Post']['type'] == Post::TYPE_ACTION): ?>
@@ -310,6 +311,9 @@ $without_header = isset($without_header) ? $without_header : false;
                 <?php else: ?>
                     <div class="col col-xxs-12 pt_10px">
                         <?php foreach ($post['PostFile'] as $file): ?>
+                            <?php if ($file['AttachedFile']['file_type'] == AttachedFile::TYPE_FILE_IMG) {
+                                continue;
+                            } ?>
                             <div class="panel panel-default file-wrap-on-post">
                                 <div class="panel-body pt_10px plr_11px pb_8px">
                                     <?= $this->element('Feed/attached_file_item',
@@ -321,26 +325,32 @@ $without_header = isset($without_header) ? $without_header : false;
                 <? endif; ?>
                 <div class="col col-xxs-12 feeds-post-btns-area">
                     <div class="feeds-post-btns-wrap-left">
-                        <a href="#" class="click-like feeds-post-like-btn <?= empty($post['MyPostLike']) ? null : "liked" ?>"
+                        <a href="#"
+                           class="click-like feeds-post-like-btn <?= empty($post['MyPostLike']) ? null : "liked" ?>"
                            like_count_id="PostLikeCount_<?= $post['Post']['id'] ?>"
                            model_id="<?= $post['Post']['id'] ?>"
                            like_type="post">
-                           <i class="fa-thumbs-up fa"></i>
+                            <i class="fa-thumbs-up fa"></i>
                             <?= __d('gl', "いいね！") ?></a>
-                        <a href="#" class="feeds-post-comment-btn trigger-click" target-id="NewCommentDummyForm_<?= $post['Post']['id'] ?>">
+                        <a href="#" class="feeds-post-comment-btn trigger-click"
+                           target-id="NewCommentDummyForm_<?= $post['Post']['id'] ?>"
+                           after-replace-target-id="CommentFormBody_<?= $post['Post']['id'] ?>"
+                            >
                             <i class="fa-comments-o fa"></i>
-                            <?= __d('gl',"コメント") ?>
+                            <?= __d('gl', "コメント") ?>
                         </a>
                     </div>
                     <div class="feeds-post-btns-wrap-right">
-                        <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_liked_users', 'post_id' => $post['Post']['id']]) ?>" class="modal-ajax-get feeds-post-btn-numbers-like">
+                        <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_liked_users', 'post_id' => $post['Post']['id']]) ?>"
+                           class="modal-ajax-get feeds-post-btn-numbers-like">
                             <i class="fa fa-thumbs-o-up"></i>&nbsp;
                             <span id="PostLikeCount_<?= $post['Post']['id'] ?>">
                                 <?= $post['Post']['post_like_count'] ?>
                             </span>
                         </a>
-                        <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_red_users', 'post_id' => $post['Post']['id']]) ?>" class="modal-ajax-get feeds-post-btn-numbers-read">
-                           <i class="fa fa-check"></i>
+                        <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_red_users', 'post_id' => $post['Post']['id']]) ?>"
+                           class="modal-ajax-get feeds-post-btn-numbers-read">
+                            <i class="fa fa-check"></i>
                            <span>
                                <?= $post['Post']['post_read_count'] ?>
                            </span>
@@ -421,7 +431,7 @@ $without_header = isset($without_header) ? $without_header : false;
                                     wrap="soft" rows="1"
                                     placeholder="<?= __d('gl', "コメントする") ?>"
                                     cols="30"
-                                    id="NewCommentDummyForm_<?= $post['Post']['id']?>"
+                                    id="NewCommentDummyForm_<?= $post['Post']['id'] ?>"
                                     init-height="15"></textarea>
                             </div>
                         </form>
