@@ -6,8 +6,9 @@ if (typeof String.prototype.startsWith != 'function') {
     String.prototype.startsWith = function (str) {
         return this.indexOf(str) === 0;
     };
-};
-function bindBalancedGallery($obj){
+}
+;
+function bindBalancedGallery($obj) {
     $obj.BalancedGallery({
         autoResize: true,                   // re-partition and resize the images when the window size changes
         //background: '#DDD',                   // the css properties of the gallery's containing element
@@ -23,7 +24,7 @@ function bindBalancedGallery($obj){
 
 };
 
-$('.post_gallery > img').imagesLoaded( function(){
+$('.post_gallery > img').imagesLoaded(function () {
     bindBalancedGallery($('.post_gallery'));
 });
 $(document).ready(function () {
@@ -921,6 +922,10 @@ function evTriggerClick() {
     $("#" + target_id).trigger('click');
     //noinspection JSJQueryEfficiency
     $("#" + target_id).focus();
+    if ($(this).attr("after-replace-target-id") != undefined) {
+        $(this).attr("target-id", $(this).attr("after-replace-target-id"));
+        $(this).removeAttr("after-replace-target-id");
+    }
     return false;
 }
 /**
@@ -2067,8 +2072,8 @@ function evFeedMoreView(options) {
                 $("#ShowMoreNoData").hide();
                 //画像をレイジーロード
                 imageLazyOn();
-                $posts.children('.post_gallery > img').imagesLoaded( function(){
-                    $posts.children('.post_gallery').each(function(index, element){
+                $posts.children('.post_gallery > img').imagesLoaded(function () {
+                    $posts.children('.post_gallery').each(function (index, element) {
                         bindBalancedGallery($(element));
                     });
                 });
@@ -2993,6 +2998,7 @@ $(function () {
         });
         return false;
     }
+
     function updateMessageNotifyCnt() {
 
         var url = cake.url.af;
@@ -3038,6 +3044,7 @@ $(function () {
         }
         return;
     }
+
     function setNotifyCntToMessageAndTitle(cnt) {
         var $bellBox = getMessageBoxSelector();
         var $title = $("title");
