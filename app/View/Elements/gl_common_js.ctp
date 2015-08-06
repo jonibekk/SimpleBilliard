@@ -33,6 +33,8 @@ echo $this->Html->script('vendor/locales/bootstrap-datepicker.ja');
 echo $this->Html->script('vendor/moment.min');
 echo $this->Html->script('vendor/pusher.min');
 echo $this->Html->script('vendor/dropzone.js');
+echo $this->Html->script('vendor/jquery.balanced-gallery.min');
+echo $this->Html->script('vendor/imagesloaded.pkgd.min');
 echo $this->Html->script('gl_basic');
 ?>
 <!--suppress JSDuplicatedDeclaration -->
@@ -48,7 +50,8 @@ echo $this->Html->script('gl_basic');
                 f: "<?=__d('validate', "パスワードにメールアドレスと同一のものを指定する事はできません。")?>",
                 g: "<?=__d('validate', "必須項目です。")?>",
                 dropzone_file_too_big: "<?=__d('gl', 'アップロード出来るファイルサイズは{{maxFilesize}}MBまでです。')?>",
-                dropzone_invalid_file_type: "<?=__d('gl', '画像ファイルを選択してください。')?>"
+                dropzone_invalid_file_type: "<?=__d('gl', '画像ファイルを選択してください。')?>",
+                dropzone_max_files_exceeded: "<?=__d('gl', 'アップロード出来るファイル数は{{maxFiles}}個までです。')?>"
             },
             notice: {
                 a: "<?=__d('gl',"入力が途中です。このまま移動しますか？")?>",

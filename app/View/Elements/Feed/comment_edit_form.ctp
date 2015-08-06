@@ -59,12 +59,6 @@ $this->Form->create('Comment', [
 </div>
 
 <div class="none" id="<?= $id_prefix ?>CommentEdit_<?= $comment['id'] ?>">
-    <a href="#" class="target-show-this-del" target-id="<?= $id_prefix ?>CommentEditFormImage_<?= $comment['id'] ?>">
-        <button type="button" class="btn pull-left photo-up-btn">
-            <i class="fa fa-camera post-camera-icon"></i>
-        </button>
-
-    </a>
     <?=
     $this->Form->submit(__d('gl', "変更を保存する"),
                         ['class' => 'btn btn-primary pull-right submit-comment-edit', 'id' => $id_prefix . "CommentEditSubmit_{$comment['id']}", 'disabled' => 'disabled']) ?>
