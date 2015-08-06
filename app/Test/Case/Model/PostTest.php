@@ -81,7 +81,7 @@ class PostTest extends CakeTestCase
                 'body' => 'test',
             ]
         ];
-        $res = $this->Post->addNormal($postData, Post::TYPE_NORMAL, $uid, $team_id);
+        $res = $this->Post->addNormal($postData, $uid, $team_id);
         $this->assertNotEmpty($res, "[正常]投稿(uid,team_id指定)");
 
         $this->Post->my_uid = $uid;
@@ -693,6 +693,66 @@ class PostTest extends CakeTestCase
         $row = $this->Post->findById(1);
         $this->assertNotEquals($row['Post']['body'], $data['Post']['body']);
 
+    }
+
+    function testGetMessageList()
+    {
+        $this->Post->current_team_id = '1';
+        $data = [
+            'user_id' => 1,
+            'team_id' => 1,
+            'body' => 'test',
+            'type' => Post::TYPE_MESSAGE
+        ];
+        $this->Post->save($data);
+        $res = $this->Post->getMessageList();
+        $this->assertNotEmpty($res);
+    }
+
+    function testConvertData()
+    {
+        $this->Post->current_team_id = '1';
+        $data = [
+            'user_id' => 1,
+            'team_id' => 1,
+            'body' => 'test',
+            'type' => Post::TYPE_MESSAGE
+        ];
+        $this->Post->save($data);
+
+        $data = [
+            'team_id' => 1,
+            'post_id' => $this->Post->getLastInsertID(),
+            'body' => 'comment test'
+        ];
+        $this->Post->Comment->save($data);
+
+        $res = $this->Post->getMessageList();
+        debug($this->Post->convertData($res));
+    }
+
+    function testGetPostById()
+    {
+        $this->Post->current_team_id = '1';
+        $data = [
+            'user_id' => 99,
+            'team_id' => 1,
+            'body' => 'test'
+        ];
+        $this->Post->save($data);
+        $res = $this->Post->getPostById($this->Post->getLastInsertID());
+        $this->assertEquals($data['body'], $res['Post']['body']);
+    }
+
+    function testGetPhotoPath()
+    {
+        $data = [
+            'user_id' => 99,
+            'team_id' => 1,
+            'photo_file_name' => ''
+        ];
+        $res = $this->Post->User->save($data);
+        $this->assertNotEmpty($this->Post->getPhotoPath($res));
     }
 
     function _setDefault()

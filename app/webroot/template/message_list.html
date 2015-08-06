@@ -1,0 +1,23 @@
+<div class="panel panel-default">
+    <div class="panel-heading">すべてのメッセージ</div>
+    <div class="panel-body panel-body-notify-page">
+        <ul class="notify-page-cards" role="menu" ng-repeat="item in message_list | orderBy:'Post.created':'DESC'">
+            <li class="notify-card-list">
+                <a href="/posts/message#/{{item.Post.id}}" class="col col-xxs-12 notify-card-link">
+                    <img class="pull-left notify-card-pic" ng-src="{{item.User.photo_path}}"/>
+                    <div class="notify-contents">
+                        <div class="col col-xxs-12 notify-card-head">
+                                <span class="font-heading">{{item.User.display_username}} +{{item.PostShareUser.length}}</span>
+                        </div>
+                        <div class="col col-xxs-12 notify-text notify-line-number notify-card-text"
+                             id="CommentTextBody_67">
+                            <i class="fa font_bold"></i> {{item.Post.body}}
+                        </div>
+                        <p class="notify-card-aside"><span ng-bind-html="item.Post.created"></span></p>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+

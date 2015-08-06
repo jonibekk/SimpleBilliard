@@ -138,6 +138,21 @@ class NotificationsControllerTest extends ControllerTestCase
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
+    function testAjaxGetNewMessageNotifyCount()
+    {
+        $this->_getNotificationsCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction("/notifications/ajax_get_new_message_notify_count", ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxGetLatestMessageNotifyItems()
+    {
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/notifications/ajax_get_latest_message_notify_items', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
     function _getNotificationsCommonMock()
     {
         /**

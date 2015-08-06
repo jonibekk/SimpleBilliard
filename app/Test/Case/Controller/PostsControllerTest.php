@@ -60,6 +60,58 @@ class PostsControllerTest extends ControllerTestCase
         'app.evaluation',
     );
 
+    function testMessage()
+    {
+        $this->_getPostsCommonMock();
+        $this->testAction('/posts/message/', ['method' => 'GET']);
+    }
+
+    function testMessageList()
+    {
+        $this->_getPostsCommonMock();
+        $this->testAction('/posts/message_list/', ['method' => 'GET']);
+    }
+
+    function testAjaxGetMessageList()
+    {
+        $this->_getPostsCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/posts/ajax_get_message_list/', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxGetMessageInfo()
+    {
+        $this->_getPostsCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/posts/ajax_get_message_info/1', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxGetMessage()
+    {
+        $this->_getPostsCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/posts/ajax_get_message/1/2/3', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxPutMessage()
+    {
+        $this->_getPostsCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/posts/ajax_put_message/1/2', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxPutMessageRead()
+    {
+        $this->_getPostsCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/posts/ajax_put_message_read/1/2', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
     function testAdd()
     {
         /**
@@ -81,6 +133,31 @@ class PostsControllerTest extends ControllerTestCase
             ],
         ];
         $this->testAction('/posts/add',
+                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+
+    }
+
+    function testAddMessage()
+    {
+        /**
+         * @var UsersController $Posts
+         */
+        $Posts = $this->_getPostsCommonMock();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Session->expects($this->any())->method('read')
+                       ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
+                   ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
+        $data = [
+            'Post' => [
+                'body'         => 'test',
+                'share_public' => 'public,circle_1,user_12',
+                'share_secret' => '',
+                'share_range'  => 'public',
+            ],
+        ];
+        $this->testAction('/posts/add_message',
                           ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
 
     }
@@ -132,6 +209,33 @@ class PostsControllerTest extends ControllerTestCase
                 'share_range'  => 'public',
                 'team_id'      => '1'
             ],
+            'socket_id'    => 'test',
+        ];
+        $this->testAction('/posts/add',
+                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+    }
+
+    function testAddOnlyMember()
+    {
+        /**
+         * @var UsersController $Posts
+         */
+        $Posts = $this->_getPostsCommonMock();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Session->expects($this->any())->method('read')
+                       ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
+                   ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
+        $data = [
+            'Post' => [
+                'body'         => 'test',
+                'share_public' => 'user_1',
+                'share_secret' => '',
+                'share_range'  => 'public',
+                'team_id'      => '1'
+            ],
+            'socket_id'    => 'test',
         ];
         $this->testAction('/posts/add',
                           ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
@@ -152,9 +256,9 @@ class PostsControllerTest extends ControllerTestCase
                 'share_public' => 'public,circle_1,user_12',
                 'share_secret' => '',
                 'share_range'  => 'public',
-                'socket_id'    => 'hogehage',
                 'team_id'      => '1'
             ],
+            'socket_id'=>'test',
         ];
         $this->testAction('/posts/add',
                           ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
@@ -1515,18 +1619,19 @@ class PostsControllerTest extends ControllerTestCase
                 'Auth'      => ['user', 'loggedIn'],
                 'Security'  => ['_validateCsrf', '_validatePost'],
                 'Ogp',
-                'NotifyBiz' => ['sendNotify', 'commentPush']
+                'NotifyBiz' => ['sendNotify', 'commentPush','push']
             ],
         ]);
         $value_map = [
             [null, [
                 'id'         => '1',
                 'last_first' => true,
-                'language'   => 'jpn'
+                'language'   => 'jpn',
+                'photo_file_name' => ''
             ]],
             ['id', '1'],
             ['language', 'jpn'],
-            ['auto_language_flg', true],
+            ['auto_language_flg', true]
         ];
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Security

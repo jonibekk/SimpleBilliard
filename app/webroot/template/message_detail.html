@@ -1,0 +1,85 @@
+<div class="panel panel-default">
+    <div class="panel-heading" style="background-color: #f5f5f5;">
+        <div class="row font_14px">
+            <span class=""> {{post_detail.User.display_username}}、他{{post_detail.PostShareUser.length}}人</span>
+            <span class="plr_11px font_brownRed">
+                <a href="/posts/ajax_get_share_circles_users_modal/post_id:{{post_detail.Post.id}}"
+                   class="modal-ajax-get-share-circles-users">
+                    <i class="fa fa-user"></i> {{post_detail.PostShareUser.length + 1}}
+                </a>
+            </span>
+            <span style="float:right;">
+                <button class="team-member-invite-btn">
+                    <i class="fa fa-plus-circle team-member-invite-btn-icon"></i>新しいメッセージ
+                </button>
+            </span>
+        </div>
+    </div>
+
+    <div class="panel-body pt_10px plr_11px pb_8px" id="message_box"
+         style="overflow:auto; height:620px; margin:0px;">
+
+        <div infinite-scroll='loadMore()' infinite-scroll-parent="true" infinite-scroll-distance="0">
+            <div ng-repeat="(key, item) in message_list | orderBy:'Comment.created'">
+                <div id="m_{{key+1}}" class="col col-xxs-12" style="padding-bottom: 8px">
+                    <div class="col col-xxs-2">
+                        <a href="/users/view_goals/user_id:{{item.User.id}}">
+                            <img width="64px" class="lazy feed-img" ng-src="{{item.User.photo_path}}"/>
+                        </a>
+                    </div>
+
+                    <div class="col col-xxs-10 showmore font_14px font_verydark box-align">
+                        <div class="font_12px font_verydark">
+                            <span class="font_bold">{{item.User.display_username}}</span>
+                        <span class="font_lightgray" style="position:absolute; right:10px;">
+                            {{item.Comment.created * 1000 | date:'MM/dd HH:mm'}}
+                        </span>
+                        </div>
+                        <div class="comment-text font_12px">{{item.Comment.body}}</div>
+                        <div class="font_12px">
+                            <a href="/posts/ajax_get_comment_red_users/comment_id:{{item.Comment.id}}"
+                               class="modal-ajax-get font_lightgray">
+                                <i class="fa fa-check"></i>&nbsp;
+                                <span id="mr_{{item.Comment.id}}">{{item.Comment.comment_read_count}}</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="panel-body ptb_8px plr_11px comment-block">
+        <div class="col-xxs-12 box-align feed-contents comment-contents">
+            <img class="lazy comment-img" ng-src="{{auth_info.photo_path}}"/>
+
+            <div class="comment-body">
+                <div class="form-feed-notify ajax-add-comment bv-form">
+                    <div class="form-group mlr_-1px required">
+                        <textarea ng-model="message"
+                                  class="form-control tiny-form-text font_12px"
+                                  rows="1" placeholder="返信する" cols="30" init-height="15"
+                                  style="height: 33px; overflow: hidden; word-wrap: break-word; resize: none;"></textarea>
+                    </div>
+                    <!--
+                    <div class="comment-btn">
+                        <a href="#" class="comment-add-pic new-comment-add-pic">
+                            <button type="button" class="btn pull-left photo-up-btn">
+                                <i class="fa fa-camera post-camera-icon"></i>
+                            </button>
+                        </a>
+                    </div>
+                    -->
+                    <div class="pull-right">
+                        <div class="submit">
+                            <input ng-click="clickMessage()" class="btn btn-primary submit-btn" type="submit"
+                                   value="返信する">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

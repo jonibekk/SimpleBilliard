@@ -1628,6 +1628,70 @@ $(document).ready(function () {
         containerCssClass: "select2PostCircleMember"
     });
 
+    //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
+    $('#select2MessageCircleMember').select2({
+        multiple: true,
+        placeholder: cake.word.select_public_message,
+        minimumInputLength: 2,
+        ajax: {
+            url: cake.url.select2_circle_user,
+            dataType: 'json',
+            quietMillis: 100,
+            cache: true,
+            data: function (term, page) {
+                return {
+                    term: term, //search term
+                    page_limit: 10, // page size
+                    circle_type: "public"
+                };
+            },
+            results: function (data, page) {
+                return {results: data.results};
+            }
+        },
+        data: [],
+        initSelection: cake.data.b,
+        formatSelection: format,
+        formatResult: format,
+        dropdownCssClass: 's2-post-dropdown',
+        escapeMarkup: function (m) {
+            return m;
+        },
+        containerCssClass: "select2MessageCircleMember"
+    });
+
+    // select2 秘密サークル選択
+    $('#select2MessageSecretCircle').select2({
+        multiple: true,
+        placeholder: cake.word.select_secret_circle,
+        minimumInputLength: 2,
+        maximumSelectionSize: 1,
+        ajax: {
+            url: cake.url.select2_secret_circle,
+            dataType: 'json',
+            quietMillis: 100,
+            cache: true,
+            data: function (term, page) {
+                return {
+                    term: term, //search term
+                    page_limit: 10 // page size
+                };
+            },
+            results: function (data, page) {
+                return {results: data.results};
+            }
+        },
+        data: [],
+        initSelection: cake.data.select2_secret_circle,
+        formatSelection: format,
+        formatResult: format,
+        dropdownCssClass: 's2-post-dropdown',
+        escapeMarkup: function (m) {
+            return m;
+        },
+        containerCssClass: "select2MessageCircleMember"
+    });
+
     // 投稿の共有範囲(公開/秘密)切り替えボタン
     var $shareRangeToggleButton = $('#postShareRangeToggleButton');
     var $shareRange = $('#postShareRange');
@@ -1721,14 +1785,20 @@ $(document).ready(function () {
         }
     });
 
-    $('#PostDisplayForm, #CommonActionDisplayForm').change(function (e) {
+    $('#PostDisplayForm, #CommonActionDisplayForm, #MessageDisplayForm').change(function (e) {
         var $target = $(e.target);
         switch ($target.attr('id')) {
             case "CommonPostBody":
                 $('#CommonActionName').val($target.val()).autosize().trigger('autosize.resize');
+                $('#CommonMessageBody').val($target.val()).autosize().trigger('autosize.resize');
                 break;
             case "CommonActionName":
                 $('#CommonPostBody').val($target.val()).autosize().trigger('autosize.resize');
+                $('#CommonMessageBody').val($target.val()).autosize().trigger('autosize.resize');
+                break;
+            case "CommonMessageBody":
+                $('#CommonPostBody').val($target.val()).autosize().trigger('autosize.resize');
+                $('#CommonActionName').val($target.val()).autosize().trigger('autosize.resize');
                 break;
         }
     });
@@ -2902,6 +2972,7 @@ $(function () {
     function setIntervalToGetNotifyCnt(sec) {
         setInterval(function () {
             updateNotifyCnt();
+            updateMessageNotifyCnt();
         }, sec * 1000);
     }
 
@@ -2922,9 +2993,53 @@ $(function () {
         });
         return false;
     }
+    function updateMessageNotifyCnt() {
+
+        var url = cake.url.af;
+        $.ajax({
+            type: 'GET',
+            url: url,
+            async: true,
+            success: function (new_notify_count) {
+                if (new_notify_count != 0) {
+                    setNotifyCntToMessageAndTitle(new_notify_count);
+                }
+            },
+            error: function () {
+            }
+        });
+        return false;
+    }
 
     function setNotifyCntToBellAndTitle(cnt) {
         var $bellBox = getBellBoxSelector();
+        var $title = $("title");
+        var $originTitle = $("title").attr("origin-title");
+        var existingBellCnt = parseInt($bellBox.children('span').html());
+        var cntIsTooMuch = '20+';
+
+        if (cnt == 0) {
+            return;
+        }
+
+        // set notify number
+        if (parseInt(cnt) <= 20) {
+            $bellBox.children('span').html(cnt);
+            $bellBox.children('sup').addClass('none');
+            $title.text("(" + cnt + ")" + $originTitle);
+        } else {
+            $bellBox.children('span').html(20);
+            $bellBox.children('sup').removeClass('none');
+            $title.text("(" + cntIsTooMuch + ")" + $originTitle);
+        }
+
+        if (existingBellCnt == 0) {
+            displaySelectorFluffy($bellBox);
+        }
+        return;
+    }
+    function setNotifyCntToMessageAndTitle(cnt) {
+        var $bellBox = getMessageBoxSelector();
         var $title = $("title");
         var $originTitle = $("title").attr("origin-title");
         var existingBellCnt = parseInt($bellBox.children('span').html());
@@ -2986,10 +3101,24 @@ $(document).ready(function () {
     });
 });
 
+$(document).ready(function () {
+    var click_cnt = 0;
+    $(document).on("click", "#click-header-message", function () {
+        initMessageNum();
+        initTitle();
+        updateMessageListBox();
+    });
+});
+
 function initBellNum() {
     $bellBox = getBellBoxSelector();
     $bellBox.css("opacity", 0);
     $bellBox.html("0");
+}
+function initMessageNum() {
+    var $box = getMessageBoxSelector();
+    $box.css("opacity", 0);
+    $box.html("0");
 }
 
 function initTitle() {
@@ -3000,10 +3129,18 @@ function initTitle() {
 function getBellBoxSelector() {
     return $("#bellNum");
 }
+function getMessageBoxSelector() {
+    return $("#messageNum");
+}
 
 function getNotifyCnt() {
     var $bellBox = getBellBoxSelector();
     return parseInt($bellBox.children('span').html());
+}
+
+function getMessageNotifyCnt() {
+    var $box = getMessageBoxSelector();
+    return parseInt($box.children('span').html());
 }
 
 function updateListBox() {
@@ -3022,6 +3159,32 @@ function updateListBox() {
             var $notifyItems = data;
             $loader_html.remove();
             $bellDropdown.append($notifyItems);
+            //画像をレイジーロード
+            imageLazyOn();
+        },
+        error: function () {
+            alert(cake.message.notice.c);
+        }
+    });
+    return false;
+}
+
+function updateMessageListBox() {
+    var $messageDropdown = $("#message-dropdown");
+    $messageDropdown.empty();
+    var $loader_html = $('<li class="text-align_c"><i class="fa fa-refresh fa-spin"></i></li>');
+    //ローダー表示
+    $messageDropdown.append($loader_html);
+    var url = cake.url.ag;
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: true,
+        success: function (data) {
+            //取得したhtmlをオブジェクト化
+            var $notifyItems = data;
+            $loader_html.remove();
+            $messageDropdown.append($notifyItems);
             //画像をレイジーロード
             imageLazyOn();
         },
@@ -3792,6 +3955,12 @@ function setDefaultTab() {
             $('#CommonFormTabs li:eq(1) a').tab('show');
             if (!isMobile()) {
                 $('#CommonPostBody').focus();
+            }
+            break;
+        case "message":
+            $('#CommonFormTabs li:eq(1) a').tab('show');
+            if (!isMobile()) {
+                $('#CommonMessageBody').focus();
             }
             break;
     }
