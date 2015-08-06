@@ -915,11 +915,16 @@ class GoalsController extends AppController
             if (isset($action['ActionResult']['goal_id']) && !empty($action['ActionResult']['goal_id'])) {
                 $this->_flashClickEvent("ActionListOpen_" . $action['ActionResult']['goal_id']);
             }
+
             /** @noinspection PhpVoidFunctionResultUsedInspection */
+            $url = $this->referer();
             $post = $this->Goal->Post->getByActionResultId($ar_id);
-            return $this->redirect(['controller' => 'posts',
-                                    'action'     => 'feed',
-                                    'post_id'    => $post['Post']['id']]);
+            if ($post) {
+                $url = ['controller' => 'posts',
+                        'action'     => 'feed',
+                        'post_id'    => $post['Post']['id']];
+            }
+            return $this->redirect($url);
         }
 
         // 編集フォーム表示
