@@ -1826,7 +1826,7 @@ textarea.feed-post-form {
     text-align: center;
     background-color: #fff;
     opacity: 0.8;
-    border: 2px dashed #029acf;
+    border: 5px dashed #029acf;
     border-radius: 4px;
     z-index: 99999;
 }
@@ -1846,8 +1846,8 @@ textarea.feed-post-form {
 
 .action-image-add-button {
     width: 100%;
-    border: 2px dashed #bbb;
-    height: 80px;
+    border: 5px dashed #bbb;
+    height: 70px;
     display: block;
     background-color: #fff;
     font-size: 14px;
@@ -1857,7 +1857,7 @@ textarea.feed-post-form {
 }
 
 .action-image-add-button-text {
-    margin-top: 25px;
+    margin-top: 18px;
     display: block;
 }
 
