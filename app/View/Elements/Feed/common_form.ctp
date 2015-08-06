@@ -204,6 +204,7 @@ $is_edit_mode = isset($common_form_mode) && $common_form_mode == 'edit';
                             'data-url'  => $this->Upload->uploadUrl($file, 'AttachedFile.attached'),
                             'data-name' => $file['AttachedFile']['attached_file_name'],
                             'data-size' => $file['AttachedFile']['file_size'],
+                            'data-ext'  => $file['AttachedFile']['file_ext'],
                         ]); ?>
                     <?php endforeach ?>
                 <?php endif ?>
@@ -337,6 +338,7 @@ $is_edit_mode = isset($common_form_mode) && $common_form_mode == 'edit';
                         'data-url'  => $this->Upload->uploadUrl($file, 'AttachedFile.attached'),
                         'data-name' => $file['AttachedFile']['attached_file_name'],
                         'data-size' => $file['AttachedFile']['file_size'],
+                        'data-ext'  => $file['AttachedFile']['file_ext'],
                     ]); ?>
                 <?php endforeach ?>
             <?php endif ?>

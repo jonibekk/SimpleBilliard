@@ -3061,7 +3061,9 @@ $(document).ready(function () {
         '<div class="dz-preview dz-default-preview panel">' +
         '  <div class="dz-details">' +
         '    <a href="#" class="pull-right font_lightgray" data-dz-remove><i class="fa fa-times"></i></a>' +
-        '    <div class="dz-thumb-container pull-left"><img class="dz-thumb" data-dz-thumbnail /></div>' +
+        '    <div class="dz-thumb-container pull-left">' +
+        '      <i class="fa fa-file-o file-other-icon"></i>' +
+        '      <img class="dz-thumb none" data-dz-thumbnail /></div>' +
         '    <span class="dz-name font_14px font_bold font_verydark pull-left" data-dz-name></span><br>' +
         '    <span class="dz-size font_11px font_lightgray pull-left" data-dz-size></span>' +
         '  </div>' +
@@ -3151,6 +3153,16 @@ $(document).ready(function () {
 
             // コールバック関数（afterSuccess）
             $uploadFileForm._callbacks[$uploadFileForm._params.previewContainerID].afterSuccess.call(this, file);
+        },
+        // サムネイル
+        thumbnail: function (file, dataUrl) {
+            var $container = $(file.previewTemplate).find('.dz-thumb-container');
+            // 画像の場合はデフォルトの処理でサムネイル作成
+            if (file.type.match(/image/)) {
+                $container.find('.fa').hide();
+                $container.find('.dz-thumb').show();
+                this.defaultOptions.thumbnail.call(this, file, dataUrl);
+            }
         },
         // ファイル削除ボタン押下時
         removedfile: function (file) {
@@ -3294,7 +3306,7 @@ $(document).ready(function () {
                 top: pos.top,
                 left: pos.left,
                 position: 'absolute'
-            }).addClass('drag-over').show();
+            }).addClass('drag-over').show().find('.upload-file-form-content').show();
         });
     };
 
@@ -3492,8 +3504,11 @@ $(document).ready(function () {
     // DB に保存済の添付ファイルデータを Dropzone に手動で登録する
     var dropzonePrepareEdit = function (setting) {
         var $input = $(this);
-        var file = new File([new ArrayBuffer($input.attr('data-size'))], $input.attr('data-name'));
+
+        var file = {};
         file.saved_file = true;
+        file.name = $input.attr('data-name');
+        file.size = $input.attr('data-size');
 
         file.upload = {
             progress: 100,
@@ -3507,10 +3522,21 @@ $(document).ready(function () {
         Dropzone.instances[0].options.addedfile.call(Dropzone.instances[0], file);
         file.previewElement.classList.remove("dz-file-preview");
         file.previewElement.querySelector('.progress').style.visibility = 'hidden';
-        var thumb = file.previewElement.querySelectorAll("[data-dz-thumbnail]");
-        for (var i = 0, len = thumb.length; i < len; i++) {
-            thumb[i].alt = file.name;
-            thumb[i].src = $input.attr('data-url');
+        
+        switch ($input.attr('data-ext')) {
+            case 'jpg':
+            case 'jpeg':
+            case 'gif':
+            case 'png':
+                var thumb = file.previewElement.querySelectorAll("[data-dz-thumbnail]");
+                for (var i = 0, len = thumb.length; i < len; i++) {
+                    thumb[i].alt = file.name;
+                    thumb[i].src = $input.attr('data-url');
+                }
+                break;
+
+            default:
+                break;
         }
         file.file_id = $input.attr('value');
         $(file.previewElement).data('file_id', file.file_id).show();

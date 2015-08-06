@@ -3377,7 +3377,6 @@ Temporary Properties - YOU MUST FIX
 }
 
 .dz-thumb-container {
-    background-color: #ccc;
     overflow: hidden;
     width: 40px;
     height:40px;
@@ -3387,7 +3386,6 @@ Temporary Properties - YOU MUST FIX
 }
 
 .dz-thumb {
-    background-color: #ccc;
     max-width: 40px;
     max-height: 40px;
     vertical-align:middle;
