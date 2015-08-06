@@ -57,6 +57,58 @@ class PostsControllerTest extends ControllerTestCase
         'app.evaluation',
     );
 
+    function testMessage()
+    {
+        $this->_getPostsCommonMock();
+        $this->testAction('/posts/message/', ['method' => 'GET']);
+    }
+
+    function testMessageList()
+    {
+        $this->_getPostsCommonMock();
+        $this->testAction('/posts/message_list/', ['method' => 'GET']);
+    }
+
+    function testAjaxGetMessageList()
+    {
+        $this->_getPostsCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/posts/ajax_get_message_list/', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxGetMessageInfo()
+    {
+        $this->_getPostsCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/posts/ajax_get_message_info/1', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxGetMessage()
+    {
+        $this->_getPostsCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/posts/ajax_get_message/1/2/3', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxPutMessage()
+    {
+        $this->_getPostsCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/posts/ajax_put_message/1/2', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxPutMessageRead()
+    {
+        $this->_getPostsCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/posts/ajax_put_message_read/1/2', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
     function testAdd()
     {
         /**
@@ -1445,11 +1497,12 @@ class PostsControllerTest extends ControllerTestCase
             [null, [
                 'id'         => '1',
                 'last_first' => true,
-                'language'   => 'jpn'
+                'language'   => 'jpn',
+                'photo_file_name' => ''
             ]],
             ['id', '1'],
             ['language', 'jpn'],
-            ['auto_language_flg', true],
+            ['auto_language_flg', true]
         ];
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Security
