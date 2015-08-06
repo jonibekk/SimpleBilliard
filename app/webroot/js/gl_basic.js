@@ -18,7 +18,7 @@ function bindPostBalancedGallery($obj){
         padding: 0,                         // pixels between images
         shuffleUnorderedPartitions: true,   // unordered galleries tend to clump larger images at the begining, this solves that issue at a slight performance cost
         //viewportHeight: 400,               // the assumed height of the gallery, defaults to the containing element's height
-        viewportWidth: 482                // the assumed width of the gallery, defaults to the containing element's width
+        //viewportWidth: 482                // the assumed width of the gallery, defaults to the containing element's width
     });
 
 };
@@ -33,7 +33,7 @@ function bindCommentBalancedGallery($obj) {
         padding: 0,                         // pixels between images
         shuffleUnorderedPartitions: true,   // unordered galleries tend to clump larger images at the begining, this solves that issue at a slight performance cost
         //viewportHeight: 400,               // the assumed height of the gallery, defaults to the containing element's height
-        viewportWidth: 482                // the assumed width of the gallery, defaults to the containing element's width
+        //viewportWidth: 482                // the assumed width of the gallery, defaults to the containing element's width
     });
 };
 
@@ -2087,16 +2087,17 @@ function evFeedMoreView(options) {
                 $("#ShowMoreNoData").hide();
                 //画像をレイジーロード
                 imageLazyOn();
-                $posts.children('.post_gallery > img').imagesLoaded(function () {
+                //$posts.children('.post_gallery > img').imagesLoaded(function () {
+                $posts.imagesLoaded(function () {
                     $posts.children('.post_gallery').each(function (index, element) {
                         bindPostBalancedGallery($(element));
                     });
                 });
-                $posts.children('.comment_gallery > img').imagesLoaded(function () {
-                    $posts.children('.post_gallery').each(function (index, element) {
-                        bindCommentBalancedGallery($(element));
-                    });
-                });
+                //$posts.children('.comment_gallery > img').imagesLoaded(function () {
+                //$posts.children('.post_gallery').each(function (index, element) {
+                //    bindCommentBalancedGallery($(element));
+                //});
+                //});
 
                 //画像リサイズ
                 $posts.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
