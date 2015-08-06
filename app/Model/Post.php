@@ -401,7 +401,6 @@ class Post extends AppModel
 
     public function get($page = 1, $limit = 20, $start = null, $end = null, $params = null, $contains_message = false)
     {
-        $this->log('post get');
         $one_month = 60 * 60 * 24 * 31;
         if (!$start) {
             $start = REQUEST_TIMESTAMP - $one_month;
@@ -722,7 +721,6 @@ class Post extends AppModel
         $res = $this->getShareMessages($res);
         //未読件数を取得
         $res = $this->getCommentMyUnreadCount($res);
-        $this->log(count($res));
         return $res;
     }
 
