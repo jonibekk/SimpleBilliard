@@ -40,14 +40,14 @@ class PostsController extends AppController
     public function addMessage()
     {
         $this->request->data['Post']['type'] = Post::TYPE_MESSAGE;
-        $this->addPost();
+        $this->_addPost();
         $to_url = Router::url(['controller' => 'posts', 'action' => 'message#', $this->Post->getLastInsertID()], true);
         $this->redirect($to_url);
     }
 
     public function add()
     {
-        $this->addPost();
+        $this->_addPost();
         $this->redirect($this->_getRedirectUrl());
     }
 
@@ -57,7 +57,7 @@ class PostsController extends AppController
      * @throws RuntimeException
      * @return void
      */
-    public function addPost()
+    public function _addPost()
     {
         $this->request->allowMethod('post');
 
