@@ -16,6 +16,7 @@ class PostsController extends AppController
     public function message()
     {
         $this->layout = LAYOUT_ONE_COLUMN;
+        $this->set('without_footer', true);
         return $this->render();
     }
 
