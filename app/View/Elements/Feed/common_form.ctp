@@ -410,7 +410,7 @@ $only_tab_post =
                     <?=__d('gl', "To:")?>
                     <?=
                     $this->Form->hidden('share_public', [
-                        'id'    => 'select2MessageCircleMember',
+                        'id'    => 'select2Member',
                         'value' => $public_message_share_default,
                         'style' => "width: 85%"
                     ]) ?>
