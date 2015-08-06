@@ -6,10 +6,27 @@ if (typeof String.prototype.startsWith != 'function') {
     String.prototype.startsWith = function (str) {
         return this.indexOf(str) === 0;
     };
-}
-;
-$(document).ready(function () {
+};
+function bindBalancedGallery($obj){
+    $obj.BalancedGallery({
+        autoResize: true,                   // re-partition and resize the images when the window size changes
+        //background: '#DDD',                   // the css properties of the gallery's containing element
+        idealHeight: 150,                  // ideal row height, only used for horizontal galleries, defaults to half the containing element's height
+        //idealWidth: 100,                   // ideal column width, only used for vertical galleries, defaults to 1/4 of the containing element's width
+        maintainOrder: false,                // keeps images in their original order, setting to 'false' can create a slightly better balance between rows
+        orientation: 'horizontal',          // 'horizontal' galleries are made of rows and scroll vertically; 'vertical' galleries are made of columns and scroll horizontally
+        padding: 0,                         // pixels between images
+        shuffleUnorderedPartitions: true,   // unordered galleries tend to clump larger images at the begining, this solves that issue at a slight performance cost
+        //viewportHeight: 400,               // the assumed height of the gallery, defaults to the containing element's height
+        viewportWidth: null                // the assumed width of the gallery, defaults to the containing element's width
+    });
 
+};
+
+$(window).load(function() {
+    bindBalancedGallery($('.post_gallery'));
+});
+$(document).ready(function () {
     setDefaultTab();
     //すべてのformで入力があった場合に行う処理
     $("select,input").change(function () {

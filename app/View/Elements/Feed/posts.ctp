@@ -152,6 +152,31 @@ $without_header = isset($without_header) ? $without_header : false;
                     <?= $this->element('Feed/display_share_range', compact('post')) ?>
                 </div>
                 <?= $this->element('Feed/post_body', compact('post')) ?>
+                <?php if (!empty($post['PostFile'])): ?>
+            </div>
+            <div class="col col-xxs-12 pt_10px post_gallery">
+                <?php foreach ($post['PostFile'] as $post_file): ?>
+                    <?php if (isset($post_file['AttachedFile']['id']) && $post_file['AttachedFile']['file_type'] == AttachedFile::TYPE_FILE_IMG): ?>
+                        <?=
+//                        $this->Html->image('ajax-loader.gif',
+//                                           [
+//                                               'class'         => 'lazy',
+//                                               'data-original' => $this->Upload->uploadUrl($post_file['AttachedFile'],
+//                                                                                           "AttachedFile.attached",
+//                                                                                           ['style' => 'small'])
+//                                           ]
+//                        );
+                        $this->Html->image($this->Upload->uploadUrl($post_file['AttachedFile'],
+                                                                    "AttachedFile.attached",
+                                                                    ['style' => 'small'])
+                        );
+                        ?>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </div>
+            <div class="panel-body pt_10px plr_11px pb_8px">
+
+                <?php endif; ?>
                 <?php $photo_count = 0;
                 //タイプ別に切り分け
                 if ($post['Post']['type'] == Post::TYPE_ACTION) {
@@ -227,7 +252,7 @@ $without_header = isset($without_header) ? $without_header : false;
                     </div>
                 <?php endif; ?>
                 <?php if ($post['Post']['type'] == Post::TYPE_ACTION && isset($post['ActionResult']['ActionResultFile'][0])): ?>
-                    <div class="col col-xxs-12 pt_10px">
+                    <div class="col col-xxs-12 pt_10px text-center">
                         <a href="<?= $this->Upload->attachedFileUrl($post['ActionResult']['ActionResultFile'][0],
                                                                     "preview") ?>"
                            rel='lightbox' data-lightbox='LightBoxAttachedFileImgMain_Post_<?= $post['Post']['id'] ?>'
@@ -328,7 +353,7 @@ $without_header = isset($without_header) ? $without_header : false;
                     </div>
                 <?php endif; ?>
                 <?php if ($post['Post']['type'] == Post::TYPE_ACTION): ?>
-                    <div class="col col-xxs-12">
+                    <div class="col col-xxs-12 pt_10px">
                         <?php foreach ($post['ActionResult']['ActionResultFile'] as $k => $file): ?>
                             <?php if ($k === 0) {
                                 continue;
@@ -342,7 +367,7 @@ $without_header = isset($without_header) ? $without_header : false;
                         <?php endforeach ?>
                     </div>
                 <?php else: ?>
-                    <div class="col col-xxs-12">
+                    <div class="col col-xxs-12 pt_10px">
                         <?php foreach ($post['PostFile'] as $file): ?>
                             <div class="panel panel-default file-wrap-on-post">
                                 <div class="panel-body pt_10px plr_11px pb_8px">
