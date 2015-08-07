@@ -37,7 +37,7 @@ function bindCommentBalancedGallery($obj) {
         //viewportWidth: 482                // the assumed width of the gallery, defaults to the containing element's width
     });
 };
-$(window).load(function() {
+$(window).load(function () {
     bindPostBalancedGallery($('.post_gallery'));
     bindCommentBalancedGallery($('.comment_gallery'));
 });
@@ -2292,19 +2292,22 @@ function evCommentOldView() {
                 //取得したhtmlをオブジェクト化
                 var $posts = $(data.html);
                 //一旦非表示
-                $posts.hide();
+                $posts.fadeOut();
                 $("#" + parent_id).before($posts);
-                //html表示
-                $posts.show("slow", function () {
-                    //もっと見る
-                    showMore(this);
-                });
+                showMore($posts);
+                $posts.fadeIn();
                 //ローダーを削除
                 $loader_html.remove();
                 //リンクを削除
-                $obj.remove();
+                $obj.css("display", "none").css("opacity", 0);
                 //画像をレイジーロード
                 imageLazyOn();
+                $posts.imagesLoaded(function () {
+                    $posts.find('.comment_gallery').each(function (index, element) {
+                        bindCommentBalancedGallery($(element));
+                    });
+                });
+
                 //画像リサイズ
                 $posts.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
                     $(this).children('.nailthumb-container').nailthumb({
@@ -2812,6 +2815,12 @@ function evCommentLatestView() {
                 $obj.css("display", "none").css("opacity", 0);
                 //画像をレイジーロード
                 imageLazyOn();
+                $posts.imagesLoaded(function () {
+                    $posts.find('.comment_gallery').each(function (index, element) {
+                        bindCommentBalancedGallery($(element));
+                    });
+                });
+
                 //画像リサイズ
                 $posts.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
                     $(this).children('.nailthumb-container').nailthumb({
