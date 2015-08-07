@@ -3637,7 +3637,7 @@ $(document).ready(function () {
     $uploadFileForm.registerAttachFileButton('#PostUploadFileButton', postParams);
 
     ///////////////////////////////
-    // アクションメイン画像
+    // アクションメイン画像（最初の画像選択時)
     ///////////////////////////////
     var actionImageParams = {
         formID: 'CommonActionDisplayForm',
@@ -3645,6 +3645,7 @@ $(document).ready(function () {
         beforeAccept: function (file) {
             var $oldPreview = $('#' + $uploadFileForm._params.previewContainerID).find('.dz-preview:visible');
 
+            // 画像を２枚同時に選択（ドラッグ）された時の対応
             if ($oldPreview.size()) {
                 // Dropzone の管理ファイルから外す
                 var old_file = Dropzone.instances[0].files.splice(0, 1)[0];
@@ -3688,7 +3689,7 @@ $(document).ready(function () {
     $uploadFileForm.registerAttachFileButton('#ActionImageAddButton', actionImageParams, actionImageDzOptions);
 
     ///////////////////////////////
-    // アクションメイン画像 入れ替え時
+    // アクションメイン画像（入れ替え時）
     ///////////////////////////////
     var actionImage2Params = {
         formID: 'CommonActionDisplayForm',
