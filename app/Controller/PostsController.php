@@ -42,7 +42,8 @@ class PostsController extends AppController
                 }
 
                 if (in_array($this->Auth->user('id'), $shared_user_id) === false
-                    && $item['Post']['user_id'] !== $this->Auth->user('id')) {
+                    && $item['Post']['user_id'] !== $this->Auth->user('id')
+                ) {
                     unset($result[$key]);
                 }
             }
@@ -340,10 +341,12 @@ class PostsController extends AppController
         $room_info['User']['photo_path'] = $this->Post->getPhotoPath($room_info['User']);
 
         $res = [
-            'auth_info' => [
-                'photo_path' => $this->Post->getPhotoPath($this->Auth->user()),
+            'auth_info'   => [
+                'user_id' => $this->Auth->user('id'),
+                'photo_path'    => $this->Post->getPhotoPath($this->Auth->user()),
             ],
-            'room_info' => $room_info
+            'room_info'   => $room_info,
+            'share_users' => $this->Post->PostShareUser->getShareUserListByPost($post_id)
         ];
 
         //対象のメッセージルーム(Post)のnotifyがあれば削除する

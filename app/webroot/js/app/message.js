@@ -12,13 +12,11 @@ var message_app = angular.module(
         '$stateParams',
         '$http',
         '$translate',
-        function (
-            $rootScope,
-            $state,
-            $stateParams,
-            $http,
-            $translate
-        ){
+        function ($rootScope,
+                  $state,
+                  $stateParams,
+                  $http,
+                  $translate) {
             $rootScope.$state = $state;
             $rootScope.$stateParams = $stateParams;
         }]
@@ -30,12 +28,10 @@ message_app.config([
     '$urlRouterProvider',
     '$translateProvider',
     '$httpProvider',
-    function (
-        $stateProvider,
-        $urlRouterProvider,
-        $translateProvider,
-        $httpProvider
-    ) {
+    function ($stateProvider,
+              $urlRouterProvider,
+              $translateProvider,
+              $httpProvider) {
 
         $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 
@@ -57,4 +53,4 @@ message_app.config([
                 },
                 controller: 'MessageDetailCtrl'
             })
-}]);
+    }]);
