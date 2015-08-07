@@ -70,6 +70,7 @@ class PostShareUser extends AppModel
      * @param int    $limit
      * @param array  $params
      *                 'user_id' : 指定すると投稿者で絞る
+     * @param bool   $contains_message
      *
      * @return array|null
      */
@@ -96,6 +97,7 @@ class PostShareUser extends AppModel
             $options['conditions']['Post.user_id'] = $params['user_id'];
             $options['contain'][] = 'Post';
         }
+
         $res = $this->find('list', $options);
         $this->primaryKey = $backupPrimaryKey;
 

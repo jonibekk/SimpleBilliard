@@ -35,6 +35,7 @@ class NotifySetting extends AppModel
     const TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION = 22;
     const TYPE_FEED_CAN_SEE_ACTION = 23;
     const TYPE_USER_JOINED_TO_INVITED_TEAM = 24;
+    const TYPE_FEED_MESSAGE = 25;
 
     static public $TYPE = [
         self::TYPE_FEED_POST                             => [
@@ -181,6 +182,12 @@ class NotifySetting extends AppModel
             'field_prefix'    => 'user_joined_to_invited_team',
             'icon_class'      => 'fa-users',
         ],
+        self::TYPE_FEED_MESSAGE                          => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => 'feed_message',
+            'icon_class'      => 'fa-paper-plane-o',
+        ],
     ];
 
     public function _setFieldRealName()
@@ -233,6 +240,8 @@ class NotifySetting extends AppModel
             = __d('gl', "自分が閲覧可能なアクションがあったとき");
         self::$TYPE[self::TYPE_USER_JOINED_TO_INVITED_TEAM]['field_real_name']
             = __d('gl', "自分の所属するチームへ招待したユーザーがチームに参加したとき");
+        self::$TYPE[self::TYPE_FEED_MESSAGE]['field_real_name']
+            = __d('gl', "自分が閲覧可能なメッセージがあったとき");
     }
 
     function __construct($id = false, $table = null, $ds = null)
@@ -448,6 +457,10 @@ class NotifySetting extends AppModel
                 break;
             case self::TYPE_USER_JOINED_TO_INVITED_TEAM:
                 $title = __d('gl', '%1$sがチームに参加しました。', $user_text);
+                break;
+            case self::TYPE_FEED_MESSAGE:
+                $title = __d('gl', '%1$s%2$s', $user_text,
+                             ($count_num > 0) ? __d('gl', " +%s", $count_num) : null);
                 break;
         }
         return $title;

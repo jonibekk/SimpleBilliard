@@ -172,7 +172,6 @@ class AppController extends Controller
                 $this->_setNotifyCnt();
                 $this->_setCurrentTerm();
                 $this->_setNextTerm();
-
             }
             $this->_setMyMemberStatus();
         }

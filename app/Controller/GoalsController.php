@@ -885,6 +885,39 @@ class GoalsController extends AppController
     }
 
     /**
+     * アクション新規登録
+     *
+     * @return CakeResponse
+     */
+    public function add_action()
+    {
+        $goal_id = viaIsSet($this->request->params['named']['goal_id']);
+        $key_result_id = viaIsSet($this->request->params['named']['key_result_id']);
+        try {
+            if (!$this->Goal->Collaborator->isCollaborated($goal_id)) {
+                throw new RuntimeException(__d('gl', "このアクションは編集できません。"));
+            }
+            if ($key_result_id && !$this->Goal->KeyResult->isPermitted($key_result_id)) {
+                throw new RuntimeException(__d('gl', "このアクションは編集できません。"));
+            }
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage());
+            /** @noinspection PhpVoidFunctionResultUsedInspection */
+            return $this->redirect($this->referer());
+        }
+        $this->request->data['ActionResult']['goal_id'] = $goal_id;
+        $this->request->data['ActionResult']['key_result_id'] = $key_result_id;
+        $kr_list = [null => '---'] + $this->Goal->KeyResult->getKeyResults($goal_id, 'list');
+        $this->set(compact('kr_list', 'key_result_id'));
+
+        $this->_setViewValOnRightColumn();
+        $this->set('common_form_type', 'action');
+        $this->set('common_form_only_tab', 'action');
+        $this->layout = LAYOUT_ONE_COLUMN;
+        $this->render('edit_action');
+    }
+
+    /**
      * アクションの編集
      */
     public function edit_action()
@@ -1089,7 +1122,11 @@ class GoalsController extends AppController
 
         // push
         $this->Pnotify->outSuccess(__d('gl', "アクションを追加しました。"));
-        $this->redirect($this->referer());
+        $post = $this->Goal->Post->getByActionResultId($this->Goal->ActionResult->getLastInsertID());
+        $url = $post ? ['controller' => 'posts',
+                        'action'     => 'feed',
+                        'post_id'    => $post['Post']['id']] : $this->referer();
+        return $this->redirect($url);
 
     }
 

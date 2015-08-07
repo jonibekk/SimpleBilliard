@@ -1,5 +1,8 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('UploadHelper', 'View/Helper');
+App::uses('TimeExHelper', 'View/Helper');
+App::uses('View', 'View');
 
 /**
  * Comment Model
@@ -185,10 +188,10 @@ class Comment extends AppModel
             }
         }
         $this->commit();
-        return true;
+        return $comment_id;
     }
 
-    public function getPostsComment($post_id, $get_num = null)
+    public function getPostsComment($post_id, $get_num = null, $page = null, $order_by = null)
     {
         $options = [
             'conditions' => [
@@ -217,13 +220,65 @@ class Comment extends AppModel
                     ]
                 ]
             ],
-            'limit'      => $get_num
+            'limit'      => $get_num,
+            'page'       => $page
         ];
+
+        if (is_null($page) === false) {
+            $options['page'] = $page;
+        }
+
+        if (is_null($order_by) === false) {
+            $options['order']['Comment.created'] = $order_by;
+        }
+
         $res = $this->find('all', $options);
 
         //既読済みに
         $comment_list = Hash::extract($res, '{n}.Comment.id');
         $this->CommentRead->red($comment_list);
+
+        return $res;
+    }
+
+    function convertData($data)
+    {
+        $upload = new UploadHelper(new View());
+
+        if (isset($data['Comment']) === true) {
+            $data['User']['photo_path'] = $upload->uploadUrl($data['User'], 'User.photo', ['style' => 'original']);
+
+        }
+        else {
+            foreach ($data as $key => $val) {
+                $data[$key]['User']['photo_path'] = $upload->uploadUrl($val['User'], 'User.photo',
+                                                                       ['style' => 'original']);
+            }
+        }
+
+        return $data;
+    }
+
+    public function getComment($comment_id)
+    {
+        $options = [
+            'conditions' => [
+                'Comment.id'      => $comment_id,
+                'Comment.team_id' => $this->current_team_id,
+            ],
+            'contain'    => [
+                'User'          => [
+                    'fields' => $this->User->profileFields
+                ],
+                'MyCommentLike' => [
+                    'conditions' => [
+                        'MyCommentLike.user_id' => $this->my_uid,
+                        'MyCommentLike.team_id' => $this->current_team_id,
+                    ]
+                ],
+            ],
+        ];
+        $res = $this->find('first', $options);
 
         return $res;
     }
