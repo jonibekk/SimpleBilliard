@@ -341,10 +341,13 @@ class PostsController extends AppController
         $room_info['User']['photo_path'] = $this->Post->getPhotoPath($room_info['User']);
 
         $res = [
-            'auth_info' => [
+            'auth_info'   => [
+                'user_id'    => $this->Auth->user('id'),
+                'language'   => $this->Auth->user('language'),
                 'photo_path' => $this->Post->getPhotoPath($this->Auth->user()),
             ],
-            'room_info' => $room_info
+            'room_info'   => $room_info,
+            'share_users' => $this->Post->PostShareUser->getShareUserListByPost($post_id)
         ];
 
         //対象のメッセージルーム(Post)のnotifyがあれば削除する

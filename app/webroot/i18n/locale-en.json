@@ -20,5 +20,7 @@
         "ARCHIVE_SUCCESS_MASSAGE": "Success.",
         "DELETE_FAILED_MASSAGE": "Failed.",
         "DELETE_SUCCESS_MASSAGE": "Success."
-    }
+    },
+
+    "ACCESS_MESSAGE_DETAIL_MESSAGE" : "Access Failed."
 }
