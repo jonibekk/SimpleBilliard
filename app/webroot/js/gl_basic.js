@@ -6,8 +6,9 @@ if (typeof String.prototype.startsWith != 'function') {
     String.prototype.startsWith = function (str) {
         return this.indexOf(str) === 0;
     };
-};
-function bindPostBalancedGallery($obj){
+}
+;
+function bindPostBalancedGallery($obj) {
     $obj.BalancedGallery({
         autoResize: true,                   // re-partition and resize the images when the window size changes
         //background: '#DDD',                   // the css properties of the gallery's containing element
@@ -3019,6 +3020,7 @@ $(function () {
         });
         return false;
     }
+
     function updateMessageNotifyCnt() {
 
         var url = cake.url.af;
@@ -3064,6 +3066,7 @@ $(function () {
         }
         return;
     }
+
     function setNotifyCntToMessageAndTitle(cnt) {
         var $bellBox = getMessageBoxSelector();
         var $title = $("title");
@@ -3306,6 +3309,9 @@ $(document).ready(function () {
         dictFileTooBig: cake.message.validate.dropzone_file_too_big,
         dictInvalidFileType: cake.message.validate.dropzone_invalid_file_type,
         dictMaxFilesExceeded: cake.message.validate.dropzone_max_files_exceeded,
+        dictResponseError: cake.message.validate.dropzone_response_error,
+        dictCancelUpload: cake.message.validate.dropzone_cancel_upload,
+        dictCancelUploadConfirmation: cake.message.validate.dropzone_cancel_upload_confirmation,
         clickable: '#' + $uploadFileAttachButton.attr('id'),
         previewTemplate: previewTemplateDefault,
         thumbnailWidth: null,
@@ -3381,6 +3387,11 @@ $(document).ready(function () {
         removedfile: function (file) {
             var $preview = $(file.previewTemplate);
 
+            // キャンセルされたファイルの場合は処理しない
+            if (file.status == Dropzone.CANCELED) {
+                return;
+            }
+
             // 既にDBに保存済のデータの場合（投稿編集時）
             if (file.saved_file) {
                 // フォームの hidden を削除
@@ -3446,6 +3457,24 @@ $(document).ready(function () {
                         });
                     });
             }
+        },
+        // アップロードがキャンセルされたとき
+        canceled: function (file) {
+            var $preview = $(file.previewTemplate);
+            // キャンセルを確認出来るようにファイルの名前を強調して少しの間表示しておく
+            $preview.find('.dz-name').addClass('font_darkRed font_bold').append('(' + cake.word.cancel + ')');
+            setTimeout(function () {
+                $preview.remove();
+            }, 4000);
+            $uploadFileForm.hide();
+            new PNotify({
+                type: 'success',
+                title: cake.word.success,
+                text: cake.message.validate.dropzone_cancel_upload,
+                icon: "fa fa-check-circle",
+                delay: 4000,
+                mouse_reset: false
+            });
         },
         // ファイルアップロード失敗
         error: function (file, errorMessage) {
