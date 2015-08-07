@@ -42,7 +42,7 @@ else {
             <?= $this->fetch('content'); ?>
             <!-- /Remark -->
         </div>
-        <div class="col-md-4 visible-md visible-lg col-xs-8 col-xxs-12 layout-goal" role="goal_area">
+        <div class="right-side-container-wrap col-md-4 visible-md visible-lg col-xs-8 col-xxs-12 layout-goal" role="goal_area">
             <?= $this->element('my_goals_area') ?>
         </div>
     </div>
