@@ -36,6 +36,7 @@ class MixpanelComponent extends Object
     const TRACK_2SV_DISABLE = '2SVDbl';
     const TRACK_ACHIEVE_GOAL = 'AchieveGoal';
     const TRACK_ACHIEVE_KR = 'AchieveKR';
+    const TRACK_MESSAGE = 'Message';
 
     /**
      * Property Values
@@ -225,6 +226,10 @@ class MixpanelComponent extends Object
         $this->track(self::TRACK_LIKE, ['$target_type' => $target_type]);
     }
 
+    function trackMessage($post_id)
+    {
+        $this->track(self::TRACK_MESSAGE, ['$post_id' => $post_id]);
+    }
     /**
      * @param $approval_type
      * @param $approval_member_type
