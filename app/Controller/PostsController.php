@@ -31,19 +31,23 @@ class PostsController extends AppController
     {
         $this->_ajaxPreProcess();
         $result = $this->Post->getMessageList();
+
         // TODO:緊急対応　汚いので後でリファクタリング
         foreach ($result as $key => $item) {
             if (isset($item['PostShareUser']) === true) {
+
+                $shared_user_id = [];
                 foreach ($item['PostShareUser'] as $item2) {
-                    if ($item2['user_id'] !== $this->Auth->user('id')
-                        && $item['Post']['user_id'] !== $this->Auth->user('id')) {
-                        unset($result[$key]);
-                    }
+                    $shared_user_id[] = $item2['user_id'];
+                }
+
+                if (in_array($this->Auth->user('id'), $shared_user_id) === false
+                    && $item['Post']['user_id'] !== $this->Auth->user('id')) {
+                    unset($result[$key]);
                 }
             }
         }
         $message_list = $this->Post->convertData($result);
-
         return $this->_ajaxGetResponse($message_list);
     }
 
