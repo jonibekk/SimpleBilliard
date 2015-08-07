@@ -10,17 +10,17 @@ message_app.controller(
               $anchorScroll,
               $location) {
 
+
+
         if (getPostDetail.auth_info.language === 'eng') {
             $translate.use('en');
         }
-        $scope.view_flag = true;
 
         // 最初のメッセージはPostテーブルから取得
         var post_detail = getPostDetail.room_info;
 
         // 投稿が存在しない時
         if (typeof post_detail.Post === 'undefined') {
-            $scope.view_flag = false;
             notificationService.error($translate.instant('ACCESS_MESSAGE_DETAIL_MESSAGE'));
             document.location = "/";
 
@@ -33,7 +33,6 @@ message_app.controller(
 
             // 権限がない時
             if (share_users.indexOf(getPostDetail.auth_info.user_id) < 0) {
-                $scope.view_flag = false;
                 notificationService.error($translate.instant('ACCESS_MESSAGE_DETAIL_MESSAGE'));
                 document.location = "/";
             }
