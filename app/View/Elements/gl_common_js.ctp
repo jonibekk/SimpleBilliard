@@ -51,7 +51,10 @@ echo $this->Html->script('gl_basic');
                 g: "<?=__d('validate', "必須項目です。")?>",
                 dropzone_file_too_big: "<?=__d('gl', 'アップロード出来るファイルサイズは{{maxFilesize}}MBまでです。')?>",
                 dropzone_invalid_file_type: "<?=__d('gl', '画像ファイルを選択してください。')?>",
-                dropzone_max_files_exceeded: "<?=__d('gl', 'アップロード出来るファイル数は{{maxFiles}}個までです。')?>"
+                dropzone_max_files_exceeded: "<?=__d('gl', 'アップロード出来るファイル数は{{maxFiles}}個までです。')?>",
+                dropzone_response_error: "<?=__d('gl', 'アップロードに失敗しました。')?>",
+                dropzone_cancel_upload: "<?=__d('gl', 'アップロードをキャンセルしました。')?>",
+                dropzone_cancel_upload_confirmation: "<?=__d('gl', 'アップロードをキャンセルしてよろしいですか？。')?>"
             },
             notice: {
                 a: "<?=__d('gl',"入力が途中です。このまま移動しますか？")?>",
@@ -97,7 +100,8 @@ echo $this->Html->script('gl_basic');
             select_secret_circle: "<?=__d('gl',"秘密サークルを指定しよう")?>",
             share_change_disabled: "<?=__d('gl',"サークルページでは切り替えられません")?>",
             success: "<?=__d('gl',"成功")?>",
-            error: "<?=__d('gl',"エラー")?>"
+            error: "<?=__d('gl',"エラー")?>",
+            cancel: "<?=__d('gl',"キャンセル")?>"
         },
         url: {
             a: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_users'])?>",
@@ -243,6 +247,7 @@ echo $this->Html->script('gl_basic');
         },
         notify_auto_update_sec: <?=NOTIFY_AUTO_UPDATE_SEC?>,
         new_notify_cnt: <?=isset($new_notify_cnt)?$new_notify_cnt:0?>,
+        new_notify_message_cnt: <?=isset($new_notify_message_cnt)?$new_notify_message_cnt:0?>,
         common_form_type: "<?= isset($common_form_type)?$common_form_type:null?>"
     };
 

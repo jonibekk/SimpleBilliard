@@ -1,19 +1,43 @@
 message_app.controller(
     "MessageDetailCtrl",
-    function (
-        $scope,
-        $http,
-        $translate,
-        notificationService,
-        getPostDetail,
-        $pusher,
-        $stateParams,
-        $anchorScroll,
-        $location
-    ){
+    function ($scope,
+              $http,
+              $translate,
+              notificationService,
+              getPostDetail,
+              $pusher,
+              $stateParams,
+              $anchorScroll,
+              $location) {
+
+
+
+        if (getPostDetail.auth_info.language === 'eng') {
+            $translate.use('en');
+        }
 
         // 最初のメッセージはPostテーブルから取得
         var post_detail = getPostDetail.room_info;
+
+        // 投稿が存在しない時
+        if (typeof post_detail.Post === 'undefined') {
+            notificationService.error($translate.instant('ACCESS_MESSAGE_DETAIL_MESSAGE'));
+            document.location = "/";
+
+        } else {
+            // シェアされてない人は表示をしない
+            var share_users = [post_detail.Post.user_id];
+            angular.forEach(getPostDetail.share_users, function (suid) {
+                share_users.push(suid);
+            });
+
+            // 権限がない時
+            if (share_users.indexOf(getPostDetail.auth_info.user_id) < 0) {
+                notificationService.error($translate.instant('ACCESS_MESSAGE_DETAIL_MESSAGE'));
+                document.location = "/";
+            }
+        }
+
         var message_list = [];
         var first_data = {
             Comment: {
@@ -40,7 +64,7 @@ message_app.controller(
                 message_id = $scope.message_list.length;
             }
             current_id = message_id;
-            $location.hash('m_'+ message_id);
+            $location.hash('m_' + message_id);
             $anchorScroll();
         };
 
@@ -54,7 +78,7 @@ message_app.controller(
                 method: 'GET',
                 url: cake.url.ak + $stateParams.post_id + '/' + read_comment_id
             };
-            $http(request).then(function(response) {
+            $http(request).then(function (response) {
             });
 
             // メッセージ表示
@@ -64,17 +88,19 @@ message_app.controller(
 
         // pusherから既読されたcomment_idを取得する
         test_channel.bind('read_message', function (comment_id) {
-            var read_box = document.getElementById("mr_"+comment_id).innerText;
-            document.getElementById("mr_"+comment_id).innerText = Number(read_box) + 1;
+            var read_box = document.getElementById("mr_" + comment_id).innerText;
+            document.getElementById("mr_" + comment_id).innerText = Number(read_box) + 1;
         });
 
         // メッセージを送信する
-        $scope.clickMessage = function () {
+        $scope.clickMessage = function (event) {
+            event.target.disabled='disabled'
             var request = {
                 method: 'GET',
-                url: cake.url.ai + $stateParams.post_id + '/' +$scope.message
+                url: cake.url.ai + $stateParams.post_id + '/' + $scope.message
             };
             $http(request).then(function(response) {
+                event.target.disabled=''
                 message_scroll($scope.message_list.length);
                 $scope.message = "";
             });

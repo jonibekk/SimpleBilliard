@@ -623,7 +623,8 @@ class AppController extends Controller
     public function _setNotifyCnt()
     {
         $new_notify_cnt = $this->NotifyBiz->getCountNewNotification();
-        $this->set(compact("new_notify_cnt"));
+        $new_notify_message_cnt = $this->NotifyBiz->getCountNewMessageNotification();
+        $this->set(compact("new_notify_cnt", 'new_notify_message_cnt'));
     }
 
     function _getRequiredParam($name)
