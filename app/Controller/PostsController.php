@@ -31,19 +31,23 @@ class PostsController extends AppController
     {
         $this->_ajaxPreProcess();
         $result = $this->Post->getMessageList();
+
         // TODO:緊急対応　汚いので後でリファクタリング
         foreach ($result as $key => $item) {
             if (isset($item['PostShareUser']) === true) {
+
+                $shared_user_id = [];
                 foreach ($item['PostShareUser'] as $item2) {
-                    if ($item2['user_id'] !== $this->Auth->user('id')
-                        && $item['Post']['user_id'] !== $this->Auth->user('id')) {
-                        unset($result[$key]);
-                    }
+                    $shared_user_id[] = $item2['user_id'];
+                }
+
+                if (in_array($this->Auth->user('id'), $shared_user_id) === false
+                    && $item['Post']['user_id'] !== $this->Auth->user('id')) {
+                    unset($result[$key]);
                 }
             }
         }
         $message_list = $this->Post->convertData($result);
-
         return $this->_ajaxGetResponse($message_list);
     }
 
@@ -878,6 +882,13 @@ class PostsController extends AppController
     /**
      * ファイルアップロード
      *
+     * JSON レスポンス形式
+     * {
+     *   error: bool,   // エラーが発生した場合に true
+     *   msg: string,   // 処理結果を示すメッセージ
+     *   id: string,    // ファイルID
+     * }
+     *
      * @return CakeResponse
      */
     public function ajax_upload_file()
@@ -892,6 +903,13 @@ class PostsController extends AppController
 
     /**
      * アップロードしたファイルを削除
+     *
+     * JSON レスポンス形式
+     * {
+     *   error: bool,   // エラーが発生した場合に true
+     *   msg: string,   // 処理結果を示すメッセージ
+     *   id: string,    // ファイルID
+     * }
      *
      * @return CakeResponse
      */
