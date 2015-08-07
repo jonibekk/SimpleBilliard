@@ -3049,10 +3049,6 @@ Temporary Properties - YOU MUST FIX
     text-align: center;
 }
 
-.circleListMore:nth-child(n+10) {
-    display: none;
-}
-
 .click-circle-trigger {
     cursor: pointer;
 }

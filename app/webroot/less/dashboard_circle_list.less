@@ -118,3 +118,63 @@
 }
 
 /*/サークルのデザイン*/
+
+
+.dashboard-circle-list {
+  background: @baseGray;
+  border: 1px solid @lightGray;
+  border-radius: 4px;
+  max-width: 100%;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+.dashboard-circle-list-header {
+  border-bottom: 1px solid @lightGray;
+  padding: 4px;
+}
+
+.dashboard-circle-list-title {
+  color: @veryDark;
+}
+
+.dashboard-circle-list-body {
+  padding: 4px;
+  overflow: scroll;
+  max-height: 260px;
+  background: @baseLightGray;
+}
+
+.dashboard-circle-list-footer {
+  border-top: 1px solid @lightGray;
+  padding: 4px;
+}
+
+.dashboard-circle-list-seek {
+  font-size: 12px;
+  line-height: 16px;
+  padding: 10px 0 6px 0;
+}
+
+.dashboard-circle-list-make {
+  font-size: 12px;
+  line-height: 16px;
+  padding: 6px 0 6px 0;
+}
+
+.circleListMore:nth-child(n+9) {
+    display: none;
+}
+
+.dashboard-circle-count-box {
+  display: inline-block;
+  width: 10%;
+  text-align: right;
+}
+
+.dashboard-circle-name-box {
+  display: inline-block;
+  width: 70%;
+  @media screen and (min-width: 768px) and (max-width: 991px){
+    width: 78%;
+  }
+}
