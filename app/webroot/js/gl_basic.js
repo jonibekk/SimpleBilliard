@@ -3344,6 +3344,7 @@ $(document).ready(function () {
             // エラー
             if (res.error) {
                 $preview.remove();
+                PNotify.removeAll();
                 new PNotify({
                     type: 'error',
                     title: cake.message.notice.d,
@@ -3415,6 +3416,7 @@ $(document).ready(function () {
                     data: $removeFileForm.serialize()
                 })
                     .done(function (res) {
+                        PNotify.removeAll();
                         // エラー
                         if (res.error) {
                             new PNotify({
@@ -3447,6 +3449,7 @@ $(document).ready(function () {
                         });
                     })
                     .fail(function (res) {
+                        PNotify.removeAll();
                         new PNotify({
                             type: 'error',
                             title: cake.message.notice.d,
@@ -3467,6 +3470,7 @@ $(document).ready(function () {
                 $preview.remove();
             }, 4000);
             $uploadFileForm.hide();
+            PNotify.removeAll();
             new PNotify({
                 type: 'success',
                 title: cake.word.success,
@@ -3485,6 +3489,7 @@ $(document).ready(function () {
                 $preview.remove();
             }, 4000);
             $uploadFileForm.hide();
+            PNotify.removeAll();
             new PNotify({
                 type: 'error',
                 title: cake.message.notice.d,
