@@ -1256,7 +1256,7 @@ class Post extends AppModel
             'contain'    => [
                 'User',
                 'PostShareUser' => [
-                    'fields' => ['id']
+                    'fields' => ['id', 'user_id']
                 ],
                 'Comment'       => [
                     'User',
