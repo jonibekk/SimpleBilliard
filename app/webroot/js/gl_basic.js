@@ -3082,6 +3082,7 @@ $(function () {
         if (parseInt(cnt) <= 20) {
             $bellBox.children('span').html(cnt);
             $bellBox.children('sup').addClass('none');
+
             $title.text("(" + cnt + ")" + $originTitle);
         } else {
             $bellBox.children('span').html(20);
@@ -3147,7 +3148,8 @@ function initBellNum() {
 function initMessageNum() {
     var $box = getMessageBoxSelector();
     $box.css("opacity", 0);
-    $box.html("0");
+    //$box.html("0");
+    $box.children('span').html("0");
 }
 
 function initTitle() {
