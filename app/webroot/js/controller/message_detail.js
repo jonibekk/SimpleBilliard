@@ -94,12 +94,14 @@ message_app.controller(
         });
 
         // メッセージを送信する
-        $scope.clickMessage = function () {
+        $scope.clickMessage = function (event) {
+            event.target.disabled='disabled'
             var request = {
                 method: 'GET',
                 url: cake.url.ai + $stateParams.post_id + '/' + $scope.message
             };
-            $http(request).then(function (response) {
+            $http(request).then(function(response) {
+                event.target.disabled=''
                 message_scroll($scope.message_list.length);
                 $scope.message = "";
             });

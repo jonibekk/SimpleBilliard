@@ -396,7 +396,7 @@ class Post extends AppModel
     public function getPhotoPath($user_arr)
     {
         $upload = new UploadHelper(new View());
-        return $upload->uploadUrl($user_arr, 'User.photo', ['style' => 'small']);
+        return $upload->uploadUrl($user_arr, 'User.photo', ['style' => 'medium']);
     }
 
     public function get($page = 1, $limit = 20, $start = null, $end = null, $params = null, $contains_message = false)

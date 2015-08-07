@@ -6,8 +6,9 @@ if (typeof String.prototype.startsWith != 'function') {
     String.prototype.startsWith = function (str) {
         return this.indexOf(str) === 0;
     };
-};
-function bindPostBalancedGallery($obj){
+}
+;
+function bindPostBalancedGallery($obj) {
     $obj.BalancedGallery({
         autoResize: true,                   // re-partition and resize the images when the window size changes
         //background: '#DDD',                   // the css properties of the gallery's containing element
@@ -3019,6 +3020,7 @@ $(function () {
         });
         return false;
     }
+
     function updateMessageNotifyCnt() {
 
         var url = cake.url.af;
@@ -3064,6 +3066,7 @@ $(function () {
         }
         return;
     }
+
     function setNotifyCntToMessageAndTitle(cnt) {
         var $bellBox = getMessageBoxSelector();
         var $title = $("title");
@@ -3079,6 +3082,7 @@ $(function () {
         if (parseInt(cnt) <= 20) {
             $bellBox.children('span').html(cnt);
             $bellBox.children('sup').addClass('none');
+
             $title.text("(" + cnt + ")" + $originTitle);
         } else {
             $bellBox.children('span').html(20);
@@ -3144,7 +3148,8 @@ function initBellNum() {
 function initMessageNum() {
     var $box = getMessageBoxSelector();
     $box.css("opacity", 0);
-    $box.html("0");
+    //$box.html("0");
+    $box.children('span').html("0");
 }
 
 function initTitle() {
@@ -3306,6 +3311,9 @@ $(document).ready(function () {
         dictFileTooBig: cake.message.validate.dropzone_file_too_big,
         dictInvalidFileType: cake.message.validate.dropzone_invalid_file_type,
         dictMaxFilesExceeded: cake.message.validate.dropzone_max_files_exceeded,
+        dictResponseError: cake.message.validate.dropzone_response_error,
+        dictCancelUpload: cake.message.validate.dropzone_cancel_upload,
+        dictCancelUploadConfirmation: cake.message.validate.dropzone_cancel_upload_confirmation,
         clickable: '#' + $uploadFileAttachButton.attr('id'),
         previewTemplate: previewTemplateDefault,
         thumbnailWidth: null,
@@ -3338,6 +3346,7 @@ $(document).ready(function () {
             // エラー
             if (res.error) {
                 $preview.remove();
+                PNotify.removeAll();
                 new PNotify({
                     type: 'error',
                     title: cake.message.notice.d,
@@ -3381,6 +3390,11 @@ $(document).ready(function () {
         removedfile: function (file) {
             var $preview = $(file.previewTemplate);
 
+            // キャンセルされたファイルの場合は処理しない
+            if (file.status == Dropzone.CANCELED) {
+                return;
+            }
+
             // 既にDBに保存済のデータの場合（投稿編集時）
             if (file.saved_file) {
                 // フォームの hidden を削除
@@ -3404,6 +3418,7 @@ $(document).ready(function () {
                     data: $removeFileForm.serialize()
                 })
                     .done(function (res) {
+                        PNotify.removeAll();
                         // エラー
                         if (res.error) {
                             new PNotify({
@@ -3436,6 +3451,7 @@ $(document).ready(function () {
                         });
                     })
                     .fail(function (res) {
+                        PNotify.removeAll();
                         new PNotify({
                             type: 'error',
                             title: cake.message.notice.d,
@@ -3447,6 +3463,25 @@ $(document).ready(function () {
                     });
             }
         },
+        // アップロードがキャンセルされたとき
+        canceled: function (file) {
+            var $preview = $(file.previewTemplate);
+            // キャンセルを確認出来るようにファイルの名前を強調して少しの間表示しておく
+            $preview.find('.dz-name').addClass('font_darkRed font_bold').append('(' + cake.word.cancel + ')');
+            setTimeout(function () {
+                $preview.remove();
+            }, 4000);
+            $uploadFileForm.hide();
+            PNotify.removeAll();
+            new PNotify({
+                type: 'success',
+                title: cake.word.success,
+                text: cake.message.validate.dropzone_cancel_upload,
+                icon: "fa fa-check-circle",
+                delay: 4000,
+                mouse_reset: false
+            });
+        },
         // ファイルアップロード失敗
         error: function (file, errorMessage) {
             var $preview = $(file.previewTemplate);
@@ -3456,6 +3491,7 @@ $(document).ready(function () {
                 $preview.remove();
             }, 4000);
             $uploadFileForm.hide();
+            PNotify.removeAll();
             new PNotify({
                 type: 'error',
                 title: cake.message.notice.d,
@@ -3603,7 +3639,7 @@ $(document).ready(function () {
     $uploadFileForm.registerAttachFileButton('#PostUploadFileButton', postParams);
 
     ///////////////////////////////
-    // アクションメイン画像
+    // アクションメイン画像（最初の画像選択時)
     ///////////////////////////////
     var actionImageParams = {
         formID: 'CommonActionDisplayForm',
@@ -3611,6 +3647,7 @@ $(document).ready(function () {
         beforeAccept: function (file) {
             var $oldPreview = $('#' + $uploadFileForm._params.previewContainerID).find('.dz-preview:visible');
 
+            // 画像を２枚同時に選択（ドラッグ）された時の対応
             if ($oldPreview.size()) {
                 // Dropzone の管理ファイルから外す
                 var old_file = Dropzone.instances[0].files.splice(0, 1)[0];
@@ -3654,7 +3691,7 @@ $(document).ready(function () {
     $uploadFileForm.registerAttachFileButton('#ActionImageAddButton', actionImageParams, actionImageDzOptions);
 
     ///////////////////////////////
-    // アクションメイン画像 入れ替え時
+    // アクションメイン画像（入れ替え時）
     ///////////////////////////////
     var actionImage2Params = {
         formID: 'CommonActionDisplayForm',

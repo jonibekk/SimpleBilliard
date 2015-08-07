@@ -886,6 +886,13 @@ class PostsController extends AppController
     /**
      * ファイルアップロード
      *
+     * JSON レスポンス形式
+     * {
+     *   error: bool,   // エラーが発生した場合に true
+     *   msg: string,   // 処理結果を示すメッセージ
+     *   id: string,    // ファイルID
+     * }
+     *
      * @return CakeResponse
      */
     public function ajax_upload_file()
@@ -900,6 +907,13 @@ class PostsController extends AppController
 
     /**
      * アップロードしたファイルを削除
+     *
+     * JSON レスポンス形式
+     * {
+     *   error: bool,   // エラーが発生した場合に true
+     *   msg: string,   // 処理結果を示すメッセージ
+     *   id: string,    // ファイルID
+     * }
      *
      * @return CakeResponse
      */

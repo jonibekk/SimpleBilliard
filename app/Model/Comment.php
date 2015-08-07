@@ -246,13 +246,13 @@ class Comment extends AppModel
         $upload = new UploadHelper(new View());
 
         if (isset($data['Comment']) === true) {
-            $data['User']['photo_path'] = $upload->uploadUrl($data['User'], 'User.photo', ['style' => 'original']);
+            $data['User']['photo_path'] = $upload->uploadUrl($data['User'], 'User.photo', ['style' => 'medium']);
 
         }
         else {
             foreach ($data as $key => $val) {
                 $data[$key]['User']['photo_path'] = $upload->uploadUrl($val['User'], 'User.photo',
-                                                                       ['style' => 'original']);
+                                                                       ['style' => 'medium']);
             }
         }
 
