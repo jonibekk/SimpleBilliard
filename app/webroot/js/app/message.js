@@ -35,6 +35,13 @@ message_app.config([
 
         $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 
+        $translateProvider.useStaticFilesLoader({
+            prefix: '/i18n/locale-',
+            suffix: '.json'
+        });
+        $translateProvider.preferredLanguage('ja');
+        $translateProvider.fallbackLanguage('en');
+
         $urlRouterProvider.otherwise("/");
         $stateProvider
             .state('detail', {

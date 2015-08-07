@@ -342,8 +342,9 @@ class PostsController extends AppController
 
         $res = [
             'auth_info'   => [
-                'user_id' => $this->Auth->user('id'),
-                'photo_path'    => $this->Post->getPhotoPath($this->Auth->user()),
+                'user_id'    => $this->Auth->user('id'),
+                'language'   => $this->Auth->user('language'),
+                'photo_path' => $this->Post->getPhotoPath($this->Auth->user()),
             ],
             'room_info'   => $room_info,
             'share_users' => $this->Post->PostShareUser->getShareUserListByPost($post_id)

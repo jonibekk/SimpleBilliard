@@ -10,6 +10,9 @@ message_app.controller(
               $anchorScroll,
               $location) {
 
+        if (getPostDetail.auth_info.language === 'eng') {
+            $translate.use('en');
+        }
         $scope.view_flag = true;
 
         // 最初のメッセージはPostテーブルから取得
@@ -18,9 +21,10 @@ message_app.controller(
         // 投稿が存在しない時
         if (typeof post_detail.Post === 'undefined') {
             $scope.view_flag = false;
+            notificationService.error($translate.instant('ACCESS_MESSAGE_DETAIL_MESSAGE'));
             document.location = "/";
-        } else {
 
+        } else {
             // シェアされてない人は表示をしない
             var share_users = [post_detail.Post.user_id];
             angular.forEach(getPostDetail.share_users, function (suid) {
@@ -30,6 +34,7 @@ message_app.controller(
             // 権限がない時
             if (share_users.indexOf(getPostDetail.auth_info.user_id) < 0) {
                 $scope.view_flag = false;
+                notificationService.error($translate.instant('ACCESS_MESSAGE_DETAIL_MESSAGE'));
                 document.location = "/";
             }
         }
