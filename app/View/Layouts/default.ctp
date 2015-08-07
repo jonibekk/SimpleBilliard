@@ -31,7 +31,7 @@ else {
 <div id="container" class="container">
     <div class="row">
         <div class="col-md-2 col-sm-4 col-xs-4 hidden-xxs layout-sub">
-            <div class="left-side-container">
+            <div class="left-side-container" id="js-left-side-container">
                 <?= $this->element('dashboard_profile_card') ?>
                 <?= $this->element('circle_list') ?>
             </div>
@@ -47,7 +47,7 @@ else {
         </div>
     </div>
 
-    <?= $this->element('footer') ?>
+ 
 </div>
 
 <?= $this->element('modals') ?>

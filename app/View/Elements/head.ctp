@@ -58,14 +58,36 @@
     echo $this->Html->script('vendor/angular/angular-pnotify');
 
     ?>
+    <?php
+        // todo pre_load_js.ctpとしてまとめる
+        echo $this->Html->script('vendor/jquery-1.11.1.min');
+    ?>
     <?php if ($this->request->params['action'] === 'display'): //上部のタブメニューの表示切替えの為?>
         <style>
             @media screen and (max-width: 991px) {
                 .container {
                     margin-top: 50px;
                 }
+                #js-left-side-container {
+                    top: 100px;
+                }
             }
         </style>
+        <script type="text/javascript">
+        if (window.matchMedia('screen and (max-width:991px)').matches) {
+            $(function(){
+                $(window).scroll(function () {
+                    if ($(this).scrollTop() > 1) {
+                        $("#js-left-side-container").stop().animate({"top": "60px"},200);
+                    } else {
+                        $("#js-left-side-container").stop().animate({"top": "100px"},100);
+                    }
+                });
+            });
+            } else {
+                // Nothing
+            }
+        </script>
     <?php endif; ?>
 
     <!--suppress HtmlUnknownTarget -->
