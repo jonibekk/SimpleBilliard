@@ -54,10 +54,6 @@
                     </div>
                 </div>
             <?php endforeach ?>
-            <?php if (count($my_circles) > 8): ?>
-                <i class="fa fa-angle-double-down circle-toggle-icon"></i><a
-                    class="pl_5px font_12px font_gray click-circle-trigger on"><?= __d('gl', "すべて表示") ?></a>
-            <?php endif; ?>
         <?php endif; ?>
     </div>
     <div class="dashboard-circle-list-footer">
