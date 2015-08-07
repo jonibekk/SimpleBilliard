@@ -46,9 +46,8 @@ else {
             <?= $this->element('my_goals_area') ?>
         </div>
     </div>
-
- 
 </div>
+<?= $this->element('common_modules') ?>
 
 <?= $this->element('modals') ?>
 <!-- START fetch modal -->

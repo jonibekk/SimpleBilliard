@@ -34,6 +34,7 @@
     </div>
     <?= $this->element('footer') ?>
 </div>
+<?= $this->element('common_modules') ?>
 <?= $this->element('modals') ?>
 <!-- START fetch modal -->
 <?= $this->fetch('modal') ?>

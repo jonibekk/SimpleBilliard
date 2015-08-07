@@ -1118,10 +1118,10 @@ $(function () {
     var topBtn = $("#gotop");
     topBtn.css("bottom", "-100px");
     $(window).scroll(function () {
-        if ($(this).scrollTop() > 500) {
+        if ($(this).scrollTop() > 30) {
             if (showFlag == false) {
                 showFlag = true;
-                topBtn.stop().animate({"bottom": "28px"}, 200);
+                topBtn.stop().animate({"bottom": "40px"}, 200);
             }
         } else {
             if (showFlag) {
