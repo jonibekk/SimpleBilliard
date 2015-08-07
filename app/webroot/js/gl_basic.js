@@ -2995,6 +2995,7 @@ $(function () {
     }
 
     setNotifyCntToBellAndTitle(cake.new_notify_cnt);
+    setNotifyCntToMessageAndTitle(cake.new_notify_message_cnt);
 
     function setIntervalToGetNotifyCnt(sec) {
         setInterval(function () {
@@ -3134,7 +3135,6 @@ $(document).ready(function () {
 $(document).ready(function () {
     var click_cnt = 0;
     $(document).on("click", "#click-header-message", function () {
-        initMessageNum();
         initTitle();
         updateMessageListBox();
     });
