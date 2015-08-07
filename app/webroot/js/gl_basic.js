@@ -10,13 +10,13 @@ if (typeof String.prototype.startsWith != 'function') {
 ;
 function bindPostBalancedGallery($obj) {
     $obj.BalancedGallery({
-        autoResize: true,                   // re-partition and resize the images when the window size changes
+        autoResize: false,                   // re-partition and resize the images when the window size changes
         //background: '#DDD',                   // the css properties of the gallery's containing element
         idealHeight: 150,                  // ideal row height, only used for horizontal galleries, defaults to half the containing element's height
         //idealWidth: 100,                   // ideal column width, only used for vertical galleries, defaults to 1/4 of the containing element's width
         maintainOrder: false,                // keeps images in their original order, setting to 'false' can create a slightly better balance between rows
         orientation: 'horizontal',          // 'horizontal' galleries are made of rows and scroll vertically; 'vertical' galleries are made of columns and scroll horizontally
-        padding: 0,                         // pixels between images
+        padding: 1,                         // pixels between images
         shuffleUnorderedPartitions: true,   // unordered galleries tend to clump larger images at the begining, this solves that issue at a slight performance cost
         //viewportHeight: 400,               // the assumed height of the gallery, defaults to the containing element's height
         //viewportWidth: 482                // the assumed width of the gallery, defaults to the containing element's width
@@ -25,21 +25,19 @@ function bindPostBalancedGallery($obj) {
 };
 function bindCommentBalancedGallery($obj) {
     $obj.BalancedGallery({
-        autoResize: true,                   // re-partition and resize the images when the window size changes
+        autoResize: false,                   // re-partition and resize the images when the window size changes
         //background: '#DDD',                   // the css properties of the gallery's containing element
-        idealHeight: 100,                  // ideal row height, only used for horizontal galleries, defaults to half the containing element's height
+        idealHeight: 130,                  // ideal row height, only used for horizontal galleries, defaults to half the containing element's height
         //idealWidth: 100,                   // ideal column width, only used for vertical galleries, defaults to 1/4 of the containing element's width
         maintainOrder: false,                // keeps images in their original order, setting to 'false' can create a slightly better balance between rows
         orientation: 'horizontal',          // 'horizontal' galleries are made of rows and scroll vertically; 'vertical' galleries are made of columns and scroll horizontally
-        padding: 0,                         // pixels between images
+        padding: 1,                         // pixels between images
         shuffleUnorderedPartitions: true,   // unordered galleries tend to clump larger images at the begining, this solves that issue at a slight performance cost
         //viewportHeight: 400,               // the assumed height of the gallery, defaults to the containing element's height
         //viewportWidth: 482                // the assumed width of the gallery, defaults to the containing element's width
     });
 };
-
-
-$('.post_gallery > img').imagesLoaded(function () {
+$(window).load(function () {
     bindPostBalancedGallery($('.post_gallery'));
     bindCommentBalancedGallery($('.comment_gallery'));
 });
@@ -2088,17 +2086,14 @@ function evFeedMoreView(options) {
                 $("#ShowMoreNoData").hide();
                 //画像をレイジーロード
                 imageLazyOn();
-                //$posts.children('.post_gallery > img').imagesLoaded(function () {
                 $posts.imagesLoaded(function () {
-                    $posts.children('.post_gallery').each(function (index, element) {
+                    $posts.find('.post_gallery').each(function (index, element) {
                         bindPostBalancedGallery($(element));
                     });
+                    $posts.find('.comment_gallery').each(function (index, element) {
+                        bindCommentBalancedGallery($(element));
+                    });
                 });
-                //$posts.children('.comment_gallery > img').imagesLoaded(function () {
-                //$posts.children('.post_gallery').each(function (index, element) {
-                //    bindCommentBalancedGallery($(element));
-                //});
-                //});
 
                 //画像リサイズ
                 $posts.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
@@ -2297,19 +2292,22 @@ function evCommentOldView() {
                 //取得したhtmlをオブジェクト化
                 var $posts = $(data.html);
                 //一旦非表示
-                $posts.hide();
+                $posts.fadeOut();
                 $("#" + parent_id).before($posts);
-                //html表示
-                $posts.show("slow", function () {
-                    //もっと見る
-                    showMore(this);
-                });
+                showMore($posts);
+                $posts.fadeIn();
                 //ローダーを削除
                 $loader_html.remove();
                 //リンクを削除
-                $obj.remove();
+                $obj.css("display", "none").css("opacity", 0);
                 //画像をレイジーロード
                 imageLazyOn();
+                $posts.imagesLoaded(function () {
+                    $posts.find('.comment_gallery').each(function (index, element) {
+                        bindCommentBalancedGallery($(element));
+                    });
+                });
+
                 //画像リサイズ
                 $posts.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
                     $(this).children('.nailthumb-container').nailthumb({
@@ -2817,6 +2815,12 @@ function evCommentLatestView() {
                 $obj.css("display", "none").css("opacity", 0);
                 //画像をレイジーロード
                 imageLazyOn();
+                $posts.imagesLoaded(function () {
+                    $posts.find('.comment_gallery').each(function (index, element) {
+                        bindCommentBalancedGallery($(element));
+                    });
+                });
+
                 //画像リサイズ
                 $posts.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
                     $(this).children('.nailthumb-container').nailthumb({
