@@ -4,3 +4,6 @@ node[:deploy].each do |application,deploy|
     Chef::Log.debug("deploy[:#{key}] = '#{value}'")
   end
 end
+application = params[:app]
+Chef::Log.debug("************ path")
+Chef::Log.debug("#{node[:deploy][application][:deploy_to]}")
