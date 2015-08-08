@@ -1,2 +1,6 @@
 Chef::Log.logger.info '*********** before_migrate ***********'
-Chef::Log.logger.info "#{node[:deploy][application][:deploy_to]}"
+node[:deploy].each do |application,deploy|
+  deploy.each do |key,value|
+    Chef::Log.debug("deploy[:#{key}] = '#{value}'")
+  end
+end
