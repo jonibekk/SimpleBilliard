@@ -9,6 +9,7 @@ if (typeof String.prototype.startsWith != 'function') {
 }
 ;
 function bindPostBalancedGallery($obj) {
+    $obj.removeClass('none');
     $obj.BalancedGallery({
         autoResize: false,                   // re-partition and resize the images when the window size changes
         //background: '#DDD',                   // the css properties of the gallery's containing element
@@ -24,6 +25,7 @@ function bindPostBalancedGallery($obj) {
 
 };
 function bindCommentBalancedGallery($obj) {
+    $obj.removeClass('none');
     $obj.BalancedGallery({
         autoResize: false,                   // re-partition and resize the images when the window size changes
         //background: '#DDD',                   // the css properties of the gallery's containing element
@@ -527,37 +529,25 @@ $(document).ready(function () {
 
 });
 function imageLazyOn($elm_obj) {
-    if ($elm_obj === undefined) {
-        $("img.lazy").lazy({
-            bind: "event",
-            attribute: "data-original",
-            combined: true,
-            delay: 100,
-            visibleOnly: false,
-            effect: "fadeIn",
-            removeAttribute: false,
-            onError: function (element) {
-                if (element.attr('error-img') != undefined) {
-                    element.attr("src", element.attr('error-img'));
-                }
+    var lazy_option = {
+        bind: "event",
+        attribute: "data-original",
+        combined: true,
+        delay: 100,
+        visibleOnly: false,
+        effect: "fadeIn",
+        removeAttribute: false,
+        onError: function (element) {
+            if (element.attr('error-img') != undefined) {
+                element.attr("src", element.attr('error-img'));
             }
-        });
+        }
+    };
+    if ($elm_obj === undefined) {
+        return $("img.lazy").lazy(lazy_option);
     }
     else {
-        $elm_obj.find("img.lazy").lazy({
-            bind: "event",
-            attribute: "data-original",
-            combined: true,
-            delay: 100,
-            visibleOnly: false,
-            effect: "fadeIn",
-            removeAttribute: false,
-            onError: function (element) {
-                if (element.attr('error-img') != undefined) {
-                    element.attr("src", element.attr('error-img'));
-                }
-            }
-        });
+        return $elm_obj.find("img.lazy").lazy(lazy_option);
     }
 }
 function evTargetRemove() {
@@ -2051,28 +2041,18 @@ function evFeedMoreView(options) {
             if (!$.isEmptyObject(data.html)) {
                 //取得したhtmlをオブジェクト化
                 var $posts = $(data.html);
+                //画像をレイジーロード
+                imageLazyOn($posts);
                 //一旦非表示
-                $posts.hide();
+                $posts.fadeOut();
                 if (append_target_id != undefined) {
                     $("#" + append_target_id).append($posts);
                 }
                 else {
                     $("#" + parent_id).before($posts);
                 }
-                //html表示
-                $posts.show("slow", function () {
-                    //もっと見る
-                    showMore(this);
-                });
-                //クリップボードコピーの処理を追加
-                //noinspection JSUnresolvedFunction
-                var client = new ZeroClipboard($posts.find('.copy_me'));
-                //noinspection JSUnusedLocalSymbols
-                client.on("ready", function (readyEvent) {
-                    client.on("aftercopy", function (event) {
-                        alert(cake.message.info.a + ": " + event.data["text/plain"]);
-                    });
-                });
+                showMore($posts);
+                $posts.fadeIn();
 
                 //ページ番号をインクリメント
                 next_page_num++;
@@ -2084,8 +2064,6 @@ function evFeedMoreView(options) {
                 $obj.text(cake.message.info.e);
                 $obj.removeAttr('disabled');
                 $("#ShowMoreNoData").hide();
-                //画像をレイジーロード
-                imageLazyOn();
                 $posts.imagesLoaded(function () {
                     $posts.find('.post_gallery').each(function (index, element) {
                         bindPostBalancedGallery($(element));
@@ -2094,17 +2072,6 @@ function evFeedMoreView(options) {
                         bindCommentBalancedGallery($(element));
                     });
                 });
-
-                //画像リサイズ
-                $posts.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
-                    $(this).children('.nailthumb-container').nailthumb({
-                        width: 50,
-                        height: 50,
-                        fitDirection: 'center center'
-                    });
-                });
-
-                $('.custom-radio-check').customRadioCheck();
             }
 
             // 取得したデータ件数が、１ページの表示件数未満だった場合
@@ -2291,6 +2258,8 @@ function evCommentOldView() {
             if (!$.isEmptyObject(data.html)) {
                 //取得したhtmlをオブジェクト化
                 var $posts = $(data.html);
+                //画像をレイジーロード
+                imageLazyOn($posts);
                 //一旦非表示
                 $posts.fadeOut();
                 $("#" + parent_id).before($posts);
@@ -2300,24 +2269,11 @@ function evCommentOldView() {
                 $loader_html.remove();
                 //リンクを削除
                 $obj.css("display", "none").css("opacity", 0);
-                //画像をレイジーロード
-                imageLazyOn();
                 $posts.imagesLoaded(function () {
                     $posts.find('.comment_gallery').each(function (index, element) {
                         bindCommentBalancedGallery($(element));
                     });
                 });
-
-                //画像リサイズ
-                $posts.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
-                    $(this).children('.nailthumb-container').nailthumb({
-                        width: 50,
-                        height: 50,
-                        fitDirection: 'center center'
-                    });
-                });
-
-                $('.custom-radio-check').customRadioCheck();
 
             }
             else {
@@ -2805,32 +2761,22 @@ function evCommentLatestView() {
             if (!$.isEmptyObject(data.html)) {
                 //取得したhtmlをオブジェクト化
                 var $posts = $(data.html);
+                //画像をレイジーロード
+                imageLazyOn($posts);
                 //一旦非表示
                 $posts.fadeOut();
                 $($obj).before($posts);
+                showMore($posts);
                 $posts.fadeIn();
                 //ローダーを削除
                 $loader_html.remove();
                 //リンクを削除
                 $obj.css("display", "none").css("opacity", 0);
-                //画像をレイジーロード
-                imageLazyOn();
                 $posts.imagesLoaded(function () {
                     $posts.find('.comment_gallery').each(function (index, element) {
                         bindCommentBalancedGallery($(element));
                     });
                 });
-
-                //画像リサイズ
-                $posts.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
-                    $(this).children('.nailthumb-container').nailthumb({
-                        width: 50,
-                        height: 50,
-                        fitDirection: 'center center'
-                    });
-                });
-
-                $('.custom-radio-check').customRadioCheck();
                 $obj.removeAttr("disabled");
 
                 initCommentNotify($obj);
