@@ -1,5 +1,5 @@
-Chef::Log.logger.info '*********** START OF before_migrate ***********'
-# デプロイ後の処理
+# デプロイフックでcake関連のデプロイ処理を行う
+
 bash "composer update" do
   code <<-EOS
   cd #{release_path}; composer self-update; composer update --no-interaction --no-dev --prefer-dist
@@ -48,5 +48,3 @@ template "/home/ubuntu/.bash_profile" do
   mode 0644
   source ".bash_profile"
 end
-
-Chef::Log.logger.info '*********** END OF before_migrate ***********'
