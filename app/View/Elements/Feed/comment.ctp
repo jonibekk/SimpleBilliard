@@ -109,7 +109,7 @@
                     <?php foreach ($imgs as $v): ?>
                         <a href="<?= $v['l'] ?>" rel='lightbox'
                            data-lightbox="FeedCommentLightBox_<?= $comment['id'] ?>">
-                            <?= $this->Html->image($v['s']) ?>
+                            <?= $this->Html->image($v['s'], ['width' => '100%']) ?>
                         </a>
                     <?php endforeach; ?>
                 </div>

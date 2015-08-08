@@ -2052,27 +2052,15 @@ function evFeedMoreView(options) {
                 //取得したhtmlをオブジェクト化
                 var $posts = $(data.html);
                 //一旦非表示
-                $posts.hide();
+                $posts.fadeOut();
                 if (append_target_id != undefined) {
                     $("#" + append_target_id).append($posts);
                 }
                 else {
                     $("#" + parent_id).before($posts);
                 }
-                //html表示
-                $posts.show("slow", function () {
-                    //もっと見る
-                    showMore(this);
-                });
-                //クリップボードコピーの処理を追加
-                //noinspection JSUnresolvedFunction
-                var client = new ZeroClipboard($posts.find('.copy_me'));
-                //noinspection JSUnusedLocalSymbols
-                client.on("ready", function (readyEvent) {
-                    client.on("aftercopy", function (event) {
-                        alert(cake.message.info.a + ": " + event.data["text/plain"]);
-                    });
-                });
+                showMore($posts);
+                $posts.fadeIn();
 
                 //ページ番号をインクリメント
                 next_page_num++;
@@ -2094,17 +2082,6 @@ function evFeedMoreView(options) {
                         bindCommentBalancedGallery($(element));
                     });
                 });
-
-                //画像リサイズ
-                $posts.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
-                    $(this).children('.nailthumb-container').nailthumb({
-                        width: 50,
-                        height: 50,
-                        fitDirection: 'center center'
-                    });
-                });
-
-                $('.custom-radio-check').customRadioCheck();
             }
 
             // 取得したデータ件数が、１ページの表示件数未満だった場合
@@ -2307,17 +2284,6 @@ function evCommentOldView() {
                         bindCommentBalancedGallery($(element));
                     });
                 });
-
-                //画像リサイズ
-                $posts.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
-                    $(this).children('.nailthumb-container').nailthumb({
-                        width: 50,
-                        height: 50,
-                        fitDirection: 'center center'
-                    });
-                });
-
-                $('.custom-radio-check').customRadioCheck();
 
             }
             else {
@@ -2808,6 +2774,7 @@ function evCommentLatestView() {
                 //一旦非表示
                 $posts.fadeOut();
                 $($obj).before($posts);
+                showMore($posts);
                 $posts.fadeIn();
                 //ローダーを削除
                 $loader_html.remove();
@@ -2820,17 +2787,6 @@ function evCommentLatestView() {
                         bindCommentBalancedGallery($(element));
                     });
                 });
-
-                //画像リサイズ
-                $posts.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
-                    $(this).children('.nailthumb-container').nailthumb({
-                        width: 50,
-                        height: 50,
-                        fitDirection: 'center center'
-                    });
-                });
-
-                $('.custom-radio-check').customRadioCheck();
                 $obj.removeAttr("disabled");
 
                 initCommentNotify($obj);
