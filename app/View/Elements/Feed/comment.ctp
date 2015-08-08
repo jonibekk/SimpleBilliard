@@ -106,7 +106,7 @@
             ?>
             <?php if (!empty($imgs)): ?>
                 <div
-                    class="col col-xxs-12 pt_10px none <?= count($imgs) !== 1 ? "comment_gallery" : 'feed_img_only_one' ?>">
+                    class="col col-xxs-12 pt_10px none <?= count($imgs) !== 1 ? "none comment_gallery" : 'feed_img_only_one' ?>">
                     <?php foreach ($imgs as $v): ?>
                         <a href="<?= $v['l'] ?>" rel='lightbox'
                            data-lightbox="FeedCommentLightBox_<?= $comment['id'] ?>">
