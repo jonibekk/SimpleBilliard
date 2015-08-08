@@ -9,6 +9,7 @@ if (typeof String.prototype.startsWith != 'function') {
 }
 ;
 function bindPostBalancedGallery($obj) {
+    $obj.removeClass('none');
     $obj.BalancedGallery({
         autoResize: false,                   // re-partition and resize the images when the window size changes
         //background: '#DDD',                   // the css properties of the gallery's containing element
@@ -24,6 +25,7 @@ function bindPostBalancedGallery($obj) {
 
 };
 function bindCommentBalancedGallery($obj) {
+    $obj.removeClass('none');
     $obj.BalancedGallery({
         autoResize: false,                   // re-partition and resize the images when the window size changes
         //background: '#DDD',                   // the css properties of the gallery's containing element
@@ -527,37 +529,25 @@ $(document).ready(function () {
 
 });
 function imageLazyOn($elm_obj) {
-    if ($elm_obj === undefined) {
-        $("img.lazy").lazy({
-            bind: "event",
-            attribute: "data-original",
-            combined: true,
-            delay: 100,
-            visibleOnly: false,
-            effect: "fadeIn",
-            removeAttribute: false,
-            onError: function (element) {
-                if (element.attr('error-img') != undefined) {
-                    element.attr("src", element.attr('error-img'));
-                }
+    var lazy_option = {
+        bind: "event",
+        attribute: "data-original",
+        combined: true,
+        delay: 100,
+        visibleOnly: false,
+        effect: "fadeIn",
+        removeAttribute: false,
+        onError: function (element) {
+            if (element.attr('error-img') != undefined) {
+                element.attr("src", element.attr('error-img'));
             }
-        });
+        }
+    };
+    if ($elm_obj === undefined) {
+        return $("img.lazy").lazy(lazy_option);
     }
     else {
-        $elm_obj.find("img.lazy").lazy({
-            bind: "event",
-            attribute: "data-original",
-            combined: true,
-            delay: 100,
-            visibleOnly: false,
-            effect: "fadeIn",
-            removeAttribute: false,
-            onError: function (element) {
-                if (element.attr('error-img') != undefined) {
-                    element.attr("src", element.attr('error-img'));
-                }
-            }
-        });
+        return $elm_obj.find("img.lazy").lazy(lazy_option);
     }
 }
 function evTargetRemove() {
@@ -2051,6 +2041,8 @@ function evFeedMoreView(options) {
             if (!$.isEmptyObject(data.html)) {
                 //取得したhtmlをオブジェクト化
                 var $posts = $(data.html);
+                //画像をレイジーロード
+                imageLazyOn($posts);
                 //一旦非表示
                 $posts.fadeOut();
                 if (append_target_id != undefined) {
@@ -2072,8 +2064,6 @@ function evFeedMoreView(options) {
                 $obj.text(cake.message.info.e);
                 $obj.removeAttr('disabled');
                 $("#ShowMoreNoData").hide();
-                //画像をレイジーロード
-                imageLazyOn();
                 $posts.imagesLoaded(function () {
                     $posts.find('.post_gallery').each(function (index, element) {
                         bindPostBalancedGallery($(element));
@@ -2268,6 +2258,8 @@ function evCommentOldView() {
             if (!$.isEmptyObject(data.html)) {
                 //取得したhtmlをオブジェクト化
                 var $posts = $(data.html);
+                //画像をレイジーロード
+                imageLazyOn($posts);
                 //一旦非表示
                 $posts.fadeOut();
                 $("#" + parent_id).before($posts);
@@ -2277,8 +2269,6 @@ function evCommentOldView() {
                 $loader_html.remove();
                 //リンクを削除
                 $obj.css("display", "none").css("opacity", 0);
-                //画像をレイジーロード
-                imageLazyOn();
                 $posts.imagesLoaded(function () {
                     $posts.find('.comment_gallery').each(function (index, element) {
                         bindCommentBalancedGallery($(element));
@@ -2771,6 +2761,8 @@ function evCommentLatestView() {
             if (!$.isEmptyObject(data.html)) {
                 //取得したhtmlをオブジェクト化
                 var $posts = $(data.html);
+                //画像をレイジーロード
+                imageLazyOn($posts);
                 //一旦非表示
                 $posts.fadeOut();
                 $($obj).before($posts);
@@ -2780,8 +2772,6 @@ function evCommentLatestView() {
                 $loader_html.remove();
                 //リンクを削除
                 $obj.css("display", "none").css("opacity", 0);
-                //画像をレイジーロード
-                imageLazyOn();
                 $posts.imagesLoaded(function () {
                     $posts.find('.comment_gallery').each(function (index, element) {
                         bindCommentBalancedGallery($(element));

@@ -217,7 +217,7 @@ $without_header = isset($without_header) ? $without_header : false;
                 ?>
                 <?php if (!empty($imgs)): ?>
             </div>
-            <div class="col col-xxs-12 pt_10px <?= count($imgs) !== 1 ? "post_gallery" : 'feed_img_only_one' ?>">
+            <div class="col col-xxs-12 pt_10px none <?= count($imgs) !== 1 ? "post_gallery" : 'feed_img_only_one' ?>">
                 <?php foreach ($imgs as $v): ?>
                     <a href="<?= $v['l'] ?>" rel='lightbox' data-lightbox="FeedLightBox_<?= $post['Post']['id'] ?>">
                         <?= $this->Html->image($v['s'], ['width' => '100%']) ?>
