@@ -154,7 +154,7 @@ class PostsController extends AppController
                     $mixpanel_prop_name = MixpanelComponent::PROP_SHARE_MEMBERS;
                 }
             }
-            $this->Mixpanel->trackPost($mixpanel_prop_name, $this->Post->getLastInsertID());
+            $this->Mixpanel->trackPost($this->Post->getLastInsertID(), $mixpanel_prop_name);
         }
 
         $this->Pnotify->outSuccess(__d('gl', "投稿しました。"));

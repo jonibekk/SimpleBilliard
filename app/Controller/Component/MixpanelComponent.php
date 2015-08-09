@@ -209,9 +209,15 @@ class MixpanelComponent extends Object
         $this->track($track_type, $property);
     }
 
-    function trackPost($share_type, $post_id)
+    function trackPost($post_id, $share_type, $img_file_count = 0, $video_file_count = 0, $doc_file_count = 0)
     {
-        $this->track(self::TRACK_POST, ['$share_type' => $share_type, '$post_id' => $post_id]);
+        $this->track(self::TRACK_POST, [
+            '$share_type'       => $share_type,
+            '$post_id'          => $post_id,
+            '$img_file_count'   => $img_file_count,
+            '$video_file_count' => $video_file_count,
+            '$doc_file_count'   => $doc_file_count,
+        ]);
     }
 
     function trackComment($post_type)
@@ -230,6 +236,7 @@ class MixpanelComponent extends Object
     {
         $this->track(self::TRACK_MESSAGE, ['$post_id' => $post_id]);
     }
+
     /**
      * @param $approval_type
      * @param $approval_member_type
