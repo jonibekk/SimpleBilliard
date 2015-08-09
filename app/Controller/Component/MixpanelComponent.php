@@ -176,6 +176,9 @@ class MixpanelComponent extends Object
             '$goal_id'              => $goal_id,
             '$goal_owner_type'      => null,
             '$goal_approval_status' => null,
+            '$img_file_count'       => 0,
+            '$video_file_count'     => 0,
+            '$doc_file_count'       => 0,
         ];
 
         if ($track_type != self::TRACK_FOLLOW_GOAL && $track_type != self::TRACK_UN_FOLLOW_GOAL) {
@@ -205,6 +208,20 @@ class MixpanelComponent extends Object
         }
         if ($action_id) {
             $property['$action_id'] = $action_id;
+        }
+        if ($track_type == self::TRACK_CREATE_ACTION) {
+            /** @var AttachedFile $AttachedFile */
+            $AttachedFile = ClassRegistry::init('AttachedFile');
+            $property['$img_file_count'] = $AttachedFile->getCountOfAttachedFiles($action_id,
+                                                                                  $AttachedFile::TYPE_MODEL_ACTION_RESULT,
+                                                                                  $AttachedFile::TYPE_FILE_IMG);
+            $property['$video_file_count'] = $AttachedFile->getCountOfAttachedFiles($action_id,
+                                                                                    $AttachedFile::TYPE_MODEL_ACTION_RESULT,
+                                                                                    $AttachedFile::TYPE_FILE_VIDEO);
+            $property['$doc_file_count'] = $AttachedFile->getCountOfAttachedFiles($action_id,
+                                                                                  $AttachedFile::TYPE_MODEL_ACTION_RESULT,
+                                                                                  $AttachedFile::TYPE_FILE_DOC);
+
         }
         $this->track($track_type, $property);
     }
