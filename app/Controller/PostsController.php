@@ -395,6 +395,7 @@ class PostsController extends AppController
 
         $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
         $pusher->trigger('message-channel-' . $post_id, 'new_message', $convert_data);
+        $this->Mixpanel->trackMessage($post_id);
 
         return $this->_ajaxGetResponse($detail_comment);
     }
