@@ -209,8 +209,19 @@ class MixpanelComponent extends Object
         $this->track($track_type, $property);
     }
 
-    function trackPost($post_id, $share_type, $img_file_count = 0, $video_file_count = 0, $doc_file_count = 0)
+    function trackPost($post_id, $share_type)
     {
+        /** @var AttachedFile $AttachedFile */
+        $AttachedFile = ClassRegistry::init('AttachedFile');
+        $img_file_count = $AttachedFile->getCountOfAttachedFiles($post_id,
+                                                                 $AttachedFile::TYPE_MODEL_POST,
+                                                                 $AttachedFile::TYPE_FILE_IMG);
+        $video_file_count = $AttachedFile->getCountOfAttachedFiles($post_id,
+                                                                   $AttachedFile::TYPE_MODEL_POST,
+                                                                   $AttachedFile::TYPE_FILE_VIDEO);
+        $doc_file_count = $AttachedFile->getCountOfAttachedFiles($post_id,
+                                                                 $AttachedFile::TYPE_MODEL_POST,
+                                                                 $AttachedFile::TYPE_FILE_DOC);
         $this->track(self::TRACK_POST, [
             '$share_type'       => $share_type,
             '$post_id'          => $post_id,
