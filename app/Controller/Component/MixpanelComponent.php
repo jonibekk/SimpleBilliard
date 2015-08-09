@@ -231,10 +231,27 @@ class MixpanelComponent extends Object
         ]);
     }
 
-    function trackComment($post_type)
+    function trackComment($post_type, $comment_id)
     {
         $target_type = $this->getTargetTypeByPostType($post_type);
-        $this->track(self::TRACK_COMMENT, ['$target_type' => $target_type]);
+        /** @var AttachedFile $AttachedFile */
+        $AttachedFile = ClassRegistry::init('AttachedFile');
+        $img_file_count = $AttachedFile->getCountOfAttachedFiles($comment_id,
+                                                                 $AttachedFile::TYPE_MODEL_COMMENT,
+                                                                 $AttachedFile::TYPE_FILE_IMG);
+        $video_file_count = $AttachedFile->getCountOfAttachedFiles($comment_id,
+                                                                   $AttachedFile::TYPE_MODEL_COMMENT,
+                                                                   $AttachedFile::TYPE_FILE_VIDEO);
+        $doc_file_count = $AttachedFile->getCountOfAttachedFiles($comment_id,
+                                                                 $AttachedFile::TYPE_MODEL_COMMENT,
+                                                                 $AttachedFile::TYPE_FILE_DOC);
+
+        $this->track(self::TRACK_COMMENT, [
+            '$target_type'      => $target_type,
+            '$img_file_count'   => $img_file_count,
+            '$video_file_count' => $video_file_count,
+            '$doc_file_count'   => $doc_file_count,
+        ]);
     }
 
     function trackLike($post_type)

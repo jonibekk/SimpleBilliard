@@ -782,7 +782,7 @@ class PostsController extends AppController
                         break;
                 }
                 //mixpanel
-                $this->Mixpanel->trackComment($type);
+                $this->Mixpanel->trackComment($type,$this->Post->Comment->getLastInsertID());
 
                 $result['msg'] = __d('gl', "コメントしました。");
             }
