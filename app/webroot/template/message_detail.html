@@ -41,7 +41,7 @@
                                 </div>
                                 <div class="comment-text font_12px">{{item.Comment.body}}</div>
                                 <div class="font_12px">
-                                    <a href="/posts/ajax_get_comment_red_users/comment_id:{{item.Comment.id}}"
+                                    <a href="{{item.get_red_user_model_url}}"
                                        class="modal-ajax-get font_lightgray">
                                         <i class="fa fa-check"></i>&nbsp;
                                         <span id="mr_{{item.Comment.id}}">{{item.Comment.comment_read_count}}</span>

@@ -54,7 +54,8 @@ message_app.controller(
                 User: {
                     display_username: post_detail.User.display_username,
                     photo_path: post_detail.User.photo_path
-                }
+                },
+                'get_red_user_model_url': '/posts/ajax_get_message_red_users/post_id:' + post_detail.Post.id
             };
             message_list.push(first_data);
 

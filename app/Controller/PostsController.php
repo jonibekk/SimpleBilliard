@@ -349,6 +349,8 @@ class PostsController extends AppController
     {
         $this->_ajaxPreProcess();
 
+        //既読処理
+        $this->Post->PostRead->red($post_id);
         $room_info = $this->Post->getPostById($post_id);
         $room_info['User']['photo_path'] = $this->Post->getPhotoPath($room_info['User']);
 
@@ -375,6 +377,9 @@ class PostsController extends AppController
     public function ajax_get_message($post_id, $limit, $page_num)
     {
         $this->_ajaxPreProcess();
+        //メッセージを既読に
+        $this->Post->Comment->CommentRead->redAllByPostId($post_id);
+
         $message_list = $this->Post->Comment->getPostsComment($post_id, $limit, $page_num, 'desc');
         $convert_msg_data = $this->Post->Comment->convertData($message_list);
         $result = ['message_list' => $convert_msg_data];
@@ -735,6 +740,31 @@ class PostsController extends AppController
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
         $response = $this->render('Feed/modal_comment_red_users');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
+    }
+
+    public function ajax_get_message_red_users()
+    {
+        $comment_id = viaIsSet($this->request->params['named']['comment_id']);
+        $post_id = viaIsSet($this->request->params['named']['post_id']);
+        $this->_ajaxPreProcess();
+        $red_users = [];
+        $model = null;
+        if ($comment_id) {
+            $red_users = $this->Post->Comment->CommentRead->getRedUsers($comment_id);
+            $model = 'CommentRead';
+        }
+        elseif ($post_id) {
+            $red_users = $this->Post->PostRead->getRedUsers($post_id);
+            $model = 'PostRead';
+        }
+        $this->set(compact('red_users', 'model'));
+
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('Feed/modal_message_red_users');
         $html = $response->__toString();
 
         return $this->_ajaxGetResponse($html);
