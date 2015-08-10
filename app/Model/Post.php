@@ -1253,6 +1253,9 @@ class Post extends AppModel
                 'team_id' => $this->current_team_id,
                 'type'    => self::TYPE_MESSAGE,
             ],
+            'order'      => [
+                'Post.modified' => 'desc',
+            ],
             'contain'    => [
                 'User',
                 'PostShareUser' => [
