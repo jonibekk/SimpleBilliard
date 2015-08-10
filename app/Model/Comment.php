@@ -240,6 +240,7 @@ class Comment extends AppModel
     {
         $upload = new UploadHelper(new View());
 
+        //add photo_path
         if (isset($data['Comment']) === true) {
             $data['User']['photo_path'] = $upload->uploadUrl($data['User'], 'User.photo', ['style' => 'medium']);
 
@@ -248,6 +249,26 @@ class Comment extends AppModel
             foreach ($data as $key => $val) {
                 $data[$key]['User']['photo_path'] = $upload->uploadUrl($val['User'], 'User.photo',
                                                                        ['style' => 'medium']);
+            }
+        }
+
+        //add url of red user modal
+        if (isset($data['Comment']) === true) {
+            $data['get_red_user_model_url'] = Router::url(
+                ['controller' => 'posts',
+                 'action'     => 'ajax_get_message_red_users',
+                 'comment_id' => $data['Comment']['id']
+                ]
+            );
+        }
+        else {
+            foreach ($data as $key => $val) {
+                $data[$key]['get_red_user_model_url'] = Router::url(
+                    ['controller' => 'posts',
+                     'action'     => 'ajax_get_message_red_users',
+                     'comment_id' => $val['Comment']['id']
+                    ]
+                );
             }
         }
 

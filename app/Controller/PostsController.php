@@ -745,6 +745,31 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
+    public function ajax_get_message_red_users()
+    {
+        $comment_id = viaIsSet($this->request->params['named']['comment_id']);
+        $post_id = viaIsSet($this->request->params['named']['post_id']);
+        $this->_ajaxPreProcess();
+        $red_users = [];
+        $model = null;
+        if ($comment_id) {
+            $red_users = $this->Post->Comment->CommentRead->getRedUsers($comment_id);
+            $model = 'CommentRead';
+        }
+        elseif ($post_id) {
+            $red_users = $this->Post->PostRead->getRedUsers($post_id);
+            $model = 'PostRead';
+        }
+        $this->set(compact('red_users', 'model'));
+
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('Feed/modal_message_red_users');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
+    }
+
     public function ajax_add_comment()
     {
         $this->request->allowMethod('post');

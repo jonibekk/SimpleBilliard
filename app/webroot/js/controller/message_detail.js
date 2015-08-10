@@ -11,7 +11,6 @@ message_app.controller(
               $location) {
 
 
-
         if (getPostDetail.auth_info.language === 'eng') {
             $translate.use('en');
         }
@@ -43,12 +42,14 @@ message_app.controller(
             Comment: {
                 body: post_detail.Post.body,
                 comment_read_count: post_detail.Post.post_read_count,
-                created: post_detail.Post.created
+                created: post_detail.Post.created,
+                post_id: post_detail.Post.id
             },
             User: {
                 display_username: post_detail.User.display_username,
                 photo_path: post_detail.User.photo_path
-            }
+            },
+            'get_red_user_model_url': '/posts/ajax_get_message_red_users/post_id:' + post_detail.Post.id
         };
         message_list.push(first_data);
 
@@ -94,13 +95,13 @@ message_app.controller(
 
         // メッセージを送信する
         $scope.clickMessage = function (event) {
-            event.target.disabled='disabled'
+            event.target.disabled = 'disabled'
             var request = {
                 method: 'GET',
                 url: cake.url.ai + $stateParams.post_id + '/' + $scope.message
             };
-            $http(request).then(function(response) {
-                event.target.disabled=''
+            $http(request).then(function (response) {
+                event.target.disabled = ''
                 message_scroll($scope.message_list.length);
                 $scope.message = "";
             });
