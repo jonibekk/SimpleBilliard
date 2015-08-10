@@ -954,8 +954,10 @@ class PostsControllerTest extends ControllerTestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/posts/ajax_get_post_liked_users/post_id:' . $post_id, ['method' => 'GET']);
         $this->testAction('/posts/ajax_get_post_red_users/post_id:' . $post_id, ['method' => 'GET']);
+        $this->testAction('/posts/ajax_get_message_red_users/post_id:' . $post_id, ['method' => 'GET']);
         $this->testAction('/posts/ajax_get_comment_liked_users/comment_id:' . $comment_id, ['method' => 'GET']);
         $this->testAction('/posts/ajax_get_comment_red_users/comment_id:' . $comment_id, ['method' => 'GET']);
+        $this->testAction('/posts/ajax_get_message_red_users/comment_id:' . $comment_id, ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
