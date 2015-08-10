@@ -268,7 +268,6 @@ $only_tab_post =
                     'rows'           => 1,
                     'placeholder'    => __d('gl', "何か投稿しよう"),
                     'class'          => 'form-control tiny-form-text-change blank-disable post-form feed-post-form box-align change-warning',
-                    'target_show_id' => "PostFormFooter",
                     'target-id'      => "PostSubmit",
                     "required"       => false
                 ])
@@ -332,12 +331,7 @@ $only_tab_post =
             <?php endif ?>
 
             <div class="post-panel-footer">
-                <div class="font_12px <?php
-                // 新規登録時は、submit ボタンはデフォルト非表示
-                // 編集時は、最初から表示
-                if (!$is_edit_mode): ?>
-                none
-                <?php endif ?>" id="PostFormFooter">
+                <div class="font_12px" id="PostFormFooter">
                     <a href="#" class="link-red" id="PostUploadFileButton">
                         <button type="button" class="btn pull-left photo-up-btn"><i
                                 class="fa fa-paperclip post-camera-icon"></i>
