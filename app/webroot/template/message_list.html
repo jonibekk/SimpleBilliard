@@ -1,7 +1,7 @@
 <div class="panel panel-default">
     <div class="panel-heading">すべてのメッセージ</div>
     <div class="panel-body panel-body-notify-page">
-        <ul class="notify-page-cards" role="menu" ng-repeat="item in message_list | orderBy:'Post.created':'DESC'">
+        <ul class="notify-page-cards" role="menu" ng-repeat="item in message_list | orderBy:'Post.modified':'DESC'">
             <li class="notify-card-list">
                 <a href="/posts/message#/{{item.Post.id}}" class="col col-xxs-12 notify-card-link">
                     <img class="pull-left notify-card-pic" ng-src="{{item.User.photo_path}}"/>

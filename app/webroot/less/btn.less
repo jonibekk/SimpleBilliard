@@ -267,15 +267,9 @@
   color: @lightGray;
   font-size: @fontSmall;
   text-decoration: none;
-  &:hover {
-    text-decoration: none;
-    color: @crimsonPink;
-  }
+  &:hover,
   &:target,
-  &:active {
-    text-decoration: none;
-    color: @crimsonPink;
-  }
+  &:active,
   &:focus {
     text-decoration: none;
     color: @lightGray;
@@ -284,10 +278,12 @@
 
 .feeds-post-like-btn {
   .feeds-post-btns;
+  font-weight: bold;
 }
 
 .feeds-post-comment-btn {
   .feeds-post-btns;
+  font-weight: bold;
 }
 
 .feeds-post-btn-numbers-like {
@@ -300,7 +296,6 @@
 
 .liked {
   color: @crimsonPink;
-  font-weight: bold;
   &:hover,
   &:target,
   &:active,

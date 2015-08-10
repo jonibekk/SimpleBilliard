@@ -9,14 +9,15 @@ if (typeof String.prototype.startsWith != 'function') {
 }
 ;
 function bindPostBalancedGallery($obj) {
+    $obj.removeClass('none');
     $obj.BalancedGallery({
-        autoResize: true,                   // re-partition and resize the images when the window size changes
+        autoResize: false,                   // re-partition and resize the images when the window size changes
         //background: '#DDD',                   // the css properties of the gallery's containing element
         idealHeight: 150,                  // ideal row height, only used for horizontal galleries, defaults to half the containing element's height
         //idealWidth: 100,                   // ideal column width, only used for vertical galleries, defaults to 1/4 of the containing element's width
         maintainOrder: false,                // keeps images in their original order, setting to 'false' can create a slightly better balance between rows
         orientation: 'horizontal',          // 'horizontal' galleries are made of rows and scroll vertically; 'vertical' galleries are made of columns and scroll horizontally
-        padding: 0,                         // pixels between images
+        padding: 1,                         // pixels between images
         shuffleUnorderedPartitions: true,   // unordered galleries tend to clump larger images at the begining, this solves that issue at a slight performance cost
         //viewportHeight: 400,               // the assumed height of the gallery, defaults to the containing element's height
         //viewportWidth: 482                // the assumed width of the gallery, defaults to the containing element's width
@@ -24,22 +25,21 @@ function bindPostBalancedGallery($obj) {
 
 };
 function bindCommentBalancedGallery($obj) {
+    $obj.removeClass('none');
     $obj.BalancedGallery({
-        autoResize: true,                   // re-partition and resize the images when the window size changes
+        autoResize: false,                   // re-partition and resize the images when the window size changes
         //background: '#DDD',                   // the css properties of the gallery's containing element
-        idealHeight: 100,                  // ideal row height, only used for horizontal galleries, defaults to half the containing element's height
+        idealHeight: 130,                  // ideal row height, only used for horizontal galleries, defaults to half the containing element's height
         //idealWidth: 100,                   // ideal column width, only used for vertical galleries, defaults to 1/4 of the containing element's width
         maintainOrder: false,                // keeps images in their original order, setting to 'false' can create a slightly better balance between rows
         orientation: 'horizontal',          // 'horizontal' galleries are made of rows and scroll vertically; 'vertical' galleries are made of columns and scroll horizontally
-        padding: 0,                         // pixels between images
+        padding: 1,                         // pixels between images
         shuffleUnorderedPartitions: true,   // unordered galleries tend to clump larger images at the begining, this solves that issue at a slight performance cost
         //viewportHeight: 400,               // the assumed height of the gallery, defaults to the containing element's height
         //viewportWidth: 482                // the assumed width of the gallery, defaults to the containing element's width
     });
 };
-
-
-$('.post_gallery > img').imagesLoaded(function () {
+$(window).load(function () {
     bindPostBalancedGallery($('.post_gallery'));
     bindCommentBalancedGallery($('.comment_gallery'));
 });
@@ -529,37 +529,25 @@ $(document).ready(function () {
 
 });
 function imageLazyOn($elm_obj) {
-    if ($elm_obj === undefined) {
-        $("img.lazy").lazy({
-            bind: "event",
-            attribute: "data-original",
-            combined: true,
-            delay: 100,
-            visibleOnly: false,
-            effect: "fadeIn",
-            removeAttribute: false,
-            onError: function (element) {
-                if (element.attr('error-img') != undefined) {
-                    element.attr("src", element.attr('error-img'));
-                }
+    var lazy_option = {
+        bind: "event",
+        attribute: "data-original",
+        combined: true,
+        delay: 100,
+        visibleOnly: false,
+        effect: "fadeIn",
+        removeAttribute: false,
+        onError: function (element) {
+            if (element.attr('error-img') != undefined) {
+                element.attr("src", element.attr('error-img'));
             }
-        });
+        }
+    };
+    if ($elm_obj === undefined) {
+        return $("img.lazy").lazy(lazy_option);
     }
     else {
-        $elm_obj.find("img.lazy").lazy({
-            bind: "event",
-            attribute: "data-original",
-            combined: true,
-            delay: 100,
-            visibleOnly: false,
-            effect: "fadeIn",
-            removeAttribute: false,
-            onError: function (element) {
-                if (element.attr('error-img') != undefined) {
-                    element.attr("src", element.attr('error-img'));
-                }
-            }
-        });
+        return $elm_obj.find("img.lazy").lazy(lazy_option);
     }
 }
 function evTargetRemove() {
@@ -2053,28 +2041,18 @@ function evFeedMoreView(options) {
             if (!$.isEmptyObject(data.html)) {
                 //取得したhtmlをオブジェクト化
                 var $posts = $(data.html);
+                //画像をレイジーロード
+                imageLazyOn($posts);
                 //一旦非表示
-                $posts.hide();
+                $posts.fadeOut();
                 if (append_target_id != undefined) {
                     $("#" + append_target_id).append($posts);
                 }
                 else {
                     $("#" + parent_id).before($posts);
                 }
-                //html表示
-                $posts.show("slow", function () {
-                    //もっと見る
-                    showMore(this);
-                });
-                //クリップボードコピーの処理を追加
-                //noinspection JSUnresolvedFunction
-                var client = new ZeroClipboard($posts.find('.copy_me'));
-                //noinspection JSUnusedLocalSymbols
-                client.on("ready", function (readyEvent) {
-                    client.on("aftercopy", function (event) {
-                        alert(cake.message.info.a + ": " + event.data["text/plain"]);
-                    });
-                });
+                showMore($posts);
+                $posts.fadeIn();
 
                 //ページ番号をインクリメント
                 next_page_num++;
@@ -2086,30 +2064,14 @@ function evFeedMoreView(options) {
                 $obj.text(cake.message.info.e);
                 $obj.removeAttr('disabled');
                 $("#ShowMoreNoData").hide();
-                //画像をレイジーロード
-                imageLazyOn();
-                //$posts.children('.post_gallery > img').imagesLoaded(function () {
                 $posts.imagesLoaded(function () {
-                    $posts.children('.post_gallery').each(function (index, element) {
+                    $posts.find('.post_gallery').each(function (index, element) {
                         bindPostBalancedGallery($(element));
                     });
-                });
-                //$posts.children('.comment_gallery > img').imagesLoaded(function () {
-                //$posts.children('.post_gallery').each(function (index, element) {
-                //    bindCommentBalancedGallery($(element));
-                //});
-                //});
-
-                //画像リサイズ
-                $posts.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
-                    $(this).children('.nailthumb-container').nailthumb({
-                        width: 50,
-                        height: 50,
-                        fitDirection: 'center center'
+                    $posts.find('.comment_gallery').each(function (index, element) {
+                        bindCommentBalancedGallery($(element));
                     });
                 });
-
-                $('.custom-radio-check').customRadioCheck();
             }
 
             // 取得したデータ件数が、１ページの表示件数未満だった場合
@@ -2296,30 +2258,22 @@ function evCommentOldView() {
             if (!$.isEmptyObject(data.html)) {
                 //取得したhtmlをオブジェクト化
                 var $posts = $(data.html);
+                //画像をレイジーロード
+                imageLazyOn($posts);
                 //一旦非表示
-                $posts.hide();
+                $posts.fadeOut();
                 $("#" + parent_id).before($posts);
-                //html表示
-                $posts.show("slow", function () {
-                    //もっと見る
-                    showMore(this);
-                });
+                showMore($posts);
+                $posts.fadeIn();
                 //ローダーを削除
                 $loader_html.remove();
                 //リンクを削除
-                $obj.remove();
-                //画像をレイジーロード
-                imageLazyOn();
-                //画像リサイズ
-                $posts.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
-                    $(this).children('.nailthumb-container').nailthumb({
-                        width: 50,
-                        height: 50,
-                        fitDirection: 'center center'
+                $obj.css("display", "none").css("opacity", 0);
+                $posts.imagesLoaded(function () {
+                    $posts.find('.comment_gallery').each(function (index, element) {
+                        bindCommentBalancedGallery($(element));
                     });
                 });
-
-                $('.custom-radio-check').customRadioCheck();
 
             }
             else {
@@ -2351,6 +2305,8 @@ function evLike() {
     var like_type = $obj.attr('like_type');
     var url = null;
     var model_id = $obj.attr('model_id');
+    $obj.toggleClass("liked");
+
     if (like_type == "post") {
         url = cake.url.d + model_id;
     }
@@ -2368,17 +2324,8 @@ function evLike() {
                 alert(cake.message.notice.d);
             }
             else {
-                //「いいね」した場合は「いいね取り消し」表示に
-                //noinspection JSUnresolvedVariable
-                if (data.created == true) {
-                    $obj.addClass("liked");
-                }
-                //「いいね取り消し」した場合は「いいね」表示に
-                else {
-                    $obj.removeClass("liked");
-                }
                 $("#" + like_count_id).text(data.count);
-            }
+            }_
         },
         error: function () {
             alert(cake.message.notice.d);
@@ -2807,26 +2754,22 @@ function evCommentLatestView() {
             if (!$.isEmptyObject(data.html)) {
                 //取得したhtmlをオブジェクト化
                 var $posts = $(data.html);
+                //画像をレイジーロード
+                imageLazyOn($posts);
                 //一旦非表示
                 $posts.fadeOut();
                 $($obj).before($posts);
+                showMore($posts);
                 $posts.fadeIn();
                 //ローダーを削除
                 $loader_html.remove();
                 //リンクを削除
                 $obj.css("display", "none").css("opacity", 0);
-                //画像をレイジーロード
-                imageLazyOn();
-                //画像リサイズ
-                $posts.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
-                    $(this).children('.nailthumb-container').nailthumb({
-                        width: 50,
-                        height: 50,
-                        fitDirection: 'center center'
+                $posts.imagesLoaded(function () {
+                    $posts.find('.comment_gallery').each(function (index, element) {
+                        bindCommentBalancedGallery($(element));
                     });
                 });
-
-                $('.custom-radio-check').customRadioCheck();
                 $obj.removeAttr("disabled");
 
                 initCommentNotify($obj);
