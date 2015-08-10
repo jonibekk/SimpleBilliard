@@ -589,6 +589,8 @@ class GoalsController extends AppController
                                    $action['ActionResult']['key_result_id'],
                                    $ar_id);
         $this->Goal->ActionResult->delete();
+        $this->Goal->ActionResult->ActionResultFile->AttachedFile->deleteAllRelatedFiles($ar_id,
+                                                                                         AttachedFile::TYPE_MODEL_ACTION_RESULT);
         if (isset($action['ActionResult']['goal_id']) && !empty($action['ActionResult']['goal_id'])) {
             $this->_flashClickEvent("ActionListOpen_" . $action['ActionResult']['goal_id']);
         }
