@@ -150,6 +150,31 @@ class PostsControllerTest extends ControllerTestCase
         $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
                    ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
         $data = [
+            'Post'      => [
+                'body'         => 'test',
+                'share_public' => 'public,circle_1,user_12',
+                'share_secret' => '',
+                'share_range'  => 'public',
+            ],
+            'socket_id' => 'test',
+        ];
+        $this->testAction('/posts/add_message',
+                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+    }
+
+    function testAddMessageNoSocketId()
+    {
+        /**
+         * @var UsersController $Posts
+         */
+        $Posts = $this->_getPostsCommonMock();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Session->expects($this->any())->method('read')
+                       ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
+                   ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
+        $data = [
             'Post' => [
                 'body'         => 'test',
                 'share_public' => 'public,circle_1,user_12',
@@ -159,7 +184,6 @@ class PostsControllerTest extends ControllerTestCase
         ];
         $this->testAction('/posts/add_message',
                           ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
-
     }
 
     function testAddSecretCircle()
@@ -202,14 +226,14 @@ class PostsControllerTest extends ControllerTestCase
         $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
                    ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
         $data = [
-            'Post' => [
+            'Post'      => [
                 'body'         => 'test',
                 'share_public' => 'circle_1',
                 'share_secret' => '',
                 'share_range'  => 'public',
                 'team_id'      => '1'
             ],
-            'socket_id'    => 'test',
+            'socket_id' => 'test',
         ];
         $this->testAction('/posts/add',
                           ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
@@ -228,14 +252,14 @@ class PostsControllerTest extends ControllerTestCase
         $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
                    ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
         $data = [
-            'Post' => [
+            'Post'      => [
                 'body'         => 'test',
                 'share_public' => 'user_1',
                 'share_secret' => '',
                 'share_range'  => 'public',
                 'team_id'      => '1'
             ],
-            'socket_id'    => 'test',
+            'socket_id' => 'test',
         ];
         $this->testAction('/posts/add',
                           ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
@@ -251,14 +275,14 @@ class PostsControllerTest extends ControllerTestCase
         $Posts->Session->expects($this->any())->method('read')
                        ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
         $data = [
-            'Post' => [
+            'Post'      => [
                 'body'         => 'test',
                 'share_public' => 'public,circle_1,user_12',
                 'share_secret' => '',
                 'share_range'  => 'public',
                 'team_id'      => '1'
             ],
-            'socket_id'=>'test',
+            'socket_id' => 'test',
         ];
         $this->testAction('/posts/add',
                           ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
@@ -1074,7 +1098,7 @@ class PostsControllerTest extends ControllerTestCase
         $Posts = $this->_getPostsCommonMock();
         $posts = $Posts->Post->getMyPostList(0, strtotime('2016-01-01'));
         $post_id = array_shift($posts);
-        $this->testAction('posts/post_edit/post_id:' . $post_id , ['method' => 'GET']);
+        $this->testAction('posts/post_edit/post_id:' . $post_id, ['method' => 'GET']);
     }
 
     /**
@@ -1619,14 +1643,14 @@ class PostsControllerTest extends ControllerTestCase
                 'Auth'      => ['user', 'loggedIn'],
                 'Security'  => ['_validateCsrf', '_validatePost'],
                 'Ogp',
-                'NotifyBiz' => ['sendNotify', 'commentPush','push']
+                'NotifyBiz' => ['sendNotify', 'commentPush', 'push']
             ],
         ]);
         $value_map = [
             [null, [
-                'id'         => '1',
-                'last_first' => true,
-                'language'   => 'jpn',
+                'id'              => '1',
+                'last_first'      => true,
+                'language'        => 'jpn',
                 'photo_file_name' => ''
             ]],
             ['id', '1'],

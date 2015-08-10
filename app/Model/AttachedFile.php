@@ -398,4 +398,33 @@ class AttachedFile extends AppModel
         }
         return true;
     }
+
+    /**
+     * @param      $foreign_key_id
+     * @param      $model_type
+     * @param null $file_type
+     *
+     * @return array|bool|int|null
+     */
+    public function getCountOfAttachedFiles($foreign_key_id, $model_type, $file_type = null)
+    {
+        if ($this->isUnavailableModelType($model_type)) {
+            return false;
+        }
+        $model = self::$TYPE_MODEL[$model_type];
+        $related_files = $this->{$model['intermediateModel']}->find('list', [
+            'conditions' => [$model['foreign_key'] => $foreign_key_id],
+            'fields'     => ['attached_file_id', 'attached_file_id']
+        ]);
+        if ($file_type === null) {
+            return count($related_files);
+        }
+
+        $options = ['conditions' => [
+            'id'        => $related_files,
+            'file_type' => $file_type,
+        ]];
+        $count_attached_files = $this->find('count', $options);
+        return $count_attached_files;
+    }
 }

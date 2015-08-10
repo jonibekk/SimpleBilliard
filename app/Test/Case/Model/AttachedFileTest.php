@@ -433,6 +433,37 @@ class AttachedFileTest extends CakeTestCase
         $this->assertNull($res);
     }
 
+    function testGetCountOfAttachedFilesFalse()
+    {
+        $res = $this->AttachedFile->getCountOfAttachedFiles(1, 10000);
+        $this->assertFalse($res);
+    }
+
+    function testGetCountOfAttachedFilesNoFileType()
+    {
+        $this->_setDefault();
+        $hashes = $this->_prepareTestFiles();
+        $upload_setting = $this->AttachedFile->actsAs['Upload'];
+        $upload_setting['attached']['path'] = ":webroot/upload/test/:model/:id/:hash_:style.:extension";
+        $this->AttachedFile->Behaviors->load('Upload', $upload_setting);
+        $this->AttachedFile->saveRelatedFiles(1, AttachedFile::TYPE_MODEL_POST, $hashes);
+        $res = $this->AttachedFile->getCountOfAttachedFiles(1, AttachedFile::TYPE_MODEL_POST);
+        $this->assertEquals(2, $res);
+    }
+
+    function testGetCountOfAttachedFilesWithFileType()
+    {
+        $this->_setDefault();
+        $hashes = $this->_prepareTestFiles();
+        $upload_setting = $this->AttachedFile->actsAs['Upload'];
+        $upload_setting['attached']['path'] = ":webroot/upload/test/:model/:id/:hash_:style.:extension";
+        $this->AttachedFile->Behaviors->load('Upload', $upload_setting);
+        $this->AttachedFile->saveRelatedFiles(1, AttachedFile::TYPE_MODEL_POST, $hashes);
+        $res = $this->AttachedFile->getCountOfAttachedFiles(1, AttachedFile::TYPE_MODEL_POST,
+                                                            AttachedFile::TYPE_FILE_IMG);
+        $this->assertEquals(1, $res);
+    }
+
     function _prepareTestFiles($file_size = 1000)
     {
         $destDir = TMP . 'attached_file';

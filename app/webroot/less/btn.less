@@ -267,18 +267,12 @@
   color: @lightGray;
   font-size: @fontSmall;
   text-decoration: none;
-  &:hover {
-    text-decoration: none;
-    color: @crimsonPink;
-  }
+  &:hover,
   &:target,
-  &:active {
-    text-decoration: none;
-    color: @crimsonPink;
-  }
+  &:active,
   &:focus {
     text-decoration: none;
-    color: @crimsonPink;
+    color: @lightGray;
   }
 }
 
@@ -302,13 +296,11 @@
 
 .liked {
   color: @crimsonPink;
-  font-weight: bold;
-  &:hover {
-    text-decoration: none;
-  }
+  &:hover,
   &:target,
   &:active,
   &:focus {
-    color: @lightGray;
+    text-decoration: none;
+    color: @crimsonPink;
   }
 }

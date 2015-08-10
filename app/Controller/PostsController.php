@@ -121,14 +121,13 @@ class PostsController extends AppController
             return false;
         }
 
-        $mixpanel_prop_name = null;
+        $share_circle = false;
+        //push to pusher
         // チーム全体公開が含まれている場合はチーム全体にのみpush
         if (in_array("public", $share)) {
             $this->NotifyBiz->push($socketId, "public");
-            $mixpanel_prop_name = MixpanelComponent::PROP_SHARE_TEAM;
         }
         else {
-            $share_circle = false;
             // それ以外の場合は共有先の数だけ回す
             foreach ($share as $val) {
                 if (strpos($val, "circle") !== false) {
@@ -136,14 +135,27 @@ class PostsController extends AppController
                 }
                 $this->NotifyBiz->push($socketId, $val);
             }
-            if ($share_circle) {
-                $mixpanel_prop_name = MixpanelComponent::PROP_SHARE_CIRCLE;
+        }
+
+        //publish an event to Mixpanel
+        $mixpanel_prop_name = null;
+        if (viaIsSet($this->request->data['Post']['type']) == Post::TYPE_MESSAGE) {
+            $this->Mixpanel->trackMessage($this->Post->getLastInsertID());
+        }
+        else {
+            if (in_array("public", $share)) {
+                $mixpanel_prop_name = MixpanelComponent::PROP_SHARE_TEAM;
             }
             else {
-                $mixpanel_prop_name = MixpanelComponent::PROP_SHARE_MEMBERS;
+                if ($share_circle) {
+                    $mixpanel_prop_name = MixpanelComponent::PROP_SHARE_CIRCLE;
+                }
+                else {
+                    $mixpanel_prop_name = MixpanelComponent::PROP_SHARE_MEMBERS;
+                }
             }
+            $this->Mixpanel->trackPost($this->Post->getLastInsertID(), $mixpanel_prop_name);
         }
-        $this->Mixpanel->trackPost($mixpanel_prop_name, $this->Post->getLastInsertID());
 
         $this->Pnotify->outSuccess(__d('gl', "投稿しました。"));
         return true;
@@ -383,6 +395,7 @@ class PostsController extends AppController
 
         $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
         $pusher->trigger('message-channel-' . $post_id, 'new_message', $convert_data);
+        $this->Mixpanel->trackMessage($post_id);
 
         return $this->_ajaxGetResponse($detail_comment);
     }
@@ -763,13 +776,9 @@ class PostsController extends AppController
                         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION,
                                                          $this->Post->id, $this->Post->Comment->id);
                         break;
-                    case Post::TYPE_MESSAGE:
-                        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MESSAGE, $this->Post->id,
-                                                         $this->Post->Comment->id);
-                        break;
                 }
                 //mixpanel
-                $this->Mixpanel->trackComment($type);
+                $this->Mixpanel->trackComment($type, $this->Post->Comment->getLastInsertID());
 
                 $result['msg'] = __d('gl', "コメントしました。");
             }
