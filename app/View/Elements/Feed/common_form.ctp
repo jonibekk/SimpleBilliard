@@ -57,7 +57,7 @@ $only_tab_post =
             </li>
             <li class="switch-message"><a href="#MessageForm" role="tab" data-toggle="tab"
                                           class="switch-message-anchor click-target-focus"
-                                          target-id="CommonMessageBody"><i
+                                          target-id="s2id_autogen1"><i
                         class="fa fa-paper-plane-o"></i><?= __d('gl', "メッセージ") ?></a><span class="switch-arrow"></span></li>
         </ul>
     </div>
