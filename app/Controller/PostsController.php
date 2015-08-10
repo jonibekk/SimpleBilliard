@@ -349,6 +349,8 @@ class PostsController extends AppController
     {
         $this->_ajaxPreProcess();
 
+        //既読処理
+        $this->Post->PostRead->red($post_id);
         $room_info = $this->Post->getPostById($post_id);
         $room_info['User']['photo_path'] = $this->Post->getPhotoPath($room_info['User']);
 
@@ -375,6 +377,9 @@ class PostsController extends AppController
     public function ajax_get_message($post_id, $limit, $page_num)
     {
         $this->_ajaxPreProcess();
+        //メッセージを既読に
+        $this->Post->Comment->CommentRead->redAllByPostId($post_id);
+
         $message_list = $this->Post->Comment->getPostsComment($post_id, $limit, $page_num, 'desc');
         $convert_msg_data = $this->Post->Comment->convertData($message_list);
         $result = ['message_list' => $convert_msg_data];

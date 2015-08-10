@@ -233,11 +233,6 @@ class Comment extends AppModel
         }
 
         $res = $this->find('all', $options);
-
-        //既読済みに
-        $comment_list = Hash::extract($res, '{n}.Comment.id');
-        $this->CommentRead->red($comment_list);
-
         return $res;
     }
 
