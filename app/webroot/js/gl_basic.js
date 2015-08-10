@@ -613,6 +613,10 @@ function getAjaxFormReplaceElm() {
     attrUndefinedCheck(this, 'tmp-target-height');
     attrUndefinedCheck(this, 'ajax-url');
     var $obj = $(this);
+    // 非表示状態の時は何もしない
+    if (!$obj.is(':visible')) {
+        return;
+    }
     var replace_elm_parent_id = $obj.attr("replace-elm-parent-id");
     var replace_elm = $('#' + replace_elm_parent_id);
     var click_target_id = $obj.attr("click-target-id");
