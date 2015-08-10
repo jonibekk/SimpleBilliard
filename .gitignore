@@ -15,7 +15,6 @@ Berksfile.lock
 /app/webroot/upload/*
 /app/Config/database_local.php
 /app/webroot/files
-/app/webroot/css/goalous.min.css
 .project
 .buildpath
 junit.xml
@@ -44,3 +43,5 @@ npm-debug.log
 # for dest files of a less and coffee maps
 /app/webroot/css/goalous.css.map
 /app/webroot/js/*.js.map
+/app/webroot/css/goalous.min.css
+/app/webroot/js/goalous.min.js
