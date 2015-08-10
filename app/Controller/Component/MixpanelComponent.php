@@ -36,6 +36,7 @@ class MixpanelComponent extends Object
     const TRACK_2SV_DISABLE = '2SVDbl';
     const TRACK_ACHIEVE_GOAL = 'AchieveGoal';
     const TRACK_ACHIEVE_KR = 'AchieveKR';
+    const TRACK_MESSAGE = 'Message';
 
     /**
      * Property Values
@@ -175,6 +176,9 @@ class MixpanelComponent extends Object
             '$goal_id'              => $goal_id,
             '$goal_owner_type'      => null,
             '$goal_approval_status' => null,
+            '$img_file_count'       => 0,
+            '$video_file_count'     => 0,
+            '$doc_file_count'       => 0,
         ];
 
         if ($track_type != self::TRACK_FOLLOW_GOAL && $track_type != self::TRACK_UN_FOLLOW_GOAL) {
@@ -205,24 +209,77 @@ class MixpanelComponent extends Object
         if ($action_id) {
             $property['$action_id'] = $action_id;
         }
+        if ($track_type == self::TRACK_CREATE_ACTION) {
+            /** @var AttachedFile $AttachedFile */
+            $AttachedFile = ClassRegistry::init('AttachedFile');
+            $property['$img_file_count'] = $AttachedFile->getCountOfAttachedFiles($action_id,
+                                                                                  $AttachedFile::TYPE_MODEL_ACTION_RESULT,
+                                                                                  $AttachedFile::TYPE_FILE_IMG);
+            $property['$video_file_count'] = $AttachedFile->getCountOfAttachedFiles($action_id,
+                                                                                    $AttachedFile::TYPE_MODEL_ACTION_RESULT,
+                                                                                    $AttachedFile::TYPE_FILE_VIDEO);
+            $property['$doc_file_count'] = $AttachedFile->getCountOfAttachedFiles($action_id,
+                                                                                  $AttachedFile::TYPE_MODEL_ACTION_RESULT,
+                                                                                  $AttachedFile::TYPE_FILE_DOC);
+
+        }
         $this->track($track_type, $property);
     }
 
-    function trackPost($share_type, $post_id)
+    function trackPost($post_id, $share_type)
     {
-        $this->track(self::TRACK_POST, ['$share_type' => $share_type, '$post_id' => $post_id]);
+        /** @var AttachedFile $AttachedFile */
+        $AttachedFile = ClassRegistry::init('AttachedFile');
+        $img_file_count = $AttachedFile->getCountOfAttachedFiles($post_id,
+                                                                 $AttachedFile::TYPE_MODEL_POST,
+                                                                 $AttachedFile::TYPE_FILE_IMG);
+        $video_file_count = $AttachedFile->getCountOfAttachedFiles($post_id,
+                                                                   $AttachedFile::TYPE_MODEL_POST,
+                                                                   $AttachedFile::TYPE_FILE_VIDEO);
+        $doc_file_count = $AttachedFile->getCountOfAttachedFiles($post_id,
+                                                                 $AttachedFile::TYPE_MODEL_POST,
+                                                                 $AttachedFile::TYPE_FILE_DOC);
+        $this->track(self::TRACK_POST, [
+            '$share_type'       => $share_type,
+            '$post_id'          => $post_id,
+            '$img_file_count'   => $img_file_count,
+            '$video_file_count' => $video_file_count,
+            '$doc_file_count'   => $doc_file_count,
+        ]);
     }
 
-    function trackComment($post_type)
+    function trackComment($post_type, $comment_id)
     {
         $target_type = $this->getTargetTypeByPostType($post_type);
-        $this->track(self::TRACK_COMMENT, ['$target_type' => $target_type]);
+        /** @var AttachedFile $AttachedFile */
+        $AttachedFile = ClassRegistry::init('AttachedFile');
+        $img_file_count = $AttachedFile->getCountOfAttachedFiles($comment_id,
+                                                                 $AttachedFile::TYPE_MODEL_COMMENT,
+                                                                 $AttachedFile::TYPE_FILE_IMG);
+        $video_file_count = $AttachedFile->getCountOfAttachedFiles($comment_id,
+                                                                   $AttachedFile::TYPE_MODEL_COMMENT,
+                                                                   $AttachedFile::TYPE_FILE_VIDEO);
+        $doc_file_count = $AttachedFile->getCountOfAttachedFiles($comment_id,
+                                                                 $AttachedFile::TYPE_MODEL_COMMENT,
+                                                                 $AttachedFile::TYPE_FILE_DOC);
+
+        $this->track(self::TRACK_COMMENT, [
+            '$target_type'      => $target_type,
+            '$img_file_count'   => $img_file_count,
+            '$video_file_count' => $video_file_count,
+            '$doc_file_count'   => $doc_file_count,
+        ]);
     }
 
     function trackLike($post_type)
     {
         $target_type = $this->getTargetTypeByPostType($post_type);
         $this->track(self::TRACK_LIKE, ['$target_type' => $target_type]);
+    }
+
+    function trackMessage($post_id)
+    {
+        $this->track(self::TRACK_MESSAGE, ['$post_id' => $post_id]);
     }
 
     /**

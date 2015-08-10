@@ -42,9 +42,9 @@ function bindCommentBalancedGallery($obj) {
 $(window).load(function () {
     bindPostBalancedGallery($('.post_gallery'));
     bindCommentBalancedGallery($('.comment_gallery'));
+    setDefaultTab();
 });
 $(document).ready(function () {
-    setDefaultTab();
     //すべてのformで入力があった場合に行う処理
     $("select,input").change(function () {
         $(this).nextAll(".help-block" + ".text-danger").remove();
@@ -100,6 +100,7 @@ $(document).ready(function () {
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         var $target = $(e.target);
         if ($target.hasClass('click-target-focus') && $target.attr('target-id') != undefined) {
+            $('#' + $target.attr('target-id')).click();
             $('#' + $target.attr('target-id')).focus();
         }
     })
@@ -613,6 +614,10 @@ function getAjaxFormReplaceElm() {
     attrUndefinedCheck(this, 'tmp-target-height');
     attrUndefinedCheck(this, 'ajax-url');
     var $obj = $(this);
+    // 非表示状態の時は何もしない
+    if (!$obj.is(':visible')) {
+        return;
+    }
     var replace_elm_parent_id = $obj.attr("replace-elm-parent-id");
     var replace_elm = $('#' + replace_elm_parent_id);
     var click_target_id = $obj.attr("click-target-id");
@@ -1107,10 +1112,10 @@ $(function () {
     var topBtn = $("#gotop");
     topBtn.css("bottom", "-100px");
     $(window).scroll(function () {
-        if ($(this).scrollTop() > 500) {
+        if ($(this).scrollTop() > 30) {
             if (showFlag == false) {
                 showFlag = true;
-                topBtn.stop().animate({"bottom": "28px"}, 200);
+                topBtn.stop().animate({"bottom": "40px"}, 200);
             }
         } else {
             if (showFlag) {
@@ -1220,18 +1225,18 @@ $(function () {
     )
 });
 
-/*表示件数調整*/
+/*表示件数調整 -mobilesize*/
 
 $(function () {
     $(".click-circle-trigger").on("click", function () {
         var txt = $(this).text();
         if ($(this).is('.on')) {
             $(this).text(txt.replace(/すべて表示/g, "閉じる")).removeClass("on");
-            $(".circleListMore:nth-child(n+10)").css("display", "block");
+            $(".circleListMore:nth-child(n+9)").css("display", "block");
             $(".circle-toggle-icon").removeClass("fa-angle-double-down").addClass("fa-angle-double-up");
         } else {
             $(this).text(txt.replace(/閉じる/g, "すべて表示")).addClass("on");
-            $(".circleListMore:nth-child(n+10)").css("display", "none");
+            $(".circleListMore:nth-child(n+9)").css("display", "none");
             $(".circle-toggle-icon").removeClass("fa-angle-double-up").addClass("fa-angle-double-down");
         }
     });
@@ -2325,7 +2330,7 @@ function evLike() {
             }
             else {
                 $("#" + like_count_id).text(data.count);
-            }_
+            }
         },
         error: function () {
             alert(cake.message.notice.d);
@@ -3283,6 +3288,16 @@ $(document).ready(function () {
             // コールバック関数実行 (afterAccept)
             $uploadFileForm._callbacks[$uploadFileForm._params.previewContainerID].afterAccept.call(this, file);
         },
+        // ファイル送信前
+        sending: function (file, xhr, formData) {
+            // コールバック関数実行 (beforeSending)
+            $uploadFileForm._callbacks[$uploadFileForm._params.previewContainerID].beforeSending.call(this, file, xhr, formData);
+        },
+        // 全てのファイルのアップロードが完了した後
+        queuecomplete: function () {
+            // コールバック関数実行 (afterQueueComplete)
+            $uploadFileForm._callbacks[$uploadFileForm._params.previewContainerID].afterQueueComplete.call(this);
+        },
         // ファイルアップロード完了時
         success: function (file, res) {
             var $preview = $(file.previewTemplate);
@@ -3544,7 +3559,9 @@ $(document).ready(function () {
             beforeAccept: params.beforeAccept ? params.beforeAccept : empty,
             afterAccept: params.afterAccept ? params.afterAccept : empty,
             afterRemoveFile: params.afterRemoveFile ? params.afterRemoveFile : empty,
-            afterSuccess: params.afterSuccess ? params.afterSuccess : empty
+            afterSuccess: params.afterSuccess ? params.afterSuccess : empty,
+            beforeSending: params.beforeSending ? params.beforeSending : empty,
+            afterQueueComplete: params.afterQueueComplete ? params.afterQueueComplete : empty
         };
     };
 
@@ -3567,6 +3584,18 @@ $(document).ready(function () {
         $(this).hide();
     });
 
+    // ファイルが１つでもアップロード中であれば true
+    $uploadFileForm._sending = false;
+    // ファイルアップロード中に submit ボタン押された時の イベントハンドラ
+    $uploadFileForm._confirmSubmit = function (e) {
+        if (!confirm(cake.message.validate.dropzone_uploading_not_end)) {
+            e.stopPropagation();
+            e.preventDefault();
+            return false;
+        }
+        return true;
+    };
+
     //////////////////////////////////////////////////
     // ドロップエリアとファイル添付ボタンの登録
     //////////////////////////////////////////////////
@@ -3576,7 +3605,28 @@ $(document).ready(function () {
     ///////////////////////////////
     var postParams = {
         formID: 'PostDisplayForm',
-        previewContainerID: 'PostUploadFilePreview'
+        previewContainerID: 'PostUploadFilePreview',
+        beforeSending: function () {
+            if ($uploadFileForm._sending) {
+                return;
+            }
+            $uploadFileForm._sending = true;
+            // ファイルの送信中はフォームの submit 時に confirm を出すようにする
+            $('#PostSubmit').on('click', $uploadFileForm._confirmSubmit);
+        },
+        afterQueueComplete: function () {
+            $uploadFileForm._sending = false;
+            // フォームの submit confirm を解除
+            $('#PostSubmit').off('click', $uploadFileForm._confirmSubmit);
+
+            // 投稿文が入力されていれば submit ボタンを有効化、空であれば無効化
+            if ($('#CommonPostBody').val().length == 0) {
+                $('#PostSubmit').attr('disabled', 'disabled');
+            }
+            else {
+                $('#PostSubmit').removeAttr('disabled');
+            }
+        }
     };
     $uploadFileForm.registerDragDropArea('#PostForm', postParams);
     $uploadFileForm.registerAttachFileButton('#PostUploadFileButton', postParams);
@@ -3706,7 +3756,21 @@ $(document).ready(function () {
     var actionParams = {
         formID: 'CommonActionDisplayForm',
         previewContainerID: 'ActionUploadFilePreview',
-        afterAccept: actionImageParams.afterAccept
+        afterAccept: actionImageParams.afterAccept,
+        beforeSending: function () {
+            if ($uploadFileForm._sending) {
+                return;
+            }
+            $uploadFileForm._sending = true;
+            // ファイルの送信中はフォームの submit 時に confirm を出すようにする
+            $('#CommonActionShare').on('click', $uploadFileForm._confirmSubmit);
+        },
+        afterQueueComplete: function () {
+            $uploadFileForm._sending = false;
+            // フォームの submit confirm を解除
+            $('#CommonActionShare').off('click', $uploadFileForm._confirmSubmit);
+            $('#CommonActionShare').removeAttr('disabled')
+        }
     };
     $uploadFileForm.registerDragDropArea('#ActionUploadFileDropArea', actionParams);
     $uploadFileForm.registerAttachFileButton('#ActionFileAttachButton', actionParams);
@@ -3751,10 +3815,15 @@ $(document).ready(function () {
             case 'jpeg':
             case 'gif':
             case 'png':
-                var thumb = file.previewElement.querySelectorAll("[data-dz-thumbnail]");
-                for (var i = 0, len = thumb.length; i < len; i++) {
-                    thumb[i].alt = file.name;
-                    thumb[i].src = $input.attr('data-url');
+                var thumb = file.previewElement.querySelector("[data-dz-thumbnail]");
+                if (thumb) {
+                    thumb.alt = file.name;
+                    thumb.src = $input.attr('data-url');
+                    thumb.classList.remove('none');
+                }
+                var icon = file.previewElement.querySelector("i[class*=file-other-icon]");
+                if (icon) {
+                    icon.classList.add('none');
                 }
                 break;
 
@@ -3966,7 +4035,7 @@ function setDefaultTab() {
         case "message":
             $('#CommonFormTabs li:eq(2) a').tab('show');
             if (!isMobile()) {
-                $('#CommonMessageBody').focus();
+                $('#s2id_autogen1').focus();
             }
             break;
     }

@@ -12,7 +12,6 @@
 ?>
 <!-- START app/View/Elements/gl_common_js.ctp -->
 <?php //echo $this->Html->script('vendor/jquery-2.1.0.min');
-echo $this->Html->script('vendor/jquery-1.11.1.min');
 echo $this->Html->script('vendor/bootstrap.min');
 echo $this->Html->script('vendor/jasny-bootstrap.min');
 echo $this->Html->script('vendor/bootstrapValidator.min');
@@ -36,6 +35,7 @@ echo $this->Html->script('vendor/dropzone.js');
 echo $this->Html->script('vendor/jquery.balanced-gallery.min');
 echo $this->Html->script('vendor/imagesloaded.pkgd.min');
 echo $this->Html->script('gl_basic');
+echo $this->Html->script('goalous.min');
 ?>
 <!--suppress JSDuplicatedDeclaration -->
 <script type="text/javascript">
@@ -54,7 +54,8 @@ echo $this->Html->script('gl_basic');
                 dropzone_max_files_exceeded: "<?=__d('gl', 'アップロード出来るファイル数は{{maxFiles}}個までです。')?>",
                 dropzone_response_error: "<?=__d('gl', 'アップロードに失敗しました。')?>",
                 dropzone_cancel_upload: "<?=__d('gl', 'アップロードをキャンセルしました。')?>",
-                dropzone_cancel_upload_confirmation: "<?=__d('gl', 'アップロードをキャンセルしてよろしいですか？。')?>"
+                dropzone_cancel_upload_confirmation: "<?=__d('gl', 'アップロードをキャンセルしてよろしいですか？')?>",
+                dropzone_uploading_not_end: "<?=__d('gl', '全てのファイルのアップロードが完了していません。\\nこのまま送信してよろしいですか？')?>"
             },
             notice: {
                 a: "<?=__d('gl',"入力が途中です。このまま移動しますか？")?>",

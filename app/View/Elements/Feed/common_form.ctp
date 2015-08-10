@@ -57,7 +57,7 @@ $only_tab_post =
             </li>
             <li class="switch-message"><a href="#MessageForm" role="tab" data-toggle="tab"
                                           class="switch-message-anchor click-target-focus"
-                                          target-id="CommonMessageBody"><i
+                                          target-id="s2id_autogen1"><i
                         class="fa fa-paper-plane-o"></i><?= __d('gl', "メッセージ") ?></a><span class="switch-arrow"></span></li>
         </ul>
     </div>
@@ -225,7 +225,7 @@ $only_tab_post =
                             'id'        => 'AttachedFile_' . $file['AttachedFile']['id'],
                             'name'      => 'data[file_id][]',
                             'value'     => $file['AttachedFile']['id'],
-                            'data-url'  => $this->Upload->uploadUrl($file, 'AttachedFile.attached'),
+                            'data-url'  => $this->Upload->uploadUrl($file, 'AttachedFile.attached', ['style' => 'small']),
                             'data-name' => $file['AttachedFile']['attached_file_name'],
                             'data-size' => $file['AttachedFile']['file_size'],
                             'data-ext'  => $file['AttachedFile']['file_ext'],
@@ -268,7 +268,6 @@ $only_tab_post =
                     'rows'           => 1,
                     'placeholder'    => __d('gl', "何か投稿しよう"),
                     'class'          => 'form-control tiny-form-text-change blank-disable post-form feed-post-form box-align change-warning',
-                    'target_show_id' => "PostFormFooter",
                     'target-id'      => "PostSubmit",
                     "required"       => false
                 ])
@@ -332,12 +331,7 @@ $only_tab_post =
             <?php endif ?>
 
             <div class="post-panel-footer">
-                <div class="font_12px <?php
-                // 新規登録時は、submit ボタンはデフォルト非表示
-                // 編集時は、最初から表示
-                if (!$is_edit_mode): ?>
-                none
-                <?php endif ?>" id="PostFormFooter">
+                <div class="font_12px" id="PostFormFooter">
                     <a href="#" class="link-red" id="PostUploadFileButton">
                         <button type="button" class="btn pull-left photo-up-btn"><i
                                 class="fa fa-paperclip post-camera-icon"></i>
@@ -359,7 +353,7 @@ $only_tab_post =
                         'id'        => 'AttachedFile_' . $file['AttachedFile']['id'],
                         'name'      => 'data[file_id][]',
                         'value'     => $file['AttachedFile']['id'],
-                        'data-url'  => $this->Upload->uploadUrl($file, 'AttachedFile.attached'),
+                        'data-url'  => $this->Upload->uploadUrl($file, 'AttachedFile.attached', ['style' => 'small']),
                         'data-name' => $file['AttachedFile']['attached_file_name'],
                         'data-size' => $file['AttachedFile']['file_size'],
                         'data-ext'  => $file['AttachedFile']['file_ext'],
@@ -460,13 +454,6 @@ $only_tab_post =
             ?>
             <div class="post-panel-footer">
                 <div class="font_12px none" id="MessageFormFooter">
-                    <a href="#" class="target-show-target-click link-red" target-id="MessageFormImage"
-                       click-target-id="Message__Photo_1">
-                        <button type="button" class="btn pull-left photo-up-btn"><i
-                                class="fa fa-camera post-camera-icon"></i>
-                        </button>
-                    </a>
-
                     <div class="row form-horizontal form-group post-share-range" id="MessageShare">
                         <?=
                         $this->Form->submit(__d('gl', "メッセージする"),

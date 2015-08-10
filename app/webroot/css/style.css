@@ -1798,7 +1798,7 @@ textarea.feed-post-form {
 }
 
 .post-upload-file-preview {
-    margin-top: 10px;
+    margin-top: 5px;
 }
 
 .action-upload-file-preview {
@@ -3047,10 +3047,6 @@ Temporary Properties - YOU MUST FIX
     width: 16px;
     height: 16px;
     text-align: center;
-}
-
-.circleListMore:nth-child(n+10) {
-    display: none;
 }
 
 .click-circle-trigger {

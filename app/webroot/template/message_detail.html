@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row" ng-show="view_flag">
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default">
             <div class="panel-heading" style="background-color: #f5f5f5;">
@@ -9,13 +9,6 @@
                    class="modal-ajax-get-share-circles-users">
                     <i class="fa fa-user"></i> {{post_detail.PostShareUser.length + 1}}
                 </a>
-            </span>
-            <span style="float:right;">
-                        <a href="/common_form/message">
-                            <button class="team-member-invite-btn">
-                                <i class="fa fa-plus-circle team-member-invite-btn-icon"></i>新しいメッセージ
-                            </button>
-                        </a>
             </span>
                 </div>
             </div>
@@ -41,7 +34,7 @@
                                 </div>
                                 <div class="comment-text font_12px">{{item.Comment.body}}</div>
                                 <div class="font_12px">
-                                    <a href="/posts/ajax_get_comment_red_users/comment_id:{{item.Comment.id}}"
+                                    <a href="{{item.get_red_user_model_url}}"
                                        class="modal-ajax-get font_lightgray">
                                         <i class="fa fa-check"></i>&nbsp;
                                         <span id="mr_{{item.Comment.id}}">{{item.Comment.comment_read_count}}</span>

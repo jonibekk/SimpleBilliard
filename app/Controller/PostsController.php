@@ -121,29 +121,43 @@ class PostsController extends AppController
             return false;
         }
 
-        $mixpanel_prop_name = null;
-        // チーム全体公開が含まれている場合はチーム全体にのみpush
-        if (in_array("public", $share)) {
-            $this->NotifyBiz->push($socketId, "public");
-            $mixpanel_prop_name = MixpanelComponent::PROP_SHARE_TEAM;
-        }
-        else {
-            $share_circle = false;
-            // それ以外の場合は共有先の数だけ回す
-            foreach ($share as $val) {
-                if (strpos($val, "circle") !== false) {
-                    $share_circle = true;
-                }
-                $this->NotifyBiz->push($socketId, $val);
-            }
-            if ($share_circle) {
-                $mixpanel_prop_name = MixpanelComponent::PROP_SHARE_CIRCLE;
+        $share_circle = false;
+        if (viaIsSet($this->request->data['Post']['type']) != Post::TYPE_MESSAGE) {
+            //push to pusher
+            // チーム全体公開が含まれている場合はチーム全体にのみpush
+            if (in_array("public", $share)) {
+                $this->NotifyBiz->push($socketId, "public");
             }
             else {
-                $mixpanel_prop_name = MixpanelComponent::PROP_SHARE_MEMBERS;
+                // それ以外の場合は共有先の数だけ回す
+                foreach ($share as $val) {
+                    if (strpos($val, "circle") !== false) {
+                        $share_circle = true;
+                    }
+                    $this->NotifyBiz->push($socketId, $val);
+                }
             }
         }
-        $this->Mixpanel->trackPost($mixpanel_prop_name, $this->Post->getLastInsertID());
+
+        //publish an event to Mixpanel
+        $mixpanel_prop_name = null;
+        if (viaIsSet($this->request->data['Post']['type']) == Post::TYPE_MESSAGE) {
+            $this->Mixpanel->trackMessage($this->Post->getLastInsertID());
+        }
+        else {
+            if (in_array("public", $share)) {
+                $mixpanel_prop_name = MixpanelComponent::PROP_SHARE_TEAM;
+            }
+            else {
+                if ($share_circle) {
+                    $mixpanel_prop_name = MixpanelComponent::PROP_SHARE_CIRCLE;
+                }
+                else {
+                    $mixpanel_prop_name = MixpanelComponent::PROP_SHARE_MEMBERS;
+                }
+            }
+            $this->Mixpanel->trackPost($this->Post->getLastInsertID(), $mixpanel_prop_name);
+        }
 
         $this->Pnotify->outSuccess(__d('gl', "投稿しました。"));
         return true;
@@ -337,6 +351,8 @@ class PostsController extends AppController
     {
         $this->_ajaxPreProcess();
 
+        //既読処理
+        $this->Post->PostRead->red($post_id);
         $room_info = $this->Post->getPostById($post_id);
         $room_info['User']['photo_path'] = $this->Post->getPhotoPath($room_info['User']);
 
@@ -363,6 +379,9 @@ class PostsController extends AppController
     public function ajax_get_message($post_id, $limit, $page_num)
     {
         $this->_ajaxPreProcess();
+        //メッセージを既読に
+        $this->Post->Comment->CommentRead->redAllByPostId($post_id);
+
         $message_list = $this->Post->Comment->getPostsComment($post_id, $limit, $page_num, 'desc');
         $convert_msg_data = $this->Post->Comment->convertData($message_list);
         $result = ['message_list' => $convert_msg_data];
@@ -383,6 +402,7 @@ class PostsController extends AppController
 
         $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
         $pusher->trigger('message-channel-' . $post_id, 'new_message', $convert_data);
+        $this->Mixpanel->trackMessage($post_id);
 
         return $this->_ajaxGetResponse($detail_comment);
     }
@@ -727,6 +747,31 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
+    public function ajax_get_message_red_users()
+    {
+        $comment_id = viaIsSet($this->request->params['named']['comment_id']);
+        $post_id = viaIsSet($this->request->params['named']['post_id']);
+        $this->_ajaxPreProcess();
+        $red_users = [];
+        $model = null;
+        if ($comment_id) {
+            $red_users = $this->Post->Comment->CommentRead->getRedUsers($comment_id);
+            $model = 'CommentRead';
+        }
+        elseif ($post_id) {
+            $red_users = $this->Post->PostRead->getRedUsers($post_id);
+            $model = 'PostRead';
+        }
+        $this->set(compact('red_users', 'model'));
+
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('Feed/modal_message_red_users');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
+    }
+
     public function ajax_add_comment()
     {
         $this->request->allowMethod('post');
@@ -763,13 +808,9 @@ class PostsController extends AppController
                         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION,
                                                          $this->Post->id, $this->Post->Comment->id);
                         break;
-                    case Post::TYPE_MESSAGE:
-                        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MESSAGE, $this->Post->id,
-                                                         $this->Post->Comment->id);
-                        break;
                 }
                 //mixpanel
-                $this->Mixpanel->trackComment($type);
+                $this->Mixpanel->trackComment($type, $this->Post->Comment->getLastInsertID());
 
                 $result['msg'] = __d('gl', "コメントしました。");
             }
