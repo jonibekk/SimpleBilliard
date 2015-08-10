@@ -2330,7 +2330,7 @@ function evLike() {
             }
             else {
                 $("#" + like_count_id).text(data.count);
-            }_
+            }
         },
         error: function () {
             alert(cake.message.notice.d);
@@ -3288,6 +3288,16 @@ $(document).ready(function () {
             // コールバック関数実行 (afterAccept)
             $uploadFileForm._callbacks[$uploadFileForm._params.previewContainerID].afterAccept.call(this, file);
         },
+        // ファイル送信前
+        sending: function (file, xhr, formData) {
+            // コールバック関数実行 (beforeSending)
+            $uploadFileForm._callbacks[$uploadFileForm._params.previewContainerID].beforeSending.call(this, file, xhr, formData);
+        },
+        // 全てのファイルのアップロードが完了した後
+        queuecomplete: function () {
+            // コールバック関数実行 (afterQueueComplete)
+            $uploadFileForm._callbacks[$uploadFileForm._params.previewContainerID].afterQueueComplete.call(this);
+        },
         // ファイルアップロード完了時
         success: function (file, res) {
             var $preview = $(file.previewTemplate);
@@ -3549,7 +3559,9 @@ $(document).ready(function () {
             beforeAccept: params.beforeAccept ? params.beforeAccept : empty,
             afterAccept: params.afterAccept ? params.afterAccept : empty,
             afterRemoveFile: params.afterRemoveFile ? params.afterRemoveFile : empty,
-            afterSuccess: params.afterSuccess ? params.afterSuccess : empty
+            afterSuccess: params.afterSuccess ? params.afterSuccess : empty,
+            beforeSending: params.beforeSending ? params.beforeSending : empty,
+            afterQueueComplete: params.afterQueueComplete ? params.afterQueueComplete : empty
         };
     };
 
@@ -3572,6 +3584,18 @@ $(document).ready(function () {
         $(this).hide();
     });
 
+    // ファイルが１つでもアップロード中であれば true
+    $uploadFileForm._sending = false;
+    // ファイルアップロード中に submit ボタン押された時の イベントハンドラ
+    $uploadFileForm._confirmSubmit = function (e) {
+        if (!confirm(cake.message.validate.dropzone_uploading_not_end)) {
+            e.stopPropagation();
+            e.preventDefault();
+            return false;
+        }
+        return true;
+    };
+
     //////////////////////////////////////////////////
     // ドロップエリアとファイル添付ボタンの登録
     //////////////////////////////////////////////////
@@ -3581,7 +3605,28 @@ $(document).ready(function () {
     ///////////////////////////////
     var postParams = {
         formID: 'PostDisplayForm',
-        previewContainerID: 'PostUploadFilePreview'
+        previewContainerID: 'PostUploadFilePreview',
+        beforeSending: function () {
+            if ($uploadFileForm._sending) {
+                return;
+            }
+            $uploadFileForm._sending = true;
+            // ファイルの送信中はフォームの submit 時に confirm を出すようにする
+            $('#PostSubmit').on('click', $uploadFileForm._confirmSubmit);
+        },
+        afterQueueComplete: function () {
+            $uploadFileForm._sending = false;
+            // フォームの submit confirm を解除
+            $('#PostSubmit').off('click', $uploadFileForm._confirmSubmit);
+
+            // 投稿文が入力されていれば submit ボタンを有効化、空であれば無効化
+            if ($('#CommonPostBody').val().length == 0) {
+                $('#PostSubmit').attr('disabled', 'disabled');
+            }
+            else {
+                $('#PostSubmit').removeAttr('disabled');
+            }
+        }
     };
     $uploadFileForm.registerDragDropArea('#PostForm', postParams);
     $uploadFileForm.registerAttachFileButton('#PostUploadFileButton', postParams);
@@ -3711,7 +3756,21 @@ $(document).ready(function () {
     var actionParams = {
         formID: 'CommonActionDisplayForm',
         previewContainerID: 'ActionUploadFilePreview',
-        afterAccept: actionImageParams.afterAccept
+        afterAccept: actionImageParams.afterAccept,
+        beforeSending: function () {
+            if ($uploadFileForm._sending) {
+                return;
+            }
+            $uploadFileForm._sending = true;
+            // ファイルの送信中はフォームの submit 時に confirm を出すようにする
+            $('#CommonActionShare').on('click', $uploadFileForm._confirmSubmit);
+        },
+        afterQueueComplete: function () {
+            $uploadFileForm._sending = false;
+            // フォームの submit confirm を解除
+            $('#CommonActionShare').off('click', $uploadFileForm._confirmSubmit);
+            $('#CommonActionShare').removeAttr('disabled')
+        }
     };
     $uploadFileForm.registerDragDropArea('#ActionUploadFileDropArea', actionParams);
     $uploadFileForm.registerAttachFileButton('#ActionFileAttachButton', actionParams);
