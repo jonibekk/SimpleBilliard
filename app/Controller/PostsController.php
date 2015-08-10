@@ -122,18 +122,20 @@ class PostsController extends AppController
         }
 
         $share_circle = false;
-        //push to pusher
-        // チーム全体公開が含まれている場合はチーム全体にのみpush
-        if (in_array("public", $share)) {
-            $this->NotifyBiz->push($socketId, "public");
-        }
-        else {
-            // それ以外の場合は共有先の数だけ回す
-            foreach ($share as $val) {
-                if (strpos($val, "circle") !== false) {
-                    $share_circle = true;
+        if (viaIsSet($this->request->data['Post']['type']) != Post::TYPE_MESSAGE) {
+            //push to pusher
+            // チーム全体公開が含まれている場合はチーム全体にのみpush
+            if (in_array("public", $share)) {
+                $this->NotifyBiz->push($socketId, "public");
+            }
+            else {
+                // それ以外の場合は共有先の数だけ回す
+                foreach ($share as $val) {
+                    if (strpos($val, "circle") !== false) {
+                        $share_circle = true;
+                    }
+                    $this->NotifyBiz->push($socketId, $val);
                 }
-                $this->NotifyBiz->push($socketId, $val);
             }
         }
 
