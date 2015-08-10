@@ -728,7 +728,6 @@ class PostTest extends CakeTestCase
         $this->Post->Comment->save($data);
 
         $res = $this->Post->getMessageList();
-        debug($this->Post->convertData($res));
     }
 
     function testGetPostById()

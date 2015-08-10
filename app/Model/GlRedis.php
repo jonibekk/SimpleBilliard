@@ -80,10 +80,10 @@ class GlRedis extends AppModel
      */
     private /** @noinspection PhpUnusedPrivateFieldInspection */
         $message_user_key = [
-        'team'          => null,
-        'user'          => null,
-        'messages'      => null,
-        'unread'        => 1,
+        'team'     => null,
+        'user'     => null,
+        'messages' => null,
+        'unread'   => 1,
     ];
     /**
      * Key Name: team:[team_id]:notification:[notify_id]:
@@ -102,8 +102,8 @@ class GlRedis extends AppModel
      */
     private /** @noinspection PhpUnusedPrivateFieldInspection */
         $message_key = [
-        'team'         => null,
-        'message'      => null,
+        'team'    => null,
+        'message' => null,
     ];
     /**
      * Key Name: team:[team_id]:user:[user_id]:new_notification_count:
@@ -123,8 +123,8 @@ class GlRedis extends AppModel
      */
     private /** @noinspection PhpUnusedPrivateFieldInspection */
         $count_message_by_user_key = [
-        'team'  => null,
-        'user'  => null,
+        'team'          => null,
+        'user'          => null,
         'message_count' => null,
     ];
 
@@ -274,37 +274,45 @@ class GlRedis extends AppModel
             $url = array_merge($url, ['notify_id' => $notify_id]);
         }
         $data = [
-            'id'      => $notify_id,
-            'user_id' => $my_id,
-            'body'    => $body,
-            'url'     => Router::url($url,true),
-            'type'    => $type,
+            'id'            => $notify_id,
+            'user_id'       => $my_id,
+            'body'          => $body,
+            'url'           => Router::url($url, true),
+            'type'          => $type,
             'to_user_count' => count($to_user_ids),
-            'created' => $date,
+            'created'       => $date,
         ];
         /** @noinspection PhpInternalEntityUsedInspection */
         $pipe = $this->Db->multi(Redis::PIPELINE);
         //save notification
-        if($type == NotifySetting::TYPE_FEED_MESSAGE){
+        if ($type == NotifySetting::TYPE_FEED_MESSAGE) {
             $pipe->hMset($this->getKeyName(self::KEY_TYPE_MESSAGE, $team_id, null, $notify_id), $data);
-            $pipe->expire($this->getKeyName(self::KEY_TYPE_MESSAGE, $team_id, null, $notify_id), 60 * 60 * 24 * self::EXPIRE_DAY_OF_NOTIFICATION);
-        } else {
+            $pipe->expire($this->getKeyName(self::KEY_TYPE_MESSAGE, $team_id, null, $notify_id),
+                          60 * 60 * 24 * self::EXPIRE_DAY_OF_NOTIFICATION);
+        }
+        else {
             $pipe->hMset($this->getKeyName(self::KEY_TYPE_NOTIFICATION, $team_id, null, $notify_id), $data);
-            $pipe->expire($this->getKeyName(self::KEY_TYPE_NOTIFICATION, $team_id, null, $notify_id), 60 * 60 * 24 * self::EXPIRE_DAY_OF_NOTIFICATION);
+            $pipe->expire($this->getKeyName(self::KEY_TYPE_NOTIFICATION, $team_id, null, $notify_id),
+                          60 * 60 * 24 * self::EXPIRE_DAY_OF_NOTIFICATION);
         }
 
         $score = substr_replace((string)(microtime(true) * 10000), '1', -1, 1);
         //save notification user process
         foreach ($to_user_ids as $uid) {
             //save notification user
-            if($type == NotifySetting::TYPE_FEED_MESSAGE){
+            if ($type == NotifySetting::TYPE_FEED_MESSAGE) {
                 $pipe->zAdd($this->getKeyName(self::KEY_TYPE_MESSAGE_USER, $team_id, $uid, null), $score, $notify_id);
-                $pipe->zAdd($this->getKeyName(self::KEY_TYPE_MESSAGE_USER, $team_id, $uid, null, 0), $score, $notify_id);
-            } else {
-                $pipe->zAdd($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $uid, null), $score, $notify_id);
-                $pipe->zAdd($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $uid, null, 0), $score, $notify_id);
+                $pipe->zAdd($this->getKeyName(self::KEY_TYPE_MESSAGE_USER, $team_id, $uid, null, 0), $score,
+                            $notify_id);
+            }
+            else {
+                $pipe->zAdd($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $uid, null), $score,
+                            $notify_id);
+                $pipe->zAdd($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $uid, null, 0), $score,
+                            $notify_id);
                 //increment
-                $pipe->hIncrBy($this->getKeyName(self::KEY_TYPE_COUNT_BY_USER, $team_id, $uid), self::FIELD_COUNT_NEW_NOTIFY, 1);
+                $pipe->hIncrBy($this->getKeyName(self::KEY_TYPE_COUNT_BY_USER, $team_id, $uid),
+                               self::FIELD_COUNT_NEW_NOTIFY, 1);
             }
 
         }
@@ -312,15 +320,39 @@ class GlRedis extends AppModel
         //メッセージの通知数は1スレッドあたり1だけなのでKEY_TYPE_MESSAGE_USERのレコード数
         //なのでredisに書き込みが終わった後じゃないとカウントできないからここでやる
         foreach ($to_user_ids as $uid) {
-            if($type == NotifySetting::TYPE_FEED_MESSAGE){
-                $message_notify_count = $this->Db->zCard( $this->getKeyName(self::KEY_TYPE_MESSAGE_USER, $team_id, $uid));
-                $pipe->hSet(
-                    $this->getKeyName(self::KEY_TYPE_COUNT_MESSAGE_BY_USER, $team_id, $uid),
-                    self::FIELD_COUNT_NEW_NOTIFY, $message_notify_count);
-
+            if ($type == NotifySetting::TYPE_FEED_MESSAGE) {
+                $this->updateCountOfNewMessageNotification($team_id, $uid, $pipe);
             }
         }
         $pipe->exec();
+        return true;
+    }
+
+    /**
+     * メッセージの未読件数の更新処理
+     * $pipeで使う場合とそうでない場合があるので、両方に対応できるようにしている
+     * $pipe: $this->Db->multi(Redis::PIPELINE)
+     *
+     * @param              $team_id
+     * @param              $uid
+     * @param Redis        $pipe
+     *
+     * @return bool
+     */
+    function updateCountOfNewMessageNotification($team_id, $uid, Redis $pipe = null)
+    {
+        $message_notify_count = $this->Db->zCard($this->getKeyName(self::KEY_TYPE_MESSAGE_USER, $team_id, $uid));
+
+        if (is_object($pipe)) {
+            $pipe->hSet(
+                $this->getKeyName(self::KEY_TYPE_COUNT_MESSAGE_BY_USER, $team_id, $uid),
+                self::FIELD_COUNT_NEW_NOTIFY, $message_notify_count);
+        }
+        else {
+            $this->Db->hSet(
+                $this->getKeyName(self::KEY_TYPE_COUNT_MESSAGE_BY_USER, $team_id, $uid),
+                self::FIELD_COUNT_NEW_NOTIFY, $message_notify_count);
+        }
         return true;
     }
 
@@ -349,6 +381,7 @@ class GlRedis extends AppModel
                                  self::FIELD_COUNT_NEW_NOTIFY);
         return ($count === false) ? 0 : (int)$count;
     }
+
     /**
      * @param  $team_id
      * @param  $user_id
@@ -361,6 +394,7 @@ class GlRedis extends AppModel
                                self::FIELD_COUNT_NEW_NOTIFY);
         return (bool)$res;
     }
+
     /**
      * @param  $team_id
      * @param  $user_id
@@ -521,6 +555,7 @@ class GlRedis extends AppModel
         }
         return $pipe_res;
     }
+
     /**
      * @param      $user_id
      * @param null $ip_address

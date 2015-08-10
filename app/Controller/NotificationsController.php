@@ -95,7 +95,6 @@ class NotificationsController extends AppController
     public function ajax_get_latest_message_notify_items()
     {
         $this->_ajaxPreProcess();
-        $this->NotifyBiz->resetCountNewMessageNotification();
         $notify_items = $this->NotifyBiz->getMessageNotification(NOTIFY_BELL_BOX_ITEMS_NUMBER);
         $team = $this->Team->findById($this->current_team_id);
         $this->set(compact('notify_items', 'team'));

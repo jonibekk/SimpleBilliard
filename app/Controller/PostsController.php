@@ -42,7 +42,8 @@ class PostsController extends AppController
                 }
 
                 if (in_array($this->Auth->user('id'), $shared_user_id) === false
-                    && $item['Post']['user_id'] !== $this->Auth->user('id')) {
+                    && $item['Post']['user_id'] !== $this->Auth->user('id')
+                ) {
                     unset($result[$key]);
                 }
             }
@@ -340,16 +341,21 @@ class PostsController extends AppController
         $room_info['User']['photo_path'] = $this->Post->getPhotoPath($room_info['User']);
 
         $res = [
-            'auth_info' => [
+            'auth_info'   => [
+                'user_id'    => $this->Auth->user('id'),
+                'language'   => $this->Auth->user('language'),
                 'photo_path' => $this->Post->getPhotoPath($this->Auth->user()),
             ],
-            'room_info' => $room_info
+            'room_info'   => $room_info,
+            'share_users' => $this->Post->PostShareUser->getShareUserListByPost($post_id)
         ];
 
         //対象のメッセージルーム(Post)のnotifyがあれば削除する
         //メッセージなら該当するnotifyをredisから削除する
         //なお通知は1ルームあたりからなず1個のため、notify_id = post_id
         $this->NotifyBiz->removeMessageNotification($post_id);
+        //未読通知件数を更新
+        $this->NotifyBiz->updateCountNewMessageNotification();
 
         return $this->_ajaxGetResponse($res);
     }
@@ -881,7 +887,6 @@ class PostsController extends AppController
 
     /**
      * ファイルアップロード
-     *
      * JSON レスポンス形式
      * {
      *   error: bool,   // エラーが発生した場合に true
@@ -903,7 +908,6 @@ class PostsController extends AppController
 
     /**
      * アップロードしたファイルを削除
-     *
      * JSON レスポンス形式
      * {
      *   error: bool,   // エラーが発生した場合に true

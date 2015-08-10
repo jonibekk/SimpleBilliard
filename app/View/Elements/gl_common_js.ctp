@@ -246,6 +246,7 @@ echo $this->Html->script('gl_basic');
         },
         notify_auto_update_sec: <?=NOTIFY_AUTO_UPDATE_SEC?>,
         new_notify_cnt: <?=isset($new_notify_cnt)?$new_notify_cnt:0?>,
+        new_notify_message_cnt: <?=isset($new_notify_message_cnt)?$new_notify_message_cnt:0?>,
         common_form_type: "<?= isset($common_form_type)?$common_form_type:null?>"
     };
 

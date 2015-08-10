@@ -336,7 +336,6 @@ class NotifyBizComponent extends Component
         $this->notify_option['post_id'] = $post_id;
     }
 
-
     /**
      * 招待したユーザがチーム参加したときのオプション
      *
@@ -948,6 +947,7 @@ class NotifyBizComponent extends Component
         }
         return $data;
     }
+
     /**
      * set notifications
      *
@@ -996,6 +996,7 @@ class NotifyBizComponent extends Component
             $this->NotifySetting->my_uid
         );
     }
+
     /**
      * delete count of new notifications form redis.
      *
@@ -1008,6 +1009,7 @@ class NotifyBizComponent extends Component
             $this->NotifySetting->my_uid
         );
     }
+
     /**
      * delete count of new notifications form redis.
      *
@@ -1056,4 +1058,18 @@ class NotifyBizComponent extends Component
             $notify_id
         );
     }
+
+    /**
+     * update count of message notification.
+     *
+     * @return bool|void
+     */
+    function updateCountNewMessageNotification()
+    {
+        return $this->GlRedis->updateCountOfNewMessageNotification(
+            $this->NotifySetting->current_team_id,
+            $this->NotifySetting->my_uid
+        );
+    }
+
 }
