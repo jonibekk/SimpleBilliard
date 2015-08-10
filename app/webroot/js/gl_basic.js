@@ -613,6 +613,10 @@ function getAjaxFormReplaceElm() {
     attrUndefinedCheck(this, 'tmp-target-height');
     attrUndefinedCheck(this, 'ajax-url');
     var $obj = $(this);
+    // 非表示状態の時は何もしない
+    if (!$obj.is(':visible')) {
+        return;
+    }
     var replace_elm_parent_id = $obj.attr("replace-elm-parent-id");
     var replace_elm = $('#' + replace_elm_parent_id);
     var click_target_id = $obj.attr("click-target-id");
@@ -2305,6 +2309,8 @@ function evLike() {
     var like_type = $obj.attr('like_type');
     var url = null;
     var model_id = $obj.attr('model_id');
+    $obj.toggleClass("liked");
+
     if (like_type == "post") {
         url = cake.url.d + model_id;
     }
@@ -2322,17 +2328,8 @@ function evLike() {
                 alert(cake.message.notice.d);
             }
             else {
-                //「いいね」した場合は「いいね取り消し」表示に
-                //noinspection JSUnresolvedVariable
-                if (data.created == true) {
-                    $obj.addClass("liked");
-                }
-                //「いいね取り消し」した場合は「いいね」表示に
-                else {
-                    $obj.removeClass("liked");
-                }
                 $("#" + like_count_id).text(data.count);
-            }
+            }_
         },
         error: function () {
             alert(cake.message.notice.d);

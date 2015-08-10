@@ -112,11 +112,22 @@ $without_header = isset($without_header) ? $without_header : false;
                                     <?php endif; ?>
                                 <?php endif ?>
                                 <?php if ($my_member_status['TeamMember']['admin_flg'] || $post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
-                                    <?php if ($post['Post']['type'] != Post::TYPE_ACTION): ?>
+                                    <?php if ($post['Post']['type'] == Post::TYPE_ACTION): ?>
+                                        <li><?=
+                                            $this->Form->postLink(__d('gl', "アクションを削除"),
+                                                                  ['controller'       => 'goals',
+                                                                   'action'           => 'delete_action',
+                                                                   'action_result_id' => $post['Post']['action_result_id']],
+                                                                  null,
+                                                                  __d('gl', "本当にこのアクションを削除しますか？")) ?></li>
+                                    <?php else: ?>
                                         <li><?=
                                             $this->Form->postLink(__d('gl', "投稿を削除"),
-                                                                  ['controller' => 'posts', 'action' => 'post_delete', 'post_id' => $post['Post']['id']],
-                                                                  null, __d('gl', "本当にこの投稿を削除しますか？")) ?></li>
+                                                                  ['controller' => 'posts',
+                                                                   'action'     => 'post_delete',
+                                                                   'post_id'    => $post['Post']['id']],
+                                                                  null,
+                                                                  __d('gl', "本当にこの投稿を削除しますか？")) ?></li>
                                     <?php endif; ?>
                                 <?php endif ?>
                                 <li>
