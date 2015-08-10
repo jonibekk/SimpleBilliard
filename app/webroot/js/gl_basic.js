@@ -42,9 +42,9 @@ function bindCommentBalancedGallery($obj) {
 $(window).load(function () {
     bindPostBalancedGallery($('.post_gallery'));
     bindCommentBalancedGallery($('.comment_gallery'));
+    setDefaultTab();
 });
 $(document).ready(function () {
-    setDefaultTab();
     //すべてのformで入力があった場合に行う処理
     $("select,input").change(function () {
         $(this).nextAll(".help-block" + ".text-danger").remove();
@@ -100,6 +100,7 @@ $(document).ready(function () {
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         var $target = $(e.target);
         if ($target.hasClass('click-target-focus') && $target.attr('target-id') != undefined) {
+            $('#' + $target.attr('target-id')).click();
             $('#' + $target.attr('target-id')).focus();
         }
     })
@@ -3975,7 +3976,7 @@ function setDefaultTab() {
         case "message":
             $('#CommonFormTabs li:eq(2) a').tab('show');
             if (!isMobile()) {
-                $('#CommonMessageBody').focus();
+                $('#s2id_autogen1').focus();
             }
             break;
     }
