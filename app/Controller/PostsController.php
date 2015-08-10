@@ -776,13 +776,9 @@ class PostsController extends AppController
                         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION,
                                                          $this->Post->id, $this->Post->Comment->id);
                         break;
-                    case Post::TYPE_MESSAGE:
-                        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MESSAGE, $this->Post->id,
-                                                         $this->Post->Comment->id);
-                        break;
                 }
                 //mixpanel
-                $this->Mixpanel->trackComment($type,$this->Post->Comment->getLastInsertID());
+                $this->Mixpanel->trackComment($type, $this->Post->Comment->getLastInsertID());
 
                 $result['msg'] = __d('gl', "コメントしました。");
             }
