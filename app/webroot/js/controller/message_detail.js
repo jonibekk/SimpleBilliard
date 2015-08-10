@@ -22,8 +22,6 @@ message_app.controller(
         // 投稿が存在しない時
         if (typeof post_detail.Post === 'undefined') {
             $scope.view_flag = false;
-            notificationService.error($translate.instant('ACCESS_MESSAGE_DETAIL_MESSAGE'));
-            document.location = "/";
 
         } else {
             // シェアされてない人は表示をしない
@@ -35,13 +33,16 @@ message_app.controller(
             // 権限がない時
             if (share_users.indexOf(getPostDetail.auth_info.user_id) < 0) {
                 $scope.view_flag = false;
-                notificationService.error($translate.instant('ACCESS_MESSAGE_DETAIL_MESSAGE'));
-                document.location = "/";
             }
         }
 
         // 表示権限あり
-        if ($scope.view_flag === true) {
+        if ($scope.view_flag === false) {
+
+            notificationService.error($translate.instant('ACCESS_MESSAGE_DETAIL_MESSAGE'));
+            document.location = "/";
+
+        } else {
 
             var message_list = [];
             var first_data = {
