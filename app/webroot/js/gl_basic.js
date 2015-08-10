@@ -3755,10 +3755,15 @@ $(document).ready(function () {
             case 'jpeg':
             case 'gif':
             case 'png':
-                var thumb = file.previewElement.querySelectorAll("[data-dz-thumbnail]");
-                for (var i = 0, len = thumb.length; i < len; i++) {
-                    thumb[i].alt = file.name;
-                    thumb[i].src = $input.attr('data-url');
+                var thumb = file.previewElement.querySelector("[data-dz-thumbnail]");
+                if (thumb) {
+                    thumb.alt = file.name;
+                    thumb.src = $input.attr('data-url');
+                    thumb.classList.remove('none');
+                }
+                var icon = file.previewElement.querySelector("i[class*=file-other-icon]");
+                if (icon) {
+                    icon.classList.add('none');
                 }
                 break;
 
