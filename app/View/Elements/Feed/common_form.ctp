@@ -454,13 +454,6 @@ $only_tab_post =
             ?>
             <div class="post-panel-footer">
                 <div class="font_12px none" id="MessageFormFooter">
-                    <a href="#" class="target-show-target-click link-red" target-id="MessageFormImage"
-                       click-target-id="Message__Photo_1">
-                        <button type="button" class="btn pull-left photo-up-btn"><i
-                                class="fa fa-camera post-camera-icon"></i>
-                        </button>
-                    </a>
-
                     <div class="row form-horizontal form-group post-share-range" id="MessageShare">
                         <?=
                         $this->Form->submit(__d('gl', "メッセージする"),
