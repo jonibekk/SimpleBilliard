@@ -33,6 +33,7 @@ else {
         <?= $this->element('footer') ?>
     <?php endif; ?>
 </div>
+<?= $this->element('common_modules') ?>
 <?= $this->element('modals') ?>
 <!-- START fetch modal -->
 <?= $this->fetch('modal') ?>

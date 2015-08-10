@@ -1111,10 +1111,10 @@ $(function () {
     var topBtn = $("#gotop");
     topBtn.css("bottom", "-100px");
     $(window).scroll(function () {
-        if ($(this).scrollTop() > 500) {
+        if ($(this).scrollTop() > 30) {
             if (showFlag == false) {
                 showFlag = true;
-                topBtn.stop().animate({"bottom": "28px"}, 200);
+                topBtn.stop().animate({"bottom": "40px"}, 200);
             }
         } else {
             if (showFlag) {
@@ -1224,18 +1224,18 @@ $(function () {
     )
 });
 
-/*表示件数調整*/
+/*表示件数調整 -mobilesize*/
 
 $(function () {
     $(".click-circle-trigger").on("click", function () {
         var txt = $(this).text();
         if ($(this).is('.on')) {
             $(this).text(txt.replace(/すべて表示/g, "閉じる")).removeClass("on");
-            $(".circleListMore:nth-child(n+10)").css("display", "block");
+            $(".circleListMore:nth-child(n+9)").css("display", "block");
             $(".circle-toggle-icon").removeClass("fa-angle-double-down").addClass("fa-angle-double-up");
         } else {
             $(this).text(txt.replace(/閉じる/g, "すべて表示")).addClass("on");
-            $(".circleListMore:nth-child(n+10)").css("display", "none");
+            $(".circleListMore:nth-child(n+9)").css("display", "none");
             $(".circle-toggle-icon").removeClass("fa-angle-double-up").addClass("fa-angle-double-down");
         }
     });

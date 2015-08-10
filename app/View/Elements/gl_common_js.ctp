@@ -12,7 +12,6 @@
 ?>
 <!-- START app/View/Elements/gl_common_js.ctp -->
 <?php //echo $this->Html->script('vendor/jquery-2.1.0.min');
-echo $this->Html->script('vendor/jquery-1.11.1.min');
 echo $this->Html->script('vendor/bootstrap.min');
 echo $this->Html->script('vendor/jasny-bootstrap.min');
 echo $this->Html->script('vendor/bootstrapValidator.min');
@@ -36,6 +35,7 @@ echo $this->Html->script('vendor/dropzone.js');
 echo $this->Html->script('vendor/jquery.balanced-gallery.min');
 echo $this->Html->script('vendor/imagesloaded.pkgd.min');
 echo $this->Html->script('gl_basic');
+echo $this->Html->script('goalous.min');
 ?>
 <!--suppress JSDuplicatedDeclaration -->
 <script type="text/javascript">
