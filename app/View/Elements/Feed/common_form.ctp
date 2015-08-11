@@ -383,36 +383,18 @@ $only_tab_post =
                 'class'         => 'form-feed-notify'
             ]); ?>
             <div class="panel-body post-share-range-panel-body" id="MessageFormShare">
-                <?php
-                // 共有範囲「公開」のデフォルト選択
-                // 「チーム全体サークル」以外のサークルフィードページの場合は、対象のサークルIDを指定。
-                // それ以外は「チーム全体サークル」(public)を指定する。
-                $public_message_share_default = '';
-                if (isset($current_circle) && $current_circle['Circle']['public_flg'] && !$current_circle['Circle']['team_all_flg']) {
-                    $public_message_share_default = "circle_" . $current_circle['Circle']['id'];
-                }
-
-                // 共有範囲「秘密」のデフォルト選択
-                // 秘密サークルのサークルフィードページの場合は、対象のサークルIDを指定する。
-                $secret_message_share_default = '';
-                if (isset($current_circle) && !$current_circle['Circle']['public_flg']) {
-                    $secret_message_share_default = "circle_" . $current_circle['Circle']['id'];
-                }
-                ?>
-                <div class="col col-xxs-10 col-xs-10 post-share-range-list" id="MessagePublicShareInputWrap"
-                     <?php if ($secret_message_share_default) : ?>style="display:none"<?php endif ?>>
+                <div class="col col-xxs-10 col-xs-10 post-share-range-list" id="MessagePublicShareInputWrap">
                     <?=__d('gl', "To:")?>
                     <?=
                     $this->Form->hidden('share_public', [
                         'id'    => 'select2Member',
-                        'value' => $public_message_share_default,
                         'style' => "width: 85%"
                     ]) ?>
                     <?php $this->Form->unlockField('Message.share_public') ?>
                 </div>
                 <?= $this->Form->hidden('share_range', [
                     'id'    => 'messageShareRange',
-                    'value' => $secret_message_share_default ? 'secret' : 'public',
+                    'value' => 'public',
                 ]) ?>
                 <?php $this->Form->unlockField('Message.share_range') ?>
                 <?php $this->Form->unlockField('socket_id') ?>
@@ -445,13 +427,6 @@ $only_tab_post =
                     <span class="help-block" id="Message__Photo_ValidateMessage"></span>
                 </div>
             </div>
-            <?php if (isset($this->request->params['circle_id'])) {
-                $display = "block";
-            }
-            else {
-                $display = "none";
-            }
-            ?>
             <div class="post-panel-footer">
                 <div class="font_12px none" id="MessageFormFooter">
                     <div class="row form-horizontal form-group post-share-range" id="MessageShare">
