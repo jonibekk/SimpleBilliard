@@ -15,7 +15,7 @@
     <div class="dashboard-circle-list-header">
         <p class="dashboard-circle-list-title circle_heading">Circles</p>
     </div>
-    <div class="dashboard-circle-list-body">
+    <div class="dashboard-circle-list-body" id="jsDashboardCircleListBody">
         <?php if (!empty($my_circles)): ?>
             <?php foreach ($my_circles as $circle): ?>
                 <div class="circle-layout clearfix">
