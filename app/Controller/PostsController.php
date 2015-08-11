@@ -11,6 +11,10 @@ class PostsController extends AppController
     public function beforeFilter()
     {
         parent::beforeFilter();
+        //angularから渡すPOSTのデータでフォーム改ざんチェック用のハッシュ生成ができない為、ここで改ざんチェックを除外指定
+        if ($this->request->params['action'] == 'ajax_put_message') {
+            $this->Security->validatePost = false;
+        }
     }
 
     public function message()
@@ -388,12 +392,12 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($result);
     }
 
-    public function ajax_put_message($post_id, $message)
+    public function ajax_put_message($post_id)
     {
-        $this->_ajaxPreProcess();
+        $this->_ajaxPreProcess('post');
 
         $params['Comment']['post_id'] = $post_id;
-        $params['Comment']['body'] = $message;
+        $params['Comment']['body'] = $this->request->data['body'];
         $comment_id = $this->Post->Comment->add($params);
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MESSAGE, $post_id, $comment_id);
 
@@ -403,7 +407,6 @@ class PostsController extends AppController
         $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
         $pusher->trigger('message-channel-' . $post_id, 'new_message', $convert_data);
         $this->Mixpanel->trackMessage($post_id);
-
         return $this->_ajaxGetResponse($detail_comment);
     }
 
