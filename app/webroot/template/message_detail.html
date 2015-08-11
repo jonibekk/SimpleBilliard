@@ -44,30 +44,29 @@
                         </div>
                     </div>
                 </div>
-
             </div>
 
-            <div class="panel-body ptb_8px plr_11px comment-block">
+
+            <div class="panel-body ptb_8px plr_11px comment-block" id="messageDropArea">
                 <div class="col-xxs-12 box-align feed-contents comment-contents">
                     <img class="lazy comment-img" ng-src="{{auth_info.photo_path}}"/>
 
                     <div class="comment-body">
                         <div class="form-feed-notify ajax-add-comment bv-form">
                             <div class="form-group mlr_-1px required">
-                        <textarea ng-model="message"
-                                  class="form-control tiny-form-text font_12px"
-                                  rows="1" placeholder="返信する" cols="30" init-height="15"
-                                  style="height: 33px; overflow: hidden; word-wrap: break-word; resize: none;"></textarea>
+                                <textarea ng-model="message"
+                                          class="form-control tiny-form-text font_12px"
+                                          rows="1" placeholder="返信する" cols="30" init-height="15"
+                                          style="height: 33px; overflow: hidden; word-wrap: break-word; resize: none;"></textarea>
                             </div>
-                            <!--
-                            <div class="comment-btn">
-                                <a href="#" class="comment-add-pic new-comment-add-pic">
+                            <div id="messageUploadFilePreviewArea"></div>
+                            <div style="height: 0;">
+                                <a href="#" class="link-red" id="messageUploadFileButton">
                                     <button type="button" class="btn pull-left photo-up-btn">
-                                        <i class="fa fa-camera post-camera-icon"></i>
+                                        <i class="fa fa-paperclip post-camera-icon"></i>
                                     </button>
                                 </a>
                             </div>
-                            -->
                             <div class="pull-right">
                                 <div class="submit">
                                     <input ng-click="clickMessage($event)"
@@ -80,6 +79,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 </div>

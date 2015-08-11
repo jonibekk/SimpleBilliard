@@ -3631,6 +3631,13 @@ $(document).ready(function () {
     $uploadFileForm.registerDragDropArea('#PostForm', postParams);
     $uploadFileForm.registerAttachFileButton('#PostUploadFileButton', postParams);
 
+    var messageParams = {
+        formID: 'messageDropArea',
+        previewContainerID: 'messageUploadFilePreviewArea'
+    };
+    $uploadFileForm.registerDragDropArea('#messageDropArea', messageParams);
+    $uploadFileForm.registerAttachFileButton('#messageUploadFileButton', messageParams);
+
     ///////////////////////////////
     // アクションメイン画像（最初の画像選択時)
     ///////////////////////////////

@@ -6,3 +6,5 @@
 <div ng-app="messageApp">
     <div ui-view> ロード中....</div>
 </div>
+
+<?php echo $this->element('file_upload_form') ?>
