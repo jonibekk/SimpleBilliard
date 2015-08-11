@@ -3027,6 +3027,9 @@ $(function () {
             return;
         }
 
+        // メッセージが存在するときだけ、ボタンの次の要素をドロップダウン対象にする
+        $('#click-header-message').next().addClass('dropdown-menu');
+
         // set notify number
         if (parseInt(cnt) <= 20) {
             $bellBox.children('span').html(cnt);
@@ -3082,7 +3085,13 @@ $(document).ready(function () {
 
 $(document).ready(function () {
     var click_cnt = 0;
-    $(document).on("click", "#click-header-message", function () {
+    $(document).on("click", "#click-header-message", function (e) {
+        // 未読件数が 0 件の場合は、直接メッセージ一覧ページに遷移させる
+        if (getMessageNotifyCnt() == 0) {
+            location.href = cake.url.message_list;
+            return;
+        }
+
         initTitle();
         updateMessageListBox();
     });
