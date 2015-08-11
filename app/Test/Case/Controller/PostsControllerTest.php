@@ -100,7 +100,7 @@ class PostsControllerTest extends ControllerTestCase
     {
         $this->_getPostsCommonMock();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/posts/ajax_put_message/1/2', ['method' => 'GET']);
+        $this->testAction('/posts/ajax_put_message/1/', ['method' => 'POST','data'=>['body'=>'test']]);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
