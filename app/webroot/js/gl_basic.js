@@ -3475,15 +3475,17 @@ $(document).ready(function () {
     /**
      * ドラッグ＆ドロップ対象エリアを設定する
      *
-     * selector : string  ドロップエリアにする要素のセレクタ
+     * selector : string  (* 必須) ドロップエリアにする要素のセレクタ
      * params: object {
-     *   formID: string|function  *必須 アップロードしたファイルIDを hidden で追加するフォームのID
-     *   previewContainerID: string|function  *必須  プレビューを表示するコンテナ要素のID
+     *   formID: string|function  (* 必須) アップロードしたファイルIDを hidden で追加するフォームのID
+     *   previewContainerID: string|function  (* 必須) プレビューを表示するコンテナ要素のID
      *   beforeAddedFile: function  コールバック関数
      *   beforeAccept: function   コールバック関数
      *   afterAccept: function  コールバック関数
      *   afterRemoveFile: function  コールバック関数
      *   afterSuccess: function   コールバック関数
+     *   beforeSending: function コールバック関数
+     *   afterQueueComplete: function コールバック関数
      * }
      * dzOptions: object {
      *    ...   Dropzone のオプション（デフォルトの設定を上書きする場合に指定）
@@ -3547,9 +3549,12 @@ $(document).ready(function () {
         $uploadFileForm._params.formID = formID;
         $uploadFileForm._params.previewContainerID = previewContainerID;
 
-        // Dropzone 設定
+        // Dropzone 設定を上書き
         // （Dropzone インスタンスは常に１つ）
         Dropzone.instances[0].options = $.extend({}, $uploadFileForm._dzDefaultOptions, dzOptions || {});
+        // acceptedFiles の設定は上書きされないので手動で設定
+        Dropzone.instances[0].hiddenFileInput.setAttribute("accept", Dropzone.instances[0].options.acceptedFiles);
+
 
         // コールバック関数登録
         var empty = function () {
