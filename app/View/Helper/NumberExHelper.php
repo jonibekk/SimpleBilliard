@@ -30,30 +30,35 @@ class NumberExHelper extends AppHelper
                 'convert_start' => 0,
             ], $options);
 
-        if ($options['convert_start'] <= $num && $num < 1000) {
+        // convert_start よりも小さい場合は何もしない
+        if ($num < $options['convert_start']) {
+            return $num;
+        }
+
+        if ($num < 1000) {
             // pass
         }
-        elseif ($options['convert_start'] <= $num && $num < 10000) {
+        elseif ($num < 10000) {
             // "1.2K"
             $num = sprintf("%.1fK", round($num / 1000, 1, PHP_ROUND_HALF_DOWN));
         }
-        elseif ($options['convert_start'] <= $num && $num < 1000000) {
+        elseif ($num < 1000000) {
             // "12K"
             $num = sprintf("%dK", floor($num / 1000));
         }
-        elseif ($options['convert_start'] <= $num && $num < 10000000) {
+        elseif ($num < 10000000) {
             // "1.2M"
             $num = sprintf("%.1fM", round($num / 1000000, 1, PHP_ROUND_HALF_DOWN));
         }
-        elseif ($options['convert_start'] <= $num && $num < 1000000000) {
+        elseif ($num < 1000000000) {
             // "12M"
             $num = sprintf("%dM", floor($num / 1000000));
         }
-        elseif ($options['convert_start'] <= $num && $num < 10000000000) {
+        elseif ($num < 10000000000) {
             // "1.2G"
             $num = sprintf("%.1fG", round($num / 1000000000, 1, PHP_ROUND_HALF_DOWN));
         }
-        elseif ($options['convert_start'] <= $num && $num < 1000000000000) {
+        elseif ($num < 1000000000000) {
             // "12G"
             $num = sprintf("%dG", floor($num / 1000000000));
         }
