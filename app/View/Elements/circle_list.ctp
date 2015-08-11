@@ -15,43 +15,41 @@
     <div class="dashboard-circle-list-header">
         <p class="dashboard-circle-list-title circle_heading">Circles</p>
     </div>
-    <div class="dashboard-circle-list-body" id="jsDashboardCircleListBody">
+    <div class="dashboard-circle-list-body" id="jsDashboardCircleListBo">
         <?php if (!empty($my_circles)): ?>
             <?php foreach ($my_circles as $circle): ?>
-                <div class="circle-layout clearfix">
-                    <a class="circle-link"
+                <div class="dashboard-circle-list-row-wrap">
+                    <a class="dashboard-circle-list-row"
                        href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle['Circle']['id']]) ?>">
-                        <div class="circle-icon_box">
-                            <?=
-                            $this->Html->image('ajax-loader.gif',
-                                               [
-                                                   'class'         => 'lazy',
-                                                   'data-original' => $this->Upload->uploadUrl($circle, 'Circle.photo',
-                                                                                               ['style' => 'small']),
-                                                   'width'         => '16px',
-                                                   'height'        => '16px',
-                                                   'error-img'     => "/img/no-image-circle.jpg",
-                                               ]
-                            )
-                            ?>
-                        </div>
-                        <p class="dashboard-circle-name-box circle-name_box" title="<?= h($circle['Circle']['name']) ?>"><?= h($circle['Circle']['name']) ?></p>
-                        <span class="dashboard-circle-count-box circle-count_box count-value">
+                        <?=
+                        $this->Html->image('ajax-loader.gif',
+                                           [
+                                               'class'         => 'lazy dashboard-circle-list-pic',
+                                               'data-original' => $this->Upload->uploadUrl($circle, 'Circle.photo',
+                                                                                           ['style' => 'small']),
+                                               'width'         => '16px',
+                                               'height'        => '16px',
+                                               'error-img'     => "/img/no-image-circle.jpg",
+                                           ]
+                        )
+                        ?>
+                        <p class="dashboard-circle-name-box" title="<?= h($circle['Circle']['name']) ?>"><?= h($circle['Circle']['name']) ?></p>
+                        <span class="dashboard-circle-count-box">
                             <?php if ($circle['CircleMember']['unread_count'] > 9): ?>
                                 9+
                             <?php elseif ($circle['CircleMember']['unread_count'] > 0): ?>
                                 <?= $circle['CircleMember']['unread_count'] ?>
                             <?php endif; ?>
+
+                            <?php if ($circle['CircleMember']['admin_flg']): ?>
+                                <a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_get_edit_modal', 'circle_id' => $circle['Circle']['id']]) ?>"
+                                   class="dashboard-circle-list-edit-wrap modal-ajax-get-circle-edit">
+                                   <i class="fa fa-cog dashboard-circle-list-edit"></i>
+                               </a>
+                            <?php endif; ?>
+                            
                         </span>
                     </a>
-
-                    <div class="circle-function_box clearfix">
-                        <?php if ($circle['CircleMember']['admin_flg']): ?>
-                            <a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_get_edit_modal', 'circle_id' => $circle['Circle']['id']]) ?>"
-                               class="modal-ajax-get-circle-edit font_lightGray-gray btn-circle-function"><i
-                                    class="fa fa-cog circle-function"></i></a>
-                        <?php endif; ?>
-                    </div>
                 </div>
             <?php endforeach ?>
         <?php endif; ?>
