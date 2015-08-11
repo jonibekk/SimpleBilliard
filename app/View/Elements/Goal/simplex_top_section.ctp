@@ -29,7 +29,7 @@
     <div class="goal-detail-numbers-wrap">
         <div class="goal-detail-numbers-action">
             <div class="goal-detail-numbers-action-counts">
-                <?= h($action_count) ?>
+                <?= h($this->NumberEx->formatHumanReadable($action_count, ['convert_start' => 10000])) ?>
             </div>
             <span class="goal-detail-numbers-category-action">
                 <?= __d('gl', 'アクション') ?>
@@ -37,7 +37,7 @@
         </div>
         <div class="goal-detail-numbers-member">
             <div class="goal-detail-numbers-member-counts">
-                <?= h($member_count) ?>
+                <?= h($this->NumberEx->formatHumanReadable($member_count, ['convert_start' => 10000])) ?>
             </div>
             <span class="goal-detail-numbers-category-member">
                 <?= __d('gl', 'メンバー') ?>
@@ -45,7 +45,7 @@
         </div>
         <div class="goal-detail-numbers-follower">
             <div class="goal-detail-numbers-follower-counts">
-                <?= h($follower_count) ?>
+                <?= h($this->NumberEx->formatHumanReadable($follower_count, ['convert_start' => 10000])) ?>
             </div>
             <span class="goal-detail-numbers-category-follower">
                 <?= __d('gl', 'フォロワー') ?>

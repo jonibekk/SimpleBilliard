@@ -149,7 +149,8 @@ echo $this->Html->script('goalous.min');
             goal_members: "<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_members']) ?>",
             goal_key_results: "<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_key_results']) ?>",
             upload_file: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_upload_file']) ?>",
-            remove_file: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_remove_file']) ?>"
+            remove_file: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_remove_file']) ?>",
+            message_list: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'message_list']) ?>"
         },
         data: {
             a: <?=isset($select2_default)?$select2_default:"[]"?>,
@@ -198,6 +199,7 @@ echo $this->Html->script('goalous.min');
             i: "<?=$this->Session->read('current_team_id')?>",
             j: "<?= isset($posts)?count($posts):null?>",
             k: <?=MY_PREVIOUS_GOALS_DISPLAY_NUMBER?>,
+            csrf_token:<?= json_encode($this->Session->read('_Token'))?>,
             l: function (element, callback) {
                 var data = [
                     {
