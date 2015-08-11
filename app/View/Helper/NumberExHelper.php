@@ -17,7 +17,7 @@ class NumberExHelper extends AppHelper
      *   1200000000  -> 1.2G
      *   12000000000 -> 12G
      *
-     * @param       $num  フォーマットする数値
+     * @param int   $num  フォーマットする数値
      * @param array $options
      *                    convert_start: int  $num がこの値より大きな数値の場合だけフォーマットする
      *
