@@ -103,8 +103,16 @@ message_app.controller(
             $scope.clickMessage = function (event) {
                 event.target.disabled = 'disabled'
                 var request = {
-                    method: 'GET',
-                    url: cake.url.ai + $stateParams.post_id + '/' + $scope.message
+                    method: 'POST',
+                    url: cake.url.ai + $stateParams.post_id,
+                    data: $.param({
+                        data: {
+                            body: $scope.message,
+                            _Token: {key: cake.data.csrf_token.key},
+                        },
+                        _method: "POST"
+                    }),
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
                 };
                 $http(request).then(function (response) {
                     event.target.disabled = ''

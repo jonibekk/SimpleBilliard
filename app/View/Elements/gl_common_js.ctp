@@ -199,6 +199,7 @@ echo $this->Html->script('goalous.min');
             i: "<?=$this->Session->read('current_team_id')?>",
             j: "<?= isset($posts)?count($posts):null?>",
             k: <?=MY_PREVIOUS_GOALS_DISPLAY_NUMBER?>,
+            csrf_token:<?= json_encode($this->Session->read('_Token'))?>,
             l: function (element, callback) {
                 var data = [
                     {
