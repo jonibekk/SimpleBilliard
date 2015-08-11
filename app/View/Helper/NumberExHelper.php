@@ -17,12 +17,24 @@ class NumberExHelper extends AppHelper
      *   1200000000  -> 1.2G
      *   12000000000 -> 12G
      *
-     * @param $num
+     * @param int   $num  フォーマットする数値
+     * @param array $options
+     *                    convert_start: int  $num がこの値より大きな数値の場合だけフォーマットする
      *
      * @return string
      */
-    public function formatHumanReadable($num)
+    public function formatHumanReadable($num, $options = [])
     {
+        $options = array_merge(
+            [
+                'convert_start' => 0,
+            ], $options);
+
+        // convert_start よりも小さい場合は何もしない
+        if ($num < $options['convert_start']) {
+            return $num;
+        }
+
         if ($num < 1000) {
             // pass
         }
