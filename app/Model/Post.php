@@ -2,6 +2,7 @@
 App::uses('AppModel', 'Model');
 App::uses('UploadHelper', 'View/Helper');
 App::uses('TimeExHelper', 'View/Helper');
+App::uses('TextExHelper', 'View/Helper');
 App::uses('View', 'View');
 
 /**
@@ -1279,6 +1280,7 @@ class Post extends AppModel
     {
         $upload = new UploadHelper(new View());
         $time = new TimeExHelper(new View());
+        $text_ex = new TextExHelper(new View());
 
         foreach ($data as $key => $item) {
             if (empty($item['Comment']) === false) {
@@ -1289,6 +1291,10 @@ class Post extends AppModel
             $data[$key]['User']['photo_path'] =
                 $upload->uploadUrl($data[$key]['User'], 'User.photo', ['style' => 'medium_large']);
             $data[$key]['Post']['created'] = $time->elapsedTime(h($data[$key]['Post']['created']));
+        }
+        //auto link処理
+        foreach ($data as $key => $item) {
+            $data[$key]['Post']['body'] = $text_ex->autoLink($item['Post']['body']);
         }
 
         return $data;
