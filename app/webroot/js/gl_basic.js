@@ -39,6 +39,21 @@ function bindCommentBalancedGallery($obj) {
         //viewportWidth: 482                // the assumed width of the gallery, defaults to the containing element's width
     });
 };
+
+/**
+ * selector の要素に Control(Command) + Enter 押下時のアクションを設定する
+ *
+ * @param selector
+ * @param callback Control + Enter が押された時に実行されるコールバック関数
+ */
+var bindCtrlEnterAction = function (selector, callback) {
+    $(selector).on('keydown', function (e) {
+        if ((e.metaKey || e.ctrlKey) && e.keyCode == 13) {
+            callback.call(this, e);
+        }
+    })
+};
+
 $(window).load(function () {
     bindPostBalancedGallery($('.post_gallery'));
     bindCommentBalancedGallery($('.comment_gallery'));
@@ -527,7 +542,43 @@ $(document).ready(function () {
         $('#FeedMoreReadLink').trigger('click');
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Ctrl(Command) + Enter 押下時のコールバック
+    ///////////////////////////////////////////////////////////////////////////
 
+    // アクションフォーム
+    bindCtrlEnterAction('#CommonActionDisplayForm', function (e) {
+        $('#CommonActionSubmit').trigger('click');
+    });
+
+    // 投稿フォーム
+    // keyup 時に bootstrap validator の処理が入ってボタンの有効状態が変わってしまうので
+    // 少し遅らせてで処理を実行する
+    bindCtrlEnterAction('#PostDisplayForm', function (e) {
+        var $submit = $('#PostSubmit');
+        var func;
+
+        // submit ボタンが無効状態の場合
+        // keyup 時に bootstrap validator の処理でボタンが有効化されてしまうので、
+        // 再度無効にする処理を行う
+        if ($submit.is(':disabled')) {
+            func = function () {
+                $submit.attr('disabled', 'disabled');
+            };
+        }
+        // submit ボタンが有効状態の場合
+        else {
+            func = function () {
+                $submit.trigger('click');
+            };
+        }
+
+        $(this).one('keyup', function () {
+            setTimeout(function () {
+                func.call();
+            }, 100)
+        });
+    });
 });
 function imageLazyOn($elm_obj) {
     var lazy_option = {
