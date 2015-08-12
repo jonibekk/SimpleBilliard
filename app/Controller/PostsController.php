@@ -53,7 +53,15 @@ class PostsController extends AppController
             }
         }
         $message_list = $this->Post->convertData($result);
-        return $this->_ajaxGetResponse($message_list);
+        $res = [
+            'auth_info'    => [
+                'user_id'    => $this->Auth->user('id'),
+                'language'   => $this->Auth->user('language'),
+                'photo_path' => $this->Post->getPhotoPath($this->Auth->user()),
+            ],
+            'message_list' => $message_list,
+        ];
+        return $this->_ajaxGetResponse($res);
     }
 
     /**
