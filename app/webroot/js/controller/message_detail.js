@@ -126,12 +126,17 @@ message_app.controller(
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
                 };
 
-
                 $http(request).then(function (response) {
-                    console.log(response);
                     event.target.disabled = '';
                     message_scroll($scope.message_list.length);
                     $scope.message = "";
+
+                    // プレビューエレメント配下の子エレメントを削除する
+                    var file_preview_element = document.getElementById("messageUploadFilePreviewArea");
+                    for (var i =file_preview_element.childNodes.length-1; i>=0; i--) {
+                        file_preview_element.removeChild(file_preview_element.childNodes[i]);
+                    }
+
                 });
 
             };
