@@ -10,16 +10,28 @@
         <ul class="notify-page-cards" role="menu" ng-repeat="item in message_list | orderBy:'Post.modified':'DESC'">
             <li class="notify-card-list">
                 <a href="/posts/message#/{{item.Post.id}}" class="col col-xxs-12 notify-card-link">
-                    <img class="pull-left notify-card-pic" ng-src="{{item.User.photo_path}}"/>
+                    <div style="width:20%; overflow:hidden;" class="pull-left">
+                        <img style="width:24px; height:24px;" class="notify-card-pic"
+                             ng-repeat="shareUser in item.share_users | limitTo:4" ng-src="{{shareUser.photo_path}}"/>
 
+                    </div>
                     <div class="notify-contents">
                         <div class="col col-xxs-12 notify-card-head">
-                            <span
-                                class="font-heading">{{item.User.display_username}} +{{item.PostShareUser.length}}</span>
+                            <span class="font-heading">
+                                <div style="display:inline-block; max-width:100%; overflow:hidden; text-overflow: ellipsis; white-space: nowrap;">
+
+                                    <span ng-repeat="shareUser in item.share_users | limitTo: name_list_max">
+                                        {{shareUser.first_name}}<span ng-if="!$last">,</span>
+                                    </span>
+                                    <span ng-if="item.PostShareUser.length - name_list_max > 0">+{{item.PostShareUser.length - name_list_max}}</span>
+                                </div>
+                            </span>
                         </div>
                         <div class="col col-xxs-12 notify-text notify-line-number notify-card-text"
                              id="CommentTextBody_67">
-                            <i class="fa font_bold"></i> {{item.Post.body}}
+                            <span ng-if="item.User.id != auth_info.user_id">{{item.User.display_first_name}}</span>
+                            <span ng-if="item.User.id == auth_info.user_id">あなた</span>
+                            : {{item.Post.body}}
                         </div>
                         <p class="notify-card-aside"><span ng-bind-html="item.Post.created"></span></p>
                     </div>
