@@ -162,7 +162,7 @@
                                 <span>0</span><sup class="notify-plus none">+</sup>
                             </div>
                         </a>
-                        <div class="frame-arrow-notify dropdown-menu dropdown-menu-right notify-dropdown-area">
+                        <div class="frame-arrow-notify dropdown-menu-right notify-dropdown-area none">
                             <ul class="header-nav-notify-contents" id="message-dropdown" role="menu">
                                 <li class="notify-card-empty" id="messageNotifyCardEmpty">
                                     <i class="fa fa-smile-o font_33px mr_8px"></i><span

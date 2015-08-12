@@ -48,7 +48,7 @@
         </div>
         <div class="profile-user-numbers-like">
             <div class="profile-user-numbers-like-counts">
-                <?= h($this->NumberEx->formatHumanReadable($like_count)) ?>
+                <?= h($this->NumberEx->formatHumanReadable($like_count, ['convert_start' => 10000])) ?>
             </div>
             <span class="profile-user-numbers-category-like">
                 <?= __d('gl', 'いいね') ?>
