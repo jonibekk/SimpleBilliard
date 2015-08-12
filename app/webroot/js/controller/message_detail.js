@@ -44,6 +44,9 @@ message_app.controller(
 
         } else {
 
+            //メッセージ通知件数をカウント
+            updateMessageNotifyCnt();
+
             var message_list = [];
             var first_data = {
                 Comment: {
