@@ -387,7 +387,16 @@ class PostsController extends AppController
         $this->Post->Comment->CommentRead->redAllByPostId($post_id);
 
         $message_list = $this->Post->Comment->getPostsComment($post_id, $limit, $page_num, 'desc');
+        foreach ($message_list as $key => $item) {
+            if (count($item['CommentFile']) > 0) {
+                $this->set('files', $item['CommentFile']);
+                $response = $this->render('Feed/attached_files');
+                $html = $response->__toString();
+                $message_list[$key]['AttachedFileHtml'] = $html;
+            }
+        }
         $convert_msg_data = $this->Post->Comment->convertData($message_list);
+
         $result = ['message_list' => $convert_msg_data];
         return $this->_ajaxGetResponse($result);
     }
