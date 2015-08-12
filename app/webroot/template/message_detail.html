@@ -28,9 +28,9 @@
                             <div class="col col-xxs-10 showmore font_14px font_verydark box-align">
                                 <div class="font_12px font_verydark">
                                     <span class="font_bold">{{item.User.display_username}}</span>
-                        <span class="font_lightgray" style="position:absolute; right:10px;">
-                            {{item.Comment.created * 1000 | date:'MM/dd HH:mm'}}
-                        </span>
+                                    <span class="font_lightgray" style="position:absolute; right:10px;">
+                                        {{item.Comment.created * 1000 | date:'MM/dd HH:mm'}}
+                                    </span>
                                 </div>
                                 <div class="comment-text font_12px">{{item.Comment.body}}</div>
                                 <div class="font_12px">
@@ -46,7 +46,6 @@
                 </div>
             </div>
 
-
             <div class="panel-body ptb_8px plr_11px comment-block" id="messageDropArea">
                 <div class="col-xxs-12 box-align feed-contents comment-contents">
                     <img class="lazy comment-img" ng-src="{{auth_info.photo_path}}"/>
@@ -60,7 +59,7 @@
                                           style="height: 33px; overflow: hidden; word-wrap: break-word; resize: none;"></textarea>
                             </div>
                             <div id="messageUploadFilePreviewArea"></div>
-                            <div style="height: 0;">
+                            <div style="height: 0; width: 45px">
                                 <a href="#" class="link-red" id="messageUploadFileButton">
                                     <button type="button" class="btn pull-left photo-up-btn">
                                         <i class="fa fa-paperclip post-camera-icon"></i>
