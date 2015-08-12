@@ -5,7 +5,8 @@ var message_app = angular.module(
         'ui.bootstrap',
         'jlareau.pnotify',
         'pusher-angular',
-        'infinite-scroll'
+        'infinite-scroll',
+        'ngSanitize'
     ]).run([
         '$rootScope',
         '$state',

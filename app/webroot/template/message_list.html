@@ -19,7 +19,7 @@
                         </div>
                         <div class="col col-xxs-12 notify-text notify-line-number notify-card-text"
                              id="CommentTextBody_67">
-                            <i class="fa font_bold"></i> {{item.Post.body}}
+                            <i class="fa font_bold"></i> <span ng-bind-html="item.Post.body"></span>
                         </div>
                         <p class="notify-card-aside"><span ng-bind-html="item.Post.created"></span></p>
                     </div>

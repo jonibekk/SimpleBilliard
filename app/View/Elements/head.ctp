@@ -56,11 +56,12 @@
     echo $this->Html->script('vendor/angular/angular-translate-loader-static-files.min');
     echo $this->Html->script('vendor/angular/ui-bootstrap-tpls-0.13.0.min');
     echo $this->Html->script('vendor/angular/angular-pnotify');
+    echo $this->Html->script('vendor/angular/angular-sanitize.min');
 
     ?>
     <?php
-        // todo pre_load_js.ctpとしてまとめる
-        echo $this->Html->script('vendor/jquery-1.11.1.min');
+    // todo pre_load_js.ctpとしてまとめる
+    echo $this->Html->script('vendor/jquery-1.11.1.min');
     ?>
     <?php if ($this->request->params['action'] === 'display'): //上部のタブメニューの表示切替えの為?>
         <style>
@@ -68,22 +69,23 @@
                 .container {
                     margin-top: 50px;
                 }
+
                 #js-left-side-container {
                     top: 100px;
                 }
             }
         </style>
         <script type="text/javascript">
-        if (window.matchMedia('screen and (max-width:991px)').matches) {
-            $(function(){
-                $(window).scroll(function () {
-                    if ($(this).scrollTop() > 1) {
-                        $("#js-left-side-container").stop().animate({"top": "60px"},200);
-                    } else {
-                        $("#js-left-side-container").stop().animate({"top": "100px"},100);
-                    }
+            if (window.matchMedia('screen and (max-width:991px)').matches) {
+                $(function () {
+                    $(window).scroll(function () {
+                        if ($(this).scrollTop() > 1) {
+                            $("#js-left-side-container").stop().animate({"top": "60px"}, 200);
+                        } else {
+                            $("#js-left-side-container").stop().animate({"top": "100px"}, 100);
+                        }
+                    });
                 });
-            });
             } else {
                 // Nothing
             }
