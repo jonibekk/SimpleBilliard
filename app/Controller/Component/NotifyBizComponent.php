@@ -991,10 +991,12 @@ class NotifyBizComponent extends Component
      */
     function getCountNewMessageNotification()
     {
-        return $this->GlRedis->getCountOfNewMessageNotification(
+        $res = $this->GlRedis->getCountOfNewMessageNotification(
             $this->NotifySetting->current_team_id,
             $this->NotifySetting->my_uid
         );
+
+        return $res;
     }
 
     /**

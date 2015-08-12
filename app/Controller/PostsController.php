@@ -425,6 +425,10 @@ class PostsController extends AppController
         if ($res === true) {
             $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
             $pusher->trigger('message-channel-' . $post_id, 'read_message', $comment_id);
+            //通知の削除が通知データ作成以前に行われてしまう為、ある程度待って削除処理実行
+            sleep(5);
+            $this->NotifyBiz->removeMessageNotification($post_id);
+            $this->NotifyBiz->updateCountNewMessageNotification();
         }
         return $this->_ajaxGetResponse($res);
     }
