@@ -2929,121 +2929,129 @@ $(function () {
     setNotifyCntToBellAndTitle(cake.new_notify_cnt);
     setNotifyCntToMessageAndTitle(cake.new_notify_message_cnt);
 
-    function setIntervalToGetNotifyCnt(sec) {
-        setInterval(function () {
-            updateNotifyCnt();
-            updateMessageNotifyCnt();
-        }, sec * 1000);
-    }
+});
 
-    function updateNotifyCnt() {
+function setIntervalToGetNotifyCnt(sec) {
+    setInterval(function () {
+        updateNotifyCnt();
+        updateMessageNotifyCnt();
+    }, sec * 1000);
+}
 
-        var url = cake.url.f;
-        $.ajax({
-            type: 'GET',
-            url: url,
-            async: true,
-            success: function (new_notify_count) {
-                if (new_notify_count != 0) {
-                    setNotifyCntToBellAndTitle(new_notify_count);
-                }
-            },
-            error: function () {
+function updateNotifyCnt() {
+
+    var url = cake.url.f;
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: true,
+        success: function (new_notify_count) {
+            if (new_notify_count != 0) {
+                setNotifyCntToBellAndTitle(new_notify_count);
             }
-        });
-        return false;
-    }
+        },
+        error: function () {
+        }
+    });
+    return false;
+}
 
-    function updateMessageNotifyCnt() {
+function updateMessageNotifyCnt() {
 
-        var url = cake.url.af;
-        $.ajax({
-            type: 'GET',
-            url: url,
-            async: true,
-            success: function (new_notify_count) {
-                if (new_notify_count != 0) {
-                    setNotifyCntToMessageAndTitle(new_notify_count);
-                }
-            },
-            error: function () {
+    var url = cake.url.af;
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: true,
+        success: function (new_notify_count) {
+            setNotifyCntToMessageAndTitle(new_notify_count);
+            if (new_notify_count != 0) {
             }
-        });
-        return false;
-    }
-
-    function setNotifyCntToBellAndTitle(cnt) {
-        var $bellBox = getBellBoxSelector();
-        var $title = $("title");
-        var $originTitle = $("title").attr("origin-title");
-        var existingBellCnt = parseInt($bellBox.children('span').html());
-        var cntIsTooMuch = '20+';
-
-        if (cnt == 0) {
-            return;
+        },
+        error: function () {
         }
+    });
+    return false;
+}
 
-        // set notify number
-        if (parseInt(cnt) <= 20) {
-            $bellBox.children('span').html(cnt);
-            $bellBox.children('sup').addClass('none');
-            $title.text("(" + cnt + ")" + $originTitle);
-        } else {
-            $bellBox.children('span').html(20);
-            $bellBox.children('sup').removeClass('none');
-            $title.text("(" + cntIsTooMuch + ")" + $originTitle);
-        }
+function setNotifyCntToBellAndTitle(cnt) {
+    var $bellBox = getBellBoxSelector();
+    var $title = $("title");
+    var $originTitle = $("title").attr("origin-title");
+    var existingBellCnt = parseInt($bellBox.children('span').html());
+    var cntIsTooMuch = '20+';
 
-        if (existingBellCnt == 0) {
-            displaySelectorFluffy($bellBox);
-        }
+    if (cnt == 0) {
         return;
     }
 
-    function setNotifyCntToMessageAndTitle(cnt) {
-        var $bellBox = getMessageBoxSelector();
-        var $title = $("title");
-        var $originTitle = $("title").attr("origin-title");
-        var existingBellCnt = parseInt($bellBox.children('span').html());
-        var cntIsTooMuch = '20+';
+    // set notify number
+    if (parseInt(cnt) <= 20) {
+        $bellBox.children('span').html(cnt);
+        $bellBox.children('sup').addClass('none');
+        $title.text("(" + cnt + ")" + $originTitle);
+    } else {
+        $bellBox.children('span').html(20);
+        $bellBox.children('sup').removeClass('none');
+        $title.text("(" + cntIsTooMuch + ")" + $originTitle);
+    }
 
-        if (cnt == 0) {
-            return;
-        }
+    if (existingBellCnt == 0) {
+        displaySelectorFluffy($bellBox);
+    }
+    return;
+}
 
+function setNotifyCntToMessageAndTitle(cnt) {
+    var $bellBox = getMessageBoxSelector();
+    var $title = $("title");
+    var $originTitle = $("title").attr("origin-title");
+    var existingBellCnt = parseInt($bellBox.children('span').html());
+    var cntIsTooMuch = '20+';
+
+    if (cnt != 0) {
         // メッセージが存在するときだけ、ボタンの次の要素をドロップダウン対象にする
         $('#click-header-message').next().addClass('dropdown-menu');
-
-        // set notify number
-        if (parseInt(cnt) <= 20) {
-            $bellBox.children('span').html(cnt);
-            $bellBox.children('sup').addClass('none');
-
-            $title.text("(" + cnt + ")" + $originTitle);
-        } else {
-            $bellBox.children('span').html(20);
-            $bellBox.children('sup').removeClass('none');
-            $title.text("(" + cntIsTooMuch + ")" + $originTitle);
-        }
-
-        if (existingBellCnt == 0) {
-            displaySelectorFluffy($bellBox);
-        }
-        return;
+    }
+    else {
+        // メッセージが存在するときだけ、ボタンの次の要素をドロップダウン対象にする
+        $('#click-header-message').next().removeClass('dropdown-menu');
     }
 
-    function displaySelectorFluffy(selector) {
-        var i = 0.2;
-        var roop = setInterval(function () {
-            selector.css("opacity", i);
-            i = i + 0.2;
-            if (i > 1) {
-                clearInterval(roop);
-            }
-        }, 100);
+    // set notify number
+    if (parseInt(cnt) == 0) {
+        $bellBox.children('span').html(cnt);
+        $bellBox.children('sup').addClass('none');
+        $title.text($originTitle);
+    } else if (parseInt(cnt) <= 20) {
+        $bellBox.children('span').html(cnt);
+        $bellBox.children('sup').addClass('none');
+        $title.text("(" + cnt + ")" + $originTitle);
+    } else {
+        $bellBox.children('span').html(20);
+        $bellBox.children('sup').removeClass('none');
+        $title.text("(" + cntIsTooMuch + ")" + $originTitle);
     }
 
-});
+    if (existingBellCnt == 0 && cnt >= 1) {
+        displaySelectorFluffy($bellBox);
+    } else if (existingBellCnt >= 1 && cnt == 0) {
+        $bellBox.css("opacity", 0);
+    }
+
+    return;
+}
+
+function displaySelectorFluffy(selector) {
+    var i = 0.2;
+    var roop = setInterval(function () {
+        selector.css("opacity", i);
+        i = i + 0.2;
+        if (i > 1) {
+            clearInterval(roop);
+        }
+    }, 100);
+}
 
 $(document).ready(function () {
     var click_cnt = 0;
