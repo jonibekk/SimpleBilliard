@@ -32,7 +32,7 @@
                             {{item.Comment.created * 1000 | date:'MM/dd HH:mm'}}
                         </span>
                                 </div>
-                                <div class="comment-text font_12px">{{item.Comment.body}}</div>
+                                <div class="comment-text font_12px" ng-bind-html="item.Comment.body"></div>
                                 <div class="font_12px">
                                     <a href="{{item.get_red_user_model_url}}"
                                        class="modal-ajax-get font_lightgray">

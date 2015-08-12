@@ -13,7 +13,6 @@ message_list_app.controller(
         $sce
     ){
         angular.forEach(getMessageList.message_list, function (val, key) {
-            this[key].Post.created = $sce.trustAsHtml(val.Post.created);
 
             // 自分以外のメッセージ共有者の名前と画像
             var share_users = [];
