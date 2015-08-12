@@ -101,24 +101,39 @@ message_app.controller(
 
             // メッセージを送信する
             $scope.clickMessage = function (event) {
-                event.target.disabled = 'disabled'
+
+                event.target.disabled = 'disabled';
+
+                var file_redis_key = [];
+                var file_ids = document.getElementsByName("data[file_id][]");
+                if (file_ids.length > 0) {
+                    angular.forEach(file_ids, function (fid) {
+                        this.push(fid.value);
+                    }, file_redis_key);
+                }
+
                 var request = {
                     method: 'POST',
                     url: cake.url.ai + $stateParams.post_id,
                     data: $.param({
                         data: {
                             body: $scope.message,
-                            _Token: {key: cake.data.csrf_token.key},
+                            file_redis_key: file_redis_key,
+                            _Token: {key: cake.data.csrf_token.key}
                         },
                         _method: "POST"
                     }),
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
                 };
+
+
                 $http(request).then(function (response) {
-                    event.target.disabled = ''
+                    console.log(response);
+                    event.target.disabled = '';
                     message_scroll($scope.message_list.length);
                     $scope.message = "";
                 });
+
             };
 
             var limit = 10;

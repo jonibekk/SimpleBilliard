@@ -398,7 +398,9 @@ class PostsController extends AppController
 
         $params['Comment']['post_id'] = $post_id;
         $params['Comment']['body'] = $this->request->data['body'];
+        $params['file_id'] = $this->request->data['file_redis_key'];
         $comment_id = $this->Post->Comment->add($params);
+
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MESSAGE, $post_id, $comment_id);
 
         $detail_comment = $this->Post->Comment->getComment($comment_id);
