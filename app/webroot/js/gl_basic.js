@@ -3664,12 +3664,18 @@ $(document).ready(function () {
     $uploadFileForm.registerDragDropArea('#PostForm', postParams);
     $uploadFileForm.registerAttachFileButton('#PostUploadFileButton', postParams);
 
+    ///////////////////////////////
+    // メッセンジャーフォーム
+    ///////////////////////////////
     var messageParams = {
         formID: 'messageDropArea',
         previewContainerID: 'messageUploadFilePreviewArea'
     };
-    $uploadFileForm.registerDragDropArea('#messageDropArea', messageParams);
-    $uploadFileForm.registerAttachFileButton('#messageUploadFileButton', messageParams);
+    var messageDzOptions = {
+        maxFiles: 1
+    };
+    $uploadFileForm.registerDragDropArea('#messageDropArea', messageParams, messageDzOptions);
+    $uploadFileForm.registerAttachFileButton('#messageUploadFileButton', messageParams, messageDzOptions);
 
     ///////////////////////////////
     // アクションメイン画像（最初の画像選択時)
