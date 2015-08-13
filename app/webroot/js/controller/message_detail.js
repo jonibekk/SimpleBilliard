@@ -121,6 +121,7 @@ message_app.controller(
                     event.target.disabled = ''
                     message_scroll($scope.message_list.length);
                     $scope.message = "";
+                    document.getElementById("message_text_input").focus();
                 });
             };
 
