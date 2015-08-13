@@ -92,6 +92,9 @@ message_app.controller(
                 $http(request).then(function (response) {
                 });
 
+                //console.log(data);
+                data.AttachedFileHtml = $sce.trustAsHtml(data.AttachedFileHtml)
+
                 // メッセージ表示
                 $scope.$apply($scope.message_list.push(data));
                 message_scroll(current_id);

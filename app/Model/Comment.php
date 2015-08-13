@@ -302,6 +302,14 @@ class Comment extends AppModel
                         'MyCommentLike.team_id' => $this->current_team_id,
                     ]
                 ],
+                'CommentFile'   => [
+                    'order'        => ['CommentFile.index_num asc'],
+                    'AttachedFile' => [
+                        'User' => [
+                            'fields' => $this->User->profileFields
+                        ]
+                    ]
+                ]
             ],
         ];
         $res = $this->find('first', $options);
