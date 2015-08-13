@@ -10,6 +10,7 @@
  * @var $member_count
  * @var $follower_count
  * @var $is_leader
+ * @var $is_coaching_goal
  */
 ?>
 <!-- START app/View/Elements/simplex_top_section.ctp -->
@@ -63,6 +64,38 @@
                                       'class' => 'btn-profile-edit'
                                   ])
             ?>
+        <? else: ?>
+            <div class="col col-xxs-12 mt_18px">
+                <?php $follow_opt = $this->Goal->getFollowOption($goal); ?>
+                <?php $collabo_opt = $this->Goal->getCollaboOption($goal); ?>
+                <div class="col col-xxs-5 col-xxs-offset-1 col-xs-4 col-xs-offset-2 col-sm-offset-2">
+                    <a class="btn btn-white bd-circle_22px toggle-follow p_8px
+                    <?= $follow_opt['class'] ?>
+                    <?php if ($is_coaching_goal): ?>
+                    follow-on
+                    <?php endif ?>"
+
+                       href="#"
+                       style="width:100%; text-align:center;"
+                       data-class="toggle-follow"
+                       goal-id="<?= $goal['Goal']['id'] ?>"
+                        <?php if ($follow_opt['disabled'] || $is_coaching_goal): ?>
+                            disabled="disabled"
+                        <?php endif ?>
+                        >
+                        <span class="ml_5px"><?= __d('gl', 'フォロー') ?></span>
+                    </a>
+                </div>
+                <div class="col col-xxs-5 col-xxs-offset-1 col-xs-4">
+                    <a class="btn btn-white bd-circle_22px modal-ajax-get-collabo p_8px <?= $collabo_opt['class'] ?>"
+                       style="width:100%; text-align:center;"
+                       data-toggle="modal"
+                       data-target="#ModalCollabo_<?= $goal['Goal']['id'] ?>"
+                       href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', 'goal_id' => $goal['Goal']['id']]) ?>">
+                        <span class=""><?= __d('gl', 'コラボ') ?></span>
+                    </a>
+                </div>
+            </div>
         <?php endif ?>
     </div>
     <p class="goal-detail-goal-name">
