@@ -39,6 +39,21 @@ function bindCommentBalancedGallery($obj) {
         //viewportWidth: 482                // the assumed width of the gallery, defaults to the containing element's width
     });
 };
+
+/**
+ * selector の要素に Control(Command) + Enter 押下時のアクションを設定する
+ *
+ * @param selector
+ * @param callback Control + Enter が押された時に実行されるコールバック関数
+ */
+var bindCtrlEnterAction = function (selector, callback) {
+    $(selector).on('keydown', function (e) {
+        if ((e.metaKey || e.ctrlKey) && e.keyCode == 13) {
+            callback.call(this, e);
+        }
+    })
+};
+
 $(window).load(function () {
     bindPostBalancedGallery($('.post_gallery'));
     bindCommentBalancedGallery($('.comment_gallery'));
@@ -527,7 +542,19 @@ $(document).ready(function () {
         $('#FeedMoreReadLink').trigger('click');
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Ctrl(Command) + Enter 押下時のコールバック
+    ///////////////////////////////////////////////////////////////////////////
 
+    // アクションフォーム
+    bindCtrlEnterAction('#CommonActionDisplayForm', function (e) {
+        $('#CommonActionSubmit').trigger('click');
+    });
+
+    // 投稿フォーム
+    bindCtrlEnterAction('#PostDisplayForm', function (e) {
+        $('#PostSubmit').trigger('click');
+    });
 });
 function imageLazyOn($elm_obj) {
     var lazy_option = {

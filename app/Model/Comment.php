@@ -278,10 +278,8 @@ class Comment extends AppModel
             $data['Comment']['body'] = $text_ex->autoLink($data['Comment']['body']);
         }
         else {
-            foreach ($data as $key => $val) {
-                foreach ($data as $key => $item) {
-                    $data[$key]['Comment']['body'] = $text_ex->autoLink($item['Comment']['body']);
-                }
+            foreach ($data as $key => $item) {
+                $data[$key]['Comment']['body'] = $text_ex->autoLink($item['Comment']['body']);
             }
         }
         return $data;
