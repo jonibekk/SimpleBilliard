@@ -27,7 +27,9 @@
 }
 
 .message-list-panel-cards {
-
+  display: block;
+  height: 64px;
+  margin: 0 0 8px 0;
 }
 
 .message-list-panel-card {
@@ -39,14 +41,62 @@
 }
 
 .message-list-panel-card-avator {
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
+  position: absolute;
+}
+
+.message-list-panel-card-avator-sm {
+  width: 32px;
+  height: 32px;
+  position: absolute;
+}
+
+.message-list-panel-card-avator-sm-tl {
+  .message-list-panel-card-avator-sm;
+  left: 0;
+  top: 0;
+}
+
+.message-list-panel-card-avator-sm-tr {
+  .message-list-panel-card-avator-sm;
+  right: 0;
+  top: 0;
+}
+
+.message-list-panel-card-avator-sm-bl {
+  .message-list-panel-card-avator-sm;
+  left: 0;
+  bottom: 0;
+}
+
+.message-list-panel-card-avator-sm-br {
+  .message-list-panel-card-avator-sm;
+  right: 0;
+  bottom: 0;
+}
+
+.message-list-panel-card-avator-md {
+  width: 64px;
+  height: 64px;
+}
+
+.message-list-panel-card-avator-vl-left {
+  clip: rect(0 48px 64px 16px);
+  position: absolute;
+  left: -16px;
+}
+
+.message-list-panel-card-avator-vl-right {
+  clip: rect(0 48px 64px 16px);
+  position: absolute;
+  right: -16px;
 }
 
 .message-list-panel-card-avator-wrap {
-  width: 20%;
-  overflow: hidden;
-  max-width: 64px;
+  position: relative;
+  height: 64px;
+  width: 64px;
 }
 
 .message-list-panel-card-names {
@@ -57,8 +107,11 @@
   white-space: nowrap;
 }
 
-.message-list-panel-card-contants {
-
+.message-list-panel-card-contents {
+  margin: 0 0 0 8px;
+  min-width: 72%;
+  max-width: 90%;
+  display: inline-block;
 }
 
 .message-list-panel-card-text {
