@@ -47,7 +47,7 @@ function bindCommentBalancedGallery($obj) {
  * @param callback Control + Enter が押された時に実行されるコールバック関数
  */
 var bindCtrlEnterAction = function (selector, callback) {
-    $(selector).on('keydown', function (e) {
+    $(document).on('keydown', selector, function (e) {
         if ((e.metaKey || e.ctrlKey) && e.keyCode == 13) {
             callback.call(this, e);
         }
@@ -554,6 +554,21 @@ $(document).ready(function () {
     // 投稿フォーム
     bindCtrlEnterAction('#PostDisplayForm', function (e) {
         $('#PostSubmit').trigger('click');
+    });
+
+    // メッセージフォーム
+    bindCtrlEnterAction('#MessageDisplayForm', function (e) {
+        $('#MessageSubmit').trigger('click');
+    });
+
+    // メッセージ個別ページ
+    bindCtrlEnterAction('#message_text_input', function (e) {
+        $('#message_submit_button').trigger('click');
+    });
+
+    // コメント
+    bindCtrlEnterAction('.comment-form', function (e) {
+        $(this).find('.comment-submit-button').trigger('click');
     });
 });
 function imageLazyOn($elm_obj) {
@@ -1521,6 +1536,11 @@ $(document).ready(function () {
         }
     });
     $('#PostDisplayForm').bootstrapValidator({
+        live: 'enabled',
+        feedbackIcons: {},
+        fields: {}
+    });
+    $('#MessageDisplayForm').bootstrapValidator({
         live: 'enabled',
         feedbackIcons: {},
         fields: {}
