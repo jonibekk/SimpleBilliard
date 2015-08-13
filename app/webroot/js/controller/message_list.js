@@ -13,6 +13,8 @@ message_list_app.controller(
         $sce
     ){
         angular.forEach(getMessageList.message_list, function (val, key) {
+            // メッセージ本文の改行を削除する
+            this[key].Post.body = this[key].Post.body.replace(/<br \/>/g, "");
 
             // 自分以外のメッセージ共有者の名前と画像
             var share_users = [];
