@@ -552,32 +552,8 @@ $(document).ready(function () {
     });
 
     // 投稿フォーム
-    // keyup 時に bootstrap validator の処理が入ってボタンの有効状態が変わってしまうので
-    // 少し遅らせてで処理を実行する
     bindCtrlEnterAction('#PostDisplayForm', function (e) {
-        var $submit = $('#PostSubmit');
-        var func;
-
-        // submit ボタンが無効状態の場合
-        // keyup 時に bootstrap validator の処理でボタンが有効化されてしまうので、
-        // 再度無効にする処理を行う
-        if ($submit.is(':disabled')) {
-            func = function () {
-                $submit.attr('disabled', 'disabled');
-            };
-        }
-        // submit ボタンが有効状態の場合
-        else {
-            func = function () {
-                $submit.trigger('click');
-            };
-        }
-
-        $(this).one('keyup', function () {
-            setTimeout(function () {
-                func.call();
-            }, 100)
-        });
+        $('#PostSubmit').trigger('click');
     });
 });
 function imageLazyOn($elm_obj) {

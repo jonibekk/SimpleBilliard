@@ -58,7 +58,8 @@ $only_tab_post =
             <li class="switch-message"><a href="#MessageForm" role="tab" data-toggle="tab"
                                           class="switch-message-anchor click-target-focus"
                                           target-id="s2id_autogen1"><i
-                        class="fa fa-paper-plane-o"></i><?= __d('gl', "メッセージ") ?></a><span class="switch-arrow"></span></li>
+                        class="fa fa-paper-plane-o"></i><?= __d('gl', "メッセージ") ?></a><span class="switch-arrow"></span>
+            </li>
         </ul>
     </div>
     <!-- Tab panes -->
@@ -225,7 +226,8 @@ $only_tab_post =
                             'id'        => 'AttachedFile_' . $file['AttachedFile']['id'],
                             'name'      => 'data[file_id][]',
                             'value'     => $file['AttachedFile']['id'],
-                            'data-url'  => $this->Upload->uploadUrl($file, 'AttachedFile.attached', ['style' => 'small']),
+                            'data-url'  => $this->Upload->uploadUrl($file, 'AttachedFile.attached',
+                                                                    ['style' => 'small']),
                             'data-name' => $file['AttachedFile']['attached_file_name'],
                             'data-size' => $file['AttachedFile']['file_size'],
                             'data-ext'  => $file['AttachedFile']['file_ext'],
@@ -261,15 +263,15 @@ $only_tab_post =
             <div class="post-panel-body plr_11px ptb_7px">
                 <?=
                 $this->Form->input('body', [
-                    'id'             => 'CommonPostBody',
-                    'label'          => false,
-                    'type'           => 'textarea',
-                    'wrap'           => 'soft',
-                    'rows'           => 1,
-                    'placeholder'    => __d('gl', "何か投稿しよう"),
-                    'class'          => 'form-control tiny-form-text-change blank-disable post-form feed-post-form box-align change-warning',
-                    'target-id'      => "PostSubmit",
-                    "required"       => false
+                    'id'                       => 'CommonPostBody',
+                    'label'                    => false,
+                    'type'                     => 'textarea',
+                    'wrap'                     => 'soft',
+                    'rows'                     => 1,
+                    'placeholder'              => __d('gl', "何か投稿しよう"),
+                    'class'                    => 'form-control tiny-form-text-change post-form feed-post-form box-align change-warning',
+                    "required"                 => true,
+                    'data-bv-notempty-message' => __d('validate', "入力必須項目です。"),
                 ])
                 ?>
                 <div id="PostUploadFilePreview" class="post-upload-file-preview"></div>
@@ -384,7 +386,7 @@ $only_tab_post =
             ]); ?>
             <div class="panel-body post-share-range-panel-body" id="MessageFormShare">
                 <div class="col col-xxs-10 col-xs-10 post-share-range-list" id="MessagePublicShareInputWrap">
-                    <?=__d('gl', "To:")?>
+                    <?= __d('gl', "To:") ?>
                     <?=
                     $this->Form->hidden('share_public', [
                         'id'    => 'select2Member',
