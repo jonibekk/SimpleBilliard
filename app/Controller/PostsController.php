@@ -388,12 +388,16 @@ class PostsController extends AppController
 
         $message_list = $this->Post->Comment->getPostsComment($post_id, $limit, $page_num, 'desc');
         foreach ($message_list as $key => $item) {
-            if (count($item['CommentFile']) > 0) {
-                $this->set('files', $item['CommentFile']);
-                $response = $this->render('Feed/attached_files');
-                $html = $response->__toString();
-                $message_list[$key]['AttachedFileHtml'] = $html;
+            if (count($item['CommentFile']) === 0) break;
+            $attached_files = '';
+            foreach ($item['CommentFile'] as $attached_file) {
+                $this->set('post_id', $item['Comment']['post_id']);
+                $this->set('comment_id', $item['Comment']['id']);
+                $this->set('data', $attached_file);
+                $response = $this->render('Feed/attached_file_item');
+                $attached_files .= $response->__toString();
             }
+            $message_list[$key]['AttachedFileHtml'] = $attached_files;
         }
         $convert_msg_data = $this->Post->Comment->convertData($message_list);
 

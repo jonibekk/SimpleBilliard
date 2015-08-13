@@ -2,6 +2,7 @@ message_app.controller(
     "MessageDetailCtrl",
     function ($scope,
               $http,
+              $sce,
               $translate,
               notificationService,
               getPostDetail,
@@ -153,9 +154,12 @@ message_app.controller(
                         url: cake.url.ah + $stateParams.post_id + '/' + limit + '/' + page_num
                     };
                     $http(request).then(function (response) {
+
                         angular.forEach(response.data.message_list, function (val) {
+                            val.AttachedFileHtml = $sce.trustAsHtml(val.AttachedFileHtml)
                             this.push(val);
                         }, $scope.message_list);
+
                         if (response.data.message_list.length > 0) {
                             message_scroll(current_id);
                         }

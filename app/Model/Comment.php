@@ -203,9 +203,6 @@ class Comment extends AppModel
                 'Comment.created' => 'asc'
             ],
             'contain'    => [
-                'CommentFile'   => [
-                    'AttachedFile'
-                ],
                 'User'          => [
                     'fields' => $this->User->profileFields
                 ],
