@@ -69,14 +69,13 @@
                 <?php $follow_opt = $this->Goal->getFollowOption($goal); ?>
                 <?php $collabo_opt = $this->Goal->getCollaboOption($goal); ?>
                 <div class="col col-xxs-5 col-xxs-offset-1 col-xs-4 col-xs-offset-2 col-sm-offset-2">
-                    <a class="btn btn-white bd-circle_22px toggle-follow p_8px
+                    <a class="btn btn-white bd-circle_22px toggle-follow p_8px width100_per
                     <?= $follow_opt['class'] ?>
                     <?php if ($is_coaching_goal): ?>
                     follow-on
                     <?php endif ?>"
 
                        href="#"
-                       style="width:100%; text-align:center;"
                        data-class="toggle-follow"
                        goal-id="<?= $goal['Goal']['id'] ?>"
                         <?php if ($follow_opt['disabled'] || $is_coaching_goal): ?>
@@ -87,8 +86,8 @@
                     </a>
                 </div>
                 <div class="col col-xxs-5 col-xxs-offset-1 col-xs-4">
-                    <a class="btn btn-white bd-circle_22px modal-ajax-get-collabo p_8px <?= $collabo_opt['class'] ?>"
-                       style="width:100%; text-align:center;"
+                    <a class="btn btn-white bd-circle_22px modal-ajax-get-collabo p_8px width100_per
+                    <?= $collabo_opt['class'] ?>"
                        data-toggle="modal"
                        data-target="#ModalCollabo_<?= $goal['Goal']['id'] ?>"
                        href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', 'goal_id' => $goal['Goal']['id']]) ?>">
