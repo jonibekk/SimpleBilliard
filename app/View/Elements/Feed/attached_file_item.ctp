@@ -28,6 +28,11 @@ elseif (isset($data['AttachedFile']['User'])) {
 if (isset($data['AttachedFile'])) {
     $data = $data['AttachedFile'];
 }
+
+if (!isset($message_page_image)) {
+    $message_page_image = false;
+}
+
 ?>
 <!-- START app/View/Elements/Feed/attached_file_item.ctp -->
 <div class="col col-xxs-12">
@@ -67,6 +72,12 @@ if (isset($data['AttachedFile'])) {
         $icon_url = $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'post_id' => $post_id]);
     }
     ?>
+
+    <?php if ($message_page_image) { ?>
+        <a href="<?= $icon_url ?>" <?= $page_type == "feed" ? "rel='lightbox' data-lightbox='LightBoxAttachedFileImg_Post{$post_id}_Comment_{$comment_id}'" : "target='_blank'" ?>>
+            <img src="<?= $this->Upload->uploadUrl($data, 'AttachedFile.attached', ['style' => 'original']) ?>">
+        </a>
+    <?php } else { ?>
     <div class="col col-xxs-1">
         <?php if ($data['file_type'] == AttachedFile::TYPE_FILE_IMG): ?>
             <a href="<?= $icon_url ?>" <?= $page_type == "feed" ? "rel='lightbox' data-lightbox='LightBoxAttachedFileImg_Post{$post_id}_Comment_{$comment_id}'" : "target='_blank'" ?>>
@@ -100,6 +111,7 @@ if (isset($data['AttachedFile'])) {
 
         <?php endif; ?>
     </div>
+
     <div class="col col-xxs-10 file-info-wrap">
         <a href="<?= $icon_url ?>"
             <?= $data['file_type'] == AttachedFile::TYPE_FILE_IMG && $page_type == "feed" ?
@@ -163,6 +175,7 @@ if (isset($data['AttachedFile'])) {
                 </a>
             </div>
         <?php endif; ?>
+        <?php } ?>
 
     </div>
 </div>
