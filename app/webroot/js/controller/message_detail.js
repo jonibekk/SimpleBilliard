@@ -146,4 +146,7 @@ message_app.controller(
             }
         }
 
+        // 戻るボタンのURL
+        $scope.message_list_url = cake.url.message_list;
+
     });
