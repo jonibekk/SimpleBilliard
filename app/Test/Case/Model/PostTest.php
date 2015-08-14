@@ -727,7 +727,15 @@ class PostTest extends CakeTestCase
         ];
         $this->Post->Comment->save($data);
 
+        $data = [
+            'team_id' => 1,
+            'post_id' => $this->Post->getLastInsertID(),
+            'user_id' => 2,
+        ];
+        $this->Post->PostShareUser->save($data);
+
         $res = $this->Post->getMessageList();
+        $this->Post->convertData($res);
     }
 
     function testGetPostById()

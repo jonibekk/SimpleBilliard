@@ -39,6 +39,21 @@ function bindCommentBalancedGallery($obj) {
         //viewportWidth: 482                // the assumed width of the gallery, defaults to the containing element's width
     });
 };
+
+/**
+ * selector の要素に Control(Command) + Enter 押下時のアクションを設定する
+ *
+ * @param selector
+ * @param callback Control + Enter が押された時に実行されるコールバック関数
+ */
+var bindCtrlEnterAction = function (selector, callback) {
+    $(document).on('keydown', selector, function (e) {
+        if ((e.metaKey || e.ctrlKey) && e.keyCode == 13) {
+            callback.call(this, e);
+        }
+    })
+};
+
 $(window).load(function () {
     bindPostBalancedGallery($('.post_gallery'));
     bindCommentBalancedGallery($('.comment_gallery'));
@@ -527,7 +542,34 @@ $(document).ready(function () {
         $('#FeedMoreReadLink').trigger('click');
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Ctrl(Command) + Enter 押下時のコールバック
+    ///////////////////////////////////////////////////////////////////////////
 
+    // アクションフォーム
+    bindCtrlEnterAction('#CommonActionDisplayForm', function (e) {
+        $('#CommonActionSubmit').trigger('click');
+    });
+
+    // 投稿フォーム
+    bindCtrlEnterAction('#PostDisplayForm', function (e) {
+        $('#PostSubmit').trigger('click');
+    });
+
+    // メッセージフォーム
+    bindCtrlEnterAction('#MessageDisplayForm', function (e) {
+        $('#MessageSubmit').trigger('click');
+    });
+
+    // メッセージ個別ページ
+    bindCtrlEnterAction('#message_text_input', function (e) {
+        $('#message_submit_button').trigger('click');
+    });
+
+    // コメント
+    bindCtrlEnterAction('.comment-form', function (e) {
+        $(this).find('.comment-submit-button').trigger('click');
+    });
 });
 function imageLazyOn($elm_obj) {
     var lazy_option = {
@@ -1090,32 +1132,6 @@ $(function () {
     );
 });
 
-// goTop
-$(function () {
-    var showFlag = false;
-    var topBtn = $("#gotop");
-    topBtn.css("bottom", "-100px");
-    $(window).scroll(function () {
-        if ($(this).scrollTop() > 30) {
-            if (showFlag == false) {
-                showFlag = true;
-                topBtn.stop().animate({"bottom": "40px"}, 200);
-            }
-        } else {
-            if (showFlag) {
-                showFlag = false;
-                topBtn.stop().animate({"bottom": "-100px"}, 200);
-            }
-        }
-    });
-    topBtn.click(function () {
-        $("body,html").stop().animate({
-            scrollTop: 0
-        }, 500, 'swing');
-        return false;
-    });
-});
-
 //SubHeaderMenu
 $(function () {
     var showNavFlag = false;
@@ -1143,19 +1159,6 @@ $(function () {
         }
     });
 });
-
-$(function () {
-    var goT = $("#gotop");
-    goT.hover(
-        function () {
-            $("#gotop-text").stop().animate({'right': '14px'}, 360);
-        },
-        function () {
-            $("#gotop-text").stop().animate({'right': '-140px'}, 800);
-        }
-    );
-});
-
 
 $(function () {
     $(".hoverPic").hover(
@@ -1494,6 +1497,11 @@ $(document).ready(function () {
         }
     });
     $('#PostDisplayForm').bootstrapValidator({
+        live: 'enabled',
+        feedbackIcons: {},
+        fields: {}
+    });
+    $('#MessageDisplayForm').bootstrapValidator({
         live: 'enabled',
         feedbackIcons: {},
         fields: {}
@@ -2929,121 +2937,129 @@ $(function () {
     setNotifyCntToBellAndTitle(cake.new_notify_cnt);
     setNotifyCntToMessageAndTitle(cake.new_notify_message_cnt);
 
-    function setIntervalToGetNotifyCnt(sec) {
-        setInterval(function () {
-            updateNotifyCnt();
-            updateMessageNotifyCnt();
-        }, sec * 1000);
-    }
+});
 
-    function updateNotifyCnt() {
+function setIntervalToGetNotifyCnt(sec) {
+    setInterval(function () {
+        updateNotifyCnt();
+        updateMessageNotifyCnt();
+    }, sec * 1000);
+}
 
-        var url = cake.url.f;
-        $.ajax({
-            type: 'GET',
-            url: url,
-            async: true,
-            success: function (new_notify_count) {
-                if (new_notify_count != 0) {
-                    setNotifyCntToBellAndTitle(new_notify_count);
-                }
-            },
-            error: function () {
+function updateNotifyCnt() {
+
+    var url = cake.url.f;
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: true,
+        success: function (new_notify_count) {
+            if (new_notify_count != 0) {
+                setNotifyCntToBellAndTitle(new_notify_count);
             }
-        });
-        return false;
-    }
+        },
+        error: function () {
+        }
+    });
+    return false;
+}
 
-    function updateMessageNotifyCnt() {
+function updateMessageNotifyCnt() {
 
-        var url = cake.url.af;
-        $.ajax({
-            type: 'GET',
-            url: url,
-            async: true,
-            success: function (new_notify_count) {
-                if (new_notify_count != 0) {
-                    setNotifyCntToMessageAndTitle(new_notify_count);
-                }
-            },
-            error: function () {
+    var url = cake.url.af;
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: true,
+        success: function (new_notify_count) {
+            setNotifyCntToMessageAndTitle(new_notify_count);
+            if (new_notify_count != 0) {
             }
-        });
-        return false;
-    }
-
-    function setNotifyCntToBellAndTitle(cnt) {
-        var $bellBox = getBellBoxSelector();
-        var $title = $("title");
-        var $originTitle = $("title").attr("origin-title");
-        var existingBellCnt = parseInt($bellBox.children('span').html());
-        var cntIsTooMuch = '20+';
-
-        if (cnt == 0) {
-            return;
+        },
+        error: function () {
         }
+    });
+    return false;
+}
 
-        // set notify number
-        if (parseInt(cnt) <= 20) {
-            $bellBox.children('span').html(cnt);
-            $bellBox.children('sup').addClass('none');
-            $title.text("(" + cnt + ")" + $originTitle);
-        } else {
-            $bellBox.children('span').html(20);
-            $bellBox.children('sup').removeClass('none');
-            $title.text("(" + cntIsTooMuch + ")" + $originTitle);
-        }
+function setNotifyCntToBellAndTitle(cnt) {
+    var $bellBox = getBellBoxSelector();
+    var $title = $("title");
+    var $originTitle = $("title").attr("origin-title");
+    var existingBellCnt = parseInt($bellBox.children('span').html());
+    var cntIsTooMuch = '20+';
 
-        if (existingBellCnt == 0) {
-            displaySelectorFluffy($bellBox);
-        }
+    if (cnt == 0) {
         return;
     }
 
-    function setNotifyCntToMessageAndTitle(cnt) {
-        var $bellBox = getMessageBoxSelector();
-        var $title = $("title");
-        var $originTitle = $("title").attr("origin-title");
-        var existingBellCnt = parseInt($bellBox.children('span').html());
-        var cntIsTooMuch = '20+';
+    // set notify number
+    if (parseInt(cnt) <= 20) {
+        $bellBox.children('span').html(cnt);
+        $bellBox.children('sup').addClass('none');
+        $title.text("(" + cnt + ")" + $originTitle);
+    } else {
+        $bellBox.children('span').html(20);
+        $bellBox.children('sup').removeClass('none');
+        $title.text("(" + cntIsTooMuch + ")" + $originTitle);
+    }
 
-        if (cnt == 0) {
-            return;
-        }
+    if (existingBellCnt == 0) {
+        displaySelectorFluffy($bellBox);
+    }
+    return;
+}
 
+function setNotifyCntToMessageAndTitle(cnt) {
+    var $bellBox = getMessageBoxSelector();
+    var $title = $("title");
+    var $originTitle = $("title").attr("origin-title");
+    var existingBellCnt = parseInt($bellBox.children('span').html());
+    var cntIsTooMuch = '20+';
+
+    if (cnt != 0) {
         // メッセージが存在するときだけ、ボタンの次の要素をドロップダウン対象にする
         $('#click-header-message').next().addClass('dropdown-menu');
-
-        // set notify number
-        if (parseInt(cnt) <= 20) {
-            $bellBox.children('span').html(cnt);
-            $bellBox.children('sup').addClass('none');
-
-            $title.text("(" + cnt + ")" + $originTitle);
-        } else {
-            $bellBox.children('span').html(20);
-            $bellBox.children('sup').removeClass('none');
-            $title.text("(" + cntIsTooMuch + ")" + $originTitle);
-        }
-
-        if (existingBellCnt == 0) {
-            displaySelectorFluffy($bellBox);
-        }
-        return;
+    }
+    else {
+        // メッセージが存在するときだけ、ボタンの次の要素をドロップダウン対象にする
+        $('#click-header-message').next().removeClass('dropdown-menu');
     }
 
-    function displaySelectorFluffy(selector) {
-        var i = 0.2;
-        var roop = setInterval(function () {
-            selector.css("opacity", i);
-            i = i + 0.2;
-            if (i > 1) {
-                clearInterval(roop);
-            }
-        }, 100);
+    // set notify number
+    if (parseInt(cnt) == 0) {
+        $bellBox.children('span').html(cnt);
+        $bellBox.children('sup').addClass('none');
+        $title.text($originTitle);
+    } else if (parseInt(cnt) <= 20) {
+        $bellBox.children('span').html(cnt);
+        $bellBox.children('sup').addClass('none');
+        $title.text("(" + cnt + ")" + $originTitle);
+    } else {
+        $bellBox.children('span').html(20);
+        $bellBox.children('sup').removeClass('none');
+        $title.text("(" + cntIsTooMuch + ")" + $originTitle);
     }
 
-});
+    if (existingBellCnt == 0 && cnt >= 1) {
+        displaySelectorFluffy($bellBox);
+    } else if (existingBellCnt >= 1 && cnt == 0) {
+        $bellBox.css("opacity", 0);
+    }
+
+    return;
+}
+
+function displaySelectorFluffy(selector) {
+    var i = 0.2;
+    var roop = setInterval(function () {
+        selector.css("opacity", i);
+        i = i + 0.2;
+        if (i > 1) {
+            clearInterval(roop);
+        }
+    }, 100);
+}
 
 $(document).ready(function () {
     var click_cnt = 0;

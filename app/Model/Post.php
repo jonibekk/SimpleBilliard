@@ -2,6 +2,7 @@
 App::uses('AppModel', 'Model');
 App::uses('UploadHelper', 'View/Helper');
 App::uses('TimeExHelper', 'View/Helper');
+App::uses('TextExHelper', 'View/Helper');
 App::uses('View', 'View');
 
 /**
@@ -1259,6 +1260,7 @@ class Post extends AppModel
             'contain'    => [
                 'User',
                 'PostShareUser' => [
+                    'User',
                     'fields' => ['id', 'user_id']
                 ],
                 'Comment'       => [
@@ -1279,16 +1281,33 @@ class Post extends AppModel
     {
         $upload = new UploadHelper(new View());
         $time = new TimeExHelper(new View());
+        $text_ex = new TextExHelper(new View());
 
         foreach ($data as $key => $item) {
+            // 最初のメッセージ作成者のデータ
+            $data[$key]['PostUser'] = $data[$key]['User'];
+
+            // 最後に送信されたメッセージ
             if (empty($item['Comment']) === false) {
                 $data[$key]['User'] = $item['Comment'][0]['User'];
                 $data[$key]['Post']['body'] = $item['Comment'][0]['body'];
                 $data[$key]['Post']['created'] = $item['Comment'][0]['created'];
             }
-            $data[$key]['User']['photo_path'] =
-                $upload->uploadUrl($data[$key]['User'], 'User.photo', ['style' => 'medium_large']);
             $data[$key]['Post']['created'] = $time->elapsedTime(h($data[$key]['Post']['created']));
+
+            // 最初のメッセージ作成者の画像
+            $data[$key]['PostUser']['photo_path'] =
+                $upload->uploadUrl($data[$key]['PostUser'], 'User.photo', ['style' => 'medium_large']);
+
+            // メッセージ受信者の画像
+            foreach ($data[$key]['PostShareUser'] as $k => $v) {
+                $v['User']['photo_path'] = $upload->uploadUrl($v['User'], 'User.photo', ['style' => 'medium_large']);
+                $data[$key]['PostShareUser'][$k] = $v;
+            }
+        }
+        //auto link処理
+        foreach ($data as $key => $item) {
+            $data[$key]['Post']['body'] = $text_ex->autoLink($item['Post']['body']);
         }
 
         return $data;

@@ -1443,6 +1443,14 @@ class GoalsController extends AppController
         }
         $this->set('is_collaborator', $is_collaborator);
 
+        // 閲覧者がコーチしているゴールかを判別
+        $is_coaching_goal = false;
+        $coaching_goal_ids = $this->Team->TeamMember->getCoachingGoalList($this->Auth->user('id'));
+        if (isset($coaching_goal_ids[$goal_id])) {
+            $is_coaching_goal = true;
+        }
+        $this->set('is_coaching_goal', $is_coaching_goal);
+
         return true;
     }
 }

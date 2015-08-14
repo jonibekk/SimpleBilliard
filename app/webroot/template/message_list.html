@@ -1,31 +1,39 @@
-<div class="panel panel-default">
-    <div class="panel-heading">すべてのメッセージ
-        <div class="pull-right">
-            <a href="/common_form/message" class="font_lightGray-gray font_16px">
+<!-- start app/webroot/template/message_list.html -->
+<div class="panel panel-default message-list-panel">
+    <div class="panel-heading message-list-panel-head">
+        すべてのメッセージ
+            <a href="/common_form/message" class="message-list-new-btn">
                 <i class="fa fa-edit"></i>
             </a>
-        </div>
     </div>
-    <div class="panel-body panel-body-notify-page">
-        <ul class="notify-page-cards" role="menu" ng-repeat="item in message_list | orderBy:'Post.modified':'DESC'">
-            <li class="notify-card-list">
-                <a href="/posts/message#/{{item.Post.id}}" class="col col-xxs-12 notify-card-link">
-                    <img class="pull-left notify-card-pic" ng-src="{{item.User.photo_path}}"/>
-
-                    <div class="notify-contents">
+    <div class="message-list-panel-body panel-body">
+        <ul class="message-list-panel-cards" role="menu" ng-repeat="item in message_list | orderBy:'Post.modified':'DESC'">
+            <li class="message-list-panel-card">
+                <a href="/posts/message#/{{item.Post.id}}" class="message-list-panel-card-link col col-xxs-12">
+                    <div class="message-list-panel-card-avator-wrap pull-left">
+                        <img class="message-list-panel-card-avator" ng-repeat="shareUser in item.share_users | limitTo:4" ng-src="{{shareUser.photo_path}}"/>
+                    </div>
+                    <div class="message-list-panel-card-contents notify-contents">
                         <div class="col col-xxs-12 notify-card-head">
-                            <span
-                                class="font-heading">{{item.User.display_username}} +{{item.PostShareUser.length}}</span>
+                            <span class="font-heading">
+                                <div class="message-list-panel-card-names">
+                                    <span ng-repeat="shareUser in item.share_users | limitTo: name_list_max">
+                                        {{shareUser.first_name}}<span ng-if="!$last">,</span>
+                                    </span>
+                                    <span ng-if="item.PostShareUser.length - name_list_max > 0">+{{item.PostShareUser.length - name_list_max}}</span>
+                                </div>
+                            </span>
                         </div>
-                        <div class="col col-xxs-12 notify-text notify-line-number notify-card-text"
-                             id="CommentTextBody_67">
-                            <i class="fa font_bold"></i> {{item.Post.body}}
+                        <div class="message-list-panel-card-text col col-xxs-12" id="CommentTextBody_67">
+                            <span ng-if="item.User.id != auth_info.user_id">{{item.User.display_first_name}}</span>
+                            <span ng-if="item.User.id == auth_info.user_id">あなた</span>
+                            : <span ng-bind-html="item.Post.body">
                         </div>
-                        <p class="notify-card-aside"><span ng-bind-html="item.Post.created"></span></p>
+                        <p class="message-list-panel-card-aside"><span ng-bind-html="item.Post.created"></span></p>
                     </div>
                 </a>
             </li>
         </ul>
     </div>
 </div>
-
+<!-- end app/webroot/template/message_list.html -->

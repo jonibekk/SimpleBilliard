@@ -1,3 +1,4 @@
+<!-- start app/webroot/template/message_detail.html -->
 <div class="row" ng-show="view_flag">
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default">
@@ -32,7 +33,7 @@
                             {{item.Comment.created * 1000 | date:'MM/dd HH:mm'}}
                         </span>
                                 </div>
-                                <div class="comment-text font_12px">{{item.Comment.body}}</div>
+                                <div class="comment-text font_12px" ng-bind-html="item.Comment.body"></div>
                                 <div class="font_12px">
                                     <a href="{{item.get_red_user_model_url}}"
                                        class="modal-ajax-get font_lightgray">
@@ -55,6 +56,7 @@
                         <div class="form-feed-notify ajax-add-comment bv-form">
                             <div class="form-group mlr_-1px required">
                         <textarea ng-model="message"
+                                  id="message_text_input"
                                   class="form-control tiny-form-text font_12px"
                                   rows="1" placeholder="返信する" cols="30" init-height="15"
                                   style="height: 33px; overflow: hidden; word-wrap: break-word; resize: none;"></textarea>
@@ -72,6 +74,7 @@
                                 <div class="submit">
                                     <input ng-click="clickMessage($event)"
                                            ng-disabled="!message"
+                                           id="message_submit_button"
                                            class="btn btn-primary submit-btn" type="submit"
                                            value="返信する">
                                 </div>
@@ -83,3 +86,10 @@
         </div>
     </div>
 </div>
+<!-- ToDo : go-topのファイルにまとめる。  -->
+<style>
+.go-top{
+    display: none;
+}
+</style>
+<!-- end app/webroot/template/message_detail.html -->
