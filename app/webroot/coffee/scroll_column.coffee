@@ -4,8 +4,8 @@ $ ->
   wrapH = $('#jsRightSideContainerWrap').height()
   t = 60 # height from top
   b = 88 # height from bottom
-  w = 992
-  
+  w = 991
+
   if winW > w
     $(window).scroll ->
       if wrapH + t > winH
