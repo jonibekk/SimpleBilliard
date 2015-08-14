@@ -75,7 +75,7 @@ if (!isset($message_page_image)) {
 
     <?php if ($message_page_image) { ?>
         <a href="<?= $icon_url ?>" <?= $page_type == "feed" ? "rel='lightbox' data-lightbox='LightBoxAttachedFileImg_Post{$post_id}_Comment_{$comment_id}'" : "target='_blank'" ?>>
-            <img src="<?= $this->Upload->uploadUrl($data, 'AttachedFile.attached', ['style' => 'original']) ?>">
+            <img src="<?= $this->Upload->uploadUrl($data, 'AttachedFile.attached', ['style' => 'small']) ?>">
         </a>
     <?php } else { ?>
     <div class="col col-xxs-1">

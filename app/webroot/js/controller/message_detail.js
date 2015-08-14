@@ -92,7 +92,6 @@ message_app.controller(
                 $http(request).then(function (response) {
                 });
 
-                //console.log(data);
                 data.AttachedFileHtml = $sce.trustAsHtml(data.AttachedFileHtml)
 
                 // メッセージ表示
@@ -144,6 +143,12 @@ message_app.controller(
                         file_preview_element.removeChild(file_preview_element.childNodes[i]);
                     }
 
+                    // ファイルアップロード処理初期化
+                    angular.forEach(file_redis_key, function(key){
+                        var node = document.getElementById(key);
+                        node.parentNode.removeChild(node);
+                    });
+                    Dropzone.instances[0].files[0] = {};
                 });
 
             };
