@@ -1,3 +1,4 @@
+<!-- start app/webroot/template/message_detail.html -->
 <div class="row" ng-show="view_flag">
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default">
@@ -54,10 +55,11 @@
                     <div class="comment-body">
                         <div class="form-feed-notify ajax-add-comment bv-form">
                             <div class="form-group mlr_-1px required">
-                                <textarea ng-model="message"
-                                          class="form-control tiny-form-text font_12px"
-                                          rows="1" placeholder="返信する" cols="30" init-height="15"
-                                          style="height: 33px; overflow: hidden; word-wrap: break-word; resize: none;"></textarea>
+                        <textarea ng-model="message"
+                                  id="message_text_input"
+                                  class="form-control tiny-form-text font_12px"
+                                  rows="1" placeholder="返信する" cols="30" init-height="15"
+                                  style="height: 33px; overflow: hidden; word-wrap: break-word; resize: none;"></textarea>
                             </div>
                             <div id="messageUploadFilePreviewArea"></div>
                             <div style="height: 0; width: 45px">
@@ -71,6 +73,7 @@
                                 <div class="submit">
                                     <input ng-click="clickMessage($event)"
                                            ng-disabled="!message"
+                                           id="message_submit_button"
                                            class="btn btn-primary submit-btn" type="submit"
                                            value="返信する">
                                 </div>
@@ -83,3 +86,10 @@
         </div>
     </div>
 </div>
+<!-- ToDo : go-topのファイルにまとめる。  -->
+<style>
+.go-top{
+    display: none;
+}
+</style>
+<!-- end app/webroot/template/message_detail.html -->

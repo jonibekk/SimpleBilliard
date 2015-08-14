@@ -47,7 +47,7 @@ function bindCommentBalancedGallery($obj) {
  * @param callback Control + Enter が押された時に実行されるコールバック関数
  */
 var bindCtrlEnterAction = function (selector, callback) {
-    $(selector).on('keydown', function (e) {
+    $(document).on('keydown', selector, function (e) {
         if ((e.metaKey || e.ctrlKey) && e.keyCode == 13) {
             callback.call(this, e);
         }
@@ -554,6 +554,21 @@ $(document).ready(function () {
     // 投稿フォーム
     bindCtrlEnterAction('#PostDisplayForm', function (e) {
         $('#PostSubmit').trigger('click');
+    });
+
+    // メッセージフォーム
+    bindCtrlEnterAction('#MessageDisplayForm', function (e) {
+        $('#MessageSubmit').trigger('click');
+    });
+
+    // メッセージ個別ページ
+    bindCtrlEnterAction('#message_text_input', function (e) {
+        $('#message_submit_button').trigger('click');
+    });
+
+    // コメント
+    bindCtrlEnterAction('.comment-form', function (e) {
+        $(this).find('.comment-submit-button').trigger('click');
     });
 });
 function imageLazyOn($elm_obj) {
@@ -1117,32 +1132,6 @@ $(function () {
     );
 });
 
-// goTop
-$(function () {
-    var showFlag = false;
-    var topBtn = $("#gotop");
-    topBtn.css("bottom", "-100px");
-    $(window).scroll(function () {
-        if ($(this).scrollTop() > 30) {
-            if (showFlag == false) {
-                showFlag = true;
-                topBtn.stop().animate({"bottom": "40px"}, 200);
-            }
-        } else {
-            if (showFlag) {
-                showFlag = false;
-                topBtn.stop().animate({"bottom": "-100px"}, 200);
-            }
-        }
-    });
-    topBtn.click(function () {
-        $("body,html").stop().animate({
-            scrollTop: 0
-        }, 500, 'swing');
-        return false;
-    });
-});
-
 //SubHeaderMenu
 $(function () {
     var showNavFlag = false;
@@ -1170,19 +1159,6 @@ $(function () {
         }
     });
 });
-
-$(function () {
-    var goT = $("#gotop");
-    goT.hover(
-        function () {
-            $("#gotop-text").stop().animate({'right': '14px'}, 360);
-        },
-        function () {
-            $("#gotop-text").stop().animate({'right': '-140px'}, 800);
-        }
-    );
-});
-
 
 $(function () {
     $(".hoverPic").hover(
@@ -1521,6 +1497,11 @@ $(document).ready(function () {
         }
     });
     $('#PostDisplayForm').bootstrapValidator({
+        live: 'enabled',
+        feedbackIcons: {},
+        fields: {}
+    });
+    $('#MessageDisplayForm').bootstrapValidator({
         live: 'enabled',
         feedbackIcons: {},
         fields: {}
