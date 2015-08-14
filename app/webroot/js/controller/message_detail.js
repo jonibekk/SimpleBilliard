@@ -148,7 +148,6 @@ message_app.controller(
                         var node = document.getElementById(key);
                         node.parentNode.removeChild(node);
                     });
-                    Dropzone.instances[0].files[0] = {};
                 });
 
             };
