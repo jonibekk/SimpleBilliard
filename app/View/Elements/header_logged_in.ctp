@@ -183,7 +183,7 @@
 
                         <div class="frame-arrow-notify dropdown-menu dropdown-menu-right notify-dropdown-area">
                             <ul class="header-nav-notify-contents notify-dropdown-cards" id="bell-dropdown" role="menu"
-                                style="overflow:scroll">
+                                style="overflow-y:scroll">
                                 <li class="notify-card-empty" id="notifyCardEmpty">
                                     <i class="fa fa-smile-o font_33px mr_8px"></i><span
                                         class="notify-empty-text"><?= __d('gl', "未読の通知はありません。") ?></span>
@@ -196,11 +196,9 @@
                                 ></a>
 
                             <a href="<?= $this->Html->url(['controller' => 'notifications', 'action' => 'index']) ?>">
-                                <ul class="header-nav-notify-contents" id="bell-dropdown" role="menu">
-                                    <li class="text-align_c notify-all-view-link">
-                                        <?= __d('gl', "すべて見る") ?>
-                                    </li>
-                                </ul>
+                                <div class="text-align_c notify-all-view-link">
+                                    <?= __d('gl', "すべて見る") ?>
+                                </div>
                             </a>
                         </div>
                     </div>
