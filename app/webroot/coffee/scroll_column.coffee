@@ -1,16 +1,19 @@
 $ ->
   winH = window.innerHeight
+  winW = window.innerWidth
   wrapH = $('#jsRightSideContainerWrap').height()
   t = 60 # height from top
   b = 88 # height from bottom
+  w = 991
 
-  $(window).scroll ->
-    if wrapH + t > winH
-      if $(this).scrollTop() + winH > wrapH + t + b
-        $('#jsRightSideContainer').addClass 'js-right-side-fixed-container'
+  if winW > w
+    $(window).scroll ->
+      if wrapH + t > winH
+        if $(this).scrollTop() + winH > wrapH + t + b
+          $('#jsRightSideContainer').addClass 'js-right-side-fixed-container'
+        else
+          $('#jsRightSideContainer').removeClass 'js-right-side-fixed-container'
+          return
       else
-        $('#jsRightSideContainer').removeClass 'js-right-side-fixed-container'
-        return
-    else
-      $('#jsRightSideContainer').addClass 'js-right-side-fixed-ontop'
-    return
+        $('#jsRightSideContainer').addClass 'js-right-side-fixed-ontop'
+      return

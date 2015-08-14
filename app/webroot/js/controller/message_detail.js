@@ -148,6 +148,7 @@ message_app.controller(
                         var node = document.getElementById(key);
                         node.parentNode.removeChild(node);
                     });
+                    document.getElementById("message_text_input").focus();
                 });
 
             };
@@ -175,5 +176,8 @@ message_app.controller(
                 }
             }
         }
+
+        // 戻るボタンのURL
+        $scope.message_list_url = cake.url.message_list;
 
     });
