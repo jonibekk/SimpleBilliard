@@ -24,19 +24,24 @@ class NotificationsController extends AppController
     }
 
     /**
-     * @param $oldest_score
+     * 古いお知らせを返す（ページング表示用）
      *
-     * @return array
+     * @param        $oldest_score
+     * @param string $location_type 呼び出し元を表す文字列
+     *                              'page'     - すべてのお知らせページ
+     *                              'dropdown' - ヘッダーのお知らせ一覧ポップアップ
+     *
+     * @return CakeResponse
      */
-    public function ajax_get_old_notify_more($oldest_score)
+    public function ajax_get_old_notify_more($oldest_score, $location_type = 'page')
     {
         $this->_ajaxPreProcess();
-        $notify_items = $this->NotifyBiz->getNotification(NOTIFY_PAGE_ITEMS_NUMBER, $oldest_score);
+        $limit = $location_type == 'page' ? NOTIFY_PAGE_ITEMS_NUMBER : NOTIFY_BELL_BOX_ITEMS_NUMBER;
+        $notify_items = $this->NotifyBiz->getNotification($limit, $oldest_score);
         $team = $this->Team->findById($this->current_team_id);
         if (count($notify_items) === 0) {
             return $this->_ajaxGetResponse("");
         }
-        $location_type = "page";
         $this->set(compact('notify_items', 'team', 'location_type'));
         $response = $this->render('Notification/notify_items');
 

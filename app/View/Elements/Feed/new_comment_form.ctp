@@ -22,7 +22,7 @@ $this->Form->create('Comment', [
         'class'     => 'form-control'
     ],
     'id'              => "{$prefix}CommentAjaxGetNewCommentForm_{$post_id}",
-    'class'           => 'form-feed-notify ajax-add-comment',
+    'class'           => 'form-feed-notify ajax-add-comment comment-form',
     'type'            => 'file',
     'novalidate'      => true,
     'error-msg-id'    => $prefix . 'CommentFormErrorMsg_' . $post_id,
@@ -40,27 +40,14 @@ $this->Form->input('body', [
     'rows'        => 1,
     'required'    => true,
     'placeholder' => __d('gl', "コメントする"),
-    'class'       => 'form-control tiny-form-text blank-disable font_12px comment-post-form box-align change-warning no-border',
+    'class'       => 'form-control tiny-form-text font_12px comment-post-form box-align change-warning no-border',
     'target-id'   => "{$prefix}CommentSubmit_{$post_id}",
-    'required'    => 'false'
+    'data-bv-notempty-message' => __d('validate', "入力必須項目です。"),
 ])
 ?>
 <div id="<?= $prefix ?>CommentUploadFilePreview_<?= $post_id ?>" class="comment-upload-file-preview"></div>
 <?php $this->Form->unlockField('file_id') ?>
 
-<div class="form-group" id="<?= $prefix ?>CommentFormImage_<?= $post_id ?>"
-     style="display: none">
-    <ul class="input-images">
-        <?php for ($i = 1; $i <= 5; $i++): ?>
-            <li>
-                <?=
-                $this->element('Feed/photo_upload',
-                               ['type' => 'comment', 'index' => $i, 'submit_id' => "{$prefix}CommentSubmit_{$post_id}", 'post_id' => $post_id]) ?>
-            </li>
-        <?php endfor ?>
-    </ul>
-    <span class="help-block" id="Comment__Post_<?= $post_id ?>_Photo_ValidateMessage"></span>
-</div>
 <?= $this->Form->hidden('post_id', ['value' => $post_id]) ?>
 <div class="comment-btn" id="<?= $prefix ?>Comment_<?= $post_id ?>">
     <div>
@@ -78,7 +65,7 @@ $this->Form->input('body', [
     <div class="pull-right">
         <?=
         $this->Form->submit(__d('gl', "コメントする"),
-                            ['class' => 'btn btn-primary submit-btn', 'id' => "{$prefix}CommentSubmit_{$post_id}", 'disabled' => 'disabled']) ?>
+                            ['class' => 'btn btn-primary submit-btn comment-submit-button', 'id' => "{$prefix}CommentSubmit_{$post_id}", 'disabled' => 'disabled']) ?>
     </div>
     <div class="clearfix"></div>
 </div>

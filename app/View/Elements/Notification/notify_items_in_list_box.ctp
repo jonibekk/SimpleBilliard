@@ -18,10 +18,5 @@
            class="notify-empty-text"><?= __d('gl', "未読の通知はありません。") ?></span>
     </li>
      -->
-<a href="<?= $this->Html->url(['controller' => 'notifications', 'action' => 'index']) ?>">
-    <li class="text-align_c notify-all-view-link">
-        <?= __d('gl', "すべて見る") ?>
-    </li>
-</a>
 
 <!-- END app/View/Elements/Notification/notify_items_in_list_box.ctp -->

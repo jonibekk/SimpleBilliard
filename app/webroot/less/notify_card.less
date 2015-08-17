@@ -5,6 +5,12 @@
 .notify-card-link {
   display: block;
   padding: 6px 6px 2px;
+  &:hover,
+  &:focus {
+    color: @black;
+    background-color: @hoverRed;
+  }
+
 }
 @media screen and (min-width: 768px) {
   .notify-card-link {
@@ -18,10 +24,11 @@
 .header-nav-notify-contents {
   margin: 0;
   padding: 0;
-  max-height: 480px;
+  max-height: 400px;
   white-space: normal;
   overflow: hidden;
   text-overflow: ellipsis;
+  box-shadow: none;
 }
 .notify-contents {
   width: 80%;
@@ -54,16 +61,11 @@
   background-color: @white;
 }
 .notify-card-unread {
-  background-color: fade(@softRed, 10%);
+  background-color: @unreadRed;
 }
 .notify-divider {
   .divider;
   background-color: @lightGray;
-}
-.notify-card-link:hover,
-.notify-card-link:focus {
-  color: @black;
-  background-color: fade(@darkRed, 20%);
 }
 /* notify-pageのスタイル */
 .panel-body-notify-page {

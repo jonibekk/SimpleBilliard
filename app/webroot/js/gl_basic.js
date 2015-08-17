@@ -47,7 +47,7 @@ function bindCommentBalancedGallery($obj) {
  * @param callback Control + Enter が押された時に実行されるコールバック関数
  */
 var bindCtrlEnterAction = function (selector, callback) {
-    $(selector).on('keydown', function (e) {
+    $(document).on('keydown', selector, function (e) {
         if ((e.metaKey || e.ctrlKey) && e.keyCode == 13) {
             callback.call(this, e);
         }
@@ -554,6 +554,21 @@ $(document).ready(function () {
     // 投稿フォーム
     bindCtrlEnterAction('#PostDisplayForm', function (e) {
         $('#PostSubmit').trigger('click');
+    });
+
+    // メッセージフォーム
+    bindCtrlEnterAction('#MessageDisplayForm', function (e) {
+        $('#MessageSubmit').trigger('click');
+    });
+
+    // メッセージ個別ページ
+    bindCtrlEnterAction('#message_text_input', function (e) {
+        $('#message_submit_button').trigger('click');
+    });
+
+    // コメント
+    bindCtrlEnterAction('.comment-form', function (e) {
+        $(this).find('.comment-submit-button').trigger('click');
     });
 });
 function imageLazyOn($elm_obj) {
@@ -1117,32 +1132,6 @@ $(function () {
     );
 });
 
-// goTop
-$(function () {
-    var showFlag = false;
-    var topBtn = $("#gotop");
-    topBtn.css("bottom", "-100px");
-    $(window).scroll(function () {
-        if ($(this).scrollTop() > 30) {
-            if (showFlag == false) {
-                showFlag = true;
-                topBtn.stop().animate({"bottom": "40px"}, 200);
-            }
-        } else {
-            if (showFlag) {
-                showFlag = false;
-                topBtn.stop().animate({"bottom": "-100px"}, 200);
-            }
-        }
-    });
-    topBtn.click(function () {
-        $("body,html").stop().animate({
-            scrollTop: 0
-        }, 500, 'swing');
-        return false;
-    });
-});
-
 //SubHeaderMenu
 $(function () {
     var showNavFlag = false;
@@ -1170,19 +1159,6 @@ $(function () {
         }
     });
 });
-
-$(function () {
-    var goT = $("#gotop");
-    goT.hover(
-        function () {
-            $("#gotop-text").stop().animate({'right': '14px'}, 360);
-        },
-        function () {
-            $("#gotop-text").stop().animate({'right': '-140px'}, 800);
-        }
-    );
-});
-
 
 $(function () {
     $(".hoverPic").hover(
@@ -1521,6 +1497,11 @@ $(document).ready(function () {
         }
     });
     $('#PostDisplayForm').bootstrapValidator({
+        live: 'enabled',
+        feedbackIcons: {},
+        fields: {}
+    });
+    $('#MessageDisplayForm').bootstrapValidator({
         live: 'enabled',
         feedbackIcons: {},
         fields: {}
@@ -2883,19 +2864,35 @@ $(function () {
 });
 
 
-function evNotifyMoreView() {
+/**
+ * お知らせ一覧のページング処理
+ *
+ * @param e
+ * @param params
+ *          locationType: string  (*必須) 呼び出し元を表す文字列 'page' | 'dropdown'
+ *          showLoader: function($loading_html)  ローディング画像の表示処理を行うコールバック関数
+ *          hideLoader: function($loading_html)  ローディング画像の削除処理を行うコールバック関数
+ * @returns {boolean}
+ */
+function evNotifyMoreView(e, params) {
     attrUndefinedCheck(this, 'get-url');
 
     var $obj = $(this);
-    var oldest_score_id = $("ul.notify-page-cards").children("li.notify-card-list:last").attr("data-score");
+    var oldest_score_id = $("ul.notify-" + params.locationType + "-cards").children("li.notify-card-list:last").attr("data-score");
     var get_url = $obj.attr('get-url');
     //リンクを無効化
     $obj.attr('disabled', 'disabled');
     var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
     //ローダー表示
-    $obj.after($loader_html);
+    if (params.showLoader) {
+        params.showLoader.call(this, $loader_html);
+    }
+    else {
+        $obj.after($loader_html);
+    }
+
     //url生成
-    var url = get_url + '/' + String(oldest_score_id);
+    var url = get_url + '/' + String(oldest_score_id) + '/' + params.locationType;
     $.ajax({
         type: 'GET',
         url: url,
@@ -2907,14 +2904,19 @@ function evNotifyMoreView() {
                 var $notify = $(data.html);
                 //一旦非表示
                 $notify.hide();
-                $(".notify-page-cards").append($notify);
+                $(".notify-" + params.locationType + "-cards").append($notify);
                 //html表示
                 $notify.show("slow", function () {
                     //もっと見る
                     showMore(this);
                 });
                 //ローダーを削除
-                $loader_html.remove();
+                if (params.hideLoader) {
+                    params.hideLoader.call($obj.get(0), $loader_html);
+                }
+                else {
+                    $loader_html.remove();
+                }
                 $obj.removeAttr('disabled');
                 $("#ShowMoreNoData").hide();
                 //画像をレイジーロード
@@ -2944,7 +2946,34 @@ function evNotifyMoreView() {
 }
 
 $(function () {
-    $(document).on("click", ".click-notify-read-more", evNotifyMoreView);
+    // お知らせ一覧ページの次のページ読込みボタン
+    $(document).on("click", ".click-notify-read-more-page", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $this = $(this);
+        evNotifyMoreView.call(this, e, {
+            locationType: "page"
+        });
+    });
+
+    // ヘッダーのお知らせ一覧ポップアップの次のページ読込みボタン
+    $(document).on("click", ".click-notify-read-more-dropdown",  function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $this = $(this);
+        evNotifyMoreView.call(this, e, {
+            locationType: "dropdown",
+            showLoader: function ($loader_html) {
+                $('#bell-dropdown').append($('<div>').append($loader_html).css({
+                   textAlign: 'center',
+                }));
+
+            },
+            hideLoader: function ($loader_html) {
+                $loader_html.remove();
+            }
+        });
+    });
 });
 
 // Auto update notify cnt
@@ -3217,6 +3246,20 @@ $(document).ready(function () {
                 $('#GoalPageKeyResultMoreLink').trigger('click');
             }
         }
+    });
+
+    // ヘッダーのお知らせ一覧ポップアップのオートローディング
+    var prevScrollTop = 0;
+    $('#bell-dropdown').scroll(function () {
+        var $this = $(this);
+        var currentScrollTop = $this.scrollTop();
+        if (prevScrollTop < currentScrollTop && ($this.get(0).scrollHeight - currentScrollTop == $this.height())) {
+            if (!autoload_more) {
+                autoload_more = true;
+                $('#NotifyDropDownReadMore').trigger('click');
+            }
+        }
+        prevScrollTop = currentScrollTop;
     });
 
 

@@ -1787,10 +1787,6 @@ a.bg-danger:hover {
     margin: 40px 0 20px;
     border-bottom: 1px solid #dddddd;
 }
-ul, ol {
-    margin-top: 0;
-    margin-bottom: 10px;
-}
 ul ul, ol ul, ul ol, ol ol {
     margin-bottom: 0;
 }

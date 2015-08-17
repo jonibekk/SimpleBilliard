@@ -412,22 +412,11 @@ $only_tab_post =
                     'rows'           => 1,
                     'required'       => true,
                     'placeholder'    => __d('gl', "メッセージを書こう"),
-                    'class'          => 'form-control tiny-form-text-change blank-disable post-form feed-post-form box-align change-warning',
+                    'class'          => 'form-control tiny-form-text-change post-form feed-post-form box-align change-warning',
                     'target_show_id' => "MessageFormFooter",
-                    'target-id'      => "MessageSubmit",
-                    "required"       => false
+                    'data-bv-notempty-message' => __d('validate', "入力必須項目です。"),
                 ]);
                 ?>
-                <div class="row form-group m_0px none" id="MessageFormImage">
-                    <ul class="col input-images post-images">
-                        <?php for ($i = 1; $i <= 5; $i++): ?>
-                        <li id="WrapPhotoForm_Message_<?= $i ?>">
-                            <?= $this->element('Feed/photo_upload',
-                                               ['type' => 'post', 'index' => $i, 'submit_id' => 'MessageSubmit']) ?>
-                            </li><?php endfor ?>
-                    </ul>
-                    <span class="help-block" id="Message__Photo_ValidateMessage"></span>
-                </div>
             </div>
             <div class="post-panel-footer">
                 <div class="font_12px none" id="MessageFormFooter">

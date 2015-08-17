@@ -23,21 +23,37 @@
 }
 
 .message-list-panel-body {
-  padding: 10px 11px;
+  padding: 0 11px;
 }
 
 .message-list-panel-cards {
   display: block;
   height: 64px;
   margin: 0 0 8px 0;
+  width: 100%;
 }
 
 .message-list-panel-card {
-
+  width: 100%;
+  border-bottom: 1px solid @baseLightGray;
+  display: inline-block;
 }
 
 .message-list-panel-card-link {
-
+  padding: 5px 0;
+  &:hover,
+  &:active,
+  &:target,
+  &:focus {
+    color: @black;
+    background-color: @hoverRed;
+    & .message-list-panel-card-text {
+      background-color: rgba(0,0,0,0) ;
+      &::before {
+        background: linear-gradient(to right, rgba(245, 245, 245, 0), @hoverRed);
+      }
+    }
+  }
 }
 
 .message-list-panel-card-avator {
