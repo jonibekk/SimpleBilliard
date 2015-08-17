@@ -405,6 +405,10 @@ textarea{
     margin-top: 5px;
 }
 
+.mt_6px {
+    margin-top: 6px;
+}
+
 .mt_8px {
     margin-top: 8px;
 }
@@ -2904,6 +2908,7 @@ Temporary Properties - YOU MUST FIX
 
 .dashboardProfileCard-score {
     line-height: 30px;
+    font-size:45px;
 }
 
 .dashboardProfileCard-activityList {
@@ -2911,6 +2916,11 @@ Temporary Properties - YOU MUST FIX
 
 .dashboardProfileCard-activity {
     padding: 1px;
+}
+
+.dashboardProfileCard-point {
+    margin-bottom:15px;
+    margin-top:10px;
 }
 
 /*=====/ dashboardProfileCard ======*/
