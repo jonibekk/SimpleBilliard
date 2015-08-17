@@ -26,39 +26,12 @@
 
         <div class="dashboardProfileCard-stats font_10px">
             <div class="dashboardProfileCard-point">
-                <div class="ml_8px"><?= __d('gl', "今期のポイント") ?></div>
                 <div class="text-align_c">
                     <div class="inline-block">
-                        <span class="dashboardProfileCard-score font_bold font_33px ml_8px">?</span>
-                        <span class="ml_2px">pt</span>
+                         <span class="dashboardProfileCard-score font_bold font_33px ml_8px" id="CountActionByMe"></span>
                     </div>
-                    <div class="inline-block">
-                        <div class="ml_2px"><?= __d('gl', "先週比") ?></div>
-                        <span>
-                            (<span class="font_seagreen font_bold plr_1px">?<i class="fa fa-level-up"></i></span>)
-                        </span>
-                    </div>
+                    <div class="ml_8px mt_6px"><i class="fa fa-check-circle mr_2px font_brownRed font_12px"></i><?= __d('gl', "アクション") ?></div>
                 </div>
-            </div>
-            <div class="dashboardProfileCard-activities bd-t mt_8px">
-                <div class="ml_8px mt_5px"><?= __d('gl', "今期のアクティビティ") ?></div>
-                <ul class="dashboardProfileCard-activityList text-align_c col-xxs-12 p_8px mb_0px">
-                    <li class="dashboardProfileCard-activity inline-block col-xxs-4">
-                        <div class="ls_title"><?= __d('gl', "アクション") ?></div>
-                        <i class="fa fa-check-circle mr_1px"></i><span class="ls_number" id="CountActionByMe"></span>
-                    </li>
-                    <li class="dashboardProfileCard-activity inline-block col-xxs-4">
-                        <div class="ls_title"><?= __d('gl', "成果") ?></div>
-                        <i class="fa fa-key mr_1px"></i><span class="ls_number">?</span>
-                    </li>
-                    <li class="dashboardProfileCard-activity inline-block col-xxs-4">
-                        <div class="ls_title"><?= __d('gl', "投稿") ?></div>
-                        <i class="fa fa-comment-o mr_1px"></i><span class="ls_number" id="CountPostByMe"></span>
-                    </li>
-                </ul>
-                <div class="dashboardProfileCard-moreRead text-align_c mtb_8px"><a class="font_lightGray-gray"
-                                                                                   href="/#"><i
-                            class="fa fa-eye mr_5px"></i><?= __d('gl', "もっと見る") ?></a></div>
             </div>
         </div>
     </div>
