@@ -56,6 +56,34 @@
   }
 }
 
+.message-list-panel-card-names {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.message-list-panel-card-contents {
+  margin: 0 0 0 8px;
+  max-width: 72%;
+  display: inline-block;
+}
+
+.message-list-panel-card-text {
+  font-size: @fontSmall;
+  color: @black;
+  .line-number-limit-1;
+}
+
+.message-list-panel-card-aside {
+  .aside-info;
+}
+
+/*
++ avatorの設定
+ */
+
 .message-list-panel-card-avator {
   width: 32px;
   height: 32px;
@@ -113,29 +141,4 @@
   position: relative;
   height: 64px;
   width: 64px;
-}
-
-.message-list-panel-card-names {
-  display: inline-block;
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.message-list-panel-card-contents {
-  margin: 0 0 0 8px;
-  min-width: 72%;
-  max-width: 90%;
-  display: inline-block;
-}
-
-.message-list-panel-card-text {
-  font-size: @fontSmall;
-  color: @black;
-  .line-number-limit-1;
-}
-
-.message-list-panel-card-aside {
-  .aside-info;
 }
