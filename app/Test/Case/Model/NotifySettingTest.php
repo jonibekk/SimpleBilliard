@@ -111,7 +111,12 @@ class NotifySettingTest extends CakeTestCase
         $count_num = 1;
         $item_name = json_encode(['ccc', 'ddd']);
         foreach (NotifySetting::$TYPE as $type => $val) {
-            $this->NotifySetting->getTitle($type, $from_user_names, $count_num, $item_name);
+            $this->NotifySetting->getTitle($type, $from_user_names, $count_num, $item_name, [
+                'share_circle_list' => [3],
+                'share_circle' => ['Circle' => [
+                    'name' => '全体サークル',
+                ]]
+            ]);
         }
     }
 
