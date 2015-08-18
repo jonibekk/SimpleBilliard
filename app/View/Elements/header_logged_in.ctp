@@ -34,7 +34,7 @@
                                 <img src="<?= $this->Html->url('/img/logo_off.png') ?>" class="header-logo-img"
                                      alt="Goalous2.0" width="20px" height="20px">
 
-                                <p class="font_11px font_heavyGray header_icon-text hidden-xs header-link">
+                                <p class="font_11px font_heavyGray header_icon-text hidden-xs js-header-link">
                                     <?= __d('gl', "ホーム") ?>
                                 </p>
                                 <span class="visible-xs-inline va_bl ml_5px"><?= __d('gl', "ホーム") ?></span>
@@ -45,9 +45,9 @@
                         <a class="header-goal header_l-icons <?= $current_global_menu == "goal" ? "activeColumn" : null ?>"
                            href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'index']) ?>">
                             <div class="ta-sm_c">
-                                <i class="fa fa-flag header-link header-icon nav-xxs-icon"></i>
+                                <i class="fa fa-flag js-header-link header-icon nav-xxs-icon"></i>
 
-                                <p class="font_11px header_icon-text hidden-xs header-link">
+                                <p class="font_11px header_icon-text hidden-xs js-header-link">
                                     <?= __d('gl', "ゴール") ?>
                                 </p>
                                 <span class="visible-xs-inline ml_5px"><?= __d('gl', "ゴール") ?></span>
@@ -58,9 +58,9 @@
                         <a class="header-team header_l-icons <?= $current_global_menu == "team" ? "activeColumn" : null ?>"
                            href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'main']) ?>">
                             <div class="ta-sm_c">
-                                <i class="fa fa-users header-link header-icon nav-xxs-icon"></i>
+                                <i class="fa fa-users js-header-link header-icon nav-xxs-icon"></i>
 
-                                <p class="font_11px header_icon-text hidden-xs header-link">
+                                <p class="font_11px header_icon-text hidden-xs js-header-link">
                                     <?= __d('gl', "チーム") ?>
                                 </p>
                                 <span class="visible-xs-inline ml_5px"><?= __d('gl', "チーム") ?></span>

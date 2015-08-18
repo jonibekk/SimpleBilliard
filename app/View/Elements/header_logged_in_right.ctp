@@ -1,19 +1,18 @@
 <!-- start app/View/Elements/header_logged_in_right -->
-<div class="pull-right">
-        <a class="header-user-avator" href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $this->Session->read('Auth.User.id')]) ?>">
-            <?=
-            $this->Upload->uploadImage($this->Session->read('Auth'), 'User.photo', ['style' => 'small'],
-                                       ['width' => '26px', 'height' => '26px', 'alt' => 'icon', 'class' => 'header-nav-avator  img-circle']) ?>
-            <span
-                class="header-user-name font_11px hidden-xxs header-home header-link pr_5px mlr_5px ptb_5px bd-r"><?= $this->Session->read('Auth.User.display_first_name') ?></span>
+<div class="header-right-navigations pull-right">
+            <a class="header-user-avator" href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $this->Session->read('Auth.User.id')]) ?>">
+                <?=
+                $this->Upload->uploadImage($this->Session->read('Auth'), 'User.photo', ['style' => 'small'],
+                                           ['width' => '26px', 'height' => '26px', 'alt' => 'icon', 'class' => 'header-nav-avator  img-circle']) ?>
+                <span
+                    class="header-user-name font_11px hidden-xxs header-home header-link pr_5px mlr_5px ptb_5px bd-r"><?= $this->Session->read('Auth.User.display_first_name') ?></span>
+            </a>
+        <a href="<?= $this->Html->url('/') ?>" class="header-user-home header-home header-link">
+            <?= __d('gl', 'ホーム') ?>
         </a>
-    <a href="<?= $this->Html->url('/') ?>" class="header-user-home header-home header-link">
-        <?= __d('gl', 'ホーム') ?>
-    </a>
-
     <div class="header-dropdown-add">
         <a href="#" data-toggle="dropdown" id="download" class="btn-addition-header">
-            <i class="header-dropdown-icon-add fa fa-plus-circle header-link"></i>
+            <i class="header-dropdown-icon-add fa fa-plus-circle js-header-link"></i>
         </a>
         <ul class="header-nav-add-contents dropdown-menu dropdown-menu-right"
             aria-labelledby="download">
@@ -54,7 +53,7 @@
     </div>
     <div class="header-dropdown-message dropdown-menu-right">
         <a id="click-header-message" class="btn-message-header" data-toggle="dropdown" href="#">
-            <i class="header-dropdown-icon-message fa fa-paper-plane-o header-link"></i>
+            <i class="header-dropdown-icon-message fa fa-paper-plane-o js-header-link"></i>
             <div class="btn btn-xs bell-notify-box notify-bell-numbers" id="messageNum" style="opacity: 0;">
                 <span>0</span><sup class="notify-plus none">+</sup>
             </div>
@@ -70,7 +69,7 @@
     </div>
     <div class="header-dropdown-notify dropdown-menu-right">
         <a id="click-header-bell" class="btn-notify-header" data-toggle="dropdown" href="#">
-            <i class="header-dropdown-icon-notify fa fa-flag fa-bell-o header-drop-icons header-link"></i>
+            <i class="header-dropdown-icon-notify fa fa-flag fa-bell-o header-drop-icons js-header-link"></i>
 
             <div class="btn btn-xs bell-notify-box notify-bell-numbers"
                  id="bellNum" style="opacity: 0;">
@@ -104,7 +103,7 @@
            class="font_lightGray-gray btn-function-header"
            data-toggle="dropdown"
            id="download">
-            <i class="header-dropdown-icon-functions fa fa-cog header-function-icon header-drop-icons header-link"></i>
+            <i class="header-dropdown-icon-functions fa fa-cog header-function-icon header-drop-icons js-header-link"></i>
             <?php if ($all_alert_cnt > 0): ?>
                 <div class="btn btn-xs notify-function-numbers">
                  <span>
@@ -125,14 +124,11 @@
                 </a>
             </li>
             <li>
-                <?php if (isset($unapproved_cnt) === true && $unapproved_cnt > 0) {
-?>
+                <?php if (isset($unapproved_cnt) === true && $unapproved_cnt > 0) { ?>
                     <div class="btn btn-danger btn-xs sub_cnt_alert">
-                        <?php echo $unapproved_cnt;
-?>
+                        <?php echo $unapproved_cnt; ?>
                     </div>
-                <?php
-} ?>
+                <?php } ?>
                 <?= $this->Html->link(__d('gl', 'ゴール認定'),
                                       ['controller' => 'goal_approval', 'action' => 'index']) ?>
             </li>

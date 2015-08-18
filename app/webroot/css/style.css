@@ -2801,16 +2801,9 @@ textarea.comment-post-form {
 }
 
 @media (min-width: 1025px) {
-    .header-link, .header-logo-img, .header-function-link {
-        opacity: 0.54;
-    }
 
     #header .header-icon {
         color: #505050;
-    }
-
-    .header-profile-icon {
-        opacity: 0.54;
     }
 
     #header .header-profile-icon {
