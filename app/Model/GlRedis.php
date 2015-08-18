@@ -259,10 +259,12 @@ class GlRedis extends AppModel
      * @param string $body
      * @param string $url
      * @param int    $date
+     * @param int    $post_id
+     * @param array  $options
      *
      * @return bool
      */
-    public function setNotifications($type, $team_id, $to_user_ids = [], $my_id, $body, $url, $date, $post_id = null)
+    public function setNotifications($type, $team_id, $to_user_ids = [], $my_id, $body, $url, $date, $post_id = null, $options = [])
     {
         $notify_id = $this->generateId();
         if ($post_id) {
@@ -281,6 +283,7 @@ class GlRedis extends AppModel
             'type'          => $type,
             'to_user_count' => count($to_user_ids),
             'created'       => $date,
+            'options'       => $options,
         ];
         /** @noinspection PhpInternalEntityUsedInspection */
         $pipe = $this->Db->multi(Redis::PIPELINE);
