@@ -1,6 +1,25 @@
 /*
   headerのスタイル
  */
+.nav-container {
+  width: 100%;
+  margin: auto;
+  @media screen and (min-width: 480px ) {
+    width: 97.5%;
+  }
+  @media screen and (min-width: 768px) {
+    width: 756px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  @media screen and (min-width: 992px) {
+    width: 972px;
+  }
+  @media screen and (min-width: 1024px) {
+    width: 1008px;
+  }
+}
+
 .header-profile-icon,
 .js-header-link,
 .header-logo-img,
@@ -11,31 +30,34 @@
 }
 
 .header-dropdowns {
-  .dropdown;
+  position: relative;
   .navbar-nav-fix;
-  height: 48px;
-  line-height: 48px;
+  width: 36px;
+  height: 50px;
+  line-height: 50px;
   padding: 0;
+  display: inline-block;
 }
 
 .header-user-avator {
   list-style: none;
+  line-height: 50px;
   height: 50px;
-  margin: 10px 0;
+  margin: 0;
   display: inline-block;
 }
 
 .header-user-home {
+  font-size: 12px;
   display: inline-block;
+  line-height: 50px;
 }
 
 .header-user-name {
   font-size: 11px;
-}
-
-.nav-icons {
-  font-size: 20px;
-  height: 48px;
+  padding: 5px 5px 5px 0;
+  margin: 0 5px;
+  border-right: 1px solid #ccc;
 }
 
 .header-dropdown-user {
@@ -56,10 +78,6 @@
 
 .header-dropdown-functions {
   .header-dropdowns;
-}
-
-.nav-icons .header-home {
-  line-height: 30px;
 }
 
 .header-dropdown-icons {
@@ -154,4 +172,12 @@
   &:hover {
     border-bottom: 4px solid @aquaBlue;
   }
+}
+
+.header-right-navigations {
+  text-align: right;
+  margin: 0 0 0 auto;
+  font-size: 0;
+  width: 250px;
+  height: 50px;
 }

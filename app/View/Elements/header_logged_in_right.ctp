@@ -1,20 +1,19 @@
 <!-- start app/View/Elements/header_logged_in_right -->
-<div class="header-right-navigations pull-right">
-            <a class="header-user-avator" href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $this->Session->read('Auth.User.id')]) ?>">
-                <?=
-                $this->Upload->uploadImage($this->Session->read('Auth'), 'User.photo', ['style' => 'small'],
-                                           ['width' => '26px', 'height' => '26px', 'alt' => 'icon', 'class' => 'header-nav-avator  img-circle']) ?>
-                <span
-                    class="header-user-name font_11px hidden-xxs header-home header-link pr_5px mlr_5px ptb_5px bd-r"><?= $this->Session->read('Auth.User.display_first_name') ?></span>
-            </a>
-        <a href="<?= $this->Html->url('/') ?>" class="header-user-home header-home header-link">
-            <?= __d('gl', 'ホーム') ?>
-        </a>
+<div class="header-right-navigations">
+    <a class="header-user-avator" href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $this->Session->read('Auth.User.id')]) ?>">
+        <?=
+        $this->Upload->uploadImage($this->Session->read('Auth'), 'User.photo', ['style' => 'small'],
+                                   ['width' => '26px', 'height' => '26px', 'alt' => 'icon', 'class' => 'header-nav-avator']) ?>
+        <span class="header-user-name hidden-xxs header-home js-header-link">
+            <?= $this->Session->read('Auth.User.display_first_name') ?>
+        </span>
+    </a>
+    <a href="<?= $this->Html->url('/') ?>" class="header-user-home header-home js-header-link"><?= __d('gl', 'ホーム') ?></a>
     <div class="header-dropdown-add">
         <a href="#" data-toggle="dropdown" id="download" class="btn-addition-header">
             <i class="header-dropdown-icon-add fa fa-plus-circle js-header-link"></i>
         </a>
-        <ul class="header-nav-add-contents dropdown-menu dropdown-menu-right"
+        <ul class="header-nav-add-contents dropdown-menu "
             aria-labelledby="download">
             <?php if ($this->Session->read('current_team_id')): ?>
                 <li><a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>">
@@ -51,14 +50,14 @@
             </li>
         </ul>
     </div>
-    <div class="header-dropdown-message dropdown-menu-right">
+    <div class="header-dropdown-message ">
         <a id="click-header-message" class="btn-message-header" data-toggle="dropdown" href="#">
             <i class="header-dropdown-icon-message fa fa-paper-plane-o js-header-link"></i>
             <div class="btn btn-xs bell-notify-box notify-bell-numbers" id="messageNum" style="opacity: 0;">
                 <span>0</span><sup class="notify-plus none">+</sup>
             </div>
         </a>
-        <div class="frame-arrow-notify dropdown-menu-right notify-dropdown-area none">
+        <div class="frame-arrow-notify  notify-dropdown-area none">
             <ul class="header-nav-notify-contents" id="message-dropdown" role="menu">
                 <li class="notify-card-empty" id="messageNotifyCardEmpty">
                     <i class="fa fa-smile-o font_33px mr_8px"></i><span
@@ -67,7 +66,7 @@
             </ul>
         </div>
     </div>
-    <div class="header-dropdown-notify dropdown-menu-right">
+    <div class="header-dropdown-notify ">
         <a id="click-header-bell" class="btn-notify-header" data-toggle="dropdown" href="#">
             <i class="header-dropdown-icon-notify fa fa-flag fa-bell-o header-drop-icons js-header-link"></i>
 
@@ -77,7 +76,7 @@
             </div>
         </a>
 
-        <div class="frame-arrow-notify dropdown-menu dropdown-menu-right notify-dropdown-area">
+        <div class="frame-arrow-notify dropdown-menu  notify-dropdown-area">
             <ul class="header-nav-notify-contents notify-dropdown-cards" id="bell-dropdown" role="menu"
                 style="overflow-y:scroll">
                 <li class="notify-card-empty" id="notifyCardEmpty">
@@ -98,7 +97,7 @@
             </a>
         </div>
     </div>
-    <div class="header-dropdown-functions dropdown-menu-right header-function nav-icons">
+    <div class="header-dropdown-functions  header-function">
         <a href="#"
            class="font_lightGray-gray btn-function-header"
            data-toggle="dropdown"
@@ -112,7 +111,7 @@
                 </div>
             <?php endif; ?>
         </a>
-        <ul class="header-nav-function-contents dropdown-menu dropdown-menu-right" role="menu"
+        <ul class="header-nav-function-contents dropdown-menu " role="menu"
             aria-labelledby="dropdownMenu1">
             <li>
                 <?= $this->Html->link(__d('gl', 'ユーザ設定'),

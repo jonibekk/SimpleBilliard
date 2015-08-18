@@ -38,24 +38,6 @@ ul {
 }
 
 /*=== Header部のリファクタリング ===*/
-.nav-icons > a {
-    float: left;
-    font-size: 20px;
-    padding: 10px 2px;
-    color: #000000;
-}
-
-.nav-icons > .dropdown > a {
-    float: left;
-    font-size: 20px;
-    padding: 10px 2px;
-    color: #000000;
-}
-
-.nav-icons > .header-function > a:hover,
-.nav-icons > .header-function > a:focus {
-    text-decoration: none;
-}
 
 .header-user-profile {
     padding: 6px 0 !important;
@@ -104,12 +86,6 @@ ul {
     font-size: 15px !important;
     padding: 7px 7px;
     pointer-events: none;
-}
-
-.nav-icons .header-home {
-    font-size: 12px;
-    line-height: 30px;
-    color: #808080;
 }
 
 .hamburger {
@@ -1998,10 +1974,6 @@ textarea.comment-post-form {
 /*/CommentArea*/
 
 /*HEADER*/
-.nav-container {
-    width: 93.75%;
-    margin: auto;
-}
 
 .header-logo-img {
     margin: 1px;
@@ -2543,20 +2515,9 @@ textarea.comment-post-form {
 
 /*=== メディアクエリで切り替え =======================*/
 
-@media (min-width: 768px) {
-    .nav-container {
-        padding-left: 0;
-        padding-right: 0;
-    }
-}
-
 /*Extrasmall*/
 @media (min-width: 480px) {
     .container {
-        width: 97.5%;
-    }
-
-    .nav-container {
         width: 97.5%;
     }
 
@@ -2616,10 +2577,6 @@ textarea.comment-post-form {
 
     .label-addiction {
         padding-left: 18px;
-    }
-
-    .nav-container {
-        width: 756px;
     }
 
     .header-search-group {
@@ -2710,10 +2667,6 @@ textarea.comment-post-form {
         width: 972px;
     }
 
-    .nav-container {
-        width: 972px;
-    }
-
     .nav-search {
         width: 200px;
     }
@@ -2771,10 +2724,6 @@ textarea.comment-post-form {
 /*ExtraMedium*/
 @media (min-width: 1024px) {
     .container {
-        width: 1008px;
-    }
-
-    .nav-container {
         width: 1008px;
     }
 
