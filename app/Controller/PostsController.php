@@ -368,14 +368,22 @@ class PostsController extends AppController
         $room_info = $this->Post->getPostById($post_id);
         $room_info['User']['photo_path'] = $this->Post->getPhotoPath($room_info['User']);
 
+        $share_users = $this->Post->PostShareUser->getShareUserListByPost($post_id);
+        // 画面表示用にメッセージ受信者１人目の情報を取得する
+        $first_share_user = [];
+        if ($share_users) {
+            $first_share_user = $this->User->findById(current($share_users));
+        }
+
         $res = [
-            'auth_info'   => [
+            'auth_info'        => [
                 'user_id'    => $this->Auth->user('id'),
                 'language'   => $this->Auth->user('language'),
                 'photo_path' => $this->Post->getPhotoPath($this->Auth->user()),
             ],
-            'room_info'   => $room_info,
-            'share_users' => $this->Post->PostShareUser->getShareUserListByPost($post_id)
+            'room_info'        => $room_info,
+            'share_users'      => $share_users,
+            'first_share_user' => $first_share_user,
         ];
 
         //対象のメッセージルーム(Post)のnotifyがあれば削除する
@@ -936,6 +944,29 @@ class PostsController extends AppController
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
         $response = $this->render('modal_share_range');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
+    }
+
+    /**
+     * １メッセージに参加しているメンバー一覧を表示
+     *
+     * @return CakeResponse
+     */
+    public function ajax_get_share_message_modal()
+    {
+        $post_id = viaIsSet($this->request->params['named']['post_id']);
+        $this->_ajaxPreProcess();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $users = $this->Post->PostShareUser->getShareUsersByPost($post_id);
+        $me = $this->User->findById($this->Auth->user('id'));
+        array_unshift($users, $me);
+        $total_share_user_count = $this->_getTotalShareUserCount([], $users);
+        $this->set(compact('users', 'total_share_user_count'));
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('modal_message_range');
         $html = $response->__toString();
 
         return $this->_ajaxGetResponse($html);

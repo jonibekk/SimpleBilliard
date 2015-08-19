@@ -1281,7 +1281,6 @@ class Post extends AppModel
     {
         $upload = new UploadHelper(new View());
         $time = new TimeExHelper(new View());
-        $text_ex = new TextExHelper(new View());
 
         foreach ($data as $key => $item) {
             // 最初のメッセージ作成者のデータ
@@ -1304,10 +1303,6 @@ class Post extends AppModel
                 $v['User']['photo_path'] = $upload->uploadUrl($v['User'], 'User.photo', ['style' => 'medium_large']);
                 $data[$key]['PostShareUser'][$k] = $v;
             }
-        }
-        //auto link処理
-        foreach ($data as $key => $item) {
-            $data[$key]['Post']['body'] = $text_ex->autoLink($item['Post']['body']);
         }
 
         return $data;
