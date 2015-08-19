@@ -240,7 +240,6 @@ class Comment extends AppModel
     function convertData($data)
     {
         $upload = new UploadHelper(new View());
-        $text_ex = new TextExHelper(new View());
 
         //add photo_path
         if (isset($data['Comment']) === true) {
@@ -271,15 +270,6 @@ class Comment extends AppModel
                      'comment_id' => $val['Comment']['id']
                     ]
                 );
-            }
-        }
-        //auto link処理
-        if (isset($data['Comment']) === true) {
-            $data['Comment']['body'] = $text_ex->autoLink($data['Comment']['body']);
-        }
-        else {
-            foreach ($data as $key => $item) {
-                $data[$key]['Comment']['body'] = $text_ex->autoLink($item['Comment']['body']);
             }
         }
         return $data;
