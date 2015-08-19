@@ -369,11 +369,17 @@ class PostsController extends AppController
         $room_info['User']['photo_path'] = $this->Post->getPhotoPath($room_info['User']);
 
         $share_users = $this->Post->PostShareUser->getShareUserListByPost($post_id);
-        // 画面表示用にメッセージ受信者１人目の情報を取得する
+        // 画面表示用に自分以外のメッセージ共有者１人の情報を取得する
         $first_share_user = [];
-        if ($share_users) {
-            $first_share_user = $this->User->findById(current($share_users));
+        if ($room_info['Post']['user_id'] != $this->Auth->user('id')) {
+            $first_share_user['User'] = $room_info['User'];
         }
+        else {
+            if ($share_users) {
+                $first_share_user = $this->User->findById(current($share_users));
+            }
+        }
+
 
         $res = [
             'auth_info'        => [
@@ -960,8 +966,8 @@ class PostsController extends AppController
         $this->_ajaxPreProcess();
         /** @noinspection PhpUndefinedMethodInspection */
         $users = $this->Post->PostShareUser->getShareUsersByPost($post_id);
-        $me = $this->User->findById($this->Auth->user('id'));
-        array_unshift($users, $me);
+        $post = $this->Post->getPostById($post_id);
+        array_unshift($users, ['User' => $post['User']]);
         $total_share_user_count = $this->_getTotalShareUserCount([], $users);
         $this->set(compact('users', 'total_share_user_count'));
         //エレメントの出力を変数に格納する
