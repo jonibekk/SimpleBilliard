@@ -409,7 +409,7 @@ class NotifySetting extends AppModel
                     }
                 }
                 // サークルメンバーとして共有されている場合
-                else {
+                else if (isset($options['is_shared_circle_member']) && $options['is_shared_circle_member']) {
                     // 自分以外に個人として他の人に共有されている場合
                     if (isset($options['share_user_list']) && $options['share_user_list']) {
                         $user_name = $options['other_share_user']['User']['display_username'];
@@ -427,9 +427,13 @@ class NotifySetting extends AppModel
                     }
                     $targets[] = $circle_name;
                 }
+                $target_str = "";
+                if ($targets) {
+                    $target_str = implode(__d('gl', "、"), $targets);
+                }
                 $title = __d('gl', '%1$s%2$sが%3$sに投稿しました。', $user_text,
                              ($count_num > 0) ? __d('gl', "と他%s人", $count_num) : null,
-                             implode(__d('gl', "、"), $targets));
+                             $target_str);
                 break;
             case self::TYPE_FEED_COMMENTED_ON_MY_POST:
                 $title = __d('gl', '%1$s%2$sがあなたの投稿にコメントしました。', $user_text,
