@@ -11,9 +11,9 @@
             <li class="message-list-panel-card">
                 <a href="/posts/message#/{{item.Post.id}}" class="message-list-panel-card-link col col-xxs-12">
                     <div class="message-list-panel-card-avator-wrap pull-left">
-                        <img class="message-list-panel-card-avator" ng-repeat="shareUser in item.share_users | limitTo:4" ng-src="{{shareUser.photo_path}}"/>
+                        <img class="" ng-repeat="shareUser in item.share_users | limitTo:4" ng-src="{{shareUser.photo_path}}" ng-class="imageLayout($index, item.share_users.length)" />
                     </div>
-                    <div class="message-list-panel-card-contents notify-contents">
+                    <div class="message-list-panel-card-contents">
                         <div class="col col-xxs-12 notify-card-head">
                             <span class="font-heading">
                                 <div class="message-list-panel-card-names">

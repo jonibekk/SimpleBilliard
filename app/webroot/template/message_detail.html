@@ -4,10 +4,13 @@
         <div class="message-detail-panel panel panel-default">
             <div class="message-detail-panel-head panel-heading" style="background-color: #f5f5f5;">
                 <div class="message-detail-users-names row font_14px">
-                    <a href="{{message_list_url}}"><i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i></a>
-                    <span class="ml_8px"> {{post_detail.User.display_username}}、他{{post_detail.PostShareUser.length}}人</span>
+                    <a href="{{message_list_url}}"><i
+                            class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i></a>
+                    <span class="ml_8px"> {{first_share_user.User.display_username}}
+                        <span ng-if="post_detail.PostShareUser.length >= 2">、他{{post_detail.PostShareUser.length - 1}}人</span>
+                    </span>
             <span class="message-detail-head-users-icon plr_11px font_brownRed">
-                <a href="/posts/ajax_get_share_circles_users_modal/post_id:{{post_detail.Post.id}}"
+                <a href="/posts/ajax_get_share_message_modal/post_id:{{post_detail.Post.id}}"
                    class="modal-ajax-get-share-circles-users">
                     <i class="fa fa-user"></i> {{post_detail.PostShareUser.length + 1}}
                 </a>
@@ -33,7 +36,8 @@
                             {{item.Comment.created * 1000 | date:'MM/dd HH:mm'}}
                         </span>
                                 </div>
-                                <div class="comment-text font_12px" ng-bind-html="item.Comment.body"></div>
+                                <div class="comment-text font_12px"
+                                     ng-bind-html="item.Comment.body | linky:'_blank'"></div>
                                 <div class="font_12px">
                                     <a href="{{item.get_red_user_model_url}}"
                                        class="modal-ajax-get font_lightgray">
@@ -69,13 +73,13 @@
                                 </a>
                             </div>
                             -->
-                                <div class="message-detail-reply-btn-wrap submit pull-right">
-                                    <input ng-click="clickMessage($event)"
-                                           ng-disabled="!message"
-                                           id="message_submit_button"
-                                           class="message-detail-reply-btn btn btn-primary submit-btn" type="submit"
-                                           value="返信する">
-                                </div>
+                            <div class="message-detail-reply-btn-wrap submit pull-right">
+                                <input ng-click="clickMessage($event)"
+                                       ng-disabled="!message"
+                                       id="message_submit_button"
+                                       class="message-detail-reply-btn btn btn-primary submit-btn" type="submit"
+                                       value="返信する">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -85,8 +89,8 @@
 </div>
 <!-- ToDo : go-topのファイルにまとめる。  -->
 <style>
-.go-top{
-    display: none;
-}
+    .go-top {
+        display: none;
+    }
 </style>
 <!-- end app/webroot/template/message_detail.html -->
