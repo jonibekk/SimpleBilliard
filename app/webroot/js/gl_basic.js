@@ -1569,6 +1569,15 @@ $(document).ready(function () {
             return m;
         },
         containerCssClass: "select2Member"
+    }).on('change', function () {
+        if ($(this).val() == '') {
+            $('#MessageSubmit').attr('disabled', 'disabled');
+        }
+        else {
+            if ($('#CommonMessageBody').val() != '') {
+                $('#MessageSubmit').removeAttr('disabled');
+            }
+        }
     });
     //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
     $('#select2PostCircleMember').select2({
