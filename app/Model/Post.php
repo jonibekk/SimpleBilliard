@@ -477,6 +477,8 @@ class Post extends AppModel
                 elseif (
                     //自分の投稿か？
                     $this->isMyPost($this->orgParams['post_id']) ||
+                    // 公開サークルに共有された投稿か？
+                    $this->PostShareCircle->isShareWithPublicCircle($this->orgParams['post_id']) ||
                     //自分が共有範囲指定された投稿か？
                     $this->PostShareUser->isShareWithMe($this->orgParams['post_id']) ||
                     //自分のサークルが共有範囲指定された投稿か？

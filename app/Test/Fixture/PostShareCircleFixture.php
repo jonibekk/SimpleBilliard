@@ -68,6 +68,16 @@ class PostShareCircleFixture extends CakeTestFixture
             'modified'  => 1388603000
         ),
         array(
+            'id'        => 4,
+            'post_id'   => 7,
+            'circle_id' => 4,
+            'team_id'   => 1,
+            'del_flg'   => 0,
+            'deleted'   => null,
+            'created'   => 1388603000,
+            'modified'  => 1388603000
+        ),
+        array(
             'id'        => '',
             'post_id'   => '',
             'circle_id' => '',
