@@ -6,8 +6,7 @@
   background: @white;
   border: none;
   height: 50px;
-  margin-top: 0;
-  margin-bottom: 0;
+  margin: 0;
   padding-left: 18px;
   padding-right: 18px;
   &:hover,
@@ -15,6 +14,9 @@
   &:target {
     background-color: #fff;
     outline: none;
+  }
+  @media screen and (min-width:768px) {
+    display: none;
   }
 }
 
@@ -76,10 +78,12 @@
 }
 
 .header-user-name {
-  font-size: 11px;
-  padding: 5px 5px 5px 0;
-  margin: 0 5px;
+  font-size: 12px;
+  padding: 0 10px;
+  line-height: 50px;
   border-right: 1px solid #ccc;
+  color: rgb(80, 80, 80);
+  vertical-align: middle;
 }
 
 .header-dropdown-user {
@@ -200,9 +204,37 @@
 .header-right-navigations {
   float: right;
   display: inline-block;
+
   // text-align: right;
   vertical-align: top;
   margin: 0 0 0 auto;
   font-size: 0;
   height: 50px;
+}
+
+/*ハンバーガー*/
+.nav-team-select,
+.nav-search {
+  width: 180px;
+  margin: auto;
+}
+
+
+.nav-team-select {
+  height: 28px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-right: 0;
+  @media screen and (min-width: 768px) {
+    width: 84px;
+    margin-left: 0;
+  }
+  @media screen and (min-width: 992px) {
+    width: 166px;
+    margin-left: 4px;
+  }
+  @media screen and (min-width: 1024px) {
+    width: 184px;
+    margin-left: 10px;
+  }
 }

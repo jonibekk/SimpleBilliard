@@ -3,7 +3,7 @@
     <a class="header-user-avator" href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $this->Session->read('Auth.User.id')]) ?>">
         <?=
         $this->Upload->uploadImage($this->Session->read('Auth'), 'User.photo', ['style' => 'small'],
-                                   ['width' => '26px', 'height' => '26px', 'alt' => 'icon', 'class' => 'header-nav-avator']) ?>
+                                   ['width' => '24', 'height' => '24', 'alt' => 'icon', 'class' => 'header-nav-avator']) ?>
         <span class="header-user-name hidden-xxs header-home js-header-link">
             <?= $this->Session->read('Auth.User.display_first_name') ?>
         </span>

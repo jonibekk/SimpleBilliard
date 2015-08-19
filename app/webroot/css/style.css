@@ -63,7 +63,6 @@ ul {
     z-index: 7777;
 }
 
-.nav-team-select,
 .nav-search {
     height: 28px;
     padding-top: 4px;
@@ -129,11 +128,6 @@ body, .btn, input, button, select, textarea, h1, h2, h3, h4, h5, h6, .h1, .h2, .
 [class*="col-"] {
     padding-left: 0;
     padding-right: 0;
-}
-
-.navbar-toggle {
-    margin-top: 0;
-    margin-right: 0;
 }
 
 .panel-body {
@@ -2068,12 +2062,6 @@ textarea.comment-post-form {
 
 /*/キャンセルボタンのデザイン*/
 
-/*ハンバーガー*/
-.nav-team-select, .nav-search {
-    width: 180px;
-    margin: auto;
-}
-
 .nav-form-icon {
     margin-left: 10px;
 }
@@ -2607,11 +2595,6 @@ textarea.comment-post-form {
         margin-bottom: -4px;
     }
 
-    .nav-team-select {
-        width: 84px;
-        margin-left: 0;
-    }
-
     .nav-search {
         width: 160px;
     }
@@ -2672,10 +2655,6 @@ textarea.comment-post-form {
         width: 54px;
     }
 
-    .nav-team-select {
-        width: 166px;
-        margin-left: 12px;
-    }
 
     .header-search-group {
         margin-left: 98px;
@@ -2712,10 +2691,6 @@ textarea.comment-post-form {
         width: 1008px;
     }
 
-    .nav-team-select {
-        width: 184px;
-        margin-left: 10px;
-    }
 
     .circle-name_box {
         width: 103px;
