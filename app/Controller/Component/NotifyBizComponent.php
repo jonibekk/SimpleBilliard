@@ -31,6 +31,7 @@ class NotifyBizComponent extends Component
         'notify_type' => null,
         'model_id'    => null,
         'item_name'   => null,
+        'options'     => [],
     ];
     public $notify_settings = [];
 
@@ -289,6 +290,12 @@ class NotifyBizComponent extends Component
         //宛先は閲覧可能な全ユーザ
         $members = $this->Post->getShareAllMemberList($post_id);
 
+        // 共有した個人一覧
+        $share_user_list = $this->Post->PostShareUser->getShareUserListByPost($post_id);
+
+        // 共有したサークル一覧
+        $share_circle_list = $this->Post->PostShareCircle->getShareCircleList($post_id);
+
         //対象ユーザの通知設定確認
         $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($members,
                                                                                 NotifySetting::TYPE_FEED_POST);
@@ -297,6 +304,8 @@ class NotifyBizComponent extends Component
         $this->notify_option['model_id'] = null;
         $this->notify_option['item_name'] = !empty($post['Post']['body']) ?
             json_encode([trim($post['Post']['body'])]) : null;
+        $this->notify_option['options']['share_user_list'] = $share_user_list;
+        $this->notify_option['options']['share_circle_list'] = $share_circle_list;
     }
 
     /**
@@ -679,6 +688,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['model_id'] = $post_id;
         $this->notify_option['item_name'] = !empty($comment) ?
             json_encode([trim($comment['Comment']['body'])]) : null;
+        $this->notify_option['options']['post_user_id'] = $post['Post']['user_id'];
     }
 
     /**
@@ -742,7 +752,8 @@ class NotifyBizComponent extends Component
             $item,
             $this->notify_option['url_data'],
             microtime(true),
-            $this->notify_option['post_id']
+            $this->notify_option['post_id'],
+            json_encode($this->notify_option['options'])
         );
         return true;
     }
@@ -850,23 +861,77 @@ class NotifyBizComponent extends Component
         }
         $data = [];
         foreach ($notify_from_redis as $v) {
+            $v['options'] = json_decode($v['options'], true);
             $data[]['Notification'] = $v;
         }
         //fetch User
         $user_list = Hash::extract($notify_from_redis, '{n}.user_id');
+        $user_list = array_merge($user_list, Hash::extract($data, '{n}.Notification.options.post_user_id'));
         $users = Hash::combine($this->NotifySetting->User->getUsersProf($user_list), '{n}.User.id', '{n}');
         //merge users to notification data
         foreach ($data as $k => $v) {
             $user_name = null;
+
+            // 通知のタイプごとに必要なオプションデータ
+            $opt = $v['Notification']['options'];
+
             if (isset($users[$v['Notification']['user_id']])) {
                 $data[$k] = array_merge($data[$k], $users[$v['Notification']['user_id']]);
                 $user_name = $data[$k]['User']['display_username'];
+
+                // $opt['post_user_id'] がある場合
+                // 投稿者の表示名をセット
+                if (isset($opt['post_user_id']) && isset($users[$opt['post_user_id']])) {
+                    $opt['post_user_name'] = $users[$opt['post_user_id']]['User']['display_username'];
+                }
+
+                // $opt['share_user_list'] がある場合
+                // 自分が共有先ユーザーに含まれているか
+                $opt['is_shared_user'] = false;
+                // 自分以外の共有先ユーザー
+                $opt['other_share_user'] = null;
+                if (isset($opt['share_user_list']) && $opt['share_user_list']) {
+                    if (isset($opt['share_user_list'][$this->NotifySetting->my_uid])) {
+                        $opt['is_shared_user'] = true;
+                    }
+
+                    // 自分以外の共有先ユーザーがいる場合は情報取得
+                    foreach ($opt['share_user_list'] as $uid) {
+                        if ($uid != $this->NotifySetting->my_uid) {
+                            $opt['other_share_user'] = $this->Post->User->findById($uid);
+                            break;
+                        }
+                    }
+                }
+
+                // $opt['share_circle_list'] がある場合
+                // 自分が共有先サークルに含まれているか
+                $opt['is_shared_circle_member'] = false;
+                // 共有先サークルの中の１つ
+                $opt['share_circle'] = null;
+                if (isset($opt['share_circle_list']) && $opt['share_circle_list']) {
+                    $circleMember = $this->Team->Circle->CircleMember->isBelong(
+                        $opt['share_circle_list'],
+                        $this->NotifySetting->my_uid);
+                    // 共有先サークルのメンバーの場合
+                    if ($circleMember) {
+                        $opt['is_shared_circle_member'] = true;
+                        $opt['share_circle'] = $this->Team->Circle->findById($circleMember['CircleMember']['circle_id']);
+                    }
+                    // 共有先サークルのメンバーでない場合
+                    // サークルをランダムに１件取得
+                    else {
+                        $opt['share_circle'] = $this->Team->Circle->findById(current($opt['share_circle_list']));
+                    }
+                }
             }
             //get title
             $title = $this->NotifySetting->getTitle($data[$k]['Notification']['type'],
                                                     $user_name, 1,
-                                                    $data[$k]['Notification']['body']);
+                                                    $data[$k]['Notification']['body'],
+                                                    $opt);
             $data[$k]['Notification']['title'] = $title;
+            $data[$k]['Notification']['options'] = $opt;
         }
         return $data;
     }
