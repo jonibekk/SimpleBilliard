@@ -1,5 +1,5 @@
 <!-- start app/View/Elements/header_logged_in_right -->
-<div class="header-right-navigations">
+<div class="header-right-navigations clearfix">
     <a class="header-user-avator" href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $this->Session->read('Auth.User.id')]) ?>">
         <?=
         $this->Upload->uploadImage($this->Session->read('Auth'), 'User.photo', ['style' => 'small'],

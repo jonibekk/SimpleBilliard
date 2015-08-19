@@ -1,6 +1,23 @@
 /*
   headerのスタイル
  */
+.header-toggle-icon {
+  display: inline-block;
+  background: @white;
+  border: none;
+  height: 50px;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-left: 18px;
+  padding-right: 18px;
+  &:hover,
+  &:focus,
+  &:target {
+    background-color: #fff;
+    outline: none;
+  }
+}
+
 .nav-container {
   width: 100%;
   margin: auto;
@@ -44,13 +61,18 @@
   line-height: 50px;
   height: 50px;
   margin: 0;
+  padding: 0 8px;
   display: inline-block;
+  vertical-align: top;
 }
 
 .header-user-home {
   font-size: 12px;
   display: inline-block;
   line-height: 50px;
+  vertical-align: top;
+  padding: 0 4px;
+  color: rgb(80, 80, 80);
 }
 
 .header-user-name {
@@ -85,6 +107,7 @@
   width: 36px;
   height: 20px;
   text-align: center;
+  vertical-align: middle;
   @media screen and (min-width: 768px) {
     width: 36px;
   }
@@ -175,9 +198,11 @@
 }
 
 .header-right-navigations {
-  text-align: right;
+  float: right;
+  display: inline-block;
+  // text-align: right;
+  vertical-align: top;
   margin: 0 0 0 auto;
   font-size: 0;
-  width: 250px;
   height: 50px;
 }

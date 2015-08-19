@@ -20,11 +20,11 @@
 <!-- START app/View/Elements/header_logged_in.ctp -->
 <header class="header">
     <div class="navbar navbar-fixed-top navbar-default gl-navbar" id="header">
-        <button type="button" class="navbar-toggle hamburger header-toggle-icon" data-toggle="offcanvas"
-                data-target=".navbar-offcanvas">
-            <i class="fa fa-navicon toggle-icon"></i>
-        </button>
         <div class="nav-container header-container">
+            <button type="button" class="header-toggle-icon" data-toggle="offcanvas"
+                    data-target=".navbar-offcanvas">
+                <i class="fa fa-navicon toggle-icon"></i>
+            </button>
             <div class="navbar-offcanvas offcanvas navmenu-fixed-left top_50px">
                 <ul class="nav navbar-nav">
                     <li class="mtb_5px mtb-sm_0">

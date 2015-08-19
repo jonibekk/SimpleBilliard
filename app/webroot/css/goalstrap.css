@@ -1233,35 +1233,6 @@ p {
         margin-left: -15px
     }
 }
-.navbar-toggle {
-    position: relative;
-    float: right;
-    margin-right: 15px;
-    padding: 9px 10px;
-    margin-top: 3px;
-    margin-bottom: 3px;
-    background-color: transparent;
-    background-image: none;
-    border: 1px solid transparent;
-    border-radius: 4px
-}
-.navbar-toggle:focus {
-    outline: 0
-}
-.navbar-toggle .icon-bar {
-    display: block;
-    width: 22px;
-    height: 2px;
-    border-radius: 1px
-}
-.navbar-toggle .icon-bar+.icon-bar {
-    margin-top: 4px
-}
-@media (min-width:768px) {
-    .navbar-toggle {
-        display: none
-    }
-}
 .navbar-nav {
     margin: 5px -15px
 }
@@ -1435,15 +1406,6 @@ p {
     color: #444;
     background-color: transparent
 }
-.navbar-default .navbar-toggle {
-    border-color: #ddd
-}
-.navbar-default .navbar-toggle:focus, .navbar-default .navbar-toggle:hover {
-    background-color: #ddd
-}
-.navbar-default .navbar-toggle .icon-bar {
-    background-color: #ccc
-}
 .navbar-default .navbar-collapse, .navbar-default .navbar-form {
     border-color: #eee
 }
@@ -1491,15 +1453,6 @@ p {
 .navbar-inverse .navbar-nav>.disabled>a, .navbar-inverse .navbar-nav>.disabled>a:focus, .navbar-inverse .navbar-nav>.disabled>a:hover {
     color: #ccc;
     background-color: transparent
-}
-.navbar-inverse .navbar-toggle {
-    border-color: #a91b0c
-}
-.navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:hover {
-    background-color: #a91b0c
-}
-.navbar-inverse .navbar-toggle .icon-bar {
-    background-color: #fff
 }
 .navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {
     border-color: #b81e0d
