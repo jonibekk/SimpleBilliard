@@ -73,6 +73,7 @@ class CommentTest extends CakeTestCase
         $this->Comment->my_uid = 1;
         $this->Comment->current_team_id = 1;
         $this->Comment->CommentFile->AttachedFile = $this->getMockForModel('AttachedFile', array('saveRelatedFiles'));
+        /** @noinspection PhpUndefinedMethodInspection */
         $this->Comment->CommentFile->AttachedFile->expects($this->any())
                                         ->method('saveRelatedFiles')
                                         ->will($this->returnValue(true));
@@ -93,6 +94,7 @@ class CommentTest extends CakeTestCase
         $this->Comment->my_uid = 1;
         $this->Comment->current_team_id = 1;
         $this->Comment->Post = $this->getMockForModel('Post', array('saveField'));
+        /** @noinspection PhpUndefinedMethodInspection */
         $this->Comment->Post->expects($this->any())
                             ->method('saveField')
                             ->will($this->returnValue(false));
@@ -106,6 +108,23 @@ class CommentTest extends CakeTestCase
             ],
         ];
         $this->Comment->add($data);
+    }
+
+    function testAddInvalidOgp() {
+        $this->Comment->my_uid = 1;
+        $this->Comment->current_team_id = 1;
+        $data = [
+            'Comment'    => [
+                'user_id' => 1,
+                'post_id' => 1,
+                'body' => 'test',
+                'site_photo' => [
+                    'type' => 'binary/octet-stream'
+                ]
+            ],
+        ];
+        $res = $this->Comment->save($data);
+        $this->assertNotEmpty($res);
     }
 
     function testCommentEdit()
