@@ -122,4 +122,12 @@ class PostShareCircleTest extends CakeTestCase
         }
     }
 
+    public function testIsShareWithPublicCircle() {
+        $this->PostShareCircle->my_uid = 1;
+        $this->PostShareCircle->current_team_id = 1;
+        $res = $this->PostShareCircle->isShareWithPublicCircle(5);
+        $this->assertTrue($res);
+        $res = $this->PostShareCircle->isShareWithPublicCircle(7);
+        $this->assertFalse($res);
+    }
 }
