@@ -192,25 +192,7 @@ class CircleMember extends AppModel
         $member_list = $this->getMemberList($circle_id, true);
 
         $keyword = trim($keyword);
-        // $keyword にスペースが入っていればフルネーム検索
-        // 入っていない場合は姓名それぞれを検索
-        if (strpos($keyword, ' ') !== false || strpos($keyword, __d('gl', '　')) !== false) {
-            // 全角スペース -> 半角スペース
-            $keyword = str_replace(__d('gl', '　'), ' ', $keyword);
-            $keyword_conditions = [
-                'CONCAT(`User.first_name`," ",`User.last_name`) Like'                       => $keyword . "%",
-                'CONCAT(`SearchLocalName.first_name`," ",`SearchLocalName.last_name`) Like' => $keyword . "%",
-            ];
-        }
-        else {
-            $keyword_conditions = [
-                'User.first_name LIKE'            => $keyword . "%",
-                'User.last_name LIKE'             => $keyword . "%",
-                'SearchLocalName.first_name LIKE' => $keyword . "%",
-                'SearchLocalName.last_name LIKE'  => $keyword . "%",
-            ];
-        }
-
+        $keyword_conditions = $this->User->makeUserNameConditions($keyword);
         $options = [
             'conditions' => [
                 'TeamMember.team_id'    => $this->current_team_id,
