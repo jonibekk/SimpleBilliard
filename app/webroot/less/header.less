@@ -58,16 +58,6 @@
   display: inline-block;
 }
 
-.header-user-avator {
-  list-style: none;
-  line-height: 50px;
-  height: 50px;
-  margin: 0;
-  padding: 0 8px;
-  display: inline-block;
-  vertical-align: top;
-}
-
 .header-user-home {
   font-size: 12px;
   display: inline-block;
@@ -151,8 +141,23 @@
   top: 40px;
 }
 
+.header-user-avator {
+  list-style: none;
+  line-height: 50px;
+  height: 50px;
+  margin: 0;
+  padding: 0 8px;
+  display: inline-block;
+  vertical-align: top;
+  &:hover {
+    .header-nav-avator{
+      box-shadow: 0 4px 8px rgba(17,17,17,.3);
+    }
+  }
+}
+
 .header-nav-avator {
-  .avator-rounded-link;
+  border-radius: 50%;
 }
 
 .btn-notify-header {
