@@ -360,7 +360,7 @@ class NotifySetting extends AppModel
         return $res_data;
     }
 
-    function getTitle($type, $from_user_names, $count_num, $item_name)
+    function getTitle($type, $from_user_names, $count_num, $item_name, $options = [])
     {
         if ($item_name && !is_array($item_name)) {
             $item_name = json_decode($item_name, true);
@@ -383,16 +383,66 @@ class NotifySetting extends AppModel
         $title = null;
         switch ($type) {
             case self::TYPE_FEED_POST:
-                $title = __d('gl', '%1$s%2$sが投稿しました。', $user_text,
-                             ($count_num > 0) ? __d('gl', "と他%s人", $count_num) : null);
+                $targets = [];
+                // 自分が個人として共有されている場合
+                if (isset($options['is_shared_user']) && $options['is_shared_user']) {
+                    $share_user_count = count($options['share_user_list']);
+                    // 自分以外に個人として他の人に共有されている場合
+                    if ($share_user_count >= 2) {
+                        $user_name = __d('gl', $options['other_share_user']['User']['display_username'])
+                            . __d('gl', '他%d人', $share_user_count - 1);
+                    }
+                    // 自分だけの場合
+                    else {
+                        $user_name = __d('gl', 'あなた');
+                    }
+                    $targets[] = $user_name;
+
+                    // サークルに共有されている場合
+                    if (isset($options['share_circle_list']) && $options['share_circle_list']) {
+                        $circle_name = $options['share_circle']['Circle']['name'];
+                        $circle_count = count($options['share_circle_list']);
+                        if ($circle_count >= 2) {
+                            $circle_name .= __d('gl', '他%dサークル', $circle_count - 1);
+                        }
+                        $targets[] = $circle_name;
+                    }
+                }
+                // サークルメンバーとして共有されている場合
+                else if (isset($options['is_shared_circle_member']) && $options['is_shared_circle_member']) {
+                    // 自分以外に個人として他の人に共有されている場合
+                    if (isset($options['share_user_list']) && $options['share_user_list']) {
+                        $user_name = $options['other_share_user']['User']['display_username'];
+                        $share_user_count = count($options['share_user_list']);
+                        if ($share_user_count >= 2) {
+                            $user_name .= __d('gl', '他%d人', $share_user_count - 1);
+                        }
+                        $targets[] = $user_name;
+                    }
+
+                    $circle_name = $options['share_circle']['Circle']['name'];
+                    $circle_count = count($options['share_circle_list']);
+                    if ($circle_count >= 2) {
+                        $circle_name .= __d('gl', '他%dサークル', $circle_count - 1);
+                    }
+                    $targets[] = $circle_name;
+                }
+                $target_str = "";
+                if ($targets) {
+                    $target_str = implode(__d('gl', "、"), $targets);
+                }
+                $title = __d('gl', '%1$s%2$sが%3$sに投稿しました。', $user_text,
+                             ($count_num > 0) ? __d('gl', "と他%s人", $count_num) : null,
+                             $target_str);
                 break;
             case self::TYPE_FEED_COMMENTED_ON_MY_POST:
                 $title = __d('gl', '%1$s%2$sがあなたの投稿にコメントしました。', $user_text,
                              ($count_num > 0) ? __d('gl', "と他%s人", $count_num) : null);
                 break;
             case self::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST:
-                $title = __d('gl', '%1$s%2$sも投稿にコメントしました。', $user_text,
-                             ($count_num > 0) ? __d('gl', "と他%s人", $count_num) : null);
+                $title = __d('gl', '%1$s%2$sも%3$s投稿にコメントしました。', $user_text,
+                             ($count_num > 0) ? __d('gl', "と他%s人", $count_num) : null,
+                             isset($options['post_user_name']) ? __d('gl', '%sさんの', $options['post_user_name']) : "");
                 break;
             case self::TYPE_CIRCLE_USER_JOIN:
                 $title = __d('gl', '%1$s%2$sがサークルに参加しました。', $user_text,
@@ -450,7 +500,8 @@ class NotifySetting extends AppModel
                 $title = __d('gl', '%1$sがあなたのアクションにコメントしました。', $user_text);
                 break;
             case self::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION:
-                $title = __d('gl', '%1$sもアクションにコメントしました。', $user_text);
+                $title = __d('gl', '%1$sも%2$sアクションにコメントしました。', $user_text,
+                             isset($options['post_user_name']) ? __d('gl', '%sさんの', $options['post_user_name']) : "");
                 break;
             case self::TYPE_FEED_CAN_SEE_ACTION:
                 $title = __d('gl', '%1$sがアクションしました。', $user_text);
