@@ -239,11 +239,15 @@ class Circle extends AppModel
         // オプションデフォルト
         $params = array_merge(['public_flg' => null], $params);
 
+        $keyword = trim($keyword);
+        if (strlen($keyword) == 0) {
+            return [];
+        }
         $my_circle_list = $this->CircleMember->getMyCircleList();
         $options = [
             'conditions' => [
-                'id'          => $my_circle_list,
-                'name Like ?' => "%" . $keyword . "%",
+                'id'        => $my_circle_list,
+                'name LIKE' => $keyword . "%",
             ],
             'limit'      => $limit,
             'fields'     => ['name', 'id', 'photo_file_name', 'team_all_flg'],
