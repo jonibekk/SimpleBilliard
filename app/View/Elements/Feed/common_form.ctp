@@ -385,7 +385,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
             <?= $this->Form->end() ?>
         </div>
 
-        <div class="tab-pane<?php
+        <div class="tab-pane <?php
         // ファイル上部の宣言部を参照
         if ($common_form_type == "message"): ?>
                 active
