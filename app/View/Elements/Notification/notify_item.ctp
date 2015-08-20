@@ -61,8 +61,12 @@ switch ($location_type) {
         <!-- </div> -->
         <div class="notify-contents  <?= $card_type_class ?>">
             <div class="col col-xxs-12 notify-card-head">
-              <span class="font-heading">
-                  <?= h($notification['title']) ?>
+              <span class="font_verydark">
+                  <?=
+                  // HTMLが入るのでエスケープしない
+                  // NotifySetting::getTitle() 内で必要な処理を行っている
+                  $notification['title']
+                  ?>
               </span>
             </div>
             <div class="col col-xxs-12 notify-text notify-line-number notify-card-text" id="CommentTextBody_67">

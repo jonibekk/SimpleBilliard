@@ -360,6 +360,19 @@ class NotifySetting extends AppModel
         return $res_data;
     }
 
+    /**
+     * Notification のタイトルを返す
+     *
+     * 戻り値はHTML入りの文字列になるので注意
+     *
+     * @param       $type
+     * @param       $from_user_names
+     * @param       $count_num
+     * @param       $item_name
+     * @param array $options
+     *
+     * @return null|string
+     */
     function getTitle($type, $from_user_names, $count_num, $item_name, $options = [])
     {
         if ($item_name && !is_array($item_name)) {
@@ -377,7 +390,7 @@ class NotifySetting extends AppModel
                 if ($key !== 0) {
                     $user_text .= __d('gl', "、");
                 }
-                $user_text .= __d('gl', '%sさん', $name);
+                $user_text .= $name;
             }
         }
         $title = null;
@@ -431,55 +444,58 @@ class NotifySetting extends AppModel
                 if ($targets) {
                     $target_str = implode(__d('gl', "、"), $targets);
                 }
-                $title = __d('gl', '%1$s%2$sが%3$sに投稿しました。', $user_text,
-                             ($count_num > 0) ? __d('gl', "と他%s人", $count_num) : null,
-                             $target_str);
+                $title = __d('gl', '<span class="font_bold">%1$s%2$s</span>が<span class="font_bold">%3$s</span>に投稿しました。',
+                             h($user_text),
+                             ($count_num > 0) ? h(__d('gl', "と他%s人", $count_num)) : null,
+                             h($target_str));
                 break;
             case self::TYPE_FEED_COMMENTED_ON_MY_POST:
-                $title = __d('gl', '%1$s%2$sがあなたの投稿にコメントしました。', $user_text,
-                             ($count_num > 0) ? __d('gl', "と他%s人", $count_num) : null);
+                $title = __d('gl', '<span class="font_bold">%1$s%2$s</span>があなたの投稿にコメントしました。',
+                             h($user_text),
+                             ($count_num > 0) ? h(__d('gl', "と他%s人", $count_num)) : null);
                 break;
             case self::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST:
-                $title = __d('gl', '%1$s%2$sも%3$s投稿にコメントしました。', $user_text,
-                             ($count_num > 0) ? __d('gl', "と他%s人", $count_num) : null,
-                             isset($options['post_user_name']) ? __d('gl', '%sさんの', $options['post_user_name']) : "");
+                $title = __d('gl', '<span class="font_bold">%1$s%2$s</span>も<span class="font_bold">%3$s</span>の投稿にコメントしました。',
+                             h($user_text),
+                             ($count_num > 0) ? h(__d('gl', "と他%s人", $count_num)) : null,
+                             isset($options['post_user_name']) ? h($options['post_user_name']) : "");
                 break;
             case self::TYPE_CIRCLE_USER_JOIN:
-                $title = __d('gl', '%1$s%2$sがサークルに参加しました。', $user_text,
+                $title = __d('gl', '<span class="font_bold">%1$s%2$s</span>がサークルに参加しました。', $user_text,
                              ($count_num > 0) ? __d('gl', "と他%s人", $count_num) : null);
                 break;
             case self::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING:
-                $title = __d('gl', '%1$sがサークルのプライバシー設定を「%2$s」に変更しました。', $user_text, $item_name[1]);
+                $title = __d('gl', '<span class="font_bold">%1$s</span>がサークルのプライバシー設定を「<span class="font_bold">%2$s</span>」に変更しました。', h($user_text), h($item_name[1]));
                 break;
             case self::TYPE_CIRCLE_ADD_USER:
-                $title = __d('gl', '%1$sがサークルにあなたを追加しました。', $user_text);
+                $title = __d('gl', '<span class="font_bold">%1$s</span>がサークルにあなたを追加しました。', h($user_text));
                 break;
             case self::TYPE_MY_GOAL_FOLLOW:
-                $title = __d('gl', '%1$sがあなたのゴールをフォローしました。', $user_text);
+                $title = __d('gl', '<span class="font_bold">%1$s</span>があなたのゴールをフォローしました。', h($user_text));
                 break;
             case self::TYPE_MY_GOAL_COLLABORATE:
-                $title = __d('gl', '%1$sがあなたのゴールにコラボりました。', $user_text);
+                $title = __d('gl', '<span class="font_bold">%1$s</span>があなたのゴールにコラボりました。', h($user_text));
                 break;
             case self::TYPE_MY_GOAL_CHANGED_BY_LEADER:
-                $title = __d('gl', '%1$sがあなたのゴールの内容を変更しました。', $user_text);
+                $title = __d('gl', '<span class="font_bold">%1$s</span>があなたのゴールの内容を変更しました。', h($user_text));
                 break;
             case self::TYPE_MY_GOAL_TARGET_FOR_EVALUATION:
-                $title = __d('gl', '%1$sがあなたのゴールを評価対象としました。', $user_text);
+                $title = __d('gl', '<span class="font_bold">%1$s</span>があなたのゴールを評価対象としました。', h($user_text));
                 break;
             case self::TYPE_MY_GOAL_AS_LEADER_REQUEST_TO_CHANGE:
-                $title = __d('gl', '%1$sがあなたのゴールに修正依頼をしました。', $user_text);
+                $title = __d('gl', '<span class="font_bold">%1$s</span>があなたのゴールに修正依頼をしました。', h($user_text));
                 break;
             case self::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION:
-                $title = __d('gl', '%1$sがあなたのゴールを評価対象外としました。', $user_text);
+                $title = __d('gl', '<span class="font_bold">%1$s</span>があなたのゴールを評価対象外としました。', h($user_text));
                 break;
             case self::TYPE_MY_MEMBER_CREATE_GOAL:
-                $title = __d('gl', '%1$sが新しいゴールを作成しました。', $user_text);
+                $title = __d('gl', '<span class="font_bold">%1$s</span>が新しいゴールを作成しました。', h($user_text));
                 break;
             case self::TYPE_MY_MEMBER_COLLABORATE_GOAL:
-                $title = __d('gl', '%1$sがゴールにコラボりました。', $user_text);
+                $title = __d('gl', '<span class="font_bold">%1$s</span>がゴールにコラボりました。', h($user_text));
                 break;
             case self::TYPE_MY_MEMBER_CHANGE_GOAL:
-                $title = __d('gl', '%1$sがゴール内容を修正しました。', $user_text);
+                $title = __d('gl', '<span class="font_bold">%1$s</span>がゴール内容を修正しました。', h($user_text));
                 break;
             case self::TYPE_EVALUATION_START:
                 $title = __d('gl', '評価期間に入りました。');
@@ -497,20 +513,21 @@ class NotifySetting extends AppModel
                 $title = __d('gl', '最終者が評価を実施しました。');
                 break;
             case self::TYPE_FEED_COMMENTED_ON_MY_ACTION:
-                $title = __d('gl', '%1$sがあなたのアクションにコメントしました。', $user_text);
+                $title = __d('gl', '<span class="font_bold">%1$s</span>があなたのアクションにコメントしました。', h($user_text));
                 break;
             case self::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION:
-                $title = __d('gl', '%1$sも%2$sアクションにコメントしました。', $user_text,
-                             isset($options['post_user_name']) ? __d('gl', '%sさんの', $options['post_user_name']) : "");
+                $title = __d('gl', '<span class="font_bold">%1$s</span>も<span class="font_bold">%2$s</span>のアクションにコメントしました。',
+                             h($user_text),
+                             isset($options['post_user_name']) ? h($options['post_user_name']) : "");
                 break;
             case self::TYPE_FEED_CAN_SEE_ACTION:
-                $title = __d('gl', '%1$sがアクションしました。', $user_text);
+                $title = __d('gl', '<span class="font_bold">%1$s</span>がアクションしました。', $user_text);
                 break;
             case self::TYPE_USER_JOINED_TO_INVITED_TEAM:
-                $title = __d('gl', '%1$sがチームに参加しました。', $user_text);
+                $title = __d('gl', '<span class="font_bold">%1$s</span>がチームに参加しました。', $user_text);
                 break;
             case self::TYPE_FEED_MESSAGE:
-                $title = __d('gl', '%1$s%2$s', $user_text,
+                $title = __d('gl', '<span class="font_bold">%1$s%2$s</span>', $user_text,
                              ($count_num > 0) ? __d('gl', " +%s", $count_num) : null);
                 break;
         }
