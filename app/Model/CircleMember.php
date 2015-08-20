@@ -191,6 +191,8 @@ class CircleMember extends AppModel
     {
         $member_list = $this->getMemberList($circle_id, true);
 
+        $keyword = trim($keyword);
+        $keyword_conditions = $this->User->makeUserNameConditions($keyword);
         $options = [
             'conditions' => [
                 'TeamMember.team_id'    => $this->current_team_id,
@@ -198,10 +200,7 @@ class CircleMember extends AppModel
                 'NOT'                   => [
                     'TeamMember.user_id' => $member_list
                 ],
-                'OR'                    => [
-                    'CONCAT(`User.first_name`," ",`User.last_name`) Like ?'                       => "%" . $keyword . "%",
-                    'CONCAT(`SearchLocalName.first_name`," ",`SearchLocalName.last_name`) Like ?' => "%" . $keyword . "%",
-                ]
+                'OR'                    => $keyword_conditions,
             ],
             'limit'      => $limit,
             'contain'    => [
