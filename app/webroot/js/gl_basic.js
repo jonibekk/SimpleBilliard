@@ -352,7 +352,7 @@ $(document).ready(function () {
                 $modal_elm.find('#select2ActionCircleMember').select2({
                     multiple: true,
                     placeholder: cake.word.select_notify_range,
-                    minimumInputLength: 2,
+                    minimumInputLength: 1,
                     ajax: {
                         url: cake.url.select2_circle_user,
                         dataType: 'json',
@@ -1546,7 +1546,7 @@ $(document).ready(function () {
     //noinspection JSUnusedLocalSymbols
     $('#select2Member').select2({
         multiple: true,
-        minimumInputLength: 2,
+        minimumInputLength: 1,
         placeholder: cake.message.notice.b,
         ajax: {
             url: cake.url.a,
@@ -1583,7 +1583,7 @@ $(document).ready(function () {
     $('#select2PostCircleMember').select2({
         multiple: true,
         placeholder: cake.word.select_public_circle,
-        minimumInputLength: 2,
+        minimumInputLength: 1,
         ajax: {
             url: cake.url.select2_circle_user,
             dataType: 'json',
@@ -1615,7 +1615,7 @@ $(document).ready(function () {
     $('#select2PostSecretCircle').select2({
         multiple: true,
         placeholder: cake.word.select_secret_circle,
-        minimumInputLength: 2,
+        minimumInputLength: 1,
         maximumSelectionSize: 1,
         ajax: {
             url: cake.url.select2_secret_circle,
@@ -1748,7 +1748,7 @@ $(document).ready(function () {
     $('#select2ActionCircleMember').select2({
         multiple: true,
         placeholder: cake.word.select_notify_range,
-        minimumInputLength: 2,
+        minimumInputLength: 1,
         ajax: {
             url: cake.url.select2_circle_user,
             dataType: 'json',
@@ -1838,7 +1838,7 @@ function bindSelect2Members($this) {
     $select2elem.select2({
         'val': null,
         multiple: true,
-        minimumInputLength: 2,
+        minimumInputLength: 1,
         placeholder: cake.message.notice.b,
         ajax: {
             url: url ? url : cake.url.a,
