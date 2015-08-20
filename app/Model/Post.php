@@ -1303,30 +1303,34 @@ class Post extends AppModel
         $upload = new UploadHelper(new View());
         $time = new TimeExHelper(new View());
 
-        foreach ($data as $key => $item) {
+        // angularJS 側で通常の（連想配列でない）配列を受け取る必要があるので、
+        // 確実に通常の配列になるようにする
+        $new_data = [];
+        foreach ($data as $item) {
             // 最初のメッセージ作成者のデータ
-            $data[$key]['PostUser'] = $data[$key]['User'];
+            $item['PostUser'] = $item['User'];
 
             // 最後に送信されたメッセージ
             if (empty($item['Comment']) === false) {
-                $data[$key]['User'] = $item['Comment'][0]['User'];
-                $data[$key]['Post']['body'] = $item['Comment'][0]['body'];
-                $data[$key]['Post']['created'] = $item['Comment'][0]['created'];
+                $item['User'] = $item['Comment'][0]['User'];
+                $item['Post']['body'] = $item['Comment'][0]['body'];
+                $item['Post']['created'] = $item['Comment'][0]['created'];
             }
-            $data[$key]['Post']['created'] = $time->elapsedTime(h($data[$key]['Post']['created']));
+            $item['Post']['created'] = $time->elapsedTime(h($item['Post']['created']));
 
             // 最初のメッセージ作成者の画像
-            $data[$key]['PostUser']['photo_path'] =
-                $upload->uploadUrl($data[$key]['PostUser'], 'User.photo', ['style' => 'medium_large']);
+            $item['PostUser']['photo_path'] =
+                $upload->uploadUrl($item['PostUser'], 'User.photo', ['style' => 'medium_large']);
 
             // メッセージ受信者の画像
-            foreach ($data[$key]['PostShareUser'] as $k => $v) {
+            foreach ($item['PostShareUser'] as $k => $v) {
                 $v['User']['photo_path'] = $upload->uploadUrl($v['User'], 'User.photo', ['style' => 'medium_large']);
-                $data[$key]['PostShareUser'][$k] = $v;
+                $item['PostShareUser'][$k] = $v;
             }
+            $new_data[] = $item;
         }
 
-        return $data;
+        return $new_data;
     }
 
     function getFilesOnCircle($circle_id, $page = 1, $limit = null,
