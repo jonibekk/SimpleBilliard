@@ -8,7 +8,9 @@
  * @var CodeCompletionView $this
  * @var                    $current_circle
  * @var                    $goal_list_for_action_option
- * @var                    $common_form_type
+ * @var string             $common_form_type     デフォルトで有効にするフォーム種類 (action, post, message)
+ * @var string             $common_form_mode     新規登録 or 編集(edit)
+ * @var string             $common_form_only_tab フォームのタブ表示を１つに絞る (action, post, message)
  */
 
 // 編集時に true
@@ -29,6 +31,11 @@ $only_tab_action =
 $only_tab_post =
     ($is_edit_mode && $common_form_type == 'post') ||
     (isset($common_form_only_tab) && $common_form_only_tab == 'post');
+
+// 表示するタブを「メッセージ」のみする
+// 以下のいずれかの場合に true
+//   1. $common_form_only_tab == 'message' が指定された場合
+$only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'message');
 ?>
 <!-- START app/View/Elements/Feed/common_form.ctp -->
 <div class="panel panel-default global-form">
@@ -37,7 +44,7 @@ $only_tab_post =
         <ul class="feed-switch clearfix plr_0px" role="tablist" id="CommonFormTabs">
             <li class="switch-action <?php
             // ファイル上部の宣言部を参照
-            if ($only_tab_post): ?>
+            if ($only_tab_post || $only_tab_message): ?>
                 none
             <?php endif ?>">
                 <a href="#ActionForm" role="tab" data-toggle="tab"
@@ -47,7 +54,7 @@ $only_tab_post =
             </li>
             <li class="switch-post <?php
             // ファイル上部の宣言部を参照
-            if ($only_tab_action): ?>
+            if ($only_tab_action || $only_tab_message): ?>
                 none
             <?php endif ?>">
                 <a href="#PostForm" role="tab" data-toggle="tab"
@@ -55,9 +62,18 @@ $only_tab_post =
                    target-id="CommonPostBody"><i
                         class="fa fa-comment-o"></i><?= __d('gl', "投稿") ?></a><span class="switch-arrow"></span>
             </li>
-            <li class="switch-message"><a href="#MessageForm" role="tab" data-toggle="tab"
-                                          class="switch-message-anchor click-target-focus"
-                                          target-id="s2id_autogen1"><i
+            <li class="switch-message <?php
+            // ファイル上部の宣言部を参照
+            if ($only_tab_action || $only_tab_post): ?>
+                none
+            <?php endif ?><?php
+            // ファイル上部の宣言部を参照
+            if ($common_form_type == "message"): ?>
+                active
+            <?php endif ?>">
+                <a href="#MessageForm" role="tab" data-toggle="tab"
+                   class="switch-message-anchor click-target-focus"
+                   target-id="s2id_autogen1"><i
                         class="fa fa-paper-plane-o"></i><?= __d('gl', "メッセージ") ?></a><span class="switch-arrow"></span>
             </li>
         </ul>
@@ -369,7 +385,14 @@ $only_tab_post =
             <?= $this->Form->end() ?>
         </div>
 
-        <div class="tab-pane fade" id="MessageForm">
+        <div class="tab-pane<?php
+        // ファイル上部の宣言部を参照
+        if ($common_form_type == "message"): ?>
+                active
+        <?php else: ?>
+                fade
+        <?php endif ?>" id="MessageForm">
+
             <?=
             $this->Form->create('Post', [
                 'url'           => ['controller' => 'posts', 'action' => 'add_message'],
@@ -405,15 +428,15 @@ $only_tab_post =
             <div class="post-panel-body plr_11px ptb_7px">
                 <?=
                 $this->Form->input('body', [
-                    'id'             => 'CommonMessageBody',
-                    'label'          => false,
-                    'type'           => 'textarea',
-                    'wrap'           => 'soft',
-                    'rows'           => 1,
-                    'required'       => true,
-                    'placeholder'    => __d('gl', "メッセージを書こう"),
-                    'class'          => 'form-control tiny-form-text-change post-form feed-post-form box-align change-warning',
-                    'target_show_id' => "MessageFormFooter",
+                    'id'                       => 'CommonMessageBody',
+                    'label'                    => false,
+                    'type'                     => 'textarea',
+                    'wrap'                     => 'soft',
+                    'rows'                     => 1,
+                    'required'                 => true,
+                    'placeholder'              => __d('gl', "メッセージを書こう"),
+                    'class'                    => 'form-control tiny-form-text-change post-form feed-post-form box-align change-warning',
+                    'target_show_id'           => "MessageFormFooter",
                     'data-bv-notempty-message' => __d('validate', "入力必須項目です。"),
                 ]);
                 ?>

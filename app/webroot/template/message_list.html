@@ -2,9 +2,6 @@
 <div class="panel panel-default message-list-panel">
     <div class="panel-heading message-list-panel-head">
         すべてのメッセージ
-            <a href="/common_form/message" class="message-list-new-btn">
-                <i class="fa fa-edit"></i>
-            </a>
     </div>
     <div class="message-list-panel-body panel-body">
         <ul class="message-list-panel-cards" role="menu" ng-repeat="item in message_list | orderBy:'Post.modified':'DESC'">
@@ -27,7 +24,7 @@
                         <div class="message-list-panel-card-text col col-xxs-12" id="CommentTextBody_67">
                             <span ng-if="item.User.id != auth_info.user_id">{{item.User.display_first_name}}</span>
                             <span ng-if="item.User.id == auth_info.user_id">あなた</span>
-                            : <span ng-bind-html="item.Post.body">
+                            : <span ng-bind-html="item.Post.body"></span>
                         </div>
                         <p class="message-list-panel-card-aside"><span ng-bind-html="item.Post.created"></span></p>
                     </div>
