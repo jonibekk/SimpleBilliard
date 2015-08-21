@@ -138,26 +138,37 @@ class NotifySettingTest extends CakeTestCase
         $count_num = 1;
         $item_name = json_encode(['ccc', 'ddd']);
 
+        $this->NotifySetting->my_uid = 1;
+        $this->NotifySetting->current_team_id = 1;
+        $this->NotifySetting->User->CircleMember->my_uid = 1;
+        $this->NotifySetting->User->CircleMember->current_team_id = 1;
+
         // 個人共有 複数
         $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_POST, $from_user_names, $count_num, $item_name, [
-            'share_user_list'  => [1, 2],
+            'share_user_list'  => [1 => 1, 2 => 2],
         ]);
 
         // 個人共有 自分のみ
         $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_POST, $from_user_names, $count_num, $item_name, [
-            'share_user_list'  => [1],
+            'share_user_list'  => [1 => 1],
         ]);
 
         // 個人 + サークル
         $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_POST, $from_user_names, $count_num, $item_name, [
-            'share_user_list'         => [1, 2],
-            'share_circle_list'       => [1, 2],
+            'share_user_list'         => [1 => 1, 2 => 2],
+            'share_circle_list'       => [1 => 1, 2 => 2],
         ]);
 
         // サークル共有
         $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_POST, $from_user_names, $count_num, $item_name, [
-            'share_user_list'         => [1, 2],
-            'share_circle_list'       => [1, 2],
+            'share_user_list'         => [1 => 1, 2 => 2],
+            'share_circle_list'       => [1 => 1, 2 => 2, 3 => 3],
+        ]);
+
+        // サークル共有 サークルメンバーでない場合
+        $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_POST, $from_user_names, $count_num, $item_name, [
+            'share_user_list'         => [1 => 1, 2 => 2],
+            'share_circle_list'       => [999 => 999],
         ]);
     }
 
