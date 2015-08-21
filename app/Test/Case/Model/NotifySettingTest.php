@@ -168,7 +168,7 @@ class NotifySettingTest extends CakeTestCase
         // サークル共有 サークルメンバーでない場合
         $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_POST, $from_user_names, $count_num, $item_name, [
             'share_user_list'         => [1 => 1, 2 => 2],
-            'share_circle_list'       => [999 => 999],
+            'share_circle_list'       => [5 => 5],
         ]);
     }
 
