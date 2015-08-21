@@ -371,7 +371,8 @@
         }
 
         if(balancedGallery.element !== document.body) {
-            $(balancedGallery.element).css({overflow:'scroll'});
+            //TODO hacked for supporting IE. written by Hirakata.
+            //$(balancedGallery.element).css({overflow:'scroll'});
         }
 
     }
@@ -420,7 +421,8 @@
         var $element = $(balancedGallery.element),
             $container;
         $element.html(''); //clear the images
-        $element.css({overflow: 'scroll'});
+        //TODO hacked for supporting IE. written by Hirakata.
+        //$element.css({overflow: 'scroll'});
         if(balancedGallery.element !== document.body) {
             $container = $('<div id="balanced-gallery-col-container"></div>');
             $element.append($container[0]);
