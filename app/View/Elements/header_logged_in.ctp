@@ -23,7 +23,7 @@
         <div class="nav-container header-container">
             <button type="button" class="header-toggle-icon" data-toggle="offcanvas"
                     data-target=".navbar-offcanvas">
-                <i class="fa fa-navicon toggle-icon"></i>
+                <i class="fa fa-navicon toggle-icon header-icons"></i>
             </button>
             <div class="navbar-offcanvas offcanvas navmenu-fixed-left top_50px">
                 <ul class="nav navbar-nav">
@@ -45,7 +45,7 @@
                         <a class="header-goal header_l-icons <?= $current_global_menu == "goal" ? "activeColumn" : null ?>"
                            href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'index']) ?>">
                             <div class="ta-sm_c">
-                                <i class="fa fa-flag js-header-link header-icon nav-xxs-icon"></i>
+                                <i class="fa fa-flag js-header-link header-icon nav-xxs-icon header-icons"></i>
 
                                 <p class="font_11px header_icon-text hidden-xs js-header-link">
                                     <?= __d('gl', "ゴール") ?>
@@ -58,7 +58,7 @@
                         <a class="header-team header_l-icons <?= $current_global_menu == "team" ? "activeColumn" : null ?>"
                            href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'main']) ?>">
                             <div class="ta-sm_c">
-                                <i class="fa fa-users js-header-link header-icon nav-xxs-icon"></i>
+                                <i class="fa fa-users js-header-link header-icon nav-xxs-icon header-icons"></i>
 
                                 <p class="font_11px header_icon-text hidden-xs js-header-link">
                                     <?= __d('gl', "チーム") ?>
@@ -86,7 +86,7 @@
                     </li>
                     <li class="header-search-group">
                         <form class="nav-form-group" role="search">
-                            <i class="fa fa-search nav-form-icon"></i>
+                            <i class="fa fa-search header-icons nav-form-icon"></i>
                             <input type="text"
                                    class="form-control nav-search font_12px disable-change-warning develop--search"
                                    placeholder="Search">

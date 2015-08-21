@@ -11,7 +11,7 @@
     <a href="<?= $this->Html->url('/') ?>" class="header-user-home header-home js-header-link"><?= __d('gl', 'ホーム') ?></a>
     <div class="header-dropdown-add">
         <a href="#" data-toggle="dropdown" id="download" class="btn-addition-header">
-            <i class="header-dropdown-icon-add fa fa-plus-circle js-header-link"></i>
+            <i class="header-dropdown-icon-add fa fa-plus-circle js-header-link header-icons"></i>
         </a>
         <ul class="header-nav-add-contents dropdown-menu "
             aria-labelledby="download">
@@ -52,7 +52,7 @@
     </div>
     <div class="header-dropdown-message ">
         <a id="click-header-message" class="btn-message-header" data-toggle="dropdown" href="#">
-            <i class="header-dropdown-icon-message fa fa-paper-plane-o js-header-link"></i>
+            <i class="header-dropdown-icon-message fa fa-paper-plane-o js-header-link header-icons"></i>
             <div class="btn btn-xs bell-notify-box notify-bell-numbers" id="messageNum" style="opacity: 0;">
                 <span>0</span><sup class="notify-plus none">+</sup>
             </div>
@@ -68,7 +68,7 @@
     </div>
     <div class="header-dropdown-notify ">
         <a id="click-header-bell" class="btn-notify-header" data-toggle="dropdown" href="#">
-            <i class="header-dropdown-icon-notify fa fa-flag fa-bell-o header-drop-icons js-header-link"></i>
+            <i class="header-dropdown-icon-notify fa fa-flag fa-bell-o header-drop-icons js-header-link header-icons"></i>
 
             <div class="btn btn-xs bell-notify-box notify-bell-numbers"
                  id="bellNum" style="opacity: 0;">
@@ -80,7 +80,7 @@
             <ul class="header-nav-notify-contents notify-dropdown-cards" id="bell-dropdown" role="menu"
                 style="overflow-y:scroll">
                 <li class="notify-card-empty" id="notifyCardEmpty">
-                    <i class="fa fa-smile-o font_33px mr_8px"></i><span
+                    <i class="fa fa-smile-o font_33px mr_8px header-icons"></i><span
                         class="notify-empty-text"><?= __d('gl', '未読の通知はありません。') ?></span>
                 </li>
             </ul>
@@ -102,7 +102,7 @@
            class="btn-function-header"
            data-toggle="dropdown"
            id="download">
-            <i class="header-dropdown-icon-functions fa fa-cog header-function-icon header-drop-icons js-header-link"></i>
+            <i class="header-dropdown-icon-functions fa fa-cog header-function-icon header-drop-icons js-header-link header-icons"></i>
             <?php if ($all_alert_cnt > 0): ?>
                 <div class="btn btn-xs notify-function-numbers">
                  <span>
