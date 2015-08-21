@@ -1364,10 +1364,6 @@ textarea{
     width: 180px;
 }
 
-.navbar i {
-    color: dimgray;
-}
-
 .sidebar-setting {
     position: fixed;
     top: 90px;
@@ -3032,7 +3028,7 @@ Temporary Properties - YOU MUST FIX
 
 /* 通知部分 */
 /*
-> 
+>
 >> notify-card-link
 >>> notify-text
 */

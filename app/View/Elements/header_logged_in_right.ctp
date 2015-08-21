@@ -16,36 +16,36 @@
         <ul class="header-nav-add-contents dropdown-menu "
             aria-labelledby="download">
             <?php if ($this->Session->read('current_team_id')): ?>
-                <li><a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>">
+                <li><a class="header-nav-add-contents-anchor" href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>">
                         <i class="fa fa-flag header-drop-icons"></i>
-                        <span class="font_verydark"><?= __d('gl', 'ゴールを作成') ?></span>
+                        <span class=""><?= __d('gl', 'ゴールを作成') ?></span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" data-toggle="modal" data-target="#modal_add_circle">
+                    <a class="header-nav-add-contents-anchor" href="#" data-toggle="modal" data-target="#modal_add_circle">
                         <i class="fa fa-circle-o header-drop-icons"></i>
-                        <span class="font_verydark"><?= __d('gl', 'サークルを作成') ?></span>
+                        <span class=""><?= __d('gl', 'サークルを作成') ?></span>
                     </a>
                 </li>
                 <li>
-                    <a href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'add_group_vision']) ?>">
+                    <a class="header-nav-add-contents-anchor" href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'add_group_vision']) ?>">
                         <i class="fa fa-plane header-drop-icons"></i>
-                        <span class="font_verydark"><?= __d('gl', 'グループビジョンを作成') ?></span>
+                        <span class=""><?= __d('gl', 'グループビジョンを作成') ?></span>
                     </a>
                 </li>
                 <?php if ($my_member_status['TeamMember']['admin_flg']): ?>
                     <li>
-                        <a href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'add_team_vision']) ?>">
+                        <a class="header-nav-add-contents-anchor" href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'add_team_vision']) ?>">
                             <i class="fa fa-rocket header-drop-icons"></i>
-                            <span class="font_verydark"><?= __d('gl', 'チームビジョンを作成') ?></span>
+                            <span class=""><?= __d('gl', 'チームビジョンを作成') ?></span>
                         </a>
                     </li>
                 <?php endif; ?>
             <?php endif; ?>
             <li>
-                <a href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'add']) ?>">
+                <a class="header-nav-add-contents-anchor" href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'add']) ?>">
                     <i class=" fa fa-users header-drop-icons"></i>
-                    <span class="font_verydark"><?= __d('gl', 'チームを作成') ?></span>
+                    <span class=""><?= __d('gl', 'チームを作成') ?></span>
                 </a>
             </li>
         </ul>
