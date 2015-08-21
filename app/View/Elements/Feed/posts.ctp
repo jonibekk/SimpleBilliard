@@ -40,7 +40,7 @@ $without_header = isset($without_header) ? $without_header : false;
                                     <?=
                                     $this->Html->image('ajax-loader.gif',
                                                        [
-                                                           'class'         => 'post-heading-goal-avator  lazy media-object',
+                                                           'class'         => 'post-heading-goal-avatar  lazy media-object',
                                                            'data-original' => $this->Upload->uploadUrl($post,
                                                                                                        "Goal.photo",
                                                                                                        ['style' => 'small']),
@@ -71,7 +71,7 @@ $without_header = isset($without_header) ? $without_header : false;
                                     <?=
                                     $this->Html->image('ajax-loader.gif',
                                                        [
-                                                           'class'         => 'post-heading-circle-avator lazy media-object',
+                                                           'class'         => 'post-heading-circle-avatar lazy media-object',
                                                            'data-original' => $this->Upload->uploadUrl($post,
                                                                                                        "Circle.photo",
                                                                                                        ['style' => 'small']),
