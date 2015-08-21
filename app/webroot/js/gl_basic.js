@@ -15,7 +15,7 @@ function bindPostBalancedGallery($obj) {
         //background: '#DDD',                   // the css properties of the gallery's containing element
         idealHeight: 150,                  // ideal row height, only used for horizontal galleries, defaults to half the containing element's height
         //idealWidth: 100,                   // ideal column width, only used for vertical galleries, defaults to 1/4 of the containing element's width
-        maintainOrder: false,                // keeps images in their original order, setting to 'false' can create a slightly better balance between rows
+        //maintainOrder: false,                // keeps images in their original order, setting to 'false' can create a slightly better balance between rows
         orientation: 'horizontal',          // 'horizontal' galleries are made of rows and scroll vertically; 'vertical' galleries are made of columns and scroll horizontally
         padding: 1,                         // pixels between images
         shuffleUnorderedPartitions: true,   // unordered galleries tend to clump larger images at the begining, this solves that issue at a slight performance cost
@@ -31,7 +31,7 @@ function bindCommentBalancedGallery($obj) {
         //background: '#DDD',                   // the css properties of the gallery's containing element
         idealHeight: 130,                  // ideal row height, only used for horizontal galleries, defaults to half the containing element's height
         //idealWidth: 100,                   // ideal column width, only used for vertical galleries, defaults to 1/4 of the containing element's width
-        maintainOrder: false,                // keeps images in their original order, setting to 'false' can create a slightly better balance between rows
+        //maintainOrder: false,                // keeps images in their original order, setting to 'false' can create a slightly better balance between rows
         orientation: 'horizontal',          // 'horizontal' galleries are made of rows and scroll vertically; 'vertical' galleries are made of columns and scroll horizontally
         padding: 1,                         // pixels between images
         shuffleUnorderedPartitions: true,   // unordered galleries tend to clump larger images at the begining, this solves that issue at a slight performance cost
@@ -53,11 +53,14 @@ var bindCtrlEnterAction = function (selector, callback) {
         }
     })
 };
-
 $(window).load(function () {
+    //bindPostBalancedGallery($('.post_gallery'));
+    //bindCommentBalancedGallery($('.comment_gallery'));
+    setDefaultTab();
+});
+$(window).imagesLoaded(function () {
     bindPostBalancedGallery($('.post_gallery'));
     bindCommentBalancedGallery($('.comment_gallery'));
-    setDefaultTab();
 });
 $(document).ready(function () {
     //すべてのformで入力があった場合に行う処理
@@ -2966,7 +2969,7 @@ $(function () {
     });
 
     // ヘッダーのお知らせ一覧ポップアップの次のページ読込みボタン
-    $(document).on("click", ".click-notify-read-more-dropdown",  function (e) {
+    $(document).on("click", ".click-notify-read-more-dropdown", function (e) {
         e.preventDefault();
         e.stopPropagation();
         var $this = $(this);
@@ -2974,7 +2977,7 @@ $(function () {
             locationType: "dropdown",
             showLoader: function ($loader_html) {
                 $('#bell-dropdown').append($('<div>').append($loader_html).css({
-                   textAlign: 'center',
+                    textAlign: 'center',
                 }));
 
             },
