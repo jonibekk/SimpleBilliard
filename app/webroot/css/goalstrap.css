@@ -2370,9 +2370,7 @@ textarea.input-lg, select[multiple].input-lg {
 }
 .dropdown-menu {
     position: absolute;
-    top: 100%;
-    left: 0;
-    z-index: 1000;
+    z-index: 100;
     display: none;
     float: left;
     min-width: 160px;

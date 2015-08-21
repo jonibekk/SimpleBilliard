@@ -13,7 +13,7 @@
     <a class="dashboardProfileCard-bg col-xxs-12" tabindex="-1" href="/#"></a>
 
     <div class="dashboardProfileCard-content">
-        <a class="dashboardProfileCard-avatorLink"
+        <a class="dashboardProfileCard-avatarLink"
            href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $this->Session->read('Auth.User.id')]) ?>">
             <?= $this->Upload->uploadImage($this->Session->read('Auth.User'), 'User.photo', ['style' => 'medium'],
                                            ['class' => 'dashboardProfileCard-avatarImage inline-block']) ?>

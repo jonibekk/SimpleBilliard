@@ -42,31 +42,31 @@ message_list_app.controller(
             [],
             // 画像１個の場合
             [{
-                'message-list-panel-card-avator-md': true
+                'message-list-panel-card-avatar-md': true
             }],
             // 画像が２個の場合
             [{
-                'message-list-panel-card-avator-vl-left': true
+                'message-list-panel-card-avatar-vl-left': true
             }, {
-                'message-list-panel-card-avator-vl-right': true
+                'message-list-panel-card-avatar-vl-right': true
             }],
             // 画像が３個の場合
             [{
-                'message-list-panel-card-avator-vl-left': true
+                'message-list-panel-card-avatar-vl-left': true
             }, {
-                'message-list-panel-card-avator-sm-tr': true
+                'message-list-panel-card-avatar-sm-tr': true
             }, {
-                'message-list-panel-card-avator-sm-br': true
+                'message-list-panel-card-avatar-sm-br': true
             }],
             // 画像が４個の場合
             [{
-                'message-list-panel-card-avator-sm-tl': true
+                'message-list-panel-card-avatar-sm-tl': true
             }, {
-                'message-list-panel-card-avator-sm-tr': true
+                'message-list-panel-card-avatar-sm-tr': true
             }, {
-                'message-list-panel-card-avator-sm-bl': true
+                'message-list-panel-card-avatar-sm-bl': true
             }, {
-                'message-list-panel-card-avator-sm-br': true
+                'message-list-panel-card-avatar-sm-br': true
             }, ]
         ];
         $scope.imageLayout = function(index, share_users_num) {

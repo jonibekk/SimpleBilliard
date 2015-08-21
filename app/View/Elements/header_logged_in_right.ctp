@@ -1,9 +1,9 @@
 <!-- start app/View/Elements/header_logged_in_right -->
 <div class="header-right-navigations clearfix">
-    <a class="header-user-avator" href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $this->Session->read('Auth.User.id')]) ?>">
+    <a class="header-user-avatar" href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $this->Session->read('Auth.User.id')]) ?>">
         <?=
         $this->Upload->uploadImage($this->Session->read('Auth'), 'User.photo', ['style' => 'small'],
-                                   ['width' => '24', 'height' => '24', 'alt' => 'icon', 'class' => 'header-nav-avator']) ?>
+                                   ['width' => '24', 'height' => '24', 'alt' => 'icon', 'class' => 'header-nav-avatar']) ?>
         <span class="header-user-name hidden-xxs header-home js-header-link">
             <?= $this->Session->read('Auth.User.display_first_name') ?>
         </span>
@@ -57,7 +57,7 @@
                 <span>0</span><sup class="notify-plus none">+</sup>
             </div>
         </a>
-        <div class="frame-arrow-notify  notify-dropdown-area none">
+        <div class="frame-arrow-notify  header-nav-message-contents-wrap none">
             <ul class="header-nav-notify-contents" id="message-dropdown" role="menu">
                 <li class="notify-card-empty" id="messageNotifyCardEmpty">
                     <i class="fa fa-smile-o font_33px mr_8px"></i><span
@@ -76,7 +76,7 @@
             </div>
         </a>
 
-        <div class="frame-arrow-notify dropdown-menu  notify-dropdown-area">
+        <div class="dropdown-menu header-nav-notify-contents-wrap">
             <ul class="header-nav-notify-contents notify-dropdown-cards" id="bell-dropdown" role="menu"
                 style="overflow-y:scroll">
                 <li class="notify-card-empty" id="notifyCardEmpty">
@@ -87,8 +87,8 @@
             <a id="NotifyDropDownReadMore" href="#"
                class="btn btn-link font_bold click-notify-read-more-dropdown none"
                get-url="<?= $this->Html->url(['controller' => 'notifications',
-                                              'action' => 'ajax_get_old_notify_more', ]) ?>"
-                ></a>
+                                              'action' => 'ajax_get_old_notify_more', ]) ?>">
+            </a>
 
             <a href="<?= $this->Html->url(['controller' => 'notifications', 'action' => 'index']) ?>">
                 <div class="text-align_c notify-all-view-link">
@@ -97,9 +97,9 @@
             </a>
         </div>
     </div>
-    <div class="header-dropdown-functions  header-function">
+    <div class="header-dropdown-functions header-function">
         <a href="#"
-           class="font_lightGray-gray btn-function-header"
+           class="btn-function-header"
            data-toggle="dropdown"
            id="download">
             <i class="header-dropdown-icon-functions fa fa-cog header-function-icon header-drop-icons js-header-link"></i>
