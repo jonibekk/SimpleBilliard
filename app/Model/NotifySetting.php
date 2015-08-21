@@ -362,19 +362,25 @@ class NotifySetting extends AppModel
 
     /**
      * Notification のタイトルを返す
-     *
-     * 戻り値はHTML入りの文字列になるので注意
+     * 戻り値はデフォルト HTML 形式なので注意。
+     * $options['style'] = 'plain' を指定するとテキスト形式で返す。
      *
      * @param       $type
      * @param       $from_user_names
      * @param       $count_num
      * @param       $item_name
      * @param array $options
+     *                 style: 'html' or 'plain'
      *
      * @return null|string
      */
     function getTitle($type, $from_user_names, $count_num, $item_name, $options = [])
     {
+        $options = array_merge(
+            [
+                'style' => 'html',
+            ], $options);
+
         if ($item_name && !is_array($item_name)) {
             $item_name = json_decode($item_name, true);
         }
@@ -396,107 +402,132 @@ class NotifySetting extends AppModel
         $title = null;
         switch ($type) {
             case self::TYPE_FEED_POST:
+                // 共有先ユーザー名 + サークル名
                 $targets = [];
-                // 自分が個人として共有されている場合
-                if (isset($options['is_shared_user']) && $options['is_shared_user']) {
-                    $share_user_count = count($options['share_user_list']);
-                    // 自分以外に個人として他の人に共有されている場合
-                    if ($share_user_count >= 2) {
-                        $user_name = __d('gl', $options['other_share_user']['User']['display_username'])
-                            . __d('gl', '他%d人', $share_user_count - 1);
-                    }
-                    // 自分だけの場合
-                    else {
-                        $user_name = __d('gl', 'あなた');
-                    }
-                    $targets[] = $user_name;
 
-                    // サークルに共有されている場合
-                    if (isset($options['share_circle_list']) && $options['share_circle_list']) {
-                        $circle_name = $options['share_circle']['Circle']['name'];
-                        $circle_count = count($options['share_circle_list']);
-                        if ($circle_count >= 2) {
-                            $circle_name .= __d('gl', '他%dサークル', $circle_count - 1);
-                        }
-                        $targets[] = $circle_name;
+                // 共有先に個人ユーザーが含まれている場合
+                if (isset($options['share_user_list']) && $options['share_user_list']) {
+                    $share_user_count = count($options['share_user_list']);
+
+                    // 共有先ユーザーが自分１人のみの場合
+                    if (isset($options['share_user_list'][$this->my_uid]) && $share_user_count == 1) {
+                        $targets[] = __d('gl', 'あなた');
                     }
-                }
-                // サークルメンバーとして共有されている場合
-                else if (isset($options['is_shared_circle_member']) && $options['is_shared_circle_member']) {
-                    // 自分以外に個人として他の人に共有されている場合
-                    if (isset($options['share_user_list']) && $options['share_user_list']) {
-                        $user_name = $options['other_share_user']['User']['display_username'];
-                        $share_user_count = count($options['share_user_list']);
+                    // 自分以外の人が個人として共有されている場合はその人の名前を表示
+                    else {
+                        $user_name = "";
+                        foreach ($options['share_user_list'] as $uid) {
+                            if ($uid != $this->my_uid) {
+                                $other_user = $this->User->findById($uid);
+                                $user_name = $other_user['User']['display_username'];
+                                break;
+                            }
+                        }
                         if ($share_user_count >= 2) {
                             $user_name .= __d('gl', '他%d人', $share_user_count - 1);
                         }
                         $targets[] = $user_name;
                     }
+                }
 
-                    $circle_name = $options['share_circle']['Circle']['name'];
+                // サークルに共有されている場合
+                if (isset($options['share_circle_list']) && $options['share_circle_list']) {
+                    $circleMember = $this->User->CircleMember->isBelong(
+                        $options['share_circle_list'],
+                        $this->my_uid);
+                    // 共有先サークルのメンバーの場合
+                    if ($circleMember) {
+                        $circle = $this->User->CircleMember->Circle->findById($circleMember['CircleMember']['circle_id']);
+                    }
+                    // 共有先サークルのメンバーでない場合
+                    // サークルをランダムに１件取得
+                    else {
+                        $circle = $this->User->CircleMember->Circle->findById(current($options['share_circle_list']));
+                    }
+
+                    $circle_name = $circle['Circle']['name'];
                     $circle_count = count($options['share_circle_list']);
                     if ($circle_count >= 2) {
                         $circle_name .= __d('gl', '他%dサークル', $circle_count - 1);
                     }
                     $targets[] = $circle_name;
                 }
-                $target_str = "";
-                if ($targets) {
-                    $target_str = implode(__d('gl', "、"), $targets);
-                }
-                $title = __d('gl', '<span class="font_bold">%1$s%2$s</span>が<span class="font_bold">%3$s</span>に投稿しました。',
+
+                $title = __d('gl',
+                             '<span class="notify-card-head-target">%1$s%2$s</span>が<span class="notify-card-head-target">%3$s</span>に投稿しました。',
                              h($user_text),
                              ($count_num > 0) ? h(__d('gl', "と他%s人", $count_num)) : null,
-                             h($target_str));
+                             h(implode(__d('gl', "、"), $targets)));
                 break;
             case self::TYPE_FEED_COMMENTED_ON_MY_POST:
-                $title = __d('gl', '<span class="font_bold">%1$s%2$s</span>が<span class="font_bold">あなた</span>の投稿にコメントしました。',
+                $title = __d('gl',
+                             '<span class="notify-card-head-target">%1$s%2$s</span>が<span class="notify-card-head-target">あなた</span>の投稿にコメントしました。',
                              h($user_text),
                              ($count_num > 0) ? h(__d('gl', "と他%s人", $count_num)) : null);
                 break;
             case self::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST:
-                $title = __d('gl', '<span class="font_bold">%1$s%2$s</span>も<span class="font_bold">%3$s</span>の投稿にコメントしました。',
+                // この通知では、$options['post_user_id'] は必須
+                // 投稿者の表示名をセット
+                $user = $this->User->findById($options['post_user_id']);
+                $title = __d('gl',
+                             '<span class="notify-card-head-target">%1$s%2$s</span>も<span class="notify-card-head-target">%3$s</span>の投稿にコメントしました。',
                              h($user_text),
                              ($count_num > 0) ? h(__d('gl', "と他%s人", $count_num)) : null,
-                             isset($options['post_user_name']) ? h($options['post_user_name']) : "");
+                             h($user['User']['display_username']));
                 break;
             case self::TYPE_CIRCLE_USER_JOIN:
-                $title = __d('gl', '<span class="font_bold">%1$s%2$s</span>がサークルに参加しました。',
+                $title = __d('gl', '<span class="notify-card-head-target">%1$s%2$s</span>がサークルに参加しました。',
                              h($user_text),
                              ($count_num > 0) ? h(__d('gl', "と他%s人", $count_num)) : null);
                 break;
             case self::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING:
-                $title = __d('gl', '<span class="font_bold">%1$s</span>がサークルのプライバシー設定を「<span class="font_bold">%2$s</span>」に変更しました。', h($user_text), h($item_name[1]));
+                $title = __d('gl',
+                             '<span class="notify-card-head-target">%1$s</span>がサークルのプライバシー設定を「<span class="notify-card-head-target">%2$s</span>」に変更しました。',
+                             h($user_text), h($item_name[1]));
                 break;
             case self::TYPE_CIRCLE_ADD_USER:
-                $title = __d('gl', '<span class="font_bold">%1$s</span>がサークルに<span class="font_bold">あなた</span>を追加しました。', h($user_text));
+                $title = __d('gl',
+                             '<span class="notify-card-head-target">%1$s</span>がサークルに<span class="notify-card-head-target">あなた</span>を追加しました。',
+                             h($user_text));
                 break;
             case self::TYPE_MY_GOAL_FOLLOW:
-                $title = __d('gl', '<span class="font_bold">%1$s</span>が<span class="font_bold">あなた</span>のゴールをフォローしました。', h($user_text));
+                $title = __d('gl',
+                             '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">あなた</span>のゴールをフォローしました。',
+                             h($user_text));
                 break;
             case self::TYPE_MY_GOAL_COLLABORATE:
-                $title = __d('gl', '<span class="font_bold">%1$s</span>が<span class="font_bold">あなた</span>のゴールにコラボりました。', h($user_text));
+                $title = __d('gl',
+                             '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">あなた</span>のゴールにコラボりました。',
+                             h($user_text));
                 break;
             case self::TYPE_MY_GOAL_CHANGED_BY_LEADER:
-                $title = __d('gl', '<span class="font_bold">%1$s</span>が<span class="font_bold">あなた</span>のゴールの内容を変更しました。', h($user_text));
+                $title = __d('gl',
+                             '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">あなた</span>のゴールの内容を変更しました。',
+                             h($user_text));
                 break;
             case self::TYPE_MY_GOAL_TARGET_FOR_EVALUATION:
-                $title = __d('gl', '<span class="font_bold">%1$s</span>が<span class="font_bold">あなた</span>のゴールを評価対象としました。', h($user_text));
+                $title = __d('gl',
+                             '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">あなた</span>のゴールを評価対象としました。',
+                             h($user_text));
                 break;
             case self::TYPE_MY_GOAL_AS_LEADER_REQUEST_TO_CHANGE:
-                $title = __d('gl', '<span class="font_bold">%1$s</span>が<span class="font_bold">あなた</span>のゴールに修正依頼をしました。', h($user_text));
+                $title = __d('gl',
+                             '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">あなた</span>のゴールに修正依頼をしました。',
+                             h($user_text));
                 break;
             case self::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION:
-                $title = __d('gl', '<span class="font_bold">%1$s</span>が<span class="font_bold">あなた</span>のゴールを評価対象外としました。', h($user_text));
+                $title = __d('gl',
+                             '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">あなた</span>のゴールを評価対象外としました。',
+                             h($user_text));
                 break;
             case self::TYPE_MY_MEMBER_CREATE_GOAL:
-                $title = __d('gl', '<span class="font_bold">%1$s</span>が新しいゴールを作成しました。', h($user_text));
+                $title = __d('gl', '<span class="notify-card-head-target">%1$s</span>が新しいゴールを作成しました。', h($user_text));
                 break;
             case self::TYPE_MY_MEMBER_COLLABORATE_GOAL:
-                $title = __d('gl', '<span class="font_bold">%1$s</span>がゴールにコラボりました。', h($user_text));
+                $title = __d('gl', '<span class="notify-card-head-target">%1$s</span>がゴールにコラボりました。', h($user_text));
                 break;
             case self::TYPE_MY_MEMBER_CHANGE_GOAL:
-                $title = __d('gl', '<span class="font_bold">%1$s</span>がゴール内容を修正しました。', h($user_text));
+                $title = __d('gl', '<span class="notify-card-head-target">%1$s</span>がゴール内容を修正しました。', h($user_text));
                 break;
             case self::TYPE_EVALUATION_START:
                 $title = __d('gl', '評価期間に入りました。');
@@ -514,24 +545,34 @@ class NotifySetting extends AppModel
                 $title = __d('gl', '最終者が評価を実施しました。');
                 break;
             case self::TYPE_FEED_COMMENTED_ON_MY_ACTION:
-                $title = __d('gl', '<span class="font_bold">%1$s</span>が<span class="font_bold">あなた</span>のアクションにコメントしました。', h($user_text));
+                $title = __d('gl',
+                             '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">あなた</span>のアクションにコメントしました。',
+                             h($user_text));
                 break;
             case self::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION:
-                $title = __d('gl', '<span class="font_bold">%1$s</span>も<span class="font_bold">%2$s</span>のアクションにコメントしました。',
+                // この通知では、$options['post_user_id'] は必須
+                // 投稿者の表示名をセット
+                $user = $this->User->findById($options['post_user_id']);
+                $title = __d('gl',
+                             '<span class="notify-card-head-target">%1$s</span>も<span class="notify-card-head-target">%2$s</span>のアクションにコメントしました。',
                              h($user_text),
-                             isset($options['post_user_name']) ? h($options['post_user_name']) : "");
+                             h($user['User']['display_username']));
                 break;
             case self::TYPE_FEED_CAN_SEE_ACTION:
-                $title = __d('gl', '<span class="font_bold">%1$s</span>がアクションしました。', h($user_text));
+                $title = __d('gl', '<span class="notify-card-head-target">%1$s</span>がアクションしました。', h($user_text));
                 break;
             case self::TYPE_USER_JOINED_TO_INVITED_TEAM:
-                $title = __d('gl', '<span class="font_bold">%1$s</span>がチームに参加しました。', h($user_text));
+                $title = __d('gl', '<span class="notify-card-head-target">%1$s</span>がチームに参加しました。', h($user_text));
                 break;
             case self::TYPE_FEED_MESSAGE:
-                $title = __d('gl', '<span class="font_bold">%1$s%2$s</span>',
+                $title = __d('gl', '<span class="notify-card-head-target">%1$s%2$s</span>',
                              h($user_text),
                              ($count_num > 0) ? h(__d('gl', " +%s", $count_num)) : null);
                 break;
+        }
+
+        if ($options['style'] == 'plain') {
+            $title = strip_tags($title);
         }
         return $title;
     }

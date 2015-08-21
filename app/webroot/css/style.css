@@ -3170,6 +3170,10 @@ Temporary Properties - YOU MUST FIX
     height: auto;
 }
 
+.notify-card-head-target {
+    font-weight:bold;
+}
+
 /*photo-upボタン*/
 .comment-contents .new-comment-add-pic {
     display: inline;
