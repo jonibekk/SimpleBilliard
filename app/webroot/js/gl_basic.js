@@ -3562,6 +3562,7 @@ $(document).ready(function () {
      * params: object {
      *   formID: string|function  (* 必須) アップロードしたファイルIDを hidden で追加するフォームのID
      *   previewContainerID: string|function  (* 必須) プレビューを表示するコンテナ要素のID
+     *   disableMultiple: 複数ファイル同時アップロードを無効にする（iphone で 「画像選択」と「写真を撮る」を選択出来るようにする）
      *   beforeAddedFile: function  コールバック関数
      *   beforeAccept: function   コールバック関数
      *   afterAccept: function  コールバック関数
@@ -3637,7 +3638,13 @@ $(document).ready(function () {
         Dropzone.instances[0].options = $.extend({}, $uploadFileForm._dzDefaultOptions, dzOptions || {});
         // acceptedFiles の設定は上書きされないので手動で設定
         Dropzone.instances[0].hiddenFileInput.setAttribute("accept", Dropzone.instances[0].options.acceptedFiles);
-
+        // maxFiles が 1 の場合、もしくは
+        // params.disableMultiple が true の場合 multiple 属性を外す（iphone で「画像選択」と「写真を撮る」を選択出来るようにする）
+        if (Dropzone.instances[0].options.maxFiles == 1 || params.disableMultiple) {
+            Dropzone.instances[0].hiddenFileInput.removeAttribute("multiple");
+        } else {
+            Dropzone.instances[0].hiddenFileInput.setAttribute("multiple", "multiple");
+        }
 
         // コールバック関数登録
         var empty = function () {
@@ -3766,6 +3773,7 @@ $(document).ready(function () {
     };
     var actionImageDzOptions = {
         acceptedFiles: "image/*",
+        maxFiles: 1,
         previewTemplate: previewTemplateActionImage
     };
     $uploadFileForm.registerDragDropArea('#ActionImageAddButton', actionImageParams, actionImageDzOptions);
@@ -3777,6 +3785,7 @@ $(document).ready(function () {
     var actionImage2Params = {
         formID: 'CommonActionDisplayForm',
         previewContainerID: 'ActionUploadFilePhotoPreview',
+        disableMultiple: true,
         beforeAccept: function (file) {
             var $oldPreview = $('#' + $uploadFileForm._params.previewContainerID).find('.dz-preview:visible');
 
