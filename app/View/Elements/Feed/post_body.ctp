@@ -14,9 +14,9 @@
     class="col col-xxs-12 feed-contents post-contents <?= $long_text ? "showmore-circle" : "showmore" ?> font_14px font_verydark box-align"
     id="PostTextBody_<?= $post['Post']['id'] ?>">
     <?php if (($post['Post']['type'] == Post::TYPE_NORMAL) || ($post['Post']['type'] == Post::TYPE_MESSAGE)): ?>
-        <?= $this->TextEx->autoLink($post['Post']['body']) ?>
+        <?= nl2br($this->TextEx->autoLink($post['Post']['body'])) ?>
     <?php elseif ($post['Post']['type'] == Post::TYPE_ACTION): ?>
-        <i class="fa fa-check-circle disp_i"></i>&nbsp;<?= $this->TextEx->autoLink($post['ActionResult']['name']) ?>
+        <i class="fa fa-check-circle disp_i"></i>&nbsp;<?= nl2br($this->TextEx->autoLink($post['ActionResult']['name'])) ?>
     <?php elseif ($post['Post']['type'] == Post::TYPE_KR_COMPLETE): ?>
         <i class="fa fa-key disp_i"></i>&nbsp;<?= __d('gl', "%s を達成しました！",
                                                       h($post['KeyResult']['name'])) ?>

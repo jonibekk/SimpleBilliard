@@ -83,7 +83,7 @@
             <div class="goal-detail-info-description">
                 <p class="goal-detail-info-description-head"><?= __d('gl', '詳細') ?></p>
 
-                <p class="goal-detail-info-description-contents"><?= h($goal['Goal']['description']) ?></p>
+                <p class="goal-detail-info-description-contents"><?= nl2br($this->TextEx->autoLink($goal['Goal']['description'])) ?></p>
             </div>
         </div>
     </div>

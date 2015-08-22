@@ -69,7 +69,7 @@
     <div class="col col-xxs-6">
         <a class="font_lightGray-veryDark no-line plr_18px sp-feed-link inline-block pt_12px height_40px sp-feed-active"
            id="SubHeaderMenuGoal">
-            <?= __d('gl', "処理済み") ?> <?php if ($done_cnt > 0) {
+            <?= __d('gl', "処理済み") ?><?php if ($done_cnt > 0) {
                 echo '(' . $done_cnt . ')';
             } ?></a>
     </div>
@@ -127,7 +127,7 @@
                                 : <?= h($goal['Goal']['Purpose']['name']); ?></p>
 
                             <p class="approval_body_text"><?= __d('gl', "詳細") ?>
-                                : <?= $this->TextEx->autoLink($goal['Goal']['description']); ?></p>
+                                : <?= nl2br($this->TextEx->autoLink($goal['Goal']['description'])); ?></p>
 
                             <?=
                             $this->Html->image('ajax-loader.gif',

@@ -68,7 +68,7 @@
         <?php endif ?>
     </div>
     <div class="profile-user-comments showmore">
-        <?= $this->TextEx->autoLink($user['TeamMember']['comment']) ?>
+        <?= nl2br($this->TextEx->autoLink($user['TeamMember']['comment'])) ?>
     </div>
 </div>
 <div class="profile-user-tab-group">
