@@ -13,7 +13,7 @@
                 <div>
                     <?=
                     $this->Upload->uploadImage($member['User'], 'User.photo', ['style' => 'medium_large'],
-                                               ['class' => 'goal-detail-member-avator',])
+                                               ['class' => 'goal-detail-member-avatar',])
                     ?>
                     <div class="goal-detail-member-info">
                         <span class="goal-detail-member-name"><?= h($member['User']['display_username']) ?></span>

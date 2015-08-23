@@ -167,7 +167,8 @@ class SendMailShell extends AppShell
             $subject = $this->User->NotifySetting->getTitle($this->item['type'],
                                                             $from_user_names,
                                                             $this->item['count_num'],
-                                                            $this->item['item_name']
+                                                            $this->item['item_name'],
+                                                            array_merge($this->item['options'], ['style' => 'plain'])
             );
             $options = [
                 'to'       => $data['ToUser']['PrimaryEmail']['email'],

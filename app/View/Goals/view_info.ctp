@@ -61,7 +61,7 @@
                     ?>
                     <?=
                     $this->Html->link($this->Upload->uploadImage($member['User'], 'User.photo', ['style' => 'medium'],
-                                                                 ['class' => 'goal-detail-info-avator',]),
+                                                                 ['class' => 'goal-detail-info-avatar',]),
                                       ['controller' => 'users',
                                        'action'     => 'view_goals',
                                        'user_id'    => $member['User']['id']],
@@ -73,7 +73,7 @@
                     <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_members', 'goal_id' => $goal['Goal']['id']]) ?>"
                        class="goal-detail-members-remaining">
                         <?= $this->Upload->uploadImage($member_all[5]['User'], 'User.photo', ['style' => 'medium'],
-                                                       ['class' => 'goal-detail-info-avator',]) ?>
+                                                       ['class' => 'goal-detail-info-avatar',]) ?>
                         <span class="goal-detail-member-more-counts">
                                 <i class="fa fa-plus"></i>
                             <?= $over_num ?></span>
@@ -83,7 +83,7 @@
             <div class="goal-detail-info-description">
                 <p class="goal-detail-info-description-head"><?= __d('gl', '詳細') ?></p>
 
-                <p class="goal-detail-info-description-contents"><?= h($goal['Goal']['description']) ?></p>
+                <p class="goal-detail-info-description-contents"><?= nl2br($this->TextEx->autoLink($goal['Goal']['description'])) ?></p>
             </div>
         </div>
     </div>

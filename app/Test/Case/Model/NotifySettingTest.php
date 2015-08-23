@@ -112,12 +112,24 @@ class NotifySettingTest extends CakeTestCase
         $item_name = json_encode(['ccc', 'ddd']);
         $types = NotifySetting::$TYPE;
         unset($types[NotifySetting::TYPE_FEED_POST]);
+        unset($types[NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST]);
+        unset($types[NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION]);
         foreach ($types as $type => $val) {
             $this->NotifySetting->getTitle($type, $from_user_names, $count_num, $item_name);
         }
 
         // from_user_name が配列以外の時
         $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_POST, 'aaa', $count_num, $item_name);
+
+        // TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST と TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION は post_user_id が必須
+        $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST, 'aaa', $count_num,
+                                       $item_name, [
+                'post_user_id' => 2,
+            ]);
+        $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION, 'aaa', $count_num,
+                                       $item_name, [
+                'post_user_id' => 2,
+            ]);
     }
 
     function testGetTitleFeedPost()
@@ -126,61 +138,51 @@ class NotifySettingTest extends CakeTestCase
         $count_num = 1;
         $item_name = json_encode(['ccc', 'ddd']);
 
+        $this->NotifySetting->my_uid = 1;
+        $this->NotifySetting->current_team_id = 1;
+        $this->NotifySetting->User->CircleMember->my_uid = 1;
+        $this->NotifySetting->User->CircleMember->current_team_id = 1;
+
         // 個人共有 複数
         $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_POST, $from_user_names, $count_num, $item_name, [
-            'is_shared_user'   => true,
-            'share_user_list'  => [1, 2],
-            'other_share_user' => [
-                'User' => [
-                    'display_username' => 'name'
-                ],
-            ]
+            'share_user_list'  => [1 => 1, 2 => 2],
         ]);
 
         // 個人共有 自分のみ
         $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_POST, $from_user_names, $count_num, $item_name, [
-            'is_shared_user'   => true,
-            'share_user_list'  => [1],
-            'other_share_user' => [
-                'User' => [
-                    'display_username' => 'name'
-                ],
-            ]
+            'share_user_list'  => [1 => 1],
         ]);
 
         // 個人 + サークル
         $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_POST, $from_user_names, $count_num, $item_name, [
-            'is_shared_user'   => true,
-            'share_user_list'  => [1, 2],
-            'other_share_user' => [
-                'User' => [
-                    'display_username' => 'name'
-                ],
-            ],
-            'is_shared_circle_member' => true,
-            'share_circle_list' => [1,2],
-            'share_circle' => [
-                'Circle' => [
-                    'name' => 'circle_name',
-                ],
-            ]
+            'share_user_list'         => [1 => 1, 2 => 2],
+            'share_circle_list'       => [1 => 1, 2 => 2],
         ]);
 
         // サークル共有
         $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_POST, $from_user_names, $count_num, $item_name, [
-            'share_user_list'  => [1, 2],
-            'other_share_user' => [
-                'User' => [
-                    'display_username' => 'name'
-                ],
-            ],
-            'is_shared_circle_member' => true,
-            'share_circle_list' => [1,2],
-            'share_circle' => [
-                'Circle' => [
-                    'name' => 'circle_name',
-                ],
-            ]
+            'share_user_list'         => [1 => 1, 2 => 2],
+            'share_circle_list'       => [1 => 1, 2 => 2, 3 => 3],
         ]);
+
+        // サークル共有 サークルメンバーでない場合
+        $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_POST, $from_user_names, $count_num, $item_name, [
+            'share_user_list'         => [1 => 1, 2 => 2],
+            'share_circle_list'       => [5 => 5],
+        ]);
+    }
+
+    function testGetTitlePlain()
+    {
+        $from_user_names = ['aaa', 'bbb'];
+        $count_num = 1;
+        $item_name = json_encode(['ccc', 'ddd']);
+
+        // HTML入り
+        $html = $this->NotifySetting->getTitle(NotifySetting::TYPE_MY_MEMBER_CHANGE_GOAL, $from_user_names, $count_num, $item_name);
+        $plain =  $this->NotifySetting->getTitle(NotifySetting::TYPE_MY_MEMBER_CHANGE_GOAL, $from_user_names, $count_num, $item_name, [
+            'style' => 'plain'
+        ]);
+        $this->assertNotEquals($html, $plain);
     }
 }

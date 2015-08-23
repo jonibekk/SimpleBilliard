@@ -872,66 +872,16 @@ class NotifyBizComponent extends Component
         foreach ($data as $k => $v) {
             $user_name = null;
 
-            // 通知のタイプごとに必要なオプションデータ
-            $opt = $v['Notification']['options'];
-
             if (isset($users[$v['Notification']['user_id']])) {
                 $data[$k] = array_merge($data[$k], $users[$v['Notification']['user_id']]);
                 $user_name = $data[$k]['User']['display_username'];
-
-                // $opt['post_user_id'] がある場合
-                // 投稿者の表示名をセット
-                if (isset($opt['post_user_id']) && isset($users[$opt['post_user_id']])) {
-                    $opt['post_user_name'] = $users[$opt['post_user_id']]['User']['display_username'];
-                }
-
-                // $opt['share_user_list'] がある場合
-                // 自分が共有先ユーザーに含まれているか
-                $opt['is_shared_user'] = false;
-                // 自分以外の共有先ユーザー
-                $opt['other_share_user'] = null;
-                if (isset($opt['share_user_list']) && $opt['share_user_list']) {
-                    if (isset($opt['share_user_list'][$this->NotifySetting->my_uid])) {
-                        $opt['is_shared_user'] = true;
-                    }
-
-                    // 自分以外の共有先ユーザーがいる場合は情報取得
-                    foreach ($opt['share_user_list'] as $uid) {
-                        if ($uid != $this->NotifySetting->my_uid) {
-                            $opt['other_share_user'] = $this->Post->User->findById($uid);
-                            break;
-                        }
-                    }
-                }
-
-                // $opt['share_circle_list'] がある場合
-                // 自分が共有先サークルに含まれているか
-                $opt['is_shared_circle_member'] = false;
-                // 共有先サークルの中の１つ
-                $opt['share_circle'] = null;
-                if (isset($opt['share_circle_list']) && $opt['share_circle_list']) {
-                    $circleMember = $this->Team->Circle->CircleMember->isBelong(
-                        $opt['share_circle_list'],
-                        $this->NotifySetting->my_uid);
-                    // 共有先サークルのメンバーの場合
-                    if ($circleMember) {
-                        $opt['is_shared_circle_member'] = true;
-                        $opt['share_circle'] = $this->Team->Circle->findById($circleMember['CircleMember']['circle_id']);
-                    }
-                    // 共有先サークルのメンバーでない場合
-                    // サークルをランダムに１件取得
-                    else {
-                        $opt['share_circle'] = $this->Team->Circle->findById(current($opt['share_circle_list']));
-                    }
-                }
             }
             //get title
             $title = $this->NotifySetting->getTitle($data[$k]['Notification']['type'],
                                                     $user_name, 1,
                                                     $data[$k]['Notification']['body'],
-                                                    $opt);
+                                                    $data[$k]['Notification']['options']);
             $data[$k]['Notification']['title'] = $title;
-            $data[$k]['Notification']['options'] = $opt;
         }
         return $data;
     }

@@ -259,6 +259,7 @@ class Comment extends AppModel
     function convertData($data)
     {
         $upload = new UploadHelper(new View());
+        $text_ex = new TextExHelper(new View());
 
         //add photo_path
         if (isset($data['Comment']) === true) {
@@ -289,6 +290,16 @@ class Comment extends AppModel
                      'comment_id' => $val['Comment']['id']
                     ]
                 );
+            }
+        }
+
+        //auto link
+        if (isset($data['Comment']) === true) {
+            $data['Comment']['body'] = nl2br($text_ex->autoLink($data['Comment']['body']));
+        }
+        else {
+            foreach ($data as $key => $val) {
+                $data[$key]['Comment']['body'] = nl2br($text_ex->autoLink($data[$key]['Comment']['body']));
             }
         }
         return $data;

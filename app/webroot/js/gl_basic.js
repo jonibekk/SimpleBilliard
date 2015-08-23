@@ -15,7 +15,7 @@ function bindPostBalancedGallery($obj) {
         //background: '#DDD',                   // the css properties of the gallery's containing element
         idealHeight: 150,                  // ideal row height, only used for horizontal galleries, defaults to half the containing element's height
         //idealWidth: 100,                   // ideal column width, only used for vertical galleries, defaults to 1/4 of the containing element's width
-        maintainOrder: false,                // keeps images in their original order, setting to 'false' can create a slightly better balance between rows
+        //maintainOrder: false,                // keeps images in their original order, setting to 'false' can create a slightly better balance between rows
         orientation: 'horizontal',          // 'horizontal' galleries are made of rows and scroll vertically; 'vertical' galleries are made of columns and scroll horizontally
         padding: 1,                         // pixels between images
         shuffleUnorderedPartitions: true,   // unordered galleries tend to clump larger images at the begining, this solves that issue at a slight performance cost
@@ -31,7 +31,7 @@ function bindCommentBalancedGallery($obj) {
         //background: '#DDD',                   // the css properties of the gallery's containing element
         idealHeight: 130,                  // ideal row height, only used for horizontal galleries, defaults to half the containing element's height
         //idealWidth: 100,                   // ideal column width, only used for vertical galleries, defaults to 1/4 of the containing element's width
-        maintainOrder: false,                // keeps images in their original order, setting to 'false' can create a slightly better balance between rows
+        //maintainOrder: false,                // keeps images in their original order, setting to 'false' can create a slightly better balance between rows
         orientation: 'horizontal',          // 'horizontal' galleries are made of rows and scroll vertically; 'vertical' galleries are made of columns and scroll horizontally
         padding: 1,                         // pixels between images
         shuffleUnorderedPartitions: true,   // unordered galleries tend to clump larger images at the begining, this solves that issue at a slight performance cost
@@ -53,11 +53,14 @@ var bindCtrlEnterAction = function (selector, callback) {
         }
     })
 };
-
 $(window).load(function () {
+    //bindPostBalancedGallery($('.post_gallery'));
+    //bindCommentBalancedGallery($('.comment_gallery'));
+    setDefaultTab();
+});
+$(window).imagesLoaded(function () {
     bindPostBalancedGallery($('.post_gallery'));
     bindCommentBalancedGallery($('.comment_gallery'));
-    setDefaultTab();
 });
 $(document).ready(function () {
     //すべてのformで入力があった場合に行う処理
@@ -1171,7 +1174,7 @@ $(function () {
 });
 
 $(function () {
-    $(".header-link").hover(
+    $(".js-header-link").hover(
         function () {
             $(this).stop().css("color", "#ae2f2f").animate({opacity: "1"}, 200);//ONマウス時のカラーと速度
         }, function () {
@@ -1199,9 +1202,9 @@ $(function () {
 $(function () {
     $("#header").hover(
         function () {
-            $(".header-link , .header-profile-icon,.header-logo-img ,.header-function-link").stop().animate({opacity: ".88"}, 300);//ONマウス時のカラーと速度
+            $(".js-header-link , .header-profile-icon,.header-logo-img ,.header-function-link").stop().animate({opacity: ".88"}, 300);//ONマウス時のカラーと速度
         }, function () {
-            $(".header-link , .header-profile-icon,.header-logo-img,.header-function-link").stop().animate({opacity: ".54"}, 600);//OFFマウス時のカラーと速度
+            $(".js-header-link , .header-profile-icon,.header-logo-img,.header-function-link").stop().animate({opacity: ".54"}, 600);//OFFマウス時のカラーと速度
         });
 });
 
@@ -2966,7 +2969,7 @@ $(function () {
     });
 
     // ヘッダーのお知らせ一覧ポップアップの次のページ読込みボタン
-    $(document).on("click", ".click-notify-read-more-dropdown",  function (e) {
+    $(document).on("click", ".click-notify-read-more-dropdown", function (e) {
         e.preventDefault();
         e.stopPropagation();
         var $this = $(this);
@@ -2974,7 +2977,7 @@ $(function () {
             locationType: "dropdown",
             showLoader: function ($loader_html) {
                 $('#bell-dropdown').append($('<div>').append($loader_html).css({
-                   textAlign: 'center',
+                    textAlign: 'center',
                 }));
 
             },
@@ -3559,6 +3562,7 @@ $(document).ready(function () {
      * params: object {
      *   formID: string|function  (* 必須) アップロードしたファイルIDを hidden で追加するフォームのID
      *   previewContainerID: string|function  (* 必須) プレビューを表示するコンテナ要素のID
+     *   disableMultiple: 複数ファイル同時アップロードを無効にする（iphone で 「画像選択」と「写真を撮る」を選択出来るようにする）
      *   beforeAddedFile: function  コールバック関数
      *   beforeAccept: function   コールバック関数
      *   afterAccept: function  コールバック関数
@@ -3634,7 +3638,13 @@ $(document).ready(function () {
         Dropzone.instances[0].options = $.extend({}, $uploadFileForm._dzDefaultOptions, dzOptions || {});
         // acceptedFiles の設定は上書きされないので手動で設定
         Dropzone.instances[0].hiddenFileInput.setAttribute("accept", Dropzone.instances[0].options.acceptedFiles);
-
+        // maxFiles が 1 の場合、もしくは
+        // params.disableMultiple が true の場合 multiple 属性を外す（iphone で「画像選択」と「写真を撮る」を選択出来るようにする）
+        if (Dropzone.instances[0].options.maxFiles == 1 || params.disableMultiple) {
+            Dropzone.instances[0].hiddenFileInput.removeAttribute("multiple");
+        } else {
+            Dropzone.instances[0].hiddenFileInput.setAttribute("multiple", "multiple");
+        }
 
         // コールバック関数登録
         var empty = function () {
@@ -3763,6 +3773,7 @@ $(document).ready(function () {
     };
     var actionImageDzOptions = {
         acceptedFiles: "image/*",
+        maxFiles: 1,
         previewTemplate: previewTemplateActionImage
     };
     $uploadFileForm.registerDragDropArea('#ActionImageAddButton', actionImageParams, actionImageDzOptions);
@@ -3774,6 +3785,7 @@ $(document).ready(function () {
     var actionImage2Params = {
         formID: 'CommonActionDisplayForm',
         previewContainerID: 'ActionUploadFilePhotoPreview',
+        disableMultiple: true,
         beforeAccept: function (file) {
             var $oldPreview = $('#' + $uploadFileForm._params.previewContainerID).find('.dz-preview:visible');
 

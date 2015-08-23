@@ -16,7 +16,8 @@
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
                 <span class="close-icon">&times;</span></button>
             <h4 class="modal-title"><?= __d('gl', "ゴール概要") ?>&nbsp;&nbsp;
-                <a class="" href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal['Goal']['id']]) ?>">
+                <a class=""
+                   href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal['Goal']['id']]) ?>">
                     <?= __d('gl', 'ゴールページへ') ?>
                 </a>
             </h4>
@@ -63,7 +64,8 @@
                 </div>
                 <div class="col col-xxs-12">
                     <p class="font_18px">
-                        <a class="font_verydark" href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal['Goal']['id']]) ?>">
+                        <a class="font_verydark"
+                           href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal['Goal']['id']]) ?>">
                             <?= h($goal['Goal']['name']) ?>
                         </a>
                     </p>
@@ -126,7 +128,7 @@
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
                     <div><i class="fa fa-ellipsis-h"></i><span class="pl_2px"><?= __d('gl', '詳細') ?></span></div>
                     <div>
-                        <?= $this->TextEx->autoLink($goal['Goal']['description']) ?>
+                        <?= nl2br($this->TextEx->autoLink($goal['Goal']['description'])) ?>
                     </div>
                 </div>
                 <div class="col col-xxs-12">
