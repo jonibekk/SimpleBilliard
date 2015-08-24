@@ -21,7 +21,7 @@ echo "*** Updating all git submodules."
 git submodule update --init --recursive || error_exit
 echo "${gre}*** Done.${whit}"
 echo "*** Updating an environment by chef.(include DB schema, using library and more.)"
-vagrant provision || error_exit
+vagrant provision default || error_exit
 
 TIME_B=`date +%s`   #B
 PT=`expr ${TIME_B} - ${TIME_A}`
