@@ -75,7 +75,11 @@ class RedisSession extends DatabaseSession implements CakeSessionHandlerInterfac
      */
     public function close()
     {
-        $this->store->close();
+        // Start session -> Close session -> Start session という遷移をすると
+        // エラーが発生するので、ここでは RedisSource::close() を呼ばない。
+        // RedisSource::__destruct() の処理に任せる。
+        //$this->store->close();
+
         return true;
     }
 
