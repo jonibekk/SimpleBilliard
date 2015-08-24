@@ -105,8 +105,5 @@
         echo $this->element('external_service_tags');
     }
     ?>
-    <?php
-        echo $this->element('external_service_tags');
-    ?>
 </head>
 <!-- END app/View/Elements/head.ctp -->
