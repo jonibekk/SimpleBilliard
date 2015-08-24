@@ -133,6 +133,8 @@
 <? if (USERVOICE_API_KEY && $this->Session->read('Auth.User.id')): ?>
     <!-- start Uservoice -->
     <script>
+    var winW = window.innerWidth;
+    if (winW > 480) {
         (function () {
             var uv = document.createElement('script');
             uv.type = 'text/javascript';
@@ -166,6 +168,9 @@
             tab_position: 'bottom-right',
             tab_inverted: false
         }]);
+    } else {
+        console.log ("hoge");
+    }
     </script>
 <? endif; ?>
 <!-- end Uservoice -->
