@@ -61,19 +61,19 @@ Vagrant.configure('2') do |config|
         ec2.vm.provider :aws do |aws, override|
             aws.access_key_id = ENV['AWS_ACCESS_KEY']
             aws.secret_access_key = ENV['AWS_SECRET_ACCESS_KEY']
-            aws.keypair_name = 'isao-goalous-opsworks'
+            aws.keypair_name = 'isao-gls-singapore'
             aws.instance_type = 'c3.large'
-            aws.region = 'ap-northeast-1'
-            aws.availability_zone = 'ap-northeast-1a'
-            aws.ami = 'ami-01500300'
+            aws.region = 'ap-southeast-1'
+            aws.availability_zone = 'ap-southeast-1a'
+            aws.ami = 'ami-eaa9f0b8'
             aws.associate_public_ip = true
-            aws.security_groups = ['sg-0722b862', 'sg-9a1f7aff']
-            aws.subnet_id = 'subnet-ad19adda'
+            aws.security_groups = ['sg-d24b27b7', 'sg-8d4a26e8', 'sg-66442803']
+            aws.subnet_id = 'subnet-ffbd0188'
             aws.tags = {
                 'Name' => 'vnc server for dev'
             }
             override.ssh.username = 'ubuntu'
-            override.ssh.private_key_path = '~/.ssh/isao-goalous-opsworks.pem'
+            override.ssh.private_key_path = '~/.ssh/isao-gls-singapore.pem'
         end
 
         doc_root = '/vagrant/app/webroot'
@@ -91,6 +91,7 @@ Vagrant.configure('2') do |config|
             chef.add_recipe 'vnc'
             chef.add_recipe 'java'
             chef.add_recipe 'phpstorm'
+            chef.add_recipe 'scudcloud'
             chef.json = {
                 doc_root: doc_root,
                 app_root: app_root,
