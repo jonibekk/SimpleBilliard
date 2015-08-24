@@ -1,18 +1,92 @@
+.dropdown-backdrop {
+  opacity: 0;
+  z-index: 5;
+}
+
+.header-icons {
+  color: #a1a1a1;
+}
+
+.navmenu-fixed-left {
+  z-index: 100;
+}
+
 /*
   headerのスタイル
  */
-
-.header-dropdowns {
-  .dropdown;
-  .navbar-nav-fix;
-  height: 48px;
-  line-height: 48px;
-  padding: 0;
+.header-toggle-icon {
+  display: inline-block;
+  background: @white;
+  border: none;
+  height: 50px;
+  margin: 0;
+  padding-left: 18px;
+  padding-right: 18px;
+  &:hover,
+  &:focus,
+  &:target {
+    background-color: #fff;
+    outline: none;
+  }
+  @media screen and (min-width:768px) {
+    display: none;
+  }
 }
 
-.nav-icons {
-  font-size: 20px;
-  height: 48px;
+.nav-container {
+  width: 100%;
+  margin: auto;
+  @media screen and (min-width: 480px ) {
+    width: 97.5%;
+  }
+  @media screen and (min-width: 768px) {
+    width: 756px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  @media screen and (min-width: 992px) {
+    width: 972px;
+  }
+  @media screen and (min-width: 1024px) {
+    width: 1008px;
+  }
+}
+
+.header-profile-icon,
+.js-header-link,
+.header-logo-img,
+.header-function-link {
+  @media screen and (min-width: 1025px) {
+    opacity: 0.54;
+  }
+}
+
+.header-dropdowns {
+  position: relative;
+  .navbar-nav-fix;
+  width: 36px;
+  height: 50px;
+  line-height: 50px;
+  padding: 0;
+  display: inline-block;
+}
+
+.header-user-home {
+  font-size: 12px;
+  display: inline-block;
+  line-height: 50px;
+  vertical-align: top;
+  padding: 0 4px;
+  color: rgb(80, 80, 80);
+}
+
+.header-user-name {
+  font-size: 12px;
+  padding: 0 10px;
+  line-height: 50px;
+  border-right: 1px solid #ccc;
+  color: rgb(80, 80, 80);
+  vertical-align: middle;
 }
 
 .header-dropdown-user {
@@ -35,16 +109,13 @@
   .header-dropdowns;
 }
 
-.nav-icons .header-home {
-  line-height: 30px;
-}
-
 .header-dropdown-icons {
   font-size: 20px;
   width: 36px;
   height: 20px;
   text-align: center;
-  @media screen and (min-width: 768px){
+  vertical-align: middle;
+  @media screen and (min-width: 768px) {
     width: 36px;
   }
   color: #505050;
@@ -67,29 +138,58 @@
 }
 
 .body {
-  padding: 100px 0 0;
-    @media screen and (min-width: 992px){
-      padding: 60px 0 0;
-    }
+  padding: 50px 0 0;
+}
+
+.container {
+  margin-top: 10px;
 }
 
 .header-nav-add-contents {
-  .frame-arrow-icon;
-}
-
-.header-nav-notify-contents {
-  .frame-arrow-icon;
+  .frame-arrow-icon(42px);
+  top: 42px;
+  right: -33px;
 }
 
 .header-nav-function-contents {
-  .frame-arrow-icon;
-  top: 40px;
+  .frame-arrow-icon(7px);
+  top: 42px;
+  right: 4px;
 }
 
-.header-nav-avator {
-  margin-top: 3px;
-  margin-bottom: 3px;
-  .avator-rounded-link;
+.header-nav-message-contents-wrap {
+  .frame-arrow-icon (64px);
+  top: 42px;
+  right: -53px;
+  width: 280px;
+  padding: 0;
+}
+
+.header-nav-notify-contents-wrap {
+  .frame-arrow-icon (36px);
+  top: 42px;
+  right: -24px;
+  width: 280px;
+  padding: 0;
+}
+
+.header-user-avatar {
+  list-style: none;
+  line-height: 50px;
+  height: 50px;
+  margin: 0;
+  padding: 0 8px;
+  display: inline-block;
+  vertical-align: top;
+  &:hover {
+    .header-nav-avatar{
+      box-shadow: 0 4px 8px rgba(17,17,17,.3);
+    }
+  }
+}
+
+.header-nav-avatar {
+  border-radius: 50%;
 }
 
 .btn-notify-header {
@@ -106,6 +206,7 @@
 
 .btn-function-header {
   .btn-animated;
+  .font-lightgray-gray;
   padding: 0 !important;
 }
 
@@ -116,4 +217,76 @@
 
 .notify-card-list {
   line-height: 1.4;
+}
+
+// sp feed alt
+.sp-feed-alt {
+  background: #f5f5f5;
+  z-index: 1;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, .15);
+}
+
+.sp-feed-active {
+  color: #231814;
+  padding-bottom: 8px;
+  border-bottom: 4px solid @aquaBlue;
+}
+
+.sp-feed-link {
+  cursor: pointer;
+  &:hover {
+    border-bottom: 4px solid @aquaBlue;
+  }
+}
+
+.header-right-navigations {
+  float: right;
+  display: inline-block;
+
+  // text-align: right;
+  vertical-align: top;
+  margin: 0 0 0 auto;
+  font-size: 0;
+  height: 50px;
+}
+
+/*ハンバーガー*/
+.nav-team-select,
+.nav-search {
+  width: 180px;
+  margin: auto;
+}
+
+
+.nav-team-select {
+  height: 28px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 8px;
+  padding-right: 8px;
+  @media screen and (min-width: 768px) {
+    width: 84px;
+    margin-left: 0;
+  }
+  @media screen and (min-width: 992px) {
+    width: 166px;
+    margin-left: 4px;
+  }
+  @media screen and (min-width: 1024px) {
+    width: 184px;
+    margin-left: 10px;
+  }
+}
+
+.header-nav-add-contents-anchor {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: normal;
+  line-height: 1.42857143;
+  color: #333333;
+  white-space: nowrap;
+  &:hover {
+    color: #fff;
+  }
 }

@@ -473,6 +473,7 @@ class CirclesControllerTest extends ControllerTestCase
     {
         $Circles = $this->_getCirclesCommonMock();
         $CircleMember = $this->getMockForModel('CircleMember', array('editAdminStatus'));
+        /** @noinspection PhpUndefinedMethodInspection */
         $CircleMember->expects($this->any())
                      ->method('editAdminStatus')
                      ->will($this->returnValue(false));
@@ -613,6 +614,7 @@ class CirclesControllerTest extends ControllerTestCase
     {
         $Circles = $this->_getCirclesCommonMock();
         $CircleMember = $this->getMockForModel('CircleMember', array('unjoinMember'));
+        /** @noinspection PhpUndefinedMethodInspection */
         $CircleMember->expects($this->any())
                      ->method('unjoinMember')
                      ->will($this->returnValue(false));
@@ -640,6 +642,17 @@ class CirclesControllerTest extends ControllerTestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $ret = $this->testAction('/circles/ajax_select2_non_circle_member/circle_id:1',
                                  ['data' => ['term' => 'name', 'page_limit' => 10], 'method' => 'GET']);
+        $json_data = json_decode($ret, true);
+        $this->assertArrayHasKey('results', $json_data);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxSelect2NonCircleMemberWithBlank()
+    {
+        $this->_getCirclesCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $ret = $this->testAction('/circles/ajax_select2_non_circle_member/circle_id:1',
+                                 ['data' => ['term' => 'aa bb', 'page_limit' => 10], 'method' => 'GET']);
         $json_data = json_decode($ret, true);
         $this->assertArrayHasKey('results', $json_data);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);

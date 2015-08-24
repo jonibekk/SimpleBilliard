@@ -196,6 +196,7 @@ class GlEmailComponent extends Component
             'count_num' => $data['count_num'],
             'item_name' => json_decode($data['item_name']),
             'model_id'  => $data['model_id'],
+            'options'   => $data['options'],
         ];
         $this->SendMail->saveMailData($send_to_users, SendMail::TYPE_TMPL_NOTIFY, $item, $data['from_user_id'],
                                       $this->SendMail->SendMailToUser->current_team_id);

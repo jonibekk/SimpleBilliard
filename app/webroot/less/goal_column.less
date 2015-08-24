@@ -7,11 +7,11 @@
   width: 40px;
   text-align: center;
   line-height: 36px;
-  border: 1px solid @dimGray;
-  color: @dimGray;
+  border: 1px solid @darkGray;
+  color: @darkGray;
   cursor: pointer;
   &:hover {
-    background-color: @dimGray;
+    background-color: @darkGray;
     color: @white;
   }
 }
@@ -72,4 +72,27 @@
   display: block;
   text-align: right;
   margin-bottom: 12px;
+}
+
+
+.js-right-side-fixed-container {
+  width: 324px;
+  @media screen and (min-width: 1024px){
+    width: 336px;
+  }
+  position: fixed;
+  bottom: 92px;
+}
+
+.js-right-side-fixed-ontop {
+  width: 324px;
+  @media screen and (min-width: 1024px){
+    width: 336px;
+  }
+  position: fixed;
+  top: 60px;
+}
+
+.right-side-container-wrap {
+  position: relative;
 }

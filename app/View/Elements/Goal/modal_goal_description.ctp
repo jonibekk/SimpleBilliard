@@ -15,35 +15,45 @@
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
                 <span class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= __d('gl', "ゴール概要") ?></h4>
+            <h4 class="modal-title"><?= __d('gl', "ゴール概要") ?>&nbsp;&nbsp;
+                <a class=""
+                   href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal['Goal']['id']]) ?>">
+                    <?= __d('gl', 'ゴールページへ') ?>
+                </a>
+            </h4>
         </div>
         <div class="modal-body modal-circle-body">
             <div class="col col-xxs-12">
                 <div class="col col-xxs-6">
-                    <img src="<?= $this->Upload->uploadUrl($goal, 'Goal.photo', ['style' => 'large']) ?>" width="128"
-                         height="128">
+                    <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal['Goal']['id']]) ?>">
+                        <img src="<?= $this->Upload->uploadUrl($goal, 'Goal.photo', ['style' => 'large']) ?>"
+                             width="128"
+                             height="128">
+                    </a>
+
                 </div>
                 <?php if ($goal['Goal']['user_id'] != $this->Session->read('Auth.User.id') && isset($goal['Goal']) && !empty($goal['Goal'])): ?>
                     <div class="col col-xxs-6">
                         <? $follow_opt = $this->Goal->getFollowOption($goal) ?>
                         <? $collabo_opt = $this->Goal->getCollaboOption($goal) ?>
                         <div>
-                          <a class="btn btn-white bd-circle_22px mt_16px toggle-follow font_verydark <?= $follow_opt['class'] ?>"
-                             href="#" <?= $follow_opt['disabled'] ?>="<?= $follow_opt['disabled'] ?>"
-                          data-class="toggle-follow"
-                          goal-id="<?= $goal['Goal']['id'] ?>">
-                          <i class="fa fa-heart font_rougeOrange" style="<?= $follow_opt['style'] ?>"></i>
-                          <span class="ml_5px"><?= $follow_opt['text'] ?></span>
-                          </a>
+                            <a class="btn btn-white bd-circle_22px mt_16px toggle-follow font_verydark <?= $follow_opt['class'] ?>"
+                               href="#" <?= $follow_opt['disabled'] ?>="<?= $follow_opt['disabled'] ?>"
+                            data-class="toggle-follow"
+                            goal-id="<?= $goal['Goal']['id'] ?>">
+                            <i class="fa fa-heart font_rougeOrange" style="<?= $follow_opt['style'] ?>"></i>
+                            <span class="ml_5px"><?= $follow_opt['text'] ?></span>
+                            </a>
                         </div>
                         <div>
-                          <a class="btn btn-white bd-circle_22px mt_16px font_verydark modal-ajax-get-collabo <?= $collabo_opt['class'] ?>"
-                             data-toggle="modal"
-                             data-target="#ModalCollabo_<?= $goal['Goal']['id'] ?>"
-                             href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', 'goal_id' => $goal['Goal']['id']]) ?>">
-                              <i class="fa fa-child font_rougeOrange font_18px" style="<?= $collabo_opt['style'] ?>"></i>
-                              <span class="ml_5px font_14px"><?= $collabo_opt['text'] ?></span>
-                          </a>
+                            <a class="btn btn-white bd-circle_22px mt_16px font_verydark modal-ajax-get-collabo <?= $collabo_opt['class'] ?>"
+                               data-toggle="modal"
+                               data-target="#ModalCollabo_<?= $goal['Goal']['id'] ?>"
+                               href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', 'goal_id' => $goal['Goal']['id']]) ?>">
+                                <i class="fa fa-child font_rougeOrange font_18px"
+                                   style="<?= $collabo_opt['style'] ?>"></i>
+                                <span class="ml_5px font_14px"><?= $collabo_opt['text'] ?></span>
+                            </a>
                         </div>
                     </div>
                 <?php endif; ?>
@@ -53,7 +63,12 @@
                     <i class="fa fa-folder"></i><span class="pl_2px"><?= h($goal['GoalCategory']['name']) ?></span>
                 </div>
                 <div class="col col-xxs-12">
-                    <p class="font_18px font_verydark"><?= h($goal['Goal']['name']) ?></p>
+                    <p class="font_18px">
+                        <a class="font_verydark"
+                           href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal['Goal']['id']]) ?>">
+                            <?= h($goal['Goal']['name']) ?>
+                        </a>
+                    </p>
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
                     <?= h($goal['Purpose']['name']) ?>
@@ -113,7 +128,7 @@
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
                     <div><i class="fa fa-ellipsis-h"></i><span class="pl_2px"><?= __d('gl', '詳細') ?></span></div>
                     <div>
-                        <?= $this->TextEx->autoLink($goal['Goal']['description']) ?>
+                        <?= nl2br($this->TextEx->autoLink($goal['Goal']['description'])) ?>
                     </div>
                 </div>
                 <div class="col col-xxs-12">

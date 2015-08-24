@@ -29,8 +29,11 @@ else {
 
     <?= $this->fetch('content'); ?>
 
-    <?= $this->element('footer') ?>
+    <?php if (!viaIsSet($without_footer)): ?>
+        <?= $this->element('footer') ?>
+    <?php endif; ?>
 </div>
+<?= $this->element('common_modules') ?>
 <?= $this->element('modals') ?>
 <!-- START fetch modal -->
 <?= $this->fetch('modal') ?>

@@ -6,11 +6,11 @@
 ?>
 <?php if (isset($kr) && $kr): ?>
     <!-- START app/View/Elements/Goal/key_result_edit_button.ctp -->
-    <div class="pull-right dropdown">
+    <div class="btn-edit-kr-wrap pull-right dropdown">
         <a href="#" class="font_lightGray-gray font_14px plr_4px pt_2px pb_2px"
            data-toggle="dropdown"
            id="download">
-            <i class="fa fa-cog mt_16px"></i>
+            <i class="fa fa-ellipsis-h btn-edit-kr"></i>
         </a>
         <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
             aria-labelledby="dropdownMenu1">

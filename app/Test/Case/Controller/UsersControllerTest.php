@@ -14,6 +14,9 @@ class UsersControllerTest extends ControllerTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.attached_file',
+        'app.post_file',
+        'app.comment_file',
         'app.action_result',
         'app.evaluator',
         'app.evaluation_setting',
@@ -1606,6 +1609,46 @@ class UsersControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedFieldInspection */
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/users/ajax_select2_get_circles_users?term=firstname&page_limit=10&circle_type=all',
+                          ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxSelect2GetUsersWithBlank()
+    {
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->_getUsersCommonMock();
+        $Users->User->TeamMember->current_team_id = 1;
+        $Users->User->TeamMember->my_uid = 1;
+        $Users->User->CircleMember->my_uid = 1;
+        $Users->User->CircleMember->current_team_id = 1;
+        $Users->User->CircleMember->Circle->PostShareCircle->my_uid = 1;
+        $Users->User->CircleMember->Circle->PostShareCircle->current_team_id = 1;
+
+        /** @noinspection PhpUndefinedFieldInspection */
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/users/ajax_select2_get_circles_users?term=aa%20bb&page_limit=10&circle_type=all',
+                          ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxSelect2GetUsersWithOnlyBlank()
+    {
+        /**
+         * @var UsersController $Users
+         */
+        $Users = $this->_getUsersCommonMock();
+        $Users->User->TeamMember->current_team_id = 1;
+        $Users->User->TeamMember->my_uid = 1;
+        $Users->User->CircleMember->my_uid = 1;
+        $Users->User->CircleMember->current_team_id = 1;
+        $Users->User->CircleMember->Circle->PostShareCircle->my_uid = 1;
+        $Users->User->CircleMember->Circle->PostShareCircle->current_team_id = 1;
+
+        /** @noinspection PhpUndefinedFieldInspection */
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $this->testAction('/users/ajax_select2_get_circles_users?term=%20&page_limit=10&circle_type=all',
                           ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }

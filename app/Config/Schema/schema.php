@@ -12,6 +12,25 @@ class AppSchema extends CakeSchema
     {
     }
 
+    public $action_result_files = array(
+        'id'               => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'ID'),
+        'action_result_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'アクションID(belongsToでActionResultモデルに関連)'),
+        'attached_file_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'ファイルID(belongsToでFileモデルに関連)'),
+        'team_id'          => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'チームID(belongsToでTeamモデルに関連)'),
+        'index_num'        => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => true, 'comment' => '表示順'),
+        'del_flg'          => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
+        'deleted'          => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '削除した日付時刻'),
+        'created'          => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '追加した日付時刻'),
+        'modified'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '更新した日付時刻'),
+        'indexes'          => array(
+            'PRIMARY'          => array('column' => 'id', 'unique' => 1),
+            'action_result_id' => array('column' => 'action_result_id', 'unique' => 0),
+            'team_id'          => array('column' => 'team_id', 'unique' => 0),
+            'attached_file_id' => array('column' => 'attached_file_id', 'unique' => 0)
+        ),
+        'tableParameters'  => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+    );
+
     public $action_results = array(
         'id'               => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'アクションリザルトID'),
         'team_id'          => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'チームID(belongsToでTeamモデルに関連)'),
@@ -68,7 +87,7 @@ class AppSchema extends CakeSchema
         'sun_flg'             => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '日曜'),
         'monthly_day'         => array('type' => 'integer', 'null' => false, 'default' => '1', 'unsigned' => false, 'comment' => '月次の日にち'),
         'action_result_count' => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => true, 'comment' => 'アクションリザルトカウント'),
-        'del_flg'             => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+        'del_flg'             => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
         'deleted'             => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '削除した日付時刻'),
         'created'             => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '追加した日付時刻'),
         'modified'            => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '更新した日付時刻'),
@@ -99,6 +118,29 @@ class AppSchema extends CakeSchema
             'created'         => array('column' => 'created', 'unique' => 0)
         ),
         'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+    );
+
+    public $attached_files = array(
+        'id'                    => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'ID'),
+        'user_id'               => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'ユーザID(belongsToでUserモデルに関連)'),
+        'team_id'               => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'チームID(belongsToでTeamモデルに関連)'),
+        'attached_file_name'    => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'ファイル名', 'charset' => 'utf8'),
+        'file_type'             => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => true, 'comment' => 'ファイルタイプ(0:画像,1:ビデオ,2:ドキュメント)'),
+        'file_ext'              => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'ファイル拡張子', 'charset' => 'utf8'),
+        'file_size'             => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => true, 'comment' => 'ファイルのバイト数'),
+        'model_type'            => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => true, 'comment' => 'モデルタイプ(0:Post,1:Comment)'),
+        'display_file_list_flg' => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => 'ファイル一覧に表示するフラグ'),
+        'removable_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '削除可能フラグ'),
+        'del_flg'               => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
+        'deleted'               => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '削除した日付時刻'),
+        'created'               => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '追加した日付時刻'),
+        'modified'              => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '更新した日付時刻'),
+        'indexes'               => array(
+            'PRIMARY' => array('column' => 'id', 'unique' => 1),
+            'post_id' => array('column' => 'user_id', 'unique' => 0),
+            'team_id' => array('column' => 'team_id', 'unique' => 0)
+        ),
+        'tableParameters'       => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
 
     public $badges = array(
@@ -198,6 +240,25 @@ class AppSchema extends CakeSchema
             'goal_id' => array('column' => 'goal_id', 'unique' => 0)
         ),
         'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+    );
+
+    public $comment_files = array(
+        'id'               => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'ID'),
+        'comment_id'       => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'コメントID(belongsToでCommentモデルに関連)'),
+        'attached_file_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'ファイルID(belongsToでFileモデルに関連)'),
+        'team_id'          => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'チームID(belongsToでTeamモデルに関連)'),
+        'index_num'        => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => true, 'comment' => '表示順'),
+        'del_flg'          => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
+        'deleted'          => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '削除した日付時刻'),
+        'created'          => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '追加した日付時刻'),
+        'modified'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '更新した日付時刻'),
+        'indexes'          => array(
+            'PRIMARY'          => array('column' => 'id', 'unique' => 1),
+            'comment_id'       => array('column' => 'comment_id', 'unique' => 0),
+            'team_id'          => array('column' => 'team_id', 'unique' => 0),
+            'attached_file_id' => array('column' => 'attached_file_id', 'unique' => 0)
+        ),
+        'tableParameters'  => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
 
     public $comment_likes = array(
@@ -643,16 +704,18 @@ class AppSchema extends CakeSchema
         'id'              => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'ローカル名ID'),
         'user_id'         => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'ユーザID(belongsToでUserモデルに関連)'),
         'language'        => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 3, 'key' => 'index', 'collate' => 'utf8_general_ci', 'comment' => '言語(日本語ならjpn)', 'charset' => 'utf8'),
-        'first_name'      => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 128, 'collate' => 'utf8_general_ci', 'comment' => '名', 'charset' => 'utf8'),
-        'last_name'       => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 128, 'collate' => 'utf8_general_ci', 'comment' => '姓', 'charset' => 'utf8'),
+        'first_name'      => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 128, 'key' => 'index', 'collate' => 'utf8_general_ci', 'comment' => '名', 'charset' => 'utf8'),
+        'last_name'       => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 128, 'key' => 'index', 'collate' => 'utf8_general_ci', 'comment' => '姓', 'charset' => 'utf8'),
         'del_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
         'deleted'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'メアドを削除した日付時刻'),
         'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'メアドを登録した日付時刻'),
         'modified'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'メアドを最後に更新した日付時刻'),
         'indexes'         => array(
-            'PRIMARY'  => array('column' => 'id', 'unique' => 1),
-            'user_id'  => array('column' => 'user_id', 'unique' => 0),
-            'language' => array('column' => 'language', 'unique' => 0)
+            'PRIMARY'    => array('column' => 'id', 'unique' => 1),
+            'user_id'    => array('column' => 'user_id', 'unique' => 0),
+            'language'   => array('column' => 'language', 'unique' => 0),
+            'first_name' => array('column' => 'first_name', 'unique' => 0),
+            'last_name'  => array('column' => 'last_name', 'unique' => 0)
         ),
         'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
@@ -717,53 +780,55 @@ class AppSchema extends CakeSchema
         'id'                                              => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'ID'),
         'user_id'                                         => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'ユーザID(belongsToでUserモデルに関連)'),
         'feed_post_app_flg'                               => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '閲覧可能な投稿があった際のアプリ通知'),
-        'feed_post_email_flg'                             => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+        'feed_post_email_flg'                             => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '閲覧可能な投稿があった際のメール通知'),
         'feed_commented_on_my_post_app_flg'               => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '自分の投稿にコメントがあった際のアプリ通知'),
-        'feed_commented_on_my_post_email_flg'             => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+        'feed_commented_on_my_post_email_flg'             => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '自分の投稿にコメントがあった際のメール通知'),
         'feed_commented_on_my_commented_post_app_flg'     => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '自分がコメントした投稿にコメントがあった際のアプリ通知'),
-        'feed_commented_on_my_commented_post_email_flg'   => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+        'feed_commented_on_my_commented_post_email_flg'   => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '自分がコメントした投稿にコメントがあった際のメール通知'),
         'circle_user_join_app_flg'                        => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '自分が管理者の公開サークルに誰かが参加した際のアプリ通知'),
-        'circle_user_join_email_flg'                      => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+        'circle_user_join_email_flg'                      => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '自分が管理者の公開サークルに誰かが参加した際のメール通知'),
         'circle_changed_privacy_setting_app_flg'          => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '自分が所属するサークルのプライバシー設定が変更になった際のアプリ通知'),
-        'circle_changed_privacy_setting_email_flg'        => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+        'circle_changed_privacy_setting_email_flg'        => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '自分が所属するサークルのプライバシー設定が変更になった際のメール通知'),
         'circle_add_user_app_flg'                         => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '誰かが自分をサークルに追加した際のアプリ通知'),
-        'circle_add_user_email_flg'                       => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+        'circle_add_user_email_flg'                       => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '誰かが自分をサークルに追加した際のメール通知'),
         'my_goal_follow_app_flg'                          => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '自分がオーナーのゴールがフォローされたときのアプリ通知'),
-        'my_goal_follow_email_flg'                        => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+        'my_goal_follow_email_flg'                        => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '自分がオーナーのゴールがフォローされたときのメール通知'),
         'my_goal_collaborate_app_flg'                     => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '自分がオーナーのゴールがコラボレートされたときのアプリ通知'),
-        'my_goal_collaborate_email_flg'                   => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+        'my_goal_collaborate_email_flg'                   => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '自分がオーナーのゴールがコラボレートされたときのメール通知'),
         'my_goal_changed_by_leader_app_flg'               => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '自分がオーナーのゴールの内容がリーダーによって変更されたときのアプリ通知'),
-        'my_goal_changed_by_leader_email_flg'             => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+        'my_goal_changed_by_leader_email_flg'             => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '自分がオーナーのゴールの内容がリーダーによって変更されたときのメール通知'),
         'my_goal_target_for_evaluation_app_flg'           => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '自分がオーナーのゴールが評価対象となったときのアプリ通知'),
-        'my_goal_target_for_evaluation_email_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+        'my_goal_target_for_evaluation_email_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '自分がオーナーのゴールが評価対象となったときのメール通知'),
         'my_goal_as_leader_request_to_change_app_flg'     => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '自分がリーダーのゴールが修正依頼を受けたときのアプリ通知'),
-        'my_goal_as_leader_request_to_change_email_flg'   => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+        'my_goal_as_leader_request_to_change_email_flg'   => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '自分がリーダーのゴールが修正依頼を受けたときのメール通知'),
         'my_goal_not_target_for_evaluation_app_flg'       => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '自分がオーナーのゴールが評価対象外となったときのアプリ通知'),
-        'my_goal_not_target_for_evaluation_email_flg'     => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+        'my_goal_not_target_for_evaluation_email_flg'     => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '自分がオーナーのゴールが評価対象外となったときのメール通知'),
         'my_member_create_goal_app_flg'                   => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '自分(コーチとして)のメンバーがゴールを作成したときのアプリ通知'),
-        'my_member_create_goal_email_flg'                 => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+        'my_member_create_goal_email_flg'                 => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '自分(コーチとして)のメンバーがゴールを作成したときのメール通知'),
         'my_member_collaborate_goal_app_flg'              => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '自分(コーチとして)のメンバーがゴールのコラボレーターとなったときのアプリ通知'),
-        'my_member_collaborate_goal_email_flg'            => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+        'my_member_collaborate_goal_email_flg'            => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '自分(コーチとして)のメンバーがゴールのコラボレーターとなったときのメール通知'),
         'my_member_change_goal_app_flg'                   => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => 'ゴールの修正依頼を受けた自分(コーチとして)のメンバーがゴール内容を修正したときのアプリ通知'),
-        'my_member_change_goal_email_flg'                 => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+        'my_member_change_goal_email_flg'                 => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => 'ゴールの修正依頼を受けた自分(コーチとして)のメンバーがゴール内容を修正したときのメール通知'),
         'start_evaluation_app_flg'                        => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '自分が所属するチームが評価開始となったときのアプリ通知'),
-        'start_evaluation_email_flg'                      => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+        'start_evaluation_email_flg'                      => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '自分が所属するチームが評価開始となったときのメール通知'),
         'fleeze_evaluation_app_flg'                       => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '自分が所属するチームが評価凍結となったときのアプリ通知'),
-        'fleeze_evaluation_email_flg'                     => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+        'fleeze_evaluation_email_flg'                     => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '自分が所属するチームが評価凍結となったときのメール通知'),
         'start_can_oneself_evaluation_app_flg'            => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '自分が自己評価できる状態になったときのアプリ通知'),
-        'start_can_oneself_evaluation_email_flg'          => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+        'start_can_oneself_evaluation_email_flg'          => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '自分が自己評価できる状態になったときのメール通知'),
         'start_can_evaluate_as_evaluator_app_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '評価者としての自分が評価できる状態になったときのアプリ通知'),
-        'start_can_evaluate_as_evaluator_email_flg'       => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+        'start_can_evaluate_as_evaluator_email_flg'       => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '評価者としての自分が評価できる状態になったときのメール通知'),
         'final_evaluation_is_done_app_flg'                => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '自分の所属するチームの最終者が最終評価データをUploadしたときのアプリ通知'),
-        'final_evaluation_is_done_email_flg'              => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+        'final_evaluation_is_done_email_flg'              => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '自分の所属するチームの最終者が最終評価データをUploadしたときのメール通知'),
         'feed_commented_on_my_action_app_flg'             => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '自分のアクションに「コメント」されたときのアプリ通知'),
-        'feed_commented_on_my_action_email_flg'           => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+        'feed_commented_on_my_action_email_flg'           => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '自分のアクションに「コメント」されたときのメール通知'),
         'feed_commented_on_my_commented_action_app_flg'   => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '自分のコメントしたアクションに「コメント」されたときのアプリ通知'),
-        'feed_commented_on_my_commented_action_email_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+        'feed_commented_on_my_commented_action_email_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '自分のコメントしたアクションに「コメント」されたときのメール通知'),
         'feed_action_app_flg'                             => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '自分が閲覧可能なアクションがあったときのアプリ通知'),
-        'feed_action_email_flg'                           => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+        'feed_action_email_flg'                           => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '自分が閲覧可能なアクションがあったときのメール通知'),
         'user_joined_to_invited_team_app_flg'             => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '自分の所属するチームへ招待したユーザーがチームに参加したときのアプリ通知'),
-        'user_joined_to_invited_team_email_flg'           => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+        'user_joined_to_invited_team_email_flg'           => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '自分の所属するチームへ招待したユーザーがチームに参加したときのメール通知'),
+        'feed_message_app_flg'                            => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '自分が閲覧可能なメッセージがあったときのアプリ通知'),
+        'feed_message_email_flg'                          => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '自分が閲覧可能なメッセージがあったときのメール通知'),
         'del_flg'                                         => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
         'deleted'                                         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '削除した日付時刻'),
         'created'                                         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '登録した日付時刻'),
@@ -792,6 +857,25 @@ class AppSchema extends CakeSchema
             'user_id' => array('column' => 'user_id', 'unique' => 0)
         ),
         'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+    );
+
+    public $post_files = array(
+        'id'               => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'ID'),
+        'post_id'          => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '投稿ID(belongsToでPostモデルに関連)'),
+        'attached_file_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'ファイルID(belongsToでFileモデルに関連)'),
+        'team_id'          => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'チームID(belongsToでTeamモデルに関連)'),
+        'index_num'        => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => true, 'comment' => '表示順'),
+        'del_flg'          => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
+        'deleted'          => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '削除した日付時刻'),
+        'created'          => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '追加した日付時刻'),
+        'modified'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '更新した日付時刻'),
+        'indexes'          => array(
+            'PRIMARY'          => array('column' => 'id', 'unique' => 1),
+            'post_id'          => array('column' => 'post_id', 'unique' => 0),
+            'team_id'          => array('column' => 'team_id', 'unique' => 0),
+            'attached_file_id' => array('column' => 'attached_file_id', 'unique' => 0)
+        ),
+        'tableParameters'  => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
 
     public $post_likes = array(
@@ -1118,8 +1202,8 @@ class AppSchema extends CakeSchema
         'phone_no'          => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 20, 'collate' => 'utf8_general_ci', 'comment' => '電話番号', 'charset' => 'utf8'),
         'hometown'          => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 128, 'collate' => 'utf8_general_ci', 'comment' => '出身地', 'charset' => 'utf8'),
         'comment'           => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'コメント', 'charset' => 'utf8'),
-        'first_name'        => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 128, 'collate' => 'utf8_general_ci', 'comment' => '英名', 'charset' => 'utf8'),
-        'last_name'         => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 128, 'collate' => 'utf8_general_ci', 'comment' => '英姓', 'charset' => 'utf8'),
+        'first_name'        => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 128, 'key' => 'index', 'collate' => 'utf8_general_ci', 'comment' => '英名', 'charset' => 'utf8'),
+        'last_name'         => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 128, 'key' => 'index', 'collate' => 'utf8_general_ci', 'comment' => '英姓', 'charset' => 'utf8'),
         'middle_name'       => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 128, 'collate' => 'utf8_general_ci', 'comment' => '英ミドルネーム', 'charset' => 'utf8'),
         'created'           => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'ユーザーデータを登録した日付時刻'),
         'modified'          => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'ユーザーデータを最後に更新した日付時刻'),
@@ -1127,7 +1211,9 @@ class AppSchema extends CakeSchema
             'PRIMARY'          => array('column' => 'id', 'unique' => 1),
             'primary_email_id' => array('column' => 'primary_email_id', 'unique' => 0),
             'default_team_id'  => array('column' => 'default_team_id', 'unique' => 0),
-            'password_token'   => array('column' => 'password_token', 'unique' => 0)
+            'password_token'   => array('column' => 'password_token', 'unique' => 0),
+            'first_name'       => array('column' => 'first_name', 'unique' => 0),
+            'last_name'        => array('column' => 'last_name', 'unique' => 0)
         ),
         'tableParameters'   => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );

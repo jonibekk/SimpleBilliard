@@ -4,6 +4,7 @@
 /Plugin
 Berksfile
 Berksfile.lock
+/app/tmp/attached_file/*
 /app/tmp/cache/*
 /app/tmp/logs/*
 /app/tmp/pear/*
@@ -14,7 +15,6 @@ Berksfile.lock
 /app/webroot/upload/*
 /app/Config/database_local.php
 /app/webroot/files
-/app/webroot/css/goalous.min.css
 .project
 .buildpath
 junit.xml
@@ -22,16 +22,7 @@ junit.xml
 composer.lock
 # PhpStorm設定ファイルを除外
 # ただし、プロジェクト内で共通の設定を適用すべきファイルはバージョン管理対象にする
-/.idea/php.xml
-/.idea/workspace.xml
-/.idea/dataSources.ids
-/.idea/dataSources.xml
-/.idea/vagrant.xml
-/.idea/watcherTasks.xml
-/.idea/inspectionProfiles
-!/.idea/inspectionProfiles/Project_Default.xml
-/.idea/dataSources.local.xml
-/.idea/jsLibraryMappings.xml
+/.idea
 # for npm
 /node_modules
 npm-debug.log
@@ -52,3 +43,5 @@ npm-debug.log
 # for dest files of a less and coffee maps
 /app/webroot/css/goalous.css.map
 /app/webroot/js/*.js.map
+/app/webroot/css/goalous.min.css
+/app/webroot/js/goalous.min.js

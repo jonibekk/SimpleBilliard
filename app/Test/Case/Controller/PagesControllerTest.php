@@ -15,6 +15,9 @@ class PagesControllerTest extends ControllerTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.key_result',
+        'app.evaluation',
+        'app.evaluate_term',
         'app.action_result',
         'app.purpose',
         'app.local_name',

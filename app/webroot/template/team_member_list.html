@@ -1,3 +1,4 @@
+<!-- start app/webroot/template/team_member_list.html -->
 <div class="well team-members-search-card">
     <div id="filter_box" class="row">
         <h3>メンバー一覧</h3>
@@ -61,9 +62,9 @@
                  ng-if="item.TeamMember.active_flg == '1' || item.TeamMember.active_flg == disp_active_flag"
                  ng-class="item.TeamMember.active_flg == '0' ? 'disable_member' : ''" class="team-members-card">
 
-                <div class="team-members-card-avator-box">
+                <div class="team-members-card-avatar-box">
                     <a ng-href="{{item.User.user_page_url}}">
-                        <img ng-src="{{item.User.img_url}}" class="feed-img avator-team-member-list"/>
+                        <img ng-src="{{item.User.img_url}}" class="feed-img avatar-team-member-list"/>
                     </a>
                 </div>
 
@@ -164,3 +165,4 @@
         </table>
     </div>
 </div>
+<!-- end app/webroot/template/team_member_list.html -->

@@ -1,0 +1,236 @@
+/*サークルのデザイン*/
+.circle-icon_box {
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    float: left;
+    margin-right: 5px;
+    margin-top: 0;
+}
+
+.circle-icon_box > img {
+    position: absolute;
+}
+
+.circle-name_box {
+    display: block;
+    width: 112px;
+    height: 16px;
+    line-height: 16px;
+    font-size: 12px;
+    float: left;
+    margin-right: 3px;
+    overflow: hidden;
+    color: #000;
+}
+
+.circle-count_box {
+    display: block;
+    width: 13px;
+    height: 16px;
+    line-height: 16px;
+    float: left;
+    margin-right: 3px;
+    text-align: center;
+}
+
+.circle-function_box {
+    display: block;
+    width: 14px;
+    height: 22px;
+    line-height: 16px;
+    float: right;
+    padding: 7px 0;
+}
+
+.circle_heading {
+    margin: 0 0 2px;
+    font-weight: bold;
+    color: #a5a5a5;
+}
+
+.circle-layout {
+    width: 100%;
+    height: 30px;
+    position: relative;
+}
+
+.count-value {
+    color: #4e5665;
+    font-size: 11px;
+}
+
+.circle-function {
+    width: 14px;
+    text-align: right;
+}
+
+.btn-circle-function {
+  .btn-animated;
+}
+
+.develop--circle-seek {
+    font-size: 12px;
+    line-height: 16px;
+    padding: 10px 0 6px 0;
+}
+
+.develop--circle-make {
+    font-size: 12px;
+    line-height: 16px;
+    padding: 6px 0 6px 0;
+}
+
+.circle-seek-icon {
+    text-align: center;
+    margin-right: 6px;
+    font-size: 14px;
+}
+
+.circle-make-icon {
+    width: 14px;
+    font-size: 14px;
+    text-align: center;
+    margin-right: 6px;
+}
+
+.circle-link {
+    position: absolute;
+    height: 30px;
+    padding: 7px 0;
+    width: 92%;
+    &:hover {
+      background: #d5d5d5;
+    }
+    @media screen and (min-width: 768px) {
+      width: 94%;
+    }
+    @media screen and (min-width: 992px) {
+      width: 91%;
+    }
+}
+
+
+
+/*/サークルのデザイン*/
+
+
+.dashboard-circle-list {
+  border-radius: 4px;
+  max-width: 100%;
+}
+
+.dashboard-circle-list-header {
+  padding: 4px;
+}
+
+.dashboard-circle-list-title {
+  color: @veryDark;
+}
+
+.dashboard-circle-list-body {
+  overflow: scroll;
+  max-height: 272px;
+  background: @baseLightGray;
+  box-shadow: inset 0 0 1px @gray;
+}
+
+.dashboard-circle-list-footer {
+  padding: 4px;
+}
+
+.dashboard-circle-list-seek {
+  font-size: 12px;
+  line-height: 16px;
+  padding: 10px 0 6px 0;
+}
+
+.dashboard-circle-list-make {
+  font-size: 12px;
+  line-height: 16px;
+  padding: 6px 0 6px 0;
+}
+
+.circleListMore:nth-child(n+9) {
+    display: none;
+}
+
+.dashboard-circle-list-row-wrap {
+  height: 32px;
+  overflow: hidden;
+  position: relative;
+}
+
+.dashboard-circle-list-row {
+  display: inline-block;
+  width: 100%;
+  height: 32px;
+  padding: 4px 24px 4px 4px;
+  font-size: @fontSmall;
+  color: @veryDark;
+  &:hover,
+  &:active,
+  &:target,
+  &:focus {
+    color: @veryDark;
+    text-decoration: none;
+    background:@lightGray ;
+  }
+}
+
+.dashboard-circle-list-pic {
+  margin: 4px 0;
+  vertical-align: middle;
+}
+.dashboard-circle-count-box {
+  margin: 4px 0;
+  display: inline-block;
+  width: 10%;
+  text-align: right;
+  height: 16px;
+  vertical-align: middle;
+}
+
+.dashboard-circle-name-box {
+  margin: 4px 0;
+  // .line-number-limit-1(@baseLightGray);
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+  width: 70%;
+  height: 16px;
+  vertical-align: middle;
+  @media screen and (min-width: 768px) and (max-width: 991px){
+    width: 78%;
+  }
+  &:hover {
+    &::before{
+      background: @baseLightGray;
+    }
+  }
+}
+
+.dashboard-circle-list-edit-wrap {
+  position: absolute;
+  right: 0;
+  width: 24px;
+  height: 32px;
+  text-align: center;
+  .no-underline;
+}
+
+.dashboard-circle-list-edit {
+  display: inline-block;
+  line-height: 32px;
+  .btn-animated;
+  color: @darkGray;
+  &:hover,
+  &:active,
+  &:target,
+  &:focus {
+    color: @darkGray;
+  }
+  // width: 32px;
+  // height: 32px;
+}

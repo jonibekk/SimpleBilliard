@@ -796,14 +796,17 @@ class User extends AppModel
     public function getUsersByKeyword($keyword, $limit = 10, $not_me = true)
     {
         $user_list = $this->TeamMember->getAllMemberUserIdList();
+
+        $keyword = trim($keyword);
+        if (strlen($keyword) == 0) {
+            return [];
+        }
+        $keyword_conditions = $this->makeUserNameConditions($keyword);
         $options = [
             'conditions' => [
                 'User.id'         => $user_list,
                 'User.active_flg' => true,
-                'OR'              => [
-                    'CONCAT(`User.first_name`," ",`User.last_name`) Like ?'                       => "%" . $keyword . "%",
-                    'CONCAT(`SearchLocalName.first_name`," ",`SearchLocalName.last_name`) Like ?' => "%" . $keyword . "%",
-                ]
+                'OR'              => $keyword_conditions,
             ],
             'limit'      => $limit,
             'fields'     => $this->profileFields,
@@ -845,6 +848,7 @@ class User extends AppModel
     {
         App::uses('UploadHelper', 'View/Helper');
         $Upload = new UploadHelper(new View());
+        $circles = [];
         switch ($circle_type) {
             case "all":
                 $circles = $this->CircleMember->Circle->getCirclesByKeyword($keyword, $limit);
@@ -1043,5 +1047,37 @@ class User extends AppModel
         ];
         $res = $this->find('all', $options);
         return $res;
+    }
+
+    /**
+     * ユーザー名検索時の条件配列を作成する
+     *
+     * codeclimate 対策
+     * CircleMember でも使ってるので注意
+     *
+     * @param $keyword
+     *
+     * @return array
+     */
+    public function makeUserNameConditions($keyword)
+    {
+        // $keyword にスペースが入っていればフルネーム検索
+        // 入っていない場合は姓名それぞれを検索
+        if (strpos($keyword, ' ') !== false || strpos($keyword, __d('gl', '　')) !== false) {
+            $keyword = str_replace(__d('gl', '　'), ' ', $keyword);
+            $keyword_conditions = [
+                'CONCAT(`User.first_name`," ",`User.last_name`) Like'                       => $keyword . "%",
+                'CONCAT(`SearchLocalName.first_name`," ",`SearchLocalName.last_name`) Like' => $keyword . "%",
+            ];
+        }
+        else {
+            $keyword_conditions = [
+                'User.first_name LIKE'            => $keyword . "%",
+                'User.last_name LIKE'             => $keyword . "%",
+                'SearchLocalName.first_name LIKE' => $keyword . "%",
+                'SearchLocalName.last_name LIKE'  => $keyword . "%",
+            ];
+        }
+        return $keyword_conditions;
     }
 }

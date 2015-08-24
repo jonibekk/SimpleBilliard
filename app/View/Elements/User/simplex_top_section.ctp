@@ -12,15 +12,15 @@
  * @var                    $like_count
  */
 ?>
-<!-- START app/View/Elements/simplex_top_section.ctp -->
+<!-- START app/View/Elements/User/simplex_top_section.ctp -->
 <div class="panel-body profile-user-upper-panel">
-    <div class="profile-user-avator-wrap">
+    <div class="profile-user-avatar-wrap">
         <?=
         $this->Html->image('ajax-loader.gif',
                            [
-                               'class'         => 'lazy profile-user-avator',
+                               'class'         => 'lazy profile-user-avatar',
                                'data-original' => $this->Upload->uploadUrl($user['User'], 'User.photo',
-                                                                           ['style' => 'large']),
+                                                                           ['style' => 'x_large']),
                            ]
         )
         ?>
@@ -48,7 +48,7 @@
         </div>
         <div class="profile-user-numbers-like">
             <div class="profile-user-numbers-like-counts">
-                <?= h($this->NumberEx->formatHumanReadable($like_count)) ?>
+                <?= h($this->NumberEx->formatHumanReadable($like_count, ['convert_start' => 10000])) ?>
             </div>
             <span class="profile-user-numbers-category-like">
                 <?= __d('gl', 'いいね') ?>
@@ -68,7 +68,7 @@
         <?php endif ?>
     </div>
     <div class="profile-user-comments showmore">
-        <?= $this->TextEx->autoLink($user['TeamMember']['comment']) ?>
+        <?= nl2br($this->TextEx->autoLink($user['TeamMember']['comment'])) ?>
     </div>
 </div>
 <div class="profile-user-tab-group">
@@ -126,4 +126,4 @@
         </p>
     </a>
 </div>
-<!-- END app/View/Elements/simplex_top_section.ctp -->
+<!-- END app/View/Elements/User/simplex_top_section.ctp -->

@@ -17,6 +17,52 @@ class UploadHelper extends AppHelper
     public $cache = [];
     public $helpers = array('Html');
 
+    private $ext_settings = [
+        'xls'  => [
+            'viewer'     => 'office_viewer',
+            'icon_class' => 'fa-file-excel-o file-excel-icon',
+        ],
+        'doc'  => [
+            'viewer'     => 'office_viewer',
+            'icon_class' => 'fa-file-word-o file-word-icon',
+        ],
+        'ppt'  => [
+            'viewer'     => 'office_viewer',
+            'icon_class' => 'fa-file-powerpoint-o file-powerpoint-icon',
+        ],
+        'xlsx' => [
+            'viewer'     => 'office_viewer',
+            'icon_class' => 'fa-file-excel-o file-excel-icon',
+        ],
+        'docx' => [
+            'viewer'     => 'office_viewer',
+            'icon_class' => 'fa-file-word-o file-word-icon',
+        ],
+        'pptx' => [
+            'viewer'     => 'office_viewer',
+            'icon_class' => 'fa-file-powerpoint-o file-powerpoint-icon',
+        ],
+        'pdf'  => [
+            'viewer'     => 'normal',
+            'icon_class' => 'fa-file-pdf-o file-other-icon',
+        ],
+        'jpeg' => [
+            'viewer' => 'lightbox',
+        ],
+        'jpg'  => [
+            'viewer' => 'lightbox',
+        ],
+        'png'  => [
+            'viewer' => 'lightbox',
+        ],
+        'gif'  => [
+            'viewer' => 'lightbox',
+        ],
+        'txt'  => [
+            'viewer' => 'normal',
+        ],
+    ];
+
     public function uploadImage($data, $path, $options = array(), $htmlOptions = array())
     {
         $options += array('urlize' => false);
@@ -28,6 +74,68 @@ class UploadHelper extends AppHelper
     {
         $urlOptions += array('style' => 'original', 'urlize' => true);
         return $this->Html->link($title, $this->uploadUrl($data, $field, $urlOptions), $htmlOptions);
+    }
+
+    /**
+     * $open_type: "viewer" or "download"
+     *
+     * @param array  $data
+     * @param string $open_type
+     *
+     * @return null|string
+     */
+    public function attachedFileUrl($data, $open_type = "viewer")
+    {
+        if (isset($data['AttachedFile'])) {
+            $data = $data['AttachedFile'];
+        }
+
+        $url = $this->uploadUrl($data, 'AttachedFile.attached');
+        //officeファイルの場合は、office viewerのリンクに変換
+        if ($open_type == "viewer" && viaIsSet($this->ext_settings[$data['file_ext']]['viewer']) == 'office_viewer') {
+            $url = OOV_BASE_URL . urlencode($url);
+        }
+        return $url;
+    }
+
+    public function getAttachedFileName($data, $exclude_ext = true)
+    {
+        if (isset($data['AttachedFile'])) {
+            $data = $data['AttachedFile'];
+        }
+        if (!$exclude_ext) {
+            return $data['attached_file_name'];
+        }
+        // 日本語ファイル名に対応するためロケールを一時的に変更する
+        $orig_locale = setlocale(LC_CTYPE, 0);
+        setlocale(LC_CTYPE, 'C.UTF-8');
+        $file_name = pathinfo($data['attached_file_name']);
+        setlocale(LC_CTYPE, $orig_locale);
+        return $file_name['filename'];
+    }
+
+    public function getCssOfFileIcon($data)
+    {
+        if (isset($data['AttachedFile'])) {
+            $data = $data['AttachedFile'];
+        }
+        $ext = $data['file_ext'];
+        if ($class = viaIsSet($this->ext_settings[$ext]['icon_class'])) {
+            return $class;
+        }
+        return 'fa-file-o file-other-icon';
+    }
+
+    public function isCanPreview($data)
+    {
+        if (isset($data['AttachedFile'])) {
+            $data = $data['AttachedFile'];
+        }
+        $ext = $data['file_ext'];
+        if (viaIsSet($this->ext_settings[$ext]['viewer'])) {
+            return true;
+        }
+        return false;
     }
 
     public function uploadUrl($data, $field, $options = array())

@@ -21,7 +21,8 @@ $this->Form->create('Comment', [
         'wrapInput' => '',
         'class'     => 'form-control'
     ],
-    'class'           => 'form-feed-notify ajax-add-comment',
+    'id'              => "{$prefix}CommentAjaxGetNewCommentForm_{$post_id}",
+    'class'           => 'form-feed-notify ajax-add-comment comment-form',
     'type'            => 'file',
     'novalidate'      => true,
     'error-msg-id'    => $prefix . 'CommentFormErrorMsg_' . $post_id,
@@ -39,32 +40,23 @@ $this->Form->input('body', [
     'rows'        => 1,
     'required'    => true,
     'placeholder' => __d('gl', "コメントする"),
-    'class'       => 'form-control tiny-form-text blank-disable font_12px comment-post-form box-align change-warning',
+    'class'       => 'form-control tiny-form-text font_12px comment-post-form box-align change-warning no-border',
     'target-id'   => "{$prefix}CommentSubmit_{$post_id}",
-    'required'    => 'false'
+    'data-bv-notempty-message' => __d('validate', "入力必須項目です。"),
 ])
 ?>
-<div class="form-group" id="<?= $prefix ?>CommentFormImage_<?= $post_id ?>"
-     style="display: none">
-    <ul class="input-images">
-        <?php for ($i = 1; $i <= 5; $i++): ?>
-            <li>
-                <?=
-                $this->element('Feed/photo_upload',
-                               ['type' => 'comment', 'index' => $i, 'submit_id' => "{$prefix}CommentSubmit_{$post_id}", 'post_id' => $post_id]) ?>
-            </li>
-        <?php endfor ?>
-    </ul>
-    <span class="help-block" id="Comment__Post_<?= $post_id ?>_Photo_ValidateMessage"></span>
-</div>
+<div id="<?= $prefix ?>CommentUploadFilePreview_<?= $post_id ?>" class="comment-upload-file-preview"></div>
+<?php $this->Form->unlockField('file_id') ?>
+
 <?= $this->Form->hidden('post_id', ['value' => $post_id]) ?>
 <div class="comment-btn" id="<?= $prefix ?>Comment_<?= $post_id ?>">
     <div>
-        <a href="#" class="target-show-target-click comment-add-pic new-comment-add-pic"
-           target-id="<?= $prefix ?>CommentFormImage_<?= $post_id ?>"
-           click-target-id="<?= $prefix ?>Comment__Post_<?= $post_id ?>_Photo_1">
-            <button type="button" class="btn pull-left photo-up-btn">
-                <i class="fa fa-camera post-camera-icon"></i>
+        <a href="#" class="link-red new-comment-add-pic comment-file-attach-button"
+           id="CommentUploadFileButton_<?= $post_id ?>"
+           data-preview-container-id="CommentUploadFilePreview_<?= $post_id ?>"
+           data-form-id="CommentAjaxGetNewCommentForm_<?= $post_id ?>">
+            <button type="button" class="btn pull-left photo-up-btn"><i
+                    class="fa fa-paperclip post-camera-icon"></i>
             </button>
         </a>
     </div>
@@ -73,7 +65,7 @@ $this->Form->input('body', [
     <div class="pull-right">
         <?=
         $this->Form->submit(__d('gl', "コメントする"),
-                            ['class' => 'btn btn-primary submit-btn', 'id' => "{$prefix}CommentSubmit_{$post_id}", 'disabled' => 'disabled']) ?>
+                            ['class' => 'btn btn-primary submit-btn comment-submit-button', 'id' => "{$prefix}CommentSubmit_{$post_id}", 'disabled' => 'disabled']) ?>
     </div>
     <div class="clearfix"></div>
 </div>

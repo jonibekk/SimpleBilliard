@@ -136,6 +136,9 @@ define('MODE_VIEW_TUTORIAL', 1);
 //aws s3のurl
 define('S3_BASE_URL', 'https://s3-ap-northeast-1.amazonaws.com');
 define('S3_TRIM_PATH', '/upload/');
+//office online viewerのbase url
+define('OOV_BASE_URL', 'https://view.officeapps.live.com/op/view.aspx?src=');
+
 //リクエストされた時点のタイムスタンプ
 define('REQUEST_TIMESTAMP', time());
 //右カラム各要素の表示数
@@ -144,7 +147,7 @@ define('MY_COLLABO_GOALS_DISPLAY_NUMBER', 5);
 define('MY_FOLLOW_GOALS_DISPLAY_NUMBER', 5);
 define('MY_PREVIOUS_GOALS_DISPLAY_NUMBER', 5);
 //通知リストボックス(ベルのアイコンのところ)内のアイテム数
-define('NOTIFY_BELL_BOX_ITEMS_NUMBER', 5);
+define('NOTIFY_BELL_BOX_ITEMS_NUMBER', 7);
 //通知リストページの1ブロックのアイテム数
 define('NOTIFY_PAGE_ITEMS_NUMBER', 50);
 //投稿フィードのアイテム数
@@ -161,6 +164,9 @@ define('GOAL_PAGE_FOLLOWER_NUMBER', 10);
 define('GOAL_PAGE_MEMBER_NUMBER', 10);
 //ゴールページのキーリザルト数
 define('GOAL_PAGE_KR_NUMBER', 10);
+//ファイル一覧ページのアイテム数
+define('FILE_LIST_PAGE_NUMBER', 20);
+
 /**
  * 共通関数
  */

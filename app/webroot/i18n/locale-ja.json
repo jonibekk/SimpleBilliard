@@ -20,5 +20,7 @@
         "ARCHIVE_SUCCESS_MASSAGE": "グループビジョンをアーカイブしました",
         "DELETE_FAILED_MASSAGE": "管理者以外の方には削除できません",
         "DELETE_SUCCESS_MASSAGE": "グループビジョンを削除しました"
-    }
+    },
+
+    "ACCESS_MESSAGE_DETAIL_MESSAGE" : "メッセージが存在しないか、権限がありません。"
 }

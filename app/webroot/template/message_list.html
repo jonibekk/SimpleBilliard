@@ -1,0 +1,36 @@
+<!-- start app/webroot/template/message_list.html -->
+<div class="panel panel-default message-list-panel">
+    <div class="panel-heading message-list-panel-head">
+        すべてのメッセージ
+    </div>
+    <div class="message-list-panel-body panel-body">
+        <ul class="message-list-panel-cards" role="menu" ng-repeat="item in message_list">
+            <li class="message-list-panel-card">
+                <a href="/posts/message#/{{item.Post.id}}" class="message-list-panel-card-link col col-xxs-12">
+                    <div class="message-list-panel-card-avatar-wrap pull-left">
+                        <img class="" ng-repeat="shareUser in item.share_users | limitTo:4" ng-src="{{shareUser.photo_path}}" ng-class="imageLayout($index, item.share_users.length)" />
+                    </div>
+                    <div class="message-list-panel-card-contents">
+                        <div class="col col-xxs-12 notify-card-head">
+                            <span class="font-heading">
+                                <div class="message-list-panel-card-names">
+                                    <span ng-repeat="shareUser in item.share_users | limitTo: name_list_max">
+                                        {{shareUser.first_name}}<span ng-if="!$last">,</span>
+                                    </span>
+                                    <span ng-if="item.PostShareUser.length - name_list_max > 0">+{{item.PostShareUser.length - name_list_max}}</span>
+                                </div>
+                            </span>
+                        </div>
+                        <div class="message-list-panel-card-text col col-xxs-12" id="CommentTextBody_67">
+                            <span ng-if="item.User.id != auth_info.user_id">{{item.User.display_first_name}}</span>
+                            <span ng-if="item.User.id == auth_info.user_id">あなた</span>
+                            : <span ng-bind-html="item.Post.body"></span>
+                        </div>
+                        <p class="message-list-panel-card-aside"><span ng-bind-html="item.Post.created"></span></p>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+<!-- end app/webroot/template/message_list.html -->

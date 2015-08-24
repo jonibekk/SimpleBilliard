@@ -36,7 +36,13 @@ class PostRead extends AppModel
         'Team',
     ];
 
-    public function red($post_list)
+    /**
+     * @param            $post_list
+     * @param bool|false $with_comment
+     *
+     * @return bool|void
+     */
+    public function red($post_list, $with_comment = false)
     {
         //既読投稿を除外
         $post_list = $this->pickUnreadPosts($post_list);
@@ -57,6 +63,9 @@ class PostRead extends AppModel
             return;
         }
         $res = $this->saveAllAtOnce($post_data, true, ['post_id']);
+        if ($with_comment) {
+            $this->Post->Comment->CommentRead->redAllByPostId($post_list);
+        }
         return $res;
     }
 

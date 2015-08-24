@@ -147,6 +147,29 @@ class PostShareCircle extends AppModel
         return false;
     }
 
+    /**
+     * $post_id の投稿が公開サークルに共有されているか確認する
+     *
+     * @param $post_id
+     *
+     * @return bool 公開サークルに共有されている時 true
+     */
+    public function isShareWithPublicCircle($post_id)
+    {
+        $options = [
+            'conditions' => [
+                'PostShareCircle.post_id' => $post_id,
+                'PostShareCircle.team_id' => $this->current_team_id,
+                'Circle.public_flg'       => 1,
+            ],
+            'contain'    => [
+                'Circle',
+            ]
+        ];
+        $res = $this->find('first', $options);
+        return $res ? true : false;
+    }
+
     public function getShareCirclesAndMembers($post_id)
     {
         $circle_list = $this->getShareCircleList($post_id);

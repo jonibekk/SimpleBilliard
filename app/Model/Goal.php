@@ -743,7 +743,7 @@ class Goal extends AppModel
                     'fields' => ['Purpose.name']
                 ],
                 'ActionResult'      => [
-                    'fields'     => [
+                    'fields'           => [
                         'ActionResult.id',
                         'ActionResult.name',
                         'ActionResult.photo1_file_name',
@@ -752,12 +752,18 @@ class Goal extends AppModel
                         'ActionResult.photo4_file_name',
                         'ActionResult.photo5_file_name',
                     ],
-                    'limit'      => $action_limit,
-                    'conditions' => ['ActionResult.user_id' => $user_id],
-                    'order'      => ['ActionResult.created desc'],
-                    'Post'       => [
+                    'limit'            => $action_limit,
+                    'conditions'       => ['ActionResult.user_id' => $user_id],
+                    'order'            => ['ActionResult.created desc'],
+                    'Post'             => [
                         'fields' => ['Post.id']
-                    ]
+                    ],
+                    'ActionResultFile' => [
+                        'conditions' => [
+                            'ActionResultFile.index_num' => 0
+                        ],
+                        'AttachedFile'
+                    ],
                 ],
                 'KeyResult'         => [
                     'fields'     => ['KeyResult.id', 'KeyResult.progress', 'KeyResult.priority'],

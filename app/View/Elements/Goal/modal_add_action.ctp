@@ -10,6 +10,7 @@
  * @var                    $goal
  * @var                    $kr_list
  * @var                    $kr_value_unit_list
+ * @var                    $key_result_id
  */
 ?>
 <!-- START app/View/Elements/Goal/modal_add_action.ctp -->
@@ -82,18 +83,28 @@
                                    ]) ?>
             </div>
             <div class="row">
-                <?=
-                $this->Form->input('key_result_id', [
-                    'before'   => '<h5 class="modal-key-result-headings">' .
-                        __d('gl', "出したい成果") .
-                        '<span class="modal-key-result-headings-description">' .
-                        __d('gl', "紐付ける成果を選択しよう。") . '</span></h5>',
-                    'label'    => false,
-                    'type'     => 'select',
-                    'required' => false,
-                    'style'    => 'width:170px',
-                    'options'  => $kr_list,
-                ]) ?>
+                <div class="form-group">
+                    <h5 class="modal-key-result-headings"><?= __d('gl', '出したい成果') ?>
+                        <span class="modal-key-result-headings-description"><?= __d('gl', '紐付ける成果を選択しよう。') ?></span>
+                    </h5>
+
+                    <div class="goal-set-input">
+                        <?php if ($key_result_id): ?>
+                            <?= $this->Form->hidden('key_result_id', ['value' => $key_result_id]) ?>
+                            <p class="form-control-static"><?= $kr_list[$key_result_id] ?></p>
+                        <?php else: ?>
+                            <?=
+                            $this->Form->input('key_result_id', [
+                                'label'    => false,
+                                'type'     => 'select',
+                                'required' => false,
+                                'div'      => false,
+                                'style'    => 'width:170px',
+                                'options'  => $kr_list,
+                            ]) ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
             </div>
 
             <div class="row">

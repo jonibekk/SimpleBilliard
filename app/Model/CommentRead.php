@@ -36,6 +36,14 @@ class CommentRead extends AppModel
         'Team'
     ];
 
+    public function redAllByPostId($post_id)
+    {
+        $comment_list = $this->Comment->find('list',
+                                             ['conditions' => ['post_id' => $post_id], 'fields' => ['id', 'id']]);
+        $res = $this->red($comment_list);
+        return $res;
+    }
+
     public function  red($comment_list)
     {
         //既読コメントを除外
