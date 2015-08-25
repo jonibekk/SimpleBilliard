@@ -105,7 +105,11 @@ message_app.controller(
 
             // メッセージを送信する
             $scope.clickMessage = function (event) {
-                event.target.disabled = 'disabled'
+                event.target.disabled = 'disabled';
+                var sendMessageLoader = document.getElementById("SendMessageLoader");
+                sendMessageLoader.style.display = "inline-block";
+
+
                 var request = {
                     method: 'POST',
                     url: cake.url.ai + $stateParams.post_id,
@@ -119,7 +123,8 @@ message_app.controller(
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
                 };
                 $http(request).then(function (response) {
-                    event.target.disabled = ''
+                    event.target.disabled = '';
+                    sendMessageLoader.style.display = 'none';
                     message_scroll($scope.message_list.length);
                     $scope.message = "";
                     document.getElementById("message_text_input").focus();
