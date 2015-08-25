@@ -54,13 +54,9 @@ var bindCtrlEnterAction = function (selector, callback) {
     })
 };
 $(window).load(function () {
-    //bindPostBalancedGallery($('.post_gallery'));
-    //bindCommentBalancedGallery($('.comment_gallery'));
-    setDefaultTab();
-});
-$(window).imagesLoaded(function () {
     bindPostBalancedGallery($('.post_gallery'));
     bindCommentBalancedGallery($('.comment_gallery'));
+    setDefaultTab();
 });
 $(document).ready(function () {
     //すべてのformで入力があった場合に行う処理
