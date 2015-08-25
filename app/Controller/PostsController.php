@@ -901,6 +901,38 @@ class PostsController extends AppController
         return $this->render();
     }
 
+    /**
+     * 添付ファイルのダウンロード
+     *
+     * @return CakeResponse
+     */
+    public function attached_file_download()
+    {
+        // データが存在するか確認
+        $file = $this->Post->PostFile->AttachedFile->findById($this->request->params['named']['file_id']);
+        if (!$file) {
+            throw new NotFoundException(__d('gl', "ファイルが存在しません。"));
+        }
+
+        // ファイルへのアクセス権限があるか確認
+        if (!$this->Post->PostFile->AttachedFile->isReadable($this->request->params['named']['file_id'])) {
+            throw new NotFoundException(__d('gl', "ファイルが存在しません。"));
+        }
+
+        // ファイルデータを取得
+        $url = $this->Post->PostFile->AttachedFile->getFileUrl($this->request->params['named']['file_id']);
+        $data = file_get_contents(Router::url($url, true));
+        if (!$data) {
+            throw new NotFoundException(__d('gl', "ファイルが存在しません。"));
+        }
+
+        $this->response->type('application/octet-stream');
+        $this->response->length(strlen($data));
+        $this->response->download($file['AttachedFile']['attached_file_name']);
+        $this->response->body($data);
+        return $this->response;
+    }
+
     function _setCircleCommonVariables()
     {
         $params = $this->request->params;

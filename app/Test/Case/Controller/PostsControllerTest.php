@@ -1649,6 +1649,26 @@ class PostsControllerTest extends ControllerTestCase
         $this->assertEquals('/circle_feed/1', $res);
     }
 
+    function testAttachedFileDownload()
+    {
+        $this->_getPostsCommonMock();
+
+        // ダウンロード出来ないファイル
+        try {
+            $this->testAction('/posts/attached_file_download/file_id:8', ['method' => 'GET']);
+        }
+        catch (NotFoundException $e) {
+        }
+
+        // 存在しないデータ
+        try {
+            $this->testAction('/posts/attached_file_download/file_id:9999888', ['method' => 'GET']);
+        }
+        catch (NotFoundException $e) {
+        }
+        $this->testAction('/posts/attached_file_download/file_id:1', ['method' => 'GET']);
+    }
+
     function _getPostsCommonMock()
     {
         /**
@@ -1743,6 +1763,19 @@ class PostsControllerTest extends ControllerTestCase
         $Posts->Team->EvaluateTerm->my_uid = 1;
         $Posts->Team->EvaluateTerm->current_team_id = 1;
         $Posts->Team->Circle->current_team_id = 1;
+
+        $Posts->Post->current_team_id = 1;
+        $Posts->Post->my_uid = 1;
+        $Posts->Post->PostShareCircle->current_team_id = 1;
+        $Posts->Post->PostShareCircle->my_uid = 1;
+        $Posts->Post->PostShareUser->current_team_id = 1;
+        $Posts->Post->PostShareUser->my_uid = 1;
+        $Posts->Post->PostFile->AttachedFile->current_team_id = 1;
+        $Posts->Post->PostFile->AttachedFile->my_uid = 1;
+        $Posts->Post->PostFile->current_team_id = 1;
+        $Posts->Post->PostFile->my_uid = 1;
+        $Posts->Post->Comment->CommentFile->current_team_id = 1;
+        $Posts->Post->Comment->CommentFile->my_uid = 1;
 
         return $Posts;
     }
