@@ -121,15 +121,20 @@ class NotifySettingTest extends CakeTestCase
         // from_user_name が配列以外の時
         $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_POST, 'aaa', $count_num, $item_name);
 
-        // TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST と TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION は post_user_id が必須
+        // TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST と TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION は
+        // post_user_id、from_user_id が必須
         $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST, 'aaa', $count_num,
-                                       $item_name, [
-                'post_user_id' => 2,
-            ]);
+                                       $item_name,
+                                       [
+                                           'from_user_id' => 1,
+                                           'post_user_id' => 2,
+                                       ]);
         $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION, 'aaa', $count_num,
-                                       $item_name, [
-                'post_user_id' => 2,
-            ]);
+                                       $item_name,
+                                       [
+                                           'from_user_id' => 1,
+                                           'post_user_id' => 2,
+                                       ]);
     }
 
     function testGetTitleFeedPost()
@@ -145,30 +150,30 @@ class NotifySettingTest extends CakeTestCase
 
         // 個人共有 複数
         $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_POST, $from_user_names, $count_num, $item_name, [
-            'share_user_list'  => [1 => 1, 2 => 2],
+            'share_user_list' => [1 => 1, 2 => 2],
         ]);
 
         // 個人共有 自分のみ
         $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_POST, $from_user_names, $count_num, $item_name, [
-            'share_user_list'  => [1 => 1],
+            'share_user_list' => [1 => 1],
         ]);
 
         // 個人 + サークル
         $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_POST, $from_user_names, $count_num, $item_name, [
-            'share_user_list'         => [1 => 1, 2 => 2],
-            'share_circle_list'       => [1 => 1, 2 => 2],
+            'share_user_list'   => [1 => 1, 2 => 2],
+            'share_circle_list' => [1 => 1, 2 => 2],
         ]);
 
         // サークル共有
         $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_POST, $from_user_names, $count_num, $item_name, [
-            'share_user_list'         => [1 => 1, 2 => 2],
-            'share_circle_list'       => [1 => 1, 2 => 2, 3 => 3],
+            'share_user_list'   => [1 => 1, 2 => 2],
+            'share_circle_list' => [1 => 1, 2 => 2, 3 => 3],
         ]);
 
         // サークル共有 サークルメンバーでない場合
         $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_POST, $from_user_names, $count_num, $item_name, [
-            'share_user_list'         => [1 => 1, 2 => 2],
-            'share_circle_list'       => [5 => 5],
+            'share_user_list'   => [1 => 1, 2 => 2],
+            'share_circle_list' => [5 => 5],
         ]);
     }
 
@@ -179,10 +184,12 @@ class NotifySettingTest extends CakeTestCase
         $item_name = json_encode(['ccc', 'ddd']);
 
         // HTML入り
-        $html = $this->NotifySetting->getTitle(NotifySetting::TYPE_MY_MEMBER_CHANGE_GOAL, $from_user_names, $count_num, $item_name);
-        $plain =  $this->NotifySetting->getTitle(NotifySetting::TYPE_MY_MEMBER_CHANGE_GOAL, $from_user_names, $count_num, $item_name, [
-            'style' => 'plain'
-        ]);
+        $html = $this->NotifySetting->getTitle(NotifySetting::TYPE_MY_MEMBER_CHANGE_GOAL, $from_user_names, $count_num,
+                                               $item_name);
+        $plain = $this->NotifySetting->getTitle(NotifySetting::TYPE_MY_MEMBER_CHANGE_GOAL, $from_user_names, $count_num,
+                                                $item_name, [
+                'style' => 'plain'
+            ]);
         $this->assertNotEquals($html, $plain);
     }
 }

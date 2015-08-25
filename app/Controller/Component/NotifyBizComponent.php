@@ -870,17 +870,19 @@ class NotifyBizComponent extends Component
         $users = Hash::combine($this->NotifySetting->User->getUsersProf($user_list), '{n}.User.id', '{n}');
         //merge users to notification data
         foreach ($data as $k => $v) {
+            $user_id = null;
             $user_name = null;
 
             if (isset($users[$v['Notification']['user_id']])) {
                 $data[$k] = array_merge($data[$k], $users[$v['Notification']['user_id']]);
+                $user_id = $v['Notification']['user_id'];
                 $user_name = $data[$k]['User']['display_username'];
             }
             //get title
             $title = $this->NotifySetting->getTitle($data[$k]['Notification']['type'],
                                                     $user_name, 1,
                                                     $data[$k]['Notification']['body'],
-                                                    $data[$k]['Notification']['options']);
+                                                    array_merge($data[$k]['Notification']['options'], ['from_user_id' => $user_id]));
             $data[$k]['Notification']['title'] = $title;
         }
         return $data;
