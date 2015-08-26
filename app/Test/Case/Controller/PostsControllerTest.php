@@ -1653,6 +1653,11 @@ class PostsControllerTest extends ControllerTestCase
     {
         $Posts = $this->_getPostsCommonMock();
 
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->expects($this->any())
+              ->method('_getHttpSocket')
+              ->will($this->returnValue(new HttpSocketMockSuccess()));
+
         // 正常
         $AttachedFileMock = $this->getMockForModel('AttachedFile', array('getFileUrl'));
         /** @noinspection PhpUndefinedMethodInspection */
@@ -1666,6 +1671,11 @@ class PostsControllerTest extends ControllerTestCase
     function testAttachedFileDownloadFailed()
     {
         $Posts = $this->_getPostsCommonMock();
+
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->expects($this->any())
+              ->method('_getHttpSocket')
+              ->will($this->returnValue(new HttpSocketMockFailed()));
 
         // URL からデータ取得に失敗したケース
         $empty_file_path = TMP . '__empty_file';
@@ -1705,7 +1715,7 @@ class PostsControllerTest extends ControllerTestCase
          * @var PostsController $Posts
          */
         $Posts = $this->generate('Posts', [
-            'methods'    => ['referer'],
+            'methods'    => ['referer', '_getHttpSocket'],
             'components' => [
                 'Session',
                 'Auth'      => ['user', 'loggedIn'],
@@ -1810,4 +1820,25 @@ class PostsControllerTest extends ControllerTestCase
         return $Posts;
     }
 
+}
+
+// テスト用モック
+class HttpSocketMockSuccess
+{
+    public function get($url)
+    {
+        $obj = new stdClass();
+        $obj->body = "success";
+        return $obj;
+    }
+}
+
+class HttpSocketMockFailed
+{
+    public function get($url)
+    {
+        $obj = new stdClass();
+        $obj->body = "";
+        return $obj;
+    }
 }

@@ -921,16 +921,26 @@ class PostsController extends AppController
 
         // ファイルデータを取得
         $url = $this->Post->PostFile->AttachedFile->getFileUrl($this->request->params['named']['file_id']);
-        $data = file_get_contents($url);
-        if (!$data) {
+        $res = $this->_getHttpSocket()->get($url);
+        if (!$res->body) {
             throw new NotFoundException(__d('gl', "ファイルが存在しません。"));
         }
 
         $this->response->type('application/octet-stream');
-        $this->response->length(strlen($data));
+        $this->response->length(strlen($res->body));
         $this->response->download($file['AttachedFile']['attached_file_name']);
-        $this->response->body($data);
+        $this->response->body($res->body);
         return $this->response;
+    }
+
+    /**
+     * HttpSocket クラスを返す
+     * （主にコントローラのユニットテスト用）
+     */
+    function _getHttpSocket()
+    {
+        App::uses('HttpSocket', 'Network/Http');
+        return new HttpSocket();
     }
 
     function _setCircleCommonVariables()
