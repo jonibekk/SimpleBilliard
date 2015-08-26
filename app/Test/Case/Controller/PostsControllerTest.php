@@ -1658,13 +1658,6 @@ class PostsControllerTest extends ControllerTestCase
               ->method('_getHttpSocket')
               ->will($this->returnValue(new HttpSocketMockSuccess()));
 
-        // 正常
-        $AttachedFileMock = $this->getMockForModel('AttachedFile', array('getFileUrl'));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $AttachedFileMock->expects($this->once())
-                         ->method('getFileUrl')
-                         ->will($this->returnValue(IMAGES . 'no-image.jpg'));
-        $Posts->Post->PostFile->AttachedFile = $AttachedFileMock;
         $this->testAction('/posts/attached_file_download/file_id:1', ['method' => 'GET']);
     }
 
@@ -1677,15 +1670,6 @@ class PostsControllerTest extends ControllerTestCase
               ->method('_getHttpSocket')
               ->will($this->returnValue(new HttpSocketMockFailed()));
 
-        // URL からデータ取得に失敗したケース
-        $empty_file_path = TMP . '__empty_file';
-        touch($empty_file_path);
-        $AttachedFileMock = $this->getMockForModel('AttachedFile', array('getFileUrl'));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $AttachedFileMock->expects($this->once())
-                         ->method('getFileUrl')
-                         ->will($this->returnValue($empty_file_path));
-        $Posts->Post->PostFile->AttachedFile = $AttachedFileMock;
         try {
             $this->testAction('/posts/attached_file_download/file_id:1', ['method' => 'GET']);
         } catch (NotFoundException $e) {
