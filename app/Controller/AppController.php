@@ -115,8 +115,9 @@ class AppController extends Controller
         parent::beforeFilter();
 
         //TODO LPページ用にすべてのページでBasic認証を行う。developマージ時に必ず外す！！
-        $this->_setBasicAuth();
-
+        if (ENV_NAME == "www" || ENV_NAME == "stg" || ENV_NAME == "hotfix") {
+            $this->_setBasicAuth();
+        }
 
         $this->_setSecurity();
         $this->_setAppLanguage();
