@@ -69,9 +69,67 @@ class GoalCategoryTest extends CakeTestCase
         parent::tearDown();
     }
 
-    function testDummy()
+    function testGetCategoryListNotEmpty()
     {
-
+        $this->_setDefault();
+        $this->GoalCategory->deleteAll(['GoalCategory.team_id' => 1]);
+        $this->GoalCategory->save(['team_id' => 1, 'name' => 'test']);
+        $actual = $this->GoalCategory->getCategoryList();
+        $this->assertCount(1, $actual);
     }
 
+    function testGetCategoryListEmpty()
+    {
+        $this->_setDefault();
+        $this->GoalCategory->deleteAll(['GoalCategory.team_id' => 1]);
+        $actual = $this->GoalCategory->getCategoryList();
+        $this->assertCount(2, $actual);
+    }
+
+    function testGetCategories()
+    {
+        $this->_setDefault();
+        $actual = $this->GoalCategory->getCategories(1);
+        $this->assertCount(2, $actual['GoalCategory']);
+        $this->GoalCategory->save(['team_id' => 1, 'name' => 'test']);
+        $actual = $this->GoalCategory->getCategories(1);
+        $this->assertCount(3, $actual['GoalCategory']);
+        $this->GoalCategory->save(['id' => $this->GoalCategory->getLastInsertID(), 'active_flg' => false]);
+        $actual = $this->GoalCategory->getCategories(1);
+        $this->assertCount(2, $actual['GoalCategory']);
+    }
+
+    function testSaveDefaultCategory()
+    {
+        $this->_setDefault();
+        $actual = $this->GoalCategory->saveDefaultCategory();
+        $this->assertNotEmpty($actual);
+    }
+
+    function testSaveGoalCategoriesEmpty()
+    {
+        $this->_setDefault();
+        $actual = $this->GoalCategory->saveGoalCategories([], 1);
+        $this->assertFalse($actual);
+    }
+
+    function testSaveGoalCategoriesNotEmpty()
+    {
+        $this->_setDefault();
+        $actual = $this->GoalCategory->saveGoalCategories([['name' => 'test'], ['name' => 'test']], 1);
+        $this->assertTrue($actual);
+    }
+
+    function testSetToInactive()
+    {
+        $this->_setDefault();
+        $actual = $this->GoalCategory->setToInactive(1);
+        $this->assertFalse($actual['GoalCategory']['active_flg']);
+    }
+
+    function _setDefault()
+    {
+        $this->GoalCategory->current_team_id = 1;
+        $this->GoalCategory->my_uid = 1;
+    }
 }
