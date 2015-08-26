@@ -427,4 +427,95 @@ class AttachedFile extends AppModel
         $count_attached_files = $this->find('count', $options);
         return $count_attached_files;
     }
+
+    /**
+     * ファイルが閲覧/ダウンロード可能か確認
+     *
+     * @param int $file_id 添付ファイルのID
+     *
+     * @return bool
+     */
+    public function isReadable($file_id)
+    {
+        $file = $this->findById($file_id);
+        if (!$file) {
+            return false;
+        }
+
+        // アクションに添付されたファイルは誰でも閲覧可能
+        if ($file['AttachedFile']['model_type'] == self::TYPE_MODEL_ACTION_RESULT) {
+            return true;
+        }
+
+        // 投稿とコメントへの添付ファイルの場合、その投稿自体が閲覧可能かを確認する。
+        // アクションへのコメントの場合は、だれでも閲覧可能にする
+        $post_id = "";
+
+        // 投稿への添付ファイル
+        // 関連テーブルから post_id 取得
+        if ($file['AttachedFile']['model_type'] == self::TYPE_MODEL_POST) {
+            $modelName = self::$TYPE_MODEL[self::TYPE_MODEL_POST]['intermediateModel'];
+            $row = $this->{$modelName}->find('first', [
+                'conditions' => [
+                    'attached_file_id' => $file['AttachedFile']['id'],
+                ],
+            ]);
+            $post_id = $row[$modelName]['post_id'];
+        }
+        // コメントへの添付ファイル
+        // 関連テーブルから post_id 取得
+        elseif ($file['AttachedFile']['model_type'] == self::TYPE_MODEL_COMMENT) {
+            $modelName = self::$TYPE_MODEL[self::TYPE_MODEL_COMMENT]['intermediateModel'];
+            $row = $this->{$modelName}->find('first', [
+                'conditions' => [
+                    'attached_file_id' => $file['AttachedFile']['id'],
+                ],
+                'contain'    => [
+                    'Comment' => ['Post']
+                ]
+            ]);
+
+            // アクションへのコメントの場合は誰でも閲覧可能
+            if ($row['Comment']['Post']['type'] == Post::TYPE_ACTION) {
+                return true;
+            }
+
+            $post_id = $row['Comment']['post_id'];
+        }
+
+        // 以下の場合は閲覧可能
+        if (
+            // 自分の投稿の場合
+            $this->PostFile->Post->isMyPost($post_id) ||
+            // 公開サークルに共有されている場合
+            $this->PostFile->Post->PostShareCircle->isShareWithPublicCircle($post_id) ||
+            // 自分が個人として共有されている場合
+            $this->PostFile->Post->PostShareUser->isShareWithMe($post_id) ||
+            // 自分の所属しているサークルに共有されている場合
+            $this->PostFile->Post->PostShareCircle->isMyCirclePost($post_id)
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * ファイルのURLを返す
+     *
+     * @param $file_id
+     *
+     * @return bool|null|string
+     */
+    public function getFileUrl($file_id)
+    {
+        $file = $this->findById($file_id);
+        if (!$file) {
+            return false;
+        }
+
+        App::uses('UploadHelper', 'View/Helper');
+        $upload = new UploadHelper(new View());
+        return $upload->attachedFileUrl($file, 'download');
+    }
 }
