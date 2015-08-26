@@ -1709,6 +1709,24 @@ class PostsControllerTest extends ControllerTestCase
         }
     }
 
+    function testGetHttpRequest()
+    {
+        $Posts = $this->generate('Posts', [
+            'methods'    => ['referer'],
+            'components' => [
+                'Session',
+                'Auth'      => ['user', 'loggedIn'],
+                'Security'  => ['_validateCsrf', '_validatePost'],
+                'Ogp',
+                'NotifyBiz' => ['sendNotify', 'commentPush', 'push']
+            ],
+        ]);
+
+        /** @noinspection PhpUndefinedMethodInspection */
+        $socket = $Posts->_getHttpSocket();
+        $this->assertTrue(method_exists($socket, 'get'));
+    }
+
     function _getPostsCommonMock()
     {
         /**
