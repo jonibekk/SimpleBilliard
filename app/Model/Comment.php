@@ -145,6 +145,25 @@ class Comment extends AppModel
         'CommentFile',
     ];
 
+    public function beforeValidate($options = [])
+    {
+        parent::beforeValidate($options);
+
+        // OGP 画像が存在する場合、画像の形式をチェックして
+        // 通常の画像形式でない場合はデフォルトの画像を表示するようにする
+        // （validate の段階でチェックすると投稿エラーになってしまうため）
+        if (isset($this->data['Comment']['site_photo']['type'])) {
+            if (isset($this->validate['site_photo']['image_type']['rule'][1])) {
+                $image_types = $this->validate['site_photo']['image_type']['rule'][1];
+                if (!in_array($this->data['Comment']['site_photo']['type'], $image_types)) {
+                    // 画像形式が許容されていない場合、画像が存在しないものとする
+                    $this->data['Comment']['site_photo'] = null;
+                }
+            }
+        }
+        return true;
+    }
+
     /**
      * コメント
      *
@@ -273,13 +292,14 @@ class Comment extends AppModel
                 );
             }
         }
-        //auto link処理
+
+        //auto link
         if (isset($data['Comment']) === true) {
-            $data['Comment']['body'] = $text_ex->autoLink($data['Comment']['body']);
+            $data['Comment']['body'] = nl2br($text_ex->autoLink($data['Comment']['body']));
         }
         else {
-            foreach ($data as $key => $item) {
-                $data[$key]['Comment']['body'] = $text_ex->autoLink($item['Comment']['body']);
+            foreach ($data as $key => $val) {
+                $data[$key]['Comment']['body'] = nl2br($text_ex->autoLink($data[$key]['Comment']['body']));
             }
         }
         return $data;

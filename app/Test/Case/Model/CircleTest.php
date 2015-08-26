@@ -253,7 +253,7 @@ class CircleTest extends CakeTestCase
         $circles = $this->Circle->getCirclesByKeyword('チーム');
         $this->assertNotEmpty($circles);
         $circles = $this->Circle->getCirclesByKeyword('全体');
-        $this->assertNotEmpty($circles);
+        $this->assertEmpty($circles);
 
         // 秘密サークル
         $circles = $this->Circle->getCirclesByKeyword('秘密サークル');
@@ -261,6 +261,10 @@ class CircleTest extends CakeTestCase
 
         // 存在しないサークル
         $circles = $this->Circle->getCirclesByKeyword('存在しないサークル名');
+        $this->assertEmpty($circles);
+
+        // スペースのみ
+        $circles = $this->Circle->getCirclesByKeyword(' ');
         $this->assertEmpty($circles);
     }
 
@@ -277,7 +281,7 @@ class CircleTest extends CakeTestCase
         $circles = $this->Circle->getPublicCirclesByKeyword('チーム');
         $this->assertNotEmpty($circles);
         $circles = $this->Circle->getPublicCirclesByKeyword('全体');
-        $this->assertNotEmpty($circles);
+        $this->assertEmpty($circles);
 
         // 秘密サークル
         $circles = $this->Circle->getPublicCirclesByKeyword('秘密サークル');
@@ -308,6 +312,4 @@ class CircleTest extends CakeTestCase
         $circles = $this->Circle->getSecretCirclesByKeyword('存在しないサークル名');
         $this->assertEmpty($circles);
     }
-
-
 }

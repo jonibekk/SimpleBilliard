@@ -1,7 +1,8 @@
-@import "mixins/avator.less";
+@import "mixins/avatar.less";
 @import "mixins/line_number_limit.less";
 @import "mixins/module_icons.less";
 @import "mixins/mixin_normalize.less";
+@import "mixins/font_colors.less";
 
 /*
   mixinを定義
@@ -44,38 +45,6 @@
 
 
 /*メニューなどの▲マーク*/
-.frame-arrow {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  border: 1px solid #ccc;
-}
-
-
-.frame-arrow-pic {
-    top: 98%;
-    .frame-arrow;
-}
-
-.frame-arrow-pic::before {
-    content: "";
-    border: 7px solid transparent;
-    /*noinspection CssOverwrittenProperties*/
-    border-bottom: 7px solid #fff;
-    position: absolute;
-    right: 14%;
-    top: -14px;
-    z-index: 2;
-}
-
-.frame-arrow-pic::after {
-    content: "";
-    border: 7px solid transparent;
-    /*noinspection CssOverwrittenProperties*/
-    border-bottom: 7px solid #ccc;
-    position: absolute;
-    right: 14%;
-    top: -15px;
-}
-/*/メニューなどの▲マーク*/
 
 .font-heading {
   color: @veryDark;

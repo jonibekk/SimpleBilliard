@@ -15,7 +15,7 @@ function bindPostBalancedGallery($obj) {
         //background: '#DDD',                   // the css properties of the gallery's containing element
         idealHeight: 150,                  // ideal row height, only used for horizontal galleries, defaults to half the containing element's height
         //idealWidth: 100,                   // ideal column width, only used for vertical galleries, defaults to 1/4 of the containing element's width
-        maintainOrder: false,                // keeps images in their original order, setting to 'false' can create a slightly better balance between rows
+        //maintainOrder: false,                // keeps images in their original order, setting to 'false' can create a slightly better balance between rows
         orientation: 'horizontal',          // 'horizontal' galleries are made of rows and scroll vertically; 'vertical' galleries are made of columns and scroll horizontally
         padding: 1,                         // pixels between images
         shuffleUnorderedPartitions: true,   // unordered galleries tend to clump larger images at the begining, this solves that issue at a slight performance cost
@@ -31,7 +31,7 @@ function bindCommentBalancedGallery($obj) {
         //background: '#DDD',                   // the css properties of the gallery's containing element
         idealHeight: 130,                  // ideal row height, only used for horizontal galleries, defaults to half the containing element's height
         //idealWidth: 100,                   // ideal column width, only used for vertical galleries, defaults to 1/4 of the containing element's width
-        maintainOrder: false,                // keeps images in their original order, setting to 'false' can create a slightly better balance between rows
+        //maintainOrder: false,                // keeps images in their original order, setting to 'false' can create a slightly better balance between rows
         orientation: 'horizontal',          // 'horizontal' galleries are made of rows and scroll vertically; 'vertical' galleries are made of columns and scroll horizontally
         padding: 1,                         // pixels between images
         shuffleUnorderedPartitions: true,   // unordered galleries tend to clump larger images at the begining, this solves that issue at a slight performance cost
@@ -53,7 +53,6 @@ var bindCtrlEnterAction = function (selector, callback) {
         }
     })
 };
-
 $(window).load(function () {
     bindPostBalancedGallery($('.post_gallery'));
     bindCommentBalancedGallery($('.comment_gallery'));
@@ -352,7 +351,7 @@ $(document).ready(function () {
                 $modal_elm.find('#select2ActionCircleMember').select2({
                     multiple: true,
                     placeholder: cake.word.select_notify_range,
-                    minimumInputLength: 2,
+                    minimumInputLength: 1,
                     ajax: {
                         url: cake.url.select2_circle_user,
                         dataType: 'json',
@@ -1171,7 +1170,7 @@ $(function () {
 });
 
 $(function () {
-    $(".header-link").hover(
+    $(".js-header-link").hover(
         function () {
             $(this).stop().css("color", "#ae2f2f").animate({opacity: "1"}, 200);//ONマウス時のカラーと速度
         }, function () {
@@ -1199,9 +1198,9 @@ $(function () {
 $(function () {
     $("#header").hover(
         function () {
-            $(".header-link , .header-profile-icon,.header-logo-img ,.header-function-link").stop().animate({opacity: ".88"}, 300);//ONマウス時のカラーと速度
+            $(".js-header-link , .header-profile-icon,.header-logo-img ,.header-function-link").stop().animate({opacity: ".88"}, 300);//ONマウス時のカラーと速度
         }, function () {
-            $(".header-link , .header-profile-icon,.header-logo-img,.header-function-link").stop().animate({opacity: ".54"}, 600);//OFFマウス時のカラーと速度
+            $(".js-header-link , .header-profile-icon,.header-logo-img,.header-function-link").stop().animate({opacity: ".54"}, 600);//OFFマウス時のカラーと速度
         });
 });
 
@@ -1546,7 +1545,7 @@ $(document).ready(function () {
     //noinspection JSUnusedLocalSymbols
     $('#select2Member').select2({
         multiple: true,
-        minimumInputLength: 2,
+        minimumInputLength: 1,
         placeholder: cake.message.notice.b,
         ajax: {
             url: cake.url.a,
@@ -1569,12 +1568,21 @@ $(document).ready(function () {
             return m;
         },
         containerCssClass: "select2Member"
+    }).on('change', function () {
+        if ($(this).val() == '') {
+            $('#MessageSubmit').attr('disabled', 'disabled');
+        }
+        else {
+            if ($('#CommonMessageBody').val() != '') {
+                $('#MessageSubmit').removeAttr('disabled');
+            }
+        }
     });
     //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
     $('#select2PostCircleMember').select2({
         multiple: true,
         placeholder: cake.word.select_public_circle,
-        minimumInputLength: 2,
+        minimumInputLength: 1,
         ajax: {
             url: cake.url.select2_circle_user,
             dataType: 'json',
@@ -1606,7 +1614,7 @@ $(document).ready(function () {
     $('#select2PostSecretCircle').select2({
         multiple: true,
         placeholder: cake.word.select_secret_circle,
-        minimumInputLength: 2,
+        minimumInputLength: 1,
         maximumSelectionSize: 1,
         ajax: {
             url: cake.url.select2_secret_circle,
@@ -1739,7 +1747,7 @@ $(document).ready(function () {
     $('#select2ActionCircleMember').select2({
         multiple: true,
         placeholder: cake.word.select_notify_range,
-        minimumInputLength: 2,
+        minimumInputLength: 1,
         ajax: {
             url: cake.url.select2_circle_user,
             dataType: 'json',
@@ -1829,7 +1837,7 @@ function bindSelect2Members($this) {
     $select2elem.select2({
         'val': null,
         multiple: true,
-        minimumInputLength: 2,
+        minimumInputLength: 1,
         placeholder: cake.message.notice.b,
         ajax: {
             url: url ? url : cake.url.a,
@@ -2957,7 +2965,7 @@ $(function () {
     });
 
     // ヘッダーのお知らせ一覧ポップアップの次のページ読込みボタン
-    $(document).on("click", ".click-notify-read-more-dropdown",  function (e) {
+    $(document).on("click", ".click-notify-read-more-dropdown", function (e) {
         e.preventDefault();
         e.stopPropagation();
         var $this = $(this);
@@ -2965,7 +2973,7 @@ $(function () {
             locationType: "dropdown",
             showLoader: function ($loader_html) {
                 $('#bell-dropdown').append($('<div>').append($loader_html).css({
-                   textAlign: 'center',
+                    textAlign: 'center',
                 }));
 
             },
@@ -2983,8 +2991,10 @@ $(function () {
     }
 
     setNotifyCntToBellAndTitle(cake.new_notify_cnt);
-    setNotifyCntToMessageAndTitle(cake.new_notify_message_cnt);
-
+    //メッセージ詳細ページの場合は実行しない。(メッセージ取得後に実行される為)
+    if (cake.request_params.controller != 'posts' || cake.request_params.action != 'message') {
+        setNotifyCntToMessageAndTitle(cake.new_notify_message_cnt);
+    }
 });
 
 function setIntervalToGetNotifyCnt(sec) {
@@ -3059,6 +3069,7 @@ function setNotifyCntToBellAndTitle(cnt) {
 }
 
 function setNotifyCntToMessageAndTitle(cnt) {
+    var cnt = parseInt(cnt);
     var $bellBox = getMessageBoxSelector();
     var $title = $("title");
     var $originTitle = $("title").attr("origin-title");
@@ -3075,11 +3086,11 @@ function setNotifyCntToMessageAndTitle(cnt) {
     }
 
     // set notify number
-    if (parseInt(cnt) == 0) {
+    if (cnt == 0) {
         $bellBox.children('span').html(cnt);
         $bellBox.children('sup').addClass('none');
         $title.text($originTitle);
-    } else if (parseInt(cnt) <= 20) {
+    } else if (cnt <= 20) {
         $bellBox.children('span').html(cnt);
         $bellBox.children('sup').addClass('none');
         $title.text("(" + cnt + ")" + $originTitle);
@@ -3091,10 +3102,9 @@ function setNotifyCntToMessageAndTitle(cnt) {
 
     if (existingBellCnt == 0 && cnt >= 1) {
         displaySelectorFluffy($bellBox);
-    } else if (existingBellCnt >= 1 && cnt == 0) {
+    } else if (cnt == 0) {
         $bellBox.css("opacity", 0);
     }
-
     return;
 }
 
@@ -3146,7 +3156,7 @@ $(document).ready(function () {
 });
 
 function initBellNum() {
-    $bellBox = getBellBoxSelector();
+    var $bellBox = getBellBoxSelector();
     $bellBox.css("opacity", 0);
     $bellBox.html("0");
 }
@@ -3158,7 +3168,7 @@ function initMessageNum() {
 }
 
 function initTitle() {
-    $title = $("title");
+    var $title = $("title");
     $title.text($title.attr("origin-title"));
 }
 
@@ -3180,7 +3190,7 @@ function getMessageNotifyCnt() {
 }
 
 function updateListBox() {
-    $bellDropdown = $("#bell-dropdown");
+    var $bellDropdown = $("#bell-dropdown");
     $bellDropdown.empty();
     var $loader_html = $('<li class="text-align_c"><i class="fa fa-refresh fa-spin"></i></li>');
     //ローダー表示
@@ -3550,6 +3560,7 @@ $(document).ready(function () {
      * params: object {
      *   formID: string|function  (* 必須) アップロードしたファイルIDを hidden で追加するフォームのID
      *   previewContainerID: string|function  (* 必須) プレビューを表示するコンテナ要素のID
+     *   disableMultiple: 複数ファイル同時アップロードを無効にする（iphone で 「画像選択」と「写真を撮る」を選択出来るようにする）
      *   beforeAddedFile: function  コールバック関数
      *   beforeAccept: function   コールバック関数
      *   afterAccept: function  コールバック関数
@@ -3625,7 +3636,13 @@ $(document).ready(function () {
         Dropzone.instances[0].options = $.extend({}, $uploadFileForm._dzDefaultOptions, dzOptions || {});
         // acceptedFiles の設定は上書きされないので手動で設定
         Dropzone.instances[0].hiddenFileInput.setAttribute("accept", Dropzone.instances[0].options.acceptedFiles);
-
+        // maxFiles が 1 の場合、もしくは
+        // params.disableMultiple が true の場合 multiple 属性を外す（iphone で「画像選択」と「写真を撮る」を選択出来るようにする）
+        if (Dropzone.instances[0].options.maxFiles == 1 || params.disableMultiple) {
+            Dropzone.instances[0].hiddenFileInput.removeAttribute("multiple");
+        } else {
+            Dropzone.instances[0].hiddenFileInput.setAttribute("multiple", "multiple");
+        }
 
         // コールバック関数登録
         var empty = function () {
@@ -3767,6 +3784,7 @@ $(document).ready(function () {
     };
     var actionImageDzOptions = {
         acceptedFiles: "image/*",
+        maxFiles: 1,
         previewTemplate: previewTemplateActionImage
     };
     $uploadFileForm.registerDragDropArea('#ActionImageAddButton', actionImageParams, actionImageDzOptions);
@@ -3778,6 +3796,7 @@ $(document).ready(function () {
     var actionImage2Params = {
         formID: 'CommonActionDisplayForm',
         previewContainerID: 'ActionUploadFilePhotoPreview',
+        disableMultiple: true,
         beforeAccept: function (file) {
             var $oldPreview = $('#' + $uploadFileForm._params.previewContainerID).find('.dz-preview:visible');
 

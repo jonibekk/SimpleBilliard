@@ -67,6 +67,7 @@ message_app.controller(
             $scope.auth_info = getPostDetail.auth_info;
             $scope.post_detail = post_detail;
             $scope.message_list = message_list;
+            $scope.first_share_user = getPostDetail.first_share_user;
 
             var current_id = 0;
             var message_scroll = function (id) {

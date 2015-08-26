@@ -15,11 +15,11 @@
 ?>
 <!-- START app/View/Elements/simplex_top_section.ctp -->
 <div class="panel-body goal-detail-upper-panel">
-    <div class="goal-detail-avator-wrap">
+    <div class="goal-detail-avatar-wrap">
         <?=
         $this->Html->image('ajax-loader.gif',
                            [
-                               'class'         => 'goal-detail-avator lazy',
+                               'class'         => 'goal-detail-avatar lazy',
                                'data-original' => $this->Upload->uploadUrl($goal['Goal'], 'Goal.photo',
                                                                            ['style' => 'x_large']),
                            ]

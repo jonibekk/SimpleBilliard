@@ -133,6 +133,21 @@ class PostTest extends CakeTestCase
         $this->assertFalse($res);
     }
 
+    public function testAddInvalidOgp() {
+        $this->Post->my_uid = 1;
+        $this->Post->current_team_id = 1;
+        $postData = [
+            'Post'    => [
+                'body' => 'test',
+                'site_photo' => [
+                    'type' => 'binary/octet-stream'
+                ]
+            ],
+        ];
+        $res = $this->Post->save($postData);
+        $this->assertNotEmpty($res);
+    }
+
     public function testGetNormal()
     {
         $this->_setDefault();

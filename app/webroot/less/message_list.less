@@ -23,30 +23,37 @@
 }
 
 .message-list-panel-body {
-  padding: 10px 11px;
+  padding: 0 11px;
 }
 
 .message-list-panel-cards {
-
+  display: block;
+  height: 64px;
+  margin: 0 0 8px 0;
+  width: 100%;
 }
 
 .message-list-panel-card {
-
+  width: 100%;
+  border-bottom: 1px solid @baseLightGray;
+  display: inline-block;
 }
 
 .message-list-panel-card-link {
-
-}
-
-.message-list-panel-card-avator {
-  width: 24px;
-  height: 24px;
-}
-
-.message-list-panel-card-avator-wrap {
-  width: 20%;
-  overflow: hidden;
-  max-width: 64px;
+  padding: 5px 0;
+  &:hover,
+  &:active,
+  &:target,
+  &:focus {
+    color: @black;
+    background-color: @hoverRed;
+    & .message-list-panel-card-text {
+      background-color: rgba(0,0,0,0) ;
+      &::before {
+        background: linear-gradient(to right, rgba(245, 245, 245, 0), @hoverRed);
+      }
+    }
+  }
 }
 
 .message-list-panel-card-names {
@@ -57,8 +64,10 @@
   white-space: nowrap;
 }
 
-.message-list-panel-card-contants {
-
+.message-list-panel-card-contents {
+  margin: 0 0 0 8px;
+  max-width: 72%;
+  display: inline-block;
 }
 
 .message-list-panel-card-text {
@@ -69,4 +78,67 @@
 
 .message-list-panel-card-aside {
   .aside-info;
+}
+
+/*
++ avatarの設定
+ */
+
+.message-list-panel-card-avatar {
+  width: 32px;
+  height: 32px;
+  position: absolute;
+}
+
+.message-list-panel-card-avatar-sm {
+  width: 32px;
+  height: 32px;
+  position: absolute;
+}
+
+.message-list-panel-card-avatar-sm-tl {
+  .message-list-panel-card-avatar-sm;
+  left: 0;
+  top: 0;
+}
+
+.message-list-panel-card-avatar-sm-tr {
+  .message-list-panel-card-avatar-sm;
+  right: 0;
+  top: 0;
+}
+
+.message-list-panel-card-avatar-sm-bl {
+  .message-list-panel-card-avatar-sm;
+  left: 0;
+  bottom: 0;
+}
+
+.message-list-panel-card-avatar-sm-br {
+  .message-list-panel-card-avatar-sm;
+  right: 0;
+  bottom: 0;
+}
+
+.message-list-panel-card-avatar-md {
+  width: 64px;
+  height: 64px;
+}
+
+.message-list-panel-card-avatar-vl-left {
+  clip: rect(0 48px 64px 16px);
+  position: absolute;
+  left: -16px;
+}
+
+.message-list-panel-card-avatar-vl-right {
+  clip: rect(0 48px 64px 16px);
+  position: absolute;
+  right: -16px;
+}
+
+.message-list-panel-card-avatar-wrap {
+  position: relative;
+  height: 64px;
+  width: 64px;
 }

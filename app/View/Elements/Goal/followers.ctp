@@ -13,7 +13,7 @@
 
                     <?=
                     $this->Upload->uploadImage($follower['User'], 'User.photo', ['style' => 'medium_large'],
-                                               ['class' => 'goal-detail-follower-avator'])
+                                               ['class' => 'goal-detail-follower-avatar'])
                     ?>
                     <div class="goal-detail-follower-info" style="padding:3px;">
                         <p class="goal-detail-follower-name">

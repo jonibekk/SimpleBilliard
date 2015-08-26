@@ -227,6 +227,25 @@ class Post extends AppModel
         $this->_setTypeMessage();
     }
 
+    public function beforeValidate($options = [])
+    {
+        parent::beforeValidate($options);
+
+        // OGP 画像が存在する場合、画像の形式をチェックして
+        // 通常の画像形式でない場合はデフォルトの画像を表示するようにする
+        // （validate の段階でチェックすると投稿エラーになってしまうため）
+        if (isset($this->data['Post']['site_photo']['type'])) {
+            if (isset($this->validate['site_photo']['image_type']['rule'][1])) {
+                $image_types = $this->validate['site_photo']['image_type']['rule'][1];
+                if (!in_array($this->data['Post']['site_photo']['type'], $image_types)) {
+                    // 画像形式が許容されていない場合、画像が存在しないものとする
+                    $this->data['Post']['site_photo'] = null;
+                }
+            }
+        }
+        return true;
+    }
+
     /**
      * 投稿
      *
@@ -477,6 +496,8 @@ class Post extends AppModel
                 elseif (
                     //自分の投稿か？
                     $this->isMyPost($this->orgParams['post_id']) ||
+                    // 公開サークルに共有された投稿か？
+                    $this->PostShareCircle->isShareWithPublicCircle($this->orgParams['post_id']) ||
                     //自分が共有範囲指定された投稿か？
                     $this->PostShareUser->isShareWithMe($this->orgParams['post_id']) ||
                     //自分のサークルが共有範囲指定された投稿か？
@@ -1281,36 +1302,35 @@ class Post extends AppModel
     {
         $upload = new UploadHelper(new View());
         $time = new TimeExHelper(new View());
-        $text_ex = new TextExHelper(new View());
 
-        foreach ($data as $key => $item) {
+        // angularJS 側で通常の（連想配列でない）配列を受け取る必要があるので、
+        // 確実に通常の配列になるようにする
+        $new_data = [];
+        foreach ($data as $item) {
             // 最初のメッセージ作成者のデータ
-            $data[$key]['PostUser'] = $data[$key]['User'];
+            $item['PostUser'] = $item['User'];
 
             // 最後に送信されたメッセージ
             if (empty($item['Comment']) === false) {
-                $data[$key]['User'] = $item['Comment'][0]['User'];
-                $data[$key]['Post']['body'] = $item['Comment'][0]['body'];
-                $data[$key]['Post']['created'] = $item['Comment'][0]['created'];
+                $item['User'] = $item['Comment'][0]['User'];
+                $item['Post']['body'] = $item['Comment'][0]['body'];
+                $item['Post']['created'] = $item['Comment'][0]['created'];
             }
-            $data[$key]['Post']['created'] = $time->elapsedTime(h($data[$key]['Post']['created']));
+            $item['Post']['created'] = $time->elapsedTime(h($item['Post']['created']));
 
             // 最初のメッセージ作成者の画像
-            $data[$key]['PostUser']['photo_path'] =
-                $upload->uploadUrl($data[$key]['PostUser'], 'User.photo', ['style' => 'medium_large']);
+            $item['PostUser']['photo_path'] =
+                $upload->uploadUrl($item['PostUser'], 'User.photo', ['style' => 'medium_large']);
 
             // メッセージ受信者の画像
-            foreach ($data[$key]['PostShareUser'] as $k => $v) {
+            foreach ($item['PostShareUser'] as $k => $v) {
                 $v['User']['photo_path'] = $upload->uploadUrl($v['User'], 'User.photo', ['style' => 'medium_large']);
-                $data[$key]['PostShareUser'][$k] = $v;
+                $item['PostShareUser'][$k] = $v;
             }
-        }
-        //auto link処理
-        foreach ($data as $key => $item) {
-            $data[$key]['Post']['body'] = $text_ex->autoLink($item['Post']['body']);
+            $new_data[] = $item;
         }
 
-        return $data;
+        return $new_data;
     }
 
     function getFilesOnCircle($circle_id, $page = 1, $limit = null,

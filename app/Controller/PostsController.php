@@ -361,21 +361,37 @@ class PostsController extends AppController
 
     public function ajax_get_message_info($post_id)
     {
+        $text_ex = new TextExHelper(new View());
         $this->_ajaxPreProcess();
 
         //既読処理
         $this->Post->PostRead->red($post_id);
         $room_info = $this->Post->getPostById($post_id);
         $room_info['User']['photo_path'] = $this->Post->getPhotoPath($room_info['User']);
+        //auto link
+        $room_info['Post']['body'] = nl2br($text_ex->autoLink($room_info['Post']['body']));
+
+        $share_users = $this->Post->PostShareUser->getShareUserListByPost($post_id);
+        // 画面表示用に自分以外のメッセージ共有者１人の情報を取得する
+        $first_share_user = [];
+        if ($room_info['Post']['user_id'] != $this->Auth->user('id')) {
+            $first_share_user['User'] = $room_info['User'];
+        }
+        else {
+            if ($share_users) {
+                $first_share_user = $this->User->findById(current($share_users));
+            }
+        }
 
         $res = [
-            'auth_info'   => [
+            'auth_info'        => [
                 'user_id'    => $this->Auth->user('id'),
                 'language'   => $this->Auth->user('language'),
                 'photo_path' => $this->Post->getPhotoPath($this->Auth->user()),
             ],
-            'room_info'   => $room_info,
-            'share_users' => $this->Post->PostShareUser->getShareUserListByPost($post_id)
+            'room_info'        => $room_info,
+            'share_users'      => $share_users,
+            'first_share_user' => $first_share_user,
         ];
 
         //対象のメッセージルーム(Post)のnotifyがあれば削除する
@@ -958,6 +974,29 @@ class PostsController extends AppController
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
         $response = $this->render('modal_share_range');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
+    }
+
+    /**
+     * １メッセージに参加しているメンバー一覧を表示
+     *
+     * @return CakeResponse
+     */
+    public function ajax_get_share_message_modal()
+    {
+        $post_id = viaIsSet($this->request->params['named']['post_id']);
+        $this->_ajaxPreProcess();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $users = $this->Post->PostShareUser->getShareUsersByPost($post_id);
+        $post = $this->Post->getPostById($post_id);
+        array_unshift($users, ['User' => $post['User']]);
+        $total_share_user_count = $this->_getTotalShareUserCount([], $users);
+        $this->set(compact('users', 'total_share_user_count'));
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('modal_message_range');
         $html = $response->__toString();
 
         return $this->_ajaxGetResponse($html);

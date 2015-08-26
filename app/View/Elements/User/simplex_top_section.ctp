@@ -14,11 +14,11 @@
 ?>
 <!-- START app/View/Elements/User/simplex_top_section.ctp -->
 <div class="panel-body profile-user-upper-panel">
-    <div class="profile-user-avator-wrap">
+    <div class="profile-user-avatar-wrap">
         <?=
         $this->Html->image('ajax-loader.gif',
                            [
-                               'class'         => 'lazy profile-user-avator',
+                               'class'         => 'lazy profile-user-avatar',
                                'data-original' => $this->Upload->uploadUrl($user['User'], 'User.photo',
                                                                            ['style' => 'x_large']),
                            ]
@@ -68,7 +68,7 @@
         <?php endif ?>
     </div>
     <div class="profile-user-comments showmore">
-        <?= $this->TextEx->autoLink($user['TeamMember']['comment']) ?>
+        <?= nl2br($this->TextEx->autoLink($user['TeamMember']['comment'])) ?>
     </div>
 </div>
 <div class="profile-user-tab-group">
