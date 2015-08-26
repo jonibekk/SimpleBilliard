@@ -3,7 +3,6 @@ App::uses('AppModel', 'Model');
 
 /**
  * SubscribeEmail Model
-
  */
 class SubscribeEmail extends AppModel
 {
