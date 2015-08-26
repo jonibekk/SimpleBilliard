@@ -921,7 +921,7 @@ class PostsController extends AppController
 
         // ファイルデータを取得
         $url = $this->Post->PostFile->AttachedFile->getFileUrl($this->request->params['named']['file_id']);
-        $data = file_get_contents(Router::url($url, true));
+        $data = file_get_contents($url);
         if (!$data) {
             throw new NotFoundException(__d('gl', "ファイルが存在しません。"));
         }

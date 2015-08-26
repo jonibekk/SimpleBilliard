@@ -1651,22 +1651,52 @@ class PostsControllerTest extends ControllerTestCase
 
     function testAttachedFileDownload()
     {
+        $Posts = $this->_getPostsCommonMock();
+
+        // 正常
+        $AttachedFileMock = $this->getMockForModel('AttachedFile', array('getFileUrl'));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $AttachedFileMock->expects($this->once())
+                         ->method('getFileUrl')
+                         ->will($this->returnValue(IMAGES . 'no-image.jpg'));
+        $Posts->Post->PostFile->AttachedFile = $AttachedFileMock;
+        $this->testAction('/posts/attached_file_download/file_id:1', ['method' => 'GET']);
+    }
+
+    function testAttachedFileDownloadFailed()
+    {
+        $Posts = $this->_getPostsCommonMock();
+
+        // URL からデータ取得に失敗したケース
+        $empty_file_path = TMP . '__empty_file';
+        touch($empty_file_path);
+        $AttachedFileMock = $this->getMockForModel('AttachedFile', array('getFileUrl'));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $AttachedFileMock->expects($this->once())
+                         ->method('getFileUrl')
+                         ->will($this->returnValue($empty_file_path));
+        $Posts->Post->PostFile->AttachedFile = $AttachedFileMock;
+        try {
+            $this->testAction('/posts/attached_file_download/file_id:1', ['method' => 'GET']);
+        } catch (NotFoundException $e) {
+        }
+    }
+
+    function testAttachedFileDownloadInvalidParam()
+    {
         $this->_getPostsCommonMock();
 
         // ダウンロード出来ないファイル
         try {
             $this->testAction('/posts/attached_file_download/file_id:8', ['method' => 'GET']);
-        }
-        catch (NotFoundException $e) {
+        } catch (NotFoundException $e) {
         }
 
         // 存在しないデータ
         try {
             $this->testAction('/posts/attached_file_download/file_id:9999888', ['method' => 'GET']);
+        } catch (NotFoundException $e) {
         }
-        catch (NotFoundException $e) {
-        }
-        $this->testAction('/posts/attached_file_download/file_id:1', ['method' => 'GET']);
     }
 
     function _getPostsCommonMock()
