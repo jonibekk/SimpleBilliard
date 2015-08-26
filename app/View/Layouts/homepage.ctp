@@ -129,14 +129,10 @@
                         <!--//dropdown-->
                         <li class="nav-item"><a href="contact.html">お問い合わせ</a></li>
                         <li class="nav-item">
-                            <button type="button" class="login-trigger btn btn-link" data-toggle="modal"
-                                    data-target="#login-modal">ログイン
-                            </button>
+                            <a href="<?=$this->Html->url(['controller'=>'users','action'=>'login'])?>" class="btn btn-link"><?=__d('gl','ログイン')?></a>
                         </li>
                         <li class="nav-item nav-item-cta last">
-                            <button type="button" class="btn btn-cta btn-cta-primary" data-toggle="modal"
-                                    data-target="#signup-modal">新規登録
-                            </button>
+                            <a href="<?=$this->Html->url(['controller'=>'users','action'=>'register'])?>" class="btn btn-cta btn-cta-primary"><?=__d('gl','新規登録')?></a>
                         </li>
                     </ul>
                     <!--//nav-->
