@@ -38,6 +38,7 @@ class TeamTest extends CakeTestCase
         'app.invite',
         'app.circle',
         'app.circle_member',
+        'app.evaluate_term',
 
         'app.thread'
     );
@@ -191,21 +192,21 @@ class TeamTest extends CakeTestCase
 
     function testGetTermStartDate()
     {
-        $this->setDefault();
+        $this->_setDefault();
         $this->Team->current_term_start_date = strtotime('2014-04-01 00:00:00');
         $this->Team->getCurrentTermStartDate();
     }
 
     function testGetTermEndDate()
     {
-        $this->setDefault();
+        $this->_setDefault();
         $this->Team->current_term_end_date = strtotime('2014-09-31 00:00:00');
         $this->Team->getCurrentTermEndDate();
     }
 
     function testSetCurrentTermStartEnd()
     {
-        $this->setDefault();
+        $this->_setDefault();
 
         $this->Team->setCurrentTermStartEnd();
 
@@ -260,7 +261,7 @@ class TeamTest extends CakeTestCase
 
     function testSetCurrentTermStartEndFromParam()
     {
-        $this->setDefault();
+        $this->_setDefault();
         $time_offset = $this->Team->me['timezone'] * 60 * 60;
 
         //no target_date
@@ -564,7 +565,7 @@ class TeamTest extends CakeTestCase
     {
         $this->assertTrue(is_null($this->Team->getTermStartEndByDate(1)));
 
-        $this->setDefault();
+        $this->_setDefault();
         $time_offset = $this->Team->me['timezone'] * 60 * 60;
         $term = $this->Team->getTermStartEndByDate(strtotime('2014/1/1') - $time_offset);
         $this->assertEquals('2014/01/01 00:00:00',
@@ -573,14 +574,14 @@ class TeamTest extends CakeTestCase
 
     function testGetBeforeTermStartEnd()
     {
-        $this->setDefault();
+        $this->_setDefault();
         $this->assertTrue(is_null($this->Team->getBeforeTermStartEnd(0)));
         $this->Team->getBeforeTermStartEnd(1);
     }
 
     function testGetAfterTermStartEnd()
     {
-        $this->setDefault();
+        $this->_setDefault();
         $this->assertTrue(is_null($this->Team->getAfterTermStartEnd(0)));
         $this->Team->getAfterTermStartEnd(1);
     }
@@ -591,16 +592,46 @@ class TeamTest extends CakeTestCase
         $this->assertEmpty($this->Team->getCurrentTeam());
 
         // current_team_id がセットされている場合
-        $this->setDefault();
+        $this->_setDefault();
         $current_team = $this->Team->getCurrentTeam();
         $this->assertEquals($this->Team->current_team_id, $current_team['Team']['id']);
     }
 
-    function setDefault()
+    function testGetBorderMonthsOptions()
+    {
+        $actual = $this->Team->getBorderMonthsOptions();
+        $this->assertNotEmpty($actual);
+        $this->assertCount(4, $actual);
+    }
+
+    function testGetMonths()
+    {
+        $actual = $this->Team->getMonths();
+        $this->assertNotEmpty($actual);
+        $this->assertCount(13, $actual);
+    }
+
+    function testSaveEditTerm()
+    {
+        $this->_setDefault();
+        $postData = [
+            'Team' => [
+                'change_from'      => Team::OPTION_CHANGE_TERM_FROM_CURRENT,
+                'start_term_month' => 1,
+                'border_months'    => 1,
+            ]
+        ];
+        $actual = $this->Team->saveEditTerm(1, $postData);
+        $this->assertTrue($actual);
+    }
+
+    function _setDefault()
     {
         $this->Team->my_uid = 1;
         $this->Team->me['timezone'] = 9;
         $this->Team->current_team_id = 1;
+        $this->Team->EvaluateTerm->current_team_id = 1;
+        $this->Team->EvaluateTerm->my_uid = 1;
     }
 
 }
