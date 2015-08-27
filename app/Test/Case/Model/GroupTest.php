@@ -54,11 +54,36 @@ class GroupTest extends CakeTestCase
         $team_id = 999;
         $params = [
             'team_id' => $team_id,
-            'name' => 'SDG'
+            'name'    => 'SDG'
         ];
         $this->Group->save($params);
         $res = $this->Group->getByAllName($team_id);
         $this->assertContains('SDG', $res);
+    }
+
+    function testSaveNewGroup()
+    {
+        $this->_setDefault();
+        $actual = $this->Group->saveNewGroup('test');
+        $this->assertNotEmpty($actual);
+    }
+
+    function testGetByNameIfNotExistsSave()
+    {
+        $this->_setDefault();
+        $this->Group->getByNameIfNotExistsSave('test');
+        $this->assertNotEquals(false, $this->Group->id);
+
+        $this->Group->create();
+        $actual = $this->Group->getByNameIfNotExistsSave('test');
+        $this->assertNotEmpty($actual);
+        $this->assertFalse($this->Group->id);
+    }
+
+    function _setDefault()
+    {
+        $this->Group->current_team_id = 1;
+        $this->Group->my_uid = 1;
     }
 
 }

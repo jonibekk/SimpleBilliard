@@ -128,4 +128,31 @@ class EvaluateScoreTest extends CakeTestCase
         $res = $this->EvaluateScore->getScoreList(1);
         $this->assertEquals(count($res), $expected);
     }
+
+    function testGetScore()
+    {
+        $actual = $this->EvaluateScore->getScore(1);
+        $this->assertNotEmpty($actual['EvaluateScore']);
+
+        $this->EvaluateScore->updateAll(['active_flg' => false], ['EvaluateScore.team_id' => 1]);
+        $actual = $this->EvaluateScore->getScore(1);
+        $this->assertEmpty($actual['EvaluateScore']);
+    }
+
+    function testSaveScores()
+    {
+        $actual = $this->EvaluateScore->saveScores([], 1);
+        $this->assertFalse($actual);
+
+        $actual = $this->EvaluateScore->saveScores([['name' => 'test'], ['name' => 'test']], 1);
+        $this->assertTrue($actual);
+    }
+
+    function testSetToInactive()
+    {
+        $this->EvaluateScore->save(['name'=>'test','team_id'=>1]);
+        $actual = $this->EvaluateScore->setToInactive($this->EvaluateScore->getLastInsertID());
+        $this->assertFalse($actual['EvaluateScore']['active_flg']);
+    }
+
 }
