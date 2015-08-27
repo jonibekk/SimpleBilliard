@@ -48,3 +48,9 @@
 
 - migration-to-cakephp3  
   03eb70b477be5b2415616cba43f22d360a65d547
+  
+- others-css2less  
+  beebd9aa95640c2f5ad2777c6d26787de7c16d2a
+  
+- others-js2coffee  
+  14b6881d82b3701cd0fbea172908d9f56729fba6
