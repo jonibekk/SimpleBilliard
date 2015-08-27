@@ -3,11 +3,11 @@
     <filter>
         <whitelist addUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">app/Model</directory>
+            <directory suffix=".php">app/View/Helper</directory>
             <exclude>
                 <directory suffix=".php">app/View</directory>
                 <directory suffix=".php">app/Controller</directory>
                 <directory suffix=".php">app/Controller/Component</directory>
-                <directory suffix=".php">app/View/Helper</directory>
                 <directory suffix=".php">app/Model/Behavior</directory>
                 <directory suffix=".php">app/Model/Datasource</directory>
                 <directory suffix=".php">app/Config</directory>
