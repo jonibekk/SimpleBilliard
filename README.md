@@ -87,6 +87,7 @@ GoalousはIsao発の「チーム力向上のスパイラルを生み出す」目
 - [開発支援ツール](docs/others/SupportDevTools.md)
 - [UI手記](docs/others/MemoForUI.md)
 - [Mixpanel](docs/others/Mixpanel.md)
+- [古いブランチの墓場](docs/others/BornyardOfOldBranch.md)
 
 ## Developers
 [Goalous Developers](https://github.com/orgs/IsaoCorp/teams/goalous_developers)
