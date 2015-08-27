@@ -17,8 +17,15 @@ class CommentLikeTest extends CakeTestCase
     public $fixtures = array(
         'app.comment_like',
         'app.comment',
-        'app.user', 'app.notify_setting',
-        'app.team'
+        'app.user',
+        'app.local_name',
+        'app.notify_setting',
+        'app.team',
+        'app.post',
+        'app.goal',
+        'app.circle',
+        'app.action_result',
+        'app.key_result',
     );
 
     /**
@@ -46,16 +53,30 @@ class CommentLikeTest extends CakeTestCase
 
     function testChangeLike()
     {
-        $uid = '1';
-        $team_id = '1';
-        $this->_setDefault($uid, $team_id);
-        $this->CommentLike->changeLike(null);
+        $this->_setDefault();
+        $this->CommentLike->Comment->save(['team_id' => 1, 'body' => 'test']);
+        $actual = $this->CommentLike->changeLike($this->CommentLike->Comment->getLastInsertID());
+        $this->assertEquals(1, $actual['count']);
+        $this->assertTrue($actual['created']);
+
+        $actual = $this->CommentLike->changeLike($this->CommentLike->Comment->getLastInsertID());
+        $this->assertEquals(0, $actual['count']);
+        $this->assertFalse($actual['created']);
     }
 
-    function _setDefault($uid, $team_id)
+    function testGetLikedUsers()
     {
-        $this->CommentLike->my_uid = $uid;
-        $this->CommentLike->current_team_id = $team_id;
+        $this->_setDefault();
+        $this->CommentLike->Comment->save(['team_id' => 1, 'body' => 'test']);
+        $this->CommentLike->changeLike($this->CommentLike->Comment->getLastInsertID());
+        $actual = $this->CommentLike->getLikedUsers($this->CommentLike->Comment->getLastInsertID());
+        $this->assertNotEmpty($actual);
+    }
+
+    function _setDefault()
+    {
+        $this->CommentLike->my_uid = 1;
+        $this->CommentLike->current_team_id = 1;
     }
 
 }

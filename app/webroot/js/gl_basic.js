@@ -54,13 +54,9 @@ var bindCtrlEnterAction = function (selector, callback) {
     })
 };
 $(window).load(function () {
-    //bindPostBalancedGallery($('.post_gallery'));
-    //bindCommentBalancedGallery($('.comment_gallery'));
-    setDefaultTab();
-});
-$(window).imagesLoaded(function () {
     bindPostBalancedGallery($('.post_gallery'));
     bindCommentBalancedGallery($('.comment_gallery'));
+    setDefaultTab();
 });
 $(document).ready(function () {
     //すべてのformで入力があった場合に行う処理
@@ -2995,8 +2991,10 @@ $(function () {
     }
 
     setNotifyCntToBellAndTitle(cake.new_notify_cnt);
-    setNotifyCntToMessageAndTitle(cake.new_notify_message_cnt);
-
+    //メッセージ詳細ページの場合は実行しない。(メッセージ取得後に実行される為)
+    if (cake.request_params.controller != 'posts' || cake.request_params.action != 'message') {
+        setNotifyCntToMessageAndTitle(cake.new_notify_message_cnt);
+    }
 });
 
 function setIntervalToGetNotifyCnt(sec) {
@@ -3071,6 +3069,7 @@ function setNotifyCntToBellAndTitle(cnt) {
 }
 
 function setNotifyCntToMessageAndTitle(cnt) {
+    var cnt = parseInt(cnt);
     var $bellBox = getMessageBoxSelector();
     var $title = $("title");
     var $originTitle = $("title").attr("origin-title");
@@ -3087,11 +3086,11 @@ function setNotifyCntToMessageAndTitle(cnt) {
     }
 
     // set notify number
-    if (parseInt(cnt) == 0) {
+    if (cnt == 0) {
         $bellBox.children('span').html(cnt);
         $bellBox.children('sup').addClass('none');
         $title.text($originTitle);
-    } else if (parseInt(cnt) <= 20) {
+    } else if (cnt <= 20) {
         $bellBox.children('span').html(cnt);
         $bellBox.children('sup').addClass('none');
         $title.text("(" + cnt + ")" + $originTitle);
@@ -3103,10 +3102,9 @@ function setNotifyCntToMessageAndTitle(cnt) {
 
     if (existingBellCnt == 0 && cnt >= 1) {
         displaySelectorFluffy($bellBox);
-    } else if (existingBellCnt >= 1 && cnt == 0) {
+    } else if (cnt == 0) {
         $bellBox.css("opacity", 0);
     }
-
     return;
 }
 
@@ -3158,7 +3156,7 @@ $(document).ready(function () {
 });
 
 function initBellNum() {
-    $bellBox = getBellBoxSelector();
+    var $bellBox = getBellBoxSelector();
     $bellBox.css("opacity", 0);
     $bellBox.html("0");
 }
@@ -3170,7 +3168,7 @@ function initMessageNum() {
 }
 
 function initTitle() {
-    $title = $("title");
+    var $title = $("title");
     $title.text($title.attr("origin-title"));
 }
 
@@ -3192,7 +3190,7 @@ function getMessageNotifyCnt() {
 }
 
 function updateListBox() {
-    $bellDropdown = $("#bell-dropdown");
+    var $bellDropdown = $("#bell-dropdown");
     $bellDropdown.empty();
     var $loader_html = $('<li class="text-align_c"><i class="fa fa-refresh fa-spin"></i></li>');
     //ローダー表示
