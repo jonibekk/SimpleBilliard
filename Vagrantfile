@@ -68,10 +68,11 @@ Vagrant.configure('2') do |config|
             aws.ami = 'ami-eaa9f0b8'
             aws.associate_public_ip = true
             aws.security_groups = ['sg-d24b27b7', 'sg-8d4a26e8', 'sg-66442803']
-            aws.subnet_id = 'subnet-ffbd0188'
+            aws.subnet_id = 'subnet-53a71924'
             aws.tags = {
                 'Name' => 'vnc server for dev'
             }
+            aws.block_device_mapping = [{ 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => 50 }]
             override.ssh.username = 'ubuntu'
             override.ssh.private_key_path = '~/.ssh/isao-gls-singapore.pem'
         end
