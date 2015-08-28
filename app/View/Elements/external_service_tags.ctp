@@ -169,7 +169,7 @@
             tab_inverted: false
         }]);
     } else {
-        console.log ("hoge");
+        // サイズが小さいときは表示しない
     }
     </script>
 <? endif; ?>
