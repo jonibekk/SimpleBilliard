@@ -35,6 +35,18 @@ class ActionResultFileFixture extends CakeTestFixture
      *
      * @var array
      */
-    public $records = [];
+    public $records = [
+        [
+            'id'               => 1,
+            'action_result_id' => 1,
+            'attached_file_id' => 2,
+            'team_id'          => 1,
+            'index_num'        => 0,
+            'del_flg'          => 0,
+            'deleted'          => null,
+            'created'          => 1,
+            'modified'         => 1,
+        ]
+    ];
 
 }

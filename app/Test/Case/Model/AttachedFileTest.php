@@ -95,6 +95,12 @@ class AttachedFileTest extends CakeTestCase
         $this->AttachedFile->PostFile->my_uid = 1;
         $this->AttachedFile->CommentFile->current_team_id = 1;
         $this->AttachedFile->CommentFile->my_uid = 1;
+        $this->AttachedFile->PostFile->Post->current_team_id = 1;
+        $this->AttachedFile->PostFile->Post->my_uid = 1;
+        $this->AttachedFile->PostFile->Post->PostShareCircle->current_team_id = 1;
+        $this->AttachedFile->PostFile->Post->PostShareCircle->my_uid = 1;
+        $this->AttachedFile->PostFile->Post->PostShareUser->current_team_id = 1;
+        $this->AttachedFile->PostFile->Post->PostShareUser->my_uid = 1;
     }
 
     function testPreUpLoadFileSuccess()
@@ -151,6 +157,7 @@ class AttachedFileTest extends CakeTestCase
     function testSaveRelatedFilesSuccess()
     {
         $this->_setDefault();
+        $this->_resetTable();
         $hashes = $this->_prepareTestFiles();
         $upload_setting = $this->AttachedFile->actsAs['Upload'];
         $upload_setting['attached']['path'] = ":webroot/upload/test/:model/:id/:hash_:style.:extension";
@@ -175,6 +182,7 @@ class AttachedFileTest extends CakeTestCase
     function testSaveRelatedFilesActionImgSuccess()
     {
         $this->_setDefault();
+        $this->_resetTable();
         $hashes = $this->_prepareTestFiles();
         $upload_setting = $this->AttachedFile->actsAs['Upload'];
         $upload_setting['attached']['path'] = ":webroot/upload/test/:model/:id/:hash_:style.:extension";
@@ -216,6 +224,7 @@ class AttachedFileTest extends CakeTestCase
     function testUpdateRelatedFilesSuccess()
     {
         $this->_setDefault();
+        $this->_resetTable();
         $hashes = $this->_prepareTestFiles();
         $upload_setting = $this->AttachedFile->actsAs['Upload'];
         $upload_setting['attached']['path'] = ":webroot/upload/test/:model/:id/:hash_:style.:extension";
@@ -255,6 +264,7 @@ class AttachedFileTest extends CakeTestCase
     function testUpdateRelatedFilesFailSizeOver()
     {
         $this->_setDefault();
+        $this->_resetTable();
         $hashes = $this->_prepareTestFiles(100000000);
         $upload_setting = $this->AttachedFile->actsAs['Upload'];
         $upload_setting['attached']['path'] = ":webroot/upload/test/:model/:id/:hash_:style.:extension";
@@ -292,6 +302,7 @@ class AttachedFileTest extends CakeTestCase
     function testUpdateRelatedFilesActionSuccess()
     {
         $this->_setDefault();
+        $this->_resetTable();
         $hashes = $this->_prepareTestFiles();
         $upload_setting = $this->AttachedFile->actsAs['Upload'];
         $upload_setting['attached']['path'] = ":webroot/upload/test/:model/:id/:hash_:style.:extension";
@@ -338,6 +349,7 @@ class AttachedFileTest extends CakeTestCase
     function testUpdateRelatedFilesActionNoChangesSuccess()
     {
         $this->_setDefault();
+        $this->_resetTable();
         $hashes = $this->_prepareTestFiles();
         $upload_setting = $this->AttachedFile->actsAs['Upload'];
         $upload_setting['attached']['path'] = ":webroot/upload/test/:model/:id/:hash_:style.:extension";
@@ -386,6 +398,7 @@ class AttachedFileTest extends CakeTestCase
     function testDeleteAllRelatedFilesSuccess()
     {
         $this->_setDefault();
+        $this->_resetTable();
         $hashes = $this->_prepareTestFiles();
         $upload_setting = $this->AttachedFile->actsAs['Upload'];
         $upload_setting['attached']['path'] = ":webroot/upload/test/:model/:id/:hash_:style.:extension";
@@ -408,6 +421,7 @@ class AttachedFileTest extends CakeTestCase
     function testDeleteFile()
     {
         $this->_setDefault();
+        $this->_resetTable();
         $hashes = $this->_prepareTestFiles();
         $upload_setting = $this->AttachedFile->actsAs['Upload'];
         $upload_setting['attached']['path'] = ":webroot/upload/test/:model/:id/:hash_:style.:extension";
@@ -442,6 +456,7 @@ class AttachedFileTest extends CakeTestCase
     function testGetCountOfAttachedFilesNoFileType()
     {
         $this->_setDefault();
+        $this->_resetTable();
         $hashes = $this->_prepareTestFiles();
         $upload_setting = $this->AttachedFile->actsAs['Upload'];
         $upload_setting['attached']['path'] = ":webroot/upload/test/:model/:id/:hash_:style.:extension";
@@ -454,6 +469,7 @@ class AttachedFileTest extends CakeTestCase
     function testGetCountOfAttachedFilesWithFileType()
     {
         $this->_setDefault();
+        $this->_resetTable();
         $hashes = $this->_prepareTestFiles();
         $upload_setting = $this->AttachedFile->actsAs['Upload'];
         $upload_setting['attached']['path'] = ":webroot/upload/test/:model/:id/:hash_:style.:extension";
@@ -463,6 +479,56 @@ class AttachedFileTest extends CakeTestCase
                                                             AttachedFile::TYPE_FILE_IMG);
         $this->assertEquals(1, $res);
     }
+
+    function testIsReadable()
+    {
+        $this->_setDefault();
+
+        // 投稿への添付ファイル
+        $res = $this->AttachedFile->isReadable(1);
+        $this->assertTrue($res);
+
+        // 投稿のコメントへの添付ファイル
+        $res = $this->AttachedFile->isReadable(3);
+        $this->assertTrue($res);
+
+        // アクションのコメントへの添付ファイル
+        $res = $this->AttachedFile->isReadable(4);
+        $this->assertTrue($res);
+
+        // 公開サークルへの添付ファイル
+        $res = $this->AttachedFile->isReadable(5);
+        $this->assertTrue($res);
+
+        // 個人共有投稿の添付ファイル
+        $res = $this->AttachedFile->isReadable(6);
+        $this->assertTrue($res);
+
+        // アクションへの添付ファイル
+        $res = $this->AttachedFile->isReadable(2);
+        $this->assertTrue($res);
+
+        // 秘密サークルへの添付ファイル
+        $res = $this->AttachedFile->isReadable(7);
+        $this->assertFalse($res);
+
+        // 存在しないファイルID
+        $res = $this->AttachedFile->isReadable(99889988);
+        $this->assertFalse($res);
+    }
+
+    function testGetFileUrl()
+    {
+        $this->_setDefault();
+        // 正常
+        $url = $this->AttachedFile->getFileUrl(1);
+        $this->assertNotEmpty($url);
+
+        // 存在しないファイルID
+        $url = $this->AttachedFile->getFileUrl(99889988);
+        $this->assertEmpty($url);
+    }
+
 
     function _prepareTestFiles($file_size = 1000)
     {
@@ -500,4 +566,15 @@ class AttachedFileTest extends CakeTestCase
         return [$hash_1, $hash_2];
     }
 
+    function _resetTable()
+    {
+        $this->AttachedFile->query("DELETE FROM {$this->AttachedFile->useTable}");
+        $this->AttachedFile->query("ALTER TABLE {$this->AttachedFile->useTable} AUTO_INCREMENT = 1");
+        $this->AttachedFile->query("DELETE FROM {$this->AttachedFile->PostFile->useTable}");
+        $this->AttachedFile->query("ALTER TABLE {$this->AttachedFile->PostFile->useTable} AUTO_INCREMENT = 1");
+        $this->AttachedFile->query("DELETE FROM {$this->AttachedFile->ActionResultFile->useTable}");
+        $this->AttachedFile->query("ALTER TABLE {$this->AttachedFile->ActionResultFile->useTable} AUTO_INCREMENT = 1");
+        $this->AttachedFile->query("DELETE FROM {$this->AttachedFile->CommentFile->useTable}");
+        $this->AttachedFile->query("ALTER TABLE {$this->AttachedFile->CommentFile->useTable} AUTO_INCREMENT = 1");
+    }
 }

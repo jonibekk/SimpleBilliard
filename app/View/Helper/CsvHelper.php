@@ -1,5 +1,5 @@
 <?php
-App::uses('AppHelper', 'Helper');
+App::uses('AppHelper', 'View/Helper');
 
 /**
  * Created by PhpStorm.
@@ -16,8 +16,9 @@ class CsvHelper extends AppHelper
     var $line = array();
     var $buffer;
 
-    function CsvHelper()
+    public function __construct(View $view, $settings = array())
     {
+        parent::__construct($view, $settings);
         $this->clear();
     }
 

@@ -81,4 +81,10 @@ class SendMailTest extends CakeTestCase
         $from = "from@email.com";
         $this->assertEquals($from, $res['FromUser']['PrimaryEmail']['email'], "送信元メールアドレスが取得できている");
     }
+
+    function testSaveMailData()
+    {
+        $actual = $this->SendMail->saveMailData(1, SendMail::TYPE_TMPL_ACCOUNT_VERIFY, [], 1, 1);
+        $this->assertNotEmpty($actual);
+    }
 }

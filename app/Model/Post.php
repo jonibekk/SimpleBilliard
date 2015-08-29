@@ -466,8 +466,8 @@ class Post extends AppModel
             $p_list = array_merge($p_list, $this->PostShareUser->getShareWithMeList($start, $end));
             //自分のサークルが共有範囲指定された投稿
             $p_list = array_merge($p_list, $this->PostShareCircle->getMyCirclePostList($start, $end));
-            //フォローorコラボorマイメンバーのゴール投稿を取得
-            $p_list = array_merge($p_list, $this->getRelatedPostList($start, $end));
+            //ゴール投稿全て
+            $p_list = array_merge($p_list, $this->getAllExistGoalPostList($start, $end));
         }
         //パラメータ指定あり
         else {

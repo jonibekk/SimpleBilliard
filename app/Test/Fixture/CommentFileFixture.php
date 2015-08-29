@@ -35,6 +35,29 @@ class CommentFileFixture extends CakeTestFixture
      *
      * @var array
      */
-    public $records = array();
+    public $records = array(
+        [
+            'id'               => 1,
+            'comment_id'       => 1,
+            'attached_file_id' => 3,
+            'team_id'          => 1,
+            'index_num'        => 0,
+            'del_flg'          => 0,
+            'deleted'          => null,
+            'created'          => 1,
+            'modified'         => 1,
+        ],
+        [
+            'id'               => 2,
+            'comment_id'       => 2,
+            'attached_file_id' => 4,
+            'team_id'          => 1,
+            'index_num'        => 0,
+            'del_flg'          => 0,
+            'deleted'          => null,
+            'created'          => 1,
+            'modified'         => 1,
+        ],
+    );
 
 }

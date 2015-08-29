@@ -39,22 +39,6 @@
                 <?php endif; ?>
 
             </div>
-        <?php else: ?>
-            <div class="col col-xxs-12 font_12px">
-                <?php if ($feed_filter == "all"): ?>
-                    <span class="feed-current-filter"><?= __d('gl', 'すべて') ?></span>
-                <?php else: ?>
-                    <?= $this->Html->link(__d('gl', 'すべて'), "/", ['class' => 'font_lightgray']) ?>
-                <?php endif; ?>
-                <span> ･ </span>
-                <?php if ($feed_filter == "goal"): ?>
-                    <span class="feed-current-filter"><?= __d('gl', 'ゴール') ?></span>
-                <?php else: ?>
-                    <?= $this->Html->link(__d('gl', 'ゴール'),
-                                          ['controller' => 'posts', 'action' => 'feed', 'filter_goal' => true],
-                                          ['class' => 'font_lightgray']) ?>
-                <?php endif; ?>
-            </div>
         <?php endif; ?>
     </div>
 </div>

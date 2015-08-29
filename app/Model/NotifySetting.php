@@ -466,14 +466,22 @@ class NotifySetting extends AppModel
                              ($count_num > 0) ? h(__d('gl', "と他%s人", $count_num)) : null);
                 break;
             case self::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST:
-                // この通知では、$options['post_user_id'] は必須
+                // この通知で必要なオプション値
+                //   - from_user_id: コメントを書いたユーザーのID
+                //   - post_user_id: コメントが書かれた投稿の投稿者ID
+
                 // 投稿者の表示名をセット
-                $user = $this->User->findById($options['post_user_id']);
+                // 自分の投稿へのコメントの場合は、表示名を「自分」にする
+                $target_user_name = __d('gl', "自分");
+                if ($options['from_user_id'] != $options['post_user_id']) {
+                    $user = $this->User->findById($options['post_user_id']);
+                    $target_user_name = $user['User']['display_username'];
+                }
                 $title = __d('gl',
                              '<span class="notify-card-head-target">%1$s%2$s</span>も<span class="notify-card-head-target">%3$s</span>の投稿にコメントしました。',
                              h($user_text),
                              ($count_num > 0) ? h(__d('gl', "と他%s人", $count_num)) : null,
-                             h($user['User']['display_username']));
+                             h($target_user_name));
                 break;
             case self::TYPE_CIRCLE_USER_JOIN:
                 $title = __d('gl', '<span class="notify-card-head-target">%1$s%2$s</span>がサークルに参加しました。',
@@ -550,13 +558,21 @@ class NotifySetting extends AppModel
                              h($user_text));
                 break;
             case self::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION:
-                // この通知では、$options['post_user_id'] は必須
+                // この通知で必要なオプション値
+                //   - from_user_id: コメントを書いたユーザーのID
+                //   - post_user_id: コメントが書かれた投稿の投稿者ID
+
                 // 投稿者の表示名をセット
-                $user = $this->User->findById($options['post_user_id']);
+                // 自分の投稿へのコメントの場合は、表示名を「自分」にする
+                $target_user_name = __d('gl', "自分");
+                if ($options['from_user_id'] != $options['post_user_id']) {
+                    $user = $this->User->findById($options['post_user_id']);
+                    $target_user_name = $user['User']['display_username'];
+                }
                 $title = __d('gl',
                              '<span class="notify-card-head-target">%1$s</span>も<span class="notify-card-head-target">%2$s</span>のアクションにコメントしました。',
                              h($user_text),
-                             h($user['User']['display_username']));
+                             h($target_user_name));
                 break;
             case self::TYPE_FEED_CAN_SEE_ACTION:
                 $title = __d('gl', '<span class="notify-card-head-target">%1$s</span>がアクションしました。', h($user_text));
