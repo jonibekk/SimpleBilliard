@@ -82,8 +82,8 @@ message_app.controller(
 
             // pusherメッセージ内容を受け取る
             var pusher = new Pusher(cake.pusher.key);
-            var test_channel = pusher.subscribe('message-channel-' + $stateParams.post_id);
-            test_channel.bind('new_message', function (data) {
+            var pusher_channel = pusher.subscribe('message-channel-' + $stateParams.post_id);
+            pusher_channel.bind('new_message', function (data) {
                 // 既読処理
                 var read_comment_id = data.Comment.id;
                 var request = {
@@ -101,13 +101,18 @@ message_app.controller(
             });
 
             // pusherから既読されたcomment_idを取得する
-            test_channel.bind('read_message', function (comment_id) {
+            pusher_channel.bind('read_message', function (comment_id) {
                 var read_box = document.getElementById("mr_" + comment_id).innerText;
                 document.getElementById("mr_" + comment_id).innerText = Number(read_box) + 1;
             });
 
             // メッセージを送信する
             $scope.clickMessage = function (event) {
+                event.target.disabled = 'disabled';
+                var sendMessageLoader = document.getElementById("SendMessageLoader");
+                sendMessageLoader.style.display = "inline-block";
+
+
 
                 event.target.disabled = 'disabled';
 
@@ -135,6 +140,7 @@ message_app.controller(
 
                 $http(request).then(function (response) {
                     event.target.disabled = '';
+                    sendMessageLoader.style.display = 'none';
                     message_scroll($scope.message_list.length);
                     $scope.message = "";
 

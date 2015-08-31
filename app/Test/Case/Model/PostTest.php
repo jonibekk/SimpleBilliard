@@ -493,6 +493,11 @@ class PostTest extends CakeTestCase
 
         $this->Post->Goal->Follower->save(['user_id' => 1, 'team_id' => 1, 'goal_id' => 1]);
         $this->Post->getRelatedPostList(1, 10000);
+
+        // 関連ゴールがないユーザー
+        $this->Post->my_uid = 99999;
+        $res = $this->Post->getRelatedPostList(PHP_INT_MAX, PHP_INT_MAX);
+        $this->assertEmpty($res);
     }
 
     function testIsPermittedGoalPostSuccess()

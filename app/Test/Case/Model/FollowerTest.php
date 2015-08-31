@@ -38,7 +38,7 @@ class FollowerTest extends CakeTestCase
         'app.given_badge',
         'app.post_mention',
         'app.comment_read',
-
+        'app.purpose',
         'app.oauth_token',
         'app.team_member',
         'app.group',
@@ -75,7 +75,7 @@ class FollowerTest extends CakeTestCase
 
     function testAddFollow()
     {
-        $this->setDefault();
+        $this->_setDefault();
         $data = [
             'user_id' => 1,
             'team_id' => 1,
@@ -87,7 +87,7 @@ class FollowerTest extends CakeTestCase
 
     function testGetFollowerListByGoalId()
     {
-        $this->setDefault();
+        $this->_setDefault();
         $expected = [(int)1 => '1'];
         $actual = $this->Follower->getFollowerListByGoalId(1);
         $this->assertEquals($expected, $actual);
@@ -95,7 +95,7 @@ class FollowerTest extends CakeTestCase
 
     function testGetFollowerByGoalId()
     {
-        $this->setDefault();
+        $this->_setDefault();
 
         // 対象ゴールのフォロワー全員
         $followers = $this->Follower->getFollowerByGoalId(2);
@@ -117,7 +117,34 @@ class FollowerTest extends CakeTestCase
         $this->assertArrayHasKey('Group', $followers[0]);
     }
 
-    function setDefault()
+    function testDeleteFollower()
+    {
+        $this->_setDefault();
+        $this->Follower->Goal->save(['team_id' => 1, 'user_id' => 1, 'name' => 'test']);
+        $goal_id = $this->Follower->Goal->getLastInsertID();
+        $this->Follower->addFollower($goal_id);
+        $before_followers = $this->Follower->getFollowerByGoalId($goal_id);
+        $this->assertNotEmpty($before_followers);
+
+        $this->Follower->deleteFollower($goal_id);
+        $after_followers = $this->Follower->getFollowerByGoalId($goal_id);
+        $this->assertEmpty($after_followers);
+    }
+
+    function testIsExists()
+    {
+        $this->_setDefault();
+        $actual = $this->Follower->isExists(9999);
+        $this->assertEmpty($actual);
+
+        $this->Follower->Goal->save(['team_id' => 1, 'user_id' => 1, 'name' => 'test']);
+        $goal_id = $this->Follower->Goal->getLastInsertID();
+        $this->Follower->addFollower($goal_id);
+        $actual = $this->Follower->isExists($goal_id);
+        $this->assertNotEmpty($actual);
+    }
+
+    function _setDefault()
     {
         $this->Follower->my_uid = 1;
         $this->Follower->current_team_id = 1;

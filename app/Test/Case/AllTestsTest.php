@@ -32,7 +32,7 @@ class AllTests extends PHPUnit_Framework_TestSuite
     {
         ini_set('memory_limit', '2G');
         $suite = new CakeTestSuite('All Application Test');
-        $suite->addTestDirectory(APP_TEST_CASES . DS . 'Controller');
+        $suite->addTestDirectory(APP_TEST_CASES . DS . 'View' . DS . 'Helper');
         $suite->addTestDirectory(APP_TEST_CASES . DS . 'Model');
         return $suite;
     }

@@ -6,6 +6,7 @@ App::uses('AppModel', 'Model');
  *
  * @property Team      $Team
  * @property KeyResult $KeyResult
+ * @property Goal      $Goal
  * @property User      $User
  */
 class Follower extends AppModel

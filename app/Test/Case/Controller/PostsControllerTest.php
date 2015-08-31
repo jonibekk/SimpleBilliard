@@ -1649,13 +1649,75 @@ class PostsControllerTest extends ControllerTestCase
         $this->assertEquals('/circle_feed/1', $res);
     }
 
+    function testAttachedFileDownload()
+    {
+        $Posts = $this->_getPostsCommonMock();
+
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->expects($this->any())
+              ->method('_getHttpSocket')
+              ->will($this->returnValue(new HttpSocketMockSuccess()));
+
+        $this->testAction('/posts/attached_file_download/file_id:1', ['method' => 'GET']);
+    }
+
+    function testAttachedFileDownloadFailed()
+    {
+        $Posts = $this->_getPostsCommonMock();
+
+        /** @noinspection PhpUndefinedMethodInspection */
+        $Posts->expects($this->any())
+              ->method('_getHttpSocket')
+              ->will($this->returnValue(new HttpSocketMockFailed()));
+
+        try {
+            $this->testAction('/posts/attached_file_download/file_id:1', ['method' => 'GET']);
+        } catch (NotFoundException $e) {
+        }
+    }
+
+    function testAttachedFileDownloadInvalidParam()
+    {
+        $this->_getPostsCommonMock();
+
+        // ダウンロード出来ないファイル
+        try {
+            $this->testAction('/posts/attached_file_download/file_id:8', ['method' => 'GET']);
+        } catch (NotFoundException $e) {
+        }
+
+        // 存在しないデータ
+        try {
+            $this->testAction('/posts/attached_file_download/file_id:9999888', ['method' => 'GET']);
+        } catch (NotFoundException $e) {
+        }
+    }
+
+    function testGetHttpRequest()
+    {
+        $Posts = $this->generate('Posts', [
+            'methods'    => ['referer'],
+            'components' => [
+                'Session',
+                'Auth'      => ['user', 'loggedIn'],
+                'Security'  => ['_validateCsrf', '_validatePost'],
+                'Ogp',
+                'NotifyBiz' => ['sendNotify', 'commentPush', 'push']
+            ],
+        ]);
+
+        /** @noinspection PhpUndefinedMethodInspection */
+        $socket = $Posts->_getHttpSocket();
+        $this->assertTrue(method_exists($socket, 'get'));
+    }
+
     function _getPostsCommonMock()
     {
         /**
          * @var PostsController $Posts
          */
         $Posts = $this->generate('Posts', [
-            'methods'    => ['referer'],
+            'methods'    => ['referer', '_getHttpSocket'],
             'components' => [
                 'Session',
                 'Auth'      => ['user', 'loggedIn'],
@@ -1744,7 +1806,41 @@ class PostsControllerTest extends ControllerTestCase
         $Posts->Team->EvaluateTerm->current_team_id = 1;
         $Posts->Team->Circle->current_team_id = 1;
 
+        $Posts->Post->current_team_id = 1;
+        $Posts->Post->my_uid = 1;
+        $Posts->Post->PostShareCircle->current_team_id = 1;
+        $Posts->Post->PostShareCircle->my_uid = 1;
+        $Posts->Post->PostShareUser->current_team_id = 1;
+        $Posts->Post->PostShareUser->my_uid = 1;
+        $Posts->Post->PostFile->AttachedFile->current_team_id = 1;
+        $Posts->Post->PostFile->AttachedFile->my_uid = 1;
+        $Posts->Post->PostFile->current_team_id = 1;
+        $Posts->Post->PostFile->my_uid = 1;
+        $Posts->Post->Comment->CommentFile->current_team_id = 1;
+        $Posts->Post->Comment->CommentFile->my_uid = 1;
+
         return $Posts;
     }
 
+}
+
+// テスト用モック
+class HttpSocketMockSuccess
+{
+    public function get($url)
+    {
+        $obj = new stdClass();
+        $obj->body = "success";
+        return $obj;
+    }
+}
+
+class HttpSocketMockFailed
+{
+    public function get($url)
+    {
+        $obj = new stdClass();
+        $obj->body = "";
+        return $obj;
+    }
 }

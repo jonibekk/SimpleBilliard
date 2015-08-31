@@ -44,8 +44,12 @@ if (!isset($message_page_image)) {
                 </a>
                 <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
                     <li>
-                        <a href="<?= $this->Upload->attachedFileUrl($data, "download") ?>"
-                           download="<?= $data['attached_file_name'] ?>">
+                        <a href="<?= $this->Html->url(
+                            [
+                                'controller' => 'posts',
+                                'action'     => 'attached_file_download',
+                                'file_id'    => $data['id']
+                            ]) ?>">
                             <i class="fa fa-download"></i><?= __d('gl', "ダウンロード") ?></a>
                     </li>
                     <?php if ($this->Upload->isCanPreview($data)): ?>
@@ -165,8 +169,12 @@ if (!isset($message_page_image)) {
                     <div class="col col-xxs-6 text-center">
                     </div>
                 <?php endif; ?>
-                <a class="link-dark-gray" href="<?= $this->Upload->attachedFileUrl($data, "download") ?>"
-                   download="<?= $data['attached_file_name'] ?>">
+                <a class="link-dark-gray" href="<?= $this->Html->url(
+                    [
+                        'controller' => 'posts',
+                        'action'     => 'attached_file_download',
+                        'file_id'    => $data['id']
+                    ]) ?>">
                     <div class="col col-xxs-6 text-center file-btn-wap">
                         <div class="file-btn">
                             <i class="fa fa-download"></i><?= __d('gl', "ダウンロード") ?>

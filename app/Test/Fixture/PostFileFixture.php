@@ -35,6 +35,62 @@ class PostFileFixture extends CakeTestFixture
      *
      * @var array
      */
-    public $records = array();
+    public $records = array(
+        [
+            'id'               => 1,
+            'post_id'          => 7,
+            'attached_file_id' => 1,
+            'team_id'          => 1,
+            'index_num'        => 0,
+            'del_flg'          => 0,
+            'deleted'          => null,
+            'created'          => 1,
+            'modified'         => 1,
+        ],
+        [
+            'id'               => 2,
+            'post_id'          => 6,
+            'attached_file_id' => 5,
+            'team_id'          => 1,
+            'index_num'        => 0,
+            'del_flg'          => 0,
+            'deleted'          => null,
+            'created'          => 1,
+            'modified'         => 1,
+        ],
+        [
+            'id'               => 3,
+            'post_id'          => 10,
+            'attached_file_id' => 6,
+            'team_id'          => 1,
+            'index_num'        => 0,
+            'del_flg'          => 0,
+            'deleted'          => null,
+            'created'          => 1,
+            'modified'         => 1,
+        ],
+        [
+            'id'               => 4,
+            'post_id'          => 11,
+            'attached_file_id' => 7,
+            'team_id'          => 1,
+            'index_num'        => 0,
+            'del_flg'          => 0,
+            'deleted'          => null,
+            'created'          => 1,
+            'modified'         => 1,
+        ],
+        [
+            'id'               => 5,
+            'post_id'          => 999,
+            'attached_file_id' => 8,
+            'team_id'          => 1,
+            'index_num'        => 0,
+            'del_flg'          => 0,
+            'deleted'          => null,
+            'created'          => 1,
+            'modified'         => 1,
+        ],
+    );
 
 }

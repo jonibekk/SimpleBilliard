@@ -3,7 +3,8 @@ App::uses('LocalName', 'Model');
 
 /**
  * LocalName Test Case
-
+ *
+ * @property LocalName $LocalName
  */
 class LocalNameTest extends CakeTestCase
 {
@@ -63,9 +64,13 @@ class LocalNameTest extends CakeTestCase
         parent::tearDown();
     }
 
-    function testDummy()
+    function testGetName()
     {
-
+        $this->LocalName->save(['user_id' => 1, 'language' => 'jpn', 'first_name' => 'test', 'last_name' => 'test']);
+        $actual = $this->LocalName->getName(1, 'jpn');
+        $this->assertNotEmpty($actual);
+        $actual = $this->LocalName->getName(1, 'eng');
+        $this->assertEmpty($actual);
     }
 
 }
