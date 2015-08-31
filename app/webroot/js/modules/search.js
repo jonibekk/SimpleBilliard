@@ -92,7 +92,7 @@ define(function () {
                                 if (res.results) {
                                     if (res.results.length == 0) {
                                         var $notFoundText = $('<div>')
-                                            .text('該当なし')
+                                            .text(cake.message.notice.search_result_zero)
                                             .addClass('nav-search-result-notfound');
                                         $container.append($notFoundText);
                                     }
