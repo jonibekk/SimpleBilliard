@@ -112,10 +112,6 @@ message_app.controller(
                 var sendMessageLoader = document.getElementById("SendMessageLoader");
                 sendMessageLoader.style.display = "inline-block";
 
-
-
-                event.target.disabled = 'disabled';
-
                 var file_redis_key = [];
                 var file_ids = document.getElementsByName("data[file_id][]");
                 if (file_ids.length > 0) {
