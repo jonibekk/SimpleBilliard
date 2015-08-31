@@ -33,6 +33,13 @@ else {
     <span class="num"></span><?= __d('gl', "件の新しい投稿があります。") ?></a>
 
 <?= $this->element('Feed/circle_join_button', compact('current_circle', 'user_status')) ?>
+<?php
+// 通知 -> 投稿単体ページ と遷移してきた場合は、通知一覧に戻るボタンを表示する
+if (isset($this->request->params['post_id']) && isset($this->request->params['named']['notify_id'])): ?>
+<a href="<?= $this->Html->url(['controller' => 'notifications']) ?>" class="btn-back-notifications">
+    <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i>
+</a>
+<?php endif ?>
 <?= $this->element("Feed/posts") ?>
 <?php //ポストが存在する　かつ　パーマリンクでない
 if (!isset($this->request->params['post_id']) || empty($this->request->params['post_id'])):
