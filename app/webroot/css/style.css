@@ -1178,10 +1178,12 @@ textarea{
 
 .post-contents a {
     color: #ddd;
-    display: block;
+    display: inline-block;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    max-width:100%;
+    vertical-align:bottom;
 }
 
 .comment-contents a {
