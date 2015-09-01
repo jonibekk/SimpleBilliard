@@ -85,11 +85,45 @@
                         </form>
                     </li>
                     <li class="header-search-group">
-                        <form class="nav-form-group" role="search">
-                            <i class="fa fa-search header-icons nav-form-icon"></i>
-                            <input type="text"
-                                   class="form-control nav-search font_12px disable-change-warning develop--search"
-                                   placeholder="Search">
+                        <form id="NavSearchForm" class="nav-form-group nav-search-form-group" role="search"
+                              autocomplete="off">
+                            <div class="input-group nav-search-form-input-group">
+                                <div class="input-group-btn nav-search-button-group">
+                                    <button type="button" id="NavSearchButton"
+                                            class="btn nav-search-button dropdown-toggle" data-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                        <i class="fa fa-user header-icons nav-form-icon nav-search-category-icon"
+                                           data-category="user"></i>
+                                        <i class="fa fa-flag header-icons nav-form-icon nav-search-category-icon none"
+                                           data-category="goal"></i>
+                                        <i class="fa fa-circle-o header-icons nav-form-icon nav-search-category-icon none"
+                                           data-category="circle"></i>
+
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu nav-search-form-dropdown" role="menu">
+                                        <li><a href="#" style="" class="nav-search-category-item" data-category="user">
+                                                <i class="fa fa-user header-drop-icons"></i>
+                                                <?= __d('gl', 'ユーザー'); ?>
+                                            </a>
+                                        </li>
+                                        <li><a href="#" class="nav-search-category-item" data-category="goal">
+                                                <i class="fa fa-flag header-drop-icons"></i>
+                                                <?= __d('gl', 'ゴール'); ?>
+                                            </a>
+                                        </li>
+                                        <li><a href="#" class="nav-search-category-item" data-category="circle">
+                                                <i class="fa fa-circle-o header-drop-icons"></i>
+                                                <?= __d('gl', 'サークル'); ?>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <input type="text"
+                                       id="NavSearchInput"
+                                       class="form-control nav-search font_12px disable-change-warning">
+                            </div>
+                            <div id="NavSearchResults" class="nav-search-result"></div>
                         </form>
                     </li>
                     <li class="circle-list-in-hamburger visible-xxs hidden-xs">
@@ -98,8 +132,8 @@
                 </ul>
             </div>
             <?php
-                echo $this->element('header_logged_in_right')
-             ?>
+            echo $this->element('header_logged_in_right')
+            ?>
         </div>
     </div>
 </header>
