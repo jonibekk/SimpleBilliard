@@ -3141,6 +3141,13 @@ $(document).ready(function () {
             return false;
         }
     });
+    $('#HeaderDropdownNotify')
+        .on('shown.bs.dropdown', function () {
+            $("body").addClass('notify-dropdown-open');
+        })
+        .on('hidden.bs.dropdown', function () {
+            $('body').removeClass('notify-dropdown-open');
+        });
 });
 
 $(document).ready(function () {
