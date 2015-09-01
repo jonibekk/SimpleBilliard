@@ -3729,7 +3729,14 @@ $(document).ready(function () {
     ///////////////////////////////
     var messageParams = {
         formID: 'messageDropArea',
-        previewContainerID: 'messageUploadFilePreviewArea'
+        previewContainerID: 'messageUploadFilePreviewArea',
+        afterSuccess: function (file) {
+            $("#message_submit_button").click(function () {
+                if (typeof Dropzone.instances[0] !== "" && Dropzone.instances[0].files.length > 0) {
+                    Dropzone.instances[0].files = [];
+                }
+            });
+        }
     };
     var messageDzOptions = {
         maxFiles: 1
