@@ -18,13 +18,16 @@
 ?>
 <!-- START app/View/Elements/Feed/contents.ctp -->
 <?php
-if (isset($user_status)) {
-    if (viaIsSet($params['controller']) == 'posts' && viaIsSet($params['action']) == 'feed' && ($user_status == 'joined' || $user_status == 'admin')) {
+// 投稿単体ページでは入力フォームを表示しない
+if (!isset($this->request->params['post_id'])) {
+    if (isset($user_status)) {
+        if (viaIsSet($params['controller']) == 'posts' && viaIsSet($params['action']) == 'feed' && ($user_status == 'joined' || $user_status == 'admin')) {
+            echo $this->element("Feed/common_form");
+        }
+    }
+    else {
         echo $this->element("Feed/common_form");
     }
-}
-else {
-    echo $this->element("Feed/common_form");
 }
 ?>
 <?= $this->element('Feed/feed_share_range_filter',
