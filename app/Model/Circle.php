@@ -464,4 +464,58 @@ class Circle extends AppModel
         $team_all_circle = $this->getTeamAllCircle();
         return viaIsSet($team_all_circle['Circle']['id']);
     }
+
+    /**
+     * 自分が閲覧可能なサークル（公開サークル + 自分が所属している秘密サークル）の中で、
+     * サークル名が $keyword にマッチするサークル一覧を返す
+     *
+     * @param string $keyword
+     * @param int    $limit
+     *
+     * @return array
+     */
+    public function getAccessibleCirclesByKeyword($keyword, $limit = 10)
+    {
+        // 自分が所属しているサークル（公開 + 秘密）
+        $circle_list = $this->CircleMember->getMyCircleList();
+
+        $keyword = trim($keyword);
+        $options = [
+            'conditions' => [
+                'OR'               => [
+                    'Circle.id'         => $circle_list,
+                    'Circle.public_flg' => 1,
+                ],
+                'Circle.name LIKE' => $keyword . '%',
+                'Circle.team_id'   => $this->current_team_id,
+            ],
+            'limit'      => $limit,
+        ];
+        return $this->find('all', $options);
+    }
+
+    /**
+     * 自分が閲覧可能なサークル（公開サークル + 自分が所属している秘密サークル）の select2 用データを返す
+     *
+     * @param string $keyword
+     * @param int    $limit
+     *
+     * @return array
+     */
+    public function getAccessibleCirclesSelect2($keyword, $limit = 10)
+    {
+        $circles = $this->getAccessibleCirclesByKeyword($keyword, $limit);
+
+        App::uses('UploadHelper', 'View/Helper');
+        $Upload = new UploadHelper(new View());
+        $res = [];
+        foreach ($circles as $val) {
+            $data = [];
+            $data['id'] = 'circle_' . $val['Circle']['id'];
+            $data['text'] = $val['Circle']['name'];
+            $data['image'] = $Upload->uploadUrl($val, 'Circle.photo', ['style' => 'small']);
+            $res[] = $data;
+        }
+        return ['results' => $res];
+    }
 }

@@ -312,4 +312,65 @@ class CircleTest extends CakeTestCase
         $circles = $this->Circle->getSecretCirclesByKeyword('存在しないサークル名');
         $this->assertEmpty($circles);
     }
+
+    function testGetAccessibleCirclesByKeyword()
+    {
+        $this->Circle->current_team_id = 1;
+        $this->Circle->my_uid = 1;
+        $this->Circle->CircleMember->current_team_id = 1;
+        $this->Circle->CircleMember->my_uid = 1;
+
+        // 公開サークル
+        $circles = $this->Circle->getAccessibleCirclesByKeyword('チーム全体');
+        $this->assertNotEmpty($circles);
+
+        // 所属していない公開サークル
+        $circles = $this->Circle->getAccessibleCirclesByKeyword('公開サークル１');
+        $this->assertNotEmpty($circles);
+
+        // 所属している秘密サークル
+        $circles = $this->Circle->getAccessibleCirclesByKeyword('秘密サークル');
+        $this->assertNotEmpty($circles);
+
+        // 所属していない秘密サークル
+        $circles = $this->Circle->getAccessibleCirclesByKeyword('秘密サークル２');
+        $this->assertEmpty($circles);
+    }
+
+    function testGetAccessibleCirclesSelect2()
+    {
+        $this->Circle->current_team_id = 1;
+        $this->Circle->my_uid = 1;
+        $this->Circle->CircleMember->current_team_id = 1;
+        $this->Circle->CircleMember->my_uid = 1;
+
+        // 公開サークル
+        $circles = $this->Circle->getAccessibleCirclesSelect2('チーム全体');
+        $this->assertArrayHasKey('results', $circles);
+        $this->assertNotEmpty($circles['results']);
+        $this->assertArrayHasKey('id', $circles['results'][0]);
+        $this->assertArrayHasKey('text', $circles['results'][0]);
+        $this->assertArrayHasKey('image', $circles['results'][0]);
+
+        // 所属していない公開サークル
+        $circles = $this->Circle->getAccessibleCirclesSelect2('公開サークル１');
+        $this->assertArrayHasKey('results', $circles);
+        $this->assertNotEmpty($circles['results']);
+        $this->assertArrayHasKey('id', $circles['results'][0]);
+        $this->assertArrayHasKey('text', $circles['results'][0]);
+        $this->assertArrayHasKey('image', $circles['results'][0]);
+
+        // 所属している秘密サークル
+        $circles = $this->Circle->getAccessibleCirclesSelect2('秘密サークル');
+        $this->assertArrayHasKey('results', $circles);
+        $this->assertNotEmpty($circles['results']);
+        $this->assertArrayHasKey('id', $circles['results'][0]);
+        $this->assertArrayHasKey('text', $circles['results'][0]);
+        $this->assertArrayHasKey('image', $circles['results'][0]);
+
+        // 所属していない秘密サークル
+        $circles = $this->Circle->getAccessibleCirclesSelect2('秘密サークル２');
+        $this->assertArrayHasKey('results', $circles);
+        $this->assertEmpty($circles['results']);
+    }
 }
