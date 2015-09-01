@@ -158,7 +158,7 @@ ul {
     text-overflow: ellipsis;
 }
 
-.nav-search-result-item:hover, .search-result-item:focus {
+.nav-search-result-item:hover, .nav-search-result-item:focus {
     background-color: #f8f8f8;
     text-decoration: none;
     color: #9197a3;
