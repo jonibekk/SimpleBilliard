@@ -3038,10 +3038,7 @@ function updateMessageNotifyCnt() {
 
 function setNotifyCntToBellAndTitle(cnt) {
     var $bellBox = getBellBoxSelector();
-    var $title = $("title");
-    var $originTitle = $("title").attr("origin-title");
     var existingBellCnt = parseInt($bellBox.children('span').html());
-    var cntIsTooMuch = '20+';
 
     if (cnt == 0) {
         return;
@@ -3051,12 +3048,11 @@ function setNotifyCntToBellAndTitle(cnt) {
     if (parseInt(cnt) <= 20) {
         $bellBox.children('span').html(cnt);
         $bellBox.children('sup').addClass('none');
-        $title.text("(" + cnt + ")" + $originTitle);
     } else {
         $bellBox.children('span').html(20);
         $bellBox.children('sup').removeClass('none');
-        $title.text("(" + cntIsTooMuch + ")" + $originTitle);
     }
+    updateTitleCount();
 
     if (existingBellCnt == 0) {
         displaySelectorFluffy($bellBox);
@@ -3067,10 +3063,7 @@ function setNotifyCntToBellAndTitle(cnt) {
 function setNotifyCntToMessageAndTitle(cnt) {
     var cnt = parseInt(cnt);
     var $bellBox = getMessageBoxSelector();
-    var $title = $("title");
-    var $originTitle = $("title").attr("origin-title");
     var existingBellCnt = parseInt($bellBox.children('span').html());
-    var cntIsTooMuch = '20+';
 
     if (cnt != 0) {
         // メッセージが存在するときだけ、ボタンの次の要素をドロップダウン対象にする
@@ -3085,16 +3078,14 @@ function setNotifyCntToMessageAndTitle(cnt) {
     if (cnt == 0) {
         $bellBox.children('span').html(cnt);
         $bellBox.children('sup').addClass('none');
-        $title.text($originTitle);
     } else if (cnt <= 20) {
         $bellBox.children('span').html(cnt);
         $bellBox.children('sup').addClass('none');
-        $title.text("(" + cnt + ")" + $originTitle);
     } else {
         $bellBox.children('span').html(20);
         $bellBox.children('sup').removeClass('none');
-        $title.text("(" + cntIsTooMuch + ")" + $originTitle);
     }
+    updateTitleCount();
 
     if (existingBellCnt == 0 && cnt >= 1) {
         displaySelectorFluffy($bellBox);
@@ -3102,6 +3093,21 @@ function setNotifyCntToMessageAndTitle(cnt) {
         $bellBox.css("opacity", 0);
     }
     return;
+}
+
+// <title> に表示される通知数を更新する
+function updateTitleCount() {
+    var $title = $("title");
+    var current_cnt = getNotifyCnt() + getMessageNotifyCnt();
+    var current_str = '';
+
+    if (current_cnt > 20) {
+        current_str = '(20+)';
+    }
+    else if (current_cnt > 0) {
+        current_str = '(' + current_cnt + ')';
+    }
+    $title.text(current_str + $title.attr("origin-title"));
 }
 
 function displaySelectorFluffy(selector) {
@@ -3177,12 +3183,12 @@ function getMessageBoxSelector() {
 
 function getNotifyCnt() {
     var $bellBox = getBellBoxSelector();
-    return parseInt($bellBox.children('span').html());
+    return parseInt($bellBox.children('span').html(), 10);
 }
 
 function getMessageNotifyCnt() {
     var $box = getMessageBoxSelector();
-    return parseInt($box.children('span').html());
+    return parseInt($box.children('span').html(), 10);
 }
 
 function updateListBox() {
