@@ -446,6 +446,8 @@ class PostsController extends AppController
         foreach ($data['CommentFile'] as $attached_file) {
             if (in_array($attached_file['AttachedFile']['file_ext'], ['jpg', 'jpeg', 'gif', 'png']) === true) {
                 $this->set('message_page_image', true);
+            } else {
+                $this->set('message_page_image', false);
             }
             $this->set('post_id', $data['Comment']['post_id']);
             $this->set('comment_id', $data['Comment']['id']);
