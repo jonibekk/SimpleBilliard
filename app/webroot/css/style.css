@@ -3422,3 +3422,8 @@ Temporary Properties - YOU MUST FIX
     padding-top: 3px;
     clear: both
 }
+
+/* body のスクロール抑止用 */
+.notify-dropdown-open {
+    overflow: hidden;
+}

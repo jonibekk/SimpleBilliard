@@ -66,7 +66,7 @@
             </ul>
         </div>
     </div>
-    <div class="header-dropdown-notify ">
+    <div id="HeaderDropdownNotify" class="header-dropdown-notify">
         <a id="click-header-bell" class="btn-notify-header" data-toggle="dropdown" href="#">
             <i class="header-dropdown-icon-notify fa fa-flag fa-bell-o header-drop-icons js-header-link header-icons"></i>
 
