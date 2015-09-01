@@ -97,7 +97,7 @@ message_app.controller(
 
                 // メッセージ表示
                 $scope.$apply($scope.message_list.push(data));
-                message_scroll(current_id);
+                message_scroll($scope.message_list.length);
             });
 
             // pusherから既読されたcomment_idを取得する
@@ -165,9 +165,8 @@ message_app.controller(
                         url: cake.url.ah + $stateParams.post_id + '/' + limit + '/' + page_num
                     };
                     $http(request).then(function (response) {
-
                         angular.forEach(response.data.message_list, function (val) {
-                            val.AttachedFileHtml = $sce.trustAsHtml(val.AttachedFileHtml)
+                            val.AttachedFileHtml = $sce.trustAsHtml(val.AttachedFileHtml);
                             this.push(val);
                         }, $scope.message_list);
 
