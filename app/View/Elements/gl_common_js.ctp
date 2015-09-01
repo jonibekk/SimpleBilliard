@@ -34,6 +34,7 @@ echo $this->Html->script('vendor/pusher.min');
 echo $this->Html->script('vendor/dropzone.js');
 echo $this->Html->script('vendor/jquery.balanced-gallery.min');
 echo $this->Html->script('vendor/imagesloaded.pkgd.min');
+echo $this->Html->script('vendor/require');
 echo $this->Html->script('gl_basic');
 echo $this->Html->script('goalous.min');
 ?>
@@ -66,7 +67,8 @@ echo $this->Html->script('goalous.min');
                 f: "<?=__d('validate',"期限が開始日以前になっています。")?>",
                 g: "<?=__d('validate',"コメント送信できませんでした")?>",
                 h: "<?=__d('gl',"このコメントは削除されました。")?>",
-                i: "<?=__d('gl',"コメントを取得できませんでした。")?>"
+                i: "<?=__d('gl',"コメントを取得できませんでした。")?>",
+                search_result_zero: "<?=__d('gl',"該当なし")?>"
             },
             info: {
                 a: "<?=__d('gl',"クリップボードに投稿URLをコピーしました。")?>",
@@ -102,7 +104,10 @@ echo $this->Html->script('goalous.min');
             share_change_disabled: "<?=__d('gl',"サークルページでは切り替えられません")?>",
             success: "<?=__d('gl',"成功")?>",
             error: "<?=__d('gl',"エラー")?>",
-            cancel: "<?=__d('gl',"キャンセル")?>"
+            cancel: "<?=__d('gl',"キャンセル")?>",
+            search_placeholder_user: "<?=__d('gl',"名前を入力")?>",
+            search_placeholder_goal: "<?=__d('gl',"ゴール名を入力")?>",
+            search_placeholder_circle: "<?=__d('gl',"サークル名を入力")?>"
         },
         url: {
             a: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_users'])?>",
@@ -144,7 +149,11 @@ echo $this->Html->script('goalous.min');
             al: "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_get_message_list'])?>/",
             select2_secret_circle: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_secret_circles'])?>/",
             select2_circle_user: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_circles_users'])?>",
+            select2_goals: "<?=$this->Html->url(['controller'=>'goals','action'=>'ajax_select2_goals'])?>",
+            select2_circles: "<?=$this->Html->url(['controller'=>'circles','action'=>'ajax_select2_circles'])?>",
             user_page: "<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => '']) ?>",
+            goal_page: "<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_info', 'goal_id' => '']) ?>",
+            circle_page: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'circle_id' => '']) ?>/",
             goal_followers: "<?=$this->Html->url(['controller'=>'goals','action'=>'ajax_get_followers'])?>",
             goal_members: "<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_members']) ?>",
             goal_key_results: "<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_key_results']) ?>",

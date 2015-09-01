@@ -633,4 +633,38 @@ class GoalTest extends CakeTestCase
     {
         $this->Goal->getGoalNameList(1);
     }
+    
+    function testGetGoalsByKeyword()
+    {
+        $this->setDefault();
+        
+        // 自分のゴール
+        $goals = $this->Goal->getGoalsByKeyword('ゴール');
+        $this->assertNotEmpty($goals);
+
+        // 他人のゴール
+        $goals = $this->Goal->getGoalsByKeyword('その他');
+        $this->assertNotEmpty($goals);
+    }
+    
+    function testGetGoalsSelect2()
+    {
+        $this->setDefault();
+
+        // 自分のゴール
+        $goals = $this->Goal->getGoalsSelect2('ゴール');
+        $this->assertArrayHasKey('results', $goals);
+        $this->assertNotEmpty($goals['results']);
+        $this->assertArrayHasKey('id', $goals['results'][0]);
+        $this->assertArrayHasKey('text', $goals['results'][0]);
+        $this->assertArrayHasKey('image', $goals['results'][0]);
+
+        // 他人のゴール
+        $goals = $this->Goal->getGoalsSelect2('その他');
+        $this->assertArrayHasKey('results', $goals);
+        $this->assertNotEmpty($goals['results']);
+        $this->assertArrayHasKey('id', $goals['results'][0]);
+        $this->assertArrayHasKey('text', $goals['results'][0]);
+        $this->assertArrayHasKey('image', $goals['results'][0]);
+    }
 }

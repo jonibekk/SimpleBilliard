@@ -8,6 +8,9 @@ if (typeof String.prototype.startsWith != 'function') {
     };
 }
 ;
+require.config({
+    baseUrl: '/js/modules'
+});
 function bindPostBalancedGallery($obj) {
     $obj.removeClass('none');
     $obj.BalancedGallery({
@@ -1122,13 +1125,6 @@ $(document).on("mouseover", ".develop--forbiddenLink", function () {
 });
 $(document).on("mouseout", ".develop--forbiddenLink", function () {
     $(this).find("div:last").remove();
-});
-
-$(function () {
-    $(".develop--search").on("click", function () {
-            $(this).attr('placeholder', '準備中です。');
-        }
-    );
 });
 
 //SubHeaderMenu
@@ -3985,6 +3981,11 @@ $(document).ready(function () {
         // ゴール選択の ajax 処理を動かす
         $('#GoalSelectOnActionForm').trigger('change');
     }
+
+    // ヘッダーの検索フォームの処理
+    require(['search'], function (search) {
+        search.headerSearch.setup();
+    });
 });
 
 function evAjaxEditCircleAdminStatus(e) {

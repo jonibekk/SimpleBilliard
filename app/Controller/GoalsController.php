@@ -1453,4 +1453,18 @@ class GoalsController extends AppController
 
         return true;
     }
+
+    /**
+     * select2のゴール名検索
+     */
+    function ajax_select2_goals()
+    {
+        $this->_ajaxPreProcess();
+        $query = $this->request->query;
+        $res = [];
+        if (isset($query['term']) && $query['term'] && isset($query['page_limit']) && $query['page_limit']) {
+            $res = $this->Goal->getGoalsSelect2($query['term'], $query['page_limit']);
+        }
+        return $this->_ajaxGetResponse($res);
+    }
 }

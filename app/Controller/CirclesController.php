@@ -82,6 +82,20 @@ class CirclesController extends AppController
     }
 
     /**
+     * select2のサークル名検索
+     */
+    function ajax_select2_circles()
+    {
+        $this->_ajaxPreProcess();
+        $query = $this->request->query;
+        $res = [];
+        if (isset($query['term']) && $query['term'] && isset($query['page_limit']) && $query['page_limit']) {
+            $res = $this->Circle->getAccessibleCirclesSelect2($query['term'], $query['page_limit']);
+        }
+        return $this->_ajaxGetResponse($res);
+    }
+
+    /**
      * サークル基本情報更新
      */
     public function edit()
