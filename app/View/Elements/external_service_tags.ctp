@@ -149,7 +149,7 @@
         if (winW > 480) {
         UserVoice.push(['showTab', 'classic_widget', {
             mode: 'full',
-            primary_color: '#f0636f',
+            primary_color: '#fff',
             link_color: '#007dbf',
             default_mode: 'feedback',
             forum_id: '<?php
