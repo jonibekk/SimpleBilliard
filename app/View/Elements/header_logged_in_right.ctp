@@ -160,7 +160,16 @@
                                   ['target' => '_blank']) ?>
             </li>
             <li>
-                <a href="javascript:void(0)" data-uv-lightbox="classic_widget" data-uv-mode="full" data-uv-primary-color="#f0636f" data-uv-link-color="#007dbf" data-uv-default-mode="feedback" data-uv-forum-id="196840">フィードバック
+                <a href="javascript:void(0)" data-uv-lightbox="classic_widget" data-uv-mode="full" data-uv-primary-color="#f0636f" data-uv-link-color="#007dbf" data-uv-default-mode="feedback" data-uv-forum-id="<?php
+                         if ($is_isao_user)
+                         {
+                             echo USERVOICE_FORUM_ID_PRIVATE;
+                         }
+                         else
+                         {
+                             echo USERVOICE_FORUM_ID_PUBLIC;
+                         }
+                         ?>">フィードバック
                 </a>
             </li>
         </ul>
