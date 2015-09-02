@@ -160,12 +160,14 @@
                                   ['target' => '_blank']) ?>
             </li>
             <li>
-                <a href="javascript:void(0)" data-uv-lightbox="classic_widget" data-uv-mode="full" data-uv-primary-color="#cc6d00" data-uv-link-color="#007dbf" data-uv-default-mode="support" data-uv-forum-id="196840">フィードバック</a>
+                <a href="javascript:void(0)" data-uv-lightbox="classic_widget" data-uv-mode="full" data-uv-primary-color="#cc6d00" data-uv-link-color="#007dbf" data-uv-default-mode="support" data-uv-forum-id="196840">フィードバック
+                </a>
             </li>
         </ul>
     </div>
 </div>
 <!-- end app/View/Elements/header_logged_in_right -->
 
-<!-- 
+<!--
 <script>(function(){var uv=document.createElement('script');uv.type='text/javascript';uv.async=true;uv.src='//widget.uservoice.com/XCmmQeEYxEfUK5hhWqYaBA.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(uv,s)})()</script>
+-->
