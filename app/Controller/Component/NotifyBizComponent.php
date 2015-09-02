@@ -402,6 +402,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['model_id'] = null;
         $this->notify_option['item_name'] = !empty($action['ActionResult']['name']) ?
             json_encode([trim($action['ActionResult']['name'])]) : null;
+        $this->notify_option['options']['goal_id'] = $goal_id;
     }
 
     /**
@@ -503,6 +504,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['url_data'] = ['controller' => 'goals', 'action' => 'index', 'team_id' => $this->NotifySetting->current_team_id];//TODO In the future, goal detail page.
         $this->notify_option['model_id'] = $goal_id;
         $this->notify_option['item_name'] = json_encode([$goal['Goal']['name']]);
+        $this->notify_option['options']['goal_id'] = $goal_id;
     }
 
     /**
@@ -527,6 +529,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['url_data'] = ['controller' => 'goals', 'action' => 'index', 'team_id' => $this->NotifySetting->current_team_id];//TODO In the future, goal detail page.
         $this->notify_option['model_id'] = $goal_id;
         $this->notify_option['item_name'] = json_encode([$goal['Goal']['name']]);
+        $this->notify_option['options']['goal_id'] = $goal_id;
     }
 
     /**
@@ -554,6 +557,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['url_data'] = ['controller' => 'goals', 'action' => 'index', 'team_id' => $this->NotifySetting->current_team_id];//TODO In the future, goal detail page.
         $this->notify_option['model_id'] = $goal_id;
         $this->notify_option['item_name'] = json_encode([$goal['Goal']['name']]);
+        $this->notify_option['options']['goal_id'] = $goal_id;
     }
 
     /**
@@ -591,6 +595,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['url_data'] = $url;
         $this->notify_option['model_id'] = $goal_id;
         $this->notify_option['item_name'] = json_encode([$goal['Goal']['name']]);
+        $this->notify_option['options']['goal_id'] = $goal_id;
     }
 
     /**
