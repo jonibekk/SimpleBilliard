@@ -69,15 +69,9 @@ message_app.controller(
             $scope.message_list = message_list;
             $scope.first_share_user = getPostDetail.first_share_user;
 
-            var current_id = 0;
-            var message_scroll = function (id) {
-                var message_id = id;
-                if (current_id === 0) {
-                    message_id = $scope.message_list.length;
-                }
-                current_id = message_id;
-                $location.hash('m_' + message_id);
-                $anchorScroll();
+            var bottom_scroll = function () {
+                var mbox = document.getElementById('message_box');
+                mbox.scrollTop = mbox.scrollHeight;
             };
 
             // pusherメッセージ内容を受け取る
@@ -97,13 +91,14 @@ message_app.controller(
 
                 // メッセージ表示
                 $scope.$apply($scope.message_list.push(data));
-                message_scroll($scope.message_list.length);
+                //message_scroll($scope.message_list.length);
             });
 
             // pusherから既読されたcomment_idを取得する
             pusher_channel.bind('read_message', function (comment_id) {
                 var read_box = document.getElementById("mr_" + comment_id).innerText;
                 document.getElementById("mr_" + comment_id).innerText = Number(read_box) + 1;
+                bottom_scroll();
             });
 
             // メッセージを送信する
@@ -137,17 +132,18 @@ message_app.controller(
                 $http(request).then(function (response) {
                     event.target.disabled = '';
                     sendMessageLoader.style.display = 'none';
-                    message_scroll($scope.message_list.length);
+                    //message_scroll($scope.message_list.length);
                     $scope.message = "";
+                    bottom_scroll();
 
                     // プレビューエレメント配下の子エレメントを削除する
                     var file_preview_element = document.getElementById("messageUploadFilePreviewArea");
-                    for (var i =file_preview_element.childNodes.length-1; i>=0; i--) {
+                    for (var i = file_preview_element.childNodes.length - 1; i >= 0; i--) {
                         file_preview_element.removeChild(file_preview_element.childNodes[i]);
                     }
 
                     // ファイルアップロード処理初期化
-                    angular.forEach(file_redis_key, function(key){
+                    angular.forEach(file_redis_key, function (key) {
                         var node = document.getElementById(key);
                         node.parentNode.removeChild(node);
                     });
@@ -158,6 +154,7 @@ message_app.controller(
 
             var limit = 10;
             var page_num = 1;
+
             $scope.loadMore = function () {
                 if (document.getElementById("message_box").scrollTop === 0) {
                     var request = {
@@ -171,7 +168,8 @@ message_app.controller(
                         }, $scope.message_list);
 
                         if (response.data.message_list.length > 0) {
-                            message_scroll(current_id);
+                            $location.hash('m_' + (limit+1));
+                            $anchorScroll();
                         }
                         page_num = page_num + 1;
                     });
