@@ -1494,4 +1494,51 @@ class Goal extends AppModel
         return $res;
     }
 
+    /**
+     * ゴール名が $keyword にマッチするゴールを返す
+     *
+     * @param string $keyword
+     * @param int    $limit
+     *
+     * @return array
+     */
+    public function getGoalsByKeyword($keyword, $limit = 10)
+    {
+        $keyword = trim($keyword);
+        $options = [
+            'conditions' => [
+                'Goal.name LIKE' => $keyword . '%',
+                'Goal.team_id'   => $this->current_team_id,
+            ],
+            'limit'      => $limit,
+        ];
+        return $this->find('all', $options);
+    }
+
+    /**
+     * ゴール名が $keyword にマッチするゴールを select2 用のデータ形式にして返す
+     *
+     * @param string $keyword
+     * @param int    $limit
+     * @param null   $start_date
+     * @param null   $end_date
+     *
+     * @return array
+     */
+    public function getGoalsSelect2($keyword, $limit = 10, $start_date = null, $end_date = null)
+    {
+        $goals = $this->getGoalsByKeyword($keyword, $limit, $start_date, $end_date);
+
+        App::uses('UploadHelper', 'View/Helper');
+        $Upload = new UploadHelper(new View());
+        $res = [];
+        foreach ($goals as $val) {
+            $data = [];
+            $data['id'] = 'goal_' . $val['Goal']['id'];
+            $data['text'] = $val['Goal']['name'];
+            $data['image'] = $Upload->uploadUrl($val, 'Goal.photo', ['style' => 'small']);
+            $res[] = $data;
+        }
+        return ['results' => $res];
+    }
 }

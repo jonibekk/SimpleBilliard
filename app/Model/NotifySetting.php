@@ -499,43 +499,83 @@ class NotifySetting extends AppModel
                              h($user_text));
                 break;
             case self::TYPE_MY_GOAL_FOLLOW:
+                // この通知で必要なオプション値
+                //   - goal_id: フォローしたゴールID
+                $goal = $this->User->Goal->findById($options['goal_id']);
                 $title = __d('gl',
-                             '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">あなた</span>のゴールをフォローしました。',
-                             h($user_text));
+                             '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">%2$s</span>をフォローしました。',
+                             h($user_text),
+                             h($goal['Goal']['name']));
                 break;
             case self::TYPE_MY_GOAL_COLLABORATE:
+                // この通知で必要なオプション値
+                //   - goal_id: コラボしたゴールID
+                $goal = $this->User->Goal->findById($options['goal_id']);
                 $title = __d('gl',
-                             '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">あなた</span>のゴールにコラボりました。',
-                             h($user_text));
+                             '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">%2$s</span>にコラボりました。',
+                             h($user_text),
+                             h($goal['Goal']['name']));
                 break;
             case self::TYPE_MY_GOAL_CHANGED_BY_LEADER:
+                // この通知で必要なオプション値
+                //   - goal_id: 内容を変更したゴールID
+                $goal = $this->User->Goal->findById($options['goal_id']);
                 $title = __d('gl',
-                             '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">あなた</span>のゴールの内容を変更しました。',
-                             h($user_text));
+                             '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">%2$s</span>の内容を変更しました。',
+                             h($user_text),
+                             h($goal['Goal']['name']));
                 break;
             case self::TYPE_MY_GOAL_TARGET_FOR_EVALUATION:
+                // この通知で必要なオプション値
+                //   - goal_id: 評価対象にしたゴールID
+                $goal = $this->User->Goal->findById($options['goal_id']);
                 $title = __d('gl',
-                             '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">あなた</span>のゴールを評価対象としました。',
-                             h($user_text));
+                             '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">%2$s</span>を評価対象としました。',
+                             h($user_text),
+                             h($goal['Goal']['name']));
                 break;
             case self::TYPE_MY_GOAL_AS_LEADER_REQUEST_TO_CHANGE:
+                // この通知で必要なオプション値
+                //   - goal_id: 修正依頼をしたゴールID
+                $goal = $this->User->Goal->findById($options['goal_id']);
                 $title = __d('gl',
-                             '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">あなた</span>のゴールに修正依頼をしました。',
-                             h($user_text));
+                             '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">%2$s</span>に修正依頼をしました。',
+                             h($user_text),
+                             h($goal['Goal']['name']));
+
                 break;
             case self::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION:
+                // この通知で必要なオプション値
+                //   - goal_id: 評価対象外にしたゴールID
+                $goal = $this->User->Goal->findById($options['goal_id']);
                 $title = __d('gl',
-                             '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">あなた</span>のゴールを評価対象外としました。',
-                             h($user_text));
+                             '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">%2$s</span>を評価対象外としました。',
+                             h($user_text),
+                             h($goal['Goal']['name']));
                 break;
             case self::TYPE_MY_MEMBER_CREATE_GOAL:
-                $title = __d('gl', '<span class="notify-card-head-target">%1$s</span>が新しいゴールを作成しました。', h($user_text));
+                // この通知で必要なオプション値
+                //   - goal_id: 新しく作成したゴールID
+                $goal = $this->User->Goal->findById($options['goal_id']);
+                $title = __d('gl', '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">%2$s</span>を作成しました。',
+                             h($user_text),
+                             h($goal['Goal']['name']));
                 break;
             case self::TYPE_MY_MEMBER_COLLABORATE_GOAL:
-                $title = __d('gl', '<span class="notify-card-head-target">%1$s</span>がゴールにコラボりました。', h($user_text));
+                // この通知で必要なオプション値
+                //   - goal_id: コラボしたゴールID
+                $goal = $this->User->Goal->findById($options['goal_id']);
+                $title = __d('gl', '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">%2$s</span>にコラボりました。',
+                             h($user_text),
+                             h($goal['Goal']['name']));
                 break;
             case self::TYPE_MY_MEMBER_CHANGE_GOAL:
-                $title = __d('gl', '<span class="notify-card-head-target">%1$s</span>がゴール内容を修正しました。', h($user_text));
+                // この通知で必要なオプション値
+                //   - goal_id: 内容を修正したゴールID
+                $goal = $this->User->Goal->findById($options['goal_id']);
+                $title = __d('gl', '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">%2$s</span>を修正しました。',
+                             h($user_text),
+                             h($goal['Goal']['name']));
                 break;
             case self::TYPE_EVALUATION_START:
                 $title = __d('gl', '評価期間に入りました。');
@@ -575,7 +615,13 @@ class NotifySetting extends AppModel
                              h($target_user_name));
                 break;
             case self::TYPE_FEED_CAN_SEE_ACTION:
-                $title = __d('gl', '<span class="notify-card-head-target">%1$s</span>がアクションしました。', h($user_text));
+                // この通知で必要なオプション値
+                //   - goal_id: アクションしたゴール
+                $goal = $this->User->Goal->findById($options['goal_id']);
+                $title = __d('gl',
+                             '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">%2$s</span>にアクションしました。',
+                             h($user_text),
+                             h($goal['Goal']['name']));
                 break;
             case self::TYPE_USER_JOINED_TO_INVITED_TEAM:
                 $title = __d('gl', '<span class="notify-card-head-target">%1$s</span>がチームに参加しました。', h($user_text));
