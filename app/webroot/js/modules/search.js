@@ -45,13 +45,12 @@ define(function () {
 
             $NavSearchInput
                 .attr('placeholder', config.user.placeholder)
-                .on('blur', function () {
-                    // 検索結果ポップアップ消す
-                    $(this).delay(200).queue(function () {
-                        $NavSearchResults.hide();
-                        $("body").removeClass('nav-search-results-open');
-                        $(this).dequeue();
-                    });
+                .on('keydown', function (e) {
+                    // down
+                    if (e.keyCode == 40) {
+                        e.preventDefault();
+                        $NavSearchResults.find('.nav-search-result-item:first').focus();
+                    }
                 })
                 .on('keypress', function (e) {
                     // 日本語入力の未確定状態を判別
@@ -114,11 +113,40 @@ define(function () {
                                         }
                                     }
                                     $NavSearchResults.html($container).show();
+
+                                    // ポップアップ下の画面をスクロールさせないようにする
                                     $("body").addClass('nav-search-results-open');
+
+                                    // ポップアップクローズ用
+                                    $(document).one('click', function () {
+                                        $NavSearchResults.hide();
+                                        $("body").removeClass('nav-search-results-open');
+                                    });
                                 }
                             }
                         );
                     }, 150);
+                });
+
+            // 矢印キーで選択可能にする
+            $NavSearchResults
+                .on('keydown', '.nav-search-result-item', function (e) {
+                    var $selectedItem = $NavSearchResults.find('.nav-search-result-item:focus');
+                    if ($selectedItem.size()) {
+                        switch (e.keyCode) {
+                            // up
+                            case 38:
+                                e.preventDefault();
+                                $selectedItem.prev().focus();
+                                break;
+
+                            // down
+                            case 40:
+                                e.preventDefault();
+                                $selectedItem.next().focus();
+                                break;
+                        }
+                    }
                 });
         }
     };
@@ -126,5 +154,4 @@ define(function () {
     return {
         headerSearch: headerSearch
     };
-})
-;
+});
