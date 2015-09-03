@@ -154,10 +154,29 @@
                                       ['controller' => 'teams', 'action' => 'settings']) ?>
                 </li>
             <?php endif; ?>
-            <li><?=
+            <li>
+                <?=
                 $this->Html->link(__d('home', 'Blog'), 'http://blog.goalous.com/',
-                                  ['target' => '_blank']) ?></li>
+                                  ['target' => '_blank']) ?>
+            </li>
+            <li>
+                <a href="javascript:void(0)" data-uv-lightbox="classic_widget" data-uv-mode="full" data-uv-primary-color="#f0636f" data-uv-link-color="#007dbf" data-uv-default-mode="feedback" data-uv-forum-id="<?php
+                         if ($is_isao_user)
+                         {
+                             echo USERVOICE_FORUM_ID_PRIVATE;
+                         }
+                         else
+                         {
+                             echo USERVOICE_FORUM_ID_PUBLIC;
+                         }
+                         ?>">フィードバック
+                </a>
+            </li>
         </ul>
     </div>
 </div>
 <!-- end app/View/Elements/header_logged_in_right -->
+
+<!--
+<script>(function(){var uv=document.createElement('script');uv.type='text/javascript';uv.async=true;uv.src='//widget.uservoice.com/XCmmQeEYxEfUK5hhWqYaBA.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(uv,s)})()</script>
+-->

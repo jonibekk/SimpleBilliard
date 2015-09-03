@@ -39,7 +39,7 @@
 </script>
 <!-- end VWO and Mixpanel Integration Code-->
 <?php if (VWO_ID): ?>
-    <!-- Start Visual Website Optimizer Asynchronous Code -->
+<!-- Start Visual Website Optimizer Asynchronous Code -->
     <script type='text/javascript'>
         var _vwo_code = (function () {
             var account_id =<?= VWO_ID?>,
@@ -84,7 +84,7 @@
         }());
         _vwo_settings_timer = _vwo_code.init();
     </script>
-    <!-- End Visual Website Optimizer Asynchronous Code -->
+<!-- End Visual Website Optimizer Asynchronous Code -->
 <?php endif; ?>
 <?php if (MIXPANEL_TOKEN): ?>
     <!-- start Mixpanel -->
@@ -131,7 +131,7 @@
     <!-- end Mixpanel -->
 <?php endif; ?>
 <? if (USERVOICE_API_KEY && $this->Session->read('Auth.User.id')): ?>
-    <!-- start Uservoice -->
+<!-- start Uservoice -->
     <script>
         (function () {
             var uv = document.createElement('script');
@@ -145,7 +145,8 @@
         <?= ($this->Session->read('uservoice_token')) ? "UserVoice.push(['setSSO', '{$this->Session-> read('uservoice_token')}']);"
             : ""
         ?>
-
+        var winW = window.innerWidth;
+        if (winW > 480) {
         UserVoice.push(['showTab', 'classic_widget', {
             mode: 'full',
             primary_color: '#f0636f',
@@ -166,7 +167,10 @@
             tab_position: 'bottom-right',
             tab_inverted: false
         }]);
+    } else {
+        // サイズが小さいときは表示しない
+    }
     </script>
-<? endif; ?>
 <!-- end Uservoice -->
+<? endif; ?>
 <!-- END app/View/Elements/external_service_tags.ctp -->
