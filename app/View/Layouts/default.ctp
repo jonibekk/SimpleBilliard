@@ -28,23 +28,22 @@ else {
 <?php if ($this->request->params['action'] === 'display') {
     echo $this->element('header_sp_feeds_alt');
 } ?>
+
 <div id="container" class="container">
-    <div class="row">
-        <div class="col-md-2 col-sm-4 col-xs-4 hidden-xxs layout-sub">
-            <div class="left-side-container" id="js-left-side-container">
-                <?= $this->element('dashboard_profile_card') ?>
-                <?= $this->element('circle_list') ?>
-            </div>
+    <div class="col-md-2 col-sm-4 col-xs-4 hidden-xxs layout-sub">
+        <div class="left-side-container" id="js-left-side-container">
+            <?= $this->element('dashboard_profile_card') ?>
+            <?= $this->element('circle_list') ?>
         </div>
-        <div class="col-md-6 col-xs-8 col-xxs-12 layout-main" role="main">
-            <?= $this->Session->flash(); ?>
-            <!-- Remark -->
-            <?= $this->fetch('content'); ?>
-            <!-- /Remark -->
-        </div>
-        <div  id="jsRightSideContainerWrap" class="right-side-container-wrap col-md-4 visible-md visible-lg col-xs-8 col-xxs-12 layout-goal" role="goal_area">
-            <?= $this->element('my_goals_area') ?>
-        </div>
+    </div>
+    <div class="col-md-6 col-xs-8 col-xxs-12 layout-main" role="main">
+        <?= $this->Session->flash(); ?>
+        <!-- Remark -->
+        <?= $this->fetch('content'); ?>
+        <!-- /Remark -->
+    </div>
+    <div  id="jsRightSideContainerWrap" class="right-side-container-wrap col-md-4 visible-md visible-lg col-xs-8 col-xxs-12 layout-goal" role="goal_area">
+        <?= $this->element('my_goals_area') ?>
     </div>
 </div>
 <?= $this->element('common_modules') ?>
