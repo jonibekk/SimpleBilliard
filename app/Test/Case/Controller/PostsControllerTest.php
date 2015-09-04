@@ -100,7 +100,19 @@ class PostsControllerTest extends ControllerTestCase
     {
         $this->_getPostsCommonMock();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/posts/ajax_get_message/1/2/3', ['method' => 'GET']);
+        $post_id = 1;
+        $this->testFileUploadMessagePageRender($post_id, true);
+        $this->testAction('/posts/ajax_get_message/'. $post_id. '/2/3', ['method' => 'GET']);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+    }
+
+    function testAjaxGetMessageNotImage()
+    {
+        $this->_getPostsCommonMock();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $post_id = 1;
+        $this->testFileUploadMessagePageRender($post_id, false);
+        $this->testAction('/posts/ajax_get_message/'. $post_id. '/2/3', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -108,7 +120,7 @@ class PostsControllerTest extends ControllerTestCase
     {
         $this->_getPostsCommonMock();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/posts/ajax_put_message/1/', ['method' => 'POST','data'=>['body'=>'test']]);
+        $this->testAction('/posts/ajax_put_message/1/', ['method' => 'POST','data'=>['body'=>'test', 'file_redis_key'=>'xxx']]);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -1709,6 +1721,58 @@ class PostsControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedMethodInspection */
         $socket = $Posts->_getHttpSocket();
         $this->assertTrue(method_exists($socket, 'get'));
+    }
+
+    function testFileUploadMessagePageRender($post_id, $attached_flg = false)
+    {
+        $user_id = 1;
+        $team_id = 1;
+
+        $comment = $this->testSaveCommentData($team_id, $user_id, $post_id);
+        $comment_id = $comment['Comment']['id'];
+
+        if ($attached_flg === true) {
+            $attached_file = $this->testSaveAttachedFileData($team_id, $user_id);
+            $attached_file_id = $attached_file['AttachedFile']['id'];
+            $this->testSaveCommentFileData($team_id, $comment_id, $attached_file_id);
+        }
+    }
+
+    function testSaveCommentData($team_id, $user_id, $post_id)
+    {
+        $Posts = $this->_getPostsCommonMock();
+        $comment_data = [
+            'Comment' => [
+                'user_id' => $user_id,
+                'team_id' => $team_id,
+                'post_id' => $post_id,
+                'body'    => 'test'
+            ],
+        ];
+        return $Posts->Post->Comment->save($comment_data);
+    }
+
+    function testSaveAttachedFileData($team_id, $user_id)
+    {
+        $Posts = $this->_getPostsCommonMock();
+        $attached_file_data = [
+            'user_id' => $user_id,
+            'team_id' => $team_id,
+            'attached_file_name' => 'test_image.jpeg',
+            'file_ext' => 'jpeg'
+        ];
+        return $Posts->Post->Comment->CommentFile->AttachedFile->save($attached_file_data);
+    }
+
+    function testSaveCommentFileData($team_id, $comment_id, $attached_file_id)
+    {
+        $Posts = $this->_getPostsCommonMock();
+        $comment_file_data = [
+            'team_id' => $team_id,
+            'comment_id' => $comment_id,
+            'attached_file_id' => $attached_file_id
+        ];
+        return $Posts->Post->Comment->CommentFile->save($comment_file_data);
     }
 
     function _getPostsCommonMock()

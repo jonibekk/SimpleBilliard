@@ -3734,6 +3734,26 @@ $(document).ready(function () {
     $uploadFileForm.registerAttachFileButton('#PostUploadFileButton', postParams);
 
     ///////////////////////////////
+    // メッセンジャーフォーム
+    ///////////////////////////////
+    var messageParams = {
+        formID: 'messageDropArea',
+        previewContainerID: 'messageUploadFilePreviewArea',
+        afterSuccess: function (file) {
+            $("#message_submit_button").click(function () {
+                if (typeof Dropzone.instances[0] !== "" && Dropzone.instances[0].files.length > 0) {
+                    Dropzone.instances[0].files = [];
+                }
+            });
+        }
+    };
+    var messageDzOptions = {
+        maxFiles: 1
+    };
+    $uploadFileForm.registerDragDropArea('#messageDropArea', messageParams, messageDzOptions);
+    $uploadFileForm.registerAttachFileButton('#messageUploadFileButton', messageParams, messageDzOptions);
+
+    ///////////////////////////////
     // アクションメイン画像（最初の画像選択時)
     ///////////////////////////////
     var actionImageParams = {
