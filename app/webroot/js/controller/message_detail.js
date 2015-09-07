@@ -12,9 +12,9 @@ message_app.controller(
               $location) {
 
         $scope.$on('$viewContentLoaded', function() {
-            var m_box = $("#message_box");
+            var $m_box = $("#message_box");
             // TODO: 一時的に高さを2000pxにした。この後対応予定のブラウザサイズによる高さ固定処理にあわせて、PXを動的に変える処理を入れる予定
-            m_box.animate({ scrollTop: 2000}, 500);
+            $m_box.animate({ scrollTop: 2000}, 500);
         });
 
         $scope.view_flag = true;
@@ -75,8 +75,8 @@ message_app.controller(
             $scope.first_share_user = getPostDetail.first_share_user;
 
             var bottom_scroll = function () {
-                var m_box = $("#message_box");
-                m_box.animate({ scrollTop: m_box[0].scrollHeight}, 300);
+                var $m_box = $("#message_box");
+                $m_box.animate({ scrollTop: $m_box[0].scrollHeight}, 300);
             };
 
             // pusherメッセージ内容を受け取る
