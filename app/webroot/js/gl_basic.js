@@ -3791,7 +3791,7 @@ $(document).ready(function () {
             }
         },
         afterAccept: function (file) {
-            var $button = $('.action-image-add-button');
+            var $button = $('.post-action-image-add-button');
             if ($button.size()) {
                 evTargetShowThisDelete.call($button.get(0));
             }
@@ -4007,7 +4007,7 @@ $(document).ready(function () {
 
     // アクションの編集画面の場合は、画像選択の画面をスキップし、
     // ajax で動いている select を選択済みにする
-    var $button = $('#ActionForm').find('.action-image-add-button.skip');
+    var $button = $('#ActionForm').find('.post-action-image-add-button.skip');
     if ($button.size()) {
         // 画像選択の画面をスキップ
         evTargetShowThisDelete.call($button.get(0));
