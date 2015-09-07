@@ -14,11 +14,20 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: Console/Command/DataShell.php:189
-msgid "既にテストデータが存在するため、テストデータのインポートをキャンセルしました。"
+#: View/Elements/Team/eval_score_form_elm.ctp:28
+#: View/Elements/Team/goal_category_form_elm.ctp:28
+msgid "名前"
 msgstr ""
 
-#: View/Elements/external_service_tags.ctp:165
-msgid "Feedback"
+#: View/Elements/Team/eval_score_form_elm.ctp:46
+msgid "表示順"
+msgstr ""
+
+#: View/Elements/Team/eval_score_form_elm.ctp:66
+msgid "定義の説明を書きましょう"
+msgstr ""
+
+#: View/Elements/Team/goal_category_form_elm.ctp:47
+msgid "ゴールカテゴリの説明を書きましょう"
 msgstr ""
 
