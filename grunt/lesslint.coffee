@@ -12,3 +12,4 @@ module.exports = (grunt) ->
       csslint:
         'font-sizes': false
         'floats': false
+        'important': false
