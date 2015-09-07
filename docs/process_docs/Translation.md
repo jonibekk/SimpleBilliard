@@ -1,8 +1,10 @@
 # 事前準備
 
 1. 翻訳用のissue作成
-1. vagrant ssh でvmにログイン
-1. `./Console/cake i18n extract` を実行
+1. `vagrant up default` でvmを起動
+1. `vagrant ssh default` でvmにログイン
+1. `cd ..;sh etc/local/ubuntu_update_app.sh` でアップデート
+1. `/vagrant_data/app/Console/cake i18n extract` を実行
 1. 以下の通り応対
    ```
   Current paths: None
@@ -29,7 +31,7 @@
 
   ```
 
-1. コミットする。
+1. コミットする(cookbooksを除く)。
 1. プルリク作成(親issue)に紐付け。
 1. `develop`にプルリクをマージ。
 1. 新しいブランチを`develop`から作成。(developにチェックアウト -> Pullする -> ブランチ作成)
