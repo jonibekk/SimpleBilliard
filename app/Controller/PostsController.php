@@ -411,7 +411,11 @@ class PostsController extends AppController
         $this->Post->Comment->CommentRead->redAllByPostId($post_id);
 
         $message_list = $this->Post->Comment->getPostsComment($post_id, $limit, $page_num, 'desc');
+        foreach ($message_list as $key => $item) {
+            $message_list[$key]['AttachedFileHtml'] = $this->fileUploadMessagePageRender($item);
+        }
         $convert_msg_data = $this->Post->Comment->convertData($message_list);
+
         $result = ['message_list' => $convert_msg_data];
         return $this->_ajaxGetResponse($result);
     }
@@ -422,16 +426,36 @@ class PostsController extends AppController
 
         $params['Comment']['post_id'] = $post_id;
         $params['Comment']['body'] = $this->request->data['body'];
+        $params['file_id'] = $this->request->data['file_redis_key'];
         $comment_id = $this->Post->Comment->add($params);
-        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MESSAGE, $post_id, $comment_id);
 
+        $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MESSAGE, $post_id, $comment_id);
         $detail_comment = $this->Post->Comment->getComment($comment_id);
+        $detail_comment['AttachedFileHtml'] = $this->fileUploadMessagePageRender($detail_comment);
         $convert_data = $this->Post->Comment->convertData($detail_comment);
 
         $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
         $pusher->trigger('message-channel-' . $post_id, 'new_message', $convert_data);
         $this->Mixpanel->trackMessage($post_id);
         return $this->_ajaxGetResponse($detail_comment);
+    }
+
+    function fileUploadMessagePageRender($data)
+    {
+        $attached_files = '';
+        foreach ($data['CommentFile'] as $attached_file) {
+            if (in_array($attached_file['AttachedFile']['file_ext'], ['jpg', 'jpeg', 'gif', 'png']) === true) {
+                $this->set('message_page_image', true);
+            } else {
+                $this->set('message_page_image', false);
+            }
+            $this->set('post_id', $data['Comment']['post_id']);
+            $this->set('comment_id', $data['Comment']['id']);
+            $this->set('data', $attached_file);
+            $response = $this->render('Feed/attached_file_item');
+            $attached_files .= $response->__toString();
+        }
+        return $attached_files;
     }
 
     public function ajax_put_message_read($post_id, $comment_id)
