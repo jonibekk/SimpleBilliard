@@ -32,7 +32,9 @@
 
                             <div class="col col-xxs-10 showmore font_14px font_verydark box-align">
                                 <div class="font_12px font_verydark">
-                                    <span class="font_bold">{{item.User.display_username}}</span>
+                                    <a href="/users/view_goals/user_id:">
+                                        <span class="font_bold">{{item.User.display_username}}</span>
+                                    </a>
                         <span class="font_lightgray" style="position:absolute; right:10px;">
                             {{item.Comment.created * 1000 | date:'MM/dd HH:mm'}}
                         </span>
