@@ -443,10 +443,19 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
             </div>
             <div class="post-panel-footer">
                 <div class="font_12px none" id="MessageFormFooter">
-                    <div class="row form-horizontal form-group post-share-range" id="MessageShare">
-                        <?=
-                        $this->Form->submit(__d('gl', "メッセージする"),
-                                            ['class' => 'btn btn-primary pull-right post-submit-button', 'id' => 'MessageSubmit', 'disabled' => 'disabled']) ?>
+                    <div id="messageDropArea">
+                        <a href="#" class="link-red" id="messageUploadFileButton">
+                            <button type="button" class="btn pull-left photo-up-btn"><i
+                                    class="fa fa-paperclip post-camera-icon"></i>
+                            </button>
+                        </a>
+
+                        <div class="row form-horizontal form-group post-share-range" id="MessageShare">
+                            <?=
+                            $this->Form->submit(__d('gl', "メッセージする"),
+                                                ['class' => 'btn btn-primary pull-right post-submit-button', 'id' => 'MessageSubmit', 'disabled' => 'disabled']) ?>
+                        </div>
+                        <div id="messageUploadFilePreviewArea"></div>
                     </div>
                 </div>
             </div>
