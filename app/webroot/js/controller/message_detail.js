@@ -10,6 +10,10 @@ message_app.controller(
               $anchorScroll,
               $location) {
 
+        $scope.$on('$viewContentLoaded', function() {
+            var m_box = $("#message_box");
+            m_box.animate({ scrollTop: m_box[0].scrollHeight}, 500);
+        });
 
         $scope.view_flag = true;
         if (getPostDetail.auth_info.language === 'eng') {
