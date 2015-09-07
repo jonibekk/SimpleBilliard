@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2014-11-20 09:40+0000\n"
-"PO-Revision-Date: 2014-11-20 18:50+0900\n"
+"POT-Creation-Date: 2015-09-07 16:32+0900\n"
+"PO-Revision-Date: 2015-09-07 16:32+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -13,25 +13,25 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.6.10\n"
+"X-Generator: Poedit 1.8.4\n"
 
-#: Controller/AppController.php:239
+#: Controller/AppController.php:428
 msgid "不正なアクセスです。"
 msgstr "Invalid access."
 
-#: Controller/UsersController.php:504
+#: Controller/UsersController.php:698
 msgid "別のユーザ宛のチーム招待です。"
 msgstr ""
 
-#: Model/Invite.php:83 Model/User.php:527
+#: Model/Invite.php:87 Model/User.php:571
 msgid "トークンが正しくありません。送信されたメールを再度ご確認下さい。"
 msgstr ""
 
-#: Model/Invite.php:86
+#: Model/Invite.php:90
 msgid "このトークンは使用済みです。"
 msgstr ""
 
-#: Model/Invite.php:89 Model/User.php:530
+#: Model/Invite.php:93 Model/User.php:574
 msgid "トークンの期限が切れています。"
 msgstr ""
 
