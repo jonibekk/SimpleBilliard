@@ -5,11 +5,11 @@
   以下ファイルをダウンロード  
   http://bit.ly/1XzyyqD  
   以下の場所にファイルをコピー  
-  ~/.ssh/  
+  `~/.ssh/`  
   
 1. sshでproxyサーバーに接続  
-  sh -i ~/.ssh/isao-gls-singapore.pem ubuntu@52.74.224.129  
-  ※もし接続できない場合は、接続IPアドレスが許可されていない可能性があるので、管理者にパブリックIPアドレスを連絡する。
+  `sh -i ~/.ssh/isao-gls-singapore.pem ubuntu@52.74.224.129`  
+  ※もし接続できない場合は、接続IPアドレスが許可されていない可能性があるので、管理者に自分の環境のパブリックIPアドレスを連絡する。
 
 ## 許可するドメインを追加する手順
 1. ホワイトリストを開く  
@@ -23,9 +23,7 @@
 1. tailで以下ファイルを開く  
   `sudo tail -1000f /var/log/squid3/access.log`  
   ※プロキシサーバに拒否されたドメインを追加する場合は、`TCP_DENIED`のドメインを探す。  
-  ```
-  ## e.g. 
-  1441584136.154      2 10.0.0.194 TCP_DENIED/403 3467 CONNECT mtalk.google.com:5228 - HIER_NONE/- text/html
-  ```  
-  この場合は、`mtalk.google.com`からのアクセスが拒否されているという事。
+  e.g.  
+  `1441584136.154      2 10.0.0.194 TCP_DENIED/403 3467 CONNECT mtalk.google.com:5228 - HIER_NONE/- text/html`  
+  この場合は、`mtalk.google.com`へのアクセスが拒否されているという事。
 
