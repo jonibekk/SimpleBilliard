@@ -37,7 +37,7 @@
 1. 新しいブランチを`develop`から作成。(developにチェックアウト -> Pullする -> ブランチ作成)
 1. poeditを開く。(※インストールされていない場合は、https://poedit.net/download からダウンロード、インストール)
 1. `Edit a translation`で該当のファイルを開く。  
-  ファイルパス: `goalous2/app/Locale/eng/*.po`
+  ファイルパス: `goalous2/app/Locale/eng/LC_MESSAGES/*.po`
   ![open_and_poedit_and_editing_goalous2_translation_md_at_doc-translate_ _isaocorp_goalous2_and_authy](https://cloud.githubusercontent.com/assets/3040037/7676825/28f040ae-fd82-11e4-941f-28d3d17b582a.png)
 1. poeditのメニュー[Catalog]->[Update from POT file]を選択。
 1. 対象の`pot`ファイルを指定(拡張子以外が同名)。
