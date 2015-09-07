@@ -1,8 +1,10 @@
 # 事前準備
 
 1. 翻訳用のissue作成
-1. vagrant ssh でvmにログイン
-1. `./Console/cake i18n extract` を実行
+1. `vagrant up default` でvmを起動
+1. `vagrant ssh default` でvmにログイン
+1. `cd ..;sh etc/local/ubuntu_update_app.sh` でアップデート
+1. `/vagrant_data/app/Console/cake i18n extract` を実行
 1. 以下の通り応対
    ```
   Current paths: None
@@ -29,13 +31,13 @@
 
   ```
 
-1. コミットする。
+1. コミットする(cookbooksを除く)。
 1. プルリク作成(親issue)に紐付け。
 1. `develop`にプルリクをマージ。
 1. 新しいブランチを`develop`から作成。(developにチェックアウト -> Pullする -> ブランチ作成)
 1. poeditを開く。(※インストールされていない場合は、https://poedit.net/download からダウンロード、インストール)
 1. `Edit a translation`で該当のファイルを開く。  
-  ファイルパス: `goalous2/app/Locale/eng/*.po`
+  ファイルパス: `goalous2/app/Locale/eng/LC_MESSAGES/*.po`
   ![open_and_poedit_and_editing_goalous2_translation_md_at_doc-translate_ _isaocorp_goalous2_and_authy](https://cloud.githubusercontent.com/assets/3040037/7676825/28f040ae-fd82-11e4-941f-28d3d17b582a.png)
 1. poeditのメニュー[Catalog]->[Update from POT file]を選択。
 1. 対象の`pot`ファイルを指定(拡張子以外が同名)。
