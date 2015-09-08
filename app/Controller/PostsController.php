@@ -370,6 +370,7 @@ class PostsController extends AppController
         $room_info['User']['photo_path'] = $this->Post->getPhotoPath($room_info['User']);
         //auto link
         $room_info['Post']['body'] = nl2br($text_ex->autoLink($room_info['Post']['body']));
+        $room_info['AttachedFileHtml'] = $this->fileUploadMessagePageRender($room_info['PostFile'], $post_id);
 
         $share_users = $this->Post->PostShareUser->getShareUserListByPost($post_id);
         // 画面表示用に自分以外のメッセージ共有者１人の情報を取得する
@@ -392,6 +393,7 @@ class PostsController extends AppController
             'room_info'        => $room_info,
             'share_users'      => $share_users,
             'first_share_user' => $first_share_user,
+            'comment_count'    => $this->Post->Comment->getCommentCount($post_id)
         ];
 
         //対象のメッセージルーム(Post)のnotifyがあれば削除する
@@ -412,7 +414,8 @@ class PostsController extends AppController
 
         $message_list = $this->Post->Comment->getPostsComment($post_id, $limit, $page_num, 'desc');
         foreach ($message_list as $key => $item) {
-            $message_list[$key]['AttachedFileHtml'] = $this->fileUploadMessagePageRender($item);
+            $message_list[$key]['AttachedFileHtml'] = $this->fileUploadMessagePageRender($item['CommentFile'],
+                                                                                         $post_id);
         }
         $convert_msg_data = $this->Post->Comment->convertData($message_list);
 
@@ -431,7 +434,8 @@ class PostsController extends AppController
 
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MESSAGE, $post_id, $comment_id);
         $detail_comment = $this->Post->Comment->getComment($comment_id);
-        $detail_comment['AttachedFileHtml'] = $this->fileUploadMessagePageRender($detail_comment);
+        $detail_comment['AttachedFileHtml'] = $this->fileUploadMessagePageRender($detail_comment['CommentFile'],
+                                                                                 $post_id);
         $convert_data = $this->Post->Comment->convertData($detail_comment);
 
         $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
@@ -440,17 +444,19 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($detail_comment);
     }
 
-    function fileUploadMessagePageRender($data)
+    function fileUploadMessagePageRender($data, $post_id)
     {
         $attached_files = '';
-        foreach ($data['CommentFile'] as $attached_file) {
-            if (in_array(strtolower($attached_file['AttachedFile']['file_ext']), ['jpg', 'jpeg', 'gif', 'png']) === true) {
+        foreach ($data as $attached_file) {
+            if (in_array(strtolower($attached_file['AttachedFile']['file_ext']),
+                         ['jpg', 'jpeg', 'gif', 'png']) === true
+            ) {
                 $this->set('message_page_image', true);
-            } else {
+            }
+            else {
                 $this->set('message_page_image', false);
             }
-            $this->set('post_id', $data['Comment']['post_id']);
-            $this->set('comment_id', $data['Comment']['id']);
+            $this->set('post_id', $post_id);
             $this->set('data', $attached_file);
             $response = $this->render('Feed/attached_file_item');
             $attached_files .= $response->__toString();

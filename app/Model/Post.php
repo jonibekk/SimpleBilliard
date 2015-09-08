@@ -407,6 +407,14 @@ class Post extends AppModel
             'contain'    => [
                 'User'          => [],
                 'PostShareUser' => [],
+                'PostFile'   => [
+                    'order'        => ['PostFile.index_num asc'],
+                    'AttachedFile' => [
+                        'User' => [
+                            'fields' => $this->User->profileFields
+                        ]
+                    ]
+                ]
             ]
         ];
         $res = $this->find('first', $options);

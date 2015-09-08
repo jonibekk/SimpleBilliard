@@ -11,10 +11,10 @@ message_app.controller(
               $anchorScroll,
               $location) {
 
-        $scope.$on('$viewContentLoaded', function() {
+        $scope.$on('$viewContentLoaded', function () {
             var $m_box = $("#message_box");
             // TODO: 一時的に高さを2000pxにした。この後対応予定のブラウザサイズによる高さ固定処理にあわせて、PXを動的に変える処理を入れる予定
-            $m_box.animate({ scrollTop: 2000}, 500);
+            $m_box.animate({scrollTop: 2000}, 500);
         });
 
         $scope.view_flag = true;
@@ -53,20 +53,23 @@ message_app.controller(
             //メッセージ通知件数をカウント
             updateMessageNotifyCnt();
 
-            var message_list = [];
-            var first_data = {
-                Comment: {
-                    body: post_detail.Post.body,
-                    comment_read_count: post_detail.Post.post_read_count,
-                    created: post_detail.Post.created
-                },
-                User: {
-                    display_username: post_detail.User.display_username,
-                    photo_path: post_detail.User.photo_path
-                },
-                'get_red_user_model_url': '/posts/ajax_get_message_red_users/post_id:' + post_detail.Post.id
-            };
-            message_list.push(first_data);
+            var limit = 10, page_num = 1, message_list = [];
+            //console.log(post_detail.comment_count < limit * page_num);
+            //if (post_detail.comment_count < limit * page_num) {
+                message_list.push({
+                    AttachedFileHtml: post_detail.AttachedFileHtml,
+                    Comment: {
+                        body: post_detail.Post.body,
+                        comment_read_count: post_detail.Post.post_read_count,
+                        created: post_detail.Post.created
+                    },
+                    User: {
+                        display_username: post_detail.User.display_username,
+                        photo_path: post_detail.User.photo_path
+                    },
+                    'get_red_user_model_url': '/posts/ajax_get_message_red_users/post_id:' + post_detail.Post.id
+                });
+            //}
 
             // スレッド情報
             $scope.auth_info = getPostDetail.auth_info;
@@ -76,7 +79,7 @@ message_app.controller(
 
             var bottom_scroll = function () {
                 var $m_box = $("#message_box");
-                $m_box.animate({ scrollTop: $m_box[0].scrollHeight}, 300);
+                $m_box.animate({scrollTop: $m_box[0].scrollHeight}, 300);
             };
 
             // pusherメッセージ内容を受け取る
@@ -96,6 +99,7 @@ message_app.controller(
 
                 // メッセージ表示
                 $scope.$apply($scope.message_list.push(data));
+                bottom_scroll();
             });
 
             // pusherから既読されたcomment_idを取得する
@@ -154,9 +158,6 @@ message_app.controller(
 
             };
 
-            var limit = 10;
-            var page_num = 1;
-
             $scope.loadMore = function () {
                 if (document.getElementById("message_box").scrollTop === 0) {
                     var request = {
@@ -170,7 +171,7 @@ message_app.controller(
                         }, $scope.message_list);
 
                         if (response.data.message_list.length > 0) {
-                            $location.hash('m_' + (limit+1));
+                            $location.hash('m_' + (limit + 1));
                             $anchorScroll();
                         }
                         page_num = page_num + 1;
