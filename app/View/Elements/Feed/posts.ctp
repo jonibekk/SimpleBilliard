@@ -363,9 +363,9 @@ $without_header = isset($without_header) ? $without_header : false;
                             </a>
                         </div>
                         <div class="col col-xxs-5 col-xs-4">
-                            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', 'goal_id' => $post['Goal']['id']]) ?>"  data-target="#ModalCollabo_<?= $post['Goal']['id'] ?>" data-toggle="modal" class="btn btn-white bd-circle_22px font_verydark modal-ajax-get-collabo p_8px collabo-off">
+                            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', 'goal_id' => $post['Goal']['id']]) ?>"  data-target="#ModalCollabo_<?= $post['Goal']['id'] ?>" data-toggle="modal" class="btn btn-white bd-circle_22px font_verydark modal-ajax-get-collabo p_8px <?= $collabo_opt['class'] ?>">
                                 <i style="" class="fa fa-child font_rougeOrange font_18px"></i>
-                                <span class="ml_5px font_14px">Collaborate</span>
+                                <span class="ml_5px font_14px"><?= $collabo_opt['text'] ?></span>
                             </a>
                         </div>
                     </div>

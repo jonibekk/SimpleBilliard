@@ -676,22 +676,6 @@ class Post extends AppModel
                         'fields'     => [
                             'MyFollow.id',
                         ],
-                    ],
-                    'Follower'     => [
-                        'fields' => [
-                            'Follower.id',
-                        ],
-                    ],
-                    'User'         => [
-                        'fields'     => $this->User->profileFields,
-                        'TeamMember' => [
-                            'fields'     => [
-                                'coach_user_id',
-                            ],
-                            'conditions' => [
-                                'coach_user_id' => $this->my_uid,
-                            ]
-                        ],
                     ]
                 ],
                 'KeyResult'       => [
