@@ -441,6 +441,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                         'data-bv-notempty-message' => __d('validate', "入力必須項目です。"),
                     ]);
                     ?>
+                    <div id="messageUploadFilePreviewArea"></div>
                 </div>
                 <div class="post-panel-footer">
                     <div class="font_12px none" id="MessageFormFooter">
@@ -455,7 +456,6 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                             $this->Form->submit(__d('gl', "メッセージする"),
                                                 ['class' => 'btn btn-primary pull-right post-submit-button', 'id' => 'MessageSubmit', 'disabled' => 'disabled']) ?>
                         </div>
-                        <div id="messageUploadFilePreviewArea"></div>
                     </div>
                 </div>
             </div>
