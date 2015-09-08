@@ -152,6 +152,7 @@ message_app.controller(
                             created: post_detail.Post.created
                         },
                         User: {
+                            id: post_detail.User.id,
                             display_username: post_detail.User.display_username,
                             photo_path: post_detail.User.photo_path
                         },
