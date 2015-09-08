@@ -657,6 +657,41 @@ class Post extends AppModel
                         'fields' => [
                             'name'
                         ]
+                    ],
+                    'MyCollabo'    => [
+                        'conditions' => [
+                            'MyCollabo.type'    => Collaborator::TYPE_COLLABORATOR,
+                            'MyCollabo.user_id' => $this->my_uid,
+                        ],
+                        'fields'     => [
+                            'MyCollabo.id',
+                            'MyCollabo.role',
+                            'MyCollabo.description',
+                        ],
+                    ],
+                    'MyFollow'     => [
+                        'conditions' => [
+                            'MyFollow.user_id' => $this->my_uid,
+                        ],
+                        'fields'     => [
+                            'MyFollow.id',
+                        ],
+                    ],
+                    'Follower'     => [
+                        'fields' => [
+                            'Follower.id',
+                        ],
+                    ],
+                    'User'         => [
+                        'fields'     => $this->User->profileFields,
+                        'TeamMember' => [
+                            'fields'     => [
+                                'coach_user_id',
+                            ],
+                            'conditions' => [
+                                'coach_user_id' => $this->my_uid,
+                            ]
+                        ],
                     ]
                 ],
                 'KeyResult'       => [
