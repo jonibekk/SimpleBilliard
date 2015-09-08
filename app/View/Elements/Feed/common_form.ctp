@@ -117,7 +117,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                        delete-method="hide"
                         >
                         <span class="action-image-add-button-text"><i
-                                class="fa fa-image action-image-add-button-icon"></i> <span>アクション画像をアップロード</span></span>
+                                class="fa fa-image action-image-add-button-icon"></i> <span><?= __d('gl', 'アクション画像をアップロード') ?></span></span>
 
                     </a>
                 </div>
