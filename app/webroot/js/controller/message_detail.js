@@ -11,6 +11,11 @@ message_app.controller(
               $anchorScroll,
               $location) {
 
+        $scope.$on('$viewContentLoaded', function() {
+            var $m_box = $("#message_box");
+            // TODO: 一時的に高さを2000pxにした。この後対応予定のブラウザサイズによる高さ固定処理にあわせて、PXを動的に変える処理を入れる予定
+            $m_box.animate({ scrollTop: 2000}, 500);
+        });
 
         $scope.view_flag = true;
         if (getPostDetail.auth_info.language === 'eng') {
@@ -70,8 +75,8 @@ message_app.controller(
             $scope.first_share_user = getPostDetail.first_share_user;
 
             var bottom_scroll = function () {
-                var mbox = document.getElementById('message_box');
-                mbox.scrollTop = mbox.scrollHeight;
+                var $m_box = $("#message_box");
+                $m_box.animate({ scrollTop: $m_box[0].scrollHeight}, 300);
             };
 
             // pusherメッセージ内容を受け取る
@@ -91,7 +96,6 @@ message_app.controller(
 
                 // メッセージ表示
                 $scope.$apply($scope.message_list.push(data));
-                //message_scroll($scope.message_list.length);
             });
 
             // pusherから既読されたcomment_idを取得する
@@ -132,9 +136,7 @@ message_app.controller(
                 $http(request).then(function (response) {
                     event.target.disabled = '';
                     sendMessageLoader.style.display = 'none';
-                    //message_scroll($scope.message_list.length);
                     $scope.message = "";
-                    bottom_scroll();
 
                     // プレビューエレメント配下の子エレメントを削除する
                     var file_preview_element = document.getElementById("messageUploadFilePreviewArea");
