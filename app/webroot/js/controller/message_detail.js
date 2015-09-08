@@ -53,23 +53,7 @@ message_app.controller(
             //メッセージ通知件数をカウント
             updateMessageNotifyCnt();
 
-            var limit = 10, page_num = 1, message_list = [];
-            //console.log(post_detail.comment_count < limit * page_num);
-            //if (post_detail.comment_count < limit * page_num) {
-                message_list.push({
-                    AttachedFileHtml: post_detail.AttachedFileHtml,
-                    Comment: {
-                        body: post_detail.Post.body,
-                        comment_read_count: post_detail.Post.post_read_count,
-                        created: post_detail.Post.created
-                    },
-                    User: {
-                        display_username: post_detail.User.display_username,
-                        photo_path: post_detail.User.photo_path
-                    },
-                    'get_red_user_model_url': '/posts/ajax_get_message_red_users/post_id:' + post_detail.Post.id
-                });
-            //}
+            var limit = 10, page_num = 1, message_list = [], post_msg_view_flag = false;
 
             // スレッド情報
             $scope.auth_info = getPostDetail.auth_info;
@@ -158,6 +142,25 @@ message_app.controller(
 
             };
 
+            var pushPostMessage = function () {
+                if (post_msg_view_flag === false) {
+                    message_list.push({
+                        AttachedFileHtml: post_detail.AttachedFileHtml,
+                        Comment: {
+                            body: post_detail.Post.body,
+                            comment_read_count: post_detail.Post.post_read_count,
+                            created: post_detail.Post.created
+                        },
+                        User: {
+                            display_username: post_detail.User.display_username,
+                            photo_path: post_detail.User.photo_path
+                        },
+                        'get_red_user_model_url': '/posts/ajax_get_message_red_users/post_id:' + post_detail.Post.id
+                    });
+                    post_msg_view_flag = true;
+                }
+            };
+
             $scope.loadMore = function () {
                 if (document.getElementById("message_box").scrollTop === 0) {
                     var request = {
@@ -165,13 +168,18 @@ message_app.controller(
                         url: cake.url.ah + $stateParams.post_id + '/' + limit + '/' + page_num
                     };
                     $http(request).then(function (response) {
+
+                        if (getPostDetail.comment_count < limit * page_num) {
+                            pushPostMessage();
+                        }
+
                         angular.forEach(response.data.message_list, function (val) {
                             val.AttachedFileHtml = $sce.trustAsHtml(val.AttachedFileHtml);
                             this.push(val);
                         }, $scope.message_list);
 
                         if (response.data.message_list.length > 0) {
-                            $location.hash('m_' + (limit + 1));
+                            $location.hash('m_' + limit);
                             $anchorScroll();
                         }
                         page_num = page_num + 1;
