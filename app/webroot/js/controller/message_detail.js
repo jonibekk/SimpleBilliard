@@ -96,6 +96,7 @@ message_app.controller(
 
                 // メッセージ表示
                 $scope.$apply($scope.message_list.push(data));
+                bottom_scroll();
             });
 
             // pusherから既読されたcomment_idを取得する
