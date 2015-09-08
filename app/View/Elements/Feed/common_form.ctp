@@ -425,25 +425,25 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                 <?php $this->Form->unlockField('socket_id') ?>
             </div>
 
-            <div class="post-panel-body plr_11px ptb_7px">
-                <?=
-                $this->Form->input('body', [
-                    'id'                       => 'CommonMessageBody',
-                    'label'                    => false,
-                    'type'                     => 'textarea',
-                    'wrap'                     => 'soft',
-                    'rows'                     => 1,
-                    'required'                 => true,
-                    'placeholder'              => __d('gl', "メッセージを書こう"),
-                    'class'                    => 'form-control tiny-form-text-change post-form feed-post-form box-align change-warning',
-                    'target_show_id'           => "MessageFormFooter",
-                    'data-bv-notempty-message' => __d('validate', "入力必須項目です。"),
-                ]);
-                ?>
-            </div>
-            <div class="post-panel-footer">
-                <div class="font_12px none" id="MessageFormFooter">
-                    <div id="messageDropArea">
+            <div id="messageDropArea">
+                <div class="post-panel-body plr_11px ptb_7px">
+                    <?=
+                    $this->Form->input('body', [
+                        'id'                       => 'CommonMessageBody',
+                        'label'                    => false,
+                        'type'                     => 'textarea',
+                        'wrap'                     => 'soft',
+                        'rows'                     => 1,
+                        'required'                 => true,
+                        'placeholder'              => __d('gl', "メッセージを書こう"),
+                        'class'                    => 'form-control tiny-form-text-change post-form feed-post-form box-align change-warning',
+                        'target_show_id'           => "MessageFormFooter",
+                        'data-bv-notempty-message' => __d('validate', "入力必須項目です。"),
+                    ]);
+                    ?>
+                </div>
+                <div class="post-panel-footer">
+                    <div class="font_12px none" id="MessageFormFooter">
                         <a href="#" class="link-red" id="messageUploadFileButton">
                             <button type="button" class="btn pull-left photo-up-btn"><i
                                     class="fa fa-paperclip post-camera-icon"></i>
@@ -459,6 +459,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                     </div>
                 </div>
             </div>
+
             <?= $this->Form->end() ?>
         </div>
     </div>

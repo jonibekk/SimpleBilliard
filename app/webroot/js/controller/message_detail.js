@@ -145,7 +145,7 @@ message_app.controller(
             var pushPostMessage = function () {
                 if (post_msg_view_flag === false) {
                     message_list.push({
-                        AttachedFileHtml: post_detail.AttachedFileHtml,
+                        AttachedFileHtml: $sce.trustAsHtml(post_detail.AttachedFileHtml),
                         Comment: {
                             body: post_detail.Post.body,
                             comment_read_count: post_detail.Post.post_read_count,
