@@ -1207,10 +1207,8 @@ class GoalsController extends AppController
         $kr_value_unit_list = KeyResult::$UNIT;
         $goal_start_date_limit_format = date('Y/m/d',
                                              $this->Goal->Team->getCurrentTermStartDate() + ($this->Auth->user('timezone') * 60 * 60));
-        $next_term = $this->Goal->Team->getTermStartEndByDate(strtotime("+1 day",
-                                                                        $this->Goal->Team->getCurrentTermEndDate()));
         $goal_end_date_limit_format = date('Y/m/d', strtotime("- 1 day",
-                                                              $next_term['end']) + ($this->Auth->user('timezone') * 60 * 60));
+                                                              $this->Goal->Team->getNextTermEndDate()) + ($this->Auth->user('timezone') * 60 * 60));
         if (isset($this->request->data['Goal']) && !empty($this->request->data['Goal'])) {
             $goal_start_date_format = date('Y/m/d',
                                            $this->request->data['Goal']['start_date'] + ($this->Auth->user('timezone') * 60 * 60));

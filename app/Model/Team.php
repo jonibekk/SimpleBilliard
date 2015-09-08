@@ -4,28 +4,28 @@ App::uses('AppModel', 'Model');
 /**
  * Team Model
  *
- * @property Badge                           $Badge
- * @property Circle                          $Circle
- * @property CommentLike                     $CommentLike
- * @property CommentMention                  $CommentMention
- * @property CommentRead                     $CommentRead
- * @property Comment                         $Comment
- * @property GivenBadge                      $GivenBadge
- * @property Group                           $Group
- * @property Invite                          $Invite
- * @property JobCategory                     $JobCategory
- * @property PostLike                        $PostLike
- * @property PostMention                     $PostMention
- * @property PostRead                        $PostRead
- * @property Post                            $Post
- * @property TeamMember                      $TeamMember
- * @property Thread                          $Thread
- * @property Evaluator                       $Evaluator
- * @property EvaluationSetting               $EvaluationSetting
- * @property Evaluation                      $Evaluation
- * @property EvaluateTerm                    $EvaluateTerm
- * @property TeamVision                      $TeamVision
- * @property GroupVision                     $GroupVision
+ * @property Badge             $Badge
+ * @property Circle            $Circle
+ * @property CommentLike       $CommentLike
+ * @property CommentMention    $CommentMention
+ * @property CommentRead       $CommentRead
+ * @property Comment           $Comment
+ * @property GivenBadge        $GivenBadge
+ * @property Group             $Group
+ * @property Invite            $Invite
+ * @property JobCategory       $JobCategory
+ * @property PostLike          $PostLike
+ * @property PostMention       $PostMention
+ * @property PostRead          $PostRead
+ * @property Post              $Post
+ * @property TeamMember        $TeamMember
+ * @property Thread            $Thread
+ * @property Evaluator         $Evaluator
+ * @property EvaluationSetting $EvaluationSetting
+ * @property Evaluation        $Evaluation
+ * @property EvaluateTerm      $EvaluateTerm
+ * @property TeamVision        $TeamVision
+ * @property GroupVision       $GroupVision
  */
 class Team extends AppModel
 {
@@ -151,6 +151,8 @@ class Team extends AppModel
     public $current_team = [];
     public $current_term_start_date = null;
     public $current_term_end_date = null;
+    public $next_term_start_date = null;
+    public $next_term_end_date = null;
 
     function __construct($id = false, $table = null, $ds = null)
     {
@@ -326,6 +328,32 @@ class Team extends AppModel
         return $this->current_term_end_date;
     }
 
+    function getNextTermStartDate()
+    {
+        if ($this->next_term_end_date) {
+            return $this->next_term_end_date;
+        }
+        $this->setNextTermStartEnd();
+        return $this->next_term_end_date;
+    }
+
+    function getNextTermEndDate()
+    {
+        if ($this->next_term_end_date) {
+            return $this->next_term_end_date;
+        }
+        $this->setNextTermStartEnd();
+        return $this->next_term_end_date;
+    }
+
+    function setNextTermStartEnd()
+    {
+        $this->setCurrentTermStartEnd();
+        $next_term = $this->getTermStartEndByDate(strtotime("+1 day", $this->getCurrentTermEndDate()));
+        $this->next_term_start_date = $next_term['start'];
+        $this->next_term_end_date = $next_term['end'];
+    }
+
     function setCurrentTermStartEnd()
     {
         //既にセットされている場合は処理しない
@@ -475,7 +503,8 @@ class Team extends AppModel
     /**
      * @return null
      */
-    function getCurrentTeam() {
+    function getCurrentTeam()
+    {
         if (empty($this->current_team)) {
             $this->current_team = $this->findById($this->current_team_id);
         }
