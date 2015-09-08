@@ -42,8 +42,10 @@
                     <i class="fa-calendar fa"></i>
                 </div>
                 <div class="goal-detail-info-due">
-                    <?= $this->Time->format('Y/m/d', $goal['Goal']['start_date']) ?>
-                    - <?= $this->Time->format('Y/m/d', $goal['Goal']['end_date']) ?>
+                    <?= $this->Time->format('Y/m/d',
+                                            $goal['Goal']['start_date'] + ($this->Session->read('Auth.User.timezone') * 60 * 60)) ?>
+                    - <?= $this->Time->format('Y/m/d',
+                                              $goal['Goal']['end_date'] + ($this->Session->read('Auth.User.timezone') * 60 * 60)) ?>
                 </div>
             </div>
             <div class="goal-detail-info-members">
