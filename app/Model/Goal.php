@@ -339,8 +339,8 @@ class Goal extends AppModel
             'contain'    => [
                 'KeyResult'    => [
                     'conditions' => [
-                        'KeyResult.start_date >' => $start_date,
-                        'KeyResult.end_date <'   => $end_date,
+                        'KeyResult.end_date >=' => $start_date,
+                        'KeyResult.end_date <='   => $end_date,
                         'KeyResult.team_id'      => $this->current_team_id,
                     ]
                 ],
@@ -425,8 +425,8 @@ class Goal extends AppModel
                 'KeyResult'  => [
                     //KeyResultは期限が今期内
                     'conditions' => [
-                        'KeyResult.start_date >=' => $start_date,
-                        'KeyResult.end_date <'    => $end_date,
+                        'KeyResult.end_date >=' => $start_date,
+                        'KeyResult.end_date <='    => $end_date,
                     ]
                 ],
                 'Purpose',
@@ -768,8 +768,8 @@ class Goal extends AppModel
                 'KeyResult'         => [
                     'fields'     => ['KeyResult.id', 'KeyResult.progress', 'KeyResult.priority'],
                     'conditions' => [
-                        'KeyResult.start_date >=' => $start_date,
-                        'KeyResult.end_date <'    => $end_date,
+                        'KeyResult.end_date >=' => $start_date,
+                        'KeyResult.end_date <='    => $end_date,
                     ]
                 ],
                 'ActionResultCount' => [
@@ -903,8 +903,8 @@ class Goal extends AppModel
                 'KeyResult' => [
                     //KeyResultは期限が今期内
                     'conditions' => [
-                        'KeyResult.start_date >=' => $start_date,
-                        'KeyResult.end_date <'    => $end_date,
+                        'KeyResult.end_date >=' => $start_date,
+                        'KeyResult.end_date <='    => $end_date,
                     ],
                     'fields'     => [
                         'KeyResult.id',
