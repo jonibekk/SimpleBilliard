@@ -339,8 +339,8 @@ class Goal extends AppModel
             'contain'    => [
                 'KeyResult'    => [
                     'conditions' => [
-                        'KeyResult.start_date >' => $start_date,
-                        'KeyResult.end_date <'   => $end_date,
+                        'KeyResult.end_date >=' => $start_date,
+                        'KeyResult.end_date <='   => $end_date,
                         'KeyResult.team_id'      => $this->current_team_id,
                     ]
                 ],
@@ -382,11 +382,11 @@ class Goal extends AppModel
         $options = [
             'fields'     => ['id'],
             'conditions' => [
-                'Goal.user_id'       => $user_id,
-                'Goal.team_id'       => $team_id,
-                'Goal.start_date >=' => $this->Team->getCurrentTermStartDate(),
-                'Goal.end_date <'    => $this->Team->getCurrentTermEndDate(),
-                'Goal.del_flg'       => 0,
+                'Goal.user_id'     => $user_id,
+                'Goal.team_id'     => $team_id,
+                'Goal.end_date >=' => $this->Team->getCurrentTermStartDate(),
+                'Goal.end_date <=' => $this->Team->getCurrentTermEndDate(),
+                'Goal.del_flg'     => 0,
             ],
         ];
         return $this->find('list', $options);
@@ -411,10 +411,10 @@ class Goal extends AppModel
         $end_date = $this->Team->getCurrentTermEndDate();
         $options = [
             'conditions' => [
-                'Goal.user_id'       => $user_id,
-                'Goal.team_id'       => $this->current_team_id,
-                'Goal.start_date >=' => $start_date,
-                'Goal.end_date <'    => $end_date,
+                'Goal.user_id'     => $user_id,
+                'Goal.team_id'     => $this->current_team_id,
+                'Goal.end_date >=' => $start_date,
+                'Goal.end_date <=' => $end_date,
             ],
             'contain'    => [
                 'MyCollabo'  => [
@@ -425,8 +425,8 @@ class Goal extends AppModel
                 'KeyResult'  => [
                     //KeyResultは期限が今期内
                     'conditions' => [
-                        'KeyResult.start_date >=' => $start_date,
-                        'KeyResult.end_date <'    => $end_date,
+                        'KeyResult.end_date >=' => $start_date,
+                        'KeyResult.end_date <='    => $end_date,
                     ]
                 ],
                 'Purpose',
@@ -504,10 +504,10 @@ class Goal extends AppModel
         //自分がリーダーの未評価前期ゴールリストを取得
         $options = [
             'conditions' => [
-                'Goal.user_id'       => $this->my_uid,
-                'Goal.team_id'       => $this->current_team_id,
-                'Goal.start_date >=' => $start_date,
-                'Goal.end_date <'    => $end_date,
+                'Goal.user_id'     => $this->my_uid,
+                'Goal.team_id'     => $this->current_team_id,
+                'Goal.end_date >=' => $start_date,
+                'Goal.end_date <=' => $end_date,
             ],
             'fields'     => [
                 'Goal.id',
@@ -539,9 +539,9 @@ class Goal extends AppModel
         //自分がコラボってるの未評価前期ゴールリストを取得
         $options = [
             'conditions' => [
-                'Goal.id'            => $this->Collaborator->getCollaboGoalList($this->my_uid, false),
-                'Goal.start_date >=' => $start_date,
-                'Goal.end_date <'    => $end_date,
+                'Goal.id'          => $this->Collaborator->getCollaboGoalList($this->my_uid, false),
+                'Goal.end_date >=' => $start_date,
+                'Goal.end_date <=' => $end_date,
             ],
             'fields'     => [
                 'Goal.id',
@@ -733,9 +733,9 @@ class Goal extends AppModel
         $end_date = $this->Team->getCurrentTermEndDate();
         $options = [
             'conditions' => [
-                'Goal.id'            => $goal_ids,
-                'Goal.start_date >=' => $start_date,
-                'Goal.end_date <='   => $end_date,
+                'Goal.id'          => $goal_ids,
+                'Goal.end_date >=' => $start_date,
+                'Goal.end_date <=' => $end_date,
             ],
             'fields'     => ['Goal.id', 'Goal.user_id', 'Goal.name', 'Goal.photo_file_name'],
             'contain'    => [
@@ -768,8 +768,8 @@ class Goal extends AppModel
                 'KeyResult'         => [
                     'fields'     => ['KeyResult.id', 'KeyResult.progress', 'KeyResult.priority'],
                     'conditions' => [
-                        'KeyResult.start_date >=' => $start_date,
-                        'KeyResult.end_date <'    => $end_date,
+                        'KeyResult.end_date >=' => $start_date,
+                        'KeyResult.end_date <='    => $end_date,
                     ]
                 ],
                 'ActionResultCount' => [
@@ -891,10 +891,10 @@ class Goal extends AppModel
         $end_date = $this->Team->getCurrentTermEndDate();
         $options = [
             'conditions' => [
-                'Goal.id'            => $goal_ids,
-                'Goal.team_id'       => $this->current_team_id,
-                'Goal.start_date >=' => $start_date,
-                'Goal.end_date <'    => $end_date,
+                'Goal.id'          => $goal_ids,
+                'Goal.team_id'     => $this->current_team_id,
+                'Goal.end_date >=' => $start_date,
+                'Goal.end_date <=' => $end_date,
             ],
             'page'       => $page,
             'limit'      => $limit,
@@ -903,8 +903,8 @@ class Goal extends AppModel
                 'KeyResult' => [
                     //KeyResultは期限が今期内
                     'conditions' => [
-                        'KeyResult.start_date >=' => $start_date,
-                        'KeyResult.end_date <'    => $end_date,
+                        'KeyResult.end_date >=' => $start_date,
+                        'KeyResult.end_date <='    => $end_date,
                     ],
                     'fields'     => [
                         'KeyResult.id',
@@ -1057,9 +1057,9 @@ class Goal extends AppModel
         }
         $options = [
             'conditions' => [
-                'Goal.team_id'       => $this->current_team_id,
-                'Goal.start_date >=' => $start_date,
-                'Goal.end_date <'    => $end_date,
+                'Goal.team_id'     => $this->current_team_id,
+                'Goal.end_date >=' => $start_date,
+                'Goal.end_date <=' => $end_date,
             ],
             'fields'     => ['Goal.user_id', 'Goal.name', 'Goal.photo_file_name',],
             'order'      => ['Goal.created desc'],
@@ -1147,9 +1147,9 @@ class Goal extends AppModel
         $end_date = $this->Team->getCurrentTermEndDate();
         $options = [
             'conditions' => [
-                'Goal.team_id'       => $this->current_team_id,
-                'Goal.start_date >=' => $start_date,
-                'Goal.end_date <'    => $end_date,
+                'Goal.team_id'     => $this->current_team_id,
+                'Goal.end_date >=' => $start_date,
+                'Goal.end_date <=' => $end_date,
             ],
             'fields'     => ['Goal.user_id'],
         ];
@@ -1165,24 +1165,24 @@ class Goal extends AppModel
             case 'previous':
                 $previous_term = $this->Team->EvaluateTerm->getPreviousTerm();
                 if (!empty($previous_term)) {
-                    $options['conditions']['Goal.start_date >='] = $previous_term['start_date'];
+                    $options['conditions']['Goal.end_date >='] = $previous_term['start_date'];
                     $options['conditions']['Goal.end_date <='] = $previous_term['end_date'];
                 }
                 else {
                     $before_term = $this->Team->getBeforeTermStartEnd();
-                    $options['conditions']['Goal.start_date >='] = $before_term['start'];
+                    $options['conditions']['Goal.end_date >='] = $before_term['start'];
                     $options['conditions']['Goal.end_date <='] = $before_term['end'];
                 }
                 break;
             case 'next':
                 $next_term = $this->Team->EvaluateTerm->getNextTerm();
                 if (!empty($next_term)) {
-                    $options['conditions']['Goal.start_date >='] = $next_term['start_date'];
+                    $options['conditions']['Goal.end_date >='] = $next_term['start_date'];
                     $options['conditions']['Goal.end_date <='] = $next_term['end_date'];
                 }
                 else {
                     $next_term = $this->Team->getAfterTermStartEnd();
-                    $options['conditions']['Goal.start_date >='] = $next_term['start'];
+                    $options['conditions']['Goal.end_date >='] = $next_term['start'];
                     $options['conditions']['Goal.end_date <='] = $next_term['end'];
                 }
                 break;
@@ -1195,7 +1195,7 @@ class Goal extends AppModel
                     $before_term = $this->Team->getBeforeTermStartEnd();
                     $options['conditions']['Goal.end_date <='] = $before_term['start'];
                 }
-                unset($options['conditions']['Goal.start_date >=']);
+                unset($options['conditions']['Goal.end_date >=']);
                 break;
         }
         //カテゴリ指定
@@ -1404,8 +1404,8 @@ class Goal extends AppModel
                     ],
                     'Goal'       => [
                         'conditions' => [
-                            'Goal.start_date >=' => $start_date,
-                            'Goal.end_date <'    => $end_date
+                            'Goal.end_date >=' => $start_date,
+                            'Goal.end_date <=' => $end_date
                         ],
                         'Purpose',
                         'GoalCategory',
@@ -1433,9 +1433,9 @@ class Goal extends AppModel
         $end_date = $this->Team->getCurrentTermEndDate();
         $options = [
             'conditions' => [
-                'id'            => $gids,
-                'start_date >=' => $start_date,
-                'end_date <='   => $end_date,
+                'id'          => $gids,
+                'end_date >=' => $start_date,
+                'end_date <=' => $end_date,
             ],
             'fields'     => ['id']
         ];
@@ -1451,11 +1451,10 @@ class Goal extends AppModel
         ];
         $res = $this->find('first', $options);
 
-        $start_date = $res['Goal']['start_date'];
         $end_date = $res['Goal']['end_date'];
 
         $is_present_term_flag = false;
-        if (intval($start_date) >= $this->Team->getCurrentTermStartDate()
+        if (intval($end_date) >= $this->Team->getCurrentTermStartDate()
             && intval($end_date) <= $this->Team->getCurrentTermEndDate()
         ) {
             $is_present_term_flag = true;
@@ -1480,7 +1479,7 @@ class Goal extends AppModel
         }
         $start_date = $this->Team->getCurrentTermStartDate();
         $current_term_opt = $options;
-        $current_term_opt['conditions']['start_date >='] = $start_date;
+        $current_term_opt['conditions']['end_date >='] = $start_date;
         $current_goals = $this->find('list', $current_term_opt);
         $before_term_opt = $options;
         $before_term_opt['conditions']['end_date <='] = $start_date;

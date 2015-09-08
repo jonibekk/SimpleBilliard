@@ -108,7 +108,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                 <div class="post-panel-body plr_11px ptb_7px">
                     <a href="#"
                        id="ActionImageAddButton"
-                       class="font_lightgray action-image-add-button <?php
+                       class="post-action-image-add-button <?php
                        // 投稿編集モードの場合は画像選択の画面をスキップする
                        if ($is_edit_mode && $common_form_type == 'action'): ?>
                         skip
@@ -407,7 +407,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                 'novalidate'    => true,
                 'class'         => 'form-feed-notify'
             ]); ?>
-            <div class="panel-body post-share-range-panel-body" id="MessageFormShare">
+            <div class="post-message-dest panel-body" id="MessageFormShare">
                 <div class="col col-xxs-10 col-xs-10 post-share-range-list" id="MessagePublicShareInputWrap">
                     <?= __d('gl', "To:") ?>
                     <?=

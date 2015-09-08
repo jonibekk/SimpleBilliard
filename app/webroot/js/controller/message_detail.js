@@ -2,6 +2,7 @@ message_app.controller(
     "MessageDetailCtrl",
     function ($scope,
               $http,
+              $sce,
               $translate,
               notificationService,
               getPostDetail,
@@ -10,6 +11,11 @@ message_app.controller(
               $anchorScroll,
               $location) {
 
+        $scope.$on('$viewContentLoaded', function() {
+            var $m_box = $("#message_box");
+            // TODO: 一時的に高さを2000pxにした。この後対応予定のブラウザサイズによる高さ固定処理にあわせて、PXを動的に変える処理を入れる予定
+            $m_box.animate({ scrollTop: 2000}, 500);
+        });
 
         $scope.view_flag = true;
         if (getPostDetail.auth_info.language === 'eng') {
@@ -68,15 +74,9 @@ message_app.controller(
             $scope.message_list = message_list;
             $scope.first_share_user = getPostDetail.first_share_user;
 
-            var current_id = 0;
-            var message_scroll = function (id) {
-                var message_id = id;
-                if (current_id === 0) {
-                    message_id = $scope.message_list.length;
-                }
-                current_id = message_id;
-                $location.hash('m_' + message_id);
-                $anchorScroll();
+            var bottom_scroll = function () {
+                var $m_box = $("#message_box");
+                $m_box.animate({ scrollTop: $m_box[0].scrollHeight}, 300);
             };
 
             // pusherメッセージ内容を受け取る
@@ -92,15 +92,17 @@ message_app.controller(
                 $http(request).then(function (response) {
                 });
 
+                data.AttachedFileHtml = $sce.trustAsHtml(data.AttachedFileHtml)
+
                 // メッセージ表示
                 $scope.$apply($scope.message_list.push(data));
-                message_scroll(current_id);
             });
 
             // pusherから既読されたcomment_idを取得する
             pusher_channel.bind('read_message', function (comment_id) {
                 var read_box = document.getElementById("mr_" + comment_id).innerText;
                 document.getElementById("mr_" + comment_id).innerText = Number(read_box) + 1;
+                bottom_scroll();
             });
 
             // メッセージを送信する
@@ -109,6 +111,13 @@ message_app.controller(
                 var sendMessageLoader = document.getElementById("SendMessageLoader");
                 sendMessageLoader.style.display = "inline-block";
 
+                var file_redis_key = [];
+                var file_ids = document.getElementsByName("data[file_id][]");
+                if (file_ids.length > 0) {
+                    angular.forEach(file_ids, function (fid) {
+                        this.push(fid.value);
+                    }, file_redis_key);
+                }
 
                 var request = {
                     method: 'POST',
@@ -116,23 +125,38 @@ message_app.controller(
                     data: $.param({
                         data: {
                             body: $scope.message,
-                            _Token: {key: cake.data.csrf_token.key},
+                            file_redis_key: file_redis_key,
+                            _Token: {key: cake.data.csrf_token.key}
                         },
                         _method: "POST"
                     }),
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
                 };
+
                 $http(request).then(function (response) {
                     event.target.disabled = '';
                     sendMessageLoader.style.display = 'none';
-                    message_scroll($scope.message_list.length);
                     $scope.message = "";
+
+                    // プレビューエレメント配下の子エレメントを削除する
+                    var file_preview_element = document.getElementById("messageUploadFilePreviewArea");
+                    for (var i = file_preview_element.childNodes.length - 1; i >= 0; i--) {
+                        file_preview_element.removeChild(file_preview_element.childNodes[i]);
+                    }
+
+                    // ファイルアップロード処理初期化
+                    angular.forEach(file_redis_key, function (key) {
+                        var node = document.getElementById(key);
+                        node.parentNode.removeChild(node);
+                    });
                     document.getElementById("message_text_input").focus();
                 });
+
             };
 
             var limit = 10;
             var page_num = 1;
+
             $scope.loadMore = function () {
                 if (document.getElementById("message_box").scrollTop === 0) {
                     var request = {
@@ -141,10 +165,13 @@ message_app.controller(
                     };
                     $http(request).then(function (response) {
                         angular.forEach(response.data.message_list, function (val) {
+                            val.AttachedFileHtml = $sce.trustAsHtml(val.AttachedFileHtml);
                             this.push(val);
                         }, $scope.message_list);
+
                         if (response.data.message_list.length > 0) {
-                            message_scroll(current_id);
+                            $location.hash('m_' + (limit+1));
+                            $anchorScroll();
                         }
                         page_num = page_num + 1;
                     });
