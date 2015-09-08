@@ -1210,8 +1210,10 @@ class GoalsController extends AppController
         $goal_end_date_limit_format = date('Y/m/d', strtotime("- 1 day",
                                                               $this->Goal->Team->getCurrentTermEndDate()) + ($this->Auth->user('timezone') * 60 * 60));
         if (isset($this->request->data['Goal']) && !empty($this->request->data['Goal'])) {
-            $goal_start_date_format = $goal_start_date_limit_format;
-            $goal_end_date_format = $goal_end_date_limit_format;
+            $goal_start_date_format = date('Y/m/d',
+                                           $this->request->data['Goal']['start_date'] + ($this->Auth->user('timezone') * 60 * 60));
+            $goal_end_date_format = date('Y/m/d',
+                                         $this->request->data['Goal']['end_date'] + ($this->Auth->user('timezone') * 60 * 60));
         }
         else {
             $goal_start_date_format = date('Y/m/d', REQUEST_TIMESTAMP + ($this->Auth->user('timezone') * 60 * 60));
