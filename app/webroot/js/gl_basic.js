@@ -3356,6 +3356,9 @@ $(document).ready(function () {
         previewTemplate: previewTemplateDefault,
         thumbnailWidth: null,
         thumbnailHeight: 240,
+        drop: function(file) {
+            $uploadFileForm.hide();
+        },
         // ファイルがドロップされた時の処理
         addedfile: function (file) {
             // previewContainer をドロップエリアに応じて入れ替える
@@ -3372,7 +3375,6 @@ $(document).ready(function () {
             // コールバック関数実行 (beforeAccept)
             $uploadFileForm._callbacks[$uploadFileForm._params.previewContainerID].beforeAccept.call(this, file);
 
-            $uploadFileForm.hide();
             done();
 
             // コールバック関数実行 (afterAccept)
