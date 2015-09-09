@@ -16,9 +16,8 @@ message_app.controller(
         // onloadの場合
         $scope.$on('$viewContentLoaded', function () {
             var $m_box = $("#message_box");
-            // TODO: 一時的に高さを2000pxにした。この後対応予定のブラウザサイズによる高さ固定処理にあわせて、PXを動的に変える処理を入れる予定
             $m_box.css("height", window.innerHeight - input_box_height);
-            $m_box.animate({scrollTop: 2000}, 500);
+            $m_box.animate({scrollTop: window.innerHeight}, 500);
         });
 
         // ブラウザリサイズの場合、入力フォームサイズ変更+オートスクロール
