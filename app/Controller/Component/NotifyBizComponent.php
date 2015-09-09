@@ -163,6 +163,9 @@ class NotifyBizComponent extends Component
 
         //通常の通知メール送信
         $this->_sendNotifyEmail();
+
+        //通常のアプリ向けPUSH通知
+        $this->_sendPushNotify();
     }
 
     public function push($socketId, $share)
@@ -774,6 +777,91 @@ class NotifyBizComponent extends Component
     {
         $uids = $this->_getSendNotifyUserList();
         $this->GlEmail->sendMailNotify($this->notify_option, $uids);
+    }
+
+    /**
+     * アプリ向けプッシュ通知送信
+     */
+    private function _sendPushNotify()
+    {
+        $timestamp = $this->_getTimestamp();
+        $signature = $this->_getNCMBSignature($timestamp);
+
+        $header = array(
+            'X-NCMB-Application-Key: ' . NCMB_APPLICATION_KEY,
+            'X-NCMB-Signature: ' . $signature,
+            'X-NCMB-Timestamp: ' . $timestamp,
+            'Content-Type: application/json'
+        );
+
+        $options = array('http' => array(
+            'ignore_errors' => true,    // APIリクエストの結果がエラーでもレスポンスボディを取得する
+            'max_redirects' => 0,       // リダイレクトはしない
+            'method'        => NCMB_REST_API_PUSH_METHOD
+        ));
+
+        // TODO: device_token取得
+        // $uids = $this->_getSendNotifyUserList();
+        // ここにuser_idに紐づくdevice_tokenを取得する処理を入れる
+        // いまのとこ固定
+
+        $body = '{
+            "immediateDeliveryFlag" : true,
+            "target":["ios","android"],
+            "searchCondition":{
+                "deviceToken":{
+                    "$inArray":[
+                        "d00131dc36b828e20516baea0947a4d75dd24f08549b91cc0e94826c323ec63c",
+                        "APA91bG-SN85DXk4sOJ2e4_WN4dgaUkbIm2AK6gZp0GjOjNdpcH9LDChvC8OOA_uCpS5PhgisZ_ed0E0ZlX9GgaMrVY7nyO0SqU5kLdJ9aR2qaR_Dv2QZ3oRzqGL21mVvTul8jEWhJER"
+                    ]
+                }
+            },
+            "message":"平形だいきがTeamISAOに投稿しました #2",
+            "deliveryExpirationTime":"1 day"
+        }';
+        $options['http']['content'] = $body;
+
+        array_push($header, 'Content-Length: ' . strlen($body));
+        $options['http']['header'] = implode("\r\n", $header);
+
+        $url = "https://".NCMB_REST_API_FQDN ."/".NCMB_REST_API_VER."/".NCMB_REST_API_PUSH;
+
+        $ret = file_get_contents($url, false, stream_context_create($options));
+
+        //error_log("FURU:result:".$ret."\n",3,"/tmp/hoge.log");
+    }
+
+    /**
+     * NOWなタイムスタンプを生成する。
+     * @return string
+     */
+    private function _getTimestamp() {
+        $now = microtime(true);
+        $msec = sprintf("%03d", ($now - floor($now)) * 1000);
+        return gmdate('Y-m-d\TH:i:s.', floor($now)) . $msec . 'Z';
+    }
+
+    /**
+     * push通知に必要なパラメータ
+     * X-NCMB-SIGNATUREを生成する
+     *
+     * @param $timestamp シグネチャを生成する時に使うタイムスタンプ
+     *
+     * @return string X-NCMB-SIGNATUREの値
+     */
+    private function _getNCMBSignature($timestamp)
+    {
+        $header_string = "SignatureMethod=HmacSHA256&";
+        $header_string .= "SignatureVersion=2&";
+        $header_string .= "X-NCMB-Application-Key=" . NCMB_APPLICATION_KEY . "&";
+        $header_string .= "X-NCMB-Timestamp=" . $timestamp;
+
+        $signature_string = NCMB_REST_API_PUSH_METHOD . "\n";
+        $signature_string .= NCMB_REST_API_FQDN . "\n";
+        $signature_string .= "/" . NCMB_REST_API_VER . "/" . NCMB_REST_API_PUSH . "\n";
+        $signature_string .= $header_string;
+
+        return base64_encode(hash_hmac("sha256", $signature_string, NCMB_CLIENT_KEY, true));
     }
 
     /**
