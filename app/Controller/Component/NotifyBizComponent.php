@@ -766,7 +766,7 @@ class NotifyBizComponent extends Component
         return true;
     }
 
-    private function _getSendNotifyUserList()
+    private function _getSendEmailNotifyUserList()
     {
         //メール通知onのユーザを取得
         $uids = [];
@@ -778,9 +778,26 @@ class NotifyBizComponent extends Component
         return $uids;
     }
 
+    /**
+     * アプリプッシュ通知送信対象のユーザを取得
+     * TODO:とりあえずブラウザ通知と同じユーザーにしているので必要に応じて修正
+     *
+     * @return array プッシュ通知送信対象のユーザーのリスト
+     */
+    private function _getSendAppNotifyUserList()
+    {
+        $uids = [];
+        foreach ($this->notify_settings as $user_id => $val) {
+            if ($val['app']) {
+                $uids[] = $user_id;
+            }
+        }
+        return $uids;
+    }
+
     private function _sendNotifyEmail()
     {
-        $uids = $this->_getSendNotifyUserList();
+        $uids = $this->_getSendEmailNotifyUserList();
         $this->GlEmail->sendMailNotify($this->notify_option, $uids);
     }
 
@@ -809,6 +826,29 @@ class NotifyBizComponent extends Component
         // $uids = $this->_getSendNotifyUserList();
         // ここにuser_idに紐づくdevice_tokenを取得する処理を入れる
         // いまのとこ固定
+        $uids = $this->_getSendAppNotifyUserList();
+        error_log("FURU:uid=".print_r($uids,true)."\n",3,"/tmp/hoge.log");
+
+
+        error_log("FURU:option=".print_r($this->notify_option,true)."\n",3,"/tmp/hoge.log");
+
+        $from_user = $this->NotifySetting->User->getUsersProf($this->notify_option['from_user_id']);
+        $from_user_name = $from_user[0]['User']['display_username'];
+        error_log("FURU:from=".print_r($from_user_name,true)."\n",3,"/tmp/hoge.log");
+
+
+        // todo:受信ユーザーごとに言語設定が違うのでnotifyは受信ユーザーごとにつくらないと言語がおかしくなる..
+        // もしくは言語設定ごとか？
+
+        $title = $this->NotifySetting->getTitle($this->notify_option['notify_type'],
+                                                $from_user_name,
+                                                1,
+                                                $this->notify_option['item_name'],
+                                                $this->notify_option['options']);
+
+        $title = strip_tags($title);
+        error_log("FURU:from=".print_r($title,true)."\n",3,"/tmp/hoge.log");
+
 
         $body = '{
             "immediateDeliveryFlag" : true,
@@ -821,7 +861,7 @@ class NotifyBizComponent extends Component
                     ]
                 }
             },
-            "message":"平形だいきがTeamISAOに投稿しました #2",
+            "message":"'.$title.'",
             "deliveryExpirationTime":"1 day"
         }';
         $options['http']['content'] = $body;
@@ -833,7 +873,7 @@ class NotifyBizComponent extends Component
 
         $ret = file_get_contents($url, false, stream_context_create($options));
 
-        //error_log("FURU:result:".$ret."\n",3,"/tmp/hoge.log");
+        error_log("FURU:result:".$ret."\n",3,"/tmp/hoge.log");
     }
 
     /**
