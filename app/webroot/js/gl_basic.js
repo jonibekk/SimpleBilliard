@@ -3356,10 +3356,12 @@ $(document).ready(function () {
         previewTemplate: previewTemplateDefault,
         thumbnailWidth: null,
         thumbnailHeight: 240,
+        // ファイルがドロップされた時の処理
         drop: function(e) {
             $uploadFileForm.hide();
         },
-        // ファイルがドロップされた時の処理
+        // ファイルがドロップされた後
+        // Dropzone で受け付けるファイルだった時
         addedfile: function (file) {
             // previewContainer をドロップエリアに応じて入れ替える
             this.previewsContainer = $('#' + $uploadFileForm._params.previewContainerID).get(0);
