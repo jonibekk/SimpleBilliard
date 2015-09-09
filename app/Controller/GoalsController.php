@@ -1171,14 +1171,20 @@ class GoalsController extends AppController
             return;
         }
 
+        //今期、来期のゴールを取得する
+        $start_date = $this->Team->getCurrentTermStartDate();
+        $end_date = $this->Team->getNextTermEndDate();
+
         if ($type === 'leader') {
-            $goals = $this->Goal->getMyGoals(MY_GOALS_DISPLAY_NUMBER, $page_num);
+            $goals = $this->Goal->getMyGoals(MY_GOALS_DISPLAY_NUMBER, $page_num, 'all', null, $start_date, $end_date);
         }
         elseif ($type === 'collabo') {
-            $goals = $this->Goal->getMyCollaboGoals(MY_COLLABO_GOALS_DISPLAY_NUMBER, $page_num);
+            $goals = $this->Goal->getMyCollaboGoals(MY_COLLABO_GOALS_DISPLAY_NUMBER, $page_num, 'all', null,
+                                                    $start_date, $end_date);
         }
         elseif ($type === 'follow') {
-            $goals = $this->Goal->getMyFollowedGoals(MY_FOLLOW_GOALS_DISPLAY_NUMBER, $page_num);
+            $goals = $this->Goal->getMyFollowedGoals(MY_FOLLOW_GOALS_DISPLAY_NUMBER, $page_num, 'all', null,
+                                                     $start_date, $end_date);
         }
         elseif ($type === 'my_prev') {
             $goals = $this->Goal->getMyPreviousGoals(MY_PREVIOUS_GOALS_DISPLAY_NUMBER, $page_num);
