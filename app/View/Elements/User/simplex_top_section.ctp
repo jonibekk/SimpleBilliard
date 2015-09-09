@@ -16,29 +16,27 @@
 <div class="panel-body profile-user-upper-panel">
     <div class="profile-user-avatar-wrap">
         <?php if ($this->Session->read('Auth.User.id') == $user['User']['id']): ?>
-        <a href="/users/settings#profile">
+            <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'settings', '#' => 'profile']) ?>">
+                <?=
+                $this->Html->image('ajax-loader.gif',
+                                   [
+                                       'class'         => 'lazy profile-user-avatar',
+                                       'data-original' => $this->Upload->uploadUrl($user['User'], 'User.photo',
+                                                                                   ['style' => 'x_large']),
+                                   ]
+                )
+                ?>
+            </a>
+        <?php else: ?>
             <?=
             $this->Html->image('ajax-loader.gif',
                                [
                                    'class'         => 'lazy profile-user-avatar',
                                    'data-original' => $this->Upload->uploadUrl($user['User'], 'User.photo',
                                                                                ['style' => 'x_large']),
-                               ], array('url' => array('controller' => 'users',
-                                                       'action'     => 'settings',
-                                                       '#'          => 'profile'))
+                               ]
             )
             ?>
-        </a>
-        <?php else: ?>
-        <?=
-        $this->Html->image('ajax-loader.gif',
-                           [
-                               'class'         => 'lazy profile-user-avatar',
-                               'data-original' => $this->Upload->uploadUrl($user['User'], 'User.photo',
-                                                                           ['style' => 'x_large']),
-                           ]
-        )
-        ?>
         <?php endif ?>
         <p class="profile-user-name">
             <?= h($user['User']['display_username']) ?>
