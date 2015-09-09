@@ -330,11 +330,11 @@ class Team extends AppModel
 
     function getNextTermStartDate()
     {
-        if ($this->next_term_end_date) {
-            return $this->next_term_end_date;
+        if ($this->next_term_start_date) {
+            return $this->next_term_start_date;
         }
         $this->setNextTermStartEnd();
-        return $this->next_term_end_date;
+        return $this->next_term_start_date;
     }
 
     function getNextTermEndDate()
@@ -352,6 +352,7 @@ class Team extends AppModel
         $next_term = $this->getTermStartEndByDate(strtotime("+1 day", $this->getCurrentTermEndDate()));
         $this->next_term_start_date = $next_term['start'];
         $this->next_term_end_date = $next_term['end'];
+        return true;
     }
 
     function setCurrentTermStartEnd()
