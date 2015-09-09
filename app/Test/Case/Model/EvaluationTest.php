@@ -643,12 +643,12 @@ class EvaluationTest extends CakeTestCase
         $this->Evaluation->saveAll($eval);
         $expected = [
             (int)0 => [
-                'name'      => 'あなた',
+                'name'      => 'You',
                 'status'    => '0',
                 'this_turn' => true
             ],
             (int)1 => [
-                'name'      => '評価者1',
+                'name'      => 'Evaluator1',
                 'status'    => '0',
                 'this_turn' => false
             ]

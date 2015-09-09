@@ -38,3 +38,6 @@ Goalousプロジェクトで利用しているクラウドツールについて�
 ## Other
 - [Zapier (API連携)](https://zapier.com/app/dashboard)
 
+### User Voiceについて
+http://app.uservoice.com/signin  
+idとパスは直接確認ください。

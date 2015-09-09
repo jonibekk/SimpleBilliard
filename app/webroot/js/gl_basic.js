@@ -3734,6 +3734,26 @@ $(document).ready(function () {
     $uploadFileForm.registerAttachFileButton('#PostUploadFileButton', postParams);
 
     ///////////////////////////////
+    // メッセンジャーフォーム
+    ///////////////////////////////
+    var messageParams = {
+        formID: 'messageDropArea',
+        previewContainerID: 'messageUploadFilePreviewArea',
+        afterSuccess: function (file) {
+            $("#message_submit_button").click(function () {
+                if (typeof Dropzone.instances[0] !== "" && Dropzone.instances[0].files.length > 0) {
+                    Dropzone.instances[0].files = [];
+                }
+            });
+        }
+    };
+    var messageDzOptions = {
+        maxFiles: 1
+    };
+    $uploadFileForm.registerDragDropArea('#messageDropArea', messageParams, messageDzOptions);
+    $uploadFileForm.registerAttachFileButton('#messageUploadFileButton', messageParams, messageDzOptions);
+
+    ///////////////////////////////
     // アクションメイン画像（最初の画像選択時)
     ///////////////////////////////
     var actionImageParams = {
@@ -3771,7 +3791,7 @@ $(document).ready(function () {
             }
         },
         afterAccept: function (file) {
-            var $button = $('.action-image-add-button');
+            var $button = $('.post-action-image-add-button');
             if ($button.size()) {
                 evTargetShowThisDelete.call($button.get(0));
             }
@@ -3987,7 +4007,7 @@ $(document).ready(function () {
 
     // アクションの編集画面の場合は、画像選択の画面をスキップし、
     // ajax で動いている select を選択済みにする
-    var $button = $('#ActionForm').find('.action-image-add-button.skip');
+    var $button = $('#ActionForm').find('.post-action-image-add-button.skip');
     if ($button.size()) {
         // 画像選択の画面をスキップ
         evTargetShowThisDelete.call($button.get(0));

@@ -23,7 +23,7 @@
 
                 <div infinite-scroll='loadMore()' infinite-scroll-parent="true" infinite-scroll-distance="0">
                     <div ng-repeat="(key, item) in message_list | orderBy:'Comment.created'">
-                        <div id="m_{{key+1}}" class="col col-xxs-12" style="padding-bottom: 8px">
+                        <div id="m_{{key+1}}" class="col col-xxs-12" style="padding: 10px">
                             <div class="message-detail-body-user-name">
                                 <a href="/users/view_goals/user_id:{{item.User.id}}">
                                     <img width="64" class="lazy feed-img" ng-src="{{item.User.photo_path}}"/>
@@ -32,13 +32,15 @@
 
                             <div class="col col-xxs-10 showmore font_14px font_verydark box-align">
                                 <div class="font_12px font_verydark">
-                                    <span class="font_bold">{{item.User.display_username}}</span>
-                        <span class="font_lightgray" style="position:absolute; right:10px;">
-                            {{item.Comment.created * 1000 | date:'MM/dd HH:mm'}}
-                        </span>
+                                    <span class="font_lightgray" style="position:absolute; right:10px;">
+                                        {{item.Comment.created * 1000 | date:'MM/dd HH:mm'}}
+                                    </span>
+                                    <a href="/users/view_goals/user_id:{{item.User.id}}">
+                                        <span class="font_bold font_verydark">{{item.User.display_username}}</span>
+                                    </a>
                                 </div>
-                                <div class="comment-text font_12px"
-                                     ng-bind-html="item.Comment.body"></div>
+                                <div class="comment-text font_12px" ng-bind-html="item.Comment.body"></div>
+                                <div ng-bind-html="item.AttachedFileHtml"></div>
                                 <div class="font_12px">
                                     <a href="{{item.get_red_user_model_url}}"
                                        class="modal-ajax-get font_lightgray">
@@ -50,10 +52,9 @@
                         </div>
                     </div>
                 </div>
-
             </div>
 
-            <div class="panel-body ptb_8px plr_11px comment-block">
+            <div class="panel-body ptb_8px plr_11px comment-block" id="messageDropArea">
                 <div class="col-xxs-12 box-align feed-contents comment-contents">
                     <img class="lazy comment-img" ng-src="{{auth_info.photo_path}}"/>
 
@@ -65,15 +66,12 @@
                                           class="message-detail-reply-input-area form-control tiny-form-text"
                                           rows="1" placeholder="返信する" cols="30" init-height="15"></textarea>
                             </div>
-                            <!--
-                            <div class="comment-btn">
-                                <a href="#" class="comment-add-pic new-comment-add-pic">
-                                    <button type="button" class="btn pull-left photo-up-btn">
-                                        <i class="fa fa-camera post-camera-icon"></i>
-                                    </button>
-                                </a>
+                            <div id="messageUploadFilePreviewArea"></div>
+                            <div class="link-red" id="messageUploadFileButton" style="height: 0; width: 45px">
+                                <button type="button" class="btn pull-left photo-up-btn">
+                                    <i class="fa fa-paperclip post-camera-icon"></i>
+                                </button>
                             </div>
-                            -->
                             <div class="message-detail-reply-btn-wrap submit pull-right">
                                 <i class="fa fa-refresh fa-spin" id="SendMessageLoader" style="display: none"></i>
                                 <input ng-click="clickMessage($event)"
@@ -86,6 +84,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 </div>

@@ -54,6 +54,8 @@ GoalousはIsao発の「チーム力向上のスパイラルを生み出す」目
 - [負荷試験環境構築手順書](docs/process_docs/StressTest.md)
 - [AWS Operation](docs/process_docs/OperationForAWS.md)
 - [CakePHP](docs/process_docs/OperationForCakePHP.md)
+- [翻訳手順書](docs/process_docs/Translation.md)
+- [海外開発拠点用プロキシサーバ運用手順書](docs/process_docs/OperationForDevProxy.md)
 - [トラブルシュート](docs/process_docs/TroubleShooting.md)
 
 ### 仕様書
