@@ -211,6 +211,17 @@ class Comment extends AppModel
         return $comment_id;
     }
 
+    public function getCommentCount($post_id)
+    {
+        $options = [
+            'conditions' => [
+                'Comment.post_id' => $post_id,
+                'Comment.team_id' => $this->current_team_id,
+            ]
+        ];
+        return $this->find('count', $options);
+    }
+
     public function getPostsComment($post_id, $get_num = null, $page = null, $order_by = null)
     {
         $options = [
