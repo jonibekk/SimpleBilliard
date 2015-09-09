@@ -3356,7 +3356,7 @@ $(document).ready(function () {
         previewTemplate: previewTemplateDefault,
         thumbnailWidth: null,
         thumbnailHeight: 240,
-        drop: function(file) {
+        drop: function(e) {
             $uploadFileForm.hide();
         },
         // ファイルがドロップされた時の処理
