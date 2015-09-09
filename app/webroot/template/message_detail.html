@@ -32,10 +32,12 @@
 
                             <div class="col col-xxs-10 showmore font_14px font_verydark box-align">
                                 <div class="font_12px font_verydark">
-                                    <span class="font_bold">{{item.User.display_username}}</span>
                                     <span class="font_lightgray" style="position:absolute; right:10px;">
                                         {{item.Comment.created * 1000 | date:'MM/dd HH:mm'}}
                                     </span>
+                                    <a href="/users/view_goals/user_id:{{item.User.id}}">
+                                        <span class="font_bold font_verydark">{{item.User.display_username}}</span>
+                                    </a>
                                 </div>
                                 <div class="comment-text font_12px" ng-bind-html="item.Comment.body"></div>
                                 <div ng-bind-html="item.AttachedFileHtml"></div>
