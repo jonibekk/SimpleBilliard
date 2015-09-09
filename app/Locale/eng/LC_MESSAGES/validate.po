@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2015-09-07 16:29+0900\n"
-"PO-Revision-Date: 2015-09-07 16:30+0900\n"
+"POT-Creation-Date: 2015-09-09 17:48+0900\n"
+"PO-Revision-Date: 2015-09-09 17:48+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -111,7 +111,7 @@ msgstr ""
 #: View/Elements/modal_add_circle.ctp:42
 #: View/Elements/modal_collabo.ctp:47;57;66
 #: View/Elements/modal_edit_circle.ctp:52
-#: View/Elements/Feed/common_form.ctp:138;152;290;440
+#: View/Elements/Feed/common_form.ctp:138;152;290;441
 #: View/Elements/Feed/new_comment_form.ctp:45
 #: View/Elements/Goal/modal_add_action.ctp:81
 #: View/Elements/Goal/modal_add_key_result.ctp:70;108;123;151;186
@@ -122,7 +122,7 @@ msgstr ""
 #: View/Elements/User/modal_change_email.ctp:76
 #: View/Elements/User/modal_change_password.ctp:86;97;112
 #: View/Elements/User/profile_setting.ctp:71;78
-#: View/Goals/add.ctp:71;149;189;202;227;263 View/Goals/view_actions.ctp:31
+#: View/Goals/add.ctp:71;149;189;202;227;262 View/Goals/view_actions.ctp:31
 #: View/Teams/add.ctp:37 View/Teams/add_group_vision.ctp:45
 #: View/Teams/add_team_vision.ctp:37 View/Teams/edit_group_vision.ctp:46
 #: View/Teams/edit_team_vision.ctp:38 View/Users/add_profile.ctp:61;68
@@ -196,7 +196,7 @@ msgstr ""
 #: View/Elements/Feed/photo_upload_mini.ctp:105
 #: View/Elements/Team/edit_basic_setting.ctp:135
 #: View/Elements/Team/edit_term_setting.ctp:169
-#: View/Elements/User/profile_setting.ctp:260 View/Goals/add.ctp:484
+#: View/Elements/User/profile_setting.ctp:260 View/Goals/add.ctp:483
 #: View/Teams/add.ctp:160 View/Teams/add_group_vision.ctp:135
 #: View/Teams/add_team_vision.ctp:127 View/Teams/edit_group_vision.ctp:138
 #: View/Teams/edit_team_vision.ctp:130 View/Users/add_profile.ctp:218
