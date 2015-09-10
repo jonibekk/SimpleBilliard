@@ -3144,7 +3144,8 @@ msgstr "Display incomplete evaluators."
 msgid "未完了数"
 msgstr "Number incomplete"
 
-#: View/Elements/Team/eval_score_form_elm.ctp:29;47;67 View/Elements/Team/goal_category_form_elm.ctp:29;48
+#: View/Elements/Team/eval_score_form_elm.ctp:29;47;67
+#: View/Elements/Team/goal_category_form_elm.ctp:29;48
 #: View/Evaluations/view.ctp:93;98;400;406
 msgid "入力必須項目です。"
 msgstr "Input required."
@@ -3197,8 +3198,10 @@ msgstr "Evaluation status."
 msgid "評価スコア定義"
 msgstr "Evaluation score rules."
 
-#: View/Elements/Team/evaluation_score_setting.ctp:45 View/Elements/Team/goal_category_setting.ctp:45
-#: View/GoalApproval/done.ctp:97 View/GoalApproval/index.ctp:110 View/Users/view_info.ctp:30
+#: View/Elements/Team/evaluation_score_setting.ctp:45
+#: View/Elements/Team/goal_category_setting.ctp:45
+#: View/GoalApproval/done.ctp:97 View/GoalApproval/index.ctp:110
+#: View/Users/view_info.ctp:30
 msgid "名前"
 msgstr "Name"
 
@@ -3360,7 +3363,7 @@ msgstr "Evaluation cannot begin as no settings have been made."
 
 #: View/Elements/Team/evaluation_start.ctp:53
 msgid "評価期間中です。"
-msgstr "In evaluation period.
+msgstr "In evaluation period."
 
 #: View/Elements/Team/evaluation_start.ctp:62
 msgid "今期の評価を開始する"
