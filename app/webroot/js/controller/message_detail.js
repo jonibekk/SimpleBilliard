@@ -11,7 +11,8 @@ message_app.controller(
               $anchorScroll,
               $location) {
 
-        var input_box_height = 220;
+        // TODO: 添付ファイルのプレビューを表示するために一時的に高さを少なくする
+        var input_box_height = 280;
 
         // onloadの場合
         $scope.$on('$viewContentLoaded', function () {
