@@ -102,7 +102,6 @@
         echo $this->element('external_service_tags');
     }
     ?>
-
 </head>
 <body>
 <?= $this->element('google_tag_manager') ?>

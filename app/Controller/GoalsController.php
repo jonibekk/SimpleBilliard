@@ -1171,14 +1171,20 @@ class GoalsController extends AppController
             return;
         }
 
+        //今期、来期のゴールを取得する
+        $start_date = $this->Team->getCurrentTermStartDate();
+        $end_date = $this->Team->getNextTermEndDate();
+
         if ($type === 'leader') {
-            $goals = $this->Goal->getMyGoals(MY_GOALS_DISPLAY_NUMBER, $page_num);
+            $goals = $this->Goal->getMyGoals(MY_GOALS_DISPLAY_NUMBER, $page_num, 'all', null, $start_date, $end_date);
         }
         elseif ($type === 'collabo') {
-            $goals = $this->Goal->getMyCollaboGoals(MY_COLLABO_GOALS_DISPLAY_NUMBER, $page_num);
+            $goals = $this->Goal->getMyCollaboGoals(MY_COLLABO_GOALS_DISPLAY_NUMBER, $page_num, 'all', null,
+                                                    $start_date, $end_date);
         }
         elseif ($type === 'follow') {
-            $goals = $this->Goal->getMyFollowedGoals(MY_FOLLOW_GOALS_DISPLAY_NUMBER, $page_num);
+            $goals = $this->Goal->getMyFollowedGoals(MY_FOLLOW_GOALS_DISPLAY_NUMBER, $page_num, 'all', null,
+                                                     $start_date, $end_date);
         }
         elseif ($type === 'my_prev') {
             $goals = $this->Goal->getMyPreviousGoals(MY_PREVIOUS_GOALS_DISPLAY_NUMBER, $page_num);
@@ -1208,7 +1214,7 @@ class GoalsController extends AppController
         $goal_start_date_limit_format = date('Y/m/d',
                                              $this->Goal->Team->getCurrentTermStartDate() + ($this->Auth->user('timezone') * 60 * 60));
         $goal_end_date_limit_format = date('Y/m/d', strtotime("- 1 day",
-                                                              $this->Goal->Team->getCurrentTermEndDate()) + ($this->Auth->user('timezone') * 60 * 60));
+                                                              $this->Goal->Team->getNextTermEndDate()) + ($this->Auth->user('timezone') * 60 * 60));
         if (isset($this->request->data['Goal']) && !empty($this->request->data['Goal'])) {
             $goal_start_date_format = date('Y/m/d',
                                            $this->request->data['Goal']['start_date'] + ($this->Auth->user('timezone') * 60 * 60));
@@ -1217,9 +1223,8 @@ class GoalsController extends AppController
         }
         else {
             $goal_start_date_format = date('Y/m/d', REQUEST_TIMESTAMP + ($this->Auth->user('timezone') * 60 * 60));
-            //TODO 将来的には期間をまたぐ当日+6ヶ月を期限にするが、現状期間末日にする
-            //$goal_end_date_format = date('Y/m/d', $this->getEndMonthLocalDateREQUEST_TIMESTAMP);
-            $goal_end_date_format = $goal_end_date_limit_format;
+            $goal_end_date_format = date('Y/m/d', strtotime("- 1 day",
+                                                            $this->Goal->Team->getCurrentTermEndDate()) + ($this->Auth->user('timezone') * 60 * 60));
         }
         $this->set(compact('goal_category_list',
                            'priority_list',

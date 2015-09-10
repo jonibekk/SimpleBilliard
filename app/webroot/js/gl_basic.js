@@ -3357,6 +3357,11 @@ $(document).ready(function () {
         thumbnailWidth: null,
         thumbnailHeight: 240,
         // ファイルがドロップされた時の処理
+        drop: function(e) {
+            $uploadFileForm.hide();
+        },
+        // ファイルがドロップされた後
+        // Dropzone で受け付けるファイルだった時
         addedfile: function (file) {
             // previewContainer をドロップエリアに応じて入れ替える
             this.previewsContainer = $('#' + $uploadFileForm._params.previewContainerID).get(0);
@@ -3372,7 +3377,6 @@ $(document).ready(function () {
             // コールバック関数実行 (beforeAccept)
             $uploadFileForm._callbacks[$uploadFileForm._params.previewContainerID].beforeAccept.call(this, file);
 
-            $uploadFileForm.hide();
             done();
 
             // コールバック関数実行 (afterAccept)

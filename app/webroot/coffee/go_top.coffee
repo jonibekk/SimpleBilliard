@@ -6,7 +6,7 @@ $ ->
     if $(this).scrollTop() > 30
       if showFlag == false
         showFlag = true
-        topBtn.stop().animate { 'bottom': '40px' }, 200
+        topBtn.stop().animate { 'bottom': '80px' }, 200
     else
       if showFlag
         showFlag = false
