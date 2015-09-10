@@ -178,7 +178,3 @@
     </div>
 </div>
 <!-- end app/View/Elements/header_logged_in_right -->
-
-<!--
-<script>(function(){var uv=document.createElement('script');uv.type='text/javascript';uv.async=true;uv.src='//widget.uservoice.com/XCmmQeEYxEfUK5hhWqYaBA.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(uv,s)})()</script>
--->
