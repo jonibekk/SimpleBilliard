@@ -827,53 +827,92 @@ class NotifyBizComponent extends Component
         // ここにuser_idに紐づくdevice_tokenを取得する処理を入れる
         // いまのとこ固定
         $uids = $this->_getSendAppNotifyUserList();
-        error_log("FURU:uid=".print_r($uids,true)."\n",3,"/tmp/hoge.log");
+
+        $this->notify_option['options']['style'] = 'plain';
+        $original_lang = Configure::read('Config.language');
+
+        // 通知を受け取るユーザーごとに言語設定が違う可能性があるので
+        // ユーザーごとに通知を送信する必要がある
+        // TODO:言語設定でメッセージは一意なのだから言語毎にやれれば...
+        foreach ($uids as $to_user_id) {
+            $this->_setLangByUserId($to_user_id, $original_lang);
+            $from_user = $this->NotifySetting->User->getUsersProf($this->notify_option['from_user_id']);
+            $from_user_name = $from_user[0]['User']['display_username'];
+            $title = $this->NotifySetting->getTitle($this->notify_option['notify_type'],
+                                                    $from_user_name,
+                                                    1,
+                                                    $this->notify_option['item_name'],
+                                                    $this->notify_option['options']);
+
+            $body = '{
+                "immediateDeliveryFlag" : true,
+                "target":["ios","android"],
+                "searchCondition":{
+                    "deviceToken":{
+                        "$inArray":[
+                            "d00131dc36b828e20516baea0947a4d75dd24f08549b91cc0e94826c323ec63c",
+                            "APA91bG-SN85DXk4sOJ2e4_WN4dgaUkbIm2AK6gZp0GjOjNdpcH9LDChvC8OOA_uCpS5PhgisZ_ed0E0ZlX9GgaMrVY7nyO0SqU5kLdJ9aR2qaR_Dv2QZ3oRzqGL21mVvTul8jEWhJER"
+                        ]
+                    }
+                },
+                "message":"' . $title . '",
+                "deliveryExpirationTime":"1 day"
+            }';
+
+            $options['http']['content'] = $body;
+
+            array_push($header, 'Content-Length: ' . strlen($body));
+            $options['http']['header'] = implode("\r\n", $header);
+
+            $url = "https://" . NCMB_REST_API_FQDN . "/" . NCMB_REST_API_VER . "/" . NCMB_REST_API_PUSH;
+            $ret = file_get_contents($url, false, stream_context_create($options));
+
+            error_log("FURU:result:" . $ret . "\n", 3, "/tmp/hoge.log");
+
+        }
+
+        //変更したlangをログインユーザーのものに書き戻しておく
+        $this->_setLang($original_lang);
 
 
-        error_log("FURU:option=".print_r($this->notify_option,true)."\n",3,"/tmp/hoge.log");
-
-        $from_user = $this->NotifySetting->User->getUsersProf($this->notify_option['from_user_id']);
-        $from_user_name = $from_user[0]['User']['display_username'];
-        error_log("FURU:from=".print_r($from_user_name,true)."\n",3,"/tmp/hoge.log");
 
 
-        // todo:受信ユーザーごとに言語設定が違うのでnotifyは受信ユーザーごとにつくらないと言語がおかしくなる..
-        // もしくは言語設定ごとか？
-
-        $title = $this->NotifySetting->getTitle($this->notify_option['notify_type'],
-                                                $from_user_name,
-                                                1,
-                                                $this->notify_option['item_name'],
-                                                $this->notify_option['options']);
-
-        $title = strip_tags($title);
-        error_log("FURU:from=".print_r($title,true)."\n",3,"/tmp/hoge.log");
 
 
-        $body = '{
-            "immediateDeliveryFlag" : true,
-            "target":["ios","android"],
-            "searchCondition":{
-                "deviceToken":{
-                    "$inArray":[
-                        "d00131dc36b828e20516baea0947a4d75dd24f08549b91cc0e94826c323ec63c",
-                        "APA91bG-SN85DXk4sOJ2e4_WN4dgaUkbIm2AK6gZp0GjOjNdpcH9LDChvC8OOA_uCpS5PhgisZ_ed0E0ZlX9GgaMrVY7nyO0SqU5kLdJ9aR2qaR_Dv2QZ3oRzqGL21mVvTul8jEWhJER"
-                    ]
-                }
-            },
-            "message":"'.$title.'",
-            "deliveryExpirationTime":"1 day"
-        }';
-        $options['http']['content'] = $body;
 
-        array_push($header, 'Content-Length: ' . strlen($body));
-        $options['http']['header'] = implode("\r\n", $header);
+    }
 
-        $url = "https://".NCMB_REST_API_FQDN ."/".NCMB_REST_API_VER."/".NCMB_REST_API_PUSH;
+    /**
+     *  指定されたuseridのlangをグローバルに設定する
+     *  注意：使い終わったら元のlangに書き戻すこと
+     *
+     * @param        $user_id
+     * @param string $default_lang 指定されたuser_idに言語設定が存在しない場合に設定されるlang
+     */
+    private function _setLangByUserId($user_id, $default_lang = "eng")
+    {
+        $to_user = $this->NotifySetting->User->getProfileAndEmail($user_id);
+        if (isset($to_user['User']['language'])) {
+            $lang = $to_user['User']['language'];
+        }
+        else {
+            $lang = $default_lang;
+        }
+        $this->_setLang($lang);
+    }
 
-        $ret = file_get_contents($url, false, stream_context_create($options));
-
-        error_log("FURU:result:".$ret."\n",3,"/tmp/hoge.log");
+    /**
+     * 指定されたlangをグローバルに設定する
+     *
+     * @param $lang
+     */
+    private function _setLang($lang)
+    {
+        Configure::write('Config.language', $lang);
+        if ($lang == "eng") {
+            $lang = null;
+        }
+        $this->NotifySetting->User->me['language'] = $lang;
     }
 
     /**
@@ -1002,6 +1041,10 @@ class NotifyBizComponent extends Component
         $user_list = array_merge($user_list, Hash::extract($data, '{n}.Notification.options.post_user_id'));
         $users = Hash::combine($this->NotifySetting->User->getUsersProf($user_list), '{n}.User.id', '{n}');
         //merge users to notification data
+        $hoge = $this->NotifySetting->User->getUsersProf($user_list);
+        error_log("###:FURU:ajax:name=".print_r($hoge,true)."\n",3,"/tmp/hoge.log");
+
+
         foreach ($data as $k => $v) {
             $user_id = null;
             $user_name = null;

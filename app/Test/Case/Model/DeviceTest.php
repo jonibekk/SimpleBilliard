@@ -93,4 +93,57 @@ class DeviceTest extends CakeTestCase
 
     }
 
+    public function testAddDevice()
+    {
+        $data = [
+            'Device' => [
+                'user_id'      => 1,
+                'device_token' => 'dummy-dummy-dummy',
+                'os_type'      => 0,
+            ]
+        ];
+        $res = $this->Device->add($data);
+        $this->assertTrue($res);
+    }
+
+    public function testGetDevicesByUserId1()
+    {
+        $data = $this->Device->getDevicesByUserId(1);
+        $this->assertTrue(count($data) === 1);
+    }
+
+    public function testGetDevicesByUserId2()
+    {
+        $data = $this->Device->getDevicesByUserId(1);
+        $this->assertTrue($data[0]['device_token'] === 'ios_dummy1');
+    }
+
+    public function testGetDevicesByUserId3()
+    {
+        $data = $this->Device->getDevicesByUserId(2);
+        $this->assertTrue($data[0]['device_token'] === 'android_dummy1');
+    }
+
+    public function testGetDevicesByUserId4()
+    {
+        $data = $this->Device->getDevicesByUserId(3);
+        $this->assertTrue(count($data) === 2);
+    }
+
+    public function testGetDevicesByUserId5()
+    {
+        $data = $this->Device->getDevicesByUserId(2);
+        $this->assertTrue($data[0]['device_token'] === 'ios_dummy2');
+    }
+
+    public function testGetDevicesByUserId6()
+    {
+        $data = $this->Device->getDevicesByUserId(2);
+        $this->assertTrue($data[1]['device_token'] === 'android_dummy2');
+    }
+    public function testGetDevicesByUserIdNotFound()
+    {
+        $data = $this->Device->getDevicesByUserId(99);
+        $this->assertFalse($data);
+    }
 }
