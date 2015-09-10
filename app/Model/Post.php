@@ -1295,7 +1295,7 @@ class Post extends AppModel
         return $res ? $res[0]['sum_like'] : 0;
     }
 
-    public function getMessageList()
+    public function getMessageList($limit=null, $page=null)
     {
         $options = [
             'conditions' => [
@@ -1320,6 +1320,15 @@ class Post extends AppModel
                 ],
             ],
         ];
+
+        if (is_null($limit) === false) {
+            $options['limit'] = $limit;
+        }
+
+        if (is_null($page) === false) {
+            $options['page'] = $page;
+        }
+
         $res = $this->find('all', $options);
 
         return $res;

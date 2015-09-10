@@ -4,6 +4,11 @@
         すべてのメッセージ
     </div>
     <div class="message-list-panel-body panel-body">
+
+
+        <div infinite-scroll='loadMore()' infinite-scroll-distance="0" id="message_list_box">
+
+
         <ul class="message-list-panel-cards" role="menu" ng-repeat="item in message_list">
             <li class="message-list-panel-card">
                 <a href="/posts/message#/{{item.Post.id}}" class="message-list-panel-card-link col col-xxs-12">
@@ -31,6 +36,11 @@
                 </a>
             </li>
         </ul>
+
+
+        </div>
+
+
     </div>
 </div>
 <!-- end app/webroot/template/message_list.html -->

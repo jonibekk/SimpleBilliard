@@ -31,10 +31,10 @@ class PostsController extends AppController
         return $this->render();
     }
 
-    public function ajax_get_message_list()
+    public function ajax_get_message_list($page=1)
     {
         $this->_ajaxPreProcess();
-        $result = $this->Post->getMessageList();
+        $result = $this->Post->getMessageList(3, $page);
 
         // TODO:緊急対応　汚いので後でリファクタリング
         foreach ($result as $key => $item) {
