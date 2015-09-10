@@ -1,17 +1,16 @@
-<?php
-/**
- *
- */
-?>
-<!-- START app/View/Post/post_edit.ctp -->
-<div class="col-sm-8 col-sm-offset-2">
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <?php  echo $this->element('Feed/add_messenger', [
-                'common_form_type'     => 'message',
-                'common_form_only_tab' => 'message'
-            ]) ?>
-        </div>
-    </div>
+<?php echo $this->Html->script('app/message_list'); ?>
+<?php echo $this->Html->script('controller/message_list'); ?>
+<?php echo $this->Html->script('vendor/angular/pusher-angular.min'); ?>
+<?php echo $this->Html->script('vendor/angular/ng-infinite-scroll.min'); ?>
+
+<div ng-app="messageApp">
+
+
+    <?= $this->element('Feed/common_form', [
+        'common_form_type'     => 'message',
+        'common_form_only_tab' => 'message'
+    ]) ?>
+
+
+
 </div>
-<!-- END app/View/Post/post_edit.ctp -->
