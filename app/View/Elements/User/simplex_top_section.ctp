@@ -15,15 +15,29 @@
 <!-- START app/View/Elements/User/simplex_top_section.ctp -->
 <div class="panel-body profile-user-upper-panel">
     <div class="profile-user-avatar-wrap">
-        <?=
-        $this->Html->image('ajax-loader.gif',
-                           [
-                               'class'         => 'lazy profile-user-avatar',
-                               'data-original' => $this->Upload->uploadUrl($user['User'], 'User.photo',
-                                                                           ['style' => 'x_large']),
-                           ]
-        )
-        ?>
+        <?php if ($this->Session->read('Auth.User.id') == $user['User']['id']): ?>
+            <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'settings', '#' => 'profile']) ?>">
+                <?=
+                $this->Html->image('ajax-loader.gif',
+                                   [
+                                       'class'         => 'lazy profile-user-avatar',
+                                       'data-original' => $this->Upload->uploadUrl($user['User'], 'User.photo',
+                                                                                   ['style' => 'x_large']),
+                                   ]
+                )
+                ?>
+            </a>
+        <?php else: ?>
+            <?=
+            $this->Html->image('ajax-loader.gif',
+                               [
+                                   'class'         => 'lazy profile-user-avatar',
+                                   'data-original' => $this->Upload->uploadUrl($user['User'], 'User.photo',
+                                                                               ['style' => 'x_large']),
+                               ]
+            )
+            ?>
+        <?php endif ?>
         <p class="profile-user-name">
             <?= h($user['User']['display_username']) ?>
         </p>

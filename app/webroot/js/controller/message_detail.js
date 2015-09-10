@@ -11,10 +11,22 @@ message_app.controller(
               $anchorScroll,
               $location) {
 
-        $scope.$on('$viewContentLoaded', function() {
+        // TODO: 添付ファイルのプレビューを表示するために一時的に高さを少なくする
+        var input_box_height = 280;
+
+        // onloadの場合
+        $scope.$on('$viewContentLoaded', function () {
             var $m_box = $("#message_box");
-            // TODO: 一時的に高さを2000pxにした。この後対応予定のブラウザサイズによる高さ固定処理にあわせて、PXを動的に変える処理を入れる予定
-            $m_box.animate({ scrollTop: 2000}, 500);
+            $m_box.css("height", window.innerHeight - input_box_height);
+            $m_box.animate({scrollTop: window.innerHeight}, 500);
+        });
+
+        // ブラウザリサイズの場合、入力フォームサイズ変更+オートスクロール
+        $(window).resize(function(){
+            $scope.$apply(function(){
+                $("#message_box").css("height", window.innerHeight - input_box_height);
+                bottom_scroll();
+            });
         });
 
         $scope.view_flag = true;
@@ -53,20 +65,7 @@ message_app.controller(
             //メッセージ通知件数をカウント
             updateMessageNotifyCnt();
 
-            var message_list = [];
-            var first_data = {
-                Comment: {
-                    body: post_detail.Post.body,
-                    comment_read_count: post_detail.Post.post_read_count,
-                    created: post_detail.Post.created
-                },
-                User: {
-                    display_username: post_detail.User.display_username,
-                    photo_path: post_detail.User.photo_path
-                },
-                'get_red_user_model_url': '/posts/ajax_get_message_red_users/post_id:' + post_detail.Post.id
-            };
-            message_list.push(first_data);
+            var limit = 10, page_num = 1, message_list = [], post_msg_view_flag = false;
 
             // スレッド情報
             $scope.auth_info = getPostDetail.auth_info;
@@ -76,7 +75,7 @@ message_app.controller(
 
             var bottom_scroll = function () {
                 var $m_box = $("#message_box");
-                $m_box.animate({ scrollTop: $m_box[0].scrollHeight}, 300);
+                $m_box.animate({scrollTop: $m_box[0].scrollHeight}, 300);
             };
 
             // pusherメッセージ内容を受け取る
@@ -155,8 +154,25 @@ message_app.controller(
 
             };
 
-            var limit = 10;
-            var page_num = 1;
+            var pushPostMessage = function () {
+                if (post_msg_view_flag === false) {
+                    message_list.push({
+                        AttachedFileHtml: $sce.trustAsHtml(post_detail.AttachedFileHtml),
+                        Comment: {
+                            body: post_detail.Post.body,
+                            comment_read_count: post_detail.Post.post_read_count,
+                            created: post_detail.Post.created
+                        },
+                        User: {
+                            id: post_detail.User.id,
+                            display_username: post_detail.User.display_username,
+                            photo_path: post_detail.User.photo_path
+                        },
+                        'get_red_user_model_url': '/posts/ajax_get_message_red_users/post_id:' + post_detail.Post.id
+                    });
+                    post_msg_view_flag = true;
+                }
+            };
 
             $scope.loadMore = function () {
                 if (document.getElementById("message_box").scrollTop === 0) {
@@ -165,13 +181,18 @@ message_app.controller(
                         url: cake.url.ah + $stateParams.post_id + '/' + limit + '/' + page_num
                     };
                     $http(request).then(function (response) {
+
+                        if (getPostDetail.comment_count < limit * page_num) {
+                            pushPostMessage();
+                        }
+
                         angular.forEach(response.data.message_list, function (val) {
                             val.AttachedFileHtml = $sce.trustAsHtml(val.AttachedFileHtml);
                             this.push(val);
                         }, $scope.message_list);
 
                         if (response.data.message_list.length > 0) {
-                            $location.hash('m_' + (limit+1));
+                            $location.hash('m_' + limit);
                             $anchorScroll();
                         }
                         page_num = page_num + 1;

@@ -249,4 +249,21 @@ class CommentTest extends CakeTestCase
         $this->assertEquals($comment_id, $comment_info['Comment']['id']);
     }
 
+    function testGetCommentCount()
+    {
+        $post_id = 1;
+        $team_id = 2;
+        $this->Comment->current_team_id = $team_id;
+
+        $comment_data = [
+            'post_id' => $post_id,
+            'team_id' => $team_id,
+            'body'    => 'test'
+        ];
+        $this->Comment->save($comment_data);
+        $res = $this->Comment->getCommentCount($post_id);
+
+        $this->assertEquals(1, $res);
+    }
+
 }
