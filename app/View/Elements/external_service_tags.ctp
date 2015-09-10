@@ -173,4 +173,19 @@
     </script>
 <!-- end Uservoice -->
 <? endif; ?>
+<?php if(INTERCOM_APP_ID):?>
+<!-- start Intercom -->
+<script>
+    window.intercomSettings = {
+        app_id: "<?=INTERCOM_APP_ID?>"
+        <?php if ($this->Session->read('Auth.User.id')): ?>,
+        name: "<?= h($this->Session->read('Auth.User.display_username')) ?>", // Full name
+        email: "<?= h($this->Session->read('Auth.User.PrimaryEmail.email')) ?>", // Email address
+        created_at: <?= h($this->Session->read('Auth.User.created')) ?> // Signup date as a Unix timestamp
+        <?php endif ?>
+    };
+</script>
+<script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/<?=INTERCOM_APP_ID?>';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})()</script>
+<!-- end Intercom -->
+<?php endif;?>
 <!-- END app/View/Elements/external_service_tags.ctp -->
