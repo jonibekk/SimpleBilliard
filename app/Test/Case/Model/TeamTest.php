@@ -625,6 +625,29 @@ class TeamTest extends CakeTestCase
         $this->assertTrue($actual);
     }
 
+    function testGetNextTermStartDate()
+    {
+        $this->_setDefault();
+        $this->Team->getNextTermStartDate();
+        $actual = $this->Team->getNextTermStartDate();
+        $this->assertNotNull($actual);
+    }
+
+    function testGetNextTermEndDate()
+    {
+        $this->_setDefault();
+        $this->Team->getNextTermEndDate();
+        $actual = $this->Team->getNextTermEndDate();
+        $this->assertNotNull($actual);
+    }
+
+    function testSetNextTermStartEnd()
+    {
+        $this->_setDefault();
+        $actual = $this->Team->setNextTermStartEnd();
+        $this->assertTrue($actual);
+    }
+
     function _setDefault()
     {
         $this->Team->my_uid = 1;
