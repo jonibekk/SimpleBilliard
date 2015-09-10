@@ -159,6 +159,7 @@
                 $this->Html->link(__d('home', 'Blog'), 'http://blog.goalous.com/',
                                   ['target' => '_blank']) ?>
             </li>
+            <?php if (USERVOICE_API_KEY && $this->Session->read('Auth.User.id')): ?>
             <li>
                 <a href="javascript:void(0)" data-uv-lightbox="classic_widget" data-uv-mode="full" data-uv-primary-color="#f0636f" data-uv-link-color="#007dbf" data-uv-default-mode="feedback" data-uv-forum-id="<?php
                          if ($is_isao_user)
@@ -169,9 +170,10 @@
                          {
                              echo USERVOICE_FORUM_ID_PUBLIC;
                          }
-                         ?>">フィードバック
+                         ?>"><?=__d('gl','Feedback')?>
                 </a>
             </li>
+            <?php endif;?>
         </ul>
     </div>
 </div>

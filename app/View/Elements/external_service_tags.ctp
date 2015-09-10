@@ -130,49 +130,6 @@
         mixpanel.init("<?= MIXPANEL_TOKEN?>");</script>
     <!-- end Mixpanel -->
 <?php endif; ?>
-<? if (USERVOICE_API_KEY && $this->Session->read('Auth.User.id')): ?>
-<!-- start Uservoice -->
-    <script>
-        (function () {
-            var uv = document.createElement('script');
-            uv.type = 'text/javascript';
-            uv.async = true;
-            uv.src = '//widget.uservoice.com/XCmmQeEYxEfUK5hhWqYaBA.js';
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(uv, s)
-        })();
-        UserVoice = window.UserVoice || [];
-        <?= ($this->Session->read('uservoice_token')) ? "UserVoice.push(['setSSO', '{$this->Session-> read('uservoice_token')}']);"
-            : ""
-        ?>
-        var winW = window.innerWidth;
-        if (winW > 480) {
-        UserVoice.push(['showTab', 'classic_widget', {
-            mode: 'full',
-            primary_color: '#f0636f',
-            link_color: '#007dbf',
-            default_mode: 'feedback',
-            forum_id: '<?php
-                     if ($is_isao_user)
-                     {
-                         echo USERVOICE_FORUM_ID_PRIVATE;
-                     }
-                     else
-                     {
-                         echo USERVOICE_FORUM_ID_PUBLIC;
-                     }
-                     ?>',
-            tab_label: '<?php echo __d('global', 'Feedback') ?>',
-            tab_color: '#f0636f',
-            tab_position: 'bottom-right',
-            tab_inverted: false
-        }]);
-    } else {
-        // サイズが小さいときは表示しない
-    }
-    </script>
-<!-- end Uservoice -->
-<? endif; ?>
 <?php if(INTERCOM_APP_ID):?>
 <!-- start Intercom -->
 <script>
