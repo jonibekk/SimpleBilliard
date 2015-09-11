@@ -2091,7 +2091,7 @@ msgstr "See All"
 
 #: View/Elements/header_logged_in_right.ctp:117
 msgid "ユーザ設定"
-msgstr "User Setting"
+msgstr "User Setting test"
 
 #: View/Elements/header_logged_in_right.ctp:122
 msgid "チュートリアル"
