@@ -71,10 +71,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
             if ($common_form_type == "message"): ?>
                 active
             <?php endif ?>">
-                <a href="#MessageForm" role="tab" data-toggle="tab"
-                   class="switch-message-anchor click-target-focus"
-                   target-id="s2id_autogen1"><i
-                        class="fa fa-paper-plane-o"></i><?= __d('gl', "メッセージ") ?></a><span class="switch-arrow"></span>
+
             </li>
         </ul>
     </div>
@@ -395,7 +392,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
 
             <?=
             $this->Form->create('Post', [
-                'url'           => ['controller' => 'posts', 'action' => 'add_message'],
+                'url'           => ['controller' => 'posts', 'action' => 'edit_message'],
                 'inputDefaults' => [
                     'div'       => 'form-group',
                     'label'     => false,
@@ -409,11 +406,11 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
             ]); ?>
             <div class="post-message-dest panel-body" id="MessageFormShare">
                 <div class="col col-xxs-10 col-xs-10 post-share-range-list" id="MessagePublicShareInputWrap">
-                    <?= __d('gl', "To:") ?>
+
                     <?=
                     $this->Form->hidden('share_public', [
                         'id'    => 'select2Member',
-                        'style' => "width: 85%"
+                        'style' => "width: 115%"
                     ]) ?>
                     <?php $this->Form->unlockField('Message.share_public') ?>
                 </div>
@@ -425,28 +422,12 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                 <?php $this->Form->unlockField('socket_id') ?>
             </div>
 
-            <div class="post-panel-body plr_11px ptb_7px">
-                <?=
-                $this->Form->input('body', [
-                    'id'                       => 'CommonMessageBody',
-                    'label'                    => false,
-                    'type'                     => 'textarea',
-                    'wrap'                     => 'soft',
-                    'rows'                     => 1,
-                    'required'                 => true,
-                    'placeholder'              => __d('gl', "メッセージを書こう"),
-                    'class'                    => 'form-control tiny-form-text-change post-form feed-post-form box-align change-warning',
-                    'target_show_id'           => "MessageFormFooter",
-                    'data-bv-notempty-message' => __d('validate', "入力必須項目です。"),
-                ]);
-                ?>
-            </div>
             <div class="post-panel-footer">
-                <div class="font_12px none" id="MessageFormFooter">
+                <div class="font_12px" id="MessageFormFooter">
                     <div class="row form-horizontal form-group post-share-range" id="MessageShare">
                         <?=
-                        $this->Form->submit(__d('gl', "メッセージする"),
-                                            ['class' => 'btn btn-primary pull-right post-submit-button', 'id' => 'MessageSubmit', 'disabled' => 'disabled']) ?>
+                        $this->Form->submit(__d('gl', "ADD"),
+                                            ['class' => 'btn btn-primary pull-right post-submit-button', 'id' => 'MessageSubmit', 'disabled' => 'disabled'] ) ?>
                     </div>
                 </div>
             </div>
