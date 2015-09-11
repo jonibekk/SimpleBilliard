@@ -1019,16 +1019,19 @@ class UsersController extends AppController
         $this->layout = LAYOUT_ONE_COLUMN;
         $page_type = viaIsSet($this->request->params['named']['page_type']);
 
-        $my_goals_count = $this->Goal->getMyGoals(null, 1, 'count', $user_id);
-        $collabo_goals_count = $this->Goal->getMyCollaboGoals(null, 1, 'count', $user_id);
+        $start_date = $this->Team->getCurrentTermStartDate();
+        $end_date = $this->Team->getNextTermEndDate();
+
+        $my_goals_count = $this->Goal->getMyGoals(null, 1, 'count', $user_id, $start_date, $end_date);
+        $collabo_goals_count = $this->Goal->getMyCollaboGoals(null, 1, 'count', $user_id, $start_date, $end_date);
         $my_goals_count += $collabo_goals_count;
-        $follow_goals_count = $this->Goal->getMyFollowedGoals(null, 1, 'count', $user_id);
+        $follow_goals_count = $this->Goal->getMyFollowedGoals(null, 1, 'count', $user_id, $start_date, $end_date);
 
         if ($page_type == "following") {
-            $goals = $this->Goal->getMyFollowedGoals(null, 1, 'all', $user_id);
+            $goals = $this->Goal->getMyFollowedGoals(null, 1, 'all', $user_id, $start_date, $end_date);
         }
         else {
-            $goals = $this->Goal->getGoalsWithAction($user_id);
+            $goals = $this->Goal->getGoalsWithAction($user_id, MY_PAGE_ACTION_NUMBER, $start_date, $end_date);
         }
 
         $is_mine = $user_id == $this->Auth->user('id') ? true : false;

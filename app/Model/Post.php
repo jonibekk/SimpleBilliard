@@ -407,6 +407,14 @@ class Post extends AppModel
             'contain'    => [
                 'User'          => [],
                 'PostShareUser' => [],
+                'PostFile'   => [
+                    'order'        => ['PostFile.index_num asc'],
+                    'AttachedFile' => [
+                        'User' => [
+                            'fields' => $this->User->profileFields
+                        ]
+                    ]
+                ]
             ]
         ];
         $res = $this->find('first', $options);
@@ -657,6 +665,25 @@ class Post extends AppModel
                         'fields' => [
                             'name'
                         ]
+                    ],
+                    'MyCollabo'    => [
+                        'conditions' => [
+                            'MyCollabo.type'    => Collaborator::TYPE_COLLABORATOR,
+                            'MyCollabo.user_id' => $this->my_uid,
+                        ],
+                        'fields'     => [
+                            'MyCollabo.id',
+                            'MyCollabo.role',
+                            'MyCollabo.description',
+                        ],
+                    ],
+                    'MyFollow'     => [
+                        'conditions' => [
+                            'MyFollow.user_id' => $this->my_uid,
+                        ],
+                        'fields'     => [
+                            'MyFollow.id',
+                        ],
                     ]
                 ],
                 'KeyResult'       => [
