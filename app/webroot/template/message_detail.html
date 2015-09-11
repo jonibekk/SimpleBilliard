@@ -18,40 +18,14 @@
             </span>
 
                     <span class="pull-right">
-                        <!-- <a id="click-header-message" class="btn-message-header" data-toggle="dropdown" href="#"> -->
-                        <a href="/posts/edit_messenger/post_id:{{post_detail.Post.id}}">
+                        <a ng-click="add_messenger_user()">
                             <span class="fa fa-user-plus">
                             </span>
                         </a>
                     </span>
+                      <div id="message_add_list"></div>
+                </div>
 
-                </div>
-                <div>
-                    <!-- start Add user messenger -->
-                    <div class="panel-body ptb_8px plr_11px comment-block" id="messageDropArea">
-                    <div class="col-xxs-12 box-align feed-contents comment-contents">
-                        <div class=" comment-body">
-                            <div class="form-feed-notify ajax-add-comment bv-form">
-                                <div class="form-group mlr_-1px required">
-                                <textarea ng-model="message"
-                                          id="message_text_input"
-                                          class="message-detail-reply-input-area form-control tiny-form-text"
-                                          rows="1" placeholder="返信する" cols="30" init-height="15"></textarea>
-                                </div>
-                                <div class="message-detail-reply-btn-wrap submit pull-right">
-                                    <i class="fa fa-refresh fa-spin" id="SendMessageLoader" style="display: none"></i>
-                                    <input ng-click="clickMessage($event)"
-                                           ng-disabled="!message"
-                                           id="message_submit_button"
-                                           class="message-detail-reply-btn btn btn-primary submit-btn" type="submit"
-                                           value="Add">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                    <!-- end Add user messenger-->
-                </div>
             </div>
 
             <div class="message-detail-panel-body panel-body" id="message_box">

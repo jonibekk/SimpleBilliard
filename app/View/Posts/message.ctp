@@ -6,12 +6,15 @@
 <?php echo $this->Html->script('vendor/angular/ng-infinite-scroll.min'); ?>
 
 <div ng-app="messageApp">
-
+    <div class="post-message-dest panel-body" id="MessageFormShareUser" style="display:none">
+        <?php  echo $this->element('Feed/add_messenger', [
+            'common_form_type'     => 'message',
+            'common_form_only_tab' => 'message'
+        ]) ?>
+        <!-- end Add messenger -->
+    </div>
     <div ui-view> ロード中....</div>
-    <?php  echo $this->element('Feed/add_messenger', [
-        'common_form_type'     => 'message',
-        'common_form_only_tab' => 'message'
-    ]) ?>
+
 
     <?php echo $this->element('file_upload_form') ?>
 

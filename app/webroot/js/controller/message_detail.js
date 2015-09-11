@@ -154,6 +154,8 @@ message_app.controller(
 
             };
 
+
+
             var limit = 10;
             var page_num = 1;
 
@@ -177,9 +179,17 @@ message_app.controller(
                     });
                 }
             }
+
+            $scope.add_messenger_user = function () {
+                $("#MessageFormShareUser").show();
+                $("#message_add_list").append($("#MessageFormShareUser"));
+            }
         }
 
         // 戻るボタンのURL
         $scope.message_list_url = cake.url.message_list;
+
+
+
 
     });

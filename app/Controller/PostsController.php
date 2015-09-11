@@ -75,6 +75,14 @@ class PostsController extends AppController
         $this->redirect($to_url);
     }
 
+    public function edit_message()
+    {
+        $this->request->data['Post']['type'] = Post::TYPE_MESSAGE;
+        $this->_editPost();
+        $to_url = Router::url(['controller' => 'posts', 'action' => 'message#', $this->Post->getLastInsertID()], true);
+        $this->redirect($to_url);
+    }
+
     public function add()
     {
         $this->_addPost();
@@ -88,6 +96,100 @@ class PostsController extends AppController
      * @return void
      */
     public function _addPost()
+    {
+        $this->request->allowMethod('post');
+
+        // ogbをインサートデータに追加
+        $this->request->data['Post'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Post']),
+                                                             viaIsSet($this->request->data['Post']['body']));
+
+        // 公開投稿か秘密サークルへの投稿かを判別
+        if (isset($this->request->data['Post']['share_range'])) {
+            $this->request->data['Post']['share'] = ($this->request->data['Post']['share_range'] == 'public')
+                ? $this->request->data['Post']['share_public']
+                : $this->request->data['Post']['share_secret'];
+        }
+
+        // 投稿を保存
+        $successSavedPost = $this->Post->addNormal($this->request->data);
+
+        // 保存に失敗
+        if (!$successSavedPost) {
+            // バリデーションエラーのケース
+            if (!empty($this->Post->validationErrors)) {
+                $error_msg = array_shift($this->Post->validationErrors);
+                $this->Pnotify->outError($error_msg[0], ['title' => __d('gl', "投稿に失敗しました。")]);
+            }
+            else {
+                $this->Pnotify->outError(__d('gl', "投稿に失敗しました。"));
+            }
+            return false;
+        }
+
+        $notify_type = NotifySetting::TYPE_FEED_POST;
+        if (viaIsSet($this->request->data['Post']['type']) == Post::TYPE_MESSAGE) {
+            $notify_type = NotifySetting::TYPE_FEED_MESSAGE;
+        }
+        $this->NotifyBiz->execSendNotify($notify_type, $this->Post->getLastInsertID());
+
+        $socketId = viaIsSet($this->request->data['socket_id']);
+        $share = explode(",", viaIsSet($this->request->data['Post']['share']));
+
+        //何らかの原因でsocketIdが無いもしくは、共有先指定なしの場合は以降の処理(通知、イベントトラッキング)を行わない
+        if (!$socketId || $share[0] === "") {
+            $this->Pnotify->outSuccess(__d('gl', "投稿しました。"));
+            return false;
+        }
+
+        $share_circle = false;
+        if (viaIsSet($this->request->data['Post']['type']) != Post::TYPE_MESSAGE) {
+            //push to pusher
+            // チーム全体公開が含まれている場合はチーム全体にのみpush
+            if (in_array("public", $share)) {
+                $this->NotifyBiz->push($socketId, "public");
+            }
+            else {
+                // それ以外の場合は共有先の数だけ回す
+                foreach ($share as $val) {
+                    if (strpos($val, "circle") !== false) {
+                        $share_circle = true;
+                    }
+                    $this->NotifyBiz->push($socketId, $val);
+                }
+            }
+        }
+
+        //publish an event to Mixpanel
+        $mixpanel_prop_name = null;
+        if (viaIsSet($this->request->data['Post']['type']) == Post::TYPE_MESSAGE) {
+            $this->Mixpanel->trackMessage($this->Post->getLastInsertID());
+        }
+        else {
+            if (in_array("public", $share)) {
+                $mixpanel_prop_name = MixpanelComponent::PROP_SHARE_TEAM;
+            }
+            else {
+                if ($share_circle) {
+                    $mixpanel_prop_name = MixpanelComponent::PROP_SHARE_CIRCLE;
+                }
+                else {
+                    $mixpanel_prop_name = MixpanelComponent::PROP_SHARE_MEMBERS;
+                }
+            }
+            $this->Mixpanel->trackPost($this->Post->getLastInsertID(), $mixpanel_prop_name);
+        }
+
+        $this->Pnotify->outSuccess(__d('gl', "投稿しました。"));
+        return true;
+    }
+
+    /**
+     * add method
+     *
+     * @throws RuntimeException
+     * @return void
+     */
+    public function _editPost()
     {
         $this->request->allowMethod('post');
 
@@ -252,9 +354,26 @@ class PostsController extends AppController
 
     public function edit_messenger()
     {
-        $this->layout = LAYOUT_ONE_COLUMN;
+
+
+        /*$this->layout = LAYOUT_ONE_COLUMN;
         $this->set('without_footer', true);
-        return $this->render();
+        return $this->render();*/
+
+        $post_id = viaIsSet($this->request->params['named']['post_id']);
+        $this->_ajaxPreProcess();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $users = $this->Post->PostShareUser->getShareUsersByPost($post_id);
+        $post = $this->Post->getPostById($post_id);
+        array_unshift($users, ['User' => $post['User']]);
+        $total_share_user_count = $this->_getTotalShareUserCount([], $users);
+        $this->set(compact('users', 'total_share_user_count'));
+        //エレメントの出力を変数に格納する
+        //htmlレンダリング結果
+        $response = $this->render('modal_message_range_add');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
 
     }
     /**
