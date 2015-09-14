@@ -65,7 +65,7 @@ Vagrant.configure('2') do |config|
             aws.instance_type = 'c3.large'
             aws.region = 'ap-southeast-1'
             aws.availability_zone = 'ap-southeast-1a'
-            aws.ami = 'ami-eaa9f0b8'
+            aws.ami = 'ami-183c294a'
             aws.associate_public_ip = true
             aws.security_groups = ['sg-d24b27b7', 'sg-8d4a26e8', 'sg-66442803']
             aws.subnet_id = 'subnet-53a71924'
