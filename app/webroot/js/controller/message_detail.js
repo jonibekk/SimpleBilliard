@@ -2,6 +2,7 @@ message_app.controller(
     "MessageDetailCtrl",
     function ($scope,
               $http,
+              $sce,
               $translate,
               notificationService,
               getPostDetail,
@@ -10,6 +11,23 @@ message_app.controller(
               $anchorScroll,
               $location) {
 
+        // TODO: 添付ファイルのプレビューを表示するために一時的に高さを少なくする
+        var input_box_height = 280;
+
+        // onloadの場合
+        $scope.$on('$viewContentLoaded', function () {
+            var $m_box = $("#message_box");
+            $m_box.css("height", window.innerHeight - input_box_height);
+            $m_box.animate({scrollTop: window.innerHeight}, 500);
+        });
+
+        // ブラウザリサイズの場合、入力フォームサイズ変更+オートスクロール
+        $(window).resize(function(){
+            $scope.$apply(function(){
+                $("#message_box").css("height", window.innerHeight - input_box_height);
+                bottom_scroll();
+            });
+        });
 
         $scope.view_flag = true;
         if (getPostDetail.auth_info.language === 'eng') {
@@ -47,20 +65,7 @@ message_app.controller(
             //メッセージ通知件数をカウント
             updateMessageNotifyCnt();
 
-            var message_list = [];
-            var first_data = {
-                Comment: {
-                    body: post_detail.Post.body,
-                    comment_read_count: post_detail.Post.post_read_count,
-                    created: post_detail.Post.created
-                },
-                User: {
-                    display_username: post_detail.User.display_username,
-                    photo_path: post_detail.User.photo_path
-                },
-                'get_red_user_model_url': '/posts/ajax_get_message_red_users/post_id:' + post_detail.Post.id
-            };
-            message_list.push(first_data);
+            var limit = 10, page_num = 1, message_list = [], post_msg_view_flag = false;
 
             // スレッド情報
             $scope.auth_info = getPostDetail.auth_info;
@@ -68,21 +73,15 @@ message_app.controller(
             $scope.message_list = message_list;
             $scope.first_share_user = getPostDetail.first_share_user;
 
-            var current_id = 0;
-            var message_scroll = function (id) {
-                var message_id = id;
-                if (current_id === 0) {
-                    message_id = $scope.message_list.length;
-                }
-                current_id = message_id;
-                $location.hash('m_' + message_id);
-                $anchorScroll();
+            var bottom_scroll = function () {
+                var $m_box = $("#message_box");
+                $m_box.animate({scrollTop: $m_box[0].scrollHeight}, 300);
             };
 
             // pusherメッセージ内容を受け取る
             var pusher = new Pusher(cake.pusher.key);
-            var test_channel = pusher.subscribe('message-channel-' + $stateParams.post_id);
-            test_channel.bind('new_message', function (data) {
+            var pusher_channel = pusher.subscribe('message-channel-' + $stateParams.post_id);
+            pusher_channel.bind('new_message', function (data) {
                 // 既読処理
                 var read_comment_id = data.Comment.id;
                 var request = {
@@ -92,42 +91,89 @@ message_app.controller(
                 $http(request).then(function (response) {
                 });
 
+                data.AttachedFileHtml = $sce.trustAsHtml(data.AttachedFileHtml)
+
                 // メッセージ表示
                 $scope.$apply($scope.message_list.push(data));
-                message_scroll(current_id);
+                bottom_scroll();
             });
 
             // pusherから既読されたcomment_idを取得する
-            test_channel.bind('read_message', function (comment_id) {
+            pusher_channel.bind('read_message', function (comment_id) {
                 var read_box = document.getElementById("mr_" + comment_id).innerText;
                 document.getElementById("mr_" + comment_id).innerText = Number(read_box) + 1;
+                bottom_scroll();
             });
 
             // メッセージを送信する
             $scope.clickMessage = function (event) {
-                event.target.disabled = 'disabled'
+                event.target.disabled = 'disabled';
+                var sendMessageLoader = document.getElementById("SendMessageLoader");
+                sendMessageLoader.style.display = "inline-block";
+
+                var file_redis_key = [];
+                var file_ids = document.getElementsByName("data[file_id][]");
+                if (file_ids.length > 0) {
+                    angular.forEach(file_ids, function (fid) {
+                        this.push(fid.value);
+                    }, file_redis_key);
+                }
+
                 var request = {
                     method: 'POST',
                     url: cake.url.ai + $stateParams.post_id,
                     data: $.param({
                         data: {
                             body: $scope.message,
-                            _Token: {key: cake.data.csrf_token.key},
+                            file_redis_key: file_redis_key,
+                            _Token: {key: cake.data.csrf_token.key}
                         },
                         _method: "POST"
                     }),
                     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
                 };
+
                 $http(request).then(function (response) {
-                    event.target.disabled = ''
-                    message_scroll($scope.message_list.length);
+                    event.target.disabled = '';
+                    sendMessageLoader.style.display = 'none';
                     $scope.message = "";
+
+                    // プレビューエレメント配下の子エレメントを削除する
+                    var file_preview_element = document.getElementById("messageUploadFilePreviewArea");
+                    for (var i = file_preview_element.childNodes.length - 1; i >= 0; i--) {
+                        file_preview_element.removeChild(file_preview_element.childNodes[i]);
+                    }
+
+                    // ファイルアップロード処理初期化
+                    angular.forEach(file_redis_key, function (key) {
+                        var node = document.getElementById(key);
+                        node.parentNode.removeChild(node);
+                    });
                     document.getElementById("message_text_input").focus();
                 });
+
             };
 
-            var limit = 10;
-            var page_num = 1;
+            var pushPostMessage = function () {
+                if (post_msg_view_flag === false) {
+                    message_list.push({
+                        AttachedFileHtml: $sce.trustAsHtml(post_detail.AttachedFileHtml),
+                        Comment: {
+                            body: post_detail.Post.body,
+                            comment_read_count: post_detail.Post.post_read_count,
+                            created: post_detail.Post.created
+                        },
+                        User: {
+                            id: post_detail.User.id,
+                            display_username: post_detail.User.display_username,
+                            photo_path: post_detail.User.photo_path
+                        },
+                        'get_red_user_model_url': '/posts/ajax_get_message_red_users/post_id:' + post_detail.Post.id
+                    });
+                    post_msg_view_flag = true;
+                }
+            };
+
             $scope.loadMore = function () {
                 if (document.getElementById("message_box").scrollTop === 0) {
                     var request = {
@@ -135,11 +181,19 @@ message_app.controller(
                         url: cake.url.ah + $stateParams.post_id + '/' + limit + '/' + page_num
                     };
                     $http(request).then(function (response) {
+
+                        if (getPostDetail.comment_count < limit * page_num) {
+                            pushPostMessage();
+                        }
+
                         angular.forEach(response.data.message_list, function (val) {
+                            val.AttachedFileHtml = $sce.trustAsHtml(val.AttachedFileHtml);
                             this.push(val);
                         }, $scope.message_list);
+
                         if (response.data.message_list.length > 0) {
-                            message_scroll(current_id);
+                            $location.hash('m_' + limit);
+                            $anchorScroll();
                         }
                         page_num = page_num + 1;
                     });

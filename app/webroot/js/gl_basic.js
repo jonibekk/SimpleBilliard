@@ -8,6 +8,9 @@ if (typeof String.prototype.startsWith != 'function') {
     };
 }
 ;
+require.config({
+    baseUrl: '/js/modules'
+});
 function bindPostBalancedGallery($obj) {
     $obj.removeClass('none');
     $obj.BalancedGallery({
@@ -391,6 +394,12 @@ $(document).ready(function () {
 
     $(document).on("click", '.modal-ajax-get-circle-edit', function (e) {
         e.preventDefault();
+        var $this = $(this);
+        if ($this.hasClass('double_click')) {
+            return false;
+        }
+        $this.addClass('double_click');
+
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
         $modal_elm.on('hidden.bs.modal', function (e) {
             $(this).remove();
@@ -447,6 +456,7 @@ $(document).ready(function () {
                     });
                 $modal_elm.modal();
             }).success(function () {
+                $this.removeClass('double_click');
                 $('body').addClass('modal-open');
             });
         }
@@ -1122,13 +1132,6 @@ $(document).on("mouseover", ".develop--forbiddenLink", function () {
 });
 $(document).on("mouseout", ".develop--forbiddenLink", function () {
     $(this).find("div:last").remove();
-});
-
-$(function () {
-    $(".develop--search").on("click", function () {
-            $(this).attr('placeholder', '準備中です。');
-        }
-    );
 });
 
 //SubHeaderMenu
@@ -3042,10 +3045,7 @@ function updateMessageNotifyCnt() {
 
 function setNotifyCntToBellAndTitle(cnt) {
     var $bellBox = getBellBoxSelector();
-    var $title = $("title");
-    var $originTitle = $("title").attr("origin-title");
     var existingBellCnt = parseInt($bellBox.children('span').html());
-    var cntIsTooMuch = '20+';
 
     if (cnt == 0) {
         return;
@@ -3055,12 +3055,11 @@ function setNotifyCntToBellAndTitle(cnt) {
     if (parseInt(cnt) <= 20) {
         $bellBox.children('span').html(cnt);
         $bellBox.children('sup').addClass('none');
-        $title.text("(" + cnt + ")" + $originTitle);
     } else {
         $bellBox.children('span').html(20);
         $bellBox.children('sup').removeClass('none');
-        $title.text("(" + cntIsTooMuch + ")" + $originTitle);
     }
+    updateTitleCount();
 
     if (existingBellCnt == 0) {
         displaySelectorFluffy($bellBox);
@@ -3071,10 +3070,7 @@ function setNotifyCntToBellAndTitle(cnt) {
 function setNotifyCntToMessageAndTitle(cnt) {
     var cnt = parseInt(cnt);
     var $bellBox = getMessageBoxSelector();
-    var $title = $("title");
-    var $originTitle = $("title").attr("origin-title");
     var existingBellCnt = parseInt($bellBox.children('span').html());
-    var cntIsTooMuch = '20+';
 
     if (cnt != 0) {
         // メッセージが存在するときだけ、ボタンの次の要素をドロップダウン対象にする
@@ -3089,16 +3085,14 @@ function setNotifyCntToMessageAndTitle(cnt) {
     if (cnt == 0) {
         $bellBox.children('span').html(cnt);
         $bellBox.children('sup').addClass('none');
-        $title.text($originTitle);
     } else if (cnt <= 20) {
         $bellBox.children('span').html(cnt);
         $bellBox.children('sup').addClass('none');
-        $title.text("(" + cnt + ")" + $originTitle);
     } else {
         $bellBox.children('span').html(20);
         $bellBox.children('sup').removeClass('none');
-        $title.text("(" + cntIsTooMuch + ")" + $originTitle);
     }
+    updateTitleCount();
 
     if (existingBellCnt == 0 && cnt >= 1) {
         displaySelectorFluffy($bellBox);
@@ -3106,6 +3100,21 @@ function setNotifyCntToMessageAndTitle(cnt) {
         $bellBox.css("opacity", 0);
     }
     return;
+}
+
+// <title> に表示される通知数を更新する
+function updateTitleCount() {
+    var $title = $("title");
+    var current_cnt = getNotifyCnt() + getMessageNotifyCnt();
+    var current_str = '';
+
+    if (current_cnt > 20) {
+        current_str = '(20+)';
+    }
+    else if (current_cnt > 0) {
+        current_str = '(' + current_cnt + ')';
+    }
+    $title.text(current_str + $title.attr("origin-title"));
 }
 
 function displaySelectorFluffy(selector) {
@@ -3139,6 +3148,13 @@ $(document).ready(function () {
             return false;
         }
     });
+    $('#HeaderDropdownNotify')
+        .on('shown.bs.dropdown', function () {
+            $("body").addClass('notify-dropdown-open');
+        })
+        .on('hidden.bs.dropdown', function () {
+            $('body').removeClass('notify-dropdown-open');
+        });
 });
 
 $(document).ready(function () {
@@ -3181,12 +3197,12 @@ function getMessageBoxSelector() {
 
 function getNotifyCnt() {
     var $bellBox = getBellBoxSelector();
-    return parseInt($bellBox.children('span').html());
+    return parseInt($bellBox.children('span').html(), 10);
 }
 
 function getMessageNotifyCnt() {
     var $box = getMessageBoxSelector();
-    return parseInt($box.children('span').html());
+    return parseInt($box.children('span').html(), 10);
 }
 
 function updateListBox() {
@@ -3348,6 +3364,11 @@ $(document).ready(function () {
         thumbnailWidth: null,
         thumbnailHeight: 240,
         // ファイルがドロップされた時の処理
+        drop: function(e) {
+            $uploadFileForm.hide();
+        },
+        // ファイルがドロップされた後
+        // Dropzone で受け付けるファイルだった時
         addedfile: function (file) {
             // previewContainer をドロップエリアに応じて入れ替える
             this.previewsContainer = $('#' + $uploadFileForm._params.previewContainerID).get(0);
@@ -3363,7 +3384,6 @@ $(document).ready(function () {
             // コールバック関数実行 (beforeAccept)
             $uploadFileForm._callbacks[$uploadFileForm._params.previewContainerID].beforeAccept.call(this, file);
 
-            $uploadFileForm.hide();
             done();
 
             // コールバック関数実行 (afterAccept)
@@ -3725,6 +3745,26 @@ $(document).ready(function () {
     $uploadFileForm.registerAttachFileButton('#PostUploadFileButton', postParams);
 
     ///////////////////////////////
+    // メッセンジャーフォーム
+    ///////////////////////////////
+    var messageParams = {
+        formID: 'messageDropArea',
+        previewContainerID: 'messageUploadFilePreviewArea',
+        afterSuccess: function (file) {
+            $("#message_submit_button").click(function () {
+                if (typeof Dropzone.instances[0] !== "" && Dropzone.instances[0].files.length > 0) {
+                    Dropzone.instances[0].files = [];
+                }
+            });
+        }
+    };
+    var messageDzOptions = {
+        maxFiles: 1
+    };
+    $uploadFileForm.registerDragDropArea('#messageDropArea', messageParams, messageDzOptions);
+    $uploadFileForm.registerAttachFileButton('#messageUploadFileButton', messageParams, messageDzOptions);
+
+    ///////////////////////////////
     // アクションメイン画像（最初の画像選択時)
     ///////////////////////////////
     var actionImageParams = {
@@ -3762,7 +3802,7 @@ $(document).ready(function () {
             }
         },
         afterAccept: function (file) {
-            var $button = $('.action-image-add-button');
+            var $button = $('.post-action-image-add-button');
             if ($button.size()) {
                 evTargetShowThisDelete.call($button.get(0));
             }
@@ -3978,13 +4018,18 @@ $(document).ready(function () {
 
     // アクションの編集画面の場合は、画像選択の画面をスキップし、
     // ajax で動いている select を選択済みにする
-    var $button = $('#ActionForm').find('.action-image-add-button.skip');
+    var $button = $('#ActionForm').find('.post-action-image-add-button.skip');
     if ($button.size()) {
         // 画像選択の画面をスキップ
         evTargetShowThisDelete.call($button.get(0));
         // ゴール選択の ajax 処理を動かす
         $('#GoalSelectOnActionForm').trigger('change');
     }
+
+    // ヘッダーの検索フォームの処理
+    require(['search'], function (search) {
+        search.headerSearch.setup();
+    });
 });
 
 function evAjaxEditCircleAdminStatus(e) {

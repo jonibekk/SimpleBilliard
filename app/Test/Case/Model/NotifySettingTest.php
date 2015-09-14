@@ -40,7 +40,8 @@ class NotifySettingTest extends CakeTestCase
         'app.message',
         'app.email',
         'app.oauth_token',
-        'app.local_name'
+        'app.local_name',
+        'app.goal',
     );
 
     /**
@@ -104,23 +105,41 @@ class NotifySettingTest extends CakeTestCase
         $this->assertEquals($expected, $res, "通知設定ありなし混在。複数ユーザ");
 
     }
-
+    
     function testGetTitle()
     {
         $from_user_names = ['aaa', 'bbb'];
         $count_num = 1;
         $item_name = json_encode(['ccc', 'ddd']);
-        $types = NotifySetting::$TYPE;
-        unset($types[NotifySetting::TYPE_FEED_POST]);
-        unset($types[NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST]);
-        unset($types[NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION]);
-        foreach ($types as $type => $val) {
-            $this->NotifySetting->getTitle($type, $from_user_names, $count_num, $item_name);
+        
+        // 特殊な処理の入らないタイトル
+        $types = [
+            NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST,
+            NotifySetting::TYPE_CIRCLE_USER_JOIN,
+            NotifySetting::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING,
+            NotifySetting::TYPE_CIRCLE_ADD_USER,
+            NotifySetting::TYPE_EVALUATION_START,
+            NotifySetting::TYPE_EVALUATION_FREEZE,
+            NotifySetting::TYPE_EVALUATION_START_CAN_ONESELF,
+            NotifySetting::TYPE_EVALUATION_CAN_AS_EVALUATOR,
+            NotifySetting::TYPE_EVALUATION_DONE_FINAL,
+            NotifySetting::TYPE_FEED_COMMENTED_ON_MY_ACTION,
+            NotifySetting::TYPE_USER_JOINED_TO_INVITED_TEAM,
+            NotifySetting::TYPE_FEED_MESSAGE,
+        ];
+        foreach ($types as $type) {
+            $title = $this->NotifySetting->getTitle($type, $from_user_names, $count_num, $item_name);
+            $this->assertNotEmpty($title);
+            // from_user_name が配列以外の時
+            $title = $this->NotifySetting->getTitle($type, 'aaa', $count_num, $item_name);
+            $this->assertNotEmpty($title);
         }
+    }
 
-        // from_user_name が配列以外の時
-        $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_POST, 'aaa', $count_num, $item_name);
-
+    function testGetTileComment() {
+        $count_num = 1;
+        $item_name = json_encode(['ccc', 'ddd']);
+        
         // TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST と TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION は
         // post_user_id、from_user_id が必須
         $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST, 'aaa', $count_num,
@@ -136,7 +155,7 @@ class NotifySettingTest extends CakeTestCase
                                            'post_user_id' => 2,
                                        ]);
     }
-
+    
     function testGetTitleFeedPost()
     {
         $from_user_names = ['aaa', 'bbb'];
@@ -184,12 +203,38 @@ class NotifySettingTest extends CakeTestCase
         $item_name = json_encode(['ccc', 'ddd']);
 
         // HTML入り
-        $html = $this->NotifySetting->getTitle(NotifySetting::TYPE_MY_MEMBER_CHANGE_GOAL, $from_user_names, $count_num,
+        $html = $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_MESSAGE, $from_user_names, $count_num,
                                                $item_name);
-        $plain = $this->NotifySetting->getTitle(NotifySetting::TYPE_MY_MEMBER_CHANGE_GOAL, $from_user_names, $count_num,
+        $plain = $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_MESSAGE, $from_user_names, $count_num,
                                                 $item_name, [
                 'style' => 'plain'
             ]);
         $this->assertNotEquals($html, $plain);
+    }
+
+
+    function testGetTitleRelateGoal()
+    {
+        $count_num = 1;
+        $item_name = json_encode(['ccc', 'ddd']);
+        
+        $types = [
+            NotifySetting::TYPE_MY_GOAL_FOLLOW,
+            NotifySetting::TYPE_MY_GOAL_COLLABORATE,
+            NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER,
+            NotifySetting::TYPE_MY_GOAL_TARGET_FOR_EVALUATION,
+            NotifySetting::TYPE_MY_GOAL_AS_LEADER_REQUEST_TO_CHANGE,
+            NotifySetting::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION,
+            NotifySetting::TYPE_MY_MEMBER_CREATE_GOAL,
+            NotifySetting::TYPE_MY_MEMBER_COLLABORATE_GOAL,
+            NotifySetting::TYPE_MY_MEMBER_CHANGE_GOAL,
+            NotifySetting::TYPE_FEED_CAN_SEE_ACTION,
+        ];
+        foreach ($types as $type) {
+            $title = $this->NotifySetting->getTitle($type, 'aaa', $count_num, $item_name, [
+                'goal_id' => 1,
+            ]);
+            $this->assertNotEmpty($title);
+        }
     }
 }

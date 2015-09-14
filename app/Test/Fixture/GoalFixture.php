@@ -57,21 +57,25 @@ class GoalFixture extends CakeTestFixture
             'id'      => '1',
             'user_id' => '1',
             'team_id' => '1',
+            'name' => 'ゴール1',
         ],
         [
             'id'      => '2',
             'user_id' => '1',
             'team_id' => '1',
+            'name' => 'ゴール2',
         ],
         [
             'id'      => '3',
             'user_id' => '1',
             'team_id' => '1',
+            'name' => 'ゴール3',
         ],
         [
             'id'      => '4',
             'user_id' => '1',
             'team_id' => '1',
+            'name' => 'ゴール4',
         ],
         [
             'id'      => '5',
@@ -87,6 +91,7 @@ class GoalFixture extends CakeTestFixture
             'id'      => '7',
             'user_id' => '2',
             'team_id' => '1',
+            'name' => 'その他ゴール1',
         ],
         [
             'id'      => '100',

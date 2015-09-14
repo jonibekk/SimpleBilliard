@@ -19,6 +19,7 @@ class CommentTest extends CakeTestCase
         'app.comment',
         'app.post',
         'app.user',
+        'app.local_name',
         'app.notify_setting',
         'app.team',
         'app.comment_like',
@@ -199,6 +200,70 @@ class CommentTest extends CakeTestCase
         $this->Comment->saveAll($data);
         $res = $this->Comment->getPostsComment($post_id, null, 1, 'DESC');
         $this->assertNotEmpty($this->Comment->convertData($res));
+    }
+
+    function testGetComment()
+    {
+        // テスト用データ挿入Start
+        $team_id = 1;
+        $post_id = 2;
+        $user_id = 3;
+
+        $comment_data = [
+            'user_id' => $user_id,
+            'team_id' => $team_id,
+            'post_id' => $post_id,
+            'body'    => 'test'
+        ];
+        $this->Comment->save($comment_data);
+        $comment_id = $this->Comment->getLastInsertID();
+
+        $comment_like_data = [
+            'comment_id' => $comment_id,
+            'user_id' => $user_id,
+            'team_id' => $team_id
+        ];
+        $this->Comment->CommentLike->save($comment_like_data);
+
+        $attached_file_data = [
+            'team_id' => $team_id,
+            'user_id' => $user_id,
+            'attached_file_name' => 'test_image.jpeg',
+            'file_ext' => 'jpeg'
+        ];
+        $this->Comment->CommentFile->AttachedFile->save($attached_file_data);
+        $attached_file_id = $this->Comment->CommentFile->AttachedFile->getLastInsertID();
+
+        $comment_file_data = [
+            'comment_id' => $comment_id,
+            'attached_file_id' => $attached_file_id,
+            'team_id' => $team_id,
+        ];
+        $this->Comment->CommentFile->save($comment_file_data);
+        // テスト用データ挿入End
+
+        $this->Comment->current_team_id = $team_id;
+        $this->Comment->my_uid = $user_id;
+
+        $comment_info = $this->Comment->getComment($comment_id);
+        $this->assertEquals($comment_id, $comment_info['Comment']['id']);
+    }
+
+    function testGetCommentCount()
+    {
+        $post_id = 1;
+        $team_id = 2;
+        $this->Comment->current_team_id = $team_id;
+
+        $comment_data = [
+            'post_id' => $post_id,
+            'team_id' => $team_id,
+            'body'    => 'test'
+        ];
+        $this->Comment->save($comment_data);
+        $res = $this->Comment->getCommentCount($post_id);
+
+        $this->assertEquals(1, $res);
     }
 
 }

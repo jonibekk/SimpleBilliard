@@ -66,7 +66,7 @@
             </ul>
         </div>
     </div>
-    <div class="header-dropdown-notify ">
+    <div id="HeaderDropdownNotify" class="header-dropdown-notify">
         <a id="click-header-bell" class="btn-notify-header" data-toggle="dropdown" href="#">
             <i class="header-dropdown-icon-notify fa fa-flag fa-bell-o header-drop-icons js-header-link header-icons"></i>
 
@@ -154,9 +154,26 @@
                                       ['controller' => 'teams', 'action' => 'settings']) ?>
                 </li>
             <?php endif; ?>
-            <li><?=
+            <li>
+                <?=
                 $this->Html->link(__d('home', 'Blog'), 'http://blog.goalous.com/',
-                                  ['target' => '_blank']) ?></li>
+                                  ['target' => '_blank']) ?>
+            </li>
+            <?php if (USERVOICE_API_KEY && $this->Session->read('Auth.User.id')): ?>
+            <li>
+                <a href="javascript:void(0)" data-uv-lightbox="classic_widget" data-uv-mode="full" data-uv-primary-color="#f0636f" data-uv-link-color="#007dbf" data-uv-default-mode="feedback" data-uv-forum-id="<?php
+                         if ($is_isao_user)
+                         {
+                             echo USERVOICE_FORUM_ID_PRIVATE;
+                         }
+                         else
+                         {
+                             echo USERVOICE_FORUM_ID_PUBLIC;
+                         }
+                         ?>"><?=__d('gl','Feedback')?>
+                </a>
+            </li>
+            <?php endif;?>
         </ul>
     </div>
 </div>

@@ -241,8 +241,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                     <span
                                         class="plr_18px"><?=
                                         $goal_start_date_format ?><?=
-                                        !isset($this->request->data['KeyResult'][0]) ? __d('gl',
-                                                                                           "（本日）") : null ?>
+                                        !isset($this->request->data['Goal']['start_date']) ? __d('gl', "（本日）") : null ?>
                                         &nbsp;&nbsp;<a href="#" class="target-show-target-del"
                                                        show-target-id="KeyResult0StartDateInputWrap"
                                                        delete-target-id="KeyResult0StartDateDefault"><?=

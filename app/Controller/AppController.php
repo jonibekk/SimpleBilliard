@@ -593,12 +593,18 @@ class AppController extends Controller
 
     public function _setViewValOnRightColumn()
     {
-        $my_goals = $this->Goal->getMyGoals(MY_GOALS_DISPLAY_NUMBER);
-        $my_goals_count = $this->Goal->getMyGoals(null, 1, 'count');
-        $collabo_goals = $this->Goal->getMyCollaboGoals(MY_COLLABO_GOALS_DISPLAY_NUMBER);
-        $collabo_goals_count = $this->Goal->getMyCollaboGoals(null, 1, 'count');
-        $follow_goals = $this->Goal->getMyFollowedGoals(MY_FOLLOW_GOALS_DISPLAY_NUMBER);
-        $follow_goals_count = $this->Goal->getMyFollowedGoals(null, 1, 'count');
+        //今期、来期のゴールを取得する
+        $start_date = $this->Team->getCurrentTermStartDate();
+        $end_date = $this->Team->getNextTermEndDate();
+
+        $my_goals = $this->Goal->getMyGoals(MY_GOALS_DISPLAY_NUMBER, 1, 'all', null, $start_date, $end_date);
+        $my_goals_count = $this->Goal->getMyGoals(null, 1, 'count', null, $start_date, $end_date);
+        $collabo_goals = $this->Goal->getMyCollaboGoals(MY_COLLABO_GOALS_DISPLAY_NUMBER, 1, 'all', null, $start_date,
+                                                        $end_date);
+        $collabo_goals_count = $this->Goal->getMyCollaboGoals(null, 1, 'count', null, $start_date, $end_date);
+        $follow_goals = $this->Goal->getMyFollowedGoals(MY_FOLLOW_GOALS_DISPLAY_NUMBER, 1, 'all', null, $start_date,
+                                                        $end_date);
+        $follow_goals_count = $this->Goal->getMyFollowedGoals(null, 1, 'count', null, $start_date, $end_date);
         $my_previous_goals = $this->Goal->getMyPreviousGoals(MY_PREVIOUS_GOALS_DISPLAY_NUMBER);
         $my_previous_goals_count = $this->Goal->getMyPreviousGoals(null, 1, 'count');
         //TODO 暫定的にアクションの候補を自分のゴールにする。あとでajax化する
