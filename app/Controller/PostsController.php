@@ -196,8 +196,6 @@ class PostsController extends AppController
     public function _editPost($id=null)
     {
         $this->request->allowMethod('post');
-        //print_r($this->request->data['Post']);
-        //post_id:{{post_detail.Post.id}}
 
         // ogbをインサートデータに追加
         $this->request->data['Post']['post_id']=$id;
@@ -361,11 +359,6 @@ class PostsController extends AppController
 
     public function edit_messenger()
     {
-
-
-        /*$this->layout = LAYOUT_ONE_COLUMN;
-        $this->set('without_footer', true);
-        return $this->render();*/
 
         $post_id = viaIsSet($this->request->params['named']['post_id']);
         $this->_ajaxPreProcess();
