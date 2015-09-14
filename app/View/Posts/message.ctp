@@ -12,8 +12,7 @@
             'common_form_type'     => 'message',
             'common_form_only_tab' => 'message'
         ]) ?>
-        <!-- end Add messenger -->
-<!--        <p>{{post_detail.Post.id}}</p>-->
+
     </div>
     <div ui-view> ロード中....</div>
 
