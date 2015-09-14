@@ -25,6 +25,8 @@ if [ ! -e $tmp_dir ]; then
     chmod 777 $tmp_dir
 fi
 
+sudo service php5-fpm reload
+
 cd $CURRENT
 
 TIME_B=`date +%s`   #B

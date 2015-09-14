@@ -394,6 +394,12 @@ $(document).ready(function () {
 
     $(document).on("click", '.modal-ajax-get-circle-edit', function (e) {
         e.preventDefault();
+        var $this = $(this);
+        if ($this.hasClass('double_click')) {
+            return false;
+        }
+        $this.addClass('double_click');
+
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
         $modal_elm.on('hidden.bs.modal', function (e) {
             $(this).remove();
@@ -450,6 +456,7 @@ $(document).ready(function () {
                     });
                 $modal_elm.modal();
             }).success(function () {
+                $this.removeClass('double_click');
                 $('body').addClass('modal-open');
             });
         }
