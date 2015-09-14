@@ -390,6 +390,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                 fade
         <?php endif ?>" id="MessageForm">
 
+
             <?=
             $this->Form->create('Post', [
                 'url'           => ['controller' => 'posts', 'action' => 'edit_message'],
@@ -412,6 +413,14 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                         'id'    => 'select2Member',
                         'style' => "width: 115%"
                     ]) ?>
+                    <?=
+                    $this->Form->input('post_id', [
+                        'id'    => 'post_messenger',
+                        'class' => "none",
+                        'value' => '',
+                        'type' => 'text'
+                    ]) ?>
+                    <?php //$this->Form->unlockField('Message.post_id') ?>
                     <?php $this->Form->unlockField('Message.share_public') ?>
                 </div>
                 <?= $this->Form->hidden('share_range', [

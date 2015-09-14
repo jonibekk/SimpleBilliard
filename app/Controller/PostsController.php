@@ -75,13 +75,15 @@ class PostsController extends AppController
         $this->redirect($to_url);
     }
 
-    public function edit_message()
+    public function edit_message($id=null)
     {
-        //print_r($this->request->data);
-        //exit;
+        $id=$this->request->data['Post']['post_id'];
         $this->request->data['Post']['type'] = Post::TYPE_MESSAGE;
-        $this->_editPost();
-        $to_url = Router::url(['controller' => 'posts', 'action' => 'message#', $this->Post->getLastInsertID()], true);
+
+        $this->_editPost($id);
+
+        $to_url = Router::url(['controller' => 'posts', 'action' => 'message#', $id], true);
+
         $this->redirect($to_url);
     }
 
@@ -191,12 +193,14 @@ class PostsController extends AppController
      * @throws RuntimeException
      * @return void
      */
-    public function _editPost()
+    public function _editPost($id=null)
     {
         $this->request->allowMethod('post');
-        //print_r($postData['Post']['post_id']);
-        //exit;
+        //print_r($this->request->data['Post']);
+        //post_id:{{post_detail.Post.id}}
+
         // ogbをインサートデータに追加
+        $this->request->data['Post']['post_id']=$id;
         $this->request->data['Post'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Post']),
                                                              viaIsSet($this->request->data['Post']['body']));
 
