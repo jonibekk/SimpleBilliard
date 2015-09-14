@@ -133,47 +133,54 @@ class TimeExHelper extends AppHelper
     public function datetimeLocalFormat($unixtime)
     {
         $local_time = $unixtime + ($this->timeOffset * 60 * 60);
-        $res = __dc("time", '%s月%s日 %s:%s', LC_TIME,
-                    date('n', $local_time),
-                    date('j', $local_time),
-                    date('H', $local_time),
-                    date('i', $local_time)
-        );
-        return $res;
+
+        switch (Configure::read('Config.language')) {
+            case "jpn":
+                $format = "%b%e日 %H:%M";
+                break;
+            default:
+                $format = "%b %e at %l:%M%P";
+        }
+        return $this->Time->i18nFormat($local_time, $format);
     }
 
     public function dateLocalFormat($unixtime)
     {
         $local_time = $unixtime + ($this->timeOffset * 60 * 60);
-        $res = __dc("time", '%s月%s日', LC_TIME,
-                    date('n', $local_time),
-                    date('j', $local_time)
-        );
-        return $res;
+        switch (Configure::read('Config.language')) {
+            case "jpn":
+                $format = "%b%e日";
+                break;
+            default:
+                $format = "%b %e";
+        }
+        return $this->Time->i18nFormat($local_time, $format);
     }
 
     public function yearDayLocalFormat($unixtime)
     {
         $local_time = $unixtime + ($this->timeOffset * 60 * 60);
-        $res = __dc("time", '%s年%s月%s日', LC_TIME,
-                    date('Y', $local_time),
-                    date('n', $local_time),
-                    date('j', $local_time)
-        );
-        return $res;
+        switch (Configure::read('Config.language')) {
+            case "jpn":
+                $format = "%Y年%b%e日";
+                break;
+            default:
+                $format = "%b %e %Y";
+        }
+        return $this->Time->i18nFormat($local_time, $format);
     }
 
     public function fullTimeLocalFormat($unixtime)
     {
         $local_time = $unixtime + ($this->timeOffset * 60 * 60);
-        $res = __dc("time", '%s年%s月%s日 %s:%s', LC_TIME,
-                    date('Y', $local_time),
-                    date('n', $local_time),
-                    date('j', $local_time),
-                    date('H', $local_time),
-                    date('i', $local_time)
-        );
-        return $res;
+        switch (Configure::read('Config.language')) {
+            case "jpn":
+                $format = "%Y年%b%e日 %H:%M";
+                break;
+            default:
+                $format = "%b %e %Y, at %l:%M%P";
+        }
+        return $this->Time->i18nFormat($local_time, $format);
     }
 
 }

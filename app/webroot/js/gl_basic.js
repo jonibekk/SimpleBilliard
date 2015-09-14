@@ -394,6 +394,12 @@ $(document).ready(function () {
 
     $(document).on("click", '.modal-ajax-get-circle-edit', function (e) {
         e.preventDefault();
+        var $this = $(this);
+        if ($this.hasClass('double_click')) {
+            return false;
+        }
+        $this.addClass('double_click');
+
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
         $modal_elm.on('hidden.bs.modal', function (e) {
             $(this).remove();
@@ -450,6 +456,7 @@ $(document).ready(function () {
                     });
                 $modal_elm.modal();
             }).success(function () {
+                $this.removeClass('double_click');
                 $('body').addClass('modal-open');
             });
         }
@@ -3357,6 +3364,11 @@ $(document).ready(function () {
         thumbnailWidth: null,
         thumbnailHeight: 240,
         // ファイルがドロップされた時の処理
+        drop: function(e) {
+            $uploadFileForm.hide();
+        },
+        // ファイルがドロップされた後
+        // Dropzone で受け付けるファイルだった時
         addedfile: function (file) {
             // previewContainer をドロップエリアに応じて入れ替える
             this.previewsContainer = $('#' + $uploadFileForm._params.previewContainerID).get(0);
@@ -3372,7 +3384,6 @@ $(document).ready(function () {
             // コールバック関数実行 (beforeAccept)
             $uploadFileForm._callbacks[$uploadFileForm._params.previewContainerID].beforeAccept.call(this, file);
 
-            $uploadFileForm.hide();
             done();
 
             // コールバック関数実行 (afterAccept)
