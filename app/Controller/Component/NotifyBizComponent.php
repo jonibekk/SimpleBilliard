@@ -8,6 +8,7 @@ App::uses('ModelType', 'Model');
  * @property GlEmailComponent $GlEmail
  * @property NotifySetting    $NotifySetting
  * @property Post             $Post
+ * @property Device           $Device
  * @property Comment          $Comment
  * @property Goal             $Goal
  * @property GlRedis          $GlRedis
@@ -58,6 +59,7 @@ class NotifyBizComponent extends Component
             $this->Comment = ClassRegistry::init('Comment');
             $this->Goal = ClassRegistry::init('Goal');
             $this->Team = ClassRegistry::init('Team');
+            $this->Device = ClassRegistry::init('Device');
             $this->GlRedis = ClassRegistry::init('GlRedis');
             $this->GlEmail->startup($controller);
         }
@@ -822,19 +824,25 @@ class NotifyBizComponent extends Component
             'method'        => NCMB_REST_API_PUSH_METHOD
         ));
 
-        // TODO: device_token取得
-        // $uids = $this->_getSendNotifyUserList();
-        // ここにuser_idに紐づくdevice_tokenを取得する処理を入れる
-        // いまのとこ固定
+        // TODO:とりあえずブラウザ用の通知送信対象ユーザーに対しPUSH通知する
+        // あとから変わるはず。
         $uids = $this->_getSendAppNotifyUserList();
 
         $this->notify_option['options']['style'] = 'plain';
         $original_lang = Configure::read('Config.language');
 
-        // 通知を受け取るユーザーごとに言語設定が違う可能性があるので
-        // ユーザーごとに通知を送信する必要がある
-        // TODO:言語設定でメッセージは一意なのだから言語毎にやれれば...
+        $post_url = Router::url(array_merge($this->notify_option['url_data'], ['from' => 'notify']), true);
+        error_log("FURU:url:" . $post_url . "\n", 3, "/tmp/hoge.log");
+
+
         foreach ($uids as $to_user_id) {
+
+            $deviceTokens = $this->Device->getDeviceTokens($to_user_id);
+            if (empty($deviceTokens)) {
+                //このユーザーはスマホ持ってないのでスキップ
+                continue;
+            }
+
             $this->_setLangByUserId($to_user_id, $original_lang);
             $from_user = $this->NotifySetting->User->getUsersProf($this->notify_option['from_user_id']);
             $from_user_name = $from_user[0]['User']['display_username'];
@@ -847,39 +855,25 @@ class NotifyBizComponent extends Component
             $body = '{
                 "immediateDeliveryFlag" : true,
                 "target":["ios","android"],
-                "searchCondition":{
-                    "deviceToken":{
-                        "$inArray":[
-                            "d00131dc36b828e20516baea0947a4d75dd24f08549b91cc0e94826c323ec63c",
-                            "APA91bG-SN85DXk4sOJ2e4_WN4dgaUkbIm2AK6gZp0GjOjNdpcH9LDChvC8OOA_uCpS5PhgisZ_ed0E0ZlX9GgaMrVY7nyO0SqU5kLdJ9aR2qaR_Dv2QZ3oRzqGL21mVvTul8jEWhJER"
-                        ]
-                    }
-                },
+                "searchCondition":{"deviceToken":{ "$inArray":["' . implode('","', $deviceTokens) . '"]}},
                 "message":"' . $title . '",
+                "userSettingValue":{"url":"'.$post_url.'"}},
                 "deliveryExpirationTime":"1 day"
             }';
 
             $options['http']['content'] = $body;
 
-            array_push($header, 'Content-Length: ' . strlen($body));
+            $header['content-length'] = 'Content-Length: ' . strlen($body);
             $options['http']['header'] = implode("\r\n", $header);
 
             $url = "https://" . NCMB_REST_API_FQDN . "/" . NCMB_REST_API_VER . "/" . NCMB_REST_API_PUSH;
             $ret = file_get_contents($url, false, stream_context_create($options));
 
             error_log("FURU:result:" . $ret . "\n", 3, "/tmp/hoge.log");
-
         }
 
         //変更したlangをログインユーザーのものに書き戻しておく
         $this->_setLang($original_lang);
-
-
-
-
-
-
-
     }
 
     /**
@@ -908,18 +902,22 @@ class NotifyBizComponent extends Component
      */
     private function _setLang($lang)
     {
+        //こっちはメッセージ本体の言語に効く
         Configure::write('Config.language', $lang);
         if ($lang == "eng") {
             $lang = null;
         }
+        //こっちは送信元の名前の言語に効く
         $this->NotifySetting->User->me['language'] = $lang;
     }
 
     /**
      * NOWなタイムスタンプを生成する。
+     *
      * @return string
      */
-    private function _getTimestamp() {
+    private function _getTimestamp()
+    {
         $now = microtime(true);
         $msec = sprintf("%03d", ($now - floor($now)) * 1000);
         return gmdate('Y-m-d\TH:i:s.', floor($now)) . $msec . 'Z';
@@ -1041,9 +1039,6 @@ class NotifyBizComponent extends Component
         $user_list = array_merge($user_list, Hash::extract($data, '{n}.Notification.options.post_user_id'));
         $users = Hash::combine($this->NotifySetting->User->getUsersProf($user_list), '{n}.User.id', '{n}');
         //merge users to notification data
-        $hoge = $this->NotifySetting->User->getUsersProf($user_list);
-        error_log("###:FURU:ajax:name=".print_r($hoge,true)."\n",3,"/tmp/hoge.log");
-
 
         foreach ($data as $k => $v) {
             $user_id = null;

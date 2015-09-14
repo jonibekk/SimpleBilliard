@@ -2,7 +2,6 @@
 
 /**
  * DeviceFixture
-
  */
 class DeviceFixture extends CakeTestFixture
 {
@@ -35,30 +34,40 @@ class DeviceFixture extends CakeTestFixture
      */
     public $records = [
         [
-            'id'      => '1',
-            'user_id' => '1',
-            'device_token'    => 'ios_dummy1',
-            'os_type'    => '0',
+            'id'           => '1',
+            'user_id'      => '1',
+            'device_token' => 'ios_dummy1',
+            'os_type'      => '0',
+            'del_flg'      => false,
         ],
         [
-            'id'      => '2',
-            'user_id' => '2',
-            'device_token'    => 'android_dummy1',
-            'os_type'    => '1',
+            'id'           => '2',
+            'user_id'      => '2',
+            'device_token' => 'android_dummy1',
+            'os_type'      => '1',
+            'del_flg'      => false,
         ],
         [
-            'id'      => '3',
-            'user_id' => '3',
-            'device_token'    => 'ios_dummy2',
-            'os_type'    => '0',
+            'id'           => '3',
+            'user_id'      => '3',
+            'device_token' => 'ios_dummy2',
+            'os_type'      => '0',
+            'del_flg'      => false,
         ],
         [
-            'id'      => '4',
-            'user_id' => '3',
-            'device_token'    => 'android_dummy2',
-            'os_type'    => '1',
+            'id'           => '4',
+            'user_id'      => '3',
+            'device_token' => 'android_dummy2',
+            'os_type'      => '1',
+            'del_flg'      => false,
+        ],
+        [
+            'id'           => '5',
+            'user_id'      => '4',
+            'device_token' => 'android_dummy3',
+            'os_type'      => '1',
+            'del_flg'      => true,
         ],
     ];
-
 
 }

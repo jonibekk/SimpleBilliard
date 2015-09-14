@@ -61,17 +61,56 @@ class Device extends AppModel
         }
         $this->create();
         $res = $this->saveAll($data);
-
-        error_log("FURU:".$res."\n",3,"/tmp/test.log");
         return $res;
     }
 
+    /**
+     * ユーザーId でDeviceを取得する
+     *
+     * @param $user_id
+     *
+     * @return array|bool|null
+     */
     function getDevicesByUserId($user_id)
     {
-        $ret = [];
-        $ret[] = ['device_token' => 'ios_dummy1'];
-        $ret[] = ["2"];
-        return $ret;
+        if (empty($user_id)) {
+            return false;
+        }
+
+        $options = [
+            'conditions' => [
+                'Device.user_id' => $user_id,
+                'Device.del_flg' => false,
+            ],
+        ];
+
+        $data = $this->find('all', $options);
+        return $data;
+    }
+
+    /**
+     * ユーザーIDでDevice.device_tokenのみを配列で取得する
+     * これがメインメソッドで、user_idで取得するのは自明なのでメソッド名は短めにしてみた
+     *
+     * @param $user_id
+     *
+     * @return array|bool device_tokenの配列
+     */
+    function getDeviceTokens($user_id)
+    {
+        $devices = $this->getDevicesByUserId($user_id);
+
+        if (empty($devices)) {
+            return false;
+        }
+
+        $deviceTokens = [];
+
+        foreach ($devices as $d) {
+            $deviceTokens[] = $d['Device']['device_token'];
+        }
+
+        return $deviceTokens;
     }
 
 }
