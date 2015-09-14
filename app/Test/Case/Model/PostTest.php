@@ -91,6 +91,26 @@ class PostTest extends CakeTestCase
         $this->assertNotEmpty($res, "[正常]投稿(uid,team_id指定なし)");
     }
 
+    public function testEdit()
+    {
+        $uid = '1';
+        $team_id = '1';
+        $postData = [
+            'Post' => [
+                'post_id' => '30',
+                'body' => 'test',
+            ]
+        ];
+        $res = $this->Post->editNormal($postData, $uid, $team_id);
+        $this->assertNotEmpty($res, "[正常]投稿(uid,team_id指定)");
+
+        $this->Post->my_uid = $uid;
+        $this->Post->current_team_id = $team_id;
+        $this->Post->create();
+        $res = $this->Post->editNormal($postData);
+        $this->assertNotEmpty($res, "[正常]投稿(uid,team_id指定なし)");
+    }
+
     public function testAddWithFile()
     {
         $uid = '1';
