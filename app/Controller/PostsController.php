@@ -77,6 +77,8 @@ class PostsController extends AppController
 
     public function edit_message()
     {
+        //print_r($this->request->data);
+        //exit;
         $this->request->data['Post']['type'] = Post::TYPE_MESSAGE;
         $this->_editPost();
         $to_url = Router::url(['controller' => 'posts', 'action' => 'message#', $this->Post->getLastInsertID()], true);
@@ -184,7 +186,7 @@ class PostsController extends AppController
     }
 
     /**
-     * add method
+     * Edit method
      *
      * @throws RuntimeException
      * @return void
@@ -192,7 +194,8 @@ class PostsController extends AppController
     public function _editPost()
     {
         $this->request->allowMethod('post');
-
+        //print_r($postData['Post']['post_id']);
+        //exit;
         // ogbをインサートデータに追加
         $this->request->data['Post'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Post']),
                                                              viaIsSet($this->request->data['Post']['body']));
@@ -205,7 +208,7 @@ class PostsController extends AppController
         }
 
         // 投稿を保存
-        $successSavedPost = $this->Post->addNormal($this->request->data);
+        $successSavedPost = $this->Post->editNormal($this->request->data);
 
         // 保存に失敗
         if (!$successSavedPost) {
