@@ -113,28 +113,9 @@
                 <!--//navbar-header-->
                 <div class="navbar-collapse collapse" id="navbar-collapse">
                     <ul class="nav navbar-nav">
-                        <li class="nav-item"><a href="features.html">機能</a></li>
-                        <li class="nav-item"><a href="pricing.html">料金</a></li>
-                        <li class="nav-item"><a href="company-content.html">導入事例</a></li>
-                        <li class="nav-item dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="0"
-                               data-close-others="false" href="blog.html">ブログ <i class="fa fa-angle-down"></i></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="blog.html">Goalous Blog</a></li>
-                                <li><a href="blog-single.html">最新記事</a></li>
-                                <li><a href="blog-single.html">人気の記事</a></li>
-
-                            </ul>
-                        </li>
-                        <!--//dropdown-->
-                        <li class="nav-item"><a href="contact.html">お問い合わせ</a></li>
                         <li class="nav-item">
                             <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'login']) ?>"
                                class="btn btn-link"><?= __d('gl', 'ログイン') ?></a>
-                        </li>
-                        <li class="nav-item nav-item-cta last">
-                            <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'register']) ?>"
-                               class="btn btn-cta btn-cta-primary"><?= __d('gl', '新規登録') ?></a>
                         </li>
                     </ul>
                     <!--//nav-->
