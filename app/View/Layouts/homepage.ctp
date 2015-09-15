@@ -93,7 +93,7 @@
     <header id="header" class="header">
         <div class="container">
             <h1 class="logo pull-left">
-                <a href="<?= $this->Html->url('/')?>">
+                <a href="<?= $this->Html->url('/') ?>">
                     <span class="logo-title">
                         <?= $this->Html->image('homepage/logo.png', ['alt' => 'Goalous']) ?>
                         <?= $this->Html->image('homepage/goalous.png', ['alt' => 'Goalous']) ?>
@@ -116,6 +116,17 @@
                         <li class="nav-item">
                             <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'login']) ?>"
                                class="btn btn-link"><?= __d('gl', 'ログイン') ?></a>
+                        </li>
+                        <li class="nav-item dropdown last">
+                            <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="0"
+                               data-close-others="false" href="blog.html"><?= __d('gl', 'Language') ?> <i
+                                    class="fa fa-angle-down"></i></a>
+                            <ul class="dropdown-menu">
+                                <?php /** @var $lang_list */
+                                foreach ($lang_list as $key => $val) : ?>
+                                    <li><?= $this->Html->link($val, '/' . $key . '/'); ?></li>
+                                <?php endforeach; ?>
+                            </ul>
                         </li>
                     </ul>
                     <!--//nav-->
