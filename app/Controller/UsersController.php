@@ -82,6 +82,8 @@ class UsersController extends AppController
             return $this->render();
         }
 
+        error_log("###ins_id:".$this->request->data['User']['installation_id']."\n",3,"/tmp/hoge.log");
+
         //account lock check
         $ip_address = $this->request->clientIp();
         $is_account_locked = $this->GlRedis->isAccountLocked($this->request->data['User']['email'], $ip_address);
