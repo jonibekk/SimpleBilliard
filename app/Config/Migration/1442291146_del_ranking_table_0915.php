@@ -18,12 +18,12 @@ class DelRankingTable0915 extends CakeMigration
     public $migration = array(
         'up'   => array(
             'drop_table' => array(
-                'team_post_ranking',
-                'team_user_ranking',
-                'team_goal_ranking',
-                'group_goal_ranking',
-                'group_post_ranking',
-                'group_user_ranking',
+                'team_post_rankings',
+                'team_user_rankings',
+                'team_goal_rankings',
+                'group_goal_rankings',
+                'group_post_rankings',
+                'group_user_rankings',
             ),
         ),
         'down' => array(
