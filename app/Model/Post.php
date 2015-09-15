@@ -362,12 +362,7 @@ class Post extends AppModel
         if (isset($postData['Post']['share']) && !empty($postData['Post']['share'])) {
 
             $share = explode(",", $postData['Post']['share']);
-            foreach ($share as $key => $val) {
-                if (stristr($val, 'public')) {
-                    $teamAllCircle = $this->Circle->getTeamAllCircle();
-                    $share[$key] = 'circle_' . $teamAllCircle['Circle']['id'];
-                }
-            }
+
         }
         $postData['Post']['user_id'] = $this->uid;
         $postData['Post']['team_id'] = $this->team_id;
