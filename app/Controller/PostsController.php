@@ -34,30 +34,13 @@ class PostsController extends AppController
     public function ajax_get_message_list($page=1)
     {
         $this->_ajaxPreProcess();
-        $result = $this->Post->getMessageList(3, $page);
-
-        // TODO:緊急対応　汚いので後でリファクタリング
-        foreach ($result as $key => $item) {
-            if (isset($item['PostShareUser']) === true) {
-
-                $shared_user_id = [];
-                foreach ($item['PostShareUser'] as $item2) {
-                    $shared_user_id[] = $item2['user_id'];
-                }
-
-                if (in_array($this->Auth->user('id'), $shared_user_id) === false
-                    && $item['Post']['user_id'] !== $this->Auth->user('id')
-                ) {
-                    unset($result[$key]);
-                }
-            }
-        }
+        $result = $this->Post->getMessageList($this->Auth->user('id'), 5, $page);
         $message_list = $this->Post->convertData($result);
         $res = [
             'auth_info'    => [
                 'user_id'    => $this->Auth->user('id'),
                 'language'   => $this->Auth->user('language'),
-                'photo_path' => $this->Post->getPhotoPath($this->Auth->user()),
+                'photo_path' => $this->Post->getPhotoPath($this->Auth->user())
             ],
             'message_list' => $message_list,
         ];

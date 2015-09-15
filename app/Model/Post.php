@@ -1295,12 +1295,15 @@ class Post extends AppModel
         return $res ? $res[0]['sum_like'] : 0;
     }
 
-    public function getMessageList($limit=null, $page=null)
+    public function getMessageList($user_id, $limit=null, $page=null)
     {
         $options = [
             'conditions' => [
                 'team_id' => $this->current_team_id,
                 'type'    => self::TYPE_MESSAGE,
+                'OR' => [
+                    'user_id' => $user_id,
+                ],
             ],
             'order'      => [
                 'Post.modified' => 'desc',
@@ -1320,6 +1323,11 @@ class Post extends AppModel
                 ],
             ],
         ];
+
+        $post_id = $this->PostShareUser->getPostIdListByUserId($user_id);
+        if (count($post_id) > 0) {
+            $options['conditions']['OR']['Post.id'] = $post_id;
+        }
 
         if (is_null($limit) === false) {
             $options['limit'] = $limit;
