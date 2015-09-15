@@ -98,8 +98,6 @@ Vagrant.configure('2') do |config|
             chef.add_recipe 'deploy_cake_local'
             chef.add_recipe 'vnc'
             chef.add_recipe 'java'
-            chef.add_recipe 'phpstorm'
-            chef.add_recipe 'scudcloud'
             chef.json = {
                 doc_root: doc_root,
                 app_root: app_root,
