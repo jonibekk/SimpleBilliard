@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2015-09-15 10:30+0000\n"
+"POT-Creation-Date: 2015-09-15 10:53+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -19,39 +19,23 @@ msgid "About Us"
 msgstr ""
 
 #: View/Layouts/homepage.ctp:154
-msgid "株式会社ISAO"
+msgid "Goalous Team"
 msgstr ""
 
-#: View/Layouts/homepage.ctp:155
-msgid "「たのしい！」をうみだしとどける"
-msgstr ""
-
-#: View/Layouts/homepage.ctp:156
-msgid "ニッポン発！億人を熱くするサービス実現！"
-msgstr ""
-
-#: View/Layouts/homepage.ctp:157
-msgid "オープン・チャレンジ・キズナ"
-msgstr ""
-
-#: View/Layouts/homepage.ctp:159
-msgid "HPを見る"
-msgstr ""
-
-#: View/Layouts/homepage.ctp:168
+#: View/Layouts/homepage.ctp:161
 msgid "Other Links"
 msgstr ""
 
-#: View/Layouts/homepage.ctp:179
+#: View/Layouts/homepage.ctp:172
 msgid "Get in touch"
 msgstr ""
 
-#: View/Layouts/homepage.ctp:182
+#: View/Layouts/homepage.ctp:175
 msgid "Goalousへのお問い合わせ"
 msgstr ""
 
 #: View/Pages/home.ctp:22
-msgid "さあ。チーム力で。飛べ。"
+msgid "チーム力で、飛べ。"
 msgstr ""
 
 #: View/Pages/home.ctp:24
@@ -67,7 +51,7 @@ msgid "前バージョン(β)をご利用の方はこちら"
 msgstr ""
 
 #: View/Pages/home.ctp:34
-msgid "知らせたい。。。Goalousのこと。"
+msgid "知らせたい。Goalousのこと。"
 msgstr ""
 
 #: View/Pages/home.ctp:36

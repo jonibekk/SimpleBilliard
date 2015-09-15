@@ -19,7 +19,7 @@
 <!-- ******PROMO****** -->
 <section id="promo" class="promo section">
     <div class="container intro">
-        <h2 class="title"><?= __d('lp', 'さあ。チーム力で。飛べ。') ?></h2>
+        <h2 class="title"><?= __d('lp', 'チーム力で、飛べ。') ?></h2>
 
         <p class="summary"><?= __d('lp', 'Goalous(ゴーラス)正式版がついに今秋登場！') ?><br/><?= __d('lp', 'チーム向上のためのSNS。はい、決定版。') ?>
         </p>
@@ -31,7 +31,7 @@
     <div class="fixed-container">
         <div class="signup">
             <div class="container text-center">
-                <h3 class="title"><?= __d('lp', '知らせたい。。。Goalousのこと。') ?></h3>
+                <h3 class="title"><?= __d('lp', '知らせたい。Goalousのこと。') ?></h3>
 
                 <p class="summary"><?= __d('lp', 'メールアドレス登録で情報をゲット！') ?></p>
                 <?= $this->Form->create('SubscribeEmail', [
