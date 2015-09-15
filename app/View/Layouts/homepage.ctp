@@ -115,7 +115,7 @@
                     <ul class="nav navbar-nav">
                         <li class="nav-item">
                             <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'login']) ?>"
-                               class="btn btn-link"><?= __d('gl', 'ログイン') ?></a>
+                               class=""><?= __d('gl', 'ログイン') ?></a>
                         </li>
                         <li class="nav-item dropdown last">
                             <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="0"
