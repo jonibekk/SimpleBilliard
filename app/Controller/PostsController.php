@@ -8,6 +8,9 @@ App::uses('AppController', 'Controller');
  */
 class PostsController extends AppController
 {
+    //　メッセージリストの1ページあたり表示件数
+    public static $message_list_page_count = 20;
+
     public function beforeFilter()
     {
         parent::beforeFilter();
@@ -34,7 +37,7 @@ class PostsController extends AppController
     public function ajax_get_message_list($page=1)
     {
         $this->_ajaxPreProcess();
-        $result = $this->Post->getMessageList($this->Auth->user('id'), 5, $page);
+        $result = $this->Post->getMessageList($this->Auth->user('id'), PostsController::$message_list_page_count, $page);
         $message_list = $this->Post->convertData($result);
         $res = [
             'auth_info'    => [
