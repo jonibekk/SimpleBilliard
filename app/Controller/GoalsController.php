@@ -1418,6 +1418,8 @@ class GoalsController extends AppController
         }
         $this->set('goal', $goal);
 
+        $this->set('item_created', isset($goal['Goal']['created']) ? $goal['Goal']['created'] : null);
+
         // アクション数
         $action_count = $this->Goal->ActionResult->getCountByGoalId($goal_id);
         $this->set('action_count', $action_count);
