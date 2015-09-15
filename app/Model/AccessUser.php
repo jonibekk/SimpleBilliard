@@ -2,13 +2,12 @@
 App::uses('AppModel', 'Model');
 
 /**
- * GroupGoalRanking Model
+ * AccessUser Model
  *
- * @property Team  $Team
- * @property Group $Group
- * @property Goal  $Goal
+ * @property Team $Team
+ * @property User $User
  */
-class GroupGoalRanking extends AppModel
+class AccessUser extends AppModel
 {
 
     /**
@@ -23,6 +22,7 @@ class GroupGoalRanking extends AppModel
             ],
         ],
     ];
+
     /**
      * belongsTo associations
      *
@@ -30,7 +30,6 @@ class GroupGoalRanking extends AppModel
      */
     public $belongsTo = [
         'Team',
-        'Group',
-        'Goal',
+        'User',
     ];
 }

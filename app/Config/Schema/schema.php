@@ -12,6 +12,23 @@ class AppSchema extends CakeSchema
     {
     }
 
+    public $access_users = array(
+        'id'              => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'),
+        'team_id'         => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index'),
+        'user_id'         => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true),
+        'access_date'     => array('type' => 'date', 'null' => true, 'default' => null),
+        'timezone'        => array('type' => 'float', 'null' => true, 'default' => null, 'unsigned' => false),
+        'del_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+        'deleted'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+        'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+        'modified'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
+        'indexes'         => array(
+            'PRIMARY'             => array('column' => 'id', 'unique' => 1),
+            'team_id_access_date' => array('column' => array('team_id', 'access_date'), 'unique' => 0)
+        ),
+        'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+    );
+
     public $action_result_files = array(
         'id'               => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'ID'),
         'action_result_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'アクションID(belongsToでActionResultモデルに関連)'),
@@ -183,11 +200,7 @@ class AppSchema extends CakeSchema
         'target_date'     => array('type' => 'date', 'null' => true, 'default' => null),
         'timezone'        => array('type' => 'float', 'null' => true, 'default' => null, 'unsigned' => false),
         'circle_id'       => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index'),
-        'member_count'    => array('type' => 'integer', 'null' => true, 'default' => '0', 'length' => 10, 'unsigned' => true),
-        'post_count'      => array('type' => 'integer', 'null' => true, 'default' => '0', 'length' => 10, 'unsigned' => true),
-        'post_read_count' => array('type' => 'integer', 'null' => true, 'default' => '0', 'length' => 10, 'unsigned' => true),
-        'post_like_count' => array('type' => 'integer', 'null' => true, 'default' => '0', 'length' => 10, 'unsigned' => true),
-        'comment_count'   => array('type' => 'integer', 'null' => true, 'default' => '0', 'length' => 10, 'unsigned' => true),
+        'user_count'      => array('type' => 'integer', 'null' => true, 'default' => '0', 'length' => 10, 'unsigned' => true),
         'del_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0'),
         'deleted'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
         'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
@@ -515,8 +528,8 @@ class AppSchema extends CakeSchema
 
     public $evaluators = array(
         'id'                => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'ID'),
-        'evaluatee_user_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '評価者ID(belongsToでUserモデルに関連)'),
         'evaluator_user_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '被評価者ID(belongsToでUserモデルに関連)'),
+        'evaluatee_user_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '評価者ID(belongsToでUserモデルに関連)'),
         'team_id'           => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'チームID(belongsToでTeamモデルに関連)'),
         'index_num'         => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false, 'comment' => '評価者の順序'),
         'del_flg'           => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
@@ -624,103 +637,21 @@ class AppSchema extends CakeSchema
         'tableParameters'     => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
 
-    public $group_goal_rankings = array(
+    public $group_insights = array(
         'id'              => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'),
         'team_id'         => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index'),
         'group_id'        => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index'),
-        'start_date'      => array('type' => 'date', 'null' => true, 'default' => null),
-        'end_date'        => array('type' => 'date', 'null' => true, 'default' => null, 'key' => 'index'),
+        'target_date'     => array('type' => 'date', 'null' => true, 'default' => null),
         'timezone'        => array('type' => 'float', 'null' => true, 'default' => null, 'unsigned' => false),
-        'goal_id'         => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index'),
-        'action_count'    => array('type' => 'integer', 'null' => true, 'default' => '0', 'length' => 10, 'unsigned' => true),
+        'user_count'      => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false),
         'del_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0'),
         'deleted'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
         'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
         'modified'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
         'indexes'         => array(
-            'PRIMARY'             => array('column' => 'id', 'unique' => 1),
-            'group_id_start_date' => array('column' => array('group_id', 'start_date'), 'unique' => 0),
-            'end_date'            => array('column' => 'end_date', 'unique' => 0),
-            'team_id'             => array('column' => 'team_id', 'unique' => 0),
-            'goal_id'             => array('column' => 'goal_id', 'unique' => 0)
-        ),
-        'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
-    );
-
-    public $group_insights = array(
-        'id'                   => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'),
-        'team_id'              => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index'),
-        'group_id'             => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index'),
-        'target_date'          => array('type' => 'date', 'null' => true, 'default' => null),
-        'timezone'             => array('type' => 'float', 'null' => true, 'default' => null, 'unsigned' => false),
-        'user_count'           => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false),
-        'access_user_count'    => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false),
-        'message_count'        => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false),
-        'action_count'         => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false),
-        'action_user_count'    => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false),
-        'post_count'           => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false),
-        'post_user_count'      => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false),
-        'like_count'           => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false),
-        'comment_count'        => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false),
-        'collabo_count'        => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false),
-        'collabo_action_count' => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false),
-        'del_flg'              => array('type' => 'boolean', 'null' => false, 'default' => '0'),
-        'deleted'              => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
-        'created'              => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
-        'modified'             => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
-        'indexes'              => array(
             'PRIMARY'              => array('column' => 'id', 'unique' => 1),
             'group_id_target_date' => array('column' => array('group_id', 'target_date'), 'unique' => 0),
             'team_id'              => array('column' => 'team_id', 'unique' => 0)
-        ),
-        'tableParameters'      => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
-    );
-
-    public $group_post_rankings = array(
-        'id'              => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'),
-        'team_id'         => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index'),
-        'group_id'        => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index'),
-        'start_date'      => array('type' => 'date', 'null' => true, 'default' => null),
-        'end_date'        => array('type' => 'date', 'null' => true, 'default' => null, 'key' => 'index'),
-        'timezone'        => array('type' => 'float', 'null' => true, 'default' => null, 'unsigned' => false),
-        'post_id'         => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index'),
-        'post_type'       => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 10, 'unsigned' => true),
-        'like_count'      => array('type' => 'integer', 'null' => true, 'default' => '0', 'length' => 10, 'unsigned' => true),
-        'comment_count'   => array('type' => 'integer', 'null' => true, 'default' => '0', 'length' => 10, 'unsigned' => true),
-        'del_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0'),
-        'deleted'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
-        'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
-        'modified'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
-        'indexes'         => array(
-            'PRIMARY'             => array('column' => 'id', 'unique' => 1),
-            'group_id_start_date' => array('column' => array('group_id', 'start_date'), 'unique' => 0),
-            'team_id'             => array('column' => 'team_id', 'unique' => 0),
-            'end_date'            => array('column' => 'end_date', 'unique' => 0),
-            'post_id'             => array('column' => 'post_id', 'unique' => 0)
-        ),
-        'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
-    );
-
-    public $group_user_rankings = array(
-        'id'              => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'),
-        'team_id'         => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index'),
-        'group_id'        => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index'),
-        'start_date'      => array('type' => 'date', 'null' => true, 'default' => null),
-        'end_date'        => array('type' => 'date', 'null' => true, 'default' => null, 'key' => 'index'),
-        'timezone'        => array('type' => 'float', 'null' => true, 'default' => null, 'unsigned' => false),
-        'user_id'         => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index'),
-        'post_count'      => array('type' => 'integer', 'null' => true, 'default' => '0', 'length' => 10, 'unsigned' => true),
-        'action_count'    => array('type' => 'integer', 'null' => true, 'default' => '0', 'length' => 10, 'unsigned' => true),
-        'del_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0'),
-        'deleted'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
-        'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
-        'modified'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
-        'indexes'         => array(
-            'PRIMARY'             => array('column' => 'id', 'unique' => 1),
-            'group_id_start_date' => array('column' => array('group_id', 'start_date'), 'unique' => 0),
-            'team_id'             => array('column' => 'team_id', 'unique' => 0),
-            'end_date'            => array('column' => 'end_date', 'unique' => 0),
-            'user_id'             => array('column' => 'user_id', 'unique' => 0)
         ),
         'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
@@ -1234,52 +1165,21 @@ class AppSchema extends CakeSchema
         'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
 
-    public $team_goal_rankings = array(
+    public $team_insights = array(
         'id'              => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'),
         'team_id'         => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index'),
-        'start_date'      => array('type' => 'date', 'null' => true, 'default' => null),
-        'end_date'        => array('type' => 'date', 'null' => true, 'default' => null, 'key' => 'index'),
+        'target_date'     => array('type' => 'date', 'null' => true, 'default' => null),
         'timezone'        => array('type' => 'float', 'null' => true, 'default' => null, 'unsigned' => false),
-        'goal_id'         => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index'),
-        'action_count'    => array('type' => 'integer', 'null' => true, 'default' => '0', 'length' => 10, 'unsigned' => true),
+        'user_count'      => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false),
         'del_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0'),
         'deleted'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
         'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
         'modified'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
         'indexes'         => array(
-            'PRIMARY'            => array('column' => 'id', 'unique' => 1),
-            'team_id_start_date' => array('column' => array('team_id', 'start_date'), 'unique' => 0),
-            'end_date'           => array('column' => 'end_date', 'unique' => 0),
-            'goal_id'            => array('column' => 'goal_id', 'unique' => 0)
-        ),
-        'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
-    );
-
-    public $team_insights = array(
-        'id'                   => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'),
-        'team_id'              => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index'),
-        'target_date'          => array('type' => 'date', 'null' => true, 'default' => null),
-        'timezone'             => array('type' => 'float', 'null' => true, 'default' => null, 'unsigned' => false),
-        'user_count'           => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false),
-        'access_user_count'    => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false),
-        'message_count'        => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false),
-        'action_count'         => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false),
-        'action_user_count'    => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false),
-        'post_count'           => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false),
-        'post_user_count'      => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false),
-        'like_count'           => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false),
-        'comment_count'        => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false),
-        'collabo_count'        => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false),
-        'collabo_action_count' => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false),
-        'del_flg'              => array('type' => 'boolean', 'null' => false, 'default' => '0'),
-        'deleted'              => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
-        'created'              => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
-        'modified'             => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
-        'indexes'              => array(
             'PRIMARY'             => array('column' => 'id', 'unique' => 1),
             'team_id_target_date' => array('column' => array('team_id', 'target_date'), 'unique' => 0)
         ),
-        'tableParameters'      => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+        'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
 
     public $team_members = array(
@@ -1311,51 +1211,6 @@ class AppSchema extends CakeSchema
             'member_no'       => array('column' => 'member_no', 'unique' => 0)
         ),
         'tableParameters'       => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
-    );
-
-    public $team_post_rankings = array(
-        'id'              => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'),
-        'team_id'         => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index'),
-        'start_date'      => array('type' => 'date', 'null' => true, 'default' => null),
-        'end_date'        => array('type' => 'date', 'null' => true, 'default' => null, 'key' => 'index'),
-        'timezone'        => array('type' => 'float', 'null' => true, 'default' => null, 'unsigned' => false),
-        'post_id'         => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index'),
-        'post_type'       => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 10, 'unsigned' => true),
-        'like_count'      => array('type' => 'integer', 'null' => true, 'default' => '0', 'length' => 10, 'unsigned' => true),
-        'comment_count'   => array('type' => 'integer', 'null' => true, 'default' => '0', 'length' => 10, 'unsigned' => true),
-        'del_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0'),
-        'deleted'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
-        'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
-        'modified'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
-        'indexes'         => array(
-            'PRIMARY'            => array('column' => 'id', 'unique' => 1),
-            'team_id_start_date' => array('column' => array('team_id', 'start_date'), 'unique' => 0),
-            'end_date'           => array('column' => 'end_date', 'unique' => 0),
-            'post_id'            => array('column' => 'post_id', 'unique' => 0)
-        ),
-        'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
-    );
-
-    public $team_user_rankings = array(
-        'id'              => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'),
-        'team_id'         => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index'),
-        'start_date'      => array('type' => 'date', 'null' => true, 'default' => null),
-        'end_date'        => array('type' => 'date', 'null' => true, 'default' => null, 'key' => 'index'),
-        'timezone'        => array('type' => 'float', 'null' => true, 'default' => null, 'unsigned' => false),
-        'user_id'         => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index'),
-        'post_count'      => array('type' => 'integer', 'null' => true, 'default' => '0', 'length' => 10, 'unsigned' => true),
-        'action_count'    => array('type' => 'integer', 'null' => true, 'default' => '0', 'length' => 10, 'unsigned' => true),
-        'del_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0'),
-        'deleted'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
-        'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
-        'modified'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true),
-        'indexes'         => array(
-            'PRIMARY'            => array('column' => 'id', 'unique' => 1),
-            'team_id_start_date' => array('column' => array('team_id', 'start_date'), 'unique' => 0),
-            'end_date'           => array('column' => 'end_date', 'unique' => 0),
-            'user_id'            => array('column' => 'user_id', 'unique' => 0)
-        ),
-        'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
 
     public $team_visions = array(

@@ -1,12 +1,12 @@
 <?php
-App::uses('GroupPostRanking', 'Model');
+App::uses('AccessUser', 'Model');
 
 /**
- * GroupPostRanking Test Case
+ * AccessUser Test Case
  *
- * @property GroupPostRanking $GroupPostRanking
+ * @property AccessUser $AccessUser
  */
-class GroupPostRankingTest extends CakeTestCase
+class AccessUserTest extends CakeTestCase
 {
 
     /**
@@ -15,7 +15,7 @@ class GroupPostRankingTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.group_post_ranking',
+        'app.access_user',
         'app.team',
         'app.badge',
         'app.user',
@@ -73,7 +73,7 @@ class GroupPostRankingTest extends CakeTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->GroupPostRanking = ClassRegistry::init('GroupPostRanking');
+        $this->AccessUser = ClassRegistry::init('AccessUser');
     }
 
     /**
@@ -83,7 +83,7 @@ class GroupPostRankingTest extends CakeTestCase
      */
     public function tearDown()
     {
-        unset($this->GroupPostRanking);
+        unset($this->AccessUser);
 
         parent::tearDown();
     }
