@@ -119,7 +119,7 @@
                         </li>
                         <li class="nav-item dropdown last">
                             <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="0"
-                               data-close-others="false" href="blog.html"><?= __d('gl', 'Language') ?> <i
+                               data-close-others="false" href="#"><?= __d('gl', 'Language') ?> <i
                                     class="fa fa-angle-down"></i></a>
                             <ul class="dropdown-menu">
                                 <?php /** @var $lang_list */
