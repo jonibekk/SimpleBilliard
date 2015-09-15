@@ -15,62 +15,12 @@ class TeamInsight extends AppModel
      * @var array
      */
     public $validate = [
-        'user_count'           => [
+        'user_count' => [
             'numeric' => [
                 'rule' => ['numeric'],
             ],
         ],
-        'access_user_count'    => [
-            'numeric' => [
-                'rule' => ['numeric'],
-            ],
-        ],
-        'message_count'        => [
-            'numeric' => [
-                'rule' => ['numeric'],
-            ],
-        ],
-        'action_count'         => [
-            'numeric' => [
-                'rule' => ['numeric'],
-            ],
-        ],
-        'action_user_count'    => [
-            'numeric' => [
-                'rule' => ['numeric'],
-            ],
-        ],
-        'post_count'           => [
-            'numeric' => [
-                'rule' => ['numeric'],
-            ],
-        ],
-        'post_user_count'      => [
-            'numeric' => [
-                'rule' => ['numeric'],
-            ],
-        ],
-        'like_count'           => [
-            'numeric' => [
-                'rule' => ['numeric'],
-            ],
-        ],
-        'comment_count'        => [
-            'numeric' => [
-                'rule' => ['numeric'],
-            ],
-        ],
-        'collabo_count'        => [
-            'numeric' => [
-                'rule' => ['numeric'],
-            ],
-        ],
-        'collabo_action_count' => [
-            'numeric' => [
-                'rule' => ['numeric'],
-            ],
-        ],
-        'del_flg'              => [
+        'del_flg'    => [
             'boolean' => [
                 'rule' => ['boolean'],
             ],
