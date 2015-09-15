@@ -223,6 +223,7 @@
 <!--//footer-->
 <?= $this->element('common_homepage_js') ?>
 <?= $this->fetch('script') ?>
+<?= $this->fetch('modal') ?>
 <?= $this->Session->flash('pnotify') ?>
 
 <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->

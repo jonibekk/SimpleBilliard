@@ -53,8 +53,12 @@
                 <?= $this->Form->submit(__d('lp', "新規登録"),
                                         ['class' => 'btn btn-cta btn-cta-primary', 'div' => false]) ?>
                 <p class="under-mail">
-                    <?php $terms = "<a href=''>" . __d('gl', "利用規約") . "</a>" ?>
-                    <?= __d('lp', "%sをご確認のうえ、同意いただけましたら「新規登録」ボタンを押してください。", $terms) ?></p>
+                    <?php
+                    $terms = "<a href='#modal-tos' data-toggle='modal'>" . __d('gl', "利用規約") . "</a>";
+                    $pp = "<a href='#modal-pp' data-toggle='modal'>" . __d('gl', "プライバシーポリシー") . "</a>";
+
+                    ?>
+                    <?= __d('lp', '%1$s と %2$s をご確認のうえ、同意いただけましたら「新規登録」ボタンを押してください。', $terms, $pp) ?></p>
                 <?= $this->Form->end(); ?>
             </div>
             <!--//contianer-->
@@ -71,4 +75,10 @@
     </div>
     <!--//bg-slider-wrapper-->
 </section><!--//promo-->
+<?php
+$this->append('modal');
+echo $this->element('modal_tos');
+echo $this->element('modal_privacy_policy');
+$this->end();
+?>
 <!-- END app/View/Pages/home.ctp -->
