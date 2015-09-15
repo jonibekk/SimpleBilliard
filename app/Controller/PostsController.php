@@ -75,15 +75,12 @@ class PostsController extends AppController
         $this->redirect($to_url);
     }
 
-    public function edit_message($id=null)
+    public function edit_message()
     {
         $id=$this->request->data['Post']['post_id'];
         $this->request->data['Post']['type'] = Post::TYPE_MESSAGE;
-
         $this->_editPost($id);
-
         $to_url = Router::url(['controller' => 'posts', 'action' => 'message#', $id], true);
-
         $this->redirect($to_url);
     }
 
@@ -193,12 +190,11 @@ class PostsController extends AppController
      * @throws RuntimeException
      * @return void
      */
-    public function _editPost($id=null)
+    public function _editPost()
     {
         $this->request->allowMethod('post');
 
         // ogbをインサートデータに追加
-        $this->request->data['Post']['post_id']=$id;
         $this->request->data['Post'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Post']),
                                                              viaIsSet($this->request->data['Post']['body']));
 
