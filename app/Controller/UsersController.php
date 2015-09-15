@@ -35,7 +35,7 @@ class UsersController extends AppController
     protected function _setupAuth()
     {
         $this->Auth->allow('register', 'login', 'verify', 'logout', 'password_reset', 'token_resend', 'sent_mail',
-                           'accept_invite', 'registration_with_set_password', 'two_fa_auth');
+                           'accept_invite', 'registration_with_set_password', 'two_fa_auth', 'add_subscribe_email');
 
         $this->Auth->authenticate = array(
             'Form2' => array(
@@ -1129,6 +1129,21 @@ class UsersController extends AppController
 
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
+    }
+
+    function add_subscribe_email()
+    {
+        $this->request->allowMethod('post');
+        /**
+         * @var SubscribeEmail $SubscribeEmail
+         */
+        $SubscribeEmail = ClassRegistry::init('SubscribeEmail');
+        if (!$SubscribeEmail->save($this->request->data)) {
+            $this->Pnotify->outError($SubscribeEmail->validationErrors['email'][0]);
+            return $this->redirect($this->referer());
+        }
+        $this->Pnotify->outSuccess(__d('gl', 'メールアドレスの登録ができました。'));
+        return $this->redirect($this->referer());
     }
 
     /**

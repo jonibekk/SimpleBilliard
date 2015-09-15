@@ -16,7 +16,12 @@ class CircleInsight extends AppModel
      * @var array
      */
     public $validate = [
-        'del_flg' => [
+        'user_count' => [
+            'numeric' => [
+                'rule' => ['numeric'],
+            ],
+        ],
+        'del_flg'    => [
             'boolean' => [
                 'rule' => ['boolean'],
             ],
