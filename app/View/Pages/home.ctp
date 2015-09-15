@@ -19,19 +19,21 @@
 <!-- ******PROMO****** -->
 <section id="promo" class="promo section">
     <div class="container intro">
-        <h2 class="title">ニッポンのシゴトを変えるのは、<br/>チーム力向上のスパイラル</h2>
+        <h2 class="title"><?= __d('lp', 'さあ。チーム力で。飛べ。') ?></h2>
 
-        <p class="summary">MBOってなんのため？目標と目的の違い、わかってる？<br/>はい、チームごっこ、おしまい。（テキストはダミーです）</p>
-        <a class="btn btn-cta btn-cta-secondary" href="tour.html">詳しく見る</a>
+        <p class="summary"><?= __d('lp', 'Goalous(ゴーラス)正式版がついに今秋登場！') ?><br/><?= __d('lp', 'チーム向上のためのSNS。はい、決定版。') ?>
+        </p>
+        <a class="btn btn-cta btn-cta-secondary" href="https://old.goalous.com"><?= __d('lp',
+                                                                                        '前バージョン(β)をご利用の方はこちら') ?></a>
     </div>
     <!--//intro-->
 
     <div class="fixed-container">
         <div class="signup">
             <div class="container text-center">
-                <h3 class="title">Try Goalous Free</h3>
+                <h3 class="title"><?= __d('lp', '知らせたい。。。Goalousのこと。') ?></h3>
 
-                <p class="summary">1チーム5人までは永年無料！今すぐお試しください。</p>
+                <p class="summary"><?= __d('lp', 'メールアドレス登録で情報をゲット！') ?></p>
                 <?= $this->Form->create('SubscribeEmail', [
                     'inputDefaults' => [
                         'div'       => 'form-group',
@@ -50,7 +52,9 @@
                 )); ?>
                 <?= $this->Form->submit(__d('lp', "新規登録"),
                                         ['class' => 'btn btn-cta btn-cta-primary', 'div' => false]) ?>
-                <p class="under-mail"><a href="">利用規約</a>をご確認のうえ、同意いただけましたら「新規登録」ボタンを押してください。</p>
+                <p class="under-mail">
+                    <?php $terms = "<a href=''>" . __d('gl', "利用規約") . "</a>" ?>
+                    <?= __d('lp', "%sをご確認のうえ、同意いただけましたら「新規登録」ボタンを押してください。", $terms) ?></p>
                 <?= $this->Form->end(); ?>
             </div>
             <!--//contianer-->
