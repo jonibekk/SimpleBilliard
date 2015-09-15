@@ -93,7 +93,7 @@
     <header id="header" class="header">
         <div class="container">
             <h1 class="logo pull-left">
-                <a href="index.html">
+                <a href="<?= $this->Html->url('/')?>">
                     <span class="logo-title">
                         <?= $this->Html->image('homepage/logo.png', ['alt' => 'Goalous']) ?>
                         <?= $this->Html->image('homepage/goalous.png', ['alt' => 'Goalous']) ?>
