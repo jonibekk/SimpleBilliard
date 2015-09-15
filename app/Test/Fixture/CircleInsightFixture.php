@@ -17,7 +17,7 @@ class CircleInsightFixture extends CakeTestFixture
         'target_date'     => array('type' => 'date', 'null' => true, 'default' => null),
         'timezone'        => array('type' => 'float', 'null' => true, 'default' => null, 'unsigned' => false),
         'circle_id'       => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index'),
-        'member_count'    => array('type' => 'integer', 'null' => true, 'default' => '0', 'length' => 10, 'unsigned' => true),
+        'user_count'      => array('type' => 'integer', 'null' => true, 'default' => '0', 'length' => 10, 'unsigned' => true),
         'post_count'      => array('type' => 'integer', 'null' => true, 'default' => '0', 'length' => 10, 'unsigned' => true),
         'post_read_count' => array('type' => 'integer', 'null' => true, 'default' => '0', 'length' => 10, 'unsigned' => true),
         'post_like_count' => array('type' => 'integer', 'null' => true, 'default' => '0', 'length' => 10, 'unsigned' => true),
