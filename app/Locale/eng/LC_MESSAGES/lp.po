@@ -68,7 +68,7 @@ msgid "メールアドレスを入力"
 msgstr "Enter your work email address."
 
 #: View/Pages/home.ctp:53
-msgid "新規登録"
+msgid "登録する"
 msgstr "Save"
 
 #: View/Pages/home.ctp:61

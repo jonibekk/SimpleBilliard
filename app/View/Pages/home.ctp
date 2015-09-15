@@ -50,7 +50,7 @@
                     'label'       => __d('lp', "Your email"),
                     'placeholder' => __d('lp', "メールアドレスを入力"),
                 )); ?>
-                <?= $this->Form->submit(__d('lp', "新規登録"),
+                <?= $this->Form->submit(__d('lp', "登録する"),
                                         ['class' => 'btn btn-cta btn-cta-primary', 'div' => false]) ?>
                 <p class="under-mail">
                     <?php
