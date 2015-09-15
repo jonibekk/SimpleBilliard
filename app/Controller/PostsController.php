@@ -370,7 +370,6 @@ class PostsController extends AppController
         $html = $response->__toString();
 
         return $this->_ajaxGetResponse($html);
-
     }
     /**
      * comment_delete method

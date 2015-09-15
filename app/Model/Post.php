@@ -308,6 +308,13 @@ class Post extends AppModel
             }
             if ($users) {
                 //共有ユーザ保存
+                if (!empty($users)) {
+                    foreach ($users as $k => $v) {
+                        if (isset($v['User']['id'])) {
+                            $all_share_user_list[$v['User']['id']] = $v['User']['id'];
+                        }
+                    }
+                }
                 $results[] = $this->PostShareUser->add($this->getLastInsertID(), $users);
             }
             if ($circles) {
@@ -346,12 +353,14 @@ class Post extends AppModel
 
 
         if (!isset($postData['Post']) || empty($postData['Post'])) {
+
             return false;
         }
 
         $this->setUidAndTeamId($uid, $team_id);
         $share = null;
         if (isset($postData['Post']['share']) && !empty($postData['Post']['share'])) {
+
             $share = explode(",", $postData['Post']['share']);
             foreach ($share as $key => $val) {
                 if (stristr($val, 'public')) {
@@ -364,59 +373,32 @@ class Post extends AppModel
         $postData['Post']['team_id'] = $this->team_id;
         if (!isset($postData['Post']['type'])) {
             $postData['Post']['type'] = Post::TYPE_NORMAL;
+
         }
 
         $this->begin();
-        $res = $this->save($postData);
-        if (empty($res)) {
-            $this->rollback();
-            return false;
-        }
-
         $post_id = $postData['Post']['post_id'];
         $results = [];
         // ファイルが添付されている場合
-        if (isset($postData['file_id']) && is_array($postData['file_id'])) {
-            $results[] = $this->PostFile->AttachedFile->saveRelatedFiles($post_id,
-                                                                         AttachedFile::TYPE_MODEL_POST,
-                                                                         $postData['file_id']);
-        }
         if (!empty($share)) {
             //ユーザとサークルに分割
             $users = [];
-            $circles = [];
+
             foreach ($share as $val) {
                 //ユーザの場合
                 if (stristr($val, 'user_')) {
                     $users[] = str_replace('user_', '', $val);
                 }
                 //サークルの場合
-                elseif (stristr($val, 'circle_')) {
-                    $circles[] = str_replace('circle_', '', $val);
-                }
+
             }
             if ($users) {
                 //共有ユーザ保存
                 $results[] = $this->PostShareUser->add($post_id, $users);
             }
-            if ($circles) {
-                //共有サークル保存
-                $results[] = $this->PostShareCircle->add($post_id, $circles);
-                //共有サークル指定されてた場合の未読件数更新
-                $results[] = $this->User->CircleMember->incrementUnreadCount($circles);
-                //共有サークル指定されてた場合、更新日時更新
-                $results[] = $this->User->CircleMember->updateModified($circles);
-                $results[] = $this->PostShareCircle->Circle->updateModified($circles);
-            }
+
         }
         // どこかでエラーが発生した場合は rollback
-        foreach ($results as $r) {
-            if (!$r) {
-                $this->rollback();
-                $this->PostFile->AttachedFile->deleteAllRelatedFiles($post_id, AttachedFile::TYPE_MODEL_POST);
-                return false;
-            }
-        }
         $this->commit();
         return true;
     }
