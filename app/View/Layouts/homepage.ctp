@@ -151,14 +151,7 @@
                     <div class="footer-col-inner">
                         <h3 class="title"><?=__d('lp','About Us')?></h3>
 
-                        <p><?=__d('lp','株式会社ISAO')?><br>
-                            <?=__d('lp','「たのしい！」をうみだしとどける')?><br>
-                            <?=__d('lp','ニッポン発！億人を熱くするサービス実現！')?><br>
-                            <?=__d('lp','オープン・チャレンジ・キズナ')?></p>
-
-                        <p><a class="more" href="http://www.isao.co.jp/" target="_blank"><?=__d('lp','HPを見る')?>
-                                <i class="fa fa-long-arrow-right"></i></a></p>
-
+                        <p><?=__d('lp','Goalous Team')?></p>
                     </div>
                     <!--//footer-col-inner-->
                 </div>
