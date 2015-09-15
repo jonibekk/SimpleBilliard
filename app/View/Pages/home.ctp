@@ -75,10 +75,4 @@
     </div>
     <!--//bg-slider-wrapper-->
 </section><!--//promo-->
-<?php
-$this->append('modal');
-echo $this->element('modal_tos');
-echo $this->element('modal_privacy_policy');
-$this->end();
-?>
 <!-- END app/View/Pages/home.ctp -->
