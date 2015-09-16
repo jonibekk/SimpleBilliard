@@ -46,8 +46,13 @@ message_list_app.controller(
         var page_num = 1;
         $scope.message_list = [];
         $scope.name_list_max = 3;
+        $scope.disable_scroll = false;
+        $scope.scroll_end = false;
 
         $scope.loadMore = function () {
+
+            if ($scope.disable_scroll === true) return;
+            $scope.disable_scroll = true;
 
             var request = {
                 method: 'GET',
@@ -94,10 +99,14 @@ message_list_app.controller(
                     $scope.auth_info = message_info.auth_info;
 
                     page_num += 1;
+                    $scope.disable_scroll = false;
+
+                } else {
+                    $scope.scroll_end = true;
+
                 }
 
             });
         }
-
-
     });
+
