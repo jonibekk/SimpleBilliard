@@ -82,8 +82,7 @@ class UsersController extends AppController
             return $this->render();
         }
 
-        error_log("###ins_id:".$this->request->data['User']['installation_id']."\n",3,"/tmp/hoge.log");
-
+/*
         //account lock check
         $ip_address = $this->request->clientIp();
         $is_account_locked = $this->GlRedis->isAccountLocked($this->request->data['User']['email'], $ip_address);
@@ -91,7 +90,7 @@ class UsersController extends AppController
             $this->Pnotify->outError(__d('notify', "アカウントがロックされています。%s分後に自動的に解除されます。", ACCOUNT_LOCK_TTL / 60));
             return $this->render();
         }
-
+*/
         //メアド、パスの認証(セッションのストアはしていない)
         $user_info = $this->Auth->identify($this->request, $this->response);
         if (!$user_info) {
@@ -99,6 +98,12 @@ class UsersController extends AppController
             return $this->render();
         }
         $this->Session->write('preAuthPost', $this->request->data);
+
+        //デバイス情報を保存する
+        $user_id = $user_info['id'];
+        $installation_id = $this->request->data['User']['installation_id'];
+        $this->NotifyBiz->saveDeviceInfo($user_id, $installation_id);
+
 
         $is_2fa_auth_enabled = true;
         // 2要素認証設定OFFの場合

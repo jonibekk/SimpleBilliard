@@ -51,4 +51,6 @@ define('NCMB_REST_API_FQDN', "mb.api.cloud.nifty.com");
 define('NCMB_REST_API_VER', "2013-09-01");
 define('NCMB_REST_API_PUSH', "push");
 define('NCMB_REST_API_PUSH_METHOD', "POST");
+define('NCMB_REST_API_GET_INSTALLATION', "installations");
+define('NCMB_REST_API_GET_METHOD', "GET");
 

@@ -927,21 +927,33 @@ class NotifyBizComponent extends Component
      * push通知に必要なパラメータ
      * X-NCMB-SIGNATUREを生成する
      *
+     * デフォルトではpush通知用のシグネチャ生成
+     *
      * @param $timestamp シグネチャを生成する時に使うタイムスタンプ
+     * @param $method シグネチャを生成する時に使うメソッド
+     * @param $path シグネチャを生成する時に使うパス
      *
      * @return string X-NCMB-SIGNATUREの値
      */
-    private function _getNCMBSignature($timestamp)
+    private function _getNCMBSignature($timestamp, $method = null, $path = null)
     {
         $header_string = "SignatureMethod=HmacSHA256&";
         $header_string .= "SignatureVersion=2&";
         $header_string .= "X-NCMB-Application-Key=" . NCMB_APPLICATION_KEY . "&";
         $header_string .= "X-NCMB-Timestamp=" . $timestamp;
 
-        $signature_string = NCMB_REST_API_PUSH_METHOD . "\n";
+        $signature_string = (($method) ? $method : NCMB_REST_API_PUSH_METHOD) . "\n";
         $signature_string .= NCMB_REST_API_FQDN . "\n";
-        $signature_string .= "/" . NCMB_REST_API_VER . "/" . NCMB_REST_API_PUSH . "\n";
+        if ($path) {
+            $signature_string .= $path . "\n";
+        }
+        else {
+            $signature_string .= "/" . NCMB_REST_API_VER . "/" . NCMB_REST_API_PUSH . "\n";
+        }
         $signature_string .= $header_string;
+
+        error_log("FURU:sign=".$signature_string."\n",3,"/tmp/hoge.log");
+
 
         return base64_encode(hash_hmac("sha256", $signature_string, NCMB_CLIENT_KEY, true));
     }
@@ -1260,6 +1272,78 @@ class NotifyBizComponent extends Component
             $this->NotifySetting->current_team_id,
             $this->NotifySetting->my_uid
         );
+    }
+
+    /**
+     * installation_idでNCMBからdevice_tokenをとってきて
+     * Deviceに保存する
+     *
+     * @param $user_id
+     * @param $installation_id
+     */
+    function saveDeviceInfo($user_id, $installation_id)
+    {
+        error_log("FURU:saveDeviceInfo:$user_id:$installation_id\n", 3, "/tmp/hoge.log");
+
+        $timestamp = $this->_getTimestamp();
+        $path = "/" . NCMB_REST_API_VER . "/" . NCMB_REST_API_GET_INSTALLATION . "/" . "5vqpmvrpZMZoGy7Z";
+        $signature = $this->_getNCMBSignature($timestamp, NCMB_REST_API_GET_METHOD, $path);
+
+        $header = array(
+            'X-NCMB-Application-Key: ' . NCMB_APPLICATION_KEY,
+            'X-NCMB-Signature: ' . $signature,
+            'X-NCMB-Timestamp: ' . $timestamp,
+            'Content-Type: application/json'
+        );
+
+        $options = array('http' => array(
+            'ignore_errors' => true,    // APIリクエストの結果がエラーでもレスポンスボディを取得する
+            'max_redirects' => 0,       // リダイレクトはしない
+            'method'        => NCMB_REST_API_GET_METHOD
+        ));
+
+        $options['http']['header'] = implode("\r\n", $header);
+
+        $url = "https://" . NCMB_REST_API_FQDN . $path;
+        error_log("FURU:url:" . $url . "\n", 3, "/tmp/hoge.log");
+        $ret = file_get_contents($url, false, stream_context_create($options));
+
+        error_log("FURU:result:" . $ret . "\n", 3, "/tmp/hoge.log");
+
+        $ret_array = json_decode($ret, true);
+
+        if (!array_key_exists('deviceToken', $ret_array)) {
+            return false;
+        }
+        $device_token = $ret_array['deviceToken'];
+        $device_type = $ret_array['deviceType'];
+        $os_type = 99;
+        if ($device_type == "android") {
+            $os_type = 1;
+        }
+        else {
+            if ($device_type == "ios") {
+                $os_type = 0;
+            }
+        }
+
+        $data = [
+            'Device' => [
+                'user_id'      => $user_id,
+                'device_token' => $device_token,
+                'os_type'      => $os_type,
+            ]
+        ];
+
+        error_log("FURU:device_token:" . $ret_array['deviceToken'] . "\n", 3, "/tmp/hoge.log");
+
+        //TODO:既に存在する場合には登録しないようにする
+        $ret = $this->Device->add($data);
+        if (!$ret) {
+            return false;
+        }
+
+        return true;
     }
 
 }
