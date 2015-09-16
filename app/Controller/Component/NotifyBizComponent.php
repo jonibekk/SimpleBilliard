@@ -1286,7 +1286,7 @@ class NotifyBizComponent extends Component
         error_log("FURU:saveDeviceInfo:$user_id:$installation_id\n", 3, "/tmp/hoge.log");
 
         $timestamp = $this->_getTimestamp();
-        $path = "/" . NCMB_REST_API_VER . "/" . NCMB_REST_API_GET_INSTALLATION . "/" . "5vqpmvrpZMZoGy7Z";
+        $path = "/" . NCMB_REST_API_VER . "/" . NCMB_REST_API_GET_INSTALLATION . "/" . $installation_id;
         $signature = $this->_getNCMBSignature($timestamp, NCMB_REST_API_GET_METHOD, $path);
 
         $header = array(
