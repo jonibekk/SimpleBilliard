@@ -106,6 +106,7 @@ class PostTest extends CakeTestCase
             'Post' => [
                 'post_id' => '30',
                 'body' => 'test',
+                'share' => '',
             ]
         ];
 
