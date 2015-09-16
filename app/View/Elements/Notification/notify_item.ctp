@@ -59,7 +59,7 @@ switch ($location_type) {
             ?>
         <?php endif; ?>
         <!-- </div> -->
-        <div class="notify-contents  <?= $card_type_class ?>">
+        <div class="<?= $card_type_class ?>">
             <div class="col col-xxs-12 notify-card-head">
               <span class="font_verydark">
                   <?=

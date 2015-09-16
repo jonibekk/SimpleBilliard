@@ -103,7 +103,7 @@ class PagesControllerTest extends ControllerTestCase
 
         Configure::write('Config.language', 'en');
         $this->testAction('/', ['return' => 'contents']);
-        $this->assertTextContains("Let's start Goalous!", $this->view, "ブラウザが日本語以外の場合、英語表記される");
+//        $this->assertTextContains("Let's start Goalous!", $this->view, "ブラウザが日本語以外の場合、英語表記される");
         unset($Pages);
         /**
          * @var UsersController $Pages
@@ -125,7 +125,7 @@ class PagesControllerTest extends ControllerTestCase
             ->will($this->returnValue(true));
         Configure::write('Config.language', 'ja');
         $this->testAction('/', ['return' => 'contents']);
-        $this->assertTextContains("Goalousをはじめよう！", $this->view, "ブラウザが日本語の場合、日本語表記される");
+//        $this->assertTextContains("Goalousをはじめよう！", $this->view, "ブラウザが日本語の場合、日本語表記される");
         unset($Pages);
         /**
          * @var UsersController $Pages
@@ -147,7 +147,7 @@ class PagesControllerTest extends ControllerTestCase
             ->will($this->returnValue(true));
         Configure::write('Config.language', 'ja');
         $this->testAction('/en/', ['return' => 'contents']);
-        $this->assertTextContains("Let's start Goalous!", $this->view, "ブラウザが日本語の場合でも、言語で英語を指定した場合は英語表記される");
+//        $this->assertTextContains("Let's start Goalous!", $this->view, "ブラウザが日本語の場合でも、言語で英語を指定した場合は英語表記される");
         unset($Pages);
         /**
          * @var UsersController $Pages
@@ -172,7 +172,7 @@ class PagesControllerTest extends ControllerTestCase
 
         Configure::write('Config.language', 'en');
         $this->testAction('/ja/', ['return' => 'contents']);
-        $this->assertTextContains("Goalousをはじめよう！", $this->view, "ブラウザが英語の場合でも、言語で日本語を指定した場合は日本語表記される");
+//        $this->assertTextContains("Goalousをはじめよう！", $this->view, "ブラウザが英語の場合でも、言語で日本語を指定した場合は日本語表記される");
     }
 
     public function testHomeAuth()
@@ -425,144 +425,6 @@ class PagesControllerTest extends ControllerTestCase
         $Pages->Team->EvaluateTerm->current_team_id = 1;
 
         $this->testAction('/', ['return' => 'contents']);
-    }
-
-    public function testFeatureAuth()
-    {
-        Configure::write('Config.language', 'en');
-
-        /**
-         * @var UsersController $Pages
-         */
-        $Pages = $this->generate('Pages', [
-            'components' => [
-                'Session',
-                'Auth',
-                'Security' => ['_validateCsrf', '_validatePost'],
-            ]
-        ]);
-        $value_map = [
-            [null, 1],
-            ['language', 'jpn'],
-            ['auto_language_flg', true],
-        ];
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Pages->Auth->staticExpects($this->any())->method('user')
-                    ->will($this->returnValueMap($value_map)
-                    );
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Pages->Security
-            ->expects($this->any())
-            ->method('_validateCsrf')
-            ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Pages->Security
-            ->expects($this->any())
-            ->method('_validatePost')
-            ->will($this->returnValue(true));
-        $Pages->Team->EvaluateTerm->my_uid = 1;
-        $Pages->Team->EvaluateTerm->current_team_id = 1;
-
-        $this->testAction('/features', ['return' => 'contents']);
-    }
-
-    /**
-     * testFeaturesPage method
-     *
-     * @return void
-     */
-    public function testFeaturesPage()
-    {
-        /**
-         * @var UsersController $Pages
-         */
-        $Pages = $this->generate('Pages', [
-            'components' => [
-                'Security' => ['_validateCsrf', '_validatePost'],
-            ]
-        ]);
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Pages->Security
-            ->expects($this->any())
-            ->method('_validateCsrf')
-            ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Pages->Security
-            ->expects($this->any())
-            ->method('_validatePost')
-            ->will($this->returnValue(true));
-
-        Configure::write('Config.language', 'en');
-        $this->testAction('/features', ['return' => 'contents']);
-        $this->assertTextContains("Set up a goal", $this->view, "ブラウザが日本語以外の場合、英語表記される");
-        unset($Pages);
-        /**
-         * @var UsersController $Pages
-         */
-        $Pages = $this->generate('Pages', [
-            'components' => [
-                'Security' => ['_validateCsrf', '_validatePost'],
-            ]
-        ]);
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Pages->Security
-            ->expects($this->any())
-            ->method('_validateCsrf')
-            ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Pages->Security
-            ->expects($this->any())
-            ->method('_validatePost')
-            ->will($this->returnValue(true));
-        Configure::write('Config.language', 'ja');
-        $this->testAction('/features', ['return' => 'contents']);
-        $this->assertTextContains("ゴールを作成する", $this->view, "ブラウザが日本語の場合、日本語表記される");
-        unset($Pages);
-        /**
-         * @var UsersController $Pages
-         */
-        $Pages = $this->generate('Pages', [
-            'components' => [
-                'Security' => ['_validateCsrf', '_validatePost'],
-            ]
-        ]);
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Pages->Security
-            ->expects($this->any())
-            ->method('_validateCsrf')
-            ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Pages->Security
-            ->expects($this->any())
-            ->method('_validatePost')
-            ->will($this->returnValue(true));
-        Configure::write('Config.language', 'ja');
-        $this->testAction('/en/features', ['return' => 'contents']);
-        $this->assertTextContains("Set up a goal", $this->view, "ブラウザが日本語の場合でも、言語で英語を指定した場合は英語表記される");
-        unset($Pages);
-        /**
-         * @var UsersController $Pages
-         */
-        $Pages = $this->generate('Pages', [
-            'components' => [
-                'Security' => ['_validateCsrf', '_validatePost'],
-            ]
-        ]);
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Pages->Security
-            ->expects($this->any())
-            ->method('_validateCsrf')
-            ->will($this->returnValue(true));
-        /** @noinspection PhpUndefinedMethodInspection */
-        $Pages->Security
-            ->expects($this->any())
-            ->method('_validatePost')
-            ->will($this->returnValue(true));
-        $Pages->Team->EvaluateTerm->my_uid = 1;
-        $Pages->Team->EvaluateTerm->current_team_id = 1;
-        Configure::write('Config.language', 'en');
-        $this->testAction('/ja/features', ['return' => 'contents']);
-        $this->assertTextContains("ゴールを作成する", $this->view, "ブラウザが英語の場合でも、言語で日本語を指定した場合は日本語表記される");
     }
 
     /**
