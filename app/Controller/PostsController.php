@@ -9,7 +9,7 @@ App::uses('AppController', 'Controller');
 class PostsController extends AppController
 {
     //　メッセージリストの1ページあたり表示件数
-    public static $message_list_page_count = 20;
+    public static $message_list_page_count = 5;
 
     public function beforeFilter()
     {
