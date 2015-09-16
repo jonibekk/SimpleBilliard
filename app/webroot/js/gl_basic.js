@@ -1581,6 +1581,46 @@ $(document).ready(function () {
             }
         }
     });
+
+    //noinspection JSUnusedLocalSymbols
+    $('#selectOnlyMember').select2({
+        multiple: true,
+        minimumInputLength: 1,
+        placeholder: cake.message.notice.b,
+        ajax: {
+            url: cake.url.a,
+            dataType: 'json',
+            quietMillis: 100,
+            cache: true,
+            data: function (term, page) {
+                return {
+                    term: term, //search term
+                    page_limit: 10 // page size
+                };
+            },
+            results: function (data, page) {
+                var check={results: data.results};
+                console.log(check);
+                console.log(cake.url.a);
+                return {results: data.results};
+            }
+        },
+        formatSelection: format,
+        formatResult: format,
+        escapeMarkup: function (m) {
+            return m;
+        },
+        containerCssClass: "select2Member"
+    }).on('change', function () {
+        if ($(this).val() == '') {
+            $('#MessageSubmit').attr('disabled', 'disabled');
+        }
+        else {
+            if ($('#CommonMessageBody').val() != '') {
+                $('#MessageSubmit').removeAttr('disabled');
+            }
+        }
+    });
     //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
     $('#select2PostCircleMember').select2({
         multiple: true,

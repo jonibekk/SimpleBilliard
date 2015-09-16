@@ -37,10 +37,7 @@
         <div ng-app="messageApp">
 
             <div ui-view> ロード中....</div>
-            <?php  /*echo $this->element('Feed/add_messenger', [
-                'common_form_type'     => 'message',
-                'common_form_only_tab' => 'message'
-            ]) */?>
+
             <div class="post-message-dest panel-body">
                 <div class="col col-xxs-10 col-xs-10 post-share-range-list" id="MessagePublicShareInputWrap">
                     <?= __d('gl', "To:") ?>

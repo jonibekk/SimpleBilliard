@@ -76,6 +76,8 @@ class PostTest extends CakeTestCase
     {
         $uid = '1';
         $team_id = '1';
+        $this->_setDefault();
+
         $postData = [
             'Post' => [
                 'body' => 'test',
@@ -95,6 +97,8 @@ class PostTest extends CakeTestCase
     {
         $uid = '2';
         $team_id = '1';
+        $this->_setDefault();
+
         $postDataOne = [];
         $postDataTwo = [
             'Post' => [
@@ -107,6 +111,14 @@ class PostTest extends CakeTestCase
                 'post_id' => '30',
                 'body' => 'test',
                 'share' => '',
+            ]
+        ];
+
+        $postDataSix = [
+            'Post' => [
+                'post_id' => '30',
+                'body' => 'test',
+                'share' => 'user_2,user_3',
             ]
         ];
 
@@ -132,6 +144,10 @@ class PostTest extends CakeTestCase
 
         $res = $this->Post->editNormal($postDataFive);
         $this->assertFalse($res);
+
+        $res = $this->Post->editNormal($postDataSix);
+        $this->assertNotEmpty($res);
+
     }
 
     public function testAddWithFile()

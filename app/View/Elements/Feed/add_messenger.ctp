@@ -71,8 +71,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
             if ($common_form_type == "message"): ?>
                 active
             <?php endif ?>">
-
-            </li>
+              </li>
         </ul>
     </div>
     <!-- Tab panes -->
@@ -410,7 +409,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
 
                     <?=
                     $this->Form->hidden('share_public', [
-                        'id'    => 'select2Member',
+                        'id'    => 'selectOnlyMember',
                         'style' => "width: 115%"
                     ]) ?>
                     <?=
@@ -420,7 +419,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                         'value' => '',
                         'type' => 'text'
                     ]) ?>
-                    <?php //$this->Form->unlockField('Message.post_id') ?>
+
                     <?php $this->Form->unlockField('Message.share_public') ?>
                 </div>
                 <?= $this->Form->hidden('share_range', [
