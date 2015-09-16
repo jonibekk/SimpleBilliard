@@ -130,6 +130,8 @@ class PostTest extends CakeTestCase
         $res = $this->Post->editNormal($postDataFive);
         $this->assertEmpty($res);
 
+        $res = $this->Post->editNormal($postDataFive);
+        $this->assertFalse($res);
     }
 
     public function testAddWithFile()
