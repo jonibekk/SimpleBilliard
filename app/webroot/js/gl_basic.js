@@ -1582,26 +1582,24 @@ $(document).ready(function () {
         }
     });
 
-    //noinspection JSUnusedLocalSymbols
+    //noinspection JSUnusedLocalSymbols post_detail.Post.id
     $('#selectOnlyMember').select2({
         multiple: true,
         minimumInputLength: 1,
         placeholder: cake.message.notice.b,
         ajax: {
-            url: cake.url.a,
+            url: cake.url.add_messenger,
             dataType: 'json',
             quietMillis: 100,
             cache: true,
             data: function (term, page) {
                 return {
                     term: term, //search term
-                    page_limit: 10 // page size
+                    page_limit: 10, // page size
+                    post_id:$('#post_messenger').val()
                 };
             },
             results: function (data, page) {
-                var check={results: data.results};
-                console.log(check);
-                console.log(cake.url.a);
                 return {results: data.results};
             }
         },

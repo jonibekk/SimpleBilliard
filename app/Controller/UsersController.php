@@ -721,6 +721,20 @@ class UsersController extends AppController
         return $this->_ajaxGetResponse($res);
     }
 
+    /**
+     * select2のユーザ検索
+     */
+    function ajax_select_only_add_users()
+    {
+        $this->_ajaxPreProcess();
+        $query = $this->request->query;
+        $res = [];
+        if (isset($query['post_id']) && !empty($query['post_id']) && isset($query['term']) && !empty($query['term']) && isset($query['page_limit']) && !empty($query['page_limit'])) {
+            $res = $this->User->getUsersSelectOnly($query['term'], $query['page_limit'],$query['post_id']);
+        }
+        return $this->_ajaxGetResponse($res);
+    }
+
     function ajax_get_modal_2fa_register()
     {
         $this->_ajaxPreProcess();
