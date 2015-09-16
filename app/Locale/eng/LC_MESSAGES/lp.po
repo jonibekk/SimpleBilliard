@@ -1,0 +1,78 @@
+# LANGUAGE translation of CakePHP Application
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2015-09-15 19:54+0900\n"
+"PO-Revision-Date: 2015-09-15 19:55+0900\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"X-Generator: Poedit 1.8.4\n"
+
+#: View/Layouts/homepage.ctp:152
+msgid "About Us"
+msgstr ""
+
+#: View/Layouts/homepage.ctp:154
+msgid "Goalous Team"
+msgstr ""
+
+#: View/Layouts/homepage.ctp:161
+msgid "Other Links"
+msgstr ""
+
+#: View/Layouts/homepage.ctp:172
+msgid "Get in touch"
+msgstr ""
+
+#: View/Layouts/homepage.ctp:175
+msgid "Goalousへのお問い合わせ"
+msgstr ""
+
+#: View/Pages/home.ctp:22
+msgid "チーム力で、飛べ。"
+msgstr "Come on, jump by a team force."
+
+#: View/Pages/home.ctp:24
+msgid "Goalous(ゴーラス)正式版がついに今秋登場！"
+msgstr "The new version of Goalous will finally launch in Fall 2015."
+
+#: View/Pages/home.ctp:24
+msgid "チーム向上のためのSNS。はい、決定版。"
+msgstr "This is the decisive SNS for increasing your team force."
+
+#: View/Pages/home.ctp:26
+msgid "前バージョン(β)をご利用の方はこちら"
+msgstr "Previous version(β)"
+
+#: View/Pages/home.ctp:34
+msgid "知らせたい。Goalousのこと。"
+msgstr "We want to inform you of goalous…"
+
+#: View/Pages/home.ctp:36
+msgid "メールアドレス登録で情報をゲット！"
+msgstr "Get Goalous news !"
+
+#: View/Pages/home.ctp:50
+msgid "Your email"
+msgstr ""
+
+#: View/Pages/home.ctp:51
+msgid "メールアドレスを入力"
+msgstr "Enter your work email address."
+
+#: View/Pages/home.ctp:53
+msgid "登録する"
+msgstr "Save"
+
+#: View/Pages/home.ctp:61
+msgid ""
+"%1$s と %2$s をご確認のうえ、同意いただけましたら「新規登録」ボタン"
+"を押してください。"
+msgstr "Please push the save button, if you agree to %1$s and %2$s."
