@@ -717,23 +717,26 @@ class PostTest extends CakeTestCase
 
     function testGetMessageList()
     {
-        $this->Post->current_team_id = '1';
+        $user_id = 1;
+        $team_id = 1;
+        $this->Post->current_team_id = $team_id;
         $data = [
-            'user_id' => 1,
-            'team_id' => 1,
+            'user_id' => $user_id,
+            'team_id' => $team_id,
             'body' => 'test',
             'type' => Post::TYPE_MESSAGE
         ];
         $this->Post->save($data);
-        $res = $this->Post->getMessageList();
+        $res = $this->Post->getMessageList($user_id);
         $this->assertNotEmpty($res);
     }
 
     function testConvertData()
     {
         $this->Post->current_team_id = '1';
+        $owner_user_id = 1;
         $data = [
-            'user_id' => 1,
+            'user_id' => $owner_user_id,
             'team_id' => 1,
             'body' => 'test',
             'type' => Post::TYPE_MESSAGE
@@ -754,7 +757,7 @@ class PostTest extends CakeTestCase
         ];
         $this->Post->PostShareUser->save($data);
 
-        $res = $this->Post->getMessageList();
+        $res = $this->Post->getMessageList($owner_user_id);
         $this->Post->convertData($res);
     }
 
