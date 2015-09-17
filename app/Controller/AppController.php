@@ -86,6 +86,8 @@ class AppController extends Controller
         'GlRedis',
     ];
 
+    //基本タイトル
+    public $title_for_layout;
     /**
      * ページネータの初期設定
      *
@@ -113,6 +115,10 @@ class AppController extends Controller
     public function beforeFilter()
     {
         parent::beforeFilter();
+
+        //全ページ共通のタイトルセット(書き換える場合はこの変数の値を変更の上、再度アクションメソッド側でsetする)
+        $this->title_for_layout = __d('gl', 'Goalous(ゴーラス)');
+        $this->set('title_for_layout', $this->title_for_layout);
 
         $this->_setSecurity();
         $this->_setAppLanguage();
@@ -176,9 +182,6 @@ class AppController extends Controller
             $this->_setMyMemberStatus();
         }
         $this->set('current_global_menu', null);
-
-        //ページタイトルセット
-        $this->set('title_for_layout', SERVICE_NAME);
     }
 
     public function _setCurrentTerm()
