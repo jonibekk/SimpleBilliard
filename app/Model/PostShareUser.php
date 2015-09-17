@@ -156,4 +156,16 @@ class PostShareUser extends AppModel
         return $res;
     }
 
+    public function getPostIdListByUserId($user_id)
+    {
+        $options = [
+            'conditions' => [
+                'team_id' => $this->current_team_id,
+                'user_id' => $user_id
+            ],
+            'fields'     => ['post_id']
+        ];
+        return $this->find('list', $options);
+    }
+
 }
