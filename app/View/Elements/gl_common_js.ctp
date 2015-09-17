@@ -159,7 +159,8 @@ echo $this->Html->script('goalous.min');
             goal_key_results: "<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_key_results']) ?>",
             upload_file: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_upload_file']) ?>",
             remove_file: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_remove_file']) ?>",
-            message_list: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'message_list']) ?>"
+            message_list: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'message_list']) ?>",
+            invite_member: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'settings','#'=>'invite_member']) ?>"
         },
         data: {
             a: <?=isset($select2_default)?$select2_default:"[]"?>,
