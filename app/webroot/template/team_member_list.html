@@ -52,9 +52,11 @@
 <div ng-if="invite_box_show === false">
     <section>
         <div class="team-member-count-label">対象メンバー ( {{(team_list|filter:name_field).length}} )</div>
-        <button class="team-member-invite-btn develop--forbiddenLink">
+        <a href="{{ invite_member_url }}">
+        <button class="team-member-invite-btn">
             <i class="fa fa-plus-circle team-member-invite-btn-icon"></i>メンバーを招待する
         </button>
+        </a>
     </section>
     <div class="col-xs-12">
         <section class="team_member_table">
