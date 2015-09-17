@@ -119,7 +119,12 @@ class AppController extends Controller
         parent::beforeFilter();
 
         //全ページ共通のタイトルセット(書き換える場合はこの変数の値を変更の上、再度アクションメソッド側でsetする)
-        $this->title_for_layout = __d('gl', 'Goalous(ゴーラス)');
+        if (ENV_NAME == "www") {
+            $this->title_for_layout = __d('gl', 'Goalous(ゴーラス)');
+        }
+        else {
+            $this->title_for_layout = "[" . ENV_NAME . "]" . __d('gl', 'Goalous(ゴーラス)');
+        }
         $this->set('title_for_layout', $this->title_for_layout);
         //全ページ共通のdescriptionのmetaタグの内容をセット(書き換える場合はこの変数の値を変更の上、再度アクションメソッド側でsetする)
         $this->meta_description = __d('gl',
