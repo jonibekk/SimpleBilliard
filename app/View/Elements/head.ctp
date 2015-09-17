@@ -3,10 +3,12 @@
  * User: bigplants
  * Date: 5/28/14
  * Time: 4:55 PM
+
  *
- * @var CodeCompletionView $this
+*@var CodeCompletionView $this
  * @var                    $title_for_layout string
  * @var                    $this             View
+ * @var                    $meta_description
  */
 ?>
 <!-- START app/View/Elements/head.ctp -->
@@ -15,6 +17,7 @@
     <title origin-title="<?= $title_for_layout; ?>">
         <?= $title_for_layout; ?>
     </title>
+    <meta name='description' content='<?= $meta_description ?>'/>
     <?php echo $this->Html->meta('icon');
     echo $this->Html->meta(
         ['name'    => 'viewport',
