@@ -189,4 +189,29 @@ class DeviceTest extends CakeTestCase
         $data = $this->Device->getDeviceTokens(99);
         $this->assertTrue(empty($data));
     }
+
+    public function testGetDevicesByUserIdAndDeviceToken1()
+    {
+        $data = $this->Device->getDevicesByUserIdAndDeviceToken(1, 'ios_dummy1');
+        $this->assertTrue(count($data) === 1);
+    }
+
+    public function testGetDevicesByUserIdAndDeviceToken2()
+    {
+        $data = $this->Device->getDevicesByUserId(3, 'ios_dummy2');
+        $this->assertTrue($data[0]['Device']['device_token'] === 'ios_dummy2');
+    }
+
+    public function testGetDevicesByUserIdAndDeviceTokenNotFound()
+    {
+        $data = $this->Device->getDevicesByUserId(99, 'dummy!');
+        $this->assertTrue(empty($data));
+    }
+
+    public function testGetDevicesByUserIdAndDeviceTokenNotFoundDelData()
+    {
+        $data = $this->Device->getDevicesByUserId(4, 'android_dummy3');
+        $this->assertTrue(empty($data));
+    }
+
 }

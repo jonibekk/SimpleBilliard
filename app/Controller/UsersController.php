@@ -100,8 +100,9 @@ class UsersController extends AppController
         //デバイス情報を保存する
         $user_id = $user_info['id'];
         $installation_id = $this->request->data['User']['installation_id'];
-        $this->NotifyBiz->saveDeviceInfo($user_id, $installation_id);
-
+        if (!empty($installation_id)) {
+            $this->NotifyBiz->saveDeviceInfo($user_id, $installation_id);
+        }
 
         $is_2fa_auth_enabled = true;
         // 2要素認証設定OFFの場合

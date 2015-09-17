@@ -89,6 +89,32 @@ class Device extends AppModel
     }
 
     /**
+     * ユーザーId,device_token でDeviceを取得する
+     *
+     * @param $user_id
+     * @param $device_token
+     *
+     * @return array|bool|null
+     */
+    function getDevicesByUserIdAndDeviceToken($user_id, $device_token)
+    {
+        if (empty($user_id) || empty($device_token)) {
+            return false;
+        }
+
+        $options = [
+            'conditions' => [
+                'Device.user_id'      => $user_id,
+                'Device.device_token' => $device_token,
+                'Device.del_flg'      => false,
+            ],
+        ];
+
+        $data = $this->find('all', $options);
+        return $data;
+    }
+
+    /**
      * ユーザーIDでDevice.device_tokenのみを配列で取得する
      * これがメインメソッドで、user_idで取得するのは自明なのでメソッド名は短めにしてみた
      *

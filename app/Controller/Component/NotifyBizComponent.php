@@ -831,16 +831,27 @@ class NotifyBizComponent extends Component
         $this->notify_option['options']['style'] = 'plain';
         $original_lang = Configure::read('Config.language');
 
-        $post_url = Router::url(array_merge($this->notify_option['url_data'], ['from' => 'notify']), true);
+        //$post_url = Router::url(array_merge($this->notify_option['url_data'], ['from' => 'notify']), true);
+        $post_url = Router::url($this->notify_option['url_data'], true);
         error_log("FURU:url:" . $post_url . "\n", 3, "/tmp/hoge.log");
 
+        $sent_device_tokens = [];
 
         foreach ($uids as $to_user_id) {
 
-            $deviceTokens = $this->Device->getDeviceTokens($to_user_id);
-            if (empty($deviceTokens)) {
+
+            $device_tokens = $this->Device->getDeviceTokens($to_user_id);
+            if (empty($device_tokens)) {
                 //このユーザーはスマホ持ってないのでスキップ
                 continue;
+            }
+
+            // ひとつのデバイスが複数のユーザーで登録されている可能性があるので
+            // 一度送ったデバイスに対して2度はPUSH通知は送らない
+            foreach ($device_tokens as $key => $value) {
+                if (array_search($value, $sent_device_tokens) !== false) {
+                    unset($device_tokens[$key]);
+                }
             }
 
             $this->_setLangByUserId($to_user_id, $original_lang);
@@ -855,7 +866,7 @@ class NotifyBizComponent extends Component
             $body = '{
                 "immediateDeliveryFlag" : true,
                 "target":["ios","android"],
-                "searchCondition":{"deviceToken":{ "$inArray":["' . implode('","', $deviceTokens) . '"]}},
+                "searchCondition":{"deviceToken":{ "$inArray":["' . implode('","', $device_tokens) . '"]}},
                 "message":"' . $title . '",
                 "userSettingValue":{"url":"'.$post_url.'"}},
                 "deliveryExpirationTime":"1 day"
@@ -868,6 +879,8 @@ class NotifyBizComponent extends Component
 
             $url = "https://" . NCMB_REST_API_FQDN . "/" . NCMB_REST_API_VER . "/" . NCMB_REST_API_PUSH;
             $ret = file_get_contents($url, false, stream_context_create($options));
+
+            $sent_device_tokens = array_merge($sent_device_tokens, $device_tokens);
 
             error_log("FURU:result:" . $ret . "\n", 3, "/tmp/hoge.log");
         }
@@ -1280,6 +1293,8 @@ class NotifyBizComponent extends Component
      *
      * @param $user_id
      * @param $installation_id
+     *
+     * @return bool
      */
     function saveDeviceInfo($user_id, $installation_id)
     {
@@ -1316,15 +1331,21 @@ class NotifyBizComponent extends Component
             return false;
         }
         $device_token = $ret_array['deviceToken'];
+
+        //既に存在する場合には登録しない
+        $devices = $this->Device->getDevicesByUserIdAndDeviceToken($user_id, $device_token);
+        if (!empty($devices)) {
+            //既に登録済みは成功
+            return true;
+        }
+
         $device_type = $ret_array['deviceType'];
         $os_type = 99;
         if ($device_type == "android") {
             $os_type = 1;
         }
-        else {
-            if ($device_type == "ios") {
-                $os_type = 0;
-            }
+        elseif ($device_type == "ios") {
+            $os_type = 0;
         }
 
         $data = [
@@ -1337,7 +1358,6 @@ class NotifyBizComponent extends Component
 
         error_log("FURU:device_token:" . $ret_array['deviceToken'] . "\n", 3, "/tmp/hoge.log");
 
-        //TODO:既に存在する場合には登録しないようにする
         $ret = $this->Device->add($data);
         if (!$ret) {
             return false;
