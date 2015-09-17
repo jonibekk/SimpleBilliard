@@ -1,4 +1,5 @@
 ## 開発環境構築手順
+1. `vagrant plugin install vagrant-proxyconf`でvagrantプラグイン(proxy設定を可能にするやつ)をインストール。
 1. `vagrant up ec2`でec2インスタンス起動およびchefの適用(30min)
 1. AWS Management Consoleにログインし以下を実行
  - EIPを紐付ける
