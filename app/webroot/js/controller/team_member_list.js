@@ -19,6 +19,7 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
             all_member_list = user_info;
             active_member_list = ActiveMemberList(user_info);
             $scope.team_list = active_member_list;
+            $scope.invite_member_url = cake.url.invite_member;
         }
 
         function getAllTeamMember () {
