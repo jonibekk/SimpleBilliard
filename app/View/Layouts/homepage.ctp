@@ -37,8 +37,6 @@
                 'content' => "width=device-width, initial-scale=1, maximum-scale=1"
             ));
     echo $this->fetch('meta');
-    //TODO botの拒否。一般公開前に必ず外す。
-    echo $this->Html->meta(['name' => 'ROBOTS', 'content' => 'NOINDEX,NOFOLLOW']);
     echo $this->fetch('ogp');
     ?>
 
@@ -149,19 +147,23 @@
             <div class="row">
                 <div class="footer-col col-md-5 col-sm-7 col-sm-12 about">
                     <div class="footer-col-inner">
-                        <h3 class="title"><?=__d('lp','About Us')?></h3>
+                        <h3 class="title"><?= __d('lp', 'About Us') ?></h3>
 
-                        <p><?=__d('lp','Goalous Team')?></p>
+                        <p><?= __d('lp', 'Goalous Team') ?></p>
                     </div>
                     <!--//footer-col-inner-->
                 </div>
                 <!--//foooter-col-->
                 <div class="footer-col col-md-3 col-sm-4 col-md-offset-1 links">
                     <div class="footer-col-inner">
-                        <h3 class="title"><?=__d('lp','Other Links')?></h3>
+                        <h3 class="title"><?= __d('lp', 'Other Links') ?></h3>
                         <ul class="list-unstyled">
-                            <li><a href='#modal-tos' data-toggle='modal'><i class="fa fa-caret-right"></i><?=__d('gl','利用規約')?></a></li>
-                            <li><a href='#modal-pp' data-toggle='modal'><i class="fa fa-caret-right"></i><?=__d('gl','プライバシーポリシー')?></a></li>
+                            <li><a href='#modal-tos' data-toggle='modal'><i class="fa fa-caret-right"></i><?= __d('gl',
+                                                                                                                  '利用規約') ?>
+                                </a></li>
+                            <li><a href='#modal-pp' data-toggle='modal'><i class="fa fa-caret-right"></i><?= __d('gl',
+                                                                                                                 'プライバシーポリシー') ?>
+                                </a></li>
                         </ul>
                     </div>
                     <!--//footer-col-inner-->
@@ -169,10 +171,11 @@
                 <!--//foooter-col-->
                 <div class="footer-col col-md-3 col-sm-12 contact">
                     <div class="footer-col-inner">
-                        <h3 class="title"><?=__d('lp','Get in touch')?></h3>
+                        <h3 class="title"><?= __d('lp', 'Get in touch') ?></h3>
 
                         <div class="row">
-                            <p class="email col-md-12 col-sm-4"><i class="fa fa-envelope"></i><a href="mailto:co-jp-form@isao.net?subject=<?=__d('lp','Goalousへのお問い合わせ')?>">co-jp-form@isao.net</a>
+                            <p class="email col-md-12 col-sm-4"><i class="fa fa-envelope"></i><a
+                                    href="mailto:co-jp-form@isao.net?subject=<?= __d('lp', 'Goalousへのお問い合わせ') ?>">co-jp-form@isao.net</a>
                             </p>
                         </div>
                     </div>
