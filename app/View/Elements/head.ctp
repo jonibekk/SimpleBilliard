@@ -3,10 +3,12 @@
  * User: bigplants
  * Date: 5/28/14
  * Time: 4:55 PM
+
  *
- * @var CodeCompletionView $this
+*@var CodeCompletionView $this
  * @var                    $title_for_layout string
  * @var                    $this             View
+ * @var                    $meta_description
  */
 ?>
 <!-- START app/View/Elements/head.ctp -->
@@ -15,14 +17,13 @@
     <title origin-title="<?= $title_for_layout; ?>">
         <?= $title_for_layout; ?>
     </title>
+    <meta name='description' content='<?= $meta_description ?>'/>
     <?php echo $this->Html->meta('icon');
     echo $this->Html->meta(
         ['name'    => 'viewport',
          'content' => "width=device-width, initial-scale=1, maximum-scale=1"
         ]);
     echo $this->Html->meta(['http-equiv' => 'X-UA-Compatible', 'content' => 'IE=edge']);
-    //TODO botの拒否。一般公開前に必ず外す。
-    echo $this->Html->meta(['name' => 'ROBOTS', 'content' => 'NOINDEX,NOFOLLOW']);
 
     // クリックジャッキング対策
     echo $this->Html->meta(['name' => 'X-FRAME-OPTIONS', 'content' => 'SAMEORIGIN']);
