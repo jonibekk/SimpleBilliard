@@ -115,10 +115,10 @@ CakePlugin::loadAll();
  */
 switch (ENV_NAME) {
     case "www":
-        define('SERVICE_NAME', "Goalous2.0");
+        define('SERVICE_NAME', "Goalous");
         break;
     default:
-        define('SERVICE_NAME', "[" . ENV_NAME . "]Goalous2.0");
+        define('SERVICE_NAME', "[" . ENV_NAME . "]Goalous");
         break;
 }
 //トークン期限
