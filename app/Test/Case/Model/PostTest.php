@@ -717,6 +717,34 @@ class PostTest extends CakeTestCase
 
     function testGetMessageList()
     {
+        $user_id = 999;
+        $team_id = 1;
+        $this->Post->current_team_id = $team_id;
+
+        //シェアされた時
+        $data = [
+            'user_id' => 888,
+            'team_id' => $team_id,
+            'body' => 'test2',
+            'type' => Post::TYPE_MESSAGE
+        ];
+        $this->Post->save($data);
+        $post_id = $this->Post->getLastInsertID();
+
+        $this->Post->PostShareUser->current_team_id = $team_id;
+        $share_user_data = [
+            'post_id' => $post_id,
+            'team_id' => $team_id,
+            'user_id' => $user_id
+        ];
+        $this->Post->PostShareUser->save($share_user_data);
+
+        $res = $this->Post->getMessageList($user_id);
+        $this->assertNotEmpty($res);
+    }
+
+    function testGetMessageListPaging()
+    {
         $user_id = 1;
         $team_id = 1;
         $this->Post->current_team_id = $team_id;
@@ -727,7 +755,7 @@ class PostTest extends CakeTestCase
             'type' => Post::TYPE_MESSAGE
         ];
         $this->Post->save($data);
-        $res = $this->Post->getMessageList($user_id);
+        $res = $this->Post->getMessageList($user_id, 1, 1);
         $this->assertNotEmpty($res);
     }
 
