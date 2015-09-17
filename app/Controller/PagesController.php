@@ -66,7 +66,9 @@ class PagesController extends AppController
         $this->_setFeedMoreReadUrl();
         $this->_setViewValOnRightColumn();
         // 現在のチーム
-        $this->set('current_team', $this->Team->getCurrentTeam());
+        $current_team = $this->Team->getCurrentTeam();
+        $this->set('item_created', isset($current_team['Team']['created']) ? $current_team['Team']['created'] : null);
+        $this->set('current_team', $current_team);
         // チーム全体サークル
         $this->set('team_all_circle', $this->Team->Circle->getTeamAllCircle());
         $current_global_menu = "home";

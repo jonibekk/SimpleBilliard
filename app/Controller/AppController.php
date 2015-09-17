@@ -331,6 +331,8 @@ class AppController extends Controller
             $is_belong_circle_member = $this->User->CircleMember->isBelong($params['circle_id']);
             if ($is_exists_circle && (!$is_secret || ($is_secret && $is_belong_circle_member))) {
                 $current_circle = $this->User->CircleMember->Circle->findById($params['circle_id']);
+                $this->set('item_created',
+                           isset($current_circle['Circle']['created']) ? $current_circle['Circle']['created'] : null);
             }
         }
         $this->set('current_circle', $current_circle);
