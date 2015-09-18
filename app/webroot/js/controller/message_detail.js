@@ -199,6 +199,12 @@ message_app.controller(
                     });
                 }
             }
+
+            $scope.add_messenger_user = function () {
+                $("#post_messenger").val(post_detail.Post.id);
+                $("#MessageFormShareUser").show();
+                $("#message_add_list").append($("#MessageFormShareUser"));
+            }
         }
 
         // 戻るボタンのURL

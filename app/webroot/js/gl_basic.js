@@ -1581,6 +1581,44 @@ $(document).ready(function () {
             }
         }
     });
+
+    //noinspection JSUnusedLocalSymbols post_detail.Post.id
+    $('#selectOnlyMember').select2({
+        multiple: true,
+        minimumInputLength: 1,
+        placeholder: cake.message.notice.b,
+        ajax: {
+            url: cake.url.add_member_on_message,
+            dataType: 'json',
+            quietMillis: 100,
+            cache: true,
+            data: function (term, page) {
+                return {
+                    term: term, //search term
+                    page_limit: 10, // page size
+                    post_id:$('#post_messenger').val()
+                };
+            },
+            results: function (data, page) {
+                return {results: data.results};
+            }
+        },
+        formatSelection: format,
+        formatResult: format,
+        escapeMarkup: function (m) {
+            return m;
+        },
+        containerCssClass: "select2Member"
+    }).on('change', function () {
+        if ($(this).val() == '') {
+            $('#MessageSubmit').attr('disabled', 'disabled');
+        }
+        else {
+            if ($('#CommonMessageBody').val() != '') {
+                $('#MessageSubmit').removeAttr('disabled');
+            }
+        }
+    });
     //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
     $('#select2PostCircleMember').select2({
         multiple: true,

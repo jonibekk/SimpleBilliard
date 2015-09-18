@@ -829,11 +829,66 @@ class User extends AppModel
         return $res;
     }
 
+    public function getNewUsersByKeywordNotSharedOnPost($keyword, $limit = 10, $not_me = true, $post_id)
+    {
+        $NoneUser_list = $this->Post->PostShareUser->getShareUserListByPost($post_id);
+
+        $user_list = $this->TeamMember->getAllMemberUserIdList(true, true, false);
+
+        $new_user_list = array_diff($user_list, $NoneUser_list);
+
+        $keyword = trim($keyword);
+        if (strlen($keyword) == 0) {
+            return [];
+        }
+        $keyword_conditions = $this->makeUserNameConditions($keyword);
+        $options = [
+            'conditions' => [
+                'User.id'         => $new_user_list,
+                'User.active_flg' => true,
+                'OR'              => $keyword_conditions,
+            ],
+            'limit'      => $limit,
+            'fields'     => $this->profileFields,
+            'joins'      => [
+                [
+                    'type'       => 'LEFT',
+                    'table'      => 'local_names',
+                    'alias'      => 'SearchLocalName',
+                    'conditions' => [
+                        '`SearchLocalName.user_id`=`User.id`',
+                    ],
+                ]
+            ]
+        ];
+        if ($not_me) {
+            $options['conditions']['NOT']['User.id'] = $this->my_uid;
+        }
+        $res = $this->find('all', $options);
+
+        return $res;
+    }
+
     public function getUsersSelect2($keyword, $limit = 10)
     {
         App::uses('UploadHelper', 'View/Helper');
         $Upload = new UploadHelper(new View());
         $users = $this->getUsersByKeyword($keyword, $limit);
+        $user_res = [];
+        foreach ($users as $val) {
+            $data['id'] = 'user_' . $val['User']['id'];
+            $data['text'] = $val['User']['display_username'] . " (" . $val['User']['roman_username'] . ")";
+            $data['image'] = $Upload->uploadUrl($val, 'User.photo', ['style' => 'small']);
+            $user_res[] = $data;
+        }
+        return ['results' => $user_res];
+    }
+
+    public function getUsersSelectOnly($keyword, $limit = 10, $post_id)
+    {
+        App::uses('UploadHelper', 'View/Helper');
+        $Upload = new UploadHelper(new View());
+        $users = $this->getNewUsersByKeywordNotSharedOnPost($keyword, $limit, true, $post_id);
         $user_res = [];
         foreach ($users as $val) {
             $data['id'] = 'user_' . $val['User']['id'];
@@ -1051,7 +1106,6 @@ class User extends AppModel
 
     /**
      * ユーザー名検索時の条件配列を作成する
-     *
      * codeclimate 対策
      * CircleMember でも使ってるので注意
      *
