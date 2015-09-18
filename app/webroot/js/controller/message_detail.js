@@ -201,8 +201,6 @@ message_app.controller(
             }
         }
 
-        console.log($scope.post_detail);
-
         // 戻るボタンのURL
         $scope.message_list_url = cake.url.message_list;
 
