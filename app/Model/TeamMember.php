@@ -263,30 +263,6 @@ class TeamMember extends AppModel
         return $res;
     }
 
-    public function getNoneMemberUserIdList($with_me = true, $required_active = true, $required_evaluate = false)
-    {
-
-        $options = [
-            'conditions' => [
-                'team_id'    => $this->current_team_id,
-                'active_flg' => true,
-            ],
-            'fields'     => ['user_id'],
-        ];
-        if ($required_active) {
-            $options['conditions']['active_flg'] = true;
-        }
-        if ($required_evaluate) {
-            $options['conditions']['evaluation_enable_flg'] = true;
-        }
-        if (!$with_me) {
-            $options['conditions']['NOT']['user_id'] = $this->my_uid;
-        }
-
-        $res = $this->find('list', $options);
-        return $res;
-    }
-
     public function setAdminUserFlag($member_id, $flag)
     {
         $this->id = $member_id;

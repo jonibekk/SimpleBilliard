@@ -831,11 +831,11 @@ class User extends AppModel
 
     public function getNewUsersByKeyword($keyword, $limit = 10, $not_me = true, $post_id)
     {
-        $NoneUser_list=$this->Post->PostShareUser->getShareUserListByPost($post_id);
+        $NoneUser_list = $this->Post->PostShareUser->getShareUserListByPost($post_id);
 
-        $user_list = $this->TeamMember->getNoneMemberUserIdList(true,true,false);
+        $user_list = $this->TeamMember->getAllMemberUserIdList(true, true, false);
 
-        $new_user_list=array_diff($user_list,$NoneUser_list);
+        $new_user_list = array_diff($user_list, $NoneUser_list);
 
         $keyword = trim($keyword);
         if (strlen($keyword) == 0) {
@@ -884,11 +884,11 @@ class User extends AppModel
         return ['results' => $user_res];
     }
 
-    public function getUsersSelectOnly($keyword, $limit = 10,$post_id)
+    public function getUsersSelectOnly($keyword, $limit = 10, $post_id)
     {
         App::uses('UploadHelper', 'View/Helper');
         $Upload = new UploadHelper(new View());
-        $users = $this->getNewUsersByKeyword($keyword, $limit,true,$post_id);
+        $users = $this->getNewUsersByKeyword($keyword, $limit, true, $post_id);
         $user_res = [];
         foreach ($users as $val) {
             $data['id'] = 'user_' . $val['User']['id'];
@@ -898,7 +898,6 @@ class User extends AppModel
         }
         return ['results' => $user_res];
     }
-
 
     public function getUsersCirclesSelect2($keyword, $limit = 10, $circle_type = "all")
     {
@@ -1107,7 +1106,6 @@ class User extends AppModel
 
     /**
      * ユーザー名検索時の条件配列を作成する
-     *
      * codeclimate 対策
      * CircleMember でも使ってるので注意
      *
