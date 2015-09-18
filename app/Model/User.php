@@ -829,7 +829,7 @@ class User extends AppModel
         return $res;
     }
 
-    public function getNewUsersByKeyword($keyword, $limit = 10, $not_me = true, $post_id)
+    public function getNewUsersByKeywordNotSharedOnPost($keyword, $limit = 10, $not_me = true, $post_id)
     {
         $NoneUser_list = $this->Post->PostShareUser->getShareUserListByPost($post_id);
 
@@ -888,7 +888,7 @@ class User extends AppModel
     {
         App::uses('UploadHelper', 'View/Helper');
         $Upload = new UploadHelper(new View());
-        $users = $this->getNewUsersByKeyword($keyword, $limit, true, $post_id);
+        $users = $this->getNewUsersByKeywordNotSharedOnPost($keyword, $limit, true, $post_id);
         $user_res = [];
         foreach ($users as $val) {
             $data['id'] = 'user_' . $val['User']['id'];
