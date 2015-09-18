@@ -13,7 +13,7 @@
  * @var string             $common_form_only_tab フォームのタブ表示を１つに絞る (action, post, message)
  */
 ?>
-<!-- START app/View/Elements/Feed/add_messenger.ctp -->
+<!-- START app/View/Elements/Feed/add_member_on_message.ctp -->
 <div class="panel panel-default global-form">
     <div class="tab-pane active" id="MessageForm">
         <?=
@@ -68,4 +68,4 @@
         <?= $this->Form->end() ?>
     </div>
 </div>
-<!-- END app/View/Elements/Feed/add_messenger.ctp -->
+<!-- END app/View/Elements/Feed/add_member_on_message.ctp -->

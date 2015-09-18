@@ -1588,7 +1588,7 @@ $(document).ready(function () {
         minimumInputLength: 1,
         placeholder: cake.message.notice.b,
         ajax: {
-            url: cake.url.add_messenger,
+            url: cake.url.add_member_on_message,
             dataType: 'json',
             quietMillis: 100,
             cache: true,
