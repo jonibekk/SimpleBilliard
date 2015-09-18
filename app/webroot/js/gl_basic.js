@@ -63,6 +63,14 @@ $(window).load(function () {
 });
 $(document).ready(function () {
 
+    $("#select2Member,#CommonMessageBody").keyup(function () {
+        if ($('#select2Member').val() == '' || $('#CommonMessageBody').val() == '') {
+            $('#MessageSubmit').attr('disabled', 'disabled');
+        }
+        else {
+            $('#MessageSubmit').removeAttr('disabled');
+        }
+    });
 
     //すべてのformで入力があった場合に行う処理
     $("select,input").change(function () {
@@ -1505,11 +1513,6 @@ $(document).ready(function () {
         feedbackIcons: {},
         fields: {}
     });
-    //$('#MessageDisplayForm').bootstrapValidator({
-    //    live: 'enabled',
-    //    feedbackIcons: {},
-    //    fields: {}
-    //});
     $('#CommonActionDisplayForm').bootstrapValidator({
         live: 'enabled',
         feedbackIcons: {},
@@ -1574,13 +1577,12 @@ $(document).ready(function () {
         },
         containerCssClass: "select2Member"
     }).on('change', function () {
-        if($('#select2Member').val()=='' || $('#CommonMessageBody').val()=='')
-        {
-            $('#MessageSubmit').attr('disabled', 'disabled');
-        }
-        else{
-            $('#MessageSubmit').removeAttr('disabled');
-        }
+        //if ($('#select2Member').val() == '' || $('#CommonMessageBody').val() == '') {
+        //    $('#MessageSubmit').attr('disabled', 'disabled');
+        //}
+        //else {
+        //    $('#MessageSubmit').removeAttr('disabled');
+        //}
     });
     //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
     $('#select2PostCircleMember').select2({
@@ -3365,7 +3367,7 @@ $(document).ready(function () {
         thumbnailWidth: null,
         thumbnailHeight: 240,
         // ファイルがドロップされた時の処理
-        drop: function(e) {
+        drop: function (e) {
             $uploadFileForm.hide();
         },
         // ファイルがドロップされた後
@@ -4031,6 +4033,22 @@ $(document).ready(function () {
     require(['search'], function (search) {
         search.headerSearch.setup();
     });
+
+    // Insight 画面の処理
+    if ($('#InsightForm').size()) {
+        require(['insight'], function (insight) {
+            if ($('#InsightResult').size()) {
+                insight.insight.setup();
+            }
+            else if ($('#InsightCircleResult').size()) {
+                insight.insightCircle.setup();
+            }
+            else if ($('#InsightRankingResult').size()) {
+                insight.insightRanking.setup();
+            }
+            insight.reload();
+        });
+    }
 });
 
 function evAjaxEditCircleAdminStatus(e) {
@@ -4193,13 +4211,3 @@ function isMobile() {
     }
     return false;
 }
-
-$("#select2Member,#CommonMessageBody").keyup(function(){
-    if($('#select2Member').val()=='' || $('#CommonMessageBody').val()=='')
-    {
-        $('#MessageSubmit').attr('disabled', 'disabled');
-    }
-    else{
-        $('#MessageSubmit').removeAttr('disabled');
-    }
-});
