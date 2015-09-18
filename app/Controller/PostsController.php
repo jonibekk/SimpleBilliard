@@ -352,25 +352,6 @@ class PostsController extends AppController
         $this->request->data = $rows[0];
         $this->layout = LAYOUT_ONE_COLUMN;
     }
-
-    public function edit_messenger()
-    {
-
-        $post_id = viaIsSet($this->request->params['named']['post_id']);
-        $this->_ajaxPreProcess();
-        /** @noinspection PhpUndefinedMethodInspection */
-        $users = $this->Post->PostShareUser->getShareUsersByPost($post_id);
-        $post = $this->Post->getPostById($post_id);
-        array_unshift($users, ['User' => $post['User']]);
-        $total_share_user_count = $this->_getTotalShareUserCount([], $users);
-        $this->set(compact('users', 'total_share_user_count'));
-        //エレメントの出力を変数に格納する
-        //htmlレンダリング結果
-        $response = $this->render('modal_message_range_add');
-        $html = $response->__toString();
-
-        return $this->_ajaxGetResponse($html);
-    }
     /**
      * comment_delete method
      *
