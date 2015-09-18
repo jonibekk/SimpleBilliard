@@ -174,10 +174,6 @@ message_app.controller(
                 }
             };
 
-
-            var limit = 10;
-            var page_num = 1;
-
             $scope.loadMore = function () {
                 if (document.getElementById("message_box").scrollTop === 0) {
                     var request = {
@@ -213,8 +209,5 @@ message_app.controller(
 
         // 戻るボタンのURL
         $scope.message_list_url = cake.url.message_list;
-
-
-
 
     });
