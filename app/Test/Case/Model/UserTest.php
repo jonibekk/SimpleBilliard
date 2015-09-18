@@ -686,6 +686,53 @@ class UserTest extends CakeTestCase
         $this->assertTrue(!empty($res));
     }
 
+    function testGetNewUsersByKeyword()
+    {
+        $this->User->current_team_id = 1;
+        $this->User->my_uid = 1;
+        $post_id=103;
+
+        // 秘密サークル
+        $res = $this->User->getNewUsersByKeyword('秘密サークル',10,true,$post_id);
+        $this->assertNotEmpty('public', $res);
+
+        // 秘密サークル
+        $res = $this->User->getNewUsersByKeyword('秘密',10,true,$post_id);
+        $this->assertNotEmpty('public', $res);
+
+        // 通常のサークル
+        $res = $this->User->getNewUsersByKeyword('test',10,true,$post_id);
+        $this->assertEquals([], $res);
+
+        // チーム全体サークル
+        $res = $this->User->getNewUsersByKeyword('チーム全体',10,true,$post_id);
+        $this->assertEquals([], $res);
+    }
+
+    function testGetUsersSelectOnly()
+    {
+        $this->User->current_team_id = 1;
+        $this->User->my_uid = 1;
+
+        $post_id=103;
+
+        // 秘密サークル
+        $res = $this->User->getUsersSelectOnly('秘密サークル',10,$post_id);
+        $this->assertNotEmpty('public', $res['results']);
+
+        // 秘密サークル
+        $res = $this->User->getUsersSelectOnly('秘密',10,$post_id);
+        $this->assertNotEmpty('public', $res['results']);
+
+        // 通常のサークル
+        $res = $this->User->getUsersSelectOnly('test',10,$post_id);
+        $this->assertEquals(['results' => []], $res);
+
+        // チーム全体サークル
+        $res = $this->User->getUsersSelectOnly('チーム全体',10,$post_id);
+        $this->assertEquals(['results' => []], $res);
+    }
+
     function testGetSecretCirclesSelect2()
     {
         $this->User->CircleMember->current_team_id = 1;

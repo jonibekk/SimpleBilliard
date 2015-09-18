@@ -257,6 +257,15 @@ class TeamMemberTest extends CakeTestCase
         $this->TeamMember->getAllMemberUserIdList(false);
     }
 
+    function testGetNoneMemberUserIdList()
+    {
+        $uid = 1;
+        $team_id = 1;
+        $this->TeamMember->current_team_id = $team_id;
+        $this->TeamMember->my_uid = $uid;
+        $this->TeamMember->getNoneMemberUserIdList(false);
+    }
+
     function testGetAllMemberUserIdListWithEval()
     {
         $uid = 1;
@@ -272,6 +281,23 @@ class TeamMemberTest extends CakeTestCase
         $actual = $this->TeamMember->getAllMemberUserIdList(true, true, true);
         $this->assertEquals($expected, $actual);
     }
+
+    function testGetNoneMemberUserIdListWithEval()
+    {
+        $uid = 1;
+        $team_id = 1;
+        $this->TeamMember->current_team_id = $team_id;
+        $this->TeamMember->my_uid = $uid;
+        $this->TeamMember->save(['id' => 1, 'evaluation_enable_flg' => false]);
+        $expected = [
+            (int)2 => '2',
+            (int)3 => '12',
+            (int)4 => '13'
+        ];
+        $actual = $this->TeamMember->getNoneMemberUserIdList(true, true, true);
+        $this->assertEquals($expected, $actual);
+    }
+
 
     function testSaveNewMembersFromCsvSuccessChangeLocalName()
     {
