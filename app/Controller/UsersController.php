@@ -1073,6 +1073,8 @@ class UsersController extends AppController
             'user_id' => $user_id,
             'type'    => Post::TYPE_NORMAL
         ]);
+        $team = $this->Team->getCurrentTeam();
+        $this->set('item_created', $team['Team']['created']);
         $this->set('posts', $posts);
         $this->set('long_text', false);
 
@@ -1109,6 +1111,8 @@ class UsersController extends AppController
             $this->Pnotify->outError(__d('gl', "不正な画面遷移です。"));
             return $this->redirect($this->referer());
         }
+        $team = $this->Team->getCurrentTeam();
+        $this->set('item_created', $team['Team']['created']);
         $this->layout = LAYOUT_ONE_COLUMN;
         $goal_ids = $this->Goal->Collaborator->getCollaboGoalList($user_id, true);
         $goal_select_options = $this->Goal->getGoalNameList($goal_ids, true, true);

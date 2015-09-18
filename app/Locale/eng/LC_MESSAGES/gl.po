@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2015-09-09 17:49+0900\n"
-"PO-Revision-Date: 2015-09-09 21:18+0900\n"
+"POT-Creation-Date: 2015-09-17 18:13+0900\n"
+"PO-Revision-Date: 2015-09-17 18:14+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: gl\n"
@@ -16,26 +16,41 @@ msgstr ""
 "X-Generator: Poedit 1.8.4\n"
 
 #: Config/Migration/1435197386_data_migration_for_all_team_0625.php:76;77
-#: Model/Team.php:195;196 Model/User.php:943
+#: Model/Team.php:197;198 Model/User.php:943
 msgid "チーム全体"
 msgstr "All Team"
 
-#: Controller/AppController.php:165
+#: Controller/AppController.php:122
+msgid "Goalous(ゴーラス)"
+msgstr "Goalous"
+
+#: Controller/AppController.php:125
+msgid ""
+"Goalous(ゴーラス)は、チーム力向上のためのSNSです。Goalousを利用すれば、オープ"
+"ンでクリアな目標設定をしたり、ゴールへの活動内容を写真で共有したり、サークル"
+"やメッセンジャーで仲間たちとコミュニケーションをとったりできます。"
+msgstr ""
+"Goalous is a tool that all members of a team are able to action in high "
+"motivated toward the achievement of self goals.Because the members create "
+"public goals in a team,they collaborate each other and share actions with "
+"everyone."
+
+#: Controller/AppController.php:177
 msgid "アクセスしたチームのアクセス権限がありません"
 msgstr "You do not have access to this team."
 
-#: Controller/AppController.php:516
+#: Controller/AppController.php:527
 msgid "このチームへのアクセス権限がありません。"
 msgstr "You do not have access to this team."
 
-#: Controller/AppController.php:602
+#: Controller/AppController.php:619
 msgid "ゴールを選択する"
 msgstr "Select a goal."
 
-#: Controller/AppController.php:634
-#: Controller/GoalsController.php:1282;1304;1325;1354;1360;1392
+#: Controller/AppController.php:651
+#: Controller/GoalsController.php:1287;1309;1330;1359;1365;1397
 #: Controller/TeamsController.php:864;922
-#: Controller/UsersController.php:1016;1060;1080;1100;1123
+#: Controller/UsersController.php:1016;1063;1085;1105;1130
 msgid "不正な画面遷移です。"
 msgstr "Invalid screen transition."
 
@@ -746,6 +761,10 @@ msgstr "Succeeded to save 2-Step Verification."
 msgid "2段階認証を解除しました。"
 msgstr "Succeeded to cancel 2-Step Verification."
 
+#: Controller/UsersController.php:1149
+msgid "メールアドレスの登録ができました。"
+msgstr ""
+
 #: Model/AttachedFile.php:30 View/Elements/Goal/add_new_action_form.ctp:53
 #: View/Elements/Goal/modal_add_action.ctp:50
 #: View/Elements/Goal/modal_edit_action_result.ctp:47
@@ -762,12 +781,12 @@ msgstr "Movies"
 msgid "ドキュメント"
 msgstr "Documents"
 
-#: Model/AttachedFile.php:141 Model/Goal.php:74;94;1476;1488
+#: Model/AttachedFile.php:141 Model/Goal.php:74;94;1490;1502
 #: Model/KeyResult.php:369;380
 msgid "すべて"
 msgstr "All"
 
-#: Model/Badge.php:24 Model/EvaluateScore.php:71 Model/Team.php:222
+#: Model/Badge.php:24 Model/EvaluateScore.php:71 Model/Team.php:224
 msgid "選択してください"
 msgstr "Please select"
 
@@ -787,7 +806,7 @@ msgstr "Public"
 msgid "秘密"
 msgstr "Secret"
 
-#: Model/Collaborator.php:41 View/Elements/gl_common_js.ctp:228
+#: Model/Collaborator.php:41 View/Elements/gl_common_js.ctp:229
 #: View/Elements/my_goals_area.ctp:83
 #: View/Elements/Goal/modal_goal_description.ctp:99
 msgid "コラボレータ"
@@ -959,7 +978,7 @@ msgstr "You do not have permission to edit this goal."
 msgid "このゴールは評価中のため、変更できません。"
 msgstr "You can not change the goal because of during the evaluation."
 
-#: Model/Goal.php:1335;1348
+#: Model/Goal.php:1349;1362
 msgid "ゴールが存在しません。"
 msgstr "The goal does not exist."
 
@@ -1368,67 +1387,67 @@ msgstr "From this term"
 msgid "来期から"
 msgstr "From next term"
 
-#: Model/Team.php:223
+#: Model/Team.php:225
 msgid "四半期"
 msgstr "Quarter"
 
-#: Model/Team.php:224
+#: Model/Team.php:226
 msgid "半年"
 msgstr "Harf a year"
 
-#: Model/Team.php:225
+#: Model/Team.php:227
 msgid "年"
 msgstr "Year"
 
-#: Model/Team.php:233
+#: Model/Team.php:235
 msgid "選択して下さい"
 msgstr "Please select"
 
-#: Model/Team.php:234
+#: Model/Team.php:236
 msgid "１月"
 msgstr "Jan"
 
-#: Model/Team.php:235
+#: Model/Team.php:237
 msgid "２月"
 msgstr "Feb"
 
-#: Model/Team.php:236
+#: Model/Team.php:238
 msgid "３月"
 msgstr "Mar"
 
-#: Model/Team.php:237
+#: Model/Team.php:239
 msgid "４月"
 msgstr "Apr"
 
-#: Model/Team.php:238
+#: Model/Team.php:240
 msgid "５月"
 msgstr "May"
 
-#: Model/Team.php:239
+#: Model/Team.php:241
 msgid "６月"
 msgstr "Jun"
 
-#: Model/Team.php:240
+#: Model/Team.php:242
 msgid "７月"
 msgstr "Jul"
 
-#: Model/Team.php:241
+#: Model/Team.php:243
 msgid "８月"
 msgstr "Aug"
 
-#: Model/Team.php:242
+#: Model/Team.php:244
 msgid "９月"
 msgstr "Sep"
 
-#: Model/Team.php:243
+#: Model/Team.php:245
 msgid "１０月"
 msgstr "Oct"
 
-#: Model/Team.php:244
+#: Model/Team.php:246
 msgid "１１月"
 msgstr "Nov"
 
-#: Model/Team.php:245
+#: Model/Team.php:247
 msgid "１２月"
 msgstr "Dec"
 
@@ -1790,11 +1809,11 @@ msgstr "View All"
 msgid "アクション"
 msgstr "Action"
 
-#: View/Elements/footer.ctp:31 View/Layouts/homepage.ctp:225
+#: View/Elements/footer.ctp:31
 msgid "Privacy Policy"
 msgstr "Privacy Policy"
 
-#: View/Elements/footer.ctp:39 View/Layouts/homepage.ctp:234
+#: View/Elements/footer.ctp:39
 msgid "Terms of Service"
 msgstr "Terms of Service"
 
@@ -1883,8 +1902,8 @@ msgstr "Following"
 msgid "もっと見る"
 msgstr "More"
 
-#: View/Elements/gl_common_js.ctp:79 View/Elements/Feed/contents.ctp:57
-#: View/Users/view_posts.ctp:26
+#: View/Elements/gl_common_js.ctp:79 View/Elements/Feed/contents.ctp:60
+#: View/Users/view_posts.ctp:30
 msgid "さらに投稿を読み込む ▼"
 msgstr "View previous posts ▼"
 
@@ -2014,11 +2033,11 @@ msgstr "Goal Name?"
 msgid "サークル名を入力"
 msgstr "Circle Name?"
 
-#: View/Elements/gl_common_js.ctp:216
+#: View/Elements/gl_common_js.ctp:217
 msgid "コーチ"
 msgstr "Coach"
 
-#: View/Elements/gl_common_js.ctp:222
+#: View/Elements/gl_common_js.ctp:223
 #: View/Elements/Goal/modal_goal_description.ctp:114
 #: View/Elements/Goal/simplex_top_section.ctp:52;173
 msgid "フォロワー"
@@ -2113,6 +2132,10 @@ msgstr "Evaluation"
 msgid "チーム設定"
 msgstr "Team Setting"
 
+#: View/Elements/header_logged_in_right.ctp:173
+msgid "Feedback"
+msgstr ""
+
 #: View/Elements/header_sp_feeds_alt.ctp:6
 msgid "ニュースフィード"
 msgstr "Newsfeed"
@@ -2129,9 +2152,9 @@ msgstr "Action list"
 msgid "これ以上のデータがありません。"
 msgstr "There is no more data."
 
-#: View/Elements/modal_action_list.ctp:71 View/Elements/Feed/contents.ctp:52
-#: View/Goals/view_actions.ctp:68 View/Users/view_actions.ctp:67
-#: View/Users/view_posts.ctp:21
+#: View/Elements/modal_action_list.ctp:71 View/Elements/Feed/contents.ctp:55
+#: View/Goals/view_actions.ctp:79 View/Users/view_actions.ctp:78
+#: View/Users/view_posts.ctp:25
 msgid "もっと読む ▼"
 msgstr "More..."
 
@@ -2376,7 +2399,8 @@ msgstr "Change"
 msgid "会話のメンバー (%s)"
 msgstr ""
 
-#: View/Elements/modal_privacy_policy.ctp:13 View/Users/register.ctp:98
+#: View/Elements/modal_privacy_policy.ctp:13 View/Layouts/homepage.ctp:166
+#: View/Pages/home.ctp:63 View/Users/register.ctp:98
 msgid "プライバシーポリシー"
 msgstr "Privacy Policy"
 
@@ -2404,7 +2428,8 @@ msgstr "No circle you have joined."
 msgid "%s人に共有しました"
 msgstr "Shared with %s people"
 
-#: View/Elements/modal_tos.ctp:16 View/Users/register.ctp:95
+#: View/Elements/modal_tos.ctp:16 View/Layouts/homepage.ctp:163
+#: View/Pages/home.ctp:62 View/Users/register.ctp:95
 msgid "利用規約"
 msgstr "Terms of Use"
 
@@ -2639,11 +2664,11 @@ msgstr "Write a message..."
 msgid "メッセージする"
 msgstr "Send"
 
-#: View/Elements/Feed/contents.ctp:36 View/Posts/attached_file_list.ctp:33
+#: View/Elements/Feed/contents.ctp:37 View/Posts/attached_file_list.ctp:33
 msgid "件の新しい投稿があります。"
 msgstr " new posts."
 
-#: View/Elements/Feed/contents.ctp:86 View/Users/view_posts.ctp:37
+#: View/Elements/Feed/contents.ctp:89 View/Users/view_posts.ctp:41
 msgid "これ以上の投稿はありませんでした。"
 msgstr "There are no more posts to show."
 
@@ -4045,11 +4070,11 @@ msgstr ""
 msgid "もっと見る ▼"
 msgstr "View more…"
 
-#: View/Goals/view_actions.ctp:77 View/Users/view_actions.ctp:76
+#: View/Goals/view_actions.ctp:84 View/Users/view_actions.ctp:83
 msgid "さらにアクションを読み込む ▼"
 msgstr "View more…"
 
-#: View/Goals/view_actions.ctp:87 View/Users/view_actions.ctp:86
+#: View/Goals/view_actions.ctp:94 View/Users/view_actions.ctp:93
 msgid "これ以上のアクションはありませんでした。"
 msgstr ""
 
@@ -4090,7 +4115,11 @@ msgstr "Collaborating"
 msgid "他%s人"
 msgstr "%s other people"
 
-#: View/Layouts/homepage.ctp:178
+#: View/Layouts/homepage.ctp:118 View/Users/login.ctp:54
+msgid "ログイン"
+msgstr "Login"
+
+#: View/Layouts/homepage.ctp:122
 msgid "Language"
 msgstr "Language"
 
@@ -4192,17 +4221,9 @@ msgstr "Login Goalous!"
 msgid "Cookieを有効にしてください"
 msgstr "Please enable cookie."
 
-#: View/Users/login.ctp:54
-msgid "ログイン"
-msgstr "Login"
-
 #: View/Users/login.ctp:61
 msgid "パスワードを忘れた場合はこちら"
 msgstr "Forgot your password?"
-
-#: View/Users/login.ctp:66
-msgid "新規ユーザ登録はこちら"
-msgstr "Do you want to new user registration?"
 
 #: View/Users/password_reset.ctp:16 View/Users/password_reset_request.ctp:16
 msgid "パスワードの再設定"
@@ -4317,6 +4338,9 @@ msgstr "Approval Status: %s"
 #: View/Users/view_info.ctp:22
 msgid "編集"
 msgstr "Edit"
+
+#~ msgid "新規ユーザ登録はこちら"
+#~ msgstr "Do you want to new user registration?"
 
 #~ msgid "フォローに失敗しました。"
 #~ msgstr "Failed to follow."
