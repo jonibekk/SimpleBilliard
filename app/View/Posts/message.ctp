@@ -6,9 +6,9 @@
 <?php echo $this->Html->script('vendor/angular/ng-infinite-scroll.min'); ?>
 
 <div ng-app="messageApp">
-    <div class="post-message-dest panel-body none" id="MessageFormShareUser">
+    <div class="panel-body none" id="MessageFormShareUser">
 
-        <?php  echo $this->element('Feed/add_member_on_message', [
+        <?php echo $this->element('Feed/add_member_on_message', [
             'common_form_type'     => 'message',
             'common_form_only_tab' => 'message'
         ]) ?>
