@@ -1537,22 +1537,13 @@ class TeamsController extends AppController
                 'end'   => $end_time,
             ]);
 
-            // 指定期間内の投稿に対していいねしたメンバーリスト（現在まで）
-            $circle_post_like_user_list = $this->Post->PostShareCircle->getLikeUserListByCircleId($circle_id, [
-                'start'        => $start_time,
-                'end'          => $end_time,
-                'like_user_id' => $circle_member_list,
+            // 指定期間内の投稿投稿へのいいね数の合計数（現在まで）
+            $circle_post_like_count = $this->Post->PostShareCircle->getTotalPostLikeCountByCircleId($circle_id, [
+                'start' => $start_time,
+                'end'   => $end_time,
             ]);
-
-            // 指定期間内の投稿に対してコメントしたメンバーリスト（現在まで）
-            $circle_post_comment_user_list = $this->Post->PostShareCircle->getCommentUserListByCircleId($circle_id, [
-                'start'           => $start_time,
-                'end'             => $end_time,
-                'comment_user_id' => $circle_member_list,
-            ]);
-            $engage_count = count(array_unique(array_merge($circle_post_like_user_list,
-                                                           $circle_post_comment_user_list)));
-            $engage_percent = $circle_post_read_count ? round($engage_count / $circle_post_read_count, 1) : 0;
+            $engage_percent = $circle_post_read_count ?
+                round($circle_post_like_count / $circle_post_read_count, 1) : 0;
 
             $circle_insights[$circle_id] = [
                 'circle_id'       => $circle_id,
