@@ -43,7 +43,6 @@ class SubscribeEmailTest extends CakeTestCase
 
     function testDummy()
     {
-
     }
 
 }

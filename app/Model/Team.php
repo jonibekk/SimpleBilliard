@@ -26,6 +26,10 @@ App::uses('AppModel', 'Model');
  * @property EvaluateTerm      $EvaluateTerm
  * @property TeamVision        $TeamVision
  * @property GroupVision       $GroupVision
+ * @property TeamInsight       $TeamInsight
+ * @property GroupInsight      $GroupInsight
+ * @property CircleInsight     $CircleInsight
+ * @property AccessUser     $AccessUser
  */
 class Team extends AppModel
 {
@@ -146,6 +150,10 @@ class Team extends AppModel
         'EvaluateTerm',
         'TeamVision',
         'GroupVision',
+        'TeamInsight',
+        'GroupInsight',
+        'CircleInsight',
+        'AccessUser',
     ];
 
     public $current_team = [];
@@ -510,5 +518,13 @@ class Team extends AppModel
             $this->current_team = $this->findById($this->current_team_id);
         }
         return $this->current_team;
+    }
+
+    /**
+     * チームのリストを取得する
+     */
+    function getList()
+    {
+        return $this->find('list');
     }
 }

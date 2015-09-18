@@ -8,6 +8,9 @@ App::uses('AppController', 'Controller');
  */
 class PostsController extends AppController
 {
+    //　メッセージリストの1ページあたり表示件数
+    public static $message_list_page_count = 7;
+
     public function beforeFilter()
     {
         parent::beforeFilter();
@@ -31,33 +34,16 @@ class PostsController extends AppController
         return $this->render();
     }
 
-    public function ajax_get_message_list()
+    public function ajax_get_message_list($page=1)
     {
         $this->_ajaxPreProcess();
-        $result = $this->Post->getMessageList();
-
-        // TODO:緊急対応　汚いので後でリファクタリング
-        foreach ($result as $key => $item) {
-            if (isset($item['PostShareUser']) === true) {
-
-                $shared_user_id = [];
-                foreach ($item['PostShareUser'] as $item2) {
-                    $shared_user_id[] = $item2['user_id'];
-                }
-
-                if (in_array($this->Auth->user('id'), $shared_user_id) === false
-                    && $item['Post']['user_id'] !== $this->Auth->user('id')
-                ) {
-                    unset($result[$key]);
-                }
-            }
-        }
+        $result = $this->Post->getMessageList($this->Auth->user('id'), PostsController::$message_list_page_count, $page);
         $message_list = $this->Post->convertData($result);
         $res = [
             'auth_info'    => [
                 'user_id'    => $this->Auth->user('id'),
                 'language'   => $this->Auth->user('language'),
-                'photo_path' => $this->Post->getPhotoPath($this->Auth->user()),
+                'photo_path' => $this->Post->getPhotoPath($this->Auth->user())
             ],
             'message_list' => $message_list,
         ];

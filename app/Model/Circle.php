@@ -363,6 +363,37 @@ class Circle extends AppModel
         return $res;
     }
 
+    /**
+     * チームに存在する全サークルのリストを返す
+     *
+     * @return array|null
+     */
+    public function getList()
+    {
+        $options = [
+            'conditions' => [
+                'Circle.team_id' => $this->current_team_id,
+            ],
+        ];
+        return $this->find('list', $options);
+    }
+
+    /**
+     * 公開サークルのリストを返す
+     *
+     * @return array|null
+     */
+    public function getPublicCircleList()
+    {
+        $options = [
+            'conditions' => [
+                'Circle.team_id'    => $this->current_team_id,
+                'Circle.public_flg' => true,
+            ],
+        ];
+        return $this->find('list', $options);
+    }
+
     function getCirclesAndMemberById($circle_ids)
     {
         $active_user_ids = $this->Team->TeamMember->getActiveTeamMembersList();

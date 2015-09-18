@@ -14,8 +14,8 @@
 <?php $this->start('sidebar') ?>
 <li class="active"><a href="#basic_setting"><?= __d('gl', "基本設定") ?></a></li>
 <li class=""><a href="#term_setting"><?= __d('gl', "期間設定") ?></a></li>
-<li class=""><a href="#account"><?= __d('gl', "メンバー招待") ?></a></li>
-<li class=""><a href="#profile"><?= __d('gl', "一括登録") ?></a></li>
+<li class=""><a href="#invite_member"><?= __d('gl', "メンバー招待") ?></a></li>
+<li class=""><a href="#batch_registration"><?= __d('gl', "一括登録") ?></a></li>
 <li class=""><a href="#goal_category"><?= __d('gl', "ゴールカテゴリ設定") ?></a></li>
 <li class=""><a href="#evaluation"><?= __d('gl', "評価設定") ?></a></li>
 <li class=""><a href="#evaluation_score_setting"><?= __d('gl', "評価スコア設定") ?></a></li>
@@ -30,10 +30,10 @@
 <div id="term_setting">
     <?= $this->element('Team/edit_term_setting') ?>
 </div>
-<div id="account">
+<div id="invite_member">
     <?= $this->element('Team/invite') ?>
 </div>
-<div id="profile">
+<div id="batch_registration">
     <?= $this->element('Team/batch_setup') ?>
 </div>
 <div id="goal_category">

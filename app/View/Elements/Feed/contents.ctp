@@ -14,6 +14,7 @@
  * @var                       $circle_status
  * @var                       $user_status
  * @var                       $params
+ * @var                       $item_created
  */
 ?>
 <!-- START app/View/Elements/Feed/contents.ctp -->
@@ -39,13 +40,15 @@ if (!isset($this->request->params['post_id'])) {
 <?php
 // 通知 -> 投稿単体ページ と遷移してきた場合は、通知一覧に戻るボタンを表示する
 if (isset($this->request->params['post_id']) && isset($this->request->params['named']['notify_id'])): ?>
-<a href="<?= $this->Html->url(['controller' => 'notifications']) ?>" class="btn-back-notifications">
-    <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i>
-</a>
+    <a href="<?= $this->Html->url(['controller' => 'notifications']) ?>" class="btn-back-notifications">
+        <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i>
+    </a>
 <?php endif ?>
 <?= $this->element("Feed/posts") ?>
-<?php //ポストが存在する　かつ　パーマリンクでない
-if (!isset($this->request->params['post_id']) || empty($this->request->params['post_id'])):
+<?php //(投稿が指定件数　もしくは　アイテム作成日から１ヶ月以上経っている)かつパーマリンクでない
+if ((count($posts) == POST_FEED_PAGE_ITEMS_NUMBER || (isset($item_created) && $item_created < REQUEST_TIMESTAMP - (60 * 60 * 24 * 30))) &&
+    (!isset($this->request->params['post_id']) || empty($this->request->params['post_id']))
+):
     ?>
     <?php $next_page_num = 2;
     $month_index = 0;

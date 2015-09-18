@@ -35,7 +35,7 @@ class UsersController extends AppController
     protected function _setupAuth()
     {
         $this->Auth->allow('register', 'login', 'verify', 'logout', 'password_reset', 'token_resend', 'sent_mail',
-                           'accept_invite', 'registration_with_set_password', 'two_fa_auth');
+                           'accept_invite', 'registration_with_set_password', 'two_fa_auth', 'add_subscribe_email');
 
         $this->Auth->authenticate = array(
             'Form2' => array(
@@ -199,7 +199,7 @@ class UsersController extends AppController
     public function register()
     {
         //TODO basic認証 本番公開後に外す
-        if ((ENV_NAME == "www" || ENV_NAME == "stg" || ENV_NAME == "hotfix") && !isset($this->request->params['named']['invite_token'])) {
+        if (ENV_NAME != "local" && !isset($this->request->params['named']['invite_token'])) {
             $this->_setBasicAuth();
         }
 
@@ -1081,6 +1081,8 @@ class UsersController extends AppController
             'user_id' => $user_id,
             'type'    => Post::TYPE_NORMAL
         ]);
+        $team = $this->Team->getCurrentTeam();
+        $this->set('item_created', $team['Team']['created']);
         $this->set('posts', $posts);
         $this->set('long_text', false);
 
@@ -1117,6 +1119,8 @@ class UsersController extends AppController
             $this->Pnotify->outError(__d('gl', "不正な画面遷移です。"));
             return $this->redirect($this->referer());
         }
+        $team = $this->Team->getCurrentTeam();
+        $this->set('item_created', $team['Team']['created']);
         $this->layout = LAYOUT_ONE_COLUMN;
         $goal_ids = $this->Goal->Collaborator->getCollaboGoalList($user_id, true);
         $goal_select_options = $this->Goal->getGoalNameList($goal_ids, true, true);
@@ -1143,6 +1147,21 @@ class UsersController extends AppController
 
         $this->layout = LAYOUT_ONE_COLUMN;
         return $this->render();
+    }
+
+    function add_subscribe_email()
+    {
+        $this->request->allowMethod('post');
+        /**
+         * @var SubscribeEmail $SubscribeEmail
+         */
+        $SubscribeEmail = ClassRegistry::init('SubscribeEmail');
+        if (!$SubscribeEmail->save($this->request->data)) {
+            $this->Pnotify->outError($SubscribeEmail->validationErrors['email'][0]);
+            return $this->redirect($this->referer());
+        }
+        $this->Pnotify->outSuccess(__d('gl', 'メールアドレスの登録ができました。'));
+        return $this->redirect($this->referer());
     }
 
     /**

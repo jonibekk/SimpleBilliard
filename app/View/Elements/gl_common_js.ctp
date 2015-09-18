@@ -32,6 +32,7 @@ echo $this->Html->script('vendor/locales/bootstrap-datepicker.ja');
 echo $this->Html->script('vendor/moment.min');
 echo $this->Html->script('vendor/pusher.min');
 echo $this->Html->script('vendor/dropzone.js');
+echo $this->Html->script('vendor/jquery.flot.js');
 echo $this->Html->script('vendor/jquery.balanced-gallery.min');
 echo $this->Html->script('vendor/imagesloaded.pkgd.min');
 echo $this->Html->script('vendor/require');
@@ -160,7 +161,11 @@ echo $this->Html->script('goalous.min');
             goal_key_results: "<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_key_results']) ?>",
             upload_file: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_upload_file']) ?>",
             remove_file: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_remove_file']) ?>",
-            message_list: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'message_list']) ?>"
+            message_list: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'message_list']) ?>",
+            invite_member: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'settings','#'=>'invite_member']) ?>",
+            insight: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_insight']) ?>",
+            insight_circle: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_insight_circle']) ?>",
+            insight_ranking: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_insight_ranking']) ?>"
         },
         data: {
             a: <?=isset($select2_default)?$select2_default:"[]"?>,

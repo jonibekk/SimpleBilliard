@@ -139,6 +139,23 @@ class TeamMemberFixture extends CakeTestFixture
             'modified'              => '2014-05-22 02:28:04'
         ),
         array(
+            'id'                    => '6',
+            'user_id'               => '15',
+            'team_id'               => '2',
+            'coach_user_id'         => '',
+            'member_no'             => 'Lorem ipsum dolor sit amet',
+            'job_category_id'       => '',
+            'active_flg'            => 0,
+            'invitation_flg'        => 1,
+            'evaluation_enable_flg' => 1,
+            'admin_flg'             => 1,
+            'last_login'            => '2014-05-22 02:28:04',
+            'del_flg'               => false,
+            'deleted'               => null,
+            'created'               => '2014-05-22 02:28:04',
+            'modified'              => '2014-05-22 02:28:04'
+        ),
+        array(
             'id'                    => '',
             'user_id'               => '',
             'team_id'               => '',

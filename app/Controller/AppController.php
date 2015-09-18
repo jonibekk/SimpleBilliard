@@ -86,6 +86,10 @@ class AppController extends Controller
         'GlRedis',
     ];
 
+    //基本タイトル
+    public $title_for_layout;
+    //基本description
+    public $meta_description;
     /**
      * ページネータの初期設定
      *
@@ -113,6 +117,19 @@ class AppController extends Controller
     public function beforeFilter()
     {
         parent::beforeFilter();
+
+        //全ページ共通のタイトルセット(書き換える場合はこの変数の値を変更の上、再度アクションメソッド側でsetする)
+        if (ENV_NAME == "www") {
+            $this->title_for_layout = __d('gl', 'Goalous(ゴーラス)');
+        }
+        else {
+            $this->title_for_layout = "[" . ENV_NAME . "]" . __d('gl', 'Goalous(ゴーラス)');
+        }
+        $this->set('title_for_layout', $this->title_for_layout);
+        //全ページ共通のdescriptionのmetaタグの内容をセット(書き換える場合はこの変数の値を変更の上、再度アクションメソッド側でsetする)
+        $this->meta_description = __d('gl',
+                                      'Goalous(ゴーラス)は、チーム力向上のためのSNSです。Goalousを利用すれば、オープンでクリアな目標設定をしたり、ゴールへの活動内容を写真で共有したり、サークルやメッセンジャーで仲間たちとコミュニケーションをとったりできます。');
+        $this->set('meta_description', $this->meta_description);
 
         $this->_setSecurity();
         $this->_setAppLanguage();
@@ -174,11 +191,9 @@ class AppController extends Controller
                 $this->_setNextTerm();
             }
             $this->_setMyMemberStatus();
+            $this->_saveAccessUser($this->current_team_id, $this->Auth->user('id'));
         }
         $this->set('current_global_menu', null);
-
-        //ページタイトルセット
-        $this->set('title_for_layout', SERVICE_NAME);
     }
 
     public function _setCurrentTerm()
@@ -331,6 +346,8 @@ class AppController extends Controller
             $is_belong_circle_member = $this->User->CircleMember->isBelong($params['circle_id']);
             if ($is_exists_circle && (!$is_secret || ($is_secret && $is_belong_circle_member))) {
                 $current_circle = $this->User->CircleMember->Circle->findById($params['circle_id']);
+                $this->set('item_created',
+                           isset($current_circle['Circle']['created']) ? $current_circle['Circle']['created'] : null);
             }
         }
         $this->set('current_circle', $current_circle);
@@ -670,4 +687,19 @@ class AppController extends Controller
         return $referer_url;
     }
 
+    /**
+     * ユーザーがアクセスした記録を残す
+     *
+     * @param $user_id
+     */
+    public function _saveAccessUser($team_id, $user_id)
+    {
+        $timezones = [
+            9,    // 東京
+            5.5,  // ニューデリー
+            1,    // ベルリン
+            -8,   // 太平洋標準時
+        ];
+        $this->GlRedis->saveAccessUser($team_id, $user_id, REQUEST_TIMESTAMP, $timezones);
+    }
 }

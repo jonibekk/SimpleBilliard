@@ -12,16 +12,22 @@ class SubscribeEmail extends AppModel
      *
      * @var array
      */
-    public $validate = array(
-        'email'   => array(
-            'email' => array(
-                'rule' => array('email'),
-            ),
-        ),
-        'del_flg' => array(
-            'boolean' => array(
-                'rule' => array('boolean'),
-            ),
-        ),
-    );
+    public $validate = [
+        'email'   => [
+            'notEmpty'      => [
+                'rule' => 'notEmpty',
+            ],
+            'email'         => [
+                'rule' => ['email'],
+            ],
+            'emailIsUnique' => [
+                'rule' => ['isUnique'],
+            ]
+        ],
+        'del_flg' => [
+            'boolean' => [
+                'rule' => ['boolean'],
+            ],
+        ],
+    ];
 }

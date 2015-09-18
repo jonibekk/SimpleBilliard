@@ -17,52 +17,7 @@ class CircleInsightTest extends CakeTestCase
     public $fixtures = array(
         'app.circle_insight',
         'app.team',
-        'app.badge',
-        'app.user',
-        'app.email',
-        'app.notify_setting',
-        'app.purpose',
-        'app.goal',
-        'app.goal_category',
-        'app.post',
-        'app.circle',
-        'app.circle_member',
-        'app.post_share_circle',
-        'app.action_result',
-        'app.key_result',
-        'app.action_result_file',
-        'app.attached_file',
-        'app.comment_file',
-        'app.comment',
-        'app.comment_like',
-        'app.comment_read',
-        'app.post_file',
-        'app.post_share_user',
-        'app.post_like',
-        'app.post_read',
-        'app.comment_mention',
-        'app.given_badge',
-        'app.post_mention',
-        'app.collaborator',
-        'app.approval_history',
-        'app.follower',
-        'app.evaluation',
-        'app.evaluate_term',
-        'app.evaluator',
-        'app.evaluate_score',
-        'app.oauth_token',
-        'app.team_member',
-        'app.job_category',
-        'app.member_type',
-        'app.local_name',
-        'app.member_group',
-        'app.group',
-        'app.group_vision',
-        'app.invite',
-        'app.thread',
-        'app.message',
-        'app.evaluation_setting',
-        'app.team_vision'
+        'app.circle'
     );
 
     /**
@@ -88,9 +43,46 @@ class CircleInsightTest extends CakeTestCase
         parent::tearDown();
     }
 
-    function testDummy()
+    function testGetTotal()
     {
+        $this->CircleInsight->current_team_id = 1;
+        $this->CircleInsight->my_uid = 1;
 
+        $this->CircleInsight->create();
+        $this->CircleInsight->save(
+            [
+                'team_id'     => 1,
+                'target_date' => '2015-01-01',
+                'timezone'    => 9,
+                'circle_id'   => 3,
+                'user_count'  => 1,
+            ]);
+        $this->CircleInsight->create();
+        $this->CircleInsight->save(
+            [
+                'team_id'     => 1,
+                'target_date' => '2015-01-02',
+                'timezone'    => 9,
+                'circle_id'   => 3,
+                'user_count'  => 2,
+            ]);
+        $this->CircleInsight->create();
+        $this->CircleInsight->save(
+            [
+                'team_id'     => 1,
+                'target_date' => '2015-01-01',
+                'timezone'    => 9,
+                'circle_id'   => 1,
+                'user_count'  => 10,
+            ]);
+
+        $start_date = '2015-01-01';
+        $end_date = '2015-01-02';
+        $timezone = 9;
+        $total = $this->CircleInsight->getTotal(1, $start_date, $end_date, $timezone);
+        $this->assertEquals(10, $total[0]['max_user_count']);
+        $total = $this->CircleInsight->getTotal(3, $start_date, $end_date, $timezone);
+        $this->assertEquals(2, $total[0]['max_user_count']);
     }
 
 }

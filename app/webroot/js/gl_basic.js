@@ -3402,7 +3402,7 @@ $(document).ready(function () {
         thumbnailWidth: null,
         thumbnailHeight: 240,
         // ファイルがドロップされた時の処理
-        drop: function(e) {
+        drop: function (e) {
             $uploadFileForm.hide();
         },
         // ファイルがドロップされた後
@@ -4068,6 +4068,22 @@ $(document).ready(function () {
     require(['search'], function (search) {
         search.headerSearch.setup();
     });
+
+    // Insight 画面の処理
+    if ($('#InsightForm').size()) {
+        require(['insight'], function (insight) {
+            if ($('#InsightResult').size()) {
+                insight.insight.setup();
+            }
+            else if ($('#InsightCircleResult').size()) {
+                insight.insightCircle.setup();
+            }
+            else if ($('#InsightRankingResult').size()) {
+                insight.insightRanking.setup();
+            }
+            insight.reload();
+        });
+    }
 });
 
 function evAjaxEditCircleAdminStatus(e) {

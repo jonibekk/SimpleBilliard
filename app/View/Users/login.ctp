@@ -61,11 +61,6 @@
                         $this->Html->link(__d('gl', 'パスワードを忘れた場合はこちら'), ['action' => 'password_reset'],
                                           ['class' => 'link']) ?>
                     </div>
-                    <div class="col-sm-4">
-                        <?=
-                        $this->Html->link(__d('gl', '新規ユーザ登録はこちら'), ['action' => 'register'],
-                                          ['class' => 'link']) ?>
-                    </div>
                 </div>
                 <?= $this->Form->end(); ?>
             </div>

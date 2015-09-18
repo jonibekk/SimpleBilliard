@@ -17,36 +17,12 @@ class CollaboratorTest extends CakeTestCase
     public $fixtures = array(
         'app.collaborator',
         'app.team',
-        'app.badge',
         'app.user',
-        'app.email',
-        'app.notify_setting',
-        'app.comment_like',
-        'app.comment',
-        'app.post',
         'app.goal',
-        'app.purpose',
         'app.goal_category',
-        'app.key_result',
-        'app.post_share_user',
-        'app.post_share_circle',
-        'app.circle',
-        'app.circle_member',
-        'app.post_like',
-        'app.post_read',
-        'app.comment_mention',
-        'app.given_badge',
-        'app.post_mention',
-        'app.comment_read',
-        'approval_history',
-        'app.oauth_token',
+        'app.approval_history',
+        'app.purpose',
         'app.team_member',
-        'app.group',
-        'app.job_category',
-        'app.local_name',
-        'app.invite',
-        'app.thread',
-        'app.message'
     );
 
     /**
@@ -380,5 +356,75 @@ class CollaboratorTest extends CakeTestCase
         $this->Collaborator->save($data);
         $res = $this->Collaborator->getCollaborator($team_id, $user_id, $goal_id, false);
         $this->assertCount(0, $res);
+    }
+
+    function testGetCount()
+    {
+        $this->Collaborator->my_uid = 1;
+        $this->Collaborator->current_team_id = 1;
+
+        $this->Collaborator->create();
+        $this->Collaborator->save(
+            [
+                'team_id' => 1,
+                'user_id' => 1,
+                'goal_id' => 1,
+                'type'    => Collaborator::TYPE_OWNER
+            ]);
+        $this->Collaborator->create();
+        $this->Collaborator->save(
+            [
+                'team_id' => 1,
+                'user_id' => 2,
+                'goal_id' => 1,
+                'type'    => Collaborator::TYPE_COLLABORATOR
+            ]);
+        $this->Collaborator->create();
+        $this->Collaborator->save(
+            [
+                'team_id' => 1,
+                'user_id' => 3,
+                'goal_id' => 1,
+                'type'    => Collaborator::TYPE_COLLABORATOR
+            ]);
+        $this->Collaborator->create();
+        $this->Collaborator->save(
+            [
+                'team_id' => 1,
+                'user_id' => 3,
+                'goal_id' => 2,
+                'type'    => Collaborator::TYPE_COLLABORATOR
+            ]);
+        $now = time();
+        $count = $this->Collaborator->getCount(
+            [
+                'start' => $now - HOUR,
+                'end' => $now + HOUR,
+            ]);
+        $this->assertEquals(4, $count);
+
+        $count = $this->Collaborator->getCount(
+            [
+                'start' => $now - HOUR,
+                'end' => $now + HOUR,
+                'type' => Collaborator::TYPE_OWNER
+            ]);
+        $this->assertEquals(1, $count);
+
+        $count = $this->Collaborator->getCount(
+            [
+                'start' => $now - HOUR,
+                'end' => $now + HOUR,
+                'type' => Collaborator::TYPE_COLLABORATOR
+            ]);
+        $this->assertEquals(3, $count);
+
+        $count = $this->Collaborator->getCount(
+            [
+                'start' => $now - HOUR,
+                'end' => $now + HOUR,
+                'user_id' => 3,
+            ]);
+        $this->assertEquals(2, $count);
     }
 }

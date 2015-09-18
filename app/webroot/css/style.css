@@ -3330,3 +3330,64 @@ Temporary Properties - YOU MUST FIX
 .notify-dropdown-open {
     overflow: hidden;
 }
+
+.insight-row {
+    border: 1px #ccc solid;
+    margin: 5px 0;
+}
+
+.insight-row a {
+    display: block;
+    color: inherit;
+    padding: 10px;
+    height: 70px;
+}
+
+.insight-row a:hover, .insight-row a:focus  {
+    text-decoration: none;
+}
+
+.insight-value {
+    font-weight: 900;
+    font-size: 20px;
+}
+
+.insight-label {
+    color: #D3D3D3;
+    font-size: 14px;
+}
+
+.insight-cmp-percent {
+    float: right;
+    line-height: 45px;
+    vertical-align: middle;
+}
+
+.insight-cmp-percent-plus {
+    color: #009900;
+}
+
+.insight-cmp-percent-minus {
+    color: #990000;
+}
+
+.insight-cmp-percent-zero {
+    color: #D3D3D3;
+}
+
+.insight-circle-value {
+    font-weight: 900;
+    font-size: 16px;
+}
+
+.insight-circle-cmp-percent {
+    font-size: 12px;
+}
+
+.insight-table-header {
+    background-color:#f5f5f5;
+}
+
+.insight-graph-container {
+    height: 100px;
+}
