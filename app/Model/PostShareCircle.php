@@ -263,6 +263,39 @@ class PostShareCircle extends AppModel
     }
 
     /**
+     * サークルへの投稿の現在までのいいね数合計を返す
+     *
+     * @param int   $circle_id
+     * @param array $params
+     *
+     * @return bool|int
+     */
+    public function getTotalPostLikeCountByCircleId($circle_id, $params = [])
+    {
+        $params = array_merge(['start' => null,
+                               'end'   => null,
+                              ], $params);
+
+        $options = [
+            'fields'     => [
+                'SUM(Post.post_like_count) as cnt',
+            ],
+            'conditions' => [
+                'PostShareCircle.team_id'   => $this->current_team_id,
+                'PostShareCircle.circle_id' => $circle_id,
+            ],
+            'contain'    => ['Post'],
+        ];
+        if ($params['start'] !== null) {
+            $options['conditions']["PostShareCircle.created >="] = $params['start'];
+        }
+        if ($params['end'] !== null) {
+            $options['conditions']["PostShareCircle.created <="] = $params['end'];
+        }
+        $res = $this->find('first', $options);
+        return isset($res[0]['cnt']) ? intval($res[0]['cnt']) : 0;
+    }
+    /**
      * サークルへの投稿にいいねしたユーザーのリストを返す
      *
      * @param int   $circle_id

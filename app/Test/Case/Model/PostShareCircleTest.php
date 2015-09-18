@@ -232,53 +232,28 @@ class PostShareCircleTest extends CakeTestCase
         $this->assertEquals([2 => "2", 3 => "3"], $list);
     }
 
-//    public function testGetTotalPostLikeCountByCircleId()
-//    {
-//        $this->PostShareCircle->my_uid = 1;
-//        $this->PostShareCircle->current_team_id = 1;
-//
-//        $now = time();
-//        $this->PostShareCircle->create();
-//        $this->PostShareCircle->save(['team_id' => 1, 'post_id' => 1, 'circle_id' => 1]);
-//        $this->PostShareCircle->create();
-//        $this->PostShareCircle->save(['team_id' => 1, 'post_id' => 2, 'circle_id' => 1]);
-//        $this->PostShareCircle->create();
-//        $this->PostShareCircle->save(['team_id' => 1, 'post_id' => 12, 'circle_id' => 2]);
-//        $count = $this->PostShareCircle->getTotalPostLikeCountByCircleId(1, [
-//            'start' => $now - HOUR,
-//            'end'   => $now + HOUR,
-//        ]);
-//        $this->assertEquals(2, $count);
-//
-//        $count = $this->PostShareCircle->getTotalPostLikeCountByCircleId(2, [
-//            'start' => $now - HOUR,
-//            'end'   => $now + HOUR,
-//        ]);
-//        $this->assertEquals(12, $count);
-//    }
-//
-//    public function testGetTotalPostCommentCountByCircleId()
-//    {
-//        $this->PostShareCircle->my_uid = 1;
-//        $this->PostShareCircle->current_team_id = 1;
-//
-//        $now = time();
-//        $this->PostShareCircle->create();
-//        $this->PostShareCircle->save(['team_id' => 1, 'post_id' => 1, 'circle_id' => 1]);
-//        $this->PostShareCircle->create();
-//        $this->PostShareCircle->save(['team_id' => 1, 'post_id' => 2, 'circle_id' => 1]);
-//        $this->PostShareCircle->create();
-//        $this->PostShareCircle->save(['team_id' => 1, 'post_id' => 12, 'circle_id' => 2]);
-//        $count = $this->PostShareCircle->getTotalPostCommentCountByCircleId(1, [
-//            'start' => $now - HOUR,
-//            'end'   => $now + HOUR,
-//        ]);
-//        $this->assertEquals(2, $count);
-//
-//        $count = $this->PostShareCircle->getTotalPostCommentCountByCircleId(2, [
-//            'start' => $now - HOUR,
-//            'end'   => $now + HOUR,
-//        ]);
-//        $this->assertEquals(11, $count);
-//    }
+    public function testGetTotalPostLikeCountByCircleId()
+    {
+        $this->PostShareCircle->my_uid = 1;
+        $this->PostShareCircle->current_team_id = 1;
+
+        $now = time();
+        $this->PostShareCircle->create();
+        $this->PostShareCircle->save(['team_id' => 1, 'post_id' => 1, 'circle_id' => 1]);
+        $this->PostShareCircle->create();
+        $this->PostShareCircle->save(['team_id' => 1, 'post_id' => 2, 'circle_id' => 1]);
+        $this->PostShareCircle->create();
+        $this->PostShareCircle->save(['team_id' => 1, 'post_id' => 12, 'circle_id' => 2]);
+        $count = $this->PostShareCircle->getTotalPostLikeCountByCircleId(1, [
+            'start' => $now - HOUR,
+            'end'   => $now + HOUR,
+        ]);
+        $this->assertEquals(2, $count);
+
+        $count = $this->PostShareCircle->getTotalPostLikeCountByCircleId(2, [
+            'start' => $now - HOUR,
+            'end'   => $now + HOUR,
+        ]);
+        $this->assertEquals(12, $count);
+    }
 }
