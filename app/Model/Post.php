@@ -308,13 +308,6 @@ class Post extends AppModel
             }
             if ($users) {
                 //共有ユーザ保存
-                if (!empty($users)) {
-                    foreach ($users as $k => $v) {
-                        if (isset($v['User']['id'])) {
-                            $all_share_user_list[$v['User']['id']] = $v['User']['id'];
-                        }
-                    }
-                }
                 $results[] = $this->PostShareUser->add($this->getLastInsertID(), $users);
             }
             if ($circles) {
