@@ -62,6 +62,7 @@ $(window).load(function () {
     setDefaultTab();
 });
 $(document).ready(function () {
+
     //すべてのformで入力があった場合に行う処理
     $("select,input").change(function () {
         $(this).nextAll(".help-block" + ".text-danger").remove();
@@ -1503,11 +1504,6 @@ $(document).ready(function () {
         feedbackIcons: {},
         fields: {}
     });
-    $('#MessageDisplayForm').bootstrapValidator({
-        live: 'enabled',
-        feedbackIcons: {},
-        fields: {}
-    });
     $('#CommonActionDisplayForm').bootstrapValidator({
         live: 'enabled',
         feedbackIcons: {},
@@ -1572,15 +1568,22 @@ $(document).ready(function () {
         },
         containerCssClass: "select2Member"
     }).on('change', function () {
-        if ($(this).val() == '') {
+        if ($(this).val() == '' || $('#CommonMessageBody').val() == '') {
             $('#MessageSubmit').attr('disabled', 'disabled');
         }
         else {
-            if ($('#CommonMessageBody').val() != '') {
-                $('#MessageSubmit').removeAttr('disabled');
-            }
+            $('#MessageSubmit').removeAttr('disabled');
         }
     });
+    $("#CommonMessageBody").keyup(function () {
+        if ($('#select2Member').val() == '' || $('#CommonMessageBody').val() == '') {
+            $('#MessageSubmit').attr('disabled', 'disabled');
+        }
+        else {
+            $('#MessageSubmit').removeAttr('disabled');
+        }
+    });
+
 
     //noinspection JSUnusedLocalSymbols post_detail.Post.id
     $('#selectOnlyMember').select2({
