@@ -1438,28 +1438,28 @@ class TeamsController extends AppController
                                                                 'user_id' => $user_ids]);
 
         // ログイン率
-        $access_user_percent = $user_count ? $access_user_count / $user_count : 0;
+        $access_user_percent = $user_count ? $access_user_count / $user_count * 100 : 0;
         $access_user_percent = $access_user_percent >= 1 ? round($access_user_percent) : round($access_user_percent, 1);
 
         // アクション率
-        $action_user_percent = $user_count ? $action_user_count / $user_count : 0;
+        $action_user_percent = $user_count ? $action_user_count / $user_count * 100 : 0;
         $action_user_percent = $action_user_percent >= 1 ? round($action_user_percent) : round($action_user_percent, 1);
 
         // 投稿率
-        $post_user_percent = $user_count ? $post_user_count / $user_count : 0;
+        $post_user_percent = $user_count ? $post_user_count / $user_count * 100 : 0;
         $post_user_percent = $post_user_percent >= 1 ? round($post_user_percent) : round($post_user_percent, 1);
 
         // いいね率
-        $like_user_percent = $user_count ? $like_user_count / $user_count : 0;
+        $like_user_percent = $user_count ? $like_user_count / $user_count * 100 : 0;
         $like_user_percent = $like_user_percent >= 1 ? round($like_user_percent) : round($like_user_percent, 1);
 
         // コメント率
-        $comment_user_percent = $user_count ? $comment_user_count / $user_count : 0;
+        $comment_user_percent = $user_count ? $comment_user_count / $user_count * 100 : 0;
         $comment_user_percent = $comment_user_percent >= 1 ?
             round($comment_user_percent) : round($comment_user_percent, 1);
 
         // メッセージ率
-        $message_user_percent = $user_count ? $message_user_count / $user_count : 0;
+        $message_user_percent = $user_count ? $message_user_count / $user_count * 100 : 0;
         $message_user_percent = $message_user_percent >= 1 ?
             round($message_user_percent) : round($message_user_percent, 1);
 
@@ -1537,22 +1537,13 @@ class TeamsController extends AppController
                 'end'   => $end_time,
             ]);
 
-            // 指定期間内の投稿に対していいねしたメンバーリスト（現在まで）
-            $circle_post_like_user_list = $this->Post->PostShareCircle->getLikeUserListByCircleId($circle_id, [
-                'start'        => $start_time,
-                'end'          => $end_time,
-                'like_user_id' => $circle_member_list,
+            // 指定期間内の投稿投稿へのいいね数の合計数（現在まで）
+            $circle_post_like_count = $this->Post->PostShareCircle->getTotalPostLikeCountByCircleId($circle_id, [
+                'start' => $start_time,
+                'end'   => $end_time,
             ]);
-
-            // 指定期間内の投稿に対してコメントしたメンバーリスト（現在まで）
-            $circle_post_comment_user_list = $this->Post->PostShareCircle->getCommentUserListByCircleId($circle_id, [
-                'start'           => $start_time,
-                'end'             => $end_time,
-                'comment_user_id' => $circle_member_list,
-            ]);
-            $engage_count = count(array_unique(array_merge($circle_post_like_user_list,
-                                                           $circle_post_comment_user_list)));
-            $engage_percent = $circle_post_read_count ? round($engage_count / $circle_post_read_count, 1) : 0;
+            $engage_percent = $circle_post_read_count ?
+                round($circle_post_like_count / $circle_post_read_count * 100, 1) : 0;
 
             $circle_insights[$circle_id] = [
                 'circle_id'       => $circle_id,
