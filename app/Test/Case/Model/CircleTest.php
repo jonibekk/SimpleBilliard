@@ -18,29 +18,11 @@ class CircleTest extends CakeTestCase
         'app.purpose',
         'app.circle',
         'app.team',
-        'app.badge',
-        'app.user', 'app.notify_setting',
-        'app.email',
-        'app.comment_like',
-        'app.comment',
+        'app.user',
         'app.post',
-        'app.post_like',
-        'app.post_read',
-        'app.post_share_user',
         'app.post_share_circle',
-        'app.comment_mention',
-        'app.given_badge',
-        'app.post_mention',
-        'app.comment_read',
-
-        'app.oauth_token',
         'app.team_member',
-        'app.group',
-        'app.job_category',
         'app.local_name',
-        'app.invite',
-        'app.thread',
-        'app.message',
         'app.circle_member'
     );
 
@@ -372,5 +354,21 @@ class CircleTest extends CakeTestCase
         $circles = $this->Circle->getAccessibleCirclesSelect2('秘密サークル２');
         $this->assertArrayHasKey('results', $circles);
         $this->assertEmpty($circles['results']);
+    }
+
+    public function testGetList()
+    {
+        $this->Circle->current_team_id = 1;
+        $this->Circle->my_uid = 1;
+        $this->Circle->CircleMember->current_team_id = 1;
+        $this->Circle->CircleMember->my_uid = 1;
+
+        $circles = $this->Circle->find('all');
+        $circle_list = $this->Circle->getList();
+        foreach ($circles as $v) {
+            $this->assertArrayHasKey($v['Circle']['id'], $circle_list);
+            unset($circle_list[$v['Circle']['id']]);
+        }
+        $this->assertEmpty($circle_list);
     }
 }

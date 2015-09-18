@@ -49,6 +49,17 @@ class GroupFixture extends CakeTestFixture
             'modified'    => 1
         ),
         array(
+            'id'          => '2',
+            'team_id'     => '1',
+            'name'        => 'グループ2',
+            'description' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
+            'active_flg'  => 1,
+            'del_flg'     => 0,
+            'deleted'     => null,
+            'created'     => 1,
+            'modified'    => 1
+        ),
+        array(
             'id'          => '',
             'team_id'     => '',
             'name'        => 'Lorem ipsum dolor sit amet',

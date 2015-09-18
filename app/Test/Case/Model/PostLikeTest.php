@@ -18,9 +18,7 @@ class PostLikeTest extends CakeTestCase
         'app.post_like',
         'app.post',
         'app.user',
-        'app.notify_setting',
         'app.team',
-        'app.local_name',
         'app.goal',
         'app.circle',
         'app.action_result',
@@ -72,6 +70,85 @@ class PostLikeTest extends CakeTestCase
         $this->PostLike->changeLike($this->PostLike->Post->getLastInsertID());
         $actual = $this->PostLike->getLikedUsers($this->PostLike->Post->getLastInsertID());
         $this->assertNotEmpty($actual);
+    }
+
+    function testGetCount()
+    {
+        $this->_setDefault();
+
+        $now = time();
+        $this->PostLike->create();
+        $this->PostLike->save(['team_id' => 1, 'user_id' => 2, 'post_id' => 1]);
+        $this->PostLike->create();
+        $this->PostLike->save(['team_id' => 1, 'user_id' => 1, 'post_id' => 1]);
+        $this->PostLike->create();
+        $this->PostLike->save(['team_id' => 1, 'user_id' => 1, 'post_id' => 1]);
+        $count = $this->PostLike->getCount(['start' => $now - HOUR,
+                                            'end'   => $now + HOUR]);
+        $this->assertEquals(3, $count);
+
+        $count = $this->PostLike->getCount(['start'   => $now - HOUR,
+                                            'end'     => $now + HOUR,
+                                            'user_id' => 1]);
+        $this->assertEquals(2, $count);
+    }
+
+    function testGetUniqueUserList()
+    {
+        $this->_setDefault();
+
+        $now = time();
+        $this->PostLike->create();
+        $this->PostLike->save(['team_id' => 1, 'user_id' => 1, 'post_id' => 1]);
+        $this->PostLike->create();
+        $this->PostLike->save(['team_id' => 1, 'user_id' => 2, 'post_id' => 1]);
+        $this->PostLike->create();
+        $this->PostLike->save(['team_id' => 1, 'user_id' => 1, 'post_id' => 1]);
+        $this->PostLike->create();
+        $this->PostLike->save(['team_id' => 1, 'user_id' => 1, 'post_id' => 2]);
+        $list = $this->PostLike->getUniqueUserList(['start' => $now - HOUR,
+                                                    'end'   => $now + HOUR]);
+        asort($list);
+        $this->assertEquals([1 => 1, 2 => 2], $list);
+
+        $list = $this->PostLike->getUniqueUserList(['start'   => $now - HOUR,
+                                                    'end'     => $now + HOUR,
+                                                    'user_id' => 1]);
+        asort($list);
+        $this->assertEquals([1 => 1], $list);
+    }
+
+    function testGetRanking()
+    {
+        $this->_setDefault();
+
+        $now = time();
+        $this->PostLike->create();
+        $this->PostLike->save(['team_id' => 1, 'user_id' => 2, 'post_id' => 1]);
+        $this->PostLike->create();
+        $this->PostLike->save(['team_id' => 1, 'user_id' => 1, 'post_id' => 1]);
+        $this->PostLike->create();
+        $this->PostLike->save(['team_id' => 1, 'user_id' => 1, 'post_id' => 1]);
+        $this->PostLike->create();
+        $this->PostLike->save(['team_id' => 1, 'user_id' => 1, 'post_id' => 8]);
+        $ranking = $this->PostLike->getRanking(['start' => $now - HOUR,
+                                                'end'   => $now + HOUR]);
+        $this->assertEquals(['1' => 3, '8' => 1], $ranking);
+
+        $ranking = $this->PostLike->getRanking(['start' => $now - HOUR,
+                                                'end'   => $now + HOUR,
+                                                'limit' => 1]);
+        $this->assertEquals(['1' => 3], $ranking);
+
+        $ranking = $this->PostLike->getRanking(['start'     => $now - HOUR,
+                                                'end'       => $now + HOUR,
+                                                'post_type' => Post::TYPE_ACTION]);
+        $this->assertEquals(['8' => 1], $ranking);
+
+        $ranking = $this->PostLike->getRanking(['start'        => $now - HOUR,
+                                                'end'          => $now + HOUR,
+                                                'post_user_id' => 2]);
+        $this->assertEquals(['1' => 3], $ranking);
     }
 
     function _setDefault()

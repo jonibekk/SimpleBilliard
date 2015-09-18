@@ -87,4 +87,136 @@ class PostLike extends AppModel
         $res = $this->find('all', $options);
         return $res;
     }
+
+    /**
+     * カウント数を返す
+     *
+     * @param array $params
+     *
+     * @return int
+     */
+    public function getCount(array $params = [])
+    {
+        $params = array_merge(['user_id' => null,
+                               'start'   => null,
+                               'end'     => null,
+                              ], $params);
+
+        $options = [
+            'conditions' => [
+                'PostLike.team_id' => $this->current_team_id,
+            ],
+        ];
+        if ($params['user_id'] !== null) {
+            $options['conditions']['PostLike.user_id'] = $params['user_id'];
+        }
+        if ($params['start'] !== null) {
+            $options['conditions']["PostLike.created >="] = $params['start'];
+        }
+        if ($params['end'] !== null) {
+            $options['conditions']["PostLike.created <="] = $params['end'];
+        }
+
+        return $this->find('count', $options);
+    }
+
+    /**
+     * いいねをしたユニークユーザーのリストを返す
+     *
+     * @param array $params
+     *
+     * @return array
+     */
+    public function getUniqueUserList(array $params = [])
+    {
+        $params = array_merge(['user_id' => null,
+                               'start'   => null,
+                               'end'     => null,
+                              ], $params);
+
+        $options = [
+            'fields'     => [
+                'PostLike.user_id',
+                'PostLike.user_id', // key, value 両方 user_id にする
+            ],
+            'conditions' => [
+                'PostLike.team_id' => $this->current_team_id,
+            ],
+        ];
+        if ($params['user_id'] !== null) {
+            $options['conditions']['PostLike.user_id'] = $params['user_id'];
+        }
+        if ($params['start'] !== null) {
+            $options['conditions']["PostLike.created >="] = $params['start'];
+        }
+        if ($params['end'] !== null) {
+            $options['conditions']["PostLike.created <="] = $params['end'];
+        }
+        return $this->find('list', $options);
+    }
+
+    /**
+     * 投稿いいね数ランキングを返す
+     *
+     * @param array $params
+     *
+     * @return mixed
+     */
+    public function getRanking($params = [])
+    {
+        $params = array_merge(['limit'           => null,
+                               'start'           => null,
+                               'end'             => null,
+                               'post_type'       => null,
+                               'post_user_id'    => null,
+                               'share_circle_id' => null,
+                              ], $params);
+
+        $options = [
+            'fields'     => [
+                'PostLike.post_id',
+                'COUNT(DISTINCT PostLike.id) as cnt',
+            ],
+            'conditions' => [
+                'PostLike.team_id' => $this->current_team_id,
+            ],
+            'group'      => ['PostLike.post_id'],
+            'order'      => ['cnt' => 'DESC'],
+            'limit'      => $params['limit'],
+            'contain'    => ['Post'],
+            'joins'      => [],
+        ];
+        if ($params['post_type'] !== null) {
+            $options['conditions']["Post.type"] = $params['post_type'];
+        }
+        if ($params['post_user_id'] !== null) {
+            $options['conditions']["Post.user_id"] = $params['post_user_id'];
+        }
+        if ($params['start'] !== null) {
+            $options['conditions']["PostLike.created >="] = $params['start'];
+        }
+        if ($params['end'] !== null) {
+            $options['conditions']["PostLike.created <="] = $params['end'];
+        }
+        if ($params['share_circle_id'] !== null) {
+            $options['joins'][] = [
+                'type'       => 'INNER',
+                'table'      => 'post_share_circles',
+                'alias'      => 'PostShareCircle',
+                'conditions' => [
+                    'PostLike.post_id = PostShareCircle.post_id',
+                    'PostShareCircle.team_id'   => $this->current_team_id,
+                    'PostShareCircle.circle_id' => $params['share_circle_id'],
+                    'PostShareCircle.del_flg = 0',
+                ],
+            ];
+        }
+        $rows = $this->find('all', $options);
+
+        $ranking = [];
+        foreach ($rows as $v) {
+            $ranking[$v['PostLike']['post_id']] = $v[0]['cnt'];
+        }
+        return $ranking;
+    }
 }

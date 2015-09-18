@@ -191,6 +191,7 @@ class AppController extends Controller
                 $this->_setNextTerm();
             }
             $this->_setMyMemberStatus();
+            $this->_saveAccessUser($this->current_team_id, $this->Auth->user('id'));
         }
         $this->set('current_global_menu', null);
     }
@@ -686,4 +687,19 @@ class AppController extends Controller
         return $referer_url;
     }
 
+    /**
+     * ユーザーがアクセスした記録を残す
+     *
+     * @param $user_id
+     */
+    public function _saveAccessUser($team_id, $user_id)
+    {
+        $timezones = [
+            9,    // 東京
+            5.5,  // ニューデリー
+            1,    // ベルリン
+            -8,   // 太平洋標準時
+        ];
+        $this->GlRedis->saveAccessUser($team_id, $user_id, REQUEST_TIMESTAMP, $timezones);
+    }
 }
