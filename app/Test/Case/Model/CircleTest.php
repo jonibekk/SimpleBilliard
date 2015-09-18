@@ -371,4 +371,20 @@ class CircleTest extends CakeTestCase
         }
         $this->assertEmpty($circle_list);
     }
+
+    public function testPublicCircleGetList()
+    {
+        $this->Circle->current_team_id = 1;
+        $this->Circle->my_uid = 1;
+        $this->Circle->CircleMember->current_team_id = 1;
+        $this->Circle->CircleMember->my_uid = 1;
+
+        $circles = $this->Circle->find('all');
+        $circle_list = $this->Circle->getPublicCircleList();
+        foreach ($circles as $v) {
+            if ($v['Circle']['public_flg'] == 1) {
+                $this->assertTrue(isset($circle_list[$v['Circle']['id']]));
+            }
+        }
+    }
 }

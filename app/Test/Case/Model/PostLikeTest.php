@@ -23,6 +23,8 @@ class PostLikeTest extends CakeTestCase
         'app.circle',
         'app.action_result',
         'app.key_result',
+        'app.local_name',
+        'app.post_share_circle',
     );
 
     /**
@@ -149,6 +151,16 @@ class PostLikeTest extends CakeTestCase
                                                 'end'          => $now + HOUR,
                                                 'post_user_id' => 2]);
         $this->assertEquals(['1' => 3], $ranking);
+        $ranking = $this->PostLike->getRanking(['start'           => $now - HOUR,
+                                                'end'             => $now + HOUR,
+                                                'share_circle_id' => [1],
+                                                'post_user_id'    => 2]);
+        $this->assertEquals(['1' => 3], $ranking);
+        $ranking = $this->PostLike->getRanking(['start'           => $now - HOUR,
+                                                'end'             => $now + HOUR,
+                                                'share_circle_id' => [99999999],
+                                                'post_user_id'    => 2]);
+        $this->assertEquals([], $ranking);
     }
 
     function _setDefault()
