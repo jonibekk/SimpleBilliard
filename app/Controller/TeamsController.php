@@ -4,7 +4,7 @@ App::uses('AppController', 'Controller');
 /**
  * Teams Controller
  *
- * @property Team         $Team
+ * @property Team $Team
  */
 class TeamsController extends AppController
 {

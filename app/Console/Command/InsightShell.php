@@ -2,6 +2,7 @@
 
 /**
  * 各種データ集計用バッチ
+ * Console/cake insight YYYY-MM-DD timezone
  *
  * @property Team          $Team
  * @property TeamMember    $TeamMember
@@ -65,7 +66,7 @@ class InsightShell extends AppShell
             // チームメンバー数
             ///////////////////////////////////////////
             $member_count = $this->TeamMember->countActiveMembersByTeamId($team['Team']['id']);
-            // 既存データが存在しない場合だけ登録する
+            // 同じ日のデータが存在しない場合だけ登録する
             $row = $this->TeamInsight->find('first', [
                 'fields'     => [
                     'TeamInsight.id',
@@ -98,7 +99,7 @@ class InsightShell extends AppShell
             $group_list = $this->Team->Group->getByAllName($team['Team']['id']);
             foreach ($group_list as $group_id => $name) {
                 $group_member_list = $this->MemberGroup->getGroupMemberUserId($team['Team']['id'], $group_id);
-                // 既存データが存在しない場合だけ登録する
+                // 同じ日のデータが存在しない場合だけ登録する
                 $row = $this->GroupInsight->find('first', [
                     'fields'     => [
                         'GroupInsight.id',
@@ -133,7 +134,7 @@ class InsightShell extends AppShell
             ///////////////////////////////////////////
             $circles = $this->Circle->getList();
             foreach ($circles as $circle_id => $circle_name) {
-                // 既存データが存在しない場合だけ登録する
+                // 同じ日のデータが存在しない場合だけ登録する
                 $row = $this->CircleInsight->find('first', [
                     'fields'     => [
                         'CircleInsight.id',
