@@ -71,7 +71,10 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
             if ($common_form_type == "message"): ?>
                 active
             <?php endif ?>">
-
+                <a href="#MessageForm" role="tab" data-toggle="tab"
+                   class="switch-message-anchor click-target-focus"
+                   target-id="s2id_autogen1"><i
+                        class="fa fa-paper-plane-o"></i><?= __d('gl', "メッセージ") ?></a><span class="switch-arrow"></span>
             </li>
         </ul>
     </div>
