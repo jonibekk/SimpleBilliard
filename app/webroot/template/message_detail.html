@@ -16,7 +16,17 @@
                     <i class="fa fa-user"></i> {{post_detail.PostShareUser.length + 1}}
                 </a>
             </span>
+
+                    <span class="pull-right">
+                        <a href="#" ng-click="add_messenger_user()" data-value="{{post_detail.Post.id}}">
+                            <span class="fa fa-user-plus">
+                            </span>
+                        </a>
+                    </span>
+
+                    <div id="message_add_list"></div>
                 </div>
+
             </div>
 
             <div class="message-detail-panel-body panel-body" id="message_box">

@@ -333,6 +333,49 @@ class Post extends AppModel
     }
 
     /**
+     * メッセージのメンバーを変更
+     *
+     * @param      $postData
+     * @param null $uid
+     * @param null $team_id
+     *
+     * @return bool|mixed
+     */
+    public function editMessageMember($postData, $uid = null, $team_id = null)
+    {
+        if (!isset($postData['Post']) || empty($postData['Post'])) {
+            return false;
+        }
+
+        $this->setUidAndTeamId($uid, $team_id);
+        $share = null;
+        if (isset($postData['Post']['share']) && !empty($postData['Post']['share'])) {
+            $share = explode(",", $postData['Post']['share']);
+        }
+        $postData['Post']['user_id'] = $this->uid;
+        $postData['Post']['team_id'] = $this->team_id;
+
+        $this->begin();
+        $post_id = $postData['Post']['post_id'];
+        $results = [];
+        if (!empty($share)) {
+            $users = [];
+            foreach ($share as $val) {
+                if (stristr($val, 'user_')) {
+                    $users[] = str_replace('user_', '', $val);
+                }
+            }
+            if ($users) {
+                //共有ユーザ保存
+                $results[] = $this->PostShareUser->add($post_id, $users);
+            }
+        }
+        // どこかでエラーが発生した場合は rollback
+        $this->commit();
+        return true;
+    }
+
+    /**
      * @param        $start
      * @param        $end
      * @param string $order
