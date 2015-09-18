@@ -87,6 +87,9 @@ class TeamInsightTest extends CakeTestCase
             $res = $this->TeamInsight->getWeekRangeDate($date, ['offset' => -2]);
             $this->assertEquals(['start' => '2015-08-31', 'end' => '2015-09-06'], $res);
         }
+
+        $res = $this->TeamInsight->getWeekRangeDate('abcde');
+        $this->assertFalse($res);
     }
 
     function testGetMonthRangeDate()
@@ -130,12 +133,48 @@ class TeamInsightTest extends CakeTestCase
             $res = $this->TeamInsight->getMonthRangeDate($date, ['offset' => -10]);
             $this->assertEquals(['start' => '2014-12-01', 'end' => '2014-12-31'], $res);
         }
+        $res = $this->TeamInsight->getMonthRangeDate('abcde');
+        $this->assertFalse($res);
     }
 
     function testGetTotal()
     {
         $this->TeamInsight->current_team_id = 1;
         $this->TeamInsight->my_uid = 1;
+
+
+        $this->TeamInsight->create();
+        $this->TeamInsight->save(
+            [
+                'team_id'     => 1,
+                'target_date' => '2015-01-01',
+                'timezone'    => 9,
+                'user_count'  => 1,
+            ]);
+        $this->TeamInsight->create();
+        $this->TeamInsight->save(
+            [
+                'team_id'     => 1,
+                'target_date' => '2015-01-02',
+                'timezone'    => 9,
+                'user_count'  => 10,
+            ]);
+        $this->TeamInsight->create();
+        $this->TeamInsight->save(
+            [
+                'team_id'     => 1,
+                'target_date' => '2015-01-01',
+                'timezone'    => 9,
+                'user_count'  => 2,
+            ]);
+
+        $start_date = '2015-01-01';
+        $end_date = '2015-01-02';
+        $timezone = 9;
+        $total = $this->TeamInsight->getTotal($start_date, $start_date, $timezone);
+        $this->assertEquals(2, $total[0]['max_user_count']);
+        $total = $this->TeamInsight->getTotal($start_date, $end_date, $timezone);
+        $this->assertEquals(10, $total[0]['max_user_count']);
 
     }
 }

@@ -48,6 +48,9 @@ class AccessUserTest extends CakeTestCase
         $this->AccessUser->current_team_id = 1;
         $this->AccessUser->my_uid = 1;
 
+        $user_list = $this->AccessUser->getUserList(1, '2015-01-01', 9);
+        $this->assertEquals([1 => '1', 2 => '2'], $user_list);
+
     }
 
 
@@ -56,6 +59,17 @@ class AccessUserTest extends CakeTestCase
         $this->AccessUser->current_team_id = 1;
         $this->AccessUser->my_uid = 1;
 
+        $count = $this->AccessUser->getUniqueUserCount('2015-01-01', '2015-01-01', 9);
+        $this->assertEquals(2, $count);
+
+        $count = $this->AccessUser->getUniqueUserCount('2015-01-01', '2015-01-02', 9);
+        $this->assertEquals(2, $count);
+
+        $count = $this->AccessUser->getUniqueUserCount('2015-01-01', '2015-01-03', 9);
+        $this->assertEquals(3, $count);
+
+        $count = $this->AccessUser->getUniqueUserCount('2015-01-01', '2015-01-03', 9, ['user_id' => [1, 3]]);
+        $this->assertEquals(2, $count);
     }
 
 

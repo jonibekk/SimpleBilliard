@@ -28,6 +28,7 @@ class CommentTest extends CakeTestCase
         'app.circle',
         'app.action_result',
         'app.key_result',
+        'app.post_share_circle',
     );
 
     /**
@@ -320,7 +321,6 @@ class CommentTest extends CakeTestCase
         $this->assertEquals(0, $count);
     }
 
-
     function testGetUniqueUserCount()
     {
         $this->Comment->my_uid = 1;
@@ -351,7 +351,6 @@ class CommentTest extends CakeTestCase
             ]);
         $this->assertEquals(1, $count);
     }
-
 
     function testGetRanking()
     {
@@ -403,6 +402,25 @@ class CommentTest extends CakeTestCase
             ]);
         $this->assertEquals([1 => "2"], $ranking);
 
+        $ranking = $this->Comment->getRanking(
+            [
+                'start'           => $now - HOUR,
+                'end'             => $now + HOUR,
+                'post_type'       => Post::TYPE_NORMAL,
+                'post_user_id'    => 2,
+                'share_circle_id' => [1],
+            ]);
+        $this->assertEquals([1 => "2"], $ranking);
+
+        $ranking = $this->Comment->getRanking(
+            [
+                'start'           => $now - HOUR,
+                'end'             => $now + HOUR,
+                'post_type'       => Post::TYPE_NORMAL,
+                'post_user_id'    => 2,
+                'share_circle_id' => [100],
+            ]);
+        $this->assertEquals([], $ranking);
     }
 
 }
