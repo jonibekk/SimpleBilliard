@@ -77,7 +77,7 @@ class PostsController extends AppController
 
     public function edit_message()
     {
-        $id=$this->request->data['Post']['post_id'];
+        $id = $this->request->data['Post']['post_id'];
         $this->request->data['Post']['type'] = Post::TYPE_MESSAGE;
         $this->_editPost($id);
         $to_url = Router::url(['controller' => 'posts', 'action' => 'message#', $id], true);
@@ -352,6 +352,7 @@ class PostsController extends AppController
         $this->request->data = $rows[0];
         $this->layout = LAYOUT_ONE_COLUMN;
     }
+
     /**
      * comment_delete method
      *
