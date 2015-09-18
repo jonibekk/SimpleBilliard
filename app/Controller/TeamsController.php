@@ -654,8 +654,10 @@ class TeamsController extends AppController
 
     /**
      * チームビジョンの詳細を取得
+     *
      * @param $team_vision_id
      * @param $active_flg
+     *
      * @return CakeResponse
      */
     function ajax_get_team_vision_detail($team_vision_id, $active_flg)
@@ -668,8 +670,10 @@ class TeamsController extends AppController
 
     /**
      * グループビジョンの詳細を取得
+     *
      * @param $group_vision_id
      * @param $active_flg
+     *
      * @return CakeResponse
      */
     function ajax_get_group_vision_detail($group_vision_id, $active_flg)
@@ -944,5 +948,940 @@ class TeamsController extends AppController
             return $this->redirect("/");
         }
         return $this->render();
+    }
+
+    /**
+     * チーム集計
+     */
+    public function insight()
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
+
+        // システム管理者のためのセットアップ
+        $this->_setupForSystemAdminInsight();
+
+        // デフォルトのタイムゾーン（日本時間）
+        $timezone = 9;
+
+        // タイムゾーンを考慮した「本日」
+        $today = date('Y-m-d', time() + intval($timezone * HOUR));
+
+        // 「先週」と「先月」start_date, end_date
+        $prev_week = $this->Team->TeamInsight->getWeekRangeDate($today, ['offset' => -1]);
+        $prev_month = $this->Team->TeamInsight->getMonthRangeDate($today, ['offset' => -1]);
+        $this->set('prev_week', $prev_week);
+        $this->set('prev_month', $prev_month);
+
+        // 全グループ
+        $group_list = $this->Team->Group->getByAllName($this->current_team_id);
+        $this->set('group_list', $group_list);
+
+        // システム管理者のためのクリーンアップ
+        $this->_cleanupForSystemAdminInsight();
+    }
+
+    /**
+     * チーム集計結果 ajax
+     *
+     * @return CakeResponse
+     */
+    public function ajax_get_insight()
+    {
+        $this->_ajaxPreProcess();
+
+        $date_range = $this->request->query('date_range');
+        $group_id = $this->request->query('group');
+        $timezone = $this->request->query('timezone');
+
+        // システム管理者のためのセットアップ
+        $this->_setupForSystemAdminInsight();
+
+        // タイムゾーンを考慮した「本日」
+        $today = date('Y-m-d', time() + intval($timezone * HOUR));
+
+        // 「先週」と「先月」start_date, end_date
+        $prev_week = $this->Team->TeamInsight->getWeekRangeDate($today, ['offset' => -1]);
+        $prev_month = $this->Team->TeamInsight->getMonthRangeDate($today, ['offset' => -1]);
+        $this->set('prev_week', $prev_week);
+        $this->set('prev_month', $prev_month);
+
+        // 集計 開始日付, 終了日付
+        // 「先週」か「先月」のみを受け付けるようにする
+        $start_date = null;
+        $end_date = null;
+        if ($date_range == 'prev_week') {
+            $start_date = $prev_week['start'];
+            $end_date = $prev_week['end'];
+        }
+        elseif ($date_range == 'prev_month') {
+            $start_date = $prev_month['start'];
+            $end_date = $prev_month['end'];
+        }
+
+        if ($start_date && $end_date && is_numeric($timezone)) {
+            $this->set('start_date', $start_date);
+            $this->set('end_date', $end_date);
+
+            // 先週〜６週間前までのデータ
+            $insights = [];
+            $target_start_date = $start_date;
+            $target_end_date = $end_date;
+            for ($i = 0; $i < 6; $i++) {
+                // 指定範囲のデータ
+                $insights[] = $this->_getInsightData($target_start_date, $target_end_date, $timezone, $group_id);
+                if ($date_range == 'prev_week') {
+                    $target_week = $this->Team->TeamInsight->getWeekRangeDate($target_start_date, ['offset' => -1]);
+                    $target_start_date = $target_week['start'];
+                    $target_end_date = $target_week['end'];
+                }
+                elseif ($date_range == 'prev_month') {
+                    $target_month = $this->Team->TeamInsight->getMonthRangeDate($target_start_date, ['offset' => -1]);
+                    $target_start_date = $target_month['start'];
+                    $target_end_date = $target_month['end'];
+                }
+            }
+
+            // 前週-前々週 or 前月-前々月 の比較
+            foreach ($insights[0] as $k => $v) {
+                if ($insights[1][$k]) {
+                    $cmp_key = $k . "_cmp";
+                    if (strpos($k, '_percent') !== false) {
+                        $insights[0][$cmp_key] = $insights[0][$k] - $insights[1][$k];
+                    }
+                    else {
+                        $insights[0][$cmp_key] = $insights[0][$k] / $insights[1][$k] * 100.0 - 100.0;
+                    }
+                    $insights[0][$cmp_key] = abs($insights[0][$cmp_key]) >= 1 ?
+                        round($insights[0][$cmp_key]) : round($insights[0][$cmp_key], 1);
+                }
+            }
+            $this->set('insights', $insights);
+        }
+
+        $response = $this->render('Team/insight_result');
+        $html = $response->__toString();
+
+        // システム管理者のためのクリーンアップ
+        $this->_cleanupForSystemAdminInsight();
+
+        return $this->_ajaxGetResponse(['html' => $html]);
+    }
+
+    /**
+     * サークル集計
+     */
+    public function insight_circle()
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
+
+        // システム管理者のためのセットアップ
+        $this->_setupForSystemAdminInsight();
+
+        // デフォルトのタイムゾーン（日本時間）
+        $timezone = 9;
+
+        // タイムゾーンを考慮した「本日」
+        $today = date('Y-m-d', time() + intval($timezone * HOUR));
+
+        // 「先週」と「先月」start_date, end_date
+        $prev_week = $this->Team->TeamInsight->getWeekRangeDate($today, ['offset' => -1]);
+        $prev_month = $this->Team->TeamInsight->getMonthRangeDate($today, ['offset' => -1]);
+        $this->set('prev_week', $prev_week);
+        $this->set('prev_month', $prev_month);
+
+        // システム管理者のためのクリーンアップ
+        $this->_cleanupForSystemAdminInsight();
+    }
+
+    /**
+     * サークル集計結果
+     *
+     * @return CakeResponse
+     */
+    public function ajax_get_insight_circle()
+    {
+        $this->_ajaxPreProcess();
+
+        $date_range = $this->request->query('date_range');
+        $timezone = $this->request->query('timezone');
+
+        // システム管理者のためのセットアップ
+        $this->_setupForSystemAdminInsight();
+
+        // タイムゾーンを考慮した「本日」
+        $today = date('Y-m-d', time() + intval($timezone * HOUR));
+
+        // 「先週」と「先月」start_date, end_date
+        $prev_week = $this->Team->TeamInsight->getWeekRangeDate($today, ['offset' => -1]);
+        $prev_month = $this->Team->TeamInsight->getMonthRangeDate($today, ['offset' => -1]);
+        $this->set('prev_week', $prev_week);
+        $this->set('prev_month', $prev_month);
+
+        // 集計 開始日付, 終了日付
+        // 「先週」か「先月」のみを受け付けるようにする
+        $start_date = null;
+        $end_date = null;
+        if ($date_range == 'prev_week') {
+            $start_date = $prev_week['start'];
+            $end_date = $prev_week['end'];
+        }
+        elseif ($date_range == 'prev_month') {
+            $start_date = $prev_month['start'];
+            $end_date = $prev_month['end'];
+        }
+
+        if ($start_date && $end_date && is_numeric($timezone)) {
+            $this->set('start_date', $start_date);
+            $this->set('end_date', $end_date);
+
+            // 指定範囲のデータ
+            $circle_insights = $this->_getCircleInsightData($start_date, $end_date, $timezone);
+
+            // 指定範囲の１つ前の期間のデータ（先々週か先々月)
+            $circle_insights2 = null;
+            if ($date_range == 'prev_week') {
+                $prev_week2 = $this->Team->TeamInsight->getWeekRangeDate($start_date, ['offset' => -1]);
+                $circle_insights2 = $this->_getCircleInsightData($prev_week2['start'], $prev_week2['end'], $timezone);
+            }
+            elseif ($date_range == 'prev_month') {
+                $prev_month2 = $this->Team->TeamInsight->getMonthRangeDate($start_date, ['offset' => -1]);
+                $circle_insights2 = $this->_getCircleInsightData($prev_month2['start'], $prev_month2['end'], $timezone);
+            }
+
+            $circle_list = $this->Team->Circle->getList();
+            foreach ($circle_insights as $circle_id => $insight) {
+                // 前週-前々週 or 前月-前々月 の比較
+                foreach ($insight as $k => $v) {
+                    if ($circle_insights2[$circle_id][$k]) {
+                        $cmp_key = $k . "_cmp";
+                        if (strpos($k, '_percent') !== false) {
+                            $insight[$cmp_key] = $insight[$k] - $circle_insights2[$circle_id][$k];
+                        }
+                        else {
+                            $insight[$cmp_key] = $insight[$k] / $circle_insights2[$circle_id][$k] * 100.0 - 100.0;
+                        }
+                        $insight[$cmp_key] = abs($insight[$cmp_key]) >= 1 ?
+                            round($insight[$cmp_key]) : round($insight[$cmp_key], 1);
+                    }
+                }
+                $circle_insights[$circle_id] = $insight;
+
+                // サークル名
+                $circle_insights[$circle_id]['name'] = $circle_list[$circle_id];
+            }
+
+            $this->set('circle_insights', $circle_insights);
+        }
+
+        $response = $this->render('Team/insight_circle_result');
+        $html = $response->__toString();
+
+        // システム管理者のためのクリーンアップ
+        $this->_cleanupForSystemAdminInsight();
+
+        return $this->_ajaxGetResponse(['html' => $html]);
+    }
+
+    public function insight_ranking()
+    {
+        $this->layout = LAYOUT_ONE_COLUMN;
+
+        // システム管理者のためのセットアップ
+        $this->_setupForSystemAdminInsight();
+
+        // デフォルトのタイムゾーン（日本時間）
+        $timezone = 9;
+
+        // タイムゾーンを考慮した「本日」
+        $today = date('Y-m-d', time() + intval($timezone * HOUR));
+
+        // 全グループ
+        $group_list = $this->Team->Group->getByAllName($this->current_team_id);
+        $this->set('group_list', $group_list);
+
+        // 「先週」と「先月」start_date, end_date
+        $prev_week = $this->Team->TeamInsight->getWeekRangeDate($today, ['offset' => -1]);
+        $prev_month = $this->Team->TeamInsight->getMonthRangeDate($today, ['offset' => -1]);
+        $this->set('prev_week', $prev_week);
+        $this->set('prev_month', $prev_month);
+
+        // システム管理者のためのクリーンアップ
+        $this->_cleanupForSystemAdminInsight();
+    }
+
+    public function ajax_get_insight_ranking()
+    {
+        $this->_ajaxPreProcess();
+
+        $date_range = $this->request->query('date_range');
+        $group_id = $this->request->query('group');
+        $type = $this->request->query('type');
+        $timezone = $this->request->query('timezone');
+
+        // システム管理者のためのセットアップ
+        $this->_setupForSystemAdminInsight();
+
+        // タイムゾーンを考慮した「本日」
+        $today = date('Y-m-d', time() + intval($timezone * HOUR));
+
+        // 「先週」と「先月」start_date, end_date
+        $prev_week = $this->Team->TeamInsight->getWeekRangeDate($today, ['offset' => -1]);
+        $prev_month = $this->Team->TeamInsight->getMonthRangeDate($today, ['offset' => -1]);
+        $this->set('prev_week', $prev_week);
+        $this->set('prev_month', $prev_month);
+
+        // 集計 開始日付, 終了日付
+        // 「先週」か「先月」のみを受け付けるようにする
+        $start_date = null;
+        $end_date = null;
+        if ($date_range == 'prev_week') {
+            $start_date = $prev_week['start'];
+            $end_date = $prev_week['end'];
+        }
+        elseif ($date_range == 'prev_month') {
+            $start_date = $prev_month['start'];
+            $end_date = $prev_month['end'];
+        }
+
+        if ($start_date && $end_date && $type && is_numeric($timezone)) {
+            $this->set('start_date', $start_date);
+            $this->set('end_date', $end_date);
+
+            // ランキングデータ取得
+            $ranking = [];
+            switch ($type) {
+                case 'action_goal_ranking':
+                    $rankings = $this->_getGoalRankingData($start_date, $end_date, $timezone, $group_id);
+                    $ranking = $rankings[$type];
+
+                    // ゴール情報取得
+                    $goal_ids = array_keys($rankings['action_goal_ranking']);
+                    $text_list = $this->Goal->getGoalNameList($goal_ids);
+                    $this->set('text_list', $text_list);
+
+                    // リンク
+                    $url_list = [];
+                    foreach ($goal_ids as $goal_id) {
+                        $url_list[$goal_id] = Router::url(['controller' => 'goals',
+                                                           'action'     => 'view_info',
+                                                           'goal_id'    => $goal_id]);
+                    }
+                    $this->set('url_list', $url_list);
+                    break;
+
+                case 'action_user_ranking':
+                case 'post_user_ranking':
+                    $rankings = $this->_getUserRankingData($start_date, $end_date, $timezone, $group_id);
+                    $ranking = $rankings[$type];
+
+                    // ユーザーデータ取得
+                    $user_ids = array_keys($ranking);
+                    $text_list = [];
+                    $users = $this->User->getUsersProf($user_ids);
+                    foreach ($users as $user) {
+                        $text_list[$user['User']['id']] = $user['User']['display_username'];
+                    }
+                    $this->set('text_list', $text_list);
+
+                    // リンク
+                    $url_list = [];
+                    foreach ($user_ids as $user_id) {
+                        $url_list[$user_id] = Router::url(['controller' => 'users',
+                                                           'action'     => 'view_goals',
+                                                           'user_id'    => $user_id]);
+                    }
+                    $this->set('url_list', $url_list);
+                    break;
+
+                case 'post_like_ranking':
+                case 'action_like_ranking':
+                case 'post_comment_ranking':
+                case 'action_comment_ranking':
+                    $rankings = $this->_getPostRankingData($start_date, $end_date, $timezone, $group_id);
+                    $ranking = $rankings[$type];
+
+                    // 投稿情報取得
+                    $post_ids = array_keys($ranking);
+                    $posts = $this->Post->getBodyById($post_ids, ['include_action' => true]);
+                    $text_list = [];
+                    foreach ($posts as $v) {
+                        $text_list[$v['Post']['id']] = $v['ActionResult']['id'] ?
+                            $v['ActionResult']['name'] : $v['Post']['body'];
+                    }
+                    $this->set('text_list', $text_list);
+
+                    // リンク
+                    $url_list = [];
+                    foreach ($post_ids as $post_id) {
+                        $url_list[$post_id] = Router::url(['controller' => 'posts',
+                                                           'action'     => 'feed',
+                                                           'post_id'    => $post_id]);
+                    }
+                    $this->set('url_list', $url_list);
+                    break;
+            }
+            $this->set('ranking', $ranking);
+        }
+
+        $response = $this->render('Team/insight_ranking_result');
+        $html = $response->__toString();
+
+        // システム管理者のためのクリーンアップ
+        $this->_cleanupForSystemAdminInsight();
+
+        return $this->_ajaxGetResponse(['html' => $html]);
+    }
+
+    /**
+     * チーム集計データを返す
+     *
+     * @param      $start_date
+     * @param      $end_date
+     * @param      $timezone
+     * @param null $group_id
+     *
+     * @return array
+     */
+    protected function _getInsightData($start_date, $end_date, $timezone, $group_id = null)
+    {
+        // キャッシュにデータがあればそれを返す
+        $insight = null;
+        if ($group_id) {
+            $insight = $this->GlRedis->getGroupInsight($this->current_team_id, $start_date, $end_date,
+                                                       $timezone, $group_id);
+        }
+        else {
+            $insight = $this->GlRedis->getTeamInsight($this->current_team_id, $start_date, $end_date, $timezone);
+        }
+        if ($insight) {
+            return $insight;
+        }
+
+        $time_adjust = intval($timezone * HOUR);
+        $start_time = strtotime($start_date . " 00:00:00") - $time_adjust;
+        $end_time = strtotime($end_date . " 23:59:59") - $time_adjust;
+
+        // グループ指定がある場合は、グループに所属する user_id で絞る
+        $user_ids = null;
+        if ($group_id) {
+            $user_ids = $this->Team->Group->MemberGroup->getGroupMemberUserId($this->current_team_id, $group_id);
+        }
+
+        // 登録者数
+        if ($group_id) {
+            $total = $this->Team->GroupInsight->getTotal($group_id, $start_date, $end_date, $timezone);
+        }
+        else {
+            $total = $this->Team->TeamInsight->getTotal($start_date, $end_date, $timezone);
+        }
+        $user_count = intval($total[0]['max_user_count']);
+
+        // アクセスユーザー数
+        $access_user_count = $this->Team->AccessUser->getUniqueUserCount($start_date, $end_date, $timezone,
+                                                                         ['user_id' => $user_ids]);
+
+        // アクション数
+        $action_count = $this->Post->ActionResult->getCount($user_ids, $start_time, $end_time, 'created');
+
+        // アクションユーザー数
+        $action_user_count = $this->Post->ActionResult->getUniqueUserCount(['start'   => $start_time,
+                                                                            'end'     => $end_time,
+                                                                            'user_id' => $user_ids]);
+
+        // 投稿数
+        $post_count = $this->Post->getCount($user_ids, $start_time, $end_time, 'created');
+
+        // 投稿ユーザー数
+        $post_user_count = $this->Post->getUniqueUserCount(['start'   => $start_time,
+                                                            'end'     => $end_time,
+                                                            'user_id' => $user_ids]);
+
+        // 投稿いいね数
+        $post_like_count = $this->Post->PostLike->getCount(['start'   => $start_time,
+                                                            'end'     => $end_time,
+                                                            'user_id' => $user_ids]);
+        // コメントいいね数
+        $comment_like_count = $this->Post->Comment->CommentLike->getCount(['start'   => $start_time,
+                                                                           'end'     => $end_time,
+                                                                           'user_id' => $user_ids]);
+        // 総イイね数
+        $like_count = $post_like_count + $comment_like_count;
+
+        // 投稿いいねユーザー数
+        $post_like_user_list = $this->Post->PostLike->getUniqueUserList(['start'   => $start_time,
+                                                                         'end'     => $end_time,
+                                                                         'user_id' => $user_ids]);
+        // コメントいいねユーザー数
+        $comment_like_user_list = $this->Post->Comment->CommentLike->getUniqueUserList(['start'   => $start_time,
+                                                                                        'end'     => $end_time,
+                                                                                        'user_id' => $user_ids]);
+        $like_user_count = count(array_unique(array_merge($post_like_user_list, $comment_like_user_list)));
+
+        // コメント数
+        $comment_count = $this->Post->Comment->getCount(['start'   => $start_time,
+                                                         'end'     => $end_time,
+                                                         'user_id' => $user_ids]);
+
+        // コメントユーザー数
+        $comment_user_count = $this->Post->Comment->getUniqueUserCount(['start'   => $start_time,
+                                                                        'end'     => $end_time,
+                                                                        'user_id' => $user_ids]);
+
+        // メッセージ数
+        $message_count = $this->Post->getMessageCount(['start'   => $start_time,
+                                                       'end'     => $end_time,
+                                                       'user_id' => $user_ids]);
+
+        // メッセージユーザー数
+        $message_user_count = $this->Post->getMessageUserCount(['start'   => $start_time,
+                                                                'end'     => $end_time,
+                                                                'user_id' => $user_ids]);
+
+        // ログイン率
+        $access_user_percent = $user_count ? $access_user_count / $user_count : 0;
+        $access_user_percent = $access_user_percent >= 1 ? round($access_user_percent) : round($access_user_percent, 1);
+
+        // アクション率
+        $action_user_percent = $user_count ? $action_user_count / $user_count : 0;
+        $action_user_percent = $action_user_percent >= 1 ? round($action_user_percent) : round($action_user_percent, 1);
+
+        // 投稿率
+        $post_user_percent = $user_count ? $post_user_count / $user_count : 0;
+        $post_user_percent = $post_user_percent >= 1 ? round($post_user_percent) : round($post_user_percent, 1);
+
+        // いいね率
+        $like_user_percent = $user_count ? $like_user_count / $user_count : 0;
+        $like_user_percent = $like_user_percent >= 1 ? round($like_user_percent) : round($like_user_percent, 1);
+
+        // コメント率
+        $comment_user_percent = $user_count ? $comment_user_count / $user_count : 0;
+        $comment_user_percent = $comment_user_percent >= 1 ?
+            round($comment_user_percent) : round($comment_user_percent, 1);
+
+        // メッセージ率
+        $message_user_percent = $user_count ? $message_user_count / $user_count : 0;
+        $message_user_percent = $message_user_percent >= 1 ?
+            round($message_user_percent) : round($message_user_percent, 1);
+
+        $insight = compact(
+            'start_date',
+            'end_date',
+            'user_count',
+            'access_user_count',
+            'action_count',
+            'action_user_count',
+            'post_count',
+            'post_user_count',
+            'like_count',
+            'like_user_count',
+            'comment_count',
+            'comment_user_count',
+            'message_count',
+            'message_user_count',
+            'access_user_percent',
+            'action_user_percent',
+            'post_user_percent',
+            'like_user_percent',
+            'comment_user_percent',
+            'message_user_percent'
+        );
+
+        // キャッシュに保存
+        if ($group_id) {
+            $this->GlRedis->saveGroupInsight($this->current_team_id, $start_date, $end_date, $timezone,
+                                             $group_id, $insight);
+        }
+        else {
+            $this->GlRedis->saveTeamInsight($this->current_team_id, $start_date, $end_date, $timezone, $insight);
+        }
+        return $insight;
+    }
+
+    /**
+     * サークルの集計データを返す
+     *
+     * @param $start_date
+     * @param $end_date
+     * @param $timezone
+     *
+     * @return array
+     */
+    protected function _getCircleInsightData($start_date, $end_date, $timezone)
+    {
+        // キャッシュにデータがあればそれを返す
+        $insight = $this->GlRedis->getCircleInsight($this->current_team_id, $start_date, $end_date, $timezone);
+        if ($insight) {
+            return $insight;
+        }
+
+        $time_adjust = intval($timezone * HOUR);
+        $start_time = strtotime($start_date . " 00:00:00") - $time_adjust;
+        $end_time = strtotime($end_date . " 23:59:59") - $time_adjust;
+
+        $circle_insights = [];
+        $public_circle_list = $this->Team->Circle->getPublicCircleList();
+        foreach ($public_circle_list as $circle_id => $circle_name) {
+            // 登録メンバー数
+            $circle_member_list = $this->Team->Circle->CircleMember->getMemberList($circle_id, true);
+
+            // 投稿数
+            $circle_post_count = $this->Post->PostShareCircle->getPostCountByCircleId($circle_id, [
+                'start' => $start_time,
+                'end'   => $end_time,
+            ]);
+
+            // リーチ数
+            // 指定期間内の投稿を読んだメンバーの合計数（現在まで）
+            $circle_post_read_count = $this->Post->PostShareCircle->getTotalPostReadCountByCircleId($circle_id, [
+                'start' => $start_time,
+                'end'   => $end_time,
+            ]);
+
+            // 指定期間内の投稿に対していいねしたメンバーリスト（現在まで）
+            $circle_post_like_user_list = $this->Post->PostShareCircle->getLikeUserListByCircleId($circle_id, [
+                'start'        => $start_time,
+                'end'          => $end_time,
+                'like_user_id' => $circle_member_list,
+            ]);
+
+            // 指定期間内の投稿に対してコメントしたメンバーリスト（現在まで）
+            $circle_post_comment_user_list = $this->Post->PostShareCircle->getCommentUserListByCircleId($circle_id, [
+                'start'           => $start_time,
+                'end'             => $end_time,
+                'comment_user_id' => $circle_member_list,
+            ]);
+            $engage_count = count(array_unique(array_merge($circle_post_like_user_list,
+                                                           $circle_post_comment_user_list)));
+            $engage_percent = $circle_post_read_count ? round($engage_count / $circle_post_read_count, 1) : 0;
+
+            $circle_insights[$circle_id] = [
+                'circle_id'       => $circle_id,
+                'user_count'      => count($circle_member_list),
+                'post_count'      => $circle_post_count,
+                'post_read_count' => $circle_post_read_count,
+                'engage_percent'  => $engage_percent,
+            ];
+        }
+
+        // 並び順変更
+        // チーム全体サークルは常に先頭、それ以外はリーチの多い順
+        $team_all_circle_id = $this->Post->Circle->getTeamAllCircleId();
+        uasort($circle_insights, function ($a, $b) use ($team_all_circle_id) {
+            if ($a['circle_id'] == $team_all_circle_id) {
+                return -1;
+            }
+            if ($b['circle_id'] == $team_all_circle_id) {
+                return 1;
+            }
+            if ($a['post_read_count'] == $b['post_read_count']) {
+                return 0;
+            }
+            return ($a['post_read_count'] < $b['post_read_count']) ? 1 : -1;
+        });
+
+        // キャッシュに保存
+        $this->GlRedis->saveCircleInsight($this->current_team_id, $start_date, $end_date, $timezone, $circle_insights);
+        return $circle_insights;
+    }
+
+    /**
+     * 投稿ランキングのデータを返す
+     *
+     * @param      $start_date
+     * @param      $end_date
+     * @param      $timezone
+     * @param null $group_id
+     *
+     * @return array|mixed|null
+     */
+    protected function _getPostRankingData($start_date, $end_date, $timezone, $group_id = null)
+    {
+        // キャッシュにデータがあればそれを返す
+        $ranking = null;
+        $type = 'post_ranking';
+        if ($group_id) {
+            $ranking = $this->GlRedis->getGroupRanking($this->current_team_id, $start_date, $end_date,
+                                                       $timezone, $group_id, $type);
+        }
+        else {
+            $ranking = $this->GlRedis->getTeamRanking($this->current_team_id, $start_date, $end_date,
+                                                      $timezone, $type);
+        }
+        if ($ranking) {
+            return $ranking;
+        }
+
+        $time_adjust = intval($timezone * HOUR);
+        $start_time = strtotime($start_date . " 00:00:00") - $time_adjust;
+        $end_time = strtotime($end_date . " 23:59:59") - $time_adjust;
+
+        // グループ指定がある場合は、グループに所属する user_id で絞る
+        $user_ids = null;
+        if ($group_id) {
+            $user_ids = $this->Team->Group->MemberGroup->getGroupMemberUserId($this->current_team_id, $group_id);
+        }
+
+        // 全公開サークル
+        // 投稿のランキングは公開サークルに共有されたものだけを対象にする
+        $public_circle_list = $this->Team->Circle->getPublicCircleList();
+
+        // 最もいいねされた投稿
+        $post_like_ranking = $this->Post->PostLike->getRanking(
+            [
+                'start'           => $start_time,
+                'end'             => $end_time,
+                'post_user_id'    => $user_ids,
+                'post_type'       => Post::TYPE_NORMAL,
+                'share_circle_id' => array_keys($public_circle_list),
+                'limit'           => 30,
+            ]);
+
+        // 最もいいねされたアクション
+        $action_like_ranking = $this->Post->PostLike->getRanking(
+            [
+                'post_user_id' => $user_ids,
+                'post_type'    => Post::TYPE_ACTION,
+                'start'        => $start_time,
+                'end'          => $end_time,
+                'limit'        => 30,
+
+            ]);
+
+        // 最もコメントされた投稿
+        $post_comment_ranking = $this->Post->Comment->getRanking(
+            [
+                'post_user_id'    => $user_ids,
+                'post_type'       => Post::TYPE_NORMAL,
+                'start'           => $start_time,
+                'end'             => $end_time,
+                'share_circle_id' => array_keys($public_circle_list),
+                'limit'           => 30,
+
+            ]);
+
+        // 最もコメントされたアクション
+        $action_comment_ranking = $this->Post->Comment->getRanking(
+            [
+                'post_user_id' => $user_ids,
+                'post_type'    => Post::TYPE_ACTION,
+                'start'        => $start_time,
+                'end'          => $end_time,
+                'limit'        => 30,
+
+            ]);
+
+        $ranking = compact(
+            'start_date',
+            'end_date',
+            'post_like_ranking',
+            'action_like_ranking',
+            'post_comment_ranking',
+            'action_comment_ranking'
+        );
+
+        // キャッシュに保存
+        if ($group_id) {
+            $this->GlRedis->saveGroupRanking($this->current_team_id, $start_date, $end_date, $timezone,
+                                             $group_id, $type, $ranking);
+        }
+        else {
+            $this->GlRedis->saveTeamRanking($this->current_team_id, $start_date, $end_date, $timezone,
+                                            $type, $ranking);
+        }
+        return $ranking;
+    }
+
+    /**
+     * ゴールランキングのデータを返す
+     *
+     * @param      $start_date
+     * @param      $end_date
+     * @param      $timezone
+     * @param null $group_id
+     *
+     * @return array|mixed|null
+     */
+    protected function _getGoalRankingData($start_date, $end_date, $timezone, $group_id = null)
+    {
+        // キャッシュを調べる
+        $ranking = null;
+        $type = 'goal_ranking';
+        if ($group_id) {
+            $ranking = $this->GlRedis->getGroupRanking($this->current_team_id, $start_date, $end_date,
+                                                       $timezone, $group_id, $type);
+        }
+        else {
+            $ranking = $this->GlRedis->getTeamRanking($this->current_team_id, $start_date, $end_date,
+                                                      $timezone, $type);
+        }
+        if ($ranking) {
+            return $ranking;
+        }
+
+        $time_adjust = intval($timezone * HOUR);
+        $start_time = strtotime($start_date . " 00:00:00") - $time_adjust;
+        $end_time = strtotime($end_date . " 23:59:59") - $time_adjust;
+
+        // グループ指定がある場合は、グループに所属する user_id で絞る
+        $user_ids = null;
+        if ($group_id) {
+            $user_ids = $this->Team->Group->MemberGroup->getGroupMemberUserId($this->current_team_id, $group_id);
+        }
+
+        // 最もアクションされたゴール
+        $action_goal_ranking = $this->Post->ActionResult->getGoalRanking(
+            [
+                'goal_user_id' => $user_ids,
+                'start'        => $start_time,
+                'end'          => $end_time,
+                'limit'        => 30,
+
+            ]);
+
+        $ranking = compact(
+            'start_date',
+            'end_date',
+            'action_goal_ranking'
+        );
+
+        // キャッシュに保存
+        if ($group_id) {
+            $this->GlRedis->saveGroupRanking($this->current_team_id, $start_date, $end_date, $timezone,
+                                             $group_id, $type, $ranking);
+        }
+        else {
+            $this->GlRedis->saveTeamRanking($this->current_team_id, $start_date, $end_date, $timezone,
+                                            $type, $ranking);
+        }
+        return $ranking;
+    }
+
+    /**
+     * ユーザーランキングのデータを返す
+     *
+     * @param      $start_date
+     * @param      $end_date
+     * @param      $timezone
+     * @param null $group_id
+     *
+     * @return array|mixed|null
+     */
+    protected function _getUserRankingData($start_date, $end_date, $timezone, $group_id = null)
+    {
+        // キャッシュを調べる
+        $ranking = null;
+        $type = 'user_ranking';
+        if ($group_id) {
+            $ranking = $this->GlRedis->getGroupRanking($this->current_team_id, $start_date, $end_date,
+                                                       $timezone, $group_id, $type);
+        }
+        else {
+            $ranking = $this->GlRedis->getTeamRanking($this->current_team_id, $start_date, $end_date,
+                                                      $timezone, $type);
+        }
+        if ($ranking) {
+            return $ranking;
+        }
+
+        $time_adjust = intval($timezone * HOUR);
+        $start_time = strtotime($start_date . " 00:00:00") - $time_adjust;
+        $end_time = strtotime($end_date . " 23:59:59") - $time_adjust;
+
+        // グループ指定がある場合は、グループに所属する user_id で絞る
+        $user_ids = null;
+        if ($group_id) {
+            $user_ids = $this->Team->Group->MemberGroup->getGroupMemberUserId($this->current_team_id, $group_id);
+        }
+
+        // 最もアクションした人
+        $action_user_ranking = $this->Post->ActionResult->getUserRanking(
+            [
+                'user_id' => $user_ids,
+                'start'   => $start_time,
+                'end'     => $end_time,
+                'limit'   => 30,
+
+            ]);
+
+        // 最も投稿した人
+        $post_user_ranking = $this->Post->getPostCountUserRanking(
+            [
+                'user_id' => $user_ids,
+                'start'   => $start_time,
+                'end'     => $end_time,
+                'limit'   => 30,
+
+            ]);
+
+        $ranking = compact(
+            'start_date',
+            'end_date',
+            'action_user_ranking',
+            'post_user_ranking'
+        );
+
+        // キャッシュに保存
+        if ($group_id) {
+            $this->GlRedis->saveGroupRanking($this->current_team_id, $start_date, $end_date, $timezone,
+                                             $group_id, $type, $ranking);
+        }
+        else {
+            $this->GlRedis->saveTeamRanking($this->current_team_id, $start_date, $end_date, $timezone,
+                                            $type, $ranking);
+        }
+        return $ranking;
+    }
+
+    /**
+     * Insight ページのシステム管理者用のセットアップ
+     */
+    protected function _setupForSystemAdminInsight()
+    {
+        // システム管理者でない場合は何もしない
+        if (!$this->Auth->user('admin_flg')) {
+            return;
+        }
+
+        // チーム選択を出来るようにする
+        $team_list = $this->Team->getList();
+        $this->set('team_list', $team_list);
+
+        // team のパラメータがあれば、モデルの team_id を上書きする
+        if ($team_id = $this->request->query('team')) {
+            $this->orig_team_id = $this->current_team_id;
+            $this->current_team_id = $team_id;
+            foreach (ClassRegistry::keys() as $k) {
+                $obj = ClassRegistry::getObject($k);
+                if ($obj instanceof AppModel) {
+                    $obj->current_team_id = $team_id;
+                }
+            }
+
+            // まだロードされてないモデル用に一時的に書き換え
+            $this->Session->write('current_team_id', $team_id);
+        }
+    }
+
+    /**
+     * Insight ページのシステム管理者用のクリーンアップ
+     */
+    protected function _cleanupForSystemAdminInsight()
+    {
+        // システム管理者でない場合は何もしない
+        if (!$this->Auth->user('admin_flg')) {
+            return;
+        }
+
+        // チームID を元に戻す
+        if ($this->orig_team_id) {
+            $this->current_team_id = $this->orig_team_id;
+            foreach (ClassRegistry::keys() as $k) {
+                $obj = ClassRegistry::getObject($k);
+                if ($obj instanceof AppModel) {
+                    $obj->current_team_id = $this->orig_team_id;
+                }
+            }
+            $this->Session->write('current_team_id', $this->orig_team_id);
+        }
     }
 }

@@ -2153,4 +2153,20 @@ class TeamMember extends AppModel
         $res = $this->find('first', $options);
         return viaIsSet($res['TeamMember']['coach_user_id']) ? $res['TeamMember']['coach_user_id'] : null;
     }
+
+    /**
+     * $team_id のチームに所属するアクティブメンバー数を返す
+     *
+     * @param $team_id
+     * @return array
+     */
+    function countActiveMembersByTeamId($team_id)
+    {
+        return $this->find('count', [
+            'conditions' => [
+                'TeamMember.team_id'    => $team_id,
+                'TeamMember.active_flg' => true,
+            ],
+        ]);
+    }
 }

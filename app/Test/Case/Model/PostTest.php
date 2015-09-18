@@ -15,7 +15,6 @@ class PostTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.goal_category',
         'app.post_file',
         'app.comment_file',
         'app.action_result_file',
@@ -35,13 +34,8 @@ class PostTest extends CakeTestCase
         'app.comment',
         'app.comment_like',
         'app.comment_read',
-        'app.given_badge',
         'app.post_like',
-        'app.post_mention',
         'app.post_read',
-        'app.image',
-        'app.badge',
-        'app.images_post',
         'app.post_share_user',
         'app.post_share_circle',
         'app.circle',
@@ -133,12 +127,13 @@ class PostTest extends CakeTestCase
         $this->assertFalse($res);
     }
 
-    public function testAddInvalidOgp() {
+    public function testAddInvalidOgp()
+    {
         $this->Post->my_uid = 1;
         $this->Post->current_team_id = 1;
         $postData = [
-            'Post'    => [
-                'body' => 'test',
+            'Post' => [
+                'body'       => 'test',
                 'site_photo' => [
                     'type' => 'binary/octet-stream'
                 ]
@@ -337,9 +332,141 @@ class PostTest extends CakeTestCase
         $res = $this->Post->getCount('me', null, null);
         $this->assertEquals(2, $res);
 
+        $res = $this->Post->getCount('me', 200, 200);
+        $this->assertEquals(2, $res);
+
+        $res = $this->Post->getCount('me', 200, 200, 'created');
+        $this->assertEquals(1, $res);
+
         // ユーザID指定
         $res = $this->Post->getCount(102, null, null);
         $this->assertEquals(1, $res);
+    }
+
+    function testGetMessageCount()
+    {
+        $this->Post->current_team_id = 1;
+        $this->Post->my_uid = 1;
+        $this->Post->Comment->current_team_id = 1;
+        $this->Post->Comment->my_uid = 1;
+
+        $now = time();
+        $this->Post->create();
+        $this->Post->save(['team_id' => 1, 'user_id' => 1, 'type' => Post::TYPE_MESSAGE, 'body' => 'test']);
+        $this->Post->create();
+        $this->Post->save(['team_id' => 1, 'user_id' => 1, 'type' => Post::TYPE_NORMAL, 'body' => 'test']);
+        $this->Post->create();
+        $this->Post->save(['team_id' => 1, 'user_id' => 2, 'type' => Post::TYPE_MESSAGE, 'body' => 'test']);
+        $count = $this->Post->getMessageCount(['start' => $now - HOUR,
+                                               'end'   => $now + HOUR]);
+        $this->assertEquals(2, $count);
+
+        $post_id = $this->Post->getLastInsertID();
+        $this->Post->Comment->create();
+        $this->Post->Comment->save(['team_id' => 1, 'user_id' => 1, 'post_id' => $post_id, 'body' => 'test']);
+        $count = $this->Post->getMessageCount(['start' => $now - HOUR,
+                                               'end'   => $now + HOUR]);
+        $this->assertEquals(3, $count);
+
+        $count = $this->Post->getMessageCount(['start'   => $now - HOUR,
+                                               'end'     => $now + HOUR,
+                                               'user_id' => 1]);
+        $this->assertEquals(2, $count);
+    }
+
+    function testGetUniqueUserCount()
+    {
+        $this->Post->current_team_id = 1;
+        $this->Post->my_uid = 1;
+
+        $now = time();
+        $this->Post->create();
+        $this->Post->save(['team_id' => 1, 'user_id' => 1, 'type' => Post::TYPE_NORMAL, 'body' => 'test']);
+        $this->Post->create();
+        $this->Post->save(['team_id' => 1, 'user_id' => 1, 'type' => Post::TYPE_NORMAL, 'body' => 'test']);
+        $this->Post->create();
+        $this->Post->save(['team_id' => 1, 'user_id' => 2, 'type' => Post::TYPE_NORMAL, 'body' => 'test']);
+
+        $count = $this->Post->getUniqueUserCount(['start' => $now - HOUR,
+                                                  'end'   => $now + HOUR]);
+        $this->assertEquals(2, $count);
+
+        $count = $this->Post->getUniqueUserCount(['start'   => $now - HOUR,
+                                                  'end'     => $now + HOUR,
+                                                  'user_id' => 1,
+                                                 ]);
+        $this->assertEquals(1, $count);
+    }
+
+    function testGetMessageUserCount()
+    {
+        $this->Post->current_team_id = 1;
+        $this->Post->my_uid = 1;
+        $this->Post->Comment->current_team_id = 1;
+        $this->Post->Comment->my_uid = 1;
+
+        $now = time();
+        $this->Post->create();
+        $this->Post->save(['team_id' => 1, 'user_id' => 1, 'type' => Post::TYPE_MESSAGE, 'body' => 'test']);
+        $this->Post->create();
+        $this->Post->save(['team_id' => 1, 'user_id' => 1, 'type' => Post::TYPE_NORMAL, 'body' => 'test']);
+        $normal_post_id = $this->Post->getLastInsertID();
+        $this->Post->create();
+        $this->Post->save(['team_id' => 1, 'user_id' => 1, 'type' => Post::TYPE_MESSAGE, 'body' => 'test']);
+        $this->Post->create();
+        $this->Post->save(['team_id' => 1, 'user_id' => 2, 'type' => Post::TYPE_MESSAGE, 'body' => 'test']);
+        $message_post_id = $this->Post->getLastInsertID();
+        $this->Post->Comment->create();
+        $this->Post->Comment->save(['team_id' => 1, 'user_id' => 1, 'post_id' => $message_post_id, 'body' => 'test']);
+        $this->Post->Comment->create();
+        $this->Post->Comment->save(['team_id' => 1, 'user_id' => 3, 'post_id' => $message_post_id, 'body' => 'test']);
+        $this->Post->Comment->create();
+        $this->Post->Comment->save(['team_id' => 1, 'user_id' => 4, 'post_id' => $normal_post_id, 'body' => 'test']);
+
+        $count = $this->Post->getMessageUserCount(['start' => $now - HOUR,
+                                                   'end'   => $now + HOUR]);
+        $this->assertEquals(3, $count);
+
+        $count = $this->Post->getMessageUserCount(['start'   => $now - HOUR,
+                                                   'end'     => $now + HOUR,
+                                                   'user_id' => [1, 2],
+                                                  ]);
+        $this->assertEquals(2, $count);
+
+        $count = $this->Post->getMessageUserCount(['start'   => $now - HOUR,
+                                                   'end'     => $now + HOUR,
+                                                   'user_id' => [1, 4],
+                                                  ]);
+        $this->assertEquals(1, $count);
+
+    }
+
+    function testGetPostCountUserRanking()
+    {
+        $this->Post->current_team_id = 1;
+        $this->Post->my_uid = 1;
+
+        $now = time();
+        $this->Post->create();
+        $this->Post->save(['team_id' => 1, 'user_id' => 2, 'type' => Post::TYPE_NORMAL, 'body' => 'test']);
+        $this->Post->create();
+        $this->Post->save(['team_id' => 1, 'user_id' => 1, 'type' => Post::TYPE_NORMAL, 'body' => 'test']);
+        $this->Post->create();
+        $this->Post->save(['team_id' => 1, 'user_id' => 1, 'type' => Post::TYPE_NORMAL, 'body' => 'test']);
+
+        $ranking = $this->Post->getPostCountUserRanking(['start' => $now - HOUR,
+                                                         'end'   => $now + HOUR]);
+        $this->assertEquals(['1' => 2, '2' => 1], $ranking);
+
+        $ranking = $this->Post->getPostCountUserRanking(['start' => $now - HOUR,
+                                                         'end'   => $now + HOUR,
+                                                         'limit' => 1]);
+        $this->assertEquals(['1' => 2], $ranking);
+
+        $ranking = $this->Post->getPostCountUserRanking(['start'   => $now - HOUR,
+                                                         'end'     => $now + HOUR,
+                                                         'user_id' => 2]);
+        $this->assertEquals(['2' => 1], $ranking);
     }
 
     function testGetShareMode()
@@ -668,7 +795,7 @@ class PostTest extends CakeTestCase
         // 通常 edit
         $data = [
             'Post' => [
-                'id' => 1,
+                'id'   => 1,
                 'body' => 'edit string',
             ]
         ];
@@ -684,8 +811,8 @@ class PostTest extends CakeTestCase
                                            ->method('updateRelatedFiles')
                                            ->will($this->returnValue(true));
         $data = [
-            'Post' => [
-                'id' => 1,
+            'Post'    => [
+                'id'   => 1,
                 'body' => 'edit string2',
             ],
             'file_id' => ['aaa', 'bbb']
@@ -702,8 +829,8 @@ class PostTest extends CakeTestCase
                                            ->method('updateRelatedFiles')
                                            ->will($this->returnValue(false));
         $data = [
-            'Post' => [
-                'id' => 1,
+            'Post'    => [
+                'id'   => 1,
                 'body' => 'edit string3',
             ],
             'file_id' => ['aaa', 'bbb']
@@ -766,15 +893,15 @@ class PostTest extends CakeTestCase
         $data = [
             'user_id' => $owner_user_id,
             'team_id' => 1,
-            'body' => 'test',
-            'type' => Post::TYPE_MESSAGE
+            'body'    => 'test',
+            'type'    => Post::TYPE_MESSAGE
         ];
         $this->Post->save($data);
 
         $data = [
             'team_id' => 1,
             'post_id' => $this->Post->getLastInsertID(),
-            'body' => 'comment test'
+            'body'    => 'comment test'
         ];
         $this->Post->Comment->save($data);
 
@@ -795,7 +922,7 @@ class PostTest extends CakeTestCase
         $data = [
             'user_id' => 99,
             'team_id' => 1,
-            'body' => 'test'
+            'body'    => 'test'
         ];
         $this->Post->save($data);
         $res = $this->Post->getPostById($this->Post->getLastInsertID());
@@ -805,8 +932,8 @@ class PostTest extends CakeTestCase
     function testGetPhotoPath()
     {
         $data = [
-            'user_id' => 99,
-            'team_id' => 1,
+            'user_id'         => 99,
+            'team_id'         => 1,
             'photo_file_name' => ''
         ];
         $res = $this->Post->User->save($data);

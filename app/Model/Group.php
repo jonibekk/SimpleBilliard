@@ -93,4 +93,20 @@ class Group extends AppModel
         $group = $this->saveNewGroup($name);
         return $group;
     }
+
+    /**
+     * 現在のチームのグループを全て返す
+     *
+     * @return array|null
+     */
+    function getAll()
+    {
+        $options = [
+            'conditions' => [
+                'team_id' => $this->current_team_id,
+            ]
+        ];
+        $res = $this->find('all', $options);
+        return $res;
+    }
 }
