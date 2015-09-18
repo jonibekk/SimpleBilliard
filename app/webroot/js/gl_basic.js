@@ -63,15 +63,6 @@ $(window).load(function () {
 });
 $(document).ready(function () {
 
-    $("#select2Member,#CommonMessageBody").keyup(function () {
-        if ($('#select2Member').val() == '' || $('#CommonMessageBody').val() == '') {
-            $('#MessageSubmit').attr('disabled', 'disabled');
-        }
-        else {
-            $('#MessageSubmit').removeAttr('disabled');
-        }
-    });
-
     //すべてのformで入力があった場合に行う処理
     $("select,input").change(function () {
         $(this).nextAll(".help-block" + ".text-danger").remove();
@@ -1577,13 +1568,22 @@ $(document).ready(function () {
         },
         containerCssClass: "select2Member"
     }).on('change', function () {
-        //if ($('#select2Member').val() == '' || $('#CommonMessageBody').val() == '') {
-        //    $('#MessageSubmit').attr('disabled', 'disabled');
-        //}
-        //else {
-        //    $('#MessageSubmit').removeAttr('disabled');
-        //}
+        if ($(this).val() == '' || $('#CommonMessageBody').val() == '') {
+            $('#MessageSubmit').attr('disabled', 'disabled');
+        }
+        else {
+            $('#MessageSubmit').removeAttr('disabled');
+        }
     });
+    $("#CommonMessageBody").keyup(function () {
+        if ($('#select2Member').val() == '' || $('#CommonMessageBody').val() == '') {
+            $('#MessageSubmit').attr('disabled', 'disabled');
+        }
+        else {
+            $('#MessageSubmit').removeAttr('disabled');
+        }
+    });
+
     //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
     $('#select2PostCircleMember').select2({
         multiple: true,
