@@ -124,28 +124,28 @@ class PostTest extends CakeTestCase
 
         $postDataFive = ['share_public' => 'user_2,user_3','post_id' => 37,'share_range' => 'public','type' => 8,'share' => 'user_2,user_3'];
 
-        $res = $this->Post->editNormal($postDataTwo,$uid,$team_id);
+        $res = $this->Post->editMessageMember($postDataTwo,$uid,$team_id);
         $this->assertNotEmpty($res, "[正常]投稿(指定)");
 
         $this->Post->my_uid = $uid;
         $this->Post->current_team_id = $team_id;
         $this->Post->create();
-        $res = $this->Post->editNormal($postDataOne);
+        $res = $this->Post->editMessageMember($postDataOne);
         $this->assertEmpty($res);
 
-        $res = $this->Post->editNormal($postDataOne,$uid,$team_id);
+        $res = $this->Post->editMessageMember($postDataOne,$uid,$team_id);
         $this->assertFalse($res,"[正常]投稿指定)");
 
-        $res = $this->Post->editNormal($postDataFour);
+        $res = $this->Post->editMessageMember($postDataFour);
         $this->assertNotEmpty($res);
 
-        $res = $this->Post->editNormal($postDataFive);
+        $res = $this->Post->editMessageMember($postDataFive);
         $this->assertEmpty($res);
 
-        $res = $this->Post->editNormal($postDataFive);
+        $res = $this->Post->editMessageMember($postDataFive);
         $this->assertFalse($res);
 
-        $res = $this->Post->editNormal($postDataSix);
+        $res = $this->Post->editMessageMember($postDataSix);
         $this->assertNotEmpty($res);
 
     }

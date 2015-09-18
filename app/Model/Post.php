@@ -340,7 +340,7 @@ class Post extends AppModel
     }
 
     /**
-     * 投稿
+     * メッセージのメンバーを変更
      *
      * @param      $postData
      * @param null $uid
@@ -348,50 +348,34 @@ class Post extends AppModel
      *
      * @return bool|mixed
      */
-    public function editNormal($postData, $uid = null, $team_id = null)
+    public function editMessageMember($postData, $uid = null, $team_id = null)
     {
-
-
         if (!isset($postData['Post']) || empty($postData['Post'])) {
-
             return false;
         }
 
         $this->setUidAndTeamId($uid, $team_id);
         $share = null;
         if (isset($postData['Post']['share']) && !empty($postData['Post']['share'])) {
-
             $share = explode(",", $postData['Post']['share']);
-
         }
         $postData['Post']['user_id'] = $this->uid;
         $postData['Post']['team_id'] = $this->team_id;
-        if (!isset($postData['Post']['type'])) {
-            $postData['Post']['type'] = Post::TYPE_NORMAL;
-
-        }
 
         $this->begin();
         $post_id = $postData['Post']['post_id'];
         $results = [];
-        // ファイルが添付されている場合
         if (!empty($share)) {
-            //ユーザとサークルに分割
             $users = [];
-
             foreach ($share as $val) {
-                //ユーザの場合
                 if (stristr($val, 'user_')) {
                     $users[] = str_replace('user_', '', $val);
                 }
-                //サークルの場合
-
             }
             if ($users) {
                 //共有ユーザ保存
                 $results[] = $this->PostShareUser->add($post_id, $users);
             }
-
         }
         // どこかでエラーが発生した場合は rollback
         $this->commit();

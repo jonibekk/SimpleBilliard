@@ -392,7 +392,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
 
             <?=
             $this->Form->create('Post', [
-                'url'           => ['controller' => 'posts', 'action' => 'edit_message'],
+                'url'           => ['controller' => 'posts', 'action' => 'edit_message_users'],
                 'inputDefaults' => [
                     'div'       => 'form-group',
                     'label'     => false,
