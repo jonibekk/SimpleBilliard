@@ -2379,4 +2379,30 @@ class TeamMemberTest extends CakeTestCase
         $res = $this->TeamMember->getActiveTeamMembersList();
         $this->assertNotEmpty($res);
     }
+    
+    function testCountActiveMembersByTeamId()
+    {
+        $members = $this->TeamMember->find('all', [
+            'fields' => [
+                'TeamMember.team_id',
+                'TeamMember.active_flg',
+            ],
+        ]);
+        
+        $counts = [];
+        foreach ($members as $v) {
+            if (!$v['TeamMember']['active_flg']) {
+                continue;
+            }
+            if (!isset($counts[$v['TeamMember']['team_id']])) {
+                $counts[$v['TeamMember']['team_id']] = 0;
+            }
+            $counts[$v['TeamMember']['team_id']]++;
+        }
+
+        foreach ($counts as $team_id => $count) {
+            $res = $this->TeamMember->countActiveMembersByTeamId($team_id);
+            $this->assertEquals($count, $res);
+        }
+    }
 }

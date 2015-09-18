@@ -38,31 +38,31 @@ class PostLikeFixture extends CakeTestFixture
      */
     public $records = array(
         array(
-            'id'       => '',
-            'post_id'  => '',
-            'user_id'  => '',
-            'team_id'  => '',
-            'del_flg'  => 1,
+            'id'       => '1',
+            'post_id'  => '100',
+            'user_id'  => '1',
+            'team_id'  => '1',
+            'del_flg'  => 0,
             'deleted'  => 1,
             'created'  => 1,
             'modified' => 1
         ),
         array(
-            'id'       => '',
-            'post_id'  => '',
-            'user_id'  => '',
-            'team_id'  => '',
-            'del_flg'  => 1,
+            'id'       => '2',
+            'post_id'  => '100',
+            'user_id'  => '2',
+            'team_id'  => '1',
+            'del_flg'  => 0,
             'deleted'  => 2,
             'created'  => 2,
             'modified' => 2
         ),
         array(
-            'id'       => '',
-            'post_id'  => '',
-            'user_id'  => '',
-            'team_id'  => '',
-            'del_flg'  => 1,
+            'id'       => '3',
+            'post_id'  => '300',
+            'user_id'  => '3',
+            'team_id'  => '1',
+            'del_flg'  => 0,
             'deleted'  => 3,
             'created'  => 3,
             'modified' => 3

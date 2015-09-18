@@ -165,13 +165,14 @@ class ActionResult extends AppModel
     /**
      * アクション数のカウントを返却
      *
-     * @param mixed $user_id ユーザーIDもしくは'me'を指定する。
-     * @param null  $start_date
-     * @param null  $end_date
+     * @param mixed  $user_id ユーザーIDもしくは'me'を指定する。
+     * @param null   $start_date
+     * @param null   $end_date
+     * @param string $date_col
      *
      * @return int
      */
-    function getCount($user_id = 'me', $start_date = null, $end_date = null)
+    function getCount($user_id = 'me', $start_date = null, $end_date = null, $date_col = 'modified')
     {
         $options = [
             'conditions' => [
@@ -182,16 +183,16 @@ class ActionResult extends AppModel
         if ($user_id == 'me') {
             $options['conditions']['user_id'] = $this->my_uid;
         }
-        elseif (is_numeric($user_id)) {
+        elseif ($user_id) {
             $options['conditions']['user_id'] = $user_id;
         }
 
         //期間で絞り込む
         if ($start_date) {
-            $options['conditions']['modified >'] = $start_date;
+            $options['conditions']["$date_col >="] = $start_date;
         }
         if ($end_date) {
-            $options['conditions']['modified <'] = $end_date;
+            $options['conditions']["$date_col <="] = $end_date;
         }
         $res = $this->find('count', $options);
         return $res;
@@ -307,4 +308,167 @@ class ActionResult extends AppModel
         return $res;
     }
 
+    /**
+     * アクションを登録したユニークユーザー数を返す
+     *
+     * @param array $params
+     *
+     * @return mixed
+     */
+    public function getUniqueUserCount($params = [])
+    {
+        $params = array_merge(['start'   => null,
+                               'end'     => null,
+                               'user_id' => null,
+                              ], $params);
+
+        $options = [
+            'fields'     => [
+                'COUNT(DISTINCT user_id) as cnt',
+            ],
+            'conditions' => [
+                'ActionResult.team_id' => $this->current_team_id,
+            ],
+        ];
+        if ($params['start'] !== null) {
+            $options['conditions']["ActionResult.created >="] = $params['start'];
+        }
+        if ($params['end'] !== null) {
+            $options['conditions']["ActionResult.created <="] = $params['end'];
+        }
+        if ($params['user_id'] !== null) {
+            $options['conditions']["ActionResult.user_id"] = $params['user_id'];
+        }
+        $row = $this->find('first', $options);
+
+        $count = 0;
+        if (isset($row[0]['cnt'])) {
+            $count = $row[0]['cnt'];
+        }
+        return $count;
+    }
+
+    /**
+     * ゴール別のアクション数ランキングを返す
+     *
+     * @param array $params
+     *
+     * @return mixed
+     */
+    public function getGoalRanking($params = [])
+    {
+        $params = array_merge(['limit'        => null,
+                               'start'        => null,
+                               'end'          => null,
+                               'goal_user_id' => null,
+                              ], $params);
+
+        $options = [
+            'fields'     => [
+                'ActionResult.goal_id',
+                'COUNT(*) as cnt',
+            ],
+            'conditions' => [
+                'ActionResult.team_id' => $this->current_team_id,
+            ],
+            'group'      => ['ActionResult.goal_id'],
+            'order'      => ['cnt' => 'DESC'],
+            'limit'      => $params['limit'],
+            'contain'    => [],
+        ];
+        if ($params['start'] !== null) {
+            $options['conditions']["ActionResult.created >="] = $params['start'];
+        }
+        if ($params['end'] !== null) {
+            $options['conditions']["ActionResult.created <="] = $params['end'];
+        }
+        if ($params['goal_user_id'] !== null) {
+            $options['conditions']["Goal.user_id"] = $params['goal_user_id'];
+            $options['contain'][] = 'Goal';
+        }
+        $rows = $this->find('all', $options);
+        $ranking = [];
+        foreach ($rows as $v) {
+            $ranking[$v['ActionResult']['goal_id']] = $v[0]['cnt'];
+        }
+        return $ranking;
+    }
+
+    /**
+     * ユーザー別のアクション数ランキングを返す
+     *
+     * @param array $params
+     *
+     * @return mixed
+     */
+    public function getUserRanking($params = [])
+    {
+        $params = array_merge(['limit'   => null,
+                               'start'   => null,
+                               'end'     => null,
+                               'user_id' => null,
+                              ], $params);
+
+        $options = [
+            'fields'     => [
+                'ActionResult.user_id',
+                'COUNT(*) as cnt',
+            ],
+            'conditions' => [
+                'ActionResult.team_id' => $this->current_team_id,
+            ],
+            'group'      => ['ActionResult.user_id'],
+            'order'      => ['cnt' => 'DESC'],
+            'limit'      => $params['limit'],
+        ];
+        if ($params['start'] !== null) {
+            $options['conditions']["ActionResult.created >="] = $params['start'];
+        }
+        if ($params['end'] !== null) {
+            $options['conditions']["ActionResult.created <="] = $params['end'];
+        }
+        if ($params['user_id'] !== null) {
+            $options['conditions']["ActionResult.user_id"] = $params['user_id'];
+        }
+        $rows = $this->find('all', $options);
+        $ranking = [];
+        foreach ($rows as $v) {
+            $ranking[$v['ActionResult']['user_id']] = $v[0]['cnt'];
+        }
+        return $ranking;
+    }
+
+    /**
+     * 他人のゴールへのアクションのカウント数を返す
+     *
+     * @param array $params
+     *
+     * @return int
+     */
+    public function getCollaboGoalActionCount(array $params = [])
+    {
+        $params = array_merge(['user_id' => null,
+                               'start'   => null,
+                               'end'     => null,
+                              ], $params);
+
+        $options = [
+            'conditions' => [
+                'ActionResult.team_id' => $this->current_team_id,
+                'ActionResult.user_id <> Goal.user_id',
+            ],
+            'contain'    => ['Goal'],
+        ];
+        if ($params['user_id'] !== null) {
+            $options['conditions']['ActionResult.user_id'] = $params['user_id'];
+        }
+        if ($params['start'] !== null) {
+            $options['conditions']["ActionResult.created >="] = $params['start'];
+        }
+        if ($params['end'] !== null) {
+            $options['conditions']["ActionResult.created <="] = $params['end'];
+        }
+
+        return $this->find('count', $options);
+    }
 }
