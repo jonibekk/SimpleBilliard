@@ -6,11 +6,6 @@
  * Time: 10:45 AM
  *
  * @var CodeCompletionView $this
- * @var                    $current_circle
- * @var                    $goal_list_for_action_option
- * @var string             $common_form_type     デフォルトで有効にするフォーム種類 (action, post, message)
- * @var string             $common_form_mode     新規登録 or 編集(edit)
- * @var string             $common_form_only_tab フォームのタブ表示を１つに絞る (action, post, message)
  */
 ?>
 <!-- START app/View/Elements/Feed/add_member_on_message.ctp -->
