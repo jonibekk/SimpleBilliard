@@ -16,39 +16,14 @@ class ActionResultTest extends CakeTestCase
      */
     public $fixtures = array(
         'app.action_result',
+        'app.purpose',
         'app.team',
-        'app.badge',
         'app.user',
         'app.email',
-        'app.notify_setting',
-        'app.comment_like',
-        'app.comment',
-        'app.post',
         'app.goal',
-        'app.purpose',
         'app.goal_category',
         'app.key_result',
-        'app.collaborator',
-        'app.follower',
-        'app.post_share_user',
-        'app.post_share_circle',
-        'app.circle',
-        'app.circle_member',
-        'app.post_like',
-        'app.post_read',
-        'app.comment_mention',
-        'app.given_badge',
-        'app.post_mention',
-        'app.comment_read',
-
-        'app.oauth_token',
-        'app.team_member',
-        'app.group',
-        'app.job_category',
-        'app.local_name',
-        'app.invite',
-        'app.thread',
-        'app.message',
+        'app.attached_file',
         'app.action_result_file'
     );
 
@@ -152,7 +127,7 @@ class ActionResultTest extends CakeTestCase
         // 通常 edit
         $data = [
             'ActionResult' => [
-                'id' => 1,
+                'id'   => 1,
                 'name' => 'edit string',
             ]
         ];
@@ -162,17 +137,18 @@ class ActionResultTest extends CakeTestCase
         $this->assertEquals($row['ActionResult']['name'], $data['ActionResult']['name']);
 
         // 添付ファイルあり
-        $this->ActionResult->ActionResultFile->AttachedFile = $this->getMockForModel('AttachedFile', array('updateRelatedFiles'));
+        $this->ActionResult->ActionResultFile->AttachedFile = $this->getMockForModel('AttachedFile',
+                                                                                     array('updateRelatedFiles'));
         /** @noinspection PhpUndefinedMethodInspection */
         $this->ActionResult->ActionResultFile->AttachedFile->expects($this->any())
-                                           ->method('updateRelatedFiles')
-                                           ->will($this->returnValue(true));
+                                                           ->method('updateRelatedFiles')
+                                                           ->will($this->returnValue(true));
         $data = [
             'ActionResult' => [
-                'id' => 1,
+                'id'   => 1,
                 'name' => 'edit string2',
             ],
-            'file_id' => ['aaa', 'bbb']
+            'file_id'      => ['aaa', 'bbb']
         ];
         $res = $this->ActionResult->actionEdit($data);
         $this->assertTrue($res);
@@ -180,17 +156,18 @@ class ActionResultTest extends CakeTestCase
         $this->assertEquals($row['ActionResult']['name'], $data['ActionResult']['name']);
 
         // rollback
-        $this->ActionResult->ActionResultFile->AttachedFile = $this->getMockForModel('AttachedFile', array('updateRelatedFiles'));
+        $this->ActionResult->ActionResultFile->AttachedFile = $this->getMockForModel('AttachedFile',
+                                                                                     array('updateRelatedFiles'));
         /** @noinspection PhpUndefinedMethodInspection */
         $this->ActionResult->ActionResultFile->AttachedFile->expects($this->any())
-                                           ->method('updateRelatedFiles')
-                                           ->will($this->returnValue(false));
+                                                           ->method('updateRelatedFiles')
+                                                           ->will($this->returnValue(false));
         $data = [
             'ActionResult' => [
-                'id' => 1,
+                'id'   => 1,
                 'name' => 'edit string3',
             ],
-            'file_id' => ['aaa', 'bbb']
+            'file_id'      => ['aaa', 'bbb']
         ];
         $res = $this->ActionResult->actionEdit($data);
         $this->assertFalse($res);
@@ -198,6 +175,165 @@ class ActionResultTest extends CakeTestCase
         $this->assertNotEquals($row['ActionResult']['name'], $data['ActionResult']['name']);
     }
 
+    function testGetUniqueUserCount()
+    {
+        $this->_setDefault();
+        $now = time();
+        $test_data = [
+            ['goal_id' => 10, 'num' => 1, 'user_id' => 1],
+            ['goal_id' => 20, 'num' => 1, 'user_id' => 2],
+            ['goal_id' => 30, 'num' => 1, 'user_id' => 1],
+        ];
+        foreach ($test_data as $v) {
+            for ($i = 0; $i < $v['num']; $i++) {
+                $this->ActionResult->create();
+                $this->ActionResult->save(
+                    [
+                        'team_id'       => 1,
+                        'goal_id'       => $v['goal_id'],
+                        'key_result_id' => null,
+                        'user_id'       => $v['user_id'],
+                        'name'          => 'test',
+                        'type'          => ActionResult::TYPE_GOAL,
+                        'created'       => $now,
+                    ]);
+            }
+        }
+
+        $count = $this->ActionResult->getUniqueUserCount(['start' => $now - HOUR, 'end' => $now + HOUR]);
+        $this->assertEquals(2, $count);
+
+        $count = $this->ActionResult->getUniqueUserCount(['start'   => $now - HOUR, 'end' => $now + HOUR,
+                                                          'user_id' => 1]);
+        $this->assertEquals(1, $count);
+
+        $count = $this->ActionResult->getUniqueUserCount(['start' => $now + HOUR]);
+        $this->assertEquals(0, $count);
+    }
+
+    function testGetGoalRanking()
+    {
+        $this->_setDefault();
+        $now = time();
+        $test_data = [
+            ['goal_id' => 10, 'num' => 1],
+            ['goal_id' => 20, 'num' => 3],
+            ['goal_id' => 100, 'num' => 2],
+        ];
+        foreach ($test_data as $v) {
+            for ($i = 0; $i < $v['num']; $i++) {
+                $this->ActionResult->create();
+                $this->ActionResult->save(
+                    [
+                        'team_id'       => 1,
+                        'goal_id'       => $v['goal_id'],
+                        'key_result_id' => null,
+                        'user_id'       => 1,
+                        'name'          => 'test',
+                        'type'          => ActionResult::TYPE_GOAL,
+                        'created'       => $now,
+                    ]);
+            }
+        }
+
+        $ranking = $this->ActionResult->getGoalRanking(['start' => $now - HOUR,
+                                                        'end'   => $now + HOUR]);
+        $this->assertEquals([20 => 3, 100 => 2, 10 => 1], $ranking);
+
+        $ranking = $this->ActionResult->getGoalRanking(['start' => $now - HOUR,
+                                                        'end'   => $now + HOUR,
+                                                        'limit' => 2]);
+        $this->assertEquals([20 => 3, 100 => 2], $ranking);
+
+        $ranking = $this->ActionResult->getGoalRanking(['start'        => $now - HOUR,
+                                                        'end'          => $now + HOUR,
+                                                        'goal_user_id' => 100]);
+        $this->assertEquals([100 => 2], $ranking);
+
+        $count = $this->ActionResult->getGoalRanking(['start' => $now + HOUR]);
+        $this->assertEquals([], $count);
+    }
+
+    function testGetUserRanking()
+    {
+        $this->_setDefault();
+        $now = time();
+        $test_data = [
+            ['goal_id' => 10, 'num' => 1, 'user_id' => 1],
+            ['goal_id' => 20, 'num' => 3, 'user_id' => 2],
+            ['goal_id' => 100, 'num' => 2, 'user_id' => 3],
+        ];
+        foreach ($test_data as $v) {
+            for ($i = 0; $i < $v['num']; $i++) {
+                $this->ActionResult->create();
+                $this->ActionResult->save(
+                    [
+                        'team_id'       => 1,
+                        'goal_id'       => $v['goal_id'],
+                        'key_result_id' => null,
+                        'user_id'       => $v['user_id'],
+                        'name'          => 'test',
+                        'type'          => ActionResult::TYPE_GOAL,
+                        'created'       => $now,
+                    ]);
+            }
+        }
+
+        $ranking = $this->ActionResult->getUserRanking(['start' => $now - HOUR,
+                                                        'end'   => $now + HOUR]);
+        $this->assertEquals([2 => 3, 3 => 2, 1 => 1], $ranking);
+
+        $ranking = $this->ActionResult->getUserRanking(['start' => $now - HOUR,
+                                                        'end'   => $now + HOUR,
+                                                        'limit' => 2]);
+        $this->assertEquals([2 => 3, 3 => 2], $ranking);
+
+        $ranking = $this->ActionResult->getUserRanking(['start'   => $now - HOUR,
+                                                        'end'     => $now + HOUR,
+                                                        'user_id' => 3]);
+        $this->assertEquals([3 => 2], $ranking);
+
+        $count = $this->ActionResult->getUserRanking(['start' => $now + HOUR]);
+        $this->assertEquals([], $count);
+    }
+
+    function testGetCollaboGoalActionCount()
+    {
+        $this->_setDefault();
+        $now = time();
+        $test_data = [
+            ['goal_id' => 1, 'num' => 1, 'user_id' => 1],
+            ['goal_id' => 1, 'num' => 3, 'user_id' => 2],
+            ['goal_id' => 100, 'num' => 2, 'user_id' => 1],
+        ];
+        foreach ($test_data as $v) {
+            for ($i = 0; $i < $v['num']; $i++) {
+                $this->ActionResult->create();
+                $this->ActionResult->save(
+                    [
+                        'team_id'       => 1,
+                        'goal_id'       => $v['goal_id'],
+                        'key_result_id' => null,
+                        'user_id'       => $v['user_id'],
+                        'name'          => 'test',
+                        'type'          => ActionResult::TYPE_GOAL,
+                        'created'       => $now,
+                    ]);
+            }
+        }
+
+        $count = $this->ActionResult->getCollaboGoalActionCount(['start' => $now - HOUR,
+                                                                 'end'   => $now + HOUR]);
+        $this->assertEquals(5, $count);
+
+        $count = $this->ActionResult->getCollaboGoalActionCount(['start'   => $now - HOUR,
+                                                                 'end'     => $now + HOUR,
+                                                                 'user_id' => 1]);
+        $this->assertEquals(2, $count);
+
+        $count = $this->ActionResult->getCollaboGoalActionCount(['start' => $now + HOUR]);
+        $this->assertEquals(0, $count);
+    }
 
     function _setDefault()
     {

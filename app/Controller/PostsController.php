@@ -61,6 +61,35 @@ class PostsController extends AppController
         $this->redirect($to_url);
     }
 
+    /**
+     * メッセージのメンバー変更のPostを受け取って処理
+     */
+    public function edit_message_users()
+    {
+        $id = $this->request->data['Post']['post_id'];
+        $this->request->data['Post']['type'] = Post::TYPE_MESSAGE;
+        $this->request->allowMethod('post');
+        // 共有範囲を格納
+        $this->request->data['Post']['share'] = $this->request->data['Post']['share_public'];
+        // メッセージ変更を保存
+        $successSavedPost = $this->Post->editMessageMember($this->request->data);
+
+        // 保存に失敗
+        if (!$successSavedPost) {
+            // バリデーションエラーのケース
+            if (!empty($this->Post->validationErrors)) {
+                $error_msg = array_shift($this->Post->validationErrors);
+                $this->Pnotify->outError($error_msg[0], ['title' => __d('gl', "メンバーの変更に失敗しました。")]);
+            }
+            else {
+                $this->Pnotify->outError(__d('gl', "メンバーの変更に失敗しました。"));
+            }
+        }
+
+        $this->Pnotify->outSuccess(__d('gl', "メンバーを変更しました。"));
+        $this->redirect(['controller' => 'posts', 'action' => 'message#', $id]);
+    }
+
     public function add()
     {
         $this->_addPost();

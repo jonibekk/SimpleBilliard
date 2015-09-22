@@ -242,4 +242,82 @@ class GlRedisTest extends CakeTestCase
         $this->assertTrue(isset($e));
     }
 
+
+    function testSaveAccessUser()
+    {
+        $this->GlRedis->saveAccessUser(1, 1, 1442567110, [9, 1]);
+        $this->GlRedis->saveAccessUser(1, 2, 1442567110, [9, 1]);
+        $res = $this->GlRedis->getAccessUsers(1, '2015-09-18', 9);
+        $this->assertEquals([0 => '1', 1 => '2'], $res);
+        $res = $this->GlRedis->getAccessUsers(1, '2015-09-18', 1);
+        $this->assertEquals([0 => '1', 1 => '2'], $res);
+
+        $this->GlRedis->delAccessUsers(1, '2015-09-18', 9);
+        $res = $this->GlRedis->getAccessUsers(1, '2015-09-18', 9);
+        $this->assertEquals([], $res);
+        $res = $this->GlRedis->getAccessUsers(1, '2015-09-18', 1);
+        $this->assertEquals([0 => '1', 1 => '2'], $res);
+    }
+
+    function testSaveTeamInsight()
+    {
+        $this->GlRedis->saveTeamInsight(1, '2015-09-18', '2015-09-19', 9, [1, 2, 3]);
+        $res = $this->GlRedis->getTeamInsight(1, '2015-09-18', '2015-09-19', 9);
+        $this->assertEquals([1, 2, 3], $res);
+        $res = $this->GlRedis->getTeamInsight(1, '2015-09-18', '2015-09-18', 9);
+        $this->assertEquals(null, $res);
+        $res = $this->GlRedis->getTeamInsight(1, '2015-09-18', '2015-09-19', 1);
+        $this->assertEquals(null, $res);
+    }
+
+    function testSaveGroupInsight()
+    {
+        $this->GlRedis->saveGroupInsight(1, '2015-09-18', '2015-09-19', 9, 1, [1, 2, 3]);
+        $res = $this->GlRedis->getGroupInsight(1, '2015-09-18', '2015-09-19', 9, 1);
+        $this->assertEquals([1, 2, 3], $res);
+        $res = $this->GlRedis->getGroupInsight(1, '2015-09-18', '2015-09-18', 9, 1);
+        $this->assertEquals(null, $res);
+        $res = $this->GlRedis->getGroupInsight(1, '2015-09-18', '2015-09-18', 9, 2);
+        $this->assertEquals(null, $res);
+        $res = $this->GlRedis->getGroupInsight(1, '2015-09-18', '2015-09-19', 1, 1);
+        $this->assertEquals(null, $res);
+    }
+
+    function testSaveCircleInsight()
+    {
+        $this->GlRedis->saveCircleInsight(1, '2015-09-18', '2015-09-19', 9, [1, 2, 3]);
+        $res = $this->GlRedis->getCircleInsight(1, '2015-09-18', '2015-09-19', 9);
+        $this->assertEquals([1, 2, 3], $res);
+        $res = $this->GlRedis->getCircleInsight(1, '2015-09-18', '2015-09-18', 9);
+        $this->assertEquals(null, $res);
+        $res = $this->GlRedis->getCircleInsight(1, '2015-09-18', '2015-09-19', 1);
+        $this->assertEquals(null, $res);
+    }
+
+    function testSaveTeamRanking()
+    {
+        $this->GlRedis->saveTeamRanking(1, '2015-09-18', '2015-09-19', 9, 'ranking', [1, 2, 3]);
+        $res = $this->GlRedis->getTeamRanking(1, '2015-09-18', '2015-09-19', 9, 'ranking');
+        $this->assertEquals([1, 2, 3], $res);
+        $res = $this->GlRedis->getTeamRanking(1, '2015-09-18', '2015-09-18', 9, 'ranking');
+        $this->assertEquals(null, $res);
+        $res = $this->GlRedis->getTeamRanking(1, '2015-09-18', '2015-09-18', 9, 'ranking2');
+        $this->assertEquals(null, $res);
+        $res = $this->GlRedis->getTeamRanking(1, '2015-09-18', '2015-09-19', 1, 'ranking');
+        $this->assertEquals(null, $res);
+    }
+
+    function testSaveGroupRanking()
+    {
+        $this->GlRedis->saveGroupRanking(1, '2015-09-18', '2015-09-19', 9, 1, 'ranking', [1, 2, 3]);
+        $res = $this->GlRedis->getGroupRanking(1, '2015-09-18', '2015-09-19', 9, 1, 'ranking');
+        $this->assertEquals([1, 2, 3], $res);
+        $res = $this->GlRedis->getGroupRanking(1, '2015-09-18', '2015-09-18', 9, 1, 'ranking');
+        $this->assertEquals(null, $res);
+        $res = $this->GlRedis->getGroupRanking(1, '2015-09-18', '2015-09-18', 9, 1, 'ranking2');
+        $this->assertEquals(null, $res);
+        $res = $this->GlRedis->getGroupRanking(1, '2015-09-18', '2015-09-19', 1, 1, 'ranking');
+        $this->assertEquals(null, $res);
+    }
+
 }
