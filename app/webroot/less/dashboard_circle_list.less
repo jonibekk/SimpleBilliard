@@ -128,11 +128,17 @@
   color: @veryDark;
 }
 
+.dashboard-circle-list-body::-webkit-scrollbar {
+  display: none;
+}
+
 .dashboard-circle-list-body {
-  overflow: scroll;
-  max-height: 272px;
-  background: @baseLightGray;
-  box-shadow: inset 0 0 1px @basicGray;
+  overflow-y: scroll;
+
+  // サークルリストの処理のため。非常に見難くなっているため再度また使うことになるだろうと思われる。
+  //
+  // background: @baseLightGray;
+  // box-shadow: inset 0 0 1px @basicGray;
 }
 
 .dashboard-circle-list-footer {
