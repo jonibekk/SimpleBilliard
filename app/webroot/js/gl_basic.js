@@ -3258,13 +3258,18 @@ function copyToClipboard(url) {
 $(document).ready(function () {
     $(window).scroll(function () {
         if ($(window).scrollTop() + $(window).height() > $(document).height() - 2000) {
-            if (!autoload_more) {
+            if (!autoload_more && networkReachable()) {
                 autoload_more = true;
                 $('#FeedMoreReadLink').trigger('click');
                 $('#GoalPageFollowerMoreLink').trigger('click');
                 $('#GoalPageMemberMoreLink').trigger('click');
                 $('#GoalPageKeyResultMoreLink').trigger('click');
             }
+        }
+    }).ajaxError(function(event,request,setting){
+        if(request.status==0)
+        {
+            return false;
         }
     });
 
@@ -4161,4 +4166,15 @@ function isMobile() {
         return true;
     }
     return false;
+}
+function networkReachable()
+{
+    jQuery.ajaxSetup({async:false});
+    re = "";
+    r = Math.round(Math.random() * 1000);
+    var path = window.location.href;
+    $.get(path +"img/no-image-user.jpg?1440663111",function(d){
+        re = true;
+    });
+    return re;
 }
