@@ -62,7 +62,7 @@ $(window).load(function () {
     setDefaultTab();
 });
 $(document).ready(function () {
-
+    $("a.youtube").YouTubeModal({autoplay: 0, width: 600, height: 445});
     //すべてのformで入力があった場合に行う処理
     $("select,input").change(function () {
         $(this).nextAll(".help-block" + ".text-danger").remove();
@@ -1599,7 +1599,7 @@ $(document).ready(function () {
                 return {
                     term: term, //search term
                     page_limit: 10, // page size
-                    post_id:$('#post_messenger').val()
+                    post_id: $('#post_messenger').val()
                 };
             },
             results: function (data, page) {

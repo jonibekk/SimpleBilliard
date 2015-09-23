@@ -123,6 +123,11 @@
                 </a>
             </li>
             <li>
+                <a href="#" class="youtube" rel="ZIr0Za55OEI">
+                    <?= __d('gl', 'youtube') ?>
+                </a>
+            </li>
+            <li>
                 <?php if (isset($unapproved_cnt) === true && $unapproved_cnt > 0) { ?>
                     <div class="btn btn-danger btn-xs sub_cnt_alert">
                         <?php echo $unapproved_cnt; ?>
