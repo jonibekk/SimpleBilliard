@@ -1,172 +1,164 @@
-/*サークルのデザイン*/
+/**
+ * Dashboardにあるサークルリストのスタイル
+ */
+
 .circle-icon_box {
-    width: 16px;
-    height: 16px;
-    line-height: 16px;
-    float: left;
-    margin-right: 5px;
-    margin-top: 0;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  float: left;
+  margin-right: 5px;
+  margin-top: 0;
 }
-
 .circle-icon_box > img {
-    position: absolute;
+  position: absolute;
 }
-
 .circle-name_box {
-    display: block;
-    width: 112px;
-    height: 16px;
-    line-height: 16px;
-    font-size: 12px;
-    float: left;
-    margin-right: 3px;
-    overflow: hidden;
-    color: #000;
+  display: block;
+  width: 112px;
+  height: 16px;
+  line-height: 16px;
+  font-size: 12px;
+  float: left;
+  margin-right: 3px;
+  overflow: hidden;
+  color: #000;
 }
-
 .circle-count_box {
-    display: block;
-    width: 13px;
-    height: 16px;
-    line-height: 16px;
-    float: left;
-    margin-right: 3px;
-    text-align: center;
+  display: block;
+  width: 13px;
+  height: 16px;
+  line-height: 16px;
+  float: left;
+  margin-right: 3px;
+  text-align: center;
 }
-
 .circle-function_box {
-    display: block;
-    width: 14px;
-    height: 22px;
-    line-height: 16px;
-    float: right;
-    padding: 7px 0;
+  display: block;
+  width: 14px;
+  height: 22px;
+  line-height: 16px;
+  float: right;
+  padding: 7px 0;
 }
-
 .circle_heading {
-    margin: 0 0 2px;
-    font-weight: bold;
-    color: #a5a5a5;
+  margin: 0 0 2px;
+  font-weight: bold;
+  color: #a5a5a5;
 }
-
 .circle-layout {
-    width: 100%;
-    height: 30px;
-    position: relative;
+  width: 100%;
+  height: 30px;
+  position: relative;
 }
-
 .count-value {
-    color: #4e5665;
-    font-size: 11px;
+  color: #4e5665;
+  font-size: 11px;
 }
-
 .circle-function {
-    width: 14px;
-    text-align: right;
+  width: 14px;
+  text-align: right;
 }
-
 .btn-circle-function {
   .btn-animated;
 }
-
 .develop--circle-seek {
-    font-size: 12px;
-    line-height: 16px;
-    padding: 10px 0 6px 0;
+  font-size: 12px;
+  line-height: 16px;
+  padding: 10px 0 6px;
 }
-
 .develop--circle-make {
-    font-size: 12px;
-    line-height: 16px;
-    padding: 6px 0 6px 0;
+  font-size: 12px;
+  line-height: 16px;
+  padding: 6px 0;
 }
-
 .circle-seek-icon {
-    text-align: center;
-    margin-right: 6px;
-    font-size: 14px;
+  text-align: center;
+  margin-right: 6px;
+  font-size: 14px;
 }
-
 .circle-make-icon {
-    width: 14px;
-    font-size: 14px;
-    text-align: center;
-    margin-right: 6px;
+  width: 14px;
+  font-size: 14px;
+  text-align: center;
+  margin-right: 6px;
 }
-
 .circle-link {
-    position: absolute;
-    height: 30px;
-    padding: 7px 0;
-    width: 92%;
-    &:hover {
-      background: #d5d5d5;
-    }
-    @media screen and (min-width: 768px) {
-      width: 94%;
-    }
-    @media screen and (min-width: 992px) {
-      width: 91%;
-    }
+  position: absolute;
+  height: 30px;
+  padding: 7px 0;
+  width: 92%;
+  &:hover {
+    background: #d5d5d5;
+  }
+  @media screen and (min-width: 768px) {
+    width: 94%;
+  }
+  @media screen and (min-width: 992px) {
+    width: 91%;
+  }
 }
 
-
-
-/*/サークルのデザイン*/
-
+/*サークルのデザイン*/
 
 .dashboard-circle-list {
   border-radius: 4px;
   max-width: 100%;
 }
-
 .dashboard-circle-list-header {
   padding: 4px;
 }
-
 .dashboard-circle-list-title {
   color: @veryDark;
 }
 
+/**
+Scrollbarを隠すために使っています。
+Wrapをスクロールバーのサイズ分(16px)実際に大きくしています。
+Webkit独自拡張のShadowDom関連の操作がFireFoxなどでも実装されればそちらで書き換えるのが一番早いと思います。
+気になる人は ::-webkit-scrollbar などでググってください。サンプルとしては以下のコードがWebKit系のブラウザであれば動作します。
+
+```
 .dashboard-circle-list-body::-webkit-scrollbar {
   display: none;
 }
+```
+*/
 
+.dashboard-circle-list-body-wrap {
+  overflow: hidden;
+  width: 168px;
+}
 .dashboard-circle-list-body {
   overflow-y: scroll;
-
+  width: 185px;
+  padding-right: 17px;
   // サークルリストの処理のため。非常に見難くなっているため再度また使うことになるだろうと思われる。
   //
   // background: @baseLightGray;
   // box-shadow: inset 0 0 1px @basicGray;
 }
-
 .dashboard-circle-list-footer {
   padding: 4px;
 }
-
 .dashboard-circle-list-seek {
   font-size: 12px;
   line-height: 16px;
-  padding: 10px 0 6px 0;
+  padding: 10px 0 6px;
 }
-
 .dashboard-circle-list-make {
   font-size: 12px;
   line-height: 16px;
-  padding: 6px 0 6px 0;
+  padding: 6px 0;
 }
-
 .circleListMore:nth-child(n+9) {
-    display: none;
+  display: none;
 }
-
 .dashboard-circle-list-row-wrap {
   height: 32px;
   overflow: hidden;
   position: relative;
 }
-
 .dashboard-circle-list-row {
   display: inline-block;
   width: 100%;
@@ -180,10 +172,9 @@
   &:focus {
     color: @veryDark;
     text-decoration: none;
-    background:@lightGray ;
+    background: @lightGray;
   }
 }
-
 .dashboard-circle-list-pic {
   margin: 4px 0;
   vertical-align: middle;
@@ -196,9 +187,9 @@
   height: 16px;
   vertical-align: middle;
 }
-
 .dashboard-circle-name-box {
   margin: 4px 0;
+
   // .line-number-limit-1(@baseLightGray);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -207,16 +198,14 @@
   width: 70%;
   height: 16px;
   vertical-align: middle;
-  @media screen and (min-width: 768px) and (max-width: 991px){
+  @media screen and (min-width: 768px) and (max-width: 991px) {
     width: 78%;
   }
-  &:hover {
-    &::before{
+  &:hover {&::before {
       background: @baseLightGray;
     }
   }
 }
-
 .dashboard-circle-list-edit-wrap {
   position: absolute;
   right: 0;
@@ -225,8 +214,9 @@
   text-align: center;
   .no-underline;
 }
-
 .dashboard-circle-list-edit {
+  // width: 32px;
+  // height: 32px;
   display: inline-block;
   line-height: 32px;
   .btn-animated;
@@ -237,6 +227,4 @@
   &:focus {
     color: @darkGray;
   }
-  // width: 32px;
-  // height: 32px;
 }
