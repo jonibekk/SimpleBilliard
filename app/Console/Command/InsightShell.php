@@ -2,7 +2,7 @@
 
 /**
  * 各種データ集計用バッチ
- * Console/cake insight YYYY-MM-DD timezone
+ * Console/cake insight -d YYYY-MM-DD -t timezone
  *
  * @property Team          $Team
  * @property TeamMember    $TeamMember
@@ -35,11 +35,22 @@ class InsightShell extends AppShell
         parent::startup();
     }
 
+    public function getOptionParser()
+    {
+        $parser = parent::getOptionParser();
+        $options = [
+            'date'     => ['short' => 'd', 'help' => '集計日(YYYY-MM-DD)', 'required' => true,],
+            'timezone' => ['short' => 't', 'help' => 'タイムゾーン', 'required' => true,],
+        ];
+        $parser->addOptions($options);
+        return $parser;
+    }
+
     public function main()
     {
         // パラメータ
-        $target_date = $this->args[0];
-        $timezone = $this->args[1];
+        $target_date = $this->params['date'];
+        $timezone = $this->params['timezone'];
 
         // validate
         list($y, $m, $d) = explode('-', $target_date);
