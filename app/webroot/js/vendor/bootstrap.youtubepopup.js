@@ -6,6 +6,7 @@
 (function ($) {
   var $YouTubeModal = null,
     $YouTubeModalDialog = null,
+      $YouTubeModalContent = null,
     $YouTubeModalTitle = null,
     $YouTubeModalBody = null,
     margin = 5,
@@ -31,6 +32,7 @@
                             '</div>';
         $YouTubeModal.html(modalContent).hide().appendTo('body');
         $YouTubeModalDialog = $("#YouTubeModalDialog");
+          $YouTubeModalContent = $("#YouTubeModalContent");
         $YouTubeModalTitle = $("#YouTubeModalTitle");
         $YouTubeModalBody = $("#YouTubeModalBody");
         $YouTubeModal.modal({
@@ -62,7 +64,22 @@
               setModalTitle(videoTitle);
             }
 
-            resizeModal(options.width);
+              //windows size
+              var max_width = window.innerWidth - 80;
+              var margin_left = -(options.width/10);
+              var max_height = window.innerHeight - 80;
+              if(options.width > max_width){
+                  options.width = max_width;
+                  margin_left = 0;
+              }
+              if(options.height > max_height){
+                  options.height = max_height;
+              }
+
+
+              resizeModalHeight(options.height);
+            resizeModalWidth(options.width,margin_left);
+
 
             //Setup YouTube Modal
             var YouTubeURL = getYouTubeUrl(youtubeId, options);
@@ -95,11 +112,20 @@
     setModalBody('');
   }
 
-  function resizeModal(w) {
-    $YouTubeModalDialog.css({
-      width: w + (margin * 2)
+  function resizeModalWidth(w,margin_left) {
+    $YouTubeModalContent.css({
+      width: w + (margin * 2),
+        'margin-left': margin_left
     });
   }
+    function resizeModalHeight(h) {
+        $YouTubeModalContent.css({
+            height: h + (margin * 2) + $YouTubeModalTitle.height
+        });
+        $YouTubeModalBody.css({
+            'max-height': h + (margin * 2)
+        });
+    }
 
   function getYouTubeUrl(youtubeId, options) {
     return ["//www.youtube.com/embed/", youtubeId, "?rel=0&showsearch=0&autohide=", options.autohide,

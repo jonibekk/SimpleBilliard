@@ -3421,7 +3421,7 @@ button.close {
     -webkit-appearance: none;
 }
 .modal-open {
-    overflow: hidden;
+    overflow: auto;
 }
 .modal {
     display: none;
