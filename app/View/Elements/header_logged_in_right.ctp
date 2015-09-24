@@ -124,7 +124,7 @@
             </li>
             <li>
                 <a href="#" class="youtube" rel="_J_wKHgKWLg" id="ExplainGoal">
-                    <?= __d('gl', 'ゴールの説明') ?>
+                    <?= __d('gl', 'ゴールについて') ?>
                 </a>
             </li>
             <li>
