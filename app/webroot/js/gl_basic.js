@@ -3054,14 +3054,18 @@ function setIntervalToGetNotifyCnt(sec) {
 
 function updateNotifyCnt() {
 
-    var url = cake.url.f;
+    var url = cake.url.f + '/team_id:' + $('#SwitchTeam').val();
     $.ajax({
         type: 'GET',
         url: url,
         async: true,
-        success: function (new_notify_count) {
-            if (new_notify_count != 0) {
-                setNotifyCntToBellAndTitle(new_notify_count);
+        success: function (res) {
+            if (res.error) {
+                location.reload();
+                return;
+            }
+            if (res != 0) {
+                setNotifyCntToBellAndTitle(res);
             }
         },
         error: function () {
@@ -3072,14 +3076,18 @@ function updateNotifyCnt() {
 
 function updateMessageNotifyCnt() {
 
-    var url = cake.url.af;
+    var url = cake.url.af + '/team_id:' + $('#SwitchTeam').val();
     $.ajax({
         type: 'GET',
         url: url,
         async: true,
-        success: function (new_notify_count) {
-            setNotifyCntToMessageAndTitle(new_notify_count);
-            if (new_notify_count != 0) {
+        success: function (res) {
+            if (res.error) {
+                location.reload();
+                return;
+            }
+            setNotifyCntToMessageAndTitle(res);
+            if (res != 0) {
             }
         },
         error: function () {
