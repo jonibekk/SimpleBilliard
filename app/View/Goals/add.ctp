@@ -12,6 +12,7 @@
  * @var                        $goal_end_date_format
  * @var                        $goal_start_date_limit_format
  * @var                        $goal_end_date_limit_format
+ * @var                        $purpose_count
  */
 $url = isset($this->request->data['Goal']['id']) ? ['goal_id' => $this->request->data['Goal']['id']] : [];
 
@@ -424,6 +425,9 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
 <?php $this->append('script') ?>
 <script type="text/javascript">
     $(document).ready(function () {
+        <?php if(viaIsSet($purpose_count) === 0):?>
+        $("#ExplainGoal").trigger('click');
+        <?php endif;?>
     });
     $('#AddGoalFormPurpose').bootstrapValidator({
         live: 'enabled',

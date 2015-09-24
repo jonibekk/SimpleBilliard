@@ -71,7 +71,7 @@
                     margin-top: 50px;
                 }
 
-                #js-left-side-container {
+                #jsLeftSideContainer {
                     top: 100px;
                 }
             }
@@ -81,9 +81,10 @@
                 $(function () {
                     $(window).scroll(function () {
                         if ($(this).scrollTop() > 1) {
-                            $("#js-left-side-container").stop().animate({"top": "60px"}, 200);
+                            $("#jsLeftSideContainer").stop().animate({"top": "60px"}, 200)
+                            var CircleListBody, scrH, varHeight, winH, winW;
                         } else {
-                            $("#js-left-side-container").stop().animate({"top": "100px"}, 100);
+                            $("#jsLeftSideContainer").stop().animate({"top": "100px"}, 100);
                         }
                     });
                 });

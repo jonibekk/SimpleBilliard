@@ -62,6 +62,11 @@ $(window).load(function () {
     setDefaultTab();
 });
 $(document).ready(function () {
+    $("a.youtube").YouTubeModal({autoplay: 0, width: 640, height: 360});
+    if(typeof cake.request_params.named.after_click !== 'undefined'){
+        $("#" + cake.request_params.named.after_click).trigger('click');
+    }
+
     //すべてのformで入力があった場合に行う処理
     $("select,input").change(function () {
         $(this).nextAll(".help-block" + ".text-danger").remove();
@@ -1503,11 +1508,6 @@ $(document).ready(function () {
         feedbackIcons: {},
         fields: {}
     });
-    $('#MessageDisplayForm').bootstrapValidator({
-        live: 'enabled',
-        feedbackIcons: {},
-        fields: {}
-    });
     $('#CommonActionDisplayForm').bootstrapValidator({
         live: 'enabled',
         feedbackIcons: {},
@@ -1559,6 +1559,51 @@ $(document).ready(function () {
                 return {
                     term: term, //search term
                     page_limit: 10 // page size
+                };
+            },
+            results: function (data, page) {
+                return {results: data.results};
+            }
+        },
+        formatSelection: format,
+        formatResult: format,
+        escapeMarkup: function (m) {
+            return m;
+        },
+        containerCssClass: "select2Member"
+    }).on('change', function () {
+        if ($(this).val() == '' || $('#CommonMessageBody').val() == '') {
+            $('#MessageSubmit').attr('disabled', 'disabled');
+        }
+        else {
+            $('#MessageSubmit').removeAttr('disabled');
+        }
+    });
+    $("#CommonMessageBody").keyup(function () {
+        if ($('#select2Member').val() == '' || $('#CommonMessageBody').val() == '') {
+            $('#MessageSubmit').attr('disabled', 'disabled');
+        }
+        else {
+            $('#MessageSubmit').removeAttr('disabled');
+        }
+    });
+
+
+    //noinspection JSUnusedLocalSymbols post_detail.Post.id
+    $('#selectOnlyMember').select2({
+        multiple: true,
+        minimumInputLength: 1,
+        placeholder: cake.message.notice.b,
+        ajax: {
+            url: cake.url.add_member_on_message,
+            dataType: 'json',
+            quietMillis: 100,
+            cache: true,
+            data: function (term, page) {
+                return {
+                    term: term, //search term
+                    page_limit: 10, // page size
+                    post_id: $('#post_messenger').val()
                 };
             },
             results: function (data, page) {

@@ -35,6 +35,7 @@ echo $this->Html->script('vendor/dropzone.js');
 echo $this->Html->script('vendor/jquery.flot.js');
 echo $this->Html->script('vendor/jquery.balanced-gallery.min');
 echo $this->Html->script('vendor/imagesloaded.pkgd.min');
+echo $this->Html->script('vendor/bootstrap.youtubepopup');
 echo $this->Html->script('vendor/require');
 echo $this->Html->script('gl_basic');
 echo $this->Html->script('goalous.min');
@@ -148,6 +149,7 @@ echo $this->Html->script('goalous.min');
             aj: "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_get_message_info'])?>/",
             ak: "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_put_message_read'])?>/",
             al: "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_get_message_list'])?>/",
+            add_member_on_message: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select_only_add_users'])?>",
             select2_secret_circle: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_secret_circles'])?>/",
             select2_circle_user: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_circles_users'])?>",
             select2_goals: "<?=$this->Html->url(['controller'=>'goals','action'=>'ajax_select2_goals'])?>",
