@@ -46,6 +46,8 @@ class GoalsController extends AppController
      */
     public function add()
     {
+        $purpose_count = $this->Goal->Purpose->getMyPurposeCount();
+        $this->set(compact('purpose_count'));
         $id = viaIsSet($this->request->params['named']['goal_id']);
         $purpose_id = viaIsSet($this->request->params['named']['purpose_id']);
         $this->layout = LAYOUT_ONE_COLUMN;
