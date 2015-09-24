@@ -60,7 +60,7 @@ class NotificationsController extends AppController
     {
         $this->_ajaxPreProcess();
 
-        // URL のパラメータとセッションのチームIDが同じ場合にのみデータを返す
+        // URLパラメータとセッションのチームIDが違う場合はエラーにする
         if ($this->Session->read('current_team_id') != $this->request->params['named']['team_id']) {
             return $this->_ajaxGetResponse(['error' => 'invalid_team_id']);
         }
@@ -79,7 +79,7 @@ class NotificationsController extends AppController
     {
        $this->_ajaxPreProcess();
 
-        // URL のパラメータとセッションのチームIDが同じ場合にのみデータを返す
+        // URLパラメータとセッションのチームIDが違う場合はエラーにする
         if ($this->Session->read('current_team_id') != $this->request->params['named']['team_id']) {
             return $this->_ajaxGetResponse(['error' => 'invalid_team_id']);
         }
