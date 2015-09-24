@@ -104,7 +104,9 @@
   }
 
   function setModalBody(content) {
-    $YouTubeModalBody.html(content);
+      setTimeout(function(){
+          $YouTubeModalBody.html(content);
+      },500);
   }
 
   function resetModalBody() {
