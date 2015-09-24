@@ -128,6 +128,11 @@
                 </a>
             </li>
             <li>
+                <a href="#" class="youtube" rel="_J_wKHgKWLg" id="ExplainGoal">
+                    <?= __d('gl', 'ゴールについて') ?>
+                </a>
+            </li>
+            <li>
                 <?php if (isset($unapproved_cnt) === true && $unapproved_cnt > 0) { ?>
                     <div class="btn btn-danger btn-xs sub_cnt_alert">
                         <?php echo $unapproved_cnt; ?>

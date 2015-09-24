@@ -80,4 +80,20 @@ class Purpose extends AppModel
         return $res;
     }
 
+    function getMyPurposeCount($user_id = null, $start_date = null, $end_date = null)
+    {
+        $user_id = $user_id ? $user_id : $this->my_uid;
+        $start_date = $start_date ? $start_date : $this->Team->getCurrentTermStartDate();
+        $end_date = $end_date ? $end_date : $this->Team->getCurrentTermEndDate();
+        $options = [
+            'conditions' => [
+                'user_id'    => $user_id,
+                'created >=' => $start_date,
+                'created <=' => $end_date,
+            ]
+        ];
+        $res = $this->find('count', $options);
+        return $res;
+    }
+
 }

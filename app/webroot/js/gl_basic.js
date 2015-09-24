@@ -62,6 +62,10 @@ $(window).load(function () {
     setDefaultTab();
 });
 $(document).ready(function () {
+    $("a.youtube").YouTubeModal({autoplay: 0, width: 640, height: 360});
+    if(typeof cake.request_params.named.after_click !== 'undefined'){
+        $("#" + cake.request_params.named.after_click).trigger('click');
+    }
 
     //すべてのformで入力があった場合に行う処理
     $("select,input").change(function () {
@@ -1599,7 +1603,7 @@ $(document).ready(function () {
                 return {
                     term: term, //search term
                     page_limit: 10, // page size
-                    post_id:$('#post_messenger').val()
+                    post_id: $('#post_messenger').val()
                 };
             },
             results: function (data, page) {

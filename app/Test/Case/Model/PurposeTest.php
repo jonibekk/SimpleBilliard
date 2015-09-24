@@ -81,6 +81,16 @@ class PurposeTest extends CakeTestCase
         $this->assertTrue(!empty($res));
     }
 
+    function testGetMyPurposeCount()
+    {
+        $this->_setDefault();
+        $data = ['Purpose' => ['name' => 'test']];
+        $this->Purpose->deleteAll(['Purpose.user_id' => $this->Purpose->my_uid]);
+        $this->Purpose->add($data);
+        $res = $this->Purpose->getMyPurposeCount(null, 1, 100000000000);
+        $this->assertEquals(1, $res);
+    }
+
     function _setDefault()
     {
         $this->Purpose->my_uid = 1;
