@@ -79,6 +79,5 @@ switch ($location_type) {
         </div>
     </a>
 </li>
-<li class="divider notify-divider"></li>
 
 <!-- END app/View/Elements/Notification/notify_item.ctp -->

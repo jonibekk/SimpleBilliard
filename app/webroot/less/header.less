@@ -165,6 +165,11 @@
   padding: 0;
 }
 
+.header-nav-notify-contents-scrolling {
+  overflow: hidden;
+  width: 280px;
+}
+
 .header-nav-notify-contents-wrap {
   .frame-arrow-icon (36px);
   top: 42px;
@@ -213,10 +218,6 @@
 .team-members-card-function-box {
   display: inline-block;
   vertical-align: middle;
-}
-
-.notify-card-list {
-  line-height: 1.4;
 }
 
 // sp feed alt
@@ -289,4 +290,28 @@
   &:hover {
     color: #fff;
   }
+}
+
+.header-nav-message-contents {
+  margin: 0;
+  padding: 0 17px 0 0;
+  max-height: 360px;
+  white-space: normal;
+  width: 297px;
+  overflow-y: scroll;
+  text-overflow: ellipsis;
+  box-shadow: none;
+}
+
+.header-nav-message-contents-scrolling {
+  overflow: hidden;
+  width: 280px;
+}
+
+.message-all-view-link {
+  .link;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  border-top: 1px solid @lightGray;
 }
