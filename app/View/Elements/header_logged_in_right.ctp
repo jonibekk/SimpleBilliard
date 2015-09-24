@@ -123,8 +123,8 @@
                 </a>
             </li>
             <li>
-                <a href="#" class="youtube" rel="ZIr0Za55OEI">
-                    <?= __d('gl', 'youtube') ?>
+                <a href="#" class="youtube" rel="_J_wKHgKWLg">
+                    <?= __d('gl', 'ゴールの説明') ?>
                 </a>
             </li>
             <li>
