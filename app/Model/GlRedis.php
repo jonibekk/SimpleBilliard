@@ -881,7 +881,7 @@ class GlRedis extends AppModel
         $key = $this->getKeyName(self::KEY_TYPE_TEAM_INSIGHT, $team_id, null, null, null, null, null, null, null,
                                   $timezone, $start_date, $end_date);
         $this->Db->set($key, json_encode($insight));
-        return $this->Db->setTimeout($key, MONTH);
+        return $this->Db->setTimeout($key, WEEK);
     }
 
     /**
@@ -920,7 +920,7 @@ class GlRedis extends AppModel
         $key = $this->getKeyName(self::KEY_TYPE_GROUP_INSIGHT, $team_id, null, null, null, null, null, null, null,
                                  $timezone, $start_date, $end_date, $group_id);
         $this->Db->set($key, json_encode($insight));
-        return $this->Db->setTimeout($key, MONTH);
+        return $this->Db->setTimeout($key, WEEK);
 
     }
 
@@ -960,7 +960,7 @@ class GlRedis extends AppModel
         $key = $this->getKeyName(self::KEY_TYPE_CIRCLE_INSIGHT, $team_id, null, null, null, null, null, null, null,
                                  $timezone, $start_date, $end_date);
         $this->Db->set($key, json_encode($insight));
-        return $this->Db->setTimeout($key, MONTH);
+        return $this->Db->setTimeout($key, WEEK);
     }
 
     /**
@@ -999,7 +999,7 @@ class GlRedis extends AppModel
         $key = $this->getKeyName(self::KEY_TYPE_TEAM_RANKING, $team_id, null, null, null, null, null, null, null,
                                  $timezone, $start_date, $end_date);
         $this->Db->hSet($key, $type, json_encode($ranking));
-        return $this->Db->setTimeout($key, MONTH);
+        return $this->Db->setTimeout($key, WEEK);
     }
 
     /**
@@ -1040,7 +1040,7 @@ class GlRedis extends AppModel
         $key = $this->getKeyName(self::KEY_TYPE_GROUP_RANKING, $team_id, null, null, null, null, null, null, null,
                                  $timezone, $start_date, $end_date, $group_id);
         $this->Db->hSet($key, $type, json_encode($ranking));
-        return $this->Db->setTimeout($key, MONTH);
+        return $this->Db->setTimeout($key, WEEK);
 
     }
 
