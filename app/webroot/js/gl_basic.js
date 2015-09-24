@@ -62,7 +62,11 @@ $(window).load(function () {
     setDefaultTab();
 });
 $(document).ready(function () {
-    $("a.youtube").YouTubeModal({autoplay: 0, width: 600, height: 445});
+    $("a.youtube").YouTubeModal({autoplay: 0, width: 640, height: 360});
+    if(typeof cake.request_params.named.after_click !== 'undefined'){
+        $("#" + cake.request_params.named.after_click).trigger('click');
+    }
+
     //すべてのformで入力があった場合に行う処理
     $("select,input").change(function () {
         $(this).nextAll(".help-block" + ".text-danger").remove();
