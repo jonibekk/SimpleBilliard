@@ -15,7 +15,6 @@ class GoalTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
-        'app.approval_history',
         'app.action_result',
         'app.evaluation',
         'app.evaluate_term',
@@ -26,30 +25,7 @@ class GoalTest extends CakeTestCase
         'app.follower',
         'app.user',
         'app.team',
-        'app.badge',
-        'app.comment_like',
-        'app.comment',
-        'app.post',
-        'app.post_share_user',
-        'app.post_share_circle',
-        'app.circle',
-        'app.circle_member',
-        'app.post_like',
-        'app.post_read',
-        'app.comment_mention',
-        'app.given_badge',
-        'app.post_mention',
-        'app.comment_read',
-        'app.group',
         'app.team_member',
-        'app.job_category',
-        'app.invite',
-
-        'app.thread',
-        'app.message',
-        'app.email',
-        'app.notify_setting',
-        'app.oauth_token',
         'app.local_name',
         'app.goal_category'
     );
@@ -666,5 +642,19 @@ class GoalTest extends CakeTestCase
         $this->assertArrayHasKey('id', $goals['results'][0]);
         $this->assertArrayHasKey('text', $goals['results'][0]);
         $this->assertArrayHasKey('image', $goals['results'][0]);
+    }
+
+    function testGetGoalsWithUser()
+    {
+        $this->setDefault();
+        $goals = $this->Goal->getGoalsWithUser(1);
+        $this->assertEquals(1, $goals[0]['Goal']['id']);
+        $this->assertEquals(1, $goals[0]['User']['id']);
+
+        $goals = $this->Goal->getGoalsWithUser([1, 7]);
+        $this->assertEquals(1, $goals[0]['Goal']['id']);
+        $this->assertEquals(1, $goals[0]['User']['id']);
+        $this->assertEquals(7, $goals[1]['Goal']['id']);
+        $this->assertEquals(2, $goals[1]['User']['id']);
     }
 }
