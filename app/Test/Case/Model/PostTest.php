@@ -999,6 +999,29 @@ class PostTest extends CakeTestCase
         $this->assertNotEmpty($this->Post->getPhotoPath($res));
     }
 
+    function testGetPostsById()
+    {
+        $this->_setDefault();
+        $posts = $this->Post->getPostsById([1]);
+        $this->assertEquals(1, $posts[0]['Post']['id']);
+        $posts = $this->Post->getPostsById([1, 2]);
+        $this->assertEquals(1, $posts[0]['Post']['id']);
+        $this->assertEquals(2, $posts[1]['Post']['id']);
+        $posts = $this->Post->getPostsById([1, 8], ['include_action' => true]);
+        $this->assertEquals(1, $posts[0]['Post']['id']);
+        $this->assertEquals(null, $posts[0]['ActionResult']['id']);
+        $this->assertEquals(8, $posts[1]['Post']['id']);
+        $this->assertEquals(1, $posts[1]['ActionResult']['id']);
+        $posts = $this->Post->getPostsById([1, 8], ['include_action' => true, 'include_user' => true]);
+        $this->assertEquals(1, $posts[0]['Post']['id']);
+        $this->assertEquals(null, $posts[0]['ActionResult']['id']);
+        $this->assertEquals(2, $posts[0]['User']['id']);
+        $this->assertEquals(8, $posts[1]['Post']['id']);
+        $this->assertEquals(1, $posts[1]['ActionResult']['id']);
+        $this->assertEquals(1, $posts[1]['User']['id']);
+
+    }
+
     function _setDefault()
     {
         $uid = '1';

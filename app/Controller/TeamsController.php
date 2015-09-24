@@ -1247,44 +1247,40 @@ class TeamsController extends AppController
                 case 'action_goal_ranking':
                     $rankings = $this->_getGoalRankingData($start_date, $end_date, $timezone, $group_id);
                     $ranking = $rankings[$type];
+                    foreach ($ranking as $k => $v) {
+                        $ranking[$k] = ['count' => $v];
+                    }
 
                     // ゴール情報取得
                     $goal_ids = array_keys($rankings['action_goal_ranking']);
-                    $text_list = $this->Goal->getGoalNameList($goal_ids);
-                    $this->set('text_list', $text_list);
-
-                    // リンク
-                    $url_list = [];
-                    foreach ($goal_ids as $goal_id) {
-                        $url_list[$goal_id] = Router::url(['controller' => 'goals',
-                                                           'action'     => 'view_info',
-                                                           'goal_id'    => $goal_id]);
+                    $goals = $this->Goal->getGoalsWithUser($goal_ids);
+                    foreach ($goals as $goal) {
+                        $ranking[$goal['Goal']['id']]['text'] = $goal['Goal']['name'];
+                        $ranking[$goal['Goal']['id']]['User'] = $goal['User'];
+                        $ranking[$goal['Goal']['id']]['url'] = Router::url(['controller' => 'goals',
+                                                                            'action'     => 'view_info',
+                                                                            'goal_id'    => $goal['Goal']['id']]);
                     }
-                    $this->set('url_list', $url_list);
                     break;
 
                 case 'action_user_ranking':
                 case 'post_user_ranking':
                     $rankings = $this->_getUserRankingData($start_date, $end_date, $timezone, $group_id);
                     $ranking = $rankings[$type];
+                    foreach ($ranking as $k => $v) {
+                        $ranking[$k] = ['count' => $v];
+                    }
 
                     // ユーザーデータ取得
                     $user_ids = array_keys($ranking);
-                    $text_list = [];
                     $users = $this->User->getUsersProf($user_ids);
                     foreach ($users as $user) {
-                        $text_list[$user['User']['id']] = $user['User']['display_username'];
+                        $ranking[$user['User']['id']]['text'] = $user['User']['display_username'];
+                        $ranking[$user['User']['id']]['User'] = $user['User'];
+                        $ranking[$user['User']['id']]['url'] = Router::url(['controller' => 'users',
+                                                                            'action'     => 'view_goals',
+                                                                            'user_id'    => $user['User']['id']]);
                     }
-                    $this->set('text_list', $text_list);
-
-                    // リンク
-                    $url_list = [];
-                    foreach ($user_ids as $user_id) {
-                        $url_list[$user_id] = Router::url(['controller' => 'users',
-                                                           'action'     => 'view_goals',
-                                                           'user_id'    => $user_id]);
-                    }
-                    $this->set('url_list', $url_list);
                     break;
 
                 case 'post_like_ranking':
@@ -1293,25 +1289,21 @@ class TeamsController extends AppController
                 case 'action_comment_ranking':
                     $rankings = $this->_getPostRankingData($start_date, $end_date, $timezone, $group_id);
                     $ranking = $rankings[$type];
+                    foreach ($ranking as $k => $v) {
+                        $ranking[$k] = ['count' => $v];
+                    }
 
                     // 投稿情報取得
                     $post_ids = array_keys($ranking);
-                    $posts = $this->Post->getBodyById($post_ids, ['include_action' => true]);
-                    $text_list = [];
-                    foreach ($posts as $v) {
-                        $text_list[$v['Post']['id']] = $v['ActionResult']['id'] ?
-                            $v['ActionResult']['name'] : $v['Post']['body'];
+                    $posts = $this->Post->getPostsById($post_ids, ['include_action' => true, 'include_user' => true]);
+                    foreach ($posts as $post) {
+                        $ranking[$post['Post']['id']]['text'] = $post['ActionResult']['id'] ?
+                            $post['ActionResult']['name'] : $post['Post']['body'];
+                        $ranking[$post['Post']['id']]['User'] = $post['User'];
+                        $ranking[$post['Post']['id']]['url'] = Router::url(['controller' => 'posts',
+                                                                            'action'     => 'feed',
+                                                                            'post_id'    => $post['Post']['id']]);
                     }
-                    $this->set('text_list', $text_list);
-
-                    // リンク
-                    $url_list = [];
-                    foreach ($post_ids as $post_id) {
-                        $url_list[$post_id] = Router::url(['controller' => 'posts',
-                                                           'action'     => 'feed',
-                                                           'post_id'    => $post_id]);
-                    }
-                    $this->set('url_list', $url_list);
                     break;
             }
             $this->set('ranking', $ranking);

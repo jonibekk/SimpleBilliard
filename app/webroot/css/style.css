@@ -3267,6 +3267,34 @@ Temporary Properties - YOU MUST FIX
     background-color:#f5f5f5;
 }
 
+.insight-ranking-table-header th:nth-child(1) {
+    text-align:center;
+    width: 40px;
+}
+.insight-ranking-table-header th:nth-child(2) {
+    text-align:center;
+    width: 50px;
+}
+
+.insight-ranking-table-header th:nth-last-child(1) {
+    text-align:center;
+    width: 70px;
+}
+
+.insight-ranking-table-row td:nth-child(1) {
+    text-align:center;
+}
+.insight-ranking-table-row td:nth-child(2) {
+    text-align:center;
+}
+
+.insight-ranking-table-row td:nth-last-child(1) {
+    text-align:right;
+}
+
+
+
+
 .insight-graph-container {
     height: 100px;
 }
