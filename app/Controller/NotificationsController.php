@@ -59,6 +59,12 @@ class NotificationsController extends AppController
     public function ajax_get_new_notify_count()
     {
         $this->_ajaxPreProcess();
+
+        // URLパラメータとセッションのチームIDが違う場合はエラーにする
+        if ($this->Session->read('current_team_id') != $this->request->params['named']['team_id']) {
+            return $this->_ajaxGetResponse(['error' => 'invalid_team_id']);
+        }
+
         $notify_count = 0;
         if ($this->Auth->user('id')) {
             $notify_count = $this->NotifyBiz->getCountNewNotification();
@@ -72,6 +78,12 @@ class NotificationsController extends AppController
     public function ajax_get_new_message_notify_count()
     {
        $this->_ajaxPreProcess();
+
+        // URLパラメータとセッションのチームIDが違う場合はエラーにする
+        if ($this->Session->read('current_team_id') != $this->request->params['named']['team_id']) {
+            return $this->_ajaxGetResponse(['error' => 'invalid_team_id']);
+        }
+
         $notify_count = 0;
         if ($this->Auth->user('id')) {
             $notify_count = $this->NotifyBiz->getCountNewMessageNotification();

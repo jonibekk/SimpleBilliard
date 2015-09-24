@@ -8,15 +8,15 @@
     <!-- START app/View/Teams/insight_circle_result.ctp -->
 
     <table class="table">
-        <tr class="insight-table-header">
-            <th><?= __d('gl', 'サークル名') ?></th>
-            <th><?= __d('gl', 'メンバー') ?></th>
-            <th><?= __d('gl', '投稿') ?></th>
-            <th><?= __d('gl', 'リーチ') ?></th>
-            <th><?= __d('gl', 'エンゲージメント') ?></th>
+        <tr class="insight-table-header insight-circle-table-header">
+            <th><i class="fa fa-circle-o" data-toggle="tooltip" title="<?= __d('gl', 'サークル名') ?>"></i></th>
+            <th><i class="fa fa-user" data-toggle="tooltip" title="<?= __d('gl', 'メンバー') ?>"></i></th>
+            <th><i class="fa fa-comment-o" data-toggle="tooltip" title="<?= __d('gl', '投稿') ?>"></i></th>
+            <th><i class="fa fa-check" data-toggle="tooltip" title="<?= __d('gl', 'リーチ') ?>"></i></th>
+            <th><i class="fa fa-heart-o" data-toggle="tooltip" title="<?= __d('gl', 'エンゲージメント') ?>"></i></th>
         </tr>
         <?php foreach ($circle_insights as $circle): ?>
-            <tr>
+            <tr class="insight-circle-table-row">
                 <td><?= h($circle['name']) ?></td>
                 <?php foreach (['user_count', 'post_count', 'post_read_count', 'engage_percent'] as $key): ?>
                     <td>

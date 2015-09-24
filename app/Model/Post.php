@@ -1457,13 +1457,13 @@ class Post extends AppModel
         return $res ? $res[0]['sum_like'] : 0;
     }
 
-    public function getMessageList($user_id, $limit=null, $page=null)
+    public function getMessageList($user_id, $limit = null, $page = null)
     {
         $options = [
             'conditions' => [
                 'team_id' => $this->current_team_id,
                 'type'    => self::TYPE_MESSAGE,
-                'OR' => [
+                'OR'      => [
                     'user_id' => $user_id,
                 ],
             ],
@@ -1710,31 +1710,31 @@ class Post extends AppModel
     }
 
     /**
-     * 投稿内容のリストを返す
+     * ID指定で複数の投稿を返す
      *
-     * @param       $post_id
+     * @param array $post_ids
      * @param array $params
      *
      * @return array|null
      */
-    public function getBodyById($post_id, $params = [])
+    public function getPostsById($post_ids, $params = [])
     {
-        $params = array_merge(['include_action' => null], $params);
+        $params = array_merge(['include_action' => null,
+                               'include_user'   => null],
+                              $params);
 
         $options = [
-            'fields'     => [
-                'Post.id',
-                'Post.body',
-            ],
             'conditions' => [
                 'Post.team_id' => $this->current_team_id,
-                'Post.id'      => $post_id,
+                'Post.id'      => $post_ids,
             ],
             'contain'    => []
         ];
         if ($params['include_action']) {
             $options['contain'][] = 'ActionResult';
-            $options['fields'][] = 'ActionResult.name';
+        }
+        if ($params['include_user']) {
+            $options['contain'][] = 'User';
         }
         return $this->find('all', $options);
     }
