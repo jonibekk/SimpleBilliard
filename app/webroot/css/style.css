@@ -2435,6 +2435,11 @@ textarea.comment-post-form {
         margin-left: 20px;
     }
 
+    .nav > li > a.active {
+        text-decoration: none;
+        background-color: #ddd;
+    }
+
     /*
         .nav > li > a {
             padding: 9px 0 0;
