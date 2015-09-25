@@ -64,7 +64,7 @@ class TeamsController extends AppController
 
     public function settings()
     {
-        $this->layout = LAYOUT_SETTING;
+        $this->layout = LAYOUT_TWO_COLUMN;
         $team_id = $this->Session->read('current_team_id');
         try {
             $this->Team->TeamMember->adminCheck($team_id, $this->Auth->user('id'));
@@ -955,7 +955,8 @@ class TeamsController extends AppController
      */
     public function insight()
     {
-        $this->layout = LAYOUT_ONE_COLUMN;
+        $this->layout = LAYOUT_TWO_COLUMN;
+        $this->set('current_global_menu', 'team');
 
         // システム管理者のためのセットアップ
         $this->_setupForSystemAdminInsight();
@@ -1082,7 +1083,8 @@ class TeamsController extends AppController
      */
     public function insight_circle()
     {
-        $this->layout = LAYOUT_ONE_COLUMN;
+        $this->layout = LAYOUT_TWO_COLUMN;
+        $this->set('current_global_menu', 'team');
 
         // システム管理者のためのセットアップ
         $this->_setupForSystemAdminInsight();
@@ -1191,7 +1193,8 @@ class TeamsController extends AppController
 
     public function insight_ranking()
     {
-        $this->layout = LAYOUT_ONE_COLUMN;
+        $this->layout = LAYOUT_TWO_COLUMN;
+        $this->set('current_global_menu', 'team');
 
         // システム管理者のためのセットアップ
         $this->_setupForSystemAdminInsight();
