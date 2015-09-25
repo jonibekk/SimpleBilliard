@@ -20,10 +20,10 @@
 <?= $this->element('header_logged_in') ?>
 <div id="container" class="container">
     <div class="row">
-        <div class="col-xs-3 hidden-xxs">
+        <div class="col-xs-3 <?php if (isset($hidden_sidebar_xxs) && $hidden_sidebar_xxs): ?>hidden-xxs<?php endif ?>">
             <?= $this->fetch('sidebar') ?>
         </div>
-        <div class="col-xs-9 col-xxs-12 parent-flash" role="main">
+        <div class="col-xs-9 parent-flash <?php if (isset($hidden_sidebar_xxs) && $hidden_sidebar_xxs): ?>col-xxs-12<?php endif ?>" role="main">
             <?= $this->Session->flash(); ?>
             <?= $this->fetch('content'); ?>
         </div>

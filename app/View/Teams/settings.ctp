@@ -9,6 +9,8 @@
  * @var                    $team_id
  * @var                    $unvalued
  */
+// two_column レイアウトで、xxs サイズの時にサイドバーを隠す
+$this->set('hidden_sidebar_xxs', true);
 ?>
 <!-- START app/View/Teams/settings.ctp -->
 <?php $this->start('sidebar') ?>

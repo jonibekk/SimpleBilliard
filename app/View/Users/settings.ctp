@@ -7,6 +7,9 @@
  *
  * @var CodeCompletionView $this
  */
+
+// two_column レイアウトで、xxs サイズの時にサイドバーを隠す
+$this->set('hidden_sidebar_xxs', true);
 ?>
 <!-- START app/View/Users/settings.ctp -->
 <?php $this->start('sidebar') ?>
