@@ -161,6 +161,15 @@ class AppController extends Controller
                 $active_team_list = $this->User->TeamMember->getActiveTeamList($login_uid);
                 $set_default_team_id = !empty($active_team_list) ? key($active_team_list) : null;
 
+                // アクティブチームリストに current_team_id が入っていない場合はチームを切り替えてリダイレクト
+                // （チームが削除された場合）
+                if ($this->current_team_id && !isset($active_team_list[$this->current_team_id])) {
+                    $this->Session->write('current_team_id', null);
+                    $this->Pnotify->outError(__d('gl', "ログイン中のチームが削除されたため、ログアウトされました。"));
+                    $this->Auth->logout();
+                    return;
+                }
+
                 //デフォルトチームが設定されていない場合はアクティブなチームでカレントチームとデフォルトチームを書き換え
                 if (!$this->Auth->user('default_team_id')) {
                     $this->User->updateDefaultTeam($set_default_team_id, true, $login_uid);

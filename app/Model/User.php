@@ -1134,4 +1134,16 @@ class User extends AppModel
         }
         return $keyword_conditions;
     }
+
+    /**
+     * default_team_id == $team_id のレコードの default_team_id を null に更新する
+     *
+     * @param $team_id
+     *
+     * @return bool
+     */
+    public function clearDefaultTeamId($team_id)
+    {
+        return $this->updateAll(['default_team_id' => null], ['default_team_id' => $team_id]);
+    }
 }
