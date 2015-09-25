@@ -82,15 +82,28 @@ $(document).ready(function () {
             $('#SubHeaderMenuGoal').removeClass('sp-feed-active');
             $(this).addClass('sp-feed-active');
             //表示切り換え
-            $('[role="goal_area"]').addClass('visible-md visible-lg');
-            $('[role="main"]').removeClass('visible-md visible-lg');
+            if (cake.is_mb_app) {
+                $('[role="goal_area"]').addClass('hidden');
+                $('[role="main"]').removeClass('hidden');
+            }
+            else {
+                $('[role="goal_area"]').addClass('visible-md visible-lg');
+                $('[role="main"]').removeClass('visible-md visible-lg');
+            }
         }
         else if ($(this).attr('id') == 'SubHeaderMenuGoal') {
             $('#SubHeaderMenuFeed').removeClass('sp-feed-active');
             $(this).addClass('sp-feed-active');
             //表示切り換え
-            $('[role="main"]').addClass('visible-md visible-lg');
-            $('[role="goal_area"]').removeClass('visible-md visible-lg');
+            if (cake.is_mb_app) {
+                $('[role="main"]').addClass('hidden');
+                $('[role="goal_area"]').removeClass('hidden');
+            }
+            else {
+                $('[role="main"]').addClass('visible-md visible-lg');
+                $('[role="goal_area"]').removeClass('visible-md visible-lg');
+            }
+
         }
         else {
             //noinspection UnnecessaryReturnStatementJS
@@ -1147,7 +1160,11 @@ $(function () {
         } else {
             if (showNavFlag) {
                 showNavFlag = false;
-                subNavbar.stop().animate({"top": "0"}, 400);
+                var scroll_offset = 0;
+                if (cake.is_mb_app) {
+                    scroll_offset = -10;
+                }
+                subNavbar.stop().animate({"top": scroll_offset}, 400);
             }
         }
     });
@@ -3364,7 +3381,7 @@ $(document).ready(function () {
         thumbnailWidth: null,
         thumbnailHeight: 240,
         // ファイルがドロップされた時の処理
-        drop: function(e) {
+        drop: function (e) {
             $uploadFileForm.hide();
         },
         // ファイルがドロップされた後

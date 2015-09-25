@@ -31,20 +31,20 @@ else {
 } ?>
 
 <div id="container" class="container">
-    <div class="col-md-2 col-sm-4 col-xs-4 hidden-xxs layout-sub">
+    <div class="<?= $is_mb_app ? "hidden" : "col-md-2 col-sm-4 col-xs-4 hidden-xxs" ?> layout-sub">
         <div class="left-side-container" id="js-left-side-container">
             <?= $this->element('dashboard_profile_card') ?>
             <?= $this->element('circle_list') ?>
         </div>
     </div>
-    <div class="col-md-6 col-xs-8 col-xxs-12 layout-main" role="main">
+    <div class="<?= $is_mb_app ? "col-md-12" : "col-md-6 col-xs-8 col-xxs-12" ?> layout-main" role="main">
         <?= $this->Session->flash(); ?>
         <!-- Remark -->
         <?= $this->fetch('content'); ?>
         <!-- /Remark -->
     </div>
     <div id="jsRightSideContainerWrap"
-         class="right-side-container-wrap col-md-4 visible-md visible-lg col-xs-8 col-xxs-12 layout-goal"
+         class="right-side-container-wrap <?= $is_mb_app ? "col-md-12" : "col-md-4 visible-md visible-lg col-xs-8 col-xxs-12" ?> layout-goal"
          role="goal_area">
         <?= $this->element('my_goals_area') ?>
     </div>
