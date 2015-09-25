@@ -118,7 +118,7 @@ class AppController extends Controller
      */
     public $is_mb_app = false;
     /**
-     * スマホアプリのUA
+     * スマホアプリのUA定義
      * defined user agents of mobile application
      *
      * @var array
@@ -372,6 +372,7 @@ class AppController extends Controller
         if (in_array(CakeRequest::header('User-Agent'), $this->mobile_app_uas)) {
             $this->is_mb_app = true;
         }
+        //TODO テスト目的。最終的に削除
         $this->is_mb_app = true;
         $this->set('is_mb_app', $this->is_mb_app);
     }
