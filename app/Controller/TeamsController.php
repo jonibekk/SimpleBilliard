@@ -1243,6 +1243,7 @@ class TeamsController extends AppController
         if ($start_date && $end_date && $type && is_numeric($timezone)) {
             $this->set('start_date', $start_date);
             $this->set('end_date', $end_date);
+            $this->set('type', $type);
 
             // ランキングデータ取得
             $ranking = [];
@@ -1259,7 +1260,7 @@ class TeamsController extends AppController
                     $goals = $this->Goal->getGoalsWithUser($goal_ids);
                     foreach ($goals as $goal) {
                         $ranking[$goal['Goal']['id']]['text'] = $goal['Goal']['name'];
-                        $ranking[$goal['Goal']['id']]['User'] = $goal['User'];
+                        $ranking[$goal['Goal']['id']]['Goal'] = $goal['Goal'];
                         $ranking[$goal['Goal']['id']]['url'] = Router::url(['controller' => 'goals',
                                                                             'action'     => 'view_info',
                                                                             'goal_id'    => $goal['Goal']['id']]);
