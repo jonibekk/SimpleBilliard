@@ -161,7 +161,7 @@ class AppController extends Controller
                 $active_team_list = $this->User->TeamMember->getActiveTeamList($login_uid);
                 $set_default_team_id = !empty($active_team_list) ? key($active_team_list) : null;
 
-                // アクティブチームリストに current_team_id が入っていない場合はチームを切り替えてリダイレクト
+                // アクティブチームリストに current_team_id が入っていない場合はログアウト
                 // （チームが削除された場合）
                 if ($this->current_team_id && !isset($active_team_list[$this->current_team_id])) {
                     $this->Session->write('current_team_id', null);
