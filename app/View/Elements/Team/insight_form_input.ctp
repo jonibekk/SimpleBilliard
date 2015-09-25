@@ -3,10 +3,12 @@
  * @var $team_list
  * @var $prev_week
  * @var $prev_month
+ * @var $current_term
  * @var $group_list
  */
 $use = isset($use) ? $use : [];
 ?>
+<!-- START app/View/Elements/Team/insight_form_input.ctp -->
 <?php if (in_array('team', $use)): ?>
 <?php
 // システム管理者の場合
@@ -23,12 +25,15 @@ $use = isset($use) ? $use : [];
         'id'      => 'InsightInputDateRange',
         'type'    => 'select',
         'options' => [
-            'prev_week'  => __d('gl', '先週') . sprintf(" (%s - %s)",
-                                                      str_replace('-', '/', $prev_week['start']),
-                                                      str_replace('-', '/', $prev_week['end'])),
-            'prev_month' => __d('gl', '先月') . sprintf(" (%s - %s)",
-                                                      str_replace('-', '/', $prev_month['start']),
-                                                      str_replace('-', '/', $prev_month['end'])),
+            'prev_week'    => __d('gl', '先週') . sprintf(" (%s - %s)",
+                                                        str_replace('-', '/', $prev_week['start']),
+                                                        str_replace('-', '/', $prev_week['end'])),
+            'prev_month'   => __d('gl', '先月') . sprintf(" (%s - %s)",
+                                                        str_replace('-', '/', $prev_month['start']),
+                                                        str_replace('-', '/', $prev_month['end'])),
+            'current_term' => __d('gl', '今期') . sprintf(" (%s - %s)",
+                                                        str_replace('-', '/', $current_term['start']),
+                                                        str_replace('-', '/', $current_term['end'])),
         ]]) ?>
 <?php endif ?>
 
@@ -69,3 +74,4 @@ $use = isset($use) ? $use : [];
         ]])
     ?>
 <?php endif ?>
+<!-- END app/View/Elements/Team/insight_form_input.ctp -->

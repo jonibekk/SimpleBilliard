@@ -23,10 +23,11 @@
 */
 .header-nav-notify-contents {
   margin: 0;
-  padding: 0;
+  padding: 0 17px 0 0;
   max-height: 360px;
   white-space: normal;
-  overflow: hidden;
+  width: 297px;
+  overflow-y: scroll;
   text-overflow: ellipsis;
   box-shadow: none;
 }
@@ -56,6 +57,8 @@
   .link;
   height: 40px;
   line-height: 40px;
+  text-align: center;
+  border-top: 1px solid @lightGray;
 }
 .notify-card-read {
   background-color: @white;
@@ -63,10 +66,10 @@
 .notify-card-unread {
   background-color: @unreadRed;
 }
-.notify-divider {
-  .divider;
-  background-color: @lightGray;
-}
+// .notify-divider {
+//   .divider;
+//   background-color: @lightGray;
+// }
 /* notify-pageのスタイル */
 .panel-body-notify-page {
   padding: 0;
@@ -107,6 +110,11 @@
 .notify-card-list {
     clear: both;
     overflow:hidden;
+    line-height: 1.4;
+    border-top: 1px solid @lightGray;
+    &:first-child{
+      border-top: none;
+    }
 }
 
 .notify-dropdown-card {

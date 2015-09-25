@@ -11,15 +11,13 @@
     ?>
     <div>
         <?php
-        // グラフの横軸
-        $xaxis = [
-            '',
-            date('M. j', strtotime($insights[4]['start_date'])),
-            date('M. j', strtotime($insights[3]['start_date'])),
-            date('M. j', strtotime($insights[2]['start_date'])),
-            date('M. j', strtotime($insights[1]['start_date'])),
-            '',
-        ];
+        // グラフの横軸ラベル
+        // 最初と最後のラベルは空にする
+        $xaxis = [''];
+        for ($i = count($insights) - 2; $i > 0; $i--) {
+            $xaxis[] =  date('M. j', strtotime($insights[$i]['start_date']));
+        }
+        $xaxis[] = '';
         ?>
         <?= $this->element('Team/insight_item', [
             'item_id'           => 'UserCountItem',

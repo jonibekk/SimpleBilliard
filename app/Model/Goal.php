@@ -1051,6 +1051,25 @@ class Goal extends AppModel
     }
 
     /**
+     * $goal_id のゴール情報 + ユーザー情報を取得
+     *
+     * @param $goal_id
+     *
+     * @return array|null
+     */
+    function getGoalsWithUser($goal_id)
+    {
+        $options = [
+            'conditions' => [
+                'Goal.id'      => $goal_id,
+                'Goal.team_id' => $this->current_team_id,
+            ],
+            'contain' => ['User'],
+        ];
+        return $this->find('all', $options);
+    }
+
+    /**
      * 全てのゴール取得
      *
      * @param int   $limit

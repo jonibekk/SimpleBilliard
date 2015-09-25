@@ -963,14 +963,11 @@ class TeamsController extends AppController
         // デフォルトのタイムゾーン（日本時間）
         $timezone = 9;
 
-        // タイムゾーンを考慮した「本日」
-        $today = date('Y-m-d', time() + intval($timezone * HOUR));
-
-        // 「先週」と「先月」start_date, end_date
-        $prev_week = $this->Team->TeamInsight->getWeekRangeDate($today, ['offset' => -1]);
-        $prev_month = $this->Team->TeamInsight->getMonthRangeDate($today, ['offset' => -1]);
-        $this->set('prev_week', $prev_week);
-        $this->set('prev_month', $prev_month);
+        // 日付範囲
+        $date_info = $this->_getInsightDateInfo($timezone);
+        $this->set('prev_week', $date_info['prev_week']);
+        $this->set('prev_month', $date_info['prev_month']);
+        $this->set('current_term', $date_info['current_term']);
 
         // 全グループ
         $group_list = $this->Team->Group->getByAllName($this->current_team_id);
@@ -996,48 +993,61 @@ class TeamsController extends AppController
         // システム管理者のためのセットアップ
         $this->_setupForSystemAdminInsight();
 
-        // タイムゾーンを考慮した「本日」
-        $today = date('Y-m-d', time() + intval($timezone * HOUR));
-
-        // 「先週」と「先月」start_date, end_date
-        $prev_week = $this->Team->TeamInsight->getWeekRangeDate($today, ['offset' => -1]);
-        $prev_month = $this->Team->TeamInsight->getMonthRangeDate($today, ['offset' => -1]);
-        $this->set('prev_week', $prev_week);
-        $this->set('prev_month', $prev_month);
+        // 日付範囲
+        $date_info = $this->_getInsightDateInfo($timezone);
 
         // 集計 開始日付, 終了日付
-        // 「先週」か「先月」のみを受け付けるようにする
+        // 「先週」「先月」「今期」のみを受け付けるようにする
         $start_date = null;
         $end_date = null;
-        if ($date_range == 'prev_week') {
-            $start_date = $prev_week['start'];
-            $end_date = $prev_week['end'];
-        }
-        elseif ($date_range == 'prev_month') {
-            $start_date = $prev_month['start'];
-            $end_date = $prev_month['end'];
+        if (in_array($date_range, ['prev_week', 'prev_month', 'current_term'])) {
+            $start_date = $date_info[$date_range]['start'];
+            $end_date = $date_info[$date_range]['end'];
         }
 
         if ($start_date && $end_date && is_numeric($timezone)) {
             $this->set('start_date', $start_date);
             $this->set('end_date', $end_date);
 
-            // 先週〜６週間前までのデータ
+            // ６ 週/月/期 前までのデータ
             $insights = [];
             $target_start_date = $start_date;
             $target_end_date = $end_date;
-            for ($i = 0; $i < 6; $i++) {
-                // 指定範囲のデータ
-                $insights[] = $this->_getInsightData($target_start_date, $target_end_date, $timezone, $group_id);
-                if ($date_range == 'prev_week') {
-                    $target_week = $this->Team->TeamInsight->getWeekRangeDate($target_start_date, ['offset' => -1]);
-                    $target_start_date = $target_week['start'];
-                    $target_end_date = $target_week['end'];
+            // 「先週」か「先月」の場合
+            if ($date_range == 'prev_week' || $date_range == 'prev_month') {
+                for ($i = 0; $i < 6; $i++) {
+                    // 指定範囲のデータ
+                    $insights[] = $this->_getInsightData($target_start_date, $target_end_date, $timezone, $group_id);
+
+                    $next_target = null;
+                    if ($date_range == 'prev_week') {
+                        $next_target = $this->Team->TeamInsight->getWeekRangeDate($target_start_date, ['offset' => -1]);
+                    }
+                    elseif ($date_range == 'prev_month') {
+                        $next_target = $this->Team->TeamInsight->getMonthRangeDate($target_start_date,
+                                                                                   ['offset' => -1]);
+                    }
+                    $target_start_date = $next_target['start'];
+                    $target_end_date = $next_target['end'];
                 }
-                elseif ($date_range == 'prev_month') {
-                    $target_month = $this->Team->TeamInsight->getMonthRangeDate($target_start_date, ['offset' => -1]);
-                    $target_start_date = $target_month['start'];
-                    $target_end_date = $target_month['end'];
+            }
+            // 「今期」の場合
+            elseif ($date_range == 'current_term') {
+                $all_terms = $this->Team->EvaluateTerm->getAllTerm();
+                $current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
+                $skip = true;
+                foreach ($all_terms as $term_id => $v) {
+                    if ($skip && $term_id != $current_term_id) {
+                        continue;
+                    }
+                    $skip = false;
+                    $insights[] = $this->_getInsightData(
+                        date('Y-m-d', $v['start_date'] + $date_info['time_adjust']),
+                        date('Y-m-d', $v['end_date'] + $date_info['time_adjust']),
+                        $timezone, $group_id);
+                    if (count($insights) >= 6) {
+                        break;
+                    }
                 }
             }
 
@@ -1080,14 +1090,11 @@ class TeamsController extends AppController
         // デフォルトのタイムゾーン（日本時間）
         $timezone = 9;
 
-        // タイムゾーンを考慮した「本日」
-        $today = date('Y-m-d', time() + intval($timezone * HOUR));
-
-        // 「先週」と「先月」start_date, end_date
-        $prev_week = $this->Team->TeamInsight->getWeekRangeDate($today, ['offset' => -1]);
-        $prev_month = $this->Team->TeamInsight->getMonthRangeDate($today, ['offset' => -1]);
-        $this->set('prev_week', $prev_week);
-        $this->set('prev_month', $prev_month);
+        // 日付範囲
+        $date_info = $this->_getInsightDateInfo($timezone);
+        $this->set('prev_week', $date_info['prev_week']);
+        $this->set('prev_month', $date_info['prev_month']);
+        $this->set('current_term', $date_info['current_term']);
 
         // システム管理者のためのクリーンアップ
         $this->_cleanupForSystemAdminInsight();
@@ -1108,26 +1115,16 @@ class TeamsController extends AppController
         // システム管理者のためのセットアップ
         $this->_setupForSystemAdminInsight();
 
-        // タイムゾーンを考慮した「本日」
-        $today = date('Y-m-d', time() + intval($timezone * HOUR));
-
-        // 「先週」と「先月」start_date, end_date
-        $prev_week = $this->Team->TeamInsight->getWeekRangeDate($today, ['offset' => -1]);
-        $prev_month = $this->Team->TeamInsight->getMonthRangeDate($today, ['offset' => -1]);
-        $this->set('prev_week', $prev_week);
-        $this->set('prev_month', $prev_month);
+        // 日付範囲
+        $date_info = $this->_getInsightDateInfo($timezone);
 
         // 集計 開始日付, 終了日付
-        // 「先週」か「先月」のみを受け付けるようにする
+        // 「先週」「先月」「今期」のみを受け付けるようにする
         $start_date = null;
         $end_date = null;
-        if ($date_range == 'prev_week') {
-            $start_date = $prev_week['start'];
-            $end_date = $prev_week['end'];
-        }
-        elseif ($date_range == 'prev_month') {
-            $start_date = $prev_month['start'];
-            $end_date = $prev_month['end'];
+        if (in_array($date_range, ['prev_week', 'prev_month', 'current_term'])) {
+            $start_date = $date_info[$date_range]['start'];
+            $end_date = $date_info[$date_range]['end'];
         }
 
         if ($start_date && $end_date && is_numeric($timezone)) {
@@ -1137,16 +1134,26 @@ class TeamsController extends AppController
             // 指定範囲のデータ
             $circle_insights = $this->_getCircleInsightData($start_date, $end_date, $timezone);
 
-            // 指定範囲の１つ前の期間のデータ（先々週か先々月)
+            // 指定範囲の１つ前の期間のデータ（先々週 or 先々月 or 前期)
             $circle_insights2 = null;
+            $target_start_date = null;
+            $target_end_date = null;
             if ($date_range == 'prev_week') {
                 $prev_week2 = $this->Team->TeamInsight->getWeekRangeDate($start_date, ['offset' => -1]);
-                $circle_insights2 = $this->_getCircleInsightData($prev_week2['start'], $prev_week2['end'], $timezone);
+                $target_start_date = $prev_week2['start'];
+                $target_end_date = $prev_week2['end'];
             }
             elseif ($date_range == 'prev_month') {
                 $prev_month2 = $this->Team->TeamInsight->getMonthRangeDate($start_date, ['offset' => -1]);
-                $circle_insights2 = $this->_getCircleInsightData($prev_month2['start'], $prev_month2['end'], $timezone);
+                $target_start_date = $prev_month2['start'];
+                $target_end_date = $prev_month2['end'];
             }
+            elseif ($date_range == 'current_term') {
+                $prev_term = $this->Team->EvaluateTerm->getPreviousTerm();
+                $target_start_date = date('Y-m-d', $prev_term['start_date'] + $date_info['time_adjust']);
+                $target_end_date = date('Y-m-d', $prev_term['end_date'] + $date_info['time_adjust']);
+            }
+            $circle_insights2 = $this->_getCircleInsightData($target_start_date, $target_end_date, $timezone);
 
             $circle_list = $this->Team->Circle->getList();
             foreach ($circle_insights as $circle_id => $insight) {
@@ -1192,18 +1199,15 @@ class TeamsController extends AppController
         // デフォルトのタイムゾーン（日本時間）
         $timezone = 9;
 
-        // タイムゾーンを考慮した「本日」
-        $today = date('Y-m-d', time() + intval($timezone * HOUR));
+        // 日付範囲
+        $date_info = $this->_getInsightDateInfo($timezone);
+        $this->set('prev_week', $date_info['prev_week']);
+        $this->set('prev_month', $date_info['prev_month']);
+        $this->set('current_term', $date_info['current_term']);
 
         // 全グループ
         $group_list = $this->Team->Group->getByAllName($this->current_team_id);
         $this->set('group_list', $group_list);
-
-        // 「先週」と「先月」start_date, end_date
-        $prev_week = $this->Team->TeamInsight->getWeekRangeDate($today, ['offset' => -1]);
-        $prev_month = $this->Team->TeamInsight->getMonthRangeDate($today, ['offset' => -1]);
-        $this->set('prev_week', $prev_week);
-        $this->set('prev_month', $prev_month);
 
         // システム管理者のためのクリーンアップ
         $this->_cleanupForSystemAdminInsight();
@@ -1221,26 +1225,16 @@ class TeamsController extends AppController
         // システム管理者のためのセットアップ
         $this->_setupForSystemAdminInsight();
 
-        // タイムゾーンを考慮した「本日」
-        $today = date('Y-m-d', time() + intval($timezone * HOUR));
-
-        // 「先週」と「先月」start_date, end_date
-        $prev_week = $this->Team->TeamInsight->getWeekRangeDate($today, ['offset' => -1]);
-        $prev_month = $this->Team->TeamInsight->getMonthRangeDate($today, ['offset' => -1]);
-        $this->set('prev_week', $prev_week);
-        $this->set('prev_month', $prev_month);
+        // 日付範囲
+        $date_info = $this->_getInsightDateInfo($timezone);
 
         // 集計 開始日付, 終了日付
-        // 「先週」か「先月」のみを受け付けるようにする
+        // 「先週」「先月」「今期」のみを受け付けるようにする
         $start_date = null;
         $end_date = null;
-        if ($date_range == 'prev_week') {
-            $start_date = $prev_week['start'];
-            $end_date = $prev_week['end'];
-        }
-        elseif ($date_range == 'prev_month') {
-            $start_date = $prev_month['start'];
-            $end_date = $prev_month['end'];
+        if (in_array($date_range, ['prev_week', 'prev_month', 'current_term'])) {
+            $start_date = $date_info[$date_range]['start'];
+            $end_date = $date_info[$date_range]['end'];
         }
 
         if ($start_date && $end_date && $type && is_numeric($timezone)) {
@@ -1253,44 +1247,40 @@ class TeamsController extends AppController
                 case 'action_goal_ranking':
                     $rankings = $this->_getGoalRankingData($start_date, $end_date, $timezone, $group_id);
                     $ranking = $rankings[$type];
+                    foreach ($ranking as $k => $v) {
+                        $ranking[$k] = ['count' => $v];
+                    }
 
                     // ゴール情報取得
                     $goal_ids = array_keys($rankings['action_goal_ranking']);
-                    $text_list = $this->Goal->getGoalNameList($goal_ids);
-                    $this->set('text_list', $text_list);
-
-                    // リンク
-                    $url_list = [];
-                    foreach ($goal_ids as $goal_id) {
-                        $url_list[$goal_id] = Router::url(['controller' => 'goals',
-                                                           'action'     => 'view_info',
-                                                           'goal_id'    => $goal_id]);
+                    $goals = $this->Goal->getGoalsWithUser($goal_ids);
+                    foreach ($goals as $goal) {
+                        $ranking[$goal['Goal']['id']]['text'] = $goal['Goal']['name'];
+                        $ranking[$goal['Goal']['id']]['User'] = $goal['User'];
+                        $ranking[$goal['Goal']['id']]['url'] = Router::url(['controller' => 'goals',
+                                                                            'action'     => 'view_info',
+                                                                            'goal_id'    => $goal['Goal']['id']]);
                     }
-                    $this->set('url_list', $url_list);
                     break;
 
                 case 'action_user_ranking':
                 case 'post_user_ranking':
                     $rankings = $this->_getUserRankingData($start_date, $end_date, $timezone, $group_id);
                     $ranking = $rankings[$type];
+                    foreach ($ranking as $k => $v) {
+                        $ranking[$k] = ['count' => $v];
+                    }
 
                     // ユーザーデータ取得
                     $user_ids = array_keys($ranking);
-                    $text_list = [];
                     $users = $this->User->getUsersProf($user_ids);
                     foreach ($users as $user) {
-                        $text_list[$user['User']['id']] = $user['User']['display_username'];
+                        $ranking[$user['User']['id']]['text'] = $user['User']['display_username'];
+                        $ranking[$user['User']['id']]['User'] = $user['User'];
+                        $ranking[$user['User']['id']]['url'] = Router::url(['controller' => 'users',
+                                                                            'action'     => 'view_goals',
+                                                                            'user_id'    => $user['User']['id']]);
                     }
-                    $this->set('text_list', $text_list);
-
-                    // リンク
-                    $url_list = [];
-                    foreach ($user_ids as $user_id) {
-                        $url_list[$user_id] = Router::url(['controller' => 'users',
-                                                           'action'     => 'view_goals',
-                                                           'user_id'    => $user_id]);
-                    }
-                    $this->set('url_list', $url_list);
                     break;
 
                 case 'post_like_ranking':
@@ -1299,25 +1289,21 @@ class TeamsController extends AppController
                 case 'action_comment_ranking':
                     $rankings = $this->_getPostRankingData($start_date, $end_date, $timezone, $group_id);
                     $ranking = $rankings[$type];
+                    foreach ($ranking as $k => $v) {
+                        $ranking[$k] = ['count' => $v];
+                    }
 
                     // 投稿情報取得
                     $post_ids = array_keys($ranking);
-                    $posts = $this->Post->getBodyById($post_ids, ['include_action' => true]);
-                    $text_list = [];
-                    foreach ($posts as $v) {
-                        $text_list[$v['Post']['id']] = $v['ActionResult']['id'] ?
-                            $v['ActionResult']['name'] : $v['Post']['body'];
+                    $posts = $this->Post->getPostsById($post_ids, ['include_action' => true, 'include_user' => true]);
+                    foreach ($posts as $post) {
+                        $ranking[$post['Post']['id']]['text'] = $post['ActionResult']['id'] ?
+                            $post['ActionResult']['name'] : $post['Post']['body'];
+                        $ranking[$post['Post']['id']]['User'] = $post['User'];
+                        $ranking[$post['Post']['id']]['url'] = Router::url(['controller' => 'posts',
+                                                                            'action'     => 'feed',
+                                                                            'post_id'    => $post['Post']['id']]);
                     }
-                    $this->set('text_list', $text_list);
-
-                    // リンク
-                    $url_list = [];
-                    foreach ($post_ids as $post_id) {
-                        $url_list[$post_id] = Router::url(['controller' => 'posts',
-                                                           'action'     => 'feed',
-                                                           'post_id'    => $post_id]);
-                    }
-                    $this->set('url_list', $url_list);
                     break;
             }
             $this->set('ranking', $ranking);
@@ -1330,6 +1316,32 @@ class TeamsController extends AppController
         $this->_cleanupForSystemAdminInsight();
 
         return $this->_ajaxGetResponse(['html' => $html]);
+    }
+
+    /**
+     * insight 系処理の日付データを返す
+     *
+     * @param $timezone
+     *
+     * @return array
+     */
+    protected function _getInsightDateInfo($timezone)
+    {
+        // 指定タイムゾーンの UTC からの差分秒数
+        $time_adjust = intval($timezone * HOUR);
+        // タイムゾーンを考慮した「本日」
+        $today = date('Y-m-d', time() + $time_adjust);
+
+        // 「先週」「先月」「前期」の start_date, end_date
+        $prev_week = $this->Team->TeamInsight->getWeekRangeDate($today, ['offset' => -1]);
+        $prev_month = $this->Team->TeamInsight->getMonthRangeDate($today, ['offset' => -1]);
+        $row = $this->Team->EvaluateTerm->getCurrentTerm();
+        $current_term = [
+            'start' => date('Y-m-d', $row['start_date'] + $time_adjust),
+            'end'   => date('Y-m-d', $row['end_date'] + $time_adjust),
+        ];
+
+        return compact('time_adjust', 'today', 'prev_week', 'prev_month', 'current_term');
     }
 
     /**

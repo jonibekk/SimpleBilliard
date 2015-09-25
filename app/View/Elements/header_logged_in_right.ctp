@@ -57,13 +57,16 @@
                 <span>0</span><sup class="notify-plus none">+</sup>
             </div>
         </a>
+
         <div class="frame-arrow-notify  header-nav-message-contents-wrap none">
-            <ul class="header-nav-notify-contents" id="message-dropdown" role="menu">
-                <li class="notify-card-empty" id="messageNotifyCardEmpty">
-                    <i class="fa fa-smile-o font_33px mr_8px"></i><span
-                        class="notify-empty-text"><?= __d('gl', '未読のメッセージはありません。') ?></span>
-                </li>
-            </ul>
+            <div class="header-nav-message-contents-scrolling">
+                <ul class="header-nav-message-contents" id="message-dropdown" role="menu">
+                    <li class="notify-card-empty" id="messageNotifyCardEmpty">
+                        <i class="fa fa-smile-o font_33px mr_8px"></i><span
+                            class="notify-empty-text"><?= __d('gl', '未読のメッセージはありません。') ?></span>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
     <div id="HeaderDropdownNotify" class="header-dropdown-notify">
@@ -77,13 +80,15 @@
         </a>
 
         <div class="dropdown-menu header-nav-notify-contents-wrap">
-            <ul class="header-nav-notify-contents notify-dropdown-cards" id="bell-dropdown" role="menu"
-                style="overflow-y:scroll">
-                <li class="notify-card-empty" id="notifyCardEmpty">
-                    <i class="fa fa-smile-o font_33px mr_8px header-icons"></i><span
-                        class="notify-empty-text"><?= __d('gl', '未読の通知はありません。') ?></span>
-                </li>
-            </ul>
+            <div class="header-nav-notify-contents-scrolling">
+                <ul class="header-nav-notify-contents notify-dropdown-cards" id="bell-dropdown" role="menu"
+                    style="overflow-y:scroll">
+                    <li class="notify-card-empty" id="notifyCardEmpty">
+                        <i class="fa fa-smile-o font_33px mr_8px header-icons"></i><span
+                            class="notify-empty-text"><?= __d('gl', '未読の通知はありません。') ?></span>
+                    </li>
+                </ul>
+            </div>
             <a id="NotifyDropDownReadMore" href="#"
                class="btn btn-link font_bold click-notify-read-more-dropdown none"
                get-url="<?= $this->Html->url(['controller' => 'notifications',
@@ -91,7 +96,7 @@
             </a>
 
             <a href="<?= $this->Html->url(['controller' => 'notifications', 'action' => 'index']) ?>">
-                <div class="text-align_c notify-all-view-link">
+                <div class="notify-all-view-link">
                     <?= __d('gl', 'すべて見る') ?>
                 </div>
             </a>
@@ -120,6 +125,11 @@
             <li>
                 <a href="#" data-toggle="modal" data-target="#modal_tutorial">
                     <?= __d('gl', 'チュートリアル') ?>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="youtube" rel="_J_wKHgKWLg" id="ExplainGoal">
+                    <?= __d('gl', 'ゴールについて') ?>
                 </a>
             </li>
             <li>
