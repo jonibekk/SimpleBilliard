@@ -19,7 +19,8 @@
 ?>
 <!-- START app/View/Elements/header_logged_in.ctp -->
 <header class="header">
-    <div class="navbar navbar-fixed-top navbar-default gl-navbar" id="header">
+    <div class="navbar navbar-fixed-top navbar-default gl-navbar <?= $is_mb_app ? "mb-app-navbar" : null ?>"
+         id="header">
         <div class="nav-container header-container">
             <button type="button" class="header-toggle-icon" data-toggle="offcanvas"
                     data-target=".navbar-offcanvas">
@@ -132,7 +133,7 @@
                 </ul>
             </div>
             <?php
-                echo $this->element('header_logged_in_right')
+            echo $this->element('header_logged_in_right')
             ?>
         </div>
     </div>

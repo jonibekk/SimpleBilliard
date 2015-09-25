@@ -5,6 +5,7 @@
  * @var string             $title_for_layout
  * @var CodeCompletionView $this
  * @var                    $action_name
+ * @var                    $is_mb_app
  */
 ?>
 <!-- START app/View/Layouts/default.ctp -->
@@ -12,7 +13,7 @@
 <!--suppress ALL -->
 <html lang="ja">
 <?= $this->element('head') ?>
-<body class="body">
+<body class="body <?= $is_mb_app ? "mb-app-body" : null ?>">
 <?php if (extension_loaded('newrelic')) {
     /** @noinspection PhpUndefinedFunctionInspection */
     echo newrelic_get_browser_timing_header();
@@ -42,7 +43,9 @@ else {
         <?= $this->fetch('content'); ?>
         <!-- /Remark -->
     </div>
-    <div  id="jsRightSideContainerWrap" class="right-side-container-wrap col-md-4 visible-md visible-lg col-xs-8 col-xxs-12 layout-goal" role="goal_area">
+    <div id="jsRightSideContainerWrap"
+         class="right-side-container-wrap col-md-4 visible-md visible-lg col-xs-8 col-xxs-12 layout-goal"
+         role="goal_area">
         <?= $this->element('my_goals_area') ?>
     </div>
 </div>

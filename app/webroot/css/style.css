@@ -63,6 +63,10 @@ ul {
     z-index: 7777;
 }
 
+.mb-app-navbar {
+    top: -50px;
+}
+
 .nav-search {
     width: 75% !important;
     height: 28px;
