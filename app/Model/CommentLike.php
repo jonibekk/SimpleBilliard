@@ -86,4 +86,75 @@ class CommentLike extends AppModel
         return $res;
     }
 
+    /**
+     * カウント数を返す
+     *
+     * @param array $params
+     *
+     * @return int
+     */
+    public function getCount(array $params = [])
+    {
+        $params = array_merge(
+            [
+                'user_id' => null,
+                'start'   => null,
+                'end'     => null,
+            ], $params);
+
+        $options = [
+            'conditions' => [
+                'CommentLike.team_id' => $this->current_team_id,
+            ],
+        ];
+        if ($params['user_id'] !== null) {
+            $options['conditions']['CommentLike.user_id'] = $params['user_id'];
+        }
+        if ($params['start'] !== null) {
+            $options['conditions']["CommentLike.created >="] = $params['start'];
+        }
+        if ($params['end'] !== null) {
+            $options['conditions']["CommentLike.created <="] = $params['end'];
+        }
+
+        return $this->find('count', $options);
+    }
+
+
+    /**
+     * コメントをしたユニークユーザーのリストを返す
+     *
+     * @param array $params
+     *
+     * @return array
+     */
+    public function getUniqueUserList(array $params = [])
+    {
+        $params = array_merge(
+            [
+                'user_id' => null,
+                'start'   => null,
+                'end'     => null,
+            ], $params);
+
+        $options = [
+            'fields'     => [
+                'CommentLike.user_id',
+                'CommentLike.user_id', // key, value 両方 user_id にする
+            ],
+            'conditions' => [
+                'CommentLike.team_id' => $this->current_team_id,
+            ],
+        ];
+        if ($params['user_id'] !== null) {
+            $options['conditions']['CommentLike.user_id'] = $params['user_id'];
+        }
+        if ($params['start'] !== null) {
+            $options['conditions']["CommentLike.created >="] = $params['start'];
+        }
+        if ($params['end'] !== null) {
+            $options['conditions']["CommentLike.created <="] = $params['end'];
+        }
+        return $this->find('list', $options);
+    }
 }

@@ -19,7 +19,7 @@
     </li>
      -->
 <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'message_list#']) ?>">
-    <li class="text-align_c notify-all-view-link">
+    <li class="message-all-view-link">
         <?= __d('gl', "すべて見る") ?>
     </li>
 </a>

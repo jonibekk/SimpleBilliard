@@ -62,6 +62,11 @@ $(window).load(function () {
     setDefaultTab();
 });
 $(document).ready(function () {
+    $("a.youtube").YouTubeModal({autoplay: 0, width: 640, height: 360});
+    if(typeof cake.request_params.named.after_click !== 'undefined'){
+        $("#" + cake.request_params.named.after_click).trigger('click');
+    }
+
     //すべてのformで入力があった場合に行う処理
     $("select,input").change(function () {
         $(this).nextAll(".help-block" + ".text-danger").remove();
@@ -1503,11 +1508,6 @@ $(document).ready(function () {
         feedbackIcons: {},
         fields: {}
     });
-    $('#MessageDisplayForm').bootstrapValidator({
-        live: 'enabled',
-        feedbackIcons: {},
-        fields: {}
-    });
     $('#CommonActionDisplayForm').bootstrapValidator({
         live: 'enabled',
         feedbackIcons: {},
@@ -1559,6 +1559,51 @@ $(document).ready(function () {
                 return {
                     term: term, //search term
                     page_limit: 10 // page size
+                };
+            },
+            results: function (data, page) {
+                return {results: data.results};
+            }
+        },
+        formatSelection: format,
+        formatResult: format,
+        escapeMarkup: function (m) {
+            return m;
+        },
+        containerCssClass: "select2Member"
+    }).on('change', function () {
+        if ($(this).val() == '' || $('#CommonMessageBody').val() == '') {
+            $('#MessageSubmit').attr('disabled', 'disabled');
+        }
+        else {
+            $('#MessageSubmit').removeAttr('disabled');
+        }
+    });
+    $("#CommonMessageBody").keyup(function () {
+        if ($('#select2Member').val() == '' || $('#CommonMessageBody').val() == '') {
+            $('#MessageSubmit').attr('disabled', 'disabled');
+        }
+        else {
+            $('#MessageSubmit').removeAttr('disabled');
+        }
+    });
+
+
+    //noinspection JSUnusedLocalSymbols post_detail.Post.id
+    $('#selectOnlyMember').select2({
+        multiple: true,
+        minimumInputLength: 1,
+        placeholder: cake.message.notice.b,
+        ajax: {
+            url: cake.url.add_member_on_message,
+            dataType: 'json',
+            quietMillis: 100,
+            cache: true,
+            data: function (term, page) {
+                return {
+                    term: term, //search term
+                    page_limit: 10, // page size
+                    post_id: $('#post_messenger').val()
                 };
             },
             results: function (data, page) {
@@ -3009,14 +3054,18 @@ function setIntervalToGetNotifyCnt(sec) {
 
 function updateNotifyCnt() {
 
-    var url = cake.url.f;
+    var url = cake.url.f + '/team_id:' + $('#SwitchTeam').val();
     $.ajax({
         type: 'GET',
         url: url,
         async: true,
-        success: function (new_notify_count) {
-            if (new_notify_count != 0) {
-                setNotifyCntToBellAndTitle(new_notify_count);
+        success: function (res) {
+            if (res.error) {
+                location.reload();
+                return;
+            }
+            if (res != 0) {
+                setNotifyCntToBellAndTitle(res);
             }
         },
         error: function () {
@@ -3027,14 +3076,18 @@ function updateNotifyCnt() {
 
 function updateMessageNotifyCnt() {
 
-    var url = cake.url.af;
+    var url = cake.url.af + '/team_id:' + $('#SwitchTeam').val();
     $.ajax({
         type: 'GET',
         url: url,
         async: true,
-        success: function (new_notify_count) {
-            setNotifyCntToMessageAndTitle(new_notify_count);
-            if (new_notify_count != 0) {
+        success: function (res) {
+            if (res.error) {
+                location.reload();
+                return;
+            }
+            setNotifyCntToMessageAndTitle(res);
+            if (res != 0) {
             }
         },
         error: function () {
@@ -3364,7 +3417,7 @@ $(document).ready(function () {
         thumbnailWidth: null,
         thumbnailHeight: 240,
         // ファイルがドロップされた時の処理
-        drop: function(e) {
+        drop: function (e) {
             $uploadFileForm.hide();
         },
         // ファイルがドロップされた後
@@ -4030,6 +4083,22 @@ $(document).ready(function () {
     require(['search'], function (search) {
         search.headerSearch.setup();
     });
+
+    // Insight 画面の処理
+    if ($('#InsightForm').size()) {
+        require(['insight'], function (insight) {
+            if ($('#InsightResult').size()) {
+                insight.insight.setup();
+            }
+            else if ($('#InsightCircleResult').size()) {
+                insight.insightCircle.setup();
+            }
+            else if ($('#InsightRankingResult').size()) {
+                insight.insightRanking.setup();
+            }
+            insight.reload();
+        });
+    }
 });
 
 function evAjaxEditCircleAdminStatus(e) {
