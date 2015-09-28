@@ -25,6 +25,7 @@ class AppModel extends Model
         ],
         'WithTeamId',
         'ExtContainable',
+        'Trim',
     ];
 
     //全てのモデルでデフォルトで再起的にjoinするのをやめる。個別に指定する。
