@@ -373,7 +373,7 @@ class AppController extends Controller
             $this->is_mb_app = true;
         }
         //TODO テスト目的。最終的に削除
-        $this->is_mb_app = true;
+//        $this->is_mb_app = true;
         $this->set('is_mb_app', $this->is_mb_app);
     }
 
