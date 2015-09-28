@@ -1357,11 +1357,6 @@ textarea{
     border-left: 2px solid #563d7c;
 }
 
-.parent-flash > div {
-    padding-top: 50px;
-    margin-top: -50px;
-}
-
 ul.example-indent {
     list-style-type: none;
     padding-left: 25px;
@@ -2398,6 +2393,10 @@ textarea.comment-post-form {
         margin-left: 40%;
     }
 
+    .parent-flash > div {
+        padding-top: 50px;
+        margin-top: -50px;
+    }
 }
 
 /*Small*/
@@ -2433,6 +2432,11 @@ textarea.comment-post-form {
 
     .header-search-group {
         margin-left: 20px;
+    }
+
+    .nav > li > a.active {
+        text-decoration: none;
+        background-color: #ddd;
     }
 
     /*
@@ -3065,7 +3069,7 @@ Temporary Properties - YOU MUST FIX
 }
 
 .goal-term-search-menu > .selected {
-    background: #ffffff none;
+    background: #ae554f none;
     border-bottom: solid 2px #ae2f2f;
 }
 

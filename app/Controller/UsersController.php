@@ -594,7 +594,7 @@ class UsersController extends AppController
         else {
             $this->request->data = $me;
         }
-        $this->layout = LAYOUT_SETTING;
+        $this->layout = LAYOUT_TWO_COLUMN;
         //姓名の並び順をセット
         $last_first = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
         //言語選択
