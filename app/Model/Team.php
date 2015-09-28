@@ -539,7 +539,7 @@ class Team extends AppModel
     {
         $this->delete($team_id);
 
-        // soft delete で戻り値が false になってしまうので、
+        // delete() の戻り値が soft delete で false になってしまうので、
         // 削除されたか自前で確認する
         $row = $this->findById($team_id);
         return $row ? false : true;

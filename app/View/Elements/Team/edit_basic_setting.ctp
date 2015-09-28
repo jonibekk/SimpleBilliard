@@ -107,18 +107,18 @@
                 $this->Form->submit(__d('gl', "基本設定を更新"),
                                     ['class' => 'btn btn-primary display-inline', 'div' => false, 'disabled' => 'disabled']) ?>
             </div>
-            <div class="col-xxs-8 col-sm-5 text-align_r"><a id="TeamDeleteButton" href="#"
-                                                            style="line-height:38px;margin-right:5px;">チームを削除する</a>
+            <div class="col-xxs-8 col-sm-5 text-align_r">
+                <a id="TeamDeleteButton" class="team-delete-button" href="#">チームを削除する</a>
             </div>
         </div>
     </div>
     <?= $this->Form->end(); ?>
     <?=
     $this->Form->create('Team', [
-        'class'         => 'none',
-        'novalidate'    => true,
-        'id'            => 'TeamDeleteForm',
-        'url'           => ['action' => 'delete_team']
+        'class'      => 'none',
+        'novalidate' => true,
+        'id'         => 'TeamDeleteForm',
+        'url'        => ['action' => 'delete_team']
     ]); ?>
     <?= $this->Form->end(); ?>
 
