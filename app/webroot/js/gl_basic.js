@@ -3258,7 +3258,10 @@ function copyToClipboard(url) {
 $(document).ready(function () {
     $(window).scroll(function () {
         if ($(window).scrollTop() + $(window).height() > $(document).height() - 2000) {
-            if (!autoload_more && networkReachable()) {
+            if(!networkReachable()) {
+                return false;
+            }
+            else if (!autoload_more) {
                 autoload_more = true;
                 $('#FeedMoreReadLink').trigger('click');
                 $('#GoalPageFollowerMoreLink').trigger('click');
@@ -4169,12 +4172,23 @@ function isMobile() {
 }
 function networkReachable()
 {
-    jQuery.ajaxSetup({async:false});
-    re = "";
-    r = Math.round(Math.random() * 1000);
+    var re = false;
     var path = window.location.href;
-    $.get(path +"img/no-image-user.jpg?1440663111",function(d){
-        re = true;
+    $.ajax({
+        url :path +"img/no-image-user.jpg?1440663111",
+        type:"HEAD",
+        timeout:3000,
+        statusCode :{
+            200:function(response){
+                re = true;
+            },
+            400:function(response){
+                re = false;
+            },
+            0:function(response){
+                re = false;
+            }
+        }
     });
     return re;
 }
