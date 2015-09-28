@@ -44,6 +44,15 @@ if (isset($this->request->params['post_id']) && isset($this->request->params['na
         <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i>
     </a>
 <?php endif ?>
+<?php
+// 投稿単体ページで $posts が空の場合（投稿が削除された場合）
+if (isset($this->request->params['post_id']) && !$posts): ?>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <?= __d('gl', '存在しません。') ?>
+        </div>
+    </div>
+<?php endif ?>
 <?= $this->element("Feed/posts") ?>
 <?php //(投稿が指定件数　もしくは　アイテム作成日から１ヶ月以上経っている)かつパーマリンクでない
 if ((count($posts) == POST_FEED_PAGE_ITEMS_NUMBER || (isset($item_created) && $item_created < REQUEST_TIMESTAMP - (60 * 60 * 24 * 30))) &&
