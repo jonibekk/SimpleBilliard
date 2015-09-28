@@ -144,6 +144,19 @@ class AppController extends Controller
             if (!$this->request->is('ajax')) {
                 $this->_setMyTeam();
                 $this->_setAvailEvaluation();
+
+                $active_team_list = $this->User->TeamMember->getActiveTeamList($login_uid);
+                $set_default_team_id = !empty($active_team_list) ? key($active_team_list) : null;
+
+                // アクティブチームリストに current_team_id が入っていない場合はログアウト
+                // （チームが削除された場合）
+                if ($this->current_team_id && !isset($active_team_list[$this->current_team_id])) {
+                    $this->Session->write('current_team_id', null);
+                    $this->Pnotify->outError(__d('gl', "ログイン中のチームが削除されたため、ログアウトされました。"));
+                    $this->Auth->logout();
+                    return;
+                }
+
                 //リクエストがログイン中のチーム以外なら切り替える
                 if ($this->request->is('get')) {
                     $this->_switchTeamBeforeCheck();
@@ -157,9 +170,6 @@ class AppController extends Controller
                 $this->set(compact('is_isao_user'));
                 $my_channels_json = $this->User->getMyChannelsJson();
                 $this->set(compact('my_channels_json'));
-                //permission check
-                $active_team_list = $this->User->TeamMember->getActiveTeamList($login_uid);
-                $set_default_team_id = !empty($active_team_list) ? key($active_team_list) : null;
 
                 //デフォルトチームが設定されていない場合はアクティブなチームでカレントチームとデフォルトチームを書き換え
                 if (!$this->Auth->user('default_team_id')) {

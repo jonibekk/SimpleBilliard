@@ -62,6 +62,56 @@ class TeamsController extends AppController
         return $this->redirect($this->referer());
     }
 
+    /**
+     * チームを削除する
+     */
+    public function delete_team()
+    {
+        $this->request->allowMethod('post');
+
+        // チーム管理者かチェック
+        try {
+            $this->Team->TeamMember->adminCheck($this->current_team_id, $this->Auth->user('id'));
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e);
+            $this->redirect($this->referer());
+        }
+
+        $this->Team->begin();
+        if (!(
+            // チーム削除
+            $this->Team->deleteTeam($this->current_team_id) &&
+            // 削除されたチームが default_team_id になっている場合、null にする
+            $this->User->clearDefaultTeamId($this->current_team_id)
+        ))
+        {
+            $this->Team->rollback();
+            $this->Pnotify->outError(__d('gl', "チーム削除に失敗しました。"));
+            return $this->redirect($this->referer());
+        }
+        $this->Team->commit();
+
+        // セッション中の default_team_id を更新
+        $this->_refreshAuth();
+
+        // 所属チームリストを更新して取得
+        $this->User->TeamMember->setActiveTeamList($this->Auth->user('id'));
+        $active_team_list = $this->User->TeamMember->getActiveTeamList($this->Auth->user('id'));
+
+        // 他に所属チームがある場合
+        if ($active_team_list) {
+            $this->_switchTeam(key($active_team_list), $this->Auth->user('id'));
+            $url = '/';
+        }
+        // 他に所属チームがない場合
+        else {
+            $this->Session->write('current_team_id', null);
+            $url = ['controller' => 'teams', 'action' => 'add'];
+        }
+        $this->Pnotify->outSuccess(__d('gl', "チームを削除しました。"));
+        return $this->redirect($url);
+    }
+
     public function settings()
     {
         $this->layout = LAYOUT_TWO_COLUMN;

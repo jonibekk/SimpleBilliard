@@ -2067,6 +2067,11 @@ textarea.comment-post-form {
     color: #333;
 }
 
+.team-delete-button {
+    line-height:38px;
+    margin-right:5px;
+}
+
 .modal {
     z-index: 8000;
 }
