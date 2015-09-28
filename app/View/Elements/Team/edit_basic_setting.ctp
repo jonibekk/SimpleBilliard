@@ -108,7 +108,7 @@
                                     ['class' => 'btn btn-primary display-inline', 'div' => false, 'disabled' => 'disabled']) ?>
             </div>
             <div class="col-xxs-8 col-sm-5 text-align_r">
-                <a id="TeamDeleteButton" class="team-delete-button" href="#">チームを削除する</a>
+                <a id="TeamDeleteButton" class="team-delete-button" href="#"><?= __d('gl', 'チームを削除する') ?></a>
             </div>
         </div>
     </div>
