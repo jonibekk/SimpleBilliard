@@ -22,7 +22,7 @@
     <div class="navbar navbar-fixed-top navbar-default gl-navbar <?= $is_mb_app ? "mb-app-navbar" : null ?>"
          id="header">
         <div class="nav-container header-container">
-            <button type="button" class="header-toggle-icon" data-toggle="offcanvas"
+            <button type="button" class="<?= $is_mb_app ? "mb-app-header-toggle-icon" : "header-toggle-icon" ?>" data-toggle="offcanvas"
                     data-target=".navbar-offcanvas">
                 <i class="fa fa-navicon toggle-icon header-icons"></i>
             </button>
