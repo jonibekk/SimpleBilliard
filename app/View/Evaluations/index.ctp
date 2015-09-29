@@ -19,18 +19,19 @@
     <div class="panel-heading"><?= __d('gl', "評価") ?></div>
     <div class="panel-body eval-view-panel-body">
         <div class="goal-search-menu">
-            <div class="goal-term-search-menu btn-group btn-group-justified" role="group">
+            <div class="eval-term-tab-menu btn-group btn-group-justified" role="group">
                 <?php foreach (['present' => __d('gl', "今期"), 'previous' => __d('gl', "前期")] as $key => $val): ?>
                     <?php $selected = $key == $selected_term_name ? 'selected' : ''; ?>
                     <?php $incompleteNum = (int)$incomplete_number_list[$key]['my_eval'] + (int)$incomplete_number_list[$key]['my_evaluatees'];
                     ?>
                     <a href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'index', 'term' => $key]) ?>"
-                       class="btn btn-default goal-search-elm <?= $selected ?>" role="button">
+                       class="btn btn-default eval-term-tab-elm <?= $selected ?>" role="button">
                         <?php if ($incompleteNum > 0 && !$isFrozens[$key]):
                             ?>
-                            <div class="btn btn-xs bell-notify-box notify-evaluation-numbers" id="bellNum" style="opacity:1;">
+                            <div class="btn btn-xs bell-notify-box notify-evaluation-numbers" id="bellNum"
+                                 style="opacity:1;">
                                 <span><?= $incompleteNum ?></span>
-                              </div>
+                            </div>
                         <?php endif;
                         ?>
                         <?= $val ?>
