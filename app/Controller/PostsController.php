@@ -8,6 +8,9 @@ App::uses('AppController', 'Controller');
  */
 class PostsController extends AppController
 {
+    //　メッセージリストの1ページあたり表示件数
+    public static $message_list_page_count = 7;
+
     public function beforeFilter()
     {
         parent::beforeFilter();
@@ -31,33 +34,16 @@ class PostsController extends AppController
         return $this->render();
     }
 
-    public function ajax_get_message_list()
+    public function ajax_get_message_list($page=1)
     {
         $this->_ajaxPreProcess();
-        $result = $this->Post->getMessageList();
-
-        // TODO:緊急対応　汚いので後でリファクタリング
-        foreach ($result as $key => $item) {
-            if (isset($item['PostShareUser']) === true) {
-
-                $shared_user_id = [];
-                foreach ($item['PostShareUser'] as $item2) {
-                    $shared_user_id[] = $item2['user_id'];
-                }
-
-                if (in_array($this->Auth->user('id'), $shared_user_id) === false
-                    && $item['Post']['user_id'] !== $this->Auth->user('id')
-                ) {
-                    unset($result[$key]);
-                }
-            }
-        }
+        $result = $this->Post->getMessageList($this->Auth->user('id'), PostsController::$message_list_page_count, $page);
         $message_list = $this->Post->convertData($result);
         $res = [
             'auth_info'    => [
                 'user_id'    => $this->Auth->user('id'),
                 'language'   => $this->Auth->user('language'),
-                'photo_path' => $this->Post->getPhotoPath($this->Auth->user()),
+                'photo_path' => $this->Post->getPhotoPath($this->Auth->user())
             ],
             'message_list' => $message_list,
         ];
@@ -73,6 +59,35 @@ class PostsController extends AppController
         $this->_addPost();
         $to_url = Router::url(['controller' => 'posts', 'action' => 'message#', $this->Post->getLastInsertID()], true);
         $this->redirect($to_url);
+    }
+
+    /**
+     * メッセージのメンバー変更のPostを受け取って処理
+     */
+    public function edit_message_users()
+    {
+        $id = $this->request->data['Post']['post_id'];
+        $this->request->data['Post']['type'] = Post::TYPE_MESSAGE;
+        $this->request->allowMethod('post');
+        // 共有範囲を格納
+        $this->request->data['Post']['share'] = $this->request->data['Post']['share_public'];
+        // メッセージ変更を保存
+        $successSavedPost = $this->Post->editMessageMember($this->request->data);
+
+        // 保存に失敗
+        if (!$successSavedPost) {
+            // バリデーションエラーのケース
+            if (!empty($this->Post->validationErrors)) {
+                $error_msg = array_shift($this->Post->validationErrors);
+                $this->Pnotify->outError($error_msg[0], ['title' => __d('gl', "メンバーの変更に失敗しました。")]);
+            }
+            else {
+                $this->Pnotify->outError(__d('gl', "メンバーの変更に失敗しました。"));
+            }
+        }
+
+        $this->Pnotify->outSuccess(__d('gl', "メンバーを変更しました。"));
+        $this->redirect(['controller' => 'posts', 'action' => 'message#', $id]);
     }
 
     public function add()

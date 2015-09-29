@@ -476,4 +476,147 @@ class Comment extends AppModel
         return $res ? $res[0]['sum_like'] : 0;
     }
 
+    /**
+     * カウント数を返す
+     *
+     * @param array $params
+     *
+     * @return int
+     */
+    public function getCount(array $params = [])
+    {
+        $params = array_merge(
+            [
+                'post_id' => null,
+                'user_id' => null,
+                'start'   => null,
+                'end'     => null,
+            ], $params);
+
+        $options = [
+            'conditions' => [
+                'Comment.team_id' => $this->current_team_id,
+            ],
+        ];
+        if ($params['post_id'] !== null) {
+            $options['conditions']['Comment.post_id'] = $params['post_id'];
+        }
+        if ($params['user_id'] !== null) {
+            $options['conditions']['Comment.user_id'] = $params['user_id'];
+        }
+        if ($params['start'] !== null) {
+            $options['conditions']["Comment.created >="] = $params['start'];
+        }
+        if ($params['end'] !== null) {
+            $options['conditions']["Comment.created <="] = $params['end'];
+        }
+        return $this->find('count', $options);
+    }
+
+    /**
+     * コメントしたユニークユーザー数を返す
+     *
+     * @param array $params
+     *
+     * @return mixed
+     */
+    public function getUniqueUserCount($params = [])
+    {
+        $params = array_merge(
+            [
+                'start'   => null,
+                'end'     => null,
+                'user_id' => null,
+            ], $params);
+
+        $options = [
+            'fields'     => [
+                'COUNT(DISTINCT user_id) as cnt',
+            ],
+            'conditions' => [
+                'Comment.team_id' => $this->current_team_id,
+            ],
+        ];
+        if ($params['start'] !== null) {
+            $options['conditions']["Comment.created >="] = $params['start'];
+        }
+        if ($params['end'] !== null) {
+            $options['conditions']["Comment.created <="] = $params['end'];
+        }
+        if ($params['user_id'] !== null) {
+            $options['conditions']["Comment.user_id"] = $params['user_id'];
+        }
+        $row = $this->find('first', $options);
+
+        $count = 0;
+        if (isset($row[0]['cnt'])) {
+            $count = $row[0]['cnt'];
+        }
+        return $count;
+    }
+
+    /**
+     * 投稿別コメント数ランキングを返す
+     *
+     * @param array $params
+     *
+     * @return mixed
+     */
+    public function getRanking($params = [])
+    {
+        $params = array_merge(['limit'           => null,
+                               'start'           => null,
+                               'end'             => null,
+                               'post_type'       => null,
+                               'post_user_id'    => null,
+                               'share_circle_id' => null,
+                              ], $params);
+
+        $options = [
+            'fields'     => [
+                'Comment.post_id',
+                'COUNT(DISTINCT Comment.id) as cnt',
+            ],
+            'conditions' => [
+                'Comment.team_id' => $this->current_team_id,
+            ],
+            'group'      => ['Comment.post_id'],
+            'order'      => ['cnt' => 'DESC'],
+            'limit'      => $params['limit'],
+            'contain'    => [],
+        ];
+        if ($params['post_type'] !== null) {
+            $options['conditions']["Post.type"] = $params['post_type'];
+            $options['contain'][] = 'Post';
+        }
+        if ($params['post_user_id'] !== null) {
+            $options['conditions']["Post.user_id"] = $params['post_user_id'];
+            $options['contain'][] = 'Post';
+        }
+        if ($params['start'] !== null) {
+            $options['conditions']["Comment.created >="] = $params['start'];
+        }
+        if ($params['end'] !== null) {
+            $options['conditions']["Comment.created <="] = $params['end'];
+        }
+        if ($params['share_circle_id'] !== null) {
+            $options['joins'][] = [
+                'type'       => 'INNER',
+                'table'      => 'post_share_circles',
+                'alias'      => 'PostShareCircle',
+                'conditions' => [
+                    'Comment.post_id = PostShareCircle.post_id',
+                    'PostShareCircle.team_id'   => $this->current_team_id,
+                    'PostShareCircle.circle_id' => $params['share_circle_id'],
+                    'PostShareCircle.del_flg = 0',
+                ],
+            ];
+        }
+        $rows = $this->find('all', $options);
+        $ranking = [];
+        foreach ($rows as $v) {
+            $ranking[$v['Comment']['post_id']] = $v[0]['cnt'];
+        }
+        return $ranking;
+    }
 }

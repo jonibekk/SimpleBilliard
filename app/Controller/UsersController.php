@@ -82,6 +82,10 @@ class UsersController extends AppController
             return $this->render();
         }
 
+        //暫定ログあとで消す
+        $ua = $_SERVER['HTTP_USER_AGENT'];
+        error_log("FURU:$ua\n",3,"/tmp/hoge.log");
+
         //account lock check
         $ip_address = $this->request->clientIp();
         $is_account_locked = $this->GlRedis->isAccountLocked($this->request->data['User']['email'], $ip_address);
@@ -594,7 +598,7 @@ class UsersController extends AppController
         else {
             $this->request->data = $me;
         }
-        $this->layout = LAYOUT_SETTING;
+        $this->layout = LAYOUT_TWO_COLUMN;
         //姓名の並び順をセット
         $last_first = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
         //言語選択
@@ -723,6 +727,20 @@ class UsersController extends AppController
         $res = [];
         if (isset($query['term']) && !empty($query['term']) && isset($query['page_limit']) && !empty($query['page_limit'])) {
             $res = $this->User->getUsersSelect2($query['term'], $query['page_limit']);
+        }
+        return $this->_ajaxGetResponse($res);
+    }
+
+    /**
+     * select2のユーザ検索
+     */
+    function ajax_select_only_add_users()
+    {
+        $this->_ajaxPreProcess();
+        $query = $this->request->query;
+        $res = [];
+        if (isset($query['post_id']) && !empty($query['post_id']) && isset($query['term']) && !empty($query['term']) && isset($query['page_limit']) && !empty($query['page_limit'])) {
+            $res = $this->User->getUsersSelectOnly($query['term'], $query['page_limit'],$query['post_id']);
         }
         return $this->_ajaxGetResponse($res);
     }
@@ -1073,6 +1091,8 @@ class UsersController extends AppController
             'user_id' => $user_id,
             'type'    => Post::TYPE_NORMAL
         ]);
+        $team = $this->Team->getCurrentTeam();
+        $this->set('item_created', $team['Team']['created']);
         $this->set('posts', $posts);
         $this->set('long_text', false);
 
@@ -1109,6 +1129,8 @@ class UsersController extends AppController
             $this->Pnotify->outError(__d('gl', "不正な画面遷移です。"));
             return $this->redirect($this->referer());
         }
+        $team = $this->Team->getCurrentTeam();
+        $this->set('item_created', $team['Team']['created']);
         $this->layout = LAYOUT_ONE_COLUMN;
         $goal_ids = $this->Goal->Collaborator->getCollaboGoalList($user_id, true);
         $goal_select_options = $this->Goal->getGoalNameList($goal_ids, true, true);

@@ -73,4 +73,18 @@ class PostShareUserTest extends CakeTestCase
         $this->PostShareUser->add(1, [1]);
     }
 
+    public function testGetPostIdListByUserId()
+    {
+        $post_id = 999;
+        $this->PostShareUser->current_team_id = 888;
+        $user_id = 777;
+        $data = [
+            'post_id' => $post_id,
+            'team_id' => 888,
+            'user_id' => $user_id,
+        ];
+        $this->PostShareUser->save($data);
+        $res = $this->PostShareUser->getPostIdListByUserId($user_id);
+        $this->assertContains($post_id, $res);
+    }
 }

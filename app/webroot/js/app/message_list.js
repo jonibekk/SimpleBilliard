@@ -41,17 +41,6 @@ message_list_app.config([
             .state('list', {
                 url: "/",
                 templateUrl: "/template/message_list.html",
-                controller: 'MessageListCtrl',
-                resolve: {
-                    getMessageList: ['$stateParams', '$http', function ($stateParams, $http) {
-                        var request = {
-                            method: 'GET',
-                            url: cake.url.al
-                        };
-                        return $http(request).then(function (response) {
-                            return response.data;
-                        });
-                    }]
-                }
+                controller: 'MessageListCtrl'
             })
     }]);

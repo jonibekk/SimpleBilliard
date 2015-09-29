@@ -7,8 +7,7 @@
                     <a href="{{message_list_url}}"><i
                         class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i></a>
                     <span class="ml_8px"> {{first_share_user.User.display_username}}
-                        <span
-                            ng-if="post_detail.PostShareUser.length >= 2">、他{{post_detail.PostShareUser.length - 1}}人</span>
+                        <span ng-if="post_detail.PostShareUser.length >= 2">、他{{post_detail.PostShareUser.length - 1}}人</span>
                     </span>
             <span class="message-detail-head-users-icon plr_11px font_brownRed">
                 <a href="/posts/ajax_get_share_message_modal/post_id:{{post_detail.Post.id}}"
@@ -16,7 +15,17 @@
                     <i class="fa fa-user"></i> {{post_detail.PostShareUser.length + 1}}
                 </a>
             </span>
+
+                    <span class="pull-right">
+                        <a href="#" ng-click="add_messenger_user()" data-value="{{post_detail.Post.id}}">
+                            <span class="fa fa-user-plus">
+                            </span>
+                        </a>
+                    </span>
+
+                    <div id="message_add_list"></div>
                 </div>
+
             </div>
 
             <div class="message-detail-panel-body panel-body" id="message_box">
@@ -44,8 +53,13 @@
                                 <div class="font_12px">
                                     <a href="{{item.get_red_user_model_url}}"
                                        class="modal-ajax-get font_lightgray">
-                                        <i class="fa fa-check"></i>&nbsp;
-                                        <span id="mr_{{item.Comment.id}}">{{item.Comment.comment_read_count}}</span>
+                                        <div ng-if="item.Comment.comment_read_count == post_detail.PostShareUser.length">
+                                            <i class="fa fa-check" style="color: #099f3f; "></i>
+                                        </div>
+                                        <div ng-if="item.Comment.comment_read_count < post_detail.PostShareUser.length">
+                                            <i class="fa fa-check"></i>&nbsp;
+                                            <span id="mr_{{item.Comment.id}}">{{item.Comment.comment_read_count}}</span>
+                                        </div>
                                     </a>
                                 </div>
                             </div>

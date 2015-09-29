@@ -115,10 +115,10 @@ CakePlugin::loadAll();
  */
 switch (ENV_NAME) {
     case "www":
-        define('SERVICE_NAME', "Goalous2.0");
+        define('SERVICE_NAME', "Goalous");
         break;
     default:
-        define('SERVICE_NAME', "[" . ENV_NAME . "]Goalous2.0");
+        define('SERVICE_NAME', "[" . ENV_NAME . "]Goalous");
         break;
 }
 //トークン期限
@@ -127,7 +127,7 @@ define('TOKEN_EXPIRE_SEC_ADD_EMAIL', 86400); //1day
 define('TOKEN_EXPIRE_SEC_INVITE', 1209600); //2weeks
 //レイアウトファイル名
 define('LAYOUT_ONE_COLUMN', "one_column");
-define('LAYOUT_SETTING', "setting");
+define('LAYOUT_TWO_COLUMN', "two_column");
 //セッションのモード
 define('MODE_NEW_PROFILE', 1);
 define('MODE_NEW_TEAM', 2);

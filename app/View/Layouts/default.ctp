@@ -32,7 +32,7 @@ else {
 
 <div id="container" class="container">
     <div class="<?= $is_mb_app ? "hidden" : "col-md-2 col-sm-4 col-xs-4 hidden-xxs" ?> layout-sub">
-        <div class="left-side-container" id="js-left-side-container">
+        <div class="left-side-container" id="jsLeftSideContainer">
             <?= $this->element('dashboard_profile_card') ?>
             <?= $this->element('circle_list') ?>
         </div>

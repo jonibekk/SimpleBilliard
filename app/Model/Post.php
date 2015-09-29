@@ -333,6 +333,49 @@ class Post extends AppModel
     }
 
     /**
+     * メッセージのメンバーを変更
+     *
+     * @param      $postData
+     * @param null $uid
+     * @param null $team_id
+     *
+     * @return bool|mixed
+     */
+    public function editMessageMember($postData, $uid = null, $team_id = null)
+    {
+        if (!isset($postData['Post']) || empty($postData['Post'])) {
+            return false;
+        }
+
+        $this->setUidAndTeamId($uid, $team_id);
+        $share = null;
+        if (isset($postData['Post']['share']) && !empty($postData['Post']['share'])) {
+            $share = explode(",", $postData['Post']['share']);
+        }
+        $postData['Post']['user_id'] = $this->uid;
+        $postData['Post']['team_id'] = $this->team_id;
+
+        $this->begin();
+        $post_id = $postData['Post']['post_id'];
+        $results = [];
+        if (!empty($share)) {
+            $users = [];
+            foreach ($share as $val) {
+                if (stristr($val, 'user_')) {
+                    $users[] = str_replace('user_', '', $val);
+                }
+            }
+            if ($users) {
+                //共有ユーザ保存
+                $results[] = $this->PostShareUser->add($post_id, $users);
+            }
+        }
+        // どこかでエラーが発生した場合は rollback
+        $this->commit();
+        return true;
+    }
+
+    /**
      * @param        $start
      * @param        $end
      * @param string $order
@@ -407,7 +450,7 @@ class Post extends AppModel
             'contain'    => [
                 'User'          => [],
                 'PostShareUser' => [],
-                'PostFile'   => [
+                'PostFile'      => [
                     'order'        => ['PostFile.index_num asc'],
                     'AttachedFile' => [
                         'User' => [
@@ -656,17 +699,17 @@ class Post extends AppModel
                     ]
                 ],
                 'Goal'            => [
-                    'fields'  => [
+                    'fields'    => [
                         'name',
                         'photo_file_name',
                         'id',
                     ],
-                    'Purpose' => [
+                    'Purpose'   => [
                         'fields' => [
                             'name'
                         ]
                     ],
-                    'MyCollabo'    => [
+                    'MyCollabo' => [
                         'conditions' => [
                             'MyCollabo.type'    => Collaborator::TYPE_COLLABORATOR,
                             'MyCollabo.user_id' => $this->my_uid,
@@ -677,7 +720,7 @@ class Post extends AppModel
                             'MyCollabo.description',
                         ],
                     ],
-                    'MyFollow'     => [
+                    'MyFollow'  => [
                         'conditions' => [
                             'MyFollow.user_id' => $this->my_uid,
                         ],
@@ -1170,13 +1213,14 @@ class Post extends AppModel
     /**
      * 投稿数のカウントを返却
      *
-     * @param mixed $user_id ユーザーIDもしくは'me'を指定する。
-     * @param null  $start_date
-     * @param null  $end_date
+     * @param mixed  $user_id ユーザーIDもしくは'me'を指定する。
+     * @param null   $start_date
+     * @param null   $end_date
+     * @param string $date_col
      *
      * @return int
      */
-    function getCount($user_id = 'me', $start_date = null, $end_date = null)
+    function getCount($user_id = 'me', $start_date = null, $end_date = null, $date_col = 'modified')
     {
         $options = [
             'conditions' => [
@@ -1188,19 +1232,137 @@ class Post extends AppModel
         if ($user_id == 'me') {
             $options['conditions']['user_id'] = $this->my_uid;
         }
-        elseif (is_numeric($user_id)) {
+        elseif ($user_id) {
             $options['conditions']['user_id'] = $user_id;
         }
 
         //期間で絞り込む
         if ($start_date) {
-            $options['conditions']['modified >'] = $start_date;
+            $options['conditions']["$date_col >="] = $start_date;
         }
         if ($end_date) {
-            $options['conditions']['modified <'] = $end_date;
+            $options['conditions']["$date_col <="] = $end_date;
         }
         $res = $this->find('count', $options);
         return $res;
+    }
+
+    /**
+     * メッセージ数（返信も含める）を返す
+     *
+     * @param array $params
+     *
+     * @return int
+     */
+    function getMessageCount($params = [])
+    {
+        $params = array_merge(['user_id' => null,
+                               'start'   => null,
+                               'end'     => null,
+                              ], $params);
+
+        $options = [
+            'conditions' => [
+                'Post.team_id' => $this->current_team_id,
+                'Post.type'    => self::TYPE_MESSAGE
+            ]
+        ];
+
+        if ($params['start'] !== null) {
+            $options['conditions']["Post.created >="] = $params['start'];
+        }
+        if ($params['end'] !== null) {
+            $options['conditions']["Post.created <="] = $params['end'];
+        }
+        if ($params['user_id'] !== null) {
+            $options['conditions']["Post.user_id"] = $params['user_id'];
+        }
+        $count = $this->find('count', $options);
+        if (!$count) {
+            return 0;
+        }
+
+        // ２件目以降のメッセージ
+        $options = [
+            'conditions' => [
+                'Comment.team_id' => $this->current_team_id,
+                'Post.type'       => self::TYPE_MESSAGE
+            ],
+            'contain'    => ['Post'],
+        ];
+
+        if ($params['start'] !== null) {
+            $options['conditions']["Comment.created >="] = $params['start'];
+        }
+        if ($params['end'] !== null) {
+            $options['conditions']["Comment.created <="] = $params['end'];
+        }
+        if ($params['user_id'] !== null) {
+            $options['conditions']["Comment.user_id"] = $params['user_id'];
+        }
+        $count += $this->Comment->find('count', $options);
+        return $count;
+    }
+
+    /**
+     * メッセージ（返信も含める）をしたユニークユーザー数を返す
+     *
+     * @param array $params
+     *
+     * @return int
+     */
+    function getMessageUserCount($params = [])
+    {
+        $params = array_merge(['user_id' => null,
+                               'start'   => null,
+                               'end'     => null,
+                              ], $params);
+
+        $options = [
+            'fields'     => [
+                'Post.user_id',
+                'Post.user_id', // key, value 両方 user_id にする
+            ],
+            'conditions' => [
+                'Post.team_id' => $this->current_team_id,
+                'Post.type'    => self::TYPE_MESSAGE
+            ]
+        ];
+        if ($params['start'] !== null) {
+            $options['conditions']["Post.created >="] = $params['start'];
+        }
+        if ($params['end'] !== null) {
+            $options['conditions']["Post.created <="] = $params['end'];
+        }
+        if ($params['user_id'] !== null) {
+            $options['conditions']["Post.user_id"] = $params['user_id'];
+        }
+        $list1 = $this->find('list', $options);
+
+        // ２件目以降のメッセージ
+        $options = [
+            'fields'     => [
+                'Comment.user_id',
+                'Comment.user_id', // key, value 両方 user_id にする
+            ],
+            'conditions' => [
+                'Comment.team_id' => $this->current_team_id,
+                'Post.type'       => self::TYPE_MESSAGE
+            ],
+            'contain'    => ['Post'],
+        ];
+        if ($params['start'] !== null) {
+            $options['conditions']["Comment.created >="] = $params['start'];
+        }
+        if ($params['end'] !== null) {
+            $options['conditions']["Comment.created <="] = $params['end'];
+        }
+        if ($params['user_id'] !== null) {
+            $options['conditions']["Comment.user_id"] = $params['user_id'];
+        }
+        $list2 = $this->Comment->find('list', $options);
+
+        return count(array_unique(array_merge($list1, $list2)));
     }
 
     /**
@@ -1295,12 +1457,15 @@ class Post extends AppModel
         return $res ? $res[0]['sum_like'] : 0;
     }
 
-    public function getMessageList()
+    public function getMessageList($user_id, $limit = null, $page = null)
     {
         $options = [
             'conditions' => [
                 'team_id' => $this->current_team_id,
                 'type'    => self::TYPE_MESSAGE,
+                'OR'      => [
+                    'user_id' => $user_id,
+                ],
             ],
             'order'      => [
                 'Post.modified' => 'desc',
@@ -1320,6 +1485,20 @@ class Post extends AppModel
                 ],
             ],
         ];
+
+        $post_id = $this->PostShareUser->getPostIdListByUserId($user_id);
+        if (count($post_id) > 0) {
+            $options['conditions']['OR']['Post.id'] = $post_id;
+        }
+
+        if (is_null($limit) === false) {
+            $options['limit'] = $limit;
+        }
+
+        if (is_null($page) === false) {
+            $options['page'] = $page;
+        }
+
         $res = $this->find('all', $options);
 
         return $res;
@@ -1442,5 +1621,121 @@ class Post extends AppModel
             ]
         ];
         return $this->find('first', $options);
+    }
+
+    /**
+     * 投稿したユニークユーザー数を返す
+     *
+     * @param array $params
+     *
+     * @return mixed
+     */
+    public function getUniqueUserCount($params = [])
+    {
+        $params = array_merge(['start'   => null,
+                               'end'     => null,
+                               'user_id' => null,
+                              ], $params);
+
+        $options = [
+            'fields'     => [
+                'COUNT(DISTINCT user_id) as cnt',
+            ],
+            'conditions' => [
+                'Post.team_id' => $this->current_team_id,
+                'Post.type'    => Post::TYPE_NORMAL,
+            ],
+        ];
+        if ($params['start'] !== null) {
+            $options['conditions']["Post.created >="] = $params['start'];
+        }
+        if ($params['end'] !== null) {
+            $options['conditions']["Post.created <="] = $params['end'];
+        }
+        if ($params['user_id'] !== null) {
+            $options['conditions']["Post.user_id"] = $params['user_id'];
+        }
+        $row = $this->find('first', $options);
+
+        $count = 0;
+        if (isset($row[0]['cnt'])) {
+            $count = $row[0]['cnt'];
+        }
+        return $count;
+    }
+
+    /**
+     * ユーザー別の投稿数ランキングを返す
+     *
+     * @param array $params
+     *
+     * @return mixed
+     */
+    public function getPostCountUserRanking($params = [])
+    {
+        $params = array_merge(['limit'   => null,
+                               'start'   => null,
+                               'end'     => null,
+                               'user_id' => null,
+                              ], $params);
+
+        $options = [
+            'fields'     => [
+                'Post.user_id',
+                'COUNT(*) as cnt',
+            ],
+            'conditions' => [
+                'Post.team_id' => $this->current_team_id,
+                'Post.type'    => self::TYPE_NORMAL,
+            ],
+            'group'      => ['Post.user_id'],
+            'order'      => ['cnt' => 'DESC'],
+            'limit'      => $params['limit'],
+        ];
+        if ($params['start'] !== null) {
+            $options['conditions']["Post.created >="] = $params['start'];
+        }
+        if ($params['end'] !== null) {
+            $options['conditions']["Post.created <="] = $params['end'];
+        }
+        if ($params['user_id'] !== null) {
+            $options['conditions']['Post.user_id'] = $params['user_id'];
+        }
+        $rows = $this->find('all', $options);
+        $ranking = [];
+        foreach ($rows as $v) {
+            $ranking[$v['Post']['user_id']] = $v[0]['cnt'];
+        }
+        return $ranking;
+    }
+
+    /**
+     * ID指定で複数の投稿を返す
+     *
+     * @param array $post_ids
+     * @param array $params
+     *
+     * @return array|null
+     */
+    public function getPostsById($post_ids, $params = [])
+    {
+        $params = array_merge(['include_action' => null,
+                               'include_user'   => null],
+                              $params);
+
+        $options = [
+            'conditions' => [
+                'Post.team_id' => $this->current_team_id,
+                'Post.id'      => $post_ids,
+            ],
+            'contain'    => []
+        ];
+        if ($params['include_action']) {
+            $options['contain'][] = 'ActionResult';
+        }
+        if ($params['include_user']) {
+            $options['contain'][] = 'User';
+        }
+        return $this->find('all', $options);
     }
 }

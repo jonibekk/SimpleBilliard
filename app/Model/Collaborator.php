@@ -378,4 +378,42 @@ class Collaborator extends AppModel
         $res = $this->find('all', $options);
         return $res;
     }
+
+    /**
+     * カウント数を返す
+     *
+     * @param array $params
+     *
+     * @return int
+     */
+    public function getCount(array $params = [])
+    {
+        $params = array_merge(
+            [
+                'user_id' => null,
+                'start'   => null,
+                'end'     => null,
+                'type'    => null,
+            ], $params);
+
+        $options = [
+            'conditions' => [
+                'Collaborator.team_id' => $this->current_team_id,
+            ],
+        ];
+        if ($params['user_id'] !== null) {
+            $options['conditions']['Collaborator.user_id'] = $params['user_id'];
+        }
+        if ($params['start'] !== null) {
+            $options['conditions']["Collaborator.created >="] = $params['start'];
+        }
+        if ($params['end'] !== null) {
+            $options['conditions']["Collaborator.created <="] = $params['end'];
+        }
+        if ($params['type'] !== null) {
+            $options['conditions']["Collaborator.type"] = $params['type'];
+        }
+
+        return $this->find('count', $options);
+    }
 }

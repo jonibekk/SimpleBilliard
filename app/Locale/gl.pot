@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2015-09-07 06:27+0000\n"
+"POT-Creation-Date: 2015-09-24 04:09+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -15,27 +15,35 @@ msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 #: Config/Migration/1435197386_data_migration_for_all_team_0625.php:76;77
-#: Model/Team.php:195;196
-#: Model/User.php:943
+#: Model/Team.php:205;206
+#: Model/User.php:998
 msgid "チーム全体"
 msgstr ""
 
-#: Controller/AppController.php:165
+#: Controller/AppController.php:123;126
+msgid "Goalous(ゴーラス)"
+msgstr ""
+
+#: Controller/AppController.php:130
+msgid "Goalous(ゴーラス)は、チーム力向上のためのSNSです。Goalousを利用すれば、オープンでクリアな目標設定をしたり、ゴールへの活動内容を写真で共有したり、サークルやメッセンジャーで仲間たちとコミュニケーションをとったりできます。"
+msgstr ""
+
+#: Controller/AppController.php:182
 msgid "アクセスしたチームのアクセス権限がありません"
 msgstr ""
 
-#: Controller/AppController.php:516
+#: Controller/AppController.php:533
 msgid "このチームへのアクセス権限がありません。"
 msgstr ""
 
-#: Controller/AppController.php:602
+#: Controller/AppController.php:625
 msgid "ゴールを選択する"
 msgstr ""
 
-#: Controller/AppController.php:634
-#: Controller/GoalsController.php:1280;1302;1323;1352;1358;1390
-#: Controller/TeamsController.php:864;922
-#: Controller/UsersController.php:1016;1060;1080;1100;1123
+#: Controller/AppController.php:657
+#: Controller/GoalsController.php:1287;1309;1330;1359;1365;1397
+#: Controller/TeamsController.php:868;926
+#: Controller/UsersController.php:1030;1077;1099;1119;1144
 msgid "不正な画面遷移です。"
 msgstr ""
 
@@ -341,8 +349,8 @@ msgstr ""
 #: View/Elements/Goal/modal_goal_description.ctp:129
 #: View/GoalApproval/done.ctp:129
 #: View/GoalApproval/index.ctp:143
-#: View/Goals/add.ctp:335
-#: View/Goals/view_info.ctp:84
+#: View/Goals/add.ctp:334
+#: View/Goals/view_info.ctp:86
 msgid "詳細"
 msgstr ""
 
@@ -352,7 +360,7 @@ msgstr ""
 #: View/Elements/Goal/modal_edit_key_result.ctp:220
 #: View/GoalApproval/done.ctp:123
 #: View/GoalApproval/index.ctp:137
-#: View/Goals/add.ctp:349
+#: View/Goals/add.ctp:348
 msgid "重要度"
 msgstr ""
 
@@ -393,9 +401,9 @@ msgid "アクションを追加しました。"
 msgstr ""
 
 #: Controller/GoalsController.php:1140
-#: Controller/PostsController.php:672;696;719
-#: Controller/UsersController.php:749;752
-#: View/Elements/gl_common_js.ctp:65
+#: Controller/PostsController.php:693;717;740
+#: Controller/UsersController.php:763;766
+#: View/Elements/gl_common_js.ctp:67
 msgid "エラーが発生しました。"
 msgstr ""
 
@@ -407,87 +415,95 @@ msgstr ""
 msgid "2 基準を定める"
 msgstr ""
 
-#: Controller/PostsController.php:113;116
+#: Controller/PostsController.php:82;85
+msgid "メンバーの変更に失敗しました。"
+msgstr ""
+
+#: Controller/PostsController.php:89
+msgid "メンバーを変更しました。"
+msgstr ""
+
+#: Controller/PostsController.php:128;131
 msgid "投稿に失敗しました。"
 msgstr ""
 
-#: Controller/PostsController.php:132;174
+#: Controller/PostsController.php:147;189
 msgid "投稿しました。"
 msgstr ""
 
-#: Controller/PostsController.php:188;215
+#: Controller/PostsController.php:203;230
 msgid "この投稿は存在しません。"
 msgstr ""
 
-#: Controller/PostsController.php:191;218
+#: Controller/PostsController.php:206;233
 msgid "この投稿はあなたのものではありません。"
 msgstr ""
 
-#: Controller/PostsController.php:197
+#: Controller/PostsController.php:212
 msgid "投稿を削除しました。"
 msgstr ""
 
-#: Controller/PostsController.php:229
+#: Controller/PostsController.php:244
 msgid "投稿の変更を保存しました。"
 msgstr ""
 
-#: Controller/PostsController.php:233
+#: Controller/PostsController.php:248
 msgid "投稿の変更に失敗しました。"
 msgstr ""
 
-#: Controller/PostsController.php:275
+#: Controller/PostsController.php:290
 msgid "コメントを削除しました。"
 msgstr ""
 
-#: Controller/PostsController.php:308
+#: Controller/PostsController.php:323
 msgid "コメントの変更を保存しました。"
 msgstr ""
 
-#: Controller/PostsController.php:312
+#: Controller/PostsController.php:327
 msgid "コメントの変更に失敗しました。"
 msgstr ""
 
-#: Controller/PostsController.php:843
+#: Controller/PostsController.php:864
 msgid "この投稿は削除されています。"
 msgstr ""
 
-#: Controller/PostsController.php:870
+#: Controller/PostsController.php:891
 msgid "コメントしました。"
 msgstr ""
 
-#: Controller/PostsController.php:938;943;950
+#: Controller/PostsController.php:959;964;971
 msgid "ファイルが存在しません。"
 msgstr ""
 
-#: Controller/PostsController.php:1065
+#: Controller/PostsController.php:1086
 msgid "アップロードに失敗しました"
 msgstr ""
 
-#: Controller/PostsController.php:1087
+#: Controller/PostsController.php:1108
 msgid "ファイルを削除しました"
 msgstr ""
 
-#: Controller/PostsController.php:1088
+#: Controller/PostsController.php:1109
 msgid "ファイルの削除に失敗しました"
 msgstr ""
 
-#: Controller/PostsController.php:1183;1200
+#: Controller/PostsController.php:1204;1221
 msgid "アクセスURLに誤りがあります。"
 msgstr ""
 
-#: Controller/PostsController.php:1188
+#: Controller/PostsController.php:1209
 msgid "You have joined the circle"
 msgstr ""
 
-#: Controller/PostsController.php:1191
+#: Controller/PostsController.php:1212
 msgid "Error in joining the circle"
 msgstr ""
 
-#: Controller/PostsController.php:1205
+#: Controller/PostsController.php:1226
 msgid "このサークルから抜けることはできません。"
 msgstr ""
 
-#: Controller/PostsController.php:1209
+#: Controller/PostsController.php:1230
 msgid "You have successfully left the circle"
 msgstr ""
 
@@ -627,39 +643,39 @@ msgstr ""
 msgid "評価の凍結を解除しました。"
 msgstr ""
 
-#: Controller/TeamsController.php:830
+#: Controller/TeamsController.php:834
 msgid "既にチームビジョンが存在する為、新規の追加はできません。"
 msgstr ""
 
-#: Controller/TeamsController.php:841;877
+#: Controller/TeamsController.php:845;881
 msgid "チームビジョンの保存に失敗しました。"
 msgstr ""
 
-#: Controller/TeamsController.php:846
+#: Controller/TeamsController.php:850
 msgid "チームビジョンを追加しました。"
 msgstr ""
 
-#: Controller/TeamsController.php:868;926
+#: Controller/TeamsController.php:872;930
 msgid "ページが存在しません。"
 msgstr ""
 
-#: Controller/TeamsController.php:882
+#: Controller/TeamsController.php:886
 msgid "チームビジョンを更新しました。"
 msgstr ""
 
-#: Controller/TeamsController.php:895
+#: Controller/TeamsController.php:899
 msgid "グループに所属していないか既に存在している為、グループビジョンは作成できません。"
 msgstr ""
 
-#: Controller/TeamsController.php:905;937
+#: Controller/TeamsController.php:909;941
 msgid "グループビジョンの保存に失敗しました。"
 msgstr ""
 
-#: Controller/TeamsController.php:910
+#: Controller/TeamsController.php:914
 msgid "グループビジョンを追加しました。"
 msgstr ""
 
-#: Controller/TeamsController.php:942
+#: Controller/TeamsController.php:946
 msgid "グループビジョンを更新しました。"
 msgstr ""
 
@@ -731,16 +747,20 @@ msgstr ""
 msgid "チーム「%s」に参加しました。"
 msgstr ""
 
-#: Controller/UsersController.php:755
+#: Controller/UsersController.php:769
 msgid "コードが正しくありません。"
 msgstr ""
 
-#: Controller/UsersController.php:766
+#: Controller/UsersController.php:780
 msgid "2段階認証の登録が完了しました。"
 msgstr ""
 
-#: Controller/UsersController.php:787
+#: Controller/UsersController.php:801
 msgid "2段階認証を解除しました。"
+msgstr ""
+
+#: Controller/UsersController.php:1163
+msgid "メールアドレスの登録ができました。"
 msgstr ""
 
 #: Model/AttachedFile.php:30
@@ -763,14 +783,14 @@ msgid "ドキュメント"
 msgstr ""
 
 #: Model/AttachedFile.php:141
-#: Model/Goal.php:74;94;1477;1489
+#: Model/Goal.php:74;94;1490;1502
 #: Model/KeyResult.php:369;380
 msgid "すべて"
 msgstr ""
 
 #: Model/Badge.php:24
 #: Model/EvaluateScore.php:71
-#: Model/Team.php:222
+#: Model/Team.php:232
 msgid "選択してください"
 msgstr ""
 
@@ -783,17 +803,17 @@ msgid "スキル"
 msgstr ""
 
 #: Model/Circle.php:27
-#: View/Elements/gl_common_js.ctp:99
+#: View/Elements/gl_common_js.ctp:101
 msgid "公開"
 msgstr ""
 
 #: Model/Circle.php:28
-#: View/Elements/gl_common_js.ctp:100
+#: View/Elements/gl_common_js.ctp:102
 msgid "秘密"
 msgstr ""
 
 #: Model/Collaborator.php:41
-#: View/Elements/gl_common_js.ctp:228
+#: View/Elements/gl_common_js.ctp:235
 #: View/Elements/my_goals_area.ctp:83
 #: View/Elements/Goal/modal_goal_description.ctp:99
 msgid "コラボレータ"
@@ -857,7 +877,8 @@ msgstr ""
 #: View/Elements/modal_add_circle.ctp:45
 #: View/Elements/modal_edit_circle.ctp:264
 #: View/Elements/Goal/simplex_top_section.ctp:44;160
-#: View/Goals/view_info.ctp:50
+#: View/Elements/Team/insight_circle_result.ctp:13
+#: View/Goals/view_info.ctp:52
 msgid "メンバー"
 msgstr ""
 
@@ -973,7 +994,7 @@ msgstr ""
 msgid "このゴールは評価中のため、変更できません。"
 msgstr ""
 
-#: Model/Goal.php:1335;1348
+#: Model/Goal.php:1349;1362
 msgid "ゴールが存在しません。"
 msgstr ""
 
@@ -1260,120 +1281,120 @@ msgstr ""
 msgid "あたらしいサークルをつくりました。"
 msgstr ""
 
-#: Model/Post.php:482
+#: Model/Post.php:533
 msgid "サークルが存在しないか、権限がありません。"
 msgstr ""
 
-#: Model/Post.php:873;890
+#: Model/Post.php:943;960
 msgid "%sに共有"
 msgstr ""
 
-#: Model/Post.php:877
+#: Model/Post.php:947
 msgid "%1$sと他%2$s人に共有"
 msgstr ""
 
-#: Model/Post.php:884
-#: View/Elements/gl_common_js.ctp:86
+#: Model/Post.php:954
+#: View/Elements/gl_common_js.ctp:88
 msgid "自分のみ"
 msgstr ""
 
-#: Model/Post.php:894
+#: Model/Post.php:964
 msgid "%1$s他%2$sサークルに共有"
 msgstr ""
 
-#: Model/Post.php:902
+#: Model/Post.php:972
 msgid "%1$sと%2$sに共有"
 msgstr ""
 
-#: Model/Post.php:907
+#: Model/Post.php:977
 msgid "%1$sと%2$s他%3$sサークルに共有"
 msgstr ""
 
-#: Model/Post.php:917
+#: Model/Post.php:987
 msgid "%1$s,%2$sと他%3$s人に共有"
 msgstr ""
 
-#: Model/Post.php:923
+#: Model/Post.php:993
 msgid "%1$sと他%2$s人,%3$s他%4$sサークルに共有"
 msgstr ""
 
-#: Model/Team.php:50
+#: Model/Team.php:54
 msgid "フリー"
 msgstr ""
 
-#: Model/Team.php:51
+#: Model/Team.php:55
 msgid "プロ"
 msgstr ""
 
-#: Model/Team.php:56
+#: Model/Team.php:60
 msgid "今期から"
 msgstr ""
 
-#: Model/Team.php:57
+#: Model/Team.php:61
 msgid "来期から"
 msgstr ""
 
-#: Model/Team.php:223
+#: Model/Team.php:233
 msgid "四半期"
 msgstr ""
 
-#: Model/Team.php:224
+#: Model/Team.php:234
 msgid "半年"
 msgstr ""
 
-#: Model/Team.php:225
+#: Model/Team.php:235
 msgid "年"
 msgstr ""
 
-#: Model/Team.php:233
+#: Model/Team.php:243
 msgid "選択して下さい"
 msgstr ""
 
-#: Model/Team.php:234
+#: Model/Team.php:244
 msgid "１月"
 msgstr ""
 
-#: Model/Team.php:235
+#: Model/Team.php:245
 msgid "２月"
 msgstr ""
 
-#: Model/Team.php:236
+#: Model/Team.php:246
 msgid "３月"
 msgstr ""
 
-#: Model/Team.php:237
+#: Model/Team.php:247
 msgid "４月"
 msgstr ""
 
-#: Model/Team.php:238
+#: Model/Team.php:248
 msgid "５月"
 msgstr ""
 
-#: Model/Team.php:239
+#: Model/Team.php:249
 msgid "６月"
 msgstr ""
 
-#: Model/Team.php:240
+#: Model/Team.php:250
 msgid "７月"
 msgstr ""
 
-#: Model/Team.php:241
+#: Model/Team.php:251
 msgid "８月"
 msgstr ""
 
-#: Model/Team.php:242
+#: Model/Team.php:252
 msgid "９月"
 msgstr ""
 
-#: Model/Team.php:243
+#: Model/Team.php:253
 msgid "１０月"
 msgstr ""
 
-#: Model/Team.php:244
+#: Model/Team.php:254
 msgid "１１月"
 msgstr ""
 
-#: Model/Team.php:245
+#: Model/Team.php:255
 msgid "１２月"
 msgstr ""
 
@@ -1712,7 +1733,7 @@ msgstr ""
 msgid "どちらでもない"
 msgstr ""
 
-#: Model/User.php:1066;1067
+#: Model/User.php:1120;1121
 msgid "　"
 msgstr ""
 
@@ -1734,19 +1755,18 @@ msgstr ""
 #: View/Elements/Feed/common_form.ctp:53
 #: View/Elements/Goal/key_results.ctp:82
 #: View/Elements/Goal/simplex_top_section.ctp:36;147
-#: View/Elements/User/simplex_top_section.ctp:38;99
+#: View/Elements/Team/insight_result.ctp:64;122;182
+#: View/Elements/User/simplex_top_section.ctp:52;113
 #: View/Evaluations/view.ctp:313
 #: View/Users/view_goals.ctp:108
 msgid "アクション"
 msgstr ""
 
 #: View/Elements/footer.ctp:31
-#: View/Layouts/homepage.ctp:225
 msgid "Privacy Policy"
 msgstr ""
 
 #: View/Elements/footer.ctp:39
-#: View/Layouts/homepage.ctp:234
 msgid "Terms of Service"
 msgstr ""
 
@@ -1758,91 +1778,91 @@ msgstr ""
 msgid "Made By %s"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:53
+#: View/Elements/gl_common_js.ctp:55
 msgid "アップロード出来るファイルサイズは{{maxFilesize}}MBまでです。"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:54
+#: View/Elements/gl_common_js.ctp:56
 msgid "画像ファイルを選択してください。"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:55
+#: View/Elements/gl_common_js.ctp:57
 msgid "アップロード出来るファイル数は{{maxFiles}}個までです。"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:56
+#: View/Elements/gl_common_js.ctp:58
 msgid "アップロードに失敗しました。"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:57
+#: View/Elements/gl_common_js.ctp:59
 msgid "アップロードをキャンセルしました。"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:58
+#: View/Elements/gl_common_js.ctp:60
 msgid "アップロードをキャンセルしてよろしいですか？"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:59
+#: View/Elements/gl_common_js.ctp:61
 msgid "全てのファイルのアップロードが完了していません。\\nこのまま送信してよろしいですか？"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:62
+#: View/Elements/gl_common_js.ctp:64
 msgid "入力が途中です。このまま移動しますか？"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:63
+#: View/Elements/gl_common_js.ctp:65
 msgid "スペルを入力してください。"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:64
+#: View/Elements/gl_common_js.ctp:66
 msgid "エラーが発生しました。データ取得できません。"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:69
+#: View/Elements/gl_common_js.ctp:71
 msgid "このコメントは削除されました。"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:70
+#: View/Elements/gl_common_js.ctp:72
 msgid "コメントを取得できませんでした。"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:71;89
+#: View/Elements/gl_common_js.ctp:73;91
 msgid "該当なし"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:74
+#: View/Elements/gl_common_js.ctp:76
 msgid "クリップボードに投稿URLをコピーしました。"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:75
+#: View/Elements/gl_common_js.ctp:77
 msgid "読込中･･･"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:76
+#: View/Elements/gl_common_js.ctp:78
 msgid "検索中･･･"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:77
+#: View/Elements/gl_common_js.ctp:79
 #: View/Helper/GoalHelper.php:26;45
 msgid "フォロー中"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:78
+#: View/Elements/gl_common_js.ctp:80
 #: View/Elements/my_goals_area.ctp:78;91;111;128
 msgid "もっと見る"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:79
-#: View/Elements/Feed/contents.ctp:57
-#: View/Users/view_posts.ctp:26
+#: View/Elements/gl_common_js.ctp:81
+#: View/Elements/Feed/contents.ctp:60
+#: View/Users/view_posts.ctp:30
 msgid "さらに投稿を読み込む ▼"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:80
+#: View/Elements/gl_common_js.ctp:82
 msgid "これ以上のコメントがありません。"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:81
+#: View/Elements/gl_common_js.ctp:83
 #: View/Elements/modal_action_list.ctp:78
 #: View/Elements/modal_circle_members.ctp:35
 #: View/Elements/modal_message_range.ctp:30
@@ -1869,82 +1889,82 @@ msgstr ""
 msgid "閉じる"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:82
+#: View/Elements/gl_common_js.ctp:84
 #: View/Elements/Goal/simplex_top_section.ctp:85
 #: View/Helper/GoalHelper.php:17
 msgid "フォロー"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:87
+#: View/Elements/gl_common_js.ctp:89
 msgid "参加"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:88
+#: View/Elements/gl_common_js.ctp:90
 msgid "不参加"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:90
+#: View/Elements/gl_common_js.ctp:92
 msgid "あと"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:91
+#: View/Elements/gl_common_js.ctp:93
 msgid "文字入れてください"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:92
+#: View/Elements/gl_common_js.ctp:94
 msgid "検索文字列が"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:93
+#: View/Elements/gl_common_js.ctp:95
 msgid "文字長すぎます"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:94
+#: View/Elements/gl_common_js.ctp:96
 msgid "最多で"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:95
+#: View/Elements/gl_common_js.ctp:97
 msgid "項目までしか選択できません"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:96
+#: View/Elements/gl_common_js.ctp:98
 #: View/Elements/Feed/common_form.ctp:182
 msgid "出したい成果を選択する(オプション)"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:97
+#: View/Elements/gl_common_js.ctp:99
 msgid "出したい成果はありません"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:98
+#: View/Elements/gl_common_js.ctp:100
 msgid "通知先を追加(オプション)"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:101
+#: View/Elements/gl_common_js.ctp:103
 msgid "公開サークルかメンバーを指定しよう"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:102
+#: View/Elements/gl_common_js.ctp:104
 msgid "メンバーを指定しよう"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:103
+#: View/Elements/gl_common_js.ctp:105
 msgid "秘密サークルを指定しよう"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:104
+#: View/Elements/gl_common_js.ctp:106
 msgid "サークルページでは切り替えられません"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:105
+#: View/Elements/gl_common_js.ctp:107
 msgid "成功"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:106
+#: View/Elements/gl_common_js.ctp:108
 msgid "エラー"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:107
+#: View/Elements/gl_common_js.ctp:109
 #: View/Elements/modal_add_circle.ctp:127
 #: View/Elements/modal_add_members_by_csv.ctp:96
 #: View/Elements/modal_collabo.ctp:79
@@ -1958,23 +1978,23 @@ msgstr ""
 msgid "キャンセル"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:108
+#: View/Elements/gl_common_js.ctp:110
 msgid "名前を入力"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:109
+#: View/Elements/gl_common_js.ctp:111
 msgid "ゴール名を入力"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:110
+#: View/Elements/gl_common_js.ctp:112
 msgid "サークル名を入力"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:216
+#: View/Elements/gl_common_js.ctp:223
 msgid "コーチ"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:222
+#: View/Elements/gl_common_js.ctp:229
 #: View/Elements/Goal/modal_goal_description.ctp:114
 #: View/Elements/Goal/simplex_top_section.ctp:52;173
 msgid "フォロワー"
@@ -1986,7 +2006,7 @@ msgid "ホーム"
 msgstr ""
 
 #: View/Elements/header_logged_in.ctp:51;53;112
-#: View/Elements/User/simplex_top_section.ctp:85
+#: View/Elements/User/simplex_top_section.ctp:99
 msgid "ゴール"
 msgstr ""
 
@@ -2054,21 +2074,29 @@ msgstr ""
 msgid "チュートリアル"
 msgstr ""
 
-#: View/Elements/header_logged_in_right.ctp:131
+#: View/Elements/header_logged_in_right.ctp:127
+msgid "ゴールについて"
+msgstr ""
+
+#: View/Elements/header_logged_in_right.ctp:136
 msgid "ゴール認定"
 msgstr ""
 
-#: View/Elements/header_logged_in_right.ctp:135
+#: View/Elements/header_logged_in_right.ctp:140
 msgid "ログアウト"
 msgstr ""
 
-#: View/Elements/header_logged_in_right.ctp:145
+#: View/Elements/header_logged_in_right.ctp:150
 #: View/Evaluations/index.ctp:19
 msgid "評価"
 msgstr ""
 
-#: View/Elements/header_logged_in_right.ctp:153
+#: View/Elements/header_logged_in_right.ctp:158
 msgid "チーム設定"
+msgstr ""
+
+#: View/Elements/header_logged_in_right.ctp:178
+msgid "Feedback"
 msgstr ""
 
 #: View/Elements/header_sp_feeds_alt.ctp:6
@@ -2089,15 +2117,16 @@ msgid "これ以上のデータがありません。"
 msgstr ""
 
 #: View/Elements/modal_action_list.ctp:71
-#: View/Elements/Feed/contents.ctp:52
-#: View/Goals/view_actions.ctp:68
-#: View/Users/view_actions.ctp:67
-#: View/Users/view_posts.ctp:21
+#: View/Elements/Feed/contents.ctp:55
+#: View/Goals/view_actions.ctp:79
+#: View/Users/view_actions.ctp:78
+#: View/Users/view_posts.ctp:25
 msgid "もっと読む ▼"
 msgstr ""
 
 #: View/Elements/modal_add_circle.ctp:40
 #: View/Elements/modal_edit_circle.ctp:50
+#: View/Elements/Team/insight_circle_result.ctp:12
 msgid "サークル名"
 msgstr ""
 
@@ -2148,7 +2177,7 @@ msgstr ""
 #: View/Elements/modal_edit_circle.ctp:98
 #: View/Elements/Team/edit_basic_setting.ctp:60
 #: View/Elements/User/profile_setting.ctp:161
-#: View/Goals/add.ctp:381
+#: View/Goals/add.ctp:380
 #: View/Teams/add.ctp:54
 #: View/Teams/add_group_vision.ctp:63
 #: View/Teams/add_team_vision.ctp:55
@@ -2162,7 +2191,7 @@ msgstr ""
 #: View/Elements/modal_edit_circle.ctp:101
 #: View/Elements/Team/edit_basic_setting.ctp:63
 #: View/Elements/User/profile_setting.ctp:164
-#: View/Goals/add.ctp:384
+#: View/Goals/add.ctp:383
 #: View/Teams/add.ctp:57
 #: View/Teams/add_group_vision.ctp:66
 #: View/Teams/add_team_vision.ctp:58
@@ -2176,7 +2205,7 @@ msgstr ""
 #: View/Elements/modal_edit_circle.ctp:113
 #: View/Elements/Team/edit_basic_setting.ctp:75
 #: View/Elements/User/profile_setting.ctp:176
-#: View/Goals/add.ctp:396
+#: View/Goals/add.ctp:395
 #: View/Teams/add.ctp:69
 #: View/Teams/add_group_vision.ctp:78
 #: View/Teams/add_team_vision.ctp:70
@@ -2341,7 +2370,7 @@ msgid "変更したユーザ情報のファイルをアップロードしてく�
 msgstr ""
 
 #: View/Elements/modal_edit_members_by_csv.ctp:99
-#: View/Goals/add.ctp:33;102;306
+#: View/Goals/add.ctp:33;102;305
 msgid "変更する"
 msgstr ""
 
@@ -2350,6 +2379,8 @@ msgid "会話のメンバー (%s)"
 msgstr ""
 
 #: View/Elements/modal_privacy_policy.ctp:13
+#: View/Layouts/homepage.ctp:166
+#: View/Pages/home.ctp:63
 #: View/Users/register.ctp:98
 msgid "プライバシーポリシー"
 msgstr ""
@@ -2379,6 +2410,8 @@ msgid "%s人に共有しました"
 msgstr ""
 
 #: View/Elements/modal_tos.ctp:16
+#: View/Layouts/homepage.ctp:163
+#: View/Pages/home.ctp:62
 #: View/Users/register.ctp:95
 msgid "利用規約"
 msgstr ""
@@ -2489,37 +2522,41 @@ msgid "自己評価未評価者"
 msgstr ""
 
 #: View/Elements/Feed/action_posts.ctp:31
-#: View/Elements/Feed/posts.ctp:110
+#: View/Elements/Feed/posts.ctp:113
 msgid "アクションを編集"
 msgstr ""
 
 #: View/Elements/Feed/action_posts.ctp:38
-#: View/Elements/Feed/posts.ctp:138
+#: View/Elements/Feed/posts.ctp:141
 msgid "リンクをコピー"
 msgstr ""
 
 #: View/Elements/Feed/action_posts.ctp:187
 #: View/Elements/Feed/comment.ctp:176
-#: View/Elements/Feed/posts.ctp:360
+#: View/Elements/Feed/posts.ctp:382
 msgid "いいね！"
 msgstr ""
 
 #: View/Elements/Feed/action_posts.ctp:211
-#: View/Elements/Feed/posts.ctp:399;408
+#: View/Elements/Feed/posts.ctp:421;430
 msgid "他%s件のコメントを見る"
 msgstr ""
 
 #: View/Elements/Feed/action_posts.ctp:227
-#: View/Elements/Feed/posts.ctp:429
+#: View/Elements/Feed/posts.ctp:451
 msgid "件の新しいコメントがあります"
 msgstr ""
 
 #: View/Elements/Feed/action_posts.ctp:255
 #: View/Elements/Feed/new_comment_form.ctp:42;67
-#: View/Elements/Feed/posts.ctp:458
+#: View/Elements/Feed/posts.ctp:480
 #: View/GoalApproval/done.ctp:175
 #: View/GoalApproval/index.ctp:188
 msgid "コメントする"
+msgstr ""
+
+#: View/Elements/Feed/add_member_on_message.ctp:58
+msgid "ADD"
 msgstr ""
 
 #: View/Elements/Feed/attached_file_item.ctp:53;180
@@ -2574,11 +2611,14 @@ msgid "変更を保存する"
 msgstr ""
 
 #: View/Elements/Feed/common_form.ctp:63
-#: View/Elements/User/simplex_top_section.ctp:46;112
+#: View/Elements/Team/insight_circle_result.ctp:14
+#: View/Elements/Team/insight_result.ctp:75;133;193
+#: View/Elements/User/simplex_top_section.ctp:60;126
 msgid "投稿"
 msgstr ""
 
 #: View/Elements/Feed/common_form.ctp:77
+#: View/Elements/Team/insight_result.ctp:108;166;226
 msgid "メッセージ"
 msgstr ""
 
@@ -2588,6 +2628,10 @@ msgstr ""
 
 #: View/Elements/Feed/common_form.ctp:89
 msgid "ゴールを作成する"
+msgstr ""
+
+#: View/Elements/Feed/common_form.ctp:120
+msgid "アクション画像をアップロード"
 msgstr ""
 
 #: View/Elements/Feed/common_form.ctp:136
@@ -2606,21 +2650,21 @@ msgstr ""
 msgid "To:"
 msgstr ""
 
-#: View/Elements/Feed/common_form.ctp:437
+#: View/Elements/Feed/common_form.ctp:438
 msgid "メッセージを書こう"
 msgstr ""
 
-#: View/Elements/Feed/common_form.ctp:448
+#: View/Elements/Feed/common_form.ctp:456
 msgid "メッセージする"
 msgstr ""
 
-#: View/Elements/Feed/contents.ctp:36
+#: View/Elements/Feed/contents.ctp:37
 #: View/Posts/attached_file_list.ctp:33
 msgid "件の新しい投稿があります。"
 msgstr ""
 
-#: View/Elements/Feed/contents.ctp:86
-#: View/Users/view_posts.ctp:37
+#: View/Elements/Feed/contents.ctp:89
+#: View/Users/view_posts.ctp:41
 msgid "これ以上の投稿はありませんでした。"
 msgstr ""
 
@@ -2669,33 +2713,34 @@ msgstr ""
 msgid "%s を達成しました！"
 msgstr ""
 
-#: View/Elements/Feed/posts.ctp:105
+#: View/Elements/Feed/posts.ctp:108
 msgid "投稿を編集"
 msgstr ""
 
-#: View/Elements/Feed/posts.ctp:117
+#: View/Elements/Feed/posts.ctp:120
 #: View/Elements/Goal/modal_edit_action_result.ctp:86
 msgid "アクションを削除"
 msgstr ""
 
-#: View/Elements/Feed/posts.ctp:122
+#: View/Elements/Feed/posts.ctp:125
 #: View/Elements/Goal/modal_edit_action_result.ctp:88
 msgid "本当にこのアクションを削除しますか？"
 msgstr ""
 
-#: View/Elements/Feed/posts.ctp:125
+#: View/Elements/Feed/posts.ctp:128
 msgid "投稿を削除"
 msgstr ""
 
-#: View/Elements/Feed/posts.ctp:130
+#: View/Elements/Feed/posts.ctp:133
 msgid "本当にこの投稿を削除しますか？"
 msgstr ""
 
-#: View/Elements/Feed/posts.ctp:366
+#: View/Elements/Feed/posts.ctp:388
+#: View/Elements/Team/insight_result.ctp:97;155;215
 msgid "コメント"
 msgstr ""
 
-#: View/Elements/Feed/posts.ctp:402
+#: View/Elements/Feed/posts.ctp:424
 msgid "(%s)"
 msgstr ""
 
@@ -2896,7 +2941,7 @@ msgstr ""
 
 #: View/Elements/Goal/modal_add_key_result.ctp:170
 #: View/Elements/Goal/modal_edit_key_result.ctp:191
-#: View/Goals/add.ctp:249
+#: View/Goals/add.ctp:248
 msgid "変更"
 msgstr ""
 
@@ -3401,6 +3446,101 @@ msgstr ""
 msgid "ゴールカテゴリを１つ追加"
 msgstr ""
 
+#: View/Elements/Team/insight_circle_result.ctp:15
+msgid "リーチ"
+msgstr ""
+
+#: View/Elements/Team/insight_circle_result.ctp:16
+msgid "エンゲージメント"
+msgstr ""
+
+#: View/Elements/Team/insight_circle_result.ctp:31
+#: View/Elements/Team/insight_item.ctp:19
+msgid "▲"
+msgstr ""
+
+#: View/Elements/Team/insight_circle_result.ctp:35
+#: View/Elements/Team/insight_item.ctp:21
+msgid "▼"
+msgstr ""
+
+#: View/Elements/Team/insight_form_input.ctp:26
+msgid "先週"
+msgstr ""
+
+#: View/Elements/Team/insight_form_input.ctp:29
+msgid "先月"
+msgstr ""
+
+#: View/Elements/Team/insight_form_input.ctp:39
+msgid "すべてのメンバー"
+msgstr ""
+
+#: View/Elements/Team/insight_form_input.ctp:49
+msgid "アクションされたゴール"
+msgstr ""
+
+#: View/Elements/Team/insight_form_input.ctp:50
+msgid "いいねされたアクション"
+msgstr ""
+
+#: View/Elements/Team/insight_form_input.ctp:51
+msgid "コメントされたアクション"
+msgstr ""
+
+#: View/Elements/Team/insight_form_input.ctp:52
+msgid "アクションしたメンバー"
+msgstr ""
+
+#: View/Elements/Team/insight_form_input.ctp:53
+msgid "投稿したメンバー"
+msgstr ""
+
+#: View/Elements/Team/insight_form_input.ctp:54
+msgid "いいねされた投稿"
+msgstr ""
+
+#: View/Elements/Team/insight_form_input.ctp:55
+msgid "コメントされた投稿"
+msgstr ""
+
+#: View/Elements/Team/insight_form_input.ctp:65
+msgid "(GMT+09:00) 東京"
+msgstr ""
+
+#: View/Elements/Team/insight_form_input.ctp:66
+msgid "(GMT+05:30) ニューデリー"
+msgstr ""
+
+#: View/Elements/Team/insight_form_input.ctp:67
+msgid "(GMT+01:00) ベルリン"
+msgstr ""
+
+#: View/Elements/Team/insight_form_input.ctp:68
+msgid "(GMT-08:00) 太平洋標準時 (アメリカ & カナダ)"
+msgstr ""
+
+#: View/Elements/Team/insight_result.ctp:27
+msgid "メンバー（アクティブ）"
+msgstr ""
+
+#: View/Elements/Team/insight_result.ctp:39
+msgid "ログインメンバー"
+msgstr ""
+
+#: View/Elements/Team/insight_result.ctp:53
+msgid "トータル"
+msgstr ""
+
+#: View/Elements/Team/insight_result.ctp:54
+msgid "ユニーク"
+msgstr ""
+
+#: View/Elements/Team/insight_result.ctp:86;144;204
+#: View/Elements/User/simplex_top_section.ctp:68
+msgid "いいね"
+msgstr ""
+
 #: View/Elements/Team/invite.ctp:15
 msgid "新しいメンバーを招待"
 msgstr ""
@@ -3818,15 +3958,11 @@ msgstr ""
 msgid "\n■ 例文１（技術者向け）<br>\n【今、チームに貢献できることは？】<br>\nスリムな開発環境の構築。オートスケール環境の構築。Git支援。<br><br>\n【これからチームで実現してみたいことは？(具体的に)】<br>\niOS,Androidで100万ダウンロードされるアプリを開発する。<br><br>\n================================================<br>\n■ 例文2（技術者以外向け）<br>\n【今、チームに貢献できることは？】<br>\n社内の風通しを良くする事。<br><br>\n【これからチームで実現してみたいことは？(具体的に)】<br>\n地域活性化に貢献できるサービスを作り社会貢献をする事。\n<br>\n"
 msgstr ""
 
-#: View/Elements/User/simplex_top_section.ctp:54
-msgid "いいね"
-msgstr ""
-
-#: View/Elements/User/simplex_top_section.ctp:58
+#: View/Elements/User/simplex_top_section.ctp:72
 msgid "プロフィール編集"
 msgstr ""
 
-#: View/Elements/User/simplex_top_section.ctp:125
+#: View/Elements/User/simplex_top_section.ctp:139
 msgid "基本データ"
 msgstr ""
 
@@ -3891,7 +4027,7 @@ msgid "ゴール評価"
 msgstr ""
 
 #: View/Evaluations/view.ctp:266
-#: View/Goals/add.ctp:361
+#: View/Goals/add.ctp:360
 msgid "ゴール画像"
 msgstr ""
 
@@ -3983,11 +4119,11 @@ msgstr ""
 msgid "例）新しい価値を人々に提供する"
 msgstr ""
 
-#: View/Goals/add.ctp:81;277
+#: View/Goals/add.ctp:81;276
 msgid "詳しくはこちら"
 msgstr ""
 
-#: View/Goals/add.ctp:85;288
+#: View/Goals/add.ctp:85;287
 msgid "次のステップ"
 msgstr ""
 
@@ -3999,35 +4135,35 @@ msgstr ""
 msgid "達成の指標として<br>『なに』をどうするか？"
 msgstr ""
 
-#: View/Goals/add.ctp:303
+#: View/Goals/add.ctp:302
 msgid "情報を追加する"
 msgstr ""
 
-#: View/Goals/add.ctp:336
+#: View/Goals/add.ctp:335
 msgid "内容を補足しましょう"
 msgstr ""
 
-#: View/Goals/add.ctp:338
+#: View/Goals/add.ctp:337
 msgid "ゴールの内容を詳しく書く"
 msgstr ""
 
-#: View/Goals/add.ctp:350
+#: View/Goals/add.ctp:349
 msgid "あなたにとっての<br>このゴールの重要度"
 msgstr ""
 
-#: View/Goals/add.ctp:363
+#: View/Goals/add.ctp:362
 msgid "イメージに合った画像を追加しましょう"
 msgstr ""
 
-#: View/Goals/add.ctp:415
+#: View/Goals/add.ctp:414
 msgid "この内容で作成"
 msgstr ""
 
-#: View/Goals/add.ctp:448
+#: View/Goals/add.ctp:447
 msgid "開始日が期限を過ぎています。"
 msgstr ""
 
-#: View/Goals/add.ctp:459
+#: View/Goals/add.ctp:458
 msgid "期限が開始日以前になっています。"
 msgstr ""
 
@@ -4056,13 +4192,13 @@ msgstr ""
 msgid "もっと見る ▼"
 msgstr ""
 
-#: View/Goals/view_actions.ctp:77
-#: View/Users/view_actions.ctp:76
+#: View/Goals/view_actions.ctp:84
+#: View/Users/view_actions.ctp:83
 msgid "さらにアクションを読み込む ▼"
 msgstr ""
 
-#: View/Goals/view_actions.ctp:87
-#: View/Users/view_actions.ctp:86
+#: View/Goals/view_actions.ctp:94
+#: View/Users/view_actions.ctp:93
 msgid "これ以上のアクションはありませんでした。"
 msgstr ""
 
@@ -4104,7 +4240,12 @@ msgstr ""
 msgid "他%s人"
 msgstr ""
 
-#: View/Layouts/homepage.ctp:178
+#: View/Layouts/homepage.ctp:118
+#: View/Users/login.ctp:54
+msgid "ログイン"
+msgstr ""
+
+#: View/Layouts/homepage.ctp:122
 msgid "Language"
 msgstr ""
 
@@ -4212,16 +4353,8 @@ msgstr ""
 msgid "Cookieを有効にしてください"
 msgstr ""
 
-#: View/Users/login.ctp:54
-msgid "ログイン"
-msgstr ""
-
 #: View/Users/login.ctp:61
 msgid "パスワードを忘れた場合はこちら"
-msgstr ""
-
-#: View/Users/login.ctp:66
-msgid "新規ユーザ登録はこちら"
 msgstr ""
 
 #: View/Users/password_reset.ctp:16

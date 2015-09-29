@@ -80,6 +80,17 @@ class GroupTest extends CakeTestCase
         $this->assertFalse($this->Group->id);
     }
 
+    function testGetAll()
+    {
+        $this->_setDefault();
+
+        $groups = $this->Group->getAll();
+        $this->assertNotEmpty($groups);
+        foreach ($groups as $v) {
+            $this->assertEquals($this->Group->current_team_id, $v['Group']['team_id']);
+        }
+    }
+
     function _setDefault()
     {
         $this->Group->current_team_id = 1;

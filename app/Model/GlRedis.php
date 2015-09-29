@@ -41,6 +41,12 @@ class GlRedis extends AppModel
     const KEY_TYPE_COUNT_MESSAGE_BY_USER = 'count_message_by_user_key';
     const KEY_TYPE_TWO_FA_DEVICE_HASHES = 'two_fa_device_hashes_key';
     const KEY_TYPE_PRE_UPLOAD_FILE = 'pre_upload_file_key';
+    const KEY_TYPE_ACCESS_USER = 'access_user_key';
+    const KEY_TYPE_TEAM_INSIGHT = 'team_insight';
+    const KEY_TYPE_GROUP_INSIGHT = 'group_insight';
+    const KEY_TYPE_CIRCLE_INSIGHT = 'circle_insight';
+    const KEY_TYPE_TEAM_RANKING = 'team_ranking';
+    const KEY_TYPE_GROUP_RANKING = 'group_ranking';
 
     const FIELD_COUNT_NEW_NOTIFY = 'new_notify';
 
@@ -55,6 +61,12 @@ class GlRedis extends AppModel
         self::KEY_TYPE_PRE_UPLOAD_FILE,
         self::KEY_TYPE_MESSAGE,
         self::KEY_TYPE_MESSAGE_USER,
+        self::KEY_TYPE_ACCESS_USER,
+        self::KEY_TYPE_TEAM_INSIGHT,
+        self::KEY_TYPE_GROUP_INSIGHT,
+        self::KEY_TYPE_CIRCLE_INSIGHT,
+        self::KEY_TYPE_TEAM_RANKING,
+        self::KEY_TYPE_GROUP_RANKING,
     ];
 
     /**
@@ -165,6 +177,91 @@ class GlRedis extends AppModel
         'pre_upload_file' => null,
     ];
 
+    /**
+     * Key Name: team:[team_id]:date:[date]:timezone:[timezone]:access_user:
+     *
+     * @var array
+     */
+    private /** @noinspection PhpUnusedPrivateFieldInspection */
+        $access_user_key = [
+        'team'        => null,
+        'date'        => null,
+        'timezone'    => null,
+        'access_user' => null,
+    ];
+
+    /**
+     * Key Name: team:[team_id]:start:[date]:end:[date]:timezone:[timezone]:team_insight:
+     *
+     * @var array
+     */
+    private /** @noinspection PhpUnusedPrivateFieldInspection */
+        $team_insight = [
+        'team'         => null,
+        'start'        => null,
+        'end'          => null,
+        'timezone'     => null,
+        'team_insight' => null,
+    ];
+
+    /**
+     * Key Name: team:[team_id]:start:[date]:end:[date]:timezone:[timezone]:group:[group_id]:group_insight:
+     *
+     * @var array
+     */
+    private /** @noinspection PhpUnusedPrivateFieldInspection */
+        $group_insight = [
+        'team'          => null,
+        'start'         => null,
+        'end'           => null,
+        'timezone'      => null,
+        'group'         => null,
+        'group_insight' => null,
+    ];
+
+    /**
+     * Key Name: team:[team_id]:start:[date]:end:[date]:timezone:[timezone]:circle_insight:
+     *
+     * @var array
+     */
+    private /** @noinspection PhpUnusedPrivateFieldInspection */
+        $circle_insight = [
+        'team'           => null,
+        'start'          => null,
+        'end'            => null,
+        'timezone'       => null,
+        'circle_insight' => null,
+    ];
+
+    /**
+     * Key Name: team:[team_id]:start:[date]:end:[date]:timezone:[timezone]:team_ranking:
+     *
+     * @var array
+     */
+    private /** @noinspection PhpUnusedPrivateFieldInspection */
+        $team_ranking = [
+        'team'         => null,
+        'start'        => null,
+        'end'          => null,
+        'timezone'     => null,
+        'team_ranking' => null,
+    ];
+
+    /**
+     * Key Name: team:[team_id]:start:[date]:end:[date]:timezone:[timezone]:group:[group_id]:group_ranking:
+     *
+     * @var array
+     */
+    private /** @noinspection PhpUnusedPrivateFieldInspection */
+        $group_ranking = [
+        'team'          => null,
+        'start'         => null,
+        'end'           => null,
+        'timezone'      => null,
+        'group'         => null,
+        'group_ranking' => null,
+    ];
+
     public function changeDbSource($config_name = "redis_test")
     {
         unset($this->Db);
@@ -193,10 +290,16 @@ class GlRedis extends AppModel
      * @param bool|int|null $unread
      * @param null|string   $email
      * @param null|string   $device
+     * @param null|string   $unique_id
+     * @param null|string   $date
+     * @param null|string   $timezone
+     * @param null|string   $start
+     * @param null|string   $end
+     * @param null|string   $group
      *
      * @return string
      */
-    private function getKeyName($key_type, $team_id = null, $user_id = null, $notify_id = null, $unread = null, $email = null, $device = null, $unique_id = null)
+    private function getKeyName($key_type, $team_id = null, $user_id = null, $notify_id = null, $unread = null, $email = null, $device = null, $unique_id = null, $date = null, $timezone = null, $start = null, $end = null, $group = null)
     {
         if (!in_array($key_type, self::$KEY_TYPES)) {
             throw new RuntimeException('this is unavailable type!');
@@ -229,6 +332,21 @@ class GlRedis extends AppModel
         }
         if ($notify_id && array_key_exists('message', $this->{$key_type})) {
             $this->{$key_type}['message'] = $notify_id;
+        }
+        if ($date && array_key_exists('date', $this->{$key_type})) {
+            $this->{$key_type}['date'] = $date;
+        }
+        if ($timezone && array_key_exists('timezone', $this->{$key_type})) {
+            $this->{$key_type}['timezone'] = $timezone;
+        }
+        if ($start && array_key_exists('start', $this->{$key_type})) {
+            $this->{$key_type}['start'] = $start;
+        }
+        if ($end && array_key_exists('end', $this->{$key_type})) {
+            $this->{$key_type}['end'] = $end;
+        }
+        if ($group && array_key_exists('group', $this->{$key_type})) {
+            $this->{$key_type}['group'] = $group;
         }
 
         $key_name = "";
@@ -694,5 +812,256 @@ class GlRedis extends AppModel
         return $this->Db->del($key);
     }
 
+    /**
+     * ユーザーのサイトアクセス日をタイムゾーンごとに保存
+     *
+     * @param int   $team_id
+     * @param int   $user_id
+     * @param int   $access_time アクセス時間 (unix timestamp, UTC)
+     * @param array $timezones   タイムゾーンのリスト
+     *
+     * @return int
+     */
+    function saveAccessUser($team_id, $user_id, $access_time, $timezones)
+    {
+        /** @noinspection PhpInternalEntityUsedInspection */
+        $pipe = $this->Db->multi(Redis::PIPELINE);
+        foreach ($timezones as $timezone) {
+            $access_date = date('Y-m-d', $access_time + intval($timezone * HOUR));
+            $pipe->sAdd($this->getKeyName(self::KEY_TYPE_ACCESS_USER, $team_id, null, null, null, null, null,
+                                          null, $access_date, $timezone), $user_id);
+        }
+        $pipe->exec();
+        return true;
+    }
+
+    /**
+     * サイトにアクセスしたユーザーのIDリストを返す
+     *
+     * @param int       $team_id
+     * @param string    $access_date アクセス日付
+     * @param int|float $timezone    タイムゾーン
+     *
+     * @return array
+     */
+    function getAccessUsers($team_id, $access_date, $timezone)
+    {
+        return $this->Db->sMembers($this->getKeyName(self::KEY_TYPE_ACCESS_USER, $team_id, null, null, null,
+                                                     null, null, null, $access_date, $timezone));
+    }
+
+    /**
+     * サイトにアクセスしたユーザーデータを削除
+     *
+     * @param int       $team_id
+     * @param string    $access_date アクセス日付
+     * @param int|float $timezone    タイムゾーン
+     *
+     * @return int
+     */
+    function delAccessUsers($team_id, $access_date, $timezone)
+    {
+        return $this->Db->del($this->getKeyName(self::KEY_TYPE_ACCESS_USER, $team_id, null, null, null,
+                                                null, null, null, $access_date, $timezone));
+    }
+
+    /**
+     * チーム集計データを保存
+     *
+     * @param $team_id
+     * @param $start_date
+     * @param $end_date
+     * @param $timezone
+     * @param $insight
+     *
+     * @return bool
+     */
+    function saveTeamInsight($team_id, $start_date, $end_date, $timezone, $insight)
+    {
+        $key = $this->getKeyName(self::KEY_TYPE_TEAM_INSIGHT, $team_id, null, null, null, null, null, null, null,
+                                  $timezone, $start_date, $end_date);
+        $this->Db->set($key, json_encode($insight));
+        return $this->Db->setTimeout($key, WEEK);
+    }
+
+    /**
+     * チーム集計データを返す
+     *
+     * @param $team_id
+     * @param $start_date
+     * @param $end_date
+     * @param $timezone
+     *
+     * @return mixed
+     */
+    function getTeamInsight($team_id, $start_date, $end_date, $timezone)
+    {
+        $insight_str = $this->Db->get($this->getKeyName(self::KEY_TYPE_TEAM_INSIGHT, $team_id,
+                                                        null, null, null, null, null, null, null,
+                                                        $timezone, $start_date, $end_date));
+        return json_decode($insight_str, true);
+
+    }
+
+    /**
+     * グループ集計データを保存
+     *
+     * @param $team_id
+     * @param $start_date
+     * @param $end_date
+     * @param $timezone
+     * @param $group_id
+     * @param $insight
+     *
+     * @return bool
+     */
+    function saveGroupInsight($team_id, $start_date, $end_date, $timezone, $group_id, $insight)
+    {
+        $key = $this->getKeyName(self::KEY_TYPE_GROUP_INSIGHT, $team_id, null, null, null, null, null, null, null,
+                                 $timezone, $start_date, $end_date, $group_id);
+        $this->Db->set($key, json_encode($insight));
+        return $this->Db->setTimeout($key, WEEK);
+
+    }
+
+    /**
+     * グループ集計データを返す
+     *
+     * @param $team_id
+     * @param $start_date
+     * @param $end_date
+     * @param $timezone
+     * @param $group_id
+     *
+     * @return mixed
+     */
+    function getGroupInsight($team_id, $start_date, $end_date, $timezone, $group_id)
+    {
+        $insight_str = $this->Db->get($this->getKeyName(self::KEY_TYPE_GROUP_INSIGHT, $team_id,
+                                                        null, null, null, null, null, null, null,
+                                                        $timezone, $start_date, $end_date, $group_id));
+        return json_decode($insight_str, true);
+
+    }
+
+    /**
+     * サークル集計データを保存
+     *
+     * @param $team_id
+     * @param $start_date
+     * @param $end_date
+     * @param $timezone
+     * @param $insight
+     *
+     * @return bool
+     */
+    function saveCircleInsight($team_id, $start_date, $end_date, $timezone, $insight)
+    {
+        $key = $this->getKeyName(self::KEY_TYPE_CIRCLE_INSIGHT, $team_id, null, null, null, null, null, null, null,
+                                 $timezone, $start_date, $end_date);
+        $this->Db->set($key, json_encode($insight));
+        return $this->Db->setTimeout($key, WEEK);
+    }
+
+    /**
+     * サークル集計データを返す
+     *
+     * @param $team_id
+     * @param $start_date
+     * @param $end_date
+     * @param $timezone
+     *
+     * @return mixed
+     */
+    function getCircleInsight($team_id, $start_date, $end_date, $timezone)
+    {
+        $insight_str = $this->Db->get($this->getKeyName(self::KEY_TYPE_CIRCLE_INSIGHT, $team_id,
+                                                        null, null, null, null, null, null, null,
+                                                        $timezone, $start_date, $end_date));
+        return json_decode($insight_str, true);
+
+    }
+
+    /**
+     * チームランキングを保存
+     *
+     * @param $team_id
+     * @param $start_date
+     * @param $end_date
+     * @param $timezone
+     * @param $type
+     * @param $ranking
+     *
+     * @return bool
+     */
+    function saveTeamRanking($team_id, $start_date, $end_date, $timezone, $type, $ranking)
+    {
+        $key = $this->getKeyName(self::KEY_TYPE_TEAM_RANKING, $team_id, null, null, null, null, null, null, null,
+                                 $timezone, $start_date, $end_date);
+        $this->Db->hSet($key, $type, json_encode($ranking));
+        return $this->Db->setTimeout($key, WEEK);
+    }
+
+    /**
+     * チームランキングを返す
+     *
+     * @param $team_id
+     * @param $start_date
+     * @param $end_date
+     * @param $timezone
+     * @param $type
+     *
+     * @return mixed
+     */
+    function getTeamRanking($team_id, $start_date, $end_date, $timezone, $type)
+    {
+        $ranking_str = $this->Db->hGet($this->getKeyName(self::KEY_TYPE_TEAM_RANKING, $team_id,
+                                                        null, null, null, null, null, null, null,
+                                                        $timezone, $start_date, $end_date), $type);
+        return json_decode($ranking_str, true);
+
+    }
+
+    /**
+     * グループランキングを保存
+     *
+     * @param $team_id
+     * @param $start_date
+     * @param $end_date
+     * @param $timezone
+     * @param $group_id
+     * @param $type
+     * @param $ranking
+     *
+     * @return bool
+     */
+    function saveGroupRanking($team_id, $start_date, $end_date, $timezone, $group_id, $type, $ranking)
+    {
+        $key = $this->getKeyName(self::KEY_TYPE_GROUP_RANKING, $team_id, null, null, null, null, null, null, null,
+                                 $timezone, $start_date, $end_date, $group_id);
+        $this->Db->hSet($key, $type, json_encode($ranking));
+        return $this->Db->setTimeout($key, WEEK);
+
+    }
+
+    /**
+     * グループランキングを返す
+     *
+     * @param $team_id
+     * @param $start_date
+     * @param $end_date
+     * @param $timezone
+     * @param $group_id
+     * @param $type
+     *
+     * @return mixed
+     */
+    function getGroupRanking($team_id, $start_date, $end_date, $timezone, $group_id, $type)
+    {
+        $ranking_str = $this->Db->hGet($this->getKeyName(self::KEY_TYPE_GROUP_RANKING, $team_id,
+                                                        null, null, null, null, null, null, null,
+                                                        $timezone, $start_date, $end_date, $group_id), $type);
+        return json_decode($ranking_str, true);
+    }
 }
 

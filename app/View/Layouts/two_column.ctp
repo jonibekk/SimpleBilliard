@@ -6,7 +6,7 @@
  * @var CodeCompletionView $this
  */
 ?>
-<!-- START app/View/Layouts/setting.ctp -->
+<!-- START app/View/Layouts/two_column.ctp -->
 <!DOCTYPE html>
 <!--suppress ALL -->
 <html lang="ja">
@@ -20,14 +20,10 @@
 <?= $this->element('header_logged_in') ?>
 <div id="container" class="container">
     <div class="row">
-        <div class="<?= $is_mb_app ? "hidden" : "col-xs-3 hidden-xxs" ?>">
-            <div class="sidebar-setting" role="complementary">
-                <ul class="nav">
-                    <?= $this->fetch('sidebar') ?>
-                </ul>
-            </div>
+        <div class="<?= $is_mb_app ? "hidden" : "col-xs-3" ?> <?php if (isset($hidden_sidebar_xxs) && $hidden_sidebar_xxs): ?>hidden-xxs<?php endif ?>">
+            <?= $this->fetch('sidebar') ?>
         </div>
-        <div class="<?= $is_mb_app ? "col-xxs-12" : "col-xs-9 col-xxs-12" ?> parent-flash" role="main">
+        <div class="parent-flash <?= $is_mb_app || viaIsSet($hidden_sidebar_xxs)? "col-xxs-12" : "col-xs-9" ?> " role="main">
             <?= $this->Session->flash(); ?>
             <?= $this->fetch('content'); ?>
         </div>
@@ -43,15 +39,10 @@
 <!-- START fetch script -->
 <?= $this->fetch('script') ?>
 <!-- END fetch script -->
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('body').scrollspy({target: '.sidebar-setting'});
-    });
-</script>
 <?php if (extension_loaded('newrelic')) {
     /** @noinspection PhpUndefinedFunctionInspection */
     echo newrelic_get_browser_timing_footer();
 } ?>
 </body>
 </html>
-<!-- END app/View/Layouts/setting.ctp -->
+<!-- END app/View/Layouts/two_column.ctp -->

@@ -22,6 +22,13 @@ Vagrant.configure('2') do |config|
         config.omnibus.chef_version = '11.4.4'
     end
 
+    #ec2の場合のみproxy設定
+    if Vagrant.has_plugin?("vagrant-proxyconf") && ARGV[1] == "ec2"
+      config.proxy.http     = "http://10.0.0.84:3128/"
+      config.proxy.https    = "https://10.0.0.84:3128/"
+      config.proxy.no_proxy = "localhost,127.0.0.1"
+    end
+
     config.vm.define 'default', primary: true do |default|
         default.vm.box = 'hashicorp/precise32'
         # IPアドレスは各アプリ毎に置き換える。(同じIPにしていると他とかぶって面倒)
@@ -65,9 +72,9 @@ Vagrant.configure('2') do |config|
             aws.instance_type = 'c3.large'
             aws.region = 'ap-southeast-1'
             aws.availability_zone = 'ap-southeast-1a'
-            aws.ami = 'ami-eaa9f0b8'
+            aws.ami = 'ami-46243114'
             aws.associate_public_ip = true
-            aws.security_groups = ['sg-d24b27b7', 'sg-8d4a26e8', 'sg-66442803']
+            aws.security_groups = ['sg-16006e73', 'sg-8d4a26e8', 'sg-d24b27b7', 'sg-e49ef081', 'sg-b781efd2']
             aws.subnet_id = 'subnet-53a71924'
             aws.tags = {
                 'Name' => 'vnc server for dev'
@@ -91,8 +98,6 @@ Vagrant.configure('2') do |config|
             chef.add_recipe 'deploy_cake_local'
             chef.add_recipe 'vnc'
             chef.add_recipe 'java'
-            chef.add_recipe 'phpstorm'
-            chef.add_recipe 'scudcloud'
             chef.json = {
                 doc_root: doc_root,
                 app_root: app_root,

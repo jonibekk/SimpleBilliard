@@ -18,14 +18,8 @@ class CommentLikeTest extends CakeTestCase
         'app.comment_like',
         'app.comment',
         'app.user',
-        'app.local_name',
-        'app.notify_setting',
         'app.team',
         'app.post',
-        'app.goal',
-        'app.circle',
-        'app.action_result',
-        'app.key_result',
     );
 
     /**
@@ -71,6 +65,67 @@ class CommentLikeTest extends CakeTestCase
         $this->CommentLike->changeLike($this->CommentLike->Comment->getLastInsertID());
         $actual = $this->CommentLike->getLikedUsers($this->CommentLike->Comment->getLastInsertID());
         $this->assertNotEmpty($actual);
+    }
+
+    function testGetCount()
+    {
+        $this->_setDefault();
+
+        $this->CommentLike->create();
+        $this->CommentLike->save(['team_id' => 1, 'user_id' => 1, 'comment_id' => 1]);
+        $this->CommentLike->create();
+        $this->CommentLike->save(['team_id' => 1, 'user_id' => 2, 'comment_id' => 1]);
+        $this->CommentLike->create();
+        $this->CommentLike->save(['team_id' => 1, 'user_id' => 1, 'comment_id' => 2]);
+        $this->CommentLike->create();
+        $this->CommentLike->save(['team_id' => 1, 'user_id' => 1, 'comment_id' => 3]);
+
+        $now = time();
+        $count = $this->CommentLike->getCount(
+            [
+                'start' => $now - HOUR,
+                'end'   => $now + HOUR,
+            ]);
+        $this->assertEquals(4, $count);
+
+        $count = $this->CommentLike->getCount(
+            [
+                'start'   => $now - HOUR,
+                'end'     => $now + HOUR,
+                'user_id' => 1,
+            ]);
+        $this->assertEquals(3, $count);
+
+        $count = $this->CommentLike->getCount(
+            [
+                'start' => $now + HOUR,
+            ]);
+        $this->assertEquals(0, $count);
+    }
+
+    function testGetUniqueUserList()
+    {
+        $this->_setDefault();
+
+        $now = time();
+        $this->CommentLike->create();
+        $this->CommentLike->save(['team_id' => 1, 'user_id' => 1, 'comment_id' => 1]);
+        $this->CommentLike->create();
+        $this->CommentLike->save(['team_id' => 1, 'user_id' => 2, 'comment_id' => 1]);
+        $this->CommentLike->create();
+        $this->CommentLike->save(['team_id' => 1, 'user_id' => 1, 'comment_id' => 1]);
+        $this->CommentLike->create();
+        $this->CommentLike->save(['team_id' => 1, 'user_id' => 1, 'comment_id' => 2]);
+        $list = $this->CommentLike->getUniqueUserList(['start' => $now - HOUR,
+                                                       'end'   => $now + HOUR]);
+        asort($list);
+        $this->assertEquals([1 => 1, 2 => 2], $list);
+
+        $list = $this->CommentLike->getUniqueUserList(['start'   => $now - HOUR,
+                                                       'end'     => $now + HOUR,
+                                                       'user_id' => 1]);
+        asort($list);
+        $this->assertEquals([1 => 1], $list);
     }
 
     function _setDefault()
