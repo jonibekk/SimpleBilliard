@@ -88,6 +88,40 @@ class PostReadTest extends CakeTestCase
         $this->PostRead->red($post_list,true);
     }
 
+    public function testRedDuplicated()
+    {
+        $uid = '1';
+        $team_id = '1';
+        $post_uid = '2';
+        $this->PostRead->my_uid = $uid;
+        $this->PostRead->current_team_id = $team_id;
+
+        $this->PostRead->Post->create();
+        $this->PostRead->Post->save(['user_id' => $post_uid, 'team_id' => $team_id, 'body' => 'test']);
+        $last_id = $this->PostRead->Post->getLastInsertID();
+
+        $this->PostRead->Post->create();
+        $this->PostRead->Post->save(['user_id' => $post_uid, 'team_id' => $team_id, 'body' => 'test']);
+        $last_id2 = $this->PostRead->Post->getLastInsertID();
+
+        $res = $this->PostRead->red($last_id, true);
+        $this->assertTrue($res);
+
+        $PostReadMock = $this->getMockForModel('PostRead', array('pickUnMyPosts'));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $PostReadMock->expects($this->any())
+                     ->method('pickUnMyPosts')
+                     ->will($this->returnValue([$last_id, $last_id2]));
+        $PostReadMock->my_uid = $uid;
+        $PostReadMock->current_team_id = $team_id;
+        $this->PostRead = $PostReadMock;
+        $res = $this->PostRead->red([$last_id, $last_id2], true);
+        $this->assertTrue($res);
+
+        $res = $this->PostRead->red([$last_id, $last_id2], true);
+        $this->assertFalse($res);
+    }
+
     public function testRedIfPoster()
     {
         $uid = '1';

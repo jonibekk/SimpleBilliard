@@ -20,6 +20,11 @@ class CommentLikeTest extends CakeTestCase
         'app.user',
         'app.team',
         'app.post',
+        'app.goal',
+        'app.key_result',
+        'app.action_result',
+        'app.circle',
+        'app.local_name',
     );
 
     /**
@@ -54,6 +59,52 @@ class CommentLikeTest extends CakeTestCase
         $this->assertTrue($actual['created']);
 
         $actual = $this->CommentLike->changeLike($this->CommentLike->Comment->getLastInsertID());
+        $this->assertEquals(0, $actual['count']);
+        $this->assertFalse($actual['created']);
+    }
+
+    function _setDefault()
+    {
+        $this->CommentLike->my_uid = 1;
+        $this->CommentLike->current_team_id = 1;
+    }
+
+    function testChangeLikeFail()
+    {
+        $this->_setDefault();
+        $this->CommentLike->Comment->save(['team_id' => 1, 'body' => 'test']);
+        $last_id = $this->CommentLike->Comment->getLastInsertID();
+
+        $CommentLike = $this->CommentLike;
+
+        $CommentLikeMock = $this->getMockForModel('CommentLike', array('save'));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $CommentLikeMock->expects($this->once())
+                        ->method('save')
+                        ->will($this->returnValue(false));
+        $this->CommentLike = $CommentLikeMock;
+        $actual = $this->CommentLike->changeLike($last_id);
+        $this->assertEquals(1, $actual['error']);
+        $this->assertEquals(0, $actual['count']);
+        $this->assertTrue($actual['created']);
+
+        $CommentLikeMock = $this->getMockForModel('CommentLike', array('save'));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $CommentLikeMock->expects($this->once())
+                        ->method('save')
+                        ->will($this->throwException(new PDOException()));
+        $this->CommentLike = $CommentLikeMock;
+        $actual = $this->CommentLike->changeLike($last_id);
+        $this->assertEquals(1, $actual['error']);
+        $this->assertEquals(0, $actual['count']);
+        $this->assertTrue($actual['created']);
+
+        $this->CommentLike = $CommentLike;
+        $actual = $this->CommentLike->changeLike($last_id);
+        $this->assertEquals(1, $actual['count']);
+        $this->assertTrue($actual['created']);
+
+        $actual = $this->CommentLike->changeLike($last_id);
         $this->assertEquals(0, $actual['count']);
         $this->assertFalse($actual['created']);
     }
@@ -113,9 +164,9 @@ class CommentLikeTest extends CakeTestCase
         $this->CommentLike->create();
         $this->CommentLike->save(['team_id' => 1, 'user_id' => 2, 'comment_id' => 1]);
         $this->CommentLike->create();
-        $this->CommentLike->save(['team_id' => 1, 'user_id' => 1, 'comment_id' => 1]);
-        $this->CommentLike->create();
         $this->CommentLike->save(['team_id' => 1, 'user_id' => 1, 'comment_id' => 2]);
+        $this->CommentLike->create();
+        $this->CommentLike->save(['team_id' => 1, 'user_id' => 1, 'comment_id' => 3]);
         $list = $this->CommentLike->getUniqueUserList(['start' => $now - HOUR,
                                                        'end'   => $now + HOUR]);
         asort($list);
@@ -126,12 +177,6 @@ class CommentLikeTest extends CakeTestCase
                                                        'user_id' => 1]);
         asort($list);
         $this->assertEquals([1 => 1], $list);
-    }
-
-    function _setDefault()
-    {
-        $this->CommentLike->my_uid = 1;
-        $this->CommentLike->current_team_id = 1;
     }
 
 }

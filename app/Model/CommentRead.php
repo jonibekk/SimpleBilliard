@@ -64,11 +64,27 @@ class CommentRead extends AppModel
         if (empty($comment_data)) {
             return;
         }
-        $res = $this->saveAllAtOnce($comment_data, true, ['comment_id']);
+        $res = false;
+        try {
+            $res = $this->saveAllAtOnce($comment_data, true, ['comment_id']);
+        }
+        catch (PDOException $e) {
+            // comment_id と user_id が重複したデータを登録しようとした場合
+            // １件ずつ登録し直して登録可能なものだけ登録する
+            foreach ($comment_data as $data) {
+                $this->create();
+                try {
+                    $row = $this->save($data);
+                    $res = $row ? true : false;
+                } catch (PDOException $e2) {
+                    // 最低１件は例外発生するが無視する
+                }
+            }
+        }
         return $res;
     }
 
-    private function pickUnread($comment_list)
+    protected function pickUnread($comment_list)
     {
         //既読済みのリスト取得
         $options = [
@@ -99,7 +115,7 @@ class CommentRead extends AppModel
         return $comment_data;
     }
 
-    private function pickNotMine($comment_list)
+    protected function pickNotMine($comment_list)
     {
         //自分以外の投稿を取得
         $options = [
