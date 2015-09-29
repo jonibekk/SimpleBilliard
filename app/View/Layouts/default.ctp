@@ -44,7 +44,7 @@ else {
         <!-- /Remark -->
     </div>
     <div id="jsRightSideContainerWrap"
-         class="right-side-container-wrap <?= $is_mb_app ? "col-md-12" : "col-md-4 visible-md visible-lg col-xs-8 col-xxs-12" ?> layout-goal"
+         class="right-side-container-wrap <?= $is_mb_app ? "col-md-12 hidden" : "col-md-4 visible-md visible-lg col-xs-8 col-xxs-12" ?> layout-goal"
          role="goal_area">
         <?= $this->element('my_goals_area') ?>
     </div>
