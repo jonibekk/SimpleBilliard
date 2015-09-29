@@ -1550,7 +1550,6 @@ $(document).ready(function () {
         multiple: true,
         minimumInputLength: 1,
         placeholder: cake.message.notice.b,
-        formatInputTooShort: false,
         ajax: {
             url: cake.url.a,
             dataType: 'json',
