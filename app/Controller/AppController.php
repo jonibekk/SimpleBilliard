@@ -396,11 +396,9 @@ class AppController extends Controller
 
     public function _decideMobileAppRequest()
     {
-        if (in_array(CakeRequest::header('User-Agent'), $this->mobile_app_uas)) {
+        if (isset($_COOKIE['is_app'])) {
             $this->is_mb_app = true;
         }
-        //TODO テスト目的。最終的に削除
-//        $this->is_mb_app = true;
         $this->set('is_mb_app', $this->is_mb_app);
     }
 
