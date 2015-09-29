@@ -114,6 +114,24 @@ class AppController extends Controller
     public $current_term_id = null;
     public $next_term_id = null;
 
+    /**
+     * スマホアプリからのリクエストか？
+     * is request from mobile app?
+     *
+     * @var bool
+     */
+    public $is_mb_app = false;
+    /**
+     * スマホアプリのUA定義
+     * defined user agents of mobile application
+     *
+     * @var array
+     */
+    private $mobile_app_uas = [
+        'Goalous App iOS',
+        'Goalous App Android'
+    ];
+
     public function beforeFilter()
     {
         parent::beforeFilter();
@@ -133,6 +151,7 @@ class AppController extends Controller
 
         $this->_setSecurity();
         $this->_setAppLanguage();
+        $this->_decideMobileAppRequest();
         //ログイン済みの場合のみ実行する
         if ($this->Auth->user()) {
             $this->current_team_id = $this->Session->read('current_team_id');
@@ -373,6 +392,16 @@ class AppController extends Controller
             }
         }
         $this->set('feed_more_read_url', $url);
+    }
+
+    public function _decideMobileAppRequest()
+    {
+        if (in_array(CakeRequest::header('User-Agent'), $this->mobile_app_uas)) {
+            $this->is_mb_app = true;
+        }
+        //TODO テスト目的。最終的に削除
+//        $this->is_mb_app = true;
+        $this->set('is_mb_app', $this->is_mb_app);
     }
 
     /**
