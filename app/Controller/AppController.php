@@ -151,7 +151,7 @@ class AppController extends Controller
 
         $this->_setSecurity();
         $this->_setAppLanguage();
-        $this->_decideSpRequest();
+        $this->_decideMobileAppRequest();
         //ログイン済みの場合のみ実行する
         if ($this->Auth->user()) {
             $this->current_team_id = $this->Session->read('current_team_id');
@@ -394,7 +394,7 @@ class AppController extends Controller
         $this->set('feed_more_read_url', $url);
     }
 
-    public function _decideSpRequest()
+    public function _decideMobileAppRequest()
     {
         if (in_array(CakeRequest::header('User-Agent'), $this->mobile_app_uas)) {
             $this->is_mb_app = true;

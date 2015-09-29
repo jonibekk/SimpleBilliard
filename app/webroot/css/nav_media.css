@@ -288,6 +288,10 @@
         padding: 9px 0 0;
     }
 
+    .nav > li > a.active {
+        text-decoration: none;
+        background-color: #ddd;
+    }
 
     .nav-search {
         width: 160px;
