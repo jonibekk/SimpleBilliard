@@ -101,6 +101,7 @@ class UsersController extends AppController
         //デバイス情報を保存する
         $user_id = $user_info['id'];
         $installation_id = $this->request->data['User']['installation_id'];
+        error_log("FURU:ins_id:$installation_id\n",3,"/tmp/hoge.log");
         if (!empty($installation_id)) {
             $this->NotifyBiz->saveDeviceInfo($user_id, $installation_id);
         }
