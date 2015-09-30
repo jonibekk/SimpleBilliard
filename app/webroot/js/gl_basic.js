@@ -4173,7 +4173,7 @@ function isMobile() {
 function networkReachable()
 {
     var re = false;
-    var path = window.location.href;
+    var path = window.location.protocol + '//' + window.location.hostname + '/';
     $.ajax({
         url :path +"img/no-image-user.jpg?1440663111",
         type:"HEAD",
