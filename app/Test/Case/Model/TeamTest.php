@@ -18,29 +18,17 @@ class TeamTest extends CakeTestCase
         'app.local_name',
         'app.team',
         'app.image',
-        'app.user', 'app.notify_setting',
+        'app.user',
+        'app.notify_setting',
         'app.badge',
         'app.post',
         'app.evaluation_setting',
-        //'app.goal',
-        'app.comment_mention',
-        'app.comment',
-        'app.comment_like',
-        'app.comment_read',
-        'app.given_badge',
-        'app.post_like',
-        'app.post_mention',
-        'app.post_read',
         'app.images_post',
         'app.group',
-        'app.team_member',
-        'app.job_category',
-        'app.invite',
         'app.circle',
         'app.circle_member',
+        'app.team_member',
         'app.evaluate_term',
-
-        'app.thread'
     );
 
     /**
@@ -647,6 +635,21 @@ class TeamTest extends CakeTestCase
         $actual = $this->Team->setNextTermStartEnd();
         $this->assertTrue($actual);
     }
+
+    function testDeleteTeam()
+    {
+        $this->_setDefault();
+
+        $team = $this->Team->findById(1);
+        $this->assertNotEmpty($team);
+
+        $res = $this->Team->deleteTeam(1);
+        $this->assertTrue($res);
+
+        $team = $this->Team->findById(1);
+        $this->assertEmpty($team);
+    }
+
 
     function _setDefault()
     {

@@ -29,7 +29,7 @@ App::uses('AppModel', 'Model');
  * @property TeamInsight       $TeamInsight
  * @property GroupInsight      $GroupInsight
  * @property CircleInsight     $CircleInsight
- * @property AccessUser     $AccessUser
+ * @property AccessUser        $AccessUser
  */
 class Team extends AppModel
 {
@@ -526,5 +526,22 @@ class Team extends AppModel
     function getList()
     {
         return $this->find('list');
+    }
+
+    /**
+     * チームを削除する
+     *
+     * @param $team_id
+     *
+     * @return bool
+     */
+    function deleteTeam($team_id)
+    {
+        $this->delete($team_id);
+
+        // delete() の戻り値が soft delete で false になってしまうので、
+        // 削除されたか自前で確認する
+        $row = $this->findById($team_id);
+        return $row ? false : true;
     }
 }

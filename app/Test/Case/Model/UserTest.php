@@ -18,35 +18,16 @@ class UserTest extends CakeTestCase
      */
     public $fixtures = array(
         'app.evaluator',
-        'app.goal',
         'app.local_name',
-        'app.user', 'app.notify_setting',
+        'app.user',
         'app.image',
-        'app.badge',
         'app.team',
-        'app.comment_like',
-        'app.comment',
-        'app.post',
-        'app.comment_mention',
-        'app.given_badge',
-        'app.post_like',
-        'app.post_mention',
-        'app.post_read',
-        'app.post_share_user',
-        'app.post_share_circle',
         'app.circle',
         'app.circle_member',
-        'app.images_post',
-        'app.comment_read',
+        'app.post_share_user',
         'app.group',
         'app.team_member',
-        'app.job_category',
-        'app.invite',
-
-        'app.thread',
-        'app.message',
         'app.email',
-        'app.oauth_token'
     );
 
     public $basicUserDefault = [
@@ -755,5 +736,44 @@ class UserTest extends CakeTestCase
         // チーム全体サークル
         $res = $this->User->getSecretCirclesSelect2('チーム全体');
         $this->assertEquals(['results' => []], $res);
+    }
+
+    function testClearDefaultTeamId()
+    {
+        $this->User->current_team_id = 1;
+        $this->User->my_uid = 1;
+
+        $count1 = $this->User->find('count', [
+            'conditions' => [
+                'User.default_team_id' => 1,
+            ]
+        ]);
+        $this->assertNotEmpty($count1);
+
+        $count2 = $this->User->find('count', [
+            'conditions' => [
+                'User.default_team_id' => 2,
+            ]
+        ]);
+        $this->assertNotEmpty($count2);
+
+        $res = $this->User->clearDefaultTeamId(2);
+        $this->assertTrue($res);
+
+        $count1_2 = $this->User->find('count', [
+            'conditions' => [
+                'User.default_team_id' => 1,
+            ]
+        ]);
+        $this->assertEquals($count1, $count1_2);
+
+        $count2_2 = $this->User->find('count', [
+            'conditions' => [
+                'User.default_team_id' => 2,
+            ]
+        ]);
+        $this->assertEquals(0, $count2_2);
+
+
     }
 }
