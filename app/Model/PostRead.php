@@ -10,6 +10,11 @@ App::uses('AppModel', 'Model');
  */
 class PostRead extends AppModel
 {
+    public $actsAs = [
+        'SoftDeletable' => [
+            'delete'      => false,
+        ],
+    ];
 
     /**
      * Validation rules
@@ -62,14 +67,30 @@ class PostRead extends AppModel
         if (empty($post_data)) {
             return;
         }
-        $res = $this->saveAllAtOnce($post_data, true, ['post_id']);
+        $res = false;
+        try {
+            $res = $this->saveAllAtOnce($post_data, true, ['post_id']);
+        }
+        catch (PDOException $e) {
+            // post_id と user_id が重複したデータを登録しようとした場合
+            // １件ずつ登録し直して登録可能なものだけ登録する
+            foreach ($post_data as $data) {
+                $this->create();
+                try {
+                    $row = $this->save($data);
+                    $res = $row ? true : false;
+                } catch (PDOException $e2) {
+                    // 最低１件は例外発生するが無視する
+                }
+            }
+        }
         if ($with_comment) {
             $this->Post->Comment->CommentRead->redAllByPostId($post_list);
         }
         return $res;
     }
 
-    private function pickUnreadPosts($post_list)
+    protected function pickUnreadPosts($post_list)
     {
         //既読済みのリスト取得
         $options = [
@@ -98,7 +119,7 @@ class PostRead extends AppModel
         return $unread_posts;
     }
 
-    private function pickUnMyPosts($post_list)
+    protected function pickUnMyPosts($post_list)
     {
         if (empty($post_list)) {
             return;

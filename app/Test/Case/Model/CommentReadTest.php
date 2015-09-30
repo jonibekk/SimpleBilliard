@@ -97,6 +97,40 @@ class CommentReadTest extends CakeTestCase
         $this->assertEquals($before_data, $after_data);
     }
 
+    public function testRedDuplicated()
+    {
+        $uid = '1';
+        $team_id = '1';
+        $post_uid = '2';
+        $this->CommentRead->my_uid = $uid;
+        $this->CommentRead->current_team_id = $team_id;
+
+        $this->CommentRead->Comment->create();
+        $this->CommentRead->Comment->save(['user_id' => $post_uid, 'team_id' => $team_id, 'body' => 'test']);
+        $last_id = $this->CommentRead->Comment->getLastInsertID();
+
+        $this->CommentRead->Comment->create();
+        $this->CommentRead->Comment->save(['user_id' => $post_uid, 'team_id' => $team_id, 'body' => 'test']);
+        $last_id2 = $this->CommentRead->Comment->getLastInsertID();
+
+        $res = $this->CommentRead->red($last_id, true);
+        $this->assertTrue($res);
+
+        $CommentReadMock = $this->getMockForModel('CommentRead', array('pickNotMine'));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $CommentReadMock->expects($this->any())
+                        ->method('pickNotMine')
+                        ->will($this->returnValue([$last_id, $last_id2]));
+        $CommentReadMock->my_uid = $uid;
+        $CommentReadMock->current_team_id = $team_id;
+        $this->CommentRead = $CommentReadMock;
+        $res = $this->CommentRead->red([$last_id, $last_id2], true);
+        $this->assertTrue($res);
+
+        $res = $this->CommentRead->red([$last_id, $last_id2], true);
+        $this->assertFalse($res);
+    }
+
     function testCountMyRead()
     {
         $uid = '1';

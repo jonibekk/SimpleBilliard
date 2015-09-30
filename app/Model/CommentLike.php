@@ -10,6 +10,11 @@ App::uses('AppModel', 'Model');
  */
 class CommentLike extends AppModel
 {
+    public $actsAs = [
+        'SoftDeletable' => [
+            'delete'      => false,
+        ],
+    ];
 
     /**
      * Validation rules
@@ -54,7 +59,13 @@ class CommentLike extends AppModel
                 'team_id'    => $this->current_team_id,
                 'comment_id' => $comment_id
             ];
-            if (!$this->save($data)) {
+            $this->create();
+            try {
+                if (!$this->save($data)) {
+                    $res['error'] = true;
+                }
+            } catch (PDOException $e) {
+                // comment_id と user_id が重複したデータを登録しようとした場合
                 $res['error'] = true;
             }
             $res['created'] = true;
