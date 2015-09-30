@@ -65,12 +65,6 @@ class PostLikeTest extends CakeTestCase
         $this->assertFalse($actual['is_liked']);
     }
 
-    function _setDefault()
-    {
-        $this->PostLike->my_uid = 1;
-        $this->PostLike->current_team_id = 1;
-    }
-
     function testChangeLikeFail()
     {
         $this->_setDefault();
@@ -211,5 +205,11 @@ class PostLikeTest extends CakeTestCase
                                                 'share_circle_id' => [99999999],
                                                 'post_user_id'    => 2]);
         $this->assertEquals([], $ranking);
+    }
+
+    function _setDefault()
+    {
+        $this->PostLike->my_uid = 1;
+        $this->PostLike->current_team_id = 1;
     }
 }
