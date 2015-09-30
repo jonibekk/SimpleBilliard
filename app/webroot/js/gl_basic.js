@@ -3638,6 +3638,8 @@ $(document).ready(function () {
     $uploadFileForm._callbacks = {};
     // Dropzone のデフォルト設定
     $uploadFileForm._dzDefaultOptions = {};
+    // 仮アップロード中のファイル（アップロードフォームごとに保持する）
+    $uploadFileForm._files = {};
 
     // 登録済ドロップエリアとアップロードボタン
     $uploadFileForm._dragDropArea = {};
@@ -3733,6 +3735,12 @@ $(document).ready(function () {
         } else {
             Dropzone.instances[0].hiddenFileInput.setAttribute("multiple", "multiple");
         }
+        // フォームごとに仮アップロード中のファイルリストを持つ
+        if (!$uploadFileForm._files[formID]) {
+            $uploadFileForm._files[formID] = [];
+        }
+        Dropzone.instances[0].files = $uploadFileForm._files[formID];
+
 
         // コールバック関数登録
         var empty = function () {
