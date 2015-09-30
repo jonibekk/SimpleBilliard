@@ -10,6 +10,11 @@ App::uses('AppModel', 'Model');
  */
 class CommentRead extends AppModel
 {
+    public $actsAs = [
+        'SoftDeletable' => [
+            'delete'      => false,
+        ],
+    ];
 
     /**
      * Validation rules

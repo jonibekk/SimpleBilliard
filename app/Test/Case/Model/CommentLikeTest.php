@@ -178,5 +178,4 @@ class CommentLikeTest extends CakeTestCase
         asort($list);
         $this->assertEquals([1 => 1], $list);
     }
-
 }
