@@ -798,6 +798,7 @@ function addComment(e) {
     $("#" + submit_id).before($loader_html);
 
     var $f = $(e.target);
+    var ajaxProcess = $.Deferred();
     $.ajax({
         url: $f.prop('action'),
         method: 'post',
@@ -808,23 +809,31 @@ function addComment(e) {
         timeout: 300000 //5min
     })
         .done(function (data) {
-            // 通信が成功したときの処理
             if (!data.error) {
-                $first_form.children().toggle();
-                $f.remove();
-                $refresh_link.click();
+                // 通信が成功したときの処理
+                evCommentLatestView.call($refresh_link.get(0), {
+                    afterSuccess: function () {
+                        $first_form.children().toggle();
+                        $f.remove();
+                        ajaxProcess.resolve();
+                    }
+                });
             }
             else {
                 $error_msg_box.text(data.msg);
+                ajaxProcess.reject();
             }
         })
         .fail(function (data) {
             $error_msg_box.text(cake.message.notice.g);
-        })
-        .always(function (data) {
-            // 通信が完了したとき
-            $submit.removeAttr('disabled');
+            ajaxProcess.reject();
         });
+
+    ajaxProcess.always(function () {
+        // 通信が完了したとき
+        $loader_html.remove();
+        $submit.removeAttr('disabled');
+    });
 }
 
 function evTargetToggle() {
@@ -2773,9 +2782,14 @@ $(document).ready(function () {
     $(document).on("click", ".click-comment-new", evCommentLatestView);
 });
 
-function evCommentLatestView() {
+function evCommentLatestView(options) {
     attrUndefinedCheck(this, 'post-id');
     attrUndefinedCheck(this, 'get-url');
+
+    options = $.extend({
+        afterSuccess: function () {
+        }
+    }, options);
 
     var $obj = $(this);
     var commentBlock = $obj.closest(".comment-block");
@@ -2826,6 +2840,8 @@ function evCommentLatestView() {
                 $obj.removeAttr("disabled");
 
                 initCommentNotify($obj);
+
+                options.afterSuccess();
             }
             else {
                 //ローダーを削除
