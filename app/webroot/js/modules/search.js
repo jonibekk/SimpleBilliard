@@ -6,7 +6,7 @@ define(function () {
             var $NavSearchInput = $('#NavSearchInput');
             var $NavSearchResults = $('#NavSearchResults');
             var keyupTimer = null;
-            var keypressCount = 0;
+            var cache = {};
 
             var config = {
                 user: {
@@ -52,23 +52,7 @@ define(function () {
                         $NavSearchResults.find('.nav-search-result-item:first').focus();
                     }
                 })
-                .on('keypress', function (e) {
-                    // 日本語入力の未確定状態を判別
-                    if (e.keyCode != 241 && e.keyCode != 242) {
-                        keypressCount++;
-                    }
-                })
                 .on('keyup', function (e) {
-                    // 日本語入力の未確定状態を判別
-                    keypressCount--;
-                    if (keypressCount < 0) {
-                        keypressCount = 0;
-                        if (e.keyCode != 13 && e.keyCode != 8) {
-                            // 日本語入力中（未確定）
-                            return;
-                        }
-                    }
-
                     // 検索文字列
                     var inputText = $(this).val();
 
@@ -82,49 +66,57 @@ define(function () {
                         }
 
                         var category = $NavSearchForm.find('.nav-search-category-icon:visible').attr('data-category');
-                        $.get(config[category].url, {
+                        var ajaxCallback = function (res) {
+                            cache[inputText] = res;
+
+                            var $container = $('<div>');
+                            $NavSearchResults.empty();
+                            if (res.results) {
+                                if (res.results.length == 0) {
+                                    var $notFoundText = $('<div>')
+                                        .text(cake.message.notice.search_result_zero)
+                                        .addClass('nav-search-result-notfound');
+                                    $container.append($notFoundText);
+                                }
+                                else {
+                                    for (var i = 0; i < res.results.length; i++) {
+                                        var $row = $('<a>')
+                                            .addClass('nav-search-result-item')
+                                            .attr('href', config[category].link_base + res.results[i].id.split('_').pop());
+
+                                        // image
+                                        var $img = $('<img>').attr('src', res.results[i].image);
+                                        $row.append($img);
+
+                                        // text
+                                        var $text = $('<span>').text(res.results[i].text);
+                                        $row.append($text);
+
+                                        $container.append($row);
+                                    }
+                                }
+                                $NavSearchResults.html($container).show();
+
+                                // ポップアップ下の画面をスクロールさせないようにする
+                                $("body").addClass('nav-search-results-open');
+
+                                // ポップアップクローズ用
+                                $(document).one('click', function () {
+                                    $NavSearchResults.hide();
+                                    $("body").removeClass('nav-search-results-open');
+                                });
+                            }
+                        };
+
+                        if (cache[inputText]) {
+                            ajaxCallback(cache[inputText]);
+                        }
+                        else {
+                            $.get(config[category].url, {
                                 term: inputText,
                                 page_limit: 10
-                            }, function (res) {
-                                var $container = $('<div>');
-                                $NavSearchResults.empty();
-                                if (res.results) {
-                                    if (res.results.length == 0) {
-                                        var $notFoundText = $('<div>')
-                                            .text(cake.message.notice.search_result_zero)
-                                            .addClass('nav-search-result-notfound');
-                                        $container.append($notFoundText);
-                                    }
-                                    else {
-                                        for (var i = 0; i < res.results.length; i++) {
-                                            var $row = $('<a>')
-                                                .addClass('nav-search-result-item')
-                                                .attr('href', config[category].link_base + res.results[i].id.split('_').pop());
-
-                                            // image
-                                            var $img = $('<img>').attr('src', res.results[i].image);
-                                            $row.append($img);
-
-                                            // text
-                                            var $text = $('<span>').text(res.results[i].text);
-                                            $row.append($text);
-
-                                            $container.append($row);
-                                        }
-                                    }
-                                    $NavSearchResults.html($container).show();
-
-                                    // ポップアップ下の画面をスクロールさせないようにする
-                                    $("body").addClass('nav-search-results-open');
-
-                                    // ポップアップクローズ用
-                                    $(document).one('click', function () {
-                                        $NavSearchResults.hide();
-                                        $("body").removeClass('nav-search-results-open');
-                                    });
-                                }
-                            }
-                        );
+                            }, ajaxCallback);
+                        }
                     }, 150);
                 });
 
