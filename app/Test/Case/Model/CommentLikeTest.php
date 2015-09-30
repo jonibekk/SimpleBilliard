@@ -63,12 +63,6 @@ class CommentLikeTest extends CakeTestCase
         $this->assertFalse($actual['created']);
     }
 
-    function _setDefault()
-    {
-        $this->CommentLike->my_uid = 1;
-        $this->CommentLike->current_team_id = 1;
-    }
-
     function testChangeLikeFail()
     {
         $this->_setDefault();
@@ -177,5 +171,11 @@ class CommentLikeTest extends CakeTestCase
                                                        'user_id' => 1]);
         asort($list);
         $this->assertEquals([1 => 1], $list);
+    }
+
+    function _setDefault()
+    {
+        $this->CommentLike->my_uid = 1;
+        $this->CommentLike->current_team_id = 1;
     }
 }
