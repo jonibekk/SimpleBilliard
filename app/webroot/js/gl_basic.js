@@ -63,7 +63,7 @@ $(window).load(function () {
 });
 $(document).ready(function () {
     $("a.youtube").YouTubeModal({autoplay: 0, width: 640, height: 360});
-    if(typeof cake.request_params.named.after_click !== 'undefined'){
+    if (typeof cake.request_params.named.after_click !== 'undefined') {
         $("#" + cake.request_params.named.after_click).trigger('click');
     }
 
@@ -2372,7 +2372,7 @@ function evLike() {
         url: url,
         async: true,
         dataType: 'json',
-        timeout :5000,
+        timeout: 5000,
         success: function (data) {
             if (data.error) {
                 alert(cake.message.notice.d);
@@ -3318,20 +3318,21 @@ function copyToClipboard(url) {
 $(document).ready(function () {
     $(window).scroll(function () {
         if ($(window).scrollTop() + $(window).height() > $(document).height() - 2000) {
-            if(!networkReachable()) {
-                return false;
-            }
-            else if (!autoload_more) {
+            if (!autoload_more) {
                 autoload_more = true;
+                if (!networkReachable()) {
+                    autoload_more = false;
+                    return false;
+                }
+
                 $('#FeedMoreReadLink').trigger('click');
                 $('#GoalPageFollowerMoreLink').trigger('click');
                 $('#GoalPageMemberMoreLink').trigger('click');
                 $('#GoalPageKeyResultMoreLink').trigger('click');
             }
         }
-    }).ajaxError(function(event,request,setting){
-        if(request.status==0)
-        {
+    }).ajaxError(function (event, request, setting) {
+        if (request.status == 0) {
             return false;
         }
     });
@@ -4278,25 +4279,20 @@ function isMobile() {
     }
     return false;
 }
-function networkReachable()
-{
-    var re = false;
+function networkReachable() {
     var path = window.location.protocol + '//' + window.location.hostname + '/';
+    var ret = false;
     $.ajax({
-        url :path +"img/no-image-user.jpg?1440663111",
-        type:"HEAD",
-        timeout:3000,
-        statusCode :{
-            200:function(response){
-                re = true;
-            },
-            400:function(response){
-                re = false;
-            },
-            0:function(response){
-                re = false;
-            }
+        url: path + "img/no-image.jpg",
+        type: "HEAD",
+        timeout: 3000,
+        async: false,
+        success: function (data, status, xhr) {
+            ret = true;
+        },
+        error: function (data, status, xhr) {
+            ret = false;
         }
     });
-    return re;
+    return ret;
 }
