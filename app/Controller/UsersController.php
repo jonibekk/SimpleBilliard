@@ -82,9 +82,6 @@ class UsersController extends AppController
             return $this->render();
         }
 
-        //暫定ログあとで消す
-        $ua = $_SERVER['HTTP_USER_AGENT'];
-        error_log("FURU:$ua\n",3,"/tmp/hoge.log");
 
         //account lock check
         $ip_address = $this->request->clientIp();
