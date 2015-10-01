@@ -823,7 +823,6 @@ class NotifyBizComponent extends Component
             'max_redirects' => 0,       // リダイレクトはしない
             'method'        => NCMB_REST_API_PUSH_METHOD
         ));
-        error_log("FURU:".print_r($this->notify_option,true)."\n",3,"/tmp/hoge.log");
 
         // TODO:とりあえずブラウザ用の通知送信対象ユーザーに対しPUSH通知する
         // あとから変わるはず。
@@ -866,10 +865,9 @@ class NotifyBizComponent extends Component
 
             //メッセージの場合は本文も出ていたほうがいいので出してみる
             $item_name = json_decode($this->notify_option['item_name']);
-            $item_name = mb_strimwidth($item_name[0], 0, 40, "...");
             if (!empty($item_name)) {
+                $item_name = mb_strimwidth($item_name[0], 0, 40, "...");
                 $title .= " : " . $item_name;
-                error_log("FURU:result:" . $title . "\n", 3, "/tmp/hoge.log");
             }
 
             $body = '{
