@@ -3333,3 +3333,14 @@ Temporary Properties - YOU MUST FIX
 .insight-graph-container {
     height: 100px;
 }
+
+.add-vision-button.disabled {
+    color: #aaa;
+    border: 1px solid #aaa;
+    text-decoration: none;
+    pointer-events:none;
+}
+
+.add-vision-button.disabled i {
+    color: #aaa;
+}
