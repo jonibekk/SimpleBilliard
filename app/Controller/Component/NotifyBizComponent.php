@@ -831,6 +831,7 @@ class NotifyBizComponent extends Component
             error_log("FURU: no push users\n", 3, "/tmp/hoge.log");
             return;
         }
+        error_log("FURU: uid:".print_r($uids,true)."\n", 3, "/tmp/hoge.log");
 
         $this->notify_option['options']['style'] = 'plain';
         $original_lang = Configure::read('Config.language');
@@ -843,12 +844,14 @@ class NotifyBizComponent extends Component
 
         foreach ($uids as $to_user_id) {
 
+            error_log("FURU:loop#1:$to_user_id\n", 3, "/tmp/hoge.log");
 
             $device_tokens = $this->Device->getDeviceTokens($to_user_id);
             if (empty($device_tokens)) {
                 //このユーザーはスマホ持ってないのでスキップ
                 continue;
             }
+            error_log("FURU:loop#2:".print_r($device_tokens,true)."\n", 3, "/tmp/hoge.log");
 
             // ひとつのデバイスが複数のユーザーで登録されている可能性があるので
             // 一度送ったデバイスに対して2度はPUSH通知は送らない
