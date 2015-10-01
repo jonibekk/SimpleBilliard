@@ -12,11 +12,10 @@
 ?>
 
 <!-- START app/View/Elements/Notification/notify_items.ctp -->
-
+<p id="mark_all_read" style="float: right;color: red;">Mark All Read</p>
 <?php foreach ($notify_items as $notify_item): ?>
     <?=
     $this->element('Notification/notify_item',
                    ['user' => viaIsSet($notify_item['User']), 'notification' => $notify_item['Notification'], 'location_type' => $location_type]) ?>
 <?php endforeach; ?>
-
 <!-- END app/View/Elements/Notification/notify_items.ctp -->

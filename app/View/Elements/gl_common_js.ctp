@@ -144,6 +144,7 @@ echo $this->Html->script('goalous.min');
             ae: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_get_user_detail'])?>/",
             af: "<?=$this->Html->url(['controller'=>'notifications','action'=>'ajax_get_new_message_notify_count'])?>",
             ag: "<?=$this->Html->url(['controller'=>'notifications','action'=>'ajax_get_latest_message_notify_items'])?>",
+            an: "<?=$this->Html->url(['controller'=>'notifications','action'=>'ajax_mark_all_read'])?>",
             ah: "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_get_message'])?>/",
             ai: "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_put_message'])?>/",
             aj: "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_get_message_info'])?>/",

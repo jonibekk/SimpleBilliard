@@ -62,6 +62,30 @@ $(window).load(function () {
     setDefaultTab();
 });
 $(document).ready(function () {
+    $(document).on('click', '#mark_all_read', function () {
+       // alert('test');
+        $.ajax({
+            type: 'GET',
+            url: cake.url.an,
+            async: true,
+            success: function () {
+               $("#bell-dropdown").fadeIn.delay(1000);
+            }
+        });
+    });
+
+    //$("#mark_all_read").click(function(){
+    //    alert('test');
+    //    $.ajax({
+    //        type: 'GET',
+    //        url: cake.url.an,
+    //        async: true,
+    //        success: function () {
+    //            location.reload();
+    //        }
+    //    });
+    //});
+
     $("a.youtube").YouTubeModal({autoplay: 0, width: 640, height: 360});
     if(typeof cake.request_params.named.after_click !== 'undefined'){
         $("#" + cake.request_params.named.after_click).trigger('click');

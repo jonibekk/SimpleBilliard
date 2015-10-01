@@ -853,6 +853,17 @@ class NotifyBizComponent extends Component
      *
      * @return array
      */
+    function getNotifyIds($limit = null, $from_date = null)
+    {
+        $notify_ids = $this->GlRedis->getNotifyIds(
+            $this->NotifySetting->current_team_id,
+            $this->NotifySetting->my_uid,
+            $limit,
+            $from_date
+        );
+        return $notify_ids;
+    }
+
     function getNotification($limit = null, $from_date = null)
     {
         $notify_from_redis = $this->GlRedis->getNotifications(
