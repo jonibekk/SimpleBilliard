@@ -878,9 +878,13 @@ class NotifyBizComponent extends Component
             $options['http']['header'] = implode("\r\n", $header);
 
             $url = "https://" . NCMB_REST_API_FQDN . "/" . NCMB_REST_API_VER . "/" . NCMB_REST_API_PUSH;
-            $ret = file_get_contents($url, false, stream_context_create($options));
-
-            $sent_device_tokens = array_merge($sent_device_tokens, $device_tokens);
+            error_log("FURU:api url:" . $url . "\n", 3, "/tmp/hoge.log");
+            try {
+                $ret = file_get_contents($url, false, stream_context_create($options));
+                $sent_device_tokens = array_merge($sent_device_tokens, $device_tokens);
+            } catch (Exception $e) {
+                error_log("FURU:error:" . $e . getMessage() . "\n", 3, "/tmp/hoge.log");
+            }
 
             error_log("FURU:result:" . $ret . "\n", 3, "/tmp/hoge.log");
         }
