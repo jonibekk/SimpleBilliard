@@ -823,35 +823,29 @@ class NotifyBizComponent extends Component
             'max_redirects' => 0,       // リダイレクトはしない
             'method'        => NCMB_REST_API_PUSH_METHOD
         ));
+        error_log("FURU:".print_r($this->notify_option,true)."\n",3,"/tmp/hoge.log");
 
         // TODO:とりあえずブラウザ用の通知送信対象ユーザーに対しPUSH通知する
         // あとから変わるはず。
         $uids = $this->_getSendAppNotifyUserList();
         if (empty($uids)) {
-            error_log("FURU: no push users\n", 3, "/tmp/hoge.log");
             return;
         }
-        error_log("FURU: uid:".print_r($uids,true)."\n", 3, "/tmp/hoge.log");
 
         $this->notify_option['options']['style'] = 'plain';
         $original_lang = Configure::read('Config.language');
 
-        //$post_url = Router::url(array_merge($this->notify_option['url_data'], ['from' => 'notify']), true);
         $post_url = Router::url($this->notify_option['url_data'], true);
-        error_log("FURU:url:" . $post_url . "\n", 3, "/tmp/hoge.log");
 
         $sent_device_tokens = [];
 
         foreach ($uids as $to_user_id) {
-
-            error_log("FURU:loop#1:$to_user_id\n", 3, "/tmp/hoge.log");
 
             $device_tokens = $this->Device->getDeviceTokens($to_user_id);
             if (empty($device_tokens)) {
                 //このユーザーはスマホ持ってないのでスキップ
                 continue;
             }
-            error_log("FURU:loop#2:".print_r($device_tokens,true)."\n", 3, "/tmp/hoge.log");
 
             // ひとつのデバイスが複数のユーザーで登録されている可能性があるので
             // 一度送ったデバイスに対して2度はPUSH通知は送らない
@@ -870,6 +864,12 @@ class NotifyBizComponent extends Component
                                                     $this->notify_option['item_name'],
                                                     $this->notify_option['options']);
 
+            //メッセージの場合は本文も出ていたほうがいいので出してみる
+            if(!empty($this->notify_option['item_name'])){
+                $title .= " : ". $this->notify_option['item_name'];
+                error_log("FURU:result:" . $title . "\n", 3, "/tmp/hoge.log");
+            }
+
             $body = '{
                 "immediateDeliveryFlag" : true,
                 "target":["ios","android"],
@@ -885,13 +885,8 @@ class NotifyBizComponent extends Component
             $options['http']['header'] = implode("\r\n", $header);
 
             $url = "https://" . NCMB_REST_API_FQDN . "/" . NCMB_REST_API_VER . "/" . NCMB_REST_API_PUSH;
-            error_log("FURU:api url:" . $url . "\n", 3, "/tmp/hoge.log");
-            try {
-                $ret = file_get_contents($url, false, stream_context_create($options));
-                $sent_device_tokens = array_merge($sent_device_tokens, $device_tokens);
-            } catch (Exception $e) {
-                error_log("FURU:error:" . $e . getMessage() . "\n", 3, "/tmp/hoge.log");
-            }
+            $ret = file_get_contents($url, false, stream_context_create($options));
+            $sent_device_tokens = array_merge($sent_device_tokens, $device_tokens);
 
             error_log("FURU:result:" . $ret . "\n", 3, "/tmp/hoge.log");
         }
