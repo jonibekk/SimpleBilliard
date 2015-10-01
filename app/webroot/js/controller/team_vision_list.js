@@ -1,5 +1,5 @@
 app.controller("TeamVisionController",
-    function ($scope, $http, $translate, teamVisionList, isTeamAdmin, $sce, notificationService, $window) {
+    function ($scope, $http, $translate, teamVisionList, isTeamAdmin, $sce, notificationService) {
 
         var team_vision_list = teamVisionList;
         angular.forEach(team_vision_list, function (val, key) {
