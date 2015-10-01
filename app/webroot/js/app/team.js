@@ -47,9 +47,17 @@ app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider', '$http
                             return response.data;
                         });
 
+                    }],
+                    isTeamAdmin: ['$stateParams', '$http', function ($stateParams, $http) {
+                        var request = {
+                            method: 'GET',
+                            url: cake.url.x
+                        };
+                        return $http(request).then(function (response) {
+                            return response.data.is_admin_user;
+                        });
                     }]
                 }
-
             })
             .state('vision_detail', {
                 url: "/vision_detail/:team_vision_id/:active_flg",
