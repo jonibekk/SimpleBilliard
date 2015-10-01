@@ -827,6 +827,10 @@ class NotifyBizComponent extends Component
         // TODO:とりあえずブラウザ用の通知送信対象ユーザーに対しPUSH通知する
         // あとから変わるはず。
         $uids = $this->_getSendAppNotifyUserList();
+        if (empty($uids)) {
+            error_log("FURU: no push users\n", 3, "/tmp/hoge.log");
+            return;
+        }
 
         $this->notify_option['options']['style'] = 'plain';
         $original_lang = Configure::read('Config.language');
