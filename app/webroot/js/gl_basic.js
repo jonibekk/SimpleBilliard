@@ -63,7 +63,7 @@ $(window).load(function () {
 });
 $(document).ready(function () {
     $("a.youtube").YouTubeModal({autoplay: 0, width: 640, height: 360});
-    if(typeof cake.request_params.named.after_click !== 'undefined'){
+    if (typeof cake.request_params.named.after_click !== 'undefined') {
         $("#" + cake.request_params.named.after_click).trigger('click');
     }
 
@@ -2389,6 +2389,7 @@ function evLike() {
         url: url,
         async: true,
         dataType: 'json',
+        timeout: 5000,
         success: function (data) {
             if (data.error) {
                 alert(cake.message.notice.d);
@@ -2398,7 +2399,7 @@ function evLike() {
             }
         },
         error: function () {
-            alert(cake.message.notice.d);
+            return false;
         }
     });
     return false;
@@ -3336,11 +3337,20 @@ $(document).ready(function () {
         if ($(window).scrollTop() + $(window).height() > $(document).height() - 2000) {
             if (!autoload_more) {
                 autoload_more = true;
+                if (!networkReachable()) {
+                    autoload_more = false;
+                    return false;
+                }
+
                 $('#FeedMoreReadLink').trigger('click');
                 $('#GoalPageFollowerMoreLink').trigger('click');
                 $('#GoalPageMemberMoreLink').trigger('click');
                 $('#GoalPageKeyResultMoreLink').trigger('click');
             }
+        }
+    }).ajaxError(function (event, request, setting) {
+        if (request.status == 0) {
+            return false;
         }
     });
 
@@ -4285,4 +4295,21 @@ function isMobile() {
         return true;
     }
     return false;
+}
+function networkReachable() {
+    var path = window.location.protocol + '//' + window.location.hostname + '/';
+    var ret = false;
+    $.ajax({
+        url: path + "img/no-image.jpg",
+        type: "HEAD",
+        timeout: 3000,
+        async: false,
+        success: function (data, status, xhr) {
+            ret = true;
+        },
+        error: function (data, status, xhr) {
+            ret = false;
+        }
+    });
+    return ret;
 }
