@@ -67,6 +67,8 @@
                         'placeholder'                  => __d('gl', "hiroshi@example.com"),
                         'data-bv-emailaddress-message' => __d('validate', "メールアドレスが正しくありません。"),
                         "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
+                        "data-bv-blank"                => "true",
+                        "data-bv-onsuccess"            => "bvEmailOnSuccess",
                     ]) ?>
                 <?php endif; ?>
 
@@ -133,6 +135,73 @@
         //ユーザ登録時にローカル時間をセットする
         $('input#InitLocalDate').val(getLocalDate());
     });
+
+    // 'email' の bootstrap validate が成功した後に呼ばれ、サーバ側の validation を行う
+    var bvEmailTimer = null;
+    var bvEmailResults = {};
+    var bvEmailOnSuccess = function (e, data) {
+        var field = data.element[0].name;
+        var email = data.element[0].value;
+
+        // 既にチェック済の場合
+        if (bvEmailResults[email] !== undefined) {
+            data.bv.updateMessage(field, "blank", bvEmailResults[email]["message"]);
+            if (bvEmailResults[email]["status"] == data.bv.STATUS_INVALID) {
+                data.bv.updateStatus(field, bvEmailResults[email]["status"], "blank");
+            }
+            return;
+        }
+
+        // キー連打考慮して時間差実行
+        clearTimeout(bvEmailTimer);
+        bvEmailTimer = setTimeout(function () {
+            // 読込み中のメッセージ表示
+            data.bv.updateMessage(field, "blank",
+                '<i class="fa fa-refresh fa-spin mr_8px"></i><?= __d('validate', "メールアドレス確認中...") ?>');
+            data.bv.updateStatus(field, data.bv.STATUS_INVALID, "blank");
+
+            $.ajax({
+                type: 'GET',
+                url: cake.url.validate_email,
+                data: {
+                    email: email
+                }
+            })
+                .done(function (res) {
+                    if (res.valid) {
+                        bvEmailResults[email] = {
+                            status: data.bv.STATUS_VALID,
+                            message: " "
+                        };
+                    }
+                    else {
+                        bvEmailResults[email] = {
+                            status: data.bv.STATUS_INVALID,
+                            message: res.message
+                        };
+                    }
+                })
+                .fail(function () {
+                    bvEmailResults[email] = {
+                        status: data.bv.STATUS_INVALID,
+                        message: cake.message.notice.d
+                    };
+                })
+                .always(function () {
+                    // ajax レスポンスが返ってきた時点で 他のエラーが出ていなければメッセージ更新する
+                    if ($(data.element[0]).parent()
+                            .find('.help-block[data-bv-for="' + field + '"]:visible')
+                            .not("[data-bv-validator=blank]").size() == 0) {
+                        data.bv.updateMessage(field, "blank", bvEmailResults[email]["message"]);
+                        data.bv.updateStatus(field, bvEmailResults[email]["status"], "blank");
+                    }
+                    // 他のエラーが出ている場合、読込み中メッセージを消す
+                    else {
+                        data.bv.updateMessage(field, "blank", " ");
+                    }
+                });
+        }, 300);
+    };
 </script>
 <?php $this->end(); ?>
 <!-- END app/View/Users/register.ctp -->

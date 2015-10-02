@@ -35,7 +35,8 @@ class UsersController extends AppController
     protected function _setupAuth()
     {
         $this->Auth->allow('register', 'login', 'verify', 'logout', 'password_reset', 'token_resend', 'sent_mail',
-                           'accept_invite', 'registration_with_set_password', 'two_fa_auth', 'add_subscribe_email');
+                           'accept_invite', 'registration_with_set_password', 'two_fa_auth', 'add_subscribe_email',
+                           'ajax_validate_email');
 
         $this->Auth->authenticate = array(
             'Form2' => array(
@@ -1020,6 +1021,32 @@ class UsersController extends AppController
         $result = $this->User->getAllUsersCirclesSelect2();
         $this->_ajaxPreProcess();
         return $this->_ajaxGetResponse($result);
+    }
+
+    /**
+     * メールアドレスが登録可能なものか確認
+     *
+     * @return CakeResponse
+     */
+    public function  ajax_validate_email()
+    {
+        $this->_ajaxPreProcess();
+        $email = $this->request->query('email');
+        $valid = false;
+        $message = '';
+        if ($email) {
+            // メールアドレスだけ validate
+            $this->User->Email->create(['email' => $email]);
+            $this->User->Email->validates(['fieldList' => 'email']);
+            if ($this->User->Email->validationErrors) {
+                $message = $this->User->Email->validationErrors['email'][0];
+            }
+            else {
+                $valid = true;
+            }
+        }
+        return $this->_ajaxGetResponse(['valid'   => $valid,
+                                        'message' => $message]);
     }
 
     function view_goals()
