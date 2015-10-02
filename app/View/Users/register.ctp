@@ -63,12 +63,13 @@
                 <?php else: ?>
                     <?=
                     $this->Form->input('Email.0.email', [
-                        'label'                        => __d('gl', "メール"),
-                        'placeholder'                  => __d('gl', "hiroshi@example.com"),
-                        'data-bv-emailaddress-message' => __d('validate', "メールアドレスが正しくありません。"),
-                        "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
-                        "data-bv-blank"                => "true",
-                        "data-bv-onsuccess"            => "bvEmailOnSuccess",
+                        'label'                     => __d('gl', "メール"),
+                        'placeholder'               => __d('gl', "hiroshi@example.com"),
+                        "data-bv-notempty"          => "false",
+                        'data-bv-emailaddress'      => "false",
+                        "data-bv-callback"          => "true",
+                        "data-bv-callback-message"  => " ",
+                        "data-bv-callback-callback" => "bvCallbackEmail",
                     ]) ?>
                 <?php endif; ?>
 
@@ -137,28 +138,31 @@
     });
 
     // 'email' の bootstrap validate が成功した後に呼ばれ、サーバ側の validation を行う
-    var bvEmailTimer = null;
-    var bvEmailResults = {};
-    var bvEmailOnSuccess = function (e, data) {
-        var field = data.element[0].name;
-        var email = data.element[0].value;
+    var bvCallbackEmailTimer = null;
+    var bvCallbackEmailResults = {};
+    var bvCallbackEmail = function (email, validator, $field) {
+        var field = $field.attr('name');
 
-        // 既にチェック済の場合
-        if (bvEmailResults[email] !== undefined) {
-            data.bv.updateMessage(field, "blank", bvEmailResults[email]["message"]);
-            if (bvEmailResults[email]["status"] == data.bv.STATUS_INVALID) {
-                data.bv.updateStatus(field, bvEmailResults[email]["status"], "blank");
-            }
-            return;
+        // 簡易チェックをして通ったものだけサーバ側で確認する
+        var parts = email.split('@');
+        if (!(parts.length >= 2 && parts[parts.length - 1].indexOf('.') != -1)) {
+            validator.updateMessage(field, "callback", '<?= __d('validate', "メールアドレスが正しくありません。") ?>');
+            return false;
+        }
+
+        // 既にサーバ側でチェック済の場合
+        if (bvCallbackEmailResults[email] !== undefined) {
+            validator.updateMessage(field, "callback", bvCallbackEmailResults[email]["message"]);
+            return bvCallbackEmailResults[email]["status"] == validator.STATUS_VALID;
         }
 
         // キー連打考慮して時間差実行
-        clearTimeout(bvEmailTimer);
-        bvEmailTimer = setTimeout(function () {
+        clearTimeout(bvCallbackEmailTimer);
+        bvCallbackEmailTimer = setTimeout(function () {
             // 読込み中のメッセージ表示
-            data.bv.updateMessage(field, "blank",
+            validator.updateMessage(field, "callback",
                 '<i class="fa fa-refresh fa-spin mr_8px"></i><?= __d('validate', "メールアドレス確認中...") ?>');
-            data.bv.updateStatus(field, data.bv.STATUS_INVALID, "blank");
+            validator.updateStatus(field, validator.STATUS_INVALID, "callback");
 
             $.ajax({
                 type: 'GET',
@@ -169,38 +173,40 @@
             })
                 .done(function (res) {
                     if (res.valid) {
-                        bvEmailResults[email] = {
-                            status: data.bv.STATUS_VALID,
+                        bvCallbackEmailResults[email] = {
+                            status: validator.STATUS_VALID,
                             message: " "
                         };
                     }
                     else {
-                        bvEmailResults[email] = {
-                            status: data.bv.STATUS_INVALID,
+                        bvCallbackEmailResults[email] = {
+                            status: validator.STATUS_INVALID,
                             message: res.message
                         };
                     }
                 })
                 .fail(function () {
-                    bvEmailResults[email] = {
-                        status: data.bv.STATUS_INVALID,
+                    bvCallbackEmailResults[email] = {
+                        status: validator.STATUS_INVALID,
                         message: cake.message.notice.d
                     };
                 })
                 .always(function () {
                     // ajax レスポンスが返ってきた時点で 他のエラーが出ていなければメッセージ更新する
-                    if ($(data.element[0]).parent()
+                    if ($field.parent()
                             .find('.help-block[data-bv-for="' + field + '"]:visible')
-                            .not("[data-bv-validator=blank]").size() == 0) {
-                        data.bv.updateMessage(field, "blank", bvEmailResults[email]["message"]);
-                        data.bv.updateStatus(field, bvEmailResults[email]["status"], "blank");
+                            .not("[data-bv-validator=callback]")
+                            .size() == 0) {
+                        validator.updateMessage(field, "callback", bvCallbackEmailResults[email]["message"]);
+                        validator.updateStatus(field, bvCallbackEmailResults[email]["status"], "callback");
                     }
                     // 他のエラーが出ている場合、読込み中メッセージを消す
                     else {
-                        data.bv.updateMessage(field, "blank", " ");
+                        validator.updateMessage(field, "callback", " ");
                     }
                 });
         }, 300);
+        return false;
     };
 </script>
 <?php $this->end(); ?>
