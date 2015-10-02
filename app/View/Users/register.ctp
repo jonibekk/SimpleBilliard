@@ -137,7 +137,7 @@
         $('input#InitLocalDate').val(getLocalDate());
     });
 
-    // 'email' の bootstrap validate が成功した後に呼ばれ、サーバ側の validation を行う
+    // 'email' の validation
     var bvCallbackEmailTimer = null;
     var bvCallbackEmailResults = {};
     var bvCallbackEmail = function (email, validator, $field) {
@@ -192,18 +192,8 @@
                     };
                 })
                 .always(function () {
-                    // ajax レスポンスが返ってきた時点で 他のエラーが出ていなければメッセージ更新する
-                    if ($field.parent()
-                            .find('.help-block[data-bv-for="' + field + '"]:visible')
-                            .not("[data-bv-validator=callback]")
-                            .size() == 0) {
-                        validator.updateMessage(field, "callback", bvCallbackEmailResults[email]["message"]);
-                        validator.updateStatus(field, bvCallbackEmailResults[email]["status"], "callback");
-                    }
-                    // 他のエラーが出ている場合、読込み中メッセージを消す
-                    else {
-                        validator.updateMessage(field, "callback", " ");
-                    }
+                    validator.updateMessage(field, "callback", bvCallbackEmailResults[email]["message"]);
+                    validator.updateStatus(field, bvCallbackEmailResults[email]["status"], "callback");
                 });
         }, 300);
         return false;
