@@ -15,41 +15,12 @@ class KeyResultTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
-
-        'app.purpose',
-        'app.cake_session',
         'app.key_result',
-        'app.collaborator',
-        'app.follower',
-        'app.team',
-        'app.badge',
-        'app.user',
-        'app.email',
-        'app.notify_setting',
-        'app.comment_like',
-        'app.comment',
-        'app.post',
         'app.goal',
         'app.goal_category',
-        'app.post_share_user',
-        'app.post_share_circle',
-        'app.circle',
-        'app.circle_member',
-        'app.post_like',
-        'app.post_read',
-        'app.comment_mention',
-        'app.given_badge',
-        'app.post_mention',
-        'app.comment_read',
-
-        'app.oauth_token',
-        'app.team_member',
-        'app.group',
-        'app.job_category',
-        'app.local_name',
-        'app.invite',
-        'app.thread',
-        'app.message'
+        'app.collaborator',
+        'app.user',
+        'app.team',
     );
 
     /**
@@ -288,6 +259,17 @@ class KeyResultTest extends CakeTestCase
         );
         $this->assertCount(3,$this->KeyResult->getKrNameList($goal_id, true));
         $this->assertCount(5,$this->KeyResult->getKrNameList($goal_id, true,true));
+    }
+
+    function testIsComplete()
+    {
+        $this->setDefault();
+        $res = $this->KeyResult->isCompleted(1);
+        $this->assertFalse($res);
+        $res = $this->KeyResult->isCompleted(999999999);
+        $this->assertFalse($res);
+        $res = $this->KeyResult->isCompleted(4);
+        $this->assertTrue($res);
     }
 
     function setDefault()
