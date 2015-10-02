@@ -80,6 +80,19 @@ class EvaluationsController extends AppController
 
             // get evaluation list
             $evaluationList = array_values($this->Evaluation->getEvaluations($evaluateTermId, $evaluateeId));
+            // order by priority
+            $goal_evaluations = [];
+            $this->log($evaluationList );
+            foreach($evaluationList as $k => $evaluation){
+                if(!empty($evaluation['Goal'])){
+                    $goal_evaluations[$evaluation['Goal']['id']]['data'][] = $evaluation;
+                    $goal_evaluations[$evaluation['Goal']['id']]['priority'] = $evaluation['Goal']['MyCollabo'][0]['priority'];
+                    unset($evaluationList[$k]);
+                }
+            }
+            $this->log($goal_evaluations);
+
+
             $isEditable = $this->Evaluation->getIsEditable($evaluateTermId, $evaluateeId);
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
