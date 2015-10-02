@@ -57,7 +57,7 @@
                                                    ]
                                 )
                                 ?>
-                            <?php endif;?>
+                            <?php endif; ?>
                         </div>
                         <div class="col-xxs-9">
                             <div class="lh_44px col-xxs-12">
@@ -302,14 +302,14 @@
                         <div class="eval-view-action-number">
                             <a class="click-show-post-modal pointer"
                                id="ActionListOpen_<?= $goal[0]['Goal']['id'] ?>"
-                               href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_goal_action_feed', 'goal_id' => $goal[0]['Goal']['id'], 'type' => Post::TYPE_ACTION, 'user_id' => $evaluateeId]) ?>">
+                               href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_goal_action_feed', 'goal_id' => $goal[0]['Goal']['id'], 'type' => Post::TYPE_ACTION, 'author_id' => $evaluateeId, 'evaluate_term_id' => $evaluateTermId]) ?>">
                                 <?= count($goal[0]['Goal']['ActionResult']) ?>
                             </a>
                         </div>
                         <div class="eval-view-action-text">
                             <a class="click-show-post-modal pointer"
                                id="ActionListOpen_<?= $goal[0]['Goal']['id'] ?>"
-                               href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_goal_action_feed', 'goal_id' => $goal[0]['Goal']['id'], 'type' => Post::TYPE_ACTION, 'user_id' => $evaluateeId]) ?>">
+                               href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_goal_action_feed', 'goal_id' => $goal[0]['Goal']['id'], 'type' => Post::TYPE_ACTION, 'author_id' => $evaluateeId, 'evaluate_term_id' => $evaluateTermId]) ?>">
                                 <?= __d('gl', "アクション") ?>
                             </a>
                         </div>

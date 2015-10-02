@@ -34,10 +34,11 @@ class PostsController extends AppController
         return $this->render();
     }
 
-    public function ajax_get_message_list($page=1)
+    public function ajax_get_message_list($page = 1)
     {
         $this->_ajaxPreProcess();
-        $result = $this->Post->getMessageList($this->Auth->user('id'), PostsController::$message_list_page_count, $page);
+        $result = $this->Post->getMessageList($this->Auth->user('id'), PostsController::$message_list_page_count,
+                                              $page);
         $message_list = $this->Post->convertData($result);
         $res = [
             'auth_info'    => [
@@ -622,7 +623,16 @@ class PostsController extends AppController
     {
         $this->_ajaxPreProcess();
         $this->_setFeedMoreReadUrl('posts', 'ajax_get_action_list_more');
-        $posts = $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null, $this->request->params);
+        $start = null;
+        $end = null;
+        if (isset($this->request->params['named']['evaluate_term_id'])) {
+            $term = $this->Team->EvaluateTerm->findById($this->request->params['named']['evaluate_term_id']);
+            if (isset($term['EvaluateTerm'])) {
+                $start = $term['EvaluateTerm']['start_date'];
+                $end = $term['EvaluateTerm']['end_date'];
+            }
+        }
+        $posts = $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, $start, $end, $this->request->params);
         $this->set(compact('posts'));
 
         //エレメントの出力を変数に格納する
