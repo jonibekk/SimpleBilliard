@@ -12,7 +12,7 @@
  */
 ?>
 <!-- START app/View/Elements/header_not_logged_in.ctp -->
-<div class="navbar navbar-default navbar-fixed-top">
+<div class="navbar navbar-default navbar-fixed-top <?= $is_mb_app ? "mb-app-navbar" : null ?>">
     <div class="container">
         <div class="navbar-header">
             <a href="/" class="navbar-brand"><?= $title_for_layout ?></a>

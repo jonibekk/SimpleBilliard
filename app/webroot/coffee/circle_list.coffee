@@ -9,7 +9,6 @@ window.onload = (resizeLoad) ->
     varHeight = winH-336 + "px"
   CircleListBody = document.getElementById ("jsDashboardCircleListBody")
   CircleListBody.style.height = varHeight
-  console.log (scrH)
 
 ###
  todo
@@ -27,7 +26,6 @@ window.onresize = (resizeChanged) ->
     varHeight = winH-336 + "px"
   CircleListBody = document.getElementById ("jsDashboardCircleListBody")
   CircleListBody.style.height = varHeight
-  console.log (scrH)
 
 
 reloadScrollBars = ->

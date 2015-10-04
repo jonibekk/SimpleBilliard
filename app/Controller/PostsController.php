@@ -973,7 +973,10 @@ class PostsController extends AppController
 
         $this->response->type('application/octet-stream');
         $this->response->length(strlen($res->body));
-        $this->response->download($file['AttachedFile']['attached_file_name']);
+        $this->response->header('Content-Disposition',
+                                sprintf('attachment; filename="%s"; filename*=UTF-8\'\'%s',
+                                        $file['AttachedFile']['attached_file_name'],
+                                        rawurlencode($file['AttachedFile']['attached_file_name'])));
         $this->response->body($res->body);
         return $this->response;
     }
