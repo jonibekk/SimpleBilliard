@@ -616,11 +616,11 @@ class NotifyBizComponent extends Component
                                                                                 NotifySetting::TYPE_EVALUATION_CAN_AS_EVALUATOR);
         $evaluatee = $this->Goal->User->getUsersProf($evaluation['Evaluation']['evaluatee_user_id']);
 
-        $url = ['controller' => 'evaluations',
-                'action'     => 'view',
-                $evaluation['Evaluation']['evaluate_term_id'],
-                $evaluation['Evaluation']['evaluatee_user_id'],
-                'team_id'    => $this->NotifySetting->current_team_id];
+        $url = ['controller'       => 'evaluations',
+                'action'           => 'view',
+                'evaluate_term_id' => $evaluation['Evaluation']['evaluate_term_id'],
+                'user_id'          => $evaluation['Evaluation']['evaluatee_user_id'],
+                'team_id'          => $this->NotifySetting->current_team_id];
 
         $this->notify_option['from_user_id'] = null;
         $this->notify_option['notify_type'] = NotifySetting::TYPE_EVALUATION_CAN_AS_EVALUATOR;
@@ -875,7 +875,7 @@ class NotifyBizComponent extends Component
                 "target":["ios","android"],
                 "searchCondition":{"deviceToken":{ "$inArray":["' . implode('","', $device_tokens) . '"]}},
                 "message":"' . $title . '",
-                "userSettingValue":{"url":"'.$post_url.'"}},
+                "userSettingValue":{"url":"' . $post_url . '"}},
                 "deliveryExpirationTime":"1 day"
             }';
 
@@ -945,12 +945,11 @@ class NotifyBizComponent extends Component
     /**
      * push通知に必要なパラメータ
      * X-NCMB-SIGNATUREを生成する
-     *
      * デフォルトではpush通知用のシグネチャ生成
      *
      * @param $timestamp シグネチャを生成する時に使うタイムスタンプ
-     * @param $method シグネチャを生成する時に使うメソッド
-     * @param $path シグネチャを生成する時に使うパス
+     * @param $method    シグネチャを生成する時に使うメソッド
+     * @param $path      シグネチャを生成する時に使うパス
      *
      * @return string X-NCMB-SIGNATUREの値
      */
@@ -971,8 +970,7 @@ class NotifyBizComponent extends Component
         }
         $signature_string .= $header_string;
 
-        error_log("FURU:sign=".$signature_string."\n",3,"/tmp/hoge.log");
-
+        error_log("FURU:sign=" . $signature_string . "\n", 3, "/tmp/hoge.log");
 
         return base64_encode(hash_hmac("sha256", $signature_string, NCMB_CLIENT_KEY, true));
     }
@@ -1084,7 +1082,8 @@ class NotifyBizComponent extends Component
             $title = $this->NotifySetting->getTitle($data[$k]['Notification']['type'],
                                                     $user_name, 1,
                                                     $data[$k]['Notification']['body'],
-                                                    array_merge($data[$k]['Notification']['options'], ['from_user_id' => $user_id]));
+                                                    array_merge($data[$k]['Notification']['options'],
+                                                                ['from_user_id' => $user_id]));
             $data[$k]['Notification']['title'] = $title;
         }
         return $data;
