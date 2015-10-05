@@ -63,10 +63,13 @@
                 <?php else: ?>
                     <?=
                     $this->Form->input('Email.0.email', [
-                        'label'                        => __d('gl', "メール"),
-                        'placeholder'                  => __d('gl', "hiroshi@example.com"),
-                        'data-bv-emailaddress-message' => __d('validate', "メールアドレスが正しくありません。"),
-                        "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
+                        'label'                     => __d('gl', "メール"),
+                        'placeholder'               => __d('gl', "hiroshi@example.com"),
+                        "data-bv-notempty"          => "false",
+                        'data-bv-emailaddress'      => "false",
+                        "data-bv-callback"          => "true",
+                        "data-bv-callback-message"  => " ",
+                        "data-bv-callback-callback" => "bvCallbackEmail",
                     ]) ?>
                 <?php endif; ?>
 
@@ -133,6 +136,68 @@
         //ユーザ登録時にローカル時間をセットする
         $('input#InitLocalDate').val(getLocalDate());
     });
+
+    // 'email' の validation
+    var bvCallbackEmailTimer = null;
+    var bvCallbackEmailResults = {};
+    var bvCallbackEmail = function (email, validator, $field) {
+        var field = $field.attr('name');
+
+        // 簡易チェックをして通ったものだけサーバ側で確認する
+        var parts = email.split('@');
+        if (!(parts.length >= 2 && parts[parts.length - 1].indexOf('.') != -1)) {
+            validator.updateMessage(field, "callback", '<?= __d('validate', "メールアドレスが正しくありません。") ?>');
+            return false;
+        }
+
+        // 既にサーバ側でチェック済の場合
+        if (bvCallbackEmailResults[email] !== undefined) {
+            validator.updateMessage(field, "callback", bvCallbackEmailResults[email]["message"]);
+            return bvCallbackEmailResults[email]["status"] == validator.STATUS_VALID;
+        }
+
+        // キー連打考慮して時間差実行
+        clearTimeout(bvCallbackEmailTimer);
+        bvCallbackEmailTimer = setTimeout(function () {
+            // 読込み中のメッセージ表示
+            validator.updateMessage(field, "callback",
+                '<i class="fa fa-refresh fa-spin mr_8px"></i><?= __d('validate', "メールアドレス確認中...") ?>');
+            validator.updateStatus(field, validator.STATUS_INVALID, "callback");
+
+            $.ajax({
+                type: 'GET',
+                url: cake.url.validate_email,
+                data: {
+                    email: email
+                }
+            })
+                .done(function (res) {
+                    if (res.valid) {
+                        bvCallbackEmailResults[email] = {
+                            status: validator.STATUS_VALID,
+                            message: " "
+                        };
+                    }
+                    else {
+                        bvCallbackEmailResults[email] = {
+                            status: validator.STATUS_INVALID,
+                            message: res.message
+                        };
+                    }
+                })
+                .fail(function () {
+                    bvCallbackEmailResults[email] = {
+                        status: validator.STATUS_INVALID,
+                        message: cake.message.notice.d
+                    };
+                })
+                .always(function () {
+                    validator.updateMessage(field, "callback", bvCallbackEmailResults[email]["message"]);
+                    validator.updateStatus(field, bvCallbackEmailResults[email]["status"], "callback");
+                });
+        }, 300);
+        return false;
+    };
 </script>
 <?php $this->end(); ?>
 <!-- END app/View/Users/register.ctp -->

@@ -27,20 +27,6 @@
                         <span class=""><?= __d('gl', 'サークルを作成') ?></span>
                     </a>
                 </li>
-                <li>
-                    <a class="header-nav-add-contents-anchor" href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'add_group_vision']) ?>">
-                        <i class="fa fa-plane header-drop-icons"></i>
-                        <span class=""><?= __d('gl', 'グループビジョンを作成') ?></span>
-                    </a>
-                </li>
-                <?php if ($my_member_status['TeamMember']['admin_flg']): ?>
-                    <li>
-                        <a class="header-nav-add-contents-anchor" href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'add_team_vision']) ?>">
-                            <i class="fa fa-rocket header-drop-icons"></i>
-                            <span class=""><?= __d('gl', 'チームビジョンを作成') ?></span>
-                        </a>
-                    </li>
-                <?php endif; ?>
             <?php endif; ?>
             <li>
                 <a class="header-nav-add-contents-anchor" href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'add']) ?>">
