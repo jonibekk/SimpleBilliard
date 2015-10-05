@@ -73,9 +73,10 @@
                     <label class="control-label modal-label"><?= __d('gl', 'サークルの説明') ?></label>
                     <?=
                     $this->Form->input('description',
-                                       ['label'       => false,
-                                        'placeholder' => __d('gl', "例) 最新情報を共有しましょう。"),
-                                        'rows'        => 1,
+                                       ['label'                    => false,
+                                        'placeholder'              => __d('gl', "例) 最新情報を共有しましょう。"),
+                                        'rows'                     => 1,
+                                        'data-bv-notempty-message' => __d('validate', "入力必須項目です。"),
                                        ]) ?>
                 </div>
 
