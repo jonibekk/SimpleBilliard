@@ -20,14 +20,17 @@ if (!viaIsSet($index) || !is_numeric($index)) {
             <?= $this->Form
                 ->input("GoalCategory.$index.name",
                         array(
-                            'wrapInput'                => false,
-                            'type'                     => 'text',
-                            'div'                      => false,
-                            'label'                    => false,
-                            'class'                    => 'form-control',
-                            'placeholder'              => __d('team', '名前'),
-                            'data-bv-notempty-message' => __d('gl', "入力必須項目です。"),
-                            'required'                 => true,
+                            'wrapInput'                    => false,
+                            'type'                         => 'text',
+                            'div'                          => false,
+                            'label'                        => false,
+                            'class'                        => 'form-control',
+                            'placeholder'                  => __d('team', '名前'),
+                            'data-bv-notempty-message'     => __d('gl', "入力必須項目です。"),
+                            'data-bv-stringlength'         => "true",
+                            'data-bv-stringlength-max'     => 30,
+                            'data-bv-stringlength-message' => __d('validate', '%2$d文字以下で入力してください。', '', 30),
+                            'required'                     => true,
                         ))
             ?>
         </div>

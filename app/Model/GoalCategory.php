@@ -27,6 +27,9 @@ class GoalCategory extends AppModel
             'notEmpty' => [
                 'rule' => ['notEmpty'],
             ],
+            'maxLength'     => [
+                'rule' => ['maxLength', 30],
+            ],
         ],
         'del_flg' => [
             'boolean' => [
