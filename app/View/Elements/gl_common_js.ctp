@@ -8,7 +8,6 @@
  * @var CodeCompletionView $this
  * @var                    $current_circle
  * @var                    $my_member_status
- * @var                    $is_mb_app
  */
 ?>
 <!-- START app/View/Elements/gl_common_js.ctp -->
@@ -167,8 +166,7 @@ echo $this->Html->script('goalous.min');
             invite_member: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'settings','#'=>'invite_member']) ?>",
             insight: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_insight']) ?>",
             insight_circle: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_insight_circle']) ?>",
-            insight_ranking: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_insight_ranking']) ?>",
-            validate_email: "<?= $this->Html->url(['controller' => 'users', 'action' => 'ajax_validate_email']) ?>"
+            insight_ranking: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_insight_ranking']) ?>"
         },
         data: {
             a: <?=isset($select2_default)?$select2_default:"[]"?>,
@@ -270,8 +268,7 @@ echo $this->Html->script('goalous.min');
         new_notify_cnt: <?=isset($new_notify_cnt)?$new_notify_cnt:0?>,
         new_notify_message_cnt: <?=isset($new_notify_message_cnt)?$new_notify_message_cnt:0?>,
         common_form_type: "<?= isset($common_form_type)?$common_form_type:null?>",
-        request_params: <?=json_encode($this->request->params)?>,
-        is_mb_app: "<?= $is_mb_app ?>"
+        request_params: <?=json_encode($this->request->params)?>
     };
 
 

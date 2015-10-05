@@ -399,77 +399,32 @@ class CollaboratorTest extends CakeTestCase
         $count = $this->Collaborator->getCount(
             [
                 'start' => $now - HOUR,
-                'end'   => $now + HOUR,
+                'end' => $now + HOUR,
             ]);
         $this->assertEquals(4, $count);
 
         $count = $this->Collaborator->getCount(
             [
                 'start' => $now - HOUR,
-                'end'   => $now + HOUR,
-                'type'  => Collaborator::TYPE_OWNER
+                'end' => $now + HOUR,
+                'type' => Collaborator::TYPE_OWNER
             ]);
         $this->assertEquals(1, $count);
 
         $count = $this->Collaborator->getCount(
             [
                 'start' => $now - HOUR,
-                'end'   => $now + HOUR,
-                'type'  => Collaborator::TYPE_COLLABORATOR
+                'end' => $now + HOUR,
+                'type' => Collaborator::TYPE_COLLABORATOR
             ]);
         $this->assertEquals(3, $count);
 
         $count = $this->Collaborator->getCount(
             [
-                'start'   => $now - HOUR,
-                'end'     => $now + HOUR,
+                'start' => $now - HOUR,
+                'end' => $now + HOUR,
                 'user_id' => 3,
             ]);
         $this->assertEquals(2, $count);
     }
-
-    function testGoalIdOrderByPriority()
-    {
-        $team_id = 1;
-        $user_id = 1;
-        $this->Collaborator->deleteAll(['Collaborator.user_id' => $user_id], false);
-        $prepare_data = [
-            [
-                'user_id'  => $user_id,
-                'team_id'  => $team_id,
-                'goal_id'  => 5,
-                'priority' => 5,
-            ],
-            [
-                'user_id'  => $user_id,
-                'team_id'  => $team_id,
-                'goal_id'  => 4,
-                'priority' => 4,
-            ],
-            [
-                'user_id'  => $user_id,
-                'team_id'  => $team_id,
-                'goal_id'  => 3,
-                'priority' => 3,
-            ],
-        ];
-        $this->Collaborator->saveAll($prepare_data);
-        $this->Collaborator->current_team_id = $team_id;
-        $this->Collaborator->my_uid = $user_id;
-        $actual = $this->Collaborator->goalIdOrderByPriority($user_id, [4, 3, 5]);
-        $expected = array(
-            (int)5 => '5',
-            (int)4 => '4',
-            (int)3 => '3'
-        );
-        $this->assertEquals($expected, $actual);
-        $actual = $this->Collaborator->goalIdOrderByPriority($user_id, [4, 3, 5], 'asc');
-        $expected = array(
-            (int)3 => '3',
-            (int)4 => '4',
-            (int)5 => '5'
-        );
-        $this->assertEquals($expected, $actual);
-    }
-
 }

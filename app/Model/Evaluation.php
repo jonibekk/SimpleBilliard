@@ -505,9 +505,6 @@ class Evaluation extends AppModel
         $goal_evaluations = [];
         $goal_list = $this->Goal->Collaborator->getCollaboGoalList($uid, true, null, 1, Collaborator::STATUS_APPROVAL);
         $goal_list = $this->Goal->filterThisTermIds($goal_list);
-        //order by priority of goal
-        $goal_list = $this->Goal->Collaborator->goalIdOrderByPriority($uid, $goal_list);
-
         foreach ($goal_list as $gid) {
             //self
             if ($this->Team->EvaluationSetting->isEnabledSelf()) {
