@@ -28,6 +28,8 @@ class UserTest extends CakeTestCase
         'app.group',
         'app.team_member',
         'app.email',
+        'app.post',
+        'app.notify_setting',
     );
 
     public $basicUserDefault = [
