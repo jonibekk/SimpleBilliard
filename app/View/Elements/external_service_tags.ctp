@@ -150,11 +150,6 @@
         email: "<?= h($this->Session->read('Auth.User.PrimaryEmail.email')) ?>", // Email address
         created_at: <?= h($this->Session->read('Auth.User.created')) ?> // Signup date as a Unix timestamp
         <?php endif ?>
-        <?php if (isset($my_member_status) && $my_member_status): ?>,
-        "team_id": <?= h(intval($my_member_status['TeamMember']['team_id'])) ?>,
-        "team_admin": <?= h(intval($my_member_status['TeamMember']['admin_flg'])) ?>
-        <?php endif ?>
-
     };
 </script>
 <script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/<?=INTERCOM_APP_ID?>';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})()</script>

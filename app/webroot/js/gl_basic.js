@@ -87,28 +87,15 @@ $(document).ready(function () {
             $('#SubHeaderMenuGoal').removeClass('sp-feed-active');
             $(this).addClass('sp-feed-active');
             //表示切り換え
-            if (cake.is_mb_app) {
-                $('[role="goal_area"]').addClass('hidden');
-                $('[role="main"]').removeClass('hidden');
-            }
-            else {
-                $('[role="goal_area"]').addClass('visible-md visible-lg');
-                $('[role="main"]').removeClass('visible-md visible-lg');
-            }
+            $('[role="goal_area"]').addClass('visible-md visible-lg');
+            $('[role="main"]').removeClass('visible-md visible-lg');
         }
         else if ($(this).attr('id') == 'SubHeaderMenuGoal') {
             $('#SubHeaderMenuFeed').removeClass('sp-feed-active');
             $(this).addClass('sp-feed-active');
             //表示切り換え
-            if (cake.is_mb_app) {
-                $('[role="main"]').addClass('hidden');
-                $('[role="goal_area"]').removeClass('hidden');
-            }
-            else {
-                $('[role="main"]').addClass('visible-md visible-lg');
-                $('[role="goal_area"]').removeClass('visible-md visible-lg');
-            }
-
+            $('[role="main"]').addClass('visible-md visible-lg');
+            $('[role="goal_area"]').removeClass('visible-md visible-lg');
         }
         else {
             //noinspection UnnecessaryReturnStatementJS
@@ -811,7 +798,6 @@ function addComment(e) {
     $("#" + submit_id).before($loader_html);
 
     var $f = $(e.target);
-    var ajaxProcess = $.Deferred();
     $.ajax({
         url: $f.prop('action'),
         method: 'post',
@@ -822,31 +808,23 @@ function addComment(e) {
         timeout: 300000 //5min
     })
         .done(function (data) {
+            // 通信が成功したときの処理
             if (!data.error) {
-                // 通信が成功したときの処理
-                evCommentLatestView.call($refresh_link.get(0), {
-                    afterSuccess: function () {
-                        $first_form.children().toggle();
-                        $f.remove();
-                        ajaxProcess.resolve();
-                    }
-                });
+                $first_form.children().toggle();
+                $f.remove();
+                $refresh_link.click();
             }
             else {
                 $error_msg_box.text(data.msg);
-                ajaxProcess.reject();
             }
         })
         .fail(function (data) {
             $error_msg_box.text(cake.message.notice.g);
-            ajaxProcess.reject();
+        })
+        .always(function (data) {
+            // 通信が完了したとき
+            $submit.removeAttr('disabled');
         });
-
-    ajaxProcess.always(function () {
-        // 通信が完了したとき
-        $loader_html.remove();
-        $submit.removeAttr('disabled');
-    });
 }
 
 function evTargetToggle() {
@@ -1174,11 +1152,7 @@ $(function () {
         } else {
             if (showNavFlag) {
                 showNavFlag = false;
-                var scroll_offset = 0;
-                if (cake.is_mb_app) {
-                    scroll_offset = -10;
-                }
-                subNavbar.stop().animate({"top": scroll_offset}, 400);
+                subNavbar.stop().animate({"top": "0"}, 400);
             }
         }
     });
@@ -2380,22 +2354,11 @@ function evLike() {
 
     var $obj = $(this);
     var like_count_id = $obj.attr('like_count_id');
-    var $like_count_text = $("#" + like_count_id);
 
     var like_type = $obj.attr('like_type');
     var url = null;
     var model_id = $obj.attr('model_id');
     $obj.toggleClass("liked");
-
-    // ajax の結果を待たずに表示されているいいね数を変更する
-    // ajax の結果が返ってきたら正しい数字で上書きされる
-    var currentCount = parseInt($like_count_text.text(), 10);
-    if ($obj.hasClass("liked")) {
-        $like_count_text.text(currentCount + 1);
-    }
-    else {
-        $like_count_text.text(currentCount - 1);
-    }
 
     if (like_type == "post") {
         url = cake.url.d + model_id;
@@ -2415,7 +2378,7 @@ function evLike() {
                 alert(cake.message.notice.d);
             }
             else {
-                $like_count_text.text(data.count);
+                $("#" + like_count_id).text(data.count);
             }
         },
         error: function () {
@@ -2811,14 +2774,9 @@ $(document).ready(function () {
     $(document).on("click", ".click-comment-new", evCommentLatestView);
 });
 
-function evCommentLatestView(options) {
+function evCommentLatestView() {
     attrUndefinedCheck(this, 'post-id');
     attrUndefinedCheck(this, 'get-url');
-
-    options = $.extend({
-        afterSuccess: function () {
-        }
-    }, options);
 
     var $obj = $(this);
     var commentBlock = $obj.closest(".comment-block");
@@ -2869,8 +2827,6 @@ function evCommentLatestView(options) {
                 $obj.removeAttr("disabled");
 
                 initCommentNotify($obj);
-
-                options.afterSuccess();
             }
             else {
                 //ローダーを削除

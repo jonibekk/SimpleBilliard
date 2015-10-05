@@ -443,9 +443,6 @@ class GoalsController extends AppController
             if (!$this->Goal->KeyResult->isPermitted($kr_id)) {
                 throw new RuntimeException(__d('gl', "権限がありません。"));
             }
-            if ($this->Goal->KeyResult->isCompleted($kr_id)) {
-                throw new RuntimeException(__d('gl', "完了済の成果は編集出来ません。"));
-            }
             if (!$kr = $this->Goal->KeyResult->saveEdit($this->request->data)) {
                 throw new RuntimeException(__d('gl', "データの保存に失敗しました。"));
             }
@@ -549,9 +546,6 @@ class GoalsController extends AppController
         try {
             if (!$this->Goal->KeyResult->isPermitted($kr_id)) {
                 throw new RuntimeException(__d('gl', "権限がありません。"));
-            }
-            if ($this->Goal->KeyResult->isCompleted($kr_id)) {
-                throw new RuntimeException(__d('gl', "完了済の成果は削除出来ません。"));
             }
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());

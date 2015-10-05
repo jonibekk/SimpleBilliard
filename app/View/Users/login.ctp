@@ -47,11 +47,7 @@
                     'value'    => ''
                 ]) ?>
 
-                <?= $this->Form->hidden('installation_id',[
-                    'id' => 'installation_id',
-                    'value' => 'no_value'
-                ]) ?>
-                <?php $this->Form->unlockField('User.installation_id')?>
+
                 <div class="form-group">
                     <div class="col-sm-9 col-sm-offset-3">
                         <?=

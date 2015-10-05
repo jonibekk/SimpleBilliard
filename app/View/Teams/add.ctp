@@ -97,8 +97,7 @@
                 $this->Form->input('start_term_month', [
                     'label'                    => __d('gl', "開始月"),
                     'type'                     => 'select',
-                    // help-block の文言があるので、エラーメッセージは表示しない
-                    "data-bv-notempty-message" => __d('validate', " "),
+                    "data-bv-notempty-message" => __d('validate', "選択してください。"),
                     'options'                  => $start_term_month_options,
                     'afterInput'               => '<span class="help-block font_11px">'
                         . __d('gl', "基準となる期の開始月を選択して下さい。")

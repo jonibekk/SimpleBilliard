@@ -389,19 +389,4 @@ class KeyResult extends AppModel
         return $res;
     }
 
-    /**
-     * キーリザルトが完了済みか確認
-     *
-     * @param $kr_id
-     * @return bool
-     */
-    public function isCompleted($kr_id)
-    {
-        $kr = $this->findById($kr_id);
-        if (!$kr) {
-            return false;
-        }
-        return $kr['KeyResult']['completed'] ? true : false;
-    }
-
 }

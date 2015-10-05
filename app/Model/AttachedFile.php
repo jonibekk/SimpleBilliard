@@ -103,7 +103,7 @@ class AttachedFile extends AppModel
                     'large'   => '2048l',
                 ],
                 'path'                   => ":webroot/upload/:model/:id/:hash_:style.:extension",
-                'quality'                => 60,
+                'quality'                => 100,
                 'default_url'            => 'no-image.jpg',
                 'addFieldNameOnFileName' => false,
             ],

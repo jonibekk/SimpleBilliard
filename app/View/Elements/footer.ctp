@@ -11,7 +11,7 @@
  */
 ?>
 <!-- START app/View/Elements/footer.ctp -->
-<footer class="col-xxs-12 <?= $is_mb_app ? "hide" : null ?>">
+<footer class="col-xxs-12">
     <div class="row">
         <div class="col-lg-12">
 

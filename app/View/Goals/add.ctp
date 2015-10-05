@@ -573,7 +573,6 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
         $obj.find(".panel-container").removeClass("panel-closed-container");
         //noinspection JSJQueryEfficiency
         $(".panel-footer", "#" + target_id).show();
-        $(this).hide();
         return false;
     });
 </script>

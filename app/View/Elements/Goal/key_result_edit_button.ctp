@@ -14,13 +14,11 @@
         </a>
         <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
             aria-labelledby="dropdownMenu1">
-            <?php if (!$kr['KeyResult']['completed']): ?>
             <li role="presentation">
                 <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_edit_key_result_modal', 'key_result_id' => $kr['KeyResult']['id']]) ?>"
                    class="modal-ajax-get-add-key-result">
                     <i class="fa fa-pencil"></i><span class="ml_2px"><?= __d('gl', "出したい成果を編集する") ?></span></a>
             </li>
-            <?php endif ?>
             <li role="presentation">
                 <?php if ($kr['KeyResult']['completed']): ?>
                     <?= $this->Form->postLink('<i class="fa fa-reply"></i><span class="ml_2px">' .
@@ -60,7 +58,6 @@
                 <?php endif; ?>
             </li>
 
-            <?php if (!$kr['KeyResult']['completed']): ?>
             <li role="presentation">
                 <?=
                 $this->Form->postLink('<i class="fa fa-trash"></i><span class="ml_5px">' .
@@ -68,7 +65,6 @@
                                       ['controller' => 'goals', 'action' => 'delete_key_result', 'key_result_id' => $kr['KeyResult']['id']],
                                       ['escape' => false], __d('gl', "本当にこの成果を削除しますか？")) ?>
             </li>
-            <?php endif ?>
         </ul>
     </div>
     <!-- END app/View/Elements/Goal/key_result_edit_button.ctp -->

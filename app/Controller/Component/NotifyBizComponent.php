@@ -8,7 +8,6 @@ App::uses('ModelType', 'Model');
  * @property GlEmailComponent $GlEmail
  * @property NotifySetting    $NotifySetting
  * @property Post             $Post
- * @property Device           $Device
  * @property Comment          $Comment
  * @property Goal             $Goal
  * @property GlRedis          $GlRedis
@@ -59,7 +58,6 @@ class NotifyBizComponent extends Component
             $this->Comment = ClassRegistry::init('Comment');
             $this->Goal = ClassRegistry::init('Goal');
             $this->Team = ClassRegistry::init('Team');
-            $this->Device = ClassRegistry::init('Device');
             $this->GlRedis = ClassRegistry::init('GlRedis');
             $this->GlEmail->startup($controller);
         }
@@ -165,9 +163,6 @@ class NotifyBizComponent extends Component
 
         //通常の通知メール送信
         $this->_sendNotifyEmail();
-
-        //通常のアプリ向けPUSH通知
-        $this->_sendPushNotify();
     }
 
     public function push($socketId, $share)
@@ -768,7 +763,7 @@ class NotifyBizComponent extends Component
         return true;
     }
 
-    private function _getSendEmailNotifyUserList()
+    private function _getSendNotifyUserList()
     {
         //メール通知onのユーザを取得
         $uids = [];
@@ -780,201 +775,10 @@ class NotifyBizComponent extends Component
         return $uids;
     }
 
-    /**
-     * アプリプッシュ通知送信対象のユーザを取得
-     * TODO:とりあえずブラウザ通知と同じユーザーにしているので必要に応じて修正
-     *
-     * @return array プッシュ通知送信対象のユーザーのリスト
-     */
-    private function _getSendAppNotifyUserList()
-    {
-        $uids = [];
-        foreach ($this->notify_settings as $user_id => $val) {
-            if ($val['app']) {
-                $uids[] = $user_id;
-            }
-        }
-        return $uids;
-    }
-
     private function _sendNotifyEmail()
     {
-        $uids = $this->_getSendEmailNotifyUserList();
+        $uids = $this->_getSendNotifyUserList();
         $this->GlEmail->sendMailNotify($this->notify_option, $uids);
-    }
-
-    /**
-     * アプリ向けプッシュ通知送信
-     */
-    private function _sendPushNotify()
-    {
-        $timestamp = $this->_getTimestamp();
-        $signature = $this->_getNCMBSignature($timestamp);
-
-        $header = array(
-            'X-NCMB-Application-Key: ' . NCMB_APPLICATION_KEY,
-            'X-NCMB-Signature: ' . $signature,
-            'X-NCMB-Timestamp: ' . $timestamp,
-            'Content-Type: application/json'
-        );
-
-        $options = array('http' => array(
-            'ignore_errors' => true,    // APIリクエストの結果がエラーでもレスポンスボディを取得する
-            'max_redirects' => 0,       // リダイレクトはしない
-            'method'        => NCMB_REST_API_PUSH_METHOD
-        ));
-
-        // TODO:とりあえずブラウザ用の通知送信対象ユーザーに対しPUSH通知する
-        // あとから変わるはず。
-        $uids = $this->_getSendAppNotifyUserList();
-        if (empty($uids)) {
-            return;
-        }
-
-        $this->notify_option['options']['style'] = 'plain';
-        $original_lang = Configure::read('Config.language');
-
-        $post_url = Router::url($this->notify_option['url_data'], true);
-
-        $sent_device_tokens = [];
-
-        foreach ($uids as $to_user_id) {
-
-            $device_tokens = $this->Device->getDeviceTokens($to_user_id);
-            if (empty($device_tokens)) {
-                //このユーザーはスマホ持ってないのでスキップ
-                continue;
-            }
-
-            // ひとつのデバイスが複数のユーザーで登録されている可能性があるので
-            // 一度送ったデバイスに対して2度はPUSH通知は送らない
-            foreach ($device_tokens as $key => $value) {
-                if (array_search($value, $sent_device_tokens) !== false) {
-                    unset($device_tokens[$key]);
-                }
-            }
-
-            $this->_setLangByUserId($to_user_id, $original_lang);
-            $from_user = $this->NotifySetting->User->getUsersProf($this->notify_option['from_user_id']);
-            $from_user_name = $from_user[0]['User']['display_username'];
-            $title = $this->NotifySetting->getTitle($this->notify_option['notify_type'],
-                                                    $from_user_name,
-                                                    1,
-                                                    $this->notify_option['item_name'],
-                                                    $this->notify_option['options']);
-
-            //メッセージの場合は本文も出ていたほうがいいので出してみる
-            $item_name = json_decode($this->notify_option['item_name']);
-            if (!empty($item_name)) {
-                $item_name = mb_strimwidth($item_name[0], 0, 40, "...");
-                $title .= " : " . $item_name;
-            }
-
-            $body = '{
-                "immediateDeliveryFlag" : true,
-                "target":["ios","android"],
-                "searchCondition":{"deviceToken":{ "$inArray":["' . implode('","', $device_tokens) . '"]}},
-                "message":"' . $title . '",
-                "userSettingValue":{"url":"'.$post_url.'"}},
-                "deliveryExpirationTime":"1 day"
-            }';
-
-            $options['http']['content'] = $body;
-
-            $header['content-length'] = 'Content-Length: ' . strlen($body);
-            $options['http']['header'] = implode("\r\n", $header);
-
-            $url = "https://" . NCMB_REST_API_FQDN . "/" . NCMB_REST_API_VER . "/" . NCMB_REST_API_PUSH;
-            $ret = file_get_contents($url, false, stream_context_create($options));
-            $sent_device_tokens = array_merge($sent_device_tokens, $device_tokens);
-
-            error_log("FURU:result:" . $ret . "\n", 3, "/tmp/hoge.log");
-        }
-
-        //変更したlangをログインユーザーのものに書き戻しておく
-        $this->_setLang($original_lang);
-    }
-
-    /**
-     *  指定されたuseridのlangをグローバルに設定する
-     *  注意：使い終わったら元のlangに書き戻すこと
-     *
-     * @param        $user_id
-     * @param string $default_lang 指定されたuser_idに言語設定が存在しない場合に設定されるlang
-     */
-    private function _setLangByUserId($user_id, $default_lang = "eng")
-    {
-        $to_user = $this->NotifySetting->User->getProfileAndEmail($user_id);
-        if (isset($to_user['User']['language'])) {
-            $lang = $to_user['User']['language'];
-        }
-        else {
-            $lang = $default_lang;
-        }
-        $this->_setLang($lang);
-    }
-
-    /**
-     * 指定されたlangをグローバルに設定する
-     *
-     * @param $lang
-     */
-    private function _setLang($lang)
-    {
-        //こっちはメッセージ本体の言語に効く
-        Configure::write('Config.language', $lang);
-        if ($lang == "eng") {
-            $lang = null;
-        }
-        //こっちは送信元の名前の言語に効く
-        $this->NotifySetting->User->me['language'] = $lang;
-    }
-
-    /**
-     * NOWなタイムスタンプを生成する。
-     *
-     * @return string
-     */
-    private function _getTimestamp()
-    {
-        $now = microtime(true);
-        $msec = sprintf("%03d", ($now - floor($now)) * 1000);
-        return gmdate('Y-m-d\TH:i:s.', floor($now)) . $msec . 'Z';
-    }
-
-    /**
-     * push通知に必要なパラメータ
-     * X-NCMB-SIGNATUREを生成する
-     *
-     * デフォルトではpush通知用のシグネチャ生成
-     *
-     * @param $timestamp シグネチャを生成する時に使うタイムスタンプ
-     * @param $method シグネチャを生成する時に使うメソッド
-     * @param $path シグネチャを生成する時に使うパス
-     *
-     * @return string X-NCMB-SIGNATUREの値
-     */
-    private function _getNCMBSignature($timestamp, $method = null, $path = null)
-    {
-        $header_string = "SignatureMethod=HmacSHA256&";
-        $header_string .= "SignatureVersion=2&";
-        $header_string .= "X-NCMB-Application-Key=" . NCMB_APPLICATION_KEY . "&";
-        $header_string .= "X-NCMB-Timestamp=" . $timestamp;
-
-        $signature_string = (($method) ? $method : NCMB_REST_API_PUSH_METHOD) . "\n";
-        $signature_string .= NCMB_REST_API_FQDN . "\n";
-        if ($path) {
-            $signature_string .= $path . "\n";
-        }
-        else {
-            $signature_string .= "/" . NCMB_REST_API_VER . "/" . NCMB_REST_API_PUSH . "\n";
-        }
-        $signature_string .= $header_string;
-
-        error_log("FURU:sign=".$signature_string."\n",3,"/tmp/hoge.log");
-
-
-        return base64_encode(hash_hmac("sha256", $signature_string, NCMB_CLIENT_KEY, true));
     }
 
     /**
@@ -1070,7 +874,6 @@ class NotifyBizComponent extends Component
         $user_list = array_merge($user_list, Hash::extract($data, '{n}.Notification.options.post_user_id'));
         $users = Hash::combine($this->NotifySetting->User->getUsersProf($user_list), '{n}.User.id', '{n}');
         //merge users to notification data
-
         foreach ($data as $k => $v) {
             $user_id = null;
             $user_name = null;
@@ -1291,85 +1094,6 @@ class NotifyBizComponent extends Component
             $this->NotifySetting->current_team_id,
             $this->NotifySetting->my_uid
         );
-    }
-
-    /**
-     * installation_idでNCMBからdevice_tokenをとってきて
-     * Deviceに保存する
-     *
-     * @param $user_id
-     * @param $installation_id
-     *
-     * @return bool
-     */
-    function saveDeviceInfo($user_id, $installation_id)
-    {
-        error_log("FURU:saveDeviceInfo:$user_id:$installation_id\n", 3, "/tmp/hoge.log");
-
-        $timestamp = $this->_getTimestamp();
-        $path = "/" . NCMB_REST_API_VER . "/" . NCMB_REST_API_GET_INSTALLATION . "/" . $installation_id;
-        $signature = $this->_getNCMBSignature($timestamp, NCMB_REST_API_GET_METHOD, $path);
-
-        $header = array(
-            'X-NCMB-Application-Key: ' . NCMB_APPLICATION_KEY,
-            'X-NCMB-Signature: ' . $signature,
-            'X-NCMB-Timestamp: ' . $timestamp,
-            'Content-Type: application/json'
-        );
-
-        $options = array('http' => array(
-            'ignore_errors' => true,    // APIリクエストの結果がエラーでもレスポンスボディを取得する
-            'max_redirects' => 0,       // リダイレクトはしない
-            'method'        => NCMB_REST_API_GET_METHOD
-        ));
-
-        $options['http']['header'] = implode("\r\n", $header);
-
-        $url = "https://" . NCMB_REST_API_FQDN . $path;
-        error_log("FURU:url:" . $url . "\n", 3, "/tmp/hoge.log");
-        $ret = file_get_contents($url, false, stream_context_create($options));
-
-        error_log("FURU:result:" . $ret . "\n", 3, "/tmp/hoge.log");
-
-        $ret_array = json_decode($ret, true);
-
-        if (!array_key_exists('deviceToken', $ret_array)) {
-            return false;
-        }
-        $device_token = $ret_array['deviceToken'];
-
-        //既に存在する場合には登録しない
-        $devices = $this->Device->getDevicesByUserIdAndDeviceToken($user_id, $device_token);
-        if (!empty($devices)) {
-            //既に登録済みは成功
-            return true;
-        }
-
-        $device_type = $ret_array['deviceType'];
-        $os_type = 99;
-        if ($device_type == "android") {
-            $os_type = 1;
-        }
-        elseif ($device_type == "ios") {
-            $os_type = 0;
-        }
-
-        $data = [
-            'Device' => [
-                'user_id'      => $user_id,
-                'device_token' => $device_token,
-                'os_type'      => $os_type,
-            ]
-        ];
-
-        error_log("FURU:device_token:" . $ret_array['deviceToken'] . "\n", 3, "/tmp/hoge.log");
-
-        $ret = $this->Device->add($data);
-        if (!$ret) {
-            return false;
-        }
-
-        return true;
     }
 
 }
