@@ -311,8 +311,8 @@ class UserFixture extends CakeTestFixture
         ),
         array(
             'id'                => '9',
-            'first_name'        => 'firstname',
-            'last_name'         => 'lastname',
+            'first_name'        => 'user_9',
+            'last_name'         => 'user_9',
             'middle_name'       => 'Lorem ipsum dolor sit amet',
             'gender_type'       => 9,
             'birth_day'         => '2014-05-22',
@@ -342,8 +342,8 @@ class UserFixture extends CakeTestFixture
         ),
         array(
             'id'                => '10',
-            'first_name'        => 'firstname',
-            'last_name'         => 'lastname',
+            'first_name'        => 'user_10',
+            'last_name'         => 'user_10',
             'middle_name'       => 'Lorem ipsum dolor sit amet',
             'gender_type'       => 2,
             'birth_day'         => '2014-05-22',
@@ -373,8 +373,8 @@ class UserFixture extends CakeTestFixture
         ),
         array(
             'id'                => '11',
-            'first_name'        => 'firstname',
-            'last_name'         => 'lastname',
+            'first_name'        => 'user_11',
+            'last_name'         => 'user_11',
             'middle_name'       => 'Lorem ipsum dolor sit amet',
             'gender_type'       => 2,
             'birth_day'         => '2014-05-22',
