@@ -75,8 +75,9 @@
                 </div>
                 <?=
                 $this->Form->input('description',
-                                   ['label'       => __d('gl', "サークルの説明"),
-                                    'placeholder' => __d('gl', "例) 最新情報を共有しましょう。"),
+                                   ['label'                    => __d('gl', "サークルの説明"),
+                                    'placeholder'              => __d('gl', "例) 最新情報を共有しましょう。"),
+                                    'data-bv-notempty-message' => __d('validate', "入力必須項目です。"),
                                    ]) ?>
                 <div class="form-group">
                     <label for="" class="f control-label modal-label"><?= __d('gl', "サークル画像") ?></label>
