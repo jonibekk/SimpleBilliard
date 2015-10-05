@@ -648,6 +648,7 @@ class GlRedis extends AppModel
         }
         return $notify_list;
     }
+
     /**
      * @param int  $team_id
      * @param int  $user_id

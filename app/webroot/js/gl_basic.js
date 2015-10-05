@@ -61,30 +61,20 @@ $(window).load(function () {
     bindCommentBalancedGallery($('.comment_gallery'));
     setDefaultTab();
 });
+
 $(document).ready(function () {
-    $(document).on('click', '#mark_all_read', function () {
-       // alert('test');
+    $(document).on('click', '#mark_all_read', function (e) {
+        e.preventDefault();
         $.ajax({
             type: 'GET',
             url: cake.url.an,
             async: true,
             success: function () {
-               $("#bell-dropdown").fadeIn.delay(1000);
+               $(".notify-card-list").removeClass('notify-card-unread').addClass('notify-card-read');
             }
         });
+        return false;
     });
-
-    //$("#mark_all_read").click(function(){
-    //    alert('test');
-    //    $.ajax({
-    //        type: 'GET',
-    //        url: cake.url.an,
-    //        async: true,
-    //        success: function () {
-    //            location.reload();
-    //        }
-    //    });
-    //});
 
     $("a.youtube").YouTubeModal({autoplay: 0, width: 640, height: 360});
     if(typeof cake.request_params.named.after_click !== 'undefined'){

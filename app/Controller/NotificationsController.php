@@ -124,8 +124,6 @@ class NotificationsController extends AppController
     {
         $this->_ajaxPreProcess();
         $notify_items = $this->NotifyBiz->getNotifyIds();
-        $notify_items = $this->GlRedis->getNotifications();
-
         foreach($notify_items as $notify_id=>$val)
         {
             $this->NotifyBiz->changeReadStatusNotification($notify_id);
