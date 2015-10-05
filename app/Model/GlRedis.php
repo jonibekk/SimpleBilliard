@@ -836,6 +836,36 @@ class GlRedis extends AppModel
     }
 
     /**
+     * パターンにマッチしたkeyを削除
+     *
+     * @param $pattern
+     *
+     * @return int
+     */
+    function dellKeys($pattern)
+    {
+        if ($pattern == "*") {
+            throw new RuntimeException(__d('gl', "*指定は禁止です！！"));
+        }
+        $keys = $this->Db->keys($pattern);
+        /** @noinspection PhpInternalEntityUsedInspection */
+        $pipe = $this->Db->multi(Redis::PIPELINE);
+        $env_name = ENV_NAME . ":";
+        foreach ($keys as $key) {
+            $key = preg_replace("/^{$env_name}/", "", $key);
+            $pipe->delete($key);
+        }
+        $pipe->exec();
+        return count($keys);
+    }
+
+    function getKeyCount($pattern)
+    {
+        $keys = $this->Db->keys($pattern);
+        return count($keys);
+    }
+
+    /**
      * サイトにアクセスしたユーザーのIDリストを返す
      *
      * @param int       $team_id
@@ -879,7 +909,7 @@ class GlRedis extends AppModel
     function saveTeamInsight($team_id, $start_date, $end_date, $timezone, $insight)
     {
         $key = $this->getKeyName(self::KEY_TYPE_TEAM_INSIGHT, $team_id, null, null, null, null, null, null, null,
-                                  $timezone, $start_date, $end_date);
+                                 $timezone, $start_date, $end_date);
         $this->Db->set($key, json_encode($insight));
         return $this->Db->setTimeout($key, WEEK);
     }
@@ -1016,8 +1046,8 @@ class GlRedis extends AppModel
     function getTeamRanking($team_id, $start_date, $end_date, $timezone, $type)
     {
         $ranking_str = $this->Db->hGet($this->getKeyName(self::KEY_TYPE_TEAM_RANKING, $team_id,
-                                                        null, null, null, null, null, null, null,
-                                                        $timezone, $start_date, $end_date), $type);
+                                                         null, null, null, null, null, null, null,
+                                                         $timezone, $start_date, $end_date), $type);
         return json_decode($ranking_str, true);
 
     }
@@ -1059,8 +1089,8 @@ class GlRedis extends AppModel
     function getGroupRanking($team_id, $start_date, $end_date, $timezone, $group_id, $type)
     {
         $ranking_str = $this->Db->hGet($this->getKeyName(self::KEY_TYPE_GROUP_RANKING, $team_id,
-                                                        null, null, null, null, null, null, null,
-                                                        $timezone, $start_date, $end_date, $group_id), $type);
+                                                         null, null, null, null, null, null, null,
+                                                         $timezone, $start_date, $end_date, $group_id), $type);
         return json_decode($ranking_str, true);
     }
 }
