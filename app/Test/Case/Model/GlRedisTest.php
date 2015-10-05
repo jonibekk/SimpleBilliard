@@ -61,6 +61,7 @@ class GlRedisTest extends CakeTestCase
         $this->GlRedis->setNotifications(1, 1, [1], 2, "body", ['/'], 1234);
         $this->assertEquals(1, $this->GlRedis->getCountOfNewNotification(1, 1));
     }
+
     function testGetCountOfNewMessageNotificationOne()
     {
         $this->GlRedis->setNotifications(25, 1, [1], 2, "body", ['/'], 1234);
@@ -73,6 +74,7 @@ class GlRedisTest extends CakeTestCase
         $this->GlRedis->setNotifications(1, 1, [1], 2, "body", ['/'], 1234);
         $this->assertEquals(2, $this->GlRedis->getCountOfNewNotification(1, 1));
     }
+
     function testGetCountOfNewMessageNotificationTwo()
     {
         $this->GlRedis->setNotifications(25, 1, [1], 2, "body", ['/'], 1234);
@@ -85,7 +87,9 @@ class GlRedisTest extends CakeTestCase
         $this->assertFalse($this->GlRedis->deleteCountOfNewNotification(1, 1));
         $this->assertEquals(0, $this->GlRedis->getCountOfNewNotification(1, 1));
     }
-    function testDeleteCountOfNewMessageNotificationFalse() {
+
+    function testDeleteCountOfNewMessageNotificationFalse()
+    {
         $this->assertFalse($this->GlRedis->deleteCountOfNewMessageNotification(1, 1));
         $this->assertEquals(0, $this->GlRedis->getCountOfNewMessageNotification(1, 1));
     }
@@ -96,6 +100,7 @@ class GlRedisTest extends CakeTestCase
         $this->assertTrue($this->GlRedis->deleteCountOfNewNotification(1, 1));
         $this->assertEquals(0, $this->GlRedis->getCountOfNewNotification(1, 1));
     }
+
     function testDeleteCountOfNewMessageNotificationTrue()
     {
         $this->GlRedis->setNotifications(25, 1, [1], 2, "body", ['/'], 1234);
@@ -126,6 +131,7 @@ class GlRedisTest extends CakeTestCase
         $res = $this->GlRedis->getNotifications(1, 1);
         $this->assertCount(3, $res);
     }
+
     function testGetMessageNotificationsFromDateNullLimitNull()
     {
         for ($i = 0; $i < 3; $i++) {
@@ -143,6 +149,7 @@ class GlRedisTest extends CakeTestCase
         $res = $this->GlRedis->getNotifications(1, 1, 1);
         $this->assertCount(1, $res);
     }
+
     function testGetMessageNotificationsFromDateNullLimited()
     {
         for ($i = 0; $i < 3; $i++) {
@@ -160,6 +167,7 @@ class GlRedisTest extends CakeTestCase
         $res = $this->GlRedis->getNotifications(1, 1);
         $this->assertCount(2, $this->GlRedis->getNotifications(1, 1, 3, $res[0]['score']));
     }
+
     function testGetMessageNotificationsFromDateLimited()
     {
         for ($i = 0; $i < 3; $i++) {
@@ -242,7 +250,6 @@ class GlRedisTest extends CakeTestCase
         $this->assertTrue(isset($e));
     }
 
-
     function testSaveAccessUser()
     {
         $this->GlRedis->saveAccessUser(1, 1, 1442567110, [9, 1]);
@@ -318,6 +325,28 @@ class GlRedisTest extends CakeTestCase
         $this->assertEquals(null, $res);
         $res = $this->GlRedis->getGroupRanking(1, '2015-09-18', '2015-09-19', 1, 1, 'ranking');
         $this->assertEquals(null, $res);
+    }
+
+    function testGetKeyCount()
+    {
+        $this->GlRedis->saveAccessUser(1, 1, 1, [9, 10]);
+        $this->GlRedis->saveAccessUser(2, 2, 1, [9]);
+        $res = $this->GlRedis->getKeyCount("*9:access_user:");
+        $this->assertEquals(2, $res);
+    }
+
+    function testDellKeys()
+    {
+        try {
+            $this->GlRedis->dellKeys("*");
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e));
+
+        $this->GlRedis->saveAccessUser(1, 1, 1, [9, 10]);
+        $this->GlRedis->saveAccessUser(2, 2, 1, [9]);
+        $res = $this->GlRedis->dellKeys("*9:access_user:");
+        $this->assertEquals(2, $res);
     }
 
 }
