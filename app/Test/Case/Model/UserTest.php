@@ -671,25 +671,20 @@ class UserTest extends CakeTestCase
 
     function testGetNewUsersByKeyword()
     {
-        $this->User->current_team_id = 1;
-        $this->User->my_uid = 1;
-        $post_id = 103;
+        $this->User->current_team_id = 3;
+        $this->User->my_uid = 9;
+        $this->User->TeamMember->current_team_id = 3;
+        $this->User->TeamMember->my_uid = 9;
+        $post_id = 13;
 
-        // 秘密サークル
-        $res = $this->User->getNewUsersByKeywordNotSharedOnPost('秘密サークル', 10, true, $post_id);
-        $this->assertNotEmpty('public', $res);
+        $res = $this->User->getNewUsersByKeywordNotSharedOnPost('user_9', 10, true, $post_id);
+        $this->assertEmpty($res);
 
-        // 秘密サークル
-        $res = $this->User->getNewUsersByKeywordNotSharedOnPost('秘密', 10, true, $post_id);
-        $this->assertNotEmpty('public', $res);
+        $res = $this->User->getNewUsersByKeywordNotSharedOnPost('user_10', 10, true, $post_id);
+        $this->assertNotEmpty($res);
 
-        // 通常のサークル
-        $res = $this->User->getNewUsersByKeywordNotSharedOnPost('test', 10, true, $post_id);
-        $this->assertEquals([], $res);
-
-        // チーム全体サークル
-        $res = $this->User->getNewUsersByKeywordNotSharedOnPost('チーム全体', 10, true, $post_id);
-        $this->assertEquals([], $res);
+        $res = $this->User->getNewUsersByKeywordNotSharedOnPost('user_11', 10, true, $post_id);
+        $this->assertEmpty($res);
     }
 
     function testGetUsersSelectOnly()
