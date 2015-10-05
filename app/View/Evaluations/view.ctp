@@ -353,7 +353,6 @@
                     <?= h($priority) ?>
                 </div>
             </div>
-
             <?php foreach ($goal as $evalIndex => $eval): ?>
                 <?php if ($eval['Evaluation']['evaluator_user_id'] == $this->Session->read('Auth.User.id') && $isEditable): ?>
                     <div class="col-xxs-12 mb_32px">
@@ -372,7 +371,7 @@
                         <div class="form-group col-xxs-9">
                             <div class="lh_44px col-xxs-12">
                                 <div for="#" class="col-xxs-12 col-sm-4 col-md-3 eval-view-panel-title">
-                                    <?= Evaluation::$TYPE[$total['Evaluation']['evaluate_type']]['view'] ?>
+                                    <?= Evaluation::$TYPE[$eval['Evaluation']['evaluate_type']]['view'] ?>
                                 </div>
                                 <div
                                     class="col-xxs-12 col-sm-4 col-md-3"><?= h($eval['EvaluatorUser']['display_username']) ?></div>
@@ -446,7 +445,7 @@
                         <div class="col-xxs-9">
                             <div class="lh_44px col-xxs-12">
                                 <div for="#" class="col-xxs-12 col-sm-4 col-md-3 eval-view-panel-title">
-                                    <?= Evaluation::$TYPE[$total['Evaluation']['evaluate_type']]['view'] ?>
+                                    <?= Evaluation::$TYPE[$eval['Evaluation']['evaluate_type']]['view'] ?>
                                 </div>
                                 <div
                                     class="col col-xxs-12 col-sm-4 col-md-3"><?= h($eval['EvaluatorUser']['display_username']) ?></div>
