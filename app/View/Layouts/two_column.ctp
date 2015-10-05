@@ -23,7 +23,7 @@
         <div class="<?= $is_mb_app ? "hidden" : "col-xs-3" ?> <?php if (isset($hidden_sidebar_xxs) && $hidden_sidebar_xxs): ?>hidden-xxs<?php endif ?>">
             <?= $this->fetch('sidebar') ?>
         </div>
-        <div class="parent-flash <?= $is_mb_app || viaIsSet($hidden_sidebar_xxs)? "col-xxs-12" : "col-xs-9" ?> " role="main">
+        <div class="parent-flash <?= $is_mb_app === true || (isset($hidden_sidebar_xxs) && $hidden_sidebar_xxs)? "col-xxs-12 col-xs-9" : "col-xs-9" ?> " role="main">
             <?= $this->Session->flash(); ?>
             <?= $this->fetch('content'); ?>
         </div>
