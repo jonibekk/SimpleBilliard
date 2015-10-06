@@ -351,7 +351,7 @@ $without_header = isset($without_header) ? $without_header : false;
                             </div>
                         <?php endforeach ?>
                     </div>
-                <?php if (isset($post['Goal']['id']) && $post['Post']['user_id'] != $this->Session->read('Auth.User.id')): ?>
+                <?php if (isset($post['Goal']['id']) && $post['Post']['user_id'] != $this->Session->read('Auth.User.id') && is_null($post['Goal']['completed'])): ?>
                         <? $follow_opt = $this->Goal->getFollowOption($post['Goal']) ?>
                         <? $collabo_opt = $this->Goal->getCollaboOption($post['Goal']) ?>
                     <div style="padding:5px" class="col col-xxs-12 mt_5px">
