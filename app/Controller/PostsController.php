@@ -505,7 +505,17 @@ class PostsController extends AppController
         else {
             $page_num = 1;
         }
-        $posts = $this->Post->get($page_num, POST_FEED_PAGE_ITEMS_NUMBER, null, null, $this->request->params);
+        $start = null;
+        $end = null;
+        if (isset($this->request->params['named']['evaluate_term_id'])) {
+            $term = $this->Team->EvaluateTerm->findById($this->request->params['named']['evaluate_term_id']);
+            if (isset($term['EvaluateTerm'])) {
+                $start = $term['EvaluateTerm']['start_date'];
+                $end = $term['EvaluateTerm']['end_date'];
+            }
+        }
+
+        $posts = $this->Post->get($page_num, POST_FEED_PAGE_ITEMS_NUMBER, $start, $end, $this->request->params);
         $this->set(compact('posts'));
 
         //エレメントの出力を変数に格納する
