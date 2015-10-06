@@ -63,9 +63,7 @@ $(window).load(function () {
 });
 $(document).ready(function () {
     $("a.youtube").YouTubeModal({autoplay: 0, width: 640, height: 360});
-    if (typeof cake.request_params.named.after_click !== 'undefined') {
-        $("#" + cake.request_params.named.after_click).trigger('click');
-    }
+
 
     //すべてのformで入力があった場合に行う処理
     $("select,input").change(function () {
@@ -77,9 +75,9 @@ $(document).ready(function () {
     });
     //ヘッダーサブメニューでのフィード、ゴール切り換え処理
     //noinspection JSJQueryEfficiency
-    $('#SubHeaderMenu a').click(function () {
+   $('#SubHeaderMenu a').click(function () {
         //既に選択中の場合は何もしない
-        if ($(this).hasClass('sp-feed-active')) {
+       if ($(this).hasClass('sp-feed-active')) {
             return;
         }
 
@@ -115,6 +113,7 @@ $(document).ready(function () {
             return;
         }
     });
+
     //アップロード画像選択時にトリムして表示
     $('.fileinput').fileinput().on('change.bs.fileinput', function () {
         $(this).children('.nailthumb-container').nailthumb({width: 150, height: 150, fitDirection: 'center center'});
@@ -568,6 +567,14 @@ $(document).ready(function () {
     if (cake.data.j == "0") {
         $('#FeedMoreReadLink').trigger('click');
     }
+
+    if (typeof cake.request_params.named.after_click !== 'undefined') {
+        $("#" + cake.request_params.named.after_click).trigger('click');
+    }
+    if (typeof cake.request_params.after_click !== 'undefined') {
+        $("#" + cake.request_params.after_click).trigger('click');
+    }
+
 
     ///////////////////////////////////////////////////////////////////////////
     // Ctrl(Command) + Enter 押下時のコールバック
