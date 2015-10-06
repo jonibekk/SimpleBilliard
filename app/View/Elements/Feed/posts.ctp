@@ -385,13 +385,15 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                            like_type="post">
                             <i class="fa-thumbs-up fa"></i>
                             <?= __d('gl', "いいね！") ?></a>
-                        <a href="#" class="feeds-post-comment-btn trigger-click"
-                           target-id="NewCommentDummyForm_<?= $post['Post']['id'] ?>"
-                           after-replace-target-id="CommentFormBody_<?= $post['Post']['id'] ?>"
-                            >
-                            <i class="fa-comments-o fa"></i>
-                            <?= __d('gl', "コメント") ?>
-                        </a>
+                        <?php if (!$without_add_comment): ?>
+                            <a href="#" class="feeds-post-comment-btn trigger-click"
+                               target-id="NewCommentDummyForm_<?= $post['Post']['id'] ?>"
+                               after-replace-target-id="CommentFormBody_<?= $post['Post']['id'] ?>"
+                                >
+                                <i class="fa-comments-o fa"></i>
+                                <?= __d('gl', "コメント") ?>
+                            </a>
+                        <?php endif; ?>
                     </div>
                     <div class="feeds-post-btns-wrap-right">
                         <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_liked_users', 'post_id' => $post['Post']['id']]) ?>"
