@@ -54,7 +54,7 @@
     <?php endif; ?>
     <div class="clearfix develop--circle-seek">
         <i class="fa fa-eye circle-function circle-seek-icon font_14px"></i><?=
-        $this->Html->link(__d('gl', "公開サークルを見る"),
+        $this->Html->link(__d('gl', "サークルを見る"),
                           ['controller' => 'circles', 'action' => 'ajax_get_public_circles_modal'],
                           ['class' => 'modal-ajax-get-public-circles']) ?>
     </div>

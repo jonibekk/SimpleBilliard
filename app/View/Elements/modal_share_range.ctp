@@ -24,7 +24,11 @@
                 <?php if (!empty($circles)): ?>
                     <?php foreach ($circles as $key => $circle): ?>
                         <?=
-                        $this->element('public_circle_item', ['circle' => $circle, 'key' => $key, 'form' => false]) ?>
+                        $this->element('public_circle_item', ['circle'       => $circle,
+                                                              'key'          => $key,
+                                                              'form'         => false,
+                                                              'member_count' => count($circle['CircleMember']),
+                        ]) ?>
                     <?php endforeach ?>
                 <?php endif ?>
                 <?php if (!empty($users)): ?>

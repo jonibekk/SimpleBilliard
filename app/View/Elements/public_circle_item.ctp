@@ -9,10 +9,16 @@
  * @var                    $circle
  * @var                    $key
  * @var                    $form
+ * @var                    $admin
+ * @var                    $joined
+ * @var                    $member_count
  */
 if (!isset($form)) {
     $form = true;
 }
+$admin = isset($admin) ? $admin : false;
+$joined = isset($joined) ? $joined : false;
+$member_count = isset($member_count) ? $member_count : '';
 ?>
 <!-- START app/View/Elements/public_circle_item.ctp -->
 <div class="col col-xxs-12 mpTB0">
@@ -23,23 +29,26 @@ if (!isset($form)) {
     <div class="comment-body modal-comment">
         <?php if ($form): ?>
             <div class="pull-right circle-join-switch">
-                <?php if (!empty($circle['CircleAdmin'])): ?>
+                <?php if ($admin): ?>
                     <?= __d('gl', "管理者") ?>
                 <?php elseif ($circle['Circle']['team_all_flg']): ?>
                     <?php // チーム全体サークルは変更不可 ?>
                 <?php else: ?>
-                    <?php $joined = false;
-                    foreach ($circle['CircleMember'] as $member) {
-                        if ($member['user_id'] == $this->Session->read('Auth.User.id')) {
-                            $joined = true;
-                            break;
-                        }
-                    }
-                    echo $this->Form->input("$key.join",
-                                            ['label' => false, 'div' => false, 'type' => 'checkbox', 'class' => 'bt-switch', 'default' => $joined ? true : false]) ?>
+                    <?= $this->Form->input("$key.join",
+                                           ['label'       => false,
+                                            'div'         => false,
+                                            'type'        => 'checkbox',
+                                            'class'       => 'bt-switch',
+                                            'default'     => $joined ? true : false,
+                                            'data-secret' => $circle['Circle']['public_flg'] ? "0" : "1"]) ?>
                     <?= $this->Form->hidden("$key.circle_id", ['value' => $circle['Circle']['id']]) ?>
                 <?php endif; ?>
             </div>
+            <?php if (!$circle['Circle']['public_flg']): ?>
+                <div class="pull-right circle-item-secret-mark" style="">
+                    <i class="fa fa-lock"></i>
+                </div>
+            <?php endif ?>
         <?php endif; ?>
         <div class="font_12px font_bold modalFeedTextPadding">
             <?php if ($circle['Circle']['created'] > strtotime("-1 week")): ?>
@@ -53,7 +62,7 @@ if (!isset($form)) {
         <div class="font_12px font_lightgray modalFeedTextPaddingSmall">
             <a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_get_circle_members', 'circle_id' => $circle['Circle']['id']]) ?>"
                class="modal-ajax-get">
-                <?= __d('gl', "%s メンバー", count($circle['CircleMember'])) ?>
+                <?= __d('gl', "%s メンバー", $member_count) ?>
             </a>
             &middot;
             <?= $this->TimeEx->elapsedTime(h($circle['Circle']['modified']), 'rough') ?>
