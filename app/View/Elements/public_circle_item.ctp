@@ -45,7 +45,7 @@ $member_count = isset($member_count) ? $member_count : '';
                 <?php endif; ?>
             </div>
             <?php if (!$circle['Circle']['public_flg']): ?>
-                <div class="pull-right circle-item-secret-mark" style="">
+                <div class="pull-right circle-item-secret-mark">
                     <i class="fa fa-lock"></i>
                 </div>
             <?php endif ?>
