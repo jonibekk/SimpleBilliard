@@ -544,6 +544,25 @@ $(document).ready(function () {
     $(document).on("click", ".click-goal-follower-more", evAjaxGoalFollowerMore);
     $(document).on("click", ".click-goal-member-more", evAjaxGoalMemberMore);
     $(document).on("click", ".click-goal-key-result-more", evAjaxGoalKeyResultMore);
+    $(document).on("submit", "#CircleJoinForm", function (e) {
+        var $form = $(this);
+        // 秘密サークルから抜けようとしている場合はアラートを出す
+        var leave_secret = false;
+        $form.find('.bt-switch[data-secret=1]').each(function () {
+            var $switch = $(this);
+            if (!$switch.bootstrapSwitch('state')) {
+                leave_secret = true;
+            }
+        });
+        if (leave_secret) {
+            var answer = confirm(cake.message.notice.leave_secret_circle);
+            if (!answer) {
+                $form.find('input[type=submit]').removeAttr('disabled');
+                return false;
+            }
+        }
+        return true;
+    });
 
 
     //noinspection JSJQueryEfficiency
