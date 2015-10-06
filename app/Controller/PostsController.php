@@ -520,6 +520,8 @@ class PostsController extends AppController
 
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
+        $this->set('without_header', true);
+        $this->set('without_add_comment', true);
         $response = $this->render('Feed/posts');
         $html = $response->__toString();
         $result = array(

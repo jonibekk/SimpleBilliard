@@ -56,7 +56,7 @@
                     <!--END Goal Post Header -->
                 <?php endif; ?>
             <?php endif; ?>
-            <?= $this->element("Feed/posts", ['without_header' => true]) ?>
+            <?= $this->element("Feed/posts", ['without_header' => true, 'without_add_comment' => true]) ?>
             <?php if (count($posts) == POST_FEED_PAGE_ITEMS_NUMBER): ?>
                 <div class="panel panel-default feed-read-more" id="ActionListMoreRead">
                     <div class="panel-body panel-read-more-body">
