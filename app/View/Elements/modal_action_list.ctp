@@ -63,6 +63,7 @@
                         <span class="none" id="ActionShowMoreNoData"><?= __d('gl', "これ以上のデータがありません。") ?></span>
                         <a href="#" class="btn btn-link click-feed-read-more"
                            parent-id="ActionListMoreRead"
+                           id="ActionListMoreReadLink"
                            next-page-num="2"
                            no-data-text-id="ActionShowMoreNoData"
                            get-url="<?=

@@ -2065,7 +2065,24 @@ function getModalPostList(e) {
             $modal_elm.find('form').bootstrapValidator().on('success.form.bv', function (e) {
                 validatorCallback(e)
             });
-
+            // アクションリストのオートローディング
+            //
+            var action_autoload_more = false;
+            var prevScrollTopAction = 0;
+            $modal_elm.find('.modal-body').scroll(function () {
+                var $this = $(this);
+                console.log('ActionListBody scroll');
+                var currentScrollTop = $this.scrollTop();
+                console.log(currentScrollTop);
+                if (prevScrollTopAction < currentScrollTop && ($this.get(0).scrollHeight - currentScrollTop == $this.height())) {
+                    console.log('more read');
+                    if (!action_autoload_more) {
+                        action_autoload_more = true;
+                        $('#ActionListMoreReadLink').trigger('click');
+                    }
+                }
+                prevScrollTopAction = currentScrollTop;
+            });
         }).success(function () {
             $('body').addClass('modal-open');
         });
@@ -3394,7 +3411,6 @@ $(document).ready(function () {
         }
         prevScrollTop = currentScrollTop;
     });
-
 
     /**
      * ファイルのドラッグ & ドロップ 設定
