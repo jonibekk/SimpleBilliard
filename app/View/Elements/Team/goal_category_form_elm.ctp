@@ -28,8 +28,8 @@ if (!viaIsSet($index) || !is_numeric($index)) {
                             'placeholder'                  => __d('team', '名前'),
                             'data-bv-notempty-message'     => __d('gl', "入力必須項目です。"),
                             'data-bv-stringlength'         => "true",
-                            'data-bv-stringlength-max'     => 30,
-                            'data-bv-stringlength-message' => __d('validate', '%2$d文字以下で入力してください。', '', 30),
+                            'data-bv-stringlength-max'     => 40,
+                            'data-bv-stringlength-message' => __d('validate', '%2$d文字以下で入力してください。', '', 40),
                             'required'                     => true,
                         ))
             ?>
