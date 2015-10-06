@@ -77,7 +77,7 @@ $(document).ready(function () {
     });
 
     $("a.youtube").YouTubeModal({autoplay: 0, width: 640, height: 360});
-    if(typeof cake.request_params.named.after_click !== 'undefined'){
+    if (typeof cake.request_params.named.after_click !== 'undefined') {
         $("#" + cake.request_params.named.after_click).trigger('click');
     }
 
@@ -101,15 +101,28 @@ $(document).ready(function () {
             $('#SubHeaderMenuGoal').removeClass('sp-feed-active');
             $(this).addClass('sp-feed-active');
             //表示切り換え
-            $('[role="goal_area"]').addClass('visible-md visible-lg');
-            $('[role="main"]').removeClass('visible-md visible-lg');
+            if (cake.is_mb_app) {
+                $('[role="goal_area"]').addClass('hidden');
+                $('[role="main"]').removeClass('hidden');
+            }
+            else {
+                $('[role="goal_area"]').addClass('visible-md visible-lg');
+                $('[role="main"]').removeClass('visible-md visible-lg');
+            }
         }
         else if ($(this).attr('id') == 'SubHeaderMenuGoal') {
             $('#SubHeaderMenuFeed').removeClass('sp-feed-active');
             $(this).addClass('sp-feed-active');
             //表示切り換え
-            $('[role="main"]').addClass('visible-md visible-lg');
-            $('[role="goal_area"]').removeClass('visible-md visible-lg');
+            if (cake.is_mb_app) {
+                $('[role="main"]').addClass('hidden');
+                $('[role="goal_area"]').removeClass('hidden');
+            }
+            else {
+                $('[role="main"]').addClass('visible-md visible-lg');
+                $('[role="goal_area"]').removeClass('visible-md visible-lg');
+            }
+
         }
         else {
             //noinspection UnnecessaryReturnStatementJS
@@ -812,6 +825,7 @@ function addComment(e) {
     $("#" + submit_id).before($loader_html);
 
     var $f = $(e.target);
+    var ajaxProcess = $.Deferred();
     $.ajax({
         url: $f.prop('action'),
         method: 'post',
@@ -822,23 +836,31 @@ function addComment(e) {
         timeout: 300000 //5min
     })
         .done(function (data) {
-            // 通信が成功したときの処理
             if (!data.error) {
-                $first_form.children().toggle();
-                $f.remove();
-                $refresh_link.click();
+                // 通信が成功したときの処理
+                evCommentLatestView.call($refresh_link.get(0), {
+                    afterSuccess: function () {
+                        $first_form.children().toggle();
+                        $f.remove();
+                        ajaxProcess.resolve();
+                    }
+                });
             }
             else {
                 $error_msg_box.text(data.msg);
+                ajaxProcess.reject();
             }
         })
         .fail(function (data) {
             $error_msg_box.text(cake.message.notice.g);
-        })
-        .always(function (data) {
-            // 通信が完了したとき
-            $submit.removeAttr('disabled');
+            ajaxProcess.reject();
         });
+
+    ajaxProcess.always(function () {
+        // 通信が完了したとき
+        $loader_html.remove();
+        $submit.removeAttr('disabled');
+    });
 }
 
 function evTargetToggle() {
@@ -1166,7 +1188,11 @@ $(function () {
         } else {
             if (showNavFlag) {
                 showNavFlag = false;
-                subNavbar.stop().animate({"top": "0"}, 400);
+                var scroll_offset = 0;
+                if (cake.is_mb_app) {
+                    scroll_offset = -10;
+                }
+                subNavbar.stop().animate({"top": scroll_offset}, 400);
             }
         }
     });
@@ -2368,11 +2394,22 @@ function evLike() {
 
     var $obj = $(this);
     var like_count_id = $obj.attr('like_count_id');
+    var $like_count_text = $("#" + like_count_id);
 
     var like_type = $obj.attr('like_type');
     var url = null;
     var model_id = $obj.attr('model_id');
     $obj.toggleClass("liked");
+
+    // ajax の結果を待たずに表示されているいいね数を変更する
+    // ajax の結果が返ってきたら正しい数字で上書きされる
+    var currentCount = parseInt($like_count_text.text(), 10);
+    if ($obj.hasClass("liked")) {
+        $like_count_text.text(currentCount + 1);
+    }
+    else {
+        $like_count_text.text(currentCount - 1);
+    }
 
     if (like_type == "post") {
         url = cake.url.d + model_id;
@@ -2386,13 +2423,13 @@ function evLike() {
         url: url,
         async: true,
         dataType: 'json',
-        timeout :5000,
+        timeout: 5000,
         success: function (data) {
             if (data.error) {
                 alert(cake.message.notice.d);
             }
             else {
-                $("#" + like_count_id).text(data.count);
+                $like_count_text.text(data.count);
             }
         },
         error: function () {
@@ -2788,9 +2825,14 @@ $(document).ready(function () {
     $(document).on("click", ".click-comment-new", evCommentLatestView);
 });
 
-function evCommentLatestView() {
+function evCommentLatestView(options) {
     attrUndefinedCheck(this, 'post-id');
     attrUndefinedCheck(this, 'get-url');
+
+    options = $.extend({
+        afterSuccess: function () {
+        }
+    }, options);
 
     var $obj = $(this);
     var commentBlock = $obj.closest(".comment-block");
@@ -2841,6 +2883,8 @@ function evCommentLatestView() {
                 $obj.removeAttr("disabled");
 
                 initCommentNotify($obj);
+
+                options.afterSuccess();
             }
             else {
                 //ローダーを削除
@@ -3332,20 +3376,21 @@ function copyToClipboard(url) {
 $(document).ready(function () {
     $(window).scroll(function () {
         if ($(window).scrollTop() + $(window).height() > $(document).height() - 2000) {
-            if(!networkReachable()) {
-                return false;
-            }
-            else if (!autoload_more) {
+            if (!autoload_more) {
                 autoload_more = true;
+                if (!networkReachable()) {
+                    autoload_more = false;
+                    return false;
+                }
+
                 $('#FeedMoreReadLink').trigger('click');
                 $('#GoalPageFollowerMoreLink').trigger('click');
                 $('#GoalPageMemberMoreLink').trigger('click');
                 $('#GoalPageKeyResultMoreLink').trigger('click');
             }
         }
-    }).ajaxError(function(event,request,setting){
-        if(request.status==0)
-        {
+    }).ajaxError(function (event, request, setting) {
+        if (request.status == 0) {
             return false;
         }
     });
@@ -4292,25 +4337,20 @@ function isMobile() {
     }
     return false;
 }
-function networkReachable()
-{
-    var re = false;
+function networkReachable() {
     var path = window.location.protocol + '//' + window.location.hostname + '/';
+    var ret = false;
     $.ajax({
-        url :path +"img/no-image-user.jpg?1440663111",
-        type:"HEAD",
-        timeout:3000,
-        statusCode :{
-            200:function(response){
-                re = true;
-            },
-            400:function(response){
-                re = false;
-            },
-            0:function(response){
-                re = false;
-            }
+        url: path + "img/no-image.jpg",
+        type: "HEAD",
+        timeout: 3000,
+        async: false,
+        success: function (data, status, xhr) {
+            ret = true;
+        },
+        error: function (data, status, xhr) {
+            ret = false;
         }
     });
-    return re;
+    return ret;
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 外部ツールのlicense key当を定義する
+ * 外部ツールのlicense key等を定義する
  * Created by PhpStorm.
  * User: bigplants
  * Date: 4/22/14
@@ -45,3 +45,12 @@ define('PRE_FILE_TTL', 60 * 60 * 24 * 7 * 2);//2 weeks
 define('TWO_FA_TTL', 60 * 60 * 24 * 30);
 define('ACCOUNT_LOCK_TTL', 60 * 5);
 define('ACCOUNT_LOCK_COUNT', 5);
+define('NCMB_APPLICATION_KEY', "84b78ad6aeec49510a48a07593acf888a845fa3284633e294733a67b9980fc06");
+define('NCMB_CLIENT_KEY', "67fb3910e63499765f60fd91ac5b05882a982221884b482a0b492a93fc62f1f4");
+define('NCMB_REST_API_FQDN', "mb.api.cloud.nifty.com");
+define('NCMB_REST_API_VER', "2013-09-01");
+define('NCMB_REST_API_PUSH', "push");
+define('NCMB_REST_API_PUSH_METHOD', "POST");
+define('NCMB_REST_API_GET_INSTALLATION', "installations");
+define('NCMB_REST_API_GET_METHOD', "GET");
+

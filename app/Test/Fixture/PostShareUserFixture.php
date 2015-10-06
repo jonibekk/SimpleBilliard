@@ -68,6 +68,16 @@ class PostShareUserFixture extends CakeTestFixture
             'modified' => 1
         ),
         array(
+            'id'       => '4',
+            'post_id'  => '13',
+            'user_id'  => '9',
+            'team_id'  => '3',
+            'del_flg'  => false,
+            'deleted'  => null,
+            'created'  => 1,
+            'modified' => 1
+        ),
+        array(
             'id'       => '',
             'post_id'  => '',
             'user_id'  => '',

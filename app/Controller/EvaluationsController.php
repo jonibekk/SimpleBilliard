@@ -80,6 +80,24 @@ class EvaluationsController extends AppController
 
             // get evaluation list
             $evaluationList = array_values($this->Evaluation->getEvaluations($evaluateTermId, $evaluateeId));
+
+            // order by priority
+            //TODO: このコードは一時的なもの(今後は評価開始時に既にソート済になるので削除予定)
+            $order_priority_list = [];
+            foreach ($evaluationList as $k => $v) {
+                $order_priority_list[$k] = 0;
+                if ($k === 0) {
+                    //first item is total evaluation
+                    $order_priority_list[$k] = 999;
+                    continue;
+                }
+                if (isset(reset($v)['Goal']['MyCollabo'][0]['priority'])) {
+                    $order_priority_list[$k] = reset($v)['Goal']['MyCollabo'][0]['priority'];
+                }
+            }
+            array_multisort($order_priority_list, SORT_DESC, SORT_NUMERIC, $evaluationList);
+            //TODO 削除ここまで
+
             $isEditable = $this->Evaluation->getIsEditable($evaluateTermId, $evaluateeId);
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());

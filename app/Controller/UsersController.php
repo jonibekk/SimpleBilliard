@@ -35,7 +35,8 @@ class UsersController extends AppController
     protected function _setupAuth()
     {
         $this->Auth->allow('register', 'login', 'verify', 'logout', 'password_reset', 'token_resend', 'sent_mail',
-                           'accept_invite', 'registration_with_set_password', 'two_fa_auth', 'add_subscribe_email');
+                           'accept_invite', 'registration_with_set_password', 'two_fa_auth', 'add_subscribe_email',
+                           'ajax_validate_email');
 
         $this->Auth->authenticate = array(
             'Form2' => array(
@@ -82,6 +83,7 @@ class UsersController extends AppController
             return $this->render();
         }
 
+
         //account lock check
         $ip_address = $this->request->clientIp();
         $is_account_locked = $this->GlRedis->isAccountLocked($this->request->data['User']['email'], $ip_address);
@@ -89,7 +91,6 @@ class UsersController extends AppController
             $this->Pnotify->outError(__d('notify', "アカウントがロックされています。%s分後に自動的に解除されます。", ACCOUNT_LOCK_TTL / 60));
             return $this->render();
         }
-
         //メアド、パスの認証(セッションのストアはしていない)
         $user_info = $this->Auth->identify($this->request, $this->response);
         if (!$user_info) {
@@ -97,6 +98,14 @@ class UsersController extends AppController
             return $this->render();
         }
         $this->Session->write('preAuthPost', $this->request->data);
+
+        //デバイス情報を保存する
+        $user_id = $user_info['id'];
+        $installation_id = $this->request->data['User']['installation_id'];
+        error_log("FURU:ins_id:$installation_id\n",3,"/tmp/hoge.log");
+        if (!empty($installation_id)) {
+            $this->NotifyBiz->saveDeviceInfo($user_id, $installation_id);
+        }
 
         $is_2fa_auth_enabled = true;
         // 2要素認証設定OFFの場合
@@ -1020,6 +1029,32 @@ class UsersController extends AppController
         $result = $this->User->getAllUsersCirclesSelect2();
         $this->_ajaxPreProcess();
         return $this->_ajaxGetResponse($result);
+    }
+
+    /**
+     * メールアドレスが登録可能なものか確認
+     *
+     * @return CakeResponse
+     */
+    public function  ajax_validate_email()
+    {
+        $this->_ajaxPreProcess();
+        $email = $this->request->query('email');
+        $valid = false;
+        $message = '';
+        if ($email) {
+            // メールアドレスだけ validate
+            $this->User->Email->create(['email' => $email]);
+            $this->User->Email->validates(['fieldList' => 'email']);
+            if ($this->User->Email->validationErrors) {
+                $message = $this->User->Email->validationErrors['email'][0];
+            }
+            else {
+                $valid = true;
+            }
+        }
+        return $this->_ajaxGetResponse(['valid'   => $valid,
+                                        'message' => $message]);
     }
 
     function view_goals()

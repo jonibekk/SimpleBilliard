@@ -2,6 +2,7 @@ app.controller("GroupVisionController",
     function ($rootScope, $scope, $http, $translate, GroupVisionList, LoginUserGroupId, $sce, notificationService) {
 
         var group_vision_list = GroupVisionList;
+        var my_group_vision_count = 0;
         angular.forEach(group_vision_list, function (val, key) {
             group_vision_list[key].GroupVision.modified = $sce.trustAsHtml(val.GroupVision.modified);
 
@@ -10,12 +11,16 @@ app.controller("GroupVisionController",
                 || $rootScope.login_user_admin_flg === true) {
                 group_vision_list[key].GroupVision.showSettingBox = true;
             }
+
+            if (LoginUserGroupId[val.GroupVision.group_id]) {
+                my_group_vision_count++;
+            }
         });
 
         $scope.GroupVisionList = group_vision_list;
         $scope.GroupVisionCount = group_vision_list.length;
         $scope.archive_flag = false;
-
+        $scope.allMyGroupVisionCreated = Object.keys(LoginUserGroupId).length == my_group_vision_count;
     });
 
 app.controller("GroupVisionArchiveController",

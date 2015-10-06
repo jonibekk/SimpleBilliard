@@ -152,6 +152,27 @@ class Collaborator extends AppModel
         return $res;
     }
 
+    /**
+     * @param integer $user_id
+     * @param array   $gids
+     * @param string  $direction "desc" or "asc"
+     *
+     * @return array|null
+     */
+    function goalIdOrderByPriority($user_id, $gids, $direction = "desc")
+    {
+        $options = [
+            'conditions' => [
+                'goal_id' => $gids,
+                'user_id' => $user_id,
+            ],
+            'order'      => ['priority' => $direction],
+            'fields'     => ['goal_id', 'goal_id']
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
     function isCollaborated($goal_id, $uid = null)
     {
         if (!$uid) {

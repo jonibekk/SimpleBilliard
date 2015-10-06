@@ -160,16 +160,6 @@ class GlRedisTest extends CakeTestCase
         $res = $this->GlRedis->getNotifications(1, 1);
         $this->assertCount(2, $this->GlRedis->getNotifications(1, 1, 3, $res[0]['score']));
     }
-
-    function testgetNotifyIds()
-    {
-        for ($i = 0; $i < 3; $i++) {
-            $this->GlRedis->setNotifications(1, 1, [1], 2, "body", [], 1893423600);
-        }
-        $res = $this->GlRedis->getNotifyIds(1, 1);
-        $this->assertCount(2, $this->GlRedis->getNotifyIds(1, 1, 3, $res[0]['score']));
-    }
-
     function testGetMessageNotificationsFromDateLimited()
     {
         for ($i = 0; $i < 3; $i++) {

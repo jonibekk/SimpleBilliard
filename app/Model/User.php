@@ -833,6 +833,11 @@ class User extends AppModel
     {
         $NoneUser_list = $this->Post->PostShareUser->getShareUserListByPost($post_id);
 
+        $post = $this->Post->findById($post_id);
+        if ($post) {
+            $NoneUser_list[] = $post['Post']['user_id'];
+        }
+
         $user_list = $this->TeamMember->getAllMemberUserIdList(true, true, false);
 
         $new_user_list = array_diff($user_list, $NoneUser_list);
