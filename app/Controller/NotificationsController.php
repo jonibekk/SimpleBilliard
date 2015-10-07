@@ -119,4 +119,15 @@ class NotificationsController extends AppController
         $html = $response->__toString();
         return $this->_ajaxGetResponse($html);
     }
+
+    public function ajax_mark_all_read()
+    {
+        $this->_ajaxPreProcess();
+        $notify_items = $this->NotifyBiz->getNotifyIds();
+        foreach($notify_items as $notify_id=>$val)
+        {
+            $this->NotifyBiz->changeReadStatusNotification($notify_id);
+        }
+        return $this->_ajaxGetResponse([]);
+    }
 }

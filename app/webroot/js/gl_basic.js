@@ -61,7 +61,21 @@ $(window).load(function () {
     bindCommentBalancedGallery($('.comment_gallery'));
     setDefaultTab();
 });
+
 $(document).ready(function () {
+    $(document).on('click', '#mark_all_read', function (e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'GET',
+            url: cake.url.an,
+            async: true,
+            success: function () {
+               $(".notify-card-list").removeClass('notify-card-unread').addClass('notify-card-read');
+            }
+        });
+        return false;
+    });
+
     $("a.youtube").YouTubeModal({autoplay: 0, width: 640, height: 360});
     if (typeof cake.request_params.named.after_click !== 'undefined') {
         $("#" + cake.request_params.named.after_click).trigger('click');
