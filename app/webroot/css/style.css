@@ -1816,6 +1816,13 @@ textarea.comment-post-form {
     padding-left: 0;
 }
 
+.circle-item-secret-mark {
+    vertical-align:middle;
+    height:32px;
+    line-height:32px;
+    margin: 0 7px;
+}
+
 .circle-new {
     color: #d9230f;
 }

@@ -56,13 +56,14 @@
                     <!--END Goal Post Header -->
                 <?php endif; ?>
             <?php endif; ?>
-            <?= $this->element('Feed/action_posts') ?>
+            <?= $this->element("Feed/posts", ['without_header' => true, 'without_add_comment' => true]) ?>
             <?php if (count($posts) == POST_FEED_PAGE_ITEMS_NUMBER): ?>
                 <div class="panel panel-default feed-read-more" id="ActionListMoreRead">
                     <div class="panel-body panel-read-more-body">
                         <span class="none" id="ActionShowMoreNoData"><?= __d('gl', "これ以上のデータがありません。") ?></span>
                         <a href="#" class="btn btn-link click-feed-read-more"
                            parent-id="ActionListMoreRead"
+                           id="ActionListMoreReadLink"
                            next-page-num="2"
                            no-data-text-id="ActionShowMoreNoData"
                            get-url="<?=
