@@ -64,8 +64,8 @@ class CircleFixture extends CakeTestFixture
             'circle_member_count' => 0,
             'del_flg'             => 0,
             'deleted'             => null,
-            'created'             => 1,
-            'modified'            => 1
+            'created'             => 1000,
+            'modified'            => 1000
         ),
         array(
             'id'                  => 3,

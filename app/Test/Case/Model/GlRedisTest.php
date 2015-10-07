@@ -131,6 +131,14 @@ class GlRedisTest extends CakeTestCase
         $res = $this->GlRedis->getNotifications(1, 1);
         $this->assertCount(3, $res);
     }
+    function testGetNotifyIdsFromDateNullLimitNull()
+    {
+        for ($i = 0; $i < 3; $i++) {
+            $this->GlRedis->setNotifications(1, 1, [1], 2, "body", [], 1893423600);
+        }
+        $res = $this->GlRedis->getNotifyIds(1, 1);
+        $this->assertCount(3, $res);
+    }
 
     function testGetMessageNotificationsFromDateNullLimitNull()
     {
@@ -150,6 +158,16 @@ class GlRedisTest extends CakeTestCase
         $this->assertCount(1, $res);
     }
 
+    function testGetNotifyIdsFromDateNullLimited()
+    {
+        for ($i = 0; $i < 3; $i++) {
+            $this->GlRedis->setNotifications(1, 1, [1], 2, "body", [], 1893423600);
+        }
+        $res = $this->GlRedis->getNotifyIds(1, 1, 1);
+        $this->assertCount(1, $res);
+    }
+
+
     function testGetMessageNotificationsFromDateNullLimited()
     {
         for ($i = 0; $i < 3; $i++) {
@@ -167,6 +185,16 @@ class GlRedisTest extends CakeTestCase
         $res = $this->GlRedis->getNotifications(1, 1);
         $this->assertCount(2, $this->GlRedis->getNotifications(1, 1, 3, $res[0]['score']));
     }
+
+    function testGetNotifyIdsFromDateLimited()
+    {
+        for ($i = 0; $i < 3; $i++) {
+            $this->GlRedis->setNotifications(1, 1, [1], 2, "body", [], 1893423600);
+        }
+        $res = $this->GlRedis->getNotifications(1, 1);
+        $this->assertCount(2, $this->GlRedis->getNotifyIds(1, 1, 3, $res[0]['score']));
+    }
+
 
     function testGetMessageNotificationsFromDateLimited()
     {
@@ -237,6 +265,12 @@ class GlRedisTest extends CakeTestCase
     {
         $this->assertEmpty($this->GlRedis->getNotifications(1, 1));
     }
+
+    function testGetNotifyIdsNotFound()
+    {
+        $this->assertEmpty($this->GlRedis->getNotifyIds(1, 1));
+    }
+
 
     function testGetKeyName()
     {

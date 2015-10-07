@@ -71,7 +71,8 @@ echo $this->Html->script('goalous.min');
                 g: "<?=__d('validate',"コメント送信できませんでした")?>",
                 h: "<?=__d('gl',"このコメントは削除されました。")?>",
                 i: "<?=__d('gl',"コメントを取得できませんでした。")?>",
-                search_result_zero: "<?=__d('gl',"該当なし")?>"
+                search_result_zero: "<?=__d('gl',"該当なし")?>",
+                leave_secret_circle: "<?=__d('gl','秘密のサークルから脱退すると、自分の操作で再度参加できません。よろしいですか？')?>"
             },
             info: {
                 a: "<?=__d('gl',"クリップボードに投稿URLをコピーしました。")?>",
@@ -145,6 +146,7 @@ echo $this->Html->script('goalous.min');
             ae: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_get_user_detail'])?>/",
             af: "<?=$this->Html->url(['controller'=>'notifications','action'=>'ajax_get_new_message_notify_count'])?>",
             ag: "<?=$this->Html->url(['controller'=>'notifications','action'=>'ajax_get_latest_message_notify_items'])?>",
+            an: "<?=$this->Html->url(['controller'=>'notifications','action'=>'ajax_mark_all_read'])?>",
             ah: "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_get_message'])?>/",
             ai: "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_put_message'])?>/",
             aj: "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_get_message_info'])?>/",

@@ -623,6 +623,32 @@ class GlRedis extends AppModel
         return $pipe_res;
     }
 
+    public function getNotifyIds($team_id, $user_id, $limit = null, $from_date = null)
+    {
+        $delete_time_from = (string)((microtime(true) - (60 * 60 * 24 * self::EXPIRE_DAY_OF_NOTIFICATION)) * 10000);
+        //delete from notification user
+        $this->Db->zRemRangeByScore($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id), 0,
+                                    $delete_time_from);
+
+        if ($limit === null) {
+            $limit = -1;
+        }
+        if ($from_date === null) {
+            if ($limit !== -1) {
+                $limit--;
+            }
+            $notify_list = $this->Db->zRevRange($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id),
+                                                0, $limit, true);
+        }
+        else {
+            $notify_list = $this->Db->zRevRangeByScore($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id,
+                                                                         $user_id),
+                                                       $from_date, -1,
+                                                       ['limit' => [1, $limit], 'withscores' => true]);
+        }
+        return $notify_list;
+    }
+
     /**
      * @param int  $team_id
      * @param int  $user_id

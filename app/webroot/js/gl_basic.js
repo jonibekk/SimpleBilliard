@@ -61,11 +61,23 @@ $(window).load(function () {
     bindCommentBalancedGallery($('.comment_gallery'));
     setDefaultTab();
 });
+
 $(document).ready(function () {
+    $(document).on('click', '#mark_all_read', function (e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'GET',
+            url: cake.url.an,
+            async: true,
+            success: function () {
+               $(".notify-card-list").removeClass('notify-card-unread').addClass('notify-card-read');
+            }
+        });
+        return false;
+    });
+
     $("a.youtube").YouTubeModal({autoplay: 0, width: 640, height: 360});
-    if (typeof cake.request_params.named.after_click !== 'undefined') {
-        $("#" + cake.request_params.named.after_click).trigger('click');
-    }
+
 
     //すべてのformで入力があった場合に行う処理
     $("select,input").change(function () {
@@ -77,9 +89,9 @@ $(document).ready(function () {
     });
     //ヘッダーサブメニューでのフィード、ゴール切り換え処理
     //noinspection JSJQueryEfficiency
-    $('#SubHeaderMenu a').click(function () {
+   $('#SubHeaderMenu a').click(function () {
         //既に選択中の場合は何もしない
-        if ($(this).hasClass('sp-feed-active')) {
+       if ($(this).hasClass('sp-feed-active')) {
             return;
         }
 
@@ -115,6 +127,7 @@ $(document).ready(function () {
             return;
         }
     });
+
     //アップロード画像選択時にトリムして表示
     $('.fileinput').fileinput().on('change.bs.fileinput', function () {
         $(this).children('.nailthumb-container').nailthumb({width: 150, height: 150, fitDirection: 'center center'});
@@ -544,6 +557,25 @@ $(document).ready(function () {
     $(document).on("click", ".click-goal-follower-more", evAjaxGoalFollowerMore);
     $(document).on("click", ".click-goal-member-more", evAjaxGoalMemberMore);
     $(document).on("click", ".click-goal-key-result-more", evAjaxGoalKeyResultMore);
+    $(document).on("submit", "#CircleJoinForm", function (e) {
+        var $form = $(this);
+        // 秘密サークルから抜けようとしている場合はアラートを出す
+        var leave_secret = false;
+        $form.find('.bt-switch[data-secret=1]').each(function () {
+            var $switch = $(this);
+            if (!$switch.bootstrapSwitch('state')) {
+                leave_secret = true;
+            }
+        });
+        if (leave_secret) {
+            var answer = confirm(cake.message.notice.leave_secret_circle);
+            if (!answer) {
+                $form.find('input[type=submit]').removeAttr('disabled');
+                return false;
+            }
+        }
+        return true;
+    });
 
 
     //noinspection JSJQueryEfficiency
@@ -568,6 +600,14 @@ $(document).ready(function () {
     if (cake.data.j == "0") {
         $('#FeedMoreReadLink').trigger('click');
     }
+
+    if (typeof cake.request_params.named.after_click !== 'undefined') {
+        $("#" + cake.request_params.named.after_click).trigger('click');
+    }
+    if (typeof cake.request_params.after_click !== 'undefined') {
+        $("#" + cake.request_params.after_click).trigger('click');
+    }
+
 
     ///////////////////////////////////////////////////////////////////////////
     // Ctrl(Command) + Enter 押下時のコールバック
@@ -2026,11 +2066,14 @@ function evFollowGoal() {
     });
     return false;
 }
-
 function getModalPostList(e) {
     e.preventDefault();
 
     var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+    $modal_elm.on('hidden.bs.modal', function (e) {
+        $(this).remove();
+        action_autoload_more = false;
+    });
     //noinspection CoffeeScriptUnusedLocalSymbols,JSUnusedLocalSymbols
     modalFormCommonBindEvent($modal_elm);
 
@@ -2065,12 +2108,26 @@ function getModalPostList(e) {
             $modal_elm.find('form').bootstrapValidator().on('success.form.bv', function (e) {
                 validatorCallback(e)
             });
-
+            // アクションリストのオートローディング
+            //
+            var prevScrollTopAction = 0;
+            $modal_elm.find('.modal-body').scroll(function () {
+                var $this = $(this);
+                var currentScrollTopAction = $this.scrollTop();
+                if (prevScrollTopAction < currentScrollTopAction && ($this.get(0).scrollHeight - currentScrollTopAction <= $this.height() + 1500)) {
+                    if (!action_autoload_more) {
+                        action_autoload_more = true;
+                        $modal_elm.find('.click-feed-read-more').trigger('click');
+                    }
+                }
+                prevScrollTopAction = currentScrollTopAction;
+            });
         }).success(function () {
             $('body').addClass('modal-open');
         });
     }
 }
+action_autoload_more = false;
 autoload_more = false;
 function evFeedMoreView(options) {
     var opt = $.extend({
@@ -2196,6 +2253,7 @@ function evFeedMoreView(options) {
                     $obj.remove();
                 }
             }
+            action_autoload_more = false;
             autoload_more = false;
         },
         error: function () {
@@ -3386,6 +3444,7 @@ $(document).ready(function () {
     $('#bell-dropdown').scroll(function () {
         var $this = $(this);
         var currentScrollTop = $this.scrollTop();
+
         if (prevScrollTop < currentScrollTop && ($this.get(0).scrollHeight - currentScrollTop == $this.height())) {
             if (!autoload_more) {
                 autoload_more = true;
@@ -3394,7 +3453,6 @@ $(document).ready(function () {
         }
         prevScrollTop = currentScrollTop;
     });
-
 
     /**
      * ファイルのドラッグ & ドロップ 設定

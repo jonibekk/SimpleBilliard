@@ -108,7 +108,7 @@ class ChangeIndexLikeRead0930 extends CakeMigration
         $Post->query('DELETE FROM post_likes WHERE id NOT IN (SELECT min_id FROM (SELECT min(t1.id) AS min_id FROM post_likes AS t1 GROUP BY t1.post_id, t1.user_id) AS t2)');
         $Post->query('DELETE FROM post_reads WHERE id NOT IN (SELECT min_id FROM (SELECT min(t1.id) AS min_id FROM post_reads AS t1 GROUP BY t1.post_id, t1.user_id) AS t2)');
         $Post->query('DELETE FROM comment_likes WHERE id NOT IN (SELECT min_id FROM (SELECT min(t1.id) AS min_id FROM comment_likes AS t1 GROUP BY t1.comment_id, t1.user_id) AS t2)');
-        $Post->query('DELETE FROM comment_likes WHERE id NOT IN (SELECT min_id FROM (SELECT min(t1.id) AS min_id FROM comment_likes AS t1 GROUP BY t1.comment_id, t1.user_id) AS t2)');
+        $Post->query('DELETE FROM comment_reads WHERE id NOT IN (SELECT min_id FROM (SELECT min(t1.id) AS min_id FROM comment_reads AS t1 GROUP BY t1.comment_id, t1.user_id) AS t2)');
         return true;
     }
 

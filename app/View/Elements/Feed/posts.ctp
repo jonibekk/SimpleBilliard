@@ -11,8 +11,10 @@
  * @var                    $goal
  * @var                    $long_text
  * @var                    $without_header
+ * @var                    $without_add_comment
  */
 $without_header = isset($without_header) ? $without_header : false;
+$without_add_comment = isset($without_add_comment) ? $without_add_comment : false;
 ?>
 <?php if (!empty($posts)): ?>
     <!-- START app/View/Elements/Feed/posts.ctp -->
@@ -351,24 +353,27 @@ $without_header = isset($without_header) ? $without_header : false;
                             </div>
                         <?php endforeach ?>
                     </div>
-                <?php if (isset($post['Goal']['id']) && $post['Post']['user_id'] != $this->Session->read('Auth.User.id')): ?>
+                <?php if (isset($post['Goal']['id']) && $post['Post']['user_id'] != $this->Session->read('Auth.User.id') && is_null($post['Goal']['completed'])): ?>
                         <? $follow_opt = $this->Goal->getFollowOption($post['Goal']) ?>
                         <? $collabo_opt = $this->Goal->getCollaboOption($post['Goal']) ?>
-                    <div style="padding:5px" class="col col-xxs-12 mt_5px">
-                        <div class="col col-xxs-6 col-xs-4 mr_5px">
-                            <a goal-id="<?= $post['Goal']['id'] ?>" data-class="toggle-follow" href="#" class="btn btn-white font_verydark bd-circle_22px toggle-follow p_8px <?= $follow_opt['class'] ?>"
-                            <?= $follow_opt['disabled'] ?>="<?= $follow_opt['disabled'] ?>">
-                            <i class="fa fa-heart font_rougeOrange" style="<?= $follow_opt['style'] ?>"></i>
-                            <span class="ml_5px"><?= $follow_opt['text'] ?></span>
-                            </a>
+                        <div style="padding:5px" class="col col-xxs-12 mt_5px">
+                            <div class="col col-xxs-6 col-xs-4 mr_5px">
+                                <a goal-id="<?= $post['Goal']['id'] ?>" data-class="toggle-follow" href="#"
+                                   class="btn btn-white font_verydark bd-circle_22px toggle-follow p_8px <?= $follow_opt['class'] ?>"
+                                <?= $follow_opt['disabled'] ?>="<?= $follow_opt['disabled'] ?>">
+                                <i class="fa fa-heart font_rougeOrange" style="<?= $follow_opt['style'] ?>"></i>
+                                <span class="ml_5px"><?= $follow_opt['text'] ?></span>
+                                </a>
+                            </div>
+                            <div class="col col-xxs-5 col-xs-4">
+                                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', 'goal_id' => $post['Goal']['id']]) ?>"
+                                   data-target="#ModalCollabo_<?= $post['Goal']['id'] ?>" data-toggle="modal"
+                                   class="btn btn-white bd-circle_22px font_verydark modal-ajax-get-collabo p_8px <?= $collabo_opt['class'] ?>">
+                                    <i style="" class="fa fa-child font_rougeOrange font_18px"></i>
+                                    <span class="ml_5px font_14px"><?= $collabo_opt['text'] ?></span>
+                                </a>
+                            </div>
                         </div>
-                        <div class="col col-xxs-5 col-xs-4">
-                            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', 'goal_id' => $post['Goal']['id']]) ?>"  data-target="#ModalCollabo_<?= $post['Goal']['id'] ?>" data-toggle="modal" class="btn btn-white bd-circle_22px font_verydark modal-ajax-get-collabo p_8px <?= $collabo_opt['class'] ?>">
-                                <i style="" class="fa fa-child font_rougeOrange font_18px"></i>
-                                <span class="ml_5px font_14px"><?= $collabo_opt['text'] ?></span>
-                            </a>
-                        </div>
-                    </div>
                     <? endif; ?>
                 <? endif; ?>
                 <div class="col col-xxs-12 feeds-post-btns-area">
@@ -380,13 +385,15 @@ $without_header = isset($without_header) ? $without_header : false;
                            like_type="post">
                             <i class="fa-thumbs-up fa"></i>
                             <?= __d('gl', "いいね！") ?></a>
-                        <a href="#" class="feeds-post-comment-btn trigger-click"
-                           target-id="NewCommentDummyForm_<?= $post['Post']['id'] ?>"
-                           after-replace-target-id="CommentFormBody_<?= $post['Post']['id'] ?>"
-                            >
-                            <i class="fa-comments-o fa"></i>
-                            <?= __d('gl', "コメント") ?>
-                        </a>
+                        <?php if (!$without_add_comment): ?>
+                            <a href="#" class="feeds-post-comment-btn trigger-click"
+                               target-id="NewCommentDummyForm_<?= $post['Post']['id'] ?>"
+                               after-replace-target-id="CommentFormBody_<?= $post['Post']['id'] ?>"
+                                >
+                                <i class="fa-comments-o fa"></i>
+                                <?= __d('gl', "コメント") ?>
+                            </a>
+                        <?php endif; ?>
                     </div>
                     <div class="feeds-post-btns-wrap-right">
                         <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_liked_users', 'post_id' => $post['Post']['id']]) ?>"
@@ -455,20 +462,21 @@ $without_header = isset($without_header) ? $without_header : false;
                 <div class="new-comment-error" id="comment_error_<?= $post['Post']['id'] ?>">
                     <i class="fa fa-exclamation-circle"></i><span class="message"></span>
                 </div>
-                <div class="col-xxs-12 box-align feed-contents comment-contents">
-                    <?=
-                    $this->Html->image('ajax-loader.gif',
-                                       [
-                                           'class'         => 'lazy comment-img',
-                                           'data-original' => $this->Upload->uploadUrl($this->Session->read('Auth.User'),
-                                                                                       'User.photo',
-                                                                                       ['style' => 'small']),
-                                       ]
-                    )
-                    ?>
-                    <div class="comment-body" id="NewCommentForm_<?= $post['Post']['id'] ?>">
-                        <form action="#" id="" method="post" accept-charset="utf-8">
-                            <div class="form-group mlr_-1px">
+                <?php if (!$without_add_comment): ?>
+                    <div class="col-xxs-12 box-align feed-contents comment-contents">
+                        <?=
+                        $this->Html->image('ajax-loader.gif',
+                                           [
+                                               'class'         => 'lazy comment-img',
+                                               'data-original' => $this->Upload->uploadUrl($this->Session->read('Auth.User'),
+                                                                                           'User.photo',
+                                                                                           ['style' => 'small']),
+                                           ]
+                        )
+                        ?>
+                        <div class="comment-body" id="NewCommentForm_<?= $post['Post']['id'] ?>">
+                            <form action="#" id="" method="post" accept-charset="utf-8">
+                                <div class="form-group mlr_-1px">
                                 <textarea
                                     class="form-control font_12px comment-post-form box-align not-autosize click-get-ajax-form-replace"
                                     replace-elm-parent-id="NewCommentForm_<?= $post['Post']['id'] ?>"
@@ -481,10 +489,11 @@ $without_header = isset($without_header) ? $without_header : false;
                                     cols="30"
                                     id="NewCommentDummyForm_<?= $post['Post']['id'] ?>"
                                     init-height="15"></textarea>
-                            </div>
-                        </form>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                </div>
+                <?php endif; ?>
             </div>
         </div>
     <?php endforeach ?>

@@ -271,10 +271,29 @@ class CircleMemberTest extends CakeTestCase
     {
         $this->CircleMember->my_uid = 1;
         $this->CircleMember->current_team_id = 1;
+
         $result = $this->CircleMember->getMyCircle();
         $this->assertNotEmpty($result);
         // 先頭はチーム全体サークル
         $this->assertEquals(1, $result[0]['Circle']['team_all_flg']);
+
+        $result = $this->CircleMember->getMyCircle(['circle_created_start' => 500]);
+        foreach ($result as $circle) {
+            $this->assertGreaterThanOrEqual(500, $circle['Circle']['created']);
+        }
+
+        $result = $this->CircleMember->getMyCircle(['circle_created_end' => 500]);
+        foreach ($result as $circle) {
+            $this->assertLessThan(500, $circle['Circle']['created']);
+        }
+
+        $result = $this->CircleMember->getMyCircle(['order' => ['Circle.created desc']]);
+        $prev_created = PHP_INT_MAX;
+        foreach ($result as $circle) {
+            $this->assertLessThanOrEqual($prev_created, $circle['Circle']['created']);
+            $prev_created = $circle['Circle']['created'];
+        }
+
     }
 
     public function testEditAdminStatus()
@@ -297,6 +316,32 @@ class CircleMemberTest extends CakeTestCase
         $this->assertTrue($res);
         $this->assertEquals(1, $this->CircleMember->getAffectedRows());
         $this->assertEmpty($this->CircleMember->isAdmin($user_id, $circle_id));
+    }
+
+    function testGetActiveMemberCount()
+    {
+        $this->CircleMember->current_team_id = 9000;
+        $this->CircleMember->my_uid = 9001;
+        $this->CircleMember->User->TeamMember->current_team_id = 9000;
+        $this->CircleMember->User->TeamMember->my_uid = 9001;
+
+        $res = $this->CircleMember->getActiveMemberCount(9000);
+        $this->assertEquals(2, $res);
+    }
+    
+    function testGetActiveMemberCountList()
+    {
+        $this->CircleMember->current_team_id = 1;
+        $this->CircleMember->my_uid = 1;
+        $this->CircleMember->Circle->current_team_id = 1;
+        $this->CircleMember->Circle->my_uid = 1;
+        $this->CircleMember->User->TeamMember->current_team_id = 1;
+        $this->CircleMember->User->TeamMember->my_uid = 1;
+        
+        $count_list = $this->CircleMember->getActiveMemberCountList(array_keys($this->CircleMember->Circle->getList()));
+        foreach ($count_list as $id => $count) {
+            $this->assertEquals($this->CircleMember->getActiveMemberCount($id), $count);
+        }
     }
 
 }
