@@ -2045,11 +2045,14 @@ function evFollowGoal() {
     });
     return false;
 }
-
 function getModalPostList(e) {
     e.preventDefault();
 
     var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+    $modal_elm.on('hidden.bs.modal', function (e) {
+        $(this).remove();
+        action_autoload_more = false;
+    });
     //noinspection CoffeeScriptUnusedLocalSymbols,JSUnusedLocalSymbols
     modalFormCommonBindEvent($modal_elm);
 
@@ -2084,12 +2087,26 @@ function getModalPostList(e) {
             $modal_elm.find('form').bootstrapValidator().on('success.form.bv', function (e) {
                 validatorCallback(e)
             });
-
+            // アクションリストのオートローディング
+            //
+            var prevScrollTopAction = 0;
+            $modal_elm.find('.modal-body').scroll(function () {
+                var $this = $(this);
+                var currentScrollTopAction = $this.scrollTop();
+                if (prevScrollTopAction < currentScrollTopAction && ($this.get(0).scrollHeight - currentScrollTopAction <= $this.height() + 1500)) {
+                    if (!action_autoload_more) {
+                        action_autoload_more = true;
+                        $modal_elm.find('.click-feed-read-more').trigger('click');
+                    }
+                }
+                prevScrollTopAction = currentScrollTopAction;
+            });
         }).success(function () {
             $('body').addClass('modal-open');
         });
     }
 }
+action_autoload_more = false;
 autoload_more = false;
 function evFeedMoreView(options) {
     var opt = $.extend({
@@ -2215,6 +2232,7 @@ function evFeedMoreView(options) {
                     $obj.remove();
                 }
             }
+            action_autoload_more = false;
             autoload_more = false;
         },
         error: function () {
@@ -3405,6 +3423,7 @@ $(document).ready(function () {
     $('#bell-dropdown').scroll(function () {
         var $this = $(this);
         var currentScrollTop = $this.scrollTop();
+
         if (prevScrollTop < currentScrollTop && ($this.get(0).scrollHeight - currentScrollTop == $this.height())) {
             if (!autoload_more) {
                 autoload_more = true;
@@ -3413,7 +3432,6 @@ $(document).ready(function () {
         }
         prevScrollTop = currentScrollTop;
     });
-
 
     /**
      * ファイルのドラッグ & ドロップ 設定
