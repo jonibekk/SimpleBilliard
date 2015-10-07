@@ -1094,7 +1094,7 @@ class Goal extends AppModel
                 'Goal.end_date >=' => $start_date,
                 'Goal.end_date <=' => $end_date,
             ],
-            'fields'     => ['Goal.user_id', 'Goal.name', 'Goal.photo_file_name',],
+            'fields'     => ['Goal.user_id', 'Goal.name', 'Goal.photo_file_name','Goal.completed',],
             'order'      => ['Goal.created desc'],
             'limit'      => $limit,
             'page'       => $page,
