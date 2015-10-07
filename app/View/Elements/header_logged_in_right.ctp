@@ -93,7 +93,7 @@
            class="btn-function-header"
            data-toggle="dropdown"
            id="download">
-            <i class="header-dropdown-icon-functions fa fa-cog header-function-icon header-drop-icons js-header-link header-icons"></i>
+            <i id="header-cog-dropdown" class="header-dropdown-icon-functions fa fa-cog header-function-icon header-drop-icons js-header-link header-icons"></i>
             <?php if ($all_alert_cnt > 0): ?>
                 <div class="btn btn-xs notify-function-numbers">
                  <span>

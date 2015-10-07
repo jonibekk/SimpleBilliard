@@ -22,7 +22,7 @@
     <div class="navbar navbar-fixed-top navbar-default gl-navbar <?= $is_mb_app ? "mb-app-navbar" : null ?>"
          id="header">
         <div class="nav-container header-container">
-            <button type="button" class="<?= $is_mb_app ? "header-toggle-icon" : "header-toggle-icon" //TODO 一時的に古いclassになっている。将来的に$is_mb_app==trueだったら、mb-app-header-toggle-icon に置き換える?>" data-toggle="offcanvas"
+            <button id="header-slide-menu" type="button" class="<?= $is_mb_app ? "header-toggle-icon" : "header-toggle-icon" //TODO 一時的に古いclassになっている。将来的に$is_mb_app==trueだったら、mb-app-header-toggle-icon に置き換える?>" data-toggle="offcanvas"
                     data-target=".navbar-offcanvas">
                 <i class="fa fa-navicon toggle-icon header-icons"></i>
             </button>
