@@ -285,14 +285,16 @@
                     <div class="col-xxs-6">
                         <div class="eval-view-result-number">
                             <div style="margin:0 auto;width:100px;">
-                                <a class="develop--forbiddenLink" href="#">
+                                <a class="modal-ajax-get"
+                                   href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_related_kr_list_modal', 'user_id' => $evaluateeId, 'goal_id' => $goal[0]['Goal']['id']]) ?>">
                                     <?= count(Hash::extract($goal, "0.Goal.KeyResult.{n}[progress=100]")) ?>
                                 </a>
                             </div>
                         </div>
                         <div class="eval-view-result-text">
                             <div style="margin:0 auto;width:100px;">
-                                <a class="develop--forbiddenLink" href="#">
+                                <a class="modal-ajax-get"
+                                   href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_related_kr_list_modal', 'user_id' => $evaluateeId, 'goal_id' => $goal[0]['Goal']['id']]) ?>">
                                     <?= __d('gl', "成果") ?>
                                 </a>
                             </div>

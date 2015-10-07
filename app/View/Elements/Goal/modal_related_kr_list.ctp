@@ -5,7 +5,7 @@
  * Date: 2014/07/19
  * Time: 22:11
  *
- * @var                    $liked_users
+ * @var                    $krs
  * @var CodeCompletionView $this
  */
 ?>
