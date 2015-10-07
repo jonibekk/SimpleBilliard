@@ -323,12 +323,8 @@
                     <?= ($role) ? h($role) : __d('gl', "リーダー") ?>
                 </div>
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
-                    <?= __d('gl', "アクション:") ?>
-                    <?= $goal[0]['Goal']['action_result_count'] ?>
-                </div>
-                <div for="#" class="col col-xxs-12 eval-view-panel-title">
                     <?= __d('gl', "コラボレータ:") ?>
-                    <?= count(Hash::extract($goal[0], "Goal.MyCollabo.{n}[type=0]")) ?>
+                    <?= count($goal[0]['Goal']['Collaborator']) ?>
                 </div>
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
                     <?= __d('gl', "進捗:") ?>

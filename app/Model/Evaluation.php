@@ -315,6 +315,11 @@ class Evaluation extends AppModel
                         'fields'     => [
                             'id'
                         ]
+                    ],
+                    'Collaborator' => [
+                        'fields' => [
+                            'user_id', 'user_id'
+                        ]
                     ]
                 ],
                 'EvaluatorUser',
