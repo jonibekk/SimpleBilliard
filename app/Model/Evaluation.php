@@ -313,7 +313,7 @@ class Evaluation extends AppModel
                                 'user_id' => $evaluateeId,
                             ],
                             'fields'     => [
-                                'count(*) as count'
+                                'id'
                             ]
                         ],
                     ],
