@@ -55,7 +55,7 @@
                             </div>
                         </a>
                     </li>
-                    <li class="mtb_5px mtb-sm_0 <?=$my_teams?null:'hidden' ?>">
+                    <li class="mtb_5px mtb-sm_0 <?= !empty($my_teams)?null:'hidden' ?>">
 
                         <a class="header-team header_l-icons <?= $current_global_menu == "team" ? "activeColumn" : null ?>"
                            href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'main']) ?>">
