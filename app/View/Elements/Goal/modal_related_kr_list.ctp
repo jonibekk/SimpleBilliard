@@ -18,6 +18,15 @@
             <h4 class="modal-title"><?= __d('gl', "完了済のキーリザルト一覧") ?></h4>
         </div>
         <div class="modal-body modal-feed-body">
+            <div class="row">
+                <?php foreach ($krs as $kr): ?>
+                    <div class="col col-xxs-12">
+                        <div class="font_12px font_bold modalFeedTextPadding">
+                            <?= h($kr['KeyResult']['name']) ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
         </div>
         <div class="modal-footer modal-feed-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('gl', "閉じる") ?></button>
