@@ -2629,7 +2629,7 @@ $(document).ready(function () {
         var $form = $("form#" + formId);
         appendSocketId($form, socketId);
         $form.submit();
-        this.disabled=true;
+        $(this).prop("disabled", true);
         return false;
     });
 
