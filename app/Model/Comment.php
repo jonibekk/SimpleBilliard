@@ -208,6 +208,15 @@ class Comment extends AppModel
             }
         }
         $this->commit();
+
+        // 添付ファイルが存在する場合は一時データを削除
+        if (isset($postData['file_id']) && is_array($postData['file_id'])) {
+            $Redis = ClassRegistry::init('GlRedis');
+            foreach ($postData['file_id'] as $hash) {
+                $Redis->delPreUploadedFile($this->current_team_id, $this->my_uid, $hash);
+            }
+        }
+
         return $comment_id;
     }
 
