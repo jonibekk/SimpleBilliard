@@ -667,6 +667,9 @@ class PostsController extends AppController
         $this->set('long_text', $long_text);
         $this->set(compact('comments'));
 
+        // コメントを既読にする
+        $this->Post->Comment->CommentRead->red(Hash::extract($comments, '{n}.Comment.id'));
+
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
         $response = $this->render('Feed/ajax_comments');
