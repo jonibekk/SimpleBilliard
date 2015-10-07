@@ -331,16 +331,6 @@
                     <?= h($goal[0]['Goal']['progress']) ?>%
                 </div>
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
-                    <?= __d('gl', "成果:") ?>
-                    <?php if (empty($goal[0]['Goal']['KeyResult'])): ?>
-                        <?= __d('gl', "なし") ?>
-                    <?php else: ?>
-                        <?php foreach (Hash::extract($goal, "0.Goal.KeyResult.{n}[progress=100]") as $kr): ?>
-                            <p><?= h($kr['name']) ?></p>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </div>
-                <div for="#" class="col col-xxs-12 eval-view-panel-title">
                     <?= __d('gl', "比重:") ?>
                     <?php $collaboPriority = viaIsSet(Hash::extract($goal[0],
                                                                     "Goal.MyCollabo.{n}[role]")[0]["priority"]) ?>
