@@ -714,6 +714,17 @@ class Post extends AppModel
                         'id',
                         'completed'
                     ],
+                    'User'         => [
+                        'fields'     => $this->User->profileFields,
+                        'TeamMember' => [
+                            'fields'     => [
+                                'coach_user_id',
+                            ],
+                            'conditions' => [
+                                'coach_user_id' => $this->my_uid,
+                            ]
+                        ],
+                    ],
                     'Purpose'   => [
                         'fields' => [
                             'name'
