@@ -869,15 +869,17 @@ class NotifyBizComponent extends Component
                 $item_name = mb_strimwidth($item_name[0], 0, 40, "...");
                 $title .= " : " . $item_name;
             }
+            $title = json_encode($title,JSON_HEX_QUOT);
 
             $body = '{
                 "immediateDeliveryFlag" : true,
                 "target":["ios","android"],
                 "searchCondition":{"deviceToken":{ "$inArray":["' . implode('","', $device_tokens) . '"]}},
-                "message":"' . $title . '",
+                "message":' . $title . ',
                 "userSettingValue":{"url":"' . $post_url . '"}},
                 "deliveryExpirationTime":"1 day"
             }';
+            error_log("FURU:result:" . $body . "\n", 3, "/tmp/hoge.log");
 
             $options['http']['content'] = $body;
 
