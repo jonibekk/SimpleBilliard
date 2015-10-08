@@ -288,6 +288,24 @@ class GoalsController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
+    public function ajax_get_related_kr_list_modal()
+    {
+        $goal_id = viaIsSet($this->request->params['named']['goal_id']);
+        $user_id = viaIsSet($this->request->params['named']['user_id']);
+        $krs = [];
+        if($goal_id && $user_id){
+            $krs = $this->Goal->KeyResult->getKrRelatedUserAction($goal_id, $user_id);
+        }
+        $this->_ajaxPreProcess();
+
+        //htmlレンダリング結果
+        $this->set(compact('krs'));
+        $response = $this->render('Goal/modal_related_kr_list');
+        $html = $response->__toString();
+
+        return $this->_ajaxGetResponse($html);
+    }
+
     public function ajax_get_add_key_result_modal()
     {
         $goal_id = viaIsSet($this->request->params['named']['goal_id']);

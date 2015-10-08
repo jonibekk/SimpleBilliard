@@ -236,6 +236,33 @@ class KeyResult extends AppModel
         return $res;
     }
 
+    /**
+     * ユーザがアクションしたKRのみ抽出
+     * Extraction KR with only exist user action
+     *
+     * @param $goal_id
+     * @param $user_id
+     *
+     * @return array|null
+     */
+    function getKrRelatedUserAction($goal_id, $user_id)
+    {
+        $kr_ids = $this->ActionResult->getKrIdsByGoalId($goal_id, $user_id);
+        $options = [
+            'conditions' => [
+                'id' => $kr_ids,
+            ],
+            'order'      => [
+                'KeyResult.progress ASC',
+                'KeyResult.start_date ASC',
+                'KeyResult.end_date ASC',
+                'KeyResult.priority DESC',
+            ],
+        ];
+        $res = $this->find('all', $options);
+        return $res;
+    }
+
     function getKrCount($goal_ids)
     {
         $options = [
@@ -393,6 +420,7 @@ class KeyResult extends AppModel
      * キーリザルトが完了済みか確認
      *
      * @param $kr_id
+     *
      * @return bool
      */
     public function isCompleted($kr_id)

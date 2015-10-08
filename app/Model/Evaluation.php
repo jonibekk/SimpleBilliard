@@ -301,7 +301,22 @@ class Evaluation extends AppModel
             'order'      => 'Evaluation.index_num asc',
             'contain'    => [
                 'Goal'          => [
-                    'KeyResult',
+                    'KeyResult'    => [
+                        'fields'       => [
+                            'id',
+                            'user_id',
+                            'priority',
+                            'progress',
+                        ],
+                        'ActionResult' => [
+                            'conditions' => [
+                                'user_id' => $evaluateeId,
+                            ],
+                            'fields'     => [
+                                'id'
+                            ]
+                        ],
+                    ],
                     'GoalCategory',
                     'MyCollabo'    => [
                         'conditions' => [
@@ -314,6 +329,11 @@ class Evaluation extends AppModel
                         ],
                         'fields'     => [
                             'id'
+                        ]
+                    ],
+                    'Collaborator' => [
+                        'fields' => [
+                            'user_id', 'user_id'
                         ]
                     ]
                 ],

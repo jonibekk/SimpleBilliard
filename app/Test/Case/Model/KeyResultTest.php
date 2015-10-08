@@ -15,8 +15,10 @@ class KeyResultTest extends CakeTestCase
      * @var array
      */
     public $fixtures = array(
+        'app.action_result',
         'app.key_result',
         'app.goal',
+        'app.purpose',
         'app.goal_category',
         'app.collaborator',
         'app.user',
@@ -257,8 +259,8 @@ class KeyResultTest extends CakeTestCase
                 ],
             ]
         );
-        $this->assertCount(3,$this->KeyResult->getKrNameList($goal_id, true));
-        $this->assertCount(5,$this->KeyResult->getKrNameList($goal_id, true,true));
+        $this->assertCount(3, $this->KeyResult->getKrNameList($goal_id, true));
+        $this->assertCount(5, $this->KeyResult->getKrNameList($goal_id, true, true));
     }
 
     function testIsComplete()
@@ -272,10 +274,37 @@ class KeyResultTest extends CakeTestCase
         $this->assertTrue($res);
     }
 
+    function testGetKrRelatedUserAction()
+    {
+        $this->setDefault();
+        $this->KeyResult->ActionResult->deleteAll(['ActionResult.user_id' => 1], false);
+        $this->KeyResult->deleteAll(['KeyResult.user_id' => 1], false);
+        $data_kr = [
+            'name'    => 'test_kr',
+            'goal_id' => 1,
+            'user_id' => 1,
+            'team_id' => 1,
+        ];
+        $this->KeyResult->create();
+        $this->KeyResult->save($data_kr);
+        $data = [
+            'goal_id'       => 1,
+            'user_id'       => 1,
+            'team_id'       => 1,
+            'key_result_id' => $this->KeyResult->getLastInsertID()
+        ];
+        $this->KeyResult->ActionResult->create();
+        $this->KeyResult->ActionResult->save($data);
+        $actual = $this->KeyResult->getKrRelatedUserAction(1, 1);
+        $this->assertNotEmpty($actual);
+    }
+
     function setDefault()
     {
         $this->KeyResult->my_uid = 1;
         $this->KeyResult->current_team_id = 1;
+        $this->KeyResult->ActionResult->my_uid = 1;
+        $this->KeyResult->ActionResult->current_team_id = 1;
         $this->KeyResult->Goal->my_uid = 1;
         $this->KeyResult->Goal->current_team_id = 1;
         $this->KeyResult->Team->my_uid = 1;

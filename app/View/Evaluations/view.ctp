@@ -285,14 +285,16 @@
                     <div class="col-xxs-6">
                         <div class="eval-view-result-number">
                             <div style="margin:0 auto;width:100px;">
-                                <a class="develop--forbiddenLink" href="#">
+                                <a class="modal-ajax-get"
+                                   href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_related_kr_list_modal', 'user_id' => $evaluateeId, 'goal_id' => $goal[0]['Goal']['id']]) ?>">
                                     <?= count(Hash::extract($goal, "0.Goal.KeyResult.{n}[progress=100]")) ?>
                                 </a>
                             </div>
                         </div>
                         <div class="eval-view-result-text">
                             <div style="margin:0 auto;width:100px;">
-                                <a class="develop--forbiddenLink" href="#">
+                                <a class="modal-ajax-get"
+                                   href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_related_kr_list_modal', 'user_id' => $evaluateeId, 'goal_id' => $goal[0]['Goal']['id']]) ?>">
                                     <?= __d('gl', "成果") ?>
                                 </a>
                             </div>
@@ -323,26 +325,12 @@
                     <?= ($role) ? h($role) : __d('gl', "リーダー") ?>
                 </div>
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
-                    <?= __d('gl', "アクション:") ?>
-                    <?= $goal[0]['Goal']['action_result_count'] ?>
-                </div>
-                <div for="#" class="col col-xxs-12 eval-view-panel-title">
                     <?= __d('gl', "コラボレータ:") ?>
-                    <?= count(Hash::extract($goal[0], "Goal.MyCollabo.{n}[type=0]")) ?>
+                    <?= count($goal[0]['Goal']['Collaborator']) ?>
                 </div>
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
                     <?= __d('gl', "進捗:") ?>
                     <?= h($goal[0]['Goal']['progress']) ?>%
-                </div>
-                <div for="#" class="col col-xxs-12 eval-view-panel-title">
-                    <?= __d('gl', "成果:") ?>
-                    <?php if (empty($goal[0]['Goal']['KeyResult'])): ?>
-                        <?= __d('gl', "なし") ?>
-                    <?php else: ?>
-                        <?php foreach (Hash::extract($goal, "0.Goal.KeyResult.{n}[progress=100]") as $kr): ?>
-                            <p><?= h($kr['name']) ?></p>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
                 </div>
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
                     <?= __d('gl', "比重:") ?>
