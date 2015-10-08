@@ -725,6 +725,22 @@ class Goal extends AppModel
         return $res;
     }
 
+    function setIsCurrentTerm($goals)
+    {
+        $start_date = $this->Team->getCurrentTermStartDate();
+        $end_date = $this->Team->getCurrentTermEndDate();
+
+        foreach ($goals as $k => $goal) {
+            $goals[$k]['Goal']['is_current_term'] = false;
+            if ($target_end_date = viaIsSet($goal['Goal']['end_date'])) {
+                if ($target_end_date >= $start_date && $target_end_date <= $end_date) {
+                    $goals[$k]['Goal']['is_current_term'] = true;
+                }
+            }
+        }
+        return $goals;
+    }
+
     function getGoalsWithAction($user_id, $action_limit = MY_PAGE_ACTION_NUMBER, $start_date, $end_date)
     {
         //対象が自分だった場合プラスボタンを出力する関係上、アクション件数を-1にする
@@ -741,7 +757,7 @@ class Goal extends AppModel
                 'Goal.end_date >=' => $start_date,
                 'Goal.end_date <=' => $end_date,
             ],
-            'fields'     => ['Goal.id', 'Goal.user_id', 'Goal.name', 'Goal.photo_file_name'],
+            'fields'     => ['Goal.id', 'Goal.user_id', 'Goal.name', 'Goal.photo_file_name', 'Goal.end_date'],
             'contain'    => [
                 'Purpose'           => [
                     'fields' => ['Purpose.name']
@@ -1064,7 +1080,7 @@ class Goal extends AppModel
                 'Goal.id'      => $goal_id,
                 'Goal.team_id' => $this->current_team_id,
             ],
-            'contain' => ['User'],
+            'contain'    => ['User'],
         ];
         return $this->find('all', $options);
     }
@@ -1094,7 +1110,7 @@ class Goal extends AppModel
                 'Goal.end_date >=' => $start_date,
                 'Goal.end_date <=' => $end_date,
             ],
-            'fields'     => ['Goal.user_id', 'Goal.name', 'Goal.photo_file_name','Goal.completed',],
+            'fields'     => ['Goal.user_id', 'Goal.name', 'Goal.photo_file_name', 'Goal.completed',],
             'order'      => ['Goal.created desc'],
             'limit'      => $limit,
             'page'       => $page,

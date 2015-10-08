@@ -99,7 +99,7 @@
                             <?php endif; ?>
                             <div class="col col-xxs-12 mt_5px">
                                 <ul class="profile-user-actions">
-                                    <?php if ($is_mine): ?>
+                                    <?php if ($is_mine && $goal['Goal']['is_current_term']): ?>
                                         <li class="profile-user-action-list">
                                             <a class="profile-user-add-action"
                                                href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add_action', 'goal_id' => $goal['Goal']['id']]) ?>"><i
