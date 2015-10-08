@@ -2651,8 +2651,8 @@ $(document).ready(function () {
             if (isFeedNotify) {
                 var pageTypeId = getPageTypeId();
                 var feedTypeId = data.feed_type;
-                var canNotify = pageTypeId === feedTypeId || pageTypeId === "all";
-                if (canNotify) {
+                var canNotify = pageTypeId === feedTypeId || feedTypeId === "all";
+                if (canNotify){
                     prevNotifyId = notifyId;
                     notifyNewFeed();
                 }
