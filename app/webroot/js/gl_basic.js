@@ -2625,12 +2625,11 @@ $(document).ready(function () {
 
     // keyResultの完了送信時にsocket_idを埋め込む
     $(document).on("click", ".kr_achieve_button", function (){
-        var formId = $(this).attr("form-id");
-        var $form = $("form#" + formId);
-        appendSocketId($form, socketId);
-        $form.submit();
-        $(this).prop("disabled", true);
-        return false;
+            var formId = $(this).attr("form-id");
+            var $form = $("form#" + formId);
+            appendSocketId($form, socketId);
+            $form.submit();
+            $(this).prop("disabled", true);
     });
 
     // page type idをセットする
