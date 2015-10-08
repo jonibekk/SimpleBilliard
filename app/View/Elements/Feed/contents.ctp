@@ -111,4 +111,11 @@ if ((count($posts) == POST_FEED_PAGE_ITEMS_NUMBER || (isset($item_created) && $i
         </div>
     </div>
 <?php endif; ?>
+<?php
+// 通知 -> 投稿単体ページ と遷移してきた場合は、通知一覧に戻るボタンを表示する
+if (isset($this->request->params['post_id']) && isset($this->request->params['named']['notify_id'])): ?>
+    <a href="<?= $this->Html->url(['controller' => 'notifications']) ?>" class="btn-back-notifications">
+        <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i>
+    </a>
+<?php endif ?>
 <!-- END app/View/Elements/Feed/contents.ctp -->
