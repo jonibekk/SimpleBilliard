@@ -380,6 +380,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
             <?php endif ?>
             <?php $this->Form->unlockField('socket_id') ?>
             <?php $this->Form->unlockField('file_id') ?>
+            <?php $this->Form->unlockField('Post.file_id') ?>
             <?php $this->Form->unlockField('deleted_file_id') ?>
 
             <?= $this->Form->end() ?>
