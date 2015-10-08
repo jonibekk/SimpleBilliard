@@ -288,6 +288,11 @@ $(document).ready(function () {
     //dynamic modal
     $(document).on("click", '.modal-ajax-get', function (e) {
         e.preventDefault();
+        var $this = $(this);
+        if ($this.hasClass('double_click')) {
+            return false;
+        }
+        $this.addClass('double_click');
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
         //noinspection CoffeeScriptUnusedLocalSymbols,JSUnusedLocalSymbols
         modalFormCommonBindEvent($modal_elm);
@@ -312,8 +317,9 @@ $(document).ready(function () {
                 $modal_elm.find("form").bootstrapValidator();
 
                 $modal_elm.find('.custom-radio-check').customRadioCheck();
-
+                $(this).prop("disabled", true);
             }).success(function () {
+                $this.removeClass('double_click');
                 $('body').addClass('modal-open');
             });
         }
@@ -1890,6 +1896,11 @@ $(document).ready(function () {
     });
     $(document).on("click", '.modal-ajax-get-public-circles', function (e) {
         e.preventDefault();
+        var $this = $(this);
+        if ($this.hasClass('double_click')) {
+            return false;
+        }
+        $this.addClass('double_click');
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
         $modal_elm.on('hidden.bs.modal', function (e) {
             $(this).remove();
@@ -1909,6 +1920,7 @@ $(document).ready(function () {
                 });
             }).success(function () {
                 $('body').addClass('modal-open');
+                $this.removeClass('double_click');
             });
         }
     });
