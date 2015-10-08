@@ -12,7 +12,7 @@
 ?>
 
 <!-- START app/View/Elements/Notification/notify_items.ctp -->
-<a class="btn-link pull-right mr_12px" id="mark_all_read"><?= __d('gl','Mark All Read')?></a>
+<a class="btn-link notify-mark-allread" id="mark_all_read"><?= __d('gl','Mark All Read')?></a>
 <?php foreach ($notify_items as $notify_item): ?>
     <?=
     $this->element('Notification/notify_item',
