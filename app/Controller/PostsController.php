@@ -505,12 +505,24 @@ class PostsController extends AppController
         else {
             $page_num = 1;
         }
-        $posts = $this->Post->get($page_num, POST_FEED_PAGE_ITEMS_NUMBER, null, null, $this->request->params);
+        $start = null;
+        $end = null;
+        if (isset($this->request->params['named']['evaluate_term_id'])) {
+            $term = $this->Team->EvaluateTerm->findById($this->request->params['named']['evaluate_term_id']);
+            if (isset($term['EvaluateTerm'])) {
+                $start = $term['EvaluateTerm']['start_date'];
+                $end = $term['EvaluateTerm']['end_date'];
+            }
+        }
+
+        $posts = $this->Post->get($page_num, POST_FEED_PAGE_ITEMS_NUMBER, $start, $end, $this->request->params);
         $this->set(compact('posts'));
 
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
-        $response = $this->render('Feed/action_posts');
+        $this->set('without_header', true);
+        $this->set('without_add_comment', true);
+        $response = $this->render('Feed/posts');
         $html = $response->__toString();
         $result = array(
             'html'          => $html,
@@ -654,6 +666,9 @@ class PostsController extends AppController
         }
         $this->set('long_text', $long_text);
         $this->set(compact('comments'));
+
+        // コメントを既読にする
+        $this->Post->Comment->CommentRead->red(Hash::extract($comments, '{n}.Comment.id'));
 
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果

@@ -194,10 +194,19 @@ class CirclesController extends AppController
     public function ajax_get_public_circles_modal()
     {
         $this->_ajaxPreProcess();
+        // 参加済サークル（公開 + 秘密）
         $joined_circles = array_merge(
-            $this->Circle->getPublicCircles('joined', strtotime("-1 week"), null, 'Circle.created desc'),
-            $this->Circle->getPublicCircles('joined', null, strtotime("-1 week"), 'Circle.modified desc')
+            $this->Circle->CircleMember->getMyCircle(['circle_created_start' => strtotime("-1 week"),
+                                                      'order'                => ['Circle.created desc'],
+                                                     ]),
+            $this->Circle->CircleMember->getMyCircle(['circle_created_end' => strtotime("-1 week"),
+                                                      'order'              => ['Circle.modified desc'],
+                                                     ])
         );
+        // 参加済サークルのメンバー数をまとめて取得
+        $joined_circle_count_list = $this->Circle->CircleMember->getActiveMemberCountList(Hash::extract($joined_circles,
+                                                                                                        "{n}.Circle.id"));
+
         $non_joined_circles = array_merge(
             $this->Circle->getPublicCircles('non-joined', strtotime("-1 week"), null, 'Circle.created desc'),
             $this->Circle->getPublicCircles('non-joined', null, strtotime("-1 week"), 'Circle.modified desc')
@@ -210,7 +219,7 @@ class CirclesController extends AppController
                 break;
             }
         }
-        $this->set(compact('joined_circles', 'non_joined_circles'));
+        $this->set(compact('joined_circles', 'non_joined_circles', 'joined_circle_count_list'));
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
         $response = $this->render('modal_public_circles');

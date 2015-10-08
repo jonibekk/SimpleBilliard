@@ -471,4 +471,19 @@ class ActionResult extends AppModel
 
         return $this->find('count', $options);
     }
+
+    function getKrIdsByGoalId($goal_id, $user_id)
+    {
+        $options = [
+            'conditions' => [
+                'goal_id' => $goal_id,
+                'user_id' => $user_id,
+            ],
+            'fields'     => [
+                'key_result_id', 'key_result_id'
+            ]
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
 }

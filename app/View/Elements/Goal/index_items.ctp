@@ -49,7 +49,7 @@
                 <i class="fa fa-child"></i><?= "&nbsp;" . count($goal['Collaborator']) . "&nbsp;" ?>
                 <?= $this->Goal->displayCollaboratorNameList($goal['Collaborator']) ?>
             </div>
-            <?php if ($goal['Goal']['user_id'] != $this->Session->read('Auth.User.id') && isset($goal['Goal'])): ?>
+            <?php if ($goal['Goal']['user_id'] != $this->Session->read('Auth.User.id') && isset($goal['Goal']) && is_null($goal['Goal']['completed'])): ?>
                 <div class="col col-xxs-12 mt_5px">
                     <? $follow_opt = $this->Goal->getFollowOption($goal) ?>
                     <? $collabo_opt = $this->Goal->getCollaboOption($goal) ?>

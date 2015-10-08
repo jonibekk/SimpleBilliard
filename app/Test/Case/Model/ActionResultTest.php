@@ -335,6 +335,25 @@ class ActionResultTest extends CakeTestCase
         $this->assertEquals(0, $count);
     }
 
+    function testGetKrIdsByGoalId()
+    {
+        $this->_setDefault();
+        $this->ActionResult->deleteAll(['ActionResult.user_id' => 1], false);
+        $data = [
+            'goal_id'       => 1,
+            'user_id'       => 1,
+            'team_id'       => 1,
+            'key_result_id' => 100
+        ];
+        $this->ActionResult->create();
+        $this->ActionResult->save($data);
+        $expected = [
+            (int)100 => '100'
+        ];
+        $actual = $this->ActionResult->getKrIdsByGoalId(1, 1);
+        $this->assertEquals($expected, $actual);
+    }
+
     function _setDefault()
     {
         $this->ActionResult->current_team_id = 1;

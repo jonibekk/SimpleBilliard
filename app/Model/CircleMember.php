@@ -74,8 +74,24 @@ class CircleMember extends AppModel
         return $res;
     }
 
-    public function getMyCircle()
+    /**
+     * 自分が所属しているサークルを返す
+     *
+     * @param array $params
+     *
+     * @return array|null
+     */
+    public function getMyCircle($params = [])
     {
+        $params = array_merge(['circle_created_start' => null,
+                               'circle_created_end'   => null,
+                               'order'         => [
+                                   'Circle.team_all_flg desc',
+                                   'Circle.modified desc'
+                               ],
+                              ],
+                              $params);
+
         $options = [
             'conditions' => [
                 'CircleMember.user_id' => $this->my_uid,
@@ -87,7 +103,7 @@ class CircleMember extends AppModel
                 'CircleMember.admin_flg',
                 'CircleMember.unread_count',
             ],
-            'order'      => ['Circle.team_all_flg desc', 'Circle.modified desc'],
+            'order'      => $params['order'],
             'contain'    => [
                 'Circle' => [
                     'fields' => [
@@ -97,10 +113,18 @@ class CircleMember extends AppModel
                         'Circle.public_flg',
                         'Circle.photo_file_name',
                         'Circle.team_all_flg',
+                        'Circle.created',
+                        'Circle.modified',
                     ]
                 ]
             ]
         ];
+        if ($params['circle_created_start'] !== null) {
+            $options['conditions']['Circle.created >='] = $params['circle_created_start'];
+        }
+        if ($params['circle_created_end'] !== null) {
+            $options['conditions']['Circle.created <'] = $params['circle_created_end'];
+        }
         $res = $this->find('all', $options);
         return $res;
     }
@@ -312,8 +336,8 @@ class CircleMember extends AppModel
                 }
             }
             if ($val['join']) {
-                //既に参加しているサークル以外を追加
-                if (!$joined) {
+                // 参加していない公開サークルであれば追加
+                if (!$joined && !$this->Circle->isSecret($val['circle_id'])) {
                     $join_circles[] = $val['circle_id'];
                 }
             }
@@ -488,5 +512,40 @@ class CircleMember extends AppModel
         ];
         $res = $this->find('count', $options);
         return $res;
+    }
+
+    /**
+     * 複数サークルのアクティブメンバー数をまとめて返す
+     *
+     * @param $circle_ids
+     *
+     * @return array|null
+     */
+    function getActiveMemberCountList($circle_ids)
+    {
+        $active_team_members_list = $this->Team->TeamMember->getActiveTeamMembersList();
+        $options = [
+            'fields' => [
+                'CircleMember.circle_id',
+                'COUNT(*) as cnt',
+            ],
+            'conditions' => [
+                'circle_id' => $circle_ids,
+                'user_id'   => $active_team_members_list,
+            ],
+            'group' => 'CircleMember.circle_id',
+        ];
+        $rows = $this->find('all', $options);
+
+        $count_list = [];
+        foreach ($rows as $row) {
+            $count_list[$row['CircleMember']['circle_id']] = $row[0]['cnt'];
+        }
+        foreach ($circle_ids as $id) {
+            if (!isset($count_list[$id])) {
+                $count_list[$id] = 0;
+            }
+        }
+        return $count_list;
     }
 }

@@ -7,6 +7,7 @@
  *
  * @var                    $circles
  * @var CodeCompletionView $this
+ * @var                    $joined_circle_count_list
  */
 ?>
 <!-- START app/View/Elements/modal_public_circles.ctp -->
@@ -15,7 +16,7 @@
         <div class="modal-header none-border">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= __d('gl', "公開サークル") ?></h4>
+            <h4 class="modal-title"><?= __d('gl', "サークル") ?></h4>
         </div>
         <ul class="nav nav-tabs">
             <li class="active"><a href="#tab1" data-toggle="tab"><?= __d('gl', "参加していない") ?></a></li>
@@ -42,7 +43,13 @@
                 <?php if (!empty($non_joined_circles)): ?>
                     <div class="row borderBottom">
                         <?php foreach ($non_joined_circles as $key => $circle): ?>
-                            <?= $this->element('public_circle_item', ['circle' => $circle, 'key' => $key]) ?>
+                            <?= $this->element('public_circle_item',
+                                               ['circle'       => $circle,
+                                                'key'          => $key,
+                                                'admin'        => false,
+                                                'joined'       => false,
+                                                'member_count' => count($circle['CircleMember']),
+                                               ]) ?>
                         <?php endforeach ?>
                     </div>
                 <?php else: ?>
@@ -54,7 +61,13 @@
                     <div class="row borderBottom">
                         <?php foreach ($joined_circles as $circle): ?>
                             <?php ++$key ?>
-                            <?= $this->element('public_circle_item', ['circle' => $circle, 'key' => $key]) ?>
+                            <?= $this->element('public_circle_item',
+                                               ['circle'       => $circle,
+                                                'key'          => $key,
+                                                'admin'        => $circle['CircleMember']['admin_flg'],
+                                                'joined'       => true,
+                                                'member_count' => $joined_circle_count_list[$circle['Circle']['id']],
+                                               ]) ?>
                         <?php endforeach ?>
                     </div>
                 <?php else: ?>
