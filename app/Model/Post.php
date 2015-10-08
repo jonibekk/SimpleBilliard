@@ -704,6 +704,17 @@ class Post extends AppModel
                         'photo_file_name',
                         'id',
                     ],
+                    'User'         => [
+                        'fields'     => $this->User->profileFields,
+                        'TeamMember' => [
+                            'fields'     => [
+                                'coach_user_id',
+                            ],
+                            'conditions' => [
+                                'coach_user_id' => $this->my_uid,
+                            ]
+                        ],
+                    ],
                     'Purpose'   => [
                         'fields' => [
                             'name'
