@@ -1110,6 +1110,7 @@ class GoalsController extends AppController
         }
 
         $this->request->allowMethod('post');
+        $file_ids = $this->request->data('file_id');
         try {
             $this->Goal->begin();
             if (!$this->Goal->Collaborator->isCollaborated($goal_id)) {
@@ -1123,7 +1124,7 @@ class GoalsController extends AppController
                                                    PostShareCircle::SHARE_TYPE_ONLY_NOTIFY)
                 || !$this->Goal->Post->PostFile->AttachedFile->saveRelatedFiles($this->Goal->ActionResult->getLastInsertID(),
                                                                                 AttachedFile::TYPE_MODEL_ACTION_RESULT,
-                                                                                $this->request->data('file_id'))
+                                                                                $file_ids)
             ) {
                 throw new RuntimeException(__d('gl', "アクションの追加に失敗しました。"));
             }
@@ -1137,6 +1138,14 @@ class GoalsController extends AppController
             $this->redirect($this->referer());
         }
         $this->Goal->commit();
+
+        // 添付ファイルが存在する場合は一時データを削除
+        if (is_array($file_ids)) {
+            foreach ($file_ids as $hash) {
+                $this->GlRedis->delPreUploadedFile($this->current_team_id, $this->my_uid, $hash);
+            }
+        }
+
         // pusherに通知
         $socket_id = viaIsSet($this->request->data['socket_id']);
         $channelName = "goal_" . $goal_id;
