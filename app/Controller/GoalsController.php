@@ -293,9 +293,12 @@ class GoalsController extends AppController
         $goal_id = viaIsSet($this->request->params['named']['goal_id']);
         $user_id = viaIsSet($this->request->params['named']['user_id']);
         $krs = [];
-        if($goal_id && $user_id){
+        if ($goal_id && $user_id) {
             $krs = $this->Goal->KeyResult->getKrRelatedUserAction($goal_id, $user_id);
         }
+
+        $krs = Hash::extract($krs, "{n}.KeyResult[progress=100]");
+
         $this->_ajaxPreProcess();
 
         //htmlレンダリング結果

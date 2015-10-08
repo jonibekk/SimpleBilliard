@@ -22,7 +22,7 @@
                 <?php foreach ($krs as $kr): ?>
                     <div class="col col-xxs-12">
                         <div class="font_12px font_bold modalFeedTextPadding">
-                            <?= h($kr['KeyResult']['name']) ?>
+                            <?= h($kr['name']) ?>
                         </div>
                     </div>
                 <?php endforeach; ?>
