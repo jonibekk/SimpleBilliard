@@ -1997,9 +1997,8 @@ function bindSelect2Members($this) {
         formatNoMatches: function () {
             return cake.word.d;
         },
-        formatInputTooShort: function (input, min) {
-            var n = min - input.length;
-            return cake.word.e + n + cake.word.f;
+        formatInputTooShort: function () {
+            return cake.word.e;
         },
         formatInputTooLong: function (input, max) {
             var n = input.length - max;
