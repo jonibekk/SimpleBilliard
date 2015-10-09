@@ -67,6 +67,9 @@
 
         <div class="dropdown-menu header-nav-notify-contents-wrap">
             <div class="header-nav-notify-contents-scrolling">
+                <div class="noitify-mark-allread-wrap">
+                    <a class="btn-link notify-mark-allread" id="mark_all_read"><?= __d('gl','Mark All as Read')?></a>
+                </div>
                 <ul class="header-nav-notify-contents notify-dropdown-cards" id="bell-dropdown" role="menu"
                     style="overflow-y:scroll">
                     <li class="notify-card-empty" id="notifyCardEmpty">
