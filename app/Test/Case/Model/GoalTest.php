@@ -609,11 +609,11 @@ class GoalTest extends CakeTestCase
     {
         $this->Goal->getGoalNameList(1);
     }
-    
+
     function testGetGoalsByKeyword()
     {
         $this->setDefault();
-        
+
         // 自分のゴール
         $goals = $this->Goal->getGoalsByKeyword('ゴール');
         $this->assertNotEmpty($goals);
@@ -622,7 +622,7 @@ class GoalTest extends CakeTestCase
         $goals = $this->Goal->getGoalsByKeyword('その他');
         $this->assertNotEmpty($goals);
     }
-    
+
     function testGetGoalsSelect2()
     {
         $this->setDefault();
@@ -656,5 +656,39 @@ class GoalTest extends CakeTestCase
         $this->assertEquals(1, $goals[0]['User']['id']);
         $this->assertEquals(7, $goals[1]['Goal']['id']);
         $this->assertEquals(2, $goals[1]['User']['id']);
+    }
+
+    function testSetIsCurrentTerm()
+    {
+        $this->setDefault();
+        $this->Goal->Team->current_term_start_date = 100000;
+        $this->Goal->Team->current_term_end_date = 200000;
+        $goals = [
+            ['Goal'=>['end_date'=>0],],
+            ['Goal'=>['end_date'=>150000],],
+            ['Goal'=>['end_date'=>250000],],
+        ];
+        $actual = $this->Goal->setIsCurrentTerm($goals);
+        $expected = [
+            (int) 0 => [
+                'Goal' => [
+                    'end_date' => (int) 0,
+                    'is_current_term' => false
+                ]
+            ],
+            (int) 1 => [
+                'Goal' => [
+                    'end_date' => (int) 150000,
+                    'is_current_term' => true
+                ]
+            ],
+            (int) 2 => [
+                'Goal' => [
+                    'end_date' => (int) 250000,
+                    'is_current_term' => false
+                ]
+            ]
+        ];
+        $this->assertEquals($expected,$actual);
     }
 }
