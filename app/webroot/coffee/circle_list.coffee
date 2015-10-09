@@ -8,8 +8,8 @@ window.onload = (resizeLoad) ->
   else
     varHeight = winH-336 + "px"
   CircleListBody = document.getElementById ("jsDashboardCircleListBody")
-  CircleListBody.style.height = varHeight
-
+  if CircleListBody?
+    CircleListBody.style.height = varHeight
 ###
  todo
  Scrollの処理。
@@ -25,8 +25,8 @@ window.onresize = (resizeChanged) ->
   else
     varHeight = winH-336 + "px"
   CircleListBody = document.getElementById ("jsDashboardCircleListBody")
-  CircleListBody.style.height = varHeight
-
+  if CircleListBody?
+    CircleListBody.style.height = varHeight
 
 reloadScrollBars = ->
   document.documentElement.style.overflow = 'auto'

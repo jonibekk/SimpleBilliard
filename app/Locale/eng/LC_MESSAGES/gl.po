@@ -1959,12 +1959,8 @@ msgid "不参加"
 msgstr "..."
 
 #: View/Elements/gl_common_js.ctp:92
-msgid "あと"
-msgstr "After"
-
-#: View/Elements/gl_common_js.ctp:93
-msgid "文字入れてください"
-msgstr "put characters."
+msgid "入力してください。"
+msgstr "Enter text."
 
 #: View/Elements/gl_common_js.ctp:94
 msgid "検索文字列が"

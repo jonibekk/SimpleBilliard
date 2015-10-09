@@ -329,6 +329,15 @@ class Post extends AppModel
             }
         }
         $this->commit();
+
+        // 添付ファイルが存在する場合は一時データを削除
+        if (isset($postData['file_id']) && is_array($postData['file_id'])) {
+            $Redis = ClassRegistry::init('GlRedis');
+            foreach ($postData['file_id'] as $hash) {
+                $Redis->delPreUploadedFile($this->current_team_id, $this->my_uid, $hash);
+            }
+        }
+
         return true;
     }
 
@@ -705,6 +714,17 @@ class Post extends AppModel
                         'id',
                         'completed'
                     ],
+                    'User'         => [
+                        'fields'     => $this->User->profileFields,
+                        'TeamMember' => [
+                            'fields'     => [
+                                'coach_user_id',
+                            ],
+                            'conditions' => [
+                                'coach_user_id' => $this->my_uid,
+                            ]
+                        ],
+                    ],
                     'Purpose'   => [
                         'fields' => [
                             'name'
@@ -1057,6 +1077,17 @@ class Post extends AppModel
             }
         }
         $this->commit();
+
+        // 添付ファイルが存在する場合は一時データを削除
+        if (isset($data['file_id']) && is_array($data['file_id'])) {
+            $Redis = ClassRegistry::init('GlRedis');
+            foreach ($data['file_id'] as $hash) {
+                if (!is_numeric($hash)) {
+                    $Redis->delPreUploadedFile($this->current_team_id, $this->my_uid, $hash);
+                }
+            }
+        }
+
         return true;
     }
 

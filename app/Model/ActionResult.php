@@ -248,6 +248,17 @@ class ActionResult extends AppModel
             }
         }
         $this->commit();
+        
+        // 添付ファイルが存在する場合は一時データを削除
+        if (isset($data['file_id']) && is_array($data['file_id'])) {
+            $Redis = ClassRegistry::init('GlRedis');
+            foreach ($data['file_id'] as $hash) {
+                if (!is_numeric($hash)) {
+                    $Redis->delPreUploadedFile($this->current_team_id, $this->my_uid, $hash);
+                }
+            }
+        }
+        
         return true;
     }
 

@@ -59,7 +59,8 @@ echo $this->Html->script('goalous.min');
                 dropzone_response_error: "<?=__d('gl', 'アップロードに失敗しました。')?>",
                 dropzone_cancel_upload: "<?=__d('gl', 'アップロードをキャンセルしました。')?>",
                 dropzone_cancel_upload_confirmation: "<?=__d('gl', 'アップロードをキャンセルしてよろしいですか？')?>",
-                dropzone_uploading_not_end: "<?=__d('gl', '全てのファイルのアップロードが完了していません。\\nこのまま送信してよろしいですか？')?>"
+                dropzone_uploading_not_end: "<?=__d('gl', '全てのファイルのアップロードが完了していません。\\nこのまま送信してよろしいですか？')?>",
+                dropzone_uploaded_file_expired: "<?=__d('gl', 'アップロードしたファイルの有効期限が切れています。再度アップロードしてください。')?>"
             },
             notice: {
                 a: "<?=__d('gl',"入力が途中です。このまま移動しますか？")?>",
@@ -91,8 +92,7 @@ echo $this->Html->script('goalous.min');
             b: "<?=__d('gl',"参加")?>",
             c: "<?=__d('gl',"不参加")?>",
             d: "<?=__d('gl',"該当なし")?>",
-            e: "<?=__d('gl',"あと")?>",
-            f: "<?=__d('gl',"文字入れてください")?>",
+            e: "<?=__d('gl',"入力してください。")?>",
             g: "<?=__d('gl',"検索文字列が")?>",
             h: "<?=__d('gl',"文字長すぎます")?>",
             i: "<?=__d('gl',"最多で")?>",
@@ -273,7 +273,8 @@ echo $this->Html->script('goalous.min');
         new_notify_message_cnt: <?=isset($new_notify_message_cnt)?$new_notify_message_cnt:0?>,
         common_form_type: "<?= isset($common_form_type)?$common_form_type:null?>",
         request_params: <?=json_encode($this->request->params)?>,
-        is_mb_app: "<?= $is_mb_app ?>"
+        is_mb_app: "<?= $is_mb_app ?>",
+        pre_file_ttl: <?= PRE_FILE_TTL ?>
     };
 
 

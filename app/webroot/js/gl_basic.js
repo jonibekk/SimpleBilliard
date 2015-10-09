@@ -288,6 +288,11 @@ $(document).ready(function () {
     //dynamic modal
     $(document).on("click", '.modal-ajax-get', function (e) {
         e.preventDefault();
+        var $this = $(this);
+        if ($this.hasClass('double_click')) {
+            return false;
+        }
+        $this.addClass('double_click');
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
         //noinspection CoffeeScriptUnusedLocalSymbols,JSUnusedLocalSymbols
         modalFormCommonBindEvent($modal_elm);
@@ -312,8 +317,8 @@ $(document).ready(function () {
                 $modal_elm.find("form").bootstrapValidator();
 
                 $modal_elm.find('.custom-radio-check').customRadioCheck();
-
             }).success(function () {
+                $this.removeClass('double_click');
                 $('body').addClass('modal-open');
             });
         }
@@ -577,6 +582,32 @@ $(document).ready(function () {
         return true;
     });
 
+    // 投稿フォーム submit 時
+    $(document).on('submit', '#PostDisplayForm', function (e) {
+        return checkUploadFileExpire('PostDisplayForm');
+    });
+
+    // アクションフォーム submit 時
+    $(document).on('submit', '#CommonActionDisplayForm', function (e) {
+        var res = checkUploadFileExpire('CommonActionDisplayForm');
+        if (!res) {
+            // 画像アップロード画面に戻す
+            var $ActionImageAddButton = $('#ActionImageAddButton');
+            var target_ids = $ActionImageAddButton.attr('target-id').split(',');
+
+            for (var i = 0; i < target_ids.length; i++) {
+                $('#' + target_ids[i]).hide();
+            }
+            $ActionImageAddButton.show();
+        }
+        return res;
+    });
+
+    // メッセージフォーム submit 時
+    $(document).on('submit', '#MessageDisplayForm', function (e) {
+        return checkUploadFileExpire('messageDropArea');
+    });
+
 
     //noinspection JSJQueryEfficiency
     $('.navbar-offcanvas').on('show.bs.offcanvas', function () {
@@ -717,6 +748,53 @@ function evToggleAjaxGet() {
     return false;
 }
 
+/**
+ *  仮アップロードされたファイルの有効期限（保存期限） が過ぎていないか確認
+ *
+ * @param formID
+ * @returns {boolean}
+ */
+function checkUploadFileExpire(formID) {
+    var $form = $('#' + formID);
+
+    var res = true;
+    $form.find('input[type=hidden][name="data[file_id][]"]').each(function () {
+        var $hidden = $(this);
+        var now = Math.floor(new Date().getTime() / 1000);
+
+        // ファイルの有効期限が切れている場合（30 秒余裕を持たす）
+        if (now - parseInt($hidden.attr('data-uploaded'), 10) > cake.pre_file_ttl - 30) {
+            var $uploadFileForm = $(document).data('uploadFileForm');
+
+            // Dropzone の管理ファイルから外す
+            var removed_file;
+            for (var i = 0; i <  $uploadFileForm._files[formID].length; i++) {
+                if ($hidden.val() == $uploadFileForm._files[formID][i].file_id) {
+                    removed_file = $uploadFileForm._files[formID].splice(i, 1)[0];
+                    break;
+                }
+            }
+            // hidden を削除
+            $hidden.remove();
+            // プレビューエリアを非表示にする
+            $(removed_file.previewElement).fadeOut();
+
+            res = false;
+        }
+    });
+    if (!res) {
+        new PNotify({
+            type: 'error',
+            title: cake.word.error,
+            text: cake.message.validate.dropzone_uploaded_file_expired,
+            icon: "fa fa-check-circle",
+            delay: 6000,
+            mouse_reset: false
+        });
+    }
+    return res;
+}
+
 function getAjaxFormReplaceElm() {
     attrUndefinedCheck(this, 'replace-elm-parent-id');
     attrUndefinedCheck(this, 'click-target-id');
@@ -749,7 +827,12 @@ function getAjaxFormReplaceElm() {
                 replace_elm.css("height", "");
                 replace_elm.append(data.html);
                 replace_elm.children("form").bootstrapValidator().on('success.form.bv', function (e) {
-                    validatorCallback(e)
+                    // アップロードファイルの有効期限が切れていなければコメント投稿
+                    var res = checkUploadFileExpire($(this).attr('id'));
+                    if (res) {
+                        validatorCallback(e)
+                    }
+                    return res;
                 });
                 $('#' + click_target_id).trigger('click').focus();
 
@@ -1890,6 +1973,11 @@ $(document).ready(function () {
     });
     $(document).on("click", '.modal-ajax-get-public-circles', function (e) {
         e.preventDefault();
+        var $this = $(this);
+        if ($this.hasClass('double_click')) {
+            return false;
+        }
+        $this.addClass('double_click');
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
         $modal_elm.on('hidden.bs.modal', function (e) {
             $(this).remove();
@@ -1909,6 +1997,7 @@ $(document).ready(function () {
                 });
             }).success(function () {
                 $('body').addClass('modal-open');
+                $this.removeClass('double_click');
             });
         }
     });
@@ -1997,9 +2086,8 @@ function bindSelect2Members($this) {
         formatNoMatches: function () {
             return cake.word.d;
         },
-        formatInputTooShort: function (input, min) {
-            var n = min - input.length;
-            return cake.word.e + n + cake.word.f;
+        formatInputTooShort: function () {
+            return cake.word.e;
         },
         formatInputTooLong: function (input, max) {
             var n = input.length - max;
@@ -2624,12 +2712,12 @@ $(document).ready(function () {
     });
 
     // keyResultの完了送信時にsocket_idを埋め込む
-    $(document).on("click", ".kr_achieve_button", function () {
-        var formId = $(this).attr("form-id");
-        var $form = $("form#" + formId);
-        appendSocketId($form, socketId);
-        $form.submit();
-        return false;
+    $(document).on("click", ".kr_achieve_button", function (){
+            var formId = $(this).attr("form-id");
+            var $form = $("form#" + formId);
+            appendSocketId($form, socketId);
+            $form.submit();
+            $(this).prop("disabled", true);
     });
 
     // page type idをセットする
@@ -3585,7 +3673,11 @@ $(document).ready(function () {
             // 処理成功
             // submit するフォームに hidden でファイルID追加
             var $form = $('#' + $uploadFileForm._params.formID);
-            $form.append($('<input type=hidden name=data[file_id][]>').val(res.id).attr('id', res.id));
+            $form.append(
+                $('<input type=hidden name=data[file_id][]>')
+                    .val(res.id)
+                    .attr('id', res.id)
+                    .attr('data-uploaded', Math.floor(new Date().getTime() / 1000)));
 
             // プレビューエリアをファイルオブジェクトにファイルIDを紐付ける
             $preview.data('file_id', res.id);
@@ -3613,6 +3705,9 @@ $(document).ready(function () {
         // ファイル削除ボタン押下時
         removedfile: function (file) {
             var $preview = $(file.previewTemplate);
+
+            // ファイルリストの参照が入れ替わっているので、フォーム別のデータを更新する
+            $uploadFileForm._files[$uploadFileForm._params.formID] = Dropzone.instances[0].files;
 
             // キャンセルされたファイルの場合は処理しない
             if (file.status == Dropzone.CANCELED) {
@@ -3926,7 +4021,9 @@ $(document).ready(function () {
         afterSuccess: function (file) {
             $("#message_submit_button").click(function () {
                 if (typeof Dropzone.instances[0] !== "" && Dropzone.instances[0].files.length > 0) {
-                    Dropzone.instances[0].files = [];
+                    // ajax で submit するので、アップロード完了後に Dropzone のファイルリストを空にする
+                    // （参照先の配列を空にするため空配列の代入はしない）
+                    Dropzone.instances[0].files.length = 0;
                 }
             });
         }
