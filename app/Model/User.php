@@ -1081,7 +1081,7 @@ class User extends AppModel
         $my_channels[] = 'team_all_' . $this->current_team_id;
         $my_channels[] = 'user_' . $this->my_uid . '_team_' . $this->current_team_id;
         // サークル
-        $my_circles = $this->CircleMember->getMyCircleList();
+        $my_circles = $this->CircleMember->getMyCircleList(true);
         foreach ($my_circles as $val) {
             $my_channels[] = 'circle_' . $val . '_team_' . $this->current_team_id;
         }
