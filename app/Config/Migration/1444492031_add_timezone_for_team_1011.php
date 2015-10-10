@@ -51,6 +51,16 @@ class AddTimezoneForTeam1011 extends CakeMigration
      */
     public function after($direction)
     {
+        if ($direction == 'down') {
+            return true;
+        }
+        //一旦、全てのチームのタイムゾーンを9に設定
+        /**
+         * @var Team $Team
+         */
+        $Team = ClassRegistry::init('Team');
+        $Team->updateAll(['timezone' => 9]);
+
         return true;
     }
 }
