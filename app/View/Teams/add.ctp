@@ -7,6 +7,7 @@
  * @var CodeCompletionView $this
  * @var                    $border_months_options
  * @var                    $start_term_month_options
+ * @var                    $timezones
  */
 ?>
 <!-- START app/View/Teams/add.ctp -->
@@ -111,6 +112,14 @@
                     "data-bv-notempty-message" => __d('validate', "選択してください。"),
                     'options'                  => $border_months_options
                 ]) ?>
+                <?=
+                $this->Form->input('timezone', [
+                    'label'   => __d('gl', "タイムゾーン"),
+                    'type'    => 'select',
+                    'options' => $timezones,
+                    'value'   => $this->Session->read('Auth.User.timezone')
+                ])
+                ?>
                 <div class="form-group">
                     <label class="col col-sm-3 control-label form-label"><?= __d('gl', "現在の期間") ?></label>
 

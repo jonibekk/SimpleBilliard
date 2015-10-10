@@ -18,7 +18,10 @@ class TeamsController extends AppController
         $this->layout = LAYOUT_ONE_COLUMN;
         $border_months_options = $this->Team->getBorderMonthsOptions();
         $start_term_month_options = $this->Team->getMonths();
-        $this->set(compact('border_months_options', 'start_term_month_options'));
+        //タイムゾーン
+        $timezones = $this->Timezone->getTimezones();
+
+        $this->set(compact('timezones', 'border_months_options', 'start_term_month_options'));
 
         if (!$this->request->is('post')) {
             return $this->render();
@@ -83,8 +86,8 @@ class TeamsController extends AppController
             $this->Team->deleteTeam($this->current_team_id) &&
             // 削除されたチームが default_team_id になっている場合、null にする
             $this->User->clearDefaultTeamId($this->current_team_id)
-        ))
-        {
+        )
+        ) {
             $this->Team->rollback();
             $this->Pnotify->outError(__d('gl', "チーム削除に失敗しました。"));
             return $this->redirect($this->referer());
