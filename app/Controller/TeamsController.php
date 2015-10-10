@@ -168,8 +168,11 @@ class TeamsController extends AppController
         $next_term = $this->Team->EvaluateTerm->getNextTerm();
         $next_term_start_date = viaIsSet($next_term['start_date']);
         $next_term_end_date = viaIsSet($next_term['end_date']) - 1;
+        //タイムゾーン
+        $timezones = $this->Timezone->getTimezones();
 
         $this->set(compact(
+                       'timezones',
                        'current_statuses',
                        'current_progress',
                        'previous_statuses',
