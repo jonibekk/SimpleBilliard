@@ -362,23 +362,21 @@ class Team extends AppModel
         $this->next_term_end_date = $next_term['end'];
         return true;
     }
-
+    
     function setCurrentTermStartEnd()
     {
         //既にセットされている場合は処理しない
         if ($this->current_term_start_date && $this->current_term_end_date) {
             return null;
         }
-        if (empty($this->current_team)) {
-            $this->current_team = $this->findById($this->current_team_id);
-            if (empty($this->current_team)) {
-                return null;
-            }
+        $current_team = $this->getCurrentTeam();
+        if (!$current_team) {
+            return null;
         }
 
-        $start_term_month = $this->current_team['Team']['start_term_month'];
+        $start_term_month = $current_team['Team']['start_term_month'];
 
-        $border_months = $this->current_team['Team']['border_months'];
+        $border_months = $current_team['Team']['border_months'];
 
         $now = REQUEST_TIMESTAMP;
         return $this->setCurrentTermStartEndFromParam($start_term_month, $border_months, $now);
@@ -386,17 +384,18 @@ class Team extends AppModel
 
     function setCurrentTermStartEndFromParam($start_term_month, $border_months, $target_date = null)
     {
+        $current_team = $this->getCurrentTeam();
         if (!$target_date) {
             $target_date = REQUEST_TIMESTAMP;
         }
         if ($this->current_term_start_date) {
-            $start_date = date("Y-m-1", $this->current_term_start_date + $this->me['timezone'] * 3600);
-            $this->current_term_end_date = strtotime($start_date . "+ {$border_months} month") - $this->me['timezone'] * 3600;
+            $start_date = date("Y-m-1", $this->current_term_start_date + $current_team['Team']['timezone'] * 3600);
+            $this->current_term_end_date = strtotime($start_date . "+ {$border_months} month") - $current_team['Team']['timezone'] * 3600;
             return;
         }
         if ($this->current_term_end_date) {
-            $end_date = date("Y-m-1", $this->current_term_end_date + $this->me['timezone'] * 3600);
-            $this->current_term_start_date = strtotime($end_date . "- {$border_months} month") - $this->me['timezone'] * 3600;
+            $end_date = date("Y-m-1", $this->current_term_end_date + $current_team['Team']['timezone'] * 3600);
+            $this->current_term_start_date = strtotime($end_date . "- {$border_months} month") - $current_team['Team']['timezone'] * 3600;
             return;
         }
 
@@ -408,18 +407,20 @@ class Team extends AppModel
 
     function getTermStrStartEndFromParam($start_term_month, $border_months, $target_date)
     {
+        $current_team = $this->getCurrentTeam();
         $res = $this->getTermStartEndFromParam($start_term_month, $border_months, $target_date);
-        $res['start'] = date('Y/m/d', $res['start'] + $this->me['timezone'] * 3600);
-        $res['end'] = date('Y/m/d', $res['end'] + $this->me['timezone'] * 3600 - 1);
+        $res['start'] = date('Y/m/d', $res['start'] + $current_team['Team']['timezone'] * 3600);
+        $res['end'] = date('Y/m/d', $res['end'] + $current_team['Team']['timezone'] * 3600 - 1);
         return $res;
     }
 
     function getTermStartEndFromParam($start_term_month, $border_months, $target_date)
     {
+        $current_team = $this->getCurrentTeam();
         $start_date = strtotime(date("Y-{$start_term_month}-1",
-                                     $target_date + $this->me['timezone'] * 3600)) - $this->me['timezone'] * 3600;
-        $start_date_tmp = date("Y-m-1", $start_date + $this->me['timezone'] * 3600);
-        $end_date = strtotime($start_date_tmp . "+ {$border_months} month") - $this->me['timezone'] * 3600;
+                                     $target_date + $current_team['Team']['timezone'] * 3600)) - $current_team['Team']['timezone'] * 3600;
+        $start_date_tmp = date("Y-m-1", $start_date + $current_team['Team']['timezone'] * 3600);
+        $end_date = strtotime($start_date_tmp . "+ {$border_months} month") - $current_team['Team']['timezone'] * 3600;
 
         //現在が期間内の場合
         if ($start_date <= $target_date && $end_date > $target_date) {
@@ -430,23 +431,23 @@ class Team extends AppModel
         //開始日が現在より後の場合
         elseif ($start_date > $target_date) {
             while ($start_date > $target_date) {
-                $start_date_tmp = date("Y-m-1", $start_date + $this->me['timezone'] * 3600);
-                $start_date = strtotime($start_date_tmp . "- {$border_months} month") - $this->me['timezone'] * 3600;
+                $start_date_tmp = date("Y-m-1", $start_date + $current_team['Team']['timezone'] * 3600);
+                $start_date = strtotime($start_date_tmp . "- {$border_months} month") - $current_team['Team']['timezone'] * 3600;
             }
             $term['start'] = $start_date;
-            $start_date_tmp = date("Y-m-1", $term['start'] + $this->me['timezone'] * 3600);
-            $term['end'] = strtotime($start_date_tmp . "+ {$border_months} month") - $this->me['timezone'] * 3600;
+            $start_date_tmp = date("Y-m-1", $term['start'] + $current_team['Team']['timezone'] * 3600);
+            $term['end'] = strtotime($start_date_tmp . "+ {$border_months} month") - $current_team['Team']['timezone'] * 3600;
             return $term;
         }
         //終了日が現在より前の場合
         elseif ($end_date < $target_date) {
             while ($end_date < $target_date) {
-                $end_date_tmp = date("Y-m-1", $end_date + $this->me['timezone'] * 3600);
-                $end_date = strtotime($end_date_tmp . "+ {$border_months} month") - $this->me['timezone'] * 3600;
+                $end_date_tmp = date("Y-m-1", $end_date + $current_team['Team']['timezone'] * 3600);
+                $end_date = strtotime($end_date_tmp . "+ {$border_months} month") - $current_team['Team']['timezone'] * 3600;
             }
             $term['end'] = $end_date;
-            $end_date_tmp = date("Y-m-1", $term['end'] + $this->me['timezone'] * 3600);
-            $term['start'] = strtotime($end_date_tmp . "- {$border_months} month") - $this->me['timezone'] * 3600;
+            $end_date_tmp = date("Y-m-1", $term['end'] + $current_team['Team']['timezone'] * 3600);
+            $term['start'] = strtotime($end_date_tmp . "- {$border_months} month") - $current_team['Team']['timezone'] * 3600;
             return $term;
         }
     }
