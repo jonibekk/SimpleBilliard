@@ -208,6 +208,7 @@ class TeamTest extends CakeTestCase
             'Team' => [
                 'start_term_month' => 4,
                 'border_months'    => 6,
+                'timezone'         => 9,
             ]
         ];
         $this->Team->current_team = $team;
@@ -229,6 +230,7 @@ class TeamTest extends CakeTestCase
             'Team' => [
                 'start_term_month' => 1,
                 'border_months'    => 12,
+                'timezone'         => 9,
             ]
         ];
         $this->Team->current_team = $team;
@@ -241,6 +243,7 @@ class TeamTest extends CakeTestCase
             'Team' => [
                 'start_term_month' => date('n', strtotime('+1 month')),
                 'border_months'    => 1,
+                'timezone'         => 9,
             ]
         ];
         $this->Team->current_team = $team;
@@ -250,6 +253,7 @@ class TeamTest extends CakeTestCase
     function testSetCurrentTermStartEndFromParam()
     {
         $this->_setDefault();
+        $this->Team->updateAll(['timezone' => 9]);
         $time_offset = $this->Team->me['timezone'] * 60 * 60;
 
         //no target_date
@@ -554,6 +558,7 @@ class TeamTest extends CakeTestCase
         $this->assertTrue(is_null($this->Team->getTermStartEndByDate(1)));
 
         $this->_setDefault();
+        $this->Team->updateAll(['timezone'=>9]);
         $time_offset = $this->Team->me['timezone'] * 60 * 60;
         $term = $this->Team->getTermStartEndByDate(strtotime('2014/1/1') - $time_offset);
         $this->assertEquals('2014/01/01 00:00:00',
@@ -649,7 +654,6 @@ class TeamTest extends CakeTestCase
         $team = $this->Team->findById(1);
         $this->assertEmpty($team);
     }
-
 
     function _setDefault()
     {
