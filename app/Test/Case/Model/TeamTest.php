@@ -558,11 +558,24 @@ class TeamTest extends CakeTestCase
         $this->assertTrue(is_null($this->Team->getTermStartEndByDate(1)));
 
         $this->_setDefault();
-        $this->Team->updateAll(['timezone'=>9]);
+        $this->Team->updateAll(['timezone' => 9]);
         $time_offset = $this->Team->me['timezone'] * 60 * 60;
         $term = $this->Team->getTermStartEndByDate(strtotime('2014/1/1') - $time_offset);
         $this->assertEquals('2014/01/01 00:00:00',
                             date('Y/m/d H:i:s', $term['start'] + $time_offset));
+    }
+
+    function testGetTermStartEndFromParam()
+    {
+        $this->_setDefault();
+        $this->Team->updateAll(['timezone' => 9]);
+        $actual = $this->Team->getTermStartEndFromParam(4, 6, 1893423600);
+        $expected = [
+            'start' => (int)1885474800,
+            'end'   => (int)1901199600
+        ];
+        $this->assertEquals($expected, $actual);
+
     }
 
     function testGetBeforeTermStartEnd()
@@ -653,6 +666,32 @@ class TeamTest extends CakeTestCase
 
         $team = $this->Team->findById(1);
         $this->assertEmpty($team);
+    }
+
+    function testGetList()
+    {
+        $this->_setDefault();
+        $this->Team->query('truncate table teams');
+        $this->Team->saveAll(
+            [
+                [
+                    'id'   => 100,
+                    'name' => 'test1',
+                ],
+                [
+                    'id'   => 200,
+                    'name' => 'test2',
+                ]
+            ]
+        );
+        $actual = $this->Team->getList();
+        $expected = [
+            (int)100 => 'test1',
+            (int)200 => 'test2'
+        ];
+
+        $this->assertEquals($expected, $actual);
+
     }
 
     function _setDefault()
