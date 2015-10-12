@@ -16,11 +16,16 @@
         <div class="modal-header none-border">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= __d('gl', "サークル") ?></h4>
+            <?php
+            $count_joined=count($joined_circles);
+            $count_non_joined=count($non_joined_circles);
+            $count_all=$count_joined+$count_non_joined;
+            ?>
+            <h4 class="modal-title"><?= __d('gl', "サークル")." (".$count_all.")"?></h4>
         </div>
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#tab1" data-toggle="tab"><?= __d('gl', "参加していない") ?></a></li>
-            <li><a href="#tab2" data-toggle="tab"><?= __d('gl', "参加している") ?></a></li>
+            <li class="active"><a href="#tab1" data-toggle="tab"><?= __d('gl', "参加していない")." (".$count_non_joined.")" ?></a></li>
+            <li><a href="#tab2" data-toggle="tab"><?= __d('gl', "参加している")." (".$count_joined.")" ?></a></li>
         </ul>
         <?=
         $this->Form->create('Circle', [
