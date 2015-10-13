@@ -373,14 +373,9 @@ class EvaluateTerm extends AppModel
                 break;
             case Team::OPTION_CHANGE_TERM_FROM_NEXT:
                 $next = $this->getNextTerm();
-                $current_new = $this->Team->getTermStartEndFromParam($start_term_month,
-                                                                     $border_months,
-                                                                     REQUEST_TIMESTAMP,
-                                                                     $timezone
-                );
                 $next_new = $this->Team->getTermStartEndFromParam($start_term_month,
                                                                   $border_months,
-                                                                  $current_new['end'] + 1,
+                                                                  $next['start_date'],
                                                                   $timezone
                 );
                 //来期からのみの場合は、来期の開始日は据え置きで終了日のみ変更
