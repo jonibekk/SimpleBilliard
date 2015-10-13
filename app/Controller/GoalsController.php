@@ -381,22 +381,25 @@ class GoalsController extends AppController
     {
         $collabo_id = viaIsSet($this->request->params['named']['collaborator_id']);
         $this->request->allowMethod('post', 'put');
+        $coach_id = $this->User->TeamMember->selectCoachUserIdFromTeamMembersTB(
+            $this->Auth->user('id'), $this->Session->read('current_team_id'));
 
         if (!isset($this->request->data['Collaborator'])) {
             $this->_editCollaboError();
             return $this->redirect($this->referer());
         }
         $collaborator = $this->request->data['Collaborator'];
-
         // もしpriority=0のデータであれば認定対象外なのでvalued_flg=2を設定する
         // そうでなければ再認定が必要なのでvalued_flg=0にする
         $valued_flg = 0;
+
         if (isset($collaborator['priority']) && $collaborator['priority'] === '0') {
             $valued_flg = 2;
         }
         $this->request->data['Collaborator']['valued_flg'] = $valued_flg;
 
         if (!$this->Goal->Collaborator->edit($this->request->data)) {
+
             $this->_editCollaboError();
             return $this->redirect($this->referer());
         }
@@ -408,6 +411,13 @@ class GoalsController extends AppController
             $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_COLLABORATE_GOAL, $collaborator['goal_id']);
             $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_COLLABORATE, $collaborator['goal_id']);
             $this->_sendNotifyToCoach($collaborator['goal_id'], NotifySetting::TYPE_MY_MEMBER_COLLABORATE_GOAL);
+        }
+        if (isset($coach_id['TeamMember']['coach_user_id']) === true
+            && is_null($coach_id['TeamMember']['coach_user_id']) === false
+            && (isset($collaborator['priority']) && $collaborator['priority']>='1')
+        )
+        {
+            $this->redirect("/goal_approval");
         }
         return $this->redirect($this->referer());
     }
