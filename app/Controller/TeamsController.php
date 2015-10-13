@@ -1022,9 +1022,7 @@ class TeamsController extends AppController
 
         // 日付範囲
         $date_info = $this->_getInsightDateInfo($timezone);
-        $this->set('prev_week', $date_info['prev_week']);
-        $this->set('prev_month', $date_info['prev_month']);
-        $this->set('current_term', $date_info['current_term']);
+        $this->set($date_info);
 
         // 全グループ
         $group_list = $this->Team->Group->getByAllName($this->current_team_id);
@@ -1053,77 +1051,103 @@ class TeamsController extends AppController
         // 日付範囲
         $date_info = $this->_getInsightDateInfo($timezone);
 
+        // あらかじめ決められた期間でなければエラー
+        if (!isset($date_info['date_ranges'][$date_range])) {
+            throw new NotFoundException();
+        }
+
         // 集計 開始日付, 終了日付
-        // 「先週」「先月」「今期」のみを受け付けるようにする
-        $start_date = null;
-        $end_date = null;
-        if (in_array($date_range, ['prev_week', 'prev_month', 'current_term'])) {
-            $start_date = $date_info[$date_range]['start'];
-            $end_date = $date_info[$date_range]['end'];
-        }
+        $start_date = $date_info['date_ranges'][$date_range]['start'];
+        $end_date = $date_info['date_ranges'][$date_range]['end'];
+        $this->set('start_date', $start_date);
+        $this->set('end_date', $end_date);
 
-        if ($start_date && $end_date && is_numeric($timezone)) {
-            $this->set('start_date', $start_date);
-            $this->set('end_date', $end_date);
+        // 今週、今月、今期の場合に true
+        $is_current = $this->_insightIsCurrentDateRange($date_range);
+        // 'week' or 'month' or 'term'
+        $date_range_type = $this->_insightGetDateRangeType($date_range);
 
-            // ６ 週/月/期 前までのデータ
-            $insights = [];
+        // ６ 週/月/期 前までのデータ
+        $insights = [];
+
+        // 今週、今月、今期 の場合
+        // 最新データが変動するのでキャッシュの有効期限を１日にする
+        $cache_expire = $is_current ? DAY : WEEK;
+
+        // 週単位、月単位の場合
+        if ($date_range_type == 'week' || $date_range_type == 'month') {
             $target_start_date = $start_date;
-            $target_end_date = $end_date;
-            // 「先週」か「先月」の場合
-            if ($date_range == 'prev_week' || $date_range == 'prev_month') {
-                for ($i = 0; $i < 6; $i++) {
-                    // 指定範囲のデータ
-                    $insights[] = $this->_getInsightData($target_start_date, $target_end_date, $timezone, $group_id);
+            $target_end_date = $this->_insightAdjustEndDate($end_date, $date_info['today']);
+            for ($i = 0; $i < 6; $i++) {
+                // 指定範囲のデータ
+                $insights[] = $this->_getInsightData($target_start_date, $target_end_date, $timezone, $group_id,
+                                                     $cache_expire);
 
-                    $next_target = null;
-                    if ($date_range == 'prev_week') {
-                        $next_target = $this->Team->TeamInsight->getWeekRangeDate($target_start_date, ['offset' => -1]);
-                    }
-                    elseif ($date_range == 'prev_month') {
-                        $next_target = $this->Team->TeamInsight->getMonthRangeDate($target_start_date,
-                                                                                   ['offset' => -1]);
-                    }
-                    $target_start_date = $next_target['start'];
-                    $target_end_date = $next_target['end'];
+                $next_target = null;
+                if ($date_range_type == 'week') {
+                    $next_target = $this->Team->TeamInsight->getWeekRangeDate($target_start_date, ['offset' => -1]);
                 }
-            }
-            // 「今期」の場合
-            elseif ($date_range == 'current_term') {
-                $all_terms = $this->Team->EvaluateTerm->getAllTerm();
-                $current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
-                $skip = true;
-                foreach ($all_terms as $term_id => $v) {
-                    if ($skip && $term_id != $current_term_id) {
-                        continue;
-                    }
-                    $skip = false;
-                    $insights[] = $this->_getInsightData(
-                        date('Y-m-d', $v['start_date'] + $date_info['time_adjust']),
-                        date('Y-m-d', $v['end_date'] + $date_info['time_adjust']),
-                        $timezone, $group_id);
-                    if (count($insights) >= 6) {
-                        break;
-                    }
+                elseif ($date_range_type == 'month') {
+                    $next_target = $this->Team->TeamInsight->getMonthRangeDate($target_start_date,
+                                                                               ['offset' => -1]);
                 }
-            }
+                $target_start_date = $next_target['start'];
+                $target_end_date = $next_target['end'];
 
-            // 前週-前々週 or 前月-前々月 の比較
-            foreach ($insights[0] as $k => $v) {
-                if ($insights[1][$k]) {
-                    $cmp_key = $k . "_cmp";
-                    if (strpos($k, '_percent') !== false) {
-                        $insights[0][$cmp_key] = $insights[0][$k] - $insights[1][$k];
-                    }
-                    else {
-                        $insights[0][$cmp_key] = $insights[0][$k] / $insights[1][$k] * 100.0 - 100.0;
-                    }
-                    $insights[0][$cmp_key] = abs($insights[0][$cmp_key]) >= 1 ?
-                        round($insights[0][$cmp_key]) : round($insights[0][$cmp_key], 1);
-                }
+                // 古いデータのキャッシュ有効期限は１週間
+                $cache_expire = WEEK;
             }
-            $this->set('insights', $insights);
         }
+        // 期単位の場合
+        elseif ($date_range_type == 'term') {
+            $all_terms = $this->Team->EvaluateTerm->getAllTerm();
+            $start_term_id = null;
+            if ($date_range == 'prev_term') {
+                $start_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
+            }
+            elseif ($date_range == 'current_term') {
+                $start_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
+            }
+            $skip = true;
+            foreach ($all_terms as $term_id => $v) {
+                // 集計対象期間まで読み飛ばし
+                if ($skip && $term_id != $start_term_id) {
+                    continue;
+                }
+                $skip = false;
+
+                $insights[] = $this->_getInsightData(
+                    date('Y-m-d', $v['start_date'] + $date_info['time_adjust']),
+                    $this->_insightAdjustEndDate(date('Y-m-d', $v['end_date'] + $date_info['time_adjust']),
+                                                 $date_info['today']),
+                    $timezone,
+                    $group_id,
+                    $cache_expire);
+
+                if (count($insights) >= 6) {
+                    break;
+                }
+
+                // 古いデータのキャッシュ有効期限は１週間
+                $cache_expire = WEEK;
+            }
+        }
+
+        // １つ前の期間との比較
+        foreach ($insights[0] as $k => $v) {
+            if ($insights[1][$k]) {
+                $cmp_key = $k . "_cmp";
+                if (strpos($k, '_percent') !== false) {
+                    $insights[0][$cmp_key] = $insights[0][$k] - $insights[1][$k];
+                }
+                else {
+                    $insights[0][$cmp_key] = $insights[0][$k] / $insights[1][$k] * 100.0 - 100.0;
+                }
+                $insights[0][$cmp_key] = abs($insights[0][$cmp_key]) >= 1 ?
+                    round($insights[0][$cmp_key]) : round($insights[0][$cmp_key], 1);
+            }
+        }
+        $this->set('insights', $insights);
 
         $response = $this->render('Team/insight_result');
         $html = $response->__toString();
@@ -1150,9 +1174,7 @@ class TeamsController extends AppController
 
         // 日付範囲
         $date_info = $this->_getInsightDateInfo($timezone);
-        $this->set('prev_week', $date_info['prev_week']);
-        $this->set('prev_month', $date_info['prev_month']);
-        $this->set('current_term', $date_info['current_term']);
+        $this->set($date_info);
 
         // システム管理者のためのクリーンアップ
         $this->_cleanupForSystemAdminInsight();
@@ -1176,67 +1198,100 @@ class TeamsController extends AppController
         // 日付範囲
         $date_info = $this->_getInsightDateInfo($timezone);
 
-        // 集計 開始日付, 終了日付
-        // 「先週」「先月」「今期」のみを受け付けるようにする
-        $start_date = null;
-        $end_date = null;
-        if (in_array($date_range, ['prev_week', 'prev_month', 'current_term'])) {
-            $start_date = $date_info[$date_range]['start'];
-            $end_date = $date_info[$date_range]['end'];
+        // あらかじめ決められた期間でなければエラー
+        if (!isset($date_info['date_ranges'][$date_range])) {
+            throw new NotFoundException();
         }
 
-        if ($start_date && $end_date && is_numeric($timezone)) {
-            $this->set('start_date', $start_date);
-            $this->set('end_date', $end_date);
+        // 集計 開始日付, 終了日付
+        $start_date = $date_info['date_ranges'][$date_range]['start'];
+        $end_date = $date_info['date_ranges'][$date_range]['end'];
+        $this->set('start_date', $start_date);
+        $this->set('end_date', $end_date);
 
-            // 指定範囲のデータ
-            $circle_insights = $this->_getCircleInsightData($start_date, $end_date, $timezone);
+        // 今週、今月、今期の場合に true
+        $is_current = $this->_insightIsCurrentDateRange($date_range);
+        // 'week' or 'month' or 'term'
+        $date_range_type = $this->_insightGetDateRangeType($date_range);
 
-            // 指定範囲の１つ前の期間のデータ（先々週 or 先々月 or 前期)
-            $circle_insights2 = null;
-            $target_start_date = null;
-            $target_end_date = null;
-            if ($date_range == 'prev_week') {
-                $prev_week2 = $this->Team->TeamInsight->getWeekRangeDate($start_date, ['offset' => -1]);
-                $target_start_date = $prev_week2['start'];
-                $target_end_date = $prev_week2['end'];
-            }
-            elseif ($date_range == 'prev_month') {
-                $prev_month2 = $this->Team->TeamInsight->getMonthRangeDate($start_date, ['offset' => -1]);
-                $target_start_date = $prev_month2['start'];
-                $target_end_date = $prev_month2['end'];
-            }
-            elseif ($date_range == 'current_term') {
-                $prev_term = $this->Team->EvaluateTerm->getPreviousTerm();
-                $target_start_date = date('Y-m-d', $prev_term['start_date'] + $date_info['time_adjust']);
-                $target_end_date = date('Y-m-d', $prev_term['end_date'] + $date_info['time_adjust']);
-            }
-            $circle_insights2 = $this->_getCircleInsightData($target_start_date, $target_end_date, $timezone);
+        // 今週、今月、今期 の場合
+        // 最新データが変動するのでキャッシュの有効期限を１日にする
+        $cache_expire = $is_current ? DAY : WEEK;
 
-            $circle_list = $this->Team->Circle->getList();
-            foreach ($circle_insights as $circle_id => $insight) {
-                // 前週-前々週 or 前月-前々月 の比較
-                foreach ($insight as $k => $v) {
-                    if ($circle_insights2[$circle_id][$k]) {
-                        $cmp_key = $k . "_cmp";
-                        if (strpos($k, '_percent') !== false) {
-                            $insight[$cmp_key] = $insight[$k] - $circle_insights2[$circle_id][$k];
-                        }
-                        else {
-                            $insight[$cmp_key] = $insight[$k] / $circle_insights2[$circle_id][$k] * 100.0 - 100.0;
-                        }
-                        $insight[$cmp_key] = abs($insight[$cmp_key]) >= 1 ?
-                            round($insight[$cmp_key]) : round($insight[$cmp_key], 1);
+        // 指定範囲のデータ
+        $circle_insights = $this->_getCircleInsightData(
+            $start_date,
+            $this->_insightAdjustEndDate($end_date, $date_info['today']),
+            $timezone,
+            $cache_expire);
+
+        // 指定範囲の１つ前の期間のデータ
+        $circle_insights2 = null;
+        $target_start_date = null;
+        $target_end_date = null;
+        if ($date_range_type == 'week') {
+            $prev_week2 = $this->Team->TeamInsight->getWeekRangeDate($start_date, ['offset' => -1]);
+            $target_start_date = $prev_week2['start'];
+            $target_end_date = $prev_week2['end'];
+        }
+        elseif ($date_range_type == 'month') {
+            $prev_month2 = $this->Team->TeamInsight->getMonthRangeDate($start_date, ['offset' => -1]);
+            $target_start_date = $prev_month2['start'];
+            $target_end_date = $prev_month2['end'];
+        }
+        elseif ($date_range_type == 'term') {
+            $prev_term2 = null;
+            if ($date_range == 'current_term') {
+                // 前期の日付
+                $prev_term2 = $this->Team->EvaluateTerm->getPreviousTerm();
+            }
+            elseif ($date_range == 'prev_term') {
+                // 前々期の日付
+                $prev_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
+                $all_terms = $this->Team->EvaluateTerm->getAllTerm();
+                $found = false;
+                foreach ($all_terms as $term_id => $v) {
+                    if ($found) {
+                        $prev_term2 = $v;
+                        break;
+                    }
+                    if ($term_id == $prev_term_id) {
+                        $found = true;
                     }
                 }
-                $circle_insights[$circle_id] = $insight;
-
-                // サークル名
-                $circle_insights[$circle_id]['name'] = $circle_list[$circle_id];
             }
-
-            $this->set('circle_insights', $circle_insights);
+            if ($prev_term2) {
+                $target_start_date = date('Y-m-d', $prev_term2['start_date'] + $date_info['time_adjust']);
+                $target_end_date = date('Y-m-d', $prev_term2['end_date'] + $date_info['time_adjust']);
+            }
         }
+        if ($target_start_date && $target_end_date) {
+            $circle_insights2 = $this->_getCircleInsightData($target_start_date, $target_end_date, $timezone, WEEK);
+        }
+
+        $circle_list = $this->Team->Circle->getList();
+        foreach ($circle_insights as $circle_id => $insight) {
+            // 前週-前々週 or 前月-前々月 の比較
+            foreach ($insight as $k => $v) {
+                if (isset($circle_insights2[$circle_id][$k]) && $circle_insights2[$circle_id][$k]) {
+                    $cmp_key = $k . "_cmp";
+                    if (strpos($k, '_percent') !== false) {
+                        $insight[$cmp_key] = $insight[$k] - $circle_insights2[$circle_id][$k];
+                    }
+                    else {
+                        $insight[$cmp_key] = $insight[$k] / $circle_insights2[$circle_id][$k] * 100.0 - 100.0;
+                    }
+                    $insight[$cmp_key] = abs($insight[$cmp_key]) >= 1 ?
+                        round($insight[$cmp_key]) : round($insight[$cmp_key], 1);
+                }
+            }
+            $circle_insights[$circle_id] = $insight;
+
+            // サークル名
+            $circle_insights[$circle_id]['name'] = $circle_list[$circle_id];
+        }
+
+        $this->set('circle_insights', $circle_insights);
 
         $response = $this->render('Team/insight_circle_result');
         $html = $response->__toString();
@@ -1247,6 +1302,9 @@ class TeamsController extends AppController
         return $this->_ajaxGetResponse(['html' => $html]);
     }
 
+    /**
+     * ランキング集計
+     */
     public function insight_ranking()
     {
         $this->layout = LAYOUT_TWO_COLUMN;
@@ -1260,9 +1318,7 @@ class TeamsController extends AppController
 
         // 日付範囲
         $date_info = $this->_getInsightDateInfo($timezone);
-        $this->set('prev_week', $date_info['prev_week']);
-        $this->set('prev_month', $date_info['prev_month']);
-        $this->set('current_term', $date_info['current_term']);
+        $this->set($date_info);
 
         // 全グループ
         $group_list = $this->Team->Group->getByAllName($this->current_team_id);
@@ -1272,6 +1328,11 @@ class TeamsController extends AppController
         $this->_cleanupForSystemAdminInsight();
     }
 
+    /**
+     * ランキング集計結果
+     *
+     * @return CakeResponse
+     */
     public function ajax_get_insight_ranking()
     {
         $this->_ajaxPreProcess();
@@ -1287,87 +1348,103 @@ class TeamsController extends AppController
         // 日付範囲
         $date_info = $this->_getInsightDateInfo($timezone);
 
+        // あらかじめ決められた期間でなければエラー
+        if (!isset($date_info['date_ranges'][$date_range])) {
+            throw new NotFoundException();
+        }
+
         // 集計 開始日付, 終了日付
-        // 「先週」「先月」「今期」のみを受け付けるようにする
-        $start_date = null;
-        $end_date = null;
-        if (in_array($date_range, ['prev_week', 'prev_month', 'current_term'])) {
-            $start_date = $date_info[$date_range]['start'];
-            $end_date = $date_info[$date_range]['end'];
+        $start_date = $date_info['date_ranges'][$date_range]['start'];
+        $end_date = $date_info['date_ranges'][$date_range]['end'];
+        $this->set('start_date', $start_date);
+        $this->set('end_date', $end_date);
+        $this->set('type', $type);
+
+        // 今週、今月、今期の場合に true
+        $is_current = $this->_insightIsCurrentDateRange($date_range);
+
+        // 今週、今月、今期 の場合
+        // 最新データが変動するのでキャッシュの有効期限を１日にする
+        $cache_expire = $is_current ? DAY : WEEK;
+
+        // ランキングデータ取得
+        $ranking = [];
+        switch ($type) {
+            case 'action_goal_ranking':
+                $rankings = $this->_getGoalRankingData($start_date,
+                                                       $this->_insightAdjustEndDate($end_date, $date_info['today']),
+                                                       $timezone,
+                                                       $group_id,
+                                                       $cache_expire);
+                $ranking = $rankings[$type];
+                foreach ($ranking as $k => $v) {
+                    $ranking[$k] = ['count' => $v];
+                }
+
+                // ゴール情報取得
+                $goal_ids = array_keys($rankings['action_goal_ranking']);
+                $goals = $this->Goal->getGoalsWithUser($goal_ids);
+                foreach ($goals as $goal) {
+                    $ranking[$goal['Goal']['id']]['text'] = $goal['Goal']['name'];
+                    $ranking[$goal['Goal']['id']]['Goal'] = $goal['Goal'];
+                    $ranking[$goal['Goal']['id']]['url'] = Router::url(['controller' => 'goals',
+                                                                        'action'     => 'view_info',
+                                                                        'goal_id'    => $goal['Goal']['id']]);
+                }
+                break;
+
+            case 'action_user_ranking':
+            case 'post_user_ranking':
+                $rankings = $this->_getUserRankingData($start_date,
+                                                       $this->_insightAdjustEndDate($end_date, $date_info['today']),
+                                                       $timezone,
+                                                       $group_id,
+                                                       $cache_expire);
+                $ranking = $rankings[$type];
+                foreach ($ranking as $k => $v) {
+                    $ranking[$k] = ['count' => $v];
+                }
+
+                // ユーザーデータ取得
+                $user_ids = array_keys($ranking);
+                $users = $this->User->getUsersProf($user_ids);
+                foreach ($users as $user) {
+                    $ranking[$user['User']['id']]['text'] = $user['User']['display_username'];
+                    $ranking[$user['User']['id']]['User'] = $user['User'];
+                    $ranking[$user['User']['id']]['url'] = Router::url(['controller' => 'users',
+                                                                        'action'     => 'view_goals',
+                                                                        'user_id'    => $user['User']['id']]);
+                }
+                break;
+
+            case 'post_like_ranking':
+            case 'action_like_ranking':
+            case 'post_comment_ranking':
+            case 'action_comment_ranking':
+                $rankings = $this->_getPostRankingData($start_date,
+                                                       $this->_insightAdjustEndDate($end_date, $date_info['today']),
+                                                       $timezone,
+                                                       $group_id,
+                                                       $cache_expire);
+                $ranking = $rankings[$type];
+                foreach ($ranking as $k => $v) {
+                    $ranking[$k] = ['count' => $v];
+                }
+
+                // 投稿情報取得
+                $post_ids = array_keys($ranking);
+                $posts = $this->Post->getPostsById($post_ids, ['include_action' => true, 'include_user' => true]);
+                foreach ($posts as $post) {
+                    $ranking[$post['Post']['id']]['text'] = $post['ActionResult']['id'] ?
+                        $post['ActionResult']['name'] : $post['Post']['body'];
+                    $ranking[$post['Post']['id']]['User'] = $post['User'];
+                    $ranking[$post['Post']['id']]['url'] = Router::url(['controller' => 'posts',
+                                                                        'action'     => 'feed',
+                                                                        'post_id'    => $post['Post']['id']]);
+                }
+                break;
         }
-
-        if ($start_date && $end_date && $type && is_numeric($timezone)) {
-            $this->set('start_date', $start_date);
-            $this->set('end_date', $end_date);
-            $this->set('type', $type);
-
-            // ランキングデータ取得
-            $ranking = [];
-            switch ($type) {
-                case 'action_goal_ranking':
-                    $rankings = $this->_getGoalRankingData($start_date, $end_date, $timezone, $group_id);
-                    $ranking = $rankings[$type];
-                    foreach ($ranking as $k => $v) {
-                        $ranking[$k] = ['count' => $v];
-                    }
-
-                    // ゴール情報取得
-                    $goal_ids = array_keys($rankings['action_goal_ranking']);
-                    $goals = $this->Goal->getGoalsWithUser($goal_ids);
-                    foreach ($goals as $goal) {
-                        $ranking[$goal['Goal']['id']]['text'] = $goal['Goal']['name'];
-                        $ranking[$goal['Goal']['id']]['Goal'] = $goal['Goal'];
-                        $ranking[$goal['Goal']['id']]['url'] = Router::url(['controller' => 'goals',
-                                                                            'action'     => 'view_info',
-                                                                            'goal_id'    => $goal['Goal']['id']]);
-                    }
-                    break;
-
-                case 'action_user_ranking':
-                case 'post_user_ranking':
-                    $rankings = $this->_getUserRankingData($start_date, $end_date, $timezone, $group_id);
-                    $ranking = $rankings[$type];
-                    foreach ($ranking as $k => $v) {
-                        $ranking[$k] = ['count' => $v];
-                    }
-
-                    // ユーザーデータ取得
-                    $user_ids = array_keys($ranking);
-                    $users = $this->User->getUsersProf($user_ids);
-                    foreach ($users as $user) {
-                        $ranking[$user['User']['id']]['text'] = $user['User']['display_username'];
-                        $ranking[$user['User']['id']]['User'] = $user['User'];
-                        $ranking[$user['User']['id']]['url'] = Router::url(['controller' => 'users',
-                                                                            'action'     => 'view_goals',
-                                                                            'user_id'    => $user['User']['id']]);
-                    }
-                    break;
-
-                case 'post_like_ranking':
-                case 'action_like_ranking':
-                case 'post_comment_ranking':
-                case 'action_comment_ranking':
-                    $rankings = $this->_getPostRankingData($start_date, $end_date, $timezone, $group_id);
-                    $ranking = $rankings[$type];
-                    foreach ($ranking as $k => $v) {
-                        $ranking[$k] = ['count' => $v];
-                    }
-
-                    // 投稿情報取得
-                    $post_ids = array_keys($ranking);
-                    $posts = $this->Post->getPostsById($post_ids, ['include_action' => true, 'include_user' => true]);
-                    foreach ($posts as $post) {
-                        $ranking[$post['Post']['id']]['text'] = $post['ActionResult']['id'] ?
-                            $post['ActionResult']['name'] : $post['Post']['body'];
-                        $ranking[$post['Post']['id']]['User'] = $post['User'];
-                        $ranking[$post['Post']['id']]['url'] = Router::url(['controller' => 'posts',
-                                                                            'action'     => 'feed',
-                                                                            'post_id'    => $post['Post']['id']]);
-                    }
-                    break;
-            }
-            $this->set('ranking', $ranking);
-        }
+        $this->set('ranking', $ranking);
 
         $response = $this->render('Team/insight_ranking_result');
         $html = $response->__toString();
@@ -1392,16 +1469,67 @@ class TeamsController extends AppController
         // タイムゾーンを考慮した「本日」
         $today = date('Y-m-d', time() + $time_adjust);
 
-        // 「先週」「先月」「前期」の start_date, end_date
-        $prev_week = $this->Team->TeamInsight->getWeekRangeDate($today, ['offset' => -1]);
-        $prev_month = $this->Team->TeamInsight->getMonthRangeDate($today, ['offset' => -1]);
+        // 今週、先週、今月、先月、前期、今期 の start_date, end_date
+        $date_ranges = [];
+        $date_ranges['current_week'] = $this->Team->TeamInsight->getWeekRangeDate($today);
+        $date_ranges['prev_week'] = $this->Team->TeamInsight->getWeekRangeDate($today, ['offset' => -1]);
+        $date_ranges['current_month'] = $this->Team->TeamInsight->getMonthRangeDate($today);
+        $date_ranges['prev_month'] = $this->Team->TeamInsight->getMonthRangeDate($today, ['offset' => -1]);
         $row = $this->Team->EvaluateTerm->getCurrentTerm();
-        $current_term = [
+        $date_ranges['current_term'] = [
+            'start' => date('Y-m-d', $row['start_date'] + $time_adjust),
+            'end'   => date('Y-m-d', $row['end_date'] + $time_adjust),
+        ];
+        $row = $this->Team->EvaluateTerm->getPreviousTerm();
+        $date_ranges['prev_term'] = [
             'start' => date('Y-m-d', $row['start_date'] + $time_adjust),
             'end'   => date('Y-m-d', $row['end_date'] + $time_adjust),
         ];
 
-        return compact('time_adjust', 'today', 'prev_week', 'prev_month', 'current_term');
+        return compact('time_adjust', 'today', 'date_ranges');
+    }
+
+    /**
+     * $end_date が $today 以降であれば、$today の一日前の日付を返す
+     * $end_date が $today より前であれば、$end_date をそのまま返す
+     *
+     * @param string $end_date YYYY-MM-DD
+     * @param string $today    YYYY-MM-DD
+     *
+     * @return string
+     */
+    protected function _insightAdjustEndDate($end_date, $today)
+    {
+        $t1 = strtotime($end_date);
+        $t2 = strtotime($today);
+        if ($t1 < $t2) {
+            return $end_date;
+        }
+        return date('Y-m-d', $t2 - DAY);
+    }
+
+    /**
+     * 期間指定の値($date_range) が「本日」を含む期間の場合に true を返す
+     *
+     * @param $date_range
+     *
+     * @return bool
+     */
+    protected function _insightIsCurrentDateRange($date_range)
+    {
+        return strpos($date_range, 'current_') === 0;
+    }
+
+    /**
+     * 期間指定の値($date_range) の種類を返す
+     *
+     * @param $date_range
+     *
+     * @return string 'week' or 'month' or 'term'
+     */
+    protected function _insightGetDateRangeType($date_range)
+    {
+        return array_pop(explode('_', $date_range));
     }
 
     /**
@@ -1411,10 +1539,11 @@ class TeamsController extends AppController
      * @param      $end_date
      * @param      $timezone
      * @param null $group_id
+     * @param null $cache_expire
      *
      * @return array
      */
-    protected function _getInsightData($start_date, $end_date, $timezone, $group_id = null)
+    protected function _getInsightData($start_date, $end_date, $timezone, $group_id = null, $cache_expire = null)
     {
         // キャッシュにデータがあればそれを返す
         $insight = null;
@@ -1561,10 +1690,11 @@ class TeamsController extends AppController
         // キャッシュに保存
         if ($group_id) {
             $this->GlRedis->saveGroupInsight($this->current_team_id, $start_date, $end_date, $timezone,
-                                             $group_id, $insight);
+                                             $group_id, $insight, $cache_expire);
         }
         else {
-            $this->GlRedis->saveTeamInsight($this->current_team_id, $start_date, $end_date, $timezone, $insight);
+            $this->GlRedis->saveTeamInsight($this->current_team_id, $start_date, $end_date, $timezone,
+                                            $insight, $cache_expire);
         }
         return $insight;
     }
@@ -1575,10 +1705,11 @@ class TeamsController extends AppController
      * @param $start_date
      * @param $end_date
      * @param $timezone
+     * @param $cache_expire
      *
      * @return array
      */
-    protected function _getCircleInsightData($start_date, $end_date, $timezone)
+    protected function _getCircleInsightData($start_date, $end_date, $timezone, $cache_expire = null)
     {
         // キャッシュにデータがあればそれを返す
         $insight = $this->GlRedis->getCircleInsight($this->current_team_id, $start_date, $end_date, $timezone);
@@ -1643,7 +1774,8 @@ class TeamsController extends AppController
         });
 
         // キャッシュに保存
-        $this->GlRedis->saveCircleInsight($this->current_team_id, $start_date, $end_date, $timezone, $circle_insights);
+        $this->GlRedis->saveCircleInsight($this->current_team_id, $start_date, $end_date, $timezone, $circle_insights,
+                                          $cache_expire);
         return $circle_insights;
     }
 
@@ -1654,10 +1786,11 @@ class TeamsController extends AppController
      * @param      $end_date
      * @param      $timezone
      * @param null $group_id
+     * @param null $cache_expire
      *
      * @return array|mixed|null
      */
-    protected function _getPostRankingData($start_date, $end_date, $timezone, $group_id = null)
+    protected function _getPostRankingData($start_date, $end_date, $timezone, $group_id = null, $cache_expire = null)
     {
         // キャッシュにデータがあればそれを返す
         $ranking = null;
@@ -1745,11 +1878,11 @@ class TeamsController extends AppController
         // キャッシュに保存
         if ($group_id) {
             $this->GlRedis->saveGroupRanking($this->current_team_id, $start_date, $end_date, $timezone,
-                                             $group_id, $type, $ranking);
+                                             $group_id, $type, $ranking, $cache_expire);
         }
         else {
             $this->GlRedis->saveTeamRanking($this->current_team_id, $start_date, $end_date, $timezone,
-                                            $type, $ranking);
+                                            $type, $ranking, $cache_expire);
         }
         return $ranking;
     }
@@ -1761,10 +1894,11 @@ class TeamsController extends AppController
      * @param      $end_date
      * @param      $timezone
      * @param null $group_id
+     * @param null $cache_expire
      *
      * @return array|mixed|null
      */
-    protected function _getGoalRankingData($start_date, $end_date, $timezone, $group_id = null)
+    protected function _getGoalRankingData($start_date, $end_date, $timezone, $group_id = null, $cache_expire = null)
     {
         // キャッシュを調べる
         $ranking = null;
@@ -1810,11 +1944,11 @@ class TeamsController extends AppController
         // キャッシュに保存
         if ($group_id) {
             $this->GlRedis->saveGroupRanking($this->current_team_id, $start_date, $end_date, $timezone,
-                                             $group_id, $type, $ranking);
+                                             $group_id, $type, $ranking, $cache_expire);
         }
         else {
             $this->GlRedis->saveTeamRanking($this->current_team_id, $start_date, $end_date, $timezone,
-                                            $type, $ranking);
+                                            $type, $ranking, $cache_expire);
         }
         return $ranking;
     }
@@ -1826,10 +1960,11 @@ class TeamsController extends AppController
      * @param      $end_date
      * @param      $timezone
      * @param null $group_id
+     * @param null $cache_expire
      *
      * @return array|mixed|null
      */
-    protected function _getUserRankingData($start_date, $end_date, $timezone, $group_id = null)
+    protected function _getUserRankingData($start_date, $end_date, $timezone, $group_id = null, $cache_expire = null)
     {
         // キャッシュを調べる
         $ranking = null;
@@ -1886,11 +2021,11 @@ class TeamsController extends AppController
         // キャッシュに保存
         if ($group_id) {
             $this->GlRedis->saveGroupRanking($this->current_team_id, $start_date, $end_date, $timezone,
-                                             $group_id, $type, $ranking);
+                                             $group_id, $type, $ranking, $cache_expire);
         }
         else {
             $this->GlRedis->saveTeamRanking($this->current_team_id, $start_date, $end_date, $timezone,
-                                            $type, $ranking);
+                                            $type, $ranking, $cache_expire);
         }
         return $ranking;
     }

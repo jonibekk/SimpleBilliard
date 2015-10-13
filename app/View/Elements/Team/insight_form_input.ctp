@@ -1,10 +1,8 @@
 <?php
 /**
  * @var $team_list
- * @var $prev_week
- * @var $prev_month
- * @var $current_term
  * @var $group_list
+ * @var $date_ranges
  */
 $use = isset($use) ? $use : [];
 ?>
@@ -25,15 +23,24 @@ $use = isset($use) ? $use : [];
         'id'      => 'InsightInputDateRange',
         'type'    => 'select',
         'options' => [
+            'current_week' => __d('gl', '今週') . sprintf(" (%s - %s)",
+                                                        str_replace('-', '/', $date_ranges['current_week']['start']),
+                                                        str_replace('-', '/', $date_ranges['current_week']['end'])),
             'prev_week'    => __d('gl', '先週') . sprintf(" (%s - %s)",
-                                                        str_replace('-', '/', $prev_week['start']),
-                                                        str_replace('-', '/', $prev_week['end'])),
+                                                        str_replace('-', '/', $date_ranges['prev_week']['start']),
+                                                        str_replace('-', '/', $date_ranges['prev_week']['end'])),
+            'current_month'   => __d('gl', '今月') . sprintf(" (%s - %s)",
+                                                        str_replace('-', '/', $date_ranges['current_month']['start']),
+                                                        str_replace('-', '/', $date_ranges['current_month']['end'])),
             'prev_month'   => __d('gl', '先月') . sprintf(" (%s - %s)",
-                                                        str_replace('-', '/', $prev_month['start']),
-                                                        str_replace('-', '/', $prev_month['end'])),
+                                                        str_replace('-', '/', $date_ranges['prev_month']['start']),
+                                                        str_replace('-', '/', $date_ranges['prev_month']['end'])),
             'current_term' => __d('gl', '今期') . sprintf(" (%s - %s)",
-                                                        str_replace('-', '/', $current_term['start']),
-                                                        str_replace('-', '/', $current_term['end'])),
+                                                        str_replace('-', '/', $date_ranges['current_term']['start']),
+                                                        str_replace('-', '/', $date_ranges['current_term']['end'])),
+            'prev_term' => __d('gl', '前期') . sprintf(" (%s - %s)",
+                                                        str_replace('-', '/', $date_ranges['prev_term']['start']),
+                                                        str_replace('-', '/', $date_ranges['prev_term']['end'])),
         ]]) ?>
 <?php endif ?>
 
