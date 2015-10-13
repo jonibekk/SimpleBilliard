@@ -115,8 +115,6 @@ message_list_app.controller(
                     $scope.message_list = $scope.message_list.concat(message_info.message_list);
                     $scope.auth_info = message_info.auth_info;
 
-                    console.log($scope.message_list);
-
                     page_num += 1;
                     $scope.disable_scroll = false;
 
