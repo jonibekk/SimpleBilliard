@@ -299,9 +299,9 @@ class EvaluateTerm extends AppModel
         return (empty($res)) ? false : true;
     }
 
-    function saveChangedTerm($option, $start_term_month, $border_months)
+    function saveChangedTerm($option, $start_term_month, $border_months, $timezone = null)
     {
-        $new_term = $this->getChangeCurrentNextTerm($option, $start_term_month, $border_months);
+        $new_term = $this->getChangeCurrentNextTerm($option, $start_term_month, $border_months, $timezone);
         $current_term_id = $this->getCurrentTermId();
         $next_term_id = $this->getNextTermId();
         //今期からの場合で評価開始してたら処理しない
@@ -330,16 +330,19 @@ class EvaluateTerm extends AppModel
         return false;
     }
 
-    function getChangeCurrentNextTerm($option, $start_term_month, $border_months)
+    function getChangeCurrentNextTerm($option, $start_term_month, $border_months, $timezone = null)
     {
+
         $res = [
             'current' => [
                 'start_date' => null,
                 'end_date'   => null,
+                'timezone'   => $timezone,
             ],
             'next'    => [
                 'start_date' => null,
                 'end_date'   => null,
+                'timezone'   => $timezone,
             ]
         ];
 
@@ -348,7 +351,9 @@ class EvaluateTerm extends AppModel
                 $previous = $this->getPreviousTerm();
                 $current_new = $this->Team->getTermStartEndFromParam($start_term_month,
                                                                      $border_months,
-                                                                     REQUEST_TIMESTAMP);
+                                                                     REQUEST_TIMESTAMP,
+                                                                     $timezone
+                );
                 if ($previous) {
                     $res['current']['start_date'] = $previous['end_date'] + 1;
                 }
@@ -358,7 +363,9 @@ class EvaluateTerm extends AppModel
                 $res['current']['end_date'] = $current_new['end'] - 1;
                 $next_new = $this->Team->getTermStartEndFromParam($start_term_month,
                                                                   $border_months,
-                                                                  $current_new['end'] + 1);
+                                                                  $current_new['end'] + 1,
+                                                                  $timezone
+                );
                 $res['next']['start_date'] = $next_new['start'];
                 $res['next']['end_date'] = $next_new['end'] - 1;
 
@@ -367,10 +374,14 @@ class EvaluateTerm extends AppModel
                 $next = $this->getNextTerm();
                 $current_new = $this->Team->getTermStartEndFromParam($start_term_month,
                                                                      $border_months,
-                                                                     REQUEST_TIMESTAMP);
+                                                                     REQUEST_TIMESTAMP,
+                                                                     $timezone
+                );
                 $next_new = $this->Team->getTermStartEndFromParam($start_term_month,
                                                                   $border_months,
-                                                                  $current_new['end'] + 1);
+                                                                  $current_new['end'] + 1,
+                                                                  $timezone
+                );
                 //来期からのみの場合は、来期の開始日は据え置きで終了日のみ変更
                 $res['next']['start_date'] = $next['start_date'];
                 $res['next']['end_date'] = $next_new['end'] - 1;

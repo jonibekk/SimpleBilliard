@@ -362,7 +362,7 @@ class Team extends AppModel
         $this->next_term_end_date = $next_term['end'];
         return true;
     }
-    
+
     function setCurrentTermStartEnd()
     {
         //既にセットされている場合は処理しない
@@ -414,13 +414,16 @@ class Team extends AppModel
         return $res;
     }
 
-    function getTermStartEndFromParam($start_term_month, $border_months, $target_date)
+    function getTermStartEndFromParam($start_term_month, $border_months, $target_date, $timezone = null)
     {
-        $current_team = $this->getCurrentTeam();
+        if (!$timezone) {
+            $current_team = $this->getCurrentTeam();
+            $timezone = $current_team['Team']['timezone'];
+        }
         $start_date = strtotime(date("Y-{$start_term_month}-1",
-                                     $target_date + $current_team['Team']['timezone'] * 3600)) - $current_team['Team']['timezone'] * 3600;
-        $start_date_tmp = date("Y-m-1", $start_date + $current_team['Team']['timezone'] * 3600);
-        $end_date = strtotime($start_date_tmp . "+ {$border_months} month") - $current_team['Team']['timezone'] * 3600;
+                                     $target_date + $timezone * 3600)) - $timezone * 3600;
+        $start_date_tmp = date("Y-m-1", $start_date + $timezone * 3600);
+        $end_date = strtotime($start_date_tmp . "+ {$border_months} month") - $timezone * 3600;
 
         //現在が期間内の場合
         if ($start_date <= $target_date && $end_date > $target_date) {
@@ -431,23 +434,23 @@ class Team extends AppModel
         //開始日が現在より後の場合
         elseif ($start_date > $target_date) {
             while ($start_date > $target_date) {
-                $start_date_tmp = date("Y-m-1", $start_date + $current_team['Team']['timezone'] * 3600);
-                $start_date = strtotime($start_date_tmp . "- {$border_months} month") - $current_team['Team']['timezone'] * 3600;
+                $start_date_tmp = date("Y-m-1", $start_date + $timezone * 3600);
+                $start_date = strtotime($start_date_tmp . "- {$border_months} month") - $timezone * 3600;
             }
             $term['start'] = $start_date;
-            $start_date_tmp = date("Y-m-1", $term['start'] + $current_team['Team']['timezone'] * 3600);
-            $term['end'] = strtotime($start_date_tmp . "+ {$border_months} month") - $current_team['Team']['timezone'] * 3600;
+            $start_date_tmp = date("Y-m-1", $term['start'] + $timezone * 3600);
+            $term['end'] = strtotime($start_date_tmp . "+ {$border_months} month") - $timezone * 3600;
             return $term;
         }
         //終了日が現在より前の場合
         elseif ($end_date < $target_date) {
             while ($end_date < $target_date) {
-                $end_date_tmp = date("Y-m-1", $end_date + $current_team['Team']['timezone'] * 3600);
-                $end_date = strtotime($end_date_tmp . "+ {$border_months} month") - $current_team['Team']['timezone'] * 3600;
+                $end_date_tmp = date("Y-m-1", $end_date + $timezone * 3600);
+                $end_date = strtotime($end_date_tmp . "+ {$border_months} month") - $timezone * 3600;
             }
             $term['end'] = $end_date;
-            $end_date_tmp = date("Y-m-1", $term['end'] + $current_team['Team']['timezone'] * 3600);
-            $term['start'] = strtotime($end_date_tmp . "- {$border_months} month") - $current_team['Team']['timezone'] * 3600;
+            $end_date_tmp = date("Y-m-1", $term['end'] + $timezone * 3600);
+            $term['start'] = strtotime($end_date_tmp . "- {$border_months} month") - $timezone * 3600;
             return $term;
         }
     }
@@ -504,7 +507,8 @@ class Team extends AppModel
         $saved_term = $this->EvaluateTerm->saveChangedTerm(
             $post_data['Team']['change_from'],
             $post_data['Team']['start_term_month'],
-            $post_data['Team']['border_months']
+            $post_data['Team']['border_months'],
+            $post_data['Team']['timezone']
         );
 
         return (bool)$saved_term;
