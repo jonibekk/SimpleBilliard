@@ -69,9 +69,12 @@
         </div>
         <?=
         $this->Form->input('timezone', [
-            'label'   => __d('gl', "タイムゾーン"),
-            'type'    => 'select',
-            'options' => $timezones,
+            'id'                       => 'EditTermTimezone',
+            'label'                    => __d('gl', "タイムゾーン"),
+            'type'                     => 'select',
+            'options'                  => $timezones,
+            'required'                 => true,
+            "data-bv-notempty-message" => __d('validate', "選択してください。"),
         ])
         ?>
         <?=

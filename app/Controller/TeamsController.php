@@ -335,19 +335,25 @@ class TeamsController extends AppController
         return $this->_ajaxGetResponse($res);
     }
 
-    function ajax_get_term_start_end_by_edit($start_term_month, $border_months, $option)
+    function ajax_get_term_start_end_by_edit($start_term_month, $border_months, $option, $timezone = null)
     {
+        if (!$timezone) {
+            $timezone = $this->Team->me['timezone'];
+        }
         $this->_ajaxPreProcess();
-        $res = $this->Team->EvaluateTerm->getChangeCurrentNextTerm($option, $start_term_month, $border_months);
+        $res = $this->Team->EvaluateTerm->getChangeCurrentNextTerm($option, $start_term_month, $border_months,
+                                                                   $timezone);
         if ($res['current']['start_date']) {
             $res['current']['start_date'] = date('Y/m/d',
-                                                 $res['current']['start_date'] + $this->Team->me['timezone'] * 3600);
+                                                 $res['current']['start_date'] + $timezone * 3600);
             $res['current']['end_date'] = date('Y/m/d',
-                                               $res['current']['end_date'] + $this->Team->me['timezone'] * 3600);
+                                               $res['current']['end_date'] + $timezone * 3600);
+            $res['current']['timezone'] = $timezone;
         }
         if ($res['next']['start_date']) {
-            $res['next']['start_date'] = date('Y/m/d', $res['next']['start_date'] + $this->Team->me['timezone'] * 3600);
-            $res['next']['end_date'] = date('Y/m/d', $res['next']['end_date'] + $this->Team->me['timezone'] * 3600);
+            $res['next']['start_date'] = date('Y/m/d', $res['next']['start_date'] + $timezone * 3600);
+            $res['next']['end_date'] = date('Y/m/d', $res['next']['end_date'] + $timezone * 3600);
+            $res['next']['timezone'] = $timezone;
         }
         return $this->_ajaxGetResponse($res);
     }
