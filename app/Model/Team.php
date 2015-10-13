@@ -465,7 +465,8 @@ class Team extends AppModel
         }
         $start_term_month = $this->current_team['Team']['start_term_month'];
         $border_months = $this->current_team['Team']['border_months'];
-        return $this->getTermStartEndFromParam($start_term_month, $border_months, $target_date);
+        $timezone = $this->current_team['Team']['timezone'];
+        return $this->getTermStartEndFromParam($start_term_month, $border_months, $target_date, $timezone);
     }
 
     function getBeforeTermStartEnd($count = 1)

@@ -93,11 +93,12 @@ class EvaluateTerm extends AppModel
         if ($this->next_term) {
             return $this->next_term;
         }
+        $current_term_end = $this->Team->getCurrentTermEndDate();
         $next_term_start_end = $this->Team->getAfterTermStartEnd();
         if (empty($next_term_start_end)) {
             return null;
         }
-        $res = $this->getTermByDate($next_term_start_end['start'], $next_term_start_end['end'] - 1);
+        $res = $this->getTermByDate($current_term_end + 1, $next_term_start_end['end'] - 1);
         $this->next_term = $res;
         return $this->next_term;
     }
