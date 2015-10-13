@@ -607,7 +607,7 @@ class UsersController extends AppController
         $is_not_use_local_name = $this->User->isNotUseLocalName($me['User']['language']);
         $not_verified_email = $this->User->Email->getNotVerifiedEmail($this->Auth->user('id'));
         $language_name = $this->Lang->availableLanguages[$me['User']['language']];
-
+        $this->_setMyCircle();
         $this->set(compact('me', 'is_not_use_local_name', 'last_first', 'language_list', 'timezones',
                            'not_verified_email', 'local_name', 'language_name'));
         return $this->render();
@@ -1059,6 +1059,7 @@ class UsersController extends AppController
     function view_goals()
     {
         $user_id = $this->_getRequiredParam('user_id');
+        $this->_setMyCircle();
         if (!$this->_setUserPageHeaderInfo($user_id)) {
             // ユーザーが存在しない
             $this->Pnotify->outError(__d('gl', "不正な画面遷移です。"));

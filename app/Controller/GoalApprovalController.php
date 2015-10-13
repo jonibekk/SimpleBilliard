@@ -168,6 +168,7 @@ class GoalApprovalController extends AppController
      */
     public function index()
     {
+        $this->_setMyCircle();
         if ($this->request->is('post')) {
             $this->_saveApprovalData();
             return $this->redirect($this->referer());

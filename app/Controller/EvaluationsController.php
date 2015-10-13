@@ -21,7 +21,7 @@ class EvaluationsController extends AppController
     function index()
     {
         $this->layout = LAYOUT_ONE_COLUMN;
-
+        $this->_setMyCircle();
         try {
             $this->Evaluation->checkAvailViewEvaluationList();
             if (!$this->Team->EvaluationSetting->isEnabled()) {
