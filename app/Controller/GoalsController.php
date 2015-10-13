@@ -151,6 +151,7 @@ class GoalsController extends AppController
                         $this->Auth->user('id'), $this->Session->read('current_team_id'));
                     if (isset($coach_id['TeamMember']['coach_user_id']) === true
                         && is_null($coach_id['TeamMember']['coach_user_id']) === false
+                        && $val['priority'] != "0"
                     ) {
                         $this->redirect("/goal_approval");
                     }
