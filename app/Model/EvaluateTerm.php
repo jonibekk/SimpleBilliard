@@ -301,9 +301,9 @@ class EvaluateTerm extends AppModel
 
     function saveChangedTerm($option, $start_term_month, $border_months, $timezone = null)
     {
-        $new_term = $this->getChangeCurrentNextTerm($option, $start_term_month, $border_months, $timezone);
         $current_term_id = $this->getCurrentTermId();
         $next_term_id = $this->getNextTermId();
+        $new_term = $this->getChangeCurrentNextTerm($option, $start_term_month, $border_months, $timezone);
         //今期からの場合で評価開始してたら処理しない
         if ($option == Team::OPTION_CHANGE_TERM_FROM_CURRENT &&
             $this->isStartedEvaluation($current_term_id)

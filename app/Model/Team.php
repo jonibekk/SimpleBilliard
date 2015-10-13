@@ -509,6 +509,7 @@ class Team extends AppModel
             $post_data['Team']['start_term_month'],
             $post_data['Team']['border_months'],
             $post_data['Team']['timezone']
+
         );
 
         return (bool)$saved_term;
