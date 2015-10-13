@@ -10,10 +10,13 @@
  * @var                    $current_eval_is_started
  * @var                    $previous_term_start_date
  * @var                    $previous_term_end_date
+ * @var                    $previous_term_timezone
  * @var                    $current_term_start_date
  * @var                    $current_term_end_date
+ * @var                    $current_term_timezone
  * @var                    $next_term_start_date
  * @var                    $next_term_end_date
+ * @var                    $next_term_timezone
  * @var                    $timezones
  */
 ?>
@@ -96,8 +99,9 @@
 
                 <div class="col col-sm-6">
                     <p class="form-control-static" id="">
-                        <?= $this->TimeEx->date($previous_term_start_date) ?>
-                        - <?= $this->TimeEx->date($previous_term_end_date) ?>
+                        <?= $this->TimeEx->date($previous_term_start_date, $previous_term_timezone) ?>
+                        - <?= $this->TimeEx->date($previous_term_end_date,
+                                                  $previous_term_timezone) ?> <?= $this->TimeEx->getTimezoneText($previous_term_timezone) ?>
                     </p>
                 </div>
             </div>
@@ -108,8 +112,9 @@
 
                 <div class="col col-sm-6">
                     <p class="form-control-static" id="">
-                        <?= $this->TimeEx->date($current_term_start_date) ?>
-                        - <?= $this->TimeEx->date($current_term_end_date) ?>
+                        <?= $this->TimeEx->date($current_term_start_date, $current_term_timezone) ?>
+                        - <?= $this->TimeEx->date($current_term_end_date,
+                                                  $current_term_timezone) ?> <?= $this->TimeEx->getTimezoneText($current_term_timezone) ?>
                     </p>
                 </div>
             </div>
@@ -120,8 +125,9 @@
 
                 <div class="col col-sm-6">
                     <p class="form-control-static" id="">
-                        <?= $this->TimeEx->date($next_term_start_date) ?>
-                        - <?= $this->TimeEx->date($next_term_end_date) ?>
+                        <?= $this->TimeEx->date($next_term_start_date, $next_term_timezone) ?>
+                        - <?= $this->TimeEx->date($next_term_end_date,
+                                                  $next_term_timezone) ?> <?= $this->TimeEx->getTimezoneText($next_term_timezone) ?>
                     </p>
                 </div>
             </div>

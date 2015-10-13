@@ -160,14 +160,18 @@ class TeamsController extends AppController
         $current_term = $this->Team->EvaluateTerm->getCurrentTerm();
         $current_term_start_date = viaIsSet($current_term['start_date']);
         $current_term_end_date = viaIsSet($current_term['end_date']) - 1;
+        $current_term_timezone = viaIsSet($current_term['timezone']);
+
         $previous_eval_is_frozen = $this->Team->EvaluateTerm->checkFrozenEvaluateTerm($previous_term_id);
         $previous_eval_is_started = $this->Team->EvaluateTerm->isStartedEvaluation($previous_term_id);
         $previous_term = $this->Team->EvaluateTerm->getPreviousTerm();
         $previous_term_start_date = viaIsSet($previous_term['start_date']);
         $previous_term_end_date = viaIsSet($previous_term['end_date']) - 1;
+        $previous_term_timezone = viaIsSet($previous_term['timezone']);
         $next_term = $this->Team->EvaluateTerm->getNextTerm();
         $next_term_start_date = viaIsSet($next_term['start_date']);
         $next_term_end_date = viaIsSet($next_term['end_date']) - 1;
+        $next_term_timezone = viaIsSet($next_term['timezone']);
         //タイムゾーン
         $timezones = $this->Timezone->getTimezones();
 
@@ -183,13 +187,16 @@ class TeamsController extends AppController
                        'current_eval_is_started',
                        'current_term_start_date',
                        'current_term_end_date',
+                       'current_term_timezone',
                        'previous_term_id',
                        'previous_eval_is_frozen',
                        'previous_eval_is_started',
                        'previous_term_start_date',
                        'previous_term_end_date',
+                       'previous_term_timezone',
                        'next_term_start_date',
-                       'next_term_end_date'
+                       'next_term_end_date',
+                       'next_term_timezone'
                    ));
 
         return $this->render();
