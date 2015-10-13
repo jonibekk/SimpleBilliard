@@ -187,7 +187,13 @@ class AppController extends Controller
                 $is_isao_user = $this->_isIsaoUser($this->Session->read('Auth.User'),
                                                    $this->Session->read('current_team_id'));
                 $this->set(compact('is_isao_user'));
-                $my_channels_json = $this->User->getMyChannelsJson();
+                //getting notification without hide circle in home.
+                if ($this->request->params['controller'] == 'pages' && $this->request->params['pass'][0] == 'home') {
+                    $my_channels_json = $this->User->getMyChannelsJson(true);
+                }
+                else {
+                    $my_channels_json = $this->User->getMyChannelsJson();
+                }
                 $this->set(compact('my_channels_json'));
 
                 //デフォルトチームが設定されていない場合はアクティブなチームでカレントチームとデフォルトチームを書き換え

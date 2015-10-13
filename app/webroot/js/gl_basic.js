@@ -2740,7 +2740,7 @@ $(document).ready(function () {
                 var pageTypeId = getPageTypeId();
                 var feedTypeId = data.feed_type;
                 var canNotify = pageTypeId === feedTypeId || pageTypeId === "all";
-                if (canNotify) {
+                if (canNotify){
                     prevNotifyId = notifyId;
                     notifyNewFeed();
                 }

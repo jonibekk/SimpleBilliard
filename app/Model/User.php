@@ -913,6 +913,7 @@ class User extends AppModel
             case "all":
                 $circles = $this->CircleMember->Circle->getCirclesByKeyword($keyword, $limit);
                 break;
+
             case "public":
                 $circles = $this->CircleMember->Circle->getPublicCirclesByKeyword($keyword, $limit);
                 break;
@@ -1075,13 +1076,13 @@ class User extends AppModel
         return null;
     }
 
-    function getMyChannelsJson()
+    function getMyChannelsJson($check_hide_status = null)
     {
         $my_channels = [];
         $my_channels[] = 'team_all_' . $this->current_team_id;
         $my_channels[] = 'user_' . $this->my_uid . '_team_' . $this->current_team_id;
         // サークル
-        $my_circles = $this->CircleMember->getMyCircleList();
+        $my_circles = $this->CircleMember->getMyCircleList($check_hide_status);
         foreach ($my_circles as $val) {
             $my_channels[] = 'circle_' . $val . '_team_' . $this->current_team_id;
         }
