@@ -202,12 +202,17 @@ class EvaluateTerm extends AppModel
         return $res;
     }
 
-    function saveTerm($start, $end)
+    function saveTerm($start, $end, $timezone = null)
     {
+        if (!$timezone) {
+            $team = $this->Team->getCurrentTeam();
+            $timezone = $team['Team']['timezone'];
+        }
         $data = [
             'team_id'    => $this->current_team_id,
             'start_date' => $start,
             'end_date'   => $end,
+            'timezone'   => $timezone,
         ];
         $this->create();
         $res = $this->save($data);
