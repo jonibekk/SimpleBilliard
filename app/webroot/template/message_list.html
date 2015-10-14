@@ -91,7 +91,15 @@
                             <span ng-if="item.User.id == auth_info.user_id">あなた</span>
                             : <span ng-bind-html="item.Post.body"></span>
                         </div>
-                        <p class="message-list-panel-card-aside"><span ng-bind-html="item.Post.created"></span></p>
+                        <p class="message-list-panel-card-aside">
+                            <span ng-if="item.read_comment_status == 'all_read'">
+                                <i class="fa fa-check" style="color: #099f3f; "></i>
+                            </span>
+                            <span ng-if="item.read_comment_status == ''">
+                                <i class="fa fa-check"></i> {{item.comment_read_count}}
+                            </span>
+                            <span ng-if="item.read_comment_status == 'not_read'" ng-bind-html="item.Post.created"></span>
+                        </p>
                     </div>
                 </a>
             </li>
