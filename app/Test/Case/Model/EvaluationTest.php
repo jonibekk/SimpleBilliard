@@ -1193,6 +1193,8 @@ class EvaluationTest extends CakeTestCase
         $this->Evaluation->current_team_id = 1;
         $this->Evaluation->my_uid = 1;
         $this->Evaluation->evaluate_term_id = 1;
+        $this->Evaluation->Team->current_team_id = 1;
+        $this->Evaluation->Team->my_uid = 1;
         $this->Evaluation->Team->TeamMember->current_team_id = 1;
         $this->Evaluation->Team->TeamMember->my_uid = 1;
         $this->Evaluation->Team->EvaluateTerm->current_team_id = 1;
