@@ -93,13 +93,10 @@ class EvaluateTerm extends AppModel
         if ($this->next_term) {
             return $this->next_term;
         }
-        $current_term_end = $this->Team->getCurrentTermEndDate();
-        $next_term_start_end = $this->Team->getAfterTermStartEnd();
-        if (empty($next_term_start_end)) {
-            return null;
-        }
-        $res = $this->getTermByDate($current_term_end + 1, $next_term_start_end['end'] - 1);
-        $this->next_term = $res;
+        $current_term = $this->Team->EvaluateTerm->getCurrentTerm();
+        $next_term = $this->Team->EvaluateTerm->getTermByDate($current_term['end_date'] + 1,
+                                                              $current_term['end_date'] + 1);
+        $this->next_term = $next_term;
         return $this->next_term;
     }
 
@@ -191,15 +188,20 @@ class EvaluateTerm extends AppModel
 
     function saveNextTerm()
     {
-        $after_start_end = $this->Team->getAfterTermStartEnd();
         $latest = $this->getLatestTerm();
-        if (!empty($latest)) {
-            $start_date = $latest['end_date'] + 1;
+        if (empty($latest)) {
+            return;
         }
-        else {
-            $start_date = $after_start_end['start'];
-        }
-        $res = $this->saveTerm($start_date, $after_start_end['end'] - 1);
+        $start_date = $latest['end_date'] + 1;
+        $team = $this->Team->getCurrentTeam();
+
+        $next_new = $this->Team->getTermStartEndFromParam($team['Team']['start_term_month'],
+                                                          $team['Team']['border_months'],
+                                                          $start_date,
+                                                          $team['Team']['timezone']
+        );
+
+        $res = $this->saveTerm($start_date, $next_new['end'] - 1);
         return $res;
     }
 
