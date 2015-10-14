@@ -161,7 +161,14 @@ class UsersController extends AppController
     {
         $redirect_url = ($this->Session->read('Auth.redirect')) ? $this->Session->read('Auth.redirect') : "/";
         $this->request->data = $this->Session->read('preAuthPost');
-        if ($this->Auth->login()) {
+        //in case of mobile app,use original login method
+        if (isset($_COOKIE['is_app'])) {
+            $auth_result = $this->_mobileAppLogin();
+        }
+        else {
+            $auth_result = $this->Auth->login();
+        }
+        if ($auth_result) {
             $this->Session->delete('preAuthPost');
             $this->Session->delete('2fa_secret');
             $this->Session->delete('user_id');
