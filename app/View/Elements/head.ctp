@@ -48,6 +48,7 @@
     echo $this->Html->css('goalous.min', array('media' => 'screen'));
     echo $this->Html->css('nav');
     echo $this->Html->css('nav_media');
+    echo $this->Html->css('jquery-crop-photo');
     echo $this->fetch('css');
     echo $this->fetch('meta');
 

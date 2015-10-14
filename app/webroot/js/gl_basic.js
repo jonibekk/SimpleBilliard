@@ -4495,3 +4495,38 @@ function networkReachable() {
     });
     return ret;
 }
+
+$(document).ready(function () {
+    $('.cropped').hide();
+    $('.cropbox-container').hide();
+    var options =
+    {
+        thumbBox: '.thumbBox',
+        spinner: '.spinner'
+    }
+    var cropper = $('.imageBox').cropbox(options);
+    $('#file').on('change', function(){
+        $('.cropbox-container').show();
+        $('.fileinput-preview').hide();
+        $('.cropped').hide();
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            options.imgSrc = e.target.result;
+            cropper = $('.imageBox').cropbox(options);
+        }
+        reader.readAsDataURL(this.files[0]);
+        this.files = [];
+    })
+    $('#btnCrop').on('click', function(){
+        $('.cropped').show();
+        $('.cropbox-container').hide();
+        var img = cropper.getDataURL();
+        $('.cropped').append('<img src="'+img+'" class="nailthumb-image">');
+    })
+    $('#btnZoomIn').on('click', function(){
+        cropper.zoomIn();
+    })
+    $('#btnZoomOut').on('click', function(){
+        cropper.zoomOut();
+    })
+});
