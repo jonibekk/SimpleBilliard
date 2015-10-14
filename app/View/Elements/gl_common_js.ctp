@@ -39,6 +39,7 @@ echo $this->Html->script('vendor/imagesloaded.pkgd.min');
 echo $this->Html->script('vendor/bootstrap.youtubepopup');
 echo $this->Html->script('vendor/require');
 echo $this->Html->script('gl_basic');
+echo $this->Html->script('exif');
 echo $this->Html->script('goalous.min');
 ?>
 <!--suppress JSDuplicatedDeclaration -->

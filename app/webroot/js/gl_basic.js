@@ -3614,7 +3614,7 @@ $(document).ready(function () {
         dictCancelUploadConfirmation: cake.message.validate.dropzone_cancel_upload_confirmation,
         clickable: '#' + $uploadFileAttachButton.attr('id'),
         previewTemplate: previewTemplateDefault,
-        thumbnailWidth: null,
+        thumbnailWidth: 240,
         thumbnailHeight: 240,
         // ファイルがドロップされた時の処理
         drop: function (e) {
