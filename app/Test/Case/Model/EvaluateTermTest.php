@@ -82,14 +82,14 @@ class EvaluateTermTest extends CakeTestCase
 
     function testSaveTerm()
     {
-        $this->EvaluateTerm->current_team_id = 1;
+        $this->_setDefault();
         $res = $this->EvaluateTerm->saveCurrentTerm();
         $this->assertNotEmpty($res);
     }
 
     function testChangeFreezeStatusCaseFrozen()
     {
-        $this->EvaluateTerm->current_team_id = 1;
+        $this->_setDefault();
         $this->EvaluateTerm->saveCurrentTerm();
         $latestTermId = $this->EvaluateTerm->getLastInsertID();
         $frozenData = ['id' => $latestTermId, 'evaluate_status' => EvaluateTerm::STATUS_EVAL_FROZEN];
@@ -102,7 +102,7 @@ class EvaluateTermTest extends CakeTestCase
 
     function testChangeFreezeStatusCaseNotFrozen()
     {
-        $this->EvaluateTerm->current_team_id = 1;
+        $this->_setDefault();
         $this->EvaluateTerm->saveCurrentTerm();
         $latestTermId = $this->EvaluateTerm->getLastInsertID();
         $frozenData = ['id' => $latestTermId, 'evaluate_status' => EvaluateTerm::STATUS_EVAL_FROZEN];
@@ -115,7 +115,7 @@ class EvaluateTermTest extends CakeTestCase
 
     function testCheckFrozenEvaluateTermCaseFrozen()
     {
-        $this->EvaluateTerm->current_team_id = 1;
+        $this->_setDefault();
         $this->EvaluateTerm->saveCurrentTerm();
         $latestTermId = $this->EvaluateTerm->getLastInsertID();
         $frozenData = ['id' => $latestTermId, 'evaluate_status' => EvaluateTerm::STATUS_EVAL_FROZEN];
@@ -126,7 +126,7 @@ class EvaluateTermTest extends CakeTestCase
 
     function testCheckFrozenEvaluateTermCaseNotFrozen()
     {
-        $this->EvaluateTerm->current_team_id = 1;
+        $this->_setDefault();
         $this->EvaluateTerm->saveCurrentTerm();
         $latestTermId = $this->EvaluateTerm->getLastInsertID();
         $notFrozenData = ['id' => $latestTermId, 'evaluate_status' => EvaluateTerm::STATUS_EVAL_IN_PROGRESS];
