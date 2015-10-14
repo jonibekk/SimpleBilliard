@@ -201,7 +201,7 @@ class GoalsController extends AppController
         $this->Pnotify->outSuccess(__d('gl', "ゴールを削除しました。"));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
-        return $this->redirect($this->referer());
+        $this->redirect('/after_click:SubHeaderMenuGoal');
     }
 
     /**
@@ -453,7 +453,8 @@ class GoalsController extends AppController
                                    $this->Goal->KeyResult->getLastInsertID());
         $this->_flashClickEvent("KRsOpen_" . $goal_id);
         $this->Pnotify->outSuccess(__d('gl', "出したい成果を追加しました。"));
-        $this->redirect($this->referer());
+        //progesh
+        $this->redirect('/after_click:SubHeaderMenuGoal');
     }
 
     public function edit_key_result()
@@ -482,7 +483,7 @@ class GoalsController extends AppController
 
         $this->Pnotify->outSuccess(__d('gl', "成果を更新しました。"));
         /** @noinspection PhpVoidFunctionResultUsedInspection */
-        return $this->redirect($this->referer());
+        $this->redirect('/after_click:SubHeaderMenuGoal');
     }
 
     public function complete_kr($with_goal = null)
@@ -535,7 +536,7 @@ class GoalsController extends AppController
 
         $this->_flashClickEvent("KRsOpen_" . $key_result['KeyResult']['goal_id']);
         /** @noinspection PhpVoidFunctionResultUsedInspection */
-        return $this->redirect($this->referer());
+        $this->redirect('/after_click:SubHeaderMenuGoal');
     }
 
     public function incomplete_kr()
@@ -561,7 +562,7 @@ class GoalsController extends AppController
         $this->_flashClickEvent("KRsOpen_" . $key_result['KeyResult']['goal_id']);
         $this->Pnotify->outSuccess(__d('gl', "成果を未完了にしました。"));
         /** @noinspection PhpVoidFunctionResultUsedInspection */
-        return $this->redirect($this->referer());
+        $this->redirect('/after_click:SubHeaderMenuGoal');
     }
 
     public function delete_key_result()
@@ -592,7 +593,7 @@ class GoalsController extends AppController
         $this->Pnotify->outSuccess(__d('gl', "成果を削除しました。"));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
-        return $this->redirect($this->referer());
+        $this->redirect('/after_click:SubHeaderMenuGoal');
     }
 
     public function delete_action()
