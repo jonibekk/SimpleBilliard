@@ -27,7 +27,10 @@ class TextExHelper extends AppHelper
 
     function autoLink($text)
     {
-        return $this->autoLinkUrlsEx($text, ['target' => 'blank']);
+        $option = [];
+        $option['onclick'] = "window.open(this.href,'_system');return false;";
+        $option['target'] = "blank";
+        return $this->autoLinkUrlsEx($text, $option);
     }
 
     function replaceUrl($text, $replacement = "[URL]")
