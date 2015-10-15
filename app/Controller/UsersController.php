@@ -607,7 +607,6 @@ class UsersController extends AppController
         $is_not_use_local_name = $this->User->isNotUseLocalName($me['User']['language']);
         $not_verified_email = $this->User->Email->getNotVerifiedEmail($this->Auth->user('id'));
         $language_name = $this->Lang->availableLanguages[$me['User']['language']];
-        $this->_setMyCircle();
         $this->set(compact('me', 'is_not_use_local_name', 'last_first', 'language_list', 'timezones',
                            'not_verified_email', 'local_name', 'language_name'));
         return $this->render();
