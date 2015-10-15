@@ -183,8 +183,7 @@
                         <div class="thumbnail cropped" style="width: 150px; height: 150px;">
                         </div>
 
-                        <div class="fileinput-preview thumbnail nailthumb-container" data-trigger="fileinput"
-                             style="width: 150px; height: 150px;">
+                        <div class="thumbnail img-default" style="width: 150px; height: 150px;">
                             <?=
                             $this->Upload->uploadImage($this->request->data, 'User.photo',
                                                        ['style' => 'x_large']) ?>

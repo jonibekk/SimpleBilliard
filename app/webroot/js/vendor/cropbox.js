@@ -1,6 +1,7 @@
 /**
  * Created by ezgoing on 14/9/2014.
  */
+
 (function ($) {
     var cropbox = function(options, el){
         var el = el || $(options.imageBox),

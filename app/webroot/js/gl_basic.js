@@ -1,6 +1,7 @@
 $.ajaxSetup({
     cache: false
 });
+
 if (typeof String.prototype.startsWith != 'function') {
     // see below for better implementation!
     String.prototype.startsWith = function (str) {
@@ -4507,7 +4508,7 @@ $(document).ready(function () {
     var cropper = $('.imageBox').cropbox(options);
     $('#file').on('change', function(){
         $('.cropbox-container').show();
-        $('.fileinput-preview').hide();
+      //  $('.img-default').hide();
         $('.cropped').hide();
         var reader = new FileReader();
         reader.onload = function(e) {
