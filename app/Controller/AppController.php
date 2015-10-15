@@ -135,7 +135,6 @@ class AppController extends Controller
     public function beforeFilter()
     {
         parent::beforeFilter();
-
         //全ページ共通のタイトルセット(書き換える場合はこの変数の値を変更の上、再度アクションメソッド側でsetする)
         if (ENV_NAME == "www") {
             $this->title_for_layout = __d('gl', 'Goalous(ゴーラス)');
@@ -224,6 +223,7 @@ class AppController extends Controller
                 $this->_setNotifyCnt();
                 $this->_setCurrentTerm();
                 $this->_setNextTerm();
+                $this->_setMyCircle();
             }
             $this->_setMyMemberStatus();
             $this->_saveAccessUser($this->current_team_id, $this->Auth->user('id'));
@@ -678,6 +678,9 @@ class AppController extends Controller
         $start = $this->Team->getCurrentTermStartDate();
         $end = $this->Team->getCurrentTermEndDate();
         foreach ($goals as $k => $goal) {
+            if(!isset($goal['Goal']['end_date'])){
+                continue;
+            }
             if (!($goal['Goal']['end_date'] >= $start && $goal['Goal']['end_date'] <= $end)) {
                 unset($goals[$k]);
             }

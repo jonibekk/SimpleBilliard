@@ -604,15 +604,6 @@ class Goal extends AppModel
             $res[$key]['Goal']['progress'] = $this->getProgress($goal);
         }
 
-        //目的一覧を取得
-        if (!empty($purposes = $this->Purpose->getPurposesNoGoal())) {
-            foreach ($purposes as $key => $val) {
-                $purposes[$key]['Goal'] = [];
-            }
-            /** @noinspection PhpParamsInspection */
-            $res = array_merge($purposes, $res);
-        }
-
         return $res;
     }
 

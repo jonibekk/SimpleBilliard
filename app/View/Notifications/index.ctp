@@ -15,6 +15,9 @@
 
 <div class="panel panel-default">
     <div class="panel-heading">
+        <div class="noitify-mark-allread-wrap">
+            <i class="fa fa-check btn-link notify-mark-allread" id="mark_all_read" rel="tooltip" title="<?= __d('gl','Mark All as Read')?>" style='color:#d2d4d5'></i>
+        </div>
         <?= __d('gl', "すべてのお知らせ") ?>
     </div>
     <div class="panel-body panel-body-notify-page">

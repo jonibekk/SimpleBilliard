@@ -269,15 +269,19 @@ class GoalApprovalController extends AppController
     {
         if (isset($this->request->data['comment_btn']) === true) {
             $this->_comment($data);
+            $this->Pnotify->outSuccess(__d('gl', "コメントを送信しました。"));
         }
         elseif (isset($this->request->data['wait_btn']) === true) {
             $this->_wait($data);
+            $this->Pnotify->outSuccess(__d('gl', "処理済みに移動しました。"));
         }
         elseif (isset($this->request->data['approval_btn']) === true) {
             $this->_approval($data);
+            $this->Pnotify->outSuccess(__d('gl', "処理済みに移動しました。"));
         }
         elseif (isset($this->request->data['modify_btn']) === true) {
             $this->_modify($data);
+            $this->Pnotify->outSuccess(__d('gl', "修正依頼を送信しました。"));
         }
     }
 
