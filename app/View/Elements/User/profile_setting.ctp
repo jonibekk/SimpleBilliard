@@ -178,9 +178,9 @@
                         </div>
                     </div>
 
-                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                    <div id="ProfilePhoto" class="fileinput fileinput-new" data-provides="fileinput">
 
-                        <div class="thumbnail cropped" style="width: 150px; height: 150px;">
+                        <div id="CroppedContainer" class="thumbnail cropped" style="width: 150px; height: 150px;">
                         </div>
 
                         <div class="thumbnail img-default" style="width: 150px; height: 150px;">
@@ -275,6 +275,7 @@ iOS,Androidで100万ダウンロードされるアプリを開発する。<br><b
         <?= $this->Form->end(); ?>
     </div>
 </div>
+<?= $this->element('file_upload_form') ?>
 <?php $this->append('script') ?>
 <script type="text/javascript">
     $(document).ready(function () {
