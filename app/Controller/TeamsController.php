@@ -76,7 +76,7 @@ class TeamsController extends AppController
         try {
             $this->Team->TeamMember->adminCheck($this->current_team_id, $this->Auth->user('id'));
         } catch (RuntimeException $e) {
-            $this->Pnotify->outError($e);
+            $this->Pnotify->outError($e->getMessage());
             $this->redirect($this->referer());
         }
 
@@ -122,7 +122,7 @@ class TeamsController extends AppController
         try {
             $this->Team->TeamMember->adminCheck($team_id, $this->Auth->user('id'));
         } catch (RuntimeException $e) {
-            $this->Pnotify->outError($e);
+            $this->Pnotify->outError($e->getMessage());
             $this->redirect($this->referer());
         }
         $border_months_options = $this->Team->getBorderMonthsOptions();
@@ -353,7 +353,7 @@ class TeamsController extends AppController
                 throw new RuntimeException(__d('gl', "評価設定が有効ではありません。"));
             }
         } catch (RuntimeException $e) {
-            $this->Pnotify->outError($e);
+            $this->Pnotify->outError($e->getMessage());
             return $this->redirect($this->referer());
         }
         //start evaluation process
@@ -625,7 +625,7 @@ class TeamsController extends AppController
         try {
             $res = $this->Team->EvaluateTerm->changeFreezeStatus($termId);
         } catch (RuntimeException $e) {
-            $this->Pnotify->outError($e);
+            $this->Pnotify->outError($e->getMessage());
             return $this->redirect($this->referer());
         }
         if ($res['EvaluateTerm']['evaluate_status'] == EvaluateTerm::STATUS_EVAL_FROZEN) {
