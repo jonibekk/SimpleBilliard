@@ -677,7 +677,7 @@ class NotifySetting extends AppModel
     }
 
     /**
-     * 通知先とグループに応じた DB に入れる値の配列を作成して返す
+     * 通知先とグループに応じて DB 登録用の キー/値 の配列を作成して返す
      *
      * @param string $notify_target 通知先 ('app' or 'email' or 'mobile')
      * @param string $type_group    通知タイプのグループ ('all' or 'primary' or 'none')
