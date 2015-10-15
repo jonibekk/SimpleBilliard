@@ -71,16 +71,25 @@ class NotifySettingTest extends CakeTestCase
     {
         $uid = 1000000;
         $this->NotifySetting->my_uid = 1;
-        $res = $this->NotifySetting->getAppEmailNotifySetting($uid, NotifySetting::TYPE_FEED_POST);
+        $res = $this->NotifySetting->getUserNotifySetting($uid, NotifySetting::TYPE_FEED_POST);
         $expected = [
-            $uid => ['app' => true, 'email' => false]
+            $uid => ['app' => true,
+                     'email' => in_array('primary', NotifySetting::$TYPE[NotifySetting::TYPE_FEED_POST]['groups']),
+                     'mobile' => in_array('primary', NotifySetting::$TYPE[NotifySetting::TYPE_FEED_POST]['groups'])]
         ];
         $this->assertEquals($expected, $res, "通知設定なし");
-        $data = ['feed_post_app_flg' => false, 'feed_post_email_flg' => false, 'user_id' => $uid];
-        $this->NotifySetting->save($data);
-        $res = $this->NotifySetting->getAppEmailNotifySetting($uid, NotifySetting::TYPE_FEED_POST);
+        $res = $this->NotifySetting->getUserNotifySetting($uid, NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST);
         $expected = [
-            $uid => ['app' => false, 'email' => false]
+            $uid => ['app' => true,
+                     'email' => in_array('primary', NotifySetting::$TYPE[NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST]['groups']),
+                     'mobile' => in_array('primary', NotifySetting::$TYPE[NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST]['groups'])]
+        ];
+        $this->assertEquals($expected, $res, "通知設定なし 2");
+        $data = ['feed_post_app_flg' => false, 'feed_post_email_flg' => false, 'feed_post_mobile_flg' => true, 'user_id' => $uid];
+        $this->NotifySetting->save($data);
+        $res = $this->NotifySetting->getUserNotifySetting($uid, NotifySetting::TYPE_FEED_POST);
+        $expected = [
+            $uid => ['app' => false, 'email' => false, 'mobile' => true]
         ];
         $this->assertEquals($expected, $res, "通知設定あり、off");
     }
@@ -90,17 +99,19 @@ class NotifySettingTest extends CakeTestCase
         $uid = 1000000;
         $uid2 = 9999999;
 
-        $data = ['user_id' => $uid, 'feed_post_app_flg' => true, 'feed_post_email_flg' => true];
+        $data = ['user_id' => $uid, 'feed_post_app_flg' => true, 'feed_post_email_flg' => true, 'feed_post_mobile_flg' => false];
         $this->NotifySetting->save($data);
-        $res = $this->NotifySetting->getAppEmailNotifySetting($uid, NotifySetting::TYPE_FEED_POST);
+        $res = $this->NotifySetting->getUserNotifySetting($uid, NotifySetting::TYPE_FEED_POST);
         $expected = [
-            $uid => ['app' => true, 'email' => true]
+            $uid => ['app' => true, 'email' => true, 'mobile' => false]
         ];
         $this->assertEquals($expected, $res, "通知設定あり、on");
-        $res = $this->NotifySetting->getAppEmailNotifySetting([$uid, $uid2], NotifySetting::TYPE_FEED_POST);
+        $res = $this->NotifySetting->getUserNotifySetting([$uid, $uid2], NotifySetting::TYPE_FEED_POST);
         $expected = [
-            $uid  => ['app' => true, 'email' => true],
-            $uid2 => ['app' => true, 'email' => false]
+            $uid  => ['app' => true, 'email' => true, 'mobile' => false],
+            $uid2 => ['app' => true,
+                      'email' => in_array('primary', NotifySetting::$TYPE[NotifySetting::TYPE_FEED_POST]['groups']),
+                      'mobile' => in_array('primary', NotifySetting::$TYPE[NotifySetting::TYPE_FEED_POST]['groups'])]
         ];
         $this->assertEquals($expected, $res, "通知設定ありなし混在。複数ユーザ");
 
@@ -235,6 +246,67 @@ class NotifySettingTest extends CakeTestCase
                 'goal_id' => 1,
             ]);
             $this->assertNotEmpty($title);
+        }
+    }
+
+    function testGetSettingValues()
+    {
+        $settings = $this->NotifySetting->getSettingValues('app', 'all');
+        foreach ($settings as $k => $v) {
+            $this->assertNotEmpty(preg_match('/_app_flg$/', $k));
+            $this->assertTrue($v);
+        }
+        $settings = $this->NotifySetting->getSettingValues('email', 'all');
+        foreach ($settings as $k => $v) {
+            $this->assertNotEmpty(preg_match('/_email_flg$/', $k));
+            $this->assertTrue($v);
+        }
+        $settings = $this->NotifySetting->getSettingValues('mobile', 'all');
+        foreach ($settings as $k => $v) {
+            $this->assertNotEmpty(preg_match('/_mobile_flg$/', $k));
+            $this->assertTrue($v);
+        }
+
+        $primary_data = [];
+        foreach (NotifySetting::$TYPE as $k => $v) {
+            $is_primary = in_array('primary', $v['groups']);
+            $primary_data[$v['field_prefix'] . '_app_flg'] = $is_primary;
+            $primary_data[$v['field_prefix'] . '_email_flg'] = $is_primary;
+            $primary_data[$v['field_prefix'] . '_mobile_flg'] = $is_primary;
+        }
+
+        $settings = $this->NotifySetting->getSettingValues('app', 'primary');
+        foreach ($settings as $k => $v) {
+            $this->assertNotEmpty(preg_match('/_app_flg$/', $k));
+            $this->assertEquals($primary_data[$k], $v);
+        }
+
+        $settings = $this->NotifySetting->getSettingValues('email', 'primary');
+        foreach ($settings as $k => $v) {
+            $this->assertNotEmpty(preg_match('/_email_flg$/', $k));
+            $this->assertEquals($primary_data[$k], $v);
+        }
+
+        $settings = $this->NotifySetting->getSettingValues('mobile', 'primary');
+        foreach ($settings as $k => $v) {
+            $this->assertNotEmpty(preg_match('/_mobile_flg$/', $k));
+            $this->assertEquals($primary_data[$k], $v);
+        }
+
+        $settings = $this->NotifySetting->getSettingValues('app', 'none');
+        foreach ($settings as $k => $v) {
+            $this->assertNotEmpty(preg_match('/_app_flg$/', $k));
+            $this->assertFalse($v);
+        }
+        $settings = $this->NotifySetting->getSettingValues('email', 'none');
+        foreach ($settings as $k => $v) {
+            $this->assertNotEmpty(preg_match('/_email_flg$/', $k));
+            $this->assertFalse($v);
+        }
+        $settings = $this->NotifySetting->getSettingValues('mobile', 'none');
+        foreach ($settings as $k => $v) {
+            $this->assertNotEmpty(preg_match('/_mobile_flg$/', $k));
+            $this->assertFalse($v);
         }
     }
 }
