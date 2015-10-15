@@ -929,15 +929,16 @@ class GlRedis extends AppModel
      * @param $end_date
      * @param $timezone
      * @param $insight
+     * @param $expire
      *
      * @return bool
      */
-    function saveTeamInsight($team_id, $start_date, $end_date, $timezone, $insight)
+    function saveTeamInsight($team_id, $start_date, $end_date, $timezone, $insight, $expire = WEEK)
     {
         $key = $this->getKeyName(self::KEY_TYPE_TEAM_INSIGHT, $team_id, null, null, null, null, null, null, null,
                                  $timezone, $start_date, $end_date);
         $this->Db->set($key, json_encode($insight));
-        return $this->Db->setTimeout($key, WEEK);
+        return $this->Db->setTimeout($key, $expire);
     }
 
     /**
@@ -968,15 +969,16 @@ class GlRedis extends AppModel
      * @param $timezone
      * @param $group_id
      * @param $insight
+     * @param $expire
      *
      * @return bool
      */
-    function saveGroupInsight($team_id, $start_date, $end_date, $timezone, $group_id, $insight)
+    function saveGroupInsight($team_id, $start_date, $end_date, $timezone, $group_id, $insight, $expire = WEEK)
     {
         $key = $this->getKeyName(self::KEY_TYPE_GROUP_INSIGHT, $team_id, null, null, null, null, null, null, null,
                                  $timezone, $start_date, $end_date, $group_id);
         $this->Db->set($key, json_encode($insight));
-        return $this->Db->setTimeout($key, WEEK);
+        return $this->Db->setTimeout($key, $expire);
 
     }
 
@@ -1008,15 +1010,16 @@ class GlRedis extends AppModel
      * @param $end_date
      * @param $timezone
      * @param $insight
+     * @param $expire
      *
      * @return bool
      */
-    function saveCircleInsight($team_id, $start_date, $end_date, $timezone, $insight)
+    function saveCircleInsight($team_id, $start_date, $end_date, $timezone, $insight, $expire = WEEK)
     {
         $key = $this->getKeyName(self::KEY_TYPE_CIRCLE_INSIGHT, $team_id, null, null, null, null, null, null, null,
                                  $timezone, $start_date, $end_date);
         $this->Db->set($key, json_encode($insight));
-        return $this->Db->setTimeout($key, WEEK);
+        return $this->Db->setTimeout($key, $expire);
     }
 
     /**
@@ -1047,15 +1050,16 @@ class GlRedis extends AppModel
      * @param $timezone
      * @param $type
      * @param $ranking
+     * @param $expire
      *
      * @return bool
      */
-    function saveTeamRanking($team_id, $start_date, $end_date, $timezone, $type, $ranking)
+    function saveTeamRanking($team_id, $start_date, $end_date, $timezone, $type, $ranking, $expire = WEEK)
     {
         $key = $this->getKeyName(self::KEY_TYPE_TEAM_RANKING, $team_id, null, null, null, null, null, null, null,
                                  $timezone, $start_date, $end_date);
         $this->Db->hSet($key, $type, json_encode($ranking));
-        return $this->Db->setTimeout($key, WEEK);
+        return $this->Db->setTimeout($key, $expire);
     }
 
     /**
@@ -1088,15 +1092,16 @@ class GlRedis extends AppModel
      * @param $group_id
      * @param $type
      * @param $ranking
+     * @param $expire
      *
      * @return bool
      */
-    function saveGroupRanking($team_id, $start_date, $end_date, $timezone, $group_id, $type, $ranking)
+    function saveGroupRanking($team_id, $start_date, $end_date, $timezone, $group_id, $type, $ranking, $expire = WEEK)
     {
         $key = $this->getKeyName(self::KEY_TYPE_GROUP_RANKING, $team_id, null, null, null, null, null, null, null,
                                  $timezone, $start_date, $end_date, $group_id);
         $this->Db->hSet($key, $type, json_encode($ranking));
-        return $this->Db->setTimeout($key, WEEK);
+        return $this->Db->setTimeout($key, $expire);
 
     }
 

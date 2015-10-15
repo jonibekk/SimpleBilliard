@@ -126,13 +126,11 @@ Configure::write('App.encoding', 'UTF-8');
  * Enables:
  *    `admin_index()` and `/admin/controller/index`
  *    `manager_index()` and `/manager/controller/index`
-
  */
 //Configure::write('Routing.prefixes', array('admin'));
 
 /**
  * Turn off all caching application-wide.
-
  */
 //Configure::write('Cache.disable', true);
 
@@ -142,7 +140,6 @@ Configure::write('App.encoding', 'UTF-8');
  * public $cacheAction inside your controllers to define caching settings.
  * You can either set it controller-wide by setting public $cacheAction = true,
  * or in each action using $this->cacheAction = true.
-
  */
 //Configure::write('Cache.check', true);
 
@@ -183,18 +180,23 @@ Configure::write('App.encoding', 'UTF-8');
  * Make sure the class implements `CakeSessionHandlerInterface` and set Session.handler to <name>
  * To use database sessions, run the app/Config/Schema/sessions.php schema using
  * the cake shell command: cake schema create Sessions
-
  */
 if (REDIS_SESSION_HOST) {
+    //モバイルアプリの場合はセッション保持期間を長くとる
+    $session_ttl = 60 * 24 * 7 * 2; //60min * 24h * 7day * 2 = 2week
+    if (isset($_COOKIE['is_app'])) {
+        $session_ttl = 60 * 24 * 30 * 3; //60min * 24h * 30day * 3 = 3months
+    }
     Configure::write('Session', array(
         'userAgent' => false,
         'cookie'    => 'SID',
-        'timeout'   => 60 * 24 * 7 * 2, //60min * 24h * 7day * 2 = 2week
+        'timeout'   => $session_ttl,
         'handler'   => array(
             'engine' => 'RedisSession',
             'key'    => 'session:'
         ),
     ));
+
 }
 else {
     Configure::write('Session', array(

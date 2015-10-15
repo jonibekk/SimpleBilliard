@@ -7,6 +7,7 @@
  * @var CodeCompletionView $this
  * @var                    $border_months_options
  * @var                    $start_term_month_options
+ * @var                    $timezones
  */
 ?>
 <!-- START app/View/Teams/add.ctp -->
@@ -93,6 +94,14 @@
                         . '</span>'
                 ]) ?>
                 <hr>
+                <?=
+                $this->Form->input('timezone', [
+                    'label'   => __d('gl', "タイムゾーン"),
+                    'type'    => 'select',
+                    'options' => $timezones,
+                    'value'   => $this->Session->read('Auth.User.timezone')
+                ])
+                ?>
                 <?=
                 $this->Form->input('start_term_month', [
                     'label'                    => __d('gl', "開始月"),

@@ -151,6 +151,7 @@ class GoalsController extends AppController
                         $this->Auth->user('id'), $this->Session->read('current_team_id'));
                     if (isset($coach_id['TeamMember']['coach_user_id']) === true
                         && is_null($coach_id['TeamMember']['coach_user_id']) === false
+                        && $val['priority'] != "0"
                     ) {
                         $this->redirect("/goal_approval");
                     }
@@ -200,7 +201,7 @@ class GoalsController extends AppController
         $this->Pnotify->outSuccess(__d('gl', "ゴールを削除しました。"));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
-        return $this->redirect($this->referer());
+        $this->redirect('/after_click:SubHeaderMenuGoal');
     }
 
     /**
@@ -381,22 +382,25 @@ class GoalsController extends AppController
     {
         $collabo_id = viaIsSet($this->request->params['named']['collaborator_id']);
         $this->request->allowMethod('post', 'put');
+        $coach_id = $this->User->TeamMember->selectCoachUserIdFromTeamMembersTB(
+            $this->Auth->user('id'), $this->Session->read('current_team_id'));
 
         if (!isset($this->request->data['Collaborator'])) {
             $this->_editCollaboError();
             return $this->redirect($this->referer());
         }
         $collaborator = $this->request->data['Collaborator'];
-
         // もしpriority=0のデータであれば認定対象外なのでvalued_flg=2を設定する
         // そうでなければ再認定が必要なのでvalued_flg=0にする
         $valued_flg = 0;
+
         if (isset($collaborator['priority']) && $collaborator['priority'] === '0') {
             $valued_flg = 2;
         }
         $this->request->data['Collaborator']['valued_flg'] = $valued_flg;
 
         if (!$this->Goal->Collaborator->edit($this->request->data)) {
+
             $this->_editCollaboError();
             return $this->redirect($this->referer());
         }
@@ -408,6 +412,13 @@ class GoalsController extends AppController
             $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_COLLABORATE_GOAL, $collaborator['goal_id']);
             $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_COLLABORATE, $collaborator['goal_id']);
             $this->_sendNotifyToCoach($collaborator['goal_id'], NotifySetting::TYPE_MY_MEMBER_COLLABORATE_GOAL);
+        }
+        if (isset($coach_id['TeamMember']['coach_user_id']) === true
+            && is_null($coach_id['TeamMember']['coach_user_id']) === false
+            && (isset($collaborator['priority']) && $collaborator['priority']>='1')
+        )
+        {
+            $this->redirect("/goal_approval");
         }
         return $this->redirect($this->referer());
     }
@@ -452,7 +463,8 @@ class GoalsController extends AppController
                                    $this->Goal->KeyResult->getLastInsertID());
         $this->_flashClickEvent("KRsOpen_" . $goal_id);
         $this->Pnotify->outSuccess(__d('gl', "出したい成果を追加しました。"));
-        $this->redirect($this->referer());
+        //progesh
+        $this->redirect('/after_click:SubHeaderMenuGoal');
     }
 
     public function edit_key_result()
@@ -481,7 +493,7 @@ class GoalsController extends AppController
 
         $this->Pnotify->outSuccess(__d('gl', "成果を更新しました。"));
         /** @noinspection PhpVoidFunctionResultUsedInspection */
-        return $this->redirect($this->referer());
+        $this->redirect('/after_click:SubHeaderMenuGoal');
     }
 
     public function complete_kr($with_goal = null)
@@ -534,7 +546,7 @@ class GoalsController extends AppController
 
         $this->_flashClickEvent("KRsOpen_" . $key_result['KeyResult']['goal_id']);
         /** @noinspection PhpVoidFunctionResultUsedInspection */
-        return $this->redirect($this->referer());
+        $this->redirect('/after_click:SubHeaderMenuGoal');
     }
 
     public function incomplete_kr()
@@ -560,7 +572,7 @@ class GoalsController extends AppController
         $this->_flashClickEvent("KRsOpen_" . $key_result['KeyResult']['goal_id']);
         $this->Pnotify->outSuccess(__d('gl', "成果を未完了にしました。"));
         /** @noinspection PhpVoidFunctionResultUsedInspection */
-        return $this->redirect($this->referer());
+        $this->redirect('/after_click:SubHeaderMenuGoal');
     }
 
     public function delete_key_result()
@@ -591,7 +603,7 @@ class GoalsController extends AppController
         $this->Pnotify->outSuccess(__d('gl', "成果を削除しました。"));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
-        return $this->redirect($this->referer());
+        $this->redirect('/after_click:SubHeaderMenuGoal');
     }
 
     public function delete_action()

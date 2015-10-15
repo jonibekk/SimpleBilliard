@@ -135,7 +135,6 @@ class AppController extends Controller
     public function beforeFilter()
     {
         parent::beforeFilter();
-
         //全ページ共通のタイトルセット(書き換える場合はこの変数の値を変更の上、再度アクションメソッド側でsetする)
         if (ENV_NAME == "www") {
             $this->title_for_layout = __d('gl', 'Goalous(ゴーラス)');
@@ -187,7 +186,13 @@ class AppController extends Controller
                 $is_isao_user = $this->_isIsaoUser($this->Session->read('Auth.User'),
                                                    $this->Session->read('current_team_id'));
                 $this->set(compact('is_isao_user'));
-                $my_channels_json = $this->User->getMyChannelsJson();
+                //getting notification without hide circle in home.
+                if ($this->request->params['controller'] == 'pages' && $this->request->params['pass'][0] == 'home') {
+                    $my_channels_json = $this->User->getMyChannelsJson(true);
+                }
+                else {
+                    $my_channels_json = $this->User->getMyChannelsJson();
+                }
                 $this->set(compact('my_channels_json'));
 
                 //デフォルトチームが設定されていない場合はアクティブなチームでカレントチームとデフォルトチームを書き換え
@@ -218,6 +223,7 @@ class AppController extends Controller
                 $this->_setNotifyCnt();
                 $this->_setCurrentTerm();
                 $this->_setNextTerm();
+                $this->_setMyCircle();
             }
             $this->_setMyMemberStatus();
             $this->_saveAccessUser($this->current_team_id, $this->Auth->user('id'));
@@ -657,14 +663,29 @@ class AppController extends Controller
         $my_previous_goals = $this->Goal->getMyPreviousGoals(MY_PREVIOUS_GOALS_DISPLAY_NUMBER);
         $my_previous_goals_count = $this->Goal->getMyPreviousGoals(null, 1, 'count');
         //TODO 暫定的にアクションの候補を自分のゴールにする。あとでajax化する
-        $goal_list_for_action_option = Hash::combine(array_merge($my_goals, $collabo_goals), '{n}.Goal.id',
-                                                     '{n}.Goal.name');
+        $current_term_goals = $this->_filterCurrentTermGoals(array_merge($my_goals, $collabo_goals));
+        $goal_list_for_action_option = Hash::combine($current_term_goals, '{n}.Goal.id', '{n}.Goal.name');
         $goal_list_for_action_option = [null => __d('gl', 'ゴールを選択する')] + $goal_list_for_action_option;
         //vision
         $vision = $this->Team->TeamVision->getDisplayVisionRandom();
         $this->set(compact('vision', 'goal_list_for_action_option', 'my_goals', 'collabo_goals', 'follow_goals',
                            'my_goals_count', 'collabo_goals_count', 'follow_goals_count', 'my_previous_goals',
                            'my_previous_goals_count'));
+    }
+
+    function _filterCurrentTermGoals($goals)
+    {
+        $start = $this->Team->getCurrentTermStartDate();
+        $end = $this->Team->getCurrentTermEndDate();
+        foreach ($goals as $k => $goal) {
+            if(!isset($goal['Goal']['end_date'])){
+                continue;
+            }
+            if (!($goal['Goal']['end_date'] >= $start && $goal['Goal']['end_date'] <= $end)) {
+                unset($goals[$k]);
+            }
+        }
+        return $goals;
     }
 
     /**

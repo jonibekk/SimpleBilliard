@@ -88,6 +88,23 @@ message_list_app.controller(
                         }
                         this[key].share_users = share_users;
 
+                        // 最新のメッセージがすべて読まれたか
+                        this[key].read_comment_status = '';
+                        var user_count = share_users.length;
+
+                        if (typeof val.Comment[0] === "undefined") {
+                            var comment_read_count = 0;
+                        } else {
+                            var comment_read_count = Number(val.Comment[0].comment_read_count);
+                        }
+                        this[key].comment_read_count = comment_read_count;
+
+                        if (user_count === comment_read_count) {
+                            this[key].read_comment_status = 'all_read';
+                        } else if (comment_read_count === 0) {
+                            this[key].read_comment_status = 'not_read';
+                        }
+
                     }, message_info.message_list);
 
                     $scope.imageLayout = function (index, share_users_num) {

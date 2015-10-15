@@ -83,7 +83,6 @@ class UsersController extends AppController
             return $this->render();
         }
 
-
         //account lock check
         $ip_address = $this->request->clientIp();
         $is_account_locked = $this->GlRedis->isAccountLocked($this->request->data['User']['email'], $ip_address);
@@ -102,7 +101,7 @@ class UsersController extends AppController
         //デバイス情報を保存する
         $user_id = $user_info['id'];
         $installation_id = $this->request->data['User']['installation_id'];
-        error_log("FURU:ins_id:$installation_id\n",3,"/tmp/hoge.log");
+        error_log("FURU:ins_id:$installation_id\n", 3, "/tmp/hoge.log");
         if (!empty($installation_id)) {
             $this->NotifyBiz->saveDeviceInfo($user_id, $installation_id);
         }
@@ -578,6 +577,22 @@ class UsersController extends AppController
             //request->dataに入っていないデータを表示しなければ行けない為、マージ
             $this->request->data['User'] = array_merge($me['User'],
                                                        isset($this->request->data['User']) ? $this->request->data['User'] : []);
+            // 通知設定 更新時
+            if (isset($this->request->data['NotifySetting']['email']) &&
+                isset($this->request->data['NotifySetting']['mobile'])
+            ) {
+                $this->request->data['NotifySetting'] =
+                    array_merge($this->request->data['NotifySetting'],
+                                $this->User->NotifySetting->getSettingValues('app', 'all'));
+                $this->request->data['NotifySetting'] =
+                    array_merge($this->request->data['NotifySetting'],
+                                $this->User->NotifySetting->getSettingValues('email',
+                                                                             $this->request->data['NotifySetting']['email']));
+                $this->request->data['NotifySetting'] =
+                    array_merge($this->request->data['NotifySetting'],
+                                $this->User->NotifySetting->getSettingValues('mobile',
+                                                                             $this->request->data['NotifySetting']['mobile']));
+            }
             $this->User->id = $this->Auth->user('id');
             //チームメンバー情報を付与
             if ($this->User->saveAll($this->request->data)) {
@@ -608,7 +623,27 @@ class UsersController extends AppController
         $is_not_use_local_name = $this->User->isNotUseLocalName($me['User']['language']);
         $not_verified_email = $this->User->Email->getNotVerifiedEmail($this->Auth->user('id'));
         $language_name = $this->Lang->availableLanguages[$me['User']['language']];
-
+        
+        // 通知設定のプルダウンデフォルト
+        $this->request->data['NotifySetting']['email'] = 'primary';
+        $this->request->data['NotifySetting']['mobile'] = 'primary';
+        // 既に通知設定が保存されている場合
+        foreach (['email', 'mobile'] as $notify_target) {
+            foreach (array_keys(NotifySetting::$TYPE_GROUP) as $type_group) {
+                $values = $this->User->NotifySetting->getSettingValues($notify_target, $type_group);
+                $same = true;
+                foreach ($values as $k => $v) {
+                    if ($this->request->data['NotifySetting'][$k] !== $v) {
+                        $same = false;
+                        break;
+                    }
+                }
+                if ($same) {
+                    $this->request->data['NotifySetting'][$notify_target] = $type_group;
+                    break;
+                }
+            }
+        }
         $this->set(compact('me', 'is_not_use_local_name', 'last_first', 'language_list', 'timezones',
                            'not_verified_email', 'local_name', 'language_name'));
         return $this->render();
@@ -739,7 +774,7 @@ class UsersController extends AppController
         $query = $this->request->query;
         $res = [];
         if (isset($query['post_id']) && !empty($query['post_id']) && isset($query['term']) && !empty($query['term']) && isset($query['page_limit']) && !empty($query['page_limit'])) {
-            $res = $this->User->getUsersSelectOnly($query['term'], $query['page_limit'],$query['post_id']);
+            $res = $this->User->getUsersSelectOnly($query['term'], $query['page_limit'], $query['post_id']);
         }
         return $this->_ajaxGetResponse($res);
     }
@@ -1082,6 +1117,7 @@ class UsersController extends AppController
         else {
             $goals = $this->Goal->getGoalsWithAction($user_id, MY_PAGE_ACTION_NUMBER, $start_date, $end_date);
         }
+        $goals = $this->Goal->setIsCurrentTerm($goals);
 
         $is_mine = $user_id == $this->Auth->user('id') ? true : false;
         $display_action_count = MY_PAGE_ACTION_NUMBER;

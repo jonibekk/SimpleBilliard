@@ -14,6 +14,7 @@
  * @var                    $current_term_end_date
  * @var                    $next_term_start_date
  * @var                    $next_term_end_date
+ * @var                    $timezones
  */
 ?>
 <!-- START app/View/Elements/Team/edit_term_setting.ctp -->
@@ -63,6 +64,13 @@
                 <?php endif; ?>
             </div>
         </div>
+        <?=
+        $this->Form->input('timezone', [
+            'label'   => __d('gl', "タイムゾーン"),
+            'type'    => 'select',
+            'options' => $timezones,
+        ])
+        ?>
         <?=
         $this->Form->input('start_term_month', [
             'id'                       => "EditTermStartTerm",
