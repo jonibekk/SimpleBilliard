@@ -1059,7 +1059,6 @@ class UsersController extends AppController
     function view_goals()
     {
         $user_id = $this->_getRequiredParam('user_id');
-        $this->_setMyCircle();
         if (!$this->_setUserPageHeaderInfo($user_id)) {
             // ユーザーが存在しない
             $this->Pnotify->outError(__d('gl', "不正な画面遷移です。"));

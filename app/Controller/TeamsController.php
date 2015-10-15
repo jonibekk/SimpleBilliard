@@ -119,7 +119,6 @@ class TeamsController extends AppController
     {
         $this->layout = LAYOUT_TWO_COLUMN;
         $team_id = $this->Session->read('current_team_id');
-        $this->_setMyCircle();
         try {
             $this->Team->TeamMember->adminCheck($team_id, $this->Auth->user('id'));
         } catch (RuntimeException $e) {
@@ -644,7 +643,6 @@ class TeamsController extends AppController
     {
         $this->layout = LAYOUT_ONE_COLUMN;
         $current_global_menu = "team";
-        $this->_setMyCircle();
         // グルーブの絞り込みが選択された場合
         $this->set(compact('current_global_menu'));
         return $this->render();

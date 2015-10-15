@@ -1431,7 +1431,6 @@ class GoalsController extends AppController
     function view_info()
     {
         $goal_id = $this->_getRequiredParam('goal_id');
-        $this->_setMyCircle();
         if (!$this->_setGoalPageHeaderInfo($goal_id)) {
             // ゴールが存在しない
             $this->Pnotify->outError(__d('gl', "不正な画面遷移です。"));
