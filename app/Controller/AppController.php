@@ -443,11 +443,7 @@ class AppController extends Controller
         if (!empty($user_lang)) {
             $lang = $user_lang['User']['language'];
         }
-
-        //if mobile app then don't logout
-        if (!isset($_COOKIE['is_app'])) {
-            $this->Auth->logout();
-        }
+        $this->Auth->logout();
         $this->User->resetLocalNames();
         $this->User->me['language'] = $lang;
         $this->User->recursive = 0;
@@ -470,25 +466,8 @@ class AppController extends Controller
             $user['User'] = array_merge($user['User'], $associations);
         }
         $this->User->me = $user['User'];
-        //in case of mobile app,use original login method
-        if (isset($_COOKIE['is_app'])) {
-            $auth_result = $this->_mobileAppLogin($user['User']);
-        }
-        else {
-            $auth_result = $this->Auth->login($user['User']);
-        }
-        return $auth_result;
-    }
-
-    public function _mobileAppLogin($user = null)
-    {
-        if (empty($user)) {
-            $user = $this->Auth->identify($this->request, $this->response);
-        }
-        if ($user) {
-            $this->Session->write('Auth.User', $user);
-        }
-        return (bool)$this->Auth->user();
+        $res = $this->Auth->login($user['User']);
+        return $res;
     }
 
     function _switchTeam($team_id, $uid = null)

@@ -182,29 +182,20 @@ Configure::write('App.encoding', 'UTF-8');
  * the cake shell command: cake schema create Sessions
  */
 if (REDIS_SESSION_HOST) {
-    //モバイルアプリの場合は独自のセッションidを利用する
+    //モバイルアプリの場合はセッション保持期間を長くとる
+    $session_ttl = 60 * 24 * 7 * 2; //60min * 24h * 7day * 2 = 2week
     if (isset($_COOKIE['is_app'])) {
-        Configure::write('Session', array(
-            'userAgent' => false,
-            'cookie'    => 'DEVICE_ID',
-            'timeout'   => 60 * 24 * 30 * 3, //60min * 24h * 30day * 3 = 3months
-            'handler'   => array(
-                'engine' => 'RedisSession',
-                'key'    => 'mb_app_session:'
-            ),
-        ));
+        $session_ttl = 60 * 24 * 30 * 3; //60min * 24h * 30day * 3 = 3months
     }
-    else {
-        Configure::write('Session', array(
-            'userAgent' => false,
-            'cookie'    => 'SID',
-            'timeout'   => 60 * 24 * 7 * 2, //60min * 24h * 7day * 2 = 2week
-            'handler'   => array(
-                'engine' => 'RedisSession',
-                'key'    => 'session:'
-            ),
-        ));
-    }
+    Configure::write('Session', array(
+        'userAgent' => false,
+        'cookie'    => 'SID',
+        'timeout'   => $session_ttl,
+        'handler'   => array(
+            'engine' => 'RedisSession',
+            'key'    => 'session:'
+        ),
+    ));
 
 }
 else {
