@@ -678,6 +678,9 @@ class AppController extends Controller
         $start = $this->Team->getCurrentTermStartDate();
         $end = $this->Team->getCurrentTermEndDate();
         foreach ($goals as $k => $goal) {
+            if(!isset($goal['Goal']['end_date'])){
+                continue;
+            }
             if (!($goal['Goal']['end_date'] >= $start && $goal['Goal']['end_date'] <= $end)) {
                 unset($goals[$k]);
             }
