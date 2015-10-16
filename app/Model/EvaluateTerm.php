@@ -474,14 +474,14 @@ class EvaluateTerm extends AppModel
                 return false;
             }
             $new_start = $current['end_date'] + 1;
-            $new_end = $this->_getNewStartAndEndDate(strtotime("+1 day", $current['end_date']))['end'];
+            $new_end = $this->_getStartEndWithoutExistsData(strtotime("+1 day", $current['end_date']))['end'];
         }
 
         if ($type === self::TYPE_CURRENT) {
             if ($this->getTermData(self::TYPE_CURRENT)) {
                 return false;
             }
-            $new = $this->_getNewStartAndEndDate();
+            $new = $this->_getStartEndWithoutExistsData();
             $new_start = $new['start'];
             $new_end = $new['end'];
         }
@@ -497,7 +497,6 @@ class EvaluateTerm extends AppModel
     }
 
     /**
-     * @param $id
      * @param $type
      * @param $start_term_month
      * @param $border_months
@@ -506,7 +505,7 @@ class EvaluateTerm extends AppModel
      * @return bool|mixed
      * @throws Exception
      */
-    public function updateTermData($id, $type, $start_term_month, $border_months, $timezone)
+    public function getNewStartAndEndDate($type, $start_term_month, $border_months, $timezone)
     {
         $this->_checkType($type);
         if ($type === self::TYPE_PREVIOUS) {
@@ -535,16 +534,36 @@ class EvaluateTerm extends AppModel
             $target_date = strtotime("+1 day", $new_start);
         }
 
-        $new_term = $this->_getNewStartAndEndDate($target_date, $start_term_month, $border_months, $timezone);
+        $new_term = $this->_getStartEndWithoutExistsData($target_date, $start_term_month, $border_months, $timezone);
         if (!$new_start) {
             $new_start = $new_term['start'];
         }
         $new_end = $new_term['end'];
+        $res = [
+            'start' => $new_start,
+            'end'   => $new_end,
+        ];
+        return $res;
+    }
+
+    /**
+     * @param $id
+     * @param $type
+     * @param $start_term_month
+     * @param $border_months
+     * @param $timezone
+     *
+     * @return mixed
+     * @throws Exception
+     */
+    public function updateTermData($id, $type, $start_term_month, $border_months, $timezone)
+    {
         $this->id = $id;
+        $term = $this->getNewStartAndEndDate($type, $start_term_month, $border_months, $timezone);
         $res = $this->save(
             [
-                'start_date' => $new_start,
-                'end_date'   => $new_end,
+                'start_date' => $term['start'],
+                'end_date'   => $term['end'],
                 'time_zone'  => $timezone
             ]
         );
@@ -561,10 +580,10 @@ class EvaluateTerm extends AppModel
      *
      * @return null|array
      */
-    private function _getNewStartAndEndDate($target_date = REQUEST_TIMESTAMP,
-                                            $start_term_month = null,
-                                            $border_months = null,
-                                            $timezone = null)
+    private function _getStartEndWithoutExistsData($target_date = REQUEST_TIMESTAMP,
+                                                   $start_term_month = null,
+                                                   $border_months = null,
+                                                   $timezone = null)
     {
         $team = $this->Team->getCurrentTeam();
         if (empty($team)) {
