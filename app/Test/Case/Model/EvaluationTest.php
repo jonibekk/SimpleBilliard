@@ -906,6 +906,18 @@ class EvaluationTest extends CakeTestCase
         $this->assertEquals($excepted, $actual);
     }
 
+
+    function testIsThisEvaluateType()
+    {
+        $this->_setDefault();
+        $this->Evaluation->Team->EvaluateTerm->saveCurrentTerm();
+        $this->_saveEvaluations();
+        $res1 = $this->Evaluation->isThisEvaluateType(1,Evaluation::TYPE_ONESELF);
+        $this->assertNotEmpty($res1);
+        $res2 = $this->Evaluation->isThisEvaluateType(1,Evaluation::TYPE_FINAL_EVALUATOR);
+        $this->assertEmpty($res2);
+    }
+
     function _saveEvaluations()
     {
         $evaluateeId = 1;
