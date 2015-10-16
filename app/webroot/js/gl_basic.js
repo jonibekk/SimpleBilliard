@@ -63,6 +63,12 @@ $(window).load(function () {
 });
 
 $(document).ready(function () {
+
+    $(document).on('keyup','#message_text_input',function(){
+        $(this).css('height','auto');
+        $(this).height(this.scrollHeight);
+    });
+
     $(document).on('click', '#mark_all_read', function (e) {
         e.preventDefault();
         $.ajax({
