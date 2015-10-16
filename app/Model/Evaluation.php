@@ -1100,4 +1100,15 @@ class Evaluation extends AppModel
         return viaIsSet($res['Evaluation']['id']);
     }
 
+    function isThisEvaluateType($id, $type)
+    {
+        return $this->find('first',
+                           [
+                               'conditions' => [
+                                   'id' => $id, 'evaluate_type' => $type
+                               ]
+                           ]
+        );
+    }
+
 }
