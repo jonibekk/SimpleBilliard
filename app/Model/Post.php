@@ -754,6 +754,7 @@ class Post extends AppModel
                     'fields' => [
                         'id',
                         'name',
+                        'end_date'
                     ],
                 ],
                 'ActionResult'    => [
