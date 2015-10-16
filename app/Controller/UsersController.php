@@ -577,6 +577,17 @@ class UsersController extends AppController
             //request->dataに入っていないデータを表示しなければ行けない為、マージ
             $this->request->data['User'] = array_merge($me['User'],
                                                        isset($this->request->data['User']) ? $this->request->data['User'] : []);
+
+            // ローカル名 更新時
+            if (isset($this->request->data['LocalName'][0])) {
+                // すでにレコードが存在する場合は、id をセット（update にする)
+                $row = $this->User->LocalName->getName($this->Auth->user('id'),
+                                                       $this->request->data['LocalName'][0]['language']);
+                if ($row) {
+                    $this->request->data['LocalName'][0]['id'] = $row['LocalName']['id'];
+                }
+            }
+
             // 通知設定 更新時
             if (isset($this->request->data['NotifySetting']['email']) &&
                 isset($this->request->data['NotifySetting']['mobile'])

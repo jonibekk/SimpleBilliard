@@ -23,7 +23,6 @@ class GoalsController extends AppController
         $search_option = $this->_getSearchVal();
         $search_url = $this->_getSearchUrl($search_option);
         $search_options = $this->Goal->getSearchOptions();
-        $this->_setMyCircle();
         $goals = $this->Goal->getAllGoals(GOAL_INDEX_ITEMS_NUMBER, $search_option, null, true);
         $goal_count = $this->Goal->countGoalRes($search_option);
         $this->_setViewValOnRightColumn();
