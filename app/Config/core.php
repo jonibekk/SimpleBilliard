@@ -183,11 +183,12 @@ Configure::write('App.encoding', 'UTF-8');
  */
 if (REDIS_SESSION_HOST) {
     $session_config = [
-        'userAgent' => false,
-        'cookie'    => 'SID',
-        'timeout'   => null,
+        'checkAgent'     => false,
+        'userAgent'      => false,
+        'cookie'         => 'SID',
+        'timeout'        => null,
         'autoRegenerate' => true,
-        'handler'   => [
+        'handler'        => [
             'engine' => 'RedisSession',
             'key'    => 'session:'
         ]
@@ -197,9 +198,6 @@ if (REDIS_SESSION_HOST) {
     $session_config['timeout'] = 60 * 24 * 7 * 2; //60min * 24h * 7day * 2 = 2week
     if (isset($_COOKIE['is_app'])) {
         $session_config['timeout'] = 60 * 24 * 30 * 3; //60min * 24h * 30day * 3 = 3months
-        $session_ini['ini'] = [
-            'session.cookie_httponly' => false,
-        ];
     }
     Configure::write('Session', array_merge($session_config, $session_ini));
 
