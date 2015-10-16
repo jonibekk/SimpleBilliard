@@ -67,8 +67,9 @@
 
         <div class="dropdown-menu header-nav-notify-contents-wrap">
             <div class="header-nav-notify-contents-scrolling">
-                <div>
-                    <i class="fa fa-check btn-link notify-mark-allread" id="mark_all_read" rel="tooltip" title="<?= __d('gl','Mark All as Read')?>" style='color:#d2d4d5'></i>
+                <div class=" btn-link notify-mark-allread" style='color:#d2d4d5'>
+                    <i class="fa fa-check" id="mark_all_read" ></i>
+                    <?= __d('gl','Mark All as Read')?>
                 </div>
                 <ul class="header-nav-notify-contents notify-dropdown-cards" id="bell-dropdown" role="menu"
                     style="overflow-y:scroll">
