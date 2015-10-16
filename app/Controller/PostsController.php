@@ -29,7 +29,6 @@ class PostsController extends AppController
 
     public function message_list()
     {
-        $this->_setMyCircle();
         $this->_setViewValOnRightColumn();
         return $this->render();
     }
@@ -1020,7 +1019,6 @@ class PostsController extends AppController
     {
         $params = $this->request->params;
         $params = array_merge($params, $params['named']);
-        $this->_setMyCircle();
         $this->_setCurrentCircle();
         $this->_setFeedMoreReadUrl();
 

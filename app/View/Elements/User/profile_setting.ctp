@@ -55,10 +55,6 @@
                 }
                 echo $this->Form->hidden('LocalName.0.language',
                                          ['value' => $this->request->data['User']['language']]);
-                if (isset($this->request->data['LocalName'][0]['id'])) {
-                    echo $this->Form->hidden('LocalName.0.id',
-                                             ['value' => $this->request->data['LocalName'][0]['id']]);
-                }
                 echo "<hr>";
             }
             ?>
