@@ -816,7 +816,8 @@ class User extends AppModel
                     'table'      => 'local_names',
                     'alias'      => 'SearchLocalName',
                     'conditions' => [
-                        '`SearchLocalName.user_id`=`User.id`',
+                        'SearchLocalName.user_id=User.id',
+                        'SearchLocalName.language' => $this->me['language'],
                     ],
                 ]
             ]
@@ -861,7 +862,8 @@ class User extends AppModel
                     'table'      => 'local_names',
                     'alias'      => 'SearchLocalName',
                     'conditions' => [
-                        '`SearchLocalName.user_id`=`User.id`',
+                        'SearchLocalName.user_id=User.id',
+                        'SearchLocalName.language' => $this->me['language'],
                     ],
                 ]
             ]
