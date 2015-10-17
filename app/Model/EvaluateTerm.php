@@ -481,7 +481,7 @@ class EvaluateTerm extends AppModel
             if ($this->getTermData(self::TYPE_CURRENT)) {
                 return false;
             }
-            $new = $this->_getNewStartAndEndDate();
+            $new = $this->_getStartEndWithoutExistsData();
             $new_start = $new['start'];
             $new_end = $new['end'];
         }
@@ -494,7 +494,7 @@ class EvaluateTerm extends AppModel
                 return false;
             }
             $new_start = $current['end_date'] + 1;
-            $new_end = $this->_getNewStartAndEndDate(strtotime("+1 day", $current['end_date']))['end'];
+            $new_end = $this->_getStartEndWithoutExistsData(strtotime("+1 day", $current['end_date']))['end'];
         }
 
         $team = $this->Team->getCurrentTeam();
@@ -548,7 +548,7 @@ class EvaluateTerm extends AppModel
             $target_date = strtotime("+1 day", $new_start);
         }
 
-        $new_term = $this->_getNewStartAndEndDate($target_date, $start_term_month, $border_months, $timezone);
+        $new_term = $this->_getStartEndWithoutExistsData($target_date, $start_term_month, $border_months, $timezone);
         if (!$new_start) {
             $new_start = $new_term['start'];
         }
@@ -593,7 +593,7 @@ class EvaluateTerm extends AppModel
      *
      * @return null|array
      */
-    private function _getNewStartAndEndDate($target_date = REQUEST_TIMESTAMP,
+    private function _getStartEndWithoutExistsData($target_date = REQUEST_TIMESTAMP,
                                             $start_term_month = null,
                                             $border_months = null,
                                             $timezone = null)
