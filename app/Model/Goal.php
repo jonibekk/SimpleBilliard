@@ -497,9 +497,9 @@ class Goal extends AppModel
      */
     function getMyPreviousGoals($limit = null, $page = 1, $type = "all")
     {
-        $term = $this->Team->getBeforeTermStartEnd(1);
-        $start_date = $term['start'];
-        $end_date = $term['end'];
+        $term = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_PREVIOUS);
+        $start_date = $term['start_date'];
+        $end_date = $term['end_date'];
 
         //自分がリーダーの未評価前期ゴールリストを取得
         $options = [
@@ -1203,37 +1203,35 @@ class Goal extends AppModel
         //期間指定
         switch (viaIsSet($search_option['term'][0])) {
             case 'previous':
-                $previous_term = $this->Team->EvaluateTerm->getPreviousTerm();
+                $previous_term = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_PREVIOUS);
                 if (!empty($previous_term)) {
                     $options['conditions']['Goal.end_date >='] = $previous_term['start_date'];
                     $options['conditions']['Goal.end_date <='] = $previous_term['end_date'];
                 }
                 else {
-                    $before_term = $this->Team->getBeforeTermStartEnd();
-                    $options['conditions']['Goal.end_date >='] = $before_term['start'];
-                    $options['conditions']['Goal.end_date <='] = $before_term['end'];
+                    $current_term_start = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT)['start_date'];
+                    $options['conditions']['Goal.end_date <'] = $current_term_start;
                 }
                 break;
             case 'next':
-                $next_term = $this->Team->EvaluateTerm->getNextTerm();
+                $next_term = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_NEXT);
                 if (!empty($next_term)) {
                     $options['conditions']['Goal.end_date >='] = $next_term['start_date'];
                     $options['conditions']['Goal.end_date <='] = $next_term['end_date'];
                 }
                 else {
-                    $next_term = $this->Team->getAfterTermStartEnd();
-                    $options['conditions']['Goal.end_date >='] = $next_term['start'];
-                    $options['conditions']['Goal.end_date <='] = $next_term['end'];
+                    $current_term_end = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_NEXT)['end_date'];
+                    $options['conditions']['Goal.end_date >'] = $current_term_end;
                 }
                 break;
             case 'before' :
-                $previous_term = $this->Team->EvaluateTerm->getPreviousTerm();
+                $previous_term = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_PREVIOUS);
                 if (!empty($previous_term)) {
                     $options['conditions']['Goal.end_date <='] = $previous_term['start_date'];
                 }
                 else {
-                    $before_term = $this->Team->getBeforeTermStartEnd();
-                    $options['conditions']['Goal.end_date <='] = $before_term['start'];
+                    $current_term_start = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT)['start_date'];
+                    $options['conditions']['Goal.end_date <'] = $current_term_start;
                 }
                 unset($options['conditions']['Goal.end_date >=']);
                 break;

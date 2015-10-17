@@ -486,13 +486,13 @@ class GoalTest extends CakeTestCase
     function testGetMyPreviousGoals()
     {
         $this->setDefault();
-        $term = $this->Goal->Team->getBeforeTermStartEnd(1);
+        $term = $this->Goal->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_PREVIOUS);
         $goal_data = [
             'user_id'    => 1,
             'team_id'    => 1,
             'purpose_id' => 1,
-            'start_date' => $term['start'] + 1,
-            'end_date'   => $term['end'] - 1,
+            'start_date' => $term['start_date'] + 1,
+            'end_date'   => $term['end_date'] - 1,
         ];
         $this->Goal->create();
         $this->Goal->save($goal_data);
@@ -500,8 +500,8 @@ class GoalTest extends CakeTestCase
             'user_id'    => 2,
             'team_id'    => 1,
             'purpose_id' => 1,
-            'start_date' => $term['start'] + 1,
-            'end_date'   => $term['end'] - 1,
+            'start_date' => $term['start_date'] + 1,
+            'end_date'   => $term['end_date'] - 1,
         ];
         $this->Goal->create();
         $this->Goal->save($goal_data);
@@ -664,31 +664,31 @@ class GoalTest extends CakeTestCase
         $this->Goal->Team->current_term_start_date = 100000;
         $this->Goal->Team->current_term_end_date = 200000;
         $goals = [
-            ['Goal'=>['end_date'=>0],],
-            ['Goal'=>['end_date'=>150000],],
-            ['Goal'=>['end_date'=>250000],],
+            ['Goal' => ['end_date' => 0],],
+            ['Goal' => ['end_date' => 150000],],
+            ['Goal' => ['end_date' => 250000],],
         ];
         $actual = $this->Goal->setIsCurrentTerm($goals);
         $expected = [
-            (int) 0 => [
+            (int)0 => [
                 'Goal' => [
-                    'end_date' => (int) 0,
+                    'end_date'        => (int)0,
                     'is_current_term' => false
                 ]
             ],
-            (int) 1 => [
+            (int)1 => [
                 'Goal' => [
-                    'end_date' => (int) 150000,
+                    'end_date'        => (int)150000,
                     'is_current_term' => true
                 ]
             ],
-            (int) 2 => [
+            (int)2 => [
                 'Goal' => [
-                    'end_date' => (int) 250000,
+                    'end_date'        => (int)250000,
                     'is_current_term' => false
                 ]
             ]
         ];
-        $this->assertEquals($expected,$actual);
+        $this->assertEquals($expected, $actual);
     }
 }

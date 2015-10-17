@@ -221,8 +221,7 @@ class AppController extends Controller
                 $this->_setEvaluableCnt();
                 $this->_setAllAlertCnt();
                 $this->_setNotifyCnt();
-                $this->_setCurrentTerm();
-                $this->_setNextTerm();
+                $this->_setTerm();
                 $this->_setMyCircle();
             }
             $this->_setMyMemberStatus();
@@ -231,29 +230,23 @@ class AppController extends Controller
         $this->set('current_global_menu', null);
     }
 
-    public function _setCurrentTerm()
+    public function _setTerm()
     {
-        if (!$this->current_team_id) {
-            return false;
+        $current_team = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT);
+        if (!$current_team) {
+            $this->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         }
-        if (!$this->current_term_id = $this->Team->EvaluateTerm->getCurrentTermId()) {
-            $term = $this->Team->EvaluateTerm->saveCurrentTerm();
-            $this->current_term_id = $term['EvaluateTerm']['id'];
-        }
-    }
+        $this->current_term_id = $this->Team->EvaluateTerm->getTermId(EvaluateTerm::TYPE_CURRENT);
 
-    public function _setNextTerm()
-    {
-        if (!$this->current_team_id) {
-            return false;
+        $previous_team = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_PREVIOUS);
+        if (!$previous_team) {
+            $this->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
         }
-        if (!$this->current_term_id) {
-            $this->_setCurrentTerm();
+        $next_team = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_NEXT);
+        if (!$next_team) {
+            $this->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
         }
-        if (!$this->next_term_id = $this->Team->EvaluateTerm->getNextTermId()) {
-            $this->Team->EvaluateTerm->saveNextTerm();
-            $this->next_term_id = $this->Team->EvaluateTerm->getLastInsertID();
-        }
+        $this->next_term_id = $this->Team->EvaluateTerm->getTermId(EvaluateTerm::TYPE_NEXT);
 
     }
 

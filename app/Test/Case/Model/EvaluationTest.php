@@ -756,8 +756,8 @@ class EvaluationTest extends CakeTestCase
         $this->Evaluation->Team->my_uid = 1;
         $this->Evaluation->Team->EvaluateTerm->saveCurrentTerm();
         $previousTermId = $this->Evaluation->Team->EvaluateTerm->getLastInsertID();
-        $previous = $this->Evaluation->Team->getBeforeTermStartEnd();
-        $this->Evaluation->Team->EvaluateTerm->save(['id' => $previousTermId, 'start_date' => $previous['start'], 'end_date' => $previous['end']]);
+        $previous = $this->Evaluation->EvaluateTerm->getTermData(EvaluateTerm::TYPE_PREVIOUS);
+        $this->Evaluation->Team->EvaluateTerm->save(['id' => $previousTermId, 'start_date' => $previous['start_date'], 'end_date' => $previous['end_date']]);
         $this->Evaluation->Team->EvaluateTerm->saveCurrentTerm();
         $this->Evaluation->Team->EvaluateTerm->changeFreezeStatus($previousTermId);
         $this->Evaluation->getMyTurnCount();
@@ -906,15 +906,14 @@ class EvaluationTest extends CakeTestCase
         $this->assertEquals($excepted, $actual);
     }
 
-
     function testIsThisEvaluateType()
     {
         $this->_setDefault();
         $this->Evaluation->Team->EvaluateTerm->saveCurrentTerm();
         $this->_saveEvaluations();
-        $res1 = $this->Evaluation->isThisEvaluateType(1,Evaluation::TYPE_ONESELF);
+        $res1 = $this->Evaluation->isThisEvaluateType(1, Evaluation::TYPE_ONESELF);
         $this->assertNotEmpty($res1);
-        $res2 = $this->Evaluation->isThisEvaluateType(1,Evaluation::TYPE_FINAL_EVALUATOR);
+        $res2 = $this->Evaluation->isThisEvaluateType(1, Evaluation::TYPE_FINAL_EVALUATOR);
         $this->assertEmpty($res2);
     }
 
