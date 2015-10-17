@@ -376,18 +376,6 @@ class PostsController extends AppController
 
     public function ajax_get_message_info($post_id)
     {
-        $res = [
-            'auth_info'        => [
-                'user_id'    => null,
-                'language'   => null,
-                'photo_path' => null,
-            ],
-            'room_info'        => null,
-            'share_users'      => null,
-            'first_share_user' => null,
-            'comment_count'    => null
-        ];
-
         $text_ex = new TextExHelper(new View());
         $this->_ajaxPreProcess();
         $room_info = $this->Post->getPostById($post_id);
