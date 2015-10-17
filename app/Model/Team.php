@@ -328,15 +328,43 @@ class Team extends AppModel
         if (!$this->save($post_data)) {
             return false;
         }
-        $saved_term = $this->EvaluateTerm->saveChangedTerm(
-            $post_data['Team']['change_from'],
-            $post_data['Team']['start_term_month'],
-            $post_data['Team']['border_months'],
-            $post_data['Team']['timezone']
+        $current_term_id = $this->EvaluateTerm->getTermId(EvaluateTerm::TYPE_CURRENT);
+        $next_term_id = $this->EvaluateTerm->getTermId(EvaluateTerm::TYPE_NEXT);
+        if (!$current_term_id || !$next_term_id) {
+            return false;
+        }
+        if ($post_data['Team']['change_from'] == Team::OPTION_CHANGE_TERM_FROM_CURRENT &&
+            $this->EvaluateTerm->isStartedEvaluation($current_term_id)
+        ) {
+            return false;
+        }
 
-        );
+        if ($post_data['Team']['change_from'] == Team::OPTION_CHANGE_TERM_FROM_CURRENT) {
+            $res1 = $this->EvaluateTerm->updateTermData(
+                $current_term_id, EvaluateTerm::TYPE_CURRENT,
+                $post_data['Team']['start_term_month'],
+                $post_data['Team']['border_months'],
+                $post_data['Team']['timezone']
+            );
+            $res2 = $this->EvaluateTerm->updateTermData(
+                $next_term_id, EvaluateTerm::TYPE_NEXT,
+                $post_data['Team']['start_term_month'],
+                $post_data['Team']['border_months'],
+                $post_data['Team']['timezone']
+            );
+            $res = $res1 && $res2;
 
-        return (bool)$saved_term;
+        }
+        if ($post_data['Team']['change_from'] == Team::OPTION_CHANGE_TERM_FROM_NEXT) {
+            $res = $this->EvaluateTerm->updateTermData(
+                $next_term_id, EvaluateTerm::TYPE_NEXT,
+                $post_data['Team']['start_term_month'],
+                $post_data['Team']['border_months'],
+                $post_data['Team']['timezone']
+            );
+        }
+
+        return (bool)$res;
     }
 
     /**

@@ -157,7 +157,7 @@ class TeamsController extends AppController
         // Get term info
         $current_eval_is_frozen = $this->Team->EvaluateTerm->checkFrozenEvaluateTerm($current_term_id);
         $current_eval_is_started = $this->Team->EvaluateTerm->isStartedEvaluation($current_term_id);
-        $current_term = $this->Team->EvaluateTerm->getCurrentTerm();
+        $current_term = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT);
         $current_term_start_date = viaIsSet($current_term['start_date']);
         $current_term_end_date = viaIsSet($current_term['end_date']) - 1;
         $current_term_timezone = viaIsSet($current_term['timezone']);
@@ -379,7 +379,7 @@ class TeamsController extends AppController
         $this->Team->Evaluation->commit();
         $this->Pnotify->outSuccess(__d('gl', "評価を開始しました。"));
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_START,
-                                         $this->Team->EvaluateTerm->getCurrentTermId());
+                                         $this->Team->EvaluateTerm->getTermId(EvaluateTerm::TYPE_CURRENT));
         return $this->redirect($this->referer());
     }
 
@@ -589,7 +589,7 @@ class TeamsController extends AppController
             $this->Team->TeamMember->commit();
             $result['msg'] = __d('gl', "%s人の最終評価を更新しました。", $save_res['success_count']);
             $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_DONE_FINAL,
-                                             $this->Team->EvaluateTerm->getCurrentTermId());
+                                             $this->Team->EvaluateTerm->getTermId(EvaluateTerm::TYPE_CURRENT));
         }
         return $this->_ajaxGetResponse($result);
     }
@@ -644,7 +644,7 @@ class TeamsController extends AppController
         if ($res['EvaluateTerm']['evaluate_status'] == EvaluateTerm::STATUS_EVAL_FROZEN) {
             $this->Pnotify->outSuccess(__d('gl', "評価を凍結しました。"));
             $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_FREEZE,
-                                             $this->Team->EvaluateTerm->getCurrentTermId());
+                                             $this->Team->EvaluateTerm->getTermId(EvaluateTerm::TYPE_CURRENT));
         }
         else {
             $this->Pnotify->outSuccess(__d('gl', "評価の凍結を解除しました。"));
@@ -1116,10 +1116,10 @@ class TeamsController extends AppController
             $all_terms = $this->Team->EvaluateTerm->getAllTerm();
             $start_term_id = null;
             if ($date_range == 'prev_term') {
-                $start_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
+                $start_term_id = $this->Team->EvaluateTerm->getTermId(EvaluateTerm::TYPE_PREVIOUS);
             }
             elseif ($date_range == 'current_term') {
-                $start_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
+                $start_term_id = $this->Team->EvaluateTerm->getTermId(EvaluateTerm::TYPE_CURRENT);
             }
             $skip = true;
             foreach ($all_terms as $term_id => $v) {
@@ -1256,11 +1256,11 @@ class TeamsController extends AppController
             $prev_term2 = null;
             if ($date_range == 'current_term') {
                 // 前期の日付
-                $prev_term2 = $this->Team->EvaluateTerm->getPreviousTerm();
+                $prev_term2 = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_PREVIOUS);
             }
             elseif ($date_range == 'prev_term') {
                 // 前々期の日付
-                $prev_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
+                $prev_term_id = $this->Team->EvaluateTerm->getTermId(EvaluateTerm::TYPE_PREVIOUS);
                 $all_terms = $this->Team->EvaluateTerm->getAllTerm();
                 $found = false;
                 foreach ($all_terms as $term_id => $v) {
@@ -1488,12 +1488,12 @@ class TeamsController extends AppController
         $date_ranges['prev_week'] = $this->Team->TeamInsight->getWeekRangeDate($today, ['offset' => -1]);
         $date_ranges['current_month'] = $this->Team->TeamInsight->getMonthRangeDate($today);
         $date_ranges['prev_month'] = $this->Team->TeamInsight->getMonthRangeDate($today, ['offset' => -1]);
-        $row = $this->Team->EvaluateTerm->getCurrentTerm();
+        $row = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT);
         $date_ranges['current_term'] = [
             'start' => date('Y-m-d', $row['start_date'] + $time_adjust),
             'end'   => date('Y-m-d', $row['end_date'] + $time_adjust),
         ];
-        $row = $this->Team->EvaluateTerm->getPreviousTerm();
+        $row = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_PREVIOUS);
         $date_ranges['prev_term'] = [
             'start' => date('Y-m-d', $row['start_date'] + $time_adjust),
             'end'   => date('Y-m-d', $row['end_date'] + $time_adjust),

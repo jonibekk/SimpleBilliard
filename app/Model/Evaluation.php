@@ -447,8 +447,8 @@ class Evaluation extends AppModel
         if (!$this->Team->EvaluationSetting->isEnabled()) {
             return false;
         }
-        if (!$term_id = $this->Team->EvaluateTerm->getCurrentTermId()) {
-            $this->Team->EvaluateTerm->saveCurrentTerm();
+        if (!$term_id = $this->Team->EvaluateTerm->getTermId(EvaluateTerm::TYPE_CURRENT)) {
+            $this->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
             $term_id = $this->Team->EvaluateTerm->getLastInsertID();
         }
         $team_members_list = $this->Team->TeamMember->getAllMemberUserIdList(true, true, true);
@@ -734,8 +734,8 @@ class Evaluation extends AppModel
         }
 
         // freeze
-        $currentTermId = $this->Team->EvaluateTerm->getCurrentTermId();
-        $previousTermId = $this->Team->EvaluateTerm->getPreviousTermId();
+        $currentTermId = $this->Team->EvaluateTerm->getTermId(EvaluateTerm::TYPE_CURRENT);
+        $previousTermId = $this->Team->EvaluateTerm->getTermId(EvaluateTerm::TYPE_PREVIOUS);
         if ($this->Team->EvaluateTerm->checkFrozenEvaluateTerm($currentTermId)) {
             $options['conditions']['NOT'][] = ['evaluate_term_id' => $currentTermId];
         }
@@ -852,8 +852,8 @@ class Evaluation extends AppModel
 
     function getIncompleteNumberList()
     {
-        $current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
-        $previous_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
+        $current_term_id = $this->Team->EvaluateTerm->getTermId(EvaluateTerm::TYPE_CURRENT);
+        $previous_term_id = $this->Team->EvaluateTerm->getTermId(EvaluateTerm::TYPE_PREVIOUS);
 
         return [
             'present'  => [

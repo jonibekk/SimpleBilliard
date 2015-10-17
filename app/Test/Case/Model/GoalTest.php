@@ -468,11 +468,9 @@ class GoalTest extends CakeTestCase
     function testGoalFilterTermNoExistsData()
     {
         $this->setDefault();
-        $current = $this->Goal->Team->EvaluateTerm->saveCurrentTerm();
-        $this->Goal->Team->EvaluateTerm->saveNextTerm();
-        $end = $current['EvaluateTerm']['start_date'] - 1;
-        $start = $current['EvaluateTerm']['start_date'] - 1000000;
-        $this->Goal->Team->EvaluateTerm->saveTerm($start, $end);
+        $current = $this->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
+        $this->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
 
         $search_options = [];
         $search_options['term'] = ['previous'];
