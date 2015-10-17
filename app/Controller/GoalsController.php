@@ -1271,8 +1271,8 @@ class GoalsController extends AppController
         }
         else {
             $goal_start_date_format = date('Y/m/d', REQUEST_TIMESTAMP + ($this->Auth->user('timezone') * 60 * 60));
-            $goal_end_date_format = date('Y/m/d', strtotime("- 1 day",
-                                                            $this->Goal->Team->getCurrentTermEndDate()) + ($this->Auth->user('timezone') * 60 * 60));
+            $goal_end_date_format = date('Y/m/d',
+                                         $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT)['end_date'] + ($this->Auth->user('timezone') * 60 * 60));
         }
         $this->set(compact('goal_category_list',
                            'priority_list',
