@@ -411,13 +411,6 @@ class EvaluateTerm extends AppModel
         return true;
     }
 
-    public function getTermId($type)
-    {
-        $this->_checkType($type);
-        $term = $this->getTermData($type);
-        return viaIsSet($term['id']);
-    }
-
     /**
      * return term data
      *
@@ -428,7 +421,6 @@ class EvaluateTerm extends AppModel
     public function getTermData($type)
     {
         $this->_checkType($type);
-
         if (!$this->current_term) {
             $this->current_term = $this->_getTermByDatetime(REQUEST_TIMESTAMP);
         }
@@ -437,7 +429,7 @@ class EvaluateTerm extends AppModel
             if ($this->previous_term) {
                 return $this->previous_term;
             }
-            if (viaIsSet($this->current_term['start_date'])) {
+            if (isset($this->current_term['start_date']) && !empty($this->current_term['start_date'])) {
                 $this->previous_term = $this->_getTermByDatetime(strtotime("-1 day",
                                                                            $this->current_term['start_date']));
             }
@@ -448,13 +440,25 @@ class EvaluateTerm extends AppModel
             if ($this->next_term) {
                 return $this->next_term;
             }
-            if (viaIsSet($this->current_term['end_date'])) {
+            if (isset($this->current_term['end_date']) && !empty($this->current_term['end_date'])) {
                 $this->next_term = $this->_getTermByDatetime(strtotime("+1 day", $this->current_term['end_date']));
             }
             return $this->next_term;
         }
 
         return $this->current_term;
+    }
+
+    /**
+     * @param $type
+     *
+     * @return null| int
+     */
+    public function getTermId($type)
+    {
+        $this->_checkType($type);
+        $term = $this->getTermData($type);
+        return viaIsSet($term['id']);
     }
 
     /**
@@ -473,17 +477,6 @@ class EvaluateTerm extends AppModel
             return false;
         }
 
-        if ($type === self::TYPE_NEXT) {
-            if ($this->getTermData(self::TYPE_PREVIOUS)) {
-                return false;
-            }
-            if (!$current = $this->getTermData(self::TYPE_CURRENT)) {
-                return false;
-            }
-            $new_start = $current['end_date'] + 1;
-            $new_end = $this->_getNewStartAndEndDate(strtotime("+1 day", $current['end_date']))['end'];
-        }
-
         if ($type === self::TYPE_CURRENT) {
             if ($this->getTermData(self::TYPE_CURRENT)) {
                 return false;
@@ -493,13 +486,26 @@ class EvaluateTerm extends AppModel
             $new_end = $new['end'];
         }
 
+        if ($type === self::TYPE_NEXT) {
+            if ($this->getTermData(self::TYPE_NEXT)) {
+                return false;
+            }
+            if (!$current = $this->getTermData(self::TYPE_CURRENT)) {
+                return false;
+            }
+            $new_start = $current['end_date'] + 1;
+            $new_end = $this->_getNewStartAndEndDate(strtotime("+1 day", $current['end_date']))['end'];
+        }
+
         $team = $this->Team->getCurrentTeam();
-        $res = $this->save(
-            ['start_date' => $new_start,
-             'end_date'   => $new_end,
-             'timezone'   => $team['Team']['timezone']
-            ]
-        );
+        $data = [
+            'start_date' => $new_start,
+            'end_date'   => $new_end,
+            'timezone'   => $team['Team']['timezone'],
+            'team_id'    => $team['Team']['id'],
+        ];
+        $this->create();
+        $res = $this->save($data);
         return $res;
     }
 
@@ -535,7 +541,7 @@ class EvaluateTerm extends AppModel
         }
 
         if ($type === self::TYPE_NEXT) {
-            if (!$current = $this->getTermData(self::TYPE_PREVIOUS)) {
+            if (!$current = $this->getTermData(self::TYPE_CURRENT)) {
                 return false;
             }
             $new_start = $current['end_date'] + 1;
@@ -556,6 +562,25 @@ class EvaluateTerm extends AppModel
             ]
         );
         return $res;
+    }
+
+    /**
+     * reset term only property, not delete data
+     *
+     * @param $type
+     */
+    public function resetTermProperty($type)
+    {
+        $this->_checkType($type);
+        if ($type === self::TYPE_CURRENT) {
+            $this->current_term = null;
+        }
+        if ($type === self::TYPE_NEXT) {
+            $this->next_term = null;
+        }
+        if ($type === self::TYPE_PREVIOUS) {
+            $this->previous_term = null;
+        }
     }
 
     /**
@@ -587,36 +612,35 @@ class EvaluateTerm extends AppModel
             $timezone = $team['Team']['timezone'];
         }
 
-        $start_date = strtotime(date("Y-{$start_term_month}-1",
-                                     $target_date + $timezone * 3600)) - $timezone * 3600;
-        $start_date_tmp = date("Y-m-1", $start_date + $timezone * 3600);
-        $end_date = strtotime($start_date_tmp . "+ {$border_months} month") - $timezone * 3600;
+        $start_date = strtotime(date("Y-{$start_term_month}-1", $target_date));
+        $start_date_tmp = date("Y-m-1", $start_date);
+        $end_date = strtotime($start_date_tmp . "+ {$border_months} month");
 
         //指定日時が期間内の場合 in the case of target date include the term
         if ($start_date <= $target_date && $end_date > $target_date) {
-            $term['start'] = $start_date;
-            $term['end'] = $end_date - 1;
+            $term['start'] = $start_date - $timezone * 3600;
+            $term['end'] = $end_date - 1 - $timezone * 3600;
             return $term;
         }
         //指定日時が開始日より前の場合 in the case of target date is earlier than start date
         elseif ($target_date < $start_date) {
             while ($target_date < $start_date) {
-                $start_date_tmp = date("Y-m-1", $start_date + $timezone * 3600);
-                $start_date = strtotime($start_date_tmp . "- {$border_months} month") - $timezone * 3600;
+                $start_date_tmp = date("Y-m-1", $start_date);
+                $start_date = strtotime($start_date_tmp . "- {$border_months} month");
             }
-            $term['start'] = $start_date;
-            $start_date_tmp = date("Y-m-1", $term['start'] + $timezone * 3600);
+            $term['start'] = $start_date - $timezone * 3600;
+            $start_date_tmp = date("Y-m-1", $start_date);
             $term['end'] = strtotime($start_date_tmp . "+ {$border_months} month") - $timezone * 3600 - 1;
             return $term;
         }
         //終了日が指定日時より前の場合 in the case of target date is later than end date
         elseif ($target_date > $end_date) {
             while ($target_date > $end_date) {
-                $end_date_tmp = date("Y-m-1", $end_date + $timezone * 3600);
-                $end_date = strtotime($end_date_tmp . "+ {$border_months} month") - $timezone * 3600;
+                $end_date_tmp = date("Y-m-1", $end_date);
+                $end_date = strtotime($end_date_tmp . "+ {$border_months} month");
             }
-            $term['end'] = $end_date - 1;
-            $end_date_tmp = date("Y-m-1", $term['end'] + $timezone * 3600);
+            $term['end'] = $end_date - 1 - $timezone * 3600;
+            $end_date_tmp = date("Y-m-1", $end_date);
             $term['start'] = strtotime($end_date_tmp . "- {$border_months} month") - $timezone * 3600;
             return $term;
         }
@@ -635,7 +659,6 @@ class EvaluateTerm extends AppModel
             'conditions' => [
                 'start_date <=' => $datetime,
                 'end_date >='   => $datetime,
-                'team_id'       => $this->current_team_id
             ]
         ];
         $res = $this->find('first', $options);
