@@ -474,7 +474,7 @@ class Team extends AppModel
         if ($count < 1) {
             return;
         }
-        $term['start'] = $this->getCurrentTermStartDate();
+        $term['start'] = $this->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT)['start_date'];
         for ($i = 0; $i < $count; $i++) {
             $term = $this->getTermStartEndByDate((strtotime("-1 day", $term['start'])));
         }

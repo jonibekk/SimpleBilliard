@@ -131,8 +131,8 @@ class TeamsController extends AppController
 
         $team = $this->Team->findById($team_id);
         unset($team['Team']['id']);
-        $term_start_date = $this->Team->getCurrentTermStartDate();
-        $term_end_date = $this->Team->getCurrentTermEndDate();
+        $term_start_date = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT)['start_date'];
+        $term_end_date = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT)['end_date'];
         $term_end_date = $term_end_date - 1;
         //get evaluation setting
         $eval_enabled = $this->Team->EvaluationSetting->isEnabled();
@@ -141,8 +141,8 @@ class TeamsController extends AppController
         $goal_categories = $this->Goal->GoalCategory->getCategories($team_id);
         $this->request->data = array_merge($this->request->data, $eval_setting, $eval_scores, $goal_categories, $team);
 
-        $current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
-        $previous_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
+        $current_term_id = $this->Team->EvaluateTerm->getTermId(EvaluateTerm::TYPE_CURRENT);
+        $previous_term_id = $this->Team->EvaluateTerm->getTermId(EvaluateTerm::TYPE_PREVIOUS);
         $eval_start_button_enabled = true;
         if (!$this->Team->EvaluateTerm->isAbleToStartEvaluation($current_term_id)) {
             $eval_start_button_enabled = false;
@@ -164,11 +164,11 @@ class TeamsController extends AppController
 
         $previous_eval_is_frozen = $this->Team->EvaluateTerm->checkFrozenEvaluateTerm($previous_term_id);
         $previous_eval_is_started = $this->Team->EvaluateTerm->isStartedEvaluation($previous_term_id);
-        $previous_term = $this->Team->EvaluateTerm->getPreviousTerm();
+        $previous_term = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_PREVIOUS);
         $previous_term_start_date = viaIsSet($previous_term['start_date']);
         $previous_term_end_date = viaIsSet($previous_term['end_date']) - 1;
         $previous_term_timezone = viaIsSet($previous_term['timezone']);
-        $next_term = $this->Team->EvaluateTerm->getNextTerm();
+        $next_term = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_NEXT);
         $next_term_start_date = viaIsSet($next_term['start_date']);
         $next_term_end_date = viaIsSet($next_term['end_date']) - 1;
         $next_term_timezone = viaIsSet($next_term['timezone']);

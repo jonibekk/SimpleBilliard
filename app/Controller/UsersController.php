@@ -634,7 +634,7 @@ class UsersController extends AppController
         $is_not_use_local_name = $this->User->isNotUseLocalName($me['User']['language']);
         $not_verified_email = $this->User->Email->getNotVerifiedEmail($this->Auth->user('id'));
         $language_name = $this->Lang->availableLanguages[$me['User']['language']];
-        
+
         // 通知設定のプルダウンデフォルト
         $this->request->data['NotifySetting']['email'] = 'primary';
         $this->request->data['NotifySetting']['mobile'] = 'primary';
@@ -1026,8 +1026,8 @@ class UsersController extends AppController
         $end_date = isset($this->request->params['named']['end_date']) ? $this->request->params['named']['end_date'] : null;
         if (!$start_date && !$end_date) {
             //デフォルトで今期
-            $start_date = $this->User->TeamMember->Team->getCurrentTermStartDate();
-            $end_date = $this->User->TeamMember->Team->getCurrentTermEndDate();
+            $start_date = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT)['start_date'];
+            $end_date = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT)['end_date'];
         }
         $post_count = $this->Post->getCount($type, $start_date, $end_date);
         $this->_ajaxPreProcess();
@@ -1051,8 +1051,8 @@ class UsersController extends AppController
         $end_date = isset($this->request->params['named']['end_date']) ? $this->request->params['named']['end_date'] : null;
         if (!$start_date && !$end_date) {
             //デフォルトで今期
-            $start_date = $this->User->TeamMember->Team->getCurrentTermStartDate();
-            $end_date = $this->User->TeamMember->Team->getCurrentTermEndDate();
+            $start_date = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT)['start_date'];
+            $end_date = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT)['end_date'];
         }
         $action_count = $this->Goal->ActionResult->getCount($type, $start_date, $end_date);
         $this->_ajaxPreProcess();
@@ -1114,8 +1114,8 @@ class UsersController extends AppController
         $this->layout = LAYOUT_ONE_COLUMN;
         $page_type = viaIsSet($this->request->params['named']['page_type']);
 
-        $start_date = $this->Team->getCurrentTermStartDate();
-        $end_date = $this->Team->getNextTermEndDate();
+        $start_date = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT)['start_date'];
+        $end_date = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT)['end_date'];
 
         $my_goals_count = $this->Goal->getMyGoals(null, 1, 'count', $user_id, $start_date, $end_date);
         $collabo_goals_count = $this->Goal->getMyCollaboGoals(null, 1, 'count', $user_id, $start_date, $end_date);
@@ -1264,8 +1264,8 @@ class UsersController extends AppController
         $this->set('user', $user);
 
         // 評価期間内の投稿数
-        $term_start_date = $this->Team->getCurrentTermStartDate();
-        $term_end_date = $this->Team->getCurrentTermEndDate();
+        $term_start_date = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT)['start_date'];
+        $term_end_date = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT)['end_date'];
         $post_count = $this->Post->getCount($user_id, $term_start_date, $term_end_date);
         $this->set('post_count', $post_count);
 

@@ -83,8 +83,8 @@ class Purpose extends AppModel
     function getMyPurposeCount($user_id = null, $start_date = null, $end_date = null)
     {
         $user_id = $user_id ? $user_id : $this->my_uid;
-        $start_date = $start_date ? $start_date : $this->Team->getCurrentTermStartDate();
-        $end_date = $end_date ? $end_date : $this->Team->getCurrentTermEndDate();
+        $start_date = $start_date ? $start_date : $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT)['start_date'];
+        $end_date = $end_date ? $end_date : $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT)['end_date'];
         $options = [
             'conditions' => [
                 'user_id'    => $user_id,

@@ -649,8 +649,8 @@ class AppController extends Controller
     public function _setViewValOnRightColumn()
     {
         //今期、来期のゴールを取得する
-        $start_date = $this->Team->getCurrentTermStartDate();
-        $end_date = $this->Team->getNextTermEndDate();
+        $start_date = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT)['start_date'];
+        $end_date = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_NEXT)['end_date'];
 
         $my_goals = $this->Goal->getMyGoals(MY_GOALS_DISPLAY_NUMBER, 1, 'all', null, $start_date, $end_date);
         $my_goals_count = $this->Goal->getMyGoals(null, 1, 'count', null, $start_date, $end_date);
@@ -675,8 +675,8 @@ class AppController extends Controller
 
     function _filterCurrentTermGoals($goals)
     {
-        $start = $this->Team->getCurrentTermStartDate();
-        $end = $this->Team->getCurrentTermEndDate();
+        $start = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT)['start_date'];
+        $end = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT)['end_date'];
         foreach ($goals as $k => $goal) {
             if (!isset($goal['Goal']['end_date'])) {
                 continue;
