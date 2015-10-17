@@ -411,6 +411,13 @@ class EvaluateTerm extends AppModel
         return true;
     }
 
+    public function getTermId($type)
+    {
+        $this->_checkType($type);
+        $term = $this->getTermData($type);
+        return viaIsSet($term['id']);
+    }
+
     /**
      * return term data
      *
