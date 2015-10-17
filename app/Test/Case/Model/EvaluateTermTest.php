@@ -177,9 +177,25 @@ class EvaluateTermTest extends CakeTestCase
         $this->assertNotNull($this->EvaluateTerm->getTermId(EvaluateTerm::TYPE_CURRENT));
     }
 
-    function testAddTermDataPrevious()
+    function testAddTermDataPreviousAlready()
     {
         $this->_setDefault();
+        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
+        $this->assertFalse($this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS));
+    }
+
+    function testAddTermDataPreviousNew()
+    {
+        $this->_setDefault();
+        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->assertNotEmpty($this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS));
+    }
+
+    function testAddTermDataPreviousNotExistsCurrent()
+    {
+        $this->_setDefault();
+        $this->EvaluateTerm->deleteAll(['team_id' => 1], false);
         $this->assertFalse($this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS));
     }
 

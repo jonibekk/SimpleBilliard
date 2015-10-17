@@ -474,7 +474,14 @@ class EvaluateTerm extends AppModel
         $new_end = null;
 
         if ($type === self::TYPE_PREVIOUS) {
-            return false;
+            if ($this->getTermData(self::TYPE_PREVIOUS)) {
+                return false;
+            }
+            if (!$current = $this->getTermData(self::TYPE_CURRENT)) {
+                return false;
+            }
+            $new_start = $this->_getStartEndWithoutExistsData(strtotime("-1 day", $current['start_date']))['start'];
+            $new_end = $current['end_date'] - 1;
         }
 
         if ($type === self::TYPE_CURRENT) {
