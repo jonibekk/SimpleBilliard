@@ -329,37 +329,18 @@ class Team extends AppModel
         if (!$current_term_id || !$next_term_id) {
             return false;
         }
-        if ($post_data['Team']['change_from'] == Team::OPTION_CHANGE_TERM_FROM_CURRENT &&
+        if (viaIsSet($post_data['Team']['change_from']) == Team::OPTION_CHANGE_TERM_FROM_CURRENT &&
             $this->EvaluateTerm->isStartedEvaluation($current_term_id)
         ) {
             return false;
         }
 
-        if ($post_data['Team']['change_from'] == Team::OPTION_CHANGE_TERM_FROM_CURRENT) {
-            $res1 = $this->EvaluateTerm->updateTermData(
-                $current_term_id, EvaluateTerm::TYPE_CURRENT,
-                $post_data['Team']['start_term_month'],
-                $post_data['Team']['border_months'],
-                $post_data['Team']['timezone']
-            );
-            $res2 = $this->EvaluateTerm->updateTermData(
-                $next_term_id, EvaluateTerm::TYPE_NEXT,
-                $post_data['Team']['start_term_month'],
-                $post_data['Team']['border_months'],
-                $post_data['Team']['timezone']
-            );
-            $res = $res1 && $res2;
-
-        }
-        if ($post_data['Team']['change_from'] == Team::OPTION_CHANGE_TERM_FROM_NEXT) {
-            $res = $this->EvaluateTerm->updateTermData(
-                $next_term_id, EvaluateTerm::TYPE_NEXT,
-                $post_data['Team']['start_term_month'],
-                $post_data['Team']['border_months'],
-                $post_data['Team']['timezone']
-            );
-        }
-
+        $res = $this->EvaluateTerm->updateTermData(
+            $post_data['Team']['change_from'],
+            $post_data['Team']['start_term_month'],
+            $post_data['Team']['border_months'],
+            $post_data['Team']['timezone']
+        );
         return (bool)$res;
     }
 

@@ -328,8 +328,7 @@ class EvaluateTerm extends AppModel
     }
 
     /**
-     * @param $id
-     * @param $type
+     * @param $option
      * @param $start_term_month
      * @param $border_months
      * @param $timezone
@@ -337,60 +336,55 @@ class EvaluateTerm extends AppModel
      * @return bool|mixed
      * @throws Exception
      */
-    public function updateTermData($id, $type, $start_term_month, $border_months, $timezone)
+    public function updateTermData($option, $start_term_month, $border_months, $timezone)
     {
-        $this->_checkType($type);
-        $this->id = $id;
-        $new_term = $this->getNewStartEndBeforeUpdate($type, $start_term_month, $border_months, $timezone);
-        $res = $this->save(
-            [
-                'start_date' => $new_term['start'],
-                'end_date'   => $new_term['end'],
-                'time_zone'  => $timezone
-            ]
-        );
+        $save_data = $this->getSaveDataBeforeUpdate($option, $start_term_month, $border_months, $timezone);
+        $res = $this->saveAll($save_data);
         return $res;
     }
 
-    public function getNewStartEndBeforeUpdate($type, $start_term_month, $border_months, $timezone)
+    public function getSaveDataBeforeUpdate($option, $start_term_month, $border_months, $timezone)
     {
-        $this->_checkType($type);
-        if ($type === self::TYPE_PREVIOUS) {
-            throw new RuntimeException("previous term can not be changed!");
+        $current_term = $this->getCurrentTermData();
+        if ($option == Team::OPTION_CHANGE_TERM_FROM_CURRENT) {
+            $new_current = $this->_getStartEndWithoutExistsData(REQUEST_TIMESTAMP, $start_term_month, $border_months,
+                                                                $timezone);
+            $new_next = $this->_getStartEndWithoutExistsData(strtotime('+1 day', $new_current['end']),
+                                                             $start_term_month,
+                                                             $border_months, $timezone);
+            $data = [
+                $this->getCurrentTermId() =>
+                    [
+                        'id'         => $this->getCurrentTermId(),
+                        'start_date' => $current_term['start_date'],
+                        'end_date'   => $new_current['end'],
+                        'timezone'   => $timezone,
+                    ],
+                $this->getNextTermId()    =>
+                    [
+                        'id'         => $this->getNextTermId(),
+                        'start_date' => $new_next['start'],
+                        'end_date'   => $new_next['end'],
+                        'timezone'   => $timezone,
+                    ]
+            ];
+        }
+        else {
+            $new_next = $this->_getStartEndWithoutExistsData(strtotime('+1 day', $current_term['end_date']),
+                                                             $start_term_month,
+                                                             $border_months, $timezone);
+            $data = [
+                $this->getNextTermId() =>
+                    [
+                        'id'         => $this->getNextTermId(),
+                        'start_date' => $current_term['end_date'] + 1,
+                        'end_date'   => $new_next['end'],
+                        'timezone'   => $timezone,
+                    ],
+            ];
         }
 
-        $new_start = null;
-        $new_end = null;
-        $target_date = null;
-
-        if ($type === self::TYPE_CURRENT) {
-            if ($previous = $this->getTermData(self::TYPE_PREVIOUS)) {
-                $new_start = $previous['end_date'] + 1;
-                $target_date = strtotime("+1 day", $new_start);
-            }
-            else {
-                $target_date = REQUEST_TIMESTAMP;
-            }
-        }
-
-        if ($type === self::TYPE_NEXT) {
-            if (!$current = $this->getTermData(self::TYPE_CURRENT)) {
-                throw new RuntimeException("if current term doesn't exist, next term can not be changed!");
-            }
-            $new_start = $current['end_date'] + 1;
-            $target_date = strtotime("+1 day", $new_start);
-        }
-
-        $new_term = $this->_getStartEndWithoutExistsData($target_date, $start_term_month, $border_months, $timezone);
-        if (!$new_start) {
-            $new_start = $new_term['start'];
-        }
-        $new_end = $new_term['end'];
-
-        $res_term['start'] = $new_start;
-        $res_term['end'] = $new_end;
-
-        return $res_term;
+        return $data;
     }
 
     public function getNewStartEndBeforeAdd($start_term_month, $border_months, $timezone)

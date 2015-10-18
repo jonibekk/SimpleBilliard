@@ -343,19 +343,40 @@ class TeamsController extends AppController
             $timezone = $this->Team->me['timezone'];
         }
         $this->_ajaxPreProcess();
-        $res = $this->Team->EvaluateTerm->getChangeCurrentNextTerm($option, $start_term_month, $border_months,
-                                                                   $timezone);
-        if ($res['current']['start_date']) {
-            $res['current']['start_date'] = date('Y/m/d',
-                                                 $res['current']['start_date'] + $timezone * 3600);
-            $res['current']['end_date'] = date('Y/m/d',
-                                               $res['current']['end_date'] + $timezone * 3600);
-            $res['current']['timezone'] = $timezone;
+        $save_data = $this->Team->EvaluateTerm->getSaveDataBeforeUpdate($option, $start_term_month, $border_months,
+                                                                        $timezone);
+        $current_id = $this->Team->EvaluateTerm->getCurrentTermId();
+        $next_id = $this->Team->EvaluateTerm->getNextTermId();
+        $res = [];
+        if ($option == Team::OPTION_CHANGE_TERM_FROM_CURRENT) {
+            $res = [
+                'current' => [
+                    'start_date' => date('Y/m/d',
+                                         $save_data[$current_id]['start_date'] + $timezone * 3600),
+                    'end_date'   => date('Y/m/d',
+                                         $save_data[$current_id]['end_date'] + $timezone * 3600),
+                    'timezone'   => $timezone,
+                ],
+                'next'    => [
+                    'start_date' => date('Y/m/d', $save_data[$next_id]['start_date'] + $timezone * 3600),
+                    'end_date'   => date('Y/m/d', $save_data[$next_id]['end_date'] + $timezone * 3600),
+                    'timezone'   => $timezone,
+                ],
+            ];
         }
-        if ($res['next']['start_date']) {
-            $res['next']['start_date'] = date('Y/m/d', $res['next']['start_date'] + $timezone * 3600);
-            $res['next']['end_date'] = date('Y/m/d', $res['next']['end_date'] + $timezone * 3600);
-            $res['next']['timezone'] = $timezone;
+        if ($option == Team::OPTION_CHANGE_TERM_FROM_NEXT) {
+            $res = [
+                'current' => [
+                    'start_date' => null,
+                    'end_date'   => null,
+                    'timezone'   => $timezone,
+                ],
+                'next'    => [
+                    'start_date' => date('Y/m/d', $save_data[$next_id]['start_date'] + $timezone * 3600),
+                    'end_date'   => date('Y/m/d', $save_data[$next_id]['end_date'] + $timezone * 3600),
+                    'timezone'   => $timezone,
+                ],
+            ];
         }
         return $this->_ajaxGetResponse($res);
     }
