@@ -160,8 +160,10 @@ class AppController extends Controller
 
             //ajaxの時以外で実行する
             if (!$this->request->is('ajax')) {
+                if ($this->current_team_id) {
+                    $this->_setTerm();
+                }
                 $this->_setMyTeam();
-                $this->_setTerm();
                 $this->_setAvailEvaluation();
 
                 $active_team_list = $this->User->TeamMember->getActiveTeamList($login_uid);
