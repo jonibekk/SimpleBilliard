@@ -223,6 +223,36 @@ class EvaluateTerm extends AppModel
         return viaIsSet($term['id']);
     }
 
+    public function getCurrentTermData()
+    {
+        return $this->getTermData(self::TYPE_CURRENT);
+    }
+
+    public function getNextTermData()
+    {
+        return $this->getTermData(self::TYPE_NEXT);
+    }
+
+    public function getPreviousTermData()
+    {
+        return $this->getTermData(self::TYPE_PREVIOUS);
+    }
+
+    public function getCurrentTermId()
+    {
+        return $this->getTermId(self::TYPE_CURRENT);
+    }
+
+    public function getNextTermId()
+    {
+        return $this->getTermId(self::TYPE_NEXT);
+    }
+
+    public function getPreviousTermId()
+    {
+        return $this->getTermId(self::TYPE_PREVIOUS);
+    }
+
     /**
      * @param $type
      *
@@ -273,7 +303,6 @@ class EvaluateTerm extends AppModel
             'timezone'   => $team['Team']['timezone'],
             'team_id'    => $team['Team']['id'],
         ];
-        $this->log($data);
         $this->create();
         $res = $this->save($data);
         return $res;

@@ -310,6 +310,58 @@ class EvaluateTermTest extends CakeTestCase
         $this->assertNotEmpty($res);
     }
 
+    function testGetCurrentTermData()
+    {
+        $this->_setDefault();
+        $this->assertEmpty($this->EvaluateTerm->getCurrentTermData());
+        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->assertNotEmpty($this->EvaluateTerm->getCurrentTermData());
+    }
+
+    function testGetNextTermData()
+    {
+        $this->_setDefault();
+        $this->assertEmpty($this->EvaluateTerm->getNextTermData());
+        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
+        $this->assertNotEmpty($this->EvaluateTerm->getNextTermData());
+    }
+
+    function testGetPreviousTermData()
+    {
+        $this->_setDefault();
+        $this->assertEmpty($this->EvaluateTerm->getPreviousTermData());
+        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
+        $this->assertNotEmpty($this->EvaluateTerm->getPreviousTermData());
+    }
+
+    function testGetCurrentTermId()
+    {
+        $this->_setDefault();
+        $this->assertNull($this->EvaluateTerm->getCurrentTermId());
+        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->assertNotNull($this->EvaluateTerm->getCurrentTermId());
+    }
+
+    function testGetNextTermId()
+    {
+        $this->_setDefault();
+        $this->assertNull($this->EvaluateTerm->getNextTermId());
+        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
+        $this->assertNotNull($this->EvaluateTerm->getNextTermId());
+    }
+
+    function testGetPreviousTermId()
+    {
+        $this->_setDefault();
+        $this->assertNull($this->EvaluateTerm->getPreviousTermId());
+        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
+        $this->assertNotNull($this->EvaluateTerm->getPreviousTermId());
+    }
+
     function test_getNewStartAndEndDate()
     {
         $m = new ReflectionMethod($this->EvaluateTerm, '_getNewStartAndEndDate');
