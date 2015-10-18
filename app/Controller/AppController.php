@@ -161,6 +161,7 @@ class AppController extends Controller
             //ajaxの時以外で実行する
             if (!$this->request->is('ajax')) {
                 $this->_setMyTeam();
+                $this->_setTerm();
                 $this->_setAvailEvaluation();
 
                 $active_team_list = $this->User->TeamMember->getActiveTeamList($login_uid);
@@ -221,7 +222,6 @@ class AppController extends Controller
                 $this->_setEvaluableCnt();
                 $this->_setAllAlertCnt();
                 $this->_setNotifyCnt();
-                $this->_setTerm();
                 $this->_setMyCircle();
             }
             $this->_setMyMemberStatus();
@@ -232,8 +232,8 @@ class AppController extends Controller
 
     public function _setTerm()
     {
-        $current_team = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT);
-        if (!$current_team) {
+        $current_term = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT);
+        if (!$current_term) {
             $this->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         }
         $this->current_term_id = $this->Team->EvaluateTerm->getTermId(EvaluateTerm::TYPE_CURRENT);

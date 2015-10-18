@@ -243,7 +243,7 @@ class EvaluateTerm extends AppModel
                 return false;
             }
             $new_start = $this->_getStartEndWithoutExistsData(strtotime("-1 day", $current['start_date']))['start'];
-            $new_end = $current['end_date'] - 1;
+            $new_end = $current['start_date'] - 1;
         }
 
         if ($type === self::TYPE_CURRENT) {
@@ -273,6 +273,7 @@ class EvaluateTerm extends AppModel
             'timezone'   => $team['Team']['timezone'],
             'team_id'    => $team['Team']['id'],
         ];
+        $this->log($data);
         $this->create();
         $res = $this->save($data);
         return $res;
