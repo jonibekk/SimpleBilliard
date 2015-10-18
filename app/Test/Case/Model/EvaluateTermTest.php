@@ -234,67 +234,31 @@ class EvaluateTermTest extends CakeTestCase
         $this->assertFalse($this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT));
     }
 
-    function testUpdateTermDataPrevious()
-    {
-        $this->_setDefault();
-        //previous
-        try {
-            $this->EvaluateTerm->updateTermData(1, EvaluateTerm::TYPE_PREVIOUS, 1, 1, 9);
-        } catch (RuntimeException $e) {
-        }
-        $this->assertTrue(isset($e));
-    }
-
-    function testUpdateTermDataCurrentNoPrevious()
+    function testGetSaveDataBeforeUpdateFromCurrent()
     {
         $this->_setDefault();
         $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
-        $res = $this->EvaluateTerm->updateTermData(
-            $this->EvaluateTerm->getLastInsertID(),
-            EvaluateTerm::TYPE_CURRENT, 1, 1, 9
-        );
-        $this->assertNotEmpty($res);
-    }
-
-    function testUpdateTermDataCurrentWithPrevious()
-    {
-        $this->_setDefault();
-        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
-        $current_2 = $this->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT);
-        $this->EvaluateTerm->create();
-        $this->EvaluateTerm->save([
-                                      'start_date' => $current_2['start_date'] - 2678400,
-                                      'end_date'   => $current_2['start_date'] - 1,
-                                      'team_id'    => 1,
-                                      'timezone'   => 9
-                                  ]);
-
-        $res = $this->EvaluateTerm->updateTermData(
-            $this->EvaluateTerm->getLastInsertID(),
-            EvaluateTerm::TYPE_CURRENT, 1, 1, 9
-        );
-        $this->assertNotEmpty($res);
-    }
-
-    function testUpdateTermDataNextNoCurrent()
-    {
-        $this->_setDefault();
-        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
-        $current_id = $this->EvaluateTerm->getLastInsertID();
         $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
-        $next_id = $this->EvaluateTerm->getLastInsertID();
+        $res = $this->EvaluateTerm->getSaveDataBeforeUpdate(Team::OPTION_CHANGE_TERM_FROM_CURRENT, 1, 1, 9);
+        $this->assertCount(2, $res);
+    }
 
-        $this->EvaluateTerm->delete($current_id);
-        $this->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_CURRENT);
+    function testGetSaveDataBeforeUpdateFromNext()
+    {
+        $this->_setDefault();
+        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
+        $res = $this->EvaluateTerm->getSaveDataBeforeUpdate(Team::OPTION_CHANGE_TERM_FROM_NEXT, 1, 1, 9);
+        $this->assertCount(1, $res);
+    }
 
-        try {
-            $this->EvaluateTerm->updateTermData(
-                $next_id,
-                EvaluateTerm::TYPE_NEXT, 1, 1, 9
-            );
-        } catch (RuntimeException $e) {
-        }
-        $this->assertTrue(isset($e));
+    function testUpdateTermData()
+    {
+        $this->_setDefault();
+        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
+        $res = $this->EvaluateTerm->updateTermData(Team::OPTION_CHANGE_TERM_FROM_CURRENT, 1, 1, 9);
+        $this->assertTrue($res);
     }
 
     function testResetTermProperty()
@@ -302,18 +266,6 @@ class EvaluateTermTest extends CakeTestCase
         $this->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_CURRENT);
         $this->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_NEXT);
         $this->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_PREVIOUS);
-    }
-
-    function testUpdateTermDataNextWithCurrent()
-    {
-        $this->_setDefault();
-        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
-        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
-        $res = $this->EvaluateTerm->updateTermData(
-            $this->EvaluateTerm->getLastInsertID(),
-            EvaluateTerm::TYPE_NEXT, 1, 1, 9
-        );
-        $this->assertNotEmpty($res);
     }
 
     function testGetCurrentTermData()
