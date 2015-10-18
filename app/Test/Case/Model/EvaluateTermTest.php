@@ -238,8 +238,11 @@ class EvaluateTermTest extends CakeTestCase
     {
         $this->_setDefault();
         //previous
-        $previous = $this->EvaluateTerm->updateTermData(1, EvaluateTerm::TYPE_PREVIOUS, 1, 1, 9);
-        $this->assertFalse($previous);
+        try {
+            $this->EvaluateTerm->updateTermData(1, EvaluateTerm::TYPE_PREVIOUS, 1, 1, 9);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e));
     }
 
     function testUpdateTermDataCurrentNoPrevious()
@@ -284,11 +287,14 @@ class EvaluateTermTest extends CakeTestCase
         $this->EvaluateTerm->delete($current_id);
         $this->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_CURRENT);
 
-        $res = $this->EvaluateTerm->updateTermData(
-            $next_id,
-            EvaluateTerm::TYPE_NEXT, 1, 1, 9
-        );
-        $this->assertFalse($res);
+        try {
+            $this->EvaluateTerm->updateTermData(
+                $next_id,
+                EvaluateTerm::TYPE_NEXT, 1, 1, 9
+            );
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e));
     }
 
     function testResetTermProperty()

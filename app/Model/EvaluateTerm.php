@@ -356,7 +356,7 @@ class EvaluateTerm extends AppModel
     {
         $this->_checkType($type);
         if ($type === self::TYPE_PREVIOUS) {
-            return false;
+            throw new RuntimeException("previous term can not be changed!");
         }
 
         $new_start = null;
@@ -375,7 +375,7 @@ class EvaluateTerm extends AppModel
 
         if ($type === self::TYPE_NEXT) {
             if (!$current = $this->getTermData(self::TYPE_CURRENT)) {
-                return false;
+                throw new RuntimeException("if current term doesn't exist, next term can not be changed!");
             }
             $new_start = $current['end_date'] + 1;
             $target_date = strtotime("+1 day", $new_start);
