@@ -504,14 +504,15 @@ $(document).ready(function () {
     });
 
     //team term setting
-    $(document).on("change", '#TeamStartTermMonth , #TeamBorderMonths', function () {
+    $(document).on("change", '#TeamStartTermMonth , #TeamBorderMonths , #TeamTimezone', function () {
         var startTermMonth = $('#TeamStartTermMonth').val();
         var borderMonths = $('#TeamBorderMonths').val();
+        var timezone = $('#TeamTimezone').val();
         if (startTermMonth === "" || borderMonths === "") {
             $('#CurrentTermStr').empty();
             return false;
         }
-        var url = cake.url.h + "/" + startTermMonth + "/" + borderMonths;
+        var url = cake.url.h + "/" + startTermMonth + "/" + borderMonths + "/" + timezone;
         $.get(url, function (data) {
             $('#CurrentTermStr').text(data.start + "  -  " + data.end);
         });

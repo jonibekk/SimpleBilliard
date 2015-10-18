@@ -328,10 +328,12 @@ class TeamsController extends AppController
         return $this->redirect($this->referer());
     }
 
-    function ajax_get_term_start_end($start_term_month, $border_months)
+    function ajax_get_term_start_end($start_term_month, $border_months, $timezone)
     {
         $this->_ajaxPreProcess();
-        $res = $this->Team->getTermStrStartEndFromParam($start_term_month, $border_months, REQUEST_TIMESTAMP);
+        $res = $this->Team->EvaluateTerm->getNewStartEndBeforeAdd($start_term_month, $border_months, $timezone);
+        $res['start'] = date('Y/m/d', $res['start'] + $timezone * 3600);
+        $res['end'] = date('Y/m/d', $res['end'] + $timezone * 3600);
         return $this->_ajaxGetResponse($res);
     }
 

@@ -309,6 +309,25 @@ class EvaluateTerm extends AppModel
     }
 
     /**
+     * reset term only property, not delete data
+     *
+     * @param $type
+     */
+    public function resetTermProperty($type)
+    {
+        $this->_checkType($type);
+        if ($type === self::TYPE_CURRENT) {
+            $this->current_term = null;
+        }
+        if ($type === self::TYPE_NEXT) {
+            $this->next_term = null;
+        }
+        if ($type === self::TYPE_PREVIOUS) {
+            $this->previous_term = null;
+        }
+    }
+
+    /**
      * @param $id
      * @param $type
      * @param $start_term_month
@@ -319,6 +338,21 @@ class EvaluateTerm extends AppModel
      * @throws Exception
      */
     public function updateTermData($id, $type, $start_term_month, $border_months, $timezone)
+    {
+        $this->_checkType($type);
+        $this->id = $id;
+        $new_term = $this->getNewStartEndBeforeUpdate($type, $start_term_month, $border_months, $timezone);
+        $res = $this->save(
+            [
+                'start_date' => $new_term['start'],
+                'end_date'   => $new_term['end'],
+                'time_zone'  => $timezone
+            ]
+        );
+        return $res;
+    }
+
+    public function getNewStartEndBeforeUpdate($type, $start_term_month, $border_months, $timezone)
     {
         $this->_checkType($type);
         if ($type === self::TYPE_PREVIOUS) {
@@ -352,34 +386,16 @@ class EvaluateTerm extends AppModel
             $new_start = $new_term['start'];
         }
         $new_end = $new_term['end'];
-        $this->id = $id;
-        $res = $this->save(
-            [
-                'start_date' => $new_start,
-                'end_date'   => $new_end,
-                'time_zone'  => $timezone
-            ]
-        );
-        return $res;
+
+        $res_term['start'] = $new_start;
+        $res_term['end'] = $new_end;
+
+        return $res_term;
     }
 
-    /**
-     * reset term only property, not delete data
-     *
-     * @param $type
-     */
-    public function resetTermProperty($type)
+    public function getNewStartEndBeforeAdd($start_term_month, $border_months, $timezone)
     {
-        $this->_checkType($type);
-        if ($type === self::TYPE_CURRENT) {
-            $this->current_term = null;
-        }
-        if ($type === self::TYPE_NEXT) {
-            $this->next_term = null;
-        }
-        if ($type === self::TYPE_PREVIOUS) {
-            $this->previous_term = null;
-        }
+        return $this->_getStartEndWithoutExistsData(REQUEST_TIMESTAMP, $start_term_month, $border_months, $timezone);
     }
 
     /**
