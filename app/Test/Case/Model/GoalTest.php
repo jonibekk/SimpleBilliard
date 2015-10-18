@@ -385,8 +385,6 @@ class GoalTest extends CakeTestCase
         $this->start_date = strtotime('2015/7/1');
         $this->end_date = strtotime('2015/10/1');
 
-        $this->Goal->Team->current_term_start_date = strtotime('2015/1/1');
-        $this->Goal->Team->current_term_end_date = strtotime('2015/12/1');
         $this->Goal->my_uid = 1;
         $this->Goal->current_team_id = 1;
         $this->Goal->Purpose->my_uid = 1;

@@ -157,10 +157,6 @@ class Team extends AppModel
     ];
 
     public $current_team = [];
-    public $current_term_start_date = null;
-    public $current_term_end_date = null;
-    public $next_term_start_date = null;
-    public $next_term_end_date = null;
 
     function __construct($id = false, $table = null, $ds = null)
     {
