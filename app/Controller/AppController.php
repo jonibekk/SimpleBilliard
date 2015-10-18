@@ -232,21 +232,21 @@ class AppController extends Controller
 
     public function _setTerm()
     {
-        $current_term = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT);
+        $current_term = $this->Team->EvaluateTerm->getCurrentTermData();
         if (!$current_term) {
             $this->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         }
-        $this->current_term_id = $this->Team->EvaluateTerm->getTermId(EvaluateTerm::TYPE_CURRENT);
+        $this->current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
 
-        $previous_team = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_PREVIOUS);
+        $previous_team = $this->Team->EvaluateTerm->getPreviousTermData();
         if (!$previous_team) {
             $this->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
         }
-        $next_team = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_NEXT);
+        $next_team = $this->Team->EvaluateTerm->getNextTermData();
         if (!$next_team) {
             $this->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
         }
-        $this->next_term_id = $this->Team->EvaluateTerm->getTermId(EvaluateTerm::TYPE_NEXT);
+        $this->next_term_id = $this->Team->EvaluateTerm->getNextTermId();
 
     }
 
@@ -642,8 +642,8 @@ class AppController extends Controller
     public function _setViewValOnRightColumn()
     {
         //今期、来期のゴールを取得する
-        $start_date = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT)['start_date'];
-        $end_date = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_NEXT)['end_date'];
+        $start_date = $this->Team->EvaluateTerm->getCurrentTermData()['start_date'];
+        $end_date = $this->Team->EvaluateTerm->getNextTermData()['end_date'];
 
         $my_goals = $this->Goal->getMyGoals(MY_GOALS_DISPLAY_NUMBER, 1, 'all', null, $start_date, $end_date);
         $my_goals_count = $this->Goal->getMyGoals(null, 1, 'count', null, $start_date, $end_date);
@@ -668,8 +668,8 @@ class AppController extends Controller
 
     function _filterCurrentTermGoals($goals)
     {
-        $start = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT)['start_date'];
-        $end = $this->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_CURRENT)['end_date'];
+        $start = $this->Team->EvaluateTerm->getCurrentTermData()['start_date'];
+        $end = $this->Team->EvaluateTerm->getCurrentTermData()['end_date'];
         foreach ($goals as $k => $goal) {
             if (!isset($goal['Goal']['end_date'])) {
                 continue;

@@ -32,8 +32,8 @@ class EvaluationsController extends AppController
         }
 
         // Set selected term
-        $current_term_id = $this->Team->EvaluateTerm->getTermId(EvaluateTerm::TYPE_CURRENT);
-        $previous_term_id = $this->Team->EvaluateTerm->getTermId(EvaluateTerm::TYPE_PREVIOUS);
+        $current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
+        $previous_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
         $term_param = viaIsSet($this->request->params['named']['term']);
         $selected_term_name = $term_param ? $term_param : 'previous';
         $selected_tab_term_id = '';

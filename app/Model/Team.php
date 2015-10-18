@@ -328,8 +328,8 @@ class Team extends AppModel
         if (!$this->save($post_data)) {
             return false;
         }
-        $current_term_id = $this->EvaluateTerm->getTermId(EvaluateTerm::TYPE_CURRENT);
-        $next_term_id = $this->EvaluateTerm->getTermId(EvaluateTerm::TYPE_NEXT);
+        $current_term_id = $this->EvaluateTerm->getCurrentTermId();
+        $next_term_id = $this->EvaluateTerm->getNextTermId();
         if (!$current_term_id || !$next_term_id) {
             return false;
         }
