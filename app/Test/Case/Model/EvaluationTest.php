@@ -705,6 +705,8 @@ class EvaluationTest extends CakeTestCase
     function testGetAddRecordsOfEvaluatee()
     {
         $this->_setDefault();
+        $current_start = $this->Evaluation->Team->EvaluateTerm->getCurrentTermData()['start_date'];
+        $current_end = $this->Evaluation->Team->EvaluateTerm->getCurrentTermData()['end_date'];
         $evaluators_save_data = [
             [
                 'evaluatee_user_id' => 1,
@@ -722,17 +724,14 @@ class EvaluationTest extends CakeTestCase
         $this->Evaluation->Team->Evaluator->saveAll($evaluators_save_data);
         $evaluators = $this->Evaluation->Team->Evaluator->getEvaluatorsCombined();
 
-        $this->Evaluation->Team->current_term_start_date = 0;
-        $this->Evaluation->Team->current_term_end_date = 9999999;
-
         $collabo = $this->Evaluation->Goal->Collaborator->find('all');
         foreach ($collabo as $k => $v) {
             $collabo[$k]['Collaborator']['valued_flg'] = Collaborator::STATUS_APPROVAL;
         }
         $this->Evaluation->Goal->Collaborator->saveAll($collabo);
         $this->Evaluation->Goal->id = 1;
-        $this->Evaluation->Goal->saveField('start_date', 1);
-        $this->Evaluation->Goal->saveField('end_date', 1);
+        $this->Evaluation->Goal->saveField('start_date', $current_start);
+        $this->Evaluation->Goal->saveField('end_date', $current_end);
 
         $res = $this->Evaluation->getAddRecordsOfGoalEvaluation(1, 1, $evaluators, 0);
         $this->assertCount(5, $res);
