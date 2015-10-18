@@ -364,7 +364,7 @@ class EvaluateTermTest extends CakeTestCase
 
     function test_getNewStartAndEndDate()
     {
-        $m = new ReflectionMethod($this->EvaluateTerm, '_getNewStartAndEndDate');
+        $m = new ReflectionMethod($this->EvaluateTerm, '_getStartEndWithoutExistsData');
         $m->setAccessible(true);
 
         //no team

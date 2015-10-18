@@ -1216,6 +1216,9 @@ class EvaluationTest extends CakeTestCase
         $this->Evaluation->Team->EvaluationSetting->my_uid = 1;
         $this->Evaluation->Goal->Collaborator->current_team_id = 1;
         $this->Evaluation->Goal->Collaborator->my_uid = 1;
+        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
+        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
         $this->current_date = strtotime('2015/7/1');
         $this->start_date = strtotime('2015/7/1');
         $this->end_date = strtotime('2015/10/1');

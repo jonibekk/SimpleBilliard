@@ -404,6 +404,10 @@ class GoalTest extends CakeTestCase
         $this->Goal->Team->EvaluateTerm->current_team_id = 1;
         $this->Goal->Team->EvaluateTerm->my_uid = 1;
 
+        $this->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
+        $this->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
+
     }
 
     function testGetGoalIdFromUserId()
@@ -531,16 +535,13 @@ class GoalTest extends CakeTestCase
 
     function testIsPresentTermGoalPatternTrue()
     {
-
-        $this->Goal->Team->current_term_start_date = strtotime('2015/1/1');
-        $this->Goal->Team->current_term_end_date = strtotime('2015/12/1');
-
+        $this->setDefault();
         $goal_data = [
             'user_id'    => 1,
             'team_id'    => 1,
             'purpose_id' => 1,
-            'start_date' => strtotime('2015/2/1'),
-            'end_date'   => strtotime('2015/3/1'),
+            'start_date' => REQUEST_TIMESTAMP,
+            'end_date'   => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['end_date'],
         ];
         $this->Goal->save($goal_data);
         $goal_id = $this->Goal->getLastInsertID();
@@ -551,16 +552,14 @@ class GoalTest extends CakeTestCase
 
     function testIsPresentTermGoalPatternFalse()
     {
-
-        $this->Goal->Team->current_term_start_date = strtotime('2015/1/1');
-        $this->Goal->Team->current_term_end_date = strtotime('2015/12/1');
+        $this->setDefault();
 
         $goal_data = [
             'user_id'    => 1,
             'team_id'    => 1,
             'purpose_id' => 1,
-            'start_date' => strtotime('2016/1/1'),
-            'end_date'   => strtotime('2016/3/1'),
+            'start_date' => $this->Goal->Team->EvaluateTerm->getPreviousTermData()['start_date'],
+            'end_date'   => $this->Goal->Team->EvaluateTerm->getPreviousTermData()['end_date'],
         ];
         $this->Goal->save($goal_data);
         $goal_id = $this->Goal->getLastInsertID();
@@ -659,34 +658,33 @@ class GoalTest extends CakeTestCase
     function testSetIsCurrentTerm()
     {
         $this->setDefault();
-        $this->Goal->Team->current_term_start_date = 100000;
-        $this->Goal->Team->current_term_end_date = 200000;
         $goals = [
-            ['Goal' => ['end_date' => 0],],
-            ['Goal' => ['end_date' => 150000],],
-            ['Goal' => ['end_date' => 250000],],
+            ['Goal' => ['end_date' => $this->Goal->Team->EvaluateTerm->getPreviousTermData()['end_date']],],
+            ['Goal' => ['end_date' => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['end_date']],],
+            ['Goal' => ['end_date' => $this->Goal->Team->EvaluateTerm->getNextTermData()['end_date']],],
         ];
         $actual = $this->Goal->setIsCurrentTerm($goals);
+        foreach($actual as $k => $v){
+            unset($actual[$k]['Goal']['end_date']);
+        }
         $expected = [
-            (int)0 => [
+            (int) 0 => [
                 'Goal' => [
-                    'end_date'        => (int)0,
                     'is_current_term' => false
                 ]
             ],
-            (int)1 => [
+            (int) 1 => [
                 'Goal' => [
-                    'end_date'        => (int)150000,
                     'is_current_term' => true
                 ]
             ],
-            (int)2 => [
+            (int) 2 => [
                 'Goal' => [
-                    'end_date'        => (int)250000,
                     'is_current_term' => false
                 ]
             ]
         ];
+
         $this->assertEquals($expected, $actual);
     }
 }
