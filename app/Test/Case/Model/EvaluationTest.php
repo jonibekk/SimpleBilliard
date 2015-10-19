@@ -856,6 +856,14 @@ class EvaluationTest extends CakeTestCase
         $this->Evaluation->getMyTurnCount();
     }
 
+    function testGetCurrentTurnEvaluationId()
+    {
+        $this->_setDefault();
+        $this->_saveEvaluations();
+        $res = $this->Evaluation->getCurrentTurnEvaluationId(1, $this->Evaluation->EvaluateTerm->getCurrentTermId());
+        $this->assertEquals(2, $res);
+    }
+
     function testGetTermIdByEvaluationId()
     {
         $this->_setDefault();
@@ -938,12 +946,23 @@ class EvaluationTest extends CakeTestCase
         $this->Evaluation->getIncompleteEvaluators($this->Evaluation->evaluate_term_id);
     }
 
-    function testGetEvaluators()
+    function testGetIncompleteNumberList()
     {
         $this->_setDefault();
         $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $this->_saveEvaluations();
-        $this->Evaluation->getIncompleteEvaluatees($this->Evaluation->evaluate_term_id, 1);
+
+        $res = $this->Evaluation->getIncompleteNumberList();
+        $this->assertNotEmpty($res);
+    }
+
+    function testGetEvaluators()
+    {
+        $this->_setDefault();
+        $this->Evaluation->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->_saveEvaluations();
+        $res = $this->Evaluation->getEvaluators($this->Evaluation->EvaluateTerm->getCurrentTermId(), 1);
+        $this->assertNotEmpty($res);
     }
 
     function testGetEvaluateesByEvaluator()
@@ -1014,6 +1033,7 @@ class EvaluationTest extends CakeTestCase
     {
         $evaluateeId = 1;
         $secondEvaluateeId = 2;
+        $evalTermId = $this->Evaluation->EvaluateTerm->getCurrentTermId();
         $records = [
             [
                 'Evaluation' => [
@@ -1021,7 +1041,7 @@ class EvaluationTest extends CakeTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 1,
-                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'evaluate_term_id'  => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 0,
@@ -1036,7 +1056,7 @@ class EvaluationTest extends CakeTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 2,
-                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'evaluate_term_id'  => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 1,
@@ -1052,7 +1072,7 @@ class EvaluationTest extends CakeTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 3,
-                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'evaluate_term_id'  => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 3,
@@ -1067,7 +1087,7 @@ class EvaluationTest extends CakeTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 1,
-                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'evaluate_term_id'  => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 0,
@@ -1082,7 +1102,7 @@ class EvaluationTest extends CakeTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 2,
-                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'evaluate_term_id'  => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 1,
@@ -1098,7 +1118,7 @@ class EvaluationTest extends CakeTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 3,
-                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'evaluate_term_id'  => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 1,
@@ -1113,7 +1133,7 @@ class EvaluationTest extends CakeTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 1,
-                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'evaluate_term_id'  => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 0,
@@ -1128,7 +1148,7 @@ class EvaluationTest extends CakeTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 2,
-                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'evaluate_term_id'  => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 1,
@@ -1144,7 +1164,7 @@ class EvaluationTest extends CakeTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 3,
-                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'evaluate_term_id'  => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 1,
@@ -1159,7 +1179,7 @@ class EvaluationTest extends CakeTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $secondEvaluateeId,
                     'evaluator_user_id' => 1,
-                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'evaluate_term_id'  => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 0,
@@ -1174,7 +1194,7 @@ class EvaluationTest extends CakeTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $secondEvaluateeId,
                     'evaluator_user_id' => 2,
-                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'evaluate_term_id'  => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 1,
@@ -1189,7 +1209,7 @@ class EvaluationTest extends CakeTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $secondEvaluateeId,
                     'evaluator_user_id' => 3,
-                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'evaluate_term_id'  => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 3,
@@ -1204,7 +1224,7 @@ class EvaluationTest extends CakeTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $secondEvaluateeId,
                     'evaluator_user_id' => 1,
-                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'evaluate_term_id'  => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 0,
@@ -1219,7 +1239,7 @@ class EvaluationTest extends CakeTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $secondEvaluateeId,
                     'evaluator_user_id' => 2,
-                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'evaluate_term_id'  => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 1,
@@ -1234,7 +1254,7 @@ class EvaluationTest extends CakeTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $secondEvaluateeId,
                     'evaluator_user_id' => 3,
-                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'evaluate_term_id'  => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 1,
@@ -1249,7 +1269,7 @@ class EvaluationTest extends CakeTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $secondEvaluateeId,
                     'evaluator_user_id' => 1,
-                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'evaluate_term_id'  => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 0,
@@ -1264,7 +1284,7 @@ class EvaluationTest extends CakeTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $secondEvaluateeId,
                     'evaluator_user_id' => 2,
-                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'evaluate_term_id'  => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 1,
@@ -1279,7 +1299,7 @@ class EvaluationTest extends CakeTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $secondEvaluateeId,
                     'evaluator_user_id' => 3,
-                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'evaluate_term_id'  => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 1,
