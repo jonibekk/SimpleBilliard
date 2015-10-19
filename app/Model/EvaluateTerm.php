@@ -425,11 +425,11 @@ class EvaluateTerm extends AppModel
         $start_date_tmp = date("Y-m-1", $start_date);
         $end_date = strtotime($start_date_tmp . "+ {$border_months} month");
 
+        $term = [];
         //指定日時が期間内の場合 in the case of target date include the term
         if ($start_date <= $target_date && $end_date > $target_date) {
             $term['start'] = $start_date - $timezone * 3600;
             $term['end'] = $end_date - 1 - $timezone * 3600;
-            return $term;
         }
         //指定日時が開始日より前の場合 in the case of target date is earlier than start date
         elseif ($target_date < $start_date) {
@@ -440,7 +440,6 @@ class EvaluateTerm extends AppModel
             $term['start'] = $start_date - $timezone * 3600;
             $start_date_tmp = date("Y-m-1", $start_date);
             $term['end'] = strtotime($start_date_tmp . "+ {$border_months} month") - $timezone * 3600 - 1;
-            return $term;
         }
         //終了日が指定日時より前の場合 in the case of target date is later than end date
         elseif ($target_date > $end_date) {
@@ -451,8 +450,8 @@ class EvaluateTerm extends AppModel
             $term['end'] = $end_date - 1 - $timezone * 3600;
             $end_date_tmp = date("Y-m-1", $end_date);
             $term['start'] = strtotime($end_date_tmp . "- {$border_months} month") - $timezone * 3600;
-            return $term;
         }
+        return $term;
     }
 
     /**
