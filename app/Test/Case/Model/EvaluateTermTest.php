@@ -80,6 +80,46 @@ class EvaluateTermTest extends CakeTestCase
         parent::tearDown();
     }
 
+    function testGetAll()
+    {
+        $this->_setDefault();
+        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
+        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
+        $res = $this->EvaluateTerm->getAllTerm();
+        $this->assertCount(3, $res);
+    }
+
+    function testIsAbleToStartEvaluation()
+    {
+        $this->_setDefault();
+        $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $res = $this->EvaluateTerm->isAbleToStartEvaluation($this->EvaluateTerm->getCurrentTermId());
+        $this->assertTrue($res);
+        $this->EvaluateTerm->changeToInProgress($this->EvaluateTerm->getCurrentTermId());
+        $res = $this->EvaluateTerm->isAbleToStartEvaluation($this->EvaluateTerm->getCurrentTermId());
+        $this->assertFalse($res);
+    }
+
+    function testChangeFreezeStatusNoData()
+    {
+        $this->_setDefault();
+        try {
+            $this->EvaluateTerm->changeFreezeStatus($this->EvaluateTerm->getCurrentTermId());
+
+        } catch (RuntimeException $e) {
+        }
+
+        $this->assertTrue(isset($e));
+    }
+
+    function testGetNewStartEndBeforeAdd()
+    {
+        $this->_setDefault();
+        $res = $this->EvaluateTerm->getNewStartEndBeforeAdd(1, 1, 9);
+        $this->assertNotEmpty($res);
+    }
+
     function testChangeFreezeStatusCaseFrozen()
     {
         $this->_setDefault();
