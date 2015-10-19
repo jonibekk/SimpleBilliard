@@ -16,6 +16,7 @@ class CollaboratorTest extends CakeTestCase
      */
     public $fixtures = array(
         'app.collaborator',
+        'app.follower',
         'app.team',
         'app.evaluate_term',
         'app.user',
@@ -57,6 +58,33 @@ class CollaboratorTest extends CakeTestCase
         $this->_setDefault();
         $res = $this->Collaborator->add(1);
         $this->assertTrue(!empty($res));
+    }
+
+    function testEdit()
+    {
+        $this->_setDefault();
+        $data = [
+            'goal_id' => 1,
+            'user_id' => 1,
+            'team_id' => 1,
+            'role'    => 'test'
+        ];
+        $post_data = $this->Collaborator->save($data);
+        $first_saved_id = $post_data['Collaborator']['id'];
+        $post_data['Collaborator']['role'] = 'edited';
+        $res = $this->Collaborator->edit($post_data);
+        $secound_saved_id = $res['Collaborator']['id'];
+
+        $this->assertEquals('edited', $res['Collaborator']['role']);
+        $this->assertEquals($first_saved_id, $secound_saved_id);
+
+    }
+
+    function testGetOwnersStatus()
+    {
+        $this->_setDefault();
+        $res = $this->Collaborator->getOwnersStatus(1);
+        $this->assertNotEmpty($res);
     }
 
     function testGetCollabeGoalDetail()
