@@ -269,14 +269,16 @@ class Goal extends AppModel
         }
         $this->validate = $validate_backup;
 
+        $timezone = $this->Team->EvaluateTerm->getCurrentTermData()['timezone'];
+
         //時間をunixtimeに変換
         if (!empty($data['Goal']['start_date'])) {
-            $data['Goal']['start_date'] = strtotime($data['Goal']['start_date']) - ($this->me['timezone'] * 60 * 60);
+            $data['Goal']['start_date'] = strtotime($data['Goal']['start_date']) - ($timezone * 60 * 60);
         }
         //期限を+1day-1secする
         if (!empty($data['Goal']['end_date'])) {
             $data['Goal']['end_date'] = strtotime('+1 day -1 sec',
-                                                  strtotime($data['Goal']['end_date'])) - ($this->me['timezone'] * 60 * 60);
+                                                  strtotime($data['Goal']['end_date'])) - ($timezone * 60 * 60);
         }
         //新規の場合はデフォルトKRを追加
         if ($add_new) {
