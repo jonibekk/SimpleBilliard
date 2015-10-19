@@ -187,7 +187,7 @@ if (REDIS_SESSION_HOST) {
         'userAgent'      => false,
         'cookie'         => 'SID',
         'timeout'        => null,
-        'autoRegenerate' => true,
+        'autoRegenerate' => false,
         'handler'        => [
             'engine' => 'RedisSession',
             'key'    => 'session:'
