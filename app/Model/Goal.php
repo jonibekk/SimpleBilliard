@@ -732,7 +732,7 @@ class Goal extends AppModel
         return $goals;
     }
 
-    function getGoalsWithAction($user_id, $action_limit = MY_PAGE_ACTION_NUMBER, $start_date, $end_date)
+    function getGoalsWithAction($user_id, $action_limit = MY_PAGE_ACTION_NUMBER, $start_date = null, $end_date = null)
     {
         //対象が自分だった場合プラスボタンを出力する関係上、アクション件数を-1にする
         if ($user_id == $this->my_uid) {
