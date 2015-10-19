@@ -1,5 +1,5 @@
 <!-- start app/View/Elements/header_logged_in_right -->
-<div class="header-right-navigations clearfix">
+<div class="header-right-navigations clearfix" xmlns="http://www.w3.org/1999/html">
     <a class="header-user-avatar" href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $this->Session->read('Auth.User.id')]) ?>">
         <?=
         $this->Upload->uploadImage($this->Session->read('Auth'), 'User.photo', ['style' => 'small'],
@@ -69,7 +69,7 @@
             <div class="header-nav-notify-contents-scrolling">
                 <div class=" btn-link notify-mark-allread" style='color:#d2d4d5'>
                     <i class="fa fa-check" id="mark_all_read" ></i>
-                    <?= __d('gl','Mark All as Read')?>
+                    <span id="mark_all_read_txt"><?= __d('gl','Mark All as Read')?></span>
                 </div>
                 <ul class="header-nav-notify-contents notify-dropdown-cards" id="bell-dropdown" role="menu"
                     style="overflow-y:scroll">
