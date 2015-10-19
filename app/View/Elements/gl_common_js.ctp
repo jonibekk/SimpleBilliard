@@ -24,7 +24,6 @@ echo $this->Html->script('vendor/jquery.autosize.min');
 echo $this->Html->script('vendor/jquery.lazy.min');
 echo $this->Html->script('vendor/lightbox.min');
 echo $this->Html->script('vendor/jquery.showmore.min');
-echo $this->Html->script('vendor/ZeroClipboard.min');
 echo $this->Html->script('vendor/placeholders.min');
 echo $this->Html->script('vendor/customRadioCheck.min');
 echo $this->Html->script('vendor/select2.min');
@@ -84,7 +83,8 @@ echo $this->Html->script('goalous.min');
                 f: "<?=__d('gl', "さらに投稿を読み込む ▼") ?>",
                 g: "<?=__d('gl','これ以上のコメントがありません。')?>",
                 h: "<?=__d('gl',"閉じる")?>",
-                z: "<?=__d('gl',"フォロー")?>" // ToDo - must rename this var
+                z: "<?=__d('gl',"フォロー")?>", // ToDo - must rename this var
+                copy_url: "<?=__d('gl',"以下のURLをコピーしてください。")?>"
             }
         },
         word: {
