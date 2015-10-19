@@ -22,12 +22,18 @@ message_app.controller(
         });
 
         // ブラウザリサイズの場合、入力フォームサイズ変更+オートスクロール
-        $(window).resize(function(){
-            $scope.$apply(function(){
+        $(window).resize(function () {
+            $scope.$apply(function () {
                 $("#message_box").css("height", window.innerHeight - input_box_height);
                 bottom_scroll();
             });
         });
+        //データが存在しない場合はエラーメッセージを出力しホームにリダイレクト
+        if (Object.keys(getPostDetail).length === 0) {
+            notificationService.error($translate.instant('ACCESS_MESSAGE_DETAIL_MESSAGE'));
+            document.location = "/";
+            return;
+        }
 
         $scope.view_flag = true;
         if (getPostDetail.auth_info.language === 'eng') {

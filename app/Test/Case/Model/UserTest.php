@@ -770,7 +770,42 @@ class UserTest extends CakeTestCase
             ]
         ]);
         $this->assertEquals(0, $count2_2);
+    }
+
+    function testGetUsersByKeyword()
+    {
+        $this->User->my_uid = 1;
+        $this->User->current_team_id = 1;
+        $this->User->me['language'] = "jpn";
+        $this->User->TeamMember->current_team_id = 1;
+        $this->User->TeamMember->my_uid = 1;
+        $this->User->LocalName->my_uid = 1;
+        $this->User->LocalName->current_team_id = 1;
+
+        $res = $this->User->getUsersByKeyword("first");
+        $this->assertNotEmpty($res);
+        $res = $this->User->getUsersByKeyword("irstname");
+        $this->assertEmpty($res);
+        $res = $this->User->getUsersByKeyword("");
+        $this->assertEmpty($res);
+    }
 
 
+    function testGetNewUsersByKeywordNotSharedOnPost()
+    {
+        $this->User->my_uid = 1;
+        $this->User->current_team_id = 1;
+        $this->User->me['language'] = "jpn";
+        $this->User->TeamMember->current_team_id = 1;
+        $this->User->TeamMember->my_uid = 1;
+        $this->User->LocalName->my_uid = 1;
+        $this->User->LocalName->current_team_id = 1;
+
+        $res = $this->User->getNewUsersByKeywordNotSharedOnPost("first", 10, true, 9999999);
+        $this->assertNotEmpty($res);
+        $res = $this->User->getNewUsersByKeywordNotSharedOnPost("irstname", 10, true, 9999999);
+        $this->assertEmpty($res);
+        $res = $this->User->getNewUsersByKeywordNotSharedOnPost("", 10, true, 9999999);
+        $this->assertEmpty($res);
     }
 }

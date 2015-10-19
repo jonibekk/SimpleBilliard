@@ -248,7 +248,8 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                 <?php if ($post['Post']['site_info']): ?>
                     <?php $site_info = json_decode($post['Post']['site_info'], true) ?>
                     <div class="col col-xxs-12 pt_10px">
-                        <a href="<?= isset($site_info['url']) ? $site_info['url'] : null ?>" target="_blank"
+                        <a href="<?= isset($site_info['url']) ? $site_info['url'] : null ?>" target="blank"
+                           onclick="window.open(this.href,'_system');return false;"
                            class="no-line font_verydark">
                             <div class="site-info bd-radius_4px">
                                 <div class="media">
@@ -353,7 +354,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                             </div>
                         <?php endforeach ?>
                     </div>
-                    <?php if($post['Goal']['end_date']>$current_term['start_date'] && !is_null($post['Goal']['completed'])) : ?>
+                    <?php if($post['Post']['user_id'] != $this->Session->read('Auth.User.id') && $post['Goal']['end_date']>$current_term['start_date'] && is_null($post['Goal']['completed'])) : ?>
                         <? $follow_opt = $this->Goal->getFollowOption($post['Goal']) ?>
                         <? $collabo_opt = $this->Goal->getCollaboOption($post['Goal']) ?>
                         <div style="padding:5px" class="col col-xxs-12 mt_5px">
