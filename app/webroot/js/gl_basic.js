@@ -65,7 +65,10 @@ $(window).load(function () {
 $(document).ready(function () {
 
     $(document).on('keyup','#message_text_input',function(){
-        $('#message_text_input:not(.not-autosize)').autosize();
+        $(this).autosize();
+        $('body').animate({
+            scrollTop: $(document).height()
+        });
     });
 
     $(document).on('click', '#mark_all_read', function (e) {
