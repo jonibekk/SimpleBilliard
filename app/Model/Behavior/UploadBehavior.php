@@ -216,6 +216,8 @@ class UploadBehavior extends ModelBehavior
     {
         //ファイル名を変更(ファイル名の後にフィールド名を追加)
         $file_name = $model->data[$model->name][$field]['name'];
+        // NFC正規化（Mac ファイル名対応）
+        $file_name = Normalizer::normalize($file_name, Normalizer::FORM_C);
         if ($settings['addFieldNameOnFileName']) {
             $file_name = substr($file_name, 0, strrpos($file_name, '.')) . // filename
                 "_" . $field .
