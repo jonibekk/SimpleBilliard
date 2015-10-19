@@ -883,7 +883,7 @@ class EvaluationTest extends CakeTestCase
         $this->_saveEvaluations();
         $expectedEvaluatorId = 2;
 
-        $nextEvaluatorId = $this->Evaluation->getNextEvaluatorId($this->Evaluation->evaluate_term_id, 1);
+        $nextEvaluatorId = $this->Evaluation->getNextEvaluatorId($this->Evaluation->EvaluateTerm->getCurrentTermData(), 1);
         $this->assertEquals($nextEvaluatorId, $expectedEvaluatorId);
     }
 
@@ -896,7 +896,7 @@ class EvaluationTest extends CakeTestCase
 
         $options = [
             'conditions' => [
-                'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                'evaluate_term_id'  => $this->Evaluation->EvaluateTerm->getCurrentTermData(),
                 'evaluatee_user_id' => $evaluatee_user_id
             ],
             'order'      => [
@@ -907,7 +907,7 @@ class EvaluationTest extends CakeTestCase
         $res = $this->Evaluation->find('first', $options);
         $lastEvaluator = $res['Evaluation']['evaluator_user_id'];
 
-        $nextEvaluatorId = $this->Evaluation->getNextEvaluatorId($this->Evaluation->evaluate_term_id, $lastEvaluator);
+        $nextEvaluatorId = $this->Evaluation->getNextEvaluatorId($this->Evaluation->EvaluateTerm->getCurrentTermData(), $lastEvaluator);
         $this->assertEquals($nextEvaluatorId, null);
     }
 
@@ -927,7 +927,7 @@ class EvaluationTest extends CakeTestCase
         $this->_setDefault();
         $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $this->_saveEvaluations();
-        $this->Evaluation->getAllStatusesForTeamSettings($this->Evaluation->evaluate_term_id);
+        $this->Evaluation->getAllStatusesForTeamSettings($this->Evaluation->EvaluateTerm->getCurrentTermData());
     }
 
     function testGetIncompleteEvaluatees()
@@ -935,7 +935,7 @@ class EvaluationTest extends CakeTestCase
         $this->_setDefault();
         $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $this->_saveEvaluations();
-        $this->Evaluation->getIncompleteEvaluatees($this->Evaluation->evaluate_term_id);
+        $this->Evaluation->getIncompleteEvaluatees($this->Evaluation->EvaluateTerm->getCurrentTermData());
     }
 
     function testGetIncompleteEvaluators()
@@ -943,7 +943,7 @@ class EvaluationTest extends CakeTestCase
         $this->_setDefault();
         $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $this->_saveEvaluations();
-        $this->Evaluation->getIncompleteEvaluators($this->Evaluation->evaluate_term_id);
+        $this->Evaluation->getIncompleteEvaluators($this->Evaluation->EvaluateTerm->getCurrentTermData());
     }
 
     function testGetIncompleteNumberList()
@@ -971,7 +971,7 @@ class EvaluationTest extends CakeTestCase
         $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $this->_saveEvaluations();
         $evaluatorId = 2;
-        $this->Evaluation->getEvaluateesByEvaluator($this->Evaluation->evaluate_term_id, $evaluatorId);
+        $this->Evaluation->getEvaluateesByEvaluator($this->Evaluation->EvaluateTerm->getCurrentTermData(), $evaluatorId);
     }
 
     function testGetIncompleteOneselfEvaluators()
@@ -979,7 +979,7 @@ class EvaluationTest extends CakeTestCase
         $this->_setDefault();
         $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $this->_saveEvaluations();
-        $this->Evaluation->getIncompleteOneselfEvaluators($this->Evaluation->evaluate_term_id);
+        $this->Evaluation->getIncompleteOneselfEvaluators($this->Evaluation->EvaluateTerm->getCurrentTermData());
     }
 
     function testGetFinalEvaluations()
@@ -987,7 +987,7 @@ class EvaluationTest extends CakeTestCase
         $this->_setDefault();
         $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $this->_saveEvaluations();
-        $res = $this->Evaluation->getFinalEvaluations($this->Evaluation->evaluate_term_id, [1, 2, 3]);
+        $res = $this->Evaluation->getFinalEvaluations($this->Evaluation->EvaluateTerm->getCurrentTermData(), [1, 2, 3]);
         $this->assertTrue(count($res) === 2);
     }
 
@@ -1000,7 +1000,7 @@ class EvaluationTest extends CakeTestCase
             (int)1 => '1',
             (int)2 => '2'
         );
-        $actual = $this->Evaluation->getEvaluateeIdsByTermId($this->Evaluation->evaluate_term_id);
+        $actual = $this->Evaluation->getEvaluateeIdsByTermId($this->Evaluation->EvaluateTerm->getCurrentTermData());
         $this->assertEquals($excepted, $actual);
     }
 
@@ -1014,7 +1014,7 @@ class EvaluationTest extends CakeTestCase
             (int)2 => '2',
             (int)3 => '3'
         );
-        $actual = $this->Evaluation->getEvaluatorIdsByTermId($this->Evaluation->evaluate_term_id);
+        $actual = $this->Evaluation->getEvaluatorIdsByTermId($this->Evaluation->EvaluateTerm->getCurrentTermData());
         $this->assertEquals($excepted, $actual);
     }
 
@@ -1316,7 +1316,6 @@ class EvaluationTest extends CakeTestCase
     {
         $this->Evaluation->current_team_id = 1;
         $this->Evaluation->my_uid = 1;
-        $this->Evaluation->evaluate_term_id = 1;
         $this->Evaluation->Team->current_team_id = 1;
         $this->Evaluation->Team->my_uid = 1;
         $this->Evaluation->Team->TeamMember->current_team_id = 1;
