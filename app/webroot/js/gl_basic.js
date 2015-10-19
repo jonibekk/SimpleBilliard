@@ -71,7 +71,7 @@ $(document).ready(function () {
         });
     });
 
-    $(document).on('click', '#mark_all_read', function (e) {
+    $(document).on('click', '#mark_all_read,#mark_all_read_txt', function (e) {
         e.preventDefault();
         $.ajax({
             type: 'GET',
