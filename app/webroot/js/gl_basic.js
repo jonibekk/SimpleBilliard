@@ -78,7 +78,7 @@ $(document).ready(function () {
             url: cake.url.an,
             async: true,
             success: function () {
-               $(".notify-card-list").removeClass('notify-card-unread').addClass('notify-card-read');
+                $(".notify-card-list").removeClass('notify-card-unread').addClass('notify-card-read');
             }
         });
         return false;
@@ -97,9 +97,9 @@ $(document).ready(function () {
     });
     //ヘッダーサブメニューでのフィード、ゴール切り換え処理
     //noinspection JSJQueryEfficiency
-   $('#SubHeaderMenu a').click(function () {
+    $('#SubHeaderMenu a').click(function () {
         //既に選択中の場合は何もしない
-       if ($(this).hasClass('sp-feed-active')) {
+        if ($(this).hasClass('sp-feed-active')) {
             return;
         }
 
@@ -512,21 +512,22 @@ $(document).ready(function () {
     });
 
     //team term setting
-    $(document).on("change", '#TeamStartTermMonth , #TeamBorderMonths', function () {
+    $(document).on("change", '#TeamStartTermMonth , #TeamBorderMonths , #TeamTimezone', function () {
         var startTermMonth = $('#TeamStartTermMonth').val();
         var borderMonths = $('#TeamBorderMonths').val();
+        var timezone = $('#TeamTimezone').val();
         if (startTermMonth === "" || borderMonths === "") {
             $('#CurrentTermStr').empty();
             return false;
         }
-        var url = cake.url.h + "/" + startTermMonth + "/" + borderMonths;
+        var url = cake.url.h + "/" + startTermMonth + "/" + borderMonths + "/" + timezone;
         $.get(url, function (data) {
             $('#CurrentTermStr').text(data.start + "  -  " + data.end);
         });
     });
 
     //edit team term setting
-    $(document).on("change", '#EditTermChangeFrom1 , #EditTermChangeFrom2 , #EditTermStartTerm , #EditTermBorderMonths', function () {
+    $(document).on("change", '#EditTermChangeFrom1 , #EditTermChangeFrom2 ,#EditTermTimezone , #EditTermStartTerm , #EditTermBorderMonths', function () {
 
         if ($("#EditTermChangeFrom1:checked").val()) {
             var changeFrom = $('#EditTermChangeFrom1:checked').val();
@@ -534,6 +535,7 @@ $(document).ready(function () {
         else {
             var changeFrom = $('#EditTermChangeFrom2:checked').val();
         }
+        var timezone = $('#EditTermTimezone').val();
         var startTermMonth = $('#EditTermStartTerm').val();
         var borderMonths = $('#EditTermBorderMonths').val();
         if (startTermMonth === "" || borderMonths === "") {
@@ -543,11 +545,13 @@ $(document).ready(function () {
             $('#NewNextTerm > div > p').empty();
             return false;
         }
-        var url = cake.url.r + "/" + startTermMonth + "/" + borderMonths + "/" + changeFrom;
+        var url = cake.url.r + "/" + startTermMonth + "/" + borderMonths + "/" + changeFrom + "/" + timezone;
         $.get(url, function (data) {
             if (data.current.start_date && data.current.end_date) {
                 $('#NewCurrentTerm').removeClass('none');
-                $('#NewCurrentTerm > div > p').text(data.current.start_date + "  -  " + data.current.end_date);
+                var current_timezone = parseFloat(data.current.timezone);
+                var current_sign = current_timezone < 0 ? "" : "+";
+                $('#NewCurrentTerm > div > p').text(data.current.start_date + "  -  " + data.current.end_date + " (UTC " + current_sign + current_timezone + "h)");
             }
             else {
                 $('#NewCurrentTerm').addClass('none');
@@ -555,7 +559,10 @@ $(document).ready(function () {
             }
             if (data.next.start_date && data.next.end_date) {
                 $('#NewNextTerm').removeClass('none');
-                $('#NewNextTerm > div > p').text(data.next.start_date + "  -  " + data.next.end_date);
+                var next_timezone = parseFloat(data.next.timezone);
+                var next_sign = next_timezone < 0 ? "" : "+";
+
+                $('#NewNextTerm > div > p').text(data.next.start_date + "  -  " + data.next.end_date + " (UTC " + next_sign + next_timezone + "h)");
             }
             else {
                 $('#NewNextTerm').addClass('none');
@@ -776,7 +783,7 @@ function checkUploadFileExpire(formID) {
 
             // Dropzone の管理ファイルから外す
             var removed_file;
-            for (var i = 0; i <  $uploadFileForm._files[formID].length; i++) {
+            for (var i = 0; i < $uploadFileForm._files[formID].length; i++) {
                 if ($hidden.val() == $uploadFileForm._files[formID][i].file_id) {
                     removed_file = $uploadFileForm._files[formID].splice(i, 1)[0];
                     break;
@@ -2702,12 +2709,12 @@ $(document).ready(function () {
     });
 
     // keyResultの完了送信時にsocket_idを埋め込む
-    $(document).on("click", ".kr_achieve_button", function (){
-            var formId = $(this).attr("form-id");
-            var $form = $("form#" + formId);
-            appendSocketId($form, socketId);
-            $form.submit();
-            $(this).prop("disabled", true);
+    $(document).on("click", ".kr_achieve_button", function () {
+        var formId = $(this).attr("form-id");
+        var $form = $("form#" + formId);
+        appendSocketId($form, socketId);
+        $form.submit();
+        $(this).prop("disabled", true);
     });
 
     // page type idをセットする
@@ -2730,7 +2737,7 @@ $(document).ready(function () {
                 var pageTypeId = getPageTypeId();
                 var feedTypeId = data.feed_type;
                 var canNotify = pageTypeId === feedTypeId || pageTypeId === "all";
-                if (canNotify){
+                if (canNotify) {
                     prevNotifyId = notifyId;
                     notifyNewFeed();
                 }

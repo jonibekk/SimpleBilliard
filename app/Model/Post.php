@@ -4,6 +4,7 @@ App::uses('UploadHelper', 'View/Helper');
 App::uses('TimeExHelper', 'View/Helper');
 App::uses('TextExHelper', 'View/Helper');
 App::uses('View', 'View');
+App::uses('PostShareCircle', 'Model');
 
 /**
  * Post Model
@@ -714,7 +715,7 @@ class Post extends AppModel
                         'end_date',
                         'completed'
                     ],
-                    'User'         => [
+                    'User'      => [
                         'fields'     => $this->User->profileFields,
                         'TeamMember' => [
                             'fields'     => [

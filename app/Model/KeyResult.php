@@ -161,14 +161,15 @@ class KeyResult extends AppModel
             throw new RuntimeException(__d('gl', "基準の保存に失敗しました。"));
         }
         $this->validate = $validate_backup;
+        $timezone = $this->Team->EvaluateTerm->getCurrentTermData()['timezone'];
         //時間をunixtimeに変換
         if (!empty($data['KeyResult']['start_date'])) {
-            $data['KeyResult']['start_date'] = strtotime($data['KeyResult']['start_date']) - ($this->me['timezone'] * 60 * 60);
+            $data['KeyResult']['start_date'] = strtotime($data['KeyResult']['start_date']) - ($timezone * 60 * 60);
         }
         //期限を+1day-1secする
         if (!empty($data['KeyResult']['end_date'])) {
             $data['KeyResult']['end_date'] = strtotime('+1 day -1 sec',
-                                                       strtotime($data['KeyResult']['end_date'])) - ($this->me['timezone'] * 60 * 60);
+                                                       strtotime($data['KeyResult']['end_date'])) - ($timezone * 60 * 60);
         }
         $this->create();
         if (!$this->save($data)) {
@@ -335,10 +336,10 @@ class KeyResult extends AppModel
         }
         $this->validate = $validate_backup;
 
-        //時間をunixtimeに変換
-        $data['KeyResult']['start_date'] = strtotime($data['KeyResult']['start_date']) - ($this->me['timezone'] * 60 * 60);
+        $timezone = $this->Team->EvaluateTerm->getCurrentTermData()['timezone'];        //時間をunixtimeに変換
+        $data['KeyResult']['start_date'] = strtotime($data['KeyResult']['start_date']) - ($timezone * 60 * 60);
         $data['KeyResult']['end_date'] = strtotime('+1 day -1 sec',
-                                                   strtotime($data['KeyResult']['end_date'])) - ($this->me['timezone'] * 60 * 60);
+                                                   strtotime($data['KeyResult']['end_date'])) - ($timezone * 60 * 60);
 //TODO 現在値を使わないため、この計算は行わない
 //        $data['KeyResult']['progress'] = $this->getProgress($data['KeyResult']['start_value'],
 //                                                            $data['KeyResult']['target_value'],
