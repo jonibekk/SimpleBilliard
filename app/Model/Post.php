@@ -481,9 +481,8 @@ class Post extends AppModel
 
     public function get($page = 1, $limit = 20, $start = null, $end = null, $params = null, $contains_message = false)
     {
-        $one_month = 60 * 60 * 24 * 31;
         if (!$start) {
-            $start = REQUEST_TIMESTAMP - $one_month;
+            $start = strtotime("-1 month", REQUEST_TIMESTAMP);
         }
         elseif (is_string($start)) {
             $start = strtotime($start);
