@@ -16,6 +16,7 @@ class KeyResultTest extends CakeTestCase
      */
     public $fixtures = array(
         'app.action_result',
+        'app.evaluate_term',
         'app.key_result',
         'app.goal',
         'app.purpose',
@@ -311,6 +312,11 @@ class KeyResultTest extends CakeTestCase
         $this->KeyResult->Team->current_team_id = 1;
         $this->KeyResult->Goal->Collaborator->my_uid = 1;
         $this->KeyResult->Goal->Collaborator->current_team_id = 1;
+        $this->KeyResult->Team->EvaluateTerm->current_team_id = 1;
+        $this->KeyResult->Team->EvaluateTerm->my_uid = 1;
+        $this->KeyResult->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->KeyResult->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
+        $this->KeyResult->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
     }
 
 }
