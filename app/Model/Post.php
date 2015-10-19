@@ -712,6 +712,7 @@ class Post extends AppModel
                         'name',
                         'photo_file_name',
                         'id',
+                        'end_date',
                         'completed'
                     ],
                     'User'         => [
@@ -754,6 +755,7 @@ class Post extends AppModel
                     'fields' => [
                         'id',
                         'name',
+                        'end_date'
                     ],
                 ],
                 'ActionResult'    => [
