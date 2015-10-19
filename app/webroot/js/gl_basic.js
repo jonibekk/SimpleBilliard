@@ -1601,15 +1601,6 @@ $(document).ready(function () {
 
     warningCloseModal();
 
-    //noinspection JSUnresolvedFunction
-    var client = new ZeroClipboard($('.copy_me'));
-    //noinspection JSUnusedLocalSymbols
-    client.on("ready", function (readyEvent) {
-        client.on("aftercopy", function (event) {
-            alert(cake.message.info.a + ": " + event.data["text/plain"]);
-        });
-    });
-
     $('[rel="tooltip"]').tooltip();
 
     $('.validate').bootstrapValidator({
@@ -2172,15 +2163,6 @@ function getModalPostList(e) {
         $.get(url, function (data) {
             $modal_elm.modal();
             $modal_elm.append(data);
-            //クリップボードコピーの処理を追加
-            //noinspection JSUnresolvedFunction
-            var client = new ZeroClipboard($modal_elm.find('.copy_me'));
-            //noinspection JSUnusedLocalSymbols
-            client.on("ready", function (readyEvent) {
-                client.on("aftercopy", function (event) {
-                    alert(cake.message.info.a + ": " + event.data["text/plain"]);
-                });
-            });
             //画像をレイジーロード
             imageLazyOn($modal_elm);
             //画像リサイズ
@@ -3502,7 +3484,7 @@ function updateMessageListBox() {
 }
 
 function copyToClipboard(url) {
-    window.prompt("Copy to clipboard: Ctrl+C, Enter", url);
+    window.prompt(cake.message.info.copy_url, url);
 }
 
 $(document).ready(function () {
