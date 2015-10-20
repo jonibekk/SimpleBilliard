@@ -577,25 +577,6 @@ $(document).ready(function () {
     $(document).on("click", ".click-goal-follower-more", evAjaxGoalFollowerMore);
     $(document).on("click", ".click-goal-member-more", evAjaxGoalMemberMore);
     $(document).on("click", ".click-goal-key-result-more", evAjaxGoalKeyResultMore);
-    $(document).on("submit", "#CircleJoinForm", function (e) {
-        var $form = $(this);
-        // 秘密サークルから抜けようとしている場合はアラートを出す
-        var leave_secret = false;
-        $form.find('.bt-switch[data-secret=1]').each(function () {
-            var $switch = $(this);
-            if (!$switch.bootstrapSwitch('state')) {
-                leave_secret = true;
-            }
-        });
-        if (leave_secret) {
-            var answer = confirm(cake.message.notice.leave_secret_circle);
-            if (!answer) {
-                $form.find('input[type=submit]').removeAttr('disabled');
-                return false;
-            }
-        }
-        return true;
-    });
 
     // 投稿フォーム submit 時
     $(document).on('submit', '#PostDisplayForm', function (e) {
@@ -641,7 +622,7 @@ $(document).ready(function () {
         var $target = $(e.target);
         var tabId = $target.attr('href').replace('#', '');
         $target.closest('.modal-dialog').find('.modal-footer').hide().filter('.' + tabId + '-footer').show();
-    })
+    });
 
     if (cake.data.j == "0") {
         $('#FeedMoreReadLink').trigger('click');
@@ -2000,7 +1981,64 @@ $(document).ready(function () {
                     size: "small",
                     onText: cake.word.b,
                     offText: cake.word.c
-                });
+                })
+                    // 参加/不参加 のスイッチ切り替えた時
+                    // 即時データを更新する
+                    .on('switchChange.bootstrapSwitch', function (e, state) {
+                        var $checkbox = $(this);
+                        var $form = $('#CircleJoinForm');
+                        $form.find('input[name="data[Circle][0][join]"]').val(state ? '1' : '0');
+                        $form.find('input[name="data[Circle][0][circle_id]"]').val($checkbox.attr('data-id'));
+
+                        // 秘密サークルの場合は確認ダイアログ表示
+                        if ($checkbox.attr('data-secret') == '1') {
+                            if (!confirm(cake.message.notice.leave_secret_circle)) {
+                                $checkbox.bootstrapSwitch('toggleState', true);
+                                return false;
+                            }
+                            $checkbox.bootstrapSwitch('toggleDisabled', true);
+                        }
+
+                        $.ajax({
+                            url: cake.url.join_circle,
+                            type: 'POST',
+                            dataType: 'json',
+                            processData: false,
+                            data: $form.serialize()
+                        })
+                            .done(function (res) {
+                                PNotify.removeAll();
+                                new PNotify({
+                                    type: 'success',
+                                    title: cake.word.success,
+                                    text: res.msg,
+                                    icon: "fa fa-check-circle",
+                                    delay: 4000,
+                                    mouse_reset: false
+                                });
+                                // 秘密サークルの場合は一覧から消す
+                                if ($checkbox.attr('data-secret') == '1') {
+                                    setTimeout(function () {
+                                        $checkbox.closest('.circle-item-row').slideUp('slow');
+                                    }, 1000);
+                                }
+                                // データを更新した場合はモーダルを閉じた時に画面リロード
+                                $modal_elm.on('hidden.bs.modal', function () {
+                                    location.reload();
+                                });
+                            })
+                            .fail(function () {
+                                PNotify.removeAll();
+                                new PNotify({
+                                    type: 'error',
+                                    title: cake.word.error,
+                                    text: cake.message.notice.d,
+                                    icon: "fa fa-check-circle",
+                                    delay: 4000,
+                                    mouse_reset: false
+                                });
+                            });
+                    });
             }).success(function () {
                 $('body').addClass('modal-open');
                 $this.removeClass('double_click');
