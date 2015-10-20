@@ -28,7 +28,7 @@
         </ul>
         <?=
         $this->Form->create('Circle', [
-            'url'           => ['controller' => 'circles', 'action' => 'join'],
+            'url'           => ['controller' => 'circles', 'action' => 'ajax_join_circle'],
             'inputDefaults' => [
                 'div'       => false,
                 'label'     => [
@@ -41,6 +41,11 @@
             'novalidate'    => true,
             'id'            => 'CircleJoinForm',
         ]); ?>
+        <?= $this->Form->hidden('0.join'); ?>
+        <?= $this->Form->hidden('0.circle_id'); ?>
+        <?php $this->Form->unlockField('Circle.0.join'); ?>
+        <?php $this->Form->unlockField('Circle.0.circle_id'); ?>
+        <?= $this->Form->end() ?>
         <div class="modal-body modal-feed-body tab-content">
             <div class="tab-pane fade in active" id="tab1">
                 <?php $key = 0 ?>
@@ -79,19 +84,6 @@
                 <?php endif ?>
             </div>
         </div>
-        <div class="modal-footer modal-feed-footer">
-            <?php if (!empty($joined_circles) || !empty($non_joined_circles)): ?>
-                <?=
-                $this->Form->submit(__d('gl', "変更を保存"),
-                                    ['class' => 'btn btn-primary pull-right', 'div' => false /*, 'disabled' => 'disabled'*/]) ?>
-                <button type="button" class="btn btn-link design-cancel mr_8px bd-radius_4px"
-                        data-dismiss="modal"><?= __d('gl',
-                                                     "キャンセル") ?></button>
-            <?php else: ?>
-                <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('gl', "閉じる") ?></button>
-            <?php endif; ?>
-        </div>
-        <?= $this->Form->end() ?>
     </div>
 </div>
 <!-- END app/View/Elements/modal_public_circles.ctp -->

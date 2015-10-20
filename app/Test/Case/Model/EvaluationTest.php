@@ -125,7 +125,7 @@ class EvaluationTest extends CakeTestCase
         $this->assertTrue(isset($e));
     }
 
-    function testCheckAvailParameterInEvalFormTermIdIsUncorrect()
+    function testCheckAvailParameterInEvalFormTermIdIsIncorrect()
     {
         $this->_setDefault();
         $termId = 1;
@@ -137,7 +137,7 @@ class EvaluationTest extends CakeTestCase
         $this->assertTrue(isset($e));
     }
 
-    function testCheckAvailParameterInEvalFormEvaluateeIdIsUncorrect()
+    function testCheckAvailParameterInEvalFormEvaluateeIdIsIncorrect()
     {
         $this->_setDefault();
         $termId = 1000;
@@ -152,7 +152,7 @@ class EvaluationTest extends CakeTestCase
     function testCheckAvailParameterInEvalFormStatusCannotGet()
     {
         $this->_setDefault();
-        $this->Evaluation->Team->EvaluateTerm->saveCurrentTerm();
+        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $termId = $this->Evaluation->Team->EvaluateTerm->getLastInsertID();
         $this->Evaluation->deleteAll(['Evaluation.id >' => 0]);
         $evaluateeId = 1;
@@ -161,6 +161,41 @@ class EvaluationTest extends CakeTestCase
         } catch (RuntimeException $e) {
         }
         $this->assertTrue(isset($e));
+    }
+
+    function testCheckAvailParameterInEvalFormNotStatus()
+    {
+        $this->_setDefault();
+        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $termId = $this->Evaluation->Team->EvaluateTerm->getLastInsertID();
+        $this->Evaluation->Team->EvaluateTerm->changeToInProgress($termId);
+        $this->Evaluation->deleteAll(['Evaluation.id >' => 0]);
+        $evaluateeId = 1;
+        try {
+            $this->Evaluation->checkAvailParameterInEvalForm($termId, $evaluateeId);
+        } catch (RuntimeException $e) {
+        }
+        $this->assertTrue(isset($e));
+    }
+
+    function testCheckAvailParameterInEvalFormSuccess()
+    {
+        $this->_setDefault();
+        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $termId = $this->Evaluation->Team->EvaluateTerm->getLastInsertID();
+        $this->Evaluation->Team->EvaluateTerm->changeToInProgress($termId);
+        $this->Evaluation->deleteAll(['Evaluation.id >' => 0]);
+        $this->Evaluation->save(
+            [
+                'team_id'           => 1,
+                'evaluatee_user_id' => 1,
+                'evaluator_user_id' => 1,
+                'evaluate_term_id'  => $termId,
+            ]
+        );
+        $evaluateeId = 1;
+        $res = $this->Evaluation->checkAvailParameterInEvalForm($termId, $evaluateeId);
+        $this->assertTrue($res);
     }
 
     function testAddDrafts()
@@ -367,6 +402,46 @@ class EvaluationTest extends CakeTestCase
         $this->Evaluation->Team->TeamMember->my_uid = 1;
         $res = $this->Evaluation->checkAvailViewEvaluationList();
         $this->assertTrue($res);
+    }
+
+    function testGetStatus()
+    {
+        $this->_setDefault();
+        $this->Evaluation->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $term_id = $this->Evaluation->EvaluateTerm->getLastInsertID();
+        $data = [
+            'team_id'           => 1,
+            'evaluatee_user_id' => 1,
+            'evaluator_user_id' => 1,
+            'status'            => 0
+        ];
+        $this->Evaluation->save($data);
+        $eval_id = $this->Evaluation->getLastInsertID();
+        $res = $this->Evaluation->getStatus($term_id, 1, 1);
+        $this->assertEquals(0, $res);
+
+        $this->Evaluation->id = $eval_id;
+        $this->Evaluation->saveField('evaluate_type', Evaluation::TYPE_FINAL_EVALUATOR);
+        $res = $this->Evaluation->getStatus($term_id, 1, 1);
+        $this->assertNull($res);
+    }
+
+    function testGetEvaluateType()
+    {
+        $this->_setDefault();
+        $this->Evaluation->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $term_id = $this->Evaluation->EvaluateTerm->getLastInsertID();
+        $data = [
+            'team_id'           => 1,
+            'evaluate_term_id'  => $term_id,
+            'evaluatee_user_id' => 1,
+            'evaluator_user_id' => 1,
+            'evaluate_type'     => 1,
+            'status'            => 0
+        ];
+        $this->Evaluation->save($data);
+        $res = $this->Evaluation->getEvaluateType($term_id, 1);
+        $this->assertEquals(1, $res);
     }
 
     function testGetMyEvaluations()
@@ -604,6 +679,25 @@ class EvaluationTest extends CakeTestCase
         $this->assertFalse($res);
     }
 
+    function testStartEvaluationNotExistsCurrentTerm()
+    {
+        $this->_setDefault();
+        $this->Evaluation->EvaluateTerm->deleteAll(['team_id' => 1], false);
+        $this->Evaluation->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_CURRENT);
+        $this->Evaluation->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_PREVIOUS);
+        $this->Evaluation->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_NEXT);
+        $res = $this->Evaluation->startEvaluation();
+        $this->assertTrue($res);
+    }
+
+    function testStartEvaluationTeamMembersAreNotExists()
+    {
+        $this->_setDefault();
+        $this->Evaluation->Team->TeamMember->deleteAll(['TeamMember.team_id' => 1], false);
+        $res = $this->Evaluation->startEvaluation();
+        $this->assertFalse($res);
+    }
+
     function testStartEvaluationAllEnabled()
     {
         $this->_setDefault();
@@ -705,6 +799,8 @@ class EvaluationTest extends CakeTestCase
     function testGetAddRecordsOfEvaluatee()
     {
         $this->_setDefault();
+        $current_start = $this->Evaluation->Team->EvaluateTerm->getCurrentTermData()['start_date'];
+        $current_end = $this->Evaluation->Team->EvaluateTerm->getCurrentTermData()['end_date'];
         $evaluators_save_data = [
             [
                 'evaluatee_user_id' => 1,
@@ -722,17 +818,14 @@ class EvaluationTest extends CakeTestCase
         $this->Evaluation->Team->Evaluator->saveAll($evaluators_save_data);
         $evaluators = $this->Evaluation->Team->Evaluator->getEvaluatorsCombined();
 
-        $this->Evaluation->Team->current_term_start_date = 0;
-        $this->Evaluation->Team->current_term_end_date = 9999999;
-
         $collabo = $this->Evaluation->Goal->Collaborator->find('all');
         foreach ($collabo as $k => $v) {
             $collabo[$k]['Collaborator']['valued_flg'] = Collaborator::STATUS_APPROVAL;
         }
         $this->Evaluation->Goal->Collaborator->saveAll($collabo);
         $this->Evaluation->Goal->id = 1;
-        $this->Evaluation->Goal->saveField('start_date', 1);
-        $this->Evaluation->Goal->saveField('end_date', 1);
+        $this->Evaluation->Goal->saveField('start_date', $current_start);
+        $this->Evaluation->Goal->saveField('end_date', $current_end);
 
         $res = $this->Evaluation->getAddRecordsOfGoalEvaluation(1, 1, $evaluators, 0);
         $this->assertCount(5, $res);
@@ -743,7 +836,7 @@ class EvaluationTest extends CakeTestCase
         $this->_setDefault();
         $this->Evaluation->Team->current_team_id = 1;
         $this->Evaluation->Team->my_uid = 1;
-        $this->Evaluation->Team->EvaluateTerm->saveCurrentTerm();
+        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $currentTermId = $this->Evaluation->Team->EvaluateTerm->getLastInsertID();
         $this->Evaluation->Team->EvaluateTerm->changeFreezeStatus($currentTermId);
         $this->Evaluation->getMyTurnCount();
@@ -754,13 +847,21 @@ class EvaluationTest extends CakeTestCase
         $this->_setDefault();
         $this->Evaluation->Team->current_team_id = 1;
         $this->Evaluation->Team->my_uid = 1;
-        $this->Evaluation->Team->EvaluateTerm->saveCurrentTerm();
+        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $previousTermId = $this->Evaluation->Team->EvaluateTerm->getLastInsertID();
-        $previous = $this->Evaluation->Team->getBeforeTermStartEnd();
-        $this->Evaluation->Team->EvaluateTerm->save(['id' => $previousTermId, 'start_date' => $previous['start'], 'end_date' => $previous['end']]);
-        $this->Evaluation->Team->EvaluateTerm->saveCurrentTerm();
+        $previous = $this->Evaluation->EvaluateTerm->getTermData(EvaluateTerm::TYPE_PREVIOUS);
+        $this->Evaluation->Team->EvaluateTerm->save(['id' => $previousTermId, 'start_date' => $previous['start_date'], 'end_date' => $previous['end_date']]);
+        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $this->Evaluation->Team->EvaluateTerm->changeFreezeStatus($previousTermId);
         $this->Evaluation->getMyTurnCount();
+    }
+
+    function testGetCurrentTurnEvaluationId()
+    {
+        $this->_setDefault();
+        $this->_saveEvaluations();
+        $res = $this->Evaluation->getCurrentTurnEvaluationId(1, $this->Evaluation->EvaluateTerm->getCurrentTermId());
+        $this->assertEquals(2, $res);
     }
 
     function testGetTermIdByEvaluationId()
@@ -782,7 +883,7 @@ class EvaluationTest extends CakeTestCase
         $this->_saveEvaluations();
         $expectedEvaluatorId = 2;
 
-        $nextEvaluatorId = $this->Evaluation->getNextEvaluatorId($this->Evaluation->evaluate_term_id, 1);
+        $nextEvaluatorId = $this->Evaluation->getNextEvaluatorId($this->Evaluation->EvaluateTerm->getCurrentTermData(), 1);
         $this->assertEquals($nextEvaluatorId, $expectedEvaluatorId);
     }
 
@@ -795,7 +896,7 @@ class EvaluationTest extends CakeTestCase
 
         $options = [
             'conditions' => [
-                'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                'evaluate_term_id'  => $this->Evaluation->EvaluateTerm->getCurrentTermData(),
                 'evaluatee_user_id' => $evaluatee_user_id
             ],
             'order'      => [
@@ -806,7 +907,7 @@ class EvaluationTest extends CakeTestCase
         $res = $this->Evaluation->find('first', $options);
         $lastEvaluator = $res['Evaluation']['evaluator_user_id'];
 
-        $nextEvaluatorId = $this->Evaluation->getNextEvaluatorId($this->Evaluation->evaluate_term_id, $lastEvaluator);
+        $nextEvaluatorId = $this->Evaluation->getNextEvaluatorId($this->Evaluation->EvaluateTerm->getCurrentTermData(), $lastEvaluator);
         $this->assertEquals($nextEvaluatorId, null);
     }
 
@@ -815,8 +916,8 @@ class EvaluationTest extends CakeTestCase
         $this->_setDefault();
         $this->Evaluation->Team->current_team_id = 1;
         $this->Evaluation->Team->my_uid = 1;
-        $this->Evaluation->Team->EvaluateTerm->saveCurrentTerm();
-        $termId = $this->Evaluation->Team->EvaluateTerm->getLatestTermId();
+        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $termId = $this->Evaluation->Team->EvaluateTerm->getTermId(EvaluateTerm::TYPE_NEXT);
         $this->Evaluation->Team->EvaluateTerm->changeFreezeStatus($termId);
         $this->Evaluation->getIsEditable($termId, null);
     }
@@ -824,92 +925,115 @@ class EvaluationTest extends CakeTestCase
     function testGetAllStatusesForTeamSettings()
     {
         $this->_setDefault();
-        $this->Evaluation->Team->EvaluateTerm->saveCurrentTerm();
+        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $this->_saveEvaluations();
-        $this->Evaluation->getAllStatusesForTeamSettings($this->Evaluation->evaluate_term_id);
+        $this->Evaluation->getAllStatusesForTeamSettings($this->Evaluation->EvaluateTerm->getCurrentTermData());
     }
 
     function testGetIncompleteEvaluatees()
     {
         $this->_setDefault();
-        $this->Evaluation->Team->EvaluateTerm->saveCurrentTerm();
+        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $this->_saveEvaluations();
-        $this->Evaluation->getIncompleteEvaluatees($this->Evaluation->evaluate_term_id);
+        $this->Evaluation->getIncompleteEvaluatees($this->Evaluation->EvaluateTerm->getCurrentTermData());
     }
 
     function testGetIncompleteEvaluators()
     {
         $this->_setDefault();
-        $this->Evaluation->Team->EvaluateTerm->saveCurrentTerm();
+        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $this->_saveEvaluations();
-        $this->Evaluation->getIncompleteEvaluators($this->Evaluation->evaluate_term_id);
+        $this->Evaluation->getIncompleteEvaluators($this->Evaluation->EvaluateTerm->getCurrentTermData());
+    }
+
+    function testGetIncompleteNumberList()
+    {
+        $this->_setDefault();
+        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->_saveEvaluations();
+
+        $res = $this->Evaluation->getIncompleteNumberList();
+        $this->assertNotEmpty($res);
     }
 
     function testGetEvaluators()
     {
         $this->_setDefault();
-        $this->Evaluation->Team->EvaluateTerm->saveCurrentTerm();
+        $this->Evaluation->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $this->_saveEvaluations();
-        $this->Evaluation->getIncompleteEvaluatees($this->Evaluation->evaluate_term_id, 1);
+        $res = $this->Evaluation->getEvaluators($this->Evaluation->EvaluateTerm->getCurrentTermId(), 1);
+        $this->assertNotEmpty($res);
     }
 
     function testGetEvaluateesByEvaluator()
     {
         $this->_setDefault();
-        $this->Evaluation->Team->EvaluateTerm->saveCurrentTerm();
+        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $this->_saveEvaluations();
         $evaluatorId = 2;
-        $this->Evaluation->getEvaluateesByEvaluator($this->Evaluation->evaluate_term_id, $evaluatorId);
+        $this->Evaluation->getEvaluateesByEvaluator($this->Evaluation->EvaluateTerm->getCurrentTermData(), $evaluatorId);
     }
 
     function testGetIncompleteOneselfEvaluators()
     {
         $this->_setDefault();
-        $this->Evaluation->Team->EvaluateTerm->saveCurrentTerm();
+        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $this->_saveEvaluations();
-        $this->Evaluation->getIncompleteOneselfEvaluators($this->Evaluation->evaluate_term_id);
+        $this->Evaluation->getIncompleteOneselfEvaluators($this->Evaluation->EvaluateTerm->getCurrentTermData());
     }
 
     function testGetFinalEvaluations()
     {
         $this->_setDefault();
-        $this->Evaluation->Team->EvaluateTerm->saveCurrentTerm();
+        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $this->_saveEvaluations();
-        $res = $this->Evaluation->getFinalEvaluations($this->Evaluation->evaluate_term_id, [1, 2, 3]);
+        $res = $this->Evaluation->getFinalEvaluations($this->Evaluation->EvaluateTerm->getCurrentTermData(), [1, 2, 3]);
         $this->assertTrue(count($res) === 2);
     }
 
     function testGetEvaluateeIdsByTermId()
     {
         $this->_setDefault();
-        $this->Evaluation->Team->EvaluateTerm->saveCurrentTerm();
+        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $this->_saveEvaluations();
         $excepted = array(
             (int)1 => '1',
             (int)2 => '2'
         );
-        $actual = $this->Evaluation->getEvaluateeIdsByTermId($this->Evaluation->evaluate_term_id);
+        $actual = $this->Evaluation->getEvaluateeIdsByTermId($this->Evaluation->EvaluateTerm->getCurrentTermData());
         $this->assertEquals($excepted, $actual);
     }
 
     function testGetEvaluatorIdsByTermId()
     {
         $this->_setDefault();
-        $this->Evaluation->Team->EvaluateTerm->saveCurrentTerm();
+        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $this->_saveEvaluations();
         $excepted = array(
             (int)1 => '1',
             (int)2 => '2',
             (int)3 => '3'
         );
-        $actual = $this->Evaluation->getEvaluatorIdsByTermId($this->Evaluation->evaluate_term_id);
+        $actual = $this->Evaluation->getEvaluatorIdsByTermId($this->Evaluation->EvaluateTerm->getCurrentTermData());
         $this->assertEquals($excepted, $actual);
+    }
+
+    function testIsThisEvaluateType()
+    {
+        $this->_setDefault();
+        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->_saveEvaluations();
+        $res1 = $this->Evaluation->isThisEvaluateType(1, Evaluation::TYPE_ONESELF);
+        $this->assertNotEmpty($res1);
+        $res2 = $this->Evaluation->isThisEvaluateType(1, Evaluation::TYPE_FINAL_EVALUATOR);
+        $this->assertEmpty($res2);
     }
 
     function _saveEvaluations()
     {
         $evaluateeId = 1;
         $secondEvaluateeId = 2;
+        $evalTermId = $this->Evaluation->EvaluateTerm->getCurrentTermId();
         $records = [
             [
                 'Evaluation' => [
@@ -917,7 +1041,7 @@ class EvaluationTest extends CakeTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 1,
-                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'evaluate_term_id'  => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 0,
@@ -932,7 +1056,7 @@ class EvaluationTest extends CakeTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 2,
-                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'evaluate_term_id'  => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 1,
@@ -948,7 +1072,7 @@ class EvaluationTest extends CakeTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 3,
-                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'evaluate_term_id'  => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 3,
@@ -963,7 +1087,7 @@ class EvaluationTest extends CakeTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 1,
-                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'evaluate_term_id'  => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 0,
@@ -978,7 +1102,7 @@ class EvaluationTest extends CakeTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 2,
-                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'evaluate_term_id'  => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 1,
@@ -994,7 +1118,7 @@ class EvaluationTest extends CakeTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 3,
-                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'evaluate_term_id'  => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 1,
@@ -1009,7 +1133,7 @@ class EvaluationTest extends CakeTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 1,
-                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'evaluate_term_id'  => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 0,
@@ -1024,7 +1148,7 @@ class EvaluationTest extends CakeTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 2,
-                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'evaluate_term_id'  => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 1,
@@ -1040,7 +1164,7 @@ class EvaluationTest extends CakeTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $evaluateeId,
                     'evaluator_user_id' => 3,
-                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'evaluate_term_id'  => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 1,
@@ -1055,7 +1179,7 @@ class EvaluationTest extends CakeTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $secondEvaluateeId,
                     'evaluator_user_id' => 1,
-                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'evaluate_term_id'  => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 0,
@@ -1070,7 +1194,7 @@ class EvaluationTest extends CakeTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $secondEvaluateeId,
                     'evaluator_user_id' => 2,
-                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'evaluate_term_id'  => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 1,
@@ -1085,7 +1209,7 @@ class EvaluationTest extends CakeTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $secondEvaluateeId,
                     'evaluator_user_id' => 3,
-                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'evaluate_term_id'  => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 3,
@@ -1100,7 +1224,7 @@ class EvaluationTest extends CakeTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $secondEvaluateeId,
                     'evaluator_user_id' => 1,
-                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'evaluate_term_id'  => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 0,
@@ -1115,7 +1239,7 @@ class EvaluationTest extends CakeTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $secondEvaluateeId,
                     'evaluator_user_id' => 2,
-                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'evaluate_term_id'  => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 1,
@@ -1130,7 +1254,7 @@ class EvaluationTest extends CakeTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $secondEvaluateeId,
                     'evaluator_user_id' => 3,
-                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'evaluate_term_id'  => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 1,
@@ -1145,7 +1269,7 @@ class EvaluationTest extends CakeTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $secondEvaluateeId,
                     'evaluator_user_id' => 1,
-                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'evaluate_term_id'  => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 0,
@@ -1160,7 +1284,7 @@ class EvaluationTest extends CakeTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $secondEvaluateeId,
                     'evaluator_user_id' => 2,
-                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'evaluate_term_id'  => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 1,
@@ -1175,7 +1299,7 @@ class EvaluationTest extends CakeTestCase
                     'team_id'           => $this->Evaluation->current_team_id,
                     'evaluatee_user_id' => $secondEvaluateeId,
                     'evaluator_user_id' => 3,
-                    'evaluate_term_id'  => $this->Evaluation->evaluate_term_id,
+                    'evaluate_term_id'  => $evalTermId,
                     'comment'           => null,
                     'evaluate_score_id' => null,
                     'evaluate_type'     => 1,
@@ -1192,7 +1316,8 @@ class EvaluationTest extends CakeTestCase
     {
         $this->Evaluation->current_team_id = 1;
         $this->Evaluation->my_uid = 1;
-        $this->Evaluation->evaluate_term_id = 1;
+        $this->Evaluation->Team->current_team_id = 1;
+        $this->Evaluation->Team->my_uid = 1;
         $this->Evaluation->Team->TeamMember->current_team_id = 1;
         $this->Evaluation->Team->TeamMember->my_uid = 1;
         $this->Evaluation->Team->EvaluateTerm->current_team_id = 1;
@@ -1203,6 +1328,9 @@ class EvaluationTest extends CakeTestCase
         $this->Evaluation->Team->EvaluationSetting->my_uid = 1;
         $this->Evaluation->Goal->Collaborator->current_team_id = 1;
         $this->Evaluation->Goal->Collaborator->my_uid = 1;
+        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
+        $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
         $this->current_date = strtotime('2015/7/1');
         $this->start_date = strtotime('2015/7/1');
         $this->end_date = strtotime('2015/10/1');

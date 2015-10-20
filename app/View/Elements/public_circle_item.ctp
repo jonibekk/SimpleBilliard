@@ -21,7 +21,7 @@ $joined = isset($joined) ? $joined : false;
 $member_count = isset($member_count) ? $member_count : '';
 ?>
 <!-- START app/View/Elements/public_circle_item.ctp -->
-<div class="col col-xxs-12 mpTB0">
+<div class="col col-xxs-12 mpTB0 circle-item-row">
     <?=
     $this->Upload->uploadImage($circle, 'Circle.photo', ['style' => 'small'],
                                ['class' => 'comment-img'])
@@ -40,8 +40,8 @@ $member_count = isset($member_count) ? $member_count : '';
                                             'type'        => 'checkbox',
                                             'class'       => 'bt-switch',
                                             'default'     => $joined ? true : false,
+                                            'data-id'     => $circle['Circle']['id'],
                                             'data-secret' => $circle['Circle']['public_flg'] ? "0" : "1"]) ?>
-                    <?= $this->Form->hidden("$key.circle_id", ['value' => $circle['Circle']['id']]) ?>
                 <?php endif; ?>
             </div>
             <?php if (!$circle['Circle']['public_flg']): ?>

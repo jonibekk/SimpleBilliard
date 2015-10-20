@@ -157,10 +157,6 @@ class Team extends AppModel
     ];
 
     public $current_team = [];
-    public $current_term_start_date = null;
-    public $current_term_end_date = null;
-    public $next_term_start_date = null;
-    public $next_term_end_date = null;
 
     function __construct($id = false, $table = null, $ds = null)
     {
@@ -316,179 +312,6 @@ class Team extends AppModel
         return $res;
     }
 
-    function getCurrentTermStartDate()
-    {
-        if ($this->current_term_start_date) {
-            return $this->current_term_start_date;
-        }
-        $this->setCurrentTermStartEnd();
-
-        return $this->current_term_start_date;
-    }
-
-    function getCurrentTermEndDate()
-    {
-        if ($this->current_term_end_date) {
-            return $this->current_term_end_date;
-        }
-        $this->setCurrentTermStartEnd();
-
-        return $this->current_term_end_date;
-    }
-
-    function getNextTermStartDate()
-    {
-        if ($this->next_term_start_date) {
-            return $this->next_term_start_date;
-        }
-        $this->setNextTermStartEnd();
-        return $this->next_term_start_date;
-    }
-
-    function getNextTermEndDate()
-    {
-        if ($this->next_term_end_date) {
-            return $this->next_term_end_date;
-        }
-        $this->setNextTermStartEnd();
-        return $this->next_term_end_date;
-    }
-
-    function setNextTermStartEnd()
-    {
-        $this->setCurrentTermStartEnd();
-        $next_term = $this->getTermStartEndByDate(strtotime("+1 day", $this->getCurrentTermEndDate()));
-        $this->next_term_start_date = $next_term['start'];
-        $this->next_term_end_date = $next_term['end'];
-        return true;
-    }
-    
-    function setCurrentTermStartEnd()
-    {
-        //既にセットされている場合は処理しない
-        if ($this->current_term_start_date && $this->current_term_end_date) {
-            return null;
-        }
-        $current_team = $this->getCurrentTeam();
-        if (!$current_team) {
-            return null;
-        }
-
-        $start_term_month = $current_team['Team']['start_term_month'];
-
-        $border_months = $current_team['Team']['border_months'];
-
-        $now = REQUEST_TIMESTAMP;
-        return $this->setCurrentTermStartEndFromParam($start_term_month, $border_months, $now);
-    }
-
-    function setCurrentTermStartEndFromParam($start_term_month, $border_months, $target_date = null)
-    {
-        $current_team = $this->getCurrentTeam();
-        if (!$target_date) {
-            $target_date = REQUEST_TIMESTAMP;
-        }
-        if ($this->current_term_start_date) {
-            $start_date = date("Y-m-1", $this->current_term_start_date + $current_team['Team']['timezone'] * 3600);
-            $this->current_term_end_date = strtotime($start_date . "+ {$border_months} month") - $current_team['Team']['timezone'] * 3600;
-            return;
-        }
-        if ($this->current_term_end_date) {
-            $end_date = date("Y-m-1", $this->current_term_end_date + $current_team['Team']['timezone'] * 3600);
-            $this->current_term_start_date = strtotime($end_date . "- {$border_months} month") - $current_team['Team']['timezone'] * 3600;
-            return;
-        }
-
-        $term = $this->getTermStartEndFromParam($start_term_month, $border_months, $target_date);
-        $this->current_term_start_date = $term['start'];
-        $this->current_term_end_date = $term['end'];
-        return null;
-    }
-
-    function getTermStrStartEndFromParam($start_term_month, $border_months, $target_date)
-    {
-        $current_team = $this->getCurrentTeam();
-        $res = $this->getTermStartEndFromParam($start_term_month, $border_months, $target_date);
-        $res['start'] = date('Y/m/d', $res['start'] + $current_team['Team']['timezone'] * 3600);
-        $res['end'] = date('Y/m/d', $res['end'] + $current_team['Team']['timezone'] * 3600 - 1);
-        return $res;
-    }
-
-    function getTermStartEndFromParam($start_term_month, $border_months, $target_date)
-    {
-        $current_team = $this->getCurrentTeam();
-        $start_date = strtotime(date("Y-{$start_term_month}-1",
-                                     $target_date + $current_team['Team']['timezone'] * 3600)) - $current_team['Team']['timezone'] * 3600;
-        $start_date_tmp = date("Y-m-1", $start_date + $current_team['Team']['timezone'] * 3600);
-        $end_date = strtotime($start_date_tmp . "+ {$border_months} month") - $current_team['Team']['timezone'] * 3600;
-
-        //現在が期間内の場合
-        if ($start_date <= $target_date && $end_date > $target_date) {
-            $term['start'] = $start_date;
-            $term['end'] = $end_date;
-            return $term;
-        }
-        //開始日が現在より後の場合
-        elseif ($start_date > $target_date) {
-            while ($start_date > $target_date) {
-                $start_date_tmp = date("Y-m-1", $start_date + $current_team['Team']['timezone'] * 3600);
-                $start_date = strtotime($start_date_tmp . "- {$border_months} month") - $current_team['Team']['timezone'] * 3600;
-            }
-            $term['start'] = $start_date;
-            $start_date_tmp = date("Y-m-1", $term['start'] + $current_team['Team']['timezone'] * 3600);
-            $term['end'] = strtotime($start_date_tmp . "+ {$border_months} month") - $current_team['Team']['timezone'] * 3600;
-            return $term;
-        }
-        //終了日が現在より前の場合
-        elseif ($end_date < $target_date) {
-            while ($end_date < $target_date) {
-                $end_date_tmp = date("Y-m-1", $end_date + $current_team['Team']['timezone'] * 3600);
-                $end_date = strtotime($end_date_tmp . "+ {$border_months} month") - $current_team['Team']['timezone'] * 3600;
-            }
-            $term['end'] = $end_date;
-            $end_date_tmp = date("Y-m-1", $term['end'] + $current_team['Team']['timezone'] * 3600);
-            $term['start'] = strtotime($end_date_tmp . "- {$border_months} month") - $current_team['Team']['timezone'] * 3600;
-            return $term;
-        }
-    }
-
-    function getTermStartEndByDate($target_date)
-    {
-        if (empty($this->current_team)) {
-            $this->current_team = $this->findById($this->current_team_id);
-            if (empty($this->current_team)) {
-                return null;
-            }
-        }
-        $start_term_month = $this->current_team['Team']['start_term_month'];
-        $border_months = $this->current_team['Team']['border_months'];
-        return $this->getTermStartEndFromParam($start_term_month, $border_months, $target_date);
-    }
-
-    function getBeforeTermStartEnd($count = 1)
-    {
-        if ($count < 1) {
-            return;
-        }
-        $term['start'] = $this->getCurrentTermStartDate();
-        for ($i = 0; $i < $count; $i++) {
-            $term = $this->getTermStartEndByDate((strtotime("-1 day", $term['start'])));
-        }
-        return $term;
-    }
-
-    function getAfterTermStartEnd($count = 1)
-    {
-        if ($count < 1) {
-            return;
-        }
-        $term['end'] = $this->getCurrentTermEndDate();
-        for ($i = 0; $i < $count; $i++) {
-            $term = $this->getTermStartEndByDate((strtotime("+1 day", $term['end'])));
-        }
-        return $term;
-    }
-
     /**
      * @param $team_id
      * @param $post_data
@@ -501,13 +324,25 @@ class Team extends AppModel
         if (!$this->save($post_data)) {
             return false;
         }
-        $saved_term = $this->EvaluateTerm->saveChangedTerm(
+        $current_term_id = $this->EvaluateTerm->getCurrentTermId();
+        $next_term_id = $this->EvaluateTerm->getNextTermId();
+        if (!$current_term_id || !$next_term_id) {
+            return false;
+        }
+        if (viaIsSet($post_data['Team']['change_from']) == Team::OPTION_CHANGE_TERM_FROM_CURRENT &&
+            $this->EvaluateTerm->isStartedEvaluation($current_term_id)
+        ) {
+            return false;
+        }
+
+        $res = $this->EvaluateTerm->updateTermData(
             $post_data['Team']['change_from'],
             $post_data['Team']['start_term_month'],
-            $post_data['Team']['border_months']
+            $post_data['Team']['border_months'],
+            $post_data['Team']['timezone']
         );
 
-        return (bool)$saved_term;
+        return (bool)$res;
     }
 
     /**

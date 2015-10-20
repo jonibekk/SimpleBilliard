@@ -23,7 +23,6 @@ class GoalsController extends AppController
         $search_option = $this->_getSearchVal();
         $search_url = $this->_getSearchUrl($search_option);
         $search_options = $this->Goal->getSearchOptions();
-        $this->_setMyCircle();
         $goals = $this->Goal->getAllGoals(GOAL_INDEX_ITEMS_NUMBER, $search_option, null, true);
         $goal_count = $this->Goal->countGoalRes($search_option);
         $this->_setViewValOnRightColumn();
@@ -382,22 +381,25 @@ class GoalsController extends AppController
     {
         $collabo_id = viaIsSet($this->request->params['named']['collaborator_id']);
         $this->request->allowMethod('post', 'put');
+        $coach_id = $this->User->TeamMember->selectCoachUserIdFromTeamMembersTB(
+            $this->Auth->user('id'), $this->Session->read('current_team_id'));
 
         if (!isset($this->request->data['Collaborator'])) {
             $this->_editCollaboError();
             return $this->redirect($this->referer());
         }
         $collaborator = $this->request->data['Collaborator'];
-
         // もしpriority=0のデータであれば認定対象外なのでvalued_flg=2を設定する
         // そうでなければ再認定が必要なのでvalued_flg=0にする
         $valued_flg = 0;
+
         if (isset($collaborator['priority']) && $collaborator['priority'] === '0') {
             $valued_flg = 2;
         }
         $this->request->data['Collaborator']['valued_flg'] = $valued_flg;
 
         if (!$this->Goal->Collaborator->edit($this->request->data)) {
+
             $this->_editCollaboError();
             return $this->redirect($this->referer());
         }
@@ -409,6 +411,12 @@ class GoalsController extends AppController
             $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_COLLABORATE_GOAL, $collaborator['goal_id']);
             $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_COLLABORATE, $collaborator['goal_id']);
             $this->_sendNotifyToCoach($collaborator['goal_id'], NotifySetting::TYPE_MY_MEMBER_COLLABORATE_GOAL);
+        }
+        if (isset($coach_id['TeamMember']['coach_user_id']) === true
+            && is_null($coach_id['TeamMember']['coach_user_id']) === false
+            && (isset($collaborator['priority']) && $collaborator['priority'] >= '1')
+        ) {
+            $this->redirect("/goal_approval");
         }
         return $this->redirect($this->referer());
     }
@@ -1212,8 +1220,8 @@ class GoalsController extends AppController
         }
 
         //今期、来期のゴールを取得する
-        $start_date = $this->Team->getCurrentTermStartDate();
-        $end_date = $this->Team->getNextTermEndDate();
+        $start_date = $this->Team->EvaluateTerm->getCurrentTermData()['start_date'];
+        $end_date = $this->Team->EvaluateTerm->getNextTermData()['end_date'];
 
         if ($type === 'leader') {
             $goals = $this->Goal->getMyGoals(MY_GOALS_DISPLAY_NUMBER, $page_num, 'all', null, $start_date, $end_date);
@@ -1252,9 +1260,9 @@ class GoalsController extends AppController
         $kr_priority_list = $this->Goal->KeyResult->priority_list;
         $kr_value_unit_list = KeyResult::$UNIT;
         $goal_start_date_limit_format = date('Y/m/d',
-                                             $this->Goal->Team->getCurrentTermStartDate() + ($this->Auth->user('timezone') * 60 * 60));
-        $goal_end_date_limit_format = date('Y/m/d', strtotime("- 1 day",
-                                                              $this->Goal->Team->getNextTermEndDate()) + ($this->Auth->user('timezone') * 60 * 60));
+                                             $this->Team->EvaluateTerm->getCurrentTermData()['start_date'] + ($this->Auth->user('timezone') * 60 * 60));
+        $goal_end_date_limit_format = date('Y/m/d',
+                                           $this->Team->EvaluateTerm->getCurrentTermData()['end_date'] + ($this->Auth->user('timezone') * 60 * 60));
         if (isset($this->request->data['Goal']) && !empty($this->request->data['Goal'])) {
             $goal_start_date_format = date('Y/m/d',
                                            $this->request->data['Goal']['start_date'] + ($this->Auth->user('timezone') * 60 * 60));
@@ -1263,8 +1271,8 @@ class GoalsController extends AppController
         }
         else {
             $goal_start_date_format = date('Y/m/d', REQUEST_TIMESTAMP + ($this->Auth->user('timezone') * 60 * 60));
-            $goal_end_date_format = date('Y/m/d', strtotime("- 1 day",
-                                                            $this->Goal->Team->getCurrentTermEndDate()) + ($this->Auth->user('timezone') * 60 * 60));
+            $goal_end_date_format = date('Y/m/d',
+                                         $this->Team->EvaluateTerm->getCurrentTermData()['end_date'] + ($this->Auth->user('timezone') * 60 * 60));
         }
         $this->set(compact('goal_category_list',
                            'priority_list',

@@ -16,8 +16,11 @@ class CollaboratorTest extends CakeTestCase
      */
     public $fixtures = array(
         'app.collaborator',
+        'app.follower',
         'app.team',
+        'app.evaluate_term',
         'app.user',
+        'app.local_name',
         'app.goal',
         'app.goal_category',
         'app.approval_history',
@@ -52,14 +55,41 @@ class CollaboratorTest extends CakeTestCase
 
     function testAdd()
     {
-        $this->Collaborator->my_uid = 1;
-        $this->Collaborator->current_team_id = 1;
+        $this->_setDefault();
         $res = $this->Collaborator->add(1);
         $this->assertTrue(!empty($res));
     }
 
+    function testEdit()
+    {
+        $this->_setDefault();
+        $data = [
+            'goal_id' => 1,
+            'user_id' => 1,
+            'team_id' => 1,
+            'role'    => 'test'
+        ];
+        $post_data = $this->Collaborator->save($data);
+        $first_saved_id = $post_data['Collaborator']['id'];
+        $post_data['Collaborator']['role'] = 'edited';
+        $res = $this->Collaborator->edit($post_data);
+        $secound_saved_id = $res['Collaborator']['id'];
+
+        $this->assertEquals('edited', $res['Collaborator']['role']);
+        $this->assertEquals($first_saved_id, $secound_saved_id);
+
+    }
+
+    function testGetOwnersStatus()
+    {
+        $this->_setDefault();
+        $res = $this->Collaborator->getOwnersStatus(1);
+        $this->assertNotEmpty($res);
+    }
+
     function testGetCollabeGoalDetail()
     {
+        $this->_setDefault();
         $team_id = 1;
 
         $params = [
@@ -106,6 +136,8 @@ class CollaboratorTest extends CakeTestCase
 
     function testGetCollabeGoalDetailExcludePriorityZero()
     {
+        $this->_setDefault();
+
         $team_id = 1;
 
         $params = [
@@ -152,8 +184,10 @@ class CollaboratorTest extends CakeTestCase
 
     function testChangeApprovalStatus()
     {
-        $user_id = 777;
-        $team_id = 888;
+        $this->_setDefault();
+
+        $user_id = 1;
+        $team_id = 1;
         $goal_id = 999;
         $valued_flg = 0;
 
@@ -173,6 +207,8 @@ class CollaboratorTest extends CakeTestCase
 
     function testCountCollaboGoal()
     {
+        $this->_setDefault();
+
         $team_id = 1;
         $params = [
             'first_name' => 'test',
@@ -217,8 +253,10 @@ class CollaboratorTest extends CakeTestCase
 
     function testCountCollaboGoalModifyStatus()
     {
-        $team_id = 999;
-        $user_id = 888;
+        $this->_setDefault();
+
+        $team_id = 1;
+        $user_id = 1;
         $goal_id = 777;
         $valued_flg = 3;
         $params = [
@@ -236,6 +274,8 @@ class CollaboratorTest extends CakeTestCase
 
     function testCountCollaboRequestModify()
     {
+        $this->_setDefault();
+
         $team_id = 1;
         $user_id = 1;
         $goal_id = 1;
@@ -255,6 +295,8 @@ class CollaboratorTest extends CakeTestCase
 
     function testCountCollaboPriorityZero()
     {
+        $this->_setDefault();
+
         $team_id = 1;
         $user_id = 1;
         $goal_id = 1;
@@ -274,8 +316,8 @@ class CollaboratorTest extends CakeTestCase
 
     function testGetLeaderUidNotNull()
     {
-        $this->Collaborator->my_uid = 1;
-        $this->Collaborator->current_team_id = 1;
+        $this->_setDefault();
+
         $this->Collaborator->save(['goal_id' => 1, 'team_id' => 1, 'user_id' => 1, 'type' => Collaborator::TYPE_OWNER]);
 
         $actual = $this->Collaborator->getLeaderUid(1);
@@ -284,16 +326,14 @@ class CollaboratorTest extends CakeTestCase
 
     function testGetLeaderUidNull()
     {
-        $this->Collaborator->my_uid = 1;
-        $this->Collaborator->current_team_id = 1;
+        $this->_setDefault();
         $actual = $this->Collaborator->getLeaderUid(111111);
         $this->assertEquals(null, $actual);
     }
 
     function testGetCollaboratorListByGoalId()
     {
-        $this->Collaborator->my_uid = 1;
-        $this->Collaborator->current_team_id = 1;
+        $this->_setDefault();
         $data = [
             'user_id' => 100,
             'goal_id' => 200,
@@ -307,8 +347,7 @@ class CollaboratorTest extends CakeTestCase
 
     function testGetCollaboratorByGoalId()
     {
-        $this->Collaborator->my_uid = 1;
-        $this->Collaborator->current_team_id = 1;
+        $this->_setDefault();
 
         $goal_id = 1;
 
@@ -328,6 +367,8 @@ class CollaboratorTest extends CakeTestCase
 
     function testGetCollaboratorOwnerTypeTrue()
     {
+        $this->_setDefault();
+
         $team_id = 1;
         $user_id = 100;
         $goal_id = 200;
@@ -344,8 +385,10 @@ class CollaboratorTest extends CakeTestCase
 
     function testGetCollaboratorOwnerTypeFalse()
     {
+        $this->_setDefault();
+
         $team_id = 1;
-        $user_id = 100;
+        $user_id = 1;
         $goal_id = 200;
         $data = [
             'team_id' => $team_id,
@@ -360,8 +403,7 @@ class CollaboratorTest extends CakeTestCase
 
     function testGetCount()
     {
-        $this->Collaborator->my_uid = 1;
-        $this->Collaborator->current_team_id = 1;
+        $this->_setDefault();
 
         $this->Collaborator->create();
         $this->Collaborator->save(
@@ -430,6 +472,8 @@ class CollaboratorTest extends CakeTestCase
 
     function testGoalIdOrderByPriority()
     {
+        $this->_setDefault();
+
         $team_id = 1;
         $user_id = 1;
         $this->Collaborator->deleteAll(['Collaborator.user_id' => $user_id], false);
@@ -454,8 +498,6 @@ class CollaboratorTest extends CakeTestCase
             ],
         ];
         $this->Collaborator->saveAll($prepare_data);
-        $this->Collaborator->current_team_id = $team_id;
-        $this->Collaborator->my_uid = $user_id;
         $actual = $this->Collaborator->goalIdOrderByPriority($user_id, [4, 3, 5]);
         $expected = array(
             (int)5 => '5',
@@ -470,6 +512,23 @@ class CollaboratorTest extends CakeTestCase
             (int)5 => '5'
         );
         $this->assertEquals($expected, $actual);
+    }
+
+    function _setDefault()
+    {
+        $this->Collaborator->current_team_id = 1;
+        $this->Collaborator->my_uid = 1;
+        $this->Collaborator->Goal->current_team_id = 1;
+        $this->Collaborator->Goal->my_uid = 1;
+        $this->Collaborator->Goal->Team->current_team_id = 1;
+        $this->Collaborator->Goal->Team->my_uid = 1;
+        $this->Collaborator->Goal->Team->EvaluateTerm->current_team_id = 1;
+        $this->Collaborator->Goal->Team->EvaluateTerm->my_uid = 1;
+
+        $this->Collaborator->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->Collaborator->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
+        $this->Collaborator->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
+
     }
 
 }

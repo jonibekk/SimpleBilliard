@@ -21,7 +21,6 @@ class EvaluationsController extends AppController
     function index()
     {
         $this->layout = LAYOUT_ONE_COLUMN;
-
         try {
             $this->Evaluation->checkAvailViewEvaluationList();
             if (!$this->Team->EvaluationSetting->isEnabled()) {
@@ -184,7 +183,9 @@ class EvaluationsController extends AppController
         elseif ($status == Evaluation::TYPE_STATUS_DONE) {
             //次の評価へ通知
             $next_evaluation_id = $this->Evaluation->getCurrentTurnEvaluationId($evaluateeId, $evaluateTermId);
-            if ($next_evaluation_id) {
+            $is_final_evaluation = $this->Evaluation->isThisEvaluateType($next_evaluation_id,
+                                                                         Evaluation::TYPE_FINAL_EVALUATOR);
+            if ($next_evaluation_id && !$is_final_evaluation) {
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_CAN_AS_EVALUATOR,
                                                  $next_evaluation_id);
             }

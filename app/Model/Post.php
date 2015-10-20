@@ -4,6 +4,7 @@ App::uses('UploadHelper', 'View/Helper');
 App::uses('TimeExHelper', 'View/Helper');
 App::uses('TextExHelper', 'View/Helper');
 App::uses('View', 'View');
+App::uses('PostShareCircle', 'Model');
 
 /**
  * Post Model
@@ -481,9 +482,8 @@ class Post extends AppModel
 
     public function get($page = 1, $limit = 20, $start = null, $end = null, $params = null, $contains_message = false)
     {
-        $one_month = 60 * 60 * 24 * 31;
         if (!$start) {
-            $start = REQUEST_TIMESTAMP - $one_month;
+            $start = strtotime("-1 month", REQUEST_TIMESTAMP);
         }
         elseif (is_string($start)) {
             $start = strtotime($start);
@@ -712,9 +712,10 @@ class Post extends AppModel
                         'name',
                         'photo_file_name',
                         'id',
+                        'end_date',
                         'completed'
                     ],
-                    'User'         => [
+                    'User'      => [
                         'fields'     => $this->User->profileFields,
                         'TeamMember' => [
                             'fields'     => [
@@ -754,6 +755,7 @@ class Post extends AppModel
                     'fields' => [
                         'id',
                         'name',
+                        'end_date'
                     ],
                 ],
                 'ActionResult'    => [
