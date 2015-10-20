@@ -147,17 +147,20 @@
             <div class="dashboard-goals-card-body shadow-default">
                 <?php if (isset($goal['Goal']['id'])): ?>
 
-                    <div class="progress mb_0px goals-column-progress-bar">
+                    <!-- ToDo - 大樹さん。 Progressをアイコンで表す処理の実装が終わればここは必要ないので削除願います。 -->
+                    <!-- <div class="progress mb_0px goals-column-progress-bar">
                         <div class="progress-bar progress-bar-info" role="progressbar"
                               aria-valuemin="0"
                              aria-valuemax="100" style="width: <?= h($goal['Goal']['progress']) ?>%;">
                             <span class="ml_12px"><?= h($goal['Goal']['progress']) ?>%</span>
                         </div>
-                    </div>
+                    </div> -->
 
                     <div class="goalsCard-krSeek">
                         <?php if (isset($goal['Goal']['end_date']) && !empty($goal['Goal']['end_date'])): ?>
-                            <div class="pull-right font_12px">
+
+                            <!-- 認定待ちと残り日数 -->
+                            <!-- <div class="pull-right font_12px">
                                 <?php if (($limit_day = ($goal['Goal']['end_date'] - REQUEST_TIMESTAMP) / (60 * 60 * 24)) < 0): ?>
                                     <?= __d('gl', "%d日経過", $limit_day * -1) ?>
                                 <?php else: ?>
@@ -175,7 +178,7 @@
                                     <?php endif; ?>
                                     <?= __d('gl', "残り%d日", $limit_day) ?>
                                 <?php endif; ?>
-                            </div>
+                            </div> -->
                         <?php endif; ?>
 
 

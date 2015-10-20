@@ -1,0 +1,61 @@
+.dashboard-goals-card-body-krs {
+  width: 100%;
+  height: 44px;
+  margin: 8px 0;
+}
+
+.dashboard-goals-card-body-krs-icon(@krBgColor: @waterBlue) {
+  color: white;
+  width: 28px;
+  height: 28px;
+  line-height: 28px;
+  text-align: center;
+  vertical-align: middle;
+  display: inline-block;
+  font-size: 20px;
+  border-radius: 50%;
+  background: @krBgColor;
+}
+
+.dashboard-goals-card-body-krs-icon-unachieved {
+  .dashboard-goals-card-body-krs-icon(@waterBlue);
+}
+
+.dashboard-goals-card-body-krs-icon-achieved {
+  .dashboard-goals-card-body-krs-icon(@slightGray);
+}
+
+.dashboard-goals-card-body-krs-title(@krTextColor: @slightGray) {
+  display: inline-block;
+  font-weight: bold;
+  color: @krTextColor;
+  vertical-align: middle;
+  width: 80%;
+  .line-number-limit-1(@veryLightYellow, inline-block);
+}
+
+.dashboard-goals-card-body-krs-title-unachieved {
+  .dashboard-goals-card-body-krs-title(@midGray);
+}
+
+.dashboard-goals-card-body-krs-title-achieved {
+  .dashboard-goals-card-body-krs-title(@slightGray);
+  text-decoration: line-through @basicGray;
+}
+
+.dashboard-goals-card-body-krs-action {
+  font-size: 20px;
+  padding: 2px;
+  color: @carmineLight;
+  border: 2px solid @carmineLight;
+  border-radius: 50%;
+  cursor: pointer;
+  &:hover,
+  &:target,
+  &:active,
+  &:focus {
+    background-color: @carmineLight;
+    color: @veryLightYellow;
+    text-decoration: none;
+  }
+}

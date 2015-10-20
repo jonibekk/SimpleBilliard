@@ -14,6 +14,23 @@
 ?>
 <!-- START app/View/Elements/Goal/key_result_items.ctp -->
 
+<!-- ToDo -> 大樹さん、完了したKRかどうかでアイコンのクラスを変更する処理もお願いします。 -->
+<ul class="dashboard-goals-card-body-krs-wrap">
+    <li class="dashboard-goals-card-body-krs">
+        <i class="fa-key fa dashboard-goals-card-body-krs-icon-unachieved"></i>
+        <p class="dashboard-goals-card-body-krs-title-unachieved">達成などしていないKRです。</p>
+        <a class="fa-check fa dashboard-goals-card-body-krs-action"></a>
+    </li>
+    <li class="dashboard-goals-card-body-krs">
+        <i class="fa-key fa dashboard-goals-card-body-krs-icon-achieved"></i>
+        <p class="dashboard-goals-card-body-krs-title-achieved">達成済のKRです。</p>
+    </li>
+    <li class="dashboard-goals-card-body-krs">
+        <i class="fa-key fa dashboard-goals-card-body-krs-icon-achieved"></i>
+        <p class="dashboard-goals-card-body-krs-title-unachieved">文字数をめちゃくちゃ長くしたバージョンを入れておかないと後々に困ります。</p>
+        <a class="fa-check fa dashboard-goals-card-body-krs-action"></a>
+    </li>
+</ul>
 
 
 <!-- 1>0のときとかいう条件付けて読み込まないようにしてありますｗ -->
