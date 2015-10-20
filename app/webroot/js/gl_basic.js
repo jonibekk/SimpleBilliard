@@ -3579,7 +3579,7 @@ $(document).ready(function () {
         '    <a href="#" class="pull-right font_lightgray" data-dz-remove><i class="fa fa-times"></i></a>' +
         '    <div class="dz-thumb-container pull-left">' +
         '      <i class="fa fa-file-o file-other-icon"></i>' +
-        '      <img class="dz-thumb none" data-dz-thumbnail /></div>' +
+        '      <img class="dz-thumb none" data-dz-thumbnail-show /></div>' +
         '    <span class="dz-name font_14px font_bold font_verydark pull-left" data-dz-name></span><br>' +
         '    <span class="dz-size font_11px font_lightgray pull-left" data-dz-size></span>' +
         '  </div>' +
@@ -3592,7 +3592,7 @@ $(document).ready(function () {
     var previewTemplateActionImage =
         '<div class="dz-preview dz-action-photo-preview action-photo-preview upload-file-attach-button">' +
         '  <div class="dz-action-photo-details">' +
-        '    <div class="dz-action-photo-thumb-container pull-left"><img class="dz-action-photo-thumb" data-dz-thumbnail /></div>' +
+        '    <div class="dz-action-photo-thumb-container pull-left"><img class="dz-action-photo-thumb" data-dz-thumbnail-show /></div>' +
         '  </div>' +
         '  <div class="dz-action-photo-progress progress">' +
         '    <div class="progress-bar progress-bar-info" role="progressbar"  data-dz-uploadprogress></div>' +
@@ -3614,7 +3614,7 @@ $(document).ready(function () {
         dictCancelUploadConfirmation: cake.message.validate.dropzone_cancel_upload_confirmation,
         clickable: '#' + $uploadFileAttachButton.attr('id'),
         previewTemplate: previewTemplateDefault,
-        thumbnailWidth: 240,
+        thumbnailWidth: null,
         thumbnailHeight: 240,
         // ファイルがドロップされた時の処理
         drop: function (e) {
@@ -3799,6 +3799,31 @@ $(document).ready(function () {
                 icon: "fa fa-check-circle",
                 delay: 4000,
                 mouse_reset: false
+            });
+        },
+        thumbnail: function(file, dataUrl) {
+            var orientation=0;
+            EXIF.getData(file, function () {
+                switch(parseInt(EXIF.getTag(file, "Orientation"))){
+                    case 3: orientation=180;
+                        break;
+                    case 6: orientation=-90;
+                        break;
+                    case 8: orientation=90;
+                        break;
+                }
+                var thumbnailElement, _i, _ref;
+                alert(orientation);
+                if(orientation!=0) {
+                    orientation = orientation + 180;
+                }
+                _ref = file.previewElement.querySelectorAll("[data-dz-thumbnail-show]");
+                for (_i = 0; _i < _ref.length; _i++) {
+                    thumbnailElement = _ref[_i];
+                }
+                thumbnailElement.alt = file.name;
+                thumbnailElement.src = dataUrl;
+                thumbnailElement.style="transform:rotate("+orientation+"deg);-ms-transform:rotate("+orientation+"deg);-webkit-transform:rotate("+orientation+"deg);";
             });
         },
         // ファイルアップロード失敗
