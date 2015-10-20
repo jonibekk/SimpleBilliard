@@ -64,7 +64,7 @@ $(window).load(function () {
 
 $(document).ready(function () {
 
-    $(document).on('keyup','#message_text_input',function(){
+    $(document).on('keyup', '#message_text_input', function () {
         $(this).autosize();
         $('body').animate({
             scrollTop: $(document).height()
@@ -334,8 +334,6 @@ $(document).ready(function () {
     $(document).on("click", '.modal-ajax-get-share-circles-users', function (e) {
         e.preventDefault();
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
-        //noinspection JSUnusedLocalSymbols,CoffeeScriptUnusedLocalSymbols
-        modalFormCommonBindEvent($modal_elm);
         var url = $(this).attr('href');
         if (url.indexOf('#') == 0) {
             $(url).modal('open');
@@ -1969,7 +1967,6 @@ $(document).ready(function () {
         $modal_elm.on('hidden.bs.modal', function (e) {
             $(this).remove();
         });
-        modalFormCommonBindEvent($modal_elm);
         var url = $(this).attr('href');
         if (url.indexOf('#') == 0) {
             $(url).modal('open');
