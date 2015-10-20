@@ -433,18 +433,33 @@ class Post extends AppModel
         return false;
     }
 
-    public function getMyPostList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000)
+    public function getMyPostList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000,$is_teamall= null)
     {
-        $options = [
-            'conditions' => [
-                'user_id'                  => $this->my_uid,
-                'team_id'                  => $this->current_team_id,
-                'modified BETWEEN ? AND ?' => [$start, $end],
-            ],
-            'order'      => [$order => $order_direction],
-            'limit'      => $limit,
-            'fields'     => ['id'],
-        ];
+        if($is_teamall && !is_null($is_teamall)) {
+            $options = [
+                'conditions' => [
+                    'user_id'                  => $this->my_uid,
+                    'team_id'                  => $this->current_team_id,
+                    'modified BETWEEN ? AND ?' => [$start, $end],
+                    'NOT'=>array('type'=>array(Post::TYPE_CREATE_GOAL))
+                ],
+                'order'      => [$order => $order_direction],
+                'limit'      => $limit,
+                'fields'     => ['id'],
+            ];
+        }
+        else{
+            $options = [
+                'conditions' => [
+                    'user_id'                  => $this->my_uid,
+                    'team_id'                  => $this->current_team_id,
+                    'modified BETWEEN ? AND ?' => [$start, $end],
+                ],
+                'order'      => [$order => $order_direction],
+                'limit'      => $limit,
+                'fields'     => ['id'],
+            ];
+        }
         $res = $this->find('list', $options);
         return $res;
     }
@@ -540,10 +555,14 @@ class Post extends AppModel
                 if (!$is_exists_circle || ($is_secret && !$is_belong_circle_member)) {
                     throw new RuntimeException(__d('gl', "サークルが存在しないか、権限がありません。"));
                 }
+
                 $p_list = array_merge($p_list,
                                       $this->PostShareCircle->getMyCirclePostList($start, $end, 'modified', 'desc',
                                                                                   1000, $this->orgParams['circle_id'],
                                                                                   PostShareCircle::SHARE_TYPE_SHARED));
+
+                $p_list = array_diff($p_list,$this->getMyPostList($start,$end,'modified', 'desc',1000,$this->Circle->isTeamAllCircle($this->orgParams['circle_id'])));
+
             }
             //単独投稿指定
             elseif ($this->orgParams['post_id']) {
