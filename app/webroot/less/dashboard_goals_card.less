@@ -62,15 +62,30 @@
 .dashboard-goals-card-header-icon {
   font-size: 30px;
   padding: 8px 4px 0;
+  margin: 0 8px 0 0;
   border-radius: 50%;
   background-color: @slightGray;
   color: white;
   display: inline-block;
   vertical-align: middle;
+  // background: -webkit-linear-gradient(bottom, @waterBlue 0%, @slightGray 50%);
+
+  // position: absolute;
+  // z-index: -1;
 }
+//
+// .dashboard-goals-card-header-icon-wrap {
+//   width: 40px;
+//   height: 40px;
+//   position: relative;
+//   display: inline-block;
+//   vertical-align: middle;
+//   background-color: @waterBlue;
+//   border-radius: 50%;
+// }
 
 .dashboard-goals-card-header-title {
-  width: 76%;
+  width: 72%;
   display: inline-block;
   vertical-align: middle;
 }
@@ -92,11 +107,24 @@
   }
 }
 
-
 .dashboard-goals-card-header-goal-set {
-  border: 1px dashed #aaa;
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  color: @trueGray;
+  border: 2px dashed @trueGray;
+  border-radius: 8px;
   padding: 4px;
   margin: 0;
+  &:hover {
+    border: 2px solid @darkGray;
+    color: @darkGray;
+    text-decoration: none;
+  }
+}
+
+.dashboard-goals-card-header-goal-set-icon {
+  margin: 0 4px 0 0;
 }
 
 .dashboard-goals-card-header-purpose {
@@ -107,7 +135,7 @@
 
 .dashboard-goals-card-header-goal {
   color: @darkBlack;
-  .line-number-limit-2(transparent);
+  .line-number-limit-2();
   .line-number-trigger;
   font-weight: bold;
 }

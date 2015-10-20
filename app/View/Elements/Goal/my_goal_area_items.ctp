@@ -13,24 +13,23 @@
 <!-- START app/View/Elements/Goal/my_goal_area_items.ctp -->
 <?php foreach ($goals as $goal): ?>
     <div class="dashboard-goals-card">
-        <?php if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])): ?>
-        <div class="dashboard-goals-card-header">
-        <?php else: ?>
-        <div class="dashboard-goals-card-header-noname">
-        <?php endif; ?>
-            <i class="dashboard-goals-card-header-icon fa fa-flag-o"></i>
+        <!-- Class is changed, whether goal name is set or not | goal名のあるなしでclassを切り替える -->
+        <div class="
+            <?php if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])): ?>
+                dashboard-goals-card-header
+            <?php else: ?>
+                dashboard-goals-card-header-noname
+            <?php endif; ?>
+        ">
+            <i class="dashboard-goals-card-header-icon fa fa-flag-o jsGoalsCardProgress" goalProgPercent="50"></i>
             <div class="dashboard-goals-card-header-title">
                 <?php if (empty($goal['Goal'])): ?>
-                    <div class="dashboard-goals-card-header-goal-set">
                         <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add', 'purpose_id' => $goal['Purpose']['id'], 'mode' => 2]) ?>"
-                           class="font_rougeOrange">
-                           <div class="">
-                               <i class="fa fa-plus-circle"></i><?= __d('gl', '基準を追加する') ?>
-                           </div>
-                            <div class="goals-column-add-icon"></div>
-                            <div class="goals-column-add-text font_12px"></div>
+                           class="dashboard-goals-card-header-goal-set">
+                           <i class="fa fa-plus-circle dashboard-goals-card-header-goal-set-icon"></i><?= __d('gl', '基準を追加する') ?>
+                            <!-- <div class="goals-column-add-icon"></div>
+                            <div class="goals-column-add-text font_12px"></div> -->
                         </a>
-                    </div>
                 <?php else: ?>
                     <div class="dashboard-goals-card-header-goal-wrap">
                         <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal['Goal']['id']]) ?>"
@@ -147,13 +146,15 @@
         <?php if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])): ?>
             <div class="dashboard-goals-card-body shadow-default">
                 <?php if (isset($goal['Goal']['id'])): ?>
+
                     <div class="progress mb_0px goals-column-progress-bar">
                         <div class="progress-bar progress-bar-info" role="progressbar"
-                             aria-valuenow="<?= h($goal['Goal']['progress']) ?>" aria-valuemin="0"
+                              aria-valuemin="0"
                              aria-valuemax="100" style="width: <?= h($goal['Goal']['progress']) ?>%;">
                             <span class="ml_12px"><?= h($goal['Goal']['progress']) ?>%</span>
                         </div>
                     </div>
+
                     <div class="goalsCard-krSeek">
                         <?php if (isset($goal['Goal']['end_date']) && !empty($goal['Goal']['end_date'])): ?>
                             <div class="pull-right font_12px">
@@ -176,12 +177,20 @@
                                 <?php endif; ?>
                             </div>
                         <?php endif; ?>
-                        <?php $url = ['controller' => 'goals', 'action' => 'ajax_get_key_results', 'goal_id' => $goal['Goal']['id'], true];
-                        if ($type == "follow") {
-                            $url = ['controller' => 'goals', 'action' => 'ajax_get_key_results', 'goal_id' => $goal['Goal']['id']];
-                        }
+
+
+                        <?php
+                            echo $this->element('Goal/key_result_items');
                         ?>
-                        <?php if (count($goal['KeyResult']) > 0) { ?>
+
+                        <?php
+                        // $url = ['controller' => 'goals', 'action' => 'ajax_get_key_results', 'goal_id' => $goal['Goal']['id'], true];
+                        // if ($type == "follow") {
+                        //     $url = ['controller' => 'goals', 'action' => 'ajax_get_key_results', 'goal_id' => $goal['Goal']['id']];
+                        // }
+                        ?>
+
+                        <!-- <?php if (count($goal['KeyResult']) > 0) { ?>
                             <a href="#"
                                class="link-dark-gray toggle-ajax-get pull-left btn-white bd-radius_14px p_4px font_12px lh_18px"
                                target-id="KeyResults_<?= $goal['Goal']['id'] ?>"
@@ -212,7 +221,8 @@
                                 <i class="fa fa-plus-circle font_brownRed"></i>
                                 <span class="ml_2px"><?= __d('gl', "出したい成果を追加") ?></span>
                             </a>
-                        <?php } ?>
+                        <?php } ?> -->
+
                     </div>
                     <div class="none" id="KeyResults_<?= $goal['Goal']['id'] ?>"></div>
                 <?php endif; ?>
