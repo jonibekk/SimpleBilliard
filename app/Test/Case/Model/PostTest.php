@@ -1011,6 +1011,14 @@ class PostTest extends CakeTestCase
         $this->assertEquals($data['body'], $res['Post']['body']);
     }
 
+    function testgetAllPostsForTeamCircle()
+    {
+        $pids = array('100','99','97','96','95','94');
+
+        $this->assertNotEmpty($this->Post->getAllPostsForTeamCircle($pids));
+
+    }
+
     function testGetPhotoPath()
     {
         $data = [

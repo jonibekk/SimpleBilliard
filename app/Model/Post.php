@@ -433,22 +433,8 @@ class Post extends AppModel
         return false;
     }
 
-    public function getMyPostList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000,$is_teamall= null)
+    public function getMyPostList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000)
     {
-        if($is_teamall && !is_null($is_teamall)) {
-            $options = [
-                'conditions' => [
-                    'user_id'                  => $this->my_uid,
-                    'team_id'                  => $this->current_team_id,
-                    'modified BETWEEN ? AND ?' => [$start, $end],
-                    'NOT'=>array('type'=>array(Post::TYPE_CREATE_GOAL))
-                ],
-                'order'      => [$order => $order_direction],
-                'limit'      => $limit,
-                'fields'     => ['id'],
-            ];
-        }
-        else{
             $options = [
                 'conditions' => [
                     'user_id'                  => $this->my_uid,
@@ -459,7 +445,26 @@ class Post extends AppModel
                 'limit'      => $limit,
                 'fields'     => ['id'],
             ];
-        }
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
+    public function getAllPostsForTeamCircle($pids)
+    {
+        $options = [
+            'conditions'=>[
+                'id'=>$pids,
+                'NOT'=>[
+                    'type'=>[
+                        self::TYPE_ACTION,
+                        self::TYPE_CREATE_GOAL,
+                        self::TYPE_GOAL_COMPLETE,
+                        self::TYPE_KR_COMPLETE
+                    ]
+                ]
+            ],
+            'fields'=>['id','id']
+        ];
         $res = $this->find('list', $options);
         return $res;
     }
@@ -561,7 +566,9 @@ class Post extends AppModel
                                                                                   1000, $this->orgParams['circle_id'],
                                                                                   PostShareCircle::SHARE_TYPE_SHARED));
 
-                $p_list = array_diff($p_list,$this->getMyPostList($start,$end,'modified', 'desc',1000,$this->Circle->isTeamAllCircle($this->orgParams['circle_id'])));
+                if($this->Circle->isTeamAllCircle($this->orgParams['circle_id'])) {
+                    $p_list = $this->getAllPostsForTeamCircle($p_list);
+                }
 
             }
             //単独投稿指定
