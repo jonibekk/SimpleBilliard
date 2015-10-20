@@ -2846,11 +2846,7 @@ function evGoalsMoreView() {
     } else if (type === "collabo") {
         listBox = $("#CollaboGoals");
         limitNumber = cake.data.f;
-    } else if (type === "follow") {
-        listBox = $("#FollowGoals");
-        limitNumber = cake.data.g;
-    }
-    else if (type === "my_prev") {
+    } else if (type === "my_prev") {
         listBox = $("#PrevGoals");
         limitNumber = cake.data.k;
     }
