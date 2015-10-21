@@ -66,7 +66,7 @@ class KeyResultTest extends CakeTestCase
                 'name'       => 'test',
             ]
         ];
-        $res = $this->KeyResult->add($data, 1);
+        $res = $this->KeyResult->add($data, 8);
         $this->assertTrue($res);
 
         $data = [
@@ -180,7 +180,7 @@ class KeyResultTest extends CakeTestCase
             'KeyResult' => [
                 'user_id'    => 1,
                 'team_id'    => 1,
-                'goal_id'    => 1,
+                'goal_id'    => 8,
                 'value_unit' => KeyResult::UNIT_BINARY,
                 'start_date' => '2015/7/7',
                 'end_date'   => '2015/10/7',
