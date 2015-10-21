@@ -314,8 +314,8 @@ class GoalTest extends CakeTestCase
                 'value_unit'       => 0,
                 'target_value'     => 100,
                 'start_value'      => 0,
-                'start_date'       => $this->start_date,
-                'end_date'         => $this->end_date,
+                'start_date'       => $this->start_date_format ,
+                'end_date'         => $this->end_date_format,
             ]
         ];
         $res = $this->Goal->add($data);
@@ -333,8 +333,8 @@ class GoalTest extends CakeTestCase
                 'value_unit'       => 2,
                 'target_value'     => 100,
                 'start_value'      => 0,
-                'start_date'       => $this->start_date,
-                'end_date'         => $this->end_date,
+                'start_date'       => $this->start_date_format,
+                'end_date'         => $this->end_date_format,
             ]
         ];
         $res = $this->Goal->add($data);
@@ -547,6 +547,8 @@ class GoalTest extends CakeTestCase
     var $current_date;
     var $start_date;
     var $end_date;
+    var $start_date_format;
+    var $end_date_format;
 
     function setDefault()
     {
@@ -576,6 +578,9 @@ class GoalTest extends CakeTestCase
         $this->current_date = REQUEST_TIMESTAMP;
         $this->start_date = $this->Goal->Team->EvaluateTerm->getCurrentTermData()['start_date'];
         $this->end_date = $this->Goal->Team->EvaluateTerm->getCurrentTermData()['end_date'];
+        $timezone = $this->Goal->Team->EvaluateTerm->getCurrentTermData()['timezone'];
+        $this->start_date_format = date('Y-m-d', $this->start_date + $timezone * HOUR);
+        $this->end_date_format = date('Y-m-d', $this->end_date + $timezone * HOUR);
 
     }
 
@@ -855,5 +860,15 @@ class GoalTest extends CakeTestCase
         ];
 
         $this->assertEquals($expected, $actual);
+    }
+    
+    function testGetGoalTermData()
+    {
+        $this->setDefault();
+
+        $term = $this->Goal->getGoalTermData(8);
+        $this->assertEquals(2, $term['id']);
+        $term = $this->Goal->getGoalTermData(999999);
+        $this->assertFalse($term);
     }
 }

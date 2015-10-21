@@ -16,45 +16,7 @@ class EvaluateTermTest extends CakeTestCase
      */
     public $fixtures = array(
         'app.evaluate_term',
-        'app.evaluation_setting',
         'app.team',
-        'app.badge',
-        'app.user',
-        'app.email',
-        'app.notify_setting',
-        'app.comment_like',
-        'app.comment',
-        'app.post',
-        'app.goal',
-        'app.purpose',
-        'app.goal_category',
-        'app.key_result',
-        'app.action_result',
-        'app.collaborator',
-        'app.follower',
-        'app.post_share_user',
-        'app.post_share_circle',
-        'app.circle',
-        'app.circle_member',
-        'app.post_like',
-        'app.post_read',
-        'app.comment_mention',
-        'app.given_badge',
-        'app.post_mention',
-        'app.comment_read',
-
-        'app.oauth_token',
-        'app.team_member',
-        'app.job_category',
-        'app.member_type',
-        'app.local_name',
-        'app.member_group',
-        'app.group',
-        'app.evaluator',
-        'app.invite',
-        'app.thread',
-        'app.message',
-        'app.evaluation'
     );
 
     /**
@@ -83,11 +45,13 @@ class EvaluateTermTest extends CakeTestCase
     function testGetAll()
     {
         $this->_setDefault();
+        $exists = $this->EvaluateTerm->getAllTerm();
+        $exists_count = count($exists);
         $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
         $this->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
         $res = $this->EvaluateTerm->getAllTerm();
-        $this->assertCount(3, $res);
+        $this->assertCount($exists_count + 3, $res);
     }
 
     function testIsAbleToStartEvaluation()
@@ -481,13 +445,11 @@ class EvaluateTermTest extends CakeTestCase
         $this->assertEquals('2017/02/28 23:59:59', date('Y/m/d H:i:s', $res['end'] + $timezone * 3600));
     }
 
-    function test_getTermByDatetime()
+    function testGetTermByDatetime()
     {
         $this->_setDefault();
         $this->EvaluateTerm->save(['start_date' => 1, 'end_date' => 100, 'team_id' => 1, 'timezone' => 9]);
-        $m = new ReflectionMethod($this->EvaluateTerm, '_getTermByDatetime');
-        $m->setAccessible(true);
-        $actual = $m->invoke($this->EvaluateTerm, 50);
+        $actual = $this->EvaluateTerm->getTermByDatetime(50);
         $this->assertEquals(1, $actual['start_date']);
         $this->assertEquals(100, $actual['end_date']);
     }

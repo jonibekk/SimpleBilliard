@@ -1944,6 +1944,11 @@ textarea.comment-post-form {
     margin-left: 10%;
 }
 
+.goal-edit-limit-date-label {
+    display:inline-block;
+    width:150px;
+}
+
 /*/Goal*/
 
 .feed-share-range {

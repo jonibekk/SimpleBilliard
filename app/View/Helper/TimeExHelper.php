@@ -205,7 +205,7 @@ class TimeExHelper extends AppHelper
         if ($timezone < 0) {
             $sign = "";
         }
-        $text = "(UTC {$sign}{$timezone}h)";
+        $text = "(GMT {$sign}{$timezone}h)";
         return $text;
     }
 

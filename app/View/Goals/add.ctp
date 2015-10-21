@@ -10,8 +10,13 @@
  * @var                        $kr_value_unit_list
  * @var                        $goal_start_date_format
  * @var                        $goal_end_date_format
- * @var                        $goal_start_date_limit_format
- * @var                        $goal_end_date_limit_format
+ * @var                        $current_term_start_date_format
+ * @var                        $current_term_end_date_format
+ * @var                        $next_term_start_date_format
+ * @var                        $next_term_end_date_format
+ * @var                        $today_format
+ * @var                        $current_term
+ * @var                        $next_term
  * @var                        $purpose_count
  */
 $url = isset($this->request->data['Goal']['id']) ? ['goal_id' => $this->request->data['Goal']['id']] : [];
@@ -207,7 +212,10 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                         </div>
                     </div>
                     <div class="row goal-edit-labels">
-                        <label class="col col-sm-3 control-label text-right"><?= __d('gl', "期間") ?></label>
+                        <div class="col col-sm-3 goal-edit-labels">
+                            <label class="control-label  width100_per text-right"><?= __d('gl', "期間") ?></label>
+                            <div id="SelectTermTimezone" class="label-addiction pull-right"></div>
+                        </div>
 
                         <div class="col col-sm-7  goal-set-input">
                             <div class="form-group" id="KeyResult0EndDateContainer">
@@ -239,15 +247,17 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
 
                                 <p class="form-control-static"
                                    id="KeyResult0StartDateDefault">
-                                    <span
-                                        class="plr_18px"><?=
-                                        $goal_start_date_format ?><?=
-                                        !isset($this->request->data['Goal']['start_date']) ? __d('gl', "（本日）") : null ?>
-                                        &nbsp;&nbsp;<a href="#" class="target-show-target-del"
+                                    <span class="plr_18px">
+                                        <span class="goal-edit-limit-date-label">
+                                            <?= $goal_start_date_format ?>
+                                            <?= !isset($this->request->data['Goal']['start_date']) ? __d('gl', "（本日）") : null ?>
+                                        </span>
+                                        <a href="#" class="target-show-target-del"
                                                        show-target-id="KeyResult0StartDateInputWrap"
-                                                       delete-target-id="KeyResult0StartDateDefault"><?=
-                                            __d('gl',
-                                                "変更") ?></a></span>
+                                                       delete-target-id="KeyResult0StartDateDefault">
+                                            <?= __d('gl', "変更") ?>
+                                        </a>
+                                    </span>
                                 </p>
 
                                 <div class="input-group date plr_5px goal-set-date none"
@@ -265,6 +275,39 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                                            'wrapInput'                => null
                                                        ]) ?>
                                     <span class="input-group-addon"><i class="fa fa-th"></i></span>
+                                </div>
+                            </div>
+                            <div class="form-group" id="KeyResult0EvaluateTermContainer">
+                                <label for="KeyResult0EvaluateTerm"
+                                       class="col col-sm-3 control-label goal-set-mid-label"><?=
+                                    __d('gl', "評価期間") ?></label>
+                                <div class="col col-sm-9">
+                                    <p class="form-control-static"
+                                       id="KeyResult0EvaluateTermDefault">
+                                        <span class="plr_18px">
+                                            <span class="goal-edit-limit-date-label"></span>
+                                            <a href="#" class="target-show-target-del"
+                                               show-target-id="KeyResult0EvaluateTermInputWrap"
+                                               delete-target-id="KeyResult0EvaluateTermDefault">
+                                                <?= __d('gl', "変更") ?>
+                                            </a>
+                                        </span>
+                                    </p>
+                                    <div class="plr_5px none" id="KeyResult0EvaluateTermInputWrap">
+                                        <?=
+                                        $this->Form->input('term_type',
+                                                           ['label'     => false,
+                                                            'wrapInput' => null,
+                                                            'type'      => 'select',
+                                                            'class'     => 'form-control',
+                                                            'required'  => true,
+                                                            'options'   => [
+                                                                'current' => __d('gl', '今期'),
+                                                                'next'    => __d('gl', '来期'),
+                                                            ],
+                                                            'id'        => 'KeyResult0EvaluateTermSelect'
+                                                           ]) ?>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -490,34 +533,99 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
             }
         }
     });
+
     //noinspection JSJQueryEfficiency
-    $('#KeyResult0StartDateContainer .input-group.date').datepicker({
+    var $startDate = $('#KeyResult0StartDateContainer .input-group.date');
+    $startDate.datepicker({
         format: "yyyy/mm/dd",
         todayBtn: 'linked',
         language: "ja",
         autoclose: true,
         todayHighlight: true,
-        startDate: "<?=$goal_start_date_limit_format?>",
-        endDate: "<?=$goal_end_date_limit_format?>"
+        startDate: "<?=$current_term_start_date_format?>",
+        endDate: "<?=$current_term_end_date_format?>"
     })
         .on('hide', function (e) {
             $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[Goal][start_date]");
             $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[Goal][end_date]");
         });
+
     //noinspection JSJQueryEfficiency
-    $('#KeyResult0EndDateContainer .input-group.date').datepicker({
+    var $endDate = $('#KeyResult0EndDateContainer .input-group.date');
+    $endDate.datepicker({
         format: "yyyy/mm/dd",
         todayBtn: 'linked',
         language: "ja",
         autoclose: true,
         todayHighlight: true,
-        startDate: "<?=$goal_start_date_limit_format?>",
-        endDate: "<?=$goal_end_date_limit_format?>"
+        startDate: "<?=$current_term_start_date_format?>",
+        endDate: "<?=$current_term_end_date_format?>"
     })
         .on('hide', function (e) {
             $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[Goal][end_date]");
             $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[Goal][start_date]");
         });
+
+    // 評価期間プルダウン表示前のテキスト表示
+    var $evaluateTermSelect = $('#KeyResult0EvaluateTermSelect');
+    $('#KeyResult0EvaluateTermDefault').find('.goal-edit-limit-date-label').text(
+        $evaluateTermSelect.find('option:selected').text());
+
+    // 評価期間のプルダウン変更時
+    $evaluateTermSelect.on('change', function (e, onInit) {
+        var $select = $(this);
+        var $selectTermTimezone = $('#SelectTermTimezone');
+        $selectTermTimezone.text('');
+
+        // 今期を選択した場合
+        if ($select.val() == 'current') {
+            // カレンダーで選択可能な日付範囲をセットし直し
+            $startDate
+                .datepicker('setStartDate', '<?= $current_term_start_date_format ?>')
+                .datepicker('setEndDate', '<?= $current_term_end_date_format ?>');
+            $endDate
+                .datepicker('setStartDate', '<?= $current_term_start_date_format ?>')
+                .datepicker('setEndDate', '<?= $current_term_end_date_format ?>');
+
+            // ユーザーのタイムゾーンが期間のタイムゾーンと違っていればオフセット表示
+            <?php if ($this->Session->read('Auth.User.timezone') != $current_term['timezone']): ?>
+            $selectTermTimezone.text('<?= $this->TimeEx->getTimezoneText($current_term['timezone']) ?>');
+            <?php endif ?>
+
+            // 入力日付を範囲に収まるように変更
+            // ページ表示直後の trigger() で呼び出した時は処理しない
+            if (!onInit) {
+                $startDate.datepicker('setDate', '<?= $today_format ?>');
+                $endDate.datepicker('setDate', '<?= $current_term_end_date_format ?>');
+                $('#KeyResult0StartDateDefault').find('.goal-edit-limit-date-label').text('<?= $today_format ?>');
+            }
+        }
+        // 来期を選択した場合
+        else {
+            // カレンダーで選択可能な日付範囲をセットし直し
+            $startDate
+                .datepicker('setStartDate', '<?= $next_term_start_date_format ?>')
+                .datepicker('setEndDate', '<?= $next_term_end_date_format ?>');
+            $endDate
+                .datepicker('setStartDate', '<?= $next_term_start_date_format ?>')
+                .datepicker('setEndDate', '<?= $next_term_end_date_format ?>');
+
+            // ユーザーのタイムゾーンが期間のタイムゾーンと違っていればオフセット表示
+            <?php if ($this->Session->read('Auth.User.timezone') != $next_term['timezone']): ?>
+            $selectTermTimezone.text('<?= $this->TimeEx->getTimezoneText($next_term['timezone']) ?>');
+            <?php endif ?>
+
+            // 入力日付を範囲に収まるように変更
+            // ページ表示直後の trigger() で呼び出した時は処理しない
+            if (!onInit) {
+                $startDate.datepicker('setDate', '<?= $next_term_start_date_format ?>');
+                $endDate.datepicker('setDate', '<?= $next_term_end_date_format ?>');
+                $('#KeyResult0StartDateDefault').find('.goal-edit-limit-date-label')
+                    .text('<?= $next_term_start_date_format ?>');
+            }
+        }
+    }).trigger('change', true);
+
     //modeによってdisableにする
     <?php if(isset($this->request->params['named']['mode'])):?>
     <?php if($this->request->params['named']['mode'] == 2):?>

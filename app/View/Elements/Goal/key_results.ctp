@@ -1,10 +1,10 @@
 <?php
 /**
- * @var CodeCompletionView $this
- * @var                    $key_results
- * @var                    $incomplete_kr_count
- * @var                    $kr_can_edit
- * @var                    $display_action_count
+ * @var $key_results
+ * @var $incomplete_kr_count
+ * @var $kr_can_edit
+ * @var $display_action_count
+ * @var $goal_term
  */
 ?>
 <?php if ($key_results): ?>
@@ -60,11 +60,12 @@
                                 1)) ?><?= h(KeyResult::$UNIT[$kr['KeyResult']['value_unit']]) ?>
                 </div>
                 <i class="fa fa-calendar"></i>
-                <?= $this->Time->format('Y/m/d',
-                                        $kr['KeyResult']['start_date'] + $this->Session->read('Auth.User.timezone') * 3600) ?>
+                <?= $this->Time->format('Y/m/d', $kr['KeyResult']['start_date'] + $goal_term['timezone'] * HOUR) ?>
                 →
-                <?= $this->Time->format('Y/m/d',
-                                        $kr['KeyResult']['end_date'] + $this->Session->read('Auth.User.timezone') * 3600) ?>
+                <?= $this->Time->format('Y/m/d', $kr['KeyResult']['end_date'] + $goal_term['timezone'] * HOUR) ?>
+                <?php if ($this->Session->read('Auth.User.timezone') != $goal_term['timezone']): ?>
+                    <?= $this->TimeEx->getTimezoneText($goal_term['timezone']); ?>
+                <?php endif ?>
             </div>
             <?php if ($kr_can_edit): ?>
                 <?= $this->element('Goal/key_result_edit_button', ['kr' => $kr]) ?>
