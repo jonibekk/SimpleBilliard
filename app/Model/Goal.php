@@ -290,9 +290,13 @@ class Goal extends AppModel
         }
 
         // 評価期間をまたいでいないかチェック
-        if ($data['Goal']['start_date'] < $goal_term['start_date'] || $goal_term['end_date'] < $data['Goal']['end_date']) {
-            return false;
+        if (isset($data['Goal']['start_date']) && isset($data['Goal']['end_date'])) {
+            if ($data['Goal']['start_date'] < $goal_term['start_date'] || $goal_term['end_date'] < $data['Goal']['end_date']) {
+                return false;
+            }
         }
+
+
 
         //新規の場合はデフォルトKRを追加
         if ($add_new) {
