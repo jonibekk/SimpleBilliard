@@ -743,6 +743,29 @@ class GoalTest extends CakeTestCase
 
     }
 
+    function testGetAllUserGoal()
+    {
+        $this->setDefault();
+        $this->Goal->User->TeamMember->current_team_id = 1;
+        $this->Goal->User->TeamMember->my_uid = 1;
+
+        $users = $this->Goal->getAllUserGoal();
+        $active_user_count =
+            $this->Goal->User->TeamMember->countActiveMembersByTeamId($this->Goal->User->TeamMember->current_team_id);
+        $this->assertEquals($active_user_count, count($users));
+
+        // ゴールの期限が範囲内に収まっているかチェック
+        $users = $this->Goal->getAllUserGoal(10000, 19999);
+        foreach ($users as $user) {
+            foreach ($user['Collaborator'] as $collabo) {
+                if ($collabo['Goal']) {
+                    $this->assertGreaterThanOrEqual(10000, $collabo['Goal']['start_date']);
+                    $this->assertLessThanOrEqual(19999, $collabo['Goal']['end_date']);
+                }
+            }
+        }
+    }
+
     function testGetAllUserGoalProgress()
     {
         $this->Goal->current_team_id = 1;
