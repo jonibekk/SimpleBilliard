@@ -184,7 +184,7 @@ class EvaluateTerm extends AppModel
     {
         $this->_checkType($type);
         if (!$this->current_term) {
-            $this->current_term = $this->getTermByDatetime(REQUEST_TIMESTAMP);
+            $this->current_term = $this->getTermDataByDatetime(REQUEST_TIMESTAMP);
         }
 
         if ($type === self::TYPE_PREVIOUS) {
@@ -192,8 +192,8 @@ class EvaluateTerm extends AppModel
                 return $this->previous_term;
             }
             if (isset($this->current_term['start_date']) && !empty($this->current_term['start_date'])) {
-                $this->previous_term = $this->getTermByDatetime(strtotime("-1 day",
-                                                                          $this->current_term['start_date']));
+                $this->previous_term = $this->getTermDataByDatetime(strtotime("-1 day",
+                                                                              $this->current_term['start_date']));
             }
             return $this->previous_term;
         }
@@ -203,7 +203,7 @@ class EvaluateTerm extends AppModel
                 return $this->next_term;
             }
             if (isset($this->current_term['end_date']) && !empty($this->current_term['end_date'])) {
-                $this->next_term = $this->getTermByDatetime(strtotime("+1 day", $this->current_term['end_date']));
+                $this->next_term = $this->getTermDataByDatetime(strtotime("+1 day", $this->current_term['end_date']));
             }
             return $this->next_term;
         }
@@ -461,7 +461,7 @@ class EvaluateTerm extends AppModel
      *
      * @return array|null
      */
-    public function getTermByDatetime($datetime = REQUEST_TIMESTAMP)
+    public function getTermDataByDatetime($datetime = REQUEST_TIMESTAMP)
     {
         $options = [
             'conditions' => [

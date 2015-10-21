@@ -296,8 +296,6 @@ class Goal extends AppModel
             }
         }
 
-
-
         //新規の場合はデフォルトKRを追加
         if ($add_new) {
             //コラボレータをタイプ　リーダーで保存
@@ -1613,6 +1611,6 @@ class Goal extends AppModel
         if (!$goal) {
             return false;
         }
-        return ClassRegistry::init('EvaluateTerm')->getTermByDatetime($goal['Goal']['end_date']);
+        return ClassRegistry::init('EvaluateTerm')->getTermDataByDatetime($goal['Goal']['end_date']);
     }
 }
