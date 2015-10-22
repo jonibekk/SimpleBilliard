@@ -144,7 +144,7 @@
                                                     'default'                      => 0,
                                                     'required'                     => true,
                                                     'maxlength'                    => 14,
-                                                    'data-bv-stringlength-message' => __d('validate', "文字���がオーバーしています。"),
+                                                    'data-bv-stringlength-message' => __d('validate', "文字数がオーバーしています。"),
                                                     "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
                                                     'data-bv-numeric-message'      => __d('validate', "数字を入力してください。"),
                                                    ]) ?>
