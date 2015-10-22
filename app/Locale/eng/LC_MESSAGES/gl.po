@@ -1160,7 +1160,7 @@ msgstr ""
 
 #: Model/NotifySetting.php:459;466;483;489
 msgid "と他%s人"
-msgstr "and %s others"
+msgstr " and %s others"
 
 #: Model/NotifySetting.php:463
 msgid ""
