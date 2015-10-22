@@ -2791,7 +2791,7 @@ msgstr "%s people read this post."
 
 #: View/Elements/Feed/post_body.ctp:21;24
 msgid "%s を達成しました！"
-msgstr ""
+msgstr "We've achieved '%s!'"
 
 #: View/Elements/Feed/posts.ctp:110
 msgid "投稿を編集"
@@ -2800,12 +2800,12 @@ msgstr "Edit post"
 #: View/Elements/Feed/posts.ctp:122
 #: View/Elements/Goal/modal_edit_action_result.ctp:86
 msgid "アクションを削除"
-msgstr ""
+msgstr "Delete the action"
 
 #: View/Elements/Feed/posts.ctp:127
 #: View/Elements/Goal/modal_edit_action_result.ctp:88
 msgid "本当にこのアクションを削除しますか？"
-msgstr ""
+msgstr "Are you sure you want to delete this action?"
 
 #: View/Elements/Feed/posts.ctp:130
 msgid "投稿を削除"
@@ -2827,7 +2827,7 @@ msgstr ""
 #: View/Elements/Goal/add_new_action_form.ctp:28
 #: View/Elements/Goal/modal_edit_action_result.ctp:38
 msgid "今日やったアクションを共有しよう！"
-msgstr ""
+msgstr "Let's share the actions that you 've done today!"
 
 #: View/Elements/Goal/add_new_action_form.ctp:69
 #: View/Elements/Goal/modal_edit_action_result.ctp:64
@@ -3060,7 +3060,7 @@ msgstr "Initial: %s"
 
 #: View/Elements/Goal/modal_last_kr_confirm.ctp:19
 msgid "ゴールを達成しましたか？"
-msgstr ""
+msgstr "Did you achieve the goal?"
 
 #: View/Elements/Goal/modal_last_kr_confirm.ctp:30
 msgid "現在値"
@@ -3072,7 +3072,7 @@ msgstr "Achieve the goal"
 
 #: View/Elements/Goal/modal_related_kr_list.ctp:18
 msgid "完了済のキーリザルト一覧"
-msgstr ""
+msgstr "Key result list of already completed"
 
 #: View/Elements/Goal/my_goal_area_items.ctp:121
 msgid "基準を追加する"
@@ -3104,58 +3104,58 @@ msgstr "Batch Registration"
 
 #: View/Elements/Team/batch_setup.ctp:20
 msgid "チームメンバーの登録や更新をCSVで一括処理します。"
-msgstr ""
+msgstr "Batch processing the registration and updating of team members in the CSV file."
 
 #: View/Elements/Team/batch_setup.ctp:22
 #: View/Elements/Team/final_evaluation.ctp:34
 msgid ""
 "ファイルをダウンロードし、フォーマットに従って入力したあと、更新済みのCSVファ"
 "イルをアップロードしてください。"
-msgstr ""
+msgstr "Please upload the updated CSV file after you have entered in accordance with the format to download the file."
 
 #: View/Elements/Team/batch_setup.ctp:25
 msgid ""
 "すでに登録済のメンバーはデータ更新され、新規のメンバーは追加で登録され、招待"
 "メールが送信されます。"
-msgstr ""
+msgstr "Already a member of the registered will be data update. The new members are registered in addition, invitations will be sent."
 
 #: View/Elements/Team/batch_setup.ctp:44
 msgid "メンバーの情報を更新"
-msgstr ""
+msgstr "Updated information of members"
 
 #: View/Elements/Team/confirm_to_inactive_goal_category_modal.ctp:17
 msgid "ゴールカテゴリ削除の確認"
-msgstr ""
+msgstr "Confirm to delete goal category"
 
 #: View/Elements/Team/confirm_to_inactive_goal_category_modal.ctp:21
 msgid "ゴールカテゴリを削除すると、過去のデータには影響ありません。"
-msgstr ""
+msgstr "When you delete a goal category , it does not affect the historical data."
 
 #: View/Elements/Team/confirm_to_inactive_goal_category_modal.ctp:23
 #: View/Elements/Team/confirm_to_inactive_score_modal.ctp:23
 msgid "今後、新規に選択はできなくなります。"
-msgstr ""
+msgstr "In the future, you will not be able to newly selected."
 
 #: View/Elements/Team/confirm_to_inactive_goal_category_modal.ctp:25
 msgid "本当にこのゴールカテゴリを削除しますか？"
-msgstr ""
+msgstr "Are you sure you want to delete the goal category?"
 
 #: View/Elements/Team/confirm_to_inactive_goal_category_modal.ctp:30
 #: View/Elements/Team/confirm_to_inactive_score_modal.ctp:30
 msgid "削除する"
-msgstr ""
+msgstr "Delete"
 
 #: View/Elements/Team/confirm_to_inactive_score_modal.ctp:17
 msgid "スコア削除の確認"
-msgstr ""
+msgstr "Confirm to delete the score"
 
 #: View/Elements/Team/confirm_to_inactive_score_modal.ctp:21
 msgid "スコアを削除すると、過去のデータには影響ありません。"
-msgstr ""
+msgstr "When you delete a score , it does not affect the historical data."
 
 #: View/Elements/Team/confirm_to_inactive_score_modal.ctp:25
 msgid "本当にこのスコア定義を削除しますか？"
-msgstr ""
+msgstr "Are you sure you want to delete this score definition?"
 
 #: View/Elements/Team/edit_basic_setting.ctp:14 View/Teams/settings.ctp:19
 msgid "基本設定"
@@ -3196,7 +3196,7 @@ msgstr "Change basic settings."
 
 #: View/Elements/Team/edit_basic_setting.ctp:111
 msgid "チームを削除する"
-msgstr ""
+msgstr "Delete the team"
 
 #: View/Elements/Team/edit_basic_setting.ctp:157
 msgid ""
@@ -3424,19 +3424,19 @@ msgstr "Last evaluated person."
 
 #: View/Elements/Team/evaluation_setup.ctp:126
 msgid "最終評価者評価 トータル スコア"
-msgstr "Last evaluated person's total score."
+msgstr "Final evaluated person's total score."
 
 #: View/Elements/Team/evaluation_setup.ctp:130
 msgid "最終評価者評価 トータル スコア 必須"
-msgstr ""
+msgstr "Final evaluator's evaluation total score required."
 
 #: View/Elements/Team/evaluation_setup.ctp:134
 msgid "最終評価者評価 トータル コメント"
-msgstr ""
+msgstr "Final evaluator's evaluation total comment"
 
 #: View/Elements/Team/evaluation_setup.ctp:138
 msgid "最終評価者評価 トータル コメント 必須"
-msgstr ""
+msgstr "Final evaluator's evaluation total comment required."
 
 #: View/Elements/Team/evaluation_setup.ctp:168
 msgid "評価設定を保存"
@@ -3504,11 +3504,11 @@ msgstr "Add goal category."
 
 #: View/Elements/Team/insight_circle_result.ctp:15
 msgid "リーチ"
-msgstr ""
+msgstr "Reach"
 
 #: View/Elements/Team/insight_circle_result.ctp:16
 msgid "エンゲージメント"
-msgstr ""
+msgstr "Engagement"
 
 #: View/Elements/Team/insight_circle_result.ctp:31
 #: View/Elements/Team/insight_item.ctp:19
@@ -3522,88 +3522,88 @@ msgstr ""
 
 #: View/Elements/Team/insight_form_input.ctp:26
 msgid "今週"
-msgstr ""
+msgstr "Current Week"
 
 #: View/Elements/Team/insight_form_input.ctp:29
 msgid "先週"
-msgstr ""
+msgstr "Last Week"
 
 #: View/Elements/Team/insight_form_input.ctp:32
 msgid "今月"
-msgstr ""
+msgstr "Current Month"
 
 #: View/Elements/Team/insight_form_input.ctp:35
 msgid "先月"
-msgstr ""
+msgstr "Last Month"
 
 #: View/Elements/Team/insight_form_input.ctp:51
 msgid "すべてのメンバー"
-msgstr ""
+msgstr "All Members"
 
 #: View/Elements/Team/insight_form_input.ctp:61
 msgid "アクションされたゴール"
-msgstr ""
+msgstr "Goal that had been actioned"
 
 #: View/Elements/Team/insight_form_input.ctp:62
 msgid "いいねされたアクション"
-msgstr ""
+msgstr "The action that had been liked"
 
 #: View/Elements/Team/insight_form_input.ctp:63
 msgid "コメントされたアクション"
-msgstr ""
+msgstr "The action that had been commented"
 
 #: View/Elements/Team/insight_form_input.ctp:64
 msgid "アクションしたメンバー"
-msgstr ""
+msgstr "Member who actioned"
 
 #: View/Elements/Team/insight_form_input.ctp:65
 msgid "投稿したメンバー"
-msgstr ""
+msgstr "Member who posted"
 
 #: View/Elements/Team/insight_form_input.ctp:66
 msgid "いいねされた投稿"
-msgstr ""
+msgstr "The post that had been liked"
 
 #: View/Elements/Team/insight_form_input.ctp:67
 msgid "コメントされた投稿"
-msgstr ""
+msgstr "The post that had been commented"
 
 #: View/Elements/Team/insight_form_input.ctp:77
 msgid "(GMT+09:00) 東京"
-msgstr ""
+msgstr "(GMT+09:00) Tokyo"
 
 #: View/Elements/Team/insight_form_input.ctp:78
 msgid "(GMT+05:30) ニューデリー"
-msgstr ""
+msgstr "(GMT+05:30) New Delhi"
 
 #: View/Elements/Team/insight_form_input.ctp:79
 msgid "(GMT+01:00) ベルリン"
-msgstr ""
+msgstr "(GMT+01:00) Berlin"
 
 #: View/Elements/Team/insight_form_input.ctp:80
 msgid "(GMT-08:00) 太平洋標準時 (アメリカ & カナダ)"
-msgstr ""
+msgstr "(GMT-08:00) Pacific Ocean Time (USA & Canada)"
 
 #: View/Elements/Team/insight_result.ctp:25
 msgid "メンバー（アクティブ）"
-msgstr ""
+msgstr "Member(Active)"
 
 #: View/Elements/Team/insight_result.ctp:37
 msgid "ログインメンバー"
-msgstr ""
+msgstr "Members of logged in"
 
 #: View/Elements/Team/insight_result.ctp:51
 msgid "トータル"
-msgstr ""
+msgstr "Total"
 
 #: View/Elements/Team/insight_result.ctp:52
 msgid "ユニーク"
-msgstr ""
+msgstr "Unique"
 
 #: View/Elements/Team/insight_result.ctp:84;142;202
 #: View/Elements/User/simplex_top_section.ctp:68
 msgid "いいね"
-msgstr ""
+msgstr "Like"
 
 #: View/Elements/Team/invite.ctp:15
 msgid "新しいメンバーを招待"
@@ -4035,71 +4035,71 @@ msgstr ""
 
 #: View/Elements/User/simplex_top_section.ctp:72
 msgid "プロフィール編集"
-msgstr ""
+msgstr "Edit Profile"
 
 #: View/Elements/User/simplex_top_section.ctp:139
 msgid "基本データ"
-msgstr ""
+msgstr "Basic Information"
 
 #: View/Evaluations/index.ctp:44
 msgid "評価は凍結されています。"
-msgstr ""
+msgstr "Evaluation has been frozen."
 
 #: View/Evaluations/index.ctp:48
 msgid "あと%s件の評価が完了しておりません。以下より評価を行なってください。"
-msgstr ""
+msgstr "%s evaluations has not completed. Please evaluate from the following."
 
 #: View/Evaluations/index.ctp:57
 msgid "未完了:1"
-msgstr ""
+msgstr "Incomplete:1"
 
 #: View/Evaluations/index.ctp:65
 msgid "あなたが評価するメンバー"
-msgstr ""
+msgstr "The member who you have to evaluate"
 
 #: View/Evaluations/index.ctp:67
 msgid "未完了:%s"
-msgstr ""
+msgstr "Incomplete:%s"
 
 #: View/Evaluations/view.ctp:40
 msgid "トータル評価"
-msgstr ""
+msgstr "Total Evaluation"
 
 #: View/Evaluations/view.ctp:88;160;381;444
 msgid "<i class='fa fa-comment-o mr_2px'></i>評価コメント"
-msgstr ""
+msgstr "<i class='fa fa-comment-o mr_2px'></i>Evaluation comment"
 
 #: View/Evaluations/view.ctp:90;383
 msgid "コメントを書いてください"
-msgstr ""
+msgstr "Please write a comment"
 
 #: View/Evaluations/view.ctp:108;174;400;458
 msgid "<i class='fa fa-paw mr_2px'></i>評価スコア"
-msgstr ""
+msgstr "<i class='fa fa-paw mr_2px'></i>Evaluation score"
 
 #: View/Evaluations/view.ctp:113;119;405;411
 msgid "選択必須項目です。"
-msgstr ""
+msgstr "Selection Required"
 
 #: View/Evaluations/view.ctp:165;179;449;463
 msgid "未確定です。"
-msgstr ""
+msgstr "Not yet determined."
 
 #: View/Evaluations/view.ctp:196;227;481;511
 msgid "下書き保存"
-msgstr ""
+msgstr "Save draft"
 
 #: View/Evaluations/view.ctp:218;502
 msgid "修正して確定"
-msgstr ""
+msgstr "Modify and submit"
 
 #: View/Evaluations/view.ctp:234;518
 msgid "確定"
-msgstr ""
+msgstr "Submit"
 
 #: View/Evaluations/view.ctp:254
 msgid "ゴール評価"
-msgstr ""
+msgstr "Evaluation of goal"
 
 #: View/Evaluations/view.ctp:266 View/Goals/add.ctp:404
 msgid "ゴール画像"
@@ -4107,27 +4107,27 @@ msgstr "Goal Image"
 
 #: View/Evaluations/view.ctp:323
 msgid "役割:"
-msgstr ""
+msgstr "Role:"
 
 #: View/Evaluations/view.ctp:328
 msgid "コラボレータ:"
-msgstr ""
+msgstr "Collaborator:"
 
 #: View/Evaluations/view.ctp:332
 msgid "進捗:"
-msgstr ""
+msgstr "Progress:"
 
 #: View/Evaluations/view.ctp:336
 msgid "比重:"
-msgstr ""
+msgstr "Weight:"
 
 #: View/GoalApproval/done.ctp:62 View/GoalApproval/index.ctp:73
 msgid "処理待ち"
-msgstr ""
+msgstr "Waiting"
 
 #: View/GoalApproval/done.ctp:72 View/GoalApproval/index.ctp:84
 msgid "処理済み"
-msgstr ""
+msgstr "Done"
 
 #: View/GoalApproval/done.ctp:100 View/GoalApproval/index.ctp:113
 #: View/Goals/add.ctp:141
@@ -4136,27 +4136,27 @@ msgstr "Category"
 
 #: View/GoalApproval/done.ctp:106 View/GoalApproval/index.ctp:120
 msgid "コラボレーター"
-msgstr ""
+msgstr "Collaborator"
 
 #: View/GoalApproval/done.ctp:120 View/GoalApproval/index.ctp:134
 msgid "期限日"
-msgstr ""
+msgstr "Due Date"
 
 #: View/GoalApproval/done.ctp:156 View/GoalApproval/index.ctp:170
 msgid "評価対象にしない"
-msgstr ""
+msgstr "To change not target of evaluation"
 
 #: View/GoalApproval/done.ctp:161 View/GoalApproval/index.ctp:168
 msgid "評価対象にする"
-msgstr ""
+msgstr "To change to be target of evaluation"
 
 #: View/GoalApproval/index.ctp:175
 msgid "ゴールを修正する"
-msgstr ""
+msgstr "Modify the goal"
 
 #: View/GoalApproval/index.ctp:192
 msgid "修正を依頼"
-msgstr ""
+msgstr "Request the modification."
 
 #: View/Goals/add.ctp:32
 msgid "新しいゴールを作成"
@@ -4260,36 +4260,36 @@ msgstr "View more…"
 
 #: View/Goals/view_actions.ctp:94 View/Users/view_actions.ctp:93
 msgid "これ以上のアクションはありませんでした。"
-msgstr ""
+msgstr "It was no further action."
 
 #: View/Goals/view_followers.ctp:20
 msgid "フォロワーはいません。"
-msgstr ""
+msgstr "Follower doesn't exist."
 
 #: View/Goals/view_followers.ctp:31 View/Goals/view_krs.ctp:59
 #: View/Goals/view_members.ctp:28
 msgid "さらに読み込む"
-msgstr ""
+msgstr "Load further"
 
 #: View/Goals/view_info.ctp:26
 msgid "カテゴリー"
-msgstr ""
+msgstr "Category"
 
 #: View/Goals/view_krs.ctp:20
 msgid "ゴール進捗率"
-msgstr ""
+msgstr "Goal progress rate"
 
 #: View/Goals/view_krs.ctp:31
 msgid "このゴールの達成要素"
-msgstr ""
+msgstr "Achieve elements of this goal"
 
 #: View/Goals/view_krs.ctp:40
 msgid "達成要素を追加"
-msgstr ""
+msgstr "Add the achievement element."
 
 #: View/Goals/view_krs.ctp:47
 msgid "達成要素は登録されていません"
-msgstr ""
+msgstr "Achievement element is not registered."
 
 #: View/Helper/GoalHelper.php:62
 msgid "コラボり中"
@@ -4318,15 +4318,15 @@ msgstr "Create a team."
 
 #: View/Posts/attached_file_list.ctp:52
 msgid "もっとファイルを読み込む ▼"
-msgstr ""
+msgstr "Load more files ▼"
 
 #: View/Posts/attached_file_list.ctp:58
 msgid "さらにファイルを読み込む ▼"
-msgstr ""
+msgstr "Load more files ▼"
 
 #: View/Posts/attached_file_list.ctp:68
 msgid "これ以上のファイルはありませんでした。"
-msgstr ""
+msgstr "There was no more files."
 
 #: View/Teams/add.ctp:17
 msgid "チームを作成してください"
@@ -4334,24 +4334,24 @@ msgstr "Create a team."
 
 #: View/Teams/add.ctp:124
 msgid "現在の期間"
-msgstr ""
+msgstr "Current period"
 
 #: View/Teams/add_group_vision.ctp:17
 msgid "グループビジョンを作成してください"
-msgstr ""
+msgstr "Please create a group vision"
 
 #: View/Teams/add_group_vision.ctp:36 View/Teams/edit_group_vision.ctp:37
 msgid "グループ"
-msgstr ""
+msgstr "Group"
 
 #: View/Teams/add_group_vision.ctp:43 View/Teams/edit_group_vision.ctp:44
 msgid "グループビジョン名"
-msgstr ""
+msgstr "Name of group vision"
 
 #: View/Teams/add_group_vision.ctp:44 View/Teams/add_team_vision.ctp:36
 #: View/Teams/edit_group_vision.ctp:45 View/Teams/edit_team_vision.ctp:37
 msgid "例) イノベーションを起こす"
-msgstr ""
+msgstr "e.g.) making an innovation"
 
 #: View/Teams/add_group_vision.ctp:105
 msgid "グループビジョンを作成"
@@ -4359,11 +4359,11 @@ msgstr "Create a group vision"
 
 #: View/Teams/add_team_vision.ctp:16
 msgid "チームビジョンを作成してください"
-msgstr ""
+msgstr "Please create a team vision"
 
 #: View/Teams/add_team_vision.ctp:35 View/Teams/edit_team_vision.ctp:36
 msgid "チームビジョン名"
-msgstr ""
+msgstr "Name of team vision"
 
 #: View/Teams/add_team_vision.ctp:97
 msgid "チームビジョンを作成"
@@ -4371,19 +4371,19 @@ msgstr "Create a team vision"
 
 #: View/Teams/edit_group_vision.ctp:17
 msgid "グループビジョンを更新"
-msgstr ""
+msgstr "Updating a group vision"
 
 #: View/Teams/edit_group_vision.ctp:108
 msgid "グループビジョンを更新する"
-msgstr ""
+msgstr "Updating a group vision"
 
 #: View/Teams/edit_team_vision.ctp:16
 msgid "チームビジョンを更新"
-msgstr ""
+msgstr "Updating a team vision"
 
 #: View/Teams/edit_team_vision.ctp:100
 msgid "チームビジョンを更新する"
-msgstr ""
+msgstr "Updating a team vision"
 
 #: View/Teams/settings.ctp:21
 msgid "メンバー招待"

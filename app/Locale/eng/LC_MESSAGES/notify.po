@@ -18,28 +18,28 @@ msgstr ""
 #: Controller/CirclesController.php:313;359
 #: Controller/Component/PnotifyComponent.php:63
 msgid "成功"
-msgstr ""
+msgstr "Success"
 
 #: Controller/CirclesController.php:380
 #: Controller/Component/PnotifyComponent.php:65
 msgid "エラー"
-msgstr ""
+msgstr "Error"
 
 #: Controller/UsersController.php:90
 msgid "アカウントがロックされています。%s分後に自動的に解除されます。"
-msgstr ""
+msgstr "The account is locked. It will be released automatically after %s minutes."
 
 #: Controller/UsersController.php:96
 msgid "メールアドレスもしくはパスワードが正しくありません。"
-msgstr ""
+msgstr "E-mail address or password is incorrect ."
 
 #: Controller/UsersController.php:138;176
 msgid "エラーが発生しました。再度ログインをお願いします。"
-msgstr ""
+msgstr "An error occured. Please log in again."
 
 #: Controller/UsersController.php:155
 msgid "2段階認証コードが正しくありません。"
-msgstr ""
+msgstr "2-step authentication code is incorrect."
 
 #: Controller/UsersController.php:171
 msgid "%sさん、こんにちは。"
@@ -47,28 +47,28 @@ msgstr "Hello! %s."
 
 #: Controller/UsersController.php:172
 msgid "ログイン成功"
-msgstr ""
+msgstr "Login success"
 
 #: Controller/UsersController.php:197
 msgid "%sさん、またお会いしましょう。"
-msgstr ""
+msgstr "See you again. %s."
 
 #: Controller/UsersController.php:198
 msgid "ログアウトしました"
-msgstr ""
+msgstr "Logged out"
 
 #: Controller/UsersController.php:446
 msgid "本登録が完了しました！"
-msgstr ""
+msgstr "The registration has been completed!"
 
 #: Controller/UsersController.php:456
 msgid "メールアドレスの認証が完了しました。"
-msgstr ""
+msgstr "The authentication of e-mail address has been completed"
 
 #: Controller/Component/PnotifyComponent.php:62
 msgid "お知らせ"
-msgstr ""
+msgstr "Notice"
 
 #: Controller/Component/PnotifyComponent.php:64
 msgid "注意"
-msgstr ""
+msgstr "Warning"

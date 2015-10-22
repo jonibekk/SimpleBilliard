@@ -208,54 +208,54 @@ msgstr "10MB or less, and Please select one of the formats of JPG or PNG and GIF
 
 #: View/Elements/gl_common_js.ctp:52
 msgid "数字、英小文字、英大文字の混在にしてください。"
-msgstr ""
+msgstr "Please mix of numbers, lower case letters and upper case letters."
 
 #: View/Elements/gl_common_js.ctp:53
 msgid "パスワードにメールアドレスと同一のものを指定する事はできません。"
-msgstr ""
+msgstr "It is not possible to use the same as the e-mail address as the password."
 
 #: View/Elements/gl_common_js.ctp:54
 msgid "必須項目です。"
-msgstr ""
+msgstr "Input is required."
 
 #: View/Elements/gl_common_js.ctp:56
 msgid "メールアドレス確認中..."
-msgstr ""
+msgstr "checking your e-mail address..."
 
 #: View/Elements/gl_common_js.ctp:71
 msgid "開始日が期限を過ぎています。"
-msgstr ""
+msgstr "Start date has expired."
 
 #: View/Elements/gl_common_js.ctp:72
 msgid "期限が開始日以前になっています。"
-msgstr ""
+msgstr "The deadline date must be after start date."
 
 #: View/Elements/gl_common_js.ctp:73
 msgid "コメント送信できませんでした"
-msgstr ""
+msgstr "Could not send comment."
 
 #: View/Elements/Feed/photo_upload.ctp:113
 msgid "１つ以上の画像を選択してください。"
-msgstr ""
+msgstr "Please select one or more images."
 
 #: View/Elements/Goal/modal_add_key_result.ctp:111;126
 #: View/Elements/Goal/modal_edit_key_result.ctp:132 View/Goals/add.ctp:194;207
 msgid "文字数がオーバーしています。"
-msgstr ""
+msgstr "it has exceeded the character limit."
 
 #: View/Elements/Goal/modal_add_key_result.ctp:113;128
 #: View/Elements/Goal/modal_edit_key_result.ctp:134;149
 #: View/Goals/add.ctp:196;209
 msgid "数字を入力してください。"
-msgstr ""
+msgstr "Please enter a number."
 
 #: View/Elements/Team/edit_term_setting.ctp:77;85;96 View/Teams/add.ctp:120
 msgid "選択してください。"
-msgstr ""
+msgstr "Please select."
 
 #: View/Elements/User/modal_change_email.ctp:85
 msgid "変更する場合はパスワード入力が必要です。"
-msgstr ""
+msgstr "Password is required if you want to change."
 
 #: View/Teams/add.ctp:110
 msgid " "
