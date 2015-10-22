@@ -354,10 +354,11 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                             </div>
                         <?php endforeach ?>
                     </div>
-                    <?php if (isset($post['Goal']['id']) && $post['Post']['user_id'] != $this->Session->read('Auth.User.id') && is_null($post['Goal']['completed'])): ?>
+                    <?php if($post['Post']['user_id'] != $this->Session->read('Auth.User.id') && $post['Goal']['end_date']>$current_term['start_date'] && is_null($post['Goal']['completed'])) : ?>
                         <? $follow_opt = $this->Goal->getFollowOption($post['Goal']) ?>
                         <? $collabo_opt = $this->Goal->getCollaboOption($post['Goal']) ?>
                         <div style="padding:5px" class="col col-xxs-12 mt_5px">
+                        <?php  if ($post['Post']['type'] != Post::TYPE_KR_COMPLETE || ($post['Post']['type'] == Post::TYPE_KR_COMPLETE && REQUEST_TIMESTAMP <= $post['KeyResult']['end_date'])): ?>
                             <div class="col col-xxs-6 col-xs-4 mr_5px">
                                 <a goal-id="<?= $post['Goal']['id'] ?>" data-class="toggle-follow" href="#"
                                    class="btn btn-white font_verydark bd-circle_22px toggle-follow p_8px <?= $follow_opt['class'] ?>"
@@ -374,6 +375,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                     <span class="ml_5px font_14px"><?= $collabo_opt['text'] ?></span>
                                 </a>
                             </div>
+                            <?php endif; ?>
                         </div>
                     <? endif; ?>
                 <? endif; ?>

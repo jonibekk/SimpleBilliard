@@ -1400,6 +1400,14 @@ ul.example-indent {
     margin-left: -1px;
     border-left: 1px solid rgba(0, 0, 0, 0);
     border-right: 1px solid rgba(0, 0, 0, 0);
+    white-space: pre;
+    white-space: pre-wrap;
+    white-space: pre-line;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    white-space: -moz-pre-wrap;
+    word-wrap:break-word
+
 }
 
 .comment-photo {
@@ -1942,6 +1950,11 @@ textarea.comment-post-form {
 
 .goal-set-buttons {
     margin-left: 10%;
+}
+
+.goal-edit-limit-date-label {
+    display:inline-block;
+    width:150px;
 }
 
 /*/Goal*/

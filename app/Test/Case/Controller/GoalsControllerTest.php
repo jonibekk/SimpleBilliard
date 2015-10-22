@@ -1529,9 +1529,6 @@ class GoalsControllerTest extends ControllerTestCase
         $this->start_date = strtotime('2015/7/1');
         $this->end_date = strtotime('2015/10/1');
 
-        $Goals->Goal->Team->current_term_start_date = strtotime('2015/1/1');
-        $Goals->Goal->Team->current_term_end_date = strtotime('2015/12/1');
-
         return $Goals;
     }
 }

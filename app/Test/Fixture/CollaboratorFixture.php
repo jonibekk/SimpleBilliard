@@ -63,6 +63,13 @@ class CollaboratorFixture extends CakeTestFixture
             'user_id' => 1,
             'type'    => 0,
         ],
+        [
+            'id'      => 4,
+            'team_id' => 1,
+            'goal_id' => 9,
+            'user_id' => 2,
+            'type'    => 1,
+        ],
     ];
 
 }

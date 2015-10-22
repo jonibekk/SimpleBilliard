@@ -38,6 +38,7 @@ class PostTest extends CakeTestCase
         'app.post_read',
         'app.post_share_user',
         'app.post_share_circle',
+        'app.post_shared_log',
         'app.circle',
         'app.circle_member',
         'app.team_member'
@@ -97,28 +98,28 @@ class PostTest extends CakeTestCase
         $postDataTwo = [
             'Post' => [
                 'post_id' => '30',
-                'body' => 'test',
+                'body'    => 'test',
             ]
         ];
         $postDataFour = [
             'Post' => [
                 'post_id' => '30',
-                'body' => 'test',
-                'share' => '',
+                'body'    => 'test',
+                'share'   => '',
             ]
         ];
 
         $postDataSix = [
             'Post' => [
                 'post_id' => '30',
-                'body' => 'test',
-                'share' => 'user_2,user_3',
+                'body'    => 'test',
+                'share'   => 'user_2,user_3',
             ]
         ];
 
-        $postDataFive = ['share_public' => 'user_2,user_3','post_id' => 37,'share_range' => 'public','type' => 8,'share' => 'user_2,user_3'];
+        $postDataFive = ['share_public' => 'user_2,user_3', 'post_id' => 37, 'share_range' => 'public', 'type' => 8, 'share' => 'user_2,user_3'];
 
-        $res = $this->Post->editMessageMember($postDataTwo,$uid,$team_id);
+        $res = $this->Post->editMessageMember($postDataTwo, $uid, $team_id);
         $this->assertNotEmpty($res, "[正常]投稿(指定)");
 
         $this->Post->my_uid = $uid;
@@ -127,8 +128,8 @@ class PostTest extends CakeTestCase
         $res = $this->Post->editMessageMember($postDataOne);
         $this->assertEmpty($res);
 
-        $res = $this->Post->editMessageMember($postDataOne,$uid,$team_id);
-        $this->assertFalse($res,"[正常]投稿指定)");
+        $res = $this->Post->editMessageMember($postDataOne, $uid, $team_id);
+        $this->assertFalse($res, "[正常]投稿指定)");
 
         $res = $this->Post->editMessageMember($postDataFour);
         $this->assertNotEmpty($res);
@@ -207,6 +208,28 @@ class PostTest extends CakeTestCase
         $this->_setDefault();
 
         $this->Post->get(1, 20, "2014-01-01", "2014-01-31");
+    }
+
+    public function testGetDefault()
+    {
+        $this->_setDefault();
+
+        $this->Post->save(['Post' => [
+            'body'     => 'test',
+            'team_id'  => $this->Post->current_team_id,
+            'user_id'  => 1,
+            'type'     => Post::TYPE_NORMAL,
+            'created'  => REQUEST_TIMESTAMP - 1000,
+            'modified' => REQUEST_TIMESTAMP - 1000,
+        ]]);
+        $post_id1 = $this->Post->getLastInsertID();
+
+        $rows = $this->Post->get(1, 20);
+        $ids = [];
+        foreach ($rows as $v) {
+            $ids[$v['Post']['id']] = true;
+        }
+        $this->assertTrue(isset($ids[$post_id1]));
     }
 
     public function testGetSinglePost()
@@ -911,8 +934,8 @@ class PostTest extends CakeTestCase
         $data = [
             'user_id' => 888,
             'team_id' => $team_id,
-            'body' => 'test2',
-            'type' => Post::TYPE_MESSAGE
+            'body'    => 'test2',
+            'type'    => Post::TYPE_MESSAGE
         ];
         $this->Post->save($data);
         $post_id = $this->Post->getLastInsertID();
@@ -937,8 +960,8 @@ class PostTest extends CakeTestCase
         $data = [
             'user_id' => $user_id,
             'team_id' => $team_id,
-            'body' => 'test',
-            'type' => Post::TYPE_MESSAGE
+            'body'    => 'test',
+            'type'    => Post::TYPE_MESSAGE
         ];
         $this->Post->save($data);
         $res = $this->Post->getMessageList($user_id, 1, 1);

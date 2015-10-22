@@ -448,7 +448,7 @@ class Evaluation extends AppModel
             return false;
         }
         if (!$term_id = $this->Team->EvaluateTerm->getCurrentTermId()) {
-            $this->Team->EvaluateTerm->saveCurrentTerm();
+            $this->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
             $term_id = $this->Team->EvaluateTerm->getLastInsertID();
         }
         $team_members_list = $this->Team->TeamMember->getAllMemberUserIdList(true, true, true);
