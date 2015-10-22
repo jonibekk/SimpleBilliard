@@ -92,6 +92,8 @@ class CollaboratorTest extends CakeTestCase
         $this->_setDefault();
         $team_id = 1;
 
+        $current_term = $this->Collaborator->Goal->Team->EvaluateTerm->getCurrentTermData();
+
         $params = [
             'first_name' => 'test',
             'last_name'  => 'test'
@@ -99,39 +101,92 @@ class CollaboratorTest extends CakeTestCase
         $this->Collaborator->User->save($params);
         $user_id = $this->Collaborator->User->getLastInsertID();
 
+        // 今期のゴール
         $params = [
             'user_id' => $user_id,
             'team_id' => $team_id,
             'name'    => 'test'
         ];
         $this->Collaborator->Goal->Purpose->save($params);
-        $purpose_id = $this->Collaborator->Goal->Purpose->getLastInsertID();
-
+        $current_purpose_id = $this->Collaborator->Goal->Purpose->getLastInsertID();
         $params = [
             'user_id'          => $user_id,
             'team_id'          => $team_id,
-            'purpose_id'       => $purpose_id,
+            'purpose_id'       => $current_purpose_id,
             'name'             => 'test',
             'goal_category_id' => 1,
-            'end_date'         => '1427813999',
-            'photo_file_name'  => 'aa.png'
+            'photo_file_name'  => 'aa.png',
+            'start_date'  => $current_term['end_date'] - 20,
+            'end_date'  => $current_term['end_date'] - 10,
         ];
         $this->Collaborator->Goal->save($params);
-        $goal_id = $this->Collaborator->Goal->getLastInsertID();
+        $current_goal_id = $this->Collaborator->Goal->getLastInsertID();
+        
+        // 来期のゴール
+        $params = [
+            'user_id' => $user_id,
+            'team_id' => $team_id,
+            'name'    => 'test'
+        ];
+        $this->Collaborator->Goal->Purpose->create();
+        $this->Collaborator->Goal->Purpose->save($params);
+        $next_purpose_id = $this->Collaborator->Goal->Purpose->getLastInsertID();
+        $params = [
+            'user_id'          => $user_id,
+            'team_id'          => $team_id,
+            'purpose_id'       => $next_purpose_id,
+            'name'             => 'test',
+            'goal_category_id' => 1,
+            'photo_file_name'  => 'aa.png',
+            'start_date'  => $current_term['end_date'] + 10,
+            'end_date'  => $current_term['end_date'] + 20,
+        ];
+        $this->Collaborator->Goal->create();
+        $this->Collaborator->Goal->save($params);
+        $next_goal_id = $this->Collaborator->Goal->getLastInsertID();
 
         $valued_flg = 0;
         $params = [
             'user_id'    => $user_id,
             'team_id'    => $team_id,
-            'goal_id'    => $goal_id,
+            'goal_id'    => $current_goal_id,
             'valued_flg' => $valued_flg,
             'type'       => 0,
             'priority'   => 1,
         ];
+        $this->Collaborator->create();
         $this->Collaborator->save($params);
 
+        $params = [
+            'user_id'    => $user_id,
+            'team_id'    => $team_id,
+            'goal_id'    => $next_goal_id,
+            'valued_flg' => $valued_flg,
+            'type'       => 0,
+            'priority'   => 1,
+        ];
+        $this->Collaborator->create();
+        $this->Collaborator->save($params);
+
+        // 評価期間の絞り込み無し
         $goal_description = $this->Collaborator->getCollaboGoalDetail($team_id, $user_id, $valued_flg);
-        $this->assertEquals($user_id, $goal_description[0]['User']['id']);
+        $ids = [];
+        foreach ($goal_description as $v) {
+            $ids[$v['Goal']['id']] = true;
+        }
+        $this->assertTrue(isset($ids[$current_goal_id]));
+        $this->assertTrue(isset($ids[$next_goal_id]));
+
+        // 今期で絞る
+        $goal_description = $this->Collaborator->getCollaboGoalDetail($team_id, $user_id, $valued_flg, true,
+                                                                      EvaluateTerm::TYPE_CURRENT);
+        $ids = [];
+        foreach ($goal_description as $v) {
+            $ids[$v['Goal']['id']] = true;
+        }
+        $this->assertTrue(isset($ids[$current_goal_id]));
+        $this->assertFalse(isset($ids[$next_goal_id]));
+
     }
 
     function testGetCollabeGoalDetailExcludePriorityZero()
