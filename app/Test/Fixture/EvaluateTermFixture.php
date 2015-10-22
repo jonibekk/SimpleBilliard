@@ -40,10 +40,18 @@ class EvaluateTermFixture extends CakeTestFixture
         [
             'id'         => 1,
             'team_id'    => 1,
-            'start_date' => 1,
-            'end_date'   => 1,
-            'del_flg'    => 1,
-            'deleted'    => 1,
+            'start_date' => 10000,
+            'end_date'   => 19999,
+            'timezone'   => 9,
+            'created'    => 1,
+            'modified'   => 1
+        ],
+        [
+            'id'         => 2,
+            'team_id'    => 1,
+            'start_date' => 20000,
+            'end_date'   => 29999,
+            'timezone'   => 9,
             'created'    => 1,
             'modified'   => 1
         ],
