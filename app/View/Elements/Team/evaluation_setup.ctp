@@ -138,6 +138,7 @@
             <label class="col col-sm-3 control-label form-label"><?= __d('gl', '最終評価者評価 トータル コメント 必須') ?></label>
             <?= $this->Form->input("final_comment_required_flg", ['default' => true,]) ?>
         </div>
+        <?php /* 今後実装予定機能
         <div class="form-group">
             <label class="col col-sm-3 control-label form-label"><?= __d('gl', 'リーダ評価') ?></label>
             <?= $this->Form->input("leader_flg", ['default' => true,]) ?>
@@ -158,6 +159,8 @@
             <label class="col col-sm-3 control-label form-label"><?= __d('gl', 'リーダ評価 ゴール コメント必須') ?></label>
             <?= $this->Form->input("leader_goal_comment_required_flg", ['default' => false,]) ?>
         </div>
+        */ ?>
+
     </div>
     <div class="panel-footer">
         <div class="row">
