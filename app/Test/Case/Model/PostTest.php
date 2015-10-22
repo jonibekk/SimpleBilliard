@@ -38,6 +38,7 @@ class PostTest extends CakeTestCase
         'app.post_read',
         'app.post_share_user',
         'app.post_share_circle',
+        'app.post_shared_log',
         'app.circle',
         'app.circle_member',
         'app.team_member'
@@ -209,17 +210,16 @@ class PostTest extends CakeTestCase
         $this->Post->get(1, 20, "2014-01-01", "2014-01-31");
     }
 
-
     public function testGetDefault()
     {
         $this->_setDefault();
 
         $this->Post->save(['Post' => [
-            'body'    => 'test',
-            'team_id'    => $this->Post->current_team_id,
-            'user_id' => 1,
-            'type' => Post::TYPE_NORMAL,
-            'created' => REQUEST_TIMESTAMP - 1000,
+            'body'     => 'test',
+            'team_id'  => $this->Post->current_team_id,
+            'user_id'  => 1,
+            'type'     => Post::TYPE_NORMAL,
+            'created'  => REQUEST_TIMESTAMP - 1000,
             'modified' => REQUEST_TIMESTAMP - 1000,
         ]]);
         $post_id1 = $this->Post->getLastInsertID();
