@@ -2895,11 +2895,7 @@ msgstr "Add Key Result"
 #: View/Elements/Goal/modal_edit_key_result.ctp:69
 #, fuzzy
 msgid "達成の指標として『なに』をどうするか？"
-msgstr ""
-"#-#-#-#-#  0catalog.po (PROJECT VERSION)  #-#-#-#-#\n"
-"What signs of progress will there be?\n"
-"#-#-#-#-#  0catalog.po (PROJECT VERSION)  #-#-#-#-#\n"
-"What signs of achievement will there be?"
+msgstr "What signs of achievement will there be?"
 
 #: View/Elements/Goal/modal_add_key_result.ctp:69
 #: View/Elements/Goal/modal_edit_key_result.ctp:72 View/Goals/add.ctp:148
