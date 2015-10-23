@@ -115,7 +115,7 @@ msgstr "Message from %s:"
 
 #: View/Emails/text/notify_basic.ctp:18
 msgid "「%s」"
-msgstr "`&s`"
+msgstr "`%s`"
 
 #: View/Emails/text/password_reset.ctp:17
 msgid "以下のリンクをクリックしてパスワードを再設定してください。"
