@@ -230,7 +230,7 @@ message_app.controller(
                             pushMessage(val);
                         }, $scope.message_list);
 
-                        if (response.data.message_list.length > 1) {
+                        if (response.data.message_list.length > 0) {
                             // 新しいメッセージが view に確実に反映されるように少し遅らす
                             setTimeout(function () {
                                 $location.hash('m_' + response.data.message_list.length);
