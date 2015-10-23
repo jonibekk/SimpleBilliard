@@ -427,13 +427,24 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($res);
     }
 
-    public function ajax_get_message($post_id, $limit, $page_num)
+    /**
+     * メッセージ一覧を返す
+     * ただし、１つのトピックの１件目のメッセージは含まれない
+     *
+     * @param $post_id
+     * @param $limit
+     * @param $page_num
+     * @param int $start メッセージ投稿時間：指定すると、この時間以降のメッセージのみを返す
+     *
+     * @return CakeResponse
+     */
+    public function ajax_get_message($post_id, $limit, $page_num, $start = null)
     {
         $this->_ajaxPreProcess();
         //メッセージを既読に
         $this->Post->Comment->CommentRead->redAllByPostId($post_id);
 
-        $message_list = $this->Post->Comment->getPostsComment($post_id, $limit, $page_num, 'desc');
+        $message_list = $this->Post->Comment->getPostsComment($post_id, $limit, $page_num, 'desc', ['start' => $start]);
         foreach ($message_list as $key => $item) {
             $message_list[$key]['AttachedFileHtml'] = $this->fileUploadMessagePageRender($item['CommentFile'],
                                                                                          $post_id);
@@ -460,7 +471,7 @@ class PostsController extends AppController
         $convert_data = $this->Post->Comment->convertData($detail_comment);
 
         $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
-        $pusher->trigger('message-channel-' . $post_id, 'new_message', $convert_data);
+        $pusher->trigger('message-channel-' . $post_id, 'new_message', $convert_data, $this->request->data('socket_id'));
         $this->Mixpanel->trackMessage($post_id);
         return $this->_ajaxGetResponse($detail_comment);
     }
