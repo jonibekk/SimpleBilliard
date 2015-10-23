@@ -170,8 +170,12 @@ message_app.controller(
                     if ($scope.message_list.length >= 2) {
                         // 最新メッセージの送信時間をパラメータに追加
                         var lastMessage = $scope.message_list.reduce(function (a, b) {
-                            if (!a.Comment) return b;
-                            if (!b.Comment) return a;
+                            if (!a.Comment) {
+                                return b;
+                            }
+                            if (!b.Comment) {
+                                return a;
+                            }
                             return parseInt(a.Comment.created, 10) > parseInt(b.Comment.created, 10) ? a : b;
                         });
                         urlParams.push(parseInt(lastMessage.Comment.created, 10));

@@ -112,6 +112,18 @@ class CommentTest extends CakeTestCase
         $this->Comment->add($data);
     }
 
+    function testAddFail()
+    {
+        $this->Comment = $this->getMockForModel('Comment', array('save'));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $this->Comment->expects($this->any())
+                      ->method('save')
+                      ->will($this->returnValue(false));
+
+        $res = $this->Comment->add([]);
+        $this->assertFalse($res);
+    }
+
     function testAddInvalidOgp()
     {
         $this->Comment->my_uid = 1;
@@ -163,7 +175,7 @@ class CommentTest extends CakeTestCase
             'team_id' => 1,
             'post_id' => $post_id,
             'body'    => 'comment test.',
-            'created'    => 1000,
+            'created' => 1000,
         ];
         $this->Comment->save($data);
         $last_id = $this->Comment->getLastInsertID();
