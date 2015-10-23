@@ -408,7 +408,7 @@ class EvaluateTerm extends AppModel
                                                    $timezone = null)
     {
         $team = $this->Team->getCurrentTeam();
-        if (empty($team)) {
+        if (empty($team) && (!$start_term_month || !$border_months || !$timezone)) {
             return null;
         }
         if (!$start_term_month) {
