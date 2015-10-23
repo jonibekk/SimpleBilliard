@@ -29,6 +29,7 @@ class CommentTest extends CakeTestCase
         'app.action_result',
         'app.key_result',
         'app.post_share_circle',
+        'app.local_name',
     );
 
     /**
@@ -161,11 +162,25 @@ class CommentTest extends CakeTestCase
         $data = [
             'team_id' => 1,
             'post_id' => $post_id,
-            'body'    => 'comment test.'
+            'body'    => 'comment test.',
+            'created'    => 1000,
         ];
         $this->Comment->save($data);
+        $last_id = $this->Comment->getLastInsertID();
         $res = $this->Comment->getPostsComment($post_id, null, 1, 'DESC');
-        $this->assertNotEmpty($res);
+        $ids = [];
+        foreach ($res as $v) {
+            $ids[$v['Comment']['id']] = true;
+        }
+        $this->assertTrue(isset($ids[$last_id]));
+
+        $res = $this->Comment->getPostsComment($post_id, null, 1, 'DESC', ['start' => 1001]);
+        $ids = [];
+        foreach ($res as $v) {
+            $ids[$v['Comment']['id']] = true;
+        }
+        $this->assertFalse(isset($ids[$last_id]));
+
     }
 
     function testConvertData()
