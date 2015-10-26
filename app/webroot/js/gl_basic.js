@@ -1490,25 +1490,28 @@ $(function () {
 //入力途中での警告表示
 //静的ページのにはすべて適用
 function setChangeWarningForAllStaticPage() {
-    var flag = false;
     //オートコンプリートでchangeしてしまうのを待つ
     setTimeout(function () {
-        $("select,input,textarea").change(function () {
-            $(document).on('submit', 'form', function () {
-                flag = true;
+        var flag="false";
+        $(":input").each(function () {
+            var default_val = "";
+            var changed_val = "";
+            default_val = $(this).load().val();
+            $(this).on("change keyup keydown", function () {
+                changed_val = $(this).val();
+                if (default_val != changed_val) {
+                    $(this).addClass("changed");
+                } else {
+                    $(this).removeClass("changed");
+                }
             });
-            $("input[type=submit]").click(function () {
-                flag = true;
-            });
-            if (!$(this).hasClass('disable-change-warning')) {
-                $(window).on('beforeunload', function () {
-                    if (!flag) {
-                        return cake.message.notice.a;
-                    }
-                    else {
-                        return;
-                    }
-                });
+        });
+        $(document).on('submit', 'form', function () {
+            flag = "true";
+        });
+        $(window).on("beforeunload", function () {
+            if ($(".changed").length != "" && flag=="false") {
+                return cake.message.notice.a;
             }
         });
     }, 2000);
