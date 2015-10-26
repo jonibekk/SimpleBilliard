@@ -53,7 +53,7 @@
                 <p class="goal-detail-info-members-head"><?= __d('gl', 'メンバー') ?></p>
                 <?php
                 $member_all = array_merge($goal['Leader'], $goal['Collaborator']);
-                $member_view_num = 5;
+                $member_view_num = 6;
                 $over_num = count($member_all) - $member_view_num;
                 ?>
                 <?php foreach ($member_all as $member): ?>
