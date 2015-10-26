@@ -3813,7 +3813,6 @@ $(document).ready(function () {
                         break;
                 }
                 var thumbnailElement, _i, _ref;
-                alert(orientation);
                 if(orientation!=0) {
                     orientation = orientation + 180;
                 }
@@ -3823,7 +3822,14 @@ $(document).ready(function () {
                 }
                 thumbnailElement.alt = file.name;
                 thumbnailElement.src = dataUrl;
-                thumbnailElement.style="transform:rotate("+orientation+"deg);-ms-transform:rotate("+orientation+"deg);-webkit-transform:rotate("+orientation+"deg);";
+                thumbnailElement.id="exif";
+                 var styles={
+                    "transform":"rotate("+orientation+"deg)",
+                    "-ms-transform":"rotate("+orientation+"deg)",
+                    "-webkit-transform":"rotate("+orientation+"deg)"
+                };
+                $("#exif").css(styles);
+                $("#exif").removeAttr("id");
             });
         },
         // ファイルアップロード失敗
