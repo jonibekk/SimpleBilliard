@@ -48,7 +48,6 @@
     echo $this->Html->css('goalous.min', array('media' => 'screen'));
     echo $this->Html->css('nav');
     echo $this->Html->css('nav_media');
-    echo $this->Html->css('jquery-crop-photo');
     echo $this->fetch('css');
     echo $this->fetch('meta');
 
@@ -60,6 +59,7 @@
     echo $this->Html->script('vendor/angular/ui-bootstrap-tpls-0.13.0.min');
     echo $this->Html->script('vendor/angular/angular-pnotify');
     echo $this->Html->script('vendor/angular/angular-sanitize.min');
+
     ?>
     <?php
     // todo pre_load_js.ctpとしてまとめる
