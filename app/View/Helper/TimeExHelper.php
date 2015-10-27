@@ -29,49 +29,65 @@ class TimeExHelper extends AppHelper
     /**
      * format : Y/m/d
      *
-     * @param  $date_str
+     * @param      $date_str
+     * @param null $timezone
      *
      * @return string
      */
-    public function date($date_str)
+    public function date($date_str, $timezone = null)
     {
-        return $this->Time->format('Y/m/d', $date_str, null, $this->timeOffset);
+        if (!$timezone) {
+            $timezone = $this->timeOffset;
+        }
+        return $this->Time->format('Y/m/d', $date_str, null, $timezone);
     }
 
     /**
      * format : n/j
      *
-     * @param $date_str
+     * @param      $date_str
+     * @param null $timezone
      *
      * @return string
      */
-    public function dateNoYear($date_str)
+    public function dateNoYear($date_str, $timezone = null)
     {
-        return $this->Time->format('n/j', $date_str, null, $this->timeOffset);
+        if (!$timezone) {
+            $timezone = $this->timeOffset;
+        }
+        return $this->Time->format('n/j', $date_str, null, $timezone);
     }
 
     /**
      * format : n/j H:i
      *
-     * @param  $date_str
+     * @param      $date_str
+     * @param null $timezone
      *
      * @return string
      */
-    public function datetimeNoYear($date_str)
+    public function datetimeNoYear($date_str, $timezone = null)
     {
-        return $this->Time->format('n/j H:i', $date_str, null, $this->timeOffset);
+        if (!$timezone) {
+            $timezone = $this->timeOffset;
+        }
+        return $this->Time->format('n/j H:i', $date_str, null, $timezone);
     }
 
     /**
      * format : Y/m/d H:i:s
      *
-     * @param  $date_str
+     * @param      $date_str
+     * @param null $timezone
      *
      * @return string
      */
-    public function fullDatetime($date_str)
+    public function fullDatetime($date_str, $timezone = null)
     {
-        return $this->Time->format('Y/m/d H:i:s', $date_str, null, $this->timeOffset);
+        if (!$timezone) {
+            $timezone = $this->timeOffset;
+        }
+        return $this->Time->format('Y/m/d H:i:s', $date_str, null, $timezone);
     }
 
     /**
@@ -181,6 +197,16 @@ class TimeExHelper extends AppHelper
                 $format = "%b %e %Y, at %l:%M%P";
         }
         return $this->Time->i18nFormat($local_time, $format);
+    }
+
+    public function getTimezoneText($timezone)
+    {
+        $sign = "+";
+        if ($timezone < 0) {
+            $sign = "";
+        }
+        $text = "(GMT {$sign}{$timezone}h)";
+        return $text;
     }
 
 }

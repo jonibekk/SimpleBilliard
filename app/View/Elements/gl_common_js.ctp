@@ -52,6 +52,8 @@ echo $this->Html->script('goalous.min');
                 e: "<?=__d('validate', "数字、英小文字、英大文字の混在にしてください。")?>",
                 f: "<?=__d('validate', "パスワードにメールアドレスと同一のものを指定する事はできません。")?>",
                 g: "<?=__d('validate', "必須項目です。")?>",
+                invalid_email: "<?= __d('validate', "メールアドレスが正しくありません。") ?>",
+                checking_email: "<?= __d('validate', "メールアドレス確認中...") ?>",
                 dropzone_file_too_big: "<?=__d('gl', 'アップロード出来るファイルサイズは{{maxFilesize}}MBまでです。')?>",
                 dropzone_invalid_file_type: "<?=__d('gl', '画像ファイルを選択してください。')?>",
                 dropzone_max_files_exceeded: "<?=__d('gl', 'アップロード出来るファイル数は{{maxFiles}}個までです。')?>",
@@ -170,7 +172,8 @@ echo $this->Html->script('goalous.min');
             insight: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_insight']) ?>",
             insight_circle: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_insight_circle']) ?>",
             insight_ranking: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_insight_ranking']) ?>",
-            validate_email: "<?= $this->Html->url(['controller' => 'users', 'action' => 'ajax_validate_email']) ?>"
+            validate_email: "<?= $this->Html->url(['controller' => 'users', 'action' => 'ajax_validate_email']) ?>",
+            join_circle: "<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_join_circle']) ?>"
         },
         data: {
             a: <?=isset($select2_default)?$select2_default:"[]"?>,

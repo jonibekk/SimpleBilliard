@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2015-09-07 06:28+0000\n"
+"POT-Creation-Date: 2015-10-22 08:32+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -103,23 +103,22 @@ msgid "現在、他のメールアドレスの認証待ちの為、メールア�
 msgstr ""
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:16
-#: View/Elements/modal_add_circle.ctp:42
+#: View/Elements/modal_add_circle.ctp:42;80
 #: View/Elements/modal_collabo.ctp:47;57;66
-#: View/Elements/modal_edit_circle.ctp:52
-#: View/Elements/Feed/common_form.ctp:138;152;290;440
+#: View/Elements/modal_edit_circle.ctp:52;79
+#: View/Elements/Feed/common_form.ctp:138;152;290;442
 #: View/Elements/Feed/new_comment_form.ctp:45
 #: View/Elements/Goal/modal_add_action.ctp:81
-#: View/Elements/Goal/modal_add_key_result.ctp:70;108;123;151;186
-#: View/Elements/Goal/modal_edit_key_result.ctp:73;130;145;173;207;225
+#: View/Elements/Goal/modal_add_key_result.ctp:74;112;127;161;196
+#: View/Elements/Goal/modal_edit_key_result.ctp:76;133;148;182;216;234
 #: View/Elements/Team/edit_basic_setting.ctp:36
 #: View/Elements/Team/invite.ctp:46
 #: View/Elements/User/modal_2fa_register.ctp:84
-#: View/Elements/User/modal_change_email.ctp:76
 #: View/Elements/User/modal_change_password.ctp:86;97;112
-#: View/Elements/User/profile_setting.ctp:71;78
-#: View/Goals/add.ctp:71;149;189;202;227;263
-#: View/Goals/view_actions.ctp:31
-#: View/Teams/add.ctp:37
+#: View/Elements/User/profile_setting.ctp:67;74
+#: View/Goals/add.ctp:77;155;195;208;236;273
+#: View/Goals/view_actions.ctp:32
+#: View/Teams/add.ctp:38
 #: View/Teams/add_group_vision.ctp:45
 #: View/Teams/add_team_vision.ctp:37
 #: View/Teams/edit_group_vision.ctp:46
@@ -127,38 +126,37 @@ msgstr ""
 #: View/Users/add_profile.ctp:61;68
 #: View/Users/password_reset.ctp:35;41
 #: View/Users/password_reset_request.ctp:38
-#: View/Users/register.ctp:34;41;69;85;91
+#: View/Users/register.ctp:34;41;88;94
 #: View/Users/registration_with_set_password.ctp:41;49;55
 #: View/Users/token_resend.ctp:38
-#: View/Users/view_actions.ctp:30
+#: View/Users/view_actions.ctp:31
 msgid "入力必須項目です。"
 msgstr ""
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:17
-#: View/Elements/User/profile_setting.ctp:70;77
+#: View/Elements/User/profile_setting.ctp:66;73
 #: View/Users/add_profile.ctp:60;67
 #: View/Users/register.ctp:33;40
 msgid "アルファベットのみで入力してください。"
 msgstr ""
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:18
-#: View/Elements/User/modal_change_email.ctp:79
+#: View/Elements/gl_common_js.ctp:55
 #: View/Users/password_reset_request.ctp:37
-#: View/Users/register.ctp:68
 #: View/Users/registration_with_set_password.ctp:40
 #: View/Users/token_resend.ctp:37
 msgid "メールアドレスが正しくありません。"
 msgstr ""
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:19
-#: View/Elements/gl_common_js.ctp:49
+#: View/Elements/gl_common_js.ctp:51
 msgid "利用規約に同意してください。"
 msgstr ""
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:20
-#: View/Elements/gl_common_js.ctp:47
+#: View/Elements/gl_common_js.ctp:49
 #: View/Elements/User/modal_change_password.ctp:109
-#: View/Elements/User/profile_setting.ctp:276
+#: View/Elements/User/profile_setting.ctp:272
 msgid "パスワードが一致しません。"
 msgstr ""
 
@@ -167,38 +165,43 @@ msgid "パスワードが間違っています。"
 msgstr ""
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:22
-#: View/Elements/gl_common_js.ctp:46
-#: View/Elements/User/modal_change_email.ctp:87
+#: View/Elements/gl_common_js.ctp:48
+#: View/Elements/User/modal_change_email.ctp:82
 #: View/Elements/User/modal_change_password.ctp:83;94
-#: View/Elements/User/profile_setting.ctp:268
+#: View/Elements/User/profile_setting.ctp:264
 msgid "%2$d文字以上で入力してください。"
 msgstr ""
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:23
-msgid "このメールアドレスは既に使用されています。他のメールアドレスを指定してください。"
+#: View/Elements/Team/goal_category_form_elm.ctp:32
+msgid "%2$d文字以下で入力してください。"
 msgstr ""
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:24
-msgid "ファイルサイズが上限を超えています。"
+msgid "このメールアドレスは既に使用されています。他のメールアドレスを指定してください。"
 msgstr ""
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:25
-msgid "画像をアップロードできませんでした。JPG、PNG、GIFのいずれかの形式で保存してください。"
+msgid "ファイルサイズが上限を超えています。"
 msgstr ""
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:26
+msgid "画像をアップロードできませんでした。JPG、PNG、GIFのいずれかの形式で保存してください。"
+msgstr ""
+
+#: Model/Behavior/ExtValidationErrorI18nBehavior.php:27
 msgid "幾つかのメールアドレスが正しくありません。"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:48
-#: View/Elements/modal_add_circle.ctp:159
+#: View/Elements/gl_common_js.ctp:50
+#: View/Elements/modal_add_circle.ctp:160
 #: View/Elements/Feed/photo_upload.ctp:110
 #: View/Elements/Feed/photo_upload_mini.ctp:105
-#: View/Elements/Team/edit_basic_setting.ctp:135
-#: View/Elements/Team/edit_term_setting.ctp:169
-#: View/Elements/User/profile_setting.ctp:260
-#: View/Goals/add.ctp:484
-#: View/Teams/add.ctp:160
+#: View/Elements/Team/edit_basic_setting.ctp:147
+#: View/Elements/Team/edit_term_setting.ctp:186
+#: View/Elements/User/profile_setting.ctp:256
+#: View/Goals/add.ctp:530
+#: View/Teams/add.ctp:170
 #: View/Teams/add_group_vision.ctp:135
 #: View/Teams/add_team_vision.ctp:127
 #: View/Teams/edit_group_vision.ctp:138
@@ -207,27 +210,31 @@ msgstr ""
 msgid "10MB以下かつJPG、PNG、GIFのいずれかの形式を選択して下さい。"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:50
+#: View/Elements/gl_common_js.ctp:52
 msgid "数字、英小文字、英大文字の混在にしてください。"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:51
+#: View/Elements/gl_common_js.ctp:53
 msgid "パスワードにメールアドレスと同一のものを指定する事はできません。"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:52
+#: View/Elements/gl_common_js.ctp:54
 msgid "必須項目です。"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:66
+#: View/Elements/gl_common_js.ctp:56
+msgid "メールアドレス確認中..."
+msgstr ""
+
+#: View/Elements/gl_common_js.ctp:71
 msgid "開始日が期限を過ぎています。"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:67
+#: View/Elements/gl_common_js.ctp:72
 msgid "期限が開始日以前になっています。"
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:68
+#: View/Elements/gl_common_js.ctp:73
 msgid "コメント送信できませんでした"
 msgstr ""
 
@@ -235,28 +242,32 @@ msgstr ""
 msgid "１つ以上の画像を選択してください。"
 msgstr ""
 
-#: View/Elements/Goal/modal_add_key_result.ctp:107;122
-#: View/Elements/Goal/modal_edit_key_result.ctp:129
-#: View/Goals/add.ctp:188;201
+#: View/Elements/Goal/modal_add_key_result.ctp:111;126
+#: View/Elements/Goal/modal_edit_key_result.ctp:132
+#: View/Goals/add.ctp:194;207
 msgid "文字数がオーバーしています。"
 msgstr ""
 
-#: View/Elements/Goal/modal_add_key_result.ctp:109;124
-#: View/Elements/Goal/modal_edit_key_result.ctp:131;146
-#: View/Goals/add.ctp:190;203
+#: View/Elements/Goal/modal_add_key_result.ctp:113;128
+#: View/Elements/Goal/modal_edit_key_result.ctp:134;149
+#: View/Goals/add.ctp:196;209
 msgid "数字を入力してください。"
 msgstr ""
 
-#: View/Elements/Goal/modal_edit_key_result.ctp:144
+#: View/Elements/Goal/modal_edit_key_result.ctp:147
 msgid "文字���がオーバーしています。"
 msgstr ""
 
-#: View/Elements/Team/edit_term_setting.ctp:71;82
-#: View/Teams/add.ctp:100;110
+#: View/Elements/Team/edit_term_setting.ctp:77;85;96
+#: View/Teams/add.ctp:120
 msgid "選択してください。"
 msgstr ""
 
-#: View/Elements/User/modal_change_email.ctp:90
+#: View/Elements/User/modal_change_email.ctp:85
 msgid "変更する場合はパスワード入力が必要です。"
+msgstr ""
+
+#: View/Teams/add.ctp:110
+msgid " "
 msgstr ""
 

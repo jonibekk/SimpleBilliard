@@ -161,14 +161,17 @@ class KeyResult extends AppModel
             throw new RuntimeException(__d('gl', "基準の保存に失敗しました。"));
         }
         $this->validate = $validate_backup;
+
+        // ゴールが属している評価期間データ
+        $goal_term = $this->Goal->getGoalTermData($goal_id);
         //時間をunixtimeに変換
         if (!empty($data['KeyResult']['start_date'])) {
-            $data['KeyResult']['start_date'] = strtotime($data['KeyResult']['start_date']) - ($this->me['timezone'] * 60 * 60);
+            $data['KeyResult']['start_date'] = strtotime($data['KeyResult']['start_date']) - $goal_term['timezone'] * HOUR;
         }
         //期限を+1day-1secする
         if (!empty($data['KeyResult']['end_date'])) {
             $data['KeyResult']['end_date'] = strtotime('+1 day -1 sec',
-                                                       strtotime($data['KeyResult']['end_date'])) - ($this->me['timezone'] * 60 * 60);
+                                                       strtotime($data['KeyResult']['end_date'])) - $goal_term['timezone'] * HOUR;
         }
         $this->create();
         if (!$this->save($data)) {
@@ -335,10 +338,12 @@ class KeyResult extends AppModel
         }
         $this->validate = $validate_backup;
 
-        //時間をunixtimeに変換
-        $data['KeyResult']['start_date'] = strtotime($data['KeyResult']['start_date']) - ($this->me['timezone'] * 60 * 60);
+        // ゴールが属している評価期間データ
+        $goal_term = $this->Goal->getGoalTermData($data['KeyResult']['goal_id']);
+        
+        $data['KeyResult']['start_date'] = strtotime($data['KeyResult']['start_date']) - $goal_term['timezone'] * HOUR;
         $data['KeyResult']['end_date'] = strtotime('+1 day -1 sec',
-                                                   strtotime($data['KeyResult']['end_date'])) - ($this->me['timezone'] * 60 * 60);
+                                                   strtotime($data['KeyResult']['end_date'])) - $goal_term['timezone'] * HOUR;
 //TODO 現在値を使わないため、この計算は行わない
 //        $data['KeyResult']['progress'] = $this->getProgress($data['KeyResult']['start_value'],
 //                                                            $data['KeyResult']['target_value'],

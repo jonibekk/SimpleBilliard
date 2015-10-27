@@ -4,6 +4,7 @@ App::uses('UploadHelper', 'View/Helper');
 App::uses('TimeExHelper', 'View/Helper');
 App::uses('TextExHelper', 'View/Helper');
 App::uses('View', 'View');
+App::uses('PostShareCircle', 'Model');
 
 /**
  * Post Model
@@ -24,6 +25,7 @@ App::uses('View', 'View');
  * @property Circle          $Circle
  * @property AttachedFile    $AttachedFile
  * @property PostFile        $PostFile
+ * @property PostSharedLog   $PostSharedLog
  */
 class Post extends AppModel
 {

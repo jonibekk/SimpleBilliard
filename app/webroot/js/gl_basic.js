@@ -63,14 +63,22 @@ $(window).load(function () {
 });
 
 $(document).ready(function () {
-    $(document).on('click', '#mark_all_read', function (e) {
+
+    $(document).on('keyup', '#message_text_input', function () {
+        $(this).autosize();
+        //$('body').animate({
+        //    scrollTop: $(document).height()
+        //});
+    });
+
+    $(document).on('click', '#mark_all_read,#mark_all_read_txt', function (e) {
         e.preventDefault();
         $.ajax({
             type: 'GET',
             url: cake.url.an,
             async: true,
             success: function () {
-               $(".notify-card-list").removeClass('notify-card-unread').addClass('notify-card-read');
+                $(".notify-card-list").removeClass('notify-card-unread').addClass('notify-card-read');
             }
         });
         return false;
@@ -89,9 +97,9 @@ $(document).ready(function () {
     });
     //ヘッダーサブメニューでのフィード、ゴール切り換え処理
     //noinspection JSJQueryEfficiency
-   $('#SubHeaderMenu a').click(function () {
+    $('#SubHeaderMenu a').click(function () {
         //既に選択中の場合は何もしない
-       if ($(this).hasClass('sp-feed-active')) {
+        if ($(this).hasClass('sp-feed-active')) {
             return;
         }
 
@@ -326,8 +334,6 @@ $(document).ready(function () {
     $(document).on("click", '.modal-ajax-get-share-circles-users', function (e) {
         e.preventDefault();
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
-        //noinspection JSUnusedLocalSymbols,CoffeeScriptUnusedLocalSymbols
-        modalFormCommonBindEvent($modal_elm);
         var url = $(this).attr('href');
         if (url.indexOf('#') == 0) {
             $(url).modal('open');
@@ -504,21 +510,22 @@ $(document).ready(function () {
     });
 
     //team term setting
-    $(document).on("change", '#TeamStartTermMonth , #TeamBorderMonths', function () {
+    $(document).on("change", '#TeamStartTermMonth , #TeamBorderMonths , #TeamTimezone', function () {
         var startTermMonth = $('#TeamStartTermMonth').val();
         var borderMonths = $('#TeamBorderMonths').val();
+        var timezone = $('#TeamTimezone').val();
         if (startTermMonth === "" || borderMonths === "") {
             $('#CurrentTermStr').empty();
             return false;
         }
-        var url = cake.url.h + "/" + startTermMonth + "/" + borderMonths;
+        var url = cake.url.h + "/" + startTermMonth + "/" + borderMonths + "/" + timezone;
         $.get(url, function (data) {
             $('#CurrentTermStr').text(data.start + "  -  " + data.end);
         });
     });
 
     //edit team term setting
-    $(document).on("change", '#EditTermChangeFrom1 , #EditTermChangeFrom2 , #EditTermStartTerm , #EditTermBorderMonths', function () {
+    $(document).on("change", '#EditTermChangeFrom1 , #EditTermChangeFrom2 ,#EditTermTimezone , #EditTermStartTerm , #EditTermBorderMonths', function () {
 
         if ($("#EditTermChangeFrom1:checked").val()) {
             var changeFrom = $('#EditTermChangeFrom1:checked').val();
@@ -526,6 +533,7 @@ $(document).ready(function () {
         else {
             var changeFrom = $('#EditTermChangeFrom2:checked').val();
         }
+        var timezone = $('#EditTermTimezone').val();
         var startTermMonth = $('#EditTermStartTerm').val();
         var borderMonths = $('#EditTermBorderMonths').val();
         if (startTermMonth === "" || borderMonths === "") {
@@ -535,11 +543,13 @@ $(document).ready(function () {
             $('#NewNextTerm > div > p').empty();
             return false;
         }
-        var url = cake.url.r + "/" + startTermMonth + "/" + borderMonths + "/" + changeFrom;
+        var url = cake.url.r + "/" + startTermMonth + "/" + borderMonths + "/" + changeFrom + "/" + timezone;
         $.get(url, function (data) {
             if (data.current.start_date && data.current.end_date) {
                 $('#NewCurrentTerm').removeClass('none');
-                $('#NewCurrentTerm > div > p').text(data.current.start_date + "  -  " + data.current.end_date);
+                var current_timezone = parseFloat(data.current.timezone);
+                var current_sign = current_timezone < 0 ? "" : "+";
+                $('#NewCurrentTerm > div > p').text(data.current.start_date + "  -  " + data.current.end_date + " (UTC " + current_sign + current_timezone + "h)");
             }
             else {
                 $('#NewCurrentTerm').addClass('none');
@@ -547,7 +557,10 @@ $(document).ready(function () {
             }
             if (data.next.start_date && data.next.end_date) {
                 $('#NewNextTerm').removeClass('none');
-                $('#NewNextTerm > div > p').text(data.next.start_date + "  -  " + data.next.end_date);
+                var next_timezone = parseFloat(data.next.timezone);
+                var next_sign = next_timezone < 0 ? "" : "+";
+
+                $('#NewNextTerm > div > p').text(data.next.start_date + "  -  " + data.next.end_date + " (UTC " + next_sign + next_timezone + "h)");
             }
             else {
                 $('#NewNextTerm').addClass('none');
@@ -562,25 +575,6 @@ $(document).ready(function () {
     $(document).on("click", ".click-goal-follower-more", evAjaxGoalFollowerMore);
     $(document).on("click", ".click-goal-member-more", evAjaxGoalMemberMore);
     $(document).on("click", ".click-goal-key-result-more", evAjaxGoalKeyResultMore);
-    $(document).on("submit", "#CircleJoinForm", function (e) {
-        var $form = $(this);
-        // 秘密サークルから抜けようとしている場合はアラートを出す
-        var leave_secret = false;
-        $form.find('.bt-switch[data-secret=1]').each(function () {
-            var $switch = $(this);
-            if (!$switch.bootstrapSwitch('state')) {
-                leave_secret = true;
-            }
-        });
-        if (leave_secret) {
-            var answer = confirm(cake.message.notice.leave_secret_circle);
-            if (!answer) {
-                $form.find('input[type=submit]').removeAttr('disabled');
-                return false;
-            }
-        }
-        return true;
-    });
 
     // 投稿フォーム submit 時
     $(document).on('submit', '#PostDisplayForm', function (e) {
@@ -626,7 +620,7 @@ $(document).ready(function () {
         var $target = $(e.target);
         var tabId = $target.attr('href').replace('#', '');
         $target.closest('.modal-dialog').find('.modal-footer').hide().filter('.' + tabId + '-footer').show();
-    })
+    });
 
     if (cake.data.j == "0") {
         $('#FeedMoreReadLink').trigger('click');
@@ -768,7 +762,7 @@ function checkUploadFileExpire(formID) {
 
             // Dropzone の管理ファイルから外す
             var removed_file;
-            for (var i = 0; i <  $uploadFileForm._files[formID].length; i++) {
+            for (var i = 0; i < $uploadFileForm._files[formID].length; i++) {
                 if ($hidden.val() == $uploadFileForm._files[formID][i].file_id) {
                     removed_file = $uploadFileForm._files[formID].splice(i, 1)[0];
                     break;
@@ -1495,73 +1489,81 @@ $(function () {
 //入力途中での警告表示
 //静的ページのにはすべて適用
 function setChangeWarningForAllStaticPage() {
-    var flag = false;
     //オートコンプリートでchangeしてしまうのを待つ
     setTimeout(function () {
-        $("select,input,textarea").change(function () {
-            $(document).on('submit', 'form', function () {
-                flag = true;
+        var flag = false;
+        $(":input").each(function () {
+            var default_val = "";
+            var changed_val = "";
+            default_val = $(this).load().val();
+            $(this).on("change keyup keydown", function () {
+                changed_val = $(this).val();
+                if (default_val != changed_val) {
+                    $(this).addClass("changed");
+                } else {
+                    $(this).removeClass("changed");
+                }
             });
-            $("input[type=submit]").click(function () {
-                flag = true;
-            });
-            if (!$(this).hasClass('disable-change-warning')) {
-                $(window).on('beforeunload', function () {
-                    if (!flag) {
-                        return cake.message.notice.a;
-                    }
-                    else {
-                        return;
-                    }
-                });
+        });
+        $(document).on('submit', 'form', function () {
+            flag = true;
+        });
+        $(window).on("beforeunload", function () {
+            if ($(".changed").length != "" && flag == false) {
+                return cake.message.notice.a;
             }
         });
     }, 2000);
 }
 
 function warningCloseModal() {
-    warningAction('modal');
+    warningAction($('.modal'));
 }
 
-function warningAction(class_name) {
-    $('.' + class_name).on('shown.bs.modal', function (e) {
-        $(this).data('form-data', $(this).find('form').serialize());
+function warningAction($obj) {
+    var flag = false;
+    $obj.on('shown.bs.modal', function (e) {
+        setTimeout(function () {
+            $obj.find(":input").each(function () {
+                var default_val = "";
+                var changed_val = "";
+                default_val = $(this).load().val();
+                $(this).on("change keyup keydown", function () {
+                    changed_val = $(this).val();
+                    if (default_val != changed_val) {
+                        $(this).addClass("changed");
+                    } else {
+                        $(this).removeClass("changed");
+                    }
+                });
+            });
+            $(document).on('submit', 'form', function () {
+                flag = true;
+            });
+        }, 2000);
     });
 
-    $('.' + class_name).on('hide.bs.modal', function (e) {
-        if ($(this).data('form-data') != $(this).find('form').serialize()) {
+    $obj.on('hide.bs.modal', function (e) {
+        //datepickerが閉じた時のイベントをなぜかここで掴んでしまう為、datepickerだった場合は何もしない。
+        if ('date' in e) {
+            return;
+        }
+        if ($obj.find(".changed").length != "" && flag == false) {
             if (!confirm(cake.message.notice.a)) {
                 e.preventDefault();
             } else {
                 $.clearInput($(this));
             }
-
         }
     });
 }
 
 function modalFormCommonBindEvent($modal_elm) {
-    modalWarningShownBind($modal_elm);
-    modalWarningHideBind($modal_elm);
+    warningAction($modal_elm);
     $modal_elm.on('shown.bs.modal', function (e) {
         $(this).find('textarea').each(function () {
             $(this).autosize();
         });
-    });
-}
-function modalWarningHideBind($modal_elm) {
-    $modal_elm.on('hide.bs.modal', function (e) {
-        if ($(this).data('form-data') != $(this).find('form').serialize()) {
-            if (!confirm(cake.message.notice.a)) {
-                e.preventDefault();
-            }
-        }
-    });
-}
-
-function modalWarningShownBind($modal_elm) {
-    $modal_elm.on('shown.bs.modal', function (e) {
-        $(this).data('form-data', $(this).find('form').serialize());
     });
 }
 
@@ -1973,7 +1975,6 @@ $(document).ready(function () {
         $modal_elm.on('hidden.bs.modal', function (e) {
             $(this).remove();
         });
-        modalFormCommonBindEvent($modal_elm);
         var url = $(this).attr('href');
         if (url.indexOf('#') == 0) {
             $(url).modal('open');
@@ -1985,7 +1986,64 @@ $(document).ready(function () {
                     size: "small",
                     onText: cake.word.b,
                     offText: cake.word.c
-                });
+                })
+                    // 参加/不参加 のスイッチ切り替えた時
+                    // 即時データを更新する
+                    .on('switchChange.bootstrapSwitch', function (e, state) {
+                        var $checkbox = $(this);
+                        var $form = $('#CircleJoinForm');
+                        $form.find('input[name="data[Circle][0][join]"]').val(state ? '1' : '0');
+                        $form.find('input[name="data[Circle][0][circle_id]"]').val($checkbox.attr('data-id'));
+
+                        // 秘密サークルの場合は確認ダイアログ表示
+                        if ($checkbox.attr('data-secret') == '1') {
+                            if (!confirm(cake.message.notice.leave_secret_circle)) {
+                                $checkbox.bootstrapSwitch('toggleState', true);
+                                return false;
+                            }
+                            $checkbox.bootstrapSwitch('toggleDisabled', true);
+                        }
+
+                        $.ajax({
+                            url: cake.url.join_circle,
+                            type: 'POST',
+                            dataType: 'json',
+                            processData: false,
+                            data: $form.serialize()
+                        })
+                            .done(function (res) {
+                                PNotify.removeAll();
+                                new PNotify({
+                                    type: 'success',
+                                    title: cake.word.success,
+                                    text: res.msg,
+                                    icon: "fa fa-check-circle",
+                                    delay: 4000,
+                                    mouse_reset: false
+                                });
+                                // 秘密サークルの場合は一覧から消す
+                                if ($checkbox.attr('data-secret') == '1') {
+                                    setTimeout(function () {
+                                        $checkbox.closest('.circle-item-row').slideUp('slow');
+                                    }, 1000);
+                                }
+                                // データを更新した場合はモーダルを閉じた時に画面リロード
+                                $modal_elm.on('hidden.bs.modal', function () {
+                                    location.reload();
+                                });
+                            })
+                            .fail(function () {
+                                PNotify.removeAll();
+                                new PNotify({
+                                    type: 'error',
+                                    title: cake.word.error,
+                                    text: cake.message.notice.d,
+                                    icon: "fa fa-check-circle",
+                                    delay: 4000,
+                                    mouse_reset: false
+                                });
+                            });
+                    });
             }).success(function () {
                 $('body').addClass('modal-open');
                 $this.removeClass('double_click');
@@ -2694,12 +2752,12 @@ $(document).ready(function () {
     });
 
     // keyResultの完了送信時にsocket_idを埋め込む
-    $(document).on("click", ".kr_achieve_button", function (){
-            var formId = $(this).attr("form-id");
-            var $form = $("form#" + formId);
-            appendSocketId($form, socketId);
-            $form.submit();
-            $(this).prop("disabled", true);
+    $(document).on("click", ".kr_achieve_button", function () {
+        var formId = $(this).attr("form-id");
+        var $form = $("form#" + formId);
+        appendSocketId($form, socketId);
+        $form.submit();
+        $(this).prop("disabled", true);
     });
 
     // page type idをセットする
@@ -2722,7 +2780,7 @@ $(document).ready(function () {
                 var pageTypeId = getPageTypeId();
                 var feedTypeId = data.feed_type;
                 var canNotify = pageTypeId === feedTypeId || pageTypeId === "all";
-                if (canNotify){
+                if (canNotify) {
                     prevNotifyId = notifyId;
                     notifyNewFeed();
                 }
@@ -4477,3 +4535,4 @@ function networkReachable() {
     });
     return ret;
 }
+

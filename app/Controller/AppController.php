@@ -158,8 +158,19 @@ class AppController extends Controller
 
             $login_uid = $this->Auth->user('id');
 
+            //sessionを手動で書き換える。cookieを更新するため。
+            if ($this->request->is('get')) {
+                if (!$this->Session->read('last_renewed') || $this->Session->read('last_renewed') < REQUEST_TIMESTAMP) {
+                    $this->Session->renew();
+                    $this->Session->write('last_renewed', REQUEST_TIMESTAMP + SESSION_RENEW_TTL);
+                }
+            }
+
             //ajaxの時以外で実行する
             if (!$this->request->is('ajax')) {
+                if ($this->current_team_id) {
+                    $this->_setTerm();
+                }
                 $this->_setMyTeam();
                 $this->_setAvailEvaluation();
 
@@ -221,8 +232,6 @@ class AppController extends Controller
                 $this->_setEvaluableCnt();
                 $this->_setAllAlertCnt();
                 $this->_setNotifyCnt();
-                $this->_setCurrentTerm();
-                $this->_setNextTerm();
                 $this->_setMyCircle();
                 $this->set('current_term',$this->Team->EvaluateTerm->getCurrentTerm());
 
@@ -233,29 +242,23 @@ class AppController extends Controller
         $this->set('current_global_menu', null);
     }
 
-    public function _setCurrentTerm()
+    public function _setTerm()
     {
-        if (!$this->current_team_id) {
-            return false;
+        $current_term = $this->Team->EvaluateTerm->getCurrentTermData();
+        if (!$current_term) {
+            $this->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         }
-        if (!$this->current_term_id = $this->Team->EvaluateTerm->getCurrentTermId()) {
-            $term = $this->Team->EvaluateTerm->saveCurrentTerm();
-            $this->current_term_id = $term['EvaluateTerm']['id'];
-        }
-    }
+        $this->current_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
 
-    public function _setNextTerm()
-    {
-        if (!$this->current_team_id) {
-            return false;
+        $previous_team = $this->Team->EvaluateTerm->getPreviousTermData();
+        if (!$previous_team) {
+            $this->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
         }
-        if (!$this->current_term_id) {
-            $this->_setCurrentTerm();
+        $next_team = $this->Team->EvaluateTerm->getNextTermData();
+        if (!$next_team) {
+            $this->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
         }
-        if (!$this->next_term_id = $this->Team->EvaluateTerm->getNextTermId()) {
-            $this->Team->EvaluateTerm->saveNextTerm();
-            $this->next_term_id = $this->Team->EvaluateTerm->getLastInsertID();
-        }
+        $this->next_term_id = $this->Team->EvaluateTerm->getNextTermId();
 
     }
 
@@ -651,8 +654,8 @@ class AppController extends Controller
     public function _setViewValOnRightColumn()
     {
         //今期、来期のゴールを取得する
-        $start_date = $this->Team->getCurrentTermStartDate();
-        $end_date = $this->Team->getNextTermEndDate();
+        $start_date = $this->Team->EvaluateTerm->getCurrentTermData()['start_date'];
+        $end_date = $this->Team->EvaluateTerm->getNextTermData()['end_date'];
 
         $my_goals = $this->Goal->getMyGoals(MY_GOALS_DISPLAY_NUMBER, 1, 'all', null, $start_date, $end_date);
         $my_goals_count = $this->Goal->getMyGoals(null, 1, 'count', null, $start_date, $end_date);
@@ -677,8 +680,8 @@ class AppController extends Controller
 
     function _filterCurrentTermGoals($goals)
     {
-        $start = $this->Team->getCurrentTermStartDate();
-        $end = $this->Team->getCurrentTermEndDate();
+        $start = $this->Team->EvaluateTerm->getCurrentTermData()['start_date'];
+        $end = $this->Team->EvaluateTerm->getCurrentTermData()['end_date'];
         foreach ($goals as $k => $goal) {
             if (!isset($goal['Goal']['end_date'])) {
                 continue;

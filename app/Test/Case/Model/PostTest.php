@@ -38,6 +38,7 @@ class PostTest extends CakeTestCase
         'app.post_read',
         'app.post_share_user',
         'app.post_share_circle',
+        'app.post_shared_log',
         'app.circle',
         'app.circle_member',
         'app.team_member'
