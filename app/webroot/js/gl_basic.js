@@ -1492,7 +1492,7 @@ $(function () {
 function setChangeWarningForAllStaticPage() {
     //オートコンプリートでchangeしてしまうのを待つ
     setTimeout(function () {
-        var flag="false";
+        var flag = false;
         $(":input").each(function () {
             var default_val = "";
             var changed_val = "";
@@ -1507,10 +1507,10 @@ function setChangeWarningForAllStaticPage() {
             });
         });
         $(document).on('submit', 'form', function () {
-            flag = "true";
+            flag = true;
         });
         $(window).on("beforeunload", function () {
-            if ($(".changed").length != "" && flag=="false") {
+            if ($(".changed").length != "" && flag == false) {
                 return cake.message.notice.a;
             }
         });
@@ -1518,48 +1518,49 @@ function setChangeWarningForAllStaticPage() {
 }
 
 function warningCloseModal() {
-    warningAction('modal');
+    warningAction($('.modal'));
 }
 
-function warningAction(class_name) {
-    $('.' + class_name).on('shown.bs.modal', function (e) {
-        $(this).data('form-data', $(this).find('form').serialize());
+function warningAction($obj) {
+    var flag = false;
+    $obj.on('shown.bs.modal', function (e) {
+        setTimeout(function () {
+            $obj.find(":input").each(function () {
+                var default_val = "";
+                var changed_val = "";
+                default_val = $(this).load().val();
+                $(this).on("change keyup keydown", function () {
+                    changed_val = $(this).val();
+                    if (default_val != changed_val) {
+                        $(this).addClass("changed");
+                    } else {
+                        $(this).removeClass("changed");
+                    }
+                });
+            });
+            $(document).on('submit', 'form', function () {
+                flag = true;
+            });
+        }, 2000);
     });
 
-    $('.' + class_name).on('hide.bs.modal', function (e) {
-        if ($(this).data('form-data') != $(this).find('form').serialize()) {
+    $obj.on('hide.bs.modal', function (e) {
+        if ($obj.find(".changed").length != "" && flag == false) {
             if (!confirm(cake.message.notice.a)) {
                 e.preventDefault();
             } else {
                 $.clearInput($(this));
             }
-
         }
     });
 }
 
 function modalFormCommonBindEvent($modal_elm) {
-    modalWarningShownBind($modal_elm);
-    modalWarningHideBind($modal_elm);
+    warningAction($modal_elm);
     $modal_elm.on('shown.bs.modal', function (e) {
         $(this).find('textarea').each(function () {
             $(this).autosize();
         });
-    });
-}
-function modalWarningHideBind($modal_elm) {
-    $modal_elm.on('hide.bs.modal', function (e) {
-        if ($(this).data('form-data') != $(this).find('form').serialize()) {
-            if (!confirm(cake.message.notice.a)) {
-                e.preventDefault();
-            }
-        }
-    });
-}
-
-function modalWarningShownBind($modal_elm) {
-    $modal_elm.on('shown.bs.modal', function (e) {
-        $(this).data('form-data', $(this).find('form').serialize());
     });
 }
 
@@ -4074,7 +4075,7 @@ $(document).ready(function () {
         formID: 'ProfilePhoto',
         previewContainerID: 'CroppedContainer',
         beforeAddedFile: function (file) {
-            var reader  = new FileReader();
+            var reader = new FileReader();
             reader.onloadend = function () {
                 var options =
                 {
@@ -4572,28 +4573,28 @@ $(document).ready(function () {
         spinner: '.spinner'
     }
     var cropper = $('.imageBox').cropbox(options);
-    $('#file').on('change', function(){
+    $('#file').on('change', function () {
         $('.cropbox-container').show();
-      //  $('.img-default').hide();
+        //  $('.img-default').hide();
         $('.cropped').hide();
         var reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = function (e) {
             options.imgSrc = e.target.result;
             cropper = $('.imageBox').cropbox(options);
         }
         reader.readAsDataURL(this.files[0]);
         this.files = [];
     })
-    $('#btnCrop').on('click', function(){
+    $('#btnCrop').on('click', function () {
         $('.cropped').show();
         $('.cropbox-container').hide();
         var img = cropper.getDataURL();
-        $('.cropped').append('<img src="'+img+'" class="nailthumb-image">');
+        $('.cropped').append('<img src="' + img + '" class="nailthumb-image">');
     })
-    $('#btnZoomIn').on('click', function(){
+    $('#btnZoomIn').on('click', function () {
         cropper.zoomIn();
     })
-    $('#btnZoomOut').on('click', function(){
+    $('#btnZoomOut').on('click', function () {
         cropper.zoomOut();
     })
 });
