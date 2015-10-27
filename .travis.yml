@@ -140,10 +140,10 @@ deploy:
   - provider: opsworks
     access-key-id: AKIAJHXVNZZEOX3TD5BA
     secret-access-key: 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
-    app-id: 8b7695b8-bf3e-46ba-90bf-fb947aead3e3
+    app-id: 786fd3c0-1b5f-49d9-b707-27dba2909c84
     wait-until-deployed: false
     on:
-      branch: develop-LP-page
+      branch: release
   - provider: opsworks
     access-key-id: AKIAJHXVNZZEOX3TD5BA
     secret-access-key: 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
