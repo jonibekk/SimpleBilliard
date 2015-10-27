@@ -110,7 +110,7 @@ class CircleTest extends CakeTestCase
         $this->assertTrue(empty($res));
     }
 
-    function testisTeamAllCircle()
+    function testIsTeamAllCircle()
     {
         $this->Circle->id = 1;
         $res = $this->Circle->isTeamAllCircle($this->Circle->id);
