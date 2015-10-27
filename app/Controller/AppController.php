@@ -224,6 +224,8 @@ class AppController extends Controller
                 $this->_setCurrentTerm();
                 $this->_setNextTerm();
                 $this->_setMyCircle();
+                $this->set('current_term',$this->Team->EvaluateTerm->getCurrentTerm());
+
             }
             $this->_setMyMemberStatus();
             $this->_saveAccessUser($this->current_team_id, $this->Auth->user('id'));

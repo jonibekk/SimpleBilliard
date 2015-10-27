@@ -435,16 +435,16 @@ class Post extends AppModel
 
     public function getMyPostList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000)
     {
-            $options = [
-                'conditions' => [
-                    'user_id'                  => $this->my_uid,
-                    'team_id'                  => $this->current_team_id,
-                    'modified BETWEEN ? AND ?' => [$start, $end],
-                ],
-                'order'      => [$order => $order_direction],
-                'limit'      => $limit,
-                'fields'     => ['id'],
-            ];
+        $options = [
+            'conditions' => [
+                'user_id'                  => $this->my_uid,
+                'team_id'                  => $this->current_team_id,
+                'modified BETWEEN ? AND ?' => [$start, $end],
+            ],
+            'order'      => [$order => $order_direction],
+            'limit'      => $limit,
+            'fields'     => ['id'],
+        ];
         $res = $this->find('list', $options);
         return $res;
     }
@@ -452,10 +452,10 @@ class Post extends AppModel
     public function getAllPostsForTeamCircle($pids)
     {
         $options = [
-            'conditions'=>[
-                'id'=>$pids,
-                'NOT'=>[
-                    'type'=>[
+            'conditions' => [
+                'id'  => $pids,
+                'NOT' => [
+                    'type' => [
                         self::TYPE_ACTION,
                         self::TYPE_CREATE_GOAL,
                         self::TYPE_GOAL_COMPLETE,
@@ -463,7 +463,7 @@ class Post extends AppModel
                     ]
                 ]
             ],
-            'fields'=>['id','id']
+            'fields'     => ['id', 'id']
         ];
         $res = $this->find('list', $options);
         return $res;
@@ -566,7 +566,7 @@ class Post extends AppModel
                                                                                   1000, $this->orgParams['circle_id'],
                                                                                   PostShareCircle::SHARE_TYPE_SHARED));
 
-                if($this->Circle->isTeamAllCircle($this->orgParams['circle_id'])) {
+                if ($this->Circle->isTeamAllCircle($this->orgParams['circle_id'])) {
                     $p_list = $this->getAllPostsForTeamCircle($p_list);
                 }
 
@@ -740,7 +740,7 @@ class Post extends AppModel
                         'end_date',
                         'completed'
                     ],
-                    'User'         => [
+                    'User'      => [
                         'fields'     => $this->User->profileFields,
                         'TeamMember' => [
                             'fields'     => [

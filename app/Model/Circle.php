@@ -480,13 +480,13 @@ class Circle extends AppModel
     {
         $options = [
             'conditions' => [
-                'id'         => $circle_id,
+                'id'           => $circle_id,
                 'team_all_flg' => true
             ]
         ];
         $res = $this->find('first', $options);
         if (isset($res['Circle']['team_id'])) {
-           return true;
+            return true;
         }
         return false;
     }
