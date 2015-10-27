@@ -12,24 +12,6 @@
  * @var boolean            $is_not_use_local_name
  */
 ?>
-<style>
-    .container
-    {
-      //  position: absolute;
-        top: 10%; left: 10%; right: 0; bottom: 0;
-    }
-    .action
-    {
-        width: 400px;
-        height: 30px;
-        margin: 10px 0;
-    }
-    .cropped>img
-    {
-        margin-right: 10px;
-    }
-</style>
-
 <!-- START app/View/Elements/User/profile_setting.ctp -->
 <div id="profile">
     <div class="panel panel-default">
@@ -161,30 +143,13 @@
                 <label for="" class="col col-sm-3 control-label form-label"><?= __d('gl', "プロフィール画像") ?></label>
 
                 <div class="col col-sm-6">
-
-                    <div class="cropbox-container">
-                        <div class="imageBox">
-                            <div class="thumbBox"></div>
-                            <div class="spinner" style="display: none">Loading...</div>
-                        </div>
-                        <div class="action">
-                            <input type="button" id="btnCrop" value="Crop" style="float: right">
-                            <input type="button" id="btnZoomIn" value="+" style="float: right">
-                            <input type="button" id="btnZoomOut" value="-" style="float: right">
-                        </div>
-                    </div>
-
-                    <div id="ProfilePhoto" class="fileinput fileinput-new" data-provides="fileinput">
-
-                        <div id="CroppedContainer" class="thumbnail cropped" style="width: 150px; height: 150px;">
-                        </div>
-
-                        <div class="thumbnail img-default" style="width: 150px; height: 150px;">
+                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                        <div class="fileinput-preview thumbnail nailthumb-container" data-trigger="fileinput"
+                             style="width: 150px; height: 150px;">
                             <?=
                             $this->Upload->uploadImage($this->request->data, 'User.photo',
                                                        ['style' => 'x_large']) ?>
                         </div>
-
                         <div>
                         <span class="btn btn-default btn-file">
                             <span class="fileinput-new">
@@ -196,7 +161,6 @@
                             <?=
                             $this->Form->input('photo',
                                                ['type'         => 'file',
-                                                'id'           =>'file',
                                                 'label'        => false,
                                                 'div'          => false,
                                                 'css'          => false,
@@ -271,7 +235,6 @@ iOS,Androidで100万ダウンロードされるアプリを開発する。<br><b
         <?= $this->Form->end(); ?>
     </div>
 </div>
-<?= $this->element('file_upload_form') ?>
 <?php $this->append('script') ?>
 <script type="text/javascript">
     $(document).ready(function () {
@@ -314,6 +277,5 @@ iOS,Androidで100万ダウンロードされるアプリを開発する。<br><b
         });
     });
 </script>
-
 <?php $this->end() ?>
 <!-- END app/View/Elements/User/profile_setting.ctp -->

@@ -1,7 +1,6 @@
 $.ajaxSetup({
     cache: false
 });
-
 if (typeof String.prototype.startsWith != 'function') {
     // see below for better implementation!
     String.prototype.startsWith = function (str) {
@@ -67,9 +66,9 @@ $(document).ready(function () {
 
     $(document).on('keyup', '#message_text_input', function () {
         $(this).autosize();
-        $('body').animate({
-            scrollTop: $(document).height()
-        });
+        //$('body').animate({
+        //    scrollTop: $(document).height()
+        //});
     });
 
     $(document).on('click', '#mark_all_read,#mark_all_read_txt', function (e) {
@@ -4079,7 +4078,7 @@ $(document).ready(function () {
         formID: 'ProfilePhoto',
         previewContainerID: 'CroppedContainer',
         beforeAddedFile: function (file) {
-            var reader = new FileReader();
+            var reader  = new FileReader();
             reader.onloadend = function () {
                 var options =
                 {
@@ -4577,28 +4576,28 @@ $(document).ready(function () {
         spinner: '.spinner'
     }
     var cropper = $('.imageBox').cropbox(options);
-    $('#file').on('change', function () {
+    $('#file').on('change', function(){
         $('.cropbox-container').show();
-        //  $('.img-default').hide();
+      //  $('.img-default').hide();
         $('.cropped').hide();
         var reader = new FileReader();
-        reader.onload = function (e) {
+        reader.onload = function(e) {
             options.imgSrc = e.target.result;
             cropper = $('.imageBox').cropbox(options);
         }
         reader.readAsDataURL(this.files[0]);
         this.files = [];
     })
-    $('#btnCrop').on('click', function () {
+    $('#btnCrop').on('click', function(){
         $('.cropped').show();
         $('.cropbox-container').hide();
         var img = cropper.getDataURL();
-        $('.cropped').append('<img src="' + img + '" class="nailthumb-image">');
+        $('.cropped').append('<img src="'+img+'" class="nailthumb-image">');
     })
-    $('#btnZoomIn').on('click', function () {
+    $('#btnZoomIn').on('click', function(){
         cropper.zoomIn();
     })
-    $('#btnZoomOut').on('click', function () {
+    $('#btnZoomOut').on('click', function(){
         cropper.zoomOut();
     })
 });
