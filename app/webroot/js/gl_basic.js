@@ -66,9 +66,9 @@ $(document).ready(function () {
 
     $(document).on('keyup', '#message_text_input', function () {
         $(this).autosize();
-        $('body').animate({
-            scrollTop: $(document).height()
-        });
+        //$('body').animate({
+        //    scrollTop: $(document).height()
+        //});
     });
 
     $(document).on('click', '#mark_all_read,#mark_all_read_txt', function (e) {
