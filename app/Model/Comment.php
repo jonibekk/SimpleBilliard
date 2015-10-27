@@ -231,8 +231,22 @@ class Comment extends AppModel
         return $this->find('count', $options);
     }
 
-    public function getPostsComment($post_id, $get_num = null, $page = null, $order_by = null)
+    /**
+     * コメント一覧データを返す
+     *
+     * @param       $post_id
+     * @param null  $get_num
+     * @param null  $page
+     * @param null  $order_by
+     * @param array $params
+     *                start: 指定すると、この時間以降に投稿されたコメントのみを返す
+     *
+     * @return array|null
+     */
+    public function getPostsComment($post_id, $get_num = null, $page = null, $order_by = null, $params = [])
     {
+        $params = array_merge(['start' => null], $params);
+
         $options = [
             'conditions' => [
                 'Comment.post_id' => $post_id,
@@ -270,6 +284,10 @@ class Comment extends AppModel
 
         if (is_null($order_by) === false) {
             $options['order']['Comment.created'] = $order_by;
+        }
+
+        if (is_null($params['start']) === false) {
+            $options['conditions']['Comment.created >='] = $params['start'];
         }
 
         $res = $this->find('all', $options);

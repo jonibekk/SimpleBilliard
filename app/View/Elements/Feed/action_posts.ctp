@@ -130,7 +130,8 @@
                 <?php if ($post['Post']['site_info']): ?>
                     <?php $site_info = json_decode($post['Post']['site_info'], true) ?>
                     <div class="col col-xxs-12 pt_10px">
-                        <a href="<?= isset($site_info['url']) ? $site_info['url'] : null ?>" target="_blank"
+                        <a href="<?= isset($site_info['url']) ? $site_info['url'] : null ?>" target="blank"
+                           onclick="window.open(this.href,'_system');return false;"
                            class="no-line font_verydark">
                             <div class="site-info bd-radius_4px">
                                 <div class="media">

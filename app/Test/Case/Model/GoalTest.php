@@ -19,6 +19,10 @@ class GoalTest extends CakeTestCase
         'app.evaluation',
         'app.evaluate_term',
         'app.purpose',
+        'app.post_share_circle',
+        'app.circle',
+        'app.post',
+        'app.purpose',
         'app.goal',
         'app.key_result',
         'app.collaborator',
@@ -279,7 +283,8 @@ class GoalTest extends CakeTestCase
     function testAddFail()
     {
         $this->setDefault();
-        $this->Goal->add([]);
+        $res = $this->Goal->add([]);
+        $this->assertFalse($res);
     }
 
     function testCompleteSuccess()
@@ -309,11 +314,12 @@ class GoalTest extends CakeTestCase
                 'value_unit'       => 0,
                 'target_value'     => 100,
                 'start_value'      => 0,
-                'start_date'       => $this->start_date,
-                'end_date'         => $this->end_date,
+                'start_date'       => $this->start_date_format ,
+                'end_date'         => $this->end_date_format,
             ]
         ];
-        $this->Goal->add($data);
+        $res = $this->Goal->add($data);
+        $this->assertTrue($res);
     }
 
     function testAddNewSuccessUnitValue()
@@ -327,11 +333,174 @@ class GoalTest extends CakeTestCase
                 'value_unit'       => 2,
                 'target_value'     => 100,
                 'start_value'      => 0,
-                'start_date'       => $this->start_date,
-                'end_date'         => $this->end_date,
+                'start_date'       => $this->start_date_format,
+                'end_date'         => $this->end_date_format,
             ]
         ];
-        $this->Goal->add($data);
+        $res = $this->Goal->add($data);
+        $this->assertTrue($res);
+    }
+
+    function testIsPermittedAdminNotExists()
+    {
+        $this->setDefault();
+        try {
+            $this->Goal->isPermittedAdmin(99999);
+        } catch (RuntimeException$e) {
+
+        }
+        $this->assertTrue(isset($e));
+    }
+
+    function testIsPermittedAdminNotOwner()
+    {
+        $this->setDefault();
+        $this->Goal->save(
+            [
+                'user_id' => 999,
+                'team_id' => 1,
+                'name'    => 'test'
+            ]
+        );
+
+        try {
+            $this->Goal->isPermittedAdmin($this->Goal->getLastInsertID());
+        } catch (RuntimeException$e) {
+
+        }
+        $this->assertTrue(isset($e));
+    }
+
+    function testIsPermittedAdminTrue()
+    {
+        $this->setDefault();
+        $this->Goal->save(
+            [
+                'user_id' => 1,
+                'team_id' => 1,
+                'name'    => 'test'
+            ]
+        );
+
+        $res = $this->Goal->isPermittedAdmin($this->Goal->getLastInsertID());
+        $this->assertTrue($res);
+    }
+
+    function testGetMyCreateGoalsList()
+    {
+        $this->setDefault();
+        $res = $this->Goal->getMyCreateGoalsList(1);
+        $this->assertNotEmpty($res);
+    }
+
+    function testGetMyCollaboGoals()
+    {
+        $this->setDefault();
+        $this->Goal->save(
+            [
+                'user_id'    => 1,
+                'team_id'    => 1,
+                'start_date' => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['start_date'],
+                'end_date'   => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['start_date'],
+                'name'       => 'test'
+            ]
+        );
+        $this->Goal->Collaborator->save(
+            [
+                'user_id' => 1,
+                'team_id' => 1,
+                'goal_id' => $this->Goal->getLastInsertID(),
+                'name'    => 'test'
+            ]
+        );
+
+        $res = $this->Goal->getMyCollaboGoals();
+        $this->assertNotEmpty($res);
+
+        $res = $this->Goal->getMyCollaboGoals(null, 1, 'count');
+        $this->assertEquals(1, $res);
+    }
+
+    function testGetGoalsWithAction()
+    {
+        $this->setDefault();
+        $this->Goal->save(
+            [
+                'user_id'    => 1,
+                'team_id'    => 1,
+                'start_date' => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['start_date'],
+                'end_date'   => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['start_date'],
+                'name'       => 'test'
+            ]
+        );
+        $this->Goal->Collaborator->save(
+            [
+                'user_id' => 1,
+                'team_id' => 1,
+                'goal_id' => $this->Goal->getLastInsertID(),
+                'name'    => 'test'
+            ]
+        );
+
+        $res = $this->Goal->getGoalsWithAction(1);
+        $this->assertNotEmpty($res);
+    }
+
+    function testGetMyFollowedGoals()
+    {
+        $this->setDefault();
+        $this->Goal->create();
+        $this->Goal->save(
+            [
+                'user_id'    => 2,
+                'team_id'    => 1,
+                'start_date' => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['start_date'],
+                'end_date'   => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['start_date'],
+                'name'       => 'test'
+            ]
+        );
+        $goal_1 = $this->Goal->getLastInsertID();
+        $this->Goal->create();
+        $this->Goal->save(
+            [
+                'user_id'    => 2,
+                'team_id'    => 1,
+                'start_date' => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['start_date'],
+                'end_date'   => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['start_date'],
+                'name'       => 'test1'
+            ]
+        );
+        $goal_2 = $this->Goal->getLastInsertID();
+
+        $this->Goal->Collaborator->create();
+        $this->Goal->Collaborator->save(
+            [
+                'user_id' => 1,
+                'team_id' => 1,
+                'goal_id' => $goal_1,
+                'name'    => 'test'
+            ]
+        );
+        $this->Goal->Follower->create();
+        $this->Goal->Follower->save(
+            [
+                'user_id' => 1,
+                'team_id' => 1,
+                'goal_id' => $goal_2,
+            ]
+        );
+
+        $res = $this->Goal->getMyFollowedGoals();
+        $this->assertNotEmpty($res);
+        $res = $this->Goal->getMyFollowedGoals(null, 1, 'count');
+        $this->assertEquals(1, $res);
+    }
+
+    function testGetGoal()
+    {
+        $this->setDefault();
+        $res = $this->Goal->getGoal(1);
+        $this->assertNotEmpty($res);
     }
 
     function _getNewGoal()
@@ -378,15 +547,12 @@ class GoalTest extends CakeTestCase
     var $current_date;
     var $start_date;
     var $end_date;
+    var $start_date_format;
+    var $end_date_format;
 
     function setDefault()
     {
-        $this->current_date = strtotime('2015/7/1');
-        $this->start_date = strtotime('2015/7/1');
-        $this->end_date = strtotime('2015/10/1');
 
-        $this->Goal->Team->current_term_start_date = strtotime('2015/1/1');
-        $this->Goal->Team->current_term_end_date = strtotime('2015/12/1');
         $this->Goal->my_uid = 1;
         $this->Goal->current_team_id = 1;
         $this->Goal->Purpose->my_uid = 1;
@@ -397,12 +563,24 @@ class GoalTest extends CakeTestCase
         $this->Goal->KeyResult->current_team_id = 1;
         $this->Goal->Collaborator->my_uid = 1;
         $this->Goal->Collaborator->current_team_id = 1;
+        $this->Goal->Follower->my_uid = 1;
+        $this->Goal->Follower->current_team_id = 1;
         $this->Goal->Post->my_uid = 1;
         $this->Goal->Post->current_team_id = 1;
         $this->Goal->Evaluation->current_team_id = 1;
         $this->Goal->Evaluation->my_uid = 1;
         $this->Goal->Team->EvaluateTerm->current_team_id = 1;
         $this->Goal->Team->EvaluateTerm->my_uid = 1;
+
+        $this->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
+        $this->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
+        $this->current_date = REQUEST_TIMESTAMP;
+        $this->start_date = $this->Goal->Team->EvaluateTerm->getCurrentTermData()['start_date'];
+        $this->end_date = $this->Goal->Team->EvaluateTerm->getCurrentTermData()['end_date'];
+        $timezone = $this->Goal->Team->EvaluateTerm->getCurrentTermData()['timezone'];
+        $this->start_date_format = date('Y-m-d', $this->start_date + $timezone * HOUR);
+        $this->end_date_format = date('Y-m-d', $this->end_date + $timezone * HOUR);
 
     }
 
@@ -468,11 +646,9 @@ class GoalTest extends CakeTestCase
     function testGoalFilterTermNoExistsData()
     {
         $this->setDefault();
-        $current = $this->Goal->Team->EvaluateTerm->saveCurrentTerm();
-        $this->Goal->Team->EvaluateTerm->saveNextTerm();
-        $end = $current['EvaluateTerm']['start_date'] - 1;
-        $start = $current['EvaluateTerm']['start_date'] - 1000000;
-        $this->Goal->Team->EvaluateTerm->saveTerm($start, $end);
+        $current = $this->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
+        $this->Goal->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
 
         $search_options = [];
         $search_options['term'] = ['previous'];
@@ -486,13 +662,13 @@ class GoalTest extends CakeTestCase
     function testGetMyPreviousGoals()
     {
         $this->setDefault();
-        $term = $this->Goal->Team->getBeforeTermStartEnd(1);
+        $term = $this->Goal->Team->EvaluateTerm->getTermData(EvaluateTerm::TYPE_PREVIOUS);
         $goal_data = [
             'user_id'    => 1,
             'team_id'    => 1,
             'purpose_id' => 1,
-            'start_date' => $term['start'] + 1,
-            'end_date'   => $term['end'] - 1,
+            'start_date' => $term['start_date'] + 1,
+            'end_date'   => $term['end_date'] - 1,
         ];
         $this->Goal->create();
         $this->Goal->save($goal_data);
@@ -500,8 +676,8 @@ class GoalTest extends CakeTestCase
             'user_id'    => 2,
             'team_id'    => 1,
             'purpose_id' => 1,
-            'start_date' => $term['start'] + 1,
-            'end_date'   => $term['end'] - 1,
+            'start_date' => $term['start_date'] + 1,
+            'end_date'   => $term['end_date'] - 1,
         ];
         $this->Goal->create();
         $this->Goal->save($goal_data);
@@ -533,16 +709,13 @@ class GoalTest extends CakeTestCase
 
     function testIsPresentTermGoalPatternTrue()
     {
-
-        $this->Goal->Team->current_term_start_date = strtotime('2015/1/1');
-        $this->Goal->Team->current_term_end_date = strtotime('2015/12/1');
-
+        $this->setDefault();
         $goal_data = [
             'user_id'    => 1,
             'team_id'    => 1,
             'purpose_id' => 1,
-            'start_date' => strtotime('2015/2/1'),
-            'end_date'   => strtotime('2015/3/1'),
+            'start_date' => REQUEST_TIMESTAMP,
+            'end_date'   => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['end_date'],
         ];
         $this->Goal->save($goal_data);
         $goal_id = $this->Goal->getLastInsertID();
@@ -553,16 +726,14 @@ class GoalTest extends CakeTestCase
 
     function testIsPresentTermGoalPatternFalse()
     {
-
-        $this->Goal->Team->current_term_start_date = strtotime('2015/1/1');
-        $this->Goal->Team->current_term_end_date = strtotime('2015/12/1');
+        $this->setDefault();
 
         $goal_data = [
             'user_id'    => 1,
             'team_id'    => 1,
             'purpose_id' => 1,
-            'start_date' => strtotime('2016/1/1'),
-            'end_date'   => strtotime('2016/3/1'),
+            'start_date' => $this->Goal->Team->EvaluateTerm->getPreviousTermData()['start_date'],
+            'end_date'   => $this->Goal->Team->EvaluateTerm->getPreviousTermData()['end_date'],
         ];
         $this->Goal->save($goal_data);
         $goal_id = $this->Goal->getLastInsertID();
@@ -570,6 +741,29 @@ class GoalTest extends CakeTestCase
         $res = $this->Goal->isPresentTermGoal($goal_id);
         $this->assertFalse($res);
 
+    }
+
+    function testGetAllUserGoal()
+    {
+        $this->setDefault();
+        $this->Goal->User->TeamMember->current_team_id = 1;
+        $this->Goal->User->TeamMember->my_uid = 1;
+
+        $users = $this->Goal->getAllUserGoal();
+        $active_user_count =
+            $this->Goal->User->TeamMember->countActiveMembersByTeamId($this->Goal->User->TeamMember->current_team_id);
+        $this->assertEquals($active_user_count, count($users));
+
+        // ゴールの期限が範囲内に収まっているかチェック
+        $users = $this->Goal->getAllUserGoal(10000, 19999);
+        foreach ($users as $user) {
+            foreach ($user['Collaborator'] as $collabo) {
+                if ($collabo['Goal']) {
+                    $this->assertGreaterThanOrEqual(10000, $collabo['Goal']['start_date']);
+                    $this->assertLessThanOrEqual(19999, $collabo['Goal']['end_date']);
+                }
+            }
+        }
     }
 
     function testGetAllUserGoalProgress()
@@ -661,34 +855,43 @@ class GoalTest extends CakeTestCase
     function testSetIsCurrentTerm()
     {
         $this->setDefault();
-        $this->Goal->Team->current_term_start_date = 100000;
-        $this->Goal->Team->current_term_end_date = 200000;
         $goals = [
-            ['Goal'=>['end_date'=>0],],
-            ['Goal'=>['end_date'=>150000],],
-            ['Goal'=>['end_date'=>250000],],
+            ['Goal' => ['end_date' => $this->Goal->Team->EvaluateTerm->getPreviousTermData()['end_date']],],
+            ['Goal' => ['end_date' => $this->Goal->Team->EvaluateTerm->getCurrentTermData()['end_date']],],
+            ['Goal' => ['end_date' => $this->Goal->Team->EvaluateTerm->getNextTermData()['end_date']],],
         ];
         $actual = $this->Goal->setIsCurrentTerm($goals);
+        foreach ($actual as $k => $v) {
+            unset($actual[$k]['Goal']['end_date']);
+        }
         $expected = [
-            (int) 0 => [
+            (int)0 => [
                 'Goal' => [
-                    'end_date' => (int) 0,
                     'is_current_term' => false
                 ]
             ],
-            (int) 1 => [
+            (int)1 => [
                 'Goal' => [
-                    'end_date' => (int) 150000,
                     'is_current_term' => true
                 ]
             ],
-            (int) 2 => [
+            (int)2 => [
                 'Goal' => [
-                    'end_date' => (int) 250000,
                     'is_current_term' => false
                 ]
             ]
         ];
-        $this->assertEquals($expected,$actual);
+
+        $this->assertEquals($expected, $actual);
+    }
+    
+    function testGetGoalTermData()
+    {
+        $this->setDefault();
+
+        $term = $this->Goal->getGoalTermData(8);
+        $this->assertEquals(2, $term['id']);
+        $term = $this->Goal->getGoalTermData(999999);
+        $this->assertFalse($term);
     }
 }

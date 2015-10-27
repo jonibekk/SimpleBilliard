@@ -577,6 +577,33 @@ class UsersController extends AppController
             //request->dataに入っていないデータを表示しなければ行けない為、マージ
             $this->request->data['User'] = array_merge($me['User'],
                                                        isset($this->request->data['User']) ? $this->request->data['User'] : []);
+
+            // ローカル名 更新時
+            if (isset($this->request->data['LocalName'][0])) {
+                // すでにレコードが存在する場合は、id をセット（update にする)
+                $row = $this->User->LocalName->getName($this->Auth->user('id'),
+                                                       $this->request->data['LocalName'][0]['language']);
+                if ($row) {
+                    $this->request->data['LocalName'][0]['id'] = $row['LocalName']['id'];
+                }
+            }
+
+            // 通知設定 更新時
+            if (isset($this->request->data['NotifySetting']['email']) &&
+                isset($this->request->data['NotifySetting']['mobile'])
+            ) {
+                $this->request->data['NotifySetting'] =
+                    array_merge($this->request->data['NotifySetting'],
+                                $this->User->NotifySetting->getSettingValues('app', 'all'));
+                $this->request->data['NotifySetting'] =
+                    array_merge($this->request->data['NotifySetting'],
+                                $this->User->NotifySetting->getSettingValues('email',
+                                                                             $this->request->data['NotifySetting']['email']));
+                $this->request->data['NotifySetting'] =
+                    array_merge($this->request->data['NotifySetting'],
+                                $this->User->NotifySetting->getSettingValues('mobile',
+                                                                             $this->request->data['NotifySetting']['mobile']));
+            }
             $this->User->id = $this->Auth->user('id');
             //チームメンバー情報を付与
             if ($this->User->saveAll($this->request->data)) {
@@ -608,6 +635,26 @@ class UsersController extends AppController
         $not_verified_email = $this->User->Email->getNotVerifiedEmail($this->Auth->user('id'));
         $language_name = $this->Lang->availableLanguages[$me['User']['language']];
 
+        // 通知設定のプルダウンデフォルト
+        $this->request->data['NotifySetting']['email'] = 'primary';
+        $this->request->data['NotifySetting']['mobile'] = 'primary';
+        // 既に通知設定が保存されている場合
+        foreach (['email', 'mobile'] as $notify_target) {
+            foreach (array_keys(NotifySetting::$TYPE_GROUP) as $type_group) {
+                $values = $this->User->NotifySetting->getSettingValues($notify_target, $type_group);
+                $same = true;
+                foreach ($values as $k => $v) {
+                    if ($this->request->data['NotifySetting'][$k] !== $v) {
+                        $same = false;
+                        break;
+                    }
+                }
+                if ($same) {
+                    $this->request->data['NotifySetting'][$notify_target] = $type_group;
+                    break;
+                }
+            }
+        }
         $this->set(compact('me', 'is_not_use_local_name', 'last_first', 'language_list', 'timezones',
                            'not_verified_email', 'local_name', 'language_name'));
         return $this->render();
@@ -979,8 +1026,8 @@ class UsersController extends AppController
         $end_date = isset($this->request->params['named']['end_date']) ? $this->request->params['named']['end_date'] : null;
         if (!$start_date && !$end_date) {
             //デフォルトで今期
-            $start_date = $this->User->TeamMember->Team->getCurrentTermStartDate();
-            $end_date = $this->User->TeamMember->Team->getCurrentTermEndDate();
+            $start_date = $this->Team->EvaluateTerm->getCurrentTermData()['start_date'];
+            $end_date = $this->Team->EvaluateTerm->getCurrentTermData()['end_date'];
         }
         $post_count = $this->Post->getCount($type, $start_date, $end_date);
         $this->_ajaxPreProcess();
@@ -1004,8 +1051,8 @@ class UsersController extends AppController
         $end_date = isset($this->request->params['named']['end_date']) ? $this->request->params['named']['end_date'] : null;
         if (!$start_date && !$end_date) {
             //デフォルトで今期
-            $start_date = $this->User->TeamMember->Team->getCurrentTermStartDate();
-            $end_date = $this->User->TeamMember->Team->getCurrentTermEndDate();
+            $start_date = $this->Team->EvaluateTerm->getCurrentTermData()['start_date'];
+            $end_date = $this->Team->EvaluateTerm->getCurrentTermData()['end_date'];
         }
         $action_count = $this->Goal->ActionResult->getCount($type, $start_date, $end_date);
         $this->_ajaxPreProcess();
@@ -1067,8 +1114,8 @@ class UsersController extends AppController
         $this->layout = LAYOUT_ONE_COLUMN;
         $page_type = viaIsSet($this->request->params['named']['page_type']);
 
-        $start_date = $this->Team->getCurrentTermStartDate();
-        $end_date = $this->Team->getNextTermEndDate();
+        $start_date = $this->Team->EvaluateTerm->getCurrentTermData()['start_date'];
+        $end_date = $this->Team->EvaluateTerm->getCurrentTermData()['end_date'];
 
         $my_goals_count = $this->Goal->getMyGoals(null, 1, 'count', $user_id, $start_date, $end_date);
         $collabo_goals_count = $this->Goal->getMyCollaboGoals(null, 1, 'count', $user_id, $start_date, $end_date);
@@ -1217,8 +1264,8 @@ class UsersController extends AppController
         $this->set('user', $user);
 
         // 評価期間内の投稿数
-        $term_start_date = $this->Team->getCurrentTermStartDate();
-        $term_end_date = $this->Team->getCurrentTermEndDate();
+        $term_start_date = $this->Team->EvaluateTerm->getCurrentTermData()['start_date'];
+        $term_end_date = $this->Team->EvaluateTerm->getCurrentTermData()['end_date'];
         $post_count = $this->Post->getCount($user_id, $term_start_date, $term_end_date);
         $this->set('post_count', $post_count);
 

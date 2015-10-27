@@ -61,7 +61,6 @@ class PagesController extends AppController
         }
 
         // ビュー変数のセット
-        $this->_setMyCircle();
         $this->_setCurrentCircle();
         $this->_setFeedMoreReadUrl();
         $this->_setViewValOnRightColumn();
@@ -83,6 +82,7 @@ class PagesController extends AppController
         }
 
         try {
+            $this->set('current_term',$this->Team->EvaluateTerm->getCurrentTermData());
             $this->set(['posts' => $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null,
                                                     $this->request->params)]);
         } catch (RuntimeException $e) {

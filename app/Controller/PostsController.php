@@ -29,7 +29,6 @@ class PostsController extends AppController
 
     public function message_list()
     {
-        $this->_setMyCircle();
         $this->_setViewValOnRightColumn();
         return $this->render();
     }
@@ -379,16 +378,22 @@ class PostsController extends AppController
     {
         $text_ex = new TextExHelper(new View());
         $this->_ajaxPreProcess();
-
-        //既読処理
+        $room_info = $this->Post->getPostById($post_id);
+        $share_users = $this->Post->PostShareUser->getShareUserListByPost($post_id);
+        //権限チェック
+        if (!in_array($this->Auth->user('id'), array_merge($share_users, [$room_info['Post']['user_id']]))) {
+            //権限が無ければ空のデータをレスポンスする
+            return $this->_ajaxGetResponse([]);
+        }
+        //トピック既読処理
         $this->Post->PostRead->red($post_id);
         $room_info = $this->Post->getPostById($post_id);
+
         $room_info['User']['photo_path'] = $this->Post->getPhotoPath($room_info['User']);
         //auto link
         $room_info['Post']['body'] = nl2br($text_ex->autoLink($room_info['Post']['body']));
         $room_info['AttachedFileHtml'] = $this->fileUploadMessagePageRender($room_info['PostFile'], $post_id);
 
-        $share_users = $this->Post->PostShareUser->getShareUserListByPost($post_id);
         // 画面表示用に自分以外のメッセージ共有者１人の情報を取得する
         $first_share_user = [];
         if ($room_info['Post']['user_id'] != $this->Auth->user('id')) {
@@ -422,13 +427,24 @@ class PostsController extends AppController
         return $this->_ajaxGetResponse($res);
     }
 
-    public function ajax_get_message($post_id, $limit, $page_num)
+    /**
+     * メッセージ一覧を返す
+     * ただし、１つのトピックの１件目のメッセージは含まれない
+     *
+     * @param $post_id
+     * @param $limit
+     * @param $page_num
+     * @param int $start メッセージ投稿時間：指定すると、この時間以降のメッセージのみを返す
+     *
+     * @return CakeResponse
+     */
+    public function ajax_get_message($post_id, $limit, $page_num, $start = null)
     {
         $this->_ajaxPreProcess();
         //メッセージを既読に
         $this->Post->Comment->CommentRead->redAllByPostId($post_id);
 
-        $message_list = $this->Post->Comment->getPostsComment($post_id, $limit, $page_num, 'desc');
+        $message_list = $this->Post->Comment->getPostsComment($post_id, $limit, $page_num, 'desc', ['start' => $start]);
         foreach ($message_list as $key => $item) {
             $message_list[$key]['AttachedFileHtml'] = $this->fileUploadMessagePageRender($item['CommentFile'],
                                                                                          $post_id);
@@ -455,7 +471,7 @@ class PostsController extends AppController
         $convert_data = $this->Post->Comment->convertData($detail_comment);
 
         $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
-        $pusher->trigger('message-channel-' . $post_id, 'new_message', $convert_data);
+        $pusher->trigger('message-channel-' . $post_id, 'new_message', $convert_data, $this->request->data('socket_id'));
         $this->Mixpanel->trackMessage($post_id);
         return $this->_ajaxGetResponse($detail_comment);
     }
@@ -1020,7 +1036,6 @@ class PostsController extends AppController
     {
         $params = $this->request->params;
         $params = array_merge($params, $params['named']);
-        $this->_setMyCircle();
         $this->_setCurrentCircle();
         $this->_setFeedMoreReadUrl();
 

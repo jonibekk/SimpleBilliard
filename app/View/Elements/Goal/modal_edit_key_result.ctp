@@ -17,6 +17,7 @@
  * @var                    $kr_end_date_format
  * @var                    $limit_end_date
  * @var                    $limit_start_date
+ * @var                    $goal_term
  */
 ?>
 <!-- START app/View/Elements/Goal/modal_edit_key_result.ctp -->
@@ -37,9 +38,11 @@
                 </li>
                 <li>
                     <i class="fa fa-calendar"></i>
-                    <?= date('Y/m/d', h($goal['Goal']['end_date']) + ($this->Session->read('timezone') * 3600)) ?>
-                    (← <?= date('Y/m/d',
-                                h($goal['Goal']['start_date']) + ($this->Session->read('timezone') * 3600)) ?> - )
+                    <?= date('Y/m/d', $goal['Goal']['end_date'] + $goal_term['timezone'] * HOUR) ?>
+                    (← <?= date('Y/m/d', $goal['Goal']['start_date'] + $goal_term['timezone'] * HOUR) ?> - )
+                    <?php if ($this->Session->read('Auth.User.timezone') != $goal_term['timezone']): ?>
+                        <?= $this->TimeEx->getTimezoneText($goal_term['timezone']); ?>
+                    <?php endif ?>
                 </li>
             </ul>
         </div>
@@ -141,7 +144,7 @@
                                                     'default'                      => 0,
                                                     'required'                     => true,
                                                     'maxlength'                    => 14,
-                                                    'data-bv-stringlength-message' => __d('validate', "文字���がオーバーしています。"),
+                                                    'data-bv-stringlength-message' => __d('validate', "文字数がオーバーしています。"),
                                                     "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
                                                     'data-bv-numeric-message'      => __d('validate', "数字を入力してください。"),
                                                    ]) ?>
@@ -150,7 +153,13 @@
                     </div>
                 </div>
                 <div class="row">
-                    <h5 class="modal-key-result-headings"><?= __d('gl', "期間") ?></h5>
+                    <h5 class="modal-key-result-headings"><?= __d('gl', "期間") ?>
+                        <?php if ($this->Session->read('Auth.User.timezone') != $goal_term['timezone']): ?>
+                            <span class="modal-key-result-headings-description">
+                            <?= $this->TimeEx->getTimezoneText($goal_term['timezone']); ?>
+                            </span>
+                        <?php endif ?>
+                    </h5>
 
                     <div class="goal-set-input">
                         <div class="form-group" id="KeyResult0EndDateContainer">

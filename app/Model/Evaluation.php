@@ -448,7 +448,7 @@ class Evaluation extends AppModel
             return false;
         }
         if (!$term_id = $this->Team->EvaluateTerm->getCurrentTermId()) {
-            $this->Team->EvaluateTerm->saveCurrentTerm();
+            $this->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
             $term_id = $this->Team->EvaluateTerm->getLastInsertID();
         }
         $team_members_list = $this->Team->TeamMember->getAllMemberUserIdList(true, true, true);
@@ -686,6 +686,7 @@ class Evaluation extends AppModel
                 'evaluator_user_id' => $evaluatorId,
                 'evaluate_term_id'  => $evaluateTermId,
                 'team_id'           => $this->current_team_id,
+                'NOT'               => ['evaluate_type' => self::TYPE_FINAL_EVALUATOR],
             ],
             'fields'     => ['status'],
             'order'      => ['index_num' => 'asc']
@@ -1098,6 +1099,17 @@ class Evaluation extends AppModel
 
         $res = $this->find('first', $options);
         return viaIsSet($res['Evaluation']['id']);
+    }
+
+    function isThisEvaluateType($id, $type)
+    {
+        return $this->find('first',
+                           [
+                               'conditions' => [
+                                   'id' => $id, 'evaluate_type' => $type
+                               ]
+                           ]
+        );
     }
 
 }
