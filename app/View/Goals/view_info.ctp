@@ -52,13 +52,19 @@
             <div class="goal-detail-info-members">
                 <p class="goal-detail-info-members-head"><?= __d('gl', 'メンバー') ?></p>
                 <?php
+                //+1という表示にはせず+2以上の表示にする
                 $member_all = array_merge($goal['Leader'], $goal['Collaborator']);
+                //この値は表示するアイテム数、たとえばアイテム数が5で件数が6だった場合は、5つ目の表示は画像の上に+2となる。
+                //アイテム数が6で件数が8だった場合は、6つ目の表示は画像の上に+3となる。
+                //アイテム数が6で件数も同じ場合は、6つ目の表示は通常のユーザ画像表示。
                 $member_view_num = 6;
-                $over_num = count($member_all) - $member_view_num;
+                $iterator = $member_view_num;
+
+                $over_num = count($member_all) - $member_view_num + 1;
                 ?>
                 <?php foreach ($member_all as $member): ?>
                     <?php
-                    if ($member_view_num-- == 0) {
+                    if ($iterator == 0 || ($over_num > 1 && $iterator == 1)) {
                         break;
                     }
                     ?>
@@ -71,11 +77,13 @@
                                       ['escape' => false]
                     )
                     ?>
+                    <?php $iterator--; ?>
                 <?php endforeach ?>
-                <?php if ($over_num > 0): ?>
+                <?php if ($over_num > 1): ?>
                     <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_members', 'goal_id' => $goal['Goal']['id']]) ?>"
                        class="goal-detail-members-remaining">
-                        <?= $this->Upload->uploadImage($member_all[5]['User'], 'User.photo', ['style' => 'medium'],
+                        <?= $this->Upload->uploadImage($member_all[$member_view_num - 1]['User'], 'User.photo',
+                                                       ['style' => 'medium'],
                                                        ['class' => 'goal-detail-info-avatar',]) ?>
                         <span class="goal-detail-member-more-counts">
                                 <i class="fa fa-plus"></i>
