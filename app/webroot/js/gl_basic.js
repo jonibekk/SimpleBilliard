@@ -4074,37 +4074,6 @@ $(document).ready(function () {
     $uploadFileForm.registerDragDropArea('#messageDropArea', messageParams, messageDzOptions);
     $uploadFileForm.registerAttachFileButton('#messageUploadFileButton', messageParams, messageDzOptions);
 
-    var profileParam = {
-        formID: 'ProfilePhoto',
-        previewContainerID: 'CroppedContainer',
-        beforeAddedFile: function (file) {
-            var reader  = new FileReader();
-            reader.onloadend = function () {
-                var options =
-                {
-                    thumbBox: '.thumbBox',
-                    spinner: '.spinner',
-                    imgSrc: reader.result
-                }
-
-                $('.cropbox-container').show();
-                var cropper = $('.imageBox').cropbox(options);
-            }
-            reader.readAsDataURL(file);
-        },
-        afterAccept: function (file) {
-            $(file.previewTemplate).show();
-        }
-    };
-    var profileDzOptions = {
-        maxFiles: 1,
-        autoProcessQueue: false,
-        previewTemplate: previewTemplateActionImage
-    };
-
-    $uploadFileForm.registerDragDropArea('#ProfilePhoto', profileParam, profileDzOptions);
-    $uploadFileForm.registerAttachFileButton('#ProfilePhoto', profileParam, profileDzOptions);
-
     ///////////////////////////////
     // アクションメイン画像（最初の画像選択時)
     ///////////////////////////////
@@ -4567,37 +4536,3 @@ function networkReachable() {
     return ret;
 }
 
-$(document).ready(function () {
-    $('.cropped').hide();
-    $('.cropbox-container').hide();
-    var options =
-    {
-        thumbBox: '.thumbBox',
-        spinner: '.spinner'
-    }
-    var cropper = $('.imageBox').cropbox(options);
-    $('#file').on('change', function(){
-        $('.cropbox-container').show();
-      //  $('.img-default').hide();
-        $('.cropped').hide();
-        var reader = new FileReader();
-        reader.onload = function(e) {
-            options.imgSrc = e.target.result;
-            cropper = $('.imageBox').cropbox(options);
-        }
-        reader.readAsDataURL(this.files[0]);
-        this.files = [];
-    })
-    $('#btnCrop').on('click', function(){
-        $('.cropped').show();
-        $('.cropbox-container').hide();
-        var img = cropper.getDataURL();
-        $('.cropped').append('<img src="'+img+'" class="nailthumb-image">');
-    })
-    $('#btnZoomIn').on('click', function(){
-        cropper.zoomIn();
-    })
-    $('#btnZoomOut').on('click', function(){
-        cropper.zoomOut();
-    })
-});
