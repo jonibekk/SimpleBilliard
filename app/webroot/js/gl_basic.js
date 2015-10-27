@@ -1545,6 +1545,10 @@ function warningAction($obj) {
     });
 
     $obj.on('hide.bs.modal', function (e) {
+        //datepickerが閉じた時のイベントをなぜかここで掴んでしまう為、datepickerだった場合は何もしない。
+        if ('date' in e) {
+            return;
+        }
         if ($obj.find(".changed").length != "" && flag == false) {
             if (!confirm(cake.message.notice.a)) {
                 e.preventDefault();
