@@ -460,7 +460,7 @@ class GoalsController extends AppController
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_CREATE_KR, $goal_id,
                                    $this->Goal->KeyResult->getLastInsertID());
         $this->_flashClickEvent("KRsOpen_" . $goal_id);
-        $this->Pnotify->outSuccess(__d('gl', "出したい成果を追加しました。"));
+        $this->Pnotify->outSuccess(__d('gl', "達成要素を追加しました。"));
         //progesh
         $this->redirect('/after_click:SubHeaderMenuGoal');
     }

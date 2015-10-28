@@ -26,10 +26,19 @@
         <p class="dashboard-goals-card-body-krs-title-achieved">達成済のKRです。</p>
     </li>
     <li class="dashboard-goals-card-body-krs">
-        <i class="fa-key fa dashboard-goals-card-body-krs-icon-achieved"></i>
-        <p class="dashboard-goals-card-body-krs-title-unachieved">文字数をめちゃくちゃ長くしたバージョンを入れておかないと後々に困ります。</p>
+        <a href="" class="hoge">
+            <i class="fa-key fa dashboard-goals-card-body-krs-icon-achieved"></i>
+            <p class="dashboard-goals-card-body-krs-title-unachieved">文字数をめちゃくちゃ長くしたバージョンを入れておかないと後々に困ります。</p>
+        </a>
         <a class="fa-check fa dashboard-goals-card-body-krs-action"></a>
     </li>
+    <li>
+        <a class="dashboard-goals-card-body-add-kr-link" href="">
+            <i class="fa fa-plus-circle font_brownRed"></i>
+            <span class="ml_2px"><?= __d('gl', "達成要素を追加") ?></span>
+        </a>
+    </li>
+
 </ul>
 
 
@@ -61,7 +70,7 @@
                 <a class="col col-xxs-12 bd-dash font_lightGray-gray p_10px modal-ajax-get-add-key-result"
                    href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal_id]) ?>">
                     <i class="fa fa-plus-circle font_brownRed"></i>
-                    <span class="ml_2px"><?= __d('gl', "出したい成果を追加") ?></span>
+                    <span class="ml_2px"><?= __d('gl', "達成要素を追加") ?></span>
                 </a>
             </div>
         <?php endif; ?>
@@ -71,7 +80,7 @@
                 <a class="col col-xxs-12 bd-dash font_lightGray-gray p_10px modal-ajax-get-add-key-result"
                    href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal_id]) ?>">
                     <i class="fa fa-plus-circle font_brownRed"></i>
-                    <span class="ml_2px"><?= __d('gl', "出したい成果を追加") ?></span>
+                    <span class="ml_2px"><?= __d('gl', "達成要素を追加") ?></span>
                 </a>
             </div>
         </div>

@@ -65,7 +65,7 @@
                             <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id']]) ?>"
                                class="modal-ajax-get-add-key-result">
                                 <i class="fa fa-plus-circle"></i><span class="ml_2px">
-                                        <?= __d('gl', "出したい成果を追加") ?></span>
+                                        <?= __d('gl', "達成要素を追加") ?></span>
                             </a>
                         </li>
                     <?php endif; ?>
@@ -100,7 +100,7 @@
                             <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id']]) ?>"
                                class="modal-ajax-get-add-key-result"
                                 ><i class="fa fa-plus-circle"></i><span class="ml_2px">
-                                    <?= __d('gl', "出したい成果を追加") ?></span></a>
+                                    <?= __d('gl', "達成要素を追加") ?></span></a>
                             <a class="modal-ajax-get-collabo"
                                data-toggle="modal"
                                data-target="#ModalCollabo_<?= $goal['Goal']['id'] ?>"
@@ -135,7 +135,7 @@
                                 <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id']]) ?>"
                                    class="modal-ajax-get-add-key-result">
                                     <i class="fa fa-plus-circle"></i><span class="ml_2px">
-                                            <?= __d('gl', "出したい成果を追加") ?></span>
+                                            <?= __d('gl', "達成要素を追加") ?></span>
                                 </a>
                             </li>
                         <?php endif; ?>
@@ -201,7 +201,7 @@
                                id="KRsOpen_<?= $goal['Goal']['id'] ?>"
                                 >
                                 <i class="fa fa-caret-down feed-arrow lh_18px"></i>
-                                <?= __d('gl', "出したい成果をみる") ?>(<?= count($goal['KeyResult']) ?>)
+                                <?= __d('gl', "達成要素をみる") ?>(<?= count($goal['KeyResult']) ?>)
                             </a>
                             <?php if ($goal['Goal']['action_result_count'] > 0): ?>
                                 <a class="goalsCard-activity inline-block font_gray-brownRed pointer"
@@ -222,7 +222,7 @@
                             <a class="font_lightGray-gray modal-ajax-get-add-key-result  goals-column-add-kr-btn"
                                href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id']]) ?>">
                                 <i class="fa fa-plus-circle font_brownRed"></i>
-                                <span class="ml_2px"><?= __d('gl', "出したい成果を追加") ?></span>
+                                <span class="ml_2px"><?= __d('gl', "達成要素を追加") ?></span>
                             </a>
                         <?php } ?> -->
 

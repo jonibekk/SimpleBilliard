@@ -65,7 +65,7 @@
                 </label>
                 <?=
                 $this->Form->input('ActionResult.key_result_id', [
-                                                                   'label'   => false, //__d('gl', "紐付ける出したい成果を選択(オプション)"),
+                                                                   'label'   => false, //__d('gl', "紐付ける達成要素を選択(オプション)"),
                                                                    'options' => [null => __d('gl', "選択なし")] + $kr_list,
                                                                    'class'   => 'form-control selectKrForAction',
                                                                    'id'      => 'ActionKeyResultId_' . $action['ActionResult']['id'],

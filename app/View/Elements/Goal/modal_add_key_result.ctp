@@ -25,7 +25,7 @@
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= __d('gl', "出したい成果を追加する") ?></h4>
+            <h4 class="modal-title"><?= __d('gl', "達成要素を追加する") ?></h4>
             <ul class="add-key-result-goal-info">
                 <li>
                     <i class="fa fa-flag"></i><?= h($goal['Goal']['name']) ?>
@@ -63,7 +63,7 @@
                 $this->Form->input('KeyResult.name',
                                    ['before'                   => '<div class="set-goal">' .
                                        '<h5 class="modal-key-result-headings">' . __d('gl',
-                                                                                      "出したい成果") . '<span class="modal-key-result-headings-description">' . __d('gl',
+                                                                                      "達成要素") . '<span class="modal-key-result-headings-description">' . __d('gl',
                                                                                                                                                                "達成の指標として『なに』をどうするか？") . '</span></h5></div>',
                                     'label'                    => false,
                                     'placeholder'              => __d('gl', "具体的に絞り込んで書く"),
@@ -209,7 +209,7 @@
         </div>
         <div class="modal-footer">
             <?=
-            $this->Form->submit(__d('gl', "出したい成果を追加"),
+            $this->Form->submit(__d('gl', "達成要素を追加"),
                                 ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
 
             <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('gl', "閉じる") ?></button>

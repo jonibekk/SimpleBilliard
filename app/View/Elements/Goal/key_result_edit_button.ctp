@@ -18,13 +18,13 @@
             <li role="presentation">
                 <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_edit_key_result_modal', 'key_result_id' => $kr['KeyResult']['id']]) ?>"
                    class="modal-ajax-get-add-key-result">
-                    <i class="fa fa-pencil"></i><span class="ml_2px"><?= __d('gl', "出したい成果を編集する") ?></span></a>
+                    <i class="fa fa-pencil"></i><span class="ml_2px"><?= __d('gl', "達成要素を編集する") ?></span></a>
             </li>
             <?php endif ?>
             <li role="presentation">
                 <?php if ($kr['KeyResult']['completed']): ?>
                     <?= $this->Form->postLink('<i class="fa fa-reply"></i><span class="ml_2px">' .
-                                              __d('gl', "出したい成果を未完了にする") . '</span>',
+                                              __d('gl', "達成要素を未完了にする") . '</span>',
                                               ['controller' => 'goals', 'action' => 'incomplete_kr', 'key_result_id' => $kr['KeyResult']['id']],
                                               ['escape' => false]) ?>
                 <?php else: ?>
@@ -33,7 +33,7 @@
                         <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_last_kr_confirm', 'key_result_id' => $kr['KeyResult']['id']]) ?>"
                            class="modal-ajax-get">
                             <i class="fa fa-check"></i><span class="ml_2px"><?= __d('gl',
-                                                                                    "出したい成果を完了にする") ?></span>
+                                                                                    "達成要素を完了にする") ?></span>
                         </a>
                     <?php else: ?>
                         <?=
@@ -53,7 +53,7 @@
                         <a href="#" form-id="kr_achieve_<?= $kr['KeyResult']['id'] ?>"
                            class="kr_achieve_button">
                             <i class="fa fa-check"></i><span class="ml_2px">
-                                            <?= __d('gl', "出したい成果を完了にする"); ?>
+                                            <?= __d('gl', "達成要素を完了にする"); ?>
                                         </span>
                         </a>
                     <?php endif; ?>
@@ -64,7 +64,7 @@
             <li role="presentation">
                 <?=
                 $this->Form->postLink('<i class="fa fa-trash"></i><span class="ml_5px">' .
-                                      __d('gl', "出したい成果を削除する") . '</span>',
+                                      __d('gl', "達成要素を削除する") . '</span>',
                                       ['controller' => 'goals', 'action' => 'delete_key_result', 'key_result_id' => $kr['KeyResult']['id']],
                                       ['escape' => false], __d('gl', "本当にこの成果を削除しますか？")) ?>
             </li>
