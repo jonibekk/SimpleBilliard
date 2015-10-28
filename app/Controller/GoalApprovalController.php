@@ -269,15 +269,19 @@ class GoalApprovalController extends AppController
     {
         if (isset($this->request->data['comment_btn']) === true) {
             $this->_comment($data);
+            $this->Pnotify->outSuccess(__d('gl', "コメントを送信しました。"));
         }
         elseif (isset($this->request->data['wait_btn']) === true) {
             $this->_wait($data);
+            $this->Pnotify->outSuccess(__d('gl', "処理済みに移動しました。"));
         }
         elseif (isset($this->request->data['approval_btn']) === true) {
             $this->_approval($data);
+            $this->Pnotify->outSuccess(__d('gl', "処理済みに移動しました。"));
         }
         elseif (isset($this->request->data['modify_btn']) === true) {
             $this->_modify($data);
+            $this->Pnotify->outSuccess(__d('gl', "修正依頼を送信しました。"));
         }
     }
 
@@ -386,22 +390,22 @@ class GoalApprovalController extends AppController
         $goal_info = [];
         if ($this->user_type === self::USER_TYPE_ONLY_COACH) {
             $goal_info = $this->Collaborator->getCollaboGoalDetail(
-                $this->team_id, [$this->user_id], $goal_status);
+                $this->team_id, [$this->user_id], $goal_status, true, EvaluateTerm::TYPE_CURRENT);
 
         }
         elseif ($this->user_type === self::USER_TYPE_COACH_AND_MEMBER) {
             $member_goal_info = $this->Collaborator->getCollaboGoalDetail(
-                $this->team_id, $this->member_ids, $goal_status, false);
+                $this->team_id, $this->member_ids, $goal_status, false, EvaluateTerm::TYPE_CURRENT);
 
             $my_goal_info = $this->Collaborator->getCollaboGoalDetail(
-                $this->team_id, [$this->user_id], $goal_status);
+                $this->team_id, [$this->user_id], $goal_status, true, EvaluateTerm::TYPE_CURRENT);
 
             $goal_info = array_merge($member_goal_info, $my_goal_info);
 
         }
         elseif ($this->user_type === self::USER_TYPE_ONLY_MEMBER) {
             $goal_info = $this->Collaborator->getCollaboGoalDetail(
-                $this->team_id, $this->member_ids, $goal_status, false);
+                $this->team_id, $this->member_ids, $goal_status, false, EvaluateTerm::TYPE_CURRENT);
         }
 
         return $goal_info;

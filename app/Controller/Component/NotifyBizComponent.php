@@ -302,8 +302,8 @@ class NotifyBizComponent extends Component
         $share_circle_list = $this->Post->PostShareCircle->getShareCircleList($post_id);
 
         //対象ユーザの通知設定確認
-        $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($members,
-                                                                                NotifySetting::TYPE_FEED_POST);
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($members,
+                                                                            NotifySetting::TYPE_FEED_POST);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_POST;
         $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
         $this->notify_option['model_id'] = null;
@@ -341,8 +341,8 @@ class NotifyBizComponent extends Component
         $members = $this->Post->getShareAllMemberList($post_id);
 
         //対象ユーザの通知設定確認
-        $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($members,
-                                                                                NotifySetting::TYPE_FEED_MESSAGE);
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($members,
+                                                                            NotifySetting::TYPE_FEED_MESSAGE);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_MESSAGE;
         $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'message#', $post['Post']['id']];
         $this->notify_option['model_id'] = null;
@@ -364,8 +364,8 @@ class NotifyBizComponent extends Component
         }
 
         //対象ユーザの通知設定確認
-        $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($invite['FromUser']['id'],
-                                                                                NotifySetting::TYPE_USER_JOINED_TO_INVITED_TEAM);
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($invite['FromUser']['id'],
+                                                                            NotifySetting::TYPE_USER_JOINED_TO_INVITED_TEAM);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_USER_JOINED_TO_INVITED_TEAM;
         $this->notify_option['url_data'] = '/';//TODO 暫定的にhome
         $this->notify_option['model_id'] = null;
@@ -400,8 +400,8 @@ class NotifyBizComponent extends Component
         unset($members[$this->Team->my_uid]);
 
         //対象ユーザの通知設定確認
-        $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($members,
-                                                                                NotifySetting::TYPE_FEED_CAN_SEE_ACTION);
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($members,
+                                                                            NotifySetting::TYPE_FEED_CAN_SEE_ACTION);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_CAN_SEE_ACTION;
         $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
         $this->notify_option['model_id'] = null;
@@ -429,8 +429,8 @@ class NotifyBizComponent extends Component
             return;
         }
         //サークルメンバーの通知設定
-        $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($circle_member_list,
-                                                                                NotifySetting::TYPE_CIRCLE_USER_JOIN);
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($circle_member_list,
+                                                                            NotifySetting::TYPE_CIRCLE_USER_JOIN);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_CIRCLE_USER_JOIN;
         //通知先ユーザ分を-1
         $this->notify_option['count_num'] = count($circle_member_list);
@@ -459,8 +459,8 @@ class NotifyBizComponent extends Component
         }
         $privacy_name = Circle::$TYPE_PUBLIC[$circle['Circle']['public_flg']];
         //サークルメンバーの通知設定
-        $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($circle_member_list,
-                                                                                NotifySetting::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING);
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($circle_member_list,
+                                                                            NotifySetting::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING;
         $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle_id];
         $this->notify_option['model_id'] = $circle_id;
@@ -482,8 +482,8 @@ class NotifyBizComponent extends Component
             return;
         }
         //対象ユーザの通知設定
-        $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($user_id,
-                                                                                NotifySetting::TYPE_CIRCLE_ADD_USER);
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($user_id,
+                                                                            NotifySetting::TYPE_CIRCLE_ADD_USER);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_CIRCLE_ADD_USER;
         $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle_id];
         $this->notify_option['model_id'] = $circle_id;
@@ -503,8 +503,8 @@ class NotifyBizComponent extends Component
         }
         $collaborators = $this->Goal->Collaborator->getCollaboratorListByGoalId($goal_id);
         //対象ユーザの通知設定
-        $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($collaborators,
-                                                                                NotifySetting::TYPE_MY_GOAL_FOLLOW);
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($collaborators,
+                                                                            NotifySetting::TYPE_MY_GOAL_FOLLOW);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_MY_GOAL_FOLLOW;
         $this->notify_option['url_data'] = ['controller' => 'goals', 'action' => 'index', 'team_id' => $this->NotifySetting->current_team_id];//TODO In the future, goal detail page.
         $this->notify_option['model_id'] = $goal_id;
@@ -528,8 +528,8 @@ class NotifyBizComponent extends Component
         //exclude me
         unset($collaborators[$user_id]);
         //対象ユーザの通知設定
-        $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($collaborators,
-                                                                                NotifySetting::TYPE_MY_GOAL_COLLABORATE);
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($collaborators,
+                                                                            NotifySetting::TYPE_MY_GOAL_COLLABORATE);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_MY_GOAL_COLLABORATE;
         $this->notify_option['url_data'] = ['controller' => 'goals', 'action' => 'index', 'team_id' => $this->NotifySetting->current_team_id];//TODO In the future, goal detail page.
         $this->notify_option['model_id'] = $goal_id;
@@ -556,8 +556,8 @@ class NotifyBizComponent extends Component
             return;
         }
         //対象ユーザの通知設定
-        $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($collaborators,
-                                                                                NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER);
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($collaborators,
+                                                                            NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER;
         $this->notify_option['url_data'] = ['controller' => 'goals', 'action' => 'index', 'team_id' => $this->NotifySetting->current_team_id];//TODO In the future, goal detail page.
         $this->notify_option['model_id'] = $goal_id;
@@ -579,8 +579,7 @@ class NotifyBizComponent extends Component
             return;
         }
         //対象ユーザの通知設定
-        $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($to_user_id,
-                                                                                $notify_type);
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($to_user_id, $notify_type);
 
         $done_list = [
             NotifySetting::TYPE_MY_GOAL_TARGET_FOR_EVALUATION,
@@ -612,8 +611,8 @@ class NotifyBizComponent extends Component
     {
         $evaluation = $this->Goal->Evaluation->findById($evaluate_id);
         //対象ユーザの通知設定
-        $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($evaluation['Evaluation']['evaluator_user_id'],
-                                                                                NotifySetting::TYPE_EVALUATION_CAN_AS_EVALUATOR);
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($evaluation['Evaluation']['evaluator_user_id'],
+                                                                            NotifySetting::TYPE_EVALUATION_CAN_AS_EVALUATOR);
         $evaluatee = $this->Goal->User->getUsersProf($evaluation['Evaluation']['evaluatee_user_id']);
 
         $url = ['controller'       => 'evaluations',
@@ -646,8 +645,8 @@ class NotifyBizComponent extends Component
             unset($to_user_ids[$user_id]);
         }
         //対象ユーザの通知設定
-        $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($to_user_ids,
-                                                                                $notify_type);
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($to_user_ids,
+                                                                            $notify_type);
 
         $notify_list_url = ['controller' => 'evaluations',
                             'action'     => 'index',
@@ -688,8 +687,8 @@ class NotifyBizComponent extends Component
             return;
         }
         //通知対象者の通知設定確認
-        $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($commented_user_list,
-                                                                                $notify_type);
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($commented_user_list,
+                                                                            $notify_type);
         $comment = $this->Post->Comment->read(null, $comment_id);
 
         $this->notify_option['notify_type'] = $notify_type;
@@ -720,8 +719,8 @@ class NotifyBizComponent extends Component
             return;
         }
         //通知対象者の通知設定確認
-        $this->notify_settings = $this->NotifySetting->getAppEmailNotifySetting($post['Post']['user_id'],
-                                                                                $notify_type);
+        $this->notify_settings = $this->NotifySetting->getUserNotifySetting($post['Post']['user_id'],
+                                                                            $notify_type);
         $comment = $this->Post->Comment->read(null, $comment_id);
 
         $this->notify_option['to_user_id'] = $post['Post']['user_id'];
@@ -782,15 +781,14 @@ class NotifyBizComponent extends Component
 
     /**
      * アプリプッシュ通知送信対象のユーザを取得
-     * TODO:とりあえずブラウザ通知と同じユーザーにしているので必要に応じて修正
      *
      * @return array プッシュ通知送信対象のユーザーのリスト
      */
-    private function _getSendAppNotifyUserList()
+    private function _getSendMobileNotifyUserList()
     {
         $uids = [];
         foreach ($this->notify_settings as $user_id => $val) {
-            if ($val['app']) {
+            if ($val['mobile']) {
                 $uids[] = $user_id;
             }
         }
@@ -824,9 +822,7 @@ class NotifyBizComponent extends Component
             'method'        => NCMB_REST_API_PUSH_METHOD
         ));
 
-        // TODO:とりあえずブラウザ用の通知送信対象ユーザーに対しPUSH通知する
-        // あとから変わるはず。
-        $uids = $this->_getSendAppNotifyUserList();
+        $uids = $this->_getSendMobileNotifyUserList();
         if (empty($uids)) {
             return;
         }
@@ -869,7 +865,7 @@ class NotifyBizComponent extends Component
                 $item_name = mb_strimwidth($item_name[0], 0, 40, "...");
                 $title .= " : " . $item_name;
             }
-            $title = json_encode($title,JSON_HEX_QUOT);
+            $title = json_encode($title, JSON_HEX_QUOT);
 
             $body = '{
                 "immediateDeliveryFlag" : true,

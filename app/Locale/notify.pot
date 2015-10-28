@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2015-09-07 06:28+0000\n"
+"POT-Creation-Date: 2015-10-22 08:32+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -14,17 +14,17 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: Controller/CirclesController.php:294;340
+#: Controller/CirclesController.php:313;359
 #: Controller/Component/PnotifyComponent.php:63
 msgid "成功"
 msgstr ""
 
-#: Controller/CirclesController.php:361
+#: Controller/CirclesController.php:380
 #: Controller/Component/PnotifyComponent.php:65
 msgid "エラー"
 msgstr ""
 
-#: Controller/UsersController.php:89
+#: Controller/UsersController.php:90
 msgid "アカウントがロックされています。%s分後に自動的に解除されます。"
 msgstr ""
 
@@ -32,35 +32,35 @@ msgstr ""
 msgid "メールアドレスもしくはパスワードが正しくありません。"
 msgstr ""
 
-#: Controller/UsersController.php:130;168
+#: Controller/UsersController.php:138;176
 msgid "エラーが発生しました。再度ログインをお願いします。"
 msgstr ""
 
-#: Controller/UsersController.php:147
+#: Controller/UsersController.php:155
 msgid "2段階認証コードが正しくありません。"
 msgstr ""
 
-#: Controller/UsersController.php:163
+#: Controller/UsersController.php:171
 msgid "%sさん、こんにちは。"
 msgstr ""
 
-#: Controller/UsersController.php:164
+#: Controller/UsersController.php:172
 msgid "ログイン成功"
 msgstr ""
 
-#: Controller/UsersController.php:189
+#: Controller/UsersController.php:197
 msgid "%sさん、またお会いしましょう。"
 msgstr ""
 
-#: Controller/UsersController.php:190
+#: Controller/UsersController.php:198
 msgid "ログアウトしました"
 msgstr ""
 
-#: Controller/UsersController.php:438
+#: Controller/UsersController.php:446
 msgid "本登録が完了しました！"
 msgstr ""
 
-#: Controller/UsersController.php:448
+#: Controller/UsersController.php:456
 msgid "メールアドレスの認証が完了しました。"
 msgstr ""
 

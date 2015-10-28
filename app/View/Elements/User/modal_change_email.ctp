@@ -39,6 +39,11 @@
                 $this->Form->input('email', [
                     'label'       => __d('gl', "新しいメールアドレス"),
                     'placeholder' => __d('gl', "hiroshi@example.com"),
+                    "data-bv-notempty"          => "false",
+                    'data-bv-emailaddress'      => "false",
+                    "data-bv-callback"          => "true",
+                    "data-bv-callback-message"  => " ",
+                    "data-bv-callback-callback" => "bvCallbackAvailableEmail",
                 ]) ?>
                 <?=
                 $this->Form->input('password_request2', [
@@ -70,16 +75,6 @@
                 validating: 'fa fa-refresh'
             },
             fields: {
-                "data[User][email]": {
-                    validators: {
-                        notEmpty: {
-                            message: "<?=__d('validate', "入力必須項目です。")?>"
-                        },
-                        emailAddress: {
-                            message: "<?=__d('validate', "メールアドレスが正しくありません。")?>"
-                        }
-                    }
-                },
                 "data[User][password_request2]": {
                     validators: {
                         stringLength: {
@@ -92,6 +87,11 @@
                     }
                 }
             }
+        });
+
+        // 登録可能な email の validate
+        require(['validate'], function (validate) {
+            window.bvCallbackAvailableEmail = validate.bvCallbackAvailableEmail;
         });
     });
 </script>

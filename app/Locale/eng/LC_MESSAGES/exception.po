@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2015-09-09 17:49+0900\n"
-"PO-Revision-Date: 2015-09-09 17:49+0900\n"
+"POT-Creation-Date: 2015-10-22 17:40+0900\n"
+"PO-Revision-Date: 2015-10-22 17:40+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -13,13 +13,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.8.4\n"
+"X-Generator: Poedit 1.8.6\n"
 
-#: Controller/AppController.php:428
+#: Controller/AppController.php:491
 msgid "不正なアクセスです。"
 msgstr "Invalid access."
 
-#: Controller/UsersController.php:698
+#: Controller/UsersController.php:753
 msgid "別のユーザ宛のチーム招待です。"
 msgstr ""
 

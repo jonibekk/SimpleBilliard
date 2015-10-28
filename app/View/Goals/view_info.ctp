@@ -5,8 +5,8 @@
  * Date: 7/9/15
  * Time: 3:33 PM
  *
- * @var CodeCompletionView $this
- * @var                    $goal
+ * @var $goal
+ * @var $goal_term
  */
 ?>
 <!-- START app/View/Goals/view_info.ctp -->
@@ -42,10 +42,11 @@
                     <i class="fa-calendar fa"></i>
                 </div>
                 <div class="goal-detail-info-due">
-                    <?= $this->Time->format('Y/m/d',
-                                            $goal['Goal']['start_date'] + ($this->Session->read('Auth.User.timezone') * 60 * 60)) ?>
-                    - <?= $this->Time->format('Y/m/d',
-                                              $goal['Goal']['end_date'] + ($this->Session->read('Auth.User.timezone') * 60 * 60)) ?>
+                    <?= $this->Time->format('Y/m/d', $goal['Goal']['start_date'] + $goal_term['timezone'] * HOUR) ?>
+                    - <?= $this->Time->format('Y/m/d', $goal['Goal']['end_date'] + $goal_term['timezone'] * HOUR) ?>
+                    <?php if ($this->Session->read('Auth.User.timezone') != $goal_term['timezone']): ?>
+                        <?= $this->TimeEx->getTimezoneText($goal_term['timezone']); ?>
+                    <?php endif ?>
                 </div>
             </div>
             <div class="goal-detail-info-members">

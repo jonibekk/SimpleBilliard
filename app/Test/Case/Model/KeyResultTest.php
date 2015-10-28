@@ -16,6 +16,7 @@ class KeyResultTest extends CakeTestCase
      */
     public $fixtures = array(
         'app.action_result',
+        'app.evaluate_term',
         'app.key_result',
         'app.goal',
         'app.purpose',
@@ -65,7 +66,7 @@ class KeyResultTest extends CakeTestCase
                 'name'       => 'test',
             ]
         ];
-        $res = $this->KeyResult->add($data, 1);
+        $res = $this->KeyResult->add($data, 8);
         $this->assertTrue($res);
 
         $data = [
@@ -179,7 +180,7 @@ class KeyResultTest extends CakeTestCase
             'KeyResult' => [
                 'user_id'    => 1,
                 'team_id'    => 1,
-                'goal_id'    => 1,
+                'goal_id'    => 8,
                 'value_unit' => KeyResult::UNIT_BINARY,
                 'start_date' => '2015/7/7',
                 'end_date'   => '2015/10/7',
@@ -311,6 +312,11 @@ class KeyResultTest extends CakeTestCase
         $this->KeyResult->Team->current_team_id = 1;
         $this->KeyResult->Goal->Collaborator->my_uid = 1;
         $this->KeyResult->Goal->Collaborator->current_team_id = 1;
+        $this->KeyResult->Team->EvaluateTerm->current_team_id = 1;
+        $this->KeyResult->Team->EvaluateTerm->my_uid = 1;
+        $this->KeyResult->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->KeyResult->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
+        $this->KeyResult->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
     }
 
 }

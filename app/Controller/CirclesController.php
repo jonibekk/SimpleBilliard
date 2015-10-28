@@ -228,21 +228,31 @@ class CirclesController extends AppController
         return $this->_ajaxGetResponse($html);
     }
 
-    public function join()
+    /**
+     * サークルの 参加/不参加 切り替え
+     * @return CakeResponse
+     */
+    public function ajax_join_circle()
     {
         $this->request->allowMethod('post');
+        $this->_ajaxPreProcess();
+
+        $msg = null;
         if ($this->Circle->CircleMember->joinCircle($this->request->data)) {
             if (!empty($this->Circle->CircleMember->new_joined_circle_list)) {
                 foreach ($this->Circle->CircleMember->new_joined_circle_list as $circle_id) {
                     $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_USER_JOIN, $circle_id);
                 }
+                $msg = __d('gl', "サークルに参加しました。");
             }
-            $this->Pnotify->outSuccess(__d('gl', "公開サークルの参加設定を保存しました。"));
+            else {
+                $msg = __d('gl', "サークルから外れました。");
+            }
         }
         else {
-            $this->Pnotify->outSuccess(__d('gl', "公開サークルの参加設定の保存に失敗しました。"));
+            $msg = __d('gl', "サークルの参加設定の保存に失敗しました。");
         }
-        $this->redirect($this->referer());
+        return $this->_ajaxGetResponse(['msg' => $msg]);
     }
 
     public function ajax_get_circle_members()
