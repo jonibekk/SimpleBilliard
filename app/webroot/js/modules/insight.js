@@ -141,19 +141,21 @@ define(function () {
             var $graphContainer = $('#' + items[i] + '_item').closest('.insight-row').find('.insight-graph-container');
             if ($graphContainer.is(':visible')) {
                 $.plot($graphContainer, data, insightGraphOptions);
-                // グラフのポイントにマウスオーバーした時
-                $graphContainer.off('plothover').on('plothover', function (event, pos, item) {
-                    var $tooltip = $("#InsightGraphTooltip");
-                    if (item) {
-                        var y = item.datapoint[1];
-                        $tooltip.html(y)
-                            .css({top: item.pageY-40, left: item.pageX-27})
-                            .fadeIn(200);
-                    } else {
-                        $tooltip.hide();
-                    }
-                });
+                $graphContainer.off('plothover').on('plothover', _onPlotHover);
             }
+        }
+    };
+
+    // グラフのポイントにマウスオーバーしたときのコールバック
+    var _onPlotHover = function (event, pos, item) {
+        var $tooltip = $("#InsightGraphTooltip");
+        if (item) {
+            var y = item.datapoint[1];
+            $tooltip.html(y)
+                .css({top: item.pageY-40, left: item.pageX-27})
+                .fadeIn(200);
+        } else {
+            $tooltip.hide();
         }
     };
 
@@ -170,7 +172,7 @@ define(function () {
         var dateRange = $('#InsightInputDateRange').val();
 
         // 今週、先週の場合
-        // 週、月 グラフを有効にする
+        // 週、日 グラフを有効にする
         if (dateRange.indexOf('week') != -1) {
             $buttonGroup.find('label[data-value=week], label[data-value=day]').removeAttr('disabled');
             graphType = 'week';

@@ -1251,13 +1251,13 @@ class TeamsController extends AppController
         // グラフ種類が「日」の場合
         if ($graph_type == 'day') {
             // 今週、先週 の場合に日別で表示する
-            $days = 7;
+            $max_days = 7;
 
             $target_start_date = $start_date;
             $target_end_date = $start_date;   // １日分のデータ
             $today_time = strtotime($date_info['today']);
             $target_start_date_time = strtotime($target_start_date);
-            for ($i = 0; $i < $days; $i++) {
+            for ($i = 0; $i < $max_days; $i++) {
                 $cache_expire = ($target_start_date_time < $today_time) ? WEEK : DAY;
                 $insights[] = $this->_getInsightData($target_start_date, $target_end_date, $timezone, $group_id,
                                                      $cache_expire);
@@ -1270,7 +1270,7 @@ class TeamsController extends AppController
         // グラフ種別が「週」の場合
         if ($graph_type == 'week') {
             // 今週、先週 の場合
-            $weeks = 6;
+            $max_weeks = 6;
             $target_start_date = $start_date;
             $target_end_date = $this->_insightAdjustEndDate($end_date, $date_info['today']);
             $limit = 0;
@@ -1283,7 +1283,7 @@ class TeamsController extends AppController
                 $limit = strtotime($start_date);
             }
 
-            for ($i = 0; $i < $weeks; $i++) {
+            for ($i = 0; $i < $max_weeks; $i++) {
                 $cache_expire = (strtotime($target_end_date) < strtotime($date_info['today'])) ? WEEK : DAY;
 
                 // 指定範囲のデータ
