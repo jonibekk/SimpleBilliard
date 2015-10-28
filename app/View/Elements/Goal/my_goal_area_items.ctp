@@ -14,14 +14,26 @@
 <?php foreach ($goals as $goal): ?>
     <div class="dashboard-goals-card">
         <!-- Class is changed, whether goal name is set or not | goal名のあるなしでclassを切り替える -->
+        <!-- If there is no goal name, then there is no vertical-border | goal名がない場合はタテ線を出さない -->
         <div class="
             <?php if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])): ?>
-                dashboard-goals-card-header
+                dashboard-goals-card-header">
+                <!-- ToDo. タテ線。
+                    heightの値をKRの数、KRをすべて開いているか閉じているかで変化させる必要あり。
+                    KRが1つ -> 104px;
+                    KRが2つ -> 168px; (+64px)
+                    KRが3つ -> 232px; (+64px)
+                    といった具合に64pxずつ追加してください。
+                    KRが閉じているときは、
+                    また、ゴール名が2行になっているかどうかを考える必要性あり。
+                    ゴール名が2行になっている場合は、プラス20px;
+                -->
+                <div class="dashboard-goals-card-vertical-line" style="height: 232px;"></div>
             <?php else: ?>
-                dashboard-goals-card-header-noname
+                dashboard-goals-card-header-noname">
             <?php endif; ?>
-        ">
-            <i class="dashboard-goals-card-header-icon fa fa-flag-o jsGoalsCardProgress" goalProgPercent="50"></i>
+            <i class="dashboard-goals-card-header-icon fa fa-flag-o jsGoalsCardProgress" goalProgPercent="50">
+            </i>
             <div class="dashboard-goals-card-header-title">
                 <?php if (empty($goal['Goal'])): ?>
                         <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add', 'purpose_id' => $goal['Purpose']['id'], 'mode' => 2]) ?>"

@@ -44,6 +44,7 @@
   clear: both;
   border-radius: 8px 8px 0 0;
   padding: 8px 4px;
+  position: relative;
 }
 
 .dashboard-goals-card-header-noname {
@@ -59,6 +60,14 @@
   border-radius: 0 0 8px 8px;
 }
 
+/*
+### 縦線の実現
+かなり複雑
+goalcardのheader自体をrelativeで基準にタテ線を引いている。
+ただし、アイコン自体もz-indexの都合でrelativeにしている。
+横線はkrの方で定義されている。
+*/
+
 .dashboard-goals-card-header-icon {
   font-size: 30px;
   padding: 8px 4px 0;
@@ -68,21 +77,20 @@
   color: white;
   display: inline-block;
   vertical-align: middle;
-  // background: -webkit-linear-gradient(bottom, @waterBlue 0%, @slightGray 50%);
-
-  // position: absolute;
-  // z-index: -1;
+  position: relative;
+  z-index: 1;
 }
-//
-// .dashboard-goals-card-header-icon-wrap {
-//   width: 40px;
-//   height: 40px;
-//   position: relative;
-//   display: inline-block;
-//   vertical-align: middle;
-//   background-color: @waterBlue;
-//   border-radius: 50%;
-// }
+
+
+.dashboard-goals-card-vertical-line {
+  position: absolute;
+  width: 3px;
+  background-color: @cGray;
+  left: 22px;
+  top: 44px;
+  z-index: 1;
+}
+
 
 .dashboard-goals-card-header-title {
   width: 72%;

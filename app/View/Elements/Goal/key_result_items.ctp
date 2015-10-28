@@ -18,6 +18,7 @@
 <ul class="dashboard-goals-card-body-krs-wrap">
     <li class="dashboard-goals-card-body-krs">
         <a href="" class="dashboard-goals-card-body-kr-link">
+            <hr class="dashboard-goals-card-horizontal-line">
             <i class="fa-key fa dashboard-goals-card-body-krs-icon-unachieved"></i>
             <p class="dashboard-goals-card-body-krs-title-unachieved">達成などしていないKRです。</p>
         </a>
@@ -32,6 +33,7 @@
     </li>
     <li class="dashboard-goals-card-body-krs">
         <span class="dashboard-goals-card-body-kr-no-link">
+            <hr class="dashboard-goals-card-horizontal-line">
             <i class="fa-key fa dashboard-goals-card-body-krs-icon-achieved"></i>
             <p class="dashboard-goals-card-body-krs-title-achieved">達成済のKRです。</p>
         </span>
@@ -45,6 +47,7 @@
     </li>
     <li class="dashboard-goals-card-body-krs">
         <a href="" class="dashboard-goals-card-body-kr-link">
+            <hr class="dashboard-goals-card-horizontal-line">
             <i class="fa-key fa dashboard-goals-card-body-krs-icon-achieved"></i>
             <p class="dashboard-goals-card-body-krs-title-unachieved">文字数をめちゃくちゃ長くしたバージョンを入れておかないと後々に困ります。</p>
         </a>
@@ -57,8 +60,9 @@
             <span class="dashboard-goals-card-body-krs-date">Due. 9/30</span>
         </div>
     </li>
-    <li>
+    <li class="dashboard-goals-card-body-add-kr">
         <a class="dashboard-goals-card-body-add-kr-link" href="">
+            <hr class="dashboard-goals-card-horizontal-line">
             <i class="fa fa-plus dashboard-goals-card-body-add-kr-icon"></i>
             <p class="dashboard-goals-card-body-add-kr-contents"><?= __d('gl', "達成要素を追加") ?></p>
         </a>
