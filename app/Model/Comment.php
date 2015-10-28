@@ -514,16 +514,18 @@ class Comment extends AppModel
     {
         $params = array_merge(
             [
-                'post_id' => null,
-                'user_id' => null,
-                'start'   => null,
-                'end'     => null,
+                'post_id'   => null,
+                'user_id'   => null,
+                'start'     => null,
+                'end'       => null,
+                'post_type' => null,
             ], $params);
 
         $options = [
             'conditions' => [
                 'Comment.team_id' => $this->current_team_id,
             ],
+            'contain' => [],
         ];
         if ($params['post_id'] !== null) {
             $options['conditions']['Comment.post_id'] = $params['post_id'];
@@ -536,6 +538,10 @@ class Comment extends AppModel
         }
         if ($params['end'] !== null) {
             $options['conditions']["Comment.created <="] = $params['end'];
+        }
+        if ($params['post_type'] !== null) {
+            $options['conditions']["Post.type"] = $params['post_type'];
+            $options['contain'][] = 'Post';
         }
         return $this->find('count', $options);
     }
@@ -551,18 +557,20 @@ class Comment extends AppModel
     {
         $params = array_merge(
             [
-                'start'   => null,
-                'end'     => null,
-                'user_id' => null,
+                'start'     => null,
+                'end'       => null,
+                'user_id'   => null,
+                'post_type' => null,
             ], $params);
 
         $options = [
             'fields'     => [
-                'COUNT(DISTINCT user_id) as cnt',
+                'COUNT(DISTINCT Comment.user_id) as cnt',
             ],
             'conditions' => [
                 'Comment.team_id' => $this->current_team_id,
             ],
+            'contain' => [],
         ];
         if ($params['start'] !== null) {
             $options['conditions']["Comment.created >="] = $params['start'];
@@ -572,6 +580,10 @@ class Comment extends AppModel
         }
         if ($params['user_id'] !== null) {
             $options['conditions']["Comment.user_id"] = $params['user_id'];
+        }
+        if ($params['post_type'] !== null) {
+            $options['conditions']["Post.type"] = $params['post_type'];
+            $options['contain'][] = 'Post';
         }
         $row = $this->find('first', $options);
 

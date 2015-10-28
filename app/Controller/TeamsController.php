@@ -1043,7 +1043,7 @@ class TeamsController extends AppController
     }
 
     /**
-     * チーム集計
+     * インサイト
      */
     public function insight()
     {
@@ -1069,7 +1069,7 @@ class TeamsController extends AppController
     }
 
     /**
-     * チーム集計結果 ajax
+     * インサイト 集計結果
      *
      * @return CakeResponse
      */
@@ -1103,7 +1103,7 @@ class TeamsController extends AppController
         // 'week' or 'month' or 'term'
         $date_range_type = $this->_insightGetDateRangeType($date_range);
 
-        // ６ 週/月/期 前までのデータ
+        // 指定期間 + １つ前の期間 のデータ
         $insights = [];
 
         // 今週、今月、今期 の場合
@@ -1114,7 +1114,7 @@ class TeamsController extends AppController
         if ($date_range_type == 'week' || $date_range_type == 'month') {
             $target_start_date = $start_date;
             $target_end_date = $this->_insightAdjustEndDate($end_date, $date_info['today']);
-            for ($i = 0; $i < 6; $i++) {
+            for ($i = 0; $i < 2; $i++) {
                 // 指定範囲のデータ
                 $insights[] = $this->_getInsightData($target_start_date, $target_end_date, $timezone, $group_id,
                                                      $cache_expire);
@@ -1160,7 +1160,7 @@ class TeamsController extends AppController
                     $group_id,
                     $cache_expire);
 
-                if (count($insights) >= 6) {
+                if (count($insights) >= 2) {
                     break;
                 }
 
@@ -1195,7 +1195,196 @@ class TeamsController extends AppController
     }
 
     /**
-     * サークル集計
+     * インサイトのグラフデータ
+     */
+    public function ajax_get_insight_graph()
+    {
+        $this->_ajaxPreProcess();
+
+        $date_range = $this->request->query('date_range');
+        $group_id = $this->request->query('group');
+        $timezone = $this->request->query('timezone');
+        $graph_type = $this->request->query('graph_type');
+
+        // システム管理者のためのセットアップ
+        $this->_setupForSystemAdminInsight();
+
+        // 日付範囲
+        $date_info = $this->_getInsightDateInfo($timezone);
+
+        // あらかじめ決められた期間でなければエラー
+        if (!isset($date_info['date_ranges'][$date_range])) {
+            throw new NotFoundException();
+        }
+
+        // 集計 開始日付, 終了日付
+        $start_date = $date_info['date_ranges'][$date_range]['start'];
+        $end_date = $date_info['date_ranges'][$date_range]['end'];
+        $this->set('start_date', $start_date);
+        $this->set('end_date', $end_date);
+
+        // 今週、今月、今期の場合に true
+        $is_current = $this->_insightIsCurrentDateRange($date_range);
+        // 'week' or 'month' or 'term'
+        $date_range_type = $this->_insightGetDateRangeType($date_range);
+
+        // 集計期間とグラフ種類の組み合わせが有効かチェック
+        if ($date_range_type == 'term') {
+            if (!in_array($graph_type, ['term', 'month'])) {
+                throw new NotFoundException();
+            }
+        }
+        elseif ($date_range_type == 'month') {
+            if (!in_array($graph_type, ['month', 'week'])) {
+                throw new NotFoundException();
+            }
+        }
+        elseif ($date_range_type == 'week') {
+            if (!in_array($graph_type, ['week', 'day'])) {
+                throw new NotFoundException();
+            }
+        }
+
+        // ６ 週/月/期 前までのデータ
+        $insights = [];
+
+        // グラフ種類が「日」の場合
+        if ($graph_type == 'day') {
+            // 今週、先週 の場合に日別で表示する
+            $days = 7;
+
+            $target_start_date = $start_date;
+            $target_end_date = $start_date;   // １日分のデータ
+            $today_time = strtotime($date_info['today']);
+            $target_start_date_time = strtotime($target_start_date);
+            for ($i = 0; $i < $days; $i++) {
+                $cache_expire = ($target_start_date_time < $today_time) ? WEEK : DAY;
+                $insights[] = $this->_getInsightData($target_start_date, $target_end_date, $timezone, $group_id,
+                                                     $cache_expire);
+                $target_start_date_time += DAY;
+                $target_start_date = date('Y-m-d', $target_start_date_time);
+                $target_end_date = $target_start_date;
+            }
+        }
+
+        // グラフ種別が「週」の場合
+        if ($graph_type == 'week') {
+            // 今週、先週 の場合
+            $weeks = 6;
+            $target_start_date = $start_date;
+            $target_end_date = $this->_insightAdjustEndDate($end_date, $date_info['today']);
+            $limit = 0;
+
+            // 今月、前月の場合
+            if ($date_range_type == 'month') {
+                $week = $this->Team->TeamInsight->getWeekRangeDate($end_date);
+                $target_start_date = $week['start'];
+                $target_end_date = $week['end'];
+                $limit = strtotime($start_date);
+            }
+
+            for ($i = 0; $i < $weeks; $i++) {
+                $cache_expire = (strtotime($target_end_date) < strtotime($date_info['today'])) ? WEEK : DAY;
+
+                // 指定範囲のデータ
+                array_unshift($insights,
+                              $this->_getInsightData($target_start_date, $target_end_date, $timezone, $group_id,
+                                                     $cache_expire));
+
+                $next_target = $this->Team->TeamInsight->getWeekRangeDate($target_start_date, ['offset' => -1]);
+                $target_start_date = $next_target['start'];
+                $target_end_date = $next_target['end'];
+
+                if (strtotime($target_end_date) < $limit) {
+                    break;
+                }
+            }
+        }
+
+        // グラフ種別が「月」の場合
+        if ($graph_type == 'month') {
+            // 今月、先月の場合
+            // 対象月から６ヶ月前までのデータを取得する
+            $max_months = 6;
+            $target_start_date = $start_date;
+            $target_end_date = $this->_insightAdjustEndDate($end_date, $date_info['today']);
+            $limit = 0;
+
+            // 今期、前期の場合
+            // 期内の月データを最大12ヶ月分取得する
+            if ($date_range_type == 'term') {
+                $max_months = 12;
+                $target_end_date = $end_date;
+                $target_start_date = date('Y-m-01', strtotime($target_end_date));
+                $limit = strtotime($start_date);
+            }
+
+            for ($i = 0; $i < $max_months; $i++) {
+                $cache_expire = (strtotime($target_end_date) < strtotime($date_info['today'])) ? WEEK : DAY;
+
+                array_unshift($insights,
+                              $this->_getInsightData($target_start_date, $target_end_date, $timezone, $group_id,
+                                                     $cache_expire));
+
+                $next_target = $this->Team->TeamInsight->getMonthRangeDate($target_start_date, ['offset' => -1]);
+                $target_start_date = $next_target['start'];
+                $target_end_date = $next_target['end'];
+
+                if (strtotime($target_end_date) < $limit) {
+                    break;
+                }
+            }
+        }
+
+        // グラフ種別が「期」の場合
+        if ($graph_type == 'term') {
+            // 今期、前期 の場合に過去６期分のデータを取得
+            $max_terms = 6;
+
+            $all_terms = $this->Team->EvaluateTerm->getAllTerm();
+            $start_term_id = null;
+            if ($date_range == 'prev_term') {
+                $start_term_id = $this->Team->EvaluateTerm->getPreviousTermId();
+            }
+            elseif ($date_range == 'current_term') {
+                $start_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
+            }
+
+            $cache_expire = $is_current ? DAY : WEEK;
+            $skip = true;
+            foreach ($all_terms as $term_id => $v) {
+                // 集計対象期間まで読み飛ばし
+                if ($skip && $term_id != $start_term_id) {
+                    continue;
+                }
+                $skip = false;
+
+                array_unshift($insights,
+                              $this->_getInsightData(
+                                  date('Y-m-d', $v['start_date'] + $date_info['time_adjust']),
+                                  $this->_insightAdjustEndDate(date('Y-m-d',
+                                                                    $v['end_date'] + $date_info['time_adjust']),
+                                                               $date_info['today']),
+                                  $timezone,
+                                  $group_id,
+                                  $cache_expire));
+
+                if (count($insights) >= $max_terms) {
+                    break;
+                }
+                // 古いデータのキャッシュ有効期限は１週間
+                $cache_expire = WEEK;
+            }
+        }
+
+        // システム管理者のためのクリーンアップ
+        $this->_cleanupForSystemAdminInsight();
+
+        return $this->_ajaxGetResponse(['insights' => $insights]);
+    }
+
+    /**
+     * サークル利用状況
      */
     public function insight_circle()
     {
@@ -1217,7 +1406,7 @@ class TeamsController extends AppController
     }
 
     /**
-     * サークル集計結果
+     * サークル利用状況 集計結果
      *
      * @return CakeResponse
      */
@@ -1339,7 +1528,7 @@ class TeamsController extends AppController
     }
 
     /**
-     * ランキング集計
+     * ランキング
      */
     public function insight_ranking()
     {
@@ -1365,7 +1554,7 @@ class TeamsController extends AppController
     }
 
     /**
-     * ランキング集計結果
+     * ランキング 集計結果
      *
      * @return CakeResponse
      */
@@ -1655,14 +1844,16 @@ class TeamsController extends AppController
         $like_user_count = count(array_unique(array_merge($post_like_user_list, $comment_like_user_list)));
 
         // コメント数
-        $comment_count = $this->Post->Comment->getCount(['start'   => $start_time,
-                                                         'end'     => $end_time,
-                                                         'user_id' => $user_ids]);
+        $comment_count = $this->Post->Comment->getCount(['start'     => $start_time,
+                                                         'end'       => $end_time,
+                                                         'post_type' => [Post::TYPE_NORMAL, Post::TYPE_ACTION],
+                                                         'user_id'   => $user_ids]);
 
         // コメントユーザー数
-        $comment_user_count = $this->Post->Comment->getUniqueUserCount(['start'   => $start_time,
-                                                                        'end'     => $end_time,
-                                                                        'user_id' => $user_ids]);
+        $comment_user_count = $this->Post->Comment->getUniqueUserCount(['start'     => $start_time,
+                                                                        'end'       => $end_time,
+                                                                        'post_type' => [Post::TYPE_NORMAL, Post::TYPE_ACTION],
+                                                                        'user_id'   => $user_ids]);
 
         // メッセージ数
         $message_count = $this->Post->getMessageCount(['start'   => $start_time,
