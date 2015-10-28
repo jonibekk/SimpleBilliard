@@ -191,15 +191,21 @@ class Collaborator extends AppModel
         return false;
     }
 
-    function getCollaboGoalDetail($team_id, $goal_user_id, $approval_flg, $is_include_priority_0 = true)
+    function getCollaboGoalDetail($team_id, $goal_user_id, $approval_flg, $is_include_priority_0 = true, $term_type = null)
     {
+        $conditions = [
+            'Collaborator.team_id'    => $team_id,
+            'Collaborator.user_id'    => $goal_user_id,
+            'Collaborator.valued_flg' => $approval_flg,
+        ];
+        if ($term_type !== null) {
+            $conditions['Goal.end_date >='] = $this->Goal->Team->EvaluateTerm->getTermData($term_type)['start_date'];
+            $conditions['Goal.end_date <='] = $this->Goal->Team->EvaluateTerm->getTermData($term_type)['end_date'];
+        }
+
         $options = [
             'fields'     => ['id', 'type', 'role', 'priority', 'valued_flg'],
-            'conditions' => [
-                'Collaborator.team_id'    => $team_id,
-                'Collaborator.user_id'    => $goal_user_id,
-                'Collaborator.valued_flg' => $approval_flg,
-            ],
+            'conditions' => $conditions,
             'contain'    => [
                 'Goal'            => [
                     'fields'       => [

@@ -269,17 +269,33 @@ class Goal extends AppModel
         }
         $this->validate = $validate_backup;
 
-        $timezone = $this->Team->EvaluateTerm->getCurrentTermData()['timezone'];
+        // 登録するゴールが来期のものか
+        $isNextTerm = (isset($data['Goal']['term_type']) && $data['Goal']['term_type'] == 'next');
+        $goal_term = null;
+        if ($isNextTerm) {
+            $goal_term = $this->Team->EvaluateTerm->getNextTermData();
+        }
+        else {
+            $goal_term = $this->Team->EvaluateTerm->getCurrentTermData();
+        }
 
         //時間をunixtimeに変換
         if (!empty($data['Goal']['start_date'])) {
-            $data['Goal']['start_date'] = strtotime($data['Goal']['start_date']) - ($timezone * 60 * 60);
+            $data['Goal']['start_date'] = strtotime($data['Goal']['start_date']) - $goal_term['timezone'] * HOUR;
         }
         //期限を+1day-1secする
         if (!empty($data['Goal']['end_date'])) {
             $data['Goal']['end_date'] = strtotime('+1 day -1 sec',
-                                                  strtotime($data['Goal']['end_date'])) - ($timezone * 60 * 60);
+                                                  strtotime($data['Goal']['end_date'])) - $goal_term['timezone'] * HOUR;
         }
+
+        // 評価期間をまたいでいないかチェック
+        if (isset($data['Goal']['start_date']) && isset($data['Goal']['end_date'])) {
+            if ($data['Goal']['start_date'] < $goal_term['start_date'] || $goal_term['end_date'] < $data['Goal']['end_date']) {
+                return false;
+            }
+        }
+
         //新規の場合はデフォルトKRを追加
         if ($add_new) {
             //コラボレータをタイプ　リーダーで保存
@@ -1580,5 +1596,21 @@ class Goal extends AppModel
             $res[] = $data;
         }
         return ['results' => $res];
+    }
+
+    /**
+     * ゴールが属している評価期間のデータを返す
+     *
+     * @param $goal_id
+     *
+     * @return bool
+     */
+    public function getGoalTermData($goal_id)
+    {
+        $goal = $this->findById($goal_id);
+        if (!$goal) {
+            return false;
+        }
+        return ClassRegistry::init('EvaluateTerm')->getTermDataByDatetime($goal['Goal']['end_date']);
     }
 }

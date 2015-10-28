@@ -66,9 +66,9 @@ $(document).ready(function () {
 
     $(document).on('keyup', '#message_text_input', function () {
         $(this).autosize();
-        $('body').animate({
-            scrollTop: $(document).height()
-        });
+        //$('body').animate({
+        //    scrollTop: $(document).height()
+        //});
     });
 
     $(document).on('click', '#mark_all_read,#mark_all_read_txt', function (e) {
@@ -1489,73 +1489,81 @@ $(function () {
 //入力途中での警告表示
 //静的ページのにはすべて適用
 function setChangeWarningForAllStaticPage() {
-    var flag = false;
     //オートコンプリートでchangeしてしまうのを待つ
     setTimeout(function () {
-        $("select,input,textarea").change(function () {
-            $(document).on('submit', 'form', function () {
-                flag = true;
+        var flag = false;
+        $(":input").each(function () {
+            var default_val = "";
+            var changed_val = "";
+            default_val = $(this).load().val();
+            $(this).on("change keyup keydown", function () {
+                changed_val = $(this).val();
+                if (default_val != changed_val) {
+                    $(this).addClass("changed");
+                } else {
+                    $(this).removeClass("changed");
+                }
             });
-            $("input[type=submit]").click(function () {
-                flag = true;
-            });
-            if (!$(this).hasClass('disable-change-warning')) {
-                $(window).on('beforeunload', function () {
-                    if (!flag) {
-                        return cake.message.notice.a;
-                    }
-                    else {
-                        return;
-                    }
-                });
+        });
+        $(document).on('submit', 'form', function () {
+            flag = true;
+        });
+        $(window).on("beforeunload", function () {
+            if ($(".changed").length != "" && flag == false) {
+                return cake.message.notice.a;
             }
         });
     }, 2000);
 }
 
 function warningCloseModal() {
-    warningAction('modal');
+    warningAction($('.modal'));
 }
 
-function warningAction(class_name) {
-    $('.' + class_name).on('shown.bs.modal', function (e) {
-        $(this).data('form-data', $(this).find('form').serialize());
+function warningAction($obj) {
+    var flag = false;
+    $obj.on('shown.bs.modal', function (e) {
+        setTimeout(function () {
+            $obj.find(":input").each(function () {
+                var default_val = "";
+                var changed_val = "";
+                default_val = $(this).load().val();
+                $(this).on("change keyup keydown", function () {
+                    changed_val = $(this).val();
+                    if (default_val != changed_val) {
+                        $(this).addClass("changed");
+                    } else {
+                        $(this).removeClass("changed");
+                    }
+                });
+            });
+            $(document).on('submit', 'form', function () {
+                flag = true;
+            });
+        }, 2000);
     });
 
-    $('.' + class_name).on('hide.bs.modal', function (e) {
-        if ($(this).data('form-data') != $(this).find('form').serialize()) {
+    $obj.on('hide.bs.modal', function (e) {
+        //datepickerが閉じた時のイベントをなぜかここで掴んでしまう為、datepickerだった場合は何もしない。
+        if ('date' in e) {
+            return;
+        }
+        if ($obj.find(".changed").length != "" && flag == false) {
             if (!confirm(cake.message.notice.a)) {
                 e.preventDefault();
             } else {
                 $.clearInput($(this));
             }
-
         }
     });
 }
 
 function modalFormCommonBindEvent($modal_elm) {
-    modalWarningShownBind($modal_elm);
-    modalWarningHideBind($modal_elm);
+    warningAction($modal_elm);
     $modal_elm.on('shown.bs.modal', function (e) {
         $(this).find('textarea').each(function () {
             $(this).autosize();
         });
-    });
-}
-function modalWarningHideBind($modal_elm) {
-    $modal_elm.on('hide.bs.modal', function (e) {
-        if ($(this).data('form-data') != $(this).find('form').serialize()) {
-            if (!confirm(cake.message.notice.a)) {
-                e.preventDefault();
-            }
-        }
-    });
-}
-
-function modalWarningShownBind($modal_elm) {
-    $modal_elm.on('shown.bs.modal', function (e) {
-        $(this).data('form-data', $(this).find('form').serialize());
     });
 }
 
@@ -4523,3 +4531,4 @@ function networkReachable() {
     });
     return ret;
 }
+

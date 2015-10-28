@@ -25,6 +25,7 @@ App::uses('PostShareCircle', 'Model');
  * @property Circle          $Circle
  * @property AttachedFile    $AttachedFile
  * @property PostFile        $PostFile
+ * @property PostSharedLog   $PostSharedLog
  */
 class Post extends AppModel
 {
