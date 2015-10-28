@@ -3732,16 +3732,6 @@ $(document).ready(function () {
             // コールバック関数（afterSuccess）
             $uploadFileForm._callbacks[$uploadFileForm._params.previewContainerID].afterSuccess.call(this, file);
         },
-        // サムネイル
-        thumbnail: function (file, dataUrl) {
-            var $container = $(file.previewTemplate).find('.dz-thumb-container');
-            // 画像の場合はデフォルトの処理でサムネイル作成
-            if (file.type.match(/image/)) {
-                $container.find('.fa').hide();
-                $container.find('.dz-thumb').show();
-                this.defaultOptions.thumbnail.call(this, file, dataUrl);
-            }
-        },
         // ファイル削除ボタン押下時
         removedfile: function (file) {
             var $preview = $(file.previewTemplate);
@@ -3841,6 +3831,7 @@ $(document).ready(function () {
                 mouse_reset: false
             });
         },
+        // サムネイル
         thumbnail: function(file, dataUrl) {
             var orientation=0;
             EXIF.getData(file, function () {
@@ -3856,6 +3847,11 @@ $(document).ready(function () {
                 if(orientation!=0) {
                     orientation = orientation + 180;
                 }
+                var $container = $(file.previewTemplate).find('.dz-thumb-container');
+                if (file.type.match(/image/)) {
+                    $container.find('.fa').hide();
+                    $container.find('.dz-thumb').show();
+                }
                 _ref = file.previewElement.querySelectorAll("[data-dz-thumbnail-show]");
                 for (_i = 0; _i < _ref.length; _i++) {
                     thumbnailElement = _ref[_i];
@@ -3863,7 +3859,7 @@ $(document).ready(function () {
                 thumbnailElement.alt = file.name;
                 thumbnailElement.src = dataUrl;
                 thumbnailElement.id="exif";
-                 var styles={
+                var styles={
                     "transform":"rotate("+orientation+"deg)",
                     "-ms-transform":"rotate("+orientation+"deg)",
                     "-webkit-transform":"rotate("+orientation+"deg)"
