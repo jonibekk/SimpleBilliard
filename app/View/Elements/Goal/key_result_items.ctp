@@ -45,6 +45,7 @@
             <span class="dashboard-goals-card-body-krs-date">Due. 9/30</span>
         </div>
     </li>
+    <!--
     <li class="dashboard-goals-card-body-krs">
         <a href="" class="dashboard-goals-card-body-kr-link">
             <hr class="dashboard-goals-card-horizontal-line">
@@ -59,13 +60,21 @@
             </a>
             <span class="dashboard-goals-card-body-krs-date">Due. 9/30</span>
         </div>
+    </li> -->
+
+    <li class="dashboard-goals-card-body-krs-ellipsis">
+        <a href="" class="dashboard-goals-card-body-krs-ellipsis-link">
+            <i class="fa fa-ellipsis-v dashboard-goals-card-krs-ellipsis-icon"></i>
+            <p class="dashboard-goals-card-body-krs-ellipsis-number">3+</p>
+        </a>
     </li>
-    <li class="dashboard-goals-card-body-add-kr">
+    <li class="dashboard-goals-card-body-add-kr clearfix">
         <a class="dashboard-goals-card-body-add-kr-link" href="">
             <hr class="dashboard-goals-card-horizontal-line">
             <i class="fa fa-plus dashboard-goals-card-body-add-kr-icon"></i>
             <p class="dashboard-goals-card-body-add-kr-contents"><?= __d('gl', "達成要素を追加") ?></p>
         </a>
+        <p class="dashboard-goals-card-body-goal-status">認定待ち</p>
     </li>
 </ul>
 
