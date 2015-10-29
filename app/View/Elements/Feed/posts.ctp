@@ -247,43 +247,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
 
                 <?php if ($post['Post']['site_info']): ?>
                     <?php $site_info = json_decode($post['Post']['site_info'], true) ?>
-                    <div class="col col-xxs-12 pt_10px">
-                        <a href="<?= isset($site_info['url']) ? $site_info['url'] : null ?>" target="blank"
-                           onclick="window.open(this.href,'_system');return false;"
-                           class="no-line font_verydark">
-                            <div class="site-info bd-radius_4px">
-                                <div class="media">
-                                    <div class="pull-left">
-                                        <?=
-                                        $this->Html->image('ajax-loader.gif',
-                                                           [
-                                                               'class'         => 'lazy media-object',
-                                                               'data-original' => $this->Upload->uploadUrl($post,
-                                                                                                           "Post.site_photo",
-                                                                                                           ['style' => 'small']),
-                                                               'width'         => '80px',
-                                                               'error-img'     => "/img/no-image-link.png",
-                                                           ]
-                                        )
-                                        ?>
-                                    </div>
-                                    <div class="media-body">
-                                        <h4 class="media-heading font_18px"><?= isset($site_info['title']) ? mb_strimwidth(h($site_info['title']),
-                                                                                                                           0,
-                                                                                                                           50,
-                                                                                                                           "...") : null ?></h4>
-
-                                        <p class="font_11px media-url"><?= isset($site_info['url']) ? h($site_info['url']) : null ?></p>
-                                        <?php if (isset($site_info['description'])): ?>
-                                            <div class="font_12px site-info-txt">
-                                                <?= mb_strimwidth(h($site_info['description']), 0, 110, "...") ?>
-                                            </div>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
+                    <?= $this->element('Feed/site_info_block', compact('post', 'site_info')) ?>
                 <?php elseif ($post['Post']['type'] == Post::TYPE_CREATE_GOAL && isset($post['Goal']['id']) && $post['Goal']['id']): ?>
                     <?= $this->element('Feed/goal_sharing_block', compact('post')) ?>
                 <?php elseif ($post['Post']['type'] == Post::TYPE_CREATE_CIRCLE && isset($post['Circle']['id']) && $post['Circle']['id']): ?>
