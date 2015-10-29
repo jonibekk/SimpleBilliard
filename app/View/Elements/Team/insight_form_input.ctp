@@ -87,16 +87,16 @@ $use = isset($use) ? $use : [];
         <label class="insight-graph-icon"><i class="fa fa-area-chart"></i>&nbsp;:&nbsp; </label>
         <div class="btn-group" data-toggle="buttons" id="InsightGraphTypeButtonGroup">
             <label class="btn insight-graph-type-button" data-value="term" disabled="disabled">
-                <input type="radio" name="graph_type" value="term"> 期
+                <input type="radio" name="graph_type" value="term"> <?= __d('gl', '期') ?>
             </label>
             <label class="btn insight-graph-type-button" data-value="month" disabled="disabled">
-                <input type="radio" name="graph_type" value="month"> 月
+                <input type="radio" name="graph_type" value="month"> <?= __d('gl', '月') ?>
             </label>
             <label class="btn insight-graph-type-button" data-value="week" disabled="disabled">
-                <input type="radio" name="graph_type" value="week"> 週
+                <input type="radio" name="graph_type" value="week"> <?= __d('gl', '週') ?>
             </label>
             <label class="btn insight-graph-type-button" data-value="day" disabled="disabled">
-                <input type="radio" name="graph_type" value="day"> 日
+                <input type="radio" name="graph_type" value="day"> <?= __d('gl', '日') ?>
             </label>
         </div>
     </div>
