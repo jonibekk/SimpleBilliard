@@ -279,6 +279,22 @@ class Post extends AppModel
             $postData['Post']['type'] = Post::TYPE_NORMAL;
         }
 
+        // 本文の末尾に OGP のURLが存在する場合は削除する
+        // ただし、本文が URL のみの場合はそのまま残す
+        if (isset($postData['Post']['site_info']) && $postData['Post']['site_info']) {
+            $site_info = json_decode($postData['Post']['site_info'], true);
+            $body = rtrim($postData['Post']['body']);
+            $body_len = strlen($body);
+            if (($pos = strrpos($body, $site_info['url'])) !== false) {
+                if ($pos == $body_len - strlen($site_info['url'])) {
+                    $body = rtrim(substr($body, 0, $pos));
+                    if (strlen($body)) {
+                        $postData['Post']['body'] = $body;
+                    }
+                }
+            }
+        }
+
         $this->begin();
         $res = $this->save($postData);
         if (empty($res)) {

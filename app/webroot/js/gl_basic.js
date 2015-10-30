@@ -849,6 +849,7 @@ function getAjaxFormReplaceElm() {
                         ogp.getOGPSiteInfo({
                             // URL が含まれるテキスト
                             text: $('#CommentFormBody_' + post_id).val(),
+
                             // ogp 情報を取得する必要があるかチェック
                             readyLoading: function () {
                                 // 既に OGP 情報を取得している場合は終了
@@ -857,6 +858,7 @@ function getAjaxFormReplaceElm() {
                                 }
                                 return true;
                             },
+
                             // ogp 情報取得成功時
                             success: function (data) {
                                 var $siteInfoUrl = $('#CommentSiteInfoUrl_' + post_id);
@@ -886,27 +888,28 @@ function getAjaxFormReplaceElm() {
                                         "padding-right": "30px"
                                     });
 
-                                // 入力中テキストから URL を削除
-                                var $input = $('#CommentFormBody_' + post_id);
-                                $input.val($input.val().replace(data.url, ''));
-                                $('#CommentAjaxGetNewCommentForm_' + post_id).bootstrapValidator('revalidateField', 'data[Comment][body]');
-
                                 // hidden に URL 追加
                                 $siteInfoUrl.val(data.url);
                             },
+
                             // ogp 情報 取得失敗時
                             error: function () {
+                                // loading アイコン削除
                                 $('#CommentSiteInfoLoadingIcon_' + post_id).remove();
                             },
+
                             // ogp 情報 取得開始時
                             loadingStart: function () {
+                                // loading アイコン表示
                                 $('<i class="fa fa-refresh fa-spin"></i>')
                                     .attr('id', 'CommentSiteInfoLoadingIcon_' + post_id)
                                     .addClass('mr_8px lh_20px')
                                     .insertBefore('#CommentSubmit_' + post_id);
                             },
+
                             // ogp 情報 取得完了時
                             loadingEnd: function () {
+                                // loading アイコン削除
                                 $('#CommentSiteInfoLoadingIcon_' + post_id).remove();
                             }
                         });
@@ -2151,6 +2154,7 @@ $(document).ready(function () {
                 ogp.getOGPSiteInfo({
                     // URL が含まれるテキスト
                     text: $('#CommonPostBody').val(),
+
                     // ogp 情報を取得する必要があるかチェック
                     readyLoading: function () {
                         // 既に OGP 情報を取得している場合は終了
@@ -2159,6 +2163,7 @@ $(document).ready(function () {
                         }
                         return true;
                     },
+
                     // ogp 情報取得成功時
                     success: function (data) {
                         var $siteInfoUrl = $('#PostSiteInfoUrl');
@@ -2188,27 +2193,28 @@ $(document).ready(function () {
                                 "padding-right": "30px"
                             });
 
-                        // 入力中テキストから URL を削除
-                        var $input = $('#CommonPostBody');
-                        $input.val($input.val().replace(data.url, ''));
-                        $('#PostDisplayForm').bootstrapValidator('revalidateField', 'data[Post][body]');
-
                         // hidden に URL 追加
                         $siteInfoUrl.val(data.url);
                     },
+
                     // ogp 情報 取得失敗時
                     error: function () {
+                        // loading アイコン削除
                         $('#PostSiteInfoLoadingIcon').remove();
                     },
+
                     // ogp 情報 取得開始時
                     loadingStart: function () {
+                        // loading アイコン表示
                         $('<i class="fa fa-refresh fa-spin"></i>')
                             .attr('id', 'PostSiteInfoLoadingIcon')
                             .addClass('pull-right lh_20px')
                             .insertBefore('#CommonFormTabs');
                     },
+
                     // ogp 情報 取得完了時
                     loadingEnd: function () {
+                        // loading アイコン削除
                         $('#PostSiteInfoLoadingIcon').remove();
                     }
                 });
