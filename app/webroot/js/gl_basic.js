@@ -194,6 +194,17 @@ $(document).ready(function () {
         }
         location.href = url;
     });
+    //Load term goal
+    $('#LoadTermGoal').change(function () {
+        var term_id = $(this).val();
+        if (term_id == "") {
+            var url = $(this).attr('redirect-url');
+        }
+        else {
+            var url = $(this).attr('redirect-url') + "/term_id:" + term_id;
+        }
+        location.href = url;
+    });
     //ゴールページのアクション一覧のKR切替え
     $('#SwitchKrOnMyPage').change(function () {
         var key_result_id = $(this).val();
