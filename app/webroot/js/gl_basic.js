@@ -4375,10 +4375,10 @@ $(document).ready(function () {
                 insight.insight.setup();
             }
             else if ($('#InsightCircleResult').size()) {
-                insight.insightCircle.setup();
+                insight.circle.setup();
             }
             else if ($('#InsightRankingResult').size()) {
-                insight.insightRanking.setup();
+                insight.ranking.setup();
             }
             insight.reload();
         });
