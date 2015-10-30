@@ -166,6 +166,38 @@ class PostTest extends CakeTestCase
         $this->assertNotEmpty($res, "[正常]投稿(uid,team_id指定)");
     }
 
+    public function testAddWithSharing()
+    {
+        $uid = '1';
+        $team_id = '1';
+        $this->Post->my_uid = $uid;
+        $this->Post->current_team_id = $team_id;
+        $this->Post->Circle->my_uid = $uid;
+        $this->Post->Circle->current_team_id = $team_id;
+        $this->Post->PostShareCircle->my_uid = $uid;
+        $this->Post->PostShareCircle->current_team_id = $team_id;
+        $postData = [
+            'Post'    => [
+                'team_id' => 1,
+                'user_id' => 1,
+                'body' => 'test',
+                'share' => 'public',
+            ],
+        ];
+        $res = $this->Post->addNormal($postData);
+        $this->assertNotEmpty($res);
+
+        $last_id = $this->Post->getLastInsertID();
+        $all = $this->Post->PostShareCircle->find('all', [
+            'conditions' => [
+                'PostShareCircle.post_id' => $last_id,
+            ]
+        ]);
+        $this->assertCount(1, $all);
+        $this->assertEquals(3, $all[0]['PostShareCircle']['circle_id']);
+    }
+
+
     public function testAddError()
     {
         $uid = '1';
