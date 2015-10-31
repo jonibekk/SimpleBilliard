@@ -45,22 +45,27 @@ if ($is_init) {
             <?= $this->element('Goal/key_result_edit_menu_dropdown', ['kr' => $kr, 'without_dropdown_link' => true]) ?>
         </div>
         <?php if (!$kr['completed']): ?>
-            <a href="#" form-id="kr_achieve_<?= $kr['id'] ?>"
-               class="kr_achieve_button fa-check fa dashboard-goals-card-body-krs-action"></a>
-            <?=
-            $this->Form->create('Goal', [
-                'url'           => ['controller' => 'goals', 'action' => 'complete_kr', 'key_result_id' => $kr['id']],
-                'inputDefaults' => [
-                    'div'       => 'form-group',
-                    'label'     => false,
-                    'wrapInput' => '',
-                ],
-                'class'         => 'form-feed-notify',
-                'name'          => 'kr_achieve_' . $kr['id'],
-                'id'            => 'kr_achieve_' . $kr['id']
-            ]); ?>
-            <?php $this->Form->unlockField('socket_id') ?>
-            <?= $this->Form->end() ?>
+            <?php if ($incomplete_kr_count === 1): ?>
+                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_last_kr_confirm', 'key_result_id' => $kr['id']]) ?>"
+                   class="modal-ajax-get kr_achieve_button fa-check fa dashboard-goals-card-body-krs-action"></a>
+            <?php else: ?>
+                <a href="#" form-id="kr_achieve_<?= $kr['id'] ?>"
+                   class="kr_achieve_button fa-check fa dashboard-goals-card-body-krs-action"></a>
+                <?=
+                $this->Form->create('Goal', [
+                    'url'           => ['controller' => 'goals', 'action' => 'complete_kr', 'key_result_id' => $kr['id']],
+                    'inputDefaults' => [
+                        'div'       => 'form-group',
+                        'label'     => false,
+                        'wrapInput' => '',
+                    ],
+                    'class'         => 'form-feed-notify',
+                    'name'          => 'kr_achieve_' . $kr['id'],
+                    'id'            => 'kr_achieve_' . $kr['id']
+                ]); ?>
+                <?php $this->Form->unlockField('socket_id') ?>
+                <?= $this->Form->end() ?>
+            <?php endif; ?>
         <?php endif; ?>
 
         <div class="dashboard-goals-card-body-krs-aside">
