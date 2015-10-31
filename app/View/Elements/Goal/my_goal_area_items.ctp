@@ -223,49 +223,7 @@
                                 <p class="dashboard-goals-card-body-goal-status"><?= Collaborator::$STATUS[$goal['MyCollabo'][0]['valued_flg']] ?></p>
                             </li>
                         </ul>
-
-                        <?php
-                        // $url = ['controller' => 'goals', 'action' => 'ajax_get_key_results', 'goal_id' => $goal['Goal']['id'], true];
-                        // if ($type == "follow") {
-                        //     $url = ['controller' => 'goals', 'action' => 'ajax_get_key_results', 'goal_id' => $goal['Goal']['id']];
-                        // }
-                        ?>
-
-                        <!-- <?php if (count($goal['KeyResult']) > 0) { ?>
-                            <a href="#"
-                               class="link-dark-gray toggle-ajax-get pull-left btn-white bd-radius_14px p_4px font_12px lh_18px"
-                               target-id="KeyResults_<?= $goal['Goal']['id'] ?>"
-                               ajax-url="<?= $this->Html->url($url) ?>"
-                               id="KRsOpen_<?= $goal['Goal']['id'] ?>"
-                                >
-                                <i class="fa fa-caret-down feed-arrow lh_18px"></i>
-                                <?= __d('gl', "達成要素をみる") ?>(<?= count($goal['KeyResult']) ?>)
-                            </a>
-                            <?php if ($goal['Goal']['action_result_count'] > 0): ?>
-                                <a class="goalsCard-activity inline-block font_gray-brownRed pointer"
-                                   id="ActionListOpen_<?= $goal['Goal']['id'] ?>"
-                                   href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_actions', 'goal_id' => $goal['Goal']['id'], 'page_type' => 'list']) ?>">
-                                    <i class="fa fa-check-circle mr_1px font_brownRed"></i><span
-                                        class="ls_number"><?= $goal['Goal']['action_result_count'] ?></span>
-                                </a>
-                            <?php else: ?>
-                                <div class="goalsCard-activity0 inline-block">
-                                    <i class="fa fa-check-circle mr_1px"></i><span
-                                        class="ls_number">0</span>
-                                </div>
-                            <?php endif; ?>
-
-                        <?php }
-                        elseif ($type != "follow") { ?>
-                            <a class="font_lightGray-gray modal-ajax-get-add-key-result  goals-column-add-kr-btn"
-                               href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id']]) ?>">
-                                <i class="fa fa-plus-circle font_brownRed"></i>
-                                <span class="ml_2px"><?= __d('gl', "達成要素を追加") ?></span>
-                            </a>
-                        <?php } ?> -->
-
                     </div>
-                    <div class="none" id="KeyResults_<?= $goal['Goal']['id'] ?>"></div>
                 <?php endif; ?>
             </div>
         <?php else: ?>
