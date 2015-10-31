@@ -200,10 +200,11 @@ class GoalsController extends AppController
         $this->Pnotify->outSuccess(__d('gl', "ゴールを削除しました。"));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
-        $params_referer = Router::parse($this->referer(null,true));
-        if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home'){
+        $params_referer = Router::parse($this->referer(null, true));
+        if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home') {
             $this->redirect('/after_click:SubHeaderMenuGoal');
-        }else{
+        }
+        else {
             return $this->redirect($this->referer());
         }
     }
@@ -468,10 +469,11 @@ class GoalsController extends AppController
                                    $this->Goal->KeyResult->getLastInsertID());
         $this->_flashClickEvent("KRsOpen_" . $goal_id);
         $this->Pnotify->outSuccess(__d('gl', "達成要素を追加しました。"));
-        $params_referer = Router::parse($this->referer(null,true));
-        if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home'){
+        $params_referer = Router::parse($this->referer(null, true));
+        if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home') {
             $this->redirect('/after_click:SubHeaderMenuGoal');
-        }else{
+        }
+        else {
             return $this->redirect($this->referer());
         }
     }
@@ -502,10 +504,11 @@ class GoalsController extends AppController
 
         $this->Pnotify->outSuccess(__d('gl', "成果を更新しました。"));
         /** @noinspection PhpVoidFunctionResultUsedInspection */
-        $params_referer = Router::parse($this->referer(null,true));
-        if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home'){
+        $params_referer = Router::parse($this->referer(null, true));
+        if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home') {
             $this->redirect('/after_click:SubHeaderMenuGoal');
-        }else{
+        }
+        else {
             return $this->redirect($this->referer());
         }
     }
@@ -560,10 +563,11 @@ class GoalsController extends AppController
 
         $this->_flashClickEvent("KRsOpen_" . $key_result['KeyResult']['goal_id']);
 
-        $params_referer = Router::parse($this->referer(null,true));
-        if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home'){
+        $params_referer = Router::parse($this->referer(null, true));
+        if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home') {
             $this->redirect('/after_click:SubHeaderMenuGoal');
-        }else{
+        }
+        else {
             return $this->redirect($this->referer());
         }
         /** @noinspection PhpVoidFunctionResultUsedInspection */
@@ -592,10 +596,11 @@ class GoalsController extends AppController
         $this->_flashClickEvent("KRsOpen_" . $key_result['KeyResult']['goal_id']);
         $this->Pnotify->outSuccess(__d('gl', "成果を未完了にしました。"));
         /** @noinspection PhpVoidFunctionResultUsedInspection */
-        $params_referer = Router::parse($this->referer(null,true));
-        if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home'){
+        $params_referer = Router::parse($this->referer(null, true));
+        if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home') {
             $this->redirect('/after_click:SubHeaderMenuGoal');
-        }else{
+        }
+        else {
             return $this->redirect($this->referer());
         }
     }
@@ -628,10 +633,11 @@ class GoalsController extends AppController
         $this->Pnotify->outSuccess(__d('gl', "成果を削除しました。"));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
-        $params_referer = Router::parse($this->referer(null,true));
-        if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home'){
+        $params_referer = Router::parse($this->referer(null, true));
+        if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home') {
             $this->redirect('/after_click:SubHeaderMenuGoal');
-        }else{
+        }
+        else {
             return $this->redirect($this->referer());
         }
     }
@@ -748,6 +754,11 @@ class GoalsController extends AppController
         $this->_ajaxPreProcess();
 
         $goal_id = $this->request->params['named']['goal_id'];
+        //除外する件数
+        $extract_count = 0;
+        if (isset($this->request->params['named']['extract_count'])) {
+            $extract_count = $this->request->params['named']['extract_count'];
+        }
 
         // テンプレを切り替える場合に指定する
         $view = isset($this->request->params['named']['view']) ? $this->request->params['named']['view'] : null;
@@ -765,6 +776,14 @@ class GoalsController extends AppController
             'page'  => $page,
             'limit' => $limit,
         ]);
+        if (!empty($key_results) && $extract_count > 0) {
+            foreach ($key_results as $k => $v) {
+                unset($key_results[$k]);
+                if (--$extract_count === 0) {
+                    break;
+                }
+            }
+        }
 
         // 未完了のキーリザルト数
         $incomplete_kr_count = $this->Goal->KeyResult->getIncompleteKrCount($goal_id);
@@ -1127,7 +1146,8 @@ class GoalsController extends AppController
                         $record['target_value'] = (double)$c_v['Goal']['target_value'];
                         $record['start_value'] = (double)$c_v['Goal']['start_value'];
                         $record['end_date'] = date("Y/m/d", $c_v['Goal']['end_date'] + $goal_term['timezone'] * HOUR);
-                        $record['start_date'] = date("Y/m/d", $c_v['Goal']['start_date'] + $goal_term['timezone'] * HOUR);
+                        $record['start_date'] = date("Y/m/d",
+                                                     $c_v['Goal']['start_date'] + $goal_term['timezone'] * HOUR);
                         $record['description'] = $c_v['Goal']['description'];
                         $record['priority'] = $c_v['priority'];
 
@@ -1294,8 +1314,8 @@ class GoalsController extends AppController
         $priority_list = $this->Goal->priority_list;
         $kr_priority_list = $this->Goal->KeyResult->priority_list;
         $kr_value_unit_list = KeyResult::$UNIT;
-        $current_term =  $this->Team->EvaluateTerm->getCurrentTermData();
-        $next_term =  $this->Team->EvaluateTerm->getNextTermData();
+        $current_term = $this->Team->EvaluateTerm->getCurrentTermData();
+        $next_term = $this->Team->EvaluateTerm->getNextTermData();
         $current_term_start_date_format = date('Y/m/d', $current_term['start_date'] + $current_term['timezone'] * HOUR);
         $current_term_end_date_format = date('Y/m/d', $current_term['end_date'] + $current_term['timezone'] * HOUR);
         $next_term_start_date_format = date('Y/m/d', $next_term['start_date'] + $next_term['timezone'] * HOUR);
@@ -1313,8 +1333,8 @@ class GoalsController extends AppController
 
             // ゴールが来期のものかチェック
             if ($next_term['start_date'] <= $this->request->data['Goal']['end_date'] &&
-                $this->request->data['Goal']['end_date'] <= $next_term['end_date'])
-            {
+                $this->request->data['Goal']['end_date'] <= $next_term['end_date']
+            ) {
                 $this->request->data['Goal']['term_type'] = 'next';
             }
         }

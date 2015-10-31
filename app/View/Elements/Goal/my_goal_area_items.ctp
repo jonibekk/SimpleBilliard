@@ -31,7 +31,8 @@
                 }
             }
             ?>
-            <div class="dashboard-goals-card-vertical-line" style="height: <?= $kr_line_height ?>px;"></div>
+            <div class="dashboard-goals-card-vertical-line" style="height: <?= $kr_line_height ?>px;"
+                 id="KRsVerticalLine_<?= $goal['Goal']['id'] ?>"></div>
             <?php else: ?>
                 dashboard-goals-card-header-noname">
             <?php endif; ?>
@@ -196,8 +197,13 @@
                                                 'incomplete_kr_count' => count($goal['IncompleteKeyResult'])
                                                ]); ?>
                             <?php if (count($goal['KeyResult']) > 2): ?>
-                                <li class="dashboard-goals-card-body-krs-ellipsis">
-                                    <a href="" class="dashboard-goals-card-body-krs-ellipsis-link">
+                                <li class="dashboard-goals-card-body-krs-ellipsis"
+                                    id="KrRemainOpenWrap_<?= $goal['Goal']['id'] ?>">
+                                    <a href="#" target-id="KrRemainOpenWrap_<?= $goal['Goal']['id'] ?>"
+                                       ajax-url="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_key_results', 'goal_id' => $goal['Goal']['id'], 'extract_count' => 2, true]) ?>"
+                                       id="KRsOpen_<?= $goal['Goal']['id'] ?>"
+                                       kr-line-id="KRsVerticalLine_<?= $goal['Goal']['id'] ?>"
+                                       class="replace-ajax-get-kr-list dashboard-goals-card-body-krs-ellipsis-link">
                                         <i class="fa fa-ellipsis-v dashboard-goals-card-krs-ellipsis-icon"></i>
 
                                         <p class="dashboard-goals-card-body-krs-ellipsis-number"><?= count($goal['IncompleteKeyResult']) + count($goal['CompleteKeyResult']) - 2 ?>

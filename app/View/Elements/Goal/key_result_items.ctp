@@ -18,6 +18,9 @@ if (!isset($is_init)) {
 if (!isset($kr_can_edit)) {
     $kr_can_edit = false;
 }
+if (isset($key_results[key($key_results)]['KeyResult'])) {
+    $key_results = Hash::extract($key_results, '{n}.KeyResult');
+}
 ?>
 
 <!-- START app/View/Elements/Goal/key_result_items.ctp -->
@@ -73,7 +76,7 @@ if ($is_init) {
     </li>
 
     <?php
-    if ($count++ == $limit_count) {
+    if ($is_init && $count++ == $limit_count) {
         break;
     }
     ?>
