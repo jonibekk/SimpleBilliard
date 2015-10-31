@@ -39,7 +39,7 @@ if ($is_init) {
 
                 <p class="<?= $kr['completed'] ? "dashboard-goals-card-body-krs-title-achieved" : "dashboard-goals-card-body-krs-title-unachieved" ?>"><?= h($kr['name']) ?></p>
             </a>
-            <?= $this->element('Goal/key_result_edit_button', ['kr' => $kr, 'without_dropdown_link' => true]) ?>
+            <?= $this->element('Goal/key_result_edit_menu_dropdown', ['kr' => $kr, 'without_dropdown_link' => true]) ?>
         </div>
         <?php if (!$kr['completed']): ?>
             <a href="#" form-id="kr_achieve_<?= $kr['id'] ?>"
@@ -98,7 +98,7 @@ if ($is_init) {
                     </div>
                 </div>
                 <?php if ($kr_can_edit): ?>
-                    <?= $this->element('Goal/key_result_edit_button', ['kr' => $kr]) ?>
+                    <?= $this->element('Goal/key_result_edit_menu_dropdown', ['kr' => $kr]) ?>
                 <?php endif; ?>
             </div>
         <?php endforeach ?>
