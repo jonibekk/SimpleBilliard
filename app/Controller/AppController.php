@@ -233,7 +233,7 @@ class AppController extends Controller
                 $this->_setAllAlertCnt();
                 $this->_setNotifyCnt();
                 $this->_setMyCircle();
-                $this->set('current_term',$this->Team->EvaluateTerm->getCurrentTermData());
+                $this->set('current_term', $this->Team->EvaluateTerm->getCurrentTermData());
 
             }
             $this->_setMyMemberStatus();
@@ -662,9 +662,6 @@ class AppController extends Controller
         $collabo_goals = $this->Goal->getMyCollaboGoals(MY_COLLABO_GOALS_DISPLAY_NUMBER, 1, 'all', null, $start_date,
                                                         $end_date);
         $collabo_goals_count = $this->Goal->getMyCollaboGoals(null, 1, 'count', null, $start_date, $end_date);
-        $follow_goals = $this->Goal->getMyFollowedGoals(MY_FOLLOW_GOALS_DISPLAY_NUMBER, 1, 'all', null, $start_date,
-                                                        $end_date);
-        $follow_goals_count = $this->Goal->getMyFollowedGoals(null, 1, 'count', null, $start_date, $end_date);
         $my_previous_goals = $this->Goal->getMyPreviousGoals(MY_PREVIOUS_GOALS_DISPLAY_NUMBER);
         $my_previous_goals_count = $this->Goal->getMyPreviousGoals(null, 1, 'count');
         //TODO 暫定的にアクションの候補を自分のゴールにする。あとでajax化する
@@ -673,8 +670,8 @@ class AppController extends Controller
         $goal_list_for_action_option = [null => __d('gl', 'ゴールを選択する')] + $goal_list_for_action_option;
         //vision
         $vision = $this->Team->TeamVision->getDisplayVisionRandom();
-        $this->set(compact('vision', 'goal_list_for_action_option', 'my_goals', 'collabo_goals', 'follow_goals',
-                           'my_goals_count', 'collabo_goals_count', 'follow_goals_count', 'my_previous_goals',
+        $this->set(compact('vision', 'goal_list_for_action_option', 'my_goals', 'collabo_goals',
+                           'my_goals_count', 'collabo_goals_count', 'my_previous_goals',
                            'my_previous_goals_count'));
     }
 
