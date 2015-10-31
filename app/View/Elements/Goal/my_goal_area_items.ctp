@@ -163,16 +163,6 @@
         <?php if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])): ?>
             <div class="dashboard-goals-card-body shadow-default">
                 <?php if (isset($goal['Goal']['id'])): ?>
-
-                    <!-- ToDo - 大樹さん。 Progressをアイコンで表す処理の実装が終わればここは必要ないので削除願います。 -->
-                    <!-- <div class="progress mb_0px goals-column-progress-bar">
-                        <div class="progress-bar progress-bar-info" role="progressbar"
-                              aria-valuemin="0"
-                             aria-valuemax="100" style="width: <?= h($goal['Goal']['progress']) ?>%;">
-                            <span class="ml_12px"><?= h($goal['Goal']['progress']) ?>%</span>
-                        </div>
-                    </div> -->
-
                     <div class="goalsCard-krSeek">
                         <?php if (isset($goal['Goal']['end_date']) && !empty($goal['Goal']['end_date'])): ?>
 
