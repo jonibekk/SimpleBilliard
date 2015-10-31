@@ -25,7 +25,8 @@
                 'id'            => 'InsightForm',
                 'type'          => 'get',
             ]); ?>
-            <?= $this->element('Team/insight_form_input', ['use' => ['team', 'date_range', 'group', 'timezone']]) ?>
+            <?= $this->element('Team/insight_form_input',
+                               ['use' => ['team', 'date_range', 'group', 'timezone', 'graph_type']]) ?>
             <?= $this->Form->end() ?>
 
             <div id="InsightResult" class="mt_18px"></div>

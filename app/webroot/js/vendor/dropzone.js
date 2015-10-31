@@ -1072,6 +1072,7 @@
       img = document.createElement("img");
       img.onload = (function(_this) {
         return function() {
+
           var canvas, ctx, resizeInfo, thumbnail, _ref, _ref1, _ref2, _ref3;
           file.width = img.width;
           file.height = img.height;

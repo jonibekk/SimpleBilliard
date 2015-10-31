@@ -451,6 +451,26 @@ class Post extends AppModel
         return $res;
     }
 
+    public function getAllPostsForTeamCircle($pids)
+    {
+        $options = [
+            'conditions' => [
+                'id'  => $pids,
+                'NOT' => [
+                    'type' => [
+                        self::TYPE_ACTION,
+                        self::TYPE_CREATE_GOAL,
+                        self::TYPE_GOAL_COMPLETE,
+                        self::TYPE_KR_COMPLETE
+                    ]
+                ]
+            ],
+            'fields'     => ['id', 'id']
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
     public function getPostById($post_id)
     {
         $options = [
@@ -542,10 +562,16 @@ class Post extends AppModel
                 if (!$is_exists_circle || ($is_secret && !$is_belong_circle_member)) {
                     throw new RuntimeException(__d('gl', "サークルが存在しないか、権限がありません。"));
                 }
+
                 $p_list = array_merge($p_list,
                                       $this->PostShareCircle->getMyCirclePostList($start, $end, 'modified', 'desc',
                                                                                   1000, $this->orgParams['circle_id'],
                                                                                   PostShareCircle::SHARE_TYPE_SHARED));
+
+                if ($this->Circle->isTeamAllCircle($this->orgParams['circle_id'])) {
+                    $p_list = $this->getAllPostsForTeamCircle($p_list);
+                }
+
             }
             //単独投稿指定
             elseif ($this->orgParams['post_id']) {
