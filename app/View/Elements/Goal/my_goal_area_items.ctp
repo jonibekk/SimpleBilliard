@@ -209,7 +209,7 @@
                                     <p class="dashboard-goals-card-body-add-kr-contents"><?= __d('gl', "達成要素を追加") ?></p>
                                 </a>
 
-                                <p class="dashboard-goals-card-body-goal-status">認定待ち</p>
+                                <p class="dashboard-goals-card-body-goal-status"><?= Collaborator::$STATUS[$goal['MyCollabo'][0]['valued_flg']]?></p>
                             </li>
                         </ul>
 
