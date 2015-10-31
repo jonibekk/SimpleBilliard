@@ -201,7 +201,8 @@
                                 </li>
                             <? endif; ?>
                             <li class="dashboard-goals-card-body-add-kr clearfix">
-                                <a class="dashboard-goals-card-body-add-kr-link" href="">
+                                <a class="dashboard-goals-card-body-add-kr-link modal-ajax-get-add-key-result"
+                                   href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id']]) ?>">
                                     <hr class="dashboard-goals-card-horizontal-line">
                                     <i class="fa fa-plus dashboard-goals-card-body-add-kr-icon"></i>
 
