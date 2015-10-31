@@ -18,38 +18,41 @@
         <div class="
             <?php if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])): ?>
                 dashboard-goals-card-header">
-                <!-- ToDo. タテ線。
-                    heightの値をKRの数、KRをすべて開いているか閉じているかで変化させる必要あり。
-                    KRが1つ -> 104px;
-                    KRが2つ -> 168px; (+64px)
-                    KRが3つ -> 232px; (+64px)
-                    といった具合に64pxずつ追加してください。
-                    KRが閉じているときは、KRが3つのときと高さは変わりません。
-                    - - -
-                    また、ゴール名が2行になっているかどうかを考える必要性あり。
-                    ゴール名が2行になっている場合は、プラス20px;
-                    -> 本件、ゴール表示を1行にすることで解決。
-                -->
-                <div class="dashboard-goals-card-vertical-line" style="height: 232px;"></div>
+            <!-- ToDo. タテ線。
+                heightの値をKRの数、KRをすべて開いているか閉じているかで変化させる必要あり。
+                KRが1つ -> 104px;
+                KRが2つ -> 168px; (+64px)
+                KRが3つ -> 232px; (+64px)
+                といった具合に64pxずつ追加してください。
+                KRが閉じているときは、KRが3つのときと高さは変わりません。
+                - - -
+                また、ゴール名が2行になっているかどうかを考える必要性あり。
+                ゴール名が2行になっている場合は、プラス20px;
+                -> 本件、ゴール表示を1行にすることで解決。
+            -->
+            <div class="dashboard-goals-card-vertical-line" style="height: 232px;"></div>
             <?php else: ?>
                 dashboard-goals-card-header-noname">
             <?php endif; ?>
-            <i class="dashboard-goals-card-header-icon fa fa-flag-o jsGoalsCardProgress" goalProgPercent="50">
+            <i class="dashboard-goals-card-header-icon fa fa-flag-o jsGoalsCardProgress"
+               goalProgPercent="<?= isset($goal['Goal']['progress']) ? $goal['Goal']['progress'] : 0 ?>">
             </i>
+
             <div class="dashboard-goals-card-header-title">
                 <?php if (empty($goal['Goal'])): ?>
-                        <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add', 'purpose_id' => $goal['Purpose']['id'], 'mode' => 2]) ?>"
-                           class="dashboard-goals-card-header-goal-set">
-                           <i class="fa fa-plus-circle dashboard-goals-card-header-goal-set-icon"></i><?= __d('gl', '基準を追加する') ?>
-                            <!-- <div class="goals-column-add-icon"></div>
-                            <div class="goals-column-add-text font_12px"></div> -->
-                        </a>
+                    <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add', 'purpose_id' => $goal['Purpose']['id'], 'mode' => 2]) ?>"
+                       class="dashboard-goals-card-header-goal-set">
+                        <i class="fa fa-plus-circle dashboard-goals-card-header-goal-set-icon"></i><?= __d('gl',
+                                                                                                           '基準を追加する') ?>
+                        <!-- <div class="goals-column-add-icon"></div>
+                        <div class="goals-column-add-text font_12px"></div> -->
+                    </a>
                 <?php else: ?>
                     <div class="dashboard-goals-card-header-goal-wrap">
                         <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal['Goal']['id']]) ?>"
                            class="">
                             <p class="dashboard-goals-card-header-goal">
-                                  <?= h($goal['Goal']['name']) ?>
+                                <?= h($goal['Goal']['name']) ?>
                             </p>
                         </a>
                     </div>
@@ -197,7 +200,7 @@
 
 
                         <?php
-                            echo $this->element('Goal/key_result_items');
+                        echo $this->element('Goal/key_result_items');
                         ?>
 
                         <?php
