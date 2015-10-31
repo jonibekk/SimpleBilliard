@@ -190,13 +190,18 @@
 
                         <ul class="dashboard-goals-card-body-krs-wrap">
                             <?= $this->element('Goal/key_result_items',
-                                               ['key_results' => $goal['KeyResult'], 'is_init' => true, 'kr_can_edit' => true, 'goal_id' => $goal['Goal']['id']]); ?>
+                                               ['key_results'         => $goal['KeyResult'],
+                                                'is_init'             => true, 'kr_can_edit' => true,
+                                                'goal_id'             => $goal['Goal']['id'],
+                                                'incomplete_kr_count' => count($goal['IncompleteKeyResult'])
+                                               ]); ?>
                             <?php if (count($goal['KeyResult']) > 2): ?>
                                 <li class="dashboard-goals-card-body-krs-ellipsis">
                                     <a href="" class="dashboard-goals-card-body-krs-ellipsis-link">
                                         <i class="fa fa-ellipsis-v dashboard-goals-card-krs-ellipsis-icon"></i>
 
-                                        <p class="dashboard-goals-card-body-krs-ellipsis-number">3+</p>
+                                        <p class="dashboard-goals-card-body-krs-ellipsis-number"><?= count($goal['IncompleteKeyResult']) + count($goal['CompleteKeyResult']) - 2 ?>
+                                            +</p>
                                     </a>
                                 </li>
                             <? endif; ?>
@@ -209,7 +214,7 @@
                                     <p class="dashboard-goals-card-body-add-kr-contents"><?= __d('gl', "達成要素を追加") ?></p>
                                 </a>
 
-                                <p class="dashboard-goals-card-body-goal-status"><?= Collaborator::$STATUS[$goal['MyCollabo'][0]['valued_flg']]?></p>
+                                <p class="dashboard-goals-card-body-goal-status"><?= Collaborator::$STATUS[$goal['MyCollabo'][0]['valued_flg']] ?></p>
                             </li>
                         </ul>
 

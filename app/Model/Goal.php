@@ -216,6 +216,9 @@ class Goal extends AppModel
         'IncompleteKeyResult' => [
             'className' => 'KeyResult'
         ],
+        'CompleteKeyResult'   => [
+            'className' => 'KeyResult'
+        ],
         'Collaborator'        => [
             'dependent' => true,
         ],
@@ -419,10 +422,11 @@ class Goal extends AppModel
      * @param null   $user_id
      * @param int    $start_date
      * @param int    $end_date
+     * @param null   $kr_limit
      *
      * @return array
      */
-    function getMyGoals($limit = null, $page = 1, $type = "all", $user_id = null, $start_date = null, $end_date = null)
+    function getMyGoals($limit = null, $page = 1, $type = "all", $user_id = null, $start_date = null, $end_date = null, $kr_limit = null)
     {
         $user_id = !$user_id ? $this->my_uid : $user_id;
         $start_date = !$start_date ? $this->Team->EvaluateTerm->getCurrentTermData()['start_date'] : $start_date;
@@ -435,20 +439,42 @@ class Goal extends AppModel
                 'Goal.end_date <=' => $end_date,
             ],
             'contain'    => [
-                'MyCollabo'  => [
+                'MyCollabo'           => [
                     'conditions' => [
                         'MyCollabo.user_id' => $this->my_uid
                     ]
                 ],
-                'KeyResult'  => [
+                'KeyResult'           => [
                     //KeyResultは期限が今期内
                     'conditions' => [
                         'KeyResult.end_date >=' => $start_date,
                         'KeyResult.end_date <=' => $end_date,
                     ]
                 ],
+                'IncompleteKeyResult' => [
+                    'conditions' => [
+                        'IncompleteKeyResult.completed'   => null,
+                        'IncompleteKeyResult.end_date >=' => $start_date,
+                        'IncompleteKeyResult.end_date <=' => $end_date,
+                    ],
+                    'fields'     => [
+                        'IncompleteKeyResult.id'
+                    ]
+                ],
+                'CompleteKeyResult'   => [
+                    'conditions' => [
+                        'NOT'                           => [
+                            'CompleteKeyResult.completed' => null,
+                        ],
+                        'CompleteKeyResult.end_date >=' => $start_date,
+                        'CompleteKeyResult.end_date <=' => $end_date,
+                    ],
+                    'fields'     => [
+                        'CompleteKeyResult.id'
+                    ]
+                ],
                 'Purpose',
-                'Evaluation' => [
+                'Evaluation'          => [
                     'conditions' => [
                         'Evaluation.evaluatee_user_id' => $user_id,
                     ],
@@ -459,6 +485,9 @@ class Goal extends AppModel
             'limit'      => $limit,
             'page'       => $page
         ];
+        if ($kr_limit) {
+            $options['contain']['KeyResult']['limit'] = $kr_limit;
+        }
         if ($type == "count") {
             unset($options['contain']);
             return $this->find($type, $options);
@@ -593,15 +622,37 @@ class Goal extends AppModel
                 'Goal.id' => $goal_ids,
             ],
             'contain'    => [
-                'MyCollabo'  => [
+                'MyCollabo'           => [
                     'conditions' => [
                         'MyCollabo.user_id' => $this->my_uid
                     ]
                 ],
-                'KeyResult'  => [
+                'KeyResult'           => [
+                ],
+                'IncompleteKeyResult' => [
+                    'conditions' => [
+                        'IncompleteKeyResult.completed'   => null,
+                        'IncompleteKeyResult.end_date >=' => $start_date,
+                        'IncompleteKeyResult.end_date <=' => $end_date,
+                    ],
+                    'fields'     => [
+                        'IncompleteKeyResult.id'
+                    ]
+                ],
+                'CompleteKeyResult'   => [
+                    'conditions' => [
+                        'NOT'                           => [
+                            'CompleteKeyResult.completed' => null,
+                        ],
+                        'CompleteKeyResult.end_date >=' => $start_date,
+                        'CompleteKeyResult.end_date <=' => $end_date,
+                    ],
+                    'fields'     => [
+                        'CompleteKeyResult.id'
+                    ]
                 ],
                 'Purpose',
-                'Evaluation' => [
+                'Evaluation'          => [
                     'conditions' => [
                         'Evaluation.evaluatee_user_id' => $this->my_uid,
                     ],
@@ -939,7 +990,7 @@ class Goal extends AppModel
             'limit'      => $limit,
             'contain'    => [
                 'Purpose',
-                'KeyResult' => [
+                'KeyResult'           => [
                     //KeyResultは期限が今期内
                     'conditions' => [
                         'KeyResult.end_date >=' => $start_date,
@@ -952,7 +1003,29 @@ class Goal extends AppModel
                         'KeyResult.completed',
                     ],
                 ],
-                'MyCollabo' => [
+                'IncompleteKeyResult' => [
+                    'conditions' => [
+                        'IncompleteKeyResult.completed'   => null,
+                        'IncompleteKeyResult.end_date >=' => $start_date,
+                        'IncompleteKeyResult.end_date <=' => $end_date,
+                    ],
+                    'fields'     => [
+                        'IncompleteKeyResult.id'
+                    ]
+                ],
+                'CompleteKeyResult'   => [
+                    'conditions' => [
+                        'NOT'                           => [
+                            'CompleteKeyResult.completed' => null,
+                        ],
+                        'CompleteKeyResult.end_date >=' => $start_date,
+                        'CompleteKeyResult.end_date <=' => $end_date,
+                    ],
+                    'fields'     => [
+                        'CompleteKeyResult.id'
+                    ]
+                ],
+                'MyCollabo'           => [
                     'conditions' => [
                         'MyCollabo.user_id' => $this->my_uid
                     ]
