@@ -45,8 +45,6 @@
                        class="dashboard-goals-card-header-goal-set">
                         <i class="fa fa-plus-circle dashboard-goals-card-header-goal-set-icon"></i><?= __d('gl',
                                                                                                            '基準を追加する') ?>
-                        <!-- <div class="goals-column-add-icon"></div>
-                        <div class="goals-column-add-text font_12px"></div> -->
                     </a>
                 <?php else: ?>
                     <div class="dashboard-goals-card-header-goal-wrap">
@@ -190,9 +188,29 @@
                         <?php endif; ?>
 
 
-                        <?php
-                        echo $this->element('Goal/key_result_items');
-                        ?>
+                        <ul class="dashboard-goals-card-body-krs-wrap">
+                            <?= $this->element('Goal/key_result_items',
+                                               ['key_results' => $goal['KeyResult'], 'is_init' => true, 'kr_can_edit' => true, 'goal_id' => $goal['Goal']['id']]); ?>
+                            <?php if (count($goal['KeyResult']) > 2): ?>
+                                <li class="dashboard-goals-card-body-krs-ellipsis">
+                                    <a href="" class="dashboard-goals-card-body-krs-ellipsis-link">
+                                        <i class="fa fa-ellipsis-v dashboard-goals-card-krs-ellipsis-icon"></i>
+
+                                        <p class="dashboard-goals-card-body-krs-ellipsis-number">3+</p>
+                                    </a>
+                                </li>
+                            <? endif; ?>
+                            <li class="dashboard-goals-card-body-add-kr clearfix">
+                                <a class="dashboard-goals-card-body-add-kr-link" href="">
+                                    <hr class="dashboard-goals-card-horizontal-line">
+                                    <i class="fa fa-plus dashboard-goals-card-body-add-kr-icon"></i>
+
+                                    <p class="dashboard-goals-card-body-add-kr-contents"><?= __d('gl', "達成要素を追加") ?></p>
+                                </a>
+
+                                <p class="dashboard-goals-card-body-goal-status">認定待ち</p>
+                            </li>
+                        </ul>
 
                         <?php
                         // $url = ['controller' => 'goals', 'action' => 'ajax_get_key_results', 'goal_id' => $goal['Goal']['id'], true];
