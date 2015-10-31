@@ -3211,6 +3211,37 @@ Temporary Properties - YOU MUST FIX
     height: 100px;
 }
 
+.insight-graph-type-button {
+    border-color: #ddd !important;
+}
+
+.insight-graph-type-button.active {
+    background-color: #f8f8f8;
+}
+
+.insight-graph-type-button:hover {
+    color: #6d6e71;
+}
+
+.insight-graph-icon {
+    color: #a1a1a1;
+    font-size:16px;
+    line-height:16px;
+    vertical-align:middle
+}
+
+.insight-graph-tooltip {
+    position: absolute;
+    display: none;
+    border: 1px solid #ccc;
+    padding: 5px;
+    width: 55px;
+    text-align: center;
+    vertical-align: middle;
+    background-color: #fff;
+}
+
+ 
 .add-vision-button.disabled {
     color: #aaa;
     border: 1px solid #aaa;

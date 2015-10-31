@@ -1011,6 +1011,27 @@ class PostTest extends CakeTestCase
         $this->assertEquals($data['body'], $res['Post']['body']);
     }
 
+    function testGetAllPostsForTeamCircle()
+    {
+        $data = [
+            [
+                'user_id' => 1,
+                'team_id' => 1,
+                'body'    => 'test'
+            ],
+        ];
+        $this->Post->create();
+        $this->Post->save($data);
+        $post_id_1 = $this->Post->getLastInsertID();
+        $this->Post->create();
+        $this->Post->save($data);
+        $post_id_2 = $this->Post->getLastInsertID();
+
+        $this->assertNotEmpty($this->Post->getAllPostsForTeamCircle([$post_id_1, $post_id_2]));
+        $this->assertCount(2, $this->Post->getAllPostsForTeamCircle([$post_id_1, $post_id_2]));
+
+    }
+
     function testGetPhotoPath()
     {
         $data = [

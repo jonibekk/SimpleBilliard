@@ -23,24 +23,24 @@ $use = isset($use) ? $use : [];
         'id'      => 'InsightInputDateRange',
         'type'    => 'select',
         'options' => [
-            'current_week' => __d('gl', '今週') . sprintf(" (%s - %s)",
-                                                        str_replace('-', '/', $date_ranges['current_week']['start']),
-                                                        str_replace('-', '/', $date_ranges['current_week']['end'])),
-            'prev_week'    => __d('gl', '先週') . sprintf(" (%s - %s)",
-                                                        str_replace('-', '/', $date_ranges['prev_week']['start']),
-                                                        str_replace('-', '/', $date_ranges['prev_week']['end'])),
-            'current_month'   => __d('gl', '今月') . sprintf(" (%s - %s)",
-                                                        str_replace('-', '/', $date_ranges['current_month']['start']),
-                                                        str_replace('-', '/', $date_ranges['current_month']['end'])),
-            'prev_month'   => __d('gl', '先月') . sprintf(" (%s - %s)",
-                                                        str_replace('-', '/', $date_ranges['prev_month']['start']),
-                                                        str_replace('-', '/', $date_ranges['prev_month']['end'])),
-            'current_term' => __d('gl', '今期') . sprintf(" (%s - %s)",
-                                                        str_replace('-', '/', $date_ranges['current_term']['start']),
-                                                        str_replace('-', '/', $date_ranges['current_term']['end'])),
-            'prev_term' => __d('gl', '前期') . sprintf(" (%s - %s)",
-                                                        str_replace('-', '/', $date_ranges['prev_term']['start']),
-                                                        str_replace('-', '/', $date_ranges['prev_term']['end'])),
+            'current_week'  => __d('gl', '今週') . sprintf(" (%s - %s)",
+                                                         str_replace('-', '/', $date_ranges['current_week']['start']),
+                                                         str_replace('-', '/', $date_ranges['current_week']['end'])),
+            'prev_week'     => __d('gl', '先週') . sprintf(" (%s - %s)",
+                                                         str_replace('-', '/', $date_ranges['prev_week']['start']),
+                                                         str_replace('-', '/', $date_ranges['prev_week']['end'])),
+            'current_month' => __d('gl', '今月') . sprintf(" (%s - %s)",
+                                                         str_replace('-', '/', $date_ranges['current_month']['start']),
+                                                         str_replace('-', '/', $date_ranges['current_month']['end'])),
+            'prev_month'    => __d('gl', '先月') . sprintf(" (%s - %s)",
+                                                         str_replace('-', '/', $date_ranges['prev_month']['start']),
+                                                         str_replace('-', '/', $date_ranges['prev_month']['end'])),
+            'current_term'  => __d('gl', '今期') . sprintf(" (%s - %s)",
+                                                         str_replace('-', '/', $date_ranges['current_term']['start']),
+                                                         str_replace('-', '/', $date_ranges['current_term']['end'])),
+            'prev_term'     => __d('gl', '前期') . sprintf(" (%s - %s)",
+                                                         str_replace('-', '/', $date_ranges['prev_term']['start']),
+                                                         str_replace('-', '/', $date_ranges['prev_term']['end'])),
         ]]) ?>
 <?php endif ?>
 
@@ -80,5 +80,25 @@ $use = isset($use) ? $use : [];
                       '-8'  => __d('gl', '(GMT-08:00) 太平洋標準時 (アメリカ & カナダ)')
         ]])
     ?>
+<?php endif ?>
+
+<?php if (in_array('graph_type', $use)): ?>
+    <div class="form-group text-align_r">
+        <label class="insight-graph-icon"><i class="fa fa-area-chart"></i>&nbsp;:&nbsp; </label>
+        <div class="btn-group" data-toggle="buttons" id="InsightGraphTypeButtonGroup">
+            <label class="btn insight-graph-type-button" data-value="term" disabled="disabled">
+                <input type="radio" name="graph_type" value="term"> <?= __d('gl', '期') ?>
+            </label>
+            <label class="btn insight-graph-type-button" data-value="month" disabled="disabled">
+                <input type="radio" name="graph_type" value="month"> <?= __d('gl', '月') ?>
+            </label>
+            <label class="btn insight-graph-type-button" data-value="week" disabled="disabled">
+                <input type="radio" name="graph_type" value="week"> <?= __d('gl', '週') ?>
+            </label>
+            <label class="btn insight-graph-type-button" data-value="day" disabled="disabled">
+                <input type="radio" name="graph_type" value="day"> <?= __d('gl', '日') ?>
+            </label>
+        </div>
+    </div>
 <?php endif ?>
 <!-- END app/View/Elements/Team/insight_form_input.ctp -->

@@ -38,6 +38,7 @@ echo $this->Html->script('vendor/imagesloaded.pkgd.min');
 echo $this->Html->script('vendor/bootstrap.youtubepopup');
 echo $this->Html->script('vendor/require');
 echo $this->Html->script('gl_basic');
+echo $this->Html->script('vendor/exif');
 echo $this->Html->script('goalous.min');
 ?>
 <!--suppress JSDuplicatedDeclaration -->
@@ -172,6 +173,7 @@ echo $this->Html->script('goalous.min');
             insight: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_insight']) ?>",
             insight_circle: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_insight_circle']) ?>",
             insight_ranking: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_insight_ranking']) ?>",
+            insight_graph: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_insight_graph']) ?>",
             validate_email: "<?= $this->Html->url(['controller' => 'users', 'action' => 'ajax_validate_email']) ?>",
             join_circle: "<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_join_circle']) ?>"
         },
