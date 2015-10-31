@@ -18,19 +18,20 @@
         <div class="
             <?php if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])): ?>
                 dashboard-goals-card-header">
-            <!-- ToDo. タテ線。
-                heightの値をKRの数、KRをすべて開いているか閉じているかで変化させる必要あり。
-                KRが1つ -> 104px;
-                KRが2つ -> 168px; (+64px)
-                KRが3つ -> 232px; (+64px)
-                といった具合に64pxずつ追加してください。
-                KRが閉じているときは、KRが3つのときと高さは変わりません。
-                - - -
-                また、ゴール名が2行になっているかどうかを考える必要性あり。
-                ゴール名が2行になっている場合は、プラス20px;
-                -> 本件、ゴール表示を1行にすることで解決。
-            -->
-            <div class="dashboard-goals-card-vertical-line" style="height: 232px;"></div>
+            <?php
+            //Changing the height of the vertical lines by the number of KR | 縦線の高さをKRの数によって変化させる
+            $kr_line_height = 40;
+            $kr_count = count($goal['KeyResult']);
+            if ($kr_count > 0) {
+                if ($kr_count >= 3) {
+                    $kr_line_height = 232;
+                }
+                else {
+                    $kr_line_height += 64 * $kr_count;
+                }
+            }
+            ?>
+            <div class="dashboard-goals-card-vertical-line" style="height: <?= $kr_line_height ?>px;"></div>
             <?php else: ?>
                 dashboard-goals-card-header-noname">
             <?php endif; ?>
