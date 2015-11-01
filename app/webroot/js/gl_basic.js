@@ -3515,6 +3515,23 @@ function updateListBox() {
     return false;
 }
 
+// reset bell notify num call from app.
+function resetBellNum(){
+    initBellNum();
+    var url = cake.url.g;
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: true,
+        success: function (data) {
+            // do nothing.
+        },
+        error: function () {
+            // do nothing.
+        }
+    });
+}
+
 function updateMessageListBox() {
     var $messageDropdown = $("#message-dropdown");
     $messageDropdown.empty();
@@ -3539,6 +3556,23 @@ function updateMessageListBox() {
         }
     });
     return false;
+}
+
+// reset bell message num call from app.
+function resetMessageNum(){
+    initMessageNum();
+    var url = cake.url.ag;
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: true,
+        success: function (data) {
+            // do nothing.
+        },
+        error: function () {
+            // do nothing.
+        }
+    });
 }
 
 function copyToClipboard(url) {
