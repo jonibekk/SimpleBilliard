@@ -4281,7 +4281,7 @@ msgstr "Achieve elements of this goal"
 
 #: View/Goals/view_krs.ctp:40
 msgid "達成要素を追加"
-msgstr "Add the achievement element."
+msgstr "Add Key Result."
 
 #: View/Goals/view_krs.ctp:47
 msgid "達成要素は登録されていません"
