@@ -791,8 +791,8 @@ class GoalsController extends AppController
         // ゴールが属している評価期間データ
         $goal_term = $this->Goal->getGoalTermData($goal_id);
         $current_term = $this->Goal->Team->EvaluateTerm->getCurrentTermData();
-        //今期の終了日以前にゴール終了日が設定されている場合はアクション追加可能
-        $can_add_action = $goal_term['end_date'] <= $current_term['end_date'] ? true : false;
+        //ゴールが今期の場合はアクション追加可能
+        $can_add_action = $goal_term['end_date'] === $current_term['end_date'] ? true : false;
         $this->set(compact('key_results', 'incomplete_kr_count', 'kr_can_edit', 'goal_id', 'goal_term',
                            'can_add_action'));
 
