@@ -469,11 +469,10 @@ class GoalsController extends AppController
                                    $this->Goal->KeyResult->getLastInsertID());
         $this->_flashClickEvent("KRsOpen_" . $goal_id);
         $this->Pnotify->outSuccess(__d('gl', "達成要素を追加しました。"));
-        $params_referer = Router::parse($this->referer(null, true));
-        if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home') {
+        $params_referer = Router::parse($this->referer(null,true));
+        if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home'){
             $this->redirect('/after_click:SubHeaderMenuGoal');
-        }
-        else {
+        }else{
             return $this->redirect($this->referer());
         }
     }
