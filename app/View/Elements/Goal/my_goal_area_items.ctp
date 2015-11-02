@@ -29,6 +29,8 @@
                 else {
                     $kr_line_height += 64 * $kr_count;
                 }
+            }else{
+                $kr_line_height = 30;
             }
             ?>
             <div class="dashboard-goals-card-vertical-line" style="height: <?= $kr_line_height ?>px;"
