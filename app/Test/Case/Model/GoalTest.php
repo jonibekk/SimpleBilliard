@@ -894,4 +894,30 @@ class GoalTest extends CakeTestCase
         $term = $this->Goal->getGoalTermData(999999);
         $this->assertFalse($term);
     }
+
+    function testGetAllMyGoalNameList()
+    {
+        $this->setDefault();
+        $term = $this->Goal->Team->EvaluateTerm->getCurrentTermData();
+        $this->Goal->create();
+        $this->Goal->save(
+            [
+                'user_id'    => $this->Goal->my_uid,
+                'team_id'    => $this->Goal->current_team_id,
+                'start_date' => $term['start_date'],
+                'end_date'   => $term['end_date'],
+                'name'       => 'test'
+            ]
+        );
+        $this->Goal->Collaborator->create();
+        $this->Goal->Collaborator->save(
+            [
+                'goal_id' => $this->Goal->getLastInsertID(),
+                'user_id' => $this->Goal->my_uid,
+                'team_id' => $this->Goal->current_team_id,
+            ]
+        );
+        $res = $this->Goal->getAllMyGoalNameList($term['start_date'], $term['end_date']);
+        $this->assertNotEmpty($res);
+    }
 }
