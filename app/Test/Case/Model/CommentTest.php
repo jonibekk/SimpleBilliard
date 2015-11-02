@@ -306,7 +306,7 @@ class CommentTest extends CakeTestCase
         $this->Comment->create();
         $this->Comment->save(['team_id' => 1, 'user_id' => 1, 'post_id' => 2]);
         $this->Comment->create();
-        $this->Comment->save(['team_id' => 1, 'user_id' => 1, 'post_id' => 3]);
+        $this->Comment->save(['team_id' => 1, 'user_id' => 1, 'post_id' => 8]);
 
         $now = time();
         $count = $this->Comment->getCount(
@@ -331,6 +331,30 @@ class CommentTest extends CakeTestCase
                 'post_id' => 1,
             ]);
         $this->assertEquals(2, $count);
+
+        $count = $this->Comment->getCount(
+            [
+                'start'     => $now - HOUR,
+                'end'       => $now + HOUR,
+                'post_type' => Post::TYPE_NORMAL,
+            ]);
+        $this->assertEquals(3, $count);
+
+        $count = $this->Comment->getCount(
+            [
+                'start'     => $now - HOUR,
+                'end'       => $now + HOUR,
+                'post_type' => Post::TYPE_ACTION,
+            ]);
+        $this->assertEquals(1, $count);
+
+        $count = $this->Comment->getCount(
+            [
+                'start'     => $now - HOUR,
+                'end'       => $now + HOUR,
+                'post_type' => [Post::TYPE_NORMAL, Post::TYPE_ACTION],
+            ]);
+        $this->assertEquals(4, $count);
 
         $count = $this->Comment->getCount(
             [
@@ -360,13 +384,37 @@ class CommentTest extends CakeTestCase
         $this->Comment->create();
         $this->Comment->save(['team_id' => 1, 'user_id' => 1, 'post_id' => 2]);
         $this->Comment->create();
-        $this->Comment->save(['team_id' => 1, 'user_id' => 1, 'post_id' => 3]);
+        $this->Comment->save(['team_id' => 1, 'user_id' => 1, 'post_id' => 8]);
 
         $now = time();
         $count = $this->Comment->getUniqueUserCount(
             [
                 'start' => $now - HOUR,
                 'end'   => $now + HOUR,
+            ]);
+        $this->assertEquals(2, $count);
+
+        $count = $this->Comment->getUniqueUserCount(
+            [
+                'start'     => $now - HOUR,
+                'end'       => $now + HOUR,
+                'post_type' => Post::TYPE_NORMAL,
+            ]);
+        $this->assertEquals(2, $count);
+
+        $count = $this->Comment->getUniqueUserCount(
+            [
+                'start'     => $now - HOUR,
+                'end'       => $now + HOUR,
+                'post_type' => Post::TYPE_ACTION,
+            ]);
+        $this->assertEquals(1, $count);
+
+        $count = $this->Comment->getUniqueUserCount(
+            [
+                'start'     => $now - HOUR,
+                'end'       => $now + HOUR,
+                'post_type' => [Post::TYPE_NORMAL, Post::TYPE_ACTION],
             ]);
         $this->assertEquals(2, $count);
 
