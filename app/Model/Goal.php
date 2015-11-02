@@ -528,7 +528,7 @@ class Goal extends AppModel
         $res = $this->sortPriority($res);
 
         //目的一覧を取得
-        if (!empty($purposes = $this->Purpose->getPurposesNoGoal())) {
+        if ($page == 1 && !empty($purposes = $this->Purpose->getPurposesNoGoal())) {
             foreach ($purposes as $key => $val) {
                 $purposes[$key]['Goal'] = [];
             }
