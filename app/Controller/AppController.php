@@ -665,11 +665,11 @@ class AppController extends Controller
         $my_previous_goals = $this->Goal->getMyPreviousGoals(MY_PREVIOUS_GOALS_DISPLAY_NUMBER);
         $my_previous_goals_count = $this->Goal->getMyPreviousGoals(null, 1, 'count');
         //TODO 暫定的にアクションの候補を自分のゴールにする。あとでajax化する
-        $current_term_goals = $this->Goal->getAllMyGoalNameList(
+        $current_term_goals_name_list = $this->Goal->getAllMyGoalNameList(
             $this->Team->EvaluateTerm->getCurrentTermData()['start_date'],
             $this->Team->EvaluateTerm->getCurrentTermData()['end_date']
         );
-        $goal_list_for_action_option = [null => __d('gl', 'ゴールを選択する')] + $current_term_goals;
+        $goal_list_for_action_option = [null => __d('gl', 'ゴールを選択する')] + $current_term_goals_name_list;
         //vision
         $vision = $this->Team->TeamVision->getDisplayVisionRandom();
         $this->set(compact('vision', 'goal_list_for_action_option', 'my_goals', 'collabo_goals',
