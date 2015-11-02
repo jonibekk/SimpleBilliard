@@ -40,7 +40,7 @@
                 dashboard-goals-card-header-noname">
             <?php endif; ?>
             <i class="dashboard-goals-card-header-icon fa fa-flag-o jsGoalsCardProgress"
-               goalProgPercent="<?= isset($goal['Goal']['progress']) ? $goal['Goal']['progress'] : 0 ?>">
+               goal-prog-percent="<?= isset($goal['Goal']['progress']) ? $goal['Goal']['progress'] : 0 ?>">
             </i>
 
             <div class="dashboard-goals-card-header-title">

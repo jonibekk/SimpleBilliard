@@ -2971,6 +2971,7 @@ function evGoalsMoreView() {
                 }
 
                 $('.custom-radio-check').customRadioCheck();
+                goalsCardProgress();
 
             } else {
                 // もっと見るボタンの削除
