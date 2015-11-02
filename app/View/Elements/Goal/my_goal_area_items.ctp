@@ -29,7 +29,8 @@
                 else {
                     $kr_line_height += 64 * $kr_count;
                 }
-            }else{
+            }
+            else {
                 $kr_line_height = 30;
             }
             ?>
@@ -107,7 +108,7 @@
             ($type == 'collabo'
             ): ?>
                 <a href="#"
-                   class="goals-column-function pull-right goals-column-function bd-radius_4px dropdown font_lightGray-gray"
+                   class="dashboard-goals-card-header-function dropdown"
                    data-toggle="dropdown"
                    id="download">
                     <i class="fa fa-cog goals-column-function-icon"></i>
@@ -134,7 +135,7 @@
             ($type == 'my_prev'
             ): ?>
                 <div class="pull-right goals-column-function bd-radius_4px dropdown">
-                    <a href="#" class="font_lightGray-gray font_14px plr_4px pt_1px pb_2px"
+                    <a href="#" class="dashboard-goals-card-header-function dropdown"
                        data-toggle="dropdown"
                        id="download">
                         <i class="fa fa-cog"></i>
