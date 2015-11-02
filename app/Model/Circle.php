@@ -476,6 +476,21 @@ class Circle extends AppModel
         return $this->find('first', $options);
     }
 
+    function isTeamAllCircle($circle_id)
+    {
+        $options = [
+            'conditions' => [
+                'id'           => $circle_id,
+                'team_all_flg' => true
+            ]
+        ];
+        $res = $this->find('first', $options);
+        if (isset($res['Circle']['team_id'])) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * @return array|null
      */

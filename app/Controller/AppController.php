@@ -233,6 +233,8 @@ class AppController extends Controller
                 $this->_setAllAlertCnt();
                 $this->_setNotifyCnt();
                 $this->_setMyCircle();
+                $this->set('current_term',$this->Team->EvaluateTerm->getCurrentTermData());
+
             }
             $this->_setMyMemberStatus();
             $this->_saveAccessUser($this->current_team_id, $this->Auth->user('id'));

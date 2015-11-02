@@ -200,7 +200,12 @@ class GoalsController extends AppController
         $this->Pnotify->outSuccess(__d('gl', "ゴールを削除しました。"));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
-        $this->redirect('/after_click:SubHeaderMenuGoal');
+        $params_referer = Router::parse($this->referer(null,true));
+        if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home'){
+            $this->redirect('/after_click:SubHeaderMenuGoal');
+        }else{
+            return $this->redirect($this->referer());
+        }
     }
 
     /**
@@ -463,8 +468,12 @@ class GoalsController extends AppController
                                    $this->Goal->KeyResult->getLastInsertID());
         $this->_flashClickEvent("KRsOpen_" . $goal_id);
         $this->Pnotify->outSuccess(__d('gl', "達成要素を追加しました。"));
-        //progesh
-        $this->redirect('/after_click:SubHeaderMenuGoal');
+        $params_referer = Router::parse($this->referer(null,true));
+        if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home'){
+            $this->redirect('/after_click:SubHeaderMenuGoal');
+        }else{
+            return $this->redirect($this->referer());
+        }
     }
 
     public function edit_key_result()
@@ -493,7 +502,12 @@ class GoalsController extends AppController
 
         $this->Pnotify->outSuccess(__d('gl', "成果を更新しました。"));
         /** @noinspection PhpVoidFunctionResultUsedInspection */
-        $this->redirect('/after_click:SubHeaderMenuGoal');
+        $params_referer = Router::parse($this->referer(null,true));
+        if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home'){
+            $this->redirect('/after_click:SubHeaderMenuGoal');
+        }else{
+            return $this->redirect($this->referer());
+        }
     }
 
     public function complete_kr($with_goal = null)
@@ -545,8 +559,14 @@ class GoalsController extends AppController
         $this->NotifyBiz->push($socket_id, $channelName);
 
         $this->_flashClickEvent("KRsOpen_" . $key_result['KeyResult']['goal_id']);
+
+        $params_referer = Router::parse($this->referer(null,true));
+        if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home'){
+            $this->redirect('/after_click:SubHeaderMenuGoal');
+        }else{
+            return $this->redirect($this->referer());
+        }
         /** @noinspection PhpVoidFunctionResultUsedInspection */
-        $this->redirect('/after_click:SubHeaderMenuGoal');
     }
 
     public function incomplete_kr()
@@ -572,7 +592,12 @@ class GoalsController extends AppController
         $this->_flashClickEvent("KRsOpen_" . $key_result['KeyResult']['goal_id']);
         $this->Pnotify->outSuccess(__d('gl', "成果を未完了にしました。"));
         /** @noinspection PhpVoidFunctionResultUsedInspection */
-        $this->redirect('/after_click:SubHeaderMenuGoal');
+        $params_referer = Router::parse($this->referer(null,true));
+        if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home'){
+            $this->redirect('/after_click:SubHeaderMenuGoal');
+        }else{
+            return $this->redirect($this->referer());
+        }
     }
 
     public function delete_key_result()
@@ -603,7 +628,12 @@ class GoalsController extends AppController
         $this->Pnotify->outSuccess(__d('gl', "成果を削除しました。"));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
-        $this->redirect('/after_click:SubHeaderMenuGoal');
+        $params_referer = Router::parse($this->referer(null,true));
+        if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home'){
+            $this->redirect('/after_click:SubHeaderMenuGoal');
+        }else{
+            return $this->redirect($this->referer());
+        }
     }
 
     public function delete_action()
