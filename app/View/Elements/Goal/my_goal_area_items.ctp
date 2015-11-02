@@ -8,6 +8,7 @@
  * @var CodeCompletionView $this
  * @var                    $goals
  * @var                    $type
+ * @var                    $current_term
  */
 ?>
 <!-- START app/View/Elements/Goal/my_goal_area_items.ctp -->
@@ -197,6 +198,7 @@
                                                ['key_results'         => $goal['KeyResult'],
                                                 'is_init'             => true, 'kr_can_edit' => true,
                                                 'goal_id'             => $goal['Goal']['id'],
+                                                'can_add_action'      => $goal['Goal']['end_date'] <= $current_term['end_date'] ? true : false,
                                                 'incomplete_kr_count' => count($goal['IncompleteKeyResult'])
                                                ]); ?>
                             <?php if (count($goal['KeyResult']) > 2): ?>

@@ -469,10 +469,11 @@ class GoalsController extends AppController
                                    $this->Goal->KeyResult->getLastInsertID());
         $this->_flashClickEvent("KRsOpen_" . $goal_id);
         $this->Pnotify->outSuccess(__d('gl', "達成要素を追加しました。"));
-        $params_referer = Router::parse($this->referer(null,true));
-        if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home'){
+        $params_referer = Router::parse($this->referer(null, true));
+        if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home') {
             $this->redirect('/after_click:SubHeaderMenuGoal');
-        }else{
+        }
+        else {
             return $this->redirect($this->referer());
         }
     }
@@ -789,8 +790,11 @@ class GoalsController extends AppController
 
         // ゴールが属している評価期間データ
         $goal_term = $this->Goal->getGoalTermData($goal_id);
-
-        $this->set(compact('key_results', 'incomplete_kr_count', 'kr_can_edit', 'goal_id', 'goal_term'));
+        $current_term = $this->Goal->Team->EvaluateTerm->getCurrentTermData();
+        //今期の終了日以前にゴール終了日が設定されている場合はアクション追加可能
+        $can_add_action = $goal_term['end_date'] <= $current_term['end_date'] ? true : false;
+        $this->set(compact('key_results', 'incomplete_kr_count', 'kr_can_edit', 'goal_id', 'goal_term',
+                           'can_add_action'));
 
         $response = null;
         switch ($view) {
@@ -1294,7 +1298,8 @@ class GoalsController extends AppController
         else {
             $goals = [];
         }
-        $this->set(compact('goals', 'type'));
+        $current_term = $this->Goal->Team->EvaluateTerm->getCurrentTermData();
+        $this->set(compact('goals', 'type', 'current_term'));
 
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果

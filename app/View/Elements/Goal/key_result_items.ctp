@@ -8,6 +8,7 @@
  * @var CodeCompletionView $this
  * @var                    $key_results
  * @var                    $kr_can_edit
+ * @var                    $can_add_action
  * @var                    $incomplete_kr_count
  * @var                    $goal_id
  * @var                    $is_init
@@ -17,6 +18,9 @@ if (!isset($is_init)) {
 }
 if (!isset($kr_can_edit)) {
     $kr_can_edit = false;
+}
+if (!isset($can_add_action)) {
+    $can_add_action = true;
 }
 if (isset($key_results[key($key_results)]['KeyResult'])) {
     $key_results = Hash::extract($key_results, '{n}.KeyResult');
@@ -42,28 +46,9 @@ if ($is_init) {
             </a>
             <?= $this->element('Goal/key_result_edit_menu_dropdown', ['kr' => $kr, 'without_dropdown_link' => true]) ?>
         </div>
-        <?php if (!$kr['completed']): ?>
-            <?php if ($incomplete_kr_count === 1): ?>
-                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add_action', 'key_result_id' => $kr['id'], 'goal_id' => $kr['goal_id']]) ?>"
-                   class="kr_achieve_button fa-check fa dashboard-goals-card-body-krs-action"></a>
-            <?php else: ?>
-                <a href="#" form-id="kr_achieve_<?= $kr['id'] ?>"
-                   class="kr_achieve_button fa-check fa dashboard-goals-card-body-krs-action"></a>
-                <?=
-                $this->Form->create('Goal', [
-                    'url'           => ['controller' => 'goals', 'action' => 'complete_kr', 'key_result_id' => $kr['id']],
-                    'inputDefaults' => [
-                        'div'       => 'form-group',
-                        'label'     => false,
-                        'wrapInput' => '',
-                    ],
-                    'class'         => 'form-feed-notify',
-                    'name'          => 'kr_achieve_' . $kr['id'],
-                    'id'            => 'kr_achieve_' . $kr['id']
-                ]); ?>
-                <?php $this->Form->unlockField('socket_id') ?>
-                <?= $this->Form->end() ?>
-            <?php endif; ?>
+        <?php if (!$kr['completed'] && $kr_can_edit && $can_add_action): ?>
+            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add_action', 'key_result_id' => $kr['id'], 'goal_id' => $kr['goal_id']]) ?>"
+               class="kr_achieve_button fa-check fa dashboard-goals-card-body-krs-action"></a>
         <?php endif; ?>
 
         <div class="dashboard-goals-card-body-krs-aside">
