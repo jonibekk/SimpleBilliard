@@ -103,7 +103,7 @@ class Goal extends AppModel
      *
      * @var string
      */
-    public $displayField = 'goal';
+    public $displayField = 'name';
 
     /**
      * Validation rules
@@ -1614,7 +1614,21 @@ class Goal extends AppModel
         return $is_present_term_flag;
     }
 
-    function getGoalNameList($goal_ids, $with_all_opt = false, $separate_term = false)
+    function getAllMyGoalNameList($start, $end)
+    {
+        $goal_ids = $this->Collaborator->getCollaboGoalList($this->my_uid, true);
+        $options = [
+            'conditions' => [
+                'id'          => $goal_ids,
+                'end_date >=' => $start,
+                'end_date <=' => $end,
+            ],
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
+    function getGoalNameListByGoalIds($goal_ids, $with_all_opt = false, $separate_term = false)
     {
         $options = [
             'conditions' => ['id' => $goal_ids],

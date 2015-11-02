@@ -30,7 +30,6 @@ if ($is_init) {
     $limit_count = 2;
     $count = 1;
 }
-$this->log($key_results);
 ?>
 <?php foreach ($key_results as $kr): ?>
     <li class="dashboard-goals-card-body-krs">
@@ -45,8 +44,8 @@ $this->log($key_results);
         </div>
         <?php if (!$kr['completed']): ?>
             <?php if ($incomplete_kr_count === 1): ?>
-                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_last_kr_confirm', 'key_result_id' => $kr['id']]) ?>"
-                   class="modal-ajax-get kr_achieve_button fa-check fa dashboard-goals-card-body-krs-action"></a>
+                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add_action', 'key_result_id' => $kr['id'], 'goal_id' => $kr['goal_id']]) ?>"
+                   class="kr_achieve_button fa-check fa dashboard-goals-card-body-krs-action"></a>
             <?php else: ?>
                 <a href="#" form-id="kr_achieve_<?= $kr['id'] ?>"
                    class="kr_achieve_button fa-check fa dashboard-goals-card-body-krs-action"></a>

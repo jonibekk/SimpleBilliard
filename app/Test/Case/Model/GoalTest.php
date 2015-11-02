@@ -314,7 +314,7 @@ class GoalTest extends CakeTestCase
                 'value_unit'       => 0,
                 'target_value'     => 100,
                 'start_value'      => 0,
-                'start_date'       => $this->start_date_format ,
+                'start_date'       => $this->start_date_format,
                 'end_date'         => $this->end_date_format,
             ]
         ];
@@ -801,7 +801,7 @@ class GoalTest extends CakeTestCase
 
     function testGetGoalNameList()
     {
-        $this->Goal->getGoalNameList(1);
+        $this->Goal->getGoalNameListByGoalIds(1);
     }
 
     function testGetGoalsByKeyword()
@@ -884,7 +884,7 @@ class GoalTest extends CakeTestCase
 
         $this->assertEquals($expected, $actual);
     }
-    
+
     function testGetGoalTermData()
     {
         $this->setDefault();
