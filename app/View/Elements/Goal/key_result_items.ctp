@@ -30,6 +30,7 @@ if ($is_init) {
     $limit_count = 2;
     $count = 1;
 }
+$this->log($key_results);
 ?>
 <?php foreach ($key_results as $kr): ?>
     <li class="dashboard-goals-card-body-krs">

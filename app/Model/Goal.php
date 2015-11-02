@@ -1010,6 +1010,9 @@ class Goal extends AppModel
                     ],
                     'fields'     => [
                         'KeyResult.id',
+                        'KeyResult.name',
+                        'KeyResult.end_date',
+                        'KeyResult.action_result_count',
                         'KeyResult.progress',
                         'KeyResult.priority',
                         'KeyResult.completed',
