@@ -44,7 +44,7 @@ if ($is_init) {
 
                 <p class="<?= $kr['completed'] ? "dashboard-goals-card-body-krs-title-achieved" : "dashboard-goals-card-body-krs-title-unachieved" ?>"><?= h($kr['name']) ?></p>
             </a>
-            <?= $this->element('Goal/key_result_edit_menu_dropdown', ['kr' => $kr, 'without_dropdown_link' => true]) ?>
+            <?= $this->element('Goal/key_result_edit_menu_dropdown', ['kr' => $kr, 'without_dropdown_link' => true,'incomplete_kr_count'=>$incomplete_kr_count]) ?>
         </div>
         <?php if (!$kr['completed'] && $kr_can_edit && $can_add_action): ?>
             <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add_action', 'key_result_id' => $kr['id'], 'goal_id' => $kr['goal_id']]) ?>"
