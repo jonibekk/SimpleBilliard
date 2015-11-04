@@ -1279,7 +1279,7 @@ class GoalsController extends AppController
 
         //今期、来期のゴールを取得する
         $start_date = $this->Team->EvaluateTerm->getCurrentTermData()['start_date'];
-        $end_date = $this->Team->EvaluateTerm->getNextTermData()['end_date'];
+        $end_date = $this->Team->EvaluateTerm->getCurrentTermData()['end_date'];
 
         if ($type === 'leader') {
             $goals = $this->Goal->getMyGoals(MY_GOALS_DISPLAY_NUMBER, $page_num, 'all', null, $start_date, $end_date);
