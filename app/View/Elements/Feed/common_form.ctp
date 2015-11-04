@@ -290,6 +290,11 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                     'data-bv-notempty-message' => __d('validate', "入力必須項目です。"),
                 ])
                 ?>
+
+                <?= $this->Form->hidden('site_info_url', ['id' => 'PostSiteInfoUrl']) ?>
+                <?php $this->Form->unlockField('Post.site_info_url') ?>
+
+                <div id="PostOgpSiteInfo" class="post-ogp-site-info"></div>
                 <div id="PostUploadFilePreview" class="post-upload-file-preview"></div>
             </div>
 

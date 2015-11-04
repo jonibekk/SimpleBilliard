@@ -1667,6 +1667,14 @@ textarea.feed-post-form {
     margin-top: 5px;
 }
 
+.post-ogp-site-info {
+    overflow:hidden;
+}
+
+.comment-ogp-site-info {
+    overflow:hidden;
+}
+
 .action-upload-file-preview {
     margin: 10px 10px;
 }
