@@ -124,6 +124,48 @@ class CommentTest extends CakeTestCase
         $this->assertFalse($res);
     }
 
+    function testAddWithOgp()
+    {
+        // 末尾の URL が削除される
+        $this->Comment->my_uid = 1;
+        $this->Comment->current_team_id = 1;
+        $data = [
+            'Comment' => [
+                'user_id'    => 1,
+                'post_id'    => 1,
+                'body'       => "test\nhttp://google.com/\n",
+                'site_info' => json_encode([
+                    'url' => 'http://google.com/'
+                ])
+            ],
+        ];
+        $res = $this->Comment->add($data);
+        $this->assertNotEmpty($res);
+
+        $last_id = $this->Comment->getLastInsertID();
+        $comment = $this->Comment->findById($last_id);
+        $this->assertEquals('test', $comment['Comment']['body']);
+
+        // URL が末尾でないので削除されない
+        $data = [
+            'Comment' => [
+                'user_id'    => 1,
+                'post_id'    => 1,
+                'body'       => "test\nhttp://google.com/\ntest",
+                'site_info' => json_encode([
+                                               'url' => 'http://google.com/'
+                                           ])
+            ],
+        ];
+        $res = $this->Comment->add($data);
+        $this->assertNotEmpty($res);
+
+        $last_id = $this->Comment->getLastInsertID();
+        $comment = $this->Comment->findById($last_id);
+        $this->assertEquals("test\nhttp://google.com/\ntest", $comment['Comment']['body']);
+    }
+
+
     function testAddInvalidOgp()
     {
         $this->Comment->my_uid = 1;
