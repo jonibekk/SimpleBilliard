@@ -1575,6 +1575,9 @@ function setChangeWarningForAllStaticPage() {
             var changed_val = "";
             default_val = $(this).load().val();
             $(this).on("change keyup keydown", function () {
+                if($(this).hasClass('disable-change-warning')){
+                    return;
+                }
                 changed_val = $(this).val();
                 if (default_val != changed_val) {
                     $(this).addClass("changed");
