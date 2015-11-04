@@ -8,6 +8,7 @@
  * @var CodeCompletionView $this
  * @var                    $goals
  * @var                    $type
+ * @var                    $current_term
  */
 ?>
 <!-- START app/View/Elements/Goal/my_goal_area_items.ctp -->
@@ -18,38 +19,44 @@
         <div class="
             <?php if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])): ?>
                 dashboard-goals-card-header">
-                <!-- ToDo. タテ線。
-                    heightの値をKRの数、KRをすべて開いているか閉じているかで変化させる必要あり。
-                    KRが1つ -> 104px;
-                    KRが2つ -> 168px; (+64px)
-                    KRが3つ -> 232px; (+64px)
-                    といった具合に64pxずつ追加してください。
-                    KRが閉じているときは、KRが3つのときと高さは変わりません。
-                    - - -
-                    また、ゴール名が2行になっているかどうかを考える必要性あり。
-                    ゴール名が2行になっている場合は、プラス20px;
-                    -> 本件、ゴール表示を1行にすることで解決。
-                -->
-                <div class="dashboard-goals-card-vertical-line" style="height: 232px;"></div>
+            <?php
+            //Changing the height of the vertical lines by the number of KR | 縦線の高さをKRの数によって変化させる
+            $kr_line_height = 40;
+            $kr_count = count($goal['KeyResult']);
+            if ($kr_count > 0) {
+                if ($kr_count >= 3) {
+                    $kr_line_height = 232;
+                }
+                else {
+                    $kr_line_height += 64 * $kr_count;
+                }
+            }
+            else {
+                $kr_line_height = 30;
+            }
+            ?>
+            <div class="dashboard-goals-card-vertical-line" style="height: <?= $kr_line_height ?>px;"
+                 id="KRsVerticalLine_<?= $goal['Goal']['id'] ?>"></div>
             <?php else: ?>
                 dashboard-goals-card-header-noname">
             <?php endif; ?>
-            <i class="dashboard-goals-card-header-icon fa fa-flag-o jsGoalsCardProgress" goalProgPercent="50">
+            <i class="dashboard-goals-card-header-icon fa fa-flag-o jsGoalsCardProgress"
+               goal-prog-percent="<?= isset($goal['Goal']['progress']) ? $goal['Goal']['progress'] : 0 ?>">
             </i>
+
             <div class="dashboard-goals-card-header-title">
                 <?php if (empty($goal['Goal'])): ?>
-                        <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add', 'purpose_id' => $goal['Purpose']['id'], 'mode' => 2]) ?>"
-                           class="dashboard-goals-card-header-goal-set">
-                           <i class="fa fa-plus-circle dashboard-goals-card-header-goal-set-icon"></i><?= __d('gl', '基準を追加する') ?>
-                            <!-- <div class="goals-column-add-icon"></div>
-                            <div class="goals-column-add-text font_12px"></div> -->
-                        </a>
+                    <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add', 'purpose_id' => $goal['Purpose']['id'], 'mode' => 2]) ?>"
+                       class="dashboard-goals-card-header-goal-set">
+                        <i class="fa fa-plus-circle dashboard-goals-card-header-goal-set-icon"></i><?= __d('gl',
+                                                                                                           '基準を追加する') ?>
+                    </a>
                 <?php else: ?>
                     <div class="dashboard-goals-card-header-goal-wrap">
                         <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal['Goal']['id']]) ?>"
                            class="">
                             <p class="dashboard-goals-card-header-goal">
-                                  <?= h($goal['Goal']['name']) ?>
+                                <?= h($goal['Goal']['name']) ?>
                             </p>
                         </a>
                     </div>
@@ -102,7 +109,7 @@
             ($type == 'collabo'
             ): ?>
                 <a href="#"
-                   class="goals-column-function pull-right goals-column-function bd-radius_4px dropdown font_lightGray-gray"
+                   class="dashboard-goals-card-header-function dropdown"
                    data-toggle="dropdown"
                    id="download">
                     <i class="fa fa-cog goals-column-function-icon"></i>
@@ -129,7 +136,7 @@
             ($type == 'my_prev'
             ): ?>
                 <div class="pull-right goals-column-function bd-radius_4px dropdown">
-                    <a href="#" class="font_lightGray-gray font_14px plr_4px pt_1px pb_2px"
+                    <a href="#" class="dashboard-goals-card-header-function dropdown"
                        data-toggle="dropdown"
                        id="download">
                         <i class="fa fa-cog"></i>
@@ -160,16 +167,6 @@
         <?php if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])): ?>
             <div class="dashboard-goals-card-body shadow-default">
                 <?php if (isset($goal['Goal']['id'])): ?>
-
-                    <!-- ToDo - 大樹さん。 Progressをアイコンで表す処理の実装が終わればここは必要ないので削除願います。 -->
-                    <!-- <div class="progress mb_0px goals-column-progress-bar">
-                        <div class="progress-bar progress-bar-info" role="progressbar"
-                              aria-valuemin="0"
-                             aria-valuemax="100" style="width: <?= h($goal['Goal']['progress']) ?>%;">
-                            <span class="ml_12px"><?= h($goal['Goal']['progress']) ?>%</span>
-                        </div>
-                    </div> -->
-
                     <div class="goalsCard-krSeek">
                         <?php if (isset($goal['Goal']['end_date']) && !empty($goal['Goal']['end_date'])): ?>
 
@@ -196,52 +193,42 @@
                         <?php endif; ?>
 
 
-                        <?php
-                            echo $this->element('Goal/key_result_items');
-                        ?>
+                        <ul class="dashboard-goals-card-body-krs-wrap">
+                            <?= $this->element('Goal/key_result_items',
+                                               ['key_results'         => $goal['KeyResult'],
+                                                'is_init'             => true, 'kr_can_edit' => true,
+                                                'goal_id'             => $goal['Goal']['id'],
+                                                'can_add_action'      => $goal['Goal']['end_date'] >= $current_term['start_date'] && $goal['Goal']['end_date'] <= $current_term['end_date'] ? true : false,
+                                                'incomplete_kr_count' => count($goal['IncompleteKeyResult'])
+                                               ]); ?>
+                            <?php if (count($goal['KeyResult']) > 2): ?>
+                                <li class="dashboard-goals-card-body-krs-ellipsis"
+                                    id="KrRemainOpenWrap_<?= $goal['Goal']['id'] ?>">
+                                    <a href="#" target-id="KrRemainOpenWrap_<?= $goal['Goal']['id'] ?>"
+                                       ajax-url="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_key_results', 'goal_id' => $goal['Goal']['id'], 'extract_count' => 2, true]) ?>"
+                                       id="KRsOpen_<?= $goal['Goal']['id'] ?>"
+                                       kr-line-id="KRsVerticalLine_<?= $goal['Goal']['id'] ?>"
+                                       class="replace-ajax-get-kr-list dashboard-goals-card-body-krs-ellipsis-link">
+                                        <i class="fa fa-ellipsis-v dashboard-goals-card-krs-ellipsis-icon"></i>
 
-                        <?php
-                        // $url = ['controller' => 'goals', 'action' => 'ajax_get_key_results', 'goal_id' => $goal['Goal']['id'], true];
-                        // if ($type == "follow") {
-                        //     $url = ['controller' => 'goals', 'action' => 'ajax_get_key_results', 'goal_id' => $goal['Goal']['id']];
-                        // }
-                        ?>
+                                        <p class="dashboard-goals-card-body-krs-ellipsis-number"><?= count($goal['IncompleteKeyResult']) + count($goal['CompleteKeyResult']) - 2 ?>
+                                            +</p>
+                                    </a>
+                                </li>
+                            <? endif; ?>
+                            <li class="dashboard-goals-card-body-add-kr clearfix">
+                                <a class="dashboard-goals-card-body-add-kr-link modal-ajax-get-add-key-result"
+                                   href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id']]) ?>">
+                                    <hr class="dashboard-goals-card-horizontal-line">
+                                    <i class="fa fa-plus dashboard-goals-card-body-add-kr-icon"></i>
 
-                        <!-- <?php if (count($goal['KeyResult']) > 0) { ?>
-                            <a href="#"
-                               class="link-dark-gray toggle-ajax-get pull-left btn-white bd-radius_14px p_4px font_12px lh_18px"
-                               target-id="KeyResults_<?= $goal['Goal']['id'] ?>"
-                               ajax-url="<?= $this->Html->url($url) ?>"
-                               id="KRsOpen_<?= $goal['Goal']['id'] ?>"
-                                >
-                                <i class="fa fa-caret-down feed-arrow lh_18px"></i>
-                                <?= __d('gl', "達成要素をみる") ?>(<?= count($goal['KeyResult']) ?>)
-                            </a>
-                            <?php if ($goal['Goal']['action_result_count'] > 0): ?>
-                                <a class="goalsCard-activity inline-block font_gray-brownRed pointer"
-                                   id="ActionListOpen_<?= $goal['Goal']['id'] ?>"
-                                   href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_actions', 'goal_id' => $goal['Goal']['id'], 'page_type' => 'list']) ?>">
-                                    <i class="fa fa-check-circle mr_1px font_brownRed"></i><span
-                                        class="ls_number"><?= $goal['Goal']['action_result_count'] ?></span>
+                                    <p class="dashboard-goals-card-body-add-kr-contents"><?= __d('gl', "達成要素を追加") ?></p>
                                 </a>
-                            <?php else: ?>
-                                <div class="goalsCard-activity0 inline-block">
-                                    <i class="fa fa-check-circle mr_1px"></i><span
-                                        class="ls_number">0</span>
-                                </div>
-                            <?php endif; ?>
 
-                        <?php }
-                        elseif ($type != "follow") { ?>
-                            <a class="font_lightGray-gray modal-ajax-get-add-key-result  goals-column-add-kr-btn"
-                               href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id']]) ?>">
-                                <i class="fa fa-plus-circle font_brownRed"></i>
-                                <span class="ml_2px"><?= __d('gl', "達成要素を追加") ?></span>
-                            </a>
-                        <?php } ?> -->
-
+                                <p class="dashboard-goals-card-body-goal-status"><?= Collaborator::$STATUS[$goal['MyCollabo'][0]['valued_flg']] ?></p>
+                            </li>
+                        </ul>
                     </div>
-                    <div class="none" id="KeyResults_<?= $goal['Goal']['id'] ?>"></div>
                 <?php endif; ?>
             </div>
         <?php else: ?>
