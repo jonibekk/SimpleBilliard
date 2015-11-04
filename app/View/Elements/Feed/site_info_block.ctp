@@ -2,22 +2,27 @@
 /**
  * @var $post
  * @var $site_info
+ * @var $title_max_length
+ * @var $description_max_length
+ * @var $img_src
  */
+$title_max_length = isset($title_max_length) ? $title_max_length : 50;
+$description_max_length = isset($description_max_length) ? $description_max_length : 110;
+$img_src = isset($img_src) ? $img_src : '';
+
+// 内部 OGP の「マイページ」「投稿」「アクション」の場合に使用するユーザーローカル名
+$local_username = null;
+if (isset($site_info['type']) && (
+        $site_info['type'] == 'user' ||
+        $site_info['type'] == 'post' ||
+        $site_info['type'] == 'action')
+) {
+    if (isset($site_info['user_local_names'][$this->Session->read('Auth.User.language')])) {
+        $local_username = $site_info['user_local_names'][$this->Session->read('Auth.User.language')]['local_username'];
+    }
+}
 ?>
 <?php if (isset($site_info)): ?>
-    <?php
-    // 内部 OGP の「マイページ」「投稿」「アクション」の場合に使用するユーザーローカル名
-    $local_username = null;
-    if (isset($site_info['type']) && (
-            $site_info['type'] == 'user' ||
-            $site_info['type'] == 'post' ||
-            $site_info['type'] == 'action')
-    ) {
-        if (isset($site_info['user_local_names'][$this->Session->read('Auth.User.language')])) {
-            $local_username = $site_info['user_local_names'][$this->Session->read('Auth.User.language')]['local_username'];
-        }
-    }
-    ?>
     <div class="col col-xxs-12 pt_10px">
         <a href="<?= isset($site_info['url']) ? $site_info['url'] : null ?>" target="blank"
            onclick="window.open(this.href,'_system');return false;"
@@ -25,13 +30,11 @@
             <div class="site-info bd-radius_4px">
                 <div class="media">
                     <div class="pull-left">
-                        <?php if (isset($post)): ?>
+                        <?php if ($img_src): ?>
                             <?=
                             $this->Html->image('ajax-loader.gif', [
                                 'class'         => 'lazy media-object',
-                                'data-original' => $this->Upload->uploadUrl($post,
-                                                                            "Post.site_photo",
-                                                                            ['style' => 'small']),
+                                'data-original' => $img_src,
                                 'width'         => '80px',
                                 'error-img'     => "/img/no-image-link.png",
                             ])
@@ -58,7 +61,7 @@
                                     $_title = $local_username;
                                 }
                                 ?>
-                                <?= mb_strimwidth(h($_title), 0, 50, "...") ?>
+                                <?= mb_strimwidth(h($_title), 0, $title_max_length, "...") ?>
                             <?php endif ?>
                         </h4>
 
@@ -77,7 +80,7 @@
                             }
                             ?>
                             <div class="font_12px site-info-txt">
-                                <?= mb_strimwidth(h($_desc), 0, 110, "...") ?>
+                                <?= mb_strimwidth(h($_desc), 0, $description_max_length, "...") ?>
                             </div>
                         <?php endif; ?>
 

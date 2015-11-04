@@ -247,7 +247,10 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
 
                 <?php if ($post['Post']['site_info']): ?>
                     <?php $site_info = json_decode($post['Post']['site_info'], true) ?>
-                    <?= $this->element('Feed/site_info_block', compact('post', 'site_info')) ?>
+                    <?= $this->element('Feed/site_info_block', [
+                        'site_info' => $site_info,
+                        'img_src'   => $this->Upload->uploadUrl($post, "Post.site_photo", ['style' => 'small']),
+                    ]) ?>
                 <?php elseif ($post['Post']['type'] == Post::TYPE_CREATE_GOAL && isset($post['Goal']['id']) && $post['Goal']['id']): ?>
                     <?= $this->element('Feed/goal_sharing_block', compact('post')) ?>
                 <?php elseif ($post['Post']['type'] == Post::TYPE_CREATE_CIRCLE && isset($post['Circle']['id']) && $post['Circle']['id']): ?>
