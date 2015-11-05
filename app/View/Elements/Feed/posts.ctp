@@ -247,43 +247,10 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
 
                 <?php if ($post['Post']['site_info']): ?>
                     <?php $site_info = json_decode($post['Post']['site_info'], true) ?>
-                    <div class="col col-xxs-12 pt_10px">
-                        <a href="<?= isset($site_info['url']) ? $site_info['url'] : null ?>" target="blank"
-                           onclick="window.open(this.href,'_system');return false;"
-                           class="no-line font_verydark">
-                            <div class="site-info bd-radius_4px">
-                                <div class="media">
-                                    <div class="pull-left">
-                                        <?=
-                                        $this->Html->image('ajax-loader.gif',
-                                                           [
-                                                               'class'         => 'lazy media-object',
-                                                               'data-original' => $this->Upload->uploadUrl($post,
-                                                                                                           "Post.site_photo",
-                                                                                                           ['style' => 'small']),
-                                                               'width'         => '80px',
-                                                               'error-img'     => "/img/no-image-link.png",
-                                                           ]
-                                        )
-                                        ?>
-                                    </div>
-                                    <div class="media-body">
-                                        <h4 class="media-heading font_18px"><?= isset($site_info['title']) ? mb_strimwidth(h($site_info['title']),
-                                                                                                                           0,
-                                                                                                                           50,
-                                                                                                                           "...") : null ?></h4>
-
-                                        <p class="font_11px media-url"><?= isset($site_info['url']) ? h($site_info['url']) : null ?></p>
-                                        <?php if (isset($site_info['description'])): ?>
-                                            <div class="font_12px site-info-txt">
-                                                <?= mb_strimwidth(h($site_info['description']), 0, 110, "...") ?>
-                                            </div>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
+                    <?= $this->element('Feed/site_info_block', [
+                        'site_info' => $site_info,
+                        'img_src'   => $this->Upload->uploadUrl($post, "Post.site_photo", ['style' => 'small']),
+                    ]) ?>
                 <?php elseif ($post['Post']['type'] == Post::TYPE_CREATE_GOAL && isset($post['Goal']['id']) && $post['Goal']['id']): ?>
                     <?= $this->element('Feed/goal_sharing_block', compact('post')) ?>
                 <?php elseif ($post['Post']['type'] == Post::TYPE_CREATE_CIRCLE && isset($post['Circle']['id']) && $post['Circle']['id']): ?>
@@ -354,27 +321,27 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                             </div>
                         <?php endforeach ?>
                     </div>
-                    <?php if($post['Post']['user_id'] != $this->Session->read('Auth.User.id') && $post['Goal']['end_date']>$current_term['start_date'] && is_null($post['Goal']['completed'])) : ?>
+                    <?php if ($post['Post']['user_id'] != $this->Session->read('Auth.User.id') && $post['Goal']['end_date'] > $current_term['start_date'] && is_null($post['Goal']['completed'])) : ?>
                         <? $follow_opt = $this->Goal->getFollowOption($post['Goal']) ?>
                         <? $collabo_opt = $this->Goal->getCollaboOption($post['Goal']) ?>
                         <div style="padding:5px" class="col col-xxs-12 mt_5px">
-                        <?php  if ($post['Post']['type'] != Post::TYPE_KR_COMPLETE || ($post['Post']['type'] == Post::TYPE_KR_COMPLETE && REQUEST_TIMESTAMP <= $post['KeyResult']['end_date'])): ?>
-                            <div class="col col-xxs-6 col-xs-4 mr_5px">
-                                <a goal-id="<?= $post['Goal']['id'] ?>" data-class="toggle-follow" href="#"
-                                   class="btn btn-white font_verydark bd-circle_22px toggle-follow p_8px <?= $follow_opt['class'] ?>"
-                                <?= $follow_opt['disabled'] ?>="<?= $follow_opt['disabled'] ?>">
-                                <i class="fa fa-heart font_rougeOrange" style="<?= $follow_opt['style'] ?>"></i>
-                                <span class="ml_5px"><?= $follow_opt['text'] ?></span>
-                                </a>
-                            </div>
-                            <div class="col col-xxs-5 col-xs-4">
-                                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', 'goal_id' => $post['Goal']['id']]) ?>"
-                                   data-target="#ModalCollabo_<?= $post['Goal']['id'] ?>" data-toggle="modal"
-                                   class="btn btn-white bd-circle_22px font_verydark modal-ajax-get-collabo p_8px <?= $collabo_opt['class'] ?>">
-                                    <i style="" class="fa fa-child font_rougeOrange font_18px"></i>
-                                    <span class="ml_5px font_14px"><?= $collabo_opt['text'] ?></span>
-                                </a>
-                            </div>
+                            <?php if ($post['Post']['type'] != Post::TYPE_KR_COMPLETE || ($post['Post']['type'] == Post::TYPE_KR_COMPLETE && REQUEST_TIMESTAMP <= $post['KeyResult']['end_date'])): ?>
+                                <div class="col col-xxs-6 col-xs-4 mr_5px">
+                                    <a goal-id="<?= $post['Goal']['id'] ?>" data-class="toggle-follow" href="#"
+                                       class="btn btn-white font_verydark bd-circle_22px toggle-follow p_8px <?= $follow_opt['class'] ?>"
+                                    <?= $follow_opt['disabled'] ?>="<?= $follow_opt['disabled'] ?>">
+                                    <i class="fa fa-heart font_rougeOrange" style="<?= $follow_opt['style'] ?>"></i>
+                                    <span class="ml_5px"><?= $follow_opt['text'] ?></span>
+                                    </a>
+                                </div>
+                                <div class="col col-xxs-5 col-xs-4">
+                                    <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', 'goal_id' => $post['Goal']['id']]) ?>"
+                                       data-target="#ModalCollabo_<?= $post['Goal']['id'] ?>" data-toggle="modal"
+                                       class="btn btn-white bd-circle_22px font_verydark modal-ajax-get-collabo p_8px <?= $collabo_opt['class'] ?>">
+                                        <i style="" class="fa fa-child font_rougeOrange font_18px"></i>
+                                        <span class="ml_5px font_14px"><?= $collabo_opt['text'] ?></span>
+                                    </a>
+                                </div>
                             <?php endif; ?>
                         </div>
                     <? endif; ?>

@@ -82,13 +82,13 @@ class LocalNameFixture extends CakeTestFixture
             'modified'   => '2014-06-25 06:24:16'
         ),
         array(
-            'id'         => '',
-            'user_id'    => '',
-            'language'   => 'Lorem ipsum dolor sit amet',
-            'first_name' => 'Lorem ipsum dolor sit amet',
-            'last_name'  => 'Lorem ipsum dolor sit amet',
-            'del_flg'    => 1,
-            'deleted'    => 5,
+            'id'         => '5',
+            'user_id'    => '12',
+            'language'   => 'eng',
+            'first_name' => 'test',
+            'last_name'  => 'test',
+            'del_flg'    => 0,
+            'deleted'    => null,
             'created'    => 5,
             'modified'   => 5
         ),

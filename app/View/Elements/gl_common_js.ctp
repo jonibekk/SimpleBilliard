@@ -38,6 +38,7 @@ echo $this->Html->script('vendor/imagesloaded.pkgd.min');
 echo $this->Html->script('vendor/bootstrap.youtubepopup');
 echo $this->Html->script('vendor/require');
 echo $this->Html->script('gl_basic');
+echo $this->Html->script('vendor/exif');
 echo $this->Html->script('goalous.min');
 ?>
 <!--suppress JSDuplicatedDeclaration -->
@@ -99,8 +100,8 @@ echo $this->Html->script('goalous.min');
             h: "<?=__d('gl',"文字長すぎます")?>",
             i: "<?=__d('gl',"最多で")?>",
             j: "<?=__d('gl',"項目までしか選択できません")?>",
-            k: "<?=__d('gl',"出したい成果を選択する(オプション)")?>",
-            l: "<?=__d('gl',"出したい成果はありません")?>",
+            k: "<?=__d('gl',"達成要素を選択する(オプション)")?>",
+            l: "<?=__d('gl',"達成要素はありません")?>",
             select_notify_range: "<?=__d('gl',"通知先を追加(オプション)")?>",
             public: "<?=__d('gl',"公開")?>",
             secret: "<?=__d('gl',"秘密")?>",
@@ -172,8 +173,10 @@ echo $this->Html->script('goalous.min');
             insight: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_insight']) ?>",
             insight_circle: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_insight_circle']) ?>",
             insight_ranking: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_insight_ranking']) ?>",
+            insight_graph: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_insight_graph']) ?>",
             validate_email: "<?= $this->Html->url(['controller' => 'users', 'action' => 'ajax_validate_email']) ?>",
-            join_circle: "<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_join_circle']) ?>"
+            join_circle: "<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_join_circle']) ?>",
+            ogp_info: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_ogp_info']) ?>"
         },
         data: {
             a: <?=isset($select2_default)?$select2_default:"[]"?>,

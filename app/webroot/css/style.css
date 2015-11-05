@@ -325,6 +325,10 @@ textarea{
     margin: 0 0 0 0;
 }
 
+.mt_3px {
+    margin-top: 3px;
+}
+
 .mt_5px {
     margin-top: 5px;
 }
@@ -1004,14 +1008,6 @@ textarea{
     border-bottom-right-radius: 4px;
 }
 
-.shadow-default {
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
-    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
-    -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
-    -o-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
-    -ms-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
-}
-
 .bd-s {
     border: 1px solid #ddd;
 }
@@ -1402,6 +1398,16 @@ ul.example-indent {
     border-right: 1px solid rgba(0, 0, 0, 0);
 }
 
+.text-wrap {
+    white-space: pre;
+    white-space: pre-wrap;
+    white-space: pre-line;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    white-space: -moz-pre-wrap;
+    word-wrap:break-word
+}
+
 .comment-photo {
     padding: 0;
     margin: 5px 0 7px;
@@ -1665,6 +1671,14 @@ textarea.feed-post-form {
 
 .post-upload-file-preview {
     margin-top: 5px;
+}
+
+.post-ogp-site-info {
+    overflow:hidden;
+}
+
+.comment-ogp-site-info {
+    overflow:hidden;
 }
 
 .action-upload-file-preview {
@@ -2235,57 +2249,6 @@ textarea.comment-post-form {
     margin: 0 0 4px;
 }
 
-/*========== ゴールカラム ==========*/
-
-.goals-column-head {
-    border-bottom: 1px solid #808080;
-}
-
-.goals-column-title {
-/ / margin : 0 0 4 px;
-}
-
-.goals-column-add-box {
-    border: 1px dashed #aaa;
-    padding: 0;
-    margin: 2px 0;
-}
-
-.goals-column-add-icon, .goals-column-add-text {
-    width: 100%;
-    text-align: center;
-}
-
-/*/goals-column-empty*/
-.goals-column-empty-box {
-    border: 1px dashed #aaa;
-    padding: 0;
-    margin: 8px 0;
-}
-
-.goals-column-empty-icon, .goals-column-empty-text {
-    width: 100%;
-    text-align: center;
-}
-
-.goals-column-empty-icon {
-    padding: 12px 0 0;
-}
-
-.goals-column-empty-text {
-    padding: 0 0 12px;
-}
-
-/*/goals-column-empty*/
-
-.my-goals-column-item {
-    background: #f5f5f5;
-}
-
-.my-goals-column-item {
-    padding: 6px 8px;
-    border-bottom: 1px solid #f0f0f0;
-}
 
 .check-status i {
     margin-right: 2px;
@@ -2303,10 +2266,6 @@ textarea.comment-post-form {
 .feed-circle-user-number {
     margin-left: 4px;
     font-size: 14px;
-}
-
-.goals-column-purpose {
-    padding-top: 2px;
 }
 
 .goals-column-progress-bar {
@@ -3211,6 +3170,37 @@ Temporary Properties - YOU MUST FIX
     height: 100px;
 }
 
+.insight-graph-type-button {
+    border-color: #ddd !important;
+}
+
+.insight-graph-type-button.active {
+    background-color: #f8f8f8;
+}
+
+.insight-graph-type-button:hover {
+    color: #6d6e71;
+}
+
+.insight-graph-icon {
+    color: #a1a1a1;
+    font-size:16px;
+    line-height:16px;
+    vertical-align:middle
+}
+
+.insight-graph-tooltip {
+    position: absolute;
+    display: none;
+    border: 1px solid #ccc;
+    padding: 5px;
+    width: 55px;
+    text-align: center;
+    vertical-align: middle;
+    background-color: #fff;
+}
+
+ 
 .add-vision-button.disabled {
     color: #aaa;
     border: 1px solid #aaa;

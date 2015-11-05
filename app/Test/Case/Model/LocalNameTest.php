@@ -16,29 +16,7 @@ class LocalNameTest extends CakeTestCase
      */
     public $fixtures = array(
         'app.local_name',
-        'app.user', 'app.notify_setting',
-        'app.team',
-        'app.badge',
-        'app.comment_like',
-        'app.comment',
-        'app.post',
-        'app.comment_mention',
-        'app.given_badge',
-        'app.post_like',
-        'app.post_mention',
-        'app.post_read',
-        'app.image',
-        'app.images_post',
-        'app.comment_read',
-        'app.group',
-        'app.team_member',
-        'app.job_category',
-        'app.invite',
-
-        'app.thread',
-        'app.message',
-        'app.email',
-        'app.oauth_token'
+        'app.user',
     );
 
     /**
@@ -71,6 +49,18 @@ class LocalNameTest extends CakeTestCase
         $this->assertNotEmpty($actual);
         $actual = $this->LocalName->getName(1, 'eng');
         $this->assertEmpty($actual);
+    }
+
+    function testGetAllByUserId()
+    {
+        $local_names = $this->LocalName->getAllByUserId(12);
+        $this->assertNotEmpty($local_names);
+        $langs = [];
+        foreach ($local_names as $v) {
+            $langs[$v['LocalName']['language']] = true;
+        }
+        $this->assertTrue(isset($langs['jpn']));
+        $this->assertTrue(isset($langs['eng']));
     }
 
 }

@@ -118,42 +118,12 @@
 
             <?php if ($comment['site_info']): ?>
                 <?php $site_info = json_decode($comment['site_info'], true) ?>
-                <div class="col col-xxs-12">
-                    <a href="<?= isset($site_info['url']) ? $site_info['url'] : null ?>" target="blank"
-                       onclick="window.open(this.href,'_system');return false;"
-                       class="no-line font_verydark">
-                        <div class="site-info bd-radius_4px">
-                            <div class="media">
-                                <div class="pull-left">
-                                    <?=
-                                    $this->Html->image('ajax-loader.gif',
-                                                       [
-                                                           'class'         => 'lazy media-object',
-                                                           'data-original' => $this->Upload->uploadUrl($comment,
-                                                                                                       "Comment.site_photo",
-                                                                                                       ['style' => 'small']),
-                                                           'width'         => '80px',
-                                                       ]
-                                    )
-                                    ?>
-                                </div>
-                                <div class="media-body">
-                                    <h4 class="media-heading font_18px  media-url"><?= isset($site_info['title']) ? mb_strimwidth(h($site_info['title']),
-                                                                                                                                  0,
-                                                                                                                                  40,
-                                                                                                                                  "...") : null ?></h4>
-
-                                    <p class="font_11px  media-url"><?= isset($site_info['url']) ? h($site_info['url']) : null ?></p>
-                                    <?php if (isset($site_info['description'])): ?>
-                                        <div class="font_12px">
-                                            <?= mb_strimwidth(h($site_info['description']), 0, 95, "...") ?>
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
+                <?= $this->element('Feed/site_info_block', [
+                    'site_info'              => $site_info,
+                    'title_max_length'       => 40,
+                    'description_max_length' => 95,
+                    'img_src' => $this->Upload->uploadUrl($comment, "Comment.site_photo", ['style' => 'small']),
+                ]) ?>
             <?php endif; ?>
             <div class="col col-xxs-12 pt_10px">
                 <?php foreach ($comment_file as $file): ?>

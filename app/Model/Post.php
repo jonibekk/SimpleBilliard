@@ -279,6 +279,22 @@ class Post extends AppModel
             $postData['Post']['type'] = Post::TYPE_NORMAL;
         }
 
+        // 本文の末尾に OGP のURLが存在する場合は削除する
+        // ただし、本文が URL のみの場合はそのまま残す
+        if (isset($postData['Post']['site_info']) && $postData['Post']['site_info']) {
+            $site_info = json_decode($postData['Post']['site_info'], true);
+            $body = rtrim($postData['Post']['body']);
+            $body_len = strlen($body);
+            if (($pos = strrpos($body, $site_info['url'])) !== false) {
+                if ($pos == $body_len - strlen($site_info['url'])) {
+                    $body = rtrim(substr($body, 0, $pos));
+                    if (strlen($body)) {
+                        $postData['Post']['body'] = $body;
+                    }
+                }
+            }
+        }
+
         $this->begin();
         $res = $this->save($postData);
         if (empty($res)) {
@@ -451,6 +467,26 @@ class Post extends AppModel
         return $res;
     }
 
+    public function getAllPostsForTeamCircle($pids)
+    {
+        $options = [
+            'conditions' => [
+                'id'  => $pids,
+                'NOT' => [
+                    'type' => [
+                        self::TYPE_ACTION,
+                        self::TYPE_CREATE_GOAL,
+                        self::TYPE_GOAL_COMPLETE,
+                        self::TYPE_KR_COMPLETE
+                    ]
+                ]
+            ],
+            'fields'     => ['id', 'id']
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
     public function getPostById($post_id)
     {
         $options = [
@@ -542,10 +578,16 @@ class Post extends AppModel
                 if (!$is_exists_circle || ($is_secret && !$is_belong_circle_member)) {
                     throw new RuntimeException(__d('gl', "サークルが存在しないか、権限がありません。"));
                 }
+
                 $p_list = array_merge($p_list,
                                       $this->PostShareCircle->getMyCirclePostList($start, $end, 'modified', 'desc',
                                                                                   1000, $this->orgParams['circle_id'],
                                                                                   PostShareCircle::SHARE_TYPE_SHARED));
+
+                if ($this->Circle->isTeamAllCircle($this->orgParams['circle_id'])) {
+                    $p_list = $this->getAllPostsForTeamCircle($p_list);
+                }
+
             }
             //単独投稿指定
             elseif ($this->orgParams['post_id']) {

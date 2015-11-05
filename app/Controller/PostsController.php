@@ -106,9 +106,16 @@ class PostsController extends AppController
     {
         $this->request->allowMethod('post');
 
+        // OGP 情報を取得する URL が含まれるテキスト
+        // フロントの JS でプレビューが正しく取得出来た場合は、site_info_url に URL が含まれている
+        // それ以外の場合は body テキスト全体から URL を検出する
+        $url_text = $this->request->data('Post.site_info_url');
+        if (!$url_text) {
+            $url_text = $this->request->data('Post.body');
+        }
+
         // ogbをインサートデータに追加
-        $this->request->data['Post'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Post']),
-                                                             viaIsSet($this->request->data['Post']['body']));
+        $this->request->data['Post'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Post']), $url_text);
 
         // 公開投稿か秘密サークルへの投稿かを判別
         if (isset($this->request->data['Post']['share_range'])) {
@@ -905,9 +912,16 @@ class PostsController extends AppController
                 throw new RuntimeException(__d('gl', "この投稿は削除されています。"));
             }
 
+            // OGP 情報を取得する URL が含まれるテキスト
+            // フロントの JS でプレビューが正しく取得出来た場合は、site_info_url に URL が含まれている
+            // それ以外の場合は body テキスト全体から URL を検出する
+            $url_text = $this->request->data('Comment.site_info_url');
+            if (!$url_text) {
+                $url_text = $this->request->data('Comment.body');
+            }
+            
             // ogbをインサートデータに追加
-            $this->request->data['Comment'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Comment']),
-                                                                    viaIsSet($this->request->data['Comment']['body']));
+            $this->request->data['Comment'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Comment']), $url_text);
 
             // コメントを追加
             if ($this->Post->Comment->add($this->request->data)) {
@@ -1015,7 +1029,7 @@ class PostsController extends AppController
         $this->response->type('application/octet-stream');
         $this->response->length(strlen($res->body));
         $this->response->header('Content-Disposition',
-                                sprintf('attachment; filename="%s"; filename*=UTF-8\'\'%s',
+                                sprintf('attachment; filename=%s; filename*=UTF-8\'\'%s',
                                         $file['AttachedFile']['attached_file_name'],
                                         rawurlencode($file['AttachedFile']['attached_file_name'])));
         $this->response->body($res->body);
@@ -1154,6 +1168,25 @@ class PostsController extends AppController
                                        ]);
     }
 
+    /**
+     * OGP のデータを取得する
+     *
+     * @return CakeResponse
+     */
+    public function ajax_get_ogp_info()
+    {
+        $this->_ajaxPreProcess();
+        $res = [];
+        $ogp = $this->Ogp->getOgpByUrlInText($this->request->query('text'));
+        if (isset($ogp['title'])) {
+            $res = $ogp;
+            $this->set('site_info', $ogp);
+            $response = $this->render('/Elements/Feed/site_info_block');
+            $res['html'] = $response->__toString();
+        }
+        return $this->_ajaxGetResponse($res);
+    }
+
     function _getTotalShareUserCount($circles, $users)
     {
         $all_share_user_list = null;
@@ -1206,15 +1239,11 @@ class PostsController extends AppController
         // ogpが取得できた場合
         $requestData['site_info'] = json_encode($ogp);
         if (isset($ogp['image'])) {
-
-            $extension = pathinfo($ogp['image'], PATHINFO_EXTENSION);
-
-            $allowed_extensions = array("jpg", "jpeg", "png", "gif");
-            if (!in_array($extension, $allowed_extensions)) {
+            $ext = UploadBehavior::getImgExtensionFromUrl($ogp['image']);
+            if (!$ext) {
                 $ogp['image'] = null;
             }
             $requestData['site_photo'] = $ogp['image'];
-
         }
         return $requestData;
     }

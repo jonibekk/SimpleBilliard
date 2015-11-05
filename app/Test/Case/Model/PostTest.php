@@ -166,6 +166,38 @@ class PostTest extends CakeTestCase
         $this->assertNotEmpty($res, "[正常]投稿(uid,team_id指定)");
     }
 
+    public function testAddWithSharing()
+    {
+        $uid = '1';
+        $team_id = '1';
+        $this->Post->my_uid = $uid;
+        $this->Post->current_team_id = $team_id;
+        $this->Post->Circle->my_uid = $uid;
+        $this->Post->Circle->current_team_id = $team_id;
+        $this->Post->PostShareCircle->my_uid = $uid;
+        $this->Post->PostShareCircle->current_team_id = $team_id;
+        $postData = [
+            'Post'    => [
+                'team_id' => 1,
+                'user_id' => 1,
+                'body' => 'test',
+                'share' => 'public',
+            ],
+        ];
+        $res = $this->Post->addNormal($postData);
+        $this->assertNotEmpty($res);
+
+        $last_id = $this->Post->getLastInsertID();
+        $all = $this->Post->PostShareCircle->find('all', [
+            'conditions' => [
+                'PostShareCircle.post_id' => $last_id,
+            ]
+        ]);
+        $this->assertCount(1, $all);
+        $this->assertEquals(3, $all[0]['PostShareCircle']['circle_id']);
+    }
+
+
     public function testAddError()
     {
         $uid = '1';
@@ -185,6 +217,43 @@ class PostTest extends CakeTestCase
                                            ->will($this->returnValue(false));
         $res = $this->Post->addNormal($postData, Post::TYPE_NORMAL, $uid, $team_id);
         $this->assertFalse($res);
+    }
+
+    public function testAddWithOgp()
+    {
+        // 末尾の URL が削除される
+        $this->Post->my_uid = 1;
+        $this->Post->current_team_id = 1;
+        $postData = [
+            'Post' => [
+                'body'      => "test\nhttp://google.com/",
+                'site_info' => json_encode([
+                                               'url' => 'http://google.com/'
+                                           ])
+            ],
+        ];
+        $res = $this->Post->addNormal($postData);
+        $this->assertNotEmpty($res);
+
+        $last_id = $this->Post->getLastInsertID();
+        $post = $this->Post->findById($last_id);
+        $this->assertEquals('test', $post['Post']['body']);
+
+        // URL が末尾でないので削除されない
+        $postData = [
+            'Post' => [
+                'body'      => "test\nhttp://google.com/\ntest",
+                'site_info' => json_encode([
+                                               'url' => 'http://google.com/'
+                                           ])
+            ],
+        ];
+        $res = $this->Post->addNormal($postData);
+        $this->assertNotEmpty($res);
+
+        $last_id = $this->Post->getLastInsertID();
+        $post = $this->Post->findById($last_id);
+        $this->assertEquals("test\nhttp://google.com/\ntest", $post['Post']['body']);
     }
 
     public function testAddInvalidOgp()
@@ -1009,6 +1078,27 @@ class PostTest extends CakeTestCase
         $this->Post->save($data);
         $res = $this->Post->getPostById($this->Post->getLastInsertID());
         $this->assertEquals($data['body'], $res['Post']['body']);
+    }
+
+    function testGetAllPostsForTeamCircle()
+    {
+        $data = [
+            [
+                'user_id' => 1,
+                'team_id' => 1,
+                'body'    => 'test'
+            ],
+        ];
+        $this->Post->create();
+        $this->Post->save($data);
+        $post_id_1 = $this->Post->getLastInsertID();
+        $this->Post->create();
+        $this->Post->save($data);
+        $post_id_2 = $this->Post->getLastInsertID();
+
+        $this->assertNotEmpty($this->Post->getAllPostsForTeamCircle([$post_id_1, $post_id_2]));
+        $this->assertCount(2, $this->Post->getAllPostsForTeamCircle([$post_id_1, $post_id_2]));
+
     }
 
     function testGetPhotoPath()

@@ -165,8 +165,8 @@ class UploadBehavior extends ModelBehavior
             $data['tmp_name'] = tempnam(sys_get_temp_dir(), $data['name']) . '.' . end($urlExplodedByDot);
         }
         else {
-            $data['name'] .= '.' . self::_getImgExtensionFromUrl($url);
-            $data['tmp_name'] = tempnam(sys_get_temp_dir(), $data['name']) . '.' . self::_getImgExtensionFromUrl($url);
+            $data['name'] .= '.' . self::getImgExtensionFromUrl($url);
+            $data['tmp_name'] = tempnam(sys_get_temp_dir(), $data['name']) . '.' . self::getImgExtensionFromUrl($url);
         }
 
         $config = [
@@ -193,7 +193,7 @@ class UploadBehavior extends ModelBehavior
         return $data;
     }
 
-    static private function _getImgExtensionFromUrl($url)
+    static public function getImgExtensionFromUrl($url)
     {
         $img_types = [
             IMAGETYPE_PNG      => 'png',

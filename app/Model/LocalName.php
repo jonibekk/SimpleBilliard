@@ -111,4 +111,22 @@ class LocalName extends AppModel
         }
         return $res;
     }
+
+    /**
+     * 指定ユーザーのローカル名を全て返す
+     *
+     * @param $user_id
+     *
+     * @return array|null
+     */
+    public function getAllByUserId($user_id)
+    {
+        $options = [
+            'conditions' => [
+                'user_id'  => $user_id,
+            ]
+        ];
+        $res = $this->find('all', $options);
+        return $res;
+    }
 }

@@ -124,6 +124,48 @@ class CommentTest extends CakeTestCase
         $this->assertFalse($res);
     }
 
+    function testAddWithOgp()
+    {
+        // 末尾の URL が削除される
+        $this->Comment->my_uid = 1;
+        $this->Comment->current_team_id = 1;
+        $data = [
+            'Comment' => [
+                'user_id'    => 1,
+                'post_id'    => 1,
+                'body'       => "test\nhttp://google.com/\n",
+                'site_info' => json_encode([
+                    'url' => 'http://google.com/'
+                ])
+            ],
+        ];
+        $res = $this->Comment->add($data);
+        $this->assertNotEmpty($res);
+
+        $last_id = $this->Comment->getLastInsertID();
+        $comment = $this->Comment->findById($last_id);
+        $this->assertEquals('test', $comment['Comment']['body']);
+
+        // URL が末尾でないので削除されない
+        $data = [
+            'Comment' => [
+                'user_id'    => 1,
+                'post_id'    => 1,
+                'body'       => "test\nhttp://google.com/\ntest",
+                'site_info' => json_encode([
+                                               'url' => 'http://google.com/'
+                                           ])
+            ],
+        ];
+        $res = $this->Comment->add($data);
+        $this->assertNotEmpty($res);
+
+        $last_id = $this->Comment->getLastInsertID();
+        $comment = $this->Comment->findById($last_id);
+        $this->assertEquals("test\nhttp://google.com/\ntest", $comment['Comment']['body']);
+    }
+
+
     function testAddInvalidOgp()
     {
         $this->Comment->my_uid = 1;
@@ -306,7 +348,7 @@ class CommentTest extends CakeTestCase
         $this->Comment->create();
         $this->Comment->save(['team_id' => 1, 'user_id' => 1, 'post_id' => 2]);
         $this->Comment->create();
-        $this->Comment->save(['team_id' => 1, 'user_id' => 1, 'post_id' => 3]);
+        $this->Comment->save(['team_id' => 1, 'user_id' => 1, 'post_id' => 8]);
 
         $now = time();
         $count = $this->Comment->getCount(
@@ -331,6 +373,30 @@ class CommentTest extends CakeTestCase
                 'post_id' => 1,
             ]);
         $this->assertEquals(2, $count);
+
+        $count = $this->Comment->getCount(
+            [
+                'start'     => $now - HOUR,
+                'end'       => $now + HOUR,
+                'post_type' => Post::TYPE_NORMAL,
+            ]);
+        $this->assertEquals(3, $count);
+
+        $count = $this->Comment->getCount(
+            [
+                'start'     => $now - HOUR,
+                'end'       => $now + HOUR,
+                'post_type' => Post::TYPE_ACTION,
+            ]);
+        $this->assertEquals(1, $count);
+
+        $count = $this->Comment->getCount(
+            [
+                'start'     => $now - HOUR,
+                'end'       => $now + HOUR,
+                'post_type' => [Post::TYPE_NORMAL, Post::TYPE_ACTION],
+            ]);
+        $this->assertEquals(4, $count);
 
         $count = $this->Comment->getCount(
             [
@@ -360,13 +426,37 @@ class CommentTest extends CakeTestCase
         $this->Comment->create();
         $this->Comment->save(['team_id' => 1, 'user_id' => 1, 'post_id' => 2]);
         $this->Comment->create();
-        $this->Comment->save(['team_id' => 1, 'user_id' => 1, 'post_id' => 3]);
+        $this->Comment->save(['team_id' => 1, 'user_id' => 1, 'post_id' => 8]);
 
         $now = time();
         $count = $this->Comment->getUniqueUserCount(
             [
                 'start' => $now - HOUR,
                 'end'   => $now + HOUR,
+            ]);
+        $this->assertEquals(2, $count);
+
+        $count = $this->Comment->getUniqueUserCount(
+            [
+                'start'     => $now - HOUR,
+                'end'       => $now + HOUR,
+                'post_type' => Post::TYPE_NORMAL,
+            ]);
+        $this->assertEquals(2, $count);
+
+        $count = $this->Comment->getUniqueUserCount(
+            [
+                'start'     => $now - HOUR,
+                'end'       => $now + HOUR,
+                'post_type' => Post::TYPE_ACTION,
+            ]);
+        $this->assertEquals(1, $count);
+
+        $count = $this->Comment->getUniqueUserCount(
+            [
+                'start'     => $now - HOUR,
+                'end'       => $now + HOUR,
+                'post_type' => [Post::TYPE_NORMAL, Post::TYPE_ACTION],
             ]);
         $this->assertEquals(2, $count);
 

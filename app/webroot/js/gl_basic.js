@@ -302,6 +302,7 @@ $(document).ready(function () {
     });
     //evToggleAjaxGet
     $(document).on("click", ".toggle-ajax-get", evToggleAjaxGet);
+    $(document).on("click", ".replace-ajax-get-kr-list", evReplaceKRListAjaxGet);
     $(document).on("click", ".ajax-get", evAjaxGetElmWithIndex);
     $(document).on("click", ".click-target-remove", evTargetRemove);
     //dynamic modal
@@ -753,6 +754,45 @@ function evToggleAjaxGet() {
     return false;
 }
 
+function evReplaceAjaxGet() {
+    attrUndefinedCheck(this, 'target-id');
+    attrUndefinedCheck(this, 'ajax-url');
+    var $obj = $(this);
+    var target_id = $obj.attr("target-id");
+    var ajax_url = $obj.attr("ajax-url");
+
+    //noinspection JSJQueryEfficiency
+    if (!$('#' + target_id).hasClass('data-exists')) {
+        $.get(ajax_url, function (data) {
+            $('#' + target_id).append(data.html);
+        });
+    }
+    return false;
+}
+
+function evReplaceKRListAjaxGet() {
+    attrUndefinedCheck(this, 'target-id');
+    attrUndefinedCheck(this, 'ajax-url');
+    attrUndefinedCheck(this, 'kr-line-id');
+    var $obj = $(this);
+    var target_id = $obj.attr("target-id");
+    var ajax_url = $obj.attr("ajax-url");
+    var kr_line_id = $obj.attr("kr-line-id");
+    var $kr_line = $('#' + kr_line_id);
+    //noinspection JSJQueryEfficiency
+    if (!$('#' + target_id).hasClass('data-exists')) {
+        $.get(ajax_url, function (data) {
+            $('#' + target_id).after(data.html);
+            var line_height = $kr_line.height();
+            line_height -= 64;
+            line_height += 64 * data.count;
+            $kr_line.height(line_height);
+            $('#' + target_id).remove();
+
+        });
+    }
+    return false;
+}
 /**
  *  仮アップロードされたファイルの有効期限（保存期限） が過ぎていないか確認
  *
@@ -853,6 +893,84 @@ function getAjaxFormReplaceElm() {
                 var $uploadFileForm = $(document).data('uploadFileForm');
                 $uploadFileForm.registerDragDropArea('#CommentBlock_' + post_id, commentParams);
                 $uploadFileForm.registerAttachFileButton('#CommentUploadFileButton_' + post_id, commentParams);
+
+                // OGP 情報を取得してプレビューする処理
+                require(['ogp'], function (ogp) {
+                    var onKeyUp = function () {
+                        ogp.getOGPSiteInfo({
+                            // URL が含まれるテキスト
+                            text: $('#CommentFormBody_' + post_id).val(),
+
+                            // ogp 情報を取得する必要があるかチェック
+                            readyLoading: function () {
+                                // 既に OGP 情報を取得している場合は終了
+                                if ($('#CommentSiteInfoUrl_' + post_id).val()) {
+                                    return false;
+                                }
+                                return true;
+                            },
+
+                            // ogp 情報取得成功時
+                            success: function (data) {
+                                var $siteInfoUrl = $('#CommentSiteInfoUrl_' + post_id);
+                                var $siteInfo = $('#CommentOgpSiteInfo_' + post_id);
+                                $siteInfo
+                                    // プレビュー用 HTML
+                                    .html(data.html)
+                                    // プレビュー削除ボタンを重ねて表示
+                                    .append($('<a>').attr('href', '#')
+                                        .addClass('font_lightgray')
+                                        .css({
+                                            left: '95%',
+                                            "margin-top": '20px',
+                                            position: 'absolute',
+                                            display: "block",
+                                            "z-index": '1000'
+                                        })
+                                        .append('<i class="fa fa-times"></i>')
+                                        .on('click', function (e) {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            $siteInfoUrl.val('');
+                                            $siteInfo.empty();
+                                        }))
+                                    // プレビュー削除ボタンの表示スペースを作る
+                                    .find('.site-info').css({
+                                        "padding-right": "30px"
+                                    });
+
+                                // hidden に URL 追加
+                                $siteInfoUrl.val(data.url);
+                            },
+
+                            // ogp 情報 取得失敗時
+                            error: function () {
+                                // loading アイコン削除
+                                $('#CommentSiteInfoLoadingIcon_' + post_id).remove();
+                            },
+
+                            // ogp 情報 取得開始時
+                            loadingStart: function () {
+                                // loading アイコン表示
+                                $('<i class="fa fa-refresh fa-spin"></i>')
+                                    .attr('id', 'CommentSiteInfoLoadingIcon_' + post_id)
+                                    .addClass('mr_8px lh_20px')
+                                    .insertBefore('#CommentSubmit_' + post_id);
+                            },
+
+                            // ogp 情報 取得完了時
+                            loadingEnd: function () {
+                                // loading アイコン削除
+                                $('#CommentSiteInfoLoadingIcon_' + post_id).remove();
+                            }
+                        });
+                    };
+                    var timer = null;
+                    $('#CommentFormBody_' + post_id).on('keyup', function () {
+                        clearTimeout(timer);
+                        timer = setTimeout(onKeyUp, 800);
+                    });
+                });
             }
         }
     });
@@ -1508,6 +1626,9 @@ function setChangeWarningForAllStaticPage() {
             var changed_val = "";
             default_val = $(this).load().val();
             $(this).on("change keyup keydown", function () {
+                if($(this).hasClass('disable-change-warning')){
+                    return;
+                }
                 changed_val = $(this).val();
                 if (default_val != changed_val) {
                     $(this).addClass("changed");
@@ -2079,6 +2200,87 @@ $(document).ready(function () {
                 break;
         }
     });
+
+    // 投稿フォームが表示されるページのみ
+    if ($('#CommonPostBody').size()) {
+        require(['ogp'], function (ogp) {
+            var onKeyUp = function () {
+                ogp.getOGPSiteInfo({
+                    // URL が含まれるテキスト
+                    text: $('#CommonPostBody').val(),
+
+                    // ogp 情報を取得する必要があるかチェック
+                    readyLoading: function () {
+                        // 既に OGP 情報を取得している場合は終了
+                        if ($('#PostSiteInfoUrl').val()) {
+                            return false;
+                        }
+                        return true;
+                    },
+
+                    // ogp 情報取得成功時
+                    success: function (data) {
+                        var $siteInfoUrl = $('#PostSiteInfoUrl');
+                        var $siteInfo = $('#PostOgpSiteInfo');
+                        $siteInfo
+                            // プレビュー用 HTML
+                            .html(data.html)
+                            // プレビュー削除ボタンを重ねて表示
+                            .append($('<a>').attr('href', '#')
+                                .addClass('font_lightgray')
+                                .css({
+                                    left: '91%',
+                                    "margin-top": '15px',
+                                    position: 'absolute',
+                                    display: "block",
+                                    "z-index": '1000'
+                                })
+                                .append('<i class="fa fa-times"></i>')
+                                .on('click', function (e) {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    $siteInfoUrl.val('');
+                                    $siteInfo.empty();
+                                }))
+                            // プレビュー削除ボタンの表示スペースを作る
+                            .find('.site-info').css({
+                                "padding-right": "30px"
+                            });
+
+                        // hidden に URL 追加
+                        $siteInfoUrl.val(data.url);
+                    },
+
+                    // ogp 情報 取得失敗時
+                    error: function () {
+                        // loading アイコン削除
+                        $('#PostSiteInfoLoadingIcon').remove();
+                    },
+
+                    // ogp 情報 取得開始時
+                    loadingStart: function () {
+                        // loading アイコン表示
+                        $('<i class="fa fa-refresh fa-spin"></i>')
+                            .attr('id', 'PostSiteInfoLoadingIcon')
+                            .addClass('pull-right lh_20px')
+                            .insertBefore('#CommonFormTabs');
+                    },
+
+                    // ogp 情報 取得完了時
+                    loadingEnd: function () {
+                        // loading アイコン削除
+                        $('#PostSiteInfoLoadingIcon').remove();
+                    }
+                });
+            };
+
+            var timer = null;
+            $('#CommonPostBody').on('keyup', function () {
+                clearTimeout(timer);
+                timer = setTimeout(onKeyUp, 800);
+            });
+        });
+    }
 });
 
 function format(item) {
@@ -2897,11 +3099,7 @@ function evGoalsMoreView() {
     } else if (type === "collabo") {
         listBox = $("#CollaboGoals");
         limitNumber = cake.data.f;
-    } else if (type === "follow") {
-        listBox = $("#FollowGoals");
-        limitNumber = cake.data.g;
-    }
-    else if (type === "my_prev") {
+    } else if (type === "my_prev") {
         listBox = $("#PrevGoals");
         limitNumber = cake.data.k;
     }
@@ -2946,6 +3144,7 @@ function evGoalsMoreView() {
                 }
 
                 $('.custom-radio-check').customRadioCheck();
+                goalsCardProgress();
 
             } else {
                 // もっと見るボタンの削除
@@ -3526,6 +3725,23 @@ function updateListBox() {
     return false;
 }
 
+// reset bell notify num call from app.
+function resetBellNum(){
+    initBellNum();
+    var url = cake.url.g;
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: true,
+        success: function (data) {
+            // do nothing.
+        },
+        error: function () {
+            // do nothing.
+        }
+    });
+}
+
 function updateMessageListBox() {
     var $messageDropdown = $("#message-dropdown");
     $messageDropdown.empty();
@@ -3550,6 +3766,23 @@ function updateMessageListBox() {
         }
     });
     return false;
+}
+
+// reset bell message num call from app.
+function resetMessageNum(){
+    initMessageNum();
+    var url = cake.url.ag;
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: true,
+        success: function (data) {
+            // do nothing.
+        },
+        error: function () {
+            // do nothing.
+        }
+    });
 }
 
 function copyToClipboard(url) {
@@ -3630,7 +3863,7 @@ $(document).ready(function () {
         '    <a href="#" class="pull-right font_lightgray" data-dz-remove><i class="fa fa-times"></i></a>' +
         '    <div class="dz-thumb-container pull-left">' +
         '      <i class="fa fa-file-o file-other-icon"></i>' +
-        '      <img class="dz-thumb none" data-dz-thumbnail /></div>' +
+        '      <img class="dz-thumb none" data-dz-thumbnail-show /></div>' +
         '    <span class="dz-name font_14px font_bold font_verydark pull-left" data-dz-name></span><br>' +
         '    <span class="dz-size font_11px font_lightgray pull-left" data-dz-size></span>' +
         '  </div>' +
@@ -3643,7 +3876,7 @@ $(document).ready(function () {
     var previewTemplateActionImage =
         '<div class="dz-preview dz-action-photo-preview action-photo-preview upload-file-attach-button">' +
         '  <div class="dz-action-photo-details">' +
-        '    <div class="dz-action-photo-thumb-container pull-left"><img class="dz-action-photo-thumb" data-dz-thumbnail /></div>' +
+        '    <div class="dz-action-photo-thumb-container pull-left"><img class="dz-action-photo-thumb" data-dz-thumbnail-show /></div>' +
         '  </div>' +
         '  <div class="dz-action-photo-progress progress">' +
         '    <div class="progress-bar progress-bar-info" role="progressbar"  data-dz-uploadprogress></div>' +
@@ -3743,16 +3976,6 @@ $(document).ready(function () {
             // コールバック関数（afterSuccess）
             $uploadFileForm._callbacks[$uploadFileForm._params.previewContainerID].afterSuccess.call(this, file);
         },
-        // サムネイル
-        thumbnail: function (file, dataUrl) {
-            var $container = $(file.previewTemplate).find('.dz-thumb-container');
-            // 画像の場合はデフォルトの処理でサムネイル作成
-            if (file.type.match(/image/)) {
-                $container.find('.fa').hide();
-                $container.find('.dz-thumb').show();
-                this.defaultOptions.thumbnail.call(this, file, dataUrl);
-            }
-        },
         // ファイル削除ボタン押下時
         removedfile: function (file) {
             var $preview = $(file.previewTemplate);
@@ -3850,6 +4073,46 @@ $(document).ready(function () {
                 icon: "fa fa-check-circle",
                 delay: 4000,
                 mouse_reset: false
+            });
+        },
+        // サムネイル
+        thumbnail: function (file, dataUrl) {
+            var orientation = 0;
+            EXIF.getData(file, function () {
+                switch (parseInt(EXIF.getTag(file, "Orientation"))) {
+                    case 3:
+                        orientation = 180;
+                        break;
+                    case 6:
+                        orientation = -90;
+                        break;
+                    case 8:
+                        orientation = 90;
+                        break;
+                }
+                var thumbnailElement, _i, _ref;
+                if (orientation != 0) {
+                    orientation = orientation + 180;
+                }
+                var $container = $(file.previewTemplate).find('.dz-thumb-container');
+                if (file.type.match(/image/)) {
+                    $container.find('.fa').hide();
+                    $container.find('.dz-thumb').show();
+                }
+                _ref = file.previewElement.querySelectorAll("[data-dz-thumbnail-show]");
+                for (_i = 0; _i < _ref.length; _i++) {
+                    thumbnailElement = _ref[_i];
+                }
+                thumbnailElement.alt = file.name;
+                thumbnailElement.src = dataUrl;
+                thumbnailElement.id = "exif";
+                var styles = {
+                    "transform": "rotate(" + orientation + "deg)",
+                    "-ms-transform": "rotate(" + orientation + "deg)",
+                    "-webkit-transform": "rotate(" + orientation + "deg)"
+                };
+                $("#exif").css(styles);
+                $("#exif").removeAttr("id");
             });
         },
         // ファイルアップロード失敗
@@ -4359,10 +4622,10 @@ $(document).ready(function () {
                 insight.insight.setup();
             }
             else if ($('#InsightCircleResult').size()) {
-                insight.insightCircle.setup();
+                insight.circle.setup();
             }
             else if ($('#InsightRankingResult').size()) {
-                insight.insightRanking.setup();
+                insight.ranking.setup();
             }
             insight.reload();
         });
