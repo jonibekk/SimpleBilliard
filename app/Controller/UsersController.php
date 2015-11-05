@@ -1114,8 +1114,47 @@ class UsersController extends AppController
         $this->layout = LAYOUT_ONE_COLUMN;
         $page_type = viaIsSet($this->request->params['named']['page_type']);
 
-        $start_date = $this->Team->EvaluateTerm->getCurrentTermData()['start_date'];
-        $end_date = $this->Team->EvaluateTerm->getCurrentTermData()['end_date'];
+        $current_term = $this->Team->EvaluateTerm->getCurrentTermData();
+        $current_id = $current_term['id'];
+
+        $next_term = $this->Team->EvaluateTerm->getNextTermData();
+        $next_id = $next_term['id'];
+
+        $previous_term = $this->Team->EvaluateTerm->getPreviousTermData();
+        $previous_id = $previous_term['id'];
+
+        function show_date($start_date, $end_date, $all_timezone)
+        {
+            return date('Y/m/d', $start_date + $all_timezone * 3600) . " - " . date('Y/m/d',
+                                                                                    $end_date + $all_timezone * 3600);
+        }
+
+        $all_term = $this->Team->EvaluateTerm->getAllTerm();
+        $all_id = array_column($all_term, 'id');
+        $all_start_date = array_column($all_term, 'start_date');
+        $all_end_date = array_column($all_term, 'end_date');
+        $all_timezone = array_column($all_term, 'timezone');
+        $all_term = array_map("show_date", $all_start_date, $all_end_date, $all_timezone);
+
+        $term1 = array(
+            $current_id  => 'Current Term',
+            $next_id     => 'Next Term',
+            $previous_id => 'Previous Term',
+        );
+        $term2 = array_combine($all_id, $all_term);
+        $term = $term1 + $term2;
+
+        if (isset($this->request->params['named']['term_id'])) {
+            $term_id = $this->request->params['named']['term_id'];
+            $target_term = $this->Team->EvaluateTerm->findById($term_id);
+            $start_date = $target_term['EvaluateTerm']['start_date'];
+            $end_date = $target_term['EvaluateTerm']['end_date'];
+        }
+        else {
+            $term_id = $current_id;
+            $start_date = $this->Team->EvaluateTerm->getCurrentTermData()['start_date'];
+            $end_date = $this->Team->EvaluateTerm->getCurrentTermData()['end_date'];
+        }
 
         $my_goals_count = $this->Goal->getMyGoals(null, 1, 'count', $user_id, $start_date, $end_date);
         $collabo_goals_count = $this->Goal->getMyCollaboGoals(null, 1, 'count', $user_id, $start_date, $end_date);
@@ -1135,7 +1174,13 @@ class UsersController extends AppController
         if ($is_mine) {
             $display_action_count--;
         }
+
+        $term_base_url = Router::url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user_id, 'page_type' => $page_type]);
+
         $this->set(compact(
+                       'term',
+                       'term_id',
+                       'term_base_url',
                        'my_goals_count',
                        'follow_goals_count',
                        'page_type',
