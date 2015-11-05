@@ -28,7 +28,7 @@
                     'class' => 'col col-sm-3 control-label pr_5px'
                 ],
                 'wrapInput' => 'col col-sm-6',
-                'class'     => 'form-control modal_input-design disable-change-warning'
+                'class'     => 'form-control modal_input-design'
             ],
             'class'         => 'form-horizontal',
             'novalidate'    => true,
