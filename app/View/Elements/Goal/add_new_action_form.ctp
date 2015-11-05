@@ -70,7 +70,7 @@ $this->Form->input('ActionResult.name', [
     </label>
     <?=
     $this->Form->input('ActionResult.key_result_id', [
-                                                       'label'   => false, //__d('gl', "紐付ける出したい成果を選択(オプション)"),
+                                                       'label'   => false, //__d('gl', "紐付ける達成要素を選択(オプション)"),
                                                        'options' => [null => __d('gl', "選択なし")],
                                                        'class'   => 'form-control col-xxs-8 selectKrForAction',
                                                        'id'      => 'ActionKeyResultId_' . $goal_id,

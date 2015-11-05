@@ -314,7 +314,7 @@ class GoalTest extends CakeTestCase
                 'value_unit'       => 0,
                 'target_value'     => 100,
                 'start_value'      => 0,
-                'start_date'       => $this->start_date_format ,
+                'start_date'       => $this->start_date_format,
                 'end_date'         => $this->end_date_format,
             ]
         ];
@@ -801,7 +801,7 @@ class GoalTest extends CakeTestCase
 
     function testGetGoalNameList()
     {
-        $this->Goal->getGoalNameList(1);
+        $this->Goal->getGoalNameListByGoalIds(1);
     }
 
     function testGetGoalsByKeyword()
@@ -884,7 +884,7 @@ class GoalTest extends CakeTestCase
 
         $this->assertEquals($expected, $actual);
     }
-    
+
     function testGetGoalTermData()
     {
         $this->setDefault();
@@ -893,5 +893,31 @@ class GoalTest extends CakeTestCase
         $this->assertEquals(2, $term['id']);
         $term = $this->Goal->getGoalTermData(999999);
         $this->assertFalse($term);
+    }
+
+    function testGetAllMyGoalNameList()
+    {
+        $this->setDefault();
+        $term = $this->Goal->Team->EvaluateTerm->getCurrentTermData();
+        $this->Goal->create();
+        $this->Goal->save(
+            [
+                'user_id'    => $this->Goal->my_uid,
+                'team_id'    => $this->Goal->current_team_id,
+                'start_date' => $term['start_date'],
+                'end_date'   => $term['end_date'],
+                'name'       => 'test'
+            ]
+        );
+        $this->Goal->Collaborator->create();
+        $this->Goal->Collaborator->save(
+            [
+                'goal_id' => $this->Goal->getLastInsertID(),
+                'user_id' => $this->Goal->my_uid,
+                'team_id' => $this->Goal->current_team_id,
+            ]
+        );
+        $res = $this->Goal->getAllMyGoalNameList($term['start_date'], $term['end_date']);
+        $this->assertNotEmpty($res);
     }
 }

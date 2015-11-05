@@ -291,6 +291,7 @@ $(document).ready(function () {
     });
     //evToggleAjaxGet
     $(document).on("click", ".toggle-ajax-get", evToggleAjaxGet);
+    $(document).on("click", ".replace-ajax-get-kr-list", evReplaceKRListAjaxGet);
     $(document).on("click", ".ajax-get", evAjaxGetElmWithIndex);
     $(document).on("click", ".click-target-remove", evTargetRemove);
     //dynamic modal
@@ -742,6 +743,45 @@ function evToggleAjaxGet() {
     return false;
 }
 
+function evReplaceAjaxGet() {
+    attrUndefinedCheck(this, 'target-id');
+    attrUndefinedCheck(this, 'ajax-url');
+    var $obj = $(this);
+    var target_id = $obj.attr("target-id");
+    var ajax_url = $obj.attr("ajax-url");
+
+    //noinspection JSJQueryEfficiency
+    if (!$('#' + target_id).hasClass('data-exists')) {
+        $.get(ajax_url, function (data) {
+            $('#' + target_id).append(data.html);
+        });
+    }
+    return false;
+}
+
+function evReplaceKRListAjaxGet() {
+    attrUndefinedCheck(this, 'target-id');
+    attrUndefinedCheck(this, 'ajax-url');
+    attrUndefinedCheck(this, 'kr-line-id');
+    var $obj = $(this);
+    var target_id = $obj.attr("target-id");
+    var ajax_url = $obj.attr("ajax-url");
+    var kr_line_id = $obj.attr("kr-line-id");
+    var $kr_line = $('#' + kr_line_id);
+    //noinspection JSJQueryEfficiency
+    if (!$('#' + target_id).hasClass('data-exists')) {
+        $.get(ajax_url, function (data) {
+            $('#' + target_id).after(data.html);
+            var line_height = $kr_line.height();
+            line_height -= 64;
+            line_height += 64 * data.count;
+            $kr_line.height(line_height);
+            $('#' + target_id).remove();
+
+        });
+    }
+    return false;
+}
 /**
  *  仮アップロードされたファイルの有効期限（保存期限） が過ぎていないか確認
  *
@@ -1575,6 +1615,9 @@ function setChangeWarningForAllStaticPage() {
             var changed_val = "";
             default_val = $(this).load().val();
             $(this).on("change keyup keydown", function () {
+                if($(this).hasClass('disable-change-warning')){
+                    return;
+                }
                 changed_val = $(this).val();
                 if (default_val != changed_val) {
                     $(this).addClass("changed");
@@ -3045,11 +3088,7 @@ function evGoalsMoreView() {
     } else if (type === "collabo") {
         listBox = $("#CollaboGoals");
         limitNumber = cake.data.f;
-    } else if (type === "follow") {
-        listBox = $("#FollowGoals");
-        limitNumber = cake.data.g;
-    }
-    else if (type === "my_prev") {
+    } else if (type === "my_prev") {
         listBox = $("#PrevGoals");
         limitNumber = cake.data.k;
     }
@@ -3094,6 +3133,7 @@ function evGoalsMoreView() {
                 }
 
                 $('.custom-radio-check').customRadioCheck();
+                goalsCardProgress();
 
             } else {
                 // もっと見るボタンの削除
@@ -4025,19 +4065,22 @@ $(document).ready(function () {
             });
         },
         // サムネイル
-        thumbnail: function(file, dataUrl) {
-            var orientation=0;
+        thumbnail: function (file, dataUrl) {
+            var orientation = 0;
             EXIF.getData(file, function () {
-                switch(parseInt(EXIF.getTag(file, "Orientation"))){
-                    case 3: orientation=180;
+                switch (parseInt(EXIF.getTag(file, "Orientation"))) {
+                    case 3:
+                        orientation = 180;
                         break;
-                    case 6: orientation=-90;
+                    case 6:
+                        orientation = -90;
                         break;
-                    case 8: orientation=90;
+                    case 8:
+                        orientation = 90;
                         break;
                 }
                 var thumbnailElement, _i, _ref;
-                if(orientation!=0) {
+                if (orientation != 0) {
                     orientation = orientation + 180;
                 }
                 var $container = $(file.previewTemplate).find('.dz-thumb-container');
@@ -4051,11 +4094,11 @@ $(document).ready(function () {
                 }
                 thumbnailElement.alt = file.name;
                 thumbnailElement.src = dataUrl;
-                thumbnailElement.id="exif";
-                var styles={
-                    "transform":"rotate("+orientation+"deg)",
-                    "-ms-transform":"rotate("+orientation+"deg)",
-                    "-webkit-transform":"rotate("+orientation+"deg)"
+                thumbnailElement.id = "exif";
+                var styles = {
+                    "transform": "rotate(" + orientation + "deg)",
+                    "-ms-transform": "rotate(" + orientation + "deg)",
+                    "-webkit-transform": "rotate(" + orientation + "deg)"
                 };
                 $("#exif").css(styles);
                 $("#exif").removeAttr("id");
