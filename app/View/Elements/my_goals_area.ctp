@@ -91,26 +91,6 @@
             <i class="fa fa-angle-double-down"><?= __d('gl', "もっと見る") ?></i>
         </a>
     <?php endif; ?>
-    <div id="FollowGoals">
-        <div class="col col-xxs-12 goals-column-head mt_32px">
-            <span class="font_18px font_gargoyleGray goals-column-title"><?= __d('gl', 'フォロー中のゴール') ?>
-                (<?= $follow_goals_count ?>)</span>
-
-            <div class="pull-right">
-                <a href="#" class="font_gargoyleGray-gray font_11px">
-                    <span class="lh_20px"><?= __d('gl', "ゴールを探す") ?></span>
-                </a>
-            </div>
-        </div>
-        <?= $this->element('Goal/my_goal_area_items', ['goals' => $follow_goals, 'type' => 'follow']) ?>
-    </div>
-    <?php if (count($follow_goals) < $follow_goals_count): ?>
-        <a href="#" class="click-follow-goals-read-more btn-link" next-page-num="2"
-           get-url="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_my_goals']) ?>"
-           goal-type="follow">
-            <i class="fa fa-angle-double-down"><?= __d('gl', "もっと見る") ?></i>
-        </a>
-    <?php endif; ?>
     <div id="PrevGoals">
         <div class="col col-xxs-12 goals-column-head mt_32px">
             <span class="font_18px font_gargoyleGray goals-column-title">

@@ -1008,14 +1008,6 @@ textarea{
     border-bottom-right-radius: 4px;
 }
 
-.shadow-default {
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
-    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
-    -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
-    -o-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
-    -ms-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
-}
-
 .bd-s {
     border: 1px solid #ddd;
 }
@@ -1404,6 +1396,16 @@ ul.example-indent {
     margin-left: -1px;
     border-left: 1px solid rgba(0, 0, 0, 0);
     border-right: 1px solid rgba(0, 0, 0, 0);
+}
+
+.text-wrap {
+    white-space: pre;
+    white-space: pre-wrap;
+    white-space: pre-line;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    white-space: -moz-pre-wrap;
+    word-wrap:break-word
 }
 
 .comment-photo {
@@ -2247,57 +2249,6 @@ textarea.comment-post-form {
     margin: 0 0 4px;
 }
 
-/*========== ゴールカラム ==========*/
-
-.goals-column-head {
-    border-bottom: 1px solid #808080;
-}
-
-.goals-column-title {
-/ / margin : 0 0 4 px;
-}
-
-.goals-column-add-box {
-    border: 1px dashed #aaa;
-    padding: 0;
-    margin: 2px 0;
-}
-
-.goals-column-add-icon, .goals-column-add-text {
-    width: 100%;
-    text-align: center;
-}
-
-/*/goals-column-empty*/
-.goals-column-empty-box {
-    border: 1px dashed #aaa;
-    padding: 0;
-    margin: 8px 0;
-}
-
-.goals-column-empty-icon, .goals-column-empty-text {
-    width: 100%;
-    text-align: center;
-}
-
-.goals-column-empty-icon {
-    padding: 12px 0 0;
-}
-
-.goals-column-empty-text {
-    padding: 0 0 12px;
-}
-
-/*/goals-column-empty*/
-
-.my-goals-column-item {
-    background: #f5f5f5;
-}
-
-.my-goals-column-item {
-    padding: 6px 8px;
-    border-bottom: 1px solid #f0f0f0;
-}
 
 .check-status i {
     margin-right: 2px;
@@ -2315,10 +2266,6 @@ textarea.comment-post-form {
 .feed-circle-user-number {
     margin-left: 4px;
     font-size: 14px;
-}
-
-.goals-column-purpose {
-    padding-top: 2px;
 }
 
 .goals-column-progress-bar {

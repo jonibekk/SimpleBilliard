@@ -1205,7 +1205,7 @@ class UsersController extends AppController
         $this->set('item_created', $team['Team']['created']);
         $this->layout = LAYOUT_ONE_COLUMN;
         $goal_ids = $this->Goal->Collaborator->getCollaboGoalList($user_id, true);
-        $goal_select_options = $this->Goal->getGoalNameList($goal_ids, true, true);
+        $goal_select_options = $this->Goal->getGoalNameListByGoalIds($goal_ids, true, true);
         $goal_base_url = Router::url(['controller' => 'users', 'action' => 'view_actions', 'user_id' => $user_id, 'page_type' => $page_type]);
         $this->set('long_text', false);
         $this->set(compact('goal_select_options', 'goal_id', 'goal_base_url'));

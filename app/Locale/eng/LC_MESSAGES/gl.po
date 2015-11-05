@@ -232,7 +232,7 @@ msgid "コラボレータの保存に失敗しました。"
 msgstr "Failed to save a goal."
 
 #: Controller/GoalsController.php:465
-msgid "出したい成果を追加しました。"
+msgid "達成要素を追加しました。"
 msgstr "Added a key result."
 
 #: Controller/GoalsController.php:480
@@ -2045,11 +2045,11 @@ msgid "項目までしか選択できません"
 msgstr "item can only be selected."
 
 #: View/Elements/gl_common_js.ctp:102 View/Elements/Feed/common_form.ctp:182
-msgid "出したい成果を選択する(オプション)"
+msgid "達成要素を選択する(オプション)"
 msgstr "Select a key result (optional)"
 
 #: View/Elements/gl_common_js.ctp:103
-msgid "出したい成果はありません"
+msgid "達成要素はありません"
 msgstr "No key result"
 
 #: View/Elements/gl_common_js.ctp:104
@@ -2850,7 +2850,7 @@ msgstr "Post"
 #: View/Elements/Goal/modal_add_key_result.ctp:222
 #: View/Elements/Goal/modal_last_kr_confirm.ctp:54
 #: View/Elements/Goal/my_goal_area_items.ctp:38;73;108;207
-msgid "出したい成果を追加"
+msgid "達成要素を追加"
 msgstr "Add Key Result"
 
 #: View/Elements/Goal/goal_menu_on_my_page.ctp:32
@@ -2873,19 +2873,19 @@ msgid "リーダー: %s"
 msgstr "Leader: %s"
 
 #: View/Elements/Goal/key_result_edit_button.ctp:21
-msgid "出したい成果を編集する"
+msgid "達成要素を編集する"
 msgstr "Edit Key Result"
 
 #: View/Elements/Goal/key_result_edit_button.ctp:27
-msgid "出したい成果を未完了にする"
+msgid "達成要素を未完了にする"
 msgstr "Uncomplete Key Result"
 
 #: View/Elements/Goal/key_result_edit_button.ctp:35;56
-msgid "出したい成果を完了にする"
+msgid "達成要素を完了にする"
 msgstr "Complete Key Result"
 
 #: View/Elements/Goal/key_result_edit_button.ctp:67
-msgid "出したい成果を削除する"
+msgid "達成要素を削除する"
 msgstr "Delete Key Result"
 
 #: View/Elements/Goal/key_result_edit_button.ctp:69
@@ -2927,7 +2927,7 @@ msgstr "eg. I completed the web site"
 #: View/Elements/Goal/modal_add_action.ctp:87
 #: View/Elements/Goal/modal_add_key_result.ctp:69
 #: View/Elements/Goal/modal_goal_description.ctp:135
-msgid "出したい成果"
+msgid "達成要素"
 msgstr "Key Result"
 
 #: View/Elements/Goal/modal_add_action.ctp:88
@@ -2947,7 +2947,7 @@ msgid "アクションを登録"
 msgstr "Add action"
 
 #: View/Elements/Goal/modal_add_key_result.ctp:29
-msgid "出したい成果を追加する"
+msgid "達成要素を追加する"
 msgstr "Add Key Result"
 
 #: View/Elements/Goal/modal_add_key_result.ctp:70
@@ -3083,7 +3083,7 @@ msgid "残り%d日"
 msgstr "%d days left"
 
 #: View/Elements/Goal/my_goal_area_items.ctp:186
-msgid "出したい成果をみる"
+msgid "達成要素をみる"
 msgstr "View Key Results"
 
 #: View/Elements/Goal/simplex_top_section.ctp:56
@@ -4281,7 +4281,7 @@ msgstr "Achieve elements of this goal"
 
 #: View/Goals/view_krs.ctp:40
 msgid "達成要素を追加"
-msgstr "Add the achievement element."
+msgstr "Add Key Result."
 
 #: View/Goals/view_krs.ctp:47
 msgid "達成要素は登録されていません"
@@ -4560,7 +4560,7 @@ msgstr "Edit"
 #~ msgid "フォローに失敗しました。"
 #~ msgstr "Failed to follow."
 
-#~ msgid "出したい成果の名前を入れてください"
+#~ msgid "達成要素の名前を入れてください"
 #~ msgstr "Input the name of a key result."
 
 #~ msgid "%sさん"

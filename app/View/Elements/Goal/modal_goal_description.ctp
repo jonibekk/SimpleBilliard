@@ -132,7 +132,7 @@
                     </div>
                 </div>
                 <div class="col col-xxs-12">
-                    <div><i class="fa fa-key"></i><span class="pl_2px"><?= __d('gl', "出したい成果") ?>
+                    <div><i class="fa fa-key"></i><span class="pl_2px"><?= __d('gl', "達成要素") ?>
                             &nbsp;(<?= count($goal['KeyResult']) ?>)</span></div>
                     <?php if (isset($goal['KeyResult']) && !empty($goal['KeyResult'])): ?>
                         <?php foreach ($goal['KeyResult'] as $key_result): ?>

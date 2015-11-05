@@ -13,9 +13,9 @@
 .line-number-trigger {
   margin-bottom: 0;
 }
-.line-number-limit-1(@fadeColor: @white){
+.line-number-limit-1(@fadeColor: @white, @display: block){
   background: @fadeColor;
-  display: block;
+  display: @display;
   overflow: hidden;
   white-space: nowrap;
   position: relative;
@@ -38,7 +38,7 @@
   margin: 0;
   overflow: hidden;
   line-break: normal;
-  height: 40px;
+  max-height: 40px;
   line-height: 1.4;
   position: relative;
   overflow: hidden;
@@ -104,7 +104,7 @@
   position: absolute;
   top: 0;
   right: 0;
-  background: @white;
+  background: white;
   background: linear-gradient(to right, rgba(245, 245, 245, 0), @white);
   width: 30%;
   height: 20px;
