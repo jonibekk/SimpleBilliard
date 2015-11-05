@@ -808,4 +808,12 @@ class UserTest extends CakeTestCase
         $res = $this->User->getNewUsersByKeywordNotSharedOnPost("", 10, true, 9999999);
         $this->assertEmpty($res);
     }
+
+    function testBuildLocalUserName()
+    {
+        $local_name = $this->User->buildLocalUserName('jpn', '名', '姓');
+        $this->assertEquals('姓 名', $local_name);
+        $local_name = $this->User->buildLocalUserName('eng', 'first', 'last');
+        $this->assertEquals('first last', $local_name);
+    }
 }

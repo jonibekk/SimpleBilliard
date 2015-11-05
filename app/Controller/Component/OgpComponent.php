@@ -70,8 +70,15 @@ class OgpComponent extends Object
     public function getOgpByUrlInText($text)
     {
         preg_match_all('(https?://[-_.!~*\'()a-zA-Z0-9;/?:@&=+$,%#]+)', $text, $urls);
+        //一番目のurlを取り出す。
         if (!empty($urls[0][0])) {
-            //一番目のurlを取り出す。
+            // 内部 OPG のチェック
+            $ogp = $this->getInternalOgpByUrl($urls[0][0]);
+            if ($ogp) {
+                return $ogp;
+            }
+
+            // 外部 OGP のチェック
             $ogp = $this->getOgpByUrl($urls[0][0]);
             return $ogp;
         }
@@ -95,6 +102,7 @@ class OgpComponent extends Object
         else {
             $res['url'] = $url;
         }
+        $res['type'] = 'external';
         if (isset($ogp->image)) {
             //imageのurlにホストが含まれているかチェックし、
             //含まれていなければ含める
@@ -133,6 +141,207 @@ class OgpComponent extends Object
         }
 
         return $res;
+    }
+
+    /**
+     * $url が自サイトのドメインで、内部 OGP の対象の場合は情報を返す
+     *
+     * @param $url
+     *
+     * @return array
+     */
+    public function getInternalOgpByUrl($url)
+    {
+        // ドメインチェック
+        if (strpos($url, Router::fullBaseUrl()) !== 0) {
+            return [];
+        }
+
+        App::uses('UploadHelper', 'View/Helper');
+        $Upload = new UploadHelper(new View());
+        $ogp = [];
+        $url_info = Router::parse(str_replace(Router::fullBaseUrl(), '', $url));
+        if ($url_info['controller'] == 'posts' && $url_info['action'] == 'feed') {
+            // 投稿単体ページ
+            if (isset($url_info['post_id'])) {
+                $posts = ClassRegistry::init('Post')->get(1, 1, null, null, ['post_id' => $url_info['post_id']]);
+                if ($posts) {
+                    $post = $posts[0];
+
+                    $attached_files = [];
+                    switch ($post['Post']['type']) {
+                        // 通常投稿
+                        case Post::TYPE_NORMAL:
+                            $ogp['type'] = 'post_normal';
+                            $ogp['title'] = explode("\n", ltrim($post['Post']['body']))[0];
+                            $ogp['description'] = $post['User']['roman_username'];
+                            $attached_files = $post['PostFile'];
+                            break;
+
+                        // ゴール作成
+                        case Post::TYPE_CREATE_GOAL:
+                            $ogp['type'] = 'post_create_goal';
+                            $ogp['title'] = $post['Goal']['name'];
+                            $ogp['description'] = Post::$TYPE_MESSAGE[Post::TYPE_CREATE_GOAL];
+                            $ogp['image'] = Router::url($Upload->uploadUrl($post, "Goal.photo",
+                                                                           ['style' => 'large']), true);
+                            break;
+
+                        // アクション
+                        case Post::TYPE_ACTION:
+                            $ogp['type'] = 'post_action';
+                            $ogp['title'] = explode("\n", ltrim($post['ActionResult']['name']))[0];
+                            $ogp['description'] = $post['User']['roman_username'];
+                            $attached_files = $post['ActionResult']['ActionResultFile'];
+                            break;
+
+                        // KR達成
+                        case Post::TYPE_KR_COMPLETE:
+                            $ogp['type'] = 'post_kr_complete';
+                            $ogp['title'] = $post['Goal']['name'];
+                            $ogp['description'] = __d('gl', "%s を達成しました！", $post['KeyResult']['name']);
+                            $ogp['image'] = Router::url($Upload->uploadUrl($post, "Goal.photo",
+                                                                           ['style' => 'large']), true);
+                            break;
+
+                        // ゴール達成
+                        case Post::TYPE_GOAL_COMPLETE:
+                            $ogp['type'] = 'post_goal_complete';
+                            $ogp['title'] = $post['Goal']['name'];
+                            $ogp['description'] = __d('gl', "ゴール達成しました！");
+                            $ogp['image'] = Router::url($Upload->uploadUrl($post, "Goal.photo",
+                                                                           ['style' => 'large']), true);
+                            break;
+
+                        // サークル作成
+                        case Post::TYPE_CREATE_CIRCLE:
+                            $ogp['type'] = 'post_create_circle';
+                            $ogp['title'] = $post['Circle']['name'];
+                            $ogp['description'] = Post::$TYPE_MESSAGE[Post::TYPE_CREATE_CIRCLE];
+                            $ogp['image'] = Router::url($Upload->uploadUrl($post, "Circle.photo",
+                                                                           ['style' => 'large']), true);
+                            break;
+                    }
+
+                    $ogp['site_name'] = $ogp['title'];
+                    $ogp['url'] = $url;
+
+                    // 添付ファイルに画像があれば追加
+                    foreach ($attached_files as $f) {
+                        if (in_array($f['AttachedFile']['file_ext'], ['jpg', 'jpeg', 'png', 'gif'])) {
+                            $ogp['image'] = Router::url($Upload->uploadUrl($f, "AttachedFile.attached",
+                                                                           ['style' => 'large']), true);
+                            break;
+                        }
+                    }
+                    // ユーザーのローカル名を全て保存
+                    $ogp['user_local_names'] = $this->_getUserLocalNames($post['User']['id']);
+                }
+            }
+            // サークルページ
+            elseif (isset($url_info['circle_id'])) {
+                $circle = ClassRegistry::init('Circle')->findById($url_info['circle_id']);
+                if ($circle) {
+                    $ogp['type'] = 'circle';
+                    $ogp['title'] = $circle['Circle']['name'];
+                    $ogp['description'] = $circle['Circle']['description'];
+                    $ogp['url'] = $url;
+                    $ogp['image'] = Router::url($Upload->uploadUrl($circle, 'Circle.photo',
+                                                                   ['style' => 'medium_large']), true);
+                    $ogp['site_name'] = $circle['Circle']['name'];
+                }
+            }
+        }
+        elseif ($url_info['controller'] == 'teams' && $url_info['action'] == 'main#') {
+            // チームビジョン
+            if ($url_info['pass'][0] == 'vision_detail') {
+                $team_vision = ClassRegistry::init('TeamVision')->findById($url_info['pass'][1]);
+                if ($team_vision) {
+                    $ogp['type'] = 'team_vision';
+                    $ogp['title'] = $team_vision['TeamVision']['name'];
+                    $ogp['description'] = $team_vision['TeamVision']['description'];
+                    $ogp['url'] = $url;
+                    $ogp['image'] = Router::url($Upload->uploadUrl($team_vision, 'TeamVision.photo',
+                                                                   ['style' => 'medium_large']), true);
+                    $ogp['site_name'] = $team_vision['TeamVision']['name'];
+                }
+            }
+            // グループビジョン
+            elseif ($url_info['pass'][0] == 'group_vision_detail') {
+                $group_vision = ClassRegistry::init('GroupVision')->findById($url_info['pass'][1]);
+                if ($group_vision) {
+                    $ogp['type'] = 'group_vision';
+                    $ogp['title'] = $group_vision['GroupVision']['name'];
+                    $ogp['description'] = $group_vision['GroupVision']['description'];
+                    $ogp['url'] = $url;
+                    $ogp['image'] = Router::url($Upload->uploadUrl($group_vision, 'GroupVision.photo',
+                                                                   ['style' => 'medium_large']), true);
+                    $ogp['site_name'] = $group_vision['GroupVision']['name'];
+                }
+            }
+        }
+        // ユーザーマイページ
+        elseif (
+            ($url_info['controller'] == 'users' && $url_info['action'] == 'view_goals') ||
+            ($url_info['controller'] == 'users' && $url_info['action'] == 'view_actions') ||
+            ($url_info['controller'] == 'users' && $url_info['action'] == 'view_posts') ||
+            ($url_info['controller'] == 'users' && $url_info['action'] == 'view_info')
+        ) {
+            $user = ClassRegistry::init('TeamMember')->getByUserId($url_info['named']['user_id']);
+            if ($user) {
+                $ogp['type'] = 'user';
+                $ogp['title'] = $user['User']['roman_username'];
+                $ogp['description'] = $user['TeamMember']['comment'];
+                $ogp['url'] = $url;
+                $ogp['image'] = Router::url($Upload->uploadUrl($user, 'User.photo',
+                                                               ['style' => 'medium_large']), true);
+                $ogp['site_name'] = $user['User']['roman_username'];
+                // ユーザーのローカル名を全て保存
+                $ogp['user_local_names'] = $this->_getUserLocalNames($user['User']['id']);
+            }
+        }
+        // ゴールページ
+        elseif (
+            ($url_info['controller'] == 'goals' && $url_info['action'] == 'view_info') ||
+            ($url_info['controller'] == 'goals' && $url_info['action'] == 'view_krs') ||
+            ($url_info['controller'] == 'goals' && $url_info['action'] == 'view_actions') ||
+            ($url_info['controller'] == 'goals' && $url_info['action'] == 'view_members') ||
+            ($url_info['controller'] == 'goals' && $url_info['action'] == 'view_followers')
+        ) {
+            $goal = ClassRegistry::init('Goal')->findById($url_info['named']['goal_id']);
+            if ($goal) {
+                $ogp['type'] = 'goal';
+                $ogp['title'] = $goal['Goal']['name'];
+                $ogp['description'] = $goal['Goal']['description'];
+                $ogp['url'] = $url;
+                $ogp['image'] = Router::url($Upload->uploadUrl($goal, 'Goal.photo',
+                                                               ['style' => 'medium_large']), true);
+                $ogp['site_name'] = $goal['Goal']['name'];
+            }
+        }
+        return $ogp;
+    }
+
+    /**
+     * ユーザーの全てのローカル名を返す
+     *
+     * @param $user_id
+     *
+     * @return array
+     */
+    private function _getUserLocalNames($user_id)
+    {
+        $user_local_names = [];
+        $rows = ClassRegistry::init('LocalName')->getAllByUserId($user_id);
+        foreach ($rows as $v) {
+            // 姓名の並び順を考慮したローカルフルネーム
+            $v['LocalName']['local_username'] =
+                ClassRegistry::init('User')->buildLocalUserName($v['LocalName']['language'],
+                                                                $v['LocalName']['first_name'],
+                                                                $v['LocalName']['last_name']);
+            $user_local_names[$v['LocalName']['language']] = $v['LocalName'];
+        }
+        return $user_local_names;
     }
 
     /**
