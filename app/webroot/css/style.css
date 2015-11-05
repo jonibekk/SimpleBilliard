@@ -1402,6 +1402,16 @@ ul.example-indent {
     border-right: 1px solid rgba(0, 0, 0, 0);
 }
 
+.text-wrap {
+    white-space: pre;
+    white-space: pre-wrap;
+    white-space: pre-line;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    white-space: -moz-pre-wrap;
+    word-wrap:break-word
+}
+
 .comment-photo {
     padding: 0;
     margin: 5px 0 7px;
