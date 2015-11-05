@@ -119,7 +119,11 @@ message_app.controller(
             //});
 
             // メッセージを送信する
-            $scope.clickMessage = function (event) {
+            $scope.clickMessage = function (event,val) {
+                if(val==='like')
+                {
+                    $scope.message = '[like]';
+                }
                 event.target.disabled = 'disabled';
                 var sendMessageLoader = document.getElementById("SendMessageLoader");
                 sendMessageLoader.style.display = "inline-block";

@@ -48,7 +48,8 @@
                                         <span class="font_bold font_verydark">{{item.User.display_username}}</span>
                                     </a>
                                 </div>
-                                <div class="comment-text font_12px" ng-bind-html="item.Comment.body"></div>
+                                <div class="comment-text font_12px" ng-if="item.Comment.body != '[like]'" ng-bind-html="item.Comment.body"></div>
+                                <div class="comment-text font_12px" ng-if="item.Comment.body == '[like]'" ><i class="fa fa-thumbs-up"></i></div>
                                 <div ng-bind-html="item.AttachedFileHtml"></div>
                                 <div class="font_12px">
                                     <a href="{{item.get_red_user_model_url}}"
@@ -92,11 +93,17 @@
                             </div>
                             <div class="message-detail-reply-btn-wrap submit pull-right">
                                 <i class="fa fa-refresh fa-spin" id="SendMessageLoader" style="display: none"></i>
-                                <input ng-click="clickMessage($event)"
-                                       ng-disabled="!message"
+                                <input ng-click="clickMessage($event,'comment')"
+                                       ng-if="message"
                                        id="message_submit_button"
                                        class="message-detail-reply-btn btn btn-primary submit-btn" type="submit"
                                        value="返信する">
+
+                                <button ng-click="clickMessage($event,'like')"
+                                        ng-if="!message"
+                                        class="message-detail-reply-btn btn btn-primary submit-btn"
+                                        type="submit" id="like">
+                                    <i class="fa fa-thumbs-up"></i></button>
                             </div>
                         </div>
                     </div>
