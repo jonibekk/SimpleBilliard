@@ -10,12 +10,17 @@ $title_max_length = isset($title_max_length) ? $title_max_length : 50;
 $description_max_length = isset($description_max_length) ? $description_max_length : 110;
 $img_src = isset($img_src) ? $img_src : '';
 
+// type が存在しないものは外部リンクとする（古いデータ対応）
+if (!isset($site_info['type'])) {
+    $site_info['type'] = 'external';
+}
+
 // 内部 OGP の「マイページ」「投稿」「アクション」の場合に使用するユーザーローカル名
 $local_username = null;
 if (isset($site_info['type']) && (
         $site_info['type'] == 'user' ||
-        $site_info['type'] == 'post' ||
-        $site_info['type'] == 'action')
+        $site_info['type'] == 'post_normal' ||
+        $site_info['type'] == 'post_action')
 ) {
     if (isset($site_info['user_local_names'][$this->Session->read('Auth.User.language')])) {
         $local_username = $site_info['user_local_names'][$this->Session->read('Auth.User.language')]['local_username'];
@@ -75,7 +80,7 @@ if (isset($site_info['type']) && (
                             <?php
                             $_desc = $site_info['description'];
                             // 内部 OGP の「投稿」「アクション」の場合はユーザー名を表示するので、ローカル名で上書きする
-                            if (($site_info['type'] == 'post' || $site_info['type'] == 'action') && $local_username) {
+                            if (($site_info['type'] == 'post_normal' || $site_info['type'] == 'post_action') && $local_username) {
                                 $_desc = $local_username;
                             }
                             ?>
@@ -88,9 +93,15 @@ if (isset($site_info['type']) && (
                         // 内部 OGP の場合、ページ種類を表示
                         if ($site_info['type'] != 'external'): ?>
                             <p class="font_11px media-url mt_3px">
-                                <?php if ($site_info['type'] == 'post'): ?>
+                                <?php if (
+                                    $site_info['type'] == 'post_normal' ||
+                                    $site_info['type'] == 'post_create_goal' ||
+                                    $site_info['type'] == 'post_kr_complete' ||
+                                    $site_info['type'] == 'post_goal_complete' ||
+                                    $site_info['type'] == 'post_create_circle'
+                                ): ?>
                                     <i class="fa fa-comment-o"></i> <?= __d('gl', '投稿') ?>
-                                <?php elseif ($site_info['type'] == 'action'): ?>
+                                <?php elseif ($site_info['type'] == 'post_action'): ?>
                                     <i class="fa fa-check-circle"></i> <?= __d('gl', 'アクション') ?>
                                 <?php elseif ($site_info['type'] == 'circle'): ?>
                                     <i class="fa fa-circle-o"></i> <?= __d('gl', 'サークル') ?>

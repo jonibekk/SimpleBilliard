@@ -162,36 +162,76 @@ class OgpComponent extends Object
         $ogp = [];
         $url_info = Router::parse(str_replace(Router::fullBaseUrl(), '', $url));
         if ($url_info['controller'] == 'posts' && $url_info['action'] == 'feed') {
-            // 投稿/アクション単体ページ
+            // 投稿単体ページ
             if (isset($url_info['post_id'])) {
                 $posts = ClassRegistry::init('Post')->get(1, 1, null, null, ['post_id' => $url_info['post_id']]);
                 if ($posts) {
                     $post = $posts[0];
 
-                    // アクション
-                    if ($post['ActionResult']['id']) {
-                        $ogp['type'] = 'action';
-                        $ogp['title'] = explode("\n", ltrim($post['ActionResult']['name']))[0];
-                        $files = $post['ActionResult']['ActionResultFile'];
+                    $attached_files = [];
+                    switch ($post['Post']['type']) {
+                        // 通常投稿
+                        case Post::TYPE_NORMAL:
+                            $ogp['type'] = 'post_normal';
+                            $ogp['title'] = explode("\n", ltrim($post['Post']['body']))[0];
+                            $ogp['description'] = $post['User']['roman_username'];
+                            $attached_files = $post['PostFile'];
+                            break;
+
+                        // ゴール作成
+                        case Post::TYPE_CREATE_GOAL:
+                            $ogp['type'] = 'post_create_goal';
+                            $ogp['title'] = $post['Goal']['name'];
+                            $ogp['description'] = Post::$TYPE_MESSAGE[Post::TYPE_CREATE_GOAL];
+                            $ogp['image'] = Router::url($Upload->uploadUrl($post, "Goal.photo",
+                                                                           ['style' => 'large']), true);
+                            break;
+
+                        // アクション
+                        case Post::TYPE_ACTION:
+                            $ogp['type'] = 'post_action';
+                            $ogp['title'] = explode("\n", ltrim($post['ActionResult']['name']))[0];
+                            $ogp['description'] = $post['User']['roman_username'];
+                            $attached_files = $post['ActionResult']['ActionResultFile'];
+                            break;
+
+                        // KR達成
+                        case Post::TYPE_KR_COMPLETE:
+                            $ogp['type'] = 'post_kr_complete';
+                            $ogp['title'] = $post['Goal']['name'];
+                            $ogp['description'] = __d('gl', "%s を達成しました！", $post['KeyResult']['name']);
+                            $ogp['image'] = Router::url($Upload->uploadUrl($post, "Goal.photo",
+                                                                           ['style' => 'large']), true);
+                            break;
+
+                        // ゴール達成
+                        case Post::TYPE_GOAL_COMPLETE:
+                            $ogp['type'] = 'post_goal_complete';
+                            $ogp['title'] = $post['Goal']['name'];
+                            $ogp['description'] = __d('gl', "ゴール達成しました！");
+                            $ogp['image'] = Router::url($Upload->uploadUrl($post, "Goal.photo",
+                                                                           ['style' => 'large']), true);
+                            break;
+
+                        // サークル作成
+                        case Post::TYPE_CREATE_CIRCLE:
+                            $ogp['type'] = 'post_create_circle';
+                            $ogp['title'] = $post['Circle']['name'];
+                            $ogp['description'] = Post::$TYPE_MESSAGE[Post::TYPE_CREATE_CIRCLE];
+                            $ogp['image'] = Router::url($Upload->uploadUrl($post, "Circle.photo",
+                                                                           ['style' => 'large']), true);
+                            break;
                     }
-                    // 投稿
-                    else {
-                        $ogp['type'] = 'post';
-                        $ogp['title'] = explode("\n", ltrim($post['Post']['body']))[0];
-                        $files = $post['PostFile'];
-                    }
-                    $ogp['description'] = $post['User']['roman_username'];
+
                     $ogp['site_name'] = $ogp['title'];
                     $ogp['url'] = $url;
 
                     // 添付ファイルに画像があれば追加
-                    if ($files) {
-                        foreach ($files as $f) {
-                            if (in_array($f['AttachedFile']['file_ext'], ['jpg', 'jpeg', 'png', 'gif'])) {
-                                $ogp['image'] = Router::url($Upload->uploadUrl($f, "AttachedFile.attached",
-                                                                               ['style' => 'large']), true);
-                                break;
-                            }
+                    foreach ($attached_files as $f) {
+                        if (in_array($f['AttachedFile']['file_ext'], ['jpg', 'jpeg', 'png', 'gif'])) {
+                            $ogp['image'] = Router::url($Upload->uploadUrl($f, "AttachedFile.attached",
+                                                                           ['style' => 'large']), true);
+                            break;
                         }
                     }
                     // ユーザーのローカル名を全て保存
