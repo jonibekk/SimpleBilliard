@@ -1239,15 +1239,11 @@ class PostsController extends AppController
         // ogpが取得できた場合
         $requestData['site_info'] = json_encode($ogp);
         if (isset($ogp['image'])) {
-
-            $extension = pathinfo($ogp['image'], PATHINFO_EXTENSION);
-
-            $allowed_extensions = array("jpg", "jpeg", "png", "gif");
-            if (!in_array($extension, $allowed_extensions)) {
+            $ext = UploadBehavior::getImgExtensionFromUrl($ogp['image']);
+            if (!$ext) {
                 $ogp['image'] = null;
             }
             $requestData['site_photo'] = $ogp['image'];
-
         }
         return $requestData;
     }
