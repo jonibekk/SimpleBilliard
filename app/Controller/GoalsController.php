@@ -761,10 +761,17 @@ class GoalsController extends AppController
             $limit = GOAL_PAGE_KR_NUMBER;
         }
 
+        $is_collaborated = $this->Goal->Collaborator->isCollaborated($goal_id);
+        $display_action_count = MY_PAGE_ACTION_NUMBER;
+        if ($is_collaborated) {
+            $display_action_count--;
+        }
+        $this->set(compact('is_collaborated', 'display_action_count'));
+
         $key_results = $this->Goal->KeyResult->getKeyResults($goal_id, 'all', false, [
             'page'  => $page,
             'limit' => $limit,
-        ]);
+        ], true, $display_action_count);
 
         // 未完了のキーリザルト数
         $incomplete_kr_count = $this->Goal->KeyResult->getIncompleteKrCount($goal_id);
