@@ -224,7 +224,7 @@ msgid "コラボレータの保存に失敗しました。"
 msgstr ""
 
 #: Controller/GoalsController.php:465
-msgid "出したい成果を追加しました。"
+msgid "達成要素を追加しました。"
 msgstr ""
 
 #: Controller/GoalsController.php:480
@@ -1989,11 +1989,11 @@ msgstr ""
 
 #: View/Elements/gl_common_js.ctp:102
 #: View/Elements/Feed/common_form.ctp:182
-msgid "出したい成果を選択する(オプション)"
+msgid "達成要素を選択する(オプション)"
 msgstr ""
 
 #: View/Elements/gl_common_js.ctp:103
-msgid "出したい成果はありません"
+msgid "達成要素はありません"
 msgstr ""
 
 #: View/Elements/gl_common_js.ctp:104
@@ -2823,7 +2823,7 @@ msgstr ""
 #: View/Elements/Goal/modal_add_key_result.ctp:222
 #: View/Elements/Goal/modal_last_kr_confirm.ctp:54
 #: View/Elements/Goal/my_goal_area_items.ctp:38;73;108;207
-msgid "出したい成果を追加"
+msgid "達成要素を追加"
 msgstr ""
 
 #: View/Elements/Goal/goal_menu_on_my_page.ctp:32
@@ -2847,19 +2847,19 @@ msgid "リーダー: %s"
 msgstr ""
 
 #: View/Elements/Goal/key_result_edit_button.ctp:21
-msgid "出したい成果を編集する"
+msgid "達成要素を編集する"
 msgstr ""
 
 #: View/Elements/Goal/key_result_edit_button.ctp:27
-msgid "出したい成果を未完了にする"
+msgid "達成要素を未完了にする"
 msgstr ""
 
 #: View/Elements/Goal/key_result_edit_button.ctp:35;56
-msgid "出したい成果を完了にする"
+msgid "達成要素を完了にする"
 msgstr ""
 
 #: View/Elements/Goal/key_result_edit_button.ctp:67
-msgid "出したい成果を削除する"
+msgid "達成要素を削除する"
 msgstr ""
 
 #: View/Elements/Goal/key_result_edit_button.ctp:69
@@ -2904,7 +2904,7 @@ msgstr ""
 #: View/Elements/Goal/modal_add_action.ctp:87
 #: View/Elements/Goal/modal_add_key_result.ctp:69
 #: View/Elements/Goal/modal_goal_description.ctp:135
-msgid "出したい成果"
+msgid "達成要素"
 msgstr ""
 
 #: View/Elements/Goal/modal_add_action.ctp:88
@@ -2924,7 +2924,7 @@ msgid "アクションを登録"
 msgstr ""
 
 #: View/Elements/Goal/modal_add_key_result.ctp:29
-msgid "出したい成果を追加する"
+msgid "達成要素を追加する"
 msgstr ""
 
 #: View/Elements/Goal/modal_add_key_result.ctp:70
@@ -3069,7 +3069,7 @@ msgid "残り%d日"
 msgstr ""
 
 #: View/Elements/Goal/my_goal_area_items.ctp:186
-msgid "出したい成果をみる"
+msgid "達成要素をみる"
 msgstr ""
 
 #: View/Elements/Goal/simplex_top_section.ctp:56

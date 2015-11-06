@@ -84,7 +84,7 @@
             </div>
             <div class="row">
                 <div class="form-group">
-                    <h5 class="modal-key-result-headings"><?= __d('gl', '出したい成果') ?>
+                    <h5 class="modal-key-result-headings"><?= __d('gl', '達成要素') ?>
                         <span class="modal-key-result-headings-description"><?= __d('gl', '紐付ける成果を選択しよう。') ?></span>
                     </h5>
 

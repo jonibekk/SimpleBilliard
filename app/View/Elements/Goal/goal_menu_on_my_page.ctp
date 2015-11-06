@@ -23,7 +23,7 @@
             <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id']]) ?>"
                class="modal-ajax-get-add-key-result"
                 ><i class="fa fa-plus-circle"></i><span class="ml_2px">
-                                    <?= __d('gl', "出したい成果を追加") ?></span></a>
+                                    <?= __d('gl', "達成要素を追加") ?></span></a>
         </li>
         <?php if (!viaIsSet($goal['Evaluation'])): ?>
             <li role="presentation">
