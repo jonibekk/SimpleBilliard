@@ -2624,7 +2624,11 @@ function evAjaxGoalKeyResultMore() {
     var kr_can_edit = $obj.attr('kr-can-edit');
     var goal_id = $obj.attr('goal-id');
     $obj.attr('ajax-url', cake.url.goal_key_results + '/' + kr_can_edit + '/goal_id:' + goal_id + '/view:key_results');
-    return evBasicReadMore.call(this);
+    return evBasicReadMore.call(this, {
+        afterSuccess: function ($content) {
+            imageLazyOn($content);
+        }
+    });
 }
 
 /**
@@ -2660,7 +2664,12 @@ function evAjaxGoalKeyResultMore() {
  */
 
 
-function evBasicReadMore() {
+function evBasicReadMore(options) {
+    $.extend({
+        afterSuccess: function ($content) {
+        }
+    }, options);
+
     var $obj = $(this);
     var ajax_url = $obj.attr('ajax-url');
     var next_page_num = $obj.attr('next-page-num');
@@ -2697,6 +2706,8 @@ function evBasicReadMore() {
 
                 // リンクを有効化
                 $obj.removeAttr('disabled');
+
+                options.afterSuccess($content);
             }
 
             // 取得したデータ件数が、１ページの表示件数未満だった場合
