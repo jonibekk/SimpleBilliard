@@ -99,7 +99,7 @@
                                        class="message-detail-reply-btn btn btn-primary submit-btn" type="submit"
                                        value="返信する">
 
-                                <button ng-click="clickMessage($event,'like')"
+                                <button ng-click="clickMessage($event,'like')" ng-dblclick="return false" ng-disabled="flag"
                                         ng-if="!message"
                                         class="message-detail-reply-btn btn btn-primary submit-btn"
                                         type="submit" id="like">
