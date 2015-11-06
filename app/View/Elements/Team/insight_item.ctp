@@ -9,7 +9,7 @@
  */
 ?>
 <div class="insight-row">
-    <a href="#" id="<?= h($item_id) ?>" class="insight-row-toggle">
+    <div id="<?= h($item_id) ?>" class="insight-value-container">
         <?php if ($item_cmp_percent !== null): ?>
             <?php if ($item_cmp_percent >= 0): ?>
                 <div class="insight-cmp-percent insight-cmp-percent-plus"><?= __d('gl', '▲') ?> <?= h($item_cmp_percent) ?>%</div>
@@ -20,7 +20,7 @@
 
         <div class="insight-value"><?= h($item_value) ?></div>
         <div class="insight-label"><?= h($item_label) ?></div>
-    </a>
+    </div>
 
-    <div class="insight-graph-container none"></div>
+    <div class="insight-graph-container"></div>
 </div>

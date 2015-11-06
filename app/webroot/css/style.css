@@ -3078,15 +3078,11 @@ Temporary Properties - YOU MUST FIX
     margin: 5px 0;
 }
 
-.insight-row a {
+.insight-row .insight-value-container {
     display: block;
     color: inherit;
     padding: 10px;
     height: 70px;
-}
-
-.insight-row a:hover, .insight-row a:focus {
-    text-decoration: none;
 }
 
 .insight-value {
