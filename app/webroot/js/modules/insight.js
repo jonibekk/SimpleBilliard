@@ -56,6 +56,8 @@ define(function () {
             points: {show: true}
         },
         grid: {
+            borderWidth: 1,
+            borderColor: '#a1a1a1',
             hoverable: true
         }
     };

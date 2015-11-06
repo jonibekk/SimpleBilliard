@@ -22,5 +22,5 @@
         <div class="insight-label"><?= h($item_label) ?></div>
     </div>
 
-    <div class="insight-graph-container"></div>
+    <div class="insight-graph-container"><i class="fa fa-refresh fa-spin"></i></div>
 </div>
