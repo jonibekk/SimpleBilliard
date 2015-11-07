@@ -623,8 +623,8 @@ class AppSchema extends CakeSchema
         'evaluate_flg'        => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '評価フラグ'),
         'status'              => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false, 'comment' => 'ステータス(0 = 進行中, 1 = 中断, 2 = 完了)'),
         'description'         => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '説明', 'charset' => 'utf8'),
-        'start_date'          => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '開始日(unixtime)'),
-        'end_date'            => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '終了日(unixtime)'),
+        'start_date'          => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '開始日(unixtime)'),
+        'end_date'            => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '終了日(unixtime)'),
         'current_value'       => array('type' => 'decimal', 'null' => false, 'default' => '0.000', 'length' => '18,3', 'unsigned' => false, 'comment' => '現在値'),
         'start_value'         => array('type' => 'decimal', 'null' => false, 'default' => '0.000', 'length' => '18,3', 'unsigned' => false, 'comment' => '開始値'),
         'target_value'        => array('type' => 'decimal', 'null' => false, 'default' => '0.000', 'length' => '18,3', 'unsigned' => false, 'comment' => '目標値'),
@@ -641,7 +641,9 @@ class AppSchema extends CakeSchema
             'modified'   => array('column' => 'modified', 'unique' => 0),
             'user_id'    => array('column' => 'user_id', 'unique' => 0),
             'team_id'    => array('column' => 'team_id', 'unique' => 0),
-            'purpose_id' => array('column' => 'purpose_id', 'unique' => 0)
+            'purpose_id' => array('column' => 'purpose_id', 'unique' => 0),
+            'start_date' => array('column' => 'start_date', 'unique' => 0),
+            'end_date'   => array('column' => 'end_date', 'unique' => 0)
         ),
         'tableParameters'     => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
@@ -756,8 +758,8 @@ class AppSchema extends CakeSchema
         'user_id'             => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '作成者ID(belongsToでUserモデルに関連)'),
         'name'                => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '名前', 'charset' => 'utf8'),
         'description'         => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '説明', 'charset' => 'utf8'),
-        'start_date'          => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '開始日(unixtime)'),
-        'end_date'            => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '終了日(unixtime)'),
+        'start_date'          => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '開始日(unixtime)'),
+        'end_date'            => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '終了日(unixtime)'),
         'current_value'       => array('type' => 'decimal', 'null' => false, 'default' => '0.000', 'length' => '18,3', 'unsigned' => false, 'comment' => '現在値'),
         'start_value'         => array('type' => 'decimal', 'null' => false, 'default' => '0.000', 'length' => '18,3', 'unsigned' => false, 'comment' => '開始値'),
         'target_value'        => array('type' => 'decimal', 'null' => false, 'default' => '0.000', 'length' => '18,3', 'unsigned' => false, 'comment' => '目標値'),
@@ -771,11 +773,13 @@ class AppSchema extends CakeSchema
         'created'             => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '追加した日付時刻'),
         'modified'            => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '更新した日付時刻'),
         'indexes'             => array(
-            'PRIMARY'  => array('column' => 'id', 'unique' => 1),
-            'team_id'  => array('column' => 'team_id', 'unique' => 0),
-            'goal_id'  => array('column' => 'goal_id', 'unique' => 0),
-            'modified' => array('column' => 'modified', 'unique' => 0),
-            'user_id'  => array('column' => 'user_id', 'unique' => 0)
+            'PRIMARY'    => array('column' => 'id', 'unique' => 1),
+            'team_id'    => array('column' => 'team_id', 'unique' => 0),
+            'goal_id'    => array('column' => 'goal_id', 'unique' => 0),
+            'modified'   => array('column' => 'modified', 'unique' => 0),
+            'user_id'    => array('column' => 'user_id', 'unique' => 0),
+            'start_date' => array('column' => 'start_date', 'unique' => 0),
+            'end_date'   => array('column' => 'end_date', 'unique' => 0)
         ),
         'tableParameters'     => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
