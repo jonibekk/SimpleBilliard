@@ -65,7 +65,7 @@ class AppSchema extends CakeSchema
         'note'             => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'ノート', 'charset' => 'utf8'),
         'del_flg'          => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
         'deleted'          => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '削除した日付時刻'),
-        'created'          => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '追加した日付時刻'),
+        'created'          => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '追加した日付時刻'),
         'modified'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '更新した日付時刻'),
         'indexes'          => array(
             'PRIMARY'       => array('column' => 'id', 'unique' => 1),
@@ -73,7 +73,8 @@ class AppSchema extends CakeSchema
             'modified'      => array('column' => 'modified', 'unique' => 0),
             'goal_id'       => array('column' => 'goal_id', 'unique' => 0),
             'key_result_id' => array('column' => 'key_result_id', 'unique' => 0),
-            'user_id'       => array('column' => 'user_id', 'unique' => 0)
+            'user_id'       => array('column' => 'user_id', 'unique' => 0),
+            'created'       => array('column' => 'created', 'unique' => 0)
         ),
         'tableParameters'  => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
@@ -246,12 +247,13 @@ class AppSchema extends CakeSchema
         'circle_member_count' => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => true, 'comment' => 'メンバー数'),
         'del_flg'             => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
         'deleted'             => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '部署を削除した日付時刻'),
-        'created'             => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '部署を追加した日付時刻'),
+        'created'             => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '部署を追加した日付時刻'),
         'modified'            => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '部署を更新した日付時刻'),
         'indexes'             => array(
             'PRIMARY' => array('column' => 'id', 'unique' => 1),
             'team_id' => array('column' => 'team_id', 'unique' => 0),
-            'name'    => array('column' => 'name', 'unique' => 0)
+            'name'    => array('column' => 'name', 'unique' => 0),
+            'created' => array('column' => 'created', 'unique' => 0)
         ),
         'tableParameters'     => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
@@ -268,13 +270,14 @@ class AppSchema extends CakeSchema
         'valued_flg'      => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false, 'comment' => '価値フラグ(0 = 処理前,1 = 承認, 2 = 保留,3 = 修正依頼, 4 = 差し戻し)'),
         'del_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
         'deleted'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '削除した日付時刻'),
-        'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '追加した日付時刻'),
+        'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '追加した日付時刻'),
         'modified'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '更新した日付時刻'),
         'indexes'         => array(
             'PRIMARY' => array('column' => 'id', 'unique' => 1),
             'team_id' => array('column' => 'team_id', 'unique' => 0),
             'user_id' => array('column' => 'user_id', 'unique' => 0),
-            'goal_id' => array('column' => 'goal_id', 'unique' => 0)
+            'goal_id' => array('column' => 'goal_id', 'unique' => 0),
+            'created' => array('column' => 'created', 'unique' => 0)
         ),
         'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
@@ -305,14 +308,15 @@ class AppSchema extends CakeSchema
         'team_id'         => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'チームID(belongsToでTeamモデルに関連)'),
         'del_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
         'deleted'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'コメントを削除した日付時刻'),
-        'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'コメントを追加した日付時刻'),
+        'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'コメントを追加した日付時刻'),
         'modified'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'コメントを更新した日付時刻'),
         'indexes'         => array(
             'PRIMARY'             => array('column' => 'id', 'unique' => 1),
             'comment_user_unique' => array('column' => array('comment_id', 'user_id'), 'unique' => 1),
             'team_id'             => array('column' => 'team_id', 'unique' => 0),
             'comment_id'          => array('column' => 'comment_id', 'unique' => 0),
-            'user_id'             => array('column' => 'user_id', 'unique' => 0)
+            'user_id'             => array('column' => 'user_id', 'unique' => 0),
+            'created'             => array('column' => 'created', 'unique' => 0)
         ),
         'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
@@ -372,13 +376,14 @@ class AppSchema extends CakeSchema
         'del_flg'              => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
         'deleted'              => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '投稿を削除した日付時刻'),
         'created'              => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => true, 'key' => 'primary', 'comment' => '投稿を追加した日付時刻'),
-        'modified'             => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '投稿を更新した日付時刻'),
+        'modified'             => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '投稿を更新した日付時刻'),
         'indexes'              => array(
-            'PRIMARY' => array('column' => array('id', 'created'), 'unique' => 1),
-            'post_id' => array('column' => 'post_id', 'unique' => 0),
-            'user_id' => array('column' => 'user_id', 'unique' => 0),
-            'team_id' => array('column' => 'team_id', 'unique' => 0),
-            'created' => array('column' => 'created', 'unique' => 0)
+            'PRIMARY'  => array('column' => array('id', 'created'), 'unique' => 1),
+            'post_id'  => array('column' => 'post_id', 'unique' => 0),
+            'user_id'  => array('column' => 'user_id', 'unique' => 0),
+            'team_id'  => array('column' => 'team_id', 'unique' => 0),
+            'created'  => array('column' => 'created', 'unique' => 0),
+            'modified' => array('column' => 'modified', 'unique' => 0)
         ),
         'tableParameters'      => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
@@ -985,14 +990,15 @@ class AppSchema extends CakeSchema
         'team_id'         => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'チームID(belongsToでTeamモデルに関連)'),
         'del_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
         'deleted'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '投稿を削除した日付時刻'),
-        'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '投稿を追加した日付時刻'),
+        'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '投稿を追加した日付時刻'),
         'modified'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '投稿を更新した日付時刻'),
         'indexes'         => array(
             'PRIMARY'          => array('column' => 'id', 'unique' => 1),
             'post_user_unique' => array('column' => array('post_id', 'user_id'), 'unique' => 1),
             'team_id'          => array('column' => 'team_id', 'unique' => 0),
             'post_id'          => array('column' => 'post_id', 'unique' => 0),
-            'user_id'          => array('column' => 'user_id', 'unique' => 0)
+            'user_id'          => array('column' => 'user_id', 'unique' => 0),
+            'created'          => array('column' => 'created', 'unique' => 0)
         ),
         'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
@@ -1044,13 +1050,14 @@ class AppSchema extends CakeSchema
         'del_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
         'deleted'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '投稿を削除した日付時刻'),
         'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '投稿を追加した日付時刻'),
-        'modified'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '投稿を更新した日付時刻'),
+        'modified'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '投稿を更新した日付時刻'),
         'indexes'         => array(
             'PRIMARY'   => array('column' => 'id', 'unique' => 1),
             'post_id'   => array('column' => 'post_id', 'unique' => 0),
             'circle_id' => array('column' => 'circle_id', 'unique' => 0),
             'team_id'   => array('column' => 'team_id', 'unique' => 0),
-            'created'   => array('column' => 'created', 'unique' => 0)
+            'created'   => array('column' => 'created', 'unique' => 0),
+            'modified'  => array('column' => 'modified', 'unique' => 0)
         ),
         'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
@@ -1064,13 +1071,14 @@ class AppSchema extends CakeSchema
         'del_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
         'deleted'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '投稿を削除した日付時刻'),
         'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '投稿を追加した日付時刻'),
-        'modified'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '投稿を更新した日付時刻'),
+        'modified'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '投稿を更新した日付時刻'),
         'indexes'         => array(
-            'PRIMARY' => array('column' => 'id', 'unique' => 1),
-            'post_id' => array('column' => 'post_id', 'unique' => 0),
-            'user_id' => array('column' => 'user_id', 'unique' => 0),
-            'team_id' => array('column' => 'team_id', 'unique' => 0),
-            'created' => array('column' => 'created', 'unique' => 0)
+            'PRIMARY'  => array('column' => 'id', 'unique' => 1),
+            'post_id'  => array('column' => 'post_id', 'unique' => 0),
+            'user_id'  => array('column' => 'user_id', 'unique' => 0),
+            'team_id'  => array('column' => 'team_id', 'unique' => 0),
+            'created'  => array('column' => 'created', 'unique' => 0),
+            'modified' => array('column' => 'modified', 'unique' => 0)
         ),
         'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
@@ -1143,12 +1151,13 @@ class AppSchema extends CakeSchema
         'goal_count'      => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => true, 'comment' => 'ゴール数'),
         'del_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
         'deleted'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '削除した日付時刻'),
-        'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '追加した日付時刻'),
+        'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '追加した日付時刻'),
         'modified'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '更新した日付時刻'),
         'indexes'         => array(
             'PRIMARY' => array('column' => 'id', 'unique' => 1),
             'user_id' => array('column' => 'user_id', 'unique' => 0),
-            'team_id' => array('column' => 'team_id', 'unique' => 0)
+            'team_id' => array('column' => 'team_id', 'unique' => 0),
+            'created' => array('column' => 'created', 'unique' => 0)
         ),
         'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
