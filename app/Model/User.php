@@ -27,6 +27,7 @@ App::uses('AppModel', 'Model');
  * @property LocalName      $LocalName
  * @property Collaborator   $Collaborator
  * @property MemberGroup    $MemberGroup
+ * @property RecoveryCode   $RecoveryCode
  */
 class User extends AppModel
 {
@@ -238,6 +239,7 @@ class User extends AppModel
         'MemberGroup',
         'Collaborator',
         'Evaluator',
+        'RecoveryCode',
     ];
 
     /**
@@ -432,6 +434,7 @@ class User extends AppModel
      * @param $language
      * @param $first_name
      * @param $last_name
+     *
      * @return string
      */
     public function buildLocalUserName($language, $first_name, $last_name)
