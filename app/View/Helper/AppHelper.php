@@ -9,6 +9,7 @@
  */
 
 App::uses('Helper', 'View');
+App::uses('UrlCacheAppHelper', 'UrlCache.View/Helper');
 
 /**
  * Application helper
@@ -17,6 +18,6 @@ App::uses('Helper', 'View');
  *
  * @package       app.View.Helper
  */
-class AppHelper extends Helper
+class AppHelper extends UrlCacheAppHelper
 {
 }

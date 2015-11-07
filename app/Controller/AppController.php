@@ -42,15 +42,15 @@ App::uses('NotifySetting', 'Model');
 class AppController extends Controller
 {
     public $components = [
-        'DebugKit.Toolbar',
+        'DebugKit.Toolbar' => ['panels' => ['UrlCache.UrlCache']],
         'Session',
         //TODO Securityコンポーネントを利用した場合のテスト通過方法がわからない。要調査
-        'Security' => [
+        'Security'         => [
             'csrfUseOnce' => false,
             'csrfExpires' => '+24 hour'
         ],
         'Paginator',
-        'Auth'     => ['flash' => [
+        'Auth'             => ['flash' => [
             'element' => 'alert',
             'key'     => 'auth',
             'params'  => ['plugin' => 'BoostCake', 'class' => 'alert-error']
