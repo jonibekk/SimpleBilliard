@@ -10,8 +10,6 @@
  * @package       app.Config
  * @since         CakePHP(tm) v 0.10.8.2117
  */
-
-// Setup a 'default' cache configuration for use in the application.
 Cache::config('default', array(
                            'engine' => 'Apc',
                        )
@@ -109,7 +107,9 @@ App::build(array(
            )
 );
 CakePlugin::loadAll();
-
+//HtmlHelper UrlCache
+CakePlugin::load('UrlCache');
+Configure::write('UrlCache.active', true);
 /**
  * Goalous独自定数
  */

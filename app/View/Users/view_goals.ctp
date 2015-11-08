@@ -19,11 +19,28 @@
     <div class="panel panel-default">
         <?= $this->element('User/simplex_top_section') ?>
         <div class="panel-body view-goals-panel">
+            <div class="input-group">
+                        <span class="input-group-addon profile-user-icons" id=""><i
+                                class="profile-user-action-related-goal-icon fa fa-calendar-o"></i></span>
+                <?=
+                $this->Form->input('term_id', [
+                    'label'                    => false,
+                    'div'                      => false,
+                    'required'                 => true,
+                    'class'                    => 'form-control disable-change-warning',
+                    'id'                       => 'LoadTermGoal',
+                    'options'                  => $term,
+                    'default'                  => $term_id,
+                    'redirect-url'             => $term_base_url,
+                ])
+                ?>
+            </div>
+            <br>
             <div class="profile-goals-select-wrap btn-group" role="group">
-                <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user['User']['id']]) ?>"
+                <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user['User']['id'], 'term_id'=>$term_id]) ?>"
                    class="profile-goals-select btn <?= $page_type == "following" ? "btn-unselected" : "btn-selected" ?>">
                     <?= __d('gl', "マイゴール(%s)", $my_goals_count) ?></a>
-                <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user['User']['id'], 'page_type' => 'following']) ?>"
+                <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user['User']['id'],'term_id'=>$term_id, 'page_type' => 'following']) ?>"
                    class="profile-goals-select btn <?= $page_type == "following" ? "btn-selected" : "btn-unselected" ?>">
                     <?= __d('gl', "フォロー中(%s)", $follow_goals_count) ?></a>
             </div>

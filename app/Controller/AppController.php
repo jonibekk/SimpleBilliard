@@ -42,15 +42,15 @@ App::uses('NotifySetting', 'Model');
 class AppController extends Controller
 {
     public $components = [
-        'DebugKit.Toolbar',
+        'DebugKit.Toolbar' => ['panels' => ['UrlCache.UrlCache']],
         'Session',
         //TODO Securityコンポーネントを利用した場合のテスト通過方法がわからない。要調査
-        'Security' => [
+        'Security'         => [
             'csrfUseOnce' => false,
             'csrfExpires' => '+24 hour'
         ],
         'Paginator',
-        'Auth'     => ['flash' => [
+        'Auth'             => ['flash' => [
             'element' => 'alert',
             'key'     => 'auth',
             'params'  => ['plugin' => 'BoostCake', 'class' => 'alert-error']
@@ -132,6 +132,15 @@ class AppController extends Controller
         'Goalous App Android'
     ];
 
+    /**
+     * ブラウザ種類を表す文字列
+     * リクエストヘッダで送られてくる User-Agent ではない
+     *
+     * @var string
+     * @see AppController::_detectUserAgent()
+     */
+    public $user_agent = '';
+
     public function beforeFilter()
     {
         parent::beforeFilter();
@@ -151,6 +160,7 @@ class AppController extends Controller
         $this->_setSecurity();
         $this->_setAppLanguage();
         $this->_decideMobileAppRequest();
+        $this->_detectUserAgent();
         //ログイン済みの場合のみ実行する
         if ($this->Auth->user()) {
             $this->current_team_id = $this->Session->read('current_team_id');
@@ -233,7 +243,7 @@ class AppController extends Controller
                 $this->_setAllAlertCnt();
                 $this->_setNotifyCnt();
                 $this->_setMyCircle();
-                $this->set('current_term',$this->Team->EvaluateTerm->getCurrentTermData());
+                $this->set('current_term', $this->Team->EvaluateTerm->getCurrentTermData());
 
             }
             $this->_setMyMemberStatus();
@@ -655,42 +665,26 @@ class AppController extends Controller
     {
         //今期、来期のゴールを取得する
         $start_date = $this->Team->EvaluateTerm->getCurrentTermData()['start_date'];
-        $end_date = $this->Team->EvaluateTerm->getNextTermData()['end_date'];
+        $end_date = $this->Team->EvaluateTerm->getCurrentTermData()['end_date'];
 
         $my_goals = $this->Goal->getMyGoals(MY_GOALS_DISPLAY_NUMBER, 1, 'all', null, $start_date, $end_date);
         $my_goals_count = $this->Goal->getMyGoals(null, 1, 'count', null, $start_date, $end_date);
         $collabo_goals = $this->Goal->getMyCollaboGoals(MY_COLLABO_GOALS_DISPLAY_NUMBER, 1, 'all', null, $start_date,
                                                         $end_date);
         $collabo_goals_count = $this->Goal->getMyCollaboGoals(null, 1, 'count', null, $start_date, $end_date);
-        $follow_goals = $this->Goal->getMyFollowedGoals(MY_FOLLOW_GOALS_DISPLAY_NUMBER, 1, 'all', null, $start_date,
-                                                        $end_date);
-        $follow_goals_count = $this->Goal->getMyFollowedGoals(null, 1, 'count', null, $start_date, $end_date);
         $my_previous_goals = $this->Goal->getMyPreviousGoals(MY_PREVIOUS_GOALS_DISPLAY_NUMBER);
         $my_previous_goals_count = $this->Goal->getMyPreviousGoals(null, 1, 'count');
         //TODO 暫定的にアクションの候補を自分のゴールにする。あとでajax化する
-        $current_term_goals = $this->_filterCurrentTermGoals(array_merge($my_goals, $collabo_goals));
-        $goal_list_for_action_option = Hash::combine($current_term_goals, '{n}.Goal.id', '{n}.Goal.name');
-        $goal_list_for_action_option = [null => __d('gl', 'ゴールを選択する')] + $goal_list_for_action_option;
+        $current_term_goals_name_list = $this->Goal->getAllMyGoalNameList(
+            $this->Team->EvaluateTerm->getCurrentTermData()['start_date'],
+            $this->Team->EvaluateTerm->getCurrentTermData()['end_date']
+        );
+        $goal_list_for_action_option = [null => __d('gl', 'ゴールを選択する')] + $current_term_goals_name_list;
         //vision
         $vision = $this->Team->TeamVision->getDisplayVisionRandom();
-        $this->set(compact('vision', 'goal_list_for_action_option', 'my_goals', 'collabo_goals', 'follow_goals',
-                           'my_goals_count', 'collabo_goals_count', 'follow_goals_count', 'my_previous_goals',
+        $this->set(compact('vision', 'goal_list_for_action_option', 'my_goals', 'collabo_goals',
+                           'my_goals_count', 'collabo_goals_count', 'my_previous_goals',
                            'my_previous_goals_count'));
-    }
-
-    function _filterCurrentTermGoals($goals)
-    {
-        $start = $this->Team->EvaluateTerm->getCurrentTermData()['start_date'];
-        $end = $this->Team->EvaluateTerm->getCurrentTermData()['end_date'];
-        foreach ($goals as $k => $goal) {
-            if (!isset($goal['Goal']['end_date'])) {
-                continue;
-            }
-            if (!($goal['Goal']['end_date'] >= $start && $goal['Goal']['end_date'] <= $end)) {
-                unset($goals[$k]);
-            }
-        }
-        return $goals;
     }
 
     /**
@@ -764,5 +758,30 @@ class AppController extends Controller
             -8,   // 太平洋標準時
         ];
         $this->GlRedis->saveAccessUser($team_id, $user_id, REQUEST_TIMESTAMP, $timezones);
+    }
+
+    /**
+     * ブラウザの種類を特定する
+     *
+     * 注：現状対応しているのは safari/PC のみ
+     */
+    public function _detectUserAgent()
+    {
+        $ua = env('HTTP_USER_AGENT');
+
+        // スマホの場合
+        if (strpos($ua, 'iPhone') !== false ||
+            strpos($ua, 'iPad') !== false ||
+            strpos($ua, 'iPod') !== false ||
+            strpos($ua, 'Android') !== false
+        ) {
+            return;
+        }
+
+        // 以下、PC
+        // safari の場合（chrome にも 'safari' という単語が入ってるので除く）
+        if (strpos($ua, 'Safari') !== false && strpos($ua, 'Chrome') === false) {
+            $this->user_agent = 'safari';
+        }
     }
 }

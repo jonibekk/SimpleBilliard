@@ -103,7 +103,7 @@ class Goal extends AppModel
      *
      * @var string
      */
-    public $displayField = 'goal';
+    public $displayField = 'name';
 
     /**
      * Validation rules
@@ -214,6 +214,9 @@ class Goal extends AppModel
             'className' => 'ActionResult',
         ],
         'IncompleteKeyResult' => [
+            'className' => 'KeyResult'
+        ],
+        'CompleteKeyResult'   => [
             'className' => 'KeyResult'
         ],
         'Collaborator'        => [
@@ -419,10 +422,11 @@ class Goal extends AppModel
      * @param null   $user_id
      * @param int    $start_date
      * @param int    $end_date
+     * @param null   $kr_limit
      *
      * @return array
      */
-    function getMyGoals($limit = null, $page = 1, $type = "all", $user_id = null, $start_date = null, $end_date = null)
+    function getMyGoals($limit = null, $page = 1, $type = "all", $user_id = null, $start_date = null, $end_date = null, $kr_limit = null)
     {
         $user_id = !$user_id ? $this->my_uid : $user_id;
         $start_date = !$start_date ? $this->Team->EvaluateTerm->getCurrentTermData()['start_date'] : $start_date;
@@ -435,20 +439,48 @@ class Goal extends AppModel
                 'Goal.end_date <=' => $end_date,
             ],
             'contain'    => [
-                'MyCollabo'  => [
+                'MyCollabo'           => [
                     'conditions' => [
                         'MyCollabo.user_id' => $this->my_uid
                     ]
                 ],
-                'KeyResult'  => [
+                'KeyResult'           => [
                     //KeyResultは期限が今期内
                     'conditions' => [
                         'KeyResult.end_date >=' => $start_date,
                         'KeyResult.end_date <=' => $end_date,
+                    ],
+                    'order'      => [
+                        'KeyResult.progress ASC',
+                        'KeyResult.start_date ASC',
+                        'KeyResult.end_date ASC',
+                        'KeyResult.priority DESC',
+                    ],
+                ],
+                'IncompleteKeyResult' => [
+                    'conditions' => [
+                        'IncompleteKeyResult.completed'   => null,
+                        'IncompleteKeyResult.end_date >=' => $start_date,
+                        'IncompleteKeyResult.end_date <=' => $end_date,
+                    ],
+                    'fields'     => [
+                        'IncompleteKeyResult.id'
+                    ]
+                ],
+                'CompleteKeyResult'   => [
+                    'conditions' => [
+                        'NOT'                           => [
+                            'CompleteKeyResult.completed' => null,
+                        ],
+                        'CompleteKeyResult.end_date >=' => $start_date,
+                        'CompleteKeyResult.end_date <=' => $end_date,
+                    ],
+                    'fields'     => [
+                        'CompleteKeyResult.id'
                     ]
                 ],
                 'Purpose',
-                'Evaluation' => [
+                'Evaluation'          => [
                     'conditions' => [
                         'Evaluation.evaluatee_user_id' => $user_id,
                     ],
@@ -459,6 +491,9 @@ class Goal extends AppModel
             'limit'      => $limit,
             'page'       => $page
         ];
+        if ($kr_limit) {
+            $options['contain']['KeyResult']['limit'] = $kr_limit;
+        }
         if ($type == "count") {
             unset($options['contain']);
             return $this->find($type, $options);
@@ -493,7 +528,7 @@ class Goal extends AppModel
         $res = $this->sortPriority($res);
 
         //目的一覧を取得
-        if (!empty($purposes = $this->Purpose->getPurposesNoGoal())) {
+        if ($page == 1 && !empty($purposes = $this->Purpose->getPurposesNoGoal())) {
             foreach ($purposes as $key => $val) {
                 $purposes[$key]['Goal'] = [];
             }
@@ -593,15 +628,43 @@ class Goal extends AppModel
                 'Goal.id' => $goal_ids,
             ],
             'contain'    => [
-                'MyCollabo'  => [
+                'MyCollabo'           => [
                     'conditions' => [
                         'MyCollabo.user_id' => $this->my_uid
                     ]
                 ],
-                'KeyResult'  => [
+                'KeyResult'           => [
+                    'order' => [
+                        'KeyResult.progress ASC',
+                        'KeyResult.start_date ASC',
+                        'KeyResult.end_date ASC',
+                        'KeyResult.priority DESC',
+                    ],
+                ],
+                'IncompleteKeyResult' => [
+                    'conditions' => [
+                        'IncompleteKeyResult.completed'   => null,
+                        'IncompleteKeyResult.end_date >=' => $start_date,
+                        'IncompleteKeyResult.end_date <=' => $end_date,
+                    ],
+                    'fields'     => [
+                        'IncompleteKeyResult.id'
+                    ]
+                ],
+                'CompleteKeyResult'   => [
+                    'conditions' => [
+                        'NOT'                           => [
+                            'CompleteKeyResult.completed' => null,
+                        ],
+                        'CompleteKeyResult.end_date >=' => $start_date,
+                        'CompleteKeyResult.end_date <=' => $end_date,
+                    ],
+                    'fields'     => [
+                        'CompleteKeyResult.id'
+                    ]
                 ],
                 'Purpose',
-                'Evaluation' => [
+                'Evaluation'          => [
                     'conditions' => [
                         'Evaluation.evaluatee_user_id' => $this->my_uid,
                     ],
@@ -939,7 +1002,7 @@ class Goal extends AppModel
             'limit'      => $limit,
             'contain'    => [
                 'Purpose',
-                'KeyResult' => [
+                'KeyResult'           => [
                     //KeyResultは期限が今期内
                     'conditions' => [
                         'KeyResult.end_date >=' => $start_date,
@@ -947,12 +1010,43 @@ class Goal extends AppModel
                     ],
                     'fields'     => [
                         'KeyResult.id',
+                        'KeyResult.name',
+                        'KeyResult.end_date',
+                        'KeyResult.action_result_count',
                         'KeyResult.progress',
                         'KeyResult.priority',
                         'KeyResult.completed',
                     ],
+                    'order'      => [
+                        'KeyResult.progress ASC',
+                        'KeyResult.start_date ASC',
+                        'KeyResult.end_date ASC',
+                        'KeyResult.priority DESC',
+                    ],
                 ],
-                'MyCollabo' => [
+                'IncompleteKeyResult' => [
+                    'conditions' => [
+                        'IncompleteKeyResult.completed'   => null,
+                        'IncompleteKeyResult.end_date >=' => $start_date,
+                        'IncompleteKeyResult.end_date <=' => $end_date,
+                    ],
+                    'fields'     => [
+                        'IncompleteKeyResult.id'
+                    ]
+                ],
+                'CompleteKeyResult'   => [
+                    'conditions' => [
+                        'NOT'                           => [
+                            'CompleteKeyResult.completed' => null,
+                        ],
+                        'CompleteKeyResult.end_date >=' => $start_date,
+                        'CompleteKeyResult.end_date <=' => $end_date,
+                    ],
+                    'fields'     => [
+                        'CompleteKeyResult.id'
+                    ]
+                ],
+                'MyCollabo'           => [
                     'conditions' => [
                         'MyCollabo.user_id' => $this->my_uid
                     ]
@@ -1520,7 +1614,21 @@ class Goal extends AppModel
         return $is_present_term_flag;
     }
 
-    function getGoalNameList($goal_ids, $with_all_opt = false, $separate_term = false)
+    function getAllMyGoalNameList($start, $end)
+    {
+        $goal_ids = $this->Collaborator->getCollaboGoalList($this->my_uid, true);
+        $options = [
+            'conditions' => [
+                'id'          => $goal_ids,
+                'end_date >=' => $start,
+                'end_date <=' => $end,
+            ],
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
+    function getGoalNameListByGoalIds($goal_ids, $with_all_opt = false, $separate_term = false)
     {
         $options = [
             'conditions' => ['id' => $goal_ids],

@@ -325,6 +325,10 @@ textarea{
     margin: 0 0 0 0;
 }
 
+.mt_3px {
+    margin-top: 3px;
+}
+
 .mt_5px {
     margin-top: 5px;
 }
@@ -1002,14 +1006,6 @@ textarea{
 .form-group .input-group .bd-r-radius_4px {
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
-}
-
-.shadow-default {
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
-    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
-    -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
-    -o-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
-    -ms-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
 }
 
 .bd-s {
@@ -2253,57 +2249,6 @@ textarea.comment-post-form {
     margin: 0 0 4px;
 }
 
-/*========== ゴールカラム ==========*/
-
-.goals-column-head {
-    border-bottom: 1px solid #808080;
-}
-
-.goals-column-title {
-/ / margin : 0 0 4 px;
-}
-
-.goals-column-add-box {
-    border: 1px dashed #aaa;
-    padding: 0;
-    margin: 2px 0;
-}
-
-.goals-column-add-icon, .goals-column-add-text {
-    width: 100%;
-    text-align: center;
-}
-
-/*/goals-column-empty*/
-.goals-column-empty-box {
-    border: 1px dashed #aaa;
-    padding: 0;
-    margin: 8px 0;
-}
-
-.goals-column-empty-icon, .goals-column-empty-text {
-    width: 100%;
-    text-align: center;
-}
-
-.goals-column-empty-icon {
-    padding: 12px 0 0;
-}
-
-.goals-column-empty-text {
-    padding: 0 0 12px;
-}
-
-/*/goals-column-empty*/
-
-.my-goals-column-item {
-    background: #f5f5f5;
-}
-
-.my-goals-column-item {
-    padding: 6px 8px;
-    border-bottom: 1px solid #f0f0f0;
-}
 
 .check-status i {
     margin-right: 2px;
@@ -2321,10 +2266,6 @@ textarea.comment-post-form {
 .feed-circle-user-number {
     margin-left: 4px;
     font-size: 14px;
-}
-
-.goals-column-purpose {
-    padding-top: 2px;
 }
 
 .goals-column-progress-bar {
@@ -3137,15 +3078,11 @@ Temporary Properties - YOU MUST FIX
     margin: 5px 0;
 }
 
-.insight-row a {
+.insight-row .insight-value-container {
     display: block;
     color: inherit;
     padding: 10px;
     height: 70px;
-}
-
-.insight-row a:hover, .insight-row a:focus {
-    text-decoration: none;
 }
 
 .insight-value {
@@ -3227,6 +3164,8 @@ Temporary Properties - YOU MUST FIX
 
 .insight-graph-container {
     height: 100px;
+    text-align:center;
+    margin:3px 7px;
 }
 
 .insight-graph-type-button {

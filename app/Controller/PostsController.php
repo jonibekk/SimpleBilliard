@@ -1026,12 +1026,21 @@ class PostsController extends AppController
             throw new NotFoundException(__d('gl', "ファイルが存在しません。"));
         }
 
+        // safari は日本語ファイル名が文字化けするので特別扱い
+        if ($this->user_agent == 'safari') {
+            $this->response->header('Content-Disposition',
+                                    sprintf('attachment; filename="%s";',
+                                            mb_convert_encoding($file['AttachedFile']['attached_file_name'],
+                                                                'SJIS', 'UTF-8')));
+        }
+        else {
+            $this->response->header('Content-Disposition',
+                                    sprintf('attachment; filename="%s"; filename*=UTF-8\'\'%s',
+                                            $file['AttachedFile']['attached_file_name'],
+                                            rawurlencode($file['AttachedFile']['attached_file_name'])));
+        }
         $this->response->type('application/octet-stream');
         $this->response->length(strlen($res->body));
-        $this->response->header('Content-Disposition',
-                                sprintf('attachment; filename=%s; filename*=UTF-8\'\'%s',
-                                        $file['AttachedFile']['attached_file_name'],
-                                        rawurlencode($file['AttachedFile']['attached_file_name'])));
         $this->response->body($res->body);
         return $this->response;
     }
@@ -1239,15 +1248,11 @@ class PostsController extends AppController
         // ogpが取得できた場合
         $requestData['site_info'] = json_encode($ogp);
         if (isset($ogp['image'])) {
-
-            $extension = pathinfo($ogp['image'], PATHINFO_EXTENSION);
-
-            $allowed_extensions = array("jpg", "jpeg", "png", "gif");
-            if (!in_array($extension, $allowed_extensions)) {
+            $ext = UploadBehavior::getImgExtensionFromUrl($ogp['image']);
+            if (!$ext) {
                 $ogp['image'] = null;
             }
             $requestData['site_photo'] = $ogp['image'];
-
         }
         return $requestData;
     }

@@ -56,6 +56,8 @@ define(function () {
             points: {show: true}
         },
         grid: {
+            borderWidth: 1,
+            borderColor: '#a1a1a1',
             hoverable: true
         }
     };
@@ -194,17 +196,6 @@ define(function () {
 
     // セットアップ
     var setupInsight = function () {
-        // 各項目をクリックした時
-        // グラフを表示する
-        $(document).on('click', '#InsightResult .insight-row-toggle', function (e) {
-            e.preventDefault();
-            var $graphContainer = $(this).closest('.insight-row').find('.insight-graph-container');
-            $graphContainer.slideToggle('fast', function () {
-                if ($graphContainer.is(':visible')) {
-                    redrawGraph();
-                }
-            });
-        });
 
         // ウィンドウサイズを変更したとき
         $(window).on('resize', function (event) {
@@ -231,6 +222,7 @@ define(function () {
                 $('#InsightUniqueRow').hide();
                 $('#InsightTotalRow').show();
             }
+            redrawGraph();
         });
 
         $formInputs.on('change', createCallback(cake.url.insight, 'InsightResult', {

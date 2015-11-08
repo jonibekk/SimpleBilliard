@@ -27,6 +27,7 @@ App::uses('AppModel', 'Model');
  * @property LocalName      $LocalName
  * @property Collaborator   $Collaborator
  * @property MemberGroup    $MemberGroup
+ * @property RecoveryCode   $RecoveryCode
  */
 class User extends AppModel
 {
@@ -238,6 +239,7 @@ class User extends AppModel
         'MemberGroup',
         'Collaborator',
         'Evaluator',
+        'RecoveryCode',
     ];
 
     /**
@@ -418,21 +420,28 @@ class User extends AppModel
             return null;
         }
         //ローカルユーザ名が存在し、言語設定がある場合は国毎の表示を設定する
-        $last_first = in_array($this->me['language'], $this->langCodeOfLastFirst);
         $local_names = [
             'first_name'     => $res['first_name'],
             'last_name'      => $res['last_name'],
-            'local_username' => null,
+            'local_username' => $this->buildLocalUserName($this->me['language'], $res['first_name'], $res['last_name']),
         ];
-        if ($last_first) {
-            $local_names['local_username'] = $res['last_name'] . " "
-                . $res['first_name'];
-        }
-        else {
-            $local_names['local_username'] = $res['first_name'] . " "
-                . $res['last_name'];
-        }
         return $local_names;
+    }
+
+    /**
+     * 言語ごとの姓名並び順を考慮したローカル名を作成して返す
+     *
+     * @param $language
+     * @param $first_name
+     * @param $last_name
+     *
+     * @return string
+     */
+    public function buildLocalUserName($language, $first_name, $last_name)
+    {
+        return in_array($language, $this->langCodeOfLastFirst) ?
+            $last_name . " " . $first_name :
+            $first_name . " " . $last_name;
     }
 
     /**
