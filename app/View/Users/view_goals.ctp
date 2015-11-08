@@ -21,7 +21,7 @@
         <div class="panel-body view-goals-panel">
             <div class="input-group">
                         <span class="input-group-addon profile-user-icons" id=""><i
-                                class="profile-user-action-related-goal-icon fa fa-flag"></i></span>
+                                class="profile-user-action-related-goal-icon fa fa-calendar-o"></i></span>
                 <?=
                 $this->Form->input('term_id', [
                     'label'                    => false,
