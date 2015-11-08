@@ -557,14 +557,14 @@ class Post extends AppModel
         }
         //独自パラメータ指定なし
         if (!$org_param_exists) {
-            //自分の投稿
-            $p_list = array_merge($p_list, $this->getMyPostList($start, $end));
-            //自分が共有範囲指定された投稿
-            $p_list = array_merge($p_list, $this->PostShareUser->getShareWithMeList($start, $end));
-            //自分のサークルが共有範囲指定された投稿
-            $p_list = array_merge($p_list, $this->PostShareCircle->getMyCirclePostList($start, $end));
-            //ゴール投稿全て
-            $p_list = array_merge($p_list, $this->getAllExistGoalPostList($start, $end));
+//            //自分の投稿
+//            $p_list = array_merge($p_list, $this->getMyPostList($start, $end));
+//            //自分が共有範囲指定された投稿
+//            $p_list = array_merge($p_list, $this->PostShareUser->getShareWithMeList($start, $end));
+//            //自分のサークルが共有範囲指定された投稿
+//            $p_list = array_merge($p_list, $this->PostShareCircle->getMyCirclePostList($start, $end));
+//            //ゴール投稿全て
+//            $p_list = array_merge($p_list, $this->getAllExistGoalPostList($start, $end));
         }
         //パラメータ指定あり
         else {
@@ -661,46 +661,88 @@ class Post extends AppModel
         }
         else {
             //単独投稿以外は再度、件数、オーダーの条件を入れ取得
-            $post_options = [
-                'conditions' => [
-                    'Post.id' => $p_list,
-                ],
-                'limit'      => $limit,
-                'page'       => $page,
-                'order'      => [
-                    'Post.modified' => 'desc'
-                ],
-            ];
-            if ($this->orgParams['type'] == self::TYPE_ACTION) {
-                $post_options['order'] = ['ActionResult.id' => 'desc'];
-                $post_options['contain'] = ['ActionResult'];
-            }
-            if ($this->orgParams['type'] == self::TYPE_NORMAL) {
-                $post_options['conditions']['Post.type'] = self::TYPE_NORMAL;
-            }
-            if ($contains_message === false) {
-                $post_options['conditions']['NOT']['Post.type'] = self::TYPE_MESSAGE;
-            }
-
-            // 独自パラメータ無しの場合（ホームフィードの場合）
-            if (!$org_param_exists) {
-                $post_options['order'] = ['Post.created' => 'desc'];
-            }
-            // 読み込む投稿の更新時間が指定されている場合
-            if ($post_time_before) {
-                $order_col = key($post_options['order']);
-                $post_options['conditions']["$order_col <="] = $post_time_before;
-            }
-            $post_list = $this->find('list', $post_options);
+//            $post_options = [
+//                'conditions' => [
+//                    'Post.id' => $p_list,
+//                ],
+//                'limit'      => $limit,
+//                'page'       => $page,
+//                'order'      => [
+//                    'Post.modified' => 'desc'
+//                ],
+//            ];
+//            if ($this->orgParams['type'] == self::TYPE_ACTION) {
+//                $post_options['order'] = ['ActionResult.id' => 'desc'];
+//                $post_options['contain'] = ['ActionResult'];
+//            }
+//            if ($this->orgParams['type'] == self::TYPE_NORMAL) {
+//                $post_options['conditions']['Post.type'] = self::TYPE_NORMAL;
+//            }
+//            if ($contains_message === false) {
+//                $post_options['conditions']['NOT']['Post.type'] = self::TYPE_MESSAGE;
+//            }
+//
+//            // 独自パラメータ無しの場合（ホームフィードの場合）
+//            if (!$org_param_exists) {
+//                $post_options['order'] = ['Post.created' => 'desc'];
+//            }
+//            // 読み込む投稿の更新時間が指定されている場合
+//            if ($post_time_before) {
+//                $order_col = key($post_options['order']);
+//                $post_options['conditions']["$order_col <="] = $post_time_before;
+//            }
+//            $post_list = $this->find('list', $post_options);
         }
 
         //投稿を既読に
-        $this->PostRead->red($post_list);
+//        $this->PostRead->red($post_list);
+        $db = $this->getDataSource();
+
+        $postIdShareWithMeList = $db->buildStatement([
+                                                         'fields'     => ['PostShareUser.post_id'],
+                                                         'table'      => $db->fullTableName($this->PostShareUser),
+                                                         'alias'      => 'PostShareUser',
+                                                         'conditions' => [
+                                                             'PostShareUser.user_id'                  => $this->my_uid,
+                                                             'PostShareUser.team_id'                  => $this->current_team_id,
+                                                             'PostShareUser.modified BETWEEN ? AND ?' => [$start, $end],
+                                                         ],
+                                                     ], $this);
+        $my_circle_list = $this->Circle->CircleMember->getMyCircleList(true);
+        $postIdMyCirclePostList = $db->buildStatement([
+                                                          'fields'     => ['PostShareCircle.post_id'],
+                                                          'table'      => $db->fullTableName($this->PostShareCircle),
+                                                          'alias'      => 'PostShareCircle',
+                                                          'conditions' => [
+                                                              'PostShareCircle.circle_id'                => $my_circle_list,
+                                                              'PostShareCircle.team_id'                  => $this->current_team_id,
+                                                              'PostShareCircle.modified BETWEEN ? AND ?' => [$start, $end],
+                                                          ],
+                                                      ], $this);
 
         $options = [
             'conditions' => [
-                'Post.id' => $post_list,
+                'OR'                            => [
+                    [
+                        'Post.user_id' => $this->my_uid,
+                    ],
+                    [
+                        'NOT' => [
+                            'Post.goal_id' => null,
+                        ],
+                    ],
+                    [
+                        $db->expression('Post.id IN (' . $postIdShareWithMeList . ')'),
+                    ],
+                    [
+                        $db->expression('Post.id IN (' . $postIdMyCirclePostList . ')'),
+                    ],
+                ],
+                'Post.modified BETWEEN ? AND ?' => [$start, $end],
+                //                'Post.id' => $post_list,
             ],
+            'limit'      => $limit,
+            'page'       => $page,
             'order'      => [
                 'Post.created' => 'desc'
             ],
