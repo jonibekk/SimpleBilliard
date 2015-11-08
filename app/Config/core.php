@@ -307,20 +307,6 @@ date_default_timezone_set('UTC');
  *        'prefix' => Inflector::slug(APP_DIR) . '_', //[optional]  prefix every cache file with this string
  *    ));
  */
-if (REDIS_CACHE_HOST) {
-    Cache::config('default', array(
-                               'engine' => 'Redis',
-                               'server' => REDIS_CACHE_HOST,
-                               'port'   => 6379,
-                           )
-    );
-}
-else {
-    Cache::config('default', array(
-                               'engine' => 'Apc',
-                           )
-    );
-}
 
 /**
  * Configure the cache handlers that CakePHP will use for internal
