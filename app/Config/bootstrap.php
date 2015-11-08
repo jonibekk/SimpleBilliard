@@ -10,6 +10,10 @@
  * @package       app.Config
  * @since         CakePHP(tm) v 0.10.8.2117
  */
+Cache::config('default', array(
+                           'engine' => 'Apc',
+                       )
+);
 
 /**
  * The settings below can be used to set additional paths to models, views and controllers.
