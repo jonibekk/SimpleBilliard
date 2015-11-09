@@ -15,7 +15,6 @@ evReplaceKRListAjaxGet = ->
         line_height += 64 * data.count
         $kr_line.height line_height
         $('#' + target_id).remove()
-
         # 高さ更新
         scrollFixColumn()
 
@@ -23,15 +22,3 @@ evReplaceKRListAjaxGet = ->
 
 $ ->
   evReplaceKRListAjaxGet()
-
-  # evReplaceAjaxGet = ->
-  #   # attrUndefinedCheck @, 'target-id'
-  #   # attrUndefinedCheck @, 'ajax-url'
-  #   $obj = $(@)
-  #   target_id = $obj.attr('target-id')
-  #   ajax_url = $obj.attr('ajax-url')
-  #   #noinspection JSJQueryEfficiency
-  #   if !$('#' + target_id).hasClass('data-exists')
-  #     $.get ajax_url, (data) ->
-  #       $('#' + target_id).append data.html
-  #     return false
