@@ -510,7 +510,6 @@ class Post extends AppModel
         if (isset($params['named']['post_time_before']) && !empty($params['named']['post_time_before'])) {
             $post_time_before = $params['named']['post_time_before'];
         }
-        $p_list = [];
         $org_param_exists = false;
         if ($params) {
             foreach ($this->orgParams as $key => $val) {
@@ -533,6 +532,7 @@ class Post extends AppModel
          * @var DboSource $db
          */
         $db = $this->getDataSource();
+        $single_post_id = null;
 
         //独自パラメータ指定なし
         if (!$org_param_exists) {
@@ -569,21 +569,19 @@ class Post extends AppModel
             //単独投稿指定
             elseif ($this->orgParams['post_id']) {
                 //アクセス可能かチェック
-                //ゴール投稿なら参照可能なゴールか？
-                if ($this->isGoalPost($this->orgParams['post_id'])) {
-                    $post_filter_conditions = ['Post.id' => $this->orgParams['post_id']];
-                }
-                elseif (
-                    //自分の投稿か？
+                if (
+                    //ゴール投稿か？であれば参照可能
+                    $this->isGoalPost($this->orgParams['post_id']) ||
+                    //自分の投稿か？であれば参照可能
                     $this->isMyPost($this->orgParams['post_id']) ||
-                    // 公開サークルに共有された投稿か？
+                    // 公開サークルに共有された投稿か？であれば参照可能
                     $this->PostShareCircle->isShareWithPublicCircle($this->orgParams['post_id']) ||
-                    //自分が共有範囲指定された投稿か？
+                    //自分が共有範囲指定された投稿か？であれば参照可能
                     $this->PostShareUser->isShareWithMe($this->orgParams['post_id']) ||
-                    //自分のサークルが共有範囲指定された投稿か？
+                    //自分のサークルが共有範囲指定された投稿か？であれば参照可能
                     $this->PostShareCircle->isMyCirclePost($this->orgParams['post_id'])
                 ) {
-                    $post_filter_conditions = ['Post.id' => $this->orgParams['post_id']];
+                    $single_post_id = $this->orgParams['post_id'];
                 }
             }
             //特定のKR指定
@@ -643,7 +641,7 @@ class Post extends AppModel
 
         if (!empty($this->orgParams['post_id'])) {
             //単独投稿指定の場合はそのまま
-            $post_list = $this->orgParams['post_id'];
+            $post_list = $single_post_id;
         }
         else {
             //単独投稿以外は再度、件数、オーダーの条件を入れ取得
