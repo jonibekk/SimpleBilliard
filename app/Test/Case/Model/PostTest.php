@@ -1202,7 +1202,7 @@ class PostTest extends CakeTestCase
          */
         $db = $this->Post->getDataSource();
         $actual = $this->Post->getSubQueryFilterKrPostList($db, 1, Post::TYPE_ACTION, 0, 1);
-        $expected = "SELECT Post.id FROM {$db->fullTableName($this->Post)} AS `Post` LEFT JOIN {$db->fullTableName($this->Post->ActionResult)} AS `ActionResult` ON (`ActionResult`.`post_id`=`Post`.`id`)  WHERE `Post`.`type` = 3 AND `Post`.`team_id` = 1 AND `ActionResult`.`key_result_id` = 1 AND `Post`.`modified` BETWEEN 0 AND 1";
+        $expected = "SELECT Post.id FROM {$db->fullTableName($this->Post)} AS `Post` LEFT JOIN {$db->fullTableName($this->Post->ActionResult)} AS `ActionResult` ON (`ActionResult`.`id`=`Post`.`action_result_id`)  WHERE `Post`.`type` = 3 AND `Post`.`team_id` = 1 AND `ActionResult`.`key_result_id` = 1 AND `Post`.`modified` BETWEEN 0 AND 1";
         $this->assertEquals($expected, $actual);
     }
 

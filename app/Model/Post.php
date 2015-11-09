@@ -599,7 +599,8 @@ class Post extends AppModel
                 //アクションのみの場合
                 if ($this->orgParams['type'] == self::TYPE_ACTION) {
                     $post_filter_conditions['OR'][] =
-                        $db->expression('Post.id IN (' . $this->getSubQueryFilterGoalPostList($this->orgParams['goal_id'],
+                        $db->expression('Post.id IN (' . $this->getSubQueryFilterGoalPostList($db,
+                                                                                              $this->orgParams['goal_id'],
                                                                                               self::TYPE_ACTION, $start,
                                                                                               $end) . ')');
 
@@ -610,7 +611,7 @@ class Post extends AppModel
                 //アクションのみの場合
                 if ($this->orgParams['type'] == self::TYPE_ACTION) {
                     $post_filter_conditions['OR'][] =
-                        $db->expression('Post.id IN (' . $this->getSubQueryFilterGoalPostList(null,
+                        $db->expression('Post.id IN (' . $this->getSubQueryFilterGoalPostList($db, null,
                                                                                               self::TYPE_ACTION, $start,
                                                                                               $end) . ')');
                 }
@@ -628,10 +629,10 @@ class Post extends AppModel
 
                 // 自分が閲覧可能なサークルへの投稿一覧
                 // （公開サークルへの投稿 + 自分が所属している秘密サークルへの投稿）
-                $p_list = array_merge($p_list,
-                                      $this->PostShareCircle->getAccessibleCirclePostList(
-                                          $start, $end, "PostShareCircle.modified", "desc", 1000,
-                                          ['user_id' => $this->orgParams['user_id']]));
+                //getSubQueryFilterAccessibleCirclePostList
+                $post_filter_conditions['OR'][] =
+                    $db->expression('Post.id IN (' . $this->getSubQueryFilterAccessibleCirclePostList($db, $start, $end,
+                                                                                                      ['user_id' => $this->orgParams['user_id']]) . ')');
 
                 // 自分自身の user_id が指定された場合は、自分の投稿を含める
                 if ($this->my_uid == $this->orgParams['user_id']) {
@@ -642,7 +643,7 @@ class Post extends AppModel
 
         if (!empty($this->orgParams['post_id'])) {
             //単独投稿指定の場合はそのまま
-            $post_list = $p_list;
+            $post_list = $this->orgParams['post_id'];
         }
         else {
             //単独投稿以外は再度、件数、オーダーの条件を入れ取得
@@ -683,7 +684,6 @@ class Post extends AppModel
         $options = [
             'conditions' => [
                 'Post.id' => $post_list,
-                'Post.modified BETWEEN ? AND ?' => [$start, $end],
             ],
             'order'      => [
                 'Post.created' => 'desc'
@@ -823,6 +823,10 @@ class Post extends AppModel
             ],
         ];
 
+        if (is_array($post_list)) {
+            $options['conditions'][] = ['Post.modified BETWEEN ? AND ?' => [$start, $end]];
+        }
+
         if ($this->orgParams['circle_id']) {
             $options['order'] = [
                 'Post.modified' => 'desc'
@@ -837,7 +841,6 @@ class Post extends AppModel
         if ($this->orgParams['type'] == self::TYPE_ACTION) {
             $options['order'] = ['ActionResult.id' => 'desc'];
         }
-
         $res = $this->find('all', $options);
         //コメントを逆順に
         foreach ($res as $key => $val) {
@@ -863,6 +866,59 @@ class Post extends AppModel
         $res = $this->getShareMessages($res);
         //未読件数を取得
         $res = $this->getCommentMyUnreadCount($res);
+        return $res;
+    }
+
+    /**
+     * 自分の閲覧可能な投稿のID一覧を返す
+     * （公開サークルへの投稿 + 自分が所属している秘密サークルへの投稿）
+     *
+     * @param DboSource $db
+     * @param           $start
+     * @param           $end
+     * @param array     $params
+     *                 'user_id' : 指定すると投稿者IDで絞る
+     *
+     * @return array|null
+     */
+    public function getSubQueryFilterAccessibleCirclePostList(DboSource $db, $start, $end, array $params = [])
+    {
+        // パラメータデフォルト
+        $params = array_merge(['user_id' => null], $params);
+
+        $my_circle_list = $this->Circle->CircleMember->getMyCircleList();
+        $query = [
+            'fields'     => ['PostShareCircle.post_id'],
+            'table'      => $db->fullTableName($this->PostShareCircle),
+            'alias'      => 'PostShareCircle',
+            'joins'      => [
+                [
+                    'type'       => 'LEFT',
+                    'table'      => $db->fullTableName($this->Circle),
+                    'alias'      => 'Circle',
+                    'conditions' => '`PostShareCircle`.`circle_id`=`Circle`.`id`',
+                ],
+            ],
+            'conditions' => [
+                'OR'                                       => [
+                    'PostShareCircle.circle_id' => $my_circle_list,
+                    'Circle.public_flg'         => 1
+                ],
+                'PostShareCircle.team_id'                  => $this->current_team_id,
+                'PostShareCircle.modified BETWEEN ? AND ?' => [$start, $end],
+            ],
+        ];
+
+        if ($params['user_id'] !== null) {
+            $query['joins'][] = [
+                'type'       => 'LEFT',
+                'table'      => $db->fullTableName($this),
+                'alias'      => 'Post',
+                'conditions' => '`PostShareCircle`.`post_id`=`Post`.`id`',
+            ];
+            $query['conditions']['Post.user_id'] = $params['user_id'];
+        }
+        $res = $db->buildStatement($query, $this);
         return $res;
     }
 
@@ -991,7 +1047,7 @@ class Post extends AppModel
                     'type'       => 'LEFT',
                     'table'      => $db->fullTableName($this->ActionResult),
                     'alias'      => 'ActionResult',
-                    'conditions' => '`ActionResult`.`post_id`=`Post`.`id`',
+                    'conditions' => '`ActionResult`.`id`=`Post`.`action_result_id`',
                 ],
             ],
             'conditions' => [
