@@ -107,6 +107,7 @@
                 </p>
             </div>
         </div>
+        <hr>
         <div class="form-group">
             <label for="2FA" class="col col-sm-3 control-label form-label"><?= __d('gl', "2段階認証") ?></label>
 
@@ -119,6 +120,10 @@
                         <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'ajax_get_modal_2fa_register']) ?>"
                            class="modal-ajax-get"><?= __d('gl', "設定する") ?></a>
                     <?php endif; ?>
+                </p>
+                <p class="form-control-static">
+                    <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'ajax_get_modal_recovery_code']) ?>"
+                       class="modal-ajax-get remove-on-hide"><?= __d('gl', "リカバリーコードを表示") ?></a>
                 </p>
             </div>
         </div>

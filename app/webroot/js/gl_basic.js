@@ -314,6 +314,11 @@ $(document).ready(function () {
         }
         $this.addClass('double_click');
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        if ($this.hasClass('remove-on-hide')) {
+            $modal_elm.on('hidden.bs.modal', function (e) {
+                $modal_elm.remove();
+            });
+        }
         //noinspection CoffeeScriptUnusedLocalSymbols,JSUnusedLocalSymbols
         modalFormCommonBindEvent($modal_elm);
         var url = $(this).attr('href');
@@ -612,6 +617,61 @@ $(document).ready(function () {
     // メッセージフォーム submit 時
     $(document).on('submit', '#MessageDisplayForm', function (e) {
         return checkUploadFileExpire('messageDropArea');
+    });
+    
+    // リカバリコード再生成
+    $(document).on('click', '#RecoveryCodeModal .regenerate-recovery-code', function (e) {
+        e.preventDefault();
+        var $form = $('#RegenerateRecoveryCodeForm');
+        $.ajax({
+            url: cake.url.regenerate_recovery_code,
+            type: 'POST',
+            dataType: 'json',
+            processData: false,
+            data: $form.serialize()
+        })
+            .done(function (res) {
+                PNotify.removeAll();
+                if (res.error) {
+                    new PNotify({
+                        type: 'error',
+                        title: cake.word.error,
+                        text: res.msg,
+                        icon: "fa fa-check-circle",
+                        delay: 4000,
+                        mouse_reset: false
+                    });
+                    return;
+                }
+                else {
+                    var $list_items = $('#RecoveryCodeList').find('li');
+                    for (var i = 0; i < 10; i++) {
+                        $list_items.eq(i).text(res.codes[i].slice(0, 4) + ' ' + res.codes[i].slice(-4));
+                    }
+                    
+                    new PNotify({
+                        type: 'success',
+                        title: cake.word.success,
+                        text: res.msg,
+                        icon: "fa fa-check-circle",
+                        delay: 4000,
+                        mouse_reset: false
+                    });
+                }
+               
+                
+            })
+            .fail(function () {
+                PNotify.removeAll();
+                new PNotify({
+                    type: 'error',
+                    title: cake.word.error,
+                    text: cake.message.notice.d,
+                    icon: "fa fa-check-circle",
+                    delay: 4000,
+                    mouse_reset: false
+                });
+            });
     });
 
 

@@ -858,6 +858,48 @@ class UsersController extends AppController
     }
 
     /**
+     * リカバリコードを表示
+     *
+     * @return CakeResponse
+     */
+    function ajax_get_modal_recovery_code()
+    {
+        $this->_ajaxPreProcess();
+        $recovery_codes = $this->User->RecoveryCode->getAvailable($this->Auth->user('id'));
+        if (!$recovery_codes) {
+            $this->User->RecoveryCode->regenerate($this->Auth->user('id'));
+            $recovery_codes = $this->User->RecoveryCode->getAvailable($this->Auth->user('id'));
+        }
+        $this->set('recovery_codes', $recovery_codes);
+        $response = $this->render('User/modal_recovery_code');
+        $html = $response->__toString();
+        return $this->_ajaxGetResponse($html);
+    }
+
+    /**
+     * リカバリコードを再生成
+     */
+    function ajax_regenerate_recovery_code()
+    {
+        $this->_ajaxPreProcess();
+        $this->request->allowMethod('post');
+
+        $success = $this->User->RecoveryCode->regenerate($this->Auth->user('id'));
+        if (!$success) {
+            return $this->_ajaxGetResponse(['error' => true,
+                                            'msg'   => __d('gl', "エラーが発生しました。")]);
+        }
+
+        $recovery_codes = $this->User->RecoveryCode->getAvailable($this->Auth->user('id'));
+        $codes = array_map(function ($v) {
+            return $v['RecoveryCode']['code'];
+        }, $recovery_codes);
+        return $this->_ajaxGetResponse(['error' => false,
+                                        'msg'   => __d('gl', "新しいリカバリコードを生成しました。"),
+                                        'codes' => $codes]);
+    }
+
+    /**
      * select2のユーザ検索
      */
     function ajax_select2_get_circles_users()

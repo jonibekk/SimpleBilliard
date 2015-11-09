@@ -17,56 +17,6 @@ class RecoveryCodeTest extends CakeTestCase
     public $fixtures = array(
         'app.recovery_code',
         'app.user',
-        'app.team',
-        'app.badge',
-        'app.circle',
-        'app.circle_member',
-        'app.post_share_circle',
-        'app.post',
-        'app.goal',
-        'app.purpose',
-        'app.goal_category',
-        'app.key_result',
-        'app.action_result',
-        'app.action_result_file',
-        'app.attached_file',
-        'app.comment_file',
-        'app.comment',
-        'app.comment_like',
-        'app.comment_read',
-        'app.post_file',
-        'app.collaborator',
-        'app.approval_history',
-        'app.follower',
-        'app.evaluation',
-        'app.evaluate_term',
-        'app.evaluator',
-        'app.evaluate_score',
-        'app.post_share_user',
-        'app.post_like',
-        'app.post_read',
-        'app.comment_mention',
-        'app.given_badge',
-        'app.post_mention',
-        'app.group',
-        'app.member_group',
-        'app.group_vision',
-        'app.invite',
-        'app.job_category',
-        'app.team_member',
-        'app.member_type',
-        'app.thread',
-        'app.message',
-        'app.evaluation_setting',
-        'app.team_vision',
-        'app.team_insight',
-        'app.group_insight',
-        'app.circle_insight',
-        'app.access_user',
-        'app.email',
-        'app.notify_setting',
-        'app.oauth_token',
-        'app.local_name'
     );
 
     /**
@@ -92,9 +42,74 @@ class RecoveryCodeTest extends CakeTestCase
         parent::tearDown();
     }
 
-    function testDummy()
+    function testGetAvailable()
     {
+        for ($i = 0; $i < 10; $i++) {
+            $this->RecoveryCode->create();
+            $this->RecoveryCode->save(['user_id' => 1, 'code' => 'test' . $i]);
+            $this->RecoveryCode->create();
+            $this->RecoveryCode->save(['user_id' => 2, 'code' => 'test' . $i]);
+        }
 
+        $available_codes = $this->RecoveryCode->getAvailable(1);
+        $this->assertCount(10, $available_codes);
+        foreach ($available_codes as $v) {
+            $this->assertEquals(1, $v['RecoveryCode']['user_id']);
+        }
     }
+
+    function testRegenerate()
+    {
+        $count1 = $this->RecoveryCode->find('count');
+        $res = $this->RecoveryCode->regenerate(1);
+        $this->assertTrue($res);
+        $count2 = $this->RecoveryCode->find('count');
+        $this->assertEquals($count1 + 10, $count2);
+        $available_codes = $this->RecoveryCode->getAvailable(1);
+        $this->assertCount(10, $available_codes);
+    }
+
+    function testRegenerateMultiTime()
+    {
+        $res = $this->RecoveryCode->regenerate(1);
+        $this->assertTrue($res);
+        $available_codes1 = $this->RecoveryCode->getAvailable(1);
+        $res = $this->RecoveryCode->regenerate(1);
+        $this->assertTrue($res);
+        $available_codes2 = $this->RecoveryCode->getAvailable(1);
+        $this->assertNotEquals($available_codes1, $available_codes2);
+        $available_codes3 = $this->RecoveryCode->getAvailable(1);
+        $this->assertEquals($available_codes2, $available_codes3);
+    }
+
+
+    function testRegenerateFailed()
+    {
+        $count1 = $this->RecoveryCode->find('count');
+        $this->RecoveryCode = $this->getMockForModel('RecoveryCode', array('updateAll'));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $this->RecoveryCode->expects($this->any())
+                           ->method('updateAll')
+                           ->will($this->returnValue(false));
+        $res = $this->RecoveryCode->regenerate(1);
+        $this->assertFalse($res);
+        $count2 = $this->RecoveryCode->find('count');
+        $this->assertEquals($count1, $count2);
+    }
+
+    function testRegenerateFailed2()
+    {
+        $count1 = $this->RecoveryCode->find('count');
+        $this->RecoveryCode = $this->getMockForModel('RecoveryCode', array('save'));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $this->RecoveryCode->expects($this->any())
+                           ->method('save')
+                           ->will($this->returnValue(false));
+        $res = $this->RecoveryCode->regenerate(1);
+        $this->assertFalse($res);
+        $count2 = $this->RecoveryCode->find('count');
+        $this->assertEquals($count1, $count2);
+    }
+
 
 }
