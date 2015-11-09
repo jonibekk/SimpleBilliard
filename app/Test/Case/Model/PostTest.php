@@ -1125,7 +1125,7 @@ class PostTest extends CakeTestCase
          */
         $db = $this->Post->getDataSource();
         $actual = $this->Post->getSubQueryFilterPostIdShareWithMe($db, 0, 1, ['user_id' => 1]);
-        $expected = "SELECT PostShareUser.post_id FROM {$db->fullTableName($this->Post->PostShareUser)} AS `PostShareUser` LEFT JOIN `myapp_test`.`posts` AS `Post` ON (`PostShareUser`.`post_id`=`Post`.`id`)  WHERE `PostShareUser`.`user_id` = 1 AND `PostShareUser`.`team_id` = 1 AND `PostShareUser`.`modified` BETWEEN 0 AND 1 AND `Post`.`user_id` = 1";
+        $expected = "SELECT PostShareUser.post_id FROM {$db->fullTableName($this->Post->PostShareUser)} AS `PostShareUser` LEFT JOIN {$db->fullTableName($this->Post)} AS `Post` ON (`PostShareUser`.`post_id`=`Post`.`id`)  WHERE `PostShareUser`.`user_id` = 1 AND `PostShareUser`.`team_id` = 1 AND `PostShareUser`.`modified` BETWEEN 0 AND 1 AND `Post`.`user_id` = 1";
         $this->assertEquals($expected, $actual);
     }
 
