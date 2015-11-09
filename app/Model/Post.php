@@ -683,9 +683,8 @@ class Post extends AppModel
         $options = [
             'conditions' => [
                 'Post.id' => $post_list,
+                'Post.modified BETWEEN ? AND ?' => [$start, $end],
             ],
-            'limit'      => $limit,
-            'page'       => $page,
             'order'      => [
                 'Post.created' => 'desc'
             ],
