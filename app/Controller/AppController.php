@@ -132,6 +132,15 @@ class AppController extends Controller
         'Goalous App Android'
     ];
 
+    /**
+     * ブラウザ種類を表す文字列
+     * リクエストヘッダで送られてくる User-Agent ではない
+     *
+     * @var string
+     * @see AppController::_detectUserAgent()
+     */
+    public $user_agent = '';
+
     public function beforeFilter()
     {
         parent::beforeFilter();
@@ -151,6 +160,7 @@ class AppController extends Controller
         $this->_setSecurity();
         $this->_setAppLanguage();
         $this->_decideMobileAppRequest();
+        $this->_detectUserAgent();
         //ログイン済みの場合のみ実行する
         if ($this->Auth->user()) {
             $this->current_team_id = $this->Session->read('current_team_id');
@@ -748,5 +758,30 @@ class AppController extends Controller
             -8,   // 太平洋標準時
         ];
         $this->GlRedis->saveAccessUser($team_id, $user_id, REQUEST_TIMESTAMP, $timezones);
+    }
+
+    /**
+     * ブラウザの種類を特定する
+     *
+     * 注：現状対応しているのは safari/PC のみ
+     */
+    public function _detectUserAgent()
+    {
+        $ua = env('HTTP_USER_AGENT');
+
+        // スマホの場合
+        if (strpos($ua, 'iPhone') !== false ||
+            strpos($ua, 'iPad') !== false ||
+            strpos($ua, 'iPod') !== false ||
+            strpos($ua, 'Android') !== false
+        ) {
+            return;
+        }
+
+        // 以下、PC
+        // safari の場合（chrome にも 'safari' という単語が入ってるので除く）
+        if (strpos($ua, 'Safari') !== false && strpos($ua, 'Chrome') === false) {
+            $this->user_agent = 'safari';
+        }
     }
 }
