@@ -372,7 +372,7 @@ class PostTest extends CakeTestCase
             'user_id' => $uid,
             'team_id' => $team_id,
 
-            'body' => 'test'
+            'body'    => 'test'
         ];
         $this->Post->save($data);
         $res = $this->Post->isMyPost($this->Post->id);
@@ -839,9 +839,9 @@ class PostTest extends CakeTestCase
 
         $expected = [
             'Post' => [
-                'user_id' => '1',
-                'team_id' => '1',
-                'type'    => (int)7,
+                'user_id'   => '1',
+                'team_id'   => '1',
+                'type'      => (int)7,
 
                 'circle_id' => (int)1,
             ]
@@ -1108,35 +1108,35 @@ class PostTest extends CakeTestCase
     function testGetSubQueryFilterPostIdShareWithMe()
     {
         $this->_setDefault();
-        $expected = "SELECT PostShareUser.post_id FROM `myapp_test`.`post_share_users` AS `PostShareUser`   WHERE `PostShareUser`.`user_id` = 1 AND `PostShareUser`.`team_id` = 1 AND `PostShareUser`.`modified` BETWEEN 0 AND 1";
         /**
          * @var DboSource $db
          */
         $db = $this->Post->getDataSource();
         $actual = $this->Post->getSubQueryFilterPostIdShareWithMe($db, 0, 1);
+        $expected = "SELECT PostShareUser.post_id FROM {$db->fullTableName($this->Post->PostShareUser)} AS `PostShareUser`   WHERE `PostShareUser`.`user_id` = 1 AND `PostShareUser`.`team_id` = 1 AND `PostShareUser`.`modified` BETWEEN 0 AND 1";
         $this->assertEquals($expected, $actual);
     }
 
     function testGetSubQueryFilterPostIdShareWithMeWithUserId()
     {
         $this->_setDefault();
-        $expected = 'SELECT PostShareUser.post_id FROM `myapp_test`.`post_share_users` AS `PostShareUser` LEFT JOIN `myapp_test`.`posts` AS `Post` ON (`PostShareUser`.`post_id`=`Post`.`id`)  WHERE `PostShareUser`.`user_id` = 1 AND `PostShareUser`.`team_id` = 1 AND `PostShareUser`.`modified` BETWEEN 0 AND 1 AND `Post`.`user_id` = 1';
         /**
          * @var DboSource $db
          */
         $db = $this->Post->getDataSource();
         $actual = $this->Post->getSubQueryFilterPostIdShareWithMe($db, 0, 1, ['user_id' => 1]);
+        $expected = "SELECT PostShareUser.post_id FROM {$db->fullTableName($this->Post->PostShareUser)} AS `PostShareUser` LEFT JOIN `myapp_test`.`posts` AS `Post` ON (`PostShareUser`.`post_id`=`Post`.`id`)  WHERE `PostShareUser`.`user_id` = 1 AND `PostShareUser`.`team_id` = 1 AND `PostShareUser`.`modified` BETWEEN 0 AND 1 AND `Post`.`user_id` = 1";
         $this->assertEquals($expected, $actual);
     }
 
     function testGetSubQueryFilterMyCirclePostId()
     {
         $this->_setDefault();
-        $expected = 'SELECT PostShareCircle.post_id FROM `myapp_test`.`post_share_circles` AS `PostShareCircle`   WHERE `PostShareCircle`.`circle_id` IN (1, 2, 3, 4) AND `PostShareCircle`.`team_id` = 1 AND `PostShareCircle`.`modified` BETWEEN 0 AND 1';
         /**
          * @var DboSource $db
          */
         $db = $this->Post->getDataSource();
+        $expected = "SELECT PostShareCircle.post_id FROM {$db->fullTableName($this->Post->PostShareCircle)} AS `PostShareCircle`   WHERE `PostShareCircle`.`circle_id` IN (1, 2, 3, 4) AND `PostShareCircle`.`team_id` = 1 AND `PostShareCircle`.`modified` BETWEEN 0 AND 1";
         $actual = $this->Post->getSubQueryFilterMyCirclePostId($db, 0, 1);
         $this->assertEquals($expected, $actual);
     }
@@ -1144,12 +1144,12 @@ class PostTest extends CakeTestCase
     function testGetSubQueryFilterMyCirclePostIdWithAllParams()
     {
         $this->_setDefault();
-        $expected = 'SELECT PostShareCircle.post_id FROM `myapp_test`.`post_share_circles` AS `PostShareCircle`   WHERE `PostShareCircle`.`circle_id` = (1) AND `PostShareCircle`.`team_id` = 1 AND `PostShareCircle`.`modified` BETWEEN 0 AND 1 AND `PostShareCircle`.`share_type` = 0';
         /**
          * @var DboSource $db
          */
         $db = $this->Post->getDataSource();
         $actual = $this->Post->getSubQueryFilterMyCirclePostId($db, 0, 1, [1], PostShareCircle::SHARE_TYPE_SHARED);
+        $expected = "SELECT PostShareCircle.post_id FROM {$db->fullTableName($this->Post->PostShareCircle)} AS `PostShareCircle`   WHERE `PostShareCircle`.`circle_id` = (1) AND `PostShareCircle`.`team_id` = 1 AND `PostShareCircle`.`modified` BETWEEN 0 AND 1 AND `PostShareCircle`.`share_type` = 0";
         $this->assertEquals($expected, $actual);
     }
 
@@ -1177,7 +1177,7 @@ class PostTest extends CakeTestCase
             ]
         );
         $actual = $this->Post->getSubQueryFilterMyCirclePostId($db, 0, 1, $this->Post->Circle->getLastInsertID());
-        $expected = 'SELECT PostShareCircle.post_id FROM `myapp_test`.`post_share_circles` AS `PostShareCircle`   WHERE `PostShareCircle`.`circle_id` = ' . $this->Post->Circle->getLastInsertID() . ' AND `PostShareCircle`.`team_id` = 1 AND `PostShareCircle`.`modified` BETWEEN 0 AND 1 AND NOT (`type` IN (3, 2, 6, 5))';
+        $expected = "SELECT PostShareCircle.post_id FROM {$db->fullTableName($this->Post->PostShareCircle)} AS `PostShareCircle`   WHERE `PostShareCircle`.`circle_id` = " . $this->Post->Circle->getLastInsertID() . " AND `PostShareCircle`.`team_id` = 1 AND `PostShareCircle`.`modified` BETWEEN 0 AND 1 AND NOT (`type` IN (3, 2, 6, 5))";
         $this->assertEquals($expected, $actual);
     }
 
@@ -1190,7 +1190,7 @@ class PostTest extends CakeTestCase
         $db = $this->Post->getDataSource();
         $this->Post->orgParams['author_id'] = 1;
         $actual = $this->Post->getSubQueryFilterGoalPostList($db, 1, Post::TYPE_ACTION, 0, 1);
-        $expected = 'SELECT Post.id FROM `myapp_test`.`posts` AS `Post`   WHERE `Post`.`type` = 3 AND `Post`.`team_id` = 1 AND `Post`.`goal_id` = 1 AND `Post`.`user_id` = 1';
+        $expected = "SELECT Post.id FROM {$db->fullTableName($this->Post)} AS `Post`   WHERE `Post`.`type` = 3 AND `Post`.`team_id` = 1 AND `Post`.`goal_id` = 1 AND `Post`.`user_id` = 1";
         $this->assertEquals($expected, $actual);
     }
 
@@ -1202,7 +1202,7 @@ class PostTest extends CakeTestCase
          */
         $db = $this->Post->getDataSource();
         $actual = $this->Post->getSubQueryFilterKrPostList($db, 1, Post::TYPE_ACTION, 0, 1);
-        $expected = 'SELECT Post.id FROM `myapp_test`.`posts` AS `Post` LEFT JOIN `myapp_test`.`action_results` AS `ActionResult` ON (`ActionResult`.`post_id`=`Post`.`id`)  WHERE `Post`.`type` = 3 AND `Post`.`team_id` = 1 AND `ActionResult`.`key_result_id` = 1 AND `Post`.`modified` BETWEEN 0 AND 1';
+        $expected = "SELECT Post.id FROM {$db->fullTableName($this->Post)} AS `Post` LEFT JOIN {$db->fullTableName($this->Post->ActionResult)} AS `ActionResult` ON (`ActionResult`.`post_id`=`Post`.`id`)  WHERE `Post`.`type` = 3 AND `Post`.`team_id` = 1 AND `ActionResult`.`key_result_id` = 1 AND `Post`.`modified` BETWEEN 0 AND 1";
         $this->assertEquals($expected, $actual);
     }
 
