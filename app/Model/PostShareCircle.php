@@ -59,31 +59,6 @@ class PostShareCircle extends AppModel
         return $this->saveAll($data);
     }
 
-    public function getMyCirclePostList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000, $my_circle_list = null, $share_type = null)
-    {
-        if (!$my_circle_list) {
-            $my_circle_list = $this->Circle->CircleMember->getMyCircleList(true);
-        }
-        $backupPrimaryKey = $this->primaryKey;
-        $this->primaryKey = 'post_id';
-        $options = [
-            'conditions' => [
-                'circle_id'                => $my_circle_list,
-                'team_id'                  => $this->current_team_id,
-                'modified BETWEEN ? AND ?' => [$start, $end],
-            ],
-            'order'      => [$order => $order_direction],
-            'limit'      => $limit,
-            'fields'     => ['post_id'],
-        ];
-        if ($share_type !== null) {
-            $options['conditions']['share_type'] = $share_type;
-        }
-        $res = $this->find('list', $options);
-        $this->primaryKey = $backupPrimaryKey;
-        return $res;
-    }
-
     /**
      * 自分の閲覧可能な投稿のID一覧を返す
      * （公開サークルへの投稿 + 自分が所属している秘密サークルへの投稿）
@@ -295,6 +270,7 @@ class PostShareCircle extends AppModel
         $res = $this->find('first', $options);
         return isset($res[0]['cnt']) ? intval($res[0]['cnt']) : 0;
     }
+
     /**
      * サークルへの投稿にいいねしたユーザーのリストを返す
      *

@@ -177,11 +177,11 @@ class PostTest extends CakeTestCase
         $this->Post->PostShareCircle->my_uid = $uid;
         $this->Post->PostShareCircle->current_team_id = $team_id;
         $postData = [
-            'Post'    => [
+            'Post' => [
                 'team_id' => 1,
                 'user_id' => 1,
-                'body' => 'test',
-                'share' => 'public',
+                'body'    => 'test',
+                'share'   => 'public',
             ],
         ];
         $res = $this->Post->addNormal($postData);
@@ -196,7 +196,6 @@ class PostTest extends CakeTestCase
         $this->assertCount(1, $all);
         $this->assertEquals(3, $all[0]['PostShareCircle']['circle_id']);
     }
-
 
     public function testAddError()
     {
@@ -373,27 +372,11 @@ class PostTest extends CakeTestCase
             'user_id' => $uid,
             'team_id' => $team_id,
 
-            'body'    => 'test'
+            'body' => 'test'
         ];
         $this->Post->save($data);
         $res = $this->Post->isMyPost($this->Post->id);
         $this->assertTrue($res);
-    }
-
-    function testGetGoalPostList()
-    {
-        $this->Post->my_uid = 1;
-        $this->Post->current_team_id = 1;
-        $data = [
-            'team_id' => 1,
-            'user_id' => 1,
-            'body'    => 'test',
-            'goal_id' => 1,
-            'type'    => Post::TYPE_ACTION
-        ];
-        $this->Post->save($data);
-        $res = $this->Post->getGoalPostList(1);
-        $this->assertTrue(!empty($res));
     }
 
     function testGetRandomShareCircleNames()
@@ -856,9 +839,9 @@ class PostTest extends CakeTestCase
 
         $expected = [
             'Post' => [
-                'user_id'   => '1',
-                'team_id'   => '1',
-                'type'      => (int)7,
+                'user_id' => '1',
+                'team_id' => '1',
+                'type'    => (int)7,
 
                 'circle_id' => (int)1,
             ]
@@ -1080,27 +1063,6 @@ class PostTest extends CakeTestCase
         $this->assertEquals($data['body'], $res['Post']['body']);
     }
 
-    function testGetAllPostsForTeamCircle()
-    {
-        $data = [
-            [
-                'user_id' => 1,
-                'team_id' => 1,
-                'body'    => 'test'
-            ],
-        ];
-        $this->Post->create();
-        $this->Post->save($data);
-        $post_id_1 = $this->Post->getLastInsertID();
-        $this->Post->create();
-        $this->Post->save($data);
-        $post_id_2 = $this->Post->getLastInsertID();
-
-        $this->assertNotEmpty($this->Post->getAllPostsForTeamCircle([$post_id_1, $post_id_2]));
-        $this->assertCount(2, $this->Post->getAllPostsForTeamCircle([$post_id_1, $post_id_2]));
-
-    }
-
     function testGetPhotoPath()
     {
         $data = [
@@ -1133,6 +1095,128 @@ class PostTest extends CakeTestCase
         $this->assertEquals(1, $posts[1]['ActionResult']['id']);
         $this->assertEquals(1, $posts[1]['User']['id']);
 
+    }
+
+    function testGetConditionGetMyPostList()
+    {
+        $this->_setDefault();
+        $actual = $this->Post->getConditionGetMyPostList();
+        $expected = ['Post.user_id' => $this->Post->my_uid];
+        $this->assertEquals($expected, $actual);
+    }
+
+    function testGetSubQueryFilterPostIdShareWithMe()
+    {
+        $this->_setDefault();
+        $expected = "SELECT PostShareUser.post_id FROM `myapp_test`.`post_share_users` AS `PostShareUser`   WHERE `PostShareUser`.`user_id` = 1 AND `PostShareUser`.`team_id` = 1 AND `PostShareUser`.`modified` BETWEEN 0 AND 1";
+        /**
+         * @var DboSource $db
+         */
+        $db = $this->Post->getDataSource();
+        $actual = $this->Post->getSubQueryFilterPostIdShareWithMe($db, 0, 1);
+        $this->assertEquals($expected, $actual);
+    }
+
+    function testGetSubQueryFilterPostIdShareWithMeWithUserId()
+    {
+        $this->_setDefault();
+        $expected = 'SELECT PostShareUser.post_id FROM `myapp_test`.`post_share_users` AS `PostShareUser` LEFT JOIN `myapp_test`.`posts` AS `Post` ON (`PostShareUser`.`post_id`=`Post`.`id`)  WHERE `PostShareUser`.`user_id` = 1 AND `PostShareUser`.`team_id` = 1 AND `PostShareUser`.`modified` BETWEEN 0 AND 1 AND `Post`.`user_id` = 1';
+        /**
+         * @var DboSource $db
+         */
+        $db = $this->Post->getDataSource();
+        $actual = $this->Post->getSubQueryFilterPostIdShareWithMe($db, 0, 1, ['user_id' => 1]);
+        $this->assertEquals($expected, $actual);
+    }
+
+    function testGetSubQueryFilterMyCirclePostId()
+    {
+        $this->_setDefault();
+        $expected = 'SELECT PostShareCircle.post_id FROM `myapp_test`.`post_share_circles` AS `PostShareCircle`   WHERE `PostShareCircle`.`circle_id` IN (1, 2, 3, 4) AND `PostShareCircle`.`team_id` = 1 AND `PostShareCircle`.`modified` BETWEEN 0 AND 1';
+        /**
+         * @var DboSource $db
+         */
+        $db = $this->Post->getDataSource();
+        $actual = $this->Post->getSubQueryFilterMyCirclePostId($db, 0, 1);
+        $this->assertEquals($expected, $actual);
+    }
+
+    function testGetSubQueryFilterMyCirclePostIdWithAllParams()
+    {
+        $this->_setDefault();
+        $expected = 'SELECT PostShareCircle.post_id FROM `myapp_test`.`post_share_circles` AS `PostShareCircle`   WHERE `PostShareCircle`.`circle_id` = (1) AND `PostShareCircle`.`team_id` = 1 AND `PostShareCircle`.`modified` BETWEEN 0 AND 1 AND `PostShareCircle`.`share_type` = 0';
+        /**
+         * @var DboSource $db
+         */
+        $db = $this->Post->getDataSource();
+        $actual = $this->Post->getSubQueryFilterMyCirclePostId($db, 0, 1, [1], PostShareCircle::SHARE_TYPE_SHARED);
+        $this->assertEquals($expected, $actual);
+    }
+
+    function testGetSubQueryFilterMyCirclePostIdTeamAllCircle()
+    {
+        $this->_setDefault();
+        /**
+         * @var DboSource $db
+         */
+        $db = $this->Post->getDataSource();
+        $this->Post->Circle->create();
+        $this->Post->Circle->save(
+            [
+                'team_id'      => $this->Post->current_team_id,
+                'team_all_flg' => 1,
+                'name'         => 'team all'
+            ]
+        );
+        $this->Post->Circle->CircleMember->create();
+        $this->Post->Circle->CircleMember->save(
+            [
+                'circle_id' => $this->Post->Circle->getLastInsertID(),
+                'team_id'   => $this->Post->current_team_id,
+                'user_id'   => $this->Post->my_uid
+            ]
+        );
+        $actual = $this->Post->getSubQueryFilterMyCirclePostId($db, 0, 1, $this->Post->Circle->getLastInsertID());
+        $expected = 'SELECT PostShareCircle.post_id FROM `myapp_test`.`post_share_circles` AS `PostShareCircle`   WHERE `PostShareCircle`.`circle_id` = ' . $this->Post->Circle->getLastInsertID() . ' AND `PostShareCircle`.`team_id` = 1 AND `PostShareCircle`.`modified` BETWEEN 0 AND 1 AND NOT (`type` IN (3, 2, 6, 5))';
+        $this->assertEquals($expected, $actual);
+    }
+
+    function testGetSubQueryFilterGoalPostList()
+    {
+        $this->_setDefault();
+        /**
+         * @var DboSource $db
+         */
+        $db = $this->Post->getDataSource();
+        $this->Post->orgParams['author_id'] = 1;
+        $actual = $this->Post->getSubQueryFilterGoalPostList($db, 1, Post::TYPE_ACTION, 0, 1);
+        $expected = 'SELECT Post.id FROM `myapp_test`.`posts` AS `Post`   WHERE `Post`.`type` = 3 AND `Post`.`team_id` = 1 AND `Post`.`goal_id` = 1 AND `Post`.`user_id` = 1';
+        $this->assertEquals($expected, $actual);
+    }
+
+    function testGetSubQueryFilterKrPostList()
+    {
+        $this->_setDefault();
+        /**
+         * @var DboSource $db
+         */
+        $db = $this->Post->getDataSource();
+        $actual = $this->Post->getSubQueryFilterKrPostList($db, 1, Post::TYPE_ACTION, 0, 1);
+        $expected = 'SELECT Post.id FROM `myapp_test`.`posts` AS `Post` LEFT JOIN `myapp_test`.`action_results` AS `ActionResult` ON (`ActionResult`.`post_id`=`Post`.`id`)  WHERE `Post`.`type` = 3 AND `Post`.`team_id` = 1 AND `ActionResult`.`key_result_id` = 1 AND `Post`.`modified` BETWEEN 0 AND 1';
+        $this->assertEquals($expected, $actual);
+    }
+
+    function testGetConditionGoalPostId()
+    {
+        $this->_setDefault();
+
+        $expected = [
+            'NOT' => [
+                'Post.goal_id' => null
+            ]
+        ];
+        $actual = $this->Post->getConditionGoalPostId();
+        $this->assertEquals($expected, $actual);
     }
 
     function _setDefault()
