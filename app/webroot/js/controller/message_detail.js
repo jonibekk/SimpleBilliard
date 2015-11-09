@@ -119,7 +119,16 @@ message_app.controller(
             //});
 
             // メッセージを送信する
-            $scope.clickMessage = function (event) {
+            $scope.clickMessage = function (event,val) {
+                if($scope.flag)
+                {
+                    return;
+                }
+                $scope.flag = true;
+                if(val==='like')
+                {
+                    $scope.message = '[like]';
+                }
                 event.target.disabled = 'disabled';
                 var sendMessageLoader = document.getElementById("SendMessageLoader");
                 sendMessageLoader.style.display = "inline-block";
@@ -148,10 +157,10 @@ message_app.controller(
                 };
 
                 $http(request).then(function (response) {
+                    $scope.flag = false;
                     event.target.disabled = '';
                     sendMessageLoader.style.display = 'none';
                     $scope.message = "";
-
                     // プレビューエレメント配下の子エレメントを削除する
                     var file_preview_element = document.getElementById("messageUploadFilePreviewArea");
                     for (var i = file_preview_element.childNodes.length - 1; i >= 0; i--) {
@@ -190,12 +199,12 @@ message_app.controller(
                             val.AttachedFileHtml = $sce.trustAsHtml(val.AttachedFileHtml);
                             pushMessage(val);
                         }, $scope.message_list);
-
                         // メッセージ表示
                         bottom_scroll();
                     });
+                }).error(function(){
+                    $scope.flag = false;
                 });
-
             };
 
             var pushPostMessage = function () {
