@@ -1469,6 +1469,10 @@ ul.example-indent {
     word-wrap: break-word;
 }
 
+.message-contents {
+    word-wrap: break-word;
+}
+
 ul.input-images {
     list-style: none;
     padding-left: 0;
