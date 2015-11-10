@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('PostShareCircle', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('PostShareCircle', 'Model');
  *
  * @property PostShareCircle $PostShareCircle
  */
-class PostShareCircleTest extends CakeTestCase
+class PostShareCircleTest extends GoalousTestCase
 {
 
     /**
@@ -87,8 +87,8 @@ class PostShareCircleTest extends CakeTestCase
         $user_id = 103;
         $res = $this->PostShareCircle->getAccessibleCirclePostList(strtotime("2014-01-01"), strtotime("2014-01-31"),
                                                                    "PostShareCircle.modified", 'desc', 1000, [
-                'user_id' => $user_id,
-            ]);
+                                                                       'user_id' => $user_id,
+                                                                   ]);
         $this->assertNotEmpty($res);
 
         // 投稿者IDで絞り込めているか確認
@@ -163,7 +163,7 @@ class PostShareCircleTest extends CakeTestCase
         ]);
         $this->assertEquals(13, $count);
     }
-    
+
     public function testGetLikeUserListByCircleId()
     {
         $this->PostShareCircle->my_uid = 1;
@@ -191,9 +191,9 @@ class PostShareCircleTest extends CakeTestCase
         $this->assertEquals([3 => "3"], $list);
 
         $list = $this->PostShareCircle->getLikeUserListByCircleId(1, [
-            'start' => $now - HOUR,
-            'end'   => $now + HOUR,
-            'like_user_id'   => [2],
+            'start'        => $now - HOUR,
+            'end'          => $now + HOUR,
+            'like_user_id' => [2],
         ]);
         $this->assertEquals([2 => "2"], $list);
     }
@@ -225,9 +225,9 @@ class PostShareCircleTest extends CakeTestCase
         $this->assertEquals([4 => "4"], $list);
 
         $list = $this->PostShareCircle->getCommentUserListByCircleId(1, [
-            'start' => $now - HOUR,
-            'end'   => $now + HOUR,
-            'comment_user_id'   => [2, 3],
+            'start'           => $now - HOUR,
+            'end'             => $now + HOUR,
+            'comment_user_id' => [2, 3],
         ]);
         $this->assertEquals([2 => "2", 3 => "3"], $list);
     }

@@ -2,7 +2,6 @@
 
 /**
  * InviteFixture
-
  */
 class InviteFixture extends CakeTestFixture
 {

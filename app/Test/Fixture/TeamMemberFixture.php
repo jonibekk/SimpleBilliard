@@ -2,7 +2,6 @@
 
 /**
  * TeamMemberFixture
-
  */
 class TeamMemberFixture extends CakeTestFixture
 {

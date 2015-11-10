@@ -2,7 +2,6 @@
 
 /**
  * GroupFixture
-
  */
 class GroupFixture extends CakeTestFixture
 {

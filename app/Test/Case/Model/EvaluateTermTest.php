@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('EvaluateTerm', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('EvaluateTerm', 'Model');
  *
  * @property EvaluateTerm $EvaluateTerm
  */
-class EvaluateTermTest extends CakeTestCase
+class EvaluateTermTest extends GoalousTestCase
 {
 
     /**
@@ -38,7 +38,6 @@ class EvaluateTermTest extends CakeTestCase
     public function tearDown()
     {
         unset($this->EvaluateTerm);
-
         parent::tearDown();
     }
 

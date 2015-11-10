@@ -184,23 +184,19 @@ class EvaluateTerm extends AppModel
     {
         $this->_checkType($type);
         if (!$this->current_term) {
-            if ($this->current_term = Cache::read($this->getCacheKey(CACHE_KEY_TERM_CURRENT))) {
-                return $this->current_term;
+            if(!$this->current_term = Cache::read($this->getCacheKey(CACHE_KEY_TERM_CURRENT),'data')){
+                if($this->current_term = $this->getTermDataByDatetime(REQUEST_TIMESTAMP)){
+                    Cache::set('duration', $this->current_term['end_date'] - REQUEST_TIMESTAMP, 'data');
+                    Cache::write($this->getCacheKey(CACHE_KEY_TERM_CURRENT), $this->current_term, 'data');
+                }
             }
-            if (!$this->current_term = $this->getTermDataByDatetime(REQUEST_TIMESTAMP)) {
-                return $this->current_term;
-            }
-            Cache::set('duration', $this->current_term['end_date'] - REQUEST_TIMESTAMP, 'data');
-            Cache::write($this->getCacheKey(CACHE_KEY_TERM_CURRENT), $this->current_term, 'data');
-
-            return $this->current_term;
         }
 
         if ($type === self::TYPE_PREVIOUS) {
             if ($this->previous_term) {
                 return $this->previous_term;
             }
-            if ($this->previous_term = Cache::read($this->getCacheKey(CACHE_KEY_TERM_PREVIOUS))) {
+            if ($this->previous_term = Cache::read($this->getCacheKey(CACHE_KEY_TERM_PREVIOUS),'data')) {
                 return $this->previous_term;
             }
             if (isset($this->current_term['start_date']) && !empty($this->current_term['start_date'])) {
@@ -218,7 +214,7 @@ class EvaluateTerm extends AppModel
             if ($this->next_term) {
                 return $this->next_term;
             }
-            if ($this->next_term = Cache::read($this->getCacheKey(CACHE_KEY_TERM_NEXT))) {
+            if ($this->next_term = Cache::read($this->getCacheKey(CACHE_KEY_TERM_NEXT),'data')) {
                 return $this->next_term;
             }
             if (isset($this->current_term['end_date']) && !empty($this->current_term['end_date'])) {

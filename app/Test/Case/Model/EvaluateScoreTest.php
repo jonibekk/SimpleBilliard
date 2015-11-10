@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('EvaluateScore', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('EvaluateScore', 'Model');
  *
  * @property EvaluateScore $EvaluateScore
  */
-class EvaluateScoreTest extends CakeTestCase
+class EvaluateScoreTest extends GoalousTestCase
 {
 
     /**
@@ -150,7 +150,7 @@ class EvaluateScoreTest extends CakeTestCase
 
     function testSetToInactive()
     {
-        $this->EvaluateScore->save(['name'=>'test','team_id'=>1]);
+        $this->EvaluateScore->save(['name' => 'test', 'team_id' => 1]);
         $actual = $this->EvaluateScore->setToInactive($this->EvaluateScore->getLastInsertID());
         $this->assertFalse($actual['EvaluateScore']['active_flg']);
     }

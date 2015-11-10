@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('CircleMember', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('CircleMember', 'Model');
  *
  * @property CircleMember $CircleMember
  */
-class CircleMemberTest extends CakeTestCase
+class CircleMemberTest extends GoalousTestCase
 {
 
     /**
@@ -242,7 +242,6 @@ class CircleMemberTest extends CakeTestCase
         $this->assertEmpty($res);
     }
 
-
     public function testShowHideStats()
     {
         $result = $this->CircleMember->show_hide_stats('user_id', 'circle_id');
@@ -328,7 +327,7 @@ class CircleMemberTest extends CakeTestCase
         $res = $this->CircleMember->getActiveMemberCount(9000);
         $this->assertEquals(2, $res);
     }
-    
+
     function testGetActiveMemberCountList()
     {
         $this->CircleMember->current_team_id = 1;
@@ -337,7 +336,7 @@ class CircleMemberTest extends CakeTestCase
         $this->CircleMember->Circle->my_uid = 1;
         $this->CircleMember->User->TeamMember->current_team_id = 1;
         $this->CircleMember->User->TeamMember->my_uid = 1;
-        
+
         $count_list = $this->CircleMember->getActiveMemberCountList(array_keys($this->CircleMember->Circle->getList()));
         foreach ($count_list as $id => $count) {
             $this->assertEquals($this->CircleMember->getActiveMemberCount($id), $count);

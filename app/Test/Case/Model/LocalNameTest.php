@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('LocalName', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('LocalName', 'Model');
  *
  * @property LocalName $LocalName
  */
-class LocalNameTest extends CakeTestCase
+class LocalNameTest extends GoalousTestCase
 {
 
     /**

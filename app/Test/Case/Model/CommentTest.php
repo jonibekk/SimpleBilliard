@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('Comment', 'Model');
 App::uses('Post', 'Model');
 
@@ -7,7 +7,7 @@ App::uses('Post', 'Model');
  *
  * @property Comment $Comment
  */
-class CommentTest extends CakeTestCase
+class CommentTest extends GoalousTestCase
 {
 
     /**
@@ -131,12 +131,12 @@ class CommentTest extends CakeTestCase
         $this->Comment->current_team_id = 1;
         $data = [
             'Comment' => [
-                'user_id'    => 1,
-                'post_id'    => 1,
-                'body'       => "test\nhttp://google.com/\n",
+                'user_id'   => 1,
+                'post_id'   => 1,
+                'body'      => "test\nhttp://google.com/\n",
                 'site_info' => json_encode([
-                    'url' => 'http://google.com/'
-                ])
+                                               'url' => 'http://google.com/'
+                                           ])
             ],
         ];
         $res = $this->Comment->add($data);
@@ -149,9 +149,9 @@ class CommentTest extends CakeTestCase
         // URL が末尾でないので削除されない
         $data = [
             'Comment' => [
-                'user_id'    => 1,
-                'post_id'    => 1,
-                'body'       => "test\nhttp://google.com/\ntest",
+                'user_id'   => 1,
+                'post_id'   => 1,
+                'body'      => "test\nhttp://google.com/\ntest",
                 'site_info' => json_encode([
                                                'url' => 'http://google.com/'
                                            ])
@@ -164,7 +164,6 @@ class CommentTest extends CakeTestCase
         $comment = $this->Comment->findById($last_id);
         $this->assertEquals("test\nhttp://google.com/\ntest", $comment['Comment']['body']);
     }
-
 
     function testAddInvalidOgp()
     {

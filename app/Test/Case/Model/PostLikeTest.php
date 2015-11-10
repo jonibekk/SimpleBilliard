@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('PostLike', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('PostLike', 'Model');
  *
  * @property PostLike $PostLike
  */
-class PostLikeTest extends CakeTestCase
+class PostLikeTest extends GoalousTestCase
 {
 
     /**
@@ -76,8 +76,8 @@ class PostLikeTest extends CakeTestCase
         $PostLikeMock = $this->getMockForModel('PostLike', array('save'));
         /** @noinspection PhpUndefinedMethodInspection */
         $PostLikeMock->expects($this->once())
-                 ->method('save')
-                 ->will($this->returnValue(false));
+                     ->method('save')
+                     ->will($this->returnValue(false));
         $this->PostLike = $PostLikeMock;
         $actual = $this->PostLike->changeLike($last_id);
         $this->assertEquals(1, $actual['error']);

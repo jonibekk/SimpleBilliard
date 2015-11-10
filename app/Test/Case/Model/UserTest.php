@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('User', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('User', 'Model');
  *
  * @property User $User
  */
-class UserTest extends CakeTestCase
+class UserTest extends GoalousTestCase
 {
 
 //    public $autoFixtures = false;
@@ -789,7 +789,6 @@ class UserTest extends CakeTestCase
         $res = $this->User->getUsersByKeyword("");
         $this->assertEmpty($res);
     }
-
 
     function testGetNewUsersByKeywordNotSharedOnPost()
     {

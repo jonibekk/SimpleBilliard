@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('TeamMember', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('TeamMember', 'Model');
  *
  * @property TeamMember $TeamMember
  */
-class TeamMemberTest extends CakeTestCase
+class TeamMemberTest extends GoalousTestCase
 {
 
     /**
@@ -2379,7 +2379,7 @@ class TeamMemberTest extends CakeTestCase
         $res = $this->TeamMember->getActiveTeamMembersList();
         $this->assertNotEmpty($res);
     }
-    
+
     function testCountActiveMembersByTeamId()
     {
         $members = $this->TeamMember->find('all', [
@@ -2388,7 +2388,7 @@ class TeamMemberTest extends CakeTestCase
                 'TeamMember.active_flg',
             ],
         ]);
-        
+
         $counts = [];
         foreach ($members as $v) {
             if (!$v['TeamMember']['active_flg']) {

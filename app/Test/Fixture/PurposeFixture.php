@@ -2,7 +2,6 @@
 
 /**
  * PurposeFixture
-
  */
 class PurposeFixture extends CakeTestFixture
 {

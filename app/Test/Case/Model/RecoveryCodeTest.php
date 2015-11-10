@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('RecoveryCode', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('RecoveryCode', 'Model');
  *
  * @property RecoveryCode $RecoveryCode
  */
-class RecoveryCodeTest extends CakeTestCase
+class RecoveryCodeTest extends GoalousTestCase
 {
 
     /**

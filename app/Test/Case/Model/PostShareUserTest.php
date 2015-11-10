@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('PostShareUser', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('PostShareUser', 'Model');
  *
  * @property PostShareUser $PostShareUser
  */
-class PostShareUserTest extends CakeTestCase
+class PostShareUserTest extends GoalousTestCase
 {
 
     /**

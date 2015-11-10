@@ -1,13 +1,13 @@
-<?php
+<?php App::uses('GoalousControllerTestCase', 'Test');
 App::uses('PagesController', 'Controller');
 
 /**
  * PagesController Test Case
- * @method testAction($url = '', $options = array()) ControllerTestCase::_testAction
+ * @method testAction($url = '', $options = array()) GoalousControllerTestCase::_testAction
  *
  * @property User $User
  */
-class PagesControllerTest extends ControllerTestCase
+class PagesControllerTest extends GoalousControllerTestCase
 {
     /**
      * Fixtures

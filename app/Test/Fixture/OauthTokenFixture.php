@@ -2,7 +2,6 @@
 
 /**
  * OauthTokenFixture
-
  */
 class OauthTokenFixture extends CakeTestFixture
 {

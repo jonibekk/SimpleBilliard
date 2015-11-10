@@ -2,7 +2,6 @@
 
 /**
  * AccessUserFixture
-
  */
 class AccessUserFixture extends CakeTestFixture
 {

@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('Circle', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('Circle', 'Model');
  *
  * @property Circle $Circle
  */
-class CircleTest extends CakeTestCase
+class CircleTest extends GoalousTestCase
 {
 
     /**

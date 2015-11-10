@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('EvaluationSetting', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('EvaluationSetting', 'Model');
  *
  * @property EvaluationSetting $EvaluationSetting
  */
-class EvaluationSettingTest extends CakeTestCase
+class EvaluationSettingTest extends GoalousTestCase
 {
 
     /**

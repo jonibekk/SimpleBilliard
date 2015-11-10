@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('TeamInsight', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('TeamInsight', 'Model');
  *
  * @property TeamInsight $TeamInsight
  */
-class TeamInsightTest extends CakeTestCase
+class TeamInsightTest extends GoalousTestCase
 {
 
     /**
@@ -141,7 +141,6 @@ class TeamInsightTest extends CakeTestCase
     {
         $this->TeamInsight->current_team_id = 1;
         $this->TeamInsight->my_uid = 1;
-
 
         $this->TeamInsight->create();
         $this->TeamInsight->save(

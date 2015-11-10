@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('Post', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('Post', 'Model');
  *
  * @property Post $Post
  */
-class PostTest extends CakeTestCase
+class PostTest extends GoalousTestCase
 {
 
     /**
@@ -177,11 +177,11 @@ class PostTest extends CakeTestCase
         $this->Post->PostShareCircle->my_uid = $uid;
         $this->Post->PostShareCircle->current_team_id = $team_id;
         $postData = [
-            'Post'    => [
+            'Post' => [
                 'team_id' => 1,
                 'user_id' => 1,
-                'body' => 'test',
-                'share' => 'public',
+                'body'    => 'test',
+                'share'   => 'public',
             ],
         ];
         $res = $this->Post->addNormal($postData);
@@ -196,7 +196,6 @@ class PostTest extends CakeTestCase
         $this->assertCount(1, $all);
         $this->assertEquals(3, $all[0]['PostShareCircle']['circle_id']);
     }
-
 
     public function testAddError()
     {
@@ -373,7 +372,7 @@ class PostTest extends CakeTestCase
             'user_id' => $uid,
             'team_id' => $team_id,
 
-            'body'    => 'test'
+            'body' => 'test'
         ];
         $this->Post->save($data);
         $res = $this->Post->isMyPost($this->Post->id);
@@ -856,9 +855,9 @@ class PostTest extends CakeTestCase
 
         $expected = [
             'Post' => [
-                'user_id'   => '1',
-                'team_id'   => '1',
-                'type'      => (int)7,
+                'user_id' => '1',
+                'team_id' => '1',
+                'type'    => (int)7,
 
                 'circle_id' => (int)1,
             ]
