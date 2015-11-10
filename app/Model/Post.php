@@ -451,40 +451,9 @@ class Post extends AppModel
         return false;
     }
 
-    public function getMyPostList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000)
+    public function getConditionGetMyPostList()
     {
-        $options = [
-            'conditions' => [
-                'user_id'                  => $this->my_uid,
-                'team_id'                  => $this->current_team_id,
-                'modified BETWEEN ? AND ?' => [$start, $end],
-            ],
-            'order'      => [$order => $order_direction],
-            'limit'      => $limit,
-            'fields'     => ['id'],
-        ];
-        $res = $this->find('list', $options);
-        return $res;
-    }
-
-    public function getAllPostsForTeamCircle($pids)
-    {
-        $options = [
-            'conditions' => [
-                'id'  => $pids,
-                'NOT' => [
-                    'type' => [
-                        self::TYPE_ACTION,
-                        self::TYPE_CREATE_GOAL,
-                        self::TYPE_GOAL_COMPLETE,
-                        self::TYPE_KR_COMPLETE
-                    ]
-                ]
-            ],
-            'fields'     => ['id', 'id']
-        ];
-        $res = $this->find('list', $options);
-        return $res;
+        return ['Post.user_id' => $this->my_uid];
     }
 
     public function getPostById($post_id)
@@ -541,7 +510,6 @@ class Post extends AppModel
         if (isset($params['named']['post_time_before']) && !empty($params['named']['post_time_before'])) {
             $post_time_before = $params['named']['post_time_before'];
         }
-        $p_list = [];
         $org_param_exists = false;
         if ($params) {
             foreach ($this->orgParams as $key => $val) {
@@ -555,16 +523,30 @@ class Post extends AppModel
                 }
             }
         }
+
+        $post_filter_conditions = [
+            'OR'                            => [],
+            'Post.modified BETWEEN ? AND ?' => [$start, $end],
+        ];
+        /**
+         * @var DboSource $db
+         */
+        $db = $this->getDataSource();
+        $single_post_id = null;
+
         //独自パラメータ指定なし
         if (!$org_param_exists) {
             //自分の投稿
-            $p_list = array_merge($p_list, $this->getMyPostList($start, $end));
+            $post_filter_conditions['OR'][] = $this->getConditionGetMyPostList();
             //自分が共有範囲指定された投稿
-            $p_list = array_merge($p_list, $this->PostShareUser->getShareWithMeList($start, $end));
+            $post_filter_conditions['OR'][] =
+                $db->expression('Post.id IN (' . $this->getSubQueryFilterPostIdShareWithMe($db, $start, $end) . ')');
+
             //自分のサークルが共有範囲指定された投稿
-            $p_list = array_merge($p_list, $this->PostShareCircle->getMyCirclePostList($start, $end));
+            $post_filter_conditions['OR'][] =
+                $db->expression('Post.id IN (' . $this->getSubQueryFilterMyCirclePostId($db, $start, $end) . ')');
             //ゴール投稿全て
-            $p_list = array_merge($p_list, $this->getAllExistGoalPostList($start, $end));
+            $post_filter_conditions['OR'][] = $this->getConditionGoalPostId();
         }
         //パラメータ指定あり
         else {
@@ -578,93 +560,93 @@ class Post extends AppModel
                 if (!$is_exists_circle || ($is_secret && !$is_belong_circle_member)) {
                     throw new RuntimeException(__d('gl', "サークルが存在しないか、権限がありません。"));
                 }
-
-                $p_list = array_merge($p_list,
-                                      $this->PostShareCircle->getMyCirclePostList($start, $end, 'modified', 'desc',
-                                                                                  1000, $this->orgParams['circle_id'],
-                                                                                  PostShareCircle::SHARE_TYPE_SHARED));
-
-                if ($this->Circle->isTeamAllCircle($this->orgParams['circle_id'])) {
-                    $p_list = $this->getAllPostsForTeamCircle($p_list);
-                }
+                $post_filter_conditions['OR'][] =
+                    $db->expression('Post.id IN (' . $this->getSubQueryFilterMyCirclePostId($db, $start, $end,
+                                                                                            $this->orgParams['circle_id'],
+                                                                                            PostShareCircle::SHARE_TYPE_SHARED) . ')');
 
             }
             //単独投稿指定
             elseif ($this->orgParams['post_id']) {
                 //アクセス可能かチェック
-                //ゴール投稿なら参照可能なゴールか？
-                if ($this->isGoalPost($this->orgParams['post_id'])) {
-                    $p_list = $this->orgParams['post_id'];
-                }
-                elseif (
-                    //自分の投稿か？
+                if (
+                    //ゴール投稿か？であれば参照可能
+                    $this->isGoalPost($this->orgParams['post_id']) ||
+                    //自分の投稿か？であれば参照可能
                     $this->isMyPost($this->orgParams['post_id']) ||
-                    // 公開サークルに共有された投稿か？
+                    // 公開サークルに共有された投稿か？であれば参照可能
                     $this->PostShareCircle->isShareWithPublicCircle($this->orgParams['post_id']) ||
-                    //自分が共有範囲指定された投稿か？
+                    //自分が共有範囲指定された投稿か？であれば参照可能
                     $this->PostShareUser->isShareWithMe($this->orgParams['post_id']) ||
-                    //自分のサークルが共有範囲指定された投稿か？
+                    //自分のサークルが共有範囲指定された投稿か？であれば参照可能
                     $this->PostShareCircle->isMyCirclePost($this->orgParams['post_id'])
                 ) {
-                    $p_list = $this->orgParams['post_id'];
+                    $single_post_id = $this->orgParams['post_id'];
                 }
             }
             //特定のKR指定
             elseif ($this->orgParams['key_result_id']) {
-                $p_list = $this->getKrPostList($this->orgParams['key_result_id'], self::TYPE_ACTION, "modified", "desc",
-                                               $start, $end);
+                $post_filter_conditions['OR'][] =
+                    $db->expression('Post.id IN (' . $this->getSubQueryFilterKrPostList($db,
+                                                                                        $this->orgParams['key_result_id'],
+                                                                                        self::TYPE_ACTION,
+                                                                                        $start, $end) . ')');
             }
             //特定ゴール指定
             elseif ($this->orgParams['goal_id']) {
                 //アクションのみの場合
                 if ($this->orgParams['type'] == self::TYPE_ACTION) {
-                    $p_list = $this->getGoalPostList($this->orgParams['goal_id'], self::TYPE_ACTION, "modified", "desc",
-                                                     $start, $end);
+                    $post_filter_conditions['OR'][] =
+                        $db->expression('Post.id IN (' . $this->getSubQueryFilterGoalPostList($db,
+                                                                                              $this->orgParams['goal_id'],
+                                                                                              self::TYPE_ACTION, $start,
+                                                                                              $end) . ')');
+
                 }
             }
             //投稿主指定
             elseif ($this->orgParams['author_id']) {
                 //アクションのみの場合
                 if ($this->orgParams['type'] == self::TYPE_ACTION) {
-                    $p_list = $this->getGoalPostList(null, self::TYPE_ACTION, "modified", "desc", $start, $end);
+                    $post_filter_conditions['OR'][] =
+                        $db->expression('Post.id IN (' . $this->getSubQueryFilterGoalPostList($db, null,
+                                                                                              self::TYPE_ACTION, $start,
+                                                                                              $end) . ')');
                 }
             }
             //ゴールのみの場合
             elseif ($this->orgParams['filter_goal']) {
-                $p_list = $this->getAllExistGoalPostList($start, $end);
+                $post_filter_conditions['OR'][] = $this->getConditionGoalPostId();
             }
             // ユーザーID指定
             elseif ($this->orgParams['user_id']) {
                 // 自分個人に共有された投稿
-                $p_list = array_merge($p_list,
-                                      $this->PostShareUser->getShareWithMeList(
-                                          $start, $end, "PostShareUser.modified", "desc", 1000,
-                                          ['user_id' => $this->orgParams['user_id']]));
+                $post_filter_conditions['OR'][] =
+                    $db->expression('Post.id IN (' . $this->getSubQueryFilterPostIdShareWithMe($db, $start, $end,
+                                                                                               ['user_id' => $this->orgParams['user_id']]) . ')');
 
                 // 自分が閲覧可能なサークルへの投稿一覧
                 // （公開サークルへの投稿 + 自分が所属している秘密サークルへの投稿）
-                $p_list = array_merge($p_list,
-                                      $this->PostShareCircle->getAccessibleCirclePostList(
-                                          $start, $end, "PostShareCircle.modified", "desc", 1000,
-                                          ['user_id' => $this->orgParams['user_id']]));
+                //getSubQueryFilterAccessibleCirclePostList
+                $post_filter_conditions['OR'][] =
+                    $db->expression('Post.id IN (' . $this->getSubQueryFilterAccessibleCirclePostList($db, $start, $end,
+                                                                                                      ['user_id' => $this->orgParams['user_id']]) . ')');
 
                 // 自分自身の user_id が指定された場合は、自分の投稿を含める
                 if ($this->my_uid == $this->orgParams['user_id']) {
-                    $p_list = array_merge($p_list, $this->getMyPostList($start, $end));
+                    $post_filter_conditions['OR'][] = $this->getConditionGetMyPostList();
                 }
             }
         }
 
         if (!empty($this->orgParams['post_id'])) {
             //単独投稿指定の場合はそのまま
-            $post_list = $p_list;
+            $post_list = $single_post_id;
         }
         else {
             //単独投稿以外は再度、件数、オーダーの条件を入れ取得
             $post_options = [
-                'conditions' => [
-                    'Post.id' => $p_list,
-                ],
+                'conditions' => $post_filter_conditions,
                 'limit'      => $limit,
                 'page'       => $page,
                 'order'      => [
@@ -839,6 +821,10 @@ class Post extends AppModel
             ],
         ];
 
+        if (is_array($post_list)) {
+            $options['conditions'][] = ['Post.modified BETWEEN ? AND ?' => [$start, $end]];
+        }
+
         if ($this->orgParams['circle_id']) {
             $options['order'] = [
                 'Post.modified' => 'desc'
@@ -853,7 +839,6 @@ class Post extends AppModel
         if ($this->orgParams['type'] == self::TYPE_ACTION) {
             $options['order'] = ['ActionResult.id' => 'desc'];
         }
-
         $res = $this->find('all', $options);
         //コメントを逆順に
         foreach ($res as $key => $val) {
@@ -882,6 +867,164 @@ class Post extends AppModel
         return $res;
     }
 
+    /**
+     * 自分の閲覧可能な投稿のID一覧を返す
+     * （公開サークルへの投稿 + 自分が所属している秘密サークルへの投稿）
+     *
+     * @param DboSource $db
+     * @param           $start
+     * @param           $end
+     * @param array     $params
+     *                 'user_id' : 指定すると投稿者IDで絞る
+     *
+     * @return array|null
+     */
+    public function getSubQueryFilterAccessibleCirclePostList(DboSource $db, $start, $end, array $params = [])
+    {
+        // パラメータデフォルト
+        $params = array_merge(['user_id' => null], $params);
+
+        $my_circle_list = $this->Circle->CircleMember->getMyCircleList();
+        $query = [
+            'fields'     => ['PostShareCircle.post_id'],
+            'table'      => $db->fullTableName($this->PostShareCircle),
+            'alias'      => 'PostShareCircle',
+            'joins'      => [
+                [
+                    'type'       => 'LEFT',
+                    'table'      => $db->fullTableName($this->Circle),
+                    'alias'      => 'Circle',
+                    'conditions' => '`PostShareCircle`.`circle_id`=`Circle`.`id`',
+                ],
+            ],
+            'conditions' => [
+                'OR'                                       => [
+                    'PostShareCircle.circle_id' => $my_circle_list,
+                    'Circle.public_flg'         => 1
+                ],
+                'PostShareCircle.team_id'                  => $this->current_team_id,
+                'PostShareCircle.modified BETWEEN ? AND ?' => [$start, $end],
+            ],
+        ];
+
+        if ($params['user_id'] !== null) {
+            $query['joins'][] = [
+                'type'       => 'LEFT',
+                'table'      => $db->fullTableName($this),
+                'alias'      => 'Post',
+                'conditions' => '`PostShareCircle`.`post_id`=`Post`.`id`',
+            ];
+            $query['conditions']['Post.user_id'] = $params['user_id'];
+        }
+        $res = $db->buildStatement($query, $this);
+        return $res;
+    }
+
+    public function getSubQueryFilterMyCirclePostId(DboSource $db, $start, $end, $my_circle_list = null, $share_type = null)
+    {
+        if (!$my_circle_list) {
+            $my_circle_list = $this->Circle->CircleMember->getMyCircleList(true);
+        }
+
+        $query = [
+            'fields'     => ['PostShareCircle.post_id'],
+            'table'      => $db->fullTableName($this->PostShareCircle),
+            'alias'      => 'PostShareCircle',
+            'conditions' => [
+                'PostShareCircle.circle_id'                => $my_circle_list,
+                'PostShareCircle.team_id'                  => $this->current_team_id,
+                'PostShareCircle.modified BETWEEN ? AND ?' => [$start, $end],
+            ],
+        ];
+        if ($share_type !== null) {
+            $query['conditions']['PostShareCircle.share_type'] = $share_type;
+        }
+        if (!is_array($my_circle_list) && $this->Circle->isTeamAllCircle($my_circle_list)) {
+            $query['conditions']['NOT'] = [
+                'type' => [
+                    self::TYPE_ACTION,
+                    self::TYPE_CREATE_GOAL,
+                    self::TYPE_GOAL_COMPLETE,
+                    self::TYPE_KR_COMPLETE
+                ]
+            ];
+        }
+        $res = $db->buildStatement($query, $this);
+        return $res;
+    }
+
+    public function getConditionGoalPostId()
+    {
+        $res = [
+            'NOT' => [
+                'Post.goal_id' => null,
+            ],
+        ];
+        return $res;
+    }
+
+    /**
+     * 自分に共有された投稿のID一覧を返す
+     *
+     * @param DboSource $db
+     * @param           $start
+     * @param           $end
+     * @param array     $params
+     *                 'user_id' : 指定すると投稿者で絞る
+     *
+     * @return array|null
+     */
+    public function getSubQueryFilterPostIdShareWithMe(DboSource $db, $start, $end, array $params = [])
+    {
+        // パラメータデフォルト
+        $params = array_merge(['user_id' => null], $params);
+        $query = [
+            'fields'     => ['PostShareUser.post_id'],
+            'table'      => $db->fullTableName($this->PostShareUser),
+            'alias'      => 'PostShareUser',
+            'conditions' => [
+                'PostShareUser.user_id'                  => $this->my_uid,
+                'PostShareUser.team_id'                  => $this->current_team_id,
+                'PostShareUser.modified BETWEEN ? AND ?' => [$start, $end],
+            ],
+        ];
+        if ($params['user_id'] !== null) {
+            $query['conditions']['Post.user_id'] = $params['user_id'];
+            $query['joins'][] = [
+                'type'       => 'LEFT',
+                'table'      => $db->fullTableName($this),
+                'alias'      => 'Post',
+                'conditions' => '`PostShareUser`.`post_id`=`Post`.`id`',
+            ];
+        }
+        $res = $db->buildStatement($query, $this);
+        return $res;
+    }
+
+    public function getSubQueryFilterGoalPostList(DboSource $db, $goal_id = null, $type = self::TYPE_ACTION, $start = null, $end = null)
+    {
+        $query = [
+            'fields'     => ['Post.id'],
+            'table'      => $db->fullTableName($this),
+            'alias'      => 'Post',
+            'conditions' => [
+                'Post.type'    => $type,
+                'Post.team_id' => $this->current_team_id,
+            ],
+        ];
+        if ($start && $end) {
+            $query['conditions']['Post.modified BETWEEN ? AND ?'] = [$start, $end];
+        }
+        if ($goal_id) {
+            $query['conditions']['Post.goal_id'] = $goal_id;
+        }
+        if ($this->orgParams['author_id']) {
+            $query['conditions']['Post.user_id'] = $this->orgParams['author_id'];
+        }
+        $res = $db->buildStatement($query, $this);
+        return $res;
+    }
+
     public function isGoalPost($post_id)
     {
         $post = $this->find('first', ['conditions' => ['Post.id' => $post_id], 'fields' => ['Post.goal_id']]);
@@ -891,63 +1034,31 @@ class Post extends AppModel
         return true;
     }
 
-    public function getAllExistGoalPostList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000)
+    public function getSubQueryFilterKrPostList(DboSource $db, $key_result_id, $type, $start = null, $end = null)
     {
-        $options = [
-            'conditions' => [
-                'NOT'                      => [
-                    'goal_id' => null,
+        $query = [
+            'fields'     => ['Post.id'],
+            'table'      => $db->fullTableName($this),
+            'alias'      => 'Post',
+            'joins'      => [
+                [
+                    'type'       => 'LEFT',
+                    'table'      => $db->fullTableName($this->ActionResult),
+                    'alias'      => 'ActionResult',
+                    'conditions' => '`ActionResult`.`id`=`Post`.`action_result_id`',
                 ],
-                'team_id'                  => $this->current_team_id,
-                'modified BETWEEN ? AND ?' => [$start, $end],
             ],
-            'order'      => [$order => $order_direction],
-            'limit'      => $limit,
-            'fields'     => ['id'],
-        ];
-        $res = $this->find('list', $options);
-        return $res;
-    }
-
-    public function getGoalPostList($goal_id = null, $type = self::TYPE_ACTION, $order = "modified", $order_direction = "desc", $start = null, $end = null)
-    {
-        $options = [
             'conditions' => [
-                'type'    => $type,
-                'team_id' => $this->current_team_id,
+                'Post.type'                  => $type,
+                'Post.team_id'               => $this->current_team_id,
+                'ActionResult.key_result_id' => $key_result_id,
             ],
-            'order'      => [$order => $order_direction],
-            'fields'     => ['id'],
         ];
-        if ($start && $end) {
-            $options['conditions']['modified BETWEEN ? AND ?'] = [$start, $end];
-        }
-        if ($goal_id) {
-            $options['conditions']['goal_id'] = $goal_id;
-        }
-        if ($this->orgParams['author_id']) {
-            $options['conditions']['user_id'] = $this->orgParams['author_id'];
-        }
-        $res = $this->find('list', $options);
-        return $res;
-    }
 
-    public function getKrPostList($key_result_id, $type, $order = "modified", $order_direction = "desc", $start = null, $end = null)
-    {
-        //まずKRのアクション一覧を取り出す
-        $action_ids = $this->ActionResult->getActionIdsByKrId($key_result_id);
-        $options = [
-            'conditions' => [
-                'action_result_id' => $action_ids,
-                'type'             => $type,
-            ],
-            'order'      => [$order => $order_direction],
-            'fields'     => ['id'],
-        ];
-        if ($start && $end) {
-            $options['conditions']['modified BETWEEN ? AND ?'] = [$start, $end];
+        if ($start !== null && $end !== null) {
+            $query['conditions']['Post.modified BETWEEN ? AND ?'] = [$start, $end];
         }
-        $res = $this->find('list', $options);
+        $res = $db->buildStatement($query, $this);
         return $res;
     }
 
