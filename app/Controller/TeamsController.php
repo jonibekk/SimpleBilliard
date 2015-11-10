@@ -228,6 +228,7 @@ class TeamsController extends AppController
         if ($this->Team->EvaluationSetting->save($this->request->data['EvaluationSetting'])) {
             $this->Team->commit();
             $this->Pnotify->outSuccess(__d('gl', "評価設定を保存しました。"));
+            Cache::delete($this->Team->getCacheKey(CACHE_KEY_TEAM_EVAL_SETTING, false), 'team_info');
         }
         else {
             $this->Team->rollback();
