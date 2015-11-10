@@ -867,7 +867,10 @@ class UsersController extends AppController
         $this->_ajaxPreProcess();
         $recovery_codes = $this->User->RecoveryCode->getAvailable($this->Auth->user('id'));
         if (!$recovery_codes) {
-            $this->User->RecoveryCode->regenerate($this->Auth->user('id'));
+            $success = $this->User->RecoveryCode->regenerate($this->Auth->user('id'));
+            if (!$success) {
+                throw new NotFoundException();
+            }
             $recovery_codes = $this->User->RecoveryCode->getAvailable($this->Auth->user('id'));
         }
         $this->set('recovery_codes', $recovery_codes);
@@ -889,7 +892,6 @@ class UsersController extends AppController
             return $this->_ajaxGetResponse(['error' => true,
                                             'msg'   => __d('gl', "エラーが発生しました。")]);
         }
-
         $recovery_codes = $this->User->RecoveryCode->getAvailable($this->Auth->user('id'));
         $codes = array_map(function ($v) {
             return $v['RecoveryCode']['code'];
