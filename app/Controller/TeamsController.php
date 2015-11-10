@@ -42,6 +42,7 @@ class TeamsController extends AppController
         $this->request->allowMethod('post');
         $this->Team->id = $this->current_team_id;
         if ($this->Team->save($this->request->data)) {
+            Cache::clear(false, 'team_info');
             $this->Pnotify->outSuccess(__d('gl', "チームの基本設定を更新しました。"));
         }
         else {
@@ -97,6 +98,8 @@ class TeamsController extends AppController
         // セッション中の default_team_id を更新
         $this->_refreshAuth();
 
+        // 事前に全ユーザのteam listデータを削除
+        Cache::clear(false, 'team_info');
         // 所属チームリストを更新して取得
         $this->User->TeamMember->setActiveTeamList($this->Auth->user('id'));
         $active_team_list = $this->User->TeamMember->getActiveTeamList($this->Auth->user('id'));
@@ -518,6 +521,8 @@ class TeamsController extends AppController
         else {
             $this->Team->TeamMember->commit();
             $result['msg'] = __d('gl', "%s人のメンバーを更新しました。", $save_res['success_count']);
+            //Cacheをすべて削除
+            Cache::clear(false, 'team_info');
         }
         return $this->_ajaxGetResponse($result);
     }

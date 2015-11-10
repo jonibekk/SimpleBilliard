@@ -170,6 +170,8 @@ define('FILE_LIST_PAGE_NUMBER', 20);
 define('CACHE_KEY_TERM_CURRENT', 'current_term');
 define('CACHE_KEY_TERM_NEXT', 'next_term');
 define('CACHE_KEY_TERM_PREVIOUS', 'previous_term');
+define('CACHE_KEY_TEAM_LIST', 'team_list');
+
 /**
  * 共通関数
  */

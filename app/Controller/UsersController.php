@@ -911,6 +911,8 @@ class UsersController extends AppController
         $this->Circle->CircleMember->joinNewMember($teamAllCircle['Circle']['id']);
         $this->Circle->current_team_id = $tmp;
         $this->Circle->CircleMember->current_team_id = $tmp;
+        //cache削除
+        Cache::delete($this->Circle->CircleMember->getCacheKey(CACHE_KEY_TEAM_LIST, true, null, false), 'team_info');
         //招待者に通知
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_USER_JOINED_TO_INVITED_TEAM, $invite['Invite']['id']);
         return $this->User->TeamMember->Team->findById($invite['Invite']['team_id']);

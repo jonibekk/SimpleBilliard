@@ -218,6 +218,8 @@ class Team extends AppModel
             $this->Circle->CircleMember->current_team_id = $this->id;
             $this->Circle->CircleMember->updateCounterCache(['circle_id' => $this->Circle->getLastInsertID()]);
             $this->Circle->CircleMember->current_team_id = $tmp;
+            //cache削除
+            Cache::delete($this->getCacheKey(CACHE_KEY_TEAM_LIST, true, null, false), 'team_info');
         }
         return true;
     }
@@ -342,9 +344,9 @@ class Team extends AppModel
             $post_data['Team']['timezone']
         );
         //キャッシュを削除
-        Cache::delete($this->getCacheKey(CACHE_KEY_TERM_CURRENT), 'data');
-        Cache::delete($this->getCacheKey(CACHE_KEY_TERM_NEXT), 'data');
-        Cache::delete($this->getCacheKey(CACHE_KEY_TERM_PREVIOUS), 'data');
+        Cache::delete($this->getCacheKey(CACHE_KEY_TERM_CURRENT), 'team_info');
+        Cache::delete($this->getCacheKey(CACHE_KEY_TERM_NEXT), 'team_info');
+        Cache::delete($this->getCacheKey(CACHE_KEY_TERM_PREVIOUS), 'team_info');
         return (bool)$res;
     }
 

@@ -444,17 +444,21 @@ class AppModel extends Model
      *
      * @param string     $name
      * @param bool|false $is_user_data
+     * @param null       $user_id
      * @param bool       $with_team_id
      *
      * @return string
      */
-    function getCacheKey($name, $is_user_data = false, $with_team_id = true)
+    function getCacheKey($name, $is_user_data = false, $user_id = null, $with_team_id = true)
     {
         if ($with_team_id) {
             $name .= ":team:" . $this->current_team_id;
         }
         if ($is_user_data) {
-            $name .= ":user:" . $this->my_uid;
+            if (!$user_id) {
+                $user_id = $this->my_uid;
+            }
+            $name .= ":user:" . $user_id;
         }
         return $name;
     }

@@ -69,6 +69,7 @@ class TeamMember extends AppModel
     function getActiveTeamList($uid)
     {
         if (empty($this->myTeams)) {
+
             $this->setActiveTeamList($uid);
         }
         return $this->myTeams;
@@ -76,15 +77,20 @@ class TeamMember extends AppModel
 
     function setActiveTeamList($uid)
     {
-        $options = [
-            'conditions' => [
-                'TeamMember.user_id'    => $uid,
-                'TeamMember.active_flg' => true
-            ],
-            'fields'     => ['TeamMember.team_id', 'Team.name'],
-            'contain'    => ['Team']
-        ];
-        $res = array_filter($this->findWithoutTeamId('list', $options));
+        $model = $this;
+        $res = Cache::remember($this->getCacheKey(CACHE_KEY_TEAM_LIST, true, null, false),
+            function () use ($model, $uid) {
+                $options = [
+                    'conditions' => [
+                        'TeamMember.user_id'    => $uid,
+                        'TeamMember.active_flg' => true
+                    ],
+                    'fields'     => ['TeamMember.team_id', 'Team.name'],
+                    'contain'    => ['Team']
+                ];
+                $res = array_filter($model->findWithoutTeamId('list', $options));
+                return $res;
+            }, 'team_info');
         $this->myTeams = $res;
     }
 
@@ -273,6 +279,12 @@ class TeamMember extends AppModel
     public function setActiveFlag($member_id, $flag)
     {
         $this->id = $member_id;
+        //対象ユーザのCache削除
+        $member = $this->read();
+        if (isset($member['TeamMember']['user_id'])) {
+            Cache::delete($this->getCacheKey(CACHE_KEY_TEAM_LIST, true, $member['TeamMember']['user_id'], false),
+                          'team_info');
+        }
         $flag = $flag == 'ON' ? 1 : 0;
         return $this->saveField('active_flg', $flag);
     }
@@ -2158,6 +2170,7 @@ class TeamMember extends AppModel
      * $team_id のチームに所属するアクティブメンバー数を返す
      *
      * @param $team_id
+     *
      * @return array
      */
     function countActiveMembersByTeamId($team_id)
