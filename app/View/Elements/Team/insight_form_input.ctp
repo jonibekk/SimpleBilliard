@@ -3,6 +3,7 @@
  * @var $team_list
  * @var $group_list
  * @var $date_ranges
+ * @var $today_time
  */
 $use = isset($use) ? $use : [];
 ?>
@@ -22,6 +23,8 @@ $use = isset($use) ? $use : [];
     <?= $this->Form->input('date_range', [
         'id'      => 'InsightInputDateRange',
         'type'    => 'select',
+        // 月曜日に表示した時は「先週」をデフォルト選択する
+        'value' => (date('w', $today_time) == 1) ? 'prev_week' : 'current_week',
         'options' => [
             'current_week'  => __d('gl', '今週') . sprintf(" (%s - %s)",
                                                          str_replace('-', '/', $date_ranges['current_week']['start']),
