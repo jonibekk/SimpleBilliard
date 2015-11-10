@@ -820,7 +820,7 @@ class UserTest extends GoalousTestCase
     {
         $this->User->my_uid = 2;
         $this->User->current_team_id = 1;
-        $actual = $this->User->getCacheKey(CACHE_KEY_TERM_CURRENT, true, true);
+        $actual = $this->User->getCacheKey(CACHE_KEY_TERM_CURRENT, true, null, true);
         $expected = 'current_term:team:1:user:2';
         $this->assertEquals($expected, $actual);
     }

@@ -64,29 +64,36 @@ class TeamMemberTest extends GoalousTestCase
                 'name' => 'test'
             ]
         ];
+        $this->TeamMember->my_uid = $uid;
+        Cache::delete($this->TeamMember->getCacheKey(CACHE_KEY_TEAM_LIST, true, $uid, false), 'team_info');
         $before_cunt = count($this->TeamMember->getActiveTeamList($uid));
         $this->TeamMember->Team->saveAll($data);
         $this->TeamMember->myTeams = null;
+        Cache::delete($this->TeamMember->getCacheKey(CACHE_KEY_TEAM_LIST, true, $uid, false), 'team_info');
         $res = $this->TeamMember->getActiveTeamList($uid);
         $this->assertEquals(count($res), $before_cunt + 1);
 
         $this->TeamMember->Team->saveAll($data);
         $this->TeamMember->myTeams = null;
+        Cache::delete($this->TeamMember->getCacheKey(CACHE_KEY_TEAM_LIST, true, $uid, false), 'team_info');
         $res = $this->TeamMember->getActiveTeamList($uid);
         $this->assertEquals(count($res), $before_cunt + 2);
 
         $this->TeamMember->delete();
         $this->TeamMember->myTeams = null;
+        Cache::delete($this->TeamMember->getCacheKey(CACHE_KEY_TEAM_LIST, true, $uid, false), 'team_info');
         $res = $this->TeamMember->getActiveTeamList($uid);
         $this->assertEquals(count($res), $before_cunt + 1);
 
         $this->TeamMember->Team->saveAll($data);
         $this->TeamMember->myTeams = null;
+        Cache::delete($this->TeamMember->getCacheKey(CACHE_KEY_TEAM_LIST, true, $uid, false), 'team_info');
         $res = $this->TeamMember->getActiveTeamList($uid);
         $this->assertEquals(count($res), $before_cunt + 2);
 
         $this->TeamMember->saveField('active_flg', false);
         $this->TeamMember->myTeams = null;
+        Cache::delete($this->TeamMember->getCacheKey(CACHE_KEY_TEAM_LIST, true, $uid, false), 'team_info');
         $res = $this->TeamMember->getActiveTeamList($uid);
         $this->assertEquals(count($res), $before_cunt + 1);
 
