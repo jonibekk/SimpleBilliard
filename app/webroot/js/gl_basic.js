@@ -3679,12 +3679,11 @@ $(document).ready(function () {
 function initBellNum() {
     var $bellBox = getBellBoxSelector();
     $bellBox.css("opacity", 0);
-    $bellBox.html("0");
+    $bellBox.children('span').html("0");
 }
 function initMessageNum() {
     var $box = getMessageBoxSelector();
     $box.css("opacity", 0);
-    //$box.html("0");
     $box.children('span').html("0");
 }
 

@@ -1693,6 +1693,8 @@ class TeamsController extends AppController
         $time_adjust = intval($timezone * HOUR);
         // タイムゾーンを考慮した「本日」
         $today = date('Y-m-d', time() + $time_adjust);
+        // 「本日」の 0 時のタイムスタンプ
+        $today_time = strtotime($today);
 
         // 今週、先週、今月、先月、前期、今期 の start_date, end_date
         $date_ranges = [];
@@ -1711,7 +1713,7 @@ class TeamsController extends AppController
             'end'   => date('Y-m-d', $row['end_date'] + $time_adjust),
         ];
 
-        return compact('time_adjust', 'today', 'date_ranges');
+        return compact('time_adjust', 'today', 'today_time', 'date_ranges');
     }
 
     /**
