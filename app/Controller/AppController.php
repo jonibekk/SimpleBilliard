@@ -269,7 +269,6 @@ class AppController extends Controller
             $this->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
         }
         $this->next_term_id = $this->Team->EvaluateTerm->getNextTermId();
-
     }
 
     /*
@@ -762,7 +761,6 @@ class AppController extends Controller
 
     /**
      * ブラウザの種類を特定する
-     *
      * 注：現状対応しているのは safari/PC のみ
      */
     public function _detectUserAgent()

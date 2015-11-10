@@ -184,16 +184,32 @@ class EvaluateTerm extends AppModel
     {
         $this->_checkType($type);
         if (!$this->current_term) {
-            $this->current_term = $this->getTermDataByDatetime(REQUEST_TIMESTAMP);
+            if ($this->current_term = Cache::read($this->getCacheKey(CACHE_KEY_TERM_CURRENT))) {
+                return $this->current_term;
+            }
+            if (!$this->current_term = $this->getTermDataByDatetime(REQUEST_TIMESTAMP)) {
+                return $this->current_term;
+            }
+            Cache::set('duration', $this->current_term['end_date'] - REQUEST_TIMESTAMP, 'data');
+            Cache::write($this->getCacheKey(CACHE_KEY_TERM_CURRENT), $this->current_term, 'data');
+
+            return $this->current_term;
         }
 
         if ($type === self::TYPE_PREVIOUS) {
             if ($this->previous_term) {
                 return $this->previous_term;
             }
+            if ($this->previous_term = Cache::read($this->getCacheKey(CACHE_KEY_TERM_PREVIOUS))) {
+                return $this->previous_term;
+            }
             if (isset($this->current_term['start_date']) && !empty($this->current_term['start_date'])) {
                 $this->previous_term = $this->getTermDataByDatetime(strtotime("-1 day",
                                                                               $this->current_term['start_date']));
+                if ($this->previous_term) {
+                    Cache::set('duration', $this->current_term['end_date'] - REQUEST_TIMESTAMP, 'data');
+                    Cache::write($this->getCacheKey(CACHE_KEY_TERM_PREVIOUS), $this->previous_term, 'data');
+                }
             }
             return $this->previous_term;
         }
@@ -202,8 +218,15 @@ class EvaluateTerm extends AppModel
             if ($this->next_term) {
                 return $this->next_term;
             }
+            if ($this->next_term = Cache::read($this->getCacheKey(CACHE_KEY_TERM_NEXT))) {
+                return $this->next_term;
+            }
             if (isset($this->current_term['end_date']) && !empty($this->current_term['end_date'])) {
                 $this->next_term = $this->getTermDataByDatetime(strtotime("+1 day", $this->current_term['end_date']));
+                if ($this->next_term) {
+                    Cache::set('duration', $this->current_term['end_date'] - REQUEST_TIMESTAMP, 'data');
+                    Cache::write($this->getCacheKey(CACHE_KEY_TERM_NEXT), $this->next_term, 'data');
+                }
             }
             return $this->next_term;
         }
@@ -261,6 +284,10 @@ class EvaluateTerm extends AppModel
      */
     public function addTermData($type)
     {
+        //キャッシュを削除
+        Cache::delete($this->getCacheKey(CACHE_KEY_TERM_CURRENT), 'data');
+        Cache::delete($this->getCacheKey(CACHE_KEY_TERM_NEXT), 'data');
+        Cache::delete($this->getCacheKey(CACHE_KEY_TERM_PREVIOUS), 'data');
         $this->_checkType($type);
         $new_start = null;
         $new_end = null;

@@ -361,3 +361,16 @@ Cache::config('_cake_model_', array(
     'serialize' => ($engine === 'File'),
     'duration'  => $duration
 ));
+
+/**
+ * データのキャッシュ
+ */
+Cache::config('data', array(
+    'engine'    => 'Redis',
+    'prefix'    => $prefix . 'cache_data:',
+    'path'      => CACHE . 'cache_data' . DS,
+    'server'    => $server,
+    'port'      => $port,
+    'serialize' => ($engine === 'File'),
+    'duration'  => 60 * 60 * 24 * 7,
+));

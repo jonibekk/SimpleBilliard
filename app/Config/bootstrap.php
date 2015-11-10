@@ -166,7 +166,10 @@ define('GOAL_PAGE_MEMBER_NUMBER', 10);
 define('GOAL_PAGE_KR_NUMBER', 10);
 //ファイル一覧ページのアイテム数
 define('FILE_LIST_PAGE_NUMBER', 20);
-
+//キャッシュ用キーネーム
+define('CACHE_KEY_TERM_CURRENT', 'current_term');
+define('CACHE_KEY_TERM_NEXT', 'next_term');
+define('CACHE_KEY_TERM_PREVIOUS', 'previous_term');
 /**
  * 共通関数
  */
