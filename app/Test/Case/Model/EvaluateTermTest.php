@@ -159,6 +159,9 @@ class EvaluateTermTest extends GoalousTestCase
         $this->assertNotEmpty($next_1);
         $next_2 = $this->EvaluateTerm->getTermData(EvaluateTerm::TYPE_NEXT);
         $this->assertNotEmpty($next_2);
+        $this->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_NEXT);
+        $next_3 = $this->EvaluateTerm->getTermData(EvaluateTerm::TYPE_NEXT);
+        $this->assertNotEmpty($next_3);
         $this->EvaluateTerm->create();
         $this->EvaluateTerm->save([
                                       'start_date' => $current_2['start_date'] - 2678400,
@@ -171,6 +174,9 @@ class EvaluateTermTest extends GoalousTestCase
         $this->assertNotEmpty($previous1);
         $previous2 = $this->EvaluateTerm->getTermData(EvaluateTerm::TYPE_PREVIOUS);
         $this->assertNotEmpty($previous2);
+        $this->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_PREVIOUS);
+        $previous3 = $this->EvaluateTerm->getTermData(EvaluateTerm::TYPE_PREVIOUS);
+        $this->assertNotEmpty($previous3);
     }
 
     function testGetTermId()

@@ -815,4 +815,13 @@ class UserTest extends GoalousTestCase
         $local_name = $this->User->buildLocalUserName('eng', 'first', 'last');
         $this->assertEquals('first last', $local_name);
     }
+
+    function testGetCacheKey()
+    {
+        $this->User->my_uid = 2;
+        $this->User->current_team_id = 1;
+        $actual = $this->User->getCacheKey(CACHE_KEY_TERM_CURRENT, true, true);
+        $expected = 'current_term:team:1:user:2';
+        $this->assertEquals($expected, $actual);
+    }
 }
