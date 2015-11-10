@@ -300,10 +300,10 @@ class EvaluateTerm extends AppModel
         $new_end = null;
 
         if ($type === self::TYPE_PREVIOUS) {
-            if ($this->getTermData(self::TYPE_PREVIOUS)) {
+            if ($this->getTermData(self::TYPE_PREVIOUS, false)) {
                 return false;
             }
-            if (!$current = $this->getTermData(self::TYPE_CURRENT)) {
+            if (!$current = $this->getTermData(self::TYPE_CURRENT, false)) {
                 return false;
             }
             $new_start = $this->_getStartEndWithoutExistsData(strtotime("-1 day", $current['start_date']))['start'];
@@ -311,7 +311,7 @@ class EvaluateTerm extends AppModel
         }
 
         if ($type === self::TYPE_CURRENT) {
-            if ($this->getTermData(self::TYPE_CURRENT)) {
+            if ($this->getTermData(self::TYPE_CURRENT, false)) {
                 return false;
             }
             $new = $this->_getStartEndWithoutExistsData();
@@ -320,10 +320,10 @@ class EvaluateTerm extends AppModel
         }
 
         if ($type === self::TYPE_NEXT) {
-            if ($this->getTermData(self::TYPE_NEXT)) {
+            if ($this->getTermData(self::TYPE_NEXT, false)) {
                 return false;
             }
-            if (!$current = $this->getTermData(self::TYPE_CURRENT)) {
+            if (!$current = $this->getTermData(self::TYPE_CURRENT, false)) {
                 return false;
             }
             $new_start = $current['end_date'] + 1;
