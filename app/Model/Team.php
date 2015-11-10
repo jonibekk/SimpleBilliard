@@ -341,7 +341,10 @@ class Team extends AppModel
             $post_data['Team']['border_months'],
             $post_data['Team']['timezone']
         );
-
+        //キャッシュを削除
+        Cache::delete($this->getCacheKey(CACHE_KEY_TERM_CURRENT), 'data');
+        Cache::delete($this->getCacheKey(CACHE_KEY_TERM_NEXT), 'data');
+        Cache::delete($this->getCacheKey(CACHE_KEY_TERM_PREVIOUS), 'data');
         return (bool)$res;
     }
 
