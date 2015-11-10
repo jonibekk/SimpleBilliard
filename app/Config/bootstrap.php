@@ -172,6 +172,10 @@ define('CACHE_KEY_TERM_NEXT', 'next_term');
 define('CACHE_KEY_TERM_PREVIOUS', 'previous_term');
 define('CACHE_KEY_TEAM_LIST', 'team_list');
 define('CACHE_KEY_TEAM_EVAL_SETTING', 'team_evaluation_setting');
+define('CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE', 'channel_circles_not_hide');
+define('CACHE_KEY_CHANNEL_CIRCLES_ALL', 'channel_circles_all');
+define('CACHE_KEY_CHANNEL_FOLLOW_GOALS', 'channel_follow_goals');
+define('CACHE_KEY_CHANNEL_COLLABO_GOALS', 'channel_collabo_goals');
 
 /**
  * 共通関数

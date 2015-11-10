@@ -33,6 +33,7 @@ abstract class GoalousTestCase extends CakeTestCase
     {
         parent::setUp();
         Cache::config('team_info', ['prefix' => 'test_cache_team_info:']);
+        Cache::config('user_data', ['prefix' => 'test_cache_user_data:']);
     }
 
     /**
@@ -43,6 +44,7 @@ abstract class GoalousTestCase extends CakeTestCase
     public function tearDown()
     {
         Cache::clear(false, 'team_info');
+        Cache::clear(false, 'user_data');
         parent::tearDown();
     }
 

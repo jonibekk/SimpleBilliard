@@ -373,5 +373,5 @@ $data_cache_config = [
     'serialize' => ($engine === 'File'),
     'duration'  => 60 * 60 * 24 * 7,
 ];
-//Cache::config('data', array_merge($data_cache_config, ['prefix' => $prefix . 'cache_data:']));
+Cache::config('user_data', array_merge($data_cache_config, ['prefix' => $prefix . 'cache_user_data:']));
 Cache::config('team_info', array_merge($data_cache_config, ['prefix' => $prefix . 'cache_team_info:']));

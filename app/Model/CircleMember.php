@@ -70,7 +70,16 @@ class CircleMember extends AppModel
                 'fields'     => ['circle_id'],
             ];
         }
-        $res = $this->find('list', $options);
+        $cache_key_name = $this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_ALL, true);
+        if ($check_hide_status === true) {
+            $cache_key_name = $this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE, true);
+        }
+
+        $model = $this;
+        $res = Cache::remember($cache_key_name,
+            function () use ($model, $options) {
+                return $this->find('list', $options);
+            }, 'user_data');
         return $res;
     }
 
@@ -85,7 +94,7 @@ class CircleMember extends AppModel
     {
         $params = array_merge(['circle_created_start' => null,
                                'circle_created_end'   => null,
-                               'order'         => [
+                               'order'                => [
                                    'Circle.team_all_flg desc',
                                    'Circle.modified desc'
                                ],
@@ -406,6 +415,8 @@ class CircleMember extends AppModel
                 'user_id'   => $this->my_uid,
             ]
         ];
+        Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_ALL, true), 'user_data');
+        Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE, true), 'user_data');
         $this->create();
         return $this->save($options);
     }
@@ -418,6 +429,8 @@ class CircleMember extends AppModel
         if (empty($this->User->CircleMember->isBelong($circle_id, $user_id))) {
             return;
         }
+        Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_ALL, true), 'user_data');
+        Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE, true), 'user_data');
         return $this->deleteAll(
             [
                 'CircleMember.circle_id' => $circle_id,
@@ -447,6 +460,7 @@ class CircleMember extends AppModel
             'CircleMember.user_id'   => $this->my_uid
         ];
 
+        Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE, true), 'user_data');
         $res = $this->updateAll(['CircleMember.show_for_all_feed_flg' => $status], $conditions);
         return $res;
     }
@@ -525,7 +539,7 @@ class CircleMember extends AppModel
     {
         $active_team_members_list = $this->Team->TeamMember->getActiveTeamMembersList();
         $options = [
-            'fields' => [
+            'fields'     => [
                 'CircleMember.circle_id',
                 'COUNT(*) as cnt',
             ],
@@ -533,7 +547,7 @@ class CircleMember extends AppModel
                 'circle_id' => $circle_ids,
                 'user_id'   => $active_team_members_list,
             ],
-            'group' => 'CircleMember.circle_id',
+            'group'      => 'CircleMember.circle_id',
         ];
         $rows = $this->find('all', $options);
 
