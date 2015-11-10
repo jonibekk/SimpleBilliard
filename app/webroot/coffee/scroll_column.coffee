@@ -1,4 +1,4 @@
-$ ->
+scrollFixColumn = ->
   winH = window.innerHeight
   winW = window.innerWidth
   wrapH = $('#jsRightSideContainerWrap').height()
@@ -18,3 +18,6 @@ $ ->
         else
           $('#jsRightSideContainer').addClass 'js-right-side-fixed-ontop'
         return
+
+$ ->
+  scrollFixColumn()

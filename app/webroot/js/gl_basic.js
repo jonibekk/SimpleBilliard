@@ -302,7 +302,6 @@ $(document).ready(function () {
     });
     //evToggleAjaxGet
     $(document).on("click", ".toggle-ajax-get", evToggleAjaxGet);
-    $(document).on("click", ".replace-ajax-get-kr-list", evReplaceKRListAjaxGet);
     $(document).on("click", ".ajax-get", evAjaxGetElmWithIndex);
     $(document).on("click", ".click-target-remove", evTargetRemove);
     //dynamic modal
@@ -754,45 +753,7 @@ function evToggleAjaxGet() {
     return false;
 }
 
-function evReplaceAjaxGet() {
-    attrUndefinedCheck(this, 'target-id');
-    attrUndefinedCheck(this, 'ajax-url');
-    var $obj = $(this);
-    var target_id = $obj.attr("target-id");
-    var ajax_url = $obj.attr("ajax-url");
 
-    //noinspection JSJQueryEfficiency
-    if (!$('#' + target_id).hasClass('data-exists')) {
-        $.get(ajax_url, function (data) {
-            $('#' + target_id).append(data.html);
-        });
-    }
-    return false;
-}
-
-function evReplaceKRListAjaxGet() {
-    attrUndefinedCheck(this, 'target-id');
-    attrUndefinedCheck(this, 'ajax-url');
-    attrUndefinedCheck(this, 'kr-line-id');
-    var $obj = $(this);
-    var target_id = $obj.attr("target-id");
-    var ajax_url = $obj.attr("ajax-url");
-    var kr_line_id = $obj.attr("kr-line-id");
-    var $kr_line = $('#' + kr_line_id);
-    //noinspection JSJQueryEfficiency
-    if (!$('#' + target_id).hasClass('data-exists')) {
-        $.get(ajax_url, function (data) {
-            $('#' + target_id).after(data.html);
-            var line_height = $kr_line.height();
-            line_height -= 64;
-            line_height += 64 * data.count;
-            $kr_line.height(line_height);
-            $('#' + target_id).remove();
-
-        });
-    }
-    return false;
-}
 /**
  *  仮アップロードされたファイルの有効期限（保存期限） が過ぎていないか確認
  *
@@ -3079,97 +3040,6 @@ function getPageTypeId() {
     return pageTypeId.replace("_feed_notify", "");
 }
 
-$(document).ready(function () {
-    $(document).on("click", ".click-my-goals-read-more", evGoalsMoreView);
-    $(document).on("click", ".click-collabo-goals-read-more", evGoalsMoreView);
-    $(document).on("click", ".click-follow-goals-read-more", evGoalsMoreView);
-});
-
-function evGoalsMoreView() {
-    attrUndefinedCheck(this, 'next-page-num');
-    attrUndefinedCheck(this, 'get-url');
-    attrUndefinedCheck(this, 'goal-type');
-
-    var $obj = $(this);
-    var next_page_num = $obj.attr('next-page-num');
-    var get_url = $obj.attr('get-url');
-    var type = $obj.attr('goal-type');
-    //リンクを無効化
-    $obj.attr('disabled', 'disabled');
-    var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
-    //ローダー表示
-    $obj.after($loader_html);
-    //url生成
-    var url = get_url + '/page:' + next_page_num + '/type:' + type;
-    var listBox;
-    var moreViewButton = $obj;
-    var limitNumber;
-    if (type === "leader") {
-        listBox = $("#LeaderGoals");
-        limitNumber = cake.data.e;
-    } else if (type === "collabo") {
-        listBox = $("#CollaboGoals");
-        limitNumber = cake.data.f;
-    } else if (type === "my_prev") {
-        listBox = $("#PrevGoals");
-        limitNumber = cake.data.k;
-    }
-    $.ajax({
-        type: 'GET',
-        url: url,
-        async: true,
-        dataType: 'json',
-        success: function (data) {
-            if (!$.isEmptyObject(data.html)) {
-                //取得したhtmlをオブジェクト化
-                var $goals = $(data.html);
-                //一旦非表示
-                $goals.hide();
-                listBox.append($goals);
-                //html表示
-                // もっと見るボタン非表示
-                moreViewButton.hide();
-                $goals.show();
-                //ページ番号をインクリメント
-                next_page_num++;
-                //次のページ番号をセット
-                $obj.attr('next-page-num', next_page_num);
-                //ローダーを削除
-                $loader_html.remove();
-                //もっと見るボタン表示
-                moreViewButton.show();
-                //リンクを有効化
-                $obj.removeAttr('disabled');
-                //画像をレイジーロード
-                imageLazyOn();
-                //画像リサイズ
-                $goals.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
-                    $(this).children('.nailthumb-container').nailthumb({
-                        width: 50,
-                        height: 50,
-                        fitDirection: 'center cgenter'
-                    });
-                });
-                if (data.count < limitNumber) {
-                    moreViewButton.hide();
-                }
-
-                $('.custom-radio-check').customRadioCheck();
-                goalsCardProgress();
-
-            } else {
-                // もっと見るボタンの削除
-                moreViewButton.hide();
-            }
-
-        },
-        error: function () {
-            alert(cake.message.notice.c);
-        }
-    });
-    return false;
-}
-
 function viaIsSet(data) {
     var isExist = typeof( data ) !== 'undefined';
     if (!isExist) return false;
@@ -4820,4 +4690,3 @@ function networkReachable() {
     });
     return ret;
 }
-
