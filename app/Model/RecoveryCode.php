@@ -131,14 +131,16 @@ class RecoveryCode extends AppModel
      * $data を暗号化する
      *
      * @param string $data 暗号化するデータ
+     *
      * @return array
      * @see http://blog.ohgaki.net/encrypt-decrypt-using-openssl
      */
-    protected function _encrypt($data) {
+    protected function _encrypt($data)
+    {
         $secret = substr(Configure::read('Security.salt'), -16);
         $salt = openssl_random_pseudo_bytes(16);
-        list($key, $iv) = $this->_makeKeyAndIV($secret, $salt);
-        $encrypted_data = openssl_encrypt($data, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
+        list($key, $ivec) = $this->_makeKeyAndIV($secret, $salt);
+        $encrypted_data = openssl_encrypt($data, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $ivec);
         return [$encrypted_data, $salt];
     }
 
@@ -146,15 +148,15 @@ class RecoveryCode extends AppModel
      * データを複合化する
      *
      * @param string $encrypted_data 暗号化されたデータ
-     * @param string $salt ソルト
+     * @param string $salt           ソルト
      *
      * @return string
      */
     protected function _decrypt($encrypted_data, $salt)
     {
         $secret = substr(Configure::read('Security.salt'), -16);
-        list($key, $iv) = $this->_makeKeyAndIV($secret, $salt);
-        return openssl_decrypt($encrypted_data, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
+        list($key, $ivec) = $this->_makeKeyAndIV($secret, $salt);
+        return openssl_decrypt($encrypted_data, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $ivec);
     }
 
     /**
@@ -168,14 +170,14 @@ class RecoveryCode extends AppModel
     protected function _makeKeyAndIV($secret, $salt)
     {
         $salted = '';
-        $dx = '';
+        $hash = '';
         while (strlen($salted) < 48) {
-            $dx = hash('sha256', $dx . $secret . $salt, true);
-            $salted .= $dx;
+            $hash = hash('sha256', $hash . $secret . $salt, true);
+            $salted .= $hash;
         }
 
         $key = substr($salted, 0, 32);
-        $iv  = substr($salted, 32,16);
-        return [$key, $iv];
+        $ivec = substr($salted, 32, 16);
+        return [$key, $ivec];
     }
 }
