@@ -385,6 +385,8 @@ class CircleMember extends AppModel
                 $this->updateCounterCache(['circle_id' => $val]);
             }
         }
+        Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_ALL, true), 'user_data');
+        Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE, true), 'user_data');
         return true;
     }
 
