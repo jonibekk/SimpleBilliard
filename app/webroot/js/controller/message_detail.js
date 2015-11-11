@@ -254,7 +254,7 @@ message_app.controller(
                             }, 1);
                             // １ページ目の表示時
                             // 確実に画面下に行くようにする
-                            if ($scope.message_list.length == pushed_message_num) {
+                            if ($scope.message_list.length === pushed_message_num) {
                                 setTimeout(function () {
                                     bottom_scroll();
                                 }, 200);
