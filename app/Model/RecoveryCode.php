@@ -95,8 +95,7 @@ class RecoveryCode extends AppModel
     {
         $this->begin();
         $res = [];
-        $res[] = $this->updateAll(['RecoveryCode.available_flg' => false],
-                                  ['RecoveryCode.user_id' => $user_id]);
+        $res[] = $this->setAllUnavailable($user_id);
         for ($i = 0; $i < 10; $i++) {
             $this->create();
             $res[] = $this->save(['user_id'       => $user_id,
@@ -109,6 +108,19 @@ class RecoveryCode extends AppModel
         }
         $this->commit();
         return true;
+    }
+
+    /**
+     * 指定ユーザーの全てのリカバリコードを利用不可状態にする
+     *
+     * @param $user_id
+     *
+     * @return bool 成功時 true
+     */
+    public function setAllUnavailable($user_id)
+    {
+        return $this->updateAll(['RecoveryCode.available_flg' => false],
+                                ['RecoveryCode.user_id' => $user_id]);
     }
 
     /**

@@ -833,6 +833,7 @@ class UsersController extends AppController
         $this->Session->delete('2fa_secret_key');
         $this->Mixpanel->track2SV(MixpanelComponent::TRACK_2SV_ENABLE);
         $this->Pnotify->outSuccess(__d('gl', "2段階認証の登録が完了しました。"));
+        $this->Session->setFlash(null, "flash_click_event", ['id' => 'ShowRecoveryCodeButton'], 'click_event');
         return $this->redirect($this->referer());
     }
 
@@ -849,6 +850,7 @@ class UsersController extends AppController
         $this->request->allowMethod('post');
         $this->User->id = $this->Auth->user('id');
         $this->User->saveField('2fa_secret', null);
+        $this->User->RecoveryCode->setAllUnavailable($this->User->id);
         if (empty($this->Auth->user('DefaultTeam.id')) === false && empty($this->Auth->user('id')) === false) {
             $this->GlRedis->deleteDeviceHash($this->Auth->user('DefaultTeam.id'), $this->Auth->user('id'));
         }

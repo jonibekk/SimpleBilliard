@@ -58,6 +58,28 @@ class RecoveryCodeTest extends CakeTestCase
         }
     }
 
+    function testSetAllUnavailable()
+    {
+        for ($i = 0; $i < 10; $i++) {
+            $this->RecoveryCode->create();
+            $this->RecoveryCode->save(['user_id' => 1, 'code' => 'test' . $i]);
+            $this->RecoveryCode->create();
+            $this->RecoveryCode->save(['user_id' => 2, 'code' => 'test' . $i]);
+        }
+        $available_codes = $this->RecoveryCode->getAvailable(1);
+        $this->assertCount(10, $available_codes);
+        $available_codes2 = $this->RecoveryCode->getAvailable(2);
+        $this->assertCount(10, $available_codes2);
+
+        $res = $this->RecoveryCode->setAllUnavailable(1);
+        $this->assertTrue($res);
+
+        $available_codes = $this->RecoveryCode->getAvailable(1);
+        $this->assertEmpty($available_codes);
+        $available_codes3 = $this->RecoveryCode->getAvailable(2);
+        $this->assertEquals($available_codes2, $available_codes3);
+    }
+
     function testRegenerate()
     {
         $count1 = $this->RecoveryCode->find('count');

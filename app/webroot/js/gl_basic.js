@@ -326,8 +326,14 @@ $(document).ready(function () {
             $(url).modal('open');
         } else {
             $.get(url, function (data) {
+                var modal_options = {
+                    backdrop: true
+                };
+                if ($this.attr('data-backdrop')) {
+                    modal_options.backdrop = $this.attr('data-backdrop');
+                }
                 $modal_elm.append(data);
-                $modal_elm.modal();
+                $modal_elm.modal(modal_options);
                 //画像をレイジーロード
                 imageLazyOn($modal_elm);
                 //画像リサイズ
