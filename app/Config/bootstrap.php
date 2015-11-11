@@ -176,6 +176,7 @@ define('CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE', 'channel_circles_not_hide');
 define('CACHE_KEY_CHANNEL_CIRCLES_ALL', 'channel_circles_all');
 define('CACHE_KEY_CHANNEL_FOLLOW_GOALS', 'channel_follow_goals');
 define('CACHE_KEY_CHANNEL_COLLABO_GOALS', 'channel_collabo_goals');
+define('CACHE_KEY_UNAPPROVED_COUNT', 'channel_unapproved_count');
 
 /**
  * 共通関数
