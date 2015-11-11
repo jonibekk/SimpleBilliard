@@ -69,9 +69,7 @@
         <style>
             @media screen and (max-width: 991px) {
                 .container {
-                <?php if($is_mb_app):?> margin-top: 10px;
-                <?php else:?> margin-top: 50px;
-                <?php endif;?>
+                    margin-top: 50px;
                 }
 
                 #jsLeftSideContainer {

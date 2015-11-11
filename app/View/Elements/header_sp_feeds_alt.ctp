@@ -10,10 +10,11 @@
 ?>
 
 <!-- START app/View/Elements/header_sp_feeds_alt.ctp -->
-<div class="col sp-feed-alt height_40px col-xxs-12 <?= $is_mb_app ? "mp-app-feed-alt" : "hidden-md hidden-lg" ?>"
+<div class="col sp-feed-alt height_40px col-xxs-12 hidden-md hidden-lg"
      id="SubHeaderMenu">
     <div class="col col-xxs-6 text-align_r">
-        <a  <?php if(isset($this->request->params['after_click'])):?>href="after_click:SubHeaderMenuFeed"<?php endif?> class="font_lightGray-veryDark no-line plr_18px sp-feed-link inline-block pt_12px height_40px sp-feed-active"
+        <a <?php if (isset($this->request->params['after_click'])): ?>href="after_click:SubHeaderMenuFeed"<?php endif ?>
+           class="font_lightGray-veryDark no-line plr_18px sp-feed-link inline-block pt_12px height_40px sp-feed-active"
            id="SubHeaderMenuFeed">
             <?= __d('gl', "ニュースフィード") ?>
         </a>

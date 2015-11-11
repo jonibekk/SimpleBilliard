@@ -19,10 +19,10 @@
 ?>
 <!-- START app/View/Elements/header_logged_in.ctp -->
 <header class="header">
-    <div class="navbar navbar-fixed-top navbar-default gl-navbar <?= $is_mb_app ? "mb-app-navbar" : null ?>"
+    <div class="navbar navbar-fixed-top navbar-default gl-navbar"
          id="header">
         <div class="nav-container header-container">
-            <button id="header-slide-menu" type="button" class="<?= $is_mb_app ? "header-toggle-icon" : "header-toggle-icon" //TODO 一時的に古いclassになっている。将来的に$is_mb_app==trueだったら、mb-app-header-toggle-icon に置き換える?>" data-toggle="offcanvas"
+            <button id="header-slide-menu" type="button" class="header-toggle-icon" data-toggle="offcanvas"
                     data-target=".navbar-offcanvas">
                 <i class="fa fa-navicon toggle-icon header-icons"></i>
             </button>
@@ -55,7 +55,7 @@
                             </div>
                         </a>
                     </li>
-                    <li class="mtb_5px mtb-sm_0 <?= !empty($my_teams)?null:'hidden' ?>">
+                    <li class="mtb_5px mtb-sm_0 <?= !empty($my_teams) ? null : 'hidden' ?>">
 
                         <a class="header-team header_l-icons <?= $current_global_menu == "team" ? "activeColumn" : null ?>"
                            href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'main']) ?>">
