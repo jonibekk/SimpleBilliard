@@ -21,7 +21,7 @@
 
     <div class="header-dropdown-add">
         <a href="#" data-toggle="dropdown" id="download" class="btn-addition-header">
-            <i class="header-dropdown-icon-add fa fa-plus-circle js-header-link header-icons"></i>
+            <i class="header-dropdown-icon-add fa fa-plus-circle js-header-link header-icons <?= $is_mb_app ? "mb-app-nav-icon" : null ?>"></i>
         </a>
         <ul class="header-nav-add-contents dropdown-menu "
             aria-labelledby="download">
@@ -113,7 +113,7 @@
            class="btn-function-header"
            data-toggle="dropdown"
            id="header-cog-dropdown">
-            <i class="header-dropdown-icon-functions fa fa-cog header-function-icon header-drop-icons js-header-link header-icons"></i>
+            <i class="header-dropdown-icon-functions fa fa-cog header-function-icon header-drop-icons js-header-link header-icons <?= $is_mb_app ? "mb-app-nav-icon" : null ?>"></i>
             <?php if ($all_alert_cnt > 0): ?>
                 <div class="btn btn-xs notify-function-numbers">
                  <span>
