@@ -182,9 +182,11 @@ class RecoveryCode extends AppModel
     {
         while ($code = $this->generateToken(8, '0123456789abcdefghijklmnopqrstuvwxyz')) {
             // 数字と英字が混ざっているか確認
-            if (strlen(str_replace(range(0, 9), '', $code, $count)) && $count) {
-                break;
+            // （テストカバレッジが毎回同じになるように書く）
+            if (!(strlen(str_replace(range(0, 9), '', $code, $count)) && $count)) {
+                continue;
             }
+            break;
         }
         return $code;
     }
