@@ -4767,6 +4767,8 @@ function setDefaultTab() {
             $('#CommonFormTabs li:eq(1) a').tab('show');
             if (!isMobile()) {
                 $('#CommonPostBody').focus();
+            } else {
+                $('#CommonPostBody').blur();
             }
             break;
         case "message":
