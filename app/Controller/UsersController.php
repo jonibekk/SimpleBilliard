@@ -833,6 +833,7 @@ class UsersController extends AppController
         $this->Session->delete('2fa_secret_key');
         $this->Mixpanel->track2SV(MixpanelComponent::TRACK_2SV_ENABLE);
         $this->Pnotify->outSuccess(__d('gl', "2段階認証の登録が完了しました。"));
+        $this->Session->setFlash(null, "flash_click_event", ['id' => 'ShowRecoveryCodeButton'], 'click_event');
         return $this->redirect($this->referer());
     }
 
@@ -849,12 +850,57 @@ class UsersController extends AppController
         $this->request->allowMethod('post');
         $this->User->id = $this->Auth->user('id');
         $this->User->saveField('2fa_secret', null);
+        $this->User->RecoveryCode->setAllUnavailable($this->User->id);
         if (empty($this->Auth->user('DefaultTeam.id')) === false && empty($this->Auth->user('id')) === false) {
             $this->GlRedis->deleteDeviceHash($this->Auth->user('DefaultTeam.id'), $this->Auth->user('id'));
         }
         $this->Mixpanel->track2SV(MixpanelComponent::TRACK_2SV_DISABLE);
         $this->Pnotify->outSuccess(__d('gl', "2段階認証を解除しました。"));
         return $this->redirect($this->referer());
+    }
+
+    /**
+     * リカバリコードを表示
+     *
+     * @return CakeResponse
+     */
+    function ajax_get_modal_recovery_code()
+    {
+        $this->_ajaxPreProcess();
+        $recovery_codes = $this->User->RecoveryCode->getAvailable($this->Auth->user('id'));
+        if (!$recovery_codes) {
+            $success = $this->User->RecoveryCode->regenerate($this->Auth->user('id'));
+            if (!$success) {
+                throw new NotFoundException();
+            }
+            $recovery_codes = $this->User->RecoveryCode->getAvailable($this->Auth->user('id'));
+        }
+        $this->set('recovery_codes', $recovery_codes);
+        $response = $this->render('User/modal_recovery_code');
+        $html = $response->__toString();
+        return $this->_ajaxGetResponse($html);
+    }
+
+    /**
+     * リカバリコードを再生成
+     */
+    function ajax_regenerate_recovery_code()
+    {
+        $this->_ajaxPreProcess();
+        $this->request->allowMethod('post');
+
+        $success = $this->User->RecoveryCode->regenerate($this->Auth->user('id'));
+        if (!$success) {
+            return $this->_ajaxGetResponse(['error' => true,
+                                            'msg'   => __d('gl', "エラーが発生しました。")]);
+        }
+        $recovery_codes = $this->User->RecoveryCode->getAvailable($this->Auth->user('id'));
+        $codes = array_map(function ($v) {
+            return $v['RecoveryCode']['code'];
+        }, $recovery_codes);
+        return $this->_ajaxGetResponse(['error' => false,
+                                        'msg'   => __d('gl', "新しいリカバリコードを生成しました。"),
+                                        'codes' => $codes]);
     }
 
     /**

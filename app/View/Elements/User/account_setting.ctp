@@ -107,6 +107,7 @@
                 </p>
             </div>
         </div>
+        <hr>
         <div class="form-group">
             <label for="2FA" class="col col-sm-3 control-label form-label"><?= __d('gl', "2段階認証") ?></label>
 
@@ -120,6 +121,14 @@
                            class="modal-ajax-get"><?= __d('gl', "設定する") ?></a>
                     <?php endif; ?>
                 </p>
+                <?php if (viaIsSet($this->request->data['User']['2fa_secret'])): ?>
+                <p class="form-control-static">
+                    <a href="<?= $this->Html->url(['controller' => 'users',
+                                                   'action'     => 'ajax_get_modal_recovery_code']) ?>"
+                       id="ShowRecoveryCodeButton"
+                       class="modal-ajax-get remove-on-hide" data-backdrop="static"><?= __d('gl', "リカバリーコードを表示") ?></a>
+                </p>
+                <?php endif; ?>
             </div>
         </div>
     </div>

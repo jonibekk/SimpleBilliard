@@ -246,12 +246,12 @@ class AppModel extends Model
      * Generate token used by the user registration system
      *
      * @param int $length Token Length
+     * @param string $possible
      *
      * @return string
      */
-    public function generateToken($length = 22)
+    public function generateToken($length = 22, $possible = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
     {
-        $possible = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $token = "";
         $i = 0;
 
