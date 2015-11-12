@@ -45,9 +45,9 @@
     echo $this->Html->css('bootstrap-ext-col');
     echo $this->Html->css('datepicker3');
     echo $this->Html->css('style', array('media' => 'screen'));
-    echo $this->Html->css('goalous.min', array('media' => 'screen'));
     echo $this->Html->css('nav');
     echo $this->Html->css('nav_media');
+    echo $this->Html->css('goalous.min', array('media' => 'screen'));
     echo $this->fetch('css');
     echo $this->fetch('meta');
 

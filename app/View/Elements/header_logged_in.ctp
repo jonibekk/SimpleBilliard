@@ -23,7 +23,9 @@
     <div class="navbar navbar-fixed-top navbar-default gl-navbar <?= $is_mb_app ? "mb-app-nav" : null ?>"
          id="header">
         <div class="nav-container header-container">
-            <button id="header-slide-menu" type="button" class="header-toggle-icon" data-toggle="offcanvas"
+            <button id="header-slide-menu" type="button"
+                    class="<?= $is_mb_app ? "mb-app-header-toggle-icon" : "header-toggle-icon" ?>"
+                    data-toggle="offcanvas"
                     data-target=".navbar-offcanvas">
                 <i class="fa fa-navicon toggle-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : null ?>"></i>
             </button>
