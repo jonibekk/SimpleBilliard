@@ -287,7 +287,7 @@ class AppController extends Controller
     public function _setUnApprovedCnt($login_uid)
     {
         $unapproved_cnt = Cache::read($this->Team->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, null), 'user_data');
-        if (empty($unapproved_cnt)) {
+        if ($unapproved_cnt === false) {
             $login_user_team_id = $this->Session->read('current_team_id');
             $member_ids = $this->Team->TeamMember->selectUserIdFromTeamMembersTB($login_uid, $login_user_team_id);
             array_push($member_ids, $login_uid);
