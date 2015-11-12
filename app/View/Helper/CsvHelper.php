@@ -10,7 +10,7 @@ App::uses('AppHelper', 'View/Helper');
 class CsvHelper extends AppHelper
 {
 
-    var $delimiter = ',';
+    var $delimiter = "\t";
     var $enclosure = '"';
     var $filename = 'Export.csv';
     var $line = array();
@@ -49,8 +49,6 @@ class CsvHelper extends AppHelper
         $tmp = array();
         foreach ($row as $v) {
             $v = str_replace('"', '""', $v);
-            //改行コードを変換
-            $v = str_replace("\n", PHP_EOL, $v);
             $tmp[] = $enclosure . $v . $enclosure;
         }
         $str = implode($delimiter, $tmp) . $eol;
@@ -82,7 +80,8 @@ class CsvHelper extends AppHelper
         rewind($this->buffer);
         $output = stream_get_contents($this->buffer);
         if ($to_encoding) {
-            $output = mb_convert_encoding($output, $to_encoding, $from_encoding);
+            $bom = chr(255) . chr(254);
+            $output = $bom . mb_convert_encoding($output, $to_encoding, $from_encoding);
         }
         return $this->output($output);
     }
@@ -99,6 +98,6 @@ class CsvHelper extends AppHelper
             }
         }
         $this->setFilename($filename);
-        return $this->render(true, 'SJIS-win', 'UTF-8');
+        return $this->render(true, 'UTF-16LE', 'UTF-8');
     }
 }
