@@ -170,6 +170,7 @@ class GoalApprovalController extends AppController
     {
         if ($this->request->is('post')) {
             $this->_saveApprovalData();
+            Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT,true), 'user_data');
             return $this->redirect($this->referer());
         }
 
@@ -206,6 +207,7 @@ class GoalApprovalController extends AppController
     {
         if ($this->request->is('post')) {
             $this->_saveApprovalData();
+            Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT,true), 'user_data');
             return $this->redirect($this->referer());
         }
 
