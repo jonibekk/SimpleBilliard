@@ -1891,7 +1891,7 @@ class TeamMemberTest extends GoalousTestCase
             'coach_user_id' => $coach_user_id,
         ];
         $this->TeamMember->save($params);
-        $res = $this->TeamMember->selectUserIdFromTeamMembersTB($coach_user_id, $team_id);
+        $res = $this->TeamMember->getMyMembersList($coach_user_id);
         $this->assertContains($user_id, $res);
     }
 

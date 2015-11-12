@@ -2035,11 +2035,10 @@ class TeamMember extends AppModel
      * ログインしているユーザーが管理するのメンバーIDを取得する
      *
      * @param $user_id
-     * @param $team_id
      *
      * @return array|null
      */
-    function selectUserIdFromTeamMembersTB($user_id, $team_id)
+    function getMyMembersList($user_id)
     {
         // 検索テーブル: team_members
         // 取得カラム: user_id
@@ -2048,7 +2047,6 @@ class TeamMember extends AppModel
             'fields'     => ['user_id'],
             'conditions' => [
                 'TeamMember.coach_user_id' => $user_id,
-                'TeamMember.team_id'       => $team_id,
                 'active_flg'               => 1,
                 'evaluation_enable_flg'    => 1,
             ],

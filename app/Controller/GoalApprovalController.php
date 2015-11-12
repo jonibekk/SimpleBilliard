@@ -170,7 +170,7 @@ class GoalApprovalController extends AppController
     {
         if ($this->request->is('post')) {
             $this->_saveApprovalData();
-            Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT,true), 'user_data');
+            Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true), 'user_data');
             return $this->redirect($this->referer());
         }
 
@@ -207,7 +207,7 @@ class GoalApprovalController extends AppController
     {
         if ($this->request->is('post')) {
             $this->_saveApprovalData();
-            Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT,true), 'user_data');
+            Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true), 'user_data');
             return $this->redirect($this->referer());
         }
 
@@ -430,7 +430,7 @@ class GoalApprovalController extends AppController
      */
     public function _setMemberFlag($user_id, $team_id)
     {
-        $member_ids = $this->TeamMember->selectUserIdFromTeamMembersTB($user_id, $team_id);
+        $member_ids = $this->TeamMember->getMyMembersList($user_id);
         if (empty($member_ids) === false) {
             $this->member_ids = $member_ids;
             $this->member_flag = true;
