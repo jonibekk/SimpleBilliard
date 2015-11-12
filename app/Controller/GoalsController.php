@@ -112,6 +112,9 @@ class GoalsController extends AppController
                     $this->_sendNotifyToCoach($id, NotifySetting::TYPE_MY_MEMBER_CHANGE_GOAL);
                 }
             }
+            $coach_id = $this->User->TeamMember->getCoachUserIdByMemberUserId(
+                $this->Auth->user('id'));
+
             switch ($this->request->params['named']['mode']) {
                 case 2:
                     //case of create new one.
@@ -125,6 +128,10 @@ class GoalsController extends AppController
                         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_GOAL, $id);
                     }
                     $this->Pnotify->outSuccess(__d('gl', "ゴールを保存しました。"));
+                    if ($coach_id) {
+                        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coach_id),
+                                      'user_data');
+                    }
                     //「情報を追加」に進む
                     $this->redirect(['goal_id' => $this->Goal->id, 'mode' => 3, '#' => 'AddGoalFormOtherWrap']);
                     break;
@@ -146,12 +153,10 @@ class GoalsController extends AppController
                     }
 
                     // ゴール作成ユーザーのコーチが存在すればゴール認定ページへ遷移
-                    $coach_id = $this->User->TeamMember->selectCoachUserIdFromTeamMembersTB(
-                        $this->Auth->user('id'), $this->Session->read('current_team_id'));
-                    if (isset($coach_id['TeamMember']['coach_user_id']) === true
-                        && is_null($coach_id['TeamMember']['coach_user_id']) === false
-                        && $val['priority'] != "0"
+                    if ($coach_id && $val['priority'] != "0"
                     ) {
+                        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coach_id),
+                                      'user_data');
                         $this->redirect("/goal_approval");
                     }
                     $this->redirect("/");
@@ -389,8 +394,8 @@ class GoalsController extends AppController
     {
         $collabo_id = viaIsSet($this->request->params['named']['collaborator_id']);
         $this->request->allowMethod('post', 'put');
-        $coach_id = $this->User->TeamMember->selectCoachUserIdFromTeamMembersTB(
-            $this->Auth->user('id'), $this->Session->read('current_team_id'));
+        $coach_id = $this->User->TeamMember->getCoachUserIdByMemberUserId(
+            $this->Auth->user('id'));
 
         if (!isset($this->request->data['Collaborator'])) {
             $this->_editCollaboError();
@@ -421,10 +426,11 @@ class GoalsController extends AppController
             $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_COLLABORATE, $collaborator['goal_id']);
             $this->_sendNotifyToCoach($collaborator['goal_id'], NotifySetting::TYPE_MY_MEMBER_COLLABORATE_GOAL);
         }
-        if (isset($coach_id['TeamMember']['coach_user_id']) === true
-            && is_null($coach_id['TeamMember']['coach_user_id']) === false
-            && (isset($collaborator['priority']) && $collaborator['priority'] >= '1')
+        if ($coach_id && (isset($collaborator['priority']) && $collaborator['priority'] >= '1')
         ) {
+            Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coach_id),
+                          'user_data');
+
             $this->redirect("/goal_approval");
         }
         return $this->redirect($this->referer());

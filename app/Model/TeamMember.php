@@ -2013,23 +2013,22 @@ class TeamMember extends AppModel
      * ログインしているユーザーのコーチIDを取得する
      *
      * @param $user_id
-     * @param $team_id
      *
      * @return array|null
      */
-    function selectCoachUserIdFromTeamMembersTB($user_id, $team_id)
+    function getCoachUserIdByMemberUserId($user_id)
     {
         // 検索テーブル: team_members
         // 取得カラム: coach_user_id
         // 条件: user_id, team_id
         $options = [
-            'fields'     => ['coach_user_id'],
+            'fields'     => ['coach_user_id', 'coach_user_id'],
             'conditions' => [
-                'TeamMember.user_id' => $user_id,
-                'TeamMember.team_id' => $team_id,
+                'user_id' => $user_id,
             ],
         ];
-        return $this->find('first', $options);
+        $res = $this->find('list', $options);
+        return array_pop($res);
     }
 
     /**

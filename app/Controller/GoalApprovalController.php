@@ -414,13 +414,11 @@ class GoalApprovalController extends AppController
     /*
      * ログインしているユーザーはコーチが存在するのか
      */
-    public function _setCoachFlag($user_id, $team_id)
+    public function _setCoachFlag($user_id)
     {
-        $coach_id = $this->TeamMember->selectCoachUserIdFromTeamMembersTB($user_id, $team_id);
-        if (isset($coach_id['TeamMember']['coach_user_id']) === true
-            && is_null($coach_id['TeamMember']['coach_user_id']) === false
-        ) {
-            $this->coach_id = $coach_id['TeamMember']['coach_user_id'];
+        $coach_id = $this->TeamMember->getCoachUserIdByMemberUserId($user_id);
+        if ($coach_id) {
+            $this->coach_id = $coach_id;
             $this->coach_flag = true;
         }
     }
