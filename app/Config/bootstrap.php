@@ -178,6 +178,7 @@ define('CACHE_KEY_CHANNEL_FOLLOW_GOALS', 'channel_follow_goals');
 define('CACHE_KEY_CHANNEL_COLLABO_GOALS', 'channel_collabo_goals');
 define('CACHE_KEY_UNAPPROVED_COUNT', 'unapproved_count');
 define('CACHE_KEY_EVALUABLE_COUNT', 'evaluable_count');
+define('CACHE_KEY_MY_CIRCLE_LIST', 'my_circle_list');
 
 /**
  * 共通関数

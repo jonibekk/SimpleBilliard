@@ -92,6 +92,13 @@ class CircleMember extends AppModel
      */
     public function getMyCircle($params = [])
     {
+        $is_default = false;
+        if (empty($params)) {
+            $is_default = true;
+            if ($circle_list = Cache::read($this->getCacheKey(CACHE_KEY_MY_CIRCLE_LIST, true), 'user_data')) {
+                return $circle_list;
+            }
+        }
         $params = array_merge(['circle_created_start' => null,
                                'circle_created_end'   => null,
                                'order'                => [
@@ -135,6 +142,9 @@ class CircleMember extends AppModel
             $options['conditions']['Circle.created <'] = $params['circle_created_end'];
         }
         $res = $this->find('all', $options);
+        if ($is_default) {
+            Cache::write($this->getCacheKey(CACHE_KEY_MY_CIRCLE_LIST, true), $res, 'user_data');
+        }
         return $res;
     }
 
@@ -387,6 +397,8 @@ class CircleMember extends AppModel
         }
         Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_ALL, true), 'user_data');
         Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE, true), 'user_data');
+        Cache::delete($this->getCacheKey(CACHE_KEY_MY_CIRCLE_LIST, true), 'user_data');
+
         return true;
     }
 
@@ -419,6 +431,7 @@ class CircleMember extends AppModel
         ];
         Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_ALL, true), 'user_data');
         Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE, true), 'user_data');
+        Cache::delete($this->getCacheKey(CACHE_KEY_MY_CIRCLE_LIST, true), 'user_data');
         $this->create();
         return $this->save($options);
     }
@@ -433,6 +446,7 @@ class CircleMember extends AppModel
         }
         Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_ALL, true), 'user_data');
         Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE, true), 'user_data');
+        Cache::delete($this->getCacheKey(CACHE_KEY_MY_CIRCLE_LIST, true), 'user_data');
         return $this->deleteAll(
             [
                 'CircleMember.circle_id' => $circle_id,

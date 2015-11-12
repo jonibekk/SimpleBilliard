@@ -147,6 +147,7 @@ class Circle extends AppModel
                 $this->add_new_member_list[] = $val;
                 Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_ALL, true, $val), 'user_data');
                 Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE, true, $val), 'user_data');
+                Cache::delete($this->getCacheKey(CACHE_KEY_MY_CIRCLE_LIST, true, $val), 'user_data');
             }
         }
         if ($res = $this->saveAll($data)) {
@@ -219,6 +220,7 @@ class Circle extends AppModel
             $this->add_new_member_list[] = $user_id;
             Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_ALL, true, $user_id), 'user_data');
             Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE, true, $user_id), 'user_data');
+            Cache::delete($this->getCacheKey(CACHE_KEY_MY_CIRCLE_LIST, true, $val), 'user_data');
         }
 
         $res = false;
