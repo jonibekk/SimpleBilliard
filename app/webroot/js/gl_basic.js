@@ -107,28 +107,15 @@ $(document).ready(function () {
             $('#SubHeaderMenuGoal').removeClass('sp-feed-active');
             $(this).addClass('sp-feed-active');
             //表示切り換え
-            if (cake.is_mb_app) {
-                $('[role="goal_area"]').addClass('hidden');
-                $('[role="main"]').removeClass('hidden');
-            }
-            else {
-                $('[role="goal_area"]').addClass('visible-md visible-lg');
-                $('[role="main"]').removeClass('visible-md visible-lg');
-            }
+            $('[role="goal_area"]').addClass('visible-md visible-lg');
+            $('[role="main"]').removeClass('visible-md visible-lg');
         }
         else if ($(this).attr('id') == 'SubHeaderMenuGoal') {
             $('#SubHeaderMenuFeed').removeClass('sp-feed-active');
             $(this).addClass('sp-feed-active');
             //表示切り換え
-            if (cake.is_mb_app) {
-                $('[role="main"]').addClass('hidden');
-                $('[role="goal_area"]').removeClass('hidden');
-            }
-            else {
-                $('[role="main"]').addClass('visible-md visible-lg');
-                $('[role="goal_area"]').removeClass('visible-md visible-lg');
-            }
-
+            $('[role="main"]').addClass('visible-md visible-lg');
+            $('[role="goal_area"]').removeClass('visible-md visible-lg');
         }
         else {
             //noinspection UnnecessaryReturnStatementJS
@@ -1626,7 +1613,7 @@ function setChangeWarningForAllStaticPage() {
             var changed_val = "";
             default_val = $(this).load().val();
             $(this).on("change keyup keydown", function () {
-                if($(this).hasClass('disable-change-warning')){
+                if ($(this).hasClass('disable-change-warning')) {
                     return;
                 }
                 changed_val = $(this).val();
@@ -3736,7 +3723,7 @@ function updateListBox() {
 }
 
 // reset bell notify num call from app.
-function resetBellNum(){
+function resetBellNum() {
     initBellNum();
     var url = cake.url.g;
     $.ajax({
@@ -3779,7 +3766,7 @@ function updateMessageListBox() {
 }
 
 // reset bell message num call from app.
-function resetMessageNum(){
+function resetMessageNum() {
     initMessageNum();
     var url = cake.url.ag;
     $.ajax({
