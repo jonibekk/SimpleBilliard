@@ -407,6 +407,7 @@ class TeamsController extends AppController
         $this->Pnotify->outSuccess(__d('gl', "評価を開始しました。"));
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_START,
                                          $this->Team->EvaluateTerm->getCurrentTermId());
+        Cache::clear(false, 'team_info');
         return $this->redirect($this->referer());
     }
 
@@ -619,6 +620,7 @@ class TeamsController extends AppController
             $result['msg'] = __d('gl', "%s人の最終評価を更新しました。", $save_res['success_count']);
             $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_DONE_FINAL,
                                              $this->Team->EvaluateTerm->getCurrentTermId());
+            Cache::clear(false, 'team_info');
         }
         return $this->_ajaxGetResponse($result);
     }
@@ -678,6 +680,7 @@ class TeamsController extends AppController
         else {
             $this->Pnotify->outSuccess(__d('gl', "評価の凍結を解除しました。"));
         }
+        CAche::clear(false, 'team_info');
         return $this->redirect($this->referer());
     }
 

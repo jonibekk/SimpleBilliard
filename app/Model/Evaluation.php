@@ -712,6 +712,14 @@ class Evaluation extends AppModel
 
     function getMyTurnCount($evaluate_type = null, $term_id = null, $is_all = true)
     {
+        $is_default = false;
+        if ($evaluate_type === null && $term_id === null && $is_all === true) {
+            $is_default = true;
+            $count = Cache::read($this->getCacheKey(CACHE_KEY_EVALUABLE_COUNT, true), 'team_info');
+            if($count !== false){
+                return $count;
+            }
+        }
         $options = [
             'conditions' => [
                 'evaluator_user_id' => $this->my_uid,
@@ -744,6 +752,12 @@ class Evaluation extends AppModel
         }
 
         $count = $this->find('count', $options);
+        if(!$count){
+            $count = 0;
+        }
+        if ($is_default) {
+            Cache::write($this->getCacheKey(CACHE_KEY_EVALUABLE_COUNT, true), $count, 'team_info');
+        }
         return $count;
     }
 
