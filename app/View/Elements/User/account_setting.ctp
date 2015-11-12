@@ -125,8 +125,7 @@
                 <p class="form-control-static">
                     <a href="<?= $this->Html->url(['controller' => 'users',
                                                    'action'     => 'ajax_get_modal_recovery_code']) ?>"
-                       id="ShowRecoveryCodeButton"
-                       class="modal-ajax-get remove-on-hide" data-backdrop="static"><?= __d('gl', "リカバリーコードを表示") ?></a>
+                       id="ShowRecoveryCodeButton"><?= __d('gl', "リカバリーコードを表示") ?></a>
                 </p>
                 <?php endif; ?>
             </div>

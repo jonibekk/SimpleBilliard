@@ -35,8 +35,8 @@ class UsersController extends AppController
     protected function _setupAuth()
     {
         $this->Auth->allow('register', 'login', 'verify', 'logout', 'password_reset', 'token_resend', 'sent_mail',
-                           'accept_invite', 'registration_with_set_password', 'two_fa_auth', 'add_subscribe_email',
-                           'ajax_validate_email');
+                           'accept_invite', 'registration_with_set_password', 'two_fa_auth', 'two_fa_auth_recovery',
+                           'add_subscribe_email', 'ajax_validate_email');
 
         $this->Auth->authenticate = array(
             'Form2' => array(
@@ -155,6 +155,47 @@ class UsersController extends AppController
             $this->Pnotify->outError(__d('notify', "2段階認証コードが正しくありません。"));
             return $this->render();
         }
+    }
+
+    /**
+     * リカバリコード入力画面
+     *
+     * @return CakeResponse|void
+     */
+    function two_fa_auth_recovery()
+    {
+        if ($this->Auth->user()) {
+            return $this->redirect($this->referer());
+        }
+        $this->layout = LAYOUT_ONE_COLUMN;
+        //仮認証状態か？そうでなければエラー出してリファラリダイレクト
+        $is_avail_auth = !empty($this->Session->read('preAuthPost')) ? true : false;
+        if (!$is_avail_auth) {
+            $this->Pnotify->outError(__d('notify', "エラーが発生しました。再度ログインをお願いします。"));
+            return $this->redirect(['action' => 'login']);
+        }
+
+        if (!$this->request->is('post')) {
+            return $this->render();
+        }
+
+        // 入力されたコードが利用可能なリカバリーコードか確認
+        $code = str_replace(' ', '', $this->request->data['User']['recovery_code']);
+        $row = $this->User->RecoveryCode->findUnusedCode($this->Session->read('user_id'), $code);
+        if (!$row) {
+            $this->Pnotify->outError(__d('notify', "リカバリーコードが正しくありません。"));
+            return $this->render();
+        }
+
+        // コードを使用済にする
+        $res = $this->User->RecoveryCode->useCode($row['RecoveryCode']['id']);
+        if (!$res) {
+            $this->Pnotify->outError(__d('notify', "エラーが発生しました。"));
+            return $this->render();
+        }
+
+        $this->GlRedis->saveDeviceHash($this->Session->read('team_id'), $this->Session->read('user_id'));
+        return $this->_afterAuthSessionStore();
     }
 
     function _afterAuthSessionStore()
@@ -850,7 +891,7 @@ class UsersController extends AppController
         $this->request->allowMethod('post');
         $this->User->id = $this->Auth->user('id');
         $this->User->saveField('2fa_secret', null);
-        $this->User->RecoveryCode->setAllUnavailable($this->User->id);
+        $this->User->RecoveryCode->invalidateAll($this->User->id);
         if (empty($this->Auth->user('DefaultTeam.id')) === false && empty($this->Auth->user('id')) === false) {
             $this->GlRedis->deleteDeviceHash($this->Auth->user('DefaultTeam.id'), $this->Auth->user('id'));
         }
@@ -867,13 +908,13 @@ class UsersController extends AppController
     function ajax_get_modal_recovery_code()
     {
         $this->_ajaxPreProcess();
-        $recovery_codes = $this->User->RecoveryCode->getAvailable($this->Auth->user('id'));
+        $recovery_codes = $this->User->RecoveryCode->getAll($this->Auth->user('id'));
         if (!$recovery_codes) {
             $success = $this->User->RecoveryCode->regenerate($this->Auth->user('id'));
             if (!$success) {
                 throw new NotFoundException();
             }
-            $recovery_codes = $this->User->RecoveryCode->getAvailable($this->Auth->user('id'));
+            $recovery_codes = $this->User->RecoveryCode->getAll($this->Auth->user('id'));
         }
         $this->set('recovery_codes', $recovery_codes);
         $response = $this->render('User/modal_recovery_code');
@@ -894,7 +935,7 @@ class UsersController extends AppController
             return $this->_ajaxGetResponse(['error' => true,
                                             'msg'   => __d('gl', "エラーが発生しました。")]);
         }
-        $recovery_codes = $this->User->RecoveryCode->getAvailable($this->Auth->user('id'));
+        $recovery_codes = $this->User->RecoveryCode->getAll($this->Auth->user('id'));
         $codes = array_map(function ($v) {
             return $v['RecoveryCode']['code'];
         }, $recovery_codes);
