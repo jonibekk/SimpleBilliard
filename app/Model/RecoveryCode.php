@@ -65,14 +65,20 @@ class RecoveryCode extends AppModel
     }
 
     /**
-     * 指定ユーザーの現在有効状態のリカバリコードを全て返す。
+     * 指定ユーザーのリカバリコードを全て返す。
      * 使用済みのコードも含まれる。
+     *
+     * 補足：
+     * available_flg == 1 のものが、現在有効なコード（画面に表示されるコード）
+     * その中で used !== NULL のものが、使用済コード
+     * available_flg == 0 のものは、無効になったコード
+     * （テーブル掃除による物理削除を防ぐため、del_flg でなく、available_flg で判別する）
      *
      * @param $user_id
      *
      * @return array
      */
-    public function getAvailable($user_id)
+    public function getAll($user_id)
     {
         $options = [
             'conditions' => [
@@ -85,7 +91,20 @@ class RecoveryCode extends AppModel
     }
 
     /**
-     * 指定ユーザーの現在有効状態のリカバリコードを全て無効にし、新しいコードを登録する
+     * 指定ユーザーのリカバリコードを全て利用不可にする
+     *
+     * @param $user_id
+     *
+     * @return bool 成功時 true
+     */
+    public function invalidateAll($user_id)
+    {
+        return $this->updateAll(['RecoveryCode.available_flg' => false],
+                                ['RecoveryCode.user_id' => $user_id]);
+    }
+
+    /**
+     * 指定ユーザーの現在のリカバリコードを全て利用不可にし、新しいコードを登録する
      *
      * @param $user_id
      *
@@ -95,7 +114,7 @@ class RecoveryCode extends AppModel
     {
         $this->begin();
         $res = [];
-        $res[] = $this->setAllUnavailable($user_id);
+        $res[] = $this->invalidateAll($user_id);
         for ($i = 0; $i < 10; $i++) {
             $this->create();
             $res[] = $this->save(['user_id'       => $user_id,
@@ -111,16 +130,47 @@ class RecoveryCode extends AppModel
     }
 
     /**
-     * 指定ユーザーの全てのリカバリコードを利用不可状態にする
+     * $code が指定したユーザーの現在利用可能なコードに含まれていればそのデータを返す
      *
      * @param $user_id
+     * @param $code
      *
-     * @return bool 成功時 true
+     * @return array|bool
      */
-    public function setAllUnavailable($user_id)
+    public function findUnusedCode($user_id, $code)
     {
-        return $this->updateAll(['RecoveryCode.available_flg' => false],
-                                ['RecoveryCode.user_id' => $user_id]);
+        $recovery_codes = $this->User->RecoveryCode->getAll($user_id);
+        foreach ($recovery_codes as $v) {
+            // 使用済み
+            if ($v['RecoveryCode']['used']) {
+                continue;
+            }
+
+            // 使用出来るコードが見つかった場合
+            if ($v['RecoveryCode']['code'] === $code) {
+                return $v;
+            }
+        }
+        // 使用出来るコードが見つからなかった場合
+        return false;
+    }
+
+    /**
+     * コードを使用済にする
+     *
+     * @param $id
+     *
+     * @return bool
+     */
+    public function useCode($id)
+    {
+        $recovery_code = $this->findById($id);
+        if (!$recovery_code) {
+            return false;
+        }
+        $this->id = $recovery_code['RecoveryCode']['id'];
+        $res = $this->saveField('used', REQUEST_TIMESTAMP);
+        return $res ? true : false;
     }
 
     /**
@@ -132,9 +182,11 @@ class RecoveryCode extends AppModel
     {
         while ($code = $this->generateToken(8, '0123456789abcdefghijklmnopqrstuvwxyz')) {
             // 数字と英字が混ざっているか確認
-            if (strlen(str_replace(range(0, 9), '', $code, $count)) && $count) {
-                break;
+            // （テストカバレッジが毎回同じになるように書く）
+            if (!(strlen(str_replace(range(0, 9), '', $code, $count)) && $count)) {
+                continue;
             }
+            break;
         }
         return $code;
     }

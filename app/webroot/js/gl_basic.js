@@ -313,14 +313,8 @@ $(document).ready(function () {
             $(url).modal('open');
         } else {
             $.get(url, function (data) {
-                var modal_options = {
-                    backdrop: true
-                };
-                if ($this.attr('data-backdrop')) {
-                    modal_options.backdrop = $this.attr('data-backdrop');
-                }
                 $modal_elm.append(data);
-                $modal_elm.modal(modal_options);
+                $modal_elm.modal();
                 //画像をレイジーロード
                 imageLazyOn($modal_elm);
                 //画像リサイズ
@@ -513,6 +507,25 @@ $(document).ready(function () {
             });
         }
     });
+
+    $(document).on("click", '#ShowRecoveryCodeButton', function (e) {
+        e.preventDefault();
+        var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        $modal_elm.on('hidden.bs.modal', function (e) {
+            $modal_elm.remove();
+        });
+        var url = $(this).attr('href');
+        $.get(url, function (data) {
+            $modal_elm.append(data);
+            // ２段階認証設定後、自動で modal を開いた場合は背景クリックで閉じれないようにする
+            $modal_elm.modal({
+                backdrop: e.isTrigger ? 'static' : true
+            });
+        }).success(function () {
+            $('body').addClass('modal-open');
+        });
+    });
+
     //lazy load
     $(document).on("click", '.target-toggle-click', function (e) {
         e.preventDefault();
