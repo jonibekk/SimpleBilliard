@@ -13,7 +13,7 @@
 <!--suppress ALL -->
 <html lang="ja">
 <?= $this->element('head') ?>
-<body class="body <?= $is_mb_app ? "mb-app-body" : null ?>">
+<body class="body">
 <?php if (extension_loaded('newrelic')) {
     /** @noinspection PhpUndefinedFunctionInspection */
     echo newrelic_get_browser_timing_header();
@@ -31,20 +31,20 @@ else {
 } ?>
 
 <div id="container" class="container">
-    <div class="<?= $is_mb_app ? "hidden" : "col-md-2 col-sm-4 col-xs-4 hidden-xxs" ?> layout-sub">
-        <div class="<?= !empty($my_teams)?null:'hidden' ?> left-side-container" id="jsLeftSideContainer">
+    <div class="col-md-2 col-sm-4 col-xs-4 hidden-xxs layout-sub">
+        <div class="<?= !empty($my_teams) ? null : 'hidden' ?> left-side-container" id="jsLeftSideContainer">
             <?= $this->element('dashboard_profile_card') ?>
             <?= $this->element('circle_list') ?>
         </div>
     </div>
-    <div class="<?= $is_mb_app ? "col-md-12" : "col-md-6 col-xs-8 col-xxs-12" ?> layout-main" role="main">
+    <div class="col-md-6 col-xs-8 col-xxs-12 layout-main" role="main">
         <?= $this->Session->flash(); ?>
         <!-- Remark -->
         <?= $this->fetch('content'); ?>
         <!-- /Remark -->
     </div>
     <div id="jsRightSideContainerWrap"
-         class="<?= !empty($my_teams)?null:'hidden' ?> right-side-container-wrap <?= $is_mb_app ? "col-md-12 hidden" : "col-md-4 visible-md visible-lg col-xs-8 col-xxs-12" ?> layout-goal"
+         class="<?= !empty($my_teams) ? null : 'hidden' ?> right-side-container-wrap col-md-4 visible-md visible-lg col-xs-8 col-xxs-12 layout-goal"
          role="goal_area">
         <?= $this->element('my_goals_area') ?>
     </div>

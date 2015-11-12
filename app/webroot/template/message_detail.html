@@ -48,7 +48,7 @@
                                         <span class="font_bold font_verydark">{{item.User.display_username}}</span>
                                     </a>
                                 </div>
-                                <div class="comment-text font_12px text-wrap" ng-if="item.Comment.body != '[like]'"
+                                <div class="comment-text font_12px message-contents" ng-if="item.Comment.body != '[like]'"
                                      ng-bind-html="item.Comment.body"></div>
                                 <div class="comment-text font_12px" ng-if="item.Comment.body == '[like]'"><i
                                         class="fa fa-thumbs-o-up font_brownRed"></i></div>

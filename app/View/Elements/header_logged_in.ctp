@@ -15,16 +15,19 @@
  * @var                    $evaluable_cnt
  * @var                    $unapproved_cnt
  * @var                    $all_alert_cnt
+ * @var                    $is_mb_app
  */
 ?>
 <!-- START app/View/Elements/header_logged_in.ctp -->
 <header class="header">
-    <div class="navbar navbar-fixed-top navbar-default gl-navbar <?= $is_mb_app ? "mb-app-navbar" : null ?>"
+    <div class="navbar navbar-fixed-top navbar-default gl-navbar <?= $is_mb_app ? "mb-app-nav" : null ?>"
          id="header">
         <div class="nav-container header-container">
-            <button id="header-slide-menu" type="button" class="<?= $is_mb_app ? "header-toggle-icon" : "header-toggle-icon" //TODO 一時的に古いclassになっている。将来的に$is_mb_app==trueだったら、mb-app-header-toggle-icon に置き換える?>" data-toggle="offcanvas"
+            <button id="header-slide-menu" type="button"
+                    class="<?= $is_mb_app ? "mb-app-header-toggle-icon" : "header-toggle-icon" ?>"
+                    data-toggle="offcanvas"
                     data-target=".navbar-offcanvas">
-                <i class="fa fa-navicon toggle-icon header-icons"></i>
+                <i class="fa fa-navicon toggle-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : null ?>"></i>
             </button>
             <div class="navbar-offcanvas offcanvas navmenu-fixed-left top_50px">
                 <ul class="nav navbar-nav">
@@ -55,7 +58,7 @@
                             </div>
                         </a>
                     </li>
-                    <li class="mtb_5px mtb-sm_0 <?= !empty($my_teams)?null:'hidden' ?>">
+                    <li class="mtb_5px mtb-sm_0 <?= !empty($my_teams) ? null : 'hidden' ?>">
 
                         <a class="header-team header_l-icons <?= $current_global_menu == "team" ? "activeColumn" : null ?>"
                            href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'main']) ?>">
