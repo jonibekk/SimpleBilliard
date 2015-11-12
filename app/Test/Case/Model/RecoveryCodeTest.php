@@ -149,6 +149,10 @@ class RecoveryCodeTest extends CakeTestCase
         $this->assertCount(10, $recovery_codes2);
         $this->assertEquals($recovery_codes[0]['RecoveryCode']['id'], $recovery_codes2[0]['RecoveryCode']['id']);
         $this->assertNotNull($recovery_codes2[0]['RecoveryCode']['used']);
+
+        // invalid ID
+        $res = $this->RecoveryCode->useCode(9999999);
+        $this->assertFalse($res);
     }
 
     function testFindUnusedCode()
