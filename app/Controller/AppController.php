@@ -762,7 +762,6 @@ class AppController extends Controller
 
     /**
      * ブラウザの種類を特定する
-     *
      * 注：現状対応しているのは safari/PC のみ
      */
     public function _detectUserAgent()

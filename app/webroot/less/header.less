@@ -35,8 +35,11 @@
 
 .mb-app-header-toggle-icon {
   .header-toggle-icon;
-  @media screen and (min-width: 768px) {
-    display: inline-block;
+  background: #C20A19;
+  &:hover,
+  &:focus,
+  &:target {
+    background-color: #C20A19;
   }
 }
 
@@ -336,4 +339,13 @@
   height: 30px;
   margin: 0 12px 0 0;
   float: right;
+}
+
+.mb-app-nav {
+  background-color: #C20A19;
+}
+
+.mb-app-nav-icon {
+  opacity: 1;
+  color: white;
 }
