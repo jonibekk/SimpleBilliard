@@ -119,7 +119,16 @@ message_app.controller(
             //});
 
             // メッセージを送信する
-            $scope.clickMessage = function (event) {
+            $scope.clickMessage = function (event,val) {
+                if($scope.flag)
+                {
+                    return;
+                }
+                $scope.flag = true;
+                if(val==='like')
+                {
+                    $scope.message = '[like]';
+                }
                 event.target.disabled = 'disabled';
                 var sendMessageLoader = document.getElementById("SendMessageLoader");
                 sendMessageLoader.style.display = "inline-block";
@@ -148,10 +157,10 @@ message_app.controller(
                 };
 
                 $http(request).then(function (response) {
+                    $scope.flag = false;
                     event.target.disabled = '';
                     sendMessageLoader.style.display = 'none';
                     $scope.message = "";
-
                     // プレビューエレメント配下の子エレメントを削除する
                     var file_preview_element = document.getElementById("messageUploadFilePreviewArea");
                     for (var i = file_preview_element.childNodes.length - 1; i >= 0; i--) {
@@ -190,12 +199,12 @@ message_app.controller(
                             val.AttachedFileHtml = $sce.trustAsHtml(val.AttachedFileHtml);
                             pushMessage(val);
                         }, $scope.message_list);
-
                         // メッセージ表示
                         bottom_scroll();
                     });
+                }).error(function(){
+                    $scope.flag = false;
                 });
-
             };
 
             var pushPostMessage = function () {
@@ -225,21 +234,31 @@ message_app.controller(
                         url: cake.url.ah + $stateParams.post_id + '/' + limit + '/' + page_num
                     };
                     $http(request).then(function (response) {
+                        var pushed_message_num = 0;
                         if (response.data.message_list.length < limit) {
                             pushPostMessage();
+                            pushed_message_num++;
                         }
 
                         angular.forEach(response.data.message_list, function (val) {
                             val.AttachedFileHtml = $sce.trustAsHtml(val.AttachedFileHtml);
                             pushMessage(val);
+                            pushed_message_num++;
                         }, $scope.message_list);
 
                         if (response.data.message_list.length > 0) {
                             // 新しいメッセージが view に確実に反映されるように少し遅らす
                             setTimeout(function () {
-                                $location.hash('m_' + response.data.message_list.length);
+                                $location.hash('m_' + pushed_message_num);
                                 $anchorScroll();
                             }, 1);
+                            // １ページ目の表示時
+                            // 確実に画面下に行くようにする
+                            if ($scope.message_list.length === pushed_message_num) {
+                                setTimeout(function () {
+                                    bottom_scroll();
+                                }, 200);
+                            }
                         }
                         page_num = page_num + 1;
                     });

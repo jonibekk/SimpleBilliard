@@ -8,16 +8,15 @@ scrollFixColumn = ->
 
   if winW > w
     $(window).scroll ->
-      if !cake.is_mb_app
-        if wrapH + t > winH
-          if $(this).scrollTop() + winH > wrapH + t + b
-            $('#jsRightSideContainer').addClass 'js-right-side-fixed-container'
-          else
-            $('#jsRightSideContainer').removeClass 'js-right-side-fixed-container'
-            return
+      if wrapH + t > winH
+        if $(this).scrollTop() + winH > wrapH + t + b
+          $('#jsRightSideContainer').addClass 'js-right-side-fixed-container'
         else
-          $('#jsRightSideContainer').addClass 'js-right-side-fixed-ontop'
-        return
+          $('#jsRightSideContainer').removeClass 'js-right-side-fixed-container'
+          return
+      else
+        $('#jsRightSideContainer').addClass 'js-right-side-fixed-ontop'
+      return
 
 $ ->
   scrollFixColumn()
