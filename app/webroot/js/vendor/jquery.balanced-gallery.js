@@ -192,8 +192,8 @@
     BalancedGallery.prototype.fallbackToStandardSize = function() {
         var idealHeight = this.options.idealHeight;
         this.elementChildren.each(function () {
+            $(this).width( idealWidth($(this)) );
             $(this).height( idealHeight );
-            $(this).width( balancedGallery.idealWidth($(this)) );
         });
     };
 
