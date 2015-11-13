@@ -164,7 +164,7 @@
                                     <?php if ($total['Evaluation']['status'] != Evaluation::TYPE_STATUS_DONE): ?>
                                         <?= __d('gl', "未確定です。") ?>
                                     <?php else: ?>
-                                        <?= h($total['Evaluation']['comment']) ?>
+                                        <?= nl2br(h($total['Evaluation']['comment'])) ?>
                                     <?php endif ?>
                                 </div>
                             </div>
@@ -448,7 +448,7 @@
                                     <?php if ($eval['Evaluation']['status'] != Evaluation::TYPE_STATUS_DONE): ?>
                                         <?= __d('gl', "未確定です。") ?>
                                     <?php else: ?>
-                                        <?= h($eval['Evaluation']['comment']) ?>
+                                        <?= nl2br(h($eval['Evaluation']['comment'])) ?>
                                     <?php endif ?>
                                 </div>
                             </div>
