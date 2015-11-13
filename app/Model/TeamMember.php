@@ -123,6 +123,14 @@ class TeamMember extends AppModel
         if (!empty($this->myStatusWithTeam)) {
             return $this->myStatusWithTeam;
         }
+        $is_default = false;
+        if ($team_id === null && $uid === null) {
+            $is_default = true;
+            $res = Cache::read($this->getCacheKey(CACHE_KEY_MY_MEMBER_STATUS, true), 'team_info');
+            if ($res !== false) {
+                return $this->myStatusWithTeam = $res;
+            }
+        }
         if (!$team_id) {
             $team_id = $this->current_team_id;
         }
@@ -143,6 +151,9 @@ class TeamMember extends AppModel
         ];
         $res = $this->find('first', $options);
         $this->myStatusWithTeam = $res;
+        if ($is_default && !empty($res)) {
+            Cache::write($this->getCacheKey(CACHE_KEY_MY_MEMBER_STATUS, true), $res, 'team_info');
+        }
         return $res;
     }
 
@@ -271,6 +282,7 @@ class TeamMember extends AppModel
 
     public function setAdminUserFlag($member_id, $flag)
     {
+        $this->deleteCacheMember($member_id);
         $this->id = $member_id;
         $flag = $flag == 'ON' ? 1 : 0;
         return $this->saveField('admin_flg', $flag);
@@ -278,22 +290,39 @@ class TeamMember extends AppModel
 
     public function setActiveFlag($member_id, $flag)
     {
+        $this->deleteCacheMember($member_id);
         $this->id = $member_id;
-        //対象ユーザのCache削除
-        $member = $this->read();
-        if (isset($member['TeamMember']['user_id'])) {
-            Cache::delete($this->getCacheKey(CACHE_KEY_TEAM_LIST, true, $member['TeamMember']['user_id'], false),
-                          'team_info');
-        }
         $flag = $flag == 'ON' ? 1 : 0;
         return $this->saveField('active_flg', $flag);
     }
 
     public function setEvaluationFlag($member_id, $flag)
     {
+        $this->deleteCacheMember($member_id);
         $this->id = $member_id;
         $flag = $flag == 'ON' ? 1 : 0;
         return $this->saveField('evaluation_enable_flg', $flag);
+    }
+
+    /**
+     * 対象ユーザのCache削除
+     *
+     * @param $member_id
+     *
+     * @return bool
+     */
+    function deleteCacheMember($member_id)
+    {
+        $this->id = $member_id;
+        $member = $this->read();
+        if (isset($member['TeamMember']['user_id'])) {
+            Cache::delete($this->getCacheKey(CACHE_KEY_TEAM_LIST, true, $member['TeamMember']['user_id'], false),
+                          'team_info');
+            Cache::delete($this->getCacheKey(CACHE_KEY_MY_MEMBER_STATUS, true, $member['TeamMember']['user_id']),
+                          'team_info');
+            return true;
+        }
+        return false;
     }
 
     /*
