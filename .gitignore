@@ -22,7 +22,7 @@ junit.xml
 composer.lock
 # PhpStorm設定ファイルを除外
 # ただし、プロジェクト内で共通の設定を適用すべきファイルはバージョン管理対象にする
-# /.idea
+/.idea
 # for npm
 /node_modules
 npm-debug.log
