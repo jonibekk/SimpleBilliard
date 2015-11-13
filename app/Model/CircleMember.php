@@ -144,7 +144,7 @@ class CircleMember extends AppModel
         $res = $this->find('all', $options);
         if ($is_default) {
             //TODO: このキャッシュは任意のタイミングでリセットするのが難しい(サークルに投稿がある度にリセットだとあまり効果ない)ので有効期限を特別にセット
-            Cache::set('duration', 60 * 60, 'user_data');//1 hour
+            Cache::set('duration', 60 * 15, 'user_data');//15 minutes
             Cache::write($this->getCacheKey(CACHE_KEY_MY_CIRCLE_LIST, true), $res, 'user_data');
         }
         return $res;
