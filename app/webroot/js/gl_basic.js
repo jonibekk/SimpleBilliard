@@ -107,28 +107,15 @@ $(document).ready(function () {
             $('#SubHeaderMenuGoal').removeClass('sp-feed-active');
             $(this).addClass('sp-feed-active');
             //表示切り換え
-            if (cake.is_mb_app) {
-                $('[role="goal_area"]').addClass('hidden');
-                $('[role="main"]').removeClass('hidden');
-            }
-            else {
-                $('[role="goal_area"]').addClass('visible-md visible-lg');
-                $('[role="main"]').removeClass('visible-md visible-lg');
-            }
+            $('[role="goal_area"]').addClass('visible-md visible-lg');
+            $('[role="main"]').removeClass('visible-md visible-lg');
         }
         else if ($(this).attr('id') == 'SubHeaderMenuGoal') {
             $('#SubHeaderMenuFeed').removeClass('sp-feed-active');
             $(this).addClass('sp-feed-active');
             //表示切り換え
-            if (cake.is_mb_app) {
-                $('[role="main"]').addClass('hidden');
-                $('[role="goal_area"]').removeClass('hidden');
-            }
-            else {
-                $('[role="main"]').addClass('visible-md visible-lg');
-                $('[role="goal_area"]').removeClass('visible-md visible-lg');
-            }
-
+            $('[role="main"]').addClass('visible-md visible-lg');
+            $('[role="goal_area"]').removeClass('visible-md visible-lg');
         }
         else {
             //noinspection UnnecessaryReturnStatementJS
@@ -314,6 +301,11 @@ $(document).ready(function () {
         }
         $this.addClass('double_click');
         var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        if ($this.hasClass('remove-on-hide')) {
+            $modal_elm.on('hidden.bs.modal', function (e) {
+                $modal_elm.remove();
+            });
+        }
         //noinspection CoffeeScriptUnusedLocalSymbols,JSUnusedLocalSymbols
         modalFormCommonBindEvent($modal_elm);
         var url = $(this).attr('href');
@@ -515,6 +507,25 @@ $(document).ready(function () {
             });
         }
     });
+
+    $(document).on("click", '#ShowRecoveryCodeButton', function (e) {
+        e.preventDefault();
+        var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        $modal_elm.on('hidden.bs.modal', function (e) {
+            $modal_elm.remove();
+        });
+        var url = $(this).attr('href');
+        $.get(url, function (data) {
+            $modal_elm.append(data);
+            // ２段階認証設定後、自動で modal を開いた場合は背景クリックで閉じれないようにする
+            $modal_elm.modal({
+                backdrop: e.isTrigger ? 'static' : true
+            });
+        }).success(function () {
+            $('body').addClass('modal-open');
+        });
+    });
+
     //lazy load
     $(document).on("click", '.target-toggle-click', function (e) {
         e.preventDefault();
@@ -612,6 +623,61 @@ $(document).ready(function () {
     // メッセージフォーム submit 時
     $(document).on('submit', '#MessageDisplayForm', function (e) {
         return checkUploadFileExpire('messageDropArea');
+    });
+    
+    // リカバリコード再生成
+    $(document).on('click', '#RecoveryCodeModal .regenerate-recovery-code', function (e) {
+        e.preventDefault();
+        var $form = $('#RegenerateRecoveryCodeForm');
+        $.ajax({
+            url: cake.url.regenerate_recovery_code,
+            type: 'POST',
+            dataType: 'json',
+            processData: false,
+            data: $form.serialize()
+        })
+            .done(function (res) {
+                PNotify.removeAll();
+                if (res.error) {
+                    new PNotify({
+                        type: 'error',
+                        title: cake.word.error,
+                        text: res.msg,
+                        icon: "fa fa-check-circle",
+                        delay: 4000,
+                        mouse_reset: false
+                    });
+                    return;
+                }
+                else {
+                    var $list_items = $('#RecoveryCodeList').find('li');
+                    for (var i = 0; i < 10; i++) {
+                        $list_items.eq(i).text(res.codes[i].slice(0, 4) + ' ' + res.codes[i].slice(-4));
+                    }
+                    
+                    new PNotify({
+                        type: 'success',
+                        title: cake.word.success,
+                        text: res.msg,
+                        icon: "fa fa-check-circle",
+                        delay: 4000,
+                        mouse_reset: false
+                    });
+                }
+               
+                
+            })
+            .fail(function () {
+                PNotify.removeAll();
+                new PNotify({
+                    type: 'error',
+                    title: cake.word.error,
+                    text: cake.message.notice.d,
+                    icon: "fa fa-check-circle",
+                    delay: 4000,
+                    mouse_reset: false
+                });
+            });
     });
 
 
@@ -1626,7 +1692,7 @@ function setChangeWarningForAllStaticPage() {
             var changed_val = "";
             default_val = $(this).load().val();
             $(this).on("change keyup keydown", function () {
-                if($(this).hasClass('disable-change-warning')){
+                if ($(this).hasClass('disable-change-warning')) {
                     return;
                 }
                 changed_val = $(this).val();
@@ -3679,12 +3745,11 @@ $(document).ready(function () {
 function initBellNum() {
     var $bellBox = getBellBoxSelector();
     $bellBox.css("opacity", 0);
-    $bellBox.html("0");
+    $bellBox.children('span').html("0");
 }
 function initMessageNum() {
     var $box = getMessageBoxSelector();
     $box.css("opacity", 0);
-    //$box.html("0");
     $box.children('span').html("0");
 }
 
@@ -3737,7 +3802,7 @@ function updateListBox() {
 }
 
 // reset bell notify num call from app.
-function resetBellNum(){
+function resetBellNum() {
     initBellNum();
     var url = cake.url.g;
     $.ajax({
@@ -3780,7 +3845,7 @@ function updateMessageListBox() {
 }
 
 // reset bell message num call from app.
-function resetMessageNum(){
+function resetMessageNum() {
     initMessageNum();
     var url = cake.url.ag;
     $.ajax({
@@ -4781,6 +4846,8 @@ function setDefaultTab() {
             $('#CommonFormTabs li:eq(1) a').tab('show');
             if (!isMobile()) {
                 $('#CommonPostBody').focus();
+            } else {
+                $('#CommonPostBody').blur();
             }
             break;
         case "message":

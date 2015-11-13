@@ -1264,10 +1264,13 @@ class TeamsController extends AppController
 
             $target_start_date = $start_date;
             $target_end_date = $start_date;   // １日分のデータ
-            $today_time = strtotime($date_info['today']);
             $target_start_date_time = strtotime($target_start_date);
             for ($i = 0; $i < $max_days; $i++) {
-                $cache_expire = ($target_start_date_time < $today_time) ? WEEK : DAY;
+                // キャッシュの有効期限
+                // 古いデータは１週間
+                // 当日以降のデータはアクセス日の24時まで（当日より後はデータは存在しないが処理単純化とデータ構造を合わせるため）
+                $cache_expire = ($target_start_date_time < $date_info['today_time']) ?
+                    WEEK : DAY - (REQUEST_TIMESTAMP + $date_info['time_adjust'] - $date_info['today_time']);
                 $insights[] = $this->_getInsightData($target_start_date, $target_end_date, $timezone, $group_id,
                                                      $cache_expire);
                 $target_start_date_time += DAY;
@@ -1293,8 +1296,11 @@ class TeamsController extends AppController
             }
 
             for ($i = 0; $i < $max_weeks; $i++) {
-                $cache_expire = (strtotime($target_end_date) < strtotime($date_info['today'])) ? WEEK : DAY;
-
+                // キャッシュの有効期限
+                // 古いデータは１週間
+                // 今週のデータはアクセス日の24時まで
+                $cache_expire = (strtotime($target_end_date) < $date_info['today_time']) ?
+                    WEEK : DAY - (REQUEST_TIMESTAMP + $date_info['time_adjust'] - $date_info['today_time']);
                 // 指定範囲のデータ
                 array_unshift($insights,
                               $this->_getInsightData($target_start_date, $target_end_date, $timezone, $group_id,
@@ -1329,7 +1335,11 @@ class TeamsController extends AppController
             }
 
             for ($i = 0; $i < $max_months; $i++) {
-                $cache_expire = (strtotime($target_end_date) < strtotime($date_info['today'])) ? WEEK : DAY;
+                // キャッシュの有効期限
+                // 古いデータは１週間
+                // 今月のデータはアクセス日の24時まで
+                $cache_expire = (strtotime($target_end_date) < strtotime($date_info['today'])) ? 
+                    WEEK : DAY - (REQUEST_TIMESTAMP + $date_info['time_adjust'] - $date_info['today_time']);
 
                 array_unshift($insights,
                               $this->_getInsightData($target_start_date, $target_end_date, $timezone, $group_id,
@@ -1359,7 +1369,12 @@ class TeamsController extends AppController
                 $start_term_id = $this->Team->EvaluateTerm->getCurrentTermId();
             }
 
-            $cache_expire = $is_current ? DAY : WEEK;
+            // キャッシュの有効期限
+            // 古いデータは１週間
+            // 今期のデータはアクセス日の24時まで
+            $cache_expire = $is_current ?
+                DAY - (REQUEST_TIMESTAMP + $date_info['time_adjust'] - $date_info['today_time']) : WEEK;
+
             $skip = true;
             foreach ($all_terms as $term_id => $v) {
                 // 集計対象期間まで読み飛ばし
@@ -1702,6 +1717,8 @@ class TeamsController extends AppController
         $time_adjust = intval($timezone * HOUR);
         // タイムゾーンを考慮した「本日」
         $today = date('Y-m-d', time() + $time_adjust);
+        // 「本日」の 0 時のタイムスタンプ
+        $today_time = strtotime($today);
 
         // 今週、先週、今月、先月、前期、今期 の start_date, end_date
         $date_ranges = [];
@@ -1720,7 +1737,7 @@ class TeamsController extends AppController
             'end'   => date('Y-m-d', $row['end_date'] + $time_adjust),
         ];
 
-        return compact('time_adjust', 'today', 'date_ranges');
+        return compact('time_adjust', 'today', 'today_time', 'date_ranges');
     }
 
     /**

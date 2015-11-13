@@ -88,7 +88,7 @@
         </div>
         <div class="modal-footer">
             <?=
-            $this->Form->submit(__d('gl', "保存"),
+            $this->Form->submit(__d('gl', "次へ"),
                                 ['class' => 'btn btn-primary pull-right', 'div' => false,]) ?>
             <?= $this->Form->end(); ?>
         </div>
