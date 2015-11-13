@@ -181,6 +181,7 @@ define('CACHE_KEY_EVALUABLE_COUNT', 'evaluable_count');
 define('CACHE_KEY_MY_CIRCLE_LIST', 'my_circle_list');
 define('CACHE_KEY_MY_MEMBER_STATUS', 'my_member_status');
 define('CACHE_KEY_TEAM_ALL_CIRCLE', 'team_all_circle');
+define('CACHE_KEY_TEAM_VISION', 'team_vision');
 
 /**
  * 共通関数
