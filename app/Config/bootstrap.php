@@ -11,8 +11,8 @@
  * @since         CakePHP(tm) v 0.10.8.2117
  */
 Cache::config('default', array(
-                           'engine' => 'Apc',
-                       )
+        'engine' => 'Apc',
+    )
 );
 
 /**
@@ -86,25 +86,25 @@ Configure::write('Dispatcher.filters', array(
 App::uses('CakeLog', 'Log');
 CakeLog::config('debug', array(
     'engine' => 'File',
-    'types'  => array('notice', 'info', 'debug'),
-    'file'   => 'debug',
+    'types' => array('notice', 'info', 'debug'),
+    'file' => 'debug',
 ));
 CakeLog::config('error', array(
     'engine' => 'File',
-    'types'  => array('warning', 'error', 'critical', 'alert', 'emergency'),
-    'file'   => 'error',
+    'types' => array('warning', 'error', 'critical', 'alert', 'emergency'),
+    'file' => 'error',
 ));
 
 Configure::write('Asset.timestamp', 'force');
 
 App::build(array(
-               'Vendor' => array(
-                   ROOT . '/Vendor/',
-               ),
-               'Plugin' => array(
-                   ROOT . '/Plugin/',
-               ),
-           )
+        'Vendor' => array(
+            ROOT . '/Vendor/',
+        ),
+        'Plugin' => array(
+            ROOT . '/Plugin/',
+        ),
+    )
 );
 CakePlugin::loadAll();
 //HtmlHelper UrlCache
@@ -180,6 +180,7 @@ define('CACHE_KEY_UNAPPROVED_COUNT', 'unapproved_count');
 define('CACHE_KEY_EVALUABLE_COUNT', 'evaluable_count');
 define('CACHE_KEY_MY_CIRCLE_LIST', 'my_circle_list');
 define('CACHE_KEY_MY_MEMBER_STATUS', 'my_member_status');
+define('CACHE_KEY_TEAM_ALL_CIRCLE', 'team_all_circle');
 
 /**
  * 共通関数
