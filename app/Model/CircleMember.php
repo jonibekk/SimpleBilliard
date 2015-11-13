@@ -322,6 +322,7 @@ class CircleMember extends AppModel
             'CircleMember.team_id'   => $this->current_team_id,
         ];
         $res = $this->updateAll(['CircleMember.unread_count' => $set_count], $conditions);
+        Cache::delete($this->getCacheKey(CACHE_KEY_MY_CIRCLE_LIST, true), 'user_data');
         return $res;
     }
 
