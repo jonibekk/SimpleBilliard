@@ -145,6 +145,15 @@ class GoalsController extends AppController
                         $this->Goal->Collaborator->changeApprovalStatus($val['id'], $valued_flg);
                     }
 
+                    // 来期ゴールを編集した場合は、マイページの来期ゴール絞り込みページへ遷移
+                    if ($this->Goal->getGoalTermData($id)['id'] == $this->Team->EvaluateTerm->getNextTermId()) {
+                        $this->redirect(['controller' => 'users',
+                                         'action'     => 'view_goals',
+                                         'user_id'    => $this->Auth->user('id'),
+                                         'term_id'    => $this->Team->EvaluateTerm->getNextTermId(),
+                                        ]);
+                    }
+
                     // ゴール作成ユーザーのコーチが存在すればゴール認定ページへ遷移
                     $coach_id = $this->User->TeamMember->selectCoachUserIdFromTeamMembersTB(
                         $this->Auth->user('id'), $this->Session->read('current_team_id'));
