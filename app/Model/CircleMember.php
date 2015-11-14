@@ -333,14 +333,9 @@ class CircleMember extends AppModel
         }
         //自分の所属しているサークルを取得
         $my_circles = $this->getMyCircle();
+
         // チーム全体サークルのIDを確認
-        $team_all_circle_id = null;
-        foreach ($my_circles as $c) {
-            if ($c['Circle']['team_all_flg']) {
-                $team_all_circle_id = $c['Circle']['id'];
-                break;
-            }
-        }
+        $team_all_circle_id = $this->Circle->getTeamAllCircleId();
 
         $un_join_circles = [];
         $join_circles = [];
@@ -458,7 +453,7 @@ class CircleMember extends AppModel
         );
     }
 
-    function show_hide_stats($userid, $circle_id)
+    function getShowHideStatus($userid, $circle_id)
     {
         $options = [
             'conditions' => [

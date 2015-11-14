@@ -126,7 +126,7 @@ class CircleMemberTest extends GoalousTestCase
         $this->CircleMember->updateModified($circle_list);
         $res = $this->CircleMember->find('all', ['conditions' => ['CircleMember.circle_id' => $circle_list]]);
         $this->assertGreaterThanOrEqual($now * 2,
-                                        $res[0]['CircleMember']['modified'] + $res[1]['CircleMember']['modified']);
+            $res[0]['CircleMember']['modified'] + $res[1]['CircleMember']['modified']);
     }
 
     public function testUpdateModifiedIfEmpty()
@@ -156,7 +156,7 @@ class CircleMemberTest extends GoalousTestCase
         $users = $this->CircleMember->find(
             'list',
             [
-                'fields'     => [
+                'fields' => [
                     'CircleMember.user_id',
                     'CircleMember.user_id'
                 ],
@@ -175,7 +175,7 @@ class CircleMemberTest extends GoalousTestCase
         $users = $this->CircleMember->find(
             'list',
             [
-                'fields'     => [
+                'fields' => [
                     'CircleMember.user_id',
                     'CircleMember.user_id'
                 ],
@@ -198,7 +198,7 @@ class CircleMemberTest extends GoalousTestCase
         $users = $this->CircleMember->find(
             'list',
             [
-                'fields'     => [
+                'fields' => [
                     'CircleMember.user_id',
                     'CircleMember.user_id'
                 ],
@@ -217,7 +217,7 @@ class CircleMemberTest extends GoalousTestCase
         $users = $this->CircleMember->find(
             'list',
             [
-                'fields'     => [
+                'fields' => [
                     'CircleMember.user_id',
                     'CircleMember.user_id'
                 ],
@@ -244,26 +244,9 @@ class CircleMemberTest extends GoalousTestCase
 
     public function testShowHideStats()
     {
-        $result = $this->CircleMember->show_hide_stats('user_id', 'circle_id');
-
-        $expected = array(
-            array('CircleMember' => array('user_id' => 11), array('circle_id' => '20'))
-        );
-
-        $this->assertNotEquals($expected, $result);
-    }
-
-    public function testCircleStatusToggle()
-    {
-        $this->CircleMember->my_uid = 1;
-        $result = $this->CircleMember->show_hide_stats('circle_id', 'status');
-
-        $expected = array(
-            array('CircleMember' => array('circle_id' => 20), array('status' => '1')),
-            array('CircleMember' => array('circle_id' => 8), array('status' => '0')),
-        );
-
-        $this->assertNotEquals($expected, $result);
+        $this->_setDefault(1, 1);
+        $result = $this->CircleMember->getShowHideStatus(1, 1);
+        $this->assertTrue($result);
     }
 
     public function testGetMyCircle()
@@ -271,6 +254,8 @@ class CircleMemberTest extends GoalousTestCase
         $this->CircleMember->my_uid = 1;
         $this->CircleMember->current_team_id = 1;
 
+        $result = $this->CircleMember->getMyCircle();
+        $this->assertNotEmpty($result);
         $result = $this->CircleMember->getMyCircle();
         $this->assertNotEmpty($result);
         // 先頭はチーム全体サークル
@@ -341,6 +326,66 @@ class CircleMemberTest extends GoalousTestCase
         foreach ($count_list as $id => $count) {
             $this->assertEquals($this->CircleMember->getActiveMemberCount($id), $count);
         }
+    }
+
+    function testGetNonCircleMemberSelect2()
+    {
+        $this->_setDefault(1, 1);
+        $data = [
+            'Circle' => [
+                'name' => 'test',
+                'public_flg' => true,
+                'team_id' => 1,
+            ]
+        ];
+        $this->CircleMember->Circle->save($data);
+        $res = $this->CircleMember->getNonCircleMemberSelect2($this->CircleMember->Circle->getLastInsertID(), 'test');
+        $this->assertNotEmpty($res);
+    }
+
+    function testUpdateUnreadCount()
+    {
+        $this->_setDefault(1, 1);
+        $res = $this->CircleMember->updateUnreadCount(1);
+        $this->assertTrue($res);
+    }
+
+    function testJoinCircle()
+    {
+        $this->_setDefault(1, 1);
+        $res = $this->CircleMember->joinCircle([]);
+        $this->assertFalse($res);
+        $this->CircleMember->Circle->save([
+            'name' => 'test'
+        ]);
+        $postData = [
+            'Circle' => [
+                [
+                    'circle_id' => 3,
+                    'join' => true
+                ],
+                [
+                    'circle_id' => 2,
+                    'join' => true
+                ],
+                [
+                    'circle_id' => 1,
+                    'join' => false
+                ],
+                [
+                    'circle_id' => $this->CircleMember->Circle->getLastInsertID(),
+                    'join' => true
+                ],
+            ]
+        ];
+        $this->assertTrue($this->CircleMember->joinCircle($postData));
+    }
+
+    function testCircleStatusToggle()
+    {
+        $this->_setDefault(1, 1);
+        $res = $this->CircleMember->circleStatusToggle(1, 1);
+        $this->assertTrue($res);
     }
 
 }

@@ -1055,7 +1055,7 @@ class PostsController extends AppController
         if ($circle_id = viaIsSet($params['circle_id'])) {
             $user_status = $this->_userCircleStatus($circle_id);
 
-            $circle_status = $this->Post->Circle->CircleMember->show_hide_stats($this->Auth->user('id'),
+            $circle_status = $this->Post->Circle->CircleMember->getShowHideStatus($this->Auth->user('id'),
                 $circle_id);
             //サークル指定の場合はメンバーリスト取得
             $circle_member_count = $this->User->CircleMember->getActiveMemberCount($params['circle_id']);
