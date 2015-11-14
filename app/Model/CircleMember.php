@@ -95,7 +95,8 @@ class CircleMember extends AppModel
         $is_default = false;
         if (empty($params)) {
             $is_default = true;
-            if ($circle_list = Cache::read($this->getCacheKey(CACHE_KEY_MY_CIRCLE_LIST, true), 'user_data')) {
+            $circle_list = Cache::read($this->getCacheKey(CACHE_KEY_MY_CIRCLE_LIST, true), 'user_data');
+            if ($circle_list !== false) {
                 return $circle_list;
             }
         }
