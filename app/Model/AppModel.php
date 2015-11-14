@@ -245,7 +245,7 @@ class AppModel extends Model
     /**
      * Generate token used by the user registration system
      *
-     * @param int $length Token Length
+     * @param int    $length Token Length
      * @param string $possible
      *
      * @return string

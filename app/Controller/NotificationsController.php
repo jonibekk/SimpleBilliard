@@ -76,7 +76,7 @@ class NotificationsController extends AppController
      */
     public function ajax_get_new_message_notify_count()
     {
-       $this->_ajaxPreProcess();
+        $this->_ajaxPreProcess();
 
         // URLパラメータとセッションのチームIDが違う場合はエラーにする
         if ($this->Session->read('current_team_id') != $this->request->params['named']['team_id']) {
@@ -123,8 +123,7 @@ class NotificationsController extends AppController
     {
         $this->_ajaxPreProcess();
         $notify_items = $this->NotifyBiz->getNotifyIds();
-        foreach($notify_items as $notify_id=>$val)
-        {
+        foreach ($notify_items as $notify_id => $val) {
             $this->NotifyBiz->changeReadStatusNotification($notify_id);
         }
         return $this->_ajaxGetResponse([]);

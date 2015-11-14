@@ -47,7 +47,7 @@ class Follower extends AppModel
         if ($this->find('first', ['conditions' => $data])) {
             return false;
         }
-        Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_FOLLOW_GOALS, true),'user_data');
+        Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_FOLLOW_GOALS, true), 'user_data');
         return $this->save($data);
     }
 
@@ -59,7 +59,7 @@ class Follower extends AppModel
             'Follower.team_id' => $this->current_team_id,
         ];
         $this->deleteAll($conditions);
-        Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_FOLLOW_GOALS, true),'user_data');
+        Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_FOLLOW_GOALS, true), 'user_data');
         return true;
     }
 

@@ -126,7 +126,7 @@ class CircleMemberTest extends GoalousTestCase
         $this->CircleMember->updateModified($circle_list);
         $res = $this->CircleMember->find('all', ['conditions' => ['CircleMember.circle_id' => $circle_list]]);
         $this->assertGreaterThanOrEqual($now * 2,
-            $res[0]['CircleMember']['modified'] + $res[1]['CircleMember']['modified']);
+                                        $res[0]['CircleMember']['modified'] + $res[1]['CircleMember']['modified']);
     }
 
     public function testUpdateModifiedIfEmpty()
@@ -156,7 +156,7 @@ class CircleMemberTest extends GoalousTestCase
         $users = $this->CircleMember->find(
             'list',
             [
-                'fields' => [
+                'fields'     => [
                     'CircleMember.user_id',
                     'CircleMember.user_id'
                 ],
@@ -175,7 +175,7 @@ class CircleMemberTest extends GoalousTestCase
         $users = $this->CircleMember->find(
             'list',
             [
-                'fields' => [
+                'fields'     => [
                     'CircleMember.user_id',
                     'CircleMember.user_id'
                 ],
@@ -198,7 +198,7 @@ class CircleMemberTest extends GoalousTestCase
         $users = $this->CircleMember->find(
             'list',
             [
-                'fields' => [
+                'fields'     => [
                     'CircleMember.user_id',
                     'CircleMember.user_id'
                 ],
@@ -217,7 +217,7 @@ class CircleMemberTest extends GoalousTestCase
         $users = $this->CircleMember->find(
             'list',
             [
-                'fields' => [
+                'fields'     => [
                     'CircleMember.user_id',
                     'CircleMember.user_id'
                 ],
@@ -333,9 +333,9 @@ class CircleMemberTest extends GoalousTestCase
         $this->_setDefault(1, 1);
         $data = [
             'Circle' => [
-                'name' => 'test',
+                'name'       => 'test',
                 'public_flg' => true,
-                'team_id' => 1,
+                'team_id'    => 1,
             ]
         ];
         $this->CircleMember->Circle->save($data);
@@ -356,25 +356,25 @@ class CircleMemberTest extends GoalousTestCase
         $res = $this->CircleMember->joinCircle([]);
         $this->assertFalse($res);
         $this->CircleMember->Circle->save([
-            'name' => 'test'
-        ]);
+                                              'name' => 'test'
+                                          ]);
         $postData = [
             'Circle' => [
                 [
                     'circle_id' => 3,
-                    'join' => true
+                    'join'      => true
                 ],
                 [
                     'circle_id' => 2,
-                    'join' => true
+                    'join'      => true
                 ],
                 [
                     'circle_id' => 1,
-                    'join' => false
+                    'join'      => false
                 ],
                 [
                     'circle_id' => $this->CircleMember->Circle->getLastInsertID(),
-                    'join' => true
+                    'join'      => true
                 ],
             ]
         ];

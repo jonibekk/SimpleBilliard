@@ -716,7 +716,7 @@ class Evaluation extends AppModel
         if ($evaluate_type === null && $term_id === null && $is_all === true) {
             $is_default = true;
             $count = Cache::read($this->getCacheKey(CACHE_KEY_EVALUABLE_COUNT, true), 'team_info');
-            if($count !== false){
+            if ($count !== false) {
                 return $count;
             }
         }
@@ -752,7 +752,7 @@ class Evaluation extends AppModel
         }
 
         $count = $this->find('count', $options);
-        if(!$count){
+        if (!$count) {
             $count = 0;
         }
         if ($is_default) {

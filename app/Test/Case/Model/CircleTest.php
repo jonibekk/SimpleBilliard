@@ -90,9 +90,9 @@ class CircleTest extends GoalousTestCase
         $this->_setDefault();
         $data = [
             'Circle' => [
-                'name' => 'test',
+                'name'       => 'test',
                 'public_flg' => true,
-                'members' => 'user_1,user_2,user_3',
+                'members'    => 'user_1,user_2,user_3',
             ]
         ];
         $res = $this->Circle->add($data);
@@ -170,9 +170,9 @@ class CircleTest extends GoalousTestCase
         $this->_setDefault();
         $data = [
             'Circle' => [
-                'name' => 'test',
-                'public_flg' => true,
-                'members' => 'user_1,user_2,user_3',
+                'name'         => 'test',
+                'public_flg'   => true,
+                'members'      => 'user_1,user_2,user_3',
                 'team_all_flg' => 1,
             ]
         ];
@@ -180,8 +180,8 @@ class CircleTest extends GoalousTestCase
 
         $edit_data = [
             'Circle' => [
-                'id' => $this->Circle->getLastInsertID(),
-                'name' => 'test',
+                'id'         => $this->Circle->getLastInsertID(),
+                'name'       => 'test',
                 'public_flg' => true,
             ]
         ];
@@ -198,8 +198,8 @@ class CircleTest extends GoalousTestCase
         $member_count = count($member_list);
         $data = [
             'Circle' => [
-                'id' => 1,
-                'members' => 'user_13',
+                'id'           => 1,
+                'members'      => 'user_13',
                 'team_all_flg' => false,
             ]
         ];
@@ -219,7 +219,7 @@ class CircleTest extends GoalousTestCase
         // パラメータ不正
         $data = [
             'Circle' => [
-                'id' => 1,
+                'id'      => 1,
                 'members' => 'user_13',
             ]
         ];
@@ -228,8 +228,8 @@ class CircleTest extends GoalousTestCase
 
         $data = [
             'Circle' => [
-                'id' => 1,
-                'members' => 'user_',
+                'id'           => 1,
+                'members'      => 'user_',
                 'team_all_flg' => false,
             ]
         ];
@@ -239,8 +239,8 @@ class CircleTest extends GoalousTestCase
         // チーム全体サークルはメンバー追加不可
         $data = [
             'Circle' => [
-                'id' => 3,
-                'members' => 'user_13',
+                'id'           => 3,
+                'members'      => 'user_13',
                 'team_all_flg' => true,
 
             ]
@@ -251,8 +251,8 @@ class CircleTest extends GoalousTestCase
         // 重複ユーザー
         $data = [
             'Circle' => [
-                'id' => 1,
-                'members' => 'user_2',
+                'id'           => 1,
+                'members'      => 'user_2',
                 'team_all_flg' => false,
             ]
         ];

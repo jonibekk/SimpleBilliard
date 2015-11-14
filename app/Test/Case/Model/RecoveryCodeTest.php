@@ -104,7 +104,6 @@ class RecoveryCodeTest extends GoalousTestCase
         $this->assertEquals($available_codes2, $available_codes3);
     }
 
-
     function testRegenerateFailed()
     {
         $count1 = $this->RecoveryCode->find('count');

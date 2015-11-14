@@ -340,7 +340,7 @@ class KeyResult extends AppModel
 
         // ゴールが属している評価期間データ
         $goal_term = $this->Goal->getGoalTermData($data['KeyResult']['goal_id']);
-        
+
         $data['KeyResult']['start_date'] = strtotime($data['KeyResult']['start_date']) - $goal_term['timezone'] * HOUR;
         $data['KeyResult']['end_date'] = strtotime('+1 day -1 sec',
                                                    strtotime($data['KeyResult']['end_date'])) - $goal_term['timezone'] * HOUR;

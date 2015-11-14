@@ -24,10 +24,10 @@ class GoalCategory extends AppModel
      */
     public $validate = [
         'name'    => [
-            'notEmpty' => [
+            'notEmpty'  => [
                 'rule' => ['notEmpty'],
             ],
-            'maxLength'     => [
+            'maxLength' => [
                 'rule' => ['maxLength', 40],
             ],
         ],

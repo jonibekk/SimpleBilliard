@@ -12,7 +12,7 @@ class CommentLike extends AppModel
 {
     public $actsAs = [
         'SoftDeletable' => [
-            'delete'      => false,
+            'delete' => false,
         ],
     ];
 
@@ -130,7 +130,6 @@ class CommentLike extends AppModel
 
         return $this->find('count', $options);
     }
-
 
     /**
      * コメントをしたユニークユーザーのリストを返す

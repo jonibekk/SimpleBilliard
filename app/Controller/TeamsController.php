@@ -1338,7 +1338,7 @@ class TeamsController extends AppController
                 // キャッシュの有効期限
                 // 古いデータは１週間
                 // 今月のデータはアクセス日の24時まで
-                $cache_expire = (strtotime($target_end_date) < strtotime($date_info['today'])) ? 
+                $cache_expire = (strtotime($target_end_date) < strtotime($date_info['today'])) ?
                     WEEK : DAY - (REQUEST_TIMESTAMP + $date_info['time_adjust'] - $date_info['today_time']);
 
                 array_unshift($insights,

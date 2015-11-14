@@ -372,7 +372,7 @@ class PostTest extends GoalousTestCase
             'user_id' => $uid,
             'team_id' => $team_id,
 
-            'body' => 'test'
+            'body'    => 'test'
         ];
         $this->Post->save($data);
         $res = $this->Post->isMyPost($this->Post->id);
@@ -839,9 +839,9 @@ class PostTest extends GoalousTestCase
 
         $expected = [
             'Post' => [
-                'user_id' => '1',
-                'team_id' => '1',
-                'type'    => (int)7,
+                'user_id'   => '1',
+                'team_id'   => '1',
+                'type'      => (int)7,
 
                 'circle_id' => (int)1,
             ]

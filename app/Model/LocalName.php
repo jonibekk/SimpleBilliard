@@ -123,7 +123,7 @@ class LocalName extends AppModel
     {
         $options = [
             'conditions' => [
-                'user_id'  => $user_id,
+                'user_id' => $user_id,
             ]
         ];
         $res = $this->find('all', $options);

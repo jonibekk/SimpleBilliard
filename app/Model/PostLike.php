@@ -12,7 +12,7 @@ class PostLike extends AppModel
 {
     public $actsAs = [
         'SoftDeletable' => [
-            'delete'      => false,
+            'delete' => false,
         ],
     ];
 
