@@ -46,6 +46,9 @@ class CirclesController extends AppController
     {
         $circle_id = $this->request->params['named']['circle_id'];
         $this->_ajaxPreProcess();
+        $this->request->data = $this->Circle->findById($circle_id);
+        $this->request->data['Circle']['members'] = null;
+
         $this->request->data = $this->Circle->getEditData($circle_id);
         $circle_members = $this->Circle->CircleMember->getMembers($circle_id, true);
         $this->set('circle_members', $circle_members);
