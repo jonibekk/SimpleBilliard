@@ -671,10 +671,11 @@ class AppController extends Controller
         $start_date = $this->Team->EvaluateTerm->getCurrentTermData()['start_date'];
         $end_date = $this->Team->EvaluateTerm->getCurrentTermData()['end_date'];
 
-        $my_goals = $this->Goal->getMyGoals(MY_GOALS_DISPLAY_NUMBER, 1, 'all', null, $start_date, $end_date);
+        $my_goals = $this->Goal->getMyGoals(MY_GOALS_DISPLAY_NUMBER, 1, 'all', null, $start_date, $end_date,
+                                            MY_GOAL_AREA_FIRST_VIEW_KR_COUNT);
         $my_goals_count = $this->Goal->getMyGoals(null, 1, 'count', null, $start_date, $end_date);
         $collabo_goals = $this->Goal->getMyCollaboGoals(MY_COLLABO_GOALS_DISPLAY_NUMBER, 1, 'all', null, $start_date,
-                                                        $end_date);
+                                                        $end_date, MY_GOAL_AREA_FIRST_VIEW_KR_COUNT);
         $collabo_goals_count = $this->Goal->getMyCollaboGoals(null, 1, 'count', null, $start_date, $end_date);
         $my_previous_goals = $this->Goal->getMyPreviousGoals(MY_PREVIOUS_GOALS_DISPLAY_NUMBER);
         $my_previous_goals_count = $this->Goal->getMyPreviousGoals(null, 1, 'count');

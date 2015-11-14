@@ -309,7 +309,7 @@ class Goal extends AppModel
         $this->create();
         $res = $this->saveAll($data);
         if ($add_new) {
-            Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS,true),'user_data');
+            Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
             //ゴール投稿
             $this->Post->addGoalPost(Post::TYPE_CREATE_GOAL, $this->getLastInsertID());
         }
@@ -546,10 +546,11 @@ class Goal extends AppModel
      * @param null   $limit
      * @param int    $page
      * @param string $type
+     * @param null   $kr_limit
      *
      * @return array
      */
-    function getMyPreviousGoals($limit = null, $page = 1, $type = "all")
+    function getMyPreviousGoals($limit = null, $page = 1, $type = "all", $kr_limit = null)
     {
         $term = $this->Team->EvaluateTerm->getPreviousTermData();
         $start_date = $term['start_date'];
@@ -680,6 +681,10 @@ class Goal extends AppModel
             unset($options['contain']);
             return $this->find('count', $options);
         }
+        if ($kr_limit) {
+            $options['contain']['KeyResult']['limit'] = $kr_limit;
+        }
+
         $res = $this->find('all', $options);
         //進捗を計算
         foreach ($res as $key => $goal) {
@@ -777,10 +782,11 @@ class Goal extends AppModel
      * @param null   $user_id
      * @param int    $start_date
      * @param int    $end_date
+     * @param null   $kr_limit
      *
      * @return array
      */
-    function getMyCollaboGoals($limit = null, $page = 1, $type = "all", $user_id = null, $start_date = null, $end_date = null)
+    function getMyCollaboGoals($limit = null, $page = 1, $type = "all", $user_id = null, $start_date = null, $end_date = null, $kr_limit = null)
     {
         $user_id = !$user_id ? $this->my_uid : $user_id;
         $start_date = !$start_date ? $this->Team->EvaluateTerm->getCurrentTermData()['start_date'] : $start_date;
@@ -790,7 +796,7 @@ class Goal extends AppModel
         if ($type == "count") {
             return $this->getByGoalId($goal_ids, $limit, $page, $type, $start_date, $end_date);
         }
-        $res = $this->getByGoalId($goal_ids, $limit, $page, $type, $start_date, $end_date);
+        $res = $this->getByGoalId($goal_ids, $limit, $page, $type, $start_date, $end_date, $kr_limit);
         $res = $this->sortModified($res);
         $res = $this->sortEndDate($res);
         $res = $this->sortPriority($res);
@@ -985,10 +991,11 @@ class Goal extends AppModel
      * @param string $type
      * @param int    $start_date
      * @param int    $end_date
+     * @param null   $kr_limit
      *
      * @return array|null
      */
-    function getByGoalId($goal_ids, $limit = null, $page = 1, $type = "all", $start_date = null, $end_date = null)
+    function getByGoalId($goal_ids, $limit = null, $page = 1, $type = "all", $start_date = null, $end_date = null, $kr_limit = null)
     {
         $start_date = !$start_date ? $this->Team->EvaluateTerm->getCurrentTermData()['start_date'] : $start_date;
         $end_date = !$end_date ? $this->Team->EvaluateTerm->getCurrentTermData()['end_date'] : $end_date;
@@ -1058,6 +1065,9 @@ class Goal extends AppModel
         if ($type == "count") {
             unset($options['contain']);
             return $this->find($type, $options);
+        }
+        if ($kr_limit) {
+            $options['contain']['KeyResult']['limit'] = $kr_limit;
         }
 
         $res = $this->find('all', $options);

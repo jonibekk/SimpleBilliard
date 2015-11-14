@@ -10,31 +10,35 @@
  * @var                    $type
  * @var                    $current_term
  */
+$kr_count = 0;
 ?>
 <!-- START app/View/Elements/Goal/my_goal_area_items.ctp -->
 <?php foreach ($goals as $goal): ?>
+    <?php
+    if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])) {
+        //Changing the height of the vertical lines by the number of KR | 縦線の高さをKRの数によって変化させる
+        $kr_line_height = 40;
+        $kr_count = count($goal['IncompleteKeyResult']) + count($goal['CompleteKeyResult']);
+        if ($kr_count > 0) {
+            if ($kr_count > MY_GOAL_AREA_FIRST_VIEW_KR_COUNT) {
+                $kr_line_height += 64 * (MY_GOAL_AREA_FIRST_VIEW_KR_COUNT + 1);
+            }
+            else {
+                $kr_line_height += 64 * $kr_count;
+            }
+        }
+        else {
+            $kr_line_height = 30;
+        }
+    }
+
+    ?>
     <div class="dashboard-goals-card">
         <!-- Class is changed, whether goal name is set or not | goal名のあるなしでclassを切り替える -->
         <!-- If there is no goal name, then there is no vertical-border | goal名がない場合はタテ線を出さない -->
         <div class="
             <?php if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])): ?>
                 dashboard-goals-card-header">
-            <?php
-            //Changing the height of the vertical lines by the number of KR | 縦線の高さをKRの数によって変化させる
-            $kr_line_height = 40;
-            $kr_count = count($goal['KeyResult']);
-            if ($kr_count > 0) {
-                if ($kr_count >= 3) {
-                    $kr_line_height = 232;
-                }
-                else {
-                    $kr_line_height += 64 * $kr_count;
-                }
-            }
-            else {
-                $kr_line_height = 30;
-            }
-            ?>
             <div class="dashboard-goals-card-vertical-line" style="height: <?= $kr_line_height ?>px;"
                  id="KRsVerticalLine_<?= $goal['Goal']['id'] ?>"></div>
             <?php else: ?>
@@ -201,17 +205,17 @@
                                                 'can_add_action'      => $goal['Goal']['end_date'] >= $current_term['start_date'] && $goal['Goal']['end_date'] <= $current_term['end_date'] ? true : false,
                                                 'incomplete_kr_count' => count($goal['IncompleteKeyResult'])
                                                ]); ?>
-                            <?php if (count($goal['KeyResult']) > 2): ?>
+                            <?php if ($kr_count > MY_GOAL_AREA_FIRST_VIEW_KR_COUNT): ?>
                                 <li class="dashboard-goals-card-body-krs-ellipsis"
                                     id="KrRemainOpenWrap_<?= $goal['Goal']['id'] ?>">
                                     <a href="#" target-id="KrRemainOpenWrap_<?= $goal['Goal']['id'] ?>"
-                                       ajax-url="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_key_results', 'goal_id' => $goal['Goal']['id'], 'extract_count' => 2, true]) ?>"
+                                       ajax-url="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_key_results', 'goal_id' => $goal['Goal']['id'], 'extract_count' => MY_GOAL_AREA_FIRST_VIEW_KR_COUNT, true]) ?>"
                                        id="KRsOpen_<?= $goal['Goal']['id'] ?>"
                                        kr-line-id="KRsVerticalLine_<?= $goal['Goal']['id'] ?>"
                                        class="replace-ajax-get-kr-list dashboard-goals-card-body-krs-ellipsis-link">
                                         <i class="fa fa-ellipsis-v dashboard-goals-card-krs-ellipsis-icon"></i>
 
-                                        <p class="dashboard-goals-card-body-krs-ellipsis-number"><?= count($goal['IncompleteKeyResult']) + count($goal['CompleteKeyResult']) - 2 ?>
+                                        <p class="dashboard-goals-card-body-krs-ellipsis-number"><?= $kr_count - MY_GOAL_AREA_FIRST_VIEW_KR_COUNT ?>
                                             +</p>
                                     </a>
                                 </li>

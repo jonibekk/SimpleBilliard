@@ -155,6 +155,8 @@ define('POST_FEED_PAGE_ITEMS_NUMBER', 5);
 //ゴール一覧のアイテム数
 define('GOAL_INDEX_ITEMS_NUMBER', 20);
 //マイページのアクション数
+define('MY_GOAL_AREA_FIRST_VIEW_KR_COUNT', 2);
+//マイページのアクション数
 define('MY_PAGE_ACTION_NUMBER', 4);
 //キューブ表示のアイテム数
 define('MY_PAGE_CUBE_ACTION_IMG_NUMBER', 21);
