@@ -118,6 +118,7 @@ class TeamVisionTest extends GoalousTestCase
 
     function testGetTeamVision()
     {
+        $this->_setDefault();
         $team_id = 1;
         $name = 'test';
         $data = [
@@ -125,6 +126,8 @@ class TeamVisionTest extends GoalousTestCase
             'name'    => $name
         ];
         $this->TeamVision->save($data);
+        $res = $this->TeamVision->getTeamVision($team_id, 1);
+        $this->assertEquals($res[0]['TeamVision']['name'], $name);
         $res = $this->TeamVision->getTeamVision($team_id, 1);
         $this->assertEquals($res[0]['TeamVision']['name'], $name);
     }
