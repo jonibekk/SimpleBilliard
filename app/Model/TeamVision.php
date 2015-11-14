@@ -23,16 +23,16 @@ class TeamVision extends AppModel
     public $actsAs = [
         'Upload' => [
             'photo' => [
-                'styles' => [
-                    'small' => '32x32',
-                    'medium' => '48x48',
+                'styles'      => [
+                    'small'        => '32x32',
+                    'medium'       => '48x48',
                     'medium_large' => '96x96',
-                    'large' => '128x128',
-                    'x_large' => '256x256',
+                    'large'        => '128x128',
+                    'x_large'      => '256x256',
                 ],
-                'path' => ":webroot/upload/:model/:id/:hash_:style.:extension",
+                'path'        => ":webroot/upload/:model/:id/:hash_:style.:extension",
                 'default_url' => 'no-image-team.jpg',
-                'quality' => 100,
+                'quality'     => 100,
             ]
         ]
     ];
@@ -43,7 +43,7 @@ class TeamVision extends AppModel
      * @var array
      */
     public $validate = [
-        'name' => [
+        'name'       => [
             'notEmpty' => [
                 'rule' => ['notEmpty'],
             ],
@@ -53,7 +53,7 @@ class TeamVision extends AppModel
                 'rule' => ['boolean'],
             ],
         ],
-        'del_flg' => [
+        'del_flg'    => [
             'boolean' => [
                 'rule' => ['boolean'],
             ],
@@ -66,11 +66,11 @@ class TeamVision extends AppModel
      */
     public $belongsTo = [
         'CreateUser' => [
-            'className' => 'User',
+            'className'  => 'User',
             'foreignKey' => 'create_user_id',
         ],
         'ModifyUser' => [
-            'className' => 'User',
+            'className'  => 'User',
             'foreignKey' => 'modify_user_id',
         ],
         'Team',
@@ -97,13 +97,15 @@ class TeamVision extends AppModel
         $is_default = false;
         if ($team_id === $this->current_team_id && $active_flg) {
             $is_default = true;
-            if ($res = Cache::read($this->getCacheKey(CACHE_KEY_TEAM_VISION, false), 'team_info')) {
+            $res = Cache::read($this->getCacheKey(CACHE_KEY_TEAM_VISION, false), 'team_info');
+            if ($res !== false) {
                 return $res;
             }
         }
+
         $options = [
             'conditions' => [
-                'team_id' => $team_id,
+                'team_id'    => $team_id,
                 'active_flg' => $active_flg
             ]
         ];
@@ -129,13 +131,14 @@ class TeamVision extends AppModel
 
         if (isset($data['TeamVision']) === true) {
             $data['TeamVision']['photo_path'] = $upload->uploadUrl($data['TeamVision'], 'TeamVision.photo',
-                ['style' => 'original']);
+                                                                   ['style' => 'original']);
             $data['TeamVision']['modified'] = $time->elapsedTime(h($data['TeamVision']['modified']));
 
-        } else {
+        }
+        else {
             foreach ($data as $key => $team) {
                 $data[$key]['TeamVision']['photo_path'] = $upload->uploadUrl($team['TeamVision'], 'TeamVision.photo',
-                    ['style' => 'original']);
+                                                                             ['style' => 'original']);
                 $data[$key]['TeamVision']['modified'] = $time->elapsedTime(h($team['TeamVision']['modified']));
             }
         }
@@ -146,6 +149,7 @@ class TeamVision extends AppModel
     function deleteTeamVision($team_vision_id)
     {
         $this->id = $team_vision_id;
+        Cache::delete($this->getCacheKey(CACHE_KEY_TEAM_VISION, false), 'team_info');
         return $this->delete();
     }
 
@@ -153,7 +157,7 @@ class TeamVision extends AppModel
     {
         $options = [
             'conditions' => [
-                'id' => $team_vision_id,
+                'id'         => $team_vision_id,
                 'active_flg' => $active_flg
             ]
         ];
@@ -169,13 +173,24 @@ class TeamVision extends AppModel
         $team_visions = Hash::extract($this->getTeamVision($this->current_team_id, true), '{n}.TeamVision');
         $team_visions = Hash::insert($team_visions, '{n}.target_name', $team_name);
         $team_visions = Hash::insert($team_visions, '{n}.model', 'TeamVision');
-        $my_group_list = $this->Team->Group->MemberGroup->getMyGroupList();
+        $model = $this;
+        $my_group_list = $model->Team->Group->MemberGroup->getMyGroupList();
         $group_visions = Hash::extract($this->Team->GroupVision->getGroupVisionsByGroupIds(array_keys($my_group_list)),
-            '{n}.GroupVision');
+                                       '{n}.GroupVision');
         foreach ($group_visions as $k => $v) {
             $group_visions[$k]['target_name'] = isset($my_group_list[$v['group_id']]) ? $my_group_list[$v['group_id']] : null;
         }
-        $group_visions = Hash::insert($group_visions, '{n}.model', 'GroupVision');
+        $group_visions = Cache::remember($this->getCacheKey(CACHE_KEY_GROUP_VISION, true),
+            function () use ($model) {
+                $my_group_list = $model->Team->Group->MemberGroup->getMyGroupList();
+                $group_visions = Hash::extract($this->Team->GroupVision->getGroupVisionsByGroupIds(array_keys($my_group_list)),
+                                               '{n}.GroupVision');
+                foreach ($group_visions as $k => $v) {
+                    $group_visions[$k]['target_name'] = isset($my_group_list[$v['group_id']]) ? $my_group_list[$v['group_id']] : null;
+                }
+                return Hash::insert($group_visions, '{n}.model', 'GroupVision');
+            }, 'team_info');
+
         $visions = array_merge($team_visions, $group_visions);
         if (empty($visions)) {
             return null;
