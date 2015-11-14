@@ -49,7 +49,9 @@ class CirclesController extends AppController
         $this->request->data = $this->Circle->findById($circle_id);
         $this->request->data['Circle']['members'] = null;
 
-        $this->request->data = $this->Circle->getEditData($circle_id);
+        $this->request->data = $this->findById($circle_id);
+        $this->request->data['Circle']['members'] = null;
+
         $circle_members = $this->Circle->CircleMember->getMembers($circle_id, true);
         $this->set('circle_members', $circle_members);
         //htmlレンダリング結果

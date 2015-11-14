@@ -298,13 +298,6 @@ class Circle extends AppModel
         return $this->getCirclesByKeyword($keyword, $limit, ['public_flg' => 0]);
     }
 
-    public function getEditData($id)
-    {
-        $circle = $this->findById($id);
-        $circle['Circle']['members'] = null;
-        return $circle;
-    }
-
     function getPublicCircles($type = 'all', $start_date = null, $end_date = null, $order = 'Circle.modified desc')
     {
         $active_user_ids = $this->Team->TeamMember->getActiveTeamMembersList();
