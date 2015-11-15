@@ -172,6 +172,7 @@ define('FILE_LIST_PAGE_NUMBER', 20);
 define('CACHE_KEY_TERM_CURRENT', 'current_term');
 define('CACHE_KEY_TERM_NEXT', 'next_term');
 define('CACHE_KEY_TERM_PREVIOUS', 'previous_term');
+define('CACHE_KEY_CURRENT_TEAM', 'current_team');
 define('CACHE_KEY_TEAM_LIST', 'team_list');
 define('CACHE_KEY_TEAM_EVAL_SETTING', 'team_evaluation_setting');
 define('CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE', 'channel_circles_not_hide');

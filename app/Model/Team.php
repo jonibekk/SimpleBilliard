@@ -356,7 +356,11 @@ class Team extends AppModel
     function getCurrentTeam()
     {
         if (empty($this->current_team)) {
-            $this->current_team = $this->findById($this->current_team_id);
+            $model = $this;
+            $this->current_team = Cache::remember($this->getCacheKey(CACHE_KEY_CURRENT_TEAM, false),
+                function () use ($model) {
+                    return $model->findById($model->current_team_id);
+                }, 'team_info');
         }
         return $this->current_team;
     }
