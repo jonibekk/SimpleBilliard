@@ -259,6 +259,12 @@ class Collaborator extends AppModel
     {
         $this->id = $id;
         $this->save(['valued_flg' => $status]);
+        $collabo = $this->findById($this->id);
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true), 'user_data');
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $collabo['Collaborator']['user_id']),
+                      'user_data');
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true, $collabo['Collaborator']['user_id']),
+                      'user_data');
     }
 
     function countCollaboGoal($team_id, $user_id, $goal_user_id, $approval_flg)

@@ -308,6 +308,7 @@ class Goal extends AppModel
         }
         $this->create();
         $res = $this->saveAll($data);
+        Cache::delete($this->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         if ($add_new) {
             Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
             //ゴール投稿

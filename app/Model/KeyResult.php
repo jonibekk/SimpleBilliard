@@ -177,6 +177,7 @@ class KeyResult extends AppModel
         if (!$this->save($data)) {
             throw new RuntimeException(__d('gl', "基準の保存に失敗しました。"));
         }
+        Cache::delete($this->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         return true;
     }
 

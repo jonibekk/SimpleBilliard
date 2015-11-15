@@ -144,8 +144,8 @@ class GoalApprovalController extends AppController
         $this->user_id = $this->Auth->user('id');
         $this->team_id = $this->Session->read('current_team_id');
 
-        $this->_setCoachFlag($this->user_id, $this->team_id);
-        $this->_setMemberFlag($this->user_id, $this->team_id);
+        $this->_setCoachFlag($this->user_id);
+        $this->_setMemberFlag($this->user_id);
 
         // コーチ認定機能が使えるユーザーはトップページ
         $this->user_type = $this->_getUserType();
@@ -170,7 +170,6 @@ class GoalApprovalController extends AppController
     {
         if ($this->request->is('post')) {
             $this->_saveApprovalData();
-            Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true), 'user_data');
             return $this->redirect($this->referer());
         }
 
@@ -207,7 +206,6 @@ class GoalApprovalController extends AppController
     {
         if ($this->request->is('post')) {
             $this->_saveApprovalData();
-            Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true), 'user_data');
             return $this->redirect($this->referer());
         }
 
@@ -428,7 +426,7 @@ class GoalApprovalController extends AppController
     /*
      * ログインしているユーザーは管理するメンバー存在するのか
      */
-    public function _setMemberFlag($user_id, $team_id)
+    public function _setMemberFlag($user_id)
     {
         $member_ids = $this->TeamMember->getMyMembersList($user_id);
         if (empty($member_ids) === false) {

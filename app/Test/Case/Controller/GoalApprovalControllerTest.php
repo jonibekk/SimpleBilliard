@@ -417,7 +417,7 @@ class GoalApprovalControllerTest extends GoalousControllerTestCase
             'coach_user_id' => 777,
         ];
         $GoalApproval->TeamMember->save($params);
-        $GoalApproval->_setCoachFlag(999, 888);
+        $GoalApproval->_setCoachFlag(999);
         $this->assertTrue($GoalApproval->coach_flag);
     }
 
@@ -425,13 +425,14 @@ class GoalApprovalControllerTest extends GoalousControllerTestCase
     {
         $GoalApproval = $this->_getGoalApprovalCommonMock();
         $GoalApproval->Collaborator->current_team_id = 888;
+        $GoalApproval->TeamMember->current_team_id = 888;
         $params = [
             'user_id'       => 999,
             'team_id'       => 888,
             'coach_user_id' => 777,
         ];
         $GoalApproval->TeamMember->save($params);
-        $GoalApproval->_setMemberFlag(777, 888);
+        $GoalApproval->_setMemberFlag(777);
         $this->assertTrue($GoalApproval->member_flag);
     }
 
