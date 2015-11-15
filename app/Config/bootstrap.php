@@ -185,6 +185,7 @@ define('CACHE_KEY_MY_MEMBER_STATUS', 'my_member_status');
 define('CACHE_KEY_TEAM_ALL_CIRCLE', 'team_all_circle');
 define('CACHE_KEY_TEAM_VISION', 'team_vision');
 define('CACHE_KEY_GROUP_VISION', 'group_vision');
+define('CACHE_KEY_MY_GOAL_AREA', 'my_goal_area');
 
 /**
  * 共通関数
