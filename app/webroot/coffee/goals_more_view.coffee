@@ -64,7 +64,7 @@ evGoalsMoreView = ->
           moreViewButton.hide()
         $('.custom-radio-check').customRadioCheck()
         goalsCardProgress()
-        scrollFixColumn()
+        openResizeColumn()
       else
         # もっと見るボタンの削除
         moreViewButton.hide()
