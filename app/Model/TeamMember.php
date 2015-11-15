@@ -203,6 +203,17 @@ class TeamMember extends AppModel
             }
             $team_id = $this->current_team_id;
         }
+        $is_default = false;
+        if ($uid == $this->my_uid && $team_id == $this->current_team_id) {
+            $is_default = true;
+            $res = Cache::read($this->getCacheKey(CACHE_KEY_MEMBER_IS_ACTIVE, true), 'team_info');
+            if ($res !== false) {
+                if (!empty($res)) {
+                    return true;
+                }
+                return false;
+            }
+        }
         $options = [
             'conditions' => [
                 'team_id'    => $team_id,
@@ -211,7 +222,11 @@ class TeamMember extends AppModel
             ],
             'fields'     => ['id']
         ];
-        if ($this->find('first', $options)) {
+        $res = $this->find('first', $options);
+        if ($is_default) {
+            Cache::write($this->getCacheKey(CACHE_KEY_MEMBER_IS_ACTIVE, true), $res, 'team_info');
+        }
+        if ($res) {
             return true;
         }
         return false;
@@ -320,6 +335,9 @@ class TeamMember extends AppModel
                           'team_info');
             Cache::delete($this->getCacheKey(CACHE_KEY_MY_MEMBER_STATUS, true, $member['TeamMember']['user_id']),
                           'team_info');
+            Cache::delete($this->getCacheKey(CACHE_KEY_MEMBER_IS_ACTIVE, true, $member['TeamMember']['user_id']),
+                          'team_info');
+
             return true;
         }
         return false;
