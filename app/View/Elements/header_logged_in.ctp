@@ -109,7 +109,7 @@
                                     <ul class="dropdown-menu nav-search-form-dropdown" role="menu">
                                         <li><a href="#" style="" class="nav-search-category-item" data-category="user">
                                                 <i class="fa fa-user header-drop-icons"></i>
-                                                <?= __d('gl', 'ユーザー'); ?>
+                                                <?= __d('gl', 'メンバー'); ?>
                                             </a>
                                         </li>
                                         <li><a href="#" class="nav-search-category-item" data-category="goal">
