@@ -177,4 +177,37 @@ class RecoveryCodeTest extends CakeTestCase
         $this->assertEquals($recovery_codes[1]['RecoveryCode']['id'], $row['RecoveryCode']['id']);
 
     }
+
+    function testGenerateCode()
+    {
+        $this->RecoveryCode = $this->getMockForModel('RecoveryCode', array('generateToken'));
+        /** @noinspection PhpUndefinedMethodInspection */
+        $this->RecoveryCode->expects($this->any())
+            ->method('generateToken')
+            ->will($this->onConsecutiveCalls(
+                'aaaabbbb', 'aaaa1111', 'aaaacccc', 'aaaa2222', 'aaaa3333',
+                'aaaa4444', 'aaaa5555', 'aaaa6666', 'aaaa7777', 'aaaa8888',
+                'aaaa9999', 'aaaa0000'));
+        $res = $this->RecoveryCode->regenerate(1);
+        $this->assertTrue($res);
+
+        $recovery_codes = $this->RecoveryCode->getAll(1);
+        $this->assertEquals(
+            [
+                'aaaa1111',
+                'aaaa2222',
+                'aaaa3333',
+                'aaaa4444',
+                'aaaa5555',
+                'aaaa6666',
+                'aaaa7777',
+                'aaaa8888',
+                'aaaa9999',
+                'aaaa0000',
+            ],
+            array_map(function ($v) {
+                return $v['RecoveryCode']['code'];
+            }, $recovery_codes)
+        );
+    }
 }
