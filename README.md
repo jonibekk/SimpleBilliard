@@ -100,5 +100,5 @@ GoalousはIsao発の「チーム力向上のスパイラルを生み出す」目
 vagrantを立ち上げつつ、すべてのファイル変更を検知して自動更新します。
 
 ```
-vagrant up && browser-sync start --proxy "192.168.50.4" --files "."
+vagrant up && browser-sync start --proxy "192.168.50.4" --files "**/*.css, **/*.js, **/*ctp, ***/.php **/*.html"
 ```
