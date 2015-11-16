@@ -22,7 +22,7 @@ echo $this->Html->script('vendor/pnotify.custom.min');
 echo $this->Html->script('vendor/jquery.nailthumb.1.1.min');
 echo $this->Html->script('vendor/jquery.autosize.min');
 echo $this->Html->script('vendor/jquery.lazy.min');
-echo $this->Html->script('vendor/lightbox.min');
+echo $this->Html->script('vendor/lightbox-custom');
 echo $this->Html->script('vendor/jquery.showmore.min');
 echo $this->Html->script('vendor/placeholders.min');
 echo $this->Html->script('vendor/customRadioCheck.min');
