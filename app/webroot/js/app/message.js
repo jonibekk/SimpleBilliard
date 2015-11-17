@@ -61,4 +61,12 @@ message_app.config([
                 },
                 controller: 'MessageDetailCtrl'
             })
+            .state('detail_from_email', {
+                url: "/:post_id/:from",
+                resolve: {
+                    detailFromEmail: ['$stateParams', '$location', function ($stateParams, $location) {
+                        $location.path('/' + $stateParams.post_id)
+                    }]
+                }
+            })
     }]);
