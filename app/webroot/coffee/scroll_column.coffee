@@ -48,8 +48,16 @@ openResizeColumn = ->
       else
         return
     else
-      # 次
-      console.log 'aaa'
+      # 下に固定されていた場合の処理
+      if  $(rightSideContainer).hasClass('js-right-side-fixed-container')
+        if $(this).scrollTop() + winH < wrapH + t + b
+          $('#jsRightSideContainer').removeClass 'js-right-side-fixed-container'
+        else
+          return
+      else
+        # 固定されていない場合は最初の関数を読み込み直すだけ
+        scrollFixColumn()
+        console.log 'aaa'
   return
   # if winW > w
   #   $('#jsRightSideContainer').removeClass 'js-right-side-fixed-container js-right-side-fixed-ontop'
