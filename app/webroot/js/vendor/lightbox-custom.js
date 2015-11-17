@@ -337,7 +337,7 @@
                     });
             }
 
-            if (this.album.length > 1 && this.options.showImageNumberLabel) {
+            if (this.album.length >= 1 && this.options.showImageNumberLabel) {
                 this.$lightbox.find('.lb-number').html(this.options.albumLabel(this.currentImageIndex + 1, this.album.length, this.album[this.currentImageIndex].link)).fadeIn('fast');
             } else {
                 this.$lightbox.find('.lb-number').hide();
