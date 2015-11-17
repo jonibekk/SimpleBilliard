@@ -93,7 +93,6 @@ class GoalsController extends AppController
                 //「ゴールを定める」に進む
                 $url = ['mode' => 2, 'purpose_id' => $this->Goal->Purpose->id, '#' => 'AddGoalFormKeyResultWrap'];
                 $url = $id ? array_merge(['goal_id' => $id], $url) : $url;
-                Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
                 $this->redirect($url);
             }
             // 失敗
@@ -202,6 +201,7 @@ class GoalsController extends AppController
         $this->Goal->id = $id;
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_DELETE_GOAL, $id);
         $this->Goal->delete();
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         $this->Goal->ActionResult->releaseGoal($id);
         $this->Pnotify->outSuccess(__d('gl', "ゴールを削除しました。"));
         /** @noinspection PhpInconsistentReturnPointsInspection */
@@ -234,6 +234,7 @@ class GoalsController extends AppController
         $this->request->allowMethod('post', 'delete');
         $this->Goal->Purpose->id = $purpose_id;
         $this->Goal->Purpose->delete();
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         $this->Pnotify->outSuccess(__d('gl', "ゴールを削除しました。"));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
@@ -510,6 +511,7 @@ class GoalsController extends AppController
         $this->_flashClickEvent("KRsOpen_" . $kr['KeyResult']['goal_id']);
 
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_KR, $kr['KeyResult']['goal_id'], $kr_id);
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
 
         $this->Pnotify->outSuccess(__d('gl', "成果を更新しました。"));
         /** @noinspection PhpVoidFunctionResultUsedInspection */
@@ -561,6 +563,7 @@ class GoalsController extends AppController
         }
         $this->Goal->commit();
 
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         // pusherに通知
         $socket_id = viaIsSet($this->request->data['socket_id']);
         $goal = viaIsSet($goal);
@@ -604,6 +607,7 @@ class GoalsController extends AppController
         $this->Goal->commit();
         $this->_flashClickEvent("KRsOpen_" . $key_result['KeyResult']['goal_id']);
         $this->Pnotify->outSuccess(__d('gl', "成果を未完了にしました。"));
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         $params_referer = Router::parse($this->referer(null, true));
         if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home') {
@@ -638,6 +642,7 @@ class GoalsController extends AppController
 
         $this->_flashClickEvent("KRsOpen_" . $kr['KeyResult']['goal_id']);
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_DELETE_KR, $kr['KeyResult']['goal_id'], $kr_id);
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
 
         $this->Pnotify->outSuccess(__d('gl', "成果を削除しました。"));
         /** @noinspection PhpInconsistentReturnPointsInspection */
