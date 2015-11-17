@@ -196,7 +196,8 @@ if (REDIS_SESSION_HOST) {
     $session_ini = [];
     //モバイルアプリの場合はセッション保持期間を長くとる
     $session_config['timeout'] = 60 * 24 * 7 * 2; //60min * 24h * 7day * 2 = 2week
-    if (isset($_COOKIE['is_app'])) {
+    $ua = $_SERVER['HTTP_USER_AGENT'];
+    if (strpos($ua, 'Goalous App') !== false) {
         $session_config['timeout'] = 60 * 24 * 30 * 3; //60min * 24h * 30day * 3 = 3months
     }
     Configure::write('Session', array_merge($session_config, $session_ini));

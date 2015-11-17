@@ -1027,11 +1027,10 @@ class PostsController extends AppController
         }
 
         // safari は日本語ファイル名が文字化けするので特別扱い
-        if ($this->user_agent == 'safari') {
+        $browser = $this->getBrowser();
+        if ($browser['browser'] == 'Safari') {
             $this->response->header('Content-Disposition',
-                                    sprintf('attachment; filename="%s";',
-                                            mb_convert_encoding($file['AttachedFile']['attached_file_name'],
-                                                                'SJIS', 'UTF-8')));
+                                    sprintf('attachment; filename="%s";', $file['AttachedFile']['attached_file_name']));
         }
         else {
             $this->response->header('Content-Disposition',

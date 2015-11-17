@@ -205,11 +205,11 @@
                                                                                                                                    ['style' => 'small'])]) ?>
                                             <div class="comment-body">
 
-                                                <div class="col col-xxs-12 comment-text comment-user">
+                                                <div class="col col-xxs-12 mb_8px">
                                                     <div
-                                                        class="mb_2px lh_12px font_bold font_verydark"><?= $history['User']['local_username']; ?></div>
+                                                        class="mb_2px lh_12px font_bold font_verydark comment-user"><?= $history['User']['local_username']; ?></div>
                                                     <div
-                                                        class="col col-xxs-12 showmore-comment comment-text feed-contents comment-contents font_verydark box-align"><?= $history['comment']; ?></div>
+                                                        class="col col-xxs-12 showmore-comment comment-text feed-contents comment-contents font_verydark box-align"><?= nl2br($history['comment']); ?></div>
                                                     <div
                                                         class="lh_15px"><?= $this->TimeEx->elapsedTime(h($history['created'])) ?></div>
                                                 </div>
