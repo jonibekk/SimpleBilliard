@@ -415,7 +415,8 @@ class AppController extends Controller
 
     public function _decideMobileAppRequest()
     {
-        if (isset($_COOKIE['is_app'])) {
+        $ua = $_SERVER['HTTP_USER_AGENT'];
+        if (strpos($ua, 'Goalous App') !== false) {
             $this->is_mb_app = true;
         }
         $this->set('is_mb_app', $this->is_mb_app);

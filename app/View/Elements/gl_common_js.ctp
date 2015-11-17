@@ -269,7 +269,8 @@ echo $this->Html->script('goalous.min');
                     data.push(current_circle_item);
                 }
                 callback(data);
-            }
+            },
+            user_id: "<?= $this->Session->read('Auth.User.id')?>"
         },
         pusher: {
             key: "<?=PUSHER_KEY?>",
