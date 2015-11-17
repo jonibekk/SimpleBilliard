@@ -438,9 +438,9 @@ class PostsController extends AppController
      * メッセージ一覧を返す
      * ただし、１つのトピックの１件目のメッセージは含まれない
      *
-     * @param $post_id
-     * @param $limit
-     * @param $page_num
+     * @param     $post_id
+     * @param     $limit
+     * @param     $page_num
      * @param int $start メッセージ投稿時間：指定すると、この時間以降のメッセージのみを返す
      *
      * @return CakeResponse
@@ -478,7 +478,8 @@ class PostsController extends AppController
         $convert_data = $this->Post->Comment->convertData($detail_comment);
 
         $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
-        $pusher->trigger('message-channel-' . $post_id, 'new_message', $convert_data, $this->request->data('socket_id'));
+        $pusher->trigger('message-channel-' . $post_id, 'new_message', $convert_data,
+                         $this->request->data('socket_id'));
         $this->Mixpanel->trackMessage($post_id);
         return $this->_ajaxGetResponse($detail_comment);
     }
@@ -919,9 +920,10 @@ class PostsController extends AppController
             if (!$url_text) {
                 $url_text = $this->request->data('Comment.body');
             }
-            
+
             // ogbをインサートデータに追加
-            $this->request->data['Comment'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Comment']), $url_text);
+            $this->request->data['Comment'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Comment']),
+                                                                    $url_text);
 
             // コメントを追加
             if ($this->Post->Comment->add($this->request->data)) {
@@ -1075,8 +1077,8 @@ class PostsController extends AppController
         if ($circle_id = viaIsSet($params['circle_id'])) {
             $user_status = $this->_userCircleStatus($circle_id);
 
-            $circle_status = $this->Post->Circle->CircleMember->show_hide_stats($this->Auth->user('id'),
-                                                                                $circle_id);
+            $circle_status = $this->Post->Circle->CircleMember->getShowHideStatus($this->Auth->user('id'),
+                                                                                  $circle_id);
             //サークル指定の場合はメンバーリスト取得
             $circle_member_count = $this->User->CircleMember->getActiveMemberCount($params['circle_id']);
             $this->set(compact('user_status', 'circle_status', 'circle_member_count'));
@@ -1343,7 +1345,7 @@ class PostsController extends AppController
         $this->Post->Circle->CircleMember->set(['show_for_all_feed_flg' => $status]);
 
         if ($this->Post->Circle->CircleMember->validates()) {
-            $this->Post->Circle->CircleMember->circle_status_toggle($circle_id, $status);
+            $this->Post->Circle->CircleMember->circleStatusToggle($circle_id, $status);
             return $this->redirect($this->request->referer());
         }
         else {

@@ -218,6 +218,8 @@ class Team extends AppModel
             $this->Circle->CircleMember->current_team_id = $this->id;
             $this->Circle->CircleMember->updateCounterCache(['circle_id' => $this->Circle->getLastInsertID()]);
             $this->Circle->CircleMember->current_team_id = $tmp;
+            //cache削除
+            Cache::delete($this->getCacheKey(CACHE_KEY_TEAM_LIST, true, null, false), 'team_info');
         }
         return true;
     }
@@ -341,7 +343,10 @@ class Team extends AppModel
             $post_data['Team']['border_months'],
             $post_data['Team']['timezone']
         );
-
+        //キャッシュを削除
+        Cache::delete($this->getCacheKey(CACHE_KEY_TERM_CURRENT), 'team_info');
+        Cache::delete($this->getCacheKey(CACHE_KEY_TERM_NEXT), 'team_info');
+        Cache::delete($this->getCacheKey(CACHE_KEY_TERM_PREVIOUS), 'team_info');
         return (bool)$res;
     }
 
@@ -351,7 +356,11 @@ class Team extends AppModel
     function getCurrentTeam()
     {
         if (empty($this->current_team)) {
-            $this->current_team = $this->findById($this->current_team_id);
+            $model = $this;
+            $this->current_team = Cache::remember($this->getCacheKey(CACHE_KEY_CURRENT_TEAM, false),
+                function () use ($model) {
+                    return $model->findById($model->current_team_id);
+                }, 'team_info');
         }
         return $this->current_team;
     }

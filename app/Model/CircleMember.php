@@ -70,7 +70,16 @@ class CircleMember extends AppModel
                 'fields'     => ['circle_id'],
             ];
         }
-        $res = $this->find('list', $options);
+        $cache_key_name = $this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_ALL, true);
+        if ($check_hide_status === true) {
+            $cache_key_name = $this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE, true);
+        }
+
+        $model = $this;
+        $res = Cache::remember($cache_key_name,
+            function () use ($model, $options) {
+                return $this->find('list', $options);
+            }, 'user_data');
         return $res;
     }
 
@@ -83,9 +92,17 @@ class CircleMember extends AppModel
      */
     public function getMyCircle($params = [])
     {
+        $is_default = false;
+        if (empty($params)) {
+            $is_default = true;
+            $circle_list = Cache::read($this->getCacheKey(CACHE_KEY_MY_CIRCLE_LIST, true), 'user_data');
+            if ($circle_list !== false) {
+                return $circle_list;
+            }
+        }
         $params = array_merge(['circle_created_start' => null,
                                'circle_created_end'   => null,
-                               'order'         => [
+                               'order'                => [
                                    'Circle.team_all_flg desc',
                                    'Circle.modified desc'
                                ],
@@ -126,6 +143,11 @@ class CircleMember extends AppModel
             $options['conditions']['Circle.created <'] = $params['circle_created_end'];
         }
         $res = $this->find('all', $options);
+        if ($is_default) {
+            //TODO: このキャッシュは任意のタイミングでリセットするのが難しい(サークルに投稿がある度にリセットだとあまり効果ない)ので有効期限を特別にセット
+            Cache::set('duration', 60 * 15, 'user_data');//15 minutes
+            Cache::write($this->getCacheKey(CACHE_KEY_MY_CIRCLE_LIST, true), $res, 'user_data');
+        }
         return $res;
     }
 
@@ -301,6 +323,7 @@ class CircleMember extends AppModel
             'CircleMember.team_id'   => $this->current_team_id,
         ];
         $res = $this->updateAll(['CircleMember.unread_count' => $set_count], $conditions);
+        Cache::delete($this->getCacheKey(CACHE_KEY_MY_CIRCLE_LIST, true), 'user_data');
         return $res;
     }
 
@@ -311,14 +334,9 @@ class CircleMember extends AppModel
         }
         //自分の所属しているサークルを取得
         $my_circles = $this->getMyCircle();
+
         // チーム全体サークルのIDを確認
-        $team_all_circle_id = null;
-        foreach ($my_circles as $c) {
-            if ($c['Circle']['team_all_flg']) {
-                $team_all_circle_id = $c['Circle']['id'];
-                break;
-            }
-        }
+        $team_all_circle_id = $this->Circle->getTeamAllCircleId();
 
         $un_join_circles = [];
         $join_circles = [];
@@ -376,6 +394,10 @@ class CircleMember extends AppModel
                 $this->updateCounterCache(['circle_id' => $val]);
             }
         }
+        Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_ALL, true), 'user_data');
+        Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE, true), 'user_data');
+        Cache::delete($this->getCacheKey(CACHE_KEY_MY_CIRCLE_LIST, true), 'user_data');
+
         return true;
     }
 
@@ -406,6 +428,9 @@ class CircleMember extends AppModel
                 'user_id'   => $this->my_uid,
             ]
         ];
+        Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_ALL, true), 'user_data');
+        Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE, true), 'user_data');
+        Cache::delete($this->getCacheKey(CACHE_KEY_MY_CIRCLE_LIST, true), 'user_data');
         $this->create();
         return $this->save($options);
     }
@@ -418,6 +443,9 @@ class CircleMember extends AppModel
         if (empty($this->User->CircleMember->isBelong($circle_id, $user_id))) {
             return;
         }
+        Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_ALL, true), 'user_data');
+        Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE, true), 'user_data');
+        Cache::delete($this->getCacheKey(CACHE_KEY_MY_CIRCLE_LIST, true), 'user_data');
         return $this->deleteAll(
             [
                 'CircleMember.circle_id' => $circle_id,
@@ -427,7 +455,7 @@ class CircleMember extends AppModel
         );
     }
 
-    function show_hide_stats($userid, $circle_id)
+    function getShowHideStatus($userid, $circle_id)
     {
         $options = [
             'conditions' => [
@@ -439,7 +467,7 @@ class CircleMember extends AppModel
         return viaIsSet($res['CircleMember']['show_for_all_feed_flg']);
     }
 
-    function circle_status_toggle($circle_id, $status)
+    function circleStatusToggle($circle_id, $status)
     {
         $conditions = [
             'CircleMember.circle_id' => $circle_id,
@@ -447,6 +475,7 @@ class CircleMember extends AppModel
             'CircleMember.user_id'   => $this->my_uid
         ];
 
+        Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE, true), 'user_data');
         $res = $this->updateAll(['CircleMember.show_for_all_feed_flg' => $status], $conditions);
         return $res;
     }
@@ -525,7 +554,7 @@ class CircleMember extends AppModel
     {
         $active_team_members_list = $this->Team->TeamMember->getActiveTeamMembersList();
         $options = [
-            'fields' => [
+            'fields'     => [
                 'CircleMember.circle_id',
                 'COUNT(*) as cnt',
             ],
@@ -533,7 +562,7 @@ class CircleMember extends AppModel
                 'circle_id' => $circle_ids,
                 'user_id'   => $active_team_members_list,
             ],
-            'group' => 'CircleMember.circle_id',
+            'group'      => 'CircleMember.circle_id',
         ];
         $rows = $this->find('all', $options);
 

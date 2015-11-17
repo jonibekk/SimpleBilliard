@@ -144,8 +144,8 @@ class GoalApprovalController extends AppController
         $this->user_id = $this->Auth->user('id');
         $this->team_id = $this->Session->read('current_team_id');
 
-        $this->_setCoachFlag($this->user_id, $this->team_id);
-        $this->_setMemberFlag($this->user_id, $this->team_id);
+        $this->_setCoachFlag($this->user_id);
+        $this->_setMemberFlag($this->user_id);
 
         // コーチ認定機能が使えるユーザーはトップページ
         $this->user_type = $this->_getUserType();
@@ -414,13 +414,11 @@ class GoalApprovalController extends AppController
     /*
      * ログインしているユーザーはコーチが存在するのか
      */
-    public function _setCoachFlag($user_id, $team_id)
+    public function _setCoachFlag($user_id)
     {
-        $coach_id = $this->TeamMember->selectCoachUserIdFromTeamMembersTB($user_id, $team_id);
-        if (isset($coach_id['TeamMember']['coach_user_id']) === true
-            && is_null($coach_id['TeamMember']['coach_user_id']) === false
-        ) {
-            $this->coach_id = $coach_id['TeamMember']['coach_user_id'];
+        $coach_id = $this->TeamMember->getCoachUserIdByMemberUserId($user_id);
+        if ($coach_id) {
+            $this->coach_id = $coach_id;
             $this->coach_flag = true;
         }
     }
@@ -428,9 +426,9 @@ class GoalApprovalController extends AppController
     /*
      * ログインしているユーザーは管理するメンバー存在するのか
      */
-    public function _setMemberFlag($user_id, $team_id)
+    public function _setMemberFlag($user_id)
     {
-        $member_ids = $this->TeamMember->selectUserIdFromTeamMembersTB($user_id, $team_id);
+        $member_ids = $this->TeamMember->getMyMembersList($user_id);
         if (empty($member_ids) === false) {
             $this->member_ids = $member_ids;
             $this->member_flag = true;

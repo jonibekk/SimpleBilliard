@@ -39,8 +39,7 @@ class EvaluationsController extends AppController
         $selected_tab_term_id = '';
         if ($selected_term_name == 'present') {
             $selected_tab_term_id = $current_term_id;
-        }
-        elseif ($selected_term_name == 'previous') {
+        } elseif ($selected_term_name == 'previous') {
             $selected_tab_term_id = $previous_term_id;
         }
 
@@ -54,12 +53,12 @@ class EvaluationsController extends AppController
         $isFrozens['previous'] = $this->Team->EvaluateTerm->checkFrozenEvaluateTerm($previous_term_id);
 
         $this->set(compact('incomplete_number_list',
-                           'my_evaluatees',
-                           'my_eval',
-                           'selected_tab_term_id',
-                           'selected_term_name',
-                           'isFrozens'
-                   ));
+            'my_evaluatees',
+            'my_eval',
+            'selected_tab_term_id',
+            'selected_term_name',
+            'isFrozens'
+        ));
     }
 
     function view()
@@ -111,8 +110,7 @@ class EvaluationsController extends AppController
         $existTotalEval = in_array(null, Hash::extract($evaluationList[0], '{n}.Evaluation.goal_id'));
         if ($existTotalEval) {
             $totalList = array_shift($evaluationList);
-        }
-        else {
+        } else {
             $totalList = [];
         }
         $goalList = $evaluationList;
@@ -137,15 +135,15 @@ class EvaluationsController extends AppController
         }
 
         $this->set(compact('scoreList',
-                           'totalList',
-                           'goalList',
-                           'evaluateTermId',
-                           'evaluateeId',
-                           'evaluateType',
-                           'status',
-                           'saveIndex',
-                           'isEditable'
-                   ));
+            'totalList',
+            'goalList',
+            'evaluateTermId',
+            'evaluateeId',
+            'evaluateType',
+            'status',
+            'saveIndex',
+            'isEditable'
+        ));
     }
 
     function add()
@@ -179,23 +177,26 @@ class EvaluationsController extends AppController
         $savedMsg = "";
         if ($status == Evaluation::TYPE_STATUS_DRAFT) {
             $savedMsg = $successMsg = __d('gl', "下書きを保存しました。");
-        }
-        elseif ($status == Evaluation::TYPE_STATUS_DONE) {
+        } elseif ($status == Evaluation::TYPE_STATUS_DONE) {
             //次の評価へ通知
             $next_evaluation_id = $this->Evaluation->getCurrentTurnEvaluationId($evaluateeId, $evaluateTermId);
             $is_final_evaluation = $this->Evaluation->isThisEvaluateType($next_evaluation_id,
-                                                                         Evaluation::TYPE_FINAL_EVALUATOR);
+                Evaluation::TYPE_FINAL_EVALUATOR);
+            //キャッシュ削除
+            $next_evaluator_id = $this->Evaluation->getNextEvaluatorId($evaluateTermId, $evaluateeId);
+            Cache::delete($this->Evaluation->getCacheKey(CACHE_KEY_EVALUABLE_COUNT, true), 'team_info');
+            Cache::delete($this->Evaluation->getCacheKey(CACHE_KEY_EVALUABLE_COUNT, true, $next_evaluator_id), 'team_info');
+
             if ($next_evaluation_id && !$is_final_evaluation) {
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_CAN_AS_EVALUATOR,
-                                                 $next_evaluation_id);
+                    $next_evaluation_id);
             }
             $mixpanel_member_type = null;
             if ($evalType == Evaluation::TYPE_ONESELF) {
                 $savedMsg = __d('gl', "自己評価を確定しました。");
                 $mixpanel_member_type = MixpanelComponent::PROP_EVALUATION_MEMBER_SELF;
 
-            }
-            elseif ($evalType == Evaluation::TYPE_EVALUATOR) {
+            } elseif ($evalType == Evaluation::TYPE_EVALUATOR) {
                 $savedMsg = __d('gl', "評価者の評価を確定しました。");
                 $mixpanel_member_type = MixpanelComponent::PROP_EVALUATION_MEMBER_EVALUATOR;
             }

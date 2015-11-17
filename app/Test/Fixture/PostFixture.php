@@ -2,7 +2,6 @@
 
 /**
  * PostFixture
-
  */
 class PostFixture extends CakeTestFixture
 {

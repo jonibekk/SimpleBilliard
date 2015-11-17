@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('PostMention', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('PostMention', 'Model');
  *
  * @property mixed PostMention
  */
-class PostMentionTest extends CakeTestCase
+class PostMentionTest extends GoalousTestCase
 {
 
     /**

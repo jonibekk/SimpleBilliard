@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('Collaborator', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('Collaborator', 'Model');
  *
  * @property Collaborator $Collaborator
  */
-class CollaboratorTest extends CakeTestCase
+class CollaboratorTest extends GoalousTestCase
 {
 
     /**
@@ -116,12 +116,12 @@ class CollaboratorTest extends CakeTestCase
             'name'             => 'test',
             'goal_category_id' => 1,
             'photo_file_name'  => 'aa.png',
-            'start_date'  => $current_term['end_date'] - 20,
-            'end_date'  => $current_term['end_date'] - 10,
+            'start_date'       => $current_term['end_date'] - 20,
+            'end_date'         => $current_term['end_date'] - 10,
         ];
         $this->Collaborator->Goal->save($params);
         $current_goal_id = $this->Collaborator->Goal->getLastInsertID();
-        
+
         // 来期のゴール
         $params = [
             'user_id' => $user_id,
@@ -138,8 +138,8 @@ class CollaboratorTest extends CakeTestCase
             'name'             => 'test',
             'goal_category_id' => 1,
             'photo_file_name'  => 'aa.png',
-            'start_date'  => $current_term['end_date'] + 10,
-            'end_date'  => $current_term['end_date'] + 20,
+            'start_date'       => $current_term['end_date'] + 10,
+            'end_date'         => $current_term['end_date'] + 20,
         ];
         $this->Collaborator->Goal->create();
         $this->Collaborator->Goal->save($params);

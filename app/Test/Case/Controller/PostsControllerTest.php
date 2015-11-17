@@ -1,11 +1,11 @@
-<?php
+<?php App::uses('GoalousControllerTestCase', 'Test');
 App::uses('PostsController', 'Controller');
 
 /**
  * PostsController Test Case
- * @method testAction($url = '', $options = array()) ControllerTestCase::_testAction
+ * @method testAction($url = '', $options = array()) GoalousControllerTestCase::_testAction
  */
-class PostsControllerTest extends ControllerTestCase
+class PostsControllerTest extends GoalousControllerTestCase
 {
 
     /**

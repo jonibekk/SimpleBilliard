@@ -2,7 +2,6 @@
 
 /**
  * FollowerFixture
-
  */
 class FollowerFixture extends CakeTestFixture
 {

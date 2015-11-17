@@ -2,7 +2,6 @@
 
 /**
  * SendMailToUserFixture
-
  */
 class SendMailToUserFixture extends CakeTestFixture
 {
@@ -43,8 +42,8 @@ class SendMailToUserFixture extends CakeTestFixture
             'send_mail_id' => '',
             'user_id'      => '',
             'team_id'      => '',
-            'del_flg' => false,
-            'deleted' => null,
+            'del_flg'      => false,
+            'deleted'      => null,
             'created'      => 1,
             'modified'     => 1
         ),

@@ -4,8 +4,8 @@ App::uses('AppModel', 'Model');
 /**
  * Badge Model
  *
- * @property User  $User
- * @property Team  $Team
+ * @property User $User
+ * @property Team $Team
  */
 class Badge extends AppModel
 {

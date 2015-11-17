@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('GroupInsight', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('GroupInsight', 'Model');
  *
  * @property GroupInsight $GroupInsight
  */
-class GroupInsightTest extends CakeTestCase
+class GroupInsightTest extends GoalousTestCase
 {
 
     /**
@@ -47,14 +47,13 @@ class GroupInsightTest extends CakeTestCase
         $this->GroupInsight->current_team_id = 1;
         $this->GroupInsight->my_uid = 1;
 
-
         $this->GroupInsight->create();
         $this->GroupInsight->save(
             [
                 'team_id'     => 1,
                 'target_date' => '2015-01-01',
                 'timezone'    => 9,
-                'group_id'   => 3,
+                'group_id'    => 3,
                 'user_count'  => 1,
             ]);
         $this->GroupInsight->create();
@@ -63,7 +62,7 @@ class GroupInsightTest extends CakeTestCase
                 'team_id'     => 1,
                 'target_date' => '2015-01-02',
                 'timezone'    => 9,
-                'group_id'   => 3,
+                'group_id'    => 3,
                 'user_count'  => 2,
             ]);
         $this->GroupInsight->create();
@@ -72,7 +71,7 @@ class GroupInsightTest extends CakeTestCase
                 'team_id'     => 1,
                 'target_date' => '2015-01-01',
                 'timezone'    => 9,
-                'group_id'   => 1,
+                'group_id'    => 1,
                 'user_count'  => 10,
             ]);
 

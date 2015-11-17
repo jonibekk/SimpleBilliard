@@ -2,7 +2,6 @@
 
 /**
  * RecoveryCodeFixture
-
  */
 class RecoveryCodeFixture extends CakeTestFixture
 {

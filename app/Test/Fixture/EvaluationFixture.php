@@ -2,7 +2,6 @@
 
 /**
  * EvaluationFixture
-
  */
 class EvaluationFixture extends CakeTestFixture
 {

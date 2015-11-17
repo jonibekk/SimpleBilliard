@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('JobCategory', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('JobCategory', 'Model');
  *
  * @property mixed JobCategory
  */
-class JobCategoryTest extends CakeTestCase
+class JobCategoryTest extends GoalousTestCase
 {
 
     /**

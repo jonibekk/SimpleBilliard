@@ -1,11 +1,11 @@
-<?php
+<?php App::uses('GoalousControllerTestCase', 'Test');
 App::uses('CirclesController', 'Controller');
 
 /**
  * CirclesController Test Case
- * @method testAction($url = '', $options = array()) ControllerTestCase::_testAction
+ * @method testAction($url = '', $options = array()) GoalousControllerTestCase::_testAction
  */
-class CirclesControllerTest extends ControllerTestCase
+class CirclesControllerTest extends GoalousControllerTestCase
 {
 
     /**
@@ -597,7 +597,7 @@ class CirclesControllerTest extends ControllerTestCase
 
         $data = [
             'CircleMember' => [
-                'user_id'   => 1,
+                'user_id' => 1,
             ]
         ];
         $ret = $this->testAction('/circles/ajax_leave_circle/circle_id:1', ['data' => $data, 'method' => 'POST']);

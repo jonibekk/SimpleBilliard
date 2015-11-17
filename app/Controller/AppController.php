@@ -269,7 +269,6 @@ class AppController extends Controller
             $this->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
         }
         $this->next_term_id = $this->Team->EvaluateTerm->getNextTermId();
-
     }
 
     /*
@@ -287,12 +286,17 @@ class AppController extends Controller
      */
     public function _setUnApprovedCnt($login_uid)
     {
-        $login_user_team_id = $this->Session->read('current_team_id');
-        $member_ids = $this->Team->TeamMember->selectUserIdFromTeamMembersTB($login_uid, $login_user_team_id);
-        array_push($member_ids, $login_uid);
+        $unapproved_cnt = Cache::read($this->Team->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, null), 'user_data');
+        if ($unapproved_cnt === false) {
+            $login_user_team_id = $this->Session->read('current_team_id');
+            $member_ids = $this->Team->TeamMember->getMyMembersList($login_uid);
+            array_push($member_ids, $login_uid);
 
-        $unapproved_cnt = $this->Goal->Collaborator->countCollaboGoal($login_user_team_id, $login_uid,
-                                                                      $member_ids, [0, 3]);
+            $unapproved_cnt = $this->Goal->Collaborator->countCollaboGoal($login_user_team_id, $login_uid,
+                                                                          $member_ids, [0, 3]);
+            Cache::write($this->Team->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, null), $unapproved_cnt,
+                         'user_data');
+        }
         $this->set(compact('unapproved_cnt'));
         $this->unapproved_cnt = $unapproved_cnt;
     }
@@ -663,23 +667,38 @@ class AppController extends Controller
 
     public function _setViewValOnRightColumn()
     {
-        //今期、来期のゴールを取得する
-        $start_date = $this->Team->EvaluateTerm->getCurrentTermData()['start_date'];
-        $end_date = $this->Team->EvaluateTerm->getCurrentTermData()['end_date'];
+        $cached_my_goal_area_vals = Cache::read($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
+        if ($cached_my_goal_area_vals !== false) {
+            //このキャッシュはviewで利用する複数の変数を格納されているのでここで展開する。
+            extract($cached_my_goal_area_vals);
+        }
+        else {
+            //今期、来期のゴールを取得する
+            $start_date = $this->Team->EvaluateTerm->getCurrentTermData()['start_date'];
+            $end_date = $this->Team->EvaluateTerm->getCurrentTermData()['end_date'];
 
-        $my_goals = $this->Goal->getMyGoals(MY_GOALS_DISPLAY_NUMBER, 1, 'all', null, $start_date, $end_date);
-        $my_goals_count = $this->Goal->getMyGoals(null, 1, 'count', null, $start_date, $end_date);
-        $collabo_goals = $this->Goal->getMyCollaboGoals(MY_COLLABO_GOALS_DISPLAY_NUMBER, 1, 'all', null, $start_date,
-                                                        $end_date);
-        $collabo_goals_count = $this->Goal->getMyCollaboGoals(null, 1, 'count', null, $start_date, $end_date);
-        $my_previous_goals = $this->Goal->getMyPreviousGoals(MY_PREVIOUS_GOALS_DISPLAY_NUMBER);
-        $my_previous_goals_count = $this->Goal->getMyPreviousGoals(null, 1, 'count');
-        //TODO 暫定的にアクションの候補を自分のゴールにする。あとでajax化する
-        $current_term_goals_name_list = $this->Goal->getAllMyGoalNameList(
-            $this->Team->EvaluateTerm->getCurrentTermData()['start_date'],
-            $this->Team->EvaluateTerm->getCurrentTermData()['end_date']
-        );
-        $goal_list_for_action_option = [null => __d('gl', 'ゴールを選択する')] + $current_term_goals_name_list;
+            $my_goals = $this->Goal->getMyGoals(MY_GOALS_DISPLAY_NUMBER, 1, 'all', null, $start_date, $end_date,
+                                                MY_GOAL_AREA_FIRST_VIEW_KR_COUNT);
+            $my_goals_count = $this->Goal->getMyGoals(null, 1, 'count', null, $start_date, $end_date);
+            $collabo_goals = $this->Goal->getMyCollaboGoals(MY_COLLABO_GOALS_DISPLAY_NUMBER, 1, 'all', null,
+                                                            $start_date,
+                                                            $end_date, MY_GOAL_AREA_FIRST_VIEW_KR_COUNT);
+            $collabo_goals_count = $this->Goal->getMyCollaboGoals(null, 1, 'count', null, $start_date, $end_date);
+            $my_previous_goals = $this->Goal->getMyPreviousGoals(MY_PREVIOUS_GOALS_DISPLAY_NUMBER);
+            $my_previous_goals_count = $this->Goal->getMyPreviousGoals(null, 1, 'count');
+            //TODO 暫定的にアクションの候補を自分のゴールにする。あとでajax化する
+            $current_term_goals_name_list = $this->Goal->getAllMyGoalNameList(
+                $this->Team->EvaluateTerm->getCurrentTermData()['start_date'],
+                $this->Team->EvaluateTerm->getCurrentTermData()['end_date']
+            );
+            $goal_list_for_action_option = [null => __d('gl', 'ゴールを選択する')] + $current_term_goals_name_list;
+            Cache::set('duration', 60 * 15, 'user_data');//15 minutes
+            Cache::write($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true),
+                         compact('goal_list_for_action_option', 'my_goals', 'collabo_goals',
+                                 'my_goals_count', 'collabo_goals_count', 'my_previous_goals',
+                                 'my_previous_goals_count'),
+                         'user_data');
+        }
         //vision
         $vision = $this->Team->TeamVision->getDisplayVisionRandom();
         $this->set(compact('vision', 'goal_list_for_action_option', 'my_goals', 'collabo_goals',

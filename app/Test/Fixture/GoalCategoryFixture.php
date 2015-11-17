@@ -2,7 +2,6 @@
 
 /**
  * GoalCategoryFixture
-
  */
 class GoalCategoryFixture extends CakeTestFixture
 {

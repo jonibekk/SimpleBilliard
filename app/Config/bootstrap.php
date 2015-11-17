@@ -155,6 +155,8 @@ define('POST_FEED_PAGE_ITEMS_NUMBER', 5);
 //ゴール一覧のアイテム数
 define('GOAL_INDEX_ITEMS_NUMBER', 20);
 //マイページのアクション数
+define('MY_GOAL_AREA_FIRST_VIEW_KR_COUNT', 2);
+//マイページのアクション数
 define('MY_PAGE_ACTION_NUMBER', 4);
 //キューブ表示のアイテム数
 define('MY_PAGE_CUBE_ACTION_IMG_NUMBER', 21);
@@ -166,6 +168,26 @@ define('GOAL_PAGE_MEMBER_NUMBER', 10);
 define('GOAL_PAGE_KR_NUMBER', 10);
 //ファイル一覧ページのアイテム数
 define('FILE_LIST_PAGE_NUMBER', 20);
+//キャッシュ用キーネーム
+define('CACHE_KEY_TERM_CURRENT', 'current_term');
+define('CACHE_KEY_TERM_NEXT', 'next_term');
+define('CACHE_KEY_TERM_PREVIOUS', 'previous_term');
+define('CACHE_KEY_CURRENT_TEAM', 'current_team');
+define('CACHE_KEY_MEMBER_IS_ACTIVE', 'member_is_active');
+define('CACHE_KEY_TEAM_LIST', 'team_list');
+define('CACHE_KEY_TEAM_EVAL_SETTING', 'team_evaluation_setting');
+define('CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE', 'channel_circles_not_hide');
+define('CACHE_KEY_CHANNEL_CIRCLES_ALL', 'channel_circles_all');
+define('CACHE_KEY_CHANNEL_FOLLOW_GOALS', 'channel_follow_goals');
+define('CACHE_KEY_CHANNEL_COLLABO_GOALS', 'channel_collabo_goals');
+define('CACHE_KEY_UNAPPROVED_COUNT', 'unapproved_count');
+define('CACHE_KEY_EVALUABLE_COUNT', 'evaluable_count');
+define('CACHE_KEY_MY_CIRCLE_LIST', 'my_circle_list');
+define('CACHE_KEY_MY_MEMBER_STATUS', 'my_member_status');
+define('CACHE_KEY_TEAM_ALL_CIRCLE', 'team_all_circle');
+define('CACHE_KEY_TEAM_VISION', 'team_vision');
+define('CACHE_KEY_GROUP_VISION', 'group_vision');
+define('CACHE_KEY_MY_GOAL_AREA', 'my_goal_area');
 
 /**
  * 共通関数

@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('GroupVision', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('GroupVision', 'Model');
  *
  * @property GroupVision $GroupVision
  */
-class GroupVisionTest extends CakeTestCase
+class GroupVisionTest extends GoalousTestCase
 {
 
     /**
@@ -105,7 +105,7 @@ class GroupVisionTest extends CakeTestCase
         $name = 'test';
         $data = [
             'team_id' => $team_id,
-            'name'=>$name
+            'name'    => $name
         ];
         $this->GroupVision->save($data);
         $res = $this->GroupVision->getGroupVision($team_id, 1);
@@ -118,8 +118,8 @@ class GroupVisionTest extends CakeTestCase
         $name = 'test';
         $active_flg = 1;
         $data = [
-            'team_id' => $team_id,
-            'name'=>$name,
+            'team_id'    => $team_id,
+            'name'       => $name,
             'active_flg' => $active_flg
         ];
         $this->GroupVision->save($data);
@@ -133,13 +133,13 @@ class GroupVisionTest extends CakeTestCase
         $name = 'test';
         $data = [
             'team_id' => $team_id,
-            'name'=>$name,
+            'name'    => $name,
         ];
         $this->GroupVision->save($data);
         $this->GroupVision->deleteGroupVision($this->GroupVision->getLastInsertID());
 
         $options = [
-            'fields' => ['del_flg'],
+            'fields'     => ['del_flg'],
             'conditions' => [
                 'id' => $this->GroupVision->getLastInsertID()
             ]
@@ -156,16 +156,16 @@ class GroupVisionTest extends CakeTestCase
 
         $data = [
             'team_id' => $team_id,
-            'id' => $group_id,
-            'name' => $group_name
+            'id'      => $group_id,
+            'name'    => $group_name
         ];
         $this->GroupVision->Group->save($data);
 
         $name = 'test';
         $data = [
-            'team_id' => $team_id,
+            'team_id'  => $team_id,
             'group_id' => $group_id,
-            'name'=>$name,
+            'name'     => $name,
         ];
         $this->GroupVision->save($data);
         $res = $this->GroupVision->getGroupVision($team_id, 1);
@@ -182,16 +182,16 @@ class GroupVisionTest extends CakeTestCase
 
         $data = [
             'team_id' => $team_id,
-            'id' => $group_id,
-            'name' => $group_name
+            'id'      => $group_id,
+            'name'    => $group_name
         ];
         $this->GroupVision->Group->save($data);
 
         $name = 'test';
         $data = [
-            'team_id' => $team_id,
+            'team_id'  => $team_id,
             'group_id' => $group_id,
-            'name'=>$name,
+            'name'     => $name,
         ];
         $this->GroupVision->save($data);
         $res = $this->GroupVision->getGroupVisionDetail($this->GroupVision->getLastInsertID(), 1);
@@ -212,7 +212,7 @@ class GroupVisionTest extends CakeTestCase
         $name = 'test';
         $data = [
             'team_id' => $team_id,
-            'name'=>$name
+            'name'    => $name
         ];
         $this->GroupVision->save($data);
 

@@ -59,6 +59,7 @@ class Purpose extends AppModel
         if (!isset($data['Purpose']) || empty($data['Purpose'])) {
             return false;
         }
+        Cache::delete($this->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         $data['Purpose']['team_id'] = $this->current_team_id;
         $data['Purpose']['user_id'] = $this->my_uid;
         return $this->save($data);

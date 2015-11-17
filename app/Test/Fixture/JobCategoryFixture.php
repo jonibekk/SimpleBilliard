@@ -2,7 +2,6 @@
 
 /**
  * JobCategoryFixture
-
  */
 class JobCategoryFixture extends CakeTestFixture
 {

@@ -67,7 +67,6 @@ class RecoveryCode extends AppModel
     /**
      * 指定ユーザーのリカバリコードを全て返す。
      * 使用済みのコードも含まれる。
-     *
      * 補足：
      * available_flg == 1 のものが、現在有効なコード（画面に表示されるコード）
      * その中で used !== NULL のものが、使用済コード

@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('PostFile', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('PostFile', 'Model');
  *
  * @property PostFile $PostFile
  */
-class PostFileTest extends CakeTestCase
+class PostFileTest extends GoalousTestCase
 {
 
     /**
@@ -85,6 +85,7 @@ class PostFileTest extends CakeTestCase
 
         parent::tearDown();
     }
+
     function testDummy()
     {
     }

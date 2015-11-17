@@ -2,7 +2,6 @@
 
 /**
  * EmailFixture
-
  */
 class EmailFixture extends CakeTestFixture
 {

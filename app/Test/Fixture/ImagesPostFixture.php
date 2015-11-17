@@ -2,7 +2,6 @@
 
 /**
  * ImagesPostFixture
-
  */
 class ImagesPostFixture extends CakeTestFixture
 {

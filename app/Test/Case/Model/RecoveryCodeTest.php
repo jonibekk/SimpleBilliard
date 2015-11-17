@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('RecoveryCode', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('RecoveryCode', 'Model');
  *
  * @property RecoveryCode $RecoveryCode
  */
-class RecoveryCodeTest extends CakeTestCase
+class RecoveryCodeTest extends GoalousTestCase
 {
 
     /**
@@ -103,7 +103,6 @@ class RecoveryCodeTest extends CakeTestCase
         $available_codes3 = $this->RecoveryCode->getAll(1);
         $this->assertEquals($available_codes2, $available_codes3);
     }
-
 
     function testRegenerateFailed()
     {

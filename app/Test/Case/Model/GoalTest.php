@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('Goal', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('Goal', 'Model');
  *
  * @property Goal $Goal
  */
-class GoalTest extends CakeTestCase
+class GoalTest extends GoalousTestCase
 {
 
     /**
@@ -126,10 +126,16 @@ class GoalTest extends CakeTestCase
             'special_flg' => true,
             'start_date'  => $this->start_date,
             'end_date'    => $this->end_date,
+            'completed'   => 1,
         ];
         $this->Goal->KeyResult->create();
         $this->Goal->KeyResult->save($key_results);
-        $res = $this->Goal->getAllGoals();
+        $params = [
+            'named' => [
+                'page' => 1
+            ]
+        ];
+        $res = $this->Goal->getAllGoals(20, null, $params, true);
         $this->assertTrue(!empty($res));
     }
 
@@ -145,7 +151,7 @@ class GoalTest extends CakeTestCase
         ];
         $this->Goal->save($goal_data);
         $goal_id = $this->Goal->getLastInsertID();
-        $res = $this->Goal->getByGoalId($goal_id);
+        $res = $this->Goal->getByGoalId($goal_id, null, 1, 'all', null, null, 2);
         $this->assertTrue(!empty($res));
     }
 
@@ -704,7 +710,10 @@ class GoalTest extends CakeTestCase
         $this->Goal->KeyResult->save($key_results);
         $this->Goal->Collaborator->create();
         $this->Goal->Collaborator->save($collabo);
-        $this->Goal->getMyPreviousGoals();
+        $res_1 = $this->Goal->getMyPreviousGoals(null, 1, 'all', 2);
+        $res_2 = $this->Goal->getMyPreviousGoals(null, 1, 'count', 2);
+        $this->assertNotEmpty($res_1);
+        $this->assertNotEquals(0, $res_2);
     }
 
     function testIsPresentTermGoalPatternTrue()
@@ -801,7 +810,16 @@ class GoalTest extends CakeTestCase
 
     function testGetGoalNameList()
     {
-        $this->Goal->getGoalNameListByGoalIds(1);
+        $this->setDefault();
+        $res = $this->Goal->getGoalNameListByGoalIds(1, true);
+        $this->assertNotEmpty($res);
+    }
+
+    function testGetGoalNameListSeparate()
+    {
+        $this->setDefault();
+        $res = $this->Goal->getGoalNameListByGoalIds(1, true, true);
+        $this->assertNotEmpty($res);
     }
 
     function testGetGoalsByKeyword()
@@ -918,6 +936,27 @@ class GoalTest extends CakeTestCase
             ]
         );
         $res = $this->Goal->getAllMyGoalNameList($term['start_date'], $term['end_date']);
+        $this->assertNotEmpty($res);
+    }
+
+    function testCountGoalRes()
+    {
+        $this->setDefault();
+        $res = $this->Goal->countGoalRes([]);
+        $this->assertEquals(0, $res);
+    }
+
+    function testIncomplete()
+    {
+        $this->setDefault();
+        $res = $this->Goal->incomplete(1);
+        $this->assertTrue($res);
+    }
+
+    function testGetCollaboModel()
+    {
+        $this->setDefault();
+        $res = $this->Goal->getCollaboModalItem(1);
         $this->assertNotEmpty($res);
     }
 }

@@ -2,7 +2,6 @@
 
 /**
  * SubscribeEmailFixture
-
  */
 class SubscribeEmailFixture extends CakeTestFixture
 {
