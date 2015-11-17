@@ -16,7 +16,7 @@ evReplaceKRListAjaxGet = ->
         $kr_line.height line_height
         $('#' + target_id).remove()
         # 高さ更新
-        scrollFixColumn()
+        openResizeColumn()
 
       return false
 
