@@ -114,6 +114,10 @@ class GoalsController extends AppController
             }
             $coach_id = $this->User->TeamMember->getCoachUserIdByMemberUserId(
                 $this->Auth->user('id'));
+            if ($coach_id) {
+                Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true), 'user_data');
+                Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coach_id), 'user_data');
+            }
 
             switch ($this->request->params['named']['mode']) {
                 case 2:
@@ -155,8 +159,6 @@ class GoalsController extends AppController
                     // ゴール作成ユーザーのコーチが存在すればゴール認定ページへ遷移
                     if ($coach_id && $val['priority'] != "0"
                     ) {
-                        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coach_id),
-                                      'user_data');
                         $this->redirect("/goal_approval");
                     }
                     $this->redirect("/");
