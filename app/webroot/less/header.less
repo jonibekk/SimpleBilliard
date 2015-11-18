@@ -298,7 +298,7 @@
 
 .header-nav-add-contents-anchor {
   display: block;
-  padding: 3px 20px;
+  // padding: 3px 20px;
   clear: both;
   font-weight: normal;
   line-height: 1.42857143;
@@ -306,6 +306,81 @@
   white-space: nowrap;
   &:hover {
     color: #fff;
+  }
+}
+
+.header-nav-add-contents-text {
+  display: inline;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  @media screen and (max-width: 991px){
+    height: 40px;
+    line-height: 40px;
+  }
+}
+
+.header-nav-add-contents-goal {
+  .header-nav-add-contents-text();
+}
+
+.header-nav-add-contents-circle {
+  .header-nav-add-contents-text();
+}
+
+.header-nav-add-contents-team {
+  .header-nav-add-contents-text();
+}
+
+.header-nav-function-contents-anchor {
+  @media screen and (max-width: 991px) {
+    display: inline-block;
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    padding: 0 20px;
+  }
+}
+
+.dropdown-menu > li > a.header-nav-function-contents-user-setting {
+  .header-nav-function-contents-anchor();
+}
+
+.dropdown-menu > li > a.header-nav-function-contents-tutorial {
+  .header-nav-function-contents-anchor();
+}
+
+.dropdown-menu > li > a.header-nav-function-contents-about-goal {
+  .header-nav-function-contents-anchor();
+}
+
+.dropdown-menu > li > a.header-nav-function-contents-approvement {
+  .header-nav-function-contents-anchor();
+  }
+
+.dropdown-menu > li > a.header-nav-function-contents-logout {
+  .header-nav-function-contents-anchor();
+}
+
+.dropdown-menu > li > a.header-nav-function-contents-evaluation {
+  .header-nav-function-contents-anchor();
+}
+
+.dropdown-menu > li > a.header-nav-function-contents-team-setting {
+  .header-nav-function-contents-anchor();
+}
+
+.dropdown-menu > li > a.header-nav-function-contents-blog {
+  .header-nav-function-contents-anchor();
+}
+
+.dropdown-menu > li > a.header-nav-function-contents-feedback {
+  .header-nav-function-contents-anchor();
+}
+
+.header-nav-function-contents-list {
+  @media screen and (max-width: 991px){
+    height: 40px;
   }
 }
 

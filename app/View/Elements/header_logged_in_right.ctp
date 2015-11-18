@@ -26,25 +26,26 @@
         <ul class="header-nav-add-contents dropdown-menu "
             aria-labelledby="download">
             <?php if ($this->Session->read('current_team_id')): ?>
-                <li><a class="header-nav-add-contents-anchor"
+                <li class="header-nav-add-contents-goal">
+                    <a class="header-nav-add-contents-anchor"
                        href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>">
                         <i class="fa fa-flag header-drop-icons"></i>
-                        <span class=""><?= __d('gl', 'ゴールを作成') ?></span>
+                        <p class="header-nav-add-contents-goal"><?= __d('gl', 'ゴールを作成') ?></p>
                     </a>
                 </li>
-                <li>
+                <li class="header-nav-add-contents-circle">
                     <a class="header-nav-add-contents-anchor" href="#" data-toggle="modal"
                        data-target="#modal_add_circle">
                         <i class="fa fa-circle-o header-drop-icons"></i>
-                        <span class=""><?= __d('gl', 'サークルを作成') ?></span>
+                        <p class="header-nav-add-contents-circle"><?= __d('gl', 'サークルを作成') ?></p>
                     </a>
                 </li>
             <?php endif; ?>
-            <li>
+            <li class="header-nav-add-contents-team">
                 <a class="header-nav-add-contents-anchor"
                    href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'add']) ?>">
                     <i class=" fa fa-users header-drop-icons"></i>
-                    <span class=""><?= __d('gl', 'チームを作成') ?></span>
+                    <p class="header-nav-add-contents-team"><?= __d('gl', 'チームを作成') ?></p>
                 </a>
             </li>
         </ul>
@@ -122,62 +123,68 @@
                 </div>
             <?php endif; ?>
         </a>
-        <ul class="header-nav-function-contents dropdown-menu " role="menu"
+        <ul class="header-nav-function-contents dropdown-menu" role="menu"
             aria-labelledby="dropdownMenu1">
-            <li>
+            <li class="header-nav-function-contents-list">
                 <?= $this->Html->link(__d('gl', 'ユーザ設定'),
-                                      ['controller' => 'users', 'action' => 'settings']) ?>
+                                      ['controller' => 'users', 'action' => 'settings'],
+                                      ['class'=>'header-nav-function-contents-user-setting']) ?>
             </li>
-            <li>
-                <a href="#" data-toggle="modal" data-target="#modal_tutorial">
+            <li class="header-nav-function-contents-list">
+                <a href="#" data-toggle="modal" data-target="#modal_tutorial" class="header-nav-function-contents-tutorial">
                     <?= __d('gl', 'チュートリアル') ?>
                 </a>
             </li>
-            <li>
-                <a href="#" class="youtube" rel="_J_wKHgKWLg" id="ExplainGoal">
+            <li class="header-nav-function-contents-list">
+                <a href="#" rel="_J_wKHgKWLg" id="ExplainGoal" class="youtube header-nav-function-contents-about-goal">
                     <?= __d('gl', 'ゴールについて') ?>
                 </a>
             </li>
-            <li>
+            <li class="header-nav-function-contents-list">
                 <?php if (isset($unapproved_cnt) === true && $unapproved_cnt > 0) { ?>
                     <div class="btn btn-danger btn-xs sub_cnt_alert">
                         <?php echo $unapproved_cnt; ?>
                     </div>
                 <?php } ?>
                 <?= $this->Html->link(__d('gl', 'ゴール認定'),
-                                      ['controller' => 'goal_approval', 'action' => 'index']) ?>
+                                      ['controller' => 'goal_approval', 'action' => 'index'],
+                                      ['class' => 'header-nav-function-contents-approvement']) ?>
             </li>
-            <li><?=
+            <li class="header-nav-function-contents-list">
+                <?=
                 $this->Html->link(__d('gl', 'ログアウト'),
-                                  ['controller' => 'users', 'action' => 'logout']) ?></li>
-            <li class="divider"></li>
+                                  ['controller' => 'users', 'action' => 'logout'],
+                                  ['class' => 'header-nav-function-contents-logout']) ?>
+            </li>
             <?php if ($is_evaluation_available): ?>
-                <li>
+                <li class="header-nav-function-contents-list">
                     <?php if (viaIsSet($evaluable_cnt) && $evaluable_cnt > 0): ?>
                         <div class="btn btn-danger btn-xs sub_cnt_alert"><?= $evaluable_cnt ?></div>
                     <?php endif; ?>
 
                     <?=
                     $this->Html->link(__d('gl', '評価'),
-                                      ['controller' => 'evaluations', 'action' => 'index']) ?>
+                                      ['controller' => 'evaluations', 'action' => 'index'],
+                                      ['class' => 'header-nav-function-contents-evaluation']) ?>
                 </li>
             <?php endif; ?>
             <?php //TODO 一時的にチーム管理者はチーム招待リンクを表示
             if (viaIsSet($my_member_status['TeamMember']['admin_flg']) && $my_member_status['TeamMember']['admin_flg']):?>
-                <li>
+                <li class="header-nav-function-contents-list">
                     <?=
                     $this->Html->link(__d('gl', 'チーム設定'),
-                                      ['controller' => 'teams', 'action' => 'settings']) ?>
+                                      ['controller' => 'teams', 'action' => 'settings'],
+                                      ['class' => 'header-nav-function-contents-team-setting']) ?>
                 </li>
             <?php endif; ?>
-            <li>
+            <li class="header-nav-function-contents-list">
                 <?=
                 $this->Html->link(__d('home', 'Blog'), 'http://blog.goalous.com/',
-                                  ['target' => '_blank']) ?>
+                                  array ('target' => '_blank','class' => 'header-nav-function-contents-blog')) ?>
             </li>
             <?php if (USERVOICE_API_KEY && $this->Session->read('Auth.User.id')): ?>
-                <li>
-                    <a href="javascript:void(0)" data-uv-lightbox="classic_widget" data-uv-mode="full"
+                <li class="header-nav-function-contents-list">
+                    <a class="header-nav-function-contents-feedback" href="javascript:void(0)" data-uv-lightbox="classic_widget" data-uv-mode="full"
                        data-uv-primary-color="#f0636f" data-uv-link-color="#007dbf" data-uv-default-mode="feedback"
                        data-uv-forum-id="<?php
                        if ($is_isao_user) {
