@@ -320,9 +320,19 @@
             </div>
             <div class="form-group col-xxs-12 eval-view-panel-section">
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
+                    <?= __d('gl', "目的:") ?>
+                    <?= h($goal[0]['Goal']['Purpose']['name']) ?>
+                </div>
+                <div for="#" class="col col-xxs-12 eval-view-panel-title">
                     <?= __d('gl', "役割:") ?>
                     <?php $role = viaIsSet(Hash::extract($goal[0], "Goal.MyCollabo.{n}[role]")[0]["role"]) ?>
                     <?= ($role) ? h($role) : __d('gl', "リーダー") ?>
+                </div>
+                <div for="#" class="col col-xxs-12 eval-view-panel-title">
+                    <?= __d('gl', "ゴール詳細:") ?>
+                    <div class="showmore-mini">
+                        <?= nl2br(h($goal[0]['Goal']['description'])) ?>
+                    </div>
                 </div>
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
                     <?= __d('gl', "コラボレータ:") ?>
