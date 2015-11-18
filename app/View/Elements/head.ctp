@@ -83,7 +83,6 @@
                     $(window).scroll(function () {
                         if ($(this).scrollTop() > 1) {
                             $("#jsLeftSideContainer").stop().animate({"top": "60px"}, 200)
-                            var CircleListBody, scrH, varHeight, winH, winW;
                         } else {
                             $("#jsLeftSideContainer").stop().animate({"top": "100px"}, 100);
                         }
