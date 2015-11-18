@@ -624,7 +624,7 @@ $(document).ready(function () {
     $(document).on('submit', '#MessageDisplayForm', function (e) {
         return checkUploadFileExpire('messageDropArea');
     });
-    
+
     // リカバリコード再生成
     $(document).on('click', '#RecoveryCodeModal .regenerate-recovery-code', function (e) {
         e.preventDefault();
@@ -654,7 +654,7 @@ $(document).ready(function () {
                     for (var i = 0; i < 10; i++) {
                         $list_items.eq(i).text(res.codes[i].slice(0, 4) + ' ' + res.codes[i].slice(-4));
                     }
-                    
+
                     new PNotify({
                         type: 'success',
                         title: cake.word.success,
@@ -664,8 +664,8 @@ $(document).ready(function () {
                         mouse_reset: false
                     });
                 }
-               
-                
+
+
             })
             .fail(function () {
                 PNotify.removeAll();
@@ -1500,9 +1500,6 @@ $(function () {
             if (showNavFlag) {
                 showNavFlag = false;
                 var scroll_offset = 0;
-                if (cake.is_mb_app) {
-                    scroll_offset = -10;
-                }
                 subNavbar.stop().animate({"top": scroll_offset}, 400);
             }
         }
@@ -4901,3 +4898,6 @@ function networkReachable() {
     return ret;
 }
 
+$(document).ready(function () {
+    insertSpaceTop(20);
+})
