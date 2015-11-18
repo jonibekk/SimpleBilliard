@@ -4897,7 +4897,3 @@ function networkReachable() {
     });
     return ret;
 }
-
-$(document).ready(function () {
-    insertSpaceTop(20);
-})
