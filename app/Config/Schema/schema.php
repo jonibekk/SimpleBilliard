@@ -920,6 +920,9 @@ class AppSchema extends CakeSchema
         'start_can_evaluate_as_evaluator_app_flg'          => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '評価者としての自分が評価できる状態になったときのアプリ通知'),
         'start_can_evaluate_as_evaluator_email_flg'        => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '評価者としての自分が評価できる状態になったときのメール通知'),
         'start_can_evaluate_as_evaluator_mobile_flg'       => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '評価者としての自分が評価できる状態になったときのモバイル通知'),
+        'my_evaluator_evaluated_app_flg'                   => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '評価者が自分の評価をしたときのアプリ通知'),
+        'my_evaluator_evaluated_email_flg'                 => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '評価者が自分の評価をしたときのメール通知'),
+        'my_evaluator_evaluated_mobile_flg'                => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '評価者が自分の評価をしたときのモバイル通知'),
         'final_evaluation_is_done_app_flg'                 => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '自分の所属するチームの最終者が最終評価データをUploadしたときのアプリ通知'),
         'final_evaluation_is_done_email_flg'               => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '自分の所属するチームの最終者が最終評価データをUploadしたときのメール通知'),
         'final_evaluation_is_done_mobile_flg'              => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '自分の所属するチームの最終者が最終評価データをUploadしたときのモバイル通知'),
@@ -1077,7 +1080,7 @@ class AppSchema extends CakeSchema
         'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '投稿を追加した日付時刻'),
         'modified'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '投稿を更新した日付時刻'),
         'indexes'         => array(
-            'PRIMARY'   => array('column' => array('id', 'modified'), 'unique' => 1),
+            'PRIMARY'  => array('column' => array('id', 'modified'), 'unique' => 1),
             'post_id'  => array('column' => 'post_id', 'unique' => 0),
             'user_id'  => array('column' => 'user_id', 'unique' => 0),
             'team_id'  => array('column' => 'team_id', 'unique' => 0),
