@@ -8,11 +8,8 @@ scrollFixColumn = ->
   fixedOnTop = 'js-right-side-fixed-ontop'
   fixedOnBottom = 'js-right-side-fixed-onbottom'
   rightColContentsId = '#jsRightSideContainer'
-  rightColContentsHeight = $(rightColContentsId).height()
-  winHeight = window.innerHeight
-  winWidth = window.innerWidth
-  heightFromTop = 60
-  heightFromBottom = 88
+  marginTop = 60
+  marginBottom = 88
 
   ###
   '?'存在演算子を使って変数が存在するかテスト
@@ -28,32 +25,26 @@ scrollFixColumn = ->
   ###
   varErrMessage = ' is undefined'
   if !varErrMessage?
-    console.log varErrMessage +' is undefined'
+    console.log 'varErrMessage' +' is undefined'
   if !fixedOnTop?
-    console.log fixedOnTop+varErrMessage
+    console.log 'fixedOnTop'+varErrMessage
   if !fixedOnBottom?
-    console.log fixedOnBottom+varErrMessage
+    console.log 'fixedOnBottom'+varErrMessage
   if !rightColContentsId?
-    console.log rightColContentsId+varErrMessage
-  if !rightColContentsHeight?
-    console.log rightColContentsHeight+varErrMessage
-  if !winHeight?
-    console.log winHeight+varErrMessage
-  if !winWidth?
-    console.log winWidth+varErrMessage
-  if !heightFromTop?
-    console.log heightFromTop+varErrMessage
-  if !heightFromBottom?
-    console.log heightFromBottom+varErrMessage
+    console.log 'rightColContentsId'+varErrMessage
+  if !marginTop?
+    console.log 'marginTop'+varErrMessage
+  if !marginBottom?
+    console.log 'marginBottom'+varErrMessage
 
-  if winWidth > 991
+  if window.innerWidth > 991
     # Scrollする前に右側が固定される領域かの判定
-    if rightColContentsHeight + heightFromTop < winHeight
+    if $(rightColContentsId).height() + marginTop < window.innerHeight
       $(rightColContentsId).addClass fixedOnTop
       return
     else
       $(window).scroll ->
-        if $(this).scrollTop() + winHeight > rightColContentsHeight + heightFromTop + heightFromBottom
+        if $(this).scrollTop() + window.innerHeight > $(rightColContentsId).height() + marginTop + marginBottom
           $(rightColContentsId).addClass fixedOnBottom
         else
           $(rightColContentsId).removeClass fixedOnBottom
@@ -70,11 +61,8 @@ openResizeColumn = ->
   fixedOnTop = 'js-right-side-fixed-ontop'
   fixedOnBottom = 'js-right-side-fixed-onbottom'
   rightColContentsId = '#jsRightSideContainer'
-  rightColContentsHeight = $(rightColContentsId).height()
-  winHeight = window.innerHeight
-  winWidth = window.innerWidth
-  heightFromTop = 60
-  heightFromBottom = 88
+  marginTop = 60
+  marginBottom = 88
 
   ###
   '?'存在演算子を使って変数が存在するかテスト
@@ -82,38 +70,50 @@ openResizeColumn = ->
 
   varErrMessage = ' is undefined'
   if !varErrMessage?
-    console.log varErrMessage +' is undefined'
+    console.log 'varErrMessage' +' is undefined'
   if !fixedOnTop?
-    console.log fixedOnTop+varErrMessage
+    console.log 'fixedOnTop'+varErrMessage
   if !fixedOnBottom?
-    console.log fixedOnBottom+varErrMessage
+    console.log 'fixedOnBottom'+varErrMessage
   if !rightColContentsId?
-    console.log rightColContentsId+varErrMessage
-  if !rightColContentsHeight?
-    console.log rightColContentsHeight+varErrMessage
-  if !winHeight?
-    console.log winHeight+varErrMessage
-  if !winWidth?
-    console.log winWidth+varErrMessage
-  if !heightFromTop?
-    console.log heightFromTop+varErrMessage
-  if !heightFromBottom?
-    console.log heightFromBottom+varErrMessage
+    console.log 'rightColContentsId'+varErrMessage
+  if !marginTop?
+    console.log 'marginTop'+varErrMessage
+  if !marginBottom?
+    console.log 'marginBottom'+varErrMessage
 
-  if winWidth > 991
+  if window.innerWidth > 991
     ###
     要素の高さがスクロールできる分の高さに達したときの処理
     ###
-    if  $(rightSideContainer).hasClass fixedOnTop and rightColContentsHeight + heightFromTop + heightFromBottom > winHeight
-      $(rightSideContainer).removeClass fixedOnTop
+    if  $(rightColContentsId).hasClass fixedOnTop
+      if window.innerHeight < $(rightColContentsId).height() + marginTop + marginBottom
+        $(rightColContentsId).removeClass fixedOnTop
+        $(window).scroll ->
+          if $(this).scrollTop() + window.innerHeight > $(rightColContentsId).height() + marginTop + marginBottom
+            $(rightColContentsId).addClass fixedOnBottom
+          else
+            $(rightColContentsId).removeClass fixedOnBottom
+          return
+      else
+        $(rightColContentsId).addClass 'hoge'
     else
-      # 下に固定されていた場合の処理
-      if  $(rightSideContainer).hasClass fixedOnBottom
-        if $(@).scrollTop() + winHeight < rightColContentsHeight + heightFromTop + heightFromBottom
-          $(rightSideContainer).removeClass fixedOnBottom
+      ###
+       下に固定されていた場合の処理
+      ###
+      if  $(rightColContentsId).hasClass fixedOnBottom
+        if $(window).scrollTop() + window.innerHeight < $(rightColContentsId).height() + marginTop + marginBottom
+          $(rightColContentsId).removeClass fixedOnBottom
         else
           return
       else
-        # 固定されていない場合は最初の関数を読み込み直すだけ
-        scrollFixColumn()
+        ###
+         固定されていない場合はそのまま再読み込み
+        ###
+        $(window).scroll ->
+          if $(this).scrollTop() + window.innerHeight > $(rightColContentsId).height() + marginTop + marginBottom
+            $(rightColContentsId).addClass fixedOnBottom
+          else
+            $(rightColContentsId).removeClass fixedOnBottom
+          return
   return
