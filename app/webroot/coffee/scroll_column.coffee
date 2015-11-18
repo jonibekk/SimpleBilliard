@@ -42,22 +42,23 @@ openResizeColumn = ->
   b = 88 # height from bottom
   if winW > 991
     # 要素の高さがスクロールできる分の高さに達したときの処理
-    if  $(rightSideContainer).hasClass('js-right-side-fixed-ontop')
-      if wrapH + t > winH
-        $('#jsRightSideContainer').removeClass(fixOnTop)
-      else
-        return
+    if  $(rightSideContainer).hasClass 'js-right-side-fixed-ontop' and wrapH + t + b > winH
+      $(rightSideContainer).removeClass 'js-right-side-fixed-ontop'
     else
       # 下に固定されていた場合の処理
-      if  $(rightSideContainer).hasClass('js-right-side-fixed-container')
+      if  $(rightSideContainer).hasClass 'js-right-side-fixed-container'
         if $(this).scrollTop() + winH < wrapH + t + b
-          $('#jsRightSideContainer').removeClass 'js-right-side-fixed-container'
+          $(rightSideContainer).removeClass 'js-right-side-fixed-container'
         else
           return
       else
         # 固定されていない場合は最初の関数を読み込み直すだけ
         scrollFixColumn()
-        console.log 'aaa'
+        console.log 'not fix'
+        console.log $(rightSideContainer).height()
+        console.log t
+        console.log b
+        console.log winH
   return
   # if winW > w
   #   $('#jsRightSideContainer').removeClass 'js-right-side-fixed-container js-right-side-fixed-ontop'
