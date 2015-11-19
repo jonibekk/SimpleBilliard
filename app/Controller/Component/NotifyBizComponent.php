@@ -35,6 +35,7 @@ class NotifyBizComponent extends Component
         'options'     => [],
     ];
     public $notify_settings = [];
+    private $push_channels = [];
 
     private $initialized = false;
 
@@ -231,39 +232,59 @@ class NotifyBizComponent extends Component
         $pusher->trigger($channelName, 'post_feed', $data, $socketId);
     }
 
+    function setBellPushChannelFromNotifySetting()
+    {
+        $push_user_ids = [];
+        foreach ($this->notify_settings as $k => $v) {
+            if ($v['app']) {
+                array_push($push_user_ids, $k);
+            }
+        }
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $push_user_ids);
+    }
+
     /**
-     * 通知ベルPush
+     * 通知ベルPushのチャンネルをセット
      *
      * @param string        $channel_type
-     * @param string        $socketId
      * @param array|integer $item_ids
      */
-    public function bellPush($channel_type, $socketId, $item_ids = null)
+    public function setBellPushChannels($channel_type, $item_ids = null)
     {
-        // push
-        if (!$socketId) {
-            return;
-        }
         //チャンネルタイプがチーム以外の場合は$item_idsが必須
         if ($channel_type != self::PUSHER_CHANNEL_TYPE_ALL_TEAM && !$item_ids) {
             return;
+        }
+        if (!is_array($item_ids)) {
+            $item_ids = [$item_ids];
         }
         //チャンネルタイプが未定義だった場合はなにもしない
         if (!in_array($channel_type, $this->pusher_channel_types)) {
             return;
         }
-        $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
-        $channel_names = [];
         if ($channel_type == self::PUSHER_CHANNEL_TYPE_ALL_TEAM) {
-            $channel_names[] = $channel_type . '_' . $this->NotifySetting->current_team_id;
+            $this->push_channels[] = $channel_type . '_' . $this->NotifySetting->current_team_id;
         }
         else {
             foreach ($item_ids as $id) {
-                $channel_names[] = $channel_type . '_' . $id . 'team_' . $this->NotifySetting->current_team_id;
+                $this->push_channels[] = $channel_type . '_' . $id . 'team_' . $this->NotifySetting->current_team_id;
             }
         }
-        //Pusherは同時に100チャンネルまでしか送れない為、チャンクする。
-        $chunk_channels = array_chunk($channel_names, 100);
+    }
+
+    /**
+     * 通知ベルPush
+     *
+     * @param string $socketId
+     */
+    public function bellPush($socketId)
+    {
+        // push
+        if (!$socketId) {
+            return;
+        }
+        $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
+        $chunk_channels = array_chunk($this->push_channels, 100);
         foreach ($chunk_channels as $channels) {
             $pusher->trigger($channels, 'bell_count', null, $socketId);
         }
@@ -356,6 +377,9 @@ class NotifyBizComponent extends Component
             json_encode([trim($post['Post']['body'])]) : null;
         $this->notify_option['options']['share_user_list'] = $share_user_list;
         $this->notify_option['options']['share_circle_list'] = $share_circle_list;
+
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $share_circle_list);
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_CIRCLE, $share_user_list);
     }
 
     /**
@@ -415,6 +439,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['url_data'] = '/';//TODO 暫定的にhome
         $this->notify_option['model_id'] = null;
         $this->notify_option['item_name'] = json_encode([$invite['Team']['name']]);
+        $this->setBellPushChannelFromNotifySetting();
     }
 
     /**
@@ -453,6 +478,8 @@ class NotifyBizComponent extends Component
         $this->notify_option['item_name'] = !empty($action['ActionResult']['name']) ?
             json_encode([trim($action['ActionResult']['name'])]) : null;
         $this->notify_option['options']['goal_id'] = $goal_id;
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_GOAL, $goal_id);
+
     }
 
     /**
@@ -482,6 +509,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle_id];
         $this->notify_option['model_id'] = $circle_id;
         $this->notify_option['item_name'] = json_encode([$circle['Circle']['name']]);
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_CIRCLE, $circle_id);
     }
 
     /**
@@ -510,6 +538,8 @@ class NotifyBizComponent extends Component
         $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle_id];
         $this->notify_option['model_id'] = $circle_id;
         $this->notify_option['item_name'] = json_encode([$circle['Circle']['name'], $privacy_name]);
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_CIRCLE, $circle_id);
+
     }
 
     /**
@@ -533,6 +563,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle_id];
         $this->notify_option['model_id'] = $circle_id;
         $this->notify_option['item_name'] = json_encode([$circle['Circle']['name']]);
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_CIRCLE, $circle_id);
     }
 
     /**
@@ -555,6 +586,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['model_id'] = $goal_id;
         $this->notify_option['item_name'] = json_encode([$goal['Goal']['name']]);
         $this->notify_option['options']['goal_id'] = $goal_id;
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_GOAL, $goal_id);
     }
 
     /**
@@ -580,6 +612,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['model_id'] = $goal_id;
         $this->notify_option['item_name'] = json_encode([$goal['Goal']['name']]);
         $this->notify_option['options']['goal_id'] = $goal_id;
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_GOAL, $goal_id);
     }
 
     /**
@@ -608,6 +641,8 @@ class NotifyBizComponent extends Component
         $this->notify_option['model_id'] = $goal_id;
         $this->notify_option['item_name'] = json_encode([$goal['Goal']['name']]);
         $this->notify_option['options']['goal_id'] = $goal_id;
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_GOAL, $goal_id);
+
     }
 
     /**
@@ -645,6 +680,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['model_id'] = $goal_id;
         $this->notify_option['item_name'] = json_encode([$goal['Goal']['name']]);
         $this->notify_option['options']['goal_id'] = $goal_id;
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $to_user_id);
     }
 
     /**
@@ -671,6 +707,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['url_data'] = $url;
         $this->notify_option['model_id'] = null;
         $this->notify_option['item_name'] = json_encode([$evaluatee[0]['User']['display_username']]);
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $evaluatee[0]['User']['id']);
     }
 
     /**
@@ -706,6 +743,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['url_data'] = $notify_list_url;
         $this->notify_option['model_id'] = null;
         $this->notify_option['item_name'] = json_encode([$team_name['Team']['name']]);
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_ALL_TEAM);
     }
 
     /**
@@ -743,6 +781,8 @@ class NotifyBizComponent extends Component
         $this->notify_option['item_name'] = !empty($comment) ?
             json_encode([trim($comment['Comment']['body'])]) : null;
         $this->notify_option['options']['post_user_id'] = $post['Post']['user_id'];
+
+        $this->setBellPushChannelFromNotifySetting();
     }
 
     /**
@@ -777,6 +817,9 @@ class NotifyBizComponent extends Component
         $this->notify_option['item_name'] = !empty($comment) ?
             json_encode([trim($comment['Comment']['body'])]) : null;
         $this->notify_option['app_notify_enable'] = $this->notify_settings[$post['Post']['user_id']]['app'];
+        if ($this->notify_settings[$post['Post']['user_id']]['app']) {
+            $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $post['Post']['user_id']);
+        }
     }
 
     private function _saveNotifications()
@@ -809,6 +852,8 @@ class NotifyBizComponent extends Component
             $this->notify_option['post_id'],
             json_encode($this->notify_option['options'])
         );
+        //TODO socketIdを引き回してここにセットする
+        $this->bellPush(null);
         return true;
     }
 
