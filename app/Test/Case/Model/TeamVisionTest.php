@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('TeamVision', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('TeamVision', 'Model');
  *
  * @property TeamVision $TeamVision
  */
-class TeamVisionTest extends CakeTestCase
+class TeamVisionTest extends GoalousTestCase
 {
 
     /**
@@ -118,6 +118,7 @@ class TeamVisionTest extends CakeTestCase
 
     function testGetTeamVision()
     {
+        $this->_setDefault();
         $team_id = 1;
         $name = 'test';
         $data = [
@@ -125,6 +126,8 @@ class TeamVisionTest extends CakeTestCase
             'name'    => $name
         ];
         $this->TeamVision->save($data);
+        $res = $this->TeamVision->getTeamVision($team_id, 1);
+        $this->assertEquals($res[0]['TeamVision']['name'], $name);
         $res = $this->TeamVision->getTeamVision($team_id, 1);
         $this->assertEquals($res[0]['TeamVision']['name'], $name);
     }

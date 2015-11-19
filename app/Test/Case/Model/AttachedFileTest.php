@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('AttachedFile', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('AttachedFile', 'Model');
  *
  * @property AttachedFile $AttachedFile
  */
-class AttachedFileTest extends CakeTestCase
+class AttachedFileTest extends GoalousTestCase
 {
 
     /**
@@ -528,7 +528,6 @@ class AttachedFileTest extends CakeTestCase
         $url = $this->AttachedFile->getFileUrl(99889988);
         $this->assertEmpty($url);
     }
-
 
     function _prepareTestFiles($file_size = 1000)
     {

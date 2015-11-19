@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('CommentLike', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('CommentLike', 'Model');
  *
  * @property  CommentLike $CommentLike
  */
-class CommentLikeTest extends CakeTestCase
+class CommentLikeTest extends GoalousTestCase
 {
 
     /**

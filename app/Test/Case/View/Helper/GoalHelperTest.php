@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('View', 'View');
 App::uses('Helper', 'View');
 App::uses('GoalHelper', 'View/Helper');
@@ -8,7 +8,7 @@ App::uses('GoalHelper', 'View/Helper');
  *
  * @property GoalHelper Goal
  */
-class GoalHelperTest extends CakeTestCase
+class GoalHelperTest extends GoalousTestCase
 {
 
     /**

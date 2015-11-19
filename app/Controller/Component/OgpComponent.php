@@ -43,7 +43,6 @@ class OgpComponent extends Object
     /**
      * There are base schema's based on type, this is just
      * a map so that the schema can be obtained
-
      */
     public static $TYPES = array(
         'activity'     => array('activity', 'sport'),
@@ -58,7 +57,6 @@ class OgpComponent extends Object
 
     /**
      * Holds all the Open Graph values we've parsed from a page
-
      */
     private $_values = array();
 

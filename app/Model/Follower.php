@@ -47,6 +47,7 @@ class Follower extends AppModel
         if ($this->find('first', ['conditions' => $data])) {
             return false;
         }
+        Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_FOLLOW_GOALS, true), 'user_data');
         return $this->save($data);
     }
 
@@ -58,11 +59,21 @@ class Follower extends AppModel
             'Follower.team_id' => $this->current_team_id,
         ];
         $this->deleteAll($conditions);
+        Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_FOLLOW_GOALS, true), 'user_data');
         return true;
     }
 
     function getFollowList($user_id, $limit = null, $page = 1)
     {
+        $is_default = false;
+        if ($user_id == $this->my_uid && $limit === null && $page === 1) {
+            $is_default = true;
+            $res = Cache::read($this->getCacheKey(CACHE_KEY_CHANNEL_FOLLOW_GOALS, true, $user_id), 'user_data');
+            if ($res !== false) {
+                return $res;
+            }
+        }
+
         $options = [
             'conditions' => [
                 'user_id' => $user_id,
@@ -75,6 +86,10 @@ class Follower extends AppModel
             'limit'      => $limit
         ];
         $res = $this->find('list', $options);
+
+        if ($is_default) {
+            Cache::write($this->getCacheKey(CACHE_KEY_CHANNEL_FOLLOW_GOALS, true, $user_id), $res, 'user_data');
+        }
         return $res;
     }
 

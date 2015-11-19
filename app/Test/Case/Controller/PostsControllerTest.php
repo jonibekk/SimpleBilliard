@@ -1,11 +1,11 @@
-<?php
+<?php App::uses('GoalousControllerTestCase', 'Test');
 App::uses('PostsController', 'Controller');
 
 /**
  * PostsController Test Case
- * @method testAction($url = '', $options = array()) ControllerTestCase::_testAction
+ * @method testAction($url = '', $options = array()) GoalousControllerTestCase::_testAction
  */
-class PostsControllerTest extends ControllerTestCase
+class PostsControllerTest extends GoalousControllerTestCase
 {
 
     /**
@@ -102,7 +102,7 @@ class PostsControllerTest extends ControllerTestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $post_id = 1;
         $this->testFileUploadMessagePageRender($post_id, true);
-        $this->testAction('/posts/ajax_get_message/'. $post_id. '/2/3', ['method' => 'GET']);
+        $this->testAction('/posts/ajax_get_message/' . $post_id . '/2/3', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -112,7 +112,7 @@ class PostsControllerTest extends ControllerTestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $post_id = 1;
         $this->testFileUploadMessagePageRender($post_id, false);
-        $this->testAction('/posts/ajax_get_message/'. $post_id. '/2/3', ['method' => 'GET']);
+        $this->testAction('/posts/ajax_get_message/' . $post_id . '/2/3', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -120,7 +120,8 @@ class PostsControllerTest extends ControllerTestCase
     {
         $this->_getPostsCommonMock();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/posts/ajax_put_message/1/', ['method' => 'POST','data'=>['body'=>'test', 'file_redis_key'=>'xxx']]);
+        $this->testAction('/posts/ajax_put_message/1/',
+                          ['method' => 'POST', 'data' => ['body' => 'test', 'file_redis_key' => 'xxx']]);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -1123,14 +1124,6 @@ class PostsControllerTest extends ControllerTestCase
         $this->assertFalse(isset($e), "[正常]投稿削除");
     }
 
-    public function testPostEdit()
-    {
-        $Posts = $this->_getPostsCommonMock();
-        $posts = $Posts->Post->getMyPostList(0, strtotime('2016-01-01'));
-        $post_id = array_shift($posts);
-        $this->testAction('posts/post_edit/post_id:' . $post_id, ['method' => 'GET']);
-    }
-
     /**
      * testDelete method
      *
@@ -1756,10 +1749,10 @@ class PostsControllerTest extends ControllerTestCase
     {
         $Posts = $this->_getPostsCommonMock();
         $attached_file_data = [
-            'user_id' => $user_id,
-            'team_id' => $team_id,
+            'user_id'            => $user_id,
+            'team_id'            => $team_id,
             'attached_file_name' => 'test_image.jpeg',
-            'file_ext' => 'jpeg'
+            'file_ext'           => 'jpeg'
         ];
         return $Posts->Post->Comment->CommentFile->AttachedFile->save($attached_file_data);
     }
@@ -1768,8 +1761,8 @@ class PostsControllerTest extends ControllerTestCase
     {
         $Posts = $this->_getPostsCommonMock();
         $comment_file_data = [
-            'team_id' => $team_id,
-            'comment_id' => $comment_id,
+            'team_id'          => $team_id,
+            'comment_id'       => $comment_id,
             'attached_file_id' => $attached_file_id
         ];
         return $Posts->Post->Comment->CommentFile->save($comment_file_data);

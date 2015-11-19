@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('View', 'View');
 App::uses('Helper', 'View');
 App::uses('TextExHelper', 'View/Helper');
@@ -8,7 +8,7 @@ App::uses('TextExHelper', 'View/Helper');
  *
  * @property TextExHelper $TextEx
  */
-class TextExHelperTest extends CakeTestCase
+class TextExHelperTest extends GoalousTestCase
 {
 
     /**

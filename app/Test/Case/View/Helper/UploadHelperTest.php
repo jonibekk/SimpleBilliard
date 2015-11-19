@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('View', 'View');
 App::uses('Helper', 'View');
 App::uses('UploadHelper', 'View/Helper');
@@ -8,7 +8,7 @@ App::uses('UploadHelper', 'View/Helper');
  *
  * @property UploadHelper $Upload
  */
-class UploadHelperTest extends CakeTestCase
+class UploadHelperTest extends GoalousTestCase
 {
 
     /**

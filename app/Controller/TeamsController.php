@@ -42,6 +42,7 @@ class TeamsController extends AppController
         $this->request->allowMethod('post');
         $this->Team->id = $this->current_team_id;
         if ($this->Team->save($this->request->data)) {
+            Cache::clear(false, 'team_info');
             $this->Pnotify->outSuccess(__d('gl', "チームの基本設定を更新しました。"));
         }
         else {
@@ -97,6 +98,8 @@ class TeamsController extends AppController
         // セッション中の default_team_id を更新
         $this->_refreshAuth();
 
+        // 事前に全ユーザのteam listデータを削除
+        Cache::clear(false, 'team_info');
         // 所属チームリストを更新して取得
         $this->User->TeamMember->setActiveTeamList($this->Auth->user('id'));
         $active_team_list = $this->User->TeamMember->getActiveTeamList($this->Auth->user('id'));
@@ -225,6 +228,7 @@ class TeamsController extends AppController
         if ($this->Team->EvaluationSetting->save($this->request->data['EvaluationSetting'])) {
             $this->Team->commit();
             $this->Pnotify->outSuccess(__d('gl', "評価設定を保存しました。"));
+            Cache::delete($this->Team->getCacheKey(CACHE_KEY_TEAM_EVAL_SETTING, false), 'team_info');
         }
         else {
             $this->Team->rollback();
@@ -403,6 +407,7 @@ class TeamsController extends AppController
         $this->Pnotify->outSuccess(__d('gl', "評価を開始しました。"));
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_START,
                                          $this->Team->EvaluateTerm->getCurrentTermId());
+        Cache::clear(false, 'team_info');
         return $this->redirect($this->referer());
     }
 
@@ -518,6 +523,8 @@ class TeamsController extends AppController
         else {
             $this->Team->TeamMember->commit();
             $result['msg'] = __d('gl', "%s人のメンバーを更新しました。", $save_res['success_count']);
+            //Cacheをすべて削除
+            Cache::clear(false, 'team_info');
         }
         return $this->_ajaxGetResponse($result);
     }
@@ -613,6 +620,7 @@ class TeamsController extends AppController
             $result['msg'] = __d('gl', "%s人の最終評価を更新しました。", $save_res['success_count']);
             $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_DONE_FINAL,
                                              $this->Team->EvaluateTerm->getCurrentTermId());
+            Cache::clear(false, 'team_info');
         }
         return $this->_ajaxGetResponse($result);
     }
@@ -672,6 +680,7 @@ class TeamsController extends AppController
         else {
             $this->Pnotify->outSuccess(__d('gl', "評価の凍結を解除しました。"));
         }
+        CAche::clear(false, 'team_info');
         return $this->redirect($this->referer());
     }
 
@@ -1329,7 +1338,7 @@ class TeamsController extends AppController
                 // キャッシュの有効期限
                 // 古いデータは１週間
                 // 今月のデータはアクセス日の24時まで
-                $cache_expire = (strtotime($target_end_date) < strtotime($date_info['today'])) ? 
+                $cache_expire = (strtotime($target_end_date) < strtotime($date_info['today'])) ?
                     WEEK : DAY - (REQUEST_TIMESTAMP + $date_info['time_adjust'] - $date_info['today_time']);
 
                 array_unshift($insights,

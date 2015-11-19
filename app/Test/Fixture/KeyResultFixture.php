@@ -2,7 +2,6 @@
 
 /**
  * KeyResultFixture
-
  */
 class KeyResultFixture extends CakeTestFixture
 {

@@ -1,13 +1,12 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('View', 'View');
 App::uses('Helper', 'View');
 App::uses('CsvHelper', 'View/Helper');
 
 /**
  * CsvHelper Test Case
-
  */
-class CsvHelperTest extends CakeTestCase
+class CsvHelperTest extends GoalousTestCase
 {
 
     /**

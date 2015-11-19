@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('AccessUser', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('AccessUser', 'Model');
  *
  * @property AccessUser $AccessUser
  */
-class AccessUserTest extends CakeTestCase
+class AccessUserTest extends GoalousTestCase
 {
 
     /**
@@ -42,7 +42,6 @@ class AccessUserTest extends CakeTestCase
         parent::tearDown();
     }
 
-
     function testGetUserList()
     {
         $this->AccessUser->current_team_id = 1;
@@ -52,7 +51,6 @@ class AccessUserTest extends CakeTestCase
         $this->assertEquals([1 => '1', 2 => '2'], $user_list);
 
     }
-
 
     function testGetUniqueUserCount()
     {
@@ -71,6 +69,5 @@ class AccessUserTest extends CakeTestCase
         $count = $this->AccessUser->getUniqueUserCount('2015-01-01', '2015-01-03', 9, ['user_id' => [1, 3]]);
         $this->assertEquals(2, $count);
     }
-
 
 }

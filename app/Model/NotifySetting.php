@@ -594,7 +594,8 @@ class NotifySetting extends AppModel
                 // この通知で必要なオプション値
                 //   - goal_id: 新しく作成したゴールID
                 $goal = $this->User->Goal->findById($options['goal_id']);
-                $title = __d('gl', '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">%2$s</span>を作成しました。',
+                $title = __d('gl',
+                             '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">%2$s</span>を作成しました。',
                              h($user_text),
                              h($goal['Goal']['name']));
                 break;
@@ -602,7 +603,8 @@ class NotifySetting extends AppModel
                 // この通知で必要なオプション値
                 //   - goal_id: コラボしたゴールID
                 $goal = $this->User->Goal->findById($options['goal_id']);
-                $title = __d('gl', '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">%2$s</span>にコラボりました。',
+                $title = __d('gl',
+                             '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">%2$s</span>にコラボりました。',
                              h($user_text),
                              h($goal['Goal']['name']));
                 break;
@@ -610,7 +612,8 @@ class NotifySetting extends AppModel
                 // この通知で必要なオプション値
                 //   - goal_id: 内容を修正したゴールID
                 $goal = $this->User->Goal->findById($options['goal_id']);
-                $title = __d('gl', '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">%2$s</span>を修正しました。',
+                $title = __d('gl',
+                             '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">%2$s</span>を修正しました。',
                              h($user_text),
                              h($goal['Goal']['name']));
                 break;

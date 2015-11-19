@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('Message', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('Message', 'Model');
  *
  * @property mixed Message
  */
-class MessageTest extends CakeTestCase
+class MessageTest extends GoalousTestCase
 {
 
     /**

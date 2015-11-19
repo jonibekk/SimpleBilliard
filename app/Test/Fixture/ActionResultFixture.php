@@ -2,7 +2,6 @@
 
 /**
  * ActionResultFixture
-
  */
 class ActionResultFixture extends CakeTestFixture
 {

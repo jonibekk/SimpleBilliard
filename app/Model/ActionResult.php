@@ -248,7 +248,7 @@ class ActionResult extends AppModel
             }
         }
         $this->commit();
-        
+
         // 添付ファイルが存在する場合は一時データを削除
         if (isset($data['file_id']) && is_array($data['file_id'])) {
             $Redis = ClassRegistry::init('GlRedis');
@@ -258,7 +258,7 @@ class ActionResult extends AppModel
                 }
             }
         }
-        
+
         return true;
     }
 
@@ -304,18 +304,6 @@ class ActionResult extends AppModel
             ],
         ];
         $res = $this->find('count', $options);
-        return $res;
-    }
-
-    function getActionIdsByKrId($key_result_id)
-    {
-        $options = [
-            'conditions' => [
-                'key_result_id' => $key_result_id,
-            ],
-            'fields'     => ['id', 'id']
-        ];
-        $res = $this->find('list', $options);
         return $res;
     }
 

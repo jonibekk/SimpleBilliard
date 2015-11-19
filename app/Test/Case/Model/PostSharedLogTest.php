@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('PostSharedLog', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('PostSharedLog', 'Model');
  *
  * @property PostSharedLog $PostSharedLog
  */
-class PostSharedLogTest extends CakeTestCase
+class PostSharedLogTest extends GoalousTestCase
 {
 
     /**

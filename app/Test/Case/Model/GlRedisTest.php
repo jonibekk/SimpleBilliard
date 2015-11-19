@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('GlRedis', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('GlRedis', 'Model');
  *
  * @property GlRedis $GlRedis
  */
-class GlRedisTest extends CakeTestCase
+class GlRedisTest extends GoalousTestCase
 {
 
     /**
@@ -131,6 +131,7 @@ class GlRedisTest extends CakeTestCase
         $res = $this->GlRedis->getNotifications(1, 1);
         $this->assertCount(3, $res);
     }
+
     function testGetNotifyIdsFromDateNullLimitNull()
     {
         for ($i = 0; $i < 3; $i++) {
@@ -167,7 +168,6 @@ class GlRedisTest extends CakeTestCase
         $this->assertCount(1, $res);
     }
 
-
     function testGetMessageNotificationsFromDateNullLimited()
     {
         for ($i = 0; $i < 3; $i++) {
@@ -194,7 +194,6 @@ class GlRedisTest extends CakeTestCase
         $res = $this->GlRedis->getNotifications(1, 1);
         $this->assertCount(2, $this->GlRedis->getNotifyIds(1, 1, 3, $res[0]['score']));
     }
-
 
     function testGetMessageNotificationsFromDateLimited()
     {
@@ -270,7 +269,6 @@ class GlRedisTest extends CakeTestCase
     {
         $this->assertEmpty($this->GlRedis->getNotifyIds(1, 1));
     }
-
 
     function testGetKeyName()
     {

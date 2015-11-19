@@ -2,7 +2,6 @@
 
 /**
  * LocalNameFixture
-
  */
 class LocalNameFixture extends CakeTestFixture
 {

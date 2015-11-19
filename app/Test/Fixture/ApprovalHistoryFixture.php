@@ -2,7 +2,6 @@
 
 /**
  * ApprovalHistoryFixture
-
  */
 class ApprovalHistoryFixture extends CakeTestFixture
 {

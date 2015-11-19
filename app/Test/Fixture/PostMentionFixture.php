@@ -2,7 +2,6 @@
 
 /**
  * PostMentionFixture
-
  */
 class PostMentionFixture extends CakeTestFixture
 {

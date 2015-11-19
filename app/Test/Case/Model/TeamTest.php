@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('Team', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('Team', 'Model');
  *
  * @property Team $Team
  */
-class TeamTest extends CakeTestCase
+class TeamTest extends GoalousTestCase
 {
 
     /**

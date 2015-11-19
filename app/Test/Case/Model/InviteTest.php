@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('Invite', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('Invite', 'Model');
  *
  * @property  Invite $Invite
  */
-class InviteTest extends CakeTestCase
+class InviteTest extends GoalousTestCase
 {
 
     /**
@@ -207,8 +207,8 @@ class InviteTest extends CakeTestCase
         $team_id = '999';
         $email = 'test999@isao.co.jp';
         $params = [
-            'team_id'  => $team_id,
-            'email' => $email
+            'team_id' => $team_id,
+            'email'   => $email
         ];
         $this->Invite->save($params);
         $res = $this->Invite->getInviteUserList($team_id);

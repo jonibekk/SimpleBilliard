@@ -2,7 +2,6 @@
 
 /**
  * CommentFixture
-
  */
 class CommentFixture extends CakeTestFixture
 {

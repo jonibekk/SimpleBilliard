@@ -2,7 +2,6 @@
 
 /**
  * CollaboratorFixture
-
  */
 class CollaboratorFixture extends CakeTestFixture
 {

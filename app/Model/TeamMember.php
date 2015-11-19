@@ -69,6 +69,7 @@ class TeamMember extends AppModel
     function getActiveTeamList($uid)
     {
         if (empty($this->myTeams)) {
+
             $this->setActiveTeamList($uid);
         }
         return $this->myTeams;
@@ -76,15 +77,20 @@ class TeamMember extends AppModel
 
     function setActiveTeamList($uid)
     {
-        $options = [
-            'conditions' => [
-                'TeamMember.user_id'    => $uid,
-                'TeamMember.active_flg' => true
-            ],
-            'fields'     => ['TeamMember.team_id', 'Team.name'],
-            'contain'    => ['Team']
-        ];
-        $res = array_filter($this->findWithoutTeamId('list', $options));
+        $model = $this;
+        $res = Cache::remember($this->getCacheKey(CACHE_KEY_TEAM_LIST, true, null, false),
+            function () use ($model, $uid) {
+                $options = [
+                    'conditions' => [
+                        'TeamMember.user_id'    => $uid,
+                        'TeamMember.active_flg' => true
+                    ],
+                    'fields'     => ['TeamMember.team_id', 'Team.name'],
+                    'contain'    => ['Team']
+                ];
+                $res = array_filter($model->findWithoutTeamId('list', $options));
+                return $res;
+            }, 'team_info');
         $this->myTeams = $res;
     }
 
@@ -117,6 +123,14 @@ class TeamMember extends AppModel
         if (!empty($this->myStatusWithTeam)) {
             return $this->myStatusWithTeam;
         }
+        $is_default = false;
+        if ($team_id === null && $uid === null) {
+            $is_default = true;
+            $res = Cache::read($this->getCacheKey(CACHE_KEY_MY_MEMBER_STATUS, true), 'team_info');
+            if ($res !== false) {
+                return $this->myStatusWithTeam = $res;
+            }
+        }
         if (!$team_id) {
             $team_id = $this->current_team_id;
         }
@@ -137,6 +151,9 @@ class TeamMember extends AppModel
         ];
         $res = $this->find('first', $options);
         $this->myStatusWithTeam = $res;
+        if ($is_default && !empty($res)) {
+            Cache::write($this->getCacheKey(CACHE_KEY_MY_MEMBER_STATUS, true), $res, 'team_info');
+        }
         return $res;
     }
 
@@ -186,6 +203,17 @@ class TeamMember extends AppModel
             }
             $team_id = $this->current_team_id;
         }
+        $is_default = false;
+        if ($uid == $this->my_uid && $team_id == $this->current_team_id) {
+            $is_default = true;
+            $res = Cache::read($this->getCacheKey(CACHE_KEY_MEMBER_IS_ACTIVE, true), 'team_info');
+            if ($res !== false) {
+                if (!empty($res)) {
+                    return true;
+                }
+                return false;
+            }
+        }
         $options = [
             'conditions' => [
                 'team_id'    => $team_id,
@@ -194,7 +222,11 @@ class TeamMember extends AppModel
             ],
             'fields'     => ['id']
         ];
-        if ($this->find('first', $options)) {
+        $res = $this->find('first', $options);
+        if ($is_default) {
+            Cache::write($this->getCacheKey(CACHE_KEY_MEMBER_IS_ACTIVE, true), $res, 'team_info');
+        }
+        if ($res) {
             return true;
         }
         return false;
@@ -265,6 +297,7 @@ class TeamMember extends AppModel
 
     public function setAdminUserFlag($member_id, $flag)
     {
+        $this->deleteCacheMember($member_id);
         $this->id = $member_id;
         $flag = $flag == 'ON' ? 1 : 0;
         return $this->saveField('admin_flg', $flag);
@@ -272,6 +305,7 @@ class TeamMember extends AppModel
 
     public function setActiveFlag($member_id, $flag)
     {
+        $this->deleteCacheMember($member_id);
         $this->id = $member_id;
         $flag = $flag == 'ON' ? 1 : 0;
         return $this->saveField('active_flg', $flag);
@@ -279,9 +313,34 @@ class TeamMember extends AppModel
 
     public function setEvaluationFlag($member_id, $flag)
     {
+        $this->deleteCacheMember($member_id);
         $this->id = $member_id;
         $flag = $flag == 'ON' ? 1 : 0;
         return $this->saveField('evaluation_enable_flg', $flag);
+    }
+
+    /**
+     * 対象ユーザのCache削除
+     *
+     * @param $member_id
+     *
+     * @return bool
+     */
+    function deleteCacheMember($member_id)
+    {
+        $this->id = $member_id;
+        $member = $this->read();
+        if (isset($member['TeamMember']['user_id'])) {
+            Cache::delete($this->getCacheKey(CACHE_KEY_TEAM_LIST, true, $member['TeamMember']['user_id'], false),
+                          'team_info');
+            Cache::delete($this->getCacheKey(CACHE_KEY_MY_MEMBER_STATUS, true, $member['TeamMember']['user_id']),
+                          'team_info');
+            Cache::delete($this->getCacheKey(CACHE_KEY_MEMBER_IS_ACTIVE, true, $member['TeamMember']['user_id']),
+                          'team_info');
+
+            return true;
+        }
+        return false;
     }
 
     /*
@@ -2001,34 +2060,32 @@ class TeamMember extends AppModel
      * ログインしているユーザーのコーチIDを取得する
      *
      * @param $user_id
-     * @param $team_id
      *
      * @return array|null
      */
-    function selectCoachUserIdFromTeamMembersTB($user_id, $team_id)
+    function getCoachUserIdByMemberUserId($user_id)
     {
         // 検索テーブル: team_members
         // 取得カラム: coach_user_id
         // 条件: user_id, team_id
         $options = [
-            'fields'     => ['coach_user_id'],
+            'fields'     => ['coach_user_id', 'coach_user_id'],
             'conditions' => [
-                'TeamMember.user_id' => $user_id,
-                'TeamMember.team_id' => $team_id,
+                'user_id' => $user_id,
             ],
         ];
-        return $this->find('first', $options);
+        $res = $this->find('list', $options);
+        return array_pop($res);
     }
 
     /**
      * ログインしているユーザーが管理するのメンバーIDを取得する
      *
      * @param $user_id
-     * @param $team_id
      *
      * @return array|null
      */
-    function selectUserIdFromTeamMembersTB($user_id, $team_id)
+    function getMyMembersList($user_id)
     {
         // 検索テーブル: team_members
         // 取得カラム: user_id
@@ -2037,7 +2094,6 @@ class TeamMember extends AppModel
             'fields'     => ['user_id'],
             'conditions' => [
                 'TeamMember.coach_user_id' => $user_id,
-                'TeamMember.team_id'       => $team_id,
                 'active_flg'               => 1,
                 'evaluation_enable_flg'    => 1,
             ],
@@ -2158,6 +2214,7 @@ class TeamMember extends AppModel
      * $team_id のチームに所属するアクティブメンバー数を返す
      *
      * @param $team_id
+     *
      * @return array
      */
     function countActiveMembersByTeamId($team_id)

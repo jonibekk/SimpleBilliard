@@ -364,3 +364,17 @@ Cache::config('_cake_model_', array(
     'serialize' => ($engine === 'File'),
     'duration'  => $duration
 ));
+
+/**
+ * データのキャッシュ
+ */
+$data_cache_config = [
+    'engine'    => 'Redis',
+    'path'      => CACHE . 'cache_data' . DS,
+    'server'    => $server,
+    'port'      => $port,
+    'serialize' => ($engine === 'File'),
+    'duration'  => 60 * 60 * 24 * 7,
+];
+Cache::config('user_data', array_merge($data_cache_config, ['prefix' => $prefix . 'cache_user_data:']));
+Cache::config('team_info', array_merge($data_cache_config, ['prefix' => $prefix . 'cache_team_info:']));

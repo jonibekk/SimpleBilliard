@@ -2,7 +2,6 @@
 
 /**
  * PostSharedLogFixture
-
  */
 class PostSharedLogFixture extends CakeTestFixture
 {

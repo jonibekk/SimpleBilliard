@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('ApprovalHistory', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('ApprovalHistory', 'Model');
  *
  * @property ApprovalHistory $ApprovalHistory
  */
-class ApprovalHistoryTest extends CakeTestCase
+class ApprovalHistoryTest extends GoalousTestCase
 {
 
     /**
