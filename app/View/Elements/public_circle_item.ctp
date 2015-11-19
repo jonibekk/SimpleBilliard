@@ -50,7 +50,7 @@ $member_count = isset($member_count) ? $member_count : '';
                 </div>
             <?php endif ?>
         <?php endif; ?>
-        <div class="font_12px font_bold modalFeedTextPadding">
+        <div class="modal-public-circles-contents-circle-name font_12px font_bold modalFeedTextPadding">
             <?php if ($circle['Circle']['created'] > strtotime("-1 week")): ?>
                 <span class="circle-new">New</span>
             <?php endif; ?>
