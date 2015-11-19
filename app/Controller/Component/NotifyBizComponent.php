@@ -38,6 +38,18 @@ class NotifyBizComponent extends Component
 
     private $initialized = false;
 
+    const PUSHER_CHANNEL_TYPE_ALL_TEAM = 'all_team';
+    const PUSHER_CHANNEL_TYPE_USER = 'user';
+    const PUSHER_CHANNEL_TYPE_CIRCLE = 'circle';
+    const PUSHER_CHANNEL_TYPE_GOAL = 'goal';
+
+    private $pusher_channel_types = [
+        self::PUSHER_CHANNEL_TYPE_ALL_TEAM,
+        self::PUSHER_CHANNEL_TYPE_USER,
+        self::PUSHER_CHANNEL_TYPE_CIRCLE,
+        self::PUSHER_CHANNEL_TYPE_GOAL
+    ];
+
     public function __construct(ComponentCollection $collection, $settings = array())
     {
         parent::__construct($collection, $settings);
@@ -219,14 +231,42 @@ class NotifyBizComponent extends Component
         $pusher->trigger($channelName, 'post_feed', $data, $socketId);
     }
 
-    public function bellPush($socketId, $channelName, $data)
+    /**
+     * 通知ベルPush
+     *
+     * @param string        $channel_type
+     * @param string        $socketId
+     * @param array|integer $item_ids
+     */
+    public function bellPush($channel_type, $socketId, $item_ids = null)
     {
         // push
-        if (!$socketId || !$channelName || !$data) {
+        if (!$socketId) {
+            return;
+        }
+        //チャンネルタイプがチーム以外の場合は$item_idsが必須
+        if ($channel_type != self::PUSHER_CHANNEL_TYPE_ALL_TEAM && !$item_ids) {
+            return;
+        }
+        //チャンネルタイプが未定義だった場合はなにもしない
+        if (!in_array($channel_type, $this->pusher_channel_types)) {
             return;
         }
         $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
-        $pusher->trigger($channelName, 'post_feed', $data, $socketId);
+        $channel_names = [];
+        if ($channel_type == self::PUSHER_CHANNEL_TYPE_ALL_TEAM) {
+            $channel_names[] = $channel_type . '_' . $this->NotifySetting->current_team_id;
+        }
+        else {
+            foreach ($item_ids as $id) {
+                $channel_names[] = $channel_type . '_' . $id . 'team_' . $this->NotifySetting->current_team_id;
+            }
+        }
+        //Pusherは同時に100チャンネルまでしか送れない為、チャンクする。
+        $chunk_channels = array_chunk($channel_names, 100);
+        foreach ($chunk_channels as $channels) {
+            $pusher->trigger($channels, 'bell_count', null, $socketId);
+        }
     }
 
     public function commentPush($socketId, $data)
@@ -808,6 +848,7 @@ class NotifyBizComponent extends Component
 
     /**
      * アプリ向けプッシュ通知送信
+     *
      * @param string $app_key
      * @param string $client_key
      */
@@ -952,10 +993,10 @@ class NotifyBizComponent extends Component
      * X-NCMB-SIGNATUREを生成する
      * デフォルトではpush通知用のシグネチャ生成
      *
-     * @param $timestamp シグネチャを生成する時に使うタイムスタンプ
-     * @param $method    シグネチャを生成する時に使うメソッド
-     * @param $path      シグネチャを生成する時に使うパス
-     * @param string $app_key  NCMB用 application key
+     * @param        $timestamp  シグネチャを生成する時に使うタイムスタンプ
+     * @param        $method     シグネチャを生成する時に使うメソッド
+     * @param        $path       シグネチャを生成する時に使うパス
+     * @param string $app_key    NCMB用 application key
      * @param string $client_key NCMB用 client key
      *
      * @return string X-NCMB-SIGNATUREの値
@@ -1314,10 +1355,11 @@ class NotifyBizComponent extends Component
      * installation_idでNCMBからdevice_tokenをとってきて
      * Deviceに保存する
      *
-     * @param $user_id
-     * @param $installation_id
+     * @param        $user_id
+     * @param        $installation_id
      * @param string $app_key
      * @param string $client_key
+     *
      * @return bool
      */
     function saveDeviceInfo($user_id, $installation_id, $app_key = NCMB_APPLICATION_KEY, $client_key = NCMB_CLIENT_KEY)
