@@ -1057,7 +1057,7 @@ class AppSchema extends CakeSchema
         'del_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
         'deleted'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '投稿を削除した日付時刻'),
         'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '投稿を追加した日付時刻'),
-        'modified'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '投稿を更新した日付時刻'),
+        'modified'        => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => true, 'key' => 'primary', 'comment' => '投稿を更新した日付時刻'),
         'indexes'         => array(
             'PRIMARY'   => array('column' => array('id', 'modified'), 'unique' => 1),
             'post_id'   => array('column' => 'post_id', 'unique' => 0),
@@ -1078,7 +1078,7 @@ class AppSchema extends CakeSchema
         'del_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
         'deleted'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '投稿を削除した日付時刻'),
         'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '投稿を追加した日付時刻'),
-        'modified'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '投稿を更新した日付時刻'),
+        'modified'        => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => true, 'key' => 'primary', 'comment' => '投稿を更新した日付時刻'),
         'indexes'         => array(
             'PRIMARY'  => array('column' => array('id', 'modified'), 'unique' => 1),
             'post_id'  => array('column' => 'post_id', 'unique' => 0),
@@ -1172,7 +1172,7 @@ class AppSchema extends CakeSchema
     public $recovery_codes = array(
         'id'              => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'),
         'user_id'         => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'コード持ち主のuser_id'),
-        'code'            => array('type' => 'string', 'null' => false, 'collate' => 'utf8_general_ci', 'comment' => 'アプリ側で暗号化済のコード', 'charset' => 'utf8'),
+        'code'            => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'アプリ側で暗号化済のコード', 'charset' => 'utf8'),
         'used'            => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'コードを利用した日時'),
         'available_flg'   => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => 'コード利用可能フラグ'),
         'del_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0'),
