@@ -137,7 +137,7 @@
                 </ul>
             </div>
             <?php
-            echo $this->element('header_logged_in_right')
+                echo $this->element('header_logged_in_right')
             ?>
         </div>
     </div>

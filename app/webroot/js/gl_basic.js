@@ -624,7 +624,7 @@ $(document).ready(function () {
     $(document).on('submit', '#MessageDisplayForm', function (e) {
         return checkUploadFileExpire('messageDropArea');
     });
-    
+
     // リカバリコード再生成
     $(document).on('click', '#RecoveryCodeModal .regenerate-recovery-code', function (e) {
         e.preventDefault();
@@ -654,7 +654,7 @@ $(document).ready(function () {
                     for (var i = 0; i < 10; i++) {
                         $list_items.eq(i).text(res.codes[i].slice(0, 4) + ' ' + res.codes[i].slice(-4));
                     }
-                    
+
                     new PNotify({
                         type: 'success',
                         title: cake.word.success,
@@ -664,8 +664,8 @@ $(document).ready(function () {
                         mouse_reset: false
                     });
                 }
-               
-                
+
+
             })
             .fail(function () {
                 PNotify.removeAll();
@@ -711,6 +711,19 @@ $(document).ready(function () {
         $("#" + cake.request_params.after_click).trigger('click');
     }
 
+    $(document).on('lightbox.open', 'a[rel^=lightbox]', function () {
+        var $viewport = $("meta[name='viewport']");
+        $viewport.attr('content', $viewport.attr('content')
+            .replace('user-scalable=no', 'user-scalable=yes')
+            .replace('maximum-scale=1', 'maximum-scale=10'));
+
+    });
+    $(document).on('lightbox.close', 'a[rel^=lightbox]', function () {
+        var $viewport = $("meta[name='viewport']");
+        $viewport.attr('content', $viewport.attr('content')
+            .replace('user-scalable=yes', 'user-scalable=no')
+            .replace('maximum-scale=10', 'maximum-scale=1'));
+    });
 
     ///////////////////////////////////////////////////////////////////////////
     // Ctrl(Command) + Enter 押下時のコールバック
@@ -1487,9 +1500,6 @@ $(function () {
             if (showNavFlag) {
                 showNavFlag = false;
                 var scroll_offset = 0;
-                if (cake.is_mb_app) {
-                    scroll_offset = -10;
-                }
                 subNavbar.stop().animate({"top": scroll_offset}, 400);
             }
         }
@@ -2966,6 +2976,13 @@ function showMore(obj) {
             showText: '<i class="fa fa-angle-double-down"></i>' + cake.message.info.e,
             hideText: '<i class="fa fa-angle-double-up"></i>' + cake.message.info.h
         });
+        $('.showmore-mini').showMore({
+            speedDown: 300,
+            speedUp: 300,
+            height: '60px',
+            showText: '<i class="fa fa-angle-double-down"></i>' + cake.message.info.e,
+            hideText: '<i class="fa fa-angle-double-up"></i>' + cake.message.info.h
+        });
     }
 }
 function getModalFormFromUrl(e) {
@@ -3939,7 +3956,7 @@ $(document).ready(function () {
         '    <a href="#" class="pull-right font_lightgray" data-dz-remove><i class="fa fa-times"></i></a>' +
         '    <div class="dz-thumb-container pull-left">' +
         '      <i class="fa fa-file-o file-other-icon"></i>' +
-        '      <img class="dz-thumb none" data-dz-thumbnail-show /></div>' +
+        '      <img class="dz-thumb none" data-dz-thumbnail /></div>' +
         '    <span class="dz-name font_14px font_bold font_verydark pull-left" data-dz-name></span><br>' +
         '    <span class="dz-size font_11px font_lightgray pull-left" data-dz-size></span>' +
         '  </div>' +
@@ -3952,7 +3969,7 @@ $(document).ready(function () {
     var previewTemplateActionImage =
         '<div class="dz-preview dz-action-photo-preview action-photo-preview upload-file-attach-button">' +
         '  <div class="dz-action-photo-details">' +
-        '    <div class="dz-action-photo-thumb-container pull-left"><img class="dz-action-photo-thumb" data-dz-thumbnail-show /></div>' +
+        '    <div class="dz-action-photo-thumb-container pull-left"><img class="dz-action-photo-thumb" data-dz-thumbnail /></div>' +
         '  </div>' +
         '  <div class="dz-action-photo-progress progress">' +
         '    <div class="progress-bar progress-bar-info" role="progressbar"  data-dz-uploadprogress></div>' +
@@ -4175,7 +4192,7 @@ $(document).ready(function () {
                     $container.find('.fa').hide();
                     $container.find('.dz-thumb').show();
                 }
-                _ref = file.previewElement.querySelectorAll("[data-dz-thumbnail-show]");
+                _ref = file.previewElement.querySelectorAll("[data-dz-thumbnail]");
                 for (_i = 0; _i < _ref.length; _i++) {
                     thumbnailElement = _ref[_i];
                 }
@@ -4605,7 +4622,7 @@ $(document).ready(function () {
         file.previewElement.classList.remove("dz-file-preview");
         file.previewElement.querySelector('.progress').style.visibility = 'hidden';
 
-        switch ($input.attr('data-ext')) {
+        switch ($input.attr('data-ext').toLowerCase()) {
             case 'jpg':
             case 'jpeg':
             case 'gif':
@@ -4887,4 +4904,3 @@ function networkReachable() {
     });
     return ret;
 }
-
