@@ -4,7 +4,8 @@
  */
 ?>
 <!-- start app/View/Elements/header_logged_in_right -->
-<div class="header-right-navigations clearfix" xmlns="http://www.w3.org/1999/html">
+<div class="<?= $is_mb_app ? "header-right-navigations-mb-app" : "header-right-navigations" ?> clearfix"
+     xmlns="http://www.w3.org/1999/html">
     <?php if (!$is_mb_app): ?>
         <a class="header-user-avatar"
            href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $this->Session->read('Auth.User.id')]) ?>">
@@ -30,6 +31,7 @@
                     <a class="header-nav-add-contents-anchor"
                        href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>">
                         <i class="fa fa-flag header-drop-icons"></i>
+
                         <p class="header-nav-add-contents-goal"><?= __d('gl', 'ゴールを作成') ?></p>
                     </a>
                 </li>
@@ -37,6 +39,7 @@
                     <a class="header-nav-add-contents-anchor" href="#" data-toggle="modal"
                        data-target="#modal_add_circle">
                         <i class="fa fa-circle-o header-drop-icons"></i>
+
                         <p class="header-nav-add-contents-circle"><?= __d('gl', 'サークルを作成') ?></p>
                     </a>
                 </li>
@@ -45,6 +48,7 @@
                 <a class="header-nav-add-contents-anchor"
                    href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'add']) ?>">
                     <i class=" fa fa-users header-drop-icons"></i>
+
                     <p class="header-nav-add-contents-team"><?= __d('gl', 'チームを作成') ?></p>
                 </a>
             </li>
@@ -128,10 +132,11 @@
             <li class="header-nav-function-contents-list">
                 <?= $this->Html->link(__d('gl', 'ユーザ設定'),
                                       ['controller' => 'users', 'action' => 'settings'],
-                                      ['class'=>'header-nav-function-contents-user-setting']) ?>
+                                      ['class' => 'header-nav-function-contents-user-setting']) ?>
             </li>
             <li class="header-nav-function-contents-list">
-                <a href="#" data-toggle="modal" data-target="#modal_tutorial" class="header-nav-function-contents-tutorial">
+                <a href="#" data-toggle="modal" data-target="#modal_tutorial"
+                   class="header-nav-function-contents-tutorial">
                     <?= __d('gl', 'チュートリアル') ?>
                 </a>
             </li>
@@ -180,11 +185,12 @@
             <li class="header-nav-function-contents-list">
                 <?=
                 $this->Html->link(__d('home', 'Blog'), 'http://blog.goalous.com/',
-                                  array ('target' => '_blank','class' => 'header-nav-function-contents-blog')) ?>
+                                  array('target' => '_blank', 'class' => 'header-nav-function-contents-blog')) ?>
             </li>
             <?php if (USERVOICE_API_KEY && $this->Session->read('Auth.User.id')): ?>
                 <li class="header-nav-function-contents-list">
-                    <a class="header-nav-function-contents-feedback" href="javascript:void(0)" data-uv-lightbox="classic_widget" data-uv-mode="full"
+                    <a class="header-nav-function-contents-feedback" href="javascript:void(0)"
+                       data-uv-lightbox="classic_widget" data-uv-mode="full"
                        data-uv-primary-color="#f0636f" data-uv-link-color="#007dbf" data-uv-default-mode="feedback"
                        data-uv-forum-id="<?php
                        if ($is_isao_user) {
