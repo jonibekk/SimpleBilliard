@@ -344,9 +344,8 @@ class Team extends AppModel
             $post_data['Team']['timezone']
         );
         //キャッシュを削除
-        Cache::delete($this->getCacheKey(CACHE_KEY_TERM_CURRENT), 'team_info');
-        Cache::delete($this->getCacheKey(CACHE_KEY_TERM_NEXT), 'team_info');
-        Cache::delete($this->getCacheKey(CACHE_KEY_TERM_PREVIOUS), 'team_info');
+        Cache::clear('team_info');
+        Cache::clear('user_data');
         return (bool)$res;
     }
 
