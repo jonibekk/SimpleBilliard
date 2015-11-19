@@ -1848,7 +1848,7 @@ msgstr ""
 #: View/Elements/circle_list.ctp:63
 #: View/Elements/circle_list_in_hamburger.ctp:57
 msgid "サークルを見る"
-msgstr ""
+msgstr "View Circles"
 
 #: View/Elements/circle_list.ctp:72
 #: View/Elements/circle_list_in_hamburger.ctp:64
