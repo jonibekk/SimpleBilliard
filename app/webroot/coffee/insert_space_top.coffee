@@ -7,3 +7,6 @@ insertSpaceTop = (height) ->
   $offcanvas = $('.offcanvas')
   $offcanvas.css 'top', parseInt($offcanvas.css('top')) + height + 'px'
   return
+$ ->
+  if cake.is_mb_app
+    insertSpaceTop(20)
