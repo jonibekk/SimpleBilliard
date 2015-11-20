@@ -203,7 +203,8 @@
             <?php endif; ?>
             <?php if (defined('INTERCOM_APP_ID') && INTERCOM_APP_ID): ?>
                 <li class="header-nav-function-contents-list">
-                    <a href="#" class="header-nav-function-contents-feedback"><?= __d('gl', 'お問い合わせ') ?></a>
+                    <a href="mailto:<?= INTERCOM_APP_ID ?>@incoming.intercom.io"
+                       class="header-nav-function-contents-feedback"><?= __d('gl', 'お問い合わせ') ?></a>
                 </li>
             <?php endif; ?>
         </ul>
