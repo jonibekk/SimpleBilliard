@@ -25,7 +25,7 @@
         </div>
         <div
             class="parent-flash <?= (isset($hidden_sidebar_xxs) && $hidden_sidebar_xxs) ? "col-xxs-12 col-xs-9" : "col-xs-9" ?> "
-            role="main">
+            role="main" id="ScrollSpyContents">
             <?= $this->Session->flash(); ?>
             <?= $this->fetch('content'); ?>
         </div>

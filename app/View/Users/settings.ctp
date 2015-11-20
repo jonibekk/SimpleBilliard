@@ -13,7 +13,7 @@ $this->set('hidden_sidebar_xxs', true);
 ?>
 <!-- START app/View/Users/settings.ctp -->
 <?php $this->start('sidebar') ?>
-<div class="sidebar-setting" role="complementary">
+<div class="sidebar-setting" role="complementary" id="SidebarSetting">
     <ul class="nav">
         <li class="active"><a href="#account"><?= __d('gl', "アカウント") ?></a></li>
         <li class=""><a href="#profile"><?= __d('gl', "プロフィール") ?></a></li>
