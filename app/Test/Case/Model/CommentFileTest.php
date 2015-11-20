@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('CommentFile', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('CommentFile', 'Model');
  *
  * @property CommentFile $CommentFile
  */
-class CommentFileTest extends CakeTestCase
+class CommentFileTest extends GoalousTestCase
 {
 
     /**
@@ -85,6 +85,7 @@ class CommentFileTest extends CakeTestCase
 
         parent::tearDown();
     }
+
     function testDummy()
     {
     }

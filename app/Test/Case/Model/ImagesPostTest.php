@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('PostsImage', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('PostsImage', 'Model');
  *
  * @property mixed ImagesPost
  */
-class ImagesPostTest extends CakeTestCase
+class ImagesPostTest extends GoalousTestCase
 {
 
     /**

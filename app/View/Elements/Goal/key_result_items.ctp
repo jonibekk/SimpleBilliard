@@ -30,8 +30,7 @@ if (isset($key_results[key($key_results)]['KeyResult'])) {
 <!-- START app/View/Elements/Goal/key_result_items.ctp -->
 <?php
 if ($is_init) {
-    //初期表示の場合は最大２件
-    $limit_count = 2;
+    $limit_count = MY_GOAL_AREA_FIRST_VIEW_KR_COUNT;
     $count = 1;
 }
 ?>

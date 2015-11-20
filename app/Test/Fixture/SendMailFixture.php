@@ -2,7 +2,6 @@
 
 /**
  * SendMailFixture
-
  */
 class SendMailFixture extends CakeTestFixture
 {
@@ -24,10 +23,10 @@ class SendMailFixture extends CakeTestFixture
         'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'メール送信を追加した日付時刻'),
         'modified'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'メール送信を更新した日付時刻'),
         'indexes'         => array(
-            'PRIMARY'         => array('column' => 'id', 'unique' => 1),
-            'from_user_id'    => array('column' => 'from_user_id', 'unique' => 0),
-            'team_id'         => array('column' => 'team_id', 'unique' => 0),
-            'del_flg'         => array('column' => 'del_flg', 'unique' => 0),
+            'PRIMARY'      => array('column' => 'id', 'unique' => 1),
+            'from_user_id' => array('column' => 'from_user_id', 'unique' => 0),
+            'team_id'      => array('column' => 'team_id', 'unique' => 0),
+            'del_flg'      => array('column' => 'del_flg', 'unique' => 0),
         ),
         'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );

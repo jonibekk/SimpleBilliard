@@ -2,7 +2,6 @@
 
 /**
  * ThreadFixture
-
  */
 class ThreadFixture extends CakeTestFixture
 {

@@ -4,9 +4,9 @@ App::uses('AppModel', 'Model');
 /**
  * SendMailToUser Model
  *
- * @property SendMail     $SendMail
- * @property User         $User
- * @property Team         $Team
+ * @property SendMail $SendMail
+ * @property User     $User
+ * @property Team     $Team
  */
 class SendMailToUser extends AppModel
 {

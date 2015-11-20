@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('OauthToken', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('OauthToken', 'Model');
  *
  * @property mixed OauthToken
  */
-class OauthTokenTest extends CakeTestCase
+class OauthTokenTest extends GoalousTestCase
 {
 
     /**

@@ -2,7 +2,6 @@
 
 /**
  * GroupVisionFixture
-
  */
 class GroupVisionFixture extends CakeTestFixture
 {

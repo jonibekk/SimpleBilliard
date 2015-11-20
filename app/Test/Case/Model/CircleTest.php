@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('Circle', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('Circle', 'Model');
  *
  * @property Circle $Circle
  */
-class CircleTest extends CakeTestCase
+class CircleTest extends GoalousTestCase
 {
 
     /**
@@ -71,11 +71,18 @@ class CircleTest extends CakeTestCase
             }
         }
 
+        $this->Circle->getPublicCircles($type = 'joined', 1, 100000000000);
         $this->Circle->getPublicCircles($type = 'joined');
         $this->Circle->getPublicCircles($type = 'non-joined');
         $this->Circle->my_uid = 2;
         $this->Circle->getPublicCircles($type = 'joined');
         $this->Circle->getPublicCircles($type = 'non-joined');
+    }
+
+    function testAddEmpty()
+    {
+        $this->_setDefault();
+        $this->assertFalse($this->Circle->add([]));
     }
 
     public function testAddCircles()
@@ -85,6 +92,7 @@ class CircleTest extends CakeTestCase
             'Circle' => [
                 'name'       => 'test',
                 'public_flg' => true,
+                'members'    => 'user_1,user_2,user_3',
             ]
         ];
         $res = $this->Circle->add($data);
@@ -155,6 +163,29 @@ class CircleTest extends CakeTestCase
 
         $circles = $this->Circle->edit([]);
         $this->assertFalse($circles);
+    }
+
+    function testEditSuccess()
+    {
+        $this->_setDefault();
+        $data = [
+            'Circle' => [
+                'name'         => 'test',
+                'public_flg'   => true,
+                'members'      => 'user_1,user_2,user_3',
+                'team_all_flg' => 1,
+            ]
+        ];
+        $this->Circle->add($data);
+
+        $edit_data = [
+            'Circle' => [
+                'id'         => $this->Circle->getLastInsertID(),
+                'name'       => 'test',
+                'public_flg' => true,
+            ]
+        ];
+        $this->assertNotEmpty($this->Circle->edit($edit_data));
     }
 
     function testAddMember()

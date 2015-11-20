@@ -47,7 +47,9 @@ class CirclesController extends AppController
     {
         $circle_id = $this->request->params['named']['circle_id'];
         $this->_ajaxPreProcess();
-        $this->request->data = $this->Circle->getEditData($circle_id);
+        $this->request->data = $this->Circle->findById($circle_id);
+        $this->request->data['Circle']['members'] = null;
+
         $circle_members = $this->Circle->CircleMember->getMembers($circle_id, true);
         $this->set('circle_members', $circle_members);
         //htmlレンダリング結果
@@ -187,6 +189,8 @@ class CirclesController extends AppController
         }
         $this->request->allowMethod('post');
         $this->Circle->delete();
+        //サークル削除時はユーザ数によってキャッシュ削除の処理が重くなるため、user_data全て削除
+        Cache::clear(false, 'user_data');
         $this->Pnotify->outSuccess(__d('gl', "サークルを削除しました。"));
         $this->redirect($this->referer());
     }
@@ -230,6 +234,7 @@ class CirclesController extends AppController
 
     /**
      * サークルの 参加/不参加 切り替え
+     *
      * @return CakeResponse
      */
     public function ajax_join_circle()
@@ -301,6 +306,9 @@ class CirclesController extends AppController
             return $this->_ajaxGetResponse($this->_makeEditErrorResult(__d('gl', "処理中にエラーが発生しました。")));
         }
 
+        Cache::delete($this->Circle->getCacheKey(CACHE_KEY_MY_CIRCLE_LIST, true,
+                                                 $this->request->data['CircleMember']['user_id']), 'user_data');
+
         // 処理成功
         $result = [
             'error'       => false,
@@ -347,6 +355,8 @@ class CirclesController extends AppController
         if (!$res) {
             return $this->_ajaxGetResponse($this->_makeEditErrorResult(__d('gl', "処理中にエラーが発生しました。")));
         }
+        Cache::delete($this->Circle->getCacheKey(CACHE_KEY_MY_CIRCLE_LIST, true,
+                                                 $this->request->data['CircleMember']['user_id']), 'user_data');
 
         // 処理成功
         $result = [

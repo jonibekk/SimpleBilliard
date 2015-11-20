@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('Evaluation', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('Evaluation', 'Model');
  *
  * @property Evaluation $Evaluation
  */
-class EvaluationTest extends CakeTestCase
+class EvaluationTest extends GoalousTestCase
 {
 
     /**
@@ -883,7 +883,8 @@ class EvaluationTest extends CakeTestCase
         $this->_saveEvaluations();
         $expectedEvaluatorId = 2;
 
-        $nextEvaluatorId = $this->Evaluation->getNextEvaluatorId($this->Evaluation->EvaluateTerm->getCurrentTermData(), 1);
+        $nextEvaluatorId = $this->Evaluation->getNextEvaluatorId($this->Evaluation->EvaluateTerm->getCurrentTermData(),
+                                                                 1);
         $this->assertEquals($nextEvaluatorId, $expectedEvaluatorId);
     }
 
@@ -907,7 +908,8 @@ class EvaluationTest extends CakeTestCase
         $res = $this->Evaluation->find('first', $options);
         $lastEvaluator = $res['Evaluation']['evaluator_user_id'];
 
-        $nextEvaluatorId = $this->Evaluation->getNextEvaluatorId($this->Evaluation->EvaluateTerm->getCurrentTermData(), $lastEvaluator);
+        $nextEvaluatorId = $this->Evaluation->getNextEvaluatorId($this->Evaluation->EvaluateTerm->getCurrentTermData(),
+                                                                 $lastEvaluator);
         $this->assertEquals($nextEvaluatorId, null);
     }
 
@@ -971,7 +973,8 @@ class EvaluationTest extends CakeTestCase
         $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $this->_saveEvaluations();
         $evaluatorId = 2;
-        $this->Evaluation->getEvaluateesByEvaluator($this->Evaluation->EvaluateTerm->getCurrentTermData(), $evaluatorId);
+        $this->Evaluation->getEvaluateesByEvaluator($this->Evaluation->EvaluateTerm->getCurrentTermData(),
+                                                    $evaluatorId);
     }
 
     function testGetIncompleteOneselfEvaluators()

@@ -11,8 +11,8 @@
  */
 ?>
 <!-- START app/View/Elements/modal_public_circles.ctp -->
-<div class="modal-dialog">
-    <div class="modal-content">
+<div class="modal-dialog modal-public-circles-dialog">
+    <div class="modal-content modal-public-circles-contents">
         <div class="modal-header none-border">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span class="close-icon">&times;</span></button>
             <?php

@@ -2,7 +2,6 @@
 
 /**
  * CircleFixture
-
  */
 class CircleFixture extends CakeTestFixture
 {

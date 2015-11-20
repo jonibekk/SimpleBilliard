@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('SubscribeEmail', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('SubscribeEmail', 'Model');
  *
  * @property SubscribeEmail $SubscribeEmail
  */
-class SubscribeEmailTest extends CakeTestCase
+class SubscribeEmailTest extends GoalousTestCase
 {
 
     /**

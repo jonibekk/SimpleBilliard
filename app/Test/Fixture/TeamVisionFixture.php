@@ -2,7 +2,6 @@
 
 /**
  * TeamVisionFixture
-
  */
 class TeamVisionFixture extends CakeTestFixture
 {

@@ -6,6 +6,7 @@
  * Time: 19:58
  *
  * @var CodeCompletionView $this
+ * @var                    $action_count
  */
 ?>
 <!-- START app/View/Elements/dashboard_profile_card.ctp -->
@@ -28,21 +29,15 @@
             <div class="dashboardProfileCard-point">
                 <div class="text-align_c">
                     <div class="inline-block">
-                         <span class="dashboardProfileCard-score font_bold font_33px ml_8px" id="CountActionByMe"></span>
+                        <span class="dashboardProfileCard-score font_bold font_33px ml_8px"
+                              id="CountActionByMe"><?= $action_count ?></span>
                     </div>
-                    <div class="ml_8px mt_6px"><i class="fa fa-check-circle mr_2px font_brownRed font_12px"></i><?= __d('gl', "アクション") ?></div>
+                    <div class="ml_8px mt_6px"><i
+                            class="fa fa-check-circle mr_2px font_brownRed font_12px"></i><?= __d('gl', "アクション") ?>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<?php $this->append('script') ?>
-<script type="text/javascript">
-    $(document).ready(function () {
-        ajaxAppendCount('CountPostByMe', "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_get_post_count'])?>");
-        ajaxAppendCount('CountActionByMe', "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_get_action_count'])?>");
-    });
-</script>
-<?php $this->end() ?>
-
 <!-- END app/View/Elements/dashboard_profile_card.ctp -->

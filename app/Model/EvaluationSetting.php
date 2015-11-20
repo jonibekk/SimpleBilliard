@@ -251,7 +251,13 @@ class EvaluationSetting extends AppModel
                 'team_id' => $this->current_team_id
             ]
         ];
-        $this->evaluation_setting = $this->find('first', $options);
+        $model = $this;
+        $this->evaluation_setting = Cache::remember(
+            $this->getCacheKey(CACHE_KEY_TEAM_EVAL_SETTING, false),
+            function () use ($model, $options) {
+                return $model->find('first', $options);
+            }, 'team_info');
+
         if (empty($this->evaluation_setting)) {
             $this->not_exists_evaluation_setting = true;
         }

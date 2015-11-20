@@ -2,7 +2,6 @@
 
 /**
  * EvaluateScoreFixture
-
  */
 class EvaluateScoreFixture extends CakeTestFixture
 {

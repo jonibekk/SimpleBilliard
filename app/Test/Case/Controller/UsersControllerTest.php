@@ -1,11 +1,11 @@
-<?php
+<?php App::uses('GoalousControllerTestCase', 'Test');
 App::uses('UsersController', 'Controller');
 
 /**
  * UsersController Test Case
- * @method testAction($url = '', $options = array()) ControllerTestCase::_testAction
+ * @method testAction($url = '', $options = array()) GoalousControllerTestCase::_testAction
  */
-class UsersControllerTest extends ControllerTestCase
+class UsersControllerTest extends GoalousControllerTestCase
 {
 
     /**
@@ -1720,24 +1720,6 @@ class UsersControllerTest extends ControllerTestCase
         /** @noinspection PhpUndefinedFieldInspection */
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/users/ajax_get_select2_circle_user_all', ['method' => 'GET']);
-        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
-    }
-
-    function testAjaxGetPostCount()
-    {
-        $this->_getUsersCommonMock();
-
-        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/users/ajax_get_post_count/', ['method' => 'GET']);
-        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
-    }
-
-    function testAjaxGetActionCount()
-    {
-        $this->_getUsersCommonMock();
-
-        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
-        $this->testAction('/users/ajax_get_action_count/', ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 

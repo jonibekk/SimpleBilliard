@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('EvaluateTerm', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('EvaluateTerm', 'Model');
  *
  * @property EvaluateTerm $EvaluateTerm
  */
-class EvaluateTermTest extends CakeTestCase
+class EvaluateTermTest extends GoalousTestCase
 {
 
     /**
@@ -38,7 +38,6 @@ class EvaluateTermTest extends CakeTestCase
     public function tearDown()
     {
         unset($this->EvaluateTerm);
-
         parent::tearDown();
     }
 
@@ -160,6 +159,9 @@ class EvaluateTermTest extends CakeTestCase
         $this->assertNotEmpty($next_1);
         $next_2 = $this->EvaluateTerm->getTermData(EvaluateTerm::TYPE_NEXT);
         $this->assertNotEmpty($next_2);
+        $this->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_NEXT);
+        $next_3 = $this->EvaluateTerm->getTermData(EvaluateTerm::TYPE_NEXT);
+        $this->assertNotEmpty($next_3);
         $this->EvaluateTerm->create();
         $this->EvaluateTerm->save([
                                       'start_date' => $current_2['start_date'] - 2678400,
@@ -172,6 +174,9 @@ class EvaluateTermTest extends CakeTestCase
         $this->assertNotEmpty($previous1);
         $previous2 = $this->EvaluateTerm->getTermData(EvaluateTerm::TYPE_PREVIOUS);
         $this->assertNotEmpty($previous2);
+        $this->EvaluateTerm->resetTermProperty(EvaluateTerm::TYPE_PREVIOUS);
+        $previous3 = $this->EvaluateTerm->getTermData(EvaluateTerm::TYPE_PREVIOUS);
+        $this->assertNotEmpty($previous3);
     }
 
     function testGetTermId()

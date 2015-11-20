@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('Email', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('Email', 'Model');
  *
  * @property Email $Email
  */
-class EmailTest extends CakeTestCase
+class EmailTest extends GoalousTestCase
 {
 
     /**
@@ -63,28 +63,28 @@ class EmailTest extends CakeTestCase
     public function testEmailValidations()
     {
         $this->assertFalse(
-             $this->getValidationRes(['email' => '']),
-             "[異常系]メールアドレスは空を受け付けない"
+            $this->getValidationRes(['email' => '']),
+            "[異常系]メールアドレスは空を受け付けない"
         );
         $this->assertTrue(
-             $this->getValidationRes(['email' => 'xxx@aaa.com']),
-             "[正常系]メールアドレスとして正しいか"
+            $this->getValidationRes(['email' => 'xxx@aaa.com']),
+            "[正常系]メールアドレスとして正しいか"
         );
         $this->assertFalse(
-             $this->getValidationRes(['email' => 'xxxaaa.com']),
-             "[異常系]メールアドレスとして正しいか"
+            $this->getValidationRes(['email' => 'xxxaaa.com']),
+            "[異常系]メールアドレスとして正しいか"
         );
         $this->assertFalse(
-             $this->getValidationRes(['email' => 'xxxaaa.comaaaa']),
-             "[異常系]メールアドレスとして正しいか"
+            $this->getValidationRes(['email' => 'xxxaaa.comaaaa']),
+            "[異常系]メールアドレスとして正しいか"
         );
         $this->assertFalse(
-             $this->getValidationRes(['email' => 'xxxaaacomaaaa']),
-             "[異常系]メールアドレスとして正しいか"
+            $this->getValidationRes(['email' => 'xxxaaacomaaaa']),
+            "[異常系]メールアドレスとして正しいか"
         );
         $this->assertFalse(
-             $this->getValidationRes(['email' => 'xxx@aaa.com,xxx@aaa.com']),
-             "[異常系]メールアドレスとして正しいか"
+            $this->getValidationRes(['email' => 'xxx@aaa.com,xxx@aaa.com']),
+            "[異常系]メールアドレスとして正しいか"
         );
     }
 

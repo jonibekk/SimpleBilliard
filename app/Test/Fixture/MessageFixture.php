@@ -2,7 +2,6 @@
 
 /**
  * MessageFixture
-
  */
 class MessageFixture extends CakeTestFixture
 {

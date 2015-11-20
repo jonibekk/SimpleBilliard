@@ -7,9 +7,9 @@ App::uses('View', 'View');
 /**
  * TeamVision Model
  *
- * @property User       $CreateUser
- * @property User       $ModifyUser
- * @property Team       $Team
+ * @property User $CreateUser
+ * @property User $ModifyUser
+ * @property Team $Team
  */
 class TeamVision extends AppModel
 {
@@ -88,23 +88,38 @@ class TeamVision extends AppModel
         }
         $data['TeamVision']['modify_user_id'] = $this->my_uid;
         $res = $this->save($data);
+        Cache::delete($this->getCacheKey(CACHE_KEY_TEAM_VISION, false), 'team_info');
         return $res;
     }
 
     function getTeamVision($team_id, $active_flg)
     {
+        $is_default = false;
+        if ($team_id === $this->current_team_id && $active_flg) {
+            $is_default = true;
+            $res = Cache::read($this->getCacheKey(CACHE_KEY_TEAM_VISION, false), 'team_info');
+            if ($res !== false) {
+                return $res;
+            }
+        }
+
         $options = [
             'conditions' => [
                 'team_id'    => $team_id,
                 'active_flg' => $active_flg
             ]
         ];
-        return $this->find('all', $options);
+        $res = $this->find('all', $options);
+        if ($is_default) {
+            Cache::write($this->getCacheKey(CACHE_KEY_TEAM_VISION, false), $res, 'team_info');
+        }
+        return $res;
     }
 
     function setTeamVisionActiveFlag($team_vision_id, $active_flg)
     {
         $this->id = $team_vision_id;
+        Cache::delete($this->getCacheKey(CACHE_KEY_TEAM_VISION, false), 'team_info');
         return $this->save(['active_flg' => $active_flg]);
     }
 
@@ -134,6 +149,7 @@ class TeamVision extends AppModel
     function deleteTeamVision($team_vision_id)
     {
         $this->id = $team_vision_id;
+        Cache::delete($this->getCacheKey(CACHE_KEY_TEAM_VISION, false), 'team_info');
         return $this->delete();
     }
 
@@ -157,12 +173,18 @@ class TeamVision extends AppModel
         $team_visions = Hash::extract($this->getTeamVision($this->current_team_id, true), '{n}.TeamVision');
         $team_visions = Hash::insert($team_visions, '{n}.target_name', $team_name);
         $team_visions = Hash::insert($team_visions, '{n}.model', 'TeamVision');
-        $my_group_list = $this->Team->Group->MemberGroup->getMyGroupList();
-        $group_visions = Hash::extract($this->Team->GroupVision->getGroupVisionsByGroupIds(array_keys($my_group_list)),
-                                       '{n}.GroupVision');
-        foreach ($group_visions as $k => $v) {
-            $group_visions[$k]['target_name'] = isset($my_group_list[$v['group_id']]) ? $my_group_list[$v['group_id']] : null;
-        }
+        ClassRegistry::init('GroupVision');
+        $model = $this;
+        $group_visions = Cache::remember($this->getCacheKey(CACHE_KEY_GROUP_VISION, true),
+            function () use ($model) {
+                $my_group_list = $model->Team->Group->MemberGroup->getMyGroupList();
+                $group_visions = Hash::extract($model->Team->GroupVision->getGroupVisionsByGroupIds(array_keys($my_group_list)),
+                                               '{n}.GroupVision');
+                foreach ($group_visions as $k => $v) {
+                    $group_visions[$k]['target_name'] = isset($my_group_list[$v['group_id']]) ? $my_group_list[$v['group_id']] : null;
+                }
+                return $group_visions;
+            }, 'team_info');
         $group_visions = Hash::insert($group_visions, '{n}.model', 'GroupVision');
         $visions = array_merge($team_visions, $group_visions);
         if (empty($visions)) {

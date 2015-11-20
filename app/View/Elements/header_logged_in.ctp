@@ -31,7 +31,7 @@
             </button>
             <div class="navbar-offcanvas offcanvas navmenu-fixed-left top_50px">
                 <ul class="nav navbar-nav">
-                    <li class="mtb_5px mtb-sm_0">
+                    <li class="<?= $is_mb_app ? "mtb_15px" : "mtb_5px" ?> mtb-sm_0">
                         <a class="header-logo header_l-icons hoverPic <?= $current_global_menu == "home" ? "activeColumn" : null ?>"
                            href="<?= $this->Html->url('/') ?>"><!--suppress HtmlUnknownTarget -->
                             <div class="ta-sm_c">
@@ -45,7 +45,7 @@
                             </div>
                         </a>
                     </li>
-                    <li class="mtb_5px mtb-sm_0">
+                    <li class="<?= $is_mb_app ? "mtb_15px" : "mtb_5px" ?> mtb-sm_0">
                         <a class="header-goal header_l-icons <?= $current_global_menu == "goal" ? "activeColumn" : null ?>"
                            href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'index']) ?>">
                             <div class="ta-sm_c">
@@ -58,7 +58,7 @@
                             </div>
                         </a>
                     </li>
-                    <li class="mtb_5px mtb-sm_0 <?= !empty($my_teams) ? null : 'hidden' ?>">
+                    <li class="<?= $is_mb_app ? "mtb_15px" : "mtb_5px" ?> mtb-sm_0 <?= !empty($my_teams) ? null : 'hidden' ?>">
 
                         <a class="header-team header_l-icons <?= $current_global_menu == "team" ? "activeColumn" : null ?>"
                            href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'main']) ?>">
@@ -137,7 +137,7 @@
                 </ul>
             </div>
             <?php
-                echo $this->element('header_logged_in_right')
+            echo $this->element('header_logged_in_right')
             ?>
         </div>
     </div>

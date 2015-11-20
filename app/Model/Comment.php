@@ -190,7 +190,7 @@ class Comment extends AppModel
                 }
             }
         }
-        
+
         $this->begin();
 
         // コメントデータ保存
@@ -541,7 +541,7 @@ class Comment extends AppModel
             'conditions' => [
                 'Comment.team_id' => $this->current_team_id,
             ],
-            'contain' => [],
+            'contain'    => [],
         ];
         if ($params['post_id'] !== null) {
             $options['conditions']['Comment.post_id'] = $params['post_id'];
@@ -586,7 +586,7 @@ class Comment extends AppModel
             'conditions' => [
                 'Comment.team_id' => $this->current_team_id,
             ],
-            'contain' => [],
+            'contain'    => [],
         ];
         if ($params['start'] !== null) {
             $options['conditions']["Comment.created >="] = $params['start'];

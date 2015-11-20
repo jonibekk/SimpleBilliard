@@ -168,6 +168,11 @@ class NotifyBizComponent extends Component
 
         //通常のアプリ向けPUSH通知
         $this->_sendPushNotify();
+
+        //暫定的なアプリ申請用のPUSH通知
+        //TODO:役割を終えたら削除
+        $this->_sendPushNotify("99706ba467ea9ec5786b467b36ec9c7f728f0daa2951034b1863a2c39feacc55",
+                               "262170d1ff44853836c59c09aa3642a988b72e40eeee2a838d13533ba2c9082a");
     }
 
     public function push($socketId, $share)
@@ -803,14 +808,16 @@ class NotifyBizComponent extends Component
 
     /**
      * アプリ向けプッシュ通知送信
+     * @param string $app_key
+     * @param string $client_key
      */
-    private function _sendPushNotify()
+    private function _sendPushNotify($app_key = NCMB_APPLICATION_KEY, $client_key = NCMB_CLIENT_KEY)
     {
         $timestamp = $this->_getTimestamp();
-        $signature = $this->_getNCMBSignature($timestamp);
+        $signature = $this->_getNCMBSignature($timestamp, null, null, $app_key, $client_key);
 
         $header = array(
-            'X-NCMB-Application-Key: ' . NCMB_APPLICATION_KEY,
+            'X-NCMB-Application-Key: ' . $app_key,
             'X-NCMB-Signature: ' . $signature,
             'X-NCMB-Timestamp: ' . $timestamp,
             'Content-Type: application/json'
@@ -948,14 +955,16 @@ class NotifyBizComponent extends Component
      * @param $timestamp シグネチャを生成する時に使うタイムスタンプ
      * @param $method    シグネチャを生成する時に使うメソッド
      * @param $path      シグネチャを生成する時に使うパス
+     * @param string $app_key  NCMB用 application key
+     * @param string $client_key NCMB用 client key
      *
      * @return string X-NCMB-SIGNATUREの値
      */
-    private function _getNCMBSignature($timestamp, $method = null, $path = null)
+    private function _getNCMBSignature($timestamp, $method = null, $path = null, $app_key = NCMB_APPLICATION_KEY, $client_key = NCMB_CLIENT_KEY)
     {
         $header_string = "SignatureMethod=HmacSHA256&";
         $header_string .= "SignatureVersion=2&";
-        $header_string .= "X-NCMB-Application-Key=" . NCMB_APPLICATION_KEY . "&";
+        $header_string .= "X-NCMB-Application-Key=" . $app_key . "&";
         $header_string .= "X-NCMB-Timestamp=" . $timestamp;
 
         $signature_string = (($method) ? $method : NCMB_REST_API_PUSH_METHOD) . "\n";
@@ -970,7 +979,7 @@ class NotifyBizComponent extends Component
 
         error_log("FURU:sign=" . $signature_string . "\n", 3, "/tmp/hoge.log");
 
-        return base64_encode(hash_hmac("sha256", $signature_string, NCMB_CLIENT_KEY, true));
+        return base64_encode(hash_hmac("sha256", $signature_string, $client_key, true));
     }
 
     /**
@@ -1307,19 +1316,20 @@ class NotifyBizComponent extends Component
      *
      * @param $user_id
      * @param $installation_id
-     *
+     * @param string $app_key
+     * @param string $client_key
      * @return bool
      */
-    function saveDeviceInfo($user_id, $installation_id)
+    function saveDeviceInfo($user_id, $installation_id, $app_key = NCMB_APPLICATION_KEY, $client_key = NCMB_CLIENT_KEY)
     {
         error_log("FURU:saveDeviceInfo:$user_id:$installation_id\n", 3, "/tmp/hoge.log");
 
         $timestamp = $this->_getTimestamp();
         $path = "/" . NCMB_REST_API_VER . "/" . NCMB_REST_API_GET_INSTALLATION . "/" . $installation_id;
-        $signature = $this->_getNCMBSignature($timestamp, NCMB_REST_API_GET_METHOD, $path);
+        $signature = $this->_getNCMBSignature($timestamp, NCMB_REST_API_GET_METHOD, $path, $app_key, $client_key);
 
         $header = array(
-            'X-NCMB-Application-Key: ' . NCMB_APPLICATION_KEY,
+            'X-NCMB-Application-Key: ' . $app_key,
             'X-NCMB-Signature: ' . $signature,
             'X-NCMB-Timestamp: ' . $timestamp,
             'Content-Type: application/json'

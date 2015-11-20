@@ -59,73 +59,6 @@ class PostShareCircle extends AppModel
         return $this->saveAll($data);
     }
 
-    public function getMyCirclePostList($start, $end, $order = "modified", $order_direction = "desc", $limit = 1000, $my_circle_list = null, $share_type = null)
-    {
-        if (!$my_circle_list) {
-            $my_circle_list = $this->Circle->CircleMember->getMyCircleList(true);
-        }
-        $backupPrimaryKey = $this->primaryKey;
-        $this->primaryKey = 'post_id';
-        $options = [
-            'conditions' => [
-                'circle_id'                => $my_circle_list,
-                'team_id'                  => $this->current_team_id,
-                'modified BETWEEN ? AND ?' => [$start, $end],
-            ],
-            'order'      => [$order => $order_direction],
-            'limit'      => $limit,
-            'fields'     => ['post_id'],
-        ];
-        if ($share_type !== null) {
-            $options['conditions']['share_type'] = $share_type;
-        }
-        $res = $this->find('list', $options);
-        $this->primaryKey = $backupPrimaryKey;
-        return $res;
-    }
-
-    /**
-     * 自分の閲覧可能な投稿のID一覧を返す
-     * （公開サークルへの投稿 + 自分が所属している秘密サークルへの投稿）
-     *
-     * @param        $start
-     * @param        $end
-     * @param string $order
-     * @param string $order_direction
-     * @param int    $limit
-     * @param array  $params
-     *                 'user_id' : 指定すると投稿者IDで絞る
-     *
-     * @return array|null
-     */
-    public function getAccessibleCirclePostList($start, $end, $order = "PostShareCircle.modified", $order_direction = "desc", $limit = 1000, array $params = [])
-    {
-        // パラメータデフォルト
-        $params = array_merge(['user_id' => null], $params);
-
-        $my_circle_list = $this->Circle->CircleMember->getMyCircleList();
-        $options = [
-            'conditions' => [
-                'OR'                                       => [
-                    'PostShareCircle.circle_id' => $my_circle_list,
-                    'Circle.public_flg'         => 1
-                ],
-                'PostShareCircle.team_id'                  => $this->current_team_id,
-                'PostShareCircle.modified BETWEEN ? AND ?' => [$start, $end],
-            ],
-            'order'      => [$order => $order_direction],
-            'limit'      => $limit,
-            'fields'     => ['PostShareCircle.post_id', 'PostShareCircle.post_id'],
-            'contain'    => ['Circle'],
-        ];
-        if ($params['user_id'] !== null) {
-            $options['conditions']['Post.user_id'] = $params['user_id'];
-            $options['contain'][] = 'Post';
-        }
-        $res = $this->find('list', $options);
-        return $res;
-    }
-
     public function isMyCirclePost($post_id)
     {
         $my_circle_list = $this->Circle->CircleMember->getMyCircleList();
@@ -295,6 +228,7 @@ class PostShareCircle extends AppModel
         $res = $this->find('first', $options);
         return isset($res[0]['cnt']) ? intval($res[0]['cnt']) : 0;
     }
+
     /**
      * サークルへの投稿にいいねしたユーザーのリストを返す
      *

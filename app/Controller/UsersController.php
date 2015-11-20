@@ -104,6 +104,11 @@ class UsersController extends AppController
         error_log("FURU:ins_id:$installation_id\n", 3, "/tmp/hoge.log");
         if (!empty($installation_id)) {
             $this->NotifyBiz->saveDeviceInfo($user_id, $installation_id);
+            //暫定的なappstore申請用アプリの通知登録処理
+            //TODO:役割を終えたら削除
+            $this->NotifyBiz->saveDeviceInfo($user_id, $installation_id,
+                                             "99706ba467ea9ec5786b467b36ec9c7f728f0daa2951034b1863a2c39feacc55",
+                                             "262170d1ff44853836c59c09aa3642a988b72e40eeee2a838d13533ba2c9082a");
         }
 
         $is_2fa_auth_enabled = true;
@@ -998,6 +1003,8 @@ class UsersController extends AppController
         $this->Circle->CircleMember->joinNewMember($teamAllCircle['Circle']['id']);
         $this->Circle->current_team_id = $tmp;
         $this->Circle->CircleMember->current_team_id = $tmp;
+        //cache削除
+        Cache::delete($this->Circle->CircleMember->getCacheKey(CACHE_KEY_TEAM_LIST, true, null, false), 'team_info');
         //招待者に通知
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_USER_JOINED_TO_INVITED_TEAM, $invite['Invite']['id']);
         return $this->User->TeamMember->Team->findById($invite['Invite']['team_id']);
@@ -1098,56 +1105,6 @@ class UsersController extends AppController
             return false;
         }
         $this->Session->write('current_team_id', $team_id);
-    }
-
-    /**
-     * ajaxで投稿数を取得(defaultで自分の投稿数および今期)
-     *
-     * @param string $type
-     *
-     * @return CakeResponse
-     */
-    public function ajax_get_post_count($type = "me")
-    {
-        $start_date = isset($this->request->params['named']['start_date']) ? $this->request->params['named']['start_date'] : null;
-        $end_date = isset($this->request->params['named']['end_date']) ? $this->request->params['named']['end_date'] : null;
-        if (!$start_date && !$end_date) {
-            //デフォルトで今期
-            $start_date = $this->Team->EvaluateTerm->getCurrentTermData()['start_date'];
-            $end_date = $this->Team->EvaluateTerm->getCurrentTermData()['end_date'];
-        }
-        $post_count = $this->Post->getCount($type, $start_date, $end_date);
-        $this->_ajaxPreProcess();
-
-        $result = [
-            'count' => $post_count
-        ];
-        return $this->_ajaxGetResponse($result);
-    }
-
-    /**
-     * ajaxでアクション数を取得(defaultで自分のアクション数および今期)
-     *
-     * @param string $type
-     *
-     * @return CakeResponse
-     */
-    public function ajax_get_action_count($type = "me")
-    {
-        $start_date = isset($this->request->params['named']['start_date']) ? $this->request->params['named']['start_date'] : null;
-        $end_date = isset($this->request->params['named']['end_date']) ? $this->request->params['named']['end_date'] : null;
-        if (!$start_date && !$end_date) {
-            //デフォルトで今期
-            $start_date = $this->Team->EvaluateTerm->getCurrentTermData()['start_date'];
-            $end_date = $this->Team->EvaluateTerm->getCurrentTermData()['end_date'];
-        }
-        $action_count = $this->Goal->ActionResult->getCount($type, $start_date, $end_date);
-        $this->_ajaxPreProcess();
-
-        $result = [
-            'count' => $action_count
-        ];
-        return $this->_ajaxGetResponse($result);
     }
 
     public function ajax_get_user_detail($user_id)

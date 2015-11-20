@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('MemberGroup', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('MemberGroup', 'Model');
  *
  * @property MemberGroup $MemberGroup
  */
-class MemberGroupTest extends CakeTestCase
+class MemberGroupTest extends GoalousTestCase
 {
 
     /**
@@ -115,8 +115,8 @@ class MemberGroupTest extends CakeTestCase
     function testGetMyGroupListNotExistsVisionEmpty()
     {
         $this->_setDefault();
-        $this->MemberGroup->Group->deleteAll(['Group.team_id'=>1]);
-        $this->MemberGroup->deleteAll(['MemberGroup.team_id'=>1]);
+        $this->MemberGroup->Group->deleteAll(['Group.team_id' => 1]);
+        $this->MemberGroup->deleteAll(['MemberGroup.team_id' => 1]);
         $this->_saveGroup();
         $group_id = $this->MemberGroup->Group->getLastInsertID();
         $this->MemberGroup->Group->GroupVision->save(

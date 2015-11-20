@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('Thread', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('Thread', 'Model');
  *
  * @property mixed Thread
  */
-class ThreadTest extends CakeTestCase
+class ThreadTest extends GoalousTestCase
 {
 
     /**

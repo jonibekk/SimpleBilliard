@@ -103,7 +103,7 @@ class AppModel extends Model
         $this->me = $Session->read('Auth.User');
         $this->current_team_id = $Session->read('current_team_id');
         $this->my_uid = $Session->read('Auth.User.id');
-        if($Session->read('Auth.User.language')){
+        if ($Session->read('Auth.User.language')) {
             Configure::write('Config.language', $Session->read('Auth.User.language'));
         }
     }
@@ -245,7 +245,7 @@ class AppModel extends Model
     /**
      * Generate token used by the user registration system
      *
-     * @param int $length Token Length
+     * @param int    $length Token Length
      * @param string $possible
      *
      * @return string
@@ -437,6 +437,30 @@ class AppModel extends Model
             return true;
         }
         return false;
+    }
+
+    /**
+     * キャッシュ用のキーを返却
+     *
+     * @param string     $name
+     * @param bool|false $is_user_data
+     * @param null       $user_id
+     * @param bool       $with_team_id
+     *
+     * @return string
+     */
+    function getCacheKey($name, $is_user_data = false, $user_id = null, $with_team_id = true)
+    {
+        if ($with_team_id) {
+            $name .= ":team:" . $this->current_team_id;
+        }
+        if ($is_user_data) {
+            if (!$user_id) {
+                $user_id = $this->my_uid;
+            }
+            $name .= ":user:" . $user_id;
+        }
+        return $name;
     }
 
 }

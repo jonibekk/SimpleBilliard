@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('TeamMember', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('TeamMember', 'Model');
  *
  * @property TeamMember $TeamMember
  */
-class TeamMemberTest extends CakeTestCase
+class TeamMemberTest extends GoalousTestCase
 {
 
     /**
@@ -60,33 +60,40 @@ class TeamMemberTest extends CakeTestCase
         $uid = '1';
         $data = [
             'TeamMember' => [['user_id' => $uid,]],
-            'Team'       => [
+            'Team' => [
                 'name' => 'test'
             ]
         ];
+        $this->TeamMember->my_uid = $uid;
+        Cache::delete($this->TeamMember->getCacheKey(CACHE_KEY_TEAM_LIST, true, $uid, false), 'team_info');
         $before_cunt = count($this->TeamMember->getActiveTeamList($uid));
         $this->TeamMember->Team->saveAll($data);
         $this->TeamMember->myTeams = null;
+        Cache::delete($this->TeamMember->getCacheKey(CACHE_KEY_TEAM_LIST, true, $uid, false), 'team_info');
         $res = $this->TeamMember->getActiveTeamList($uid);
         $this->assertEquals(count($res), $before_cunt + 1);
 
         $this->TeamMember->Team->saveAll($data);
         $this->TeamMember->myTeams = null;
+        Cache::delete($this->TeamMember->getCacheKey(CACHE_KEY_TEAM_LIST, true, $uid, false), 'team_info');
         $res = $this->TeamMember->getActiveTeamList($uid);
         $this->assertEquals(count($res), $before_cunt + 2);
 
         $this->TeamMember->delete();
         $this->TeamMember->myTeams = null;
+        Cache::delete($this->TeamMember->getCacheKey(CACHE_KEY_TEAM_LIST, true, $uid, false), 'team_info');
         $res = $this->TeamMember->getActiveTeamList($uid);
         $this->assertEquals(count($res), $before_cunt + 1);
 
         $this->TeamMember->Team->saveAll($data);
         $this->TeamMember->myTeams = null;
+        Cache::delete($this->TeamMember->getCacheKey(CACHE_KEY_TEAM_LIST, true, $uid, false), 'team_info');
         $res = $this->TeamMember->getActiveTeamList($uid);
         $this->assertEquals(count($res), $before_cunt + 2);
 
         $this->TeamMember->saveField('active_flg', false);
         $this->TeamMember->myTeams = null;
+        Cache::delete($this->TeamMember->getCacheKey(CACHE_KEY_TEAM_LIST, true, $uid, false), 'team_info');
         $res = $this->TeamMember->getActiveTeamList($uid);
         $this->assertEquals(count($res), $before_cunt + 1);
 
@@ -118,11 +125,11 @@ class TeamMemberTest extends CakeTestCase
         $data = [
             'TeamMember' => [
                 [
-                    'user_id'    => $uid,
+                    'user_id' => $uid,
                     'active_flg' => false,
                 ]
             ],
-            'Team'       => [
+            'Team' => [
                 'name' => 'test'
             ]
         ];
@@ -138,11 +145,11 @@ class TeamMemberTest extends CakeTestCase
         $data = [
             'TeamMember' => [
                 [
-                    'user_id'    => $uid,
+                    'user_id' => $uid,
                     'active_flg' => true,
                 ]
             ],
-            'Team'       => [
+            'Team' => [
                 'name' => 'test'
             ]
         ];
@@ -153,20 +160,16 @@ class TeamMemberTest extends CakeTestCase
 
     function testGetWithTeam()
     {
-        $data = [
-            'TeamMember' => [
-                [
-                    'user_id'    => 1,
-                    'active_flg' => true,
-                ]
-            ],
-            'Team'       => [
-                'name' => 'test'
-            ]
-        ];
-        $this->TeamMember->Team->saveAll($data);
-        $this->TeamMember->my_uid = 1;
-        $this->TeamMember->getWithTeam();
+        $this->setDefault();
+        $res = $this->TeamMember->getWithTeam();
+        $this->assertNotEmpty($res);
+        $this->TeamMember->setMyStatusWithTeam(1, 1);
+        $res = $this->TeamMember->getWithTeam();
+        $this->assertNotEmpty($res);
+        $this->TeamMember->myStatusWithTeam = null;
+        $res = $this->TeamMember->getWithTeam();
+        $this->assertNotEmpty($res);
+
     }
 
     function testAdminCheck()
@@ -177,12 +180,12 @@ class TeamMemberTest extends CakeTestCase
         $data = [
             'TeamMember' => [
                 [
-                    'user_id'    => $uid,
+                    'user_id' => $uid,
                     'active_flg' => true,
-                    'admin_flg'  => false,
+                    'admin_flg' => false,
                 ]
             ],
-            'Team'       => [
+            'Team' => [
                 'name' => 'test'
             ]
         ];
@@ -197,17 +200,19 @@ class TeamMemberTest extends CakeTestCase
         $data = [
             'TeamMember' => [
                 [
-                    'user_id'    => $uid,
+                    'user_id' => $uid,
                     'active_flg' => true,
-                    'admin_flg'  => true,
+                    'admin_flg' => true,
                 ]
             ],
-            'Team'       => [
+            'Team' => [
                 'name' => 'test'
             ]
         ];
         $this->TeamMember->Team->saveAll($data);
-        $res = $this->TeamMember->adminCheck($this->TeamMember->Team->getLastInsertID(), $uid);
+        $this->TeamMember->current_team_id = $this->TeamMember->Team->getLastInsertID();
+        $this->TeamMember->my_uid = $uid;
+        $res = $this->TeamMember->adminCheck();
         $this->assertTrue($res, "[正常]アドミンチェック");
 
     }
@@ -222,6 +227,9 @@ class TeamMemberTest extends CakeTestCase
             ]
         ];
         $this->TeamMember->Team->save($data);
+        $res = $this->TeamMember->add($uid, $this->TeamMember->Team->id);
+        $this->assertTrue($res['TeamMember']['active_flg'], "[正常]メンバー追加でアクティブフラグon");
+        $this->assertArrayHasKey("id", $res['TeamMember'], "[正常]メンバー追加が正常に完了");
         $res = $this->TeamMember->add($uid, $this->TeamMember->Team->id);
         $this->assertTrue($res['TeamMember']['active_flg'], "[正常]メンバー追加でアクティブフラグon");
         $this->assertArrayHasKey("id", $res['TeamMember'], "[正常]メンバー追加が正常に完了");
@@ -291,9 +299,9 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => false,
+            'error' => false,
             'error_line_no' => 0,
-            'error_msg'     => null,
+            'error_msg' => null,
             'success_count' => 1,
         ];
         $this->assertEquals($excepted, $actual);
@@ -313,7 +321,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 0
         ];
         $this->assertEquals($excepted, $actual);
@@ -333,7 +341,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -351,7 +359,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 0
         ];
         $this->assertEquals($excepted, $actual);
@@ -370,7 +378,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -390,7 +398,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -409,7 +417,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -430,7 +438,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -451,7 +459,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -472,7 +480,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -493,7 +501,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -514,7 +522,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -535,7 +543,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -556,7 +564,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -577,7 +585,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -598,7 +606,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -619,7 +627,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -640,7 +648,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -661,7 +669,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -682,7 +690,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -703,7 +711,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -724,7 +732,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -745,7 +753,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -766,7 +774,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -787,7 +795,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -808,7 +816,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -829,7 +837,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -850,7 +858,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -879,7 +887,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -903,7 +911,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -933,7 +941,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -956,7 +964,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -977,7 +985,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 3
         ];
         $this->assertEquals($excepted, $actual);
@@ -992,13 +1000,13 @@ class TeamMemberTest extends CakeTestCase
         $csv_data[] = $this->getEmptyRowOnCsv();
 
         $csv_data[1] = ['aaa@aaa.com', 'abc', 'firstname', 'lastname', 'ON', 'ON', '', 'jpn', 'localfirstname', 'locallastname', '000-0000-0000', 'male', '1999', '11', '11', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', '', 'member_1', 'rater2', 'rater3', 'rater4', 'rater5', 'rater6', 'rater7',];
-        $csv_data[2] = ['aaax@aaa.com', 'member_2', 'firstname', 'lastname', 'ON', 'ON', '', 'jpn', 'localfirstname', 'locallastname', '000-0000-0000', 'male', '1999', '11', '11', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', '', 'abc', 'rater2', 'rater3', 'rater4', 'rater5', 'rater6', 'rater7',];
+        $csv_data[2] = ['aaax@aaa.com', 'member_z', 'firstname', 'lastname', 'ON', 'ON', '', 'jpn', 'localfirstname', 'locallastname', '000-0000-0000', 'male', '1999', '11', '11', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', '', 'abc', 'rater2', 'rater3', 'rater4', 'rater5', 'rater6', 'rater7',];
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -1011,16 +1019,16 @@ class TeamMemberTest extends CakeTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+            ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+            ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 0
         ];
         $this->assertEquals($excepted, $actual);
@@ -1033,13 +1041,13 @@ class TeamMemberTest extends CakeTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+            ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+            ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+            ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+            ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
 
         unset($csv_data[0]['email']);
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
@@ -1048,7 +1056,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 1
         ];
         $this->assertEquals($excepted, $actual);
@@ -1061,13 +1069,13 @@ class TeamMemberTest extends CakeTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+            ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+            ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+            ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+            ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
 
         $csv_data[0]['email'] = 'test';
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
@@ -1076,7 +1084,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 1
         ];
         $this->assertEquals($excepted, $actual);
@@ -1089,13 +1097,13 @@ class TeamMemberTest extends CakeTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+            ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+            ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+            ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+            ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
@@ -1103,7 +1111,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -1116,20 +1124,20 @@ class TeamMemberTest extends CakeTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstnamex', 'lastname', 'member_1', 'ON', 'ON', 'ON']);
+            ['from@email.com', 'firstnamex', 'lastname', 'member_1', 'ON', 'ON', 'ON']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -1142,20 +1150,20 @@ class TeamMemberTest extends CakeTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastnamex', 'member_1', 'ON', 'ON', 'ON']);
+            ['from@email.com', 'firstname', 'lastnamex', 'member_1', 'ON', 'ON', 'ON']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -1168,13 +1176,13 @@ class TeamMemberTest extends CakeTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', '', 'ON', 'ON', 'ON']);
+            ['from@email.com', 'firstname', 'lastname', '', 'ON', 'ON', 'ON']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
@@ -1182,7 +1190,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -1195,13 +1203,13 @@ class TeamMemberTest extends CakeTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', 'member_1', '', 'ON', 'ON']);
+            ['from@email.com', 'firstname', 'lastname', 'member_1', '', 'ON', 'ON']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
@@ -1209,7 +1217,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -1222,13 +1230,13 @@ class TeamMemberTest extends CakeTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'aaa', 'ON', 'ON']);
+            ['from@email.com', 'firstname', 'lastname', 'member_1', 'aaa', 'ON', 'ON']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
@@ -1236,7 +1244,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -1249,13 +1257,13 @@ class TeamMemberTest extends CakeTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', '', 'ON']);
+            ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', '', 'ON']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
@@ -1263,7 +1271,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -1276,13 +1284,13 @@ class TeamMemberTest extends CakeTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'aa', 'ON']);
+            ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'aa', 'ON']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
@@ -1290,7 +1298,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -1303,13 +1311,13 @@ class TeamMemberTest extends CakeTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', '']);
+            ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', '']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
@@ -1317,7 +1325,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -1330,13 +1338,13 @@ class TeamMemberTest extends CakeTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'aaa']);
+            ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'aaa']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
@@ -1344,7 +1352,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -1357,13 +1365,13 @@ class TeamMemberTest extends CakeTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', '', 'group2']);
+            ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', '', 'group2']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
@@ -1371,7 +1379,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -1384,13 +1392,13 @@ class TeamMemberTest extends CakeTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', 'group1', 'group1']);
+            ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', 'group1', 'group1']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
@@ -1398,7 +1406,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -1411,13 +1419,13 @@ class TeamMemberTest extends CakeTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON',]);
+            ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON',]);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
@@ -1425,7 +1433,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -1438,13 +1446,13 @@ class TeamMemberTest extends CakeTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'member_1']);
+            ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'member_1']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
@@ -1452,7 +1460,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -1465,13 +1473,13 @@ class TeamMemberTest extends CakeTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'member_2', '', 'rater2']);
+            ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'member_2', '', 'rater2']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
@@ -1479,7 +1487,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -1492,13 +1500,13 @@ class TeamMemberTest extends CakeTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'member_2', 'member_1', 'rater2']);
+            ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'member_2', 'member_1', 'rater2']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
@@ -1506,7 +1514,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -1519,13 +1527,13 @@ class TeamMemberTest extends CakeTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'member_2', 'rater1', 'rater1']);
+            ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'member_2', 'rater1', 'rater1']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
@@ -1533,7 +1541,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -1546,13 +1554,13 @@ class TeamMemberTest extends CakeTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'OFF', 'OFF', 'ON', '', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'member_2', 'rater1', 'rater2']);
+            ['from@email.com', 'firstname', 'lastname', 'member_1', 'OFF', 'OFF', 'ON', '', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'member_2', 'rater1', 'rater2']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'OFF', 'OFF', 'ON']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'OFF', 'OFF', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'OFF', 'OFF', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'OFF', 'OFF', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'OFF', 'OFF', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'OFF', 'OFF', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
@@ -1560,7 +1568,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 0
         ];
         $this->assertEquals($excepted, $actual);
@@ -1573,13 +1581,13 @@ class TeamMemberTest extends CakeTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'member_2', 'rater1', 'rater2']);
+            ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'member_2', 'rater1', 'rater2']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+            ['from@email.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
@@ -1587,7 +1595,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -1600,20 +1608,20 @@ class TeamMemberTest extends CakeTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'member_2', 'rater1', 'rater2']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'member_2', 'rater1', 'rater2']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+            ['from@email.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -1626,13 +1634,13 @@ class TeamMemberTest extends CakeTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'xxxxxxxxxx', 'rater1', 'rater2']);
+            ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'xxxxxxxxxx', 'rater1', 'rater2']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
@@ -1640,7 +1648,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -1653,13 +1661,13 @@ class TeamMemberTest extends CakeTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'member_2', 'rater1', 'rater2', 'xxxxxxxxxx']);
+            ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'member_2', 'rater1', 'rater2', 'xxxxxxxxxx']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
@@ -1667,7 +1675,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -1687,7 +1695,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 1
         ];
         $this->assertEquals($excepted, $actual);
@@ -1708,7 +1716,7 @@ class TeamMemberTest extends CakeTestCase
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 1
         ];
         $this->assertEquals($excepted, $actual);
@@ -1723,14 +1731,14 @@ class TeamMemberTest extends CakeTestCase
         $csv_data[1] = $this->getEmptyRowOnCsv(33);
         $csv_data[1] = copyKeyName($this->TeamMember->_getCsvHeadingEvaluation(), $csv_data[1]);
         $csv_data[1] = Hash::merge($csv_data[1],
-                                   ['member_no' => 'test', 'total.final.score' => 'aaaaa']);
+            ['member_no' => 'test', 'total.final.score' => 'aaaaa']);
         $actual = $this->TeamMember->validateUpdateFinalEvaluationCsvData($csv_data, 1);
 
         if (viaIsSet($actual['error_msg'])) {
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -1746,14 +1754,14 @@ class TeamMemberTest extends CakeTestCase
         $csv_data[1] = $this->getEmptyRowOnCsv(33);
         $csv_data[1] = copyKeyName($this->TeamMember->_getCsvHeadingEvaluation(), $csv_data[1]);
         $csv_data[1] = Hash::merge($csv_data[1],
-                                   ['member_no' => 'member_1', 'total.final.score' => 'aaaaa']);
+            ['member_no' => 'member_1', 'total.final.score' => 'aaaaa']);
         $actual = $this->TeamMember->validateUpdateFinalEvaluationCsvData($csv_data, 1);
 
         if (viaIsSet($actual['error_msg'])) {
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -1764,16 +1772,16 @@ class TeamMemberTest extends CakeTestCase
     {
         $this->setDefault();
         $eval_data = [
-            'team_id'           => 1,
+            'team_id' => 1,
             'evaluatee_user_id' => 2,
             'evaluator_user_id' => 1,
-            'evaluate_term_id'  => 1,
-            'comment'           => null,
+            'evaluate_term_id' => 1,
+            'comment' => null,
             'evaluate_score_id' => null,
-            'evaluate_type'     => 0,
-            'goal_id'           => null,
-            'index_num'         => 0,
-            'status'            => 0
+            'evaluate_type' => 0,
+            'goal_id' => null,
+            'index_num' => 0,
+            'status' => 0
         ];
         $this->TeamMember->Team->Evaluation->save($eval_data);
 
@@ -1782,18 +1790,18 @@ class TeamMemberTest extends CakeTestCase
         $csv_data[1] = $this->getEmptyRowOnCsv(33);
         $csv_data[1] = copyKeyName($this->TeamMember->_getCsvHeadingEvaluation(), $csv_data[1]);
         $csv_data[1] = Hash::merge($csv_data[1],
-                                   ['member_no' => 'member_1', 'total.final.score' => 'A']);
+            ['member_no' => 'member_1', 'total.final.score' => 'A']);
         $csv_data[2] = $this->getEmptyRowOnCsv(33);
         $csv_data[2] = copyKeyName($this->TeamMember->_getCsvHeadingEvaluation(), $csv_data[2]);
         $csv_data[2] = Hash::merge($csv_data[2],
-                                   ['member_no' => 'member_1', 'total.final.score' => 'A']);
+            ['member_no' => 'member_1', 'total.final.score' => 'A']);
         $actual = $this->TeamMember->validateUpdateFinalEvaluationCsvData($csv_data, 1);
 
         if (viaIsSet($actual['error_msg'])) {
             unset($actual['error_msg']);
         }
         $excepted = [
-            'error'         => true,
+            'error' => true,
             'error_line_no' => 2
         ];
         $this->assertEquals($excepted, $actual);
@@ -1845,6 +1853,19 @@ class TeamMemberTest extends CakeTestCase
         $this->assertFalse($this->TeamMember->isActive($uid));
     }
 
+    function testIsActiveDefault()
+    {
+        $this->setDefault();
+        $res = $this->TeamMember->isActive(1);
+        $this->assertTrue($res);
+        $res = $this->TeamMember->isActive(1);
+        $this->assertTrue($res);
+        $res = $this->TeamMember->isActive(999);
+        $this->assertFalse($res);
+        $res = $this->TeamMember->isActive(999);
+        $this->assertFalse($res);
+    }
+
     function setDefault()
     {
         $uid = 1;
@@ -1862,13 +1883,13 @@ class TeamMemberTest extends CakeTestCase
         $coach_user_id = 999;
 
         $params = [
-            'user_id'       => $user_id,
-            'team_id'       => $team_id,
+            'user_id' => $user_id,
+            'team_id' => $team_id,
             'coach_user_id' => $coach_user_id,
         ];
         $this->TeamMember->save($params);
-        $res = $this->TeamMember->selectCoachUserIdFromTeamMembersTB($user_id, $team_id);
-        $this->assertEquals($coach_user_id, intval($res['TeamMember']['coach_user_id']));
+        $res = $this->TeamMember->getCoachUserIdByMemberUserId($user_id);
+        $this->assertEquals($coach_user_id, $res);
 
     }
 
@@ -1879,12 +1900,12 @@ class TeamMemberTest extends CakeTestCase
         $coach_user_id = 999;
 
         $params = [
-            'user_id'       => $user_id,
-            'team_id'       => $team_id,
+            'user_id' => $user_id,
+            'team_id' => $team_id,
             'coach_user_id' => $coach_user_id,
         ];
         $this->TeamMember->save($params);
-        $res = $this->TeamMember->selectUserIdFromTeamMembersTB($coach_user_id, $team_id);
+        $res = $this->TeamMember->getMyMembersList($coach_user_id);
         $this->assertContains($user_id, $res);
     }
 
@@ -1894,9 +1915,9 @@ class TeamMemberTest extends CakeTestCase
         $team_id = 888;
 
         $params = [
-            'user_id'               => $user_id,
-            'team_id'               => $team_id,
-            'active_flg'            => 1,
+            'user_id' => $user_id,
+            'team_id' => $team_id,
+            'active_flg' => 1,
             'evaluation_enable_flg' => 1
         ];
         $this->TeamMember->save($params);
@@ -1910,9 +1931,9 @@ class TeamMemberTest extends CakeTestCase
         $team_id = 888;
 
         $params = [
-            'user_id'               => $user_id,
-            'team_id'               => $team_id,
-            'active_flg'            => 0,
+            'user_id' => $user_id,
+            'team_id' => $team_id,
+            'active_flg' => 0,
             'evaluation_enable_flg' => 1
         ];
         $this->TeamMember->save($params);
@@ -1926,9 +1947,9 @@ class TeamMemberTest extends CakeTestCase
         $team_id = 888;
 
         $params = [
-            'user_id'               => $user_id,
-            'team_id'               => $team_id,
-            'active_flg'            => 1,
+            'user_id' => $user_id,
+            'team_id' => $team_id,
+            'active_flg' => 1,
             'evaluation_enable_flg' => 0
         ];
         $this->TeamMember->save($params);
@@ -1962,10 +1983,10 @@ class TeamMemberTest extends CakeTestCase
         $evaluations = [
             1 => [
                 [
-                    'Evaluation'    => [
+                    'Evaluation' => [
                         'evaluate_type' => Evaluation::TYPE_FINAL_EVALUATOR,
-                        'goal_id'       => null,
-                        'comment'       => 'nice!'
+                        'goal_id' => null,
+                        'comment' => 'nice!'
                     ],
                     'EvaluateScore' => [
                         'name' => 'score_name',
@@ -1981,7 +2002,7 @@ class TeamMemberTest extends CakeTestCase
 
         $expected = [
             (int)0 => [
-                'total.final.score'   => 'score_name',
+                'total.final.score' => 'score_name',
                 'total.final.comment' => 'nice!'
             ]
         ];
@@ -2008,10 +2029,10 @@ class TeamMemberTest extends CakeTestCase
         $evaluations = [
             1 => [
                 [
-                    'Evaluation'    => [
+                    'Evaluation' => [
                         'evaluate_type' => Evaluation::TYPE_EVALUATOR,
-                        'goal_id'       => null,
-                        'comment'       => 'nice!'
+                        'goal_id' => null,
+                        'comment' => 'nice!'
                     ],
                     'EvaluateScore' => [
                         'name' => 'score_name',
@@ -2030,8 +2051,8 @@ class TeamMemberTest extends CakeTestCase
 
         $expected = [
             (int)0 => [
-                'total.evaluator.1.name'    => 'test user',
-                'total.evaluator.1.score'   => 'score_name',
+                'total.evaluator.1.name' => 'test user',
+                'total.evaluator.1.score' => 'score_name',
                 'total.evaluator.1.comment' => 'nice!'
             ]
         ];
@@ -2057,8 +2078,8 @@ class TeamMemberTest extends CakeTestCase
         $this->TeamMember->setGoalEvaluationForCsvData();
         $expected = [
             (int)0 => [
-                'kr_count'      => (int)0,
-                'action_count'  => (int)0,
+                'kr_count' => (int)0,
+                'action_count' => (int)0,
                 'goal_progress' => (int)0
             ]
         ];
@@ -2085,7 +2106,7 @@ class TeamMemberTest extends CakeTestCase
     {
         $member_id = 999;
         $params = [
-            'id'        => $member_id,
+            'id' => $member_id,
             'admin_flg' => 0,
         ];
         $this->TeamMember->save($params);
@@ -2100,7 +2121,7 @@ class TeamMemberTest extends CakeTestCase
     {
         $member_id = 999;
         $params = [
-            'id'        => $member_id,
+            'id' => $member_id,
             'admin_flg' => 0,
         ];
         $this->TeamMember->save($params);
@@ -2115,7 +2136,7 @@ class TeamMemberTest extends CakeTestCase
     {
         $member_id = 999;
         $params = [
-            'id'         => $member_id,
+            'id' => $member_id,
             'active_flg' => 0,
         ];
         $this->TeamMember->save($params);
@@ -2130,7 +2151,7 @@ class TeamMemberTest extends CakeTestCase
     {
         $member_id = 999;
         $params = [
-            'id'         => $member_id,
+            'id' => $member_id,
             'active_flg' => 0,
         ];
         $this->TeamMember->save($params);
@@ -2145,7 +2166,7 @@ class TeamMemberTest extends CakeTestCase
     {
         $member_id = 999;
         $params = [
-            'id'                    => $member_id,
+            'id' => $member_id,
             'evaluation_enable_flg' => 0,
         ];
         $this->TeamMember->save($params);
@@ -2160,7 +2181,7 @@ class TeamMemberTest extends CakeTestCase
     {
         $member_id = 999;
         $params = [
-            'id'                    => $member_id,
+            'id' => $member_id,
             'evaluation_enable_flg' => 0,
         ];
         $this->TeamMember->save($params);
@@ -2175,7 +2196,7 @@ class TeamMemberTest extends CakeTestCase
     {
         $user_id = 999;
         $params = [
-            'id'         => $user_id,
+            'id' => $user_id,
             '2fa_secret' => null,
         ];
         $this->TeamMember->User->save($params);
@@ -2195,7 +2216,7 @@ class TeamMemberTest extends CakeTestCase
     {
         $user_id = 999;
         $params = [
-            'id'         => $user_id,
+            'id' => $user_id,
             '2fa_secret' => 'test',
         ];
         $this->TeamMember->User->save($params);
@@ -2221,8 +2242,8 @@ class TeamMemberTest extends CakeTestCase
 
         $team_id = 888;
         $params = [
-            'user_id'   => $user_id,
-            'team_id'   => $team_id,
+            'user_id' => $user_id,
+            'team_id' => $team_id,
             'admin_flg' => 1
         ];
         $this->TeamMember->save($params);
@@ -2240,8 +2261,8 @@ class TeamMemberTest extends CakeTestCase
 
         $team_id = 888;
         $params = [
-            'user_id'   => $user_id,
-            'team_id'   => $team_id,
+            'user_id' => $user_id,
+            'team_id' => $team_id,
             'admin_flg' => 0
         ];
         $this->TeamMember->save($params);
@@ -2284,8 +2305,8 @@ class TeamMemberTest extends CakeTestCase
 
         $group_id = 1;
         $params = [
-            'user_id'  => $user_id,
-            'team_id'  => $team_id,
+            'user_id' => $user_id,
+            'team_id' => $team_id,
             'group_id' => $group_id,
         ];
         $this->TeamMember->User->MemberGroup->save($params);
@@ -2297,17 +2318,17 @@ class TeamMemberTest extends CakeTestCase
     {
         $team_id = 999;
         $options = [
-            'fields'     => ['id', 'active_flg', 'admin_flg', 'coach_user_id', 'evaluation_enable_flg', 'created'],
+            'fields' => ['id', 'active_flg', 'admin_flg', 'coach_user_id', 'evaluation_enable_flg', 'created'],
             'conditions' => [
                 'team_id' => $team_id,
             ],
-            'order'      => ['TeamMember.created' => 'DESC'],
-            'contain'    => [
-                'User'      => [
-                    'fields'      => ['id', 'first_name', 'last_name', '2fa_secret', 'photo_file_name'],
+            'order' => ['TeamMember.created' => 'DESC'],
+            'contain' => [
+                'User' => [
+                    'fields' => ['id', 'first_name', 'last_name', '2fa_secret', 'photo_file_name'],
                     'MemberGroup' => [
                         'fields' => ['group_id'],
-                        'Group'  => [
+                        'Group' => [
                             'fields' => ['name']
                         ]
                     ],
@@ -2333,33 +2354,33 @@ class TeamMemberTest extends CakeTestCase
         // coach
         $coach_user_id = 777;
         $params = [
-            'id'         => $coach_user_id,
+            'id' => $coach_user_id,
             'first_name' => 'coach',
-            'last_name'  => 'a'
+            'last_name' => 'a'
         ];
         $this->TeamMember->User->save($params);
 
         $team_id = 888;
         $params = [
-            'user_id'       => $user_id,
-            'team_id'       => $team_id,
+            'user_id' => $user_id,
+            'team_id' => $team_id,
             'coach_user_id' => $coach_user_id,
         ];
         $this->TeamMember->save($params);
 
         $group_id = 1;
         $params = [
-            'user_id'  => $user_id,
-            'team_id'  => $team_id,
+            'user_id' => $user_id,
+            'team_id' => $team_id,
             'group_id' => $group_id,
         ];
         $this->TeamMember->User->MemberGroup->save($params);
 
         $group_name = 'SDG';
         $params = [
-            'id'      => $group_id,
+            'id' => $group_id,
             'team_id' => $team_id,
-            'name'    => $group_name
+            'name' => $group_name
         ];
         $this->TeamMember->User->MemberGroup->Group->save($params);
 
@@ -2379,7 +2400,7 @@ class TeamMemberTest extends CakeTestCase
         $res = $this->TeamMember->getActiveTeamMembersList();
         $this->assertNotEmpty($res);
     }
-    
+
     function testCountActiveMembersByTeamId()
     {
         $members = $this->TeamMember->find('all', [
@@ -2388,7 +2409,7 @@ class TeamMemberTest extends CakeTestCase
                 'TeamMember.active_flg',
             ],
         ]);
-        
+
         $counts = [];
         foreach ($members as $v) {
             if (!$v['TeamMember']['active_flg']) {
@@ -2405,4 +2426,58 @@ class TeamMemberTest extends CakeTestCase
             $this->assertEquals($count, $res);
         }
     }
+
+    function testUpdateLastLogin()
+    {
+        $this->setDefault();
+        $this->assertNotEmpty($this->TeamMember->updateLastLogin(1, 1));
+    }
+
+    function testDeleteCacheMember()
+    {
+        $this->setDefault();
+        $this->assertFalse($this->TeamMember->deleteCacheMember(99999));
+    }
+
+    function testGetByMemberNo()
+    {
+        $this->setDefault();
+        $this->assertNotEmpty($this->TeamMember->getByMemberNo('member_1'));
+    }
+
+    function testGetByUserId()
+    {
+        $this->setDefault();
+        $this->assertNotEmpty($this->TeamMember->getByUserId(1));
+    }
+
+    function testGetLoginUserAdminFlag()
+    {
+        $this->setDefault();
+        $this->assertTrue($this->TeamMember->getLoginUserAdminFlag(1, 1));
+        $this->assertFalse($this->TeamMember->getLoginUserAdminFlag(1, 2));
+    }
+
+    function testGetAdminUserCount()
+    {
+        $this->setDefault();
+        $actual = $this->TeamMember->getAdminUserCount(1);
+        $this->assertEquals(3, $actual);
+    }
+
+    function testGetCoachId()
+    {
+        $this->setDefault();
+        $actual = $this->TeamMember->getCoachId(1, 1);
+        $this->assertEquals(2, $actual);
+
+    }
+
+    function testGetUserIdsByMemberNo()
+    {
+        $this->setDefault();
+        $actual = $this->TeamMember->getUserIdsByMemberNos(['member_1', 'member_2']);
+        $this->assertCount(2, $actual);
+    }
+
 }

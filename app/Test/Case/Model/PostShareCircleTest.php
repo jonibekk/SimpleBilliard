@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('PostShareCircle', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('PostShareCircle', 'Model');
  *
  * @property PostShareCircle $PostShareCircle
  */
-class PostShareCircleTest extends CakeTestCase
+class PostShareCircleTest extends GoalousTestCase
 {
 
     /**
@@ -70,41 +70,6 @@ class PostShareCircleTest extends CakeTestCase
         $this->PostShareCircle->isMyCirclePost(1);
     }
 
-    public function testGetAccessibleCirclePostList()
-    {
-        $this->PostShareCircle->my_uid = 1;
-        $this->PostShareCircle->current_team_id = 1;
-        $this->PostShareCircle->Circle->CircleMember->my_uid = 1;
-        $this->PostShareCircle->Circle->CircleMember->current_team_id = 1;
-        $this->PostShareCircle->Post->my_uid = 1;
-        $this->PostShareCircle->Post->current_team_id = 1;
-
-        // 閲覧可能なサークルの投稿
-        $res = $this->PostShareCircle->getAccessibleCirclePostList(strtotime("2014-01-01"), strtotime("2014-01-31"));
-        $this->assertNotEmpty($res);
-
-        // 閲覧可能なサークルの投稿（投稿者IDで絞り込み）
-        $user_id = 103;
-        $res = $this->PostShareCircle->getAccessibleCirclePostList(strtotime("2014-01-01"), strtotime("2014-01-31"),
-                                                                   "PostShareCircle.modified", 'desc', 1000, [
-                'user_id' => $user_id,
-            ]);
-        $this->assertNotEmpty($res);
-
-        // 投稿者IDで絞り込めているか確認
-        $posts = $this->PostShareCircle->Post->find('all', [
-            'fields'     => [
-                'Post.user_id'
-            ],
-            'conditions' => [
-                'Post.id' => $res,
-            ],
-        ]);
-        foreach ($posts as $post) {
-            $this->assertEquals($user_id, $post['Post']['user_id']);
-        }
-    }
-
     public function testIsShareWithPublicCircle()
     {
         $this->PostShareCircle->my_uid = 1;
@@ -163,7 +128,7 @@ class PostShareCircleTest extends CakeTestCase
         ]);
         $this->assertEquals(13, $count);
     }
-    
+
     public function testGetLikeUserListByCircleId()
     {
         $this->PostShareCircle->my_uid = 1;
@@ -191,9 +156,9 @@ class PostShareCircleTest extends CakeTestCase
         $this->assertEquals([3 => "3"], $list);
 
         $list = $this->PostShareCircle->getLikeUserListByCircleId(1, [
-            'start' => $now - HOUR,
-            'end'   => $now + HOUR,
-            'like_user_id'   => [2],
+            'start'        => $now - HOUR,
+            'end'          => $now + HOUR,
+            'like_user_id' => [2],
         ]);
         $this->assertEquals([2 => "2"], $list);
     }
@@ -225,9 +190,9 @@ class PostShareCircleTest extends CakeTestCase
         $this->assertEquals([4 => "4"], $list);
 
         $list = $this->PostShareCircle->getCommentUserListByCircleId(1, [
-            'start' => $now - HOUR,
-            'end'   => $now + HOUR,
-            'comment_user_id'   => [2, 3],
+            'start'           => $now - HOUR,
+            'end'             => $now + HOUR,
+            'comment_user_id' => [2, 3],
         ]);
         $this->assertEquals([2 => "2", 3 => "3"], $list);
     }

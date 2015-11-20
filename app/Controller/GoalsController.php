@@ -112,6 +112,13 @@ class GoalsController extends AppController
                     $this->_sendNotifyToCoach($id, NotifySetting::TYPE_MY_MEMBER_CHANGE_GOAL);
                 }
             }
+            $coach_id = $this->User->TeamMember->getCoachUserIdByMemberUserId(
+                $this->Auth->user('id'));
+            if ($coach_id) {
+                Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true), 'user_data');
+                Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coach_id), 'user_data');
+            }
+
             switch ($this->request->params['named']['mode']) {
                 case 2:
                     //case of create new one.
@@ -125,6 +132,10 @@ class GoalsController extends AppController
                         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_GOAL, $id);
                     }
                     $this->Pnotify->outSuccess(__d('gl', "ゴールを保存しました。"));
+                    if ($coach_id) {
+                        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coach_id),
+                                      'user_data');
+                    }
                     //「情報を追加」に進む
                     $this->redirect(['goal_id' => $this->Goal->id, 'mode' => 3, '#' => 'AddGoalFormOtherWrap']);
                     break;
@@ -155,11 +166,7 @@ class GoalsController extends AppController
                     }
 
                     // ゴール作成ユーザーのコーチが存在すればゴール認定ページへ遷移
-                    $coach_id = $this->User->TeamMember->selectCoachUserIdFromTeamMembersTB(
-                        $this->Auth->user('id'), $this->Session->read('current_team_id'));
-                    if (isset($coach_id['TeamMember']['coach_user_id']) === true
-                        && is_null($coach_id['TeamMember']['coach_user_id']) === false
-                        && $val['priority'] != "0"
+                    if ($coach_id && $val['priority'] != "0"
                     ) {
                         $this->redirect("/goal_approval");
                     }
@@ -205,6 +212,7 @@ class GoalsController extends AppController
         $this->Goal->id = $id;
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_DELETE_GOAL, $id);
         $this->Goal->delete();
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         $this->Goal->ActionResult->releaseGoal($id);
         $this->Pnotify->outSuccess(__d('gl', "ゴールを削除しました。"));
         /** @noinspection PhpInconsistentReturnPointsInspection */
@@ -237,6 +245,7 @@ class GoalsController extends AppController
         $this->request->allowMethod('post', 'delete');
         $this->Goal->Purpose->id = $purpose_id;
         $this->Goal->Purpose->delete();
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         $this->Pnotify->outSuccess(__d('gl', "ゴールを削除しました。"));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
@@ -398,8 +407,8 @@ class GoalsController extends AppController
     {
         $collabo_id = viaIsSet($this->request->params['named']['collaborator_id']);
         $this->request->allowMethod('post', 'put');
-        $coach_id = $this->User->TeamMember->selectCoachUserIdFromTeamMembersTB(
-            $this->Auth->user('id'), $this->Session->read('current_team_id'));
+        $coach_id = $this->User->TeamMember->getCoachUserIdByMemberUserId(
+            $this->Auth->user('id'));
 
         if (!isset($this->request->data['Collaborator'])) {
             $this->_editCollaboError();
@@ -424,15 +433,18 @@ class GoalsController extends AppController
         //success case.
         $this->Pnotify->outSuccess(__d('gl', "コラボレータを保存しました。"));
         //if new
+        Cache::delete($this->Goal->Collaborator->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
+        Cache::delete($this->Goal->Collaborator->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         if (!$collabo_id) {
             $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_COLLABORATE_GOAL, $collaborator['goal_id']);
             $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_COLLABORATE, $collaborator['goal_id']);
             $this->_sendNotifyToCoach($collaborator['goal_id'], NotifySetting::TYPE_MY_MEMBER_COLLABORATE_GOAL);
         }
-        if (isset($coach_id['TeamMember']['coach_user_id']) === true
-            && is_null($coach_id['TeamMember']['coach_user_id']) === false
-            && (isset($collaborator['priority']) && $collaborator['priority'] >= '1')
+        if ($coach_id && (isset($collaborator['priority']) && $collaborator['priority'] >= '1')
         ) {
+            Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coach_id),
+                          'user_data');
+
             $this->redirect("/goal_approval");
         }
         return $this->redirect($this->referer());
@@ -510,6 +522,7 @@ class GoalsController extends AppController
         $this->_flashClickEvent("KRsOpen_" . $kr['KeyResult']['goal_id']);
 
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_KR, $kr['KeyResult']['goal_id'], $kr_id);
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
 
         $this->Pnotify->outSuccess(__d('gl', "成果を更新しました。"));
         /** @noinspection PhpVoidFunctionResultUsedInspection */
@@ -561,6 +574,7 @@ class GoalsController extends AppController
         }
         $this->Goal->commit();
 
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         // pusherに通知
         $socket_id = viaIsSet($this->request->data['socket_id']);
         $goal = viaIsSet($goal);
@@ -604,6 +618,7 @@ class GoalsController extends AppController
         $this->Goal->commit();
         $this->_flashClickEvent("KRsOpen_" . $key_result['KeyResult']['goal_id']);
         $this->Pnotify->outSuccess(__d('gl', "成果を未完了にしました。"));
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         $params_referer = Router::parse($this->referer(null, true));
         if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home') {
@@ -638,6 +653,7 @@ class GoalsController extends AppController
 
         $this->_flashClickEvent("KRsOpen_" . $kr['KeyResult']['goal_id']);
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_DELETE_KR, $kr['KeyResult']['goal_id'], $kr_id);
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
 
         $this->Pnotify->outSuccess(__d('gl', "成果を削除しました。"));
         /** @noinspection PhpInconsistentReturnPointsInspection */
@@ -682,6 +698,8 @@ class GoalsController extends AppController
         }
 
         $this->Pnotify->outSuccess(__d('gl', "アクションを削除しました。"));
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_ACTION_COUNT, true), 'user_data');
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->redirect($this->referer());
@@ -705,6 +723,8 @@ class GoalsController extends AppController
         }
         $this->Goal->Collaborator->delete();
         $this->Pnotify->outSuccess(__d('gl', "コラボレータから外れました。"));
+        Cache::delete($this->Goal->Collaborator->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
+        Cache::delete($this->Goal->Collaborator->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         $this->redirect($this->referer());
     }
 
@@ -1243,6 +1263,9 @@ class GoalsController extends AppController
                                    $this->Goal->ActionResult->getLastInsertID());
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_CAN_SEE_ACTION,
                                          $this->Goal->ActionResult->getLastInsertID());
+
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_ACTION_COUNT, true), 'user_data');
 
         // push
         $this->Pnotify->outSuccess(__d('gl', "アクションを追加しました。"));

@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('User', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('User', 'Model');
  *
  * @property User $User
  */
-class UserTest extends CakeTestCase
+class UserTest extends GoalousTestCase
 {
 
 //    public $autoFixtures = false;
@@ -790,7 +790,6 @@ class UserTest extends CakeTestCase
         $this->assertEmpty($res);
     }
 
-
     function testGetNewUsersByKeywordNotSharedOnPost()
     {
         $this->User->my_uid = 1;
@@ -815,5 +814,14 @@ class UserTest extends CakeTestCase
         $this->assertEquals('姓 名', $local_name);
         $local_name = $this->User->buildLocalUserName('eng', 'first', 'last');
         $this->assertEquals('first last', $local_name);
+    }
+
+    function testGetCacheKey()
+    {
+        $this->User->my_uid = 2;
+        $this->User->current_team_id = 1;
+        $actual = $this->User->getCacheKey(CACHE_KEY_TERM_CURRENT, true, null, true);
+        $expected = 'current_term:team:1:user:2';
+        $this->assertEquals($expected, $actual);
     }
 }

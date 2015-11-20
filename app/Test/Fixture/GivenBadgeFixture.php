@@ -2,7 +2,6 @@
 
 /**
  * GivenBadgeFixture
-
  */
 class GivenBadgeFixture extends CakeTestFixture
 {

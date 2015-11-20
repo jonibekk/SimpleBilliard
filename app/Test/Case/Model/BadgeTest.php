@@ -1,4 +1,4 @@
-<?php
+<?php App::uses('GoalousTestCase', 'Test');
 App::uses('Badge', 'Model');
 
 /**
@@ -6,7 +6,7 @@ App::uses('Badge', 'Model');
  *
  * @property mixed Badge
  */
-class BadgeTest extends CakeTestCase
+class BadgeTest extends GoalousTestCase
 {
 
     /**
