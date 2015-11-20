@@ -92,6 +92,7 @@ class CircleMember extends AppModel
      */
     public function getMyCircle($params = [])
     {
+        ClassRegistry::init('Circle');
         $is_default = false;
         if (empty($params)) {
             $is_default = true;
