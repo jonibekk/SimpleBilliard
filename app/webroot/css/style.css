@@ -493,14 +493,14 @@ textarea{
     margin-bottom: 5px;
 }
 
-.mtb_15px {
-    margin-top: 15px;
-    margin-bottom: 15px;
-}
-
 .mtb_8px {
     margin-top: 8px;
     margin-bottom: 8px;
+}
+
+.mtb_15px {
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
 
 .ptb_5px {
