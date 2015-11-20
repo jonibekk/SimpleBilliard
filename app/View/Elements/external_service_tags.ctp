@@ -132,14 +132,7 @@
 <?php endif; ?>
 <? if (USERVOICE_API_KEY && $this->Session->read('Auth.User.id')): ?>
     <!-- start Uservoice -->
-    <script>(function () {
-            var uv = document.createElement('script');
-            uv.type = 'text/javascript';
-            uv.async = true;
-            uv.src = '//widget.uservoice.com/XCmmQeEYxEfUK5hhWqYaBA.js';
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(uv, s)
-        })();
+    <script>(function () {var uv = document.createElement('script');uv.type = 'text/javascript';uv.async = true;uv.src = '//widget.uservoice.com/XCmmQeEYxEfUK5hhWqYaBA.js';var s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(uv, s)})();
         UserVoice = window.UserVoice || [];
         <?= ($this->Session->read('uservoice_token')) ? "UserVoice.push(['setSSO', '{$this->Session-> read('uservoice_token')}']);"
             : ""
@@ -147,7 +140,7 @@
     </script>
     <!-- end Uservoice -->
 <? endif; ?>
-<?php if (INTERCOM_APP_ID): ?>
+<?php if(INTERCOM_APP_ID):?>
     <!-- start Intercom -->
     <script>
         window.intercomSettings = {
@@ -166,38 +159,7 @@
             }
         };
     </script>
-    <script>(function () {
-            var w = window;
-            var ic = w.Intercom;
-            if (typeof ic === "function") {
-                ic('reattach_activator');
-                ic('update', intercomSettings);
-            } else {
-                var d = document;
-                var i = function () {
-                    i.c(arguments)
-                };
-                i.q = [];
-                i.c = function (args) {
-                    i.q.push(args)
-                };
-                w.Intercom = i;
-                function l() {
-                    var s = d.createElement('script');
-                    s.type = 'text/javascript';
-                    s.async = true;
-                    s.src = 'https://widget.intercom.io/widget/<?=INTERCOM_APP_ID?>';
-                    var x = d.getElementsByTagName('script')[0];
-                    x.parentNode.insertBefore(s, x);
-                }
-
-                if (w.attachEvent) {
-                    w.attachEvent('onload', l);
-                } else {
-                    w.addEventListener('load', l, false);
-                }
-            }
-        })()</script>
+    <script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/<?=INTERCOM_APP_ID?>';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})()</script>
     <!-- end Intercom -->
-<?php endif; ?>
+<?php endif;?>
 <!-- END app/View/Elements/external_service_tags.ctp -->
