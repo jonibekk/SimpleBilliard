@@ -823,6 +823,20 @@ class UsersController extends AppController
     }
 
     /**
+     * select2のユーザ + グループ検索
+     */
+    function ajax_select2_get_users_and_groups()
+    {
+        $this->_ajaxPreProcess();
+        $query = $this->request->query;
+        $res = [];
+        if (isset($query['term']) && !empty($query['term']) && isset($query['page_limit']) && !empty($query['page_limit'])) {
+            $res = $this->User->getUsersSelect2($query['term'], $query['page_limit'], true);
+        }
+        return $this->_ajaxGetResponse($res);
+    }
+
+    /**
      * select2のユーザ検索
      */
     function ajax_select_only_add_users()
@@ -831,7 +845,7 @@ class UsersController extends AppController
         $query = $this->request->query;
         $res = [];
         if (isset($query['post_id']) && !empty($query['post_id']) && isset($query['term']) && !empty($query['term']) && isset($query['page_limit']) && !empty($query['page_limit'])) {
-            $res = $this->User->getUsersSelectOnly($query['term'], $query['page_limit'], $query['post_id']);
+            $res = $this->User->getUsersSelectOnly($query['term'], $query['page_limit'], $query['post_id'], true);
         }
         return $this->_ajaxGetResponse($res);
     }
@@ -958,7 +972,7 @@ class UsersController extends AppController
         $query = $this->request->query;
         $res = [];
         if (viaIsSet($query['term']) && viaIsSet($query['page_limit']) && viaIsSet($query['circle_type'])) {
-            $res = $this->User->getUsersCirclesSelect2($query['term'], $query['page_limit'], $query['circle_type']);
+            $res = $this->User->getUsersCirclesSelect2($query['term'], $query['page_limit'], $query['circle_type'], true);
         }
         return $this->_ajaxGetResponse($res);
     }

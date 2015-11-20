@@ -885,22 +885,28 @@ class User extends AppModel
         return $res;
     }
 
-    public function getUsersSelect2($keyword, $limit = 10)
+    public function getUsersSelect2($keyword, $limit = 10, $with_group = false)
     {
         App::uses('UploadHelper', 'View/Helper');
         $Upload = new UploadHelper(new View());
         $users = $this->getUsersByKeyword($keyword, $limit);
         $user_res = [];
         foreach ($users as $val) {
+            $data = [];
             $data['id'] = 'user_' . $val['User']['id'];
             $data['text'] = $val['User']['display_username'] . " (" . $val['User']['roman_username'] . ")";
             $data['image'] = $Upload->uploadUrl($val, 'User.photo', ['style' => 'small']);
             $user_res[] = $data;
         }
+        // グループを結果に含める場合
+        if ($with_group) {
+            $group_res = $this->getGroupsSelect2($keyword, $limit);
+            $user_res = array_merge($user_res, $group_res['results']);
+        }
         return ['results' => $user_res];
     }
 
-    public function getUsersSelectOnly($keyword, $limit = 10, $post_id)
+    public function getUsersSelectOnly($keyword, $limit = 10, $post_id, $with_group = false)
     {
         App::uses('UploadHelper', 'View/Helper');
         $Upload = new UploadHelper(new View());
@@ -912,10 +918,22 @@ class User extends AppModel
             $data['image'] = $Upload->uploadUrl($val, 'User.photo', ['style' => 'small']);
             $user_res[] = $data;
         }
+
+        // グループを結果に含める場合
+        // 既にメッセージメンバーになっているユーザーを除外してから返却データに追加
+        if ($with_group) {
+            $shared_user_list = $this->Post->PostShareUser->getShareUserListByPost($post_id);
+            $post = $this->Post->findById($post_id);
+            if ($post) {
+                $shared_user_list[$post['Post']['user_id']] = $post['Post']['user_id'];
+            }
+            $group_res = $this->getGroupsSelect2($keyword, $limit);
+            $user_res = array_merge($user_res, $this->excludeGroupMemberSelect2($group_res['results'], $shared_user_list));
+        }
         return ['results' => $user_res];
     }
 
-    public function getUsersCirclesSelect2($keyword, $limit = 10, $circle_type = "all")
+    public function getUsersCirclesSelect2($keyword, $limit = 10, $circle_type = "all", $with_group = false)
     {
         App::uses('UploadHelper', 'View/Helper');
         $Upload = new UploadHelper(new View());
@@ -931,25 +949,30 @@ class User extends AppModel
 //            case "private":
 //                break;
         }
-        $circle_res = [];
+        $res = [];
         foreach ($circles as $val) {
             $data = [];
             $data['id'] = $val['Circle']['team_all_flg'] ? 'public' : 'circle_' . $val['Circle']['id'];
             $data['text'] = $val['Circle']['name'];
             $data['image'] = $Upload->uploadUrl($val, 'Circle.photo', ['style' => 'small']);
-            $circle_res[] = $data;
+            $res[] = $data;
         }
 
         $users = $this->getUsersByKeyword($keyword, $limit);
-        $user_res = [];
         foreach ($users as $val) {
+            $data = [];
             $data['id'] = 'user_' . $val['User']['id'];
             $data['text'] = $val['User']['display_username'] . " (" . $val['User']['roman_username'] . ")";
-
             $data['image'] = $Upload->uploadUrl($val, 'User.photo', ['style' => 'small']);
-            $user_res[] = $data;
+            $res[] = $data;
         }
-        $res = array_merge($circle_res, $user_res);
+
+        // グループを結果に含める場合
+        if ($with_group) {
+            $group_res = $this->getGroupsSelect2($keyword, $limit);
+            $res = array_merge($res, $group_res['results']);
+        }
+
         return ['results' => $res];
     }
 
@@ -1021,6 +1044,46 @@ class User extends AppModel
         $res = array_merge($team_res, $circle_res, $user_res);
 
         return $res;
+    }
+
+    /**
+     * キーワードにマッチするグループの select2 用データを返す
+     *
+     * @param     $keyword
+     * @param int $limit
+     *
+     * @return array
+     */
+    public function getGroupsSelect2($keyword, $limit = 10)
+    {
+        App::uses('UploadHelper', 'View/Helper');
+        $Upload = new UploadHelper(new View());
+        $res = [];
+
+        // キーワードにマッチするグループ
+        $groups = $this->MemberGroup->Group->getGroupsByKeyword($keyword, $limit);
+        foreach ($groups as $group) {
+            $members = $this->MemberGroup->getGroupMember($group['Group']['id']);
+            $users = [];
+            foreach ($members as $member) {
+                if ($this->my_uid != $member['User']['id']) {
+                    $users[] = [
+                        'id'   => 'user_' . $member['User']['id'],
+                        'text' => $member['User']['display_username'] . " (" . $member['User']['roman_username'] . ")",
+                        'image' => $Upload->uploadUrl($member, 'User.photo', ['style' => 'small']),
+                    ];
+                }
+            }
+            if (!$users) {
+                continue;
+            }
+            $res[] = [
+                'id'    => 'group_' . $group['Group']['id'],
+                'text'  => $group['Group']['name'] . ' (' . strval(__d('gl', '%1$s人のメンバー', count($users))) . ')',
+                'users' => $users,
+            ];
+        }
+        return ['results' => $res];
     }
 
     public function getAllMember($with_me = true)
@@ -1161,5 +1224,34 @@ class User extends AppModel
     public function clearDefaultTeamId($team_id)
     {
         return $this->updateAll(['default_team_id' => null], ['default_team_id' => $team_id]);
+    }
+
+
+    /**
+     * select2 用のグループ検索結果のユーザーリストから
+     * $exclude_member_list のユーザーを除外する
+     *
+     * @param array $select2_results
+     * @param array $exclude_member_list user_id をキーに持つリスト
+     *
+     * @return array
+     */
+    public function excludeGroupMemberSelect2($select2_results, $exclude_member_list) {
+        foreach ($select2_results as $k => $v) {
+            $users = [];
+            foreach ($v['users'] as $k2 => $v2) {
+                if (!isset($exclude_member_list[str_replace('user_', '', $v2['id'])])) {
+                    $users[] = $v2;
+                }
+            }
+            $select2_results[$k]['users'] = $users;
+
+            // users リストが空になった場合はグループ自体を除外
+            if (!$users) {
+                unset($select2_results[$k]);
+            }
+        }
+        // 連想配列にならないようにする
+        return array_values($select2_results);
     }
 }

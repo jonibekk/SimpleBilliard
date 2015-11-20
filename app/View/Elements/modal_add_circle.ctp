@@ -46,8 +46,14 @@
 
                     <div class="ddd">
                         <?=
-                        $this->Form->hidden('members',
-                                            ['id' => 'select2Member', 'value' => null, 'style' => "width: 100%",]) ?>
+                        $this->Form->hidden('members', ['class'    => 'ajax_add_select2_members',
+                                                        'value'    => null,
+                                                        'style'    => "width: 100%",
+                                                        'data-url' => $this->Html->url(
+                                                            ['controller' => 'users',
+                                                             'action'     => 'ajax_select2_get_users_and_groups'
+                                                            ])
+                        ]) ?>
                         <?php $this->Form->unlockField('Circle.members') ?>
                         <span class="help-block font_11px"><?=
                             __d('gl', "管理者：%s",

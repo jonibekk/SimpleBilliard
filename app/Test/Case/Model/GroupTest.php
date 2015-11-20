@@ -91,6 +91,26 @@ class GroupTest extends GoalousTestCase
         }
     }
 
+    function testGetGroupsByKeyword()
+    {
+        $this->_setDefault();
+
+        $groups = $this->Group->getGroupsByKeyword('グループ');
+        $this->assertNotEmpty($groups);
+        foreach ($groups as $v) {
+            $this->assertEquals(0, strpos($v['Group']['name'], 'グループ'));
+        }
+
+        $groups = $this->Group->getGroupsByKeyword('');
+        $this->assertEmpty($groups);
+
+        $groups = $this->Group->getGroupsByKeyword('テスト');
+        $this->assertNotEmpty($groups);
+        foreach ($groups as $v) {
+            $this->assertEquals(0, strpos($v['Group']['name'], 'テスト'));
+        }
+    }
+
     function _setDefault()
     {
         $this->Group->current_team_id = 1;

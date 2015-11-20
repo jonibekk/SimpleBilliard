@@ -1899,7 +1899,7 @@ $(document).ready(function () {
         minimumInputLength: 1,
         placeholder: cake.message.notice.b,
         ajax: {
-            url: cake.url.a,
+            url: cake.url.select2_uesrs_and_groups,
             dataType: 'json',
             quietMillis: 100,
             cache: true,
@@ -1920,12 +1920,15 @@ $(document).ready(function () {
         },
         containerCssClass: "select2Member"
     }).on('change', function () {
-        if ($(this).val() == '' || $('#CommonMessageBody').val() == '') {
+        var $this = $(this);
+        if ($this.val() == '' || $('#CommonMessageBody').val() == '') {
             $('#MessageSubmit').attr('disabled', 'disabled');
         }
         else {
             $('#MessageSubmit').removeAttr('disabled');
         }
+        // グループを選択した場合、グループに所属するユーザーを展開して入力済にする
+        $this.select2('data', select2ExpandGroup($this.select2('data')));
     });
     $("#CommonMessageBody").keyup(function () {
         if ($('#select2Member').val() == '' || $('#CommonMessageBody').val() == '') {
@@ -1965,7 +1968,8 @@ $(document).ready(function () {
         },
         containerCssClass: "select2Member"
     }).on('change', function () {
-        if ($(this).val() == '') {
+        var $this = $(this);
+        if ($this.val() == '') {
             $('#MessageSubmit').attr('disabled', 'disabled');
         }
         else {
@@ -1973,6 +1977,8 @@ $(document).ready(function () {
                 $('#MessageSubmit').removeAttr('disabled');
             }
         }
+        // グループを選択した場合、グループに所属するユーザーを展開して入力済にする
+        $this.select2('data', select2ExpandGroup($this.select2('data')));
     });
     //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
     $('#select2PostCircleMember').select2({
@@ -2004,7 +2010,12 @@ $(document).ready(function () {
             return m;
         },
         containerCssClass: "select2PostCircleMember"
-    });
+    })
+        .on('change', function () {
+            var $this = $(this);
+            // グループを選択した場合、グループに所属するユーザーを展開して入力済にする
+            $this.select2('data', select2ExpandGroup($this.select2('data')));
+        });
 
     // select2 秘密サークル選択
     $('#select2PostSecretCircle').select2({
@@ -2101,6 +2112,9 @@ $(document).ready(function () {
         },
         containerCssClass: "select2MessageCircleMember"
     });
+
+    // サークル追加用モーダルの select2 を設定
+    bindSelect2Members($('#modal_add_circle'));
 
     // 投稿の共有範囲(公開/秘密)切り替えボタン
     var $shareRangeToggleButton = $('#postShareRangeToggleButton');
@@ -2393,24 +2407,33 @@ function bindSelect2Members($this) {
                 return {results: data.results};
             }
         },
-        initSelection: function (element, callback) {
-            var circle_id = $(element).attr('circle_id');
-            if (circle_id !== "") {
-                $.ajax(cake.url.b + circle_id, {
-                    dataType: 'json'
-                }).done(function (data) {
-                    callback(data.results);
-                });
-            }
-        },
         formatSelection: format,
         formatResult: format,
         escapeMarkup: function (m) {
             return m;
-        },
-        containerCssClass: "select2Member"
-    });
+        }
+    })
+        .on('change', function () {
+            var $this = $(this);
+            // グループを選択した場合
+            // グループに所属するユーザーを展開して入力済にする
+            $this.select2('data', select2ExpandGroup($this.select2('data')));
+        });
 }
+
+// select2 で選択されたグループをユーザーとして展開する
+function select2ExpandGroup(data) {
+    for (var i = 0; i < data.length; i++) {
+        if (data[i].id.indexOf('group_') === 0 && data[i].users) {
+            var group = data.splice(i, 1)[0];
+            for (var j = 0; j < group.users.length; j++) {
+                data.push(group.users[j]);
+            }
+        }
+    }
+    return data;
+};
+
 /**
  * Select2 translation.
  */

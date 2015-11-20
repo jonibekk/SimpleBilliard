@@ -230,10 +230,11 @@ class CircleMember extends AppModel
      * @param     $circle_id
      * @param     $keyword
      * @param int $limit
+     * @param     $with_group
      *
      * @return array
      */
-    public function getNonCircleMemberSelect2($circle_id, $keyword, $limit = 10)
+    public function getNonCircleMemberSelect2($circle_id, $keyword, $limit = 10, $with_group = false)
     {
         $member_list = $this->getMemberList($circle_id, true);
 
@@ -267,6 +268,14 @@ class CircleMember extends AppModel
         ];
         $users = $this->User->TeamMember->find('all', $options);
         $user_res = $this->_makeSelect2UserList($users);
+
+        // グループを結果に含める場合
+        // 既にサークルメンバーになっているユーザーを除外してから返却データに追加
+        if ($with_group) {
+            $group_res = $this->User->getGroupsSelect2($keyword, $limit);
+            $user_res = array_merge($user_res, $this->User->excludeGroupMemberSelect2($group_res['results'], $member_list));
+        }
+
         return ['results' => $user_res];
     }
 
