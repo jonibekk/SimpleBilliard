@@ -23,19 +23,19 @@ scrollFixColumn = ->
     console.log fixedOnTop+' is undefined'
   ```
   ###
-  varErrMessage = ' is undefined'
-  if !varErrMessage?
-    console.log 'varErrMessage' +' is undefined'
-  if !fixedOnTop?
-    console.log 'fixedOnTop'+varErrMessage
-  if !fixedOnBottom?
-    console.log 'fixedOnBottom'+varErrMessage
-  if !rightColContentsId?
-    console.log 'rightColContentsId'+varErrMessage
-  if !marginTop?
-    console.log 'marginTop'+varErrMessage
-  if !marginBottom?
-    console.log 'marginBottom'+varErrMessage
+#  varErrMessage = ' is undefined'
+#  if !varErrMessage?
+#    console.log 'varErrMessage' +' is undefined'
+#  if !fixedOnTop?
+#    console.log 'fixedOnTop'+varErrMessage
+#  if !fixedOnBottom?
+#    console.log 'fixedOnBottom'+varErrMessage
+#  if !rightColContentsId?
+#    console.log 'rightColContentsId'+varErrMessage
+#  if !marginTop?
+#    console.log 'marginTop'+varErrMessage
+#  if !marginBottom?
+#    console.log 'marginBottom'+varErrMessage
 
   if window.innerWidth > 991
     # Scrollする前に右側が固定される領域かの判定
@@ -68,19 +68,19 @@ openResizeColumn = ->
   '?'存在演算子を使って変数が存在するかテスト
   ###
 
-  varErrMessage = ' is undefined'
-  if !varErrMessage?
-    console.log 'varErrMessage' +' is undefined'
-  if !fixedOnTop?
-    console.log 'fixedOnTop'+varErrMessage
-  if !fixedOnBottom?
-    console.log 'fixedOnBottom'+varErrMessage
-  if !rightColContentsId?
-    console.log 'rightColContentsId'+varErrMessage
-  if !marginTop?
-    console.log 'marginTop'+varErrMessage
-  if !marginBottom?
-    console.log 'marginBottom'+varErrMessage
+#  varErrMessage = ' is undefined'
+#  if !varErrMessage?
+#    console.log 'varErrMessage' +' is undefined'
+#  if !fixedOnTop?
+#    console.log 'fixedOnTop'+varErrMessage
+#  if !fixedOnBottom?
+#    console.log 'fixedOnBottom'+varErrMessage
+#  if !rightColContentsId?
+#    console.log 'rightColContentsId'+varErrMessage
+#  if !marginTop?
+#    console.log 'marginTop'+varErrMessage
+#  if !marginBottom?
+#    console.log 'marginBottom'+varErrMessage
 
   if window.innerWidth > 991
     ###
