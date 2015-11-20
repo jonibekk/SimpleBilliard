@@ -29,7 +29,7 @@
                     data-target=".navbar-offcanvas">
                 <i class="fa fa-navicon toggle-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : null ?>"></i>
             </button>
-            <div class="navbar-offcanvas offcanvas navmenu-fixed-left top_50px">
+            <div class="navbar-offcanvas offcanvas navmenu-fixed-left top_50px" id="NavbarOffcanvas">
                 <ul class="nav navbar-nav">
                     <li class="<?= $is_mb_app ? "mtb_15px" : "mtb_5px" ?> mtb-sm_0">
                         <a class="header-logo header_l-icons hoverPic <?= $current_global_menu == "home" ? "activeColumn" : null ?>"
