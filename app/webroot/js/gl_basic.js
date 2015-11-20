@@ -450,8 +450,6 @@ $(document).ready(function () {
         $modal_elm.on('hidden.bs.modal', function (e) {
             $(this).remove();
         });
-        //noinspection JSUnusedLocalSymbols,CoffeeScriptUnusedLocalSymbols
-        modalFormCommonBindEvent($modal_elm);
         var url = $(this).attr('href');
         if (url.indexOf('#') == 0) {
             $(url).modal('open');
