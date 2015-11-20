@@ -2205,6 +2205,10 @@ msgstr "Team Setting"
 msgid "Feedback"
 msgstr ""
 
+#: View/Elements/header_logged_in_right.ctp:207
+msgid "サポート"
+msgstr "Support"
+
 #: View/Elements/header_sp_feeds_alt.ctp:18
 msgid "ニュースフィード"
 msgstr "Newsfeed"
