@@ -15,10 +15,9 @@ evReplaceKRListAjaxGet = ->
         line_height += 64 * data.count
         $kr_line.height line_height
         $('#' + target_id).remove()
-        # 高さ更新
         openResizeColumn()
-
-      return false
+    return false
 
 $ ->
   evReplaceKRListAjaxGet()
+  # openResizeColumn()
