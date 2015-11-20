@@ -4,6 +4,8 @@ insertSpaceTop = (height) ->
   $header.css 'padding-top', parseInt($header.css('padding-top')) + height + 'px'
   $jsLeftSideContainer = $('#jsLeftSideContainer')
   $jsLeftSideContainer.css 'top', parseInt($jsLeftSideContainer.css('top')) + height + 'px'
+  $jsRightSideContainer = $('#jsRightSideContainer')
+  $jsRightSideContainer.css 'top', parseInt($jsRightSideContainer.css('top')) + height + 'px'
   $body = $('body')
   $body.css 'padding-top', parseInt($body.css('padding-top')) + height + 'px'
   $offcanvas = $('#NavbarOffcanvas')
