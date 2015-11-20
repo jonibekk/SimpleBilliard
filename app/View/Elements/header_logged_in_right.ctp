@@ -54,65 +54,63 @@
             </li>
         </ul>
     </div>
-    <?php if (!$is_mb_app): ?>
-        <div class="header-dropdown-message ">
-            <a id="click-header-message" class="btn-message-header" data-toggle="dropdown" href="#">
-                <i class="header-dropdown-icon-message fa fa-paper-plane-o js-header-link header-icons"></i>
+    <div class="header-dropdown-message <?= $is_mb_app ? "hide" : null ?>">
+        <a id="click-header-message" class="btn-message-header" data-toggle="dropdown" href="#">
+            <i class="header-dropdown-icon-message fa fa-paper-plane-o js-header-link header-icons"></i>
 
-                <div class="btn btn-xs bell-notify-box notify-bell-numbers" id="messageNum" style="opacity: 0;">
-                    <span>0</span><sup class="notify-plus none">+</sup>
-                </div>
-            </a>
+            <div class="btn btn-xs bell-notify-box notify-bell-numbers" id="messageNum" style="opacity: 0;">
+                <span>0</span><sup class="notify-plus none">+</sup>
+            </div>
+        </a>
 
-            <div class="frame-arrow-notify  header-nav-message-contents-wrap none">
-                <div class="header-nav-message-contents-scrolling">
-                    <ul class="header-nav-message-contents" id="message-dropdown" role="menu">
-                        <li class="notify-card-empty" id="messageNotifyCardEmpty">
-                            <i class="fa fa-smile-o font_33px mr_8px"></i><span
-                                class="notify-empty-text"><?= __d('gl', '未読のメッセージはありません。') ?></span>
-                        </li>
-                    </ul>
-                </div>
+        <div class="frame-arrow-notify  header-nav-message-contents-wrap none">
+            <div class="header-nav-message-contents-scrolling">
+                <ul class="header-nav-message-contents" id="message-dropdown" role="menu">
+                    <li class="notify-card-empty" id="messageNotifyCardEmpty">
+                        <i class="fa fa-smile-o font_33px mr_8px"></i><span
+                            class="notify-empty-text"><?= __d('gl', '未読のメッセージはありません。') ?></span>
+                    </li>
+                </ul>
             </div>
         </div>
-        <div id="HeaderDropdownNotify" class="header-dropdown-notify">
-            <a id="click-header-bell" class="btn-notify-header" data-toggle="dropdown" href="#">
-                <i class="header-dropdown-icon-notify fa fa-flag fa-bell-o header-drop-icons js-header-link header-icons"></i>
+    </div>
+    <div id="HeaderDropdownNotify" class="header-dropdown-notify <?= $is_mb_app ? "hide" : null ?>">
+        <a id="click-header-bell" class="btn-notify-header" data-toggle="dropdown" href="#">
+            <i class="header-dropdown-icon-notify fa fa-flag fa-bell-o header-drop-icons js-header-link header-icons"></i>
 
-                <div class="btn btn-xs bell-notify-box notify-bell-numbers"
-                     id="bellNum" style="opacity: 0;">
-                    <span>0</span><sup class="notify-plus none">+</sup>
+            <div class="btn btn-xs bell-notify-box notify-bell-numbers"
+                 id="bellNum" style="opacity: 0;">
+                <span>0</span><sup class="notify-plus none">+</sup>
+            </div>
+        </a>
+
+        <div class="dropdown-menu header-nav-notify-contents-wrap">
+            <div class="header-nav-notify-contents-scrolling">
+                <div class=" btn-link notify-mark-allread" style='color:#d2d4d5'>
+                    <i class="fa fa-check" id="mark_all_read"></i>
+                    <span id="mark_all_read_txt"><?= __d('gl', 'Mark All as Read') ?></span>
                 </div>
+                <ul class="header-nav-notify-contents notify-dropdown-cards" id="bell-dropdown" role="menu"
+                    style="overflow-y:scroll">
+                    <li class="notify-card-empty" id="notifyCardEmpty">
+                        <i class="fa fa-smile-o font_33px mr_8px header-icons"></i><span
+                            class="notify-empty-text"><?= __d('gl', '未読の通知はありません。') ?></span>
+                    </li>
+                </ul>
+            </div>
+            <a id="NotifyDropDownReadMore" href="#"
+               class="btn btn-link font_bold click-notify-read-more-dropdown none"
+               get-url="<?= $this->Html->url(['controller' => 'notifications',
+                                              'action'     => 'ajax_get_old_notify_more',]) ?>">
             </a>
 
-            <div class="dropdown-menu header-nav-notify-contents-wrap">
-                <div class="header-nav-notify-contents-scrolling">
-                    <div class=" btn-link notify-mark-allread" style='color:#d2d4d5'>
-                        <i class="fa fa-check" id="mark_all_read"></i>
-                        <span id="mark_all_read_txt"><?= __d('gl', 'Mark All as Read') ?></span>
-                    </div>
-                    <ul class="header-nav-notify-contents notify-dropdown-cards" id="bell-dropdown" role="menu"
-                        style="overflow-y:scroll">
-                        <li class="notify-card-empty" id="notifyCardEmpty">
-                            <i class="fa fa-smile-o font_33px mr_8px header-icons"></i><span
-                                class="notify-empty-text"><?= __d('gl', '未読の通知はありません。') ?></span>
-                        </li>
-                    </ul>
+            <a href="<?= $this->Html->url(['controller' => 'notifications', 'action' => 'index']) ?>">
+                <div class="notify-all-view-link">
+                    <?= __d('gl', 'すべて見る') ?>
                 </div>
-                <a id="NotifyDropDownReadMore" href="#"
-                   class="btn btn-link font_bold click-notify-read-more-dropdown none"
-                   get-url="<?= $this->Html->url(['controller' => 'notifications',
-                                                  'action'     => 'ajax_get_old_notify_more',]) ?>">
-                </a>
-
-                <a href="<?= $this->Html->url(['controller' => 'notifications', 'action' => 'index']) ?>">
-                    <div class="notify-all-view-link">
-                        <?= __d('gl', 'すべて見る') ?>
-                    </div>
-                </a>
-            </div>
+            </a>
         </div>
-    <?php endif; ?>
+    </div>
     <div class="header-dropdown-functions header-function">
         <a href="#"
            class="btn-function-header"
