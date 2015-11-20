@@ -493,6 +493,11 @@ textarea{
     margin-bottom: 5px;
 }
 
+.mtb_15px {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
 .mtb_8px {
     margin-top: 8px;
     margin-bottom: 8px;
@@ -1405,7 +1410,7 @@ ul.example-indent {
     white-space: -pre-wrap;
     white-space: -o-pre-wrap;
     white-space: -moz-pre-wrap;
-    word-wrap:break-word
+    word-wrap: break-word
 }
 
 .comment-photo {
@@ -1678,11 +1683,11 @@ textarea.feed-post-form {
 }
 
 .post-ogp-site-info {
-    overflow:hidden;
+    overflow: hidden;
 }
 
 .comment-ogp-site-info {
-    overflow:hidden;
+    overflow: hidden;
 }
 
 .action-upload-file-preview {
@@ -1835,9 +1840,9 @@ textarea.comment-post-form {
 }
 
 .circle-item-secret-mark {
-    vertical-align:middle;
-    height:32px;
-    line-height:32px;
+    vertical-align: middle;
+    height: 32px;
+    line-height: 32px;
     margin: 0 7px;
 }
 
@@ -1963,8 +1968,8 @@ textarea.comment-post-form {
 }
 
 .goal-edit-limit-date-label {
-    display:inline-block;
-    width:150px;
+    display: inline-block;
+    width: 150px;
 }
 
 /*/Goal*/
@@ -2252,7 +2257,6 @@ textarea.comment-post-form {
 .goalsCard-krSeek {
     margin: 0 0 4px;
 }
-
 
 .check-status i {
     margin-right: 2px;
@@ -3168,8 +3172,8 @@ Temporary Properties - YOU MUST FIX
 
 .insight-graph-container {
     height: 100px;
-    text-align:center;
-    margin:3px 7px;
+    text-align: center;
+    margin: 3px 7px;
 }
 
 .insight-graph-type-button {
@@ -3186,9 +3190,9 @@ Temporary Properties - YOU MUST FIX
 
 .insight-graph-icon {
     color: #a1a1a1;
-    font-size:16px;
-    line-height:16px;
-    vertical-align:middle
+    font-size: 16px;
+    line-height: 16px;
+    vertical-align: middle
 }
 
 .insight-graph-tooltip {
@@ -3202,12 +3206,11 @@ Temporary Properties - YOU MUST FIX
     background-color: #fff;
 }
 
- 
 .add-vision-button.disabled {
     color: #aaa;
     border: 1px solid #aaa;
     text-decoration: none;
-    pointer-events:none;
+    pointer-events: none;
 }
 
 .add-vision-button.disabled i {
