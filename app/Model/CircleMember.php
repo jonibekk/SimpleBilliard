@@ -220,7 +220,7 @@ class CircleMember extends AppModel
     public function getCircleInitMemberSelect2($circle_id, $with_admin = false)
     {
         $users = $this->getMembers($circle_id, $with_admin);
-        $user_res = $this->_makeSelect2UserList($users);
+        $user_res = $this->User->makeSelect2UserList($users);
         return ['results' => $user_res];
     }
 
@@ -267,7 +267,7 @@ class CircleMember extends AppModel
             ]
         ];
         $users = $this->User->TeamMember->find('all', $options);
-        $user_res = $this->_makeSelect2UserList($users);
+        $user_res = $this->User->makeSelect2UserList($users);
 
         // グループを結果に含める場合
         // 既にサークルメンバーになっているユーザーを除外してから返却データに追加
@@ -507,29 +507,6 @@ class CircleMember extends AppModel
         ];
 
         return $this->updateAll(['CircleMember.admin_flg' => $admin_status], $conditions);
-    }
-
-    /**
-     * select2 用のユーザーリスト配列を返す
-     *
-     * @param array $users
-     *
-     * @return array
-     */
-    protected function _makeSelect2UserList(array $users)
-    {
-        App::uses('UploadHelper', 'View/Helper');
-        $Upload = new UploadHelper(new View());
-
-        $res = [];
-        foreach ($users as $val) {
-            $data = [];
-            $data['id'] = 'user_' . $val['User']['id'];
-            $data['text'] = $val['User']['display_username'] . " (" . $val['User']['roman_username'] . ")";
-            $data['image'] = $Upload->uploadUrl($val, 'User.photo', ['style' => 'small']);
-            $res[] = $data;
-        }
-        return $res;
     }
 
     /**

@@ -968,6 +968,31 @@ class UserTest extends GoalousTestCase
             }
         }
         $this->assertTrue($group_found);
-
+    }
+    
+    function testMakeSelect2UserList()
+    {
+        $users = [
+            ['User' => [
+                'id' => 1,
+                'display_username' => '表示名 1',
+                'roman_username' => 'display name 1',
+                'photo_file_name' => 'test1.jpg',
+            ]],
+            ['User' => [
+                'id' => 2,
+                'display_username' => '表示名 2',
+                'roman_username' => 'display name 2',
+                'photo_file_name' => 'test2.jpg',
+            ]],
+        ];
+        $user_res = $this->User->makeSelect2UserList($users);
+        foreach ($user_res as $k => $v) {
+            $id = $k + 1;
+            $this->assertEquals("user_{$id}", $v['id']);
+            $this->assertEquals("表示名 {$id} (display name {$id})", $v['text']);
+            $this->assertNotEquals("test{$id}.jpg", $v['image']);
+            $this->assertTrue(strpos($v['image'], '.jpg') !== false);
+        }
     }
 }

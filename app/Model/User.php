@@ -887,17 +887,9 @@ class User extends AppModel
 
     public function getUsersSelect2($keyword, $limit = 10, $with_group = false)
     {
-        App::uses('UploadHelper', 'View/Helper');
-        $Upload = new UploadHelper(new View());
         $users = $this->getUsersByKeyword($keyword, $limit);
-        $user_res = [];
-        foreach ($users as $val) {
-            $data = [];
-            $data['id'] = 'user_' . $val['User']['id'];
-            $data['text'] = $val['User']['display_username'] . " (" . $val['User']['roman_username'] . ")";
-            $data['image'] = $Upload->uploadUrl($val, 'User.photo', ['style' => 'small']);
-            $user_res[] = $data;
-        }
+        $user_res = $this->makeSelect2UserList($users);
+
         // グループを結果に含める場合
         if ($with_group) {
             $group_res = $this->getGroupsSelect2($keyword, $limit);
@@ -908,16 +900,8 @@ class User extends AppModel
 
     public function getUsersSelectOnly($keyword, $limit = 10, $post_id, $with_group = false)
     {
-        App::uses('UploadHelper', 'View/Helper');
-        $Upload = new UploadHelper(new View());
         $users = $this->getNewUsersByKeywordNotSharedOnPost($keyword, $limit, true, $post_id);
-        $user_res = [];
-        foreach ($users as $val) {
-            $data['id'] = 'user_' . $val['User']['id'];
-            $data['text'] = $val['User']['display_username'] . " (" . $val['User']['roman_username'] . ")";
-            $data['image'] = $Upload->uploadUrl($val, 'User.photo', ['style' => 'small']);
-            $user_res[] = $data;
-        }
+        $user_res = $this->makeSelect2UserList($users);
 
         // グループを結果に含める場合
         // 既にメッセージメンバーになっているユーザーを除外してから返却データに追加
@@ -959,13 +943,8 @@ class User extends AppModel
         }
 
         $users = $this->getUsersByKeyword($keyword, $limit);
-        foreach ($users as $val) {
-            $data = [];
-            $data['id'] = 'user_' . $val['User']['id'];
-            $data['text'] = $val['User']['display_username'] . " (" . $val['User']['roman_username'] . ")";
-            $data['image'] = $Upload->uploadUrl($val, 'User.photo', ['style' => 'small']);
-            $res[] = $data;
-        }
+        $user_res = $this->makeSelect2UserList($users);
+        $res = array_merge($res, $user_res);
 
         // グループを結果に含める場合
         if ($with_group) {
@@ -1063,6 +1042,7 @@ class User extends AppModel
         // キーワードにマッチするグループ
         $groups = $this->MemberGroup->Group->getGroupsByKeyword($keyword, $limit);
         foreach ($groups as $group) {
+            // グループに属するメンバーの情報を追加
             $members = $this->MemberGroup->getGroupMember($group['Group']['id']);
             $users = [];
             foreach ($members as $member) {
@@ -1074,6 +1054,7 @@ class User extends AppModel
                     ];
                 }
             }
+            // 所属するメンバーが一人もいない場合は結果に含めない
             if (!$users) {
                 continue;
             }
@@ -1254,4 +1235,28 @@ class User extends AppModel
         // 連想配列にならないようにする
         return array_values($select2_results);
     }
+
+    /**
+     * select2 用のユーザーリスト配列を返す
+     *
+     * @param array $users
+     *
+     * @return array
+     */
+    public function makeSelect2UserList(array $users)
+    {
+        App::uses('UploadHelper', 'View/Helper');
+        $Upload = new UploadHelper(new View());
+
+        $res = [];
+        foreach ($users as $val) {
+            $data = [];
+            $data['id'] = 'user_' . $val['User']['id'];
+            $data['text'] = $val['User']['display_username'] . " (" . $val['User']['roman_username'] . ")";
+            $data['image'] = $Upload->uploadUrl($val, 'User.photo', ['style' => 'small']);
+            $res[] = $data;
+        }
+        return $res;
+    }
+
 }
