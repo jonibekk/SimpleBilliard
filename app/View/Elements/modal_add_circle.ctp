@@ -51,7 +51,8 @@
                                                         'style'    => "width: 100%",
                                                         'data-url' => $this->Html->url(
                                                             ['controller' => 'users',
-                                                             'action'     => 'ajax_select2_get_users_and_groups'
+                                                             'action'     => 'ajax_select2_get_users',
+                                                             '?'          => ['with_group' => '1']
                                                             ])
                         ]) ?>
                         <?php $this->Form->unlockField('Circle.members') ?>

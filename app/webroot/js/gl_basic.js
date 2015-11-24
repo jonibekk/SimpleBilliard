@@ -1899,14 +1899,15 @@ $(document).ready(function () {
         minimumInputLength: 1,
         placeholder: cake.message.notice.b,
         ajax: {
-            url: cake.url.select2_uesrs_and_groups,
+            url: cake.url.a,
             dataType: 'json',
             quietMillis: 100,
             cache: true,
             data: function (term, page) {
                 return {
                     term: term, //search term
-                    page_limit: 10 // page size
+                    page_limit: 10, // page size
+                    with_group: 1
                 };
             },
             results: function (data, page) {

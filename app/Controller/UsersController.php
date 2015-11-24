@@ -817,21 +817,8 @@ class UsersController extends AppController
         $query = $this->request->query;
         $res = [];
         if (isset($query['term']) && !empty($query['term']) && isset($query['page_limit']) && !empty($query['page_limit'])) {
-            $res = $this->User->getUsersSelect2($query['term'], $query['page_limit']);
-        }
-        return $this->_ajaxGetResponse($res);
-    }
-
-    /**
-     * select2のユーザ + グループ検索
-     */
-    function ajax_select2_get_users_and_groups()
-    {
-        $this->_ajaxPreProcess();
-        $query = $this->request->query;
-        $res = [];
-        if (isset($query['term']) && !empty($query['term']) && isset($query['page_limit']) && !empty($query['page_limit'])) {
-            $res = $this->User->getUsersSelect2($query['term'], $query['page_limit'], true);
+            $with_group = (isset($query['with_group']) && $query['with_group']);
+            $res = $this->User->getUsersSelect2($query['term'], $query['page_limit'], $with_group);
         }
         return $this->_ajaxGetResponse($res);
     }
