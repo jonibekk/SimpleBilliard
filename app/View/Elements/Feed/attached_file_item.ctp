@@ -45,7 +45,7 @@ if (!isset($message_page_image)) {
                     <i class="fa fa-ellipsis-h"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
-                    <?php if (strtolower($ua['device_type']) === "desktop" && !$is_mb_app): ?>
+                    <?php if (strtolower($this->Session->read('ua.device_type')) === "desktop" && !$is_mb_app): ?>
                         <li>
                             <a href="<?= $this->Html->url(
                                 [
@@ -173,7 +173,7 @@ if (!isset($message_page_image)) {
                     <div class="col col-xxs-6 text-center">
                     </div>
                 <?php endif; ?>
-                <?php if (strtolower($ua['device_type']) === "desktop" && !$is_mb_app): ?>
+                <?php if (strtolower($this->Session->read('ua.device_type')) === "desktop" && !$is_mb_app): ?>
                     <a class="link-dark-gray" href="<?= $this->Html->url(
                         [
                             'controller' => 'posts',
