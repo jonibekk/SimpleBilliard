@@ -78,7 +78,7 @@ class CirclesController extends AppController
         $res = [];
         if (isset($query['term']) && $query['term'] && isset($query['page_limit']) && $query['page_limit']) {
             $res = $this->Circle->CircleMember->getNonCircleMemberSelect2($circle_id, $query['term'],
-                                                                          $query['page_limit']);
+                                                                          $query['page_limit'], true);
         }
         return $this->_ajaxGetResponse($res);
     }
