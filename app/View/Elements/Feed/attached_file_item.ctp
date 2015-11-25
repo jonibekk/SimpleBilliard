@@ -10,6 +10,8 @@
  * @var                    $page_type
  * @var                    $post_id
  * @var                    $comment_id
+ * @var                    $ua
+ * @var                    $is_mb_app
  */
 if (!isset($comment_id)) {
     $comment_id = null;
@@ -43,15 +45,17 @@ if (!isset($message_page_image)) {
                     <i class="fa fa-ellipsis-h"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
-                    <li>
-                        <a href="<?= $this->Html->url(
-                            [
-                                'controller' => 'posts',
-                                'action'     => 'attached_file_download',
-                                'file_id'    => $data['id']
-                            ]) ?>">
-                            <i class="fa fa-download"></i><?= __d('gl', "ダウンロード") ?></a>
-                    </li>
+                    <?php if (strtolower($this->Session->read('ua.device_type')) === "desktop" && !$is_mb_app): ?>
+                        <li>
+                            <a href="<?= $this->Html->url(
+                                [
+                                    'controller' => 'posts',
+                                    'action'     => 'attached_file_download',
+                                    'file_id'    => $data['id']
+                                ]) ?>">
+                                <i class="fa fa-download"></i><?= __d('gl', "ダウンロード") ?></a>
+                        </li>
+                    <?php endif; ?>
                     <?php if ($this->Upload->isCanPreview($data)): ?>
                         <li>
                             <a href="<?= $this->Upload->attachedFileUrl($data, "viewer") ?>"
@@ -169,18 +173,20 @@ if (!isset($message_page_image)) {
                     <div class="col col-xxs-6 text-center">
                     </div>
                 <?php endif; ?>
-                <a class="link-dark-gray" href="<?= $this->Html->url(
-                    [
-                        'controller' => 'posts',
-                        'action'     => 'attached_file_download',
-                        'file_id'    => $data['id']
-                    ]) ?>">
-                    <div class="col col-xxs-6 text-center file-btn-wap">
-                        <div class="file-btn">
-                            <i class="fa fa-download"></i><?= __d('gl', "ダウンロード") ?>
+                <?php if (strtolower($this->Session->read('ua.device_type')) === "desktop" && !$is_mb_app): ?>
+                    <a class="link-dark-gray" href="<?= $this->Html->url(
+                        [
+                            'controller' => 'posts',
+                            'action'     => 'attached_file_download',
+                            'file_id'    => $data['id']
+                        ]) ?>">
+                        <div class="col col-xxs-6 text-center file-btn-wap">
+                            <div class="file-btn">
+                                <i class="fa fa-download"></i><?= __d('gl', "ダウンロード") ?>
+                            </div>
                         </div>
-                    </div>
-                </a>
+                    </a>
+                <?php endif; ?>
             </div>
         <?php endif; ?>
         <?php } ?>
