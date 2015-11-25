@@ -37,7 +37,7 @@ class GlRedis extends AppModel
     const KEY_TYPE_MESSAGE = 'message_key';
     const KEY_TYPE_NOTIFICATION_COUNT = 'new_notification_count_key';
     const KEY_TYPE_LOGIN_FAIL = 'login_fail_key';
-    const KEY_TYPE_TWO_FA_LOGIN_FAIL = 'two_fa_login_fail_key';
+    const KEY_TYPE_TWO_FA_FAIL = 'two_fa_fail_key';
     const KEY_TYPE_COUNT_BY_USER = 'count_by_user_key';
     const KEY_TYPE_COUNT_MESSAGE_BY_USER = 'count_message_by_user_key';
     const KEY_TYPE_TWO_FA_DEVICE_HASHES = 'two_fa_device_hashes_key';
@@ -56,7 +56,7 @@ class GlRedis extends AppModel
         self::KEY_TYPE_NOTIFICATION,
         self::KEY_TYPE_NOTIFICATION_COUNT,
         self::KEY_TYPE_LOGIN_FAIL,
-        self::KEY_TYPE_TWO_FA_LOGIN_FAIL,
+        self::KEY_TYPE_TWO_FA_FAIL,
         self::KEY_TYPE_COUNT_BY_USER,
         self::KEY_TYPE_COUNT_MESSAGE_BY_USER,
         self::KEY_TYPE_TWO_FA_DEVICE_HASHES,
@@ -160,7 +160,7 @@ class GlRedis extends AppModel
      * @var array
      */
     private /** @noinspection PhpUnusedPrivateFieldInspection */
-        $two_fa_login_fail_key = [
+        $two_fa_fail_key = [
         'user'       => null,
         'device'     => null,
         'two_fa'     => null,
@@ -819,7 +819,7 @@ class GlRedis extends AppModel
     function isTwoFaAccountLocked($user_id, $ip_address = null)
     {
         $device = $this->makeDeviceHash($user_id, $ip_address);
-        $key = $this->getKeyName(self::KEY_TYPE_TWO_FA_LOGIN_FAIL, null, $user_id, null, null, null, $device);
+        $key = $this->getKeyName(self::KEY_TYPE_TWO_FA_FAIL, null, $user_id, null, null, null, $device);
         $count = $this->Db->incr($key);
         if ($count !== false && $count >= ACCOUNT_LOCK_COUNT) {
             return true;
