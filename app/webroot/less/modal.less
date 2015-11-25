@@ -117,52 +117,52 @@ Tutorial
 }
 
 .modalTutorial-btnPrev {
-    width: 96px;
-    height: 96px;
-    display: inline;
-    line-height: 100px;
-    border-radius: 50%;
-    background: #fff;
-    text-align: center;
-    opacity: .55;
-    position: absolute;
-    bottom: 16px;
-    left: 16px;
-    padding-right: 8px;
+  width: 96px;
+  height: 96px;
+  display: inline;
+  line-height: 100px;
+  border-radius: 50%;
+  background: #fff;
+  text-align: center;
+  opacity: .55;
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  padding-right: 8px;
 }
 
 .modalTutorial-btnNext {
-    width: 96px;
-    height: 96px;
-    display: inline;
-    line-height: 100px;
-    border-radius: 50%;
-    background: #fff;
-    text-align: center;
-    opacity: .55;
-    position: absolute;
-    bottom: 16px;
-    right: 16px;
-    padding-left: 8px;
+  width: 96px;
+  height: 96px;
+  display: inline;
+  line-height: 100px;
+  border-radius: 50%;
+  background: #fff;
+  text-align: center;
+  opacity: .55;
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  padding-left: 8px;
 }
 
 .modalTutorial-btnGo {
-    display: none;
-    width: 96px;
-    height: 96px;
-    line-height: 100px;
-    border-radius: 50%;
-    background: #fff;
-    text-align: center;
-    opacity: .85;
-    position: absolute;
-    bottom: 16px;
-    right: 16px;
+  display: none;
+  width: 96px;
+  height: 96px;
+  line-height: 100px;
+  border-radius: 50%;
+  background: #fff;
+  text-align: center;
+  opacity: .85;
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
 }
 
 .modalTutorial-btnIcon {
-    display: inline;
-    line-height: 96px;
+  display: inline;
+  line-height: 96px;
 }
 
 .modal-key-result-headings {
@@ -201,8 +201,14 @@ Tutorial
 .modal-public-circles-contents-circle-name {
   display: inline-block;
   width: 54%;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  // .line-number-limit-1();
+  // white-space: nowrap;
+  // overflow: hidden;
+  // text-overflow: ellipsis;
+  .line-number-limit-1();
+  &::before {
+    height: 24px;
+  }
+  @media screen and (min-width: 768px) {
+    width: 72%;
+  }
 }

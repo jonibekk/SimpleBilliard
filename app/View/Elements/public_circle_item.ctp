@@ -44,19 +44,17 @@ $member_count = isset($member_count) ? $member_count : '';
                                             'data-secret' => $circle['Circle']['public_flg'] ? "0" : "1"]) ?>
                 <?php endif; ?>
             </div>
-            <?php if (!$circle['Circle']['public_flg']): ?>
-                <div class="pull-right circle-item-secret-mark">
-                    <i class="fa fa-lock"></i>
-                </div>
-            <?php endif ?>
         <?php endif; ?>
         <div class="modal-public-circles-contents-circle-name font_12px font_bold modalFeedTextPadding">
             <?php if ($circle['Circle']['created'] > strtotime("-1 week")): ?>
-                <span class="circle-new">New</span>
+                <span class="circle-item-new">New</span>
             <?php endif; ?>
+            <?php if (!$circle['Circle']['public_flg']): ?>
+                <i class="fa fa-lock circle-item-secret-mark"></i>
+            <?php endif ?>
             <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle['Circle']['id']]) ?>"
-               class="link-dark-gray">
-                <?= h($circle['Circle']['name']) ?>
+               class="link-dark-gray circle-item-circle-link">
+                <p class="circle-item-circle-name"><?= h($circle['Circle']['name']) ?></p>
             </a>
         </div>
         <div class="font_12px font_lightgray modalFeedTextPaddingSmall">
