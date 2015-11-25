@@ -109,4 +109,28 @@ class Group extends AppModel
         $res = $this->find('all', $options);
         return $res;
     }
+
+    /**
+     * グループ名がキーワードにマッチするグループを返す
+     *
+     * @param $keyword
+     * @param $limit
+     *
+     * @return array|null
+     */
+    function getGroupsByKeyword($keyword, $limit = 10)
+    {
+        $keyword = trim($keyword);
+        if (strlen($keyword) == 0) {
+            return [];
+        }
+        $options = [
+            'conditions' => [
+                'Group.name LIKE' => $keyword . "%",
+            ],
+            'limit'      => $limit,
+        ];
+        $res = $this->find('all', $options);
+        return $res;
+    }
 }

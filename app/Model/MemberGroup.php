@@ -88,4 +88,22 @@ class MemberGroup extends AppModel
         return $group_list;
     }
 
+    /**
+     * 指定グループに属しているメンバーデータを返す
+     *
+     * @param $group_id
+     *
+     * @return array|null
+     */
+    public function getGroupMember($group_id)
+    {
+        $options = [
+            'conditions' => [
+                'group_id' => $group_id
+            ],
+            'contain' => ['User']
+        ];
+        return $this->find('all', $options);
+    }
+
 }
