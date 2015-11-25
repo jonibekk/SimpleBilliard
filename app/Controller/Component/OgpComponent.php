@@ -429,7 +429,7 @@ class OgpComponent extends Object
                 $page->_values[$key] = $tag->getAttribute('value');
             }
             //Based on modifications at https://github.com/bashofmann/opengraph/blob/master/src/OpenGraph/OpenGraph.php
-            if ($tag->hasAttribute('name') && $tag->getAttribute('name') === 'description') {
+            if ($tag->hasAttribute('name') && strtolower($tag->getAttribute('name')) === 'description') {
                 $nonOgDescription = $tag->getAttribute('content');
             }
 
