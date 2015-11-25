@@ -242,8 +242,10 @@ class AppController extends Controller
                 $this->_setNotifyCnt();
                 $this->_setMyCircle();
                 $this->_setActionCnt();
-                $this->set('current_term', $this->Team->EvaluateTerm->getCurrentTermData());
+                //UA情報をViewにセット
+                $this->set('ua', $this->getBrowser());
 
+                $this->set('current_term', $this->Team->EvaluateTerm->getCurrentTermData());
             }
             $this->_setMyMemberStatus();
             $this->_saveAccessUser($this->current_team_id, $this->Auth->user('id'));
