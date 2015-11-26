@@ -91,9 +91,11 @@
 }
 
 .header-user-name {
+  display: inline-block;
   font-size: 12px;
+  margin: 16px 0;
   padding: 0 10px;
-  line-height: 50px;
+  line-height: 18px;
   border-right: 1px solid #ccc;
   color: rgb(80, 80, 80);
   vertical-align: middle;
@@ -203,6 +205,9 @@
   &:hover {
     .header-nav-avatar {
       box-shadow: 0 4px 8px rgba(17, 17, 17, .3);
+    }
+    .header-user-name {
+      text-decoration: underline;
     }
   }
 }
