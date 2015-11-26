@@ -1150,37 +1150,6 @@ textarea{
     vertical-align: top;
 }
 
-.post-contents a {
-    color: #ddd;
-    display: inline-block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-    vertical-align: bottom;
-}
-
-.comment-contents a {
-    color: #c5c5c5;
-    display: block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.post-contents a:hover,
-.post-contents a:hover,
-.post-contents a:hover,
-.comment-contents a:hover,
-.comment-contents a:hover,
-.comment-contents a:hover {
-    color: #91170a;
-}
-
-.comment-contents .comment-add-pic {
-    color: #d9230f;
-}
-
 .zeroclipboard-is-hover {
     color: #fff !important;
     background: #d9230f !important;
