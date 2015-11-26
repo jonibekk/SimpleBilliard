@@ -14,9 +14,9 @@
 /*
   headerのスタイル
  */
-.header-toggle-icon {
+.header-toggle-icon(@bgcolor: white) {
   display: inline-block;
-  background: white;
+  background: @bgcolor;
   border: none;
   height: 50px;
   margin: 0;
@@ -25,7 +25,7 @@
   &:hover,
   &:focus,
   &:target {
-    background-color: #fff;
+    background-color: @bgcolor;
     outline: none;
   }
   @media screen and (min-width: 768px) {
@@ -34,13 +34,7 @@
 }
 
 .mb-app-header-toggle-icon {
-  .header-toggle-icon;
-  background: #C20A19;
-  &:hover,
-  &:focus,
-  &:target {
-    background-color: #C20A19;
-  }
+  .header-toggle-icon(#c20a19);
 }
 
 .nav-container {
@@ -174,7 +168,7 @@
 }
 
 .header-nav-message-contents-wrap {
-  .frame-arrow-icon (64px);
+  .frame-arrow-icon(64px);
   top: 42px;
   right: -53px;
   width: 280px;
@@ -187,7 +181,7 @@
 }
 
 .header-nav-notify-contents-wrap {
-  .frame-arrow-icon (36px);
+  .frame-arrow-icon(36px);
   top: 42px;
   right: -24px;
   width: 280px;
@@ -323,7 +317,7 @@
 }
 
 .header-nav-add-contents-text {
-  display: inline;
+  display: inline-block;
   width: 100%;
   margin: 0;
   padding: 0;
