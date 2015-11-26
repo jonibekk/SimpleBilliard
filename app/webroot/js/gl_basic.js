@@ -2843,6 +2843,7 @@ function evCommentOldView() {
                     $posts.find('.comment_gallery').each(function (index, element) {
                         bindCommentBalancedGallery($(element));
                     });
+                    changeSizeFeedImageOnlyOne($posts.find('.feed_img_only_one'));
                 });
 
             }
@@ -3269,6 +3270,7 @@ function evCommentLatestView(options) {
                     $posts.find('.comment_gallery').each(function (index, element) {
                         bindCommentBalancedGallery($(element));
                     });
+                    changeSizeFeedImageOnlyOne($posts.find('.feed_img_only_one'));
                 });
                 $obj.removeAttr("disabled");
 
