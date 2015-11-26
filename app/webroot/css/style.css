@@ -1354,6 +1354,24 @@ ul.example-indent {
     margin-right: 8px;
 }
 
+
+.feed_img_only_one a {
+    display:block;
+    width:100%;
+    overflow: hidden;
+    position:relative;
+}
+
+.feed_img_only_one a img {
+    position: absolute;
+    top: -100%;
+    left: -100%;
+    right: -100%;
+    bottom: -100%;
+    margin: auto;
+    width: 100%;
+}
+
 .post-contents {
     padding: 10px 0 0 0;
 }
