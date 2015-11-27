@@ -76,3 +76,39 @@
 .feed_img_only_one img{
   width: 100%;
 }
+
+.post-contents {
+  a {
+    color: @subColor4;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    vertical-align: bottom;
+    &:hover,
+    &:target,
+    &:active {
+      color: #91170a;
+    }
+  }
+}
+
+.comment-contents {
+  a {
+    color: @subColor4;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    &:hover,
+    &:target,
+    &:active {
+      color: #91170a;
+    }
+  }
+
+  .comment-add-pic {
+    color: #d9230f;
+  }
+}
