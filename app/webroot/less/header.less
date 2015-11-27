@@ -1,3 +1,7 @@
+/*
+  headerのスタイル
+ */
+
 .dropdown-backdrop {
   opacity: 0;
   z-index: 5;
@@ -10,13 +14,10 @@
 .navmenu-fixed-left {
   z-index: 100;
 }
-
-/*
-  headerのスタイル
- */
-.header-toggle-icon {
+ 
+.mixin-header-toggle-icon (@bgcolor: @backgroundColor1) {
   display: inline-block;
-  background: @backgroundColor1;
+  background: @bgcolor;
   border: none;
   height: 50px;
   margin: 0;
@@ -25,7 +26,7 @@
   &:hover,
   &:focus,
   &:target {
-    background-color: @backgroundColor1;
+    background-color: @bgcolor;
     outline: none;
   }
   @media screen and (min-width: 768px) {
@@ -33,14 +34,12 @@
   }
 }
 
+.header-toggle-icon {
+  .mixin-header-toggle-icon();
+}
+
 .mb-app-header-toggle-icon {
-  .header-toggle-icon;
-  background: #C20A19;
-  &:hover,
-  &:focus,
-  &:target {
-    background-color: #C20A19;
-  }
+  .mixin-header-toggle-icon(#c20a19);
 }
 
 .nav-container {
@@ -174,7 +173,7 @@
 }
 
 .header-nav-message-contents-wrap {
-  .frame-arrow-icon (64px);
+  .frame-arrow-icon(64px);
   top: 42px;
   right: -53px;
   width: 280px;
@@ -187,7 +186,7 @@
 }
 
 .header-nav-notify-contents-wrap {
-  .frame-arrow-icon (36px);
+  .frame-arrow-icon(36px);
   top: 42px;
   right: -24px;
   width: 280px;
@@ -266,8 +265,6 @@
 .header-right-navigations {
   float: right;
   display: inline-block;
-
-  // text-align: right;
   vertical-align: top;
   margin: 0 0 0 auto;
   font-size: 0;
@@ -282,7 +279,6 @@
   }
 }
 
-/*ハンバーガー*/
 .nav-team-select,
 .nav-search {
   width: 180px;
@@ -318,12 +314,12 @@
   color: #333333;
   white-space: nowrap;
   &:hover {
-    color: @whiteColor;
+    color: #fff;
   }
 }
 
 .header-nav-add-contents-text {
-  display: inline;
+  display: inline-block;
   width: 100%;
   margin: 0;
   padding: 0;
@@ -435,5 +431,5 @@
 
 .mb-app-nav-icon {
   opacity: 1;
-  color: @whiteColor;
+  color: white;
 }
