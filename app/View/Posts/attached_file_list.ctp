@@ -16,6 +16,9 @@
 ?>
 <!-- START app/View/Posts/attached_file_list.ctp -->
 <?php if ($this->Session->read('current_team_id')): ?>
+    <?= $this->element('Feed/feed_share_range_filter',
+                       compact('current_circle', 'user_status', 'circle_member_count', 'circle_status',
+                               'feed_filter')) ?>
     <?php
     if (isset($user_status)) {
         if (viaIsSet($params['controller']) == 'posts' && viaIsSet($params['action']) == 'attached_file_list' && ($user_status == 'joined' || $user_status == 'admin')) {
@@ -26,9 +29,6 @@
         echo $this->element("Feed/common_form");
     }
     ?>
-    <?= $this->element('Feed/feed_share_range_filter',
-                       compact('current_circle', 'user_status', 'circle_member_count', 'circle_status',
-                               'feed_filter')) ?>
     <a href="" class="alert alert-info feed-notify-box" role="alert" style="margin-bottom:5px;display:none;opacity:0;">
         <span class="num"></span><?= __d('gl', "件の新しい投稿があります。") ?></a>
     <div class="panel panel-default" id="CircleFiles">

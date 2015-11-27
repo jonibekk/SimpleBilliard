@@ -18,6 +18,8 @@
  */
 ?>
 <!-- START app/View/Elements/Feed/contents.ctp -->
+<?= $this->element('Feed/feed_share_range_filter',
+                   compact('current_circle', 'user_status', 'circle_member_count', 'circle_status', 'feed_filter')) ?>
 <?php
 // 投稿単体ページでは入力フォームを表示しない
 if (!isset($this->request->params['post_id'])) {
@@ -31,8 +33,6 @@ if (!isset($this->request->params['post_id'])) {
     }
 }
 ?>
-<?= $this->element('Feed/feed_share_range_filter',
-                   compact('current_circle', 'user_status', 'circle_member_count', 'circle_status', 'feed_filter')) ?>
 <a href="" class="alert alert-info feed-notify-box" role="alert" style="margin-bottom:5px;display:none;opacity:0;">
     <span class="num"></span><?= __d('gl', "件の新しい投稿があります。") ?></a>
 
