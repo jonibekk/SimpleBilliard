@@ -43,6 +43,26 @@ function bindCommentBalancedGallery($obj) {
     });
 };
 
+function changeSizeFeedImageOnlyOne($obj)
+{
+    $obj.each(function (i, v) {
+        var $elm = $(v);
+        var $img = $elm.find('img');
+
+        // 横長と正方形の画像は全体を表示
+        if ($img.width() >= $img.height()) {
+            $elm.css('height', $img.height());
+            $img.parent().css('height', $img.height());
+        }
+        // 縦長の画像は、4:3 の比率にする
+        else {
+            var height = $img.width() * 0.75;
+            $elm.css('height', height);
+            $img.parent().css('height', height);
+        }
+    });
+}
+
 /**
  * selector の要素に Control(Command) + Enter 押下時のアクションを設定する
  *
@@ -59,6 +79,7 @@ var bindCtrlEnterAction = function (selector, callback) {
 $(window).load(function () {
     bindPostBalancedGallery($('.post_gallery'));
     bindCommentBalancedGallery($('.comment_gallery'));
+    changeSizeFeedImageOnlyOne($('.feed_img_only_one'));
     setDefaultTab();
 });
 
@@ -2598,6 +2619,7 @@ function evFeedMoreView(options) {
                     $posts.find('.comment_gallery').each(function (index, element) {
                         bindCommentBalancedGallery($(element));
                     });
+                    changeSizeFeedImageOnlyOne($posts.find('.feed_img_only_one'));
                 });
             }
 
@@ -2812,6 +2834,7 @@ function evCommentOldView() {
                     $posts.find('.comment_gallery').each(function (index, element) {
                         bindCommentBalancedGallery($(element));
                     });
+                    changeSizeFeedImageOnlyOne($posts.find('.feed_img_only_one'));
                 });
 
             }
@@ -3238,6 +3261,7 @@ function evCommentLatestView(options) {
                     $posts.find('.comment_gallery').each(function (index, element) {
                         bindCommentBalancedGallery($(element));
                     });
+                    changeSizeFeedImageOnlyOne($posts.find('.feed_img_only_one'));
                 });
                 $obj.removeAttr("disabled");
 
