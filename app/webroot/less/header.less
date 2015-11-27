@@ -16,7 +16,7 @@
  */
 .header-toggle-icon {
   display: inline-block;
-  background: white;
+  background: @backgroundColor1;
   border: none;
   height: 50px;
   margin: 0;
@@ -25,7 +25,7 @@
   &:hover,
   &:focus,
   &:target {
-    background-color: #fff;
+    background-color: @backgroundColor1;
     outline: none;
   }
   @media screen and (min-width: 768px) {
@@ -318,7 +318,7 @@
   color: #333333;
   white-space: nowrap;
   &:hover {
-    color: #fff;
+    color: @whiteColor;
   }
 }
 
@@ -435,5 +435,5 @@
 
 .mb-app-nav-icon {
   opacity: 1;
-  color: white;
+  color: @whiteColor;
 }
