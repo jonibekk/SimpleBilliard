@@ -419,7 +419,7 @@ class CirclesController extends AppController
         $error = $res ? false : true;
         $msg = $error ? __d('gl', "エラーが発生しました。") : __d('gl', "設定を更新しました。");
 
-        return $this->_ajaxGetResponse(['error' => $error, 'msg'   => $msg]);
+        return $this->_ajaxGetResponse(['error' => $error, 'msg' => $msg]);
     }
 
 
