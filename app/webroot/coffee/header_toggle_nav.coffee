@@ -16,7 +16,7 @@ headerToggleNav = ->
     $('.toggle-icon').removeClass('rotate').addClass('rotate-reverse').removeClass('fa-arrow-right').addClass 'fa-navicon'
     return
   $(headerDropdowns).on 'click', ->
-    if $('#NavbarOffcanvas).hasClass 'canvas-slid'
+    if $('#NavbarOffcanvas').hasClass 'canvas-slid'
       $('#NavbarOffcanvas').removeClass 'in canvas-slid'
     $('#layer-black').css 'display', 'none'
     $('.toggle-icon').removeClass('rotate').addClass('rotate-reverse').removeClass('fa-arrow-right').addClass 'fa-navicon'
