@@ -41,7 +41,7 @@
                     <?php } ?>
                 </li>
             <?php endif; ?>
-            <?php if ($user_status == 'joined'): ?>
+            <?php if ($user_status == 'joined' || $user_status == 'admin'): ?>
             <li><a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_setting', 'circle_id' => $current_circle['Circle']['id']]) ?>" class="modal-circle-setting"><?= __d('gl', '設定') ?></a></li>
             <?php endif ?>
         </ul>
