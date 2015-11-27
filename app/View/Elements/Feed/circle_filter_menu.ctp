@@ -15,7 +15,7 @@
 <span class="feed-current-filter"><?= mb_strimwidth(h($current_circle['Circle']['name']), 0, 29,
                                                     '...') ?></span>
 <a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_get_circle_members', 'circle_id' => $current_circle['Circle']['id']]) ?>"
-     class="modal-ajax-get"> <span class="feed-circle-user-number"><i
+     class="modal-ajax-get remove-on-hide"> <span class="feed-circle-user-number"><i
             class="fa fa-user"></i>&nbsp;<?= $circle_member_count ?>
                     </span></a>
 <?php if ($user_status != 'admin') { ?>
