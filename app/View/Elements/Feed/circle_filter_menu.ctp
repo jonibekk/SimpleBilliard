@@ -18,8 +18,7 @@
      class="modal-ajax-get remove-on-hide"> <span class="feed-circle-user-number"><i
             class="fa fa-user"></i>&nbsp;<?= $circle_member_count ?>
                     </span></a>
-<?php if ($user_status != 'admin') { ?>
-    <div class="pull-right header-function dropdown">
+    <div class="pull-right header-function dropdown" id="CircleFilterMenuDropDown">
         <a id="download" data-toggle="dropdown"
            class="font_lightGray-gray"
            href="#" style="opacity: 0.54;">
@@ -30,31 +29,21 @@
         </a>
         <ul aria-labelledby="dropdownMenu1" role="menu"
             class="dropdown-menu dropdown-menu-right frame-arrow-icon">
-            <?php if (!$current_circle['Circle']['team_all_flg']): ?>
+            <?php if (!$current_circle['Circle']['team_all_flg'] && $user_status != 'admin'): ?>
                 <li>
                     <?php if ($user_status != 'joined') { ?>
                         <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'join_circle', 'circle_id' => $current_circle['Circle']['id']]) ?>">
-                            <?= __d('gl', 'Join Circle') ?></a>
+                            <?= __d('gl', 'サークルに参加する') ?></a>
                     <?php }
                     else { ?>
                         <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'unjoin_circle', 'circle_id' => $current_circle['Circle']['id']]) ?>">
-                            <?= __d('gl', 'Leave Circle') ?></a>
+                            <?= __d('gl', 'サークルを脱退する') ?></a>
                     <?php } ?>
                 </li>
             <?php endif; ?>
-            <?php if ($user_status == 'joined'): ?>
-                <li>
-                    <?php if ($circle_status == '1') {
-                        echo $this->Html->link(__d('gl', 'Hide'),
-                                               ['controller' => 'posts', 'action' => 'circle_toggle_status', 'circle_id' => $current_circle['Circle']['id'], 0]);
-                    }
-                    else {
-                        echo $this->Html->link(__d('gl', 'Show'),
-                                               ['controller' => 'posts', 'action' => 'circle_toggle_status', 'circle_id' => $current_circle['Circle']['id'], 1]);
-                    } ?>
-                </li>
-            <?php endif; ?>
+            <?php if ($user_status == 'joined' || $user_status == 'admin'): ?>
+            <li><a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_setting', 'circle_id' => $current_circle['Circle']['id']]) ?>" class="modal-circle-setting"><?= __d('gl', '設定') ?></a></li>
+            <?php endif ?>
         </ul>
     </div>
-<?php } ?>
 <!-- END app/View/Elements/Feed/circle_filter_menu.ctp -->
