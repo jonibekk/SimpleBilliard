@@ -1,3 +1,7 @@
+/*
+  headerのスタイル
+ */
+
 .dropdown-backdrop {
   opacity: 0;
   z-index: 5;
@@ -10,11 +14,8 @@
 .navmenu-fixed-left {
   z-index: 100;
 }
-
-/*
-  headerのスタイル
- */
-.header-toggle-icon(@bgcolor: @backgroundColor1) {
+ 
+.mixin-header-toggle-icon (@bgcolor: @backgroundColor1) {
   display: inline-block;
   background: @bgcolor;
   border: none;
@@ -33,8 +34,12 @@
   }
 }
 
+.header-toggle-icon {
+  .mixin-header-toggle-icon();
+}
+
 .mb-app-header-toggle-icon {
-  .header-toggle-icon(#c20a19);
+  .mixin-header-toggle-icon(#c20a19);
 }
 
 .nav-container {
@@ -260,8 +265,6 @@
 .header-right-navigations {
   float: right;
   display: inline-block;
-
-  // text-align: right;
   vertical-align: top;
   margin: 0 0 0 auto;
   font-size: 0;
@@ -276,7 +279,6 @@
   }
 }
 
-/*ハンバーガー*/
 .nav-team-select,
 .nav-search {
   width: 180px;
