@@ -430,4 +430,56 @@ class CircleMemberTest extends GoalousTestCase
         $this->assertTrue($res);
     }
 
+    function testEditCircleSetting()
+    {
+        $this->_setDefault(1, 1);
+        $circle_member = $this->CircleMember->isBelong(1, 1);
+
+        $res = $this->CircleMember->editCircleSetting(1, 1, ['CircleMember' => [
+            'show_for_all_feed_flg' => 1,
+            'get_notification_flg'  => 1,
+        ]]);
+        $this->assertTrue($res);
+        $row = $this->CircleMember->findById($circle_member['CircleMember']['id']);
+        $this->assertEquals(1, $row['CircleMember']['show_for_all_feed_flg']);
+        $this->assertEquals(1, $row['CircleMember']['get_notification_flg']);
+
+        $res = $this->CircleMember->editCircleSetting(1, 1, ['CircleMember' => [
+            'show_for_all_feed_flg' => 1,
+            'get_notification_flg'  => 0,
+        ]]);
+        $this->assertTrue($res);
+        $row = $this->CircleMember->findById($circle_member['CircleMember']['id']);
+        $this->assertEquals(1, $row['CircleMember']['show_for_all_feed_flg']);
+        $this->assertEquals(0, $row['CircleMember']['get_notification_flg']);
+
+        $res = $this->CircleMember->editCircleSetting(1, 1, ['CircleMember' => [
+            'show_for_all_feed_flg' => 0,
+        ]]);
+        $this->assertTrue($res);
+        $row = $this->CircleMember->findById($circle_member['CircleMember']['id']);
+        $this->assertEquals(0, $row['CircleMember']['show_for_all_feed_flg']);
+        $this->assertEquals(0, $row['CircleMember']['get_notification_flg']);
+
+        $res = $this->CircleMember->editCircleSetting(1, 1, ['CircleMember' => [
+            'circle_id' => 0,
+        ]]);
+        $this->assertFalse($res);
+    }
+
+    function testGetNotificationEnableUserList()
+    {
+        $this->_setDefault(1, 1);
+        $rows = $this->CircleMember->getNotificationEnableUserList(1);
+        $this->assertNotEmpty($rows);
+        $user_id = current($rows);
+        $this->CircleMember->updateAll(['get_notification_flg' => 0], [
+            'CircleMember.user_id'   => $user_id,
+            'CircleMember.team_id'   => 1,
+            'CircleMember.circle_id' => 1,
+        ]);
+        $rows = $this->CircleMember->getNotificationEnableUserList(1);
+        $this->assertFalse(isset($rows[$user_id]));
+    }
+
 }
