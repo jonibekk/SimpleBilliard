@@ -2254,6 +2254,75 @@ $(document).ready(function () {
         }
     });
 
+    $(document).on("click", '#CircleFilterMenuDropDown .modal-circle-setting', function (e) {
+        e.preventDefault();
+        var $this = $(this);
+        if ($this.hasClass('double_click')) {
+            return false;
+        }
+        $this.addClass('double_click');
+        var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        $modal_elm.on('hidden.bs.modal', function () {
+            $(this).remove();
+        });
+        var url = $(this).attr('href');
+        $.get(url, function (data) {
+            $modal_elm.append(data);
+            $modal_elm.modal();
+            $modal_elm.find(".bt-switch").bootstrapSwitch({
+                size: "small"
+            })
+                // スイッチ切り替えた時、即時データを更新する
+                .on('switchChange.bootstrapSwitch', function () {
+                    var $form = $('#CircleSettingForm');
+                    $.ajax({
+                        url: cake.url.circle_setting,
+                        type: 'POST',
+                        dataType: 'json',
+                        processData: false,
+                        data: $form.serialize()
+                    })
+                        .done(function (res) {
+                            PNotify.removeAll();
+                            if (res.error) {
+                                new PNotify({
+                                    type: 'error',
+                                    title: cake.word.error,
+                                    text: res.msg,
+                                    icon: "fa fa-check-circle",
+                                    delay: 4000,
+                                    mouse_reset: false
+                                });
+                            }
+                            else {
+                                new PNotify({
+                                    type: 'success',
+                                    title: cake.word.success,
+                                    text: res.msg,
+                                    icon: "fa fa-check-circle",
+                                    delay: 4000,
+                                    mouse_reset: false
+                                });
+                            }
+                        })
+                        .fail(function () {
+                            PNotify.removeAll();
+                            new PNotify({
+                                type: 'error',
+                                title: cake.word.error,
+                                text: cake.message.notice.d,
+                                icon: "fa fa-check-circle",
+                                delay: 4000,
+                                mouse_reset: false
+                            });
+                        });
+                });
+        }).success(function () {
+            $('body').addClass('modal-open');
+            $this.removeClass('double_click');
+        });
+    });
+
     $('#PostDisplayForm, #CommonActionDisplayForm, #MessageDisplayForm').change(function (e) {
         var $target = $(e.target);
         switch ($target.attr('id')) {

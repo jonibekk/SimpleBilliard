@@ -374,6 +374,56 @@ class CirclesController extends AppController
     }
 
     /**
+     * サークル設定変更 モーダル表示
+     *
+     * @return CakeResponse
+     */
+    public function ajax_setting()
+    {
+        $this->_ajaxPreProcess();
+
+        // このサークルに属しているかチェック
+        $circle_member = $this->Circle->CircleMember->isBelong($this->request->params['named']['circle_id'],
+                                                               $this->Auth->user('id'));
+        if (!$circle_member) {
+            throw new NotFoundException(__d('gl', "このサークルは存在しません。"));
+        }
+        $this->set('circle_member', $circle_member);
+
+        $response = $this->render('Feed/modal_circle_setting');
+        $html = $response->__toString();
+        return $this->_ajaxGetResponse($html);
+    }
+
+    /**
+     * サークル設定変更
+     *
+     * @return CakeResponse
+     */
+    public function ajax_change_setting()
+    {
+        $this->_ajaxPreProcess();
+        $this->request->allowMethod('post');
+
+        // このサークルに属しているかチェック
+        $circle_member = $this->Circle->CircleMember->isBelong($this->request->data('CircleMember.circle_id'),
+                                                               $this->Auth->user('id'));
+        if (!$circle_member) {
+            throw new NotFoundException(__d('gl', "このサークルは存在しません。"));
+        }
+
+        // 設定データ更新
+        $res = $this->Circle->CircleMember->editCircleSetting($this->request->data('CircleMember.circle_id'),
+                                                              $this->Auth->user('id'),
+                                                              $this->request->data);
+        $error = $res ? false : true;
+        $msg = $error ? __d('gl', "エラーが発生しました。") : __d('gl', "設定を更新しました。");
+
+        return $this->_ajaxGetResponse(['error' => $error, 'msg'   => $msg]);
+    }
+
+
+    /**
      * ajax エラー用レスポンスデータを返す
      *
      * @param $message
