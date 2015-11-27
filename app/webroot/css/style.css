@@ -1323,12 +1323,11 @@ ul.example-indent {
     margin-right: 8px;
 }
 
-
 .feed_img_only_one a {
-    display:block;
-    width:100%;
+    display: block;
+    width: 100%;
     overflow: hidden;
-    position:relative;
+    position: relative;
 }
 
 .feed_img_only_one a img {
@@ -1423,7 +1422,7 @@ ul.example-indent {
     color: red;
 }
 
-.panel-read-more-body {
+.panel-read-more-body, .panel-read-more-body-no-data {
     padding: 0;
     width: 100%;
     height: 100%;

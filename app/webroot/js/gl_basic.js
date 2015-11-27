@@ -43,8 +43,7 @@ function bindCommentBalancedGallery($obj) {
     });
 };
 
-function changeSizeFeedImageOnlyOne($obj)
-{
+function changeSizeFeedImageOnlyOne($obj) {
     $obj.each(function (i, v) {
         var $elm = $(v);
         var $img = $elm.find('img');
@@ -2550,11 +2549,18 @@ function getModalPostList(e) {
 }
 action_autoload_more = false;
 autoload_more = false;
+var feed_loading_now = false;
 function evFeedMoreView(options) {
     var opt = $.extend({
         recursive: false,
         loader_id: null
     }, options);
+
+    //フィード読み込み中はキャンセル
+    if(feed_loading_now){
+        return false;
+    }
+    feed_loading_now = true;
 
     attrUndefinedCheck(this, 'parent-id');
     attrUndefinedCheck(this, 'next-page-num');
@@ -2653,6 +2659,7 @@ function evFeedMoreView(options) {
                         // さらに古い投稿が存在する可能性がある場合は、再度同じ関数を呼び出す
                         if (data.start && data.start > oldest_post_time) {
                             setTimeout(function () {
+                                feed_loading_now = false;
                                 evFeedMoreView.call($obj[0], {recursive: true, loader_id: '__feed_loader'});
                             }, 200);
                             return;
@@ -2661,6 +2668,7 @@ function evFeedMoreView(options) {
                         else {
                             $loader_html.remove();
                             $("#" + no_data_text_id).show();
+                            $('#' + parent_id).find('.panel-read-more-body').removeClass('panel-read-more-body').addClass('panel-read-more-body-no-data');
                             $obj.remove();
                             return;
                         }
@@ -2671,16 +2679,19 @@ function evFeedMoreView(options) {
                     //ローダーを削除
                     $loader_html.remove();
                     $("#" + no_data_text_id).show();
+                    $('#' + parent_id).find('.panel-read-more-body').removeClass('panel-read-more-body').addClass('panel-read-more-body-no-data');
                     //もっと読む表示をやめる
                     $obj.remove();
                 }
             }
             action_autoload_more = false;
             autoload_more = false;
+            feed_loading_now = false;
         },
         error: function () {
             alert(cake.message.notice.c);
-        }
+            feed_loading_now = false;
+        },
     });
     return false;
 }
