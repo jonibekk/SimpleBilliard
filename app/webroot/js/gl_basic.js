@@ -43,8 +43,7 @@ function bindCommentBalancedGallery($obj) {
     });
 };
 
-function changeSizeFeedImageOnlyOne($obj)
-{
+function changeSizeFeedImageOnlyOne($obj) {
     $obj.each(function (i, v) {
         var $elm = $(v);
         var $img = $elm.find('img');
@@ -2661,6 +2660,7 @@ function evFeedMoreView(options) {
                         else {
                             $loader_html.remove();
                             $("#" + no_data_text_id).show();
+                            $('#' + parent_id).find('.panel-read-more-body').removeClass('panel-read-more-body').addClass('panel-read-more-body-no-data');
                             $obj.remove();
                             return;
                         }
@@ -2671,6 +2671,7 @@ function evFeedMoreView(options) {
                     //ローダーを削除
                     $loader_html.remove();
                     $("#" + no_data_text_id).show();
+                    $('#' + parent_id).find('.panel-read-more-body').removeClass('panel-read-more-body').addClass('panel-read-more-body-no-data');
                     //もっと読む表示をやめる
                     $obj.remove();
                 }
