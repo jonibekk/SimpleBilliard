@@ -1150,37 +1150,6 @@ textarea{
     vertical-align: top;
 }
 
-.post-contents a {
-    color: #ddd;
-    display: inline-block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-    vertical-align: bottom;
-}
-
-.comment-contents a {
-    color: #c5c5c5;
-    display: block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.post-contents a:hover,
-.post-contents a:hover,
-.post-contents a:hover,
-.comment-contents a:hover,
-.comment-contents a:hover,
-.comment-contents a:hover {
-    color: #91170a;
-}
-
-.comment-contents .comment-add-pic {
-    color: #d9230f;
-}
-
 .zeroclipboard-is-hover {
     color: #fff !important;
     background: #d9230f !important;
@@ -1354,6 +1323,23 @@ ul.example-indent {
     margin-right: 8px;
 }
 
+.feed_img_only_one a {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.feed_img_only_one a img {
+    position: absolute;
+    top: -100%;
+    left: -100%;
+    right: -100%;
+    bottom: -100%;
+    margin: auto;
+    width: 100%;
+}
+
 .post-contents {
     padding: 10px 0 0 0;
 }
@@ -1436,7 +1422,7 @@ ul.example-indent {
     color: red;
 }
 
-.panel-read-more-body {
+.panel-read-more-body, .panel-read-more-body-no-data {
     padding: 0;
     width: 100%;
     height: 100%;
@@ -1844,10 +1830,6 @@ textarea.comment-post-form {
     height: 32px;
     line-height: 32px;
     margin: 0 7px;
-}
-
-.circle-new {
-    color: #d9230f;
 }
 
 .header-profile-icon {

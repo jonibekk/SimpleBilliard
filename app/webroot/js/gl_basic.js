@@ -43,6 +43,25 @@ function bindCommentBalancedGallery($obj) {
     });
 };
 
+function changeSizeFeedImageOnlyOne($obj) {
+    $obj.each(function (i, v) {
+        var $elm = $(v);
+        var $img = $elm.find('img');
+
+        // 横長と正方形の画像は全体を表示
+        if ($img.width() >= $img.height()) {
+            $elm.css('height', $img.height());
+            $img.parent().css('height', $img.height());
+        }
+        // 縦長の画像は、4:3 の比率にする
+        else {
+            var height = $img.width() * 0.75;
+            $elm.css('height', height);
+            $img.parent().css('height', height);
+        }
+    });
+}
+
 /**
  * selector の要素に Control(Command) + Enter 押下時のアクションを設定する
  *
@@ -59,6 +78,7 @@ var bindCtrlEnterAction = function (selector, callback) {
 $(window).load(function () {
     bindPostBalancedGallery($('.post_gallery'));
     bindCommentBalancedGallery($('.comment_gallery'));
+    changeSizeFeedImageOnlyOne($('.feed_img_only_one'));
     setDefaultTab();
 });
 
@@ -679,15 +699,6 @@ $(document).ready(function () {
 
 
     //noinspection JSJQueryEfficiency
-    $('.navbar-offcanvas').on('show.bs.offcanvas', function () {
-        $('#layer-black').css('display', 'block');
-        $(".toggle-icon").addClass('rotate').removeClass('rotate-reverse').addClass('fa-arrow-right').removeClass('fa-navicon');
-    });
-    //noinspection JSJQueryEfficiency
-    $('.navbar-offcanvas').on('hide.bs.offcanvas', function () {
-        $('#layer-black').css('display', 'none');
-        $(".toggle-icon").removeClass('rotate').addClass('rotate-reverse').removeClass('fa-arrow-right').addClass('fa-navicon');
-    });
 
     // サークル編集画面のタブ切り替え
     // タブによって footer 部分を切り替える
@@ -2233,6 +2244,75 @@ $(document).ready(function () {
         }
     });
 
+    $(document).on("click", '#CircleFilterMenuDropDown .modal-circle-setting', function (e) {
+        e.preventDefault();
+        var $this = $(this);
+        if ($this.hasClass('double_click')) {
+            return false;
+        }
+        $this.addClass('double_click');
+        var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        $modal_elm.on('hidden.bs.modal', function () {
+            $(this).remove();
+        });
+        var url = $(this).attr('href');
+        $.get(url, function (data) {
+            $modal_elm.append(data);
+            $modal_elm.modal();
+            $modal_elm.find(".bt-switch").bootstrapSwitch({
+                size: "small"
+            })
+                // スイッチ切り替えた時、即時データを更新する
+                .on('switchChange.bootstrapSwitch', function () {
+                    var $form = $('#CircleSettingForm');
+                    $.ajax({
+                        url: cake.url.circle_setting,
+                        type: 'POST',
+                        dataType: 'json',
+                        processData: false,
+                        data: $form.serialize()
+                    })
+                        .done(function (res) {
+                            PNotify.removeAll();
+                            if (res.error) {
+                                new PNotify({
+                                    type: 'error',
+                                    title: cake.word.error,
+                                    text: res.msg,
+                                    icon: "fa fa-check-circle",
+                                    delay: 4000,
+                                    mouse_reset: false
+                                });
+                            }
+                            else {
+                                new PNotify({
+                                    type: 'success',
+                                    title: cake.word.success,
+                                    text: res.msg,
+                                    icon: "fa fa-check-circle",
+                                    delay: 4000,
+                                    mouse_reset: false
+                                });
+                            }
+                        })
+                        .fail(function () {
+                            PNotify.removeAll();
+                            new PNotify({
+                                type: 'error',
+                                title: cake.word.error,
+                                text: cake.message.notice.d,
+                                icon: "fa fa-check-circle",
+                                delay: 4000,
+                                mouse_reset: false
+                            });
+                        });
+                });
+        }).success(function () {
+            $('body').addClass('modal-open');
+            $this.removeClass('double_click');
+        });
+    });
+
     $('#PostDisplayForm, #CommonActionDisplayForm, #MessageDisplayForm').change(function (e) {
         var $target = $(e.target);
         switch ($target.attr('id')) {
@@ -2529,11 +2609,18 @@ function getModalPostList(e) {
 }
 action_autoload_more = false;
 autoload_more = false;
+var feed_loading_now = false;
 function evFeedMoreView(options) {
     var opt = $.extend({
         recursive: false,
         loader_id: null
     }, options);
+
+    //フィード読み込み中はキャンセル
+    if(feed_loading_now){
+        return false;
+    }
+    feed_loading_now = true;
 
     attrUndefinedCheck(this, 'parent-id');
     attrUndefinedCheck(this, 'next-page-num');
@@ -2607,6 +2694,7 @@ function evFeedMoreView(options) {
                     $posts.find('.comment_gallery').each(function (index, element) {
                         bindCommentBalancedGallery($(element));
                     });
+                    changeSizeFeedImageOnlyOne($posts.find('.feed_img_only_one'));
                 });
             }
 
@@ -2631,6 +2719,7 @@ function evFeedMoreView(options) {
                         // さらに古い投稿が存在する可能性がある場合は、再度同じ関数を呼び出す
                         if (data.start && data.start > oldest_post_time) {
                             setTimeout(function () {
+                                feed_loading_now = false;
                                 evFeedMoreView.call($obj[0], {recursive: true, loader_id: '__feed_loader'});
                             }, 200);
                             return;
@@ -2639,6 +2728,7 @@ function evFeedMoreView(options) {
                         else {
                             $loader_html.remove();
                             $("#" + no_data_text_id).show();
+                            $('#' + parent_id).find('.panel-read-more-body').removeClass('panel-read-more-body').addClass('panel-read-more-body-no-data');
                             $obj.remove();
                             return;
                         }
@@ -2649,16 +2739,19 @@ function evFeedMoreView(options) {
                     //ローダーを削除
                     $loader_html.remove();
                     $("#" + no_data_text_id).show();
+                    $('#' + parent_id).find('.panel-read-more-body').removeClass('panel-read-more-body').addClass('panel-read-more-body-no-data');
                     //もっと読む表示をやめる
                     $obj.remove();
                 }
             }
             action_autoload_more = false;
             autoload_more = false;
+            feed_loading_now = false;
         },
         error: function () {
             alert(cake.message.notice.c);
-        }
+            feed_loading_now = false;
+        },
     });
     return false;
 }
@@ -2821,6 +2914,7 @@ function evCommentOldView() {
                     $posts.find('.comment_gallery').each(function (index, element) {
                         bindCommentBalancedGallery($(element));
                     });
+                    changeSizeFeedImageOnlyOne($posts.find('.feed_img_only_one'));
                 });
 
             }
@@ -3247,6 +3341,7 @@ function evCommentLatestView(options) {
                     $posts.find('.comment_gallery').each(function (index, element) {
                         bindCommentBalancedGallery($(element));
                     });
+                    changeSizeFeedImageOnlyOne($posts.find('.feed_img_only_one'));
                 });
                 $obj.removeAttr("disabled");
 

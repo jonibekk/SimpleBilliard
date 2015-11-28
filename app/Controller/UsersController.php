@@ -148,6 +148,12 @@ class UsersController extends AppController
             return $this->render();
         }
 
+        $is_account_locked = $this->GlRedis->isTwoFaAccountLocked($this->Session->read('user_id'), $this->request->clientIp());
+        if ($is_account_locked) {
+            $this->Pnotify->outError(__d('notify', "アカウントがロックされています。%s分後に自動的に解除されます。", ACCOUNT_LOCK_TTL / 60));
+            return $this->render();
+        }
+
         if ((empty($this->Session->read('2fa_secret')) === false && empty($this->request->data['User']['two_fa_code']) === false)
             && $this->TwoFa->verifyKey($this->Session->read('2fa_secret'),
                                        $this->request->data['User']['two_fa_code']) === true
@@ -181,6 +187,12 @@ class UsersController extends AppController
         }
 
         if (!$this->request->is('post')) {
+            return $this->render();
+        }
+
+        $is_account_locked = $this->GlRedis->isTwoFaAccountLocked($this->Session->read('user_id'), $this->request->clientIp());
+        if ($is_account_locked) {
+            $this->Pnotify->outError(__d('notify', "アカウントがロックされています。%s分後に自動的に解除されます。", ACCOUNT_LOCK_TTL / 60));
             return $this->render();
         }
 

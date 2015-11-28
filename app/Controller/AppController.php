@@ -242,13 +242,22 @@ class AppController extends Controller
                 $this->_setNotifyCnt();
                 $this->_setMyCircle();
                 $this->_setActionCnt();
-                $this->set('current_term', $this->Team->EvaluateTerm->getCurrentTermData());
+                $this->_setBrowserToSession();
 
+                $this->set('current_term', $this->Team->EvaluateTerm->getCurrentTermData());
             }
             $this->_setMyMemberStatus();
             $this->_saveAccessUser($this->current_team_id, $this->Auth->user('id'));
         }
         $this->set('current_global_menu', null);
+    }
+
+    public function _setBrowserToSession()
+    {
+        //UA情報をViewにセット
+        if (!$this->Session->read('ua')) {
+            $this->Session->write('ua', $this->getBrowser());
+        }
     }
 
     public function _setTerm()

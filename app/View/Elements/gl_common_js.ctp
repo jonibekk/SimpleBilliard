@@ -82,8 +82,8 @@ echo $this->Html->script('goalous.min');
                 b: "<?=__d('gl',"読込中･･･")?>",
                 c: "<?=__d('gl',"検索中･･･")?>",
                 d: "<?=__d('gl',"フォロー中")?>",
-                e: "<?=__d('gl', "もっと見る") ?>",
-                f: "<?=__d('gl', "さらに投稿を読み込む ▼") ?>",
+                e: "<?=__d('gl', "もっと見る") ?> ",
+                f: "<?=__d('gl', "さらに投稿を読み込む ▼") ?> ",
                 g: "<?=__d('gl','これ以上のコメントがありません。')?>",
                 h: "<?=__d('gl',"閉じる")?>",
                 z: "<?=__d('gl',"フォロー")?>", // ToDo - must rename this var
@@ -177,7 +177,8 @@ echo $this->Html->script('goalous.min');
             validate_email: "<?= $this->Html->url(['controller' => 'users', 'action' => 'ajax_validate_email']) ?>",
             join_circle: "<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_join_circle']) ?>",
             ogp_info: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_ogp_info']) ?>",
-            regenerate_recovery_code: "<?= $this->Html->url(['controller' => 'users', 'action' => 'ajax_regenerate_recovery_code']) ?>"
+            regenerate_recovery_code: "<?= $this->Html->url(['controller' => 'users', 'action' => 'ajax_regenerate_recovery_code']) ?>",
+            circle_setting: "<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_change_setting']) ?>",
         },
         data: {
             a: <?=isset($select2_default)?$select2_default:"[]"?>,

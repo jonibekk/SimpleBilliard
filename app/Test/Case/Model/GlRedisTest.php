@@ -260,6 +260,15 @@ class GlRedisTest extends GoalousTestCase
         $this->assertTrue($this->GlRedis->isAccountLocked('aaa@aaa.com', "111"));
     }
 
+    function testIsTwoFaAccountLocked()
+    {
+        for ($i = 0; $i < 3; $i++) {
+            $this->GlRedis->isTwoFaAccountLocked(111, "111");
+        }
+        $this->assertFalse($this->GlRedis->isTwoFaAccountLocked(111, "111"));
+        $this->assertTrue($this->GlRedis->isTwoFaAccountLocked(111, "111"));
+    }
+
     function testGetNotificationsNotFound()
     {
         $this->assertEmpty($this->GlRedis->getNotifications(1, 1));

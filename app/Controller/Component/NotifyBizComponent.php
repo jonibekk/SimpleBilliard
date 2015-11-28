@@ -306,6 +306,21 @@ class NotifyBizComponent extends Component
         // 共有したサークル一覧
         $share_circle_list = $this->Post->PostShareCircle->getShareCircleList($post_id);
 
+        // 共有されたサークルの通知設定が全てオフになっている場合は通知対象から外す
+        if ($share_circle_list) {
+            $enable_user_list = $this->Post->Circle->CircleMember->getNotificationEnableUserList($share_circle_list);
+            foreach ($members as $k => $uid) {
+                // 個人として共有されている場合は通知対象とするのでスルー
+                if (isset($share_user_list[$uid])) {
+                    continue;
+                }
+                // サークル通知設定がオンでない場合は、通知対象から外す
+                if (!isset($enable_user_list[$uid])) {
+                    unset($members[$k]);
+                }
+            }
+        }
+
         //対象ユーザの通知設定確認
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($members,
                                                                             NotifySetting::TYPE_FEED_POST);

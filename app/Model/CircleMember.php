@@ -511,6 +511,60 @@ class CircleMember extends AppModel
     }
 
     /**
+     * サークル設定を更新する
+     *
+     * @param $circle_id
+     * @param $user_id
+     * @param $data
+     *
+     * @return bool
+     */
+    function editCircleSetting($circle_id, $user_id, $data)
+    {
+        // 更新するデータのキー
+        $setting_keys = ['show_for_all_feed_flg', 'get_notification_flg'];
+        $update_data = [];
+        foreach ($setting_keys as $k) {
+            if (isset($data['CircleMember'][$k])) {
+                $update_data[$k] = $data['CircleMember'][$k];
+            }
+        }
+        if (!$update_data) {
+            return false;
+        }
+
+        Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE, true), 'user_data');
+        $conditions = [
+            'CircleMember.team_id'   => $this->current_team_id,
+            'CircleMember.circle_id' => $circle_id,
+            'CircleMember.user_id'   => $user_id,
+        ];
+        return $this->updateAll($update_data, $conditions);
+    }
+
+    /**
+     * 指定サークルの中で１つでも通知設定をオンにしているユーザーのリストを返す
+     *
+     * @param $circle_id
+     *
+     * @return array
+     */
+    function getNotificationEnableUserList($circle_id)
+    {
+        $options = [
+            'conditions' => [
+                'CircleMember.circle_id'            => $circle_id,
+                'CircleMember.get_notification_flg' => 1,
+            ],
+            'fields'     => [
+                'CircleMember.user_id', 'CircleMember.user_id',
+            ],
+            'group'      => ['CircleMember.user_id']
+        ];
+        return $this->find('list', $options);
+    }
+
+    /**
      * return active member count of circle
      *
      * @param $circle_id
