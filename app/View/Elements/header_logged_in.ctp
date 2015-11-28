@@ -73,7 +73,7 @@
                         </a>
                     </li>
                     <li>
-                        <form class="nav-form-group" role="search">
+                        <form class="nav-form-group nav-team-select-parent" role="search">
                             <?php echo $this->Form->input('current_team',
                                                           array(
                                                               'type'      => 'select',
@@ -83,7 +83,7 @@
                                                               'id'        => 'SwitchTeam',
                                                               'label'     => false,
                                                               'div'       => false,
-                                                              'class'     => 'form-control nav-team-select font_12px disable-change-warning',
+                                                              'class'     => 'form-control nav-team-select disable-change-warning',
                                                               'wrapInput' => false,
                                                           ))
                             ?>
