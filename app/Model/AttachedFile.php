@@ -99,7 +99,7 @@ class AttachedFile extends AppModel
             'attached' => [
                 'styles'                 => [
                     'x_small' => '128l',
-                    'small'   => '646W',
+                    'small'   => '648W',
                     'large'   => '2048W',
                 ],
                 'path'                   => ":webroot/upload/:model/:id/:hash_:style.:extension",
