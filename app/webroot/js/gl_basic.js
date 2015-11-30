@@ -2617,7 +2617,7 @@ function evFeedMoreView(options) {
     }, options);
 
     //フィード読み込み中はキャンセル
-    if(feed_loading_now){
+    if (feed_loading_now) {
         return false;
     }
     feed_loading_now = true;
@@ -3057,6 +3057,13 @@ function showMore(obj) {
             speedDown: 300,
             speedUp: 300,
             height: '60px',
+            showText: '<i class="fa fa-angle-double-down"></i>' + cake.message.info.e,
+            hideText: '<i class="fa fa-angle-double-up"></i>' + cake.message.info.h
+        });
+        $('.showmore-xtra-mini').showMore({
+            speedDown: 300,
+            speedUp: 300,
+            height: '40px',
             showText: '<i class="fa fa-angle-double-down"></i>' + cake.message.info.e,
             hideText: '<i class="fa fa-angle-double-up"></i>' + cake.message.info.h
         });
