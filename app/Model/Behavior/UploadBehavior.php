@@ -427,9 +427,27 @@ class UploadBehavior extends ModelBehavior
                 $destW = (int)$geometry - 1;
                 $resizeMode = false;
             }
+            //wの追加ルールで指定サイズより実際のサイズが小さい場合はリサイズしない
+            elseif (preg_match('/^[\\d]+W$/', $geometry)) {
+                // calculate heigh according to aspect ratio
+                $destW = (int)$geometry - 1;
+                if ($destW > $srcW) {
+                    $destW = $srcW;
+                }
+                $resizeMode = false;
+            }
             elseif (preg_match('/^[\\d]+h$/', $geometry)) {
                 // calculate width according to aspect ratio
                 $destH = (int)$geometry - 1;
+                $resizeMode = false;
+            }
+            //hの追加ルールで指定サイズより実際のサイズが小さい場合はリサイズしない
+            elseif (preg_match('/^[\\d]+H$/', $geometry)) {
+                // calculate width according to aspect ratio
+                $destH = (int)$geometry - 1;
+                if ($destH > $srcH) {
+                    $destH = $srcH;
+                }
                 $resizeMode = false;
             }
             elseif (preg_match('/^[\\d]+l$/', $geometry)) {
@@ -442,6 +460,24 @@ class UploadBehavior extends ModelBehavior
                 }
                 $resizeMode = false;
             }
+            //lの追加ルールで指定サイズより実際のサイズが小さい場合はリサイズしない
+            elseif (preg_match('/^[\\d]+L$/', $geometry)) {
+                // calculate shortest side according to aspect ratio
+                if ($srcW > $srcH) {
+                    $destW = (int)$geometry - 1;
+                    if ($destW > $srcW) {
+                        $destW = $srcW;
+                    }
+                }
+                else {
+                    $destH = (int)$geometry - 1;
+                    if ($destH > $srcH) {
+                        $destH = $srcH;
+                    }
+                }
+                $resizeMode = false;
+            }
+
             if (!isset($destW)) {
                 /** @noinspection PhpUndefinedVariableInspection */
                 $destW = ($destH / $srcH) * $srcW;

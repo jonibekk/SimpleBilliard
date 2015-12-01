@@ -110,7 +110,7 @@
                     <?php foreach ($imgs as $v): ?>
                         <a href="<?= $v['l'] ?>" rel='lightbox'
                            data-lightbox="FeedCommentLightBox_<?= $comment['id'] ?>">
-                            <?= $this->Html->image($v['s'], ['width' => '100%']) ?>
+                            <?= $this->Html->image($v['s']) ?>
                         </a>
                     <?php endforeach; ?>
                 </div>
@@ -122,7 +122,8 @@
                     'site_info'              => $site_info,
                     'title_max_length'       => 40,
                     'description_max_length' => 95,
-                    'img_src' => $this->Upload->uploadUrl($comment, "Comment.site_photo", ['style' => 'small']),
+                    'img_src'                => $this->Upload->uploadUrl($comment, "Comment.site_photo",
+                                                                         ['style' => 'small']),
                 ]) ?>
             <?php endif; ?>
             <div class="col col-xxs-12 pt_10px">
