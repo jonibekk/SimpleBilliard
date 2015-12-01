@@ -536,17 +536,20 @@ class Post extends AppModel
 
         //独自パラメータ指定なし
         if (!$org_param_exists) {
+
+            $related_post_ids = $this->getRelatedPostList($start,$end);
+
             //自分の投稿
             $post_filter_conditions['OR'][] = $this->getConditionGetMyPostList();
             //自分が共有範囲指定された投稿
             $post_filter_conditions['OR'][] =
                 $db->expression('Post.id IN (' . $this->getSubQueryFilterPostIdShareWithMe($db, $start, $end) . ')');
-
             //自分のサークルが共有範囲指定された投稿
             $post_filter_conditions['OR'][] =
                 $db->expression('Post.id IN (' . $this->getSubQueryFilterMyCirclePostId($db, $start, $end) . ')');
+
             //ゴール投稿全て
-            $post_filter_conditions['OR'][] = $this->getConditionGoalPostId();
+            $post_filter_conditions['OR'][] = $this->getConditionGoalPostId($related_post_ids);
         }
         //パラメータ指定あり
         else {
@@ -953,12 +956,32 @@ class Post extends AppModel
         return $res;
     }
 
-    public function getConditionGoalPostId()
+    public function getConditionGoalPostId($post_ids = null)
+    {
+        if(!is_null($post_ids)) {
+            $res = [
+                'NOT'     => [
+                    'Post.goal_id' => null,
+                ],
+                'Post.id' => $post_ids
+            ];
+        }
+        else{
+            $res = [
+                'NOT'     => [
+                    'Post.goal_id' => null,
+                ],
+            ];
+        }
+        return $res;
+    }
+
+    public function getConditionKRFilterPostId()
     {
         $res = [
             'NOT' => [
                 'Post.goal_id' => null,
-            ],
+            ]
         ];
         return $res;
     }
