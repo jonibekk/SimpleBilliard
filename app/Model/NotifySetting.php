@@ -716,4 +716,12 @@ class NotifySetting extends AppModel
 
         return $notify_setting;
     }
+
+    function getFlagPrefixByType($type)
+    {
+        if (!isset(self::$TYPE[$type]['field_prefix'])) {
+            return null;
+        }
+        return self::$TYPE[$type]['field_prefix'];
+    }
 }

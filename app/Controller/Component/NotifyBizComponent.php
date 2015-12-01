@@ -275,18 +275,16 @@ class NotifyBizComponent extends Component
     /**
      * 通知ベルPush
      *
-     * @param string $socketId
+     * @param $from_user_id
+     * @param $flag_name
      */
-    public function bellPush($socketId)
+    public function bellPush($from_user_id, $flag_name)
     {
-        // push
-        if (!$socketId) {
-            return;
-        }
         $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
         $chunk_channels = array_chunk($this->push_channels, 100);
+        $data = compact('from_user_id', 'flag_name');
         foreach ($chunk_channels as $channels) {
-            $pusher->trigger($channels, 'bell_count', null, $socketId);
+            $pusher->trigger($channels, 'bell_count', $data);
         }
     }
 
@@ -867,8 +865,8 @@ class NotifyBizComponent extends Component
             $this->notify_option['post_id'],
             json_encode($this->notify_option['options'])
         );
-        //TODO socketIdを引き回してここにセットする
-        $this->bellPush(null);
+        $flag_name = $this->NotifySetting->getFlagPrefixByType($this->notify_option['notify_type']) . '_app_flg';
+        $this->bellPush($this->notify_option['from_user_id'], $flag_name);
         return true;
     }
 

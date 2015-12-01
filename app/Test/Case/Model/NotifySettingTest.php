@@ -327,4 +327,12 @@ class NotifySettingTest extends GoalousTestCase
         $this->assertNotNull($res_2['id']);
     }
 
+    function testGetFlagPrefixByType()
+    {
+        $res1 = $this->NotifySetting->getFlagPrefixByType(1);
+        $this->assertNotNull($res1);
+        $res2 = $this->NotifySetting->getFlagPrefixByType(1111);
+        $this->assertNull($res2);
+    }
+
 }
