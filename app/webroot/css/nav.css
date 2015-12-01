@@ -420,6 +420,19 @@
     background-color: #ddd !important;
 }
 
+.nav-form-group input {
+    padding-left: 27px;
+}
+
+.nav-search-form-group {
+    width: 180px;
+    margin-left: 10px;
+}
+
+.nav-search-form-group input {
+    padding-left: 10px;
+}
+
 .nav-search-button-group {
     width: 25%;
     float: left;
@@ -491,6 +504,16 @@
 
 .nav-search-results-open {
     overflow: hidden;
+}
+
+.nav-form-group {
+    position: relative;
+    padding: 10px 0;
+}
+
+/*noinspection ALL*/
+.nav-form-group i {
+    font-size: 15px !important;
 }
 
 .navbar-nav-fix {
