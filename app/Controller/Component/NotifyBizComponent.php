@@ -430,6 +430,8 @@ class NotifyBizComponent extends Component
         $this->notify_option['model_id'] = null;
         $this->notify_option['item_name'] = !empty($body) ? json_encode([trim($body)]) : null;
         $this->notify_option['post_id'] = $post_id;
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $members);
+
     }
 
     /**
