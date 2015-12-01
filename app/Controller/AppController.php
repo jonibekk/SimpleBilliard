@@ -115,6 +115,13 @@ class AppController extends Controller
     public $next_term_id = null;
 
     /**
+     * 通知設定
+     *
+     * @var null
+     */
+    public $notify_setting = null;
+
+    /**
      * スマホアプリからのリクエストか？
      * is request from mobile app?
      *
@@ -286,6 +293,12 @@ class AppController extends Controller
     {
         $all_alert_cnt = $this->unapproved_cnt + $this->evaluable_cnt;
         $this->set(compact('all_alert_cnt'));
+    }
+
+    function _setNotifySettings()
+    {
+        $this->notify_setting = $this->User->NotifySetting->getMySettings();
+        $this->set('notify_setting', $this->notify_setting);
     }
 
     /*

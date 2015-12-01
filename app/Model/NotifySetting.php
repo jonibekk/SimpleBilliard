@@ -695,4 +695,19 @@ class NotifySetting extends AppModel
         }
         return $values;
     }
+
+    public function getMySettings()
+    {
+        /** @noinspection PhpMethodParametersCountMismatchInspection */
+        $res = $this->findByUserId($this->my_uid);
+        $res = Hash::extract($res, 'NotifySetting');
+        if (!empty($res)) {
+            return $res;
+        }
+        $schema = $this->schema();
+        foreach ($schema as $k => $v) {
+            $res[$k] = $v['default'];
+        }
+        return $res;
+    }
 }
