@@ -101,14 +101,8 @@ class UsersController extends AppController
         //デバイス情報を保存する
         $user_id = $user_info['id'];
         $installation_id = $this->request->data['User']['installation_id'];
-        error_log("FURU:ins_id:$installation_id\n", 3, "/tmp/hoge.log");
         if (!empty($installation_id)) {
             $this->NotifyBiz->saveDeviceInfo($user_id, $installation_id);
-            //暫定的なappstore申請用アプリの通知登録処理
-            //TODO:役割を終えたら削除
-            $this->NotifyBiz->saveDeviceInfo($user_id, $installation_id,
-                                             "99706ba467ea9ec5786b467b36ec9c7f728f0daa2951034b1863a2c39feacc55",
-                                             "262170d1ff44853836c59c09aa3642a988b72e40eeee2a838d13533ba2c9082a");
         }
 
         $is_2fa_auth_enabled = true;
