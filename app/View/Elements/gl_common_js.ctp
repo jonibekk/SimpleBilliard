@@ -9,6 +9,7 @@
  * @var                    $current_circle
  * @var                    $my_member_status
  * @var                    $is_mb_app
+ * @var                    $notify_setting
  */
 ?>
 <!-- START app/View/Elements/gl_common_js.ctp -->
@@ -283,7 +284,8 @@ echo $this->Html->script('goalous.min');
         common_form_type: "<?= isset($common_form_type)?$common_form_type:null?>",
         request_params: <?=json_encode($this->request->params)?>,
         is_mb_app: "<?= $is_mb_app ?>",
-        pre_file_ttl: <?= PRE_FILE_TTL ?>
+        pre_file_ttl: <?= PRE_FILE_TTL ?>,
+        notify_setting: <?=json_encode($notify_setting)?>
     };
 
 
