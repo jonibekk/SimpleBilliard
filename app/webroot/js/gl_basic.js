@@ -3184,16 +3184,31 @@ $(document).ready(function () {
                 notifyNewComment(notifyBox);
             }
         });
+        pusher.subscribe(cake.data.c[i]).bind('bell_count', function (data) {
+            //通知設定がoffもしくは自分自身が送信者の場合はなにもしない。
+            if (!cake.notify_setting[data.flag_name]) {
+                return;
+            }
+            if (cake.data.user_id == data.from_user_id) {
+                return;
+            }
+            setNotifyCntToBellAndTitle(getCurrentUnreadNotifyCnt() + 1);
+        });
     }
 
 });
+
+function getCurrentUnreadNotifyCnt() {
+    var $bellNum = $("#bellNum");
+    var $numArea = $bellNum.find("span");
+    return parseInt($numArea.html());
+}
 
 function notifyNewFeed() {
     var notifyBox = $(".feed-notify-box");
     var numArea = notifyBox.find(".num");
     var num = parseInt(numArea.html());
     var title = $("title");
-
     // Increment unread number
     if (num >= 1) {
         // top of feed
