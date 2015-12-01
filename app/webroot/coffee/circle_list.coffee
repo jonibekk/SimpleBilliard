@@ -1,32 +1,33 @@
 window.onload = (resizeLoad) ->
-  winW = window.innerWidth
-  winH = window.innerHeight
-  scrH = document.body.scrollTop
+  winWidth = window.innerWidth
+  winHeight = window.innerHeight
+  scrollHeight = document.body.scrollTop
   # ヘッダーサブが出現しているかどうかの判定が必要。
-  if winW < 992 and scrH == 0
-    varHeight = winH-380 + "px"
+  if winWidth < 992 and scrollHeight == 0
+    circleListHeight = winHeight-380 + "px"
   else
-    varHeight = winH-336 + "px"
+    circleListHeight = winHeight-336 + "px"
   CircleListBody = document.getElementById ("jsDashboardCircleListBody")
   if CircleListBody?
-    CircleListBody.style.height = varHeight
+    CircleListBody.style.height = circleListHeight
 ###
  todo
  Scrollの処理。
+ -> 何のことだか忘れた。11月18日
 ###
 
 window.onresize = (resizeChanged) ->
-  winW = window.innerWidth
-  winH = window.innerHeight
-  scrH = document.body.scrollTop
+  winWidth = window.innerWidth
+  winHeight = window.innerHeight
+  scrollHeight = document.body.scrollTop
   # ヘッダーサブが出現しているかどうかの判定が必要。
-  if winW < 992 and scrH == 0
-    varHeight = winH-380 + "px"
+  if winWidth < 992 and scrollHeight == 0
+    circleListHeight = winHeight-380 + "px"
   else
-    varHeight = winH-336 + "px"
+    circleListHeight = winHeight-336 + "px"
   CircleListBody = document.getElementById ("jsDashboardCircleListBody")
   if CircleListBody?
-    CircleListBody.style.height = varHeight
+    CircleListBody.style.height = circleListHeight
 
 reloadScrollBars = ->
   document.documentElement.style.overflow = 'auto'

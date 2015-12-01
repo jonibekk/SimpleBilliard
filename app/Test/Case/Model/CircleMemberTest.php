@@ -18,27 +18,11 @@ class CircleMemberTest extends GoalousTestCase
         'app.circle_member',
         'app.circle',
         'app.team',
-        'app.badge',
-        'app.user', 'app.notify_setting',
-        'app.email',
-        'app.comment_like',
-        'app.comment',
-        'app.post',
-        'app.post_like',
-        'app.post_read',
-        'app.comment_mention',
-        'app.given_badge',
-        'app.post_mention',
-        'app.comment_read',
-
-        'app.oauth_token',
+        'app.user',
         'app.team_member',
         'app.group',
-        'app.job_category',
         'app.local_name',
-        'app.invite',
-        'app.thread',
-        'app.message'
+        'app.member_group',
     );
 
     /**
@@ -341,6 +325,64 @@ class CircleMemberTest extends GoalousTestCase
         $this->CircleMember->Circle->save($data);
         $res = $this->CircleMember->getNonCircleMemberSelect2($this->CircleMember->Circle->getLastInsertID(), 'test');
         $this->assertNotEmpty($res);
+
+        $res = $this->CircleMember->getNonCircleMemberSelect2(3, 'first', 10);
+        $this->assertNotEmpty($res['results']);
+        $user1_found = false;
+        foreach ($res['results'] as $v) {
+            if ($v['id'] == 'user_1') {
+                $user1_found = true;
+            }
+        }
+        $this->assertFalse($user1_found);
+
+        $res = $this->CircleMember->getNonCircleMemberSelect2(5, 'first', 10);
+        $this->assertNotEmpty($res['results']);
+        $user1_found = false;
+        foreach ($res['results'] as $v) {
+            if ($v['id'] == 'user_1') {
+                $user1_found = true;
+            }
+        }
+        $this->assertTrue($user1_found);
+
+        $res = $this->CircleMember->getNonCircleMemberSelect2(3, 'first', 10, true);
+        $this->assertNotEmpty($res['results']);
+        $user1_found = false;
+        $group_found = false;
+        foreach ($res['results'] as $v) {
+            if (strpos($v['id'], 'group_') === 0) {
+                $group_found = true;
+                $this->assertNotEmpty($v['users']);
+                foreach ($v['users'] as $user) {
+                    $this->assertNotEquals($this->CircleMember->my_uid, $user['id']);
+                    if ($user['id'] == 'user_1') {
+                        $user1_found = true;
+                    }
+                }
+            }
+        }
+        $this->assertTrue($group_found);
+        $this->assertFalse($user1_found);
+
+        $res = $this->CircleMember->getNonCircleMemberSelect2(5, 'first', 10, true);
+        $this->assertNotEmpty($res['results']);
+        $user1_found = false;
+        $group_found = false;
+        foreach ($res['results'] as $v) {
+            if (strpos($v['id'], 'group_') === 0) {
+                $group_found = true;
+                $this->assertNotEmpty($v['users']);
+                foreach ($v['users'] as $user) {
+                    $this->assertNotEquals($this->CircleMember->my_uid, $user['id']);
+                    if ($user['id'] == 'user_1') {
+                        $user1_found = true;
+                    }
+                }
+            }
+        }
+        $this->assertTrue($group_found);
+        $this->assertTrue($user1_found);
     }
 
     function testUpdateUnreadCount()
@@ -386,6 +428,58 @@ class CircleMemberTest extends GoalousTestCase
         $this->_setDefault(1, 1);
         $res = $this->CircleMember->circleStatusToggle(1, 1);
         $this->assertTrue($res);
+    }
+
+    function testEditCircleSetting()
+    {
+        $this->_setDefault(1, 1);
+        $circle_member = $this->CircleMember->isBelong(1, 1);
+
+        $res = $this->CircleMember->editCircleSetting(1, 1, ['CircleMember' => [
+            'show_for_all_feed_flg' => 1,
+            'get_notification_flg'  => 1,
+        ]]);
+        $this->assertTrue($res);
+        $row = $this->CircleMember->findById($circle_member['CircleMember']['id']);
+        $this->assertEquals(1, $row['CircleMember']['show_for_all_feed_flg']);
+        $this->assertEquals(1, $row['CircleMember']['get_notification_flg']);
+
+        $res = $this->CircleMember->editCircleSetting(1, 1, ['CircleMember' => [
+            'show_for_all_feed_flg' => 1,
+            'get_notification_flg'  => 0,
+        ]]);
+        $this->assertTrue($res);
+        $row = $this->CircleMember->findById($circle_member['CircleMember']['id']);
+        $this->assertEquals(1, $row['CircleMember']['show_for_all_feed_flg']);
+        $this->assertEquals(0, $row['CircleMember']['get_notification_flg']);
+
+        $res = $this->CircleMember->editCircleSetting(1, 1, ['CircleMember' => [
+            'show_for_all_feed_flg' => 0,
+        ]]);
+        $this->assertTrue($res);
+        $row = $this->CircleMember->findById($circle_member['CircleMember']['id']);
+        $this->assertEquals(0, $row['CircleMember']['show_for_all_feed_flg']);
+        $this->assertEquals(0, $row['CircleMember']['get_notification_flg']);
+
+        $res = $this->CircleMember->editCircleSetting(1, 1, ['CircleMember' => [
+            'circle_id' => 0,
+        ]]);
+        $this->assertFalse($res);
+    }
+
+    function testGetNotificationEnableUserList()
+    {
+        $this->_setDefault(1, 1);
+        $rows = $this->CircleMember->getNotificationEnableUserList(1);
+        $this->assertNotEmpty($rows);
+        $user_id = current($rows);
+        $this->CircleMember->updateAll(['get_notification_flg' => 0], [
+            'CircleMember.user_id'   => $user_id,
+            'CircleMember.team_id'   => 1,
+            'CircleMember.circle_id' => 1,
+        ]);
+        $rows = $this->CircleMember->getNotificationEnableUserList(1);
+        $this->assertFalse(isset($rows[$user_id]));
     }
 
 }

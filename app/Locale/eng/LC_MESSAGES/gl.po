@@ -1848,7 +1848,7 @@ msgstr ""
 #: View/Elements/circle_list.ctp:63
 #: View/Elements/circle_list_in_hamburger.ctp:57
 msgid "サークルを見る"
-msgstr ""
+msgstr "View Circles"
 
 #: View/Elements/circle_list.ctp:72
 #: View/Elements/circle_list_in_hamburger.ctp:64
@@ -2204,6 +2204,10 @@ msgstr "Team Setting"
 #: View/Elements/header_logged_in_right.ctp:173
 msgid "Feedback"
 msgstr ""
+
+#: View/Elements/header_logged_in_right.ctp:207
+msgid "サポート"
+msgstr "Support"
 
 #: View/Elements/header_sp_feeds_alt.ctp:18
 msgid "ニュースフィード"

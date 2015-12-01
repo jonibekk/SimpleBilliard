@@ -21,19 +21,62 @@ body {
 }
 
 /* iOS Safari Hack */
-select,
 input {
   -webkit-appearance: none;
+  -moz-appearance: none;
   appearance: none;
 }
 
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/*
+select要素の親にmixinさせる
+ */
+
+.select-parants(@top: 0) {
+  &::before {
+    vertical-align: middle;
+    font-family: FontAwesome;
+    content: "\f0d7";
+    position: absolute;
+    z-index: 0;
+    top: @top;
+    right: 4%;
+    padding: 0 4px;
+    @media screen and (min-width: 768) {
+      right: 2%;
+    }
+  }
+}
+
+.js-select-parants {
+  .select-parants(10px);
+}
+
+select {
+  padding-right: 30px !important;
+  background: transparent !important;
+  position: relative;
+  z-index: 1;
+  @media screen and (min-width: 768){
+    padding-right: 20px !important;
+  }
+}
+
+
+
 input[type="radio"] {
   -webkit-appearance: radio;
+  -moz-appearance: radio;
   appearance: radio;
 }
 
 .checkbox {
-  background-color: @white;
+  background-color: @backgroundColor1;
   padding-left: 0;
 }
 
@@ -50,7 +93,7 @@ input[type=checkbox] {
 }
 
 input[type=checkbox]:checked {
-  background-color: @white;
+  background-color: @backgroundColor1;
   content: "\f00c";
   /* or whatever styles you want depending on your design */
   /* be as obvious as possible that it's a checkbox and that it's checked! */

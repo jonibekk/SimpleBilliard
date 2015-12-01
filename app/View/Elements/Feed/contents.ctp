@@ -18,6 +18,8 @@
  */
 ?>
 <!-- START app/View/Elements/Feed/contents.ctp -->
+<?= $this->element('Feed/feed_share_range_filter',
+                   compact('current_circle', 'user_status', 'circle_member_count', 'circle_status', 'feed_filter')) ?>
 <?php
 // 投稿単体ページでは入力フォームを表示しない
 if (!isset($this->request->params['post_id'])) {
@@ -31,8 +33,6 @@ if (!isset($this->request->params['post_id'])) {
     }
 }
 ?>
-<?= $this->element('Feed/feed_share_range_filter',
-                   compact('current_circle', 'user_status', 'circle_member_count', 'circle_status', 'feed_filter')) ?>
 <a href="" class="alert alert-info feed-notify-box" role="alert" style="margin-bottom:5px;display:none;opacity:0;">
     <span class="num"></span><?= __d('gl', "件の新しい投稿があります。") ?></a>
 
@@ -96,7 +96,7 @@ if ((count($posts) == POST_FEED_PAGE_ITEMS_NUMBER || (isset($item_created) && $i
     <div class="panel panel-default feed-read-more" id="FeedMoreRead">
         <div class="panel-body panel-read-more-body">
             <span class="none" id="ShowMoreNoData"><?= __d('gl', "これ以上の投稿はありませんでした。") ?></span>
-            <a href="#" class="btn btn-link click-feed-read-more"
+            <a href="#" class="click-feed-read-more"
                parent-id="FeedMoreRead"
                no-data-text-id="ShowMoreNoData"
                next-page-num="<?= $next_page_num ?>"
@@ -107,7 +107,7 @@ if ((count($posts) == POST_FEED_PAGE_ITEMS_NUMBER || (isset($item_created) && $i
                oldest-post-time="<?= $oldest_post_time ?>"
                post-time-before="<?= $post_time_before ?>"
                 >
-                <?= $more_read_text ?></a>
+                <?= $more_read_text ?> </a>
         </div>
     </div>
 <?php endif; ?>

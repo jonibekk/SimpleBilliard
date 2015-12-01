@@ -241,13 +241,23 @@ class AppController extends Controller
                 $this->_setAllAlertCnt();
                 $this->_setNotifyCnt();
                 $this->_setMyCircle();
-                $this->set('current_term', $this->Team->EvaluateTerm->getCurrentTermData());
+                $this->_setActionCnt();
+                $this->_setBrowserToSession();
 
+                $this->set('current_term', $this->Team->EvaluateTerm->getCurrentTermData());
             }
             $this->_setMyMemberStatus();
             $this->_saveAccessUser($this->current_team_id, $this->Auth->user('id'));
         }
         $this->set('current_global_menu', null);
+    }
+
+    public function _setBrowserToSession()
+    {
+        //UA情報をViewにセット
+        if (!$this->Session->read('ua')) {
+            $this->Session->write('ua', $this->getBrowser());
+        }
     }
 
     public function _setTerm()
@@ -297,6 +307,21 @@ class AppController extends Controller
         }
         $this->set(compact('unapproved_cnt'));
         $this->unapproved_cnt = $unapproved_cnt;
+    }
+
+    function _setActionCnt()
+    {
+        $model = $this;
+        $current_term = $model->Team->EvaluateTerm->getCurrentTermData();
+        Cache::set('duration', $current_term['end_date'] - REQUEST_TIMESTAMP, 'user_data');
+        $action_count = Cache::remember($this->Goal->getCacheKey(CACHE_KEY_ACTION_COUNT, true),
+            function () use ($model, $current_term) {
+                $current_term = $model->Team->EvaluateTerm->getCurrentTermData();
+                $res = $model->Goal->ActionResult->getCount('me', $current_term['start_date'],
+                                                            $current_term['end_date']);
+                return $res;
+            }, 'user_data');
+        $this->set(compact('action_count'));
     }
 
     function _setEvaluableCnt()
@@ -784,7 +809,7 @@ class AppController extends Controller
     public function getBrowser()
     {
         if (!$this->_browser) {
-            $this->_browser = get_browser(NULL, true);
+            $this->_browser = get_browser(null, true);
         }
         return $this->_browser;
     }

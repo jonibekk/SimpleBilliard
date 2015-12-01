@@ -699,7 +699,7 @@ class GoalsController extends AppController
 
         $this->Pnotify->outSuccess(__d('gl', "アクションを削除しました。"));
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
-
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_ACTION_COUNT, true), 'user_data');
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->redirect($this->referer());
@@ -1265,6 +1265,7 @@ class GoalsController extends AppController
                                          $this->Goal->ActionResult->getLastInsertID());
 
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
+        Cache::delete($this->Goal->getCacheKey(CACHE_KEY_ACTION_COUNT, true), 'user_data');
 
         // push
         $this->Pnotify->outSuccess(__d('gl', "アクションを追加しました。"));

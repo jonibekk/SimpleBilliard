@@ -92,7 +92,7 @@
                     <div class="panel panel-default feed-read-more" id="FeedMoreRead">
                         <div class="panel-body panel-read-more-body">
                             <span class="none" id="ShowMoreNoData"><?= __d('gl', "これ以上のアクションはありませんでした。") ?></span>
-                            <a href="#" class="btn btn-link click-feed-read-more"
+                            <a href="#" class="click-feed-read-more"
                                parent-id="FeedMoreRead"
                                no-data-text-id="ShowMoreNoData"
                                next-page-num="<?= $next_page_num ?>"
@@ -110,7 +110,7 @@
                                append-target-id="UserPageContents"
                                oldest-post-time="<?= $oldest_post_time ?>"
                                 >
-                                <?= $more_read_text ?></a>
+                                <?= $more_read_text ?> </a>
                         </div>
                     </div>
                 </div>

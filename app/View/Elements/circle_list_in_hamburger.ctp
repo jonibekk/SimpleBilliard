@@ -8,6 +8,7 @@
  * @var CodeCompletionView $this
  * @var array              $me
  * @var array              $my_circles
+ * @var                    $is_mb_app
  */
 ?>
 <!-- START app/View/Elements/circle_list_in_hamburger.ctp -->
@@ -15,7 +16,7 @@
     <p class="circle_heading">Circles</p>
     <?php if (!empty($my_circles)): ?>
         <?php foreach ($my_circles as $circle): ?>
-            <div class="circle-layout clearfix circleListMore">
+            <div class="circle-layout clearfix circleListMore <?= $is_mb_app ? "mtb_15px" : null ?>">
                 <div class="circle-link">
                     <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle['Circle']['id']]) ?>">
                         <div class="circle-icon_box">
@@ -52,13 +53,13 @@
                 class="pl_5px font_12px font_gray click-circle-trigger on"><?= __d('gl', "すべて表示") ?></a>
         <?php endif; ?>
     <?php endif; ?>
-    <div class="clearfix develop--circle-seek">
+    <div class="clearfix develop--circle-seek <?= $is_mb_app ? "mtb_15px" : null ?>">
         <i class="fa fa-eye circle-function circle-seek-icon font_14px"></i><?=
         $this->Html->link(__d('gl', "サークルを見る"),
                           ['controller' => 'circles', 'action' => 'ajax_get_public_circles_modal'],
                           ['class' => 'modal-ajax-get-public-circles']) ?>
     </div>
-    <div class="clearfix develop--circle-make">
+    <div class="clearfix develop--circle-make <?= $is_mb_app ? "mtb_15px" : null ?>">
         <i class="fa fa-plus-circle circle-function circle-make-icon font_14px"></i><a href="#" data-toggle="modal"
                                                                                        data-target="#modal_add_circle"><?=
             __d('gl',

@@ -13,7 +13,7 @@
 .line-number-trigger {
   margin-bottom: 0;
 }
-.line-number-limit-1(@fadeColor: @white, @display: block){
+.line-number-limit-1(@fadeColor: @whiteColor, @display: block){
   background: @fadeColor;
   display: @display;
   overflow: hidden;
@@ -33,7 +33,7 @@
     padding-bottom: 4px;
   }
 }
-.line-number-limit-2(@fadeColor : @white){
+.line-number-limit-2(@fadeColor : @whiteColor){
   background: @fadeColor;
   margin: 0;
   overflow: hidden;
@@ -146,8 +146,8 @@
 }
 .ln_2-f:before,
 .ln_2-f:after {
-  background: @white;
-  background: linear-gradient(to right, rgba(255, 255, 255, 0), @white);
+  background: @backgroundColor1;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0), @backgroundColor1);
   position: absolute;
 }
 .ln_2:after,

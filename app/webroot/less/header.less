@@ -1,3 +1,7 @@
+/*
+  headerのスタイル
+ */
+
 .dropdown-backdrop {
   opacity: 0;
   z-index: 5;
@@ -10,13 +14,10 @@
 .navmenu-fixed-left {
   z-index: 100;
 }
-
-/*
-  headerのスタイル
- */
-.header-toggle-icon {
+ 
+.mixin-header-toggle-icon (@bgcolor: @backgroundColor1) {
   display: inline-block;
-  background: white;
+  background: @bgcolor;
   border: none;
   height: 50px;
   margin: 0;
@@ -25,7 +26,7 @@
   &:hover,
   &:focus,
   &:target {
-    background-color: #fff;
+    background-color: @bgcolor;
     outline: none;
   }
   @media screen and (min-width: 768px) {
@@ -33,14 +34,12 @@
   }
 }
 
+.header-toggle-icon {
+  .mixin-header-toggle-icon();
+}
+
 .mb-app-header-toggle-icon {
-  .header-toggle-icon;
-  background: #C20A19;
-  &:hover,
-  &:focus,
-  &:target {
-    background-color: #C20A19;
-  }
+  .mixin-header-toggle-icon(#c20a19);
 }
 
 .nav-container {
@@ -91,9 +90,11 @@
 }
 
 .header-user-name {
+  display: inline-block;
   font-size: 12px;
+  margin: 16px 0;
   padding: 0 10px;
-  line-height: 50px;
+  line-height: 18px;
   border-right: 1px solid #ccc;
   color: rgb(80, 80, 80);
   vertical-align: middle;
@@ -172,7 +173,7 @@
 }
 
 .header-nav-message-contents-wrap {
-  .frame-arrow-icon (64px);
+  .frame-arrow-icon(64px);
   top: 42px;
   right: -53px;
   width: 280px;
@@ -185,7 +186,7 @@
 }
 
 .header-nav-notify-contents-wrap {
-  .frame-arrow-icon (36px);
+  .frame-arrow-icon(36px);
   top: 42px;
   right: -24px;
   width: 280px;
@@ -203,6 +204,9 @@
   &:hover {
     .header-nav-avatar {
       box-shadow: 0 4px 8px rgba(17, 17, 17, .3);
+    }
+    .header-user-name {
+      text-decoration: underline;
     }
   }
 }
@@ -261,8 +265,6 @@
 .header-right-navigations {
   float: right;
   display: inline-block;
-
-  // text-align: right;
   vertical-align: top;
   margin: 0 0 0 auto;
   font-size: 0;
@@ -277,7 +279,6 @@
   }
 }
 
-/*ハンバーガー*/
 .nav-team-select,
 .nav-search {
   width: 180px;
@@ -318,7 +319,7 @@
 }
 
 .header-nav-add-contents-text {
-  display: inline;
+  display: inline-block;
   width: 100%;
   margin: 0;
   padding: 0;

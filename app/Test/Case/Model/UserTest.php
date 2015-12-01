@@ -30,6 +30,7 @@ class UserTest extends GoalousTestCase
         'app.email',
         'app.post',
         'app.notify_setting',
+        'app.member_group',
     );
 
     public $basicUserDefault = [
@@ -645,6 +646,21 @@ class UserTest extends GoalousTestCase
         // 通常のサークルを取得する場合
         $res = $this->User->getUsersCirclesSelect2('test');
         $this->assertEquals('circle_1', $res['results'][0]['id']);
+
+        // グループ含む
+        $res = $this->User->getUsersCirclesSelect2('first', 10, 'all', true);
+        $this->assertArrayHasKey('results', $res);
+        $group_found = false;
+        foreach ($res['results'] as $v) {
+            if (strpos($v['id'], 'group_') === 0) {
+                $group_found = true;
+                $this->assertNotEmpty($v['users']);
+                foreach ($v['users'] as $user) {
+                    $this->assertNotEquals($this->User->my_uid, $user['id']);
+                }
+            }
+        }
+        $this->assertTrue($group_found);
     }
 
     function testGetAllUsersCirclesSelect2()
@@ -691,24 +707,30 @@ class UserTest extends GoalousTestCase
     {
         $this->User->current_team_id = 1;
         $this->User->my_uid = 1;
+        $this->User->Post->PostShareUser->current_team_id = 1;
+        $this->User->Post->PostShareUser->my_uid = 1;
+        $this->User->TeamMember->current_team_id = 1;
+        $this->User->TeamMember->my_uid = 1;
 
-        $post_id = 103;
+        $post_id = 14;
 
         // 秘密サークル
-        $res = $this->User->getUsersSelectOnly('秘密サークル', 10, $post_id);
-        $this->assertNotEmpty('public', $res['results']);
+        $res = $this->User->getUsersSelectOnly('first', 10, $post_id);
+        $this->assertNotEmpty($res['results']);
 
-        // 秘密サークル
-        $res = $this->User->getUsersSelectOnly('秘密', 10, $post_id);
-        $this->assertNotEmpty('public', $res['results']);
-
-        // 通常のサークル
-        $res = $this->User->getUsersSelectOnly('test', 10, $post_id);
-        $this->assertEquals(['results' => []], $res);
-
-        // チーム全体サークル
-        $res = $this->User->getUsersSelectOnly('チーム全体', 10, $post_id);
-        $this->assertEquals(['results' => []], $res);
+        $users = $this->User->getUsersSelectOnly('first', 10, $post_id, true);
+        $this->assertArrayHasKey('results', $users);
+        $group_found = false;
+        foreach ($users['results'] as $v) {
+            if (strpos($v['id'], 'group_') === 0) {
+                $group_found = true;
+                $this->assertNotEmpty($v['users']);
+                foreach ($v['users'] as $user) {
+                    $this->assertNotEquals($this->User->my_uid, $user['id']);
+                }
+            }
+        }
+        $this->assertTrue($group_found);
     }
 
     function testGetSecretCirclesSelect2()
@@ -823,5 +845,154 @@ class UserTest extends GoalousTestCase
         $actual = $this->User->getCacheKey(CACHE_KEY_TERM_CURRENT, true, null, true);
         $expected = 'current_term:team:1:user:2';
         $this->assertEquals($expected, $actual);
+    }
+
+    function testExcludeGroupMemberSelect2()
+    {
+        $test_data = [
+            ['id'    => 'group_1',
+             'users' => [
+                 ['id' => 'user_1', 'text' => 'user1'],
+                 ['id' => 'user_2', 'text' => 'user2'],
+                 ['id' => 'user_3', 'text' => 'user3'],
+                 ['id' => 'user_4', 'text' => 'user4'],
+             ]],
+            ['id'    => 'group_2',
+             'users' => [
+                 ['id' => 'user_1', 'text' => 'user1'],
+                 ['id' => 'user_4', 'text' => 'user4'],
+                 ['id' => 'user_5', 'text' => 'user5'],
+             ]],
+        ];
+
+        $res = $this->User->excludeGroupMemberSelect2($test_data, [2 => 2, 4 => 4]);
+        $this->assertEquals([
+                ['id'    => 'group_1',
+                 'users' => [
+                     ['id' => 'user_1', 'text' => 'user1'],
+                     ['id' => 'user_3', 'text' => 'user3'],
+                 ]],
+                ['id'    => 'group_2',
+                 'users' => [
+                     ['id' => 'user_1', 'text' => 'user1'],
+                     ['id' => 'user_5', 'text' => 'user5'],
+                 ]],
+            ], $res);
+
+        $res = $this->User->excludeGroupMemberSelect2($test_data, [1 => 1, 2 => 2, 3 => 3, 4 => 4]);
+        $this->assertEquals([['id'    => 'group_2',
+                              'users' => [
+                                  ['id' => 'user_5', 'text' => 'user5'],
+                              ]],
+                            ], $res);
+
+        $res = $this->User->excludeGroupMemberSelect2($test_data,  [1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5]);
+        $this->assertEquals([], $res);
+
+        $res = $this->User->excludeGroupMemberSelect2($test_data, []);
+        $this->assertEquals($test_data, $res);
+    }
+
+    function testGetGroupsSelect2()
+    {
+        $this->User->my_uid = 1;
+        $this->User->current_team_id = 1;
+        $this->User->me['language'] = "jpn";
+        $this->User->TeamMember->current_team_id = 1;
+        $this->User->TeamMember->my_uid = 1;
+        $this->User->LocalName->my_uid = 1;
+        $this->User->LocalName->current_team_id = 1;
+
+        $groups = $this->User->getGroupsSelect2('first', 10);
+        $this->assertArrayHasKey('results', $groups);
+        foreach ($groups['results'] as $v) {
+            $this->assertEquals(0, strpos($v['id'], 'group_'));
+
+            // 自分以外の一人以上のユーザーが含まれているか
+            $this->assertNotEmpty($v['users']);
+            foreach ($v['users'] as $user) {
+                $this->assertNotEquals($this->User->my_uid, $user['id']);
+            }
+        }
+
+        // 別ユーザー
+        $this->User->my_uid = 2;
+        $this->User->TeamMember->my_uid = 2;
+        $this->User->LocalName->my_uid = 2;
+
+        $groups2 = $this->User->getGroupsSelect2('first', 10);
+        $this->assertArrayHasKey('results', $groups2);
+        $this->assertNotEquals($groups, $groups2);
+        foreach ($groups2['results'] as $v) {
+            $this->assertEquals(0, strpos($v['id'], 'group_'));
+
+            // 自分以外の一人以上のユーザーが含まれているか
+            $this->assertNotEmpty($v['users']);
+            foreach ($v['users'] as $user) {
+                $this->assertNotEquals($this->User->my_uid, $user['id']);
+            }
+        }
+    }
+
+    function testGetUsersSelect2()
+    {
+        $this->User->my_uid = 1;
+        $this->User->current_team_id = 1;
+        $this->User->me['language'] = "jpn";
+        $this->User->TeamMember->current_team_id = 1;
+        $this->User->TeamMember->my_uid = 1;
+        $this->User->LocalName->my_uid = 1;
+        $this->User->LocalName->current_team_id = 1;
+
+        $users = $this->User->getUsersSelect2('first');
+        $this->assertArrayHasKey('results', $users);
+        $this->assertNotEmpty($users['results']);
+        foreach ($users['results'] as $v) {
+            $this->assertEquals(0, strpos($v['id'], 'user_'));
+        }
+
+        $users = $this->User->getUsersSelect2('first', 1);
+        $this->assertArrayHasKey('results', $users);
+        $this->assertCount(1, $users['results']);
+
+        $users = $this->User->getUsersSelect2('first', 10, true);
+        $this->assertArrayHasKey('results', $users);
+        $group_found = false;
+        foreach ($users['results'] as $v) {
+            if (strpos($v['id'], 'group_') === 0) {
+                $group_found = true;
+                $this->assertNotEmpty($v['users']);
+                foreach ($v['users'] as $user) {
+                    $this->assertNotEquals($this->User->my_uid, $user['id']);
+                }
+            }
+        }
+        $this->assertTrue($group_found);
+    }
+    
+    function testMakeSelect2UserList()
+    {
+        $users = [
+            ['User' => [
+                'id' => 1,
+                'display_username' => '表示名 1',
+                'roman_username' => 'display name 1',
+                'photo_file_name' => 'test1.jpg',
+            ]],
+            ['User' => [
+                'id' => 2,
+                'display_username' => '表示名 2',
+                'roman_username' => 'display name 2',
+                'photo_file_name' => 'test2.jpg',
+            ]],
+        ];
+        $user_res = $this->User->makeSelect2UserList($users);
+        foreach ($user_res as $k => $v) {
+            $id = $k + 1;
+            $this->assertEquals("user_{$id}", $v['id']);
+            $this->assertEquals("表示名 {$id} (display name {$id})", $v['text']);
+            $this->assertNotEquals("test{$id}.jpg", $v['image']);
+            $this->assertTrue(strpos($v['image'], '.jpg') !== false);
+        }
     }
 }

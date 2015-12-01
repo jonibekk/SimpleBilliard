@@ -6,7 +6,11 @@ define(function () {
             var $NavSearchInput = $('#NavSearchInput');
             var $NavSearchResults = $('#NavSearchResults');
             var keyupTimer = null;
-            var cache = {};
+            var cache = {
+                user: {},
+                goal: {},
+                circle: {}
+            };
 
             var config = {
                 user: {
@@ -67,7 +71,7 @@ define(function () {
 
                         var category = $NavSearchForm.find('.nav-search-category-icon:visible').attr('data-category');
                         var ajaxCallback = function (res) {
-                            cache[inputText] = res;
+                            cache[category][inputText] = res;
 
                             var $container = $('<div>');
                             $NavSearchResults.empty();
@@ -108,8 +112,8 @@ define(function () {
                             }
                         };
 
-                        if (cache[inputText]) {
-                            ajaxCallback(cache[inputText]);
+                        if (cache[category][inputText]) {
+                            ajaxCallback(cache[category][inputText]);
                         }
                         else {
                             $.get(config[category].url, {

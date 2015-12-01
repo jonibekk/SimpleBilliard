@@ -148,6 +148,12 @@ class UsersController extends AppController
             return $this->render();
         }
 
+        $is_account_locked = $this->GlRedis->isTwoFaAccountLocked($this->Session->read('user_id'), $this->request->clientIp());
+        if ($is_account_locked) {
+            $this->Pnotify->outError(__d('notify', "アカウントがロックされています。%s分後に自動的に解除されます。", ACCOUNT_LOCK_TTL / 60));
+            return $this->render();
+        }
+
         if ((empty($this->Session->read('2fa_secret')) === false && empty($this->request->data['User']['two_fa_code']) === false)
             && $this->TwoFa->verifyKey($this->Session->read('2fa_secret'),
                                        $this->request->data['User']['two_fa_code']) === true
@@ -181,6 +187,12 @@ class UsersController extends AppController
         }
 
         if (!$this->request->is('post')) {
+            return $this->render();
+        }
+
+        $is_account_locked = $this->GlRedis->isTwoFaAccountLocked($this->Session->read('user_id'), $this->request->clientIp());
+        if ($is_account_locked) {
+            $this->Pnotify->outError(__d('notify', "アカウントがロックされています。%s分後に自動的に解除されます。", ACCOUNT_LOCK_TTL / 60));
             return $this->render();
         }
 
@@ -817,7 +829,8 @@ class UsersController extends AppController
         $query = $this->request->query;
         $res = [];
         if (isset($query['term']) && !empty($query['term']) && isset($query['page_limit']) && !empty($query['page_limit'])) {
-            $res = $this->User->getUsersSelect2($query['term'], $query['page_limit']);
+            $with_group = (isset($query['with_group']) && $query['with_group']);
+            $res = $this->User->getUsersSelect2($query['term'], $query['page_limit'], $with_group);
         }
         return $this->_ajaxGetResponse($res);
     }
@@ -831,7 +844,7 @@ class UsersController extends AppController
         $query = $this->request->query;
         $res = [];
         if (isset($query['post_id']) && !empty($query['post_id']) && isset($query['term']) && !empty($query['term']) && isset($query['page_limit']) && !empty($query['page_limit'])) {
-            $res = $this->User->getUsersSelectOnly($query['term'], $query['page_limit'], $query['post_id']);
+            $res = $this->User->getUsersSelectOnly($query['term'], $query['page_limit'], $query['post_id'], true);
         }
         return $this->_ajaxGetResponse($res);
     }
@@ -958,7 +971,7 @@ class UsersController extends AppController
         $query = $this->request->query;
         $res = [];
         if (viaIsSet($query['term']) && viaIsSet($query['page_limit']) && viaIsSet($query['circle_type'])) {
-            $res = $this->User->getUsersCirclesSelect2($query['term'], $query['page_limit'], $query['circle_type']);
+            $res = $this->User->getUsersCirclesSelect2($query['term'], $query['page_limit'], $query['circle_type'], true);
         }
         return $this->_ajaxGetResponse($res);
     }
@@ -1105,56 +1118,6 @@ class UsersController extends AppController
             return false;
         }
         $this->Session->write('current_team_id', $team_id);
-    }
-
-    /**
-     * ajaxで投稿数を取得(defaultで自分の投稿数および今期)
-     *
-     * @param string $type
-     *
-     * @return CakeResponse
-     */
-    public function ajax_get_post_count($type = "me")
-    {
-        $start_date = isset($this->request->params['named']['start_date']) ? $this->request->params['named']['start_date'] : null;
-        $end_date = isset($this->request->params['named']['end_date']) ? $this->request->params['named']['end_date'] : null;
-        if (!$start_date && !$end_date) {
-            //デフォルトで今期
-            $start_date = $this->Team->EvaluateTerm->getCurrentTermData()['start_date'];
-            $end_date = $this->Team->EvaluateTerm->getCurrentTermData()['end_date'];
-        }
-        $post_count = $this->Post->getCount($type, $start_date, $end_date);
-        $this->_ajaxPreProcess();
-
-        $result = [
-            'count' => $post_count
-        ];
-        return $this->_ajaxGetResponse($result);
-    }
-
-    /**
-     * ajaxでアクション数を取得(defaultで自分のアクション数および今期)
-     *
-     * @param string $type
-     *
-     * @return CakeResponse
-     */
-    public function ajax_get_action_count($type = "me")
-    {
-        $start_date = isset($this->request->params['named']['start_date']) ? $this->request->params['named']['start_date'] : null;
-        $end_date = isset($this->request->params['named']['end_date']) ? $this->request->params['named']['end_date'] : null;
-        if (!$start_date && !$end_date) {
-            //デフォルトで今期
-            $start_date = $this->Team->EvaluateTerm->getCurrentTermData()['start_date'];
-            $end_date = $this->Team->EvaluateTerm->getCurrentTermData()['end_date'];
-        }
-        $action_count = $this->Goal->ActionResult->getCount($type, $start_date, $end_date);
-        $this->_ajaxPreProcess();
-
-        $result = [
-            'count' => $action_count
-        ];
-        return $this->_ajaxGetResponse($result);
     }
 
     public function ajax_get_user_detail($user_id)

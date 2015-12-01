@@ -43,6 +43,25 @@ function bindCommentBalancedGallery($obj) {
     });
 };
 
+function changeSizeFeedImageOnlyOne($obj) {
+    $obj.each(function (i, v) {
+        var $elm = $(v);
+        var $img = $elm.find('img');
+
+        // 横長と正方形の画像は全体を表示
+        if ($img.width() >= $img.height()) {
+            $elm.css('height', $img.height());
+            $img.parent().css('height', $img.height());
+        }
+        // 縦長の画像は、4:3 の比率にする
+        else {
+            var height = $img.width() * 0.75;
+            $elm.css('height', height);
+            $img.parent().css('height', height);
+        }
+    });
+}
+
 /**
  * selector の要素に Control(Command) + Enter 押下時のアクションを設定する
  *
@@ -59,6 +78,7 @@ var bindCtrlEnterAction = function (selector, callback) {
 $(window).load(function () {
     bindPostBalancedGallery($('.post_gallery'));
     bindCommentBalancedGallery($('.comment_gallery'));
+    changeSizeFeedImageOnlyOne($('.feed_img_only_one'));
     setDefaultTab();
 });
 
@@ -289,7 +309,6 @@ $(document).ready(function () {
     });
     //evToggleAjaxGet
     $(document).on("click", ".toggle-ajax-get", evToggleAjaxGet);
-    $(document).on("click", ".replace-ajax-get-kr-list", evReplaceKRListAjaxGet);
     $(document).on("click", ".ajax-get", evAjaxGetElmWithIndex);
     $(document).on("click", ".click-target-remove", evTargetRemove);
     //dynamic modal
@@ -450,8 +469,6 @@ $(document).ready(function () {
         $modal_elm.on('hidden.bs.modal', function (e) {
             $(this).remove();
         });
-        //noinspection JSUnusedLocalSymbols,CoffeeScriptUnusedLocalSymbols
-        modalFormCommonBindEvent($modal_elm);
         var url = $(this).attr('href');
         if (url.indexOf('#') == 0) {
             $(url).modal('open');
@@ -682,15 +699,6 @@ $(document).ready(function () {
 
 
     //noinspection JSJQueryEfficiency
-    $('.navbar-offcanvas').on('show.bs.offcanvas', function () {
-        $('#layer-black').css('display', 'block');
-        $(".toggle-icon").addClass('rotate').removeClass('rotate-reverse').addClass('fa-arrow-right').removeClass('fa-navicon');
-    });
-    //noinspection JSJQueryEfficiency
-    $('.navbar-offcanvas').on('hide.bs.offcanvas', function () {
-        $('#layer-black').css('display', 'none');
-        $(".toggle-icon").removeClass('rotate').addClass('rotate-reverse').removeClass('fa-arrow-right').addClass('fa-navicon');
-    });
 
     // サークル編集画面のタブ切り替え
     // タブによって footer 部分を切り替える
@@ -833,45 +841,7 @@ function evToggleAjaxGet() {
     return false;
 }
 
-function evReplaceAjaxGet() {
-    attrUndefinedCheck(this, 'target-id');
-    attrUndefinedCheck(this, 'ajax-url');
-    var $obj = $(this);
-    var target_id = $obj.attr("target-id");
-    var ajax_url = $obj.attr("ajax-url");
 
-    //noinspection JSJQueryEfficiency
-    if (!$('#' + target_id).hasClass('data-exists')) {
-        $.get(ajax_url, function (data) {
-            $('#' + target_id).append(data.html);
-        });
-    }
-    return false;
-}
-
-function evReplaceKRListAjaxGet() {
-    attrUndefinedCheck(this, 'target-id');
-    attrUndefinedCheck(this, 'ajax-url');
-    attrUndefinedCheck(this, 'kr-line-id');
-    var $obj = $(this);
-    var target_id = $obj.attr("target-id");
-    var ajax_url = $obj.attr("ajax-url");
-    var kr_line_id = $obj.attr("kr-line-id");
-    var $kr_line = $('#' + kr_line_id);
-    //noinspection JSJQueryEfficiency
-    if (!$('#' + target_id).hasClass('data-exists')) {
-        $.get(ajax_url, function (data) {
-            $('#' + target_id).after(data.html);
-            var line_height = $kr_line.height();
-            line_height -= 64;
-            line_height += 64 * data.count;
-            $kr_line.height(line_height);
-            $('#' + target_id).remove();
-
-        });
-    }
-    return false;
-}
 /**
  *  仮アップロードされたファイルの有効期限（保存期限） が過ぎていないか確認
  *
@@ -1908,7 +1878,8 @@ $(document).ready(function () {
             data: function (term, page) {
                 return {
                     term: term, //search term
-                    page_limit: 10 // page size
+                    page_limit: 10, // page size
+                    with_group: 1
                 };
             },
             results: function (data, page) {
@@ -1922,12 +1893,15 @@ $(document).ready(function () {
         },
         containerCssClass: "select2Member"
     }).on('change', function () {
-        if ($(this).val() == '' || $('#CommonMessageBody').val() == '') {
+        var $this = $(this);
+        if ($this.val() == '' || $('#CommonMessageBody').val() == '') {
             $('#MessageSubmit').attr('disabled', 'disabled');
         }
         else {
             $('#MessageSubmit').removeAttr('disabled');
         }
+        // グループを選択した場合、グループに所属するユーザーを展開して入力済にする
+        $this.select2('data', select2ExpandGroup($this.select2('data')));
     });
     $("#CommonMessageBody").keyup(function () {
         if ($('#select2Member').val() == '' || $('#CommonMessageBody').val() == '') {
@@ -1967,7 +1941,8 @@ $(document).ready(function () {
         },
         containerCssClass: "select2Member"
     }).on('change', function () {
-        if ($(this).val() == '') {
+        var $this = $(this);
+        if ($this.val() == '') {
             $('#MessageSubmit').attr('disabled', 'disabled');
         }
         else {
@@ -1975,6 +1950,8 @@ $(document).ready(function () {
                 $('#MessageSubmit').removeAttr('disabled');
             }
         }
+        // グループを選択した場合、グループに所属するユーザーを展開して入力済にする
+        $this.select2('data', select2ExpandGroup($this.select2('data')));
     });
     //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
     $('#select2PostCircleMember').select2({
@@ -2006,7 +1983,12 @@ $(document).ready(function () {
             return m;
         },
         containerCssClass: "select2PostCircleMember"
-    });
+    })
+        .on('change', function () {
+            var $this = $(this);
+            // グループを選択した場合、グループに所属するユーザーを展開して入力済にする
+            $this.select2('data', select2ExpandGroup($this.select2('data')));
+        });
 
     // select2 秘密サークル選択
     $('#select2PostSecretCircle').select2({
@@ -2103,6 +2085,9 @@ $(document).ready(function () {
         },
         containerCssClass: "select2MessageCircleMember"
     });
+
+    // サークル追加用モーダルの select2 を設定
+    bindSelect2Members($('#modal_add_circle'));
 
     // 投稿の共有範囲(公開/秘密)切り替えボタン
     var $shareRangeToggleButton = $('#postShareRangeToggleButton');
@@ -2259,6 +2244,75 @@ $(document).ready(function () {
         }
     });
 
+    $(document).on("click", '#CircleFilterMenuDropDown .modal-circle-setting', function (e) {
+        e.preventDefault();
+        var $this = $(this);
+        if ($this.hasClass('double_click')) {
+            return false;
+        }
+        $this.addClass('double_click');
+        var $modal_elm = $('<div class="modal on fade" tabindex="-1"></div>');
+        $modal_elm.on('hidden.bs.modal', function () {
+            $(this).remove();
+        });
+        var url = $(this).attr('href');
+        $.get(url, function (data) {
+            $modal_elm.append(data);
+            $modal_elm.modal();
+            $modal_elm.find(".bt-switch").bootstrapSwitch({
+                size: "small"
+            })
+                // スイッチ切り替えた時、即時データを更新する
+                .on('switchChange.bootstrapSwitch', function () {
+                    var $form = $('#CircleSettingForm');
+                    $.ajax({
+                        url: cake.url.circle_setting,
+                        type: 'POST',
+                        dataType: 'json',
+                        processData: false,
+                        data: $form.serialize()
+                    })
+                        .done(function (res) {
+                            PNotify.removeAll();
+                            if (res.error) {
+                                new PNotify({
+                                    type: 'error',
+                                    title: cake.word.error,
+                                    text: res.msg,
+                                    icon: "fa fa-check-circle",
+                                    delay: 4000,
+                                    mouse_reset: false
+                                });
+                            }
+                            else {
+                                new PNotify({
+                                    type: 'success',
+                                    title: cake.word.success,
+                                    text: res.msg,
+                                    icon: "fa fa-check-circle",
+                                    delay: 4000,
+                                    mouse_reset: false
+                                });
+                            }
+                        })
+                        .fail(function () {
+                            PNotify.removeAll();
+                            new PNotify({
+                                type: 'error',
+                                title: cake.word.error,
+                                text: cake.message.notice.d,
+                                icon: "fa fa-check-circle",
+                                delay: 4000,
+                                mouse_reset: false
+                            });
+                        });
+                });
+        }).success(function () {
+            $('body').addClass('modal-open');
+            $this.removeClass('double_click');
+        });
+    });
+
     $('#PostDisplayForm, #CommonActionDisplayForm, #MessageDisplayForm').change(function (e) {
         var $target = $(e.target);
         switch ($target.attr('id')) {
@@ -2395,24 +2449,33 @@ function bindSelect2Members($this) {
                 return {results: data.results};
             }
         },
-        initSelection: function (element, callback) {
-            var circle_id = $(element).attr('circle_id');
-            if (circle_id !== "") {
-                $.ajax(cake.url.b + circle_id, {
-                    dataType: 'json'
-                }).done(function (data) {
-                    callback(data.results);
-                });
-            }
-        },
         formatSelection: format,
         formatResult: format,
         escapeMarkup: function (m) {
             return m;
-        },
-        containerCssClass: "select2Member"
-    });
+        }
+    })
+        .on('change', function () {
+            var $this = $(this);
+            // グループを選択した場合
+            // グループに所属するユーザーを展開して入力済にする
+            $this.select2('data', select2ExpandGroup($this.select2('data')));
+        });
 }
+
+// select2 で選択されたグループをユーザーとして展開する
+function select2ExpandGroup(data) {
+    for (var i = 0; i < data.length; i++) {
+        if (data[i].id.indexOf('group_') === 0 && data[i].users) {
+            var group = data.splice(i, 1)[0];
+            for (var j = 0; j < group.users.length; j++) {
+                data.push(group.users[j]);
+            }
+        }
+    }
+    return data;
+};
+
 /**
  * Select2 translation.
  */
@@ -2546,11 +2609,18 @@ function getModalPostList(e) {
 }
 action_autoload_more = false;
 autoload_more = false;
+var feed_loading_now = false;
 function evFeedMoreView(options) {
     var opt = $.extend({
         recursive: false,
         loader_id: null
     }, options);
+
+    //フィード読み込み中はキャンセル
+    if (feed_loading_now) {
+        return false;
+    }
+    feed_loading_now = true;
 
     attrUndefinedCheck(this, 'parent-id');
     attrUndefinedCheck(this, 'next-page-num');
@@ -2624,6 +2694,7 @@ function evFeedMoreView(options) {
                     $posts.find('.comment_gallery').each(function (index, element) {
                         bindCommentBalancedGallery($(element));
                     });
+                    changeSizeFeedImageOnlyOne($posts.find('.feed_img_only_one'));
                 });
             }
 
@@ -2648,6 +2719,7 @@ function evFeedMoreView(options) {
                         // さらに古い投稿が存在する可能性がある場合は、再度同じ関数を呼び出す
                         if (data.start && data.start > oldest_post_time) {
                             setTimeout(function () {
+                                feed_loading_now = false;
                                 evFeedMoreView.call($obj[0], {recursive: true, loader_id: '__feed_loader'});
                             }, 200);
                             return;
@@ -2656,6 +2728,7 @@ function evFeedMoreView(options) {
                         else {
                             $loader_html.remove();
                             $("#" + no_data_text_id).show();
+                            $('#' + parent_id).find('.panel-read-more-body').removeClass('panel-read-more-body').addClass('panel-read-more-body-no-data');
                             $obj.remove();
                             return;
                         }
@@ -2666,16 +2739,19 @@ function evFeedMoreView(options) {
                     //ローダーを削除
                     $loader_html.remove();
                     $("#" + no_data_text_id).show();
+                    $('#' + parent_id).find('.panel-read-more-body').removeClass('panel-read-more-body').addClass('panel-read-more-body-no-data');
                     //もっと読む表示をやめる
                     $obj.remove();
                 }
             }
             action_autoload_more = false;
             autoload_more = false;
+            feed_loading_now = false;
         },
         error: function () {
             alert(cake.message.notice.c);
-        }
+            feed_loading_now = false;
+        },
     });
     return false;
 }
@@ -2838,6 +2914,7 @@ function evCommentOldView() {
                     $posts.find('.comment_gallery').each(function (index, element) {
                         bindCommentBalancedGallery($(element));
                     });
+                    changeSizeFeedImageOnlyOne($posts.find('.feed_img_only_one'));
                 });
 
             }
@@ -2980,6 +3057,13 @@ function showMore(obj) {
             speedDown: 300,
             speedUp: 300,
             height: '60px',
+            showText: '<i class="fa fa-angle-double-down"></i>' + cake.message.info.e,
+            hideText: '<i class="fa fa-angle-double-up"></i>' + cake.message.info.h
+        });
+        $('.showmore-xtra-mini').showMore({
+            speedDown: 300,
+            speedUp: 300,
+            height: '40px',
             showText: '<i class="fa fa-angle-double-down"></i>' + cake.message.info.e,
             hideText: '<i class="fa fa-angle-double-up"></i>' + cake.message.info.h
         });
@@ -3162,97 +3246,6 @@ function getPageTypeId() {
     return pageTypeId.replace("_feed_notify", "");
 }
 
-$(document).ready(function () {
-    $(document).on("click", ".click-my-goals-read-more", evGoalsMoreView);
-    $(document).on("click", ".click-collabo-goals-read-more", evGoalsMoreView);
-    $(document).on("click", ".click-follow-goals-read-more", evGoalsMoreView);
-});
-
-function evGoalsMoreView() {
-    attrUndefinedCheck(this, 'next-page-num');
-    attrUndefinedCheck(this, 'get-url');
-    attrUndefinedCheck(this, 'goal-type');
-
-    var $obj = $(this);
-    var next_page_num = $obj.attr('next-page-num');
-    var get_url = $obj.attr('get-url');
-    var type = $obj.attr('goal-type');
-    //リンクを無効化
-    $obj.attr('disabled', 'disabled');
-    var $loader_html = $('<i class="fa fa-refresh fa-spin"></i>');
-    //ローダー表示
-    $obj.after($loader_html);
-    //url生成
-    var url = get_url + '/page:' + next_page_num + '/type:' + type;
-    var listBox;
-    var moreViewButton = $obj;
-    var limitNumber;
-    if (type === "leader") {
-        listBox = $("#LeaderGoals");
-        limitNumber = cake.data.e;
-    } else if (type === "collabo") {
-        listBox = $("#CollaboGoals");
-        limitNumber = cake.data.f;
-    } else if (type === "my_prev") {
-        listBox = $("#PrevGoals");
-        limitNumber = cake.data.k;
-    }
-    $.ajax({
-        type: 'GET',
-        url: url,
-        async: true,
-        dataType: 'json',
-        success: function (data) {
-            if (!$.isEmptyObject(data.html)) {
-                //取得したhtmlをオブジェクト化
-                var $goals = $(data.html);
-                //一旦非表示
-                $goals.hide();
-                listBox.append($goals);
-                //html表示
-                // もっと見るボタン非表示
-                moreViewButton.hide();
-                $goals.show();
-                //ページ番号をインクリメント
-                next_page_num++;
-                //次のページ番号をセット
-                $obj.attr('next-page-num', next_page_num);
-                //ローダーを削除
-                $loader_html.remove();
-                //もっと見るボタン表示
-                moreViewButton.show();
-                //リンクを有効化
-                $obj.removeAttr('disabled');
-                //画像をレイジーロード
-                imageLazyOn();
-                //画像リサイズ
-                $goals.find('.fileinput_post_comment').fileinput().on('change.bs.fileinput', function () {
-                    $(this).children('.nailthumb-container').nailthumb({
-                        width: 50,
-                        height: 50,
-                        fitDirection: 'center cgenter'
-                    });
-                });
-                if (data.count < limitNumber) {
-                    moreViewButton.hide();
-                }
-
-                $('.custom-radio-check').customRadioCheck();
-                goalsCardProgress();
-
-            } else {
-                // もっと見るボタンの削除
-                moreViewButton.hide();
-            }
-
-        },
-        error: function () {
-            alert(cake.message.notice.c);
-        }
-    });
-    return false;
-}
-
 function viaIsSet(data) {
     var isExist = typeof( data ) !== 'undefined';
     if (!isExist) return false;
@@ -3355,6 +3348,7 @@ function evCommentLatestView(options) {
                     $posts.find('.comment_gallery').each(function (index, element) {
                         bindCommentBalancedGallery($(element));
                     });
+                    changeSizeFeedImageOnlyOne($posts.find('.feed_img_only_one'));
                 });
                 $obj.removeAttr("disabled");
 

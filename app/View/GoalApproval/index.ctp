@@ -66,7 +66,7 @@
     }
 </script>
 
-<div class="col col-md-12 sp-feed-alt-sub" style="top: 50px;">
+<div class="col col-md-12 sp-feed-alt-sub" style="top: 50px;" id="SpFeedAltSub">
     <div class="col col-xxs-6 text-align_r">
         <a class="font_lightGray-veryDark no-line plr_18px sp-feed-link inline-block pt_12px height_40px sp-feed-active"
            id="SubHeaderMenuFeed">

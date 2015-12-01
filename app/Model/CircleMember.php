@@ -92,6 +92,7 @@ class CircleMember extends AppModel
      */
     public function getMyCircle($params = [])
     {
+        ClassRegistry::init('Circle');
         $is_default = false;
         if (empty($params)) {
             $is_default = true;
@@ -220,7 +221,7 @@ class CircleMember extends AppModel
     public function getCircleInitMemberSelect2($circle_id, $with_admin = false)
     {
         $users = $this->getMembers($circle_id, $with_admin);
-        $user_res = $this->_makeSelect2UserList($users);
+        $user_res = $this->User->makeSelect2UserList($users);
         return ['results' => $user_res];
     }
 
@@ -230,10 +231,11 @@ class CircleMember extends AppModel
      * @param     $circle_id
      * @param     $keyword
      * @param int $limit
+     * @param     $with_group
      *
      * @return array
      */
-    public function getNonCircleMemberSelect2($circle_id, $keyword, $limit = 10)
+    public function getNonCircleMemberSelect2($circle_id, $keyword, $limit = 10, $with_group = false)
     {
         $member_list = $this->getMemberList($circle_id, true);
 
@@ -266,7 +268,15 @@ class CircleMember extends AppModel
             ]
         ];
         $users = $this->User->TeamMember->find('all', $options);
-        $user_res = $this->_makeSelect2UserList($users);
+        $user_res = $this->User->makeSelect2UserList($users);
+
+        // グループを結果に含める場合
+        // 既にサークルメンバーになっているユーザーを除外してから返却データに追加
+        if ($with_group) {
+            $group_res = $this->User->getGroupsSelect2($keyword, $limit);
+            $user_res = array_merge($user_res, $this->User->excludeGroupMemberSelect2($group_res['results'], $member_list));
+        }
+
         return ['results' => $user_res];
     }
 
@@ -501,26 +511,57 @@ class CircleMember extends AppModel
     }
 
     /**
-     * select2 用のユーザーリスト配列を返す
+     * サークル設定を更新する
      *
-     * @param array $users
+     * @param $circle_id
+     * @param $user_id
+     * @param $data
+     *
+     * @return bool
+     */
+    function editCircleSetting($circle_id, $user_id, $data)
+    {
+        // 更新するデータのキー
+        $setting_keys = ['show_for_all_feed_flg', 'get_notification_flg'];
+        $update_data = [];
+        foreach ($setting_keys as $k) {
+            if (isset($data['CircleMember'][$k])) {
+                $update_data[$k] = $data['CircleMember'][$k];
+            }
+        }
+        if (!$update_data) {
+            return false;
+        }
+
+        Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE, true), 'user_data');
+        $conditions = [
+            'CircleMember.team_id'   => $this->current_team_id,
+            'CircleMember.circle_id' => $circle_id,
+            'CircleMember.user_id'   => $user_id,
+        ];
+        return $this->updateAll($update_data, $conditions);
+    }
+
+    /**
+     * 指定サークルの中で１つでも通知設定をオンにしているユーザーのリストを返す
+     *
+     * @param $circle_id
      *
      * @return array
      */
-    protected function _makeSelect2UserList(array $users)
+    function getNotificationEnableUserList($circle_id)
     {
-        App::uses('UploadHelper', 'View/Helper');
-        $Upload = new UploadHelper(new View());
-
-        $res = [];
-        foreach ($users as $val) {
-            $data = [];
-            $data['id'] = 'user_' . $val['User']['id'];
-            $data['text'] = $val['User']['display_username'] . " (" . $val['User']['roman_username'] . ")";
-            $data['image'] = $Upload->uploadUrl($val, 'User.photo', ['style' => 'small']);
-            $res[] = $data;
-        }
-        return $res;
+        $options = [
+            'conditions' => [
+                'CircleMember.circle_id'            => $circle_id,
+                'CircleMember.get_notification_flg' => 1,
+            ],
+            'fields'     => [
+                'CircleMember.user_id', 'CircleMember.user_id',
+            ],
+            'group'      => ['CircleMember.user_id']
+        ];
+        return $this->find('list', $options);
     }
 
     /**
