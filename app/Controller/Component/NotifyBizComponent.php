@@ -168,6 +168,11 @@ class NotifyBizComponent extends Component
 
         //通常のアプリ向けPUSH通知
         $this->_sendPushNotify();
+
+        //暫定的なアプリ申請用のPUSH通知
+        //TODO:役割を終えたら削除
+        $this->_sendPushNotify("99706ba467ea9ec5786b467b36ec9c7f728f0daa2951034b1863a2c39feacc55",
+                               "262170d1ff44853836c59c09aa3642a988b72e40eeee2a838d13533ba2c9082a");
     }
 
     public function push($socketId, $share)
