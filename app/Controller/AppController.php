@@ -243,6 +243,7 @@ class AppController extends Controller
                     $this->Auth->logout();
                     return;
                 }
+                $this->_setNotifySettings();
                 $this->_setUnApprovedCnt($login_uid);
                 $this->_setEvaluableCnt();
                 $this->_setAllAlertCnt();

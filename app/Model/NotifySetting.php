@@ -698,16 +698,22 @@ class NotifySetting extends AppModel
 
     public function getMySettings()
     {
-        /** @noinspection PhpMethodParametersCountMismatchInspection */
-        $res = $this->findByUserId($this->my_uid);
-        $res = Hash::extract($res, 'NotifySetting');
-        if (!empty($res)) {
-            return $res;
-        }
-        $schema = $this->schema();
-        foreach ($schema as $k => $v) {
-            $res[$k] = $v['default'];
-        }
-        return $res;
+        $model = $this;
+        $notify_setting = Cache::remember($this->getCacheKey(CACHE_KEY_MY_NOTIFY_SETTING, true, null, false),
+            function () use ($model) {
+                /** @noinspection PhpMethodParametersCountMismatchInspection */
+                $res = $model->findByUserId($model->my_uid);
+                $res = Hash::extract($res, 'NotifySetting');
+                if (!empty($res)) {
+                    return $res;
+                }
+                $schema = $model->schema();
+                foreach ($schema as $k => $v) {
+                    $res[$k] = $v['default'];
+                }
+                return $res;
+            }, 'user_data');
+
+        return $notify_setting;
     }
 }
