@@ -39,7 +39,7 @@ class NotifyBizComponent extends Component
 
     private $initialized = false;
 
-    const PUSHER_CHANNEL_TYPE_ALL_TEAM = 'all_team';
+    const PUSHER_CHANNEL_TYPE_ALL_TEAM = 'team_all';
     const PUSHER_CHANNEL_TYPE_USER = 'user';
     const PUSHER_CHANNEL_TYPE_CIRCLE = 'circle';
     const PUSHER_CHANNEL_TYPE_GOAL = 'goal';
