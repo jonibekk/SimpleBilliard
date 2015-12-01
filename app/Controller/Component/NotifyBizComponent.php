@@ -522,7 +522,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle_id];
         $this->notify_option['model_id'] = $circle_id;
         $this->notify_option['item_name'] = json_encode([$circle['Circle']['name']]);
-        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_CIRCLE, $circle_id);
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $circle_member_list);
     }
 
     /**
@@ -576,7 +576,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle_id];
         $this->notify_option['model_id'] = $circle_id;
         $this->notify_option['item_name'] = json_encode([$circle['Circle']['name']]);
-        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_CIRCLE, $circle_id);
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $user_id);
     }
 
     /**
