@@ -84,6 +84,18 @@ $(window).load(function () {
 
 $(document).ready(function () {
 
+    //Monitoring of the communication state of App Server | Appサーバーの通信状態の監視
+    var network_reachable = true;
+    setInterval(function () {
+        var current_reachable = networkReachable();
+        //Processing who do if you have recovered from the communication state is bad state | 通信状態が悪い状態から復旧した場合に行う処理たち
+        if (network_reachable === false && current_reachable === true) {
+            updateNotifyCnt();
+            updateMessageNotifyCnt();
+        }
+        network_reachable = current_reachable;
+    }, 5000);
+
     $(document).on('keyup', '#message_text_input', function () {
         $(this).autosize();
         //$('body').animate({
