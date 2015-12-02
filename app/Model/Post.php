@@ -1024,16 +1024,6 @@ class Post extends AppModel
         return $res;
     }
 
-    public function getConditionKRFilterPostId()
-    {
-        $res = [
-            'NOT' => [
-                'Post.goal_id' => null,
-            ]
-        ];
-        return $res;
-    }
-
     /**
      * 自分に共有された投稿のID一覧を返す
      *
