@@ -288,6 +288,23 @@ class NotifyBizComponent extends Component
         }
     }
 
+    /**
+     * 通知ベルPush
+     *
+     * @param $from_user_id
+     * @param $flag_name
+     * @param $post_id
+     */
+    public function msgNotifyPush($from_user_id, $flag_name, $post_id)
+    {
+        $pusher = new Pusher(PUSHER_KEY, PUSHER_SECRET, PUSHER_ID);
+        $chunk_channels = array_chunk($this->push_channels, 100);
+        $data = compact('from_user_id', 'flag_name', 'post_id');
+        foreach ($chunk_channels as $channels) {
+            $pusher->trigger($channels, 'msg_count', $data);
+        }
+    }
+
     public function commentPush($socketId, $data)
     {
         // push
@@ -868,7 +885,12 @@ class NotifyBizComponent extends Component
             json_encode($this->notify_option['options'])
         );
         $flag_name = $this->NotifySetting->getFlagPrefixByType($this->notify_option['notify_type']) . '_app_flg';
-        $this->bellPush($this->notify_option['from_user_id'], $flag_name);
+        if ($this->notify_option['notify_type'] == NotifySetting::TYPE_FEED_MESSAGE) {
+            $this->msgNotifyPush($this->notify_option['from_user_id'], $flag_name, $this->notify_option['post_id']);
+        }
+        else {
+            $this->bellPush($this->notify_option['from_user_id'], $flag_name);
+        }
         return true;
     }
 
@@ -1333,6 +1355,16 @@ class NotifyBizComponent extends Component
             $this->NotifySetting->my_uid
         );
 
+        return $res;
+    }
+
+    function getUnreadMessagePostIds()
+    {
+        $unread_msgs = $this->GlRedis->getMessageNotifications(
+            $this->NotifySetting->current_team_id,
+            $this->NotifySetting->my_uid
+        );
+        $res = Hash::extract($unread_msgs, '{n}.id');
         return $res;
     }
 

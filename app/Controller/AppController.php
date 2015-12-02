@@ -761,7 +761,8 @@ class AppController extends Controller
     {
         $new_notify_cnt = $this->NotifyBiz->getCountNewNotification();
         $new_notify_message_cnt = $this->NotifyBiz->getCountNewMessageNotification();
-        $this->set(compact("new_notify_cnt", 'new_notify_message_cnt'));
+        $unread_msg_post_ids = $this->NotifyBiz->getUnreadMessagePostIds();
+        $this->set(compact("new_notify_cnt", 'new_notify_message_cnt', 'unread_msg_post_ids'));
     }
 
     function _getRequiredParam($name)

@@ -3195,6 +3195,20 @@ $(document).ready(function () {
             setNotifyCntToBellAndTitle(getCurrentUnreadNotifyCnt() + 1);
         });
     }
+    pusher.subscribe('user_' + cake.data.user_id + '_team_' + cake.data.i).bind('msg_count', function (data) {
+        //通知設定がoffもしくは自分自身が送信者の場合はなにもしない。
+        if (!cake.notify_setting[data.flag_name]) {
+            return;
+        }
+        if (cake.data.user_id == data.from_user_id) {
+            return;
+        }
+        if (cake.unread_msg_post_ids.indexOf(data.post_id) >= 0) {
+            return;
+        }
+        cake.unread_msg_post_ids.push(data.post_id);
+        setNotifyCntToMessageAndTitle(getMessageNotifyCnt() + 1);
+    });
 
 });
 
