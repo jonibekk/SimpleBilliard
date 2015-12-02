@@ -511,7 +511,7 @@ class NotifyBizComponent extends Component
             json_encode([trim($action['ActionResult']['name'])]) : null;
         $this->notify_option['options']['goal_id'] = $goal_id;
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_GOAL, $goal_id);
-
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $share_members);
     }
 
     /**
