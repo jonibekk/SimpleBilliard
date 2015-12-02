@@ -232,17 +232,6 @@ class NotifyBizComponent extends Component
         $pusher->trigger($channelName, 'post_feed', $data, $socketId);
     }
 
-    function setBellPushChannelFromNotifySetting()
-    {
-        $push_user_ids = [];
-        foreach ($this->notify_settings as $k => $v) {
-            if ($v['app']) {
-                array_push($push_user_ids, $k);
-            }
-        }
-        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $push_user_ids);
-    }
-
     /**
      * 通知ベルPushのチャンネルをセット
      *
@@ -471,7 +460,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['url_data'] = '/';//TODO 暫定的にhome
         $this->notify_option['model_id'] = null;
         $this->notify_option['item_name'] = json_encode([$invite['Team']['name']]);
-        $this->setBellPushChannelFromNotifySetting();
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $invite['FromUser']['id']);
     }
 
     /**
@@ -813,8 +802,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['item_name'] = !empty($comment) ?
             json_encode([trim($comment['Comment']['body'])]) : null;
         $this->notify_option['options']['post_user_id'] = $post['Post']['user_id'];
-
-        $this->setBellPushChannelFromNotifySetting();
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $commented_user_list);
     }
 
     /**
@@ -849,9 +837,7 @@ class NotifyBizComponent extends Component
         $this->notify_option['item_name'] = !empty($comment) ?
             json_encode([trim($comment['Comment']['body'])]) : null;
         $this->notify_option['app_notify_enable'] = $this->notify_settings[$post['Post']['user_id']]['app'];
-        if ($this->notify_settings[$post['Post']['user_id']]['app']) {
-            $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $post['Post']['user_id']);
-        }
+        $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $post['Post']['user_id']);
     }
 
     private function _saveNotifications()
