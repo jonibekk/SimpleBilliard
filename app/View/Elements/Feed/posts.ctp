@@ -233,10 +233,11 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                 ?>
                 <?php if (!empty($imgs)): ?>
             </div>
-            <div class="col col-xxs-12 pt_10px <?= count($imgs) !== 1 ? "none post_gallery" : 'feed_img_only_one mb_12px' ?>">
+            <div
+                class="col col-xxs-12 pt_10px <?= count($imgs) !== 1 ? "none post_gallery" : 'feed_img_only_one mb_12px' ?>">
                 <?php foreach ($imgs as $v): ?>
                     <a href="<?= $v['l'] ?>" rel='lightbox' data-lightbox="FeedLightBox_<?= $post['Post']['id'] ?>">
-                        <?= $this->Html->image($v['s'], ['width' => '100%']) ?>
+                        <?= $this->Html->image($v['s']) ?>
                     </a>
                 <?php endforeach; ?>
             </div>

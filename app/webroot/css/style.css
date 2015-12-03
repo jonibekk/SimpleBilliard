@@ -1325,7 +1325,6 @@ ul.example-indent {
 
 .feed_img_only_one a {
     display: block;
-    width: 100%;
     overflow: hidden;
     position: relative;
 }
@@ -1333,11 +1332,8 @@ ul.example-indent {
 .feed_img_only_one a img {
     position: absolute;
     top: -100%;
-    left: -100%;
-    right: -100%;
     bottom: -100%;
     margin: auto;
-    width: 100%;
 }
 
 .post-contents {
