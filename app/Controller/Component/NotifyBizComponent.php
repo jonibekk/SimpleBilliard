@@ -917,6 +917,9 @@ class NotifyBizComponent extends Component
      */
     private function _sendPushNotify($app_key = NCMB_APPLICATION_KEY, $client_key = NCMB_CLIENT_KEY)
     {
+        if (!$app_key) {
+            return;
+        }
         $timestamp = $this->_getTimestamp();
         $signature = $this->_getNCMBSignature($timestamp, null, null, $app_key, $client_key);
 
@@ -1437,6 +1440,9 @@ class NotifyBizComponent extends Component
      */
     function saveDeviceInfo($user_id, $installation_id, $app_key = NCMB_APPLICATION_KEY, $client_key = NCMB_CLIENT_KEY)
     {
+        if (!$app_key) {
+            return false;
+        }
         error_log("FURU:saveDeviceInfo:$user_id:$installation_id\n", 3, "/tmp/hoge.log");
 
         $timestamp = $this->_getTimestamp();
