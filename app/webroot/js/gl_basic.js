@@ -84,6 +84,18 @@ $(window).load(function () {
 
 $(document).ready(function () {
 
+    //Monitoring of the communication state of App Server | Appサーバーの通信状態の監視
+    var network_reachable = true;
+    setInterval(function () {
+        var current_reachable = networkReachable();
+        //Processing who do if you have recovered from the communication state is bad state | 通信状態が悪い状態から復旧した場合に行う処理たち
+        if (network_reachable === false && current_reachable === true) {
+            updateNotifyCnt();
+            updateMessageNotifyCnt();
+        }
+        network_reachable = current_reachable;
+    }, 5000);
+
     $(document).on('keyup', '#message_text_input', function () {
         $(this).autosize();
         //$('body').animate({
@@ -3184,16 +3196,45 @@ $(document).ready(function () {
                 notifyNewComment(notifyBox);
             }
         });
+        pusher.subscribe(cake.data.c[i]).bind('bell_count', function (data) {
+            //通知設定がoffもしくは自分自身が送信者の場合はなにもしない。
+            if (!cake.notify_setting[data.flag_name]) {
+                return;
+            }
+            if (cake.data.user_id == data.from_user_id) {
+                return;
+            }
+            setNotifyCntToBellAndTitle(getCurrentUnreadNotifyCnt() + 1);
+        });
     }
+    pusher.subscribe('user_' + cake.data.user_id + '_team_' + cake.data.i).bind('msg_count', function (data) {
+        //通知設定がoffもしくは自分自身が送信者の場合はなにもしない。
+        if (!cake.notify_setting[data.flag_name]) {
+            return;
+        }
+        if (cake.data.user_id == data.from_user_id) {
+            return;
+        }
+        if (cake.unread_msg_post_ids.indexOf(data.post_id) >= 0) {
+            return;
+        }
+        cake.unread_msg_post_ids.push(data.post_id);
+        setNotifyCntToMessageAndTitle(getMessageNotifyCnt() + 1);
+    });
 
 });
+
+function getCurrentUnreadNotifyCnt() {
+    var $bellNum = $("#bellNum");
+    var $numArea = $bellNum.find("span");
+    return parseInt($numArea.html());
+}
 
 function notifyNewFeed() {
     var notifyBox = $(".feed-notify-box");
     var numArea = notifyBox.find(".num");
     var num = parseInt(numArea.html());
     var title = $("title");
-
     // Increment unread number
     if (num >= 1) {
         // top of feed
