@@ -87,13 +87,15 @@ $(document).ready(function () {
     //Monitoring of the communication state of App Server | Appサーバーの通信状態の監視
     var network_reachable = true;
     setInterval(function () {
-        var current_reachable = networkReachable();
-        //Processing who do if you have recovered from the communication state is bad state | 通信状態が悪い状態から復旧した場合に行う処理たち
-        if (network_reachable === false && current_reachable === true) {
-            updateNotifyCnt();
-            updateMessageNotifyCnt();
-        }
-        network_reachable = current_reachable;
+        networkReachable(function () {
+            if (network_reachable === false) {
+                updateNotifyCnt();
+                updateMessageNotifyCnt();
+                network_reachable = true;
+            }
+        }, function () {
+            network_reachable = false;
+        });
     }, 5000);
 
     $(document).on('keyup', '#message_text_input', function () {
@@ -2619,8 +2621,8 @@ function getModalPostList(e) {
         });
     }
 }
-action_autoload_more = false;
-autoload_more = false;
+var action_autoload_more = false;
+var autoload_more = false;
 var feed_loading_now = false;
 function evFeedMoreView(options) {
     var opt = $.extend({
@@ -3922,15 +3924,16 @@ $(document).ready(function () {
         if ($(window).scrollTop() + $(window).height() > $(document).height() - 2000) {
             if (!autoload_more) {
                 autoload_more = true;
-                if (!networkReachable()) {
+
+                networkReachable(function () {
+                    $('#FeedMoreReadLink').trigger('click');
+                    $('#GoalPageFollowerMoreLink').trigger('click');
+                    $('#GoalPageMemberMoreLink').trigger('click');
+                    $('#GoalPageKeyResultMoreLink').trigger('click');
+                }, function () {
                     autoload_more = false;
                     return false;
-                }
-
-                $('#FeedMoreReadLink').trigger('click');
-                $('#GoalPageFollowerMoreLink').trigger('click');
-                $('#GoalPageMemberMoreLink').trigger('click');
-                $('#GoalPageKeyResultMoreLink').trigger('click');
+                });
             }
         }
     }).ajaxError(function (event, request, setting) {
@@ -4922,20 +4925,13 @@ function isMobile() {
     }
     return false;
 }
-function networkReachable() {
+function networkReachable(success_callback, error_callback) {
     var path = window.location.protocol + '//' + window.location.hostname + '/';
-    var ret = false;
     $.ajax({
         url: path + "img/no-image.jpg",
         type: "HEAD",
         timeout: 3000,
-        async: false,
-        success: function (data, status, xhr) {
-            ret = true;
-        },
-        error: function (data, status, xhr) {
-            ret = false;
-        }
+        success: success_callback,
+        error: error_callback
     });
-    return ret;
 }
