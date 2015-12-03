@@ -1206,17 +1206,21 @@ class PostTest extends GoalousTestCase
         $this->assertEquals($expected, $actual);
     }
 
+    function testGetSubQueryFilterRelatedGoalPost()
+    {
+        $this->_setDefault();
+        /**
+         * @var DboSource $db
+         */
+        $db = $this->Post->getDataSource();
+        $actual = $this->Post->getSubQueryFilterRelatedGoalPost($db, 0, 1, [1]);
+        $this->assertNotEmpty($actual);
+    }
+
     function testGetConditionGoalPostId()
     {
         $this->_setDefault();
-
-        $expected = [
-            'NOT' => [
-                'Post.goal_id' => null
-            ]
-        ];
-        $actual = $this->Post->getConditionGoalPostId();
-        $this->assertEquals($expected, $actual);
+        $this->assertNotEmpty($this->Post->getConditionAllGoalPostId([1]));
     }
 
     function _setDefault()
