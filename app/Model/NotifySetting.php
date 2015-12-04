@@ -695,4 +695,33 @@ class NotifySetting extends AppModel
         }
         return $values;
     }
+
+    public function getMySettings()
+    {
+        $model = $this;
+        $notify_setting = Cache::remember($this->getCacheKey(CACHE_KEY_MY_NOTIFY_SETTING, true, null, false),
+            function () use ($model) {
+                /** @noinspection PhpMethodParametersCountMismatchInspection */
+                $res = $model->findByUserId($model->my_uid);
+                $res = Hash::extract($res, 'NotifySetting');
+                if (!empty($res)) {
+                    return $res;
+                }
+                $schema = $model->schema();
+                foreach ($schema as $k => $v) {
+                    $res[$k] = $v['default'];
+                }
+                return $res;
+            }, 'user_data');
+
+        return $notify_setting;
+    }
+
+    function getFlagPrefixByType($type)
+    {
+        if (!isset(self::$TYPE[$type]['field_prefix'])) {
+            return null;
+        }
+        return self::$TYPE[$type]['field_prefix'];
+    }
 }

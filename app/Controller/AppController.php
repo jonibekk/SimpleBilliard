@@ -115,6 +115,13 @@ class AppController extends Controller
     public $next_term_id = null;
 
     /**
+     * 通知設定
+     *
+     * @var null
+     */
+    public $notify_setting = null;
+
+    /**
      * スマホアプリからのリクエストか？
      * is request from mobile app?
      *
@@ -236,6 +243,7 @@ class AppController extends Controller
                     $this->Auth->logout();
                     return;
                 }
+                $this->_setNotifySettings();
                 $this->_setUnApprovedCnt($login_uid);
                 $this->_setEvaluableCnt();
                 $this->_setAllAlertCnt();
@@ -286,6 +294,12 @@ class AppController extends Controller
     {
         $all_alert_cnt = $this->unapproved_cnt + $this->evaluable_cnt;
         $this->set(compact('all_alert_cnt'));
+    }
+
+    function _setNotifySettings()
+    {
+        $this->notify_setting = $this->User->NotifySetting->getMySettings();
+        $this->set('notify_setting', $this->notify_setting);
     }
 
     /*
@@ -747,7 +761,8 @@ class AppController extends Controller
     {
         $new_notify_cnt = $this->NotifyBiz->getCountNewNotification();
         $new_notify_message_cnt = $this->NotifyBiz->getCountNewMessageNotification();
-        $this->set(compact("new_notify_cnt", 'new_notify_message_cnt'));
+        $unread_msg_post_ids = $this->NotifyBiz->getUnreadMessagePostIds();
+        $this->set(compact("new_notify_cnt", 'new_notify_message_cnt', 'unread_msg_post_ids'));
     }
 
     function _getRequiredParam($name)

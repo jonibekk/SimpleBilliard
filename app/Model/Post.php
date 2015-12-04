@@ -541,12 +541,23 @@ class Post extends AppModel
             //自分が共有範囲指定された投稿
             $post_filter_conditions['OR'][] =
                 $db->expression('Post.id IN (' . $this->getSubQueryFilterPostIdShareWithMe($db, $start, $end) . ')');
-
             //自分のサークルが共有範囲指定された投稿
             $post_filter_conditions['OR'][] =
                 $db->expression('Post.id IN (' . $this->getSubQueryFilterMyCirclePostId($db, $start, $end) . ')');
-            //ゴール投稿全て
-            $post_filter_conditions['OR'][] = $this->getConditionGoalPostId();
+
+            //関連ゴール
+            $post_filter_conditions['OR'][] =
+                $db->expression('Post.id IN (' . $this->getSubQueryFilterRelatedGoalPost($db, $start, $end,
+                                                                                         [self::TYPE_KR_COMPLETE]) . ')');
+
+            //すべてのユーザが閲覧可能なゴール投稿
+            $post_filter_conditions['OR'][] = $this->getConditionAllGoalPostId([
+                                                                                   self::TYPE_CREATE_GOAL,
+                                                                                   self::TYPE_ACTION,
+                                                                                   self::TYPE_GOAL_COMPLETE,
+                                                                               ]
+            );
+
         }
         //パラメータ指定あり
         else {
@@ -616,7 +627,13 @@ class Post extends AppModel
             }
             //ゴールのみの場合
             elseif ($this->orgParams['filter_goal']) {
-                $post_filter_conditions['OR'][] = $this->getConditionGoalPostId();
+                $post_filter_conditions['OR'][] = $this->getConditionAllGoalPostId([
+                                                                                       self::TYPE_CREATE_GOAL,
+                                                                                       self::TYPE_KR_COMPLETE,
+                                                                                       self::TYPE_ACTION,
+                                                                                       self::TYPE_GOAL_COMPLETE,
+                                                                                   ]
+                );
             }
             // ユーザーID指定
             elseif ($this->orgParams['user_id']) {
@@ -953,13 +970,57 @@ class Post extends AppModel
         return $res;
     }
 
-    public function getConditionGoalPostId()
+    /**
+     * @param $post_types
+     *
+     * @return array
+     */
+    public function getConditionAllGoalPostId($post_types)
     {
         $res = [
-            'NOT' => [
+            'NOT'       => [
                 'Post.goal_id' => null,
             ],
+            'Post.type' => $post_types
         ];
+        return $res;
+    }
+
+    /**
+     * @param  DboSource $db
+     * @param            $start
+     * @param            $end
+     * @param array      $post_types
+     *
+     * @return array
+     */
+    public function getSubQueryFilterRelatedGoalPost(DboSource $db, $start, $end, $post_types)
+    {
+        $related_goal_ids = $this->Goal->getRelatedGoals();
+
+        $query = [
+            'fields'     => ['Post.id'],
+            'table'      => $db->fullTableName($this->Goal),
+            'alias'      => 'Goal',
+            'conditions' => [
+                'Goal.team_id' => $this->current_team_id,
+                'Goal.id'      => $related_goal_ids,
+            ],
+            'joins'      => [
+                [
+                    'type'       => 'LEFT',
+                    'table'      => $db->fullTableName($this),
+                    'alias'      => 'Post',
+                    'conditions' => [
+                        '`Goal`.`id`=`Post`.`goal_id`',
+                        'Post.modified BETWEEN ? AND ?' => [$start, $end],
+                        'Post.type'                     => $post_types,
+                    ],
+                ]
+            ]
+        ];
+        $res = $db->buildStatement($query, $this);
+
         return $res;
     }
 

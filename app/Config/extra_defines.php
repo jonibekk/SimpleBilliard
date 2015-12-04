@@ -40,7 +40,7 @@ define('PUSHER_KEY', 'cfa05829683ced581f02');
 define('PUSHER_SECRET', '5f88d7065071f0439be4');
 define('BASIC_AUTH_ID', 'test');
 define('BASIC_AUTH_PASS', 'test');
-define('NOTIFY_AUTO_UPDATE_SEC', 5);
+define('NOTIFY_AUTO_UPDATE_SEC', 60 * 60);//1 hour
 define('PRE_FILE_TTL', 60 * 60 * 3);// 3 hours
 define('TWO_FA_TTL', 60 * 60 * 24 * 30);
 define('ACCOUNT_LOCK_TTL', 60 * 5);

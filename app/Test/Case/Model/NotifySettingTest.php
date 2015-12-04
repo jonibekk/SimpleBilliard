@@ -311,4 +311,28 @@ class NotifySettingTest extends GoalousTestCase
             $this->assertFalse($v);
         }
     }
+
+    function testGetMySettingNoData()
+    {
+        $this->NotifySetting->my_uid = 1;
+        $res_1 = $this->NotifySetting->getMySettings();
+        $this->assertNull($res_1['id']);
+    }
+
+    function testGetMySettingExistData()
+    {
+        $this->NotifySetting->my_uid = 1;
+        $this->NotifySetting->save(['user_id' => 1]);
+        $res_2 = $this->NotifySetting->getMySettings();
+        $this->assertNotNull($res_2['id']);
+    }
+
+    function testGetFlagPrefixByType()
+    {
+        $res1 = $this->NotifySetting->getFlagPrefixByType(1);
+        $this->assertNotNull($res1);
+        $res2 = $this->NotifySetting->getFlagPrefixByType(1111);
+        $this->assertNull($res2);
+    }
+
 }
