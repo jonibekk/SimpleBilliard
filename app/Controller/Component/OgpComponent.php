@@ -226,7 +226,7 @@ class OgpComponent extends Object
 
                     // 添付ファイルに画像があれば追加
                     foreach ($attached_files as $f) {
-                        if (in_array($f['AttachedFile']['file_ext'], ['jpg', 'jpeg', 'png', 'gif'])) {
+                        if (in_array(strtolower($f['AttachedFile']['file_ext']), ['jpg', 'jpeg', 'png', 'gif'])) {
                             $ogp['image'] = Router::url($Upload->uploadUrl($f, "AttachedFile.attached",
                                                                            ['style' => 'large']), true);
                             break;
