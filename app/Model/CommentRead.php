@@ -85,7 +85,7 @@ class CommentRead extends AppModel
                 }
             }
         }
-        return $res;
+        return $res ? $comment_list : false;
     }
 
     protected function pickUnread($comment_list)
