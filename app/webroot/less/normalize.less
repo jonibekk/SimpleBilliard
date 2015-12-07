@@ -24,7 +24,16 @@ body {
 select,
 input {
   -webkit-appearance: none;
+  -moz-appearance: none;
   appearance: none;
+}
+
+select {
+  background: transparent;
+  &::before {
+    content: 'abcdefghi';
+    font-family: FontAwesome;
+  }
 }
 
 input[type="radio"] {
