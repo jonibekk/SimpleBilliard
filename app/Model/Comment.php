@@ -214,6 +214,11 @@ class Comment extends AppModel
         // 投稿データのmodifiedを更新
         $this->Post->id = $postData['Comment']['post_id'];
         $results[] = $this->Post->saveField('modified', REQUEST_TIMESTAMP);
+        //post_share_users,post_share_circlesの更新
+        $results[] = $this->Post->PostShareUser->updateAll(['PostShareUser.modified' => REQUEST_TIMESTAMP],
+                                                           ['PostShareUser.post_id' => $postData['Comment']['post_id']]);
+        $results[] = $this->Post->PostShareCircle->updateAll(['PostShareCircle.modified' => REQUEST_TIMESTAMP],
+                                                             ['PostShareCircle.post_id' => $postData['Comment']['post_id']]);
 
         // どこかでエラーが発生した場合は rollback
         foreach ($results as $r) {

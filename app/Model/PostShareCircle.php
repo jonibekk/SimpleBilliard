@@ -118,7 +118,7 @@ class PostShareCircle extends AppModel
                 'PostShareCircle.team_id' => $this->current_team_id,
             ],
             'fields'     => [
-                'PostShareCircle.circle_id',
+                'PostShareCircle.circle_id', 'PostShareCircle.circle_id',
             ],
         ];
         $res = $this->find('list', $options);

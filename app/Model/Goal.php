@@ -1733,4 +1733,16 @@ class Goal extends AppModel
         }
         return ClassRegistry::init('EvaluateTerm')->getTermDataByDatetime($goal['Goal']['end_date']);
     }
+
+    public function getRelatedGoals($user_id = null)
+    {
+        if (!$user_id) {
+            $user_id = $this->my_uid;
+        }
+        $g_list = [];
+        $g_list = array_merge($g_list, $this->Follower->getFollowList($user_id));
+        $g_list = array_merge($g_list, $this->Collaborator->getCollaboGoalList($user_id, true));
+        $g_list = array_merge($g_list, $this->User->TeamMember->getCoachingGoalList($user_id));
+        return $g_list;
+    }
 }

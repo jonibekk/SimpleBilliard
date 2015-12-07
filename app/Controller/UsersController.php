@@ -142,7 +142,8 @@ class UsersController extends AppController
             return $this->render();
         }
 
-        $is_account_locked = $this->GlRedis->isTwoFaAccountLocked($this->Session->read('user_id'), $this->request->clientIp());
+        $is_account_locked = $this->GlRedis->isTwoFaAccountLocked($this->Session->read('user_id'),
+                                                                  $this->request->clientIp());
         if ($is_account_locked) {
             $this->Pnotify->outError(__d('notify', "アカウントがロックされています。%s分後に自動的に解除されます。", ACCOUNT_LOCK_TTL / 60));
             return $this->render();
@@ -184,7 +185,8 @@ class UsersController extends AppController
             return $this->render();
         }
 
-        $is_account_locked = $this->GlRedis->isTwoFaAccountLocked($this->Session->read('user_id'), $this->request->clientIp());
+        $is_account_locked = $this->GlRedis->isTwoFaAccountLocked($this->Session->read('user_id'),
+                                                                  $this->request->clientIp());
         if ($is_account_locked) {
             $this->Pnotify->outError(__d('notify', "アカウントがロックされています。%s分後に自動的に解除されます。", ACCOUNT_LOCK_TTL / 60));
             return $this->render();
@@ -626,6 +628,8 @@ class UsersController extends AppController
         //ユーザデータ取得
         $me = $this->_getMyUserDataForSetting();
         if ($this->request->is('put')) {
+            //キャッシュ削除
+            Cache::delete($this->User->getCacheKey(CACHE_KEY_MY_NOTIFY_SETTING, true, null, false), 'user_data');
             //request->dataに入っていないデータを表示しなければ行けない為、マージ
             $this->request->data['User'] = array_merge($me['User'],
                                                        isset($this->request->data['User']) ? $this->request->data['User'] : []);
@@ -965,7 +969,8 @@ class UsersController extends AppController
         $query = $this->request->query;
         $res = [];
         if (viaIsSet($query['term']) && viaIsSet($query['page_limit']) && viaIsSet($query['circle_type'])) {
-            $res = $this->User->getUsersCirclesSelect2($query['term'], $query['page_limit'], $query['circle_type'], true);
+            $res = $this->User->getUsersCirclesSelect2($query['term'], $query['page_limit'], $query['circle_type'],
+                                                       true);
         }
         return $this->_ajaxGetResponse($res);
     }

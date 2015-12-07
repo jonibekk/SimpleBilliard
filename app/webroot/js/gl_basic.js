@@ -84,6 +84,20 @@ $(window).load(function () {
 
 $(document).ready(function () {
 
+    //Monitoring of the communication state of App Server | Appサーバーの通信状態の監視
+    var network_reachable = true;
+    setInterval(function () {
+        networkReachable(function () {
+            if (network_reachable === false) {
+                updateNotifyCnt();
+                updateMessageNotifyCnt();
+                network_reachable = true;
+            }
+        }, function () {
+            network_reachable = false;
+        });
+    }, 5000);
+
     $(document).on('keyup', '#message_text_input', function () {
         $(this).autosize();
         //$('body').animate({
@@ -2607,8 +2621,8 @@ function getModalPostList(e) {
         });
     }
 }
-action_autoload_more = false;
-autoload_more = false;
+var action_autoload_more = false;
+var autoload_more = false;
 var feed_loading_now = false;
 function evFeedMoreView(options) {
     var opt = $.extend({
@@ -3184,16 +3198,45 @@ $(document).ready(function () {
                 notifyNewComment(notifyBox);
             }
         });
+        pusher.subscribe(cake.data.c[i]).bind('bell_count', function (data) {
+            //通知設定がoffもしくは自分自身が送信者の場合はなにもしない。
+            if (!cake.notify_setting[data.flag_name]) {
+                return;
+            }
+            if (cake.data.user_id == data.from_user_id) {
+                return;
+            }
+            setNotifyCntToBellAndTitle(getCurrentUnreadNotifyCnt() + 1);
+        });
     }
+    pusher.subscribe('user_' + cake.data.user_id + '_team_' + cake.data.i).bind('msg_count', function (data) {
+        //通知設定がoffもしくは自分自身が送信者の場合はなにもしない。
+        if (!cake.notify_setting[data.flag_name]) {
+            return;
+        }
+        if (cake.data.user_id == data.from_user_id) {
+            return;
+        }
+        if (cake.unread_msg_post_ids.indexOf(data.post_id) >= 0) {
+            return;
+        }
+        cake.unread_msg_post_ids.push(data.post_id);
+        setNotifyCntToMessageAndTitle(getMessageNotifyCnt() + 1);
+    });
 
 });
+
+function getCurrentUnreadNotifyCnt() {
+    var $bellNum = $("#bellNum");
+    var $numArea = $bellNum.find("span");
+    return parseInt($numArea.html());
+}
 
 function notifyNewFeed() {
     var notifyBox = $(".feed-notify-box");
     var numArea = notifyBox.find(".num");
     var num = parseInt(numArea.html());
     var title = $("title");
-
     // Increment unread number
     if (num >= 1) {
         // top of feed
@@ -3881,15 +3924,16 @@ $(document).ready(function () {
         if ($(window).scrollTop() + $(window).height() > $(document).height() - 2000) {
             if (!autoload_more) {
                 autoload_more = true;
-                if (!networkReachable()) {
+
+                networkReachable(function () {
+                    $('#FeedMoreReadLink').trigger('click');
+                    $('#GoalPageFollowerMoreLink').trigger('click');
+                    $('#GoalPageMemberMoreLink').trigger('click');
+                    $('#GoalPageKeyResultMoreLink').trigger('click');
+                }, function () {
                     autoload_more = false;
                     return false;
-                }
-
-                $('#FeedMoreReadLink').trigger('click');
-                $('#GoalPageFollowerMoreLink').trigger('click');
-                $('#GoalPageMemberMoreLink').trigger('click');
-                $('#GoalPageKeyResultMoreLink').trigger('click');
+                });
             }
         }
     }).ajaxError(function (event, request, setting) {
@@ -4881,20 +4925,13 @@ function isMobile() {
     }
     return false;
 }
-function networkReachable() {
+function networkReachable(success_callback, error_callback) {
     var path = window.location.protocol + '//' + window.location.hostname + '/';
-    var ret = false;
     $.ajax({
         url: path + "img/no-image.jpg",
         type: "HEAD",
         timeout: 3000,
-        async: false,
-        success: function (data, status, xhr) {
-            ret = true;
-        },
-        error: function (data, status, xhr) {
-            ret = false;
-        }
+        success: success_callback,
+        error: error_callback
     });
-    return ret;
 }
