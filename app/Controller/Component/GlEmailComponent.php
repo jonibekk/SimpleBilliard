@@ -189,7 +189,11 @@ class GlEmailComponent extends Component
         if (empty($data)) {
             return;
         }
-        $url = Router::url(array_merge($data['url_data'], ['from' => 'email']), true);
+        $url_data = ['from' => 'email'];
+        if (viaIsSet($data['url_data'])) {
+            $url_data = array_merge($url_data, $data['url_data']);
+        }
+        $url = Router::url($url_data, true);
         $item = [
             'url'       => $url,
             'type'      => $data['notify_type'],
