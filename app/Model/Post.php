@@ -868,7 +868,18 @@ class Post extends AppModel
         if (!empty($res)) {
             /** @noinspection PhpDeprecationInspection */
             $comment_list = Hash::extract($res, '{n}.Comment.{n}.id');
-            $this->Comment->CommentRead->red($comment_list);
+            //新たにコメントを既読にした
+            if ($comment_new_read = $this->Comment->CommentRead->red($comment_list)) {
+                foreach ($res as $p_k => $p_v) {
+                    if (isset($p_v['Comment'])) {
+                        foreach ($p_v['Comment'] as $c_k => $c_v) {
+                            if (in_array($c_v['id'], $comment_new_read)) {
+                                $res[$p_k]['Comment'][$c_k]['comment_read_count']++;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         //１件のサークル名をランダムで取得
