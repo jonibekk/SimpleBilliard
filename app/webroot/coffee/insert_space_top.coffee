@@ -20,5 +20,5 @@ insertSpaceTop = (height) ->
     $(elem).css 'margin-top', parseInt($(elem).css('margin-top')) - height + 'px'
 
 $ ->
-  if cake.is_mb_app
+  if cake.is_mb_app_ios
     insertSpaceTop(20)
