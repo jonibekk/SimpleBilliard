@@ -1274,6 +1274,11 @@ class Post extends AppModel
 
         // 投稿データ保存
         $results[] = $this->save($data);
+        //post_share_users,post_share_circlesの更新
+        $results[] = $this->PostShareUser->updateAll(['PostShareUser.modified' => REQUEST_TIMESTAMP],
+                                                     ['PostShareUser.post_id' => $data['Post']['id']]);
+        $results[] = $this->PostShareCircle->updateAll(['PostShareCircle.modified' => REQUEST_TIMESTAMP],
+                                                       ['PostShareCircle.post_id' => $data['Post']['id']]);
 
         // ファイルが添付されている場合
         if ((isset($data['file_id']) && is_array($data['file_id'])) ||
@@ -1285,7 +1290,6 @@ class Post extends AppModel
                 isset($data['file_id']) ? $data['file_id'] : [],
                 isset($data['deleted_file_id']) ? $data['deleted_file_id'] : []);
         }
-
         // どこかでエラーが発生した場合は rollback
         foreach ($results as $r) {
             if (!$r) {
