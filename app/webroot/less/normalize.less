@@ -21,19 +21,41 @@ body {
 }
 
 /* iOS Safari Hack */
-select,
-input {
+.appearance() {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
 }
 
 select {
-  background: transparent;
-  &::before {
-    content: 'abcdefghi';
-    font-family: FontAwesome;
+  .appearance();
+  padding-right: 30px !important;
+  background: transparent !important;
+  position: relative;
+  z-index: 1;
+  @media screen and (min-width: 768) {
+    padding-righ: 20px !important;
   }
+}
+
+.select-parants (@top: 0; @icon: "\f0d7") {
+  &::before {
+    vertical-align: middle;
+    font-family: FontAwesome;
+    content: @icon;
+    position: absolute;
+    z-index: 0;
+    top: @top;
+    right: 4%;
+    padding: 0 4px;
+    @media screen and (min-width: 768) {
+      right: 2%;
+    }
+  }
+}
+
+input {
+  .appearance();
 }
 
 input[type="radio"] {
