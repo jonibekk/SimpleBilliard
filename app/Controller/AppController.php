@@ -129,6 +129,13 @@ class AppController extends Controller
      */
     public $is_mb_app = false;
     /**
+     * iOSスマホアプリからのリクエストか？
+     * is request from mobile app?
+     *
+     * @var bool
+     */
+    public $is_mb_app_ios = false;
+    /**
      * スマホアプリのUA定義
      * defined user agents of mobile application
      *
@@ -463,6 +470,10 @@ class AppController extends Controller
             $this->is_mb_app = true;
         }
         $this->set('is_mb_app', $this->is_mb_app);
+        if (strpos($ua, 'Goalous App iOS') !== false) {
+            $this->is_mb_app_ios = true;
+        }
+        $this->set('is_mb_app_ios', $this->is_mb_app_ios);
     }
 
     /**
