@@ -38,18 +38,21 @@ select {
   }
 }
 
-.select-parants (@top: 0; @icon: "\f0d7") {
+.select-parants (@top: 8px; @right-mobile: 2%; @right-pc: 2%; @icon: "\f107") {
+  position: relative;
   &::before {
+    color: @subColor4;
+    font-size: @fontLarge;
     vertical-align: middle;
     font-family: FontAwesome;
     content: @icon;
     position: absolute;
     z-index: 0;
     top: @top;
-    right: 4%;
+    right: @right-mobile;
     padding: 0 4px;
-    @media screen and (min-width: 768) {
-      right: 2%;
+    @media screen and (min-width: 768px) {
+      right: @right-pc;
     }
   }
 }

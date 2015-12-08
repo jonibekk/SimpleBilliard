@@ -26,3 +26,10 @@ $ ->
     $('#jsGoTopText').stop().animate { 'right': '-140px' }, 800
     return
   return
+
+# デバッグ用
+selectAddParants = ->
+  selectElm = document.querySelectorAll('select')
+  selectElmNum = selectElm.length
+  console.log 'このページには ' + selectElmNum + ' 個の<select>があります。'
+selectAddParants()
