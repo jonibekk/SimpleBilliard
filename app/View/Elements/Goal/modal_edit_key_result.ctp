@@ -108,7 +108,7 @@
                             <?=
                             $this->Form->input('KeyResult.value_unit',
                                                ['label'               => __d('gl', "単位"),
-                                                'wrapInput'           => 'fff',
+                                                'wrapInput'           => 'modal-edit-kr-change-unit',
                                                 'type'                => 'select',
                                                 'class'               => 'change-select-target-hidden form-control addteam_input-design',
                                                 'target-id'           => 'KeyResult0ValueInputWrap_' . $kr_id,
@@ -234,6 +234,7 @@
                     "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                     'style'                    => 'width:170px',
                     'options'                  => $kr_priority_list,
+                    'wrapInput' => 'modal-edit-kr-set-importance-wrap'
                 ]) ?>
             </div>
         </div>
