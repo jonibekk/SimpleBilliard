@@ -35,6 +35,7 @@
                             'disabled'                 => ['disable_value1', 'disable_value2'],
                             'default'                  => $goal_id,
                             'redirect-url'             => $goal_base_url,
+                            'wrapInput'               => 'profile-user-action-terms-select-wrap'
                         ])
                         ?>
                     </div>

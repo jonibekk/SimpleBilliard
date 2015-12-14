@@ -65,7 +65,8 @@ div#debug-kit-toolbar .panel-tab > a {
 */
 
 .header-team-select-form {
- .select-parants(@top: 17px; @right-mobile: 6%; @right-pc: 8%;);
+  padding: 6px 0;
+ .select-parants(@top: 13px; @right-mobile: 6%; @right-pc: 8%;);
 }
 
 .feed-action-goal-select-wrap {
@@ -88,9 +89,26 @@ div#debug-kit-toolbar .panel-tab > a {
   .select-parants();
 }
 
+.circle-insight-team-select,
 .team-ranking-periods,
 .team-ranking-members,
 .team-ranking-types,
 .team-ranking-timezones {
+  .select-parants();
+}
+
+.profile-user-goals-terms-select-wrap {
+  .select-parants();
+}
+
+.profile-user-goals-terms-select {
+  border-radius: 0 4px 4px 0 !important;
+}
+
+.profile-user-action-terms-select-wrap {
+  .select-parants();
+}
+
+.goal-add-category-select-wrap {
   .select-parants();
 }

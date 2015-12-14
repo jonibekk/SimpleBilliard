@@ -15,7 +15,8 @@ $use = isset($use) ? $use : [];
         <?= $this->Form->input('team', [
             'id'      => 'InsightInputTeam',
             'type'    => 'select',
-            'options' => $team_list]) ?>
+            'options' => $team_list,
+            'wrapInput' => 'circle-insight-team-select']) ?>
     <?php endif ?>
 <?php endif ?>
 
