@@ -1,4 +1,7 @@
 <?php
+/**
+ * @var CodeCompletionView $this
+ */
 if (isset($vol) && !empty($vol)) {
     //jpnの場合
     if (isset($user['User']['language']) && $user['User']['language'] == "jpn") {
@@ -26,5 +29,5 @@ echo "\n";
 echo __d('mail', '◆Goalousホーム');
 echo "\n";
 echo "-> ";
-echo Router::url('/' . $gl_param, true);
+echo "https://www.goalous.com";
 echo "\n";
