@@ -4474,7 +4474,7 @@ $(document).ready(function () {
         }
     };
     var messageDzOptions = {
-        maxFiles: 1
+        maxFiles: 10
     };
     $uploadFileForm.registerDragDropArea('#messageDropArea', messageParams, messageDzOptions);
     $uploadFileForm.registerAttachFileButton('#messageUploadFileButton', messageParams, messageDzOptions);
