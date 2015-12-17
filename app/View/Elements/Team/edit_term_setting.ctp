@@ -74,6 +74,7 @@
             'type'                     => 'select',
             'options'                  => $timezones,
             'required'                 => true,
+            'wrapInput' => 'team-setting-term-timezone',
             "data-bv-notempty-message" => __d('validate', "選択してください。"),
         ])
         ?>
@@ -84,6 +85,7 @@
             'type'                     => 'select',
             "data-bv-notempty-message" => __d('validate', "選択してください。"),
             'options'                  => $start_term_month_options,
+            'wrapInput' => 'team-setting-term-begining',
             'afterInput'               => '<span class="help-block font_11px">'
                 . __d('gl', "基準となる期の開始月を選択して下さい。")
                 . '</span>'
@@ -94,7 +96,8 @@
             'label'                    => __d('gl', "期間"),
             'type'                     => 'select',
             "data-bv-notempty-message" => __d('validate', "選択してください。"),
-            'options'                  => $border_months_options
+            'options'                  => $border_months_options,
+            'wrapInput' => 'team-setting-term-span',
         ]) ?>
         <?php if ($previous_term_start_date && $previous_term_end_date): ?>
             <div class="form-group">
