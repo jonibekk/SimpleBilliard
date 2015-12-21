@@ -114,7 +114,7 @@ class CommentReadTest extends GoalousTestCase
         $last_id2 = $this->CommentRead->Comment->getLastInsertID();
 
         $res = $this->CommentRead->red($last_id, true);
-        $this->assertTrue($res);
+        $this->assertNotEmpty($res);
 
         $CommentReadMock = $this->getMockForModel('CommentRead', array('pickNotMine'));
         /** @noinspection PhpUndefinedMethodInspection */
@@ -125,7 +125,7 @@ class CommentReadTest extends GoalousTestCase
         $CommentReadMock->current_team_id = $team_id;
         $this->CommentRead = $CommentReadMock;
         $res = $this->CommentRead->red([$last_id, $last_id2], true);
-        $this->assertTrue($res);
+        $this->assertNotEmpty($res);
 
         $res = $this->CommentRead->red([$last_id, $last_id2], true);
         $this->assertFalse($res);

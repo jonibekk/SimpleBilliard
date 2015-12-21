@@ -172,6 +172,12 @@ message_app.controller(
                         var node = document.getElementById(key);
                         node.parentNode.removeChild(node);
                     });
+                    if (typeof Dropzone.instances[0] !== "" && Dropzone.instances[0].files.length > 0) {
+                        // ajax で submit するので、アップロード完了後に Dropzone のファイルリストを空にする
+                        // （参照先の配列を空にするため空配列の代入はしない）
+                        Dropzone.instances[0].files.length = 0;
+                    }
+
                     document.getElementById("message_text_input").focus();
 
                     // 未読メッセージ一覧を取得（送信直後の自身のメッセージを含む）
