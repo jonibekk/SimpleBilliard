@@ -5,9 +5,10 @@
             <div class="message-detail-panel-head panel-heading" style="background-color: #f5f5f5;">
                 <div class="message-detail-users-names row font_14px">
                     <a href="{{message_list_url}}"><i
-                            class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i></a>
+                        class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i></a>
                     <span class="ml_8px"> {{first_share_user.User.display_username}}
-                        <span ng-if="post_detail.PostShareUser.length >= 2">、他{{post_detail.PostShareUser.length - 1}}人</span>
+                        <span
+                            ng-if="post_detail.PostShareUser.length >= 2">、他{{post_detail.PostShareUser.length - 1}}人</span>
                     </span>
             <span class="message-detail-head-users-icon plr_11px font_brownRed">
                 <a href="/posts/ajax_get_share_message_modal/post_id:{{post_detail.Post.id}}"
@@ -48,15 +49,17 @@
                                         <span class="font_bold font_verydark">{{item.User.display_username}}</span>
                                     </a>
                                 </div>
-                                <div class="comment-text font_12px message-contents" ng-if="item.Comment.body != '[like]'"
+                                <div class="comment-text font_12px message-contents"
+                                     ng-if="item.Comment.body != '[like]'"
                                      ng-bind-html="item.Comment.body"></div>
                                 <div class="comment-text font_12px" ng-if="item.Comment.body == '[like]'"><i
-                                        class="fa fa-thumbs-o-up font_brownRed"></i></div>
+                                    class="fa fa-thumbs-o-up font_brownRed"></i></div>
                                 <div ng-bind-html="item.AttachedFileHtml"></div>
                                 <div class="font_12px">
                                     <a href="{{item.get_red_user_model_url}}"
                                        class="modal-ajax-get font_lightgray">
-                                        <div ng-if="item.Comment.comment_read_count == post_detail.PostShareUser.length">
+                                        <div
+                                            ng-if="item.Comment.comment_read_count == post_detail.PostShareUser.length">
                                             <i class="fa fa-check" style="color: #099f3f; "></i>
                                         </div>
                                         <div ng-if="item.Comment.comment_read_count < post_detail.PostShareUser.length">
@@ -84,7 +87,8 @@
                                           class="message-detail-reply-input-area form-control tiny-form-text"
                                           rows="1" placeholder="返信する" cols="30" init-height="15"></textarea>
                                 -->
-                                <textarea ng-model="message" id="message_text_input" class="form-control"
+                                <textarea ng-model="message" id="message_text_input"
+                                          class="form-control disable-change-warning"
                                           rows="1" placeholder="返信する" cols="30" init-height="15"></textarea>
                             </div>
                             <div id="messageUploadFilePreviewArea"></div>
