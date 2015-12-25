@@ -216,6 +216,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                     <div class="row goal-edit-labels">
                         <div class="col col-sm-3 goal-edit-labels">
                             <label class="control-label  width100_per text-right"><?= __d('gl', "期間") ?></label>
+
                             <div id="SelectTermTimezone" class="label-addiction pull-right"></div>
                         </div>
 
@@ -252,11 +253,12 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                     <span class="plr_18px">
                                         <span class="goal-edit-limit-date-label">
                                             <?= $goal_start_date_format ?>
-                                            <?= !isset($this->request->data['Goal']['start_date']) ? __d('gl', "（本日）") : null ?>
+                                            <?= !isset($this->request->data['Goal']['start_date']) ? __d('gl',
+                                                                                                         "（本日）") : null ?>
                                         </span>
                                         <a href="#" class="target-show-target-del"
-                                                       show-target-id="KeyResult0StartDateInputWrap"
-                                                       delete-target-id="KeyResult0StartDateDefault">
+                                           show-target-id="KeyResult0StartDateInputWrap"
+                                           delete-target-id="KeyResult0StartDateDefault">
                                             <?= __d('gl', "変更") ?>
                                         </a>
                                     </span>
@@ -283,32 +285,39 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                 <label for="KeyResult0EvaluateTerm"
                                        class="col col-sm-3 control-label goal-set-mid-label"><?=
                                     __d('gl', "評価期間") ?></label>
+
                                 <div class="col col-sm-9">
                                     <p class="form-control-static"
                                        id="KeyResult0EvaluateTermDefault">
                                         <span class="plr_18px">
                                             <span class="goal-edit-limit-date-label"></span>
-                                            <a href="#" class="target-show-target-del"
-                                               show-target-id="KeyResult0EvaluateTermInputWrap"
-                                               delete-target-id="KeyResult0EvaluateTermDefault">
-                                                <?= __d('gl', "変更") ?>
-                                            </a>
+                                            <?php if (!isset($this->request->data['Goal'])): ?>
+                                                <a href="#" class="target-show-target-del"
+                                                   show-target-id="KeyResult0EvaluateTermInputWrap"
+                                                   delete-target-id="KeyResult0EvaluateTermDefault">
+                                                    <?= __d('gl', "変更") ?>
+                                                </a>
+                                            <?php endif; ?>
                                         </span>
                                     </p>
+
                                     <div class="plr_5px none" id="KeyResult0EvaluateTermInputWrap">
-                                        <?=
-                                        $this->Form->input('term_type',
-                                                           ['label'     => false,
-                                                            'wrapInput' => null,
-                                                            'type'      => 'select',
-                                                            'class'     => 'form-control',
-                                                            'required'  => true,
-                                                            'options'   => [
-                                                                'current' => __d('gl', '今期'),
-                                                                'next'    => __d('gl', '来期'),
-                                                            ],
-                                                            'id'        => 'KeyResult0EvaluateTermSelect'
-                                                           ]) ?>
+                                        <?php
+                                        $input_option = ['label'     => false,
+                                                         'wrapInput' => null,
+                                                         'type'      => 'select',
+                                                         'class'     => 'form-control',
+                                                         'required'  => true,
+                                                         'options'   => [
+                                                             'current' => __d('gl', '今期'),
+                                                             'next'    => __d('gl', '来期'),
+                                                         ],
+                                                         'id'        => 'KeyResult0EvaluateTermSelect',
+                                        ];
+                                        if (isset($this->request->data['Goal'])) {
+                                            $input_option['disabled'] = 'disabled';
+                                        }
+                                        echo $this->Form->input('term_type', $input_option) ?>
                                     </div>
                                 </div>
                             </div>

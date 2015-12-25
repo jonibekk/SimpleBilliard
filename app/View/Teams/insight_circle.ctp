@@ -18,7 +18,7 @@
                     'div'       => 'form-group',
                     'label'     => false,
                     'wrapInput' => '',
-                    'class'     => 'form-control',
+                    'class'     => 'form-control disable-change-warning',
                 ],
                 'id'            => 'InsightForm',
                 'type'          => 'get',
