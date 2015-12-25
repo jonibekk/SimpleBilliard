@@ -31,34 +31,22 @@ select {
   .appearance();
   padding-right: 30px !important;
   background: transparent !important;
-  position: relative;
-  z-index: 1;
   @media screen and (min-width: 768) {
     padding-righ: 20px !important;
   }
-}
-
-.select-parants (@top: 8px; @right-mobile: 2%; @right-pc: 2%; @icon: "\f107") {
-  position: relative;
-  &::before {
-    color: @subColor4;
-    font-size: @fontLarge;
-    vertical-align: middle;
-    font-family: FontAwesome;
-    content: @icon;
-    position: absolute;
-    z-index: 0;
-    top: @top;
-    right: @right-mobile;
-    padding: 0 4px;
-    @media screen and (min-width: 768px) {
-      right: @right-pc;
-    }
+  display: inline-block;
+  font-family: "Helvetica Neue", Helvetica, "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", Verdana, "メイリオ", Meiryo, "ＭＳ Ｐゴシック", Roboto, "Droid Sans", FontAwesome, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: url(../img/svg/icon_arrow_open.svgz) no-repeat right !important;
+  background-size: 12px 12px !important;
+  background-position: 98% center;
+  &:focus {
+    outline: 0;
   }
-}
-
-input {
-  .appearance();
 }
 
 input[type="radio"] {
@@ -96,21 +84,6 @@ input[type=checkbox]:checked::before {
   display: block;
   text-align: center;
   line-height: 20px;
-}
-
-input:focus {
-  outline: 0;
-}
-
-/*  Use FontAwesome with Unicode */
-input {
-  display: inline-block;
-  font-family: "Helvetica Neue", Helvetica, "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", Verdana, "メイリオ", Meiryo, "ＭＳ Ｐゴシック", Roboto, "Droid Sans", FontAwesome, sans-serif;
-  font-style: normal;
-  font-weight: normal;
-  line-height: 1;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 img {
