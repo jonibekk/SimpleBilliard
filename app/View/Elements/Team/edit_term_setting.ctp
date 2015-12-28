@@ -74,7 +74,6 @@
             'type'                     => 'select',
             'options'                  => $timezones,
             'required'                 => true,
-            'wrapInput' => 'team-setting-term-timezone',
             "data-bv-notempty-message" => __d('validate', "選択してください。"),
         ])
         ?>

@@ -144,7 +144,6 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                         'class' => 'goal-add-category-select form-control',
                         'type'    => 'select',
                         'options' => $goal_category_list,
-                        'wrapInput' => 'goal-add-category-select-wrap'
                     ]) ?>
                     <?=
                     $this->Form->input('name',
