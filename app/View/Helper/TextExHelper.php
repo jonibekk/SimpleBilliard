@@ -57,11 +57,10 @@ class TextExHelper extends AppHelper
         $options += array('escape' => true);
 
         # URLに使用可能な文字列のみ抽出
-
-        $pattern = '@(https?://([-\w\.]+)+(:\d+)?(/([\w/_\.%-=#]*(\?\S+)?)?)?)@';
+        $regex = '#(?<!href="|src="|">)((?:https?|ftp|nntp)://[\p{L}0-9.\-_:]+(?:[/?][^\s<]*)?)#ui';
 
         $text = preg_replace_callback(
-            $pattern,
+            $regex,
             array(&$this, '_insertPlaceHolder'),
             $text
         );
