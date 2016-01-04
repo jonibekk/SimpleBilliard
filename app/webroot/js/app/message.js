@@ -33,7 +33,13 @@ message_app.config([
               $urlRouterProvider,
               $translateProvider,
               $httpProvider) {
-
+        //Anti IE cache
+        if (!$httpProvider.defaults.headers.get)
+            $httpProvider.defaults.headers.get = {};
+        $httpProvider
+            .defaults
+            .headers
+            .get['If-Modified-Since'] = (new Date(0)).toUTCString();
         $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 
         $translateProvider.useStaticFilesLoader({
