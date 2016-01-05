@@ -8,7 +8,7 @@
     "cakedc/utils": "dev-master",
     "slywalker/boost_cake": "*",
     "ichikaway/cakeplus": "2.0.*@dev",
-    "satooshi/php-coveralls": "dev-master",
+    "satooshi/php-coveralls": "v1.0.0",
     "pusher/pusher-php-server": "dev-master",
     "mixpanel/mixpanel-php": "2.*",
     "aws/aws-sdk-php": "2.6.*",
