@@ -288,7 +288,13 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                     <p class="form-control-static"
                                        id="KeyResult0EvaluateTermDefault">
                                         <span class="plr_18px">
-                                            <span class="goal-edit-limit-date-label"></span>
+                                            <span class="goal-edit-limit-date-label">
+                                            <?php if (isset($this->request->data['Goal'])): ?>
+                                                <?= $this->request->data['Goal']['term_text'] ?>
+                                            <?php else: ?>
+                                                <?= __d('gl', '今期') ?>
+                                            <?php endif; ?>
+                                            </span>
                                             <?php if (!isset($this->request->data['Goal'])): ?>
                                                 <a href="#" class="target-show-target-del"
                                                    show-target-id="KeyResult0EvaluateTermInputWrap"
@@ -301,21 +307,20 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
 
                                     <div class="plr_5px none" id="KeyResult0EvaluateTermInputWrap">
                                         <?php
-                                        $input_option = ['label'     => false,
-                                                         'wrapInput' => null,
-                                                         'type'      => 'select',
-                                                         'class'     => 'form-control',
-                                                         'required'  => true,
-                                                         'options'   => [
-                                                             'current' => __d('gl', '今期'),
-                                                             'next'    => __d('gl', '来期'),
-                                                         ],
-                                                         'id'        => 'KeyResult0EvaluateTermSelect',
-                                        ];
-                                        if (isset($this->request->data['Goal'])) {
-                                            $input_option['disabled'] = 'disabled';
-                                        }
-                                        echo $this->Form->input('term_type', $input_option) ?>
+                                        if (!isset($this->request->data['Goal'])) {
+                                            $input_option = ['label'     => false,
+                                                             'wrapInput' => null,
+                                                             'type'      => 'select',
+                                                             'class'     => 'form-control',
+                                                             'required'  => true,
+                                                             'options'   => [
+                                                                 'current' => __d('gl', '今期'),
+                                                                 'next'    => __d('gl', '来期'),
+                                                             ],
+                                                             'id'        => 'KeyResult0EvaluateTermSelect',
+                                            ];
+                                            echo $this->Form->input('term_type', $input_option);
+#3476                                        } ?>
                                     </div>
                                 </div>
                             </div>
@@ -577,8 +582,6 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
 
     // 評価期間プルダウン表示前のテキスト表示
     var $evaluateTermSelect = $('#KeyResult0EvaluateTermSelect');
-    $('#KeyResult0EvaluateTermDefault').find('.goal-edit-limit-date-label').text(
-        $evaluateTermSelect.find('option:selected').text());
 
     // 評価期間のプルダウン変更時
     $evaluateTermSelect.on('change', function (e, onInit) {

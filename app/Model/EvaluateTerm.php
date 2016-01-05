@@ -507,4 +507,23 @@ class EvaluateTerm extends AppModel
         $res = Hash::extract($res, 'EvaluateTerm');
         return $res;
     }
+
+    public function getTermText($start_date, $end_date)
+    {
+        $current = $this->getCurrentTermData();
+        $previous = $this->getPreviousTermData();
+        $next = $this->getNextTermData();
+        if ($start_date >= $current['start_date'] && $end_date <= $current['end_date']) {
+            return __d('gl', '今期');
+        }
+        elseif ($start_date >= $previous['start_date'] && $end_date <= $previous['end_date']) {
+            return __d('gl', '前期');
+        }
+        elseif ($start_date >= $next['start_date'] && $end_date <= $next['end_date']) {
+            return __d('gl', '来期');
+        }
+
+        return date('Y/m/d', $start_date + $this->me['timezone'] * 3600) . ' - ' .
+        date('Y/m/d', $end_date + $this->me['timezone'] * 3600);
+    }
 }
