@@ -320,7 +320,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                                              'id'        => 'KeyResult0EvaluateTermSelect',
                                             ];
                                             echo $this->Form->input('term_type', $input_option);
-#3476                                        } ?>
+                                        } ?>
                                     </div>
                                 </div>
                             </div>
