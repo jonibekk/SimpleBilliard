@@ -2814,6 +2814,8 @@ function evNotifyPost(options){
     // URL生成
     var url = get_url.replace(/post_permanent/,"ajax_post_permanent");
 
+    var back_notifylist = '<a href="/notifications" class="btn-back-notifications"> <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i> </a> ';
+
     $.ajax({
         type: 'GET',
         url: url,
@@ -2823,12 +2825,15 @@ function evNotifyPost(options){
             if (!$.isEmptyObject(data.html)) {
                 //取得したhtmlをオブジェクト化
                 var $posts = $(data.html);
+                //notify一覧に戻るhtmlを追加
                 //画像をレイジーロード
                 imageLazyOn($posts);
                 //一旦非表示
                 $posts.fadeOut();
 
-                $(".layout-main").html($posts);
+                $(".layout-main").html(back_notifylist);
+                $(".layout-main").append($posts);
+                $(".layout-main").append(back_notifylist);
 
                 showMore($posts);
                 $posts.fadeIn();
