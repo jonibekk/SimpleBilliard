@@ -26,6 +26,7 @@ Router::connect('/team_id::team_id/*', ['controller' => 'pages', 'action' => 'di
 Router::connect('/from::from/*', ['controller' => 'pages', 'action' => 'display', 'home']);
 Router::connect('/circle_feed/:circle_id/*', ['controller' => 'posts', 'action' => 'feed',]);
 Router::connect('/post_permanent/:post_id/*', ['controller' => 'posts', 'action' => 'feed',]);
+Router::connect('/ajax_post_permanent/:post_id/*', ['controller' => 'posts', 'action' => 'ajax_get_feed',]);
 
 /**
  * トップページの言語切り換えの為のルーティング設定。
