@@ -2796,6 +2796,14 @@ function evNotifyPost(options){
     var $obj = $(this);
     var get_url = $obj.attr('get-url');
 
+    //layout-mainが存在しないところではajaxでコンテンツ更新しようにもロードしていない
+    //要素が多すぎるので、おとなしくページリロードする
+    jQuery.fn.exists = function(){return Boolean(this.length > 0);}
+    if(!$(".layout-main").exists()){
+        window.location.href = get_url;
+        return false;
+    }
+
     //ローダー表示
     var $loader_html = opt.loader_id ? $('#' + opt.loader_id) : $('<center><i id="__feed_loader" class="fa fa-refresh fa-spin"></i></center>');
     if (!opt.recursive) {
