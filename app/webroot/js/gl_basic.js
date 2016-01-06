@@ -2799,8 +2799,9 @@ function evNotifyPost(options){
 
     //layout-mainが存在しないところではajaxでコンテンツ更新しようにもロードしていない
     //要素が多すぎるので、おとなしくページリロードする
+    //urlにpost_permanentを含まない場合も対象外
     jQuery.fn.exists = function(){return Boolean(this.length > 0);}
-    if(!$(".layout-main").exists()){
+    if(!$(".layout-main").exists() || !get_url.match(/post_permanent/)){
         window.location.href = get_url;
         return false;
     }
