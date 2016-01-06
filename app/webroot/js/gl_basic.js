@@ -2628,6 +2628,7 @@ function getModalPostList(e) {
 var action_autoload_more = false;
 var autoload_more = false;
 var feed_loading_now = false;
+var doReloadHeaderBellList = false;
 function evFeedMoreView(options) {
     var opt = $.extend({
         recursive: false,
@@ -2851,6 +2852,7 @@ function evNotifyPost(options){
             action_autoload_more = false;
             autoload_more = false;
             feed_loading_now = false;
+            doReloadHeaderBellList = true;
         },
         error: function () {
             alert(cake.message.notice.c);
@@ -3852,8 +3854,9 @@ $(document).ready(function () {
         initBellNum();
         initTitle();
 
-        if (isExistNewNotify || click_cnt == 1) {
+        if (isExistNewNotify || click_cnt == 1 || doReloadHeaderBellList) {
             updateListBox();
+            doReloadHeaderBellList = false;
         }
 
         function isExistNewNotify() {
