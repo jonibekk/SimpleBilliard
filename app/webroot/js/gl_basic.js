@@ -2811,7 +2811,6 @@ function evNotifyPost(options){
     }
 
     // URL生成
-    // 投稿の更新時間が指定されていれば、それ以前の投稿のみを取得する
     var url = get_url.replace(/post_permanent/,"ajax_post_permanent");
 
     $.ajax({
@@ -2836,7 +2835,6 @@ function evNotifyPost(options){
                 //ローダーを削除
                 $loader_html.remove();
                 //リンクを有効化
-                $obj.text(cake.message.info.e);
                 $obj.removeAttr('disabled');
                 $("#ShowMoreNoData").hide();
                 $posts.imagesLoaded(function () {
