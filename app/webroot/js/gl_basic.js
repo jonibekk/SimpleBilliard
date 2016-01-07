@@ -2833,10 +2833,9 @@ function evNotifyPost(options){
                 //一旦非表示
                 $posts.fadeOut();
 
-                //$(".layout-main").html(back_notifylist);
-                //$(".layout-main").append($posts);
-                //$(".layout-main").append(back_notifylist);
-                $(".layout-main").html($posts);
+                $(".layout-main").html(back_notifylist);
+                $(".layout-main").append($posts);
+                $(".layout-main").append(back_notifylist);
 
                 showMore($posts);
                 $posts.fadeIn();
