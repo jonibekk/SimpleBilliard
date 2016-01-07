@@ -2629,7 +2629,7 @@ function getModalPostList(e) {
 var action_autoload_more = false;
 var autoload_more = false;
 var feed_loading_now = false;
-var doReloadHeaderBellList = false;
+var do_reload_header_bellList = false;
 function evFeedMoreView(options) {
     var opt = $.extend({
         recursive: false,
@@ -2817,7 +2817,7 @@ function evNotifyPost(options){
     // URL生成
     var url = get_url.replace(/post_permanent/,"ajax_post_permanent");
 
-    var back_notifylist = '<a href="/notifications" class="btn-back-notifications"> <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i> </a> ';
+    var button_notifylist = '<a href="/notifications" class="btn-back-notifications"> <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i> </a> ';
 
     $.ajax({
         type: 'GET',
@@ -2834,10 +2834,9 @@ function evNotifyPost(options){
                 //一旦非表示
                 $posts.fadeOut();
 
-                //$(".layout-main").html(back_notifylist);
-                //$(".layout-main").append($posts);
-                //$(".layout-main").append(back_notifylist);
-                $(".layout-main").html($posts);
+                $(".layout-main").html(button_notifylist);
+                $(".layout-main").append($posts);
+                $(".layout-main").append(button_notifylist);
 
                 showMore($posts);
                 $posts.fadeIn();
@@ -2861,7 +2860,7 @@ function evNotifyPost(options){
             action_autoload_more = false;
             autoload_more = false;
             feed_loading_now = false;
-            doReloadHeaderBellList = true;
+            do_reload_header_bellList = true;
         },
         error: function () {
             alert(cake.message.notice.c);
@@ -2873,9 +2872,6 @@ function evNotifyPost(options){
 
 // Ajax的なサークルフィード読み込み
 function evCircleFeed(options) {
-
-    //とりあえずサークルリストは隠す?
-    $("#HeaderDropdownNotify").removeClass("open");
 
     var opt = $.extend({
         recursive: false,
@@ -2950,7 +2946,7 @@ function evCircleFeed(options) {
             action_autoload_more = false;
             autoload_more = false;
             feed_loading_now = false;
-            doReloadHeaderBellList = true;
+            do_reload_header_bellList = true;
         },
         error: function () {
             alert(cake.message.notice.c);
@@ -3951,9 +3947,9 @@ $(document).ready(function () {
         initBellNum();
         initTitle();
 
-        if (isExistNewNotify || click_cnt == 1 || doReloadHeaderBellList) {
+        if (isExistNewNotify || click_cnt == 1 || do_reload_header_bellList) {
             updateListBox();
-            doReloadHeaderBellList = false;
+            do_reload_header_bellList = false;
         }
 
         function isExistNewNotify() {
