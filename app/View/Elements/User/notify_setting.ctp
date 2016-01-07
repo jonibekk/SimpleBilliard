@@ -23,7 +23,6 @@
                 'label'     => [
                     'class' => 'col col-sm-3 control-label form-label'
                 ],
-                'wrapInput' => 'col col-xxs-5 col-sm-3',
                 'class'     => 'form-control setting_input-design'
             ],
             'class'         => 'form-horizontal',
@@ -63,6 +62,7 @@
                     'type'    => 'select',
                     'class'   => 'form-control',
                     'options' => NotifySetting::$TYPE_GROUP,
+                    'wrapInput' => 'user-setting-notify-email-select col col-xxs-5 col-sm-3',
                 ])
                 ?>
             </div>
@@ -81,6 +81,7 @@
                     'type'    => 'select',
                     'class'   => 'form-control',
                     'options' => NotifySetting::$TYPE_GROUP,
+                    'wrapInput' => 'user-setting-notify-mobile-select col col-xxs-5 col-sm-3',
                 ])
                 ?>
             </div>

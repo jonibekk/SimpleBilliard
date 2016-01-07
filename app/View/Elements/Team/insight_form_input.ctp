@@ -15,7 +15,8 @@ $use = isset($use) ? $use : [];
         <?= $this->Form->input('team', [
             'id'      => 'InsightInputTeam',
             'type'    => 'select',
-            'options' => $team_list]) ?>
+            'options' => $team_list,
+            'wrapInput' => 'circle-insight-team-select']) ?>
     <?php endif ?>
 <?php endif ?>
 
@@ -44,7 +45,9 @@ $use = isset($use) ? $use : [];
             'prev_term'     => __d('gl', '前期') . sprintf(" (%s - %s)",
                                                          str_replace('-', '/', $date_ranges['prev_term']['start']),
                                                          str_replace('-', '/', $date_ranges['prev_term']['end'])),
-        ]]) ?>
+        ],
+        'wrapInput' => 'team-ranking-periods'
+        ]) ?>
 <?php endif ?>
 
 <?php if (in_array('group', $use)): ?>
@@ -52,7 +55,8 @@ $use = isset($use) ? $use : [];
         'id'      => 'InsightInputGroup',
         'type'    => 'select',
         'empty'   => __d('gl', 'すべてのメンバー'),
-        'options' => $group_list])
+        'options' => $group_list,
+        'wrapInput' => 'team-ranking-members'])
     ?>
 <?php endif ?>
 
@@ -68,7 +72,9 @@ $use = isset($use) ? $use : [];
                       'post_user_ranking'      => __d('gl', '投稿したメンバー'),
                       'post_like_ranking'      => __d('gl', 'いいねされた投稿'),
                       'post_comment_ranking'   => __d('gl', 'コメントされた投稿'),
-        ]])
+        ],
+        'wrapInput' => 'team-ranking-types',
+    ])
     ?>
 <?php endif ?>
 
@@ -81,7 +87,9 @@ $use = isset($use) ? $use : [];
                       '5.5' => __d('gl', '(GMT+05:30) ニューデリー'),
                       '1'   => __d('gl', '(GMT+01:00) ベルリン'),
                       '-8'  => __d('gl', '(GMT-08:00) 太平洋標準時 (アメリカ & カナダ)')
-        ]])
+        ],
+        'wrapInput' => 'team-ranking-timezones'
+    ])
     ?>
 <?php endif ?>
 
