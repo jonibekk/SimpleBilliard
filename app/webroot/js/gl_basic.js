@@ -318,6 +318,7 @@ $(document).ready(function () {
     $(document).on("click", ".toggle-follow", evFollowGoal);
     $(document).on("click", ".click-get-ajax-form-replace", getAjaxFormReplaceElm);
     $(document).on("click", ".notify-card-link", evNotifyPost);
+    $(document).on("click", ".dashboard-circle-list-row", evCircleFeed);
     $(document).on("submit", "form.ajax-csv-upload", uploadCsvFileByForm);
     $(document).on("touchend", "#layer-black", function () {
         $('.navbar-offcanvas').offcanvas('hide');
@@ -2868,6 +2869,94 @@ function evNotifyPost(options){
     return false;
 }
 
+// Ajax的なサークルフィード読み込み
+function evCircleFeed(options) {
+
+    //とりあえずサークルリストは隠す?
+    $("#HeaderDropdownNotify").removeClass("open");
+
+    var opt = $.extend({
+        recursive: false,
+        loader_id: null
+    }, options);
+
+    //フィード読み込み中はキャンセル
+    if (feed_loading_now) {
+        return false;
+    }
+    feed_loading_now = true;
+
+    attrUndefinedCheck(this, 'get-url');
+
+    var $obj = $(this);
+    var get_url = $obj.attr('get-url');
+
+    //layout-mainが存在しないところではajaxでコンテンツ更新しようにもロードしていない
+    //要素が多すぎるので、おとなしくページリロードする
+    //urlにcircle_feedを含まない場合も対象外
+    jQuery.fn.exists = function(){return Boolean(this.length > 0);}
+    if(!$(".layout-main").exists() || !get_url.match(/circle_feed/)){
+        window.location.href = get_url;
+        return false;
+    }
+
+    //ローダー表示
+    var $loader_html = opt.loader_id ? $('#' + opt.loader_id) : $('<center><i id="__feed_loader" class="fa fa-refresh fa-spin"></i></center>');
+    if (!opt.recursive) {
+        $(".layout-main").html($loader_html);
+    }
+
+    // URL生成
+    var url = get_url.replace(/circle_feed/,"ajax_circle_feed");
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: true,
+        dataType: 'json',
+        success: function (data) {
+            if (!$.isEmptyObject(data.html)) {
+                //取得したhtmlをオブジェクト化
+                var $posts = $(data.html);
+                //notify一覧に戻るhtmlを追加
+                //画像をレイジーロード
+                imageLazyOn($posts);
+                //一旦非表示
+                $posts.fadeOut();
+
+                $(".layout-main").html($posts);
+
+                showMore($posts);
+                $posts.fadeIn();
+
+                //ローダーを削除
+                $loader_html.remove();
+                //リンクを有効化
+                $obj.removeAttr('disabled');
+                $("#ShowMoreNoData").hide();
+                $posts.imagesLoaded(function () {
+                    $posts.find('.post_gallery').each(function (index, element) {
+                        bindPostBalancedGallery($(element));
+                    });
+                    $posts.find('.comment_gallery').each(function (index, element) {
+                        bindCommentBalancedGallery($(element));
+                    });
+                    changeSizeFeedImageOnlyOne($posts.find('.feed_img_only_one'));
+                });
+            }
+
+            action_autoload_more = false;
+            autoload_more = false;
+            feed_loading_now = false;
+            doReloadHeaderBellList = true;
+        },
+        error: function () {
+            alert(cake.message.notice.c);
+            feed_loading_now = false;
+        },
+    });
+    return false;
+}
 
 // ゴールのフォロワー一覧を取得
 function evAjaxGoalFollowerMore() {

@@ -21,7 +21,8 @@
                 <?php foreach ($my_circles as $circle): ?>
                     <div class="dashboard-circle-list-row-wrap">
                         <a class="dashboard-circle-list-row"
-                           href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle['Circle']['id']]) ?>">
+                           get-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle['Circle']['id']]) ?>"
+                           href="#" >
                             <?=
                             $this->Html->image('ajax-loader.gif',
                                                [
