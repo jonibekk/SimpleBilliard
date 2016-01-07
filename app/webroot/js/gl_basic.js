@@ -2780,6 +2780,7 @@ function evNotifyPost(options){
 
     //とりあえずドロップダウンは隠す
     $("#HeaderDropdownNotify").removeClass("open");
+    $('body').removeClass('notify-dropdown-open');
 
     var opt = $.extend({
         recursive: false,
@@ -2832,9 +2833,10 @@ function evNotifyPost(options){
                 //一旦非表示
                 $posts.fadeOut();
 
-                $(".layout-main").html(back_notifylist);
-                $(".layout-main").append($posts);
-                $(".layout-main").append(back_notifylist);
+                //$(".layout-main").html(back_notifylist);
+                //$(".layout-main").append($posts);
+                //$(".layout-main").append(back_notifylist);
+                $(".layout-main").html($posts);
 
                 showMore($posts);
                 $posts.fadeIn();
