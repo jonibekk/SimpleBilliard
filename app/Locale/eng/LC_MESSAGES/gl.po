@@ -1451,7 +1451,7 @@ msgstr "Quarter"
 
 #: Model/Team.php:230
 msgid "半年"
-msgstr "Half a year"
+msgstr "Harf a year"
 
 #: Model/Team.php:231
 msgid "年"

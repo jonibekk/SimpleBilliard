@@ -17,7 +17,7 @@
                 'url'           => ['controller' => 'teams',
                                     'action'     => 'insight'],
                 'inputDefaults' => [
-                    'div'       => 'form-group team-insight-wraps',
+                    'div'       => 'form-group',
                     'label'     => false,
                     'wrapInput' => '',
                     'class'     => 'form-control disable-change-warning',
