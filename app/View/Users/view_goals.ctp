@@ -19,19 +19,21 @@
     <div class="panel panel-default">
         <?= $this->element('User/simplex_top_section') ?>
         <div class="panel-body view-goals-panel">
-            <div class="input-group">
-                        <span class="input-group-addon profile-user-icons" id=""><i
-                                class="profile-user-action-related-goal-icon fa fa-calendar-o"></i></span>
+            <div class="input-group profile-user-goals-terms">
+                    <span class="input-group-addon profile-user-goals-terms-icon-wrap" id="">
+                        <i class="profile-user-goals-terms-icon fa fa-calendar-o"></i>
+                    </span>
                 <?=
                 $this->Form->input('term_id', [
                     'label'                    => false,
                     'div'                      => false,
                     'required'                 => true,
-                    'class'                    => 'form-control disable-change-warning',
+                    'class'                    => 'form-control disable-change-warning profile-user-goals-terms-select',
                     'id'                       => 'LoadTermGoal',
                     'options'                  => $term,
                     'default'                  => $term_id,
                     'redirect-url'             => $term_base_url,
+                    'wrapInput'         => 'profile-user-goals-terms-select-wrap'
                 ])
                 ?>
             </div>
