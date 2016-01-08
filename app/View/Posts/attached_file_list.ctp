@@ -42,7 +42,6 @@
             'options'      => $file_type_options,
             'default'      => viaisset($this->request->params['named']['file_type']),
             'redirect-url' => $circle_file_list_base_url,
-            'wrapInput' => 'circle-uploaded-files-type-select-wrap'
         ])
         ?>
         <?= $this->element('Feed/attached_files', ['files' => $files]) ?>

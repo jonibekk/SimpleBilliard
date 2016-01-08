@@ -88,7 +88,7 @@
                         <?=
                         $this->Form->input('KeyResult.value_unit',
                                            ['label'               => __d('gl', "単位"),
-                                            'wrapInput'           => 'modal-add-kr-change-unit-wrap',
+                                            'wrapInput'           => 'ddd',
                                             'type'                => 'select',
                                             'class'               => 'change-select-target-hidden form-control addteam_input-design',
                                             'target-id'           => 'KeyResult0ValueInputWrap_' . $goal_id,
@@ -214,7 +214,6 @@
                     'required' => false,
                     'style'    => 'width:170px',
                     'options'  => $kr_priority_list,
-                    'wrapInput' => 'modal-add-kr-set-importance-wrap'
                 ]) ?>
             </div>
         </div>

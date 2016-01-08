@@ -139,10 +139,10 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                     ])
                     ?>
                 </div>
-<!-- 目印 -->
+
                 <div id="ActionUploadFileDropArea" class="action-upload-file-drop-area">
                     <div class="panel-body action-form-panel-body form-group none" id="WrapCommonActionGoal">
-                        <div class="input-group feed-action-goal-select-wrap">
+                        <div class="input-group">
                             <span class="input-group-addon" id=""><i class="fa fa-flag"></i></span>
                             <?=
                             $this->Form->input('goal_id', [
@@ -171,7 +171,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                     if (!(isset($kr_list) && $kr_list)): ?>
                         none
                     <?php endif ?>" id="WrapKrSelectOnActionForm">
-                        <div class="input-group feed-action-kr-select-wrap">
+                        <div class="input-group">
                             <span class="input-group-addon" id=""><i class="fa fa-key"></i></span>
                             <?=
                             $this->Form->input('key_result_id', [

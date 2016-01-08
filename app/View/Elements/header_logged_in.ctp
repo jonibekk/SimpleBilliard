@@ -73,7 +73,7 @@
                         </a>
                     </li>
                     <li>
-                        <form class="nav-form-group header-team-select-form" role="search">
+                        <form class="nav-form-group" role="search">
                             <?php echo $this->Form->input('current_team',
                                                           array(
                                                               'type'      => 'select',
