@@ -35,7 +35,7 @@ select {
     padding-righ: 20px !important;
   }
   display: inline-block;
-  font-family: "Helvetica Neue", Helvetica, "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", Verdana, "メイリオ", Meiryo, "ＭＳ Ｐゴシック", Roboto, "Droid Sans", FontAwesome, sans-serif;
+  font-family: @font-family-default;
   font-style: normal;
   font-weight: normal;
   line-height: 1;
@@ -78,16 +78,6 @@ input[type=checkbox] {
 input[type=checkbox]:checked {
   background-color: @backgroundColor1;
   content: "\f00c";
-  /* or whatever styles you want depending on your design */
-  /* be as obvious as possible that it's a checkbox and that it's checked! */
-}
-
-input[type=checkbox]:checked::before {
-  content: "\f00c";
-  color: @lighterGray;
-  display: block;
-  text-align: center;
-  line-height: 20px;
 }
 
 img {
