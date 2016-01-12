@@ -23,20 +23,14 @@
 <?php
 // 投稿単体ページでは入力フォームを表示しない
 if (!isset($this->request->params['post_id'])) {
-    error_log("FURU#1:".print_r($user_status,true)."\n", 3, "/tmp/hoge.log");
-
     if (isset($user_status)) {
-        error_log("FURU#2:".print_r($params,true)."\n", 3, "/tmp/hoge.log");
         if (viaIsSet($params['controller']) == 'posts' && (viaIsSet($params['action']) == 'feed' || viaIsSet($params['action']) == 'ajax_circle_feed') && ($user_status == 'joined' || $user_status == 'admin')) {
-            error_log("FURU#3:\n", 3, "/tmp/hoge.log");
             echo $this->element("Feed/common_form");
         }
     }
     else {
-        error_log("FURU#4:\n", 3, "/tmp/hoge.log");
         echo $this->element("Feed/common_form");
     }
-    error_log("FURU#5:\n", 3, "/tmp/hoge.log");
 }
 ?>
 <a href="" class="alert alert-info feed-notify-box" role="alert" style="margin-bottom:5px;display:none;opacity:0;">
@@ -59,7 +53,9 @@ if (isset($this->request->params['post_id']) && !$posts): ?>
         </div>
     </div>
 <?php endif ?>
+<div id="app-view-elements-feed-posts">
 <?= $this->element("Feed/posts") ?>
+</div>
 <?php //(投稿が指定件数　もしくは　アイテム作成日から１ヶ月以上経っている)かつパーマリンクでない
 if ((count($posts) == POST_FEED_PAGE_ITEMS_NUMBER || (isset($item_created) && $item_created < REQUEST_TIMESTAMP - (60 * 60 * 24 * 30))) &&
     (!isset($this->request->params['post_id']) || empty($this->request->params['post_id']))

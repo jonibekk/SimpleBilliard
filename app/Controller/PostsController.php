@@ -338,7 +338,7 @@ class PostsController extends AppController
         return $this->redirect($this->referer());
     }
 
-    public function ajax_get_feed($render_target = "Feed/posts")
+    public function ajax_get_feed()
     {
         $param_named = $this->request->params['named'];
         $this->_ajaxPreProcess();
@@ -370,7 +370,7 @@ class PostsController extends AppController
 
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
-        $response = $this->render($render_target);
+        $response = $this->render("Feed/posts");
         $html = $response->__toString();
         $result = array(
             'html'          => $html,
@@ -987,9 +987,8 @@ class PostsController extends AppController
 
     public function ajax_circle_feed()
     {
-        error_log("FURU#1\n", 3, "/tmp/hoge.log");
         $this->_setCircleCommonVariables();
-        $this->ajax_get_feed("/Posts/feed");
+        $this->ajax_get_feed();
     }
 
     public function attached_file_list()
@@ -1080,11 +1079,8 @@ class PostsController extends AppController
         }
 
         $feed_filter = null;
-        error_log("FURU###0:\n", 3, "/tmp/hoge.log");
         if ($circle_id = viaIsSet($params['circle_id'])) {
             $user_status = $this->_userCircleStatus($circle_id);
-            error_log("FURU###1:".print_r($user_status,true)."\n", 3, "/tmp/hoge.log");
-
             $circle_status = $this->Post->Circle->CircleMember->getShowHideStatus($this->Auth->user('id'),
                                                                                   $circle_id);
             //サークル指定の場合はメンバーリスト取得

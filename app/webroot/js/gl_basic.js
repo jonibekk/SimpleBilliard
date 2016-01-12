@@ -2749,7 +2749,8 @@ function evFeedMoreView(options) {
                             $loader_html.remove();
                             $("#" + no_data_text_id).show();
                             $('#' + parent_id).find('.panel-read-more-body').removeClass('panel-read-more-body').addClass('panel-read-more-body-no-data');
-                            $obj.remove();
+                            $obj.css("display","none");
+                            feed_loading_now = false;
                             return;
                         }
                     }
@@ -2761,7 +2762,7 @@ function evFeedMoreView(options) {
                     $("#" + no_data_text_id).show();
                     $('#' + parent_id).find('.panel-read-more-body').removeClass('panel-read-more-body').addClass('panel-read-more-body-no-data');
                     //もっと読む表示をやめる
-                    $obj.remove();
+                    $obj.css("display","none");
                 }
             }
             action_autoload_more = false;
@@ -2872,7 +2873,6 @@ function evNotifyPost(options){
 
 // Ajax的なサークルフィード読み込み
 function evCircleFeed(options) {
-
     var opt = $.extend({
         recursive: false,
         loader_id: null
@@ -2889,23 +2889,30 @@ function evCircleFeed(options) {
     var $obj = $(this);
     var get_url = $obj.attr('get-url');
 
-    //layout-mainが存在しないところではajaxでコンテンツ更新しようにもロードしていない
+    //app-view-elements-feed-postsが存在しないところではajaxでコンテンツ更新しようにもロードしていない
     //要素が多すぎるので、おとなしくページリロードする
     //urlにcircle_feedを含まない場合も対象外
     jQuery.fn.exists = function(){return Boolean(this.length > 0);}
-    if(!$(".layout-main").exists() || !get_url.match(/circle_feed/)){
+    if(!$("#app-view-elements-feed-posts").exists() || !get_url.match(/circle_feed/)){
         window.location.href = get_url;
         return false;
     }
 
+    //不要な要素を削除
+    $(".panel.panel-default").not(".feed-read-more, .global-form").remove();
+
     //ローダー表示
     var $loader_html = opt.loader_id ? $('#' + opt.loader_id) : $('<center><i id="__feed_loader" class="fa fa-refresh fa-spin"></i></center>');
     if (!opt.recursive) {
-        $(".layout-main").html($loader_html);
+        $("#app-view-elements-feed-posts").html($loader_html);
     }
 
     // URL生成
     var url = get_url.replace(/circle_feed/,"ajax_circle_feed");
+    var more_read_url = get_url.replace(/\/circle_feed\//,"\/posts\/ajax_get_feed\/circle_id:");
+
+    // read more 非表示
+    $("#FeedMoreReadLink").css("display","none");
 
     $.ajax({
         type: 'GET',
@@ -2922,7 +2929,11 @@ function evCircleFeed(options) {
                 //一旦非表示
                 $posts.fadeOut();
 
-                $(".layout-main").html($posts);
+                $("#app-view-elements-feed-posts").html($posts);
+                //read moreの情報を差し替え
+                $("#FeedMoreReadLink").attr("get-url",more_read_url);
+                $("#FeedMoreReadLink").attr("month-index",1);
+                $("#FeedMoreReadLink").css("display","inline");
 
                 showMore($posts);
                 $posts.fadeIn();
