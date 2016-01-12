@@ -23,14 +23,20 @@
 <?php
 // 投稿単体ページでは入力フォームを表示しない
 if (!isset($this->request->params['post_id'])) {
+    error_log("FURU#1:".print_r($user_status,true)."\n", 3, "/tmp/hoge.log");
+
     if (isset($user_status)) {
-        if (viaIsSet($params['controller']) == 'posts' && viaIsSet($params['action']) == 'feed' && ($user_status == 'joined' || $user_status == 'admin')) {
+        error_log("FURU#2:".print_r($params,true)."\n", 3, "/tmp/hoge.log");
+        if (viaIsSet($params['controller']) == 'posts' && (viaIsSet($params['action']) == 'feed' || viaIsSet($params['action']) == 'ajax_circle_feed') && ($user_status == 'joined' || $user_status == 'admin')) {
+            error_log("FURU#3:\n", 3, "/tmp/hoge.log");
             echo $this->element("Feed/common_form");
         }
     }
     else {
+        error_log("FURU#4:\n", 3, "/tmp/hoge.log");
         echo $this->element("Feed/common_form");
     }
+    error_log("FURU#5:\n", 3, "/tmp/hoge.log");
 }
 ?>
 <a href="" class="alert alert-info feed-notify-box" role="alert" style="margin-bottom:5px;display:none;opacity:0;">

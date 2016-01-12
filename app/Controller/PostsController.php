@@ -988,6 +988,7 @@ class PostsController extends AppController
     public function ajax_circle_feed()
     {
         error_log("FURU#1\n", 3, "/tmp/hoge.log");
+        $this->_setCircleCommonVariables();
         $this->ajax_get_feed("/Posts/feed");
     }
 
@@ -1079,8 +1080,10 @@ class PostsController extends AppController
         }
 
         $feed_filter = null;
+        error_log("FURU###0:\n", 3, "/tmp/hoge.log");
         if ($circle_id = viaIsSet($params['circle_id'])) {
             $user_status = $this->_userCircleStatus($circle_id);
+            error_log("FURU###1:".print_r($user_status,true)."\n", 3, "/tmp/hoge.log");
 
             $circle_status = $this->Post->Circle->CircleMember->getShowHideStatus($this->Auth->user('id'),
                                                                                   $circle_id);
