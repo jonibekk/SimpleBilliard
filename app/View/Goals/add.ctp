@@ -141,6 +141,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                             'text'  => __d('gl', "カテゴリ"),
                             'class' => 'col col-sm-3 control-label goal-edit-labels'
                         ],
+                        'class' => 'goal-add-category-select form-control',
                         'type'    => 'select',
                         'options' => $goal_category_list,
                     ]) ?>

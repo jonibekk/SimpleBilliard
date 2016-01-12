@@ -25,7 +25,6 @@
             'label'     => [
                 'class' => 'col col-sm-3 control-label form-label'
             ],
-            'wrapInput' => 'col col-sm-6',
             'class'     => 'form-control setting_input-design'
         ],
         'class'         => 'form-horizontal',
@@ -77,6 +76,7 @@
             'label'   => __d('gl', "言語"),
             'type'    => 'select',
             'options' => $language_list,
+            'wrapInput' => 'user-setting-lang-select-wrap col col-sm-6'
         ]) ?>
         <hr>
         <?=
@@ -84,6 +84,7 @@
             'label'   => __d('gl', "タイムゾーン"),
             'type'    => 'select',
             'options' => $timezones,
+            'wrapInput' => 'user-setting-timezone-select-wrap col col-sm-6'
         ])
         ?>
         <hr>
@@ -92,6 +93,7 @@
                 'label'   => __d('gl', "デフォルトチーム"),
                 'type'    => 'select',
                 'options' => $my_teams,
+                'wrapInput' => 'user-setting-default-team-select-wrap col col-sm-6'
             ]);
             echo "<hr>";
         }
