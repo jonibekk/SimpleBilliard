@@ -188,6 +188,10 @@ class AppController extends Controller
                 }
             }
 
+            //通知の既読ステータス
+            if (isset($this->request->params['named']['notify_id'])) {
+                $this->NotifyBiz->changeReadStatusNotification($this->request->params['named']['notify_id']);
+            }
             //ajaxの時以外で実行する
             if (!$this->request->is('ajax')) {
                 if ($this->current_team_id) {
@@ -211,10 +215,6 @@ class AppController extends Controller
                 //リクエストがログイン中のチーム以外なら切り替える
                 if ($this->request->is('get')) {
                     $this->_switchTeamBeforeCheck();
-                }
-                //通知の既読ステータス
-                if (isset($this->request->params['named']['notify_id'])) {
-                    $this->NotifyBiz->changeReadStatusNotification($this->request->params['named']['notify_id']);
                 }
                 $is_isao_user = $this->_isIsaoUser($this->Session->read('Auth.User'),
                                                    $this->Session->read('current_team_id'));

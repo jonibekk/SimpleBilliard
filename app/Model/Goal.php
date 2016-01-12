@@ -389,6 +389,9 @@ class Goal extends AppModel
                 $res['KeyResult'][$k]['target_value'] = (double)$k_val['target_value'];
             }
         }
+        //期間表示名をセット
+        $res['Goal']['term_text'] = $this->Team->EvaluateTerm->getTermText($res['Goal']['start_date'],
+                                                                           $res['Goal']['end_date']);
         return $res;
     }
 
