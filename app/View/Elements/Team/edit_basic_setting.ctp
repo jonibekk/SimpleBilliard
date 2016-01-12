@@ -92,6 +92,7 @@
             'label'      => __d('gl', "プラン"),
             'type'       => 'select',
             'options'    => Team::$TYPE,
+            'wrapInput' => 'team-setting-basic-plan',
             'afterInput' => '<span class="help-block font_11px">'
                 . __d('gl', "フリープランは、５人までのチームで使えます。また、複数の機能制限がございます。")
                 . '<br>'
