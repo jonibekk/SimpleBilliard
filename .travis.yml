@@ -35,7 +35,7 @@ before_script:
   - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default
   - sudo apt-get install php5-xdebug php5-curl php5-mcrypt
   - sudo apt-get install php-pear php5-dev
-  - pecl install oauth
+  - pecl install oauth-1.2.3
   - sh -c "if [ ! -e apcu-4.0.2 ]; then wget http://pecl.php.net/get/apcu-4.0.2.tgz && tar -xzf apcu-4.0.2.tgz ; fi"
   - sh -c "cd apcu-4.0.2 && phpize && ./configure && make && sudo make install"
   - echo "extension=apcu.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini

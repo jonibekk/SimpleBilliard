@@ -22,7 +22,7 @@
                     'label'     => [
                         'class' => 'col col-sm-3 control-label form-label'
                     ],
-                    'wrapInput' => 'col col-sm-6',
+                    'wrapInput' => 'col col-sm-6 team-group-vision-edit-group-select-edit',
                     'class'     => 'form-control addteam_input-design'
                 ],
                 'class'         => 'form-horizontal',

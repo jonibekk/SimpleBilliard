@@ -317,6 +317,7 @@ $(document).ready(function () {
     //noinspection JSUnresolvedVariable
     $(document).on("click", ".toggle-follow", evFollowGoal);
     $(document).on("click", ".click-get-ajax-form-replace", getAjaxFormReplaceElm);
+    $(document).on("click", ".notify-card-link", evNotifyPost);
     $(document).on("submit", "form.ajax-csv-upload", uploadCsvFileByForm);
     $(document).on("touchend", "#layer-black", function () {
         $('.navbar-offcanvas').offcanvas('hide');
@@ -2621,9 +2622,13 @@ function getModalPostList(e) {
         });
     }
 }
+
+
+
 var action_autoload_more = false;
 var autoload_more = false;
 var feed_loading_now = false;
+var doReloadHeaderBellList = false;
 function evFeedMoreView(options) {
     var opt = $.extend({
         recursive: false,
@@ -2769,6 +2774,101 @@ function evFeedMoreView(options) {
     });
     return false;
 }
+
+//通知から投稿に移動
+function evNotifyPost(options){
+
+    //とりあえずドロップダウンは隠す
+    $("#HeaderDropdownNotify").removeClass("open");
+    $('body').removeClass('notify-dropdown-open');
+
+    var opt = $.extend({
+        recursive: false,
+        loader_id: null
+    }, options);
+
+    //フィード読み込み中はキャンセル
+    if (feed_loading_now) {
+        return false;
+    }
+    feed_loading_now = true;
+
+    attrUndefinedCheck(this, 'get-url');
+
+    var $obj = $(this);
+    var get_url = $obj.attr('get-url');
+
+    //layout-mainが存在しないところではajaxでコンテンツ更新しようにもロードしていない
+    //要素が多すぎるので、おとなしくページリロードする
+    //urlにpost_permanentを含まない場合も対象外
+    jQuery.fn.exists = function(){return Boolean(this.length > 0);}
+    if(!$(".layout-main").exists() || !get_url.match(/post_permanent/)){
+        window.location.href = get_url;
+        return false;
+    }
+
+    //ローダー表示
+    var $loader_html = opt.loader_id ? $('#' + opt.loader_id) : $('<center><i id="__feed_loader" class="fa fa-refresh fa-spin"></i></center>');
+    if (!opt.recursive) {
+        $(".layout-main").html($loader_html);
+    }
+
+    // URL生成
+    var url = get_url.replace(/post_permanent/,"ajax_post_permanent");
+
+    var back_notifylist = '<a href="/notifications" class="btn-back-notifications"> <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i> </a> ';
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: true,
+        dataType: 'json',
+        success: function (data) {
+            if (!$.isEmptyObject(data.html)) {
+                //取得したhtmlをオブジェクト化
+                var $posts = $(data.html);
+                //notify一覧に戻るhtmlを追加
+                //画像をレイジーロード
+                imageLazyOn($posts);
+                //一旦非表示
+                $posts.fadeOut();
+
+                $(".layout-main").html(back_notifylist);
+                $(".layout-main").append($posts);
+                $(".layout-main").append(back_notifylist);
+
+                showMore($posts);
+                $posts.fadeIn();
+
+                //ローダーを削除
+                $loader_html.remove();
+                //リンクを有効化
+                $obj.removeAttr('disabled');
+                $("#ShowMoreNoData").hide();
+                $posts.imagesLoaded(function () {
+                    $posts.find('.post_gallery').each(function (index, element) {
+                        bindPostBalancedGallery($(element));
+                    });
+                    $posts.find('.comment_gallery').each(function (index, element) {
+                        bindCommentBalancedGallery($(element));
+                    });
+                    changeSizeFeedImageOnlyOne($posts.find('.feed_img_only_one'));
+                });
+            }
+
+            action_autoload_more = false;
+            autoload_more = false;
+            feed_loading_now = false;
+            doReloadHeaderBellList = true;
+        },
+        error: function () {
+            alert(cake.message.notice.c);
+            feed_loading_now = false;
+        },
+    });
+    return false;
+}
+
 
 // ゴールのフォロワー一覧を取得
 function evAjaxGoalFollowerMore() {
@@ -3761,8 +3861,9 @@ $(document).ready(function () {
         initBellNum();
         initTitle();
 
-        if (isExistNewNotify || click_cnt == 1) {
+        if (isExistNewNotify || click_cnt == 1 || doReloadHeaderBellList) {
             updateListBox();
+            doReloadHeaderBellList = false;
         }
 
         function isExistNewNotify() {
@@ -4474,7 +4575,7 @@ $(document).ready(function () {
         }
     };
     var messageDzOptions = {
-        maxFiles: 1
+        maxFiles: 10
     };
     $uploadFileForm.registerDragDropArea('#messageDropArea', messageParams, messageDzOptions);
     $uploadFileForm.registerAttachFileButton('#messageUploadFileButton', messageParams, messageDzOptions);
