@@ -105,11 +105,10 @@ class PostsController extends AppController
     public function _addPost()
     {
         $this->request->allowMethod('post');
-
         //OGP処理はメッセ、アクション以外の場合に実行
-        if($this->request->data['Post']['type'] != Post::TYPE_MESSAGE &&
-            $this->request->data['Post']['type'] != Post::TYPE_ACTION
-        ){
+        if (isset($this->request->data['Post']['site_info_url']) &&
+            !empty($this->request->data['Post']['site_info_url'])
+        ) {
             // OGP 情報を取得する URL が含まれるテキスト
             // フロントの JS でプレビューが正しく取得出来た場合は、site_info_url に URL が含まれている
             // それ以外の場合は body テキスト全体から URL を検出する
@@ -117,7 +116,6 @@ class PostsController extends AppController
             if (!$url_text) {
                 $url_text = $this->request->data('Post.body');
             }
-
             // ogbをインサートデータに追加
             $this->request->data['Post'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Post']), $url_text);
         }
