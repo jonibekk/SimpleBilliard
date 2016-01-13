@@ -29,33 +29,39 @@
             <label for="TeamName" class="col col-sm-3 control-label form-label"></label>
 
             <div class="col col-sm-6">
-                <p class="form-control-static"><?= __d('gl', "このセクションでは最終評価をCSVにて行う事ができます。") ?></p>
+                <?php if ($this->Session->read('ua.device_type') == 'Desktop'): ?>
+                    <p class="form-control-static"><?= __d('gl', "このセクションでは最終評価をCSVにて行う事ができます。") ?></p>
 
-                <p class="form-control-static"><?= __d('gl',
-                                                       "ファイルをダウンロードし、フォーマットに従って入力したあと、更新済みのCSVファイルをアップロードしてください。") ?></p>
+                    <p class="form-control-static"><?= __d('gl',
+                                                           "ファイルをダウンロードし、フォーマットに従って入力したあと、更新済みのCSVファイルをアップロードしてください。") ?></p>
 
-                <p class="form-control-static"><?= __d('gl', "") ?></p>
+                    <p class="form-control-static"><?= __d('gl', "") ?></p>
 
-                <p class="form-control-static"><?= __d('gl', "") ?></p>
+                    <p class="form-control-static"><?= __d('gl', "") ?></p>
 
-                <p class="form-control-static"><?= __d('gl', "") ?></p>
+                    <p class="form-control-static"><?= __d('gl', "") ?></p>
 
-                <p class="form-control-static"><?= __d('gl', "") ?></p>
+                    <p class="form-control-static"><?= __d('gl', "") ?></p>
+                <?php else: ?>
+                    <p class="form-control-static"><?= __d('gl', "本機能はPCにてご利用できます。") ?></p>
+                <?php endif; ?>
             </div>
         </div>
     </div>
-    <div class="panel-footer">
-        <div class="row">
-            <div class="col-sm-9 col-sm-offset-3">
-                <a href="#" data-toggle="modal" data-target="#ModalFinalEvaluation_<?= $previous_term_id ?>_ByCsv"
-                   class="btn btn-primary" <?= $previous_term_id && $previous_eval_is_frozen ? null : 'disabled' ?>>
-                    <?= __d('gl', '前期の最終評価を行う') ?></a>
-                <a href="#" data-toggle="modal" data-target="#ModalFinalEvaluation_<?= $current_term_id ?>_ByCsv"
-                   class="btn btn-primary" <?= $current_term_id && $current_eval_is_frozen ? null : 'disabled' ?>>
-                    <?= __d('gl', '今期の最終評価を行う') ?></a>
+    <?php if ($this->Session->read('ua.device_type') == 'Desktop'): ?>
+        <div class="panel-footer">
+            <div class="row">
+                <div class="col-sm-9 col-sm-offset-3">
+                    <a href="#" data-toggle="modal" data-target="#ModalFinalEvaluation_<?= $previous_term_id ?>_ByCsv"
+                       class="btn btn-primary" <?= $previous_term_id && $previous_eval_is_frozen ? null : 'disabled' ?>>
+                        <?= __d('gl', '前期の最終評価を行う') ?></a>
+                    <a href="#" data-toggle="modal" data-target="#ModalFinalEvaluation_<?= $current_term_id ?>_ByCsv"
+                       class="btn btn-primary" <?= $current_term_id && $current_eval_is_frozen ? null : 'disabled' ?>>
+                        <?= __d('gl', '今期の最終評価を行う') ?></a>
+                </div>
             </div>
         </div>
-    </div>
+    <?php endif; ?>
 </div>
 <!-- END app/View/Elements/Team/final_evaluation.ctp -->
 <?php $this->start('modal');
