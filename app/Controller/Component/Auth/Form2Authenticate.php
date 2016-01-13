@@ -26,6 +26,7 @@ class Form2Authenticate extends FormAuthenticate
             //TODO ハードコーディングでPrimaryEmailモデルを指定、もし複数アドレスを許可する場合は書き換える必要あり。
             $conditions = array(
                 'PrimaryEmail' . '.' . $fields['username'] => $username,
+                'PrimaryEmail.del_flg'                     => false,
             );
         }
 
