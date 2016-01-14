@@ -338,7 +338,7 @@ class PostsController extends AppController
         return $this->redirect($this->referer());
     }
 
-    public function ajax_get_feed()
+    public function ajax_get_feed($view = "Feed/posts")
     {
         $param_named = $this->request->params['named'];
         $this->_ajaxPreProcess();
@@ -370,7 +370,7 @@ class PostsController extends AppController
 
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
-        $response = $this->render("Feed/posts");
+        $response = $this->render($view);
         $html = $response->__toString();
         $result = array(
             'html'          => $html,
@@ -988,7 +988,7 @@ class PostsController extends AppController
     public function ajax_circle_feed()
     {
         $this->_setCircleCommonVariables();
-        $this->ajax_get_feed();
+        $this->ajax_get_feed("/Posts/feed");
     }
 
     public function attached_file_list()

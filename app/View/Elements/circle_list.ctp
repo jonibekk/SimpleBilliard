@@ -22,6 +22,9 @@
                     <div class="dashboard-circle-list-row-wrap">
                         <a class="dashboard-circle-list-row"
                            get-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle['Circle']['id']]) ?>"
+                           image-url="<?= $this->Upload->uploadUrl($circle, 'Circle.photo', ['style' => 'small']) ?>"
+                           title="<?= h($circle['Circle']['name']) ?>"
+                           circle-id="<?= $circle['Circle']['id'] ?>"
                            href="#" >
                             <?=
                             $this->Html->image('ajax-loader.gif',

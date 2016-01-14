@@ -319,6 +319,7 @@ $(document).ready(function () {
     $(document).on("click", ".click-get-ajax-form-replace", getAjaxFormReplaceElm);
     $(document).on("click", ".notify-card-link", evNotifyPost);
     $(document).on("click", ".dashboard-circle-list-row", evCircleFeed);
+    $(document).on("click", ".circle-link", evCircleFeed);
     $(document).on("submit", "form.ajax-csv-upload", uploadCsvFileByForm);
     $(document).on("touchend", "#layer-black", function () {
         $('.navbar-offcanvas').offcanvas('hide');
@@ -1969,210 +1970,9 @@ $(document).ready(function () {
         // グループを選択した場合、グループに所属するユーザーを展開して入力済にする
         $this.select2('data', select2ExpandGroup($this.select2('data')));
     });
-    //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
-    $('#select2PostCircleMember').select2({
-        multiple: true,
-        placeholder: cake.word.select_public_circle,
-        minimumInputLength: 1,
-        ajax: {
-            url: cake.url.select2_circle_user,
-            dataType: 'json',
-            quietMillis: 100,
-            cache: true,
-            data: function (term, page) {
-                return {
-                    term: term, //search term
-                    page_limit: 10, // page size
-                    circle_type: "public"
-                };
-            },
-            results: function (data, page) {
-                return {results: data.results};
-            }
-        },
-        data: [],
-        initSelection: cake.data.b,
-        formatSelection: format,
-        formatResult: format,
-        dropdownCssClass: 's2-post-dropdown',
-        escapeMarkup: function (m) {
-            return m;
-        },
-        containerCssClass: "select2PostCircleMember"
-    })
-        .on('change', function () {
-            var $this = $(this);
-            // グループを選択した場合、グループに所属するユーザーを展開して入力済にする
-            $this.select2('data', select2ExpandGroup($this.select2('data')));
-        });
 
-    // select2 秘密サークル選択
-    $('#select2PostSecretCircle').select2({
-        multiple: true,
-        placeholder: cake.word.select_secret_circle,
-        minimumInputLength: 1,
-        maximumSelectionSize: 1,
-        ajax: {
-            url: cake.url.select2_secret_circle,
-            dataType: 'json',
-            quietMillis: 100,
-            cache: true,
-            data: function (term, page) {
-                return {
-                    term: term, //search term
-                    page_limit: 10 // page size
-                };
-            },
-            results: function (data, page) {
-                return {results: data.results};
-            }
-        },
-        data: [],
-        initSelection: cake.data.select2_secret_circle,
-        formatSelection: format,
-        formatResult: format,
-        dropdownCssClass: 's2-post-dropdown',
-        escapeMarkup: function (m) {
-            return m;
-        },
-        containerCssClass: "select2PostCircleMember"
-    });
+    initCircleSelect2();
 
-    //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
-    $('#select2MessageCircleMember').select2({
-        multiple: true,
-        placeholder: cake.word.select_public_message,
-        minimumInputLength: 2,
-        ajax: {
-            url: cake.url.select2_circle_user,
-            dataType: 'json',
-            quietMillis: 100,
-            cache: true,
-            data: function (term, page) {
-                return {
-                    term: term, //search term
-                    page_limit: 10, // page size
-                    circle_type: "public"
-                };
-            },
-            results: function (data, page) {
-                return {results: data.results};
-            }
-        },
-        data: [],
-        initSelection: cake.data.b,
-        formatSelection: format,
-        formatResult: format,
-        dropdownCssClass: 's2-post-dropdown',
-        escapeMarkup: function (m) {
-            return m;
-        },
-        containerCssClass: "select2MessageCircleMember"
-    });
-
-    // select2 秘密サークル選択
-    $('#select2MessageSecretCircle').select2({
-        multiple: true,
-        placeholder: cake.word.select_secret_circle,
-        minimumInputLength: 2,
-        maximumSelectionSize: 1,
-        ajax: {
-            url: cake.url.select2_secret_circle,
-            dataType: 'json',
-            quietMillis: 100,
-            cache: true,
-            data: function (term, page) {
-                return {
-                    term: term, //search term
-                    page_limit: 10 // page size
-                };
-            },
-            results: function (data, page) {
-                return {results: data.results};
-            }
-        },
-        data: [],
-        initSelection: cake.data.select2_secret_circle,
-        formatSelection: format,
-        formatResult: format,
-        dropdownCssClass: 's2-post-dropdown',
-        escapeMarkup: function (m) {
-            return m;
-        },
-        containerCssClass: "select2MessageCircleMember"
-    });
-
-    // サークル追加用モーダルの select2 を設定
-    bindSelect2Members($('#modal_add_circle'));
-
-    // 投稿の共有範囲(公開/秘密)切り替えボタン
-    var $shareRangeToggleButton = $('#postShareRangeToggleButton');
-    var $shareRange = $('#postShareRange');
-    var publicButtonLabel = '<i class="fa fa-unlock"></i> ' + cake.word.public;
-    var secretButtonLabel = '<i class="fa fa-lock font_verydark"></i> ' + cake.word.secret;
-
-    // ボタン初期状態
-    $shareRangeToggleButton.html(($shareRange.val() == 'public') ? publicButtonLabel : secretButtonLabel);
-
-    // 共有範囲切り替えボタンが有効な場合
-    if ($shareRangeToggleButton.attr('data-toggle-enabled')) {
-        $shareRangeToggleButton.on('click', function (e) {
-            e.preventDefault();
-            $shareRange.val($shareRange.val() == 'public' ? 'secret' : 'public');
-            if ($shareRange.val() == 'public') {
-                $shareRangeToggleButton.html(publicButtonLabel);
-                $('#PostSecretShareInputWrap').hide();
-                $('#PostPublicShareInputWrap').show();
-            }
-            else {
-                $shareRangeToggleButton.html(secretButtonLabel);
-                $('#PostPublicShareInputWrap').hide();
-                $('#PostSecretShareInputWrap').show();
-            }
-        });
-    }
-    // 共有範囲切り替えボタンが無効な場合（サークルフィードページ）
-    else {
-        $shareRangeToggleButton.popover({
-            'data-toggle': "popover",
-            'placement': 'top',
-            'trigger': "focus",
-            'content': cake.word.share_change_disabled,
-            'container': 'body'
-        });
-    }
-
-
-    $('#select2ActionCircleMember').select2({
-        multiple: true,
-        placeholder: cake.word.select_notify_range,
-        minimumInputLength: 1,
-        ajax: {
-            url: cake.url.select2_circle_user,
-            dataType: 'json',
-            quietMillis: 100,
-            cache: true,
-            data: function (term, page) {
-                return {
-                    term: term, //search term
-                    page_limit: 10, // page size
-                    circle_type: 'all'
-                };
-            },
-            results: function (data, page) {
-                return {results: data.results};
-            }
-        },
-        data: [],
-        initSelection: cake.data.l,
-        formatSelection: format,
-        formatResult: format,
-        dropdownCssClass: 's2-post-dropdown aaaa',
-        escapeMarkup: function (m) {
-            return m;
-        },
-        containerCssClass: "select2ActionCircleMember"
-    });
     $(document).on("click", '.modal-ajax-get-public-circles', function (e) {
         e.preventDefault();
         var $this = $(this);
@@ -2428,6 +2228,216 @@ $(document).ready(function () {
         });
     }
 });
+
+
+function initCircleSelect2(){
+    //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
+    console.log("FURU:####1");
+    $('#select2PostCircleMember').select2({
+            multiple: true,
+            placeholder: cake.word.select_public_circle,
+            minimumInputLength: 1,
+            ajax: {
+                url: cake.url.select2_circle_user,
+                dataType: 'json',
+                quietMillis: 100,
+                cache: true,
+                data: function (term, page) {
+                    return {
+                        term: term, //search term
+                        page_limit: 10, // page size
+                        circle_type: "public"
+                    };
+                },
+                results: function (data, page) {
+                    return {results: data.results};
+                }
+            },
+            data: [],
+            initSelection: cake.data.b,
+            formatSelection: format,
+            formatResult: format,
+            dropdownCssClass: 's2-post-dropdown',
+            escapeMarkup: function (m) {
+                return m;
+            },
+            containerCssClass: "select2PostCircleMember"
+        })
+        .on('change', function () {
+            var $this = $(this);
+            // グループを選択した場合、グループに所属するユーザーを展開して入力済にする
+            $this.select2('data', select2ExpandGroup($this.select2('data')));
+        });
+
+    // select2 秘密サークル選択
+    $('#select2PostSecretCircle').select2({
+        multiple: true,
+        placeholder: cake.word.select_secret_circle,
+        minimumInputLength: 1,
+        maximumSelectionSize: 1,
+        ajax: {
+            url: cake.url.select2_secret_circle,
+            dataType: 'json',
+            quietMillis: 100,
+            cache: true,
+            data: function (term, page) {
+                return {
+                    term: term, //search term
+                    page_limit: 10 // page size
+                };
+            },
+            results: function (data, page) {
+                return {results: data.results};
+            }
+        },
+        data: [],
+        initSelection: cake.data.select2_secret_circle,
+        formatSelection: format,
+        formatResult: format,
+        dropdownCssClass: 's2-post-dropdown',
+        escapeMarkup: function (m) {
+            return m;
+        },
+        containerCssClass: "select2PostCircleMember"
+    });
+
+    //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
+    $('#select2MessageCircleMember').select2({
+        multiple: true,
+        placeholder: cake.word.select_public_message,
+        minimumInputLength: 2,
+        ajax: {
+            url: cake.url.select2_circle_user,
+            dataType: 'json',
+            quietMillis: 100,
+            cache: true,
+            data: function (term, page) {
+                return {
+                    term: term, //search term
+                    page_limit: 10, // page size
+                    circle_type: "public"
+                };
+            },
+            results: function (data, page) {
+                return {results: data.results};
+            }
+        },
+        data: [],
+        initSelection: cake.data.b,
+        formatSelection: format,
+        formatResult: format,
+        dropdownCssClass: 's2-post-dropdown',
+        escapeMarkup: function (m) {
+            return m;
+        },
+        containerCssClass: "select2MessageCircleMember"
+    });
+
+    // select2 秘密サークル選択
+    $('#select2MessageSecretCircle').select2({
+        multiple: true,
+        placeholder: cake.word.select_secret_circle,
+        minimumInputLength: 2,
+        maximumSelectionSize: 1,
+        ajax: {
+            url: cake.url.select2_secret_circle,
+            dataType: 'json',
+            quietMillis: 100,
+            cache: true,
+            data: function (term, page) {
+                return {
+                    term: term, //search term
+                    page_limit: 10 // page size
+                };
+            },
+            results: function (data, page) {
+                return {results: data.results};
+            }
+        },
+        data: [],
+        initSelection: cake.data.select2_secret_circle,
+        formatSelection: format,
+        formatResult: format,
+        dropdownCssClass: 's2-post-dropdown',
+        escapeMarkup: function (m) {
+            return m;
+        },
+        containerCssClass: "select2MessageCircleMember"
+    });
+
+    // サークル追加用モーダルの select2 を設定
+    bindSelect2Members($('#modal_add_circle'));
+
+    // 投稿の共有範囲(公開/秘密)切り替えボタン
+    var $shareRangeToggleButton = $('#postShareRangeToggleButton');
+    var $shareRange = $('#postShareRange');
+    var publicButtonLabel = '<i class="fa fa-unlock"></i> ' + cake.word.public;
+    var secretButtonLabel = '<i class="fa fa-lock font_verydark"></i> ' + cake.word.secret;
+
+    // ボタン初期状態
+    $shareRangeToggleButton.html(($shareRange.val() == 'public') ? publicButtonLabel : secretButtonLabel);
+
+    // 共有範囲切り替えボタンが有効な場合
+    if ($shareRangeToggleButton.attr('data-toggle-enabled')) {
+        $shareRangeToggleButton.on('click', function (e) {
+            e.preventDefault();
+            $shareRange.val($shareRange.val() == 'public' ? 'secret' : 'public');
+            if ($shareRange.val() == 'public') {
+                $shareRangeToggleButton.html(publicButtonLabel);
+                $('#PostSecretShareInputWrap').hide();
+                $('#PostPublicShareInputWrap').show();
+            }
+            else {
+                $shareRangeToggleButton.html(secretButtonLabel);
+                $('#PostPublicShareInputWrap').hide();
+                $('#PostSecretShareInputWrap').show();
+            }
+        });
+    }
+    // 共有範囲切り替えボタンが無効な場合（サークルフィードページ）
+    else {
+        $shareRangeToggleButton.popover({
+            'data-toggle': "popover",
+            'placement': 'top',
+            'trigger': "focus",
+            'content': cake.word.share_change_disabled,
+            'container': 'body'
+        });
+    }
+
+
+    $('#select2ActionCircleMember').select2({
+        multiple: true,
+        placeholder: cake.word.select_notify_range,
+        minimumInputLength: 1,
+        ajax: {
+            url: cake.url.select2_circle_user,
+            dataType: 'json',
+            quietMillis: 100,
+            cache: true,
+            data: function (term, page) {
+                return {
+                    term: term, //search term
+                    page_limit: 10, // page size
+                    circle_type: 'all'
+                };
+            },
+            results: function (data, page) {
+                return {results: data.results};
+            }
+        },
+        data: [],
+        initSelection: cake.data.l,
+        formatSelection: format,
+        formatResult: format,
+        dropdownCssClass: 's2-post-dropdown aaaa',
+        escapeMarkup: function (m) {
+            return m;
+        },
+        containerCssClass: "select2ActionCircleMember"
+    });
+
+}
 
 function format(item) {
     if ('image' in item) {
@@ -2883,17 +2893,27 @@ function evCircleFeed(options) {
         return false;
     }
     feed_loading_now = true;
-
     attrUndefinedCheck(this, 'get-url');
+
 
     var $obj = $(this);
     var get_url = $obj.attr('get-url');
+    var circle_id = "circle_"+ $obj.attr('circle-id');
+    var image_url = $obj.attr('image-url');
+    var title = $obj.attr('title');
+    updateCakeValue(circle_id,title,image_url);
+
+
+    if($obj.attr('class') == 'circle-link'){
+        //ハンバーガーから来た場合は隠す
+        $("#header-slide-menu").click();
+    }
 
     //app-view-elements-feed-postsが存在しないところではajaxでコンテンツ更新しようにもロードしていない
     //要素が多すぎるので、おとなしくページリロードする
     //urlにcircle_feedを含まない場合も対象外
     jQuery.fn.exists = function(){return Boolean(this.length > 0);}
-    if(!$("#app-view-elements-feed-posts").exists() || !get_url.match(/circle_feed/)){
+    if(!$(".layout-main").exists() || !get_url.match(/circle_feed/)){
         window.location.href = get_url;
         return false;
     }
@@ -2904,7 +2924,7 @@ function evCircleFeed(options) {
     //ローダー表示
     var $loader_html = opt.loader_id ? $('#' + opt.loader_id) : $('<center><i id="__feed_loader" class="fa fa-refresh fa-spin"></i></center>');
     if (!opt.recursive) {
-        $("#app-view-elements-feed-posts").html($loader_html);
+        $(".layout-main").html($loader_html);
     }
 
     // URL生成
@@ -2929,12 +2949,14 @@ function evCircleFeed(options) {
                 //一旦非表示
                 $posts.fadeOut();
 
-                $("#app-view-elements-feed-posts").html($posts);
+                $(".layout-main").html($posts);
                 //read moreの情報を差し替え
-                $("#FeedMoreReadLink").attr("get-url",more_read_url);
-                $("#FeedMoreReadLink").attr("month-index",1);
-                $("#FeedMoreReadLink").css("display","inline");
+                $("#FeedMoreReadLink").attr("get-url", more_read_url);
+                $("#FeedMoreReadLink").attr("month-index", 1);
+                $("#FeedMoreReadLink").css("display", "inline");
 
+
+                setDefaultTab();
                 showMore($posts);
                 $posts.fadeIn();
 
@@ -2954,6 +2976,9 @@ function evCircleFeed(options) {
                 });
             }
 
+
+            initCircleSelect2();
+
             action_autoload_more = false;
             autoload_more = false;
             feed_loading_now = false;
@@ -2965,6 +2990,36 @@ function evCircleFeed(options) {
         },
     });
     return false;
+}
+
+// サークルフィード用のcake value 更新
+function updateCakeValue(circle_id, title, image_url) {
+    //サークルフィードでは必ずデフォルト投稿タイプはポスト
+    cake.common_form_type = "post";
+
+    cake.data.b = function (element, callback) {
+        var data = [];
+        var current_circle_item = {
+            id: circle_id,
+            text: title,
+            image: image_url
+        };
+
+        data.push(current_circle_item);
+        callback(data);
+    }
+
+    cake.data.select2_secret_circle = function (element, callback) {
+        var data = [];
+        var current_circle_item = {
+            id: circle_id,
+            text: title,
+            image: image_url,
+            locked: true
+        };
+        data.push(current_circle_item);
+        callback(data);
+    }
 }
 
 // ゴールのフォロワー一覧を取得
