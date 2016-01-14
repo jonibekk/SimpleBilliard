@@ -25,6 +25,7 @@
                            image-url="<?= $this->Upload->uploadUrl($circle, 'Circle.photo', ['style' => 'small']) ?>"
                            title="<?= h($circle['Circle']['name']) ?>"
                            circle-id="<?= $circle['Circle']['id'] ?>"
+                           public-flg="<?= $circle['Circle']['public_flg'] ?>"
                            href="#" >
                             <?=
                             $this->Html->image('ajax-loader.gif',

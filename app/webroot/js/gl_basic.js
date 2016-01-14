@@ -2232,7 +2232,6 @@ $(document).ready(function () {
 
 function initCircleSelect2(){
     //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
-    console.log("FURU:####1");
     $('#select2PostCircleMember').select2({
             multiple: true,
             placeholder: cake.word.select_public_circle,
@@ -2895,14 +2894,13 @@ function evCircleFeed(options) {
     feed_loading_now = true;
     attrUndefinedCheck(this, 'get-url');
 
-
     var $obj = $(this);
     var get_url = $obj.attr('get-url');
-    var circle_id = "circle_"+ $obj.attr('circle-id');
+    var circle_id = $obj.attr('circle-id');
     var image_url = $obj.attr('image-url');
     var title = $obj.attr('title');
-    updateCakeValue(circle_id,title,image_url);
-
+    var public_flg = $obj.attr('public-flg');
+    updateCakeValue(circle_id, title, image_url);
 
     if($obj.attr('class') == 'circle-link'){
         //ハンバーガーから来た場合は隠す
@@ -2913,7 +2911,7 @@ function evCircleFeed(options) {
     //要素が多すぎるので、おとなしくページリロードする
     //urlにcircle_feedを含まない場合も対象外
     jQuery.fn.exists = function(){return Boolean(this.length > 0);}
-    if(!$(".layout-main").exists() || !get_url.match(/circle_feed/)){
+    if(!$("#app-view-elements-feed-posts").exists() || !get_url.match(/circle_feed/)){
         window.location.href = get_url;
         return false;
     }
@@ -2924,7 +2922,7 @@ function evCircleFeed(options) {
     //ローダー表示
     var $loader_html = opt.loader_id ? $('#' + opt.loader_id) : $('<center><i id="__feed_loader" class="fa fa-refresh fa-spin"></i></center>');
     if (!opt.recursive) {
-        $(".layout-main").html($loader_html);
+        $("#app-view-elements-feed-posts").html($loader_html);
     }
 
     // URL生成
@@ -2933,6 +2931,48 @@ function evCircleFeed(options) {
 
     // read more 非表示
     $("#FeedMoreReadLink").css("display","none");
+
+    //サークル名が長すぎる場合は切る
+    var panel_title = title;
+    if(title.length > 30){
+        panel_title = title.substr(0,29) + "…";
+    }
+
+    $("#circle-filter-menu-circle-name").html(panel_title);
+    $("#circle-filter-menu-member-url").attr("href","/circles/ajax_get_circle_members/circle_id:"+circle_id);
+    $(".feed-share-range-file-url").attr("href","/posts/attached_file_list/circle_id:"+circle_id);
+    if(public_flg == 1){
+        $("#feed-share-range-public-flg").children("i").removeClass("fa-lock").addClass("fa-unlock");
+        $('#postShareRange').val("public");
+        $('#PostSecretShareInputWrap').hide();
+        $('#PostPublicShareInputWrap').show();
+
+        $('#select2PostCircleMember').val("circle_"+circle_id);
+        $('#select2PostSecretCircle').val("");
+    } else {
+        $("#feed-share-range-public-flg").children("i").removeClass("fa-unlock").addClass("fa-lock");
+        $('#postShareRange').val("secret");
+        $('#PostPublicShareInputWrap').hide();
+        $('#PostSecretShareInputWrap').show();
+
+        $('#select2PostCircleMember').val("");
+        $('#select2PostSecretCircle').val("circle_"+circle_id);
+    }
+    $("#postShareRangeToggleButton").popover({
+        'data-toggle': "popover",
+        'placement': 'top',
+        'trigger': "focus",
+        'content': cake.word.share_change_disabled,
+        'container': 'body'
+    });
+    // circle情報パネル表示
+    $(".feed-share-range").css("display","block");
+
+    //Post後のリダイレクトURLを設定
+    $("#PostRedirectUrl").val(get_url);
+
+    setDefaultTab();
+    initCircleSelect2();
 
     $.ajax({
         type: 'GET',
@@ -2949,19 +2989,17 @@ function evCircleFeed(options) {
                 //一旦非表示
                 $posts.fadeOut();
 
-                $(".layout-main").html($posts);
+                $("#app-view-elements-feed-posts").html($posts);
                 //read moreの情報を差し替え
                 $("#FeedMoreReadLink").attr("get-url", more_read_url);
                 $("#FeedMoreReadLink").attr("month-index", 1);
                 $("#FeedMoreReadLink").css("display", "inline");
 
+                $("#circle-filter-menu-circle-member-count").html(data.circle_member_count);
 
-                setDefaultTab();
                 showMore($posts);
                 $posts.fadeIn();
 
-                //ローダーを削除
-                $loader_html.remove();
                 //リンクを有効化
                 $obj.removeAttr('disabled');
                 $("#ShowMoreNoData").hide();
@@ -2976,9 +3014,7 @@ function evCircleFeed(options) {
                 });
             }
 
-
-            initCircleSelect2();
-
+            $loader_html.remove();
             action_autoload_more = false;
             autoload_more = false;
             feed_loading_now = false;
@@ -3000,7 +3036,7 @@ function updateCakeValue(circle_id, title, image_url) {
     cake.data.b = function (element, callback) {
         var data = [];
         var current_circle_item = {
-            id: circle_id,
+            id: "circle_"+circle_id,
             text: title,
             image: image_url
         };
@@ -3012,7 +3048,7 @@ function updateCakeValue(circle_id, title, image_url) {
     cake.data.select2_secret_circle = function (element, callback) {
         var data = [];
         var current_circle_item = {
-            id: circle_id,
+            id: "circle_"+circle_id,
             text: title,
             image: image_url,
             locked: true

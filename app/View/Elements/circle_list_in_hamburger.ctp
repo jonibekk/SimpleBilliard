@@ -22,6 +22,7 @@
                      image-url="<?= $this->Upload->uploadUrl($circle, 'Circle.photo', ['style' => 'small']) ?>"
                      title="<?= h($circle['Circle']['name']) ?>"
                      circle-id="<?= $circle['Circle']['id'] ?>"
+                     public-flg="<?= $circle['Circle']['public_flg'] ?>"
                 >
                     <a href="#">
                         <div class="circle-icon_box">

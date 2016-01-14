@@ -338,7 +338,7 @@ class PostsController extends AppController
         return $this->redirect($this->referer());
     }
 
-    public function ajax_get_feed($view = "Feed/posts")
+    public function ajax_get_feed($view = "Feed/posts", $circle_member_count = 0)
     {
         $param_named = $this->request->params['named'];
         $this->_ajaxPreProcess();
@@ -377,6 +377,7 @@ class PostsController extends AppController
             'count'         => count($posts),
             'page_item_num' => POST_FEED_PAGE_ITEMS_NUMBER,
             'start'         => $start ? $start : REQUEST_TIMESTAMP - MONTH,
+            'circle_member_count' => $circle_member_count,
         );
         return $this->_ajaxGetResponse($result);
     }
@@ -987,8 +988,8 @@ class PostsController extends AppController
 
     public function ajax_circle_feed()
     {
-        $this->_setCircleCommonVariables();
-        $this->ajax_get_feed("/Posts/feed");
+        $circle_member_count = $this->_setCircleCommonVariables();
+        $this->ajax_get_feed("Feed/posts", $circle_member_count);
     }
 
     public function attached_file_list()
@@ -1097,6 +1098,8 @@ class PostsController extends AppController
 
         $this->set('common_form_type', 'post');
         $this->set(compact('feed_filter', 'circle_id', 'params'));
+
+        return isset($circle_member_count) ? $circle_member_count : 0;
     }
 
     public function ajax_get_share_circles_users_modal()

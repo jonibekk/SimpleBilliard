@@ -12,12 +12,16 @@
  */
 ?>
 <!-- START app/View/Elements/Feed/circle_filter_menu.ctp -->
-<span class="feed-current-filter"><?= mb_strimwidth(h($current_circle['Circle']['name']), 0, 29,
+<span id="circle-filter-menu-circle-name" class="feed-current-filter"><?= mb_strimwidth(h($current_circle['Circle']['name']), 0, 29,
                                                     '...') ?></span>
 <a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_get_circle_members', 'circle_id' => $current_circle['Circle']['id']]) ?>"
-     class="modal-ajax-get remove-on-hide"> <span class="feed-circle-user-number"><i
-            class="fa fa-user"></i>&nbsp;<?= $circle_member_count ?>
-                    </span></a>
+     class="modal-ajax-get remove-on-hide" id="circle-filter-menu-member-url">
+     <span class="feed-circle-user-number"><i class="fa fa-user"></i>&nbsp;
+        <span id="circle-filter-menu-circle-member-count">
+            <?php if (isset($circle_member_count)): ?><?= $circle_member_count ?><?php endif ?>
+        </span>
+    </span>
+</a>
     <div class="pull-right header-function dropdown" id="CircleFilterMenuDropDown">
         <a id="download" data-toggle="dropdown"
            class="font_lightGray-gray"
