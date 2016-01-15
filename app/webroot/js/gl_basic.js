@@ -2900,6 +2900,7 @@ function evCircleFeed(options) {
     var image_url = $obj.attr('image-url');
     var title = $obj.attr('title');
     var public_flg = $obj.attr('public-flg');
+    var team_all_flg = $obj.attr('team-all-flg');
     updateCakeValue(circle_id, title, image_url);
 
     if($obj.attr('class') == 'circle-link'){
@@ -2974,6 +2975,8 @@ function evCircleFeed(options) {
     setDefaultTab();
     initCircleSelect2();
 
+    $('.dropdown-menu.dropdown-menu-right.frame-arrow-icon').empty();
+
     $.ajax({
         type: 'GET',
         url: url,
@@ -2991,11 +2994,6 @@ function evCircleFeed(options) {
 
                 $("#app-view-elements-feed-posts").html($posts);
                 //read moreの情報を差し替え
-                $("#FeedMoreReadLink").attr("get-url", more_read_url);
-                $("#FeedMoreReadLink").attr("month-index", 1);
-                $("#FeedMoreReadLink").css("display", "inline");
-
-                $("#circle-filter-menu-circle-member-count").html(data.circle_member_count);
 
                 showMore($posts);
                 $posts.fadeIn();
@@ -3012,6 +3010,23 @@ function evCircleFeed(options) {
                     });
                     changeSizeFeedImageOnlyOne($posts.find('.feed_img_only_one'));
                 });
+
+            }
+
+            $("#FeedMoreReadLink").attr("get-url", more_read_url);
+            $("#FeedMoreReadLink").attr("month-index", 1);
+            $("#FeedMoreReadLink").css("display", "inline");
+
+            $("#circle-filter-menu-circle-member-count").html(data.circle_member_count);
+
+            //サークル設定メニュー生成
+            if(!team_all_flg && data.user_status == "joined"){
+                $('.dropdown-menu.dropdown-menu-right.frame-arrow-icon')
+                    .append('<li><a href="/posts/unjoin_circle/circle_id:'+circle_id+'">サークルを脱退する</a></li>');
+            }
+            if(data.user_status == "joined" || data.user_status == "admin"){
+                $('.dropdown-menu.dropdown-menu-right.frame-arrow-icon')
+                    .append('<li><a href="/circles/ajax_setting/circle_id:'+circle_id+'" class="modal-circle-setting">設定</a></li></ul>');
             }
 
             $loader_html.remove();

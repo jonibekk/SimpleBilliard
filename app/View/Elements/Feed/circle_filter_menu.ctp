@@ -33,6 +33,7 @@
         </a>
         <ul aria-labelledby="dropdownMenu1" role="menu"
             class="dropdown-menu dropdown-menu-right frame-arrow-icon">
+            <?php if (isset($user_status)): ?>
             <?php if (!$current_circle['Circle']['team_all_flg'] && $user_status != 'admin'): ?>
                 <li>
                     <?php if ($user_status != 'joined') { ?>
@@ -47,6 +48,7 @@
             <?php endif; ?>
             <?php if ($user_status == 'joined' || $user_status == 'admin'): ?>
             <li><a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_setting', 'circle_id' => $current_circle['Circle']['id']]) ?>" class="modal-circle-setting"><?= __d('gl', '設定') ?></a></li>
+            <?php endif ?>
             <?php endif ?>
         </ul>
     </div>

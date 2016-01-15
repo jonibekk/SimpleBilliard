@@ -23,6 +23,7 @@
                      title="<?= h($circle['Circle']['name']) ?>"
                      circle-id="<?= $circle['Circle']['id'] ?>"
                      public-flg="<?= $circle['Circle']['public_flg'] ?>"
+                     team-all-flg="<?= $circle['Circle']['team_all_flg'] ?>"
                 >
                     <a href="#">
                         <div class="circle-icon_box">
