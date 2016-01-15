@@ -2819,6 +2819,8 @@ function evNotifyPost(options){
         return false;
     }
 
+    $('#jsGoTop').click();
+
     //ローダー表示
     var $loader_html = opt.loader_id ? $('#' + opt.loader_id) : $('<center><i id="__feed_loader" class="fa fa-refresh fa-spin"></i></center>');
     if (!opt.recursive) {
