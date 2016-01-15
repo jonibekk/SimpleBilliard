@@ -9,14 +9,15 @@
  * @var array              $my_teams
  */
 ?>
-    <!-- START app/View/Elements/Team/batch_setup.ctp -->
-    <div class="panel panel-default">
-        <div class="panel-heading"><?= __d('gl', "一括登録") ?></div>
-        <div class="panel-body">
-            <div class="form-group">
-                <label for="TeamName" class="col col-sm-3 control-label form-label"></label>
+<!-- START app/View/Elements/Team/batch_setup.ctp -->
+<div class="panel panel-default">
+    <div class="panel-heading"><?= __d('gl', "一括登録") ?></div>
+    <div class="panel-body">
+        <div class="form-group">
+            <label for="TeamName" class="col col-sm-3 control-label form-label"></label>
 
-                <div class="col col-sm-6">
+            <div class="col col-sm-6">
+                <?php if ($this->Session->read('ua.device_type') == 'Desktop'): ?>
                     <p class="form-control-static"><?= __d('gl', "チームメンバーの登録や更新をCSVで一括処理します。") ?></p>
 
                     <p class="form-control-static"><?= __d('gl',
@@ -32,9 +33,14 @@
                     <p class="form-control-static"><?= __d('gl', "") ?></p>
 
                     <p class="form-control-static"><?= __d('gl', "") ?></p>
-                </div>
+                <?php else: ?>
+                    <p class="form-control-static"><?= __d('gl', "本機能はPCにてご利用できます。") ?></p>
+                <?php endif; ?>
             </div>
+
         </div>
+    </div>
+    <?php if ($this->Session->read('ua.device_type') == 'Desktop'): ?>
         <div class="panel-footer">
             <div class="row">
                 <div class="col-sm-9 col-sm-offset-3">
@@ -45,8 +51,9 @@
                 </div>
             </div>
         </div>
-    </div>
-    <!-- END app/View/Elements/Team/batch_setup.ctp -->
+    <?php endif; ?>
+</div>
+<!-- END app/View/Elements/Team/batch_setup.ctp -->
 <?php $this->start('modal') ?>
 <?= $this->element('modal_add_members_by_csv') ?>
 <?= $this->element('modal_edit_members_by_csv') ?>
