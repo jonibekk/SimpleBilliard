@@ -2852,8 +2852,6 @@ function evNotifyPost(options){
                 showMore($posts);
                 $posts.fadeIn();
 
-                //ローダーを削除
-                $loader_html.remove();
                 //リンクを有効化
                 $obj.removeAttr('disabled');
                 $("#ShowMoreNoData").hide();
@@ -2868,6 +2866,9 @@ function evNotifyPost(options){
                 });
             }
 
+            //ローダーを削除
+            $loader_html.remove();
+
             action_autoload_more = false;
             autoload_more = false;
             feed_loading_now = false;
@@ -2876,6 +2877,7 @@ function evNotifyPost(options){
         error: function () {
             alert(cake.message.notice.c);
             feed_loading_now = false;
+            $loader_html.remove();
         },
     });
     return false;

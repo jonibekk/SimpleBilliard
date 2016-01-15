@@ -116,7 +116,9 @@ echo $this->Html->script('goalous.min');
             cancel: "<?=__d('gl',"キャンセル")?>",
             search_placeholder_user: "<?=__d('gl',"名前を入力")?>",
             search_placeholder_goal: "<?=__d('gl',"ゴール名を入力")?>",
-            search_placeholder_circle: "<?=__d('gl',"サークル名を入力")?>"
+            search_placeholder_circle: "<?=__d('gl',"サークル名を入力")?>",
+            leave_circle: "<?=__d('gl',"サークルを脱退する")?>",
+            config: "<?=__d('gl',"設定")?>"
         },
         url: {
             a: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_users'])?>",
