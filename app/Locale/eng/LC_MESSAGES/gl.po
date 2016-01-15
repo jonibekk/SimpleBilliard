@@ -1034,12 +1034,8 @@ msgid "ゴールが存在しません。"
 msgstr "The goal does not exist."
 
 #: Model/GoalCategory.php:86
-msgid "職務"
-msgstr "Professional aims"
-
-#: Model/GoalCategory.php:90
-msgid "成長"
-msgstr "Personal aims"
+msgid "未設定"
+msgstr "Undefined"
 
 #: Model/KeyResult.php:36
 msgid "%"

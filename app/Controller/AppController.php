@@ -269,7 +269,7 @@ class AppController extends Controller
 
     public function _setBrowserToSession()
     {
-        //UA情報をViewにセット
+        //UA情報をSessionにセット
         if (!$this->Session->read('ua')) {
             $this->Session->write('ua', $this->getBrowser());
         }
