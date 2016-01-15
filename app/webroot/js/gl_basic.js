@@ -2377,9 +2377,9 @@ function initCircleSelect2(){
     $shareRangeToggleButton.html(($shareRange.val() == 'public') ? publicButtonLabel : secretButtonLabel);
 
     // 共有範囲切り替えボタンが有効な場合
-    if ($shareRangeToggleButton.attr('data-toggle-enabled')) {
-        $shareRangeToggleButton.on('click', function (e) {
-            e.preventDefault();
+    $shareRangeToggleButton.on('click', function (e) {
+        e.preventDefault();
+        if ($shareRangeToggleButton.attr('data-toggle-enabled')) {
             $shareRange.val($shareRange.val() == 'public' ? 'secret' : 'public');
             if ($shareRange.val() == 'public') {
                 $shareRangeToggleButton.html(publicButtonLabel);
@@ -2391,18 +2391,19 @@ function initCircleSelect2(){
                 $('#PostPublicShareInputWrap').hide();
                 $('#PostSecretShareInputWrap').show();
             }
-        });
-    }
-    // 共有範囲切り替えボタンが無効な場合（サークルフィードページ）
-    else {
-        $shareRangeToggleButton.popover({
-            'data-toggle': "popover",
-            'placement': 'top',
-            'trigger': "focus",
-            'content': cake.word.share_change_disabled,
-            'container': 'body'
-        });
-    }
+        }
+        else {
+            // 共有範囲切り替えボタンが無効な場合（サークルフィードページ）
+            $shareRangeToggleButton.popover({
+                'data-toggle': "popover",
+                'placement': 'top',
+                'trigger': "focus",
+                'content': cake.word.share_change_disabled,
+                'container': 'body'
+            });
+        }
+    });
+
 
 
     $('#select2ActionCircleMember').select2({
@@ -2942,6 +2943,7 @@ function evCircleFeed(options) {
     $("#circle-filter-menu-circle-name").html(panel_title);
     $("#circle-filter-menu-member-url").attr("href","/circles/ajax_get_circle_members/circle_id:"+circle_id);
     $(".feed-share-range-file-url").attr("href","/posts/attached_file_list/circle_id:"+circle_id);
+    $('#postShareRangeToggleButton').removeAttr('data-toggle-enabled');
     if(public_flg == 1){
         $("#feed-share-range-public-flg").children("i").removeClass("fa-lock").addClass("fa-unlock");
         $('#postShareRange').val("public");
@@ -3022,11 +3024,11 @@ function evCircleFeed(options) {
             //サークル設定メニュー生成
             if(!team_all_flg && data.user_status == "joined"){
                 $('.dropdown-menu.dropdown-menu-right.frame-arrow-icon')
-                    .append('<li><a href="/posts/unjoin_circle/circle_id:'+circle_id+'">サークルを脱退する</a></li>');
+                    .append('<li><a href="/posts/unjoin_circle/circle_id:'+circle_id+'">'+cake.word.leave_circle+'</a></li>');
             }
             if(data.user_status == "joined" || data.user_status == "admin"){
                 $('.dropdown-menu.dropdown-menu-right.frame-arrow-icon')
-                    .append('<li><a href="/circles/ajax_setting/circle_id:'+circle_id+'" class="modal-circle-setting">設定</a></li></ul>');
+                    .append('<li><a href="/circles/ajax_setting/circle_id:'+circle_id+'" class="modal-circle-setting">'+cake.word.config+'</a></li></ul>');
             }
 
             $loader_html.remove();
