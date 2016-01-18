@@ -23,7 +23,6 @@
         return this.each(function () {
             var $this = $(this),
                 $showMoreOrgHeight = $this.height();
-            console.log($showMoreOrgHeight);
             if ($showMoreOrgHeight > parseInt(options.height)) {
                 // Insert showmore_content within the showmore div
                 $this.wrapInner('<div class="showmore_content" />');
