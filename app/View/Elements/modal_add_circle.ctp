@@ -37,9 +37,12 @@
             <div class="modal-body modal-circle-body">
                 <?=
                 $this->Form->input('name',
-                                   ['label'                    => __d('gl', "サークル名"),
-                                    'placeholder'              => __d('gl', "例) 営業部"),
-                                    "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                                   ['label'                        => __d('gl', "サークル名"),
+                                    'placeholder'                  => __d('gl', "例) 営業部"),
+                                    "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
+                                    'data-bv-stringlength'         => 'true',
+                                    'data-bv-stringlength-max'     => 200,
+                                    'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 200),
                                    ]) ?>
                 <div class="form-group">
                     <label class="ccc control-label modal-label"><?= __d('gl', 'メンバー') ?></label>
@@ -68,13 +71,13 @@
                                                                                                         "サークル名と参加メンバー、投稿はこのサークルの参加メンバーだけに表示されます。サークル管理者だけがメンバーを追加できます。") . '</span>';
                 ?>
                 <?php echo $this->Form->input('public_flg', array(
-                    'type'    => 'radio',
-                    'before'  => '<label class="eee control-label modal-label">' . __d('gl',
-                                                                                                'プライバシー') . '</label>',
-                    'legend'  => false,
-                    'class'   => false,
-                    'options' => $privacy_option,
-                    'default' => Circle::TYPE_PUBLIC_ON,
+                    'type'     => 'radio',
+                    'before'   => '<label class="eee control-label modal-label">' . __d('gl',
+                                                                                        'プライバシー') . '</label>',
+                    'legend'   => false,
+                    'class'    => false,
+                    'options'  => $privacy_option,
+                    'default'  => Circle::TYPE_PUBLIC_ON,
                     'required' => false
                 )); ?>
                 <div class="font_brownRed font_11px">
@@ -82,9 +85,12 @@
                 </div>
                 <?=
                 $this->Form->input('description',
-                                   ['label'                    => __d('gl', "サークルの説明"),
-                                    'placeholder'              => __d('gl', "例) 最新情報を共有しましょう。"),
-                                    'data-bv-notempty-message' => __d('validate', "入力必須項目です。"),
+                                   ['label'                        => __d('gl', "サークルの説明"),
+                                    'placeholder'                  => __d('gl', "例) 最新情報を共有しましょう。"),
+                                    'data-bv-notempty-message'     => __d('validate', "入力必須項目です。"),
+                                    'data-bv-stringlength'         => 'true',
+                                    'data-bv-stringlength-max'     => 2000,
+                                    'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 2000),
                                    ]) ?>
                 <div class="form-group">
                     <label for="" class="f control-label modal-label"><?= __d('gl', "サークル画像") ?></label>
@@ -113,9 +119,9 @@
                             </span>
                                     <span class="help-block font_11px inline-block"><?= __d('gl',
                                                                                             '10MB以下') ?></span>
-                                </div>
-                            </div>
-                        <div>
+                        </div>
+                    </div>
+                    <div>
 
                         <div class="has-error">
                             <?=
