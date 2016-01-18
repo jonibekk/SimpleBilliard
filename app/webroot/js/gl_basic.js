@@ -1843,6 +1843,11 @@ $(document).ready(function () {
         feedbackIcons: {},
         fields: {}
     });
+    $('#MessageDisplayForm').bootstrapValidator({
+        live: 'enabled',
+        feedbackIcons: {},
+        fields: {}
+    });
     $('#CommonActionDisplayForm').bootstrapValidator({
         live: 'enabled',
         feedbackIcons: {},
@@ -1918,15 +1923,6 @@ $(document).ready(function () {
         // グループを選択した場合、グループに所属するユーザーを展開して入力済にする
         $this.select2('data', select2ExpandGroup($this.select2('data')));
     });
-    $("#CommonMessageBody").keyup(function () {
-        if ($('#select2Member').val() == '' || $('#CommonMessageBody').val() == '') {
-            $('#MessageSubmit').attr('disabled', 'disabled');
-        }
-        else {
-            $('#MessageSubmit').removeAttr('disabled');
-        }
-    });
-
 
     //noinspection JSUnusedLocalSymbols post_detail.Post.id
     $('#selectOnlyMember').select2({
@@ -2624,7 +2620,6 @@ function getModalPostList(e) {
 }
 
 
-
 var action_autoload_more = false;
 var autoload_more = false;
 var feed_loading_now = false;
@@ -2776,7 +2771,7 @@ function evFeedMoreView(options) {
 }
 
 //通知から投稿に移動
-function evNotifyPost(options){
+function evNotifyPost(options) {
 
     //とりあえずドロップダウンは隠す
     $("#HeaderDropdownNotify").removeClass("open");
@@ -2801,8 +2796,10 @@ function evNotifyPost(options){
     //layout-mainが存在しないところではajaxでコンテンツ更新しようにもロードしていない
     //要素が多すぎるので、おとなしくページリロードする
     //urlにpost_permanentを含まない場合も対象外
-    jQuery.fn.exists = function(){return Boolean(this.length > 0);}
-    if(!$(".layout-main").exists() || !get_url.match(/post_permanent/)){
+    jQuery.fn.exists = function () {
+        return Boolean(this.length > 0);
+    }
+    if (!$(".layout-main").exists() || !get_url.match(/post_permanent/)) {
         window.location.href = get_url;
         return false;
     }
@@ -2814,7 +2811,7 @@ function evNotifyPost(options){
     }
 
     // URL生成
-    var url = get_url.replace(/post_permanent/,"ajax_post_permanent");
+    var url = get_url.replace(/post_permanent/, "ajax_post_permanent");
 
     var back_notifylist = '<a href="/notifications" class="btn-back-notifications"> <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i> </a> ';
 
