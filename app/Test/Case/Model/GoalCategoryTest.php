@@ -83,7 +83,7 @@ class GoalCategoryTest extends GoalousTestCase
         $this->_setDefault();
         $this->GoalCategory->deleteAll(['GoalCategory.team_id' => 1]);
         $actual = $this->GoalCategory->getCategoryList();
-        $this->assertCount(2, $actual);
+        $this->assertCount(1, $actual);
     }
 
     function testGetCategories()
