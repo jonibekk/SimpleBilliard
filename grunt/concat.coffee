@@ -12,6 +12,40 @@ module.exports = (grunt) ->
     options:
       separator: ';'
 
+  vendors:
+    src:[
+      '<%= config.js %>/vendor/jquery-1.11.1.min.js'
+      '<%= config.js %>/vendor/bootstrap.js'
+      '<%= config.js %>/vendor/jasny-bootstrap.js'
+      '<%= config.js %>/vendor/bootstrapValidator.js'
+      '<%= config.js %>/vendor/bootstrap-switch.js'
+      '<%= config.js %>/vendor/bvAddition.js'
+      '<%= config.js %>/vendor/pnotify.custom.js'
+      '<%= config.js %>/vendor/jquery.nailthumb.1.1.js'
+      '<%= config.js %>/vendor/jquery.autosize.js'
+      '<%= config.js %>/vendor/jquery.lazy.js'
+      '<%= config.js %>/vendor/lightbox-custom.js'
+      '<%= config.js %>/vendor/jquery.showmore.src.js'
+      '<%= config.js %>/vendor/placeholders.js'
+      '<%= config.js %>/vendor/customRadioCheck.js'
+      '<%= config.js %>/vendor/select2.js'
+      '<%= config.js %>/vendor/bootstrap-datepicker.js'
+      '<%= config.js %>/vendor/locales/bootstrap-datepicker.ja.js'
+      '<%= config.js %>/vendor/moment.js'
+      '<%= config.js %>/vendor/pusher.js'
+      '<%= config.js %>/vendor/dropzone.js'
+      '<%= config.js %>/vendor/jquery.flot.js'
+      '<%= config.js %>/vendor/jquery.balanced-gallery.js'
+      '<%= config.js %>/vendor/imagesloaded.pkgd.js'
+      '<%= config.js %>/vendor/bootstrap.youtubepopup.js'
+      '<%= config.js %>/vendor/require.js'
+      '<%= config.js %>/vendor/exif.js'
+      '<%= config.js %>/gl_basic.js'
+    ]
+    dest: '<%= config.js %>/vendors.js'
+    options:
+      separator: ';'
+
   ng_app:
     src: ['<%= config.js %>/app/**/*.js']
     dest: '<%= config.dest %>/jscat/ng_app.js'
