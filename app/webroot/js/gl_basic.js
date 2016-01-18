@@ -9,7 +9,7 @@ if (typeof String.prototype.startsWith != 'function') {
 }
 ;
 require.config({
-    baseUrl: '/js/modules'
+    baseUrl: '/js/modules/'
 });
 function bindPostBalancedGallery($obj) {
     $obj.removeClass('none');
