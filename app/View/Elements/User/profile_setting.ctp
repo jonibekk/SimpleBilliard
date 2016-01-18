@@ -38,11 +38,17 @@
                 $local_last_name = $this->Form->input('LocalName.0.last_name', [
                     'label'       => __d('gl', "姓(%s)", $language_name),
                     'placeholder' => __d('gl', "例) 鈴木"),
+                    'data-bv-stringlength'         => 'true',
+                    'data-bv-stringlength-max'     => 200,
+                    'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 200),
                     //                    "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                 ]);
                 $local_first_name = $this->Form->input('LocalName.0.first_name', [
                     'label'       => __d('gl', "名(%s)", $language_name),
                     'placeholder' => __d('gl', "例) 太郎"),
+                    'data-bv-stringlength'         => 'true',
+                    'data-bv-stringlength-max'     => 200,
+                    'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 200),
                     //                    "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                 ]);
                 if ($me['User']['last_first']) {
@@ -65,6 +71,9 @@
                 "pattern"                  => '^[a-zA-Z]+$',
                 "data-bv-regexp-message"   => __d('validate', "アルファベットのみで入力してください。"),
                 "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                'data-bv-stringlength'         => 'true',
+                'data-bv-stringlength-max'     => 200,
+                'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 200),
             ]);
             $first_name = $this->Form->input('first_name', [
                 'label'                    => __d('gl', "名(ローマ字)"),
@@ -72,6 +81,9 @@
                 "pattern"                  => '^[a-zA-Z]+$',
                 "data-bv-regexp-message"   => __d('validate', "アルファベットのみで入力してください。"),
                 "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                'data-bv-stringlength'         => 'true',
+                'data-bv-stringlength-max'     => 200,
+                'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 200),
             ]);
             if ($last_first) {
                 echo $last_name;
@@ -136,6 +148,9 @@
             $this->Form->input('hometown', [
                 'label'       => __d('gl', "出身地"),
                 'placeholder' => __d('gl', '例) 東京都'),
+                'data-bv-stringlength'         => 'true',
+                'data-bv-stringlength-max'     => 200,
+                'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 200),
             ]);
             ?>
             <hr>
@@ -201,6 +216,9 @@
                                         'div'       => false,
                                         'wrapInput' => false,
                                         'css'       => false,
+                                        'data-bv-stringlength'         => 'true',
+                                        'data-bv-stringlength-max'     => 2000,
+                                        'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 2000),
                                         'value'     => (isset($this->request->data['TeamMember'][0]['comment']) && !empty($this->request->data['TeamMember'][0]['comment']))
                                             ? $this->request->data['TeamMember'][0]['comment']
                                             : __d('gl',
