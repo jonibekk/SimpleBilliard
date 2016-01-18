@@ -145,7 +145,7 @@
 
                         <div class="panel-body comment-block">
                             <?= $this->Form->create('GoalApproval',
-                                                    ['url' => ['controller' => 'goal_approval', 'action' => 'done'], 'type' => 'post', 'novalidate' => true]); ?>
+                                                    ['id' => 'GoalApprovalIndexForm_' . $goal['Collaborator']['id'], 'url' => ['controller' => 'goal_approval', 'action' => 'done'], 'type' => 'post', 'novalidate' => true]); ?>
                             <?= $this->Form->hidden('collaborator_id', ['value' => $goal['Collaborator']['id']]); ?>
 
                             <?php if ($goal['is_present_term'] === true) { ?>
@@ -166,8 +166,25 @@
                                     </div>
                                 </div>
 
-                                <?= $this->Form->textarea('comment',
-                                                          ['label' => false, 'class' => 'form-control addteam_input-design', 'rows' => 3, 'cols' => 30, 'style' => 'margin-top: 10px; margin-bottom: 10px;', 'placeholder' => 'コメントを書く']) ?>
+                                <div class="form-group">
+                                    <?= $this->Form->textarea('comment',
+                                                              [
+                                                                  'label'                        => false,
+                                                                  'class'                        => 'form-control addteam_input-design',
+                                                                  'rows'                         => 3,
+                                                                  'cols'                         => 30,
+                                                                  'style'                        => 'margin-top: 10px; margin-bottom: 10px;',
+                                                                  'placeholder'                  => 'コメントを書く',
+                                                                  'data-bv-stringlength'         => 'true',
+                                                                  'data-bv-stringlength-max'     => 5000,
+                                                                  'data-bv-stringlength-message' => __d('validate',
+                                                                                                        "最大文字数(%s)を超えています。",
+                                                                                                        5000),
+                                                                  'data-bv-notempty-message'     => __d('validate',
+                                                                                                        "入力必須項目です。"),
+                                                                  'required'                     => 'required'
+                                                              ]) ?>
+                                </div>
 
                                 <div class="row">
                                     <div class="approval_botton_area">
@@ -213,3 +230,18 @@
     </div>
 </div>
 <!-- END app/View/GoalApproval/done.ctp -->
+<?php $this->append('script') ?>
+<script type="text/javascript">
+    $(document).ready(function () {
+        <?php foreach ($goal_info as $goal):?>
+        <?php if(isset($goal['Collaborator']['id'])):?>
+        $('#GoalApprovalIndexForm_<?= $goal['Collaborator']['id']?>').bootstrapValidator({
+            live: 'enabled',
+            feedbackIcons: {},
+            fields: {}
+        });
+        <?php endif;?>
+        <?php endforeach;?>
+    });
+</script>
+<?php $this->end() ?>

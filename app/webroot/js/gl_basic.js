@@ -286,6 +286,8 @@ $(document).ready(function () {
     $(document).on("click", ".click-show", evShow);
     $(document).on("click", ".trigger-click", evTriggerClick);
     //noinspection SpellCheckingInspection
+    $(document).on("keyup", ".blank-disable-and-undisable", evBlankDisableAndUndisable);
+    //noinspection SpellCheckingInspection
     $(document).on("keyup", ".blank-disable", evBlankDisable);
     //noinspection JSUnresolvedVariable
     $(document).on("click", ".click-feed-read-more", evFeedMoreView);
@@ -1300,7 +1302,7 @@ function evToggle() {
     return true;
 }
 
-function evBlankDisable() {
+function evBlankDisableAndUndisable() {
     attrUndefinedCheck(this, 'target-id');
     var $obj = $(this);
     var target_id = $obj.attr("target-id");
@@ -1309,6 +1311,14 @@ function evBlankDisable() {
     }
     else {
         $("#" + target_id).removeAttr("disabled");
+    }
+}
+function evBlankDisable() {
+    attrUndefinedCheck(this, 'target-id');
+    var $obj = $(this);
+    var target_id = $obj.attr("target-id");
+    if ($obj.val().length == 0) {
+        $("#" + target_id).attr("disabled", "disabled");
     }
 }
 
