@@ -15,7 +15,7 @@
 ?>
 <!-- START app/View/Elements/gl_common_js.ctp -->
 <?php
-echo $this->Html->script('vendors.js');
+echo $this->Html->script('vendors.min');
 // echo $this->Html->script('vendor/jquery-2.1.0.min');
 // echo $this->Html->script('vendor/bootstrap.min');
 // echo $this->Html->script('vendor/jasny-bootstrap.min');

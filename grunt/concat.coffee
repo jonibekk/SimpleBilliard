@@ -42,7 +42,7 @@ module.exports = (grunt) ->
       '<%= config.js %>/vendor/exif.js'
       '<%= config.js %>/gl_basic.js'
     ]
-    dest: '<%= config.js %>/vendors.js'
+    dest: '<%= config.dest %>/jscat/vendors.js'
     options:
       separator: ';'
 
