@@ -341,11 +341,12 @@ class PostsController extends AppController
         return $this->redirect($this->referer());
     }
 
-    public function ajax_get_feed()
+    public function ajax_get_feed($view = "Feed/posts", $user_status = null, $circle_member_count = 0)
     {
         $param_named = $this->request->params['named'];
         $this->_ajaxPreProcess();
-        if (isset($this->request->params['named']['circle_id'])
+
+        if (isset($this->request->params['named']['circle_id']) || isset($this->request->params['named']['notify_id'])
         ) {
             $this->set('long_text', true);
         }
@@ -373,13 +374,15 @@ class PostsController extends AppController
 
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
-        $response = $this->render('Feed/posts');
+        $response = $this->render($view);
         $html = $response->__toString();
         $result = array(
             'html'          => $html,
             'count'         => count($posts),
             'page_item_num' => POST_FEED_PAGE_ITEMS_NUMBER,
             'start'         => $start ? $start : REQUEST_TIMESTAMP - MONTH,
+            'circle_member_count' => $circle_member_count,
+            'user_status' => $user_status,
         );
         return $this->_ajaxGetResponse($result);
     }
@@ -988,6 +991,12 @@ class PostsController extends AppController
         }
     }
 
+    public function ajax_circle_feed()
+    {
+        list($user_status, $circle_member_count) = $this->_setCircleCommonVariables();
+        $this->ajax_get_feed("Feed/posts", $user_status, $circle_member_count);
+    }
+
     public function attached_file_list()
     {
         $this->_setCircleCommonVariables();
@@ -1076,9 +1085,10 @@ class PostsController extends AppController
         }
 
         $feed_filter = null;
+        $user_status = null;
+        $circle_member_count = 0;
         if ($circle_id = viaIsSet($params['circle_id'])) {
             $user_status = $this->_userCircleStatus($circle_id);
-
             $circle_status = $this->Post->Circle->CircleMember->getShowHideStatus($this->Auth->user('id'),
                                                                                   $circle_id);
             //サークル指定の場合はメンバーリスト取得
@@ -1095,6 +1105,8 @@ class PostsController extends AppController
 
         $this->set('common_form_type', 'post');
         $this->set(compact('feed_filter', 'circle_id', 'params'));
+
+        return array($user_status, $circle_member_count);
     }
 
     public function ajax_get_share_circles_users_modal()

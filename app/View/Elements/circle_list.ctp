@@ -21,7 +21,13 @@
                 <?php foreach ($my_circles as $circle): ?>
                     <div class="dashboard-circle-list-row-wrap">
                         <a class="dashboard-circle-list-row"
-                           href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle['Circle']['id']]) ?>">
+                           get-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle['Circle']['id']]) ?>"
+                           image-url="<?= $this->Upload->uploadUrl($circle, 'Circle.photo', ['style' => 'small']) ?>"
+                           title="<?= h($circle['Circle']['name']) ?>"
+                           circle-id="<?= $circle['Circle']['id'] ?>"
+                           public-flg="<?= $circle['Circle']['public_flg'] ?>"
+                           team-all-flg="<?= $circle['Circle']['team_all_flg'] ?>"
+                           href="#" >
                             <?=
                             $this->Html->image('ajax-loader.gif',
                                                [
