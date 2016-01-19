@@ -102,8 +102,8 @@
                                     'default'                  => $total['Evaluation']['evaluate_score_id'],
                                     'options'                  => $scoreList,
                                     'label'                    => __d('gl', "<i class='fa fa-paw mr_2px'></i>評価スコア"),
-                                    'class'                    => 'form-control col-xxs-12 col-sm-8 eva-val',
-                                    'wrapInput'                => false,
+                                    'class'                    => 'form-control eva-val',
+                                    'wrapInput'                => 'col col-xxs-12 col-sm-8',
                                     'required'                 => false,
                                     'data-bv-notempty'         => "true",
                                     'data-bv-notempty-message' => __d('gl', "選択必須項目です。")
@@ -397,8 +397,8 @@
                                     'default'                  => $eval['Evaluation']['evaluate_score_id'],
                                     'options'                  => $scoreList,
                                     'label'                    => __d('gl', "<i class='fa fa-paw mr_2px'></i>評価スコア"),
-                                    'class'                    => 'form-control col-xxs-12 col-sm-8 eva-val',
-                                    'wrapInput'                => false,
+                                    'class'                    => 'form-control eva-val',
+                                    'wrapInput'                => 'col col-xxs-12 col-sm-8',
                                     'required'                 => false,
                                     'data-bv-notempty'         => "true",
                                     'data-bv-notempty-message' => __d('gl', "選択必須項目です。")
