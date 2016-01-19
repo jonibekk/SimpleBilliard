@@ -51,14 +51,16 @@
     echo $this->fetch('css');
     echo $this->fetch('meta');
 
-    echo $this->Html->script('vendor/angular/angular.min');
-    echo $this->Html->script('vendor/angular/angular-ui-router.min');
-    echo $this->Html->script('vendor/angular/angular-route.min');
-    echo $this->Html->script('vendor/angular/angular-translate.min');
-    echo $this->Html->script('vendor/angular/angular-translate-loader-static-files.min');
-    echo $this->Html->script('vendor/angular/ui-bootstrap-tpls-0.13.0');
-    echo $this->Html->script('vendor/angular/angular-pnotify');
-    echo $this->Html->script('vendor/angular/angular-sanitize.min');
+    echo $this->Html->script('ng_vendors.min');
+
+    // echo $this->Html->script('vendor/angular/angular.min');
+    // echo $this->Html->script('vendor/angular/angular-ui-router.min');
+    // echo $this->Html->script('vendor/angular/angular-route.min');
+    // echo $this->Html->script('vendor/angular/angular-translate.min');
+    // echo $this->Html->script('vendor/angular/angular-translate-loader-static-files.min');
+    // echo $this->Html->script('vendor/angular/ui-bootstrap-tpls-0.13.0');
+    // echo $this->Html->script('vendor/angular/angular-pnotify');
+    // echo $this->Html->script('vendor/angular/angular-sanitize.min');
 
     ?>
     <?php

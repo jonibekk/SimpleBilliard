@@ -11,6 +11,7 @@ module.exports = (grunt) ->
     'concat:js'
     'concat:ng_app'
     'concat:ng_controller'
+    'concat:ng_vendors'
     # 'concat:ng_vendor'
     'concat:vendors'
     # 'concat:modules'

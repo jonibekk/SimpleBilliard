@@ -58,6 +58,21 @@ module.exports = (grunt) ->
     options:
       separator: ';'
 
+  ng_vendors:
+    src: [
+      '<%= config.js %>/vendor/angular/angular.js'
+      '<%= config.js %>/vendor/angular/angular-ui-router.js'
+      '<%= config.js %>/vendor/angular/angular-route.js'
+      '<%= config.js %>/vendor/angular/angular-translate.js'
+      '<%= config.js %>/vendor/angular/angular-translate-loader-static-files.js'
+      '<%= config.js %>/vendor/angular/ui-bootstrap-tpls-0.13.0.js'
+      '<%= config.js %>/vendor/angular/angular-pnotify.js'
+      '<%= config.js %>/vendor/angular/angular-sanitize.js'
+    ]
+    dest: '<%= config.dest %>/jscat/ng_vendors.js'
+    options:
+      separator: ';'
+
   # ng_vendor:
   #   src: [
   #     '<%= config.js %>/vendor/angular/**/*.js'
