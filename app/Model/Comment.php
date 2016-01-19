@@ -108,7 +108,7 @@ class Comment extends AppModel
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
         'body'               => [
-            'maxLength' => ['rule' => ['maxLength', 2]],
+            'maxLength' => ['rule' => ['maxLength', 5000]],
             'isString'  => ['rule' => 'isString', 'message' => 'Invalid Submission']
         ]
     ];
