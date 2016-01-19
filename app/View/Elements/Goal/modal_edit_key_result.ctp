@@ -134,9 +134,9 @@
                                                     'default'                      => 100,
                                                     'required'                     => true,
                                                     'data-bv-stringlength'         => 'true',
-                                                    'data-bv-stringlength-max'     => 50,
+                                                    'data-bv-stringlength-max'     => 15,
                                                     'data-bv-stringlength-message' => __d('validate',
-                                                                                          "最大文字数(%s)を超えています。", 50),
+                                                                                          "最大文字数(%s)を超えています。", 15),
                                                     "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
                                                     'data-bv-numeric-message'      => __d('validate', "数字を入力してください。"),
                                                    ]) ?>
@@ -152,9 +152,9 @@
                                                     'required'                     => true,
                                                     'maxlength'                    => 14,
                                                     'data-bv-stringlength'         => 'true',
-                                                    'data-bv-stringlength-max'     => 50,
+                                                    'data-bv-stringlength-max'     => 15,
                                                     'data-bv-stringlength-message' => __d('validate',
-                                                                                          "最大文字数(%s)を超えています。", 50),
+                                                                                          "最大文字数(%s)を超えています。", 15),
                                                     "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
                                                     'data-bv-numeric-message'      => __d('validate', "数字を入力してください。"),
                                                    ]) ?>
