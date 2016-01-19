@@ -68,15 +68,18 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                 <div class="panel-body add-team-panel-body goal-set-body">
                     <?=
                     $this->Form->input('Purpose.name',
-                                       ['before'                   => '<div class="col col-sm-3 control-label goal-edit-labels">' .
+                                       ['before'                       => '<div class="col col-sm-3 control-label goal-edit-labels">' .
                                            '<label class="no-asterisk">' . __d('gl', "目的") . '</label>' .
                                            '<div class="label-addiction">' . __d('gl', "達成したいことは？") . '</div></div>',
-                                        'label'                    => false,
-                                        'placeholder'              => __d('gl', "達成したいことをざっくり書く"),
-                                        'rows'                     => 1,
-                                        "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
-                                        'afterInput'               => '<span class="help-block goal-form-addiction">' . __d('gl',
-                                                                                                                            "例）新しい価値を人々に提供する") . '</span>'
+                                        'label'                        => false,
+                                        'placeholder'                  => __d('gl', "達成したいことをざっくり書く"),
+                                        'rows'                         => 1,
+                                        "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
+                                        'afterInput'                   => '<span class="help-block goal-form-addiction">' . __d('gl',
+                                                                                                                                "例）新しい価値を人々に提供する") . '</span>',
+                                        'data-bv-stringlength'         => 'true',
+                                        'data-bv-stringlength-max'     => 200,
+                                        'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 200),
                                        ]) ?>
                 </div>
 
@@ -141,23 +144,26 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                             'text'  => __d('gl', "カテゴリ"),
                             'class' => 'col col-sm-3 control-label goal-edit-labels'
                         ],
-                        'class' => 'goal-add-category-select form-control',
+                        'class'   => 'goal-add-category-select form-control',
                         'type'    => 'select',
                         'options' => $goal_category_list,
                     ]) ?>
                     <?=
                     $this->Form->input('name',
-                                       ['before'                   => '<div class="col col-sm-3 control-label set-goal goal-edit-labels">' .
+                                       ['before'                       => '<div class="col col-sm-3 control-label set-goal goal-edit-labels">' .
                                            '<label class="no-asterisk">' . __d('gl', "ゴール名") . '</label>' .
                                            '<div class="label-addiction">' . __d('gl',
                                                                                  "達成の指標として<br>『なに』をどうするか？") . '</div></div>',
-                                        'label'                    => false,
-                                        'placeholder'              => __d('gl', "具体的に絞り込んで書く"),
-                                        "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
-                                        'required'                 => true,
-                                        'rows'                     => 1,
-                                        'afterInput'               => '<span class="help-block font_12px">' . __d('gl',
-                                                                                                                  "例）サービスAの国内市場シェアを増加させる") . '</span>'
+                                        'label'                        => false,
+                                        'placeholder'                  => __d('gl', "具体的に絞り込んで書く"),
+                                        "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
+                                        'required'                     => true,
+                                        'rows'                         => 1,
+                                        'afterInput'                   => '<span class="help-block font_12px">' . __d('gl',
+                                                                                                                      "例）サービスAの国内市場シェアを増加させる") . '</span>',
+                                        'data-bv-stringlength'         => 'true',
+                                        'data-bv-stringlength-max'     => 200,
+                                        'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 200),
                                        ]) ?>
                     <div class="row">
                         <div class="col col-sm-3 goal-edit-labels">
@@ -389,12 +395,15 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                 <div class="panel-body add-team-panel-body">
                     <?=
                     $this->Form->input('description',
-                                       ['before'      => '<div class="col col-sm-3 control-label set-detail goal-edit-labels">' .
+                                       ['before'                       => '<div class="col col-sm-3 control-label set-detail goal-edit-labels">' .
                                            '<label>' . __d('gl', "詳細") . '</label>' .
                                            '<div class="label-addiction">' . __d('gl', "内容を補足しましょう") . '</div></div>',
-                                        'label'       => false,
-                                        'placeholder' => __d('gl', "ゴールの内容を詳しく書く"),
-                                        'rows'        => 1,
+                                        'label'                        => false,
+                                        'placeholder'                  => __d('gl', "ゴールの内容を詳しく書く"),
+                                        'rows'                         => 1,
+                                        'data-bv-stringlength'         => 'true',
+                                        'data-bv-stringlength-max'     => 2000,
+                                        'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 2000),
                                        ]) ?>
                     <?php if (isset($this->request->data['Collaborator'][0]['id'])) {
                         echo $this->Form->hidden('Collaborator.0.id',
