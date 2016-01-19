@@ -9,6 +9,10 @@ module.exports = (grunt) ->
     'coffeelint:release'
     'coffee'
     'concat:js'
+    'concat:ng_app'
+    'concat:ng_controller'
+    'concat:ng_vendors'
+    'concat:vendors'
     'uglify'
     'copy:js'
     'copy:jsMap'
@@ -20,6 +24,7 @@ module.exports = (grunt) ->
   # This task is watched. The task is going to run, when less(app/webroot/less/**/*.less) is changed.
   #
   grunt.registerTask 'css', [
+    'concat:css'
     'lesslint'
     'less:dist'
     'autoprefixer'
@@ -52,7 +57,7 @@ module.exports = (grunt) ->
   #
   grunt.registerTask 'cssdocs', [
     'copy:readme'
-    'styleguide'
+    # 'styleguide'
     'concat:cssDocs'
   ]
 

@@ -13,3 +13,12 @@ module.exports = (grunt) ->
       dest: '<%= config.dest %>/cssmin'
       ext: '.min.css'
     ]
+
+  regacy:
+    files:[
+      expand: true
+      cwd: '<%= config.css %>'
+      src: ['release.css']
+      dest: '<%= config.css %>'
+      ext: '.min.css'
+    ]

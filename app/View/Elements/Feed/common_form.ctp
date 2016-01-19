@@ -300,6 +300,8 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
 
                 <?= $this->Form->hidden('site_info_url', ['id' => 'PostSiteInfoUrl']) ?>
                 <?php $this->Form->unlockField('Post.site_info_url') ?>
+                <?= $this->Form->hidden('redirect_url', ['id' => 'PostRedirectUrl']) ?>
+                <?php $this->Form->unlockField('Post.redirect_url') ?>
 
                 <div id="PostOgpSiteInfo" class="post-ogp-site-info"></div>
                 <div id="PostUploadFilePreview" class="post-upload-file-preview"></div>

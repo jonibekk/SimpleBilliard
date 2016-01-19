@@ -126,4 +126,3 @@ message_list_app.controller(
             });
         }
     });
-
