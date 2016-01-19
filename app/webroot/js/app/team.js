@@ -23,7 +23,13 @@ var app = angular.module('myApp', ['ui.router', 'pascalprecht.translate', 'ui.bo
 
 app.config(['$stateProvider', '$urlRouterProvider', '$translateProvider', '$httpProvider',
     function ($stateProvider, $urlRouterProvider, $translateProvider, $httpProvider) {
-
+        // Anti IE cache
+        if (!$httpProvider.defaults.headers.get)
+            $httpProvider.defaults.headers.get = {};
+        $httpProvider
+            .defaults
+            .headers
+            .get['If-Modified-Since'] = (new Date(0)).toUTCString();
         $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 
         $urlRouterProvider.otherwise("/");
