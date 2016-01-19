@@ -25,3 +25,4 @@ module.exports = (grunt) ->
       docs: 'docs'
       grunt: 'grunt'
       js: 'app/webroot/js'
+      css: 'app/webroot/css'

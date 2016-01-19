@@ -98,3 +98,26 @@ module.exports = (grunt) ->
   gruntDocs:
     src: ['<%= config.docs %>/grunt/**/*.html','!<%= config.docs %>/grunt/index.html']
     dest: '<%= config.docs %>/grunt/index.html'
+
+  css:
+    src: [
+      '<%= config.css %>/goalstrap.css'
+      '<%= config.css %>/jasny-bootstrap.css'
+      '<%= config.css %>/font-awesome.css'
+      '<%= config.css %>/jquery.nailthumb.1.1.css'
+      '<%= config.css %>/bootstrapValidator.css'
+      '<%= config.css %>/bootstrap-switch.css'
+      '<%= config.css %>/pnotify.custom.css'
+      '<%= config.css %>/lightbox.css'
+      '<%= config.css %>/showmore.css'
+      '<%= config.css %>/bootstrap-ext-col.css'
+      '<%= config.css %>/customRadioCheck.css'
+      '<%= config.css %>/select2.css'
+      '<%= config.css %>/select2-bootstrap.css'
+      '<%= config.css %>/datepicker3.css'
+      '<%= config.css %>/style.css'
+      '<%= config.css %>/nav.css'
+      '<%= config.css %>/nav_media.css'
+    ]
+    dest: '<%= config.css %>/release/style.css'
+    sourceMap: true

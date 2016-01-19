@@ -58,7 +58,7 @@ module.exports = (grunt) ->
   #
   grunt.registerTask 'cssdocs', [
     'copy:readme'
-    'styleguide'
+    # 'styleguide'
     'concat:cssDocs'
   ]
 
