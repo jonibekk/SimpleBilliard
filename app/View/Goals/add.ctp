@@ -239,15 +239,21 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                     <?=
                                     $this->Form->input('end_date',
                                                        [
-                                                           'value'                    => $goal_end_date_format,
-                                                           'default'                  => $goal_end_date_format,
-                                                           'label'                    => false,
-                                                           'div'                      => false,
-                                                           'class'                    => "form-control",
-                                                           'required'                 => true,
-                                                           "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
-                                                           'type'                     => 'text',
-                                                           'wrapInput'                => null
+                                                           'value'                        => $goal_end_date_format,
+                                                           'default'                      => $goal_end_date_format,
+                                                           'label'                        => false,
+                                                           'div'                          => false,
+                                                           'class'                        => "form-control",
+                                                           'required'                     => true,
+                                                           "data-bv-notempty-message"     => __d('validate',
+                                                                                                 "入力必須項目です。"),
+                                                           'data-bv-stringlength'         => 'true',
+                                                           'data-bv-stringlength-max'     => 10,
+                                                           'data-bv-stringlength-message' => __d('validate',
+                                                                                                 "最大文字数(%s)を超えています。",
+                                                                                                 10),
+                                                           'type'                         => 'text',
+                                                           'wrapInput'                    => null
                                                        ]) ?>
                                     <span class="input-group-addon"><i class="fa fa-th"></i></span>
                                 </div>
@@ -278,14 +284,20 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                     <?=
                                     $this->Form->input('start_date',
                                                        [
-                                                           'value'                    => $goal_start_date_format,
-                                                           'label'                    => false,
-                                                           'div'                      => false,
-                                                           'class'                    => "form-control",
-                                                           'required'                 => true,
-                                                           "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
-                                                           'type'                     => 'text',
-                                                           'wrapInput'                => null
+                                                           'value'                        => $goal_start_date_format,
+                                                           'label'                        => false,
+                                                           'div'                          => false,
+                                                           'class'                        => "form-control",
+                                                           'required'                     => true,
+                                                           "data-bv-notempty-message"     => __d('validate',
+                                                                                                 "入力必須項目です。"),
+                                                           'data-bv-stringlength'         => 'true',
+                                                           'data-bv-stringlength-max'     => 10,
+                                                           'data-bv-stringlength-message' => __d('validate',
+                                                                                                 "最大文字数(%s)を超えています。",
+                                                                                                 10),
+                                                           'type'                         => 'text',
+                                                           'wrapInput'                    => null
                                                        ]) ?>
                                     <span class="input-group-addon"><i class="fa fa-th"></i></span>
                                 </div>
@@ -524,6 +536,10 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                             var m = new moment(value, 'YYYY/MM/DD', true);
                             return m.isBefore($('[name="data[Goal][end_date]"]').val());
                         }
+                    },
+                    date: {
+                        format: 'YYYY/MM/DD',
+                        message: '<?=__d('validate',"日付はYYYY/MM/DDの形式で入力してください。")?>'
                     }
                 }
             },
@@ -535,6 +551,10 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                             var m = new moment(value, 'YYYY/MM/DD', true);
                             return m.isAfter($('[name="data[Goal][start_date]"]').val());
                         }
+                    },
+                    date: {
+                        format: 'YYYY/MM/DD',
+                        message: '<?=__d('validate',"日付はYYYY/MM/DDの形式で入力してください。")?>'
                     }
                 }
             }

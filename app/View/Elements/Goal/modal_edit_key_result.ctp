@@ -183,15 +183,19 @@
                                 <?=
                                 $this->Form->input('KeyResult.end_date',
                                                    [
-                                                       'value'                    => $kr_end_date_format,
-                                                       'default'                  => $kr_end_date_format,
-                                                       'label'                    => false,
-                                                       'div'                      => false,
-                                                       'class'                    => "form-control",
-                                                       'required'                 => true,
-                                                       "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
-                                                       'type'                     => 'text',
-                                                       'wrapInput'                => null,
+                                                       'value'                        => $kr_end_date_format,
+                                                       'default'                      => $kr_end_date_format,
+                                                       'label'                        => false,
+                                                       'div'                          => false,
+                                                       'class'                        => "form-control",
+                                                       'required'                     => true,
+                                                       "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
+                                                       'data-bv-stringlength'         => 'true',
+                                                       'data-bv-stringlength-max'     => 10,
+                                                       'data-bv-stringlength-message' => __d('validate',
+                                                                                             "最大文字数(%s)を超えています。", 10),
+                                                       'type'                         => 'text',
+                                                       'wrapInput'                    => null,
                                                    ]) ?>
                                 <span class="input-group-addon bd-r-radius_4px"><i class="fa fa-th"></i></span>
                             </div>
@@ -218,14 +222,18 @@
                                 <?=
                                 $this->Form->input('KeyResult.start_date',
                                                    [
-                                                       'value'                    => $kr_start_date_format,
-                                                       'label'                    => false,
-                                                       'div'                      => false,
-                                                       'class'                    => "form-control",
-                                                       'required'                 => true,
-                                                       "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
-                                                       'type'                     => 'text',
-                                                       'wrapInput'                => null
+                                                       'value'                        => $kr_start_date_format,
+                                                       'label'                        => false,
+                                                       'div'                          => false,
+                                                       'class'                        => "form-control",
+                                                       'required'                     => true,
+                                                       "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
+                                                       'data-bv-stringlength'         => 'true',
+                                                       'data-bv-stringlength-max'     => 10,
+                                                       'data-bv-stringlength-message' => __d('validate',
+                                                                                             "最大文字数(%s)を超えています。", 10),
+                                                       'type'                         => 'text',
+                                                       'wrapInput'                    => null
                                                    ]) ?>
                                 <span class="input-group-addon bd-r-radius_4px"><i class="fa fa-th"></i></span>
                             </div>

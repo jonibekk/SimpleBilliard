@@ -3228,6 +3228,10 @@ function getModalFormFromUrl(e) {
                                     var m = new moment(value, 'YYYY/MM/DD', true);
                                     return m.isBefore($('[name="data[KeyResult][end_date]"]').val());
                                 }
+                            },
+                            date: {
+                                format: 'YYYY/MM/DD',
+                                message: cake.message.validate.date_format
                             }
                         }
                     },
@@ -3239,6 +3243,10 @@ function getModalFormFromUrl(e) {
                                     var m = new moment(value, 'YYYY/MM/DD', true);
                                     return m.isAfter($('[name="data[KeyResult][start_date]"]').val());
                                 }
+                            },
+                            date: {
+                                format: 'YYYY/MM/DD',
+                                message: cake.message.validate.date_format
                             }
                         }
                     }
