@@ -29,6 +29,10 @@
 
     //    echo $this->Html->css('bw-simplex.min', array('media' => 'screen'));
     //    echo $this->Html->css('bw-simplex', array('media' => 'screen'));
+
+    echo $this->Html->css('release.min');
+
+/* gruntタスク化
     echo $this->Html->css('goalstrap', array('media' => 'screen'));
     echo $this->Html->css('jasny-bootstrap.min');
     echo $this->Html->css('font-awesome.min');
@@ -47,7 +51,10 @@
     echo $this->Html->css('style', array('media' => 'screen'));
     echo $this->Html->css('nav');
     echo $this->Html->css('nav_media');
+*/
+
     echo $this->Html->css('goalous.min', array('media' => 'screen'));
+
     echo $this->fetch('css');
     echo $this->fetch('meta');
 
