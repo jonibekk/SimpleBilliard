@@ -51,7 +51,7 @@
                                     'placeholder'                  => __d('gl', "例) 営業部"),
                                     "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
                                     'data-bv-stringlength'         => 'true',
-                                    'data-bv-stringlength-max'     => 200,
+                                    'data-bv-stringlength-max'     => 128,
                                     'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 200),
                                    ]) ?>
                 <?php if (!$this->request->data['Circle']['team_all_flg']): ?>
