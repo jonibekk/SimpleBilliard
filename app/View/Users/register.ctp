@@ -69,13 +69,13 @@
                 <?php else: ?>
                     <?=
                     $this->Form->input('Email.0.email', [
-                        'label'                     => __d('gl', "メール"),
-                        'placeholder'               => __d('gl', "hiroshi@example.com"),
-                        "data-bv-notempty"          => "false",
-                        'data-bv-emailaddress'      => "false",
-                        "data-bv-callback"          => "true",
-                        "data-bv-callback-message"  => " ",
-                        "data-bv-callback-callback" => "bvCallbackAvailableEmail",
+                        'label'                        => __d('gl', "メール"),
+                        'placeholder'                  => __d('gl', "hiroshi@example.com"),
+                        "data-bv-notempty"             => "false",
+                        'data-bv-emailaddress'         => "false",
+                        "data-bv-callback"             => "true",
+                        "data-bv-callback-message"     => " ",
+                        "data-bv-callback-callback"    => "bvCallbackAvailableEmail",
                         'data-bv-stringlength'         => 'true',
                         'data-bv-stringlength-max'     => 200,
                         'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 200),
@@ -92,19 +92,19 @@
                 <hr>
                 <?=
                 $this->Form->input('password', [
-                    'label'                    => __d('gl', "パスワードを作成"),
-                    'placeholder'              => __d('gl', '8文字以上'),
-                    "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
-                    'type'                     => 'password',
+                    'label'                        => __d('gl', "パスワードを作成"),
+                    'placeholder'                  => __d('gl', '8文字以上'),
+                    "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
+                    'type'                         => 'password',
                     'data-bv-stringlength'         => 'true',
                     'data-bv-stringlength-max'     => 50,
                     'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 50),
                 ]) ?>
                 <?=
                 $this->Form->input('password_confirm', [
-                    'label'                    => __d('gl', "パスワードを再入力"),
-                    "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
-                    'type'                     => 'password',
+                    'label'                        => __d('gl', "パスワードを再入力"),
+                    "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
+                    'type'                         => 'password',
                     'data-bv-stringlength'         => 'true',
                     'data-bv-stringlength-max'     => 50,
                     'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 50),
