@@ -84,6 +84,8 @@ $(window).load(function () {
 
 $(document).ready(function () {
 
+    fastClick();
+
     //Monitoring of the communication state of App Server | Appサーバーの通信状態の監視
     var network_reachable = true;
     setInterval(function () {

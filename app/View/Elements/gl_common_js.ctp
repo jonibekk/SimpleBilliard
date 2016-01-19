@@ -39,6 +39,7 @@ echo $this->Html->script('vendor/jquery.balanced-gallery');
 echo $this->Html->script('vendor/imagesloaded.pkgd.min');
 echo $this->Html->script('vendor/bootstrap.youtubepopup');
 echo $this->Html->script('vendor/require');
+echo $this->Html->script('vendor/fastClick.min.js');
 echo $this->Html->script('gl_basic');
 echo $this->Html->script('vendor/exif');
 echo $this->Html->script('goalous.min');
