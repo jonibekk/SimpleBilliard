@@ -51,8 +51,8 @@ if (!viaIsSet($index) || !is_numeric($index)) {
                             'data-bv-integer-message'      => __d('gl', "数字を入力してください。"),
                             'required'                     => true,
                             'data-bv-stringlength'         => 'true',
-                            'data-bv-stringlength-max'     => 10,
-                            'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 10),
+                            'data-bv-stringlength-max'     => 5,
+                            'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 5),
                         ))
             ?>
         </div>
