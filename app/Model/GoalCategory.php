@@ -83,11 +83,7 @@ class GoalCategory extends AppModel
     {
         $data = [
             [
-                'name'    => __d('gl', "職務"),
-                'team_id' => $this->current_team_id,
-            ],
-            [
-                'name'    => __d('gl', "成長"),
+                'name'    => __d('gl', "未設定"),
                 'team_id' => $this->current_team_id,
             ],
         ];
