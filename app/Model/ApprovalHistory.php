@@ -27,6 +27,9 @@ class ApprovalHistory extends AppModel
                 'rule' => ['numeric'],
             ],
         ],
+        'comment'       => [
+            'maxLength' => ['rule' => ['maxLength', 5000]],
+        ],
         'del_flg'       => [
             'boolean' => [
                 'rule' => ['boolean'],

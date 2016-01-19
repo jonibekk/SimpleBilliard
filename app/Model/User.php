@@ -100,10 +100,12 @@ class User extends AppModel
      */
     public $validate = [
         'first_name'        => [
+            'maxLength'      => ['rule' => ['maxLength', 128]],
             'notEmpty'       => ['rule' => 'notEmpty'],
             'isAlphabetOnly' => ['rule' => 'isAlphabetOnly'],
         ],
         'last_name'         => [
+            'maxLength'      => ['rule' => ['maxLength', 128]],
             'notEmpty'       => ['rule' => 'notEmpty'],
             'isAlphabetOnly' => ['rule' => 'isAlphabetOnly'],
         ],
@@ -182,10 +184,14 @@ class User extends AppModel
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
         'hometown'          => [
-            'isString' => [
+            'maxLength' => ['rule' => ['maxLength', 128]],
+            'isString'  => [
                 'rule'       => ['isString',],
                 'allowEmpty' => true,
             ],
+        ],
+        'comment'           => [
+            'maxLength' => ['rule' => ['maxLength', 2000]],
         ]
     ];
 
@@ -912,7 +918,8 @@ class User extends AppModel
                 $shared_user_list[$post['Post']['user_id']] = $post['Post']['user_id'];
             }
             $group_res = $this->getGroupsSelect2($keyword, $limit);
-            $user_res = array_merge($user_res, $this->excludeGroupMemberSelect2($group_res['results'], $shared_user_list));
+            $user_res = array_merge($user_res,
+                                    $this->excludeGroupMemberSelect2($group_res['results'], $shared_user_list));
         }
         return ['results' => $user_res];
     }
@@ -1048,8 +1055,8 @@ class User extends AppModel
             foreach ($members as $member) {
                 if ($this->my_uid != $member['User']['id']) {
                     $users[] = [
-                        'id'   => 'user_' . $member['User']['id'],
-                        'text' => $member['User']['display_username'] . " (" . $member['User']['roman_username'] . ")",
+                        'id'    => 'user_' . $member['User']['id'],
+                        'text'  => $member['User']['display_username'] . " (" . $member['User']['roman_username'] . ")",
                         'image' => $Upload->uploadUrl($member, 'User.photo', ['style' => 'small']),
                     ];
                 }
@@ -1207,7 +1214,6 @@ class User extends AppModel
         return $this->updateAll(['default_team_id' => null], ['default_team_id' => $team_id]);
     }
 
-
     /**
      * select2 用のグループ検索結果のユーザーリストから
      * $exclude_member_list のユーザーを除外する
@@ -1217,7 +1223,8 @@ class User extends AppModel
      *
      * @return array
      */
-    public function excludeGroupMemberSelect2($select2_results, $exclude_member_list) {
+    public function excludeGroupMemberSelect2($select2_results, $exclude_member_list)
+    {
         foreach ($select2_results as $k => $v) {
             $users = [];
             foreach ($v['users'] as $k2 => $v2) {

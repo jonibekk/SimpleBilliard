@@ -25,6 +25,10 @@ class Invite extends AppModel
         'email'          => ['email' => ['rule' => ['email']]],
         'email_verified' => ['boolean' => ['rule' => ['boolean']]],
         'del_flg'        => ['boolean' => ['rule' => ['boolean']]],
+        'message'        => [
+            'maxLength' => ['rule' => ['maxLength', 2000]],
+        ]
+
     ];
 
     //The Associations below have been created with all possible keys, those that are not needed can be removed

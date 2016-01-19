@@ -667,14 +667,14 @@ class UsersController extends AppController
                 $this->_autoLogin($this->Auth->user('id'), true);
                 //言語設定
                 $this->_setAppLanguage();
-                $me = $this->_getMyUserDataForSetting();
-                $this->request->data = $me;
 
                 $this->Pnotify->outSuccess(__d('gl', "ユーザ設定を保存しました。"));
             }
             else {
                 $this->Pnotify->outError(__d('gl', "ユーザ設定の保存に失敗しました。"));
             }
+            $me = $this->_getMyUserDataForSetting();
+            $this->request->data = $me;
         }
         else {
             $this->request->data = $me;

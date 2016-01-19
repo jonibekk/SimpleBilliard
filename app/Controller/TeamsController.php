@@ -439,6 +439,13 @@ class TeamsController extends AppController
             return $this->redirect($this->referer());
         }
 
+        //max 100 invitation
+        $max_invitation_count = 100;
+        if (count($email_list) > $max_invitation_count) {
+            $this->Pnotify->outError(__d('gl', "一度に送信できる招待は%s件までです。", $max_invitation_count));
+            return $this->redirect($this->referer());
+        }
+
         $alreadyBelongTeamEmails = [];
         $sentEmails = [];
         //generate token and send mail one by one.
@@ -455,6 +462,10 @@ class TeamsController extends AppController
                 $this->Auth->user('id'),
                 !empty($data['Team']['comment']) ? $data['Team']['comment'] : null
             );
+            if (!$invite) {
+                $this->Pnotify->outError(__d('gl', "問題がある為、招待に失敗しました。"));
+                return $this->redirect($this->referer());
+            }
             //send invite mail
             $team_name = $this->Team->TeamMember->myTeams[$this->Session->read('current_team_id')];
             $this->GlEmail->sendMailInvite($invite, $team_name);
