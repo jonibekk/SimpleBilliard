@@ -66,17 +66,21 @@
         <div class="modal-body modal-circle-body">
             <div class="aaa">
                 <div class="row">
-                                    <?=
-                                      $this->Form->input('KeyResult.name',
-                                       ['before'                   => '<div class="set-goal">' .
-                                           '<h5 class="modal-key-result-headings">' . __d('gl', "成果名") .'<span class="modal-key-result-headings-description">' . __d('gl',
-                                                                                 "達成の指標として『なに』をどうするか？") .  '</span></label></div>' ,
-                                        'label'                    => false,
-                                        'placeholder'              => __d('gl', "具体的に絞り込んで書く"),
-                                        "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
-                                        'rows'                     => 1,
-                                        'afterInput'               => '<span class="help-block font_12px">' . __d('gl',
-                                                                                                                  "例）サービスAの国内市場シェアを増加させる") . '</span>'
+                    <?=
+                    $this->Form->input('KeyResult.name',
+                                       ['before'                       => '<div class="set-goal">' .
+                                           '<h5 class="modal-key-result-headings">' . __d('gl',
+                                                                                          "成果名") . '<span class="modal-key-result-headings-description">' . __d('gl',
+                                                                                                                                                                "達成の指標として『なに』をどうするか？") . '</span></label></div>',
+                                        'label'                        => false,
+                                        'placeholder'                  => __d('gl', "具体的に絞り込んで書く"),
+                                        "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
+                                        'data-bv-stringlength'         => 'true',
+                                        'data-bv-stringlength-max'     => 200,
+                                        'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 200),
+                                        'rows'                         => 1,
+                                        'afterInput'                   => '<span class="help-block font_12px">' . __d('gl',
+                                                                                                                      "例）サービスAの国内市場シェアを増加させる") . '</span>'
                                        ]) ?>
                 </div>
                 <div class="row">
@@ -101,7 +105,8 @@
                 </div>
                 <div class="row">
                     <div class="ddd">
-                        <h5 class="modal-key-result-headings"><?= __d('gl', "程度") ?><span class="modal-key-result-headings-description"><?= __d('gl', "どのくらい？") ?></span></h5>
+                        <h5 class="modal-key-result-headings"><?= __d('gl', "程度") ?><span
+                                class="modal-key-result-headings-description"><?= __d('gl', "どのくらい？") ?></span></h5>
                     </div>
                     <div class="goal-set-input">
                         <div class="eee">
@@ -128,8 +133,10 @@
                                                     'step'                         => '0.1',
                                                     'default'                      => 100,
                                                     'required'                     => true,
-                                                    'maxlength'                    => 14,
-                                                    'data-bv-stringlength-message' => __d('validate', "文字数がオーバーしています。"),
+                                                    'data-bv-stringlength'         => 'true',
+                                                    'data-bv-stringlength-max'     => 50,
+                                                    'data-bv-stringlength-message' => __d('validate',
+                                                                                          "最大文字数(%s)を超えています。", 50),
                                                     "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
                                                     'data-bv-numeric-message'      => __d('validate', "数字を入力してください。"),
                                                    ]) ?>
@@ -144,7 +151,10 @@
                                                     'default'                      => 0,
                                                     'required'                     => true,
                                                     'maxlength'                    => 14,
-                                                    'data-bv-stringlength-message' => __d('validate', "文字数がオーバーしています。"),
+                                                    'data-bv-stringlength'         => 'true',
+                                                    'data-bv-stringlength-max'     => 50,
+                                                    'data-bv-stringlength-message' => __d('validate',
+                                                                                          "最大文字数(%s)を超えています。", 50),
                                                     "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
                                                     'data-bv-numeric-message'      => __d('validate', "数字を入力してください。"),
                                                    ]) ?>
@@ -226,7 +236,9 @@
             <div class="row">
                 <?=
                 $this->Form->input('priority', [
-                    'before'                   =>'<h5 class="modal-key-result-headings">' . __d('gl', "重要度") .'<span class="modal-key-result-headings-description">' . __d('gl', "ゴールにとってこの成果の重要度") . '</span></h5>' ,
+                    'before'                   => '<h5 class="modal-key-result-headings">' . __d('gl',
+                                                                                                 "重要度") . '<span class="modal-key-result-headings-description">' . __d('gl',
+                                                                                                                                                                       "ゴールにとってこの成果の重要度") . '</span></h5>',
                     'label'                    => false,
                     'type'                     => 'select',
                     'default'                  => 1,
@@ -234,7 +246,7 @@
                     "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                     'style'                    => 'width:170px',
                     'options'                  => $kr_priority_list,
-                    'wrapInput' => 'modal-edit-kr-set-importance-wrap'
+                    'wrapInput'                => 'modal-edit-kr-set-importance-wrap'
                 ]) ?>
             </div>
         </div>
