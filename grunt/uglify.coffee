@@ -12,7 +12,7 @@ module.exports = (grunt) ->
       '<%= config.app %>/webroot/dest/jsmin/ng_app.min.js': [
         '<%= config.app %>/webroot/dest/jscat/ng_app.js'
       ]
-  
+
   ng_vendors:
     files:
       '<%= config.app %>/webroot/dest/jsmin/ng_vendors.min.js': [

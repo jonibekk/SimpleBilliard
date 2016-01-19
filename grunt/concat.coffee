@@ -52,6 +52,8 @@ module.exports = (grunt) ->
     options:
       separator: ';'
 
+
+  # controllerはmin化するとバグが発生するのでそのままjsディレクトリに。
   ng_controller:
     src: ['<%= config.js %>/controller/**/*.js']
     dest: '<%= config.js %>/ng_controller.js'
@@ -119,5 +121,5 @@ module.exports = (grunt) ->
       '<%= config.css %>/nav.css'
       '<%= config.css %>/nav_media.css'
     ]
-    dest: '<%= config.css %>/release/style.css'
+    dest: '<%= config.css %>/release.css'
     sourceMap: true
