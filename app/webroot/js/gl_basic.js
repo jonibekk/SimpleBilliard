@@ -2819,6 +2819,16 @@ function evNotifyPost(options){
         return false;
     }
 
+    //アドレスバー書き換え
+    if (typeof history.pushState == 'function') {
+        try {
+            history.pushState(null, null, get_url);
+        } catch (e) {
+            window.location.href = get_url;
+            return false;
+        }
+    }
+
     $('#jsGoTop').click();
 
     //ローダー表示
@@ -2920,6 +2930,16 @@ function evCircleFeed(options) {
     if(!$("#app-view-elements-feed-posts").exists() || !get_url.match(/circle_feed/)){
         window.location.href = get_url;
         return false;
+    }
+
+    //アドレスバー書き換え
+    if (typeof history.pushState == 'function') {
+        try {
+            history.pushState(null, null, get_url);
+        } catch (e) {
+            window.location.href = get_url;
+            return false;
+        }
     }
 
     //不要な要素を削除
