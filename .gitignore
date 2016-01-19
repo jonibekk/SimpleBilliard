@@ -45,3 +45,7 @@ npm-debug.log
 /app/webroot/js/*.js.map
 /app/webroot/css/goalous.min.css
 /app/webroot/js/goalous.min.js
+/app/webroot/js/ng_app.min.js
+/app/webroot/js/ng_vendors.min.js
+/app/webroot/js/ng_controller.min.js
+/app/webroot/js/vendors.min.js
