@@ -32,10 +32,13 @@
             <div class="panel-body add-team-panel-body">
                 <?=
                 $this->Form->input('name',
-                                   ['label'                    => __d('gl', "チームビジョン名"),
-                                    'placeholder'              => __d('gl', "例) イノベーションを起こす"),
-                                    "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
-                                    'rows'                     => 1,
+                                   ['label'                        => __d('gl', "チームビジョン名"),
+                                    'placeholder'                  => __d('gl', "例) イノベーションを起こす"),
+                                    "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
+                                    'rows'                         => 1,
+                                    'data-bv-stringlength'         => 'true',
+                                    'data-bv-stringlength-max'     => 200,
+                                    'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 200),
                                    ]) ?>
                 <hr>
                 <div class="form-group">
