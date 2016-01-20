@@ -13,14 +13,17 @@
  * @var                    $feed_filter
  */
 ?>
-<div class="feed-share-range">
+<div class="feed-share-range"
+        <?php if (!$current_circle): ?>
+     style="display: none"
+        <?php endif; ?>
+>
     <div class="panel-body ptb_10px plr_11px">
-        <?php if ($current_circle): ?>
             <div class="col col-xxs-12 font_12px">
                 <?= $this->element('Feed/circle_filter_menu',
                                    compact('current_circle', 'user_status', 'circle_member_count', 'circle_status')
                 ) ?>
-                <span class="font_verydark">
+                <span class="font_verydark" id="feed-share-range-public-flg">
                     <?= __d('gl', '・') ?>
                     <?php if ($current_circle['Circle']['public_flg']): ?>
                         <i class="fa fa-unlock font_14px"></i>
@@ -31,7 +34,7 @@
             </div>
             <div class="col col-xxs-12 font_14px mtb_3px">
                 <i class="fa fa-th-list"></i>
-                <?php if ($this->request->params['action'] == "feed"): ?>
+                <?php if ($this->request->params['action'] == "feed" || !$current_circle): ?>
                     <span class="feed-current-filter"><?= __d('gl', 'フィード') ?></span>
                 <?php else: ?>
                     <?= $this->Html->link(__d('gl', 'フィード'),
@@ -45,10 +48,9 @@
                 <?php else: ?>
                     <?= $this->Html->link(__d('gl', 'ファイル'),
                                           ['action' => 'attached_file_list', 'circle_id' => $current_circle['Circle']['id']],
-                                          ['class' => 'font_lightgray']) ?>
+                                          ['class' => 'font_lightgray feed-share-range-file-url']) ?>
                 <?php endif; ?>
 
             </div>
-        <?php endif; ?>
     </div>
 </div>

@@ -29,6 +29,10 @@
 
     //    echo $this->Html->css('bw-simplex.min', array('media' => 'screen'));
     //    echo $this->Html->css('bw-simplex', array('media' => 'screen'));
+
+    echo $this->Html->css('release.min');
+
+/* gruntタスク化
     echo $this->Html->css('goalstrap', array('media' => 'screen'));
     echo $this->Html->css('jasny-bootstrap.min');
     echo $this->Html->css('font-awesome.min');
@@ -47,18 +51,23 @@
     echo $this->Html->css('style', array('media' => 'screen'));
     echo $this->Html->css('nav');
     echo $this->Html->css('nav_media');
+*/
+
     echo $this->Html->css('goalous.min', array('media' => 'screen'));
+
     echo $this->fetch('css');
     echo $this->fetch('meta');
 
-    echo $this->Html->script('vendor/angular/angular.min');
-    echo $this->Html->script('vendor/angular/angular-ui-router.min');
-    echo $this->Html->script('vendor/angular/angular-route.min');
-    echo $this->Html->script('vendor/angular/angular-translate.min');
-    echo $this->Html->script('vendor/angular/angular-translate-loader-static-files.min');
-    echo $this->Html->script('vendor/angular/ui-bootstrap-tpls-0.13.0.min');
-    echo $this->Html->script('vendor/angular/angular-pnotify');
-    echo $this->Html->script('vendor/angular/angular-sanitize.min');
+    echo $this->Html->script('ng_vendors.min');
+
+    // echo $this->Html->script('vendor/angular/angular.min');
+    // echo $this->Html->script('vendor/angular/angular-ui-router.min');
+    // echo $this->Html->script('vendor/angular/angular-route.min');
+    // echo $this->Html->script('vendor/angular/angular-translate.min');
+    // echo $this->Html->script('vendor/angular/angular-translate-loader-static-files.min');
+    // echo $this->Html->script('vendor/angular/ui-bootstrap-tpls-0.13.0');
+    // echo $this->Html->script('vendor/angular/angular-pnotify');
+    // echo $this->Html->script('vendor/angular/angular-sanitize.min');
 
     ?>
     <?php

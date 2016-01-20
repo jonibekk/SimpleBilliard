@@ -29,7 +29,7 @@ echo $this->Html->script('vendor/angular/angular.min');
 echo $this->Html->script('vendor/angular/angular-route.min');
 echo $this->Html->script('vendor/angular/angular-translate.min');
 echo $this->Html->script('vendor/angular/angular-translate-loader-static-files.min');
-echo $this->Html->script('controller/team_member_list');
+echo $this->Html->script('ng_controller');
 ?>
 
 <div ng-app="myApp">
