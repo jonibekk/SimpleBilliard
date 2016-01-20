@@ -73,21 +73,24 @@ class KeyResult extends AppModel
      * @var array
      */
     public $validate = [
-        'name'       => [
-            'notEmpty' => [
+        'name'         => [
+            'maxLength' => ['rule' => ['maxLength', 1]],
+            'notEmpty'  => [
                 'rule' => 'notEmpty',
             ],
         ],
-        'del_flg'    => [
+        'del_flg'      => [
             'boolean' => [
                 'rule' => ['boolean'],
             ],
         ],
-        'start_date' => [
-            'numeric' => ['rule' => ['numeric']]
+        'start_value'  => [
+            'maxLength' => ['rule' => ['maxLength', 15]],
+            'numeric'   => ['rule' => ['numeric']]
         ],
-        'end_date'   => [
-            'numeric' => ['rule' => ['numeric']]
+        'target_value' => [
+            'maxLength' => ['rule' => ['maxLength', 15]],
+            'numeric'   => ['rule' => ['numeric']]
         ],
     ];
 
@@ -142,7 +145,7 @@ class KeyResult extends AppModel
             $uid = $this->my_uid;
         }
         if (!isset($data['KeyResult']) || empty($data['KeyResult'])) {
-            throw new RuntimeException(__d('gl', "基準のデータがありません。"));
+            throw new RuntimeException(__d('gl', "達成要素のデータがありません。"));
         }
         $data['KeyResult']['goal_id'] = $goal_id;
         $data['KeyResult']['user_id'] = $uid;
@@ -158,7 +161,7 @@ class KeyResult extends AppModel
         $validate_backup = $this->validate;
         $this->validate = array_merge($this->validate, $this->post_validate);
         if (!$this->validates()) {
-            throw new RuntimeException(__d('gl', "基準の保存に失敗しました。"));
+            throw new RuntimeException(__d('gl', "達成要素の保存に失敗しました。"));
         }
         $this->validate = $validate_backup;
 
@@ -175,7 +178,7 @@ class KeyResult extends AppModel
         }
         $this->create();
         if (!$this->save($data)) {
-            throw new RuntimeException(__d('gl', "基準の保存に失敗しました。"));
+            throw new RuntimeException(__d('gl', "達成要素の保存に失敗しました。"));
         }
         Cache::delete($this->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         return true;

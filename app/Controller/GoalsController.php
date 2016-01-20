@@ -512,7 +512,7 @@ class GoalsController extends AppController
                 throw new RuntimeException(__d('gl', "完了済の成果は編集出来ません。"));
             }
             if (!$kr = $this->Goal->KeyResult->saveEdit($this->request->data)) {
-                throw new RuntimeException(__d('gl', "データの保存に失敗しました。"));
+                throw new RuntimeException(__d('gl', "達成要素の保存に失敗しました。"));
             }
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
@@ -524,7 +524,7 @@ class GoalsController extends AppController
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_KR, $kr['KeyResult']['goal_id'], $kr_id);
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
 
-        $this->Pnotify->outSuccess(__d('gl', "成果を更新しました。"));
+        $this->Pnotify->outSuccess(__d('gl', "達成要素を更新しました。"));
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         $params_referer = Router::parse($this->referer(null, true));
         if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home') {
