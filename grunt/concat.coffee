@@ -38,6 +38,7 @@ module.exports = (grunt) ->
       '<%= config.js %>/vendor/jquery.balanced-gallery.js'
       '<%= config.js %>/vendor/imagesloaded.pkgd.js'
       '<%= config.js %>/vendor/bootstrap.youtubepopup.js'
+      '<%= config.js %>/vendor/fastClick.js'
       '<%= config.js %>/vendor/require.js'
       '<%= config.js %>/vendor/exif.js'
       '<%= config.js %>/gl_basic.js'

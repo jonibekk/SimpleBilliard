@@ -43,7 +43,6 @@ echo $this->Html->script('vendors.min');
 // echo $this->Html->script('vendor/require');
 // echo $this->Html->script('vendor/exif');
 // echo $this->Html->script('gl_basic');
-echo $this->Html->script('vendor/fastClick.min.js');
 echo $this->Html->script('goalous.min');
 ?>
 <!--suppress JSDuplicatedDeclaration -->
