@@ -55,12 +55,12 @@
             <?php endforeach; ?>
         </table>
         <div class="form-group">
-            <?= $this->Form->submit(__d('gl', 'ゴールカテゴリ設定を保存'), ['class' => 'btn btn-primary pull-right']) ?>
             <?php $index = count($this->request->data['GoalCategory']);
             $max_index = $index + 9; ?>
             <?= $this->Html->link(__d('gl', "ゴールカテゴリを１つ追加"),
                                   ['controller' => 'teams', 'action' => 'ajax_get_goal_category_elm'],
-                                  ['id' => 'AddCategoryButton', 'target-selector' => '#GoalCategoryTable > tbody', 'index' => $index, 'max_index' => $max_index, 'class' => 'btn btn-default pull-left']) ?>
+                                  ['id' => 'AddCategoryButton', 'target-selector' => '#GoalCategoryTable > tbody', 'index' => $index, 'max_index' => $max_index, 'class' => 'btn btn-default']) ?>
+                                  <?= $this->Form->submit(__d('gl', 'ゴールカテゴリ設定を保存'), ['class' => 'btn btn-primary team-setting-add-goal-category']) ?>
         </div>
         <?php for ($i = $index; $i <= $max_index; $i++): ?>
             <?php $this->Form->unlockField("GoalCategory.$i.name") ?>
@@ -100,4 +100,3 @@
     });
 </script>
 <?php $this->end() ?>
-
