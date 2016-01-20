@@ -49,7 +49,7 @@ class ApprovalHistory extends AppModel
     function add($collaborator_id, $user_id, $action_status = 0, $comment = '')
     {
         if ($action_status === self::ACTION_STATUS_NO_ACTION && empty($comment) === true) {
-            return;
+            return false;
         }
 
         $param = [
