@@ -1832,6 +1832,10 @@ $(document).ready(function () {
             },
             "data[User][password_confirm]": {
                 validators: {
+                    stringLength: {
+                        min: 8,
+                        message: cake.message.validate.a
+                    },
                     identical: {
                         field: "data[User][password]",
                         message: cake.message.validate.b
@@ -2236,38 +2240,38 @@ $(document).ready(function () {
 });
 
 
-function initCircleSelect2(){
+function initCircleSelect2() {
     //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
     $('#select2PostCircleMember').select2({
-            multiple: true,
-            placeholder: cake.word.select_public_circle,
-            minimumInputLength: 1,
-            ajax: {
-                url: cake.url.select2_circle_user,
-                dataType: 'json',
-                quietMillis: 100,
-                cache: true,
-                data: function (term, page) {
-                    return {
-                        term: term, //search term
-                        page_limit: 10, // page size
-                        circle_type: "public"
-                    };
-                },
-                results: function (data, page) {
-                    return {results: data.results};
-                }
+        multiple: true,
+        placeholder: cake.word.select_public_circle,
+        minimumInputLength: 1,
+        ajax: {
+            url: cake.url.select2_circle_user,
+            dataType: 'json',
+            quietMillis: 100,
+            cache: true,
+            data: function (term, page) {
+                return {
+                    term: term, //search term
+                    page_limit: 10, // page size
+                    circle_type: "public"
+                };
             },
-            data: [],
-            initSelection: cake.data.b,
-            formatSelection: format,
-            formatResult: format,
-            dropdownCssClass: 's2-post-dropdown',
-            escapeMarkup: function (m) {
-                return m;
-            },
-            containerCssClass: "select2PostCircleMember"
-        })
+            results: function (data, page) {
+                return {results: data.results};
+            }
+        },
+        data: [],
+        initSelection: cake.data.b,
+        formatSelection: format,
+        formatResult: format,
+        dropdownCssClass: 's2-post-dropdown',
+        escapeMarkup: function (m) {
+            return m;
+        },
+        containerCssClass: "select2PostCircleMember"
+    })
         .on('change', function () {
             var $this = $(this);
             // グループを選択した場合、グループに所属するユーザーを展開して入力済にする
@@ -2409,7 +2413,6 @@ function initCircleSelect2(){
             });
         }
     });
-
 
 
     $('#select2ActionCircleMember').select2({
@@ -2764,7 +2767,7 @@ function evFeedMoreView(options) {
                             $loader_html.remove();
                             $("#" + no_data_text_id).show();
                             $('#' + parent_id).find('.panel-read-more-body').removeClass('panel-read-more-body').addClass('panel-read-more-body-no-data');
-                            $obj.css("display","none");
+                            $obj.css("display", "none");
                             feed_loading_now = false;
                             return;
                         }
@@ -2777,7 +2780,7 @@ function evFeedMoreView(options) {
                     $("#" + no_data_text_id).show();
                     $('#' + parent_id).find('.panel-read-more-body').removeClass('panel-read-more-body').addClass('panel-read-more-body-no-data');
                     //もっと読む表示をやめる
-                    $obj.css("display","none");
+                    $obj.css("display", "none");
                 }
             }
             action_autoload_more = false;
@@ -2925,7 +2928,7 @@ function evCircleFeed(options) {
     var team_all_flg = $obj.attr('team-all-flg');
     updateCakeValue(circle_id, title, image_url);
 
-    if($obj.attr('class') == 'circle-link'){
+    if ($obj.attr('class') == 'circle-link') {
         //ハンバーガーから来た場合は隠す
         $("#header-slide-menu").click();
     }
@@ -2933,8 +2936,10 @@ function evCircleFeed(options) {
     //app-view-elements-feed-postsが存在しないところではajaxでコンテンツ更新しようにもロードしていない
     //要素が多すぎるので、おとなしくページリロードする
     //urlにcircle_feedを含まない場合も対象外
-    jQuery.fn.exists = function(){return Boolean(this.length > 0);}
-    if(!$("#app-view-elements-feed-posts").exists() || !get_url.match(/circle_feed/)){
+    jQuery.fn.exists = function () {
+        return Boolean(this.length > 0);
+    }
+    if (!$("#app-view-elements-feed-posts").exists() || !get_url.match(/circle_feed/)) {
         window.location.href = get_url;
         return false;
     }
@@ -2959,29 +2964,29 @@ function evCircleFeed(options) {
     }
 
     // URL生成
-    var url = get_url.replace(/circle_feed/,"ajax_circle_feed");
-    var more_read_url = get_url.replace(/\/circle_feed\//,"\/posts\/ajax_get_feed\/circle_id:");
+    var url = get_url.replace(/circle_feed/, "ajax_circle_feed");
+    var more_read_url = get_url.replace(/\/circle_feed\//, "\/posts\/ajax_get_feed\/circle_id:");
 
     // read more 非表示
-    $("#FeedMoreReadLink").css("display","none");
+    $("#FeedMoreReadLink").css("display", "none");
 
     //サークル名が長すぎる場合は切る
     var panel_title = title;
-    if(title.length > 30){
-        panel_title = title.substr(0,29) + "…";
+    if (title.length > 30) {
+        panel_title = title.substr(0, 29) + "…";
     }
 
     $("#circle-filter-menu-circle-name").html(panel_title);
-    $("#circle-filter-menu-member-url").attr("href","/circles/ajax_get_circle_members/circle_id:"+circle_id);
-    $(".feed-share-range-file-url").attr("href","/posts/attached_file_list/circle_id:"+circle_id);
+    $("#circle-filter-menu-member-url").attr("href", "/circles/ajax_get_circle_members/circle_id:" + circle_id);
+    $(".feed-share-range-file-url").attr("href", "/posts/attached_file_list/circle_id:" + circle_id);
     $('#postShareRangeToggleButton').removeAttr('data-toggle-enabled');
-    if(public_flg == 1){
+    if (public_flg == 1) {
         $("#feed-share-range-public-flg").children("i").removeClass("fa-lock").addClass("fa-unlock");
         $('#postShareRange').val("public");
         $('#PostSecretShareInputWrap').hide();
         $('#PostPublicShareInputWrap').show();
 
-        $('#select2PostCircleMember').val("circle_"+circle_id);
+        $('#select2PostCircleMember').val("circle_" + circle_id);
         $('#select2PostSecretCircle').val("");
     } else {
         $("#feed-share-range-public-flg").children("i").removeClass("fa-unlock").addClass("fa-lock");
@@ -2990,7 +2995,7 @@ function evCircleFeed(options) {
         $('#PostSecretShareInputWrap').show();
 
         $('#select2PostCircleMember').val("");
-        $('#select2PostSecretCircle').val("circle_"+circle_id);
+        $('#select2PostSecretCircle').val("circle_" + circle_id);
     }
     $("#postShareRangeToggleButton").popover({
         'data-toggle': "popover",
@@ -3000,7 +3005,7 @@ function evCircleFeed(options) {
         'container': 'body'
     });
     // circle情報パネル表示
-    $(".feed-share-range").css("display","block");
+    $(".feed-share-range").css("display", "block");
 
     //Post後のリダイレクトURLを設定
     $("#PostRedirectUrl").val(get_url);
@@ -3053,13 +3058,13 @@ function evCircleFeed(options) {
             $("#circle-filter-menu-circle-member-count").html(data.circle_member_count);
 
             //サークル設定メニュー生成
-            if(!team_all_flg && data.user_status == "joined"){
+            if (!team_all_flg && data.user_status == "joined") {
                 $('.dropdown-menu.dropdown-menu-right.frame-arrow-icon')
-                    .append('<li><a href="/posts/unjoin_circle/circle_id:'+circle_id+'">'+cake.word.leave_circle+'</a></li>');
+                    .append('<li><a href="/posts/unjoin_circle/circle_id:' + circle_id + '">' + cake.word.leave_circle + '</a></li>');
             }
-            if(data.user_status == "joined" || data.user_status == "admin"){
+            if (data.user_status == "joined" || data.user_status == "admin") {
                 $('.dropdown-menu.dropdown-menu-right.frame-arrow-icon')
-                    .append('<li><a href="/circles/ajax_setting/circle_id:'+circle_id+'" class="modal-circle-setting">'+cake.word.config+'</a></li></ul>');
+                    .append('<li><a href="/circles/ajax_setting/circle_id:' + circle_id + '" class="modal-circle-setting">' + cake.word.config + '</a></li></ul>');
             }
 
             $loader_html.remove();
@@ -3084,7 +3089,7 @@ function updateCakeValue(circle_id, title, image_url) {
     cake.data.b = function (element, callback) {
         var data = [];
         var current_circle_item = {
-            id: "circle_"+circle_id,
+            id: "circle_" + circle_id,
             text: title,
             image: image_url
         };
@@ -3096,7 +3101,7 @@ function updateCakeValue(circle_id, title, image_url) {
     cake.data.select2_secret_circle = function (element, callback) {
         var data = [];
         var current_circle_item = {
-            id: "circle_"+circle_id,
+            id: "circle_" + circle_id,
             text: title,
             image: image_url,
             locked: true

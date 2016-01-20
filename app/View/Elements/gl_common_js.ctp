@@ -50,7 +50,7 @@ echo $this->Html->script('goalous.min');
     var cake = {
         message: {
             validate: {
-                a: "<?=__d('validate', '%2$d文字以上で入力してください。',"",8)?>",
+                a: "<?=__d('validate', '%1$d文字以上で%2$d文字以下で入力してください。',8,50)?>",
                 b: "<?=__d('validate', "パスワードが一致しません。")?>",
                 c: "<?=__d('validate', "10MB以下かつJPG、PNG、GIFのいずれかの形式を選択して下さい。")?>",
                 d: "<?=__d('validate', "利用規約に同意してください。")?>",

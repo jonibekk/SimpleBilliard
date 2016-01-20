@@ -142,6 +142,7 @@ class User extends AppModel
             ]
         ],
         'password_request'  => [
+            'maxLength'     => ['rule' => ['maxLength', 50]],
             'notEmpty'      => [
                 'rule' => 'notEmpty',
             ],
@@ -153,6 +154,7 @@ class User extends AppModel
             ]
         ],
         'password_request2' => [
+            'maxLength'     => ['rule' => ['maxLength', 50]],
             'notEmpty'      => [
                 'rule' => 'notEmpty',
             ],
@@ -164,6 +166,7 @@ class User extends AppModel
             ]
         ],
         'password'          => [
+            'maxLength' => ['rule' => ['maxLength', 50]],
             'notEmpty'  => [
                 'rule' => 'notEmpty',
             ],
