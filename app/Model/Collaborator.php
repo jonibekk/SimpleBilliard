@@ -59,12 +59,20 @@ class Collaborator extends AppModel
      * @var array
      */
     public $validate = [
-        'type'    => [
+        'role'        => [
+            'maxLength' => ['rule' => ['maxLength', 200]],
+            'notEmpty'  => ['rule' => 'notEmpty',],
+        ],
+        'description' => [
+            'maxLength' => ['rule' => ['maxLength', 2000]],
+            'notEmpty'  => ['rule' => 'notEmpty',],
+        ],
+        'type'        => [
             'numeric' => [
                 'rule' => ['numeric'],
             ],
         ],
-        'del_flg' => [
+        'del_flg'     => [
             'boolean' => [
                 'rule' => ['boolean'],
             ],
