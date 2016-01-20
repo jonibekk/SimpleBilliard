@@ -90,9 +90,12 @@
                 <hr>
                 <?=
                 $this->Form->input('description', [
-                    'label' => __d('gl', "説明"),
-                    'type'  => 'text',
-                    'rows'  => 1,
+                    'label'                        => __d('gl', "説明"),
+                    'type'                         => 'text',
+                    'rows'                         => 1,
+                    'data-bv-stringlength'         => 'true',
+                    'data-bv-stringlength-max'     => 2000,
+                    'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 2000),
                 ]) ?>
             </div>
 
