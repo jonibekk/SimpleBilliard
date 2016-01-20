@@ -45,17 +45,21 @@ class GroupVision extends AppModel
      * @var array
      */
     public $validate = [
-        'name'       => [
-            'notEmpty' => [
+        'name'        => [
+            'maxLength' => ['rule' => ['maxLength', 200]],
+            'notEmpty'  => [
                 'rule' => ['notEmpty'],
             ],
         ],
-        'active_flg' => [
+        'description' => [
+            'maxLength' => ['rule' => ['maxLength', 2000]],
+        ],
+        'active_flg'  => [
             'boolean' => [
                 'rule' => ['boolean'],
             ],
         ],
-        'del_flg'    => [
+        'del_flg'     => [
             'boolean' => [
                 'rule' => ['boolean'],
             ],

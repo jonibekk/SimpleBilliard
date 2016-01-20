@@ -953,15 +953,15 @@ class TeamsController extends AppController
         if ($this->request->is('get')) {
             return $this->render();
         }
-        if (!viaIsSet($this->request->data['TeamVision'])) {
-            $this->Pnotify->outError(__d('gl', "チームビジョンの保存に失敗しました。"));
-            return $this->redirect($this->referer());
-        }
 
         if ($this->Team->TeamVision->saveTeamVision($this->request->data)) {
             $this->Pnotify->outSuccess(__d('gl', "チームビジョンを追加しました。"));
             //TODO 遷移先はビジョン一覧ページ。未実装の為、仮でホームに遷移させている。
             return $this->redirect("/");
+        }
+        else{
+            $this->Pnotify->outError(__d('gl', "チームビジョンの保存に失敗しました。"));
+            return $this->redirect($this->referer());
         }
         return $this->render();
     }
@@ -989,15 +989,15 @@ class TeamsController extends AppController
             $this->request->data = $this->Team->TeamVision->findById($team_vision_id);
             return $this->render();
         }
-        if (!viaIsSet($this->request->data['TeamVision'])) {
-            $this->Pnotify->outError(__d('gl', "チームビジョンの保存に失敗しました。"));
-            return $this->redirect($this->referer());
-        }
 
         if ($this->Team->TeamVision->saveTeamVision($this->request->data, false)) {
             $this->Pnotify->outSuccess(__d('gl', "チームビジョンを更新しました。"));
             //TODO 遷移先はビジョン一覧ページ。未実装の為、仮でホームに遷移させている。
             return $this->redirect("/");
+        }
+        else{
+            $this->Pnotify->outError(__d('gl', "チームビジョンの保存に失敗しました。"));
+            return $this->redirect($this->referer());
         }
         return $this->render();
     }
@@ -1017,16 +1017,17 @@ class TeamsController extends AppController
         if ($this->request->is('get')) {
             return $this->render();
         }
-        if (!viaIsSet($this->request->data['GroupVision'])) {
-            $this->Pnotify->outError(__d('gl', "グループビジョンの保存に失敗しました。"));
-            return $this->redirect($this->referer());
-        }
 
         if ($this->Team->GroupVision->saveGroupVision($this->request->data)) {
             $this->Pnotify->outSuccess(__d('gl', "グループビジョンを追加しました。"));
             //TODO 遷移先はビジョン一覧ページ。未実装の為、仮でホームに遷移させている。
             return $this->redirect("/");
         }
+        else{
+            $this->Pnotify->outError(__d('gl', "グループビジョンの保存に失敗しました。"));
+            return $this->redirect($this->referer());
+        }
+
         return $this->render();
     }
 
@@ -1049,15 +1050,15 @@ class TeamsController extends AppController
             $this->request->data = $this->Team->GroupVision->findById($group_vision_id);
             return $this->render();
         }
-        if (!viaIsSet($this->request->data['GroupVision'])) {
-            $this->Pnotify->outError(__d('gl', "グループビジョンの保存に失敗しました。"));
-            return $this->redirect($this->referer());
-        }
 
         if ($this->Team->GroupVision->saveGroupVision($this->request->data, false)) {
             $this->Pnotify->outSuccess(__d('gl', "グループビジョンを更新しました。"));
             //TODO 遷移先はビジョン一覧ページ。未実装の為、仮でホームに遷移させている。
             return $this->redirect("/");
+        }
+        else {
+            $this->Pnotify->outError(__d('gl', "グループビジョンの保存に失敗しました。"));
+            return $this->redirect($this->referer());
         }
         return $this->render();
     }
