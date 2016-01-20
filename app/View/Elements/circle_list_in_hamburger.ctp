@@ -17,8 +17,15 @@
     <?php if (!empty($my_circles)): ?>
         <?php foreach ($my_circles as $circle): ?>
             <div class="circle-layout clearfix circleListMore <?= $is_mb_app ? "mtb_15px" : null ?>">
-                <div class="circle-link">
-                    <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle['Circle']['id']]) ?>">
+                <div class="circle-link"
+                     get-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle['Circle']['id']]) ?>"
+                     image-url="<?= $this->Upload->uploadUrl($circle, 'Circle.photo', ['style' => 'small']) ?>"
+                     title="<?= h($circle['Circle']['name']) ?>"
+                     circle-id="<?= $circle['Circle']['id'] ?>"
+                     public-flg="<?= $circle['Circle']['public_flg'] ?>"
+                     team-all-flg="<?= $circle['Circle']['team_all_flg'] ?>"
+                >
+                    <a href="#">
                         <div class="circle-icon_box">
                             <?=
                             $this->Upload->uploadImage($circle, 'Circle.photo', ['style' => 'small'],
