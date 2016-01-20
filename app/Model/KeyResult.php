@@ -74,7 +74,7 @@ class KeyResult extends AppModel
      */
     public $validate = [
         'name'         => [
-            'maxLength' => ['rule' => ['maxLength', 1]],
+            'maxLength' => ['rule' => ['maxLength', 200]],
             'notEmpty'  => [
                 'rule' => 'notEmpty',
             ],
