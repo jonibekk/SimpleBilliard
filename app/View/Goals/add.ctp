@@ -140,13 +140,14 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                 <div class="panel-body add-team-panel-body">
                     <?=
                     $this->Form->input('goal_category_id', [
-                        'label'   => [
+                        'label'    => [
                             'text'  => __d('gl', "カテゴリ"),
                             'class' => 'col col-sm-3 control-label goal-edit-labels'
                         ],
-                        'class'   => 'goal-add-category-select form-control',
-                        'type'    => 'select',
-                        'options' => $goal_category_list,
+                        'required' => false,
+                        'class'    => 'goal-add-category-select form-control',
+                        'type'     => 'select',
+                        'options'  => $goal_category_list,
                     ]) ?>
                     <?=
                     $this->Form->input('name',
@@ -417,6 +418,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                         'label'                        => false,
                                         'placeholder'                  => __d('gl', "ゴールの内容を詳しく書く"),
                                         'rows'                         => 1,
+                                        'required'                     => false,
                                         'data-bv-stringlength'         => 'true',
                                         'data-bv-stringlength-max'     => 2000,
                                         'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 2000),

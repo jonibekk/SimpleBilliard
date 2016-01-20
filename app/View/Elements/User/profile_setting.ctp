@@ -38,6 +38,7 @@
                 $local_last_name = $this->Form->input('LocalName.0.last_name', [
                     'label'                        => __d('gl', "姓(%s)", $language_name),
                     'placeholder'                  => __d('gl', "例) 鈴木"),
+                    'required'                     => false,
                     'data-bv-stringlength'         => 'true',
                     'data-bv-stringlength-max'     => 128,
                     'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 128),
@@ -45,6 +46,7 @@
                 $local_first_name = $this->Form->input('LocalName.0.first_name', [
                     'label'                        => __d('gl', "名(%s)", $language_name),
                     'placeholder'                  => __d('gl', "例) 太郎"),
+                    'required'                     => false,
                     'data-bv-stringlength'         => 'true',
                     'data-bv-stringlength-max'     => 128,
                     'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 128),
@@ -146,6 +148,7 @@
             $this->Form->input('hometown', [
                 'label'                        => __d('gl', "出身地"),
                 'placeholder'                  => __d('gl', '例) 東京都'),
+                'required'                     => false,
                 'data-bv-stringlength'         => 'true',
                 'data-bv-stringlength-max'     => 128,
                 'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 128),
