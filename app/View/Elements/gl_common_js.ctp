@@ -293,7 +293,8 @@ echo $this->Html->script('goalous.min');
         is_mb_app_ios: "<?= $is_mb_app_ios ?>",
         pre_file_ttl: <?= PRE_FILE_TTL ?>,
         notify_setting: <?= isset($notify_setting)?json_encode($notify_setting):"''" ?>,
-        unread_msg_post_ids: <?=isset($unread_msg_post_ids)?json_encode($unread_msg_post_ids):"''"?>
+        unread_msg_post_ids: <?=isset($unread_msg_post_ids)?json_encode($unread_msg_post_ids):"''"?>,
+        select2_query_limit: <?=SELECT2_QUERY_LIMIT?>
     };
 
 
