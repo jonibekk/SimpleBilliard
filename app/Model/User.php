@@ -195,6 +195,9 @@ class User extends AppModel
         ],
         'comment'           => [
             'maxLength' => ['rule' => ['maxLength', 2000]],
+        ],
+        'phone_no'          => [
+            'maxLength' => ['rule' => ['maxLength', 20]],
         ]
     ];
 

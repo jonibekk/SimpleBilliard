@@ -24,6 +24,7 @@ class TeamMember extends AppModel
      * @var array
      */
     public $validate = [
+        'member_no'             => ['maxLength' => ['rule' => ['maxLength', 64]]],
         'active_flg'            => ['boolean' => ['rule' => ['boolean'],],],
         'evaluation_enable_flg' => ['boolean' => ['rule' => ['boolean'],],],
         'invitation_flg'        => ['boolean' => ['rule' => ['boolean'],],],
@@ -1956,7 +1957,11 @@ class TeamMember extends AppModel
         ];
         $validateOfNew = [
             'phone_no'         => [
-                'phoneNo' => [
+                'maxLength' => [
+                    'rule'    => ['maxLength', 20],
+                    'message' => __d('validate', "$%sは20文字以内で入力してください。", __d('gl', "電話番号"))
+                ],
+                'phoneNo'   => [
                     'rule'       => 'phoneNo',
                     'message'    => __d('validate', "電話番号が正しくありません。使用できる文字は半角数字、'-()'です。"),
                     'allowEmpty' => true,
