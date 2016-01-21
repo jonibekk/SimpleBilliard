@@ -185,26 +185,10 @@
                 $this->Html->link(__d('home', 'Blog'), 'http://blog.goalous.com/',
                                   array('target' => '_blank', 'class' => 'header-nav-function-contents-blog')) ?>
             </li>
-            <?php if (USERVOICE_API_KEY && $this->Session->read('Auth.User.id')): ?>
-                <li class="header-nav-function-contents-list">
-                    <a class="header-nav-function-contents-feedback" href="javascript:void(0)"
-                       data-uv-lightbox="classic_widget" data-uv-mode="full"
-                       data-uv-primary-color="#f0636f" data-uv-link-color="#007dbf" data-uv-default-mode="feedback"
-                       data-uv-forum-id="<?php
-                       if ($is_isao_user) {
-                           echo USERVOICE_FORUM_ID_PRIVATE;
-                       }
-                       else {
-                           echo USERVOICE_FORUM_ID_PUBLIC;
-                       }
-                       ?>"><?= __d('gl', 'Feedback') ?>
-                    </a>
-                </li>
-            <?php endif; ?>
             <?php if (defined('INTERCOM_APP_ID') && INTERCOM_APP_ID): ?>
                 <li class="header-nav-function-contents-list">
                     <a href="mailto:<?= INTERCOM_APP_ID ?>@incoming.intercom.io"
-                       class="header-nav-function-contents-feedback" id="Intercom"><?= __d('gl', 'サポート') ?></a>
+                       class="header-nav-function-contents-support" id="Intercom"><?= __d('gl', 'サポート') ?></a>
                 </li>
             <?php endif; ?>
         </ul>
