@@ -27,6 +27,7 @@ Router::connect('/from::from/*', ['controller' => 'pages', 'action' => 'display'
 Router::connect('/circle_feed/:circle_id/*', ['controller' => 'posts', 'action' => 'feed',]);
 Router::connect('/post_permanent/:post_id/*', ['controller' => 'posts', 'action' => 'feed',]);
 Router::connect('/ajax_post_permanent/:post_id/*', ['controller' => 'posts', 'action' => 'ajax_get_feed',]);
+Router::connect('/ajax_circle_feed/:circle_id/*', ['controller' => 'posts', 'action' => 'ajax_circle_feed',]);
 
 /**
  * トップページの言語切り換えの為のルーティング設定。

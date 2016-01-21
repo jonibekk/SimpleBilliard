@@ -133,7 +133,7 @@ class EmailTest extends GoalousTestCase
     {
         $email = 'from@email.com';
         $team_id = '1';
-        $res = $this->Email->isBelongTeamByEmail($email, $team_id);
+        $res = $this->Email->isActiveOnTeamByEmail($email, $team_id);
         $this->assertTrue($res, "[正常]メアドからユーザが既にチームに存在しているかのチェック");
     }
 

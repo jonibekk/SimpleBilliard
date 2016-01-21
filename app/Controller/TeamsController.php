@@ -444,7 +444,7 @@ class TeamsController extends AppController
         //generate token and send mail one by one.
         foreach ($email_list as $email) {
             //don't process in case of exists in team.
-            if ($this->User->Email->isBelongTeamByEmail($email, $team_id)) {
+            if ($this->User->Email->isActiveOnTeamByEmail($email, $team_id)) {
                 $alreadyBelongTeamEmails[] = $email;
                 continue;
             }
