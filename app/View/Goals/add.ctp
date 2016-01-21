@@ -87,10 +87,6 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                     <div class="row">
                         <div class="pull-right">
                             <?=
-                            $this->Html->link(__d('gl', "詳しくはこちら"),
-                                              ['controller' => 'helps', 'action' => 'ajax_get_modal', HelpsController::TYPE_CREATE_GOAL_STEP01],
-                                              ['class' => 'btn btn-link btn-lightGray bd-radius_4px modal-ajax-get', 'div' => false]) ?>
-                            <?=
                             $this->Form->submit(__d('gl', "次のステップ"),
                                                 ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
 
@@ -354,10 +350,6 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                 <div class="panel-footer addteam_pannel-footer goalset_pannel-footer">
                     <div class="row">
                         <div class="pull-right">
-                            <?=
-                            $this->Html->link(__d('gl', "詳しくはこちら"),
-                                              ['controller' => 'helps', 'action' => 'ajax_get_modal', HelpsController::TYPE_CREATE_GOAL_STEP02],
-                                              ['class' => 'btn btn-link btn-lightGray bd-radius_4px modal-ajax-get', 'div' => false]) ?>
                             <?php if (isset($this->request->data['KeyResult'][0])) {
                                 $disabled = false;
                             }
