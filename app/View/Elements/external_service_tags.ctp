@@ -130,16 +130,6 @@
         mixpanel.init("<?= MIXPANEL_TOKEN?>");</script>
     <!-- end Mixpanel -->
 <?php endif; ?>
-<? if (USERVOICE_API_KEY && $this->Session->read('Auth.User.id')): ?>
-    <!-- start Uservoice -->
-    <script>(function () {var uv = document.createElement('script');uv.type = 'text/javascript';uv.async = true;uv.src = '//widget.uservoice.com/XCmmQeEYxEfUK5hhWqYaBA.js';var s = document.getElementsByTagName('script')[0];s.parentNode.insertBefore(uv, s)})();
-        UserVoice = window.UserVoice || [];
-        <?= ($this->Session->read('uservoice_token')) ? "UserVoice.push(['setSSO', '{$this->Session-> read('uservoice_token')}']);"
-            : ""
-        ?>
-    </script>
-    <!-- end Uservoice -->
-<? endif; ?>
 <?php if(INTERCOM_APP_ID):?>
     <!-- start Intercom -->
     <script>
