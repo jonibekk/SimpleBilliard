@@ -17,6 +17,7 @@ class MemberGroupTest extends GoalousTestCase
     public $fixtures = array(
         'app.group_vision',
         'app.member_group',
+        'app.team_member',
         'app.team',
         'app.user',
         'app.local_name',
@@ -120,6 +121,8 @@ class MemberGroupTest extends GoalousTestCase
 
     function _setDefault()
     {
+        $this->MemberGroup->Team->TeamMember->current_team_id = 1;
+        $this->MemberGroup->Team->TeamMember->my_uid = 1;
         $this->MemberGroup->current_team_id = 1;
         $this->MemberGroup->my_uid = 1;
         $this->MemberGroup->Group->current_team_id = 1;
