@@ -2942,7 +2942,7 @@ function evCircleFeed(options) {
     jQuery.fn.exists = function () {
         return Boolean(this.length > 0);
     }
-    if (!$("#app-view-elements-feed-posts").exists() || !get_url.match(/circle_feed/)) {
+    if (!$("#app-view-elements-feed-posts").exists() || !$("#global-form").exists() || !get_url.match(/circle_feed/)) {
         window.location.href = get_url;
         return false;
     }
