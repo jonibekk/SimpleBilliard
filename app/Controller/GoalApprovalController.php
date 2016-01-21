@@ -169,7 +169,13 @@ class GoalApprovalController extends AppController
     public function index()
     {
         if ($this->request->is('post')) {
-            $this->_saveApprovalData();
+            $this->ApprovalHistory->begin();
+            if ($this->_saveApprovalData()) {
+                $this->ApprovalHistory->commit();
+            }
+            else {
+                $this->ApprovalHistory->rollback();
+            }
             return $this->redirect($this->referer());
         }
 
@@ -205,7 +211,13 @@ class GoalApprovalController extends AppController
     public function done()
     {
         if ($this->request->is('post')) {
-            $this->_saveApprovalData();
+            $this->ApprovalHistory->begin();
+            if ($this->_saveApprovalData()) {
+                $this->ApprovalHistory->commit();
+            }
+            else {
+                $this->ApprovalHistory->rollback();
+            }
             return $this->redirect($this->referer());
         }
 
@@ -244,21 +256,24 @@ class GoalApprovalController extends AppController
     {
         $data = viaIsSet($this->request->data['GoalApproval']);
         if (empty($data)) {
-            return;
+            return false;
         }
-        $this->_changeStatus($data);
+        if (!$this->_changeStatus($data)) {
+            return false;
+        }
 
         $cb_id = viaIsSet($data['collaborator_id']);
         if (!$cb_id) {
-            return;
+            return false;
         }
         $collaborator = $this->Collaborator->findById($cb_id);
         $goal_id = viaIsSet($collaborator['Collaborator']['goal_id']);
         if (!$goal_id) {
-            return;
+            return false;
         }
         $this->_trackToMixpanel($goal_id);
         $this->_notifyToCollaborator($cb_id);
+        return true;
 
     }
 
@@ -267,22 +282,27 @@ class GoalApprovalController extends AppController
      */
     public function _changeStatus($data)
     {
+        $res = false;
         if (isset($this->request->data['comment_btn']) === true) {
-            $this->_comment($data);
+            $res = $this->_comment($data);
             $this->Pnotify->outSuccess(__d('gl', "コメントを送信しました。"));
         }
         elseif (isset($this->request->data['wait_btn']) === true) {
-            $this->_wait($data);
+            $res = $this->_wait($data);
             $this->Pnotify->outSuccess(__d('gl', "処理済みに移動しました。"));
         }
         elseif (isset($this->request->data['approval_btn']) === true) {
-            $this->_approval($data);
+            $res = $this->_approval($data);
             $this->Pnotify->outSuccess(__d('gl', "処理済みに移動しました。"));
         }
         elseif (isset($this->request->data['modify_btn']) === true) {
-            $this->_modify($data);
+            $res = $this->_modify($data);
             $this->Pnotify->outSuccess(__d('gl', "修正依頼を送信しました。"));
         }
+        if (!$res) {
+            $this->Pnotify->outError(__d('gl', "認定の更新に失敗しました。"));
+        }
+        return $res;
     }
 
     /*
@@ -293,7 +313,7 @@ class GoalApprovalController extends AppController
         $cb_id = isset($data['collaborator_id']) === true ? $data['collaborator_id'] : '';
         if (empty($cb_id) === false) {
             $this->Collaborator->changeApprovalStatus(intval($cb_id), $this->goal_status['approval']);
-            $this->_comment($data);
+            return $this->_comment($data);
         }
     }
 
@@ -305,7 +325,7 @@ class GoalApprovalController extends AppController
         $cb_id = isset($data['collaborator_id']) === true ? $data['collaborator_id'] : '';
         if (empty($cb_id) === false) {
             $this->Collaborator->changeApprovalStatus(intval($cb_id), $this->goal_status['hold']);
-            $this->_comment($data);
+            return $this->_comment($data);
         }
     }
 
@@ -317,7 +337,7 @@ class GoalApprovalController extends AppController
         $cb_id = isset($data['collaborator_id']) === true ? $data['collaborator_id'] : '';
         if (empty($cb_id) === false) {
             $this->Collaborator->changeApprovalStatus(intval($cb_id), $this->goal_status['modify']);
-            $this->_comment($data);
+            return $this->_comment($data);
         }
     }
 
@@ -332,7 +352,8 @@ class GoalApprovalController extends AppController
         // 現状はコメントがある時、履歴を追加している。
         // 今後はコメントなくてもアクションステータスを格納する必要あり。
         if (empty($cb_id) === false && empty($comment) === false) {
-            $this->ApprovalHistory->add($cb_id, $this->user_id, ApprovalHistory::ACTION_STATUS_ONLY_COMMENT, $comment);
+            return $this->ApprovalHistory->add($cb_id, $this->user_id, ApprovalHistory::ACTION_STATUS_ONLY_COMMENT,
+                                               $comment);
         }
     }
 

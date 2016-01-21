@@ -667,14 +667,14 @@ class UsersController extends AppController
                 $this->_autoLogin($this->Auth->user('id'), true);
                 //言語設定
                 $this->_setAppLanguage();
-                $me = $this->_getMyUserDataForSetting();
-                $this->request->data = $me;
 
                 $this->Pnotify->outSuccess(__d('gl', "ユーザ設定を保存しました。"));
             }
             else {
                 $this->Pnotify->outError(__d('gl', "ユーザ設定の保存に失敗しました。"));
             }
+            $me = $this->_getMyUserDataForSetting();
+            $this->request->data = $me;
         }
         else {
             $this->request->data = $me;
@@ -825,8 +825,8 @@ class UsersController extends AppController
     {
         $this->_ajaxPreProcess();
         $query = $this->request->query;
-        $res = [];
-        if (isset($query['term']) && !empty($query['term']) && isset($query['page_limit']) && !empty($query['page_limit'])) {
+        $res = ['results' => []];
+        if (isset($query['term']) && !empty($query['term']) && count($query['term']) <= SELECT2_QUERY_LIMIT && isset($query['page_limit']) && !empty($query['page_limit'])) {
             $with_group = (isset($query['with_group']) && $query['with_group']);
             $res = $this->User->getUsersSelect2($query['term'], $query['page_limit'], $with_group);
         }

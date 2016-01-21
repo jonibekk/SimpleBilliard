@@ -36,7 +36,7 @@
                                                           'label'       => false,
                                                           'rows'        => 1,
                                                           'placeholder' => __d('gl', "今日やったアクションを共有しよう！"),
-                                                          'class'       => 'form-control tiny-form-text blank-disable goalsCard-actionInput mb_12px',
+                                                          'class'       => 'form-control tiny-form-text blank-disable-and-undisable goalsCard-actionInput mb_12px',
                                                           'id'          => "ActionEditFormName_" . $action['ActionResult']['id'],
                                                           'target-id'   => "ActionEditFormSubmit_" . $action['ActionResult']['id'],
                                                       ]

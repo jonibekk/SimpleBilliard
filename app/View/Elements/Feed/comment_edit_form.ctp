@@ -33,15 +33,18 @@ $this->Form->create('Comment', [
 <div class="m_-1px">
     <?=
     $this->Form->input('body', [
-        'id'             => $id_prefix . "CommentEditFormBody_{$comment['id']}",
-        'label'          => false,
-        'type'           => 'textarea',
-        'wrap'           => 'soft',
-        'rows'           => 1,
-        'class'          => 'form-control tiny-form-text blank-disable font_12px edit-form comment-edit-form',
-        'target_show_id' => $id_prefix . "CommentEdit_{$comment['id']}",
-        'target-id'      => $id_prefix . "CommentEditSubmit_{$comment['id']}",
-        'value'          => $comment['body'],
+        'id'                           => $id_prefix . "CommentEditFormBody_{$comment['id']}",
+        'label'                        => false,
+        'type'                         => 'textarea',
+        'wrap'                         => 'soft',
+        'rows'                         => 1,
+        'class'                        => 'form-control tiny-form-text font_12px edit-form comment-edit-form',
+        'target_show_id'               => $id_prefix . "CommentEdit_{$comment['id']}",
+        'target-id'                    => $id_prefix . "CommentEditSubmit_{$comment['id']}",
+        'value'                        => $comment['body'],
+        'data-bv-stringlength'         => 'true',
+        'data-bv-stringlength-max'     => 5000,
+        'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 5000),
     ])
     ?>
 </div>

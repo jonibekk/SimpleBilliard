@@ -55,17 +55,6 @@
 
 </style>
 
-<script type="text/javascript">
-    var is_comment = function (str, button_no) {
-        var button_name = 'modify_btn_' + button_no;
-        if (str.length > 0) {
-            document.getElementById(button_name).disabled = "";
-        } else {
-            document.getElementById(button_name).disabled = "disabled";
-        }
-    }
-</script>
-
 <div class="col col-md-12 sp-feed-alt-sub" style="top: 50px;" id="SpFeedAltSub">
     <div class="col col-xxs-6 text-align_r">
         <a class="font_lightGray-veryDark no-line plr_18px sp-feed-link inline-block pt_12px height_40px sp-feed-active"
@@ -159,7 +148,7 @@
 
                         <div class="panel-body comment-block">
                             <?= $this->Form->create('GoalApproval',
-                                                    ['url' => ['controller' => 'goal_approval', 'action' => 'index'], 'type' => 'post', 'novalidate' => true]); ?>
+                                                    ['id' => 'GoalApprovalIndexForm_' . $goal['Collaborator']['id'], 'url' => ['controller' => 'goal_approval', 'action' => 'index'], 'type' => 'post', 'novalidate' => true]); ?>
                             <?= $this->Form->hidden('collaborator_id', ['value' => $goal['Collaborator']['id']]); ?>
 
                             <div class="row">
@@ -179,8 +168,22 @@
                                 </div>
                             </div>
 
-                            <?= $this->Form->textarea('comment',
-                                                      ['label' => false, 'onkeyup' => 'is_comment(value,' . $goal['Collaborator']['id'] . ')', 'class' => 'form-control addteam_input-design', 'rows' => 3, 'cols' => 30, 'style' => 'margin-top: 10px; margin-bottom: 10px;', 'placeholder' => 'コメントを書く']) ?>
+                            <div class="form-group">
+                                <?= $this->Form->textarea('comment',
+                                                          ['label'                        => false,
+                                                           'class'                        => 'form-control addteam_input-design blank-disable',
+                                                           'target-id'                    => 'modify_btn_' . $goal['Collaborator']['id'],
+                                                           'rows'                         => 3, 'cols' => 30,
+                                                           'style'                        => 'margin-top: 10px; margin-bottom: 10px;',
+                                                           'placeholder'                  => 'コメントを書く',
+                                                           'data-bv-stringlength'         => 'true',
+                                                           'data-bv-stringlength-max'     => 5000,
+                                                           'data-bv-stringlength-message' => __d('validate',
+                                                                                                 "最大文字数(%s)を超えています。",
+                                                                                                 5000),
+                                                          ])
+                                ?>
+                            </div>
 
                             <div class="row">
                                 <div class="approval_botton_area">
@@ -190,7 +193,7 @@
                                     <?php }
                                     else { ?>
                                         <?= $this->Form->button(__d('gl', "修正を依頼"),
-                                                                ['id' => 'modify_btn_' . $goal['Collaborator']['id'], 'name' => 'modify_btn', 'class' => 'btn btn-Gray approval_button', 'div' => false, 'disabled']) ?>
+                                                                ['id' => 'modify_btn_' . $goal['Collaborator']['id'], 'name' => 'modify_btn', 'class' => 'btn btn-Gray approval_button', 'div' => false, 'disabled' => 'disabled']) ?>
                                     <?php } ?>
                                 </div>
                             </div>
@@ -228,3 +231,18 @@
     </div>
 </div>
 <!-- END app/View/GoalApproval/index.ctp -->
+<?php $this->append('script') ?>
+<script type="text/javascript">
+    $(document).ready(function () {
+        <?php foreach ($goal_info as $goal):?>
+        <?php if(isset($goal['Collaborator']['id'])):?>
+        $('#GoalApprovalIndexForm_<?= $goal['Collaborator']['id']?>').bootstrapValidator({
+            live: 'enabled',
+            feedbackIcons: {},
+            fields: {}
+        });
+        <?php endif;?>
+        <?php endforeach;?>
+    });
+</script>
+<?php $this->end() ?>

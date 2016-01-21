@@ -126,6 +126,7 @@
                                 </div>
                                 <input type="text"
                                        id="NavSearchInput"
+                                       maxlength="<?= SELECT2_QUERY_LIMIT ?>"
                                        class="form-control nav-search font_12px disable-change-warning">
                             </div>
                             <div id="NavSearchResults" class="nav-search-result"></div>

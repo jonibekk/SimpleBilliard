@@ -90,7 +90,10 @@ class Team extends AppModel
      * @var array
      */
     public $validate = [
-        'name'               => ['notEmpty' => ['rule' => ['notEmpty'],],],
+        'name'               => [
+            'maxLength' => ['rule' => ['maxLength', 128]],
+            'notEmpty'  => ['rule' => ['notEmpty'],
+            ],],
         'type'               => ['numeric' => ['rule' => ['numeric'],],],
         'domain_limited_flg' => ['boolean' => ['rule' => ['boolean'],],],
         'start_term_month'   => ['numeric' => ['rule' => ['numeric'],],],
