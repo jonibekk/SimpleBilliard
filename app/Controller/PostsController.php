@@ -384,6 +384,10 @@ class PostsController extends AppController
             'circle_member_count' => $circle_member_count,
             'user_status' => $user_status,
         );
+        if(isset($posts[0]['Post']['modified'])){
+            $result['post_time_before'] = $posts[0]['Post']['modified'];
+        }
+
         return $this->_ajaxGetResponse($result);
     }
 

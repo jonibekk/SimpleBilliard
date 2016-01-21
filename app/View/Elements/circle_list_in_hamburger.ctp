@@ -24,6 +24,7 @@
                      circle-id="<?= $circle['Circle']['id'] ?>"
                      public-flg="<?= $circle['Circle']['public_flg'] ?>"
                      team-all-flg="<?= $circle['Circle']['team_all_flg'] ?>"
+                     oldest-post-time="<?= $circle['Circle']['created'] ?>"
                 >
                     <a href="#">
                         <div class="circle-icon_box">
