@@ -2928,6 +2928,7 @@ function evCircleFeed(options) {
     var title = $obj.attr('title');
     var public_flg = $obj.attr('public-flg');
     var team_all_flg = $obj.attr('team-all-flg');
+    var oldest_post_time = $obj.attr('oldest-post-time');
     updateCakeValue(circle_id, title, image_url);
 
     if ($obj.attr('class') == 'circle-link') {
@@ -2945,6 +2946,9 @@ function evCircleFeed(options) {
         window.location.href = get_url;
         return false;
     }
+
+    //サークルリストのわきに表示されている未読数リセット
+    $obj.children(".dashboard-circle-count-box").html("");
 
     //アドレスバー書き換え
     if (typeof history.pushState == 'function') {
@@ -3023,6 +3027,7 @@ function evCircleFeed(options) {
         async: true,
         dataType: 'json',
         success: function (data) {
+            var post_time_before = "";
             if (!$.isEmptyObject(data.html)) {
                 //取得したhtmlをオブジェクト化
                 var $posts = $(data.html);
@@ -3053,8 +3058,15 @@ function evCircleFeed(options) {
 
             }
 
+            if(data.post_time_before != null){
+                post_time_before = data.post_time_before;
+            }
+
             $("#FeedMoreReadLink").attr("get-url", more_read_url);
-            $("#FeedMoreReadLink").attr("month-index", 1);
+            $("#FeedMoreReadLink").attr("month-index", 0);
+            $("#FeedMoreReadLink").attr("next-page-num", 2);
+            $("#FeedMoreReadLink").attr("oldest-post-time", oldest_post_time);
+            $("#FeedMoreReadLink").attr("post-time-before", post_time_before);
             $("#FeedMoreReadLink").css("display", "inline");
 
             $("#circle-filter-menu-circle-member-count").html(data.circle_member_count);

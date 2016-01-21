@@ -384,6 +384,10 @@ class PostsController extends AppController
             'circle_member_count' => $circle_member_count,
             'user_status'         => $user_status,
         );
+        if(isset($posts[0]['Post']['modified'])){
+            $result['post_time_before'] = $posts[0]['Post']['modified'];
+        }
+
         return $this->_ajaxGetResponse($result);
     }
 
@@ -996,6 +1000,7 @@ class PostsController extends AppController
 
     public function ajax_circle_feed()
     {
+        $this->User->CircleMember->updateUnreadCount($this->request->params['circle_id']);
         list($user_status, $circle_member_count) = $this->_setCircleCommonVariables();
         $this->ajax_get_feed("Feed/posts", $user_status, $circle_member_count);
     }
