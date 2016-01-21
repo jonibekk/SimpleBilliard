@@ -384,7 +384,11 @@ class Team extends AppModel
      */
     function deleteTeam($team_id)
     {
-        $this->delete($team_id);
+        try{
+            $this->delete($team_id);
+        }catch (PDOException $e){
+            return false;
+        }
 
         // delete() の戻り値が soft delete で false になってしまうので、
         // 削除されたか自前で確認する
