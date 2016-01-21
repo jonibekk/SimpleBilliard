@@ -993,6 +993,7 @@ class PostsController extends AppController
 
     public function ajax_circle_feed()
     {
+        $this->User->CircleMember->updateUnreadCount($this->request->params['circle_id']);
         list($user_status, $circle_member_count) = $this->_setCircleCommonVariables();
         $this->ajax_get_feed("Feed/posts", $user_status, $circle_member_count);
     }
