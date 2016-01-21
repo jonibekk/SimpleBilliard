@@ -38,7 +38,7 @@ $only_tab_post =
 $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'message');
 ?>
 <!-- START app/View/Elements/Feed/common_form.ctp -->
-<div class="panel panel-default global-form">
+<div class="panel panel-default global-form" id="GlobalForms">
     <div class="post-panel-heading ptb_7px plr_11px">
         <!-- Nav tabs -->
         <ul class="feed-switch clearfix plr_0px" role="tablist" id="CommonFormTabs">
