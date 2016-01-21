@@ -2942,7 +2942,7 @@ function evCircleFeed(options) {
     jQuery.fn.exists = function () {
         return Boolean(this.length > 0);
     }
-    if (!$("#app-view-elements-feed-posts").exists() || !$("#global-form").exists() || !get_url.match(/circle_feed/)) {
+    if (!$("#app-view-elements-feed-posts").exists() || !$("#GlobalForms").exists() || !get_url.match(/circle_feed/)) {
         window.location.href = get_url;
         return false;
     }
@@ -3058,7 +3058,7 @@ function evCircleFeed(options) {
 
             }
 
-            if(data.post_time_before != null){
+            if (data.post_time_before != null) {
                 post_time_before = data.post_time_before;
             }
 
