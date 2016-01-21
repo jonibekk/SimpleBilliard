@@ -82,15 +82,21 @@
 
 .header-user-home {
   font-size: 12px;
-  display: inline-block;
+  display: none;
   line-height: 50px;
   vertical-align: top;
   padding: 0 4px;
   color: rgb(80, 80, 80);
+  @media screen and (min-width: 992px){
+    display: inline-block;;
+  }
 }
 
 .header-user-name {
-  display: inline-block;
+  display: none;
+  @media screen and (min-width: 480px){
+    display: inline-block;
+  }
   font-size: 12px;
   margin: 16px 0;
   padding: 0 10px;
@@ -98,6 +104,10 @@
   border-right: 1px solid #ccc;
   color: rgb(80, 80, 80);
   vertical-align: middle;
+  max-width: 112px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 18px;
 }
 
 .header-dropdown-user {

@@ -90,8 +90,8 @@ class CirclesController extends AppController
     {
         $this->_ajaxPreProcess();
         $query = $this->request->query;
-        $res = [];
-        if (isset($query['term']) && $query['term'] && isset($query['page_limit']) && $query['page_limit']) {
+        $res = ['results' => []];
+        if (isset($query['term']) && $query['term'] && count($query['term']) <= SELECT2_QUERY_LIMIT && isset($query['page_limit']) && $query['page_limit']) {
             $res = $this->Circle->getAccessibleCirclesSelect2($query['term'], $query['page_limit']);
         }
         return $this->_ajaxGetResponse($res);
@@ -421,7 +421,6 @@ class CirclesController extends AppController
 
         return $this->_ajaxGetResponse(['error' => $error, 'msg' => $msg]);
     }
-
 
     /**
      * ajax エラー用レスポンスデータを返す

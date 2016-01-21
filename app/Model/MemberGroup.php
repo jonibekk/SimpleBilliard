@@ -97,11 +97,13 @@ class MemberGroup extends AppModel
      */
     public function getGroupMember($group_id)
     {
+        $active_user_ids = $this->Team->TeamMember->getActiveTeamMembersList();
         $options = [
             'conditions' => [
-                'group_id' => $group_id
+                'group_id' => $group_id,
+                'user_id'  => $active_user_ids
             ],
-            'contain' => ['User']
+            'contain'    => ['User']
         ];
         return $this->find('all', $options);
     }

@@ -34,16 +34,20 @@
             ]); ?>
             <div class="modal-body">
                 <p><?= __d('gl', "変更後にメールアドレス宛に認証用のメールが届きます。") ?></p>
+
                 <p><?= __d('gl', "メールに掲載されている確認URLを開くと変更が完了します。") ?></p>
                 <?=
                 $this->Form->input('email', [
-                    'label'       => __d('gl', "新しいメールアドレス"),
-                    'placeholder' => __d('gl', "hiroshi@example.com"),
-                    "data-bv-notempty"          => "false",
-                    'data-bv-emailaddress'      => "false",
-                    "data-bv-callback"          => "true",
-                    "data-bv-callback-message"  => " ",
-                    "data-bv-callback-callback" => "bvCallbackAvailableEmail",
+                    'label'                        => __d('gl', "新しいメールアドレス"),
+                    'placeholder'                  => __d('gl', "hiroshi@example.com"),
+                    'data-bv-stringlength'         => 'true',
+                    'data-bv-stringlength-max'     => 200,
+                    'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 200),
+                    "data-bv-notempty"             => "false",
+                    'data-bv-emailaddress'         => "false",
+                    "data-bv-callback"             => "true",
+                    "data-bv-callback-message"     => " ",
+                    "data-bv-callback-callback"    => "bvCallbackAvailableEmail",
                 ]) ?>
                 <?=
                 $this->Form->input('password_request2', [

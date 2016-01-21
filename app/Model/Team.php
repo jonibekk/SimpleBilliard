@@ -90,7 +90,10 @@ class Team extends AppModel
      * @var array
      */
     public $validate = [
-        'name'               => ['notEmpty' => ['rule' => ['notEmpty'],],],
+        'name'               => [
+            'maxLength' => ['rule' => ['maxLength', 128]],
+            'notEmpty'  => ['rule' => ['notEmpty'],
+            ],],
         'type'               => ['numeric' => ['rule' => ['numeric'],],],
         'domain_limited_flg' => ['boolean' => ['rule' => ['boolean'],],],
         'start_term_month'   => ['numeric' => ['rule' => ['numeric'],],],
@@ -381,7 +384,11 @@ class Team extends AppModel
      */
     function deleteTeam($team_id)
     {
-        $this->delete($team_id);
+        try{
+            $this->delete($team_id);
+        }catch (PDOException $e){
+            return false;
+        }
 
         // delete() の戻り値が soft delete で false になってしまうので、
         // 削除されたか自前で確認する

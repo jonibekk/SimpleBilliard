@@ -103,6 +103,17 @@ class MemberGroupFixture extends CakeTestFixture
             'created'   => 1,
             'modified'  => 1
         ),
+        array(
+            'id'        => '7',
+            'team_id'   => '1',
+            'user_id'   => '14',
+            'group_id'  => '6',
+            'index_num' => 1,
+            'del_flg'   => false,
+            'deleted'   => null,
+            'created'   => 1,
+            'modified'  => 1
+        ),
     );
 
 }

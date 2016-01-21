@@ -346,7 +346,9 @@ class PostsController extends AppController
         $param_named = $this->request->params['named'];
         $this->_ajaxPreProcess();
 
-        if (isset($this->request->params['named']['circle_id']) || isset($this->request->params['named']['notify_id'])
+        if (isset($this->request->params['named']['circle_id'])
+            || isset($this->request->params['named']['notify_id'])
+            || isset($this->request->params['circle_id'])
         ) {
             $this->set('long_text', true);
         }
@@ -377,13 +379,17 @@ class PostsController extends AppController
         $response = $this->render($view);
         $html = $response->__toString();
         $result = array(
-            'html'          => $html,
-            'count'         => count($posts),
-            'page_item_num' => POST_FEED_PAGE_ITEMS_NUMBER,
-            'start'         => $start ? $start : REQUEST_TIMESTAMP - MONTH,
+            'html'                => $html,
+            'count'               => count($posts),
+            'page_item_num'       => POST_FEED_PAGE_ITEMS_NUMBER,
+            'start'               => $start ? $start : REQUEST_TIMESTAMP - MONTH,
             'circle_member_count' => $circle_member_count,
-            'user_status' => $user_status,
+            'user_status'         => $user_status,
         );
+        if(isset($posts[0]['Post']['modified'])){
+            $result['post_time_before'] = $posts[0]['Post']['modified'];
+        }
+
         return $this->_ajaxGetResponse($result);
     }
 
@@ -475,7 +481,10 @@ class PostsController extends AppController
         $params['Comment']['post_id'] = $post_id;
         $params['Comment']['body'] = $this->request->data['body'];
         $params['file_id'] = $this->request->data['file_redis_key'];
-        $comment_id = $this->Post->Comment->add($params);
+        if (!$comment_id = $this->Post->Comment->add($params)) {
+            //失敗の場合
+            return $this->_ajaxGetResponse([]);
+        }
 
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_MESSAGE, $post_id, $comment_id);
         $detail_comment = $this->Post->Comment->getComment($comment_id);
@@ -993,6 +1002,7 @@ class PostsController extends AppController
 
     public function ajax_circle_feed()
     {
+        $this->User->CircleMember->updateUnreadCount($this->request->params['circle_id']);
         list($user_status, $circle_member_count) = $this->_setCircleCommonVariables();
         $this->ajax_get_feed("Feed/posts", $user_status, $circle_member_count);
     }
