@@ -111,10 +111,14 @@ class Goal extends AppModel
      * @var array
      */
     public $validate = [
-        'purpose'          => [
-            'notEmpty' => [
+        'name'             => [
+            'maxLength' => ['rule' => ['maxLength', 200]],
+            'notEmpty'  => [
                 'rule' => 'notEmpty',
             ],
+        ],
+        'description'      => [
+            'maxLength' => ['rule' => ['maxLength', 2000]],
         ],
         'evaluate_flg'     => [
             'boolean' => [
@@ -150,6 +154,14 @@ class Goal extends AppModel
         ],
         'end_date'         => [
             'numeric' => ['rule' => ['numeric']]
+        ],
+        'start_value'      => [
+            'maxLength' => ['rule' => ['maxLength', 15]],
+            'numeric'   => ['rule' => ['numeric']]
+        ],
+        'target_value'     => [
+            'maxLength' => ['rule' => ['maxLength', 15]],
+            'numeric'   => ['rule' => ['numeric']]
         ],
     ];
 

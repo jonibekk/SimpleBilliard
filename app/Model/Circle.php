@@ -65,7 +65,8 @@ class Circle extends AppModel
      */
     public $validate = [
         'name'         => [
-            'notEmpty' => [
+            'maxLength' => ['rule' => ['maxLength', 128]],
+            'notEmpty'  => [
                 'rule' => ['notEmpty'],
             ],
         ],
@@ -89,7 +90,8 @@ class Circle extends AppModel
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
         'description'  => [
-            'isString' => ['rule' => 'isString', 'message' => 'Invalid Submission']
+            'maxLength' => ['rule' => ['maxLength', 2000]],
+            'isString'  => ['rule' => 'isString', 'message' => 'Invalid Submission']
         ]
     ];
 

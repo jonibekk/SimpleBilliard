@@ -23,15 +23,20 @@ class GoalCategory extends AppModel
      * @var array
      */
     public $validate = [
-        'name'    => [
+        'name'        => [
             'notEmpty'  => [
                 'rule' => ['notEmpty'],
             ],
             'maxLength' => [
-                'rule' => ['maxLength', 40],
+                'rule' => ['maxLength', 200],
             ],
         ],
-        'del_flg' => [
+        'description' => [
+            'maxLength' => [
+                'rule' => ['maxLength', 2000],
+            ],
+        ],
+        'del_flg'     => [
             'boolean' => [
                 'rule' => ['boolean'],
             ],

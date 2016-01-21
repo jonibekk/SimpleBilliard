@@ -28,8 +28,8 @@ if (!viaIsSet($index) || !is_numeric($index)) {
                             'placeholder'                  => __d('team', '名前'),
                             'data-bv-notempty-message'     => __d('gl', "入力必須項目です。"),
                             'data-bv-stringlength'         => "true",
-                            'data-bv-stringlength-max'     => 40,
-                            'data-bv-stringlength-message' => __d('validate', '%2$d文字以下で入力してください。', '', 40),
+                            'data-bv-stringlength-max'     => 200,
+                            'data-bv-stringlength-message' => __d('validate', '最大文字数(%s)を超えています。', 200),
                             'required'                     => true,
                         ))
             ?>
@@ -41,15 +41,18 @@ if (!viaIsSet($index) || !is_numeric($index)) {
             <?= $this->Form
                 ->input("GoalCategory.$index.description",
                         array(
-                            'wrapInput'                => false,
-                            'type'                     => 'textarea',
-                            'rows'                     => 3,
-                            'div'                      => false,
-                            'label'                    => false,
-                            'class'                    => 'form-control',
-                            'placeholder'              => __d('team', 'ゴールカテゴリの説明を書きましょう'),
-                            'data-bv-notempty-message' => __d('gl', "入力必須項目です。"),
-                            'required'                 => true,
+                            'wrapInput'                    => false,
+                            'type'                         => 'textarea',
+                            'rows'                         => 3,
+                            'div'                          => false,
+                            'label'                        => false,
+                            'class'                        => 'form-control',
+                            'placeholder'                  => __d('team', 'ゴールカテゴリの説明を書きましょう'),
+                            'data-bv-notempty-message'     => __d('gl', "入力必須項目です。"),
+                            'required'                     => true,
+                            'data-bv-stringlength'         => 'true',
+                            'data-bv-stringlength-max'     => 2000,
+                            'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 2000),
                         ))
             ?>
         </div>

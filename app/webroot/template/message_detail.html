@@ -79,40 +79,44 @@
                     <img class="lazy comment-img" ng-src="{{auth_info.photo_path}}"/>
 
                     <div class=" comment-body">
-                        <div class="form-feed-notify ajax-add-comment bv-form">
-                            <div class="form-group mlr_-1px required">
-                                <!--
-                                <textarea ng-model="message"
-                                          id="message_text_input"
-                                          class="message-detail-reply-input-area form-control tiny-form-text"
-                                          rows="1" placeholder="返信する" cols="30" init-height="15"></textarea>
-                                -->
+                        <form name="userForm" novalidate>
+                            <div class="form-feed-notify ajax-add-comment bv-form">
+                                <div class="form-group mlr_-1px required">
                                 <textarea ng-model="message" id="message_text_input"
                                           class="form-control disable-change-warning"
-                                          rows="1" placeholder="返信する" cols="30" init-height="15"></textarea>
-                            </div>
-                            <div id="messageUploadFilePreviewArea"></div>
-                            <div class="link-red" id="messageUploadFileButton" style="height: 0; width: 45px">
-                                <button type="button" class="btn pull-left photo-up-btn">
-                                    <i class="fa fa-paperclip post-camera-icon"></i>
-                                </button>
-                            </div>
-                            <div class="message-detail-reply-btn-wrap submit pull-right">
-                                <i class="fa fa-refresh fa-spin" id="SendMessageLoader" style="display: none"></i>
-                                <input ng-click="clickMessage($event,'comment')"
-                                       ng-if="message"
-                                       id="message_submit_button"
-                                       class="message-detail-reply-btn btn btn-primary submit-btn" type="submit"
-                                       value="返信する">
+                                          ng-maxlength="5000"
+                                          rows="1" placeholder="返信する" cols="30" init-height="15"
+                                          name="message_body"></textarea>
 
-                                <button ng-click="clickMessage($event,'like')" ng-dblclick="return false"
-                                        ng-disabled="flag"
-                                        ng-if="!message"
-                                        class="message-detail-reply-btn btn btn-primary submit-btn"
-                                        type="submit" id="like">
-                                    <i class="fa fa-thumbs-o-up"></i></button>
+                                    <div class="has-error">
+                                    <span class="has-error help-block" ng-show="userForm.message_body.$error.maxlength">
+                                        最大文字数(5000)を超えています。
+                                    </span>
+                                    </div>
+
+                                </div>
+                                <div id="messageUploadFilePreviewArea"></div>
+                                <div class="link-red" id="messageUploadFileButton" style="height: 0; width: 45px">
+                                    <button type="button" class="btn pull-left photo-up-btn">
+                                        <i class="fa fa-paperclip post-camera-icon"></i>
+                                    </button>
+                                </div>
+                                <div class="message-detail-reply-btn-wrap submit pull-right">
+                                    <i class="fa fa-refresh fa-spin" id="SendMessageLoader" style="display: none"></i>
+                                    <input ng-click="clickMessage($event,'comment')"
+                                           ng-if="message"
+                                           id="message_submit_button"
+                                           class="message-detail-reply-btn btn btn-primary submit-btn" type="submit"
+                                           value="返信する">
+                                    <button ng-click="clickMessage($event,'like')" ng-dblclick="return false"
+                                            ng-disabled="flag"
+                                            ng-if="!message && !userForm.message_body.$error.maxlength"
+                                            class="message-detail-reply-btn btn btn-primary submit-btn"
+                                            type="submit" id="like">
+                                        <i class="fa fa-thumbs-o-up"></i></button>
+                                </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>

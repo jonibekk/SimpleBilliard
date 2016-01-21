@@ -20,14 +20,17 @@ if (!viaIsSet($index) || !is_numeric($index)) {
             <?= $this->Form
                 ->input("EvaluateScore.$index.name",
                         array(
-                            'wrapInput'                => false,
-                            'type'                     => 'text',
-                            'div'                      => false,
-                            'label'                    => false,
-                            'class'                    => 'form-control',
-                            'placeholder'              => __d('team', '名前'),
-                            'data-bv-notempty-message' => __d('gl', "入力必須項目です。"),
-                            'required'                 => true,
+                            'wrapInput'                    => false,
+                            'type'                         => 'text',
+                            'div'                          => false,
+                            'label'                        => false,
+                            'class'                        => 'form-control',
+                            'placeholder'                  => __d('team', '名前'),
+                            'data-bv-notempty-message'     => __d('gl', "入力必須項目です。"),
+                            'required'                     => true,
+                            'data-bv-stringlength'         => 'true',
+                            'data-bv-stringlength-max'     => 200,
+                            'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 200),
                         ))
             ?>
         </div>
@@ -38,15 +41,18 @@ if (!viaIsSet($index) || !is_numeric($index)) {
             <?= $this->Form
                 ->input("EvaluateScore.$index.index_num",
                         array(
-                            'wrapInput'                => false,
-                            'type'                     => 'number',
-                            'div'                      => false,
-                            'label'                    => false,
-                            'class'                    => 'form-control',
-                            'placeholder'              => __d('team', '表示順'),
-                            'data-bv-notempty-message' => __d('gl', "入力必須項目です。"),
-                            'data-bv-integer-message'  => __d('gl', "数字を入力してください。"),
-                            'required'                 => true,
+                            'wrapInput'                    => false,
+                            'type'                         => 'number',
+                            'div'                          => false,
+                            'label'                        => false,
+                            'class'                        => 'form-control',
+                            'placeholder'                  => __d('team', '表示順'),
+                            'data-bv-notempty-message'     => __d('gl', "入力必須項目です。"),
+                            'data-bv-integer-message'      => __d('gl', "数字を入力してください。"),
+                            'required'                     => true,
+                            'data-bv-stringlength'         => 'true',
+                            'data-bv-stringlength-max'     => 5,
+                            'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 5),
                         ))
             ?>
         </div>
@@ -57,15 +63,18 @@ if (!viaIsSet($index) || !is_numeric($index)) {
             <?= $this->Form
                 ->input("EvaluateScore.$index.description",
                         array(
-                            'wrapInput'                => false,
-                            'type'                     => 'textarea',
-                            'rows'                     => 3,
-                            'div'                      => false,
-                            'label'                    => false,
-                            'class'                    => 'form-control',
-                            'placeholder'              => __d('team', '定義の説明を書きましょう'),
-                            'data-bv-notempty-message' => __d('gl', "入力必須項目です。"),
-                            'required'                 => true,
+                            'wrapInput'                    => false,
+                            'type'                         => 'textarea',
+                            'rows'                         => 3,
+                            'div'                          => false,
+                            'label'                        => false,
+                            'class'                        => 'form-control',
+                            'placeholder'                  => __d('team', '定義の説明を書きましょう'),
+                            'data-bv-notempty-message'     => __d('gl', "入力必須項目です。"),
+                            'required'                     => true,
+                            'data-bv-stringlength'         => 'true',
+                            'data-bv-stringlength-max'     => 2000,
+                            'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 2000),
                         ))
             ?>
         </div>
