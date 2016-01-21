@@ -58,11 +58,11 @@
             <?php endforeach; ?>
         </table>
         <div class="form-group">
-            <?= $this->Form->submit(__d('gl', '評価スコア設定を保存'), ['class' => 'btn btn-primary pull-right']) ?>
+            <?= $this->Form->submit(__d('gl', '評価スコア設定を保存'), ['class' => 'btn btn-primary team-setting-add-goal-category']) ?>
             <?php $index = count($this->request->data['EvaluateScore']);
             $max_index = $index + 9; ?>
             <?= $this->Html->link(__d('gl', "定義を１つ追加"), ['controller' => 'teams', 'action' => 'ajax_get_score_elm'],
-                                  ['id' => 'AddScoreButton', 'target-selector' => '#EvaluateScoreTable > tbody', 'index' => $index, 'max_index' => $max_index, 'class' => 'btn btn-default pull-left']) ?>
+                                  ['id' => 'AddScoreButton', 'target-selector' => '#EvaluateScoreTable > tbody', 'index' => $index, 'max_index' => $max_index, 'class' => 'btn btn-default']) ?>
         </div>
         <?php for ($i = $index; $i <= $max_index; $i++): ?>
             <?php $this->Form->unlockField("EvaluateScore.$i.name") ?>
@@ -103,4 +103,3 @@
     });
 </script>
 <?php $this->end() ?>
-
