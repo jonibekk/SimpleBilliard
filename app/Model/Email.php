@@ -21,6 +21,7 @@ class Email extends AppModel
             ],
         ],
         'email'          => [
+            'maxLength'     => ['rule' => ['maxLength', 200]],
             'notEmpty'      => [
                 'rule' => 'notEmpty',
             ],

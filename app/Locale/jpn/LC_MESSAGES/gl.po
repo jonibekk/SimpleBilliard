@@ -2163,10 +2163,6 @@ msgstr ""
 msgid "チーム設定"
 msgstr ""
 
-#: View/Elements/header_logged_in_right.ctp:200
-msgid "Feedback"
-msgstr "フィードバック"
-
 #: View/Elements/header_logged_in_right.ctp:207
 msgid "サポート"
 msgstr ""

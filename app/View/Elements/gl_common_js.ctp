@@ -50,7 +50,7 @@ echo $this->Html->script('goalous.min');
     var cake = {
         message: {
             validate: {
-                a: "<?=__d('validate', '%2$d文字以上で入力してください。',"",8)?>",
+                a: "<?=__d('validate', '%1$d文字以上で%2$d文字以下で入力してください。',8,50)?>",
                 b: "<?=__d('validate', "パスワードが一致しません。")?>",
                 c: "<?=__d('validate', "10MB以下かつJPG、PNG、GIFのいずれかの形式を選択して下さい。")?>",
                 d: "<?=__d('validate', "利用規約に同意してください。")?>",
@@ -66,7 +66,8 @@ echo $this->Html->script('goalous.min');
                 dropzone_cancel_upload: "<?=__d('gl', 'アップロードをキャンセルしました。')?>",
                 dropzone_cancel_upload_confirmation: "<?=__d('gl', 'アップロードをキャンセルしてよろしいですか？')?>",
                 dropzone_uploading_not_end: "<?=__d('gl', '全てのファイルのアップロードが完了していません。\\nこのまま送信してよろしいですか？')?>",
-                dropzone_uploaded_file_expired: "<?=__d('gl', 'アップロードしたファイルの有効期限が切れています。再度アップロードしてください。')?>"
+                dropzone_uploaded_file_expired: "<?=__d('gl', 'アップロードしたファイルの有効期限が切れています。再度アップロードしてください。')?>",
+                date_format: "<?=__d('validate',"日付はYYYY/MM/DDの形式で入力してください。")?>",
             },
             notice: {
                 a: "<?=__d('gl',"入力が途中です。このまま移動しますか？")?>",
@@ -292,7 +293,8 @@ echo $this->Html->script('goalous.min');
         is_mb_app_ios: "<?= $is_mb_app_ios ?>",
         pre_file_ttl: <?= PRE_FILE_TTL ?>,
         notify_setting: <?= isset($notify_setting)?json_encode($notify_setting):"''" ?>,
-        unread_msg_post_ids: <?=isset($unread_msg_post_ids)?json_encode($unread_msg_post_ids):"''"?>
+        unread_msg_post_ids: <?=isset($unread_msg_post_ids)?json_encode($unread_msg_post_ids):"''"?>,
+        select2_query_limit: <?=SELECT2_QUERY_LIMIT?>
     };
 
 

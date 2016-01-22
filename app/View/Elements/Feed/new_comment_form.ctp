@@ -33,16 +33,19 @@ $this->Form->create('Comment', [
 <?php $this->Form->unlockField('socket_id') ?>
 <?=
 $this->Form->input('body', [
-    'id'          => "{$prefix}CommentFormBody_{$post_id}",
-    'label'       => false,
-    'type'        => 'textarea',
-    'wrap'        => 'soft',
-    'rows'        => 1,
-    'required'    => true,
-    'placeholder' => __d('gl', "コメントする"),
-    'class'       => 'form-control tiny-form-text font_12px comment-post-form box-align change-warning no-border',
-    'target-id'   => "{$prefix}CommentSubmit_{$post_id}",
-    'data-bv-notempty-message' => __d('validate', "入力必須項目です。"),
+    'id'                           => "{$prefix}CommentFormBody_{$post_id}",
+    'label'                        => false,
+    'type'                         => 'textarea',
+    'wrap'                         => 'soft',
+    'rows'                         => 1,
+    'required'                     => true,
+    'placeholder'                  => __d('gl', "コメントする"),
+    'class'                        => 'form-control tiny-form-text font_12px comment-post-form box-align change-warning no-border',
+    'target-id'                    => "{$prefix}CommentSubmit_{$post_id}",
+    'data-bv-notempty-message'     => __d('validate', "入力必須項目です。"),
+    'data-bv-stringlength'         => 'true',
+    'data-bv-stringlength-max'     => 5000,
+    'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 5000),
 ])
 ?>
 <?= $this->Form->hidden('site_info_url', ['id' => "CommentSiteInfoUrl_{$post_id}"]) ?>

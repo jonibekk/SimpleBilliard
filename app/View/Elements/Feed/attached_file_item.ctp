@@ -86,7 +86,7 @@ if (!isset($message_page_image)) {
             <img src="<?= $this->Upload->uploadUrl($data, 'AttachedFile.attached', ['style' => 'small']) ?>">
         </a>
     <?php } else { ?>
-    <div class="col col-xxs-1">
+    <div class="col col-xxs-1 messanger-attached-files-icon">
         <?php if ($data['file_type'] == AttachedFile::TYPE_FILE_IMG): ?>
             <a href="<?= $icon_url ?>" <?= $page_type == "feed" ? "rel='lightbox' data-lightbox='LightBoxAttachedFileImg_Post{$post_id}_Comment_{$comment_id}'" : "target='_blank'" ?>>
                 <div>

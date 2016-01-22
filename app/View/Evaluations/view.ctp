@@ -81,43 +81,34 @@
                                 ?>
                                 <?=
                                 $this->Form->input("0.Evaluation.comment", [
-                                    'type'                     => 'textarea',
-                                    'class'                    => 'form-control eva-val',
-                                    'rows'                     => 2,
-                                    'default'                  => $total['Evaluation']['comment'],
-                                    'label'                    => __d('gl',
-                                                                      "<i class='fa fa-comment-o mr_2px'></i>評価コメント"),
-                                    'placeholder'              => __d('gl', "コメントを書いてください"),
-                                    'required'                 => false,
-                                    'data-bv-notempty'         => "true",
-                                    'data-bv-notempty-message' => __d('gl', "入力必須項目です。")
+                                    'type'                         => 'textarea',
+                                    'class'                        => 'form-control eva-val',
+                                    'rows'                         => 2,
+                                    'default'                      => $total['Evaluation']['comment'],
+                                    'label'                        => __d('gl',
+                                                                          "<i class='fa fa-comment-o mr_2px'></i>評価コメント"),
+                                    'placeholder'                  => __d('gl', "コメントを書いてください"),
+                                    'required'                     => false,
+                                    'data-bv-notempty'             => "true",
+                                    'data-bv-notempty-message'     => __d('gl', "入力必須項目です。"),
+                                    'data-bv-stringlength'         => 'true',
+                                    'data-bv-stringlength-max'     => 5000,
+                                    'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 5000),
                                 ])
                                 ?>
-                                <small class="help-block" data-bv-validator="notEmpty"
-                                       data-bv-for="data[0][Evaluation][comment]"
-                                       data-bv-result="NOT_VALIDATED" style="display: none;"><?= __d('gl',
-                                                                                                     "入力必須項目です。") ?>
-                                </small>
-                            </div>
-                            <div class="col-xxs-12">
                                 <?=
                                 $this->Form->input("0.Evaluation.evaluate_score_id", [
                                     'type'                     => 'select',
                                     'default'                  => $total['Evaluation']['evaluate_score_id'],
                                     'options'                  => $scoreList,
                                     'label'                    => __d('gl', "<i class='fa fa-paw mr_2px'></i>評価スコア"),
-                                    'class'                    => 'form-control col-xxs-12 col-sm-8 eva-val',
-                                    'wrapInput'                => false,
+                                    'class'                    => 'form-control eva-val',
+                                    'wrapInput'                => 'col col-xxs-12 col-sm-8',
                                     'required'                 => false,
                                     'data-bv-notempty'         => "true",
                                     'data-bv-notempty-message' => __d('gl', "選択必須項目です。")
                                 ])
                                 ?>
-                                <small class="help-block" data-bv-validator="notEmpty"
-                                       data-bv-for="data[0][Evaluation][evaluate_score_id]"
-                                       data-bv-result="NOT_VALIDATED"
-                                       style="display: none;"><?= __d('gl', "選択必須項目です。") ?>
-                                </small>
                             </div>
                         </div>
                     </div>
@@ -385,41 +376,34 @@
                                 ?>
                                 <?=
                                 $this->Form->input("{$saveIndex}.Evaluation.comment", [
-                                    'type'                     => 'textarea',
-                                    'rows'                     => 2,
-                                    'default'                  => $eval['Evaluation']['comment'],
-                                    'label'                    => __d('gl',
-                                                                      "<i class='fa fa-comment-o mr_2px'></i>評価コメント"),
-                                    'placeholder'              => __d('gl', "コメントを書いてください"),
-                                    'required'                 => false,
-                                    'class'                    => 'form-control eva-val',
-                                    'data-bv-notempty'         => "true",
-                                    'data-bv-notempty-message' => __d('gl', "入力必須項目です。")
+                                    'type'                         => 'textarea',
+                                    'rows'                         => 2,
+                                    'default'                      => $eval['Evaluation']['comment'],
+                                    'label'                        => __d('gl',
+                                                                          "<i class='fa fa-comment-o mr_2px'></i>評価コメント"),
+                                    'placeholder'                  => __d('gl', "コメントを書いてください"),
+                                    'required'                     => false,
+                                    'class'                        => 'form-control eva-val',
+                                    'data-bv-notempty'             => "true",
+                                    'data-bv-notempty-message'     => __d('gl', "入力必須項目です。"),
+                                    'data-bv-stringlength'         => 'true',
+                                    'data-bv-stringlength-max'     => 5000,
+                                    'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 5000),
                                 ])
                                 ?>
-                                <small class="help-block" data-bv-validator="notEmpty"
-                                       data-bv-for="data[<?= $evalIndex ?>][Evaluation][comment]"
-                                       data-bv-result="NOT_VALIDATED"
-                                       style="display: none;"><?= __d('gl', "入力必須項目です。") ?>
-                                </small>
                                 <?=
                                 $this->Form->input("{$saveIndex}.Evaluation.evaluate_score_id", [
                                     'type'                     => 'select',
                                     'default'                  => $eval['Evaluation']['evaluate_score_id'],
                                     'options'                  => $scoreList,
                                     'label'                    => __d('gl', "<i class='fa fa-paw mr_2px'></i>評価スコア"),
-                                    'class'                    => 'form-control col-xxs-12 col-sm-8 eva-val',
-                                    'wrapInput'                => false,
+                                    'class'                    => 'form-control eva-val',
+                                    'wrapInput'                => 'col col-xxs-12 col-sm-8',
                                     'required'                 => false,
                                     'data-bv-notempty'         => "true",
                                     'data-bv-notempty-message' => __d('gl', "選択必須項目です。")
                                 ])
                                 ?>
-                                <small class="help-block" data-bv-validator="notEmpty"
-                                       data-bv-for="data[<?= $evalIndex ?>][Evaluation][evaluate_score_id]"
-                                       data-bv-result="NOT_VALIDATED"
-                                       style="display: none;"><?= __d('gl', "選択必須項目です。") ?>
-                                </small>
                             </div>
                         </div>
                     </div>
@@ -548,3 +532,14 @@ $this->Form->input("evaluate_type", [
 ?>
 <?= $this->Form->end() ?>
 <!-- END app/View/Evaluations/view.ctp -->
+<?php $this->append('script') ?>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#evaluation-form').bootstrapValidator({
+            live: 'enabled',
+            feedbackIcons: {},
+            fields: {}
+        });
+    });
+</script>
+<?php $this->end() ?>

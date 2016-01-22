@@ -130,6 +130,7 @@
                 $this->Form->input('hometown', [
                     'label'       => __d('gl', "出身地"),
                     'placeholder' => __d('gl', '例) 東京都'),
+                    'required'    => false,
                 ]);
                 ?>
                 <hr>

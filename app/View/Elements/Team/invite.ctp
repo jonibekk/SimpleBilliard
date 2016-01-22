@@ -43,6 +43,9 @@
             'label'                    => __d('gl', "招待するメンバーのメールアドレス"),
             'type'                     => 'text',
             'rows'                     => 3,
+            'data-bv-stringlength'         => 'true',
+            'data-bv-stringlength-max'     => 2000,
+            'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 2000),
             "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
             'afterInput'               => '<span class="help-block">'
                 . '<p class="font_11px">' . __d('gl', "メールアドレスはカンマ( , )区切り、もしくは改行区切りで複数指定可能です。") . '</p>'
@@ -60,6 +63,9 @@
             'label'      => __d('gl', "コメント(オプション)"),
             'type'       => 'text',
             'rows'       => 3,
+            'data-bv-stringlength'         => 'true',
+            'data-bv-stringlength-max'     => 2000,
+            'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 2000),
             'afterInput' => '<span class="help-block font_11px">' . __d('gl',
                                                                         "コメント(任意)はメールの本文に追加されます。") . '</span>'
         ]) ?>

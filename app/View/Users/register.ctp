@@ -27,18 +27,24 @@
             <div class="panel-body register-panel-body">
                 <?php //姓と名は言語によって表示順を変える
                 $last_name = $this->Form->input('last_name', [
-                    'label'                    => __d('gl', "姓(ローマ字)"),
-                    'placeholder'              => __d('gl', "例) Suzuki"),
-                    "pattern"                  => '^[a-zA-Z]+$',
-                    "data-bv-regexp-message"   => __d('validate', "アルファベットのみで入力してください。"),
-                    "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                    'label'                        => __d('gl', "姓(ローマ字)"),
+                    'placeholder'                  => __d('gl', "例) Suzuki"),
+                    "pattern"                      => '^[a-zA-Z]+$',
+                    "data-bv-regexp-message"       => __d('validate', "アルファベットのみで入力してください。"),
+                    "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
+                    'data-bv-stringlength'         => 'true',
+                    'data-bv-stringlength-max'     => 128,
+                    'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 128),
                 ]);
                 $first_name = $this->Form->input('first_name', [
-                    'label'                    => __d('gl', "名(ローマ字)"),
-                    'placeholder'              => __d('gl', "例) Hiroshi"),
-                    "pattern"                  => '^[a-zA-Z]+$',
-                    "data-bv-regexp-message"   => __d('validate', "アルファベットのみで入力してください。"),
-                    "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                    'label'                        => __d('gl', "名(ローマ字)"),
+                    'placeholder'                  => __d('gl', "例) Hiroshi"),
+                    "pattern"                      => '^[a-zA-Z]+$',
+                    "data-bv-regexp-message"       => __d('validate', "アルファベットのみで入力してください。"),
+                    "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
+                    'data-bv-stringlength'         => 'true',
+                    'data-bv-stringlength-max'     => 128,
+                    'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 128),
                 ]);
                 if ($last_first) {
                     echo $last_name;
@@ -63,13 +69,16 @@
                 <?php else: ?>
                     <?=
                     $this->Form->input('Email.0.email', [
-                        'label'                     => __d('gl', "メール"),
-                        'placeholder'               => __d('gl', "hiroshi@example.com"),
-                        "data-bv-notempty"          => "false",
-                        'data-bv-emailaddress'      => "false",
-                        "data-bv-callback"          => "true",
-                        "data-bv-callback-message"  => " ",
-                        "data-bv-callback-callback" => "bvCallbackAvailableEmail",
+                        'label'                        => __d('gl', "メール"),
+                        'placeholder'                  => __d('gl', "hiroshi@example.com"),
+                        "data-bv-notempty"             => "false",
+                        'data-bv-emailaddress'         => "false",
+                        "data-bv-callback"             => "true",
+                        "data-bv-callback-message"     => " ",
+                        "data-bv-callback-callback"    => "bvCallbackAvailableEmail",
+                        'data-bv-stringlength'         => 'true',
+                        'data-bv-stringlength-max'     => 200,
+                        'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 200),
                     ]) ?>
                 <?php endif; ?>
 
@@ -87,12 +96,14 @@
                     'placeholder'              => __d('gl', '8文字以上'),
                     "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                     'type'                     => 'password',
+                    'maxlength'                => 50,
                 ]) ?>
                 <?=
                 $this->Form->input('password_confirm', [
                     'label'                    => __d('gl', "パスワードを再入力"),
                     "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                     'type'                     => 'password',
+                    'maxlength'                => 50,
                 ]) ?>
                 <hr>
                 <?php $tosLink = $this->Html->link(__d('gl', '利用規約'), '#modal-tos',

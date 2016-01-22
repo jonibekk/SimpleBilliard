@@ -1813,10 +1813,6 @@ msgstr ""
 msgid "ゴール作成"
 msgstr "Create a Goal"
 
-#: Model/Thread.php:30
-msgid "フィードバック"
-msgstr "Feedback"
-
 #: Model/Thread.php:49
 msgid "オープン"
 msgstr "Open"
@@ -2196,10 +2192,6 @@ msgstr "Evaluation"
 #: View/Elements/header_logged_in_right.ctp:153
 msgid "チーム設定"
 msgstr "Team Setting"
-
-#: View/Elements/header_logged_in_right.ctp:173
-msgid "Feedback"
-msgstr ""
 
 #: View/Elements/header_logged_in_right.ctp:207
 msgid "サポート"
