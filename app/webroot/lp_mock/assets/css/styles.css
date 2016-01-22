@@ -1,5 +1,5 @@
 
-/*   
+/*
  * Template Name: Tempo - Responsive Website Template for Startups
  * Version: 1.4
  * Author: 3rd Wave Media
@@ -1163,7 +1163,7 @@ select {
 }
 /* ======= Video Section ======= */
 .video {
-  padding: 80px 0;
+  padding: 195px 0;
   position: relative;
     background: #c20a19 url('../images/background/Goalous_video_thumb.jpg') no-repeat center center;
   -webkit-background-size: cover;
@@ -1190,7 +1190,7 @@ select {
 }
 .video .control {
   position: relative;
-    top: -40px;
+  /*top: -40px;*/
 }
 .video .control .play-trigger {
   color: #fff;
@@ -1344,7 +1344,7 @@ select {
   color: #c20a19;
   margin-top: 0;
 }
-.features .item .title .fa {      
+.features .item .title .fa {
 font-size: 58px;
 color: #b3b3b3;
 margin-right: 20px;
@@ -1895,7 +1895,7 @@ margin-right: 20px;
     clear: left;
   }
   .video {
-    padding: 30px 0;
+    /*padding: 30px 0;*/
   }
   .video .control {
     position: static;
@@ -2118,6 +2118,9 @@ margin-right: 20px;
     -o-transition: all 0.4s ease-in-out;
     max-width: 190px;
     margin: 0 auto;
+}
+.document-fa{
+  font-size: 65px;
 }
 .features .benefits .item .icon .fa {
     font-size: 58px;
