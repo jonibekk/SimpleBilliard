@@ -2949,6 +2949,7 @@ function evCircleFeed(options) {
 
     //サークルリストのわきに表示されている未読数リセット
     $obj.children(".dashboard-circle-count-box").html("");
+    $obj.children(".circle-count_box").children(".count-value").html("");
 
     //アドレスバー書き換え
     if (typeof history.pushState == 'function') {
