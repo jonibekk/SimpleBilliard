@@ -718,6 +718,13 @@ class UserTest extends GoalousTestCase
         $res = $this->User->getUsersSelectOnly('first', 10, $post_id);
         $this->assertNotEmpty($res['results']);
 
+        $this->User->TeamMember->create();
+        $this->User->TeamMember->save([
+                                          'user_id'    => '14',
+                                          'team_id'    => '1',
+                                          'active_flg' => 1,
+                                      ]);
+
         $users = $this->User->getUsersSelectOnly('first', 10, $post_id, true);
         $this->assertArrayHasKey('results', $users);
         $group_found = false;
@@ -867,17 +874,17 @@ class UserTest extends GoalousTestCase
 
         $res = $this->User->excludeGroupMemberSelect2($test_data, [2 => 2, 4 => 4]);
         $this->assertEquals([
-                ['id'    => 'group_1',
-                 'users' => [
-                     ['id' => 'user_1', 'text' => 'user1'],
-                     ['id' => 'user_3', 'text' => 'user3'],
-                 ]],
-                ['id'    => 'group_2',
-                 'users' => [
-                     ['id' => 'user_1', 'text' => 'user1'],
-                     ['id' => 'user_5', 'text' => 'user5'],
-                 ]],
-            ], $res);
+                                ['id'    => 'group_1',
+                                 'users' => [
+                                     ['id' => 'user_1', 'text' => 'user1'],
+                                     ['id' => 'user_3', 'text' => 'user3'],
+                                 ]],
+                                ['id'    => 'group_2',
+                                 'users' => [
+                                     ['id' => 'user_1', 'text' => 'user1'],
+                                     ['id' => 'user_5', 'text' => 'user5'],
+                                 ]],
+                            ], $res);
 
         $res = $this->User->excludeGroupMemberSelect2($test_data, [1 => 1, 2 => 2, 3 => 3, 4 => 4]);
         $this->assertEquals([['id'    => 'group_2',
@@ -886,7 +893,7 @@ class UserTest extends GoalousTestCase
                               ]],
                             ], $res);
 
-        $res = $this->User->excludeGroupMemberSelect2($test_data,  [1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5]);
+        $res = $this->User->excludeGroupMemberSelect2($test_data, [1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5]);
         $this->assertEquals([], $res);
 
         $res = $this->User->excludeGroupMemberSelect2($test_data, []);
@@ -969,21 +976,21 @@ class UserTest extends GoalousTestCase
         }
         $this->assertTrue($group_found);
     }
-    
+
     function testMakeSelect2UserList()
     {
         $users = [
             ['User' => [
-                'id' => 1,
+                'id'               => 1,
                 'display_username' => '表示名 1',
-                'roman_username' => 'display name 1',
-                'photo_file_name' => 'test1.jpg',
+                'roman_username'   => 'display name 1',
+                'photo_file_name'  => 'test1.jpg',
             ]],
             ['User' => [
-                'id' => 2,
+                'id'               => 2,
                 'display_username' => '表示名 2',
-                'roman_username' => 'display name 2',
-                'photo_file_name' => 'test2.jpg',
+                'roman_username'   => 'display name 2',
+                'photo_file_name'  => 'test2.jpg',
             ]],
         ];
         $user_res = $this->User->makeSelect2UserList($users);

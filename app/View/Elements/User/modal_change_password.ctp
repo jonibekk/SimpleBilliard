@@ -35,9 +35,10 @@
             <div class="modal-body">
                 <?=
                 $this->Form->input('old_password', [
-                    'label'    => __d('gl', "現在のパスワード"),
-                    'type'     => 'password',
-                    'required' => true,
+                    'label'     => __d('gl', "現在のパスワード"),
+                    'type'      => 'password',
+                    'required'  => true,
+                    'maxlength' => 50,
                 ]) ?>
                 <?=
                 $this->Form->input('password', [
@@ -45,12 +46,14 @@
                     'placeholder' => __d('gl', '8文字以上'),
                     'type'        => 'password',
                     'required'    => true,
+                    'maxlength'   => 50,
                 ]) ?>
                 <?=
                 $this->Form->input('password_confirm', [
-                    'label'    => __d('gl', "パスワードを再入力"),
-                    'type'     => 'password',
-                    'required' => true,
+                    'label'     => __d('gl', "パスワードを再入力"),
+                    'type'      => 'password',
+                    'required'  => true,
+                    'maxlength' => 50,
                 ]) ?>
                 <?= $this->Form->hidden('id', ['value' => $this->Session->read('Auth.User.id')]) ?>
             </div>
@@ -78,10 +81,6 @@
             fields: {
                 "data[User][old_password]": {
                     validators: {
-                        stringLength: {
-                            min: 8,
-                            message: "<?=__d('validate', '%2$d文字以上で入力してください。',"",8)?>"
-                        },
                         notEmpty: {
                             message: "<?=__d('validate', "入力必須項目です。")?>"
                         }
@@ -91,7 +90,7 @@
                     validators: {
                         stringLength: {
                             min: 8,
-                            message: "<?=__d('validate', '%2$d文字以上で入力してください。',"",8)?>"
+                            message: "<?=__d('validate', '%1$d文字以上で%2$d文字以下で入力してください。',8,50)?>"
                         },
                         notEmpty: {
                             message: "<?=__d('validate', "入力必須項目です。")?>"

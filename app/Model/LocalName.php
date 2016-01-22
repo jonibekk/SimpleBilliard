@@ -15,22 +15,18 @@ class LocalName extends AppModel
      * @var array
      */
     public $validate = [
-        'language' => [
+        'language'   => [
             'notEmpty' => [
                 'rule' => ['notEmpty'],
             ],
         ],
-        //        'first_name' => [
-        //            'notEmpty' => [
-        //                'rule' => ['notEmpty'],
-        //            ],
-        //        ],
-        //        'last_name'  => [
-        //            'notEmpty' => [
-        //                'rule' => ['notEmpty'],
-        //            ],
-        //        ],
-        'del_flg'  => [
+        'first_name' => [
+            'maxLength' => ['rule' => ['maxLength', 128]],
+        ],
+        'last_name'  => [
+            'maxLength' => ['rule' => ['maxLength', 128]],
+        ],
+        'del_flg'    => [
             'boolean' => [
                 'rule' => ['boolean'],
             ],

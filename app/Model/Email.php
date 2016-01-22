@@ -21,6 +21,7 @@ class Email extends AppModel
             ],
         ],
         'email'          => [
+            'maxLength'     => ['rule' => ['maxLength', 200]],
             'notEmpty'      => [
                 'rule' => 'notEmpty',
             ],
@@ -78,7 +79,7 @@ class Email extends AppModel
         return $res;
     }
 
-    function isBelongTeamByEmail($email, $team_id)
+    function isActiveOnTeamByEmail($email, $team_id)
     {
         $options = [
             'conditions' => [
@@ -89,13 +90,13 @@ class Email extends AppModel
                 'User' => [
                     'TeamMember' => [
                         'conditions' => ['TeamMember.team_id' => $team_id],
-                        'fields'     => ['id']
+                        'fields'     => ['id', 'active_flg']
                     ]
                 ]
             ]
         ];
         $res = $this->find('first', $options);
-        if (isset($res['User']['TeamMember'][0]['id']) && !empty($res['User']['TeamMember'][0]['id'])) {
+        if (isset($res['User']['TeamMember'][0]['active_flg']) && $res['User']['TeamMember'][0]['active_flg']) {
             return true;
         }
         return false;

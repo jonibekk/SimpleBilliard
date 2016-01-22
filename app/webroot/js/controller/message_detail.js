@@ -119,14 +119,12 @@ message_app.controller(
             //});
 
             // メッセージを送信する
-            $scope.clickMessage = function (event,val) {
-                if($scope.flag)
-                {
+            $scope.clickMessage = function (event, val) {
+                if ($scope.flag) {
                     return;
                 }
                 $scope.flag = true;
-                if(val==='like')
-                {
+                if (val === 'like') {
                     $scope.message = '[like]';
                 }
                 event.target.disabled = 'disabled';
@@ -180,6 +178,12 @@ message_app.controller(
 
                     document.getElementById("message_text_input").focus();
 
+                    if (jQuery.isEmptyObject(response.data)) {
+                        //メッセージ送信失敗
+                        notificationService.error($translate.instant('PUT_MESSAGE_FAIL'));
+                        return;
+                    }
+
                     // 未読メッセージ一覧を取得（送信直後の自身のメッセージを含む）
                     var urlParams = [$stateParams.post_id, 10, 1];
                     if ($scope.message_list.length >= 2) {
@@ -208,7 +212,7 @@ message_app.controller(
                         // メッセージ表示
                         bottom_scroll();
                     });
-                }).error(function(){
+                }).error(function () {
                     $scope.flag = false;
                 });
             };

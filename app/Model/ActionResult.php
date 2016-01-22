@@ -110,7 +110,8 @@ class ActionResult extends AppModel
             ],
         ],
         'name'    => [
-            'isString' => ['rule' => 'isString', 'message' => 'Invalid Submission']
+            'maxLength' => ['rule' => ['maxLength', 10000]],
+            'isString'  => ['rule' => 'isString', 'message' => 'Invalid Submission']
         ]
     ];
 

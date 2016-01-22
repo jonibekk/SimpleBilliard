@@ -788,6 +788,11 @@ class AppController extends Controller
 
     function _getRedirectUrl()
     {
+        $redirect_url = $this->request->data('Post.redirect_url');
+        if ($redirect_url) {
+            return $redirect_url;
+        }
+
         $url_map = [
             'attached_file_list' => [
                 'controller' => 'posts',

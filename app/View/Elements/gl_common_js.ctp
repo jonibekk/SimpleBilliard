@@ -14,33 +14,35 @@
  */
 ?>
 <!-- START app/View/Elements/gl_common_js.ctp -->
-<?php //echo $this->Html->script('vendor/jquery-2.1.0.min');
-echo $this->Html->script('vendor/bootstrap.min');
-echo $this->Html->script('vendor/jasny-bootstrap.min');
-echo $this->Html->script('vendor/bootstrapValidator.min');
-echo $this->Html->script('vendor/bootstrap-switch.min');
-echo $this->Html->script('vendor/bvAddition');
-echo $this->Html->script('vendor/pnotify.custom.min');
-echo $this->Html->script('vendor/jquery.nailthumb.1.1.min');
-echo $this->Html->script('vendor/jquery.autosize.min');
-echo $this->Html->script('vendor/jquery.lazy.min');
-echo $this->Html->script('vendor/lightbox-custom');
-echo $this->Html->script('vendor/jquery.showmore.min');
-echo $this->Html->script('vendor/placeholders.min');
-echo $this->Html->script('vendor/customRadioCheck.min');
-echo $this->Html->script('vendor/select2.min');
-echo $this->Html->script('vendor/bootstrap-datepicker.min');
-echo $this->Html->script('vendor/locales/bootstrap-datepicker.ja');
-echo $this->Html->script('vendor/moment.min');
-echo $this->Html->script('vendor/pusher.min');
-echo $this->Html->script('vendor/dropzone.js');
-echo $this->Html->script('vendor/jquery.flot.js');
-echo $this->Html->script('vendor/jquery.balanced-gallery');
-echo $this->Html->script('vendor/imagesloaded.pkgd.min');
-echo $this->Html->script('vendor/bootstrap.youtubepopup');
-echo $this->Html->script('vendor/require');
-echo $this->Html->script('gl_basic');
-echo $this->Html->script('vendor/exif');
+<?php
+echo $this->Html->script('vendors.min');
+// echo $this->Html->script('vendor/jquery-2.1.0.min');
+// echo $this->Html->script('vendor/bootstrap.min');
+// echo $this->Html->script('vendor/jasny-bootstrap.min');
+// echo $this->Html->script('vendor/bootstrapValidator.min');
+// echo $this->Html->script('vendor/bootstrap-switch.min');
+// echo $this->Html->script('vendor/bvAddition');
+// echo $this->Html->script('vendor/pnotify.custom.min');
+// echo $this->Html->script('vendor/jquery.nailthumb.1.1.min');
+// echo $this->Html->script('vendor/jquery.autosize.min');
+// echo $this->Html->script('vendor/jquery.lazy.min');
+// echo $this->Html->script('vendor/lightbox-custom');
+// echo $this->Html->script('vendor/jquery.showmore.min');
+// echo $this->Html->script('vendor/placeholders.min');
+// echo $this->Html->script('vendor/customRadioCheck.min');
+// echo $this->Html->script('vendor/select2.min');
+// echo $this->Html->script('vendor/bootstrap-datepicker.min');
+// echo $this->Html->script('vendor/locales/bootstrap-datepicker.ja');
+// echo $this->Html->script('vendor/moment.min');
+// echo $this->Html->script('vendor/pusher.min');
+// echo $this->Html->script('vendor/dropzone.js');
+// echo $this->Html->script('vendor/jquery.flot.js');
+// echo $this->Html->script('vendor/jquery.balanced-gallery');
+// echo $this->Html->script('vendor/imagesloaded.pkgd.min');
+// echo $this->Html->script('vendor/bootstrap.youtubepopup');
+// echo $this->Html->script('vendor/require');
+// echo $this->Html->script('vendor/exif');
+// echo $this->Html->script('gl_basic');
 echo $this->Html->script('goalous.min');
 ?>
 <!--suppress JSDuplicatedDeclaration -->
@@ -48,7 +50,7 @@ echo $this->Html->script('goalous.min');
     var cake = {
         message: {
             validate: {
-                a: "<?=__d('validate', '%2$d文字以上で入力してください。',"",8)?>",
+                a: "<?=__d('validate', '%1$d文字以上で%2$d文字以下で入力してください。',8,50)?>",
                 b: "<?=__d('validate', "パスワードが一致しません。")?>",
                 c: "<?=__d('validate', "10MB以下かつJPG、PNG、GIFのいずれかの形式を選択して下さい。")?>",
                 d: "<?=__d('validate', "利用規約に同意してください。")?>",
@@ -64,7 +66,8 @@ echo $this->Html->script('goalous.min');
                 dropzone_cancel_upload: "<?=__d('gl', 'アップロードをキャンセルしました。')?>",
                 dropzone_cancel_upload_confirmation: "<?=__d('gl', 'アップロードをキャンセルしてよろしいですか？')?>",
                 dropzone_uploading_not_end: "<?=__d('gl', '全てのファイルのアップロードが完了していません。\\nこのまま送信してよろしいですか？')?>",
-                dropzone_uploaded_file_expired: "<?=__d('gl', 'アップロードしたファイルの有効期限が切れています。再度アップロードしてください。')?>"
+                dropzone_uploaded_file_expired: "<?=__d('gl', 'アップロードしたファイルの有効期限が切れています。再度アップロードしてください。')?>",
+                date_format: "<?=__d('validate',"日付はYYYY/MM/DDの形式で入力してください。")?>",
             },
             notice: {
                 a: "<?=__d('gl',"入力が途中です。このまま移動しますか？")?>",
@@ -116,7 +119,9 @@ echo $this->Html->script('goalous.min');
             cancel: "<?=__d('gl',"キャンセル")?>",
             search_placeholder_user: "<?=__d('gl',"名前を入力")?>",
             search_placeholder_goal: "<?=__d('gl',"ゴール名を入力")?>",
-            search_placeholder_circle: "<?=__d('gl',"サークル名を入力")?>"
+            search_placeholder_circle: "<?=__d('gl',"サークル名を入力")?>",
+            leave_circle: "<?=__d('gl',"サークルを脱退する")?>",
+            config: "<?=__d('gl',"設定")?>"
         },
         url: {
             a: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_users'])?>",
@@ -287,8 +292,9 @@ echo $this->Html->script('goalous.min');
         is_mb_app: "<?= $is_mb_app ?>",
         is_mb_app_ios: "<?= $is_mb_app_ios ?>",
         pre_file_ttl: <?= PRE_FILE_TTL ?>,
-        notify_setting: <?=json_encode($notify_setting)?>,
-        unread_msg_post_ids: <?=json_encode($unread_msg_post_ids)?>
+        notify_setting: <?= isset($notify_setting)?json_encode($notify_setting):"''" ?>,
+        unread_msg_post_ids: <?=isset($unread_msg_post_ids)?json_encode($unread_msg_post_ids):"''"?>,
+        select2_query_limit: <?=SELECT2_QUERY_LIMIT?>
     };
 
 

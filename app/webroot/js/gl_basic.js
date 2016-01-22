@@ -9,7 +9,7 @@ if (typeof String.prototype.startsWith != 'function') {
 }
 ;
 require.config({
-    baseUrl: '/js/modules'
+    baseUrl: '/js/modules/'
 });
 function bindPostBalancedGallery($obj) {
     $obj.removeClass('none');
@@ -83,6 +83,8 @@ $(window).load(function () {
 });
 
 $(document).ready(function () {
+
+    fastClick();
 
     //Monitoring of the communication state of App Server | Appサーバーの通信状態の監視
     var network_reachable = true;
@@ -286,6 +288,8 @@ $(document).ready(function () {
     $(document).on("click", ".click-show", evShow);
     $(document).on("click", ".trigger-click", evTriggerClick);
     //noinspection SpellCheckingInspection
+    $(document).on("keyup", ".blank-disable-and-undisable", evBlankDisableAndUndisable);
+    //noinspection SpellCheckingInspection
     $(document).on("keyup", ".blank-disable", evBlankDisable);
     //noinspection JSUnresolvedVariable
     $(document).on("click", ".click-feed-read-more", evFeedMoreView);
@@ -318,6 +322,8 @@ $(document).ready(function () {
     $(document).on("click", ".toggle-follow", evFollowGoal);
     $(document).on("click", ".click-get-ajax-form-replace", getAjaxFormReplaceElm);
     $(document).on("click", ".notify-card-link", evNotifyPost);
+    $(document).on("click", ".dashboard-circle-list-row", evCircleFeed);
+    $(document).on("click", ".circle-link", evCircleFeed);
     $(document).on("submit", "form.ajax-csv-upload", uploadCsvFileByForm);
     $(document).on("touchend", "#layer-black", function () {
         $('.navbar-offcanvas').offcanvas('hide');
@@ -1300,7 +1306,7 @@ function evToggle() {
     return true;
 }
 
-function evBlankDisable() {
+function evBlankDisableAndUndisable() {
     attrUndefinedCheck(this, 'target-id');
     var $obj = $(this);
     var target_id = $obj.attr("target-id");
@@ -1309,6 +1315,14 @@ function evBlankDisable() {
     }
     else {
         $("#" + target_id).removeAttr("disabled");
+    }
+}
+function evBlankDisable() {
+    attrUndefinedCheck(this, 'target-id');
+    var $obj = $(this);
+    var target_id = $obj.attr("target-id");
+    if ($obj.val().length == 0) {
+        $("#" + target_id).attr("disabled", "disabled");
     }
 }
 
@@ -1820,6 +1834,10 @@ $(document).ready(function () {
             },
             "data[User][password_confirm]": {
                 validators: {
+                    stringLength: {
+                        min: 8,
+                        message: cake.message.validate.a
+                    },
                     identical: {
                         field: "data[User][password]",
                         message: cake.message.validate.b
@@ -1839,6 +1857,11 @@ $(document).ready(function () {
         }
     });
     $('#PostDisplayForm').bootstrapValidator({
+        live: 'enabled',
+        feedbackIcons: {},
+        fields: {}
+    });
+    $('#MessageDisplayForm').bootstrapValidator({
         live: 'enabled',
         feedbackIcons: {},
         fields: {}
@@ -1918,15 +1941,6 @@ $(document).ready(function () {
         // グループを選択した場合、グループに所属するユーザーを展開して入力済にする
         $this.select2('data', select2ExpandGroup($this.select2('data')));
     });
-    $("#CommonMessageBody").keyup(function () {
-        if ($('#select2Member').val() == '' || $('#CommonMessageBody').val() == '') {
-            $('#MessageSubmit').attr('disabled', 'disabled');
-        }
-        else {
-            $('#MessageSubmit').removeAttr('disabled');
-        }
-    });
-
 
     //noinspection JSUnusedLocalSymbols post_detail.Post.id
     $('#selectOnlyMember').select2({
@@ -1968,210 +1982,9 @@ $(document).ready(function () {
         // グループを選択した場合、グループに所属するユーザーを展開して入力済にする
         $this.select2('data', select2ExpandGroup($this.select2('data')));
     });
-    //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
-    $('#select2PostCircleMember').select2({
-        multiple: true,
-        placeholder: cake.word.select_public_circle,
-        minimumInputLength: 1,
-        ajax: {
-            url: cake.url.select2_circle_user,
-            dataType: 'json',
-            quietMillis: 100,
-            cache: true,
-            data: function (term, page) {
-                return {
-                    term: term, //search term
-                    page_limit: 10, // page size
-                    circle_type: "public"
-                };
-            },
-            results: function (data, page) {
-                return {results: data.results};
-            }
-        },
-        data: [],
-        initSelection: cake.data.b,
-        formatSelection: format,
-        formatResult: format,
-        dropdownCssClass: 's2-post-dropdown',
-        escapeMarkup: function (m) {
-            return m;
-        },
-        containerCssClass: "select2PostCircleMember"
-    })
-        .on('change', function () {
-            var $this = $(this);
-            // グループを選択した場合、グループに所属するユーザーを展開して入力済にする
-            $this.select2('data', select2ExpandGroup($this.select2('data')));
-        });
 
-    // select2 秘密サークル選択
-    $('#select2PostSecretCircle').select2({
-        multiple: true,
-        placeholder: cake.word.select_secret_circle,
-        minimumInputLength: 1,
-        maximumSelectionSize: 1,
-        ajax: {
-            url: cake.url.select2_secret_circle,
-            dataType: 'json',
-            quietMillis: 100,
-            cache: true,
-            data: function (term, page) {
-                return {
-                    term: term, //search term
-                    page_limit: 10 // page size
-                };
-            },
-            results: function (data, page) {
-                return {results: data.results};
-            }
-        },
-        data: [],
-        initSelection: cake.data.select2_secret_circle,
-        formatSelection: format,
-        formatResult: format,
-        dropdownCssClass: 's2-post-dropdown',
-        escapeMarkup: function (m) {
-            return m;
-        },
-        containerCssClass: "select2PostCircleMember"
-    });
+    initCircleSelect2();
 
-    //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
-    $('#select2MessageCircleMember').select2({
-        multiple: true,
-        placeholder: cake.word.select_public_message,
-        minimumInputLength: 2,
-        ajax: {
-            url: cake.url.select2_circle_user,
-            dataType: 'json',
-            quietMillis: 100,
-            cache: true,
-            data: function (term, page) {
-                return {
-                    term: term, //search term
-                    page_limit: 10, // page size
-                    circle_type: "public"
-                };
-            },
-            results: function (data, page) {
-                return {results: data.results};
-            }
-        },
-        data: [],
-        initSelection: cake.data.b,
-        formatSelection: format,
-        formatResult: format,
-        dropdownCssClass: 's2-post-dropdown',
-        escapeMarkup: function (m) {
-            return m;
-        },
-        containerCssClass: "select2MessageCircleMember"
-    });
-
-    // select2 秘密サークル選択
-    $('#select2MessageSecretCircle').select2({
-        multiple: true,
-        placeholder: cake.word.select_secret_circle,
-        minimumInputLength: 2,
-        maximumSelectionSize: 1,
-        ajax: {
-            url: cake.url.select2_secret_circle,
-            dataType: 'json',
-            quietMillis: 100,
-            cache: true,
-            data: function (term, page) {
-                return {
-                    term: term, //search term
-                    page_limit: 10 // page size
-                };
-            },
-            results: function (data, page) {
-                return {results: data.results};
-            }
-        },
-        data: [],
-        initSelection: cake.data.select2_secret_circle,
-        formatSelection: format,
-        formatResult: format,
-        dropdownCssClass: 's2-post-dropdown',
-        escapeMarkup: function (m) {
-            return m;
-        },
-        containerCssClass: "select2MessageCircleMember"
-    });
-
-    // サークル追加用モーダルの select2 を設定
-    bindSelect2Members($('#modal_add_circle'));
-
-    // 投稿の共有範囲(公開/秘密)切り替えボタン
-    var $shareRangeToggleButton = $('#postShareRangeToggleButton');
-    var $shareRange = $('#postShareRange');
-    var publicButtonLabel = '<i class="fa fa-unlock"></i> ' + cake.word.public;
-    var secretButtonLabel = '<i class="fa fa-lock font_verydark"></i> ' + cake.word.secret;
-
-    // ボタン初期状態
-    $shareRangeToggleButton.html(($shareRange.val() == 'public') ? publicButtonLabel : secretButtonLabel);
-
-    // 共有範囲切り替えボタンが有効な場合
-    if ($shareRangeToggleButton.attr('data-toggle-enabled')) {
-        $shareRangeToggleButton.on('click', function (e) {
-            e.preventDefault();
-            $shareRange.val($shareRange.val() == 'public' ? 'secret' : 'public');
-            if ($shareRange.val() == 'public') {
-                $shareRangeToggleButton.html(publicButtonLabel);
-                $('#PostSecretShareInputWrap').hide();
-                $('#PostPublicShareInputWrap').show();
-            }
-            else {
-                $shareRangeToggleButton.html(secretButtonLabel);
-                $('#PostPublicShareInputWrap').hide();
-                $('#PostSecretShareInputWrap').show();
-            }
-        });
-    }
-    // 共有範囲切り替えボタンが無効な場合（サークルフィードページ）
-    else {
-        $shareRangeToggleButton.popover({
-            'data-toggle': "popover",
-            'placement': 'top',
-            'trigger': "focus",
-            'content': cake.word.share_change_disabled,
-            'container': 'body'
-        });
-    }
-
-
-    $('#select2ActionCircleMember').select2({
-        multiple: true,
-        placeholder: cake.word.select_notify_range,
-        minimumInputLength: 1,
-        ajax: {
-            url: cake.url.select2_circle_user,
-            dataType: 'json',
-            quietMillis: 100,
-            cache: true,
-            data: function (term, page) {
-                return {
-                    term: term, //search term
-                    page_limit: 10, // page size
-                    circle_type: 'all'
-                };
-            },
-            results: function (data, page) {
-                return {results: data.results};
-            }
-        },
-        data: [],
-        initSelection: cake.data.l,
-        formatSelection: format,
-        formatResult: format,
-        dropdownCssClass: 's2-post-dropdown aaaa',
-        escapeMarkup: function (m) {
-            return m;
-        },
-        containerCssClass: "select2ActionCircleMember"
-    });
     $(document).on("click", '.modal-ajax-get-public-circles', function (e) {
         e.preventDefault();
         var $this = $(this);
@@ -2428,6 +2241,215 @@ $(document).ready(function () {
     }
 });
 
+
+function initCircleSelect2() {
+    //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
+    $('#select2PostCircleMember').select2({
+        multiple: true,
+        placeholder: cake.word.select_public_circle,
+        minimumInputLength: 1,
+        ajax: {
+            url: cake.url.select2_circle_user,
+            dataType: 'json',
+            quietMillis: 100,
+            cache: true,
+            data: function (term, page) {
+                return {
+                    term: term, //search term
+                    page_limit: 10, // page size
+                    circle_type: "public"
+                };
+            },
+            results: function (data, page) {
+                return {results: data.results};
+            }
+        },
+        data: [],
+        initSelection: cake.data.b,
+        formatSelection: format,
+        formatResult: format,
+        dropdownCssClass: 's2-post-dropdown',
+        escapeMarkup: function (m) {
+            return m;
+        },
+        containerCssClass: "select2PostCircleMember"
+    })
+        .on('change', function () {
+            var $this = $(this);
+            // グループを選択した場合、グループに所属するユーザーを展開して入力済にする
+            $this.select2('data', select2ExpandGroup($this.select2('data')));
+        });
+
+    // select2 秘密サークル選択
+    $('#select2PostSecretCircle').select2({
+        multiple: true,
+        placeholder: cake.word.select_secret_circle,
+        minimumInputLength: 1,
+        maximumSelectionSize: 1,
+        ajax: {
+            url: cake.url.select2_secret_circle,
+            dataType: 'json',
+            quietMillis: 100,
+            cache: true,
+            data: function (term, page) {
+                return {
+                    term: term, //search term
+                    page_limit: 10 // page size
+                };
+            },
+            results: function (data, page) {
+                return {results: data.results};
+            }
+        },
+        data: [],
+        initSelection: cake.data.select2_secret_circle,
+        formatSelection: format,
+        formatResult: format,
+        dropdownCssClass: 's2-post-dropdown',
+        escapeMarkup: function (m) {
+            return m;
+        },
+        containerCssClass: "select2PostCircleMember"
+    });
+
+    //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
+    $('#select2MessageCircleMember').select2({
+        multiple: true,
+        placeholder: cake.word.select_public_message,
+        minimumInputLength: 2,
+        ajax: {
+            url: cake.url.select2_circle_user,
+            dataType: 'json',
+            quietMillis: 100,
+            cache: true,
+            data: function (term, page) {
+                return {
+                    term: term, //search term
+                    page_limit: 10, // page size
+                    circle_type: "public"
+                };
+            },
+            results: function (data, page) {
+                return {results: data.results};
+            }
+        },
+        data: [],
+        initSelection: cake.data.b,
+        formatSelection: format,
+        formatResult: format,
+        dropdownCssClass: 's2-post-dropdown',
+        escapeMarkup: function (m) {
+            return m;
+        },
+        containerCssClass: "select2MessageCircleMember"
+    });
+
+    // select2 秘密サークル選択
+    $('#select2MessageSecretCircle').select2({
+        multiple: true,
+        placeholder: cake.word.select_secret_circle,
+        minimumInputLength: 2,
+        maximumSelectionSize: 1,
+        ajax: {
+            url: cake.url.select2_secret_circle,
+            dataType: 'json',
+            quietMillis: 100,
+            cache: true,
+            data: function (term, page) {
+                return {
+                    term: term, //search term
+                    page_limit: 10 // page size
+                };
+            },
+            results: function (data, page) {
+                return {results: data.results};
+            }
+        },
+        data: [],
+        initSelection: cake.data.select2_secret_circle,
+        formatSelection: format,
+        formatResult: format,
+        dropdownCssClass: 's2-post-dropdown',
+        escapeMarkup: function (m) {
+            return m;
+        },
+        containerCssClass: "select2MessageCircleMember"
+    });
+
+    // サークル追加用モーダルの select2 を設定
+    bindSelect2Members($('#modal_add_circle'));
+
+    // 投稿の共有範囲(公開/秘密)切り替えボタン
+    var $shareRangeToggleButton = $('#postShareRangeToggleButton');
+    var $shareRange = $('#postShareRange');
+    var publicButtonLabel = '<i class="fa fa-unlock"></i> ' + cake.word.public;
+    var secretButtonLabel = '<i class="fa fa-lock font_verydark"></i> ' + cake.word.secret;
+
+    // ボタン初期状態
+    $shareRangeToggleButton.html(($shareRange.val() == 'public') ? publicButtonLabel : secretButtonLabel);
+
+    // 共有範囲切り替えボタンが有効な場合
+    $shareRangeToggleButton.on('click', function (e) {
+        e.preventDefault();
+        if ($shareRangeToggleButton.attr('data-toggle-enabled')) {
+            $shareRange.val($shareRange.val() == 'public' ? 'secret' : 'public');
+            if ($shareRange.val() == 'public') {
+                $shareRangeToggleButton.html(publicButtonLabel);
+                $('#PostSecretShareInputWrap').hide();
+                $('#PostPublicShareInputWrap').show();
+            }
+            else {
+                $shareRangeToggleButton.html(secretButtonLabel);
+                $('#PostPublicShareInputWrap').hide();
+                $('#PostSecretShareInputWrap').show();
+            }
+        }
+        else {
+            // 共有範囲切り替えボタンが無効な場合（サークルフィードページ）
+            $shareRangeToggleButton.popover({
+                'data-toggle': "popover",
+                'placement': 'top',
+                'trigger': "focus",
+                'content': cake.word.share_change_disabled,
+                'container': 'body'
+            });
+        }
+    });
+
+
+    $('#select2ActionCircleMember').select2({
+        multiple: true,
+        placeholder: cake.word.select_notify_range,
+        minimumInputLength: 1,
+        ajax: {
+            url: cake.url.select2_circle_user,
+            dataType: 'json',
+            quietMillis: 100,
+            cache: true,
+            data: function (term, page) {
+                return {
+                    term: term, //search term
+                    page_limit: 10, // page size
+                    circle_type: 'all'
+                };
+            },
+            results: function (data, page) {
+                return {results: data.results};
+            }
+        },
+        data: [],
+        initSelection: cake.data.l,
+        formatSelection: format,
+        formatResult: format,
+        dropdownCssClass: 's2-post-dropdown aaaa',
+        escapeMarkup: function (m) {
+            return m;
+        },
+        containerCssClass: "select2ActionCircleMember"
+    });
+
+}
+
 function format(item) {
     if ('image' in item) {
         return "<img style='width:14px;height: 14px' class='select2-item-img' src='" + item.image + "' alt='icon' /> " + "<span class='select2-item-txt'>" + item.text + "</span>";
@@ -2624,11 +2646,10 @@ function getModalPostList(e) {
 }
 
 
-
 var action_autoload_more = false;
 var autoload_more = false;
 var feed_loading_now = false;
-var doReloadHeaderBellList = false;
+var do_reload_header_bellList = false;
 function evFeedMoreView(options) {
     var opt = $.extend({
         recursive: false,
@@ -2748,7 +2769,8 @@ function evFeedMoreView(options) {
                             $loader_html.remove();
                             $("#" + no_data_text_id).show();
                             $('#' + parent_id).find('.panel-read-more-body').removeClass('panel-read-more-body').addClass('panel-read-more-body-no-data');
-                            $obj.remove();
+                            $obj.css("display", "none");
+                            feed_loading_now = false;
                             return;
                         }
                     }
@@ -2760,7 +2782,7 @@ function evFeedMoreView(options) {
                     $("#" + no_data_text_id).show();
                     $('#' + parent_id).find('.panel-read-more-body').removeClass('panel-read-more-body').addClass('panel-read-more-body-no-data');
                     //もっと読む表示をやめる
-                    $obj.remove();
+                    $obj.css("display", "none");
                 }
             }
             action_autoload_more = false;
@@ -2776,7 +2798,7 @@ function evFeedMoreView(options) {
 }
 
 //通知から投稿に移動
-function evNotifyPost(options){
+function evNotifyPost(options) {
 
     //とりあえずドロップダウンは隠す
     $("#HeaderDropdownNotify").removeClass("open");
@@ -2801,11 +2823,25 @@ function evNotifyPost(options){
     //layout-mainが存在しないところではajaxでコンテンツ更新しようにもロードしていない
     //要素が多すぎるので、おとなしくページリロードする
     //urlにpost_permanentを含まない場合も対象外
-    jQuery.fn.exists = function(){return Boolean(this.length > 0);}
-    if(!$(".layout-main").exists() || !get_url.match(/post_permanent/)){
+    jQuery.fn.exists = function () {
+        return Boolean(this.length > 0);
+    }
+    if (!$(".layout-main").exists() || !get_url.match(/post_permanent/)) {
         window.location.href = get_url;
         return false;
     }
+
+    //アドレスバー書き換え
+    if (typeof history.pushState == 'function') {
+        try {
+            history.pushState(null, null, get_url);
+        } catch (e) {
+            window.location.href = get_url;
+            return false;
+        }
+    }
+
+    $('#jsGoTop').click();
 
     //ローダー表示
     var $loader_html = opt.loader_id ? $('#' + opt.loader_id) : $('<center><i id="__feed_loader" class="fa fa-refresh fa-spin"></i></center>');
@@ -2814,9 +2850,9 @@ function evNotifyPost(options){
     }
 
     // URL生成
-    var url = get_url.replace(/post_permanent/,"ajax_post_permanent");
+    var url = get_url.replace(/post_permanent/, "ajax_post_permanent");
 
-    var back_notifylist = '<a href="/notifications" class="btn-back-notifications"> <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i> </a> ';
+    var button_notifylist = '<a href="/notifications" class="btn-back-notifications"> <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i> </a> ';
 
     $.ajax({
         type: 'GET',
@@ -2833,15 +2869,13 @@ function evNotifyPost(options){
                 //一旦非表示
                 $posts.fadeOut();
 
-                $(".layout-main").html(back_notifylist);
+                $(".layout-main").html(button_notifylist);
                 $(".layout-main").append($posts);
-                $(".layout-main").append(back_notifylist);
+                $(".layout-main").append(button_notifylist);
 
                 showMore($posts);
                 $posts.fadeIn();
 
-                //ローダーを削除
-                $loader_html.remove();
                 //リンクを有効化
                 $obj.removeAttr('disabled');
                 $("#ShowMoreNoData").hide();
@@ -2856,10 +2890,202 @@ function evNotifyPost(options){
                 });
             }
 
+            //ローダーを削除
+            $loader_html.remove();
+
             action_autoload_more = false;
             autoload_more = false;
             feed_loading_now = false;
-            doReloadHeaderBellList = true;
+            do_reload_header_bellList = true;
+        },
+        error: function () {
+            alert(cake.message.notice.c);
+            feed_loading_now = false;
+            $loader_html.remove();
+        },
+    });
+    return false;
+}
+
+// Ajax的なサークルフィード読み込み
+function evCircleFeed(options) {
+    var opt = $.extend({
+        recursive: false,
+        loader_id: null
+    }, options);
+
+    //フィード読み込み中はキャンセル
+    if (feed_loading_now) {
+        return false;
+    }
+    feed_loading_now = true;
+    attrUndefinedCheck(this, 'get-url');
+
+    var $obj = $(this);
+    var get_url = $obj.attr('get-url');
+    var circle_id = $obj.attr('circle-id');
+    var image_url = $obj.attr('image-url');
+    var title = $obj.attr('title');
+    var public_flg = $obj.attr('public-flg');
+    var team_all_flg = $obj.attr('team-all-flg');
+    var oldest_post_time = $obj.attr('oldest-post-time');
+    updateCakeValue(circle_id, title, image_url);
+
+    if ($obj.attr('class') == 'circle-link') {
+        //ハンバーガーから来た場合は隠す
+        $("#header-slide-menu").click();
+    }
+
+    //app-view-elements-feed-postsが存在しないところではajaxでコンテンツ更新しようにもロードしていない
+    //要素が多すぎるので、おとなしくページリロードする
+    //urlにcircle_feedを含まない場合も対象外
+    jQuery.fn.exists = function () {
+        return Boolean(this.length > 0);
+    }
+    if (!$("#app-view-elements-feed-posts").exists() || !$("#GlobalForms").exists() || !get_url.match(/circle_feed/)) {
+        window.location.href = get_url;
+        return false;
+    }
+
+    //サークルリストのわきに表示されている未読数リセット
+    $obj.children(".dashboard-circle-count-box").html("");
+
+    //アドレスバー書き換え
+    if (typeof history.pushState == 'function') {
+        try {
+            history.pushState(null, null, get_url);
+        } catch (e) {
+            window.location.href = get_url;
+            return false;
+        }
+    }
+
+    //不要な要素を削除
+    $(".panel.panel-default").not(".feed-read-more, .global-form").remove();
+
+    //ローダー表示
+    var $loader_html = opt.loader_id ? $('#' + opt.loader_id) : $('<center><i id="__feed_loader" class="fa fa-refresh fa-spin"></i></center>');
+    if (!opt.recursive) {
+        $("#app-view-elements-feed-posts").html($loader_html);
+    }
+
+    // URL生成
+    var url = get_url.replace(/circle_feed/, "ajax_circle_feed");
+    var more_read_url = get_url.replace(/\/circle_feed\//, "\/posts\/ajax_get_feed\/circle_id:");
+
+    // read more 非表示
+    $("#FeedMoreReadLink").css("display", "none");
+
+    //サークル名が長すぎる場合は切る
+    var panel_title = title;
+    if (title.length > 30) {
+        panel_title = title.substr(0, 29) + "…";
+    }
+
+    $("#circle-filter-menu-circle-name").html(panel_title);
+    $("#circle-filter-menu-member-url").attr("href", "/circles/ajax_get_circle_members/circle_id:" + circle_id);
+    $(".feed-share-range-file-url").attr("href", "/posts/attached_file_list/circle_id:" + circle_id);
+    $('#postShareRangeToggleButton').removeAttr('data-toggle-enabled');
+    if (public_flg == 1) {
+        $("#feed-share-range-public-flg").children("i").removeClass("fa-lock").addClass("fa-unlock");
+        $('#postShareRange').val("public");
+        $('#PostSecretShareInputWrap').hide();
+        $('#PostPublicShareInputWrap').show();
+
+        $('#select2PostCircleMember').val("circle_" + circle_id);
+        $('#select2PostSecretCircle').val("");
+    } else {
+        $("#feed-share-range-public-flg").children("i").removeClass("fa-unlock").addClass("fa-lock");
+        $('#postShareRange').val("secret");
+        $('#PostPublicShareInputWrap').hide();
+        $('#PostSecretShareInputWrap').show();
+
+        $('#select2PostCircleMember').val("");
+        $('#select2PostSecretCircle').val("circle_" + circle_id);
+    }
+    $("#postShareRangeToggleButton").popover({
+        'data-toggle': "popover",
+        'placement': 'top',
+        'trigger': "focus",
+        'content': cake.word.share_change_disabled,
+        'container': 'body'
+    });
+    // circle情報パネル表示
+    $(".feed-share-range").css("display", "block");
+
+    //Post後のリダイレクトURLを設定
+    $("#PostRedirectUrl").val(get_url);
+
+    setDefaultTab();
+    initCircleSelect2();
+
+    $('.dropdown-menu.dropdown-menu-right.frame-arrow-icon').empty();
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: true,
+        dataType: 'json',
+        success: function (data) {
+            var post_time_before = "";
+            if (!$.isEmptyObject(data.html)) {
+                //取得したhtmlをオブジェクト化
+                var $posts = $(data.html);
+                //notify一覧に戻るhtmlを追加
+                //画像をレイジーロード
+                imageLazyOn($posts);
+                //一旦非表示
+                $posts.fadeOut();
+
+                $("#app-view-elements-feed-posts").html($posts);
+                //read moreの情報を差し替え
+
+                showMore($posts);
+                $posts.fadeIn();
+
+                //リンクを有効化
+                $obj.removeAttr('disabled');
+                $("#ShowMoreNoData").hide();
+                $posts.imagesLoaded(function () {
+                    $posts.find('.post_gallery').each(function (index, element) {
+                        bindPostBalancedGallery($(element));
+                    });
+                    $posts.find('.comment_gallery').each(function (index, element) {
+                        bindCommentBalancedGallery($(element));
+                    });
+                    changeSizeFeedImageOnlyOne($posts.find('.feed_img_only_one'));
+                });
+
+            }
+
+            if (data.post_time_before != null) {
+                post_time_before = data.post_time_before;
+            }
+
+            $("#FeedMoreReadLink").attr("get-url", more_read_url);
+            $("#FeedMoreReadLink").attr("month-index", 0);
+            $("#FeedMoreReadLink").attr("next-page-num", 2);
+            $("#FeedMoreReadLink").attr("oldest-post-time", oldest_post_time);
+            $("#FeedMoreReadLink").attr("post-time-before", post_time_before);
+            $("#FeedMoreReadLink").css("display", "inline");
+
+            $("#circle-filter-menu-circle-member-count").html(data.circle_member_count);
+
+            //サークル設定メニュー生成
+            if (!team_all_flg && data.user_status == "joined") {
+                $('.dropdown-menu.dropdown-menu-right.frame-arrow-icon')
+                    .append('<li><a href="/posts/unjoin_circle/circle_id:' + circle_id + '">' + cake.word.leave_circle + '</a></li>');
+            }
+            if (data.user_status == "joined" || data.user_status == "admin") {
+                $('.dropdown-menu.dropdown-menu-right.frame-arrow-icon')
+                    .append('<li><a href="/circles/ajax_setting/circle_id:' + circle_id + '" class="modal-circle-setting">' + cake.word.config + '</a></li></ul>');
+            }
+
+            $loader_html.remove();
+            action_autoload_more = false;
+            autoload_more = false;
+            feed_loading_now = false;
+            do_reload_header_bellList = true;
         },
         error: function () {
             alert(cake.message.notice.c);
@@ -2869,6 +3095,35 @@ function evNotifyPost(options){
     return false;
 }
 
+// サークルフィード用のcake value 更新
+function updateCakeValue(circle_id, title, image_url) {
+    //サークルフィードでは必ずデフォルト投稿タイプはポスト
+    cake.common_form_type = "post";
+
+    cake.data.b = function (element, callback) {
+        var data = [];
+        var current_circle_item = {
+            id: "circle_" + circle_id,
+            text: title,
+            image: image_url
+        };
+
+        data.push(current_circle_item);
+        callback(data);
+    }
+
+    cake.data.select2_secret_circle = function (element, callback) {
+        var data = [];
+        var current_circle_item = {
+            id: "circle_" + circle_id,
+            text: title,
+            image: image_url,
+            locked: true
+        };
+        data.push(current_circle_item);
+        callback(data);
+    }
+}
 
 // ゴールのフォロワー一覧を取得
 function evAjaxGoalFollowerMore() {
@@ -3221,6 +3476,10 @@ function getModalFormFromUrl(e) {
                                     var m = new moment(value, 'YYYY/MM/DD', true);
                                     return m.isBefore($('[name="data[KeyResult][end_date]"]').val());
                                 }
+                            },
+                            date: {
+                                format: 'YYYY/MM/DD',
+                                message: cake.message.validate.date_format
                             }
                         }
                     },
@@ -3232,6 +3491,10 @@ function getModalFormFromUrl(e) {
                                     var m = new moment(value, 'YYYY/MM/DD', true);
                                     return m.isAfter($('[name="data[KeyResult][start_date]"]').val());
                                 }
+                            },
+                            date: {
+                                format: 'YYYY/MM/DD',
+                                message: cake.message.validate.date_format
                             }
                         }
                     }
@@ -3861,9 +4124,9 @@ $(document).ready(function () {
         initBellNum();
         initTitle();
 
-        if (isExistNewNotify || click_cnt == 1 || doReloadHeaderBellList) {
+        if (isExistNewNotify || click_cnt == 1 || do_reload_header_bellList) {
             updateListBox();
-            doReloadHeaderBellList = false;
+            do_reload_header_bellList = false;
         }
 
         function isExistNewNotify() {

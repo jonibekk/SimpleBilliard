@@ -27,6 +27,9 @@ class ApprovalHistory extends AppModel
                 'rule' => ['numeric'],
             ],
         ],
+        'comment'       => [
+            'maxLength' => ['rule' => ['maxLength', 5000]],
+        ],
         'del_flg'       => [
             'boolean' => [
                 'rule' => ['boolean'],
@@ -46,7 +49,7 @@ class ApprovalHistory extends AppModel
     function add($collaborator_id, $user_id, $action_status = 0, $comment = '')
     {
         if ($action_status === self::ACTION_STATUS_NO_ACTION && empty($comment) === true) {
-            return;
+            return false;
         }
 
         $param = [

@@ -38,7 +38,7 @@ $only_tab_post =
 $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'message');
 ?>
 <!-- START app/View/Elements/Feed/common_form.ctp -->
-<div class="panel panel-default global-form">
+<div class="panel panel-default global-form" id="GlobalForms">
     <div class="post-panel-heading ptb_7px plr_11px">
         <!-- Nav tabs -->
         <ul class="feed-switch clearfix plr_0px" role="tablist" id="CommonFormTabs">
@@ -117,7 +117,8 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                        delete-method="hide"
                         >
                         <span class="action-image-add-button-text"><i
-                                class="fa fa-image action-image-add-button-icon"></i> <span><?= __d('gl', 'アクション画像をアップロード') ?></span></span>
+                                class="fa fa-image action-image-add-button-icon"></i> <span><?= __d('gl',
+                                                                                                    'アクション画像をアップロード') ?></span></span>
 
                     </a>
                 </div>
@@ -127,19 +128,22 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                 <div id="WrapActionFormName" class="panel-body action-form-panel-body none pull-left action-input-name">
                     <?=
                     $this->Form->input('name', [
-                        'id'                       => 'CommonActionName',
-                        'label'                    => false,
-                        'type'                     => 'textarea',
-                        'wrap'                     => 'soft',
-                        'rows'                     => 1,
-                        'required'                 => true,
-                        'placeholder'              => __d('gl', "アクションを説明しよう"),
-                        'class'                    => 'form-control change-warning',
-                        'data-bv-notempty-message' => __d('validate', "入力必須項目です。"),
+                        'id'                           => 'CommonActionName',
+                        'label'                        => false,
+                        'type'                         => 'textarea',
+                        'wrap'                         => 'soft',
+                        'rows'                         => 1,
+                        'required'                     => true,
+                        'placeholder'                  => __d('gl', "アクションを説明しよう"),
+                        'class'                        => 'form-control change-warning',
+                        'data-bv-notempty-message'     => __d('validate', "入力必須項目です。"),
+                        'data-bv-stringlength'         => 'true',
+                        'data-bv-stringlength-max'     => 10000,
+                        'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 10000),
                     ])
                     ?>
                 </div>
-<!-- 目印 -->
+                <!-- 目印 -->
                 <div id="ActionUploadFileDropArea" class="action-upload-file-drop-area">
                     <div class="panel-body action-form-panel-body form-group none" id="WrapCommonActionGoal">
                         <div class="input-group feed-action-goal-select-wrap">
@@ -279,20 +283,25 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
             <div class="post-panel-body plr_11px ptb_7px">
                 <?=
                 $this->Form->input('body', [
-                    'id'                       => 'CommonPostBody',
-                    'label'                    => false,
-                    'type'                     => 'textarea',
-                    'wrap'                     => 'soft',
-                    'rows'                     => 1,
-                    'placeholder'              => __d('gl', "何か投稿しよう"),
-                    'class'                    => 'form-control tiny-form-text-change post-form feed-post-form box-align change-warning',
-                    "required"                 => true,
-                    'data-bv-notempty-message' => __d('validate', "入力必須項目です。"),
+                    'id'                           => 'CommonPostBody',
+                    'label'                        => false,
+                    'type'                         => 'textarea',
+                    'wrap'                         => 'soft',
+                    'rows'                         => 1,
+                    'placeholder'                  => __d('gl', "何か投稿しよう"),
+                    'class'                        => 'form-control tiny-form-text-change post-form feed-post-form box-align change-warning',
+                    "required"                     => true,
+                    'data-bv-notempty-message'     => __d('validate', "入力必須項目です。"),
+                    'data-bv-stringlength'         => 'true',
+                    'data-bv-stringlength-max'     => 10000,
+                    'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 10000),
                 ])
                 ?>
 
                 <?= $this->Form->hidden('site_info_url', ['id' => 'PostSiteInfoUrl']) ?>
                 <?php $this->Form->unlockField('Post.site_info_url') ?>
+                <?= $this->Form->hidden('redirect_url', ['id' => 'PostRedirectUrl']) ?>
+                <?php $this->Form->unlockField('Post.redirect_url') ?>
 
                 <div id="PostOgpSiteInfo" class="post-ogp-site-info"></div>
                 <div id="PostUploadFilePreview" class="post-upload-file-preview"></div>
@@ -435,16 +444,19 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                 <div class="post-panel-body plr_11px ptb_7px">
                     <?=
                     $this->Form->input('body', [
-                        'id'                       => 'CommonMessageBody',
-                        'label'                    => false,
-                        'type'                     => 'textarea',
-                        'wrap'                     => 'soft',
-                        'rows'                     => 1,
-                        'required'                 => true,
-                        'placeholder'              => __d('gl', "メッセージを書こう"),
-                        'class'                    => 'form-control tiny-form-text-change post-form feed-post-form box-align change-warning',
-                        'target_show_id'           => "MessageFormFooter",
-                        'data-bv-notempty-message' => __d('validate', "入力必須項目です。"),
+                        'id'                           => 'CommonMessageBody',
+                        'label'                        => false,
+                        'type'                         => 'textarea',
+                        'wrap'                         => 'soft',
+                        'rows'                         => 1,
+                        'required'                     => true,
+                        'placeholder'                  => __d('gl', "メッセージを書こう"),
+                        'class'                        => 'form-control tiny-form-text-change post-form feed-post-form box-align change-warning',
+                        'target_show_id'               => "MessageFormFooter",
+                        'data-bv-notempty-message'     => __d('validate', "入力必須項目です。"),
+                        'data-bv-stringlength'         => 'true',
+                        'data-bv-stringlength-max'     => 2,
+                        'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 5000),
                     ]);
                     ?>
                     <div id="messageUploadFilePreviewArea"></div>

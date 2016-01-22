@@ -23,12 +23,19 @@ class EvaluateScore extends AppModel
      * @var array
      */
     public $validate = [
-        'index_num' => [
-            'numeric' => [
+        'name'        => [
+            'maxLength' => ['rule' => ['maxLength', 200]],
+        ],
+        'description' => [
+            'maxLength' => ['rule' => ['maxLength', 2000]],
+        ],
+        'index_num'   => [
+            'maxLength' => ['rule' => ['maxLength', 5]],
+            'numeric'   => [
                 'rule' => ['numeric'],
             ],
         ],
-        'del_flg'   => [
+        'del_flg'     => [
             'boolean' => [
                 'rule' => ['boolean'],
             ],
