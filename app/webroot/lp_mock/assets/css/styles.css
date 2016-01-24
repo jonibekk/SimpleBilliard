@@ -1602,7 +1602,7 @@ margin-right: 20px;
   padding-top: 80px;
 }
 .contact-main .title {
-  margin-top: 0;
+  /*margin-top: 0;*/
   margin-bottom: 30px;
   font-size: 28px;
 }
@@ -2126,4 +2126,18 @@ margin-right: 20px;
     font-size: 58px;
     color: #b3b3b3;
     margin-top: 5px;
+}
+
+.salesperson{
+  cursor: pointer;
+}
+.salesperson .input-group-addon{
+  background: none;
+  border: none;
+}
+.salesperson .media{
+  margin-top:0;
+}
+.salesperson .media-body{
+  font-weight:400;
 }
