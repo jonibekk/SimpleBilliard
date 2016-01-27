@@ -2800,8 +2800,6 @@ function evFeedMoreView(options) {
 }
 
 function evNotifications(options) {
-    console.log("ev Notifications called.");
-
 
     //とりあえずドロップダウンは隠す
     $("#HeaderDropdownNotify").removeClass("open");
