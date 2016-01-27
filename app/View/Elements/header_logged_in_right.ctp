@@ -104,7 +104,7 @@
                                               'action'     => 'ajax_get_old_notify_more',]) ?>">
             </a>
 
-            <a href="<?= $this->Html->url(['controller' => 'notifications', 'action' => 'index']) ?>">
+            <a href="#" get-url="<?= $this->Html->url(['controller' => 'notifications', 'action' => 'index']) ?>" class="call-notifications">
                 <div class="notify-all-view-link">
                     <?= __d('gl', 'すべて見る') ?>
                 </div>
