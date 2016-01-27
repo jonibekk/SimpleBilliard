@@ -2806,6 +2806,7 @@ function evMessageList(options){
 
 
 function evNotifications(options) {
+
     //とりあえずドロップダウンは隠す
     $("#HeaderDropdownNotify").removeClass("open");
     $('body').removeClass('notify-dropdown-open');
