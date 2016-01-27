@@ -2799,10 +2799,13 @@ function evFeedMoreView(options) {
     return false;
 }
 
+
+function evMessageList(options){
+
+}
+
+
 function evNotifications(options) {
-    console.log("ev Notifications called.");
-
-
     //とりあえずドロップダウンは隠す
     $("#HeaderDropdownNotify").removeClass("open");
     $('body').removeClass('notify-dropdown-open');
