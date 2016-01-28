@@ -35,9 +35,9 @@ Router::connect('/ajax_circle_feed/:circle_id/*', ['controller' => 'posts', 'act
  */
 Router::connect('/:lang/', ['controller' => 'pages', 'action' => 'display', 'home'], ['lang' => 'ja|en']);
 Router::connect('/:pagename', ['controller' => 'pages', 'action' => 'display'],
-                ['pagename' => 'features|pp|tos', 'pass' => ['pagename']]);
+                ['pagename' => 'features|pp|tos|pricing|contact|contact_confirm', 'pass' => ['pagename']]);
 Router::connect('/:lang/:pagename', ['controller' => 'pages', 'action' => 'display'],
-                ['pagename' => 'features|pp|tos', 'lang' => 'ja|en', 'pass' => ['pagename']]);
+                ['pagename' => 'features|pp|tos|pricing|contact|contact_confirm', 'lang' => 'ja|en', 'pass' => ['pagename']]);
 /**
  * Load all plugin routes. See the CakePlugin documentation on
  * how to customize the loading of plugin routes.
