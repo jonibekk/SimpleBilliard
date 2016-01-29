@@ -44,6 +44,11 @@ echo $this->Html->script('vendors.min');
 // echo $this->Html->script('vendor/exif');
 // echo $this->Html->script('gl_basic');
 echo $this->Html->script('goalous.min');
+echo $this->Html->script('ng_app.min');
+echo $this->Html->script('ng_controller');
+echo $this->Html->script('vendor/angular/pusher-angular.min');
+echo $this->Html->script('vendor/angular/ng-infinite-scroll.min');
+
 ?>
 <!--suppress JSDuplicatedDeclaration -->
 <script type="text/javascript">
@@ -177,6 +182,8 @@ echo $this->Html->script('goalous.min');
             upload_file: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_upload_file']) ?>",
             remove_file: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_remove_file']) ?>",
             message_list: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'message_list']) ?>",
+            ajax_message_list: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_message_list']) ?>",
+            ajax_message: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_message']) ?>",
             invite_member: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'settings','#'=>'invite_member']) ?>",
             insight: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_insight']) ?>",
             insight_circle: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_insight_circle']) ?>",

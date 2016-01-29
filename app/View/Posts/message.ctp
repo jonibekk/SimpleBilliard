@@ -1,10 +1,10 @@
-<!-- <?php echo $this->Html->script('app/message'); ?> -->
-<?php echo $this->Html->script('ng_app.min'); ?>
-<?php echo $this->Html->script('ng_controller'); ?>
-<?php echo $this->Html->script('vendor/angular/pusher-angular.min'); ?>
-<?php echo $this->Html->script('vendor/angular/ng-infinite-scroll.min'); ?>
+<?php //echo $this->Html->script('app/message'); ?>
+<?php //echo $this->Html->script('ng_app.min'); ?>
+<?php //echo $this->Html->script('ng_controller'); ?>
+<?php //echo $this->Html->script('vendor/angular/pusher-angular.min'); ?>
+<?php //echo $this->Html->script('vendor/angular/ng-infinite-scroll.min'); ?>
 
-<div ng-app="messageApp">
+<div ng-app="messageApp" id="message-app">
     <div class="panel-body none" id="MessageFormShareUser">
 
         <?php echo $this->element('Feed/add_member_on_message', [
