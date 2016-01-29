@@ -1306,23 +1306,40 @@ function evToggle() {
     return true;
 }
 
+/**
+ * target_idの属性に対象となるIDがセットするとブランクの場合にdisabledにする。
+ * 再度ブランクではない状態になったらdisabledを削除する。
+ * target_idは,区切りで複数の要素を指定可能
+ */
 function evBlankDisableAndUndisable() {
     attrUndefinedCheck(this, 'target-id');
     var $obj = $(this);
-    var target_id = $obj.attr("target-id");
+    var target_ids = $obj.attr("target-id");
+    target_ids = target_ids.split(',');
     if ($obj.val().length == 0) {
-        $("#" + target_id).attr("disabled", "disabled");
+        for (var i = 0; i < target_ids.length; i++) {
+            $("#" + target_ids[i]).attr("disabled", "disabled");
+        }
     }
     else {
-        $("#" + target_id).removeAttr("disabled");
+        for (var i = 0; i < target_ids.length; i++) {
+            $("#" + target_ids[i]).removeAttr("disabled");
+        }
     }
 }
+/**
+ * target_idの属性に対象となるIDがセットするとブランクの場合にdisabledにする。
+ * target_idは,区切りで複数の要素を指定可能
+ */
 function evBlankDisable() {
     attrUndefinedCheck(this, 'target-id');
     var $obj = $(this);
-    var target_id = $obj.attr("target-id");
+    var target_ids = $obj.attr("target-id");
+    target_ids = target_ids.split(',');
     if ($obj.val().length == 0) {
-        $("#" + target_id).attr("disabled", "disabled");
+        for (var i = 0; i < target_ids.length; i++) {
+            $("#" + target_ids[i]).attr("disabled", "disabled");
+        }
     }
 }
 
