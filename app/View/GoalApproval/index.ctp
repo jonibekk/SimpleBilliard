@@ -157,7 +157,7 @@
                                         <?= $this->Form->button(__d('gl', "評価対象にする"),
                                                                 ['name' => 'approval_btn', 'class' => 'btn btn-primary approval_button', 'div' => false]) ?>
                                         <?= $this->Form->button(__d('gl', "評価対象にしない"),
-                                                                ['name' => 'wait_btn', 'class' => 'btn btn-Gray approval_button', 'div' => false]) ?>
+                                                                ['name' => 'wait_btn', 'id' => 'reject_btn_' . $goal['Collaborator']['id'], 'class' => 'btn btn-Gray approval_button', 'div' => false, 'disabled' => 'disabled']) ?>
                                     <?php }
                                     elseif ($goal['my_goal'] === true && $goal['Collaborator']['type'] === (string)Collaborator::TYPE_OWNER && $goal['Collaborator']['valued_flg'] === (string)Collaborator::STATUS_MODIFY) { ?>
                                         <a class="btn btn-primary approval_button"
@@ -172,7 +172,7 @@
                                 <?= $this->Form->textarea('comment',
                                                           ['label'                        => false,
                                                            'class'                        => 'form-control addteam_input-design blank-disable',
-                                                           'target-id'                    => 'modify_btn_' . $goal['Collaborator']['id'],
+                                                           'target-id'                    => 'modify_btn_' . $goal['Collaborator']['id'] . ',' . 'reject_btn_' . $goal['Collaborator']['id'],
                                                            'rows'                         => 3, 'cols' => 30,
                                                            'style'                        => 'margin-top: 10px; margin-bottom: 10px;',
                                                            'placeholder'                  => 'コメントを書く',

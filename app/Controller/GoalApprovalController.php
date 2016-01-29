@@ -355,6 +355,7 @@ class GoalApprovalController extends AppController
             return $this->ApprovalHistory->add($cb_id, $this->user_id, ApprovalHistory::ACTION_STATUS_ONLY_COMMENT,
                                                $comment);
         }
+        return true;
     }
 
     function _trackToMixpanel($goal_id)
