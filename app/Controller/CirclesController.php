@@ -265,7 +265,7 @@ class CirclesController extends AppController
         $circle_id = $this->request->params['named']['circle_id'];
         $this->_ajaxPreProcess();
         $circle_members = $this->Circle->CircleMember->getMembers($circle_id, true, 'CircleMember.modified', 'desc');
-        $this->set(compact('circle_members'));
+        $this->set(compact('circle_members', 'circle_id'));
 
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
