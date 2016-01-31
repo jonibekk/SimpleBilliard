@@ -324,6 +324,8 @@ $(document).ready(function () {
     $(document).on("click", ".notify-card-link", evNotifyPost);
     $(document).on("click", ".dashboard-circle-list-row", evCircleFeed);
     $(document).on("click", ".circle-link", evCircleFeed);
+    $(document).on("click", ".btn-back-notifications", evNotifications);
+    $(document).on("click", ".call-notifications", evNotifications);
     $(document).on("submit", "form.ajax-csv-upload", uploadCsvFileByForm);
     $(document).on("touchend", "#layer-black", function () {
         $('.navbar-offcanvas').offcanvas('hide');
@@ -2814,6 +2816,95 @@ function evFeedMoreView(options) {
     return false;
 }
 
+function evNotifications(options) {
+
+    //とりあえずドロップダウンは隠す
+    $("#HeaderDropdownNotify").removeClass("open");
+    $('body').removeClass('notify-dropdown-open');
+
+    var opt = $.extend({
+        recursive: false,
+        loader_id: null
+    }, options);
+
+    //フィード読み込み中はキャンセル
+    if (feed_loading_now) {
+        return false;
+    }
+    feed_loading_now = true;
+
+    attrUndefinedCheck(this, 'get-url');
+
+    var $obj = $(this);
+    var get_url = $obj.attr('get-url');
+
+    //layout-mainが存在しないところではajaxでコンテンツ更新しようにもロードしていない
+    //要素が多すぎるので、おとなしくページリロードする
+    jQuery.fn.exists = function () {
+        return Boolean(this.length > 0);
+    }
+    if (!$(".layout-main").exists()) {
+        window.location.href = get_url;
+        return false;
+    }
+
+    //アドレスバー書き換え
+    if (typeof history.pushState == 'function') {
+        try {
+            history.pushState(null, null, get_url);
+        } catch (e) {
+            window.location.href = get_url;
+            return false;
+        }
+    }
+
+    $('#jsGoTop').click();
+
+    //ローダー表示
+    var $loader_html = opt.loader_id ? $('#' + opt.loader_id) : $('<center><i id="__feed_loader" class="fa fa-refresh fa-spin"></i></center>');
+    if (!opt.recursive) {
+        $(".layout-main").html($loader_html);
+    }
+
+    // URL生成
+    var url = cake.url.notifications;
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: true,
+        dataType: 'json',
+        success: function (data) {
+            if (!$.isEmptyObject(data.html)) {
+                //取得したhtmlをオブジェクト化
+                var $posts = $(data.html);
+                //notify一覧に戻るhtmlを追加
+                //画像をレイジーロード
+                imageLazyOn($posts);
+                //一旦非表示
+                $posts.fadeOut();
+
+                $(".layout-main").html($posts);
+
+            }
+
+            //ローダーを削除
+            $loader_html.remove();
+
+            action_autoload_more = false;
+            autoload_more = false;
+            feed_loading_now = false;
+            do_reload_header_bellList = true;
+        },
+        error: function () {
+            alert(cake.message.notice.c);
+            feed_loading_now = false;
+            $loader_html.remove();
+        },
+    });
+    return false;
+}
+
 //通知から投稿に移動
 function evNotifyPost(options) {
 
@@ -2869,7 +2960,7 @@ function evNotifyPost(options) {
     // URL生成
     var url = get_url.replace(/post_permanent/, "ajax_post_permanent");
 
-    var button_notifylist = '<a href="/notifications" class="btn-back-notifications"> <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i> </a> ';
+    var button_notifylist = '<a href="#" get-url="/notifications" class="btn-back-notifications"> <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i> </a> ';
 
     $.ajax({
         type: 'GET',
