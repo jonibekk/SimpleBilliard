@@ -191,6 +191,7 @@ define('CACHE_KEY_TEAM_VISION', 'team_vision');
 define('CACHE_KEY_GROUP_VISION', 'group_vision');
 define('CACHE_KEY_MY_GOAL_AREA', 'my_goal_area');
 define('CACHE_KEY_MY_NOTIFY_SETTING', 'my_notify_setting');
+define('CACHE_KEY_MY_PROFILE', 'my_profile');
 
 /**
  * 共通関数

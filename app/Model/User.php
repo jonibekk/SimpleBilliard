@@ -1177,6 +1177,24 @@ class User extends AppModel
         return $res;
     }
 
+    function getMyProf()
+    {
+        $model = $this;
+        $res = Cache::remember($this->getCacheKey(CACHE_KEY_MY_PROFILE, true, null, false),
+            function () use ($model) {
+                $options = [
+                    'conditions' => [
+                        'id' => $model->my_uid
+                    ],
+                    'fields'     => $model->profileFields
+                ];
+                $res = $model->find('first', $options);
+                return $res;
+            }, 'user_data');
+
+        return $res;
+    }
+
     /**
      * ユーザー名検索時の条件配列を作成する
      * codeclimate 対策
