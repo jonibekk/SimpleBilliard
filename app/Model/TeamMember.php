@@ -258,6 +258,22 @@ class TeamMember extends AppModel
         return true;
     }
 
+    public function isAdmin($uid = null)
+    {
+        if (!$uid) {
+            $uid = $this->my_uid;
+        }
+
+        $options = [
+            'conditions' => [
+                'user_id'   => $uid,
+                'admin_flg' => true
+            ]
+        ];
+        $res = $this->find('first', $options);
+        return $res;
+    }
+
     public function add($uid, $team_id)
     {
         //if exists update
