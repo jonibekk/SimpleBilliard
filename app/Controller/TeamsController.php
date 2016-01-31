@@ -504,6 +504,7 @@ class TeamsController extends AppController
         $th = $this->Team->TeamMember->_getCsvHeading(true);
         $td = [];
         $this->set(compact('filename', 'th', 'td'));
+        $this->_setResponseCsv($filename);
     }
 
     function ajax_upload_update_members_csv()
@@ -598,6 +599,7 @@ class TeamsController extends AppController
         $td = $this->Team->TeamMember->getAllMembersCsvData();
 
         $this->set(compact('filename', 'th', 'td'));
+        $this->_setResponseCsv($filename);
     }
 
     function ajax_upload_final_evaluations_csv()
@@ -649,6 +651,7 @@ class TeamsController extends AppController
         $td = $this->Team->TeamMember->getAllEvaluationsCsvData($evaluate_term_id, $team_id);
 
         $this->set(compact('filename', 'th', 'td'));
+        $this->_setResponseCsv($filename);
     }
 
     public function ajax_switch_team()
@@ -959,7 +962,7 @@ class TeamsController extends AppController
             //TODO 遷移先はビジョン一覧ページ。未実装の為、仮でホームに遷移させている。
             return $this->redirect("/");
         }
-        else{
+        else {
             $this->Pnotify->outError(__d('gl', "チームビジョンの保存に失敗しました。"));
             return $this->redirect($this->referer());
         }
@@ -995,7 +998,7 @@ class TeamsController extends AppController
             //TODO 遷移先はビジョン一覧ページ。未実装の為、仮でホームに遷移させている。
             return $this->redirect("/");
         }
-        else{
+        else {
             $this->Pnotify->outError(__d('gl', "チームビジョンの保存に失敗しました。"));
             return $this->redirect($this->referer());
         }
@@ -1023,7 +1026,7 @@ class TeamsController extends AppController
             //TODO 遷移先はビジョン一覧ページ。未実装の為、仮でホームに遷移させている。
             return $this->redirect("/");
         }
-        else{
+        else {
             $this->Pnotify->outError(__d('gl', "グループビジョンの保存に失敗しました。"));
             return $this->redirect($this->referer());
         }
