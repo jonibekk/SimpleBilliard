@@ -677,7 +677,7 @@ class GoalsController extends AppController
             ) {
                 throw new RuntimeException(__d('gl', "アクションが存在しません。"));
             }
-            if (!$this->Goal->Collaborator->isCollaborated($action['ActionResult']['goal_id'])) {
+            if (!$this->Team->TeamMember->isAdmin() && !$this->Goal->Collaborator->isCollaborated($action['ActionResult']['goal_id'])) {
                 throw new RuntimeException(__d('gl', "権限がありません。"));
             }
         } catch (RuntimeException $e) {
@@ -1200,6 +1200,7 @@ class GoalsController extends AppController
         }
 
         $this->set(compact('filename', 'th', 'td'));
+        $this->_setResponseCsv($filename);
     }
 
     /**

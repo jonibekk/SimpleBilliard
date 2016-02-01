@@ -20,14 +20,14 @@ Goalousで素早く開発を始められるよう心がけております。
 当リポジトリは[Phpstorm](http://www.jetbrains.com/phpstorm/)に最適化されています。なるべくこれを使う事を推奨します。そうすれば開発メンバー全員がよりハッピーになれます。
 
 ## Installation
-1. ソースファイルをClone
-ターミナルを起動し、以下を実行
-`git clone --recursive git@github.com:IsaoCorp/goalous2.git`
-1. vagrantを起動
-ターミナルで以下を実行
-`cd goalous2`
-`vagrant up`
-[vagrant upで先に進まない、もしくはエラーが出た場合の対処方法](http://bit.ly/1TnOYjQ)
-1. 動作確認
-ブラウザから以下にアクセス
-`http://192.168.50.4`
+1. ソースファイルをClone  
+ターミナルを起動し、以下を実行  
+`git clone --recursive git@github.com:IsaoCorp/goalous2.git`  
+1. vagrantを起動  
+ターミナルで以下を実行  
+`cd goalous2`  
+`vagrant up default`  
+[vagrant upで先に進まない、もしくはエラーが出た場合の対処方法](http://bit.ly/1TnOYjQ)  
+1. 動作確認  
+ブラウザから以下にアクセス  
+`http://192.168.50.4`  
