@@ -593,7 +593,7 @@ select {
 }
 /* ======= Signup Section ======= */
 .signup {
-  padding: 80px 0;
+  padding: 20px 0;
 }
 .signup.has-bg-color {
   background: #f5f5f5;
@@ -605,9 +605,11 @@ select {
   margin-top: 0;
 }
 .signup .summary {
-  margin-bottom: 30px;
+  /*margin-bottom: 30px;*/
   color: #999999;
   font-size: 18px;
+  padding-bottom: 8px;
+  padding-top: 8px;
 }
 .signup .signup-form .form-control {
   font-size: 16px;
@@ -920,16 +922,27 @@ select {
 .promo .intro {
   color: #fff;
   padding-top: 30px;
-  position: relative;
+  /*position: relative;*/
   z-index: 10;
 }
-.promo .intro .title {
-  color: #fff;
+.promo .title {
+  bottom: 0;
   font-size: 38px;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
-  max-width: 720px;
-  font-weight: bold;
-  margin-bottom: 15px;
+  height: 1em;
+  left: 0;
+  margin: auto;
+  position: absolute;
+  right: 0;
+  text-align: center;
+  top: 0;
+  z-index: 10;
+}
+.promo .title .text {
+    background-color: rgba(211, 175, 56, .5);
+    box-shadow: 0 0 10px rgba(211, 175, 56, .5);
+    color:#fff;
+    font-weight: normal;
+    text-shadow: 0px 0px 5px rgba(0, 0, 0, 1);
 }
 .promo .intro .summary {
   color: #fff;
@@ -939,50 +952,51 @@ select {
   margin-bottom: 15px;
 }
 .promo .fixed-container {
+  font-size: 25px;
   position: absolute;
   z-index: 10;
   bottom: 0;
   width: 100%;
 }
-.promo .signup {
-  background: rgba(0, 0, 0, 0.2);
-  padding: 30px 0;
-  padding-bottom: 45px;
+.signup {
+  background: rgba(0, 0, 0, 0.8);
+  font-size: 30px;
+  padding: 10px 0;
+  /*padding-bottom: 45px;*/
   color: #fff;
 }
 .promo .signup .title {
-  font-size: 18px;
   margin-top: 0;
   margin-bottom: 15px;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.6);
 }
-.promo .signup .summary {
+.signup .summary {
   color: #fff;
-  font-size: 16px;
+  display: inline-block;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
 }
-.promo .social {
+.social.btns {
   background: #c20a19;
   padding: 8px 0;
-  -webkit-opacity: 0.8;
-  -moz-opacity: 0.8;
-  opacity: 0.8;
+  /*-webkit-opacity: 0.8;*/
+  /*-moz-opacity: 0.8;*/
+  /*opacity: 0.8;*/
   color: #fff;
   font-size: 13px;
 }
-.promo .social .line {
+.social.btns .line {
   position: relative;
   top: -4px;
   display: inline-block;
   margin-right: 10px;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
 }
-.promo .social .twitter-tweet {
+.social.btns .twitter-tweet {
   display: inline-block;
   position: relative;
   top: 2px;
 }
-.promo .social .fb-like .hatena-bookmark {
+.social.btns .fb-like .hatena-bookmark {
     display: inline-block;
     position: relative;
     top: -2px;
@@ -1857,7 +1871,7 @@ margin-right: 20px;
     position: static;
   }
   .promo .intro .title {
-    font-size: 22px;
+    font-size: 30px;
   }
   .promo .intro .summary {
     font-size: 18px;
@@ -2140,4 +2154,10 @@ margin-right: 20px;
 }
 .salesperson .media-body{
   font-weight:400;
+}
+
+.signup .summary,
+.signup .btn{
+    font-size:24px;
+    margin-bottom: 0;
 }
