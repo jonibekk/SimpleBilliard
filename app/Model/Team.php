@@ -347,8 +347,8 @@ class Team extends AppModel
             $post_data['Team']['timezone']
         );
         //キャッシュを削除
-        Cache::clear('team_info');
-        Cache::clear('user_data');
+        Cache::clear(false, 'team_info');
+        Cache::clear(false, 'user_data');
         return (bool)$res;
     }
 
@@ -384,9 +384,9 @@ class Team extends AppModel
      */
     function deleteTeam($team_id)
     {
-        try{
+        try {
             $this->delete($team_id);
-        }catch (PDOException $e){
+        } catch (PDOException $e) {
             return false;
         }
 

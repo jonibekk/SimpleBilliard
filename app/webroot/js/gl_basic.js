@@ -324,6 +324,8 @@ $(document).ready(function () {
     $(document).on("click", ".notify-card-link", evNotifyPost);
     $(document).on("click", ".dashboard-circle-list-row", evCircleFeed);
     $(document).on("click", ".circle-link", evCircleFeed);
+    $(document).on("click", ".btn-back-notifications", evNotifications);
+    $(document).on("click", ".call-notifications", evNotifications);
     $(document).on("submit", "form.ajax-csv-upload", uploadCsvFileByForm);
     $(document).on("touchend", "#layer-black", function () {
         $('.navbar-offcanvas').offcanvas('hide');
@@ -610,7 +612,7 @@ $(document).ready(function () {
                 $('#NewCurrentTerm').removeClass('none');
                 var current_timezone = parseFloat(data.current.timezone);
                 var current_sign = current_timezone < 0 ? "" : "+";
-                $('#NewCurrentTerm > div > p').text(data.current.start_date + "  -  " + data.current.end_date + " (UTC " + current_sign + current_timezone + "h)");
+                $('#NewCurrentTerm > div > p').text(data.current.start_date + "  -  " + data.current.end_date + " (GMT " + current_sign + current_timezone + "h)");
             }
             else {
                 $('#NewCurrentTerm').addClass('none');
@@ -621,7 +623,7 @@ $(document).ready(function () {
                 var next_timezone = parseFloat(data.next.timezone);
                 var next_sign = next_timezone < 0 ? "" : "+";
 
-                $('#NewNextTerm > div > p').text(data.next.start_date + "  -  " + data.next.end_date + " (UTC " + next_sign + next_timezone + "h)");
+                $('#NewNextTerm > div > p').text(data.next.start_date + "  -  " + data.next.end_date + " (GMT " + next_sign + next_timezone + "h)");
             }
             else {
                 $('#NewNextTerm').addClass('none');
@@ -668,12 +670,12 @@ $(document).ready(function () {
         e.preventDefault();
         var $form = $('#RegenerateRecoveryCodeForm');
         $.ajax({
-            url: cake.url.regenerate_recovery_code,
-            type: 'POST',
-            dataType: 'json',
-            processData: false,
-            data: $form.serialize()
-        })
+                url: cake.url.regenerate_recovery_code,
+                type: 'POST',
+                dataType: 'json',
+                processData: false,
+                data: $form.serialize()
+            })
             .done(function (res) {
                 PNotify.removeAll();
                 if (res.error) {
@@ -985,7 +987,7 @@ function getAjaxFormReplaceElm() {
                                 var $siteInfoUrl = $('#CommentSiteInfoUrl_' + post_id);
                                 var $siteInfo = $('#CommentOgpSiteInfo_' + post_id);
                                 $siteInfo
-                                    // プレビュー用 HTML
+                                // プレビュー用 HTML
                                     .html(data.html)
                                     // プレビュー削除ボタンを重ねて表示
                                     .append($('<a>').attr('href', '#')
@@ -1006,8 +1008,8 @@ function getAjaxFormReplaceElm() {
                                         }))
                                     // プレビュー削除ボタンの表示スペースを作る
                                     .find('.site-info').css({
-                                        "padding-right": "30px"
-                                    });
+                                    "padding-right": "30px"
+                                });
 
                                 // hidden に URL 追加
                                 $siteInfoUrl.val(data.url);
@@ -1071,14 +1073,14 @@ function uploadCsvFileByForm(e) {
 
     var $f = $(this);
     $.ajax({
-        url: $f.prop('action'),
-        method: 'post',
-        dataType: 'json',
-        processData: false,
-        contentType: false,
-        data: new FormData(this),
-        timeout: 600000 //10min
-    })
+            url: $f.prop('action'),
+            method: 'post',
+            dataType: 'json',
+            processData: false,
+            contentType: false,
+            data: new FormData(this),
+            timeout: 600000 //10min
+        })
         .done(function (data) {
             // 通信が成功したときの処理
             $result_msg
@@ -1129,14 +1131,14 @@ function addComment(e) {
     var $f = $(e.target);
     var ajaxProcess = $.Deferred();
     $.ajax({
-        url: $f.prop('action'),
-        method: 'post',
-        dataType: 'json',
-        processData: false,
-        contentType: false,
-        data: new FormData(e.target),
-        timeout: 300000 //5min
-    })
+            url: $f.prop('action'),
+            method: 'post',
+            dataType: 'json',
+            processData: false,
+            contentType: false,
+            data: new FormData(e.target),
+            timeout: 300000 //5min
+        })
         .done(function (data) {
             if (!data.error) {
                 // 通信が成功したときの処理
@@ -2021,10 +2023,10 @@ $(document).ready(function () {
                 $modal_elm.append(data);
                 $modal_elm.modal();
                 $modal_elm.find(".bt-switch").bootstrapSwitch({
-                    size: "small",
-                    onText: cake.word.b,
-                    offText: cake.word.c
-                })
+                        size: "small",
+                        onText: cake.word.b,
+                        offText: cake.word.c
+                    })
                     // 参加/不参加 のスイッチ切り替えた時
                     // 即時データを更新する
                     .on('switchChange.bootstrapSwitch', function (e, state) {
@@ -2043,12 +2045,12 @@ $(document).ready(function () {
                         }
 
                         $.ajax({
-                            url: cake.url.join_circle,
-                            type: 'POST',
-                            dataType: 'json',
-                            processData: false,
-                            data: $form.serialize()
-                        })
+                                url: cake.url.join_circle,
+                                type: 'POST',
+                                dataType: 'json',
+                                processData: false,
+                                data: $form.serialize()
+                            })
                             .done(function (res) {
                                 PNotify.removeAll();
                                 new PNotify({
@@ -2105,18 +2107,18 @@ $(document).ready(function () {
             $modal_elm.append(data);
             $modal_elm.modal();
             $modal_elm.find(".bt-switch").bootstrapSwitch({
-                size: "small"
-            })
+                    size: "small"
+                })
                 // スイッチ切り替えた時、即時データを更新する
                 .on('switchChange.bootstrapSwitch', function () {
                     var $form = $('#CircleSettingForm');
                     $.ajax({
-                        url: cake.url.circle_setting,
-                        type: 'POST',
-                        dataType: 'json',
-                        processData: false,
-                        data: $form.serialize()
-                    })
+                            url: cake.url.circle_setting,
+                            type: 'POST',
+                            dataType: 'json',
+                            processData: false,
+                            data: $form.serialize()
+                        })
                         .done(function (res) {
                             PNotify.removeAll();
                             if (res.error) {
@@ -2198,7 +2200,7 @@ $(document).ready(function () {
                         var $siteInfoUrl = $('#PostSiteInfoUrl');
                         var $siteInfo = $('#PostOgpSiteInfo');
                         $siteInfo
-                            // プレビュー用 HTML
+                        // プレビュー用 HTML
                             .html(data.html)
                             // プレビュー削除ボタンを重ねて表示
                             .append($('<a>').attr('href', '#')
@@ -2219,8 +2221,8 @@ $(document).ready(function () {
                                 }))
                             // プレビュー削除ボタンの表示スペースを作る
                             .find('.site-info').css({
-                                "padding-right": "30px"
-                            });
+                            "padding-right": "30px"
+                        });
 
                         // hidden に URL 追加
                         $siteInfoUrl.val(data.url);
@@ -2262,35 +2264,35 @@ $(document).ready(function () {
 function initCircleSelect2() {
     //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
     $('#select2PostCircleMember').select2({
-        multiple: true,
-        placeholder: cake.word.select_public_circle,
-        minimumInputLength: 1,
-        ajax: {
-            url: cake.url.select2_circle_user,
-            dataType: 'json',
-            quietMillis: 100,
-            cache: true,
-            data: function (term, page) {
-                return {
-                    term: term, //search term
-                    page_limit: 10, // page size
-                    circle_type: "public"
-                };
+            multiple: true,
+            placeholder: cake.word.select_public_circle,
+            minimumInputLength: 1,
+            ajax: {
+                url: cake.url.select2_circle_user,
+                dataType: 'json',
+                quietMillis: 100,
+                cache: true,
+                data: function (term, page) {
+                    return {
+                        term: term, //search term
+                        page_limit: 10, // page size
+                        circle_type: "public"
+                    };
+                },
+                results: function (data, page) {
+                    return {results: data.results};
+                }
             },
-            results: function (data, page) {
-                return {results: data.results};
-            }
-        },
-        data: [],
-        initSelection: cake.data.b,
-        formatSelection: format,
-        formatResult: format,
-        dropdownCssClass: 's2-post-dropdown',
-        escapeMarkup: function (m) {
-            return m;
-        },
-        containerCssClass: "select2PostCircleMember"
-    })
+            data: [],
+            initSelection: cake.data.b,
+            formatSelection: format,
+            formatResult: format,
+            dropdownCssClass: 's2-post-dropdown',
+            escapeMarkup: function (m) {
+                return m;
+            },
+            containerCssClass: "select2PostCircleMember"
+        })
         .on('change', function () {
             var $this = $(this);
             // グループを選択した場合、グループに所属するユーザーを展開して入力済にする
@@ -2484,31 +2486,31 @@ function bindSelect2Members($this) {
 
     //noinspection JSUnusedLocalSymbols
     $select2elem.select2({
-        'val': null,
-        multiple: true,
-        minimumInputLength: 1,
-        placeholder: cake.message.notice.b,
-        ajax: {
-            url: url ? url : cake.url.a,
-            dataType: 'json',
-            quietMillis: 100,
-            cache: true,
-            data: function (term, page) {
-                return {
-                    term: term, //search term
-                    page_limit: 10 // page size
-                };
+            'val': null,
+            multiple: true,
+            minimumInputLength: 1,
+            placeholder: cake.message.notice.b,
+            ajax: {
+                url: url ? url : cake.url.a,
+                dataType: 'json',
+                quietMillis: 100,
+                cache: true,
+                data: function (term, page) {
+                    return {
+                        term: term, //search term
+                        page_limit: 10 // page size
+                    };
+                },
+                results: function (data, page) {
+                    return {results: data.results};
+                }
             },
-            results: function (data, page) {
-                return {results: data.results};
+            formatSelection: format,
+            formatResult: format,
+            escapeMarkup: function (m) {
+                return m;
             }
-        },
-        formatSelection: format,
-        formatResult: format,
-        escapeMarkup: function (m) {
-            return m;
-        }
-    })
+        })
         .on('change', function () {
             var $this = $(this);
             // グループを選択した場合
@@ -2814,6 +2816,95 @@ function evFeedMoreView(options) {
     return false;
 }
 
+function evNotifications(options) {
+
+    //とりあえずドロップダウンは隠す
+    $("#HeaderDropdownNotify").removeClass("open");
+    $('body').removeClass('notify-dropdown-open');
+
+    var opt = $.extend({
+        recursive: false,
+        loader_id: null
+    }, options);
+
+    //フィード読み込み中はキャンセル
+    if (feed_loading_now) {
+        return false;
+    }
+    feed_loading_now = true;
+
+    attrUndefinedCheck(this, 'get-url');
+
+    var $obj = $(this);
+    var get_url = $obj.attr('get-url');
+
+    //layout-mainが存在しないところではajaxでコンテンツ更新しようにもロードしていない
+    //要素が多すぎるので、おとなしくページリロードする
+    jQuery.fn.exists = function () {
+        return Boolean(this.length > 0);
+    }
+    if (!$(".layout-main").exists()) {
+        window.location.href = get_url;
+        return false;
+    }
+
+    //アドレスバー書き換え
+    if (typeof history.pushState == 'function') {
+        try {
+            history.pushState(null, null, get_url);
+        } catch (e) {
+            window.location.href = get_url;
+            return false;
+        }
+    }
+
+    $('#jsGoTop').click();
+
+    //ローダー表示
+    var $loader_html = opt.loader_id ? $('#' + opt.loader_id) : $('<center><i id="__feed_loader" class="fa fa-refresh fa-spin"></i></center>');
+    if (!opt.recursive) {
+        $(".layout-main").html($loader_html);
+    }
+
+    // URL生成
+    var url = cake.url.notifications;
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: true,
+        dataType: 'json',
+        success: function (data) {
+            if (!$.isEmptyObject(data.html)) {
+                //取得したhtmlをオブジェクト化
+                var $posts = $(data.html);
+                //notify一覧に戻るhtmlを追加
+                //画像をレイジーロード
+                imageLazyOn($posts);
+                //一旦非表示
+                $posts.fadeOut();
+
+                $(".layout-main").html($posts);
+
+            }
+
+            //ローダーを削除
+            $loader_html.remove();
+
+            action_autoload_more = false;
+            autoload_more = false;
+            feed_loading_now = false;
+            do_reload_header_bellList = true;
+        },
+        error: function () {
+            alert(cake.message.notice.c);
+            feed_loading_now = false;
+            $loader_html.remove();
+        },
+    });
+    return false;
+}
+
 //通知から投稿に移動
 function evNotifyPost(options) {
 
@@ -2869,7 +2960,7 @@ function evNotifyPost(options) {
     // URL生成
     var url = get_url.replace(/post_permanent/, "ajax_post_permanent");
 
-    var button_notifylist = '<a href="/notifications" class="btn-back-notifications"> <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i> </a> ';
+    var button_notifylist = '<a href="#" get-url="/notifications" class="btn-back-notifications"> <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i> </a> ';
 
     $.ajax({
         type: 'GET',
@@ -3463,13 +3554,13 @@ function getModalFormFromUrl(e) {
 
     $modal_elm.on('shown.bs.modal', function (e) {
         $(this).find('.input-group.date').datepicker({
-            format: "yyyy/mm/dd",
-            todayBtn: 'linked',
-            language: "ja",
-            autoclose: true,
-            todayHighlight: true
-            //endDate:"2015/11/30"
-        })
+                format: "yyyy/mm/dd",
+                todayBtn: 'linked',
+                language: "ja",
+                autoclose: true,
+                todayHighlight: true
+                //endDate:"2015/11/30"
+            })
             .on('hide', function (e) {
                 $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[KeyResult][start_date]");
                 $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[KeyResult][end_date]");
@@ -4517,12 +4608,12 @@ $(document).ready(function () {
             else {
                 $removeFileForm.find('input[name="data[AttachedFile][file_id]"]').val($preview.data('file_id'));
                 $.ajax({
-                    url: cake.url.remove_file,
-                    type: 'POST',
-                    dataType: 'json',
-                    processData: false,
-                    data: $removeFileForm.serialize()
-                })
+                        url: cake.url.remove_file,
+                        type: 'POST',
+                        dataType: 'json',
+                        processData: false,
+                        data: $removeFileForm.serialize()
+                    })
                     .done(function (res) {
                         PNotify.removeAll();
                         // エラー
@@ -4884,12 +4975,12 @@ $(document).ready(function () {
                 // サーバ上から削除
                 $removeFileForm.find('input[name="data[AttachedFile][file_id]"]').val(old_file.file_id);
                 $.ajax({
-                    url: cake.url.remove_file,
-                    type: 'POST',
-                    dataType: 'json',
-                    processData: false,
-                    data: $removeFileForm.serialize()
-                })
+                        url: cake.url.remove_file,
+                        type: 'POST',
+                        dataType: 'json',
+                        processData: false,
+                        data: $removeFileForm.serialize()
+                    })
                     .done(function (res) {
                         // pass
                     })
@@ -4947,12 +5038,12 @@ $(document).ready(function () {
                 // サーバ上から削除
                 $removeFileForm.find('input[name="data[AttachedFile][file_id]"]').val(old_file.file_id);
                 $.ajax({
-                    url: cake.url.remove_file,
-                    type: 'POST',
-                    dataType: 'json',
-                    processData: false,
-                    data: $removeFileForm.serialize()
-                })
+                        url: cake.url.remove_file,
+                        type: 'POST',
+                        dataType: 'json',
+                        processData: false,
+                        data: $removeFileForm.serialize()
+                    })
                     .done(function (res) {
                         // pass
                     })
@@ -5152,12 +5243,12 @@ function evAjaxEditCircleAdminStatus(e) {
     var user_id = $this.attr('data-user-id');
 
     $.ajax({
-        url: $this.attr('action'),
-        type: 'POST',
-        dataType: 'json',
-        processData: false,
-        data: $this.serialize()
-    })
+            url: $this.attr('action'),
+            type: 'POST',
+            dataType: 'json',
+            processData: false,
+            data: $this.serialize()
+        })
         .done(function (data) {
             // 処理失敗時
             if (data.error) {
@@ -5219,12 +5310,12 @@ function evAjaxLeaveCircle(e) {
     var user_id = $this.attr('data-user-id');
 
     $.ajax({
-        url: $this.attr('action'),
-        type: 'POST',
-        dataType: 'json',
-        processData: false,
-        data: $this.serialize()
-    })
+            url: $this.attr('action'),
+            type: 'POST',
+            dataType: 'json',
+            processData: false,
+            data: $this.serialize()
+        })
         .done(function (data) {
             // 処理失敗時
             if (data.error) {
