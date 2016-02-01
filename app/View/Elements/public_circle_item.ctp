@@ -59,7 +59,7 @@ $member_count = isset($member_count) ? $member_count : '';
         </div>
         <div class="font_12px font_lightgray modalFeedTextPaddingSmall">
             <a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_get_circle_members', 'circle_id' => $circle['Circle']['id']]) ?>"
-               class="modal-ajax-get">
+               class="modal-ajax-get remove-on-hide">
                 <?= __d('gl', "%s メンバー", $member_count) ?>
             </a>
             &middot;

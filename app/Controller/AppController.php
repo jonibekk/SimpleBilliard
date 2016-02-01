@@ -844,4 +844,23 @@ class AppController extends Controller
         }
         return $this->_browser;
     }
+
+    function _setResponseCsv($filename)
+    {
+        // safari は日本語ファイル名が文字化けするので特別扱い
+        $browser = $this->getBrowser();
+        if ($browser['browser'] == 'Safari') {
+            $this->response->header('Content-Disposition',
+                                    sprintf('attachment; filename="%s";', $filename . '.csv'));
+        }
+        else {
+            $this->response->header('Content-Disposition',
+                                    sprintf('attachment; filename="%s"; filename*=UTF-8\'\'%s',
+                                            $filename . '.csv',
+                                            rawurlencode($filename . '.csv')));
+        }
+        $this->response->type('application/octet-stream');
+
+    }
+
 }
