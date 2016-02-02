@@ -4479,10 +4479,6 @@ msgstr ""
 "Sent a mail to %s. To authenticate the account, click on the URL listed in "
 "the mail ."
 
-#: View/Users/settings.ctp:23
-msgid "リンク"
-msgstr "Link"
-
 #: View/Users/token_resend.ctp:16
 msgid "メールアドレスの再認証"
 msgstr "Re-authentication of the mail address"

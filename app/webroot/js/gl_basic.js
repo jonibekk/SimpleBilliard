@@ -1497,13 +1497,6 @@ function attrUndefinedCheck(obj, attr_name) {
     }
 }
 
-$(document).on("mouseover", ".develop--forbiddenLink", function () {
-    $(this).append($('<div class="develop--forbiddenLink__design">準備中です</div>'));
-});
-$(document).on("mouseout", ".develop--forbiddenLink", function () {
-    $(this).find("div:last").remove();
-});
-
 //SubHeaderMenu
 $(function () {
     var showNavFlag = false;
