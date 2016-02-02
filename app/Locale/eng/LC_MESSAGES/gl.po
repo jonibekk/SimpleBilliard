@@ -1433,6 +1433,10 @@ msgstr "Free"
 msgid "プロ"
 msgstr "Pro"
 
+#: Model/Team.php:59
+msgid "無料キャンペーン"
+msgstr "Free Campaign"
+
 #: Model/Team.php:60
 msgid "今期から"
 msgstr "From this term"
@@ -3165,6 +3169,10 @@ msgstr "Team Image"
 #: View/Elements/Team/edit_basic_setting.ctp:92 View/Teams/add.ctp:87
 msgid "プラン"
 msgstr "Plan"
+
+#: View/Elements/Team/edit_basic_setting.ctp: View/Teams/add.ctp
+msgid "2016年8月31日まで無料でご利用いただけます。"
+msgstr "You can use Goalous free of charge until 31 Aug 2016."
 
 #: View/Elements/Team/edit_basic_setting.ctp:96 View/Teams/add.ctp:91
 msgid ""
