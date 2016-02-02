@@ -1195,9 +1195,9 @@ class UsersController extends AppController
         $all_term = array_map("show_date", $all_start_date, $all_end_date, $all_timezone);
 
         $term1 = array(
-            $current_id  => 'Current Term',
-            $next_id     => 'Next Term',
-            $previous_id => 'Previous Term',
+            $current_id  => __d('gl', "今期"),
+            $next_id     => __d('gl', "来期"),
+            $previous_id => __d('gl', "前期"),
         );
         $term2 = array_combine($all_id, $all_term);
         $term = $term1 + $term2;
