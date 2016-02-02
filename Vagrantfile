@@ -12,6 +12,7 @@ required_plugins.each do |plugin|
 end
 
 Vagrant.configure('2') do |config|
+
     if Vagrant.has_plugin?('vagrant-cachier')
         config.cache.auto_detect = true
         config.cache.scope = :box
@@ -41,7 +42,12 @@ Vagrant.configure('2') do |config|
         src_dir = './'
         doc_root = '/vagrant_data/app/webroot'
         app_root = '/vagrant_data/'
-        default.vm.synced_folder src_dir, '/vagrant_data', create: true, owner: 'vagrant', group: 'www-data', mount_options: ['dmode=775,fmode=775']
+        if ( RUBY_PLATFORM.downcase =~ /darwin/ )
+          default.vm.synced_folder src_dir, '/vagrant_data', :nfs => true
+        else
+          default.vm.synced_folder src_dir, '/vagrant_data', create: true, owner: 'vagrant', group: 'www-data', mount_options: ['dmode=775,fmode=775']
+        end
+
 
         default.vm.provision :chef_solo do |chef|
             chef.cookbooks_path = 'cookbooks'

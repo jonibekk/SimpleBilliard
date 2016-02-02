@@ -1002,4 +1002,11 @@ class UserTest extends GoalousTestCase
             $this->assertTrue(strpos($v['image'], '.jpg') !== false);
         }
     }
+
+    function testGetMyProf()
+    {
+        $this->User->my_uid = 1;
+        $res = $this->User->getMyProf();
+        $this->assertNotEmpty($res);
+    }
 }
