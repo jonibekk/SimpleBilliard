@@ -3,9 +3,9 @@
  * Created by PhpStorm.
  * User: bigplants
  * Date: 6/18/14
- * Time: 5:40 PM
+ * Time: 5:40 PM.
  *
- * @var CodeCompletionView $this
+ * @var CodeCompletionView
  */
 
 // two_column レイアウトで、xxs サイズの時にサイドバーを隠す
@@ -15,12 +15,9 @@ $this->set('hidden_sidebar_xxs', true);
 <?php $this->start('sidebar') ?>
 <div class="sidebar-setting" role="complementary" id="SidebarSetting">
     <ul class="nav">
-        <li class="active"><a href="#account"><?= __d('gl', "アカウント") ?></a></li>
-        <li class=""><a href="#profile"><?= __d('gl', "プロフィール") ?></a></li>
-        <li class="">
-            <a class="" href="#notification"><?= __d('gl', "通知") ?></a></li>
-        <li class=""><!--suppress HtmlUnknownAnchorTarget -->
-            <a class="develop--forbiddenLink" href="#link"><?= __d('gl', "リンク") ?></a></li>
+        <li class="active"><a href="#account"><?= __d('gl', 'アカウント') ?></a></li>
+        <li class=""><a href="#profile"><?= __d('gl', 'プロフィール') ?></a></li>
+        <li class=""><a class="" href="#notification"><?= __d('gl', '通知') ?></a></li>
     </ul>
 </div>
 <?php $this->end() ?>
