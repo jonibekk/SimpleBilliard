@@ -15,11 +15,11 @@
  * @var                    $top_lang
  */
 ?>
-<!-- START app/View/Pages/contact.ctp -->
 <?php $this->append('meta') ?>
 <link rel="alternate" hreflang="ja" href="<?= $this->Html->url('/ja/contact') ?>"/>
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/contact') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/contact') ?>"/>
 <?php $this->end() ?>
+<!-- START app/View/Pages/contact.ctp -->
 contact!
 <!-- END app/View/Pages/contact.ctp -->

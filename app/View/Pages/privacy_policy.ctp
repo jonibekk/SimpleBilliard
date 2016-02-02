@@ -15,11 +15,11 @@
  * @var                    $top_lang
  */
 ?>
-<!-- START app/View/Pages/privacy_policy.ctp -->
 <?php $this->append('meta') ?>
 <link rel="alternate" hreflang="ja" href="<?= $this->Html->url('/ja/privacy_policy') ?>"/>
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/privacy_policy') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/privacy_policy') ?>"/>
 <?php $this->end() ?>
+<!-- START app/View/Pages/privacy_policy.ctp -->
 特定商取引法に基づく表記
 <!-- END app/View/Pages/privacy_policy.ctp -->

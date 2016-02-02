@@ -15,11 +15,11 @@
  * @var                    $top_lang
  */
 ?>
-<!-- START app/View/Pages/features.ctp -->
 <?php $this->append('meta') ?>
 <link rel="alternate" hreflang="ja" href="<?= $this->Html->url('/ja/features') ?>"/>
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/features') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/features') ?>"/>
 <?php $this->end() ?>
+<!-- START app/View/Pages/features.ctp -->
 features!
 <!-- END app/View/Pages/features.ctp -->

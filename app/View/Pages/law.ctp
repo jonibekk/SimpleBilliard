@@ -15,11 +15,11 @@
  * @var                    $top_lang
  */
 ?>
-<!-- START app/View/Pages/law.ctp -->
 <?php $this->append('meta') ?>
 <link rel="alternate" hreflang="ja" href="<?= $this->Html->url('/ja/law') ?>"/>
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/law') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/law') ?>"/>
 <?php $this->end() ?>
+<!-- START app/View/Pages/law.ctp -->
 特定商取引法に基づく表記
 <!-- END app/View/Pages/law.ctp -->

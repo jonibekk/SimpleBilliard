@@ -15,11 +15,11 @@
  * @var                    $top_lang
  */
 ?>
-<!-- START app/View/Pages/pricing.ctp -->
 <?php $this->append('meta') ?>
 <link rel="alternate" hreflang="ja" href="<?= $this->Html->url('/ja/pricing') ?>"/>
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/pricing') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/pricing') ?>"/>
 <?php $this->end() ?>
+<!-- START app/View/Pages/pricing.ctp -->
 pricing!
 <!-- END app/View/Pages/pricing.ctp -->
