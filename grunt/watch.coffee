@@ -15,3 +15,6 @@ module.exports = (grunt) ->
   less:
     files: ['<%= config.less %>/**/*.less']
     tasks: ['css']
+  js:
+    files: ['<%= config.js %>/**/*.js']
+    tasks: ['js']
