@@ -9,12 +9,12 @@ module.exports = (grunt) ->
   options:
     spawn: false
 
-  coffee:
-    files: ['<%= config.coffee %>/**/*.coffee']
+  js:
+    files: [
+      '<%= config.coffee %>/**/*.coffee'
+      '<%= config.js %>/**/*.js'
+    ]
     tasks: ['js']
-  less:
+  css:
     files: ['<%= config.less %>/**/*.less']
     tasks: ['css']
-  js:
-    files: ['<%= config.js %>/**/*.js']
-    tasks: ['js']
