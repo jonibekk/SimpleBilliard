@@ -20,6 +20,8 @@ PR制度を採用しています。
 `vagrant ssh default`
 1. アプリケーションをアップデート  
 `vagrant@precise32:/vagrant_data/app$ sh ../etc/local/ubuntu_update_app.sh `
+1. gruntでcss,less,coffee,jsファイルをwatch  
+`vagrant@precise32:/vagrant_data/app$ grunt`
 1. 作業後にコミット(関連するIssue番号をコミットログにつける。) ※ここからホストOSで作業  
 `git add .`  
 `git commit`
