@@ -4929,6 +4929,19 @@ $(document).ready(function () {
     var messageParams = {
         formID: 'messageDropArea',
         previewContainerID: 'messageUploadFilePreviewArea',
+        beforeSending: function (file) {
+            if ($uploadFileForm._sending) {
+                return;
+            }
+            $uploadFileForm._sending = true;
+            // ファイルの送信中はフォームの submit 時に confirm を出すようにする
+            $('#MessageSubmit').on('click', $uploadFileForm._confirmSubmit);
+        },
+        afterQueueComplete: function (file) {
+            $uploadFileForm._sending = false;
+            // フォームの submit confirm を解除
+            $('#MessageSubmit').off('click', $uploadFileForm._confirmSubmit);
+        },
         afterSuccess: function (file) {
             $("#message_submit_button").click(function () {
                 if (typeof Dropzone.instances[0] !== "" && Dropzone.instances[0].files.length > 0) {
