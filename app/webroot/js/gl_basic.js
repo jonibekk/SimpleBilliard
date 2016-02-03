@@ -953,6 +953,8 @@ function getAjaxFormReplaceElm() {
                 });
                 $('#' + click_target_id).trigger('click').focus();
 
+                var $uploadFileForm = $(document).data('uploadFileForm');
+
                 // コメントフォームをドラッグ＆ドロップ対象エリアにする
                 var commentParams = {
                     formID: function () {
@@ -960,9 +962,21 @@ function getAjaxFormReplaceElm() {
                     },
                     previewContainerID: function () {
                         return $(this).attr('data-preview-container-id');
+                    },
+                    beforeSending: function () {
+                        if ($uploadFileForm._sending) {
+                            return;
+                        }
+                        $uploadFileForm._sending = true;
+                        // ファイルの送信中はフォームの submit 時に confirm を出すようにする
+                        $('#CommentSubmit_' + post_id).on('click', $uploadFileForm._confirmSubmit);
+                    },
+                    afterQueueComplete: function () {
+                        $uploadFileForm._sending = false;
+                        // フォームの submit confirm を解除
+                        $('#CommentSubmit_' + post_id).off('click', $uploadFileForm._confirmSubmit);
                     }
                 };
-                var $uploadFileForm = $(document).data('uploadFileForm');
                 $uploadFileForm.registerDragDropArea('#CommentBlock_' + post_id, commentParams);
                 $uploadFileForm.registerAttachFileButton('#CommentUploadFileButton_' + post_id, commentParams);
 
