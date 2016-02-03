@@ -212,8 +212,6 @@ message_app.controller(
                         // メッセージ表示
                         bottom_scroll();
                     });
-                }).error(function () {
-                    $scope.flag = false;
                 });
             };
 

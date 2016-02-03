@@ -1433,6 +1433,10 @@ msgstr "Free"
 msgid "プロ"
 msgstr "Pro"
 
+#: Model/Team.php:59
+msgid "無料キャンペーン"
+msgstr "Free Campaign"
+
 #: Model/Team.php:60
 msgid "今期から"
 msgstr "From this term"
@@ -3166,6 +3170,10 @@ msgstr "Team Image"
 msgid "プラン"
 msgstr "Plan"
 
+#: View/Elements/Team/edit_basic_setting.ctp: View/Teams/add.ctp
+msgid "2016年8月31日まで無料でご利用いただけます。"
+msgstr "You can use Goalous free of charge until 31 Aug 2016."
+
 #: View/Elements/Team/edit_basic_setting.ctp:96 View/Teams/add.ctp:91
 msgid ""
 "フリープランは、５人までのチームで使えます。また、複数の機能制限がございま"
@@ -4479,10 +4487,6 @@ msgstr ""
 "Sent a mail to %s. To authenticate the account, click on the URL listed in "
 "the mail ."
 
-#: View/Users/settings.ctp:23
-msgid "リンク"
-msgstr "Link"
-
 #: View/Users/token_resend.ctp:16
 msgid "メールアドレスの再認証"
 msgstr "Re-authentication of the mail address"
@@ -4518,6 +4522,19 @@ msgstr "Approval Status: %s"
 #: View/Users/view_info.ctp:22
 msgid "編集"
 msgstr "Edit"
+
+#: Controller/UsersController.php:
+msgid "今期"
+msgstr "Current Term"
+
+#: Controller/UsersController.php:
+msgid "来期"
+msgstr "Next Term"
+
+#: Controller/UsersController.php:
+msgid "前期"
+msgstr "Previous Term"
+
 
 #~ msgid "公開サークルの参加設定を保存しました。"
 #~ msgstr "Saved participation settings public circle."

@@ -173,6 +173,7 @@ class AppController extends Controller
         $this->_setSecurity();
         $this->_setAppLanguage();
         $this->_decideMobileAppRequest();
+        $this->set('my_prof', $this->User->getMyProf());
         //ログイン済みの場合のみ実行する
         if ($this->Auth->user()) {
             $this->current_team_id = $this->Session->read('current_team_id');
