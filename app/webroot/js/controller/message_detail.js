@@ -118,8 +118,37 @@ message_app.controller(
             //    bottom_scroll();
             //});
 
+            // ファイルアップロード処理の初期化
+            var $uploadFileForm = $(document).data('uploadFileForm');
+            var messageReplayParams = {
+                formID: 'messageReplyDropArea',
+                previewContainerID: 'messageUploadFilePreviewArea',
+                beforeSending: function (file) {
+                    if ($uploadFileForm._sending) {
+                        return;
+                    }
+                    $uploadFileForm._sending = true;
+                },
+                afterQueueComplete: function (file) {
+                    $uploadFileForm._sending = false;
+                }
+            };
+            var messageDzOptions = {
+                maxFiles: 10
+            };
+            $uploadFileForm.registerDragDropArea('#messageReplyDropArea', messageReplayParams, messageDzOptions);
+            $uploadFileForm.registerAttachFileButton('#messageReplyUploadFileButton', messageReplayParams, messageDzOptions);
+
             // メッセージを送信する
             $scope.clickMessage = function (event, val) {
+
+                // ファイルアップロード中の場合は送信確認をおこなう
+                if($uploadFileForm._sending) {
+                    if(!$uploadFileForm._confirmSubmit()){
+                        return;
+                    }
+                }
+
                 if ($scope.flag) {
                     return;
                 }
