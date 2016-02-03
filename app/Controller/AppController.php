@@ -208,6 +208,10 @@ class AppController extends Controller
                 // （チームが削除された場合）
                 if ($this->current_team_id && !isset($active_team_list[$this->current_team_id])) {
                     $this->Session->write('current_team_id', null);
+                    //もしdefault_teamがそのチームだった場合はdefault_teamにnullをセット
+                    if ($this->Auth->user('default_team_id') == $this->current_team_id) {
+                        $this->User->updateDefaultTeam(null, true, $login_uid);
+                    }
                     $this->Pnotify->outError(__d('gl', "ログイン中のチームが削除されたため、ログアウトされました。"));
                     $this->Auth->logout();
                     return;
@@ -229,8 +233,11 @@ class AppController extends Controller
                 }
                 $this->set(compact('my_channels_json'));
 
-                //デフォルトチームが設定されていない場合はアクティブなチームでカレントチームとデフォルトチームを書き換え
-                if (!$this->Auth->user('default_team_id')) {
+                //デフォルトチームが設定されていない場合もしくはカレントチームで非アクティブの場合は
+                //アクティブなチームでカレントチームとデフォルトチームを書き換え
+                if (!$this->Auth->user('default_team_id') ||
+                    !$this->User->TeamMember->isActive($login_uid)
+                ) {
                     $this->User->updateDefaultTeam($set_default_team_id, true, $login_uid);
                     $this->Session->write('current_team_id', $set_default_team_id);
                     $this->_refreshAuth();
@@ -241,15 +248,6 @@ class AppController extends Controller
                             $obj->current_team_id = $set_default_team_id;
                         }
                     }
-                }
-                //デフォルトチームが設定されていて、カレントチームが非アクティブの場合は、デフォルトチームを書き換えてログオフ
-                elseif (!$this->User->TeamMember->isActive($login_uid)) {
-                    $this->User->updateDefaultTeam($set_default_team_id, true, $login_uid);
-                    $this->Session->write('current_team_id', $set_default_team_id);
-                    //ログアウト
-                    $this->Pnotify->outError(__d('gl', "アクセスしたチームのアクセス権限がありません"));
-                    $this->Auth->logout();
-                    return;
                 }
                 $this->_setNotifySettings();
                 $this->_setUnApprovedCnt($login_uid);
