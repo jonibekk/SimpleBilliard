@@ -971,6 +971,15 @@ function getAjaxFormReplaceElm() {
                         // ファイルの送信中はフォームの submit 時に confirm を出すようにする
                         $('#CommentSubmit_' + post_id).on('click', $uploadFileForm._confirmSubmit);
                     },
+                    afterSuccess: function (file) {
+                        $('#CommentSubmit_' + post_id).click(function () {
+                            if (typeof Dropzone.instances[0] !== "" && Dropzone.instances[0].files.length > 0) {
+                                // ajax で submit するので、アップロード完了後に Dropzone のファイルリストを空にする
+                                // （参照先の配列を空にするため空配列の代入はしない）
+                                Dropzone.instances[0].files.length = 0;
+                            }
+                        });
+                    },
                     afterQueueComplete: function () {
                         $uploadFileForm._sending = false;
                         // フォームの submit confirm を解除
