@@ -4523,6 +4523,19 @@ msgstr "Approval Status: %s"
 msgid "編集"
 msgstr "Edit"
 
+#: Controller/UsersController.php:
+msgid "今期"
+msgstr "Current Term"
+
+#: Controller/UsersController.php:
+msgid "来期"
+msgstr "Next Term"
+
+#: Controller/UsersController.php:
+msgid "前期"
+msgstr "Previous Term"
+
+
 #~ msgid "公開サークルの参加設定を保存しました。"
 #~ msgstr "Saved participation settings public circle."
 
