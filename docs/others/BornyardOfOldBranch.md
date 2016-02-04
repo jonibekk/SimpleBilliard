@@ -54,3 +54,33 @@
   
 - others-js2coffee  
   14b6881d82b3701cd0fbea172908d9f56729fba6
+
+- stress-test  
+  bbc00232760dbd3da4ea2a8b540794d2d0b23ada
+
+- test-css-js-perf  
+  ecc875ef21f0cda29ee3f51a42a11712d3a55541 
+
+- visible-new-members-name #2791  
+  74f2a9862b96d998ca8b3491387639236b3b9ed4
+
+- crop_profile_pic_test2 #2790  
+  c7b61278d8c972e28b20a2021da01637fa1ab602
+
+- improve-select-arrow-again #3288  
+  472efe28f20bf33b9201abcb56a5537a830d5ddb
+
+- topic-resize-shell #3417  
+  3b108e42e9e188f8ae85f68e6b97b0a0cdc2001f
+
+- doc-external-specification #3125  
+  edf631d45db428dfb975b62e6d8c4404cee915ff
+
+- crop_profile_pic_test1  
+  1ea46099cd043a502e101eb7d437962696993001
+
+- profile_image_uploading #2779  
+  146a7cef989dfc4cd9ef02d3d8d113e8f7de28b2
+
+- topic-angular-gettext #2817  
+  d0cb4351da8eb879b774b77adfb11c5e635ea508
