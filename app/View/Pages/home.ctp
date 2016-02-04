@@ -28,8 +28,6 @@
 
         <p class="summary"><?= __d('lp', 'Goalous(ゴーラス)正式版がついに今秋登場！') ?><br/><?= __d('lp', 'チーム向上のためのSNS。はい、決定版。') ?>
         </p>
-        <a class="btn btn-cta btn-cta-secondary" href="https://old.goalous.com"><?= __d('lp',
-                                                                                        '前バージョン(β)をご利用の方はこちら') ?></a>
     </div>
     <!--//intro-->
 
