@@ -19,7 +19,7 @@
                 // ロゴの表示保留中
                 // echo($this->Html->link($this->Html->image('logo_on.png')));
             ?>
-            <div>最強にオープンな社内SNS</div>
+            <div><?= __d('lp', '最強にオープンな社内SNS') ?></div>
             <div class="logo-title">
                 <?php
                     // echo($this->Html->link($this->Html->image('')));
@@ -30,7 +30,7 @@
             <div class="navbar-header">
                 <!-- モバイルサイズのハンバーガーメニュー -->
                 <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
+                    <span class="sr-only"><?= __d('lp', '') ?>Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
