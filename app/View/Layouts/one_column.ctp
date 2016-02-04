@@ -21,6 +21,7 @@
     echo $this->element('header_logged_in');
 }
 else {
+    // これも読み込まれる可能性はあるのか。
     echo $this->element('header_not_logged_in');
 }
 ?>

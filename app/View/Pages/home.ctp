@@ -21,6 +21,7 @@
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/') ?>"/>
 <?php $this->end() ?>
+
 <!-- ******PROMO****** -->
 <section id="promo" class="promo section">
     <div class="container intro">

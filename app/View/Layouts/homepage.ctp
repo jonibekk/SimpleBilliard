@@ -18,14 +18,14 @@
  */
 ?>
 <!-- START app/View/Layouts/homepage.ctp -->
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <!--[if IE 8]>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" class="ie8"> <![endif]-->
 <!--[if IE 9]>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" class="ie9"> <![endif]-->
 <!--[if !IE]><!-->
-<html xmlns="http://www.w3.org/1999/xhtml" lang="ja"> <!--<![endif]-->
+<html lang="en">
+<!--<![endif]-->
 <head>
     <?= $this->Html->charset(); ?>
     <title><?=
@@ -78,71 +78,32 @@
 
 <!-- * Facebook Like button script starts -->
 <div id="fb-root"></div>
-<script>(function (d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) return;
-        js = d.createElement(s);
-        js.id = id;
-        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.0";
-        fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));</script>
+<script>
+(function(d, s, id) {
+var js, fjs = d.getElementsByTagName(s)[0];
+if (d.getElementById(id)) return;
+    js = d.createElement(s);
+    js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.0";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+</script>
 <!-- * Facebook Like button script ends -->
 
+
 <div class="wrapper">
+
     <!-- ******HEADER****** -->
-    <header id="header" class="header">
-        <div class="container">
-            <h1 class="logo pull-left">
-                <a href="<?= $this->Html->url('/') ?>">
-                    <span class="logo-title">
-                        <?= $this->Html->image('homepage/logo.png', ['alt' => 'Goalous']) ?>
-                        <?= $this->Html->image('homepage/goalous.png', ['alt' => 'Goalous']) ?>
-                        </span>
-                </a>
-            </h1><!--//logo-->
-            <nav id="main-nav" class="main-nav navbar-right" role="navigation">
-                <div class="navbar-header">
-                    <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-collapse">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <!--//nav-toggle-->
-                </div>
-                <!--//navbar-header-->
-                <div class="navbar-collapse collapse" id="navbar-collapse">
-                    <ul class="nav navbar-nav">
-                        <li class="nav-item">
-                            <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'login']) ?>"
-                               class=""><?= __d('gl', 'ログイン') ?></a>
-                        </li>
-                        <li class="nav-item dropdown last">
-                            <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="0"
-                               data-close-others="false" href="#"><?= __d('gl', 'Language') ?> <i
-                                    class="fa fa-angle-down"></i></a>
-                            <ul class="dropdown-menu">
-                                <?php /** @var $lang_list */
-                                foreach ($lang_list as $key => $val) : ?>
-                                    <li><?= $this->Html->link($val, '/' . $key . '/'); ?></li>
-                                <?php endforeach; ?>
-                            </ul>
-                        </li>
-                    </ul>
-                    <!--//nav-->
-                </div>
-                <!--//navabr-collapse-->
-            </nav>
-            <!--//main-nav-->
-        </div>
-        <!--//container-->
-    </header>
-    <!--//header-->
+    <?php echo $this->element('header_not_logged_in'); ?>
+
     <?= $this->element('alert_maint') ?>
     <?= $this->Session->flash(); ?>
+
+
     <?= $this->fetch('content') ?>
 </div>
 <!-- ******FOOTER****** -->
+<?php echo $this->element('footer'); ?>
 <footer class="footer">
     <div class="footer-content">
         <div class="container">
