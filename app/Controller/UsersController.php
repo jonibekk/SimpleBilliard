@@ -630,6 +630,7 @@ class UsersController extends AppController
         if ($this->request->is('put')) {
             //キャッシュ削除
             Cache::delete($this->User->getCacheKey(CACHE_KEY_MY_NOTIFY_SETTING, true, null, false), 'user_data');
+            Cache::delete($this->User->getCacheKey(CACHE_KEY_MY_PROFILE, true, null, false), 'user_data');
             //request->dataに入っていないデータを表示しなければ行けない為、マージ
             $this->request->data['User'] = array_merge($me['User'],
                                                        isset($this->request->data['User']) ? $this->request->data['User'] : []);
@@ -675,6 +676,7 @@ class UsersController extends AppController
             }
             $me = $this->_getMyUserDataForSetting();
             $this->request->data = $me;
+            $this->set('my_prof', $this->User->getMyProf());
         }
         else {
             $this->request->data = $me;
@@ -1138,7 +1140,7 @@ class UsersController extends AppController
      *
      * @return CakeResponse
      */
-    public function  ajax_validate_email()
+    public function ajax_validate_email()
     {
         $this->_ajaxPreProcess();
         $email = $this->request->query('email');
@@ -1193,9 +1195,9 @@ class UsersController extends AppController
         $all_term = array_map("show_date", $all_start_date, $all_end_date, $all_timezone);
 
         $term1 = array(
-            $current_id  => 'Current Term',
-            $next_id     => 'Next Term',
-            $previous_id => 'Previous Term',
+            $current_id  => __d('gl', "今期"),
+            $next_id     => __d('gl', "来期"),
+            $previous_id => __d('gl', "前期"),
         );
         $term2 = array_combine($all_id, $all_term);
         $term = $term1 + $term2;

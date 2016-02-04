@@ -953,6 +953,8 @@ function getAjaxFormReplaceElm() {
                 });
                 $('#' + click_target_id).trigger('click').focus();
 
+                var $uploadFileForm = $(document).data('uploadFileForm');
+
                 // コメントフォームをドラッグ＆ドロップ対象エリアにする
                 var commentParams = {
                     formID: function () {
@@ -960,9 +962,30 @@ function getAjaxFormReplaceElm() {
                     },
                     previewContainerID: function () {
                         return $(this).attr('data-preview-container-id');
+                    },
+                    beforeSending: function () {
+                        if ($uploadFileForm._sending) {
+                            return;
+                        }
+                        $uploadFileForm._sending = true;
+                        // ファイルの送信中はフォームの submit 時に confirm を出すようにする
+                        $('#CommentSubmit_' + post_id).on('click', $uploadFileForm._confirmSubmit);
+                    },
+                    afterSuccess: function (file) {
+                        $('#CommentSubmit_' + post_id).click(function () {
+                            if (typeof Dropzone.instances[0] !== "" && Dropzone.instances[0].files.length > 0) {
+                                // ajax で submit するので、アップロード完了後に Dropzone のファイルリストを空にする
+                                // （参照先の配列を空にするため空配列の代入はしない）
+                                Dropzone.instances[0].files.length = 0;
+                            }
+                        });
+                    },
+                    afterQueueComplete: function () {
+                        $uploadFileForm._sending = false;
+                        // フォームの submit confirm を解除
+                        $('#CommentSubmit_' + post_id).off('click', $uploadFileForm._confirmSubmit);
                     }
                 };
-                var $uploadFileForm = $(document).data('uploadFileForm');
                 $uploadFileForm.registerDragDropArea('#CommentBlock_' + post_id, commentParams);
                 $uploadFileForm.registerAttachFileButton('#CommentUploadFileButton_' + post_id, commentParams);
 
@@ -1496,13 +1519,6 @@ function attrUndefinedCheck(obj, attr_name) {
         throw new Error(msg);
     }
 }
-
-$(document).on("mouseover", ".develop--forbiddenLink", function () {
-    $(this).append($('<div class="develop--forbiddenLink__design">準備中です</div>'));
-});
-$(document).on("mouseout", ".develop--forbiddenLink", function () {
-    $(this).find("div:last").remove();
-});
 
 //SubHeaderMenu
 $(function () {
@@ -4936,6 +4952,19 @@ $(document).ready(function () {
     var messageParams = {
         formID: 'messageDropArea',
         previewContainerID: 'messageUploadFilePreviewArea',
+        beforeSending: function (file) {
+            if ($uploadFileForm._sending) {
+                return;
+            }
+            $uploadFileForm._sending = true;
+            // ファイルの送信中はフォームの submit 時に confirm を出すようにする
+            $('#MessageSubmit').on('click', $uploadFileForm._confirmSubmit);
+        },
+        afterQueueComplete: function (file) {
+            $uploadFileForm._sending = false;
+            // フォームの submit confirm を解除
+            $('#MessageSubmit').off('click', $uploadFileForm._confirmSubmit);
+        },
         afterSuccess: function (file) {
             $("#message_submit_button").click(function () {
                 if (typeof Dropzone.instances[0] !== "" && Dropzone.instances[0].files.length > 0) {

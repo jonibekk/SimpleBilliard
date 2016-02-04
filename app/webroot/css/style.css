@@ -2474,27 +2474,6 @@ textarea.comment-post-form {
 Temporary Properties - YOU MUST FIX
 ==================================*/
 
-.develop--forbiddenLink {
-    position: relative !important;
-}
-
-.develop--forbiddenLink__design {
-    top: 24px;
-    left: 32px;
-    width: 72px;
-    height: 24px;
-    line-height: 12px;
-    font-size: 12px;
-    padding: 5px;
-    border: solid 1px #999;
-    border-radius: 4px;
-    background: #ccc;
-    text-align: center;
-    position: absolute;
-    z-index: 100;
-    opacity: 0.8;
-}
-
 /*noinspection ALL*/
 
 .develop--submenu {

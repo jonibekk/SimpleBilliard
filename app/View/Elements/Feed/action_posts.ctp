@@ -28,7 +28,7 @@
                                     <li>
                                         <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_edit_action_modal', 'action_result_id' => $post['Post']['action_result_id']]) ?>"
                                            class="modal-ajax-get"
-                                            ><?= __d('gl', "アクションを編集") ?></a>
+                                        ><?= __d('gl', "アクションを編集") ?></a>
                                     </li>
                                 <?php endif ?>
                                 <li><a href="#" class="copy_me"
@@ -207,7 +207,7 @@
                        id="ActionComments_<?= $post['Post']['id'] ?>"
                        parent-id="ActionComments_<?= $post['Post']['id'] ?>"
                        get-url="<?= $this->Html->url(["controller" => "posts", 'action' => 'ajax_get_old_comment', 'post_id' => $post['Post']['id'], $post['Post']['comment_count'] - 3]) ?>"
-                        >
+                    >
                         <i class="fa fa-comment-o"></i>&nbsp;<?=
                         __d('gl', "他%s件のコメントを見る",
                             $post['Post']['comment_count'] - 3) ?></a>
@@ -222,7 +222,7 @@
                    style="display:none"
                    post-id="<?= $post['Post']['id'] ?>"
                    get-url="<?= $this->Html->url(["controller" => "posts", 'action' => 'ajax_get_latest_comment', 'post_id' => $post['Post']['id']]) ?>"
-                    >
+                >
                     <div class="alert alert-danger new-comment-read">
                         <span class="num">0</span>
                         <?= __d('gl', "件の新しいコメントがあります") ?>
@@ -237,7 +237,7 @@
                     $this->Html->image('ajax-loader.gif',
                                        [
                                            'class'         => 'lazy comment-img',
-                                           'data-original' => $this->Upload->uploadUrl($this->Session->read('Auth.User'),
+                                           'data-original' => $this->Upload->uploadUrl($my_prof,
                                                                                        'User.photo',
                                                                                        ['style' => 'small']),
                                        ]
