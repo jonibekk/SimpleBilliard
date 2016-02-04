@@ -4622,6 +4622,35 @@ $(document).ready(function () {
             }
             // 新しくアップロードするファイルの場合
             else {
+                // キューに入ってるアップロードをキャンセルしようとした場合
+                //   (アップロード中のキャンセルはcanceledコールバックが呼ばれるっぽい。
+                //   このブロックはその前段階のキャンセル時の処理。)
+                if($preview.data('file_id') === undefined) {
+                    // アップロード中のキャンセル時は確認をはさむので、
+                    // ここでもそれに合わせて確認をはさむようにする
+                    if(!confirm(cake.message.validate.dropzone_cancel_upload_confirmation)) {
+                        return;
+                    }
+
+                    // キャンセルを確認出来るようにファイルの名前を強調して少しの間表示しておく
+                    $preview.find('.dz-name').addClass('font_darkRed font_bold').append('(' + cake.word.cancel + ')');
+                    setTimeout(function () {
+                        $preview.remove();
+                    }, 4000);
+                    $uploadFileForm.hide();
+                    PNotify.removeAll();
+
+                    // 成功
+                    new PNotify({
+                        type: 'success',
+                        title: cake.word.success,
+                        text: cake.message.validate.dropzone_cancel_upload,
+                        icon: "fa fa-check-circle",
+                        delay: 4000,
+                        mouse_reset: false
+                    });
+                    return;
+                }
                 $removeFileForm.find('input[name="data[AttachedFile][file_id]"]').val($preview.data('file_id'));
                 $.ajax({
                         url: cake.url.remove_file,
@@ -4677,6 +4706,7 @@ $(document).ready(function () {
             }
         },
         // アップロードがキャンセルされたとき
+        // (キューにある状態の場合はremovedfile()が呼ばれる。ここは呼ばれない)
         canceled: function (file) {
             var $preview = $(file.previewTemplate);
             // キャンセルを確認出来るようにファイルの名前を強調して少しの間表示しておく
