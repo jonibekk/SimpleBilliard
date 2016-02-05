@@ -37,7 +37,12 @@ class Email extends AppModel
     ];
 
     public $contact_validate = [
-        'email'                 => [
+        'want'    => [
+            'notEmpty' => [
+                'rule' => 'notEmpty',
+            ],
+        ],
+        'email'   => [
             'maxLength'     => ['rule' => ['maxLength', 200]],
             'notEmpty'      => [
                 'rule' => 'notEmpty',
@@ -49,21 +54,20 @@ class Email extends AppModel
                 'rule' => ['isUnique'],
             ]
         ],
-        'company_name'          => [
+        'company' => [
             'maxLength' => ['rule' => ['maxLength', 50]],
         ],
-        'user_name'             => [
+        'name'    => [
             'notEmpty'  => ['rule' => 'notEmpty',],
             'maxLength' => ['rule' => ['maxLength', 50]],
         ],
-        'body'                  => [
+        'message' => [
             'notEmpty'  => ['rule' => 'notEmpty',],
             'maxLength' => ['rule' => ['maxLength', 3000]],
         ],
-        'accept_privacy_policy' => [
-            'notEmpty' => [
-                'rule' => 'notEmpty',
-            ],
+        'need'    => [
+            'rule'     => ['multiple', ['min' => 1]],
+            'required' => true,
         ],
     ];
 

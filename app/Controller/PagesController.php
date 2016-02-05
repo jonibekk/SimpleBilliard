@@ -145,7 +145,6 @@ class PagesController extends AppController
             $this->Session->write('contact_form_data', $data);
             return $this->redirect('/contact_confirm');
         }
-        $this->Pnotify->outError(__d('validate', '問題が発生したため、処理が完了しませんでした。'));
         return $this->render();
     }
 

@@ -30,6 +30,15 @@ Router::connect('/ajax_post_permanent/:post_id/*', ['controller' => 'posts', 'ac
 Router::connect('/ajax_circle_feed/:circle_id/*', ['controller' => 'posts', 'action' => 'ajax_circle_feed',]);
 
 /**
+ * コンタクト系の一部のactionは独自の処理が必要な為、actionメソッドをPagesControllerに配置している
+ * 言語指定あり
+ */
+Router::connect('/:action', ['controller' => 'pages'],
+                ['action' => 'contact|contact_confirm|contact_send']);
+Router::connect('/:lang/:action', ['controller' => 'pages'],
+                ['action' => 'contact|contact_confirm|contact_send', 'lang' => 'ja|en']);
+
+/**
  * トップページの言語切り換えの為のルーティング設定。
  * 言語指定あり
  * PagesControllerにのみ影響する。
@@ -39,14 +48,6 @@ Router::connect('/:pagename', ['controller' => 'pages', 'action' => 'display'],
                 ['pagename' => 'features|pricing|contact|contact_confirm|contact_thanks|terms|privacy_policy|law', 'pass' => ['pagename']]);
 Router::connect('/:lang/:pagename', ['controller' => 'pages', 'action' => 'display'],
                 ['pagename' => 'features|pricing|contact|contact_confirm|contact_thanks|terms|privacy_policy|law', 'lang' => 'ja|en', 'pass' => ['pagename']]);
-/**
- * コンタクト系の一部のactionは独自の処理が必要な為、actionメソッドをPagesControllerに配置している
- * 言語指定あり
- */
-Router::connect('/:action', ['controller' => 'pages'],
-                ['action' => 'contact|contact_confirm|contact_send']);
-Router::connect('/:lang/:action', ['controller' => 'pages'],
-                ['action' => 'contact|contact_confirm|contact_send', 'lang' => 'ja|en']);
 
 /**
  * Load all plugin routes. See the CakePlugin documentation on
