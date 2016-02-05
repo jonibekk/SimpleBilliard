@@ -23,6 +23,6 @@
 <!-- START app/View/Pages/contact_confirm.ctp -->
 contact_confirm!
 
-<a href="/emails/contact_send">送信</a>
+<a href="/contact_send">送信</a>
 
 <!-- END app/View/Pages/contact_confirm.ctp -->

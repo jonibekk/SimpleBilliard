@@ -95,7 +95,8 @@ class PagesController extends AppController
     {
         $this->_setLanguage();
         //全ページ許可
-        $this->Auth->allow('display');
+        $this->Auth->allow();
+
         //チームidがあった場合は許可しない
         if (isset($this->request->params['team_id'])) {
             $this->Auth->deny('display');
@@ -126,5 +127,77 @@ class PagesController extends AppController
             'en' => __d('home', "English"),
         ];
         return $lang_list;
+    }
+
+    public function contact()
+    {
+        $this->layout = 'homepage';
+
+        if ($this->request->is('get')) {
+            return $this->render();
+        }
+        App::uses('Email', 'Model');
+        $Email = new Email();
+        $Email->validate = $Email->contact_validate;
+        $Email->set($this->request->data);
+        $data = Hash::extract($this->request->data, 'Email');
+        if ($Email->validates()) {
+            $this->Session->write('contact_form_data', $data);
+            return $this->redirect('/contact_confirm');
+        }
+        $this->Pnotify->outError(__d('validate', '問題が発生したため、処理が完了しませんでした。'));
+        return $this->render();
+    }
+
+    public function contact_confirm()
+    {
+        $this->layout = 'homepage';
+        $data = $this->Session->read('contact_form_data');
+        if (empty($data)) {
+            $this->Pnotify->outError(__d('validate', '問題が発生したため、処理が完了しませんでした。'));
+            return $this->redirect($this->referer());
+        }
+        return $this->render();
+    }
+
+    public function contact_send()
+    {
+
+        $data = $this->Session->read('contact_form_data');
+        if (empty($data)) {
+            $this->Pnotify->outError(__d('validate', '問題が発生したため、処理が完了しませんでした。'));
+            return $this->redirect($this->referer());
+        }
+        $this->Session->delete('contact_form_data');
+        //メール送信処理
+        App::uses('CakeEmail', 'Network/Email');
+        if (ENV_NAME === "local") {
+            $config = 'default';
+        }
+        else {
+            $config = 'amazon';
+        }
+
+        if (empty($data['representatives'])) {
+            $data['representatives'] = __d('mail', '指定なし');
+        }
+        else {
+            $data['representatives'] = implode(", ", $data['representatives']);
+        }
+
+        // 送信処理
+        $email = new CakeEmail($config);
+        $email
+            ->template('contact', 'default')
+            ->viewVars(['data' => $data])
+            ->emailFormat('text')
+            ->to([$data['email'] => $data['email']])
+            //TODO SES側の設定を行う必要あり
+//            ->from(['Goalous返信専用' => 'noreply@goalous.com'])
+//            ->bcc(['contact@goalous.com' => 'contact@goalous.com'])
+            ->subject(__d('mail', '【Goalous】お問い合わせありがとうございました'))
+            ->send();
+
+        return $this->redirect('/contact_thanks');
     }
 }
