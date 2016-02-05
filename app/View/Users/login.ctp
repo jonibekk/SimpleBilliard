@@ -72,6 +72,7 @@
     </div>
 </div>
 <?php $this->append('script') ?>
+<!-- なんでこれ残ってる？ -->
 <?php echo $this->Html->script('https://goalous.uservoice.com/logout.js') ?>
 <script>
     $(document).ready(function () {

@@ -27,13 +27,11 @@ else {
 ?>
 <div id="container" class="container">
     <?= $this->Session->flash(); ?>
-
     <?= $this->fetch('content'); ?>
-
-    <?php if (!viaIsSet($without_footer)): ?>
-        <?= $this->element('footer') ?>
-    <?php endif; ?>
 </div>
+<?php if (!viaIsSet($without_footer)): ?>
+    <?= $this->element('footer') ?>
+<?php endif; ?>
 <?= $this->element('common_modules') ?>
 <?= $this->element('modals') ?>
 <!-- START fetch modal -->

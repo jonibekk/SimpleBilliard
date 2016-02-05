@@ -60,7 +60,10 @@
         </div>
         <div class="row text-left">
                 <p class="col-md-2 col-md-offset-2 col-sm-3"><?= __d('lp', '2016年2月5日') ?></p>
-                <p class="col-md-6 col-sm-9"><a href="/Goalous_lp_mock/company-content.html"><?= __d('lp', '月刊人事マネジメント2016年2月号に掲載されました') ?></a></p>
+                <p class="col-md-6 col-sm-9">
+                    <?= $this->Html->link( __d('lp', 'お問い合わせ'), array('controller' => 'company-content'), array('class' => 'btn btn-cta btn')) ?>
+                    <a href="/Goalous_lp_mock/company-content.html">
+                    <?= __d('lp', '月刊人事マネジメント2016年2月号に掲載されました') ?></a></p>
         </div>
     </div>
 </div><!--//press-->
@@ -78,7 +81,7 @@
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 from-left">
-                <?= $this->Html->image('homepage/top/top-1.jpg', array('alt' => '')); ?>
+                <?= $this->Html->image('homepage/top/top-1.jpg', array('alt' => '', 'class' => 'img-responsive')); ?>
             </div><!--//figure-->
         </div><!--//item-->
 
@@ -92,7 +95,7 @@
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 col-md-offset-1 col-sm-offset-1 col-xs-offset-0 from-right">
-                <?= $this->Html->image('homepage/top/top-2.jpg', array('alt' => '')); ?>
+                <?= $this->Html->image('homepage/top/top-2.jpg', array('alt' => '', 'class' => 'img-responsive')); ?>
             </div><!--//figure-->
         </div><!--//item-->
 
@@ -106,7 +109,7 @@
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 from-left">
-                <?= $this->Html->image('homepage/top/top-3.jpg', array('alt' => '')); ?>
+                <?= $this->Html->image('homepage/top/top-3.jpg', array('alt' => '', 'class' => 'img-responsive')); ?>
             </div><!--//figure-->
         </div><!--//item-->
     </div><!--//container-->
@@ -318,7 +321,7 @@
         </div><!--//row-->
         <div class="more text-center">
             <h4 class="title"><?= __d('lp', 'その他のご質問はありますか？') ?></h4>
-            <a class="btn btn-cta btn-cta-secondary" href="contact.html"><?= __d('lp', 'お問い合わせ') ?></a>
+            <?= $this->Html->link( __d('lp', 'お問い合わせ'), array('controller' => 'contact'), array('class' => 'btn btn-cta btn-cta-secondary'));?>
         </div>
     </div><!--//container-->
 </section><!--//faq-->
@@ -342,12 +345,5 @@
     </div>
 </div><!--//document-->
 
-<!-- ******SIGNUP****** -->
-<section id="signup" class="signup">
-    <div class="container text-center">
-        <h2 class="title"><?= __d('lp', 'さぁ、Goalous Teamへ！') ?></h2>
-        <p class="summary"><?= __d('lp', '2016年8月31日まで完全無料！今すぐお試しください。') ?></p>
-        <button type="submit" class="btn btn-cta btn-cta-primary"><?= __d('lp', '新規登録') ?></button>
-    </div>
-</section><!--//signup-->
+<?= $this->element('Homepage/signup') ?>
 <!-- END app/View/Pages/home.ctp -->

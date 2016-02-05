@@ -2161,3 +2161,27 @@ margin-right: 20px;
     font-size:24px;
     margin-bottom: 0;
 }
+
+.header .main-nav .nav .nav-item .shine {
+    color: white;
+}
+.header .main-nav .nav .nav-item .shine:hover {
+    color: white;
+}
+.header .main-nav .nav .nav-item .shine:active {
+    color: white;
+}
+.header .main-nav .nav .nav-item .shine:focus {
+    color: white;
+}
+.header .main-nav .nav .nav-item .shine:visited {
+    color: white;
+}
+
+.body {
+    padding: 0;
+}
+
+.footer {
+    margin: 0;
+}
