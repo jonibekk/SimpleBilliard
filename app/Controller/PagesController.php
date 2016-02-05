@@ -143,6 +143,12 @@ class PagesController extends AppController
         $Email->set($this->request->data);
         $data = Hash::extract($this->request->data, 'Email');
         if ($Email->validates()) {
+            if (empty($data['sales_people'])) {
+                $data['sales_people_text'] = __d('lp', '指定なし');
+            }
+            else {
+                $data['sales_people_text'] = implode(', ', $data['sales_people']);
+            }
             $this->Session->write('contact_form_data', $data);
             return $this->redirect('/contact_confirm');
         }
@@ -157,6 +163,7 @@ class PagesController extends AppController
             $this->Pnotify->outError(__d('validate', '問題が発生したため、処理が完了しませんでした。'));
             return $this->redirect($this->referer());
         }
+        $this->set(compact('data'));
         return $this->render();
     }
 
@@ -178,13 +185,6 @@ class PagesController extends AppController
             $config = 'amazon';
         }
 
-        if (empty($data['representatives'])) {
-            $data['representatives'] = __d('mail', '指定なし');
-        }
-        else {
-            $data['representatives'] = implode(", ", $data['representatives']);
-        }
-
         // 送信処理
         $email = new CakeEmail($config);
         $email
@@ -192,9 +192,7 @@ class PagesController extends AppController
             ->viewVars(['data' => $data])
             ->emailFormat('text')
             ->to([$data['email'] => $data['email']])
-            //TODO SES側の設定を行う必要あり
-//            ->from(['Goalous返信専用' => 'noreply@goalous.com'])
-//            ->bcc(['contact@goalous.com' => 'contact@goalous.com'])
+            ->bcc(['contact@goalous.com' => 'contact@goalous.com'])
             ->subject(__d('mail', '【Goalous】お問い合わせありがとうございました'))
             ->send();
 

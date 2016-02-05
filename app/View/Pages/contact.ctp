@@ -50,25 +50,25 @@
         $this->Form->create('Email', [
             'id'            => 'contact-form',
             'class'         => 'form',
-            'inputDefaults' => ['div' => null, 'wrapInput' => false, 'class' => 'form-control', 'label' => false, 'error' => false],
+            'inputDefaults' => ['div' => null, 'wrapInput' => false, 'class' => null, 'label' => false, 'error' => false],
             'novalidate'    => true
         ]); ?>
         <div class="contact-form col-md-8 col-sm-12 col-xs-12 col-md-offset-2">
             <div class="form-group want">
                 <?= $this->Form->select('want',
-                                        array(
+                                        [
                                             null                 => __d('lp', '選択してください'),
                                             __d('lp', '詳しく知りたい') => __d('lp', '詳しく知りたい'),
                                             __d('lp', '資料がほしい')  => __d('lp', '資料がほしい'),
                                             __d('lp', '協業したい')   => __d('lp', '協業したい'),
                                             __d('lp', '取材したい')   => __d('lp', '取材したい'),
                                             __d('lp', 'その他')     => __d('lp', 'その他'),
-                                        ),
-                                        array(
+                                        ],
+                                        [
                                             'class' => 'form-control',
                                             'empty' => false,
                                             'value' => 0,
-                                        )
+                                        ]
                 ); ?>
                 <?= $this->Form->error('want', null, ['class' => 'help-block text-danger pull-left']) ?>
             </div><!-- //form-group -->
@@ -76,30 +76,32 @@
                 <label class="sr-only" for="company">
                     <?= __d('lp', 'company') ?>
                 </label>
-                <?= $this->Form->input('company', ['placeholder' => __d('lp', '会社名')]) ?>
+                <?= $this->Form->input('company', ['class' => 'form-control', 'placeholder' => __d('lp', '会社名')]) ?>
                 <?= $this->Form->error('company', null, ['class' => 'help-block text-danger pull-left']) ?>
             </div><!--//form-group-->
             <div class="form-group name">
                 <label class="sr-only" for="name">
                     <?= __d('lp', 'name') ?>
                 </label>
-                <?= $this->Form->input('name', ['placeholder' => __d('lp', 'お名前') . ' *']) ?>
+                <?= $this->Form->input('name', ['class' => 'form-control', 'placeholder' => __d('lp', 'お名前') . ' *']) ?>
                 <?= $this->Form->error('name', null, ['class' => 'help-block text-danger pull-left']) ?>
             </div><!--//form-group-->
             <div class="form-group email">
                 <label class="sr-only" for="email">
                     <?= __d('lp', 'email') ?>
                 </label>
-                <?= $this->Form->input('email', ['type' => 'email', 'placeholder' => __d('lp',
-                                                                                         'メールアドレス') . ' *']) ?>
+                <?= $this->Form->input('email',
+                                       ['class' => 'form-control', 'type' => 'email', 'placeholder' => __d('lp',
+                                                                                                           'メールアドレス') . ' *']) ?>
                 <?= $this->Form->error('email', null, ['class' => 'help-block text-danger pull-left']) ?>
             </div><!--//form-group-->
             <div class="form-group message">
                 <label class="sr-only" for="message">
                     <?= __d('lp', 'message') ?>
                 </label>
-                <?= $this->Form->input('message', ['type' => 'text', 'rows' => 8, 'placeholder' => __d('lp',
-                                                                                                       'お問い合わせ内容') . ' *']) ?>
+                <?= $this->Form->input('message',
+                                       ['class' => 'form-control', 'type' => 'text', 'rows' => 8, 'placeholder' => __d('lp',
+                                                                                                                       'お問い合わせ内容') . ' *']) ?>
                 <?= $this->Form->error('message', null, ['class' => 'help-block text-danger pull-left']) ?>
             </div><!--//form-group-->
         </div>
@@ -109,12 +111,14 @@
                 <?= __d('lp', 'ご希望の営業担当者がいれば、リクエストください。（複数選択可）') ?>
             </p>
 
+            <? $this->Form->unlockField('sales_people') ?>
             <div class="form-group sales text-left">
 
                 <label class="col-md-4 col-sm-6 col-xs-12 salesperson">
                     <div class="input-group">
                             <span class="input-group-addon">
-                                <input type="checkbox" value="">
+                                <?= $this->Form->checkbox('sales_people.',
+                                                          ['value' => __d('lp', '湯川啓太'), 'hiddenField' => false]) ?>
                             </span>
                         <div class="media">
                             <div class="media-left media-middle">
@@ -134,7 +138,8 @@
                 <label class="col-md-4 col-sm-6 col-xs-12 salesperson">
                     <div class="input-group">
                             <span class="input-group-addon">
-                                <input type="checkbox" value="">
+                                <?= $this->Form->checkbox('sales_people.',
+                                                          ['value' => __d('lp', '菊池厚平'), 'hiddenField' => false]) ?>
                             </span>
                         <div class="media">
                             <div class="media-left media-middle">
@@ -154,7 +159,8 @@
                 <label class="col-md-4 col-sm-6 col-xs-12 salesperson">
                     <div class="input-group">
                             <span class="input-group-addon">
-                                <input type="checkbox" value="">
+                                <?= $this->Form->checkbox('sales_people.',
+                                                          ['value' => __d('lp', '吉岡真人'), 'hiddenField' => false]) ?>
                             </span>
                         <div class="media">
                             <div class="media-left media-middle">
@@ -174,7 +180,8 @@
                 <label class="col-md-4 col-sm-6 col-xs-12 salesperson">
                     <div class="input-group">
                             <span class="input-group-addon">
-                                <input type="checkbox" value="">
+                                <?= $this->Form->checkbox('sales_people.',
+                                                          ['value' => __d('lp', '石原裕介'), 'hiddenField' => false]) ?>
                             </span>
                         <div class="media">
                             <div class="media-left media-middle">
