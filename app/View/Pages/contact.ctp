@@ -26,7 +26,7 @@
     <?=
     $this->Form->create('Email', [
         'inputDefaults' => ['div' => null, 'wrapInput' => false, 'class' => null,],
-        'url'           => ['controller' => 'emails', 'action' => 'validate_contact'],
+        'url'           => ['controller' => 'emails', 'action' => 'contact_validate'],
         'novalidate'    => true
     ]); ?>
     <?= $this->Form->input('company_name', ['label' => 'company_name']) ?>
