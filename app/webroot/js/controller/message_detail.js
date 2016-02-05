@@ -144,6 +144,8 @@ message_app.controller(
                 // ファイルの送信中はsubmitできないようにする(クリックはできるがsubmit処理は走らない)
                 if($uploadFileForm._sending) {
                     alert(cake.message.validate.dropzone_uploading_not_end);
+                    event.preventDefault();
+                    event.stopPropagation();
                     return;
                 }
 
