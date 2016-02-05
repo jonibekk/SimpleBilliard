@@ -968,8 +968,8 @@ function getAjaxFormReplaceElm() {
                             return;
                         }
                         $uploadFileForm._sending = true;
-                        // ファイルの送信中はフォームの submit 時に confirm を出すようにする
-                        $('#CommentSubmit_' + post_id).on('click', $uploadFileForm._confirmSubmit);
+                        // ファイルの送信中はsubmitできないようにする(クリックはできるがsubmit処理は走らない)
+                        $('#CommentSubmit_' + post_id).on('click', $uploadFileForm._forbitSubmit);
                     },
                     afterSuccess: function (file) {
                         $('#CommentSubmit_' + post_id).click(function () {
@@ -982,8 +982,8 @@ function getAjaxFormReplaceElm() {
                     },
                     afterQueueComplete: function () {
                         $uploadFileForm._sending = false;
-                        // フォームの submit confirm を解除
-                        $('#CommentSubmit_' + post_id).off('click', $uploadFileForm._confirmSubmit);
+                        // フォームをsubmit可能にする
+                        $('#CommentSubmit_' + post_id).off('click', $uploadFileForm._forbitSubmit);
                     }
                 };
                 $uploadFileForm.registerDragDropArea('#CommentBlock_' + post_id, commentParams);
@@ -4931,14 +4931,13 @@ $(document).ready(function () {
 
     // ファイルが１つでもアップロード中であれば true
     $uploadFileForm._sending = false;
+
     // ファイルアップロード中に submit ボタン押された時の イベントハンドラ
-    $uploadFileForm._confirmSubmit = function (e) {
-        if (!confirm(cake.message.validate.dropzone_uploading_not_end)) {
-            e.stopPropagation();
-            e.preventDefault();
-            return false;
-        }
-        return true;
+    $uploadFileForm._forbitSubmit = function (e) {
+        alert(cake.message.validate.dropzone_uploading_not_end);
+        e.stopPropagation();
+        e.preventDefault();
+        return false;
     };
 
     //////////////////////////////////////////////////
@@ -4956,13 +4955,14 @@ $(document).ready(function () {
                 return;
             }
             $uploadFileForm._sending = true;
-            // ファイルの送信中はフォームの submit 時に confirm を出すようにする
-            $('#PostSubmit').on('click', $uploadFileForm._confirmSubmit);
+            // ファイルの送信中はsubmitできないようにする(クリックはできるがsubmit処理は走らない)
+            $('#PostSubmit').on('click', $uploadFileForm._forbitSubmit);
         },
         afterQueueComplete: function () {
             $uploadFileForm._sending = false;
-            // フォームの submit confirm を解除
-            $('#PostSubmit').off('click', $uploadFileForm._confirmSubmit);
+
+            // フォームをsubmit可能にする
+            $('#PostSubmit').off('click', $uploadFileForm._forbitSubmit);
 
             // 投稿文が入力されていれば submit ボタンを有効化、空であれば無効化
             if ($('#CommonPostBody').val().length == 0) {
@@ -4987,13 +4987,13 @@ $(document).ready(function () {
                 return;
             }
             $uploadFileForm._sending = true;
-            // ファイルの送信中はフォームの submit 時に confirm を出すようにする
-            $('#MessageSubmit').on('click', $uploadFileForm._confirmSubmit);
+            // ファイルの送信中はsubmitできないようにする(クリックはできるがsubmit処理は走らない)
+            $('#MessageSubmit').on('click', $uploadFileForm._forbitSubmit);
         },
         afterQueueComplete: function (file) {
             $uploadFileForm._sending = false;
-            // フォームの submit confirm を解除
-            $('#MessageSubmit').off('click', $uploadFileForm._confirmSubmit);
+            // フォームをsubmit可能にする
+            $('#MessageSubmit').off('click', $uploadFileForm._forbitSubmit);
         },
         afterSuccess: function (file) {
             $("#message_submit_button").click(function () {
@@ -5144,13 +5144,13 @@ $(document).ready(function () {
                 return;
             }
             $uploadFileForm._sending = true;
-            // ファイルの送信中はフォームの submit 時に confirm を出すようにする
-            $('#CommonActionShare').on('click', $uploadFileForm._confirmSubmit);
+            // ファイルの送信中はsubmitできないようにする(クリックはできるがsubmit処理は走らない)
+            $('#CommonActionShare').on('click', $uploadFileForm._forbitSubmit);
         },
         afterQueueComplete: function () {
             $uploadFileForm._sending = false;
-            // フォームの submit confirm を解除
-            $('#CommonActionShare').off('click', $uploadFileForm._confirmSubmit);
+            // フォームをsubmit可能にする
+            $('#CommonActionShare').off('click', $uploadFileForm._forbitSubmit);
             $('#CommonActionShare').removeAttr('disabled')
         }
     };

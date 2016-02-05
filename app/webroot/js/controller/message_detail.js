@@ -142,11 +142,10 @@ message_app.controller(
             // メッセージを送信する
             $scope.clickMessage = function (event, val) {
 
-                // ファイルアップロード中の場合は送信確認をおこなう
+                // ファイルの送信中はsubmitできないようにする(クリックはできるがsubmit処理は走らない)
                 if($uploadFileForm._sending) {
-                    if(!$uploadFileForm._confirmSubmit()){
-                        return;
-                    }
+                    $uploadFileForm._forbitSubmit();
+                    return;
                 }
 
                 if ($scope.flag) {
