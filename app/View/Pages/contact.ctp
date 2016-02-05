@@ -27,7 +27,7 @@
         <h2 class="title"><?= __d('lp', 'Goalousに関するお問い合わせ') ?></h2>
         <p class="intro">
             <?=
-            __d('lp', 'Goalousは、”世界のシゴトをたのしくするビジョナリーハンサム”である') .
+            __d('lp', 'Goalousは、”世界のシゴトをたのしくするビジョナリーカンパニー”である') .
             $this->Html->link(__d('lp', '株式会社ISAO'), 'http://www.isao.co.jp/',
                               array('target' => '_blank', 'class' => 'more')) .
             __d('lp', 'が運営しております。') .
