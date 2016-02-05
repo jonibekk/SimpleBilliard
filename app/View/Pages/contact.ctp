@@ -198,7 +198,7 @@
                     <?= $this->Form->checkbox('need') ?>
                     <?= __d('lp', '個人情報の取り扱いについてに同意の上、問い合わせする') ?>
                 </label>
-                <?= $this->Form->error('need', null, ['class' => 'help-block text-danger']) ?>
+                <?= $this->Form->error('need', __d('lp','個人情報保護方針の同意が必要です。'), ['class' => 'help-block text-danger']) ?>
             </div>
             <p>
                 <?= $this->Form->submit(__d('lp', '確認画面へ'), ['class' => 'btn btn-block btn-cta-primary']) ?>
