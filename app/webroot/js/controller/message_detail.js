@@ -205,7 +205,11 @@ message_app.controller(
                         Dropzone.instances[0].files.length = 0;
                     }
 
-                    document.getElementById("message_text_input").focus();
+                    // テキストエリア初期化処理
+                    // テキストエリアの高さは、デフォルト38px。
+                    var messageTextarea = document.getElementById("message_text_input");
+                    messageTextarea.focus();
+                    messageTextarea.style.height = "38px";
 
                     if (jQuery.isEmptyObject(response.data)) {
                         //メッセージ送信失敗
