@@ -16,7 +16,7 @@
 <?= $this->Html->script('homepage/jquery.fitvids') ?>
 <?= $this->Html->script('homepage/jquery.flexslider-min') ?>
 <?= $this->Html->script('homepage/main') ?>
-<?= $this->Html->script('http://a.vimeocdn.com/js/froogaloop2.min.js') ?>
+<?= $this->Html->script('homepage/froogaloop2.min') ?>
 <?= $this->Html->script('homepage/vimeo') ?>
 <!--[if !IE]>-->
 <?= $this->Html->script('homepage/animations') ?>
