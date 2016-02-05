@@ -103,77 +103,7 @@ if (d.getElementById(id)) return;
     <?= $this->fetch('content') ?>
 </div>
 <!-- ******FOOTER****** -->
-<?php echo $this->element('footer'); ?>
-<footer class="footer">
-    <div class="footer-content">
-        <div class="container">
-            <div class="row">
-                <div class="footer-col col-md-5 col-sm-7 col-sm-12 about">
-                    <div class="footer-col-inner">
-                        <h3 class="title"><?= __d('lp', 'About Us') ?></h3>
-
-                        <p><?= __d('lp', 'Goalous Team') ?></p>
-                    </div>
-                    <!--//footer-col-inner-->
-                </div>
-                <!--//foooter-col-->
-                <div class="footer-col col-md-3 col-sm-4 col-md-offset-1 links">
-                    <div class="footer-col-inner">
-                        <h3 class="title"><?= __d('lp', 'Other Links') ?></h3>
-                        <ul class="list-unstyled">
-                            <li><a href='#modal-tos' data-toggle='modal'><i class="fa fa-caret-right"></i><?= __d('gl',
-                                                                                                                  '利用規約') ?>
-                                </a></li>
-                            <li><a href='#modal-pp' data-toggle='modal'><i class="fa fa-caret-right"></i><?= __d('gl',
-                                                                                                                 'プライバシーポリシー') ?>
-                                </a></li>
-                        </ul>
-                    </div>
-                    <!--//footer-col-inner-->
-                </div>
-                <!--//foooter-col-->
-                <div class="footer-col col-md-3 col-sm-12 contact">
-                    <div class="footer-col-inner">
-                        <h3 class="title"><?= __d('lp', 'Get in touch') ?></h3>
-
-                        <div class="row">
-                            <p class="email col-md-12 col-sm-4"><i class="fa fa-envelope"></i><a
-                                    href="mailto:co-jp-form@isao.net?subject=<?= __d('lp', 'Goalousへのお問い合わせ') ?>">co-jp-form@isao.net</a>
-                            </p>
-                        </div>
-                    </div>
-                    <!--//footer-col-inner-->
-                </div>
-                <!--//foooter-col-->
-            </div>
-            <!--//row-->
-        </div>
-        <!--//container-->
-    </div>
-    <!--//footer-content-->
-    <div class="bottom-bar">
-        <div class="container">
-            <div class="row">
-                <small class="copyright col-md-6 col-sm-6 col-xs-12">Copyright© ISAO CORPORATION. All rights
-                    reserved.
-                </small>
-                <ul class="social col-md-6 col-sm-6 col-xs-12 list-inline">
-                    <li><a href="https://plus.google.com/+isaocojp/posts"><i class="fa fa-google"></i></a></li>
-                    <li>
-                        <a href="https://www.linkedin.com/company/1806929?trk=vsrp_companies_res_name&trkInfo=VSRPsearchId%3A3688113161424846250341%2CVSRPtargetId%3A1806929%2CVSRPcmpt%3Aprimary"><i
-                                class="fa fa-linkedin"></i></a></li>
-                    <li class="last"><a href="https://www.youtube.com/user/isaocorp"><i
-                                class="fa fa-youtube"></i></a></li>
-                    <li><a href="https://www.facebook.com/isao.jp"><i class="fa fa-facebook"></i></a></li>
-                </ul>
-                <!--//social-->
-            </div>
-            <!--//row-->
-        </div>
-        <!--//container-->
-    </div>
-    <!--//bottom-bar-->
-</footer>
+<?php echo $this->element('footer_not_logged_in'); ?>
 <!--//footer-->
 <?= $this->element('common_homepage_js') ?>
 <?= $this->fetch('script') ?>

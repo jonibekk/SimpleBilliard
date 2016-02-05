@@ -1,19 +1,19 @@
 <?php /**
- * PHP 5
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * Licensed under The MIT License
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @package       Cake.View.Pages
- * @since         CakePHP(tm) v 0.10.0.1076
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
- * @var CodeCompletionView $this
- * @var                    $user_count
- * @var                    $top_lang
- */
+* PHP 5
+* CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
+* Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+* Licensed under The MIT License
+* Redistributions of files must retain the above copyright notice.
+*
+* @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+* @link          http://cakephp.org CakePHP(tm) Project
+* @package       Cake.View.Pages
+* @since         CakePHP(tm) v 0.10.0.1076
+* @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+* @var CodeCompletionView $this
+* @var                    $user_count
+* @var                    $top_lang
+*/
 ?>
 <?php $this->append('meta') ?>
 <link rel="alternate" hreflang="ja" href="<?= $this->Html->url('/ja/contact_thanks') ?>"/>
@@ -21,5 +21,53 @@
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/contact_thanks') ?>"/>
 <?php $this->end() ?>
 <!-- START app/View/Pages/contact_thanks.ctp -->
-contact_thanks!
+<!-- ******CONTACT MAIN****** -->
+<section id="contact-main" class="contact-main section">
+    <div class="container text-center">
+        <h2 class="title"><?= __d('lp', 'お問い合わせありがとうございました') ?></h2>
+        <p class="intro"><?= __d('lp', '2営業日以内に弊社担当者よりご連絡いたします。') ?></p>
+        <p class="intro"><?= __d('lp', 'お時間がございましたら、Goalous運営会社・株式会社ISAOのブログやSNSをご覧ください。') ?></p>
+
+        <div class="row">
+            <div class="item col-md-4 col-sm-12 col-xs-12">
+                <div class="item-inner">
+                    <div class="icon">
+                        <i class="fa fa-rss"></i>
+                    </div>
+                    <div class="details">
+                        <h4><?= __d('lp', 'IsaB') ?></h4>
+                        <p><?= __d('lp', '億人の”シゴト”を熱くする！株式会社ISAOのブログ') ?></p>
+                        <p><a href="blog.isao.co.jp/" target="_blank"><?= __d('lp', 'https://blog.isao.co.jp/') ?></a></p>
+                    </div><!--details-->
+                </div><!--//item-inner-->
+            </div><!--//item-->
+            <div class="item col-md-4 col-sm-12 col-xs-12">
+                <div class="item-inner">
+                    <div class="icon">
+                        <i class="fa fa-facebook"></i>
+                    </div>
+                    <div class="details">
+                        <h4><?= __d('lp', 'facebookページ') ?></h4>
+                        <p><?= __d('lp', 'Like us！') ?></p>
+                        <p><a href="https://www.facebook.com/isao.jp" target="_blank"><?= __d('lp', 'isao.jp') ?></a></p>
+                    </div><!--details-->
+                </div><!--//item-inner-->
+            </div><!--//item-->
+            <div class="item col-md-4 col-sm-12 col-xs-12">
+                <div class="item-inner">
+                    <div class="icon">
+                        <i class="fa fa-twitter"></i>
+                    </div>
+                    <div class="details">
+                        <h4><?= __d('lp', 'twitter') ?></h4>
+                        <p><?= __d('lp', 'Follow now！') ?></p>
+                        <p><a href="https://twitter.com/ISAOcorp" target="_blank"><?= __d('lp', '@ISAOcorp') ?></a></p>
+                    </div><!--details-->
+                </div><!--//item-inner-->
+            </div><!--//item-->
+        </div><!--//row-->
+    </div><!--//container-->
+</section><!--//contact-->
+
+<?= $this->element('Homepage/signup') ?>
 <!-- END app/View/Pages/contact_thanks.ctp -->
