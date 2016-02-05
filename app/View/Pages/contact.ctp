@@ -29,11 +29,13 @@
         'url'           => ['controller' => 'emails', 'action' => 'contact_validate'],
         'novalidate'    => true
     ]); ?>
+    <?= $this->Form->input('contact_menu', ['label' => 'contact_menu']) ?>
     <?= $this->Form->input('company_name', ['label' => 'company_name']) ?>
     <?= $this->Form->input('user_name', ['label' => 'user_name']) ?>
-    <?= $this->Form->input('body', ['label' => 'body']) ?>
-    <?= $this->Form->input('accept_privacy_policy', ['label' => 'accept_privacy_policy']) ?>
     <?= $this->Form->input('email', ['label' => 'email']) ?>
+    <?= $this->Form->input('body', ['label' => 'body']) ?>
+    <?= $this->Form->input('representatives.0', ['label' => 'representatives']) ?>
+    <?= $this->Form->input('accept_privacy_policy', ['label' => 'accept_privacy_policy']) ?>
     <?= $this->Form->submit('送信') ?>
     <?= $this->Form->end() ?>
 

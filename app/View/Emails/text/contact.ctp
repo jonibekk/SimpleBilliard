@@ -9,10 +9,24 @@
  * @var $data
  */
 
-echo "email";
+echo __d('mail', 'このたびはGoalous（ゴーラス）へお問い合わせいただき、誠にありがとうございます。') . "\n";
 echo "\n";
-echo h($data['email']);
+echo __d('mail', '内容を確認のうえ、担当者より３営業日以内にご連絡いたします。') . "\n";
+echo __d('mail', 'どうぞよろしくお願い申し上げます。') . "\n";
 echo "\n";
-echo "body";
+echo "────────────────────\n";
+echo __d('mail', 'お問い合わせ内容') . "\n";
+echo "────────────────────\n";
 echo "\n";
-echo h($data['body']);
+echo "  - " . __d('mail', 'お問い合わせ項目') . ": " . h($data['contact_menu']) . "\n";
+echo "  - " . __d('mail', '会社名') . ": " . h($data['company_name']) . "\n";
+echo "  - " . __d('mail', 'お名前') . ": " . h($data['user_name']) . "\n";
+echo "  - " . __d('mail', 'メールアドレス') . ": " . h($data['email']) . "\n";
+echo "  - " . __d('mail', 'お問い合わせ内容') . ": " . h($data['body']) . "\n";
+echo "  - " . __d('mail', 'ご希望の営業担当者') . ": " . h($data['representatives']) . "\n";
+echo "\n";
+echo __d('mail', '■ご注意') . "\n";
+echo __d('mail', 'このメールは、お問い合わせメールアドレス宛に自動的に送信されています。') . "\n";
+echo __d('mail', '直接返信されないようお願い申し上げます。') . "\n";
+echo "\n";
+echo __d('mail', 'このメールに心当たりの無い方は、お問い合わせフォームからお問い合わせください。') . "\n";

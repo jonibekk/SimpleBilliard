@@ -77,6 +77,13 @@ class EmailsController extends AppController
             $config = 'amazon';
         }
 
+        if (empty($data['representatives'])) {
+            $data['representatives'] = __d('mail', '指定なし');
+        }
+        else {
+            $data['representatives'] = implode(", ", $data['representatives']);
+        }
+
         // 送信処理
         $email = new CakeEmail($config);
         $email
@@ -87,7 +94,7 @@ class EmailsController extends AppController
             //TODO SES側の設定を行う必要あり
 //            ->from(['Goalous返信専用' => 'noreply@goalous.com'])
 //            ->bcc(['contact@goalous.com' => 'contact@goalous.com'])
-            ->subject(__d('gl', 'お問い合わせいただきありがとうございます。'))
+            ->subject(__d('mail', '【Goalous】お問い合わせありがとうございました'))
             ->send();
 
         return $this->redirect('/contact_thanks');
