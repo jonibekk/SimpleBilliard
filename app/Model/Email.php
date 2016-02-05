@@ -50,9 +50,6 @@ class Email extends AppModel
             'email'         => [
                 'rule' => ['email'],
             ],
-            'emailIsUnique' => [
-                'rule' => ['isUnique'],
-            ]
         ],
         'company' => [
             'maxLength' => ['rule' => ['maxLength', 50]],
