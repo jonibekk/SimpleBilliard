@@ -30,7 +30,7 @@ else {
     <?= $this->fetch('content'); ?>
 </div>
 <?php if (!viaIsSet($without_footer)): ?>
-    <?= $this->element('footer') ?>
+    <?= $this->element('footer_not_logged_in') ?>
 <?php endif; ?>
 <?= $this->element('common_modules') ?>
 <?= $this->element('modals') ?>

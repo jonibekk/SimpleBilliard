@@ -103,7 +103,7 @@ if (d.getElementById(id)) return;
     <?= $this->fetch('content') ?>
 </div>
 <!-- ******FOOTER****** -->
-<?php echo $this->element('footer'); ?>
+<?php echo $this->element('footer_not_logged_in'); ?>
 <!--//footer-->
 <?= $this->element('common_homepage_js') ?>
 <?= $this->fetch('script') ?>
