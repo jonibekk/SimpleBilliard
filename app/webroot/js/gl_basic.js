@@ -2832,6 +2832,105 @@ function evFeedMoreView(options) {
     return false;
 }
 
+//アドレスバー書き換え
+function updateAddressBar(url){
+    if (typeof history.pushState == 'function') {
+        try {
+            history.pushState(null, null, url);
+            return true;
+        } catch (e) {
+            window.location.href = url;
+            return false;
+        }
+    }
+}
+
+function activateMessageList(){
+    var message_list_app = $("#message-list-app");
+    angular.element(message_list_app).ready(function() { angular.bootstrap(message_list_app, ['messageListApp']); });
+}
+
+function evMessageList(options){
+    //とりあえずドロップダウンは隠す
+    $("#HeaderDropdownNotify").removeClass("open");
+    $('body').removeClass('notify-dropdown-open');
+
+    var opt = $.extend({
+        recursive: false,
+        loader_id: null
+    }, options);
+
+    //フィード読み込み中はキャンセル
+    if (feed_loading_now) {
+        return false;
+    }
+    feed_loading_now = true;
+
+    //layout-mainが存在しないところではajaxでコンテンツ更新しようにもロードしていない
+    //要素が多すぎるので、おとなしくページリロードする
+    var url = cake.url.message_list;
+    jQuery.fn.exists = function () {
+        return Boolean(this.length > 0);
+    }
+    if (!$(".layout-main").exists()) {
+        location.href = url;
+        return false;
+    }
+
+    //アドレスバー書き換え
+    if(!updateAddressBar("/posts/message_list#/")){
+        return false;
+    }
+
+    $('#jsGoTop').click();
+
+    //ローダー表示
+    var $loader_html = opt.loader_id ? $('#' + opt.loader_id) : $('<center><i id="__feed_loader" class="fa fa-refresh fa-spin"></i></center>');
+    if (!opt.recursive) {
+        $(".layout-main").html($loader_html);
+    }
+
+    // URL生成
+    var url = cake.url.ajax_message_list;
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: true,
+        dataType: 'json',
+        success: function (data) {
+            if (!$.isEmptyObject(data.html)) {
+                //取得したhtmlをオブジェクト化
+                var $posts = $(data.html);
+                //notify一覧に戻るhtmlを追加
+                //画像をレイジーロード
+                imageLazyOn($posts);
+                //一旦非表示
+                $posts.fadeOut();
+
+                $(".layout-main").html($posts);
+                activateMessageList();
+            }
+
+            //ローダーを削除
+            $loader_html.remove();
+
+            action_autoload_more = false;
+            autoload_more = false;
+            feed_loading_now = false;
+            do_reload_header_bellList = true;
+        },
+        error: function () {
+            alert(cake.message.notice.c);
+            feed_loading_now = false;
+            $loader_html.remove();
+        },
+    });
+    return false;
+}
+
+
+
 function evNotifications(options) {
 
     //とりあえずドロップダウンは隠す
@@ -2901,7 +3000,6 @@ function evNotifications(options) {
                 $posts.fadeOut();
 
                 $(".layout-main").html($posts);
-
             }
 
             //ローダーを削除
@@ -4276,7 +4374,7 @@ $(document).ready(function () {
     $(document).on("click", "#click-header-message", function (e) {
         // 未読件数が 0 件の場合は、直接メッセージ一覧ページに遷移させる
         if (getMessageNotifyCnt() == 0) {
-            location.href = cake.url.message_list;
+            evMessageList(null);
             return;
         }
 

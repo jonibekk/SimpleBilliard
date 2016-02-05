@@ -27,6 +27,30 @@ class PostsController extends AppController
         return $this->render();
     }
 
+    public function ajax_message(){
+        $this->_ajaxPreProcess();
+
+        $response = $this->render('/Posts/message');
+
+        $html = $response->__toString();
+        $result = array(
+            'html'     => $html,
+        );
+        return $this->_ajaxGetResponse($result);
+    }
+
+    public function ajax_message_list(){
+        $this->_ajaxPreProcess();
+
+        $response = $this->render('/Posts/message_list');
+
+        $html = $response->__toString();
+        $result = array(
+            'html'     => $html,
+        );
+        return $this->_ajaxGetResponse($result);
+    }
+
     public function message_list()
     {
         $this->_setViewValOnRightColumn();

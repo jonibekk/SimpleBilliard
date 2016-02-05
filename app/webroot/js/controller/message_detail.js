@@ -286,7 +286,6 @@ message_app.controller(
                         if (response.data.message_list.length > 0) {
                             // 新しいメッセージが view に確実に反映されるように少し遅らす
                             setTimeout(function () {
-                                $location.hash('m_' + pushed_message_num);
                                 $anchorScroll();
                             }, 1);
                             // １ページ目の表示時
