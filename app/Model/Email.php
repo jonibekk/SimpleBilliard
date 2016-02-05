@@ -36,6 +36,37 @@ class Email extends AppModel
         'del_flg'        => ['boolean' => ['rule' => ['boolean']]],
     ];
 
+    public $contact_validate = [
+        'email'                 => [
+            'maxLength'     => ['rule' => ['maxLength', 200]],
+            'notEmpty'      => [
+                'rule' => 'notEmpty',
+            ],
+            'email'         => [
+                'rule' => ['email'],
+            ],
+            'emailIsUnique' => [
+                'rule' => ['isUnique'],
+            ]
+        ],
+        'company_name'          => [
+            'maxLength' => ['rule' => ['maxLength', 50]],
+        ],
+        'user_name'             => [
+            'notEmpty'  => ['rule' => 'notEmpty',],
+            'maxLength' => ['rule' => ['maxLength', 50]],
+        ],
+        'body'                  => [
+            'notEmpty'  => ['rule' => 'notEmpty',],
+            'maxLength' => ['rule' => ['maxLength', 3000]],
+        ],
+        'accept_privacy_policy' => [
+            'notEmpty' => [
+                'rule' => 'notEmpty',
+            ],
+        ],
+    ];
+
     /**
      * belongsTo associations
      *
