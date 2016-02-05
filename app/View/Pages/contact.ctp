@@ -57,12 +57,12 @@
             <div class="form-group want">
                 <?= $this->Form->select('want',
                                         array(
-                                            null => __d('lp', '選択してください'),
-                                            '1'  => __d('lp', '詳しく知りたい'),
-                                            '2'  => __d('lp', '資料がほしい'),
-                                            '3'  => __d('lp', '協業したい'),
-                                            '4'  => __d('lp', '取材したい'),
-                                            '5'  => __d('lp', 'その他'),
+                                            null                 => __d('lp', '選択してください'),
+                                            __d('lp', '詳しく知りたい') => __d('lp', '詳しく知りたい'),
+                                            __d('lp', '資料がほしい')  => __d('lp', '資料がほしい'),
+                                            __d('lp', '協業したい')   => __d('lp', '協業したい'),
+                                            __d('lp', '取材したい')   => __d('lp', '取材したい'),
+                                            __d('lp', 'その他')     => __d('lp', 'その他'),
                                         ),
                                         array(
                                             'class' => 'form-control',
@@ -110,6 +110,7 @@
             </p>
 
             <div class="form-group sales text-left">
+
                 <label class="col-md-4 col-sm-6 col-xs-12 salesperson">
                     <div class="input-group">
                             <span class="input-group-addon">
@@ -198,7 +199,7 @@
                     <?= $this->Form->checkbox('need') ?>
                     <?= __d('lp', '個人情報の取り扱いについてに同意の上、問い合わせする') ?>
                 </label>
-                <?= $this->Form->error('need', __d('lp','個人情報保護方針の同意が必要です。'), ['class' => 'help-block text-danger']) ?>
+                <?= $this->Form->error('need', __d('lp', '個人情報保護方針の同意が必要です。'), ['class' => 'help-block text-danger']) ?>
             </div>
             <p>
                 <?= $this->Form->submit(__d('lp', '確認画面へ'), ['class' => 'btn btn-block btn-cta-primary']) ?>

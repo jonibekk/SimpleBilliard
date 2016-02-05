@@ -21,6 +21,54 @@ App::uses('AppController', 'Controller');
  */
 class PagesController extends AppController
 {
+    private $contact_sales_persons = [
+        [
+            'name'        => [
+                'ja' => '湯川啓太',
+                'en' => 'Keita Yukawa',
+            ],
+            'description' => [
+                'ja' => '唐沢寿明に似てます',
+                'en' => null,
+            ],
+            'img'         => 'homepage/people/sales1.jpg',
+        ],
+        [
+            'name'        => [
+                'ja' => '菊池厚平',
+                'en' => 'Kohei Kikuchi',
+            ],
+            'description' => [
+                'ja' => 'Goalousのオーナーです',
+                'en' => null,
+            ],
+            'img'         => 'homepage/people/sales2.jpg',
+        ],
+        [
+            'name'        => [
+                'ja' => '吉岡真人',
+                'en' => 'Makoto Yoshioka',
+            ],
+            'description' => [
+                'ja' => '唐沢寿明に似てます',
+                'en' => null,
+            ],
+            'img'         => 'homepage/people/sales3.jpg',
+        ],
+        [
+            'name'        => [
+                'ja' => '石原裕介',
+                'en' => 'Yusuke Ishihara',
+            ],
+            'description' => [
+                'ja' => 'DJやってます',
+                'en' => null,
+            ],
+            'img'         => 'homepage/people/sales4.jpg',
+        ],
+
+    ];
+
     /**
      * Displays a view
      *
@@ -132,6 +180,10 @@ class PagesController extends AppController
     public function contact()
     {
         $this->layout = 'homepage';
+
+        $this->set('contact_sales_persons', $this->contact_sales_persons);
+        //Configure::write('Config.language', $this->request->params['lang']);
+        $this->log(Configure::read('Config.language'));
 
         if ($this->request->is('get')) {
             return $this->render();
