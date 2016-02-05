@@ -2816,6 +2816,19 @@ function evFeedMoreView(options) {
     return false;
 }
 
+//アドレスバー書き換え
+function updateAddressBar(url){
+    if (typeof history.pushState == 'function') {
+        try {
+            history.pushState(null, null, url);
+            return true;
+        } catch (e) {
+            window.location.href = url;
+            return false;
+        }
+    }
+}
+
 function activateMessageList(){
     var message_list_app = $("#message-list-app");
     angular.element(message_list_app).ready(function() { angular.bootstrap(message_list_app, ['messageListApp']); });
@@ -2849,13 +2862,8 @@ function evMessageList(options){
     }
 
     //アドレスバー書き換え
-    if (typeof history.pushState == 'function') {
-        try {
-            history.pushState(null, null, url);
-        } catch (e) {
-            window.location.href = url;
-            return false;
-        }
+    if(!updateAddressBar("/posts/message_list#/")){
+        return false;
     }
 
     $('#jsGoTop').click();
