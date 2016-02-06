@@ -137,8 +137,10 @@ class PagesController extends AppController
         if ($this->request->is('get')) {
             return $this->render();
         }
-        App::uses('Email', 'Model');
-        $Email = new Email();
+        /**
+         * var Email $Email
+         */
+        $Email = ClassRegistry::init('Email');
         $Email->validate = $Email->contact_validate;
         $Email->set($this->request->data);
         $data = Hash::extract($this->request->data, 'Email');

@@ -70,21 +70,21 @@
                                             'value' => 0,
                                         ]
                 ); ?>
-                <?= $this->Form->error('want', null, ['class' => 'help-block text-danger pull-left']) ?>
+                <?= $this->Form->error('want', null, ['class' => 'contact-error-msg-block pull-left']) ?>
             </div><!-- //form-group -->
             <div class="form-group company">
                 <label class="sr-only" for="company">
                     <?= __d('lp', 'company') ?>
                 </label>
-                <?= $this->Form->input('company', ['class' => 'form-control', 'placeholder' => __d('lp', '会社名')]) ?>
-                <?= $this->Form->error('company', null, ['class' => 'help-block text-danger pull-left']) ?>
+                <?= $this->Form->input('company', ['class' => 'form-control', 'placeholder' => __d('lp', '会社名'),'maxLength']) ?>
+                <?= $this->Form->error('company', null, ['class' => 'contact-error-msg-block pull-left']) ?>
             </div><!--//form-group-->
             <div class="form-group name">
                 <label class="sr-only" for="name">
                     <?= __d('lp', 'name') ?>
                 </label>
                 <?= $this->Form->input('name', ['class' => 'form-control', 'placeholder' => __d('lp', 'お名前') . ' *']) ?>
-                <?= $this->Form->error('name', null, ['class' => 'help-block text-danger pull-left']) ?>
+                <?= $this->Form->error('name', null, ['class' => 'contact-error-msg-block pull-left']) ?>
             </div><!--//form-group-->
             <div class="form-group email">
                 <label class="sr-only" for="email">
@@ -93,7 +93,7 @@
                 <?= $this->Form->input('email',
                                        ['class' => 'form-control', 'type' => 'email', 'placeholder' => __d('lp',
                                                                                                            'メールアドレス') . ' *']) ?>
-                <?= $this->Form->error('email', null, ['class' => 'help-block text-danger pull-left']) ?>
+                <?= $this->Form->error('email', null, ['class' => 'contact-error-msg-block pull-left']) ?>
             </div><!--//form-group-->
             <div class="form-group message">
                 <label class="sr-only" for="message">
@@ -102,7 +102,7 @@
                 <?= $this->Form->input('message',
                                        ['class' => 'form-control', 'type' => 'text', 'rows' => 8, 'placeholder' => __d('lp',
                                                                                                                        'お問い合わせ内容') . ' *']) ?>
-                <?= $this->Form->error('message', null, ['class' => 'help-block text-danger pull-left']) ?>
+                <?= $this->Form->error('message', null, ['class' => 'contact-error-msg-block pull-left']) ?>
             </div><!--//form-group-->
         </div>
 
@@ -206,7 +206,7 @@
                     <?= $this->Form->checkbox('need') ?>
                     <?= __d('lp', '個人情報の取り扱いについてに同意の上、問い合わせする') ?>
                 </label>
-                <?= $this->Form->error('need', __d('lp', '個人情報保護方針の同意が必要です。'), ['class' => 'help-block text-danger']) ?>
+                <?= $this->Form->error('need', __d('lp', '個人情報保護方針の同意が必要です。'), ['class' => 'contact-error-msg-block']) ?>
             </div>
             <p>
                 <?= $this->Form->submit(__d('lp', '確認画面へ'), ['class' => 'btn btn-block btn-cta-primary']) ?>
