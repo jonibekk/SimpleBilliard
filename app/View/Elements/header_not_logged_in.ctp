@@ -13,13 +13,18 @@
 ?>
 <!-- START app/View/Elements/header_not_logged_in.ctp -->
 <?= $this->Html->css('homepage/styles'); ?>
+<?
+if(!isset($top_lang)){
+    $top_lang = null;
+}
+?>
 <header id="header" class="header">
     <div class="container">
         <h1 class="logo pull-left">
-            <a href="<?= $this->Html->url('/'); ?>">
+            <a href="<?= $this->Html->url($top_lang ? '/' . $top_lang . "/" : '/'); ?>">
                 <div><?= __d('lp', '最強にオープンな社内SNS') ?></div>
                 <div class="logo-title">
-                    <?= $this->Html->image('homepage/Goalous_logo.png', array('alt'=>'Goalous', 'width'=>'115')); ?>
+                    <?= $this->Html->image('homepage/Goalous_logo.png', array('alt' => 'Goalous', 'width' => '115')); ?>
                 </div>
             </a>
         </h1>
@@ -36,25 +41,34 @@
             <div id="navbar-collapse" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li class="nav-item">
-                        <?=$this->Html->link( __d('lp', '機能'), array('controller' => 'features',));?>
+                        <?= $this->Html->link(__d('lp', '機能'), ['controller' => 'pages', 'action' => 'display',
+                                                                'pagename'   => 'features', 'lang' => $top_lang,]); ?>
                     </li>
                     <li class="nav-item">
-                        <?=$this->Html->link( __d('lp', '料金'), array('controller' => 'pricing',));?>
+                        <?= $this->Html->link(__d('lp', '料金'), ['controller' => 'pages', 'action' => 'display',
+                                                                'pagename'   => 'pricing', 'lang' => $top_lang,]); ?>
                     </li>
                     <li class="nav-item">
-                        <?=$this->Html->link( __d('lp', 'ブログ'), 'http://blog.isao.co.jp/tag/goalous/', array('target' => '_blank'));?>
+                        <?= $this->Html->link(__d('lp', 'ブログ'), 'http://blog.isao.co.jp/tag/goalous/',
+                                              array('target' => '_blank')); ?>
                     </li>
                     <li class="nav-item">
-                        <?=$this->Html->link( __d('lp', 'お問い合わせ'), array('controller' => 'contact'));?>
+                        <?= $this->Html->link(__d('lp', 'お問い合わせ'), ['controller' => 'pages', 'action' => 'display',
+                                                                    'pagename'   => 'contact', 'lang' => $top_lang,]); ?>
                     </li>
                     <li class="nav-item">
-                        <button type="button" class="login-trigger btn btn-link" data-toggle="modal" data-target="#login-modal">
-                            <?=$this->Html->link( __d('lp', 'ログイン'), array('controller' => 'users', 'action' => 'login'));?>
+                        <button type="button" class="login-trigger btn btn-link" data-toggle="modal"
+                                data-target="#login-modal">
+                            <?= $this->Html->link(__d('lp', 'ログイン'),
+                                                  array('controller' => 'users', 'action' => 'login')); ?>
                         </button>
                     </li>
                     <li class="nav-item nav-item-cta last">
-                        <button type="button" class="btn btn-cta btn-cta-primary" data-toggle="modal" data-target="#signup-modal" >
-                            <?=$this->Html->link( __d('lp', '新規登録'), array('controller' => 'users', 'action' => 'register'), array('class' => 'shine'));?>
+                        <button type="button" class="btn btn-cta btn-cta-primary" data-toggle="modal"
+                                data-target="#signup-modal">
+                            <?= $this->Html->link(__d('lp', '新規登録'),
+                                                  array('controller' => 'users', 'action' => 'register'),
+                                                  array('class' => 'shine')); ?>
                         </button>
                     </li>
                 </ul> <!-- //nav -->
