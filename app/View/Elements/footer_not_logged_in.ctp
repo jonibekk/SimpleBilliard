@@ -10,7 +10,12 @@
  * @var $this View
  */
 ?>
-<!-- START app/View/Elements/footer.ctp -->
+<?
+if(!isset($top_lang)){
+    $top_lang = null;
+}
+?>
+<!-- START app/View/Elements/footer_not_logged_in.ctp -->
 <footer class="footer <?= $is_mb_app ? 'hide' : null ?>">
     <div class="footer-content">
         <div class="container">
@@ -30,9 +35,12 @@
                     <div class="footer-col-inner">
                         <h3 class="title"><?= __d('lp', 'Other Links') ?></h3>
                         <ul class="list-unstyled">
-                            <li><a href="terms.html"><i class="fa fa-caret-right"></i><?= __d('lp', '利用規約') ?></a></li>
-                            <li><a href="privacy.html"><i class="fa fa-caret-right"></i><?= __d('lp', 'プライバシーポリシー') ?></a></li>
-                            <li><a href="law.html"><i class="fa fa-caret-right"></i><?= __d('lp', '特定商取引法に基づく表記') ?></a></li>
+                            <li><a href="<?=$this->Html->url(['controller' => 'pages', 'action' => 'display',
+                                                              'pagename'   => 'terms', 'lang' => $top_lang,])?>"><i class="fa fa-caret-right"></i><?= __d('lp', '利用規約') ?></a></li>
+                            <li><a href="<?=$this->Html->url(['controller' => 'pages', 'action' => 'display',
+                                                              'pagename'   => 'privacy_policy', 'lang' => $top_lang,])?>"><i class="fa fa-caret-right"></i><?= __d('lp', 'プライバシーポリシー') ?></a></li>
+                            <li><a href="<?=$this->Html->url(['controller' => 'pages', 'action' => 'display',
+                                                              'pagename'   => 'law', 'lang' => $top_lang,])?>"><i class="fa fa-caret-right"></i><?= __d('lp', '特定商取引法に基づく表記') ?></a></li>
                         </ul>
                     </div><!--//footer-col-inner-->
                 </div><!--//foooter-col-->
