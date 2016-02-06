@@ -132,6 +132,10 @@ class PagesController extends AppController
 
     public function contact()
     {
+        //もしログイン済ならトップにリダイレクト
+        if($this->Auth->user()){
+            return $this->redirect('/');
+        }
         $this->layout = 'homepage';
 
         if ($this->request->is('get')) {
@@ -159,6 +163,10 @@ class PagesController extends AppController
 
     public function contact_confirm()
     {
+        //もしログイン済ならトップにリダイレクト
+        if($this->Auth->user()){
+            return $this->redirect('/');
+        }
         $this->layout = 'homepage';
         $data = $this->Session->read('contact_form_data');
         if (empty($data)) {
@@ -171,6 +179,10 @@ class PagesController extends AppController
 
     public function contact_send()
     {
+        //もしログイン済ならトップにリダイレクト
+        if($this->Auth->user()){
+            return $this->redirect('/');
+        }
 
         $data = $this->Session->read('contact_form_data');
         if (empty($data)) {
