@@ -70,13 +70,15 @@
                                             'value' => 0,
                                         ]
                 ); ?>
-                <?= $this->Form->error('want', null, ['class' => 'contact-error-msg-block pull-left']) ?>
+                <?= $this->Form->error('want', __d('lp', '選択してください。'),
+                                       ['class' => 'contact-error-msg-block pull-left']) ?>
             </div><!-- //form-group -->
             <div class="form-group company">
                 <label class="sr-only" for="company">
                     <?= __d('lp', 'company') ?>
                 </label>
-                <?= $this->Form->input('company', ['class' => 'form-control', 'placeholder' => __d('lp', '会社名'),'maxLength']) ?>
+                <?= $this->Form->input('company',
+                                       ['class' => 'form-control', 'placeholder' => __d('lp', '会社名'), 'maxLength']) ?>
                 <?= $this->Form->error('company', null, ['class' => 'contact-error-msg-block pull-left']) ?>
             </div><!--//form-group-->
             <div class="form-group name">
@@ -206,7 +208,8 @@
                     <?= $this->Form->checkbox('need') ?>
                     <?= __d('lp', '個人情報の取り扱いについてに同意の上、問い合わせする') ?>
                 </label>
-                <?= $this->Form->error('need', __d('lp', '個人情報保護方針の同意が必要です。'), ['class' => 'contact-error-msg-block']) ?>
+                <?= $this->Form->error('need', __d('lp', '個人情報保護方針の同意が必要です。'),
+                                       ['class' => 'contact-error-msg-block']) ?>
             </div>
             <p>
                 <?= $this->Form->submit(__d('lp', '確認画面へ'), ['class' => 'btn btn-block btn-cta-primary']) ?>
