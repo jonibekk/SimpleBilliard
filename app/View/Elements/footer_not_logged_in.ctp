@@ -70,8 +70,7 @@ if (!isset($top_lang)) {
     <div class="bottom-bar">
         <div class="container">
             <div class="row">
-                <small class="copyright col-md-6 col-sm-6 col-xs-12"><?= __d('lp',
-                                                                             '© 2016 ISAO │　English (US)  　日本語') ?></small>
+                <small class="copyright col-md-6 col-sm-6 col-xs-12">© 2016 ISAO │　<a href="<?=$this->Html->url('/en/')?>">English (US)</a>  　<a href="<?=$this->Html->url('/ja/')?>">日本語</a></small>
                 <ul class="social col-md-6 col-sm-6 col-xs-12 list-inline">
                     <li><a href="http://instagram.com/goalous" target=" _blank"><i class="fa fa-instagram"></i></a></li>
                     <li><a href="https://twitter.com/goalous" target=" _blank"><i class="fa fa-twitter"></i></a></li>
