@@ -31,10 +31,10 @@
                 <h3 class="heading"><?= __d('lp', 'Basic') ?></h3>
                 <div class="content">
                     <div class="price-figure">
-                      <p><?= __d('lp', '1ユーザーあたり') ?></p>
-                      <span class="currency"><?= __d('lp', '¥') ?></span>
-                      <span class="number"><?= __d('lp', '0') ?></span>
-                      <span class="unit"><?= __d('lp', '/月') ?></span>
+                        <p><?= __d('lp', '1ユーザーあたり') ?></p>
+                        <span class="currency"><?= __d('lp', '¥') ?></span>
+                        <span class="number"><?= __d('lp', '0') ?></span>
+                        <span class="unit"><?= __d('lp', '/月') ?></span>
                     </div>
                     <ul class="list-unstyled feature-list">
                         <li><?= __d('lp', '1チーム10アカウントまで') ?></li>
@@ -45,9 +45,10 @@
                         <li>　</li>
                         <li>　</li>
                     </ul>
-                    <a class="btn btn-cta btn-cta-primary" href="/users/register">
+                    <a class="btn btn-cta btn-cta-primary"
+                       href="<?= $this->Html->url(['controller' => 'users', 'action' => 'register']) ?>">
                         <?= __d('lp', 'Plusを試す') ?>
-                        <br />
+                        <br/>
                         <span class="extra"><?= __d('lp', '無料相談受付中') ?></span>
                     </a>
                     <!--a class="btn btn-cta btn-cta-primary" href="#">今すぐ始める<br /><span class="extra">無料相談受付中</span></a-->
@@ -55,11 +56,15 @@
             </div><!--//item-->
 
             <div class="item col-md-4 col-sm-4 col-xs-12">
-                <h3 class="heading"><?= __d('lp', 'Plus') ?><span class="label label-custom"><?= __d('lp', 'キャンペーン') ?></span></h3>
+                <h3 class="heading"><?= __d('lp', 'Plus') ?><span class="label label-custom"><?= __d('lp',
+                                                                                                     'キャンペーン') ?></span>
+                </h3>
                 <div class="content">
                     <div class="price-figure">
-                      <p><?= __d('lp', '1ユーザーあたり') ?></p>
-                      <span class="currency"><?= __d('lp', '¥') ?></span><span class="number"><?= __d('lp', '1,980') ?></span><span class="unit"><?= __d('lp', '/月') ?></span>
+                        <p><?= __d('lp', '1ユーザーあたり') ?></p>
+                        <span class="currency"><?= __d('lp', '¥') ?></span><span class="number"><?= __d('lp',
+                                                                                                        '1,980') ?></span><span
+                            class="unit"><?= __d('lp', '/月') ?></span>
                     </div>
                     <ul class="list-unstyled feature-list">
                         <li><?= __d('lp', '1チームのアカウント無制限') ?></li>
@@ -70,9 +75,10 @@
                         <li><?= __d('lp', 'チーム管理機能') ?></li>
                         <li><?= __d('lp', 'オンラインでのユーザーサポート') ?></li>
                     </ul>
-                    <a class="btn btn-cta btn-cta-primary" href="/users/register">
+                    <a class="btn btn-cta btn-cta-primary"
+                       href="<?= $this->Html->url(['controller' => 'users', 'action' => 'register']) ?>">
                         <?= __d('lp', '今すぐ始める') ?>
-                        <br />
+                        <br/>
                         <span class="extra">
                             <?= __d('lp', '無料相談受付中') ?>
                         </span>
@@ -92,7 +98,8 @@
                 <div class="panel">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a data-parent="#accordion" data-toggle="collapse" class="panel-toggle" href="#faq1"><i class="fa fa-plus-square"></i>
+                            <a data-parent="#accordion" data-toggle="collapse" class="panel-toggle" href="#faq1"><i
+                                    class="fa fa-plus-square"></i>
                                 <?= __d('lp', 'Can I viverra sit amet quam eget lacinia?') ?>
                             </a>
                         </h4>
@@ -120,7 +127,10 @@
                 <div class="panel">
                     <div class="panel-heading">
                         <h4 class="panel-title"><a data-parent="#accordion"
-                        data-toggle="collapse" class="panel-toggle" href="#faq2"><i class="fa fa-plus-square"></i><?= __d('lp', 'What is the ipsum dolor sit amet quam tortor?') ?></a></h4>
+                                                   data-toggle="collapse" class="panel-toggle" href="#faq2"><i
+                                    class="fa fa-plus-square"></i><?= __d('lp',
+                                                                          'What is the ipsum dolor sit amet quam tortor?') ?>
+                            </a></h4>
                     </div>
 
                     <div class="panel-collapse collapse" id="faq2">
@@ -145,7 +155,9 @@
                 <div class="panel">
                     <div class="panel-heading">
                         <h4 class="panel-title"><a data-parent="#accordion"
-                        data-toggle="collapse" class="panel-toggle" href="#faq3"><i class="fa fa-plus-square"></i><?= __d('lp', '') ?>How does the morbi quam tortor work?</a></h4>
+                                                   data-toggle="collapse" class="panel-toggle" href="#faq3"><i
+                                    class="fa fa-plus-square"></i><?= __d('lp', '') ?>How does the morbi quam tortor
+                                work?</a></h4>
                     </div>
 
                     <div class="panel-collapse collapse" id="faq3">
@@ -169,7 +181,9 @@
                 <div class="panel">
                     <div class="panel-heading">
                         <h4 class="panel-title"><a data-parent="#accordion"
-                        data-toggle="collapse" class="panel-toggle" href="#faq4"><i class="fa fa-plus-square"></i>Can I ipsum dolor sit amet nascetur ridiculus?</a></h4>
+                                                   data-toggle="collapse" class="panel-toggle" href="#faq4"><i
+                                    class="fa fa-plus-square"></i>Can I ipsum dolor sit amet nascetur ridiculus?</a>
+                        </h4>
                     </div>
 
                     <div class="panel-collapse collapse" id="faq4">
@@ -194,7 +208,9 @@
                 <div class="panel">
                     <div class="panel-heading">
                         <h4 class="panel-title"><a data-parent="#accordion"
-                        data-toggle="collapse" class="panel-toggle" href="#faq5"><i class="fa fa-plus-square"></i><?= __d('lp', '') ?>Is it possible to tellus eget auctor condimentum?</a></h4>
+                                                   data-toggle="collapse" class="panel-toggle" href="#faq5"><i
+                                    class="fa fa-plus-square"></i><?= __d('lp', '') ?>Is it possible to tellus eget
+                                auctor condimentum?</a></h4>
                     </div>
 
                     <div class="panel-collapse collapse" id="faq5">
@@ -218,7 +234,9 @@
                 <div class="panel">
                     <div class="panel-heading">
                         <h4 class="panel-title"><a data-parent="#accordion"
-                        data-toggle="collapse" class="panel-toggle" href="#faq6"><i class="fa fa-plus-square"></i><?= __d('lp', '') ?>Would it elementum turpis semper imperdiet?</a></h4>
+                                                   data-toggle="collapse" class="panel-toggle" href="#faq6"><i
+                                    class="fa fa-plus-square"></i><?= __d('lp', '') ?>Would it elementum turpis semper
+                                imperdiet?</a></h4>
                     </div>
 
                     <div class="panel-collapse collapse" id="faq6">
@@ -242,7 +260,9 @@
                 <div class="panel">
                     <div class="panel-heading">
                         <h4 class="panel-title"><a data-parent="#accordion"
-                        data-toggle="collapse" class="panel-toggle" href="#faq7"><i class="fa fa-plus-square"></i><?= __d('lp', '') ?>How can I imperdiet lorem sem non nisl?</a></h4>
+                                                   data-toggle="collapse" class="panel-toggle" href="#faq7"><i
+                                    class="fa fa-plus-square"></i><?= __d('lp', '') ?>How can I imperdiet lorem sem non
+                                nisl?</a></h4>
                     </div>
 
                     <div class="panel-collapse collapse" id="faq7">
@@ -266,7 +286,8 @@
                 <div class="panel">
                     <div class="panel-heading">
                         <h4 class="panel-title"><a data-parent="#accordion"
-                        data-toggle="collapse" class="panel-toggle" href="#faq8"><i class="fa fa-plus-square"></i><?= __d('lp', '') ?>Can I imperdiet massa ut?</a></h4>
+                                                   data-toggle="collapse" class="panel-toggle" href="#faq8"><i
+                                    class="fa fa-plus-square"></i><?= __d('lp', '') ?>Can I imperdiet massa ut?</a></h4>
                     </div>
 
                     <div class="panel-collapse collapse" id="faq8">

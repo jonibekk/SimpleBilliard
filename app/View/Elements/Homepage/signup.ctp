@@ -15,13 +15,15 @@
  * @var                    $top_lang
  */
 ?>
-<!-- START app/View/Pages/modules/signup.ctp -->
+<!-- START app/View/Elements/Homepage/signup.ctp -->
 <!-- ******SIGNUP****** -->
 <section id="signup" class="signup">
     <div class="container text-center">
         <h2 class="title"><?= __d('lp', 'さぁ、Goalous Teamへ！') ?></h2>
         <p class="summary"><?= __d('lp', '2016年8月31日まで完全無料！今すぐお試しください。') ?></p>
-        <button type="submit" class="btn btn-cta btn-cta-primary"><?= __d('lp', '新規登録') ?></button>
+        <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'register']) ?>">
+            <button type="submit" class="btn btn-cta btn-cta-primary"><?= __d('lp', '新規登録') ?></button>
+        </a>
     </div>
 </section><!--//signup-->
-<!-- END app/View/Pages/modules/signup.ctp -->
+<!-- END app/View/Elements/Homepage/signup.ctp -->
