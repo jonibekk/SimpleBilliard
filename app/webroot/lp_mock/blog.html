@@ -257,7 +257,13 @@
             <div class="container text-center">
                 <h2 class="title">さぁ、Goalous Teamへ！</h2>
                 <p class="summary">2016年8月末日まで完全無料！今すぐお試しください。</p>
-                <button type="submit" class="btn btn-cta btn-cta-primary">新規登録</button>
+                <form class="signup-form" method="post" action="#">
+                    <div class="form-group">
+                        <label class="sr-only" for="semail2">Your email</label>
+                        <input type="email" id="semail2" name="semail2" class="form-control" placeholder="メールアドレスを入力する" required>
+                    </div>
+                    <button type="submit" class="btn btn-cta btn-cta-primary">新規登録</button>
+                </form><!--//signup-form-->
             </div>
         </section><!--//signup-->
         
