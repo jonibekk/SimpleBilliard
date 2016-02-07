@@ -71,17 +71,4 @@
         </div>
     </div>
 </div>
-<?php $this->append('script') ?>
-<!-- なんでこれ残ってる？ -->
-<?php echo $this->Html->script('https://goalous.uservoice.com/logout.js') ?>
-<script>
-    $(document).ready(function () {
-        $("#UserEmail").attr('autocomplete', 'on');
-        $("#UserPassword").attr('autocomplete', 'off');
-        if (!navigator.cookieEnabled) {
-            $('#RequireCookieAlert').show();
-        }
-    });
-</script>
-<?php $this->end() ?>
 <!-- END app/View/Users/login.ctp -->
