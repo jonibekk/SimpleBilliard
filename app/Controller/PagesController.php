@@ -45,7 +45,7 @@ class PagesController extends AppController
 
         //ログインしていない場合
         if (!$this->Auth->user()) {
-            $this->layout = 'homepage';
+            $this->layout = LAYOUT_HOMEPAGE;
             return $this->render(implode('/', $path));
         }
 
@@ -145,12 +145,11 @@ class PagesController extends AppController
 
     public function contact($type = null)
     {
-        $lang = $this->_getLangFromParam();
         //もしログイン済ならトップにリダイレクト
         if ($this->Auth->user()) {
             return $this->redirect('/');
         }
-        $this->layout = 'homepage';
+        $this->layout = LAYOUT_HOMEPAGE;
         $this->set('type_options', $this->_getContactTypeOption());
         $this->set('selected_type', $type);
 
@@ -198,7 +197,7 @@ class PagesController extends AppController
         if ($this->Auth->user()) {
             return $this->redirect('/');
         }
-        $this->layout = 'homepage';
+        $this->layout = LAYOUT_HOMEPAGE;
         $data = $this->Session->read('contact_form_data');
         if (empty($data)) {
             $this->Pnotify->outError(__d('validate', '問題が発生したため、処理が完了しませんでした。'));
