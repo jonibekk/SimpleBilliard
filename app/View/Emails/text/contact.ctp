@@ -18,7 +18,7 @@ echo "────────────────────\n";
 echo __d('mail', 'お問い合わせ内容') . "\n";
 echo "────────────────────\n";
 echo "\n";
-echo "  - " . __d('mail', 'お問い合わせ項目') . ": " . h($data['want']) . "\n";
+echo "  - " . __d('mail', 'お問い合わせ項目') . ": " . h($data['want_text']) . "\n";
 echo "  - " . __d('mail', '会社名') . ": " . h($data['company']) . "\n";
 echo "  - " . __d('mail', 'お名前') . ": " . h($data['name']) . "\n";
 echo "  - " . __d('mail', 'メールアドレス') . ": " . h($data['email']) . "\n";

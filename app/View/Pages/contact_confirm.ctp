@@ -36,7 +36,7 @@
                 <div class="form-group">
                     <label class="col-sm-4 control-label"><?= __d('lp', 'ご希望') ?></label>
                     <div class="col-sm-8">
-                        <p class="form-control-static"><?= h($data['want']) ?></p>
+                        <p class="form-control-static"><?= h($data['want_text']) ?></p>
                     </div>
                 </div>
                 <div class="form-group">
@@ -71,8 +71,9 @@
                 </div>
 
                 <a href="javascript:history.back()" class="btn btn-block btn-cta-secondary"><?= __d('lp', '戻る') ?></a>
-                <a href="/contact_send" class="btn btn-block btn-cta-primary" id="SendContactLink"><?= __d('lp',
-                                                                                                           '送信する') ?></a>
+                <a href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'contact_send', 'lang' => $top_lang]) ?>"
+                   class="btn btn-block btn-cta-primary" id="SendContactLink"><?= __d('lp',
+                                                                                      '送信する') ?></a>
             </form><!--//form-->
         </div>
     </div><!--//row-->

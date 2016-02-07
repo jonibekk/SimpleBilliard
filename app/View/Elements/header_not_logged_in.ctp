@@ -14,7 +14,7 @@
 <!-- START app/View/Elements/header_not_logged_in.ctp -->
 <?= $this->Html->css('homepage/styles'); ?>
 <?
-if(!isset($top_lang)){
+if (!isset($top_lang)) {
     $top_lang = null;
 }
 ?>
@@ -54,7 +54,7 @@ if(!isset($top_lang)){
                     </li>
                     <li class="nav-item">
                         <?= $this->Html->link(__d('lp', 'お問い合わせ'), ['controller' => 'pages', 'action' => 'display',
-                                                                    'pagename'   => 'contact', 'lang' => $top_lang,]); ?>
+                                                                    'pagename'   => 'contact', 'lang' => $top_lang]); ?>
                     </li>
                     <li class="nav-item">
                         <button type="button" class="login-trigger btn btn-link" data-toggle="modal"

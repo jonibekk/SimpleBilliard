@@ -56,18 +56,11 @@
         <div class="contact-form col-md-8 col-sm-12 col-xs-12 col-md-offset-2">
             <div class="form-group want">
                 <?= $this->Form->select('want',
-                                        [
-                                            null                 => __d('lp', '選択してください'),
-                                            __d('lp', '詳しく知りたい') => __d('lp', '詳しく知りたい'),
-                                            __d('lp', '資料がほしい')  => __d('lp', '資料がほしい'),
-                                            __d('lp', '協業したい')   => __d('lp', '協業したい'),
-                                            __d('lp', '取材したい')   => __d('lp', '取材したい'),
-                                            __d('lp', 'その他')     => __d('lp', 'その他'),
-                                        ],
+                                        $type_options,
                                         [
                                             'class' => 'form-control',
                                             'empty' => false,
-                                            'value' => 0,
+                                            'value' => $selected_type,
                                         ]
                 ); ?>
                 <?= $this->Form->error('want', __d('lp', '選択してください。'),
