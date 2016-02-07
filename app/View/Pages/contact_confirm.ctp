@@ -1,19 +1,19 @@
 <?php /**
-* PHP 5
-* CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
-* Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
-* Licensed under The MIT License
-* Redistributions of files must retain the above copyright notice.
-*
-* @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
-* @link          http://cakephp.org CakePHP(tm) Project
-* @package       Cake.View.Pages
-* @since         CakePHP(tm) v 0.10.0.1076
-* @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
-* @var CodeCompletionView $this
-* @var                    $user_count
-* @var                    $top_lang
-*/
+ * PHP 5
+ * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
+ * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link          http://cakephp.org CakePHP(tm) Project
+ * @package       Cake.View.Pages
+ * @since         CakePHP(tm) v 0.10.0.1076
+ * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * @var CodeCompletionView $this
+ * @var                    $user_count
+ * @var                    $top_lang
+ */
 ?>
 <?php $this->append('meta') ?>
 <link rel="alternate" hreflang="ja" href="<?= $this->Html->url('/ja/contact_confirm') ?>"/>
@@ -36,43 +36,60 @@
                 <div class="form-group">
                     <label class="col-sm-4 control-label"><?= __d('lp', 'ご希望') ?></label>
                     <div class="col-sm-8">
-                        <p class="form-control-static"><?= __d('lp', '訪問したい') ?></p>
+                        <p class="form-control-static"><?= h($data['want_text']) ?></p>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-4 control-label"><?= __d('lp', '会社名') ?></label>
                     <div class="col-sm-8">
-                        <p class="form-control-static"><?= __d('lp', '株式会社ISAO') ?></p>
+                        <p class="form-control-static"><?= h($data['company']) ?></p>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-4 control-label"><?= __d('lp', 'お名前') ?></label>
                     <div class="col-sm-8">
-                        <p class="form-control-static"><?= __d('lp', '中嶋あいみ') ?></p>
+                        <p class="form-control-static"><?= h($data['name']) ?></p>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-4 control-label"><?= __d('lp', 'メールアドレス') ?></label>
                     <div class="col-sm-8">
-                        <p class="form-control-static"><?= __d('lp', 'nakajimaa@isao.co.jp') ?></p>
+                        <p class="form-control-static"><?= h($data['email']) ?></p>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-4 control-label"><?= __d('lp', 'お問い合わせ内容') ?></label>
                     <div class="col-sm-8">
-                        <p class="form-control-static"><?= __d('lp', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.') ?></p>
+                        <p class="form-control-static"><?= nl2br(h($data['message'])) ?></p>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-4 control-label"><?= __d('lp', 'ご希望の営業担当者') ?></label>
                     <div class="col-sm-8">
-                        <p class="form-control-static"><?= __d('lp', '湯川、吉岡') ?></p>
+                        <p class="form-control-static"><?= h($data['sales_people_text']) ?></p>
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-block btn-cta-secondary"><?= __d('lp', '戻る') ?></button>
-                <button type="submit" class="btn btn-block btn-cta-primary"><?= __d('lp', '送信する') ?></button>
+                <a href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'contact', 'lang' => $top_lang, 'from_confirm' => true]) ?>"
+                   class="btn btn-block btn-cta-secondary"><?= __d('lp', '戻る') ?></a>
+                <a href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'contact_send', 'lang' => $top_lang]) ?>"
+                   class="btn btn-block btn-cta-primary" id="SendContactLink"><?= __d('lp',
+                                                                                      '送信する') ?></a>
             </form><!--//form-->
         </div>
     </div><!--//row-->
 </section><!--//contact--><!-- END app/View/Pages/contact_confirm.ctp -->
+<?php $this->append('script'); ?>
+<script type="text/javascript">
+    $(function () {
+        $('#SendContactLink').on('click', function () {
+            if ($(this).hasClass('double_click')) {
+                return false;
+            }
+            $(this).text("<?=__d('lp', '送信中...')?>");
+            // 2重送信防止クラス
+            $(this).addClass('double_click');
+        });
+    })
+</script>
+<?php $this->end(); ?>

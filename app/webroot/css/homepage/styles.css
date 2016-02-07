@@ -116,7 +116,6 @@ a.btn-cta-secondary:hover .fa,
   border-color: #d9d9d9;
 }
 .form-control:focus {
-  border-color: ;
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
@@ -2184,4 +2183,11 @@ margin-right: 20px;
 
 .footer {
     margin: 0;
+}
+
+.contact-error-msg-block {
+  display: block;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  color: red;
 }
