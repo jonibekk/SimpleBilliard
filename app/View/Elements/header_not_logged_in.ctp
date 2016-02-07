@@ -53,8 +53,8 @@ if (!isset($top_lang)) {
                                               array('target' => '_blank')); ?>
                     </li>
                     <li class="nav-item">
-                        <?= $this->Html->link(__d('lp', 'お問い合わせ'), ['controller' => 'pages', 'action' => 'display',
-                                                                    'pagename'   => 'contact', 'lang' => $top_lang]); ?>
+                        <?= $this->Html->link(__d('lp', 'お問い合わせ'),
+                                              ['controller' => 'pages', 'action' => 'contact', 'lang' => $top_lang]); ?>
                     </li>
                     <li class="nav-item">
                         <button type="button" class="login-trigger btn btn-link" data-toggle="modal"
