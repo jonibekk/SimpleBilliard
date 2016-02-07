@@ -311,7 +311,7 @@
         <div class="more text-center">
             <h4 class="title"><?= __d('lp', '') ?>More questions?</h4>
             <a class="btn btn-cta btn-cta-secondary"
-               href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'contact', 'lang' => $top_lang, 5]) ?>"><?= __d('lp',
+               href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'contact', 'lang' => $top_lang]) ?>"><?= __d('lp',
                                                                                                                                 '') ?>
                 Get in touch</a>
         </div>
