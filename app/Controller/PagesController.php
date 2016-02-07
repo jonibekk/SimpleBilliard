@@ -154,6 +154,11 @@ class PagesController extends AppController
         $this->set('selected_type', $type);
 
         if ($this->request->is('get')) {
+            if (isset($this->request->params['named']['from_confirm']) &&
+                $this->Session->read('contact_form_data')
+            ) {
+                $this->request->data['Email'] = $this->Session->read('contact_form_data');
+            }
             return $this->render();
         }
         /**

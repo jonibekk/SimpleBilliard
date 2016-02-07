@@ -70,7 +70,8 @@
                     </div>
                 </div>
 
-                <a href="javascript:history.back()" class="btn btn-block btn-cta-secondary"><?= __d('lp', '戻る') ?></a>
+                <a href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'contact', 'lang' => $top_lang, 'from_confirm' => true]) ?>"
+                   class="btn btn-block btn-cta-secondary"><?= __d('lp', '戻る') ?></a>
                 <a href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'contact_send', 'lang' => $top_lang]) ?>"
                    class="btn btn-block btn-cta-primary" id="SendContactLink"><?= __d('lp',
                                                                                       '送信する') ?></a>

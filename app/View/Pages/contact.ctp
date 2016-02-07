@@ -113,7 +113,11 @@
                     <div class="input-group">
                             <span class="input-group-addon">
                                 <?= $this->Form->checkbox('sales_people.',
-                                                          ['value' => __d('lp', '湯川啓太'), 'hiddenField' => false]) ?>
+                                                          ['value'   => __d('lp', '湯川啓太'), 'hiddenField' => false,
+                                                           'checked' => isset($this->request->data['Email']['sales_people']) &&
+                                                           in_array(__d('lp', '湯川啓太'),
+                                                                    $this->request->data['Email']['sales_people']) ? 'checked' : null
+                                                          ]) ?>
                             </span>
                         <div class="media">
                             <div class="media-left media-middle">
@@ -134,7 +138,11 @@
                     <div class="input-group">
                             <span class="input-group-addon">
                                 <?= $this->Form->checkbox('sales_people.',
-                                                          ['value' => __d('lp', '菊池厚平'), 'hiddenField' => false]) ?>
+                                                          ['value'   => __d('lp', '菊池厚平'), 'hiddenField' => false,
+                                                           'checked' => isset($this->request->data['Email']['sales_people']) &&
+                                                           in_array(__d('lp', '菊池厚平'),
+                                                                    $this->request->data['Email']['sales_people']) ? 'checked' : null
+                                                          ]) ?>
                             </span>
                         <div class="media">
                             <div class="media-left media-middle">
@@ -155,7 +163,11 @@
                     <div class="input-group">
                             <span class="input-group-addon">
                                 <?= $this->Form->checkbox('sales_people.',
-                                                          ['value' => __d('lp', '吉岡真人'), 'hiddenField' => false]) ?>
+                                                          ['value'   => __d('lp', '吉岡真人'), 'hiddenField' => false,
+                                                           'checked' => isset($this->request->data['Email']['sales_people']) &&
+                                                               in_array(__d('lp', '吉岡真人'),
+                                                                                 $this->request->data['Email']['sales_people']) ? 'checked' : null
+                                                          ]) ?>
                             </span>
                         <div class="media">
                             <div class="media-left media-middle">
@@ -176,7 +188,11 @@
                     <div class="input-group">
                             <span class="input-group-addon">
                                 <?= $this->Form->checkbox('sales_people.',
-                                                          ['value' => __d('lp', '石原裕介'), 'hiddenField' => false]) ?>
+                                                          ['value'   => __d('lp', '石原裕介'), 'hiddenField' => false,
+                                                           'checked' => isset($this->request->data['Email']['sales_people']) &&
+                                                               in_array(__d('lp', '石原裕介'),
+                                                                                 $this->request->data['Email']['sales_people']) ? 'checked' : null
+                                                          ]) ?>
                             </span>
                         <div class="media">
                             <div class="media-left media-middle">
