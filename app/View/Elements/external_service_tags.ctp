@@ -134,13 +134,13 @@
     <!-- start Intercom -->
     <script>
         window.intercomSettings = {
-            app_id: "<?=INTERCOM_APP_ID?>"
-            <?php if ($this->Session->read('Auth.User.id')): ?>,
+            app_id: "<?=INTERCOM_APP_ID?>",
+            <?php if ($this->Session->read('Auth.User.id')): ?>
             name: "<?= h($this->Session->read('Auth.User.display_username')) ?>", // Full name
             email: "<?= h($this->Session->read('Auth.User.PrimaryEmail.email')) ?>", // Email address
-            created_at: <?= h($this->Session->read('Auth.User.created')) ?> // Signup date as a Unix timestamp
+            created_at: <?= h($this->Session->read('Auth.User.created')) ?>, // Signup date as a Unix timestamp
             <?php endif ?>
-            <?php if (isset($my_member_status) && $my_member_status): ?>,
+            <?php if (isset($my_member_status) && $my_member_status): ?>
             "team_id": <?= h(intval($my_member_status['TeamMember']['team_id'])) ?>,
             "team_admin": <?= h(intval($my_member_status['TeamMember']['admin_flg'])) ?>,
             <?php endif ?>
