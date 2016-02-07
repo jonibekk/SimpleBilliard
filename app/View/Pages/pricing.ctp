@@ -33,7 +33,7 @@
                     <div class="price-figure">
                         <p><?= __d('lp', '1ユーザーあたり') ?></p>
                         <span class="currency"><?= __d('lp', '¥') ?></span>
-                        <span class="number"><?= __d('lp', '0') ?></span>
+                        <span class="number">0</span>
                         <span class="unit"><?= __d('lp', '/月') ?></span>
                     </div>
                     <ul class="list-unstyled feature-list">
@@ -62,8 +62,7 @@
                 <div class="content">
                     <div class="price-figure">
                         <p><?= __d('lp', '1ユーザーあたり') ?></p>
-                        <span class="currency"><?= __d('lp', '¥') ?></span><span class="number"><?= __d('lp',
-                                                                                                        '1,980') ?></span><span
+                        <span class="currency"><?= __d('lp', '¥') ?></span><span class="number">1,980</span><span
                             class="unit"><?= __d('lp', '/月') ?></span>
                     </div>
                     <ul class="list-unstyled feature-list">
