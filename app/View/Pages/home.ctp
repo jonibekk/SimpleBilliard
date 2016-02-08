@@ -66,8 +66,6 @@
         <div class="row text-left">
             <p class="col-md-2 col-md-offset-2 col-sm-3"><?= __d('lp', '2016年2月5日') ?></p>
             <p class="col-md-6 col-sm-9">
-                <?= $this->Html->link(__d('lp', 'お問い合わせ'), array('controller' => 'company-content'),
-                                      array('class' => 'btn btn-cta btn')) ?>
                 <a href="/Goalous_lp_mock/company-content.html">
                     <?= __d('lp', '月刊人事マネジメント2016年2月号に掲載されました') ?></a></p>
         </div>

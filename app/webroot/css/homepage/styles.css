@@ -2136,7 +2136,7 @@ input[type="text"], input[type="email"], input[type="password"], input[type="sub
 }
 .contact-promo {
     position: relative;
-    background: #c20a19 url('../images/background/contact-bg.jpg') no-repeat center bottom;
+    background: #c20a19 url('../../img/homepage/background/contact-bg.jpg') no-repeat center bottom;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -2243,4 +2243,13 @@ input[type="text"], input[type="email"], input[type="password"], input[type="sub
     margin-top: 5px;
     margin-bottom: 10px;
     color: red;
+}
+
+.lp-contact-control-label {
+    float: left;
+    margin-right: 8px;
+}
+
+.lp-contact-form-control {
+    clear: both;
 }
