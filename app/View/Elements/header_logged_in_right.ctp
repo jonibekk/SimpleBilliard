@@ -10,14 +10,14 @@
         <a class="header-user-avatar"
            href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $this->Session->read('Auth.User.id')]) ?>">
             <?=
-            $this->Upload->uploadImage($this->Session->read('Auth'), 'User.photo', ['style' => 'small'],
+            $this->Upload->uploadImage($my_prof, 'User.photo', ['style' => 'small'],
                                        ['width' => '24', 'height' => '24', 'alt' => 'icon', 'class' => 'header-nav-avatar']) ?>
             <span class="header-user-name js-header-link">
             <?= $this->Session->read('Auth.User.display_first_name') ?>
         </span>
         </a>
         <a href="<?= $this->Html->url('/') ?>" class="header-user-home  js-header-link"><?= __d('gl',
-                                                                                                           'ホーム') ?></a>
+                                                                                                'ホーム') ?></a>
     <?php endif; ?>
 
     <div class="header-dropdown-add">
@@ -104,7 +104,8 @@
                                               'action'     => 'ajax_get_old_notify_more',]) ?>">
             </a>
 
-            <a href="<?= $this->Html->url(['controller' => 'notifications', 'action' => 'index']) ?>">
+            <a href="#" get-url="<?= $this->Html->url(['controller' => 'notifications', 'action' => 'index']) ?>"
+               class="call-notifications">
                 <div class="notify-all-view-link">
                     <?= __d('gl', 'すべて見る') ?>
                 </div>

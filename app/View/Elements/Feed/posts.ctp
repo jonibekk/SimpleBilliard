@@ -107,12 +107,12 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                     <?php if ($post['Post']['type'] == Post::TYPE_NORMAL): ?>
                                         <li>
                                             <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'post_edit', 'post_id' => $post['Post']['id']]) ?>"
-                                                ><?= __d('gl', "投稿を編集") ?></a>
+                                            ><?= __d('gl', "投稿を編集") ?></a>
                                         </li>
                                     <?php elseif ($post['Post']['type'] == Post::TYPE_ACTION): ?>
                                         <li>
                                             <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'edit_action', 'action_result_id' => $post['Post']['action_result_id']]) ?>"
-                                                ><?= __d('gl', "アクションを編集") ?></a>
+                                            ><?= __d('gl', "アクションを編集") ?></a>
                                         </li>
                                     <?php endif; ?>
                                 <?php endif ?>
@@ -360,7 +360,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                             <a href="#" class="feeds-post-comment-btn trigger-click"
                                target-id="NewCommentDummyForm_<?= $post['Post']['id'] ?>"
                                after-replace-target-id="CommentFormBody_<?= $post['Post']['id'] ?>"
-                                >
+                            >
                                 <i class="fa-comments-o fa"></i>
                                 <?= __d('gl', "コメント") ?>
                             </a>
@@ -393,7 +393,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                        id="Comments_<?= $post['Post']['id'] ?>"
                        parent-id="Comments_<?= $post['Post']['id'] ?>"
                        get-url="<?= $this->Html->url(["controller" => "posts", 'action' => 'ajax_get_old_comment', 'post_id' => $post['Post']['id'], $post['Post']['comment_count'] - 3, 'long_text' => $long_text]) ?>"
-                        >
+                    >
                         <?php if ($post['unread_count'] > 0): ?>
                             <i class="fa fa-comment-o font_brownRed"></i>&nbsp;<?=
                             __d('gl', "他%s件のコメントを見る",
@@ -423,7 +423,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                    style="display:none"
                    post-id="<?= $post['Post']['id'] ?>"
                    get-url="<?= $this->Html->url(["controller" => "posts", 'action' => 'ajax_get_latest_comment', 'post_id' => $post['Post']['id']]) ?>"
-                    >
+                >
                     <div class="alert alert-danger new-comment-read">
                         <span class="num">0</span>
                         <?= __d('gl', "件の新しいコメントがあります") ?>
@@ -439,7 +439,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                         $this->Html->image('ajax-loader.gif',
                                            [
                                                'class'         => 'lazy comment-img',
-                                               'data-original' => $this->Upload->uploadUrl($this->Session->read('Auth.User'),
+                                               'data-original' => $this->Upload->uploadUrl($my_prof,
                                                                                            'User.photo',
                                                                                            ['style' => 'small']),
                                            ]

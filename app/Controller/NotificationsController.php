@@ -23,6 +23,31 @@ class NotificationsController extends AppController
     }
 
     /**
+     * お知らせを返すajax版
+     *
+     * @return CakeResponse
+     */
+    public function ajax_index()
+    {
+        $this->_ajaxPreProcess();
+
+        $notify_items = $this->NotifyBiz->getNotification(NOTIFY_PAGE_ITEMS_NUMBER);
+        $isExistMoreNotify = true;
+        if (count($notify_items) < NOTIFY_PAGE_ITEMS_NUMBER) {
+            $isExistMoreNotify = false;
+        }
+        $this->set(compact('notify_items', 'isExistMoreNotify'));
+        $response = $this->render('/Notifications/index');
+
+        $html = $response->__toString();
+        $result = array(
+            'html'     => $html,
+            'item_cnt' => count($notify_items)
+        );
+        return $this->_ajaxGetResponse($result);
+    }
+
+    /**
      * 古いお知らせを返す（ページング表示用）
      *
      * @param        $oldest_score

@@ -36,9 +36,14 @@ class Team extends AppModel
     /**
      * タイプ
      */
-    const TYPE_FREE = 1;
-    const TYPE_PRO = 2;
-    static public $TYPE = [self::TYPE_FREE => "", self::TYPE_PRO => ""];
+    // const TYPE_FREE = 1;
+    // const TYPE_PRO = 2;
+    const TYPE_CAMPAIGN = 3;
+    static public $TYPE = [
+        // self::TYPE_FREE => "",
+        // self::TYPE_PRO => "",
+        self::TYPE_CAMPAIGN => ""
+    ];
     const OPTION_CHANGE_TERM_FROM_CURRENT = 1;
     const OPTION_CHANGE_TERM_FROM_NEXT = 2;
     static public $OPTION_CHANGE_TERM = [
@@ -51,8 +56,9 @@ class Team extends AppModel
      */
     private function _setTypeName()
     {
-        self::$TYPE[self::TYPE_FREE] = __d('gl', "フリー");
-        self::$TYPE[self::TYPE_PRO] = __d('gl', "プロ");
+        self::$TYPE[self::TYPE_CAMPAIGN] = __d('gl', "無料キャンペーン");
+        // self::$TYPE[self::TYPE_FREE] = __d('gl', "フリー");
+        // self::$TYPE[self::TYPE_PRO] = __d('gl', "プロ");
     }
 
     private function _setTermOptionName()
@@ -347,8 +353,8 @@ class Team extends AppModel
             $post_data['Team']['timezone']
         );
         //キャッシュを削除
-        Cache::clear('team_info');
-        Cache::clear('user_data');
+        Cache::clear(false, 'team_info');
+        Cache::clear(false, 'user_data');
         return (bool)$res;
     }
 
@@ -384,9 +390,9 @@ class Team extends AppModel
      */
     function deleteTeam($team_id)
     {
-        try{
+        try {
             $this->delete($team_id);
-        }catch (PDOException $e){
+        } catch (PDOException $e) {
             return false;
         }
 
