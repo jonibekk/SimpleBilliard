@@ -17,22 +17,14 @@
 
             <ul class="list-unstyled">
                 <li><?=
-                    $this->Html->link(__d('home', 'Features'),
-                                      [
-                                          'controller' => 'pages',
-                                          'action'     => 'display',
-                                          'pagename'   => 'features',
-                                      ])
-                    ?></li>
-                <li><?=
-                    $this->Html->link(__d('home', 'Blog'), 'http://blog.goalous.com/',
+                    $this->Html->link(__d('home', 'Blog'), 'http://blog.isao.co.jp/tag/goalous/',
                                       ['target' => '_blank']) ?></li>
                 <li><?=
                     $this->Html->link(__d('gl', 'Privacy Policy'),
                                       [
                                           'controller' => 'pages',
                                           'action'     => 'display',
-                                          'pagename'   => 'pp',
+                                          'pagename'   => 'privacy_policy',
                                       ])
                     ?></li>
                 <li><?=
@@ -40,7 +32,7 @@
                                       [
                                           'controller' => 'pages',
                                           'action'     => 'display',
-                                          'pagename'   => 'tos',
+                                          'pagename'   => 'terms',
                                       ])
                     ?></li>
             </ul>

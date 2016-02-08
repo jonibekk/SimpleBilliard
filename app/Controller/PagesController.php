@@ -49,6 +49,12 @@ class PagesController extends AppController
             return $this->render(implode('/', $path));
         }
 
+        //ログイン済の場合に、ログインしていない状態で表示できないページ(以下)は拒否る
+        //features,pricing
+        if(in_array('features',$path) || in_array('pricing',$path)){
+            return $this->redirect('/');
+        }
+
         // 1カラムレイアウト
         if ($path[0] !== 'home') {
             $this->layout = LAYOUT_ONE_COLUMN;
