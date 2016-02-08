@@ -1922,45 +1922,8 @@ $(document).ready(function () {
         $('#CommonActionDisplayForm').bootstrapValidator('revalidateField', 'photo');
     });
 
-    //noinspection JSUnusedLocalSymbols
-    $('#select2Member').select2({
-        multiple: true,
-        minimumInputLength: 1,
-        placeholder: cake.message.notice.b,
-        ajax: {
-            url: cake.url.a,
-            dataType: 'json',
-            quietMillis: 100,
-            cache: true,
-            data: function (term, page) {
-                return {
-                    term: term, //search term
-                    page_limit: 10, // page size
-                    with_group: 1
-                };
-            },
-            results: function (data, page) {
-                return {results: data.results};
-            }
-        },
-        formatSelection: format,
-        formatResult: format,
-        escapeMarkup: function (m) {
-            return m;
-        },
-        containerCssClass: "select2Member"
-    }).on('change', function () {
-        var $this = $(this);
-        if ($this.val() == '' || $('#CommonMessageBody').val() == '') {
-            $('#MessageSubmit').attr('disabled', 'disabled');
-        }
-        else {
-            $('#MessageSubmit').removeAttr('disabled');
-        }
-        // グループを選択した場合、グループに所属するユーザーを展開して入力済にする
-        $this.select2('data', select2ExpandGroup($this.select2('data')));
-    });
 
+    initMemberSelect2();
     //noinspection JSUnusedLocalSymbols post_detail.Post.id
     $('#selectOnlyMember').select2({
         multiple: true,
@@ -2260,6 +2223,46 @@ $(document).ready(function () {
     }
 });
 
+function initMemberSelect2() {
+    //noinspection JSUnusedLocalSymbols
+    $('#select2Member').select2({
+        multiple: true,
+        minimumInputLength: 1,
+        placeholder: cake.message.notice.b,
+        ajax: {
+            url: cake.url.a,
+            dataType: 'json',
+            quietMillis: 100,
+            cache: true,
+            data: function (term, page) {
+                return {
+                    term: term, //search term
+                    page_limit: 10, // page size
+                    with_group: 1
+                };
+            },
+            results: function (data, page) {
+                return {results: data.results};
+            }
+        },
+        formatSelection: format,
+        formatResult: format,
+        escapeMarkup: function (m) {
+            return m;
+        },
+        containerCssClass: "select2Member"
+    }).on('change', function () {
+        var $this = $(this);
+        if ($this.val() == '' || $('#CommonMessageBody').val() == '') {
+            $('#MessageSubmit').attr('disabled', 'disabled');
+        }
+        else {
+            $('#MessageSubmit').removeAttr('disabled');
+        }
+        // グループを選択した場合、グループに所属するユーザーを展開して入力済にする
+        $this.select2('data', select2ExpandGroup($this.select2('data')));
+    });
+}
 
 function initCircleSelect2() {
     //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
@@ -2862,7 +2865,7 @@ function evMessageList(options){
     }
 
     //アドレスバー書き換え
-    if(!updateAddressBar("/posts/message_list#/")){
+    if(!updateAddressBar("/posts/message_list#")){
         return false;
     }
 
@@ -2898,6 +2901,8 @@ function evMessageList(options){
 
             //ローダーを削除
             $loader_html.remove();
+
+            initMemberSelect2();
 
             action_autoload_more = false;
             autoload_more = false;
