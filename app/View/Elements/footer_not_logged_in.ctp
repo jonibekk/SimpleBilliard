@@ -55,7 +55,7 @@ if (!isset($top_lang)) {
                         <div class="row">
                             <p class="email col-md-12 col-sm-4"><i class="fa fa-envelope"></i><a href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'contact', 'lang' => $top_lang]) ?>"><?= __d('lp', 'お問い合わせ') ?></a></p>
                             <p class="email col-md-12 col-sm-4"><i class="fa fa-microphone"></i><a
-                                    href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'contact', 'lang' => $top_lang, 1]) ?>"><?= __d('lp',
+                                    href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'contact', 'lang' => $top_lang, 4]) ?>"><?= __d('lp',
                                                                                                                                                      'プレス関連のお問い合わせ') ?></a>
                             </p>
                             <p class="email col-md-12 col-sm-4"><i class="fa fa-heart"></i><a

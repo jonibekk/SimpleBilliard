@@ -61,6 +61,7 @@
                         'class' => 'control-label lp-contact-control-label',
                     ],
                     ]) ?>
+                    <?= $this->Form->error('name', null, ['class' => 'contact-error-msg-block']) ?>
             </div>
             <div class="form-group email">
                 <span class="label label-danger">必須</span>
@@ -73,6 +74,7 @@
                             'class' => 'control-label lp-contact-control-label',
                         ],
                     ]) ?>
+                    <?= $this->Form->error('email', null, ['class' => 'contact-error-msg-block']) ?>
             </div>
             <div class="form-group company">
                 <?= $this->Form->input('company', [
@@ -85,22 +87,22 @@
                     ],
                 ])
                 ?>
+                <?= $this->Form->error('company', null, ['class' => 'contact-error-msg-block']) ?>
             </div>
             <div class="form-group want">
                 <span class="label label-danger">必須</span>
                 <?=
                     $this->Form->input('want', [
                     'options' => $type_options, // PagesController - ln.184,
+                    'value' => $selected_type,
                     'label' => [
                         'text' => __d('lp', 'お問い合わせ項目'),
-                        'class' => 'control-label lp-contact-control-label'
+                        'class' => 'control-label lp-contact-control-label',
+                        'empty' => false,
                     ],
                     'class' => 'form-control lp-contact-form-control',
-                    [
-                        'empty' => false,
-                        'value' => $selected_type
-                    ]]
-                ); ?>
+                ]); ?>
+                <?= $this->Form->error('want', null, ['class' => 'contact-error-msg-block']) ?>
             </div>
             <div class="form-group messsage">
                 <span class="label label-danger">必須</span>
@@ -111,11 +113,12 @@
                         'rows' => 8,
                         'placeholder' => __d('lp', '例）導入を希望しています。詳しく説明に来て欲しいです。'),
                         'label' => [
-                            'text' => __d('lp', 'お問い合わせ内容'),
+                            'text' => __d('lp', 'お問い合わせ内容（最大3,000文字）'),
                             'class' => 'control-label lp-contact-control-label',
                         ],
                     ]);
                 ?>
+                <?= $this->Form->error('message', null, ['class' => 'contact-error-msg-block']) ?>
             </div>
         </div>
 
