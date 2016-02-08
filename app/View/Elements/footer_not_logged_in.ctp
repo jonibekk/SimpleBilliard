@@ -71,8 +71,14 @@ if (!isset($top_lang)) {
     <div class="bottom-bar">
         <div class="container">
             <div class="row">
-                <small class="copyright col-md-6 col-sm-6 col-xs-12">© 2016 ISAO │　<a href="<?=$this->Html->url('/en/')?>">English (US)</a>  　<a href="<?=$this->Html->url('/ja/')?>">日本語</a></small>
-                <ul class="social col-md-6 col-sm-6 col-xs-12 list-inline">
+                <div class="pull-left">
+                    <small class="copyright">© 2016 ISAO │</small>
+                    <ul class="footer-lang list-inline">
+                        <li><a href="<?=$this->Html->url('/en/')?>">English (US)</a></li>
+                        <li><a href="<?=$this->Html->url('/ja/')?>">日本語</a></li>
+                    </ul>
+                </div>
+                <ul class="social list-inline pull-right">
                     <li><a href="http://instagram.com/goalous" target=" _blank"><i class="fa fa-instagram"></i></a></li>
                     <li><a href="https://twitter.com/goalous" target=" _blank"><i class="fa fa-twitter"></i></a></li>
                     <li class="last"><a href="https://www.youtube.com/user/Goalous" target=" _blank"><i

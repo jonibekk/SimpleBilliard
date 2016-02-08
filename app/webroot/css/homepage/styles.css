@@ -2253,3 +2253,11 @@ input[type="text"], input[type="email"], input[type="password"], input[type="sub
 .lp-contact-form-control {
     clear: both;
 }
+
+.footer-lang {
+    display: inline-block;
+}
+
+.footer-lang a {
+    color: #fff;
+}

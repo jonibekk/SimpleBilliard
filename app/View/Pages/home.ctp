@@ -356,24 +356,5 @@
     </div><!--//container-->
 </section><!--//faq-->
 
-<div class="document">
-    <div class="container text-center">
-        <dl class="media col-md-6">
-            <div class="media-left media-middle">
-                <i class="fa fa-file-powerpoint-o document-fa"></i>
-            </div>
-            <div class="media-body">
-                <dt class="bold-text">
-                    <?= __d('lp', '稟議書サンプル（PDFファイル / 2.8MB）') ?>
-                </dt>
-                <dd>
-                    <?= __d('lp', '社内稟議用のサンプル資料です。是非ご活用ください。') ?><br>
-                    <a href="#"><i class="fa fa-caret-right"></i><?= __d('lp', '資料ダウンロード') ?></a>
-                </dd>
-            </div>
-        </dl>
-    </div>
-</div><!--//document-->
-
 <?= $this->element('Homepage/signup') ?>
 <!-- END app/View/Pages/home.ctp -->
