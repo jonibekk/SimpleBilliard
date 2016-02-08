@@ -9,11 +9,21 @@ message_app.controller(
               $pusher,
               $stateParams,
               $anchorScroll,
-              $location) {
+              $location
+    ) {
 
         // TODO: 添付ファイルのプレビューを表示するために一時的に高さを少なくする
         var input_box_height = 280;
 
+
+        if (typeof(angular_message_post_id) != "undefined") {
+            //evMessage経由で呼ばれている場合のレイアウト調整
+            $("#app-webroot-template-message-detail").removeClass("col-sm-offset-2");
+            $("#app-webroot-template-message-detail").removeClass("col-sm-8");
+            $("#app-webroot-template-message-detail").addClass("col-sm-12");
+            console.log("FURU:MessageDetail called.");
+            //$location.path('/notes/1',false);
+        }
         // onloadの場合
         $scope.$on('$viewContentLoaded', function () {
             var $m_box = $("#message_box");
