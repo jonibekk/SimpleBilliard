@@ -103,7 +103,7 @@ class AmazonTransport extends AbstractTransport
         $destinations += array_keys($this->_cakeEmail->to());
         $destinations += array_keys($this->_cakeEmail->cc());
         $destinations += array_keys($this->_cakeEmail->bcc());
-
+CakeLog::error(print_r($destinations,true));
         $this->_data = [
             'Source'       => key($this->_cakeEmail->from()),
             'Destinations' => $destinations,
