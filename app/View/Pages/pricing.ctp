@@ -61,9 +61,16 @@
                 </h3>
                 <div class="content">
                     <div class="price-figure">
-                        <p><?= __d('lp', '1ユーザーあたり') ?></p>
                         <span class="currency"><?= __d('lp', '¥') ?></span><span class="number">1,980</span><span
                             class="unit"><?= __d('lp', '/月') ?></span>
+                        <div class="pricing-line-through"></div>
+                    </div>
+                    <i class="fa fa-arrow-down pricing-figure-mid-icon"></i>
+                    <div class="price-figure">
+                        <p><?= __d('lp', '1ユーザーあたり') ?></p>
+                        <span class="currency"><?= __d('lp', '¥') ?></span>
+                        <span class="number">0</span>
+                        <span class="unit"><?= __d('lp', '/月') ?></span>
                     </div>
                     <ul class="list-unstyled feature-list">
                         <li><?= __d('lp', '1チームのアカウント無制限') ?></li>
