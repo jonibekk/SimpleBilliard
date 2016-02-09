@@ -90,7 +90,7 @@ class AmazonTransport extends AbstractTransport
      */
     protected function _prepareData()
     {
-        $headers = $this->_cakeEmail->getHeaders(array('from', 'sender', 'replyTo', 'readReceipt', 'returnPath', 'to', 'cc', 'subject'));
+        $headers = $this->_cakeEmail->getHeaders(array('from', 'sender', 'replyTo', 'readReceipt', 'returnPath', 'to', 'cc', 'bcc', 'subject'));
 
         if ($headers['Sender'] == '') {
             $headers['Sender'] = $headers['From'];
@@ -99,11 +99,9 @@ class AmazonTransport extends AbstractTransport
         $message = implode("\r\n", $this->_cakeEmail->message());
 
         $this->_data = array();
-        $destinations = [];
-        $destinations += array_keys($this->_cakeEmail->to());
-        $destinations += array_keys($this->_cakeEmail->cc());
-        $destinations += array_keys($this->_cakeEmail->bcc());
-
+        $destinations = array_merge(array_keys($this->_cakeEmail->to()),
+                                    array_keys($this->_cakeEmail->cc()),
+                                    array_keys($this->_cakeEmail->bcc()));
         $this->_data = [
             'Source'       => key($this->_cakeEmail->from()),
             'Destinations' => $destinations,
@@ -143,11 +141,11 @@ class AmazonTransport extends AbstractTransport
     protected function _generateAmazonSes()
     {
         $this->_amazonSes = SesClient::factory(
-                                     [
-                                         'key'    => $this->_config['key'],
-                                         'secret' => $this->_config['secret'],
-                                         'region' => Region::US_EAST_1
-                                     ]
+            [
+                'key'    => $this->_config['key'],
+                'secret' => $this->_config['secret'],
+                'region' => Region::US_EAST_1
+            ]
         );
     }
 }

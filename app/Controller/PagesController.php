@@ -237,7 +237,7 @@ class PagesController extends AppController
             $config = 'default';
         }
         else {
-            $config = 'amazon';
+            $config = 'amazon_contact';
         }
 
         // 送信処理
