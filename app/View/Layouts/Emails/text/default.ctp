@@ -14,6 +14,5 @@
  */
 ?>
 <?php echo $this->fetch('content'); ?>
-<?php echo $this->element('Email/goalous_web') ?>
 <?php echo $this->element('Email/no_reply') ?>
-<?php echo $this->element('Email/signature') ?>
+<?php echo $this->element('Email/goalous_web') ?>
