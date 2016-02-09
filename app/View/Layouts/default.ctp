@@ -23,7 +23,6 @@
     echo $this->element('header_logged_in');
 }
 else {
-    // ToDo - これが読み込まれる可能性があるのか。
     echo $this->element('header_not_logged_in');
 }
 ?>

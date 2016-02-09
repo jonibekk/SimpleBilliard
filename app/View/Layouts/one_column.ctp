@@ -5,9 +5,6 @@
  * @var                    $title_for_layout string
  * @var CodeCompletionView $this
  */
-if (!isset($without_footer)) {
-    $without_footer = false;
-}
 ?>
 <!-- START app/View/Layouts/one_column.ctp -->
 <!DOCTYPE html>
@@ -24,20 +21,18 @@ if (!isset($without_footer)) {
     echo $this->element('header_logged_in');
 }
 else {
-    // これも読み込まれる可能性はあるのか。
     echo $this->element('header_not_logged_in');
 }
 ?>
 <div id="container" class="container">
     <?= $this->Session->flash(); ?>
+
     <?= $this->fetch('content'); ?>
-    <?php if ($this->Session->read('Auth.User.id') && !viaIsSet($without_footer)): ?>
+
+    <?php if (!viaIsSet($without_footer)): ?>
         <?= $this->element('footer') ?>
     <?php endif; ?>
 </div>
-<?php if (!$this->Session->read('Auth.User.id') && !viaIsSet($without_footer)): ?>
-    <?= $this->element('footer_not_logged_in') ?>
-<?php endif; ?>
 <?= $this->element('common_modules') ?>
 <?= $this->element('modals') ?>
 <!-- START fetch modal -->
