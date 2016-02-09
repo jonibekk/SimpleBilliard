@@ -21,7 +21,6 @@ App::uses('AppController', 'Controller');
  */
 class PagesController extends AppController
 {
-
     /**
      * Displays a view
      *
@@ -45,7 +44,7 @@ class PagesController extends AppController
 
         //ログインしていない場合
         if (!$this->Auth->user()) {
-            $this->layout = LAYOUT_HOMEPAGE;
+            $this->layout = 'homepage';
             return $this->render(implode('/', $path));
         }
 
@@ -96,8 +95,7 @@ class PagesController extends AppController
     {
         $this->_setLanguage();
         //全ページ許可
-        $this->Auth->allow();
-
+        $this->Auth->allow('display');
         //チームidがあった場合は許可しない
         if (isset($this->request->params['team_id'])) {
             $this->Auth->deny('display');
@@ -112,23 +110,10 @@ class PagesController extends AppController
     {
         // パラメータから言語をセット
         $this->set('top_lang', null);
-        $lang = $this->_getLangFromParam();
-        if ($lang) {
-            $this->set('top_lang', $lang);
-            Configure::write('Config.language', $lang);
-        }
-    }
-
-    function _getLangFromParam()
-    {
-        $lang = null;
         if (isset($this->request->params['lang'])) {
-            $lang = $this->request->params['lang'];
+            $this->set('top_lang', $this->request->params['lang']);
+            Configure::write('Config.language', $this->request->params['lang']);
         }
-        elseif (isset($this->request->params['named']['lang'])) {
-            $lang = $this->request->params['named']['lang'];
-        }
-        return $lang;
     }
 
     /**
@@ -141,110 +126,5 @@ class PagesController extends AppController
             'en' => __d('home', "English"),
         ];
         return $lang_list;
-    }
-
-    public function contact($type = null)
-    {
-        //もしログイン済ならトップにリダイレクト
-        if ($this->Auth->user()) {
-            return $this->redirect('/');
-        }
-        $this->layout = LAYOUT_HOMEPAGE;
-        $this->set('type_options', $this->_getContactTypeOption());
-        $this->set('selected_type', $type);
-
-        if ($this->request->is('get')) {
-            if (isset($this->request->params['named']['from_confirm']) &&
-                $this->Session->read('contact_form_data')
-            ) {
-                $this->request->data['Email'] = $this->Session->read('contact_form_data');
-            }
-            return $this->render();
-        }
-        /**
-         * var Email $Email
-         */
-        $Email = ClassRegistry::init('Email');
-        $Email->validate = $Email->contact_validate;
-        $Email->set($this->request->data);
-        $data = Hash::extract($this->request->data, 'Email');
-        if ($Email->validates()) {
-            if (empty($data['sales_people'])) {
-                $data['sales_people_text'] = __d('lp', '指定なし');
-            }
-            else {
-                $data['sales_people_text'] = implode(', ', $data['sales_people']);
-            }
-            $data['want_text'] = $this->_getContactTypeOption()[$data['want']];
-
-            $this->Session->write('contact_form_data', $data);
-            $lang = $this->_getLangFromParam();
-            return $this->redirect(['action' => 'contact_confirm', 'lang' => $lang]);
-        }
-        return $this->render();
-    }
-
-    private function _getContactTypeOption()
-    {
-        return [
-            null => __d('lp', '選択してください'),
-            1    => __d('lp', '詳しく知りたい'),
-            2    => __d('lp', '資料がほしい'),
-            3    => __d('lp', '協業したい'),
-            4    => __d('lp', '取材したい'),
-            5    => __d('lp', 'その他'),
-        ];
-    }
-
-    public function contact_confirm()
-    {
-        //もしログイン済ならトップにリダイレクト
-        if ($this->Auth->user()) {
-            return $this->redirect('/');
-        }
-        $this->layout = LAYOUT_HOMEPAGE;
-        $data = $this->Session->read('contact_form_data');
-        if (empty($data)) {
-            $this->Pnotify->outError(__d('validate', '問題が発生したため、処理が完了しませんでした。'));
-            return $this->redirect($this->referer());
-        }
-        $this->set(compact('data'));
-        return $this->render();
-    }
-
-    public function contact_send()
-    {
-        //もしログイン済ならトップにリダイレクト
-        if ($this->Auth->user()) {
-            return $this->redirect('/');
-        }
-
-        $data = $this->Session->read('contact_form_data');
-        if (empty($data)) {
-            $this->Pnotify->outError(__d('validate', '問題が発生したため、処理が完了しませんでした。'));
-            return $this->redirect($this->referer());
-        }
-        $this->Session->delete('contact_form_data');
-        //メール送信処理
-        App::uses('CakeEmail', 'Network/Email');
-        if (ENV_NAME === "local") {
-            $config = 'default';
-        }
-        else {
-            $config = 'amazon';
-        }
-
-        // 送信処理
-        $email = new CakeEmail($config);
-        $email
-            ->template('contact', 'default')
-            ->viewVars(['data' => $data])
-            ->emailFormat('text')
-            ->to([$data['email'] => $data['email']])
-            ->bcc(['contact@goalous.com' => 'contact@goalous.com'])
-            ->subject(__d('mail', '【Goalous】お問い合わせありがとうございました'))
-            ->send();
-        $lang = $this->_getLangFromParam();
-        return $this->redirect(['controller' => 'pages', 'action' => 'display', 'pagename' => 'contact_thanks', 'lang' => $lang,]);
     }
 }
