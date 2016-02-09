@@ -71,7 +71,7 @@ echo $this->Html->script('vendor/angular/angular-location-update');
                 dropzone_response_error: "<?=__d('gl', 'アップロードに失敗しました。')?>",
                 dropzone_cancel_upload: "<?=__d('gl', 'アップロードをキャンセルしました。')?>",
                 dropzone_cancel_upload_confirmation: "<?=__d('gl', 'アップロードをキャンセルしてよろしいですか？')?>",
-                dropzone_uploading_not_end: "<?=__d('gl', '全てのファイルのアップロードが完了していません。\\nこのまま送信してよろしいですか？')?>",
+                dropzone_uploading_not_end: "<?=__d('gl', '全てのファイルのアップロードが完了していません。アップロード完了までお待ち下さい。')?>",
                 dropzone_uploaded_file_expired: "<?=__d('gl', 'アップロードしたファイルの有効期限が切れています。再度アップロードしてください。')?>",
                 date_format: "<?=__d('validate',"日付はYYYY/MM/DDの形式で入力してください。")?>",
             },
