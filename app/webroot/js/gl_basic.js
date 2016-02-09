@@ -2897,12 +2897,18 @@ function evMessageList(options){
 
                 $(".layout-main").html($posts);
                 activateMessageList();
+                initMemberSelect2();
+
+                //メッセージフォームのvalidateを有効化
+                $('#MessageDisplayForm').bootstrapValidator({
+                    live: 'enabled',
+                    feedbackIcons: {},
+                    fields: {}
+                });
             }
 
             //ローダーを削除
             $loader_html.remove();
-
-            initMemberSelect2();
 
             action_autoload_more = false;
             autoload_more = false;
