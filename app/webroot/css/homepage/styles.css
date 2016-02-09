@@ -2191,3 +2191,22 @@ margin-right: 20px;
   margin-bottom: 10px;
   color: red;
 }
+
+.price-figure {
+    position: static;
+}
+
+.pricing-line-through {
+    position: absolute;
+    border-top: 2px solid #000;
+    border-bottom: 2px solid #000;
+    height: 12px;
+    width: 240px;
+    transform: rotate(-12deg);
+    top: 60%;
+    left: 10%;
+}
+
+.pricing-figure-mid-icon {
+    margin: 12px;
+}
