@@ -1,4 +1,5 @@
-<?php /**
+<?php
+/**
  * PHP 5
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
@@ -6,13 +7,15 @@
  * Redistributions of files must retain the above copyright notice.
  *
  * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ *
  * @link          http://cakephp.org CakePHP(tm) Project
- * @package       Cake.View.Pages
  * @since         CakePHP(tm) v 0.10.0.1076
+ *
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
- * @var CodeCompletionView $this
- * @var                    $user_count
- * @var                    $top_lang
+ *
+ * @var CodeCompletionView
+ * @var
+ * @var
  */
 ?>
 <!-- START app/View/Pages/home.ctp -->
@@ -58,16 +61,32 @@
 <div class="press">
     <div class="container text-center">
         <div class="row text-left">
-            <p class="col-md-2 col-md-offset-2 col-sm-3"><?= __d('lp', '2016年2月5日') ?></p>
-            <p class="col-md-6 col-sm-9"><a href="/Goalous_lp_mock/company-content.html"><?= __d('lp',
-                                                                                                 '月刊人事マネジメント2016年2月号に掲載されました') ?></a>
+            <p class="col-md-2 col-md-offset-2 col-sm-3"><?=
+                    __d('lp', '2016年2月5日');
+            ?></p>
+            <p class="col-md-6 col-sm-9">
+                <?=
+                    $this->Html->link(
+                        __d('lp', '月刊人事マネジメント2016年2月号に掲載されました'),
+                        'http://blog.isao.co.jp/press_jinjimanage_20160205/',
+                        ['target' => '_blank']
+                    );
+                ?>
             </p>
         </div>
         <div class="row text-left">
-            <p class="col-md-2 col-md-offset-2 col-sm-3"><?= __d('lp', '2016年2月5日') ?></p>
+            <p class="col-md-2 col-md-offset-2 col-sm-3"><?=
+                    __d('lp', '2016年2月4日');
+            ?></p>
             <p class="col-md-6 col-sm-9">
-                <a href="/Goalous_lp_mock/company-content.html">
-                    <?= __d('lp', '月刊人事マネジメント2016年2月号に掲載されました') ?></a></p>
+                <?=
+                    $this->Html->link(
+                        __d('lp', 'アイデム 人と仕事の研究所 制度探訪に掲載されました'),
+                        'https://apj.aidem.co.jp/column/597//',
+                        ['target' => '_blank']
+                    );
+                ?>
+            </p>
         </div>
     </div>
 </div><!--//press-->
@@ -77,47 +96,47 @@
     <div class="container">
         <h2 class="title text-center"><?= __d('lp', 'Goalousで、組織は激変する') ?></h2>
         <p class="intro text-center"><?= __d('lp', '「ゴール達成」って？「最強にオープン」って？Goalousは、世界のシゴトをたのしくしたい。それだけのこと。') ?></p>
-        <div class="item row">
+        <div class="item row flex from-left">
             <div
-                class="content col-md-5 col-sm-5 col-xs-12 pull-right col-md-offset-1 col-sm-offset-1 col-xs-offset-0 from-right">
+                class="content col-md-5 col-sm-5 col-xs-12 pull-right col-md-offset-1 col-sm-offset-1 col-xs-offset-0 col-right">
                 <h3 class="title"><?= __d('lp', '経営ビジョンにずんずん近づく') ?></h3>
                 <div class="details">
                     <p><?= __d('lp',
                                '経営ビジョンが反映され、従業員たちが到達を目指す具体的な指標。それがゴールです。Goalousを使えば使うほど、ゴールへの活動が増えて、組織が前へ前へずんずん進みます。') ?></p>
                 </div>
             </div><!--//content-->
-            <div class="figure col-md-6 col-sm-6 col-xs-12 from-left">
+            <div class="figure col-md-6 col-sm-6 col-xs-12 col-left">
                 <?= $this->Html->image('homepage/top/top-1.jpg', array('alt' => '', 'class' => 'img-responsive')); ?>
             </div><!--//figure-->
         </div><!--//item-->
 
         <hr/>
 
-        <div class="item row">
-            <div class="content col-md-5 col-sm-5 col-xs-12 from-left">
+        <div class="item row flex from-right">
+            <div class="content col-md-5 col-sm-5 col-xs-12 col-left">
                 <h3 class="title"><?= __d('lp', '「それ知らない」が激減する') ?></h3>
                 <div class="details">
                     <p><?= __d('lp',
                                '商談した・ドキュメントを作成した・プレゼンした…など、ゴール( 目標 )に対する日々のアクションや、特定の仲間との会話によって情報量が増えます。情報の不足がなければ、より的確な判断ができます。') ?></p>
                 </div>
             </div><!--//content-->
-            <div class="figure col-md-6 col-sm-6 col-xs-12 col-md-offset-1 col-sm-offset-1 col-xs-offset-0 from-right">
+            <div class="figure col-md-6 col-sm-6 col-xs-12 col-md-offset-1 col-sm-offset-1 col-xs-offset-0 col-right">
                 <?= $this->Html->image('homepage/top/top-2.jpg', array('alt' => '', 'class' => 'img-responsive')); ?>
             </div><!--//figure-->
         </div><!--//item-->
 
         <hr/>
 
-        <div class="item row">
+        <div class="item row flex from-left">
             <div
-                class="content col-md-5 col-sm-5 col-xs-12 pull-right col-md-offset-1 col-sm-offset-1 col-xs-offset-0 from-right">
+                class="content col-md-5 col-sm-5 col-xs-12 pull-right col-md-offset-1 col-sm-offset-1 col-xs-offset-0 col-right">
                 <h3 class="title"><?= __d('lp', '協力による成果が出る') ?></h3>
                 <div class="details">
                     <p><?= __d('lp',
                                'チームでミッションを達成するのに、最も大切な要素は「お互いにわかり合う」こと。Goalousを通して、お互いの活動を認め合い、助け合うことで効率よく成果が出るようになります。') ?></p>
                 </div>
             </div><!--//content-->
-            <div class="figure col-md-6 col-sm-6 col-xs-12 from-left">
+            <div class="figure col-md-6 col-sm-6 col-xs-12 col-left">
                 <?= $this->Html->image('homepage/top/top-3.jpg', array('alt' => '', 'class' => 'img-responsive')); ?>
             </div><!--//figure-->
         </div><!--//item-->
@@ -139,7 +158,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 id="videoModalLabel" class="modal-title"><?= __d('lp', 'Video Tour') ?></h4>
+                            <h4 id="videoModalLabel" class="modal-title"><?= __d('lp', 'Goalousについて') ?></h4>
                         </div>
                         <div class="modal-body">
                             <div class="video-container">
@@ -156,205 +175,40 @@
     </div>
 </section><!--//video-->
 
-<!-- ******FAQ****** -->
-<section id="faq" class="faq section has-bg-color">
+<div class="store section">
     <div class="container">
-        <h2 class="title text-center"><?= __d('lp', 'よくあるご質問') ?></h2>
-        <div class="row">
-            <div class="col-md-6 col-sm-6 col-xs-12">
-                <div class="panel">
-                    <div class="panel-heading">
-                        <h4 class="panel-title"><a data-parent="#accordion"
-                                                   data-toggle="collapse" class="panel-toggle" href="#faq1"><i
-                                    class="fa fa-plus-square"></i><?= __d('lp', '他の社内向けSNSと何が違いますか？') ?></a></h4>
-                    </div>
-
-                    <div class="panel-collapse collapse" id="faq1">
-                        <div class="panel-body">
-                            <?= __d('lp', '回答を入れる。回答を入れる。回答を入れる。回答を入れる。') ?>
-                            <?= __d('lp', '回答を入れる。回答を入れる。回答を入れる。回答を入れる。') ?>
-                        </div>
-                    </div>
-                </div><!--//panel-->
-
-                <div class="panel">
-                    <div class="panel-heading">
-                        <h4 class="panel-title"><a data-parent="#accordion"
-                                                   data-toggle="collapse" class="panel-toggle" href="#faq2"><i
-                                    class="fa fa-plus-square"></i><?= __d('lp', '個人の目標評価はどのようにおこなうのですか？') ?></a></h4>
-                    </div>
-
-                    <div class="panel-collapse collapse" id="faq2">
-                        <div class="panel-body">
-                            <?= __d('lp', '回答を入れる。回答を入れる。回答を入れる。回答を入れる。') ?>
-                            <?= __d('lp', '回答を入れる。回答を入れる。回答を入れる。回答を入れる。') ?>
-                        </div>
-                    </div>
-                </div><!--//panel-->
-
-                <div class="panel">
-                    <div class="panel-heading">
-                        <h4 class="panel-title"><a data-parent="#accordion"
-                                                   data-toggle="collapse" class="panel-toggle" href="#faq3"><i
-                                    class="fa fa-plus-square"></i><?= __d('lp', '社員が期中で退職したらどうなりますか？') ?></a></h4>
-                    </div>
-
-                    <div class="panel-collapse collapse" id="faq3">
-                        <div class="panel-body">
-                            <?= __d('lp', '回答を入れる。回答を入れる。回答を入れる。回答を入れる。') ?>
-                            <?= __d('lp', '回答を入れる。回答を入れる。回答を入れる。回答を入れる。') ?>
-                        </div>
-                    </div>
-                </div><!--//panel-->
-
-                <div class="panel">
-                    <div class="panel-heading">
-                        <h4 class="panel-title"><a data-parent="#accordion"
-                                                   data-toggle="collapse" class="panel-toggle" href="#faq4"><i
-                                    class="fa fa-plus-square"></i><?= __d('lp', 'セキュリティやバックアップはどうなっていますか？') ?></a></h4>
-                    </div>
-
-                    <div class="panel-collapse collapse" id="faq4">
-                        <div class="panel-body">
-                            <?= __d('lp', '回答を入れる。回答を入れる。回答を入れる。回答を入れる。') ?>
-                            <?= __d('lp', '回答を入れる。回答を入れる。回答を入れる。回答を入れる。') ?>
-                        </div>
-                    </div>
-                </div><!--//panel-->
-
-                <div class="panel">
-                    <div class="panel-heading">
-                        <h4 class="panel-title"><a data-parent="#accordion"
-                                                   data-toggle="collapse" class="panel-toggle" href="#faq5"><i
-                                    class="fa fa-plus-square"></i><?= __d('lp', 'スマートフォン・タブレットのアプリはありますか？') ?></a></h4>
-                    </div>
-
-                    <div class="panel-collapse collapse" id="faq5">
-                        <div class="panel-body">
-                            <?= __d('lp', '回答を入れる。回答を入れる。回答を入れる。回答を入れる。') ?>
-                            <?= __d('lp', '回答を入れる。回答を入れる。回答を入れる。回答を入れる。') ?>
-                        </div>
-                    </div>
-                </div><!--//panel-->
-
-                <div class="panel">
-                    <div class="panel-heading">
-                        <h4 class="panel-title"><a data-parent="#accordion"
-                                                   data-toggle="collapse" class="panel-toggle" href="#faq6"><i
-                                    class="fa fa-plus-square"></i><?= __d('lp', '企業担当者向けに詳しい説明をしてもらえますか？') ?></a></h4>
-                    </div>
-
-                    <div class="panel-collapse collapse" id="faq6">
-                        <div class="panel-body">
-                            <?= __d('lp', '回答を入れる。回答を入れる。回答を入れる。回答を入れる。') ?>
-                            <?= __d('lp', '回答を入れる。回答を入れる。回答を入れる。回答を入れる。') ?>
-                        </div>
-                    </div>
-                </div><!--//panel-->
-
+        <div class="row flex">
+            <div class="col-md-6 col-sm-6 col-xs-12 from-left col-left text-center">
+                <h3><?= __d('lp', 'スマホアプリ、マルチデバイス対応') ?></h3>
+                <p class="lead-text"><?= __d('lp', 'iOS・Androidアプリでもご利用いただけます') ?></p>
+                <?= $this->Html->link(
+                    $this->Html->image('http://linkmaker.itunes.apple.com/images/badges/en-us/badge_appstore-lrg.svg'),
+                    'https://itunes.apple.com/us/app/goalous-chimu-li-xiang-shangsns/id1060474459?ls=1&mt=8',
+                    array(
+                        'escape' => false,
+                        'alt' => 'iOS・Androidアプリでもご利用いただけます',
+                        'class' => 'app-dl-btn'
+                    ))
+                ?>
+                <?= $this->Html->link(
+                    $this->Html->image([
+                        'https://play.google.com/intl/en_us/badges/images/apps/en-play-badge.png', 'alt' => 'Get it on Google Play']),
+                    'https://play.google.com/store/apps/details?id=jp.co.isao.android.goalous',
+                    array(
+                        'escape' => false,
+                        'class' => 'app-dl-btn',
+                        'height' => '40'
+                    ))
+                ?>
+                <a class="app-dl-btn" href=""><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/apps/en-play-badge.png" height="40px" /></a>
             </div>
-            <div class="col-md-6 col-sm-6 col-xs-12">
-                <div class="panel">
-                    <div class="panel-heading">
-                        <h4 class="panel-title"><a data-parent="#accordion"
-                                                   data-toggle="collapse" class="panel-toggle" href="#faq7"><i
-                                    class="fa fa-plus-square"></i><?= __d('lp', '2016年8月31日の無料期間の後はどうなりますか？') ?></a>
-                        </h4>
-                    </div>
-
-                    <div class="panel-collapse collapse" id="faq7">
-                        <div class="panel-body">
-                            <?= __d('lp', '自動継続になる？9月1日以降ログインできなくなる？やめたらデータが消える？放置するとどうなる？') ?>
-                        </div>
-                    </div>
-                </div><!--//panel-->
-
-                <div class="panel">
-                    <div class="panel-heading">
-                        <h4 class="panel-title"><a data-parent="#accordion"
-                                                   data-toggle="collapse" class="panel-toggle" href="#faq8"><i
-                                    class="fa fa-plus-square"></i><?= __d('lp', 'プラン変更時にデータは引き継がれますか？') ?></a></h4>
-                    </div>
-
-                    <div class="panel-collapse collapse" id="faq8">
-                        <div class="panel-body">
-                            <?= __d('lp', '回答を入れる。回答を入れる。回答を入れる。回答を入れる。') ?>
-                            <?= __d('lp', '回答を入れる。回答を入れる。回答を入れる。回答を入れる。') ?>
-                        </div>
-                    </div>
-                </div><!--//panel-->
-
-                <div class="panel">
-                    <div class="panel-heading">
-                        <h4 class="panel-title"><a data-parent="#accordion"
-                                                   data-toggle="collapse" class="panel-toggle" href="#faq9"><i
-                                    class="fa fa-plus-square"></i><?= __d('lp', '機能のカスタマイズはできますか？') ?></a></h4>
-                    </div>
-
-                    <div class="panel-collapse collapse" id="faq9">
-                        <div class="panel-body">
-                            <?= __d('lp', '回答を入れる。回答を入れる。回答を入れる。回答を入れる。') ?>
-                            <?= __d('lp', '回答を入れる。回答を入れる。回答を入れる。回答を入れる。') ?>
-                        </div>
-                    </div>
-                </div><!--//panel-->
-
-                <div class="panel">
-                    <div class="panel-heading">
-                        <h4 class="panel-title"><a data-parent="#accordion"
-                                                   data-toggle="collapse" class="panel-toggle" href="#faq10"><i
-                                    class="fa fa-plus-square"></i><?= __d('lp', '退会後に個人情報や機密情報はどうなりますか？') ?></a></h4>
-                    </div>
-
-                    <div class="panel-collapse collapse" id="faq10">
-                        <div class="panel-body">
-                            <?= __d('lp', '回答を入れる。回答を入れる。回答を入れる。回答を入れる。') ?>
-                            <?= __d('lp', '回答を入れる。回答を入れる。回答を入れる。回答を入れる。') ?>
-                        </div>
-                    </div>
-                </div><!--//panel-->
-
-                <div class="panel">
-                    <div class="panel-heading">
-                        <h4 class="panel-title"><a data-parent="#accordion"
-                                                   data-toggle="collapse" class="panel-toggle" href="#faq11"><i
-                                    class="fa fa-plus-square"></i><?= __d('lp', '使い方がわからない場合、サポートはありますか？') ?></a></h4>
-                    </div>
-
-                    <div class="panel-collapse collapse" id="faq11">
-                        <div class="panel-body">
-                            <?= __d('lp', '回答を入れる。回答を入れる。回答を入れる。回答を入れる。') ?>
-                            <?= __d('lp', '回答を入れる。回答を入れる。回答を入れる。回答を入れる。') ?>
-                        </div>
-                    </div>
-                </div><!--//panel-->
-
-                <div class="panel">
-                    <div class="panel-heading">
-                        <h4 class="panel-title"><a data-parent="#accordion"
-                                                   data-toggle="collapse" class="panel-toggle" href="#faq12"><i
-                                    class="fa fa-plus-square"></i><?= __d('lp', 'Goalousの運営会社はどこですか？？') ?></a></h4>
-                    </div>
-
-                    <div class="panel-collapse collapse" id="faq12">
-                        <div class="panel-body">
-                            <a class="more" href="http://www.isao.co.jp/" target="_blank"><?= __d('lp',
-                                                                                                  '株式会社ISAO') ?></a><?= __d('lp',
-                                                                                                                            '（いさお）が企画・運営・開発全ておこなっています。') ?>
-                        </div>
-                    </div>
-                </div><!--//panel-->
-
-
+            <div class="col-md-6 col-sm-6 col-xs-12 from-right col-right">
+                <?= $this->Html->image( 'homepage/top/devices.png', array('alt' => '', 'class' => 'img-responsive')); ?>
             </div>
-        </div><!--//row-->
-        <div class="more text-center">
-            <h4 class="title"><?= __d('lp', 'その他のご質問はありますか？') ?></h4>
-            <?= $this->Html->link(__d('lp', 'お問い合わせ'), array('controller' => 'contact'),
-                                  array('class' => 'btn btn-cta btn-cta-secondary')); ?>
         </div>
-    </div><!--//container-->
-</section><!--//faq-->
+    </div>
+</div>
 
+<?= $this->element('Homepage/faq') ?>
 <?= $this->element('Homepage/signup') ?>
 <!-- END app/View/Pages/home.ctp -->

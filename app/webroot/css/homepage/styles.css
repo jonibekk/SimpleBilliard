@@ -407,6 +407,7 @@ input[type="text"], input[type="email"], input[type="password"], input[type="sub
     text-transform: uppercase;
     font-size: 14px;
     margin-right: 10px;
+    min-width: 100px;
 }
 .header .main-nav .nav .nav-item .btn-link {
     background: none;
@@ -1888,7 +1889,7 @@ input[type="text"], input[type="email"], input[type="password"], input[type="sub
         padding-top: 5px;
         padding-bottom: 5px;
     }
-    .header h1.log .logo-description {
+    .header h1.logo .logo-description {
         display: none;
     }
 }
@@ -2044,6 +2045,10 @@ input[type="text"], input[type="email"], input[type="password"], input[type="sub
     .footer {
         height: 296px;
         /* must be the same height as footer */
+    }
+
+    .header .main-nav .nav .nav-item {
+        min-width: 60px;
     }
 }
 
@@ -2213,10 +2218,6 @@ input[type="text"], input[type="email"], input[type="password"], input[type="sub
         margin-bottom: 20px;
     }
 }
-.signup .summary, .signup .btn {
-    font-size: 24px;
-    margin-bottom: 0;
-}
 .header .main-nav .nav .nav-item .shine {
     color: white;
 }
@@ -2260,4 +2261,45 @@ input[type="text"], input[type="email"], input[type="password"], input[type="sub
 
 .footer-lang a {
     color: #fff;
+}
+
+.price-figure {
+    position: static;
+}
+
+.pricing-line-through {
+    position: absolute;
+    border-top: 2px solid #c20a19;
+    border-bottom: 2px solid #c20a19;
+    height: 12px;
+    width: 68%;
+    transform: rotate(-12deg);
+    top: 44%;
+    left: 12%;
+}
+
+.pricing-figure-mid-icon {
+    margin: 12px;
+}
+
+@media (max-width: 480px) {
+    .footer .bottom-bar .footer-bottom-left {
+        display: block;
+        float: none !important;
+        text-align: center;
+    }
+
+    .footer .bottom-bar .social {
+        display: block;
+        float: none !important;
+        width: 240px;
+        text-align: center;
+        margin-left: auto;
+    }
+}
+
+.faq-partition {
+    opacity: 0;
+    width: 100%;
+    margin: 0;
 }

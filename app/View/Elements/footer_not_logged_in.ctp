@@ -71,7 +71,7 @@ if (!isset($top_lang)) {
     <div class="bottom-bar">
         <div class="container">
             <div class="row">
-                <div class="pull-left">
+                <div class="pull-left footer-bottom-left">
                     <small class="copyright">© 2016 ISAO │</small>
                     <ul class="footer-lang list-inline">
                         <li><a href="<?=$this->Html->url('/en/')?>">English (US)</a></li>

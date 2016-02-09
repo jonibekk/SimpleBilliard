@@ -21,10 +21,10 @@ if (!isset($top_lang)) {
     <div class="container">
         <h1 class="logo pull-left">
             <a href="<?= $this->Html->url($top_lang ? '/' . $top_lang . "/" : '/'); ?>">
-                <div><?= __d('lp', '最強にオープンな社内SNS') ?></div>
                 <div class="logo-title">
-                    <?= $this->Html->image('homepage/Goalous_logo.png', array('alt' => 'Goalous', 'width' => '115')); ?>
+                    <?= $this->Html->image('homepage/Goalous_logo.png', array('alt' => 'Goalous', 'height' => '40')); ?>
                 </div>
+                <div class="logo-description"><?= __d('lp', '最強にオープンな社内SNS') ?></div>
             </a>
         </h1>
         <nav id="main-nav" class="main-nav navbar-right" role="navigation">
