@@ -18,7 +18,7 @@
            class="notify-empty-text"><?= __d('gl', "未読の通知はありません。") ?></span>
     </li>
      -->
-<a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'message_list#']) ?>">
+<a href="#" get-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'message_list#']) ?>" onclick="evMessageList()">
     <li class="message-all-view-link">
         <?= __d('gl', "すべて見る") ?>
     </li>

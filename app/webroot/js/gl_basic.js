@@ -3015,6 +3015,14 @@ function evMessageList(options){
 
                 $(".layout-main").html($posts);
                 activateMessageList();
+                initMemberSelect2();
+
+                //メッセージフォームのvalidateを有効化
+                $('#MessageDisplayForm').bootstrapValidator({
+                    live: 'enabled',
+                    feedbackIcons: {},
+                    fields: {}
+                });
             }
 
             //ローダーを削除
