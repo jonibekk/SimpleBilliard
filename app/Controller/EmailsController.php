@@ -10,7 +10,6 @@ App::uses('AppController', 'Controller');
  */
 class EmailsController extends AppController
 {
-
     /**
      * delete method
      *
