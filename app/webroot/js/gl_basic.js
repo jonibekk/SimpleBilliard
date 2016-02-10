@@ -2859,8 +2859,9 @@ function activateMessageList(){
 
 function evMessageList(options){
     //とりあえずドロップダウンは隠す
-    $("#HeaderDropdownNotify").removeClass("open");
+    $(".has-notify-dropdown").removeClass("open");
     $('body').removeClass('notify-dropdown-open');
+    alert(123);
 
     var opt = $.extend({
         recursive: false,
@@ -2949,7 +2950,7 @@ function evMessageList(options){
 function evNotifications(options) {
 
     //とりあえずドロップダウンは隠す
-    $("#HeaderDropdownNotify").removeClass("open");
+    $(".has-notify-dropdown").removeClass("open");
     $('body').removeClass('notify-dropdown-open');
 
     var opt = $.extend({
@@ -3038,7 +3039,7 @@ function evNotifications(options) {
 function evNotifyPost(options) {
 
     //とりあえずドロップダウンは隠す
-    $("#HeaderDropdownNotify").removeClass("open");
+    $(".has-notify-dropdown").removeClass("open");
     $('body').removeClass('notify-dropdown-open');
 
     var opt = $.extend({
