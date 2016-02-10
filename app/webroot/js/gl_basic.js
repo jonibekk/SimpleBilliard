@@ -975,15 +975,6 @@ function getAjaxFormReplaceElm() {
                         // ファイルの送信中はsubmitできないようにする(クリックはできるがsubmit処理は走らない)
                         $('#CommentSubmit_' + post_id).on('click', $uploadFileForm._forbitSubmit);
                     },
-                    afterSuccess: function (file) {
-                        $('#CommentSubmit_' + post_id).click(function () {
-                            if (typeof Dropzone.instances[0] !== "" && Dropzone.instances[0].files.length > 0) {
-                                // ajax で submit するので、アップロード完了後に Dropzone のファイルリストを空にする
-                                // （参照先の配列を空にするため空配列の代入はしない）
-                                Dropzone.instances[0].files.length = 0;
-                            }
-                        });
-                    },
                     afterQueueComplete: function () {
                         $uploadFileForm._sending = false;
                         // フォームをsubmit可能にする
@@ -1154,6 +1145,13 @@ function addComment(e) {
 
     // Display loading button
     $("#" + submit_id).before($loader_html);
+
+    // アップロードファイルの上限数をリセット
+    if (typeof Dropzone.instances[0] !== "" && Dropzone.instances[0].files.length > 0) {
+        // ajax で submit するので、アップロード完了後に Dropzone のファイルリストを空にする
+        // （参照先の配列を空にするため空配列の代入はしない）
+        Dropzone.instances[0].files.length = 0;
+    }
 
     var $f = $(e.target);
     var ajaxProcess = $.Deferred();
