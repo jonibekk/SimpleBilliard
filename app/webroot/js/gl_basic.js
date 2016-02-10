@@ -2861,7 +2861,6 @@ function evMessageList(options){
     //とりあえずドロップダウンは隠す
     $(".has-notify-dropdown").removeClass("open");
     $('body').removeClass('notify-dropdown-open');
-    alert(123);
 
     var opt = $.extend({
         recursive: false,
@@ -3035,7 +3034,9 @@ function evNotifications(options) {
     return false;
 }
 
-//通知から投稿に移動
+// 通知から投稿、メッセージに移動
+// TODO: メッセージ通知リンクと投稿通知リンクのイベントを分けるか、このメソッドを汎用的に使えるようにする。
+//       そうしないとメッセージ詳細へのリンクをajax化する際に、ここのロジックが相当複雑になってしまう予感がする。
 function evNotifyPost(options) {
 
     //とりあえずドロップダウンは隠す
@@ -3065,6 +3066,8 @@ function evNotifyPost(options) {
         return Boolean(this.length > 0);
     }
     if (!$(".layout-main").exists() || !get_url.match(/post_permanent/)) {
+        // 現状、メッセージページに遷移する場合はこのブロックを通る
+        feed_loading_now = false;
         window.location.href = get_url;
         return false;
     }
