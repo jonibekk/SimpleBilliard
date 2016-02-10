@@ -75,6 +75,17 @@ var bindCtrlEnterAction = function (selector, callback) {
         }
     })
 };
+
+// selectorの存在確認用
+jQuery.fn.exists = function () {
+    return Boolean(this.length > 0);
+}
+
+// scrollbarの存在確認用
+jQuery.fn.hasScrollBar = function() {
+    return this.get(0) ? this.get(0).scrollHeight > this.innerHeight() : false;
+}
+
 $(window).load(function () {
     bindPostBalancedGallery($('.post_gallery'));
     bindCommentBalancedGallery($('.comment_gallery'));
@@ -325,7 +336,8 @@ $(document).ready(function () {
     //noinspection JSUnresolvedVariable
     $(document).on("click", ".toggle-follow", evFollowGoal);
     $(document).on("click", ".click-get-ajax-form-replace", getAjaxFormReplaceElm);
-    $(document).on("click", ".notify-card-link", evNotifyPost);
+    $(document).on("click", ".notify-click-target", evNotifyPost);
+    $(document).on("click", ".message-click-target", evMessage);
     $(document).on("click", ".dashboard-circle-list-row", evCircleFeed);
     $(document).on("click", ".circle-link", evCircleFeed);
     $(document).on("click", ".btn-back-notifications", evNotifications);
@@ -2205,8 +2217,7 @@ $(document).ready(function () {
 });
 
 function initMessageSelect2() {
-    console.log("initMessageSelect2 called.");
-//noinspection JSUnusedLocalSymbols post_detail.Post.id
+    //noinspection JSUnusedLocalSymbols post_detail.Post.id
     $('#selectOnlyMember').select2({
         multiple: true,
         minimumInputLength: 1,
@@ -2881,22 +2892,17 @@ function evMessage(){
 
     var $obj = $(this);
     var get_url = $obj.attr('get-url');
-    console.log("FURU:get_url="+get_url);
-    window.angular_message_post_id = $obj.attr('post-id');
-    window.last_angular_message_post_id = null;
 
+    console.log(get_url);
     //layout-mainが存在しないところではajaxでコンテンツ更新しようにもロードしていない
     //要素が多すぎるので、おとなしくページリロードする
-    jQuery.fn.exists = function () {
-        return Boolean(this.length > 0);
-    }
     if (!$(".layout-main").exists()) {
         location.href = get_url;
         return false;
     }
 
     //アドレスバー書き換え
-    var addressbar_url = get_url.replace(/message/, "message#");
+    var addressbar_url = get_url.replace(/message[#]*/, "message#");
     if(!updateAddressBar(addressbar_url)){
         return false;
     }
@@ -2909,8 +2915,6 @@ function evMessage(){
 
     // URL生成
     var url = get_url.replace(/message/, "ajax_message");
-    console.log("FURU:url="+url);
-
 
     $.ajax({
         type: 'GET',
@@ -2974,9 +2978,6 @@ function evMessageList(options){
     //layout-mainが存在しないところではajaxでコンテンツ更新しようにもロードしていない
     //要素が多すぎるので、おとなしくページリロードする
     var url = cake.url.message_list;
-    jQuery.fn.exists = function () {
-        return Boolean(this.length > 0);
-    }
     if (!$(".layout-main").exists()) {
         location.href = url;
         return false;
@@ -3028,8 +3029,6 @@ function evMessageList(options){
             //ローダーを削除
             $loader_html.remove();
 
-            initMemberSelect2();
-
             action_autoload_more = false;
             autoload_more = false;
             feed_loading_now = false;
@@ -3070,9 +3069,6 @@ function evNotifications(options) {
 
     //layout-mainが存在しないところではajaxでコンテンツ更新しようにもロードしていない
     //要素が多すぎるので、おとなしくページリロードする
-    jQuery.fn.exists = function () {
-        return Boolean(this.length > 0);
-    }
     if (!$(".layout-main").exists()) {
         window.location.href = get_url;
         return false;
@@ -3160,9 +3156,6 @@ function evNotifyPost(options) {
     //layout-mainが存在しないところではajaxでコンテンツ更新しようにもロードしていない
     //要素が多すぎるので、おとなしくページリロードする
     //urlにpost_permanentを含まない場合も対象外
-    jQuery.fn.exists = function () {
-        return Boolean(this.length > 0);
-    }
     if (!$(".layout-main").exists() || !get_url.match(/post_permanent/)) {
         window.location.href = get_url;
         return false;
@@ -3276,9 +3269,6 @@ function evCircleFeed(options) {
     //app-view-elements-feed-postsが存在しないところではajaxでコンテンツ更新しようにもロードしていない
     //要素が多すぎるので、おとなしくページリロードする
     //urlにcircle_feedを含まない場合も対象外
-    jQuery.fn.exists = function () {
-        return Boolean(this.length > 0);
-    }
     if (!$("#app-view-elements-feed-posts").exists() || !$("#GlobalForms").exists() || !get_url.match(/circle_feed/)) {
         window.location.href = get_url;
         return false;

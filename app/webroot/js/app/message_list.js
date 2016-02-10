@@ -15,9 +15,8 @@ var message_list_app = angular.module(
         '$translate',
         function ($rootScope,
                   $state,
-                  $stateParams,
-                  $http,
-                  $translate) {
+                  $stateParams
+        ) {
             $rootScope.$state = $state;
             $rootScope.$stateParams = $stateParams;
         }]
@@ -42,7 +41,6 @@ message_list_app.config([
             .get['If-Modified-Since'] = (new Date(0)).toUTCString();
         $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 
-        //$urlRouterProvider.otherwise("/");
         $stateProvider
             .state('list', {
                 url: "/",

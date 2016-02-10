@@ -29,7 +29,9 @@ switch ($location_type) {
 <!-- START app/View/Elements/Notification/notify_item.ctp -->
 <?php $status_read = $notification['unread_flg'] ? 'notify-card-unread' : 'notify-card-read'; ?>
 <li class="notify-card-list <?= $status_read ?> <?= $list_type_class ?>" data-score="<?= $notification['score'] ?>">
-    <a href="#" get-url="<?= $notification['url'] ?>" class="col col-xxs-12 notify-card-link" id="notifyCard">
+    <a href="#" get-url="<?= $notification['url'] ?>" post-id="<?= $notification['id'] ?>"
+       class="col col-xxs-12 notify-card-link <?php if($is_message_notify):?>message-click-target<?php else: ?>notify-click-target<?php endif; ?>"
+       id="notifyCard">
         <!-- <div class="notify-card-pic-box"> -->
         <?php if (!empty($user)): ?>
             <?=

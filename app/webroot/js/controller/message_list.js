@@ -125,4 +125,8 @@ message_list_app.controller(
 
             });
         }
+
+        $scope.postProcess = function(){
+            $scope.disable_scroll = true;
+        }
     });
