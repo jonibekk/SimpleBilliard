@@ -142,7 +142,6 @@ message_app.controller(
             // メッセージを送信する
             $scope.clickMessage = function (event, val) {
                 // ファイルの送信中はsubmitできないようにする(クリックはできるがsubmit処理は走らない)
-                console.log($uploadFileForm);
                 if($uploadFileForm._sending) {
                     alert(cake.message.validate.dropzone_uploading_not_end);
                     event.preventDefault();
