@@ -1942,45 +1942,8 @@ $(document).ready(function () {
         $('#CommonActionDisplayForm').bootstrapValidator('revalidateField', 'photo');
     });
 
-    //noinspection JSUnusedLocalSymbols
-    $('#select2Member').select2({
-        multiple: true,
-        minimumInputLength: 1,
-        placeholder: cake.message.notice.b,
-        ajax: {
-            url: cake.url.a,
-            dataType: 'json',
-            quietMillis: 100,
-            cache: true,
-            data: function (term, page) {
-                return {
-                    term: term, //search term
-                    page_limit: 10, // page size
-                    with_group: 1
-                };
-            },
-            results: function (data, page) {
-                return {results: data.results};
-            }
-        },
-        formatSelection: format,
-        formatResult: format,
-        escapeMarkup: function (m) {
-            return m;
-        },
-        containerCssClass: "select2Member"
-    }).on('change', function () {
-        var $this = $(this);
-        if ($this.val() == '' || $('#CommonMessageBody').val() == '') {
-            $('#MessageSubmit').attr('disabled', 'disabled');
-        }
-        else {
-            $('#MessageSubmit').removeAttr('disabled');
-        }
-        // グループを選択した場合、グループに所属するユーザーを展開して入力済にする
-        $this.select2('data', select2ExpandGroup($this.select2('data')));
-    });
 
+    initMemberSelect2();
     //noinspection JSUnusedLocalSymbols post_detail.Post.id
     $('#selectOnlyMember').select2({
         multiple: true,
@@ -2280,6 +2243,46 @@ $(document).ready(function () {
     }
 });
 
+function initMemberSelect2() {
+    //noinspection JSUnusedLocalSymbols
+    $('#select2Member').select2({
+        multiple: true,
+        minimumInputLength: 1,
+        placeholder: cake.message.notice.b,
+        ajax: {
+            url: cake.url.a,
+            dataType: 'json',
+            quietMillis: 100,
+            cache: true,
+            data: function (term, page) {
+                return {
+                    term: term, //search term
+                    page_limit: 10, // page size
+                    with_group: 1
+                };
+            },
+            results: function (data, page) {
+                return {results: data.results};
+            }
+        },
+        formatSelection: format,
+        formatResult: format,
+        escapeMarkup: function (m) {
+            return m;
+        },
+        containerCssClass: "select2Member"
+    }).on('change', function () {
+        var $this = $(this);
+        if ($this.val() == '' || $('#CommonMessageBody').val() == '') {
+            $('#MessageSubmit').attr('disabled', 'disabled');
+        }
+        else {
+            $('#MessageSubmit').removeAttr('disabled');
+        }
+        // グループを選択した場合、グループに所属するユーザーを展開して入力済にする
+        $this.select2('data', select2ExpandGroup($this.select2('data')));
+    });
+}
 
 function initCircleSelect2() {
     //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
@@ -2836,6 +2839,113 @@ function evFeedMoreView(options) {
     return false;
 }
 
+//アドレスバー書き換え
+function updateAddressBar(url){
+    if (typeof history.pushState == 'function') {
+        try {
+            history.pushState(null, null, url);
+            return true;
+        } catch (e) {
+            window.location.href = url;
+            return false;
+        }
+    }
+}
+
+function activateMessageList(){
+    var message_list_app = $("#message-list-app");
+    angular.element(message_list_app).ready(function() { angular.bootstrap(message_list_app, ['messageListApp']); });
+}
+
+function evMessageList(options){
+    //とりあえずドロップダウンは隠す
+    $("#HeaderDropdownNotify").removeClass("open");
+    $('body').removeClass('notify-dropdown-open');
+
+    var opt = $.extend({
+        recursive: false,
+        loader_id: null
+    }, options);
+
+    //フィード読み込み中はキャンセル
+    if (feed_loading_now) {
+        return false;
+    }
+    feed_loading_now = true;
+
+    //layout-mainが存在しないところではajaxでコンテンツ更新しようにもロードしていない
+    //要素が多すぎるので、おとなしくページリロードする
+    var url = cake.url.message_list;
+    jQuery.fn.exists = function () {
+        return Boolean(this.length > 0);
+    }
+    if (!$(".layout-main").exists()) {
+        location.href = url;
+        return false;
+    }
+
+    //アドレスバー書き換え
+    if(!updateAddressBar("/posts/message_list#")){
+        return false;
+    }
+
+    $('#jsGoTop').click();
+
+    //ローダー表示
+    var $loader_html = opt.loader_id ? $('#' + opt.loader_id) : $('<center><i id="__feed_loader" class="fa fa-refresh fa-spin"></i></center>');
+    if (!opt.recursive) {
+        $(".layout-main").html($loader_html);
+    }
+
+    // URL生成
+    var url = cake.url.ajax_message_list;
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: true,
+        dataType: 'json',
+        success: function (data) {
+            if (!$.isEmptyObject(data.html)) {
+                //取得したhtmlをオブジェクト化
+                var $posts = $(data.html);
+                //notify一覧に戻るhtmlを追加
+                //画像をレイジーロード
+                imageLazyOn($posts);
+                //一旦非表示
+                $posts.fadeOut();
+
+                $(".layout-main").html($posts);
+                activateMessageList();
+                initMemberSelect2();
+
+                //メッセージフォームのvalidateを有効化
+                $('#MessageDisplayForm').bootstrapValidator({
+                    live: 'enabled',
+                    feedbackIcons: {},
+                    fields: {}
+                });
+            }
+
+            //ローダーを削除
+            $loader_html.remove();
+
+            action_autoload_more = false;
+            autoload_more = false;
+            feed_loading_now = false;
+            do_reload_header_bellList = true;
+        },
+        error: function () {
+            alert(cake.message.notice.c);
+            feed_loading_now = false;
+            $loader_html.remove();
+        },
+    });
+    return false;
+}
+
+
+
 function evNotifications(options) {
 
     //とりあえずドロップダウンは隠す
@@ -2905,7 +3015,6 @@ function evNotifications(options) {
                 $posts.fadeOut();
 
                 $(".layout-main").html($posts);
-
             }
 
             //ローダーを削除
@@ -4280,7 +4389,7 @@ $(document).ready(function () {
     $(document).on("click", "#click-header-message", function (e) {
         // 未読件数が 0 件の場合は、直接メッセージ一覧ページに遷移させる
         if (getMessageNotifyCnt() == 0) {
-            location.href = cake.url.message_list;
+            evMessageList(null);
             return;
         }
 
