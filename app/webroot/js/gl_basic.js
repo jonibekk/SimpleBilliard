@@ -86,7 +86,7 @@ $(document).ready(function () {
 
     // Androidアプリかiosアプリの場合のみfastClickを実行する。
     // 　→iosでsafari/chromeでfastClick使用時、チェックボックス操作に不具合が見つかったため。
-    if(cake.is_mb_app === 'true' || cake.is_mb_app_ios === 'true') {
+    if (cake.is_mb_app === 'true' || cake.is_mb_app_ios === 'true') {
         fastClick();
     }
 
@@ -2838,7 +2838,7 @@ function evFeedMoreView(options) {
 }
 
 //アドレスバー書き換え
-function updateAddressBar(url){
+function updateAddressBar(url) {
     if (typeof history.pushState == 'function') {
         try {
             history.pushState(null, null, url);
@@ -2850,12 +2850,14 @@ function updateAddressBar(url){
     }
 }
 
-function activateMessageList(){
+function activateMessageList() {
     var message_list_app = $("#message-list-app");
-    angular.element(message_list_app).ready(function() { angular.bootstrap(message_list_app, ['messageListApp']); });
+    angular.element(message_list_app).ready(function () {
+        angular.bootstrap(message_list_app, ['messageListApp']);
+    });
 }
 
-function evMessageList(options){
+function evMessageList(options) {
     //とりあえずドロップダウンは隠す
     $(".has-notify-dropdown").removeClass("open");
     $('body').removeClass('notify-dropdown-open');
@@ -2883,7 +2885,7 @@ function evMessageList(options){
     }
 
     //アドレスバー書き換え
-    if(!updateAddressBar("/posts/message_list#")){
+    if (!updateAddressBar("/posts/message_list#")) {
         return false;
     }
 
@@ -2941,7 +2943,6 @@ function evMessageList(options){
     });
     return false;
 }
-
 
 
 function evNotifications(options) {
@@ -3696,6 +3697,9 @@ function getModalFormFromUrl(e) {
                 $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[KeyResult][start_date]");
                 $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[KeyResult][end_date]");
             });
+    });
+    $modal_elm.on('hidden.bs.modal', function (e) {
+        $(this).empty();
     });
 
     var url = $(this).attr('href');
@@ -4740,10 +4744,10 @@ $(document).ready(function () {
                 // キューに入ってるアップロードをキャンセルしようとした場合
                 //   (アップロード中のキャンセルはcanceledコールバックが呼ばれるっぽい。
                 //   このブロックはその前段階のキャンセル時の処理。)
-                if($preview.data('file_id') === undefined) {
+                if ($preview.data('file_id') === undefined) {
                     // アップロード中のキャンセル時は確認をはさむので、
                     // ここでもそれに合わせて確認をはさむようにする
-                    if(!confirm(cake.message.validate.dropzone_cancel_upload_confirmation)) {
+                    if (!confirm(cake.message.validate.dropzone_cancel_upload_confirmation)) {
                         return;
                     }
 
