@@ -54,7 +54,7 @@ define('NCMB_REST_API_PUSH', "push");
 define('NCMB_REST_API_PUSH_METHOD', "POST");
 define('NCMB_REST_API_GET_INSTALLATION', "installations");
 define('NCMB_REST_API_GET_METHOD', "GET");
-define('LOG_ENGINE', "SLACK");
+define('LOG_ENGINE', "File");
 define('LOG_SLACK_TOKEN', null);
 define('LOG_SLACK_ERROR_CHANNEL', null);
 define('LOG_SLACK_DEBUG_CHANNEL', null);
