@@ -44,6 +44,11 @@ echo $this->Html->script('vendors.min');
 // echo $this->Html->script('vendor/exif');
 // echo $this->Html->script('gl_basic');
 echo $this->Html->script('goalous.min');
+echo $this->Html->script('ng_app.min');
+echo $this->Html->script('ng_controller');
+echo $this->Html->script('vendor/angular/pusher-angular.min');
+echo $this->Html->script('vendor/angular/ng-infinite-scroll.min');
+
 ?>
 <!--suppress JSDuplicatedDeclaration -->
 <script type="text/javascript">
@@ -65,7 +70,7 @@ echo $this->Html->script('goalous.min');
                 dropzone_response_error: "<?=__d('gl', 'アップロードに失敗しました。')?>",
                 dropzone_cancel_upload: "<?=__d('gl', 'アップロードをキャンセルしました。')?>",
                 dropzone_cancel_upload_confirmation: "<?=__d('gl', 'アップロードをキャンセルしてよろしいですか？')?>",
-                dropzone_uploading_not_end: "<?=__d('gl', '全てのファイルのアップロードが完了していません。\\nこのまま送信してよろしいですか？')?>",
+                dropzone_uploading_not_end: "<?=__d('gl', '全てのファイルのアップロードが完了していません。アップロード完了までお待ち下さい。')?>",
                 dropzone_uploaded_file_expired: "<?=__d('gl', 'アップロードしたファイルの有効期限が切れています。再度アップロードしてください。')?>",
                 date_format: "<?=__d('validate',"日付はYYYY/MM/DDの形式で入力してください。")?>",
             },
@@ -177,6 +182,8 @@ echo $this->Html->script('goalous.min');
             upload_file: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_upload_file']) ?>",
             remove_file: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_remove_file']) ?>",
             message_list: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'message_list']) ?>",
+            ajax_message_list: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_message_list']) ?>",
+            ajax_message: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_message']) ?>",
             invite_member: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'settings','#'=>'invite_member']) ?>",
             insight: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_insight']) ?>",
             insight_circle: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_insight_circle']) ?>",

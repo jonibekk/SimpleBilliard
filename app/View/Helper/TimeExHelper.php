@@ -36,7 +36,7 @@ class TimeExHelper extends AppHelper
      */
     public function date($date_str, $timezone = null)
     {
-        if (!$timezone) {
+        if ($timezone === null) {
             $timezone = $this->timeOffset;
         }
         return $this->Time->format('Y/m/d', $date_str, null, $timezone);
@@ -52,7 +52,7 @@ class TimeExHelper extends AppHelper
      */
     public function dateNoYear($date_str, $timezone = null)
     {
-        if (!$timezone) {
+        if ($timezone === null) {
             $timezone = $this->timeOffset;
         }
         return $this->Time->format('n/j', $date_str, null, $timezone);
@@ -68,7 +68,7 @@ class TimeExHelper extends AppHelper
      */
     public function datetimeNoYear($date_str, $timezone = null)
     {
-        if (!$timezone) {
+        if ($timezone === null) {
             $timezone = $this->timeOffset;
         }
         return $this->Time->format('n/j H:i', $date_str, null, $timezone);
@@ -84,7 +84,7 @@ class TimeExHelper extends AppHelper
      */
     public function fullDatetime($date_str, $timezone = null)
     {
-        if (!$timezone) {
+        if ($timezone === null) {
             $timezone = $this->timeOffset;
         }
         return $this->Time->format('Y/m/d H:i:s', $date_str, null, $timezone);
