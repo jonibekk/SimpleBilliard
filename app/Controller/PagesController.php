@@ -45,7 +45,13 @@ class PagesController extends AppController
         //ログインしていない場合
         if (!$this->Auth->user()) {
             $this->layout = 'homepage';
-            return $this->render(implode('/', $path));
+            //html出力結果をキャッシュ
+            $url = "/" . $this->request->url;
+            if (!$out = Cache::read($url, 'homepage')) {
+                $out = $this->render(implode('/', $path));
+                Cache::write($url, $out, 'homepage');
+            }
+            return $out;
         }
 
         // 1カラムレイアウト
