@@ -72,12 +72,7 @@ class UploadBehavior extends ModelBehavior
                     $log = sprintf("Error: Failed to upload file. uid=%s\n", $model->my_uid);
                     $log .= Debugger::exportVar($model->data) . "\n";
                     $log .= Debugger::trace();
-                    CakeLog::config('upload', array(
-                        'engine' => 'File',
-                        'types'  => array('upload'),
-                        'file'   => 'upload',
-                    ));
-                    $this->log($log, 'upload');
+                    $this->log($log);
 
                     // ファイルアップロードに失敗した場合は、save()自体をエラーにする
                     return false;
