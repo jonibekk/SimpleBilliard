@@ -57,4 +57,3 @@ define('NCMB_REST_API_GET_METHOD', "GET");
 define('LOG_ENGINE', "FILE");
 define('LOG_SLACK_CHANNEL', null);
 define('LOG_SLACK_TOKEN', null);
-//'T04J0E9S6/B0LUSMHC3/9fvhr9pOx0aemgwYP1IkanTW'
