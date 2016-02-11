@@ -79,18 +79,25 @@ Configure::write('Dispatcher.filters', array(
     'AssetDispatcher',
     'CacheDispatcher'
 ));
+//slack setting
+Configure::write('Slack', [
+    'token'      => LOG_SLACK_TOKEN,
+    'channel'    => LOG_SLACK_CHANNEL,
+    'username'   => 'cakephp',
+    'icon_emoji' => ':cake:',
+]);
 
 /**
  * Configures default file logging options
  */
 App::uses('CakeLog', 'Log');
 CakeLog::config('debug', array(
-    'engine' => 'File',
+    'engine' => LOG_ENGINE,
     'types'  => array('notice', 'info', 'debug'),
     'file'   => 'debug',
 ));
 CakeLog::config('error', array(
-    'engine' => 'File',
+    'engine' => LOG_ENGINE,
     'types'  => array('warning', 'error', 'critical', 'alert', 'emergency'),
     'file'   => 'error',
 ));
@@ -110,6 +117,7 @@ CakePlugin::loadAll();
 //HtmlHelper UrlCache
 CakePlugin::load('UrlCache');
 Configure::write('UrlCache.active', true);
+
 /**
  * Goalous独自定数
  */
