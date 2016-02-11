@@ -47,9 +47,14 @@ class PagesController extends AppController
             $this->layout = 'homepage';
             //html出力結果をキャッシュ
             $url = "/" . $this->request->url;
-            if (!$out = Cache::read($url, 'homepage')) {
+            if(CACHE_HOMEPAGE){
+                if (!$out = Cache::read($url, 'homepage')) {
+                    $out = $this->render(implode('/', $path));
+                    Cache::write($url, $out, 'homepage');
+                }
+            }
+            else{
                 $out = $this->render(implode('/', $path));
-                Cache::write($url, $out, 'homepage');
             }
             return $out;
         }
