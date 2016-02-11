@@ -15,7 +15,7 @@
 <?= $this->Html->script('homepage/jquery.placeholder') ?>
 <?= $this->Html->script('homepage/jquery.fitvids') ?>
 <?= $this->Html->script('homepage/jquery.flexslider-min') ?>
-<?= $this->Html->script('hompage/marked.min') ?>
+<?= $this->Html->script('homepage/marked.min') ?>
 <?= $this->Html->script('homepage/main') ?>
 <?= $this->Html->script('homepage/froogaloop2.min') ?>
 <?= $this->Html->script('homepage/vimeo') ?>
