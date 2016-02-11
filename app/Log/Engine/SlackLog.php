@@ -73,6 +73,16 @@ class SlackLog extends BaseLog
     public function write($type, $message)
     {
         $output = "```\n" . date('Y-m-d H:i:s') . ' ' . ucfirst($type) . ': ' . $message . "\n" . "```\n";
+        if (isset($this->_config['file']) && $this->_config['file']) {
+            $channel = null;
+            if ($this->_config['file'] === "debug") {
+                $channel = LOG_SLACK_DEBUG_CHANNEL;
+            }
+            elseif ($this->_config['file'] === "error") {
+                $channel = LOG_SLACK_ERROR_CHANNEL;
+            }
+            Configure::write('Slack.channel', $channel);
+        }
         //slackへ通知
         $result = Slack::send($output);
         return $result;

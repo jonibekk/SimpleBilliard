@@ -82,7 +82,7 @@ Configure::write('Dispatcher.filters', array(
 //slack setting
 Configure::write('Slack', [
     'token'      => LOG_SLACK_TOKEN,
-    'channel'    => LOG_SLACK_CHANNEL,
+    'channel'    => LOG_SLACK_ERROR_CHANNEL,
     'username'   => 'cakephp',
     'icon_emoji' => ':cake:',
 ]);
