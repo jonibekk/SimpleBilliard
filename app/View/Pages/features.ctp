@@ -48,22 +48,22 @@
 <!-- ******FEATURES****** -->
 <section id="features" class="features section">
     <div class="container">
-        <div class="item row">
-            <div class="content col-md-5 col-sm-5 col-xs-12 pull-right col-md-offset-1 col-sm-offset-1 col-xs-offset-0 from-right">
+        <div class="item row flex">
+            <div class="content col-md-5 col-sm-5 col-xs-12 pull-right col-md-offset-1 col-sm-offset-1 col-xs-offset-0 from-right col-right">
                 <h3 class="title"><i class="fa fa-flag-o"></i><?= __d('lp', '一目瞭然、全社員のゴール') ?></h3>
                 <div class="details">
                     <p><?= __d('lp', 'チームの1人ひとりのゴール。つまり、何のために何を目指し、どんなアクションをしているのか、全てオープンです。チームフィードにアクセスすると、見えないものが見える。そんな体験が待ってます。') ?></p>
                 </div>
             </div><!--//content-->
-            <div class="figure col-md-6 col-sm-6 col-xs-12 from-left">
+            <div class="figure col-md-6 col-sm-6 col-xs-12 from-left col-left">
                 <?= $this->Html->image('homepage/features/screenshot-1.png', array('alt' => '', 'class' => 'img-responsive')) ?>
             </div><!--//figure-->
         </div><!--//item-->
 
         <hr />
 
-        <div class="item row">
-            <div class="content col-md-5 col-sm-5 col-xs-12 from-left">
+        <div class="item row flex">
+            <div class="content col-md-5 col-sm-5 col-xs-12 from-left col-left">
                 <h3 class="title"><i class="fa fa-image"></i><?= __d('lp', '視覚に刺さる、フォトアクション') ?></h3>
                 <div class="details">
                     <p>
@@ -75,43 +75,43 @@
                     </p>
                 </div>
             </div><!--//content-->
-            <div class="figure col-md-6 col-sm-6 col-xs-12 col-md-offset-1 col-sm-offset-1 col-xs-offset-0 from-right">
-                <?= $this->Html->image('homepage/features/screenshot-2.png', array('alt' => '', 'class' => 'img-responsive')) ?>
+            <div class="figure col-md-6 col-sm-6 col-xs-12 col-md-offset-1 col-sm-offset-1 col-xs-offset-0 from-right col-right">
+                <?= $this->Html->image('homepage/features/screenshot-2.jpg', array('alt' => '', 'class' => 'img-responsive')) ?>
             </div><!--//figure-->
         </div><!--//item-->
 
          <hr />
 
-        <div class="item row">
-            <div class="content col-md-5 col-sm-5 col-xs-12 pull-right col-md-offset-1 col-sm-offset-1 col-xs-offset-0 from-right">
+        <div class="item row flex">
+            <div class="content col-md-5 col-sm-5 col-xs-12 pull-right col-md-offset-1 col-sm-offset-1 col-xs-offset-0 from-right col-right">
                 <h3 class="title"><i class="fa fa-circle-o"></i><?= __d('lp', '共有はサークルで') ?></h3>
                 <div class="details">
                     <p><?= __d('lp', '部署別、プロジェクト別、同期・・・社内のあらゆるコミュニティ毎に、情報共有の場を作成できます。慣れたSNSのインターフェースで、投稿や写真・ファイルをシェア。') ?></p>
                 </div>
             </div><!--//content-->
-            <div class="figure col-md-6 col-sm-6 col-xs-12 from-left">
+            <div class="figure col-md-6 col-sm-6 col-xs-12 from-left col-left">
                 <?= $this->Html->image('homepage/features/screenshot-3.png', array('alt' => '', 'class' => 'img-responsive')) ?>
             </div><!--//figure-->
         </div><!--//item-->
 
          <hr />
 
-        <div class="item row">
-            <div class="content col-md-5 col-sm-5 col-xs-12 from-left">
+        <div class="item row flex">
+            <div class="content col-md-5 col-sm-5 col-xs-12 from-left col-left">
                 <h3 class="title"><i class="fa fa-send-o"></i><?= __d('lp', 'メッセージ送受信') ?></h3>
                 <div class="details">
                     <p><?= __d('lp', 'アプリでもWebでも、メッセージでコミュニケーション。社内限定だから、安心してやり取りできます。ファイルの添付やグループチャットできるから、もうEメールはいりません。') ?></p>
                 </div>
             </div><!--//content-->
-            <div class="figure col-md-6 col-sm-6 col-xs-12 col-md-offset-1 col-sm-offset-1 col-xs-offset-0 from-right">
+            <div class="figure col-md-6 col-sm-6 col-xs-12 col-md-offset-1 col-sm-offset-1 col-xs-offset-0 from-right col-right">
                 <?= $this->Html->image('homepage/features/screenshot-4.png', array('alt' => '', 'class' => 'img-responsive')) ?>
             </div><!--//figure-->
         </div><!--//item-->
 
          <hr />
 
-        <div class="item row">
-            <div class="content col-md-5 col-sm-5 col-xs-12 pull-right col-md-offset-1 col-sm-offset-1 col-xs-offset-0 from-right">
+        <div class="item row flex">
+            <div class="content col-md-5 col-sm-5 col-xs-12 pull-right col-md-offset-1 col-sm-offset-1 col-xs-offset-0 from-right col-right">
                 <h3 class="title"><i class="fa fa-shield"></i><?= __d('lp', '根拠のある評価ができる') ?></h3>
                 <div class="details">
                     <p>
@@ -123,22 +123,22 @@
                     </p>
                 </div>
             </div><!--//content-->
-            <div class="figure col-md-6 col-sm-6 col-xs-12 from-left">
-                <?= $this->Html->image('homepage/features/screenshot-5.png', array('alt' => '', 'class' => 'img-responsive')) ?>
+            <div class="figure col-md-6 col-sm-6 col-xs-12 from-left col-left">
+                <?= $this->Html->image('homepage/features/screenshot-5.jpg', array('alt' => '', 'class' => 'img-responsive')) ?>
             </div><!--//figure-->
         </div><!--//item-->
 
         <hr />
 
-        <div class="item row">
-            <div class="content col-md-5 col-sm-5 col-xs-12 from-left">
+        <div class="item row flex">
+            <div class="content col-md-5 col-sm-5 col-xs-12 from-left col-left">
                 <h3 class="title"><i class="fa fa-line-chart"></i><?= __d('lp', 'インサイト') ?></h3>
                 <div class="details">
                     <p><?= __d('lp', '社内SNSを導入している企業でよく言われるのが「導入して効果があったのかわからない」という声。インサイトやランキングで、エンゲージメントの増加が目に見えます。') ?></p>
                 </div>
             </div><!--//content-->
-            <div class="figure col-md-6 col-sm-6 col-xs-12 col-md-offset-1 col-sm-offset-1 col-xs-offset-0 from-right">
-                <?= $this->Html->image('homepage/features/screenshot-6.png', array('alt' => '', 'class' => 'img-responsive')) ?>
+            <div class="figure col-md-6 col-sm-6 col-xs-12 col-md-offset-1 col-sm-offset-1 col-xs-offset-0 from-right col-right">
+                <?= $this->Html->image('homepage/features/screenshot-6.jpg', array('alt' => '', 'class' => 'img-responsive')) ?>
             </div><!--//figure-->
         </div><!--//item-->
         <div class="container text-center">

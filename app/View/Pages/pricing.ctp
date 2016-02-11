@@ -32,9 +32,8 @@
                 </h3>
                 <div class="content">
                     <div class="price-figure">
-                        <span class="currency"><?= __d('lp', '¥') ?></span><span class="number">1,980</span><span
+                        <span class="currency"><?= __d('lp', '¥') ?><div class="pricing-line-through"></div></span><span class="number">1,980</span><span
                             class="unit"><?= __d('lp', '/月') ?></span>
-                        <div class="pricing-line-through"></div>
                     </div>
                     <i class="fa fa-arrow-down pricing-figure-mid-icon"></i>
                     <div class="price-figure">
@@ -52,7 +51,7 @@
                         <li><?= __d('lp', 'チーム管理機能') ?></li>
                         <li><?= __d('lp', 'オンラインでのユーザーサポート') ?></li>
                     </ul>
-                    <a class="btn btn-cta btn-cta-primary"
+                    <a class="pricing-signup btn btn-cta btn-cta-primary"
                        href="<?= $this->Html->url(['controller' => 'users', 'action' => 'register']) ?>">
                         <?= __d('lp', '今すぐ始める') ?>
                         <br/>

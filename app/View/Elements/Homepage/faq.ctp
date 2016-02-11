@@ -89,7 +89,7 @@
                     </div><!--//panel-->
                 </div>
                 <!-- 左右を2コ1にするために右側のfaqのあとにパーティションを挿入 -->
-                <?php if( $key%2 === 1 ){ echo '<hr class="faq-partition">'; } ?>
+                <?php if( $key%2 === 1 ){ echo '<hr class="faq-partition col-xs-12">'; } ?>
             <?php endforeach; ?>
 
         </div><!--//row-->

@@ -19,14 +19,12 @@ if (!isset($top_lang)) {
 ?>
 <header id="header" class="header">
     <div class="container">
-        <h1 class="logo pull-left">
-            <a href="<?= $this->Html->url($top_lang ? '/' . $top_lang . "/" : '/'); ?>">
-                <div class="logo-title">
-                    <?= $this->Html->image('homepage/Goalous_logo.png', array('alt' => 'Goalous', 'height' => '40')); ?>
-                </div>
-                <div class="logo-description"><?= __d('lp', '最強にオープンな社内SNS') ?></div>
-            </a>
-        </h1>
+        <a class="logo-title" href="<?= $this->Html->url($top_lang ? '/' . $top_lang . "/" : '/'); ?>">
+            <h1 class="logo pull-left">
+                <?= $this->Html->image('homepage/Goalous_logo.png', array('alt' => 'Goalous', 'height' => '40')); ?>
+                <span class="logo-description"><?= __d('lp', '最強にオープンな社内SNS') ?></span>
+            </h1>
+        </a>
         <nav id="main-nav" class="main-nav navbar-right" role="navigation">
             <div class="navbar-header">
                 <!-- モバイルサイズのハンバーガーメニュー -->
@@ -63,12 +61,9 @@ if (!isset($top_lang)) {
                         </button>
                     </li>
                     <li class="nav-item nav-item-cta last">
-                        <button type="button" class="btn btn-cta btn-cta-primary" data-toggle="modal"
-                                data-target="#signup-modal">
-                            <?= $this->Html->link(__d('lp', '新規登録'),
-                                                  array('controller' => 'users', 'action' => 'register'),
-                                                  array('class' => 'shine')); ?>
-                        </button>
+                        <?= $this->Html->link(__d('lp', '新規登録'),
+                                              array('controller' => 'users', 'action' => 'register'),
+                                              array('class' => 'header-signup btn btn-cta btn-cta-primary')); ?>
                     </li>
                 </ul> <!-- //nav -->
             </div> <!-- //navbar-collapse -->

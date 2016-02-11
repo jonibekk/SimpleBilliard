@@ -79,7 +79,7 @@ if (!isset($top_lang)) {
                     </ul>
                 </div>
                 <ul class="social list-inline pull-right">
-                    <li><a href="http://instagram.com/goalous" target=" _blank"><i class="fa fa-instagram"></i></a></li>
+                    <!-- <li><a href="http://instagram.com/goalous" target=" _blank"><i class="fa fa-instagram"></i></a></li> -->
                     <li><a href="https://twitter.com/goalous" target=" _blank"><i class="fa fa-twitter"></i></a></li>
                     <li class="last"><a href="https://www.youtube.com/user/Goalous" target=" _blank"><i
                                 class="fa fa-youtube"></i></a></li>

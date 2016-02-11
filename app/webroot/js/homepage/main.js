@@ -41,35 +41,8 @@ $(document).ready(function() {
     });
 
     /* ======= Toggle between Signup & Login & ResetPass Modals ======= */
-    $('#signup-link').on('click', function(e) {
-        $('#signup-modal').modal();
-        $('#login-modal').modal('toggle');
-        e.preventDefault();
-    });
-
-    $('#login-link').on('click', function(e) {
-        $('#login-modal').modal();
-        $('#signup-modal').modal('toggle');
-        e.preventDefault();
-    });
-
-    $('#back-to-login-link').on('click', function(e) {
-        $('#login-modal').modal();
-        $('#resetpass-modal').modal('toggle');
-        e.preventDefault();
-    });
-
-    $('#resetpass-link').on('click', function(e) {
-        $('#login-modal').modal('hide');
-        e.preventDefault();
-    });
 
     /* ======= Price Plan CTA buttons trigger signup modal ======= */
-
-    $('#price-plan .btn-cta').on('click', function(e) {
-        $('#signup-modal').modal();
-        e.preventDefault();
-    });
 
     /* ======= Style Switcher (REMOVE ON YOUR PRODUCTION SITE) ======= */
 
@@ -110,5 +83,15 @@ $(document).ready(function() {
         }
     });
 
+    // #tour-videoのモーダルが開いたら
+    $('#tour-video').on('shown.bs.modal', function () {
+        // id vimeo-videoのiframeの srcにhttps://www.youtube.com/embed/jwG1Lsq3Wyw?rel=0&autoplay=1を引き渡す。
+        $('#vimeo-video').attr('src', 'https://www.youtube.com/embed/jwG1Lsq3Wyw?rel=0&autoplay=1');
+    });
+
+    // #tour-videoのモーダルが閉じたら
+    $('#tour-video').on('hidden.bs.modal', function () {
+        $('#vimeo-video').attr('src', 'https://www.youtube.com/embed/jwG1Lsq3Wyw?rel=0&autoplay=0');
+    });
 
 });

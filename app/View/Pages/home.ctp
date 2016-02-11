@@ -179,7 +179,7 @@
     <div class="container">
         <div class="row flex">
             <div class="col-md-6 col-sm-6 col-xs-12 from-left col-left text-center">
-                <h3><?= __d('lp', 'スマホアプリ、マルチデバイス対応') ?></h3>
+                <h3><?= __d('lp', 'スマホアプリで、いつでもどこからでも') ?></h3>
                 <p class="lead-text"><?= __d('lp', 'iOS・Androidアプリでもご利用いただけます') ?></p>
                 <?= $this->Html->link(
                     $this->Html->image('http://linkmaker.itunes.apple.com/images/badges/en-us/badge_appstore-lrg.svg'),
@@ -191,16 +191,19 @@
                     ))
                 ?>
                 <?= $this->Html->link(
-                    $this->Html->image([
-                        'https://play.google.com/intl/en_us/badges/images/apps/en-play-badge.png', 'alt' => 'Get it on Google Play']),
-                    'https://play.google.com/store/apps/details?id=jp.co.isao.android.goalous',
-                    array(
-                        'escape' => false,
-                        'class' => 'app-dl-btn',
-                        'height' => '40'
-                    ))
+                    $this->Html->image(
+                        'https://play.google.com/intl/en_us/badges/images/apps/en-play-badge.png',
+                        [
+                            'alt' => 'Get it on Google Play',
+                            'height' => '40'
+                        ]),
+                        'https://play.google.com/store/apps/details?id=jp.co.isao.android.goalous/',
+                        [
+                            'escape' => false,
+                            'class' => 'app-dl-btn'
+                        ])
                 ?>
-                <a class="app-dl-btn" href=""><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/apps/en-play-badge.png" height="40px" /></a>
+                <!-- <a class="app-dl-btn" href=""><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/apps/en-play-badge.png" height="40px" /></a> -->
             </div>
             <div class="col-md-6 col-sm-6 col-xs-12 from-right col-right">
                 <?= $this->Html->image( 'homepage/top/devices.png', array('alt' => '', 'class' => 'img-responsive')); ?>
