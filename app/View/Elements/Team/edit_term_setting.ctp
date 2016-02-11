@@ -84,7 +84,7 @@
             'type'                     => 'select',
             "data-bv-notempty-message" => __d('validate', "選択してください。"),
             'options'                  => $start_term_month_options,
-            'wrapInput' => 'team-setting-term-begining',
+            'wrapInput'                => 'team-setting-term-begining',
             'afterInput'               => '<span class="help-block font_11px">'
                 . __d('gl', "基準となる期の開始月を選択して下さい。")
                 . '</span>'
@@ -96,7 +96,7 @@
             'type'                     => 'select',
             "data-bv-notempty-message" => __d('validate', "選択してください。"),
             'options'                  => $border_months_options,
-            'wrapInput' => 'team-setting-term-span',
+            'wrapInput'                => 'team-setting-term-span',
         ]) ?>
         <?php if ($previous_term_start_date && $previous_term_end_date): ?>
             <div class="form-group">
@@ -105,8 +105,8 @@
                 <div class="col col-sm-6">
                     <p class="form-control-static" id="">
                         <?= $this->TimeEx->date($previous_term_start_date, $previous_term_timezone) ?>
-                        - <?= $this->TimeEx->date($previous_term_end_date,
-                                                  $previous_term_timezone) ?> <?= $this->TimeEx->getTimezoneText($previous_term_timezone) ?>
+                        - <?= $this->TimeEx->date($previous_term_end_date, $previous_term_timezone) ?>
+                        <?= $this->TimeEx->getTimezoneText($previous_term_timezone) ?>
                     </p>
                 </div>
             </div>
@@ -118,8 +118,8 @@
                 <div class="col col-sm-6">
                     <p class="form-control-static" id="">
                         <?= $this->TimeEx->date($current_term_start_date, $current_term_timezone) ?>
-                        - <?= $this->TimeEx->date($current_term_end_date,
-                                                  $current_term_timezone) ?> <?= $this->TimeEx->getTimezoneText($current_term_timezone) ?>
+                        - <?= $this->TimeEx->date($current_term_end_date, $current_term_timezone) ?>
+                        <?= $this->TimeEx->getTimezoneText($current_term_timezone) ?>
                     </p>
                 </div>
             </div>
