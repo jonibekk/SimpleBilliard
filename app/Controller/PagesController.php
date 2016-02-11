@@ -46,14 +46,14 @@ class PagesController extends AppController
         if (!$this->Auth->user()) {
             $this->layout = 'homepage';
             //html出力結果をキャッシュ
-            $url = "/" . $this->request->url;
-            if(CACHE_HOMEPAGE){
+            $url = "/" . $this->request->url . "_lang:" . Configure::read('Config.language');;
+            if (CACHE_HOMEPAGE) {
                 if (!$out = Cache::read($url, 'homepage')) {
                     $out = $this->render(implode('/', $path));
                     Cache::write($url, $out, 'homepage');
                 }
             }
-            else{
+            else {
                 $out = $this->render(implode('/', $path));
             }
             return $out;
