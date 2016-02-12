@@ -25,7 +25,15 @@
 <!--<![endif]-->
 
 <script>
-    document.getElementById('law-mark').innerHTML = marked('#できてない');
+$(function(){
+    $.ajax({
+        url: $('#markdown')[0].attributes['src'].value
+    }).success(function(data){
+        $('#markdown').append(marked(data));
+    }).error(function(data){
+        $('#markdown').append("This content failed to load.");
+    });
+});
 </script>
 
 <!-- END app/View/Elements/common_homepage_js.ctp -->

@@ -2195,3 +2195,8 @@ body {
 .document-download-text {
     vertical-align: middle;
 }
+
+.markdown-wrap {
+    width: 80%;
+    margin: 0 auto;
+}
