@@ -168,7 +168,7 @@
                 <?=
                 $this->Html->link(__d('gl', 'ユーザー利用ガイド'),
                                   '/document/UserGuidelines.pdf',
-                                  ['class' => '', 'target' => '_blank']) ?>
+                                  ['class' => 'header-nav-function-contents-user-guidelines', 'target' => '_blank']) ?>
             </li>
             <li class="header-nav-function-contents-list">
                 <a href="#" rel="_J_wKHgKWLg" id="ExplainGoal" class="youtube header-nav-function-contents-about-goal">
