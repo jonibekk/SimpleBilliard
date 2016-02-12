@@ -206,11 +206,6 @@ message_app.controller(
                         var node = document.getElementById(key);
                         node.parentNode.removeChild(node);
                     });
-                    if (typeof Dropzone.instances[0] !== "" && Dropzone.instances[0].files.length > 0) {
-                        // ajax で submit するので、アップロード完了後に Dropzone のファイルリストを空にする
-                        // （参照先の配列を空にするため空配列の代入はしない）
-                        Dropzone.instances[0].files.length = 0;
-                    }
 
                     // テキストエリア初期化処理
                     // テキストエリアの高さは、デフォルト38px。
@@ -256,6 +251,13 @@ message_app.controller(
             };
 
             var pushPostMessage = function () {
+                // アップロードファイルの上限数をリセット
+                if (typeof Dropzone.instances[0] !== "" && Dropzone.instances[0].files.length > 0) {
+                    // ajax で submit するので、アップロード完了後に Dropzone のファイルリストを空にする
+                    // （参照先の配列を空にするため空配列の代入はしない）
+                    Dropzone.instances[0].files.length = 0;
+                }
+
                 if (post_msg_view_flag === false) {
                     message_list.push({
                         AttachedFileHtml: $sce.trustAsHtml(post_detail.AttachedFileHtml),

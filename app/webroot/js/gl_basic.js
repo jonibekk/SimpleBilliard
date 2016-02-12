@@ -97,7 +97,7 @@ $(document).ready(function () {
 
     // Androidアプリかiosアプリの場合のみfastClickを実行する。
     // 　→iosでsafari/chromeでfastClick使用時、チェックボックス操作に不具合が見つかったため。
-    if(cake.is_mb_app === 'true' || cake.is_mb_app_ios === 'true') {
+    if (cake.is_mb_app === 'true' || cake.is_mb_app_ios === 'true') {
         fastClick();
     }
 
@@ -988,15 +988,6 @@ function getAjaxFormReplaceElm() {
                         // ファイルの送信中はsubmitできないようにする(クリックはできるがsubmit処理は走らない)
                         $('#CommentSubmit_' + post_id).on('click', $uploadFileForm._forbitSubmit);
                     },
-                    afterSuccess: function (file) {
-                        $('#CommentSubmit_' + post_id).click(function () {
-                            if (typeof Dropzone.instances[0] !== "" && Dropzone.instances[0].files.length > 0) {
-                                // ajax で submit するので、アップロード完了後に Dropzone のファイルリストを空にする
-                                // （参照先の配列を空にするため空配列の代入はしない）
-                                Dropzone.instances[0].files.length = 0;
-                            }
-                        });
-                    },
                     afterQueueComplete: function () {
                         $uploadFileForm._sending = false;
                         // フォームをsubmit可能にする
@@ -1167,6 +1158,13 @@ function addComment(e) {
 
     // Display loading button
     $("#" + submit_id).before($loader_html);
+
+    // アップロードファイルの上限数をリセット
+    if (typeof Dropzone.instances[0] !== "" && Dropzone.instances[0].files.length > 0) {
+        // ajax で submit するので、アップロード完了後に Dropzone のファイルリストを空にする
+        // （参照先の配列を空にするため空配列の代入はしない）
+        Dropzone.instances[0].files.length = 0;
+    }
 
     var $f = $(e.target);
     var ajaxProcess = $.Deferred();
@@ -2857,7 +2855,7 @@ function evFeedMoreView(options) {
 }
 
 //アドレスバー書き換え
-function updateAddressBar(url){
+function updateAddressBar(url) {
     if (typeof history.pushState == 'function') {
         try {
             history.pushState(null, null, url);
@@ -2875,8 +2873,6 @@ function activateMessage() {
 }
 
 function evMessage(){
-    console.log("evMessage called.");
-
     //とりあえずドロップダウンは隠す
     $("#HeaderDropdownNotify").removeClass("open");
     $('body').removeClass('notify-dropdown-open');
@@ -2893,7 +2889,6 @@ function evMessage(){
     var $obj = $(this);
     var get_url = $obj.attr('get-url');
 
-    console.log(get_url);
     //layout-mainが存在しないところではajaxでコンテンツ更新しようにもロードしていない
     //要素が多すぎるので、おとなしくページリロードする
     if (!$(".layout-main").exists()) {
@@ -2956,12 +2951,14 @@ function evMessage(){
 
 function activateMessageList(){
     var message_list_app = $("#message-list-app");
-    angular.element(message_list_app).ready(function() { angular.bootstrap(message_list_app, ['messageListApp']); });
+    angular.element(message_list_app).ready(function () {
+        angular.bootstrap(message_list_app, ['messageListApp']);
+    });
 }
 
-function evMessageList(options){
+function evMessageList(options) {
     //とりあえずドロップダウンは隠す
-    $("#HeaderDropdownNotify").removeClass("open");
+    $(".has-notify-dropdown").removeClass("open");
     $('body').removeClass('notify-dropdown-open');
 
     var opt = $.extend({
@@ -2984,7 +2981,7 @@ function evMessageList(options){
     }
 
     //アドレスバー書き換え
-    if(!updateAddressBar("/posts/message_list#")){
+    if (!updateAddressBar("/posts/message_list#")) {
         return false;
     }
 
@@ -3044,11 +3041,10 @@ function evMessageList(options){
 }
 
 
-
 function evNotifications(options) {
 
     //とりあえずドロップダウンは隠す
-    $("#HeaderDropdownNotify").removeClass("open");
+    $(".has-notify-dropdown").removeClass("open");
     $('body').removeClass('notify-dropdown-open');
 
     var opt = $.extend({
@@ -3130,11 +3126,13 @@ function evNotifications(options) {
     return false;
 }
 
-//通知から投稿に移動
+// 通知から投稿、メッセージに移動
+// TODO: メッセージ通知リンクと投稿通知リンクのイベントを分けるか、このメソッドを汎用的に使えるようにする。
+//       そうしないとメッセージ詳細へのリンクをajax化する際に、ここのロジックが相当複雑になってしまう予感がする。
 function evNotifyPost(options) {
 
     //とりあえずドロップダウンは隠す
-    $("#HeaderDropdownNotify").removeClass("open");
+    $(".has-notify-dropdown").removeClass("open");
     $('body').removeClass('notify-dropdown-open');
 
     var opt = $.extend({
@@ -3157,6 +3155,8 @@ function evNotifyPost(options) {
     //要素が多すぎるので、おとなしくページリロードする
     //urlにpost_permanentを含まない場合も対象外
     if (!$(".layout-main").exists() || !get_url.match(/post_permanent/)) {
+        // 現状、メッセージページに遷移する場合はこのブロックを通る
+        feed_loading_now = false;
         window.location.href = get_url;
         return false;
     }
@@ -3784,6 +3784,9 @@ function getModalFormFromUrl(e) {
                 $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[KeyResult][start_date]");
                 $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[KeyResult][end_date]");
             });
+    });
+    $modal_elm.on('hidden.bs.modal', function (e) {
+        $(this).empty();
     });
 
     var url = $(this).attr('href');
@@ -4828,10 +4831,10 @@ $(document).ready(function () {
                 // キューに入ってるアップロードをキャンセルしようとした場合
                 //   (アップロード中のキャンセルはcanceledコールバックが呼ばれるっぽい。
                 //   このブロックはその前段階のキャンセル時の処理。)
-                if($preview.data('file_id') === undefined) {
+                if ($preview.data('file_id') === undefined) {
                     // アップロード中のキャンセル時は確認をはさむので、
                     // ここでもそれに合わせて確認をはさむようにする
-                    if(!confirm(cake.message.validate.dropzone_cancel_upload_confirmation)) {
+                    if (!confirm(cake.message.validate.dropzone_cancel_upload_confirmation)) {
                         return;
                     }
 

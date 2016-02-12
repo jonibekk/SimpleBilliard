@@ -258,8 +258,8 @@ class AppController extends Controller
                 $this->_setActionCnt();
                 $this->_setBrowserToSession();
 
-                $this->set('current_term', $this->Team->EvaluateTerm->getCurrentTermData());
             }
+            $this->set('current_term', $this->Team->EvaluateTerm->getCurrentTermData());
             $this->_setMyMemberStatus();
             $this->_saveAccessUser($this->current_team_id, $this->Auth->user('id'));
         }

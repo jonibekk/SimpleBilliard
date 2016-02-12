@@ -54,7 +54,7 @@
             </li>
         </ul>
     </div>
-    <div class="header-dropdown-message <?= $is_mb_app ? "hide" : null ?>">
+    <div class="header-dropdown-message has-notify-dropdown <?= $is_mb_app ? "hide" : null ?>">
         <a id="click-header-message" class="btn-message-header" data-toggle="dropdown" href="#">
             <i class="header-dropdown-icon-message fa fa-paper-plane-o js-header-link header-icons"></i>
 
@@ -74,7 +74,7 @@
             </div>
         </div>
     </div>
-    <div id="HeaderDropdownNotify" class="header-dropdown-notify <?= $is_mb_app ? "hide" : null ?>">
+    <div id="HeaderDropdownNotify" class="header-dropdown-notify has-notify-dropdown <?= $is_mb_app ? "hide" : null ?>">
         <a id="click-header-bell" class="btn-notify-header" data-toggle="dropdown" href="#">
             <i class="header-dropdown-icon-notify fa fa-flag fa-bell-o header-drop-icons js-header-link header-icons"></i>
 
