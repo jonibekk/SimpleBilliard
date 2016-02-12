@@ -110,13 +110,17 @@ class ActionResult extends AppModel
             ],
         ],
         'goal_id'       => [
-            'numeric' => [
+            'numeric'  => [
                 'rule' => ['numeric'],
             ],
+            'notEmpty' => [
+                'rule' => 'notEmpty',
+            ]
         ],
         'key_result_id' => [
             'numeric' => [
-                'rule' => ['numeric'],
+                'rule'       => ['numeric'],
+                'allowEmpty' => true,
             ],
         ],
         'name'          => [
