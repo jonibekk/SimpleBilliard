@@ -203,7 +203,6 @@
                             'class' => 'app-dl-btn'
                         ])
                 ?>
-                <!-- <a class="app-dl-btn" href=""><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/apps/en-play-badge.png" height="40px" /></a> -->
             </div>
             <div class="col-md-6 col-sm-6 col-xs-12 from-right col-right">
                 <?= $this->Html->image( 'homepage/top/devices.png', array('alt' => '', 'class' => 'img-responsive')); ?>
@@ -213,5 +212,44 @@
 </div>
 
 <?= $this->element('Homepage/faq') ?>
+
+<section class="document">
+    <div class="container text-center">
+        <dl class="media col-md-6 from-bottom">
+            <div class="media-left media-middle">
+                <i class="fa fa fa-file-pdf-o document-fa"></i>
+            </div>
+            <div class="media-body">
+                <dt class="bold-text">
+                </dt>
+                <dd>
+                    <?= __d('lp', '社内稟議用のサンプル資料です。是非ご活用ください。') ?>
+                    <br>
+                    <a href="#"><i class="fa fa-caret-right"></i>
+                        <?= __d('lp', '資料ダウンロード') ?>
+                    </a>
+                </dd>
+            </div>
+        </dl>
+        <dl class="media col-md-6 from-bottom">
+            <div class="media-left media-middle">
+                <i class="fa fa fa-file-pdf-o document-fa"></i>
+            </div>
+            <div class="media-body">
+                <dt class="bold-text">
+                    <?= __d('lp', 'フライヤー（PDFファイル / 2.8MB）') ?>
+                </dt>
+                <dd>
+                    <?= __d('lp', 'フライヤー資料です。是非ご活用ください。') ?>
+                    <br>
+                    <a href="#"><i class="fa fa-caret-right"></i>
+                        <?= __d('lp', '資料ダウンロード') ?>
+                    </a>
+                </dd>
+            </div>
+        </dl>
+    </div>
+</section>
+
 <?= $this->element('Homepage/signup') ?>
 <!-- END app/View/Pages/home.ctp -->
