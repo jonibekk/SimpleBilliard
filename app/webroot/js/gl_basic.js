@@ -2875,6 +2875,7 @@ function activateMessage() {
 function evMessage(){
     //とりあえずドロップダウンは隠す
     $("#HeaderDropdownNotify").removeClass("open");
+    $(".header-dropdown-message").removeClass("open");
     $('body').removeClass('notify-dropdown-open');
 
     //フィード読み込み中はキャンセル

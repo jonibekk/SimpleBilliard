@@ -7,8 +7,7 @@ message_app.controller(
               notificationService,
               getPostDetail,
               $pusher,
-              $stateParams,
-              $anchorScroll
+              $stateParams
     ) {
 
         // TODO: 添付ファイルのプレビューを表示するために一時的に高さを少なくする
@@ -277,6 +276,21 @@ message_app.controller(
                 }
             };
 
+            var scroll2Target = function ($target) {
+                var $doc = $("#message_box");
+                var speed = 0;
+                var targetPositionTop = $target.offset().top;
+
+                $doc.stop().animate({
+                        scrollTop: targetPositionTop
+                    },
+                    {
+                        duration: speed
+                    });
+
+                return false;
+            }
+
             var forceLoad = false;
             $scope.loadMore = function () {
                 if (document.getElementById("message_box").scrollTop !== 0) {
@@ -303,7 +317,7 @@ message_app.controller(
                     if (response.data.message_list.length > 0) {
                         // 新しいメッセージが view に確実に反映されるように少し遅らす
                         setTimeout(function () {
-                            $anchorScroll();
+                            scroll2Target($('#m_'+pushed_message_num));
                         }, 1);
                         // １ページ目の表示時
                         // 確実に画面下に行くようにする
