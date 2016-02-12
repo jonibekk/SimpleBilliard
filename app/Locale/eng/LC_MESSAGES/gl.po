@@ -4535,6 +4535,8 @@ msgstr "Next Term"
 msgid "前期"
 msgstr "Previous Term"
 
+msgid "新規ユーザ登録はこちら"
+msgstr "Do you want to new user registration?"
 
 #~ msgid "公開サークルの参加設定を保存しました。"
 #~ msgstr "Saved participation settings public circle."
@@ -4562,9 +4564,6 @@ msgstr "Previous Term"
 
 #~ msgid "リーダ評価 ゴール コメント必須"
 #~ msgstr "Comment necessary for leader evaluation goal."
-
-#~ msgid "新規ユーザ登録はこちら"
-#~ msgstr "Do you want to new user registration?"
 
 #~ msgid "フォローに失敗しました。"
 #~ msgstr "Failed to follow."
