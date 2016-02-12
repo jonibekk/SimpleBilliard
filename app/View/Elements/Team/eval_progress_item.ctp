@@ -41,10 +41,10 @@
             <?php if ($type == Evaluation::TYPE_ONESELF): ?>
                 <a class="modal-ajax-get pointer"
                    href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'ajax_get_incomplete_oneself', 'evaluate_term_id' => $evaluate_term_id]) ?>">
-                    <?= $status['label'] ?>
+                    <?= h($status['label']) ?>
                 </a>
             <?php else: ?>
-                <?= $status['label'] ?>
+                <?= h($status['label']) ?>
             <?php endif ?>
         </label>
 

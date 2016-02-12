@@ -53,7 +53,7 @@
                            id="FeedMoreReadLink"
                            oldest-post-time="<?= $oldest_post_time ?>"
                             >
-                            <?= $more_read_text ?> </a>
+                            <?= h($more_read_text) ?> </a>
                     </div>
                 </div>
             <?php endif; ?>

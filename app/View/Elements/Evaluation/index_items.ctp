@@ -29,8 +29,8 @@
                     </span>
                 <?php endforeach ?>
                 <?php if ($user['status_text']['body'] && !$eval_is_frozen): ?>
-                    <?php $text_class = $user['status_text']['your_turn'] ? 'font_brownRed' : 'font_verydark' ?>
-                    <p class="<?= $text_class ?>"><?= $user['status_text']['body'] ?></p>
+                    <?php $text_class = h($user['status_text']['your_turn']) ? 'font_brownRed' : 'font_verydark' ?>
+                    <p class="<?= $text_class ?>"><?= h($user['status_text']['body']) ?></p>
                 <?php else: ?>
                     <p class="font_verydark"></p>
                 <?php endif; ?>

@@ -28,7 +28,7 @@
             </a>
         </div>
         <div class="font_12px modalFeedTextPadding">
-            <?= $user['Evaluation']['evaluator_type_name'] ?>
+            <?= h($user['Evaluation']['evaluator_type_name']) ?>
         </div>
     </div>
 </div>

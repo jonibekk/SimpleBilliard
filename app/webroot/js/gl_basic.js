@@ -3256,7 +3256,8 @@ function evCircleFeed(options) {
     var get_url = $obj.attr('get-url');
     var circle_id = $obj.attr('circle-id');
     var image_url = $obj.attr('image-url');
-    var title = $obj.attr('title');
+    // DOMから取得し再度DOMに投入するデータなのでサニタイズを行う
+    var title = sanitize($obj.attr('title'));
     var public_flg = $obj.attr('public-flg');
     var team_all_flg = $obj.attr('team-all-flg');
     var oldest_post_time = $obj.attr('oldest-post-time');
@@ -5672,5 +5673,26 @@ function networkReachable(success_callback, error_callback) {
         timeout: 3000,
         success: success_callback,
         error: error_callback
+    });
+}
+
+/**
+ * サニタイズ処理
+ * DOMから取得するデータはサーバサイドのサニタイズがリセットされてしまうため、
+ * 改めてこのメソッドでサニタイズする必要がある。
+ *
+ * @param string
+ * @returns string
+ */
+function sanitize (string) {
+    return string.replace(/[&'`"<>]/g, function(match) {
+        return {
+            '&': '&amp;',
+            "'": '&#x27;',
+            '`': '&#x60;',
+            '"': '&quot;',
+            '<': '&lt;',
+            '>': '&gt;',
+        }[match]
     });
 }
