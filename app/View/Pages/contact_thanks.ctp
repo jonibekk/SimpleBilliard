@@ -25,7 +25,7 @@
 <section id="contact-main" class="contact-main section">
     <div class="container text-center">
         <h2 class="title"><?= __d('lp', 'お問い合わせありがとうございました') ?></h2>
-        <p class="intro"><?= __d('lp', '2営業日以内に弊社担当者よりご連絡いたします。') ?></p>
+        <p class="intro"><?= __d('lp', '確認後、弊社担当者よりご連絡いたします。') ?></p>
         <p class="intro"><?= __d('lp', 'お時間がございましたら、Goalous運営会社・株式会社ISAOのブログやSNSをご覧ください。') ?></p>
 
         <div class="row">
