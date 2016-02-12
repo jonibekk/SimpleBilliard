@@ -84,32 +84,42 @@ class ActionResult extends AppModel
      * @var array
      */
     public $validate = [
-        'photo1'  => [
+        'photo1'        => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
-        'photo2'  => [
+        'photo2'        => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
-        'photo3'  => [
+        'photo3'        => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
-        'photo4'  => [
+        'photo4'        => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
-        'photo5'  => [
+        'photo5'        => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
-        'del_flg' => [
+        'del_flg'       => [
             'boolean' => [
                 'rule' => ['boolean'],
             ],
         ],
-        'name'    => [
+        'goal_id'       => [
+            'numeric' => [
+                'rule' => ['numeric'],
+            ],
+        ],
+        'key_result_id' => [
+            'numeric' => [
+                'rule' => ['numeric'],
+            ],
+        ],
+        'name'          => [
             'maxLength' => ['rule' => ['maxLength', 10000]],
             'isString'  => ['rule' => 'isString', 'message' => 'Invalid Submission']
         ]
