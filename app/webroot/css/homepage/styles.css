@@ -2181,3 +2181,17 @@ body {
 .pricing-signup:focus {
     color: #fff;
 }
+
+.document-download-icon {
+    border-radius: 4px;
+    background: #c20a19;
+    color: #ccc;
+    padding: 3px 2px 2px 3px;
+    text-align: center;
+    font-size: 68%;
+    vertical-align: middle;;
+}
+
+.document-download-text {
+    vertical-align: middle;
+}

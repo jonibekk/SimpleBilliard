@@ -225,8 +225,10 @@
                 <dd>
                     <?= __d('lp', '社内稟議用のサンプル資料です。是非ご活用ください。') ?>
                     <br>
-                    <a href="#"><i class="fa fa-caret-right"></i>
-                        <?= __d('lp', '資料ダウンロード') ?>
+                    <a href="#"><i class="fa fa-arrow-down document-download-icon"></i>
+                        <span class="document-download-text">
+                            <?= __d('lp', '資料ダウンロード') ?>
+                        </span>
                     </a>
                 </dd>
             </div>
@@ -242,8 +244,10 @@
                 <dd>
                     <?= __d('lp', 'フライヤー資料です。是非ご活用ください。') ?>
                     <br>
-                    <a href="#"><i class="fa fa-caret-right"></i>
-                        <?= __d('lp', '資料ダウンロード') ?>
+                    <a href="#"><i class="fa fa-arrow-down document-download-icon"></i>
+                        <span class="document-download-text">
+                            <?= __d('lp', '資料ダウンロード') ?>
+                        </span>
                     </a>
                 </dd>
             </div>
