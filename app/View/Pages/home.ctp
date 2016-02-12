@@ -181,28 +181,14 @@
             <div class="col-md-6 col-sm-6 col-xs-12 from-left col-left text-center">
                 <h3><?= __d('lp', 'スマホアプリで、いつでもどこからでも') ?></h3>
                 <p class="lead-text"><?= __d('lp', 'iOS・Androidアプリでもご利用いただけます') ?></p>
-                <?= $this->Html->link(
-                    $this->Html->image('http://linkmaker.itunes.apple.com/images/badges/en-us/badge_appstore-lrg.svg'),
-                    'https://itunes.apple.com/us/app/goalous-chimu-li-xiang-shangsns/id1060474459?ls=1&mt=8',
-                    array(
-                        'escape' => false,
-                        'alt' => 'iOS・Androidアプリでもご利用いただけます',
-                        'class' => 'app-dl-btn'
-                    ))
-                ?>
-                <?= $this->Html->link(
-                    $this->Html->image(
-                        'https://play.google.com/intl/en_us/badges/images/apps/en-play-badge.png',
-                        [
-                            'alt' => 'Get it on Google Play',
-                            'height' => '40'
-                        ]),
-                        'https://play.google.com/store/apps/details?id=jp.co.isao.android.goalous/',
-                        [
-                            'escape' => false,
-                            'class' => 'app-dl-btn'
-                        ])
-                ?>
+                <div class="app-banner-wrap">
+                    <div class="app-banner-left">
+                        <?= $this->Html->link( $this->Html->image('http://linkmaker.itunes.apple.com/images/badges/en-us/badge_appstore-lrg.svg'), 'https://itunes.apple.com/us/app/goalous-chimu-li-xiang-shangsns/id1060474459?ls=1&mt=8', [ 'escape' => false, 'alt' => 'iOS・Androidアプリでもご利用いただけます', 'class' => 'app-dl-btn' ]) ?>
+                    </div>
+                    <div class="app-banner-right">
+                        <?= $this->Html->link( $this->Html->image( 'https://play.google.com/intl/en_us/badges/images/apps/en-play-badge.png', [ 'alt' => 'Get it on Google Play', 'height' => '40']), 'https://play.google.com/store/apps/details?id=jp.co.isao.android.goalous/', [ 'escape' => false, 'class' => 'app-dl-btn' ]) ?>
+                    </div>
+                </div>
             </div>
             <div class="col-md-6 col-sm-6 col-xs-12 from-right col-right">
                 <?= $this->Html->image( 'homepage/top/devices.png', array('alt' => '', 'class' => 'img-responsive')); ?>

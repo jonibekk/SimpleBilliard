@@ -2134,6 +2134,26 @@ input[type="text"], input[type="email"], input[type="password"], input[type="sub
 .pricing-figure-mid-icon {
     margin: 12px;
 }
+.app-banner-wrap {
+    width: 100%;
+    font-size: 0;
+}
+.app-banner-left {
+    display: inline-block;
+    width: 50%;
+    text-align: right;;
+}
+.app-banner-right {
+    display: inline-block;
+    width: 50%;
+    text-align: left;
+}
+.app-banner-left .app-dl-btn {
+    margin-right: 8px;
+}
+.app-banner-right .app-dl-btn {
+    margin-left: 8px;
+}
 
 @media (max-width: 480px) {
     .footer .bottom-bar .footer-bottom-left {
