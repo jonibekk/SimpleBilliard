@@ -138,9 +138,6 @@
                 <div class="row">
                     <div class="team-button pull-right">
                         <?=
-                        $this->Html->link(__d('gl', "スキップ"), "/",
-                                          ['class' => 'btn btn-default design-cancel bd-radius_4px', 'div' => false]) ?>
-                        <?=
                         $this->Form->submit(__d('gl', "チームを作成"),
                                             ['class' => 'btn btn-primary display-inline', 'div' => false, 'disabled' => 'disabled']) ?>
                     </div>
