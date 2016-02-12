@@ -41,13 +41,11 @@ message_list_app.config([
             .get['If-Modified-Since'] = (new Date(0)).toUTCString();
         $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 
+        $urlRouterProvider.otherwise(function(){
+            location.href = "/posts/message_list";
+        });
         $stateProvider
             .state('list', {
-                url: "/",
-                templateUrl: "/template/message_list.html",
-                controller: 'MessageListCtrl'
-            })
-            .state('list2', {
                 url: "",
                 templateUrl: "/template/message_list.html",
                 controller: 'MessageListCtrl'

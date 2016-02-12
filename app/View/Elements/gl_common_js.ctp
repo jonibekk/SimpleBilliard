@@ -48,7 +48,6 @@ echo $this->Html->script('ng_app.min');
 echo $this->Html->script('ng_controller');
 echo $this->Html->script('vendor/angular/pusher-angular.min');
 echo $this->Html->script('vendor/angular/ng-infinite-scroll.min');
-echo $this->Html->script('vendor/angular/angular-location-update');
 
 ?>
 <!--suppress JSDuplicatedDeclaration -->
