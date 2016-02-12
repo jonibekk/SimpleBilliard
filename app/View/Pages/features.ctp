@@ -56,7 +56,7 @@
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 from-left col-left">
-                <?= $this->Html->image('homepage/features/screenshot-1.png', array('alt' => '', 'class' => 'img-responsive')) ?>
+                <?= $this->Html->image('homepage/features/screenshot-1.jpg', array('alt' => '', 'class' => 'img-responsive')) ?>
             </div><!--//figure-->
         </div><!--//item-->
 
@@ -90,7 +90,7 @@
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 from-left col-left">
-                <?= $this->Html->image('homepage/features/screenshot-3.png', array('alt' => '', 'class' => 'img-responsive')) ?>
+                <?= $this->Html->image('homepage/features/screenshot-3.jpg', array('alt' => '', 'class' => 'img-responsive')) ?>
             </div><!--//figure-->
         </div><!--//item-->
 
@@ -104,7 +104,7 @@
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 col-md-offset-1 col-sm-offset-1 col-xs-offset-0 from-right col-right">
-                <?= $this->Html->image('homepage/features/screenshot-4.png', array('alt' => '', 'class' => 'img-responsive')) ?>
+                <?= $this->Html->image('homepage/features/screenshot-4.jpg', array('alt' => '', 'class' => 'img-responsive')) ?>
             </div><!--//figure-->
         </div><!--//item-->
 

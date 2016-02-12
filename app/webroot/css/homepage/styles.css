@@ -531,7 +531,7 @@ input[type="text"], input[type="email"], input[type="password"], input[type="sub
 /* ======= Footer ======= */
 
 .footer {
-    background: #c20a19;
+    background: #666;
     color: #fff;
     padding: 15px 0;
 }
