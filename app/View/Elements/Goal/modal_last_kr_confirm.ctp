@@ -27,13 +27,13 @@
                   <?= __d('gl', "単位") ?>:<?= KeyResult::$UNIT[$goal['Goal']['value_unit']] ?>
                 </li>
                 <li>
-                  <?= __d('gl', "現在値") ?>:<?= $goal['Goal']['current_value'] ?>
+                  <?= __d('gl', "現在値") ?>:<?= h($goal['Goal']['current_value']) ?>
                 </li>
                 <li>
-                  <?= __d('gl', "開始時") ?>:<?= $goal['Goal']['start_value'] ?>
+                  <?= __d('gl', "開始時") ?>:<?= h($goal['Goal']['start_value']) ?>
                 </li>
                 <li>
-                  <?= __d('gl', "達成時") ?>:<?= $goal['Goal']['target_value'] ?>
+                  <?= __d('gl', "達成時") ?>:<?= h($goal['Goal']['target_value']) ?>
                 </li>
             </ul>
         </div>

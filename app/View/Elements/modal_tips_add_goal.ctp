@@ -15,7 +15,7 @@
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
                 <span class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= $help_item['title'] ?></h4>
+            <h4 class="modal-title"><?= h($help_item['title']) ?></h4>
         </div>
         <div class="modal-body">
             <?php if ($help_item['picture_name']): ?>
@@ -26,7 +26,7 @@
             <?php endif; ?>
             <?php if ($help_item['body']): ?>
                 <div class="col col-xxs-12">
-                    <?= $help_item['body'] ?>
+                    <?= h($help_item['body']) ?>
                 </div>
             <?php endif; ?>
         </div>
