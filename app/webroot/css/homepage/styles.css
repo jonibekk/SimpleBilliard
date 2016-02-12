@@ -12,7 +12,9 @@
 body {
     font-family: 'Hiragino Kaku Gothic Pro', 'ヒラギノ角ゴ Pro W3', Meiryo, 'メイリオ', Osaka, 'MS PGothic', arial, helvetica, sans-serif;
     color: #444444;
-    font-size: 16px;
+    overflow-x: hidden;
+}
+h1, h2, h3, h4 h5, h6{
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -1651,7 +1653,7 @@ input[type="text"], input[type="email"], input[type="password"], input[type="sub
         position: static;
     }
     .promo .intro .title {
-        font-size: 30px;
+        font-size: 28px;
     }
     .promo .intro .summary {
         font-size: 18px;

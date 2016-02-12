@@ -22,5 +22,6 @@
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/terms') ?>"/>
 <?php $this->end() ?>
 <!-- START app/View/Pages/terms.ctp -->
+<!-- 言語で読み込むファイルを切り替えたい -->
 <div id="markdown" class="markdown-wrap" src="../../markdowns/jp_terms.md"></div>
 <!-- END app/View/Pages/terms.ctp -->
