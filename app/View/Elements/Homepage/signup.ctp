@@ -22,7 +22,7 @@
         <h2 class="title"><?= __d('lp', 'さぁ、Goalous Teamへ！') ?></h2>
         <p class="summary"><?= __d('lp', '2016年8月31日まで完全無料！今すぐお試しください。') ?></p>
         <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'register']) ?>">
-            <button type="submit" class="btn btn-cta btn-cta-primary"><?= __d('lp', '新規登録') ?></button>
+            <button type="submit" class="btn btn-cta btn-cta-primary btn-block btn-lg"><?= __d('lp', '新規登録') ?></button>
         </a>
     </div>
 </section><!--//signup-->

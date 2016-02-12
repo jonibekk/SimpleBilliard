@@ -59,7 +59,7 @@
                         <i class="fa fa-twitter"></i>
                     </div>
                     <div class="details">
-                        <h4><?= __d('lp', 'twitter') ?></h4>
+                        <h4><?= __d('lp', 'Twitter') ?></h4>
                         <p><?= __d('lp', 'Follow now！') ?></p>
                         <p><a href="https://twitter.com/ISAOcorp" target="_blank"><?= __d('lp', '@ISAOcorp') ?></a></p>
                     </div><!--details-->

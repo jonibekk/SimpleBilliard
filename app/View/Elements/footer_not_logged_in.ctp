@@ -55,7 +55,7 @@ if (!isset($top_lang)) {
                         <div class="row">
                             <p class="email col-md-12 col-sm-4"><i class="fa fa-envelope"></i><a href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'contact', 'lang' => $top_lang]) ?>"><?= __d('lp', 'お問い合わせ') ?></a></p>
                             <p class="email col-md-12 col-sm-4"><i class="fa fa-microphone"></i><a
-                                    href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'contact', 'lang' => $top_lang, 1]) ?>"><?= __d('lp',
+                                    href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'contact', 'lang' => $top_lang, 4]) ?>"><?= __d('lp',
                                                                                                                                                      'プレス関連のお問い合わせ') ?></a>
                             </p>
                             <p class="email col-md-12 col-sm-4"><i class="fa fa-heart"></i><a
@@ -71,9 +71,15 @@ if (!isset($top_lang)) {
     <div class="bottom-bar">
         <div class="container">
             <div class="row">
-                <small class="copyright col-md-6 col-sm-6 col-xs-12">© 2016 ISAO │　<a href="<?=$this->Html->url('/en/')?>">English (US)</a>  　<a href="<?=$this->Html->url('/ja/')?>">日本語</a></small>
-                <ul class="social col-md-6 col-sm-6 col-xs-12 list-inline">
-                    <li><a href="http://instagram.com/goalous" target=" _blank"><i class="fa fa-instagram"></i></a></li>
+                <div class="pull-left footer-bottom-left">
+                    <small class="copyright">© 2016 ISAO │</small>
+                    <ul class="footer-lang list-inline">
+                        <li><a href="<?=$this->Html->url('/en/')?>">English (US)</a></li>
+                        <li><a href="<?=$this->Html->url('/ja/')?>">日本語</a></li>
+                    </ul>
+                </div>
+                <ul class="social list-inline pull-right">
+                    <!-- <li><a href="http://instagram.com/goalous" target=" _blank"><i class="fa fa-instagram"></i></a></li> -->
                     <li><a href="https://twitter.com/goalous" target=" _blank"><i class="fa fa-twitter"></i></a></li>
                     <li class="last"><a href="https://www.youtube.com/user/Goalous" target=" _blank"><i
                                 class="fa fa-youtube"></i></a></li>

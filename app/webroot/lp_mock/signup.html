@@ -75,7 +75,13 @@
             <div class="container text-center">
                 <h2 class="title">新規会員登録</h2>
                 <p class="summary">2016年8月末日まで完全無料！今すぐお試しください。</p>
-                <div><button type="submit" class="btn btn-cta btn-cta-primary">送　信</button></div>
+                <form class="signup-form" method="post" action="#">
+                    <div class="form-group">
+                        <label class="sr-only" for="semail2">Your email</label>
+                        <p><input type="email" id="semail2" name="semail2" class="form-control" placeholder="メールアドレス" required></p>
+                    </div>
+                    <div><button type="submit" class="btn btn-cta btn-cta-primary">送　信</button></div>
+                </form><!--//signup-form-->
             </div>
         </section><!--//signup-->
         <!-- ******FAQ****** --> 

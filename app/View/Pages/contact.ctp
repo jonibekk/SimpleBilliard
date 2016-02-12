@@ -22,94 +22,112 @@
 <?php $this->end() ?>
 <!-- START app/View/Pages/contact.ctp -->
 <!-- ******CONTACT MAIN****** -->
-<section id="contact-main" class="contact-main section">
-    <div class="container text-center">
-        <h2 class="title"><?= __d('lp', 'Goalousに関するお問い合わせ') ?></h2>
-        <p class="intro">
-            <?=
-            __d('lp', 'Goalousは、”世界のシゴトをたのしくするビジョナリーカンパニー”である') .
-            $this->Html->link(__d('lp', '株式会社ISAO'), 'http://www.isao.co.jp/',
-                              array('target' => '_blank', 'class' => 'more')) .
-            __d('lp', 'が運営しております。') .
-            '<br>' .
-            __d('lp', 'なんでも、お気軽にご相談ください。');
-            ?>
-        </p>
-
-        <!--h3>お問い合わせフォーム</h3>
-        <p class="intro">
-        1〜2営業日を目処に担当者よりご回答いたします。<br>
-        3営業日以内に回答がない場合には、大変お手数ですがcontact@goalous.comまでご連絡下さい。
-    </p-->
+<section id="contact-promo" class="contact-promo section">
+    <div class="bg-mask"></div>
+    <div class="container">
+        <div class="row">
+            <div class="contact-intro col-xs-12 text-center">
+                <h2 class="title"><?= __d('lp', 'Goalousに関するお問い合わせ') ?></h2>
+                <p class="contact-list">
+                    <?=
+                    __d('lp', 'Goalousは、”世界のシゴトをたのしくするビジョナリーカンパニー”である株式会社ISAOが運営しております。') .
+                    '<br>' .
+                    __d('lp', 'なんでも、お気軽にご相談ください。');
+                    ?>
+                </p>
+            </div>
+        </div>
     </div>
 </section>
 
 <section class="container contact-form-section">
-    <div class="row text-center">
+    <div class="row">
         <?=
         $this->Form->create('Email', [
             'id'            => 'contact-form',
             'class'         => 'form',
-            'inputDefaults' => ['div' => null, 'wrapInput' => false, 'class' => null, 'label' => false, 'error' => false],
+            'inputDefaults' => ['div' => null, 'wrapInput' => false, 'class' => null, 'error' => false],
             'novalidate'    => true
         ]); ?>
-        <div class="contact-form col-md-8 col-sm-12 col-xs-12 col-md-offset-2">
-            <div class="form-group want">
-                <?= $this->Form->select('want',
-                                        $type_options,
-                                        [
-                                            'class' => 'form-control',
-                                            'empty' => false,
-                                            'value' => $selected_type,
-                                        ]
-                ); ?>
-                <?= $this->Form->error('want', __d('lp', '選択してください。'),
-                                       ['class' => 'contact-error-msg-block pull-left']) ?>
-            </div><!-- //form-group -->
-            <div class="form-group company">
-                <label class="sr-only" for="company">
-                    <?= __d('lp', 'company') ?>
-                </label>
-                <?= $this->Form->input('company',
-                                       ['class' => 'form-control', 'placeholder' => __d('lp', '会社名'), 'maxLength']) ?>
-                <?= $this->Form->error('company', null, ['class' => 'contact-error-msg-block pull-left']) ?>
-            </div><!--//form-group-->
+        <div class="contact-form col-md-8 col-xs-12 col-md-offset-2">
             <div class="form-group name">
-                <label class="sr-only" for="name">
-                    <?= __d('lp', 'name') ?>
-                </label>
-                <?= $this->Form->input('name', ['class' => 'form-control', 'placeholder' => __d('lp', 'お名前') . ' *']) ?>
-                <?= $this->Form->error('name', null, ['class' => 'contact-error-msg-block pull-left']) ?>
-            </div><!--//form-group-->
+                <span class="label label-danger">必須</span>
+                <?= $this->Form->input('name', [
+                    'placeholder' => __d('lp', '例）鈴木 いさお'),
+                    'id' => 'EmailName',
+                    'class' => 'form-control lp-contact-form-control',
+                    'label' => [
+                        'text' => __d( 'lp', 'お名前'),
+                        'class' => 'control-label lp-contact-control-label',
+                    ],
+                    ]) ?>
+                    <?= $this->Form->error('name', null, ['class' => 'contact-error-msg-block']) ?>
+            </div>
             <div class="form-group email">
-                <label class="sr-only" for="email">
-                    <?= __d('lp', 'email') ?>
-                </label>
-                <?= $this->Form->input('email',
-                                       ['class' => 'form-control', 'type' => 'email', 'placeholder' => __d('lp',
-                                                                                                           'メールアドレス') . ' *']) ?>
-                <?= $this->Form->error('email', null, ['class' => 'contact-error-msg-block pull-left']) ?>
-            </div><!--//form-group-->
-            <div class="form-group message">
-                <label class="sr-only" for="message">
-                    <?= __d('lp', 'message') ?>
-                </label>
-                <?= $this->Form->input('message',
-                                       ['class' => 'form-control', 'type' => 'text', 'rows' => 8, 'placeholder' => __d('lp',
-                                                                                                                       'お問い合わせ内容') . ' *']) ?>
-                <?= $this->Form->error('message', null, ['class' => 'contact-error-msg-block pull-left']) ?>
-            </div><!--//form-group-->
+                <span class="label label-danger">必須</span>
+                <?= $this->Form->input('email', [
+                        'placeholder' => __d('lp', '例）example@goalous.com（半角英数字）'),
+                        'id' => 'email',
+                        'class' => 'form-control lp-contact-form-control',
+                        'label' => [
+                            'text' => __d('lp', 'メールアドレス'),
+                            'class' => 'control-label lp-contact-control-label',
+                        ],
+                    ]) ?>
+                    <?= $this->Form->error('email', null, ['class' => 'contact-error-msg-block']) ?>
+            </div>
+            <div class="form-group company">
+                <?= $this->Form->input('company', [
+                    'placeholder' => __d('lp', '例）株式会社ISAO'),
+                    'id' => 'company',
+                    'class' => 'form-control lp-contact-form-control',
+                    'label' => [
+                        'text' => __d('lp', '会社名・団体名など'),
+                        'class' => 'control-label lp-contact-control-label',
+                    ],
+                ])
+                ?>
+                <?= $this->Form->error('company', null, ['class' => 'contact-error-msg-block']) ?>
+            </div>
+            <div class="form-group want">
+                <span class="label label-danger">必須</span>
+                <?=
+                    $this->Form->input('want', [
+                    'options' => $type_options, // PagesController - ln.184,
+                    'value' => $selected_type,
+                    'label' => [
+                        'text' => __d('lp', 'お問い合わせ項目'),
+                        'class' => 'control-label lp-contact-control-label',
+                        'empty' => false,
+                    ],
+                    'class' => 'form-control lp-contact-form-control',
+                ]); ?>
+                <?= $this->Form->error('want', null, ['class' => 'contact-error-msg-block']) ?>
+            </div>
+            <div class="form-group messsage">
+                <span class="label label-danger">必須</span>
+                <?=
+                    $this->Form->input('message', [
+                        'class' => 'form-control lp-contact-form-control',
+                        'type' => 'text',
+                        'rows' => 8,
+                        'placeholder' => __d('lp', '例）導入を希望しています。詳しく説明に来て欲しいです。'),
+                        'label' => [
+                            'text' => __d('lp', 'お問い合わせ内容（最大3,000文字）'),
+                            'class' => 'control-label lp-contact-control-label',
+                        ],
+                    ]);
+                ?>
+                <?= $this->Form->error('message', null, ['class' => 'contact-error-msg-block']) ?>
+            </div>
         </div>
 
         <div class="contact-form col-md-10 col-md-offset-1 col-sm-12 col-xs-12 text-center">
-            <p class="intro">
-                <?= __d('lp', 'ご希望の営業担当者がいれば、リクエストください。（複数選択可）') ?>
-            </p>
-
+            <label class="control-label"><?= __d('lp', 'ご希望の営業担当者がいれば、リクエストください。（複数選択可）') ?></label>
             <? $this->Form->unlockField('sales_people') ?>
             <div class="form-group sales text-left">
 
-                <label class="col-md-4 col-sm-6 col-xs-12 salesperson">
+                <label class="col-sm-6 col-xs-12 salesperson">
                     <div class="input-group">
                             <span class="input-group-addon">
                                 <?= $this->Form->checkbox('sales_people.',
@@ -133,8 +151,8 @@
                             </div>
                         </div>
                     </div><!-- /input-group -->
-                </label><!-- /.col-md-4 col-sm-6 col-xs-12 -->
-                <label class="col-md-4 col-sm-6 col-xs-12 salesperson">
+                </label><!-- /.col-sm-6 col-xs-12 -->
+                <label class="col-sm-6 col-xs-12 salesperson">
                     <div class="input-group">
                             <span class="input-group-addon">
                                 <?= $this->Form->checkbox('sales_people.',
@@ -146,7 +164,7 @@
                             </span>
                         <div class="media">
                             <div class="media-left media-middle">
-                                <?= $this->Html->image('homepage/people/sales2.jpeg',
+                                <?= $this->Html->image('homepage/people/sales2.jpg',
                                                        array('alt' => 'photo', 'width' => '60', 'height' => '60', 'class' => 'img-circle')); ?>
                             </div>
                             <div class="media-body media-middle">
@@ -158,8 +176,8 @@
                             </div>
                         </div>
                     </div><!-- /input-group -->
-                </label><!-- /.col-md-4 col-sm-6 col-xs-12 -->
-                <label class="col-md-4 col-sm-6 col-xs-12 salesperson">
+                </label><!-- /.col-sm-6 col-xs-12 -->
+                <label class="col-sm-6 col-xs-12 salesperson">
                     <div class="input-group">
                             <span class="input-group-addon">
                                 <?= $this->Form->checkbox('sales_people.',
@@ -178,13 +196,13 @@
                                 <?=
                                 __d('lp', '吉岡真人') .
                                 '<br>' .
-                                __d('lp', '唐沢寿明に似てます')
+                                __d('lp', '愛をこめた営業をします')
                                 ?>
                             </div>
                         </div>
                     </div><!-- /input-group -->
-                </label><!-- /.col-md-4 col-sm-6 col-xs-12 -->
-                <label class="col-md-4 col-sm-6 col-xs-12 salesperson">
+                </label><!-- /.col-sm-6 col-xs-12 -->
+                <label class="col-sm-6 col-xs-12 salesperson">
                     <div class="input-group">
                             <span class="input-group-addon">
                                 <?= $this->Form->checkbox('sales_people.',
@@ -196,7 +214,7 @@
                             </span>
                         <div class="media">
                             <div class="media-left media-middle">
-                                <?= $this->Html->image('homepage/people/sales4.jpeg',
+                                <?= $this->Html->image('homepage/people/sales4.jpg',
                                                        array('alt' => 'photo', 'width' => '60', 'height' => '60', 'class' => 'img-circle')); ?>
                             </div>
                             <div class="media-body media-middle">
@@ -208,7 +226,7 @@
                             </div>
                         </div>
                     </div><!-- /input-group -->
-                </label><!-- /.col-md-4 col-sm-6 col-xs-12 -->
+                </label><!-- /.col-sm-6 col-xs-12 -->
             </div><!--//form-group-->
         </div>
         <div class="contact-form col-md-8 col-sm-12 col-xs-12 col-md-offset-2">
@@ -230,64 +248,4 @@
     </div><!--//row-->
 </section>
 
-<section id="contact-main" class="contact-main section">
-    <div class="container text-center">
-        <div class="row">
-            <div class="item col-md-4 col-sm-12 col-xs-12">
-                <div class="item-inner">
-                    <a href="mailto:contact@goalous.com?subject=Goalousに関するお問い合わせ">
-                        <div class="icon">
-                            <!--<i class="fa fa-envelope"></i>-->
-                            <span class="pe-icon pe-7s-mail-open-file"></span>
-                        </div>
-                    </a>
-                    <div class="details">
-                        <h4><?= __d('lp', 'Email') ?></h4>
-                        <p>
-                            <?= $this->html->link(__d('lp', 'Email'),
-                                                  'mailto:contact@goalous.com?subject=' .
-                                                  __d('lp', 'Goalousに関するお問い合わせ')
-                            );
-                            ?>
-                        </p>
-                    </div><!--details-->
-                </div><!--//item-inner-->
-            </div><!--//item-->
-            <div class="item col-md-4 col-sm-12 col-xs-12">
-                <div class="item-inner">
-                    <a href="https://twitter.com/goalous" target="_blank">
-                        <div class="icon">
-                            <span class="fa fa-twitter"></span>
-                        </div>
-                    </a>
-                    <div class="details">
-                        <!-- なんで小文字はじまり？ -->
-                        <h4><?= __d('lp', 'twitter') ?></h4>
-                        <p>
-                            <?= $this->Html->link('@goalous', 'https://twitter.com/goalous',
-                                                  array('target' => '_blank')) ?>
-                        </p>
-                    </div><!--details-->
-                </div><!--//item-inner-->
-            </div><!--//item-->
-            <div class="item col-md-4 col-sm-12 col-xs-12 last">
-                <div class="item-inner">
-                    <a href="https://www.facebook.com/goalous" target="_blank">
-                        <div class="icon">
-                            <!--<i class="fa fa-map-marker"></i>-->
-                            <span class="pe-icon pe-7s-map-2"></span>
-                        </div>
-                    </a>
-                    <div class="details">
-                        <h4><?= __d('lp', 'Facebookページ') ?></h4>
-                        <p>
-                            <?= $this->Html->link('Goalous', 'https://www.facebook.com/goalous',
-                                                  array('target' => '_blank')) ?>
-                        </p>
-                    </div><!--details-->
-                </div><!--//item-inner-->
-            </div><!--//item-->
-        </div><!--//row-->
-    </div><!--//container-->
-</section><!--//contact-->
 <!-- END app/View/Pages/contact.ctp -->
