@@ -198,6 +198,7 @@
 </div>
 
 <?= $this->element('Homepage/faq') ?>
+<?= $this->element('Homepage/signup') ?>
 
 <section class="document">
     <div class="container text-center">
@@ -207,11 +208,12 @@
             </div>
             <div class="media-body">
                 <dt class="bold-text">
+                    <?= __d('lp', 'Goalous紹介資料（PDFファイル）') ?>
                 </dt>
                 <dd>
-                    <?= __d('lp', '社内稟議用のサンプル資料です。是非ご活用ください。') ?>
+                    <?= __d('lp', '社内稟議用のサンプル資料です。ぜひご活用ください。') ?>
                     <br>
-                    <a href="#"><i class="fa fa-arrow-down document-download-icon"></i>
+                    <a href="../composition/pdf/jp_GoalousIntroduction_100.pdf" target="_blank"><i class="fa fa-arrow-down document-download-icon"></i>
                         <span class="document-download-text">
                             <?= __d('lp', '資料ダウンロード') ?>
                         </span>
@@ -225,12 +227,12 @@
             </div>
             <div class="media-body">
                 <dt class="bold-text">
-                    <?= __d('lp', 'フライヤー（PDFファイル / 2.8MB）') ?>
+                    <?= __d('lp', 'フライヤー（PDFファイル）') ?>
                 </dt>
                 <dd>
-                    <?= __d('lp', 'フライヤー資料です。是非ご活用ください。') ?>
+                    <?= __d('lp', 'フライヤー資料です。ぜひご活用ください。') ?>
                     <br>
-                    <a href="#"><i class="fa fa-arrow-down document-download-icon"></i>
+                    <a href="../composition/pdf/jp_goalous_flier_campaign.pdf" target="_blank"><i class="fa fa-arrow-down document-download-icon"></i>
                         <span class="document-download-text">
                             <?= __d('lp', '資料ダウンロード') ?>
                         </span>
@@ -240,6 +242,4 @@
         </dl>
     </div>
 </section>
-
-<?= $this->element('Homepage/signup') ?>
 <!-- END app/View/Pages/home.ctp -->

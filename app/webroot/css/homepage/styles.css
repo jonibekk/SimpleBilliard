@@ -1907,7 +1907,6 @@ input[type="text"], input[type="email"], input[type="password"], input[type="sub
 /* ======= Document Section ======= */
 
 .document {
-    background: #cccccc;
     padding: 30px 0;
 }
 .document dl {
@@ -2208,7 +2207,7 @@ body {
     border-radius: 4px;
     background: #c20a19;
     color: #ccc;
-    padding: 3px 2px 2px 3px;
+    padding: 2px;
     text-align: center;
     font-size: 68%;
     vertical-align: middle;;
