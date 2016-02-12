@@ -38,7 +38,7 @@
             </div><!--//intro-->
             <div class="features-video col-md-7 col-sm-6 col-xs-12 col-xs-offset-0">
                 <div class="video-container">
-                    <!-- <iframe width="720" height="405" src="https://www.youtube.com/embed/jwG1Lsq3Wyw?rel=0&autoplay=1" frameborder="0" allowfullscreen></iframe> -->
+                    <iframe width="720" height="405" src="https://www.youtube.com/embed/jwG1Lsq3Wyw?rel=0&autoplay=1" frameborder="0" allowfullscreen></iframe>
                 </div><!--//video-container-->
             </div><!--//video-->
         </div><!--//row-->

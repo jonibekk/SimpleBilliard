@@ -233,7 +233,17 @@
             <div class="checkbox">
                 <label>
                     <?= $this->Form->checkbox('need') ?>
-                    <?= __d('lp', '個人情報の取り扱いについてに同意の上、問い合わせする') ?>
+                    <?= $this->Html->link(__d('lp', '個人情報の取り扱い'),[
+                        'controller' => 'pages',
+                        'action' => 'display',
+                        'pagename'   => 'privacy_policy',
+                        'lang' => $top_lang,
+                    ],
+                    [
+                        'target' => '_blank',
+                    ]
+                    ) ?>
+                    <?= __d('lp', 'について同意の上、問い合わせする') ?>
                 </label>
                 <?= $this->Form->error('need', __d('lp', '個人情報保護方針の同意が必要です。'),
                                        ['class' => 'contact-error-msg-block']) ?>
