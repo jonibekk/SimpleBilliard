@@ -56,7 +56,7 @@
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 from-left col-left">
-                <?= $this->Html->image('homepage/features/screenshot-1.jpg', array('alt' => '', 'class' => 'img-responsive')) ?>
+                <?= $this->Html->image('homepage/features/screenshot-1.jpg', array('alt' => __d('lp','全員のゴールを簡単に知る事ができる。今までこの情報を知りうる手段はありましたか？'), 'class' => 'img-responsive')) ?>
             </div><!--//figure-->
         </div><!--//item-->
 
@@ -76,7 +76,7 @@
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 col-md-offset-1 col-sm-offset-1 col-xs-offset-0 from-right col-right">
-                <?= $this->Html->image('homepage/features/screenshot-2.jpg', array('alt' => '', 'class' => 'img-responsive')) ?>
+                <?= $this->Html->image('homepage/features/screenshot-2.jpg', array('alt' => __d('lp','写真によって活動の表現力が格段にあがります。'), 'class' => 'img-responsive')) ?>
             </div><!--//figure-->
         </div><!--//item-->
 
@@ -90,7 +90,7 @@
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 from-left col-left">
-                <?= $this->Html->image('homepage/features/screenshot-3.jpg', array('alt' => '', 'class' => 'img-responsive')) ?>
+                <?= $this->Html->image('homepage/features/screenshot-3.jpg', array('alt' => __d('lp','様々な活動や話題をサークルで共有しよう！'), 'class' => 'img-responsive')) ?>
             </div><!--//figure-->
         </div><!--//item-->
 
@@ -104,7 +104,7 @@
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 col-md-offset-1 col-sm-offset-1 col-xs-offset-0 from-right col-right">
-                <?= $this->Html->image('homepage/features/screenshot-4.jpg', array('alt' => '', 'class' => 'img-responsive')) ?>
+                <?= $this->Html->image('homepage/features/screenshot-4.jpg', array('alt' => __d('lp','Goalousはメッセンジャー機能も備えています。'), 'class' => 'img-responsive')) ?>
             </div><!--//figure-->
         </div><!--//item-->
 
@@ -124,7 +124,7 @@
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 from-left col-left">
-                <?= $this->Html->image('homepage/features/screenshot-5.jpg', array('alt' => '', 'class' => 'img-responsive')) ?>
+                <?= $this->Html->image('homepage/features/screenshot-5.jpg', array('alt' => __d('lp','評価？もちろんGoalousでできます。'), 'class' => 'img-responsive')) ?>
             </div><!--//figure-->
         </div><!--//item-->
 
@@ -138,7 +138,7 @@
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 col-md-offset-1 col-sm-offset-1 col-xs-offset-0 from-right col-right">
-                <?= $this->Html->image('homepage/features/screenshot-6.jpg', array('alt' => '', 'class' => 'img-responsive')) ?>
+                <?= $this->Html->image('homepage/features/screenshot-6.jpg', array('alt' => __d('lp','チーム力が向上しているか？これを見れば分かります。'), 'class' => 'img-responsive')) ?>
             </div><!--//figure-->
         </div><!--//item-->
         <div class="container text-center">
