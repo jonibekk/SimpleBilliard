@@ -28,7 +28,7 @@
                 </div>
                 <div class="panel-body">
                     <?= __d('gl', '名前') ?>
-                    <span class="pull-right"><?= $user['User']['display_username'] ?></span>
+                    <span class="pull-right"><?= h($user['User']['display_username']) ?></span>
                 </div>
                 <div class="panel-body" style="border-top: 1px solid #ddd;">
                     <?= __d('gl', '性別') ?>
