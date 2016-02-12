@@ -17,7 +17,7 @@
     <?php if ($vision): ?>
         <div class="col col-xxs-12 goals-column-head">
         <span class="font_18px mt_5px font_gargoyleGray goals-column-title right-column-vision-title">
-            <?= __d('gl', 'ビジョン') ?> <i class="fa fa-caret-right"></i> <?= $vision['target_name'] ?>
+            <?= __d('gl', 'ビジョン') ?> <i class="fa fa-caret-right"></i> <?= h($vision['target_name']) ?>
         </span>
         </div>
         <div class="col col-xxs-12 mt_5px mb_12px font_gargoyleGray right-column-vision-objective">
@@ -31,7 +31,7 @@
                                ]
             )
             ?>
-            <?= $vision['name'] ?>
+            <?= h($vision['name']) ?>
             <?php
             $method = $vision['model'] === 'TeamVision' ? 'vision_detail' : 'group_vision_detail';
             ?>

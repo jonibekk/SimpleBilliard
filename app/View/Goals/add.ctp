@@ -310,7 +310,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                         <span class="plr_18px">
                                             <span class="goal-edit-limit-date-label">
                                             <?php if (isset($this->request->data['Goal'])): ?>
-                                                <?= $this->request->data['Goal']['term_text'] ?>
+                                                <?= h($this->request->data['Goal']['term_text']) ?>
                                             <?php else: ?>
                                                 <?= __d('gl', '今期') ?>
                                             <?php endif; ?>

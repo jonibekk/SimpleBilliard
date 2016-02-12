@@ -22,9 +22,9 @@
     <table class="table mt_18px">
         <tr class="insight-table-header insight-ranking-table-header">
             <th>#</th>
-            <th><i class="fa <?= $icon[$type]['img'] ?>"></i></th>
-            <th><i class="fa <?= $icon[$type]['text'] ?>"></i></th>
-            <th><i class="fa <?= $icon[$type]['count'] ?>"></i></th>
+            <th><i class="fa <?= h($icon[$type]['img']) ?>"></i></th>
+            <th><i class="fa <?= h($icon[$type]['text']) ?>"></i></th>
+            <th><i class="fa <?= h($icon[$type]['count']) ?>"></i></th>
         </tr>
         <?php
         $no = 1;
@@ -47,13 +47,13 @@
                              'user_id'    => $row['User']['id']
                             ]) ?>"
                            data-toggle="tooltip"
-                           title="<?= $row['User']['display_username'] ?>"><?= $this->Upload->uploadImage($row['User'],
+                           title="<?= h($row['User']['display_username']) ?>"><?= $this->Upload->uploadImage($row['User'],
                                                                                                           'User.photo',
                                                                                                           ['style' => 'small']) ?></a>
                     <?php endif ?>
                 </td>
                 <td>
-                    <a href="<?= $row['url'] ?>"><?= h(mb_substr($row['text'], 0, 40, 'UTF-8')) ?></a>
+                    <a href="<?= h($row['url']) ?>"><?= h(mb_substr($row['text'], 0, 40, 'UTF-8')) ?></a>
                 </td>
                 <td><?= h($row['count']) ?></td>
             </tr>

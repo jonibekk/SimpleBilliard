@@ -41,7 +41,7 @@
                 </div>
                 <div class="panel-body" style="border-top: 1px solid #ddd;">
                     <?= __d('gl', '出身地') ?>
-                    <span class="pull-right"><?= $user['User']['hometown'] ?></span>
+                    <span class="pull-right"><?= h($user['User']['hometown']) ?></span>
                 </div>
                 <div class="panel-body" style="border-top: 1px solid #ddd;">
                     <?= __d('gl', 'プロフィール画像') ?>

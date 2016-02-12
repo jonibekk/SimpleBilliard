@@ -82,7 +82,7 @@
                append-target-id="CircleFiles"
                oldest-post-time="<?= $oldest_post_time ?>"
                 >
-                <?= $more_read_text ?></a>
+                <?= h($more_read_text) ?></a>
         </div>
     </div>
 
