@@ -113,7 +113,7 @@
                                                        'pagename'   => 'terms',
                                                    ],
                                                    [
-                                                       'target'  => "blank",
+                                                       'target'  => "_blank",
                                                        'onclick' => "window.open(this.href,'_system');return false;",
                                                        'class'   => 'link',
                                                    ]
@@ -126,7 +126,7 @@
                                                 'pagename'   => 'privacy_policy',
                                             ],
                                             [
-                                                'target'  => "blank",
+                                                'target'  => "_blank",
                                                 'onclick' => "window.open(this.href,'_system');return false;",
                                                 'class'   => 'link',
                                             ]
