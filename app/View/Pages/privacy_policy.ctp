@@ -21,10 +21,5 @@
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/privacy_policy') ?>"/>
 <?php $this->end() ?>
 <!-- START app/View/Pages/privacy_policy.ctp -->
-<?php
-//ToDo - 言語で読み込むmdファイルを変えたい
-//TODO 日本語ファイル名をja_privacy_policyに、英語ファイル名をen_privacy_policyに変更
-//TODO 読み込みを composition/markdowns/\<\?= $sort_lang \?\>_privacy_policy.md
-?>
-<div id="markdown" class="markdown-wrap" src="../../composition/markdowns/jp_privacy_policy.md"></div>
+<div id="markdown" class="markdown-wrap" src="../../composition/markdowns/<?=$short_lang?>_privacy_policy.md"></div>
 <!-- END app/View/Pages/privacy_policy.ctp -->

@@ -21,10 +21,5 @@
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/law') ?>"/>
 <?php $this->end() ?>
 <!-- START app/View/Pages/law.ctp -->
-<?php
-//ToDo - 言語で読み込むmdファイルを変えたい
-//TODO 日本語ファイル名をja_law.mdに、英語ファイル名をen_law.mdに変更
-//TODO 読み込みを composition/markdowns/\<\?= $sort_lang \?\>_law.md
-?>
-<div id="markdown" src="../../composition/markdowns/jp_law.md" class="markdown-wrap"></div>
+<div id="markdown" src="../../composition/markdowns/<?=$short_lang?>_law.md" class="markdown-wrap"></div>
 <!-- END app/View/Pages/law.ctp -->
