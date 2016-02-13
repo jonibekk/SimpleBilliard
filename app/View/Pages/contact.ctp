@@ -122,7 +122,7 @@
             </div>
         </div>
 
-        <div class="contact-form col-md-10 col-md-offset-1 col-sm-12 col-xs-12 text-center">
+        <div class="contact-form col-md-8 col-xs-12 col-md-offset-2 text-center">
             <label class="control-label"><?= __d('lp', 'ご希望の営業担当者がいれば、リクエストください。（複数選択可）') ?></label>
             <? $this->Form->unlockField('sales_people') ?>
             <div class="form-group sales text-left">
