@@ -43,16 +43,17 @@ class Email extends AppModel
             ],
         ],
         'email'   => [
-            'maxLength'     => ['rule' => ['maxLength', 200]],
-            'notEmpty'      => [
+            'maxLength' => ['rule' => ['maxLength', 200]],
+            'notEmpty'  => [
                 'rule' => 'notEmpty',
             ],
-            'email'         => [
+            'email'     => [
                 'rule' => ['email'],
             ],
         ],
         'company' => [
-            'maxLength' => ['rule' => ['maxLength', 50]],
+            'isString'  => ['rule' => 'isString',],
+            'maxLength' => ['rule' => ['maxLength', 50],],
         ],
         'name'    => [
             'notEmpty'  => ['rule' => 'notEmpty',],
