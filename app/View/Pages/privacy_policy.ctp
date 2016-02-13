@@ -21,6 +21,5 @@
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/privacy_policy') ?>"/>
 <?php $this->end() ?>
 <!-- START app/View/Pages/privacy_policy.ctp -->
-<!-- 言語で読み込むファイルを切り替えたい -->
-<div id="markdown" class="markdown-wrap" src="../../composition/markdowns/jp_privacy_policy.md"></div>
+<div id="markdown" class="markdown-wrap" src="../../composition/markdowns/<?=$short_lang?>_privacy_policy.md"></div>
 <!-- END app/View/Pages/privacy_policy.ctp -->
