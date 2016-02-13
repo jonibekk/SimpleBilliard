@@ -6,6 +6,9 @@
  *
  * @var CodeCompletionView $this
  */
+if (!isset($page_type)) {
+    $page_type = 'app';
+}
 ?>
 <!-- START app/View/Elements/google_tag_manager.ctp -->
 <? if (GOOGLE_TAG_MANAGER_ID): ?>
@@ -17,9 +20,10 @@
     </noscript>
     <script>
         dataLayer = [{
-            "loggedIn": "<?= $this->Session->read('Auth.User.id')?"true":"false"?>",
+            "loggedIn": "<?= $this->Session->read('Auth.User.id') ? "true" : "false"?>",
             "teamId": "<?= $this->Session->read('current_team_id')?>",
-            "userId": "<?= $this->Session->read('Auth.User.id')?>"
+            "userId": "<?= $this->Session->read('Auth.User.id')?>",
+            "pageType": "<?=$page_type?>"
         }];
         (function (w, d, s, l, i) {
             w[l] = w[l] || [];

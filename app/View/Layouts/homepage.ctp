@@ -74,7 +74,7 @@
     <![endif]-->
 </head>
 <body class="home-page">
-<?= $this->element('google_tag_manager') ?>
+<?= $this->element('google_tag_manager', ['page_type' => 'lp']) ?>
 
 <!-- * Facebook Like button script starts -->
 <div id="fb-root"></div>

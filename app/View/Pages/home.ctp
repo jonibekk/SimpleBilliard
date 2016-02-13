@@ -44,7 +44,7 @@
                 <p class="summary"><?= __d('lp', '2016年8月31日まで完全無料！今すぐお試しください。') ?></p>
             </div>
             <div class="col-md-5 col-sm-12 col-xs-12">
-                <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'register']) ?>">
+                <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'register']) ?>" id="RegisterLinkTopMiddle">
                     <button type="submit" class="btn btn-cta btn-cta-primary btn-block"><?= __d('lp',
                                                                                                 '新規会員登録') ?></button>
                 </a>
