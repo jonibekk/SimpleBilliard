@@ -51,7 +51,7 @@
                         <li><?= __d('lp', 'チーム管理機能') ?></li>
                         <li><?= __d('lp', 'オンラインでのユーザーサポート') ?></li>
                     </ul>
-                    <a class="pricing-signup btn btn-cta btn-cta-primary"
+                    <a class="pricing-signup btn btn-cta btn-cta-primary" id="RegisterLinkPricingPlus"
                        href="<?= $this->Html->url(['controller' => 'users', 'action' => 'register']) ?>">
                         <?= __d('lp', '今すぐ始める') ?>
                         <br/>
