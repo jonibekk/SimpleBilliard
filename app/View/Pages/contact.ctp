@@ -51,38 +51,38 @@
         ]); ?>
         <div class="contact-form col-md-8 col-xs-12 col-md-offset-2">
             <div class="form-group name">
-                <span class="label label-danger">必須</span>
+                <span class="label label-danger"><?= __d('lp', '必須') ?></span>
                 <?= $this->Form->input('name', [
                     'placeholder' => __d('lp', '例）鈴木 いさお'),
-                    'id' => 'EmailName',
-                    'class' => 'form-control lp-contact-form-control',
-                    'label' => [
-                        'text' => __d( 'lp', 'お名前'),
+                    'id'          => 'EmailName',
+                    'class'       => 'form-control lp-contact-form-control',
+                    'label'       => [
+                        'text'  => __d('lp', 'お名前'),
                         'class' => 'control-label lp-contact-control-label',
                     ],
-                    ]) ?>
-                    <?= $this->Form->error('name', null, ['class' => 'contact-error-msg-block']) ?>
+                ]) ?>
+                <?= $this->Form->error('name', null, ['class' => 'contact-error-msg-block']) ?>
             </div>
             <div class="form-group email">
-                <span class="label label-danger">必須</span>
+                <span class="label label-danger"><?= __d('lp', '必須') ?></span>
                 <?= $this->Form->input('email', [
-                        'placeholder' => __d('lp', '例）example@goalous.com（半角英数字）'),
-                        'id' => 'email',
-                        'class' => 'form-control lp-contact-form-control',
-                        'label' => [
-                            'text' => __d('lp', 'メールアドレス'),
-                            'class' => 'control-label lp-contact-control-label',
-                        ],
-                    ]) ?>
-                    <?= $this->Form->error('email', null, ['class' => 'contact-error-msg-block']) ?>
+                    'placeholder' => __d('lp', '例）example@goalous.com（半角英数字）'),
+                    'id'          => 'email',
+                    'class'       => 'form-control lp-contact-form-control',
+                    'label'       => [
+                        'text'  => __d('lp', 'メールアドレス'),
+                        'class' => 'control-label lp-contact-control-label',
+                    ],
+                ]) ?>
+                <?= $this->Form->error('email', null, ['class' => 'contact-error-msg-block']) ?>
             </div>
             <div class="form-group company">
                 <?= $this->Form->input('company', [
                     'placeholder' => __d('lp', '例）株式会社ISAO'),
-                    'id' => 'company',
-                    'class' => 'form-control lp-contact-form-control',
-                    'label' => [
-                        'text' => __d('lp', '会社名・団体名など'),
+                    'id'          => 'company',
+                    'class'       => 'form-control lp-contact-form-control',
+                    'label'       => [
+                        'text'  => __d('lp', '会社名・団体名など'),
                         'class' => 'control-label lp-contact-control-label',
                     ],
                 ])
@@ -90,169 +90,120 @@
                 <?= $this->Form->error('company', null, ['class' => 'contact-error-msg-block']) ?>
             </div>
             <div class="form-group want">
-                <span class="label label-danger">必須</span>
+                <span class="label label-danger"><?= __d('lp', '必須') ?></span>
                 <?=
-                    $this->Form->input('want', [
+                $this->Form->input('want', [
                     'options' => $type_options, // PagesController - ln.184,
-                    'value' => $selected_type,
-                    'label' => [
-                        'text' => __d('lp', 'お問い合わせ項目'),
+                    'value'   => $selected_type,
+                    'label'   => [
+                        'text'  => __d('lp', 'お問い合わせ項目'),
                         'class' => 'control-label lp-contact-control-label',
                         'empty' => false,
                     ],
-                    'class' => 'form-control lp-contact-form-control',
+                    'class'   => 'form-control lp-contact-form-control',
                 ]); ?>
                 <?= $this->Form->error('want', null, ['class' => 'contact-error-msg-block']) ?>
             </div>
             <div class="form-group messsage">
-                <span class="label label-danger">必須</span>
+                <span class="label label-danger"><?= __d('lp', '必須') ?></span>
                 <?=
-                    $this->Form->input('message', [
-                        'class' => 'form-control lp-contact-form-control',
-                        'type' => 'text',
-                        'rows' => 8,
-                        'placeholder' => __d('lp', '例）導入を希望しています。詳しく説明に来て欲しいです。'),
-                        'label' => [
-                            'text' => __d('lp', 'お問い合わせ内容（最大3,000文字）'),
-                            'class' => 'control-label lp-contact-control-label',
-                        ],
-                    ]);
+                $this->Form->input('message', [
+                    'class'       => 'form-control lp-contact-form-control',
+                    'type'        => 'text',
+                    'rows'        => 8,
+                    'placeholder' => __d('lp', '例）導入を希望しています。詳しく説明に来て欲しいです。'),
+                    'label'       => [
+                        'text'  => __d('lp', 'お問い合わせ内容（最大3,000文字）'),
+                        'class' => 'control-label lp-contact-control-label',
+                    ],
+                ]);
                 ?>
                 <?= $this->Form->error('message', null, ['class' => 'contact-error-msg-block']) ?>
             </div>
         </div>
 
-        <div class="contact-form col-md-10 col-md-offset-1 col-sm-12 col-xs-12 text-center">
+        <div class="contact-form col-md-8 col-xs-12 col-md-offset-2 text-center">
             <label class="control-label"><?= __d('lp', 'ご希望の営業担当者がいれば、リクエストください。（複数選択可）') ?></label>
             <? $this->Form->unlockField('sales_people') ?>
             <div class="form-group sales text-left">
+                <?php
+                $sales_people = [
+                    [
+                        'name'        => __d('lp', '湯川啓太'),
+                        'description' => __d('lp', '唐沢寿明に似てます'),
+                        'img'         => 'homepage/people/sales1.jpg',
+                    ],
+                    [
+                        'name'        => __d('lp', '菊池厚平'),
+                        'description' => __d('lp', 'Goalousのオーナーです'),
+                        'img'         => 'homepage/people/sales2.jpg',
+                    ],
+                    [
+                        'name'        => __d('lp', '吉岡真人'),
+                        'description' => __d('lp', '愛をこめた営業をします'),
+                        'img'         => 'homepage/people/sales3.jpg',
+                    ],
+                    [
+                        'name'        => __d('lp', '石原裕介'),
+                        'description' => __d('lp', 'DJやってます'),
+                        'img'         => 'homepage/people/sales4.jpg',
+                    ],
+                ]
+                ?>
+                <? foreach ($sales_people as $k => $v): ?>
+                    <label class="col-sm-6 col-xs-12 salesperson">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <?= $this->Form->checkbox('sales_people.',
+                                                          ['value'   => $v['name'], 'hiddenField' => false,
+                                                           'checked' => isset($this->request->data['Email']['sales_people']) &&
+                                                           in_array($v['name'],
+                                                                    $this->request->data['Email']['sales_people']) ? 'checked' : null
+                                                          ]) ?>
+                            </span>
+                            <div class="media">
+                                <div class="media-left media-middle">
+                                    <?= $this->Html->image($v['img'],
+                                                           array('alt' => 'photo', 'width' => '60', 'height' => '60', 'class' => 'img-circle')); ?>
+                                </div>
+                                <div class="media-body media-middle">
+                                    <?=
+                                    $v['name'] .
+                                    '<br>' .
+                                    $v['description']
+                                    ?>
+                                </div>
+                            </div>
+                        </div><!-- /input-group -->
+                    </label><!-- /.col-sm-6 col-xs-12 -->
 
-                <label class="col-sm-6 col-xs-12 salesperson">
-                    <div class="input-group">
-                            <span class="input-group-addon">
-                                <?= $this->Form->checkbox('sales_people.',
-                                                          ['value'   => __d('lp', '湯川啓太'), 'hiddenField' => false,
-                                                           'checked' => isset($this->request->data['Email']['sales_people']) &&
-                                                           in_array(__d('lp', '湯川啓太'),
-                                                                    $this->request->data['Email']['sales_people']) ? 'checked' : null
-                                                          ]) ?>
-                            </span>
-                        <div class="media">
-                            <div class="media-left media-middle">
-                                <?= $this->Html->image('homepage/people/sales1.jpg',
-                                                       array('alt' => 'photo', 'width' => '60', 'height' => '60', 'class' => 'img-circle')); ?>
-                            </div>
-                            <div class="media-body media-middle">
-                                <?=
-                                __d('lp', '湯川啓太') .
-                                '<br>' .
-                                __d('lp', '唐沢寿明に似てます')
-                                ?>
-                            </div>
-                        </div>
-                    </div><!-- /input-group -->
-                </label><!-- /.col-sm-6 col-xs-12 -->
-                <label class="col-sm-6 col-xs-12 salesperson">
-                    <div class="input-group">
-                            <span class="input-group-addon">
-                                <?= $this->Form->checkbox('sales_people.',
-                                                          ['value'   => __d('lp', '菊池厚平'), 'hiddenField' => false,
-                                                           'checked' => isset($this->request->data['Email']['sales_people']) &&
-                                                           in_array(__d('lp', '菊池厚平'),
-                                                                    $this->request->data['Email']['sales_people']) ? 'checked' : null
-                                                          ]) ?>
-                            </span>
-                        <div class="media">
-                            <div class="media-left media-middle">
-                                <?= $this->Html->image('homepage/people/sales2.jpg',
-                                                       array('alt' => 'photo', 'width' => '60', 'height' => '60', 'class' => 'img-circle')); ?>
-                            </div>
-                            <div class="media-body media-middle">
-                                <?=
-                                __d('lp', '菊池厚平') .
-                                '<br>' .
-                                __d('lp', 'Goalousのオーナーです')
-                                ?>
-                            </div>
-                        </div>
-                    </div><!-- /input-group -->
-                </label><!-- /.col-sm-6 col-xs-12 -->
-                <label class="col-sm-6 col-xs-12 salesperson">
-                    <div class="input-group">
-                            <span class="input-group-addon">
-                                <?= $this->Form->checkbox('sales_people.',
-                                                          ['value'   => __d('lp', '吉岡真人'), 'hiddenField' => false,
-                                                           'checked' => isset($this->request->data['Email']['sales_people']) &&
-                                                               in_array(__d('lp', '吉岡真人'),
-                                                                                 $this->request->data['Email']['sales_people']) ? 'checked' : null
-                                                          ]) ?>
-                            </span>
-                        <div class="media">
-                            <div class="media-left media-middle">
-                                <?= $this->Html->image('homepage/people/sales3.jpg',
-                                                       array('alt' => 'photo', 'width' => '60', 'height' => '60', 'class' => 'img-circle')); ?>
-                            </div>
-                            <div class="media-body media-middle">
-                                <?=
-                                __d('lp', '吉岡真人') .
-                                '<br>' .
-                                __d('lp', '愛をこめた営業をします')
-                                ?>
-                            </div>
-                        </div>
-                    </div><!-- /input-group -->
-                </label><!-- /.col-sm-6 col-xs-12 -->
-                <label class="col-sm-6 col-xs-12 salesperson">
-                    <div class="input-group">
-                            <span class="input-group-addon">
-                                <?= $this->Form->checkbox('sales_people.',
-                                                          ['value'   => __d('lp', '石原裕介'), 'hiddenField' => false,
-                                                           'checked' => isset($this->request->data['Email']['sales_people']) &&
-                                                               in_array(__d('lp', '石原裕介'),
-                                                                                 $this->request->data['Email']['sales_people']) ? 'checked' : null
-                                                          ]) ?>
-                            </span>
-                        <div class="media">
-                            <div class="media-left media-middle">
-                                <?= $this->Html->image('homepage/people/sales4.jpg',
-                                                       array('alt' => 'photo', 'width' => '60', 'height' => '60', 'class' => 'img-circle')); ?>
-                            </div>
-                            <div class="media-body media-middle">
-                                <?=
-                                __d('lp', '石原裕介') .
-                                '<br>' .
-                                __d('lp', 'DJやってます')
-                                ?>
-                            </div>
-                        </div>
-                    </div><!-- /input-group -->
-                </label><!-- /.col-sm-6 col-xs-12 -->
+                <? endforeach; ?>
             </div><!--//form-group-->
         </div>
         <div class="contact-form col-md-8 col-sm-12 col-xs-12 col-md-offset-2">
             <div class="checkbox">
                 <label>
                     <?= $this->Form->checkbox('need') ?>
-                    <?= $this->Html->link(__d('lp', '利用規約'),[
+                    <?= $this->Html->link(__d('lp', '利用規約'), [
                         'controller' => 'pages',
-                        'action' => 'display',
+                        'action'     => 'display',
                         'pagename'   => 'terms',
-                        'lang' => $top_lang,
+                        'lang'       => $top_lang,
                     ],
-                    [
-                        'target' => '_blank',
-                    ]
+                                          [
+                                              'target' => '_blank',
+                                          ]
                     ) ?>
                     <?= __d('lp', '・') ?>
-                    <?= $this->Html->link(__d('lp', '個人情報の取り扱い'),[
+                    <?= $this->Html->link(__d('lp', '個人情報の取り扱い'), [
                         'controller' => 'pages',
-                        'action' => 'display',
+                        'action'     => 'display',
                         'pagename'   => 'privacy_policy',
-                        'lang' => $top_lang,
+                        'lang'       => $top_lang,
                     ],
-                    [
-                        'target' => '_blank',
-                    ]
+                                          [
+                                              'target' => '_blank',
+                                          ]
                     ) ?>
                     <?= __d('lp', 'について同意の上、問い合わせする') ?>
                 </label>
