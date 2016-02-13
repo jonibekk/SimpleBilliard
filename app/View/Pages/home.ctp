@@ -105,7 +105,7 @@
             <div class="figure col-md-6 col-sm-6 col-xs-12 col-left">
                 <?= $this->Html->image('homepage/top/top-1.jpg',
                                        array('alt' => __d('lp',
-                                                          '自分のゴールの活動によって組織が成長している事を実感できる！'), 'class' => 'img-responsive')); ?>
+                                                          '自分のゴールの活動によって組織が成長している事を実感できます！'), 'class' => 'img-responsive')); ?>
             </div><!--//figure-->
         </div><!--//item-->
 
@@ -122,7 +122,7 @@
             <div class="figure col-md-6 col-sm-6 col-xs-12 col-md-offset-1 col-sm-offset-1 col-xs-offset-0 col-right">
                 <?= $this->Html->image('homepage/top/top-2.jpg',
                                        array('alt' => __d('lp',
-                                                          '仕事で大変な事も嬉しい事もオープンにしてお互いを理解しよう！すべてはそこから始まるのです。'), 'class' => 'img-responsive')); ?>
+                                                          '仕事で大変な事も嬉しい事もオープンにしてお互いを理解しましょう！すべてはそこから始まります。'), 'class' => 'img-responsive')); ?>
             </div><!--//figure-->
         </div><!--//item-->
 
@@ -140,7 +140,7 @@
             <div class="figure col-md-6 col-sm-6 col-xs-12 col-left">
                 <?= $this->Html->image('homepage/top/top-3.jpg',
                                        array('alt' => __d('lp',
-                                                          '共に助けあい、共に喜び合う。素敵じゃないですか？'), 'class' => 'img-responsive')); ?>
+                                                          '共に助けあい、共に喜び合う。素敵ですよね？'), 'class' => 'img-responsive')); ?>
             </div><!--//figure-->
         </div><!--//item-->
     </div><!--//container-->
@@ -189,7 +189,7 @@
                     'https://itunes.apple.com/us/app/goalous-chimu-li-xiang-shangsns/id1060474459?ls=1&mt=8',
                     array(
                         'escape' => false,
-                        'alt'    => 'iOS・Androidアプリでもご利用いただけます',
+                        'alt'    => 'iPhoneアプリもご利用いただけます',
                         'class'  => 'app-dl-btn'
                     ))
                 ?>
