@@ -86,7 +86,7 @@ $(document).ready(function () {
 
     // Androidアプリかiosアプリの場合のみfastClickを実行する。
     // 　→iosでsafari/chromeでfastClick使用時、チェックボックス操作に不具合が見つかったため。
-    if (cake.is_mb_app === 'true' || cake.is_mb_app_ios === 'true') {
+    if(cake.is_mb_app === 'true' || cake.is_mb_app_ios === 'true') {
         fastClick();
     }
 
