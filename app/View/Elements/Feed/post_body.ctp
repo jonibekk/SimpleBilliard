@@ -11,7 +11,7 @@
 ?>
 <!-- START app/View/Elements/Feed/post_body.ctp -->
 <div
-    class="col col-xxs-12 feed-contents post-contents <?= $long_text ? "showmore-circle" : "showmore" ?> font_14px font_verydark box-align"
+    class="col col-xxs-12 feed-contents post-contents <?= h($long_text) ? "showmore-circle" : "showmore" ?> font_14px font_verydark box-align"
     id="PostTextBody_<?= $post['Post']['id'] ?>">
     <?php if (($post['Post']['type'] == Post::TYPE_NORMAL) || ($post['Post']['type'] == Post::TYPE_MESSAGE)): ?>
         <?= nl2br($this->TextEx->autoLink($post['Post']['body'])) ?>

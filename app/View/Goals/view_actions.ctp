@@ -110,7 +110,7 @@
                                append-target-id="UserPageContents"
                                oldest-post-time="<?= $oldest_post_time ?>"
                                 >
-                                <?= $more_read_text ?> </a>
+                                <?= h($more_read_text) ?> </a>
                         </div>
                     </div>
                 </div>

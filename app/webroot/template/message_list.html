@@ -57,18 +57,13 @@
     }
 
 </style>
-
 <!-- start app/webroot/template/message_list.html -->
 <div class="panel panel-default message-list-panel">
     <div class="panel-heading message-list-panel-head">
         すべてのメッセージ
     </div>
     <div class="message-list-panel-body panel-body">
-
-
         <div infinite-scroll='loadMore()' infinite-scroll-disabled="disable_scroll">
-
-
         <ul class="message-list-panel-cards" role="menu" ng-repeat="item in message_list">
             <li class="message-list-panel-card">
                 <a href="/posts/message#/{{item.Post.id}}" class="message-list-panel-card-link col col-xxs-12">
@@ -104,7 +99,6 @@
                 </a>
             </li>
         </ul>
-
         <div style="margin-bottom: -22px;" ng-show="disable_scroll && scroll_end == false">
             <div class="spinner">
                 <div class="rect1"></div>
@@ -114,11 +108,7 @@
                 <div class="rect5"></div>
             </div>
         </div>
-
-
         </div>
-
-
     </div>
 </div>
 <!-- end app/webroot/template/message_list.html -->

@@ -975,15 +975,6 @@ function getAjaxFormReplaceElm() {
                         // ファイルの送信中はsubmitできないようにする(クリックはできるがsubmit処理は走らない)
                         $('#CommentSubmit_' + post_id).on('click', $uploadFileForm._forbitSubmit);
                     },
-                    afterSuccess: function (file) {
-                        $('#CommentSubmit_' + post_id).click(function () {
-                            if (typeof Dropzone.instances[0] !== "" && Dropzone.instances[0].files.length > 0) {
-                                // ajax で submit するので、アップロード完了後に Dropzone のファイルリストを空にする
-                                // （参照先の配列を空にするため空配列の代入はしない）
-                                Dropzone.instances[0].files.length = 0;
-                            }
-                        });
-                    },
                     afterQueueComplete: function () {
                         $uploadFileForm._sending = false;
                         // フォームをsubmit可能にする
@@ -1154,6 +1145,13 @@ function addComment(e) {
 
     // Display loading button
     $("#" + submit_id).before($loader_html);
+
+    // アップロードファイルの上限数をリセット
+    if (typeof Dropzone.instances[0] !== "" && Dropzone.instances[0].files.length > 0) {
+        // ajax で submit するので、アップロード完了後に Dropzone のファイルリストを空にする
+        // （参照先の配列を空にするため空配列の代入はしない）
+        Dropzone.instances[0].files.length = 0;
+    }
 
     var $f = $(e.target);
     var ajaxProcess = $.Deferred();
@@ -1942,45 +1940,8 @@ $(document).ready(function () {
         $('#CommonActionDisplayForm').bootstrapValidator('revalidateField', 'photo');
     });
 
-    //noinspection JSUnusedLocalSymbols
-    $('#select2Member').select2({
-        multiple: true,
-        minimumInputLength: 1,
-        placeholder: cake.message.notice.b,
-        ajax: {
-            url: cake.url.a,
-            dataType: 'json',
-            quietMillis: 100,
-            cache: true,
-            data: function (term, page) {
-                return {
-                    term: term, //search term
-                    page_limit: 10, // page size
-                    with_group: 1
-                };
-            },
-            results: function (data, page) {
-                return {results: data.results};
-            }
-        },
-        formatSelection: format,
-        formatResult: format,
-        escapeMarkup: function (m) {
-            return m;
-        },
-        containerCssClass: "select2Member"
-    }).on('change', function () {
-        var $this = $(this);
-        if ($this.val() == '' || $('#CommonMessageBody').val() == '') {
-            $('#MessageSubmit').attr('disabled', 'disabled');
-        }
-        else {
-            $('#MessageSubmit').removeAttr('disabled');
-        }
-        // グループを選択した場合、グループに所属するユーザーを展開して入力済にする
-        $this.select2('data', select2ExpandGroup($this.select2('data')));
-    });
 
+    initMemberSelect2();
     //noinspection JSUnusedLocalSymbols post_detail.Post.id
     $('#selectOnlyMember').select2({
         multiple: true,
@@ -2280,6 +2241,46 @@ $(document).ready(function () {
     }
 });
 
+function initMemberSelect2() {
+    //noinspection JSUnusedLocalSymbols
+    $('#select2Member').select2({
+        multiple: true,
+        minimumInputLength: 1,
+        placeholder: cake.message.notice.b,
+        ajax: {
+            url: cake.url.a,
+            dataType: 'json',
+            quietMillis: 100,
+            cache: true,
+            data: function (term, page) {
+                return {
+                    term: term, //search term
+                    page_limit: 10, // page size
+                    with_group: 1
+                };
+            },
+            results: function (data, page) {
+                return {results: data.results};
+            }
+        },
+        formatSelection: format,
+        formatResult: format,
+        escapeMarkup: function (m) {
+            return m;
+        },
+        containerCssClass: "select2Member"
+    }).on('change', function () {
+        var $this = $(this);
+        if ($this.val() == '' || $('#CommonMessageBody').val() == '') {
+            $('#MessageSubmit').attr('disabled', 'disabled');
+        }
+        else {
+            $('#MessageSubmit').removeAttr('disabled');
+        }
+        // グループを選択した場合、グループに所属するユーザーを展開して入力済にする
+        $this.select2('data', select2ExpandGroup($this.select2('data')));
+    });
+}
 
 function initCircleSelect2() {
     //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
@@ -2836,10 +2837,118 @@ function evFeedMoreView(options) {
     return false;
 }
 
+//アドレスバー書き換え
+function updateAddressBar(url) {
+    if (typeof history.pushState == 'function') {
+        try {
+            history.pushState(null, null, url);
+            return true;
+        } catch (e) {
+            window.location.href = url;
+            return false;
+        }
+    }
+}
+
+function activateMessageList() {
+    var message_list_app = $("#message-list-app");
+    angular.element(message_list_app).ready(function () {
+        angular.bootstrap(message_list_app, ['messageListApp']);
+    });
+}
+
+function evMessageList(options) {
+    //とりあえずドロップダウンは隠す
+    $(".has-notify-dropdown").removeClass("open");
+    $('body').removeClass('notify-dropdown-open');
+
+    var opt = $.extend({
+        recursive: false,
+        loader_id: null
+    }, options);
+
+    //フィード読み込み中はキャンセル
+    if (feed_loading_now) {
+        return false;
+    }
+    feed_loading_now = true;
+
+    //layout-mainが存在しないところではajaxでコンテンツ更新しようにもロードしていない
+    //要素が多すぎるので、おとなしくページリロードする
+    var url = cake.url.message_list;
+    jQuery.fn.exists = function () {
+        return Boolean(this.length > 0);
+    }
+    if (!$(".layout-main").exists()) {
+        location.href = url;
+        return false;
+    }
+
+    //アドレスバー書き換え
+    if (!updateAddressBar("/posts/message_list#")) {
+        return false;
+    }
+
+    $('#jsGoTop').click();
+
+    //ローダー表示
+    var $loader_html = opt.loader_id ? $('#' + opt.loader_id) : $('<center><i id="__feed_loader" class="fa fa-refresh fa-spin"></i></center>');
+    if (!opt.recursive) {
+        $(".layout-main").html($loader_html);
+    }
+
+    // URL生成
+    var url = cake.url.ajax_message_list;
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: true,
+        dataType: 'json',
+        success: function (data) {
+            if (!$.isEmptyObject(data.html)) {
+                //取得したhtmlをオブジェクト化
+                var $posts = $(data.html);
+                //notify一覧に戻るhtmlを追加
+                //画像をレイジーロード
+                imageLazyOn($posts);
+                //一旦非表示
+                $posts.fadeOut();
+
+                $(".layout-main").html($posts);
+                activateMessageList();
+                initMemberSelect2();
+
+                //メッセージフォームのvalidateを有効化
+                $('#MessageDisplayForm').bootstrapValidator({
+                    live: 'enabled',
+                    feedbackIcons: {},
+                    fields: {}
+                });
+            }
+
+            //ローダーを削除
+            $loader_html.remove();
+
+            action_autoload_more = false;
+            autoload_more = false;
+            feed_loading_now = false;
+            do_reload_header_bellList = true;
+        },
+        error: function () {
+            alert(cake.message.notice.c);
+            feed_loading_now = false;
+            $loader_html.remove();
+        },
+    });
+    return false;
+}
+
+
 function evNotifications(options) {
 
     //とりあえずドロップダウンは隠す
-    $("#HeaderDropdownNotify").removeClass("open");
+    $(".has-notify-dropdown").removeClass("open");
     $('body').removeClass('notify-dropdown-open');
 
     var opt = $.extend({
@@ -2905,7 +3014,6 @@ function evNotifications(options) {
                 $posts.fadeOut();
 
                 $(".layout-main").html($posts);
-
             }
 
             //ローダーを削除
@@ -2925,11 +3033,13 @@ function evNotifications(options) {
     return false;
 }
 
-//通知から投稿に移動
+// 通知から投稿、メッセージに移動
+// TODO: メッセージ通知リンクと投稿通知リンクのイベントを分けるか、このメソッドを汎用的に使えるようにする。
+//       そうしないとメッセージ詳細へのリンクをajax化する際に、ここのロジックが相当複雑になってしまう予感がする。
 function evNotifyPost(options) {
 
     //とりあえずドロップダウンは隠す
-    $("#HeaderDropdownNotify").removeClass("open");
+    $(".has-notify-dropdown").removeClass("open");
     $('body').removeClass('notify-dropdown-open');
 
     var opt = $.extend({
@@ -2955,6 +3065,8 @@ function evNotifyPost(options) {
         return Boolean(this.length > 0);
     }
     if (!$(".layout-main").exists() || !get_url.match(/post_permanent/)) {
+        // 現状、メッセージページに遷移する場合はこのブロックを通る
+        feed_loading_now = false;
         window.location.href = get_url;
         return false;
     }
@@ -3053,7 +3165,8 @@ function evCircleFeed(options) {
     var get_url = $obj.attr('get-url');
     var circle_id = $obj.attr('circle-id');
     var image_url = $obj.attr('image-url');
-    var title = $obj.attr('title');
+    // DOMから取得し再度DOMに投入するデータなのでサニタイズを行う
+    var title = sanitize($obj.attr('title'));
     var public_flg = $obj.attr('public-flg');
     var team_all_flg = $obj.attr('team-all-flg');
     var oldest_post_time = $obj.attr('oldest-post-time');
@@ -3585,6 +3698,9 @@ function getModalFormFromUrl(e) {
                 $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[KeyResult][start_date]");
                 $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[KeyResult][end_date]");
             });
+    });
+    $modal_elm.on('hidden.bs.modal', function (e) {
+        $(this).empty();
     });
 
     var url = $(this).attr('href');
@@ -4280,7 +4396,7 @@ $(document).ready(function () {
     $(document).on("click", "#click-header-message", function (e) {
         // 未読件数が 0 件の場合は、直接メッセージ一覧ページに遷移させる
         if (getMessageNotifyCnt() == 0) {
-            location.href = cake.url.message_list;
+            evMessageList(null);
             return;
         }
 
@@ -4629,10 +4745,10 @@ $(document).ready(function () {
                 // キューに入ってるアップロードをキャンセルしようとした場合
                 //   (アップロード中のキャンセルはcanceledコールバックが呼ばれるっぽい。
                 //   このブロックはその前段階のキャンセル時の処理。)
-                if($preview.data('file_id') === undefined) {
+                if ($preview.data('file_id') === undefined) {
                     // アップロード中のキャンセル時は確認をはさむので、
                     // ここでもそれに合わせて確認をはさむようにする
-                    if(!confirm(cake.message.validate.dropzone_cancel_upload_confirmation)) {
+                    if (!confirm(cake.message.validate.dropzone_cancel_upload_confirmation)) {
                         return;
                     }
 
@@ -5469,5 +5585,26 @@ function networkReachable(success_callback, error_callback) {
         timeout: 3000,
         success: success_callback,
         error: error_callback
+    });
+}
+
+/**
+ * サニタイズ処理
+ * DOMから取得するデータはサーバサイドのサニタイズがリセットされてしまうため、
+ * 改めてこのメソッドでサニタイズする必要がある。
+ *
+ * @param string
+ * @returns string
+ */
+function sanitize (string) {
+    return string.replace(/[&'`"<>]/g, function(match) {
+        return {
+            '&': '&amp;',
+            "'": '&#x27;',
+            '`': '&#x60;',
+            '"': '&quot;',
+            '<': '&lt;',
+            '>': '&gt;',
+        }[match]
     });
 }

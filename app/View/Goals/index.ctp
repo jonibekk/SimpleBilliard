@@ -7,7 +7,7 @@
  */
 ?>
 <!-- START app/View/Goals/index.ctp -->
-<?php if ($is_admin): ?>
+<?php if ($is_admin && $this->Session->read('ua.device_type') == 'Desktop'): ?>
     <div class="panel panel-default feed-share-range">
         <div class="panel-body ptb_10px plr_11px">
             <div class="col col-xxs-12 font_12px">
@@ -39,40 +39,40 @@
                            class="goals-search-terms-tab selected" role="button"><?= $val ?></a>
                     <?php else: ?>
                         <a href="<?= $this->Html->url(array_merge($search_url, ['term' => $key])) ?>"
-                           class="goals-search-terms-tab" role="button"><?= $val ?></a>
+                           class="goals-search-terms-tab" role="button"><?= h($val) ?></a>
                     <?php endif; ?>
                 <?php endforeach; ?>
             </div>
             <div class="goals-filters-menu btn-group btn-group-justified" role="group">
                 <div class="goals-search-filters-category-wrap btn-group" role="group">
                     <a href="#" class="goals-search-filters-category dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                        <span class="goals-search-filters-tab-text goal_type_name"><?= $search_option['category'][1] ?></span>
+                        <span class="goals-search-filters-tab-text goal_type_name"><?= h($search_option['category'][1]) ?></span>
                         <i class="goals-search-filters-tab-caret fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu" role="menu">
                         <?php foreach ($search_options['category'] as $key => $val): ?>
                             <li><a href="<?= $this->Html->url(array_merge($search_url,
-                                                                          ['category' => $key])) ?>"><?= $val ?></a>
+                                                                          ['category' => $key])) ?>"><?= h($val) ?></a>
                             </li>
                         <?php endforeach; ?>
                     </ul>
                 </div>
                 <div class="goals-search-filters-category-wrap btn-group" role="group">
                     <a href="#" class="goals-search-filters-completed dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                        <span class="goals-search-filters-tab-text goal_type_name"><?= $search_option['progress'][1] ?></span>
+                        <span class="goals-search-filters-tab-text goal_type_name"><?= h($search_option['progress'][1]) ?></span>
                         <i class="goals-search-filters-tab-caret fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu" role="menu">
                         <?php foreach ($search_options['progress'] as $key => $val): ?>
                             <li><a href="<?= $this->Html->url(array_merge($search_url,
-                                                                          ['progress' => $key])) ?>"><?= $val ?></a>
+                                                                          ['progress' => $key])) ?>"><?= h($val) ?></a>
                             </li>
                         <?php endforeach; ?>
                     </ul>
                 </div>
                 <div class="goals-search-filters-order-wrap btn-group" role="group">
                     <a href="#" class="goals-search-filters-order goal-filter-elm dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                        <span class="goals-search-filters-tab-text goal_type_name"><?= $search_option['order'][1] ?></span>
+                        <span class="goals-search-filters-tab-text goal_type_name"><?= h($search_option['order'][1]) ?></span>
                         <i class="goals-search-filters-tab-caret fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu pull-right" role="menu">
