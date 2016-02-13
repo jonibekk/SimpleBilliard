@@ -7,12 +7,9 @@
  * Redistributions of files must retain the above copyright notice.
  *
  * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
- *
  * @link          http://cakephp.org CakePHP(tm) Project
  * @since         CakePHP(tm) v 0.10.0.1076
- *
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
- *
  * @var CodeCompletionView
  * @var
  * @var
@@ -62,29 +59,29 @@
     <div class="container text-center">
         <div class="row text-left">
             <p class="col-md-2 col-md-offset-2 col-sm-3"><?=
-                    __d('lp', '2016年2月5日');
-            ?></p>
+                __d('lp', '2016年2月5日');
+                ?></p>
             <p class="col-md-6 col-sm-9">
                 <?=
-                    $this->Html->link(
-                        __d('lp', '月刊人事マネジメント2016年2月号に掲載されました'),
-                        'http://blog.isao.co.jp/press_jinjimanage_20160205/',
-                        ['target' => '_blank']
-                    );
+                $this->Html->link(
+                    __d('lp', '月刊人事マネジメント2016年2月号に掲載されました'),
+                    'http://blog.isao.co.jp/press_jinjimanage_20160205/',
+                    ['target' => '_blank']
+                );
                 ?>
             </p>
         </div>
         <div class="row text-left">
             <p class="col-md-2 col-md-offset-2 col-sm-3"><?=
-                    __d('lp', '2016年2月4日');
-            ?></p>
+                __d('lp', '2016年2月4日');
+                ?></p>
             <p class="col-md-6 col-sm-9">
                 <?=
-                    $this->Html->link(
-                        __d('lp', 'アイデム 人と仕事の研究所 制度探訪に掲載されました'),
-                        'https://apj.aidem.co.jp/column/597//',
-                        ['target' => '_blank']
-                    );
+                $this->Html->link(
+                    __d('lp', 'アイデム 人と仕事の研究所 制度探訪に掲載されました'),
+                    'https://apj.aidem.co.jp/column/597//',
+                    ['target' => '_blank']
+                );
                 ?>
             </p>
         </div>
@@ -106,7 +103,9 @@
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 col-left">
-                <?= $this->Html->image('homepage/top/top-1.jpg', array('alt' => '', 'class' => 'img-responsive')); ?>
+                <?= $this->Html->image('homepage/top/top-1.jpg',
+                                       array('alt' => __d('lp',
+                                                          '自分のゴールの活動によって組織が成長している事を実感できます！'), 'class' => 'img-responsive')); ?>
             </div><!--//figure-->
         </div><!--//item-->
 
@@ -121,7 +120,9 @@
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 col-md-offset-1 col-sm-offset-1 col-xs-offset-0 col-right">
-                <?= $this->Html->image('homepage/top/top-2.jpg', array('alt' => '', 'class' => 'img-responsive')); ?>
+                <?= $this->Html->image('homepage/top/top-2.jpg',
+                                       array('alt' => __d('lp',
+                                                          '仕事で大変な事も嬉しい事もオープンにしてお互いを理解しましょう！すべてはそこから始まります。'), 'class' => 'img-responsive')); ?>
             </div><!--//figure-->
         </div><!--//item-->
 
@@ -137,7 +138,9 @@
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 col-left">
-                <?= $this->Html->image('homepage/top/top-3.jpg', array('alt' => '', 'class' => 'img-responsive')); ?>
+                <?= $this->Html->image('homepage/top/top-3.jpg',
+                                       array('alt' => __d('lp',
+                                                          '共に助けあい、共に喜び合う。素敵ですよね？'), 'class' => 'img-responsive')); ?>
             </div><!--//figure-->
         </div><!--//item-->
     </div><!--//container-->
@@ -181,17 +184,31 @@
             <div class="col-md-6 col-sm-6 col-xs-12 from-left col-left text-center">
                 <h3><?= __d('lp', 'スマホアプリで、いつでもどこからでも') ?></h3>
                 <p class="lead-text"><?= __d('lp', 'iOS・Androidアプリでもご利用いただけます') ?></p>
-                <div class="app-banner-wrap">
-                    <div class="app-banner-left">
-                        <?= $this->Html->link( $this->Html->image('http://linkmaker.itunes.apple.com/images/badges/en-us/badge_appstore-lrg.svg'), 'https://itunes.apple.com/us/app/goalous-chimu-li-xiang-shangsns/id1060474459?ls=1&mt=8', [ 'escape' => false, 'alt' => 'iOS・Androidアプリでもご利用いただけます', 'class' => 'app-dl-btn' ]) ?>
-                    </div>
-                    <div class="app-banner-right">
-                        <?= $this->Html->link( $this->Html->image( 'https://play.google.com/intl/en_us/badges/images/apps/en-play-badge.png', [ 'alt' => 'Get it on Google Play', 'height' => '40']), 'https://play.google.com/store/apps/details?id=jp.co.isao.android.goalous/', [ 'escape' => false, 'class' => 'app-dl-btn' ]) ?>
-                    </div>
-                </div>
+                <?= $this->Html->link(
+                    $this->Html->image('http://linkmaker.itunes.apple.com/images/badges/en-us/badge_appstore-lrg.svg'),
+                    'https://itunes.apple.com/us/app/goalous-chimu-li-xiang-shangsns/id1060474459?ls=1&mt=8',
+                    array(
+                        'escape' => false,
+                        'alt'    => 'iPhoneアプリもご利用いただけます',
+                        'class'  => 'app-dl-btn'
+                    ))
+                ?>
+                <?= $this->Html->link(
+                    $this->Html->image(
+                        'https://play.google.com/intl/en_us/badges/images/apps/en-play-badge.png',
+                        [
+                            'alt'    => 'Get it on Google Play',
+                            'height' => '40'
+                        ]),
+                    'https://play.google.com/store/apps/details?id=jp.co.isao.android.goalous/',
+                    [
+                        'escape' => false,
+                        'class'  => 'app-dl-btn'
+                    ])
+                ?>
             </div>
             <div class="col-md-6 col-sm-6 col-xs-12 from-right col-right">
-                <?= $this->Html->image( 'homepage/top/devices.png', array('alt' => '', 'class' => 'img-responsive')); ?>
+                <?= $this->Html->image('homepage/top/devices.png', array('alt' => '', 'class' => 'img-responsive')); ?>
             </div>
         </div>
     </div>
