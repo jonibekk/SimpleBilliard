@@ -50,7 +50,18 @@ class PagesController extends AppController
         }
 
         $this->layout = LAYOUT_HOMEPAGE;
-        return $this->render(implode('/', $path));
+        //html出力結果をキャッシュ
+        $url = "/" . $this->request->url . "_lang:" . Configure::read('Config.language');
+        if (CACHE_HOMEPAGE) {
+            if (!$out = Cache::read($url, 'homepage')) {
+                $out = $this->render(implode('/', $path));
+                Cache::write($url, $out, 'homepage');
+            }
+        }
+        else {
+            $out = $this->render(implode('/', $path));
+        }
+        return $out;
     }
 
     function _setTopAllContentIfLoggedIn()

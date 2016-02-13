@@ -15,7 +15,7 @@
         <?php foreach ($posts as $post): ?>
             <div class="cube-img-block">
                 <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']]) ?>"
-                   title="<?= $post['ActionResult']['name'] ?>">
+                   title="<?= h($post['ActionResult']['name']) ?>">
                     <?php if (viaIsSet($post['ActionResult']['ActionResultFile'][0]['AttachedFile'])): ?>
                         <?= $this->Html->image('ajax-loader.gif',
                                                [

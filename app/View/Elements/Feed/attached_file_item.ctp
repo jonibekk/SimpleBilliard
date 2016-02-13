@@ -137,7 +137,7 @@ if (!isset($message_page_image)) {
                     title="<?= $this->TimeEx->datetimeLocalFormat(h($data['created'])) ?>"><?= $this->TimeEx->elapsedTime(h($data['created'])) ?></span>
                 <span class="font_lightgray"> ･ </span>
             <?php endif; ?>
-            <span class=""><?= $data['file_ext'] ?></span>
+            <span class=""><?= h($data['file_ext']) ?></span>
             <?php if ($page_type == 'file_list'): ?>
                 <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user['id']]) ?>"
                    class="link-dark-gray">

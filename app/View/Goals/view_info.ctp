@@ -21,7 +21,7 @@
                 <div class="goal-detail-info-data">
                     <span class="font_bold"><?= h($goal['Goal']['name']) ?></span>
 
-                    <p class="goal-detail-info-purpose"><?= __d('gl', '目的') ?>： <?= $goal['Purpose']['name'] ?></p>
+                    <p class="goal-detail-info-purpose"><?= __d('gl', '目的') ?>： <?= h($goal['Purpose']['name']) ?></p>
 
                     <p class="goal-detail-info-category"><?= __d('gl', 'カテゴリー') ?>
                         ： <?= h($goal['GoalCategory']['name']) ?></p>

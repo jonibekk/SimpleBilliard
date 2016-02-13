@@ -73,7 +73,7 @@
                 </div>
             </div>
             <div
-                class="col col-xxs-12 <?= $long_text ? "showmore-comment-circle" : "showmore-comment" ?> comment-text feed-contents comment-contents font_verydark box-align"
+                class="col col-xxs-12 <?= h($long_text) ? "showmore-comment-circle" : "showmore-comment" ?> comment-text feed-contents comment-contents font_verydark box-align"
                 id="<?= $id_prefix ?>CommentTextBody_<?= $comment['id'] ?>"><?= nl2br($this->TextEx->autoLink($comment['body'])) ?></div>
 
             <?
