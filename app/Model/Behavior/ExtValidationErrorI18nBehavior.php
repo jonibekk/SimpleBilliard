@@ -15,6 +15,7 @@ class ExtValidationErrorI18nBehavior extends ValidationErrorI18nBehavior
         $error_messages = array(
             'notEmpty'          => __d('validate', "入力必須項目です。"),
             'isAlphabetOnly'    => __d('validate', "アルファベットのみで入力してください。"),
+            'isString'          => __d('validate', "不正な入力値です。"),
             'email'             => __d('validate', "メールアドレスが正しくありません。"),
             'notBlankCheckbox'  => __d('validate', "利用規約に同意してください。"),
             'passwordSameCheck' => __d('validate', "パスワードが一致しません。"),

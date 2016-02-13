@@ -51,7 +51,7 @@ class PagesController extends AppController
 
         //ログイン済の場合に、ログインしていない状態で表示できないページ(以下)は拒否る
         //features,pricing
-        if(in_array('features',$path) || in_array('pricing',$path)){
+        if (in_array('features', $path) || in_array('pricing', $path)) {
             return $this->redirect('/');
         }
 
@@ -168,7 +168,7 @@ class PagesController extends AppController
             return $this->render();
         }
         /**
-         * var Email $Email
+         * @var Email $Email
          */
         $Email = ClassRegistry::init('Email');
         $Email->validate = $Email->contact_validate;
