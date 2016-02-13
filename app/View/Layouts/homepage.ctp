@@ -107,12 +107,6 @@
 <!--//footer-->
 <?= $this->element('common_homepage_js') ?>
 <?= $this->fetch('script') ?>
-<?php
-$this->append('modal');
-echo $this->element('modal_tos');
-echo $this->element('modal_privacy_policy');
-$this->end();
-?>
 <?= $this->fetch('modal') ?>
 <?= $this->Session->flash('pnotify') ?>
 

@@ -106,11 +106,31 @@
                     'maxlength'                => 50,
                 ]) ?>
                 <hr>
-                <?php $tosLink = $this->Html->link(__d('gl', '利用規約'), '#modal-tos',
-                                                   ['class' => 'link', 'data-toggle' => "modal"]);
+                <?php $tosLink = $this->Html->link(__d('gl', '利用規約'),
+                                                   [
+                                                       'controller' => 'pages',
+                                                       'action'     => 'display',
+                                                       'pagename'   => 'terms',
+                                                   ],
+                                                   [
+                                                       'target'  => "blank",
+                                                       'onclick' => "window.open(this.href,'_system');return false;",
+                                                       'class'   => 'link',
+                                                   ]
+                );
 
-                $ppLink = $this->Html->link(__d('gl', 'プライバシーポリシー'), '#modal-pp',
-                                            ['class' => 'link', 'data-toggle' => "modal"]);
+                $ppLink = $this->Html->link(__d('gl', 'プライバシーポリシー'),
+                                            [
+                                                'controller' => 'pages',
+                                                'action'     => 'display',
+                                                'pagename'   => 'privacy_policy',
+                                            ],
+                                            [
+                                                'target'  => "blank",
+                                                'onclick' => "window.open(this.href,'_system');return false;",
+                                                'class'   => 'link',
+                                            ]
+                );
                 echo $this->Form->input('agree_tos', [
                     'wrapInput' => 'col col-sm-9 col-sm-offset-3',
                     'type'      => 'checkbox',
@@ -139,8 +159,6 @@
         </div>
     </div>
 </div>
-<?= $this->element('modal_tos') ?>
-<?= $this->element('modal_privacy_policy') ?>
 <?php $this->append('script'); ?>
 <script type="text/javascript">
     $(document).ready(function () {
