@@ -51,7 +51,7 @@
         ]); ?>
         <div class="contact-form col-md-8 col-xs-12 col-md-offset-2">
             <div class="form-group name">
-                <span class="label label-danger">必須</span>
+                <span class="label label-danger"><?=__d('lp','必須')?></span>
                 <?= $this->Form->input('name', [
                     'placeholder' => __d('lp', '例）鈴木 いさお'),
                     'id' => 'EmailName',
@@ -64,7 +64,7 @@
                     <?= $this->Form->error('name', null, ['class' => 'contact-error-msg-block']) ?>
             </div>
             <div class="form-group email">
-                <span class="label label-danger">必須</span>
+                <span class="label label-danger"><?=__d('lp','必須')?></span>
                 <?= $this->Form->input('email', [
                         'placeholder' => __d('lp', '例）example@goalous.com（半角英数字）'),
                         'id' => 'email',
@@ -90,7 +90,7 @@
                 <?= $this->Form->error('company', null, ['class' => 'contact-error-msg-block']) ?>
             </div>
             <div class="form-group want">
-                <span class="label label-danger">必須</span>
+                <span class="label label-danger"><?=__d('lp','必須')?></span>
                 <?=
                     $this->Form->input('want', [
                     'options' => $type_options, // PagesController - ln.184,
@@ -105,7 +105,7 @@
                 <?= $this->Form->error('want', null, ['class' => 'contact-error-msg-block']) ?>
             </div>
             <div class="form-group messsage">
-                <span class="label label-danger">必須</span>
+                <span class="label label-danger"><?=__d('lp','必須')?></span>
                 <?=
                     $this->Form->input('message', [
                         'class' => 'form-control lp-contact-form-control',
