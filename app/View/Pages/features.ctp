@@ -56,7 +56,7 @@
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 from-left col-left">
-                <?= $this->Html->image('homepage/features/screenshot-1.jpg', array('alt' => __d('lp','全員のゴールを簡単に知る事ができる。今までこの情報を知りうる手段はありましたか？'), 'class' => 'img-responsive')) ?>
+                <?= $this->Html->image('homepage/features/screenshot-1.jpg', array('alt' => __d('lp','全員のゴールを簡単に知る事ができます。今までこの情報を知りうる手段はありましたか？'), 'class' => 'img-responsive')) ?>
             </div><!--//figure-->
         </div><!--//item-->
 
