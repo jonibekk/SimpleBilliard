@@ -22,6 +22,10 @@
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/terms') ?>"/>
 <?php $this->end() ?>
 <!-- START app/View/Pages/terms.ctp -->
-<!-- 言語で読み込むファイルを切り替えたい -->
+<?php
+//ToDo - 言語で読み込むmdファイルを変えたい
+//TODO 日本語ファイル名をja_termsに、英語ファイル名をen_termsに変更
+//TODO 読み込みを composition/markdowns/\<\?= $sort_lang \?\>_terms.md
+?>
 <div id="markdown" class="markdown-wrap" src="../../composition/markdowns/jp_terms.md"></div>
 <!-- END app/View/Pages/terms.ctp -->

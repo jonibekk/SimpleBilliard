@@ -43,30 +43,23 @@ class PagesController extends AppController
         //title_for_layoutはAppControllerで設定
         $this->set(compact('page', 'subpage'));
 
-        //ログインしていない場合
-        if (!$this->Auth->user()) {
-            $this->layout = LAYOUT_HOMEPAGE;
-            return $this->render(implode('/', $path));
+        //ログインしているかつ、topの場合はフィード表示
+        if ($this->Auth->user() && $path[0] === 'home') {
+            $this->_setTopAllContentIfLoggedIn();
+            return $this->render('logged_in_home');
         }
 
-        //ログイン済の場合に、ログインしていない状態で表示できないページ(以下)は拒否る
-        //features,pricing
-        if (in_array('features', $path) || in_array('pricing', $path)) {
-            return $this->redirect('/');
-        }
+        $this->layout = LAYOUT_HOMEPAGE;
+        return $this->render(implode('/', $path));
+    }
 
-        // 1カラムレイアウト
-        if ($path[0] !== 'home') {
-            $this->layout = LAYOUT_ONE_COLUMN;
-            return $this->render(implode('/', $path));
-        }
-
+    function _setTopAllContentIfLoggedIn()
+    {
         // プロフィール作成モードの場合、ビューモードに切り替え
         if ($this->Session->read('add_new_mode') === MODE_NEW_PROFILE) {
             $this->Session->delete('add_new_mode');
             $this->set('mode_view', MODE_VIEW_TUTORIAL);
         }
-
         // ビュー変数のセット
         $this->_setCurrentCircle();
         $this->_setFeedMoreReadUrl();
@@ -95,7 +88,6 @@ class PagesController extends AppController
             $this->Pnotify->outError($e->getMessage());
             $this->redirect($this->referer());
         }
-        return $this->render('logged_in_home');
     }
 
     public function beforeFilter()
@@ -123,6 +115,13 @@ class PagesController extends AppController
             $this->set('top_lang', $lang);
             Configure::write('Config.language', $lang);
         }
+        //省略型の言語テキストをviewにセット
+        $short_lang = $this->Lang->getShortLang();
+        $available_lang = $this->_getPageLanguageList();
+        if (!array_key_exists($short_lang, $available_lang)) {
+            $short_lang = 'en';
+        }
+        $this->set('short_lang', $short_lang);
     }
 
     function _getLangFromParam()
@@ -151,10 +150,6 @@ class PagesController extends AppController
 
     public function contact($type = null)
     {
-        //もしログイン済ならトップにリダイレクト
-        if ($this->Auth->user()) {
-            return $this->redirect('/');
-        }
         $this->layout = LAYOUT_HOMEPAGE;
         $this->set('type_options', $this->_getContactTypeOption());
         $this->set('selected_type', $type);
@@ -204,10 +199,6 @@ class PagesController extends AppController
 
     public function contact_confirm()
     {
-        //もしログイン済ならトップにリダイレクト
-        if ($this->Auth->user()) {
-            return $this->redirect('/');
-        }
         $this->layout = LAYOUT_HOMEPAGE;
         $data = $this->Session->read('contact_form_data');
         if (empty($data)) {
@@ -220,11 +211,6 @@ class PagesController extends AppController
 
     public function contact_send()
     {
-        //もしログイン済ならトップにリダイレクト
-        if ($this->Auth->user()) {
-            return $this->redirect('/');
-        }
-
         $data = $this->Session->read('contact_form_data');
         if (empty($data)) {
             $this->Pnotify->outError(__d('validate', '問題が発生したため、処理が完了しませんでした。'));

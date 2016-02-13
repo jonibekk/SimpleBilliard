@@ -25,7 +25,12 @@
                                           'controller' => 'pages',
                                           'action'     => 'display',
                                           'pagename'   => 'privacy_policy',
-                                      ])
+                                      ],
+                                      [
+                                          'target'  => "blank",
+                                          'onclick' => "window.open(this.href,'_system');return false;",
+                                      ]
+                    )
                     ?></li>
                 <li><?=
                     $this->Html->link(__d('gl', 'Terms of Service'),
@@ -33,7 +38,12 @@
                                           'controller' => 'pages',
                                           'action'     => 'display',
                                           'pagename'   => 'terms',
-                                      ])
+                                      ],
+                                      [
+                                          'target'  => "blank",
+                                          'onclick' => "window.open(this.href,'_system');return false;",
+                                      ]
+                    )
                     ?></li>
             </ul>
             <p>© 2016 ISAO</p>
