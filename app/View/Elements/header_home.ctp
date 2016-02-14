@@ -62,8 +62,8 @@ if (!isset($top_lang)) {
                     </li>
                     <li class="nav-item nav-item-cta last">
                         <?= $this->Html->link(__d('lp', '新規登録'),
-                                              array('controller' => 'users', 'action' => 'register'),
-                                              array('class' => 'header-signup btn btn-cta btn-cta-primary','id'=>'RegisterLinkHeader')); ?>
+                                              array('controller' => 'users', 'action' => 'register', '?' => ['type' => 'header']),
+                                              array('class' => 'header-signup btn btn-cta btn-cta-primary', 'id' => 'RegisterLinkHeader')); ?>
                     </li>
                 </ul> <!-- //nav -->
             </div> <!-- //navbar-collapse -->
