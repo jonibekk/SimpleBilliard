@@ -13,7 +13,7 @@
 <!-- START app/View/Elements/head.ctp -->
 <head>
     <?= $this->Html->charset(); ?>
-    <title origin-title="<?= $title_for_layout; ?>">
+    <title>
         <?= $title_for_layout; ?>
     </title>
     <meta name='description' content='<?= $meta_description ?>'/>
