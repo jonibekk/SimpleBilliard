@@ -65,6 +65,7 @@ for($i = 0; $i < $num_ogp; $i++){
     echo $this->Html->meta($ogp_features[$i]);
 }
 ?>
+<title><?= __d('lp', '機能 | Goalous (ゴーラス)') ?></title>
 <link rel="alternate" hreflang="ja" href="<?= $this->Html->url('/ja/features') ?>"/>
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/features') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/features') ?>"/>

@@ -29,7 +29,7 @@ $ogp_law = [
     ],
     [
         "property" => "og:title",
-        "content" => __d('gl', 'プライバシーポリシー | Goalous(ゴーラス)'),
+        "content" => __d('gl', '特定商取引法に基づく表記 | Goalous(ゴーラス)'),
     ],
     [
         "property" => "og:description",
@@ -65,6 +65,7 @@ for($i = 0; $i < $num_ogp; $i++){
     echo $this->Html->meta($ogp_law[$i]);
 }
 ?>
+<title><?= __d('lp', '特定商取引法に基づく表記 | Goalous (ゴーラス)') ?></title>
 <link rel="alternate" hreflang="ja" href="<?= $this->Html->url('/ja/law') ?>"/>
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/law') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/law') ?>"/>
