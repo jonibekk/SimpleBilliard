@@ -54,7 +54,7 @@ for($i = 0; $i < $num_ogp; $i++){
     echo $this->Html->meta($ogp_home[$i]);
 }
 ?>
-<?
+<?php
 $twi_home = [
     [
         "name" => "twitter_card",
