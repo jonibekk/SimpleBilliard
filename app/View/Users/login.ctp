@@ -47,11 +47,11 @@
                     'value'    => ''
                 ]) ?>
 
-                <?= $this->Form->hidden('installation_id',[
-                    'id' => 'installation_id',
+                <?= $this->Form->hidden('installation_id', [
+                    'id'    => 'installation_id',
                     'value' => 'no_value'
                 ]) ?>
-                <?php $this->Form->unlockField('User.installation_id')?>
+                <?php $this->Form->unlockField('User.installation_id') ?>
                 <div class="form-group">
                     <div class="col-sm-9 col-sm-offset-3">
                         <?=
@@ -61,9 +61,18 @@
                 </div>
                 <div class="form-group">
                     <div class="col-sm-5 col-sm-offset-3">
+                        <?php
+                        $options = ['class' => 'link'];
+                        if ($is_mb_app) {
+                            $options = ['class' => 'link', 'target' => '_blank', 'onclick' => "window.open(this.href,'_system');return false;"];
+                        }
+                        ?>
                         <?=
-                        $this->Html->link(__d('gl', 'パスワードを忘れた場合はこちら'), ['action' => 'password_reset'],
-                                          ['class' => 'link']) ?>
+                        $this->Html->link(__d('gl', 'パスワードを忘れた場合はこちら'), ['action' => 'password_reset'], $options) ?>
+                    </div>
+                    <div class="col-sm-4">
+                        <?=
+                        $this->Html->link(__d('gl', '新規ユーザ登録はこちら'), ['action' => 'register'], $options) ?>
                     </div>
                 </div>
                 <?= $this->Form->end(); ?>
@@ -71,16 +80,4 @@
         </div>
     </div>
 </div>
-<?php $this->append('script') ?>
-<?php echo $this->Html->script('https://goalous.uservoice.com/logout.js') ?>
-<script>
-    $(document).ready(function () {
-        $("#UserEmail").attr('autocomplete', 'on');
-        $("#UserPassword").attr('autocomplete', 'off');
-        if (!navigator.cookieEnabled) {
-            $('#RequireCookieAlert').show();
-        }
-    });
-</script>
-<?php $this->end() ?>
 <!-- END app/View/Users/login.ctp -->

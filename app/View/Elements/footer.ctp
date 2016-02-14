@@ -17,31 +17,33 @@
 
             <ul class="list-unstyled">
                 <li><?=
-                    $this->Html->link(__d('home', 'Features'),
-                                      [
-                                          'controller' => 'pages',
-                                          'action'     => 'display',
-                                          'pagename'   => 'features',
-                                      ])
-                    ?></li>
-                <li><?=
-                    $this->Html->link(__d('home', 'Blog'), 'http://blog.goalous.com/',
+                    $this->Html->link(__d('home', 'Blog'), 'http://blog.isao.co.jp/tag/goalous/',
                                       ['target' => '_blank']) ?></li>
                 <li><?=
                     $this->Html->link(__d('gl', 'Privacy Policy'),
                                       [
                                           'controller' => 'pages',
                                           'action'     => 'display',
-                                          'pagename'   => 'pp',
-                                      ])
+                                          'pagename'   => 'privacy_policy',
+                                      ],
+                                      [
+                                          'target'  => "blank",
+                                          'onclick' => "window.open(this.href,'_system');return false;",
+                                      ]
+                    )
                     ?></li>
                 <li><?=
                     $this->Html->link(__d('gl', 'Terms of Service'),
                                       [
                                           'controller' => 'pages',
                                           'action'     => 'display',
-                                          'pagename'   => 'tos',
-                                      ])
+                                          'pagename'   => 'terms',
+                                      ],
+                                      [
+                                          'target'  => "blank",
+                                          'onclick' => "window.open(this.href,'_system');return false;",
+                                      ]
+                    )
                     ?></li>
             </ul>
             <p>© 2016 ISAO</p>

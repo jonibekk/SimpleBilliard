@@ -34,7 +34,7 @@
                             </div>
                         <?php endif;
                         ?>
-                        <?= $val ?>
+                        <?= h($val) ?>
                     </a>
                 <?php endforeach; ?>
             </div>

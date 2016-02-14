@@ -84,6 +84,16 @@ class KeyResult extends AppModel
                 'rule' => ['boolean'],
             ],
         ],
+        'priority'     => [
+            'numeric' => [
+                'rule' => ['numeric'],
+            ],
+        ],
+        'value_unit'   => [
+            'numeric' => [
+                'rule' => ['numeric'],
+            ],
+        ],
         'start_value'  => [
             'maxLength' => ['rule' => ['maxLength', 15]],
             'numeric'   => ['rule' => ['numeric']]

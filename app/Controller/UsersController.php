@@ -260,8 +260,8 @@ class UsersController extends AppController
      */
     public function register()
     {
-        //TODO basic認証 本番公開後に外す
-        if (ENV_NAME != "local" && !isset($this->request->params['named']['invite_token'])) {
+        //現状、ローカルと本番環境以外でbasic認証を有効にする
+        if (!(ENV_NAME == "local" || ENV_NAME == "www") && !isset($this->request->params['named']['invite_token'])) {
             $this->_setBasicAuth();
         }
 
