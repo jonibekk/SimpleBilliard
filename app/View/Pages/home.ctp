@@ -44,7 +44,8 @@
                 <p class="summary"><?= __d('lp', '2016年8月31日まで完全無料！今すぐお試しください。') ?></p>
             </div>
             <div class="col-md-5 col-sm-12 col-xs-12">
-                <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'register']) ?>" id="RegisterLinkTopMiddle">
+                <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'register', '?' => ['type' => 'middle']]) ?>"
+                   id="RegisterLinkTopMiddle">
                     <button type="submit" class="btn btn-cta btn-cta-primary btn-block"><?= __d('lp',
                                                                                                 '新規会員登録') ?></button>
                 </a>
@@ -230,7 +231,8 @@
                 <dd>
                     <?= __d('lp', '社内稟議用のサンプル資料です。ぜひご活用ください。') ?>
                     <br>
-                    <a href="../composition/pdf/jp_GoalousIntroduction_100.pdf" target="_blank"><i class="fa fa-arrow-down document-download-icon"></i>
+                    <a href="../composition/pdf/jp_GoalousIntroduction_100.pdf" target="_blank"><i
+                            class="fa fa-arrow-down document-download-icon"></i>
                         <span class="document-download-text">
                             <?= __d('lp', '資料ダウンロード') ?>
                         </span>
@@ -249,7 +251,8 @@
                 <dd>
                     <?= __d('lp', 'フライヤー資料です。ぜひご活用ください。') ?>
                     <br>
-                    <a href="../composition/pdf/jp_goalous_flier_campaign.pdf" target="_blank"><i class="fa fa-arrow-down document-download-icon"></i>
+                    <a href="../composition/pdf/jp_goalous_flier_campaign.pdf" target="_blank"><i
+                            class="fa fa-arrow-down document-download-icon"></i>
                         <span class="document-download-text">
                             <?= __d('lp', '資料ダウンロード') ?>
                         </span>

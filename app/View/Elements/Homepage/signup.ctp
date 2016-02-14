@@ -21,7 +21,8 @@
     <div class="container text-center">
         <h2 class="title"><?= __d('lp', 'さぁ、Goalousへ！') ?></h2>
         <p class="summary"><?= __d('lp', '2016年8月31日まで完全無料！今すぐお試しください。') ?></p>
-        <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'register']) ?>" class="col-md-6 col-md-offset-3" id="RegisterLinkBottom">
+        <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'register', '?' => ['type' => 'bottom']]) ?>"
+           class="col-md-6 col-md-offset-3" id="RegisterLinkBottom">
             <button type="submit" class="btn btn-cta btn-cta-primary btn-block btn-lg"><?= __d('lp', '新規登録') ?></button>
         </a>
     </div>
