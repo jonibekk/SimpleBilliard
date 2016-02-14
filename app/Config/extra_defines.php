@@ -25,6 +25,7 @@ define('REDIS_SESSION_HOST', 'localhost');
 define('REDIS_CACHE_HOST', 'localhost');
 define('REDIS_HOST', 'localhost');
 define('SES_FROM_ADDRESS', 'support@goalous.com');
+define('SES_FROM_ADDRESS_CONTACT', 'contact@goalous.com');
 define('SES_FROM_ADDRESS_NEWS', 'news@goalous.com');
 define('SES_FROM_ADDRESS_NOTICE', 'notice@goalous.com');
 define('GOOGLE_TAG_MANAGER_ID', null);

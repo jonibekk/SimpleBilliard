@@ -3574,16 +3574,8 @@ button.close {
     left: 0;
     z-index: 1050;
     /*noinspection CssUnknownProperty*/
-    -webkit-overflow-scrolling: touch;
+    -webkit-overflow-scrolling: auto;
     outline: 0;
-}
-
-/* TODO iPhone5sのscrollのバグ対応。*/
-@media (max-width: 340px) {
-    .modal {
-        /*noinspection CssUnknownProperty*/
-        -webkit-overflow-scrolling: auto;
-    }
 }
 
 .modal.fade .modal-dialog {

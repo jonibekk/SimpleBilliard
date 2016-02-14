@@ -95,7 +95,7 @@
                                                                                                                        ['style' => 'small'])]) ?></p>
 
                             <p class="approval_body_text"><?= __d('gl', "名前") ?>
-                                : <?= $goal['User']['display_username']; ?></p>
+                                : <?= h($goal['User']['display_username']); ?></p>
 
                             <p class="approval_body_text"><?= __d('gl', "カテゴリ") ?>
                                 : <?= h($goal['Goal']['GoalCategory']['name']); ?></p>
@@ -109,7 +109,7 @@
                                 : <?= h($goal['Collaborator']['role']); ?></p>
 
                             <p class="approval_body_text"><?= __d('gl', "単位") ?>
-                                : <?= $value_unit_list[$goal['Goal']['value_unit']]; ?></p>
+                                : <?= h($value_unit_list[$goal['Goal']['value_unit']]); ?></p>
 
                             <p class="approval_body_text"><?= __d('gl', "達成時") ?>
                                 : <?= (double)$goal['Goal']['target_value']; ?></p>
@@ -208,9 +208,9 @@
 
                                                 <div class="col col-xxs-12 comment-text comment-user">
                                                     <div
-                                                        class="mb_2px lh_12px font_bold font_verydark"><?= $history['User']['local_username']; ?></div>
+                                                        class="mb_2px lh_12px font_bold font_verydark"><?= h($history['User']['local_username']); ?></div>
                                                     <div
-                                                        class="col col-xxs-12 showmore-comment comment-text feed-contents comment-contents font_verydark box-align"><?= $history['comment']; ?></div>
+                                                        class="col col-xxs-12 showmore-comment comment-text feed-contents comment-contents font_verydark box-align"><?= h($history['comment']); ?></div>
                                                     <div
                                                         class="lh_15px"><?= $this->TimeEx->elapsedTime(h($history['created'])) ?></div>
                                                 </div>

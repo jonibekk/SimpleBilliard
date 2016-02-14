@@ -18,11 +18,12 @@
     /** @noinspection PhpUndefinedFunctionInspection */
     echo newrelic_get_browser_timing_header();
 } ?>
-<?= $this->element('google_tag_manager') ?>
+<?= $this->element('google_tag_manager', ['page_type' => 'app']) ?>
 <?php if ($this->Session->read('Auth.User.id')) {
     echo $this->element('header_logged_in');
 }
 else {
+    // ToDo - これが読み込まれる可能性があるのか。
     echo $this->element('header_not_logged_in');
 }
 ?>
@@ -43,7 +44,9 @@ else {
         <?= $this->fetch('content'); ?>
         <!-- /Remark -->
     </div>
-    <div class="<?= !empty($my_teams) ? null : 'hidden' ?> right-side-container-wrap col-md-4 visible-md visible-lg col-xs-8 col-xxs-12 layout-goal" role="goal_area">
+    <div
+        class="<?= !empty($my_teams) ? null : 'hidden' ?> right-side-container-wrap col-md-4 visible-md visible-lg col-xs-8 col-xxs-12 layout-goal"
+        role="goal_area">
         <?= $this->element('my_goals_area') ?>
     </div>
 </div>

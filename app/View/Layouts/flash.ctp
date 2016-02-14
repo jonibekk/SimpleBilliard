@@ -13,10 +13,10 @@
 <html>
 <head>
     <?= $this->Html->charset(); ?>
-    <title><?= $page_title; ?></title>
+    <title><?= h($page_title); ?></title>
 
     <?php if (Configure::read('debug') == 0): ?>
-        <meta http-equiv="Refresh" content="<?= $pause; ?>;url=<?= $url; ?>"/>
+        <meta http-equiv="Refresh" content="<?= h($pause); ?>;url=<?= h($url); ?>"/>
     <?php endif ?>
     <style><!--
         P {
@@ -37,6 +37,6 @@
         --></style>
 </head>
 <body>
-<p><a href="<?= $url; ?>"><?= $message; ?></a></p>
+<p><a href="<?= h($url); ?>"><?= h($message); ?></a></p>
 </body>
 </html>

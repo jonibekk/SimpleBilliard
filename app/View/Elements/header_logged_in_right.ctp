@@ -129,37 +129,19 @@
         <ul class="header-nav-function-contents dropdown-menu" role="menu"
             aria-labelledby="dropdownMenu1">
             <li class="header-nav-function-contents-list">
-                <?= $this->Html->link(__d('gl', 'ユーザ設定'),
+                <?= $this->Html->link(__d('gl', 'ユーザー設定'),
                                       ['controller' => 'users', 'action' => 'settings'],
                                       ['class' => 'header-nav-function-contents-user-setting']) ?>
             </li>
-            <li class="header-nav-function-contents-list">
-                <a href="#" data-toggle="modal" data-target="#modal_tutorial"
-                   class="header-nav-function-contents-tutorial">
-                    <?= __d('gl', 'チュートリアル') ?>
-                </a>
-            </li>
-            <li class="header-nav-function-contents-list">
-                <a href="#" rel="_J_wKHgKWLg" id="ExplainGoal" class="youtube header-nav-function-contents-about-goal">
-                    <?= __d('gl', 'ゴールについて') ?>
-                </a>
-            </li>
-            <li class="header-nav-function-contents-list">
-                <?php if (isset($unapproved_cnt) === true && $unapproved_cnt > 0) { ?>
-                    <div class="btn btn-danger btn-xs sub_cnt_alert">
-                        <?php echo $unapproved_cnt; ?>
-                    </div>
-                <?php } ?>
-                <?= $this->Html->link(__d('gl', 'ゴール認定'),
-                                      ['controller' => 'goal_approval', 'action' => 'index'],
-                                      ['class' => 'header-nav-function-contents-approvement']) ?>
-            </li>
-            <li class="header-nav-function-contents-list">
-                <?=
-                $this->Html->link(__d('gl', 'ログアウト'),
-                                  ['controller' => 'users', 'action' => 'logout'],
-                                  ['class' => 'header-nav-function-contents-logout']) ?>
-            </li>
+            <?php //TODO 一時的にチーム管理者はチーム招待リンクを表示
+            if (viaIsSet($my_member_status['TeamMember']['admin_flg']) && $my_member_status['TeamMember']['admin_flg']):?>
+                <li class="header-nav-function-contents-list">
+                    <?=
+                    $this->Html->link(__d('gl', 'チーム設定'),
+                                      ['controller' => 'teams', 'action' => 'settings'],
+                                      ['class' => 'header-nav-function-contents-team-setting']) ?>
+                </li>
+            <?php endif; ?>
             <?php if ($is_evaluation_available): ?>
                 <li class="header-nav-function-contents-list">
                     <?php if (viaIsSet($evaluable_cnt) && $evaluable_cnt > 0): ?>
@@ -172,19 +154,32 @@
                                       ['class' => 'header-nav-function-contents-evaluation']) ?>
                 </li>
             <?php endif; ?>
-            <?php //TODO 一時的にチーム管理者はチーム招待リンクを表示
-            if (viaIsSet($my_member_status['TeamMember']['admin_flg']) && $my_member_status['TeamMember']['admin_flg']):?>
-                <li class="header-nav-function-contents-list">
-                    <?=
-                    $this->Html->link(__d('gl', 'チーム設定'),
-                                      ['controller' => 'teams', 'action' => 'settings'],
-                                      ['class' => 'header-nav-function-contents-team-setting']) ?>
-                </li>
-            <?php endif; ?>
+            <li class="header-nav-function-contents-list">
+                <?php if (isset($unapproved_cnt) === true && $unapproved_cnt > 0) { ?>
+                    <div class="btn btn-danger btn-xs sub_cnt_alert">
+                        <?php echo $unapproved_cnt; ?>
+                    </div>
+                <?php } ?>
+                <?= $this->Html->link(__d('gl', 'ゴール認定'),
+                                      ['controller' => 'goal_approval', 'action' => 'index'],
+                                      ['class' => 'header-nav-function-contents-approvement']) ?>
+            </li>
             <li class="header-nav-function-contents-list">
                 <?=
-                $this->Html->link(__d('home', 'Blog'), 'http://blog.goalous.com/',
-                                  array('target' => '_blank', 'class' => 'header-nav-function-contents-blog')) ?>
+                $this->Html->link(__d('gl', 'ユーザー利用ガイド'),
+                                  '/document/UserGuidelines.pdf',
+                                  ['class' => 'header-nav-function-contents-user-guidelines', 'target' => '_blank']) ?>
+            </li>
+            <li class="header-nav-function-contents-list">
+                <a href="#" rel="_J_wKHgKWLg" id="ExplainGoal" class="youtube header-nav-function-contents-about-goal">
+                    <?= __d('gl', 'ゴール作成方法') ?>
+                </a>
+            </li>
+            <li class="header-nav-function-contents-list">
+                <a href="#" data-toggle="modal" data-target="#modal_tutorial"
+                   class="header-nav-function-contents-tutorial">
+                    <?= __d('gl', 'チュートリアル') ?>
+                </a>
             </li>
             <?php if (defined('INTERCOM_APP_ID') && INTERCOM_APP_ID): ?>
                 <li class="header-nav-function-contents-list">
@@ -192,6 +187,12 @@
                        class="header-nav-function-contents-support" id="Intercom"><?= __d('gl', 'サポート') ?></a>
                 </li>
             <?php endif; ?>
+            <li class="header-nav-function-contents-list">
+                <?=
+                $this->Html->link(__d('gl', 'ログアウト'),
+                                  ['controller' => 'users', 'action' => 'logout'],
+                                  ['class' => 'header-nav-function-contents-logout']) ?>
+            </li>
         </ul>
     </div>
 </div>

@@ -11,7 +11,7 @@
 
     <h1>500</h1>
 
-    <p><?= $name; ?></p>
+    <p><?= h($name); ?></p>
 </div>
 <?php if (Configure::read('debug') > 0):
     echo $this->element('exception_stack_trace');

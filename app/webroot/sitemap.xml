@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance">
+
+<!--  created with free sitemap generation system www.sitemapxml.jp  --> 
+<url>
+  <loc>https://www.goalous.com/</loc>
+  <priority>1.0</priority>
+</url>
+<url>
+  <loc>https://www.goalous.com/features</loc>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://www.goalous.com/pricing</loc>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://www.goalous.com/contact</loc>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://www.goalous.com/users/login</loc>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://www.goalous.com/users/register</loc>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://www.goalous.com/terms</loc>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://www.goalous.com/privacy_policy</loc>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://www.goalous.com/law</loc>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://www.goalous.com/contact/4</loc>
+  <priority>0.8</priority>
+</url>
+<url>
+  <loc>https://www.goalous.com/contact/3</loc>
+  <priority>0.8</priority>
+</url>
+
+</urlset>

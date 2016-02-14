@@ -112,7 +112,7 @@
                                 : <?= h($goal['Collaborator']['role']); ?></p>
 
                             <p class="approval_body_text"><?= __d('gl', "単位") ?>
-                                : <?= $value_unit_list[$goal['Goal']['value_unit']]; ?></p>
+                                : <?= h($value_unit_list[$goal['Goal']['value_unit']]); ?></p>
 
                             <p class="approval_body_text"><?= __d('gl', "達成時") ?>
                                 : <?= (double)$goal['Goal']['target_value']; ?></p>
@@ -210,7 +210,7 @@
 
                                                 <div class="col col-xxs-12 mb_8px">
                                                     <div
-                                                        class="mb_2px lh_12px font_bold font_verydark comment-user"><?= $history['User']['local_username']; ?></div>
+                                                        class="mb_2px lh_12px font_bold font_verydark comment-user"><?= h($history['User']['local_username']); ?></div>
                                                     <div
                                                         class="col col-xxs-12 showmore-comment comment-text feed-contents comment-contents font_verydark box-align"><?= nl2br($history['comment']); ?></div>
                                                     <div
