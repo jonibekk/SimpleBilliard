@@ -17,6 +17,55 @@
  */
 ?>
 <?php $this->append('meta') ?>
+<?php
+/*
+Page毎に要素が変わるもの
+- url
+- title
+*/
+$ogp_terms = [
+    [
+        "property" => "og:type",
+        "content" => "website",
+    ],
+    [
+        "property" => "og:title",
+        "content" => __d('gl', 'Goalous利用規約 | Goalous(ゴーラス)'),
+    ],
+    [
+        "property" => "og:description",
+        "content" =>__d('gl', 'Goalous(ゴーラス)は、チーム力向上のためのSNSです。Goalousを利用すれば、オープンでクリアな目標設定をしたり、ゴールへの活動内容を写真で共有したり、サークルやメッセンジャーで仲間たちとコミュニケーションをとったりできます。'),
+    ],
+    [
+        "property" => "og:url",
+        "content" => "https://www.goalous.com/terms/",
+    ],
+    [
+        "property" => "og:image",
+        "content" => "https://www.goalous.com/img/homepage/background/promo-bg.jpg",
+    ],
+    [
+        "property" => "og:site_name",
+        "content" => __d('lp', 'Goalous (ゴーラス) │ゴール達成への最強にオープンな社内SNS'),
+    ],
+    [
+        "property" => "fb:app_id",
+        "content" => "989681217739413",
+    ],
+    [
+        "name" => "twitter_card",
+        "content" => "summary",
+    ],
+    [
+        "name" => "twitter:site",
+        "content" => "@goalous",
+    ]
+];
+$num_ogp = count($ogp_terms);
+for($i = 0; $i < $num_ogp; $i++){
+    echo $this->Html->meta($ogp_terms[$i]);
+}
+?>
 <link rel="alternate" hreflang="ja" href="<?= $this->Html->url('/ja/terms') ?>"/>
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/terms') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/terms') ?>"/>
