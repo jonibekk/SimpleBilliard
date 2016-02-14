@@ -54,11 +54,10 @@ if (!isset($top_lang)) {
                                               ['controller' => 'pages', 'action' => 'contact', 'lang' => $top_lang]); ?>
                     </li>
                     <li class="nav-item">
-                        <button type="button" class="login-trigger btn btn-link" data-toggle="modal"
-                                data-target="#login-modal">
-                            <?= $this->Html->link(__d('lp', 'ログイン'),
-                                                  array('controller' => 'users', 'action' => 'login')); ?>
-                        </button>
+                            <?= $this->Html->link(__d('lp', 'ログイン'),array('controller' => 'users', 'action' => 'login'),
+                                              [
+                                                  "class" => "btn btn-link",
+                                              ]); ?>
                     </li>
                     <li class="nav-item nav-item-cta last">
                         <?= $this->Html->link(__d('lp', '新規登録'),
