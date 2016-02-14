@@ -45,7 +45,7 @@ $ogp_lp = [
     ],
     [
         "property" => "fb:app_id",
-        "content" => "989681217739413",
+        "content" => "966242223397117",
     ],
     [
         "name" => "twitter_card",
@@ -245,7 +245,7 @@ for($i = 0; $i < $num_ogp; $i++){
                             'alt'    => 'Get it on Google Play',
                             'height' => '40'
                         ]),
-                    'https://play.google.com/store/apps/details?id=jp.co.isao.android.goalous/',
+                    'https://play.google.com/store/apps/details?id=jp.co.isao.android.goalous',
                     [
                         'escape' => false,
                         'class'  => 'app-dl-btn'

@@ -50,7 +50,7 @@ $ogp_terms = [
     ],
     [
         "property" => "fb:app_id",
-        "content" => "989681217739413",
+        "content" => "966242223397117",
     ],
     [
         "name" => "twitter_card",
