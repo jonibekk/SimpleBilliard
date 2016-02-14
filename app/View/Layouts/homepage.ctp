@@ -30,16 +30,7 @@
     <?= $this->Html->charset(); ?>
     <title><?=
         $title_for_layout ?></title>
-    <?php echo $this->Html->meta('icon');
-    echo $this->Html
-        ->meta(
-            array(
-                'name'    => 'viewport',
-                'content' => "width=device-width, initial-scale=1, maximum-scale=1"
-            ));
-    echo $this->fetch('meta');
-    ?>
-    <meta name='description' content='<?= $meta_description ?>'/>
+    <!-- だまる -->
 
     <!-- START CSS -->
     <link href='https://fonts.googleapis.com/css?family=Lato:300,400,300italic,400italic' rel='stylesheet'

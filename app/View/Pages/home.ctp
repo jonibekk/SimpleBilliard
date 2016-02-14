@@ -19,7 +19,7 @@
 <?php $this->append('meta') ?>
 <!-- だまれ -->
 <?php
-$ogp_home = [
+$ogp_lp = [
     [
         "property" => "og:type",
         "content" => "website",
@@ -47,15 +47,7 @@ $ogp_home = [
     [
         "property" => "fb:app_id",
         "content" => "989681217739413",
-    ]
-];
-$num_ogp = count($ogp_home);
-for($i = 0; $i < $num_ogp; $i++){
-    echo $this->Html->meta($ogp_home[$i]);
-}
-?>
-<?php
-$twi_home = [
+    ],
     [
         "name" => "twitter_card",
         "content" => "summary",
@@ -65,9 +57,9 @@ $twi_home = [
         "content" => "@goalous",
     ]
 ];
-$num_twi = count($twi_home);
-for($j = 0; $j < $num_twi; $j++){
-    echo $this->Html->meta($twi_home[$j]);
+$num_ogp = count($ogp_lp);
+for($i = 0; $i < $num_ogp; $i++){
+    echo $this->Html->meta($ogp_lp[$i]);
 }
 ?>
 
