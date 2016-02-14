@@ -25,7 +25,7 @@ $ogp_lp = [
     ],
     [
         "property" => "og:title",
-        "content" => __d('gl', 'Goalous(ゴーラス)'),
+        "content" => __d('gl', 'Goalous(ゴーラス) | 最強にオープンな社内SNS'),
     ],
     [
         "property" => "og:description",
@@ -33,11 +33,11 @@ $ogp_lp = [
     ],
     [
         "property" => "og:url",
-        "content" => "https://stg2.goalous.com/",
+        "content" => "https://www.goalous.com/",
     ],
     [
         "property" => "og:image",
-        "content" => "https://stg2.goalous.com/img/homepage/background/promo-bg.jpg",
+        "content" => "https://www.goalous.com/img/homepage/background/promo-bg.jpg",
     ],
     [
         "property" => "og:site_name",
