@@ -7,7 +7,7 @@
  */
 ?>
 <!-- START app/View/Goals/index.ctp -->
-<?php if ($is_admin): ?>
+<?php if ($is_admin && $this->Session->read('ua.device_type') == 'Desktop'): ?>
     <div class="panel panel-default feed-share-range">
         <div class="panel-body ptb_10px plr_11px">
             <div class="col col-xxs-12 font_12px">

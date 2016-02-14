@@ -141,12 +141,12 @@ message_app.controller(
 
             // メッセージを送信する
             $scope.clickMessage = function (event, val) {
-
-                // ファイルアップロード中の場合は送信確認をおこなう
+                // ファイルの送信中はsubmitできないようにする(クリックはできるがsubmit処理は走らない)
                 if($uploadFileForm._sending) {
-                    if(!$uploadFileForm._confirmSubmit()){
-                        return;
-                    }
+                    alert(cake.message.validate.dropzone_uploading_not_end);
+                    event.preventDefault();
+                    event.stopPropagation();
+                    return;
                 }
 
                 if ($scope.flag) {
@@ -199,13 +199,12 @@ message_app.controller(
                         var node = document.getElementById(key);
                         node.parentNode.removeChild(node);
                     });
-                    if (typeof Dropzone.instances[0] !== "" && Dropzone.instances[0].files.length > 0) {
-                        // ajax で submit するので、アップロード完了後に Dropzone のファイルリストを空にする
-                        // （参照先の配列を空にするため空配列の代入はしない）
-                        Dropzone.instances[0].files.length = 0;
-                    }
 
-                    document.getElementById("message_text_input").focus();
+                    // テキストエリア初期化処理
+                    // テキストエリアの高さは、デフォルト38px。
+                    var messageTextarea = document.getElementById("message_text_input");
+                    messageTextarea.focus();
+                    messageTextarea.style.height = "38px";
 
                     if (jQuery.isEmptyObject(response.data)) {
                         //メッセージ送信失敗
@@ -245,6 +244,13 @@ message_app.controller(
             };
 
             var pushPostMessage = function () {
+                // アップロードファイルの上限数をリセット
+                if (typeof Dropzone.instances[0] !== "" && Dropzone.instances[0].files.length > 0) {
+                    // ajax で submit するので、アップロード完了後に Dropzone のファイルリストを空にする
+                    // （参照先の配列を空にするため空配列の代入はしない）
+                    Dropzone.instances[0].files.length = 0;
+                }
+
                 if (post_msg_view_flag === false) {
                     message_list.push({
                         AttachedFileHtml: $sce.trustAsHtml(post_detail.AttachedFileHtml),
@@ -286,7 +292,6 @@ message_app.controller(
                         if (response.data.message_list.length > 0) {
                             // 新しいメッセージが view に確実に反映されるように少し遅らす
                             setTimeout(function () {
-                                $location.hash('m_' + pushed_message_num);
                                 $anchorScroll();
                             }, 1);
                             // １ページ目の表示時

@@ -18,7 +18,13 @@ $kr_count = 0;
     if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])) {
         //Changing the height of the vertical lines by the number of KR | 縦線の高さをKRの数によって変化させる
         $kr_line_height = 40;
-        $kr_count = count($goal['IncompleteKeyResult']) + count($goal['CompleteKeyResult']);
+        $kr_incomp_count = count($goal['IncompleteKeyResult']);
+        $kr_comp_count = count($goal['CompleteKeyResult']);
+        $kr_count = $kr_comp_count + $kr_incomp_count;
+        $kr_prog_percent = 0;
+        if ($kr_comp_count != 0 && $kr_count != 0) {
+            $kr_prog_percent = round($kr_comp_count / $kr_count, 2) * 100;
+        }
         if ($kr_count > 0) {
             if ($kr_count > MY_GOAL_AREA_FIRST_VIEW_KR_COUNT) {
                 $kr_line_height += 64 * (MY_GOAL_AREA_FIRST_VIEW_KR_COUNT + 1);
@@ -45,7 +51,7 @@ $kr_count = 0;
                 dashboard-goals-card-header-noname">
             <?php endif; ?>
             <i class="dashboard-goals-card-header-icon fa fa-flag-o jsGoalsCardProgress"
-               goal-prog-percent="<?= isset($goal['Goal']['progress']) ? $goal['Goal']['progress'] : 0 ?>">
+               goal-prog-percent="<?= $kr_prog_percent ?>">
             </i>
 
             <div class="dashboard-goals-card-header-title">
@@ -124,7 +130,7 @@ $kr_count = 0;
                         <li role="presentation">
                             <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id']]) ?>"
                                class="modal-ajax-get-add-key-result"
-                                ><i class="fa fa-plus-circle"></i><span class="ml_2px">
+                            ><i class="fa fa-plus-circle"></i><span class="ml_2px">
                                     <?= __d('gl', "達成要素を追加") ?></span></a>
                             <a class="modal-ajax-get-collabo"
                                data-toggle="modal"

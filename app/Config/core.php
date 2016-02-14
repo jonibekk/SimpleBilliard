@@ -196,7 +196,7 @@ if (REDIS_SESSION_HOST) {
     $session_ini = [];
     //モバイルアプリの場合はセッション保持期間を長くとる
     $session_config['timeout'] = 60 * 24 * 7 * 2; //60min * 24h * 7day * 2 = 2week
-    if(isset($_SERVER['HTTP_USER_AGENT'])){
+    if (isset($_SERVER['HTTP_USER_AGENT'])) {
         $ua = $_SERVER['HTTP_USER_AGENT'];
         if (strpos($ua, 'Goalous App') !== false) {
             $session_config['timeout'] = 60 * 24 * 30 * 3; //60min * 24h * 30day * 3 = 3months
@@ -378,3 +378,12 @@ $data_cache_config = [
 ];
 Cache::config('user_data', array_merge($data_cache_config, ['prefix' => $prefix . 'cache_user_data:']));
 Cache::config('team_info', array_merge($data_cache_config, ['prefix' => $prefix . 'cache_team_info:']));
+Cache::config('homepage', [
+    'engine'    => 'Redis',
+    'path'      => CACHE . 'cache_data' . DS,
+    'server'    => $server,
+    'port'      => $port,
+    'serialize' => ($engine === 'File'),
+    'duration'  => 60 * 60 * 24 * 7,
+    'prefix'    => $prefix . 'homepage:'
+]);

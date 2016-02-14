@@ -972,22 +972,13 @@ function getAjaxFormReplaceElm() {
                             return;
                         }
                         $uploadFileForm._sending = true;
-                        // ファイルの送信中はフォームの submit 時に confirm を出すようにする
-                        $('#CommentSubmit_' + post_id).on('click', $uploadFileForm._confirmSubmit);
-                    },
-                    afterSuccess: function (file) {
-                        $('#CommentSubmit_' + post_id).click(function () {
-                            if (typeof Dropzone.instances[0] !== "" && Dropzone.instances[0].files.length > 0) {
-                                // ajax で submit するので、アップロード完了後に Dropzone のファイルリストを空にする
-                                // （参照先の配列を空にするため空配列の代入はしない）
-                                Dropzone.instances[0].files.length = 0;
-                            }
-                        });
+                        // ファイルの送信中はsubmitできないようにする(クリックはできるがsubmit処理は走らない)
+                        $('#CommentSubmit_' + post_id).on('click', $uploadFileForm._forbitSubmit);
                     },
                     afterQueueComplete: function () {
                         $uploadFileForm._sending = false;
-                        // フォームの submit confirm を解除
-                        $('#CommentSubmit_' + post_id).off('click', $uploadFileForm._confirmSubmit);
+                        // フォームをsubmit可能にする
+                        $('#CommentSubmit_' + post_id).off('click', $uploadFileForm._forbitSubmit);
                     }
                 };
                 $uploadFileForm.registerDragDropArea('#CommentBlock_' + post_id, commentParams);
@@ -1154,6 +1145,13 @@ function addComment(e) {
 
     // Display loading button
     $("#" + submit_id).before($loader_html);
+
+    // アップロードファイルの上限数をリセット
+    if (typeof Dropzone.instances[0] !== "" && Dropzone.instances[0].files.length > 0) {
+        // ajax で submit するので、アップロード完了後に Dropzone のファイルリストを空にする
+        // （参照先の配列を空にするため空配列の代入はしない）
+        Dropzone.instances[0].files.length = 0;
+    }
 
     var $f = $(e.target);
     var ajaxProcess = $.Deferred();
@@ -1942,45 +1940,8 @@ $(document).ready(function () {
         $('#CommonActionDisplayForm').bootstrapValidator('revalidateField', 'photo');
     });
 
-    //noinspection JSUnusedLocalSymbols
-    $('#select2Member').select2({
-        multiple: true,
-        minimumInputLength: 1,
-        placeholder: cake.message.notice.b,
-        ajax: {
-            url: cake.url.a,
-            dataType: 'json',
-            quietMillis: 100,
-            cache: true,
-            data: function (term, page) {
-                return {
-                    term: term, //search term
-                    page_limit: 10, // page size
-                    with_group: 1
-                };
-            },
-            results: function (data, page) {
-                return {results: data.results};
-            }
-        },
-        formatSelection: format,
-        formatResult: format,
-        escapeMarkup: function (m) {
-            return m;
-        },
-        containerCssClass: "select2Member"
-    }).on('change', function () {
-        var $this = $(this);
-        if ($this.val() == '' || $('#CommonMessageBody').val() == '') {
-            $('#MessageSubmit').attr('disabled', 'disabled');
-        }
-        else {
-            $('#MessageSubmit').removeAttr('disabled');
-        }
-        // グループを選択した場合、グループに所属するユーザーを展開して入力済にする
-        $this.select2('data', select2ExpandGroup($this.select2('data')));
-    });
 
+    initMemberSelect2();
     //noinspection JSUnusedLocalSymbols post_detail.Post.id
     $('#selectOnlyMember').select2({
         multiple: true,
@@ -2280,6 +2241,46 @@ $(document).ready(function () {
     }
 });
 
+function initMemberSelect2() {
+    //noinspection JSUnusedLocalSymbols
+    $('#select2Member').select2({
+        multiple: true,
+        minimumInputLength: 1,
+        placeholder: cake.message.notice.b,
+        ajax: {
+            url: cake.url.a,
+            dataType: 'json',
+            quietMillis: 100,
+            cache: true,
+            data: function (term, page) {
+                return {
+                    term: term, //search term
+                    page_limit: 10, // page size
+                    with_group: 1
+                };
+            },
+            results: function (data, page) {
+                return {results: data.results};
+            }
+        },
+        formatSelection: format,
+        formatResult: format,
+        escapeMarkup: function (m) {
+            return m;
+        },
+        containerCssClass: "select2Member"
+    }).on('change', function () {
+        var $this = $(this);
+        if ($this.val() == '' || $('#CommonMessageBody').val() == '') {
+            $('#MessageSubmit').attr('disabled', 'disabled');
+        }
+        else {
+            $('#MessageSubmit').removeAttr('disabled');
+        }
+        // グループを選択した場合、グループに所属するユーザーを展開して入力済にする
+        $this.select2('data', select2ExpandGroup($this.select2('data')));
+    });
+}
 
 function initCircleSelect2() {
     //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
@@ -2836,10 +2837,118 @@ function evFeedMoreView(options) {
     return false;
 }
 
+//アドレスバー書き換え
+function updateAddressBar(url) {
+    if (typeof history.pushState == 'function') {
+        try {
+            history.pushState(null, null, url);
+            return true;
+        } catch (e) {
+            window.location.href = url;
+            return false;
+        }
+    }
+}
+
+function activateMessageList() {
+    var message_list_app = $("#message-list-app");
+    angular.element(message_list_app).ready(function () {
+        angular.bootstrap(message_list_app, ['messageListApp']);
+    });
+}
+
+function evMessageList(options) {
+    //とりあえずドロップダウンは隠す
+    $(".has-notify-dropdown").removeClass("open");
+    $('body').removeClass('notify-dropdown-open');
+
+    var opt = $.extend({
+        recursive: false,
+        loader_id: null
+    }, options);
+
+    //フィード読み込み中はキャンセル
+    if (feed_loading_now) {
+        return false;
+    }
+    feed_loading_now = true;
+
+    //layout-mainが存在しないところではajaxでコンテンツ更新しようにもロードしていない
+    //要素が多すぎるので、おとなしくページリロードする
+    var url = cake.url.message_list;
+    jQuery.fn.exists = function () {
+        return Boolean(this.length > 0);
+    }
+    if (!$(".layout-main").exists()) {
+        location.href = url;
+        return false;
+    }
+
+    //アドレスバー書き換え
+    if (!updateAddressBar("/posts/message_list#")) {
+        return false;
+    }
+
+    $('#jsGoTop').click();
+
+    //ローダー表示
+    var $loader_html = opt.loader_id ? $('#' + opt.loader_id) : $('<center><i id="__feed_loader" class="fa fa-refresh fa-spin"></i></center>');
+    if (!opt.recursive) {
+        $(".layout-main").html($loader_html);
+    }
+
+    // URL生成
+    var url = cake.url.ajax_message_list;
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: true,
+        dataType: 'json',
+        success: function (data) {
+            if (!$.isEmptyObject(data.html)) {
+                //取得したhtmlをオブジェクト化
+                var $posts = $(data.html);
+                //notify一覧に戻るhtmlを追加
+                //画像をレイジーロード
+                imageLazyOn($posts);
+                //一旦非表示
+                $posts.fadeOut();
+
+                $(".layout-main").html($posts);
+                activateMessageList();
+                initMemberSelect2();
+
+                //メッセージフォームのvalidateを有効化
+                $('#MessageDisplayForm').bootstrapValidator({
+                    live: 'enabled',
+                    feedbackIcons: {},
+                    fields: {}
+                });
+            }
+
+            //ローダーを削除
+            $loader_html.remove();
+
+            action_autoload_more = false;
+            autoload_more = false;
+            feed_loading_now = false;
+            do_reload_header_bellList = true;
+        },
+        error: function () {
+            alert(cake.message.notice.c);
+            feed_loading_now = false;
+            $loader_html.remove();
+        },
+    });
+    return false;
+}
+
+
 function evNotifications(options) {
 
     //とりあえずドロップダウンは隠す
-    $("#HeaderDropdownNotify").removeClass("open");
+    $(".has-notify-dropdown").removeClass("open");
     $('body').removeClass('notify-dropdown-open');
 
     var opt = $.extend({
@@ -2905,7 +3014,6 @@ function evNotifications(options) {
                 $posts.fadeOut();
 
                 $(".layout-main").html($posts);
-
             }
 
             //ローダーを削除
@@ -2925,11 +3033,13 @@ function evNotifications(options) {
     return false;
 }
 
-//通知から投稿に移動
+// 通知から投稿、メッセージに移動
+// TODO: メッセージ通知リンクと投稿通知リンクのイベントを分けるか、このメソッドを汎用的に使えるようにする。
+//       そうしないとメッセージ詳細へのリンクをajax化する際に、ここのロジックが相当複雑になってしまう予感がする。
 function evNotifyPost(options) {
 
     //とりあえずドロップダウンは隠す
-    $("#HeaderDropdownNotify").removeClass("open");
+    $(".has-notify-dropdown").removeClass("open");
     $('body').removeClass('notify-dropdown-open');
 
     var opt = $.extend({
@@ -2955,6 +3065,8 @@ function evNotifyPost(options) {
         return Boolean(this.length > 0);
     }
     if (!$(".layout-main").exists() || !get_url.match(/post_permanent/)) {
+        // 現状、メッセージページに遷移する場合はこのブロックを通る
+        feed_loading_now = false;
         window.location.href = get_url;
         return false;
     }
@@ -3585,6 +3697,9 @@ function getModalFormFromUrl(e) {
                 $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[KeyResult][start_date]");
                 $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[KeyResult][end_date]");
             });
+    });
+    $modal_elm.on('hidden.bs.modal', function (e) {
+        $(this).empty();
     });
 
     var url = $(this).attr('href');
@@ -4280,7 +4395,7 @@ $(document).ready(function () {
     $(document).on("click", "#click-header-message", function (e) {
         // 未読件数が 0 件の場合は、直接メッセージ一覧ページに遷移させる
         if (getMessageNotifyCnt() == 0) {
-            location.href = cake.url.message_list;
+            evMessageList(null);
             return;
         }
 
@@ -4626,6 +4741,35 @@ $(document).ready(function () {
             }
             // 新しくアップロードするファイルの場合
             else {
+                // キューに入ってるアップロードをキャンセルしようとした場合
+                //   (アップロード中のキャンセルはcanceledコールバックが呼ばれるっぽい。
+                //   このブロックはその前段階のキャンセル時の処理。)
+                if ($preview.data('file_id') === undefined) {
+                    // アップロード中のキャンセル時は確認をはさむので、
+                    // ここでもそれに合わせて確認をはさむようにする
+                    if (!confirm(cake.message.validate.dropzone_cancel_upload_confirmation)) {
+                        return;
+                    }
+
+                    // キャンセルを確認出来るようにファイルの名前を強調して少しの間表示しておく
+                    $preview.find('.dz-name').addClass('font_darkRed font_bold').append('(' + cake.word.cancel + ')');
+                    setTimeout(function () {
+                        $preview.remove();
+                    }, 4000);
+                    $uploadFileForm.hide();
+                    PNotify.removeAll();
+
+                    // 成功
+                    new PNotify({
+                        type: 'success',
+                        title: cake.word.success,
+                        text: cake.message.validate.dropzone_cancel_upload,
+                        icon: "fa fa-check-circle",
+                        delay: 4000,
+                        mouse_reset: false
+                    });
+                    return;
+                }
                 $removeFileForm.find('input[name="data[AttachedFile][file_id]"]').val($preview.data('file_id'));
                 $.ajax({
                         url: cake.url.remove_file,
@@ -4681,6 +4825,7 @@ $(document).ready(function () {
             }
         },
         // アップロードがキャンセルされたとき
+        // (キューにある状態の場合はremovedfile()が呼ばれる。ここは呼ばれない)
         canceled: function (file) {
             var $preview = $(file.previewTemplate);
             // キャンセルを確認出来るようにファイルの名前を強調して少しの間表示しておく
@@ -4905,14 +5050,13 @@ $(document).ready(function () {
 
     // ファイルが１つでもアップロード中であれば true
     $uploadFileForm._sending = false;
+
     // ファイルアップロード中に submit ボタン押された時の イベントハンドラ
-    $uploadFileForm._confirmSubmit = function (e) {
-        if (!confirm(cake.message.validate.dropzone_uploading_not_end)) {
-            e.stopPropagation();
-            e.preventDefault();
-            return false;
-        }
-        return true;
+    $uploadFileForm._forbitSubmit = function (e) {
+        alert(cake.message.validate.dropzone_uploading_not_end);
+        e.stopPropagation();
+        e.preventDefault();
+        return false;
     };
 
     //////////////////////////////////////////////////
@@ -4930,13 +5074,14 @@ $(document).ready(function () {
                 return;
             }
             $uploadFileForm._sending = true;
-            // ファイルの送信中はフォームの submit 時に confirm を出すようにする
-            $('#PostSubmit').on('click', $uploadFileForm._confirmSubmit);
+            // ファイルの送信中はsubmitできないようにする(クリックはできるがsubmit処理は走らない)
+            $('#PostSubmit').on('click', $uploadFileForm._forbitSubmit);
         },
         afterQueueComplete: function () {
             $uploadFileForm._sending = false;
-            // フォームの submit confirm を解除
-            $('#PostSubmit').off('click', $uploadFileForm._confirmSubmit);
+
+            // フォームをsubmit可能にする
+            $('#PostSubmit').off('click', $uploadFileForm._forbitSubmit);
 
             // 投稿文が入力されていれば submit ボタンを有効化、空であれば無効化
             if ($('#CommonPostBody').val().length == 0) {
@@ -4961,13 +5106,13 @@ $(document).ready(function () {
                 return;
             }
             $uploadFileForm._sending = true;
-            // ファイルの送信中はフォームの submit 時に confirm を出すようにする
-            $('#MessageSubmit').on('click', $uploadFileForm._confirmSubmit);
+            // ファイルの送信中はsubmitできないようにする(クリックはできるがsubmit処理は走らない)
+            $('#MessageSubmit').on('click', $uploadFileForm._forbitSubmit);
         },
         afterQueueComplete: function (file) {
             $uploadFileForm._sending = false;
-            // フォームの submit confirm を解除
-            $('#MessageSubmit').off('click', $uploadFileForm._confirmSubmit);
+            // フォームをsubmit可能にする
+            $('#MessageSubmit').off('click', $uploadFileForm._forbitSubmit);
         },
         afterSuccess: function (file) {
             $("#message_submit_button").click(function () {
@@ -5118,13 +5263,13 @@ $(document).ready(function () {
                 return;
             }
             $uploadFileForm._sending = true;
-            // ファイルの送信中はフォームの submit 時に confirm を出すようにする
-            $('#CommonActionShare').on('click', $uploadFileForm._confirmSubmit);
+            // ファイルの送信中はsubmitできないようにする(クリックはできるがsubmit処理は走らない)
+            $('#CommonActionShare').on('click', $uploadFileForm._forbitSubmit);
         },
         afterQueueComplete: function () {
             $uploadFileForm._sending = false;
-            // フォームの submit confirm を解除
-            $('#CommonActionShare').off('click', $uploadFileForm._confirmSubmit);
+            // フォームをsubmit可能にする
+            $('#CommonActionShare').off('click', $uploadFileForm._forbitSubmit);
             $('#CommonActionShare').removeAttr('disabled')
         }
     };
