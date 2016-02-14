@@ -17,6 +17,60 @@
 ?>
 <!-- START app/View/Pages/home.ctp -->
 <?php $this->append('meta') ?>
+<!-- だまれ -->
+<?php
+$ogp_home = [
+    [
+        "property" => "og:type",
+        "content" => "website",
+    ],
+    [
+        "property" => "og:title",
+        "content" => __d('gl', 'Goalous(ゴーラス)'),
+    ],
+    [
+        "property" => "og:description",
+        "content" =>__d('gl', 'Goalous(ゴーラス)は、チーム力向上のためのSNSです。Goalousを利用すれば、オープンでクリアな目標設定をしたり、ゴールへの活動内容を写真で共有したり、サークルやメッセンジャーで仲間たちとコミュニケーションをとったりできます。'),
+    ],
+    [
+        "property" => "og:url",
+        "content" => "https://www.goalous.com/",
+    ],
+    [
+        "property" => "og:image",
+        "content" => "/img/homepage/background/promo-bg.jpg",
+    ],
+    [
+        "property" => "og:site_name",
+        "content" => __d('lp', 'Goalous (ゴーラス) │ゴール達成への最強にオープンな社内SNS'),
+    ],
+    [
+        "property" => "fb:app_id",
+        "content" => "989681217739413",
+    ]
+];
+$num_ogp = count($ogp_home);
+for($i = 0; $i < $num_ogp; $i++){
+    echo $this->Html->meta($ogp_home[$i]);
+}
+?>
+<?
+$twi_home = [
+    [
+        "name" => "twitter_card",
+        "content" => "summary",
+    ],
+    [
+        "name" => "twitter:site",
+        "content" => "@goalous",
+    ]
+];
+$num_twi = count($twi_home);
+for($j = 0; $j < $num_twi; $j++){
+    echo $this->Html->meta($twi_home[$j]);
+}
+?>
+
 <link rel="alternate" hreflang="ja" href="<?= $this->Html->url('/ja/') ?>"/>
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/') ?>"/>
