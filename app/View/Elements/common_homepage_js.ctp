@@ -15,10 +15,27 @@
 <?= $this->Html->script('homepage/jquery.placeholder') ?>
 <?= $this->Html->script('homepage/jquery.fitvids') ?>
 <?= $this->Html->script('homepage/jquery.flexslider-min') ?>
+<?= $this->Html->script('homepage/marked.min') ?>
 <?= $this->Html->script('homepage/main') ?>
 <?= $this->Html->script('homepage/froogaloop2.min') ?>
 <?= $this->Html->script('homepage/vimeo') ?>
+
 <!--[if !IE]>-->
 <?= $this->Html->script('homepage/animations') ?>
 <!--<![endif]-->
+
+<script>
+    $(function () {
+        if ($("#markdown")[0]) {
+            $.ajax({
+                url: $('#markdown')[0].attributes['src'].value
+            }).success(function (data) {
+                $('#markdown').append(marked(data));
+            }).error(function (data) {
+                $('#markdown').append("This content failed to load.");
+            });
+        }
+    });
+</script>
+
 <!-- END app/View/Elements/common_homepage_js.ctp -->

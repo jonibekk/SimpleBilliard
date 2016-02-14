@@ -64,6 +64,16 @@ class LangComponent extends Object
     {
     }
 
+    function getShortLang()
+    {
+        $res = $this->L10n->map($this->L10n->catalog(Configure::read('Config.language')));
+        if ($res === false) {
+            return null;
+        }
+        $res = array_shift($res);
+        return $res;
+    }
+
     function getLanguage()
     {
         $catalog_searched = $this->L10n->catalog($this->L10n->get());

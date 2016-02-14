@@ -5,6 +5,9 @@
  * @var                    $title_for_layout string
  * @var CodeCompletionView $this
  */
+if (!isset($without_footer)) {
+    $without_footer = false;
+}
 ?>
 <!-- START app/View/Layouts/one_column.ctp -->
 <!DOCTYPE html>
@@ -16,22 +19,19 @@
     /** @noinspection PhpUndefinedFunctionInspection */
     echo newrelic_get_browser_timing_header();
 } ?>
-<?= $this->element('google_tag_manager') ?>
+<?= $this->element('google_tag_manager', ['page_type' => 'app']) ?>
 <?php if ($this->Session->read('Auth.User.id')) {
     echo $this->element('header_logged_in');
 }
 else {
+    // これも読み込まれる可能性はあるのか。
     echo $this->element('header_not_logged_in');
 }
 ?>
 <div id="container" class="container">
     <?= $this->Session->flash(); ?>
-
     <?= $this->fetch('content'); ?>
-
-    <?php if (!viaIsSet($without_footer)): ?>
-        <?= $this->element('footer') ?>
-    <?php endif; ?>
+    <?= $this->element('footer') ?>
 </div>
 <?= $this->element('common_modules') ?>
 <?= $this->element('modals') ?>
