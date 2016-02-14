@@ -46,7 +46,7 @@ if (!isset($top_lang)) {
                                                                 'pagename'   => 'pricing', 'lang' => $top_lang,]); ?>
                     </li>
                     <li class="nav-item">
-                        <?= $this->Html->link(__d('lp', 'ブログ'), 'http://blog.isao.co.jp/tag/goalous/',
+                        <?= $this->Html->link(__d('lp', 'ブログ'), 'http://blog.isao.co.jp/',
                                               array('target' => '_blank')); ?>
                     </li>
                     <li class="nav-item">
