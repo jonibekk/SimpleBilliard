@@ -29,11 +29,11 @@ $ogp_law = [
     ],
     [
         "property" => "og:title",
-        "content" => __d('gl', 'プライバシーポリシー | Goalous(ゴーラス)'),
+        "content" => __d('gl', '特定商取引法に基づく表記 | Goalous(ゴーラス)'),
     ],
     [
         "property" => "og:description",
-        "content" =>__d('gl', 'Goalous(ゴーラス)は、チーム力向上のためのSNSです。Goalousを利用すれば、オープンでクリアな目標設定をしたり、ゴールへの活動内容を写真で共有したり、サークルやメッセンジャーで仲間たちとコミュニケーションをとったりできます。'),
+        "content" =>__d('gl', 'Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。スマホアプリ・ブラウザで利用可能です。'),
     ],
     [
         "property" => "og:url",
@@ -65,6 +65,7 @@ for($i = 0; $i < $num_ogp; $i++){
     echo $this->Html->meta($ogp_law[$i]);
 }
 ?>
+<title><?= __d('lp', '特定商取引法に基づく表記 | Goalous (ゴーラス)') ?></title>
 <link rel="alternate" hreflang="ja" href="<?= $this->Html->url('/ja/law') ?>"/>
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/law') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/law') ?>"/>

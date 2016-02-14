@@ -25,7 +25,7 @@ msgid "Goalous(ゴーラス)"
 msgstr ""
 
 #: Controller/AppController.php:155
-msgid "Goalous(ゴーラス)は、チーム力向上のためのSNSです。Goalousを利用すれば、オープンでクリアな目標設定をしたり、ゴールへの活動内容を写真で共有したり、サークルやメッセンジャーで仲間たちとコミュニケーションをとったりできます。"
+msgid "Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。スマホアプリ・ブラウザで利用可能です。"
 msgstr ""
 
 #: Controller/AppController.php:192

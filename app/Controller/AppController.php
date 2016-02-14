@@ -167,7 +167,7 @@ class AppController extends Controller
         $this->set('title_for_layout', $this->title_for_layout);
         //全ページ共通のdescriptionのmetaタグの内容をセット(書き換える場合はこの変数の値を変更の上、再度アクションメソッド側でsetする)
         $this->meta_description = __d('gl',
-                                      'Goalous(ゴーラス)は、チーム力向上のためのSNSです。Goalousを利用すれば、オープンでクリアな目標設定をしたり、ゴールへの活動内容を写真で共有したり、サークルやメッセンジャーで仲間たちとコミュニケーションをとったりできます。');
+                                      'Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。スマホアプリ・ブラウザで利用可能です。');
         $this->set('meta_description', $this->meta_description);
 
         $this->_setSecurity();
