@@ -150,7 +150,7 @@
 <section id="video" class="video section">
     <div class="container">
         <div class="control text-center">
-            <button type="button" id="play-trigger" class="play-trigger" data-toggle="modal" data-target="#tour-video">
+            <button type="button" id="play-trigger" class="play-trigger" data-toggle="modal" data-target="#tour-video" data-theVideo="https://www.youtube.com/embed/jwG1Lsq3Wyw">
                 <i class="fa fa-play"></i></button>
             <p><?= __d('lp', 'Watch Video') ?></p>
 
@@ -165,8 +165,8 @@
                         </div>
                         <div class="modal-body">
                             <div class="video-container">
-                                <iframe id="vimeo-video"
-                                        src="https://www.youtube.com/embed/jwG1Lsq3Wyw?rel=0&autoplay=0" width="720"
+                                <iframe id="home-video"
+                                        width="720"
                                         height="405" frameborder="0" webkitallowfullscreen mozallowfullscreen
                                         allowfullscreen></iframe>
                             </div><!--//video-container-->
