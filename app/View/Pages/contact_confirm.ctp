@@ -16,6 +16,55 @@
  */
 ?>
 <?php $this->append('meta') ?>
+<?php
+/*
+Page毎に要素が変わるもの
+- url
+- title
+*/
+$ogp_contact_confirm = [
+    [
+        "property" => "og:type",
+        "content" => "website",
+    ],
+    [
+        "property" => "og:title",
+        "content" => __d('gl', '入力内容確認 | Goalous(ゴーラス)'),
+    ],
+    [
+        "property" => "og:description",
+        "content" =>__d('gl', 'Goalous(ゴーラス)は、チーム力向上のためのSNSです。Goalousを利用すれば、オープンでクリアな目標設定をしたり、ゴールへの活動内容を写真で共有したり、サークルやメッセンジャーで仲間たちとコミュニケーションをとったりできます。'),
+    ],
+    [
+        "property" => "og:url",
+        "content" => "https://www.goalous.com/contact_confirm/",
+    ],
+    [
+        "property" => "og:image",
+        "content" => "https://www.goalous.com/img/homepage/background/promo-bg.jpg",
+    ],
+    [
+        "property" => "og:site_name",
+        "content" => __d('lp', 'Goalous (ゴーラス) │ゴール達成への最強にオープンな社内SNS'),
+    ],
+    [
+        "property" => "fb:app_id",
+        "content" => "989681217739413",
+    ],
+    [
+        "name" => "twitter_card",
+        "content" => "summary",
+    ],
+    [
+        "name" => "twitter:site",
+        "content" => "@goalous",
+    ]
+];
+$num_ogp = count($ogp_contact_confirm);
+for($i = 0; $i < $num_ogp; $i++){
+    echo $this->Html->meta($ogp_contact_confirm[$i]);
+}
+?>
 <link rel="alternate" hreflang="ja" href="<?= $this->Html->url('/ja/contact_confirm') ?>"/>
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/contact_confirm') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/contact_confirm') ?>"/>
