@@ -18,7 +18,7 @@
 <?= $this->Html->script('homepage/marked.min') ?>
 <?= $this->Html->script('homepage/main') ?>
 <?= $this->Html->script('homepage/froogaloop2.min') ?>
-<?= $this->Html->script('homepage/youtube_modal') ?>
+<?= $this->Html->script('homepage/vimeo') ?>
 
 <!--[if !IE]>-->
 <?= $this->Html->script('homepage/animations') ?>
