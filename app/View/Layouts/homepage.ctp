@@ -38,7 +38,6 @@
                 'content' => "width=device-width, initial-scale=1, maximum-scale=1"
             ));
     echo $this->fetch('meta');
-    echo $this->fetch('ogp');
     ?>
     <meta name='description' content='<?= $meta_description ?>'/>
 

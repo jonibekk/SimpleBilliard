@@ -38,7 +38,7 @@ $ogp_home = [
     ],
     [
         "property" => "og:image",
-        "content" => "/img/homepage/background/promo-bg.jpg",
+        "content" => "https://stg2.goalous.com/img/homepage/background/promo-bg.jpg",
     ],
     [
         "property" => "og:site_name",
