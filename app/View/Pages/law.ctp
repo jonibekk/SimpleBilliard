@@ -19,21 +19,31 @@
 <?php
 /*
 Page毎に要素が変わるもの
-- url
+- meta description
+- og:description
+- og:url
 - title
 */
-$ogp_law = [
+$meta_law = [
+    [
+        "name" => "description",
+        "content" => __d('lp','Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。特定商取引法に基づく表記はこちら。'),
+    ],
+    [
+        "name" => "keywords",
+        "content" => "目標管理,目標達成,社内SNS,評価,MBO",
+    ],
     [
         "property" => "og:type",
         "content" => "website",
     ],
     [
         "property" => "og:title",
-        "content" => __d('gl', 'プライバシーポリシー | Goalous(ゴーラス)'),
+        "content" => __d('gl', '特定商取引法に基づく表記 | Goalous(ゴーラス)'),
     ],
     [
         "property" => "og:description",
-        "content" =>__d('gl', 'Goalous(ゴーラス)は、チーム力向上のためのSNSです。Goalousを利用すれば、オープンでクリアな目標設定をしたり、ゴールへの活動内容を写真で共有したり、サークルやメッセンジャーで仲間たちとコミュニケーションをとったりできます。'),
+        "content" =>__d('gl', 'Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。特定商取引法に基づく表記はこちら。'),
     ],
     [
         "property" => "og:url",
@@ -60,9 +70,9 @@ $ogp_law = [
         "content" => "@goalous",
     ]
 ];
-$num_ogp = count($ogp_law);
+$num_ogp = count($meta_law);
 for($i = 0; $i < $num_ogp; $i++){
-    echo $this->Html->meta($ogp_law[$i]);
+    echo $this->Html->meta($meta_law[$i]);
 }
 ?>
 <link rel="alternate" hreflang="ja" href="<?= $this->Html->url('/ja/law') ?>"/>

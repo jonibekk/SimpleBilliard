@@ -19,10 +19,20 @@
 <?php
 /*
 Page毎に要素が変わるもの
-- url
+- meta description
+- og:description
+- og:url
 - title
 */
-$ogp_pricing = [
+$meta_pricing = [
+    [
+        "name" => "description",
+        "content" => __d('lp','Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。料金・価格はこちら。'),
+    ],
+    [
+        "name" => "keywords",
+        "content" => "目標管理,目標達成,社内SNS,評価,MBO",
+    ],
     [
         "property" => "og:type",
         "content" => "website",
@@ -33,7 +43,7 @@ $ogp_pricing = [
     ],
     [
         "property" => "og:description",
-        "content" =>__d('gl', 'Goalous(ゴーラス)は、チーム力向上のためのSNSです。Goalousを利用すれば、オープンでクリアな目標設定をしたり、ゴールへの活動内容を写真で共有したり、サークルやメッセンジャーで仲間たちとコミュニケーションをとったりできます。'),
+        "content" =>__d('gl', 'Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。料金・価格はこちら。'),
     ],
     [
         "property" => "og:url",
@@ -60,9 +70,9 @@ $ogp_pricing = [
         "content" => "@goalous",
     ]
 ];
-$num_ogp = count($ogp_pricing);
+$num_ogp = count($meta_pricing);
 for($i = 0; $i < $num_ogp; $i++){
-    echo $this->Html->meta($ogp_pricing[$i]);
+    echo $this->Html->meta($meta_pricing[$i]);
 }
 ?>
 <link rel="alternate" hreflang="ja" href="<?= $this->Html->url('/ja/pricing') ?>"/>

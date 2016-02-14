@@ -19,10 +19,20 @@
 <?php
 /*
 Page毎に要素が変わるもの
-- url
+- meta description
+- og:description
+- og:url
 - title
 */
-$ogp_contact = [
+$meta_contact = [
+    [
+        "name" => "description",
+        "content" => __d('lp','Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。導入のご相談を受け付けています。'),
+    ],
+    [
+        "name" => "keywords",
+        "content" => "目標管理,目標達成,社内SNS,評価,MBO",
+    ],
     [
         "property" => "og:type",
         "content" => "website",
@@ -60,9 +70,9 @@ $ogp_contact = [
         "content" => "@goalous",
     ]
 ];
-$num_ogp = count($ogp_contact);
+$num_ogp = count($meta_contact);
 for($i = 0; $i < $num_ogp; $i++){
-    echo $this->Html->meta($ogp_contact[$i]);
+    echo $this->Html->meta($meta_contact[$i]);
 }
 ?>
 <link rel="alternate" hreflang="ja" href="<?= $this->Html->url('/ja/contact') ?>"/>

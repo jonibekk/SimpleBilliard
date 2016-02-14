@@ -19,10 +19,20 @@
 <?php
 /*
 Page毎に要素が変わるもの
-- url
+- meta description
+- og:description
+- og:url
 - title
 */
-$ogp_features = [
+$meta_features = [
+    [
+        "name" => "description",
+        "content" => __d('lp','Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。機能の説明はこちら。'),
+    ],
+    [
+        "name" => "keywords",
+        "content" => "目標管理,目標達成,社内SNS,評価,MBO",
+    ],
     [
         "property" => "og:type",
         "content" => "website",
@@ -33,7 +43,7 @@ $ogp_features = [
     ],
     [
         "property" => "og:description",
-        "content" =>__d('gl', 'Goalous(ゴーラス)は、チーム力向上のためのSNSです。Goalousを利用すれば、オープンでクリアな目標設定をしたり、ゴールへの活動内容を写真で共有したり、サークルやメッセンジャーで仲間たちとコミュニケーションをとったりできます。'),
+        "content" =>__d('gl', 'Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。機能の説明はこちら。'),
     ],
     [
         "property" => "og:url",
@@ -60,9 +70,9 @@ $ogp_features = [
         "content" => "@goalous",
     ]
 ];
-$num_ogp = count($ogp_features);
+$num_ogp = count($meta_features);
 for($i = 0; $i < $num_ogp; $i++){
-    echo $this->Html->meta($ogp_features[$i]);
+    echo $this->Html->meta($meta_features[$i]);
 }
 ?>
 <link rel="alternate" hreflang="ja" href="<?= $this->Html->url('/ja/features') ?>"/>
