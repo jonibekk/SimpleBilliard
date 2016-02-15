@@ -131,7 +131,6 @@ message_list_app.controller(
         }
 
         $scope.postProcess = function(){
-            console.log("postProcess called.");
             $scope.disable_scroll = true;
         }
     });
