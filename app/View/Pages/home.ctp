@@ -18,7 +18,21 @@
 <!-- START app/View/Pages/home.ctp -->
 <?php $this->append('meta') ?>
 <?php
-$ogp_lp = [
+/*
+- meta description
+- og:description
+- og:url
+- title
+ */
+$meta_lp = [
+    [
+        "name" => "description",
+        "content" => __d('lp','Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。スマホアプリ・ブラウザで利用可能です。'),
+    ],
+    [
+        "name" => "keywords",
+        "content" => "目標管理,目標達成,社内SNS,評価,MBO",
+    ],
     [
         "property" => "og:type",
         "content" => "website",
@@ -56,9 +70,9 @@ $ogp_lp = [
         "content" => "@goalous",
     ]
 ];
-$num_ogp = count($ogp_lp);
+$num_ogp = count($meta_lp);
 for($i = 0; $i < $num_ogp; $i++){
-    echo $this->Html->meta($ogp_lp[$i]);
+    echo $this->Html->meta($meta_lp[$i]);
 }
 ?>
 <title><?= __d('lp', 'Goalous (ゴーラス) │最強にオープンな社内SNS') ?></title>

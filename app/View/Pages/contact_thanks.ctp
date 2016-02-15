@@ -19,10 +19,20 @@
 <?php
 /*
 Page毎に要素が変わるもの
-- url
+- meta description
+- og:description
+- og:url
 - title
 */
-$ogp_contact_thanks = [
+$meta_contact_thanks = [
+    [
+        "name" => "description",
+        "content" => __d('lp','Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。お問い合わせありがとうございました。'),
+    ],
+    [
+        "name" => "keywords",
+        "content" => "目標管理,目標達成,社内SNS,評価,MBO",
+    ],
     [
         "property" => "og:type",
         "content" => "website",
@@ -33,7 +43,7 @@ $ogp_contact_thanks = [
     ],
     [
         "property" => "og:description",
-        "content" =>__d('gl', 'Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。スマホアプリ・ブラウザで利用可能です。'),
+        "content" =>__d('gl', 'Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。お問い合わせありがとうございました。'),
     ],
     [
         "property" => "og:url",
@@ -60,9 +70,9 @@ $ogp_contact_thanks = [
         "content" => "@goalous",
     ]
 ];
-$num_ogp = count($ogp_contact_thanks);
+$num_ogp = count($meta_contact_thanks);
 for($i = 0; $i < $num_ogp; $i++){
-    echo $this->Html->meta($ogp_contact_thanks[$i]);
+    echo $this->Html->meta($meta_contact_thanks[$i]);
 }
 ?>
 <title><?= __d('lp', 'お問い合わせ完了 | Goalous (ゴーラス)') ?></title>

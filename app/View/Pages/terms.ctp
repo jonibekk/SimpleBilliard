@@ -20,10 +20,20 @@
 <?php
 /*
 Page毎に要素が変わるもの
-- url
+- meta description
+- og:description
+- og:url
 - title
 */
-$ogp_terms = [
+$meta_terms = [
+    [
+        "name" => "description",
+        "content" => __d('lp','Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。利用規約はこちら。'),
+    ],
+    [
+        "name" => "keywords",
+        "content" => "目標管理,目標達成,社内SNS,評価,MBO",
+    ],
     [
         "property" => "og:type",
         "content" => "website",
@@ -34,7 +44,7 @@ $ogp_terms = [
     ],
     [
         "property" => "og:description",
-        "content" =>__d('gl', 'Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。スマホアプリ・ブラウザで利用可能です。'),
+        "content" =>__d('gl', 'Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。利用規約はこちら。'),
     ],
     [
         "property" => "og:url",
@@ -61,9 +71,9 @@ $ogp_terms = [
         "content" => "@goalous",
     ]
 ];
-$num_ogp = count($ogp_terms);
+$num_ogp = count($meta_terms);
 for($i = 0; $i < $num_ogp; $i++){
-    echo $this->Html->meta($ogp_terms[$i]);
+    echo $this->Html->meta($meta_terms[$i]);
 }
 ?>
 <title><?= __d('lp', 'Goalous利用規約 | Goalous (ゴーラス)') ?></title>

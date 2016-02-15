@@ -19,10 +19,20 @@
 <?php
 /*
 Page毎に要素が変わるもの
-- url
+- meta description
+- og:description
+- og:url
 - title
 */
-$ogp_contact_confirm = [
+$meta_contact_confirm = [
+    [
+        "name" => "description",
+        "content" => __d('lp','Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。お問い合わせ内容の確認です。'),
+    ],
+    [
+        "name" => "keywords",
+        "content" => "目標管理,目標達成,社内SNS,評価,MBO",
+    ],
     [
         "property" => "og:type",
         "content" => "website",
@@ -33,7 +43,7 @@ $ogp_contact_confirm = [
     ],
     [
         "property" => "og:description",
-        "content" =>__d('gl', 'Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。スマホアプリ・ブラウザで利用可能です。'),
+        "content" =>__d('gl', 'Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。お問い合わせ内容の確認です。'),
     ],
     [
         "property" => "og:url",
@@ -60,9 +70,9 @@ $ogp_contact_confirm = [
         "content" => "@goalous",
     ]
 ];
-$num_ogp = count($ogp_contact_confirm);
+$num_ogp = count($meta_contact_confirm);
 for($i = 0; $i < $num_ogp; $i++){
-    echo $this->Html->meta($ogp_contact_confirm[$i]);
+    echo $this->Html->meta($meta_contact_confirm[$i]);
 }
 ?>
 <title><?= __d('lp', '入力内容確認 | Goalous (ゴーラス)') ?></title>

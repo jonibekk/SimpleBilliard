@@ -14,7 +14,6 @@
  * @var                    $this View
  * @var                    $top_lang
  * @var CodeCompletionView $this
- * @var                    $meta_description
  */
 ?>
 <!-- START app/View/Layouts/homepage.ctp -->
@@ -36,8 +35,6 @@
         ]);
         echo $this->fetch('meta');
     ?>
-    <meta name='description' content='<?= $meta_description ?>'/>
-    <!-- だまる -->
 
     <!-- START CSS -->
     <link href='https://fonts.googleapis.com/css?family=Lato:300,400,300italic,400italic' rel='stylesheet'
