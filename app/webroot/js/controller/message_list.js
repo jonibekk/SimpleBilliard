@@ -49,6 +49,10 @@ message_list_app.controller(
         $scope.disable_scroll = false;
         $scope.scroll_end = false;
 
+        // mobile safariで2回クリックしないとクリックイベントが発生しないため
+        // ここで1回目のダミークリックイベントを発生
+        $("#GlobalForms").click();
+
         $scope.loadMore = function () {
 
             if ($scope.disable_scroll === true) return;
@@ -127,6 +131,7 @@ message_list_app.controller(
         }
 
         $scope.postProcess = function(){
+            console.log("postProcess called.");
             $scope.disable_scroll = true;
         }
     });
