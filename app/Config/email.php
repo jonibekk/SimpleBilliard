@@ -32,7 +32,6 @@
  * where 'Your' is the name of the transport.
  * from =>
  * The origin email. See CakeEmail::from() about the valid values
-
  */
 class EmailConfig
 {
@@ -107,6 +106,16 @@ class EmailConfig
             SES_FROM_ADDRESS => 'Goalous Support'
         )
     );
+
+    public $amazon_contact = array(
+        'transport' => 'Amazon',
+        'key'       => AWS_ACCESS_KEY,
+        'secret'    => AWS_SECRET_KEY,
+        'from'      => array(
+            SES_FROM_ADDRESS_CONTACT => 'Goalous Support'
+        )
+    );
+
     public $amazon_news = array(
         'transport' => 'Amazon',
         'key'       => AWS_ACCESS_KEY,
