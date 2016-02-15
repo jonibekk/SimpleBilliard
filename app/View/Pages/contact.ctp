@@ -241,7 +241,7 @@ for($i = 0; $i < $num_ogp; $i++){
             </div><!--//form-group-->
         </div>
         <div class="contact-form col-md-8 col-sm-12 col-xs-12 col-md-offset-2">
-            <div class="checkbox">
+            <div class="checkbox contact-form-checkbox">
                 <label>
                     <?= $this->Form->checkbox('need') ?>
                     <?= $this->Html->link(__d('lp', '利用規約'), [
