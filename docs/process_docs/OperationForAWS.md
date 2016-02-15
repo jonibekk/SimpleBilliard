@@ -10,23 +10,23 @@
 ### Deploy
 #### stg
 ```
-aws opsworks --region us-east-1 create-deployment --stack-id 07838a54-a9ae-4df1-b7dc-747b6ace1c66 --app-id d1b2b17e-2be3-4a94-90dc-03b1767bd786 --command "{\"Name\":\"deploy from cli\"}"
+aws opsworks --region us-east-1 create-deployment --stack-id 07838a54-a9ae-4df1-b7dc-747b6ace1c66 --app-id d1b2b17e-2be3-4a94-90dc-03b1767bd786 --command "{\"Name\":\"deploy\"}"
 ```
 #### release
 ```
-aws opsworks --region us-east-1 create-deployment --stack-id f7b25c63-458c-497c-aeb1-267d7506defc --app-id 786fd3c0-1b5f-49d9-b707-27dba2909c84 --command "{\"Name\":\"deploy from cli\"}"
+aws opsworks --region us-east-1 create-deployment --stack-id f7b25c63-458c-497c-aeb1-267d7506defc --app-id 786fd3c0-1b5f-49d9-b707-27dba2909c84 --command "{\"Name\":\"deploy\"}"
 ```
 #### www 
 ```
-aws opsworks --region us-east-1 create-deployment --stack-id e09a695a-0631-4c60-be82-cf498ea49317 --app-id 77c4fc53-40c3-4a73-b532-18d5ef1beff7 --command "{\"Name\":\"deploy from cli\"}"
+aws opsworks --region us-east-1 create-deployment --stack-id e09a695a-0631-4c60-be82-cf498ea49317 --app-id 77c4fc53-40c3-4a73-b532-18d5ef1beff7 --command "{\"Name\":\"deploy\"}"
 ```
 #### hotfix
 ```
-aws opsworks --region us-east-1 create-deployment --stack-id 8d158e51-2c9b-4cf4-876b-5f11ab8280e9 --app-id feaeb538-35a5-4a1c-bab7-01a70c666987 --command "{\"Name\":\"deploy from cli\"}"
+aws opsworks --region us-east-1 create-deployment --stack-id 8d158e51-2c9b-4cf4-876b-5f11ab8280e9 --app-id feaeb538-35a5-4a1c-bab7-01a70c666987 --command "{\"Name\":\"deploy\"}"
 ```
 #### stress test
 ```
-aws opsworks --region us-east-1 create-deployment --stack-id 086f0871-7c09-4d3e-8f81-4e64174793fe --app-id a62504ee-0dcc-4dab-a51b-6583bd9234ff --command "{\"Name\":\"deploy from cli\"}"
+aws opsworks --region us-east-1 create-deployment --stack-id 086f0871-7c09-4d3e-8f81-4e64174793fe --app-id a62504ee-0dcc-4dab-a51b-6583bd9234ff --command "{\"Name\":\"deploy\"}"
 ```
 
 ### Add instance
