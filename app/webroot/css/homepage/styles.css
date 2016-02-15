@@ -147,8 +147,14 @@ blockquote {
 }
 input[type="text"], input[type="email"], input[type="password"], input[type="submit"], input[type="button"], textarea, select {
     appearance: none;
+    -moz-appearance: none;
     /* for mobile safari */
     -webkit-appearance: none;
+}
+select {
+    background: url(../../img/svg/icon_arrow_open.svgz) no-repeat right !important;
+    background-size: 12px 12px !important;
+    background-position: 98% center !important;
 }
 ::-webkit-input-placeholder {
     /* WebKit browsers */
@@ -420,6 +426,7 @@ input[type="text"], input[type="email"], input[type="password"], input[type="sub
 }
 .header .main-nav .nav .nav-item .btn-link {
     background: none;
+    display: inline-block;
     color: #666666 !important;
     font-weight: 400;
     text-transform: uppercase;
@@ -2221,4 +2228,13 @@ body {
 .markdown-wrap {
     width: 80%;
     margin: 0 auto;
+}
+
+.contact-form-checkbox {
+    text-align: center;
+    margin: 16px 0;
+}
+
+.btn-block + .contact-confirm-send {
+    margin: 16px 0 0;
 }
