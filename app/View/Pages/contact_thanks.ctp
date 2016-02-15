@@ -97,7 +97,7 @@ for($i = 0; $i < $num_ogp; $i++){
                     <div class="details">
                         <h4><?= __d('lp', 'IsaB') ?></h4>
                         <p><?= __d('lp', '億人の”シゴト”を熱くする！株式会社ISAOのブログ') ?></p>
-                        <p><a href="blog.isao.co.jp/" target="_blank"><?= __d('lp', 'https://blog.isao.co.jp/') ?></a></p>
+                        <p><a href="http://blog.isao.co.jp/" target="_blank"><?= __d('lp', 'http://blog.isao.co.jp/') ?></a></p>
                     </div><!--details-->
                 </div><!--//item-inner-->
             </div><!--//item-->
