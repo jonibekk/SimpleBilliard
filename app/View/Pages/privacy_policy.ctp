@@ -75,6 +75,7 @@ for($i = 0; $i < $num_ogp; $i++){
     echo $this->Html->meta($meta_privacy_policy[$i]);
 }
 ?>
+<title><?= __d('lp', 'プライバシーポリシー | Goalous (ゴーラス)') ?></title>
 <link rel="alternate" hreflang="ja" href="<?= $this->Html->url('/ja/privacy_policy') ?>"/>
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/privacy_policy') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/privacy_policy') ?>"/>

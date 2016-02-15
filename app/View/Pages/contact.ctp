@@ -43,7 +43,7 @@ $meta_contact = [
     ],
     [
         "property" => "og:description",
-        "content" =>__d('gl', 'Goalous(ゴーラス)は、チーム力向上のためのSNSです。Goalousを利用すれば、オープンでクリアな目標設定をしたり、ゴールへの活動内容を写真で共有したり、サークルやメッセンジャーで仲間たちとコミュニケーションをとったりできます。'),
+        "content" =>__d('gl', 'Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。導入のご相談を受け付けています。'),
     ],
     [
         "property" => "og:url",
@@ -75,6 +75,7 @@ for($i = 0; $i < $num_ogp; $i++){
     echo $this->Html->meta($meta_contact[$i]);
 }
 ?>
+<title><?= __d('lp', 'お問い合わせ | Goalous (ゴーラス)') ?></title>
 <link rel="alternate" hreflang="ja" href="<?= $this->Html->url('/ja/contact') ?>"/>
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/contact') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/contact') ?>"/>

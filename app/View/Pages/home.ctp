@@ -75,6 +75,7 @@ for($i = 0; $i < $num_ogp; $i++){
     echo $this->Html->meta($meta_lp[$i]);
 }
 ?>
+<title><?= __d('lp', 'Goalous (ゴーラス) │最強にオープンな社内SNS') ?></title>
 <link rel="alternate" hreflang="ja" href="<?= $this->Html->url('/ja/') ?>"/>
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/') ?>"/>
