@@ -75,6 +75,17 @@ var bindCtrlEnterAction = function (selector, callback) {
         }
     })
 };
+
+// selectorの存在確認用
+jQuery.fn.exists = function () {
+    return Boolean(this.length > 0);
+}
+
+// scrollbarの存在確認用
+jQuery.fn.hasScrollBar = function() {
+    return this.get(0) ? this.get(0).scrollHeight > this.innerHeight() : false;
+}
+
 $(window).load(function () {
     bindPostBalancedGallery($('.post_gallery'));
     bindCommentBalancedGallery($('.comment_gallery'));
@@ -325,11 +336,13 @@ $(document).ready(function () {
     //noinspection JSUnresolvedVariable
     $(document).on("click", ".toggle-follow", evFollowGoal);
     $(document).on("click", ".click-get-ajax-form-replace", getAjaxFormReplaceElm);
-    $(document).on("click", ".notify-card-link", evNotifyPost);
+    $(document).on("click", ".notify-click-target", evNotifyPost);
+    $(document).on("click", ".message-click-target", evMessage);
     $(document).on("click", ".dashboard-circle-list-row", evCircleFeed);
     $(document).on("click", ".circle-link", evCircleFeed);
     $(document).on("click", ".btn-back-notifications", evNotifications);
     $(document).on("click", ".call-notifications", evNotifications);
+    $(document).on("click", ".message-list-panel-card-link", evMessage);
     $(document).on("submit", "form.ajax-csv-upload", uploadCsvFileByForm);
     $(document).on("touchend", "#layer-black", function () {
         $('.navbar-offcanvas').offcanvas('hide');
@@ -1942,47 +1955,7 @@ $(document).ready(function () {
 
 
     initMemberSelect2();
-    //noinspection JSUnusedLocalSymbols post_detail.Post.id
-    $('#selectOnlyMember').select2({
-        multiple: true,
-        minimumInputLength: 1,
-        placeholder: cake.message.notice.b,
-        ajax: {
-            url: cake.url.add_member_on_message,
-            dataType: 'json',
-            quietMillis: 100,
-            cache: true,
-            data: function (term, page) {
-                return {
-                    term: term, //search term
-                    page_limit: 10, // page size
-                    post_id: $('#post_messenger').val()
-                };
-            },
-            results: function (data, page) {
-                return {results: data.results};
-            }
-        },
-        formatSelection: format,
-        formatResult: format,
-        escapeMarkup: function (m) {
-            return m;
-        },
-        containerCssClass: "select2Member"
-    }).on('change', function () {
-        var $this = $(this);
-        if ($this.val() == '') {
-            $('#MessageSubmit').attr('disabled', 'disabled');
-        }
-        else {
-            if ($('#CommonMessageBody').val() != '') {
-                $('#MessageSubmit').removeAttr('disabled');
-            }
-        }
-        // グループを選択した場合、グループに所属するユーザーを展開して入力済にする
-        $this.select2('data', select2ExpandGroup($this.select2('data')));
-    });
-
+    initMessageSelect2();
     initCircleSelect2();
 
     $(document).on("click", '.modal-ajax-get-public-circles', function (e) {
@@ -2240,6 +2213,50 @@ $(document).ready(function () {
         });
     }
 });
+
+function initMessageSelect2() {
+    //noinspection JSUnusedLocalSymbols post_detail.Post.id
+    $('#selectOnlyMember').select2({
+        multiple: true,
+        minimumInputLength: 1,
+        placeholder: cake.message.notice.b,
+        ajax: {
+            url: cake.url.add_member_on_message,
+            dataType: 'json',
+            quietMillis: 100,
+            cache: true,
+            data: function (term, page) {
+                return {
+                    term: term, //search term
+                    page_limit: 10, // page size
+                    post_id: $('#post_messenger').val()
+                };
+            },
+            results: function (data, page) {
+                return {results: data.results};
+            }
+        },
+        formatSelection: format,
+        formatResult: format,
+        escapeMarkup: function (m) {
+            return m;
+        },
+        containerCssClass: "select2Member"
+    }).on('change', function () {
+        var $this = $(this);
+        if ($this.val() == '') {
+            $('#MessageSubmit').attr('disabled', 'disabled');
+        }
+        else {
+            if ($('#CommonMessageBody').val() != '') {
+                $('#MessageSubmit').removeAttr('disabled');
+            }
+        }
+        // グループを選択した場合、グループに所属するユーザーを展開して入力済にする
+        $this.select2('data', select2ExpandGroup($this.select2('data')));
+    });
+}
+
 
 function initMemberSelect2() {
     //noinspection JSUnusedLocalSymbols
@@ -2850,7 +2867,90 @@ function updateAddressBar(url) {
     }
 }
 
-function activateMessageList() {
+function activateMessage() {
+    var message_app = $("#message-app");
+    angular.element(message_app).ready(function () { angular.bootstrap(message_app, ['messageApp']); });
+}
+
+function evMessage(){
+    //とりあえずドロップダウンは隠す
+    $("#HeaderDropdownNotify").removeClass("open");
+    $(".header-dropdown-message").removeClass("open");
+    $('body').removeClass('notify-dropdown-open');
+
+    //フィード読み込み中はキャンセル
+    if (feed_loading_now) {
+        return false;
+    }
+    feed_loading_now = true;
+
+    attrUndefinedCheck(this, 'get-url');
+    attrUndefinedCheck(this, 'post-id');
+
+    var $obj = $(this);
+    var get_url = $obj.attr('get-url');
+
+    //layout-mainが存在しないところではajaxでコンテンツ更新しようにもロードしていない
+    //要素が多すぎるので、おとなしくページリロードする
+    if (!$(".layout-main").exists()) {
+        location.href = get_url;
+        return false;
+    }
+
+    //アドレスバー書き換え
+    var addressbar_url = get_url.replace(/message[#]*/, "message#");
+    if(!updateAddressBar(addressbar_url)){
+        return false;
+    }
+
+    $('#jsGoTop').click();
+
+    //ローダー表示
+    var $loader_html = $('<center><i id="__feed_loader" class="fa fa-refresh fa-spin"></i></center>');
+    $(".layout-main").html($loader_html);
+
+    // URL生成
+    var url = get_url.replace(/message/, "ajax_message");
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: true,
+        dataType: 'json',
+        success: function (data) {
+            if (!$.isEmptyObject(data.html)) {
+                //取得したhtmlをオブジェクト化
+                var $posts = $(data.html);
+                //notify一覧に戻るhtmlを追加
+                //画像をレイジーロード
+                imageLazyOn($posts);
+                //一旦非表示
+                $posts.fadeOut();
+
+                $(".layout-main").html($posts);
+                activateMessage();
+            }
+
+            //ローダーを削除
+            $loader_html.remove();
+
+            initMessageSelect2();
+
+            action_autoload_more = false;
+            autoload_more = false;
+            feed_loading_now = false;
+            do_reload_header_bellList = true;
+        },
+        error: function () {
+            alert(cake.message.notice.c);
+            feed_loading_now = false;
+            $loader_html.remove();
+        },
+    });
+    return false;
+}
+
+function activateMessageList(){
     var message_list_app = $("#message-list-app");
     angular.element(message_list_app).ready(function () {
         angular.bootstrap(message_list_app, ['messageListApp']);
@@ -2876,9 +2976,6 @@ function evMessageList(options) {
     //layout-mainが存在しないところではajaxでコンテンツ更新しようにもロードしていない
     //要素が多すぎるので、おとなしくページリロードする
     var url = cake.url.message_list;
-    jQuery.fn.exists = function () {
-        return Boolean(this.length > 0);
-    }
     if (!$(".layout-main").exists()) {
         location.href = url;
         return false;
@@ -2969,9 +3066,6 @@ function evNotifications(options) {
 
     //layout-mainが存在しないところではajaxでコンテンツ更新しようにもロードしていない
     //要素が多すぎるので、おとなしくページリロードする
-    jQuery.fn.exists = function () {
-        return Boolean(this.length > 0);
-    }
     if (!$(".layout-main").exists()) {
         window.location.href = get_url;
         return false;
@@ -3061,9 +3155,6 @@ function evNotifyPost(options) {
     //layout-mainが存在しないところではajaxでコンテンツ更新しようにもロードしていない
     //要素が多すぎるので、おとなしくページリロードする
     //urlにpost_permanentを含まない場合も対象外
-    jQuery.fn.exists = function () {
-        return Boolean(this.length > 0);
-    }
     if (!$(".layout-main").exists() || !get_url.match(/post_permanent/)) {
         // 現状、メッセージページに遷移する場合はこのブロックを通る
         feed_loading_now = false;
@@ -3180,9 +3271,6 @@ function evCircleFeed(options) {
     //app-view-elements-feed-postsが存在しないところではajaxでコンテンツ更新しようにもロードしていない
     //要素が多すぎるので、おとなしくページリロードする
     //urlにcircle_feedを含まない場合も対象外
-    jQuery.fn.exists = function () {
-        return Boolean(this.length > 0);
-    }
     if (!$("#app-view-elements-feed-posts").exists() || !$("#GlobalForms").exists() || !get_url.match(/circle_feed/)) {
         window.location.href = get_url;
         return false;
