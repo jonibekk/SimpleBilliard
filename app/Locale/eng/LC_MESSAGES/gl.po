@@ -2170,7 +2170,7 @@ msgid "すべて見る"
 msgstr "See All"
 
 #: View/Elements/header_logged_in_right.ctp:112
-msgid "ユーザ設定"
+msgid "ユーザー設定"
 msgstr "User Setting"
 
 #: View/Elements/header_logged_in_right.ctp:117
@@ -2184,6 +2184,14 @@ msgstr "About a goal"
 #: View/Elements/header_logged_in_right.ctp:131
 msgid "ゴール認定"
 msgstr "Goal Approval"
+
+#: View/Elements/header_logged_in_right.ctp:133
+msgid "ユーザー利用ガイド"
+msgstr "User Guide (jp)"
+
+#: View/Elements/header_logged_in_right.ctp:134
+msgid "ゴール作成方法"
+msgstr "How to make a Goal (jp)"
 
 #: View/Elements/header_logged_in_right.ctp:135
 msgid "ログアウト"
