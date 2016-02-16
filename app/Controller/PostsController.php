@@ -60,9 +60,18 @@ class PostsController extends AppController
     public function ajax_get_message_list($page = 1)
     {
         $this->_ajaxPreProcess();
-        $result = $this->Post->getMessageList($this->Auth->user('id'), PostsController::$message_list_page_count,
-                                              $page);
+        $result = $this->Post->getMessageList($this->Auth->user('id'),
+                                              PostsController::$message_list_page_count, $page);
         $message_list = $this->Post->convertData($result);
+        $notify_list = $this->_getMessageNotifyPostIdArray();
+
+        for ($i = 0; $i < count($message_list); $i++) {
+            $post_id = $message_list[$i]['Post']['id'];
+            if ($notify_list[$post_id]) {
+                $message_list[$i]['Post']['is_unread'] = true;
+            }
+        }
+
         $res = [
             'auth_info'    => [
                 'user_id'    => $this->Auth->user('id'),
@@ -72,6 +81,25 @@ class PostsController extends AppController
             'message_list' => $message_list,
         ];
         return $this->_ajaxGetResponse($res);
+    }
+
+    /**
+     * 未読通知があるメッセージ通知のpostid配列を返す
+     *
+     * @return array|null
+     */
+    function _getMessageNotifyPostIdArray()
+    {
+        $notify_items = $this->NotifyBiz->getMessageNotification();
+        if (empty($notify_items)) {
+            return null;
+        }
+        $post_ids = [];
+        foreach ($notify_items as $item) {
+            $post_id = $item['Notification']['id'];
+            $post_ids[$post_id] = true;
+        }
+        return $post_ids;
     }
 
     /**
