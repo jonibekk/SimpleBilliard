@@ -25,7 +25,7 @@
 ?>
 <!-- START app/View/Elements/Team/evaluation_setup.ctp -->
 <div class="panel panel-default">
-    <div class="panel-heading"><?= __d\('app', "評価設定") ?></div>
+    <div class="panel-heading"><?= __d('app', "評価設定") ?></div>
     <div class="panel-body form-horizontal">
         <?=
         $this->Form->create('EvaluationSetting', [
@@ -43,120 +43,120 @@
         <?= $this->Form->hidden('id') ?>
         <?= $this->Form->hidden('team_id', ['value' => $this->Session->read('current_team_id')]) ?>
         <div class="form-group">
-            <label class="col col-sm-3 control-label form-label"><?= __d\('app', '評価する') ?></label>
+            <label class="col col-sm-3 control-label form-label"><?= __d('app', '評価する') ?></label>
             <?= $this->Form->input("enable_flg", ['default' => false,]) ?>
         </div>
         <div class="form-group">
-            <label class="col col-sm-3 control-label form-label"><?= __d\('app', '自己評価') ?></label>
+            <label class="col col-sm-3 control-label form-label"><?= __d('app', '自己評価') ?></label>
             <?= $this->Form->input("self_flg", ['default' => true,]) ?>
         </div>
         <div class="form-group">
-            <label class="col col-sm-3 control-label form-label"><?= __d\('app', '自己評価ゴールスコア') ?></label>
+            <label class="col col-sm-3 control-label form-label"><?= __d('app', '自己評価ゴールスコア') ?></label>
             <?= $this->Form->input("self_goal_score_flg", ['default' => true,]) ?>
         </div>
         <div class="form-group">
-            <label class="col col-sm-3 control-label form-label"><?= __d\('app', '自己評価ゴールスコア必須') ?></label>
+            <label class="col col-sm-3 control-label form-label"><?= __d('app', '自己評価ゴールスコア必須') ?></label>
             <?= $this->Form->input("self_goal_score_required_flg", ['default' => true,]) ?>
         </div>
         <div class="form-group">
-            <label class="col col-sm-3 control-label form-label"><?= __d\('app', '自己評価 ゴール コメント') ?></label>
+            <label class="col col-sm-3 control-label form-label"><?= __d('app', '自己評価 ゴール コメント') ?></label>
             <?= $this->Form->input("self_goal_comment_flg", ['default' => true,]) ?>
         </div>
         <div class="form-group">
-            <label class="col col-sm-3 control-label form-label"><?= __d\('app', '自己評価 ゴール コメント必須') ?></label>
+            <label class="col col-sm-3 control-label form-label"><?= __d('app', '自己評価 ゴール コメント必須') ?></label>
             <?= $this->Form->input("self_goal_comment_required_flg", ['default' => true,]) ?>
         </div>
         <div class="form-group">
-            <label class="col col-sm-3 control-label form-label"><?= __d\('app', '自己評価 トータル スコア') ?></label>
+            <label class="col col-sm-3 control-label form-label"><?= __d('app', '自己評価 トータル スコア') ?></label>
             <?= $this->Form->input("self_score_flg", ['default' => true,]) ?>
         </div>
         <div class="form-group">
-            <label class="col col-sm-3 control-label form-label"><?= __d\('app', '自己評価 トータル スコア 必須') ?></label>
+            <label class="col col-sm-3 control-label form-label"><?= __d('app', '自己評価 トータル スコア 必須') ?></label>
             <?= $this->Form->input("self_score_required_flg", ['default' => true,]) ?>
         </div>
         <div class="form-group">
-            <label class="col col-sm-3 control-label form-label"><?= __d\('app', '自己評価 トータル コメント') ?></label>
+            <label class="col col-sm-3 control-label form-label"><?= __d('app', '自己評価 トータル コメント') ?></label>
             <?= $this->Form->input("self_comment_flg", ['default' => true,]) ?>
         </div>
         <div class="form-group">
-            <label class="col col-sm-3 control-label form-label"><?= __d\('app', '自己評価 トータル コメント 必須') ?></label>
+            <label class="col col-sm-3 control-label form-label"><?= __d('app', '自己評価 トータル コメント 必須') ?></label>
             <?= $this->Form->input("self_comment_required_flg", ['default' => true,]) ?>
         </div>
         <div class="form-group">
-            <label class="col col-sm-3 control-label form-label"><?= __d\('app', '評価者評価') ?></label>
+            <label class="col col-sm-3 control-label form-label"><?= __d('app', '評価者評価') ?></label>
             <?= $this->Form->input("evaluator_flg", ['default' => true,]) ?>
         </div>
         <div class="form-group">
-            <label class="col col-sm-3 control-label form-label"><?= __d\('app', '評価者評価 ゴール スコア') ?></label>
+            <label class="col col-sm-3 control-label form-label"><?= __d('app', '評価者評価 ゴール スコア') ?></label>
             <?= $this->Form->input("evaluator_goal_score_flg", ['default' => true,]) ?>
         </div>
         <div class="form-group">
-            <label class="col col-sm-3 control-label form-label"><?= __d\('app', '評価者評価 ゴール スコア必須') ?></label>
+            <label class="col col-sm-3 control-label form-label"><?= __d('app', '評価者評価 ゴール スコア必須') ?></label>
             <?= $this->Form->input("evaluator_goal_score_reuqired_flg", ['default' => true,]) ?>
         </div>
         <div class="form-group">
-            <label class="col col-sm-3 control-label form-label"><?= __d\('app', '評価者評価 ゴール コメント') ?></label>
+            <label class="col col-sm-3 control-label form-label"><?= __d('app', '評価者評価 ゴール コメント') ?></label>
             <?= $this->Form->input("evaluator_goal_comment_flg", ['default' => true,]) ?>
         </div>
         <div class="form-group">
-            <label class="col col-sm-3 control-label form-label"><?= __d\('app', '評価者評価 ゴール コメント必須') ?></label>
+            <label class="col col-sm-3 control-label form-label"><?= __d('app', '評価者評価 ゴール コメント必須') ?></label>
             <?= $this->Form->input("evaluator_goal_comment_required_flg", ['default' => true,]) ?>
         </div>
         <div class="form-group">
-            <label class="col col-sm-3 control-label form-label"><?= __d\('app', '評価者評価 トータル スコア') ?></label>
+            <label class="col col-sm-3 control-label form-label"><?= __d('app', '評価者評価 トータル スコア') ?></label>
             <?= $this->Form->input("evaluator_score_flg", ['default' => true,]) ?>
         </div>
         <div class="form-group">
-            <label class="col col-sm-3 control-label form-label"><?= __d\('app', '評価者評価 トータル スコア 必須') ?></label>
+            <label class="col col-sm-3 control-label form-label"><?= __d('app', '評価者評価 トータル スコア 必須') ?></label>
             <?= $this->Form->input("evaluator_score_required_flg", ['default' => true,]) ?>
         </div>
         <div class="form-group">
-            <label class="col col-sm-3 control-label form-label"><?= __d\('app', '評価者評価 トータル コメント') ?></label>
+            <label class="col col-sm-3 control-label form-label"><?= __d('app', '評価者評価 トータル コメント') ?></label>
             <?= $this->Form->input("evaluator_comment_flg", ['default' => true,]) ?>
         </div>
         <div class="form-group">
-            <label class="col col-sm-3 control-label form-label"><?= __d\('app', '評価者評価 トータル コメント 必須') ?></label>
+            <label class="col col-sm-3 control-label form-label"><?= __d('app', '評価者評価 トータル コメント 必須') ?></label>
             <?= $this->Form->input("evaluator_comment_required_flg", ['default' => false,]) ?>
         </div>
         <div class="form-group">
-            <label class="col col-sm-3 control-label form-label"><?= __d\('app', '最終評価者評価') ?></label>
+            <label class="col col-sm-3 control-label form-label"><?= __d('app', '最終評価者評価') ?></label>
             <?= $this->Form->input("final_flg", ['default' => true,]) ?>
         </div>
         <div class="form-group">
-            <label class="col col-sm-3 control-label form-label"><?= __d\('app', '最終評価者評価 トータル スコア') ?></label>
+            <label class="col col-sm-3 control-label form-label"><?= __d('app', '最終評価者評価 トータル スコア') ?></label>
             <?= $this->Form->input("final_score_flg", ['default' => true,]) ?>
         </div>
         <div class="form-group">
-            <label class="col col-sm-3 control-label form-label"><?= __d\('app', '最終評価者評価 トータル スコア 必須') ?></label>
+            <label class="col col-sm-3 control-label form-label"><?= __d('app', '最終評価者評価 トータル スコア 必須') ?></label>
             <?= $this->Form->input("final_score_required_flg", ['default' => true,]) ?>
         </div>
         <div class="form-group">
-            <label class="col col-sm-3 control-label form-label"><?= __d\('app', '最終評価者評価 トータル コメント') ?></label>
+            <label class="col col-sm-3 control-label form-label"><?= __d('app', '最終評価者評価 トータル コメント') ?></label>
             <?= $this->Form->input("final_comment_flg", ['default' => true,]) ?>
         </div>
         <div class="form-group">
-            <label class="col col-sm-3 control-label form-label"><?= __d\('app', '最終評価者評価 トータル コメント 必須') ?></label>
+            <label class="col col-sm-3 control-label form-label"><?= __d('app', '最終評価者評価 トータル コメント 必須') ?></label>
             <?= $this->Form->input("final_comment_required_flg", ['default' => true,]) ?>
         </div>
         <?php /* 今後実装予定機能
         <div class="form-group">
-            <label class="col col-sm-3 control-label form-label"><?= __d\('app', 'リーダ評価') ?></label>
+            <label class="col col-sm-3 control-label form-label"><?= __d('app', 'リーダ評価') ?></label>
             <?= $this->Form->input("leader_flg", ['default' => true,]) ?>
         </div>
         <div class="form-group">
-            <label class="col col-sm-3 control-label form-label"><?= __d\('app', 'リーダ評価 ゴール スコア') ?></label>
+            <label class="col col-sm-3 control-label form-label"><?= __d('app', 'リーダ評価 ゴール スコア') ?></label>
             <?= $this->Form->input("leader_goal_score_flg", ['default' => false,]) ?>
         </div>
         <div class="form-group">
-            <label class="col col-sm-3 control-label form-label"><?= __d\('app', 'リーダ評価 ゴール スコア必須') ?></label>
+            <label class="col col-sm-3 control-label form-label"><?= __d('app', 'リーダ評価 ゴール スコア必須') ?></label>
             <?= $this->Form->input("leader_goal_score_reuqired_flg", ['default' => true,]) ?>
         </div>
         <div class="form-group">
-            <label class="col col-sm-3 control-label form-label"><?= __d\('app', 'リーダ評価 ゴール コメント') ?></label>
+            <label class="col col-sm-3 control-label form-label"><?= __d('app', 'リーダ評価 ゴール コメント') ?></label>
             <?= $this->Form->input("leader_goal_comment_flg", ['default' => true,]) ?>
         </div>
         <div class="form-group">
-            <label class="col col-sm-3 control-label form-label"><?= __d\('app', 'リーダ評価 ゴール コメント必須') ?></label>
+            <label class="col col-sm-3 control-label form-label"><?= __d('app', 'リーダ評価 ゴール コメント必須') ?></label>
             <?= $this->Form->input("leader_goal_comment_required_flg", ['default' => false,]) ?>
         </div>
         */ ?>
@@ -165,7 +165,7 @@
     <div class="panel-footer">
         <div class="row">
             <div class="col-sm-9 col-sm-offset-3">
-                <?= $this->Form->submit(__d\('app', '評価設定を保存'), ['class' => 'btn btn-primary pull-right']) ?>
+                <?= $this->Form->submit(__d('app', '評価設定を保存'), ['class' => 'btn btn-primary pull-right']) ?>
             </div>
         </div>
     </div>

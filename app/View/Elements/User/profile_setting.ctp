@@ -15,7 +15,7 @@
 <!-- START app/View/Elements/User/profile_setting.ctp -->
 <div id="profile">
     <div class="panel panel-default">
-        <div class="panel-heading"><?= __d\('app', "プロフィール") ?></div>
+        <div class="panel-heading"><?= __d('app', "プロフィール") ?></div>
         <?=
         $this->Form->create('User', [
             'inputDefaults' => [
@@ -36,16 +36,16 @@
                 //ローカル名を使う国のみ表示
                 //姓と名は言語によって表示順を変える
                 $local_last_name = $this->Form->input('LocalName.0.last_name', [
-                    'label'                        => __d\('app', "姓(%s)", $language_name),
-                    'placeholder'                  => __d\('app', "例) 鈴木"),
+                    'label'                        => __d('app', "姓(%s)", $language_name),
+                    'placeholder'                  => __d('app', "例) 鈴木"),
                     'required'                     => false,
                     'data-bv-stringlength'         => 'true',
                     'data-bv-stringlength-max'     => 128,
                     'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 128),
                 ]);
                 $local_first_name = $this->Form->input('LocalName.0.first_name', [
-                    'label'                        => __d\('app', "名(%s)", $language_name),
-                    'placeholder'                  => __d\('app', "例) 太郎"),
+                    'label'                        => __d('app', "名(%s)", $language_name),
+                    'placeholder'                  => __d('app', "例) 太郎"),
                     'required'                     => false,
                     'data-bv-stringlength'         => 'true',
                     'data-bv-stringlength-max'     => 128,
@@ -66,8 +66,8 @@
             ?>
             <?php //姓と名は言語によって表示順を変える
             $last_name = $this->Form->input('last_name', [
-                'label'                        => __d\('app', "姓(ローマ字)"),
-                'placeholder'                  => __d\('app', "例) Suzuki"),
+                'label'                        => __d('app', "姓(ローマ字)"),
+                'placeholder'                  => __d('app', "例) Suzuki"),
                 "pattern"                      => '^[a-zA-Z]+$',
                 "data-bv-regexp-message"       => __d('validate', "アルファベットのみで入力してください。"),
                 "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
@@ -76,8 +76,8 @@
                 'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 128),
             ]);
             $first_name = $this->Form->input('first_name', [
-                'label'                        => __d\('app', "名(ローマ字)"),
-                'placeholder'                  => __d\('app', "例) Hiroshi"),
+                'label'                        => __d('app', "名(ローマ字)"),
+                'placeholder'                  => __d('app', "例) Hiroshi"),
                 "pattern"                      => '^[a-zA-Z]+$',
                 "data-bv-regexp-message"       => __d('validate', "アルファベットのみで入力してください。"),
                 "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
@@ -100,7 +100,7 @@
                                [
                                    'type'    => 'radio',
                                    'before'  => '<label class="col col-sm-3 control-label form-label">'
-                                       . __d\('app', '性別') . '</label>',
+                                       . __d('app', '性別') . '</label>',
                                    'legend'  => false,
                                    'options' => User::$TYPE_GENDER,
                                    'class'   => 'radio-inline'
@@ -112,21 +112,21 @@
                 ->input('birth_day',
                         [
                             'monthNames' => [
-                                '01' => __d\('app', '1月'),
-                                '02' => __d\('app', '2月'),
-                                '03' => __d\('app', '3月'),
-                                '04' => __d\('app', '4月'),
-                                '05' => __d\('app', '5月'),
-                                '06' => __d\('app', '6月'),
-                                '07' => __d\('app', '7月'),
-                                '08' => __d\('app', '8月'),
-                                '09' => __d\('app', '9月'),
-                                '10' => __d\('app', '10月'),
-                                '11' => __d\('app', '11月'),
-                                '12' => __d\('app', '12月'),
+                                '01' => __d('app', '1月'),
+                                '02' => __d('app', '2月'),
+                                '03' => __d('app', '3月'),
+                                '04' => __d('app', '4月'),
+                                '05' => __d('app', '5月'),
+                                '06' => __d('app', '6月'),
+                                '07' => __d('app', '7月'),
+                                '08' => __d('app', '8月'),
+                                '09' => __d('app', '9月'),
+                                '10' => __d('app', '10月'),
+                                '11' => __d('app', '11月'),
+                                '12' => __d('app', '12月'),
                             ],
                             'class'      => 'form-control inline-fix setting_input-design',
-                            'label'      => __d\('app', '誕生日'),
+                            'label'      => __d('app', '誕生日'),
                             'dateFormat' => 'YMD',
                             'empty'      => true,
                             'separator'  => ' / ',
@@ -139,15 +139,15 @@
             $this->Form->input('hide_year_flg', [
                 'wrapInput' => 'col col-sm-9 col-sm-offset-3',
                 'type'      => 'checkbox',
-                'label'     => ['class' => null, 'text' => __d\('app', "生年を隠す。")],
+                'label'     => ['class' => null, 'text' => __d('app', "生年を隠す。")],
                 'class'     => false,
             ])
             ?>
             <hr>
             <?=
             $this->Form->input('hometown', [
-                'label'                        => __d\('app', "出身地"),
-                'placeholder'                  => __d\('app', '例) 東京都'),
+                'label'                        => __d('app', "出身地"),
+                'placeholder'                  => __d('app', '例) 東京都'),
                 'required'                     => false,
                 'data-bv-stringlength'         => 'true',
                 'data-bv-stringlength-max'     => 128,
@@ -156,7 +156,7 @@
             ?>
             <hr>
             <div class="form-group">
-                <label for="" class="col col-sm-3 control-label form-label"><?= __d\('app', "プロフィール画像") ?></label>
+                <label for="" class="col col-sm-3 control-label form-label"><?= __d('app', "プロフィール画像") ?></label>
 
                 <div class="col col-sm-6">
                     <div class="fileinput fileinput-new" data-provides="fileinput">
@@ -170,10 +170,10 @@
                         <span class="btn btn-default btn-file">
                             <span class="fileinput-new">
                                 <?=
-                                __d\('app',
+                                __d('app',
                                     "画像を選択") ?>
                             </span>
-                            <span class="fileinput-exists"><?= __d\('app', "画像を再選択") ?></span>
+                            <span class="fileinput-exists"><?= __d('app', "画像を再選択") ?></span>
                             <?=
                             $this->Form->input('photo',
                                                ['type'         => 'file',
@@ -185,7 +185,7 @@
                                                 'required'     => false
                                                ]) ?>
                         </span>
-                            <span class="help-block inline-block font_11px"><?= __d\('app', '10MB以下') ?></span>
+                            <span class="help-block inline-block font_11px"><?= __d('app', '10MB以下') ?></span>
                         </div>
                     </div>
 
@@ -202,9 +202,9 @@
             <hr>
             <div class="form-group">
                 <div class="col col-sm-3 control-label form-label">
-                    <label for="UserComment" class=""><?= __d\('app', "自己紹介") ?></label>
+                    <label for="UserComment" class=""><?= __d('app', "自己紹介") ?></label>
 
-                    <div class="label-addiction"><?= __d\('app', "チーム内限定で共有されます。") ?></div>
+                    <div class="label-addiction"><?= __d('app', "チーム内限定で共有されます。") ?></div>
                 </div>
                 <div class="col col-sm-6">
                     <?php if (isset($this->request->data['TeamMember'][0]['id'])): ?>
@@ -222,14 +222,14 @@
                                         'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 2000),
                                         'value'                        => (isset($this->request->data['TeamMember'][0]['comment']) && !empty($this->request->data['TeamMember'][0]['comment']))
                                             ? $this->request->data['TeamMember'][0]['comment']
-                                            : __d\('app',
+                                            : __d('app',
                                                   "【今、チームに貢献できることは？】\n\n【これからチームで実現してみたいことは？(具体的に)】\n\n【その他】\n\n")]
                     )
                     ?>
-                    <a href="#" class="target-show-this-del link-dark-gray" target-id="CommentHelp"><?= __d\('app',
+                    <a href="#" class="target-show-this-del link-dark-gray" target-id="CommentHelp"><?= __d('app',
                                                                                                             "例文を表示") ?></a>
                 <span class="help-block inline-block font_11px" id="CommentHelp" style="display: none">
-                    <?= __d\('app', "
+                    <?= __d('app', "
 ■ 例文１（技術者向け）<br>
 【今、チームに貢献できることは？】<br>
 スリムな開発環境の構築。オートスケール環境の構築。Git支援。<br><br>
@@ -248,7 +248,7 @@ iOS,Androidで100万ダウンロードされるアプリを開発する。<br><b
             </div>
         </div>
         <div class="panel-footer setting_pannel-footer">
-            <?= $this->Form->submit(__d\('app', "変更を保存"), ['class' => 'btn btn-primary pull-right']) ?>
+            <?= $this->Form->submit(__d('app', "変更を保存"), ['class' => 'btn btn-primary pull-right']) ?>
             <div class="clearfix"></div>
         </div>
         <?= $this->Form->end(); ?>

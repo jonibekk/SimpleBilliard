@@ -56,15 +56,15 @@ class Team extends AppModel
      */
     private function _setTypeName()
     {
-        self::$TYPE[self::TYPE_CAMPAIGN] = __d\('app', "無料キャンペーン");
-        // self::$TYPE[self::TYPE_FREE] = __d\('app', "フリー");
-        // self::$TYPE[self::TYPE_PRO] = __d\('app', "プロ");
+        self::$TYPE[self::TYPE_CAMPAIGN] = __d('app', "無料キャンペーン");
+        // self::$TYPE[self::TYPE_FREE] = __d('app', "フリー");
+        // self::$TYPE[self::TYPE_PRO] = __d('app', "プロ");
     }
 
     private function _setTermOptionName()
     {
-        self::$OPTION_CHANGE_TERM[self::OPTION_CHANGE_TERM_FROM_CURRENT] = __d\('app', "今期から");
-        self::$OPTION_CHANGE_TERM[self::OPTION_CHANGE_TERM_FROM_NEXT] = __d\('app', "来期から");
+        self::$OPTION_CHANGE_TERM[self::OPTION_CHANGE_TERM_FROM_CURRENT] = __d('app', "今期から");
+        self::$OPTION_CHANGE_TERM[self::OPTION_CHANGE_TERM_FROM_NEXT] = __d('app', "来期から");
     }
 
     /**
@@ -207,8 +207,8 @@ class Team extends AppModel
         $circleData = [
             'Circle'       => [
                 'team_id'      => $this->id,
-                'name'         => __d\('app', 'チーム全体'),
-                'description'  => __d\('app', 'チーム全体'),
+                'name'         => __d('app', 'チーム全体'),
+                'description'  => __d('app', 'チーム全体'),
                 'public_flg'   => true,
                 'team_all_flg' => true,
             ],
@@ -236,10 +236,10 @@ class Team extends AppModel
     function getBorderMonthsOptions()
     {
         $term_options = [
-            null => __d\('app', "選択してください"),
-            3    => __d\('app', "四半期"),
-            6    => __d\('app', "半年"),
-            12   => __d\('app', "年")
+            null => __d('app', "選択してください"),
+            3    => __d('app', "四半期"),
+            6    => __d('app', "半年"),
+            12   => __d('app', "年")
         ];
         return $term_options;
     }
@@ -247,19 +247,19 @@ class Team extends AppModel
     function getMonths()
     {
         $months = [
-            null => __d\('app', "選択して下さい"),
-            1    => __d\('app', "１月"),
-            2    => __d\('app', "２月"),
-            3    => __d\('app', "３月"),
-            4    => __d\('app', "４月"),
-            5    => __d\('app', "５月"),
-            6    => __d\('app', "６月"),
-            7    => __d\('app', "７月"),
-            8    => __d\('app', "８月"),
-            9    => __d\('app', "９月"),
-            10   => __d\('app', "１０月"),
-            11   => __d\('app', "１１月"),
-            12   => __d\('app', "１２月"),
+            null => __d('app', "選択して下さい"),
+            1    => __d('app', "１月"),
+            2    => __d('app', "２月"),
+            3    => __d('app', "３月"),
+            4    => __d('app', "４月"),
+            5    => __d('app', "５月"),
+            6    => __d('app', "６月"),
+            7    => __d('app', "７月"),
+            8    => __d('app', "８月"),
+            9    => __d('app', "９月"),
+            10   => __d('app', "１０月"),
+            11   => __d('app', "１１月"),
+            12   => __d('app', "１２月"),
         ];
         return $months;
     }

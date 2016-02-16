@@ -153,8 +153,8 @@ class PagesController extends AppController
     public function _getPageLanguageList()
     {
         $lang_list = [
-            'ja' => __d\('lp', "Japanese"),
-            'en' => __d\('lp', "English"),
+            'ja' => __d('lp', "Japanese"),
+            'en' => __d('lp', "English"),
         ];
         return $lang_list;
     }

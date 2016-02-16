@@ -15,7 +15,7 @@
 <!-- START app/View/Elements/User/notify_setting.ctp -->
 <div id="notify_setting">
     <div class="panel panel-default">
-        <div class="panel-heading"><?= __d\('app', "通知") ?></div>
+        <div class="panel-heading"><?= __d('app', "通知") ?></div>
         <?=
         $this->Form->create('User', [
             'inputDefaults' => [
@@ -37,7 +37,7 @@
         <div class="panel-body notify-setting-panel-body">
             <div class="form-group">
                 <label class="col col-sm-3 col-xxs-12 control-label form-label">
-                    <i class="fa fa-globe"></i> <?= __d\('app', 'Goalousサイト') ?>
+                    <i class="fa fa-globe"></i> <?= __d('app', 'Goalousサイト') ?>
                 </label>
 
                 <div class="col col-xxs-9 col-sm-9">
@@ -45,14 +45,14 @@
                 </div>
             </div>
             <div id="NotifySettingAppHelp" class="col col-sm-offset-3 help-block font_12px">
-                <?= __d\('app', 'すべての通知が送信されます。') ?>
+                <?= __d('app', 'すべての通知が送信されます。') ?>
             </div>
 
 
             <hr>
             <div class="form-group">
                 <label class="col col-sm-3 col-xxs-12 control-label form-label">
-                    <i class="fa fa-envelope-o"></i> <?= __d\('app', 'Email') ?>
+                    <i class="fa fa-envelope-o"></i> <?= __d('app', 'Email') ?>
                 </label>
                 <?=
                 $this->Form->input("NotifySetting.email", [
@@ -71,7 +71,7 @@
             <hr>
             <div class="form-group">
                 <label class="col col-sm-3 col-xxs-12 control-label form-label">
-                    <i class="fa fa-mobile"></i> <?= __d\('app', 'モバイル') ?>
+                    <i class="fa fa-mobile"></i> <?= __d('app', 'モバイル') ?>
                 </label>
                 <?=
                 $this->Form->input("NotifySetting.mobile", [
@@ -88,7 +88,7 @@
             <div id="NotifySettingMobileHelp" class="col col-sm-offset-3 help-block font_12px none"></div>
         </div>
         <div class="panel-footer setting_pannel-footer">
-            <?= $this->Form->submit(__d\('app', "変更を保存"), ['class' => 'btn btn-primary pull-right']) ?>
+            <?= $this->Form->submit(__d('app', "変更を保存"), ['class' => 'btn btn-primary pull-right']) ?>
             <div class="clearfix"></div>
         </div>
         <?= $this->Form->end(); ?>
@@ -98,9 +98,9 @@
 <script>
     $(function () {
         var notify_help_message = {
-            'all': '<?= __d\('app', 'すべての通知が送信されます。') ?>',
-            'primary': '<?= __d\('app', 'あなたに関わる重要な通知（サークルへの新しい投稿などを除く）が送信されます。') ?>',
-            'none': '<?= __d\('app', '通知は送信されません。') ?>'
+            'all': '<?= __d('app', 'すべての通知が送信されます。') ?>',
+            'primary': '<?= __d('app', 'あなたに関わる重要な通知（サークルへの新しい投稿などを除く）が送信されます。') ?>',
+            'none': '<?= __d('app', '通知は送信されません。') ?>'
         };
 
         var onSelectChange =  function () {

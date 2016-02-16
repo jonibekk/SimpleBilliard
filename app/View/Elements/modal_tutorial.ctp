@@ -31,16 +31,16 @@
             </div>
             <div class="modal-footer">
                 <div class="col-xxs-12 text-align_l tutorial-texts">
-                    <p id="tutorialText1" class="tutorial-text"><?= __d\('app',
+                    <p id="tutorialText1" class="tutorial-text"><?= __d('app',
                                                                         "ニュースフィードに投稿してみよう。既読管理ができて、いいね！が伝わります。") ?></p>
 
-                    <p id="tutorialText2" class="tutorial-text"><?= __d\('app',
+                    <p id="tutorialText2" class="tutorial-text"><?= __d('app',
                                                                         "サークルをつくったり、サークルに入ってみよう。サークルには秘密と公開の2種類があります。") ?></p>
 
-                    <p id="tutorialText3" class="tutorial-text"><?= __d\('app',
+                    <p id="tutorialText3" class="tutorial-text"><?= __d('app',
                                                                         "ゴールをつくりましょう。ゴールページでは、より詳細な設定ができます。") ?></p>
 
-                    <p id="tutorialText4" class="tutorial-text"><?= __d\('app', "チーム力を向上させよう。Goalousをさっそく使ってみましょう") ?></p>
+                    <p id="tutorialText4" class="tutorial-text"><?= __d('app', "チーム力を向上させよう。Goalousをさっそく使ってみましょう") ?></p>
                 </div>
             </div>
         </div>

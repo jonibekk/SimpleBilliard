@@ -186,7 +186,7 @@ TEXT;
         $Model = ClassRegistry::init('User');
         $result = $Model->findById(1);
         if (!empty($result)) {
-            $this->out(__d\('appobal', '既にテストデータが存在するため、テストデータのインポートをキャンセルしました。'));
+            $this->out(__d('appobal', '既にテストデータが存在するため、テストデータのインポートをキャンセルしました。'));
             return;
         }
 

@@ -63,7 +63,7 @@ $this->Form->create('Comment', [
 
 <div class="none" id="<?= $id_prefix ?>CommentEdit_<?= $comment['id'] ?>">
     <?=
-    $this->Form->submit(__d\('app', "変更を保存する"),
+    $this->Form->submit(__d('app', "変更を保存する"),
                         ['class' => 'btn btn-primary pull-right submit-comment-edit', 'id' => $id_prefix . "CommentEditSubmit_{$comment['id']}", 'disabled' => 'disabled']) ?>
     <div class="clearfix"></div>
 </div>

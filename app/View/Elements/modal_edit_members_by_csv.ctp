@@ -16,7 +16,7 @@
             <div class="modal-header">
                 <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
                     <span class="close-icon">&times;</span></button>
-                <h4 class="modal-title"><?= __d\('app', "メンバーの情報を変更") ?></h4>
+                <h4 class="modal-title"><?= __d('app', "メンバーの情報を変更") ?></h4>
             </div>
             <div class="modal-body">
                 <?=
@@ -39,28 +39,28 @@
                     'class'         => 'ajax-csv-upload',
                 ]); ?>
                 <div class="form-group">
-                    <label class=""><?= __d\('app', "1.ユーザ情報をダウンロード") ?></label>
+                    <label class=""><?= __d('app', "1.ユーザ情報をダウンロード") ?></label>
 
-                    <p><?= __d\('app', "CSVフォーマットのユーザ情報をダウンロードしてください。テンプレートのヘッダーは変更しないでください。") ?></p>
+                    <p><?= __d('app', "CSVフォーマットのユーザ情報をダウンロードしてください。テンプレートのヘッダーは変更しないでください。") ?></p>
 
                     <div class="">
                         <?=
-                        $this->Html->link(__d\('app', "ユーザ情報をダウンロード"), ['action' => 'download_team_members_csv'],
+                        $this->Html->link(__d('app', "ユーザ情報をダウンロード"), ['action' => 'download_team_members_csv'],
                                           ['class' => 'btn btn-default', 'div' => false])
                         ?>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class=""><?= __d\('app', '2.ファイルのアップロード') ?></label>
+                    <label class=""><?= __d('app', '2.ファイルのアップロード') ?></label>
 
-                    <p><?= __d\('app', "変更したユーザ情報のファイルをアップロードしてください。") ?></p>
+                    <p><?= __d('app', "変更したユーザ情報のファイルをアップロードしてください。") ?></p>
 
                     <div class="">
                         <div class="fileinput fileinput-new fileinput-enabled-submit" data-provides="fileinput"
                              submit-id="EditMembersSubmit">
                             <span class="btn btn-default btn-file">
-                                <span class="fileinput-new"><?= __d\('app', "ファイルを選択") ?></span>
-                                <span class="fileinput-exists"><?= __d\('app', "別のファイルに変更する") ?></span>
+                                <span class="fileinput-new"><?= __d('app', "ファイルを選択") ?></span>
+                                <span class="fileinput-exists"><?= __d('app', "別のファイルに変更する") ?></span>
                                 <?=
                                 $this->Form->input('csv_file',
                                                    ['type'         => 'file',
@@ -93,10 +93,10 @@
                             &nbsp;<i class="fa fa-refresh fa-spin"></i>
                         </div>
                         <button type="button" class="btn btn-link design-cancel bd-radius_4px"
-                                data-dismiss="modal"><?= __d\('app',
+                                data-dismiss="modal"><?= __d('app',
                                                              "キャンセル") ?></button>
                         <?=
-                        $this->Form->submit(__d\('app', "変更する"),
+                        $this->Form->submit(__d('app', "変更する"),
                                             ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled', 'id' => 'EditMembersSubmit']) ?>
 
                     </div>

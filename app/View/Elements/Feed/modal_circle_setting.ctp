@@ -8,7 +8,7 @@
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= __d\('app', "サークルの設定") ?></h4>
+            <h4 class="modal-title"><?= __d('app', "サークルの設定") ?></h4>
         </div>
         <?=
         $this->Form->create('CircleMember', [
@@ -41,7 +41,7 @@
                         </div>
 
                         <div class="ptb_10px font_bold">
-                            <?= __d\('app', "ホームフィードに表示する") ?>
+                            <?= __d('app', "ホームフィードに表示する") ?>
                         </div>
                     </div>
                 </div>
@@ -61,7 +61,7 @@
                         </div>
 
                         <div class="ptb_10px font_bold">
-                            <?= __d\('app', "新しい投稿を通知する") ?>
+                            <?= __d('app', "新しい投稿を通知する") ?>
                         </div>
                     </div>
                 </div>

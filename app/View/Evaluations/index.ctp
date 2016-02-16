@@ -16,11 +16,11 @@
 ?>
 <!-- START app/View/Evaluations/index.ctp -->
 <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix">
-    <div class="panel-heading"><?= __d\('app', "評価") ?></div>
+    <div class="panel-heading"><?= __d('app', "評価") ?></div>
     <div class="panel-body eval-view-panel-body">
         <div class="goal-search-menu">
             <div class="eval-term-tab-menu btn-group btn-group-justified" role="group">
-                <?php foreach (['present' => __d\('app', "今期"), 'previous' => __d\('app', "前期")] as $key => $val): ?>
+                <?php foreach (['present' => __d('app', "今期"), 'previous' => __d('app', "前期")] as $key => $val): ?>
                     <?php $selected = $key == $selected_term_name ? 'selected' : ''; ?>
                     <?php $incompleteNum = (int)$incomplete_number_list[$key]['my_eval'] + (int)$incomplete_number_list[$key]['my_evaluatees'];
                     ?>
@@ -41,20 +41,20 @@
         </div>
         <?php if ($isFrozens[$selected_term_name]): ?>
             <div class="col-sm-12 bg-danger font_bold p_8px mb_8px">
-                <?= __d\('app', "評価は凍結されています。") ?></div>
+                <?= __d('app', "評価は凍結されています。") ?></div>
         <?php else: ?>
             <?php if ((int)$incomplete_number_list[$selected_term_name]['my_eval'] + (int)$incomplete_number_list[$selected_term_name]['my_evaluatees'] > 0): ?>
                 <div class="col-sm-12 bg-danger font_bold p_8px mb_8px">
-                    <?= __d\('app', "あと%s件の評価が完了しておりません。以下より評価を行なってください。",
+                    <?= __d('app', "あと%s件の評価が完了しておりません。以下より評価を行なってください。",
                             (int)$incomplete_number_list[$selected_term_name]['my_eval'] + (int)$incomplete_number_list[$selected_term_name]['my_evaluatees']) ?></div>
             <?php endif; ?>
         <?php endif; ?>
         <div class="form-group">
             <?php if (!empty($my_eval[0])): ?>
                 <div for="#" class="col col-xxs-12 eval-index-panel-title bg-lightGray p_8px mb_8px">
-                    <p class="font_bold"><?= __d\('app', "自分") ?></p>
+                    <p class="font_bold"><?= __d('app', "自分") ?></p>
                     <?php if ((int)$incomplete_number_list[$selected_term_name]['my_eval'] > 0): ?>
-                        <p><?= __d\('app', "未完了:1") ?></p>
+                        <p><?= __d('app', "未完了:1") ?></p>
                     <?php endif; ?>
                 </div>
                 <?= $this->element('Evaluation/index_items',
@@ -62,9 +62,9 @@
             <?php endif; ?>
             <?php if (!empty($my_evaluatees)): ?>
                 <div for="#" class="col col-xxs-12 eval-index-panel-title bg-lightGray p_8px mb_8px">
-                    <p class="font_bold"><?= __d\('app', "あなたが評価するメンバー") ?></p>
+                    <p class="font_bold"><?= __d('app', "あなたが評価するメンバー") ?></p>
                     <?php if ((int)$incomplete_number_list[$selected_term_name]['my_evaluatees'] > 0): ?>
-                        <p><?= __d\('app', "未完了:%s",
+                        <p><?= __d('app', "未完了:%s",
                                    (int)$incomplete_number_list[$selected_term_name]['my_evaluatees']) ?></p>
                     <?php endif; ?>
                 </div>

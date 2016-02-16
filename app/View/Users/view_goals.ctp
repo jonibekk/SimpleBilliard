@@ -41,10 +41,10 @@
             <div class="profile-goals-select-wrap btn-group" role="group">
                 <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user['User']['id'], 'term_id'=>$term_id]) ?>"
                    class="profile-goals-select btn <?= $page_type == "following" ? "btn-unselected" : "btn-selected" ?>">
-                    <?= __d\('app', "マイゴール(%s)", $my_goals_count) ?></a>
+                    <?= __d('app', "マイゴール(%s)", $my_goals_count) ?></a>
                 <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user['User']['id'],'term_id'=>$term_id, 'page_type' => 'following']) ?>"
                    class="profile-goals-select btn <?= $page_type == "following" ? "btn-selected" : "btn-unselected" ?>">
-                    <?= __d\('app', "フォロー中(%s)", $follow_goals_count) ?></a>
+                    <?= __d('app', "フォロー中(%s)", $follow_goals_count) ?></a>
             </div>
             <?php foreach ($goals as $goal): ?>
                 <div class="col col-xxs-12 my-goals-item">
@@ -73,10 +73,10 @@
                             <?= $this->element('Goal/goal_menu_on_my_page', ['goal' => $goal]) ?>
                         <?php endif; ?>
                         <div class="col col-xxs-12 font_lightgray font_12px">
-                            <?= __d\('app', "目的: %s", $goal['Purpose']['name']) ?>
+                            <?= __d('app', "目的: %s", $goal['Purpose']['name']) ?>
                         </div>
                         <div class="col col-xxs-12 font_lightgray font_12px">
-                            <?= __d\('app', "認定ステータス: %s",
+                            <?= __d('app', "認定ステータス: %s",
                                     Collaborator::$STATUS[$goal['Collaborator']['valued_flg']]) ?>
                         </div>
                         <div class="col col-xxs-12">
@@ -124,9 +124,9 @@
                                                href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add_action', 'goal_id' => $goal['Goal']['id']]) ?>"><i
                                                     class="fa fa-plus"></i>
 
-                                                <p class="profile-user-add-action-text "><?= __d\('app', "アクション") ?></p>
+                                                <p class="profile-user-add-action-text "><?= __d('app', "アクション") ?></p>
 
-                                                <p class="profile-user-add-action-text "><?= __d\('app', "追加") ?></p>
+                                                <p class="profile-user-add-action-text "><?= __d('app', "追加") ?></p>
                                             </a>
                                         </li>
                                     <?php endif; ?>

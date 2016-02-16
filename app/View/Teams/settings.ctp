@@ -16,17 +16,17 @@ $this->set('hidden_sidebar_xxs', true);
 <?php $this->start('sidebar') ?>
 <div class="sidebar-setting" role="complementary">
     <ul class="nav">
-        <li class="active"><a href="#basic_setting"><?= __d\('app', "基本設定") ?></a></li>
-        <li class=""><a href="#term_setting"><?= __d\('app', "期間設定") ?></a></li>
-        <li class=""><a href="#invite_member"><?= __d\('app', "メンバー招待") ?></a></li>
-        <li class=""><a href="#batch_registration"><?= __d\('app', "一括登録") ?></a></li>
-        <li class=""><a href="#goal_category"><?= __d\('app', "ゴールカテゴリ設定") ?></a></li>
-        <li class=""><a href="#evaluation"><?= __d\('app', "評価設定") ?></a></li>
-        <li class=""><a href="#evaluation_score_setting"><?= __d\('app', "評価スコア設定") ?></a></li>
-        <li class=""><a href="#evaluation_start"><?= __d\('app', "評価開始") ?></a></li>
-        <li class=""><a href="#evaluation_freeze"><?= __d\('app', "評価凍結") ?></a></li>
-        <li class=""><a href="#final_evaluation"><?= __d\('app', "最終評価") ?></a></li>
-        <li class=""><a href="#progress"><?= __d\('app', "評価状況") ?></a></li>
+        <li class="active"><a href="#basic_setting"><?= __d('app', "基本設定") ?></a></li>
+        <li class=""><a href="#term_setting"><?= __d('app', "期間設定") ?></a></li>
+        <li class=""><a href="#invite_member"><?= __d('app', "メンバー招待") ?></a></li>
+        <li class=""><a href="#batch_registration"><?= __d('app', "一括登録") ?></a></li>
+        <li class=""><a href="#goal_category"><?= __d('app', "ゴールカテゴリ設定") ?></a></li>
+        <li class=""><a href="#evaluation"><?= __d('app', "評価設定") ?></a></li>
+        <li class=""><a href="#evaluation_score_setting"><?= __d('app', "評価スコア設定") ?></a></li>
+        <li class=""><a href="#evaluation_start"><?= __d('app', "評価開始") ?></a></li>
+        <li class=""><a href="#evaluation_freeze"><?= __d('app', "評価凍結") ?></a></li>
+        <li class=""><a href="#final_evaluation"><?= __d('app', "最終評価") ?></a></li>
+        <li class=""><a href="#progress"><?= __d('app', "評価状況") ?></a></li>
     </ul>
 </div>
 <?php $this->end() ?>

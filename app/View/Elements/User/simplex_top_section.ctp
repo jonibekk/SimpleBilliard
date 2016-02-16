@@ -49,7 +49,7 @@
                 <?= h($action_count) ?>
             </div>
             <span class="profile-user-numbers-category-action">
-                <?= __d\('app', 'アクション') ?>
+                <?= __d('app', 'アクション') ?>
             </span>
         </div>
         <div class="profile-user-numbers-post">
@@ -57,7 +57,7 @@
                 <?= h($post_count) ?>
             </div>
             <span class="profile-user-numbers-category-post">
-                <?= __d\('app', '投稿') ?>
+                <?= __d('app', '投稿') ?>
             </span>
         </div>
         <div class="profile-user-numbers-like">
@@ -65,11 +65,11 @@
                 <?= h($this->NumberEx->formatHumanReadable($like_count, ['convert_start' => 10000])) ?>
             </div>
             <span class="profile-user-numbers-category-like">
-                <?= __d\('app', 'いいね') ?>
+                <?= __d('app', 'いいね') ?>
             </span>
         </div>
         <?php if ($this->Session->read('Auth.User.id') == $user['User']['id']): ?>
-            <?= $this->Html->link(__d\('app', 'プロフィール編集'),
+            <?= $this->Html->link(__d('app', 'プロフィール編集'),
                                   [
                                       'controller' => 'users',
                                       'action'     => 'settings',
@@ -96,7 +96,7 @@
         <i class="fa fa-flag profile-user-tab-icon"></i>
 
         <p class="profile-user-tab-title">
-            <?= h(__d\('app', 'ゴール')) ?>
+            <?= h(__d('app', 'ゴール')) ?>
         </p>
     </a>
     <a class="profile-user-action-tab <?= $this->request->params['action'] == 'view_actions' ? "profile-user-tab-active" : null ?>"
@@ -110,7 +110,7 @@
         <i class="fa fa-check-circle profile-user-tab-icon"></i>
 
         <p class="profile-user-tab-title">
-            <?= h(__d\('app', 'アクション')) ?>
+            <?= h(__d('app', 'アクション')) ?>
         </p>
     </a>
     <a class="profile-user-post-tab <?= $this->request->params['action'] == 'view_posts' ? "profile-user-tab-active" : null ?>"
@@ -123,7 +123,7 @@
         <i class="fa fa-comment-o profile-user-tab-icon"></i>
 
         <p class="profile-user-tab-title">
-            <?= h(__d\('app', '投稿')) ?>
+            <?= h(__d('app', '投稿')) ?>
         </p>
     </a>
     <a class="profile-user-status-tab <?= $this->request->params['action'] == 'view_info' ? "profile-user-tab-active" : null ?>"
@@ -136,7 +136,7 @@
         <i class="fa fa-user profile-user-tab-icon"></i>
 
         <p class="profile-user-tab-title">
-            <?= h(__d\('app', '基本データ')) ?>
+            <?= h(__d('app', '基本データ')) ?>
         </p>
     </a>
 </div>

@@ -13,7 +13,7 @@
 <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default">
-            <div class="panel-heading"><?= __d\('app', "2段階認証") ?></div>
+            <div class="panel-heading"><?= __d('app', "2段階認証") ?></div>
             <div class="panel-body login-panel-body">
                 <?=
                 $this->Form->create('User', [
@@ -30,17 +30,17 @@
                 ]); ?>
                 <?=
                 $this->Form->input('two_fa_code', [
-                    'label' => __d\('app', "コード")
+                    'label' => __d('app', "コード")
                 ]) ?>
 
                 <div class="form-group">
                     <div class="col-sm-9 col-sm-offset-3">
                         <?=
-                        $this->Form->submit(__d\('app', "認証"),
+                        $this->Form->submit(__d('app', "認証"),
                                             ['class' => 'btn btn-primary']) ?>
                         <span class="help-block">
-                            <?= __d\('app', "認証アプリを使用できない場合は") ?>
-                            <?= $this->Html->link(__d\('app', "こちら"), [
+                            <?= __d('app', "認証アプリを使用できない場合は") ?>
+                            <?= $this->Html->link(__d('app', "こちら"), [
                                 'controller' => 'users',
                                 'action'     => 'two_fa_auth_recovery',
                             ]); ?>

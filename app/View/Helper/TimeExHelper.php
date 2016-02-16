@@ -101,11 +101,11 @@ class TimeExHelper extends AppHelper
         $elapsed = null;
         //「たった今」 $date > REQUEST_TIMESTAMP - 60sec
         if ($unixtime > strtotime("-1 minute")) {
-            $elapsed = __d\('app', "たった今");
+            $elapsed = __d('app', "たった今");
         }
         //「１分前」 $date > REQUEST_TIMESTAMP - 120sec
         elseif ($unixtime > strtotime("-2 minutes")) {
-            $elapsed = __d\('app', "1分前");
+            $elapsed = __d('app', "1分前");
         }
         //「2分前」〜「59分前」 $date > REQUEST_TIMESTAMP - 1h
         elseif ($unixtime > strtotime("-1 hour")) {
@@ -137,13 +137,13 @@ class TimeExHelper extends AppHelper
     public function elapsedMinutes($unixtime)
     {
         $minutes = floor((REQUEST_TIMESTAMP - $unixtime) / 60);
-        return __d\('app', "%s分前", $minutes);
+        return __d('app', "%s分前", $minutes);
     }
 
     public function elapsedHours($unixtime)
     {
         $hours = floor((REQUEST_TIMESTAMP - $unixtime) / 60 / 60);
-        return __d\('app', "%s時間前", $hours);
+        return __d('app', "%s時間前", $hours);
     }
 
     public function datetimeLocalFormat($unixtime)

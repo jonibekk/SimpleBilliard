@@ -40,11 +40,11 @@ $meta_terms = [
     ],
     [
         "property" => "og:title",
-        "content" => __d\('app', 'Goalous利用規約 | Goalous(ゴーラス)'),
+        "content" => __d('app', 'Goalous利用規約 | Goalous(ゴーラス)'),
     ],
     [
         "property" => "og:description",
-        "content" =>__d\('app', 'Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。利用規約はこちら。'),
+        "content" =>__d('app', 'Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。利用規約はこちら。'),
     ],
     [
         "property" => "og:url",

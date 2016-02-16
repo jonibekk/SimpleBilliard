@@ -23,21 +23,21 @@
             <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id']]) ?>"
                class="modal-ajax-get-add-key-result"
                 ><i class="fa fa-plus-circle"></i><span class="ml_2px">
-                                    <?= __d\('app', "達成要素を追加") ?></span></a>
+                                    <?= __d('app', "達成要素を追加") ?></span></a>
         </li>
         <?php if (!viaIsSet($goal['Evaluation'])): ?>
             <li role="presentation">
                 <a role="menuitem" tabindex="-1"
                    href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add', 'goal_id' => $goal['Goal']['id'], 'mode' => 3]) ?>">
-                    <i class="fa fa-pencil"></i><span class="ml_2px"><?= __d\('app', "ゴールを編集") ?></span>
+                    <i class="fa fa-pencil"></i><span class="ml_2px"><?= __d('app', "ゴールを編集") ?></span>
                 </a>
             </li>
             <li role="presentation">
                 <?=
                 $this->Form->postLink('<i class="fa fa-trash"></i><span class="ml_5px">' .
-                                      __d\('app', "ゴールを削除") . '</span>',
+                                      __d('app', "ゴールを削除") . '</span>',
                                       ['controller' => 'goals', 'action' => 'delete', 'goal_id' => $goal['Goal']['id']],
-                                      ['escape' => false], __d\('app', "本当にこのゴールを削除しますか？")) ?>
+                                      ['escape' => false], __d('app', "本当にこのゴールを削除しますか？")) ?>
             </li>
         <?php endif; ?>
     </ul>

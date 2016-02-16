@@ -13,10 +13,10 @@
 <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default">
-            <div class="panel-heading"><?= __d\('app', "Goalousにログイン！") ?></div>
+            <div class="panel-heading"><?= __d('app', "Goalousにログイン！") ?></div>
             <div class="panel-body login-panel-body">
                 <div id="RequireCookieAlert" class="alert alert-danger" style="display:none">
-                    <?= __d\('app', "Cookieを有効にしてください") ?>
+                    <?= __d('app', "Cookieを有効にしてください") ?>
                 </div>
                 <?=
                 $this->Form->create('User', [
@@ -33,7 +33,7 @@
                 ]); ?>
                 <?=
                 $this->Form->input('email', [
-                    'label' => __d\('app', "メールアドレス")
+                    'label' => __d('app', "メールアドレス")
                 ]) ?>
 
                 <?php //TODO For disabling autocomplete from the browser end ?>
@@ -41,7 +41,7 @@
 
                 <?=
                 $this->Form->input('password', [
-                    'label'    => __d\('app', "パスワード"),
+                    'label'    => __d('app', "パスワード"),
                     'type'     => 'password',
                     'required' => false,
                     'value'    => ''
@@ -55,7 +55,7 @@
                 <div class="form-group">
                     <div class="col-sm-9 col-sm-offset-3">
                         <?=
-                        $this->Form->submit(__d\('app', "ログイン"),
+                        $this->Form->submit(__d('app', "ログイン"),
                                             ['class' => 'btn btn-primary' /*, 'disabled'=>'disabled'*/]) ?>
                     </div>
                 </div>
@@ -68,11 +68,11 @@
                         }
                         ?>
                         <?=
-                        $this->Html->link(__d\('app', 'パスワードを忘れた場合はこちら'), ['action' => 'password_reset'], $options) ?>
+                        $this->Html->link(__d('app', 'パスワードを忘れた場合はこちら'), ['action' => 'password_reset'], $options) ?>
                     </div>
                     <div class="col-sm-4">
                         <?=
-                        $this->Html->link(__d\('app', '新規ユーザ登録はこちら'), ['action' => 'register'], $options) ?>
+                        $this->Html->link(__d('app', '新規ユーザ登録はこちら'), ['action' => 'register'], $options) ?>
                     </div>
                 </div>
                 <?= $this->Form->end(); ?>

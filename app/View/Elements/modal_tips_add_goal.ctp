@@ -31,7 +31,7 @@
             <?php endif; ?>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d\('app', "閉じる") ?></button>
+            <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('app', "閉じる") ?></button>
         </div>
     </div>
 </div>

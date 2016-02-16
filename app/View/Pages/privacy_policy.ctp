@@ -39,11 +39,11 @@ $meta_privacy_policy = [
     ],
     [
         "property" => "og:title",
-        "content" => __d\('app', 'プライバシーポリシー | Goalous(ゴーラス)'),
+        "content" => __d('app', 'プライバシーポリシー | Goalous(ゴーラス)'),
     ],
     [
         "property" => "og:description",
-        "content" =>__d\('app', 'Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。プライバシーポリシーはこちら。'),
+        "content" =>__d('app', 'Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。プライバシーポリシーはこちら。'),
     ],
     [
         "property" => "og:url",

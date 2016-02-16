@@ -67,7 +67,7 @@
     <div class="dashboard-circle-list-footer">
         <div class="clearfix dashboard-circle-list-seek">
             <i class="fa fa-eye circle-function circle-seek-icon font_brownRed"></i><?=
-            $this->Html->link(__d\('app', "サークルを見る"),
+            $this->Html->link(__d('app', "サークルを見る"),
                               ['controller' => 'circles', 'action' => 'ajax_get_public_circles_modal'],
                               ['class' => 'modal-ajax-get-public-circles font-dimgray']) ?>
         </div>
@@ -76,7 +76,7 @@
                                                                                                class="font-dimgray"
                                                                                                data-toggle="modal"
                                                                                                data-target="#modal_add_circle"><?=
-                __d\('app',
+                __d('app',
                     "サークルを作成する") ?></a>
         </div>
     </div>

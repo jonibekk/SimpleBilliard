@@ -15,7 +15,7 @@
 <!--
     <li class="notify-card-empty" id="notifyCardEmpty">
        <i class="fa fa-smile-o font_33px mr_8px"></i><span
-           class="notify-empty-text"><?= __d\('app', "未読の通知はありません。") ?></span>
+           class="notify-empty-text"><?= __d('app', "未読の通知はありません。") ?></span>
     </li>
      -->
 

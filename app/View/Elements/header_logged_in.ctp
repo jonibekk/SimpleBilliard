@@ -39,9 +39,9 @@
                                      alt="Goalous2.0" width="20px" height="20px">
 
                                 <p class="font_11px font_heavyGray header_icon-text hidden-xs js-header-link">
-                                    <?= __d\('app', "ホーム") ?>
+                                    <?= __d('app', "ホーム") ?>
                                 </p>
-                                <span class="visible-xs-inline va_bl ml_5px"><?= __d\('app', "ホーム") ?></span>
+                                <span class="visible-xs-inline va_bl ml_5px"><?= __d('app', "ホーム") ?></span>
                             </div>
                         </a>
                     </li>
@@ -52,9 +52,9 @@
                                 <i class="fa fa-flag js-header-link header-icon nav-xxs-icon header-icons"></i>
 
                                 <p class="font_11px header_icon-text hidden-xs js-header-link">
-                                    <?= __d\('app', "ゴール") ?>
+                                    <?= __d('app', "ゴール") ?>
                                 </p>
-                                <span class="visible-xs-inline ml_5px"><?= __d\('app', "ゴール") ?></span>
+                                <span class="visible-xs-inline ml_5px"><?= __d('app', "ゴール") ?></span>
                             </div>
                         </a>
                     </li>
@@ -66,9 +66,9 @@
                                 <i class="fa fa-users js-header-link header-icon nav-xxs-icon header-icons"></i>
 
                                 <p class="font_11px header_icon-text hidden-xs js-header-link">
-                                    <?= __d\('app', "チーム") ?>
+                                    <?= __d('app', "チーム") ?>
                                 </p>
-                                <span class="visible-xs-inline ml_5px"><?= __d\('app', "チーム") ?></span>
+                                <span class="visible-xs-inline ml_5px"><?= __d('app', "チーム") ?></span>
                             </div>
                         </a>
                     </li>
@@ -77,7 +77,7 @@
                             <?php echo $this->Form->input('current_team',
                                                           array(
                                                               'type'      => 'select',
-                                                              'options'   => !empty($my_teams) ? $my_teams : [__d\('app',
+                                                              'options'   => !empty($my_teams) ? $my_teams : [__d('app',
                                                                                                                   'チームがありません')],
                                                               'value'     => $this->Session->read('current_team_id'),
                                                               'id'        => 'SwitchTeam',
@@ -109,17 +109,17 @@
                                     <ul class="dropdown-menu nav-search-form-dropdown" role="menu">
                                         <li><a href="#" style="" class="nav-search-category-item" data-category="user">
                                                 <i class="fa fa-user header-drop-icons"></i>
-                                                <?= __d\('app', 'メンバー'); ?>
+                                                <?= __d('app', 'メンバー'); ?>
                                             </a>
                                         </li>
                                         <li><a href="#" class="nav-search-category-item" data-category="goal">
                                                 <i class="fa fa-flag header-drop-icons"></i>
-                                                <?= __d\('app', 'ゴール'); ?>
+                                                <?= __d('app', 'ゴール'); ?>
                                             </a>
                                         </li>
                                         <li><a href="#" class="nav-search-category-item" data-category="circle">
                                                 <i class="fa fa-circle-o header-drop-icons"></i>
-                                                <?= __d\('app', 'サークル'); ?>
+                                                <?= __d('app', 'サークル'); ?>
                                             </a>
                                         </li>
                                     </ul>

@@ -38,7 +38,7 @@
             <div class="col col-xxs-12 font_lightgray font_12px">
                 <?php if (!empty($goal['Leader'])): ?>
                     <?=
-                    __d\('app', "リーダー: %s",
+                    __d('app', "リーダー: %s",
                         h($goal['Leader'][0]['User']['display_username'])) ?>
                 <?php endif; ?>
             </div>
