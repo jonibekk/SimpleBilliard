@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2015-10-22 08:32+0000\n"
+"POT-Creation-Date: 2016-02-16 08:26+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -13,6 +13,10 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: Controller/PagesController.php:248
+msgid "【Goalous】お問い合わせありがとうございました"
+msgstr ""
 
 #: Model/SendMail.php:61
 msgid "アカウントの仮登録が完了しました"
@@ -38,28 +42,40 @@ msgstr ""
 msgid "Goalousのチームへ招待"
 msgstr ""
 
-#: View/Elements/Email/goalous_web.ctp:18
-msgid "◆Follow on Facebook"
+#: View/Elements/Email/goalous_web.ctp:7
+msgid "■Goalous(ゴーラス)"
 msgstr ""
 
-#: View/Elements/Email/goalous_web.ctp:22
-msgid "◆Goalous Blog"
+#: View/Elements/Email/goalous_web.ctp:12
+msgid "■お問い合わせ"
 msgstr ""
 
-#: View/Elements/Email/goalous_web.ctp:26
-msgid "◆Goalousホーム"
+#: View/Elements/Email/goalous_web.ctp:17
+msgid "■運営会社"
+msgstr ""
+
+#: View/Elements/Email/goalous_web.ctp:19
+msgid "株式会社ISAO"
 msgstr ""
 
 #: View/Elements/Email/login_url.ctp:5
 msgid "◆Goalousログイン"
 msgstr ""
 
-#: View/Elements/Email/no_reply.ctp:4
-msgid "□本メールは送信専用のため、"
+#: View/Elements/Email/no_reply.ctp:3
+msgid "■ご注意"
 msgstr ""
 
-#: View/Elements/Email/no_reply.ctp:6
-msgid " 返信しないようお願いします。"
+#: View/Elements/Email/no_reply.ctp:5
+msgid "このメールは、お問い合わせメールアドレス宛に自動的に送信されています。"
+msgstr ""
+
+#: View/Elements/Email/no_reply.ctp:7
+msgid "直接返信されないようお願い申し上げます。"
+msgstr ""
+
+#: View/Elements/Email/no_reply.ctp:10
+msgid "このメールに心当たりの無い方は、お問い合わせフォームからお問い合わせください。"
 msgstr ""
 
 #: View/Elements/Email/stop_mail.ctp:4
@@ -96,6 +112,42 @@ msgstr ""
 #: View/Emails/text/change_email.ctp:22
 #: View/Emails/text/password_reset.ctp:22
 msgid "もし、このメールに心当たりがない場合は、何もせずにメールを破棄してください。"
+msgstr ""
+
+#: View/Emails/text/contact.ctp:12
+msgid "このたびはGoalous（ゴーラス）へお問い合わせいただき、誠にありがとうございます。"
+msgstr ""
+
+#: View/Emails/text/contact.ctp:14
+msgid "内容を確認のうえ、担当者より３営業日以内にご連絡いたします。"
+msgstr ""
+
+#: View/Emails/text/contact.ctp:15
+msgid "どうぞよろしくお願い申し上げます。"
+msgstr ""
+
+#: View/Emails/text/contact.ctp:18;33
+msgid "お問い合わせ内容"
+msgstr ""
+
+#: View/Emails/text/contact.ctp:21
+msgid "お問い合わせ項目"
+msgstr ""
+
+#: View/Emails/text/contact.ctp:24
+msgid "会社名"
+msgstr ""
+
+#: View/Emails/text/contact.ctp:27
+msgid "お名前"
+msgstr ""
+
+#: View/Emails/text/contact.ctp:30
+msgid "メールアドレス"
+msgstr ""
+
+#: View/Emails/text/contact.ctp:36
+msgid "ご希望の営業担当者"
 msgstr ""
 
 #: View/Emails/text/invite.ctp:20

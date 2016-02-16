@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2015-10-22 08:32+0000\n"
+"POT-Creation-Date: 2016-02-16 08:26+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -14,20 +14,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: Controller/PagesController.php:126
+#: Controller/PagesController.php:156
 msgid "Japanese"
 msgstr ""
 
-#: Controller/PagesController.php:127
+#: Controller/PagesController.php:157
 msgid "English"
 msgstr ""
 
 #: View/Elements/footer.ctp:20
-msgid "Features"
-msgstr ""
-
-#: View/Elements/footer.ctp:28
-#: View/Elements/header_logged_in_right.ctp:159
 msgid "Blog"
 msgstr ""
 

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2015-10-22 08:32+0000\n"
+"POT-Creation-Date: 2016-02-16 08:26+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -14,25 +14,25 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: Controller/AppController.php:491
+#: Controller/AppController.php:555
 msgid "不正なアクセスです。"
 msgstr ""
 
-#: Controller/UsersController.php:753
+#: Controller/UsersController.php:811
 msgid "別のユーザ宛のチーム招待です。"
 msgstr ""
 
-#: Model/Invite.php:87
-#: Model/User.php:571
+#: Model/Invite.php:91
+#: Model/User.php:592
 msgid "トークンが正しくありません。送信されたメールを再度ご確認下さい。"
 msgstr ""
 
-#: Model/Invite.php:90
+#: Model/Invite.php:94
 msgid "このトークンは使用済みです。"
 msgstr ""
 
-#: Model/Invite.php:93
-#: Model/User.php:574
+#: Model/Invite.php:97
+#: Model/User.php:595
 msgid "トークンの期限が切れています。"
 msgstr ""
 
