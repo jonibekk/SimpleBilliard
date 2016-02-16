@@ -53,19 +53,19 @@ if (!isset($message_page_image)) {
                                     'action'     => 'attached_file_download',
                                     'file_id'    => $data['id']
                                 ]) ?>">
-                                <i class="fa fa-download"></i><?= __d('gl', "ダウンロード") ?></a>
+                                <i class="fa fa-download"></i><?= __d\('app', "ダウンロード") ?></a>
                         </li>
                     <?php endif; ?>
                     <?php if ($this->Upload->isCanPreview($data)): ?>
                         <li>
                             <a href="<?= $this->Upload->attachedFileUrl($data, "viewer") ?>"
                                 <?= $data['file_type'] == AttachedFile::TYPE_FILE_IMG ? "rel='lightbox' data-lightbox='LightBoxAttachedFilePreview_{$data['id']}'" : "target='_blank'" ?>>
-                                <i class="fa fa-external-link-square"></i><?= __d('gl', "プレビュー") ?></a>
+                                <i class="fa fa-external-link-square"></i><?= __d\('app', "プレビュー") ?></a>
                         </li>
                     <?php endif; ?>
                     <li>
                         <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'post_id' => $post_id]) ?>">
-                            <i class="fa fa-eye"></i><?= __d('gl', "投稿を見る") ?></a>
+                            <i class="fa fa-eye"></i><?= __d\('app', "投稿を見る") ?></a>
                     </li>
                 </ul>
             </div>
@@ -165,7 +165,7 @@ if (!isset($message_page_image)) {
                         <?= $data['file_type'] == AttachedFile::TYPE_FILE_IMG ? "rel='lightbox' data-lightbox='LightBoxAttachedFileMenu_Post{$post_id}_Comment{$comment_id}'" : "target='_blank'" ?>>
                         <div class="col col-xxs-6 text-center file-btn-wap">
                             <div class="file-btn">
-                                <i class="fa fa-external-link-square"></i><?= __d('gl', "プレビュー") ?>
+                                <i class="fa fa-external-link-square"></i><?= __d\('app', "プレビュー") ?>
                             </div>
                         </div>
                     </a>
@@ -182,7 +182,7 @@ if (!isset($message_page_image)) {
                         ]) ?>">
                         <div class="col col-xxs-6 text-center file-btn-wap">
                             <div class="file-btn">
-                                <i class="fa fa-download"></i><?= __d('gl', "ダウンロード") ?>
+                                <i class="fa fa-download"></i><?= __d\('app', "ダウンロード") ?>
                             </div>
                         </div>
                     </a>

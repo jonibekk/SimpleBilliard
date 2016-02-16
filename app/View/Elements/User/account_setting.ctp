@@ -17,7 +17,7 @@
 ?>
 <!-- START app/View/Elements/User/account_setting.ctp -->
 <div class="panel panel-default">
-    <div class="panel-heading"><?= __d('gl', "アカウント") ?></div>
+    <div class="panel-heading"><?= __d\('app', "アカウント") ?></div>
     <?=
     $this->Form->create('User', [
         'inputDefaults' => [
@@ -33,32 +33,32 @@
     ]); ?>
     <div class="panel-body user-setting-panel-body">
         <div class="form-group">
-            <label for="PrimaryEmailEmail" class="col col-sm-3 control-label form-label"><?= __d('gl', "メール") ?></label>
+            <label for="PrimaryEmailEmail" class="col col-sm-3 control-label form-label"><?= __d\('app', "メール") ?></label>
 
             <div class="col col-sm-6">
                 <p class="form-control-static"><?= h($me['PrimaryEmail']['email']) ?></p>
 
                 <?php if (!empty($not_verified_email)): ?>
                     <p class="form-control-static">
-                        <a href="#" rel="tooltip" title="<?= __d('gl', "認証待ちのメールアドレスが存在するため、変更はできません。") ?>">
-                            <?= __d('gl', "メールアドレスを変更する") ?>
+                        <a href="#" rel="tooltip" title="<?= __d\('app', "認証待ちのメールアドレスが存在するため、変更はできません。") ?>">
+                            <?= __d\('app', "メールアドレスを変更する") ?>
                         </a>
                     </p>
                     <div class="alert alert-warning fade in">
                         <p><?=
-                            __d('gl', '現在、%sの認証待ちです。',
+                            __d\('app', '現在、%sの認証待ちです。',
                                 "<b>" . $not_verified_email['Email']['email'] . "</b>") ?></p>
 
-                        <p><?= __d('gl', 'このメールアドレスに送られた確認用のメールをご確認ください。') ?></p>
+                        <p><?= __d\('app', 'このメールアドレスに送られた確認用のメールをご確認ください。') ?></p>
                         <a href="#" data-toggle="modal" data-target="#modal_delete_email">
-                            <?= __d('gl', "メールアドレスの変更をキャンセルする") ?>
+                            <?= __d\('app', "メールアドレスの変更をキャンセルする") ?>
                         </a>
                     </div>
 
                 <?php else: ?>
                     <p class="form-control-static">
                         <a href="#" data-toggle="modal" data-target="#modal_change_email">
-                            <?= __d('gl', "メールアドレスを変更する") ?>
+                            <?= __d\('app', "メールアドレスを変更する") ?>
                         </a>
                     </p>
                 <?php endif ?>
@@ -67,13 +67,13 @@
         <?=
         $this->Form->input('update_email_flg', [
             'wrapInput' => 'col col-sm-9 col-sm-offset-3',
-            'label'     => ['class' => null, 'text' => __d('gl', "Goalousからのメールによるニュースや更新情報などを受け取る。")],
+            'label'     => ['class' => null, 'text' => __d\('app', "Goalousからのメールによるニュースや更新情報などを受け取る。")],
             'class'     => false,
         ]) ?>
         <hr>
         <?=
         $this->Form->input('language', [
-            'label'   => __d('gl', "言語"),
+            'label'   => __d\('app', "言語"),
             'type'    => 'select',
             'options' => $language_list,
             'wrapInput' => 'user-setting-lang-select-wrap col col-sm-6'
@@ -81,7 +81,7 @@
         <hr>
         <?=
         $this->Form->input('timezone', [
-            'label'   => __d('gl', "タイムゾーン"),
+            'label'   => __d\('app', "タイムゾーン"),
             'type'    => 'select',
             'options' => $timezones,
             'wrapInput' => 'user-setting-timezone-select-wrap col col-sm-6'
@@ -90,7 +90,7 @@
         <hr>
         <?php if (!empty($my_teams)) {
             echo $this->Form->input('default_team_id', [
-                'label'   => __d('gl', "デフォルトチーム"),
+                'label'   => __d\('app', "デフォルトチーム"),
                 'type'    => 'select',
                 'options' => $my_teams,
                 'wrapInput' => 'user-setting-default-team-select-wrap col col-sm-6'
@@ -99,42 +99,42 @@
         }
         ?>
         <div class="form-group">
-            <label for="UserPassword" class="col col-sm-3 control-label form-label"><?= __d('gl', "パスワード") ?></label>
+            <label for="UserPassword" class="col col-sm-3 control-label form-label"><?= __d\('app', "パスワード") ?></label>
 
             <div class="col col-sm-6">
                 <p class="form-control-static">
                     <a href="#" data-toggle="modal" data-target="#modal_change_password"><?=
-                        __d('gl',
+                        __d\('app',
                             "パスワードを変更する") ?></a>
                 </p>
             </div>
         </div>
         <hr>
         <div class="form-group">
-            <label for="2FA" class="col col-sm-3 control-label form-label"><?= __d('gl', "2段階認証") ?></label>
+            <label for="2FA" class="col col-sm-3 control-label form-label"><?= __d\('app', "2段階認証") ?></label>
 
             <div class="col col-sm-6">
                 <p class="form-control-static">
                     <?php if (viaIsSet($this->request->data['User']['2fa_secret'])): ?>
                         <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'ajax_get_modal_2fa_delete']) ?>"
-                           class="modal-ajax-get"><?= __d('gl', "解除する") ?></a>
+                           class="modal-ajax-get"><?= __d\('app', "解除する") ?></a>
                     <?php else: ?>
                         <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'ajax_get_modal_2fa_register']) ?>"
-                           class="modal-ajax-get"><?= __d('gl', "設定する") ?></a>
+                           class="modal-ajax-get"><?= __d\('app', "設定する") ?></a>
                     <?php endif; ?>
                 </p>
                 <?php if (viaIsSet($this->request->data['User']['2fa_secret'])): ?>
                 <p class="form-control-static">
                     <a href="<?= $this->Html->url(['controller' => 'users',
                                                    'action'     => 'ajax_get_modal_recovery_code']) ?>"
-                       id="ShowRecoveryCodeButton"><?= __d('gl', "リカバリーコードを表示") ?></a>
+                       id="ShowRecoveryCodeButton"><?= __d\('app', "リカバリーコードを表示") ?></a>
                 </p>
                 <?php endif; ?>
             </div>
         </div>
     </div>
     <div class="panel-footer setting_pannel-footer">
-        <?= $this->Form->submit(__d('gl', "変更を保存"), ['class' => 'btn btn-primary pull-right']) ?>
+        <?= $this->Form->submit(__d\('app', "変更を保存"), ['class' => 'btn btn-primary pull-right']) ?>
         <div class="clearfix"></div>
     </div>
     <?= $this->Form->end(); ?>

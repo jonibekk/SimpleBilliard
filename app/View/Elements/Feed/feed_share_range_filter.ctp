@@ -24,7 +24,7 @@
                                    compact('current_circle', 'user_status', 'circle_member_count', 'circle_status')
                 ) ?>
                 <span class="font_verydark" id="feed-share-range-public-flg">
-                    <?= __d('gl', '・') ?>
+                    <?= __d\('app', '・') ?>
                     <?php if ($current_circle['Circle']['public_flg']): ?>
                         <i class="fa fa-unlock font_14px"></i>
                     <?php else: ?>
@@ -35,18 +35,18 @@
             <div class="col col-xxs-12 font_14px mtb_3px">
                 <i class="fa fa-th-list"></i>
                 <?php if ($this->request->params['action'] == "feed" || !$current_circle): ?>
-                    <span class="feed-current-filter"><?= __d('gl', 'フィード') ?></span>
+                    <span class="feed-current-filter"><?= __d\('app', 'フィード') ?></span>
                 <?php else: ?>
-                    <?= $this->Html->link(__d('gl', 'フィード'),
+                    <?= $this->Html->link(__d\('app', 'フィード'),
                                           ['action' => 'feed', 'circle_id' => $current_circle['Circle']['id']],
                                           ['class' => 'font_lightgray']) ?>
                 <?php endif; ?>
                 <span>&nbsp;|&nbsp;</span>
                 <i class="fa fa-file-o"></i>
                 <?php if ($this->request->params['action'] == "attached_file_list"): ?>
-                    <span class="feed-current-filter"><?= __d('gl', 'ファイル') ?></span>
+                    <span class="feed-current-filter"><?= __d\('app', 'ファイル') ?></span>
                 <?php else: ?>
-                    <?= $this->Html->link(__d('gl', 'ファイル'),
+                    <?= $this->Html->link(__d\('app', 'ファイル'),
                                           ['action' => 'attached_file_list', 'circle_id' => $current_circle['Circle']['id']],
                                           ['class' => 'font_lightgray feed-share-range-file-url']) ?>
                 <?php endif; ?>

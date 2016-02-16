@@ -153,8 +153,8 @@ class PagesController extends AppController
     public function _getPageLanguageList()
     {
         $lang_list = [
-            'ja' => __d('home', "Japanese"),
-            'en' => __d('home', "English"),
+            'ja' => __d\('lp', "Japanese"),
+            'en' => __d\('lp', "English"),
         ];
         return $lang_list;
     }
@@ -245,7 +245,7 @@ class PagesController extends AppController
             ->emailFormat('text')
             ->to([$data['email'] => $data['email']])
             ->bcc(['contact@goalous.com' => 'contact@goalous.com'])
-            ->subject(__d('mail', '【Goalous】お問い合わせありがとうございました'))
+            ->subject(__d('email', '【Goalous】お問い合わせありがとうございました'))
             ->send();
         $lang = $this->_getLangFromParam();
         return $this->redirect(['controller' => 'pages', 'action' => 'display', 'pagename' => 'contact_thanks', 'lang' => $lang,]);

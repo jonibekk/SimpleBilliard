@@ -30,7 +30,7 @@ $member_count = isset($member_count) ? $member_count : '';
         <?php if ($form): ?>
             <div class="pull-right circle-join-switch">
                 <?php if ($admin): ?>
-                    <?= __d('gl', "管理者") ?>
+                    <?= __d\('app', "管理者") ?>
                 <?php elseif ($circle['Circle']['team_all_flg']): ?>
                     <?php // チーム全体サークルは変更不可 ?>
                 <?php else: ?>
@@ -60,7 +60,7 @@ $member_count = isset($member_count) ? $member_count : '';
         <div class="font_12px font_lightgray modalFeedTextPaddingSmall">
             <a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_get_circle_members', 'circle_id' => $circle['Circle']['id']]) ?>"
                class="modal-ajax-get remove-on-hide">
-                <?= __d('gl', "%s メンバー", $member_count) ?>
+                <?= __d\('app', "%s メンバー", $member_count) ?>
             </a>
             &middot;
             <?= $this->TimeEx->elapsedTime(h($circle['Circle']['modified']), 'rough') ?>

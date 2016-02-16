@@ -15,9 +15,9 @@ $this->set('hidden_sidebar_xxs', true);
 <?php $this->start('sidebar') ?>
 <div class="sidebar-setting" role="complementary" id="SidebarSetting">
     <ul class="nav">
-        <li class="active"><a href="#account"><?= __d('gl', 'アカウント') ?></a></li>
-        <li class=""><a href="#profile"><?= __d('gl', 'プロフィール') ?></a></li>
-        <li class=""><a class="" href="#notification"><?= __d('gl', '通知') ?></a></li>
+        <li class="active"><a href="#account"><?= __d\('app', 'アカウント') ?></a></li>
+        <li class=""><a href="#profile"><?= __d\('app', 'プロフィール') ?></a></li>
+        <li class=""><a class="" href="#notification"><?= __d\('app', '通知') ?></a></li>
     </ul>
 </div>
 <?php $this->end() ?>

@@ -19,7 +19,7 @@
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= __d('gl', "アクションを追加する") ?></h4>
+            <h4 class="modal-title"><?= __d\('app', "アクションを追加する") ?></h4>
             <ul class="add-key-result-goal-info">
                 <li>
                     <i class="fa fa-flag"></i> <?= h($goal['Goal']['name']) ?>
@@ -47,9 +47,9 @@
             <div class="row">
                 <div class="form-group required">
                     <div class="set-goal">
-                        <h5 class="modal-key-result-headings"><?= __d('gl', '画像') ?>&nbsp;<i
+                        <h5 class="modal-key-result-headings"><?= __d\('app', '画像') ?>&nbsp;<i
                                 class="fa font_brownRed font_14px">*</i>
-                            <span class="modal-key-result-headings-description"><?= __d('gl',
+                            <span class="modal-key-result-headings-description"><?= __d\('app',
                                                                                         'アクションの結果が分かる画像を追加しよう') ?></span>
                         </h5>
                     </div>
@@ -73,19 +73,19 @@
                 $this->Form->input('name',
                                    ['before'                   => '<div class="set-goal">' .
                                        '<h5 class="modal-key-result-headings">' .
-                                       __d('gl', "説明") .
+                                       __d\('app', "説明") .
                                        '&nbsp;<i class="fa font_brownRed font_14px">*</i><span class="modal-key-result-headings-description">' .
-                                       __d('gl', "やった事を書こう") . '</span></h5></div>',
+                                       __d\('app', "やった事を書こう") . '</span></h5></div>',
                                     'label'                    => false,
-                                    'placeholder'              => __d('gl', "例）Webサイトを完成させた"),
+                                    'placeholder'              => __d\('app', "例）Webサイトを完成させた"),
                                     "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                                     'rows'                     => 1,
                                    ]) ?>
             </div>
             <div class="row">
                 <div class="form-group">
-                    <h5 class="modal-key-result-headings"><?= __d('gl', '達成要素') ?>
-                        <span class="modal-key-result-headings-description"><?= __d('gl', '紐付ける成果を選択しよう。') ?></span>
+                    <h5 class="modal-key-result-headings"><?= __d\('app', '達成要素') ?>
+                        <span class="modal-key-result-headings-description"><?= __d\('app', '紐付ける成果を選択しよう。') ?></span>
                     </h5>
 
                     <div class="goal-set-input">
@@ -110,9 +110,9 @@
             <div class="row">
                 <div class="form-group">
                     <div class="set-goal">
-                        <h5 class="modal-key-result-headings"><?= __d('gl', '通知先') ?>
+                        <h5 class="modal-key-result-headings"><?= __d\('app', '通知先') ?>
                             <span class="modal-key-result-headings-description">
-                                <?= __d('gl', '通知したいサークル、ユーザを選択') ?></span>
+                                <?= __d\('app', '通知したいサークル、ユーザを選択') ?></span>
                         </h5>
                     </div>
                     <div class="goal-set-input">
@@ -128,10 +128,10 @@
         </div>
         <div class="modal-footer">
             <?=
-            $this->Form->submit(__d('gl', "アクションを登録"),
+            $this->Form->submit(__d\('app', "アクションを登録"),
                                 ['id' => 'AddActionSubmitModal', 'class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
 
-            <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('gl', "閉じる") ?></button>
+            <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d\('app', "閉じる") ?></button>
         </div>
         <?= $this->Form->end() ?>
     </div>

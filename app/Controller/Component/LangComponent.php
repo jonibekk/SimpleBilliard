@@ -29,8 +29,8 @@ class LangComponent extends Object
 
     protected function _setLangList()
     {
-        $this->availableLanguages['jpn'] = __d('language', "日本語");
-        $this->availableLanguages['eng'] = __d('language', "English");
+        $this->availableLanguages['jpn'] = __d\('app', "日本語");
+        $this->availableLanguages['eng'] = __d\('app', "English");
     }
 
     function initialize()

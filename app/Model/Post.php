@@ -54,8 +54,8 @@ class Post extends AppModel
 
     function _setTypeMessage()
     {
-        self::$TYPE_MESSAGE[self::TYPE_CREATE_GOAL] = __d('gl', "あたらしいゴールをつくりました。");
-        self::$TYPE_MESSAGE[self::TYPE_CREATE_CIRCLE] = __d('gl', "あたらしいサークルをつくりました。");
+        self::$TYPE_MESSAGE[self::TYPE_CREATE_GOAL] = __d\('app', "あたらしいゴールをつくりました。");
+        self::$TYPE_MESSAGE[self::TYPE_CREATE_CIRCLE] = __d\('app', "あたらしいサークルをつくりました。");
     }
 
     const SHARE_PEOPLE = 2;
@@ -553,7 +553,7 @@ class Post extends AppModel
                                                                        $this->current_team_id);
                 $is_belong_circle_member = $this->User->CircleMember->isBelong($this->orgParams['circle_id']);
                 if (!$is_exists_circle || ($is_secret && !$is_belong_circle_member)) {
-                    throw new RuntimeException(__d('gl', "サークルが存在しないか、権限がありません。"));
+                    throw new RuntimeException(__d\('app', "サークルが存在しないか、権限がありません。"));
                 }
                 $post_filter_conditions['OR'][] =
                     $db->expression('Post.id IN (' . $this->getSubQueryFilterMyCirclePostId($db, $start, $end,
@@ -1173,28 +1173,28 @@ class Post extends AppModel
             switch ($val['share_mode']) {
                 case self::SHARE_PEOPLE:
                     if (count($val['PostShareUser']) == 1) {
-                        $data[$key]['share_text'] = __d('gl', "%sに共有",
+                        $data[$key]['share_text'] = __d\('app', "%sに共有",
                                                         $data[$key]['share_user_name']);
                     }
                     else {
-                        $data[$key]['share_text'] = __d('gl', '%1$sと他%2$s人に共有',
+                        $data[$key]['share_text'] = __d\('app', '%1$sと他%2$s人に共有',
                                                         $data[$key]['share_user_name'],
                                                         count($val['PostShareUser']) - 1);
                     }
                     break;
                 case self::SHARE_ONLY_ME:
                     //自分だけ
-                    $data[$key]['share_text'] = __d('gl', "自分のみ");
+                    $data[$key]['share_text'] = __d\('app', "自分のみ");
                     break;
                 case self::SHARE_CIRCLE:
                     //共有ユーザがいない場合
                     if (count($val['PostShareUser']) == 0) {
                         if (count($val['PostShareCircle']) == 1) {
-                            $data[$key]['share_text'] = __d('gl', "%sに共有",
+                            $data[$key]['share_text'] = __d\('app', "%sに共有",
                                                             $data[$key]['share_circle_name']);
                         }
                         else {
-                            $data[$key]['share_text'] = __d('gl', '%1$s他%2$sサークルに共有',
+                            $data[$key]['share_text'] = __d\('app', '%1$s他%2$sサークルに共有',
                                                             $data[$key]['share_circle_name'],
                                                             count($val['PostShareCircle']) - 1);
                         }
@@ -1202,12 +1202,12 @@ class Post extends AppModel
                     //共有ユーザが１人いる場合
                     elseif (count($val['PostShareUser']) == 1) {
                         if (count($val['PostShareCircle']) == 1) {
-                            $data[$key]['share_text'] = __d('gl', '%1$sと%2$sに共有',
+                            $data[$key]['share_text'] = __d\('app', '%1$sと%2$sに共有',
                                                             $data[$key]['share_circle_name'],
                                                             $data[$key]['share_user_name']);
                         }
                         else {
-                            $data[$key]['share_text'] = __d('gl', '%1$sと%2$s他%3$sサークルに共有',
+                            $data[$key]['share_text'] = __d\('app', '%1$sと%2$s他%3$sサークルに共有',
                                                             $data[$key]['share_user_name'],
                                                             $data[$key]['share_circle_name'],
                                                             count($val['PostShareCircle']) - 1);
@@ -1217,13 +1217,13 @@ class Post extends AppModel
                     //共有ユーザが２人以上いる場合
                     else {
                         if (count($val['PostShareCircle']) == 1) {
-                            $data[$key]['share_text'] = __d('gl', '%1$s,%2$sと他%3$s人に共有',
+                            $data[$key]['share_text'] = __d\('app', '%1$s,%2$sと他%3$s人に共有',
                                                             $data[$key]['share_circle_name'],
                                                             $data[$key]['share_user_name'],
                                                             count($val['PostShareUser']) - 1);
                         }
                         else {
-                            $data[$key]['share_text'] = __d('gl', '%1$sと他%2$s人,%3$s他%4$sサークルに共有',
+                            $data[$key]['share_text'] = __d\('app', '%1$sと他%2$s人,%3$s他%4$sサークルに共有',
                                                             $data[$key]['share_user_name'],
                                                             count($val['PostShareUser']) - 1,
                                                             $data[$key]['share_circle_name'],

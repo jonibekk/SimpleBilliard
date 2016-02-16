@@ -24,11 +24,11 @@
                                            'action'           => 'ajax_get_evaluators_status',
                                            'user_id'          => $user['id'],
                                            'evaluate_term_id' => $evaluate_term_id]) ?>">
-                <?= __d('gl', "詳細を見る") ?>
+                <?= __d\('app', "詳細を見る") ?>
             </a>
         </div>
         <div class="font_12px modalFeedTextPadding">
-            <?= __d('gl', "残り") ?> <?= h($user['incomplete_count']) ?>
+            <?= __d\('app', "残り") ?> <?= h($user['incomplete_count']) ?>
         </div>
     </div>
 </div>

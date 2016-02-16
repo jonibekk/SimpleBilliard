@@ -20,8 +20,8 @@ class OauthToken extends AppModel
      */
     private function _setProviderTypeName()
     {
-        self::$TYPE[self::TYPE_FB] = __d('gl', "Facebook");
-        self::$TYPE[self::TYPE_GOOGLE] = __d('gl', "Google");
+        self::$TYPE[self::TYPE_FB] = __d\('app', "Facebook");
+        self::$TYPE[self::TYPE_GOOGLE] = __d\('app', "Google");
     }
 
     /**

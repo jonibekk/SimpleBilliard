@@ -25,7 +25,7 @@
 ?>
 <!-- START app/View/Elements/Team/goal_category_setting.ctp -->
 <div class="panel panel-default">
-    <div class="panel-heading"><?= __d('gl', "ゴールカテゴリ設定") ?></div>
+    <div class="panel-heading"><?= __d\('app', "ゴールカテゴリ設定") ?></div>
     <div class="panel-body form-horizontal">
         <?=
         $this->Form->create('GoalCategory', [
@@ -42,10 +42,10 @@
         <table class="table table-striped" id="GoalCategoryTable">
             <tr>
                 <th>
-                    <?php echo __d('gl', '名前') ?>
+                    <?php echo __d\('app', '名前') ?>
                 </th>
                 <th>
-                    <?php echo __d('gl', '説明') ?>
+                    <?php echo __d\('app', '説明') ?>
                 </th>
                 <th></th>
             </tr>
@@ -57,10 +57,10 @@
         <div class="form-group">
             <?php $index = count($this->request->data['GoalCategory']);
             $max_index = $index + 9; ?>
-            <?= $this->Html->link(__d('gl', "ゴールカテゴリを１つ追加"),
+            <?= $this->Html->link(__d\('app', "ゴールカテゴリを１つ追加"),
                                   ['controller' => 'teams', 'action' => 'ajax_get_goal_category_elm'],
                                   ['id' => 'AddCategoryButton', 'target-selector' => '#GoalCategoryTable > tbody', 'index' => $index, 'max_index' => $max_index, 'class' => 'btn btn-default']) ?>
-                                  <?= $this->Form->submit(__d('gl', 'ゴールカテゴリ設定を保存'), ['class' => 'btn btn-primary team-setting-add-goal-category']) ?>
+                                  <?= $this->Form->submit(__d\('app', 'ゴールカテゴリ設定を保存'), ['class' => 'btn btn-primary team-setting-add-goal-category']) ?>
         </div>
         <?php for ($i = $index; $i <= $max_index; $i++): ?>
             <?php $this->Form->unlockField("GoalCategory.$i.name") ?>

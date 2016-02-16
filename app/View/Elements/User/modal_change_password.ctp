@@ -15,7 +15,7 @@
             <div class="modal-header">
                 <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
                     <span class="close-icon">&times;</span></button>
-                <h4 class="modal-title"><?= __d('gl', "パスワードの変更") ?></h4>
+                <h4 class="modal-title"><?= __d\('app', "パスワードの変更") ?></h4>
             </div>
             <?=
             $this->Form->create('User', [
@@ -35,22 +35,22 @@
             <div class="modal-body">
                 <?=
                 $this->Form->input('old_password', [
-                    'label'     => __d('gl', "現在のパスワード"),
+                    'label'     => __d\('app', "現在のパスワード"),
                     'type'      => 'password',
                     'required'  => true,
                     'maxlength' => 50,
                 ]) ?>
                 <?=
                 $this->Form->input('password', [
-                    'label'       => __d('gl', "新しいパスワード"),
-                    'placeholder' => __d('gl', '8文字以上'),
+                    'label'       => __d\('app', "新しいパスワード"),
+                    'placeholder' => __d\('app', '8文字以上'),
                     'type'        => 'password',
                     'required'    => true,
                     'maxlength'   => 50,
                 ]) ?>
                 <?=
                 $this->Form->input('password_confirm', [
-                    'label'     => __d('gl', "パスワードを再入力"),
+                    'label'     => __d\('app', "パスワードを再入力"),
                     'type'      => 'password',
                     'required'  => true,
                     'maxlength' => 50,
@@ -58,10 +58,10 @@
                 <?= $this->Form->hidden('id', ['value' => $this->Session->read('Auth.User.id')]) ?>
             </div>
             <div class="modal-footer modal_pannel-footer">
-                <?= $this->Form->submit(__d('gl', "変更を保存"),
+                <?= $this->Form->submit(__d\('app', "変更を保存"),
                                         ['class' => 'btn btn-primary pull-right', 'disabled' => 'disabled']) ?>
                 <button type="button" class="btn btn-link design-cancel mr_8px bd-radius_4px" data-dismiss="modal">
-                    <?= __d('gl', "キャンセル") ?>
+                    <?= __d\('app', "キャンセル") ?>
                 </button>
             </div>
             <?= $this->Form->end() ?>

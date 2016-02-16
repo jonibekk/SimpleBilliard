@@ -21,14 +21,14 @@ $admin_circle_members = array_filter($circle_members, function ($v) {
         <div class="modal-header no-border">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
-            <h4 class="modal-title font_18px font_bold"><?= __d('gl', "このサークルのメンバー") ?></h4>
+            <h4 class="modal-title font_18px font_bold"><?= __d\('app', "このサークルのメンバー") ?></h4>
         </div>
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#ModalCircleMemberTab1_<?= $circle_id ?>" data-toggle="tab"><?= __d('gl',
+            <li class="active"><a href="#ModalCircleMemberTab1_<?= $circle_id ?>" data-toggle="tab"><?= __d\('app',
                                                                                                             "メンバー(%s)",
                                                                                                             count($circle_members)) ?></a>
             </li>
-            <li><a href="#ModalCircleMemberTab2_<?= $circle_id ?>" data-toggle="tab"><?= __d('gl', "管理者(%s)",
+            <li><a href="#ModalCircleMemberTab2_<?= $circle_id ?>" data-toggle="tab"><?= __d\('app', "管理者(%s)",
                                                                                              count($admin_circle_members)) ?></a>
             </li>
         </ul>
@@ -46,7 +46,7 @@ $admin_circle_members = array_filter($circle_members, function ($v) {
                         <?php endforeach ?>
                     </div>
                 <?php else: ?>
-                    <?= __d('gl', "このサークルにはメンバーがいません。") ?>
+                    <?= __d\('app', "このサークルにはメンバーがいません。") ?>
                 <?php endif ?>
             </div>
             <div class="tab-pane fade in" id="ModalCircleMemberTab2_<?= $circle_id ?>">
@@ -63,7 +63,7 @@ $admin_circle_members = array_filter($circle_members, function ($v) {
             </div>
         </div>
         <div class="modal-footer modal-feed-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('gl', "閉じる") ?></button>
+            <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d\('app', "閉じる") ?></button>
         </div>
     </div>
 </div>

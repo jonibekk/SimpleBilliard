@@ -61,7 +61,7 @@ belongsToもしくはhasManyのテーブルを一緒に取ってきたい場合�
 理由としては、
 
 - メンバ定数 ... コード補完が効くのでController、Viewから参照しやすい。
-- 名前を`__construct`で指定する ... gettext形式(`__d('gl',"hoge")`)が変数定義時に利用できない為。
+- 名前を`__construct`で指定する ... gettext形式(`__d\('app',"hoge")`)が変数定義時に利用できない為。
 
 #### 複数のModelを参照するfindを書く場合は、元になるModelにメソッドを書く。
 書きかけです。

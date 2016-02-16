@@ -18,10 +18,10 @@
     <?php elseif ($post['Post']['type'] == Post::TYPE_ACTION): ?>
         <i class="fa fa-check-circle disp_i"></i>&nbsp;<?= nl2br($this->TextEx->autoLink($post['ActionResult']['name'])) ?>
     <?php elseif ($post['Post']['type'] == Post::TYPE_KR_COMPLETE): ?>
-        <i class="fa fa-key disp_i"></i>&nbsp;<?= __d('gl', "%s を達成しました！",
+        <i class="fa fa-key disp_i"></i>&nbsp;<?= __d\('app', "%s を達成しました！",
                                                       h($post['KeyResult']['name'])) ?>
     <?php elseif ($post['Post']['type'] == Post::TYPE_GOAL_COMPLETE): ?>
-        <i class="fa fa-flag disp_i"></i>&nbsp;<?= __d('gl', "%s を達成しました！", h($post['Goal']['name'])) ?>
+        <i class="fa fa-flag disp_i"></i>&nbsp;<?= __d\('app', "%s を達成しました！", h($post['Goal']['name'])) ?>
     <?php else: ?>
         <?= Post::$TYPE_MESSAGE[$post['Post']['type']] ?>
     <?php endif; ?>

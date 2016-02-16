@@ -39,11 +39,11 @@ $meta_contact_thanks = [
     ],
     [
         "property" => "og:title",
-        "content" => __d('gl', 'お問い合わせ完了 | Goalous(ゴーラス)'),
+        "content" => __d\('app', 'お問い合わせ完了 | Goalous(ゴーラス)'),
     ],
     [
         "property" => "og:description",
-        "content" =>__d('gl', 'Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。お問い合わせありがとうございました。'),
+        "content" =>__d\('app', 'Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。お問い合わせありがとうございました。'),
     ],
     [
         "property" => "og:url",

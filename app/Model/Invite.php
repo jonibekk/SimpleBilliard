@@ -88,13 +88,13 @@ class Invite extends AppModel
         $invite = $this->getByToken($token);
         if (empty($invite)) {
             throw new RuntimeException(
-                __d('exception', "トークンが正しくありません。送信されたメールを再度ご確認下さい。"));
+                __d\('validate', "トークンが正しくありません。送信されたメールを再度ご確認下さい。"));
         }
         if ($invite['Invite']['email_verified']) {
-            throw new RuntimeException(__d('exception', 'このトークンは使用済みです。'));
+            throw new RuntimeException(__d\('validate', 'このトークンは使用済みです。'));
         }
         if ($invite['Invite']['email_token_expires'] < REQUEST_TIMESTAMP) {
-            throw new RuntimeException(__d('exception', 'トークンの期限が切れています。'));
+            throw new RuntimeException(__d\('validate', 'トークンの期限が切れています。'));
         }
         return true;
     }

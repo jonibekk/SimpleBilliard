@@ -14,24 +14,24 @@
  * @var CodeCompletionView $this
  */
 if ($to_user_name) {
-    echo __d('mail', 'こんにちは %sさん、', h($to_user_name));
+    echo __d\('email', 'こんにちは %sさん、', h($to_user_name));
 }
 else {
-    echo __d('mail', 'こんにちは。');
+    echo __d\('email', 'こんにちは。');
 
 };
 echo "\n";
 echo "\n";
-echo __d('mail', '%sさんがGoalous内のチーム「%s」へあなたを招待しています。', h($from_user_name), h($team_name));
+echo __d\('email', '%sさんがGoalous内のチーム「%s」へあなたを招待しています。', h($from_user_name), h($team_name));
 echo "\n";
 echo "\n";
-echo __d('mail', 'この招待に応じる場合は、次のリンクをクリックしてください。');
+echo __d\('email', 'この招待に応じる場合は、次のリンクをクリックしてください。');
 echo "\n";
 echo $url;
 echo "\n";
 echo "\n";
 if ($message) {
-    echo __d('mail', "%sさんからのメッセージ：", h($from_user_name));
+    echo __d\('email', "%sさんからのメッセージ：", h($from_user_name));
     echo "\n";
     echo h($message);
     echo "\n";
