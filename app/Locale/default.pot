@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2015-10-22 08:32+0000\n"
+"POT-Creation-Date: 2016-02-16 08:26+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -14,9 +14,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: Controller/EmailsController.php:27;30
-#: Controller/GoalsController.php:651;654;973
-#: Controller/PostsController.php:279;282;311;314;1301
+#: Controller/EmailsController.php:26;29
+#: Controller/GoalsController.php:714;717;1061
+#: Controller/PostsController.php:313;316;345;348;1399
 msgid "gl"
 msgstr ""
 
@@ -65,7 +65,9 @@ msgstr ""
 #: Model/PostRead.php:validation for field del_flg
 #: Model/PostShareCircle.php:validation for field del_flg
 #: Model/PostShareUser.php:validation for field del_flg
+#: Model/PostSharedLog.php:validation for field del_flg
 #: Model/Purpose.php:validation for field del_flg
+#: Model/RecoveryCode.php:validation for field available_flg;validation for field del_flg
 #: Model/SendMail.php:validation for field del_flg
 #: Model/SendMailToUser.php:validation for field del_flg
 #: Model/SubscribeEmail.php:validation for field del_flg
@@ -99,13 +101,7 @@ msgstr ""
 msgid "image_type"
 msgstr ""
 
-#: Model/ActionResult.php:validation for field name
-#: Model/Circle.php:validation for field description
-#: Model/Comment.php:validation for field body
-#: Model/Post.php:validation for field body
-msgid "Invalid Submission"
-msgstr ""
-
+#: Model/ActionResult.php:validation for field goal_id;validation for field key_result_id
 #: Model/ApprovalHistory.php:validation for field action_status
 #: Model/AttachedFile.php:validation for field file_type;validation for field file_size;validation for field model_type
 #: Model/CircleInsight.php:validation for field user_count
@@ -116,9 +112,9 @@ msgstr ""
 #: Model/EvaluateScore.php:validation for field index_num
 #: Model/Evaluation.php:validation for field index_num
 #: Model/Evaluator.php:validation for field index_num
-#: Model/Goal.php:validation for field status;validation for field priority;validation for field goal_category_id;validation for field start_date;validation for field end_date
+#: Model/Goal.php:validation for field status;validation for field priority;validation for field goal_category_id;validation for field start_date;validation for field end_date;validation for field start_value;validation for field target_value
 #: Model/GroupInsight.php:validation for field user_count
-#: Model/KeyResult.php:validation for field start_date;validation for field end_date
+#: Model/KeyResult.php:validation for field priority;validation for field value_unit;validation for field start_value;validation for field target_value
 #: Model/MemberGroup.php:validation for field index_num
 #: Model/OauthToken.php:validation for field type
 #: Model/Post.php:validation for field comment_count;validation for field post_like_count;validation for field post_read_count
@@ -130,12 +126,14 @@ msgstr ""
 msgid "numeric"
 msgstr ""
 
+#: Model/ActionResult.php:validation for field goal_id
 #: Model/Badge.php:validation for field name
 #: Model/Circle.php:validation for field name
+#: Model/Collaborator.php:validation for field role;validation for field description
 #: Model/Device.php:validation for field device_token
 #: Model/Email.php:validation for field user_id;validation for field email
 #: Model/Evaluation.php:validation for field evaluatee_user_id;validation for field evaluator_user_id;validation for field evaluate_term_id
-#: Model/Goal.php:validation for field purpose
+#: Model/Goal.php:validation for field name
 #: Model/GoalCategory.php:validation for field name
 #: Model/Group.php:validation for field name
 #: Model/GroupVision.php:validation for field name
@@ -144,13 +142,45 @@ msgstr ""
 #: Model/LocalName.php:validation for field language
 #: Model/MemberType.php:validation for field name
 #: Model/OauthToken.php:validation for field uid
+#: Model/PostSharedLog.php:validation for field shared_list
 #: Model/Purpose.php:validation for field name
+#: Model/RecoveryCode.php:validation for field code
 #: Model/SubscribeEmail.php:validation for field email
 #: Model/Team.php:validation for field name;validation for field emails
 #: Model/TeamVision.php:validation for field name
 #: Model/Thread.php:validation for field name
 #: Model/User.php:validation for field first_name;validation for field last_name;validation for field old_password;validation for field password_request;validation for field password_request2;validation for field password;validation for field password_confirm
 msgid "notEmpty"
+msgstr ""
+
+#: Model/ActionResult.php:validation for field name
+#: Model/ApprovalHistory.php:validation for field comment
+#: Model/Circle.php:validation for field name;validation for field description
+#: Model/Collaborator.php:validation for field role;validation for field description
+#: Model/Comment.php:validation for field body
+#: Model/Email.php:validation for field email
+#: Model/EvaluateScore.php:validation for field name;validation for field description;validation for field index_num
+#: Model/Evaluation.php:validation for field comment
+#: Model/Goal.php:validation for field name;validation for field description;validation for field start_value;validation for field target_value
+#: Model/GoalCategory.php:validation for field name;validation for field description
+#: Model/GroupVision.php:validation for field name;validation for field description
+#: Model/Invite.php:validation for field message
+#: Model/KeyResult.php:validation for field name;validation for field start_value;validation for field target_value
+#: Model/LocalName.php:validation for field first_name;validation for field last_name
+#: Model/Post.php:validation for field body
+#: Model/Purpose.php:validation for field name
+#: Model/Team.php:validation for field name
+#: Model/TeamMember.php:validation for field member_no
+#: Model/TeamVision.php:validation for field name;validation for field description
+#: Model/User.php:validation for field first_name;validation for field last_name;validation for field password_request;validation for field password_request2;validation for field password;validation for field hometown;validation for field comment;validation for field phone_no
+msgid "maxLength"
+msgstr ""
+
+#: Model/ActionResult.php:validation for field name
+#: Model/Circle.php:validation for field description
+#: Model/Comment.php:validation for field body
+#: Model/Post.php:validation for field body
+msgid "Invalid Submission"
 msgstr ""
 
 #: Model/CircleMember.php:validation for field show_for_all_feed_flg
@@ -166,10 +196,6 @@ msgstr ""
 #: Model/Email.php:validation for field email
 #: Model/SubscribeEmail.php:validation for field email
 msgid "emailIsUnique"
-msgstr ""
-
-#: Model/GoalCategory.php:validation for field name
-msgid "maxLength"
 msgstr ""
 
 #: Model/Team.php:validation for field emails
