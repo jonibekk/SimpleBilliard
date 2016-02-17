@@ -99,7 +99,6 @@ class Team extends AppModel
         'name'               => [
             'isString'  => [
                 'rule'       => ['isString',],
-                'allowEmpty' => true,
             ],
             'maxLength' => ['rule' => ['maxLength', 128]],
             'notEmpty'  => ['rule' => ['notEmpty'],],

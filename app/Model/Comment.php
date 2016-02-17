@@ -114,14 +114,15 @@ class Comment extends AppModel
         'site_info_url'      => [
             'isString'   => [
                 'rule' => ['isString'],
+                'allowEmpty' => true,
             ],
-            'allowEmpty' => true,
+
         ],
         'post_id'            => [
             'numeric'    => [
                 'rule' => ['numeric'],
+                'allowEmpty' => true,
             ],
-            'allowEmpty' => true,
         ],
     ];
 

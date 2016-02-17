@@ -100,10 +100,10 @@ class User extends AppModel
      */
     public $validate = [
         'team_id'           => [
-            'numeric'    => [
-                'rule' => ['numeric'],
+            'numeric' => [
+                'rule'       => ['numeric'],
+                'allowEmpty' => true,
             ],
-            'allowEmpty' => true,
         ],
         'first_name'        => [
             'maxLength'      => ['rule' => ['maxLength', 128]],
