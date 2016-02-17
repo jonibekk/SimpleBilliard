@@ -7,7 +7,9 @@
         ]) ?>
 
     </div>
-    <div ui-view> ロード中....</div>
+    <div ui-view>
+        <center><i id="__feed_loader" class="fa fa-refresh fa-spin"></i></center>'
+    </div>
 
 
     <?php echo $this->element('file_upload_form') ?>
