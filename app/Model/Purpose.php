@@ -25,6 +25,10 @@ class Purpose extends AppModel
      */
     public $validate = [
         'name'    => [
+            'isString' => [
+                'rule'       => ['isString',],
+                'allowEmpty' => true,
+            ],
             'maxLength' => ['rule' => ['maxLength', 200]],
             'notEmpty'  => [
                 'rule' => ['notEmpty'],

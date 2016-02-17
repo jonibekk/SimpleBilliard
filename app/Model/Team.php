@@ -97,10 +97,26 @@ class Team extends AppModel
      */
     public $validate = [
         'name'               => [
+            'isString' => [
+                'rule'       => ['isString',],
+                'allowEmpty' => true,
+            ],
             'maxLength' => ['rule' => ['maxLength', 128]],
-            'notEmpty'  => ['rule' => ['notEmpty'],
-            ],],
+            'notEmpty'  => ['rule' => ['notEmpty'],],
+        ],
         'type'               => ['numeric' => ['rule' => ['numeric'],],],
+        'change_from'        => [
+            'boolean' => [
+                'rule' => ['boolean'],
+                'allowEmpty' => true,
+            ],
+        ],
+        'timezone'        => [
+            'numeric' => [
+                'rule' => ['numeric'],
+                'allowEmpty' => true,
+            ],
+        ],
         'domain_limited_flg' => ['boolean' => ['rule' => ['boolean'],],],
         'start_term_month'   => ['numeric' => ['rule' => ['numeric'],],],
         'border_months'      => ['numeric' => ['rule' => ['numeric'],],],
