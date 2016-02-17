@@ -97,7 +97,7 @@ class Team extends AppModel
      */
     public $validate = [
         'name'               => [
-            'isString' => [
+            'isString'  => [
                 'rule'       => ['isString',],
                 'allowEmpty' => true,
             ],
@@ -107,13 +107,13 @@ class Team extends AppModel
         'type'               => ['numeric' => ['rule' => ['numeric'],],],
         'change_from'        => [
             'boolean' => [
-                'rule' => ['boolean'],
+                'rule'       => ['boolean'],
                 'allowEmpty' => true,
             ],
         ],
-        'timezone'        => [
+        'timezone'           => [
             'numeric' => [
-                'rule' => ['numeric'],
+                'rule'       => ['numeric'],
                 'allowEmpty' => true,
             ],
         ],

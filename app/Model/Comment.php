@@ -111,14 +111,14 @@ class Comment extends AppModel
             'maxLength' => ['rule' => ['maxLength', 5000]],
             'isString'  => ['rule' => 'isString', 'message' => 'Invalid Submission']
         ],
-        'site_info_url' => [
-            'isString' => [
+        'site_info_url'      => [
+            'isString'   => [
                 'rule' => ['isString'],
             ],
             'allowEmpty' => true,
         ],
-        'post_id' => [
-            'numeric' => [
+        'post_id'            => [
+            'numeric'    => [
                 'rule' => ['numeric'],
             ],
             'allowEmpty' => true,

@@ -72,9 +72,9 @@ class Collaborator extends AppModel
                 'rule' => ['numeric'],
             ],
         ],
-        'priority' => [
+        'priority'    => [
             'numeric' => [
-                'rule' => ['numeric'],
+                'rule'       => ['numeric'],
                 'allowEmpty' => true,
             ],
         ],

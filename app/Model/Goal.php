@@ -112,7 +112,7 @@ class Goal extends AppModel
      */
     public $validate = [
         'name'             => [
-            'isString' => [
+            'isString'  => [
                 'rule'       => ['isString',],
                 'allowEmpty' => true,
             ],
@@ -121,26 +121,26 @@ class Goal extends AppModel
                 'rule' => 'notEmpty',
             ],
         ],
-        'value_unit'             => [
+        'value_unit'       => [
             'numeric' => [
                 'rule'       => ['numeric',],
                 'allowEmpty' => true,
             ],
         ],
-        'target_value'             => [
+        'target_value'     => [
             'numeric' => [
                 'rule'       => ['numeric',],
                 'allowEmpty' => true,
             ],
         ],
-        'start_value'=> [
+        'start_value'      => [
             'numeric' => [
                 'rule'       => ['numeric',],
                 'allowEmpty' => true,
             ],
         ],
         'description'      => [
-            'isString' => [
+            'isString'  => [
                 'rule'       => ['isString',],
                 'allowEmpty' => true,
             ],

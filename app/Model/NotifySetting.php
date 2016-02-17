@@ -327,14 +327,14 @@ class NotifySetting extends AppModel
         'circle_add_user_email_flg'                     => [
             'boolean' => ['rule' => ['boolean'], 'allowEmpty' => true,],
         ],
-        'email' => [
-            'isString'  => [
+        'email'                                         => [
+            'isString' => [
                 'rule'       => ['isString',],
                 'allowEmpty' => true,
             ],
         ],
-        'mobile' => [
-            'isString'  => [
+        'mobile'                                        => [
+            'isString' => [
                 'rule'       => ['isString',],
                 'allowEmpty' => true,
             ],

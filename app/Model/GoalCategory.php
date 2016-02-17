@@ -32,7 +32,7 @@ class GoalCategory extends AppModel
             ],
         ],
         'description' => [
-            'isString' => [
+            'isString'  => [
                 'rule'       => ['isString',],
                 'allowEmpty' => true,
             ],

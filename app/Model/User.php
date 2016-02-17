@@ -99,8 +99,8 @@ class User extends AppModel
      * @var array
      */
     public $validate = [
-        'team_id' => [
-            'numeric' => [
+        'team_id'           => [
+            'numeric'    => [
                 'rule' => ['numeric'],
             ],
             'allowEmpty' => true,
@@ -116,13 +116,13 @@ class User extends AppModel
             'isAlphabetOnly' => ['rule' => 'isAlphabetOnly'],
         ],
         'gender_type'       => [
-            'isString'  => [
+            'isString' => [
                 'rule'       => ['isString',],
                 'allowEmpty' => true,
             ],
         ],
-        'birth_day' => [
-            'rule' => ['date', 'ymd'],
+        'birth_day'         => [
+            'rule'       => ['date', 'ymd'],
             'allowEmpty' => true
         ],
         'hide_year_flg'     => [
@@ -143,21 +143,21 @@ class User extends AppModel
                 'allowEmpty' => true,
             ],
         ],
-        'language'  => [
-            'isString'  => [
+        'language'          => [
+            'isString' => [
                 'rule'       => ['isString',],
                 'allowEmpty' => true,
             ],
         ],
-        'timezone' => [
-            'numeric'   => [
-                'rule' => ['numeric'],
+        'timezone'          => [
+            'numeric' => [
+                'rule'       => ['numeric'],
                 'allowEmpty' => true,
             ],
         ],
-        'default_team_id' => [
-            'numeric'   => [
-                'rule' => ['numeric'],
+        'default_team_id'   => [
+            'numeric' => [
+                'rule'       => ['numeric'],
                 'allowEmpty' => true,
             ],
         ],
