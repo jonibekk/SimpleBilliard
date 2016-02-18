@@ -24,9 +24,17 @@ class EvaluateScore extends AppModel
      */
     public $validate = [
         'name'        => [
+            'isString'   => [
+                'rule' => ['isString'],
+                'allowEmpty' => true,
+            ],
             'maxLength' => ['rule' => ['maxLength', 200]],
         ],
         'description' => [
+            'isString'   => [
+                'rule' => ['isString'],
+                'allowEmpty' => true,
+            ],
             'maxLength' => ['rule' => ['maxLength', 2000]],
         ],
         'index_num'   => [
