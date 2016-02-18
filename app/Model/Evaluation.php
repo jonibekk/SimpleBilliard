@@ -53,9 +53,24 @@ class Evaluation extends AppModel
             ]
         ],
         'comment'           => [
+            'isString'   => [
+                'rule' => ['isString'],
+                'allowEmpty' => true,
+            ],
             'maxLength' => ['rule' => ['maxLength', 5000]],
         ],
-        'evaluate_score_id' => []
+        'evaluate_score_id' => [
+            'numeric'  => [
+                'rule' => ['numeric'],
+                'allowEmpty' => true,
+            ],
+        ],
+        'evaluate_type' => [
+            'numeric'  => [
+                'rule' => ['numeric'],
+                'allowEmpty' => true,
+            ],
+        ],
     ];
 
     /**
@@ -412,6 +427,9 @@ class Evaluation extends AppModel
         if (isset($this->validate['comment']['notEmpty'])) {
             unset($this->validate['comment']['notEmpty']);
         }
+        if (!isset($this->validate['comment']['isString']['allowEmpty'])) {
+            $this->validate['comment']['isString']['allowEmpty'] = true;
+        }
         return;
     }
 
@@ -421,6 +439,10 @@ class Evaluation extends AppModel
             return;
         }
         $this->validate['comment']['notEmpty'] = ['rule' => 'notEmpty'];
+
+        if (isset($this->validate['comment']['isString']['allowEmpty'])) {
+            unset($this->validate['comment']['isString']['allowEmpty']);
+        }
         return;
     }
 
@@ -428,6 +450,9 @@ class Evaluation extends AppModel
     {
         if (isset($this->validate['evaluate_score_id']['notEmpty'])) {
             unset($this->validate['evaluate_score_id']['notEmpty']);
+        }
+        if (!isset($this->validate['evaluate_score_id']['numeric']['allowEmpty'])) {
+            $this->validate['evaluate_score_id']['numeric']['allowEmpty'] = true;
         }
         return;
     }
@@ -438,6 +463,10 @@ class Evaluation extends AppModel
             return;
         }
         $this->validate['evaluate_score_id']['notEmpty'] = ['rule' => 'notEmpty'];
+
+        if (isset($this->validate['evaluate_score_id']['numeric']['allowEmpty'])) {
+            unset($this->validate['evaluate_score_id']['numeric']['allowEmpty']);
+        }
         return;
     }
 

@@ -99,6 +99,12 @@ class User extends AppModel
      * @var array
      */
     public $validate = [
+        'team_id'           => [
+            'numeric' => [
+                'rule'       => ['numeric'],
+                'allowEmpty' => true,
+            ],
+        ],
         'first_name'        => [
             'maxLength'      => ['rule' => ['maxLength', 128]],
             'notEmpty'       => ['rule' => 'notEmpty'],
@@ -108,6 +114,16 @@ class User extends AppModel
             'maxLength'      => ['rule' => ['maxLength', 128]],
             'notEmpty'       => ['rule' => 'notEmpty'],
             'isAlphabetOnly' => ['rule' => 'isAlphabetOnly'],
+        ],
+        'gender_type'       => [
+            'isString' => [
+                'rule'       => ['isString',],
+                'allowEmpty' => true,
+            ],
+        ],
+        'birth_day'         => [
+            'rule'       => ['date', 'ymd'],
+            'allowEmpty' => true
         ],
         'hide_year_flg'     => [
             'boolean' => [
@@ -124,6 +140,24 @@ class User extends AppModel
         'update_email_flg'  => [
             'boolean' => [
                 'rule'       => ['boolean',],
+                'allowEmpty' => true,
+            ],
+        ],
+        'language'          => [
+            'isString' => [
+                'rule'       => ['isString',],
+                'allowEmpty' => true,
+            ],
+        ],
+        'timezone'          => [
+            'numeric' => [
+                'rule'       => ['numeric'],
+                'allowEmpty' => true,
+            ],
+        ],
+        'default_team_id'   => [
+            'numeric' => [
+                'rule'       => ['numeric'],
                 'allowEmpty' => true,
             ],
         ],
@@ -198,7 +232,7 @@ class User extends AppModel
         ],
         'phone_no'          => [
             'maxLength' => ['rule' => ['maxLength', 20]],
-        ]
+        ],
     ];
 
     public $profileFields = [

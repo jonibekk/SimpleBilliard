@@ -112,12 +112,38 @@ class Goal extends AppModel
      */
     public $validate = [
         'name'             => [
+            'isString'  => [
+                'rule'       => ['isString',],
+                'allowEmpty' => true,
+            ],
             'maxLength' => ['rule' => ['maxLength', 200]],
             'notEmpty'  => [
                 'rule' => 'notEmpty',
             ],
         ],
+        'value_unit'       => [
+            'numeric' => [
+                'rule'       => ['numeric',],
+                'allowEmpty' => true,
+            ],
+        ],
+        'target_value'     => [
+            'numeric' => [
+                'rule'       => ['numeric',],
+                'allowEmpty' => true,
+            ],
+        ],
+        'start_value'      => [
+            'numeric' => [
+                'rule'       => ['numeric',],
+                'allowEmpty' => true,
+            ],
+        ],
         'description'      => [
+            'isString'  => [
+                'rule'       => ['isString',],
+                'allowEmpty' => true,
+            ],
             'maxLength' => ['rule' => ['maxLength', 2000]],
         ],
         'evaluate_flg'     => [
