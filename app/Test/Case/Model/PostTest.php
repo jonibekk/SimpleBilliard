@@ -218,43 +218,6 @@ class PostTest extends GoalousTestCase
         $this->assertFalse($res);
     }
 
-    public function testAddWithOgp()
-    {
-        // 末尾の URL が削除される
-        $this->Post->my_uid = 1;
-        $this->Post->current_team_id = 1;
-        $postData = [
-            'Post' => [
-                'body'      => "test\nhttp://google.com/",
-                'site_info' => json_encode([
-                                               'url' => 'http://google.com/'
-                                           ])
-            ],
-        ];
-        $res = $this->Post->addNormal($postData);
-        $this->assertNotEmpty($res);
-
-        $last_id = $this->Post->getLastInsertID();
-        $post = $this->Post->findById($last_id);
-        $this->assertEquals('test', $post['Post']['body']);
-
-        // URL が末尾でないので削除されない
-        $postData = [
-            'Post' => [
-                'body'      => "test\nhttp://google.com/\ntest",
-                'site_info' => json_encode([
-                                               'url' => 'http://google.com/'
-                                           ])
-            ],
-        ];
-        $res = $this->Post->addNormal($postData);
-        $this->assertNotEmpty($res);
-
-        $last_id = $this->Post->getLastInsertID();
-        $post = $this->Post->findById($last_id);
-        $this->assertEquals("test\nhttp://google.com/\ntest", $post['Post']['body']);
-    }
-
     public function testAddInvalidOgp()
     {
         $this->Post->my_uid = 1;
