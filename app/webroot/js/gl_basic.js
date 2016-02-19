@@ -3058,6 +3058,11 @@ function evNotifyPost(options) {
     var $obj = $(this);
     var get_url = $obj.attr('get-url');
 
+    //TODO [ここから] iOSアプリ,Andoroidアプリでajax後にコメントできなくなる問題が発生しているため、暫定的に全てページロードするように修正
+    window.location.href = get_url;
+    return false;
+    //TODO [ここまで]
+
     //layout-mainが存在しないところではajaxでコンテンツ更新しようにもロードしていない
     //要素が多すぎるので、おとなしくページリロードする
     //urlにpost_permanentを含まない場合も対象外
