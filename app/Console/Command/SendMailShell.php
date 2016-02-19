@@ -245,6 +245,7 @@ class SendMailShell extends AppShell
      */
     private function _sendMailItem($options, $viewVars)
     {
+        $viewVars['message'] = $this->_preventGarbledCharacters($viewVars['message']);
         $defaults = array(
             'subject'  => '',
             'template' => '',
@@ -278,6 +279,12 @@ class SendMailShell extends AppShell
         else {
             return new CakeEmail('amazon');
         }
+    }
+
+    private function _preventGarbledCharacters($string, $width=249) {
+        $pattern = "/(.{1,{$width}})(?:\\s|$)|(.{{$width}})/uS";
+        $replace = '$1$2' . "\n";
+        return preg_replace($pattern, $replace, $string);
     }
 
 }
