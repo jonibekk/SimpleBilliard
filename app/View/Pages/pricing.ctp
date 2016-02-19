@@ -39,11 +39,11 @@ $meta_pricing = [
     ],
     [
         "property" => "og:title",
-        "content" => __d('app', '料金・価格 | Goalous(ゴーラス)'),
+        "content" => __d('lp', '料金・価格 | Goalous(ゴーラス)'),
     ],
     [
         "property" => "og:description",
-        "content" =>__d('app', 'Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。料金・価格はこちら。'),
+        "content" =>__d('lp', 'Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。料金・価格はこちら。'),
     ],
     [
         "property" => "og:url",

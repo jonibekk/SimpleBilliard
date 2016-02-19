@@ -1,4 +1,4 @@
-<?php /**
+lp<?php /**
  * PHP 5
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
@@ -39,11 +39,11 @@ $meta_privacy_policy = [
     ],
     [
         "property" => "og:title",
-        "content" => __d('app', 'プライバシーポリシー | Goalous(ゴーラス)'),
+        "content" => __d('lp', 'プライバシーポリシー | Goalous(ゴーラス)'),
     ],
     [
         "property" => "og:description",
-        "content" =>__d('app', 'Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。プライバシーポリシーはこちら。'),
+        "content" =>__d('lp', 'Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。プライバシーポリシーはこちら。'),
     ],
     [
         "property" => "og:url",

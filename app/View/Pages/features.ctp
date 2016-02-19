@@ -39,11 +39,11 @@ $meta_features = [
     ],
     [
         "property" => "og:title",
-        "content" => __d('app', '機能 | Goalous(ゴーラス)'),
+        "content" => __d('lp', '機能 | Goalous(ゴーラス)'),
     ],
     [
         "property" => "og:description",
-        "content" =>__d('app', 'Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。機能の説明はこちら。'),
+        "content" =>__d('lp', 'Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。機能の説明はこちら。'),
     ],
     [
         "property" => "og:url",
