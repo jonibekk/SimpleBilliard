@@ -228,7 +228,6 @@
                 'id'       => 'evaluation-register-submit',
                 'name'     => 'status',
                 'value'    => Evaluation::TYPE_STATUS_DONE,
-                'disabled' => true,
             ]) ?>
             <?php endif;
             ?>
@@ -515,7 +514,6 @@
                 'id'       => 'evaluation-register-submit',
                 'name'     => 'status',
                 'value'    => Evaluation::TYPE_STATUS_DONE,
-                'disabled' => true,
             ]) ?>
             <?php endif;
             ?>
@@ -538,7 +536,9 @@ $this->Form->input("evaluate_type", [
         $('#evaluation-form').bootstrapValidator({
             live: 'enabled',
             feedbackIcons: {},
-            fields: {}
+            fields: {},
+        }).on('click','button[value="<?= Evaluation::TYPE_STATUS_DRAFT ?>"]',function(){
+            $('#evaluation-form').bootstrapValidator('destroy');
         });
     });
 </script>
