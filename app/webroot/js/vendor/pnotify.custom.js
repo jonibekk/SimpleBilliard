@@ -374,9 +374,7 @@ license GPL/LGPL/MPL
     c.extend(PNotify, {
         notices: [],
         removeAll: function() {
-            c.each(PNotify.notices, function() {
-                this.remove && this.remove()
-            })
+            PNotify.notices = [];
         },
         positionAll: function(b) {
             f && clearTimeout(f);
