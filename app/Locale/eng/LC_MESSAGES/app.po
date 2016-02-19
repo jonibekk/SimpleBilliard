@@ -1115,121 +1115,19 @@ msgstr "0(not affect the progress)"
 
 #: Model/KeyResult.php:158
 msgid "達成要素のデータがありません。"
-msgstr ""
+msgstr "There is no data of KR."
 
 #: Model/KeyResult.php:372;385
 msgid "成果が存在しません。"
 msgstr "There is no key result."
 
-#: Model/NotifySetting.php:227
-msgid "自分が閲覧可能な投稿があったとき"
-msgstr ""
-
-#: Model/NotifySetting.php:229
-msgid "自分の投稿に「コメント」されたとき"
-msgstr ""
-
-#: Model/NotifySetting.php:231
-msgid "自分のコメントした投稿に「コメント」されたとき"
-msgstr ""
-
-#: Model/NotifySetting.php:233
-msgid "自分が管理者の公開サークルに誰かが参加したとき"
-msgstr ""
-
-#: Model/NotifySetting.php:235
-msgid "自分が所属するサークルのプライバシー設定が変更になったとき"
-msgstr ""
-
-#: Model/NotifySetting.php:237
-msgid "自分が新たにサークルメンバーに追加させたとき"
-msgstr ""
-
-#: Model/NotifySetting.php:239
-msgid "自分がオーナーのゴールがフォローされたとき"
-msgstr ""
-
-#: Model/NotifySetting.php:241
-msgid "自分がオーナーのゴールがコラボレートされたとき"
-msgstr ""
-
-#: Model/NotifySetting.php:243
-msgid "自分がオーナーの内容がリーダーによって変更されたとき"
-msgstr ""
-
-#: Model/NotifySetting.php:245
-msgid "自分がオーナーのゴールが評価対象となったとき"
-msgstr ""
-
-#: Model/NotifySetting.php:247
-msgid "自分がリーダーのゴールが修正依頼を受けたとき"
-msgstr ""
-
-#: Model/NotifySetting.php:249
-msgid "自分がオーナーのゴールが評価対象外となったとき"
-msgstr ""
-
-#: Model/NotifySetting.php:251
-msgid "自分(コーチとして)のメンバーがゴールを作成したとき"
-msgstr ""
-
-#: Model/NotifySetting.php:253
-msgid "自分(コーチとして)のメンバーがゴールのコラボレーターとなったとき"
-msgstr ""
-
-#: Model/NotifySetting.php:255
-msgid ""
-"ゴールの修正依頼を受けた自分(コーチとして)のメンバーがゴール内容を修正したと"
-"き"
-msgstr ""
-
-#: Model/NotifySetting.php:257
-msgid "自分が所属するチームが評価開始となったとき"
-msgstr ""
-
-#: Model/NotifySetting.php:259
-msgid "自分が所属するチームが評価凍結となったとき"
-msgstr ""
-
-#: Model/NotifySetting.php:261
-msgid "自分が自己評価できる状態になったとき"
-msgstr ""
-
-#: Model/NotifySetting.php:263
-msgid "評価者としての自分が評価できる状態になったとき"
-msgstr ""
-
-#: Model/NotifySetting.php:265
-msgid "自分の所属するチームの最終者が最終評価データをUploadしたとき"
-msgstr ""
-
-#: Model/NotifySetting.php:267
-msgid "自分のアクションに「コメント」されたとき"
-msgstr ""
-
-#: Model/NotifySetting.php:269
-msgid "自分のコメントしたアクションに「コメント」されたとき"
-msgstr ""
-
-#: Model/NotifySetting.php:271
-msgid "自分が閲覧可能なアクションがあったとき"
-msgstr ""
-
-#: Model/NotifySetting.php:273
-msgid "自分の所属するチームへ招待したユーザーがチームに参加したとき"
-msgstr ""
-
-#: Model/NotifySetting.php:275
-msgid "自分が閲覧可能なメッセージがあったとき"
-msgstr ""
-
 #: Model/NotifySetting.php:278
 msgid "重要なもの"
-msgstr ""
+msgstr "Important ones"
 
 #: Model/NotifySetting.php:279
 msgid "オフ"
-msgstr ""
+msgstr "Off"
 
 #: Model/NotifySetting.php:434;497
 msgid "、"
@@ -1237,11 +1135,11 @@ msgstr ","
 
 #: Model/NotifySetting.php:464
 msgid "他%d人"
-msgstr ""
+msgstr "Other %d members"
 
 #: Model/NotifySetting.php:488
 msgid "他%dサークル"
-msgstr ""
+msgstr "Other $d circles"
 
 #: Model/NotifySetting.php:493
 msgid ""

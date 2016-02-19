@@ -223,57 +223,6 @@ class NotifySetting extends AppModel
 
     public function _setFieldRealName()
     {
-        self::$TYPE[self::TYPE_FEED_POST]['field_real_name']
-            = __d('app', "自分が閲覧可能な投稿があったとき");
-        self::$TYPE[self::TYPE_FEED_COMMENTED_ON_MY_POST]['field_real_name']
-            = __d('app', "自分の投稿に「コメント」されたとき");
-        self::$TYPE[self::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST]['field_real_name']
-            = __d('app', "自分のコメントした投稿に「コメント」されたとき");
-        self::$TYPE[self::TYPE_CIRCLE_USER_JOIN]['field_real_name']
-            = __d('app', "自分が管理者の公開サークルに誰かが参加したとき");
-        self::$TYPE[self::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING]['field_real_name']
-            = __d('app', "自分が所属するサークルのプライバシー設定が変更になったとき");
-        self::$TYPE[self::TYPE_CIRCLE_ADD_USER]['field_real_name']
-            = __d('app', "自分が新たにサークルメンバーに追加させたとき");
-        self::$TYPE[self::TYPE_MY_GOAL_FOLLOW]['field_real_name']
-            = __d('app', "自分がオーナーのゴールがフォローされたとき");
-        self::$TYPE[self::TYPE_MY_GOAL_COLLABORATE]['field_real_name']
-            = __d('app', "自分がオーナーのゴールがコラボレートされたとき");
-        self::$TYPE[self::TYPE_MY_GOAL_CHANGED_BY_LEADER]['field_real_name']
-            = __d('app', "自分がオーナーの内容がリーダーによって変更されたとき");
-        self::$TYPE[self::TYPE_MY_GOAL_TARGET_FOR_EVALUATION]['field_real_name']
-            = __d('app', "自分がオーナーのゴールが評価対象となったとき");
-        self::$TYPE[self::TYPE_MY_GOAL_AS_LEADER_REQUEST_TO_CHANGE]['field_real_name']
-            = __d('app', "自分がリーダーのゴールが修正依頼を受けたとき");
-        self::$TYPE[self::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION]['field_real_name']
-            = __d('app', "自分がオーナーのゴールが評価対象外となったとき");
-        self::$TYPE[self::TYPE_MY_MEMBER_CREATE_GOAL]['field_real_name']
-            = __d('app', "自分(コーチとして)のメンバーがゴールを作成したとき");
-        self::$TYPE[self::TYPE_MY_MEMBER_COLLABORATE_GOAL]['field_real_name']
-            = __d('app', "自分(コーチとして)のメンバーがゴールのコラボレーターとなったとき");
-        self::$TYPE[self::TYPE_MY_MEMBER_CHANGE_GOAL]['field_real_name']
-            = __d('app', "ゴールの修正依頼を受けた自分(コーチとして)のメンバーがゴール内容を修正したとき");
-        self::$TYPE[self::TYPE_EVALUATION_START]['field_real_name']
-            = __d('app', "自分が所属するチームが評価開始となったとき");
-        self::$TYPE[self::TYPE_EVALUATION_FREEZE]['field_real_name']
-            = __d('app', "自分が所属するチームが評価凍結となったとき");
-        self::$TYPE[self::TYPE_EVALUATION_START_CAN_ONESELF]['field_real_name']
-            = __d('app', "自分が自己評価できる状態になったとき");
-        self::$TYPE[self::TYPE_EVALUATION_CAN_AS_EVALUATOR]['field_real_name']
-            = __d('app', "評価者としての自分が評価できる状態になったとき");
-        self::$TYPE[self::TYPE_EVALUATION_DONE_FINAL]['field_real_name']
-            = __d('app', "自分の所属するチームの最終者が最終評価データをUploadしたとき");
-        self::$TYPE[self::TYPE_FEED_COMMENTED_ON_MY_ACTION]['field_real_name']
-            = __d('app', "自分のアクションに「コメント」されたとき");
-        self::$TYPE[self::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION]['field_real_name']
-            = __d('app', "自分のコメントしたアクションに「コメント」されたとき");
-        self::$TYPE[self::TYPE_FEED_CAN_SEE_ACTION]['field_real_name']
-            = __d('app', "自分が閲覧可能なアクションがあったとき");
-        self::$TYPE[self::TYPE_USER_JOINED_TO_INVITED_TEAM]['field_real_name']
-            = __d('app', "自分の所属するチームへ招待したユーザーがチームに参加したとき");
-        self::$TYPE[self::TYPE_FEED_MESSAGE]['field_real_name']
-            = __d('app', "自分が閲覧可能なメッセージがあったとき");
-
         self::$TYPE_GROUP['all'] = __d('app', "すべて");
         self::$TYPE_GROUP['primary'] = __d('app', "重要なもの");
         self::$TYPE_GROUP['none'] = __d('app', "オフ");
