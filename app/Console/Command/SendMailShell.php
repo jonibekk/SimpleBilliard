@@ -281,10 +281,19 @@ class SendMailShell extends AppShell
         }
     }
 
-    private function _preventGarbledCharacters($string, $width=249) {
+    /**
+     * Prevent multi-byte text garbled over 1000 byte
+     *
+     * @param string $bigText
+     * @param int $width
+     *
+     * @return string $wrappedText
+     */
+    private function _preventGarbledCharacters($bigText, $width=249) {
         $pattern = "/(.{1,{$width}})(?:\\s|$)|(.{{$width}})/uS";
         $replace = '$1$2' . "\n";
-        return preg_replace($pattern, $replace, $string);
+        $wrappedText = preg_replace($pattern, $replace, $bigText);
+        return $wrappedText;
     }
 
 }
