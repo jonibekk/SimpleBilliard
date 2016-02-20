@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2016-02-18 09:57+0900\n"
-"PO-Revision-Date: 2016-02-18 09:57+0900\n"
+"POT-Creation-Date: 2016-02-19 19:49+0900\n"
+"PO-Revision-Date: 2016-02-19 19:49+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -43,11 +43,11 @@ msgstr "2-step authentication code is incorrect."
 
 #: Controller/UsersController.php:199
 msgid "リカバリーコードが正しくありません。"
-msgstr ""
+msgstr "Invalid Recovery code."
 
 #: Controller/UsersController.php:206
 msgid "エラーが発生しました。"
-msgstr ""
+msgstr "Error."
 
 #: Controller/UsersController.php:225
 msgid "%sさん、こんにちは。"

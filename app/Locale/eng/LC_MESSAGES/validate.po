@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: 2016-02-17 01:21+0000\n"
-"PO-Revision-Date: 2016-02-18 09:58+0900\n"
+"PO-Revision-Date: 2016-02-20 20:04+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -283,20 +283,20 @@ msgstr "Invalid access."
 
 #: Controller/UsersController.php:753
 msgid "別のユーザ宛のチーム招待です。"
-msgstr ""
+msgstr "This invitation is for another user."
 
 #: Model/Invite.php:87 Model/User.php:571
 msgid "トークンが正しくありません。送信されたメールを再度ご確認下さい。"
-msgstr ""
+msgstr "Invalid token. Please check your email again."
 
 #: Model/Invite.php:90
 msgid "このトークンは使用済みです。"
-msgstr ""
+msgstr "This token has already been used."
 
 #: Model/Invite.php:93 Model/User.php:574
 msgid "トークンの期限が切れています。"
-msgstr ""
+msgstr "This token is expired."
 
 #: View/Errors/error400.ctp:15
 msgid "お探しのページが見つかりませんでした。"
-msgstr ""
+msgstr "The page you're looking for can't be found."

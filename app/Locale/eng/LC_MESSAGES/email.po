@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2016-02-18 09:52+0900\n"
-"PO-Revision-Date: 2016-02-18 09:52+0900\n"
+"POT-Creation-Date: 2016-02-19 19:42+0900\n"
+"PO-Revision-Date: 2016-02-19 19:46+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -17,7 +17,7 @@ msgstr ""
 
 #: Controller/PagesController.php:248
 msgid "【Goalous】お問い合わせありがとうございました"
-msgstr ""
+msgstr "Thank you for your contact."
 
 #: Model/SendMail.php:61
 msgid "アカウントの仮登録が完了しました"
@@ -45,41 +45,43 @@ msgstr "Invitation to the team of Goalous"
 
 #: View/Elements/Email/goalous_web.ctp:7
 msgid "■Goalous(ゴーラス)"
-msgstr ""
+msgstr "- Goalous(ゴーラス)"
 
 #: View/Elements/Email/goalous_web.ctp:12
 msgid "■お問い合わせ"
-msgstr ""
+msgstr "- Contact Us"
 
 #: View/Elements/Email/goalous_web.ctp:17
 msgid "■運営会社"
-msgstr ""
+msgstr "- Company"
 
 #: View/Elements/Email/goalous_web.ctp:19
 msgid "株式会社ISAO"
-msgstr ""
+msgstr "ISAO Corporation"
 
 #: View/Elements/Email/login_url.ctp:5
 msgid "◆Goalousログイン"
-msgstr ""
+msgstr "- Login to Goalous"
 
 #: View/Elements/Email/no_reply.ctp:3
 msgid "■ご注意"
-msgstr ""
+msgstr "- Attention"
 
 #: View/Elements/Email/no_reply.ctp:5
 msgid "このメールは、お問い合わせメールアドレス宛に自動的に送信されています。"
-msgstr ""
+msgstr "This email is automatically sent."
 
 #: View/Elements/Email/no_reply.ctp:7
 msgid "直接返信されないようお願い申し上げます。"
-msgstr ""
+msgstr "Please do not directly reply to this email."
 
 #: View/Elements/Email/no_reply.ctp:10
 msgid ""
 "このメールに心当たりの無い方は、お問い合わせフォームからお問い合わせくださ"
 "い。"
 msgstr ""
+"If you don't get why this email is sent to you, please ask us from our "
+"contact form."
 
 #: View/Elements/Email/stop_mail.ctp:4
 msgid "□配信停止"
@@ -123,39 +125,39 @@ msgstr ""
 msgid ""
 "このたびはGoalous（ゴーラス）へお問い合わせいただき、誠にありがとうございま"
 "す。"
-msgstr ""
+msgstr "Thank you for contact us."
 
 #: View/Emails/text/contact.ctp:14
-msgid "内容を確認のうえ、担当者より３営業日以内にご連絡いたします。"
-msgstr ""
+msgid "確認後、弊社担当者よりご連絡いたします。"
+msgstr "REP. will send you an email soon."
 
 #: View/Emails/text/contact.ctp:15
 msgid "どうぞよろしくお願い申し上げます。"
-msgstr ""
+msgstr "Best Regards."
 
 #: View/Emails/text/contact.ctp:18;33
 msgid "お問い合わせ内容"
-msgstr ""
+msgstr "Your Message"
 
 #: View/Emails/text/contact.ctp:21
 msgid "お問い合わせ項目"
-msgstr ""
+msgstr "Topic"
 
 #: View/Emails/text/contact.ctp:24
 msgid "会社名"
-msgstr ""
+msgstr "Your company name"
 
 #: View/Emails/text/contact.ctp:27
 msgid "お名前"
-msgstr ""
+msgstr "Your name"
 
 #: View/Emails/text/contact.ctp:30
 msgid "メールアドレス"
-msgstr ""
+msgstr "Your email address"
 
 #: View/Emails/text/contact.ctp:36
 msgid "ご希望の営業担当者"
-msgstr ""
+msgstr "REP. you chose."
 
 #: View/Emails/text/invite.ctp:20
 msgid "こんにちは。"
