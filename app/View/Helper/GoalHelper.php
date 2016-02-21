@@ -14,7 +14,7 @@ class GoalHelper extends AppHelper
         $option = [
             'class'    => 'follow-off',
             'style'    => null,
-            'text'     => __d('gl', "フォロー"),
+            'text'     => __d('app', "フォロー"),
             'disabled' => null,
         ];
 
@@ -23,7 +23,7 @@ class GoalHelper extends AppHelper
             $option['class'] = 'follow-on';
             $option['style'] = 'display:none;';
             $option['disabled'] = "disabled";
-            $option['text'] = __d('gl', "フォロー中");
+            $option['text'] = __d('app', "フォロー中");
             return $option;
         }
 
@@ -42,7 +42,7 @@ class GoalHelper extends AppHelper
 
         $option['class'] = 'follow-on';
         $option['style'] = 'display:none;';
-        $option['text'] = __d('gl', "フォロー中");
+        $option['text'] = __d('app', "フォロー中");
         return $option;
     }
 
@@ -51,7 +51,7 @@ class GoalHelper extends AppHelper
         $option = [
             'class' => 'collabo-off',
             'style' => null,
-            'text'  => __d('gl', "コラボる"),
+            'text'  => __d('app', "コラボる"),
         ];
 
         if (!viaIsSet($goal['MyCollabo'])) {
@@ -59,7 +59,7 @@ class GoalHelper extends AppHelper
         }
         $option['class'] = 'collabo-on';
         $option['style'] = 'display:none;';
-        $option['text'] = __d('gl', "コラボり中");
+        $option['text'] = __d('app', "コラボり中");
         return $option;
     }
 
@@ -84,7 +84,7 @@ class GoalHelper extends AppHelper
         }
         $rest_count = count($collaborator) - 2;
         if ($rest_count > 0) {
-            $items[] = __d('gl', "他%s人", $rest_count);
+            $items[] = __d('app', "他%s人", $rest_count);
         }
 
         return "( " . implode(", ", $items) . " )";

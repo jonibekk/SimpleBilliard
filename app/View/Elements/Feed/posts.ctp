@@ -107,32 +107,32 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                     <?php if ($post['Post']['type'] == Post::TYPE_NORMAL): ?>
                                         <li>
                                             <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'post_edit', 'post_id' => $post['Post']['id']]) ?>"
-                                            ><?= __d('gl', "投稿を編集") ?></a>
+                                            ><?= __d('app', "投稿を編集") ?></a>
                                         </li>
                                     <?php elseif ($post['Post']['type'] == Post::TYPE_ACTION): ?>
                                         <li>
                                             <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'edit_action', 'action_result_id' => $post['Post']['action_result_id']]) ?>"
-                                            ><?= __d('gl', "アクションを編集") ?></a>
+                                            ><?= __d('app', "アクションを編集") ?></a>
                                         </li>
                                     <?php endif; ?>
                                 <?php endif ?>
                                 <?php if ($my_member_status['TeamMember']['admin_flg'] || $post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
                                     <?php if ($post['Post']['type'] == Post::TYPE_ACTION): ?>
                                         <li><?=
-                                            $this->Form->postLink(__d('gl', "アクションを削除"),
+                                            $this->Form->postLink(__d('app', "アクションを削除"),
                                                                   ['controller'       => 'goals',
                                                                    'action'           => 'delete_action',
                                                                    'action_result_id' => $post['Post']['action_result_id']],
                                                                   null,
-                                                                  __d('gl', "本当にこのアクションを削除しますか？")) ?></li>
+                                                                  __d('app', "本当にこのアクションを削除しますか？")) ?></li>
                                     <?php else: ?>
                                         <li><?=
-                                            $this->Form->postLink(__d('gl', "投稿を削除"),
+                                            $this->Form->postLink(__d('app', "投稿を削除"),
                                                                   ['controller' => 'posts',
                                                                    'action'     => 'post_delete',
                                                                    'post_id'    => $post['Post']['id']],
                                                                   null,
-                                                                  __d('gl', "本当にこの投稿を削除しますか？")) ?></li>
+                                                                  __d('app', "本当にこの投稿を削除しますか？")) ?></li>
                                     <?php endif; ?>
                                 <?php endif ?>
                                 <li>
@@ -140,7 +140,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                        onclick="copyToClipboard('<?=
                                        $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']],
                                                         true) ?>'); return false;">
-                                        <?= __d('gl', "リンクをコピー") ?></a>
+                                        <?= __d('app', "リンクをコピー") ?></a>
                                 </li>
                             </ul>
                         </div>
@@ -355,14 +355,14 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                            model_id="<?= $post['Post']['id'] ?>"
                            like_type="post">
                             <i class="fa-thumbs-up fa"></i>
-                            <?= __d('gl', "いいね！") ?></a>
+                            <?= __d('app', "いいね！") ?></a>
                         <?php if (!$without_add_comment): ?>
                             <a href="#" class="feeds-post-comment-btn trigger-click"
                                target-id="NewCommentDummyForm_<?= $post['Post']['id'] ?>"
                                after-replace-target-id="CommentFormBody_<?= $post['Post']['id'] ?>"
                             >
                                 <i class="fa-comments-o fa"></i>
-                                <?= __d('gl', "コメント") ?>
+                                <?= __d('app', "コメント") ?>
                             </a>
                         <?php endif; ?>
                     </div>
@@ -396,16 +396,16 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                     >
                         <?php if ($post['unread_count'] > 0): ?>
                             <i class="fa fa-comment-o font_brownRed"></i>&nbsp;<?=
-                            __d('gl', "他%s件のコメントを見る",
+                            __d('app', "他%s件のコメントを見る",
                                 $post['Post']['comment_count'] - 3) ?>
                             <?=
-                            __d('gl', "(%s)",
+                            __d('app', "(%s)",
                                 $post['unread_count']) ?>
 
                         <?php else: ?>
                             <span class="font_gray">
                             <i class="fa fa-comment-o font_brownRed"></i>&nbsp;<?=
-                                __d('gl', "他%s件のコメントを見る",
+                                __d('app', "他%s件のコメントを見る",
                                     $post['Post']['comment_count'] - 3) ?>
                             </span>
                         <?php endif; ?>
@@ -426,7 +426,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                 >
                     <div class="alert alert-danger new-comment-read">
                         <span class="num">0</span>
-                        <?= __d('gl', "件の新しいコメントがあります") ?>
+                        <?= __d('app', "件の新しいコメントがあります") ?>
                     </div>
                 </a>
 
@@ -456,7 +456,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                     tmp-target-height="32"
                                     ajax-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_new_comment_form', 'post_id' => $post['Post']['id']]) ?>"
                                     wrap="soft" rows="1"
-                                    placeholder="<?= __d('gl', "コメントする") ?>"
+                                    placeholder="<?= __d('app', "コメントする") ?>"
                                     cols="30"
                                     id="NewCommentDummyForm_<?= $post['Post']['id'] ?>"
                                     init-height="15"></textarea>

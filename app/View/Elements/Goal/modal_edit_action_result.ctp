@@ -17,7 +17,7 @@
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= __d('gl', "アクションを変更") ?></h4>
+            <h4 class="modal-title"><?= __d('app', "アクションを変更") ?></h4>
         </div>
         <?= $this->Form->create('ActionResult', [
             'inputDefaults' => [
@@ -35,7 +35,7 @@
                 $this->Form->input('ActionResult.name', [
                                                           'label'       => false,
                                                           'rows'        => 1,
-                                                          'placeholder' => __d('gl', "今日やったアクションを共有しよう！"),
+                                                          'placeholder' => __d('app', "今日やったアクションを共有しよう！"),
                                                           'class'       => 'form-control tiny-form-text blank-disable-and-undisable goalsCard-actionInput mb_12px',
                                                           'id'          => "ActionEditFormName_" . $action['ActionResult']['id'],
                                                           'target-id'   => "ActionEditFormSubmit_" . $action['ActionResult']['id'],
@@ -44,7 +44,7 @@
                 ?>
                 <div class="form-group">
                     <label class="font_normal lh_40px" for="ActionPhotos">
-                        <i class="fa fa-camera mr_2px"></i><?= __d('gl', "画像") ?>
+                        <i class="fa fa-camera mr_2px"></i><?= __d('app', "画像") ?>
                     </label>
 
                     <div class="bbb">
@@ -61,12 +61,12 @@
                     </div>
                 </div>
                 <label class="font_normal lh_40px" for="KeyResults_<?= $action['ActionResult']['id'] ?>">
-                    <i class="fa fa-key mr_2px"></i><?= __d('gl', "成果") ?>
+                    <i class="fa fa-key mr_2px"></i><?= __d('app', "成果") ?>
                 </label>
                 <?=
                 $this->Form->input('ActionResult.key_result_id', [
-                                                                   'label'   => false, //__d('gl', "紐付ける達成要素を選択(オプション)"),
-                                                                   'options' => [null => __d('gl', "選択なし")] + $kr_list,
+                                                                   'label'   => false, //__d('app', "紐付ける達成要素を選択(オプション)"),
+                                                                   'options' => [null => __d('app', "選択なし")] + $kr_list,
                                                                    'class'   => 'form-control selectKrForAction',
                                                                    'id'      => 'ActionKeyResultId_' . $action['ActionResult']['id'],
                                                                ]
@@ -77,15 +77,15 @@
         </div>
         <div class="modal-footer">
             <?=
-            $this->Form->submit(__d('gl', "アクションを変更"),
+            $this->Form->submit(__d('app', "アクションを変更"),
                                 ['class' => 'btn btn-primary', 'div' => false, 'id' => "ActionEditFormSubmit_" . $action['ActionResult']['id']]) ?>
             <?= $this->Form->end() ?>
 
-            <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('gl', "閉じる") ?></button>
+            <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('app', "閉じる") ?></button>
             <?=
-            $this->Form->postLink(__d('gl', "アクションを削除"),
+            $this->Form->postLink(__d('app', "アクションを削除"),
                                   ['controller' => 'goals', 'action' => 'delete_action', 'action_result_id' => $action['ActionResult']['id']],
-                                  ['class' => 'btn btn-default pull-left'], __d('gl', "本当にこのアクションを削除しますか？")) ?>
+                                  ['class' => 'btn btn-default pull-left'], __d('app', "本当にこのアクションを削除しますか？")) ?>
 
 
         </div>

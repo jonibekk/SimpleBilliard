@@ -51,3 +51,5 @@ npm-debug.log
 /app/webroot/js/vendors.min.js
 /app/webroot/css/release.css
 /app/webroot/css/release.min.css
+# for Translation | 翻訳関連
+/app/Locale/**/*.pot

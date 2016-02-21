@@ -13,14 +13,14 @@
         <?= $this->element('Team/insight_item', [
             'item_id'           => 'user_count_item',
             'item_value'        => $insight['user_count'],
-            'item_label'        => __d('gl', 'メンバー（アクティブ）'),
+            'item_label'        => __d('app', 'メンバー（アクティブ）'),
             'item_cmp_percent'  => isset($insight['user_count_cmp']) ? $insight['user_count_cmp'] : null,
         ]) ?>
 
         <?= $this->element('Team/insight_item', [
             'item_id'           => 'access_user_count_item',
             'item_value'        => $insight['access_user_count'],
-            'item_label'        => __d('gl', 'ログインメンバー'),
+            'item_label'        => __d('app', 'ログインメンバー'),
             'item_cmp_percent'  => isset($insight['access_user_count_cmp']) ? $insight['access_user_count_cmp'] : null,
         ]) ?>
     </div>
@@ -29,8 +29,8 @@
 
     <?= $this->Form->select('unique',
                             [
-                                'total'  => __d('gl', 'トータル'),
-                                'unique' => __d('gl', 'ユニーク'),
+                                'total'  => __d('app', 'トータル'),
+                                'unique' => __d('app', 'ユニーク'),
                             ], [
                                 'id'    => 'InsightUniqueToggle',
                                 'class' => 'form-control',
@@ -40,31 +40,31 @@
         <?= $this->element('Team/insight_item', [
             'item_id'           => 'action_count_item',
             'item_value'        => $insight['action_count'],
-            'item_label'        => __d('gl', 'アクション'),
+            'item_label'        => __d('app', 'アクション'),
             'item_cmp_percent'  => isset($insight['action_count_cmp']) ? $insight['action_count_cmp'] : null,
         ]) ?>
         <?= $this->element('Team/insight_item', [
             'item_id'           => 'post_count_item',
             'item_value'        => $insight['post_count'],
-            'item_label'        => __d('gl', '投稿'),
+            'item_label'        => __d('app', '投稿'),
             'item_cmp_percent'  => isset($insight['post_count_cmp']) ? $insight['post_count_cmp'] : null,
         ]) ?>
         <?= $this->element('Team/insight_item', [
             'item_id'           => 'like_count_item',
             'item_value'        => $insight['like_count'],
-            'item_label'        => __d('gl', 'いいね'),
+            'item_label'        => __d('app', 'いいね'),
             'item_cmp_percent'  => isset($insight['like_count_cmp']) ? $insight['like_count_cmp'] : null,
         ]) ?>
         <?= $this->element('Team/insight_item', [
             'item_id'           => 'comment_count_item',
             'item_value'        => $insight['comment_count'],
-            'item_label'        => __d('gl', 'コメント'),
+            'item_label'        => __d('app', 'コメント'),
             'item_cmp_percent'  => isset($insight['comment_count_cmp']) ? $insight['comment_count_cmp'] : null,
         ]) ?>
         <?= $this->element('Team/insight_item', [
             'item_id'           => 'message_count_item',
             'item_value'        => $insight['message_count'],
-            'item_label'        => __d('gl', 'メッセージ'),
+            'item_label'        => __d('app', 'メッセージ'),
             'item_cmp_percent'  => isset($insight['message_count_cmp']) ? $insight['message_count_cmp'] : null,
         ]) ?>
     </div>
@@ -73,31 +73,31 @@
         <?= $this->element('Team/insight_item', [
             'item_id'           => 'action_user_count_item',
             'item_value'        => $insight['action_user_count'],
-            'item_label'        => __d('gl', 'アクション'),
+            'item_label'        => __d('app', 'アクション'),
             'item_cmp_percent'  => isset($insight['action_user_count_cmp']) ? $insight['action_user_count_cmp'] : null,
         ]) ?>
         <?= $this->element('Team/insight_item', [
             'item_id'           => 'post_user_count_item',
             'item_value'        => $insight['post_user_count'],
-            'item_label'        => __d('gl', '投稿'),
+            'item_label'        => __d('app', '投稿'),
             'item_cmp_percent'  => isset($insight['post_user_count_cmp']) ? $insight['post_user_count_cmp'] : null,
         ]) ?>
         <?= $this->element('Team/insight_item', [
             'item_id'           => 'like_user_count_item',
             'item_value'        => $insight['like_user_count'],
-            'item_label'        => __d('gl', 'いいね'),
+            'item_label'        => __d('app', 'いいね'),
             'item_cmp_percent'  => isset($insight['like_user_count_cmp']) ? $insight['like_user_count_cmp'] : null,
         ]) ?>
         <?= $this->element('Team/insight_item', [
             'item_id'           => 'comment_user_count_item',
             'item_value'        => $insight['comment_user_count'],
-            'item_label'        => __d('gl', 'コメント'),
+            'item_label'        => __d('app', 'コメント'),
             'item_cmp_percent'  => isset($insight['comment_user_count_cmp']) ? $insight['comment_user_count_cmp'] : null,
         ]) ?>
         <?= $this->element('Team/insight_item', [
             'item_id'           => 'message_user_count_item',
             'item_value'        => $insight['message_user_count'],
-            'item_label'        => __d('gl', 'メッセージ'),
+            'item_label'        => __d('app', 'メッセージ'),
             'item_cmp_percent'  => isset($insight['message_user_count_cmp']) ? $insight['message_user_count_cmp'] : null,
         ]) ?>
     </div>
@@ -108,31 +108,31 @@
         <?= $this->element('Team/insight_item', [
             'item_id'           => 'action_user_percent_item',
             'item_value'        => $insight['action_user_percent'] . ' %',
-            'item_label'        => __d('gl', 'アクション'),
+            'item_label'        => __d('app', 'アクション'),
             'item_cmp_percent'  => isset($insight['action_user_percent_cmp']) ? $insight['action_user_percent_cmp'] : null,
         ]) ?>
         <?= $this->element('Team/insight_item', [
             'item_id'           => 'post_user_percent_item',
             'item_value'        => $insight['post_user_percent'] . ' %',
-            'item_label'        => __d('gl', '投稿'),
+            'item_label'        => __d('app', '投稿'),
             'item_cmp_percent'  => isset($insight['post_user_percent_cmp']) ? $insight['post_user_percent_cmp'] : null,
         ]) ?>
         <?= $this->element('Team/insight_item', [
             'item_id'           => 'like_user_percent_item',
             'item_value'        => $insight['like_user_percent'] . ' %',
-            'item_label'        => __d('gl', 'いいね'),
+            'item_label'        => __d('app', 'いいね'),
             'item_cmp_percent'  => isset($insight['like_user_percent_cmp']) ? $insight['like_user_percent_cmp'] : null,
         ]) ?>
         <?= $this->element('Team/insight_item', [
             'item_id'           => 'comment_user_percent_item',
             'item_value'        => $insight['comment_user_percent'] . ' %',
-            'item_label'        => __d('gl', 'コメント'),
+            'item_label'        => __d('app', 'コメント'),
             'item_cmp_percent'  => isset($insight['comment_user_percent_cmp']) ? $insight['comment_user_percent_cmp'] : null,
         ]) ?>
         <?= $this->element('Team/insight_item', [
             'item_id'           => 'message_user_percent_item',
             'item_value'        => $insight['message_user_percent'] . ' %',
-            'item_label'        => __d('gl', 'メッセージ'),
+            'item_label'        => __d('app', 'メッセージ'),
             'item_cmp_percent'  => isset($insight['message_user_percent_cmp']) ? $insight['message_user_percent_cmp'] : null,
         ]) ?>
     </div>

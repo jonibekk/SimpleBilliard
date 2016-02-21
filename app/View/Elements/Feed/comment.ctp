@@ -44,17 +44,17 @@
                         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="download">
                             <li><a href="#" class="target-toggle-click"
                                    target-id="<?= $id_prefix ?>CommentEditForm_<?= $comment['id'] ?>"
-                                   opend-text="<?= __d('gl', "編集をやめる") ?>"
-                                   closed-text="<?= __d('gl', "コメントを編集") ?>"
+                                   opend-text="<?= __d('app', "編集をやめる") ?>"
+                                   closed-text="<?= __d('app', "コメントを編集") ?>"
                                    ajax-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_edit_comment_form', 'comment_id' => $comment['id'], $id_prefix]) ?>"
                                    click-target-id="<?= $id_prefix ?>CommentEditFormBody_<?= $comment['id'] ?>"
                                    hidden-target-id="<?= $id_prefix ?>CommentTextBody_<?= $comment['id'] ?>"
 
-                                    ><?= __d('gl', "コメントを編集") ?></a></li>
+                                    ><?= __d('app', "コメントを編集") ?></a></li>
                             <li><?=
-                                $this->Form->postLink(__d('gl', "コメントを削除"),
+                                $this->Form->postLink(__d('app', "コメントを削除"),
                                                       ['controller' => 'posts', 'action' => 'comment_delete', 'comment_id' => $comment['id']],
-                                                      null, __d('gl', "本当にこのコメントを削除しますか？")) ?></li>
+                                                      null, __d('app', "本当にこのコメントを削除しますか？")) ?></li>
                         </ul>
                     </div>
                 <?php elseif ($my_member_status['TeamMember']['admin_flg']): ?>
@@ -62,7 +62,7 @@
                         <?=
                         $this->Form->postLink('<i class="fa fa-times comment-cross"></i>',
                                               ['controller' => 'posts', 'action' => 'comment_delete', 'comment_id' => $comment['id']],
-                                              ['escape' => false], __d('gl', "本当にこのコメントを削除しますか？")) ?>
+                                              ['escape' => false], __d('app', "本当にこのコメントを削除しますか？")) ?>
                     </div>
                 <?php endif; ?>
                 <div class="mb_2px lh_12px">
@@ -145,7 +145,7 @@
                    like_count_id="<?= $id_prefix ?>CommentLikeCount_<?= $comment['id'] ?>"
                    model_id="<?= $comment['id'] ?>"
                    like_type="comment">
-                    <?= __d('gl', "いいね！") ?></a><span
+                    <?= __d('app', "いいね！") ?></a><span
                     class="font_lightgray"> ･ </span>
             <span>
                             <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_comment_liked_users', 'comment_id' => $comment['id']]) ?>"

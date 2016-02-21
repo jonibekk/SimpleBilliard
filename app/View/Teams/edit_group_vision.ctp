@@ -14,7 +14,7 @@
 <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default">
-            <div class="panel-heading"><?= __d('gl', "グループビジョンを更新") ?></div>
+            <div class="panel-heading"><?= __d('app', "グループビジョンを更新") ?></div>
             <?=
             $this->Form->create('GroupVision', [
                 'inputDefaults' => [
@@ -34,15 +34,15 @@
             <div class="panel-body add-team-panel-body">
                 <?=
                 $this->Form->input('group_id', [
-                    'label'   => __d('gl', "グループ"),
+                    'label'   => __d('app', "グループ"),
                     'type'    => 'select',
                     'options' => $group_list,
                 ]) ?>
                 <hr>
                 <?=
                 $this->Form->input('name',
-                                   ['label'                        => __d('gl', "グループビジョン名"),
-                                    'placeholder'                  => __d('gl', "例) イノベーションを起こす"),
+                                   ['label'                        => __d('app', "グループビジョン名"),
+                                    'placeholder'                  => __d('app', "例) イノベーションを起こす"),
                                     "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
                                     'rows'                         => 1,
                                     'data-bv-stringlength'         => 'true',
@@ -51,7 +51,7 @@
                                    ]) ?>
                 <hr>
                 <div class="form-group">
-                    <label for="" class="col col-sm-3 control-label form-label"><?= __d('gl', "画像") ?></label>
+                    <label for="" class="col col-sm-3 control-label form-label"><?= __d('app', "画像") ?></label>
 
                     <div class="col col-sm-6">
                         <div class="fileinput_small fileinput-new" data-provides="fileinput">
@@ -66,10 +66,10 @@
                         <span class="btn btn-default btn-file">
                             <span class="fileinput-new">
                                 <?=
-                                __d('gl',
+                                __d('app',
                                     "画像を選択") ?>
                             </span>
-                            <span class="fileinput-exists"><?= __d('gl', "画像を再選択") ?></span>
+                            <span class="fileinput-exists"><?= __d('app', "画像を再選択") ?></span>
                             <?=
                             $this->Form->input('photo',
                                                ['type'         => 'file',
@@ -81,7 +81,7 @@
                                                 'required'     => false
                                                ]) ?>
                         </span>
-                                <span class="help-block font_11px inline-block"><?= __d('gl', '10MB以下') ?></span>
+                                <span class="help-block font_11px inline-block"><?= __d('app', '10MB以下') ?></span>
                             </div>
                         </div>
 
@@ -98,7 +98,7 @@
                 <hr>
                 <?=
                 $this->Form->input('description', [
-                    'label'                        => __d('gl', "説明"),
+                    'label'                        => __d('app', "説明"),
                     'type'                         => 'text',
                     'rows'                         => 1,
                     'data-bv-stringlength'         => 'true',
@@ -111,7 +111,7 @@
                 <div class="row">
                     <div class="team-button pull-right">
                         <?=
-                        $this->Form->submit(__d('gl', "グループビジョンを更新する"),
+                        $this->Form->submit(__d('app', "グループビジョンを更新する"),
                                             ['class' => 'btn btn-primary display-inline', 'div' => false]) ?>
                     </div>
                 </div>

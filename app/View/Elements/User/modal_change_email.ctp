@@ -15,7 +15,7 @@
             <div class="modal-header">
                 <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
                     <span class="close-icon">&times;</span></button>
-                <h4 class="modal-title"><?= __d('gl', "メールアドレスの変更") ?></h4>
+                <h4 class="modal-title"><?= __d('app', "メールアドレスの変更") ?></h4>
             </div>
             <?=
             $this->Form->create('User', [
@@ -33,13 +33,13 @@
                 'id'            => 'ChangeEmail',
             ]); ?>
             <div class="modal-body">
-                <p><?= __d('gl', "変更後にメールアドレス宛に認証用のメールが届きます。") ?></p>
+                <p><?= __d('app', "変更後にメールアドレス宛に認証用のメールが届きます。") ?></p>
 
-                <p><?= __d('gl', "メールに掲載されている確認URLを開くと変更が完了します。") ?></p>
+                <p><?= __d('app', "メールに掲載されている確認URLを開くと変更が完了します。") ?></p>
                 <?=
                 $this->Form->input('email', [
-                    'label'                        => __d('gl', "新しいメールアドレス"),
-                    'placeholder'                  => __d('gl', "hiroshi@example.com"),
+                    'label'                        => __d('app', "新しいメールアドレス"),
+                    'placeholder'                  => __d('app', "hiroshi@example.com"),
                     'data-bv-stringlength'         => 'true',
                     'data-bv-stringlength-max'     => 200,
                     'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 200),
@@ -51,16 +51,16 @@
                 ]) ?>
                 <?=
                 $this->Form->input('password_request2', [
-                    'label' => __d('gl', "パスワード入力"),
+                    'label' => __d('app', "パスワード入力"),
                     'type'  => 'password',
                 ]) ?>
             </div>
             <div class="modal-footer modal_pannel-footer">
-                <?= $this->Form->submit(__d('gl', "認証メールを送信"),
+                <?= $this->Form->submit(__d('app', "認証メールを送信"),
                                         ['class' => 'btn btn-primary pull-right', 'disabled' => 'disabled']) ?>
                 <div class="pull-right">
                     <button type="button" class="btn btn-link design-cancel mr_8px bd-radius_4px" data-dismiss="modal">
-                        <?= __d('gl', "キャンセル") ?>
+                        <?= __d('app', "キャンセル") ?>
                     </button>
                 </div>
             </div>
