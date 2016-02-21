@@ -245,6 +245,7 @@ class SendMailShell extends AppShell
      */
     private function _sendMailItem($options, $viewVars)
     {
+        $viewVars['message'] = $this->_preventGarbledCharacters($viewVars['message']);
         $defaults = array(
             'subject'  => '',
             'template' => '',
@@ -278,6 +279,21 @@ class SendMailShell extends AppShell
         else {
             return new CakeEmail('amazon');
         }
+    }
+
+    /**
+     * Prevent multi-byte text garbled over 1000 byte
+     *
+     * @param string $bigText
+     * @param int $width
+     *
+     * @return string $wrappedText
+     */
+    private function _preventGarbledCharacters($bigText, $width=249) {
+        $pattern = "/(.{1,{$width}})(?:\\s|$)|(.{{$width}})/uS";
+        $replace = '$1$2' . "\n";
+        $wrappedText = preg_replace($pattern, $replace, $bigText);
+        return $wrappedText;
     }
 
 }
