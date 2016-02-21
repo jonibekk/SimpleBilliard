@@ -32,9 +32,9 @@ class Goal extends AppModel
      */
     private function _setStatusName()
     {
-        self::$STATUS[self::STATUS_DOING] = __d('gl', "進行中");
-        self::$STATUS[self::STATUS_PAUSE] = __d('gl', "中断");
-        self::$STATUS[self::STATUS_COMPLETE] = __d('gl', "完了");
+        self::$STATUS[self::STATUS_DOING] = __d('app', "進行中");
+        self::$STATUS[self::STATUS_PAUSE] = __d('app', "中断");
+        self::$STATUS[self::STATUS_COMPLETE] = __d('app', "完了");
     }
 
     /**
@@ -42,10 +42,10 @@ class Goal extends AppModel
      */
     private function _setPriorityName()
     {
-        $this->priority_list[0] = __d('gl', "0 (認定対象外)");
-        $this->priority_list[1] = __d('gl', "1 (とても低い)");
-        $this->priority_list[3] = __d('gl', "3 (デフォルト)");
-        $this->priority_list[5] = __d('gl', "5 (とても高い)");
+        $this->priority_list[0] = __d('app', "0 (認定対象外)");
+        $this->priority_list[1] = __d('app', "1 (とても低い)");
+        $this->priority_list[3] = __d('app', "3 (デフォルト)");
+        $this->priority_list[5] = __d('app', "5 (とても高い)");
     }
 
     public $priority_list = [
@@ -66,21 +66,21 @@ class Goal extends AppModel
     {
         $res = [
             'term'     => [
-                'present'  => __d('gl', "今期"),
-                'next'     => __d('gl', "来期"),
-                'previous' => __d('gl', "前期"),
-                'before'   => __d('gl', "もっと前")],
+                'present'  => __d('app', "今期"),
+                'next'     => __d('app', "来期"),
+                'previous' => __d('app', "前期"),
+                'before'   => __d('app', "もっと前")],
             'progress' => [
-                'all'        => __d('gl', "すべて"),
-                'complete'   => __d('gl', "達成"),
-                'incomplete' => __d('gl', "未達成")],
+                'all'        => __d('app', "すべて"),
+                'complete'   => __d('app', "達成"),
+                'incomplete' => __d('app', "未達成")],
             'order'    => [
-                'new'      => __d('gl', "新着順"),
-                'action'   => __d('gl', "アクションが多い順"),
-                'result'   => __d('gl', "出した成果が多い順"),
-                'follow'   => __d('gl', "フォロワーが多い順"),
-                'collabo'  => __d('gl', "コラボが多い順"),
-                'progress' => __d('gl', "進捗率が高い順")]
+                'new'      => __d('app', "新着順"),
+                'action'   => __d('app', "アクションが多い順"),
+                'result'   => __d('app', "出した成果が多い順"),
+                'follow'   => __d('app', "フォロワーが多い順"),
+                'collabo'  => __d('app', "コラボが多い順"),
+                'progress' => __d('app', "進捗率が高い順")]
         ];
         //カテゴリ取得
         $options = [
@@ -91,9 +91,9 @@ class Goal extends AppModel
                              'name'],
         ];
         $goal_categories = $this->GoalCategory->find('all', $options);
-        $res['category'] = ['all' => __d('gl', 'すべて')];
+        $res['category'] = ['all' => __d('app', 'すべて')];
         foreach ($goal_categories as $val) {
-            $res['category'] += [$val['GoalCategory']['id'] => __d('gl', $val['GoalCategory']['name'])];
+            $res['category'] += [$val['GoalCategory']['id'] => __d('app', $val['GoalCategory']['name'])];
         }
         return $res;
     }
@@ -341,10 +341,10 @@ class Goal extends AppModel
     {
         $this->id = $id;
         if (!$this->exists()) {
-            throw new RuntimeException(__d('gl', "このゴールは存在しません。"));
+            throw new RuntimeException(__d('app', "このゴールは存在しません。"));
         }
         if (!$this->isOwner($this->my_uid, $id)) {
-            throw new RuntimeException(__d('gl', "このゴールの編集の権限がありません。"));
+            throw new RuntimeException(__d('app', "このゴールの編集の権限がありません。"));
         }
         return true;
     }
@@ -358,7 +358,7 @@ class Goal extends AppModel
         ];
         $res = $this->Evaluation->find('first', $options);
         if (!empty($res)) {
-            throw new RuntimeException(__d('gl', "このゴールは評価中のため、変更できません。"));
+            throw new RuntimeException(__d('app', "このゴールは評価中のため、変更できません。"));
         }
         return true;
     }
@@ -1509,7 +1509,7 @@ class Goal extends AppModel
     {
         $goal = $this->findById($goal_id);
         if (empty($goal)) {
-            throw new RuntimeException(__d('gl', "ゴールが存在しません。"));
+            throw new RuntimeException(__d('app', "ゴールが存在しません。"));
         }
         $this->id = $goal_id;
         $this->saveField('current_value', $goal['Goal']['target_value']);
@@ -1522,7 +1522,7 @@ class Goal extends AppModel
     {
         $goal = $this->findById($goal_id);
         if (empty($goal)) {
-            throw new RuntimeException(__d('gl', "ゴールが存在しません。"));
+            throw new RuntimeException(__d('app', "ゴールが存在しません。"));
         }
         $goal['Goal']['completed'] = null;
         unset($goal['Goal']['modified']);
@@ -1665,7 +1665,7 @@ class Goal extends AppModel
         if (!$separate_term) {
             $res = $this->find('list', $options);
             if ($with_all_opt) {
-                return [null => __d('gl', 'すべて')] + $res;
+                return [null => __d('app', 'すべて')] + $res;
             }
             return $res;
         }
@@ -1677,7 +1677,7 @@ class Goal extends AppModel
         $before_term_opt['conditions']['end_date <='] = $start_date;
         $before_goals = $this->find('list', $before_term_opt);
         $res = [];
-        $res += $with_all_opt ? [null => __d('gl', 'すべて')] : null;
+        $res += $with_all_opt ? [null => __d('app', 'すべて')] : null;
         $res += ['disable_value1' => '----------------------------------------------------------------------------------------'];
         $res += $current_goals;
         $res += ['disable_value2' => '----------------------------------------------------------------------------------------'];

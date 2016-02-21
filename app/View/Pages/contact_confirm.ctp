@@ -39,11 +39,11 @@ $meta_contact_confirm = [
     ],
     [
         "property" => "og:title",
-        "content" => __d('gl', '入力内容確認 | Goalous(ゴーラス)'),
+        "content" => __d('lp', '入力内容確認 | Goalous(ゴーラス)'),
     ],
     [
         "property" => "og:description",
-        "content" =>__d('gl', 'Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。お問い合わせ内容の確認です。'),
+        "content" =>__d('lp', 'Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。お問い合わせ内容の確認です。'),
     ],
     [
         "property" => "og:url",
