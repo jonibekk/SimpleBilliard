@@ -33,7 +33,7 @@
                 <?= h($this->NumberEx->formatHumanReadable($action_count, ['convert_start' => 10000])) ?>
             </div>
             <span class="goal-detail-numbers-category-action">
-                <?= __d('gl', 'アクション') ?>
+                <?= __d('app', 'アクション') ?>
             </span>
         </div>
         <div class="goal-detail-numbers-member">
@@ -41,7 +41,7 @@
                 <?= h($this->NumberEx->formatHumanReadable($member_count, ['convert_start' => 10000])) ?>
             </div>
             <span class="goal-detail-numbers-category-member">
-                <?= __d('gl', 'メンバー') ?>
+                <?= __d('app', 'メンバー') ?>
             </span>
         </div>
         <div class="goal-detail-numbers-follower">
@@ -49,11 +49,11 @@
                 <?= h($this->NumberEx->formatHumanReadable($follower_count, ['convert_start' => 10000])) ?>
             </div>
             <span class="goal-detail-numbers-category-follower">
-                <?= __d('gl', 'フォロワー') ?>
+                <?= __d('app', 'フォロワー') ?>
             </span>
         </div>
         <?php if ($is_leader): ?>
-            <?= $this->Html->link(__d('gl', 'ゴール編集'),
+            <?= $this->Html->link(__d('app', 'ゴール編集'),
                                   [
                                       'controller' => 'goals',
                                       'action'     => 'add',
@@ -82,7 +82,7 @@
                             disabled="disabled"
                         <?php endif ?>
                         >
-                        <span class="ml_5px"><?= __d('gl', 'フォロー') ?></span>
+                        <span class="ml_5px"><?= __d('app', 'フォロー') ?></span>
                     </a>
                 </div>
                 <div class="col col-xxs-5 col-xxs-offset-1 col-xs-4">
@@ -91,7 +91,7 @@
                        data-toggle="modal"
                        data-target="#ModalCollabo_<?= $goal['Goal']['id'] ?>"
                        href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', 'goal_id' => $goal['Goal']['id']]) ?>">
-                        <span class=""><?= __d('gl', 'コラボ') ?></span>
+                        <span class=""><?= __d('app', 'コラボ') ?></span>
                     </a>
                 </div>
             </div>
@@ -117,7 +117,7 @@
         <i class="fa fa-flag goal-detail-tab-icon"></i>
 
         <p class="goal-detail-tab-title">
-            <?= h(__d('gl', '基本情報')) ?>
+            <?= h(__d('app', '基本情報')) ?>
         </p>
     </a>
     <a class="goal-detail-kr-tab <?= $this->request->params['action'] == 'view_krs' ? "profile-user-tab-active" : null ?>"
@@ -130,7 +130,7 @@
         <i class="fa fa-key goal-detail-tab-icon"></i>
 
         <p class="goal-detail-tab-title">
-            <?= h(__d('gl', '成果')) ?>
+            <?= h(__d('app', '成果')) ?>
         </p>
     </a>
     <a class="goal-detail-action-tab <?= $this->request->params['action'] == 'view_actions' ? "profile-user-tab-active" : null ?>"
@@ -144,7 +144,7 @@
         <i class="fa fa-check goal-detail-tab-icon"></i>
 
         <p class="goal-detail-tab-title">
-            <?= h(__d('gl', 'アクション')) ?>
+            <?= h(__d('app', 'アクション')) ?>
         </p>
     </a>
     <a class="goal-detail-member-tab <?= $this->request->params['action'] == 'view_members' ? "profile-user-tab-active" : null ?>"
@@ -157,7 +157,7 @@
         <i class="fa fa-users goal-detail-tab-icon"></i>
 
         <p class="goal-detail-tab-title">
-            <?= h(__d('gl', 'メンバー')) ?>
+            <?= h(__d('app', 'メンバー')) ?>
         </p>
     </a>
     <a class="goal-detail-member-tab <?= $this->request->params['action'] == 'view_followers' ? "profile-user-tab-active" : null ?>"
@@ -170,7 +170,7 @@
         <i class="fa fa-heart goal-detail-tab-icon"></i>
 
         <p class="goal-detail-tab-title">
-            <?= h(__d('gl', 'フォロワー')) ?>
+            <?= h(__d('app', 'フォロワー')) ?>
         </p>
     </a>
 </div>

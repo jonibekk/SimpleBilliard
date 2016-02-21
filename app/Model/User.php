@@ -44,9 +44,9 @@ class User extends AppModel
      */
     private function _setGenderTypeName()
     {
-        self::$TYPE_GENDER[self::TYPE_GENDER_MALE] = __d('gl', "男性");
-        self::$TYPE_GENDER[self::TYPE_GENDER_FEMALE] = __d('gl', "女性");
-        self::$TYPE_GENDER[self::TYPE_GENDER_NEITHER] = __d('gl', "どちらでもない");
+        self::$TYPE_GENDER[self::TYPE_GENDER_MALE] = __d('app', "男性");
+        self::$TYPE_GENDER[self::TYPE_GENDER_FEMALE] = __d('app', "女性");
+        self::$TYPE_GENDER[self::TYPE_GENDER_NEITHER] = __d('app', "どちらでもない");
     }
 
     public $actsAs = [
@@ -623,10 +623,10 @@ class User extends AppModel
 
         if (empty($user)) {
             throw new RuntimeException(
-                __d('exception', "トークンが正しくありません。送信されたメールを再度ご確認下さい。"));
+                __d('validate', "トークンが正しくありません。送信されたメールを再度ご確認下さい。"));
         }
         if ($user['Email']['email_token_expires'] < REQUEST_TIMESTAMP) {
-            throw new RuntimeException(__d('exception', 'トークンの期限が切れています。'));
+            throw new RuntimeException(__d('validate', 'トークンの期限が切れています。'));
         }
 
         $user['User']['id'] = $user['Email']['user_id'];
@@ -1061,7 +1061,7 @@ class User extends AppModel
             $team_res = [
                 [
                     'id'    => "public",
-                    'text'  => __d('gl', "チーム全体"),
+                    'text'  => __d('app', "チーム全体"),
                     'image' => $Upload->uploadUrl($team, 'Team.photo', ['style' => 'small']),
                 ]
             ];
@@ -1107,7 +1107,7 @@ class User extends AppModel
             }
             $res[] = [
                 'id'    => 'group_' . $group['Group']['id'],
-                'text'  => h($group['Group']['name'] . ' (' . strval(__d('gl', '%1$s人のメンバー', count($users))) . ')'),
+                'text'  => h($group['Group']['name'] . ' (' . strval(__d('app', '%1$s人のメンバー', count($users))) . ')'),
                 'users' => $users,
             ];
         }
@@ -1242,8 +1242,8 @@ class User extends AppModel
     {
         // $keyword にスペースが入っていればフルネーム検索
         // 入っていない場合は姓名それぞれを検索
-        if (strpos($keyword, ' ') !== false || strpos($keyword, __d('gl', '　')) !== false) {
-            $keyword = str_replace(__d('gl', '　'), ' ', $keyword);
+        if (strpos($keyword, ' ') !== false || strpos($keyword, __d('app', '　')) !== false) {
+            $keyword = str_replace(__d('app', '　'), ' ', $keyword);
             $keyword_conditions = [
                 'CONCAT(`User.first_name`," ",`User.last_name`) Like'                       => $keyword . "%",
                 'CONCAT(`SearchLocalName.first_name`," ",`SearchLocalName.last_name`) Like' => $keyword . "%",

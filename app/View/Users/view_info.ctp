@@ -15,11 +15,11 @@
         <div class="panel-body view-info-panel">
             <div class="panel panel-default">
                 <div class="panel-heading" style="background-color:#eee; font-size:100%">
-                    <?= __d('gl', "プロフィール") ?>
+                    <?= __d('app', "プロフィール") ?>
                     <?php if ($this->Session->read('Auth.User.id') == $user['User']['id']): ?>
                         <span class="pull-right" style="font-weight:normal;">
                             <i class="fa fa-pencil"></i>
-                            <?= $this->Html->link(__d('gl', '編集'), [
+                            <?= $this->Html->link(__d('app', '編集'), [
                                 'controller' => 'users',
                                 'action'     => 'settings',
                                 '#'          => 'profile']) ?>
@@ -27,24 +27,24 @@
                     <?php endif ?>
                 </div>
                 <div class="panel-body">
-                    <?= __d('gl', '名前') ?>
+                    <?= __d('app', '名前') ?>
                     <span class="pull-right"><?= h($user['User']['display_username']) ?></span>
                 </div>
                 <div class="panel-body" style="border-top: 1px solid #ddd;">
-                    <?= __d('gl', '性別') ?>
+                    <?= __d('app', '性別') ?>
                     <span class="pull-right"><?= User::$TYPE_GENDER[$user['User']['gender_type']] ?></span>
                 </div>
                 <div class="panel-body" style="border-top: 1px solid #ddd;">
-                    <?= __d('gl', '誕生日') ?>
+                    <?= __d('app', '誕生日') ?>
                     <span class="pull-right"><?= $this->Time->format($user['User']['hide_year_flg'] ? 'm/d' : 'Y/m/d',
                                                                      $user['User']['birth_day']) ?></span>
                 </div>
                 <div class="panel-body" style="border-top: 1px solid #ddd;">
-                    <?= __d('gl', '出身地') ?>
+                    <?= __d('app', '出身地') ?>
                     <span class="pull-right"><?= h($user['User']['hometown']) ?></span>
                 </div>
                 <div class="panel-body" style="border-top: 1px solid #ddd;">
-                    <?= __d('gl', 'プロフィール画像') ?>
+                    <?= __d('app', 'プロフィール画像') ?>
                     <span class="pull-right"><?=
                         $this->Upload->uploadImage($user, 'User.photo',
                                                    ['style' => 'small']) ?></span>

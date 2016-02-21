@@ -52,7 +52,7 @@ class DataShell extends AppShell
 	--connection <connection>:   Choise to connection configure.
 	                             Default: `default'
 TEXT;
-        $this->out(__d("cake_console", $help));
+        $this->out(__d('cake_console', $help));
         $this->_stop();
     }
 
@@ -186,7 +186,7 @@ TEXT;
         $Model = ClassRegistry::init('User');
         $result = $Model->findById(1);
         if (!empty($result)) {
-            $this->out(__d('global', '既にテストデータが存在するため、テストデータのインポートをキャンセルしました。'));
+            $this->out(__d('app', '既にテストデータが存在するため、テストデータのインポートをキャンセルしました。'));
             return;
         }
 

@@ -30,7 +30,7 @@
     }
     ?>
     <a href="" class="alert alert-info feed-notify-box" role="alert" style="margin-bottom:5px;display:none;opacity:0;">
-        <span class="num"></span><?= __d('gl', "件の新しい投稿があります。") ?></a>
+        <span class="num"></span><?= __d('app', "件の新しい投稿があります。") ?></a>
     <div class="panel panel-default" id="CircleFiles">
         <?=
         $this->Form->input('file_type', [
@@ -50,13 +50,13 @@
     <?php
     $next_page_num = 2;
     $month_index = 0;
-    $more_read_text = __d('gl', "もっとファイルを読み込む ▼");
+    $more_read_text = __d('app', "もっとファイルを読み込む ▼");
     $oldest_post_time = 0;
     $item_num = FILE_LIST_PAGE_NUMBER;
     if ((count($files) != $item_num)) {
         $next_page_num = 1;
         $month_index = 1;
-        $more_read_text = __d('gl', "さらにファイルを読み込む ▼");
+        $more_read_text = __d('app', "さらにファイルを読み込む ▼");
     }
 
     // サークルの登録日以前の投稿は存在しないので読み込まないようにする
@@ -66,7 +66,7 @@
     ?>
     <div class="panel panel-default feed-read-more" id="FeedMoreRead">
         <div class="panel-body panel-read-more-body">
-            <span class="none" id="ShowMoreNoData"><?= __d('gl', "これ以上のファイルはありませんでした。") ?></span>
+            <span class="none" id="ShowMoreNoData"><?= __d('app', "これ以上のファイルはありませんでした。") ?></span>
             <a href="#" class="btn btn-link click-feed-read-more"
                parent-id="FeedMoreRead"
                no-data-text-id="ShowMoreNoData"
@@ -88,6 +88,6 @@
 
     <?= $this->element('Feed/circle_join_button', compact('current_circle', 'user_status')) ?>
 <?php else: ?>
-    <?= $this->Html->link(__d('gl', "チームを作成してください。"), ['controller' => 'teams', 'action' => 'add']) ?>
+    <?= $this->Html->link(__d('app', "チームを作成してください。"), ['controller' => 'teams', 'action' => 'add']) ?>
 <?php endif; ?>
 <!-- END app/View/Posts/attached_file_list.ctp -->

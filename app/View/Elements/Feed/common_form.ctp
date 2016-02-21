@@ -50,7 +50,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                 <a href="#ActionForm" role="tab" data-toggle="tab"
                    class="switch-action-anchor click-target-focus"
                    target-id="CommonActionName"><i
-                        class="fa fa-check-circle"></i><?= __d('gl', "アクション") ?></a><span class="switch-arrow"></span>
+                        class="fa fa-check-circle"></i><?= __d('app', "アクション") ?></a><span class="switch-arrow"></span>
             </li>
             <li class="switch-post <?php
             // ファイル上部の宣言部を参照
@@ -60,7 +60,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                 <a href="#PostForm" role="tab" data-toggle="tab"
                    class="switch-post-anchor click-target-focus"
                    target-id="CommonPostBody"><i
-                        class="fa fa-comment-o"></i><?= __d('gl', "投稿") ?></a><span class="switch-arrow"></span>
+                        class="fa fa-comment-o"></i><?= __d('app', "投稿") ?></a><span class="switch-arrow"></span>
             </li>
             <li class="switch-message <?php
             // ファイル上部の宣言部を参照
@@ -74,7 +74,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                 <a href="#MessageForm" role="tab" data-toggle="tab"
                    class="switch-message-anchor click-target-focus"
                    target-id="s2id_autogen1"><i
-                        class="fa fa-paper-plane-o"></i><?= __d('gl', "メッセージ") ?></a><span class="switch-arrow"></span>
+                        class="fa fa-paper-plane-o"></i><?= __d('app', "メッセージ") ?></a><span class="switch-arrow"></span>
             </li>
         </ul>
     </div>
@@ -84,9 +84,9 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
             <?php if (count($goal_list_for_action_option) == 1): ?>
                 <div class="post-panel-body plr_11px ptb_7px">
                     <div class="alert alert-warning" role="alert">
-                        <?= __d('gl', '今期のゴールがありません。') ?>
+                        <?= __d('app', '今期のゴールがありません。') ?>
                         <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>"
-                           class="alert-link"><?= __d('gl', 'ゴールを作成する') ?></a>
+                           class="alert-link"><?= __d('app', 'ゴールを作成する') ?></a>
                     </div>
                 </div>
             <?php else: ?>
@@ -117,7 +117,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                        delete-method="hide"
                         >
                         <span class="action-image-add-button-text"><i
-                                class="fa fa-image action-image-add-button-icon"></i> <span><?= __d('gl',
+                                class="fa fa-image action-image-add-button-icon"></i> <span><?= __d('app',
                                                                                                     'アクション画像をアップロード') ?></span></span>
 
                     </a>
@@ -134,7 +134,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                         'wrap'                         => 'soft',
                         'rows'                         => 1,
                         'required'                     => true,
-                        'placeholder'                  => __d('gl', "アクションを説明しよう"),
+                        'placeholder'                  => __d('app', "アクションを説明しよう"),
                         'class'                        => 'form-control change-warning',
                         'data-bv-notempty-message'     => __d('validate', "入力必須項目です。"),
                         'data-bv-stringlength'         => 'true',
@@ -183,7 +183,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                                 'div'      => false,
                                 'required' => false,
                                 'id'       => 'KrSelectOnActionForm',
-                                'options'  => isset($kr_list) ? $kr_list : [null => __d('gl', '達成要素を選択する(オプション)')],
+                                'options'  => isset($kr_list) ? $kr_list : [null => __d('app', '達成要素を選択する(オプション)')],
                             ])
                             ?>
                         </div>
@@ -197,7 +197,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                            id="CommonActionFormShowOptionLink">
                             <div class="panel-body action-form-panel-body font_11px font_lightgray"
                                  id="CommonActionFormShare">
-                                <p class="text-center"><?= __d('gl', "オプションを表示") ?></p>
+                                <p class="text-center"><?= __d('app', "オプションを表示") ?></p>
 
                                 <p class="text-center"><i class="fa fa-chevron-down"></i></p>
                             </div>
@@ -234,7 +234,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
 
                             <div class="row form-horizontal form-group post-share-range" id="CommonActionShare">
                                 <?=
-                                $this->Form->submit(__d('gl', $is_edit_mode ? "保存する" : "アクション登録"),
+                                $this->Form->submit(__d('app', $is_edit_mode ? "保存する" : "アクション登録"),
                                                     ['class' => 'btn btn-primary pull-right post-submit-button', 'id' => 'CommonActionSubmit', 'disabled' => 'disabled']) ?>
                             </div>
                         </div>
@@ -288,7 +288,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                     'type'                         => 'textarea',
                     'wrap'                         => 'soft',
                     'rows'                         => 1,
-                    'placeholder'                  => __d('gl', "何か投稿しよう"),
+                    'placeholder'                  => __d('app', "何か投稿しよう"),
                     'class'                        => 'form-control tiny-form-text-change post-form feed-post-form box-align change-warning',
                     "required"                     => true,
                     'data-bv-notempty-message'     => __d('validate', "入力必須項目です。"),
@@ -372,7 +372,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
 
                     <div class="row form-horizontal form-group post-share-range" id="PostShare">
                         <?=
-                        $this->Form->submit(__d('gl', $is_edit_mode ? "保存する" : "投稿する"),
+                        $this->Form->submit(__d('app', $is_edit_mode ? "保存する" : "投稿する"),
                                             ['class'    => 'btn btn-primary pull-right post-submit-button',
                                              'id'       => 'PostSubmit',
                                              'disabled' => $is_edit_mode ? '' : 'disabled']) ?>
@@ -424,7 +424,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
             ]); ?>
             <div class="post-message-dest panel-body" id="MessageFormShare">
                 <div class="col col-xxs-10 col-xs-10 post-share-range-list" id="MessagePublicShareInputWrap">
-                    <?= __d('gl', "To:") ?>
+                    <?= __d('app', "To:") ?>
                     <?=
                     $this->Form->hidden('share_public', [
                         'id'    => 'select2Member',
@@ -450,7 +450,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                         'wrap'                         => 'soft',
                         'rows'                         => 1,
                         'required'                     => true,
-                        'placeholder'                  => __d('gl', "メッセージを書こう"),
+                        'placeholder'                  => __d('app', "メッセージを書こう"),
                         'class'                        => 'form-control tiny-form-text-change post-form feed-post-form box-align change-warning',
                         'target_show_id'               => "MessageFormFooter",
                         'data-bv-notempty-message'     => __d('validate', "入力必須項目です。"),
@@ -471,7 +471,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
 
                         <div class="row form-horizontal form-group post-share-range" id="MessageShare">
                             <?=
-                            $this->Form->submit(__d('gl', "メッセージする"),
+                            $this->Form->submit(__d('app', "メッセージする"),
                                                 ['class' => 'btn btn-primary pull-right post-submit-button', 'id' => 'MessageSubmit', 'disabled' => 'disabled']) ?>
                         </div>
                     </div>
