@@ -1162,8 +1162,9 @@ function addComment(e) {
     $("#" + submit_id).before($loader_html);
 
     // アップロードファイルの上限数をリセット
-    console.log(Dropzone);
-    if (typeof Dropzone.instances[0] !== "" && Dropzone.instances[0].files.length > 0) {
+    console.log(typeof Dropzone.instances);
+    if (typeof Dropzone == "function" && typeof Dropzone.instances == "object"
+        && typeof Dropzone.instances[0] !== "" && Dropzone.instances[0].files.length > 0) {
         // ajax で submit するので、アップロード完了後に Dropzone のファイルリストを空にする
         // （参照先の配列を空にするため空配列の代入はしない）
         Dropzone.instances[0].files.length = 0;
