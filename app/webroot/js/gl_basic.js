@@ -1162,13 +1162,10 @@ function addComment(e) {
     $("#" + submit_id).before($loader_html);
 
     // アップロードファイルの上限数をリセット
-    alert(typeof Dropzone);
-    alert(typeof Dropzone.instances);
     alert(typeof Dropzone.instances[0]);
-    alert(typeof Dropzone.instances[0].files);
-    alert(typeof Dropzone.instances[0].files.length);
-    if (typeof Dropzone == "function" && typeof Dropzone.instances == "object"
-        && typeof Dropzone.instances[0] !== "" && Dropzone.instances[0].files.length > 0) {
+    if (typeof Dropzone.instances[0] != "undefined"
+        && typeof Dropzone.instances[0] !== ""
+        && Dropzone.instances[0].files.length > 0) {
         // ajax で submit するので、アップロード完了後に Dropzone のファイルリストを空にする
         // （参照先の配列を空にするため空配列の代入はしない）
         Dropzone.instances[0].files.length = 0;
