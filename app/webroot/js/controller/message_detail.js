@@ -33,8 +33,7 @@ message_app.controller(
         });
 
         // ブラウザリサイズの場合、入力フォームサイズ変更+オートスクロール
-        $(window).resize(function () {
-            //$message_box.css("height", window.innerHeight - input_box_height);
+        $(window).on('resize', function () {
             $scope.$apply(function () {
                 $message_box.css('height', default_message_box_height + 'px');
                 bottom_scroll();

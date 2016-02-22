@@ -20,4 +20,10 @@ App::uses('UrlCacheAppHelper', 'UrlCache.View/Helper');
  */
 class AppHelper extends UrlCacheAppHelper
 {
+    function needDisplayFooter() {
+        if($this->name === 'posts' && $this->action === 'message') {
+            return false;
+        }
+        return true;
+    }
 }
