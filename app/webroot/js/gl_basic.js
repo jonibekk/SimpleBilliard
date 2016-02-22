@@ -1162,7 +1162,8 @@ function addComment(e) {
     $("#" + submit_id).before($loader_html);
 
     // アップロードファイルの上限数をリセット
-    console.log(typeof Dropzone.instances);
+    alert(typeof Dropzone);
+    alert(typeof Dropzone.instances);
     if (typeof Dropzone == "function" && typeof Dropzone.instances == "object"
         && typeof Dropzone.instances[0] !== "" && Dropzone.instances[0].files.length > 0) {
         // ajax で submit するので、アップロード完了後に Dropzone のファイルリストを空にする
