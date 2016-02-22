@@ -1158,19 +1158,15 @@ function addComment(e) {
     $error_msg_box.text("");
     appendSocketId($(e.target), cake.pusher.socket_id);
 
-    alert("FURU:addComment called.#5");
-
     // Display loading button
     $("#" + submit_id).before($loader_html);
-    alert("FURU:addComment called.#6");
 
     // アップロードファイルの上限数をリセット
-    if (Dropzone && Dropzone.instances && typeof Dropzone.instances[0] !== "" && Dropzone.instances[0].files.length > 0) {
-        alert("FURU:addComment called.#6.1");
+    console.log(Dropzone);
+    if (typeof Dropzone.instances[0] !== "" && Dropzone.instances[0].files.length > 0) {
         // ajax で submit するので、アップロード完了後に Dropzone のファイルリストを空にする
         // （参照先の配列を空にするため空配列の代入はしない）
         Dropzone.instances[0].files.length = 0;
-        alert("FURU:addComment called.#6.2");
     }
     alert("FURU:addComment called.#7");
 
