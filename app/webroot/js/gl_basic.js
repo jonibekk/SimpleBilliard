@@ -1165,7 +1165,7 @@ function addComment(e) {
     alert("FURU:addComment called.#6");
 
     // アップロードファイルの上限数をリセット
-    if (typeof Dropzone.instances[0] !== "" && Dropzone.instances[0].files.length > 0) {
+    if (Dropzone && Dropzone.instances && typeof Dropzone.instances[0] !== "" && Dropzone.instances[0].files.length > 0) {
         alert("FURU:addComment called.#6.1");
         // ajax で submit するので、アップロード完了後に Dropzone のファイルリストを空にする
         // （参照先の配列を空にするため空配列の代入はしない）
