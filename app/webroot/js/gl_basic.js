@@ -1151,27 +1151,28 @@ function addComment(e) {
     var first_form_id = $(e.target).attr('first-form-id');
     var $first_form = $('#' + first_form_id);
     attrUndefinedCheck(e.target, 'refresh-link-id');
-    alert("FURU:addComment called.#1");
     var refresh_link_id = $(e.target).attr('refresh-link-id');
     var $refresh_link = $('#' + refresh_link_id);
     var $loader_html = $('<i class="fa fa-refresh fa-spin mr_8px"></i>');
-    alert("FURU:addComment called.#3");
 
     $error_msg_box.text("");
-    alert("FURU:addComment called.#4");
     appendSocketId($(e.target), cake.pusher.socket_id);
 
     alert("FURU:addComment called.#5");
 
     // Display loading button
     $("#" + submit_id).before($loader_html);
+    alert("FURU:addComment called.#6");
 
     // アップロードファイルの上限数をリセット
     if (typeof Dropzone.instances[0] !== "" && Dropzone.instances[0].files.length > 0) {
+        alert("FURU:addComment called.#6.1");
         // ajax で submit するので、アップロード完了後に Dropzone のファイルリストを空にする
         // （参照先の配列を空にするため空配列の代入はしない）
         Dropzone.instances[0].files.length = 0;
+        alert("FURU:addComment called.#6.2");
     }
+    alert("FURU:addComment called.#7");
 
     var $f = $(e.target);
     alert("FURU:addComment called.#6");
