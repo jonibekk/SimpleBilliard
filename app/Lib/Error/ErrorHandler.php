@@ -84,9 +84,9 @@ class ErrorHandler
      */
     public static function handleException(Exception $exception)
     {
-        //ISAO社内のセキュリティソフトが原因でこの例外が多発する為、特定の条件のものは何も処理しない
+        //ページが存在しない場合のエラーログが大量に吐かれるため、公開環境の場合はログやめる。
         if ($exception instanceof MissingControllerException) {
-            if (DEBUG_MODE === 0 && $exception->getMessage() == 'Controller class JsController could not be found.') {
+            if (DEBUG_MODE === 0) {
                 return;
             }
         }
