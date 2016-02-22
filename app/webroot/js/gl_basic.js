@@ -1162,7 +1162,6 @@ function addComment(e) {
     $("#" + submit_id).before($loader_html);
 
     // アップロードファイルの上限数をリセット
-    alert(typeof Dropzone.instances[0]);
     if (typeof Dropzone.instances[0] != "undefined"
         && typeof Dropzone.instances[0] !== ""
         && Dropzone.instances[0].files.length > 0) {
@@ -1170,12 +1169,9 @@ function addComment(e) {
         // （参照先の配列を空にするため空配列の代入はしない）
         Dropzone.instances[0].files.length = 0;
     }
-    alert("FURU:addComment called.#7");
 
     var $f = $(e.target);
-    alert("FURU:addComment called.#6");
     var ajaxProcess = $.Deferred();
-    alert($f.prop('action'));
     $.ajax({
             url: $f.prop('action'),
             method: 'post',
