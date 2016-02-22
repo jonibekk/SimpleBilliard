@@ -13,7 +13,7 @@
 <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default">
-            <div class="panel-heading"><?= __d('gl', "ユーザ認証") ?></div>
+            <div class="panel-heading"><?= __d('app', "ユーザ認証") ?></div>
             <?=
             $this->Form->create('User', [
                 'inputDefaults' => [
@@ -28,15 +28,15 @@
                 'novalidate'    => true
             ]); ?>
             <div class="panel-body reset-password-panel-body">
-                <p><?= __d('gl', "Goalousへようこそ！") ?></p>
+                <p><?= __d('app', "Goalousへようこそ！") ?></p>
 
-                <p><?= __d('gl', "Goalousへのユーザ登録を行います。") ?></p>
+                <p><?= __d('app', "Goalousへのユーザ登録を行います。") ?></p>
 
-                <p><?= __d('gl', "招待を受けたメールアドレスの入力とパスワードの登録をお願いします。") ?></p>
+                <p><?= __d('app', "招待を受けたメールアドレスの入力とパスワードの登録をお願いします。") ?></p>
 
                 <?=
                 $this->Form->input('Email.email', [
-                    'label'                        => __d('gl', "メールアドレス"),
+                    'label'                        => __d('app', "メールアドレス"),
                     'data-bv-emailaddress-message' => __d('validate', "メールアドレスが正しくありません。"),
                     "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
                     'required'                     => true
@@ -44,14 +44,14 @@
 
                 <?=
                 $this->Form->input('password', [
-                    'label'                    => __d('gl', "パスワードを作成"),
-                    'placeholder'              => __d('gl', '8文字以上'),
+                    'label'                    => __d('app', "パスワードを作成"),
+                    'placeholder'              => __d('app', '8文字以上'),
                     "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                     'type'                     => 'password',
                 ]) ?>
                 <?=
                 $this->Form->input('password_confirm', [
-                    'label'                    => __d('gl', "パスワードを再入力"),
+                    'label'                    => __d('app', "パスワードを再入力"),
                     "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
                     'type'                     => 'password',
                 ]) ?>
@@ -69,7 +69,7 @@
             <div class="panel-footer">
                 <div class="form-group">
                     <div class="col-sm-9 col-sm-offset-3">
-                        <?= $this->Form->submit(__d('gl', "登録"), ['class' => 'btn btn-primary']) ?>
+                        <?= $this->Form->submit(__d('app', "登録"), ['class' => 'btn btn-primary']) ?>
                     </div>
                 </div>
             </div>

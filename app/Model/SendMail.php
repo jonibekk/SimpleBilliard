@@ -58,12 +58,12 @@ class SendMail extends AppModel
 
     private function _setTemplateSubject()
     {
-        self::$TYPE_TMPL[self::TYPE_TMPL_ACCOUNT_VERIFY]['subject'] = __d('mail', "アカウントの仮登録が完了しました");
-        self::$TYPE_TMPL[self::TYPE_TMPL_PASSWORD_RESET]['subject'] = __d('mail', "パスワードの再設定");
-        self::$TYPE_TMPL[self::TYPE_TMPL_PASSWORD_RESET_COMPLETE]['subject'] = __d('mail', "パスワードの再設定が完了しました");
-        self::$TYPE_TMPL[self::TYPE_TMPL_TOKEN_RESEND]['subject'] = __d('mail', "メールアドレス認証");
-        self::$TYPE_TMPL[self::TYPE_TMPL_CHANGE_EMAIL_VERIFY]['subject'] = __d('mail', "メールアドレス変更に伴う認証");
-        self::$TYPE_TMPL[self::TYPE_TMPL_INVITE]['subject'] = __d('mail', "Goalousのチームへ招待");
+        self::$TYPE_TMPL[self::TYPE_TMPL_ACCOUNT_VERIFY]['subject'] = __d('email', "アカウントの仮登録が完了しました");
+        self::$TYPE_TMPL[self::TYPE_TMPL_PASSWORD_RESET]['subject'] = __d('email', "パスワードの再設定");
+        self::$TYPE_TMPL[self::TYPE_TMPL_PASSWORD_RESET_COMPLETE]['subject'] = __d('email', "パスワードの再設定が完了しました");
+        self::$TYPE_TMPL[self::TYPE_TMPL_TOKEN_RESEND]['subject'] = __d('email', "メールアドレス認証");
+        self::$TYPE_TMPL[self::TYPE_TMPL_CHANGE_EMAIL_VERIFY]['subject'] = __d('email', "メールアドレス変更に伴う認証");
+        self::$TYPE_TMPL[self::TYPE_TMPL_INVITE]['subject'] = __d('email', "Goalousのチームへ招待");
     }
 
     function __construct($id = false, $table = null, $ds = null)

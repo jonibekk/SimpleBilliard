@@ -38,16 +38,16 @@
                 <li>
                     <?php if ($user_status != 'joined') { ?>
                         <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'join_circle', 'circle_id' => $current_circle['Circle']['id']]) ?>">
-                            <?= __d('gl', 'サークルに参加する') ?></a>
+                            <?= __d('app', 'サークルに参加する') ?></a>
                     <?php }
                     else { ?>
                         <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'unjoin_circle', 'circle_id' => $current_circle['Circle']['id']]) ?>">
-                            <?= __d('gl', 'サークルを脱退する') ?></a>
+                            <?= __d('app', 'サークルを脱退する') ?></a>
                     <?php } ?>
                 </li>
             <?php endif; ?>
             <?php if ($user_status == 'joined' || $user_status == 'admin'): ?>
-            <li><a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_setting', 'circle_id' => $current_circle['Circle']['id']]) ?>" class="modal-circle-setting"><?= __d('gl', '設定') ?></a></li>
+            <li><a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_setting', 'circle_id' => $current_circle['Circle']['id']]) ?>" class="modal-circle-setting"><?= __d('app', '設定') ?></a></li>
             <?php endif ?>
             <?php endif ?>
         </ul>

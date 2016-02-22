@@ -1,188 +1,209 @@
 # LANGUAGE translation of CakePHP Application
 # Copyright YEAR NAME <EMAIL@ADDRESS>
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2016-02-16 08:26+0000\n"
-"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"POT-Creation-Date: 2016-02-19 19:42+0900\n"
+"PO-Revision-Date: 2016-02-19 19:46+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"Language: en\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.8.7\n"
 
 #: Controller/PagesController.php:248
 msgid "【Goalous】お問い合わせありがとうございました"
-msgstr ""
+msgstr "Thank you for your contact."
 
 #: Model/SendMail.php:61
 msgid "アカウントの仮登録が完了しました"
-msgstr ""
+msgstr "Provisional registration of the account has been completed."
 
 #: Model/SendMail.php:62
 msgid "パスワードの再設定"
-msgstr ""
+msgstr "Password Reset"
 
 #: Model/SendMail.php:63
 msgid "パスワードの再設定が完了しました"
-msgstr ""
+msgstr "Re-setting of the password was completed."
 
 #: Model/SendMail.php:64
 msgid "メールアドレス認証"
-msgstr ""
+msgstr "E-mail address authentication"
 
 #: Model/SendMail.php:65
 msgid "メールアドレス変更に伴う認証"
-msgstr ""
+msgstr "Authentication for mail address change"
 
 #: Model/SendMail.php:66
 msgid "Goalousのチームへ招待"
-msgstr ""
+msgstr "Invitation to the team of Goalous"
 
 #: View/Elements/Email/goalous_web.ctp:7
 msgid "■Goalous(ゴーラス)"
-msgstr ""
+msgstr "- Goalous(ゴーラス)"
 
 #: View/Elements/Email/goalous_web.ctp:12
 msgid "■お問い合わせ"
-msgstr ""
+msgstr "- Contact Us"
 
 #: View/Elements/Email/goalous_web.ctp:17
 msgid "■運営会社"
-msgstr ""
+msgstr "- Company"
 
 #: View/Elements/Email/goalous_web.ctp:19
 msgid "株式会社ISAO"
-msgstr ""
+msgstr "ISAO Corporation"
 
 #: View/Elements/Email/login_url.ctp:5
 msgid "◆Goalousログイン"
-msgstr ""
+msgstr "- Login to Goalous"
 
 #: View/Elements/Email/no_reply.ctp:3
 msgid "■ご注意"
-msgstr ""
+msgstr "- Attention"
 
 #: View/Elements/Email/no_reply.ctp:5
 msgid "このメールは、お問い合わせメールアドレス宛に自動的に送信されています。"
-msgstr ""
+msgstr "This email is automatically sent."
 
 #: View/Elements/Email/no_reply.ctp:7
 msgid "直接返信されないようお願い申し上げます。"
-msgstr ""
+msgstr "Please do not directly reply to this email."
 
 #: View/Elements/Email/no_reply.ctp:10
-msgid "このメールに心当たりの無い方は、お問い合わせフォームからお問い合わせください。"
+msgid ""
+"このメールに心当たりの無い方は、お問い合わせフォームからお問い合わせくださ"
+"い。"
 msgstr ""
+"If you don't get why this email is sent to you, please ask us from our "
+"contact form."
 
 #: View/Elements/Email/stop_mail.ctp:4
 msgid "□配信停止"
-msgstr ""
+msgstr "□Unsubscribe"
 
 #: View/Elements/Email/stop_mail.ctp:6
 msgid "　[ログイン]->[設定]->[通知]"
-msgstr ""
+msgstr "  [Login]->[Setting]->[Notification]"
 
 #: View/Emails/text/account_verification.ctp:14
-#: View/Emails/text/change_email.ctp:14
-#: View/Emails/text/invite.ctp:17
+#: View/Emails/text/change_email.ctp:14 View/Emails/text/invite.ctp:17
 #: View/Emails/text/password_reset.ctp:14
 #: View/Emails/text/password_reset_complete.ctp:14
 #: View/Emails/text/token_resend.ctp:14
 msgid "こんにちは %sさん、"
-msgstr ""
+msgstr "Hi %s,"
 
 #: View/Emails/text/account_verification.ctp:16
 #: View/Emails/text/token_resend.ctp:16
 msgid "Goalousへようこそ！"
-msgstr ""
+msgstr "Welcome to Goalous!"
 
 #: View/Emails/text/account_verification.ctp:19
 msgid "以下のリンクをクリックしてアカウントを有効化してください。"
-msgstr ""
+msgstr "Please activate the account by clicking the following link."
 
-#: View/Emails/text/change_email.ctp:17
-#: View/Emails/text/token_resend.ctp:19
+#: View/Emails/text/change_email.ctp:17 View/Emails/text/token_resend.ctp:19
 msgid "以下のリンクをクリックしてメールアドレスの認証を行ってください。"
 msgstr ""
+"Please perform the authentication of the e-mail address by clicking on the "
+"following link."
 
-#: View/Emails/text/change_email.ctp:22
-#: View/Emails/text/password_reset.ctp:22
-msgid "もし、このメールに心当たりがない場合は、何もせずにメールを破棄してください。"
+#: View/Emails/text/change_email.ctp:22 View/Emails/text/password_reset.ctp:22
+msgid ""
+"もし、このメールに心当たりがない場合は、何もせずにメールを破棄してください。"
 msgstr ""
+"If you've received this mail in error , please discard the mail without "
+"doing anything."
 
 #: View/Emails/text/contact.ctp:12
-msgid "このたびはGoalous（ゴーラス）へお問い合わせいただき、誠にありがとうございます。"
-msgstr ""
+msgid ""
+"このたびはGoalous（ゴーラス）へお問い合わせいただき、誠にありがとうございま"
+"す。"
+msgstr "Thank you for contact us."
 
 #: View/Emails/text/contact.ctp:14
-msgid "内容を確認のうえ、担当者より３営業日以内にご連絡いたします。"
-msgstr ""
+msgid "確認後、弊社担当者よりご連絡いたします。"
+msgstr "REP. will send you an email soon."
 
 #: View/Emails/text/contact.ctp:15
 msgid "どうぞよろしくお願い申し上げます。"
-msgstr ""
+msgstr "Best Regards."
 
 #: View/Emails/text/contact.ctp:18;33
 msgid "お問い合わせ内容"
-msgstr ""
+msgstr "Your Message"
 
 #: View/Emails/text/contact.ctp:21
 msgid "お問い合わせ項目"
-msgstr ""
+msgstr "Topic"
 
 #: View/Emails/text/contact.ctp:24
 msgid "会社名"
-msgstr ""
+msgstr "Your company name"
 
 #: View/Emails/text/contact.ctp:27
 msgid "お名前"
-msgstr ""
+msgstr "Your name"
 
 #: View/Emails/text/contact.ctp:30
 msgid "メールアドレス"
-msgstr ""
+msgstr "Your email address"
 
 #: View/Emails/text/contact.ctp:36
 msgid "ご希望の営業担当者"
-msgstr ""
+msgstr "REP. you chose."
 
 #: View/Emails/text/invite.ctp:20
 msgid "こんにちは。"
-msgstr ""
+msgstr "Hello,"
 
 #: View/Emails/text/invite.ctp:25
 msgid "%sさんがGoalous内のチーム「%s」へあなたを招待しています。"
-msgstr ""
+msgstr "%s invites you to the team `%s` in Goalous."
 
 #: View/Emails/text/invite.ctp:28
 msgid "この招待に応じる場合は、次のリンクをクリックしてください。"
-msgstr ""
+msgstr "If you respond to this invitation , please click the following link."
 
 #: View/Emails/text/invite.ctp:34
 msgid "%sさんからのメッセージ："
-msgstr ""
+msgstr "Message from %s:"
 
 #: View/Emails/text/notify_basic.ctp:18
 msgid "「%s」"
-msgstr ""
+msgstr "`%s`"
 
 #: View/Emails/text/password_reset.ctp:17
 msgid "以下のリンクをクリックしてパスワードを再設定してください。"
-msgstr ""
+msgstr "Please reset the password by clicking on the following link."
 
 #: View/Emails/text/password_reset_complete.ctp:17
 msgid "パスワードの再設定が完了しました。"
-msgstr ""
+msgstr "Re-setting of the password has been completed."
 
 #: View/Emails/text/password_reset_complete.ctp:20
-msgid "もし、このメールに心当たりがない場合は、第三者が不正にあなたのパスワードを利用してログインしている可能性があります。"
+msgid ""
+"もし、このメールに心当たりがない場合は、第三者が不正にあなたのパスワードを利"
+"用してログインしている可能性があります。"
 msgstr ""
+"If you've received this mail in error , there is a possibility that a third "
+"party is logged in by unauthorized use of your password."
 
 #: View/Emails/text/password_reset_complete.ctp:22
 msgid "その場合は直ちに以下にご連絡ください。"
-msgstr ""
+msgstr "In that case , please contact the following immediately."
 
+#~ msgid "◆Goalousホーム"
+#~ msgstr "◆homepage of Goalous"
+
+#~ msgid "□本メールは送信専用のため、"
+#~ msgstr "□Because it is a send-only e-mail,"
+
+#~ msgid " 返信しないようお願いします。"
+#~ msgstr "please do not reply."

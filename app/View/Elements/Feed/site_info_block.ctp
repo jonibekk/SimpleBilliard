@@ -100,19 +100,19 @@ if (isset($site_info['type']) && (
                                     $site_info['type'] == 'post_goal_complete' ||
                                     $site_info['type'] == 'post_create_circle'
                                 ): ?>
-                                    <i class="fa fa-comment-o"></i> <?= __d('gl', '投稿') ?>
+                                    <i class="fa fa-comment-o"></i> <?= __d('app', '投稿') ?>
                                 <?php elseif ($site_info['type'] == 'post_action'): ?>
-                                    <i class="fa fa-check-circle"></i> <?= __d('gl', 'アクション') ?>
+                                    <i class="fa fa-check-circle"></i> <?= __d('app', 'アクション') ?>
                                 <?php elseif ($site_info['type'] == 'circle'): ?>
-                                    <i class="fa fa-circle-o"></i> <?= __d('gl', 'サークル') ?>
+                                    <i class="fa fa-circle-o"></i> <?= __d('app', 'サークル') ?>
                                 <?php elseif ($site_info['type'] == 'goal'): ?>
-                                    <i class="fa fa-flag"></i> <?= __d('gl', 'ゴール') ?>
+                                    <i class="fa fa-flag"></i> <?= __d('app', 'ゴール') ?>
                                 <?php elseif ($site_info['type'] == 'team_vision'): ?>
-                                    <i class="fa fa-rocket"></i> <?= __d('gl', 'チームビジョン') ?>
+                                    <i class="fa fa-rocket"></i> <?= __d('app', 'チームビジョン') ?>
                                 <?php elseif ($site_info['type'] == 'group_vision'): ?>
-                                    <i class="fa fa-plane"></i> <?= __d('gl', 'グループビジョン') ?>
+                                    <i class="fa fa-plane"></i> <?= __d('app', 'グループビジョン') ?>
                                 <?php elseif ($site_info['type'] == 'user'): ?>
-                                    <i class="fa fa-user"></i> <?= __d('gl', 'メンバー') ?>
+                                    <i class="fa fa-user"></i> <?= __d('app', 'メンバー') ?>
                                 <?php endif ?>
                             </p>
                         <?php endif ?>
