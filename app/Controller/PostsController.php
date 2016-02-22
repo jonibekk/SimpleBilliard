@@ -938,6 +938,8 @@ class PostsController extends AppController
 
     public function ajax_add_comment()
     {
+        error_log("FURU:ajax_add_comment:" . print_r($this->request->data, true) . "\n", 3, "/tmp/hoge.log");
+
         $this->request->allowMethod('post');
         $this->_ajaxPreProcess();
         $result = [
