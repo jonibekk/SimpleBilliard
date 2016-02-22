@@ -930,6 +930,7 @@ function checkUploadFileExpire(formID) {
 }
 
 function getAjaxFormReplaceElm() {
+    console.log("FURU:getAjaxFormReplaceElm called.");
     attrUndefinedCheck(this, 'replace-elm-parent-id');
     attrUndefinedCheck(this, 'click-target-id');
     attrUndefinedCheck(this, 'tmp-target-height');
