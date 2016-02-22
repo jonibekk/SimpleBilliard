@@ -965,6 +965,7 @@ function getAjaxFormReplaceElm() {
                     // アップロードファイルの有効期限が切れていなければコメント投稿
                     var res = checkUploadFileExpire($(this).attr('id'));
                     if (res) {
+                        alert("FURU:validatorCallback called.");
                         validatorCallback(e)
                     }
                     return res;
@@ -4137,11 +4138,14 @@ function initCommentNotify(notifyBox) {
 //bootstrapValidatorがSuccessした時
 function validatorCallback(e) {
     if (e.target.id.startsWith('CommentAjaxGetNewCommentForm_')) {
+        alert("##1");
         addComment(e);
     }
     else if (e.target.id == "ActionCommentForm") {
+        alert("##2");
         addComment(e);
     }
+    alert("##3");
 }
 
 // Be Enable or Disabled eval button
