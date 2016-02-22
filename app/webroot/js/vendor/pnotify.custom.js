@@ -28,6 +28,9 @@ license GPL/LGPL/MPL
         };
     PNotify = function(b) {
         this.parseOptions(b);
+        // 初期化前に表示されているPNotifyボックスを全て隠す
+        // 同一エラーメッセージ重複表示を防ぐため
+        this.hideAll();
         this.init()
     };
     c.extend(PNotify.prototype, {
@@ -369,12 +372,18 @@ license GPL/LGPL/MPL
                 },
                 isNaN(this.options.delay) ? 0 : this.options.delay);
             return this
-        }
+        },
+        hideAll: function() {
+            $('.ui-pnotify').hide();
+            return this;
+        },
     });
     c.extend(PNotify, {
         notices: [],
         removeAll: function() {
-            PNotify.notices = [];
+            c.each(PNotify.notices, function() {
+                this.remove && this.remove()
+            })
         },
         positionAll: function(b) {
             f && clearTimeout(f);
