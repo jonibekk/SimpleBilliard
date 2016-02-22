@@ -97,9 +97,9 @@ $(document).ready(function () {
 
     // Androidアプリかiosアプリの場合のみfastClickを実行する。
     // 　→iosでsafari/chromeでfastClick使用時、チェックボックス操作に不具合が見つかったため。
-    if(cake.is_mb_app === 'true' || cake.is_mb_app_ios === 'true') {
-        fastClick();
-    }
+    //if(cake.is_mb_app === 'true' || cake.is_mb_app_ios === 'true') {
+    //    fastClick();
+    //}
 
     //Monitoring of the communication state of App Server | Appサーバーの通信状態の監視
     var network_reachable = true;
