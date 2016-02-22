@@ -1138,7 +1138,7 @@ function uploadCsvFileByForm(e) {
 }
 
 function addComment(e) {
-    console.log("FURU:addComment called.");
+    alert("FURU:addComment called.");
     e.preventDefault();
 
     attrUndefinedCheck(e.target, 'error-msg-id');
@@ -1170,7 +1170,7 @@ function addComment(e) {
 
     var $f = $(e.target);
     var ajaxProcess = $.Deferred();
-    console.log($f.prop('action'));
+    alert($f.prop('action'));
     $.ajax({
             url: $f.prop('action'),
             method: 'post',
