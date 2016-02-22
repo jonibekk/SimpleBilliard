@@ -32,6 +32,10 @@ class GoalCategory extends AppModel
             ],
         ],
         'description' => [
+            'isString'  => [
+                'rule'       => ['isString',],
+                'allowEmpty' => true,
+            ],
             'maxLength' => [
                 'rule' => ['maxLength', 2000],
             ],

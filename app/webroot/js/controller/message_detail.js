@@ -7,13 +7,19 @@ message_app.controller(
               notificationService,
               getPostDetail,
               $pusher,
-              $stateParams,
-              $anchorScroll,
-              $location) {
+              $stateParams
+    ) {
 
         // TODO: 添付ファイルのプレビューを表示するために一時的に高さを少なくする
         var input_box_height = 280;
 
+
+        if ($(".layout-main").exists()) {
+            //evMessage経由で呼ばれている場合のレイアウト調整
+            $("#app-webroot-template-message-detail").removeClass("col-sm-offset-2");
+            $("#app-webroot-template-message-detail").removeClass("col-sm-8");
+            $("#app-webroot-template-message-detail").addClass("col-sm-12");
+        }
         // onloadの場合
         $scope.$on('$viewContentLoaded', function () {
             var $m_box = $("#message_box");
@@ -271,42 +277,72 @@ message_app.controller(
                 }
             };
 
-            $scope.loadMore = function () {
-                if (document.getElementById("message_box").scrollTop === 0) {
-                    var request = {
-                        method: 'GET',
-                        url: cake.url.ah + $stateParams.post_id + '/' + limit + '/' + page_num
-                    };
-                    $http(request).then(function (response) {
-                        var pushed_message_num = 0;
-                        if (response.data.message_list.length < limit) {
-                            pushPostMessage();
-                            pushed_message_num++;
-                        }
+            var scroll2Target = function ($target) {
+                var $doc = $("#message_box");
+                var speed = 0;
+                var targetPositionTop = $target.offset().top;
 
-                        angular.forEach(response.data.message_list, function (val) {
-                            val.AttachedFileHtml = $sce.trustAsHtml(val.AttachedFileHtml);
-                            pushMessage(val);
-                            pushed_message_num++;
-                        }, $scope.message_list);
-
-                        if (response.data.message_list.length > 0) {
-                            // 新しいメッセージが view に確実に反映されるように少し遅らす
-                            setTimeout(function () {
-                                $anchorScroll();
-                            }, 1);
-                            // １ページ目の表示時
-                            // 確実に画面下に行くようにする
-                            if ($scope.message_list.length === pushed_message_num) {
-                                setTimeout(function () {
-                                    bottom_scroll();
-                                }, 200);
-                            }
-                        }
-                        page_num = page_num + 1;
+                $doc.stop().animate({
+                        scrollTop: targetPositionTop
+                    },
+                    {
+                        duration: speed
                     });
+
+                return false;
+            }
+
+            var forceLoad = false;
+            $scope.loadMore = function () {
+                if (document.getElementById("message_box").scrollTop !== 0) {
+                    return;
                 }
-            };
+
+                var request = {
+                    method: 'GET',
+                    url: cake.url.ah + $stateParams.post_id + '/' + limit + '/' + page_num
+                };
+                $http(request).then(function (response) {
+                    var pushed_message_num = 0;
+                    if (response.data.message_list.length < limit) {
+                        pushPostMessage();
+                        pushed_message_num++;
+                    }
+
+                    angular.forEach(response.data.message_list, function (val) {
+                        val.AttachedFileHtml = $sce.trustAsHtml(val.AttachedFileHtml);
+                        pushMessage(val);
+                        pushed_message_num++;
+                    }, $scope.message_list);
+
+                    if (response.data.message_list.length > 0) {
+                        // 新しいメッセージが view に確実に反映されるように少し遅らす
+                        setTimeout(function () {
+                            scroll2Target($('#m_'+pushed_message_num));
+                        }, 1);
+                        // １ページ目の表示時
+                        // 確実に画面下に行くようにする
+                        if ($scope.message_list.length === pushed_message_num || forceLoad) {
+                            forceLoad = false;
+                            setTimeout(function () {
+                                bottom_scroll();
+                            }, 200);
+                        }
+                    }
+                    page_num = page_num + 1;
+
+                    //初回検索で最大件数のメッセージが取れているにもかかわらずスクロールバーが出ていない場合には
+                    //infiniteScrollが機能しない可能性があるので強制的にロードする
+                    //(2回検索したらふつースクロールバー出る高さになる)
+                    if ((response.data.message_list.length == limit)
+                        && !$("#message_box").hasScrollBar()
+                        && page_num == 2
+                    ) {
+                        $scope.$emit('force:load');
+                        forceLoad = true;
+                    }
+                });
+            }
 
             $scope.add_messenger_user = function () {
                 $("#post_messenger").val(post_detail.Post.id);

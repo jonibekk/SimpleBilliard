@@ -25,6 +25,13 @@ class TeamMember extends AppModel
      */
     public $validate = [
         'member_no'             => ['maxLength' => ['rule' => ['maxLength', 64]]],
+        'comment'               => [
+            'isString'  => [
+                'rule'       => ['isString',],
+                'allowEmpty' => true,
+            ],
+            'maxLength' => ['rule' => ['maxLength', 2000]],
+        ],
         'active_flg'            => ['boolean' => ['rule' => ['boolean'],],],
         'evaluation_enable_flg' => ['boolean' => ['rule' => ['boolean'],],],
         'invitation_flg'        => ['boolean' => ['rule' => ['boolean'],],],
