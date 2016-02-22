@@ -965,7 +965,6 @@ function getAjaxFormReplaceElm() {
                     // アップロードファイルの有効期限が切れていなければコメント投稿
                     var res = checkUploadFileExpire($(this).attr('id'));
                     if (res) {
-                        alert("FURU:validatorCallback called.");
                         validatorCallback(e)
                     }
                     return res;
@@ -1139,29 +1138,31 @@ function uploadCsvFileByForm(e) {
 }
 
 function addComment(e) {
-    alert("FURU:addComment called.");
     e.preventDefault();
 
     attrUndefinedCheck(e.target, 'error-msg-id');
-    alert("@1");
     var result_msg_id = $(e.target).attr('error-msg-id');
+
+
     var $error_msg_box = $('#' + result_msg_id);
     attrUndefinedCheck(e.target, 'submit-id');
-    alert("@2");
     var submit_id = $(e.target).attr('submit-id');
     var $submit = $('#' + submit_id);
     attrUndefinedCheck(e.target, 'first-form-id');
-    alert("@3");
     var first_form_id = $(e.target).attr('first-form-id');
     var $first_form = $('#' + first_form_id);
     attrUndefinedCheck(e.target, 'refresh-link-id');
-    alert("@4");
+    alert("FURU:addComment called.#1");
     var refresh_link_id = $(e.target).attr('refresh-link-id');
     var $refresh_link = $('#' + refresh_link_id);
     var $loader_html = $('<i class="fa fa-refresh fa-spin mr_8px"></i>');
+    alert("FURU:addComment called.#3");
 
     $error_msg_box.text("");
+    alert("FURU:addComment called.#4");
     appendSocketId($(e.target), cake.pusher.socket_id);
+
+    alert("FURU:addComment called.#5");
 
     // Display loading button
     $("#" + submit_id).before($loader_html);
@@ -1174,6 +1175,7 @@ function addComment(e) {
     }
 
     var $f = $(e.target);
+    alert("FURU:addComment called.#6");
     var ajaxProcess = $.Deferred();
     alert($f.prop('action'));
     $.ajax({
@@ -4142,14 +4144,11 @@ function initCommentNotify(notifyBox) {
 //bootstrapValidatorがSuccessした時
 function validatorCallback(e) {
     if (e.target.id.startsWith('CommentAjaxGetNewCommentForm_')) {
-        alert("##1");
         addComment(e);
     }
     else if (e.target.id == "ActionCommentForm") {
-        alert("##2");
         addComment(e);
     }
-    alert("##3");
 }
 
 // Be Enable or Disabled eval button
