@@ -1143,15 +1143,19 @@ function addComment(e) {
     e.preventDefault();
 
     attrUndefinedCheck(e.target, 'error-msg-id');
+    alert("@1");
     var result_msg_id = $(e.target).attr('error-msg-id');
     var $error_msg_box = $('#' + result_msg_id);
     attrUndefinedCheck(e.target, 'submit-id');
+    alert("@2");
     var submit_id = $(e.target).attr('submit-id');
     var $submit = $('#' + submit_id);
     attrUndefinedCheck(e.target, 'first-form-id');
+    alert("@3");
     var first_form_id = $(e.target).attr('first-form-id');
     var $first_form = $('#' + first_form_id);
     attrUndefinedCheck(e.target, 'refresh-link-id');
+    alert("@4");
     var refresh_link_id = $(e.target).attr('refresh-link-id');
     var $refresh_link = $('#' + refresh_link_id);
     var $loader_html = $('<i class="fa fa-refresh fa-spin mr_8px"></i>');
