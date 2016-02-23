@@ -1242,8 +1242,9 @@ class User extends AppModel
     {
         // $keyword にスペースが入っていればフルネーム検索
         // 入っていない場合は姓名それぞれを検索
-        if (strpos($keyword, ' ') !== false || strpos($keyword, __('　')) !== false) {
-            $keyword = str_replace(__('　'), ' ', $keyword);
+        // クオートの中には半角スペースか全角スペースが入っているので注意
+        if (strpos($keyword, ' ') !== false || strpos($keyword, '　') !== false) {
+            $keyword = str_replace('　', ' ', $keyword);
             $keyword_conditions = [
                 'CONCAT(`User.first_name`," ",`User.last_name`) Like'                       => $keyword . "%",
                 'CONCAT(`SearchLocalName.first_name`," ",`SearchLocalName.last_name`) Like' => $keyword . "%",
