@@ -156,6 +156,9 @@ class AppController extends Controller
 
     public function beforeFilter()
     {
+        $url = array_merge(['controller' => 'pages', 'action' => 'display', 'home'], ['notify_id' => 1]);
+        $this->log($url);
+        $this->log(Router::url($url, true));
         parent::beforeFilter();
         //全ページ共通のタイトルセット(書き換える場合はこの変数の値を変更の上、再度アクションメソッド側でsetする)
         if (ENV_NAME == "www") {

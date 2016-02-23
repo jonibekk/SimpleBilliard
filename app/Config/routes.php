@@ -20,6 +20,7 @@ if (env('HTTP_X_FORWARDED_PROTO') == 'https') {
 }
 
 Router::connect('/', ['controller' => 'pages', 'action' => 'display', 'home']);
+Router::connect('/notify_id::notify_id/*', ['controller' => 'pages', 'action' => 'display', 'home']);
 Router::connect('/after_click::after_click/*', ['controller' => 'pages', 'action' => 'display', 'home']);
 Router::connect('/common_form/:common_form_type/*', ['controller' => 'pages', 'action' => 'display', 'home']);
 Router::connect('/team_id::team_id/*', ['controller' => 'pages', 'action' => 'display', 'home']);
