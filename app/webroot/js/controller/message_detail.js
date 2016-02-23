@@ -11,7 +11,7 @@ message_app.controller(
     ) {
 
         // TODO: 添付ファイルのプレビューを表示するために一時的に高さを少なくする
-        var input_box_height = 280;
+        var input_box_height = 220;
 
         var default_message_box_height;
         var $message_box = $('#message_box');
@@ -24,7 +24,7 @@ message_app.controller(
         }
         // onloadの場合
         $scope.$on('$viewContentLoaded', function () {
-            $message_box.css("height", window.innerHeight - input_box_height);
+            resizeMessageBox($message_box, input_box_height);
             $message_box.animate({scrollTop: window.innerHeight}, 500);
 
             // データ挿入等が全て終わりメッセージボックスの高さがFIXされたタイミングで
@@ -223,6 +223,8 @@ message_app.controller(
                     messageTextarea.focus();
                     messageTextarea.style.height = "38px";
 
+                    resizeMessageBox($message_box, input_box_height);
+
                     if (jQuery.isEmptyObject(response.data)) {
                         //メッセージ送信失敗
                         notificationService.error($translate.instant('PUT_MESSAGE_FAIL'));
@@ -360,6 +362,11 @@ message_app.controller(
                 $("#post_messenger").val(post_detail.Post.id);
                 $("#MessageFormShareUser").show();
                 $("#message_add_list").append($("#MessageFormShareUser"));
+            }
+
+            var resizeMessageBox = function($message_box, input_box_height) {
+                $message_box.css("height", window.innerHeight - input_box_height);
+                return $message_box;
             }
         }
 
