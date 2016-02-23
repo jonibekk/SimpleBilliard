@@ -115,7 +115,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                         <?php endif ?>"
                        target-id="CommonActionSubmit,WrapActionFormName,WrapCommonActionGoal,CommonActionFooter,CommonActionFormShowOptionLink,ActionUploadFileDropArea"
                        delete-method="hide"
-                        >
+                    >
                         <span class="action-image-add-button-text"><i
                                 class="fa fa-image action-image-add-button-icon"></i> <span><?= __d('app',
                                                                                                     'アクション画像をアップロード') ?></span></span>
@@ -156,7 +156,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                                 'data-bv-notempty-message' => __d('validate', "入力必須項目です。"),
                                 'class'                    => 'form-control change-next-select-with-value',
                                 'id'                       => 'GoalSelectOnActionForm',
-                                'options'                  => $goal_list_for_action_option,
+                                'options'                  => isset($goal_list_for_action_option) ? $goal_list_for_action_option : [],
                                 'target-id'                => 'KrSelectOnActionForm',
                                 'toggle-target-id'         => 'WrapKrSelectOnActionForm',
                                 'target-value'             =>
