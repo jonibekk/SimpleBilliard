@@ -11,7 +11,7 @@ message_app.controller(
     ) {
 
         // TODO: 添付ファイルのプレビューを表示するために一時的に高さを少なくする
-        var input_box_height = 220;
+        var input_box_height = 260;
 
         var default_message_box_height;
         var $message_box = $('#message_box');
