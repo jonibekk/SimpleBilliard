@@ -12,7 +12,7 @@
         <div class="panel-body ptb_10px plr_11px">
             <div class="col col-xxs-12 font_12px">
                 <?= $this->Form
-                    ->postLink("<i class='fa fa-download'></i> " . __d('app', 'CSVの書き出し'),
+                    ->postLink("<i class='fa fa-download'></i> " . __('CSVの書き出し'),
                                [
                                    'action' => 'download_all_goal_csv',
                                ],
@@ -29,7 +29,7 @@
 <div class="panel panel-default">
     <div class="panel-body">
         <div class="col col-xxs-12 goals-feed-head">
-            <span class="font_14px goals-column-title"><?= __d('app', 'みんなのゴール') ?></span>
+            <span class="font_14px goals-column-title"><?= __('みんなのゴール') ?></span>
         </div>
         <div class="goal-search-menu">
             <div class="goal-term-search-menu btn-group btn-group-justified" role="group">
@@ -84,12 +84,12 @@
                 </div>
             </div>
         </div>
-        <p class="goals-search-count"><?= __d('app', "対象ゴール") ?><span class="goals-search-count-number"><?= $goal_count ?></span><?= __d('app', "件") ?></p>
+        <p class="goals-search-count"><?= __("対象ゴール") ?><span class="goals-search-count-number"><?= $goal_count ?></span><?= __("件") ?></p>
         <div class="goals-page-cards">
             <?php if (empty($goals)): ?>
                 <div class="col col-xxs-12 mt_16px">
                     <div class="alert alert-warning fade in" role="alert">
-                        <?= __d('app', "対象ゴールがありません。") ?>
+                        <?= __("対象ゴールがありません。") ?>
                     </div>
                 </div>
             <?php else: ?>
@@ -101,7 +101,7 @@
                            parent-id="GoalMoreView"
                            next-page-num="2"
                            get-url="<?= $this->Html->url($more_read_url) ?>">
-                            <?= __d('app', "もっと見る ▼") ?></a>
+                            <?= __("もっと見る ▼") ?></a>
                     </div>
                 <?php endif; ?>
             <?php endif ?>

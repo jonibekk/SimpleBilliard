@@ -21,9 +21,9 @@ class Badge extends AppModel
      */
     private function _setTypeName()
     {
-        self::$TYPE[null] = __d('app', "選択してください");
-        self::$TYPE[self::TYPE_PRAISE] = __d('app', "賞賛");
-        self::$TYPE[self::TYPE_SKILL] = __d('app', "スキル");
+        self::$TYPE[null] = __("選択してください");
+        self::$TYPE[self::TYPE_PRAISE] = __("賞賛");
+        self::$TYPE[self::TYPE_SKILL] = __("スキル");
     }
 
     /**

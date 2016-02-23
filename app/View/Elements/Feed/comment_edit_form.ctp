@@ -44,7 +44,7 @@ $this->Form->create('Comment', [
         'value'                        => $comment['body'],
         'data-bv-stringlength'         => 'true',
         'data-bv-stringlength-max'     => 5000,
-        'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 5000),
+        'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 5000),
     ])
     ?>
 </div>
@@ -63,7 +63,7 @@ $this->Form->create('Comment', [
 
 <div class="none" id="<?= $id_prefix ?>CommentEdit_<?= $comment['id'] ?>">
     <?=
-    $this->Form->submit(__d('app', "変更を保存する"),
+    $this->Form->submit(__("変更を保存する"),
                         ['class' => 'btn btn-primary pull-right submit-comment-edit', 'id' => $id_prefix . "CommentEditSubmit_{$comment['id']}", 'disabled' => 'disabled']) ?>
     <div class="clearfix"></div>
 </div>

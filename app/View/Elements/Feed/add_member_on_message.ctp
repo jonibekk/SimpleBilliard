@@ -55,7 +55,7 @@
             <div class="font_12px" id="MessageFormFooter">
                 <div class="row form-horizontal form-group post-share-range" id="MessageShare">
                     <?=
-                    $this->Form->submit(__d('app', "ADD"),
+                    $this->Form->submit(__("ADD"),
                                         ['class' => 'btn btn-primary pull-right post-submit-button', 'id' => 'MessageSubmit', 'disabled' => 'disabled']) ?>
                 </div>
             </div>

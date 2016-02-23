@@ -11,12 +11,12 @@
  * @var CodeCompletionView $this
  */
 
-echo __d('email', 'こんにちは %sさん、', $to_user_name);
+echo __('こんにちは %sさん、', $to_user_name);
 echo "\n";
-echo __d('email', 'Goalousへようこそ！');
+echo __('Goalousへようこそ！');
 echo "\n";
 echo "\n";
-echo __d('email', '以下のリンクをクリックしてメールアドレスの認証を行ってください。');
+echo __('以下のリンクをクリックしてメールアドレスの認証を行ってください。');
 echo "\n";
 echo $url;
 echo "\n";

@@ -13,19 +13,19 @@ class ExtValidationErrorI18nBehavior extends ValidationErrorI18nBehavior
     {
         //ここに全てのエラーメッセージを記載する
         $error_messages = array(
-            'notEmpty'          => __d('validate', "入力必須項目です。"),
-            'isAlphabetOnly'    => __d('validate', "アルファベットのみで入力してください。"),
-            'isString'          => __d('validate', "不正な入力値です。"),
-            'email'             => __d('validate', "メールアドレスが正しくありません。"),
-            'notBlankCheckbox'  => __d('validate', "利用規約に同意してください。"),
-            'passwordSameCheck' => __d('validate', "パスワードが一致しません。"),
-            'passwordCheck'     => __d('validate', "パスワードが間違っています。"),
-            'minLength'         => __d('validate', '%2$d文字以上で入力してください。'),
-            'maxLength'         => __d('validate', '%2$d文字以下で入力してください。'),
-            'emailIsUnique'     => __d('validate', "このメールアドレスは既に使用されています。他のメールアドレスを指定してください。"),
-            'image_max_size'    => __d('validate', "ファイルサイズが上限を超えています。"),
-            'image_type'        => __d('validate', "画像をアップロードできませんでした。JPG、PNG、GIFのいずれかの形式で保存してください。"),
-            'emailsCheck'       => __d('validate', "幾つかのメールアドレスが正しくありません。"),
+            'notEmpty'          => __("入力必須項目です。"),
+            'isAlphabetOnly'    => __("アルファベットのみで入力してください。"),
+            'isString'          => __("不正な入力値です。"),
+            'email'             => __("メールアドレスが正しくありません。"),
+            'notBlankCheckbox'  => __("利用規約に同意してください。"),
+            'passwordSameCheck' => __("パスワードが一致しません。"),
+            'passwordCheck'     => __("パスワードが間違っています。"),
+            'minLength'         => __('%2$d文字以上で入力してください。'),
+            'maxLength'         => __('%2$d文字以下で入力してください。'),
+            'emailIsUnique'     => __("このメールアドレスは既に使用されています。他のメールアドレスを指定してください。"),
+            'image_max_size'    => __("ファイルサイズが上限を超えています。"),
+            'image_type'        => __("画像をアップロードできませんでした。JPG、PNG、GIFのいずれかの形式で保存してください。"),
+            'emailsCheck'       => __("幾つかのメールアドレスが正しくありません。"),
         );
         $this->setErrorMessageI18n($model, $error_messages, false);
         $this->replaceValidationErrorMessagesI18n($model);

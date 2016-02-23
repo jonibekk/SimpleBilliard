@@ -100,19 +100,19 @@ if (isset($site_info['type']) && (
                                     $site_info['type'] == 'post_goal_complete' ||
                                     $site_info['type'] == 'post_create_circle'
                                 ): ?>
-                                    <i class="fa fa-comment-o"></i> <?= __d('app', '投稿') ?>
+                                    <i class="fa fa-comment-o"></i> <?= __('投稿') ?>
                                 <?php elseif ($site_info['type'] == 'post_action'): ?>
-                                    <i class="fa fa-check-circle"></i> <?= __d('app', 'アクション') ?>
+                                    <i class="fa fa-check-circle"></i> <?= __('アクション') ?>
                                 <?php elseif ($site_info['type'] == 'circle'): ?>
-                                    <i class="fa fa-circle-o"></i> <?= __d('app', 'サークル') ?>
+                                    <i class="fa fa-circle-o"></i> <?= __('サークル') ?>
                                 <?php elseif ($site_info['type'] == 'goal'): ?>
-                                    <i class="fa fa-flag"></i> <?= __d('app', 'ゴール') ?>
+                                    <i class="fa fa-flag"></i> <?= __('ゴール') ?>
                                 <?php elseif ($site_info['type'] == 'team_vision'): ?>
-                                    <i class="fa fa-rocket"></i> <?= __d('app', 'チームビジョン') ?>
+                                    <i class="fa fa-rocket"></i> <?= __('チームビジョン') ?>
                                 <?php elseif ($site_info['type'] == 'group_vision'): ?>
-                                    <i class="fa fa-plane"></i> <?= __d('app', 'グループビジョン') ?>
+                                    <i class="fa fa-plane"></i> <?= __('グループビジョン') ?>
                                 <?php elseif ($site_info['type'] == 'user'): ?>
-                                    <i class="fa fa-user"></i> <?= __d('app', 'メンバー') ?>
+                                    <i class="fa fa-user"></i> <?= __('メンバー') ?>
                                 <?php endif ?>
                             </p>
                         <?php endif ?>

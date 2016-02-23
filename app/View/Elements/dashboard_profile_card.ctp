@@ -33,7 +33,7 @@
                               id="CountActionByMe"><?= $action_count ?></span>
                     </div>
                     <div class="ml_8px mt_6px"><i
-                            class="fa fa-check-circle mr_2px font_brownRed font_12px"></i><?= __d('app', "アクション") ?>
+                            class="fa fa-check-circle mr_2px font_brownRed font_12px"></i><?= __("アクション") ?>
                     </div>
                 </div>
             </div>

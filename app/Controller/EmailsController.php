@@ -31,7 +31,7 @@ class EmailsController extends AppController
 
         $this->request->allowMethod('post', 'delete');
         $this->Email->delete();
-        $this->Pnotify->outSuccess(__d('app', "メールアドレス変更をキャンセルしました。"));
+        $this->Pnotify->outSuccess(__("メールアドレス変更をキャンセルしました。"));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->redirect($this->referer());

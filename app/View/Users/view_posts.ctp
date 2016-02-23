@@ -22,12 +22,12 @@
                 <?php
                 $next_page_num = 2;
                 $month_index = 0;
-                $more_read_text = __d('app', "もっと読む ▼");
+                $more_read_text = __("もっと読む ▼");
                 $oldest_post_time = 0;
                 if ((count($posts) != POST_FEED_PAGE_ITEMS_NUMBER)) {
                     $next_page_num = 1;
                     $month_index = 1;
-                    $more_read_text = __d('app', "さらに投稿を読み込む ▼");
+                    $more_read_text = __("さらに投稿を読み込む ▼");
                 }
 
                 // ユーザーの登録日以前の投稿は存在しないので読み込まないようにする
@@ -38,7 +38,7 @@
                 ?>
                 <div class="panel panel-default feed-read-more" id="FeedMoreRead">
                     <div class="panel-body panel-read-more-body">
-                        <span class="none" id="ShowMoreNoData"><?= __d('app', "これ以上の投稿はありませんでした。") ?></span>
+                        <span class="none" id="ShowMoreNoData"><?= __("これ以上の投稿はありませんでした。") ?></span>
                         <a href="#" class="click-feed-read-more"
                            parent-id="FeedMoreRead"
                            no-data-text-id="ShowMoreNoData"

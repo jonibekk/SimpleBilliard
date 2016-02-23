@@ -17,10 +17,10 @@
 
             <ul class="list-unstyled">
                 <li><?=
-                    $this->Html->link(__d('lp', 'Blog'), 'http://blog.isao.co.jp/tag/goalous/',
+                    $this->Html->link(__('Blog'), 'http://blog.isao.co.jp/tag/goalous/',
                                       ['target' => '_blank']) ?></li>
                 <li><?=
-                    $this->Html->link(__d('app', 'Privacy Policy'),
+                    $this->Html->link(__('Privacy Policy'),
                                       [
                                           'controller' => 'pages',
                                           'action'     => 'display',
@@ -33,7 +33,7 @@
                     )
                     ?></li>
                 <li><?=
-                    $this->Html->link(__d('app', 'Terms of Service'),
+                    $this->Html->link(__('Terms of Service'),
                                       [
                                           'controller' => 'pages',
                                           'action'     => 'display',

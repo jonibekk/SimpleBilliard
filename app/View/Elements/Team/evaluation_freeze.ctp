@@ -25,40 +25,40 @@
 ?>
 <!-- START app/View/Elements/Team/evaluation_freeze.ctp -->
 <div class="panel panel-default">
-    <div class="panel-heading"><?= __d('app', "評価凍結設定") ?></div>
+    <div class="panel-heading"><?= __("評価凍結設定") ?></div>
     <div class="panel-body form-horizontal">
         <?php if ($current_eval_is_started): ?>
-            <h4><?= __d('app', "今期") ?>(<?= $this->TimeEx->date($current_term_start_date) ?>
+            <h4><?= __("今期") ?>(<?= $this->TimeEx->date($current_term_start_date) ?>
                 - <?= $this->TimeEx->date($current_term_end_date) ?>)</h4>
             <?php if ($current_eval_is_frozen): ?>
                 <?=
-                $this->Form->postLink(__d('app', "今期の評価の凍結を解除する"),
+                $this->Form->postLink(__("今期の評価の凍結を解除する"),
                                       ['controller' => 'teams', 'action' => 'change_freeze_status', 'evaluate_term_id' => $current_term_id],
                                       ['class' => 'btn btn-default'],
-                                      __d('app', "今期の評価の凍結を解除します。よろしいですか？")) ?>
+                                      __("今期の評価の凍結を解除します。よろしいですか？")) ?>
             <?php else: ?>
                 <?=
-                $this->Form->postLink(__d('app', "今期の評価を凍結する"),
+                $this->Form->postLink(__("今期の評価を凍結する"),
                                       ['controller' => 'teams', 'action' => 'change_freeze_status', 'evaluate_term_id' => $current_term_id],
                                       ['class' => 'btn btn-primary'],
-                                      __d('app', "今期の評価を凍結します。よろしいですか？")) ?>
+                                      __("今期の評価を凍結します。よろしいですか？")) ?>
             <?php endif; ?>
         <?php endif; ?>
         <?php if ($previous_eval_is_started): ?>
-            <h4><?= __d('app', "前期") ?>(<?= $this->TimeEx->date($previous_term_start_date) ?>
+            <h4><?= __("前期") ?>(<?= $this->TimeEx->date($previous_term_start_date) ?>
                 - <?= $this->TimeEx->date($previous_term_end_date) ?>)</h4>
             <?php if ($previous_eval_is_frozen): ?>
                 <?=
-                $this->Form->postLink(__d('app', "前期の評価の凍結を解除する"),
+                $this->Form->postLink(__("前期の評価の凍結を解除する"),
                                       ['controller' => 'teams', 'action' => 'change_freeze_status', 'evaluate_term_id' => $previous_term_id],
                                       ['class' => 'btn btn-default'],
-                                      __d('app', "前期の評価の凍結を解除します。よろしいですか？")) ?>
+                                      __("前期の評価の凍結を解除します。よろしいですか？")) ?>
             <?php else: ?>
                 <?=
-                $this->Form->postLink(__d('app', "前期の評価を凍結する"),
+                $this->Form->postLink(__("前期の評価を凍結する"),
                                       ['controller' => 'teams', 'action' => 'change_freeze_status', 'evaluate_term_id' => $previous_term_id],
                                       ['class' => 'btn btn-primary'],
-                                      __d('app', "前期の評価を凍結します。よろしいですか？")) ?>
+                                      __("前期の評価を凍結します。よろしいですか？")) ?>
             <?php endif; ?>
         <?php endif; ?>
     </div>

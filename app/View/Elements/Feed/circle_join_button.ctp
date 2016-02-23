@@ -18,7 +18,7 @@
                     Join this Circle to post or comment.
                     <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'join_circle', 'circle_id' => $current_circle['Circle']['id']]) ?>"
                        class='btn btn-primary pull-right'>
-                        <i class="fa fa-user-plus"></i> <?= __d('app', 'Join Circle') ?>
+                        <i class="fa fa-user-plus"></i> <?= __('Join Circle') ?>
                     </a>
                 </div>
             </div>

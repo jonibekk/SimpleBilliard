@@ -25,11 +25,11 @@ if (!viaIsSet($index) || !is_numeric($index)) {
                             'div'                          => false,
                             'label'                        => false,
                             'class'                        => 'form-control',
-                            'placeholder'                  => __d('app', '名前'),
-                            'data-bv-notempty-message'     => __d('app', "入力必須項目です。"),
+                            'placeholder'                  => __('名前'),
+                            'data-bv-notempty-message'     => __("入力必須項目です。"),
                             'data-bv-stringlength'         => "true",
                             'data-bv-stringlength-max'     => 200,
-                            'data-bv-stringlength-message' => __d('validate', '最大文字数(%s)を超えています。', 200),
+                            'data-bv-stringlength-message' => __('最大文字数(%s)を超えています。', 200),
                             'required'                     => true,
                         ))
             ?>
@@ -47,12 +47,12 @@ if (!viaIsSet($index) || !is_numeric($index)) {
                             'div'                          => false,
                             'label'                        => false,
                             'class'                        => 'form-control',
-                            'placeholder'                  => __d('app', 'ゴールカテゴリの説明を書きましょう'),
-                            'data-bv-notempty-message'     => __d('app', "入力必須項目です。"),
+                            'placeholder'                  => __('ゴールカテゴリの説明を書きましょう'),
+                            'data-bv-notempty-message'     => __("入力必須項目です。"),
                             'required'                     => true,
                             'data-bv-stringlength'         => 'true',
                             'data-bv-stringlength-max'     => 2000,
-                            'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 2000),
+                            'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 2000),
                         ))
             ?>
         </div>

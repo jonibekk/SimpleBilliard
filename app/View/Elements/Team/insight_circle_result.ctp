@@ -9,11 +9,11 @@
 
     <table class="table">
         <tr class="insight-table-header insight-circle-table-header">
-            <th><i class="fa fa-circle-o" data-toggle="tooltip" title="<?= __d('app', 'サークル名') ?>"></i></th>
-            <th><i class="fa fa-user" data-toggle="tooltip" title="<?= __d('app', 'メンバー') ?>"></i></th>
-            <th><i class="fa fa-comment-o" data-toggle="tooltip" title="<?= __d('app', '投稿') ?>"></i></th>
-            <th><i class="fa fa-check" data-toggle="tooltip" title="<?= __d('app', 'リーチ') ?>"></i></th>
-            <th><i class="fa fa-heart-o" data-toggle="tooltip" title="<?= __d('app', 'エンゲージメント') ?>"></i></th>
+            <th><i class="fa fa-circle-o" data-toggle="tooltip" title="<?= __('サークル名') ?>"></i></th>
+            <th><i class="fa fa-user" data-toggle="tooltip" title="<?= __('メンバー') ?>"></i></th>
+            <th><i class="fa fa-comment-o" data-toggle="tooltip" title="<?= __('投稿') ?>"></i></th>
+            <th><i class="fa fa-check" data-toggle="tooltip" title="<?= __('リーチ') ?>"></i></th>
+            <th><i class="fa fa-heart-o" data-toggle="tooltip" title="<?= __('エンゲージメント') ?>"></i></th>
         </tr>
         <?php foreach ($circle_insights as $circle): ?>
             <tr class="insight-circle-table-row">
@@ -28,11 +28,11 @@
                         <?php if (isset($circle["{$key}_cmp"])): ?>
                             <?php if ($circle["{$key}_cmp"] >= 0): ?>
                                 <div class="insight-circle-cmp-percent insight-cmp-percent-plus">
-                                    <?= __d('app', '▲') ?> <?= h($circle["{$key}_cmp"]) ?>%
+                                    <?= __('▲') ?> <?= h($circle["{$key}_cmp"]) ?>%
                                 </div>
                             <?php elseif ($circle["{$key}_cmp"] < 0): ?>
                                 <div class="insight-circle-cmp-percent insight-cmp-percent-minus">
-                                    <?= __d('app', '▼') ?> <?= h(abs($circle["{$key}_cmp"])) ?>%
+                                    <?= __('▼') ?> <?= h(abs($circle["{$key}_cmp"])) ?>%
                                 </div>
                             <?php endif ?>
                         <?php endif ?>

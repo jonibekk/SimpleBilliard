@@ -223,9 +223,9 @@ class NotifySetting extends AppModel
 
     public function _setFieldRealName()
     {
-        self::$TYPE_GROUP['all'] = __d('app', "すべて");
-        self::$TYPE_GROUP['primary'] = __d('app', "重要なもの");
-        self::$TYPE_GROUP['none'] = __d('app', "オフ");
+        self::$TYPE_GROUP['all'] = __("すべて");
+        self::$TYPE_GROUP['primary'] = __("重要なもの");
+        self::$TYPE_GROUP['none'] = __("オフ");
     }
 
     function __construct($id = false, $table = null, $ds = null)
@@ -392,7 +392,7 @@ class NotifySetting extends AppModel
             }
             foreach ($from_user_names as $key => $name) {
                 if ($key !== 0) {
-                    $user_text .= __d('app', "、");
+                    $user_text .= __("、");
                 }
                 $user_text .= $name;
             }
@@ -409,7 +409,7 @@ class NotifySetting extends AppModel
 
                     // 共有先ユーザーが自分１人のみの場合
                     if (isset($options['share_user_list'][$this->my_uid]) && $share_user_count == 1) {
-                        $targets[] = __d('app', 'あなた');
+                        $targets[] = __('あなた');
                     }
                     // 自分以外の人が個人として共有されている場合はその人の名前を表示
                     else {
@@ -422,7 +422,7 @@ class NotifySetting extends AppModel
                             }
                         }
                         if ($share_user_count >= 2) {
-                            $user_name .= __d('app', '他%d人', $share_user_count - 1);
+                            $user_name .= __('他%d人', $share_user_count - 1);
                         }
                         $targets[] = $user_name;
                     }
@@ -446,22 +446,22 @@ class NotifySetting extends AppModel
                     $circle_name = $circle['Circle']['name'];
                     $circle_count = count($options['share_circle_list']);
                     if ($circle_count >= 2) {
-                        $circle_name .= __d('app', '他%dサークル', $circle_count - 1);
+                        $circle_name .= __('他%dサークル', $circle_count - 1);
                     }
                     $targets[] = $circle_name;
                 }
 
-                $title = __d('app',
+                $title = __(
                              '<span class="notify-card-head-target">%1$s%2$s</span>が<span class="notify-card-head-target">%3$s</span>に投稿しました。',
                              h($user_text),
-                             ($count_num > 0) ? h(__d('app', "と他%s人", $count_num)) : null,
-                             h(implode(__d('app', "、"), $targets)));
+                             ($count_num > 0) ? h(__("と他%s人", $count_num)) : null,
+                             h(implode(__("、"), $targets)));
                 break;
             case self::TYPE_FEED_COMMENTED_ON_MY_POST:
-                $title = __d('app',
+                $title = __(
                              '<span class="notify-card-head-target">%1$s%2$s</span>が<span class="notify-card-head-target">あなた</span>の投稿にコメントしました。',
                              h($user_text),
-                             ($count_num > 0) ? h(__d('app', "と他%s人", $count_num)) : null);
+                             ($count_num > 0) ? h(__("と他%s人", $count_num)) : null);
                 break;
             case self::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST:
                 // この通知で必要なオプション値
@@ -470,29 +470,29 @@ class NotifySetting extends AppModel
 
                 // 投稿者の表示名をセット
                 // 自分の投稿へのコメントの場合は、表示名を「自分」にする
-                $target_user_name = __d('app', "自分");
+                $target_user_name = __("自分");
                 if ($options['from_user_id'] != $options['post_user_id']) {
                     $user = $this->User->findById($options['post_user_id']);
                     $target_user_name = $user['User']['display_username'];
                 }
-                $title = __d('app',
+                $title = __(
                              '<span class="notify-card-head-target">%1$s%2$s</span>も<span class="notify-card-head-target">%3$s</span>の投稿にコメントしました。',
                              h($user_text),
-                             ($count_num > 0) ? h(__d('app', "と他%s人", $count_num)) : null,
+                             ($count_num > 0) ? h(__("と他%s人", $count_num)) : null,
                              h($target_user_name));
                 break;
             case self::TYPE_CIRCLE_USER_JOIN:
-                $title = __d('app', '<span class="notify-card-head-target">%1$s%2$s</span>がサークルに参加しました。',
+                $title = __('<span class="notify-card-head-target">%1$s%2$s</span>がサークルに参加しました。',
                              h($user_text),
-                             ($count_num > 0) ? h(__d('app', "と他%s人", $count_num)) : null);
+                             ($count_num > 0) ? h(__("と他%s人", $count_num)) : null);
                 break;
             case self::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING:
-                $title = __d('app',
+                $title = __(
                              '<span class="notify-card-head-target">%1$s</span>がサークルのプライバシー設定を「<span class="notify-card-head-target">%2$s</span>」に変更しました。',
                              h($user_text), h($item_name[1]));
                 break;
             case self::TYPE_CIRCLE_ADD_USER:
-                $title = __d('app',
+                $title = __(
                              '<span class="notify-card-head-target">%1$s</span>がサークルに<span class="notify-card-head-target">あなた</span>を追加しました。',
                              h($user_text));
                 break;
@@ -500,7 +500,7 @@ class NotifySetting extends AppModel
                 // この通知で必要なオプション値
                 //   - goal_id: フォローしたゴールID
                 $goal = $this->User->Goal->findById($options['goal_id']);
-                $title = __d('app',
+                $title = __(
                              '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">%2$s</span>をフォローしました。',
                              h($user_text),
                              h($goal['Goal']['name']));
@@ -509,7 +509,7 @@ class NotifySetting extends AppModel
                 // この通知で必要なオプション値
                 //   - goal_id: コラボしたゴールID
                 $goal = $this->User->Goal->findById($options['goal_id']);
-                $title = __d('app',
+                $title = __(
                              '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">%2$s</span>にコラボりました。',
                              h($user_text),
                              h($goal['Goal']['name']));
@@ -518,7 +518,7 @@ class NotifySetting extends AppModel
                 // この通知で必要なオプション値
                 //   - goal_id: 内容を変更したゴールID
                 $goal = $this->User->Goal->findById($options['goal_id']);
-                $title = __d('app',
+                $title = __(
                              '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">%2$s</span>の内容を変更しました。',
                              h($user_text),
                              h($goal['Goal']['name']));
@@ -527,7 +527,7 @@ class NotifySetting extends AppModel
                 // この通知で必要なオプション値
                 //   - goal_id: 評価対象にしたゴールID
                 $goal = $this->User->Goal->findById($options['goal_id']);
-                $title = __d('app',
+                $title = __(
                              '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">%2$s</span>を評価対象としました。',
                              h($user_text),
                              h($goal['Goal']['name']));
@@ -536,7 +536,7 @@ class NotifySetting extends AppModel
                 // この通知で必要なオプション値
                 //   - goal_id: 修正依頼をしたゴールID
                 $goal = $this->User->Goal->findById($options['goal_id']);
-                $title = __d('app',
+                $title = __(
                              '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">%2$s</span>に修正依頼をしました。',
                              h($user_text),
                              h($goal['Goal']['name']));
@@ -546,7 +546,7 @@ class NotifySetting extends AppModel
                 // この通知で必要なオプション値
                 //   - goal_id: 評価対象外にしたゴールID
                 $goal = $this->User->Goal->findById($options['goal_id']);
-                $title = __d('app',
+                $title = __(
                              '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">%2$s</span>を評価対象外としました。',
                              h($user_text),
                              h($goal['Goal']['name']));
@@ -555,7 +555,7 @@ class NotifySetting extends AppModel
                 // この通知で必要なオプション値
                 //   - goal_id: 新しく作成したゴールID
                 $goal = $this->User->Goal->findById($options['goal_id']);
-                $title = __d('app',
+                $title = __(
                              '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">%2$s</span>を作成しました。',
                              h($user_text),
                              h($goal['Goal']['name']));
@@ -564,7 +564,7 @@ class NotifySetting extends AppModel
                 // この通知で必要なオプション値
                 //   - goal_id: コラボしたゴールID
                 $goal = $this->User->Goal->findById($options['goal_id']);
-                $title = __d('app',
+                $title = __(
                              '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">%2$s</span>にコラボりました。',
                              h($user_text),
                              h($goal['Goal']['name']));
@@ -573,28 +573,28 @@ class NotifySetting extends AppModel
                 // この通知で必要なオプション値
                 //   - goal_id: 内容を修正したゴールID
                 $goal = $this->User->Goal->findById($options['goal_id']);
-                $title = __d('app',
+                $title = __(
                              '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">%2$s</span>を修正しました。',
                              h($user_text),
                              h($goal['Goal']['name']));
                 break;
             case self::TYPE_EVALUATION_START:
-                $title = __d('app', '評価期間に入りました。');
+                $title = __('評価期間に入りました。');
                 break;
             case self::TYPE_EVALUATION_FREEZE:
-                $title = __d('app', '評価が凍結されました。');
+                $title = __('評価が凍結されました。');
                 break;
             case self::TYPE_EVALUATION_START_CAN_ONESELF:
-                $title = __d('app', '自己評価を実施してください。');
+                $title = __('自己評価を実施してください。');
                 break;
             case self::TYPE_EVALUATION_CAN_AS_EVALUATOR:
-                $title = __d('app', '被評価者の評価を実施してください。');
+                $title = __('被評価者の評価を実施してください。');
                 break;
             case self::TYPE_EVALUATION_DONE_FINAL:
-                $title = __d('app', '最終者が評価を実施しました。');
+                $title = __('最終者が評価を実施しました。');
                 break;
             case self::TYPE_FEED_COMMENTED_ON_MY_ACTION:
-                $title = __d('app',
+                $title = __(
                              '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">あなた</span>のアクションにコメントしました。',
                              h($user_text));
                 break;
@@ -605,12 +605,12 @@ class NotifySetting extends AppModel
 
                 // 投稿者の表示名をセット
                 // 自分の投稿へのコメントの場合は、表示名を「自分」にする
-                $target_user_name = __d('app', "自分");
+                $target_user_name = __("自分");
                 if ($options['from_user_id'] != $options['post_user_id']) {
                     $user = $this->User->findById($options['post_user_id']);
                     $target_user_name = $user['User']['display_username'];
                 }
-                $title = __d('app',
+                $title = __(
                              '<span class="notify-card-head-target">%1$s</span>も<span class="notify-card-head-target">%2$s</span>のアクションにコメントしました。',
                              h($user_text),
                              h($target_user_name));
@@ -619,18 +619,18 @@ class NotifySetting extends AppModel
                 // この通知で必要なオプション値
                 //   - goal_id: アクションしたゴール
                 $goal = $this->User->Goal->findById($options['goal_id']);
-                $title = __d('app',
+                $title = __(
                              '<span class="notify-card-head-target">%1$s</span>が<span class="notify-card-head-target">%2$s</span>にアクションしました。',
                              h($user_text),
                              h($goal['Goal']['name']));
                 break;
             case self::TYPE_USER_JOINED_TO_INVITED_TEAM:
-                $title = __d('app', '<span class="notify-card-head-target">%1$s</span>がチームに参加しました。', h($user_text));
+                $title = __('<span class="notify-card-head-target">%1$s</span>がチームに参加しました。', h($user_text));
                 break;
             case self::TYPE_FEED_MESSAGE:
-                $title = __d('app', '<span class="notify-card-head-target">%1$s%2$s</span>',
+                $title = __('<span class="notify-card-head-target">%1$s%2$s</span>',
                              h($user_text),
-                             ($count_num > 0) ? h(__d('app', " +%s", $count_num)) : null);
+                             ($count_num > 0) ? h(__(" +%s", $count_num)) : null);
                 break;
         }
 

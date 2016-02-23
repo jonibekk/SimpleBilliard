@@ -14,20 +14,20 @@
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= __d('app', "スコア削除の確認") ?></h4>
+            <h4 class="modal-title"><?= __("スコア削除の確認") ?></h4>
         </div>
         <div class="modal-body">
             <div class="col col-xxs-12">
-                <p><?= __d('app', "スコアを削除すると、過去のデータには影響ありません。") ?></p>
+                <p><?= __("スコアを削除すると、過去のデータには影響ありません。") ?></p>
 
-                <p><?= __d('app', "今後、新規に選択はできなくなります。") ?></p>
+                <p><?= __("今後、新規に選択はできなくなります。") ?></p>
 
-                <p><?= __d('app', "本当にこのスコア定義を削除しますか？") ?></p>
+                <p><?= __("本当にこのスコア定義を削除しますか？") ?></p>
             </div>
         </div>
         <div class="modal-footer">
             <?=
-            $this->Form->postLink(__d('app', "削除する"),
+            $this->Form->postLink(__("削除する"),
                                   ['controller' => 'teams', 'action' => 'to_inactive_score', 'team_id' => $id],
                                   ['class' => 'btn btn-primary']) ?>
         </div>

@@ -11,7 +11,7 @@
 ?>
 <!-- START app/View/Elements/Team/edit_basic_setting.ctp -->
 <div class="panel panel-default">
-    <div class="panel-heading"><?= __d('app', "基本設定") ?></div>
+    <div class="panel-heading"><?= __("基本設定") ?></div>
     <?=
     $this->Form->create('Team', [
         'inputDefaults' => [
@@ -31,16 +31,16 @@
     <div class="panel-body add-team-panel-body">
         <?=
         $this->Form->input('name',
-                           ['label'                        => __d('app', "チーム名"),
-                            'placeholder'                  => __d('app', "例) チームGoalous"),
-                            "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
+                           ['label'                        => __("チーム名"),
+                            'placeholder'                  => __("例) チームGoalous"),
+                            "data-bv-notempty-message"     => __("入力必須項目です。"),
                             'data-bv-stringlength'         => 'true',
                             'data-bv-stringlength-max'     => 128,
-                            'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 128),
+                            'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 128),
                            ]) ?>
         <hr>
         <div class="form-group">
-            <label for="" class="col col-sm-3 control-label form-label"><?= __d('app', "チーム画像") ?></label>
+            <label for="" class="col col-sm-3 control-label form-label"><?= __("チーム画像") ?></label>
 
             <div class="col col-sm-6">
                 <div class="fileinput_small fileinput-new" data-provides="fileinput">
@@ -60,10 +60,10 @@
                         <span class="btn btn-default btn-file">
                             <span class="fileinput-new">
                                 <?=
-                                __d('app',
+                                __(
                                     "画像を選択") ?>
                             </span>
-                            <span class="fileinput-exists"><?= __d('app', "画像を再選択") ?></span>
+                            <span class="fileinput-exists"><?= __("画像を再選択") ?></span>
                             <?=
                             $this->Form->input('photo',
                                                ['type'         => 'file',
@@ -75,7 +75,7 @@
                                                 'required'     => false
                                                ]) ?>
                         </span>
-                        <span class="help-block font_11px inline-block"><?= __d('app', '10MB以下') ?></span>
+                        <span class="help-block font_11px inline-block"><?= __('10MB以下') ?></span>
                     </div>
                 </div>
 
@@ -92,15 +92,15 @@
         <hr>
         <?=
         $this->Form->input('type', [
-            'label'      => __d('app', "プラン"),
+            'label'      => __("プラン"),
             'type'       => 'select',
             'options'    => Team::$TYPE,
             'wrapInput'  => 'team-setting-basic-plan',
             'afterInput' => '<span class="help-block font_11px">'
-                .__d('app', "2016年8月31日まで無料でご利用いただけます。") // 同様の文言がteam/add.ctp
-                // . __d('app', "フリープランは、５人までのチームで使えます。また、複数の機能制限がございます。")
+                .__("2016年8月31日まで無料でご利用いただけます。") // 同様の文言がteam/add.ctp
+                // . __("フリープランは、５人までのチームで使えます。また、複数の機能制限がございます。")
                 // . '<br>'
-                // . __d('app', "このプランはチーム作成後にいつでも変更できます。")
+                // . __("このプランはチーム作成後にいつでも変更できます。")
                 . '</span>'
         ]) ?>
     </div>
@@ -109,11 +109,11 @@
         <div class="row">
             <div class="col-xxs-4 col-sm-offset-3">
                 <?=
-                $this->Form->submit(__d('app', "基本設定を更新"),
+                $this->Form->submit(__("基本設定を更新"),
                                     ['class' => 'btn btn-primary display-inline', 'div' => false, 'disabled' => 'disabled']) ?>
             </div>
             <div class="col-xxs-8 col-sm-5 text-align_r">
-                <a id="TeamDeleteButton" class="team-delete-button" href="#"><?= __d('app', 'チームを削除する') ?></a>
+                <a id="TeamDeleteButton" class="team-delete-button" href="#"><?= __('チームを削除する') ?></a>
             </div>
         </div>
     </div>
@@ -149,7 +149,7 @@
                             extension: 'jpeg,jpg,png,gif',
                             type: 'image/jpeg,image/png,image/gif',
                             maxSize: 10485760,   // 10mb
-                            message: "<?=__d('validate', "10MB以下かつJPG、PNG、GIFのいずれかの形式を選択して下さい。")?>"
+                            message: "<?=__("10MB以下かつJPG、PNG、GIFのいずれかの形式を選択して下さい。")?>"
                         }
                     }
                 }
@@ -159,7 +159,7 @@
         $('#TeamDeleteButton').on('click', function (e) {
             e.preventDefault();
 
-            if (confirm('<?=__d('app', 'チームを削除するとゴールやアクション、投稿などチームに属するすべての情報が削除されます。よろしいですか？\\nよろしければ "OK" ボタンを押してください。')?>')) {
+            if (confirm('<?=__('チームを削除するとゴールやアクション、投稿などチームに属するすべての情報が削除されます。よろしいですか？\\nよろしければ "OK" ボタンを押してください。')?>')) {
                 $('#TeamDeleteForm').submit();
             }
         });

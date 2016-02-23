@@ -27,7 +27,7 @@ Page毎に要素が変わるもの
 $meta_contact_confirm = [
     [
         "name" => "description",
-        "content" => __d('lp','Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。お問い合わせ内容の確認です。'),
+        "content" => __('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。お問い合わせ内容の確認です。'),
     ],
     [
         "name" => "keywords",
@@ -39,11 +39,11 @@ $meta_contact_confirm = [
     ],
     [
         "property" => "og:title",
-        "content" => __d('lp', '入力内容確認 | Goalous(ゴーラス)'),
+        "content" => __('入力内容確認 | Goalous(ゴーラス)'),
     ],
     [
         "property" => "og:description",
-        "content" =>__d('lp', 'Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。お問い合わせ内容の確認です。'),
+        "content" =>__('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。お問い合わせ内容の確認です。'),
     ],
     [
         "property" => "og:url",
@@ -55,7 +55,7 @@ $meta_contact_confirm = [
     ],
     [
         "property" => "og:site_name",
-        "content" => __d('lp', 'Goalous (ゴーラス) │ゴール達成への最強にオープンな社内SNS'),
+        "content" => __('Goalous (ゴーラス) │ゴール達成への最強にオープンな社内SNS'),
     ],
     [
         "property" => "fb:app_id",
@@ -75,7 +75,7 @@ for($i = 0; $i < $num_ogp; $i++){
     echo $this->Html->meta($meta_contact_confirm[$i]);
 }
 ?>
-<title><?= __d('lp', '入力内容確認 | Goalous (ゴーラス)') ?></title>
+<title><?= __('入力内容確認 | Goalous (ゴーラス)') ?></title>
 <link rel="alternate" hreflang="ja" href="<?= $this->Html->url('/ja/contact_confirm') ?>"/>
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/contact_confirm') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/contact_confirm') ?>"/>
@@ -84,8 +84,8 @@ for($i = 0; $i < $num_ogp; $i++){
 <!-- ******CONTACT MAIN****** -->
 <section id="contact-main" class="contact-main section">
     <div class="container text-center">
-        <h2 class="title"><?= __d('lp', 'お問い合わせ内容確認') ?></h2>
-        <p class="intro"><?= __d('lp', '内容をご確認のうえ、問題なければ送信をクリックしてください。') ?></p>
+        <h2 class="title"><?= __('お問い合わせ内容確認') ?></h2>
+        <p class="intro"><?= __('内容をご確認のうえ、問題なければ送信をクリックしてください。') ?></p>
     </div><!--//container-->
 </section>
 
@@ -94,46 +94,46 @@ for($i = 0; $i < $num_ogp; $i++){
         <div class="col-md-8 col-md-offset-2 text-left">
             <form class="form-horizontal">
                 <div class="form-group">
-                    <label class="col-sm-4 control-label"><?= __d('lp', 'ご希望') ?></label>
+                    <label class="col-sm-4 control-label"><?= __('ご希望') ?></label>
                     <div class="col-sm-8">
                         <p class="form-control-static"><?= h($data['want_text']) ?></p>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-4 control-label"><?= __d('lp', '会社名') ?></label>
+                    <label class="col-sm-4 control-label"><?= __('会社名') ?></label>
                     <div class="col-sm-8">
                         <p class="form-control-static"><?= h($data['company']) ?></p>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-4 control-label"><?= __d('lp', 'お名前') ?></label>
+                    <label class="col-sm-4 control-label"><?= __('お名前') ?></label>
                     <div class="col-sm-8">
                         <p class="form-control-static"><?= h($data['name']) ?></p>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-4 control-label"><?= __d('lp', 'メールアドレス') ?></label>
+                    <label class="col-sm-4 control-label"><?= __('メールアドレス') ?></label>
                     <div class="col-sm-8">
                         <p class="form-control-static"><?= h($data['email']) ?></p>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-4 control-label"><?= __d('lp', 'お問い合わせ内容') ?></label>
+                    <label class="col-sm-4 control-label"><?= __('お問い合わせ内容') ?></label>
                     <div class="col-sm-8">
                         <p class="form-control-static"><?= nl2br(h($data['message'])) ?></p>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-4 control-label"><?= __d('lp', 'ご希望の営業担当者') ?></label>
+                    <label class="col-sm-4 control-label"><?= __('ご希望の営業担当者') ?></label>
                     <div class="col-sm-8">
                         <p class="form-control-static"><?= h($data['sales_people_text']) ?></p>
                     </div>
                 </div>
 
                 <a href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'contact', 'lang' => $top_lang, 'from_confirm' => true]) ?>"
-                   class="btn btn-block btn-cta-secondary"><?= __d('lp', '戻る') ?></a>
+                   class="btn btn-block btn-cta-secondary"><?= __('戻る') ?></a>
                 <a href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'contact_send', 'lang' => $top_lang]) ?>"
-                   class="btn btn-block btn-cta-primary contact-confirm-send" id="SendContactLink"><?= __d('lp',
+                   class="btn btn-block btn-cta-primary contact-confirm-send" id="SendContactLink"><?= __(
                                                                                       '送信する') ?></a>
             </form><!--//form-->
         </div>
@@ -146,7 +146,7 @@ for($i = 0; $i < $num_ogp; $i++){
             if ($(this).hasClass('double_click')) {
                 return false;
             }
-            $(this).text("<?=__d('lp', '送信中...')?>");
+            $(this).text("<?=__('送信中...')?>");
             // 2重送信防止クラス
             $(this).addClass('double_click');
         });

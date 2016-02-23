@@ -13,7 +13,7 @@
 <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default">
-            <div class="panel-heading"><?= __d('app', "チームビジョンを更新") ?></div>
+            <div class="panel-heading"><?= __("チームビジョンを更新") ?></div>
             <?=
             $this->Form->create('TeamVision', [
                 'inputDefaults' => [
@@ -33,17 +33,17 @@
             <div class="panel-body add-team-panel-body">
                 <?=
                 $this->Form->input('name',
-                                   ['label'                        => __d('app', "チームビジョン名"),
-                                    'placeholder'                  => __d('app', "例) イノベーションを起こす"),
-                                    "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
+                                   ['label'                        => __("チームビジョン名"),
+                                    'placeholder'                  => __("例) イノベーションを起こす"),
+                                    "data-bv-notempty-message"     => __("入力必須項目です。"),
                                     'rows'                         => 1,
                                     'data-bv-stringlength'         => 'true',
                                     'data-bv-stringlength-max'     => 200,
-                                    'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 200),
+                                    'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 200),
                                    ]) ?>
                 <hr>
                 <div class="form-group">
-                    <label for="" class="col col-sm-3 control-label form-label"><?= __d('app', "画像") ?></label>
+                    <label for="" class="col col-sm-3 control-label form-label"><?= __("画像") ?></label>
 
                     <div class="col col-sm-6">
                         <div class="fileinput_small fileinput-new" data-provides="fileinput">
@@ -58,10 +58,10 @@
                         <span class="btn btn-default btn-file">
                             <span class="fileinput-new">
                                 <?=
-                                __d('app',
+                                __(
                                     "画像を選択") ?>
                             </span>
-                            <span class="fileinput-exists"><?= __d('app', "画像を再選択") ?></span>
+                            <span class="fileinput-exists"><?= __("画像を再選択") ?></span>
                             <?=
                             $this->Form->input('photo',
                                                ['type'         => 'file',
@@ -73,7 +73,7 @@
                                                 'required'     => false
                                                ]) ?>
                         </span>
-                                <span class="help-block font_11px inline-block"><?= __d('app', '10MB以下') ?></span>
+                                <span class="help-block font_11px inline-block"><?= __('10MB以下') ?></span>
                             </div>
                         </div>
 
@@ -90,12 +90,12 @@
                 <hr>
                 <?=
                 $this->Form->input('description', [
-                    'label'                        => __d('app', "説明"),
+                    'label'                        => __("説明"),
                     'type'                         => 'text',
                     'rows'                         => 1,
                     'data-bv-stringlength'         => 'true',
                     'data-bv-stringlength-max'     => 2000,
-                    'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 2000),
+                    'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 2000),
                 ]) ?>
             </div>
 
@@ -103,7 +103,7 @@
                 <div class="row">
                     <div class="team-button pull-right">
                         <?=
-                        $this->Form->submit(__d('app', "チームビジョンを更新する"),
+                        $this->Form->submit(__("チームビジョンを更新する"),
                                             ['class' => 'btn btn-primary display-inline', 'div' => false]) ?>
                     </div>
                 </div>
@@ -133,7 +133,7 @@
                             extension: 'jpeg,jpg,png,gif',
                             type: 'image/jpeg,image/png,image/gif',
                             maxSize: 10485760,   // 10mb
-                            message: "<?=__d('validate', "10MB以下かつJPG、PNG、GIFのいずれかの形式を選択して下さい。")?>"
+                            message: "<?=__("10MB以下かつJPG、PNG、GIFのいずれかの形式を選択して下さい。")?>"
                         }
                     }
                 }

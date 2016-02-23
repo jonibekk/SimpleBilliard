@@ -16,7 +16,7 @@
             <?= $this->Session->read('Auth.User.display_first_name') ?>
         </span>
         </a>
-        <a href="<?= $this->Html->url('/') ?>" class="header-user-home  js-header-link"><?= __d('app',
+        <a href="<?= $this->Html->url('/') ?>" class="header-user-home  js-header-link"><?= __(
                                                                                                 'ホーム') ?></a>
     <?php endif; ?>
 
@@ -32,7 +32,7 @@
                        href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>">
                         <i class="fa fa-flag header-drop-icons"></i>
 
-                        <p class="header-nav-add-contents-goal"><?= __d('app', 'ゴールを作成') ?></p>
+                        <p class="header-nav-add-contents-goal"><?= __('ゴールを作成') ?></p>
                     </a>
                 </li>
                 <li class="header-nav-add-contents-circle">
@@ -40,7 +40,7 @@
                        data-target="#modal_add_circle">
                         <i class="fa fa-circle-o header-drop-icons"></i>
 
-                        <p class="header-nav-add-contents-circle"><?= __d('app', 'サークルを作成') ?></p>
+                        <p class="header-nav-add-contents-circle"><?= __('サークルを作成') ?></p>
                     </a>
                 </li>
             <?php endif; ?>
@@ -49,7 +49,7 @@
                    href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'add']) ?>">
                     <i class=" fa fa-users header-drop-icons"></i>
 
-                    <p class="header-nav-add-contents-team"><?= __d('app', 'チームを作成') ?></p>
+                    <p class="header-nav-add-contents-team"><?= __('チームを作成') ?></p>
                 </a>
             </li>
         </ul>
@@ -68,7 +68,7 @@
                 <ul class="header-nav-message-contents" id="message-dropdown" role="menu">
                     <li class="notify-card-empty" id="messageNotifyCardEmpty">
                         <i class="fa fa-smile-o font_33px mr_8px"></i><span
-                            class="notify-empty-text"><?= __d('app', '未読のメッセージはありません。') ?></span>
+                            class="notify-empty-text"><?= __('未読のメッセージはありません。') ?></span>
                     </li>
                 </ul>
             </div>
@@ -88,13 +88,13 @@
             <div class="header-nav-notify-contents-scrolling">
                 <div class=" btn-link notify-mark-allread" style='color:#d2d4d5'>
                     <i class="fa fa-check" id="mark_all_read"></i>
-                    <span id="mark_all_read_txt"><?= __d('app', 'Mark All as Read') ?></span>
+                    <span id="mark_all_read_txt"><?= __('Mark All as Read') ?></span>
                 </div>
                 <ul class="header-nav-notify-contents notify-dropdown-cards" id="bell-dropdown" role="menu"
                     style="overflow-y:scroll">
                     <li class="notify-card-empty" id="notifyCardEmpty">
                         <i class="fa fa-smile-o font_33px mr_8px header-icons"></i><span
-                            class="notify-empty-text"><?= __d('app', '未読の通知はありません。') ?></span>
+                            class="notify-empty-text"><?= __('未読の通知はありません。') ?></span>
                     </li>
                 </ul>
             </div>
@@ -107,7 +107,7 @@
             <a href="#" get-url="<?= $this->Html->url(['controller' => 'notifications', 'action' => 'index']) ?>"
                class="call-notifications">
                 <div class="notify-all-view-link">
-                    <?= __d('app', 'すべて見る') ?>
+                    <?= __('すべて見る') ?>
                 </div>
             </a>
         </div>
@@ -129,7 +129,7 @@
         <ul class="header-nav-function-contents dropdown-menu" role="menu"
             aria-labelledby="dropdownMenu1">
             <li class="header-nav-function-contents-list">
-                <?= $this->Html->link(__d('app', 'ユーザー設定'),
+                <?= $this->Html->link(__('ユーザー設定'),
                                       ['controller' => 'users', 'action' => 'settings'],
                                       ['class' => 'header-nav-function-contents-user-setting']) ?>
             </li>
@@ -137,7 +137,7 @@
             if (viaIsSet($my_member_status['TeamMember']['admin_flg']) && $my_member_status['TeamMember']['admin_flg']):?>
                 <li class="header-nav-function-contents-list">
                     <?=
-                    $this->Html->link(__d('app', 'チーム設定'),
+                    $this->Html->link(__('チーム設定'),
                                       ['controller' => 'teams', 'action' => 'settings'],
                                       ['class' => 'header-nav-function-contents-team-setting']) ?>
                 </li>
@@ -149,7 +149,7 @@
                     <?php endif; ?>
 
                     <?=
-                    $this->Html->link(__d('app', '評価'),
+                    $this->Html->link(__('評価'),
                                       ['controller' => 'evaluations', 'action' => 'index'],
                                       ['class' => 'header-nav-function-contents-evaluation']) ?>
                 </li>
@@ -160,36 +160,36 @@
                         <?php echo $unapproved_cnt; ?>
                     </div>
                 <?php } ?>
-                <?= $this->Html->link(__d('app', 'ゴール認定'),
+                <?= $this->Html->link(__('ゴール認定'),
                                       ['controller' => 'goal_approval', 'action' => 'index'],
                                       ['class' => 'header-nav-function-contents-approvement']) ?>
             </li>
             <li class="header-nav-function-contents-list">
                 <?=
-                $this->Html->link(__d('app', 'ユーザー利用ガイド'),
+                $this->Html->link(__('ユーザー利用ガイド'),
                                   '/document/UserGuidelines.pdf',
                                   ['class' => 'header-nav-function-contents-user-guidelines', 'target' => '_blank']) ?>
             </li>
             <li class="header-nav-function-contents-list">
                 <a href="#" rel="_J_wKHgKWLg" id="ExplainGoal" class="youtube header-nav-function-contents-about-goal">
-                    <?= __d('app', 'ゴール作成方法') ?>
+                    <?= __('ゴール作成方法') ?>
                 </a>
             </li>
             <li class="header-nav-function-contents-list">
                 <a href="#" data-toggle="modal" data-target="#modal_tutorial"
                    class="header-nav-function-contents-tutorial">
-                    <?= __d('app', 'チュートリアル') ?>
+                    <?= __('チュートリアル') ?>
                 </a>
             </li>
             <?php if (defined('INTERCOM_APP_ID') && INTERCOM_APP_ID): ?>
                 <li class="header-nav-function-contents-list">
                     <a href="mailto:<?= INTERCOM_APP_ID ?>@incoming.intercom.io"
-                       class="header-nav-function-contents-support" id="Intercom"><?= __d('app', 'サポート') ?></a>
+                       class="header-nav-function-contents-support" id="Intercom"><?= __('サポート') ?></a>
                 </li>
             <?php endif; ?>
             <li class="header-nav-function-contents-list">
                 <?=
-                $this->Html->link(__d('app', 'ログアウト'),
+                $this->Html->link(__('ログアウト'),
                                   ['controller' => 'users', 'action' => 'logout'],
                                   ['class' => 'header-nav-function-contents-logout']) ?>
             </li>

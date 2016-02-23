@@ -10,7 +10,7 @@
 <div class="row add-profile">
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default">
-            <div class="panel-heading"><?= __d('app', "プロフィールを入力してください") ?></div>
+            <div class="panel-heading"><?= __("プロフィールを入力してください") ?></div>
             <?=
             $this->Form->create('User', [
                 'inputDefaults' => [
@@ -31,13 +31,13 @@
                     //ローカル名を使う国のみ表示
                     //姓と名は言語によって表示順を変える
                     $local_last_name = $this->Form->input('LocalName.0.last_name', [
-                        'label'       => __d('app', "姓(%s)", $language_name),
-                        'placeholder' => __d('app', "例) 鈴木"),
+                        'label'       => __("姓(%s)", $language_name),
+                        'placeholder' => __("例) 鈴木"),
                         'required'    => false,
                     ]);
                     $local_first_name = $this->Form->input('LocalName.0.first_name', [
-                        'label'       => __d('app', "名(%s)", $language_name),
-                        'placeholder' => __d('app', "例) 太郎"),
+                        'label'       => __("名(%s)", $language_name),
+                        'placeholder' => __("例) 太郎"),
                         'required'    => false,
                     ]);
                     if ($me['last_first']) {
@@ -54,18 +54,18 @@
                 ?>
                 <?php //姓と名は言語によって表示順を変える
                 $last_name = $this->Form->input('last_name', [
-                    'label'                    => __d('app', "姓(ローマ字)"),
-                    'placeholder'              => __d('app', "例) Suzuki"),
+                    'label'                    => __("姓(ローマ字)"),
+                    'placeholder'              => __("例) Suzuki"),
                     "pattern"                  => '^[a-zA-Z]+$',
-                    "data-bv-regexp-message"   => __d('validate', "アルファベットのみで入力してください。"),
-                    "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                    "data-bv-regexp-message"   => __("アルファベットのみで入力してください。"),
+                    "data-bv-notempty-message" => __("入力必須項目です。"),
                 ]);
                 $first_name = $this->Form->input('first_name', [
-                    'label'                    => __d('app', "名(ローマ字)"),
-                    'placeholder'              => __d('app', "例) Hiroshi"),
+                    'label'                    => __("名(ローマ字)"),
+                    'placeholder'              => __("例) Hiroshi"),
                     "pattern"                  => '^[a-zA-Z]+$',
-                    "data-bv-regexp-message"   => __d('validate', "アルファベットのみで入力してください。"),
-                    "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                    "data-bv-regexp-message"   => __("アルファベットのみで入力してください。"),
+                    "data-bv-notempty-message" => __("入力必須項目です。"),
                 ]);
                 if ($me['last_first']) {
                     echo $last_name;
@@ -82,7 +82,7 @@
                                    [
                                        'type'    => 'radio',
                                        'before'  => '<label class="col col-sm-3 control-label mr_5px profile-radio-label">'
-                                           . __d('app', '性別') . '</label>',
+                                           . __('性別') . '</label>',
                                        'legend'  => false,
                                        'options' => User::$TYPE_GENDER,
                                        'class'   => 'radio-inline profile-radio-inline'
@@ -94,21 +94,21 @@
                     ->input('birth_day',
                             [
                                 'monthNames' => [
-                                    '01' => __d('app', '1月'),
-                                    '02' => __d('app', '2月'),
-                                    '03' => __d('app', '3月'),
-                                    '04' => __d('app', '4月'),
-                                    '05' => __d('app', '5月'),
-                                    '06' => __d('app', '6月'),
-                                    '07' => __d('app', '7月'),
-                                    '08' => __d('app', '8月'),
-                                    '09' => __d('app', '9月'),
-                                    '10' => __d('app', '10月'),
-                                    '11' => __d('app', '11月'),
-                                    '12' => __d('app', '12月'),
+                                    '01' => __('1月'),
+                                    '02' => __('2月'),
+                                    '03' => __('3月'),
+                                    '04' => __('4月'),
+                                    '05' => __('5月'),
+                                    '06' => __('6月'),
+                                    '07' => __('7月'),
+                                    '08' => __('8月'),
+                                    '09' => __('9月'),
+                                    '10' => __('10月'),
+                                    '11' => __('11月'),
+                                    '12' => __('12月'),
                                 ],
                                 'class'      => 'form-control inline-fix',
-                                'label'      => __d('app', '誕生日'),
+                                'label'      => __('誕生日'),
                                 'dateFormat' => 'YMD',
                                 'empty'      => true,
                                 'separator'  => ' / ',
@@ -121,21 +121,21 @@
                 $this->Form->input('hide_year_flg', [
                     'wrapInput' => 'col col-sm-9 col-sm-offset-3',
                     'type'      => 'checkbox',
-                    'label'     => ['class' => null, 'text' => __d('app', "生年を隠す。")],
+                    'label'     => ['class' => null, 'text' => __("生年を隠す。")],
                     'class'     => false,
                 ])
                 ?>
                 <hr>
                 <?=
                 $this->Form->input('hometown', [
-                    'label'       => __d('app', "出身地"),
-                    'placeholder' => __d('app', '例) 東京都'),
+                    'label'       => __("出身地"),
+                    'placeholder' => __('例) 東京都'),
                     'required'    => false,
                 ]);
                 ?>
                 <hr>
                 <div class="form-group">
-                    <label for="" class="col col-sm-3 control-label mr_5px"><?= __d('app', "プロフィール画像") ?></label>
+                    <label for="" class="col col-sm-3 control-label mr_5px"><?= __("プロフィール画像") ?></label>
 
                     <div class="col col-sm-6">
                         <div class="fileinput fileinput-new" data-provides="fileinput">
@@ -148,10 +148,10 @@
                         <span class="btn btn-default btn-file">
                             <span class="fileinput-new">
                                 <?=
-                                __d('app',
+                                __(
                                     "画像を選択") ?>
                             </span>
-                            <span class="fileinput-exists"><?= __d('app', "画像を再選択") ?></span>
+                            <span class="fileinput-exists"><?= __("画像を再選択") ?></span>
                             <?=
                             $this->Form->input('photo',
                                                ['type'         => 'file',
@@ -166,7 +166,7 @@
                         </span>
                             </div>
                         </div>
-                        <span class="help-block font_11px inline-block"><?= __d('app', '10MB以下') ?></span>
+                        <span class="help-block font_11px inline-block"><?= __('10MB以下') ?></span>
 
                         <div class="has-error">
                             <?=
@@ -184,11 +184,11 @@
                     <div class="col-sm-9 col-sm-offset-3">
                         <?= $this->Form->hidden('id', ['value' => $this->Session->read('Auth.User.id')]) ?>
                         <?=
-                        $this->Form->submit(__d('app', "プロフィールを登録"),
+                        $this->Form->submit(__("プロフィールを登録"),
                                             ['class' => 'btn btn-primary', 'div' => false]) ?>
                         <?php //招待の場合のスキップはホーム、そうじゃない場合はチーム作成
                         $skip_link = isset($this->request->params['named']['invite_token']) ? "/" : ['controller' => 'teams', 'action' => 'add'];
-                        echo $this->Html->link(__d('app', "スキップ"), $skip_link,
+                        echo $this->Html->link(__("スキップ"), $skip_link,
                                                ['class' => 'btn btn-default', 'div' => false]);
                         ?>
                     </div>
@@ -216,7 +216,7 @@
                             extension: 'jpeg,jpg,png,gif',
                             type: 'image/jpeg,image/png,image/gif',
                             maxSize: 10485760,   // 10mb
-                            message: "<?=__d('validate', "10MB以下かつJPG、PNG、GIFのいずれかの形式を選択して下さい。")?>"
+                            message: "<?=__("10MB以下かつJPG、PNG、GIFのいずれかの形式を選択して下さい。")?>"
                         }
                     }
                 }

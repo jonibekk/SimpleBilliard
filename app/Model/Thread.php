@@ -26,8 +26,8 @@ class Thread extends AppModel
      */
     private function _setTypeName()
     {
-        self::$TYPE[self::TYPE_CREATED_GOAL] = __d('app', "ゴール作成");
-        self::$TYPE[self::TYPE_FEEDBACK] = __d('app', "フィードバック");
+        self::$TYPE[self::TYPE_CREATED_GOAL] = __("ゴール作成");
+        self::$TYPE[self::TYPE_FEEDBACK] = __("フィードバック");
     }
 
     /**
@@ -46,8 +46,8 @@ class Thread extends AppModel
     private function _setStatusName()
     {
         //TODO 仮
-        self::$STATUS[self::STATUS_OPEN] = __d('app', "オープン");
-        self::$STATUS[self::STATUS_CLOSE] = __d('app', "クローズ");
+        self::$STATUS[self::STATUS_OPEN] = __("オープン");
+        self::$STATUS[self::STATUS_CLOSE] = __("クローズ");
 
     }
 

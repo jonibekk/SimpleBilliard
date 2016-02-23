@@ -17,16 +17,16 @@
             <div class="modal-header">
                 <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
                     <span class="close-icon">&times;</span></button>
-                <h4 class="modal-title"><?= __d('app', "確認") ?></h4>
+                <h4 class="modal-title"><?= __("確認") ?></h4>
             </div>
             <div class="modal-body">
-                <p><?= __d('app', "%sへのメールアドレス変更をキャンセルしますか？", $email) ?></p>
+                <p><?= __("%sへのメールアドレス変更をキャンセルしますか？", $email) ?></p>
             </div>
             <div class="modal-footer modal_pannel-footer">
                 <button type="button" class="btn btn-link design-cancel mr_8px bd-radius_4px" data-dismiss="modal">閉じる</button>
                 <?=
                 $this->Form
-                    ->postLink(__d('app', "キャンセルする"),
+                    ->postLink(__("キャンセルする"),
                                [
                                    'controller' => 'emails',
                                    'action'     => 'delete',

@@ -25,7 +25,7 @@
 ?>
 <!-- START app/View/Elements/Team/evaluation_score_setting.ctp -->
 <div class="panel panel-default">
-    <div class="panel-heading"><?= __d('app', "評価スコア定義") ?></div>
+    <div class="panel-heading"><?= __("評価スコア定義") ?></div>
     <div class="panel-body form-horizontal">
         <?=
         $this->Form->create('EvaluateScore', [
@@ -42,13 +42,13 @@
         <table class="table table-striped" id="EvaluateScoreTable">
             <tr>
                 <th>
-                    <?php echo __d('app', '名前') ?>
+                    <?php echo __('名前') ?>
                 </th>
                 <th>
-                    <?php echo __d('app', '表示順') ?>
+                    <?php echo __('表示順') ?>
                 </th>
                 <th>
-                    <?php echo __d('app', '説明') ?>
+                    <?php echo __('説明') ?>
                 </th>
                 <th></th>
             </tr>
@@ -58,10 +58,10 @@
             <?php endforeach; ?>
         </table>
         <div class="form-group">
-            <?= $this->Form->submit(__d('app', '評価スコア設定を保存'), ['class' => 'btn btn-primary team-setting-add-goal-category']) ?>
+            <?= $this->Form->submit(__('評価スコア設定を保存'), ['class' => 'btn btn-primary team-setting-add-goal-category']) ?>
             <?php $index = count($this->request->data['EvaluateScore']);
             $max_index = $index + 9; ?>
-            <?= $this->Html->link(__d('app', "定義を１つ追加"), ['controller' => 'teams', 'action' => 'ajax_get_score_elm'],
+            <?= $this->Html->link(__("定義を１つ追加"), ['controller' => 'teams', 'action' => 'ajax_get_score_elm'],
                                   ['id' => 'AddScoreButton', 'target-selector' => '#EvaluateScoreTable > tbody', 'index' => $index, 'max_index' => $max_index, 'class' => 'btn btn-default']) ?>
         </div>
         <?php for ($i = $index; $i <= $max_index; $i++): ?>

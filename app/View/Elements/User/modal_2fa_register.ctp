@@ -33,7 +33,7 @@
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= __d('app', "2段階認証設定") ?></h4>
+            <h4 class="modal-title"><?= __("2段階認証設定") ?></h4>
         </div>
         <?=
         $this->Form->create('User', [
@@ -51,23 +51,23 @@
         ]); ?>
         <div class="modal-body" style="max-height: none">
             <div class="two_fa_step_box">
-                <label for="" ><?= __d('app', "STEP 1 ： ") ?><?= __d('app', "アプリをインストールする") ?></label>
-                <p><?= __d('app','Google Authenticatorをダウンロードしましょう') ?></p>
+                <label for="" ><?= __("STEP 1 ： ") ?><?= __("アプリをインストールする") ?></label>
+                <p><?= __('Google Authenticatorをダウンロードしましょう') ?></p>
                 <div class="modal_two_fa_download">
                   <div class="btn-frame">
                     <p><i class="fa fa-android"></i> Android</p>
-                    <a class="two_fa_app_download_link"href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank"><?= __d('app', "ダウンロード") ?></a>
+                    <a class="two_fa_app_download_link"href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank"><?= __("ダウンロード") ?></a>
                   </div>
                   <div class="btn-frame">
                       <p><i class="fa fa-apple"></i> iOS</p>
-                      <a class="two_fa_app_download_link" href="http://itunes.apple.com/us/app/google-authenticator/id388497605" target="_blank"><?= __d('app', "ダウンロード") ?></a>
+                      <a class="two_fa_app_download_link" href="http://itunes.apple.com/us/app/google-authenticator/id388497605" target="_blank"><?= __("ダウンロード") ?></a>
                   </div>
                 </div>
             </div>
 
             <div class="two_fa_step_box">
-                <label for="" ><?= __d('app', "STEP 2 ： ") ?><?= __d('app', "バーコードをスキャンする") ?></label>
-                <p><?= __d('app', "アプリを起動し、カメラを使用してバーコードをスキャンします。") ?></p>
+                <label for="" ><?= __("STEP 2 ： ") ?><?= __("バーコードをスキャンする") ?></label>
+                <p><?= __("アプリを起動し、カメラを使用してバーコードをスキャンします。") ?></p>
                 <?= $this->Html->image($url_2fa,[
                   'width' => '120',
                   'height' => '120',
@@ -75,20 +75,20 @@
             </div>
 
             <div class="two_fa_step_box">
-                <label for="" ><?= __d('app', "STEP 3 ： ") ?><?= __d('app', "確認コードを入力する") ?></label>
-                <p><?= __d('app', "バーコードをスキャンしたら、アプリで生成された6桁の確認コードを入力します。") ?></p>
+                <label for="" ><?= __("STEP 3 ： ") ?><?= __("確認コードを入力する") ?></label>
+                <p><?= __("バーコードをスキャンしたら、アプリで生成された6桁の確認コードを入力します。") ?></p>
             <?=
             $this->Form->input('2fa_code',
                                ['label'                    => false,
-                                'placeholder'              => __d('app', "code"),
-                                "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                                'placeholder'              => __("code"),
+                                "data-bv-notempty-message" => __("入力必須項目です。"),
                                 'required'                 => true,
                                ]) ?>
             </div>
         </div>
         <div class="modal-footer">
             <?=
-            $this->Form->submit(__d('app', "次へ"),
+            $this->Form->submit(__("次へ"),
                                 ['class' => 'btn btn-primary pull-right', 'div' => false,]) ?>
             <?= $this->Form->end(); ?>
         </div>

@@ -183,16 +183,16 @@ class TeamMember extends AppModel
     {
         //チームに入っていない場合
         if (!$team_id) {
-            throw new RuntimeException(__d('app', "このページにアクセスする場合は、チームに切り換えてください。"));
+            throw new RuntimeException(__("このページにアクセスする場合は、チームに切り換えてください。"));
         }
         if (!$this->myStatusWithTeam) {
             $this->setMyStatusWithTeam($team_id, $uid);
         }
         if (empty($this->myStatusWithTeam['Team'])) {
-            throw new RuntimeException(__d('app', "チームが存在しません。"));
+            throw new RuntimeException(__("チームが存在しません。"));
         }
         if (!$this->myStatusWithTeam['TeamMember']['active_flg']) {
-            throw new RuntimeException(__d('app', "現在、あなたはこのチームにアクセスできません。ユーザアカウントが無効化されています。"));
+            throw new RuntimeException(__("現在、あなたはこのチームにアクセスできません。ユーザアカウントが無効化されています。"));
         }
         return true;
     }
@@ -260,7 +260,7 @@ class TeamMember extends AppModel
         //まず通常のチームアクセス権限があるかチェック
         $this->permissionCheck($team_id, $uid);
         if (!$this->myStatusWithTeam['TeamMember']['admin_flg']) {
-            throw new RuntimeException(__d('app', "あなたはチーム管理者では無い為、このページにはアクセスできません。"));
+            throw new RuntimeException(__("あなたはチーム管理者では無い為、このページにはアクセスできません。"));
         }
         return true;
     }
@@ -993,7 +993,7 @@ class TeamMember extends AppModel
 
         //レコード数が同一である事を確認
         if (count($csv_data) - 1 !== count($before_csv_data)) {
-            $res['error_msg'] = __d('validate', "レコード数が一致しません。");
+            $res['error_msg'] = __("レコード数が一致しません。");
             return $res;
         }
         //row validation
@@ -1003,12 +1003,12 @@ class TeamMember extends AppModel
 
             //key name set
             if (!($row = copyKeyName($this->_getCsvHeading(false), $row))) {
-                $res['error_msg'] = __d('app', "項目数が一致しません。");
+                $res['error_msg'] = __("項目数が一致しません。");
                 return $res;
             }
             if ($key === 0) {
                 if (!empty(array_diff($row, $this->_getCsvHeading(false)))) {
-                    $res['error_msg'] = __d('app', "見出しが一致しません。");
+                    $res['error_msg'] = __("見出しが一致しません。");
                     return $res;
                 }
                 continue;
@@ -1027,12 +1027,12 @@ class TeamMember extends AppModel
 
             //first name check
             if ($row['first_name'] != $before_record['first_name']) {
-                $res['error_msg'] = __d('app', "ファーストネームは変更できません。");
+                $res['error_msg'] = __("ファーストネームは変更できません。");
                 return $res;
             }
             //last name check
             if ($row['last_name'] != $before_record['last_name']) {
-                $res['error_msg'] = __d('app', "ラストネームは変更できません。");
+                $res['error_msg'] = __("ラストネームは変更できません。");
                 return $res;
             }
             $this->csv_member_ids[] = $row['member_no'];
@@ -1081,7 +1081,7 @@ class TeamMember extends AppModel
         }
         if (!$exists_admin_active) {
             $res['error_line_no'] = 0;
-            $res['error_msg'] = __d('app', "最低１人は管理者かつアクティブにしてください。");
+            $res['error_msg'] = __("最低１人は管理者かつアクティブにしてください。");
             return $res;
         }
 
@@ -1092,7 +1092,7 @@ class TeamMember extends AppModel
             $duplicate_email = key($duplicate_emails);
             //set line no
             $res['error_line_no'] = array_search($duplicate_email, $this->csv_emails) + 2;
-            $res['error_msg'] = __d('app', "重複したメールアドレスが含まれています。");
+            $res['error_msg'] = __("重複したメールアドレスが含まれています。");
             return $res;
         }
         //member id duplicate check
@@ -1101,7 +1101,7 @@ class TeamMember extends AppModel
             $duplicate_member_id = key($duplicate_member_ids);
             //set line no
             $res['error_line_no'] = array_search($duplicate_member_id, $this->csv_member_ids) + 2;
-            $res['error_msg'] = __d('app', "重複したメンバーIDが含まれています。");
+            $res['error_msg'] = __("重複したメンバーIDが含まれています。");
             return $res;
         }
         //coach id check
@@ -1111,7 +1111,7 @@ class TeamMember extends AppModel
             $key = array_search($v, $this->csv_member_ids);
             if ($key === false) {
                 $res['error_line_no'] = $k + 2;
-                $res['error_msg'] = __d('app', "存在しないメンバーIDがコーチIDに含まれています。");
+                $res['error_msg'] = __("存在しないメンバーIDがコーチIDに含まれています。");
                 return $res;
             }
         }
@@ -1133,7 +1133,7 @@ class TeamMember extends AppModel
                 $key = array_search($v, $this->csv_member_ids);
                 if ($key === false) {
                     $res['error_line_no'] = $r_k + 2;
-                    $res['error_msg'] = __d('app', "存在しないメンバーIDが評価者IDに含まれています。");
+                    $res['error_msg'] = __("存在しないメンバーIDが評価者IDに含まれています。");
                     return $res;
                 }
             }
@@ -1159,7 +1159,7 @@ class TeamMember extends AppModel
         $before_member_numbers = array_column($before_csv_data, 'member_no');
         //レコード数が同一である事を確認
         if (count($csv_data) - 1 !== count($before_csv_data)) {
-            $res['error_msg'] = __d('validate', "レコード数が一致しません。");
+            $res['error_msg'] = __("レコード数が一致しません。");
             return $res;
         }
         $score_list = $this->Team->Evaluation->EvaluateScore->getScoreList($this->current_team_id);
@@ -1170,12 +1170,12 @@ class TeamMember extends AppModel
 
             //key name set
             if (!($row = copyKeyName($this->_getCsvHeadingEvaluation(), $row))) {
-                $res['error_msg'] = __d('app', "項目数が一致しません。");
+                $res['error_msg'] = __("項目数が一致しません。");
                 return $res;
             }
             if ($key === 0) {
                 if (!empty(array_diff($row, $this->_getCsvHeadingEvaluation()))) {
-                    $res['error_msg'] = __d('app', "見出しが一致しません。");
+                    $res['error_msg'] = __("見出しが一致しません。");
                     return $res;
                 }
                 continue;
@@ -1188,13 +1188,13 @@ class TeamMember extends AppModel
 
             //member_no exists check
             if (!in_array($row['member_no'], $before_member_numbers)) {
-                $res['error_msg'] = __d('app', "存在しないメンバーIDです。");
+                $res['error_msg'] = __("存在しないメンバーIDです。");
                 return $res;
             }
 
             //score check
             if (!in_array($row['total.final.score'], $score_list)) {
-                $res['error_msg'] = __d('app', "定義されていないスコアです。");
+                $res['error_msg'] = __("定義されていないスコアです。");
                 return $res;
             }
 
@@ -1207,7 +1207,7 @@ class TeamMember extends AppModel
             $duplicate_member_id = key($duplicate_member_ids);
             //set line no
             $res['error_line_no'] = array_search($duplicate_member_id, $this->csv_member_ids) + 2;
-            $res['error_msg'] = __d('app', "重複したメンバーIDが含まれています。");
+            $res['error_msg'] = __("重複したメンバーIDが含まれています。");
             return $res;
         }
         $res['error'] = false;
@@ -1233,7 +1233,7 @@ class TeamMember extends AppModel
         ];
 
         if (count($csv_data) <= 1) {
-            $res['error_msg'] = __d('app', "データが１件もありません。");
+            $res['error_msg'] = __("データが１件もありません。");
             return $res;
         }
         //validation each line of csv data.
@@ -1241,7 +1241,7 @@ class TeamMember extends AppModel
             //first record check
             if ($key == 0) {
                 if (!empty(array_diff($row, $this->_getCsvHeading()))) {
-                    $res['error_msg'] = __d('app', "見出しが一致しません。");
+                    $res['error_msg'] = __("見出しが一致しません。");
                     return $res;
                 }
                 continue;
@@ -1250,7 +1250,7 @@ class TeamMember extends AppModel
             $res['error_line_no'] = $key + 1;
             //key name set
             if (!($row = copyKeyName($this->_getCsvHeading(), $row))) {
-                $res['error_msg'] = __d('app', "項目数が一致しません。");
+                $res['error_msg'] = __("項目数が一致しません。");
                 return $res;
             }
 
@@ -1321,7 +1321,7 @@ class TeamMember extends AppModel
             $duplicate_email = key($duplicate_emails);
             //set line no
             $res['error_line_no'] = array_search($duplicate_email, $this->csv_emails) + 2;
-            $res['error_msg'] = __d('app', "重複したメールアドレスが含まれています。");
+            $res['error_msg'] = __("重複したメールアドレスが含まれています。");
             return $res;
         }
 
@@ -1330,7 +1330,7 @@ class TeamMember extends AppModel
         foreach ($joined_emails as $email) {
             //set line no
             $res['error_line_no'] = array_search($email['Email']['email'], $this->csv_emails) + 2;
-            $res['error_msg'] = __d('app', "既にチームに参加しているメールアドレスです。");
+            $res['error_msg'] = __("既にチームに参加しているメールアドレスです。");
             return $res;
         }
 
@@ -1340,7 +1340,7 @@ class TeamMember extends AppModel
             $duplicate_member_id = key($duplicate_member_ids);
             //set line no
             $res['error_line_no'] = array_search($duplicate_member_id, $this->csv_member_ids) + 2;
-            $res['error_msg'] = __d('app', "重複したメンバーIDが含まれています。");
+            $res['error_msg'] = __("重複したメンバーIDが含まれています。");
             return $res;
         }
 
@@ -1353,7 +1353,7 @@ class TeamMember extends AppModel
         );
         if (viaIsSet($members[0]['TeamMember']['member_no'])) {
             $res['error_line_no'] = array_search($members[0]['TeamMember']['member_no'], $this->csv_member_ids) + 2;
-            $res['error_msg'] = __d('app', "既に存在するメンバーIDです。");
+            $res['error_msg'] = __("既に存在するメンバーIDです。");
             return $res;
         }
 
@@ -1380,7 +1380,7 @@ class TeamMember extends AppModel
             $key = array_search($v, $this->csv_member_ids);
             if ($key === false) {
                 $res['error_line_no'] = $k + 2;
-                $res['error_msg'] = __d('app', "存在しないメンバーIDがコーチIDに含まれています。");
+                $res['error_msg'] = __("存在しないメンバーIDがコーチIDに含まれています。");
                 return $res;
             }
         }
@@ -1420,7 +1420,7 @@ class TeamMember extends AppModel
                 $key = array_search($v, $this->csv_member_ids);
                 if ($key === false) {
                     $res['error_line_no'] = $r_k + 2;
-                    $res['error_msg'] = __d('app', "存在しないメンバーIDが評価者IDに含まれています。");
+                    $res['error_msg'] = __("存在しないメンバーIDが評価者IDに含まれています。");
                     return $res;
                 }
             }
@@ -1765,63 +1765,63 @@ class TeamMember extends AppModel
     {
         if ($new) {
             return [
-                'email'                 => __d('app', "メール(*)"),
-                'member_no'             => __d('app', "メンバーID(*)"),
-                'first_name'            => __d('app', "ローマ字名(*)"),
-                'last_name'             => __d('app', "ローマ字姓(*)"),
-                'admin_flg'             => __d('app', "管理者(*)"),
-                'evaluation_enable_flg' => __d('app', "評価対象(*)"),
-                'member_type'           => __d('app', "メンバータイプ"),
-                'language'              => __d('app', "ローカル姓名の言語コード"),
-                'local_first_name'      => __d('app', "ローカル名"),
-                'local_last_name'       => __d('app', "ローカル姓"),
-                'phone_no'              => __d('app', "電話"),
-                'gender'                => __d('app', "性別"),
-                'birth_year'            => __d('app', "誕生年"),
-                'birth_month'           => __d('app', "誕生月"),
-                'birth_day'             => __d('app', "誕生日"),
-                'group.1'               => __d('app', "グループ1"),
-                'group.2'               => __d('app', "グループ2"),
-                'group.3'               => __d('app', "グループ3"),
-                'group.4'               => __d('app', "グループ4"),
-                'group.5'               => __d('app', "グループ5"),
-                'group.6'               => __d('app', "グループ6"),
-                'group.7'               => __d('app', "グループ7"),
-                'coach_member_no'       => __d('app', "コーチID"),
-                'evaluator_member_no.1' => __d('app', "評価者1"),
-                'evaluator_member_no.2' => __d('app', "評価者2"),
-                'evaluator_member_no.3' => __d('app', "評価者3"),
-                'evaluator_member_no.4' => __d('app', "評価者4"),
-                'evaluator_member_no.5' => __d('app', "評価者5"),
-                'evaluator_member_no.6' => __d('app', "評価者6"),
-                'evaluator_member_no.7' => __d('app', "評価者7"),
+                'email'                 => __("メール(*)"),
+                'member_no'             => __("メンバーID(*)"),
+                'first_name'            => __("ローマ字名(*)"),
+                'last_name'             => __("ローマ字姓(*)"),
+                'admin_flg'             => __("管理者(*)"),
+                'evaluation_enable_flg' => __("評価対象(*)"),
+                'member_type'           => __("メンバータイプ"),
+                'language'              => __("ローカル姓名の言語コード"),
+                'local_first_name'      => __("ローカル名"),
+                'local_last_name'       => __("ローカル姓"),
+                'phone_no'              => __("電話"),
+                'gender'                => __("性別"),
+                'birth_year'            => __("誕生年"),
+                'birth_month'           => __("誕生月"),
+                'birth_day'             => __("誕生日"),
+                'group.1'               => __("グループ1"),
+                'group.2'               => __("グループ2"),
+                'group.3'               => __("グループ3"),
+                'group.4'               => __("グループ4"),
+                'group.5'               => __("グループ5"),
+                'group.6'               => __("グループ6"),
+                'group.7'               => __("グループ7"),
+                'coach_member_no'       => __("コーチID"),
+                'evaluator_member_no.1' => __("評価者1"),
+                'evaluator_member_no.2' => __("評価者2"),
+                'evaluator_member_no.3' => __("評価者3"),
+                'evaluator_member_no.4' => __("評価者4"),
+                'evaluator_member_no.5' => __("評価者5"),
+                'evaluator_member_no.6' => __("評価者6"),
+                'evaluator_member_no.7' => __("評価者7"),
             ];
         }
 
         return [
-            'email'                 => __d('app', "メール(*, 変更できません)"),
-            'first_name'            => __d('app', "ローマ字名(*, 変更できません)"),
-            'last_name'             => __d('app', "ローマ字姓(*, 変更できません)"),
-            'member_no'             => __d('app', "メンバーID(*)"),
-            'active_flg'            => __d('app', "メンバーアクティブ状態(*)"),
-            'admin_flg'             => __d('app', "管理者(*)"),
-            'evaluation_enable_flg' => __d('app', "評価対象(*)"),
-            'member_type'           => __d('app', "メンバータイプ"),
-            'group.1'               => __d('app', "グループ1"),
-            'group.2'               => __d('app', "グループ2"),
-            'group.3'               => __d('app', "グループ3"),
-            'group.4'               => __d('app', "グループ4"),
-            'group.5'               => __d('app', "グループ5"),
-            'group.6'               => __d('app', "グループ6"),
-            'group.7'               => __d('app', "グループ7"),
-            'coach_member_no'       => __d('app', "コーチID"),
-            'evaluator_member_no.1' => __d('app', "評価者1"),
-            'evaluator_member_no.2' => __d('app', "評価者2"),
-            'evaluator_member_no.3' => __d('app', "評価者3"),
-            'evaluator_member_no.4' => __d('app', "評価者4"),
-            'evaluator_member_no.5' => __d('app', "評価者5"),
-            'evaluator_member_no.6' => __d('app', "評価者6"),
-            'evaluator_member_no.7' => __d('app', "評価者7"),
+            'email'                 => __("メール(*, 変更できません)"),
+            'first_name'            => __("ローマ字名(*, 変更できません)"),
+            'last_name'             => __("ローマ字姓(*, 変更できません)"),
+            'member_no'             => __("メンバーID(*)"),
+            'active_flg'            => __("メンバーアクティブ状態(*)"),
+            'admin_flg'             => __("管理者(*)"),
+            'evaluation_enable_flg' => __("評価対象(*)"),
+            'member_type'           => __("メンバータイプ"),
+            'group.1'               => __("グループ1"),
+            'group.2'               => __("グループ2"),
+            'group.3'               => __("グループ3"),
+            'group.4'               => __("グループ4"),
+            'group.5'               => __("グループ5"),
+            'group.6'               => __("グループ6"),
+            'group.7'               => __("グループ7"),
+            'coach_member_no'       => __("コーチID"),
+            'evaluator_member_no.1' => __("評価者1"),
+            'evaluator_member_no.2' => __("評価者2"),
+            'evaluator_member_no.3' => __("評価者3"),
+            'evaluator_member_no.4' => __("評価者4"),
+            'evaluator_member_no.5' => __("評価者5"),
+            'evaluator_member_no.6' => __("評価者6"),
+            'evaluator_member_no.7' => __("評価者7"),
         ];
 
     }
@@ -1830,26 +1830,26 @@ class TeamMember extends AppModel
     {
 
         $record = [
-            'member_no'          => __d('app', "メンバーID(*)"),
-            'member_type'        => __d('app', "メンバータイプ"),
-            'user_name'          => __d('app', "メンバー姓名"),
-            'coach_user_name'    => __d('app', "コーチ姓名"),
-            'goal_count'         => __d('app', "ゴール数"),
-            'kr_count'           => __d('app', "出した成果数"),
-            'action_count'       => __d('app', "アクション数"),
-            'goal_progress'      => __d('app', "ゴール全体の進捗率(%)"),
-            'total.self.score'   => __d('app', '本人によるスコア'),
-            'total.self.comment' => __d('app', '本人によるコメント'),
+            'member_no'          => __("メンバーID(*)"),
+            'member_type'        => __("メンバータイプ"),
+            'user_name'          => __("メンバー姓名"),
+            'coach_user_name'    => __("コーチ姓名"),
+            'goal_count'         => __("ゴール数"),
+            'kr_count'           => __("出した成果数"),
+            'action_count'       => __("アクション数"),
+            'goal_progress'      => __("ゴール全体の進捗率(%)"),
+            'total.self.score'   => __('本人によるスコア'),
+            'total.self.comment' => __('本人によるコメント'),
         ];
         //evaluator
         for ($ek = 1; $ek <= 7; $ek++) {
-            $record["total.evaluator.$ek.name"] = __d('app', '評価者%sの姓名', $ek);
-            $record["total.evaluator.$ek.score"] = __d('app', '評価者%sによるスコア', $ek);
-            $record["total.evaluator.$ek.comment"] = __d('app', '評価者%sによるコメント', $ek);
+            $record["total.evaluator.$ek.name"] = __('評価者%sの姓名', $ek);
+            $record["total.evaluator.$ek.score"] = __('評価者%sによるスコア', $ek);
+            $record["total.evaluator.$ek.comment"] = __('評価者%sによるコメント', $ek);
         }
         //final
-        $record["total.final.score"] = __d('app', '最終評価者によるスコア');
-        $record["total.final.comment"] = __d('app', '最終評価者によるコメント');
+        $record["total.final.score"] = __('最終評価者によるスコア');
+        $record["total.final.comment"] = __('最終評価者によるコメント');
 
         return $record;
     }
@@ -1860,120 +1860,120 @@ class TeamMember extends AppModel
             'email'                 => [
                 'notEmpty' => [
                     'rule'    => 'notEmpty',
-                    'message' => __d('validate', "%sは必須項目です。", __d('app', "メールアドレス"))
+                    'message' => __("%sは必須項目です。", __("メールアドレス"))
                 ],
                 'email'    => [
                     'rule'    => ['email'],
-                    'message' => __d('validate', "%sが正しくありません。", __d('app', "メールアドレス"))
+                    'message' => __("%sが正しくありません。", __("メールアドレス"))
                 ],
             ],
             'member_no'             => [
                 'notEmpty'        => [
                     'rule'    => 'notEmpty',
-                    'message' => __d('validate', "%sは必須項目です。", __d('app', "メンバーID"))
+                    'message' => __("%sは必須項目です。", __("メンバーID"))
                 ],
                 'maxLength'       => [
                     'rule'    => ['maxLength', 64],
-                    'message' => __d('validate', "%sは64文字以内で入力してください。", __d('app', "メンバーID"))
+                    'message' => __("%sは64文字以内で入力してください。", __("メンバーID"))
                 ],
                 'isNotExistArray' => [
                     'rule'       => ['isNotExistArray', 'evaluator_member_no'],
-                    'message'    => __d('app', "%sに本人のIDを指定する事はできません。", __d('app', "評価者ID")),
+                    'message'    => __("%sに本人のIDを指定する事はできません。", __("評価者ID")),
                     'allowEmpty' => true,
                 ],
             ],
             'first_name'            => [
                 'maxLength'      => [
                     'rule'    => ['maxLength', 64],
-                    'message' => __d('validate', "%sは64文字以内で入力してください。", __d('app', "ファーストネーム"))
+                    'message' => __("%sは64文字以内で入力してください。", __("ファーストネーム"))
                 ],
                 'notEmpty'       => [
                     'rule'    => 'notEmpty',
-                    'message' => __d('validate', "%sは必須項目です。", __d('app', "ファーストネーム"))
+                    'message' => __("%sは必須項目です。", __("ファーストネーム"))
                 ],
                 'isAlphabetOnly' => [
                     'rule'    => 'isAlphabetOnly',
-                    'message' => __d('validate', "%sはアルファベットのみで入力してください。", __d('app', "ファーストネーム"))
+                    'message' => __("%sはアルファベットのみで入力してください。", __("ファーストネーム"))
                 ],
             ],
             'last_name'             => [
                 'maxLength'      => [
                     'rule'    => ['maxLength', 64],
-                    'message' => __d('validate', "%sは64文字以内で入力してください。", __d('app', "ラストネーム"))
+                    'message' => __("%sは64文字以内で入力してください。", __("ラストネーム"))
                 ],
                 'notEmpty'       => [
                     'rule'    => 'notEmpty',
-                    'message' => __d('validate', "%sは必須項目です。", __d('app', "ラストネーム"))
+                    'message' => __("%sは必須項目です。", __("ラストネーム"))
                 ],
                 'isAlphabetOnly' => [
                     'rule'    => 'isAlphabetOnly',
-                    'message' => __d('validate', "%sはアルファベットのみで入力してください。", __d('app', "ラストネーム"))
+                    'message' => __("%sはアルファベットのみで入力してください。", __("ラストネーム"))
                 ],
             ],
             'admin_flg'             => [
                 'notEmpty'  => [
                     'rule'    => 'notEmpty',
-                    'message' => __d('validate', "%sは必須項目です。", __d('app', "管理者"))
+                    'message' => __("%sは必須項目です。", __("管理者"))
                 ],
                 'isOnOrOff' => [
                     'rule'    => 'isOnOrOff',
-                    'message' => __d('validate', "%sは'ON'もしくは'OFF'のいずれかである必要があいます。", __d('app', '管理者'))
+                    'message' => __("%sは'ON'もしくは'OFF'のいずれかである必要があいます。", __('管理者'))
                 ],
             ],
             'evaluation_enable_flg' => [
                 'notEmpty'  => [
                     'rule'    => 'notEmpty',
-                    'message' => __d('validate', "%sは必須項目です。", __d('app', "評価者"))
+                    'message' => __("%sは必須項目です。", __("評価者"))
                 ],
                 'isOnOrOff' => [
                     'rule'    => 'isOnOrOff',
-                    'message' => __d('validate', "%sは'ON'もしくは'OFF'のいずれかである必要があいます。", __d('app', '評価者'))
+                    'message' => __("%sは'ON'もしくは'OFF'のいずれかである必要があいます。", __('評価者'))
                 ],
             ],
             'member_type'           => [
                 'maxLength' => [
                     'rule'    => ['maxLength', 64],
-                    'message' => __d('validate', "%sは64文字以内で入力してください。", __d('app', "メンバータイプ"))
+                    'message' => __("%sは64文字以内で入力してください。", __("メンバータイプ"))
                 ],
             ],
             'group'                 => [
                 'isAlignLeft'     => [
                     'rule'       => 'isAlignLeft',
-                    'message'    => __d('validate', "%sは左詰めで記入してください。", __d('app', "グループ名")),
+                    'message'    => __("%sは左詰めで記入してください。", __("グループ名")),
                     'allowEmpty' => true,
                 ],
                 'isNotDuplicated' => [
                     'rule'       => 'isNotDuplicated',
-                    'message'    => __d('validate', "%sが重複しています。", __d('app', "グループ名")),
+                    'message'    => __("%sが重複しています。", __("グループ名")),
                     'allowEmpty' => true,
                 ],
                 'maxLengthArray'  => [
                     'rule'       => ['maxLengthArray', 64],
-                    'message'    => __d('validate', "%sは64文字以内で入力してください。", __d('app', "グループ名")),
+                    'message'    => __("%sは64文字以内で入力してください。", __("グループ名")),
                     'allowEmpty' => true,
                 ],
             ],
             'coach_member_no'       => [
                 'isNotEqual' => [
                     'rule'       => ['isNotEqual', 'member_no'],
-                    'message'    => __d('validate', "%sに本人のIDを指定する事はできません。", __d('app', "コーチID")),
+                    'message'    => __("%sに本人のIDを指定する事はできません。", __("コーチID")),
                     'allowEmpty' => true,
                 ],
             ],
             'evaluator_member_no'   => [
                 'isAlignLeft'     => [
                     'rule'       => 'isAlignLeft',
-                    'message'    => __d('validate', "%sは左詰めで記入してください。", __d('app', "評価者")),
+                    'message'    => __("%sは左詰めで記入してください。", __("評価者")),
                     'allowEmpty' => true,
                 ],
                 'isNotDuplicated' => [
                     'rule'       => 'isNotDuplicated',
-                    'message'    => __d('validate', "%sが重複しています。", __d('app', "評価者")),
+                    'message'    => __("%sが重複しています。", __("評価者")),
                     'allowEmpty' => true,
                 ],
                 'maxLengthArray'  => [
                     'rule'       => ['maxLengthArray', 64],
-                    'message'    => __d('validate', "%sは64文字以内で入力してください。", __d('app', "評価者")),
+                    'message'    => __("%sは64文字以内で入力してください。", __("評価者")),
                     'allowEmpty' => true,
                 ],
             ],
@@ -1982,62 +1982,62 @@ class TeamMember extends AppModel
             'phone_no'         => [
                 'maxLength' => [
                     'rule'    => ['maxLength', 20],
-                    'message' => __d('validate', "$%sは20文字以内で入力してください。", __d('app', "電話番号"))
+                    'message' => __("$%sは20文字以内で入力してください。", __("電話番号"))
                 ],
                 'phoneNo'   => [
                     'rule'       => 'phoneNo',
-                    'message'    => __d('validate', "電話番号が正しくありません。使用できる文字は半角数字、'-()'です。"),
+                    'message'    => __("電話番号が正しくありません。使用できる文字は半角数字、'-()'です。"),
                     'allowEmpty' => true,
                 ],
             ],
             'gender'           => [
                 'inList' => [
                     'rule'       => ['inList', ['male', 'female']],
-                    'message'    => __d('validate', "サポートされていない性別表記です。'male'もしくは'female'で記入してください。"),
+                    'message'    => __("サポートされていない性別表記です。'male'もしくは'female'で記入してください。"),
                     'allowEmpty' => true,
                 ],
             ],
             'language'         => [
                 'inList' => [
                     'rule'       => ['inList', $this->support_lang_codes],
-                    'message'    => __d('validate', "サポートされていないローカル姓名の言語コードです。"),
+                    'message'    => __("サポートされていないローカル姓名の言語コードです。"),
                     'allowEmpty' => true,
                 ],
             ],
             'local_first_name' => [
                 'maxLength' => [
                     'rule'    => ['maxLength', 64],
-                    'message' => __d('validate', "%sは64文字以内で入力してください。", __d('app', "ローカル名"))
+                    'message' => __("%sは64文字以内で入力してください。", __("ローカル名"))
                 ],
             ],
             'local_last_name'  => [
                 'maxLength' => [
                     'rule'    => ['maxLength', 64],
-                    'message' => __d('validate', "%sは64文字以内で入力してください。", __d('app', "ローカル姓"))
+                    'message' => __("%sは64文字以内で入力してください。", __("ローカル姓"))
                 ],
             ],
             'birth_year'       => [
                 'isAllOrNothing' => [
                     'rule'    => ['isAllOrNothing', ['birth_year', 'birth_month', 'birth_day']],
-                    'message' => __d('validate', "誕生日を記入する場合は年月日のすべての項目を記入してください。"),
+                    'message' => __("誕生日を記入する場合は年月日のすべての項目を記入してください。"),
                 ],
                 'birthYear'      => [
                     'rule'       => 'birthYear',
-                    'message'    => __d('validate', "%sが正しくありません。", __d('app', "誕生年")),
+                    'message'    => __("%sが正しくありません。", __("誕生年")),
                     'allowEmpty' => true,
                 ],
             ],
             'birth_month'      => [
                 'birthMonth' => [
                     'rule'       => 'birthMonth',
-                    'message'    => __d('validate', "%sが正しくありません。", __d('app', "誕生月")),
+                    'message'    => __("%sが正しくありません。", __("誕生月")),
                     'allowEmpty' => true,
                 ],
             ],
             'birth_day'        => [
                 'birthDay' => [
                     'rule'       => 'birthDay',
-                    'message'    => __d('validate', "%sが正しくありません。", __d('app', "誕生日")),
+                    'message'    => __("%sが正しくありません。", __("誕生日")),
                     'allowEmpty' => true,
                 ],
             ],
@@ -2046,11 +2046,11 @@ class TeamMember extends AppModel
             'active_flg' => [
                 'notEmpty'  => [
                     'rule'    => 'notEmpty',
-                    'message' => __d('validate', "%sは必須項目です。", __d('app', "メンバーアクティブ状態"))
+                    'message' => __("%sは必須項目です。", __("メンバーアクティブ状態"))
                 ],
                 'isOnOrOff' => [
                     'rule'    => 'isOnOrOff',
-                    'message' => __d('validate', "%sは'ON'もしくは'OFF'のいずれかである必要があいます。", __d('app', 'メンバーアクティブ状態'))
+                    'message' => __("%sは'ON'もしくは'OFF'のいずれかである必要があいます。", __('メンバーアクティブ状態'))
                 ],
             ],
         ];
@@ -2071,7 +2071,7 @@ class TeamMember extends AppModel
             'total.final.score' => [
                 'notEmpty' => [
                     'rule'    => 'notEmpty',
-                    'message' => __d('validate', "%sは必須項目です。", __d('app', "最終評価者によるスコア"))
+                    'message' => __("%sは必須項目です。", __("最終評価者によるスコア"))
                 ],
             ],
         ];

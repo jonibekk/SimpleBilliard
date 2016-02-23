@@ -73,8 +73,8 @@ class DataMigrationForAllTeam0625 extends CakeMigration
                 $Circle->save(
                     [
                         'team_id'      => $team_id,
-                        'name'         => __d('app', "チーム全体"),
-                        'description'  => __d('app', "チーム全体"),
+                        'name'         => __("チーム全体"),
+                        'description'  => __("チーム全体"),
                         'team_all_flg' => true,
                         'public_flg'   => true,
                         'created'      => $created,

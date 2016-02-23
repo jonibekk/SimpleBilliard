@@ -16,7 +16,7 @@
             <div class="modal-header">
                 <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
                     <span class="close-icon">&times;</span></button>
-                <h4 class="modal-title"><?= __d('app', "サークルを作成") ?></h4>
+                <h4 class="modal-title"><?= __("サークルを作成") ?></h4>
             </div>
             <?=
             $this->Form->create('Circle', [
@@ -37,15 +37,15 @@
             <div class="modal-body modal-circle-body">
                 <?=
                 $this->Form->input('name',
-                                   ['label'                        => __d('app', "サークル名"),
-                                    'placeholder'                  => __d('app', "例) 営業部"),
-                                    "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
+                                   ['label'                        => __("サークル名"),
+                                    'placeholder'                  => __("例) 営業部"),
+                                    "data-bv-notempty-message"     => __("入力必須項目です。"),
                                     'data-bv-stringlength'         => 'true',
                                     'data-bv-stringlength-max'     => 128,
-                                    'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 128),
+                                    'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 128),
                                    ]) ?>
                 <div class="form-group">
-                    <label class="ccc control-label modal-label"><?= __d('app', 'メンバー') ?></label>
+                    <label class="ccc control-label modal-label"><?= __('メンバー') ?></label>
 
                     <div class="ddd">
                         <?=
@@ -60,19 +60,19 @@
                         ]) ?>
                         <?php $this->Form->unlockField('Circle.members') ?>
                         <span class="help-block font_11px"><?=
-                            __d('app', "管理者：%s",
+                            __("管理者：%s",
                                 h($this->Session->read('Auth.User.display_username'))) ?></span>
                     </div>
                 </div>
                 <?php $privacy_option = Circle::$TYPE_PUBLIC;
-                $privacy_option[Circle::TYPE_PUBLIC_ON] .= '<span class="help-block font_11px">' . __d('app',
+                $privacy_option[Circle::TYPE_PUBLIC_ON] .= '<span class="help-block font_11px">' . __(
                                                                                                        "サークル名と参加メンバー、投稿がチーム内に公開されます。チームメンバーは誰でも自由に参加できます。") . '</span>';
-                $privacy_option[Circle::TYPE_PUBLIC_OFF] .= '<span class="help-block font_11px">' . __d('app',
+                $privacy_option[Circle::TYPE_PUBLIC_OFF] .= '<span class="help-block font_11px">' . __(
                                                                                                         "サークル名と参加メンバー、投稿はこのサークルの参加メンバーだけに表示されます。サークル管理者だけがメンバーを追加できます。") . '</span>';
                 ?>
                 <?php echo $this->Form->input('public_flg', array(
                     'type'     => 'radio',
-                    'before'   => '<label class="eee control-label modal-label">' . __d('app',
+                    'before'   => '<label class="eee control-label modal-label">' . __(
                                                                                         'プライバシー') . '</label>',
                     'legend'   => false,
                     'class'    => false,
@@ -81,19 +81,19 @@
                     'required' => false
                 )); ?>
                 <div class="font_brownRed font_11px">
-                    <?= __d('app', 'この設定は後で変更できません') ?>
+                    <?= __('この設定は後で変更できません') ?>
                 </div>
                 <?=
                 $this->Form->input('description',
-                                   ['label'                        => __d('app', "サークルの説明"),
-                                    'placeholder'                  => __d('app', "例) 最新情報を共有しましょう。"),
-                                    'data-bv-notempty-message'     => __d('validate', "入力必須項目です。"),
+                                   ['label'                        => __("サークルの説明"),
+                                    'placeholder'                  => __("例) 最新情報を共有しましょう。"),
+                                    'data-bv-notempty-message'     => __("入力必須項目です。"),
                                     'data-bv-stringlength'         => 'true',
                                     'data-bv-stringlength-max'     => 2000,
-                                    'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 2000),
+                                    'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 2000),
                                    ]) ?>
                 <div class="form-group">
-                    <label for="" class="f control-label modal-label"><?= __d('app', "サークル画像") ?></label>
+                    <label for="" class="f control-label modal-label"><?= __("サークル画像") ?></label>
 
                     <div class="ggg">
                         <div class="fileinput_small fileinput-new" data-provides="fileinput">
@@ -103,9 +103,9 @@
                             </div>
                             <span class="btn btn-default btn-file">
                                 <span class="fileinput-new">
-                                    <?= __d('app', "画像を選択") ?>
+                                    <?= __("画像を選択") ?>
                                 </span>
-                                <span class="fileinput-exists"><?= __d('app', "画像を再選択") ?></span>
+                                <span class="fileinput-exists"><?= __("画像を再選択") ?></span>
                                 <?=
                                 $this->Form->input('photo',
                                                    ['type'         => 'file',
@@ -117,7 +117,7 @@
                                                     'required'     => false
                                                    ]) ?>
                             </span>
-                                    <span class="help-block font_11px inline-block"><?= __d('app',
+                                    <span class="help-block font_11px inline-block"><?= __(
                                                                                             '10MB以下') ?></span>
                         </div>
                     </div>
@@ -138,10 +138,10 @@
                 <div class="row">
                     <div class="h">
                         <button type="button" class="btn btn-link design-cancel bd-radius_4px"
-                                data-dismiss="modal"><?= __d('app',
+                                data-dismiss="modal"><?= __(
                                                              "キャンセル") ?></button>
                         <?=
-                        $this->Form->submit(__d('app', "サークルを作成"),
+                        $this->Form->submit(__("サークルを作成"),
                                             ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
 
                     </div>
@@ -170,7 +170,7 @@
                             extension: 'jpeg,jpg,png,gif',
                             type: 'image/jpeg,image/png,image/gif',
                             maxSize: 10485760,   // 10mb
-                            message: "<?=__d('validate', "10MB以下かつJPG、PNG、GIFのいずれかの形式を選択して下さい。")?>"
+                            message: "<?=__("10MB以下かつJPG、PNG、GIFのいずれかの形式を選択して下さい。")?>"
                         }
                     }
                 }

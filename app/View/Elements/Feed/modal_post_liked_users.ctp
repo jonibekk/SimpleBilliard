@@ -15,7 +15,7 @@
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
-            <h4 class="modal-title font_18px font_bold"><?= __d('app', "この投稿を%s人が「いいね！」と言っています。",
+            <h4 class="modal-title font_18px font_bold"><?= __("この投稿を%s人が「いいね！」と言っています。",
                                                                 count($liked_users)) ?></h4>
         </div>
         <div class="modal-body modal-feed-body">
@@ -28,11 +28,11 @@
                     <?php endforeach ?>
                 </div>
             <?php else: ?>
-                <?= __d('app', "まだ、いいね！と言っている人はいません。") ?>
+                <?= __("まだ、いいね！と言っている人はいません。") ?>
             <?php endif ?>
         </div>
         <div class="modal-footer modal-feed-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('app', "閉じる") ?></button>
+            <button type="button" class="btn btn-default" data-dismiss="modal"><?= __("閉じる") ?></button>
         </div>
     </div>
 </div>

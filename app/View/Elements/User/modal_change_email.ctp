@@ -15,7 +15,7 @@
             <div class="modal-header">
                 <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
                     <span class="close-icon">&times;</span></button>
-                <h4 class="modal-title"><?= __d('app', "メールアドレスの変更") ?></h4>
+                <h4 class="modal-title"><?= __("メールアドレスの変更") ?></h4>
             </div>
             <?=
             $this->Form->create('User', [
@@ -33,16 +33,16 @@
                 'id'            => 'ChangeEmail',
             ]); ?>
             <div class="modal-body">
-                <p><?= __d('app', "変更後にメールアドレス宛に認証用のメールが届きます。") ?></p>
+                <p><?= __("変更後にメールアドレス宛に認証用のメールが届きます。") ?></p>
 
-                <p><?= __d('app', "メールに掲載されている確認URLを開くと変更が完了します。") ?></p>
+                <p><?= __("メールに掲載されている確認URLを開くと変更が完了します。") ?></p>
                 <?=
                 $this->Form->input('email', [
-                    'label'                        => __d('app', "新しいメールアドレス"),
-                    'placeholder'                  => __d('app', "hiroshi@example.com"),
+                    'label'                        => __("新しいメールアドレス"),
+                    'placeholder'                  => __("hiroshi@example.com"),
                     'data-bv-stringlength'         => 'true',
                     'data-bv-stringlength-max'     => 200,
-                    'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 200),
+                    'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 200),
                     "data-bv-notempty"             => "false",
                     'data-bv-emailaddress'         => "false",
                     "data-bv-callback"             => "true",
@@ -51,16 +51,16 @@
                 ]) ?>
                 <?=
                 $this->Form->input('password_request2', [
-                    'label' => __d('app', "パスワード入力"),
+                    'label' => __("パスワード入力"),
                     'type'  => 'password',
                 ]) ?>
             </div>
             <div class="modal-footer modal_pannel-footer">
-                <?= $this->Form->submit(__d('app', "認証メールを送信"),
+                <?= $this->Form->submit(__("認証メールを送信"),
                                         ['class' => 'btn btn-primary pull-right', 'disabled' => 'disabled']) ?>
                 <div class="pull-right">
                     <button type="button" class="btn btn-link design-cancel mr_8px bd-radius_4px" data-dismiss="modal">
-                        <?= __d('app', "キャンセル") ?>
+                        <?= __("キャンセル") ?>
                     </button>
                 </div>
             </div>
@@ -83,10 +83,10 @@
                     validators: {
                         stringLength: {
                             min: 8,
-                            message: "<?=__d('validate', '%2$d文字以上で入力してください。',"",8)?>"
+                            message: "<?=__('%2$d文字以上で入力してください。',"",8)?>"
                         },
                         notEmpty: {
-                            message: "<?=__d('validate', "変更する場合はパスワード入力が必要です。")?>"
+                            message: "<?=__("変更する場合はパスワード入力が必要です。")?>"
                         }
                     }
                 }

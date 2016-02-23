@@ -37,7 +37,7 @@
 <?php if (!empty($totalList)): ?>
 
     <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix">
-        <div class="panel-heading"><?= __d('app', "トータル評価") ?></div>
+        <div class="panel-heading"><?= __("トータル評価") ?></div>
         <div class="panel-body eval-view-panel-body">
             <?php foreach ($totalList as $total): ?>
                 <?php if ($total['Evaluation']['evaluator_user_id'] == $this->Session->read('Auth.User.id') && $isEditable && $total['Evaluation']['evaluate_type'] != Evaluation::TYPE_FINAL_EVALUATOR):
@@ -85,15 +85,15 @@
                                     'class'                        => 'form-control eva-val',
                                     'rows'                         => 2,
                                     'default'                      => $total['Evaluation']['comment'],
-                                    'label'                        => __d('app',
+                                    'label'                        => __(
                                                                           "<i class='fa fa-comment-o mr_2px'></i>評価コメント"),
-                                    'placeholder'                  => __d('app', "コメントを書いてください"),
+                                    'placeholder'                  => __("コメントを書いてください"),
                                     'required'                     => false,
                                     'data-bv-notempty'             => "true",
-                                    'data-bv-notempty-message'     => __d('app', "入力必須項目です。"),
+                                    'data-bv-notempty-message'     => __("入力必須項目です。"),
                                     'data-bv-stringlength'         => 'true',
                                     'data-bv-stringlength-max'     => 5000,
-                                    'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 5000),
+                                    'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 5000),
                                 ])
                                 ?>
                                 <?=
@@ -101,12 +101,12 @@
                                     'type'                     => 'select',
                                     'default'                  => $total['Evaluation']['evaluate_score_id'],
                                     'options'                  => $scoreList,
-                                    'label'                    => __d('app', "<i class='fa fa-paw mr_2px'></i>評価スコア"),
+                                    'label'                    => __("<i class='fa fa-paw mr_2px'></i>評価スコア"),
                                     'class'                    => 'form-control eva-val',
                                     'wrapInput'                => 'col col-xxs-12 col-sm-8',
                                     'required'                 => false,
                                     'data-bv-notempty'         => "true",
-                                    'data-bv-notempty-message' => __d('app', "選択必須項目です。")
+                                    'data-bv-notempty-message' => __("選択必須項目です。")
                                 ])
                                 ?>
                             </div>
@@ -148,12 +148,12 @@
                             <div class="form-group col-xxs-12">
                                 <label for="0EvaluationComment"
                                        class="col-xxs-12 col-sm-4 col-md-3 control-label form-label">
-                                    <?= __d('app', "<i class='fa fa-comment-o mr_2px'></i>評価コメント") ?>
+                                    <?= __("<i class='fa fa-comment-o mr_2px'></i>評価コメント") ?>
                                 </label>
 
                                 <div class="col col-sm-8">
                                     <?php if ($total['Evaluation']['status'] != Evaluation::TYPE_STATUS_DONE): ?>
-                                        <?= __d('app', "未確定です。") ?>
+                                        <?= __("未確定です。") ?>
                                     <?php else: ?>
                                         <?= nl2br(h($total['Evaluation']['comment'])) ?>
                                     <?php endif ?>
@@ -162,12 +162,12 @@
                             <div class="form-group col-xxs-12">
                                 <label for="0EvaluationComment"
                                        class="col col-xxs-12 col-sm-4 col-md-3 control-label form-label">
-                                    <?= __d('app', "<i class='fa fa-paw mr_2px'></i>評価スコア") ?>
+                                    <?= __("<i class='fa fa-paw mr_2px'></i>評価スコア") ?>
                                 </label>
 
                                 <div class="col col-sm-8">
                                     <?php if ($total['Evaluation']['status'] != Evaluation::TYPE_STATUS_DONE): ?>
-                                        <?= __d('app', "未確定です。") ?>
+                                        <?= __("未確定です。") ?>
                                     <?php else: ?>
                                         <?= h($total['EvaluateScore']['name']) ?>
                                     <?php endif ?>
@@ -184,7 +184,7 @@
                 ?>
                 <div class="panel-footer clearfix">
                     <div class="disp_ib pull-right">
-                        <?= $this->Form->button(__d('app', "下書き保存"), [
+                        <?= $this->Form->button(__("下書き保存"), [
                             'div'   => false,
                             'class' => 'btn btn-default',
                             'id'    => 'evaluation-draft-submit',
@@ -206,7 +206,7 @@
         <div class="text-align_c p_8px bg-lightGray">
             <?php if ($status == Evaluation::TYPE_STATUS_DONE):
                 ?>
-                <?= $this->Form->button(__d('app', "修正して確定"), [
+                <?= $this->Form->button(__("修正して確定"), [
                 'div'   => false,
                 'class' => 'btn btn-primary eval-view-btn-submit',
                 'id'    => 'evaluation-register-submit',
@@ -215,14 +215,14 @@
             ]) ?>
             <?php else:
                 ?>
-                <?= $this->Form->button(__d('app', "下書き保存"), [
+                <?= $this->Form->button(__("下書き保存"), [
                 'div'   => false,
                 'class' => 'btn btn-default',
                 'id'    => 'evaluation-draft-submit',
                 'name'  => 'status',
                 'value' => Evaluation::TYPE_STATUS_DRAFT,
             ]) ?>
-                <?= $this->Form->button(__d('app', "確定"), [
+                <?= $this->Form->button(__("確定"), [
                 'div'      => false,
                 'class'    => 'btn btn-primary eval-view-btn-submit',
                 'id'       => 'evaluation-register-submit',
@@ -241,7 +241,7 @@
 <?php foreach ($goalList as $goal): ?>
     <?php $goal = array_values($goal) ?>
     <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix">
-        <div class="panel-heading"><?= __d('app', "ゴール評価") ?>(<?= $goalIndex ?>/<?= count($goalList) ?>)</div>
+        <div class="panel-heading"><?= __("ゴール評価") ?>(<?= $goalIndex ?>/<?= count($goalList) ?>)</div>
         <div class="panel-body eval-view-panel-body">
             <div class="form-group col-xxs-12 eval-view-panel-section">
                 <div class="col col-xxs-6 col-sm-4">
@@ -253,7 +253,7 @@
                                                'class'         => 'lazy img-rounded eval-view-panel-goal-pic',
                                                'width'         => "128",
                                                'height'        => "128",
-                                               'alt'           => __d('app', "ゴール画像"),
+                                               'alt'           => __("ゴール画像"),
                                                'data-original' => $this->Upload->uploadUrl($goal[0], 'Goal.photo',
                                                                                            ['style' => 'large']),
                                            ]
@@ -285,7 +285,7 @@
                             <div style="margin:0 auto;width:100px;">
                                 <a class="modal-ajax-get"
                                    href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_related_kr_list_modal', 'user_id' => $evaluateeId, 'goal_id' => $goal[0]['Goal']['id']]) ?>">
-                                    <?= __d('app', "成果") ?>
+                                    <?= __("成果") ?>
                                 </a>
                             </div>
                         </div>
@@ -302,7 +302,7 @@
                             <a class="click-show-post-modal pointer"
                                id="ActionListOpen_<?= $goal[0]['Goal']['id'] ?>"
                                href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_goal_action_feed', 'goal_id' => $goal[0]['Goal']['id'], 'type' => Post::TYPE_ACTION, 'author_id' => $evaluateeId, 'evaluate_term_id' => $evaluateTermId]) ?>">
-                                <?= __d('app', "アクション") ?>
+                                <?= __("アクション") ?>
                             </a>
                         </div>
                     </div>
@@ -310,30 +310,30 @@
             </div>
             <div class="form-group col-xxs-12 eval-view-panel-section">
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
-                    <?= __d('app', "目的:") ?>
+                    <?= __("目的:") ?>
                     <?= h($goal[0]['Goal']['Purpose']['name']) ?>
                 </div>
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
-                    <?= __d('app', "役割:") ?>
+                    <?= __("役割:") ?>
                     <?php $role = viaIsSet(Hash::extract($goal[0], "Goal.MyCollabo.{n}[role]")[0]["role"]) ?>
-                    <?= ($role) ? h($role) : __d('app', "リーダー") ?>
+                    <?= ($role) ? h($role) : __("リーダー") ?>
                 </div>
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
-                    <?= __d('app', "ゴール詳細:") ?>
+                    <?= __("ゴール詳細:") ?>
                     <div class="showmore-mini">
                         <?= nl2br(h($goal[0]['Goal']['description'])) ?>
                     </div>
                 </div>
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
-                    <?= __d('app', "コラボレータ:") ?>
+                    <?= __("コラボレータ:") ?>
                     <?= count($goal[0]['Goal']['Collaborator']) ?>
                 </div>
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
-                    <?= __d('app', "進捗:") ?>
+                    <?= __("進捗:") ?>
                     <?= h($goal[0]['Goal']['progress']) ?>%
                 </div>
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
-                    <?= __d('app', "比重:") ?>
+                    <?= __("比重:") ?>
                     <?php $collaboPriority = viaIsSet(Hash::extract($goal[0],
                                                                     "Goal.MyCollabo.{n}[role]")[0]["priority"]) ?>
                     <?php $priority = ($collaboPriority) ? $collaboPriority : viaIsSet(Hash::extract($goal[0],
@@ -378,16 +378,16 @@
                                     'type'                         => 'textarea',
                                     'rows'                         => 2,
                                     'default'                      => $eval['Evaluation']['comment'],
-                                    'label'                        => __d('app',
+                                    'label'                        => __(
                                                                           "<i class='fa fa-comment-o mr_2px'></i>評価コメント"),
-                                    'placeholder'                  => __d('app', "コメントを書いてください"),
+                                    'placeholder'                  => __("コメントを書いてください"),
                                     'required'                     => false,
                                     'class'                        => 'form-control eva-val',
                                     'data-bv-notempty'             => "true",
-                                    'data-bv-notempty-message'     => __d('app', "入力必須項目です。"),
+                                    'data-bv-notempty-message'     => __("入力必須項目です。"),
                                     'data-bv-stringlength'         => 'true',
                                     'data-bv-stringlength-max'     => 5000,
-                                    'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 5000),
+                                    'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 5000),
                                 ])
                                 ?>
                                 <?=
@@ -395,12 +395,12 @@
                                     'type'                     => 'select',
                                     'default'                  => $eval['Evaluation']['evaluate_score_id'],
                                     'options'                  => $scoreList,
-                                    'label'                    => __d('app', "<i class='fa fa-paw mr_2px'></i>評価スコア"),
+                                    'label'                    => __("<i class='fa fa-paw mr_2px'></i>評価スコア"),
                                     'class'                    => 'form-control eva-val',
                                     'wrapInput'                => 'col col-xxs-12 col-sm-8',
                                     'required'                 => false,
                                     'data-bv-notempty'         => "true",
-                                    'data-bv-notempty-message' => __d('app', "選択必須項目です。")
+                                    'data-bv-notempty-message' => __("選択必須項目です。")
                                 ])
                                 ?>
                             </div>
@@ -434,12 +434,12 @@
                             <div class="form-group">
                                 <label for="0EvaluationComment"
                                        class="col col-xxs-12 col-sm-4 col-md-3 control-label form-label">
-                                    <?= __d('app', "<i class='fa fa-comment-o mr_2px'></i>評価コメント") ?>
+                                    <?= __("<i class='fa fa-comment-o mr_2px'></i>評価コメント") ?>
                                 </label>
 
                                 <div class="col col-sm-8">
                                     <?php if ($eval['Evaluation']['status'] != Evaluation::TYPE_STATUS_DONE): ?>
-                                        <?= __d('app', "未確定です。") ?>
+                                        <?= __("未確定です。") ?>
                                     <?php else: ?>
                                         <?= nl2br(h($eval['Evaluation']['comment'])) ?>
                                     <?php endif ?>
@@ -448,12 +448,12 @@
                             <div class="form-group">
                                 <label for="0EvaluationComment"
                                        class="col col-xxs-12 col-sm-4 col-md-3 control-label form-label">
-                                    <?= __d('app', "<i class='fa fa-paw mr_2px'></i>評価スコア") ?>
+                                    <?= __("<i class='fa fa-paw mr_2px'></i>評価スコア") ?>
                                 </label>
 
                                 <div class="col col-sm-8">
                                     <?php if ($eval['Evaluation']['status'] != Evaluation::TYPE_STATUS_DONE): ?>
-                                        <?= __d('app', "未確定です。") ?>
+                                        <?= __("未確定です。") ?>
                                     <?php else: ?>
                                         <?= h($eval['EvaluateScore']['name']) ?>
                                     <?php endif ?>
@@ -471,7 +471,7 @@
                 ?>
                 <div class="panel-footer clearfix">
                     <div class="disp_ib pull-right">
-                        <?= $this->Form->button(__d('app', "下書き保存"), [
+                        <?= $this->Form->button(__("下書き保存"), [
                             'div'   => false,
                             'class' => 'btn btn-default',
                             'id'    => 'evaluation-draft-submit',
@@ -492,7 +492,7 @@
         <div class="text-align_c p_8px bg-lightGray">
             <?php if ($status == Evaluation::TYPE_STATUS_DONE):
                 ?>
-                <?= $this->Form->button(__d('app', "修正して確定"), [
+                <?= $this->Form->button(__("修正して確定"), [
                 'div'   => false,
                 'class' => 'btn btn-primary eval-view-btn-submit',
                 'id'    => 'evaluation-register-submit',
@@ -501,14 +501,14 @@
             ]) ?>
             <?php else:
                 ?>
-                <?= $this->Form->button(__d('app', "下書き保存"), [
+                <?= $this->Form->button(__("下書き保存"), [
                 'div'   => false,
                 'class' => 'btn btn-default',
                 'id'    => 'evaluation-draft-submit',
                 'name'  => 'status',
                 'value' => Evaluation::TYPE_STATUS_DRAFT
             ]) ?>
-                <?= $this->Form->button(__d('app', "確定"), [
+                <?= $this->Form->button(__("確定"), [
                 'div'      => false,
                 'class'    => 'btn btn-primary eval-view-btn-submit',
                 'id'       => 'evaluation-register-submit',

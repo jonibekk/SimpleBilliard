@@ -24,7 +24,7 @@
                                            'action'           => 'ajax_get_evaluators_status',
                                            'evaluate_term_id' => $evaluate_term_id,
                                            'user_id'          => $user['User']['id']]) ?>">
-                <?= __d('app', "詳細を見る") ?>
+                <?= __("詳細を見る") ?>
             </a>
         </div>
         <div class="font_12px modalFeedTextPadding">

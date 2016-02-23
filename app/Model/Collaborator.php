@@ -38,8 +38,8 @@ class Collaborator extends AppModel
      */
     private function _setTypeName()
     {
-        self::$TYPE[self::TYPE_COLLABORATOR] = __d('app', "コラボレータ");
-        self::$TYPE[self::TYPE_OWNER] = __d('app', "オーナ");
+        self::$TYPE[self::TYPE_COLLABORATOR] = __("コラボレータ");
+        self::$TYPE[self::TYPE_OWNER] = __("オーナ");
     }
 
     /**
@@ -47,10 +47,10 @@ class Collaborator extends AppModel
      */
     private function _setStatusName()
     {
-        self::$STATUS[self::STATUS_UNAPPROVED] = __d('app', "認定待ち");
-        self::$STATUS[self::STATUS_APPROVAL] = __d('app', "評価対象");
-        self::$STATUS[self::STATUS_HOLD] = __d('app', "評価対象外");
-        self::$STATUS[self::STATUS_MODIFY] = __d('app', "修正待ち");
+        self::$STATUS[self::STATUS_UNAPPROVED] = __("認定待ち");
+        self::$STATUS[self::STATUS_APPROVAL] = __("評価対象");
+        self::$STATUS[self::STATUS_HOLD] = __("評価対象外");
+        self::$STATUS[self::STATUS_MODIFY] = __("修正待ち");
     }
 
     /**

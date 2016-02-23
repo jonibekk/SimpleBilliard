@@ -10,7 +10,7 @@
 <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default">
-            <div class="panel-heading"><?= __d('app', "新しいアカウントを作成") ?></div>
+            <div class="panel-heading"><?= __("新しいアカウントを作成") ?></div>
             <?=
             $this->Form->create('User', [
                 'inputDefaults' => [
@@ -27,24 +27,24 @@
             <div class="panel-body register-panel-body">
                 <?php //姓と名は言語によって表示順を変える
                 $last_name = $this->Form->input('last_name', [
-                    'label'                        => __d('app', "姓(ローマ字)"),
-                    'placeholder'                  => __d('app', "例) Suzuki"),
+                    'label'                        => __("姓(ローマ字)"),
+                    'placeholder'                  => __("例) Suzuki"),
                     "pattern"                      => '^[a-zA-Z]+$',
-                    "data-bv-regexp-message"       => __d('validate', "アルファベットのみで入力してください。"),
-                    "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
+                    "data-bv-regexp-message"       => __("アルファベットのみで入力してください。"),
+                    "data-bv-notempty-message"     => __("入力必須項目です。"),
                     'data-bv-stringlength'         => 'true',
                     'data-bv-stringlength-max'     => 128,
-                    'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 128),
+                    'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 128),
                 ]);
                 $first_name = $this->Form->input('first_name', [
-                    'label'                        => __d('app', "名(ローマ字)"),
-                    'placeholder'                  => __d('app', "例) Hiroshi"),
+                    'label'                        => __("名(ローマ字)"),
+                    'placeholder'                  => __("例) Hiroshi"),
                     "pattern"                      => '^[a-zA-Z]+$',
-                    "data-bv-regexp-message"       => __d('validate', "アルファベットのみで入力してください。"),
-                    "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
+                    "data-bv-regexp-message"       => __("アルファベットのみで入力してください。"),
+                    "data-bv-notempty-message"     => __("入力必須項目です。"),
                     'data-bv-stringlength'         => 'true',
                     'data-bv-stringlength-max'     => 128,
-                    'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 128),
+                    'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 128),
                 ]);
                 if ($last_first) {
                     echo $last_name;
@@ -58,7 +58,7 @@
                 <hr>
                 <?php if (isset($email)): ?>
                     <div class="form-group">
-                        <label for="" class="col col-sm-3 control-label form-label"><?= __d('app', "メール") ?></label>
+                        <label for="" class="col col-sm-3 control-label form-label"><?= __("メール") ?></label>
 
                         <div class="col col-sm-6">
                             <p class="form-control-static"><?= h($email) ?></p>
@@ -69,8 +69,8 @@
                 <?php else: ?>
                     <?=
                     $this->Form->input('Email.0.email', [
-                        'label'                        => __d('app', "メール"),
-                        'placeholder'                  => __d('app', "hiroshi@example.com"),
+                        'label'                        => __("メール"),
+                        'placeholder'                  => __("hiroshi@example.com"),
                         "data-bv-notempty"             => "false",
                         'data-bv-emailaddress'         => "false",
                         "data-bv-callback"             => "true",
@@ -78,35 +78,35 @@
                         "data-bv-callback-callback"    => "bvCallbackAvailableEmail",
                         'data-bv-stringlength'         => 'true',
                         'data-bv-stringlength-max'     => 200,
-                        'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 200),
+                        'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 200),
                     ]) ?>
                 <?php endif; ?>
 
                 <?=
                 $this->Form->input('update_email_flg', [
                     'wrapInput' => 'col col-sm-9 col-sm-offset-3',
-                    'label'     => ['class' => null, 'text' => __d('app', "Goalousからのメールによるニュースや更新情報などを受け取る。")],
+                    'label'     => ['class' => null, 'text' => __("Goalousからのメールによるニュースや更新情報などを受け取る。")],
                     'class'     => false,
                     'default'   => true,
                 ]) ?>
                 <hr>
                 <?=
                 $this->Form->input('password', [
-                    'label'                    => __d('app', "パスワードを作成"),
-                    'placeholder'              => __d('app', '8文字以上'),
-                    "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                    'label'                    => __("パスワードを作成"),
+                    'placeholder'              => __('8文字以上'),
+                    "data-bv-notempty-message" => __("入力必須項目です。"),
                     'type'                     => 'password',
                     'maxlength'                => 50,
                 ]) ?>
                 <?=
                 $this->Form->input('password_confirm', [
-                    'label'                    => __d('app', "パスワードを再入力"),
-                    "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                    'label'                    => __("パスワードを再入力"),
+                    "data-bv-notempty-message" => __("入力必須項目です。"),
                     'type'                     => 'password',
                     'maxlength'                => 50,
                 ]) ?>
                 <hr>
-                <?php $tosLink = $this->Html->link(__d('app', '利用規約'),
+                <?php $tosLink = $this->Html->link(__('利用規約'),
                                                    [
                                                        'controller' => 'pages',
                                                        'action'     => 'display',
@@ -119,7 +119,7 @@
                                                    ]
                 );
 
-                $ppLink = $this->Html->link(__d('app', 'プライバシーポリシー'),
+                $ppLink = $this->Html->link(__('プライバシーポリシー'),
                                             [
                                                 'controller' => 'pages',
                                                 'action'     => 'display',
@@ -135,7 +135,7 @@
                     'wrapInput' => 'col col-sm-9 col-sm-offset-3',
                     'type'      => 'checkbox',
                     'label'     => ['class' => null,
-                                    'text'  => __d('app', "Goalousの%sと%sに同意します。", $tosLink, $ppLink)],
+                                    'text'  => __("Goalousの%sと%sに同意します。", $tosLink, $ppLink)],
                     'class'     => 'validate-checkbox'
                 ]);
                 //タイムゾーン設定の為のローカル時刻をセット
@@ -150,7 +150,7 @@
             <div class="panel-footer">
                 <div class="row">
                     <div class="col-sm-9 col-sm-offset-3">
-                        <?= $this->Form->submit(__d('app', "新規登録"),
+                        <?= $this->Form->submit(__("新規登録"),
                                                 ['class' => 'btn btn-primary', 'disabled' => 'disabled']) ?>
                     </div>
                 </div>

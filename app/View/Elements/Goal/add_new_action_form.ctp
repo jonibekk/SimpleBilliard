@@ -25,7 +25,7 @@
 $this->Form->input('ActionResult.name', [
                                           'label'          => false,
                                           'rows'           => 1,
-                                          'placeholder'    => __d('app', "今日やったアクションを共有しよう！"),
+                                          'placeholder'    => __("今日やったアクションを共有しよう！"),
                                           'class'          => 'form-control tiny-form-text blank-disable-and-undisable col-xxs-10 goalsCard-actionInput mb_12px add-select-options change-warning',
                                           'id'             => "ActionFormName_" . $goal_id,
                                           'target-id'      => "ActionFormSubmit_" . $goal_id,
@@ -50,7 +50,7 @@ $this->Form->input('ActionResult.name', [
 <div id="ActionFormDetail_<?= $goal_id ?>">
     <div class="form-group">
         <label class="font_normal col-xxs-4 lh_40px" for="ActionPhotos">
-            <i class="fa fa-camera mr_2px"></i><?= __d('app', "画像") ?>
+            <i class="fa fa-camera mr_2px"></i><?= __("画像") ?>
         </label>
 
         <div class="col-xxs-8">
@@ -66,12 +66,12 @@ $this->Form->input('ActionResult.name', [
         </div>
     </div>
     <label class="font_normal col-xxs-4 lh_40px" for="KeyResults_<?= $goal_id ?>">
-        <i class="fa fa-key mr_2px"></i><?= __d('app', "成果") ?>
+        <i class="fa fa-key mr_2px"></i><?= __("成果") ?>
     </label>
     <?=
     $this->Form->input('ActionResult.key_result_id', [
-                                                       'label'   => false, //__d('app', "紐付ける達成要素を選択(オプション)"),
-                                                       'options' => [null => __d('app', "選択なし")],
+                                                       'label'   => false, //__("紐付ける達成要素を選択(オプション)"),
+                                                       'options' => [null => __("選択なし")],
                                                        'class'   => 'form-control col-xxs-8 selectKrForAction',
                                                        'id'      => 'ActionKeyResultId_' . $goal_id,
                                                    ]
@@ -80,9 +80,9 @@ $this->Form->input('ActionResult.name', [
     <?php $this->Form->unlockField('socket_id') ?>
     <div class="form-group col-xxs-12 mt_12px">
         <a href="#" target-id="ActionFormName_<?= $goal_id ?>"
-           class="btn btn-white tiny-form-text-close font_verydark"><?= __d('app',
+           class="btn btn-white tiny-form-text-close font_verydark"><?= __(
                                                                             "キャンセル") ?></a>
-        <?= $this->Form->submit(__d('app', "アクション登録"), [
+        <?= $this->Form->submit(__("アクション登録"), [
             'div'      => false,
             'id'       => "ActionFormSubmit_" . $goal_id,
             'class'    => 'btn btn-info pull-right',

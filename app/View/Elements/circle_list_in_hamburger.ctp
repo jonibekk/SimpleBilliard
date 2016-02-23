@@ -58,19 +58,19 @@
         <?php endforeach ?>
         <?php if (count($my_circles) > 8): ?>
             <i class="fa fa-angle-double-down circle-toggle-icon"></i><a
-                class="pl_5px font_12px font_gray click-circle-trigger on"><?= __d('app', "すべて表示") ?></a>
+                class="pl_5px font_12px font_gray click-circle-trigger on"><?= __("すべて表示") ?></a>
         <?php endif; ?>
     <?php endif; ?>
     <div class="clearfix develop--circle-seek <?= $is_mb_app ? "mtb_15px" : null ?>">
         <i class="fa fa-eye circle-function circle-seek-icon font_14px"></i><?=
-        $this->Html->link(__d('app', "サークルを見る"),
+        $this->Html->link(__("サークルを見る"),
                           ['controller' => 'circles', 'action' => 'ajax_get_public_circles_modal'],
                           ['class' => 'modal-ajax-get-public-circles']) ?>
     </div>
     <div class="clearfix develop--circle-make <?= $is_mb_app ? "mtb_15px" : null ?>">
         <i class="fa fa-plus-circle circle-function circle-make-icon font_14px"></i><a href="#" data-toggle="modal"
                                                                                        data-target="#modal_add_circle"><?=
-            __d('app',
+            __(
                 "サークルを作成する") ?></a>
     </div>
 </div>

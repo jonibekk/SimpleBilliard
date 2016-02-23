@@ -24,10 +24,10 @@
 ?>
 <!-- START app/View/Elements/Team/evaluation_progress.ctp -->
 <div class="panel panel-default">
-    <div class="panel-heading"><?= __d('app', "評価状況") ?></div>
+    <div class="panel-heading"><?= __("評価状況") ?></div>
     <?php if ($previous_eval_is_started): ?>
         <div class="panel-body">
-            <h4><?= __d('app', '前期') ?>(<?= $this->TimeEx->date($previous_term_start_date) ?>
+            <h4><?= __('前期') ?>(<?= $this->TimeEx->date($previous_term_start_date) ?>
                 - <?= $this->TimeEx->date($previous_term_end_date) ?>)</h4>
             <?= $this->element('Team/eval_progress_item',
                                ['evaluate_term_id' => $previous_term_id,
@@ -37,7 +37,7 @@
     <?php endif; ?>
     <?php if ($current_eval_is_started): ?>
         <div class="panel-body">
-            <h4><?= __d('app', '今期') ?>(<?= $this->TimeEx->date($current_term_start_date) ?>
+            <h4><?= __('今期') ?>(<?= $this->TimeEx->date($current_term_start_date) ?>
                 - <?= $this->TimeEx->date($current_term_end_date) ?>)</h4>
             <?= $this->element('Team/eval_progress_item',
                                ['evaluate_term_id' => $current_term_id,

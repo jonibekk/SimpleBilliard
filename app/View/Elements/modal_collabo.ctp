@@ -16,7 +16,7 @@
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
                 <span class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= empty($goal['MyCollabo']) ? __d('app', "コラボる") : __d('app', "コラボを編集") ?></h4>
+            <h4 class="modal-title"><?= empty($goal['MyCollabo']) ? __("コラボる") : __("コラボを編集") ?></h4>
         </div>
         <?php $collabo_id = isset($goal['MyCollabo'][0]['id']) ? $goal['MyCollabo'][0]['id'] : null ?>
         <?=
@@ -42,12 +42,12 @@
         <div class="modal-body">
             <?=
             $this->Form->input('role',
-                               ['label'                    => __d('app', "役割"),
-                                'placeholder'              => __d('app', "例) ○○"),
-                                "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                               ['label'                    => __("役割"),
+                                'placeholder'              => __("例) ○○"),
+                                "data-bv-notempty-message" => __("入力必須項目です。"),
                                 'data-bv-stringlength'         => 'true',
                                 'data-bv-stringlength-max'     => 200,
-                                'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。",200),
+                                'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。",200),
                                 'required'                 => true,
                                 'rows'                     => 1,
                                 'value'                    => isset($goal['MyCollabo'][0]['role']) ? $goal['MyCollabo'][0]['role'] : null,
@@ -55,12 +55,12 @@
             <hr>
             <?=
             $this->Form->input('description',
-                               ['label'                    => __d('app', "詳細"),
-                                'placeholder'              => __d('app', "例) ○○"),
-                                "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                               ['label'                    => __("詳細"),
+                                'placeholder'              => __("例) ○○"),
+                                "data-bv-notempty-message" => __("入力必須項目です。"),
                                 'data-bv-stringlength'         => 'true',
                                 'data-bv-stringlength-max'     => 2000,
-                                'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。",2000),
+                                'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。",2000),
                                 'required'                 => true,
                                 'rows'                     => 1,
                                 'value'                    => isset($goal['MyCollabo'][0]['description']) ? $goal['MyCollabo'][0]['description'] : null,
@@ -68,8 +68,8 @@
             <hr>
             <?=
             $this->Form->input('priority',
-                               ['label'                    => __d('app', "重要度"),
-                                "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                               ['label'                    => __("重要度"),
+                                "data-bv-notempty-message" => __("入力必須項目です。"),
                                 'required'                 => true,
                                 'type'                     => 'select',
                                 'default'                  => 3,
@@ -82,18 +82,18 @@
             <div class="row">
                 <div class="col-sm-9 col-sm-offset-3">
                     <button type="button" class="btn btn-link design-cancel bd-radius_4px"
-                            data-dismiss="modal"><?= __d('app',
+                            data-dismiss="modal"><?= __(
                                                          "キャンセル") ?></button>
                     <?=
-                    $this->Form->submit(empty($goal['MyCollabo']) ? __d('app', "コラボる") : __d('app', "コラボを編集"),
+                    $this->Form->submit(empty($goal['MyCollabo']) ? __("コラボる") : __("コラボを編集"),
                                         ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
                     <?= $this->Form->end(); ?>
                     <?php if (!empty($goal['MyCollabo'])): ?>
                         <?=
-                        $this->Form->postLink(__d('app', "コラボを抜ける"),
+                        $this->Form->postLink(__("コラボを抜ける"),
                                               ['controller' => 'goals', 'action' => 'delete_collabo', 'collaborator_id' => $goal['MyCollabo'][0]['id']],
                                               ['class' => 'pull-left btn btn-link'],
-                                              __d('app', "本当にコラボレータから抜けますか？")) ?>
+                                              __("本当にコラボレータから抜けますか？")) ?>
                     <?php endif; ?>
 
                 </div>
