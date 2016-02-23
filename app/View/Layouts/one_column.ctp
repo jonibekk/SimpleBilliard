@@ -31,7 +31,9 @@ else {
 <div id="container" class="container">
     <?= $this->Session->flash(); ?>
     <?= $this->fetch('content'); ?>
-    <?= $this->element('footer') ?>
+    <?php if($this->App->needDisplayFooter()): ?>
+        <?= $this->element('footer') ?>
+    <?php endif; ?>
 </div>
 <?= $this->element('common_modules') ?>
 <?= $this->element('modals') ?>
