@@ -97,9 +97,9 @@ $(document).ready(function () {
 
     // Androidアプリかiosアプリの場合のみfastClickを実行する。
     // 　→iosでsafari/chromeでfastClick使用時、チェックボックス操作に不具合が見つかったため。
-    //if(cake.is_mb_app === 'true' || cake.is_mb_app_ios === 'true') {
-    //    fastClick();
-    //}
+    if(cake.is_mb_app === 'true' || cake.is_mb_app_ios === 'true') {
+        fastClick();
+    }
 
     //Monitoring of the communication state of App Server | Appサーバーの通信状態の監視
     var network_reachable = true;
@@ -930,6 +930,7 @@ function checkUploadFileExpire(formID) {
 }
 
 function getAjaxFormReplaceElm() {
+    alert("FURU:getAjaxFormReplaceFlm");
     attrUndefinedCheck(this, 'replace-elm-parent-id');
     attrUndefinedCheck(this, 'click-target-id');
     attrUndefinedCheck(this, 'tmp-target-height');
@@ -996,6 +997,7 @@ function getAjaxFormReplaceElm() {
                 };
                 $uploadFileForm.registerDragDropArea('#CommentBlock_' + post_id, commentParams);
                 $uploadFileForm.registerAttachFileButton('#CommentUploadFileButton_' + post_id, commentParams);
+                alert("FURU:#1");
 
                 // OGP 情報を取得してプレビューする処理
                 require(['ogp'], function (ogp) {
@@ -1161,7 +1163,7 @@ function addComment(e) {
     $("#" + submit_id).before($loader_html);
 
     // アップロードファイルの上限数をリセット
-    if (typeof Dropzone.instances[0] != "undefined" && Dropzone.instances[0].files.length > 0) {
+    if (typeof Dropzone.instances[0] !== "undefined" && Dropzone.instances[0].files.length > 0) {
         // ajax で submit するので、アップロード完了後に Dropzone のファイルリストを空にする
         // （参照先の配列を空にするため空配列の代入はしない）
         Dropzone.instances[0].files.length = 0;
