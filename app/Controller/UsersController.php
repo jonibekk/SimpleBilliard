@@ -1149,7 +1149,7 @@ class UsersController extends AppController
         if ($email) {
             // メールアドレスだけ validate
             $this->User->Email->create(['email' => $email]);
-            $this->User->Email->validates(['fieldList' => 'email']);
+            $this->User->Email->validates(['fieldList' => ['email']]);
             if ($this->User->Email->validationErrors) {
                 $message = $this->User->Email->validationErrors['email'][0];
             }
