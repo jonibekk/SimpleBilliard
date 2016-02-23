@@ -930,7 +930,6 @@ function checkUploadFileExpire(formID) {
 }
 
 function getAjaxFormReplaceElm() {
-    alert("FURU:getAjaxFormReplaceFlm");
     attrUndefinedCheck(this, 'replace-elm-parent-id');
     attrUndefinedCheck(this, 'click-target-id');
     attrUndefinedCheck(this, 'tmp-target-height');
@@ -997,7 +996,6 @@ function getAjaxFormReplaceElm() {
                 };
                 $uploadFileForm.registerDragDropArea('#CommentBlock_' + post_id, commentParams);
                 $uploadFileForm.registerAttachFileButton('#CommentUploadFileButton_' + post_id, commentParams);
-                alert("FURU:#1");
 
                 // OGP 情報を取得してプレビューする処理
                 require(['ogp'], function (ogp) {
@@ -5064,16 +5062,20 @@ $(document).ready(function () {
      * 引数は registerDragDropArea と同じ
      */
     $uploadFileForm.registerAttachFileButton = function (selector, params, dzOptions) {
+        alert("#1");
         if ($uploadFileForm._attachFileButton[selector]) {
             return true;
         }
+        alert("#2");
         $uploadFileForm._attachFileButton[selector] = {
             selector: selector,
             params: params,
             dzOptions: dzOptions
         };
 
+        alert("#3");
         $(document).on('click', selector, function (e) {
+            alert("#4");
             e.preventDefault();
             $uploadFileForm._setParams(this, params, dzOptions);
             $uploadFileAttachButton.trigger('click');
