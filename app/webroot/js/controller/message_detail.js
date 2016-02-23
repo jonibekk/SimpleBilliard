@@ -12,6 +12,7 @@ message_app.controller(
 
         // TODO: 添付ファイルのプレビューを表示するために一時的に高さを少なくする
         var input_box_height = 260;
+        var sub_header_height = 40;
 
         var default_message_box_height;
         var $message_box = $('#message_box');
@@ -24,7 +25,12 @@ message_app.controller(
         }
         // onloadの場合
         $scope.$on('$viewContentLoaded', function () {
-            resizeMessageBox($message_box, input_box_height);
+            // SP用のサブヘッダが表示されていない場合
+            if($('#SubHeaderMenu').length == 0 || $('#SubHeaderMenu').is(':hidden')) {
+                resizeMessageBox(window.innerHeight - input_box_height + sub_header_height);
+            } else {
+                resizeMessageBox(window.innerHeight - input_box_height);
+            }
             $message_box.animate({scrollTop: window.innerHeight}, 500);
 
             // データ挿入等が全て終わりメッセージボックスの高さがFIXされたタイミングで
@@ -35,7 +41,7 @@ message_app.controller(
         // ブラウザリサイズの場合、入力フォームサイズ変更+オートスクロール
         $(window).on('resize', function () {
             $scope.$apply(function () {
-                $message_box.css('height', default_message_box_height + 'px');
+                resizeMessageBox(default_message_box_height);
                 bottom_scroll();
             });
         });
@@ -223,7 +229,7 @@ message_app.controller(
                     messageTextarea.focus();
                     messageTextarea.style.height = "38px";
 
-                    resizeMessageBox($message_box, input_box_height);
+                    resizeMessageBox(default_message_box_height);
 
                     if (jQuery.isEmptyObject(response.data)) {
                         //メッセージ送信失敗
@@ -267,7 +273,7 @@ message_app.controller(
 
             $scope.focusReplyTextarea = function () {
                 if(default_message_box_height != $message_box.outerHeight()) {
-                    $message_box.css('height', default_message_box_height + 'px');
+                    resizeMessageBox(default_message_box_height);
                 }
             };
 
@@ -364,10 +370,11 @@ message_app.controller(
                 $("#message_add_list").append($("#MessageFormShareUser"));
             }
 
-            var resizeMessageBox = function($message_box, input_box_height) {
-                $message_box.css("height", window.innerHeight - input_box_height);
+            var resizeMessageBox = function(message_box_height) {
+                $message_box.css("height", message_box_height);
                 return $message_box;
             }
+
         }
 
         // 戻るボタンのURL
