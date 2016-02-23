@@ -5062,20 +5062,17 @@ $(document).ready(function () {
      * 引数は registerDragDropArea と同じ
      */
     $uploadFileForm.registerAttachFileButton = function (selector, params, dzOptions) {
-        alert("#1");
         if ($uploadFileForm._attachFileButton[selector]) {
             return true;
         }
-        alert("#2");
         $uploadFileForm._attachFileButton[selector] = {
             selector: selector,
             params: params,
             dzOptions: dzOptions
         };
 
-        alert("#3");
         $(document).on('click', selector, function (e) {
-            alert("#4");
+            alert("FURU:DropZone clicked");
             e.preventDefault();
             $uploadFileForm._setParams(this, params, dzOptions);
             $uploadFileAttachButton.trigger('click');
