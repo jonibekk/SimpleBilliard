@@ -52,7 +52,7 @@ $kr_count = 0;
             <?php endif; ?>
             <i class="dashboard-goals-card-header-icon fa fa-flag-o jsGoalsCardProgress"
                goal-prog-percent="<?= isset($kr_prog_percent) ? $kr_prog_percent : 0; ?>">
-            </i>b
+            </i>
 
             <div class="dashboard-goals-card-header-title">
                 <?php if (empty($goal['Goal'])): ?>
