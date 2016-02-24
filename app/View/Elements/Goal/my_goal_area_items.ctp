@@ -51,8 +51,8 @@ $kr_count = 0;
                 dashboard-goals-card-header-noname">
             <?php endif; ?>
             <i class="dashboard-goals-card-header-icon fa fa-flag-o jsGoalsCardProgress"
-               goal-prog-percent="<?= $kr_prog_percent ?>">
-            </i>
+               goal-prog-percent="<?= isset($kr_prog_percent) ? $kr_prog_percent : 0; ?>">
+            </i>b
 
             <div class="dashboard-goals-card-header-title">
                 <?php if (empty($goal['Goal'])): ?>
@@ -232,7 +232,8 @@ $kr_count = 0;
                                     <hr class="dashboard-goals-card-horizontal-line">
                                     <i class="fa fa-plus dashboard-goals-card-body-add-kr-icon"></i>
 
-                                    <p class="dashboard-goals-card-body-add-kr-contents"><?= __d('app', "達成要素を追加") ?></p>
+                                    <p class="dashboard-goals-card-body-add-kr-contents"><?= __d('app',
+                                                                                                 "達成要素を追加") ?></p>
                                 </a>
 
                                 <p class="dashboard-goals-card-body-goal-status"><?= Collaborator::$STATUS[$goal['MyCollabo'][0]['valued_flg']] ?></p>
