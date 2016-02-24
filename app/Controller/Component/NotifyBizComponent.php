@@ -32,6 +32,7 @@ class NotifyBizComponent extends Component
         'notify_type' => null,
         'model_id'    => null,
         'item_name'   => null,
+        'post_id'     => null,
         'options'     => [],
     ];
     public $notify_settings = [];
