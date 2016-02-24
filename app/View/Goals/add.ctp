@@ -69,7 +69,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                     <?=
                     $this->Form->input('Purpose.name',
                                        ['before'                       => '<div class="col col-sm-3 control-label goal-edit-labels">' .
-                                           '<label class="no-asterisk">' . __("目的") . '</label>' .
+                                           '<label class="no-asterisk">' . __("Purpose") . '</label>' .
                                            '<div class="label-addiction">' . __("達成したいことは？") . '</div></div>',
                                         'label'                        => false,
                                         'placeholder'                  => __("達成したいことをざっくり書く"),
@@ -148,7 +148,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                     <?=
                     $this->Form->input('name',
                                        ['before'                       => '<div class="col col-sm-3 control-label set-goal goal-edit-labels">' .
-                                           '<label class="no-asterisk">' . __("ゴール名") . '</label>' .
+                                           '<label class="no-asterisk">' . __("Goal Name") . '</label>' .
                                            '<div class="label-addiction">' . __(
                                                                                  "達成の指標として<br>『なに』をどうするか？") . '</div></div>',
                                         'label'                        => false,
@@ -172,7 +172,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
 
                             <?=
                             $this->Form->input('value_unit',
-                                               ['label'               => __("単位"),
+                                               ['label'               => __("Unit"),
                                                 'wrapInput'           => 'col col-sm-9 pl_5px',
                                                 'type'                => 'select',
                                                 'class'               => 'change-select-target-hidden form-control addteam_input-design',
@@ -230,7 +230,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                             <div class="form-group" id="KeyResult0EndDateContainer">
                                 <label for="KeyResult0EndDate" class="col col-sm-3 control-label goal-set-mid-label"><?=
                                     __(
-                                        "期限") ?></label>
+                                        "Due Date") ?></label>
 
                                 <div class="input-group date pl_5px goal-set-date">
                                     <?=
@@ -405,7 +405,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                     <?=
                     $this->Form->input('description',
                                        ['before'                       => '<div class="col col-sm-3 control-label set-detail goal-edit-labels">' .
-                                           '<label>' . __("詳細") . '</label>' .
+                                           '<label>' . __("Description") . '</label>' .
                                            '<div class="label-addiction">' . __("内容を補足しましょう") . '</div></div>',
                                         'label'                        => false,
                                         'placeholder'                  => __("ゴールの内容を詳しく書く"),
@@ -423,7 +423,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                     <?=
                     $this->Form->input('Collaborator.0.priority', [
                         'before'   => '<div class="col col-sm-3 control-label set-importance goal-edit-labels">' .
-                            '<label>' . __("重要度") . '</label>' .
+                            '<label>' . __("Weight") . '</label>' .
                             '<div class="label-addiction">' . __("あなたにとっての<br>このゴールの重要度") . '</div></div>',
                         'label'    => false,
                         'type'     => 'select',

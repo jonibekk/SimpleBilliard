@@ -1061,7 +1061,7 @@ class User extends AppModel
             $team_res = [
                 [
                     'id'    => "public",
-                    'text'  => __("チーム全体"),
+                    'text'  => __("All Team"),
                     'image' => $Upload->uploadUrl($team, 'Team.photo', ['style' => 'small']),
                 ]
             ];

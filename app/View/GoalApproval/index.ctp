@@ -102,7 +102,7 @@
                             <p class="approval_body_text"><?= __("カテゴリ") ?>
                                 : <?= h($goal['Goal']['GoalCategory']['name']); ?></p>
 
-                            <p class="approval_body_text"><?= __("ゴール名") ?>
+                            <p class="approval_body_text"><?= __("Goal Name") ?>
                                 : <?= h($goal['Goal']['name']); ?></p>
 
                             <p class="approval_body_text"><?= $goal['Collaborator']['type'] === (string)Collaborator::TYPE_OWNER ?
@@ -111,7 +111,7 @@
                             <p class="approval_body_text"><?= __("役割") ?>
                                 : <?= h($goal['Collaborator']['role']); ?></p>
 
-                            <p class="approval_body_text"><?= __("単位") ?>
+                            <p class="approval_body_text"><?= __("Unit") ?>
                                 : <?= h($value_unit_list[$goal['Goal']['value_unit']]); ?></p>
 
                             <p class="approval_body_text"><?= __("達成時") ?>
@@ -120,16 +120,16 @@
                             <p class="approval_body_text"><?= __("開始時") ?>
                                 : <?= (double)$goal['Goal']['start_value']; ?></p>
 
-                            <p class="approval_body_text"><?= __("期限日") ?>
+                            <p class="approval_body_text"><?= __("Due Date") ?>
                                 : <?= $this->TimeEx->date(h($goal['Goal']['end_date'])) ?></p>
 
-                            <p class="approval_body_text"><?= __("重要度") ?>
+                            <p class="approval_body_text"><?= __("Weight") ?>
                                 : <?= $goal['Collaborator']['priority']; ?></p>
 
-                            <p class="approval_body_text"><?= __("目的") ?>
+                            <p class="approval_body_text"><?= __("Purpose") ?>
                                 : <?= h($goal['Goal']['Purpose']['name']); ?></p>
 
-                            <p class="approval_body_text"><?= __("詳細") ?>
+                            <p class="approval_body_text"><?= __("Description") ?>
                                 : <?= nl2br($this->TextEx->autoLink($goal['Goal']['description'])); ?></p>
                             <?=
                             $this->Html->image('ajax-loader.gif',

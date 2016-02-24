@@ -126,10 +126,10 @@ class GoalApprovalController extends AppController
     private function _setMsg()
     {
         $this->approval_msg_list = [
-            self::WAIT_MY_GOAL_MSG             => __("認定待ち"),
-            self::MODIFY_MEMBER_GOAL_MSG       => __("修正待ち"),
-            self::APPROVAL_MEMBER_GOAL_MSG     => __("評価対象"),
-            self::NOT_APPROVAL_MEMBER_GOAL_MSG => __("評価対象外"),
+            self::WAIT_MY_GOAL_MSG             => __("Waiting for approval"),
+            self::APPROVAL_MEMBER_GOAL_MSG     => __("In Evaluation"),
+            self::NOT_APPROVAL_MEMBER_GOAL_MSG => __("Out of Evaluation"),
+            self::MODIFY_MEMBER_GOAL_MSG       => __("Waiting for modified"),
         ];
     }
 
@@ -285,7 +285,7 @@ class GoalApprovalController extends AppController
         $res = false;
         if (isset($this->request->data['comment_btn']) === true) {
             $res = $this->_comment($data);
-            $this->Pnotify->outSuccess(__("コメントを送信しました。"));
+            $this->Pnotify->outSuccess(__("Commented"));
         }
         elseif (isset($this->request->data['wait_btn']) === true) {
             $res = $this->_wait($data);
@@ -297,10 +297,10 @@ class GoalApprovalController extends AppController
         }
         elseif (isset($this->request->data['modify_btn']) === true) {
             $res = $this->_modify($data);
-            $this->Pnotify->outSuccess(__("修正依頼を送信しました。"));
+            $this->Pnotify->outSuccess(__("Sent amend request."));
         }
         if (!$res) {
-            $this->Pnotify->outError(__("認定の更新に失敗しました。"));
+            $this->Pnotify->outError(__("Failed to update Approvement."));
         }
         return $res;
     }

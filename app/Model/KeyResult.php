@@ -171,7 +171,7 @@ class KeyResult extends AppModel
         $validate_backup = $this->validate;
         $this->validate = array_merge($this->validate, $this->post_validate);
         if (!$this->validates()) {
-            throw new RuntimeException(__("達成要素の保存に失敗しました。"));
+            throw new RuntimeException(__("Failed to save KR."));
         }
         $this->validate = $validate_backup;
 
@@ -188,7 +188,7 @@ class KeyResult extends AppModel
         }
         $this->create();
         if (!$this->save($data)) {
-            throw new RuntimeException(__("達成要素の保存に失敗しました。"));
+            throw new RuntimeException(__("Failed to save KR."));
         }
         Cache::delete($this->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         return true;

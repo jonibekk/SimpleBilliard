@@ -55,7 +55,7 @@
             <hr>
             <?=
             $this->Form->input('description',
-                               ['label'                    => __("詳細"),
+                               ['label'                    => __("Description"),
                                 'placeholder'              => __("例) ○○"),
                                 "data-bv-notempty-message" => __("入力必須項目です。"),
                                 'data-bv-stringlength'         => 'true',
@@ -68,7 +68,7 @@
             <hr>
             <?=
             $this->Form->input('priority',
-                               ['label'                    => __("重要度"),
+                               ['label'                    => __("Weight"),
                                 "data-bv-notempty-message" => __("入力必須項目です。"),
                                 'required'                 => true,
                                 'type'                     => 'select',

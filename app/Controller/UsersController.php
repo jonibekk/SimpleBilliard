@@ -203,7 +203,7 @@ class UsersController extends AppController
         // コードを使用済にする
         $res = $this->User->RecoveryCode->useCode($row['RecoveryCode']['id']);
         if (!$res) {
-            $this->Pnotify->outError(__("エラーが発生しました。"));
+            $this->Pnotify->outError(__("An error has occurred."));
             return $this->render();
         }
 
@@ -874,10 +874,10 @@ class UsersController extends AppController
         $this->request->allowMethod('post');
         try {
             if (!$secret_key = $this->Session->read('2fa_secret_key')) {
-                throw new RuntimeException(__("エラーが発生しました。"));
+                throw new RuntimeException(__("An error has occurred."));
             }
             if (!viaIsSet($this->request->data['User']['2fa_code'])) {
-                throw new RuntimeException(__("エラーが発生しました。"));
+                throw new RuntimeException(__("An error has occurred."));
             }
             if (!$this->TwoFa->verifyKey($secret_key, $this->request->data['User']['2fa_code'])) {
                 throw new RuntimeException(__("コードが正しくありません。"));
@@ -951,7 +951,7 @@ class UsersController extends AppController
         $success = $this->User->RecoveryCode->regenerate($this->Auth->user('id'));
         if (!$success) {
             return $this->_ajaxGetResponse(['error' => true,
-                                            'msg'   => __("エラーが発生しました。")]);
+                                            'msg'   => __("An error has occurred.")]);
         }
         $recovery_codes = $this->User->RecoveryCode->getAll($this->Auth->user('id'));
         $codes = array_map(function ($v) {
@@ -1166,7 +1166,7 @@ class UsersController extends AppController
         $user_id = $this->_getRequiredParam('user_id');
         if (!$this->_setUserPageHeaderInfo($user_id)) {
             // ユーザーが存在しない
-            $this->Pnotify->outError(__("不正な画面遷移です。"));
+            $this->Pnotify->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
         $this->layout = LAYOUT_ONE_COLUMN;
@@ -1259,7 +1259,7 @@ class UsersController extends AppController
         $user_id = $this->_getRequiredParam('user_id');
         if (!$this->_setUserPageHeaderInfo($user_id)) {
             // ユーザーが存在しない
-            $this->Pnotify->outError(__("不正な画面遷移です。"));
+            $this->Pnotify->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
         $posts = $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null, [
@@ -1281,7 +1281,7 @@ class UsersController extends AppController
         $page_type = $this->_getRequiredParam('page_type');
         $goal_id = viaIsSet($this->request->params['named']['goal_id']);
         if (!in_array($page_type, ['list', 'image'])) {
-            $this->Pnotify->outError(__("不正な画面遷移です。"));
+            $this->Pnotify->outError(__("Invalid screen transition."));
             $this->redirect($this->referer());
         }
         $params = [
@@ -1301,7 +1301,7 @@ class UsersController extends AppController
         $this->set(compact('posts'));
         if (!$this->_setUserPageHeaderInfo($user_id)) {
             // ユーザーが存在しない
-            $this->Pnotify->outError(__("不正な画面遷移です。"));
+            $this->Pnotify->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
         $team = $this->Team->getCurrentTeam();
@@ -1326,7 +1326,7 @@ class UsersController extends AppController
 
         if (!$this->_setUserPageHeaderInfo($user_id)) {
             // ユーザーが存在しない
-            $this->Pnotify->outError(__("不正な画面遷移です。"));
+            $this->Pnotify->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
 

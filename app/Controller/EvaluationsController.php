@@ -24,7 +24,7 @@ class EvaluationsController extends AppController
         try {
             $this->Evaluation->checkAvailViewEvaluationList();
             if (!$this->Team->EvaluationSetting->isEnabled()) {
-                throw new RuntimeException(__("チームの評価設定が有効になっておりません。チーム管理者にお問い合わせください。"));
+                throw new RuntimeException(__("Evaluation setting of the team is not enabled. Please contact the team administrator."));
             }
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
@@ -72,7 +72,7 @@ class EvaluationsController extends AppController
             // check authorities
             $this->Evaluation->checkAvailViewEvaluationList();
             if (!$this->Team->EvaluationSetting->isEnabled()) {
-                throw new RuntimeException(__("チームの評価設定が有効になっておりません。チーム管理者にお問い合わせください。"));
+                throw new RuntimeException(__("Evaluation setting of the team is not enabled. Please contact the team administrator."));
             }
             $this->Evaluation->checkAvailParameterInEvalForm($evaluateTermId, $evaluateeId);
 
@@ -176,7 +176,7 @@ class EvaluationsController extends AppController
         // Set saved message
         $savedMsg = "";
         if ($status == Evaluation::TYPE_STATUS_DRAFT) {
-            $savedMsg = $successMsg = __("下書きを保存しました。");
+            $savedMsg = $successMsg = __("Saved the draft.");
         } elseif ($status == Evaluation::TYPE_STATUS_DONE) {
             //次の評価へ通知
             $next_evaluation_id = $this->Evaluation->getCurrentTurnEvaluationId($evaluateeId, $evaluateTermId);
@@ -193,11 +193,11 @@ class EvaluationsController extends AppController
             }
             $mixpanel_member_type = null;
             if ($evalType == Evaluation::TYPE_ONESELF) {
-                $savedMsg = __("自己評価を確定しました。");
+                $savedMsg = __("Submitted the self-evaluation.");
                 $mixpanel_member_type = MixpanelComponent::PROP_EVALUATION_MEMBER_SELF;
 
             } elseif ($evalType == Evaluation::TYPE_EVALUATOR) {
-                $savedMsg = __("評価者の評価を確定しました。");
+                $savedMsg = __("Submitted the evaluation by evaluator.");
                 $mixpanel_member_type = MixpanelComponent::PROP_EVALUATION_MEMBER_EVALUATOR;
             }
             $this->Mixpanel->trackEvaluation($mixpanel_member_type);

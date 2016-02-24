@@ -21,10 +21,10 @@
         <div class="modal-body modal-circle-body">
             <ul class="add-key-result-goal-info">
                 <li>
-                  <i class="fa fa-flag"></i><?= __("ゴール名") ?>:<?= h($goal['Goal']['name']) ?>
+                  <i class="fa fa-flag"></i><?= __("Goal Name") ?>:<?= h($goal['Goal']['name']) ?>
                 </li>
                 <li>
-                  <?= __("単位") ?>:<?= KeyResult::$UNIT[$goal['Goal']['value_unit']] ?>
+                  <?= __("Unit") ?>:<?= KeyResult::$UNIT[$goal['Goal']['value_unit']] ?>
                 </li>
                 <li>
                   <?= __("現在値") ?>:<?= h($goal['Goal']['current_value']) ?>

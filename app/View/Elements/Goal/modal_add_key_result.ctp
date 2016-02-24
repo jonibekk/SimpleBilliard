@@ -81,16 +81,16 @@
                                    ]) ?>
             </div>
             <div class="row">
-                <div class="bbb">
+                <div>
                     <h5 class="modal-key-result-headings"><?= __("程度") ?><span
                             class="modal-key-result-headings-description"><?= __("どのくらい？") ?></span></h5>
                 </div>
                 <div class=" goal-set-input">
-                    <div class="ccc">
+                    <div>
 
                         <?=
                         $this->Form->input('KeyResult.value_unit',
-                                           ['label'               => __("単位"),
+                                           ['label'               => __("Unit"),
                                             'wrapInput'           => 'modal-add-kr-change-unit-wrap',
                                             'type'                => 'select',
                                             'class'               => 'change-select-target-hidden form-control addteam_input-design',
@@ -101,7 +101,7 @@
                                            ]) ?>
                     </div>
                     <div id="KeyResult0ValueInputWrap_<?= $goal_id ?>" style="">
-                        <div class="eee">
+                        <div>
                             <?=
                             $this->Form->input('KeyResult.target_value',
                                                ['label'                        => __("達成時"),
@@ -118,7 +118,7 @@
                                                 'data-bv-numeric-message'      => __("数字を入力してください。"),
                                                ]) ?>
                         </div>
-                        <div class="fff">
+                        <div>
                             <?=
                             $this->Form->input('KeyResult.start_value',
                                                ['label'                        => __("開始時"),
@@ -151,7 +151,7 @@
                     <div class="form-group" id="KeyResult0EndDateContainer">
                         <label for="KeyResult0EndDate" class="control-label text-align_left"><?=
                             __(
-                                "期限") ?></label>
+                                "Due Date") ?></label>
 
                         <div class="input-group date goal-set-date"
                              data-date-end-date="<?= $limit_end_date ?>"
@@ -221,7 +221,7 @@
                 <?=
                 $this->Form->input('priority', [
                     'before'    => '<h5 class="modal-key-result-headings">' . __(
-                                                                                  "重要度") . '<span class="modal-key-result-headings-description">' . __(
+                                                                                  "Weight") . '<span class="modal-key-result-headings-description">' . __(
                                                                                                                                                         "ゴールにとってこの成果の重要度") . '</span></h5>',
                     'label'     => false,
                     'type'      => 'select',

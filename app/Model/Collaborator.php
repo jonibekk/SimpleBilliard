@@ -47,10 +47,10 @@ class Collaborator extends AppModel
      */
     private function _setStatusName()
     {
-        self::$STATUS[self::STATUS_UNAPPROVED] = __("認定待ち");
-        self::$STATUS[self::STATUS_APPROVAL] = __("評価対象");
-        self::$STATUS[self::STATUS_HOLD] = __("評価対象外");
-        self::$STATUS[self::STATUS_MODIFY] = __("修正待ち");
+        self::$STATUS[self::STATUS_UNAPPROVED] = __("Waiting for approval");
+        self::$STATUS[self::STATUS_APPROVAL] = __("In Evaluation");
+        self::$STATUS[self::STATUS_HOLD] = __("Out of Evaluation");
+        self::$STATUS[self::STATUS_MODIFY] = __("Waiting for modified");
     }
 
     /**

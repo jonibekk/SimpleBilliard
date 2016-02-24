@@ -76,7 +76,7 @@
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
                     <i class="fa fa-bullseye"></i><span class="pl_2px"><?= __('程度') ?></span>
 
-                    <div><?= __('単位: %s', KeyResult::$UNIT[$goal['Goal']['value_unit']]) ?></div>
+                    <div><?= __('Unit: %s', KeyResult::$UNIT[$goal['Goal']['value_unit']]) ?></div>
                     <?php if ($goal['Goal']['value_unit'] != KeyResult::UNIT_BINARY): ?>
                         <div><?= __('達成時: %s', (double)$goal['Goal']['target_value']) ?></div>
                         <div><?= __('開始時: %s', (double)$goal['Goal']['start_value']) ?></div>
@@ -126,7 +126,7 @@
                     <?php endif; ?>
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
-                    <div><i class="fa fa-ellipsis-h"></i><span class="pl_2px"><?= __('詳細') ?></span></div>
+                    <div><i class="fa fa-ellipsis-h"></i><span class="pl_2px"><?= __('Description') ?></span></div>
                     <div>
                         <?= nl2br($this->TextEx->autoLink($goal['Goal']['description'])) ?>
                     </div>

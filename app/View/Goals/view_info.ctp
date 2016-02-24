@@ -21,7 +21,7 @@
                 <div class="goal-detail-info-data">
                     <span class="font_bold"><?= h($goal['Goal']['name']) ?></span>
 
-                    <p class="goal-detail-info-purpose"><?= __('目的') ?>： <?= h($goal['Purpose']['name']) ?></p>
+                    <p class="goal-detail-info-purpose"><?= __('Purpose') ?>： <?= h($goal['Purpose']['name']) ?></p>
 
                     <p class="goal-detail-info-category"><?= __('カテゴリー') ?>
                         ： <?= h($goal['GoalCategory']['name']) ?></p>
@@ -92,7 +92,7 @@
                 <?php endif ?>
             </div>
             <div class="goal-detail-info-description">
-                <p class="goal-detail-info-description-head"><?= __('詳細') ?></p>
+                <p class="goal-detail-info-description-head"><?= __('Description') ?></p>
 
                 <p class="goal-detail-info-description-contents"><?= nl2br($this->TextEx->autoLink($goal['Goal']['description'])) ?></p>
             </div>

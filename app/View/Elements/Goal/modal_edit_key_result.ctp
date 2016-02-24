@@ -112,7 +112,7 @@
                         <div class="eee">
                             <?=
                             $this->Form->input('KeyResult.value_unit',
-                                               ['label'               => __("単位"),
+                                               ['label'               => __("Unit"),
                                                 'wrapInput'           => 'modal-edit-kr-change-unit',
                                                 'type'                => 'select',
                                                 'class'               => 'change-select-target-hidden form-control addteam_input-design',
@@ -174,8 +174,7 @@
                     <div class="goal-set-input">
                         <div class="form-group" id="KeyResult0EndDateContainer">
                             <label for="KeyResult0EndDate" class="control-label goal-set-mid-label"><?=
-                                __(
-                                    "期限") ?></label>
+                                __("Due Date") ?></label>
 
                             <div class="input-group date goal-set-date"
                                  data-date-end-date="<?= $limit_end_date ?>"
@@ -245,7 +244,7 @@
                 <?=
                 $this->Form->input('priority', [
                     'before'                   => '<h5 class="modal-key-result-headings">' . __(
-                                                                                                 "重要度") . '<span class="modal-key-result-headings-description">' . __(
+                                                                                                 "Weight") . '<span class="modal-key-result-headings-description">' . __(
                                                                                                                                                                        "ゴールにとってこの成果の重要度") . '</span></h5>',
                     'label'                    => false,
                     'type'                     => 'select',

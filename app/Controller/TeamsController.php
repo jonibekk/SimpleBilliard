@@ -28,12 +28,12 @@ class TeamsController extends AppController
         }
 
         if (!$this->Team->add($this->request->data, $this->Auth->user('id'))) {
-            $this->Pnotify->outError(__("チーム作成に失敗しました。"));
+            $this->Pnotify->outError(__("Failed to create a team."));
             return $this->render();
         }
         $this->_refreshAuth($this->Auth->user('id'));
         $this->Session->write('current_team_id', $this->Team->getLastInsertID());
-        $this->Pnotify->outSuccess(__("チームを作成しました。"));
+        $this->Pnotify->outSuccess(__("Created a team."));
         return $this->redirect(['action' => 'invite']);
     }
 
@@ -43,10 +43,10 @@ class TeamsController extends AppController
         $this->Team->id = $this->current_team_id;
         if ($this->Team->save($this->request->data)) {
             Cache::clear(false, 'team_info');
-            $this->Pnotify->outSuccess(__("チームの基本設定を更新しました。"));
+            $this->Pnotify->outSuccess(__("Changed basic team settings."));
         }
         else {
-            $this->Pnotify->outError(__("チームの基本設定の更新に失敗しました。"));
+            $this->Pnotify->outError(__("Failed to change basic team settings."));
         }
         return $this->redirect($this->referer());
     }
@@ -56,7 +56,7 @@ class TeamsController extends AppController
         $this->request->allowMethod('post');
         $this->Team->begin();
         if ($this->Team->saveEditTerm($this->current_team_id, $this->request->data)) {
-            $this->Pnotify->outSuccess(__("期間設定を更新しました。"));
+            $this->Pnotify->outSuccess(__("Changed time period."));
             $this->Team->commit();
         }
         else {
@@ -980,7 +980,7 @@ class TeamsController extends AppController
         }
 
         if (!$team_vision_id = viaIsSet($this->request->params['named']['team_vision_id'])) {
-            $this->Pnotify->outError(__("不正な画面遷移です。"));
+            $this->Pnotify->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
         if (!$this->Team->TeamVision->exists($team_vision_id)) {
@@ -1039,7 +1039,7 @@ class TeamsController extends AppController
         $this->layout = LAYOUT_ONE_COLUMN;
 
         if (!$group_vision_id = viaIsSet($this->request->params['named']['group_vision_id'])) {
-            $this->Pnotify->outError(__("不正な画面遷移です。"));
+            $this->Pnotify->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
         if (!$this->Team->GroupVision->exists($group_vision_id)) {

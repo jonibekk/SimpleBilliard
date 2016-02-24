@@ -187,13 +187,13 @@ $kr_count = 0;
                                 <?php else: ?>
                                     <?php if (isset($goal['Goal']['owner_approval_flag']) === true) : ?>
                                         <?php if ($goal['Goal']['owner_approval_flag'] === '0') : ?>
-                                            <span style="color:red"><?= __("認定待ち") ?></span>
+                                            <span style="color:red"><?= __("Waiting for approval") ?></span>
                                         <?php elseif ($goal['Goal']['owner_approval_flag'] === '1') : ?>
-                                            <span style="color:#00BFFF"><?= __("評価対象") ?></span>
+                                            <span style="color:#00BFFF"><?= __("In Evaluation") ?></span>
                                         <?php elseif ($goal['Goal']['owner_approval_flag'] === '2') : ?>
-                                            <?= __("評価対象外") ?>
+                                            <?= __("Out of Evaluation") ?>
                                         <?php elseif ($goal['Goal']['owner_approval_flag'] === '3') : ?>
-                                            <span style="color:red"><?= __("修正待ち") ?></span>
+                                            <span style="color:red"><?= __("Waiting for modified") ?></span>
                                         <?php endif ?>
                                         ・
                                     <?php endif; ?>

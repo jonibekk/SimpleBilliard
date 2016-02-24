@@ -34,7 +34,7 @@ App::uses('AppModel', 'Model');
 class Team extends AppModel
 {
     /**
-     * タイプ
+     * Type | タイプ
      */
     // const TYPE_FREE = 1;
     // const TYPE_PRO = 2;
@@ -52,7 +52,7 @@ class Team extends AppModel
     ];
 
     /**
-     * タイプの名前をセット
+     * Set Type name | タイプの名前をセット
      */
     private function _setTypeName()
     {
@@ -211,19 +211,19 @@ class Team extends AppModel
         ];
         $postData = array_merge($postData, $team_member);
         $this->saveAll($postData);
-        //デフォルトチームを更新
+        // Update default team | デフォルトチームを更新
         $user = $this->TeamMember->User->findById($uid);
         if (isset($user['User']) && !$user['User']['default_team_id']) {
             $this->TeamMember->User->id = $uid;
             $this->TeamMember->User->saveField('default_team_id', $this->id);
         }
 
-        // 「チーム全体」サークルを追加
+        // Add All team | 「チーム全体」サークルを追加
         $circleData = [
             'Circle'       => [
                 'team_id'      => $this->id,
-                'name'         => __('チーム全体'),
-                'description'  => __('チーム全体'),
+                'name'         => __('All Team'),
+                'description'  => __('All Team'),
                 'public_flg'   => true,
                 'team_all_flg' => true,
             ],
@@ -236,13 +236,13 @@ class Team extends AppModel
             ]
         ];
         if ($this->Circle->saveAll($circleData)) {
-            // サークルメンバー数を更新
-            // 新しく追加したチームのサークルなので current_team_id を一時的に変更する
+            // Update circle members number | サークルメンバー数を更新
+            // temporarily changed current_team_id | 新しく追加したチームのサークルなので current_team_id を一時的に変更する
             $tmp = $this->Circle->CircleMember->current_team_id;
             $this->Circle->CircleMember->current_team_id = $this->id;
             $this->Circle->CircleMember->updateCounterCache(['circle_id' => $this->Circle->getLastInsertID()]);
             $this->Circle->CircleMember->current_team_id = $tmp;
-            //cache削除
+            // cache clear | cache削除
             Cache::delete($this->getCacheKey(CACHE_KEY_TEAM_LIST, true, null, false), 'team_info');
         }
         return true;
