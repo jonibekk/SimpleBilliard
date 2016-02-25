@@ -32,6 +32,7 @@ class NotifyBizComponent extends Component
         'notify_type' => null,
         'model_id'    => null,
         'item_name'   => null,
+        'post_id'     => null,
         'options'     => [],
     ];
     public $notify_settings = [];
@@ -410,14 +411,14 @@ class NotifyBizComponent extends Component
         if (empty($post)) {
             return;
         }
-        if ($comment_id) {
-            $comment = $this->Comment->findById($comment_id);
-        }
 
         //基本的にnotifyにはメッセージについたコメントを表示するが、コメントが無ければ最初のメッセージ
-        $body = $comment['Comment']['body'];
-        if (empty($body)) {
-            $body = $post['Post']['body'];
+        $body = $post['Post']['body'];
+        if ($comment_id) {
+            $comment = $this->Comment->findById($comment_id);
+            if (!empty($comment_body = $comment['Comment']['body'])) {
+                $body = $comment_body;
+            }
         }
 
         //宛先は閲覧可能な全ユーザ
