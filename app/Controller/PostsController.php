@@ -65,10 +65,12 @@ class PostsController extends AppController
         $message_list = $this->Post->convertData($result);
         $notify_list = $this->_getMessageNotifyPostIdArray();
 
-        for ($i = 0; $i < count($message_list); $i++) {
-            $post_id = $message_list[$i]['Post']['id'];
-            if ($notify_list[$post_id]) {
-                $message_list[$i]['Post']['is_unread'] = true;
+        if (!empty($notify_list)) {
+            foreach ($message_list as $key => $value) {
+                $post_id = $value['Post']['id'];
+                if (isset($notify_list[$post_id])) {
+                    $message_list[$key]['Post']['is_unread'] = true;
+                }
             }
         }
 
