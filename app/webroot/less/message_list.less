@@ -23,24 +23,27 @@
 }
 
 .message-list-panel-body {
-  padding: 0 11px;
+  padding: 0 0;
 }
 
 .message-list-panel-cards {
   display: block;
-  height: 64px;
-  margin: 0 0 8px 0;
+  height: 72px;
   width: 100%;
+  margin-top: 1px;
+  &:first-child {
+    margin-top: 0;
+  }
 }
 
 .message-list-panel-card {
   width: 100%;
-  border-bottom: 1px solid @baseLightGray;
+  border-bottom: 1px solid @lightGray;
   display: inline-block;
 }
 
 .message-list-panel-card-link {
-  padding: 5px 0;
+  padding: 6px 6px 2px;
   &:hover,
   &:active,
   &:target,
@@ -73,7 +76,14 @@
 .message-list-panel-card-text {
   font-size: @fontSmall;
   color: @black;
+}
+
+.message-list-panel-card-text-read {
   .line-number-limit-1;
+}
+
+.message-list-panel-card-text-unread {
+  .line-number-limit-1(@unreadRed);
 }
 
 .message-list-panel-card-aside {
