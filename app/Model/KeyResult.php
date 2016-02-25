@@ -33,11 +33,11 @@ class KeyResult extends AppModel
      */
     function _setUnitName()
     {
-        self::$UNIT[self::UNIT_PERCENT] = __d('gl', "%");
-        self::$UNIT[self::UNIT_YEN] = __d('gl', '¥');
-        self::$UNIT[self::UNIT_DOLLAR] = __d('gl', '$');
-        self::$UNIT[self::UNIT_NUMBER] = __d('gl', "その他の単位");
-        self::$UNIT[self::UNIT_BINARY] = __d('gl', 'なし');
+        self::$UNIT[self::UNIT_PERCENT] = __d('app', "%");
+        self::$UNIT[self::UNIT_YEN] = __d('app', '¥');
+        self::$UNIT[self::UNIT_DOLLAR] = __d('app', '$');
+        self::$UNIT[self::UNIT_NUMBER] = __d('app', "その他の単位");
+        self::$UNIT[self::UNIT_BINARY] = __d('app', 'なし');
     }
 
     /**
@@ -45,10 +45,10 @@ class KeyResult extends AppModel
      */
     private function _setPriorityName()
     {
-        $this->priority_list[0] = __d('gl', "0 (進捗に影響しない)");
-        $this->priority_list[1] = __d('gl', "1 (とても低い)");
-        $this->priority_list[3] = __d('gl', "3 (デフォルト)");
-        $this->priority_list[5] = __d('gl', "5 (とても高い)");
+        $this->priority_list[0] = __d('app', "0 (進捗に影響しない)");
+        $this->priority_list[1] = __d('app', "1 (とても低い)");
+        $this->priority_list[3] = __d('app', "3 (デフォルト)");
+        $this->priority_list[5] = __d('app', "5 (とても高い)");
     }
 
     public $priority_list = [
@@ -155,7 +155,7 @@ class KeyResult extends AppModel
             $uid = $this->my_uid;
         }
         if (!isset($data['KeyResult']) || empty($data['KeyResult'])) {
-            throw new RuntimeException(__d('gl', "達成要素のデータがありません。"));
+            throw new RuntimeException(__d('app', "達成要素のデータがありません。"));
         }
         $data['KeyResult']['goal_id'] = $goal_id;
         $data['KeyResult']['user_id'] = $uid;
@@ -171,7 +171,7 @@ class KeyResult extends AppModel
         $validate_backup = $this->validate;
         $this->validate = array_merge($this->validate, $this->post_validate);
         if (!$this->validates()) {
-            throw new RuntimeException(__d('gl', "達成要素の保存に失敗しました。"));
+            throw new RuntimeException(__d('app', "達成要素の保存に失敗しました。"));
         }
         $this->validate = $validate_backup;
 
@@ -188,7 +188,7 @@ class KeyResult extends AppModel
         }
         $this->create();
         if (!$this->save($data)) {
-            throw new RuntimeException(__d('gl', "達成要素の保存に失敗しました。"));
+            throw new RuntimeException(__d('app', "達成要素の保存に失敗しました。"));
         }
         Cache::delete($this->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         return true;
@@ -369,7 +369,7 @@ class KeyResult extends AppModel
     {
         $current_kr = $this->findById($kr_id);
         if (empty($current_kr)) {
-            throw new RuntimeException(__d('gl', "成果が存在しません。"));
+            throw new RuntimeException(__d('app', "成果が存在しません。"));
         }
         $this->id = $kr_id;
         $this->saveField('current_value', $current_kr['KeyResult']['target_value']);
@@ -382,7 +382,7 @@ class KeyResult extends AppModel
     {
         $current_kr = $this->findById($kr_id);
         if (empty($current_kr)) {
-            throw new RuntimeException(__d('gl', "成果が存在しません。"));
+            throw new RuntimeException(__d('app', "成果が存在しません。"));
         }
         $current_kr['KeyResult']['completed'] = null;
         unset($current_kr['KeyResult']['modified']);
@@ -412,7 +412,7 @@ class KeyResult extends AppModel
         if (!$separate_progress) {
             $res = $this->find('list', $options);
             if ($with_all_opt) {
-                return [null => __d('gl', 'すべて')] + $res;
+                return [null => __d('app', 'すべて')] + $res;
             }
             return $res;
         }
@@ -423,7 +423,7 @@ class KeyResult extends AppModel
         $completed_opt['conditions']['NOT']['completed'] = null;
         $completed_krs = $this->find('list', $completed_opt);
         $res = [];
-        $res += $with_all_opt ? [null => __d('gl', 'すべて')] : null;
+        $res += $with_all_opt ? [null => __d('app', 'すべて')] : null;
         if (!empty($incomplete_krs)) {
             $res += ['disable_value1' => '----------------------------------------------------------------------------------------'];
             $res += $incomplete_krs;

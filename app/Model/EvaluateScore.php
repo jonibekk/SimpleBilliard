@@ -24,9 +24,17 @@ class EvaluateScore extends AppModel
      */
     public $validate = [
         'name'        => [
+            'isString'   => [
+                'rule' => ['isString'],
+                'allowEmpty' => true,
+            ],
             'maxLength' => ['rule' => ['maxLength', 200]],
         ],
         'description' => [
+            'isString'   => [
+                'rule' => ['isString'],
+                'allowEmpty' => true,
+            ],
             'maxLength' => ['rule' => ['maxLength', 2000]],
         ],
         'index_num'   => [
@@ -75,7 +83,7 @@ class EvaluateScore extends AppModel
             ]
         ];
         $res = $this->find('list', $options);
-        return [null => __d('gl', "選択してください")] + $res;
+        return [null => __d('app', "選択してください")] + $res;
     }
 
     function getScore($teamId)

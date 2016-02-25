@@ -131,14 +131,14 @@ class PostsController extends AppController
             // バリデーションエラーのケース
             if (!empty($this->Post->validationErrors)) {
                 $error_msg = array_shift($this->Post->validationErrors);
-                $this->Pnotify->outError($error_msg[0], ['title' => __d('gl', "メンバーの変更に失敗しました。")]);
+                $this->Pnotify->outError($error_msg[0], ['title' => __d('app', "メンバーの変更に失敗しました。")]);
             }
             else {
-                $this->Pnotify->outError(__d('gl', "メンバーの変更に失敗しました。"));
+                $this->Pnotify->outError(__d('app', "メンバーの変更に失敗しました。"));
             }
         }
 
-        $this->Pnotify->outSuccess(__d('gl', "メンバーを変更しました。"));
+        $this->Pnotify->outSuccess(__d('app', "メンバーを変更しました。"));
         $this->redirect(['controller' => 'posts', 'action' => 'message#', $id]);
     }
 
@@ -187,10 +187,10 @@ class PostsController extends AppController
             // バリデーションエラーのケース
             if (!empty($this->Post->validationErrors)) {
                 $error_msg = array_shift($this->Post->validationErrors);
-                $this->Pnotify->outError($error_msg[0], ['title' => __d('gl', "投稿に失敗しました。")]);
+                $this->Pnotify->outError($error_msg[0], ['title' => __d('app', "投稿に失敗しました。")]);
             }
             else {
-                $this->Pnotify->outError(__d('gl', "投稿に失敗しました。"));
+                $this->Pnotify->outError(__d('app', "投稿に失敗しました。"));
             }
             return false;
         }
@@ -206,7 +206,7 @@ class PostsController extends AppController
 
         //何らかの原因でsocketIdが無いもしくは、共有先指定なしの場合は以降の処理(通知、イベントトラッキング)を行わない
         if (!$socketId || $share[0] === "") {
-            $this->Pnotify->outSuccess(__d('gl', "投稿しました。"));
+            $this->Pnotify->outSuccess(__d('app', "投稿しました。"));
             return false;
         }
 
@@ -248,7 +248,7 @@ class PostsController extends AppController
             $this->Mixpanel->trackPost($this->Post->getLastInsertID(), $mixpanel_prop_name);
         }
 
-        $this->Pnotify->outSuccess(__d('gl', "投稿しました。"));
+        $this->Pnotify->outSuccess(__d('app', "投稿しました。"));
         return true;
     }
 
@@ -262,16 +262,16 @@ class PostsController extends AppController
     {
         $this->Post->id = viaIsSet($this->request->params['named']['post_id']);
         if (!$this->Post->exists()) {
-            throw new NotFoundException(__d('gl', "この投稿は存在しません。"));
+            throw new NotFoundException(__d('app', "この投稿は存在しません。"));
         }
         if (!$this->Post->isOwner($this->Auth->user('id')) && !$this->User->TeamMember->myStatusWithTeam['TeamMember']['admin_flg']) {
-            throw new NotFoundException(__d('gl', "この投稿はあなたのものではありません。"));
+            throw new NotFoundException(__d('app', "この投稿はあなたのものではありません。"));
         }
         $this->request->allowMethod('post', 'delete');
         $this->Post->delete();
         $this->Post->PostFile->AttachedFile->deleteAllRelatedFiles($this->Post->id,
                                                                    AttachedFile::TYPE_MODEL_POST);
-        $this->Pnotify->outSuccess(__d('gl', "投稿を削除しました。"));
+        $this->Pnotify->outSuccess(__d('app', "投稿を削除しました。"));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->redirect($this->referer());
@@ -289,10 +289,10 @@ class PostsController extends AppController
 
         // 例外チェック
         if (!$this->Post->exists()) {
-            throw new NotFoundException(__d('gl', "この投稿は存在しません。"));
+            throw new NotFoundException(__d('app', "この投稿は存在しません。"));
         }
         if (!$this->Post->isOwner($this->Auth->user('id'))) {
-            throw new NotFoundException(__d('gl', "この投稿はあなたのものではありません。"));
+            throw new NotFoundException(__d('app', "この投稿はあなたのものではありません。"));
         }
 
         // フォームが submit された時
@@ -303,11 +303,11 @@ class PostsController extends AppController
                                                                  viaIsSet($this->request->data['Post']['body']));
             // 投稿を保存
             if ($this->Post->postEdit($this->request->data)) {
-                $this->Pnotify->outSuccess(__d('gl', "投稿の変更を保存しました。"));
+                $this->Pnotify->outSuccess(__d('app', "投稿の変更を保存しました。"));
             }
             else {
                 $error_msg = array_shift($this->Post->validationErrors);
-                $this->Pnotify->outError($error_msg[0], ['title' => __d('gl', "投稿の変更に失敗しました。")]);
+                $this->Pnotify->outError($error_msg[0], ['title' => __d('app', "投稿の変更に失敗しました。")]);
             }
             /** @noinspection PhpInconsistentReturnPointsInspection */
             /** @noinspection PhpVoidFunctionResultUsedInspection */
@@ -349,7 +349,7 @@ class PostsController extends AppController
                                                                    AttachedFile::TYPE_MODEL_COMMENT);
         $this->Post->Comment->updateCounterCache(['post_id' => $post_id]);
 
-        $this->Pnotify->outSuccess(__d('gl', "コメントを削除しました。"));
+        $this->Pnotify->outSuccess(__d('app', "コメントを削除しました。"));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->redirect($this->referer());
@@ -382,11 +382,11 @@ class PostsController extends AppController
 
         // コメントを追加
         if ($this->Post->Comment->commentEdit($this->request->data)) {
-            $this->Pnotify->outSuccess(__d('gl', "コメントの変更を保存しました。"));
+            $this->Pnotify->outSuccess(__d('app', "コメントの変更を保存しました。"));
         }
         else {
             $error_msg = array_shift($this->Post->Comment->validationErrors);
-            $this->Pnotify->outError($error_msg[0], ['title' => __d('gl', "コメントの変更に失敗しました。")]);
+            $this->Pnotify->outError($error_msg[0], ['title' => __d('app', "コメントの変更に失敗しました。")]);
         }
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
@@ -806,7 +806,7 @@ class PostsController extends AppController
         }
         else {
             $result['error'] = true;
-            $result['msg'] = __d('gl', "エラーが発生しました。");
+            $result['msg'] = __d('app', "エラーが発生しました。");
         }
         return $this->_ajaxGetResponse($result);
     }
@@ -830,7 +830,7 @@ class PostsController extends AppController
         }
         else {
             $result['error'] = true;
-            $result['msg'] = __d('gl', "エラーが発生しました。");
+            $result['msg'] = __d('app', "エラーが発生しました。");
         }
         return $this->_ajaxGetResponse($result);
     }
@@ -853,7 +853,7 @@ class PostsController extends AppController
         }
         else {
             $result['error'] = true;
-            $result['msg'] = __d('gl', "エラーが発生しました。");
+            $result['msg'] = __d('app', "エラーが発生しました。");
         }
         return $this->_ajaxGetResponse($result);
     }
@@ -977,7 +977,7 @@ class PostsController extends AppController
         $type = viaIsSet($post['Post']['type']);
         try {
             if (!$this->Post->exists()) {
-                throw new RuntimeException(__d('gl', "この投稿は削除されています。"));
+                throw new RuntimeException(__d('app', "この投稿は削除されています。"));
             }
 
             // OGP 情報を取得する URL が含まれるテキスト
@@ -1012,7 +1012,7 @@ class PostsController extends AppController
                 //mixpanel
                 $this->Mixpanel->trackComment($type, $this->Post->Comment->getLastInsertID());
 
-                $result['msg'] = __d('gl', "コメントしました。");
+                $result['msg'] = __d('app', "コメントしました。");
             }
             else {
                 if (!empty($this->Post->Comment->validationErrors)) {
@@ -1087,19 +1087,19 @@ class PostsController extends AppController
         // データが存在するか確認
         $file = $this->Post->PostFile->AttachedFile->findById($this->request->params['named']['file_id']);
         if (!$file) {
-            throw new NotFoundException(__d('gl', "ファイルが存在しません。"));
+            throw new NotFoundException(__d('app', "ファイルが存在しません。"));
         }
 
         // ファイルへのアクセス権限があるか確認
         if (!$this->Post->PostFile->AttachedFile->isReadable($this->request->params['named']['file_id'])) {
-            throw new NotFoundException(__d('gl', "ファイルが存在しません。"));
+            throw new NotFoundException(__d('app', "ファイルが存在しません。"));
         }
 
         // ファイルデータを取得
         $url = $this->Post->PostFile->AttachedFile->getFileUrl($this->request->params['named']['file_id']);
         $res = $this->_getHttpSocket()->get(Router::url($url, true));
         if (!$res->body) {
-            throw new NotFoundException(__d('gl', "ファイルが存在しません。"));
+            throw new NotFoundException(__d('app', "ファイルが存在しません。"));
         }
 
         // safari は日本語ファイル名が文字化けするので特別扱い
@@ -1227,7 +1227,7 @@ class PostsController extends AppController
         $this->_ajaxPreProcess();
         $file_id = $this->Post->PostFile->AttachedFile->preUploadFile($this->request->params['form']);
         return $this->_ajaxGetResponse(['error' => $file_id ? false : true,
-                                        'msg'   => $file_id ? "" : __d('gl', 'アップロードに失敗しました'),
+                                        'msg'   => $file_id ? "" : __d('app', 'アップロードに失敗しました'),
                                         'id'    => $file_id ? $file_id : "",
                                        ]);
     }
@@ -1249,8 +1249,8 @@ class PostsController extends AppController
         $success = $this->Post->PostFile->AttachedFile->cancelUploadFile($this->request->data('AttachedFile.file_id'));
         return $this->_ajaxGetResponse(['error' => !$success,
                                         'msg'   => $success
-                                            ? __d('gl', 'ファイルを削除しました')
-                                            : __d('gl', 'ファイルの削除に失敗しました'),
+                                            ? __d('app', 'ファイルを削除しました')
+                                            : __d('app', 'ファイルの削除に失敗しました'),
                                         'id'    => "",
                                        ]);
     }
@@ -1359,15 +1359,15 @@ class PostsController extends AppController
     public function join_circle()
     {
         if (!$this->_isAvailCircle()) {
-            $this->Pnotify->outError(__d('gl', "アクセスURLに誤りがあります。"));
+            $this->Pnotify->outError(__d('app', "アクセスURLに誤りがあります。"));
             return $this->redirect($this->referer());
         }
 
         if ($this->Post->Circle->CircleMember->joinNewMember($this->request->params['named']['circle_id'])) {
-            $this->Pnotify->outSuccess(__d('gl', "You have joined the circle"));
+            $this->Pnotify->outSuccess(__d('app', "You have joined the circle"));
         }
         else {
-            $this->Pnotify->outError(__d('gl', "Error in joining the circle"));
+            $this->Pnotify->outError(__d('app', "Error in joining the circle"));
         }
         return $this->redirect($this->request->referer());
 
@@ -1376,16 +1376,16 @@ class PostsController extends AppController
     public function unjoin_circle()
     {
         if (!$this->_isAvailCircle()) {
-            $this->Pnotify->outError(__d('gl', "アクセスURLに誤りがあります。"));
+            $this->Pnotify->outError(__d('app', "アクセスURLに誤りがあります。"));
             return $this->redirect($this->referer());
         }
         $circle_id = $this->request->params['named']['circle_id'];
         if ($circle_id == $this->Post->Circle->getTeamAllCircleId()) {
-            $this->Pnotify->outError(__d('gl', "このサークルから抜けることはできません。"));
+            $this->Pnotify->outError(__d('app', "このサークルから抜けることはできません。"));
             return $this->redirect($this->referer());
         }
         $this->Post->Circle->CircleMember->unjoinMember($circle_id);
-        $this->Pnotify->outSuccess(__d('gl', "You have successfully left the circle"));
+        $this->Pnotify->outSuccess(__d('app', "You have successfully left the circle"));
         return $this->redirect($this->referer());
     }
 

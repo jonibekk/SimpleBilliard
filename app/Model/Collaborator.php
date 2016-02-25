@@ -38,8 +38,8 @@ class Collaborator extends AppModel
      */
     private function _setTypeName()
     {
-        self::$TYPE[self::TYPE_COLLABORATOR] = __d('gl', "コラボレータ");
-        self::$TYPE[self::TYPE_OWNER] = __d('gl', "オーナ");
+        self::$TYPE[self::TYPE_COLLABORATOR] = __d('app', "コラボレータ");
+        self::$TYPE[self::TYPE_OWNER] = __d('app', "オーナ");
     }
 
     /**
@@ -47,10 +47,10 @@ class Collaborator extends AppModel
      */
     private function _setStatusName()
     {
-        self::$STATUS[self::STATUS_UNAPPROVED] = __d('gl', "認定待ち");
-        self::$STATUS[self::STATUS_APPROVAL] = __d('gl', "評価対象");
-        self::$STATUS[self::STATUS_HOLD] = __d('gl', "評価対象外");
-        self::$STATUS[self::STATUS_MODIFY] = __d('gl', "修正待ち");
+        self::$STATUS[self::STATUS_UNAPPROVED] = __d('app', "認定待ち");
+        self::$STATUS[self::STATUS_APPROVAL] = __d('app', "評価対象");
+        self::$STATUS[self::STATUS_HOLD] = __d('app', "評価対象外");
+        self::$STATUS[self::STATUS_MODIFY] = __d('app', "修正待ち");
     }
 
     /**
@@ -70,6 +70,12 @@ class Collaborator extends AppModel
         'type'        => [
             'numeric' => [
                 'rule' => ['numeric'],
+            ],
+        ],
+        'priority'    => [
+            'numeric' => [
+                'rule'       => ['numeric'],
+                'allowEmpty' => true,
             ],
         ],
         'del_flg'     => [

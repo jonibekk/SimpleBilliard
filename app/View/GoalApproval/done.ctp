@@ -59,7 +59,7 @@
         <a class="font_lightGray-veryDark no-line plr_18px sp-feed-link inline-block pt_12px height_40px"
            id="SubHeaderMenuFeed"
            href="<?= $this->Html->url(['controller' => 'goal_approval', 'action' => 'index']) ?>">
-            <?= __d('gl', "処理待ち") ?>
+            <?= __d('app', "処理待ち") ?>
             <?php if ($unapproved_cnt > 0) { ?>
             <span class="btn btn-danger btn-xs bell-notify-box approval_badge">
             <?php echo $unapproved_cnt; ?>
@@ -69,7 +69,7 @@
     <div class="col col-xxs-6">
         <a class="font_lightGray-veryDark no-line plr_18px sp-feed-link inline-block pt_12px height_40px sp-feed-active"
            id="SubHeaderMenuGoal">
-            <?= __d('gl', "処理済み") ?><?php if ($done_cnt > 0) {
+            <?= __d('app', "処理済み") ?><?php if ($done_cnt > 0) {
                 echo '(' . $done_cnt . ')';
             } ?></a>
     </div>
@@ -94,39 +94,39 @@
                                                                                                                        'User.photo',
                                                                                                                        ['style' => 'small'])]) ?></p>
 
-                            <p class="approval_body_text"><?= __d('gl', "名前") ?>
+                            <p class="approval_body_text"><?= __d('app', "名前") ?>
                                 : <?= h($goal['User']['display_username']); ?></p>
 
-                            <p class="approval_body_text"><?= __d('gl', "カテゴリ") ?>
+                            <p class="approval_body_text"><?= __d('app', "カテゴリ") ?>
                                 : <?= h($goal['Goal']['GoalCategory']['name']); ?></p>
 
-                            <p class="approval_body_text"><?= __d('gl', "ゴール名") ?>: <?= h($goal['Goal']['name']); ?></p>
+                            <p class="approval_body_text"><?= __d('app', "ゴール名") ?>: <?= h($goal['Goal']['name']); ?></p>
 
                             <p class="approval_body_text"><?= $goal['Collaborator']['type'] === (string)Collaborator::TYPE_OWNER ?
-                                    __d('gl', "リーダー") : __d('gl', "コラボレーター"); ?></p>
+                                    __d('app', "リーダー") : __d('app', "コラボレーター"); ?></p>
 
-                            <p class="approval_body_text"><?= __d('gl', "役割") ?>
+                            <p class="approval_body_text"><?= __d('app', "役割") ?>
                                 : <?= h($goal['Collaborator']['role']); ?></p>
 
-                            <p class="approval_body_text"><?= __d('gl', "単位") ?>
+                            <p class="approval_body_text"><?= __d('app', "単位") ?>
                                 : <?= h($value_unit_list[$goal['Goal']['value_unit']]); ?></p>
 
-                            <p class="approval_body_text"><?= __d('gl', "達成時") ?>
+                            <p class="approval_body_text"><?= __d('app', "達成時") ?>
                                 : <?= (double)$goal['Goal']['target_value']; ?></p>
 
-                            <p class="approval_body_text"><?= __d('gl', "開始時") ?>
+                            <p class="approval_body_text"><?= __d('app', "開始時") ?>
                                 : <?= (double)$goal['Goal']['start_value']; ?></p>
 
-                            <p class="approval_body_text"><?= __d('gl', "期限日") ?>
+                            <p class="approval_body_text"><?= __d('app', "期限日") ?>
                                 : <?= $this->TimeEx->date(h($goal['Goal']['end_date'])) ?></p>
 
-                            <p class="approval_body_text"><?= __d('gl', "重要度") ?>
+                            <p class="approval_body_text"><?= __d('app', "重要度") ?>
                                 : <?= $goal['Collaborator']['priority']; ?></p>
 
-                            <p class="approval_body_text"><?= __d('gl', "目的") ?>
+                            <p class="approval_body_text"><?= __d('app', "目的") ?>
                                 : <?= h($goal['Goal']['Purpose']['name']); ?></p>
 
-                            <p class="approval_body_text"><?= __d('gl', "詳細") ?>
+                            <p class="approval_body_text"><?= __d('app', "詳細") ?>
                                 : <?= nl2br($this->TextEx->autoLink($goal['Goal']['description'])); ?></p>
 
                             <?=
@@ -153,12 +153,12 @@
                                     <div class="approval_botton_area">
                                         <?php if ($goal['my_goal'] === false) { ?>
                                             <?php if ($goal['Collaborator']['valued_flg'] === (string)Collaborator::STATUS_APPROVAL) { ?>
-                                                <?= $this->Form->button(__d('gl', "評価対象にしない"),
+                                                <?= $this->Form->button(__d('app', "評価対象にしない"),
                                                                         ['name' => 'wait_btn', 'class' => 'btn btn-primary approval_button', 'div' => false]) ?>
                                             <?php }
                                             else {
                                                 if ($goal['Collaborator']['valued_flg'] === (string)Collaborator::STATUS_HOLD) { ?>
-                                                    <?= $this->Form->button(__d('gl', "評価対象にする"),
+                                                    <?= $this->Form->button(__d('app', "評価対象にする"),
                                                                             ['name' => 'approval_btn', 'class' => 'btn btn-primary approval_button', 'div' => false]) ?>
                                                 <?php }
                                             } ?>
@@ -189,7 +189,7 @@
                                 <div class="row">
                                     <div class="approval_botton_area">
                                         <?php if ($goal['my_goal'] === true) { ?>
-                                            <?= $this->Form->button(__d('gl', "コメントする"),
+                                            <?= $this->Form->button(__d('app', "コメントする"),
                                                                     ['name' => 'comment_btn', 'class' => 'btn btn-primary approval_button', 'div' => false]) ?>
                                         <?php } ?>
                                     </div>

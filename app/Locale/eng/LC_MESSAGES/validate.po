@@ -4,16 +4,16 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2015-10-22 17:41+0900\n"
-"PO-Revision-Date: 2015-10-22 17:41+0900\n"
+"POT-Creation-Date: 2016-02-17 01:21+0000\n"
+"PO-Revision-Date: 2016-02-20 20:04+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.8.6\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"X-Generator: Poedit 1.8.7\n"
 
 #: Model/Evaluation.php:266
 msgid "入力内容に不足があります。"
@@ -61,20 +61,27 @@ msgstr "%s does not allow you to specify the ID of you."
 
 #: Model/TeamMember.php:1902
 msgid "電話番号が正しくありません。使用できる文字は半角数字、'-()'です。"
-msgstr "Telephone number is not incorrect. Characters are single-byte number and '-()' that can be used"
+msgstr ""
+"Telephone number is not incorrect. Characters are single-byte number and '-"
+"()' that can be used"
 
 #: Model/TeamMember.php:1909
 msgid ""
 "サポートされていない性別表記です。'male'もしくは'female'で記入してください。"
-msgstr "It is the gender representation that is not supported. Please fill in 'male' or 'female'."
+msgstr ""
+"It is the gender representation that is not supported. Please fill in 'male' "
+"or 'female'."
 
 #: Model/TeamMember.php:1916
 msgid "サポートされていないローカル姓名の言語コードです。"
-msgstr "It is unsupported language code of the local first name and local last name."
+msgstr ""
+"It is unsupported language code of the local first name and local last name."
 
 #: Model/TeamMember.php:1935
 msgid "誕生日を記入する場合は年月日のすべての項目を記入してください。"
-msgstr "If you want to fill in the date of birth , please fill out all of the items of date."
+msgstr ""
+"If you want to fill in the date of birth , please fill out all of the items "
+"of date."
 
 #: Model/User.php:516
 msgid "現在のパスワードが間違っています。"
@@ -92,7 +99,9 @@ msgstr "This e-mail address is not registered in Goalous."
 msgid ""
 "このメールアドレスは認証が完了しておりません。Goalousから以前に送信されたメー"
 "ルをご確認ください。"
-msgstr "This e-mail address is not authenticated . Please check the e-mail that was sent previously from Goalous."
+msgstr ""
+"This e-mail address is not authenticated . Please check the e-mail that was "
+"sent previously from Goalous."
 
 #: Model/User.php:622
 msgid "ユーザアカウントが有効ではありません。"
@@ -105,7 +114,9 @@ msgstr "E-mail address has not been entered"
 #: Model/User.php:714
 msgid ""
 "現在、他のメールアドレスの認証待ちの為、メールアドレス変更はできません。"
-msgstr "Currently , because of the authentication waiting for other e-mail address , you can not change your e-mail address."
+msgstr ""
+"Currently , because of the authentication waiting for other e-mail address , "
+"you can not change your e-mail address."
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:16
 #: View/Elements/modal_add_circle.ctp:42;80
@@ -178,7 +189,8 @@ msgstr "Please enter %2$d characters or less."
 msgid ""
 "このメールアドレスは既に使用されています。他のメールアドレスを指定してくださ"
 "い。"
-msgstr "This email address is already taken. Please specify the other e-mail address."
+msgstr ""
+"This email address is already taken. Please specify the other e-mail address."
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:25
 msgid "ファイルサイズが上限を超えています。"
@@ -188,7 +200,9 @@ msgstr "File size exceeds the upper limit."
 msgid ""
 "画像をアップロードできませんでした。JPG、PNG、GIFのいずれかの形式で保存してく"
 "ださい。"
-msgstr "it was not able to upload the image. Please save in any format of JPG, PNG or GIF."
+msgstr ""
+"it was not able to upload the image. Please save in any format of JPG, PNG "
+"or GIF."
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:27
 msgid "幾つかのメールアドレスが正しくありません。"
@@ -204,7 +218,8 @@ msgstr "Some of the e-mail address is incorrect."
 #: View/Teams/add_team_vision.ctp:127 View/Teams/edit_group_vision.ctp:138
 #: View/Teams/edit_team_vision.ctp:130 View/Users/add_profile.ctp:218
 msgid "10MB以下かつJPG、PNG、GIFのいずれかの形式を選択して下さい。"
-msgstr "10MB or less, and Please select one of the formats of JPG or PNG and GIF."
+msgstr ""
+"10MB or less, and Please select one of the formats of JPG or PNG and GIF."
 
 #: View/Elements/gl_common_js.ctp:52
 msgid "数字、英小文字、英大文字の混在にしてください。"
@@ -212,7 +227,8 @@ msgstr "Please mix of numbers, lower case letters and upper case letters."
 
 #: View/Elements/gl_common_js.ctp:53
 msgid "パスワードにメールアドレスと同一のものを指定する事はできません。"
-msgstr "It is not possible to use the same as the e-mail address as the password."
+msgstr ""
+"It is not possible to use the same as the e-mail address as the password."
 
 #: View/Elements/gl_common_js.ctp:54
 msgid "必須項目です。"
@@ -260,3 +276,27 @@ msgstr "Password is required if you want to change."
 #: View/Teams/add.ctp:110
 msgid " "
 msgstr ""
+
+#: Controller/AppController.php:491
+msgid "不正なアクセスです。"
+msgstr "Invalid access."
+
+#: Controller/UsersController.php:753
+msgid "別のユーザ宛のチーム招待です。"
+msgstr "This invitation is for another user."
+
+#: Model/Invite.php:87 Model/User.php:571
+msgid "トークンが正しくありません。送信されたメールを再度ご確認下さい。"
+msgstr "Invalid token. Please check your email again."
+
+#: Model/Invite.php:90
+msgid "このトークンは使用済みです。"
+msgstr "This token has already been used."
+
+#: Model/Invite.php:93 Model/User.php:574
+msgid "トークンの期限が切れています。"
+msgstr "This token is expired."
+
+#: View/Errors/error400.ctp:15
+msgid "お探しのページが見つかりませんでした。"
+msgstr "The page you're looking for can't be found."

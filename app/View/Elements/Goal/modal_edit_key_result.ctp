@@ -26,7 +26,7 @@
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= __d('gl', "成果を更新") ?></h4>
+            <h4 class="modal-title"><?= __d('app', "成果を更新") ?></h4>
             <ul class="add-key-result-goal-info">
                 <li>
                     <i class="fa fa-flag"></i><?= h($goal['Goal']['name']) ?>
@@ -69,17 +69,17 @@
                     <?=
                     $this->Form->input('KeyResult.name',
                                        ['before'                       => '<div class="set-goal">' .
-                                           '<h5 class="modal-key-result-headings">' . __d('gl',
-                                                                                          "成果名") . '<span class="modal-key-result-headings-description">' . __d('gl',
+                                           '<h5 class="modal-key-result-headings">' . __d('app',
+                                                                                          "成果名") . '<span class="modal-key-result-headings-description">' . __d('app',
                                                                                                                                                                 "達成の指標として『なに』をどうするか？") . '</span></label></div>',
                                         'label'                        => false,
-                                        'placeholder'                  => __d('gl', "具体的に絞り込んで書く"),
+                                        'placeholder'                  => __d('app', "具体的に絞り込んで書く"),
                                         "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
                                         'data-bv-stringlength'         => 'true',
                                         'data-bv-stringlength-max'     => 200,
                                         'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 200),
                                         'rows'                         => 1,
-                                        'afterInput'                   => '<span class="help-block font_12px">' . __d('gl',
+                                        'afterInput'                   => '<span class="help-block font_12px">' . __d('app',
                                                                                                                       "例）サービスAの国内市場シェアを増加させる") . '</span>'
                                        ]) ?>
                 </div>
@@ -88,7 +88,7 @@
                     //                echo $this->Form->input('KeyResult.current_value',
                     //                                        [
                     //                                            'before'                       => '<div class="control-label set-importance">' .
-                    //                                                '<label>' . __d('gl', "現在値") . '</label>' .
+                    //                                                '<label>' . __d('app', "現在値") . '</label>' .
                     //                                                '<div class="label-addiction">' . '</div></div>',
                     //                                            'label'                        => false,
                     //                                            'wrapInput'                    => 'goal-set-input',
@@ -105,14 +105,14 @@
                 </div>
                 <div class="row">
                     <div class="ddd">
-                        <h5 class="modal-key-result-headings"><?= __d('gl', "程度") ?><span
-                                class="modal-key-result-headings-description"><?= __d('gl', "どのくらい？") ?></span></h5>
+                        <h5 class="modal-key-result-headings"><?= __d('app', "程度") ?><span
+                                class="modal-key-result-headings-description"><?= __d('app', "どのくらい？") ?></span></h5>
                     </div>
                     <div class="goal-set-input">
                         <div class="eee">
                             <?=
                             $this->Form->input('KeyResult.value_unit',
-                                               ['label'               => __d('gl', "単位"),
+                                               ['label'               => __d('app', "単位"),
                                                 'wrapInput'           => 'modal-edit-kr-change-unit',
                                                 'type'                => 'select',
                                                 'class'               => 'change-select-target-hidden form-control addteam_input-design',
@@ -127,7 +127,7 @@
                             <div class="ggg">
                                 <?=
                                 $this->Form->input('KeyResult.target_value',
-                                                   ['label'                        => __d('gl', "達成時"),
+                                                   ['label'                        => __d('app', "達成時"),
                                                     'wrapInput'                    => 'hhh',
                                                     'type'                         => 'number',
                                                     'step'                         => '0.1',
@@ -144,7 +144,7 @@
                             <div class="iii">
                                 <?=
                                 $this->Form->input('KeyResult.start_value',
-                                                   ['label'                        => __d('gl', "開始時"),
+                                                   ['label'                        => __d('app', "開始時"),
                                                     'wrapInput'                    => 'jjj',
                                                     'type'                         => 'number',
                                                     'step'                         => '0.1',
@@ -163,7 +163,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <h5 class="modal-key-result-headings"><?= __d('gl', "期間") ?>
+                    <h5 class="modal-key-result-headings"><?= __d('app', "期間") ?>
                         <?php if ($this->Session->read('Auth.User.timezone') != $goal_term['timezone']): ?>
                             <span class="modal-key-result-headings-description">
                             <?= $this->TimeEx->getTimezoneText($goal_term['timezone']); ?>
@@ -174,7 +174,7 @@
                     <div class="goal-set-input">
                         <div class="form-group" id="KeyResult0EndDateContainer">
                             <label for="KeyResult0EndDate" class="control-label goal-set-mid-label"><?=
-                                __d('gl',
+                                __d('app',
                                     "期限") ?></label>
 
                             <div class="input-group date goal-set-date"
@@ -202,7 +202,7 @@
                         </div>
                         <div class="form-group" id="KeyResult0StartDateContainer">
                             <label for="KeyResult0StartDate" class="control-label goal-set-mid-label"><?=
-                                __d('gl', "開始") ?></label>
+                                __d('app', "開始") ?></label>
 
                             <p class="form-control-static"
                                id="KeyResult0StartDateDefault_<?= $kr_id ?>">
@@ -211,7 +211,7 @@
                                         &nbsp;&nbsp;<a href="#" class="target-show-target-del"
                                                        show-target-id="KeyResult0StartDateInputWrap_<?= $kr_id ?>"
                                                        delete-target-id="KeyResult0StartDateDefault_<?= $kr_id ?>">
-                                            <?= __d('gl', "変更") ?></a>
+                                            <?= __d('app', "変更") ?></a>
                                     </span>
                             </p>
 
@@ -244,8 +244,8 @@
             <div class="row">
                 <?=
                 $this->Form->input('priority', [
-                    'before'                   => '<h5 class="modal-key-result-headings">' . __d('gl',
-                                                                                                 "重要度") . '<span class="modal-key-result-headings-description">' . __d('gl',
+                    'before'                   => '<h5 class="modal-key-result-headings">' . __d('app',
+                                                                                                 "重要度") . '<span class="modal-key-result-headings-description">' . __d('app',
                                                                                                                                                                        "ゴールにとってこの成果の重要度") . '</span></h5>',
                     'label'                    => false,
                     'type'                     => 'select',
@@ -260,10 +260,10 @@
         </div>
         <div class="modal-footer">
             <?=
-            $this->Form->submit(__d('gl', "成果を更新"),
+            $this->Form->submit(__d('app', "成果を更新"),
                                 ['class' => 'btn btn-primary', 'div' => false]) ?>
 
-            <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('gl', "閉じる") ?></button>
+            <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('app', "閉じる") ?></button>
         </div>
         <?= $this->Form->end() ?>
     </div>

@@ -24,8 +24,8 @@ class Circle extends AppModel
      */
     private function _setPublicTypeName()
     {
-        self::$TYPE_PUBLIC[self::TYPE_PUBLIC_ON] = __d('gl', "公開");
-        self::$TYPE_PUBLIC[self::TYPE_PUBLIC_OFF] = __d('gl', "秘密");
+        self::$TYPE_PUBLIC[self::TYPE_PUBLIC_ON] = __d('app', "公開");
+        self::$TYPE_PUBLIC[self::TYPE_PUBLIC_OFF] = __d('app', "秘密");
     }
 
     function __construct($id = false, $table = null, $ds = null)
@@ -65,9 +65,19 @@ class Circle extends AppModel
      */
     public $validate = [
         'name'         => [
+            'isString' => [
+                'rule'       => ['isString',],
+                'allowEmpty' => true,
+            ],
             'maxLength' => ['rule' => ['maxLength', 128]],
             'notEmpty'  => [
                 'rule' => ['notEmpty'],
+            ],
+        ],
+        'description'      => [
+            'isString' => [
+                'rule'       => ['isString',],
+                'allowEmpty' => true,
             ],
         ],
         'del_flg'      => [

@@ -110,7 +110,20 @@ class Comment extends AppModel
         'body'               => [
             'maxLength' => ['rule' => ['maxLength', 5000]],
             'isString'  => ['rule' => 'isString', 'message' => 'Invalid Submission']
-        ]
+        ],
+        'site_info_url'      => [
+            'isString'   => [
+                'rule' => ['isString'],
+                'allowEmpty' => true,
+            ],
+
+        ],
+        'post_id'            => [
+            'numeric'    => [
+                'rule' => ['numeric'],
+                'allowEmpty' => true,
+            ],
+        ],
     ];
 
     /**
@@ -176,22 +189,6 @@ class Comment extends AppModel
      */
     public function add($postData, $uid = null, $team_id = null)
     {
-        // 本文の末尾に OGP のURLが存在する場合は削除する
-        // ただし、本文が URL のみの場合はそのまま残す
-        if (isset($postData['Comment']['site_info']) && $postData['Comment']['site_info']) {
-            $site_info = json_decode($postData['Comment']['site_info'], true);
-            $body = rtrim($postData['Comment']['body']);
-            $body_len = strlen($body);
-            if (($pos = strrpos($body, $site_info['url'])) !== false) {
-                if ($pos == $body_len - strlen($site_info['url'])) {
-                    $body = rtrim(substr($body, 0, $pos));
-                    if (strlen($body)) {
-                        $postData['Comment']['body'] = $body;
-                    }
-                }
-            }
-        }
-
         $this->begin();
 
         // コメントデータ保存

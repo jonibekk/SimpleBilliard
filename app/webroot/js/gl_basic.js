@@ -3152,6 +3152,11 @@ function evNotifyPost(options) {
     var $obj = $(this);
     var get_url = $obj.attr('get-url');
 
+    //TODO [ここから] iOSアプリ,Andoroidアプリでajax後にコメントできなくなる問題が発生しているため、暫定的に全てページロードするように修正
+    window.location.href = get_url;
+    return false;
+    //TODO [ここまで]
+
     //layout-mainが存在しないところではajaxでコンテンツ更新しようにもロードしていない
     //要素が多すぎるので、おとなしくページリロードする
     //urlにpost_permanentを含まない場合も対象外
@@ -4140,53 +4145,6 @@ function validatorCallback(e) {
         addComment(e);
     }
 }
-
-// Be Enable or Disabled eval button
-$(function () {
-    var eva = [];
-    if ($('#evaluation-form')[0]) {
-
-        // Initialize
-        $(".eva-val").each(function () {
-            setKeyValToEvalList(this);
-        });
-        switchSubmitBtnEnableOrEnabled();
-
-        // event catch
-        $(".eva-val").change(function () {
-            setKeyValToEvalList(this);
-            switchSubmitBtnEnableOrEnabled();
-        });
-        $("textarea.eva-val").keyup(function () {
-            setKeyValToEvalList(this);
-            switchSubmitBtnEnableOrEnabled();
-        });
-    }
-
-    function switchSubmitBtnEnableOrEnabled() {
-        if (isNull(eva)) {
-            $('.eval-view-btn-submit').removeAttr('disabled');
-        }
-        else {
-            $('.eval-view-btn-submit').attr('disabled', true);
-        }
-    }
-
-    function isNull(val) {
-        for (var i in val) {
-            if (val[i] == '') {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    function setKeyValToEvalList(selector) {
-        eva[selector.id] = selector.value;
-    }
-
-});
-
 
 /**
  * お知らせ一覧のページング処理

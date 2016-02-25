@@ -58,7 +58,7 @@ $kr_count = 0;
                 <?php if (empty($goal['Goal'])): ?>
                     <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add', 'purpose_id' => $goal['Purpose']['id'], 'mode' => 2]) ?>"
                        class="dashboard-goals-card-header-goal-set">
-                        <i class="fa fa-plus-circle dashboard-goals-card-header-goal-set-icon"></i><?= __d('gl',
+                        <i class="fa fa-plus-circle dashboard-goals-card-header-goal-set-icon"></i><?= __d('app',
                                                                                                            '基準を追加する') ?>
                     </a>
                 <?php else: ?>
@@ -96,22 +96,22 @@ $kr_count = 0;
                             <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id']]) ?>"
                                class="modal-ajax-get-add-key-result">
                                 <i class="fa fa-plus-circle"></i><span class="ml_2px">
-                                        <?= __d('gl', "達成要素を追加") ?></span>
+                                        <?= __d('app', "達成要素を追加") ?></span>
                             </a>
                         </li>
                     <?php endif; ?>
                     <?php if (!viaIsSet($goal['Evaluation'])): ?>
                         <li role="presentation"><a role="menuitem" tabindex="-1"
                                                    href="<?= $this->Html->url($edit_url) ?>">
-                                <i class="fa fa-pencil"></i><span class="ml_2px"><?= __d('gl', "ゴールを編集") ?></span>
+                                <i class="fa fa-pencil"></i><span class="ml_2px"><?= __d('app', "ゴールを編集") ?></span>
                             </a>
                         </li>
                         <li role="presentation">
                             <?=
                             $this->Form->postLink('<i class="fa fa-trash"></i><span class="ml_5px">' .
-                                                  __d('gl', "ゴールを削除") . '</span>',
+                                                  __d('app', "ゴールを削除") . '</span>',
                                                   $del_url,
-                                                  ['escape' => false], __d('gl', "本当にこのゴールを削除しますか？")) ?>
+                                                  ['escape' => false], __d('app', "本当にこのゴールを削除しますか？")) ?>
                         </li>
                     <?php endif; ?>
                 </ul>
@@ -131,13 +131,13 @@ $kr_count = 0;
                             <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id']]) ?>"
                                class="modal-ajax-get-add-key-result"
                             ><i class="fa fa-plus-circle"></i><span class="ml_2px">
-                                    <?= __d('gl', "達成要素を追加") ?></span></a>
+                                    <?= __d('app', "達成要素を追加") ?></span></a>
                             <a class="modal-ajax-get-collabo"
                                data-toggle="modal"
                                data-target="#ModalCollabo_<?= $goal['Goal']['id'] ?>"
                                href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', 'goal_id' => $goal['Goal']['id']]) ?>">
                                 <i class="fa fa-pencil"></i>
-                                <span class="ml_2px"><?= __d('gl', "コラボを編集") ?></span>
+                                <span class="ml_2px"><?= __d('app', "コラボを編集") ?></span>
                             </a>
                         </li>
                     <?php endif; ?>
@@ -166,7 +166,7 @@ $kr_count = 0;
                                 <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id']]) ?>"
                                    class="modal-ajax-get-add-key-result">
                                     <i class="fa fa-plus-circle"></i><span class="ml_2px">
-                                            <?= __d('gl', "達成要素を追加") ?></span>
+                                            <?= __d('app', "達成要素を追加") ?></span>
                                 </a>
                             </li>
                         <?php endif; ?>
@@ -183,21 +183,21 @@ $kr_count = 0;
                             <!-- 認定待ちと残り日数 -->
                             <!-- <div class="pull-right font_12px">
                                 <?php if (($limit_day = ($goal['Goal']['end_date'] - REQUEST_TIMESTAMP) / (60 * 60 * 24)) < 0): ?>
-                                    <?= __d('gl', "%d日経過", $limit_day * -1) ?>
+                                    <?= __d('app', "%d日経過", $limit_day * -1) ?>
                                 <?php else: ?>
                                     <?php if (isset($goal['Goal']['owner_approval_flag']) === true) : ?>
                                         <?php if ($goal['Goal']['owner_approval_flag'] === '0') : ?>
-                                            <span style="color:red"><?= __d('gl', "認定待ち") ?></span>
+                                            <span style="color:red"><?= __d('app', "認定待ち") ?></span>
                                         <?php elseif ($goal['Goal']['owner_approval_flag'] === '1') : ?>
-                                            <span style="color:#00BFFF"><?= __d('gl', "評価対象") ?></span>
+                                            <span style="color:#00BFFF"><?= __d('app', "評価対象") ?></span>
                                         <?php elseif ($goal['Goal']['owner_approval_flag'] === '2') : ?>
-                                            <?= __d('gl', "評価対象外") ?>
+                                            <?= __d('app', "評価対象外") ?>
                                         <?php elseif ($goal['Goal']['owner_approval_flag'] === '3') : ?>
-                                            <span style="color:red"><?= __d('gl', "修正待ち") ?></span>
+                                            <span style="color:red"><?= __d('app', "修正待ち") ?></span>
                                         <?php endif ?>
                                         ・
                                     <?php endif; ?>
-                                    <?= __d('gl', "残り%d日", $limit_day) ?>
+                                    <?= __d('app', "残り%d日", $limit_day) ?>
                                 <?php endif; ?>
                             </div> -->
                         <?php endif; ?>
@@ -232,7 +232,7 @@ $kr_count = 0;
                                     <hr class="dashboard-goals-card-horizontal-line">
                                     <i class="fa fa-plus dashboard-goals-card-body-add-kr-icon"></i>
 
-                                    <p class="dashboard-goals-card-body-add-kr-contents"><?= __d('gl', "達成要素を追加") ?></p>
+                                    <p class="dashboard-goals-card-body-add-kr-contents"><?= __d('app', "達成要素を追加") ?></p>
                                 </a>
 
                                 <p class="dashboard-goals-card-body-goal-status"><?= Collaborator::$STATUS[$goal['MyCollabo'][0]['valued_flg']] ?></p>

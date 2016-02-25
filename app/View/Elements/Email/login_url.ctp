@@ -2,7 +2,7 @@
 echo "━━━━━━━━━━━━━━━━━━━━";
 echo "\n";
 echo "\n";
-echo __d('mail', '◆Goalousログイン');
+echo __d('email', '◆Goalousログイン');
 echo "\n";
 echo "->";
 if (isset($vol) && !empty($vol)) {

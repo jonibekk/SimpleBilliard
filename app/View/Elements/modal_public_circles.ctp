@@ -20,11 +20,11 @@
             $count_non_joined=count($non_joined_circles);
             $count_all=$count_joined+$count_non_joined;
             ?>
-            <h4 class="modal-title"><?= __d('gl', "サークル")." (".$count_all.")"?></h4>
+            <h4 class="modal-title"><?= __d('app', "サークル")." (".$count_all.")"?></h4>
         </div>
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#tab1" data-toggle="tab"><?= __d('gl', "参加していない")." (".$count_non_joined.")" ?></a></li>
-            <li><a href="#tab2" data-toggle="tab"><?= __d('gl', "参加している")." (".$count_joined.")" ?></a></li>
+            <li class="active"><a href="#tab1" data-toggle="tab"><?= __d('app', "参加していない")." (".$count_non_joined.")" ?></a></li>
+            <li><a href="#tab2" data-toggle="tab"><?= __d('app', "参加している")." (".$count_joined.")" ?></a></li>
         </ul>
         <?=
         $this->Form->create('Circle', [
@@ -62,7 +62,7 @@
                         <?php endforeach ?>
                     </div>
                 <?php else: ?>
-                    <?= __d('gl', "参加していないサークルはありません。") ?>
+                    <?= __d('app', "参加していないサークルはありません。") ?>
                 <?php endif ?>
             </div>
             <div class="tab-pane fade" id="tab2">
@@ -80,7 +80,7 @@
                         <?php endforeach ?>
                     </div>
                 <?php else: ?>
-                    <?= __d('gl', "参加しているサークルはありません。") ?>
+                    <?= __d('app', "参加しているサークルはありません。") ?>
                 <?php endif ?>
             </div>
         </div>

@@ -46,12 +46,24 @@ class GroupVision extends AppModel
      */
     public $validate = [
         'name'        => [
+            'isString'  => [
+                'rule'       => ['isString',],
+            ],
             'maxLength' => ['rule' => ['maxLength', 200]],
             'notEmpty'  => [
                 'rule' => ['notEmpty'],
             ],
         ],
+        'group_id' => [
+            'numeric'    => [
+                'rule' => ['numeric'],
+                'allowEmpty' => true,
+            ],
+        ],
         'description' => [
+            'isString'  => [
+                'rule'       => ['isString',],
+            ],
             'maxLength' => ['rule' => ['maxLength', 2000]],
         ],
         'active_flg'  => [

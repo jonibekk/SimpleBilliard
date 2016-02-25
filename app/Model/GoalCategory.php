@@ -32,6 +32,10 @@ class GoalCategory extends AppModel
             ],
         ],
         'description' => [
+            'isString'  => [
+                'rule'       => ['isString',],
+                'allowEmpty' => true,
+            ],
             'maxLength' => [
                 'rule' => ['maxLength', 2000],
             ],
@@ -88,7 +92,7 @@ class GoalCategory extends AppModel
     {
         $data = [
             [
-                'name'    => __d('gl', "未設定"),
+                'name'    => __d('app', "未設定"),
                 'team_id' => $this->current_team_id,
             ],
         ];
