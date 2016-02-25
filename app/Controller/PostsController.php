@@ -504,7 +504,9 @@ class PostsController extends AppController
 
         $params['Comment']['post_id'] = $post_id;
         $params['Comment']['body'] = $this->request->data['body'];
-        $params['file_id'] = $this->request->data['file_redis_key'];
+        if(isset($this->request->data['file_redis_key'])){
+            $params['file_id'] = $this->request->data['file_redis_key'];
+        }
         if (!$comment_id = $this->Post->Comment->add($params)) {
             //失敗の場合
             return $this->_ajaxGetResponse([]);
