@@ -20,4 +20,10 @@ App::uses('UrlCacheAppHelper', 'UrlCache.View/Helper');
  */
 class AppHelper extends UrlCacheAppHelper
 {
+    function needDisplayFooter() {
+        if(viaIsSet($this->request->params['controller']) === 'posts' && viaIsSet($this->request->params['action']) === 'message') {
+            return false;
+        }
+        return true;
+    }
 }
