@@ -159,7 +159,11 @@ class SendMailShell extends AppShell
         $this->item = json_decode($data['SendMail']['item'], true);
         $to_user_ids = $this->SendMail->SendMailToUser->getToUserList($data['SendMail']['id']);
 
-        $notify_option = NotifySetting::$TYPE[$this->item['type']];
+        if(isset(NotifySetting::$TYPE[$this->item['type']])) {
+            $notify_option = NotifySetting::$TYPE[$this->item['type']];
+        } else {
+            $notify_option = null;
+        }
         foreach ($to_user_ids as $to_user_id) {
             $data = $this->_getLangToUserData($to_user_id, true);
             $from_user_names = [];
