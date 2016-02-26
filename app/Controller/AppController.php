@@ -251,7 +251,6 @@ class AppController extends Controller
                 $this->_setNotifySettings();
                 $this->_setUnApprovedCnt($login_uid);
                 $this->_setEvaluableCnt();
-                $this->_setAllAlertCnt();
                 $this->_setNotifyCnt();
                 $this->_setMyCircle();
                 $this->_setActionCnt();
@@ -262,6 +261,7 @@ class AppController extends Controller
             $this->_setMyMemberStatus();
             $this->_saveAccessUser($this->current_team_id, $this->Auth->user('id'));
             $this->_setAvailEvaluation();
+            $this->_setAllAlertCnt();
         }
         $this->set('current_global_menu', null);
     }
