@@ -1160,7 +1160,7 @@ function addComment(e) {
     $("#" + submit_id).before($loader_html);
 
     // アップロードファイルの上限数をリセット
-    if (typeof Dropzone.instances[0] !== "" && Dropzone.instances[0].files.length > 0) {
+    if (typeof Dropzone.instances[0] !== "undefined" && Dropzone.instances[0].files.length > 0) {
         // ajax で submit するので、アップロード完了後に Dropzone のファイルリストを空にする
         // （参照先の配列を空にするため空配列の代入はしない）
         Dropzone.instances[0].files.length = 0;
@@ -3072,13 +3072,8 @@ function evNotifications(options) {
     }
 
     //アドレスバー書き換え
-    if (typeof history.pushState == 'function') {
-        try {
-            history.pushState(null, null, get_url);
-        } catch (e) {
-            window.location.href = get_url;
-            return false;
-        }
+    if(!updateAddressBar(get_url)){
+        return false;
     }
 
     $('#jsGoTop').click();
@@ -3152,11 +3147,6 @@ function evNotifyPost(options) {
     var $obj = $(this);
     var get_url = $obj.attr('get-url');
 
-    //TODO [ここから] iOSアプリ,Andoroidアプリでajax後にコメントできなくなる問題が発生しているため、暫定的に全てページロードするように修正
-    window.location.href = get_url;
-    return false;
-    //TODO [ここまで]
-
     //layout-mainが存在しないところではajaxでコンテンツ更新しようにもロードしていない
     //要素が多すぎるので、おとなしくページリロードする
     //urlにpost_permanentを含まない場合も対象外
@@ -3168,13 +3158,8 @@ function evNotifyPost(options) {
     }
 
     //アドレスバー書き換え
-    if (typeof history.pushState == 'function') {
-        try {
-            history.pushState(null, null, get_url);
-        } catch (e) {
-            window.location.href = get_url;
-            return false;
-        }
+    if(!updateAddressBar(get_url)){
+        return false;
     }
 
     $('#jsGoTop').click();
@@ -3286,13 +3271,8 @@ function evCircleFeed(options) {
     $obj.children(".circle-count_box").children(".count-value").html("");
 
     //アドレスバー書き換え
-    if (typeof history.pushState == 'function') {
-        try {
-            history.pushState(null, null, get_url);
-        } catch (e) {
-            window.location.href = get_url;
-            return false;
-        }
+    if (!updateAddressBar(get_url)) {
+        return false;
     }
 
     //不要な要素を削除
