@@ -467,6 +467,9 @@ class NotifySetting extends AppModel
                 // この通知で必要なオプション値
                 //   - from_user_id: コメントを書いたユーザーのID
                 //   - post_user_id: コメントが書かれた投稿の投稿者ID
+                if(!isset($options['from_user_id'])) {
+                    $options['from_user_id'] = null;
+                }
 
                 // 投稿者の表示名をセット
                 // 自分の投稿へのコメントの場合は、表示名を「自分」にする
