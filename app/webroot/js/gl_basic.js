@@ -3164,13 +3164,8 @@ function evNotifyPost(options) {
     }
 
     //アドレスバー書き換え
-    if (typeof history.pushState == 'function') {
-        try {
-            history.pushState(null, null, get_url);
-        } catch (e) {
-            window.location.href = get_url;
-            return false;
-        }
+    if(!updateAddressBar(get_url)){
+        return false;
     }
 
     $('#jsGoTop').click();
@@ -5025,7 +5020,6 @@ $(document).ready(function () {
         };
 
         $(document).on('click', selector, function (e) {
-            alert("FURU:DropZone clicked");
             e.preventDefault();
             $uploadFileForm._setParams(this, params, dzOptions);
             $uploadFileAttachButton.trigger('click');
