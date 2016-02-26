@@ -53,6 +53,7 @@
                                     'data-bv-stringlength'         => 'true',
                                     'data-bv-stringlength-max'     => 128,
                                     'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 128),
+                                    'required'                     => true,
                                    ]) ?>
                 <?php if (!$this->request->data['Circle']['team_all_flg']): ?>
 
@@ -94,7 +95,7 @@
                         <div class="fileinput_small fileinput-new" data-provides="fileinput">
                             <div class="fileinput-preview thumbnail nailthumb-container" data-trigger="fileinput"
                                  style="width: 96px; height: 96px; line-height: 96px;"
-                                >
+                            >
                                 <?=
                                 $this->Upload->uploadImage($this->request->data, 'Circle.photo',
                                                            ['style' => 'medium_large']) ?>
