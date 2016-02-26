@@ -3072,13 +3072,8 @@ function evNotifications(options) {
     }
 
     //アドレスバー書き換え
-    if (typeof history.pushState == 'function') {
-        try {
-            history.pushState(null, null, get_url);
-        } catch (e) {
-            window.location.href = get_url;
-            return false;
-        }
+    if(!updateAddressBar(get_url)){
+        return false;
     }
 
     $('#jsGoTop').click();
@@ -3276,13 +3271,8 @@ function evCircleFeed(options) {
     $obj.children(".circle-count_box").children(".count-value").html("");
 
     //アドレスバー書き換え
-    if (typeof history.pushState == 'function') {
-        try {
-            history.pushState(null, null, get_url);
-        } catch (e) {
-            window.location.href = get_url;
-            return false;
-        }
+    if (!updateAddressBar(get_url)) {
+        return false;
     }
 
     //不要な要素を削除
