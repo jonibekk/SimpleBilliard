@@ -1141,7 +1141,6 @@ function addComment(e) {
 
     attrUndefinedCheck(e.target, 'error-msg-id');
     var result_msg_id = $(e.target).attr('error-msg-id');
-
     var $error_msg_box = $('#' + result_msg_id);
     attrUndefinedCheck(e.target, 'submit-id');
     var submit_id = $(e.target).attr('submit-id');
