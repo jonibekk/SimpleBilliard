@@ -8,7 +8,6 @@
  * @var CodeCompletionView $this
  * @var                    $comments
  */
-
 if (!isset($long_text)) {
     $long_text = false;
 }

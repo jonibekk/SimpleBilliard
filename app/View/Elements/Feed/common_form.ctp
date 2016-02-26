@@ -36,6 +36,10 @@ $only_tab_post =
 // 以下のいずれかの場合に true
 //   1. $common_form_only_tab == 'message' が指定された場合
 $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'message');
+//メッセージ通知からajaxで呼ばれた場合に$goal_list_for_action_optionの変数がセットされなくなるのでその場合の対応
+if (!isset($goal_list_for_action_option)) {
+    $goal_list_for_action_option = [];
+}
 ?>
 <!-- START app/View/Elements/Feed/common_form.ctp -->
 <div class="panel panel-default global-form" id="GlobalForms">
@@ -81,7 +85,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
     <!-- Tab panes -->
     <div class="tab-content">
         <div class="tab-pane fade" id="ActionForm">
-            <?php if (count($goal_list_for_action_option) == 1): ?>
+            <?php if (count($goal_list_for_action_option) <= 1): ?>
                 <div class="post-panel-body plr_11px ptb_7px">
                     <div class="alert alert-warning" role="alert">
                         <?= __d('app', '今期のゴールがありません。') ?>
@@ -114,12 +118,10 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                         skip
                         <?php endif ?>"
                        target-id="CommonActionSubmit,WrapActionFormName,WrapCommonActionGoal,CommonActionFooter,CommonActionFormShowOptionLink,ActionUploadFileDropArea"
-                       delete-method="hide"
-                        >
+                       delete-method="hide">
                         <span class="action-image-add-button-text"><i
                                 class="fa fa-image action-image-add-button-icon"></i> <span><?= __d('app',
                                                                                                     'アクション画像をアップロード') ?></span></span>
-
                     </a>
                 </div>
 
