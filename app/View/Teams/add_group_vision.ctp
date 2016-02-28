@@ -50,7 +50,7 @@
                                    ]) ?>
                 <hr>
                 <div class="form-group">
-                    <label for="" class="col col-sm-3 control-label form-label"><?= __("画像") ?></label>
+                    <label for="" class="col col-sm-3 control-label form-label"><?= __("Images") ?></label>
 
                     <div class="col col-sm-6">
                         <div class="fileinput_small fileinput-new" data-provides="fileinput">

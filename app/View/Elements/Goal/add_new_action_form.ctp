@@ -50,7 +50,7 @@ $this->Form->input('ActionResult.name', [
 <div id="ActionFormDetail_<?= $goal_id ?>">
     <div class="form-group">
         <label class="font_normal col-xxs-4 lh_40px" for="ActionPhotos">
-            <i class="fa fa-camera mr_2px"></i><?= __("画像") ?>
+            <i class="fa fa-camera mr_2px"></i><?= __("Images") ?>
         </label>
 
         <div class="col-xxs-8">

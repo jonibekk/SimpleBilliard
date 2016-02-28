@@ -28,7 +28,7 @@
     <div class="panel-heading"><?= __("評価凍結設定") ?></div>
     <div class="panel-body form-horizontal">
         <?php if ($current_eval_is_started): ?>
-            <h4><?= __("今期") ?>(<?= $this->TimeEx->date($current_term_start_date) ?>
+            <h4><?= __("Current Term") ?>(<?= $this->TimeEx->date($current_term_start_date) ?>
                 - <?= $this->TimeEx->date($current_term_end_date) ?>)</h4>
             <?php if ($current_eval_is_frozen): ?>
                 <?=
@@ -45,7 +45,7 @@
             <?php endif; ?>
         <?php endif; ?>
         <?php if ($previous_eval_is_started): ?>
-            <h4><?= __("前期") ?>(<?= $this->TimeEx->date($previous_term_start_date) ?>
+            <h4><?= __("Previous Term") ?>(<?= $this->TimeEx->date($previous_term_start_date) ?>
                 - <?= $this->TimeEx->date($previous_term_end_date) ?>)</h4>
             <?php if ($previous_eval_is_frozen): ?>
                 <?=

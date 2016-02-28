@@ -27,9 +27,9 @@ class AttachedFile extends AppModel
 
     function _setFileTypeName()
     {
-        self::$TYPE_FILE[self::TYPE_FILE_IMG]['name'] = __("画像");
-        self::$TYPE_FILE[self::TYPE_FILE_VIDEO]['name'] = __("動画");
-        self::$TYPE_FILE[self::TYPE_FILE_DOC]['name'] = __("ドキュメント");
+        self::$TYPE_FILE[self::TYPE_FILE_IMG]['name'] = __("Images");
+        self::$TYPE_FILE[self::TYPE_FILE_VIDEO]['name'] = __("Movies");
+        self::$TYPE_FILE[self::TYPE_FILE_DOC]['name'] = __("Document");
     }
 
     function __construct($id = false, $table = null, $ds = null)
@@ -138,7 +138,7 @@ class AttachedFile extends AppModel
 
     public function getFileTypeOptions()
     {
-        $res = [null => __("すべて")];
+        $res = [null => __("All")];
         foreach (self::$TYPE_FILE as $v) {
             $res[$v['type']] = $v['name'];
         }

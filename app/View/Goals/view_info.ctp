@@ -50,7 +50,7 @@
                 </div>
             </div>
             <div class="goal-detail-info-members">
-                <p class="goal-detail-info-members-head"><?= __('メンバー') ?></p>
+                <p class="goal-detail-info-members-head"><?= __('Members') ?></p>
                 <?php
                 //+1という表示にはせず+2以上の表示にする
                 $member_all = array_merge($goal['Leader'], $goal['Collaborator']);

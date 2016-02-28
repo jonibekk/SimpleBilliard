@@ -112,7 +112,7 @@ if (isset($site_info['type']) && (
                                 <?php elseif ($site_info['type'] == 'group_vision'): ?>
                                     <i class="fa fa-plane"></i> <?= __('グループビジョン') ?>
                                 <?php elseif ($site_info['type'] == 'user'): ?>
-                                    <i class="fa fa-user"></i> <?= __('メンバー') ?>
+                                    <i class="fa fa-user"></i> <?= __('Members') ?>
                                 <?php endif ?>
                             </p>
                         <?php endif ?>

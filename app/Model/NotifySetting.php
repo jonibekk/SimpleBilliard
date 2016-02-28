@@ -223,7 +223,7 @@ class NotifySetting extends AppModel
 
     public function _setFieldRealName()
     {
-        self::$TYPE_GROUP['all'] = __("すべて");
+        self::$TYPE_GROUP['all'] = __("All");
         self::$TYPE_GROUP['primary'] = __("重要なもの");
         self::$TYPE_GROUP['none'] = __("オフ");
     }
@@ -409,7 +409,7 @@ class NotifySetting extends AppModel
 
                     // 共有先ユーザーが自分１人のみの場合
                     if (isset($options['share_user_list'][$this->my_uid]) && $share_user_count == 1) {
-                        $targets[] = __('あなた');
+                        $targets[] = __('You');
                     }
                     // 自分以外の人が個人として共有されている場合はその人の名前を表示
                     else {

@@ -546,7 +546,7 @@ msgid "Failed to change basic team settings."
 msgstr "チームの基本設定の更新に失敗しました。"
 
 #: Controller/TeamsController.php:59
-msgid "Changed time period."
+msgid "Changed terms setting."
 msgstr "期間設定を更新しました。"
 
 #: Controller/TeamsController.php:63
@@ -554,47 +554,47 @@ msgid "Failed to change time period."
 msgstr "期間設定の更新に失敗しました。"
 
 #: Controller/TeamsController.php:93
-msgid "Failed to delete team."
+msgid "Failed to delete the team."
 msgstr "チーム削除に失敗しました。"
 
 #: Controller/TeamsController.php:117
-msgid "Deleted team."
+msgid "Deleted the team."
 msgstr "チームを削除しました。"
 
 #: Controller/TeamsController.php:230
-msgid "Changed evaluation settings."
+msgid "Changed evaluation setting."
 msgstr "評価設定を保存しました。"
 
 #: Controller/TeamsController.php:235
-msgid "Error changing evaluation settings."
+msgid "Failed to change evaluation setting."
 msgstr "評価設定が保存できませんでした。"
 
 #: Controller/TeamsController.php:248
-msgid "Evaluation score settings changed."
+msgid "Changed evaluation score setting."
 msgstr "評価スコア設定を保存しました。"
 
 #: Controller/TeamsController.php:252
-msgid "Error changing evaluation score settings."
+msgid "Failed to change evaluation score setting."
 msgstr "評価スコア設定が保存できませんでした。"
 
 #: Controller/TeamsController.php:265
-msgid "Goal category settings saved."
+msgid "Saved goal category setting."
 msgstr "ゴールカテゴリ設定を保存しました。"
 
 #: Controller/TeamsController.php:269
-msgid "Error saving goal category settings."
+msgid "Failed to save goal category setting."
 msgstr "ゴールカテゴリ設定が保存できませんでした。"
 
 #: Controller/TeamsController.php:280
-msgid "Score definition deleted."
+msgid "Deleted score definition."
 msgstr "スコア定義を削除しました。"
 
 #: Controller/TeamsController.php:331
-msgid "Goal category deleted."
+msgid "Deleted goal category."
 msgstr "ゴールカテゴリを削除しました。"
 
 #: Controller/TeamsController.php:393
-msgid "Evaluation settings not active."
+msgid "Evaluation setting is not active."
 msgstr "評価設定が有効ではありません。"
 
 #: Controller/TeamsController.php:403
@@ -606,64 +606,64 @@ msgid "Evaluation started."
 msgstr "評価を開始しました。"
 
 #: Controller/TeamsController.php:438
-msgid "E-mail address is incorrect."
+msgid "Email address is incorrect."
 msgstr "メールアドレスが正しくありません。"
 
 #: Controller/TeamsController.php:445
-msgid "%s invitations is one time limit."
+msgid "%s invitations are the limits in one time."
 msgstr "一度に送信できる招待は%s件までです。"
 
 #: Controller/TeamsController.php:466
-msgid "Error. Failed to invite."
-msgstr "問題がある為、招待に失敗しました。"
+msgid "Error, failed to invite."
+msgstr "問題があるため、招待に失敗しました。"
 
 #: Controller/TeamsController.php:477
-msgid "Sending mail to %s people who are already in the circle cancelled."
+msgid "Cancelled sending email to %s people who are already in the circle."
 msgstr ""
-"%s人は既にチームに参加しているユーザの為、メール送信をキャンセルしました。"
+"%s人はすでにチームに参加しているユーザのため、メール送信をキャンセルしました。"
 
 #: Controller/TeamsController.php:486
-msgid "You invited %s people"
+msgid "Invited %s people."
 msgstr "%s人に招待メールを送信しました。"
 
 #: Controller/TeamsController.php:516
-msgid "Update completed correctly."
-msgstr "正常に更新が完了しました。"
+msgid "Update completed."
+msgstr "更新が完了しました。"
 
 #: Controller/TeamsController.php:529;625
 msgid "Error in extension data."
 msgstr "更新データに誤りがあります。"
 
 #: Controller/TeamsController.php:532;566;628
-msgid "Error in column %s (Column number included in text)"
-msgstr "%s行目でエラーがあります(行番号は見出し含む)。"
+msgid "Error in the column %s (Column number included in text)"
+msgstr "%s行目でエラーがあります（行番号は見出し含む）。"
 
 #: Controller/TeamsController.php:537
-msgid "%s members updated. "
+msgid "%s members updated."
 msgstr "%s人のメンバーを更新しました。"
 
 #: Controller/TeamsController.php:550
 msgid "Registration completed."
-msgstr "正常に登録が完了しました。"
+msgstr "登録が完了しました。"
 
 #: Controller/TeamsController.php:563
 msgid "Error occurred."
 msgstr "エラーがあります。"
 
 #: Controller/TeamsController.php:585
-msgid "%s members were added."
+msgid "%s members are added."
 msgstr "%s人のメンバーを追加しました。"
 
 #: Controller/TeamsController.php:612
-msgid "Last evaluation completed."
+msgid "Last evaluation is completed."
 msgstr "正常に最終評価が完了しました。"
 
 #: Controller/TeamsController.php:633
-msgid "%s people's last evaluation completed."
+msgid "%s people's last evaluations are completed."
 msgstr "%s人の最終評価を更新しました。"
 
 #: Controller/TeamsController.php:665
-msgid "Irregular access."
+msgid "Invalid access."
 msgstr "不正なアクセスです"
 
 #: Controller/TeamsController.php:671
@@ -683,11 +683,11 @@ msgid "Evaluation suspension removed."
 msgstr "評価の凍結を解除しました。"
 
 #: Controller/TeamsController.php:949
-msgid "Team vision already exists, new entry cannot be made."
+msgid "Team vision already exists, new one cannot be made."
 msgstr "既にチームビジョンが存在する為、新規の追加はできません。"
 
 #: Controller/TeamsController.php:961
-msgid "Team vision added."
+msgid "Team vision is added."
 msgstr "チームビジョンを追加しました。"
 
 #: Controller/TeamsController.php:966;1002
@@ -699,13 +699,12 @@ msgid "Page does not exist."
 msgstr "ページが存在しません。"
 
 #: Controller/TeamsController.php:997
-msgid "Team vision updated."
+msgid "Updated team vision."
 msgstr "チームビジョンを更新しました。"
 
 #: Controller/TeamsController.php:1014
 msgid ""
-"Unable to create group vision as you do not belong in this group, or it "
-"already exists."
+"Unable to create group vision as you do not belong to this group, or the vision already exists."
 msgstr ""
 "グループに所属していないか既に存在している為、グループビジョンは作成できませ"
 "ん。"
@@ -728,31 +727,31 @@ msgstr "トークンが正しくありません。"
 
 #: Controller/UsersController.php:381
 msgid ""
-"Mail address is incorrect. Please enter the address from the mail you "
+"Email address is incorrect. Please enter the address from the email you "
 "received. "
 msgstr ""
 "メールアドレスが一致しません。招待が届いたメールアドレスを入力してください。"
 
 #: Controller/UsersController.php:537
-msgid "Please cancel changing mail address and try again."
+msgid "Please cancel changing email address and try again."
 msgstr "メールアドレス変更を一度キャンセルし、再度変更してください。"
 
 #: Controller/UsersController.php:544
-msgid "Mail address changed."
+msgid "Email address is changed."
 msgstr "メールアドレスの変更が正常に完了しました。"
 
 #: Controller/UsersController.php:574
-msgid "Password reset mail has been sent. Please check your mails."
+msgid "Password reset email has been sent. Please check your email."
 msgstr "パスワード再設定のメールを送信しました。ご確認ください。"
 
 #: Controller/UsersController.php:575;618
-msgid "Mail sent."
+msgid "Email sent."
 msgstr "メールを送信しました"
 
 #: Controller/UsersController.php:584
 msgid ""
 "Password code incorrect. The validity period may have expired. Please resend "
-"the reset mail again."
+"the reset email again."
 msgstr ""
 "パスワードトークンが正しくないか、期限切れの可能性があります。もう一度、再設"
 "定用のメールを送信してください。"
@@ -766,33 +765,28 @@ msgid "Please login with your new password."
 msgstr "新しいパスワードでログインしてください。"
 
 #: Controller/UsersController.php:598
-msgid "Password set."
+msgid "Password is set."
 msgstr "パスワードを設定しました"
 
-#: Controller/UsersController.php:617
-msgid "Confirmation has been sent to your mail address."
+#: Controller/UsersController.php:617 774
+msgid "Confirmation has been sent to your email address."
 msgstr "メールアドレス認証用のメールを送信しました。ご確認ください。"
 
 #: Controller/UsersController.php:672
-msgid "User settings saved."
+msgid "Saved user setting."
 msgstr "ユーザ設定を保存しました。"
 
 #: Controller/UsersController.php:675
-msgid "Failed to save user settings."
+msgid "Failed to save user setting."
 msgstr "ユーザ設定の保存に失敗しました。"
 
 #: Controller/UsersController.php:747
-msgid "Failed to save password changes."
+msgid "Failed to save password change."
 msgstr "パスワードの変更に失敗しました"
 
 #: Controller/UsersController.php:751
-msgid "Password changed."
+msgid "Changed password."
 msgstr "パスワードを変更しました。"
-
-#: Controller/UsersController.php:774
-msgid "Confirmation has been sent. Please check this. "
-msgstr ""
-"認証用のメールを送信しました。送信されたメールを確認し、認証してください。"
 
 #: Controller/UsersController.php:815
 msgid "Joined %s."
@@ -848,7 +842,7 @@ msgstr "English"
 
 #: Controller/Component/OgpComponent.php:200
 #: View/Elements/Feed/post_body.ctp:21;24
-msgid "We've achieved '%s!'"
+msgid "Achieved '%s!'"
 msgstr "%s を達成しました！"
 
 #: Controller/Component/OgpComponent.php:209
@@ -898,7 +892,7 @@ msgstr "オーナー"
 msgid "This period can not be frozen."
 msgstr "この期間は凍結できません。"
 
-#: Model/Evaluation.php:144;642 Model/NotifySetting.php:412
+#: Model/Evaluation.php:144;148;642 Model/NotifySetting.php:412
 msgid "You"
 msgstr "あなた"
 
@@ -907,19 +901,11 @@ msgstr "あなた"
 msgid "Evaluator"
 msgstr "評価者"
 
-#: Model/Evaluation.php:146
-msgid "Final Evaluator"
-msgstr "最終者"
-
 #: Model/Evaluation.php:147;151
 msgid "Leader"
 msgstr "リーダー"
 
-#: Model/Evaluation.php:148
-msgid "You"
-msgstr "本人"
-
-#: Model/Evaluation.php:150;199
+#: Model/Evaluation.php:146;150;199
 msgid "Final Evaluator"
 msgstr "最終評価者"
 
@@ -928,13 +914,12 @@ msgid "Self"
 msgstr "自己"
 
 #: Model/Evaluation.php:224
-msgid "You do not have access to this page."
+msgid "You don't have access right to this page."
 msgstr "この画面にはアクセスできません。"
 
 #: Model/Evaluation.php:227
-msgid ""
-"Evaluation setting is turned off. Please check with your team administrator."
-msgstr "評価設定がoffになっています。チーム管理者にご確認ください"
+msgid "Evaluation setting is turned off. Please ask your team administrator."
+msgstr "評価設定がoffになっています。チーム管理者にご確認ください。"
 
 #: Model/Evaluation.php:241
 msgid "Parameter is invalid."
@@ -959,7 +944,7 @@ msgid "Waiting for the evaluation by %s."
 msgstr "%sの評価待ちです"
 
 #: Model/Evaluation.php:670
-msgid "Please evaluate by yourself."
+msgid "Please evaluate yourself."
 msgstr "自己評価をしてください"
 
 #: Model/Evaluation.php:673

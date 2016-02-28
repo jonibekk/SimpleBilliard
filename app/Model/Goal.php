@@ -66,12 +66,12 @@ class Goal extends AppModel
     {
         $res = [
             'term'     => [
-                'present'  => __("今期"),
-                'next'     => __("来期"),
-                'previous' => __("前期"),
+                'present'  => __("Current Term"),
+                'next'     => __("Next Term"),
+                'previous' => __("Previous Term"),
                 'before'   => __("もっと前")],
             'progress' => [
-                'all'        => __("すべて"),
+                'all'        => __("All"),
                 'complete'   => __("達成"),
                 'incomplete' => __("未達成")],
             'order'    => [
@@ -91,7 +91,7 @@ class Goal extends AppModel
                              'name'],
         ];
         $goal_categories = $this->GoalCategory->find('all', $options);
-        $res['category'] = ['all' => __('すべて')];
+        $res['category'] = ['all' => __('All')];
         foreach ($goal_categories as $val) {
             $res['category'] += [$val['GoalCategory']['id'] => __($val['GoalCategory']['name'])];
         }
@@ -1691,7 +1691,7 @@ class Goal extends AppModel
         if (!$separate_term) {
             $res = $this->find('list', $options);
             if ($with_all_opt) {
-                return [null => __('すべて')] + $res;
+                return [null => __('All')] + $res;
             }
             return $res;
         }
@@ -1703,7 +1703,7 @@ class Goal extends AppModel
         $before_term_opt['conditions']['end_date <='] = $start_date;
         $before_goals = $this->find('list', $before_term_opt);
         $res = [];
-        $res += $with_all_opt ? [null => __('すべて')] : null;
+        $res += $with_all_opt ? [null => __('All')] : null;
         $res += ['disable_value1' => '----------------------------------------------------------------------------------------'];
         $res += $current_goals;
         $res += ['disable_value2' => '----------------------------------------------------------------------------------------'];

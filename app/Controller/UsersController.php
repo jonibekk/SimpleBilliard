@@ -364,7 +364,7 @@ class UsersController extends AppController
             //トークンが有効かチェック
             $this->Invite->confirmToken($this->request->params['named']['invite_token']);
             if (!$this->Invite->isByBatchSetup($this->request->params['named']['invite_token'])) {
-                throw new RuntimeException(__("トークンが正しくありません。"));
+                throw new RuntimeException(__("Code is incorrect."));
             }
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
@@ -378,7 +378,7 @@ class UsersController extends AppController
 
             //Email match check
             if (!viaIsSet($invite['Invite']['email']) || $this->request->data['Email']['email'] != $invite['Invite']['email']) {
-                $this->Pnotify->outError(__("メールアドレスが一致しません。招待が届いたメールアドレスを入力してください。"));
+                $this->Pnotify->outError(__("Email address is incorrect. Please enter the address from the email you received."));
                 return $this->render();
             }
             $user = $this->User->getUserByEmail($this->request->data['Email']['email']);
@@ -534,14 +534,14 @@ class UsersController extends AppController
         } catch (RuntimeException $e) {
             $this->User->rollback();
             //例外の場合は、トークン再送信画面へ
-            $this->Pnotify->outError($e->getMessage() . "\n" . __("メールアドレス変更を一度キャンセルし、再度変更してください。"));
+            $this->Pnotify->outError($e->getMessage() . "\n" . __("Please cancel changing email address and try again."));
             //トークン再送ページへ
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->redirect(['action' => 'settings']);
         }
         $this->User->commit();
         $this->_autoLogin($this->Auth->user('id'));
-        $this->Pnotify->outSuccess(__("メールアドレスの変更が正常に完了しました。"));
+        $this->Pnotify->outSuccess(__("Email address is changed."));
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->redirect(['action' => 'settings']);
     }
@@ -571,8 +571,8 @@ class UsersController extends AppController
             if ($user) {
                 // Send mail containing token
                 $this->GlEmail->sendMailPasswordReset($user['User']['id'], $user['User']['password_token']);
-                $this->Pnotify->outSuccess(__("パスワード再設定のメールを送信しました。ご確認ください。"),
-                                           ['title' => __("メールを送信しました")]);
+                $this->Pnotify->outSuccess(__("Password reset email has been sent. Please check your email."),
+                                           ['title' => __("Email sent.")]);
             }
             return $this->render('password_reset_request');
         }
@@ -581,8 +581,8 @@ class UsersController extends AppController
         $user_email = $this->User->checkPasswordToken($token);
 
         if (!$user_email) {
-            $this->Pnotify->outError(__("パスワードトークンが正しくないか、期限切れの可能性があります。もう一度、再設定用のメールを送信してください。"),
-                                     ['title' => __("トークンの認証に失敗しました。")]);
+            $this->Pnotify->outError(__("Password code incorrect. The validity period may have expired. Please resend email again."),
+                                     ['title' => __("Failed to confirm code.")]);
             return $this->redirect(['action' => 'password_reset']);
         }
 
@@ -594,8 +594,8 @@ class UsersController extends AppController
         if ($successPasswordReset) {
             // Notify to user reset password
             $this->GlEmail->sendMailCompletePasswordReset($user_email['User']['id']);
-            $this->Pnotify->outSuccess(__("新しいパスワードでログインしてください。"),
-                                       ['title' => __('パスワードを設定しました')]);
+            $this->Pnotify->outSuccess(__("Please login with your new password."),
+                                       ['title' => __('Password is set.')]);
             return $this->redirect(['action' => 'login']);
         }
         return $this->render('password_reset');
@@ -614,7 +614,7 @@ class UsersController extends AppController
                 //メールでトークンを送信
                 $this->GlEmail->sendMailEmailTokenResend($email_user['User']['id'],
                                                          $email_user['Email']['email_token']);
-                $this->Pnotify->outSuccess(__("メールアドレス認証用のメールを送信しました。ご確認ください。"),
+                $this->Pnotify->outSuccess(__("Confirmation has been sent to your email address."),
                                            ['title' => __("メールを送信しました")]);
             }
         }
@@ -669,10 +669,10 @@ class UsersController extends AppController
                 //言語設定
                 $this->_setAppLanguage();
 
-                $this->Pnotify->outSuccess(__("ユーザ設定を保存しました。"));
+                $this->Pnotify->outSuccess(__("Saved user setting."));
             }
             else {
-                $this->Pnotify->outError(__("ユーザ設定の保存に失敗しました。"));
+                $this->Pnotify->outError(__("Failed to save user setting."));
             }
             $me = $this->_getMyUserDataForSetting();
             $this->request->data = $me;
@@ -744,11 +744,11 @@ class UsersController extends AppController
         try {
             $this->User->changePassword($this->request->data);
         } catch (RuntimeException $e) {
-            $this->Pnotify->outError($e->getMessage(), ['title' => __("パスワードの変更に失敗しました")]);
+            $this->Pnotify->outError($e->getMessage(), ['title' => __("Failed to save password change.")]);
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->redirect($this->referer());
         }
-        $this->Pnotify->outSuccess(__("パスワードを変更しました。"));
+        $this->Pnotify->outSuccess(__("Changed password."));
 
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->redirect($this->referer());
@@ -771,7 +771,7 @@ class UsersController extends AppController
             return $this->redirect($this->referer());
         }
 
-        $this->Pnotify->outInfo(__("認証用のメールを送信しました。送信されたメールを確認し、認証してください。"));
+        $this->Pnotify->outInfo(__("Confirmation has been sent to your email address."));
         $this->GlEmail->sendMailChangeEmailVerify($this->Auth->user('id'), $email_data['Email']['email'],
                                                   $email_data['Email']['email_token']);
 
@@ -812,7 +812,7 @@ class UsersController extends AppController
             }
 
             $team = $this->_joinTeam($token);
-            $this->Pnotify->outSuccess(__("チーム「%s」に参加しました。", $team['Team']['name']));
+            $this->Pnotify->outSuccess(__("Joined %s.", $team['Team']['name']));
             return $this->redirect("/");
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
@@ -880,7 +880,7 @@ class UsersController extends AppController
                 throw new RuntimeException(__("An error has occurred."));
             }
             if (!$this->TwoFa->verifyKey($secret_key, $this->request->data['User']['2fa_code'])) {
-                throw new RuntimeException(__("コードが正しくありません。"));
+                throw new RuntimeException(__("The code is incorrect."));
             }
             //2要素認証コードの登録
             $this->User->id = $this->Auth->user('id');
@@ -891,7 +891,7 @@ class UsersController extends AppController
         }
         $this->Session->delete('2fa_secret_key');
         $this->Mixpanel->track2SV(MixpanelComponent::TRACK_2SV_ENABLE);
-        $this->Pnotify->outSuccess(__("2段階認証の登録が完了しました。"));
+        $this->Pnotify->outSuccess(__("Succeeded to save 2-Step Verification."));
         $this->Session->setFlash(null, "flash_click_event", ['id' => 'ShowRecoveryCodeButton'], 'click_event');
         return $this->redirect($this->referer());
     }
@@ -914,7 +914,7 @@ class UsersController extends AppController
             $this->GlRedis->deleteDeviceHash($this->Auth->user('DefaultTeam.id'), $this->Auth->user('id'));
         }
         $this->Mixpanel->track2SV(MixpanelComponent::TRACK_2SV_DISABLE);
-        $this->Pnotify->outSuccess(__("2段階認証を解除しました。"));
+        $this->Pnotify->outSuccess(__("Succeeded to cancel 2-Step Verification."));
         return $this->redirect($this->referer());
     }
 
@@ -958,7 +958,7 @@ class UsersController extends AppController
             return $v['RecoveryCode']['code'];
         }, $recovery_codes);
         return $this->_ajaxGetResponse(['error' => false,
-                                        'msg'   => __("新しいリカバリコードを生成しました。"),
+                                        'msg'   => __("Generated new recovery codes."),
                                         'codes' => $codes]);
     }
 
@@ -1195,9 +1195,9 @@ class UsersController extends AppController
         $all_term = array_map("show_date", $all_start_date, $all_end_date, $all_timezone);
 
         $term1 = array(
-            $current_id  => __("今期"),
-            $next_id     => __("来期"),
-            $previous_id => __("前期"),
+            $current_id  => __("Current Term"),
+            $next_id     => __("Next Term"),
+            $previous_id => __("Previous Term"),
         );
         $term2 = array_combine($all_id, $all_term);
         $term = $term1 + $term2;
@@ -1345,7 +1345,7 @@ class UsersController extends AppController
             $this->Pnotify->outError($SubscribeEmail->validationErrors['email'][0]);
             return $this->redirect($this->referer());
         }
-        $this->Pnotify->outSuccess(__('メールアドレスの登録ができました。'));
+        $this->Pnotify->outSuccess(__('Registered email address.'));
         return $this->redirect($this->referer());
     }
 

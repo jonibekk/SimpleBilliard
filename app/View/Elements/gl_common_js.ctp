@@ -113,8 +113,8 @@ echo $this->Html->script('vendor/angular/ng-infinite-scroll.min');
             k: "<?=__("達成要素を選択する(オプション)")?>",
             l: "<?=__("達成要素はありません")?>",
             select_notify_range: "<?=__("通知先を追加(オプション)")?>",
-            public: "<?=__("公開")?>",
-            secret: "<?=__("秘密")?>",
+            public: "<?=__("Public")?>",
+            secret: "<?=__("Secret")?>",
             select_public_circle: "<?=__("公開サークルかメンバーを指定しよう")?>",
             select_public_message: "<?=__("メンバーを指定しよう")?>",
             select_secret_circle: "<?=__("秘密サークルを指定しよう")?>",
@@ -259,7 +259,7 @@ echo $this->Html->script('vendor/angular/ng-infinite-scroll.min');
                     },
                     {
                         id: "collaborators",
-                        text: "<?=__("コラボレータ")?>",
+                        text: "<?=__("Collaborator")?>",
                         icon: "fa fa-child",
                         locked: true
                     }

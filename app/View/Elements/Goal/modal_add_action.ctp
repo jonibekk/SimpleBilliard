@@ -47,7 +47,7 @@
             <div class="row">
                 <div class="form-group required">
                     <div class="set-goal">
-                        <h5 class="modal-key-result-headings"><?= __('画像') ?>&nbsp;<i
+                        <h5 class="modal-key-result-headings"><?= __('Images') ?>&nbsp;<i
                                 class="fa font_brownRed font_14px">*</i>
                             <span class="modal-key-result-headings-description"><?= __(
                                                                                         'アクションの結果が分かる画像を追加しよう') ?></span>

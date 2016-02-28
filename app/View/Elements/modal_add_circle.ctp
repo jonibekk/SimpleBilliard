@@ -45,7 +45,7 @@
                                     'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 128),
                                    ]) ?>
                 <div class="form-group">
-                    <label class="ccc control-label modal-label"><?= __('メンバー') ?></label>
+                    <label class="ccc control-label modal-label"><?= __('Members') ?></label>
 
                     <div class="ddd">
                         <?=

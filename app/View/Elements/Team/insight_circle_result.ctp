@@ -10,7 +10,7 @@
     <table class="table">
         <tr class="insight-table-header insight-circle-table-header">
             <th><i class="fa fa-circle-o" data-toggle="tooltip" title="<?= __('サークル名') ?>"></i></th>
-            <th><i class="fa fa-user" data-toggle="tooltip" title="<?= __('メンバー') ?>"></i></th>
+            <th><i class="fa fa-user" data-toggle="tooltip" title="<?= __('Members') ?>"></i></th>
             <th><i class="fa fa-comment-o" data-toggle="tooltip" title="<?= __('投稿') ?>"></i></th>
             <th><i class="fa fa-check" data-toggle="tooltip" title="<?= __('リーチ') ?>"></i></th>
             <th><i class="fa fa-heart-o" data-toggle="tooltip" title="<?= __('エンゲージメント') ?>"></i></th>

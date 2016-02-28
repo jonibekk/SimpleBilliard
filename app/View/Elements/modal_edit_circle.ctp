@@ -269,7 +269,7 @@
                     ]); ?>
                     <?= $this->Form->hidden('id') ?>
                     <div class="form-group">
-                        <label class="control-label modal-label"><?= __('メンバー') ?></label>
+                        <label class="control-label modal-label"><?= __('Members') ?></label>
 
                         <div class="bbb">
                             <?=

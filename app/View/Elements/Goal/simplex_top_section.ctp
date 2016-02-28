@@ -41,7 +41,7 @@
                 <?= h($this->NumberEx->formatHumanReadable($member_count, ['convert_start' => 10000])) ?>
             </div>
             <span class="goal-detail-numbers-category-member">
-                <?= __('メンバー') ?>
+                <?= __('Members') ?>
             </span>
         </div>
         <div class="goal-detail-numbers-follower">
@@ -157,7 +157,7 @@
         <i class="fa fa-users goal-detail-tab-icon"></i>
 
         <p class="goal-detail-tab-title">
-            <?= h(__('メンバー')) ?>
+            <?= h(__('Members')) ?>
         </p>
     </a>
     <a class="goal-detail-member-tab <?= $this->request->params['action'] == 'view_followers' ? "profile-user-tab-active" : null ?>"

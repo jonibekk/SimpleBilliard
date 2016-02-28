@@ -197,7 +197,7 @@ class OgpComponent extends Object
                         case Post::TYPE_KR_COMPLETE:
                             $ogp['type'] = 'post_kr_complete';
                             $ogp['title'] = $post['Goal']['name'];
-                            $ogp['description'] = __("%s を達成しました！", $post['KeyResult']['name']);
+                            $ogp['description'] = __("Achieved %s!", $post['KeyResult']['name']);
                             $ogp['image'] = Router::url($Upload->uploadUrl($post, "Goal.photo",
                                                                            ['style' => 'large']), true);
                             break;
@@ -206,7 +206,7 @@ class OgpComponent extends Object
                         case Post::TYPE_GOAL_COMPLETE:
                             $ogp['type'] = 'post_goal_complete';
                             $ogp['title'] = $post['Goal']['name'];
-                            $ogp['description'] = __("ゴール達成しました！");
+                            $ogp['description'] = __("Achieved a goal.");
                             $ogp['image'] = Router::url($Upload->uploadUrl($post, "Goal.photo",
                                                                            ['style' => 'large']), true);
                             break;

@@ -312,7 +312,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                             <?php if (isset($this->request->data['Goal'])): ?>
                                                 <?= h($this->request->data['Goal']['term_text']) ?>
                                             <?php else: ?>
-                                                <?= __('今期') ?>
+                                                <?= __('Current Term') ?>
                                             <?php endif; ?>
                                             </span>
                                             <?php if (!isset($this->request->data['Goal'])): ?>
@@ -334,8 +334,8 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                                              'class'     => 'form-control',
                                                              'required'  => true,
                                                              'options'   => [
-                                                                 'current' => __('今期'),
-                                                                 'next'    => __('来期'),
+                                                                 'current' => __('Current Term'),
+                                                                 'next'    => __('Next Term'),
                                                              ],
                                                              'id'        => 'KeyResult0EvaluateTermSelect',
                                             ];

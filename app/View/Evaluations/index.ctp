@@ -20,7 +20,7 @@
     <div class="panel-body eval-view-panel-body">
         <div class="goal-search-menu">
             <div class="eval-term-tab-menu btn-group btn-group-justified" role="group">
-                <?php foreach (['present' => __("今期"), 'previous' => __("前期")] as $key => $val): ?>
+                <?php foreach (['present' => __("Current Term"), 'previous' => __("Previous Term")] as $key => $val): ?>
                     <?php $selected = $key == $selected_term_name ? 'selected' : ''; ?>
                     <?php $incompleteNum = (int)$incomplete_number_list[$key]['my_eval'] + (int)$incomplete_number_list[$key]['my_evaluatees'];
                     ?>

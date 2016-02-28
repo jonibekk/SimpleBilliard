@@ -96,7 +96,7 @@
                     <?php endif; ?>
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
-                    <div><i class="fa fa-child"></i><span class="pl_2px"><?= __("コラボレータ") ?>
+                    <div><i class="fa fa-child"></i><span class="pl_2px"><?= __("Collaborator") ?>
                             &nbsp;(<?= count($goal['Collaborator']) ?>)</span></div>
                     <?php if (isset($goal['Collaborator']) && !empty($goal['Collaborator'])): ?>
                         <?php foreach ($goal['Collaborator'] as $collabo): ?>

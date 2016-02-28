@@ -412,7 +412,7 @@ class KeyResult extends AppModel
         if (!$separate_progress) {
             $res = $this->find('list', $options);
             if ($with_all_opt) {
-                return [null => __('すべて')] + $res;
+                return [null => __('All')] + $res;
             }
             return $res;
         }
@@ -423,7 +423,7 @@ class KeyResult extends AppModel
         $completed_opt['conditions']['NOT']['completed'] = null;
         $completed_krs = $this->find('list', $completed_opt);
         $res = [];
-        $res += $with_all_opt ? [null => __('すべて')] : null;
+        $res += $with_all_opt ? [null => __('All')] : null;
         if (!empty($incomplete_krs)) {
             $res += ['disable_value1' => '----------------------------------------------------------------------------------------'];
             $res += $incomplete_krs;
