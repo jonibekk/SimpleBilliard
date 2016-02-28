@@ -36,7 +36,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                 <div class="pull-left goal-set-title"><span class='font_bold'>1</span> <?= __("目的を決める") ?>
                 </div>
                 <?=
-                $this->Html->link(__("変更する"), "#",
+                $this->Html->link(__("Change"), "#",
                                   [
                                       'class'     => 'btn btn-link btn_white goal-add-edit-button pull-right bd-radius_4px',
                                       'div'       => false,
@@ -104,7 +104,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                 <div class="pull-left goal-set-title"><span class='font_bold'>2</span> <?= __("基準を定める") ?>
                 </div>
                 <?=
-                $this->Html->link(__("変更する"), "#",
+                $this->Html->link(__("Change"), "#",
                                   [
                                       'class'     => 'btn btn-link btn_white goal-add-edit-button pull-right bd-radius_4px',
                                       'div'       => false,
@@ -376,7 +376,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                 <div class="pull-left goal-set-title"><span class='font_bold'>3</span> <?= __("情報を追加する") ?>
                 </div>
                 <?=
-                $this->Html->link(__("変更する"), "#",
+                $this->Html->link(__("Change"), "#",
                                   [
                                       'class'     => 'btn btn-link btn_white goal-add-edit-button pull-right bd-radius_4px',
                                       'div'       => false,

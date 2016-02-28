@@ -17,7 +17,7 @@
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
-            <h4 class="modal-title font_18px font_bold"><?= __("%s人に共有しました", $total_share_user_count) ?></h4>
+            <h4 class="modal-title font_18px font_bold"><?= __("Shared with %s people", $total_share_user_count) ?></h4>
         </div>
         <div class="modal-body modal-feed-body">
             <div class="row borderBottom">

@@ -52,15 +52,15 @@
         <div class="modal-body" style="max-height: none">
             <div class="two_fa_step_box">
                 <label for="" ><?= __("STEP 1 ： ") ?><?= __("アプリをインストールする") ?></label>
-                <p><?= __('Google Authenticatorをダウンロードしましょう') ?></p>
+                <p><?= __('Download Google Authenticator.') ?></p>
                 <div class="modal_two_fa_download">
                   <div class="btn-frame">
                     <p><i class="fa fa-android"></i> Android</p>
-                    <a class="two_fa_app_download_link"href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank"><?= __("ダウンロード") ?></a>
+                    <a class="two_fa_app_download_link"href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank"><?= __("Download") ?></a>
                   </div>
                   <div class="btn-frame">
                       <p><i class="fa fa-apple"></i> iOS</p>
-                      <a class="two_fa_app_download_link" href="http://itunes.apple.com/us/app/google-authenticator/id388497605" target="_blank"><?= __("ダウンロード") ?></a>
+                      <a class="two_fa_app_download_link" href="http://itunes.apple.com/us/app/google-authenticator/id388497605" target="_blank"><?= __("Download") ?></a>
                   </div>
                 </div>
             </div>

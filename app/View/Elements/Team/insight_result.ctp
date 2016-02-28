@@ -46,7 +46,7 @@
         <?= $this->element('Team/insight_item', [
             'item_id'           => 'post_count_item',
             'item_value'        => $insight['post_count'],
-            'item_label'        => __('投稿'),
+            'item_label'        => __('Posts'),
             'item_cmp_percent'  => isset($insight['post_count_cmp']) ? $insight['post_count_cmp'] : null,
         ]) ?>
         <?= $this->element('Team/insight_item', [
@@ -64,7 +64,7 @@
         <?= $this->element('Team/insight_item', [
             'item_id'           => 'message_count_item',
             'item_value'        => $insight['message_count'],
-            'item_label'        => __('メッセージ'),
+            'item_label'        => __('Message'),
             'item_cmp_percent'  => isset($insight['message_count_cmp']) ? $insight['message_count_cmp'] : null,
         ]) ?>
     </div>
@@ -79,7 +79,7 @@
         <?= $this->element('Team/insight_item', [
             'item_id'           => 'post_user_count_item',
             'item_value'        => $insight['post_user_count'],
-            'item_label'        => __('投稿'),
+            'item_label'        => __('Posts'),
             'item_cmp_percent'  => isset($insight['post_user_count_cmp']) ? $insight['post_user_count_cmp'] : null,
         ]) ?>
         <?= $this->element('Team/insight_item', [
@@ -97,7 +97,7 @@
         <?= $this->element('Team/insight_item', [
             'item_id'           => 'message_user_count_item',
             'item_value'        => $insight['message_user_count'],
-            'item_label'        => __('メッセージ'),
+            'item_label'        => __('Message'),
             'item_cmp_percent'  => isset($insight['message_user_count_cmp']) ? $insight['message_user_count_cmp'] : null,
         ]) ?>
     </div>
@@ -114,7 +114,7 @@
         <?= $this->element('Team/insight_item', [
             'item_id'           => 'post_user_percent_item',
             'item_value'        => $insight['post_user_percent'] . ' %',
-            'item_label'        => __('投稿'),
+            'item_label'        => __('Posts'),
             'item_cmp_percent'  => isset($insight['post_user_percent_cmp']) ? $insight['post_user_percent_cmp'] : null,
         ]) ?>
         <?= $this->element('Team/insight_item', [
@@ -132,7 +132,7 @@
         <?= $this->element('Team/insight_item', [
             'item_id'           => 'message_user_percent_item',
             'item_value'        => $insight['message_user_percent'] . ' %',
-            'item_label'        => __('メッセージ'),
+            'item_label'        => __('Message'),
             'item_cmp_percent'  => isset($insight['message_user_percent_cmp']) ? $insight['message_user_percent_cmp'] : null,
         ]) ?>
     </div>

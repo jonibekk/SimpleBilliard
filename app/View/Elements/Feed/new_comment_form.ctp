@@ -39,7 +39,7 @@ $this->Form->input('body', [
     'wrap'                         => 'soft',
     'rows'                         => 1,
     'required'                     => true,
-    'placeholder'                  => __("コメントする"),
+    'placeholder'                  => __("Comment"),
     'class'                        => 'form-control tiny-form-text font_12px comment-post-form box-align change-warning no-border',
     'target-id'                    => "{$prefix}CommentSubmit_{$post_id}",
     'data-bv-notempty-message'     => __("入力必須項目です。"),
@@ -71,7 +71,7 @@ $this->Form->input('body', [
     </div>
     <div class="pull-right">
         <?=
-        $this->Form->submit(__("コメントする"),
+        $this->Form->submit(__("Comment"),
                             ['class' => 'btn btn-primary submit-btn comment-submit-button', 'id' => "{$prefix}CommentSubmit_{$post_id}", 'disabled' => 'disabled']) ?>
     </div>
     <div class="clearfix"></div>

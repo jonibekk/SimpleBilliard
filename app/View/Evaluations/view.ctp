@@ -316,7 +316,7 @@
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
                     <?= __("役割:") ?>
                     <?php $role = viaIsSet(Hash::extract($goal[0], "Goal.MyCollabo.{n}[role]")[0]["role"]) ?>
-                    <?= ($role) ? h($role) : __("リーダー") ?>
+                    <?= ($role) ? h($role) : __("Leader") ?>
                 </div>
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
                     <?= __("ゴール詳細:") ?>

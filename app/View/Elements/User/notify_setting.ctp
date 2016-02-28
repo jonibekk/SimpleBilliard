@@ -88,7 +88,7 @@
             <div id="NotifySettingMobileHelp" class="col col-sm-offset-3 help-block font_12px none"></div>
         </div>
         <div class="panel-footer setting_pannel-footer">
-            <?= $this->Form->submit(__("変更を保存"), ['class' => 'btn btn-primary pull-right']) ?>
+            <?= $this->Form->submit(__("Save changes"), ['class' => 'btn btn-primary pull-right']) ?>
             <div class="clearfix"></div>
         </div>
         <?= $this->Form->end(); ?>

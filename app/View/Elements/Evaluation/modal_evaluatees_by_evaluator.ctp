@@ -16,7 +16,7 @@
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= __("%sの未評価者", $evaluator['EvaluatorUser']['display_username']) ?></h4>
+            <h4 class="modal-title"><?= __("%s Pending", $evaluator['EvaluatorUser']['display_username']) ?></h4>
         </div>
         <div class="modal-body modal-feed-body">
             <?php if (!empty($incomplete_evaluatees)): ?>
@@ -28,7 +28,7 @@
                     <?php endforeach ?>
                 </div>
             <?php else: ?>
-                <?= __("全員の評価が完了しています。") ?>
+                <?= __("Done all evaluations.") ?>
             <?php endif ?>
         </div>
         <div class="modal-footer modal-feed-footer">

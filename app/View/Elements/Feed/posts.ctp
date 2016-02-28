@@ -112,7 +112,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                     <?php elseif ($post['Post']['type'] == Post::TYPE_ACTION): ?>
                                         <li>
                                             <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'edit_action', 'action_result_id' => $post['Post']['action_result_id']]) ?>"
-                                            ><?= __("アクションを編集") ?></a>
+                                            ><?= __("Edit Action") ?></a>
                                         </li>
                                     <?php endif; ?>
                                 <?php endif ?>
@@ -140,7 +140,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                        onclick="copyToClipboard('<?=
                                        $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']],
                                                         true) ?>'); return false;">
-                                        <?= __("リンクをコピー") ?></a>
+                                        <?= __("Copy Link") ?></a>
                                 </li>
                             </ul>
                         </div>
@@ -355,14 +355,14 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                            model_id="<?= $post['Post']['id'] ?>"
                            like_type="post">
                             <i class="fa-thumbs-up fa"></i>
-                            <?= __("いいね！") ?></a>
+                            <?= __("Like!") ?></a>
                         <?php if (!$without_add_comment): ?>
                             <a href="#" class="feeds-post-comment-btn trigger-click"
                                target-id="NewCommentDummyForm_<?= $post['Post']['id'] ?>"
                                after-replace-target-id="CommentFormBody_<?= $post['Post']['id'] ?>"
                             >
                                 <i class="fa-comments-o fa"></i>
-                                <?= __("コメント") ?>
+                                <?= __("Comments") ?>
                             </a>
                         <?php endif; ?>
                     </div>
@@ -396,7 +396,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                     >
                         <?php if ($post['unread_count'] > 0): ?>
                             <i class="fa fa-comment-o font_brownRed"></i>&nbsp;<?=
-                            __("他%s件のコメントを見る",
+                            __("View %s more comments",
                                 $post['Post']['comment_count'] - 3) ?>
                             <?=
                             __("(%s)",
@@ -405,7 +405,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                         <?php else: ?>
                             <span class="font_gray">
                             <i class="fa fa-comment-o font_brownRed"></i>&nbsp;<?=
-                                __("他%s件のコメントを見る",
+                                __("View %s comments",
                                     $post['Post']['comment_count'] - 3) ?>
                             </span>
                         <?php endif; ?>
@@ -426,7 +426,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                 >
                     <div class="alert alert-danger new-comment-read">
                         <span class="num">0</span>
-                        <?= __("件の新しいコメントがあります") ?>
+                        <?= __(" New comments.") ?>
                     </div>
                 </a>
 
@@ -456,7 +456,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                     tmp-target-height="32"
                                     ajax-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_new_comment_form', 'post_id' => $post['Post']['id']]) ?>"
                                     wrap="soft" rows="1"
-                                    placeholder="<?= __("コメントする") ?>"
+                                    placeholder="<?= __("Comment") ?>"
                                     cols="30"
                                     id="NewCommentDummyForm_<?= $post['Post']['id'] ?>"
                                     init-height="15"></textarea>

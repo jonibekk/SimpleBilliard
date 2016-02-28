@@ -17,7 +17,7 @@
     <?php if ($vision): ?>
         <div class="col col-xxs-12 goals-column-head">
         <span class="font_18px mt_5px font_gargoyleGray goals-column-title right-column-vision-title">
-            <?= __('ビジョン') ?> <i class="fa fa-caret-right"></i> <?= h($vision['target_name']) ?>
+            <?= __('Vision') ?> <i class="fa fa-caret-right"></i> <?= h($vision['target_name']) ?>
         </span>
         </div>
         <div class="col col-xxs-12 mt_5px mb_12px font_gargoyleGray right-column-vision-objective">
@@ -39,13 +39,13 @@
         </div>
         <a class="vision-more-read"
            href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'main', '#' => "{$method}/{$vision['id']}/true"]) ?>">
-            <?= __('詳細へ') ?>
+            <?= __('View detail') ?>
         </a>
 
     <?php endif; ?>
     <div class="col col-xxs-12 goals-column-head">
         <span class="font_18px mt_5px font_gargoyleGray goals-column-title">
-            <?= __('あなたのゴール') ?>(<?= $my_goals_count + $collabo_goals_count ?>)
+            <?= __('Your goals') ?>(<?= $my_goals_count + $collabo_goals_count ?>)
         </span>
         <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>"
            class="font_gargoyleGray-brownRed pull-right col-xxs-5 btn-goals-column-plus">
@@ -56,7 +56,7 @@
     </div>
     <div id="LeaderGoals">
         <div class="col col-xxs-12 mt_16px font_gargoyleGray">
-            <i class="fa fa-sun-o"></i><?= __('リーダー') ?>(<?= $my_goals_count ?>)
+            <i class="fa fa-sun-o"></i><?= __('Leader') ?>(<?= $my_goals_count ?>)
         </div>
 
         <?php if (empty($my_goals)): ?>
@@ -64,7 +64,7 @@
                 <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>"
                    class="font_lightGray-gray">
                     <div class="goals-column-empty-icon"><i class="fa fa-plus-circle font_33px"></i></div>
-                    <div class="goals-column-empty-text font_14px"><?= __('新しいゴールをつくる') ?></div>
+                    <div class="goals-column-empty-text font_14px"><?= __('Create a new goal') ?></div>
                 </a>
             </div>
         <?php else: ?>
@@ -94,7 +94,7 @@
     <div id="PrevGoals">
         <div class="col col-xxs-12 goals-column-head mt_32px">
             <span class="font_18px font_gargoyleGray goals-column-title">
-                <?= __('前期の未評価のあなたのゴール') ?>
+                <?= __('Unevaluated in the previous term') ?>
                 (<?= $my_previous_goals_count ?>)
             </span>
 

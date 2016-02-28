@@ -86,7 +86,7 @@
                     <!-- アクション、フォロワー -->
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
-                    <div><i class="fa fa-sun-o"></i><span class="pl_2px"><?= __("リーダー") ?></span></div>
+                    <div><i class="fa fa-sun-o"></i><span class="pl_2px"><?= __("Leader") ?></span></div>
                     <?php if (isset($goal['Leader'][0]['User'])): ?>
                         <img src="<?=
                         $this->Upload->uploadUrl($goal['Leader'][0]['User'],

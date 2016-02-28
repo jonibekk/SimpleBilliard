@@ -62,7 +62,7 @@ $this->Form->create('Post', [
     </a>
 
     <?=
-    $this->Form->submit(__("変更を保存する"),
+    $this->Form->submit(__("Save changes"),
                         ['class' => 'btn btn-primary pull-right submit-post-edit', 'id' => "PostEditSubmit_{$post['Post']['id']}", 'disabled' => 'disabled']) ?>
     <div class="clearfix"></div>
 </div>

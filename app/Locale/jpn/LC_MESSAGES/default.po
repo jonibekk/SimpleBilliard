@@ -2274,7 +2274,7 @@ msgid "eg) **"
 msgstr "例) ○○"
 
 #: View/Elements/modal_collabo.ctp:93
-msgid "Quite the collaboration"
+msgid "Quit the collaboration"
 msgstr "コラボを抜ける"
 
 #: View/Elements/modal_collabo.ctp:96
@@ -2291,7 +2291,7 @@ msgid "Basic Info"
 msgstr "基本情報"
 
 #: View/Elements/modal_edit_circle.ctp:22
-msgid "Members"
+msgid "Members list"
 msgstr "メンバー一覧"
 
 #: View/Elements/modal_edit_circle.ctp:24;319
@@ -2299,7 +2299,7 @@ msgid "Add member(s)"
 msgstr "メンバー追加"
 
 #: View/Elements/modal_edit_circle.ctp:163
-msgid "Make admin"
+msgid "Set as admin"
 msgstr "管理者にする"
 
 #: View/Elements/modal_edit_circle.ctp:190
@@ -2311,19 +2311,19 @@ msgstr ""
 "すか？"
 
 #: View/Elements/modal_edit_circle.ctp:194
-msgid "Remove as admin"
+msgid "Remove from admin"
 msgstr "管理者から外す"
 
 #: View/Elements/modal_edit_circle.ctp:209
 msgid ""
-"After leaving this circle, you can't edit any setting. Do you really want to "
+"After leaving this circle, you can't edit any circle setting. Do you really want to "
 "leave the circle?"
 msgstr ""
 "自分自身をサークルから外すとサークル情報の編集が出来なくなりますが、よろしい"
 "ですか？"
 
 #: View/Elements/modal_edit_circle.ctp:226
-msgid "Remove from a circle"
+msgid "Remove from the circle"
 msgstr "サークルから外す"
 
 #: View/Elements/modal_edit_circle.ctp:295
@@ -2331,7 +2331,7 @@ msgstr "サークルから外す"
 #: View/Elements/User/modal_change_password.ctp:61
 #: View/Elements/User/notify_setting.ctp:91
 #: View/Elements/User/profile_setting.ctp:251
-msgid "Save change"
+msgid "Save changes"
 msgstr "変更を保存"
 
 #: View/Elements/modal_edit_circle.ctp:304
@@ -2369,7 +2369,7 @@ msgid "Change"
 msgstr "変更する"
 
 #: View/Elements/modal_message_range.ctp:16
-msgid "Members"
+msgid "Members in this topic"
 msgstr "会話のメンバー (%s)"
 
 #: View/Elements/modal_public_circles.ctp:26
@@ -2381,11 +2381,11 @@ msgid "Joined"
 msgstr "参加している"
 
 #: View/Elements/modal_public_circles.ctp:65
-msgid "No ciecle"
+msgid "You belong to all circles in this team."
 msgstr "参加していないサークルはありません。"
 
 #: View/Elements/modal_public_circles.ctp:83
-msgid "No circle you have joined."
+msgid "You don't belong to any circle."
 msgstr "参加しているサークルはありません。"
 
 #: View/Elements/modal_share_range.ctp:20
@@ -2433,7 +2433,7 @@ msgstr "リーダー"
 
 #: View/Elements/my_goals_area.ctp:67
 msgid "Create a new goal"
-msgstr "新しいゴールをつくる"
+msgstr "あたらしいゴールをつくる"
 
 #: View/Elements/my_goals_area.ctp:97
 msgid "Unevaluated in the last term"
@@ -2446,7 +2446,7 @@ msgstr "%s メンバー"
 #: View/Elements/Evaluation/evaluatee_by_evaluator.ctp:27
 #: View/Elements/Evaluation/incomplete_evaluatee.ctp:27
 #: View/Elements/Evaluation/incomplete_evaluator.ctp:24
-msgid "View more"
+msgid "View details"
 msgstr "詳細を見る"
 
 #: View/Elements/Evaluation/evaluators_status.ctp:34
@@ -2471,12 +2471,12 @@ msgid "Done all evaluations."
 msgstr "全員の評価が完了しています。"
 
 #: View/Elements/Evaluation/modal_evaluators_status.ctp:18
-msgid "%s Status"
+msgid "%s Evaluation Status"
 msgstr "%sの評価状況"
 
 #: View/Elements/Evaluation/modal_evaluators_status.ctp:30
 #: View/Elements/Feed/modal_post_red_users.ctp:31
-msgid "No-one has read this comment yet."
+msgid "No one has read this comment yet."
 msgstr "まだ、この投稿を読んだ人はいません。"
 
 #: View/Elements/Evaluation/modal_incomplete_evaluatees.ctp:19

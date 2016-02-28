@@ -38,7 +38,7 @@
                 <li>
                     <?php if ($user_status != 'joined') { ?>
                         <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'join_circle', 'circle_id' => $current_circle['Circle']['id']]) ?>">
-                            <?= __('サークルに参加する') ?></a>
+                            <?= __('Join circle') ?></a>
                     <?php }
                     else { ?>
                         <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'unjoin_circle', 'circle_id' => $current_circle['Circle']['id']]) ?>">

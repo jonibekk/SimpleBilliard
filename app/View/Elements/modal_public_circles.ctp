@@ -23,8 +23,8 @@
             <h4 class="modal-title"><?= __("サークル")." (".$count_all.")"?></h4>
         </div>
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#tab1" data-toggle="tab"><?= __("参加していない")." (".$count_non_joined.")" ?></a></li>
-            <li><a href="#tab2" data-toggle="tab"><?= __("参加している")." (".$count_joined.")" ?></a></li>
+            <li class="active"><a href="#tab1" data-toggle="tab"><?= __("Unjoined")." (".$count_non_joined.")" ?></a></li>
+            <li><a href="#tab2" data-toggle="tab"><?= __("Joined")." (".$count_joined.")" ?></a></li>
         </ul>
         <?=
         $this->Form->create('Circle', [
@@ -62,7 +62,7 @@
                         <?php endforeach ?>
                     </div>
                 <?php else: ?>
-                    <?= __("参加していないサークルはありません。") ?>
+                    <?= __("You belong to all circles in this team.") ?>
                 <?php endif ?>
             </div>
             <div class="tab-pane fade" id="tab2">
@@ -80,7 +80,7 @@
                         <?php endforeach ?>
                     </div>
                 <?php else: ?>
-                    <?= __("参加しているサークルはありません。") ?>
+                    <?= __("You don't belong to any circle.") ?>
                 <?php endif ?>
             </div>
         </div>

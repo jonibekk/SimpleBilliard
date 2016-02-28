@@ -57,7 +57,7 @@
                 <?= h($post_count) ?>
             </div>
             <span class="profile-user-numbers-category-post">
-                <?= __('投稿') ?>
+                <?= __('Posts') ?>
             </span>
         </div>
         <div class="profile-user-numbers-like">
@@ -123,7 +123,7 @@
         <i class="fa fa-comment-o profile-user-tab-icon"></i>
 
         <p class="profile-user-tab-title">
-            <?= h(__('投稿')) ?>
+            <?= h(__('Posts')) ?>
         </p>
     </a>
     <a class="profile-user-status-tab <?= $this->request->params['action'] == 'view_info' ? "profile-user-tab-active" : null ?>"

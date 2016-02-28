@@ -16,7 +16,7 @@
             <div class="modal-header">
                 <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
                     <span class="close-icon">&times;</span></button>
-                <h4 class="modal-title"><?= __("メンバーの情報を変更") ?></h4>
+                <h4 class="modal-title"><?= __("Change members information.") ?></h4>
             </div>
             <div class="modal-body">
                 <?=
@@ -39,13 +39,13 @@
                     'class'         => 'ajax-csv-upload',
                 ]); ?>
                 <div class="form-group">
-                    <label class="">1. <?= __("ユーザ情報をダウンロード") ?></label>
+                    <label class="">1. <?= __("Download users information.") ?></label>
 
-                    <p><?= __("CSVフォーマットのユーザ情報をダウンロードしてください。テンプレートのヘッダーは変更しないでください。") ?></p>
+                    <p><?= __("Download csv of users information. Header isn't allowed to change.") ?></p>
 
                     <div class="">
                         <?=
-                        $this->Html->link(__("ユーザ情報をダウンロード"), ['action' => 'download_team_members_csv'],
+                        $this->Html->link(__("Download users information."), ['action' => 'download_team_members_csv'],
                                           ['class' => 'btn btn-default', 'div' => false])
                         ?>
                     </div>
@@ -53,7 +53,7 @@
                 <div class="form-group">
                     <label class="">2. <?= __('Upload the file.') ?></label>
 
-                    <p><?= __("変更したユーザ情報のファイルをアップロードしてください。") ?></p>
+                    <p><?= __("Upload edited users information.") ?></p>
 
                     <div class="">
                         <div class="fileinput fileinput-new fileinput-enabled-submit" data-provides="fileinput"
@@ -96,7 +96,7 @@
                             <?= __("Cancel") ?>
                         </button>
                         <?=
-                        $this->Form->submit(__("変更する"),
+                        $this->Form->submit(__("Change"),
                                             ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled', 'id' => 'EditMembersSubmit']) ?>
 
                     </div>

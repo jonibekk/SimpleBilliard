@@ -28,7 +28,7 @@
                     <?php endforeach ?>
                 </div>
             <?php else: ?>
-                <?= __("まだ、この投稿を読んだ人はいません。") ?>
+                <?= __("No one has read this comment yet.") ?>
             <?php endif ?>
         </div>
         <div class="modal-footer modal-feed-footer">

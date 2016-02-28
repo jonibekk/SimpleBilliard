@@ -21,11 +21,11 @@
             <?= h($user['display_username']) ?>
             <a class="modal-ajax-get pointer"
                href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'ajax_get_evaluatees_by_evaluator', 'user_id' => $user['id'], 'evaluate_term_id' => $evaluate_term_id]) ?>">
-                <?= __("詳細を見る") ?>
+                <?= __("View details") ?>
             </a>
         </div>
         <div class="font_12px modalFeedTextPadding">
-            <?= __("残り") ?> <?= h($user['incomplete_count']) ?>
+            <?= __("Remaining") ?> <?= h($user['incomplete_count']) ?>
         </div>
     </div>
 </div>

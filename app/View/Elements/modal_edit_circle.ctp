@@ -15,13 +15,13 @@
         <div class="modal-header none-border">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= __("サークルを編集") ?></h4>
+            <h4 class="modal-title"><?= __("Edit Circle") ?></h4>
         </div>
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#tab1" data-toggle="tab"><?= __("基本情報") ?></a></li>
-            <li><a href="#tab2" data-toggle="tab"><?= __("メンバー一覧") ?></a></li>
+            <li class="active"><a href="#tab1" data-toggle="tab"><?= __("Basic info") ?></a></li>
+            <li><a href="#tab2" data-toggle="tab"><?= __("Members list") ?></a></li>
             <?php if (!$this->request->data['Circle']['team_all_flg']): ?>
-                <li><a href="#tab3" data-toggle="tab"><?= __("メンバー追加") ?></a></li>
+                <li><a href="#tab3" data-toggle="tab"><?= __("Add member(s)") ?></a></li>
             <?php endif ?>
         </ul>
 
@@ -160,7 +160,7 @@
                                             <?= $this->Form->hidden('user_id', ['value' => $user['User']['id']]) ?>
                                             <?= $this->Form->hidden('admin_flg', ['value' => 1]) ?>
                                             <?= $this->Form->end() ?>
-                                            <?= $this->Html->link(__("管理者にする"), '#',
+                                            <?= $this->Html->link(__("Set as Admin"), '#',
                                                                   ['class'   => 'item-for-non-admin',
                                                                    'style'   => $user['CircleMember']['admin_flg'] ? 'display:none' : '',
                                                                    'onclick' => "$('#EditAdminStatusForm1_{$user['User']['id']}').submit(); return false;"]) ?>
@@ -187,11 +187,11 @@
                                             if ($this->Session->read('Auth.User.id') == $user['User']['id']) {
                                                 $onclick =
                                                     "if (confirm('" .
-                                                    __('自分自身を管理者から外すとサークル情報の編集が出来なくなりますが、よろしいですか？') .
+                                                    __('After quitting circle admin, you can\'t edit circle information. Do you really want to quit admin?') .
                                                     "')) { $('#EditAdminStatusForm2_{$user['User']['id']}').submit(); } return false;";
                                             }
                                             ?>
-                                            <?= $this->Html->link(__("管理者から外す"), '#',
+                                            <?= $this->Html->link(__("Remove from admin"), '#',
                                                                   ['class'   => 'item-for-admin',
                                                                    'style'   => $user['CircleMember']['admin_flg'] ? '' : 'display:none',
                                                                    'onclick' => $onclick]); ?>
@@ -206,7 +206,7 @@
                                                 if ($this->Session->read('Auth.User.id') == $user['User']['id']) {
                                                     $onclick =
                                                         "if (confirm('" .
-                                                        __('自分自身をサークルから外すとサークル情報の編集が出来なくなりますが、よろしいですか？') .
+                                                        __('After leaving this circle, you can\'t edit any circle setting. Do you really want to leave the circle?') .
                                                         "')) { $('#LeaveCircleForm_{$user['User']['id']}').submit(); } return false;";
                                                 }
                                                 ?>
@@ -223,7 +223,7 @@
                                                 ]); ?>
                                                 <?= $this->Form->hidden('user_id', ['value' => $user['User']['id']]) ?>
                                                 <?= $this->Form->end() ?>
-                                                <?= $this->Html->link(__("サークルから外す"), '#',
+                                                <?= $this->Html->link(__("Remove from the circle"), '#',
                                                                       ['onclick' => $onclick]) ?>
                                             </li>
                                         <?php endif ?>
@@ -292,7 +292,7 @@
 
         <div class="modal-footer tab1-footer">
             <?=
-            $this->Form->button(__("変更を保存"),
+            $this->Form->button(__("Save changes"),
                                 ['id'      => 'EditCircleFormSubmit',
                                  'class'   => 'btn btn-primary pull-right',
                                  'onclick' => "$(this).attr('disabled', 'disabled'); document.getElementById('EditCircleForm').submit(); return false;",
@@ -301,12 +301,12 @@
                     data-dismiss="modal"><?= __("Cancel") ?></button>
             <?php if (!$this->request->data['Circle']['team_all_flg']): ?>
                 <?=
-                $this->Form->postLink(__("サークルを削除"),
+                $this->Form->postLink(__("Delete circle"),
                                       ['controller' => 'circles',
                                        'action'     => 'delete',
                                        'circle_id'  => $this->request->data['Circle']['id']],
                                       ['class' => 'btn btn-default pull-left'],
-                                      __("本当にこのサークルを削除しますか？")) ?>
+                                      __("Do you really want to delete the circle?")) ?>
             <?php endif ?>
         </div>
 
@@ -316,7 +316,7 @@
         <?php if (!$this->request->data['Circle']['team_all_flg']): ?>
             <div class="modal-footer tab3-footer" style="display:none">
                 <?=
-                $this->Form->button(__("メンバー追加"),
+                $this->Form->button(__("Add member(s)"),
                                     ['class'   => 'btn btn-primary pull-right',
                                      'onclick' => "$(this).attr('disabled', 'disabled'); document.getElementById('AddCircleMemberForm').submit(); return false;",
                                      'div'     => false,

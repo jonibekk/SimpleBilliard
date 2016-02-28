@@ -28,14 +28,14 @@
                                     <li>
                                         <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_edit_action_modal', 'action_result_id' => $post['Post']['action_result_id']]) ?>"
                                            class="modal-ajax-get"
-                                        ><?= __("アクションを編集") ?></a>
+                                        ><?= __("Edit Action") ?></a>
                                     </li>
                                 <?php endif ?>
                                 <li><a href="#" class="copy_me"
                                        data-clipboard-text="<?=
                                        $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']],
                                                         true) ?>">
-                                        <?= __("リンクをコピー") ?></a>
+                                        <?= __("Copy Link") ?></a>
                                 </li>
                             </ul>
                         </div>
@@ -185,7 +185,7 @@
                        like_count_id="ActionPostLikeCount_<?= $post['Post']['id'] ?>"
                        model_id="<?= $post['Post']['id'] ?>"
                        like_type="post">
-                        <?= __("いいね！") ?></a>
+                        <?= __("Like!") ?></a>
                     <span class="font_lightgray"> ･ </span>
                                 <span>
                             <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_liked_users', 'post_id' => $post['Post']['id']]) ?>"
@@ -209,7 +209,7 @@
                        get-url="<?= $this->Html->url(["controller" => "posts", 'action' => 'ajax_get_old_comment', 'post_id' => $post['Post']['id'], $post['Post']['comment_count'] - 3]) ?>"
                     >
                         <i class="fa fa-comment-o"></i>&nbsp;<?=
-                        __("他%s件のコメントを見る",
+                        __("View %s more comments",
                             $post['Post']['comment_count'] - 3) ?></a>
                 <?php endif; ?>
                 <?php foreach ($post['Comment'] as $comment): ?>
@@ -225,7 +225,7 @@
                 >
                     <div class="alert alert-danger new-comment-read">
                         <span class="num">0</span>
-                        <?= __("件の新しいコメントがあります") ?>
+                        <?= __(" New comments.") ?>
                     </div>
                 </a>
 
@@ -253,7 +253,7 @@
                                     tmp-target-height="32"
                                     ajax-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_new_comment_form', 'post_id' => $post['Post']['id'], 'Action']) ?>"
                                     wrap="soft" rows="1"
-                                    placeholder="<?= __("コメントする") ?>"
+                                    placeholder="<?= __("Comment") ?>"
                                     cols="30"
                                     init-height="15"></textarea>
                             </div>

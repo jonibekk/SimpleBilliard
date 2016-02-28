@@ -16,7 +16,7 @@
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
                 <span class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= empty($goal['MyCollabo']) ? __("Collaborate") : __("コラボを編集") ?></h4>
+            <h4 class="modal-title"><?= empty($goal['MyCollabo']) ? __("Collaborate") : __("Edit Collaborate") ?></h4>
         </div>
         <?php $collabo_id = isset($goal['MyCollabo'][0]['id']) ? $goal['MyCollabo'][0]['id'] : null ?>
         <?=
@@ -42,8 +42,8 @@
         <div class="modal-body">
             <?=
             $this->Form->input('role',
-                               ['label'                    => __("役割"),
-                                'placeholder'              => __("例) ○○"),
+                               ['label'                    => __("Role"),
+                                'placeholder'              => __("eg) **"),
                                 "data-bv-notempty-message" => __("入力必須項目です。"),
                                 'data-bv-stringlength'         => 'true',
                                 'data-bv-stringlength-max'     => 200,
@@ -56,7 +56,7 @@
             <?=
             $this->Form->input('description',
                                ['label'                    => __("Description"),
-                                'placeholder'              => __("例) ○○"),
+                                'placeholder'              => __("eg) **"),
                                 "data-bv-notempty-message" => __("入力必須項目です。"),
                                 'data-bv-stringlength'         => 'true',
                                 'data-bv-stringlength-max'     => 2000,
@@ -85,15 +85,15 @@
                         <?= __("Cancel") ?>
                     </button>
                     <?=
-                    $this->Form->submit(empty($goal['MyCollabo']) ? __("Collaborate") : __("コラボを編集"),
+                    $this->Form->submit(empty($goal['MyCollabo']) ? __("Collaborate") : __("Edit Collaborate"),
                                         ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
                     <?= $this->Form->end(); ?>
                     <?php if (!empty($goal['MyCollabo'])): ?>
                         <?=
-                        $this->Form->postLink(__("コラボを抜ける"),
+                        $this->Form->postLink(__("Quit the collaboration"),
                                               ['controller' => 'goals', 'action' => 'delete_collabo', 'collaborator_id' => $goal['MyCollabo'][0]['id']],
                                               ['class' => 'pull-left btn btn-link'],
-                                              __("本当にコラボレータから抜けますか？")) ?>
+                                              __("Do you really want to quit the collaboration?")) ?>
                     <?php endif; ?>
 
                 </div>

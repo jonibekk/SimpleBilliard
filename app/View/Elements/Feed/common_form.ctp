@@ -60,7 +60,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                 <a href="#PostForm" role="tab" data-toggle="tab"
                    class="switch-post-anchor click-target-focus"
                    target-id="CommonPostBody"><i
-                        class="fa fa-comment-o"></i><?= __("投稿") ?></a><span class="switch-arrow"></span>
+                        class="fa fa-comment-o"></i><?= __("Posts") ?></a><span class="switch-arrow"></span>
             </li>
             <li class="switch-message <?php
             // ファイル上部の宣言部を参照
@@ -74,7 +74,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                 <a href="#MessageForm" role="tab" data-toggle="tab"
                    class="switch-message-anchor click-target-focus"
                    target-id="s2id_autogen1"><i
-                        class="fa fa-paper-plane-o"></i><?= __("メッセージ") ?></a><span class="switch-arrow"></span>
+                        class="fa fa-paper-plane-o"></i><?= __("Message") ?></a><span class="switch-arrow"></span>
             </li>
         </ul>
     </div>
@@ -84,9 +84,9 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
             <?php if (count($goal_list_for_action_option) == 1): ?>
                 <div class="post-panel-body plr_11px ptb_7px">
                     <div class="alert alert-warning" role="alert">
-                        <?= __('今期のゴールがありません。') ?>
+                        <?= __('You have no goal.') ?>
                         <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>"
-                           class="alert-link"><?= __('ゴールを作成する') ?></a>
+                           class="alert-link"><?= __('Create a goal') ?></a>
                     </div>
                 </div>
             <?php else: ?>
@@ -118,7 +118,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                         >
                         <span class="action-image-add-button-text"><i
                                 class="fa fa-image action-image-add-button-icon"></i> <span><?= __(
-                                                                                                    'アクション画像をアップロード') ?></span></span>
+                                                                                                    'Upload an image as your action') ?></span></span>
 
                     </a>
                 </div>

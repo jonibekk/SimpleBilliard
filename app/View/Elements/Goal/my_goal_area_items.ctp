@@ -137,7 +137,7 @@ $kr_count = 0;
                                data-target="#ModalCollabo_<?= $goal['Goal']['id'] ?>"
                                href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', 'goal_id' => $goal['Goal']['id']]) ?>">
                                 <i class="fa fa-pencil"></i>
-                                <span class="ml_2px"><?= __("コラボを編集") ?></span>
+                                <span class="ml_2px"><?= __("Edit Collaborate") ?></span>
                             </a>
                         </li>
                     <?php endif; ?>

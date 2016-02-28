@@ -106,9 +106,9 @@
                                 : <?= h($goal['Goal']['name']); ?></p>
 
                             <p class="approval_body_text"><?= $goal['Collaborator']['type'] === (string)Collaborator::TYPE_OWNER ?
-                                    __("リーダー") : __("コラボレーター"); ?></p>
+                                    __("Leader") : __("Collaborator"); ?></p>
 
-                            <p class="approval_body_text"><?= __("役割") ?>
+                            <p class="approval_body_text"><?= __("Role") ?>
                                 : <?= h($goal['Collaborator']['role']); ?></p>
 
                             <p class="approval_body_text"><?= __("Unit") ?>
@@ -188,7 +188,7 @@
                             <div class="row">
                                 <div class="approval_botton_area">
                                     <?php if ($goal['my_goal'] === true || ($goal['my_goal'] === false && $goal['Collaborator']['type'] === (string)Collaborator::TYPE_COLLABORATOR)) { ?>
-                                        <?= $this->Form->button(__("コメントする"),
+                                        <?= $this->Form->button(__("Comment"),
                                                                 ['name' => 'comment_btn', 'class' => 'btn btn-primary approval_button', 'div' => false]) ?>
                                     <?php }
                                     else { ?>

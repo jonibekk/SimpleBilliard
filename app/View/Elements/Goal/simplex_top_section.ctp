@@ -117,7 +117,7 @@
         <i class="fa fa-flag goal-detail-tab-icon"></i>
 
         <p class="goal-detail-tab-title">
-            <?= h(__('基本情報')) ?>
+            <?= h(__('Basic info')) ?>
         </p>
     </a>
     <a class="goal-detail-kr-tab <?= $this->request->params['action'] == 'view_krs' ? "profile-user-tab-active" : null ?>"

@@ -58,7 +58,7 @@
                 <?= $this->Form->hidden('id', ['value' => $this->Session->read('Auth.User.id')]) ?>
             </div>
             <div class="modal-footer modal_pannel-footer">
-                <?= $this->Form->submit(__("変更を保存"),
+                <?= $this->Form->submit(__("Save changes"),
                                         ['class' => 'btn btn-primary pull-right', 'disabled' => 'disabled']) ?>
                 <button type="button" class="btn btn-link design-cancel mr_8px bd-radius_4px" data-dismiss="modal">
                     <?= __("Cancel") ?>
