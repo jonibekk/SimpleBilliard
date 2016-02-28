@@ -80,8 +80,9 @@ $this->Form->input('ActionResult.name', [
     <?php $this->Form->unlockField('socket_id') ?>
     <div class="form-group col-xxs-12 mt_12px">
         <a href="#" target-id="ActionFormName_<?= $goal_id ?>"
-           class="btn btn-white tiny-form-text-close font_verydark"><?= __(
-                                                                            "キャンセル") ?></a>
+           class="btn btn-white tiny-form-text-close font_verydark">
+           <?= __("Cancel") ?>
+        </a>
         <?= $this->Form->submit(__("アクション登録"), [
             'div'      => false,
             'id'       => "ActionFormSubmit_" . $goal_id,

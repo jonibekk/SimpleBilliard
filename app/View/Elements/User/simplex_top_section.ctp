@@ -49,7 +49,7 @@
                 <?= h($action_count) ?>
             </div>
             <span class="profile-user-numbers-category-action">
-                <?= __('アクション') ?>
+                <?= __('Action') ?>
             </span>
         </div>
         <div class="profile-user-numbers-post">
@@ -96,7 +96,7 @@
         <i class="fa fa-flag profile-user-tab-icon"></i>
 
         <p class="profile-user-tab-title">
-            <?= h(__('ゴール')) ?>
+            <?= h(__('Goal')) ?>
         </p>
     </a>
     <a class="profile-user-action-tab <?= $this->request->params['action'] == 'view_actions' ? "profile-user-tab-active" : null ?>"
@@ -110,7 +110,7 @@
         <i class="fa fa-check-circle profile-user-tab-icon"></i>
 
         <p class="profile-user-tab-title">
-            <?= h(__('アクション')) ?>
+            <?= h(__('Action')) ?>
         </p>
     </a>
     <a class="profile-user-post-tab <?= $this->request->params['action'] == 'view_posts' ? "profile-user-tab-active" : null ?>"

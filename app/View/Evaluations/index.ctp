@@ -16,7 +16,7 @@
 ?>
 <!-- START app/View/Evaluations/index.ctp -->
 <div class="panel panel-default col-sm-8 col-sm-offset-2 clearfix">
-    <div class="panel-heading"><?= __("評価") ?></div>
+    <div class="panel-heading"><?= __("Evaluation") ?></div>
     <div class="panel-body eval-view-panel-body">
         <div class="goal-search-menu">
             <div class="eval-term-tab-menu btn-group btn-group-justified" role="group">

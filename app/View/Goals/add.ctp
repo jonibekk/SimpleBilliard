@@ -454,11 +454,9 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                 <div>
                                 <span class="btn btn-default btn-file">
                                     <span class="fileinput-new">
-                                        <?=
-                                        __(
-                                            "画像を選択") ?>
+                                        <?= __("Select an image") ?>
                                     </span>
-                                    <span class="fileinput-exists"><?= __("画像を再選択") ?></span>
+                                    <span class="fileinput-exists"><?= __("Reselect an image") ?></span>
                                     <?=
                                     $this->Form->input('photo',
                                                        ['type'         => 'file',
@@ -470,7 +468,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                                         'required'     => false
                                                        ]) ?>
                                 </span>
-                                    <span class="help-block inline-block font_11px"><?= __('10MB以下') ?></span>
+                                    <span class="help-block inline-block font_11px"><?= __('Smaller than 10MB') ?></span>
                                 </div>
                             </div>
 

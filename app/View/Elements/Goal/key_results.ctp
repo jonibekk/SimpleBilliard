@@ -80,7 +80,7 @@
                                                       ]) ?>"><i
                                 class="fa fa-plus"></i>
 
-                            <p class="goal-detail-add-action-text "><?= __("アクション") ?></p>
+                            <p class="goal-detail-add-action-text "><?= __("Action") ?></p>
 
                             <p class="goal-detail-add-action-text "><?= __("追加") ?></p>
                         </a>

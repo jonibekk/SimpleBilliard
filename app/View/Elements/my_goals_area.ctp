@@ -51,7 +51,7 @@
            class="font_gargoyleGray-brownRed pull-right col-xxs-5 btn-goals-column-plus">
             <i class="fa fa-plus-circle font_brownRed">
             </i>
-            <?= __('ゴールを作成') ?>
+            <?= __('Create a goal') ?>
         </a>
     </div>
     <div id="LeaderGoals">
@@ -75,7 +75,7 @@
         <a href="#" class="click-my-goals-read-more btn-link" next-page-num="2"
            get-url="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_my_goals']) ?>"
            goal-type="leader">
-            <i class="fa fa-angle-double-down"><?= __("もっと見る") ?></i>
+            <i class="fa fa-angle-double-down"><?= __("More") ?></i>
         </a>
     <?php endif; ?>
     <div id="CollaboGoals">
@@ -88,7 +88,7 @@
         <a href="#" class="click-collabo-goals-read-more btn-link" next-page-num="2"
            get-url="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_my_goals']) ?>"
            goal-type="collabo">
-            <i class="fa fa-angle-double-down"><?= __("もっと見る") ?></i>
+            <i class="fa fa-angle-double-down"><?= __("More") ?></i>
         </a>
     <?php endif; ?>
     <div id="PrevGoals">
@@ -105,7 +105,7 @@
         <a href="#" class="click-collabo-goals-read-more btn-link" next-page-num="2"
            get-url="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_my_goals']) ?>"
            goal-type="my_prev">
-            <i class="fa fa-angle-double-down"><?= __("もっと見る") ?></i>
+            <i class="fa fa-angle-double-down"><?= __("More") ?></i>
         </a>
     <?php endif; ?>
 </div>

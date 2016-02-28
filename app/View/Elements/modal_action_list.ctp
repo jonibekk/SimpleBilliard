@@ -18,7 +18,7 @@
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
                 <span class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= __("アクションリスト") ?></h4>
+            <h4 class="modal-title"><?= __("Action list") ?></h4>
         </div>
         <div class="modal-body" id="ActionListBody">
             <?php if (!empty($posts)): ?>
@@ -60,7 +60,7 @@
             <?php if (count($posts) == POST_FEED_PAGE_ITEMS_NUMBER): ?>
                 <div class="panel panel-default feed-read-more" id="ActionListMoreRead">
                     <div class="panel-body panel-read-more-body">
-                        <span class="none" id="ActionShowMoreNoData"><?= __("これ以上のデータがありません。") ?></span>
+                        <span class="none" id="ActionShowMoreNoData"><?= __("There is no more data.") ?></span>
                         <a href="#" class="btn btn-link click-feed-read-more"
                            parent-id="ActionListMoreRead"
                            id="ActionListMoreReadLink"
@@ -69,14 +69,14 @@
                            get-url="<?=
                            $this->Html->url($feed_more_read_url) ?>"
                             >
-                            <?= __("もっと読む ▼") ?></a>
+                            <?= __("More...") ?></a>
                     </div>
                 </div>
             <?php endif; ?>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default"
-                    data-dismiss="modal"><?= __("閉じる") ?></button>
+                    data-dismiss="modal"><?= __("Close") ?></button>
         </div>
     </div>
 </div>

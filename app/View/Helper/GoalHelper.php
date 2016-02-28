@@ -14,7 +14,7 @@ class GoalHelper extends AppHelper
         $option = [
             'class'    => 'follow-off',
             'style'    => null,
-            'text'     => __("フォロー"),
+            'text'     => __("Follow"),
             'disabled' => null,
         ];
 
@@ -23,7 +23,7 @@ class GoalHelper extends AppHelper
             $option['class'] = 'follow-on';
             $option['style'] = 'display:none;';
             $option['disabled'] = "disabled";
-            $option['text'] = __("フォロー中");
+            $option['text'] = __("Following");
             return $option;
         }
 
@@ -42,7 +42,7 @@ class GoalHelper extends AppHelper
 
         $option['class'] = 'follow-on';
         $option['style'] = 'display:none;';
-        $option['text'] = __("フォロー中");
+        $option['text'] = __("Following");
         return $option;
     }
 
@@ -51,7 +51,7 @@ class GoalHelper extends AppHelper
         $option = [
             'class' => 'collabo-off',
             'style' => null,
-            'text'  => __("コラボる"),
+            'text'  => __("Collaborate"),
         ];
 
         if (!viaIsSet($goal['MyCollabo'])) {

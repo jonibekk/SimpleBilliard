@@ -111,8 +111,12 @@
                     <?php endif; ?>
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
-                    <div><i class="fa fa-heart"></i><span class="pl_2px"><?= __("フォロワー") ?>
-                            &nbsp;(<?= count($goal['Follower']) ?>)</span></div>
+                    <div>
+                        <i class="fa fa-heart"></i>
+                        <span class="pl_2px">
+                            <?= __("Follower") ?> &nbsp;(<?= count($goal['Follower']) ?>)
+                        </span>
+                    </div>
                     <?php if (isset($goal['Follower']) && !empty($goal['Follower'])): ?>
                         <?php foreach ($goal['Follower'] as $follower): ?>
                             <img src="<?=
@@ -153,7 +157,7 @@
         </div>
 
         <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal"><?= __("閉じる") ?></button>
+            <button type="button" class="btn btn-default" data-dismiss="modal"><?= __("Close") ?></button>
         </div>
     </div>
 </div>

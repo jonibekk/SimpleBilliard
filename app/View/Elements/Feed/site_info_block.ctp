@@ -102,11 +102,11 @@ if (isset($site_info['type']) && (
                                 ): ?>
                                     <i class="fa fa-comment-o"></i> <?= __('投稿') ?>
                                 <?php elseif ($site_info['type'] == 'post_action'): ?>
-                                    <i class="fa fa-check-circle"></i> <?= __('アクション') ?>
+                                    <i class="fa fa-check-circle"></i> <?= __('Action') ?>
                                 <?php elseif ($site_info['type'] == 'circle'): ?>
-                                    <i class="fa fa-circle-o"></i> <?= __('サークル') ?>
+                                    <i class="fa fa-circle-o"></i> <?= __('Circle') ?>
                                 <?php elseif ($site_info['type'] == 'goal'): ?>
-                                    <i class="fa fa-flag"></i> <?= __('ゴール') ?>
+                                    <i class="fa fa-flag"></i> <?= __('Goal') ?>
                                 <?php elseif ($site_info['type'] == 'team_vision'): ?>
                                     <i class="fa fa-rocket"></i> <?= __('チームビジョン') ?>
                                 <?php elseif ($site_info['type'] == 'group_vision'): ?>

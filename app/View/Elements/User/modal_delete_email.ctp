@@ -26,7 +26,7 @@
                 <button type="button" class="btn btn-link design-cancel mr_8px bd-radius_4px" data-dismiss="modal">閉じる</button>
                 <?=
                 $this->Form
-                    ->postLink(__("キャンセルする"),
+                    ->postLink(__("Cancel"),
                                [
                                    'controller' => 'emails',
                                    'action'     => 'delete',

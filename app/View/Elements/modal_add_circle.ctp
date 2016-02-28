@@ -16,7 +16,7 @@
             <div class="modal-header">
                 <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
                     <span class="close-icon">&times;</span></button>
-                <h4 class="modal-title"><?= __("サークルを作成") ?></h4>
+                <h4 class="modal-title"><?= __("Create a circle") ?></h4>
             </div>
             <?=
             $this->Form->create('Circle', [
@@ -37,8 +37,8 @@
             <div class="modal-body modal-circle-body">
                 <?=
                 $this->Form->input('name',
-                                   ['label'                        => __("サークル名"),
-                                    'placeholder'                  => __("例) 営業部"),
+                                   ['label'                        => __("Circle name"),
+                                    'placeholder'                  => __("eg) the sales division"),
                                     "data-bv-notempty-message"     => __("入力必須項目です。"),
                                     'data-bv-stringlength'         => 'true',
                                     'data-bv-stringlength-max'     => 128,
@@ -60,20 +60,20 @@
                         ]) ?>
                         <?php $this->Form->unlockField('Circle.members') ?>
                         <span class="help-block font_11px"><?=
-                            __("管理者：%s",
+                            __("Administrators",
                                 h($this->Session->read('Auth.User.display_username'))) ?></span>
                     </div>
                 </div>
                 <?php $privacy_option = Circle::$TYPE_PUBLIC;
                 $privacy_option[Circle::TYPE_PUBLIC_ON] .= '<span class="help-block font_11px">' . __(
-                                                                                                       "サークル名と参加メンバー、投稿がチーム内に公開されます。チームメンバーは誰でも自由に参加できます。") . '</span>';
+                                                                                                       "Anyone can see the circle, its members and their posts.") . '</span>';
                 $privacy_option[Circle::TYPE_PUBLIC_OFF] .= '<span class="help-block font_11px">' . __(
-                                                                                                        "サークル名と参加メンバー、投稿はこのサークルの参加メンバーだけに表示されます。サークル管理者だけがメンバーを追加できます。") . '</span>';
+                                                                                                        "Only members can find the circle and see posts.") . '</span>';
                 ?>
                 <?php echo $this->Form->input('public_flg', array(
                     'type'     => 'radio',
                     'before'   => '<label class="eee control-label modal-label">' . __(
-                                                                                        'プライバシー') . '</label>',
+                                                                                        'Privacy') . '</label>',
                     'legend'   => false,
                     'class'    => false,
                     'options'  => $privacy_option,
@@ -81,19 +81,19 @@
                     'required' => false
                 )); ?>
                 <div class="font_brownRed font_11px">
-                    <?= __('この設定は後で変更できません') ?>
+                    <?= __('You can\'t change this setting lator.') ?>
                 </div>
                 <?=
                 $this->Form->input('description',
-                                   ['label'                        => __("サークルの説明"),
-                                    'placeholder'                  => __("例) 最新情報を共有しましょう。"),
+                                   ['label'                        => __("Circle Description"),
+                                    'placeholder'                  => __("eg) Let's share the latest information."),
                                     'data-bv-notempty-message'     => __("入力必須項目です。"),
                                     'data-bv-stringlength'         => 'true',
                                     'data-bv-stringlength-max'     => 2000,
                                     'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 2000),
                                    ]) ?>
                 <div class="form-group">
-                    <label for="" class="f control-label modal-label"><?= __("サークル画像") ?></label>
+                    <label for="" class="f control-label modal-label"><?= __("Circle Image") ?></label>
 
                     <div class="ggg">
                         <div class="fileinput_small fileinput-new" data-provides="fileinput">
@@ -103,9 +103,9 @@
                             </div>
                             <span class="btn btn-default btn-file">
                                 <span class="fileinput-new">
-                                    <?= __("画像を選択") ?>
+                                    <?= __("Select an image") ?>
                                 </span>
-                                <span class="fileinput-exists"><?= __("画像を再選択") ?></span>
+                                <span class="fileinput-exists"><?= __("Reselect an image") ?></span>
                                 <?=
                                 $this->Form->input('photo',
                                                    ['type'         => 'file',
@@ -117,8 +117,7 @@
                                                     'required'     => false
                                                    ]) ?>
                             </span>
-                                    <span class="help-block font_11px inline-block"><?= __(
-                                                                                            '10MB以下') ?></span>
+                                    <span class="help-block font_11px inline-block"><?= __('Smaller than 10MB') ?></span>
                         </div>
                     </div>
                     <div>
@@ -137,11 +136,11 @@
             <div class="modal-footer addcircle_pannel-footer">
                 <div class="row">
                     <div class="h">
-                        <button type="button" class="btn btn-link design-cancel bd-radius_4px"
-                                data-dismiss="modal"><?= __(
-                                                             "キャンセル") ?></button>
+                        <button type="button" class="btn btn-link design-cancel bd-radius_4px" data-dismiss="modal">
+                            <?= __("Cancel") ?>
+                        </button>
                         <?=
-                        $this->Form->submit(__("サークルを作成"),
+                        $this->Form->submit(__("Create a circle"),
                                             ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
 
                     </div>

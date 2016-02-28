@@ -1798,19 +1798,16 @@ msgstr "アップロードをキャンセルしてよろしいですか？"
 #: View/Elements/gl_common_js.ctp:73
 msgid "Not finished uploading yet, please wait just a moment."
 msgstr ""
-"全てのファイルのアップロードが完了していません。アップロード完了までお待ち下"
-"さい。"
+"全てのファイルのアップロードが完了していません。アップロード完了までお待ちください。"
 
 #: View/Elements/gl_common_js.ctp:74
 msgid "Uploaded files are invalid due. Please try again."
 msgstr ""
-"アップロードしたファイルの有効期限が切れています。再度アップロードしてくださ"
-"い。"
+"アップロードしたファイルの有効期限が切れています。再度アップロードしてください。"
 
 #: View/Elements/gl_common_js.ctp:78
 msgid ""
-"You haven't finished your input data yet. Do you want to leave without "
-"finishing?"
+"You haven't finished your input data yet. Do you want to leave without finishing?"
 msgstr "入力が途中です。このまま移動しますか？"
 
 #: View/Elements/gl_common_js.ctp:79
@@ -1822,7 +1819,7 @@ msgid "An error has occurred. Data can not be retrieved."
 msgstr "エラーが発生しました。データ取得できません。"
 
 #: View/Elements/gl_common_js.ctp:85
-msgid "This comment is deleted."
+msgid "This comment was deleted."
 msgstr "このコメントは削除されました。"
 
 #: View/Elements/gl_common_js.ctp:86
@@ -1835,8 +1832,7 @@ msgstr "該当なし"
 
 #: View/Elements/gl_common_js.ctp:88
 msgid ""
-"After leaving secret circle, you can't join again by yourself. Do you really "
-"want to leave this secret circle?"
+"After leaving secret circle, you can't join again by yourself. Do you really want to leave this secret circle?"
 msgstr ""
 "秘密のサークルから脱退すると、自分の操作で再度参加できません。よろしいです"
 "か？"
@@ -1924,7 +1920,7 @@ msgid "is too long."
 msgstr "文字長すぎます"
 
 #: View/Elements/gl_common_js.ctp:111
-msgid "In most,"
+msgid "At most,"
 msgstr "最多で"
 
 #: View/Elements/gl_common_js.ctp:112
@@ -1944,19 +1940,19 @@ msgid "Add notified parties (optional)"
 msgstr "通知先を追加(オプション)"
 
 #: View/Elements/gl_common_js.ctp:118
-msgid "Specify public circle(s) or member(s)"
+msgid "Choose public circle(s) or member(s)"
 msgstr "公開サークルかメンバーを指定しよう"
 
 #: View/Elements/gl_common_js.ctp:119
-msgid "Specify member(s)"
+msgid "Choose member(s)"
 msgstr "メンバーを指定しよう"
 
 #: View/Elements/gl_common_js.ctp:120
-msgid "Specify secret circle(s)"
+msgid "Choose secret circle(s)"
 msgstr "秘密サークルを指定しよう"
 
 #: View/Elements/gl_common_js.ctp:121
-msgid "You do not switch in the circle page."
+msgid "You can't switch in the circle page."
 msgstr "サークルページでは切り替えられません"
 
 #: View/Elements/gl_common_js.ctp:122
@@ -2050,7 +2046,7 @@ msgid "Create a team"
 msgstr "チームを作成"
 
 #: View/Elements/header_logged_in_right.ctp:71
-msgid "No message"
+msgid "No new message"
 msgstr "未読のメッセージはありません。"
 
 #: View/Elements/header_logged_in_right.ctp:91
@@ -2060,7 +2056,7 @@ msgstr "すべて既読にする"
 #: View/Elements/header_logged_in_right.ctp:97
 #: View/Elements/Notification/message_notify_items_in_list_box.ctp:18
 #: View/Elements/Notification/notify_items_in_list_box.ctp:18
-msgid "No notification"
+msgid "No new notification"
 msgstr "未読の通知はありません。"
 
 #: View/Elements/header_logged_in_right.ctp:110
@@ -2109,7 +2105,7 @@ msgid "Newsfeed"
 msgstr "ニュースフィード"
 
 #: View/Elements/header_sp_feeds_alt.ctp:25
-msgid "Related goals"
+msgid "Related Goals"
 msgstr "関連ゴール"
 
 #: View/Elements/modal_action_list.ctp:21
@@ -2160,7 +2156,7 @@ msgid "You can't change this setting later."
 msgstr "この設定は後で変更できません"
 
 #: View/Elements/modal_add_circle.ctp:88 View/Elements/modal_edit_circle.ctp:77
-msgid "Description"
+msgid "Circle Description"
 msgstr "サークルの説明"
 
 #: View/Elements/modal_add_circle.ctp:89 View/Elements/modal_edit_circle.ctp:81
@@ -2168,7 +2164,7 @@ msgid "eg) Let's share the latest information."
 msgstr "例) 最新情報を共有しましょう。"
 
 #: View/Elements/modal_add_circle.ctp:96 View/Elements/modal_edit_circle.ctp:91
-msgid "Image"
+msgid "Circle Image"
 msgstr "サークル画像"
 
 #: View/Elements/modal_add_circle.ctp:106
@@ -2206,29 +2202,25 @@ msgstr "10MB以下"
 msgid "Add new members."
 msgstr "新しいメンバーを追加"
 
-#: View/Elements/modal_add_members_by_csv.ctp:42
-msgid "1. Download template."
-msgstr "1.テンプレートをダウンロード"
-
 #: View/Elements/modal_add_members_by_csv.ctp:44
 msgid "Download CSV template and edit it without any change in header."
 msgstr ""
 "CSVフォーマットのテンプレートをダウンロードしてください。テンプレートのヘッ"
 "ダーは変更しないでください。"
 
-#: View/Elements/modal_add_members_by_csv.ctp:48
+#: View/Elements/modal_add_members_by_csv.ctp:42;48
 msgid "Download template."
 msgstr "テンプレートをダウンロード"
 
 #: View/Elements/modal_add_members_by_csv.ctp:54
 #: View/Elements/modal_edit_members_by_csv.ctp:54
 #: View/Elements/Team/modal_final_evaluation_by_csv.ctp:60
-msgid "2. Upload the file."
-msgstr "2.ファイルのアップロード"
+msgid "Upload the file."
+msgstr "ファイルのアップロード"
 
 #: View/Elements/modal_add_members_by_csv.ctp:56
 msgid "Upload edited file."
-msgstr "新しいメンバーを追加したファイルをアップロードしてください。"
+msgstr "編集したファイルをアップロードしてください。"
 
 #: View/Elements/modal_add_members_by_csv.ctp:62
 #: View/Elements/modal_edit_members_by_csv.ctp:62
@@ -3785,7 +3777,7 @@ msgstr "%sへのメールアドレス変更をキャンセルしますか？"
 
 #: View/Elements/User/modal_delete_email.ctp:29
 msgid "Cancel"
-msgstr "キャンセルする"
+msgstr "キャンセル"
 
 #: View/Elements/User/modal_recovery_code.ctp:12
 msgid "Recovery Codes"

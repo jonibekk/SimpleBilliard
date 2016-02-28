@@ -76,7 +76,7 @@
                     <?php
                     $next_page_num = 2;
                     $month_index = 0;
-                    $more_read_text = __("もっと読む ▼");
+                    $more_read_text = __("More...");
                     $oldest_post_time = 0;
                     if ((count($posts) != $item_num)) {
                         $next_page_num = 1;

@@ -50,7 +50,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                 <a href="#ActionForm" role="tab" data-toggle="tab"
                    class="switch-action-anchor click-target-focus"
                    target-id="CommonActionName"><i
-                        class="fa fa-check-circle"></i><?= __("アクション") ?></a><span class="switch-arrow"></span>
+                        class="fa fa-check-circle"></i><?= __("Action") ?></a><span class="switch-arrow"></span>
             </li>
             <li class="switch-post <?php
             // ファイル上部の宣言部を参照
@@ -183,7 +183,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                                 'div'      => false,
                                 'required' => false,
                                 'id'       => 'KrSelectOnActionForm',
-                                'options'  => isset($kr_list) ? $kr_list : [null => __('達成要素を選択する(オプション)')],
+                                'options'  => isset($kr_list) ? $kr_list : [null => __('Select a key result (optional)')],
                             ])
                             ?>
                         </div>

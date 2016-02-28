@@ -16,7 +16,7 @@
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
                 <span class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= empty($goal['MyCollabo']) ? __("コラボる") : __("コラボを編集") ?></h4>
+            <h4 class="modal-title"><?= empty($goal['MyCollabo']) ? __("Collaborate") : __("コラボを編集") ?></h4>
         </div>
         <?php $collabo_id = isset($goal['MyCollabo'][0]['id']) ? $goal['MyCollabo'][0]['id'] : null ?>
         <?=
@@ -81,11 +81,11 @@
         <div class="modal-footer">
             <div class="row">
                 <div class="col-sm-9 col-sm-offset-3">
-                    <button type="button" class="btn btn-link design-cancel bd-radius_4px"
-                            data-dismiss="modal"><?= __(
-                                                         "キャンセル") ?></button>
+                    <button type="button" class="btn btn-link design-cancel bd-radius_4px" data-dismiss="modal">
+                        <?= __("Cancel") ?>
+                    </button>
                     <?=
-                    $this->Form->submit(empty($goal['MyCollabo']) ? __("コラボる") : __("コラボを編集"),
+                    $this->Form->submit(empty($goal['MyCollabo']) ? __("Collaborate") : __("コラボを編集"),
                                         ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
                     <?= $this->Form->end(); ?>
                     <?php if (!empty($goal['MyCollabo'])): ?>

@@ -45,7 +45,7 @@
             <div class="row">
                 <div class="col-sm-9 col-sm-offset-3">
                     <a href="#" class="btn btn-default" data-toggle="modal"
-                       data-target="#ModalAddMembersByCsv"><?= __('新しいメンバーを追加') ?></a>
+                       data-target="#ModalAddMembersByCsv"><?= __('Add new members.') ?></a>
                     <a href="#" class="btn btn-default" data-toggle="modal"
                        data-target="#ModalEditMembersByCsv"><?= __('メンバーの情報を更新') ?></a>
                 </div>

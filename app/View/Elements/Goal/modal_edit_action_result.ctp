@@ -81,7 +81,7 @@
                                 ['class' => 'btn btn-primary', 'div' => false, 'id' => "ActionEditFormSubmit_" . $action['ActionResult']['id']]) ?>
             <?= $this->Form->end() ?>
 
-            <button type="button" class="btn btn-default" data-dismiss="modal"><?= __("閉じる") ?></button>
+            <button type="button" class="btn btn-default" data-dismiss="modal"><?= __("Close") ?></button>
             <?=
             $this->Form->postLink(__("アクションを削除"),
                                   ['controller' => 'goals', 'action' => 'delete_action', 'action_result_id' => $action['ActionResult']['id']],

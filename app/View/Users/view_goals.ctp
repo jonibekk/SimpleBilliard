@@ -124,7 +124,7 @@
                                                href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add_action', 'goal_id' => $goal['Goal']['id']]) ?>"><i
                                                     class="fa fa-plus"></i>
 
-                                                <p class="profile-user-add-action-text "><?= __("アクション") ?></p>
+                                                <p class="profile-user-add-action-text "><?= __("Action") ?></p>
 
                                                 <p class="profile-user-add-action-text "><?= __("追加") ?></p>
                                             </a>

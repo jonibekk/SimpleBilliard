@@ -44,7 +44,7 @@
                     'class'         => 'ajax-csv-upload',
                 ]); ?>
                 <div class="form-group">
-                    <label class=""><?= __("1.評価データをダウンロード") ?></label>
+                    <label class="">1. <?= __("評価データをダウンロード") ?></label>
 
                     <p><?= __("CSVフォーマットの評価データをダウンロードしてください。テンプレートのヘッダーは変更しないでください。") ?></p>
 
@@ -57,7 +57,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class=""><?= __('2.ファイルのアップロード') ?></label>
+                    <label class="">2. <?= __('Upload the file.') ?></label>
 
                     <p><?= __("変更した評価データのファイルをアップロードしてください。") ?></p>
 
@@ -65,8 +65,8 @@
                         <div class="fileinput fileinput-new fileinput-enabled-submit" data-provides="fileinput"
                              submit-id="FinalEvaluation_<?= $evaluate_term_id ?>_Submit">
                             <span class="btn btn-default btn-file">
-                                <span class="fileinput-new"><?= __("ファイルを選択") ?></span>
-                                <span class="fileinput-exists"><?= __("別のファイルに変更する") ?></span>
+                                <span class="fileinput-new"><?= __("Choose a file.") ?></span>
+                                <span class="fileinput-exists"><?= __("Change to another file.") ?></span>
                                 <?=
                                 $this->Form->input('csv_file',
                                                    ['type'         => 'file',
@@ -99,8 +99,7 @@
                             &nbsp;<i class="fa fa-refresh fa-spin"></i>
                         </div>
                         <button type="button" class="btn btn-link design-cancel bd-radius_4px"
-                                data-dismiss="modal"><?= __(
-                                                             "キャンセル") ?></button>
+                                data-dismiss="modal"><?= __("Cancel") ?></button>
                         <?=
                         $this->Form->submit(__("更新する"),
                                             ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled', 'id' => "FinalEvaluation_{$evaluate_term_id}_Submit"]) ?>

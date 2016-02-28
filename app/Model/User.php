@@ -44,9 +44,9 @@ class User extends AppModel
      */
     private function _setGenderTypeName()
     {
-        self::$TYPE_GENDER[self::TYPE_GENDER_MALE] = __("男性");
-        self::$TYPE_GENDER[self::TYPE_GENDER_FEMALE] = __("女性");
-        self::$TYPE_GENDER[self::TYPE_GENDER_NEITHER] = __("どちらでもない");
+        self::$TYPE_GENDER[self::TYPE_GENDER_MALE] = __("Male");
+        self::$TYPE_GENDER[self::TYPE_GENDER_FEMALE] = __("Female");
+        self::$TYPE_GENDER[self::TYPE_GENDER_NEITHER] = __("Neither");
     }
 
     public $actsAs = [
@@ -1107,7 +1107,7 @@ class User extends AppModel
             }
             $res[] = [
                 'id'    => 'group_' . $group['Group']['id'],
-                'text'  => h($group['Group']['name'] . ' (' . strval(__('%1$s人のメンバー', count($users))) . ')'),
+                'text'  => h($group['Group']['name'] . ' (' . strval(__('%1$s人 member', count($users))) . ')'),
                 'users' => $users,
             ];
         }

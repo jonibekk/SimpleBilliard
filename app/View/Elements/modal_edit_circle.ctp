@@ -47,8 +47,8 @@
                 <?= $this->Form->hidden('id') ?>
                 <?=
                 $this->Form->input('name',
-                                   ['label'                        => __("サークル名"),
-                                    'placeholder'                  => __("例) 営業部"),
+                                   ['label'                        => __("Circle name"),
+                                    'placeholder'                  => __("eg) the sales division"),
                                     "data-bv-notempty-message"     => __("入力必須項目です。"),
                                     'data-bv-stringlength'         => 'true',
                                     'data-bv-stringlength-max'     => 128,
@@ -58,12 +58,12 @@
 
                     <?php $privacy_option = Circle::$TYPE_PUBLIC;
                     $privacy_option[Circle::TYPE_PUBLIC_ON] .= '<span class="help-block font_11px">' . __(
-                                                                                                           "サークル名と参加メンバー、投稿がチーム内に公開されます。チームメンバーは誰でも自由に参加できます。") . '</span>';
+                                                                                                           "Anyone can see the circle, its members and their posts.") . '</span>';
                     $privacy_option[Circle::TYPE_PUBLIC_OFF] .= '<span class="help-block font_11px">' . __(
-                                                                                                            "サークル名と参加メンバー、投稿はこのサークルの参加メンバーだけに表示されます。サークル管理者だけがメンバーを追加できます。") . '</span>';
+                                                                                                            "Only members can find the circle and see posts.") . '</span>';
                     ?>
                     <div class="form-group">
-                        <label class="control-label modal-label"><?= __('プライバシー') ?></label>
+                        <label class="control-label modal-label"><?= __('Privacy') ?></label>
 
                         <div>
                             <span class="font_14px">
@@ -74,11 +74,11 @@
                 <?php endif ?>
 
                 <div class="form-group">
-                    <label class="control-label modal-label"><?= __('サークルの説明') ?></label>
+                    <label class="control-label modal-label"><?= __('Circle Description') ?></label>
                     <?=
                     $this->Form->input('description',
                                        ['label'                        => false,
-                                        'placeholder'                  => __("例) 最新情報を共有しましょう。"),
+                                        'placeholder'                  => __("eg) Let's share the latest information."),
                                         'rows'                         => 1,
                                         'data-bv-notempty-message'     => __("入力必須項目です。"),
                                         'data-bv-stringlength'         => 'true',
@@ -88,7 +88,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="" class="control-label modal-label"><?= __("サークル画像") ?></label>
+                    <label for="" class="control-label modal-label"><?= __("Circle Image") ?></label>
 
                     <div class="ccc">
                         <div class="fileinput_small fileinput-new" data-provides="fileinput">
@@ -102,11 +102,11 @@
                             <div>
                         <span class="btn btn-default btn-file">
                             <span class="fileinput-new">
-                                <?=
-                                __(
-                                    "画像を選択") ?>
+                                <?=__("Select an image") ?>
                             </span>
-                            <span class="fileinput-exists"><?= __("画像を再選択") ?></span>
+                            <span class="fileinput-exists">
+                                <?= __("Reselect an image") ?>
+                            </span>
                             <?=
                             $this->Form->input('photo',
                                                ['type'         => 'file',
@@ -118,7 +118,7 @@
                                                 'required'     => false
                                                ]) ?>
                         </span>
-                                <span class="help-block font_11px inline-block"><?= __('10MB以下') ?></span>
+                                <span class="help-block font_11px inline-block"><?= __('Smaller than 10MB') ?></span>
                             </div>
                         </div>
 
@@ -250,7 +250,7 @@
                         <?php endforeach ?>
                     </div>
                 <?php else: ?>
-                    <?= __("このサークルにはメンバーがいません。") ?>
+                    <?= __("No one in this circle.") ?>
                 <?php endif ?>
             </div>
 
@@ -298,7 +298,7 @@
                                  'onclick' => "$(this).attr('disabled', 'disabled'); document.getElementById('EditCircleForm').submit(); return false;",
                                  'div'     => false,]) ?>
             <button type="button" class="btn btn-link design-cancel pull-right mr_8px bd-radius_4px"
-                    data-dismiss="modal"><?= __("キャンセル") ?></button>
+                    data-dismiss="modal"><?= __("Cancel") ?></button>
             <?php if (!$this->request->data['Circle']['team_all_flg']): ?>
                 <?=
                 $this->Form->postLink(__("サークルを削除"),

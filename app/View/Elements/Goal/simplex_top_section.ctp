@@ -33,7 +33,7 @@
                 <?= h($this->NumberEx->formatHumanReadable($action_count, ['convert_start' => 10000])) ?>
             </div>
             <span class="goal-detail-numbers-category-action">
-                <?= __('アクション') ?>
+                <?= __('Action') ?>
             </span>
         </div>
         <div class="goal-detail-numbers-member">
@@ -49,7 +49,7 @@
                 <?= h($this->NumberEx->formatHumanReadable($follower_count, ['convert_start' => 10000])) ?>
             </div>
             <span class="goal-detail-numbers-category-follower">
-                <?= __('フォロワー') ?>
+                <?= __('Follower') ?>
             </span>
         </div>
         <?php if ($is_leader): ?>
@@ -82,7 +82,7 @@
                             disabled="disabled"
                         <?php endif ?>
                         >
-                        <span class="ml_5px"><?= __('フォロー') ?></span>
+                        <span class="ml_5px"><?= __('Follow') ?></span>
                     </a>
                 </div>
                 <div class="col col-xxs-5 col-xxs-offset-1 col-xs-4">
@@ -144,7 +144,7 @@
         <i class="fa fa-check goal-detail-tab-icon"></i>
 
         <p class="goal-detail-tab-title">
-            <?= h(__('アクション')) ?>
+            <?= h(__('Action')) ?>
         </p>
     </a>
     <a class="goal-detail-member-tab <?= $this->request->params['action'] == 'view_members' ? "profile-user-tab-active" : null ?>"
@@ -170,7 +170,7 @@
         <i class="fa fa-heart goal-detail-tab-icon"></i>
 
         <p class="goal-detail-tab-title">
-            <?= h(__('フォロワー')) ?>
+            <?= h(__('Follower')) ?>
         </p>
     </a>
 </div>

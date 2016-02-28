@@ -40,7 +40,7 @@
         <?= $this->element('Team/insight_item', [
             'item_id'           => 'action_count_item',
             'item_value'        => $insight['action_count'],
-            'item_label'        => __('アクション'),
+            'item_label'        => __('Action'),
             'item_cmp_percent'  => isset($insight['action_count_cmp']) ? $insight['action_count_cmp'] : null,
         ]) ?>
         <?= $this->element('Team/insight_item', [
@@ -73,7 +73,7 @@
         <?= $this->element('Team/insight_item', [
             'item_id'           => 'action_user_count_item',
             'item_value'        => $insight['action_user_count'],
-            'item_label'        => __('アクション'),
+            'item_label'        => __('Action'),
             'item_cmp_percent'  => isset($insight['action_user_count_cmp']) ? $insight['action_user_count_cmp'] : null,
         ]) ?>
         <?= $this->element('Team/insight_item', [
@@ -108,7 +108,7 @@
         <?= $this->element('Team/insight_item', [
             'item_id'           => 'action_user_percent_item',
             'item_value'        => $insight['action_user_percent'] . ' %',
-            'item_label'        => __('アクション'),
+            'item_label'        => __('Action'),
             'item_cmp_percent'  => isset($insight['action_user_percent_cmp']) ? $insight['action_user_percent_cmp'] : null,
         ]) ?>
         <?= $this->element('Team/insight_item', [

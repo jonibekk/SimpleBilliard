@@ -15,12 +15,12 @@
 <!--
     <li class="notify-card-empty" id="notifyCardEmpty">
        <i class="fa fa-smile-o font_33px mr_8px"></i><span
-           class="notify-empty-text"><?= __("未読の通知はありません。") ?></span>
+           class="notify-empty-text"><?= __("No new notification") ?></span>
     </li>
      -->
 <a href="#" get-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'message_list#']) ?>" onclick="evMessageList()">
     <li class="message-all-view-link">
-        <?= __("すべて見る") ?>
+        <?= __("See All") ?>
     </li>
 </a>
 

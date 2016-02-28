@@ -63,12 +63,12 @@ if ((count($posts) == POST_FEED_PAGE_ITEMS_NUMBER || (isset($item_created) && $i
     ?>
     <?php $next_page_num = 2;
     $month_index = 0;
-    $more_read_text = __("もっと読む ▼");
+    $more_read_text = __("More...");
     $oldest_post_time = 0;
     if ((count($posts) != POST_FEED_PAGE_ITEMS_NUMBER)) {
         $next_page_num = 1;
         $month_index = 1;
-        $more_read_text = __("さらに投稿を読み込む ▼");
+        $more_read_text = __("View previous posts ▼");
     }
 
     // １件目の投稿の更新時間

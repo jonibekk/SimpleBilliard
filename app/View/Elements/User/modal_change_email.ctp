@@ -60,7 +60,7 @@
                                         ['class' => 'btn btn-primary pull-right', 'disabled' => 'disabled']) ?>
                 <div class="pull-right">
                     <button type="button" class="btn btn-link design-cancel mr_8px bd-radius_4px" data-dismiss="modal">
-                        <?= __("キャンセル") ?>
+                        <?= __("Cancel") ?>
                     </button>
                 </div>
             </div>

@@ -39,9 +39,9 @@
                                      alt="Goalous2.0" width="20px" height="20px">
 
                                 <p class="font_11px font_heavyGray header_icon-text hidden-xs js-header-link">
-                                    <?= __("ホーム") ?>
+                                    <?= __("Home") ?>
                                 </p>
-                                <span class="visible-xs-inline va_bl ml_5px"><?= __("ホーム") ?></span>
+                                <span class="visible-xs-inline va_bl ml_5px"><?= __("Home") ?></span>
                             </div>
                         </a>
                     </li>
@@ -52,9 +52,9 @@
                                 <i class="fa fa-flag js-header-link header-icon nav-xxs-icon header-icons"></i>
 
                                 <p class="font_11px header_icon-text hidden-xs js-header-link">
-                                    <?= __("ゴール") ?>
+                                    <?= __("Goal") ?>
                                 </p>
-                                <span class="visible-xs-inline ml_5px"><?= __("ゴール") ?></span>
+                                <span class="visible-xs-inline ml_5px"><?= __("Goal") ?></span>
                             </div>
                         </a>
                     </li>
@@ -66,9 +66,9 @@
                                 <i class="fa fa-users js-header-link header-icon nav-xxs-icon header-icons"></i>
 
                                 <p class="font_11px header_icon-text hidden-xs js-header-link">
-                                    <?= __("チーム") ?>
+                                    <?= __("Team") ?>
                                 </p>
-                                <span class="visible-xs-inline ml_5px"><?= __("チーム") ?></span>
+                                <span class="visible-xs-inline ml_5px"><?= __("Team") ?></span>
                             </div>
                         </a>
                     </li>
@@ -78,7 +78,7 @@
                                                           array(
                                                               'type'      => 'select',
                                                               'options'   => !empty($my_teams) ? $my_teams : [__(
-                                                                                                                  'チームがありません')],
+                                                                                                                  'There is no team.')],
                                                               'value'     => $this->Session->read('current_team_id'),
                                                               'id'        => 'SwitchTeam',
                                                               'label'     => false,
@@ -114,12 +114,12 @@
                                         </li>
                                         <li><a href="#" class="nav-search-category-item" data-category="goal">
                                                 <i class="fa fa-flag header-drop-icons"></i>
-                                                <?= __('ゴール'); ?>
+                                                <?= __('Goal'); ?>
                                             </a>
                                         </li>
                                         <li><a href="#" class="nav-search-category-item" data-category="circle">
                                                 <i class="fa fa-circle-o header-drop-icons"></i>
-                                                <?= __('サークル'); ?>
+                                                <?= __('Circle'); ?>
                                             </a>
                                         </li>
                                     </ul>

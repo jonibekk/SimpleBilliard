@@ -16,13 +16,13 @@
         <a <?php if (isset($this->request->params['after_click'])): ?>href="after_click:SubHeaderMenuFeed"<?php endif ?>
            class="font_lightGray-veryDark no-line plr_18px sp-feed-link inline-block pt_12px height_40px sp-feed-active"
            id="SubHeaderMenuFeed">
-            <?= __("ニュースフィード") ?>
+            <?= __("Newsfeed") ?>
         </a>
     </div>
     <div class="col col-xxs-6">
         <a class="font_lightGray-veryDark no-line plr_18px sp-feed-link inline-block pt_12px height_40px"
            id="SubHeaderMenuGoal">
-            <?= __("関連ゴール") ?>
+            <?= __("Related Goals") ?>
         </a>
     </div>
 </div>

@@ -302,7 +302,7 @@
                             <a class="click-show-post-modal pointer"
                                id="ActionListOpen_<?= $goal[0]['Goal']['id'] ?>"
                                href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_goal_action_feed', 'goal_id' => $goal[0]['Goal']['id'], 'type' => Post::TYPE_ACTION, 'author_id' => $evaluateeId, 'evaluate_term_id' => $evaluateTermId]) ?>">
-                                <?= __("アクション") ?>
+                                <?= __("Action") ?>
                             </a>
                         </div>
                     </div>

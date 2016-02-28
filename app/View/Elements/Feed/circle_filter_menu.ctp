@@ -42,12 +42,12 @@
                     <?php }
                     else { ?>
                         <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'unjoin_circle', 'circle_id' => $current_circle['Circle']['id']]) ?>">
-                            <?= __('サークルを脱退する') ?></a>
+                            <?= __('Leave circle.') ?></a>
                     <?php } ?>
                 </li>
             <?php endif; ?>
             <?php if ($user_status == 'joined' || $user_status == 'admin'): ?>
-            <li><a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_setting', 'circle_id' => $current_circle['Circle']['id']]) ?>" class="modal-circle-setting"><?= __('設定') ?></a></li>
+            <li><a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_setting', 'circle_id' => $current_circle['Circle']['id']]) ?>" class="modal-circle-setting"><?= __('Settings') ?></a></li>
             <?php endif ?>
             <?php endif ?>
         </ul>

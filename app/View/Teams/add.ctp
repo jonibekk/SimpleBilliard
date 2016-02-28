@@ -54,11 +54,9 @@
                             <div>
                         <span class="btn btn-default btn-file">
                             <span class="fileinput-new">
-                                <?=
-                                __(
-                                    "画像を選択") ?>
+                                <?=  __("Select an image") ?>
                             </span>
-                            <span class="fileinput-exists"><?= __("画像を再選択") ?></span>
+                            <span class="fileinput-exists"><?= __("Reselect an image") ?></span>
                             <?=
                             $this->Form->input('photo',
                                                ['type'         => 'file',
@@ -70,7 +68,7 @@
                                                 'required'     => false
                                                ]) ?>
                         </span>
-                                <span class="help-block font_11px inline-block"><?= __('10MB以下') ?></span>
+                                <span class="help-block font_11px inline-block"><?= __('Smaller than 10MB') ?></span>
                             </div>
                         </div>
 
@@ -138,7 +136,7 @@
                 <div class="row">
                     <div class="team-button pull-right">
                         <?=
-                        $this->Form->submit(__("チームを作成"),
+                        $this->Form->submit(__("Create a team"),
                                             ['class' => 'btn btn-primary display-inline', 'div' => false, 'disabled' => 'disabled']) ?>
                     </div>
                 </div>

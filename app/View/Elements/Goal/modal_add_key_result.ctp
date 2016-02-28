@@ -238,7 +238,7 @@
             $this->Form->submit(__("達成要素を追加"),
                                 ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
 
-            <button type="button" class="btn btn-default" data-dismiss="modal"><?= __("閉じる") ?></button>
+            <button type="button" class="btn btn-default" data-dismiss="modal"><?= __("Close") ?></button>
         </div>
         <?= $this->Form->end() ?>
     </div>
