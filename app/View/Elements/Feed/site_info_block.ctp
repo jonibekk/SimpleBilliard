@@ -108,9 +108,9 @@ if (isset($site_info['type']) && (
                                 <?php elseif ($site_info['type'] == 'goal'): ?>
                                     <i class="fa fa-flag"></i> <?= __('Goal') ?>
                                 <?php elseif ($site_info['type'] == 'team_vision'): ?>
-                                    <i class="fa fa-rocket"></i> <?= __('チームビジョン') ?>
+                                    <i class="fa fa-rocket"></i> <?= __('Team Vision') ?>
                                 <?php elseif ($site_info['type'] == 'group_vision'): ?>
-                                    <i class="fa fa-plane"></i> <?= __('グループビジョン') ?>
+                                    <i class="fa fa-plane"></i> <?= __('Group Vision') ?>
                                 <?php elseif ($site_info['type'] == 'user'): ?>
                                     <i class="fa fa-user"></i> <?= __('Members') ?>
                                 <?php endif ?>

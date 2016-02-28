@@ -30,7 +30,7 @@
     }
     ?>
     <a href="" class="alert alert-info feed-notify-box" role="alert" style="margin-bottom:5px;display:none;opacity:0;">
-        <span class="num"></span><?= __("件の新しい投稿があります。") ?></a>
+        <span class="num"></span><?= __(" new posts.") ?></a>
     <div class="panel panel-default" id="CircleFiles">
         <?=
         $this->Form->input('file_type', [

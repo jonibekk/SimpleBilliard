@@ -58,7 +58,7 @@
         <?= $this->element('Team/insight_item', [
             'item_id'           => 'comment_count_item',
             'item_value'        => $insight['comment_count'],
-            'item_label'        => __('コメント'),
+            'item_label'        => __('Comments'),
             'item_cmp_percent'  => isset($insight['comment_count_cmp']) ? $insight['comment_count_cmp'] : null,
         ]) ?>
         <?= $this->element('Team/insight_item', [
@@ -91,7 +91,7 @@
         <?= $this->element('Team/insight_item', [
             'item_id'           => 'comment_user_count_item',
             'item_value'        => $insight['comment_user_count'],
-            'item_label'        => __('コメント'),
+            'item_label'        => __('Comments'),
             'item_cmp_percent'  => isset($insight['comment_user_count_cmp']) ? $insight['comment_user_count_cmp'] : null,
         ]) ?>
         <?= $this->element('Team/insight_item', [
@@ -126,7 +126,7 @@
         <?= $this->element('Team/insight_item', [
             'item_id'           => 'comment_user_percent_item',
             'item_value'        => $insight['comment_user_percent'] . ' %',
-            'item_label'        => __('コメント'),
+            'item_label'        => __('Comments'),
             'item_cmp_percent'  => isset($insight['comment_user_percent_cmp']) ? $insight['comment_user_percent_cmp'] : null,
         ]) ?>
         <?= $this->element('Team/insight_item', [

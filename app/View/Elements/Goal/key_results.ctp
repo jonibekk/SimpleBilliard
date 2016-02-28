@@ -50,7 +50,7 @@
             <div class="goal-detail-kr-cards-contents">
                 <h4 class="goal-detail-kr-card-title"><?= h($kr['KeyResult']['name']) ?></h4>
                 <?php if ($kr['KeyResult']['completed']): ?>
-                    <?= __('クリア') ?>
+                    <?= __('Clear') ?>
                 <?php endif ?>
                 <div class="goal-detail-kr-score">
                     <i class="fa fa-bullseye"></i>
@@ -82,7 +82,7 @@
 
                             <p class="goal-detail-add-action-text "><?= __("Action") ?></p>
 
-                            <p class="goal-detail-add-action-text "><?= __("追加") ?></p>
+                            <p class="goal-detail-add-action-text "><?= __("Add") ?></p>
                         </a>
                     </li>
                 <?php endif; ?>

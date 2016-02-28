@@ -29,7 +29,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
     <!--GoalSet01-->
     <div class="col-sm-8 col-sm-offset-2">
         <div class="page-title">
-            <?= isset($this->request->data['Goal']['id']) ? __("ゴールを編集") : __("新しいゴールを作成") ?>
+            <?= isset($this->request->data['Goal']['id']) ? __("Edit goal") : __("新しいゴールを作成") ?>
         </div>
         <div class="panel panel-default" id="AddGoalFormPurposeWrap">
             <div class="panel-heading goal-set-heading clearfix">

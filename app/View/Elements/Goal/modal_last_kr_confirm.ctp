@@ -52,7 +52,7 @@
             <?php $this->Form->unlockField('socket_id') ?>
             <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id'], 'key_result_id' => $kr_id]) ?>"
                class="btn btn-default modal-ajax-get-add-key-result" data-dismiss="modal"><?= __(
-                                                                                                  "達成要素を追加") ?></a>
+                                                                                                  "Add Key Result") ?></a>
             <?=
             $this->Form->submit(__("ゴール達成"),
                                 ['class' => 'btn btn-primary', 'div' => false]) ?>

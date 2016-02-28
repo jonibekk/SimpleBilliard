@@ -285,7 +285,7 @@
                             <div style="margin:0 auto;width:100px;">
                                 <a class="modal-ajax-get"
                                    href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_related_kr_list_modal', 'user_id' => $evaluateeId, 'goal_id' => $goal[0]['Goal']['id']]) ?>">
-                                    <?= __("成果") ?>
+                                    <?= __("Results") ?>
                                 </a>
                             </div>
                         </div>
@@ -325,15 +325,15 @@
                     </div>
                 </div>
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
-                    <?= __("コラボレータ:") ?>
+                    <?= __("Collaborator") ?>:
                     <?= count($goal[0]['Goal']['Collaborator']) ?>
                 </div>
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
-                    <?= __("進捗:") ?>
+                    <?= __("進捗") ?>:
                     <?= h($goal[0]['Goal']['progress']) ?>%
                 </div>
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
-                    <?= __("比重:") ?>
+                    <?= __("比重") ?>:
                     <?php $collaboPriority = viaIsSet(Hash::extract($goal[0],
                                                                     "Goal.MyCollabo.{n}[role]")[0]["priority"]) ?>
                     <?php $priority = ($collaboPriority) ? $collaboPriority : viaIsSet(Hash::extract($goal[0],

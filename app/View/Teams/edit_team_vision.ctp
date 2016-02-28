@@ -88,7 +88,7 @@
                 <hr>
                 <?=
                 $this->Form->input('description', [
-                    'label'                        => __("説明"),
+                    'label'                        => __("Description"),
                     'type'                         => 'text',
                     'rows'                         => 1,
                     'data-bv-stringlength'         => 'true',

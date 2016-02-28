@@ -45,7 +45,7 @@
                     <?php echo __('名前') ?>
                 </th>
                 <th>
-                    <?php echo __('説明') ?>
+                    <?php echo __('Description') ?>
                 </th>
                 <th></th>
             </tr>

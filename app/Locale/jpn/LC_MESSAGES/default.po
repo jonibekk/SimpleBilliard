@@ -2611,7 +2611,7 @@ msgid "Write a message..."
 msgstr "メッセージを書こう"
 
 #: View/Elements/Feed/common_form.ctp:474
-msgid "Send"
+msgid "Send Message"
 msgstr "メッセージする"
 
 #: View/Elements/Feed/contents.ctp:37 View/Posts/attached_file_list.ctp:33
@@ -2623,7 +2623,7 @@ msgid "Not exist"
 msgstr "存在しません。"
 
 #: View/Elements/Feed/contents.ctp:100 View/Users/view_posts.ctp:41
-msgid "There are no more posts to show."
+msgid "There is no more post to show."
 msgstr "これ以上の投稿はありませんでした。"
 
 #: View/Elements/Feed/feed_share_range_filter.ctp:27
@@ -2656,7 +2656,7 @@ msgstr "このコメントに%s人が「いいね！」と言っています。"
 
 #: View/Elements/Feed/modal_comment_liked_users.ctp:30
 #: View/Elements/Feed/modal_post_liked_users.ctp:31
-msgid "There are no likes yet."
+msgid "There is no like! yet."
 msgstr "まだ、いいね！と言っている人はいません。"
 
 #: View/Elements/Feed/modal_comment_red_users.ctp:18
@@ -2694,7 +2694,7 @@ msgstr "アクションを削除"
 
 #: View/Elements/Feed/posts.ctp:127
 #: View/Elements/Goal/modal_edit_action_result.ctp:88
-msgid "Are you sure you want to delete this action?"
+msgid "Do you really want to delete this action?"
 msgstr "本当にこのアクションを削除しますか？"
 
 #: View/Elements/Feed/posts.ctp:130
@@ -2724,7 +2724,7 @@ msgstr "グループビジョン"
 
 #: View/Elements/Goal/add_new_action_form.ctp:28
 #: View/Elements/Goal/modal_edit_action_result.ctp:38
-msgid "Let's share the actions that you 've done today!"
+msgid "Let's share the actions that you've done today!"
 msgstr "今日やったアクションを共有しよう！"
 
 #: View/Elements/Goal/add_new_action_form.ctp:69
@@ -2736,10 +2736,10 @@ msgstr "成果"
 #: View/Elements/Goal/add_new_action_form.ctp:74
 #: View/Elements/Goal/modal_edit_action_result.ctp:69
 msgid "Nothing"
-msgstr "選択なし"
+msgstr "なし"
 
 #: View/Elements/Goal/add_new_action_form.ctp:85
-msgid "Post"
+msgid "Post an action"
 msgstr "アクション登録"
 
 #: View/Elements/Goal/goal_menu_on_my_page.ctp:26
@@ -2806,8 +2806,8 @@ msgid "Add action"
 msgstr "アクションを追加する"
 
 #: View/Elements/Goal/modal_add_action.ctp:52
-msgid "Add image to know the result of your action."
-msgstr "アクションの結果が分かる画像を追加しよう"
+msgid "Add an image to show the result of your action."
+msgstr "アクションの結果がわかる画像を追加しよう"
 
 #: View/Elements/Goal/modal_add_action.ctp:76
 #: View/Elements/Team/evaluation_score_setting.ctp:51
@@ -2818,51 +2818,47 @@ msgid "Description"
 msgstr "説明"
 
 #: View/Elements/Goal/modal_add_action.ctp:78
-msgid "Write something you did. "
+msgid "Write what you did."
 msgstr "やった事を書こう"
 
 #: View/Elements/Goal/modal_add_action.ctp:80
-msgid "eg. I completed the web site"
+msgid "eg) I completed making the web site"
 msgstr "例）Webサイトを完成させた"
 
 #: View/Elements/Goal/modal_add_action.ctp:87
 #: View/Elements/Goal/modal_add_key_result.ctp:69
 #: View/Elements/Goal/modal_goal_description.ctp:135
-msgid "Key Result"
+msgid "Key Results"
 msgstr "達成要素"
 
 #: View/Elements/Goal/modal_add_action.ctp:88
-msgid "Choose a key result to tie."
+msgid "Choose a key result to associate."
 msgstr "紐付ける成果を選択しよう。"
 
 #: View/Elements/Goal/modal_add_action.ctp:113
-msgid "Notify"
+msgid "Notified to"
 msgstr "通知先"
 
 #: View/Elements/Goal/modal_add_action.ctp:115
 msgid "Choose circle or member to notify"
 msgstr "通知したいサークル、ユーザーを選択"
 
-#: View/Elements/Goal/modal_add_action.ctp:131
-msgid "Add action"
-msgstr "アクションを登録"
-
 #: View/Elements/Goal/modal_add_key_result.ctp:29
 msgid "Add Key Result"
-msgstr "達成要素を追加する"
+msgstr "達成要素を追加"
 
 #: View/Elements/Goal/modal_add_key_result.ctp:70
 #: View/Elements/Goal/modal_edit_key_result.ctp:73
-msgid "What signs of achievement will there be?"
+msgid "What is set as an indicator of achievement?"
 msgstr "達成の指標として『なに』をどうするか？"
 
 #: View/Elements/Goal/modal_add_key_result.ctp:73
 #: View/Elements/Goal/modal_edit_key_result.ctp:76 View/Goals/add.ctp:155
-msgid "Write specifics"
+msgid "Write in details"
 msgstr "具体的に絞り込んで書く"
 
 #: View/Elements/Goal/modal_add_key_result.ctp:79
-msgid "eg) Complete Website"
+msgid "eg) Complete making the web site."
 msgstr "例）Webサイトを完成させる"
 
 #: View/Elements/Goal/modal_add_key_result.ctp:85
@@ -4210,7 +4206,7 @@ msgid "…"
 msgstr "件"
 
 #: View/Goals/index.ctp:92
-msgid "Nothing"
+msgid "No Goal"
 msgstr "対象ゴールがありません。"
 
 #: View/Goals/index.ctp:104 View/Notifications/index.ctp:35

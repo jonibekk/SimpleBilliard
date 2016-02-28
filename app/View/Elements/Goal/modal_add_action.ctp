@@ -50,7 +50,7 @@
                         <h5 class="modal-key-result-headings"><?= __('Images') ?>&nbsp;<i
                                 class="fa font_brownRed font_14px">*</i>
                             <span class="modal-key-result-headings-description"><?= __(
-                                                                                        'アクションの結果が分かる画像を追加しよう') ?></span>
+                                                                                        'Add an image to show the result of your action.') ?></span>
                         </h5>
                     </div>
                     <div class="goal-set-input required">
@@ -73,19 +73,19 @@
                 $this->Form->input('name',
                                    ['before'                   => '<div class="set-goal">' .
                                        '<h5 class="modal-key-result-headings">' .
-                                       __("説明") .
+                                       __("Description") .
                                        '&nbsp;<i class="fa font_brownRed font_14px">*</i><span class="modal-key-result-headings-description">' .
-                                       __("やった事を書こう") . '</span></h5></div>',
+                                       __("Write what you did.") . '</span></h5></div>',
                                     'label'                    => false,
-                                    'placeholder'              => __("例）Webサイトを完成させた"),
+                                    'placeholder'              => __("eg) I completed making the web site."),
                                     "data-bv-notempty-message" => __("入力必須項目です。"),
                                     'rows'                     => 1,
                                    ]) ?>
             </div>
             <div class="row">
                 <div class="form-group">
-                    <h5 class="modal-key-result-headings"><?= __('達成要素') ?>
-                        <span class="modal-key-result-headings-description"><?= __('紐付ける成果を選択しよう。') ?></span>
+                    <h5 class="modal-key-result-headings"><?= __('Key Results') ?>
+                        <span class="modal-key-result-headings-description"><?= __('Choose a key result to associate.') ?></span>
                     </h5>
 
                     <div class="goal-set-input">
@@ -110,9 +110,9 @@
             <div class="row">
                 <div class="form-group">
                     <div class="set-goal">
-                        <h5 class="modal-key-result-headings"><?= __('通知先') ?>
+                        <h5 class="modal-key-result-headings"><?= __('Notified to') ?>
                             <span class="modal-key-result-headings-description">
-                                <?= __('通知したいサークル、ユーザを選択') ?></span>
+                                <?= __('Choose circle or member to notify') ?></span>
                         </h5>
                     </div>
                     <div class="goal-set-input">
@@ -128,7 +128,7 @@
         </div>
         <div class="modal-footer">
             <?=
-            $this->Form->submit(__("アクションを登録"),
+            $this->Form->submit(__("Post an action"),
                                 ['id' => 'AddActionSubmitModal', 'class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
 
             <button type="button" class="btn btn-default" data-dismiss="modal"><?= __("Close") ?></button>

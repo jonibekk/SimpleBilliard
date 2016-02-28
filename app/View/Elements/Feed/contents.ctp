@@ -34,7 +34,7 @@ if (!isset($this->request->params['post_id'])) {
 }
 ?>
 <a href="" class="alert alert-info feed-notify-box" role="alert" style="margin-bottom:5px;display:none;opacity:0;">
-    <span class="num"></span><?= __("件の新しい投稿があります。") ?></a>
+    <span class="num"></span><?= __(" new posts") ?></a>
 
 <?= $this->element('Feed/circle_join_button', compact('current_circle', 'user_status')) ?>
 <?php
@@ -49,7 +49,7 @@ if (isset($this->request->params['post_id']) && isset($this->request->params['na
 if (isset($this->request->params['post_id']) && !$posts): ?>
     <div class="panel panel-default">
         <div class="panel-body">
-            <?= __('存在しません。') ?>
+            <?= __('Not exist') ?>
         </div>
     </div>
 <?php endif ?>
@@ -97,7 +97,7 @@ if ((count($posts) == POST_FEED_PAGE_ITEMS_NUMBER || (isset($item_created) && $i
     ?>
     <div class="panel panel-default feed-read-more" id="FeedMoreRead">
         <div class="panel-body panel-read-more-body">
-            <span class="none" id="ShowMoreNoData"><?= __("これ以上の投稿はありませんでした。") ?></span>
+            <span class="none" id="ShowMoreNoData"><?= __("There is no more post to show.") ?></span>
             <a href="#" class="click-feed-read-more"
                parent-id="FeedMoreRead"
                no-data-text-id="ShowMoreNoData"

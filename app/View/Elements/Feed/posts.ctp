@@ -107,7 +107,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                     <?php if ($post['Post']['type'] == Post::TYPE_NORMAL): ?>
                                         <li>
                                             <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'post_edit', 'post_id' => $post['Post']['id']]) ?>"
-                                            ><?= __("投稿を編集") ?></a>
+                                            ><?= __("Edit post") ?></a>
                                         </li>
                                     <?php elseif ($post['Post']['type'] == Post::TYPE_ACTION): ?>
                                         <li>
@@ -119,20 +119,20 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                 <?php if ($my_member_status['TeamMember']['admin_flg'] || $post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
                                     <?php if ($post['Post']['type'] == Post::TYPE_ACTION): ?>
                                         <li><?=
-                                            $this->Form->postLink(__("アクションを削除"),
+                                            $this->Form->postLink(__("Delete the action"),
                                                                   ['controller'       => 'goals',
                                                                    'action'           => 'delete_action',
                                                                    'action_result_id' => $post['Post']['action_result_id']],
                                                                   null,
-                                                                  __("本当にこのアクションを削除しますか？")) ?></li>
+                                                                  __("Do you really want to delete this action_")) ?></li>
                                     <?php else: ?>
                                         <li><?=
-                                            $this->Form->postLink(__("投稿を削除"),
+                                            $this->Form->postLink(__("Delete post"),
                                                                   ['controller' => 'posts',
                                                                    'action'     => 'post_delete',
                                                                    'post_id'    => $post['Post']['id']],
                                                                   null,
-                                                                  __("本当にこの投稿を削除しますか？")) ?></li>
+                                                                  __("Do you really want to delete this post?")) ?></li>
                                     <?php endif; ?>
                                 <?php endif ?>
                                 <li>

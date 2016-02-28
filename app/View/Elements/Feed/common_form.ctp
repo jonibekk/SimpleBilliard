@@ -134,7 +134,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                         'wrap'                         => 'soft',
                         'rows'                         => 1,
                         'required'                     => true,
-                        'placeholder'                  => __("アクションを説明しよう"),
+                        'placeholder'                  => __("Write an action..."),
                         'class'                        => 'form-control change-warning',
                         'data-bv-notempty-message'     => __("入力必須項目です。"),
                         'data-bv-stringlength'         => 'true',
@@ -197,7 +197,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                            id="CommonActionFormShowOptionLink">
                             <div class="panel-body action-form-panel-body font_11px font_lightgray"
                                  id="CommonActionFormShare">
-                                <p class="text-center"><?= __("オプションを表示") ?></p>
+                                <p class="text-center"><?= __("View options") ?></p>
 
                                 <p class="text-center"><i class="fa fa-chevron-down"></i></p>
                             </div>
@@ -288,7 +288,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                     'type'                         => 'textarea',
                     'wrap'                         => 'soft',
                     'rows'                         => 1,
-                    'placeholder'                  => __("何か投稿しよう"),
+                    'placeholder'                  => __("Write something..."),
                     'class'                        => 'form-control tiny-form-text-change post-form feed-post-form box-align change-warning',
                     "required"                     => true,
                     'data-bv-notempty-message'     => __("入力必須項目です。"),
@@ -372,7 +372,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
 
                     <div class="row form-horizontal form-group post-share-range" id="PostShare">
                         <?=
-                        $this->Form->submit(__($is_edit_mode ? "保存する" : "投稿する"),
+                        $this->Form->submit(__($is_edit_mode ? "Save" : "Post"),
                                             ['class'    => 'btn btn-primary pull-right post-submit-button',
                                              'id'       => 'PostSubmit',
                                              'disabled' => $is_edit_mode ? '' : 'disabled']) ?>
@@ -450,7 +450,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
                         'wrap'                         => 'soft',
                         'rows'                         => 1,
                         'required'                     => true,
-                        'placeholder'                  => __("メッセージを書こう"),
+                        'placeholder'                  => __("Write a message..."),
                         'class'                        => 'form-control tiny-form-text-change post-form feed-post-form box-align change-warning',
                         'target_show_id'               => "MessageFormFooter",
                         'data-bv-notempty-message'     => __("入力必須項目です。"),
@@ -471,7 +471,7 @@ $only_tab_message = (isset($common_form_only_tab) && $common_form_only_tab == 'm
 
                         <div class="row form-horizontal form-group post-share-range" id="MessageShare">
                             <?=
-                            $this->Form->submit(__("メッセージする"),
+                            $this->Form->submit(__("Send Message"),
                                                 ['class' => 'btn btn-primary pull-right post-submit-button', 'id' => 'MessageSubmit', 'disabled' => 'disabled']) ?>
                         </div>
                     </div>

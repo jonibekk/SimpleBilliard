@@ -25,7 +25,7 @@
 $this->Form->input('ActionResult.name', [
                                           'label'          => false,
                                           'rows'           => 1,
-                                          'placeholder'    => __("今日やったアクションを共有しよう！"),
+                                          'placeholder'    => __("Let's share the actions that you've done today!"),
                                           'class'          => 'form-control tiny-form-text blank-disable-and-undisable col-xxs-10 goalsCard-actionInput mb_12px add-select-options change-warning',
                                           'id'             => "ActionFormName_" . $goal_id,
                                           'target-id'      => "ActionFormSubmit_" . $goal_id,
@@ -66,12 +66,12 @@ $this->Form->input('ActionResult.name', [
         </div>
     </div>
     <label class="font_normal col-xxs-4 lh_40px" for="KeyResults_<?= $goal_id ?>">
-        <i class="fa fa-key mr_2px"></i><?= __("成果") ?>
+        <i class="fa fa-key mr_2px"></i><?= __("Results") ?>
     </label>
     <?=
     $this->Form->input('ActionResult.key_result_id', [
                                                        'label'   => false, //__("紐付ける達成要素を選択(オプション)"),
-                                                       'options' => [null => __("選択なし")],
+                                                       'options' => [null => __("Nothing")],
                                                        'class'   => 'form-control col-xxs-8 selectKrForAction',
                                                        'id'      => 'ActionKeyResultId_' . $goal_id,
                                                    ]
@@ -83,7 +83,7 @@ $this->Form->input('ActionResult.name', [
            class="btn btn-white tiny-form-text-close font_verydark">
            <?= __("Cancel") ?>
         </a>
-        <?= $this->Form->submit(__("アクション登録"), [
+        <?= $this->Form->submit(__("Post an action"), [
             'div'      => false,
             'id'       => "ActionFormSubmit_" . $goal_id,
             'class'    => 'btn btn-info pull-right',

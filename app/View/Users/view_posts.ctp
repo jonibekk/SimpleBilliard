@@ -38,7 +38,7 @@
                 ?>
                 <div class="panel panel-default feed-read-more" id="FeedMoreRead">
                     <div class="panel-body panel-read-more-body">
-                        <span class="none" id="ShowMoreNoData"><?= __("これ以上の投稿はありませんでした。") ?></span>
+                        <span class="none" id="ShowMoreNoData"><?= __("There is no more post to show.") ?></span>
                         <a href="#" class="click-feed-read-more"
                            parent-id="FeedMoreRead"
                            no-data-text-id="ShowMoreNoData"

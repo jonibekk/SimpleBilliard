@@ -15,7 +15,7 @@
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
-            <h4 class="modal-title font_18px font_bold"><?= __("この投稿を%s人が読みました。",
+            <h4 class="modal-title font_18px font_bold"><?= __("%s people read this post.",
                                                                 count($red_users)) ?></h4>
         </div>
         <div class="modal-body modal-feed-body">

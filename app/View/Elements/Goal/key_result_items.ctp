@@ -56,8 +56,10 @@ if ($is_init) {
                 <span
                     class="dashboard-goals-card-body-krs-past-action-number"><?= h($kr['action_result_count']) ?></span>
             </a>
-            <span class="dashboard-goals-card-body-krs-date"><?= __(
-                                                                     'Due.') ?> <?= $this->TimeEx->dateNoYear($kr['end_date']) ?></span>
+            <span class="dashboard-goals-card-body-krs-date">
+            <?= __('Due.') ?>
+            <?= $this->TimeEx->dateNoYear($kr['end_date']) ?>
+            </span>
         </div>
     </li>
 

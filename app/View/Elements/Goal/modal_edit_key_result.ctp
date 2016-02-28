@@ -71,9 +71,9 @@
                                        ['before'                       => '<div class="set-goal">' .
                                            '<h5 class="modal-key-result-headings">' . __(
                                                                                           "成果名") . '<span class="modal-key-result-headings-description">' . __(
-                                                                                                                                                                "達成の指標として『なに』をどうするか？") . '</span></label></div>',
+                                                                                                                                                                "What is set as an indicator of achievement?") . '</span></label></div>',
                                         'label'                        => false,
-                                        'placeholder'                  => __("具体的に絞り込んで書く"),
+                                        'placeholder'                  => __("Write in details"),
                                         "data-bv-notempty-message"     => __("入力必須項目です。"),
                                         'data-bv-stringlength'         => 'true',
                                         'data-bv-stringlength-max'     => 200,
@@ -84,29 +84,9 @@
                                        ]) ?>
                 </div>
                 <div class="row">
-                    <?php //TODO 一旦、使わないのでコメントアウト
-                    //                echo $this->Form->input('KeyResult.current_value',
-                    //                                        [
-                    //                                            'before'                       => '<div class="control-label set-importance">' .
-                    //                                                '<label>' . __("現在値") . '</label>' .
-                    //                                                '<div class="label-addiction">' . '</div></div>',
-                    //                                            'label'                        => false,
-                    //                                            'wrapInput'                    => 'goal-set-input',
-                    //                                            'type'                         => 'number',
-                    //                                            'step'                         => '0.1',
-                    //                                            'default'                      => 100,
-                    //                                            'required'                     => true,
-                    //                                            'maxlength'                    => 14,
-                    //                                            'data-bv-stringlength-message' => __("文字数がオーバーしています。"),
-                    //                                            "data-bv-notempty-message"     => __("入力必須項目です。"),
-                    //                                            'data-bv-numeric-message'      => __("数字を入力してください。"),
-                    //                                        ])
-                    ?>
-                </div>
-                <div class="row">
                     <div class="ddd">
-                        <h5 class="modal-key-result-headings"><?= __("程度") ?><span
-                                class="modal-key-result-headings-description"><?= __("どのくらい？") ?></span></h5>
+                        <h5 class="modal-key-result-headings"><?= __("Measurement") ?><span
+                                class="modal-key-result-headings-description"><?= __("How much?") ?></span></h5>
                     </div>
                     <div class="goal-set-input">
                         <div class="eee">
@@ -163,7 +143,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <h5 class="modal-key-result-headings"><?= __("期間") ?>
+                    <h5 class="modal-key-result-headings"><?= __("Term") ?>
                         <?php if ($this->Session->read('Auth.User.timezone') != $goal_term['timezone']): ?>
                             <span class="modal-key-result-headings-description">
                             <?= $this->TimeEx->getTimezoneText($goal_term['timezone']); ?>

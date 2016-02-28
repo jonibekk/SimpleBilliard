@@ -26,7 +26,7 @@
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= __("達成要素を追加する") ?></h4>
+            <h4 class="modal-title"><?= __("Add Key Result") ?></h4>
             <ul class="add-key-result-goal-info">
                 <li>
                     <i class="fa fa-flag"></i><?= h($goal['Goal']['name']) ?>
@@ -67,23 +67,23 @@
                 $this->Form->input('KeyResult.name',
                                    ['before'                       => '<div class="set-goal">' .
                                        '<h5 class="modal-key-result-headings">' . __(
-                                                                                      "達成要素") . '<span class="modal-key-result-headings-description">' . __(
-                                                                                                                                                             "達成の指標として『なに』をどうするか？") . '</span></h5></div>',
+                                                                                      "Key Results") . '<span class="modal-key-result-headings-description">' . __(
+                                                                                                                                                             "What is set as an indicator of achievement?") . '</span></h5></div>',
                                     'label'                        => false,
-                                    'placeholder'                  => __("具体的に絞り込んで書く"),
+                                    'placeholder'                  => __("Write in details"),
                                     "data-bv-notempty-message"     => __("入力必須項目です。"),
                                     'data-bv-stringlength'         => 'true',
                                     'data-bv-stringlength-max'     => 200,
                                     'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 200),
                                     'rows'                         => 1,
                                     'afterInput'                   => '<span class="help-block font_12px">' . __(
-                                                                                                                  "例）Webサイトを完成させる") . '</span>'
+                                                                                                                  "eg) Complete making the web site.") . '</span>'
                                    ]) ?>
             </div>
             <div class="row">
                 <div>
-                    <h5 class="modal-key-result-headings"><?= __("程度") ?><span
-                            class="modal-key-result-headings-description"><?= __("どのくらい？") ?></span></h5>
+                    <h5 class="modal-key-result-headings"><?= __("Measurement") ?><span
+                            class="modal-key-result-headings-description"><?= __("How much?") ?></span></h5>
                 </div>
                 <div class=" goal-set-input">
                     <div>
@@ -235,7 +235,7 @@
         </div>
         <div class="modal-footer">
             <?=
-            $this->Form->submit(__("達成要素を追加"),
+            $this->Form->submit(__("Add Key Result"),
                                 ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
 
             <button type="button" class="btn btn-default" data-dismiss="modal"><?= __("Close") ?></button>

@@ -35,7 +35,7 @@
                 $this->Form->input('ActionResult.name', [
                                                           'label'       => false,
                                                           'rows'        => 1,
-                                                          'placeholder' => __("今日やったアクションを共有しよう！"),
+                                                          'placeholder' => __("Let's share the actions that you've done today!"),
                                                           'class'       => 'form-control tiny-form-text blank-disable-and-undisable goalsCard-actionInput mb_12px',
                                                           'id'          => "ActionEditFormName_" . $action['ActionResult']['id'],
                                                           'target-id'   => "ActionEditFormSubmit_" . $action['ActionResult']['id'],
@@ -61,12 +61,12 @@
                     </div>
                 </div>
                 <label class="font_normal lh_40px" for="KeyResults_<?= $action['ActionResult']['id'] ?>">
-                    <i class="fa fa-key mr_2px"></i><?= __("成果") ?>
+                    <i class="fa fa-key mr_2px"></i><?= __("Results") ?>
                 </label>
                 <?=
                 $this->Form->input('ActionResult.key_result_id', [
                                                                    'label'   => false, //__("紐付ける達成要素を選択(オプション)"),
-                                                                   'options' => [null => __("選択なし")] + $kr_list,
+                                                                   'options' => [null => __("Nothing")] + $kr_list,
                                                                    'class'   => 'form-control selectKrForAction',
                                                                    'id'      => 'ActionKeyResultId_' . $action['ActionResult']['id'],
                                                                ]
@@ -77,15 +77,15 @@
         </div>
         <div class="modal-footer">
             <?=
-            $this->Form->submit(__("アクションを変更"),
+            $this->Form->submit(__("Change action"),
                                 ['class' => 'btn btn-primary', 'div' => false, 'id' => "ActionEditFormSubmit_" . $action['ActionResult']['id']]) ?>
             <?= $this->Form->end() ?>
 
             <button type="button" class="btn btn-default" data-dismiss="modal"><?= __("Close") ?></button>
             <?=
-            $this->Form->postLink(__("アクションを削除"),
+            $this->Form->postLink(__("Delete the action"),
                                   ['controller' => 'goals', 'action' => 'delete_action', 'action_result_id' => $action['ActionResult']['id']],
-                                  ['class' => 'btn btn-default pull-left'], __("本当にこのアクションを削除しますか？")) ?>
+                                  ['class' => 'btn btn-default pull-left'], __("Do you really want to delete this action?")) ?>
 
 
         </div>

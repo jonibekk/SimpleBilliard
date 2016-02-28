@@ -30,13 +30,13 @@ if (!isset($incomplete_kr_count)) {
             <li role="presentation">
                 <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_edit_key_result_modal', 'key_result_id' => $kr['id']]) ?>"
                    class="modal-ajax-get-add-key-result">
-                    <i class="fa fa-pencil"></i><span class="ml_2px"><?= __("達成要素を編集する") ?></span></a>
+                    <i class="fa fa-pencil"></i><span class="ml_2px"><?= __("Edit Key Result") ?></span></a>
             </li>
         <?php endif ?>
         <li role="presentation">
             <?php if ($kr['completed']): ?>
                 <?= $this->Form->postLink('<i class="fa fa-reply"></i><span class="ml_2px">' .
-                                          __("達成要素を未完了にする") . '</span>',
+                                          __("Uncompete Key Result") . '</span>',
                                           ['controller' => 'goals', 'action' => 'incomplete_kr', 'key_result_id' => $kr['id']],
                                           ['escape' => false]) ?>
             <?php else: ?>
@@ -45,7 +45,7 @@ if (!isset($incomplete_kr_count)) {
                     <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_last_kr_confirm', 'key_result_id' => $kr['id']]) ?>"
                        class="modal-ajax-get">
                         <i class="fa fa-check"></i><span class="ml_2px"><?= __(
-                                                                                "達成要素を完了にする") ?></span>
+                                                                                "Complete Key Result") ?></span>
                     </a>
                 <?php else: ?>
                     <?=
@@ -65,7 +65,7 @@ if (!isset($incomplete_kr_count)) {
                     <a href="#" form-id="kr_achieve_<?= $kr['id'] ?>"
                        class="kr_achieve_button">
                         <i class="fa fa-check"></i><span class="ml_2px">
-                                            <?= __("達成要素を完了にする"); ?>
+                                            <?= __("Complete Key Result"); ?>
                                         </span>
                     </a>
                 <?php endif; ?>
@@ -76,9 +76,9 @@ if (!isset($incomplete_kr_count)) {
             <li role="presentation">
                 <?=
                 $this->Form->postLink('<i class="fa fa-trash"></i><span class="ml_5px">' .
-                                      __("達成要素を削除する") . '</span>',
+                                      __("Delete Key Result") . '</span>',
                                       ['controller' => 'goals', 'action' => 'delete_key_result', 'key_result_id' => $kr['id']],
-                                      ['escape' => false], __("本当にこの成果を削除しますか？")) ?>
+                                      ['escape' => false], __("Do you really want to delete this Key Result?")) ?>
             </li>
         <?php endif ?>
     </ul>

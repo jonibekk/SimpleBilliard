@@ -126,7 +126,7 @@
 
                                                 <p class="profile-user-add-action-text "><?= __("Action") ?></p>
 
-                                                <p class="profile-user-add-action-text "><?= __("追加") ?></p>
+                                                <p class="profile-user-add-action-text "><?= __("Add") ?></p>
                                             </a>
                                         </li>
                                     <?php endif; ?>

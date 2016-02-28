@@ -37,7 +37,7 @@
                     <a class="btn-add-kr modal-ajax-get-add-key-result"
                        href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id']]) ?>">
                         <i class="fa fa-plus btn-add-kr-icon"></i>
-                        <span><?= __("達成要素を追加") ?></span>
+                        <span><?= __("Add Key Result") ?></span>
                     </a>
                 </div>
             <?php endif ?>
