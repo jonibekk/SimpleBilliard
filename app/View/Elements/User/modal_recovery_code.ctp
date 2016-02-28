@@ -42,7 +42,7 @@
         </div>
         <div class="modal-footer">
             <?=
-            $this->Form->button(__("完了"), [
+            $this->Form->button(__("Completed"), [
                 'class'        => 'btn btn-primary pull-right',
                 'data-dismiss' => 'modal',
                 'div'          => false,

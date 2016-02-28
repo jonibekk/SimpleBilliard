@@ -30,7 +30,7 @@ $member_count = isset($member_count) ? $member_count : '';
         <?php if ($form): ?>
             <div class="pull-right circle-join-switch">
                 <?php if ($admin): ?>
-                    <?= __("管理者") ?>
+                    <?= __("Administrators") ?>
                 <?php elseif ($circle['Circle']['team_all_flg']): ?>
                     <?php // チーム全体サークルは変更不可 ?>
                 <?php else: ?>

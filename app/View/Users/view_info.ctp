@@ -31,11 +31,11 @@
                     <span class="pull-right"><?= h($user['User']['display_username']) ?></span>
                 </div>
                 <div class="panel-body" style="border-top: 1px solid #ddd;">
-                    <?= __('性別') ?>
+                    <?= __('Gender') ?>
                     <span class="pull-right"><?= User::$TYPE_GENDER[$user['User']['gender_type']] ?></span>
                 </div>
                 <div class="panel-body" style="border-top: 1px solid #ddd;">
-                    <?= __('誕生日') ?>
+                    <?= __('Birthday') ?>
                     <span class="pull-right"><?= $this->Time->format($user['User']['hide_year_flg'] ? 'm/d' : 'Y/m/d',
                                                                      $user['User']['birth_day']) ?></span>
                 </div>

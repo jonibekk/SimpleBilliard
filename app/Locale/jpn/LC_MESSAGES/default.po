@@ -986,11 +986,11 @@ msgid "5(Very High)"
 msgstr "5 (とても高い)"
 
 #: Model/Goal.php:72
-msgid "More"
+msgid "More Previous"
 msgstr "もっと前"
 
 #: Model/Goal.php:75
-msgid "Completed"
+msgid "Complete"
 msgstr "達成"
 
 #: Model/Goal.php:76
@@ -1002,39 +1002,39 @@ msgid "Creation Date"
 msgstr "新着順"
 
 #: Model/Goal.php:79
-msgid "Actions"
+msgid "Actions number"
 msgstr "アクションが多い順"
 
 #: Model/Goal.php:80
-msgid "Key results"
+msgid "Key results number"
 msgstr "出した成果が多い順"
 
 #: Model/Goal.php:81
-msgid "Followers"
+msgid "Followers number"
 msgstr "フォロワーが多い順"
 
 #: Model/Goal.php:82
-msgid "Collaborators"
+msgid "Collaborators number"
 msgstr "コラボが多い順"
 
 #: Model/Goal.php:83
-msgid "Progress"
+msgid "Progress rate"
 msgstr "進捗率が高い順"
 
 #: Model/Goal.php:370
-msgid "This goal dose not exist."
+msgid "This goal dosen't exist."
 msgstr "このゴールは存在しません。"
 
 #: Model/Goal.php:373
-msgid "You do not have permission to edit this goal."
+msgid "You don't have permission to edit this goal."
 msgstr "このゴールの編集の権限がありません。"
 
 #: Model/Goal.php:387
-msgid "You can not change the goal because of during the evaluation."
+msgid "You can't change the goal in the evaluation."
 msgstr "このゴールは評価中のため、変更できません。"
 
 #: Model/Goal.php:1538;1551
-msgid "The goal does not exist."
+msgid "The goal doesn't exist."
 msgstr "ゴールが存在しません。"
 
 #: Model/GoalCategory.php:95
@@ -1072,7 +1072,7 @@ msgstr "達成要素のデータがありません。"
 
 #: Model/KeyResult.php:372;385
 msgid "There is no key result."
-msgstr "成果が存在しません。"
+msgstr "達成要素が存在しません。"
 
 #: Model/NotifySetting.php:227
 msgid "Important ones"
@@ -1288,7 +1288,7 @@ msgid "Created a new circle."
 msgstr "あたらしいサークルをつくりました。"
 
 #: Model/Post.php:556
-msgid "The circle dose not exist, or you do not have permission."
+msgid "The circle dosen't exist or you don't have permission."
 msgstr "サークルが存在しないか、権限がありません。"
 
 #: Model/Post.php:1176;1193
@@ -1317,11 +1317,11 @@ msgstr "%1$sと%2$s他%3$sサークルに共有"
 
 #: Model/Post.php:1220
 msgid "Shared %1$s,%2$s and %3$s others"
-msgstr "%1$s,%2$sと他%3$s人に共有"
+msgstr "%1$s、%2$sと他%3$s人に共有"
 
 #: Model/Post.php:1226
 msgid "Shared %1$s and %2$s others,%3$s and %4$s circle(s)"
-msgstr "%1$sと他%2$s人,%3$s他%4$sサークルに共有"
+msgstr "%1$sと他%2$s人、%3$s他%4$sサークルに共有"
 
 #: Model/Team.php:59
 msgid "Free Campaign"
@@ -1349,7 +1349,7 @@ msgstr "年"
 
 #: Model/Team.php:265
 msgid "Please select"
-msgstr "選択して下さい"
+msgstr "選択してください"
 
 #: Model/Team.php:266
 msgid "Jan"
@@ -1401,22 +1401,21 @@ msgstr "１２月"
 
 #: Model/TeamMember.php:186
 msgid "If you want to access this page, please switch to the team."
-msgstr "このページにアクセスする場合は、チームに切り換えてください。"
+msgstr "このページにアクセスするには、チームを切り換えてください。"
 
 #: Model/TeamMember.php:192
 msgid "There is no team."
 msgstr "チームが存在しません。"
 
 #: Model/TeamMember.php:195
-msgid "You can not access to this team.Your account has been disabled."
+msgid "You can't access to this team. Your account has been disabled."
 msgstr ""
-"現在、あなたはこのチームにアクセスできません。ユーザアカウントが無効化されて"
-"います。"
+"あなたはこのチームにアクセスできません。アカウントが無効化されています。"
 
 #: Model/TeamMember.php:263
 msgid ""
-"Because you are not a team administrator, does not have access to this page."
-msgstr "あなたはチーム管理者では無い為、このページにはアクセスできません。"
+"Only team administrators are allowed to access to this page."
+msgstr "あなたはチーム管理者では無いため、このページにはアクセスできません。"
 
 #: Model/TeamMember.php:1006;1173;1253
 msgid "Numbers are not consistent."
@@ -1435,7 +1434,7 @@ msgid "You can't change last name."
 msgstr "ラストネームは変更できません。"
 
 #: Model/TeamMember.php:1084
-msgid "At least one active admin is needed."
+msgid "At least one active admin is required."
 msgstr "最低１人は管理者かつアクティブにしてください。"
 
 #: Model/TeamMember.php:1095;1324
@@ -1463,19 +1462,19 @@ msgid "Invalid score."
 msgstr "定義されていないスコアです。"
 
 #: Model/TeamMember.php:1236
-msgid "At least one data should be set."
+msgid "At least one data is required."
 msgstr "データが１件もありません。"
 
 #: Model/TeamMember.php:1333
 msgid "This email address is found in this team."
-msgstr "既にチームに参加しているメールアドレスです。"
+msgstr "すでにチームに参加しているメールアドレスです。"
 
 #: Model/TeamMember.php:1356
-msgid "Member ID is found in this team."
-msgstr "既に存在するメンバーIDです。"
+msgid "This Member ID is found in this team."
+msgstr "すでに存在するメンバーIDです。"
 
 #: Model/TeamMember.php:1768
-msgid "Mail(*)"
+msgid "Email(*)"
 msgstr "メール(*)"
 
 #: Model/TeamMember.php:1769;1805;1833
@@ -1597,7 +1596,7 @@ msgid "Evaluator 7"
 msgstr "評価者7"
 
 #: Model/TeamMember.php:1802
-msgid "Mail(*, Not changed)"
+msgid "Email(*, Not changed)"
 msgstr "メール(*, 変更できません)"
 
 #: Model/TeamMember.php:1803

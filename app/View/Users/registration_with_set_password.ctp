@@ -36,7 +36,7 @@
 
                 <?=
                 $this->Form->input('Email.email', [
-                    'label'                        => __("メールアドレス"),
+                    'label'                        => __("Email Address"),
                     'data-bv-emailaddress-message' => __("メールアドレスが正しくありません。"),
                     "data-bv-notempty-message"     => __("入力必須項目です。"),
                     'required'                     => true

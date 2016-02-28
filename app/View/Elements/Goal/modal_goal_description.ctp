@@ -107,7 +107,7 @@
                                  title="<?= h($collabo['User']['display_username']) ?>">
                         <?php endforeach ?>
                     <?php else: ?>
-                        <?= __("なし") ?>
+                        <?= __("No Unit") ?>
                     <?php endif; ?>
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
@@ -122,7 +122,7 @@
                                  title="<?= h($follower['User']['display_username']) ?>">
                         <?php endforeach ?>
                     <?php else: ?>
-                        <?= __("なし") ?>
+                        <?= __("No Unit") ?>
                     <?php endif; ?>
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
@@ -138,15 +138,15 @@
                         <?php foreach ($goal['KeyResult'] as $key_result): ?>
                             <div class="col col-xxs-12 dot-omission">
                                 <?php if ($key_result['completed']): ?>
-                                    <span class="fin-kr tag-sm tag-info"><?= __("完了") ?></span>
+                                    <span class="fin-kr tag-sm tag-info"><?= __("Completed") ?></span>
                                 <?php else: ?>
-                                    <span class="unfin-kr tag-sm tag-danger"><?= __("未完了") ?></span>
+                                    <span class="unfin-kr tag-sm tag-danger"><?= __("Incompleted") ?></span>
                                 <?php endif; ?>
                                 <?= h($key_result['name']) ?>
                             </div>
                         <?php endforeach ?>
                     <?php else: ?>
-                        <?= __("なし") ?>
+                        <?= __("No Unit") ?>
                     <?php endif; ?>
                 </div>
             <?php endif; ?>

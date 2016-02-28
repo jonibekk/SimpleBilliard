@@ -56,15 +56,15 @@ class Team extends AppModel
      */
     private function _setTypeName()
     {
-        self::$TYPE[self::TYPE_CAMPAIGN] = __("無料キャンペーン");
+        self::$TYPE[self::TYPE_CAMPAIGN] = __("Free Campaign");
         // self::$TYPE[self::TYPE_FREE] = __("フリー");
         // self::$TYPE[self::TYPE_PRO] = __("プロ");
     }
 
     private function _setTermOptionName()
     {
-        self::$OPTION_CHANGE_TERM[self::OPTION_CHANGE_TERM_FROM_CURRENT] = __("今期から");
-        self::$OPTION_CHANGE_TERM[self::OPTION_CHANGE_TERM_FROM_NEXT] = __("来期から");
+        self::$OPTION_CHANGE_TERM[self::OPTION_CHANGE_TERM_FROM_CURRENT] = __("From this term");
+        self::$OPTION_CHANGE_TERM[self::OPTION_CHANGE_TERM_FROM_NEXT] = __("From next term");
     }
 
     /**
@@ -251,10 +251,10 @@ class Team extends AppModel
     function getBorderMonthsOptions()
     {
         $term_options = [
-            null => __("選択してください"),
-            3    => __("四半期"),
-            6    => __("半年"),
-            12   => __("年")
+            null => __("Please select"),
+            3    => __("Quater"),
+            6    => __("Half a year"),
+            12   => __("Year")
         ];
         return $term_options;
     }
@@ -262,19 +262,19 @@ class Team extends AppModel
     function getMonths()
     {
         $months = [
-            null => __("選択して下さい"),
-            1    => __("１月"),
-            2    => __("２月"),
-            3    => __("３月"),
-            4    => __("４月"),
-            5    => __("５月"),
-            6    => __("６月"),
-            7    => __("７月"),
-            8    => __("８月"),
-            9    => __("９月"),
-            10   => __("１０月"),
-            11   => __("１１月"),
-            12   => __("１２月"),
+            null => __("Please select"),
+            1    => __("Jan"),
+            2    => __("Feb"),
+            3    => __("Mar"),
+            4    => __("Apr"),
+            5    => __("May"),
+            6    => __("Jun"),
+            7    => __("Jul"),
+            8    => __("Aug"),
+            9    => __("Sep"),
+            10   => __("Oct"),
+            11   => __("Nov"),
+            12   => __("Dec"),
         ];
         return $months;
     }

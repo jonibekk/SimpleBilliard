@@ -101,7 +101,7 @@ echo $this->Html->script('vendor/angular/ng-infinite-scroll.min');
             }
         },
         word: {
-            a: "<?=__("自分のみ")?>",
+            a: "<?=__("Only you")?>",
             b: "<?=__("参加")?>",
             c: "<?=__("不参加")?>",
             d: "<?=__("該当なし")?>",

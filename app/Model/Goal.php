@@ -32,9 +32,9 @@ class Goal extends AppModel
      */
     private function _setStatusName()
     {
-        self::$STATUS[self::STATUS_DOING] = __("進行中");
-        self::$STATUS[self::STATUS_PAUSE] = __("中断");
-        self::$STATUS[self::STATUS_COMPLETE] = __("完了");
+        self::$STATUS[self::STATUS_DOING] = __("In progress");
+        self::$STATUS[self::STATUS_PAUSE] = __("Interruption");
+        self::$STATUS[self::STATUS_COMPLETE] = __("Completed");
     }
 
     /**
@@ -42,10 +42,10 @@ class Goal extends AppModel
      */
     private function _setPriorityName()
     {
-        $this->priority_list[0] = __("0 (認定対象外)");
-        $this->priority_list[1] = __("1 (とても低い)");
-        $this->priority_list[3] = __("3 (デフォルト)");
-        $this->priority_list[5] = __("5 (とても高い)");
+        $this->priority_list[0] = __("0 (Certified exempt)");
+        $this->priority_list[1] = __("1 (Very low)");
+        $this->priority_list[3] = __("3 (Default)");
+        $this->priority_list[5] = __("5 (Very high)");
     }
 
     public $priority_list = [
@@ -69,18 +69,18 @@ class Goal extends AppModel
                 'present'  => __("Current Term"),
                 'next'     => __("Next Term"),
                 'previous' => __("Previous Term"),
-                'before'   => __("もっと前")],
+                'before'   => __("More Previous")],
             'progress' => [
                 'all'        => __("All"),
-                'complete'   => __("達成"),
-                'incomplete' => __("未達成")],
+                'complete'   => __("Complete"),
+                'incomplete' => __("Incomplete")],
             'order'    => [
-                'new'      => __("新着順"),
-                'action'   => __("アクションが多い順"),
-                'result'   => __("出した成果が多い順"),
-                'follow'   => __("フォロワーが多い順"),
-                'collabo'  => __("コラボが多い順"),
-                'progress' => __("進捗率が高い順")]
+                'new'      => __("Creation Date"),
+                'action'   => __("Actions number"),
+                'result'   => __("Key results number"),
+                'follow'   => __("Followers number"),
+                'collabo'  => __("Collaborators number"),
+                'progress' => __("Progress rate")]
         ];
         //カテゴリ取得
         $options = [
@@ -367,10 +367,10 @@ class Goal extends AppModel
     {
         $this->id = $id;
         if (!$this->exists()) {
-            throw new RuntimeException(__("このゴールは存在しません。"));
+            throw new RuntimeException(__("This goal doesn't exist."));
         }
         if (!$this->isOwner($this->my_uid, $id)) {
-            throw new RuntimeException(__("このゴールの編集の権限がありません。"));
+            throw new RuntimeException(__("You don't have permission to edit this goal."));
         }
         return true;
     }
@@ -384,7 +384,7 @@ class Goal extends AppModel
         ];
         $res = $this->Evaluation->find('first', $options);
         if (!empty($res)) {
-            throw new RuntimeException(__("このゴールは評価中のため、変更できません。"));
+            throw new RuntimeException(__("You can't change the goal in the evaluation."));
         }
         return true;
     }
@@ -1535,7 +1535,7 @@ class Goal extends AppModel
     {
         $goal = $this->findById($goal_id);
         if (empty($goal)) {
-            throw new RuntimeException(__("ゴールが存在しません。"));
+            throw new RuntimeException(__("The goal doesn't exist."));
         }
         $this->id = $goal_id;
         $this->saveField('current_value', $goal['Goal']['target_value']);
@@ -1548,7 +1548,7 @@ class Goal extends AppModel
     {
         $goal = $this->findById($goal_id);
         if (empty($goal)) {
-            throw new RuntimeException(__("ゴールが存在しません。"));
+            throw new RuntimeException(__("The goal doesn't exist."));
         }
         $goal['Goal']['completed'] = null;
         unset($goal['Goal']['modified']);

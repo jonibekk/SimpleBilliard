@@ -82,7 +82,7 @@
                                    [
                                        'type'    => 'radio',
                                        'before'  => '<label class="col col-sm-3 control-label mr_5px profile-radio-label">'
-                                           . __('性別') . '</label>',
+                                           . __('Gender') . '</label>',
                                        'legend'  => false,
                                        'options' => User::$TYPE_GENDER,
                                        'class'   => 'radio-inline profile-radio-inline'
@@ -108,7 +108,7 @@
                                     '12' => __('12月'),
                                 ],
                                 'class'      => 'form-control inline-fix',
-                                'label'      => __('誕生日'),
+                                'label'      => __('Birthday'),
                                 'dateFormat' => 'YMD',
                                 'empty'      => true,
                                 'separator'  => ' / ',

@@ -33,7 +33,7 @@
                 ]); ?>
                 <?=
                 $this->Form->input('email', [
-                    'label' => __("メールアドレス")
+                    'label' => __("Email Address")
                 ]) ?>
 
                 <?php //TODO For disabling autocomplete from the browser end ?>

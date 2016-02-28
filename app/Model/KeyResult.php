@@ -36,19 +36,19 @@ class KeyResult extends AppModel
         self::$UNIT[self::UNIT_PERCENT] = __("%");
         self::$UNIT[self::UNIT_YEN] = __('¥');
         self::$UNIT[self::UNIT_DOLLAR] = __('$');
-        self::$UNIT[self::UNIT_NUMBER] = __("その他の単位");
-        self::$UNIT[self::UNIT_BINARY] = __('なし');
+        self::$UNIT[self::UNIT_NUMBER] = __("Other Unit");
+        self::$UNIT[self::UNIT_BINARY] = __('No Unit');
     }
 
     /**
-     * 重要度の名前をセット
+     * 重要度の名前をセットz
      */
     private function _setPriorityName()
     {
-        $this->priority_list[0] = __("0 (進捗に影響しない)");
-        $this->priority_list[1] = __("1 (とても低い)");
-        $this->priority_list[3] = __("3 (デフォルト)");
-        $this->priority_list[5] = __("5 (とても高い)");
+        $this->priority_list[0] = __("0(not affect the progress)");
+        $this->priority_list[1] = __("1(Very low)");
+        $this->priority_list[3] = __("3(default)");
+        $this->priority_list[5] = __("5(Very high)");
     }
 
     public $priority_list = [
@@ -155,7 +155,7 @@ class KeyResult extends AppModel
             $uid = $this->my_uid;
         }
         if (!isset($data['KeyResult']) || empty($data['KeyResult'])) {
-            throw new RuntimeException(__("達成要素のデータがありません。"));
+            throw new RuntimeException(__("There is no data of KR."));
         }
         $data['KeyResult']['goal_id'] = $goal_id;
         $data['KeyResult']['user_id'] = $uid;
@@ -369,7 +369,7 @@ class KeyResult extends AppModel
     {
         $current_kr = $this->findById($kr_id);
         if (empty($current_kr)) {
-            throw new RuntimeException(__("成果が存在しません。"));
+            throw new RuntimeException(__("There is no key result."));
         }
         $this->id = $kr_id;
         $this->saveField('current_value', $current_kr['KeyResult']['target_value']);
@@ -382,7 +382,7 @@ class KeyResult extends AppModel
     {
         $current_kr = $this->findById($kr_id);
         if (empty($current_kr)) {
-            throw new RuntimeException(__("成果が存在しません。"));
+            throw new RuntimeException(__("There is no key result."));
         }
         $current_kr['KeyResult']['completed'] = null;
         unset($current_kr['KeyResult']['modified']);

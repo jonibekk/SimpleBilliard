@@ -100,7 +100,7 @@
                                [
                                    'type'    => 'radio',
                                    'before'  => '<label class="col col-sm-3 control-label form-label">'
-                                       . __('性別') . '</label>',
+                                       . __('Gender') . '</label>',
                                    'legend'  => false,
                                    'options' => User::$TYPE_GENDER,
                                    'class'   => 'radio-inline'
@@ -126,7 +126,7 @@
                                 '12' => __('12月'),
                             ],
                             'class'      => 'form-control inline-fix setting_input-design',
-                            'label'      => __('誕生日'),
+                            'label'      => __('Birthday'),
                             'dateFormat' => 'YMD',
                             'empty'      => true,
                             'separator'  => ' / ',
