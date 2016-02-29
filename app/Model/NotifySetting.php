@@ -467,7 +467,7 @@ class NotifySetting extends AppModel
                 // この通知で必要なオプション値
                 //   - from_user_id: コメントを書いたユーザーのID
                 //   - post_user_id: コメントが書かれた投稿の投稿者ID
-                if(!isset($options['from_user_id'])) {
+                if (!isset($options['from_user_id'])) {
                     $options['from_user_id'] = null;
                 }
 
