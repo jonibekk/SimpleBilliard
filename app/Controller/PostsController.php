@@ -27,26 +27,28 @@ class PostsController extends AppController
         return $this->render();
     }
 
-    public function ajax_message(){
+    public function ajax_message()
+    {
         $this->_ajaxPreProcess();
 
         $response = $this->render('/Posts/message');
 
         $html = $response->__toString();
         $result = array(
-            'html'     => $html,
+            'html' => $html,
         );
         return $this->_ajaxGetResponse($result);
     }
 
-    public function ajax_message_list(){
+    public function ajax_message_list()
+    {
         $this->_ajaxPreProcess();
 
         $response = $this->render('/Posts/message_list');
 
         $html = $response->__toString();
         $result = array(
-            'html'     => $html,
+            'html' => $html,
         );
         return $this->_ajaxGetResponse($result);
     }
@@ -410,7 +412,7 @@ class PostsController extends AppController
             'circle_member_count' => $circle_member_count,
             'user_status'         => $user_status,
         );
-        if(isset($posts[0]['Post']['modified'])){
+        if (isset($posts[0]['Post']['modified'])) {
             $result['post_time_before'] = $posts[0]['Post']['modified'];
         }
 
@@ -503,8 +505,8 @@ class PostsController extends AppController
         $this->_ajaxPreProcess('post');
 
         $params['Comment']['post_id'] = $post_id;
-        $params['Comment']['body'] = $this->request->data['body'];
-        $params['file_id'] = $this->request->data['file_redis_key'];
+        $params['Comment']['body'] = $this->request->data('body');
+        $params['file_id'] = $this->request->data('file_redis_key');
         if (!$comment_id = $this->Post->Comment->add($params)) {
             //失敗の場合
             return $this->_ajaxGetResponse([]);
