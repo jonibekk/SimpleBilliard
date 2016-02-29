@@ -199,7 +199,6 @@ class AppController extends Controller
                     $this->_setTerm();
                 }
                 $this->_setMyTeam();
-                $this->_setAvailEvaluation();
 
                 $active_team_list = $this->User->TeamMember->getActiveTeamList($login_uid);
                 $set_default_team_id = !empty($active_team_list) ? key($active_team_list) : null;
@@ -252,7 +251,6 @@ class AppController extends Controller
                 $this->_setNotifySettings();
                 $this->_setUnApprovedCnt($login_uid);
                 $this->_setEvaluableCnt();
-                $this->_setAllAlertCnt();
                 $this->_setNotifyCnt();
                 $this->_setMyCircle();
                 $this->_setActionCnt();
@@ -262,6 +260,8 @@ class AppController extends Controller
             $this->set('current_term', $this->Team->EvaluateTerm->getCurrentTermData());
             $this->_setMyMemberStatus();
             $this->_saveAccessUser($this->current_team_id, $this->Auth->user('id'));
+            $this->_setAvailEvaluation();
+            $this->_setAllAlertCnt();
         }
         $this->set('current_global_menu', null);
     }
