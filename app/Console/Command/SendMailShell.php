@@ -181,7 +181,7 @@ class SendMailShell extends AppShell
             $options = [
                 'to'       => $data['ToUser']['PrimaryEmail']['email'],
                 'subject'  => $subject,
-                'template' => $notify_option['mail_template'],
+                'template' => isset($notify_option['mail_template']) ? $notify_option['mail_template'] : '',
                 'layout'   => 'default',
             ];
             $viewVars = [
