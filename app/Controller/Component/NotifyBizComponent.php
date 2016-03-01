@@ -174,6 +174,12 @@ class NotifyBizComponent extends Component
             default:
                 break;
         }
+
+        //通知するアイテムかどうかチェック
+        if (!$this->_canNotify()) {
+            return;
+        }
+
         //通常のアプリ通知データ保存
         $this->_saveNotifications();
 
@@ -1509,6 +1515,20 @@ class NotifyBizComponent extends Component
             return false;
         }
 
+        return true;
+    }
+
+    /**
+     * check notification available
+     *
+     * @return bool
+     */
+    function _canNotify()
+    {
+        // 通知先ユーザが存在しない場合　
+        if (count($this->notify_settings) === 0) {
+            return false;
+        }
         return true;
     }
 
