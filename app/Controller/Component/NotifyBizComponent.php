@@ -1519,7 +1519,7 @@ class NotifyBizComponent extends Component
     }
 
     /**
-     * Checking notification available
+     * check notification available
      *
      * @return bool
      */
