@@ -21,7 +21,7 @@
 //外部ツールのKeyを取得
 require_once "extra_defines.php";
 
-Configure::write('debug', 0);
+Configure::write('debug', DEBUG_MODE);
 
 /**
  * Configure the Error handler used to handle errors for your application. By default
