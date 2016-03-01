@@ -168,19 +168,6 @@ class NotifySettingTest extends GoalousTestCase
                                            'from_user_id' => 1,
                                            'post_user_id' => 2,
                                        ]);
-
-        // from_user_idが入ってこないケース(異常系)
-        $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST, 'aaa', $count_num,
-                                       $item_name,
-                                       [
-                                           'post_user_id' => 2,
-                                       ]);
-        $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION, 'aaa', $count_num,
-                                       $item_name,
-                                       [
-                                           'post_user_id' => 2,
-                                       ]);
-
     }
 
     function testGetTitleFeedPost()

@@ -9,10 +9,10 @@ App::uses('NotifySetting', 'Model');
 /**
  * SendMailShell
  *
- * @property Team          $Team
- * @property User          $User
- * @property SendMail      $SendMail
- * @property LangComponent $LangComponent
+ * @property Team                      $Team
+ * @property User                      $User
+ * @property SendMail                  $SendMail
+ * @property LangComponent             $LangComponent
  */
 class SendMailShell extends AppShell
 {
@@ -159,12 +159,7 @@ class SendMailShell extends AppShell
         $this->item = json_decode($data['SendMail']['item'], true);
         $to_user_ids = $this->SendMail->SendMailToUser->getToUserList($data['SendMail']['id']);
 
-        if (isset(NotifySetting::$TYPE[$this->item['type']])) {
-            $notify_option = NotifySetting::$TYPE[$this->item['type']];
-        }
-        else {
-            $notify_option = null;
-        }
+        $notify_option = NotifySetting::$TYPE[$this->item['type']];
         foreach ($to_user_ids as $to_user_id) {
             $data = $this->_getLangToUserData($to_user_id, true);
             $from_user_names = [];
@@ -174,14 +169,14 @@ class SendMailShell extends AppShell
                                                             $this->item['count_num'],
                                                             $this->item['item_name'],
                                                             array_merge($this->item['options'], [
-                                                                'style'        => 'plain',
+                                                                'style' => 'plain',
                                                                 'from_user_id' => $data['SendMail']['from_user_id'],
                                                             ])
             );
             $options = [
                 'to'       => $data['ToUser']['PrimaryEmail']['email'],
                 'subject'  => $subject,
-                'template' => isset($notify_option['mail_template']) ? $notify_option['mail_template'] : '',
+                'template' => $notify_option['mail_template'],
                 'layout'   => 'default',
             ];
             $viewVars = [
@@ -252,7 +247,7 @@ class SendMailShell extends AppShell
     {
         // TODO: $viewVars['message']以外の場所もメール本文として使われてる可能性があるため、調査が必要。
         //       もし上記の場所を発見したら、そのテキストを_preventGarbledCharacters()に通す必要がある。文字化け回避のために。
-        if (isset($viewVars['message'])) {
+        if(isset($viewVars['message'])) {
             $viewVars['message'] = $this->_preventGarbledCharacters($viewVars['message']);
         }
         $defaults = array(
@@ -294,12 +289,11 @@ class SendMailShell extends AppShell
      * Prevent multi-byte text garbled over 1000 byte
      *
      * @param string $bigText
-     * @param int    $width
+     * @param int $width
      *
      * @return string $wrappedText
      */
-    private function _preventGarbledCharacters($bigText, $width = 249)
-    {
+    private function _preventGarbledCharacters($bigText, $width=249) {
         $pattern = "/(.{1,{$width}})(?:\\s|$)|(.{{$width}})/uS";
         $replace = '$1$2' . "\n";
         $wrappedText = preg_replace($pattern, $replace, $bigText);
