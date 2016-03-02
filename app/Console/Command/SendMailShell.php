@@ -43,7 +43,9 @@ class SendMailShell extends AppShell
     {
         parent::startup();
         if ($this->params['session_id']) {
-            CakeSession::destroy();
+            if(CakeSession::started()){
+                CakeSession::destroy();
+            }
             CakeSession::id($this->params['session_id']);
             CakeSession::start();
         }
