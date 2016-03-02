@@ -243,7 +243,7 @@ if (!isset($goal_list_for_action_option)) {
                     </div>
                 </div>
                 <?php if ($is_edit_mode): ?>
-                    <?php if (isset($this->request->data['ActionResultFile'])): ?>
+                    <?php if (isset($this->request->data['ActionResultFile']) && is_array($this->request->data['ActionResultFile'])): ?>
                         <?php foreach ($this->request->data['ActionResultFile'] as $file): ?>
                             <?= $this->Form->hidden('file_id', [
                                 'id'        => 'AttachedFile_' . $file['AttachedFile']['id'],
@@ -384,7 +384,7 @@ if (!isset($goal_list_for_action_option)) {
                 </div>
             </div>
             <?php if ($is_edit_mode): ?>
-                <?php if (isset($this->request->data['PostFile'])): ?>
+                <?php if (isset($this->request->data['PostFile']) && is_array($this->request->data['PostFile'])): ?>
                     <?php foreach ($this->request->data['PostFile'] as $file): ?>
                         <?= $this->Form->hidden('file_id', [
                             'id'        => 'AttachedFile_' . $file['AttachedFile']['id'],
