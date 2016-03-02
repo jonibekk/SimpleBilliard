@@ -382,7 +382,7 @@ if (!isset($goal_list_for_action_option)) {
                 </div>
             </div>
             <?php if ($is_edit_mode): ?>
-                <?php foreach ($this->request->data['PostFile'] as $file): ?>
+                <?php foreach ($this->request->data['ActionResultFile'] as $file): ?>
                     <?= $this->Form->hidden('file_id', [
                         'id'        => 'AttachedFile_' . $file['AttachedFile']['id'],
                         'name'      => 'data[file_id][]',
