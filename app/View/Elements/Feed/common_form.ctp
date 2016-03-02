@@ -243,18 +243,20 @@ if (!isset($goal_list_for_action_option)) {
                     </div>
                 </div>
                 <?php if ($is_edit_mode): ?>
-                    <?php foreach ($this->request->data['ActionResultFile'] as $file): ?>
-                        <?= $this->Form->hidden('file_id', [
-                            'id'        => 'AttachedFile_' . $file['AttachedFile']['id'],
-                            'name'      => 'data[file_id][]',
-                            'value'     => $file['AttachedFile']['id'],
-                            'data-url'  => $this->Upload->uploadUrl($file, 'AttachedFile.attached',
-                                                                    ['style' => 'small']),
-                            'data-name' => $file['AttachedFile']['attached_file_name'],
-                            'data-size' => $file['AttachedFile']['file_size'],
-                            'data-ext'  => $file['AttachedFile']['file_ext'],
-                        ]); ?>
-                    <?php endforeach ?>
+                    <?php if (isset($this->request->data['ActionResultFile'])): ?>
+                        <?php foreach ($this->request->data['ActionResultFile'] as $file): ?>
+                            <?= $this->Form->hidden('file_id', [
+                                'id'        => 'AttachedFile_' . $file['AttachedFile']['id'],
+                                'name'      => 'data[file_id][]',
+                                'value'     => $file['AttachedFile']['id'],
+                                'data-url'  => $this->Upload->uploadUrl($file, 'AttachedFile.attached',
+                                                                        ['style' => 'small']),
+                                'data-name' => $file['AttachedFile']['attached_file_name'],
+                                'data-size' => $file['AttachedFile']['file_size'],
+                                'data-ext'  => $file['AttachedFile']['file_ext'],
+                            ]); ?>
+                        <?php endforeach ?>
+                    <?php endif; ?>
                 <?php endif ?>
                 <?php $this->Form->unlockField('socket_id') ?>
                 <?php $this->Form->unlockField('file_id') ?>
@@ -268,7 +270,7 @@ if (!isset($goal_list_for_action_option)) {
         <div class="tab-pane fade" id="PostForm">
             <?=
             $this->Form->create('Post', [
-                'url'           => $is_edit_mode
+                'url'           => $is_edit_mode && isset($this->request->data['Post']['id'])
                     ? ['controller' => 'posts', 'action' => 'post_edit', 'post_id' => $this->request->data['Post']['id']]
                     : ['controller' => 'posts', 'action' => 'add'],
                 'inputDefaults' => [
@@ -382,17 +384,20 @@ if (!isset($goal_list_for_action_option)) {
                 </div>
             </div>
             <?php if ($is_edit_mode): ?>
-                <?php foreach ($this->request->data['ActionResultFile'] as $file): ?>
-                    <?= $this->Form->hidden('file_id', [
-                        'id'        => 'AttachedFile_' . $file['AttachedFile']['id'],
-                        'name'      => 'data[file_id][]',
-                        'value'     => $file['AttachedFile']['id'],
-                        'data-url'  => $this->Upload->uploadUrl($file, 'AttachedFile.attached', ['style' => 'small']),
-                        'data-name' => $file['AttachedFile']['attached_file_name'],
-                        'data-size' => $file['AttachedFile']['file_size'],
-                        'data-ext'  => $file['AttachedFile']['file_ext'],
-                    ]); ?>
-                <?php endforeach ?>
+                <?php if (isset($this->request->data['PostFile'])): ?>
+                    <?php foreach ($this->request->data['PostFile'] as $file): ?>
+                        <?= $this->Form->hidden('file_id', [
+                            'id'        => 'AttachedFile_' . $file['AttachedFile']['id'],
+                            'name'      => 'data[file_id][]',
+                            'value'     => $file['AttachedFile']['id'],
+                            'data-url'  => $this->Upload->uploadUrl($file, 'AttachedFile.attached',
+                                                                    ['style' => 'small']),
+                            'data-name' => $file['AttachedFile']['attached_file_name'],
+                            'data-size' => $file['AttachedFile']['file_size'],
+                            'data-ext'  => $file['AttachedFile']['file_ext'],
+                        ]); ?>
+                    <?php endforeach ?>
+                <?php endif; ?>
             <?php endif ?>
             <?php $this->Form->unlockField('socket_id') ?>
             <?php $this->Form->unlockField('file_id') ?>
