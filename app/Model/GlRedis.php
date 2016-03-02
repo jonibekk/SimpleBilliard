@@ -406,8 +406,6 @@ class GlRedis extends AppModel
             $notify_id = $post_id;
         }
         if ($type != NotifySetting::TYPE_FEED_MESSAGE) {
-            //通知データ
-
             $url = array_merge($url, ['notify_id' => $notify_id]);
         }
         $data = [

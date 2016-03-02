@@ -460,7 +460,7 @@ class NotifyBizComponent extends Component
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($invite['FromUser']['id'],
                                                                             NotifySetting::TYPE_USER_JOINED_TO_INVITED_TEAM);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_USER_JOINED_TO_INVITED_TEAM;
-        $this->notify_option['url_data'] = '/';//TODO 暫定的にhome
+        $this->notify_option['url_data'] = ['controller' => 'users', 'action' => 'view_info', 'user_id' => $invite['ToUser']['id']];
         $this->notify_option['model_id'] = null;
         $this->notify_option['item_name'] = json_encode([$invite['Team']['name']]);
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $invite['FromUser']['id']);
