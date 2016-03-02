@@ -4,6 +4,6 @@
         'common_form_only_tab' => 'message'
     ]) ?>
     <div ui-view>
-        <center><i id="__feed_loader" class="fa fa-refresh fa-spin"></i></center>'
+        <center><i id="__feed_loader" class="fa fa-refresh fa-spin"></i></center>
     </div>
 </div>

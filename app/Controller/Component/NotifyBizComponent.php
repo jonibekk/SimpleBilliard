@@ -32,6 +32,7 @@ class NotifyBizComponent extends Component
         'notify_type' => null,
         'model_id'    => null,
         'item_name'   => null,
+        'post_id'     => null,
         'options'     => [],
     ];
     public $notify_settings = [];
@@ -89,6 +90,7 @@ class NotifyBizComponent extends Component
     function sendNotify($notify_type, $model_id, $sub_model_id = null, $to_user_list = null, $user_id, $team_id)
     {
         $this->notify_option['from_user_id'] = $user_id;
+        $this->notify_option['options']['from_user_id'] = $user_id;
         $this->_setModelProperty($user_id, $team_id);
 
         switch ($notify_type) {
@@ -173,6 +175,12 @@ class NotifyBizComponent extends Component
             default:
                 break;
         }
+
+        //通知するアイテムかどうかチェック
+        if (!$this->_canNotify()) {
+            return;
+        }
+
         //通常のアプリ通知データ保存
         $this->_saveNotifications();
 
@@ -410,14 +418,14 @@ class NotifyBizComponent extends Component
         if (empty($post)) {
             return;
         }
-        if ($comment_id) {
-            $comment = $this->Comment->findById($comment_id);
-        }
 
         //基本的にnotifyにはメッセージについたコメントを表示するが、コメントが無ければ最初のメッセージ
-        $body = $comment['Comment']['body'];
-        if (empty($body)) {
-            $body = $post['Post']['body'];
+        $body = $post['Post']['body'];
+        if ($comment_id) {
+            $comment = $this->Comment->findById($comment_id);
+            if (!empty($comment_body = $comment['Comment']['body'])) {
+                $body = $comment_body;
+            }
         }
 
         //宛先は閲覧可能な全ユーザ
@@ -1508,6 +1516,20 @@ class NotifyBizComponent extends Component
             return false;
         }
 
+        return true;
+    }
+
+    /**
+     * check notification available
+     *
+     * @return bool
+     */
+    function _canNotify()
+    {
+        // 通知先ユーザが存在しない場合　
+        if (count($this->notify_settings) === 0) {
+            return false;
+        }
         return true;
     }
 

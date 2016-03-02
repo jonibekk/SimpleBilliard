@@ -37,6 +37,7 @@ GoalousはIsao発の「チーム力向上のスパイラルを生み出す」目
 #### 運用ガイドライン
 - [GitHub運用ガイドライン](docs/guidelines/GitHub.md)
 - [Waffle運用ガイドライン](docs/guidelines/Waffle.md)
+- [レビュー前チェックリストの運用ガイドライン](docs/guidelines/ReviewChecklist.md)
 
 #### コーディングガイド
 - [CSSコーディングガイド](docs/guidelines/CSS.md)
