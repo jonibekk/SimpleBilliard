@@ -1795,7 +1795,8 @@ class TeamsController extends AppController
      */
     protected function _insightGetDateRangeType($date_range)
     {
-        return array_pop(explode('_', $date_range));
+        $exploded_date_range = explode('_', $date_range);
+        return array_pop($exploded_date_range);
     }
 
     /**
