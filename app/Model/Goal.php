@@ -918,7 +918,7 @@ class Goal extends AppModel
                     'conditions' => ['ActionResultCount.user_id' => $user_id]
                 ],
                 'MyCollabo'         => [
-                    'fields'     => ['MyCollabo.id', 'MyCollabo.type'],
+                    'fields'     => ['MyCollabo.id', 'MyCollabo.type', 'MyCollabo.valued_flg'],
                     'conditions' => ['MyCollabo.user_id' => $this->my_uid]
                 ],
                 'MyFollow'          => [
