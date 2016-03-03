@@ -1795,6 +1795,8 @@ class TeamsController extends AppController
      */
     protected function _insightGetDateRangeType($date_range)
     {
+        // array_pop()は引数に参照渡しを要求するので、
+        // 一旦date_rangeを変数に格納した後、コールする
         $exploded_date_range = explode('_', $date_range);
         return array_pop($exploded_date_range);
     }
