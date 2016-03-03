@@ -25,25 +25,24 @@
                     </span>
                 <?=
                 $this->Form->input('term_id', [
-                    'label'        => false,
-                    'div'          => false,
-                    'required'     => true,
-                    'class'        => 'form-control disable-change-warning profile-user-goals-terms-select',
-                    'id'           => 'LoadTermGoal',
-                    'options'      => $term,
-                    'default'      => $term_id,
-                    'redirect-url' => $term_base_url,
-                    'wrapInput'    => 'profile-user-goals-terms-select-wrap'
+                    'label'                    => false,
+                    'div'                      => false,
+                    'required'                 => true,
+                    'class'                    => 'form-control disable-change-warning profile-user-goals-terms-select',
+                    'id'                       => 'LoadTermGoal',
+                    'options'                  => $term,
+                    'default'                  => $term_id,
+                    'redirect-url'             => $term_base_url,
+                    'wrapInput'         => 'profile-user-goals-terms-select-wrap'
                 ])
                 ?>
             </div>
             <br>
-
             <div class="profile-goals-select-wrap btn-group" role="group">
-                <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user['User']['id'], 'term_id' => $term_id]) ?>"
+                <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user['User']['id'], 'term_id'=>$term_id]) ?>"
                    class="profile-goals-select btn <?= $page_type == "following" ? "btn-unselected" : "btn-selected" ?>">
                     <?= __d('app', "マイゴール(%s)", $my_goals_count) ?></a>
-                <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user['User']['id'], 'term_id' => $term_id, 'page_type' => 'following']) ?>"
+                <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user['User']['id'],'term_id'=>$term_id, 'page_type' => 'following']) ?>"
                    class="profile-goals-select btn <?= $page_type == "following" ? "btn-selected" : "btn-unselected" ?>">
                     <?= __d('app', "フォロー中(%s)", $follow_goals_count) ?></a>
             </div>
@@ -78,7 +77,7 @@
                         </div>
                         <div class="col col-xxs-12 font_lightgray font_12px">
                             <?= __d('app', "認定ステータス: %s",
-                                    Collaborator::$STATUS[$goal['MyCollabo'][0]['valued_flg']]) ?>
+                                    Collaborator::$STATUS[$goal['Collaborator']['valued_flg']]) ?>
                         </div>
                         <div class="col col-xxs-12">
                             <div class="progress mb_0px goals-column-progress-bar">
@@ -101,8 +100,7 @@
                                            data-class="toggle-follow"
                                            goal-id="<?= $goal['Goal']['id'] ?>"
                                         <?= h($follow_opt['disabled']) ?>="<?= h($follow_opt['disabled']) ?>">
-                                        <i class="fa fa-heart font_rougeOrange"
-                                           style="<?= h($follow_opt['style']) ?>"></i>
+                                        <i class="fa fa-heart font_rougeOrange" style="<?= h($follow_opt['style']) ?>"></i>
                                         <span class="ml_5px"><?= h($follow_opt['text']) ?></span>
                                         </a>
                                     </div>
