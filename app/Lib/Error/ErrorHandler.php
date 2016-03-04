@@ -84,15 +84,20 @@ class ErrorHandler
      */
     public static function handleException(Exception $exception)
     {
-        //ISAO社内のセキュリティソフトが原因でこの例外が多発する為、特定の条件のものは何も処理しない
-        if ($exception instanceof MissingControllerException) {
-            if (DEBUG_MODE === 0 && $exception->getMessage() == 'Controller class JsController could not be found.') {
-                return;
-            }
+        $config = Configure::read('Exception');
+        $skip_exceptions = [
+            'MissingControllerException',
+            'MissingActionException',
+            'PrivateActionException',
+            'NotFoundException'
+        ];
+        $skip_log = false;
+        //公開環境(DEBUG_MODE == 0)でページが見つからない系のエラーはログ出力しない。
+        if (DEBUG_MODE == 0 && in_array(get_class($exception), $skip_exceptions)) {
+            $skip_log = true;
         }
 
-        $config = Configure::read('Exception');
-        if (!empty($config['log'])) {
+        if (!$skip_log && !empty($config['log'])) {
             $message = sprintf("[%s] %s\n%s",
                                get_class($exception),
                                $exception->getMessage(),
@@ -100,6 +105,7 @@ class ErrorHandler
             );
             CakeLog::write(LOG_ERR, $message);
         }
+
         $renderer = $config['renderer'];
         if ($renderer !== 'ExceptionRenderer') {
             list($plugin, $renderer) = pluginSplit($renderer, true);

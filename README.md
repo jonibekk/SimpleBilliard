@@ -30,13 +30,14 @@ GoalousはIsao発の「チーム力向上のスパイラルを生み出す」目
 - [チームメンバー以外の方のプロジェクトへの貢献について](CONTRIBUTING.md)
 
 #### 開発ガイドライン
-- [開発サイクル](docs/guidelines/DevelopmentCycle.md)
+- [開発フローと操作手順](docs/guidelines/DevelopmentCycle.md)
 - [アジャイル開発](docs/guidelines/Ajile.md)
 - [イテレーションについて](docs/guidelines/Iteration.md)
 
 #### 運用ガイドライン
 - [GitHub運用ガイドライン](docs/guidelines/GitHub.md)
 - [Waffle運用ガイドライン](docs/guidelines/Waffle.md)
+- [レビュー前チェックリストの運用ガイドライン](docs/guidelines/ReviewChecklist.md)
 
 #### コーディングガイド
 - [CSSコーディングガイド](docs/guidelines/CSS.md)

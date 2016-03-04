@@ -6,23 +6,20 @@ var message_app = angular.module(
         'jlareau.pnotify',
         'pusher-angular',
         'infinite-scroll',
-        'ngSanitize'
+        'ngSanitize',
+        'ngRoute'
     ]).run([
-        '$rootScope',
-        '$state',
-        '$stateParams',
-        '$http',
-        '$translate',
-        function ($rootScope,
-                  $state,
-                  $stateParams,
-                  $http,
-                  $translate) {
-            $rootScope.$state = $state;
-            $rootScope.$stateParams = $stateParams;
-        }]
+    '$rootScope',
+    '$state',
+    '$stateParams',
+    function ($rootScope,
+              $state,
+              $stateParams
+    ) {
+        $rootScope.$state = $state;
+        $rootScope.$stateParams = $stateParams;
+    }]
 );
-
 
 message_app.config([
     '$stateProvider',
@@ -32,7 +29,8 @@ message_app.config([
     function ($stateProvider,
               $urlRouterProvider,
               $translateProvider,
-              $httpProvider) {
+              $httpProvider
+    ) {
         //Anti IE cache
         if (!$httpProvider.defaults.headers.get)
             $httpProvider.defaults.headers.get = {};
@@ -49,13 +47,13 @@ message_app.config([
         $translateProvider.preferredLanguage('ja');
         $translateProvider.fallbackLanguage('en');
 
-        $urlRouterProvider.otherwise("/");
         $stateProvider
             .state('detail', {
                 url: "/:post_id",
                 templateUrl: "/template/message_detail.html",
                 resolve: {
                     getPostDetail: ['$stateParams', '$http', function ($stateParams, $http) {
+                        $("#SubHeaderMenu").css("top","0px");
                         var request = {
                             method: 'GET',
                             url: cake.url.aj + $stateParams.post_id
@@ -76,3 +74,5 @@ message_app.config([
                 }
             })
     }]);
+
+

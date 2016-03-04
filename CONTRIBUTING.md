@@ -10,3 +10,6 @@ Githubページ上右上の「Fork」をクリックしてリポジトリをコ�
 1. コミットする
 1. pushする
 1. Pull Requestする(マージ対象はdevelop)
+
+## プルリクエストの運用ガイド
+- [レビュー前チェックリストの運用ガイドライン](docs/guidelines/ReviewChecklist.md)
