@@ -454,7 +454,7 @@ class NotifySetting extends AppModel
                         $circle_name = $circle['Circle']['name'];
                         $circle_count = count($options['share_circle_list']);
                         if ($circle_count >= 2) {
-                            $circle_name .= __d('app', '他%dサークル', $circle_count - 1);
+                            $circle_name .= __d('app', 'と他%sサークル', $circle_count - 1);
                         }
                         $targets[] = $circle_name;
                     }
