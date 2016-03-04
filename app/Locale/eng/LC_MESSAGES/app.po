@@ -1140,6 +1140,10 @@ msgstr ""
 msgid "と他%s人"
 msgstr " and %s others"
 
+#: Model/NotifySetting.php:457
+msgid "と他%sサークル"
+msgstr " and %s other circles"
+
 #: Model/NotifySetting.php:449
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s%2$s</span>が<span class="
