@@ -78,7 +78,7 @@
                         </div>
                         <div class="col col-xxs-12 font_lightgray font_12px">
                             <?= __d('app', "認定ステータス: %s",
-                                    Collaborator::$STATUS[$goal['MyCollabo'][0]['valued_flg']]) ?>
+                                    Collaborator::$STATUS[$goal['Collaborator']['valued_flg']]) ?>
                         </div>
                         <div class="col col-xxs-12">
                             <div class="progress mb_0px goals-column-progress-bar">
