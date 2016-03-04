@@ -77,7 +77,7 @@
                             <?= __d('app', "目的: %s", $goal['Purpose']['name']) ?>
                         </div>
                         <div class="col col-xxs-12 font_lightgray font_12px">
-                            <?php if($page_type === 'following'): ?>
+                            <?php if ($page_type === 'following'): ?>
                                 <?= __d('app', "認定ステータス: %s",
                                         Collaborator::$STATUS[$goal['Leader'][0]['valued_flg']]) ?>
                             <?php else: ?>
