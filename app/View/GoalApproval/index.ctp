@@ -114,10 +114,10 @@
                             <p class="approval_body_text"><?= __("Unit") ?>
                                 : <?= h($value_unit_list[$goal['Goal']['value_unit']]); ?></p>
 
-                            <p class="approval_body_text"><?= __("達成時") ?>
+                            <p class="approval_body_text"><?= __("Achieve point") ?>
                                 : <?= (double)$goal['Goal']['target_value']; ?></p>
 
-                            <p class="approval_body_text"><?= __("開始時") ?>
+                            <p class="approval_body_text"><?= __("Initial point") ?>
                                 : <?= (double)$goal['Goal']['start_value']; ?></p>
 
                             <p class="approval_body_text"><?= __("Due Date") ?>

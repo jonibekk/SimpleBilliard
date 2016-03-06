@@ -16,10 +16,10 @@ $this->set('hidden_sidebar_xxs', true);
 <?php $this->start('sidebar') ?>
 <div class="sidebar-setting" role="complementary">
     <ul class="nav">
-        <li class="active"><a href="#basic_setting"><?= __("基本設定") ?></a></li>
-        <li class=""><a href="#term_setting"><?= __("期間設定") ?></a></li>
+        <li class="active"><a href="#basic_setting"><?= __("Basic settings") ?></a></li>
+        <li class=""><a href="#term_setting"><?= __("Term settings") ?></a></li>
         <li class=""><a href="#invite_member"><?= __("メンバー招待") ?></a></li>
-        <li class=""><a href="#batch_registration"><?= __("一括登録") ?></a></li>
+        <li class=""><a href="#batch_registration"><?= __("Batch Registration") ?></a></li>
         <li class=""><a href="#goal_category"><?= __("ゴールカテゴリ設定") ?></a></li>
         <li class=""><a href="#evaluation"><?= __("評価設定") ?></a></li>
         <li class=""><a href="#evaluation_score_setting"><?= __("評価スコア設定") ?></a></li>

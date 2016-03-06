@@ -31,7 +31,7 @@
     ]); ?>
     <div class="panel-body">
         <div class="form-group">
-            <label for="TeamName" class="col col-sm-3 control-label form-label"><?= __("チーム名") ?></label>
+            <label for="TeamName" class="col col-sm-3 control-label form-label"><?= __("Team Name") ?></label>
 
             <div class="col col-sm-6">
                 <p class="form-control-static"><?= h($team['Team']['name']) ?></p>

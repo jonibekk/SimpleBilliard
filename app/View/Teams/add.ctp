@@ -33,8 +33,8 @@
             <div class="panel-body add-team-panel-body">
                 <?=
                 $this->Form->input('name',
-                                   ['label'                        => __("チーム名"),
-                                    'placeholder'                  => __("例) チームGoalous"),
+                                   ['label'                        => __("Team Name"),
+                                    'placeholder'                  => __("eg. Team Goalous"),
                                     "data-bv-notempty-message"     => __("入力必須項目です。"),
                                     'data-bv-stringlength'         => 'true',
                                     'data-bv-stringlength-max'     => 128,
@@ -42,7 +42,7 @@
                                    ]) ?>
                 <hr>
                 <div class="form-group">
-                    <label for="" class="col col-sm-3 control-label form-label"><?= __("チーム画像") ?></label>
+                    <label for="" class="col col-sm-3 control-label form-label"><?= __("Team Image") ?></label>
 
                     <div class="col col-sm-6">
                         <div class="fileinput_small fileinput-new" data-provides="fileinput">
@@ -85,11 +85,11 @@
                 <hr>
                 <?=
                 $this->Form->input('type', [
-                    'label'      => __("プラン"),
+                    'label'      => __("Plan"),
                     'type'       => 'select',
                     'options'    => Team::$TYPE,
                     'afterInput' => '<span class="help-block font_11px">'
-                        .__("2016年8月31日まで無料でご利用いただけます。") // 同様の文言がteam/edit_basic_setting.ctp
+                        .__("You can use Goalous free of charge until 31 Aug 2016.") // 同様の文言がteam/edit_basic_setting.ctp
                         // . __("フリープランは、５人までのチームで使えます。また、複数の機能制限がございます。")
                         // . '<br>'
                         // . __("このプランはチーム作成後にいつでも変更できます。")
@@ -98,7 +98,7 @@
                 <hr>
                 <?=
                 $this->Form->input('timezone', [
-                    'label'   => __("タイムゾーン"),
+                    'label'   => __("Timezone"),
                     'type'    => 'select',
                     'options' => $timezones,
                     'value'   => $this->Session->read('Auth.User.timezone')
@@ -106,18 +106,18 @@
                 ?>
                 <?=
                 $this->Form->input('start_term_month', [
-                    'label'                    => __("開始月"),
+                    'label'                    => __("Start date"),
                     'type'                     => 'select',
                     // help-block の文言があるので、エラーメッセージは表示しない
                     "data-bv-notempty-message" => __(" "),
                     'options'                  => $start_term_month_options,
                     'afterInput'               => '<span class="help-block font_11px">'
-                        . __("基準となる期の開始月を選択して下さい。")
+                        . __("Please select the standard start month.")
                         . '</span>'
                 ]) ?>
                 <?=
                 $this->Form->input('border_months', [
-                    'label'                    => __("期間"),
+                    'label'                    => __("Term"),
                     'type'                     => 'select',
                     "data-bv-notempty-message" => __("選択してください。"),
                     'options'                  => $border_months_options

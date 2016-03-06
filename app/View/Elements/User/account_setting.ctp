@@ -81,7 +81,7 @@
         <hr>
         <?=
         $this->Form->input('timezone', [
-            'label'   => __("タイムゾーン"),
+            'label'   => __("Timezone"),
             'type'    => 'select',
             'options' => $timezones,
             'wrapInput' => 'user-setting-timezone-select-wrap col col-sm-6'
@@ -103,9 +103,9 @@
 
             <div class="col col-sm-6">
                 <p class="form-control-static">
-                    <a href="#" data-toggle="modal" data-target="#modal_change_password"><?=
-                        __(
-                            "パスワードを変更する") ?></a>
+                    <a href="#" data-toggle="modal" data-target="#modal_change_password">
+                    <?= __("パスワードを変更する") ?>
+                    </a>
                 </p>
             </div>
         </div>

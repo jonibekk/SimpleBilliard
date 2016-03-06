@@ -58,8 +58,8 @@ $kr_count = 0;
                 <?php if (empty($goal['Goal'])): ?>
                     <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add', 'purpose_id' => $goal['Purpose']['id'], 'mode' => 2]) ?>"
                        class="dashboard-goals-card-header-goal-set">
-                        <i class="fa fa-plus-circle dashboard-goals-card-header-goal-set-icon"></i><?= __(
-                                                                                                           '基準を追加する') ?>
+                        <i class="fa fa-plus-circle dashboard-goals-card-header-goal-set-icon"></i>
+                        <?= __('Add Reference Values') ?>
                     </a>
                 <?php else: ?>
                     <div class="dashboard-goals-card-header-goal-wrap">
@@ -183,7 +183,7 @@ $kr_count = 0;
                             <!-- 認定待ちと残り日数 -->
                             <!-- <div class="pull-right font_12px">
                                 <?php if (($limit_day = ($goal['Goal']['end_date'] - REQUEST_TIMESTAMP) / (60 * 60 * 24)) < 0): ?>
-                                    <?= __("%d日経過", $limit_day * -1) ?>
+                                    <?= __("%d days pass", $limit_day * -1) ?>
                                 <?php else: ?>
                                     <?php if (isset($goal['Goal']['owner_approval_flag']) === true) : ?>
                                         <?php if ($goal['Goal']['owner_approval_flag'] === '0') : ?>
@@ -197,7 +197,7 @@ $kr_count = 0;
                                         <?php endif ?>
                                         ・
                                     <?php endif; ?>
-                                    <?= __("残り%d日", $limit_day) ?>
+                                    <?= __("%d days left", $limit_day) ?>
                                 <?php endif; ?>
                             </div> -->
                         <?php endif; ?>

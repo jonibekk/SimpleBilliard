@@ -152,21 +152,21 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                            '<div class="label-addiction">' . __(
                                                                                  "達成の指標として<br>『なに』をどうするか？") . '</div></div>',
                                         'label'                        => false,
-                                        'placeholder'                  => __("具体的に絞り込んで書く"),
+                                        'placeholder'                  => __("Write in details."),
                                         "data-bv-notempty-message"     => __("入力必須項目です。"),
                                         'required'                     => true,
                                         'rows'                         => 1,
                                         'afterInput'                   => '<span class="help-block font_12px">' . __(
-                                                                                                                      "例）サービスAの国内市場シェアを増加させる") . '</span>',
+                                                                                                                      "eg) Increasing the internal market share of A") . '</span>',
                                         'data-bv-stringlength'         => 'true',
                                         'data-bv-stringlength-max'     => 200,
                                         'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 200),
                                        ]) ?>
                     <div class="row">
                         <div class="col col-sm-3 goal-edit-labels">
-                            <label class="control-label width100_per text-right"><?= __("程度") ?></label>
+                            <label class="control-label width100_per text-right"><?= __("Measurement") ?></label>
 
-                            <div class="label-addiction pull-right"><?= __("どのくらい？") ?></div>
+                            <div class="label-addiction pull-right"><?= __("How much?") ?></div>
                         </div>
                         <div class="col col-sm-7  goal-set-input">
 
@@ -188,7 +188,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
 
                                 <?=
                                 $this->Form->input('target_value',
-                                                   ['label'                        => __("達成時"),
+                                                   ['label'                        => __("Achieve point"),
                                                     'wrapInput'                    => 'col col-sm-9 pl_5px',
                                                     'type'                         => 'number',
                                                     'step'                         => '0.1',
@@ -203,7 +203,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                                    ]) ?>
                                 <?=
                                 $this->Form->input('start_value',
-                                                   ['label'                        => __("開始時"),
+                                                   ['label'                        => __("Initial point"),
                                                     'wrapInput'                    => 'col col-sm-9 pl_5px',
                                                     'type'                         => 'number',
                                                     'step'                         => '0.1',
@@ -221,7 +221,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                     </div>
                     <div class="row goal-edit-labels">
                         <div class="col col-sm-3 goal-edit-labels">
-                            <label class="control-label  width100_per text-right"><?= __("期間") ?></label>
+                            <label class="control-label  width100_per text-right"><?= __("Term") ?></label>
 
                             <div id="SelectTermTimezone" class="label-addiction pull-right"></div>
                         </div>
@@ -258,20 +258,21 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                             <div class="form-group" id="KeyResult0StartDateContainer">
                                 <label for="KeyResult0StartDate"
                                        class="col col-sm-3 control-label goal-set-mid-label"><?=
-                                    __("開始") ?></label>
+                                    __("Start") ?></label>
 
                                 <p class="form-control-static"
                                    id="KeyResult0StartDateDefault">
                                     <span class="plr_18px">
                                         <span class="goal-edit-limit-date-label">
                                             <?= $goal_start_date_format ?>
-                                            <?= !isset($this->request->data['Goal']['start_date']) ? __(
-                                                                                                         "（本日）") : null ?>
+                                            (
+                                            <?= !isset($this->request->data['Goal']['start_date']) ? __("(Today)") : null ?>
+                                            )
                                         </span>
                                         <a href="#" class="target-show-target-del"
                                            show-target-id="KeyResult0StartDateInputWrap"
                                            delete-target-id="KeyResult0StartDateDefault">
-                                            <?= __("変更") ?>
+                                            <?= __("Change") ?>
                                         </a>
                                     </span>
                                 </p>

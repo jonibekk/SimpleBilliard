@@ -15,10 +15,10 @@
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
                 <span class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= __("ゴール概要") ?>&nbsp;&nbsp;
+            <h4 class="modal-title"><?= __("Goal Summary") ?>&nbsp;&nbsp;
                 <a class=""
                    href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal['Goal']['id']]) ?>">
-                    <?= __('ゴールページへ') ?>
+                    <?= __('Go to Goal page') ?>
                 </a>
             </h4>
         </div>
@@ -74,12 +74,12 @@
                     <?= h($goal['Purpose']['name']) ?>
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
-                    <i class="fa fa-bullseye"></i><span class="pl_2px"><?= __('程度') ?></span>
+                    <i class="fa fa-bullseye"></i><span class="pl_2px"><?= __('Measurement') ?></span>
 
                     <div><?= __('Unit: %s', KeyResult::$UNIT[$goal['Goal']['value_unit']]) ?></div>
                     <?php if ($goal['Goal']['value_unit'] != KeyResult::UNIT_BINARY): ?>
-                        <div><?= __('達成時: %s', (double)$goal['Goal']['target_value']) ?></div>
-                        <div><?= __('開始時: %s', (double)$goal['Goal']['start_value']) ?></div>
+                        <div><?= __('Achieve point: %s', (double)$goal['Goal']['target_value']) ?></div>
+                        <div><?= __('Initial point: %s', (double)$goal['Goal']['start_value']) ?></div>
                     <?php endif; ?>
                 </div>
                 <div class="col col-xxs-12">

@@ -11,7 +11,7 @@
 ?>
 <!-- START app/View/Elements/Team/edit_basic_setting.ctp -->
 <div class="panel panel-default">
-    <div class="panel-heading"><?= __("基本設定") ?></div>
+    <div class="panel-heading"><?= __("Basic settings") ?></div>
     <?=
     $this->Form->create('Team', [
         'inputDefaults' => [
@@ -31,8 +31,8 @@
     <div class="panel-body add-team-panel-body">
         <?=
         $this->Form->input('name',
-                           ['label'                        => __("チーム名"),
-                            'placeholder'                  => __("例) チームGoalous"),
+                           ['label'                        => __("Team Name"),
+                            'placeholder'                  => __("eg. Team Goalous"),
                             "data-bv-notempty-message"     => __("入力必須項目です。"),
                             'data-bv-stringlength'         => 'true',
                             'data-bv-stringlength-max'     => 128,
@@ -40,7 +40,7 @@
                            ]) ?>
         <hr>
         <div class="form-group">
-            <label for="" class="col col-sm-3 control-label form-label"><?= __("チーム画像") ?></label>
+            <label for="" class="col col-sm-3 control-label form-label"><?= __("Team Image") ?></label>
 
             <div class="col col-sm-6">
                 <div class="fileinput_small fileinput-new" data-provides="fileinput">
@@ -90,12 +90,12 @@
         <hr>
         <?=
         $this->Form->input('type', [
-            'label'      => __("プラン"),
+            'label'      => __("Plan"),
             'type'       => 'select',
             'options'    => Team::$TYPE,
             'wrapInput'  => 'team-setting-basic-plan',
             'afterInput' => '<span class="help-block font_11px">'
-                .__("2016年8月31日まで無料でご利用いただけます。") // 同様の文言がteam/add.ctp
+                .__("You can use Goalous free of charge until 31 Aug 2016.") // 同様の文言がteam/add.ctp
                 // . __("フリープランは、５人までのチームで使えます。また、複数の機能制限がございます。")
                 // . '<br>'
                 // . __("このプランはチーム作成後にいつでも変更できます。")
@@ -107,11 +107,11 @@
         <div class="row">
             <div class="col-xxs-4 col-sm-offset-3">
                 <?=
-                $this->Form->submit(__("基本設定を更新"),
+                $this->Form->submit(__("Change basic settings"),
                                     ['class' => 'btn btn-primary display-inline', 'div' => false, 'disabled' => 'disabled']) ?>
             </div>
             <div class="col-xxs-8 col-sm-5 text-align_r">
-                <a id="TeamDeleteButton" class="team-delete-button" href="#"><?= __('チームを削除する') ?></a>
+                <a id="TeamDeleteButton" class="team-delete-button" href="#"><?= __('Delete the team') ?></a>
             </div>
         </div>
     </div>
@@ -157,7 +157,7 @@
         $('#TeamDeleteButton').on('click', function (e) {
             e.preventDefault();
 
-            if (confirm('<?=__('チームを削除するとゴールやアクション、投稿などチームに属するすべての情報が削除されます。よろしいですか？\\nよろしければ "OK" ボタンを押してください。')?>')) {
+            if (confirm('<?=__('If the team is deleted, everything such as posts, actions and goals will be deleted. Do you really want to delete the team?')?>')) {
                 $('#TeamDeleteForm').submit();
             }
         });

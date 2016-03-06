@@ -15,7 +15,7 @@
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= __("完了済のキーリザルト一覧") ?></h4>
+            <h4 class="modal-title"><?= __("List of completed KRs") ?></h4>
         </div>
         <div class="modal-body modal-feed-body">
             <div class="row">

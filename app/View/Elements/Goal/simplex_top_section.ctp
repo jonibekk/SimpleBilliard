@@ -53,7 +53,7 @@
             </span>
         </div>
         <?php if ($is_leader): ?>
-            <?= $this->Html->link(__('ゴール編集'),
+            <?= $this->Html->link(__('Edit a goal'),
                                   [
                                       'controller' => 'goals',
                                       'action'     => 'add',
@@ -91,7 +91,7 @@
                        data-toggle="modal"
                        data-target="#ModalCollabo_<?= $goal['Goal']['id'] ?>"
                        href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', 'goal_id' => $goal['Goal']['id']]) ?>">
-                        <span class=""><?= __('コラボ') ?></span>
+                        <span class=""><?= __('Collaboration') ?></span>
                     </a>
                 </div>
             </div>

@@ -16,7 +16,7 @@
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= __("ゴールを達成しましたか？") ?></h4>
+            <h4 class="modal-title"><?= __("Did you achieve the goal?") ?></h4>
         </div>
         <div class="modal-body modal-circle-body">
             <ul class="add-key-result-goal-info">
@@ -27,18 +27,20 @@
                   <?= __("Unit") ?>:<?= KeyResult::$UNIT[$goal['Goal']['value_unit']] ?>
                 </li>
                 <li>
-                  <?= __("現在値") ?>:<?= h($goal['Goal']['current_value']) ?>
+                  <?= __("Current point") ?>:<?= h($goal['Goal']['current_value']) ?>
                 </li>
                 <li>
-                  <?= __("開始時") ?>:<?= h($goal['Goal']['start_value']) ?>
+                  <?= __("Initial point") ?>:<?= h($goal['Goal']['start_value']) ?>
                 </li>
                 <li>
-                  <?= __("達成時") ?>:<?= h($goal['Goal']['target_value']) ?>
+                  <?= __("Achieve point") ?>:<?= h($goal['Goal']['target_value']) ?>
                 </li>
             </ul>
         </div>
         <div class="modal-footer">
-            <div class="text-align_l font_12px font_rouge mb_12px">※どちらを選択しても、選択中の成果は「完了」となります。</div>
+            <div class="text-align_l font_12px font_rouge mb_12px">
+                <? __('※どちらを選択しても、選択中の成果は「完了」となります。') ?>
+            </div>
             <?=
             $this->Form->create('Post', [
                 'url'           => ['controller' => 'goals', 'action' => 'complete_kr', 'key_result_id' => $kr_id, true],
@@ -54,7 +56,7 @@
                class="btn btn-default modal-ajax-get-add-key-result" data-dismiss="modal"><?= __(
                                                                                                   "Add Key Result") ?></a>
             <?=
-            $this->Form->submit(__("ゴール達成"),
+            $this->Form->submit(__("Achieve the goal"),
                                 ['class' => 'btn btn-primary', 'div' => false]) ?>
             <?= $this->Form->end() ?>
         </div>

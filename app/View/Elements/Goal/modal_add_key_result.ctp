@@ -104,7 +104,7 @@
                         <div>
                             <?=
                             $this->Form->input('KeyResult.target_value',
-                                               ['label'                        => __("達成時"),
+                                               ['label'                        => __("Achieve point"),
                                                 'wrapInput'                    => 'fff',
                                                 'type'                         => 'number',
                                                 'step'                         => '0.1',
@@ -121,7 +121,7 @@
                         <div>
                             <?=
                             $this->Form->input('KeyResult.start_value',
-                                               ['label'                        => __("開始時"),
+                                               ['label'                        => __("Initial point"),
                                                 'wrapInput'                    => 'ggg',
                                                 'type'                         => 'number',
                                                 'step'                         => '0.1',
@@ -139,7 +139,7 @@
                 </div>
             </div>
             <div class="row">
-                <h5 class="modal-key-result-headings"><?= __("期間") ?>
+                <h5 class="modal-key-result-headings"><?= __("Term") ?>
                     <?php if ($this->Session->read('Auth.User.timezone') != $goal_term['timezone']): ?>
                         <span class="modal-key-result-headings-description">
                             <?= $this->TimeEx->getTimezoneText($goal_term['timezone']); ?>
@@ -178,17 +178,17 @@
                     </div>
                     <div class="form-group" id="KeyResult0StartDateContainer">
                         <label for="KeyResult0StartDate" class="control-label text-align_left"><?=
-                            __("開始") ?></label>
+                            __("Start") ?></label>
 
                         <p class="form-control-static"
                            id="KeyResult0StartDateDefault_<?= $goal_id ?>">
                                 <span
                                     class="pull-left"><?= $kr_start_date_format ?>
-                                    <?= __("（本日）") ?>
+                                    <?= __("(Today)") ?>
                                     &nbsp;&nbsp;<a href="#" class="target-show-target-del pull-right"
                                                    show-target-id="KeyResult0StartDateInputWrap_<?= $goal_id ?>"
                                                    delete-target-id="KeyResult0StartDateDefault_<?= $goal_id ?>">
-                                        <?= __("変更") ?></a>
+                                        <?= __("Change") ?></a>
                                 </span>
                         </p>
 
@@ -222,7 +222,7 @@
                 $this->Form->input('priority', [
                     'before'    => '<h5 class="modal-key-result-headings">' . __(
                                                                                   "Weight") . '<span class="modal-key-result-headings-description">' . __(
-                                                                                                                                                        "ゴールにとってこの成果の重要度") . '</span></h5>',
+                                                                                                                                                        "Weight of Key Result for the Goal") . '</span></h5>',
                     'label'     => false,
                     'type'      => 'select',
                     'default'   => 3,

@@ -26,7 +26,7 @@
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= __("成果を更新") ?></h4>
+            <h4 class="modal-title"><?= __("Update Key Result") ?></h4>
             <ul class="add-key-result-goal-info">
                 <li>
                     <i class="fa fa-flag"></i><?= h($goal['Goal']['name']) ?>
@@ -70,7 +70,7 @@
                     $this->Form->input('KeyResult.name',
                                        ['before'                       => '<div class="set-goal">' .
                                            '<h5 class="modal-key-result-headings">' . __(
-                                                                                          "成果名") . '<span class="modal-key-result-headings-description">' . __(
+                                                                                          "KR name") . '<span class="modal-key-result-headings-description">' . __(
                                                                                                                                                                 "What is set as an indicator of achievement?") . '</span></label></div>',
                                         'label'                        => false,
                                         'placeholder'                  => __("Write in details"),
@@ -80,7 +80,7 @@
                                         'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 200),
                                         'rows'                         => 1,
                                         'afterInput'                   => '<span class="help-block font_12px">' . __(
-                                                                                                                      "例）サービスAの国内市場シェアを増加させる") . '</span>'
+                                                                                                                      "eg) Increasing the internal market share of A") . '</span>'
                                        ]) ?>
                 </div>
                 <div class="row">
@@ -107,7 +107,7 @@
                             <div class="ggg">
                                 <?=
                                 $this->Form->input('KeyResult.target_value',
-                                                   ['label'                        => __("達成時"),
+                                                   ['label'                        => __("Achieve point"),
                                                     'wrapInput'                    => 'hhh',
                                                     'type'                         => 'number',
                                                     'step'                         => '0.1',
@@ -124,7 +124,7 @@
                             <div class="iii">
                                 <?=
                                 $this->Form->input('KeyResult.start_value',
-                                                   ['label'                        => __("開始時"),
+                                                   ['label'                        => __("Initial point"),
                                                     'wrapInput'                    => 'jjj',
                                                     'type'                         => 'number',
                                                     'step'                         => '0.1',
@@ -181,7 +181,7 @@
                         </div>
                         <div class="form-group" id="KeyResult0StartDateContainer">
                             <label for="KeyResult0StartDate" class="control-label goal-set-mid-label"><?=
-                                __("開始") ?></label>
+                                __("Start") ?></label>
 
                             <p class="form-control-static"
                                id="KeyResult0StartDateDefault_<?= $kr_id ?>">
@@ -190,7 +190,7 @@
                                         &nbsp;&nbsp;<a href="#" class="target-show-target-del"
                                                        show-target-id="KeyResult0StartDateInputWrap_<?= $kr_id ?>"
                                                        delete-target-id="KeyResult0StartDateDefault_<?= $kr_id ?>">
-                                            <?= __("変更") ?></a>
+                                            <?= __("Change") ?></a>
                                     </span>
                             </p>
 
@@ -225,7 +225,7 @@
                 $this->Form->input('priority', [
                     'before'                   => '<h5 class="modal-key-result-headings">' . __(
                                                                                                  "Weight") . '<span class="modal-key-result-headings-description">' . __(
-                                                                                                                                                                       "ゴールにとってこの成果の重要度") . '</span></h5>',
+                                                                                                                                                                       "Weight of Key Result for the Goal") . '</span></h5>',
                     'label'                    => false,
                     'type'                     => 'select',
                     'default'                  => 1,
@@ -239,7 +239,7 @@
         </div>
         <div class="modal-footer">
             <?=
-            $this->Form->submit(__("成果を更新"),
+            $this->Form->submit(__("Update Key Result"),
                                 ['class' => 'btn btn-primary', 'div' => false]) ?>
 
             <button type="button" class="btn btn-default" data-dismiss="modal"><?= __("Close") ?></button>

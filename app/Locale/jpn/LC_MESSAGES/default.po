@@ -2877,7 +2877,7 @@ msgstr "どのくらい？"
 #: View/Elements/Goal/modal_last_kr_confirm.ctp:36
 #: View/GoalApproval/done.ctp:114 View/GoalApproval/index.ctp:117
 #: View/Goals/add.ctp:191
-msgid "Final"
+msgid "Achieve point"
 msgstr "達成時"
 
 #: View/Elements/Goal/modal_add_key_result.ctp:124
@@ -2885,7 +2885,7 @@ msgstr "達成時"
 #: View/Elements/Goal/modal_last_kr_confirm.ctp:33
 #: View/GoalApproval/done.ctp:117 View/GoalApproval/index.ctp:120
 #: View/Goals/add.ctp:206
-msgid "Initial"
+msgid "Initial point"
 msgstr "開始時"
 
 #: View/Elements/Goal/modal_add_key_result.ctp:142
@@ -2911,23 +2911,23 @@ msgstr "変更"
 
 #: View/Elements/Goal/modal_add_key_result.ctp:224
 #: View/Elements/Goal/modal_edit_key_result.ctp:248
-msgid "Weight of Key Result for this goal"
+msgid "Weight of Key Result for the Goal"
 msgstr "ゴールにとってこの成果の重要度"
 
 #: View/Elements/Goal/modal_edit_action_result.ctp:20;80
-msgid "Change action"
-msgstr "アクションを変更"
+msgid "Edit Action"
+msgstr "アクションを編集"
 
 #: View/Elements/Goal/modal_edit_key_result.ctp:29;263
 msgid "Update Key Result"
-msgstr "成果を更新"
+msgstr "達成要素を更新"
 
 #: View/Elements/Goal/modal_edit_key_result.ctp:72
-msgid "Name"
-msgstr "成果名"
+msgid "KR name"
+msgstr "達成要素名"
 
 #: View/Elements/Goal/modal_edit_key_result.ctp:82 View/Goals/add.ctp:159
-msgid "eg. Increasing the internal market share of A"
+msgid "eg) Increasing the internal market share of A"
 msgstr "例）サービスAの国内市場シェアを増加させる"
 
 #: View/Elements/Goal/modal_goal_description.ctp:18
@@ -2943,11 +2943,11 @@ msgid "Unit: %s"
 msgstr "単位: %s"
 
 #: View/Elements/Goal/modal_goal_description.ctp:81
-msgid "Final: %s"
+msgid "Achieve point: %s"
 msgstr "達成時: %s"
 
 #: View/Elements/Goal/modal_goal_description.ctp:82
-msgid "Initial: %s"
+msgid "Initial point: %s"
 msgstr "開始時: %s"
 
 #: View/Elements/Goal/modal_last_kr_confirm.ctp:19
@@ -2955,7 +2955,7 @@ msgid "Did you achieve the goal?"
 msgstr "ゴールを達成しましたか？"
 
 #: View/Elements/Goal/modal_last_kr_confirm.ctp:30
-msgid "Current"
+msgid "Current point"
 msgstr "現在値"
 
 #: View/Elements/Goal/modal_last_kr_confirm.ctp:57
@@ -2963,7 +2963,7 @@ msgid "Achieve the goal"
 msgstr "ゴール達成"
 
 #: View/Elements/Goal/modal_related_kr_list.ctp:18
-msgid "Key result list of already completed"
+msgid "List of completed KRs"
 msgstr "完了済のキーリザルト一覧"
 
 #: View/Elements/Goal/my_goal_area_items.ctp:61
@@ -2992,23 +2992,20 @@ msgstr "一括登録"
 
 #: View/Elements/Team/batch_setup.ctp:21
 msgid ""
-"Batch processing the registration and updating of team members in the CSV "
+"Managed registration and update of team members by CSV."
 "file."
 msgstr "チームメンバーの登録や更新をCSVで一括処理します。"
 
 #: View/Elements/Team/batch_setup.ctp:23
 #: View/Elements/Team/final_evaluation.ctp:35
 msgid ""
-"Please upload the updated CSV file after you have entered in accordance with "
-"the format to download the file."
+"Download CSV. After editing, upload it."
 msgstr ""
 "ファイルをダウンロードし、フォーマットに従って入力したあと、更新済みのCSVファ"
 "イルをアップロードしてください。"
 
 #: View/Elements/Team/batch_setup.ctp:26
-msgid ""
-"Already a member of the registered will be data update. The new members are "
-"registered in addition, invitations will be sent."
+msgid "Existing accounts will be updated. Non-registered members will be registered and get an invitation email."
 msgstr ""
 "すでに登録済のメンバーはデータ更新され、新規のメンバーは追加で登録され、招待"
 "メールが送信されます。"
@@ -3019,7 +3016,7 @@ msgid "This function can be used only by PC."
 msgstr "本機能はPCにてご利用できます。"
 
 #: View/Elements/Team/batch_setup.ctp:50
-msgid "Updated information of members"
+msgid "Update members information"
 msgstr "メンバーの情報を更新"
 
 #: View/Elements/Team/confirm_to_inactive_goal_category_modal.ctp:17
@@ -3027,16 +3024,16 @@ msgid "Confirm to delete goal category"
 msgstr "ゴールカテゴリ削除の確認"
 
 #: View/Elements/Team/confirm_to_inactive_goal_category_modal.ctp:21
-msgid "When you delete a goal category , it does not affect the historical data."
+msgid "Even if you delete a goal category, there is no affection to the past data."
 msgstr "ゴールカテゴリを削除しても、過去のデータには影響ありません。"
 
 #: View/Elements/Team/confirm_to_inactive_goal_category_modal.ctp:23
 #: View/Elements/Team/confirm_to_inactive_score_modal.ctp:23
-msgid "In the future, you will not be able to newly selected."
+msgid "After deleting, you can't select it."
 msgstr "今後、新規に選択はできなくなります。"
 
 #: View/Elements/Team/confirm_to_inactive_goal_category_modal.ctp:25
-msgid "Are you sure you want to delete the goal category?"
+msgid "Do you really want to delete the goal category?"
 msgstr "本当にこのゴールカテゴリを削除しますか？"
 
 #: View/Elements/Team/confirm_to_inactive_goal_category_modal.ctp:30
@@ -3049,15 +3046,15 @@ msgid "Confirm to delete the score"
 msgstr "スコア削除の確認"
 
 #: View/Elements/Team/confirm_to_inactive_score_modal.ctp:21
-msgid "When you delete a score , it does not affect the historical data."
-msgstr "スコアを削除すると、過去のデータには影響ありません。"
+msgid "Even if you delete a score, there is no affection to the past data."
+msgstr "スコアを削除しても、過去のデータには影響ありません。"
 
 #: View/Elements/Team/confirm_to_inactive_score_modal.ctp:25
-msgid "Are you sure you want to delete this score definition?"
+msgid "Do you really want to delete this score definition?"
 msgstr "本当にこのスコア定義を削除しますか？"
 
 #: View/Elements/Team/edit_basic_setting.ctp:14 View/Teams/settings.ctp:19
-msgid "Basic setting"
+msgid "Basic settings"
 msgstr "基本設定"
 
 #: View/Elements/Team/edit_basic_setting.ctp:34
@@ -3066,7 +3063,7 @@ msgid "Team Name"
 msgstr "チーム名"
 
 #: View/Elements/Team/edit_basic_setting.ctp:35 View/Teams/add.ctp:37
-msgid "eg. Team Goal"
+msgid "eg. Team Goalous"
 msgstr "例) チームGoalous"
 
 #: View/Elements/Team/edit_basic_setting.ctp:43 View/Teams/add.ctp:45
@@ -3082,7 +3079,7 @@ msgid "You can use Goalous free of charge until 31 Aug 2016."
 msgstr "2016年8月31日まで無料でご利用いただけます。"
 
 #: View/Elements/Team/edit_basic_setting.ctp:112
-msgid "Change basic settings."
+msgid "Change basic settings"
 msgstr "基本設定を更新"
 
 #: View/Elements/Team/edit_basic_setting.ctp:116
@@ -3098,7 +3095,7 @@ msgstr ""
 "除されます。よろしいですか？\\nよろしければ \"OK\" ボタンを押してください。"
 
 #: View/Elements/Team/edit_term_setting.ctp:25 View/Teams/settings.ctp:20
-msgid "Time period settings."
+msgid "Term settings"
 msgstr "期間設定"
 
 #: View/Elements/Team/edit_term_setting.ctp:50
@@ -3106,7 +3103,7 @@ msgid "Items for change."
 msgstr "変更適用対象"
 
 #: View/Elements/Team/edit_term_setting.ctp:66
-msgid "This time period cannot be changed during the evaluation period."
+msgid "Current term can't be changed during the evaluation period."
 msgstr "評価期間中は今期の変更ができません。"
 
 #: View/Elements/Team/edit_term_setting.ctp:73
@@ -3115,7 +3112,7 @@ msgid "Timezone"
 msgstr "タイムゾーン"
 
 #: View/Elements/Team/edit_term_setting.ctp:83 View/Teams/add.ctp:111
-msgid "Start date."
+msgid "Start date"
 msgstr "開始月"
 
 #: View/Elements/Team/edit_term_setting.ctp:89 View/Teams/add.ctp:117
@@ -3123,27 +3120,27 @@ msgid "Please select the standard start month."
 msgstr "基準となる期の開始月を選択して下さい。"
 
 #: View/Elements/Team/edit_term_setting.ctp:103
-msgid "Last term."
-msgstr "前期の期間"
+msgid "Last term before changed"
+msgstr "現在の前期の期間"
 
 #: View/Elements/Team/edit_term_setting.ctp:116
-msgid "Current term."
+msgid "Current term"
 msgstr "現在の今期の期間"
 
 #: View/Elements/Team/edit_term_setting.ctp:129
-msgid "Next term."
+msgid "Next term"
 msgstr "現在の来期の期間"
 
 #: View/Elements/Team/edit_term_setting.ctp:141
-msgid "New this term."
+msgid "Current term after changed"
 msgstr "更新後の今期の期間"
 
 #: View/Elements/Team/edit_term_setting.ctp:148
-msgid "Next term after change."
+msgid "Next term after changed"
 msgstr "更新後の来期の期間"
 
 #: View/Elements/Team/edit_term_setting.ctp:160
-msgid "Change term settings."
+msgid "Change term settings"
 msgstr "期間設定を更新"
 
 #: View/Elements/Team/eval_progress_item.ctp:25

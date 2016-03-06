@@ -32,8 +32,9 @@
                 <?php if ($this->Session->read('ua.device_type') == 'Desktop'): ?>
                     <p class="form-control-static"><?= __("このセクションでは最終評価をCSVにて行う事ができます。") ?></p>
 
-                    <p class="form-control-static"><?= __(
-                                                           "ファイルをダウンロードし、フォーマットに従って入力したあと、更新済みのCSVファイルをアップロードしてください。") ?></p>
+                    <p class="form-control-static">
+                        <?= __("Download CSV. After editting, upload it.") ?>
+                    </p>
 
                     <p class="form-control-static"><?= __("") ?></p>
 
@@ -43,7 +44,7 @@
 
                     <p class="form-control-static"><?= __("") ?></p>
                 <?php else: ?>
-                    <p class="form-control-static"><?= __("本機能はPCにてご利用できます。") ?></p>
+                    <p class="form-control-static"><?= __("This function can be used only by PC.") ?></p>
                 <?php endif; ?>
             </div>
         </div>
