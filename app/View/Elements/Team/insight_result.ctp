@@ -13,14 +13,14 @@
         <?= $this->element('Team/insight_item', [
             'item_id'           => 'user_count_item',
             'item_value'        => $insight['user_count'],
-            'item_label'        => __('メンバー（アクティブ）'),
+            'item_label'        => __('Member(Active)'),
             'item_cmp_percent'  => isset($insight['user_count_cmp']) ? $insight['user_count_cmp'] : null,
         ]) ?>
 
         <?= $this->element('Team/insight_item', [
             'item_id'           => 'access_user_count_item',
             'item_value'        => $insight['access_user_count'],
-            'item_label'        => __('ログインメンバー'),
+            'item_label'        => __('Members of logged in'),
             'item_cmp_percent'  => isset($insight['access_user_count_cmp']) ? $insight['access_user_count_cmp'] : null,
         ]) ?>
     </div>
@@ -29,8 +29,8 @@
 
     <?= $this->Form->select('unique',
                             [
-                                'total'  => __('トータル'),
-                                'unique' => __('ユニーク'),
+                                'total'  => __('Total'),
+                                'unique' => __('Unique'),
                             ], [
                                 'id'    => 'InsightUniqueToggle',
                                 'class' => 'form-control',
@@ -52,7 +52,7 @@
         <?= $this->element('Team/insight_item', [
             'item_id'           => 'like_count_item',
             'item_value'        => $insight['like_count'],
-            'item_label'        => __('いいね'),
+            'item_label'        => __('Like!'),
             'item_cmp_percent'  => isset($insight['like_count_cmp']) ? $insight['like_count_cmp'] : null,
         ]) ?>
         <?= $this->element('Team/insight_item', [
@@ -85,7 +85,7 @@
         <?= $this->element('Team/insight_item', [
             'item_id'           => 'like_user_count_item',
             'item_value'        => $insight['like_user_count'],
-            'item_label'        => __('いいね'),
+            'item_label'        => __('Like!'),
             'item_cmp_percent'  => isset($insight['like_user_count_cmp']) ? $insight['like_user_count_cmp'] : null,
         ]) ?>
         <?= $this->element('Team/insight_item', [
@@ -120,7 +120,7 @@
         <?= $this->element('Team/insight_item', [
             'item_id'           => 'like_user_percent_item',
             'item_value'        => $insight['like_user_percent'] . ' %',
-            'item_label'        => __('いいね'),
+            'item_label'        => __('Like!'),
             'item_cmp_percent'  => isset($insight['like_user_percent_cmp']) ? $insight['like_user_percent_cmp'] : null,
         ]) ?>
         <?= $this->element('Team/insight_item', [

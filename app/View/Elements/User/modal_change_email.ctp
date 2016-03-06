@@ -15,7 +15,7 @@
             <div class="modal-header">
                 <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
                     <span class="close-icon">&times;</span></button>
-                <h4 class="modal-title"><?= __("メールアドレスの変更") ?></h4>
+                <h4 class="modal-title"><?= __("Change email address") ?></h4>
             </div>
             <?=
             $this->Form->create('User', [
@@ -33,13 +33,13 @@
                 'id'            => 'ChangeEmail',
             ]); ?>
             <div class="modal-body">
-                <p><?= __("変更後にメールアドレス宛に認証用のメールが届きます。") ?></p>
+                <p><?= __("Finished to change, you'll get confirmation email.") ?></p>
 
-                <p><?= __("メールに掲載されている確認URLを開くと変更が完了します。") ?></p>
+                <p><?= __("Please open confirmation link on Email.") ?></p>
                 <?=
                 $this->Form->input('email', [
-                    'label'                        => __("新しいメールアドレス"),
-                    'placeholder'                  => __("hiroshi@example.com"),
+                    'label'                        => __("New email address"),
+                    'placeholder'                  => __("tom@example.com"),
                     'data-bv-stringlength'         => 'true',
                     'data-bv-stringlength-max'     => 200,
                     'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 200),
@@ -51,12 +51,12 @@
                 ]) ?>
                 <?=
                 $this->Form->input('password_request2', [
-                    'label' => __("パスワード入力"),
+                    'label' => __("Input your password"),
                     'type'  => 'password',
                 ]) ?>
             </div>
             <div class="modal-footer modal_pannel-footer">
-                <?= $this->Form->submit(__("認証メールを送信"),
+                <?= $this->Form->submit(__("Send confirmation email"),
                                         ['class' => 'btn btn-primary pull-right', 'disabled' => 'disabled']) ?>
                 <div class="pull-right">
                     <button type="button" class="btn btn-link design-cancel mr_8px bd-radius_4px" data-dismiss="modal">

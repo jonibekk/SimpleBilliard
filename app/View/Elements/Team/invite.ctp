@@ -12,7 +12,7 @@
 ?>
 <!-- START app/View/Elements/Team/invite.ctp -->
 <div class="panel panel-default">
-    <div class="panel-heading"><?= __("新しいメンバーを招待") ?></div>
+    <div class="panel-heading"><?= __("Invite ne members") ?></div>
     <?=
     $this->Form->create('Team', [
         'inputDefaults' => [
@@ -40,7 +40,7 @@
         <hr>
         <?=
         $this->Form->input('emails', [
-            'label'                    => __("招待するメンバーのメールアドレス"),
+            'label'                    => __("Email address"),
             'type'                     => 'text',
             'rows'                     => 3,
             'data-bv-stringlength'         => 'true',
@@ -48,11 +48,11 @@
             'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 2000),
             "data-bv-notempty-message" => __("入力必須項目です。"),
             'afterInput'               => '<span class="help-block">'
-                . '<p class="font_11px">' . __("メールアドレスはカンマ( , )区切り、もしくは改行区切りで複数指定可能です。") . '</p>'
-                . '<ul class="example-indent font_11px"><li>' . __("例%s",
+                . '<p class="font_11px">' . __("You can set email addresses by comma(,) separated or by newline separated.") . '</p>'
+                . '<ul class="example-indent font_11px"><li>' . __("eg. %s",
                                                                     1) . ' aaa@example.com,bbb@example.com</li></ul>'
                 . '<ul class="example-indent font_11px"><li>'
-                . '' . __("例%s", 2) . ' aaa@example.com</br>'
+                . '' . __("eg. %s", 2) . ' aaa@example.com</br>'
                 . 'aaa@example.com</br>'
                 . '</li></ul>'
                 . '</span>'
@@ -60,25 +60,25 @@
         <hr>
         <?=
         $this->Form->input('comment', [
-            'label'      => __("コメント(オプション)"),
+            'label'      => __("Comment(optional)"),
             'type'       => 'text',
             'rows'       => 3,
             'data-bv-stringlength'         => 'true',
             'data-bv-stringlength-max'     => 2000,
             'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 2000),
             'afterInput' => '<span class="help-block font_11px">' . __(
-                                                                        "コメント(任意)はメールの本文に追加されます。") . '</span>'
+                                                                        "Comment will be added to the body of the invitation email.") . '</span>'
         ]) ?>
     </div>
     <div class="panel-footer">
         <div class="row">
             <div class="col-sm-9 col-sm-offset-3">
                 <?=
-                $this->Form->submit(__("招待メールを送信"),
+                $this->Form->submit(__("Send an invitation email"),
                                     ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
                 <?php if (isset($from_setting) && !$from_setting): ?>
                     <?=
-                    $this->Html->link(__("スキップ"), "/",
+                    $this->Html->link(__("Skip"), "/",
                                       ['class' => 'btn btn-default', 'div' => false]) ?>
                 <?php endif; ?>
             </div>

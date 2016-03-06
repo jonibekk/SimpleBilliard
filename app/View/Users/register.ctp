@@ -27,8 +27,8 @@
             <div class="panel-body register-panel-body">
                 <?php //姓と名は言語によって表示順を変える
                 $last_name = $this->Form->input('last_name', [
-                    'label'                        => __("姓(ローマ字)"),
-                    'placeholder'                  => __("例) Suzuki"),
+                    'label'                        => __("Last Name"),
+                    'placeholder'                  => __("eg. Jobs"),
                     "pattern"                      => '^[a-zA-Z]+$',
                     "data-bv-regexp-message"       => __("アルファベットのみで入力してください。"),
                     "data-bv-notempty-message"     => __("入力必須項目です。"),
@@ -37,8 +37,8 @@
                     'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 128),
                 ]);
                 $first_name = $this->Form->input('first_name', [
-                    'label'                        => __("名(ローマ字)"),
-                    'placeholder'                  => __("例) Hiroshi"),
+                    'label'                        => __("First Name"),
+                    'placeholder'                  => __("Harry"),
                     "pattern"                      => '^[a-zA-Z]+$',
                     "data-bv-regexp-message"       => __("アルファベットのみで入力してください。"),
                     "data-bv-notempty-message"     => __("入力必須項目です。"),
@@ -58,7 +58,7 @@
                 <hr>
                 <?php if (isset($email)): ?>
                     <div class="form-group">
-                        <label for="" class="col col-sm-3 control-label form-label"><?= __("メール") ?></label>
+                        <label for="" class="col col-sm-3 control-label form-label"><?= __("Email") ?></label>
 
                         <div class="col col-sm-6">
                             <p class="form-control-static"><?= h($email) ?></p>
@@ -69,8 +69,8 @@
                 <?php else: ?>
                     <?=
                     $this->Form->input('Email.0.email', [
-                        'label'                        => __("メール"),
-                        'placeholder'                  => __("hiroshi@example.com"),
+                        'label'                        => __("Email"),
+                        'placeholder'                  => __("tom@example.com"),
                         "data-bv-notempty"             => "false",
                         'data-bv-emailaddress'         => "false",
                         "data-bv-callback"             => "true",
@@ -85,7 +85,7 @@
                 <?=
                 $this->Form->input('update_email_flg', [
                     'wrapInput' => 'col col-sm-9 col-sm-offset-3',
-                    'label'     => ['class' => null, 'text' => __("Goalousからのメールによるニュースや更新情報などを受け取る。")],
+                    'label'     => ['class' => null, 'text' => __("I receive the news and updates by email from Goalous.")],
                     'class'     => false,
                     'default'   => true,
                 ]) ?>
@@ -93,14 +93,14 @@
                 <?=
                 $this->Form->input('password', [
                     'label'                    => __("パスワードを作成"),
-                    'placeholder'              => __('8文字以上'),
+                    'placeholder'              => __('Use at least 8 characters and use a mix of capital characters, small characters and numbers. Symbols are not allowed.'),
                     "data-bv-notempty-message" => __("入力必須項目です。"),
                     'type'                     => 'password',
                     'maxlength'                => 50,
                 ]) ?>
                 <?=
                 $this->Form->input('password_confirm', [
-                    'label'                    => __("パスワードを再入力"),
+                    'label'                    => __("Confirm your password"),
                     "data-bv-notempty-message" => __("入力必須項目です。"),
                     'type'                     => 'password',
                     'maxlength'                => 50,

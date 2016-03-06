@@ -41,11 +41,11 @@
         </div>
         <?php if ($isFrozens[$selected_term_name]): ?>
             <div class="col-sm-12 bg-danger font_bold p_8px mb_8px">
-                <?= __("評価は凍結されています。") ?></div>
+                <?= __("Evaluation is frozen.") ?></div>
         <?php else: ?>
             <?php if ((int)$incomplete_number_list[$selected_term_name]['my_eval'] + (int)$incomplete_number_list[$selected_term_name]['my_evaluatees'] > 0): ?>
                 <div class="col-sm-12 bg-danger font_bold p_8px mb_8px">
-                    <?= __("あと%s件の評価が完了しておりません。以下より評価を行なってください。",
+                    <?= __("%s evaluations have not completed. Evaluate them from the following.",
                             (int)$incomplete_number_list[$selected_term_name]['my_eval'] + (int)$incomplete_number_list[$selected_term_name]['my_evaluatees']) ?></div>
             <?php endif; ?>
         <?php endif; ?>
@@ -54,7 +54,7 @@
                 <div for="#" class="col col-xxs-12 eval-index-panel-title bg-lightGray p_8px mb_8px">
                     <p class="font_bold"><?= __("his/her") ?></p>
                     <?php if ((int)$incomplete_number_list[$selected_term_name]['my_eval'] > 0): ?>
-                        <p><?= __("未完了:1") ?></p>
+                        <p><?= __("Incomplete:1") ?></p>
                     <?php endif; ?>
                 </div>
                 <?= $this->element('Evaluation/index_items',
@@ -62,9 +62,9 @@
             <?php endif; ?>
             <?php if (!empty($my_evaluatees)): ?>
                 <div for="#" class="col col-xxs-12 eval-index-panel-title bg-lightGray p_8px mb_8px">
-                    <p class="font_bold"><?= __("あなたが評価するメンバー") ?></p>
+                    <p class="font_bold"><?= __("The member who you evaluate") ?></p>
                     <?php if ((int)$incomplete_number_list[$selected_term_name]['my_evaluatees'] > 0): ?>
-                        <p><?= __("未完了:%s",
+                        <p><?= __("Incomplete:%s",
                                    (int)$incomplete_number_list[$selected_term_name]['my_evaluatees']) ?></p>
                     <?php endif; ?>
                 </div>

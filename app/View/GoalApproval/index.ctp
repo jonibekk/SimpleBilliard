@@ -96,7 +96,7 @@
                                                                                                                        'User.photo',
                                                                                                                        ['style' => 'small'])]) ?></p>
 
-                            <p class="approval_body_text"><?= __("名前") ?>
+                            <p class="approval_body_text"><?= __("Name") ?>
                                 : <?= h($goal['User']['display_username']); ?></p>
 
                             <p class="approval_body_text"><?= __("カテゴリ") ?>

@@ -25,7 +25,7 @@
 ?>
 <!-- START app/View/Elements/Team/evaluation_score_setting.ctp -->
 <div class="panel panel-default">
-    <div class="panel-heading"><?= __("評価スコア定義") ?></div>
+    <div class="panel-heading"><?= __("Evaluation score settings") ?></div>
     <div class="panel-body form-horizontal">
         <?=
         $this->Form->create('EvaluateScore', [
@@ -42,10 +42,10 @@
         <table class="table table-striped" id="EvaluateScoreTable">
             <tr>
                 <th>
-                    <?php echo __('名前') ?>
+                    <?php echo __('Name') ?>
                 </th>
                 <th>
-                    <?php echo __('表示順') ?>
+                    <?php echo __('Display order') ?>
                 </th>
                 <th>
                     <?php echo __('Description') ?>
@@ -58,10 +58,10 @@
             <?php endforeach; ?>
         </table>
         <div class="form-group">
-            <?= $this->Form->submit(__('評価スコア設定を保存'), ['class' => 'btn btn-primary team-setting-add-goal-category']) ?>
+            <?= $this->Form->submit(__('Save evaluation score settings'), ['class' => 'btn btn-primary team-setting-add-goal-category']) ?>
             <?php $index = count($this->request->data['EvaluateScore']);
             $max_index = $index + 9; ?>
-            <?= $this->Html->link(__("定義を１つ追加"), ['controller' => 'teams', 'action' => 'ajax_get_score_elm'],
+            <?= $this->Html->link(__("Add definition"), ['controller' => 'teams', 'action' => 'ajax_get_score_elm'],
                                   ['id' => 'AddScoreButton', 'target-selector' => '#EvaluateScoreTable > tbody', 'index' => $index, 'max_index' => $max_index, 'class' => 'btn btn-default']) ?>
         </div>
         <?php for ($i = $index; $i <= $max_index; $i++): ?>

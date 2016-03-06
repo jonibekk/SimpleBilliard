@@ -41,7 +41,7 @@
 
                 <?=
                 $this->Form->input('password', [
-                    'label'    => __("パスワード"),
+                    'label'    => __("Password"),
                     'type'     => 'password',
                     'required' => false,
                     'value'    => ''

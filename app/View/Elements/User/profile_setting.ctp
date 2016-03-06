@@ -15,7 +15,7 @@
 <!-- START app/View/Elements/User/profile_setting.ctp -->
 <div id="profile">
     <div class="panel panel-default">
-        <div class="panel-heading"><?= __("プロフィール") ?></div>
+        <div class="panel-heading"><?= __("Profile") ?></div>
         <?=
         $this->Form->create('User', [
             'inputDefaults' => [
@@ -36,16 +36,16 @@
                 //ローカル名を使う国のみ表示
                 //姓と名は言語によって表示順を変える
                 $local_last_name = $this->Form->input('LocalName.0.last_name', [
-                    'label'                        => __("姓(%s)", $language_name),
-                    'placeholder'                  => __("例) 鈴木"),
+                    'label'                        => __("Last Name(%s)", $language_name),
+                    'placeholder'                  => __("eg. Jobs"),
                     'required'                     => false,
                     'data-bv-stringlength'         => 'true',
                     'data-bv-stringlength-max'     => 128,
                     'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 128),
                 ]);
                 $local_first_name = $this->Form->input('LocalName.0.first_name', [
-                    'label'                        => __("名(%s)", $language_name),
-                    'placeholder'                  => __("例) 太郎"),
+                    'label'                        => __("First Name(%s)", $language_name),
+                    'placeholder'                  => __("eg. Bruce"),
                     'required'                     => false,
                     'data-bv-stringlength'         => 'true',
                     'data-bv-stringlength-max'     => 128,
@@ -66,8 +66,8 @@
             ?>
             <?php //姓と名は言語によって表示順を変える
             $last_name = $this->Form->input('last_name', [
-                'label'                        => __("姓(ローマ字)"),
-                'placeholder'                  => __("例) Suzuki"),
+                'label'                        => __("Last Name"),
+                'placeholder'                  => __("eg. Armstrong"),
                 "pattern"                      => '^[a-zA-Z]+$',
                 "data-bv-regexp-message"       => __("アルファベットのみで入力してください。"),
                 "data-bv-notempty-message"     => __("入力必須項目です。"),
@@ -76,8 +76,8 @@
                 'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 128),
             ]);
             $first_name = $this->Form->input('first_name', [
-                'label'                        => __("名(ローマ字)"),
-                'placeholder'                  => __("例) Hiroshi"),
+                'label'                        => __("First Name"),
+                'placeholder'                  => __("eg. Harry"),
                 "pattern"                      => '^[a-zA-Z]+$',
                 "data-bv-regexp-message"       => __("アルファベットのみで入力してください。"),
                 "data-bv-notempty-message"     => __("入力必須項目です。"),
@@ -112,18 +112,18 @@
                 ->input('birth_day',
                         [
                             'monthNames' => [
-                                '01' => __('1月'),
-                                '02' => __('2月'),
-                                '03' => __('3月'),
-                                '04' => __('4月'),
-                                '05' => __('5月'),
-                                '06' => __('6月'),
-                                '07' => __('7月'),
-                                '08' => __('8月'),
-                                '09' => __('9月'),
-                                '10' => __('10月'),
-                                '11' => __('11月'),
-                                '12' => __('12月'),
+                                '01' => __('Jan'),
+                                '02' => __('Feb'),
+                                '03' => __('Mar'),
+                                '04' => __('Apr'),
+                                '05' => __('May'),
+                                '06' => __('Jun'),
+                                '07' => __('Jul'),
+                                '08' => __('Aug'),
+                                '09' => __('Sep'),
+                                '10' => __('Oct'),
+                                '11' => __('Nov'),
+                                '12' => __('Dec'),
                             ],
                             'class'      => 'form-control inline-fix setting_input-design',
                             'label'      => __('Birthday'),
@@ -139,15 +139,15 @@
             $this->Form->input('hide_year_flg', [
                 'wrapInput' => 'col col-sm-9 col-sm-offset-3',
                 'type'      => 'checkbox',
-                'label'     => ['class' => null, 'text' => __("生年を隠す。")],
+                'label'     => ['class' => null, 'text' => __("Hide birth year")],
                 'class'     => false,
             ])
             ?>
             <hr>
             <?=
             $this->Form->input('hometown', [
-                'label'                        => __("出身地"),
-                'placeholder'                  => __('例) 東京都'),
+                'label'                        => __("Birthplace"),
+                'placeholder'                  => __('eg. Tokyo'),
                 'required'                     => false,
                 'data-bv-stringlength'         => 'true',
                 'data-bv-stringlength-max'     => 128,
@@ -156,7 +156,9 @@
             ?>
             <hr>
             <div class="form-group">
-                <label for="" class="col col-sm-3 control-label form-label"><?= __("プロフィール画像") ?></label>
+                <label for="" class="col col-sm-3 control-label form-label">
+                <?= __("Profile Image") ?>
+                </label>
 
                 <div class="col col-sm-6">
                     <div class="fileinput fileinput-new" data-provides="fileinput">
@@ -200,9 +202,9 @@
             <hr>
             <div class="form-group">
                 <div class="col col-sm-3 control-label form-label">
-                    <label for="UserComment" class=""><?= __("自己紹介") ?></label>
+                    <label for="UserComment" class=""><?= __("About me") ?></label>
 
-                    <div class="label-addiction"><?= __("チーム内限定で共有されます。") ?></div>
+                    <div class="label-addiction"><?= __("It will be shared with members only in this team.") ?></div>
                 </div>
                 <div class="col col-sm-6">
                     <?php if (isset($this->request->data['TeamMember'][0]['id'])): ?>
@@ -221,25 +223,22 @@
                                         'value'                        => (isset($this->request->data['TeamMember'][0]['comment']) && !empty($this->request->data['TeamMember'][0]['comment']))
                                             ? $this->request->data['TeamMember'][0]['comment']
                                             : __(
-                                                  "【今、チームに貢献できることは？】\n\n【これからチームで実現してみたいことは？(具体的に)】\n\n【その他】\n\n")]
+                                                  "[What is that you can contribute to the team?]\n\n【[What is the thing you want to achieve in the team?(Specifically)]\n\n[Others]\n\n")]
                     )
                     ?>
                     <a href="#" class="target-show-this-del link-dark-gray" target-id="CommentHelp"><?= __(
-                                                                                                            "例文を表示") ?></a>
+                                                                                                            "Show Examples") ?></a>
                 <span class="help-block inline-block font_11px" id="CommentHelp" style="display: none">
                     <?= __("
-■ 例文１（技術者向け）<br>
-【今、チームに貢献できることは？】<br>
-スリムな開発環境の構築。オートスケール環境の構築。Git支援。<br><br>
-【これからチームで実現してみたいことは？(具体的に)】<br>
-iOS,Androidで100万ダウンロードされるアプリを開発する。<br><br>
-================================================<br>
-■ 例文2（技術者以外向け）<br>
-【今、チームに貢献できることは？】<br>
-社内の風通しを良くする事。<br><br>
-【これからチームで実現してみたいことは？(具体的に)】<br>
-地域活性化に貢献できるサービスを作り社会貢献をする事。
-<br>
+[Now, What is that you can contribute to the team?]<br>\n
+Consulting UX of your production.<br>\n
+[What is the thing you want to achieve in the team?(Specifically)]<br>\n
+Innovation methods - Remote collaboration - Creativity - UX at C-level - Holocracy<br>\n
+[Others]<br>\n
+Need New Customers?<br>\n
+1. Be focused on culture above all else, get happy employees.<br>\n
+2. Create a culture of innovation, team spirit, collaboration, creativity everywhere<br>\n
+3. Simplify everything
 ") ?>
                 </span>
                 </div>

@@ -15,7 +15,7 @@
             <div class="modal-header">
                 <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
                     <span class="close-icon">&times;</span></button>
-                <h4 class="modal-title"><?= __("パスワードの変更") ?></h4>
+                <h4 class="modal-title"><?= __("Change password") ?></h4>
             </div>
             <?=
             $this->Form->create('User', [
@@ -35,22 +35,22 @@
             <div class="modal-body">
                 <?=
                 $this->Form->input('old_password', [
-                    'label'     => __("現在のパスワード"),
+                    'label'     => __("Current password"),
                     'type'      => 'password',
                     'required'  => true,
                     'maxlength' => 50,
                 ]) ?>
                 <?=
                 $this->Form->input('password', [
-                    'label'       => __("新しいパスワード"),
-                    'placeholder' => __('8文字以上'),
+                    'label'       => __("New password"),
+                    'placeholder' => __('Use at least 8 characters and use a mix of capital characters, small characters and numbers. Symbols are not allowed.'),
                     'type'        => 'password',
                     'required'    => true,
                     'maxlength'   => 50,
                 ]) ?>
                 <?=
                 $this->Form->input('password_confirm', [
-                    'label'     => __("パスワードを再入力"),
+                    'label'     => __("Confirm your password"),
                     'type'      => 'password',
                     'required'  => true,
                     'maxlength' => 50,

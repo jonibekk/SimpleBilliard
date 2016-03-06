@@ -2436,7 +2436,7 @@ msgid "Create a new goal"
 msgstr "あたらしいゴールをつくる"
 
 #: View/Elements/my_goals_area.ctp:97
-msgid "Unevaluated in the last term"
+msgid "Unevaluated in the previous term"
 msgstr "前期の未評価のあなたのゴール"
 
 #: View/Elements/public_circle_item.ctp:63
@@ -3120,7 +3120,7 @@ msgid "Please select the standard start month."
 msgstr "基準となる期の開始月を選択して下さい。"
 
 #: View/Elements/Team/edit_term_setting.ctp:103
-msgid "Last term before changed"
+msgid "Previous term before changed"
 msgstr "現在の前期の期間"
 
 #: View/Elements/Team/edit_term_setting.ctp:116
@@ -3180,7 +3180,7 @@ msgid "Please enter a number."
 msgstr "数字を入力してください。"
 
 #: View/Elements/Team/eval_score_form_elm.ctp:72
-msgid "Please describe the description of the definition."
+msgid "Please explain the definition."
 msgstr "定義の説明を書きましょう"
 
 #: View/Elements/Team/evaluation_freeze.ctp:28
@@ -3188,219 +3188,219 @@ msgid "Paused evaluation settings."
 msgstr "評価凍結設定"
 
 #: View/Elements/Team/evaluation_freeze.ctp:35
-msgid "Resume this term's evaluations."
+msgid "Resume current term evaluations."
 msgstr "今期の評価の凍結を解除する"
 
 #: View/Elements/Team/evaluation_freeze.ctp:38
-msgid "Would you like to resume this term's evaluations?"
+msgid "Would you like to resume current term evaluations?"
 msgstr "今期の評価の凍結を解除します。よろしいですか？"
 
 #: View/Elements/Team/evaluation_freeze.ctp:41
-msgid "Pause this terms evaluations."
+msgid "Pause this term evaluations."
 msgstr "今期の評価を凍結する"
 
 #: View/Elements/Team/evaluation_freeze.ctp:44
-msgid "Would you like to pause this term's evaluations?"
+msgid "Would you like to pause this term evaluations?"
 msgstr "今期の評価を凍結します。よろしいですか？"
 
 #: View/Elements/Team/evaluation_freeze.ctp:52
-msgid "Resume last term's evaluations."
+msgid "Resume previous term evaluations."
 msgstr "前期の評価の凍結を解除する"
 
 #: View/Elements/Team/evaluation_freeze.ctp:55
-msgid "Would you like to resume last term's evaluations?"
+msgid "Would you like to resume previous term evaluations?"
 msgstr "前期の評価の凍結を解除します。よろしいですか？"
 
 #: View/Elements/Team/evaluation_freeze.ctp:58
-msgid "Pause last term's evaulations."
+msgid "Pause previous term evaluations."
 msgstr "前期の評価を凍結する"
 
 #: View/Elements/Team/evaluation_freeze.ctp:61
-msgid "Would you like to pause last term's evaulations?"
+msgid "Would you like to pause previous term evaluations?"
 msgstr "前期の評価を凍結します。よろしいですか？"
 
 #: View/Elements/Team/evaluation_progress.ctp:27 View/Teams/settings.ctp:29
-msgid "Evaluation status."
+msgid "Evaluation status"
 msgstr "評価状況"
 
 #: View/Elements/Team/evaluation_score_setting.ctp:28
-msgid "Evaluation score rules."
-msgstr "評価スコア定義"
+msgid "Evaluation score settings
+msgstr "評価スコア設定"
 
 #: View/Elements/Team/evaluation_score_setting.ctp:61
-msgid "Save evaluation score settings."
+msgid "Save evaluation score settings"
 msgstr "評価スコア設定を保存"
 
 #: View/Elements/Team/evaluation_score_setting.ctp:64
-msgid "Add definition."
+msgid "Add definition"
 msgstr "定義を１つ追加"
 
 #: View/Elements/Team/evaluation_setup.ctp:28 View/Teams/settings.ctp:24
-msgid "Evaluation settings."
+msgid "Evaluation settings"
 msgstr "評価設定"
 
 #: View/Elements/Team/evaluation_setup.ctp:46
-msgid "Evaluate."
+msgid "Evaluate"
 msgstr "評価する"
 
 #: View/Elements/Team/evaluation_setup.ctp:50
-msgid "Personal evaluation."
+msgid "Self evaluation"
 msgstr "自己評価"
 
 #: View/Elements/Team/evaluation_setup.ctp:54
-msgid "Personal evaluation goal score."
+msgid "Self evaluation goal score"
 msgstr "自己評価ゴールスコア"
 
 #: View/Elements/Team/evaluation_setup.ctp:58
-msgid "Personal evaluation goal score required."
+msgid "Self evaluation goal score required"
 msgstr "自己評価ゴールスコア必須"
 
 #: View/Elements/Team/evaluation_setup.ctp:62
-msgid "Personal evaluation goal comment."
+msgid "Self evaluation goal comment"
 msgstr "自己評価 ゴール コメント"
 
 #: View/Elements/Team/evaluation_setup.ctp:66
-msgid "Personal evaluation goal comment required."
+msgid "Self evaluation goal comment required"
 msgstr "自己評価 ゴール コメント必須"
 
 #: View/Elements/Team/evaluation_setup.ctp:70
-msgid "Personal evaluation total score."
+msgid "Self evaluation total score"
 msgstr "自己評価 トータル スコア"
 
 #: View/Elements/Team/evaluation_setup.ctp:74
-msgid "Personal evaluation total score required."
+msgid "Self evaluation total score required"
 msgstr "自己評価 トータル スコア 必須"
 
 #: View/Elements/Team/evaluation_setup.ctp:78
-msgid "Personal evaluation total comment."
+msgid "Self evaluation total comment"
 msgstr "自己評価 トータル コメント"
 
 #: View/Elements/Team/evaluation_setup.ctp:82
-msgid "Personal evaluation total comment required. "
+msgid "Self evaluation total comment required"
 msgstr "自己評価 トータル コメント 必須"
 
 #: View/Elements/Team/evaluation_setup.ctp:86
-msgid "Evaluator's evaluation."
+msgid "Evaluation by Evaluator"
 msgstr "評価者評価"
 
 #: View/Elements/Team/evaluation_setup.ctp:90
-msgid "Evaluator's evaluation goal score."
+msgid "Evaluation goal score by Evaluator"
 msgstr "評価者評価 ゴール スコア"
 
 #: View/Elements/Team/evaluation_setup.ctp:94
-msgid "Evaluator's evaluation goal score required."
+msgid "Evaluation goal score by Evaluator required"
 msgstr "評価者評価 ゴール スコア必須"
 
 #: View/Elements/Team/evaluation_setup.ctp:98
-msgid "Evaluator's evaluation goal comment. "
+msgid "Evaluation goal comment by Evaluator"
 msgstr "評価者評価 ゴール コメント"
 
 #: View/Elements/Team/evaluation_setup.ctp:102
-msgid "Evaluator's evaluation goal comment required."
+msgid "Evaluation goal comment by Evaluator required"
 msgstr "評価者評価 ゴール コメント必須"
 
 #: View/Elements/Team/evaluation_setup.ctp:106
-msgid "Evaluator's evaluation total score."
+msgid "Evaluation total score by Evaluator"
 msgstr "評価者評価 トータル スコア"
 
 #: View/Elements/Team/evaluation_setup.ctp:110
-msgid "Evaluator's evaluation total score quired."
+msgid "Evaluation total score by Evaluator required"
 msgstr "評価者評価 トータル スコア 必須"
 
 #: View/Elements/Team/evaluation_setup.ctp:114
-msgid "Evalutor's evaluation total comment."
+msgid "Evaluation total comment by Evaluator"
 msgstr "評価者評価 トータル コメント"
 
 #: View/Elements/Team/evaluation_setup.ctp:118
-msgid "Evaluator's evaluation total comment required."
+msgid "Evaluation total comment by Evaluator required"
 msgstr "評価者評価 トータル コメント 必須"
 
 #: View/Elements/Team/evaluation_setup.ctp:122
-msgid "Last evaluated person."
+msgid "Evaluation by Final Evaluator"
 msgstr "最終評価者評価"
 
 #: View/Elements/Team/evaluation_setup.ctp:126
-msgid "Final evaluated person's total score."
+msgid "Evaluation total score by Final Evaluator"
 msgstr "最終評価者評価 トータル スコア"
 
 #: View/Elements/Team/evaluation_setup.ctp:130
-msgid "Final evaluator's evaluation total score required."
+msgid "Evaluation total score by Final Evaluator required"
 msgstr "最終評価者評価 トータル スコア 必須"
 
 #: View/Elements/Team/evaluation_setup.ctp:134
-msgid "Final evaluator's evaluation total comment"
+msgid "Evaluation total comment by Final Evaluator"
 msgstr "最終評価者評価 トータル コメント"
 
 #: View/Elements/Team/evaluation_setup.ctp:138
-msgid "Final evaluator's evaluation total comment required."
+msgid "Evaluation total comment by Final Evaluator required"
 msgstr "最終評価者評価 トータル コメント 必須"
 
 #: View/Elements/Team/evaluation_setup.ctp:168
-msgid "Save evaluation settings."
+msgid "Save evaluation settings"
 msgstr "評価設定を保存"
 
 #: View/Elements/Team/evaluation_start.ctp:28 View/Teams/settings.ctp:26
-msgid "Begin evaluation."
+msgid "Begin evaluation"
 msgstr "評価開始"
 
 #: View/Elements/Team/evaluation_start.ctp:34
-msgid "This evaluation may start using the current settings."
+msgid "You can start evaluation with the current settings."
 msgstr "このセクションでは、現在の評価設定に基づき、評価を開始できます。"
 
 #: View/Elements/Team/evaluation_start.ctp:36
-msgid "Please take care. These settings cannot be undone. "
+msgid "Notice - These settings can't be canceled."
 msgstr "この設定は取り消すことができませんので気を付けてください。"
 
 #: View/Elements/Team/evaluation_start.ctp:40
-msgid "Current term."
-msgstr "今期の期間"
+msgid "Current term"
+msgstr "今期"
 
 #: View/Elements/Team/evaluation_start.ctp:49
-msgid "Evaluation cannot begin as no settings have been made."
-msgstr "現在、評価設定が有効では無い為、評価を開始する事ができません。"
+msgid "You need to active Evaluation settings before starting Evaluation."
+msgstr "評価設定が有効でないため、評価を開始することができません。"
 
 #: View/Elements/Team/evaluation_start.ctp:53
-msgid "In evaluation period."
+msgid "In evaluation term"
 msgstr "評価期間中です。"
 
 #: View/Elements/Team/evaluation_start.ctp:62
-msgid "Start this term's evaluations."
+msgid "Start current term evaluations"
 msgstr "今期の評価を開始する"
 
 #: View/Elements/Team/evaluation_start.ctp:64
-msgid "Unable to cancel. Proceed?"
+msgid "Unable to cancel. Do you really want to start evaluations?"
 msgstr "取り消しができません。よろしいですか？"
 
 #: View/Elements/Team/final_evaluation.ctp:26 View/Teams/settings.ctp:28
-msgid "Last evaluation."
+msgid "Final evaluation"
 msgstr "最終評価"
 
 #: View/Elements/Team/final_evaluation.ctp:33
-msgid "A CSV file can be created for this section."
-msgstr "このセクションでは最終評価をCSVにて行う事ができます。"
+msgid "Final evaluation is performed by CSV."
+msgstr "このセクションでは最終評価をCSVにて行うことができます。"
 
 #: View/Elements/Team/final_evaluation.ctp:57
-msgid "Perform last term's final evaluation."
+msgid "Perform final evaluation of previous term"
 msgstr "前期の最終評価を行う"
 
 #: View/Elements/Team/final_evaluation.ctp:60
-msgid "Perform this term's final evaluation."
+msgid "Perform final evaluation of current term"
 msgstr "今期の最終評価を行う"
 
 #: View/Elements/Team/goal_category_form_elm.ctp:50
-msgid "Please write a description of the goal category."
+msgid "Write a description of the goal category."
 msgstr "ゴールカテゴリの説明を書きましょう"
 
 #: View/Elements/Team/goal_category_setting.ctp:28 View/Teams/settings.ctp:23
-msgid "Goal category settings."
+msgid "Goal category settings"
 msgstr "ゴールカテゴリ設定"
 
 #: View/Elements/Team/goal_category_setting.ctp:60
-msgid "Add goal category."
-msgstr "ゴールカテゴリを１つ追加"
+msgid "Add a goal category"
+msgstr "ゴールカテゴリを追加"
 
 #: View/Elements/Team/goal_category_setting.ctp:63
-msgid "Save goal category settings."
+msgid "Save goal category settings"
 msgstr "ゴールカテゴリ設定を保存"
 
 #: View/Elements/Team/insight_circle_result.ctp:15
@@ -3519,21 +3519,20 @@ msgstr "ユニーク"
 
 #: View/Elements/Team/insight_result.ctp:55;88;123
 #: View/Elements/User/simplex_top_section.ctp:68
-msgid "Like"
-msgstr "いいね"
+msgid "Like!"
+msgstr "いいね！"
 
 #: View/Elements/Team/invite.ctp:15
 msgid "Invite new members"
 msgstr "新しいメンバーを招待"
 
 #: View/Elements/Team/invite.ctp:43
-msgid "Mail Address"
-msgstr "招待するメンバーのメールアドレス"
+msgid "Email Address"
+msgstr "メールアドレス"
 
 #: View/Elements/Team/invite.ctp:51
 msgid ""
-"Mail addresses are comma(,) separated, or is more that can be specified with "
-"a newline-separated."
+"You can set email addresses by comma(,) separated or by newline separated."
 msgstr ""
 "メールアドレスはカンマ( , )区切り、もしくは改行区切りで複数指定可能です。"
 
@@ -3547,10 +3546,10 @@ msgstr "コメント(オプション)"
 
 #: View/Elements/Team/invite.ctp:69
 msgid "Comments (optional) will be added to the body of the mail."
-msgstr "コメント(任意)はメールの本文に追加されます。"
+msgstr "Comment will be added to the body of the invitation email."
 
 #: View/Elements/Team/invite.ctp:77
-msgid "Send an invitation mail"
+msgid "Send an invitation email"
 msgstr "招待メールを送信"
 
 #: View/Elements/Team/invite.ctp:81 View/Users/add_profile.ctp:191
@@ -3558,12 +3557,12 @@ msgid "Skip"
 msgstr "スキップ"
 
 #: View/Elements/Team/modal_final_evaluation_by_csv.ctp:22
-msgid "Last evaluation (%s - %s)"
-msgstr "最終評価を行う (期間：%s - %s)"
+msgid "Final evaluation (%s - %s)"
+msgstr "最終評価 (期間：%s - %s)"
 
 #: View/Elements/Team/modal_final_evaluation_by_csv.ctp:47
-msgid "1. Download evaluation data."
-msgstr "1.評価データをダウンロード"
+msgid "Download evaluation data"
+msgstr "評価データをダウンロード"
 
 #: View/Elements/Team/modal_final_evaluation_by_csv.ctp:49
 msgid "Download and edit csv without any changes in header."
@@ -3572,7 +3571,7 @@ msgstr ""
 "は変更しないでください。"
 
 #: View/Elements/Team/modal_final_evaluation_by_csv.ctp:53
-msgid "Download evaluation data."
+msgid "Download evaluation data"
 msgstr "評価データをダウンロード"
 
 #: View/Elements/Team/modal_final_evaluation_by_csv.ctp:62
@@ -3588,17 +3587,15 @@ msgid "Account"
 msgstr "アカウント"
 
 #: View/Elements/User/account_setting.ctp:36 View/Users/register.ctp:61;72
-msgid "Mail"
+msgid "Email"
 msgstr "メール"
 
 #: View/Elements/User/account_setting.ctp:43
-msgid ""
-"Because the e-mail address of the authentication waiting is present, it can "
-"not be changed."
+msgid "Email address can't be changed because of the authentication."
 msgstr "認証待ちのメールアドレスが存在するため、変更はできません。"
 
 #: View/Elements/User/account_setting.ctp:44;61
-msgid "Change mail address"
+msgid "Change email address"
 msgstr "メールアドレスを変更する"
 
 #: View/Elements/User/account_setting.ctp:49
@@ -3606,15 +3603,15 @@ msgid "%s Authentication waiting currently."
 msgstr "現在、%sの認証待ちです。"
 
 #: View/Elements/User/account_setting.ctp:52
-msgid "Please check your mail for the confirmation sent to this mail address."
+msgid "Confirm the email sent to this email address."
 msgstr "このメールアドレスに送られた確認用のメールをご確認ください。"
 
 #: View/Elements/User/account_setting.ctp:54
-msgid "Cancel the mail address change."
+msgid "Cancel changing the email address"
 msgstr "メールアドレスの変更をキャンセルする"
 
 #: View/Elements/User/account_setting.ctp:70 View/Users/register.ctp:88
-msgid "I receive the news and updates by mail from Goalous."
+msgid "I receive the news and updates by email from Goalous."
 msgstr "Goalousからのメールによるニュースや更新情報などを受け取る。"
 
 #: View/Elements/User/account_setting.ctp:76
@@ -3640,11 +3637,11 @@ msgstr "2段階認証"
 #: View/Elements/User/account_setting.ctp:120
 #: View/Elements/User/modal_2fa_delete.ctp:31
 msgid "Disable"
-msgstr "解除する"
+msgstr "無効化する"
 
 #: View/Elements/User/account_setting.ctp:123
 msgid "Enable"
-msgstr "設定する"
+msgstr "有効化する"
 
 #: View/Elements/User/account_setting.ctp:130
 msgid "Show Recovery codes."
@@ -3669,10 +3666,10 @@ msgstr "STEP 1 ： "
 
 #: View/Elements/User/modal_2fa_register.ctp:54
 msgid "Install Application for 2-Step Verification"
-msgstr "アプリをインストールする"
+msgstr "2段階認証のためのアプリをインストールする"
 
 #: View/Elements/User/modal_2fa_register.ctp:55
-msgid "Download Google Authenticator."
+msgid "Download Google Authenticator"
 msgstr "Google Authenticatorをダウンロードしましょう"
 
 #: View/Elements/User/modal_2fa_register.ctp:69
@@ -3692,13 +3689,12 @@ msgid "STEP 3 : "
 msgstr "STEP 3 ： "
 
 #: View/Elements/User/modal_2fa_register.ctp:78
-msgid "Enter confirmation code."
+msgid "Enter confirmation code"
 msgstr "確認コードを入力する"
 
 #: View/Elements/User/modal_2fa_register.ctp:79
 msgid "After reading QR, enter the code (6 digits)"
-msgstr ""
-"バーコードをスキャンしたら、アプリで生成された6桁の確認コードを入力します。"
+msgstr "バーコードをスキャンしたら、アプリで生成された6桁の確認コードを入力します。"
 
 #: View/Elements/User/modal_2fa_register.ctp:83
 msgid "code"
@@ -3709,7 +3705,7 @@ msgid "Next"
 msgstr "次へ"
 
 #: View/Elements/User/modal_change_email.ctp:18
-msgid "Change mail address"
+msgid "Change email address"
 msgstr "メールアドレスの変更"
 
 #: View/Elements/User/modal_change_email.ctp:36
@@ -3721,7 +3717,7 @@ msgid "Please open confirmation link on Email."
 msgstr "メールに掲載されている確認URLを開くと変更が完了します。"
 
 #: View/Elements/User/modal_change_email.ctp:41
-msgid "New email address."
+msgid "New email address"
 msgstr "新しいメールアドレス"
 
 #: View/Elements/User/modal_change_email.ctp:42 View/Users/register.ctp:73
@@ -3733,7 +3729,7 @@ msgid "Input your password"
 msgstr "パスワード入力"
 
 #: View/Elements/User/modal_change_email.ctp:59
-msgid "Send confirmation email."
+msgid "Send confirmation email"
 msgstr "認証メールを送信"
 
 #: View/Elements/User/modal_change_password.ctp:18
@@ -3751,8 +3747,8 @@ msgstr "新しいパスワード"
 #: View/Elements/User/modal_change_password.ctp:46
 #: View/Users/password_reset.ctp:34 View/Users/register.ctp:96
 #: View/Users/registration_with_set_password.ctp:48
-msgid "Use at least 8 characters"
-msgstr "8文字以上"
+msgid "Use at least 8 characters and use a mix of capital characters, small characters and numbers. Symbols are not allowed."
+msgstr "8文字以上。アルファベット大文字、小文字、数字が混在している必要があります。記号は使えません。"
 
 #: View/Elements/User/modal_change_password.ctp:53
 #: View/Users/password_reset.ctp:40 View/Users/register.ctp:103
@@ -3766,7 +3762,7 @@ msgstr "確認"
 
 #: View/Elements/User/modal_delete_email.ctp:23
 msgid "Do you really want to cancel the changing of your mail address?%s"
-msgstr "%sへのメールアドレス変更をキャンセルしますか？"
+msgstr "メールアドレス変更をキャンセルしますか？"
 
 #: View/Elements/User/modal_delete_email.ctp:29
 msgid "Cancel"
@@ -3777,7 +3773,7 @@ msgid "Recovery Codes"
 msgstr "リカバリーコード"
 
 #: View/Elements/User/modal_recovery_code.ctp:16
-msgid "Keep them somewhere accessible. Each code can be used only once."
+msgid "Keep them somewhere safe and acessible. Each code can be used only once."
 msgstr ""
 "これらのコードを印刷するか書き留めて、安全な場所に保管しましょう。各リカバ"
 "リーコードは１回のみ使用できます。"
@@ -3787,21 +3783,19 @@ msgid "Used"
 msgstr "使用済"
 
 #: View/Elements/User/modal_recovery_code.ctp:29
-msgid "Generate new codes."
+msgid "Generate new recovery codes"
 msgstr "新しいリカバリーコードを作成"
 
 #: View/Elements/User/modal_recovery_code.ctp:33
-msgid "After making new codes, old ones will not be available."
-msgstr ""
-"新しいリカバリーコードを生成すると、上記のリカバリーコードは全て無効になりま"
-"す。"
+msgid "After making new recovery codes, old ones will be unavailable."
+msgstr "新しいリカバリーコードを生成すると、上記のリカバリーコードは無効になります。"
 
 #: View/Elements/User/notify_setting.ctp:18 View/Users/settings.ctp:20
 msgid "Notification"
 msgstr "通知"
 
 #: View/Elements/User/notify_setting.ctp:40
-msgid "Goalous"
+msgid "Goalous Web"
 msgstr "Goalousサイト"
 
 #: View/Elements/User/notify_setting.ctp:48;101
@@ -3813,11 +3807,11 @@ msgid "Email"
 msgstr "メール"
 
 #: View/Elements/User/notify_setting.ctp:74
-msgid "Mobile app"
+msgid "Mobile App"
 msgstr "モバイル"
 
 #: View/Elements/User/notify_setting.ctp:102
-msgid "You will get important notification."
+msgid "You'll get important notification."
 msgstr ""
 "あなたに関わる重要な通知（サークルへの新しい投稿などを除く）が送信されます。"
 
@@ -3853,7 +3847,7 @@ msgstr "姓(ローマ字)"
 
 #: View/Elements/User/profile_setting.ctp:70 View/Users/add_profile.ctp:58
 #: View/Users/register.ctp:31
-msgid "eg. Jobs"
+msgid "eg. Armstrong"
 msgstr "例) Suzuki"
 
 #: View/Elements/User/profile_setting.ctp:79 View/Users/add_profile.ctp:64
@@ -3863,7 +3857,7 @@ msgstr "名(ローマ字)"
 
 #: View/Elements/User/profile_setting.ctp:80 View/Users/add_profile.ctp:65
 #: View/Users/register.ctp:41
-msgid "eg. Hiroshi"
+msgid "eg. Harry"
 msgstr "例) Hiroshi"
 
 #: View/Elements/User/profile_setting.ctp:115 View/Users/add_profile.ctp:97
@@ -3915,7 +3909,7 @@ msgid "Dec"
 msgstr "12月"
 
 #: View/Elements/User/profile_setting.ctp:142 View/Users/add_profile.ctp:124
-msgid "Hide birthday year"
+msgid "Hide birth year"
 msgstr "生年を隠す。"
 
 #: View/Elements/User/profile_setting.ctp:149 View/Users/add_profile.ctp:131
@@ -3937,12 +3931,12 @@ msgid "About me"
 msgstr "自己紹介"
 
 #: View/Elements/User/profile_setting.ctp:207
-msgid "It will be shared with the team in the limited."
+msgid "It will be shared with members only in this team."
 msgstr "チーム内限定で共有されます。"
 
 #: View/Elements/User/profile_setting.ctp:225
 msgid ""
-"[Now, What is that you can contribute to the team?]\n"
+"[What is that you can contribute to the team?]\n"
 "\n"
 "[What is the thing you want to achieve in the team?(Specifically)]\n"
 "\n"
@@ -3961,15 +3955,16 @@ msgid "Show Examples."
 msgstr "例文を表示"
 
 #: View/Elements/User/profile_setting.ctp:232
-msgid ""
-"[Now, What is that you can contribute to the team?]\n"
-"Consulting UX of your production.[What is the thing you want to achieve in "
-"the team?(Specifically)]\n"
-"Innovation methods - Remote collaboration - Creativity - UX at C-level - "
-"Holocracy[Others]\n"
-"Need New Customers? 1. Be focused on culture above all else, get happy "
-"employees.2. Create a culture of innovation, team spirit, collaboration, "
-"creativity everywhere3. Simplify everything\n"
+msgid "[Now, What is that you can contribute to the team?]<br>\n
+Consulting UX of your production.<br>\n
+[What is the thing you want to achieve in the team?(Specifically)]<br>\n
+Innovation methods - Remote collaboration - Creativity - UX at C-level - Holocracy<br>\n
+[Others]<br>\n
+Need New Customers?<br>\n
+1. Be focused on culture above all else, get happy employees.<br>\n
+2. Create a culture of innovation, team spirit, collaboration, creativity everywhere<br>\n
+3. Simplify everything
+"
 msgstr ""
 "\n"
 "■ 例文１（技術者向け）<br>\n"
@@ -3994,11 +3989,11 @@ msgid "Basic Information"
 msgstr "基本データ"
 
 #: View/Evaluations/index.ctp:44
-msgid "Evaluation has been frozen."
+msgid "Evaluation is frozen."
 msgstr "評価は凍結されています。"
 
 #: View/Evaluations/index.ctp:48
-msgid "%s evaluations has not completed. Please evaluate from the following."
+msgid "%s evaluations have not completed. Evaluate them from the following."
 msgstr "あと%s件の評価が完了しておりません。以下より評価を行なってください。"
 
 #: View/Evaluations/index.ctp:57
@@ -4022,7 +4017,7 @@ msgid "<i class='fa fa-comment-o mr_2px'></i>Evaluation comment"
 msgstr "<i class='fa fa-comment-o mr_2px'></i>評価コメント"
 
 #: View/Evaluations/view.ctp:90;383
-msgid "Please write a comment"
+msgid "Write a comment."
 msgstr "コメントを書いてください"
 
 #: View/Evaluations/view.ctp:104;165;398;451
@@ -4030,11 +4025,11 @@ msgid "<i class='fa fa-paw mr_2px'></i>Evaluation score"
 msgstr "<i class='fa fa-paw mr_2px'></i>評価スコア"
 
 #: View/Evaluations/view.ctp:109;403
-msgid "Selection Required"
+msgid "Selection required."
 msgstr "選択必須項目です。"
 
 #: View/Evaluations/view.ctp:156;170;442;456
-msgid "Not yet determined."
+msgid "Not determined."
 msgstr "未確定です。"
 
 #: View/Evaluations/view.ctp:187;218;474;504
@@ -4043,11 +4038,11 @@ msgstr "下書き保存"
 
 #: View/Evaluations/view.ctp:209;495
 msgid "Modify and submit"
-msgstr "修正して確定"
+msgstr "修正して提出"
 
 #: View/Evaluations/view.ctp:225;511
 msgid "Submit"
-msgstr "確定"
+msgstr "提出"
 
 #: View/Evaluations/view.ctp:244
 msgid "Evaluation of goal"
@@ -4058,28 +4053,28 @@ msgid "Goal Image"
 msgstr "ゴール画像"
 
 #: View/Evaluations/view.ctp:313
-msgid "Purpose:"
-msgstr "目的:"
+msgid "Purpose"
+msgstr "目的"
 
 #: View/Evaluations/view.ctp:317
-msgid "Role:"
-msgstr "役割:"
+msgid "Role"
+msgstr "役割"
 
 #: View/Evaluations/view.ctp:322
-msgid "Details:"
-msgstr "ゴール詳細:"
+msgid "Goal Details"
+msgstr "ゴール詳細"
 
 #: View/Evaluations/view.ctp:328
-msgid "Collaborator:"
-msgstr "コラボレーター:"
+msgid "Collaborator"
+msgstr "コラボレーター"
 
 #: View/Evaluations/view.ctp:332
-msgid "Progress:"
-msgstr "進捗:"
+msgid "Progress"
+msgstr "進捗"
 
 #: View/Evaluations/view.ctp:336
-msgid "Weight:"
-msgstr "比重:"
+msgid "Weight"
+msgstr "比重"
 
 #: View/GoalApproval/done.ctp:62 View/GoalApproval/index.ctp:62
 msgid "Waiting"

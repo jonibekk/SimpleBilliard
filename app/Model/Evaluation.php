@@ -648,7 +648,7 @@ class Evaluation extends AppModel
             }
             //自己評価で被評価者が自分以外の場合は「メンバー」
             elseif ($val['evaluate_type'] == self::TYPE_ONESELF && $val['evaluatee_user_id'] != $this->my_uid) {
-                $name = __('Members')p ;
+                $name = __('Members') ;
             }
             $flow[] = [
                 'name'      => $name,

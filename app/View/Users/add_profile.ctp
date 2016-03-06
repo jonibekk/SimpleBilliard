@@ -31,13 +31,13 @@
                     //ローカル名を使う国のみ表示
                     //姓と名は言語によって表示順を変える
                     $local_last_name = $this->Form->input('LocalName.0.last_name', [
-                        'label'       => __("姓(%s)", $language_name),
-                        'placeholder' => __("例) 鈴木"),
+                        'label'       => __("Last Name(%s)", $language_name),
+                        'placeholder' => __("eg. Jobs"),
                         'required'    => false,
                     ]);
                     $local_first_name = $this->Form->input('LocalName.0.first_name', [
-                        'label'       => __("名(%s)", $language_name),
-                        'placeholder' => __("例) 太郎"),
+                        'label'       => __("First Name(%s)", $language_name),
+                        'placeholder' => __("eg. Bruce"),
                         'required'    => false,
                     ]);
                     if ($me['last_first']) {
@@ -54,15 +54,15 @@
                 ?>
                 <?php //姓と名は言語によって表示順を変える
                 $last_name = $this->Form->input('last_name', [
-                    'label'                    => __("姓(ローマ字)"),
-                    'placeholder'              => __("例) Suzuki"),
+                    'label'                    => __("Last Name"),
+                    'placeholder'              => __("eg. Armstrong"),
                     "pattern"                  => '^[a-zA-Z]+$',
                     "data-bv-regexp-message"   => __("アルファベットのみで入力してください。"),
                     "data-bv-notempty-message" => __("入力必須項目です。"),
                 ]);
                 $first_name = $this->Form->input('first_name', [
-                    'label'                    => __("名(ローマ字)"),
-                    'placeholder'              => __("例) Hiroshi"),
+                    'label'                    => __("First Name"),
+                    'placeholder'              => __("eg. Harry"),
                     "pattern"                  => '^[a-zA-Z]+$',
                     "data-bv-regexp-message"   => __("アルファベットのみで入力してください。"),
                     "data-bv-notempty-message" => __("入力必須項目です。"),
@@ -94,18 +94,18 @@
                     ->input('birth_day',
                             [
                                 'monthNames' => [
-                                    '01' => __('1月'),
-                                    '02' => __('2月'),
-                                    '03' => __('3月'),
-                                    '04' => __('4月'),
-                                    '05' => __('5月'),
-                                    '06' => __('6月'),
-                                    '07' => __('7月'),
-                                    '08' => __('8月'),
-                                    '09' => __('9月'),
-                                    '10' => __('10月'),
-                                    '11' => __('11月'),
-                                    '12' => __('12月'),
+                                    '01' => __('Jan'),
+                                    '02' => __('Feb'),
+                                    '03' => __('Mar'),
+                                    '04' => __('Apr'),
+                                    '05' => __('May'),
+                                    '06' => __('Jun'),
+                                    '07' => __('Jul'),
+                                    '08' => __('Aug'),
+                                    '09' => __('Sep'),
+                                    '10' => __('Oct'),
+                                    '11' => __('Nov'),
+                                    '12' => __('Dec'),
                                 ],
                                 'class'      => 'form-control inline-fix',
                                 'label'      => __('Birthday'),
@@ -121,21 +121,23 @@
                 $this->Form->input('hide_year_flg', [
                     'wrapInput' => 'col col-sm-9 col-sm-offset-3',
                     'type'      => 'checkbox',
-                    'label'     => ['class' => null, 'text' => __("生年を隠す。")],
+                    'label'     => ['class' => null, 'text' => __("Hide birth year")],
                     'class'     => false,
                 ])
                 ?>
                 <hr>
                 <?=
                 $this->Form->input('hometown', [
-                    'label'       => __("出身地"),
-                    'placeholder' => __('例) 東京都'),
+                    'label'       => __("Birthplace"),
+                    'placeholder' => __('eg. Tokyo'),
                     'required'    => false,
                 ]);
                 ?>
                 <hr>
                 <div class="form-group">
-                    <label for="" class="col col-sm-3 control-label mr_5px"><?= __("プロフィール画像") ?></label>
+                    <label for="" class="col col-sm-3 control-label mr_5px">
+                    <?= __("Profile Image") ?>
+                    </label>
 
                     <div class="col col-sm-6">
                         <div class="fileinput fileinput-new" data-provides="fileinput">
@@ -186,7 +188,7 @@
                                             ['class' => 'btn btn-primary', 'div' => false]) ?>
                         <?php //招待の場合のスキップはホーム、そうじゃない場合はチーム作成
                         $skip_link = isset($this->request->params['named']['invite_token']) ? "/" : ['controller' => 'teams', 'action' => 'add'];
-                        echo $this->Html->link(__("スキップ"), $skip_link,
+                        echo $this->Html->link(__("Skip"), $skip_link,
                                                ['class' => 'btn btn-default', 'div' => false]);
                         ?>
                     </div>

@@ -9,28 +9,28 @@
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= __("リカバリーコード") ?></h4>
+            <h4 class="modal-title"><?= __("Recovery Codes") ?></h4>
         </div>
         <div class="modal-body">
             <div class="two_fa_step_box">
-                <?= __('これらのコードを印刷するか書き留めて、安全な場所に保管しましょう。各リカバリーコードは１回のみ使用できます。') ?>
+                <?= __('Keep them somewhere safe and acessible. Each code can be used only once.') ?>
             </div>
             <ol id="RecoveryCodeList">
                 <?php foreach ($recovery_codes as $v): ?>
                     <?php $_code =  wordwrap($v['RecoveryCode']['code'], 4, ' ', true); ?>
                     <?php if ($v['RecoveryCode']['used']): ?>
-                        <li><span class="font_lightgray"><s><?= h($_code) ?></s>&nbsp;&nbsp;<span class="font_10px"><?= __("使用済") ?></span></span></li>
+                        <li><span class="font_lightgray"><s><?= h($_code) ?></s>&nbsp;&nbsp;<span class="font_10px"><?= __("Used") ?></span></span></li>
                     <?php else: ?>
                         <li><?= h($_code) ?></li>
                     <?php endif ?>
                 <?php endforeach ?>
             </ol>
             <hr>
-            <?= $this->Html->link(__("新しいリカバリーコードを作成"), '#', [
+            <?= $this->Html->link(__("Generate new recovery codes"), '#', [
                 'class' => 'regenerate-recovery-code'
             ]) ?>
             <div class="font_11px">
-                <?= __('新しいリカバリーコードを生成すると、上記のリカバリーコードは全て無効になります。') ?>
+                <?= __('After making new recovery codes, old ones will be unavailable.') ?>
             </div>
             <?= $this->Form->create('RecoveryCode', [
                 'url'   => ['controller' => 'users', 'action' => 'ajax_regenerate_recovery_code'],

@@ -100,7 +100,7 @@
         ]) ?>
         <?php if ($previous_term_start_date && $previous_term_end_date): ?>
             <div class="form-group">
-                <label class="col col-sm-3 control-label form-label"><?= __("Last term before changed") ?></label>
+                <label class="col col-sm-3 control-label form-label"><?= __("Previous term before changed") ?></label>
 
                 <div class="col col-sm-6">
                     <p class="form-control-static" id="">

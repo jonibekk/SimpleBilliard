@@ -19,7 +19,7 @@
             <div class="modal-header">
                 <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
                     <span class="close-icon">&times;</span></button>
-                <h4 class="modal-title"><?= __("最終評価を行う (期間：%s - %s)",
+                <h4 class="modal-title"><?= __("Final evaluation (%s - %s)",
                                                 $this->TimeEx->date($start),
                                                 $this->TimeEx->date($end)) ?></h4>
             </div>
@@ -44,13 +44,13 @@
                     'class'         => 'ajax-csv-upload',
                 ]); ?>
                 <div class="form-group">
-                    <label class="">1. <?= __("評価データをダウンロード") ?></label>
+                    <label class="">1. <?= __("Download evaluation data") ?></label>
 
-                    <p><?= __("CSVフォーマットの評価データをダウンロードしてください。テンプレートのヘッダーは変更しないでください。") ?></p>
+                    <p><?= __("Download and edit csv without any changes in header.") ?></p>
 
                     <div class="">
                         <?=
-                        $this->Html->link(__("評価データをダウンロード"),
+                        $this->Html->link(__("Download evaluation data"),
                                           ['action' => 'download_final_evaluations_csv', 'evaluate_term_id' => $evaluate_term_id],
                                           ['class' => 'btn btn-default', 'div' => false])
                         ?>
@@ -59,7 +59,7 @@
                 <div class="form-group">
                     <label class="">2. <?= __('Upload the file.') ?></label>
 
-                    <p><?= __("変更した評価データのファイルをアップロードしてください。") ?></p>
+                    <p><?= __("Upload edited evaluation data.") ?></p>
 
                     <div class="">
                         <div class="fileinput fileinput-new fileinput-enabled-submit" data-provides="fileinput"
@@ -101,7 +101,7 @@
                         <button type="button" class="btn btn-link design-cancel bd-radius_4px"
                                 data-dismiss="modal"><?= __("Cancel") ?></button>
                         <?=
-                        $this->Form->submit(__("更新する"),
+                        $this->Form->submit(__("Upload"),
                                             ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled', 'id' => "FinalEvaluation_{$evaluate_term_id}_Submit"]) ?>
 
                     </div>

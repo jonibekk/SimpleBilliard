@@ -65,11 +65,11 @@
                 <?= h($this->NumberEx->formatHumanReadable($like_count, ['convert_start' => 10000])) ?>
             </div>
             <span class="profile-user-numbers-category-like">
-                <?= __('いいね') ?>
+                <?= __('Like!') ?>
             </span>
         </div>
         <?php if ($this->Session->read('Auth.User.id') == $user['User']['id']): ?>
-            <?= $this->Html->link(__('プロフィール編集'),
+            <?= $this->Html->link(__('Edit Profile'),
                                   [
                                       'controller' => 'users',
                                       'action'     => 'settings',
@@ -136,7 +136,7 @@
         <i class="fa fa-user profile-user-tab-icon"></i>
 
         <p class="profile-user-tab-title">
-            <?= h(__('基本データ')) ?>
+            <?= h(__('Basic Information')) ?>
         </p>
     </a>
 </div>

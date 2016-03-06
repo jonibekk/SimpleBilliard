@@ -15,7 +15,7 @@
 <!-- START app/View/Elements/User/notify_setting.ctp -->
 <div id="notify_setting">
     <div class="panel panel-default">
-        <div class="panel-heading"><?= __("通知") ?></div>
+        <div class="panel-heading"><?= __("Notification") ?></div>
         <?=
         $this->Form->create('User', [
             'inputDefaults' => [
@@ -37,7 +37,7 @@
         <div class="panel-body notify-setting-panel-body">
             <div class="form-group">
                 <label class="col col-sm-3 col-xxs-12 control-label form-label">
-                    <i class="fa fa-globe"></i> <?= __('Goalousサイト') ?>
+                    <i class="fa fa-globe"></i> <?= __('Goalous Web') ?>
                 </label>
 
                 <div class="col col-xxs-9 col-sm-9">
@@ -45,7 +45,7 @@
                 </div>
             </div>
             <div id="NotifySettingAppHelp" class="col col-sm-offset-3 help-block font_12px">
-                <?= __('すべての通知が送信されます。') ?>
+                <?= __("You'll get all notification.") ?>
             </div>
 
 
@@ -71,7 +71,7 @@
             <hr>
             <div class="form-group">
                 <label class="col col-sm-3 col-xxs-12 control-label form-label">
-                    <i class="fa fa-mobile"></i> <?= __('モバイル') ?>
+                    <i class="fa fa-mobile"></i> <?= __('Mobile App') ?>
                 </label>
                 <?=
                 $this->Form->input("NotifySetting.mobile", [
@@ -98,9 +98,9 @@
 <script>
     $(function () {
         var notify_help_message = {
-            'all': '<?= __('すべての通知が送信されます。') ?>',
-            'primary': '<?= __('あなたに関わる重要な通知（サークルへの新しい投稿などを除く）が送信されます。') ?>',
-            'none': '<?= __('通知は送信されません。') ?>'
+            'all': '<?= __("You'll get all notification.") ?>',
+            'primary': '<?= __("You'll get important notification.") ?>',
+            'none': '<?= __("Nothing will be deliverd.") ?>'
         };
 
         var onSelectChange =  function () {

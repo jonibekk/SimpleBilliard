@@ -27,7 +27,7 @@
                     <?php endif ?>
                 </div>
                 <div class="panel-body">
-                    <?= __('名前') ?>
+                    <?= __('Name') ?>
                     <span class="pull-right"><?= h($user['User']['display_username']) ?></span>
                 </div>
                 <div class="panel-body" style="border-top: 1px solid #ddd;">
@@ -40,11 +40,11 @@
                                                                      $user['User']['birth_day']) ?></span>
                 </div>
                 <div class="panel-body" style="border-top: 1px solid #ddd;">
-                    <?= __('出身地') ?>
+                    <?= __('Birthplace') ?>
                     <span class="pull-right"><?= h($user['User']['hometown']) ?></span>
                 </div>
                 <div class="panel-body" style="border-top: 1px solid #ddd;">
-                    <?= __('プロフィール画像') ?>
+                    <?= __('Profile Image') ?>
                     <span class="pull-right"><?=
                         $this->Upload->uploadImage($user, 'User.photo',
                                                    ['style' => 'small']) ?></span>

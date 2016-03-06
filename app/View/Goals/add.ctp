@@ -436,7 +436,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                     <?php $this->Form->unlockField('socket_id') ?>
                     <div class="form-group">
                         <div class="col col-sm-3 control-label goal-edit-labels">
-                            <label for=""><?= __("ゴール画像") ?></label>
+                            <label for=""><?= __("Goal Image") ?></label>
 
                             <div class="label-addiction pull-sm-right"><?= __("イメージに合った画像を追加しましょう") ?></div>
                         </div>

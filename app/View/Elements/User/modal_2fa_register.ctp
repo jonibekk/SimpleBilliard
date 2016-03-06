@@ -33,7 +33,7 @@
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= __("2段階認証設定") ?></h4>
+            <h4 class="modal-title"><?= __("2-Step Verification settings") ?></h4>
         </div>
         <?=
         $this->Form->create('User', [
@@ -51,8 +51,8 @@
         ]); ?>
         <div class="modal-body" style="max-height: none">
             <div class="two_fa_step_box">
-                <label for="" ><?= __("STEP 1 ： ") ?><?= __("アプリをインストールする") ?></label>
-                <p><?= __('Download Google Authenticator.') ?></p>
+                <label for="" ><?= __("STEP 1 : ") ?><?= __("Install Application for 2-Step Verification") ?></label>
+                <p><?= __('Download Google Authenticator') ?></p>
                 <div class="modal_two_fa_download">
                   <div class="btn-frame">
                     <p><i class="fa fa-android"></i> Android</p>
@@ -66,8 +66,8 @@
             </div>
 
             <div class="two_fa_step_box">
-                <label for="" ><?= __("STEP 2 ： ") ?><?= __("バーコードをスキャンする") ?></label>
-                <p><?= __("アプリを起動し、カメラを使用してバーコードをスキャンします。") ?></p>
+                <label for="" ><?= __("STEP 2 : ") ?><?= __("Scan QR") ?></label>
+                <p><?= __("Start the app and read QR by camera.") ?></p>
                 <?= $this->Html->image($url_2fa,[
                   'width' => '120',
                   'height' => '120',
@@ -75,8 +75,8 @@
             </div>
 
             <div class="two_fa_step_box">
-                <label for="" ><?= __("STEP 3 ： ") ?><?= __("確認コードを入力する") ?></label>
-                <p><?= __("バーコードをスキャンしたら、アプリで生成された6桁の確認コードを入力します。") ?></p>
+                <label for="" ><?= __("STEP 3 : ") ?><?= __("Enter confirmation code") ?></label>
+                <p><?= __("After reading QR, enter the code (6 digits)") ?></p>
             <?=
             $this->Form->input('2fa_code',
                                ['label'                    => false,
@@ -88,7 +88,7 @@
         </div>
         <div class="modal-footer">
             <?=
-            $this->Form->submit(__("次へ"),
+            $this->Form->submit(__("Next"),
                                 ['class' => 'btn btn-primary pull-right', 'div' => false,]) ?>
             <?= $this->Form->end(); ?>
         </div>

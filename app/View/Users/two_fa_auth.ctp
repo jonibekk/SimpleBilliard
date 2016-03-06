@@ -13,7 +13,7 @@
 <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default">
-            <div class="panel-heading"><?= __("2段階認証") ?></div>
+            <div class="panel-heading"><?= __("2-Step Verification") ?></div>
             <div class="panel-body login-panel-body">
                 <?=
                 $this->Form->create('User', [

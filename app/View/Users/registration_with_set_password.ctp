@@ -45,13 +45,13 @@
                 <?=
                 $this->Form->input('password', [
                     'label'                    => __("パスワードを作成"),
-                    'placeholder'              => __('8文字以上'),
+                    'placeholder'              => __('Use at least 8 characters and use a mix of capital characters, small characters and numbers. Symbols are not allowed.'),
                     "data-bv-notempty-message" => __("入力必須項目です。"),
                     'type'                     => 'password',
                 ]) ?>
                 <?=
                 $this->Form->input('password_confirm', [
-                    'label'                    => __("パスワードを再入力"),
+                    'label'                    => __("Confirm your password"),
                     "data-bv-notempty-message" => __("入力必須項目です。"),
                     'type'                     => 'password',
                 ]) ?>

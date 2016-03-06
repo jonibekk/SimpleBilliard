@@ -27,16 +27,16 @@ $use = isset($use) ? $use : [];
         // 月曜日に表示した時は「先週」をデフォルト選択する
         'value' => (date('w', $today_time) == 1) ? 'prev_week' : 'current_week',
         'options' => [
-            'current_week'  => __('今週') . sprintf(" (%s - %s)",
+            'current_week'  => __('Current Week') . sprintf(" (%s - %s)",
                                                          str_replace('-', '/', $date_ranges['current_week']['start']),
                                                          str_replace('-', '/', $date_ranges['current_week']['end'])),
-            'prev_week'     => __('先週') . sprintf(" (%s - %s)",
+            'prev_week'     => __('Last Week') . sprintf(" (%s - %s)",
                                                          str_replace('-', '/', $date_ranges['prev_week']['start']),
                                                          str_replace('-', '/', $date_ranges['prev_week']['end'])),
-            'current_month' => __('今月') . sprintf(" (%s - %s)",
+            'current_month' => __('Current Month') . sprintf(" (%s - %s)",
                                                          str_replace('-', '/', $date_ranges['current_month']['start']),
                                                          str_replace('-', '/', $date_ranges['current_month']['end'])),
-            'prev_month'    => __('先月') . sprintf(" (%s - %s)",
+            'prev_month'    => __('Last Month') . sprintf(" (%s - %s)",
                                                          str_replace('-', '/', $date_ranges['prev_month']['start']),
                                                          str_replace('-', '/', $date_ranges['prev_month']['end'])),
             'current_term'  => __('Current Term') . sprintf(" (%s - %s)",
@@ -54,7 +54,7 @@ $use = isset($use) ? $use : [];
     <?= $this->Form->input('group', [
         'id'      => 'InsightInputGroup',
         'type'    => 'select',
-        'empty'   => __('すべてのメンバー'),
+        'empty'   => __('All Members'),
         'options' => $group_list,
         'wrapInput' => 'team-ranking-members'])
     ?>
@@ -65,13 +65,13 @@ $use = isset($use) ? $use : [];
         'id'      => 'InsightInputType',
         'type'    => 'select',
         'empty'   => false,
-        'options' => ['action_goal_ranking'    => __('アクションされたゴール'),
-                      'action_like_ranking'    => __('いいねされたアクション'),
-                      'action_comment_ranking' => __('コメントされたアクション'),
-                      'action_user_ranking'    => __('アクションしたメンバー'),
-                      'post_user_ranking'      => __('投稿したメンバー'),
-                      'post_like_ranking'      => __('いいねされた投稿'),
-                      'post_comment_ranking'   => __('コメントされた投稿'),
+        'options' => ['action_goal_ranking'    => __('Goal that had been actioned'),
+                      'action_like_ranking'    => __('Action that had been liked'),
+                      'action_comment_ranking' => __('Action that had been commented'),
+                      'action_user_ranking'    => __('Member who actioned'),
+                      'post_user_ranking'      => __('Member who posted'),
+                      'post_like_ranking'      => __('Post that had been liked'),
+                      'post_comment_ranking'   => __('Post that had been commented'),
         ],
         'wrapInput' => 'team-ranking-types',
     ])
@@ -83,10 +83,10 @@ $use = isset($use) ? $use : [];
         'id'      => 'InsightInputTimezone',
         'type'    => 'select',
         'empty'   => false,
-        'options' => ['9'   => __('(GMT+09:00) 東京'),
-                      '5.5' => __('(GMT+05:30) ニューデリー'),
-                      '1'   => __('(GMT+01:00) ベルリン'),
-                      '-8'  => __('(GMT-08:00) 太平洋標準時 (アメリカ & カナダ)')
+        'options' => ['9'   => __('(GMT+09:00) Tokyo'),
+                      '5.5' => __('(GMT+05:30) New Delhi'),
+                      '1'   => __('(GMT+01:00) Berlin'),
+                      '-8'  => __('(GMT-08:00) Pacific Ocean Time (USA & Canada)')
         ],
         'wrapInput' => 'team-ranking-timezones'
     ])
@@ -98,16 +98,16 @@ $use = isset($use) ? $use : [];
         <label class="insight-graph-icon"><i class="fa fa-area-chart"></i>&nbsp;:&nbsp; </label>
         <div class="btn-group" data-toggle="buttons" id="InsightGraphTypeButtonGroup">
             <label class="btn insight-graph-type-button" data-value="term" disabled="disabled">
-                <input type="radio" name="graph_type" value="term"> <?= __('期') ?>
+                <input type="radio" name="graph_type" value="term"> <?= __('Term') ?>
             </label>
             <label class="btn insight-graph-type-button" data-value="month" disabled="disabled">
-                <input type="radio" name="graph_type" value="month"> <?= __('月') ?>
+                <input type="radio" name="graph_type" value="month"> <?= __('Month') ?>
             </label>
             <label class="btn insight-graph-type-button" data-value="week" disabled="disabled">
-                <input type="radio" name="graph_type" value="week"> <?= __('週') ?>
+                <input type="radio" name="graph_type" value="week"> <?= __('Week') ?>
             </label>
             <label class="btn insight-graph-type-button" data-value="day" disabled="disabled">
-                <input type="radio" name="graph_type" value="day"> <?= __('日') ?>
+                <input type="radio" name="graph_type" value="day"> <?= __('Day') ?>
             </label>
         </div>
     </div>

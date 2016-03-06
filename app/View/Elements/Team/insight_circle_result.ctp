@@ -12,8 +12,8 @@
             <th><i class="fa fa-circle-o" data-toggle="tooltip" title="<?= __('Circle name') ?>"></i></th>
             <th><i class="fa fa-user" data-toggle="tooltip" title="<?= __('Members') ?>"></i></th>
             <th><i class="fa fa-comment-o" data-toggle="tooltip" title="<?= __('Posts') ?>"></i></th>
-            <th><i class="fa fa-check" data-toggle="tooltip" title="<?= __('リーチ') ?>"></i></th>
-            <th><i class="fa fa-heart-o" data-toggle="tooltip" title="<?= __('エンゲージメント') ?>"></i></th>
+            <th><i class="fa fa-check" data-toggle="tooltip" title="<?= __('Reach') ?>"></i></th>
+            <th><i class="fa fa-heart-o" data-toggle="tooltip" title="<?= __('Engagement') ?>"></i></th>
         </tr>
         <?php foreach ($circle_insights as $circle): ?>
             <tr class="insight-circle-table-row">

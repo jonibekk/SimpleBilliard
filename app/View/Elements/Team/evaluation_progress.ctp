@@ -24,7 +24,7 @@
 ?>
 <!-- START app/View/Elements/Team/evaluation_progress.ctp -->
 <div class="panel panel-default">
-    <div class="panel-heading"><?= __("評価状況") ?></div>
+    <div class="panel-heading"><?= __("Evaluation status") ?></div>
     <?php if ($previous_eval_is_started): ?>
         <div class="panel-body">
             <h4><?= __('Previous Term') ?>(<?= $this->TimeEx->date($previous_term_start_date) ?>
