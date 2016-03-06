@@ -25,7 +25,7 @@
                list-container="#GoalPageMemberContainer"
                goal-id="<?= h($goal['Goal']['id']) ?>"
                 >
-                <?= __('さらに読み込む') ?></a>
+                <?= __('View more') ?></a>
         </div>
     </div>
 </div>

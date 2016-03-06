@@ -81,7 +81,7 @@
                     if ((count($posts) != $item_num)) {
                         $next_page_num = 1;
                         $month_index = 1;
-                        $more_read_text = __("さらにアクションを読み込む ▼");
+                        $more_read_text = __("View more");
                     }
 
                     // ユーザーの登録日以前の投稿は存在しないので読み込まないようにする
@@ -91,7 +91,7 @@
                     ?>
                     <div class="panel panel-default feed-read-more" id="FeedMoreRead">
                         <div class="panel-body panel-read-more-body">
-                            <span class="none" id="ShowMoreNoData"><?= __("これ以上のアクションはありませんでした。") ?></span>
+                            <span class="none" id="ShowMoreNoData"><?= __("There is no further action.") ?></span>
                             <a href="#" class="click-feed-read-more"
                                parent-id="FeedMoreRead"
                                no-data-text-id="ShowMoreNoData"

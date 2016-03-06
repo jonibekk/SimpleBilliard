@@ -17,7 +17,7 @@
         <?= $this->element('Goal/simplex_top_section') ?>
         <div class="panel-body goal-detail-kr-panel">
             <p class="goal-detail-kr-progress-score">
-                <?= __('ゴール進捗率') ?>: <?= h($goal['Goal']['progress']) ?>%
+                <?= __('Goal progress rate') ?>: <?= h($goal['Goal']['progress']) ?>%
             </p>
             <div class="progress mb_0px goals-column-progress-bar goal-detail-kr-progress-bar-wrap">
                 <div class="progress-bar progress-bar-info goal-detail-kr-progress-bar" role="progressbar"
@@ -28,7 +28,7 @@
             </div>
             <h3 class="goal-detail-kr-add-heading">
                 <i class="fa fa-key"></i>
-                <?= __('このゴールの達成要素') ?>
+                <?= __('KRs of this goal') ?>
                 <!-- todo 数を追加 -->
             </h3>
             <?php $kr_can_edit = ($is_leader || $is_collaborator); ?>
@@ -44,7 +44,7 @@
             <div class="row borderBottom" id="GoalPageKeyResultContainer">
                 <?= $this->element('Goal/key_results', ['kr_can_edit' => $kr_can_edit]) ?>
                 <?php if (!$key_results): ?>
-                    <?= __('達成要素は登録されていません') ?>
+                    <?= __('There is no KR.') ?>
                 <? endif ?>
             </div>
         </div>
@@ -56,7 +56,7 @@
                goal-id="<?= h($goal['Goal']['id']) ?>"
                kr-can-edit="<?= h((int)$kr_can_edit) ?>"
                 >
-                <?= __('さらに読み込む') ?></a>
+                <?= __('View more') ?></a>
         </div>
     </div>
 </div>

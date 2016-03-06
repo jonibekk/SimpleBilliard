@@ -4098,11 +4098,11 @@ msgid "Due Date"
 msgstr "期限"
 
 #: View/GoalApproval/done.ctp:156 View/GoalApproval/index.ctp:159
-msgid "To change not target of evaluation"
+msgid "Remove from target of evaluation"
 msgstr "評価対象にしない"
 
 #: View/GoalApproval/done.ctp:161 View/GoalApproval/index.ctp:157
-msgid "To change to be target of evaluation"
+msgid "Set as target of evaluation"
 msgstr "評価対象にする"
 
 #: View/GoalApproval/index.ctp:164
@@ -4110,7 +4110,7 @@ msgid "Modify the goal"
 msgstr "ゴールを修正する"
 
 #: View/GoalApproval/index.ctp:195
-msgid "Request the modification."
+msgid "Request to modify."
 msgstr "修正を依頼"
 
 #: View/Goals/add.ctp:32
@@ -4126,11 +4126,11 @@ msgid "What do you want to achieve?"
 msgstr "達成したいことは？"
 
 #: View/Goals/add.ctp:75
-msgid "Write something that you want to achieve roughly."
+msgid "Describe it roughly."
 msgstr "達成したいことをざっくり書く"
 
 #: View/Goals/add.ctp:78
-msgid "eg. Provide a new value to the people."
+msgid "eg. Provide a new value to people."
 msgstr "例）新しい価値を人々に提供する"
 
 #: View/Goals/add.ctp:90;361
@@ -4142,7 +4142,7 @@ msgid "Set Reference Values"
 msgstr "基準を定める"
 
 #: View/Goals/add.ctp:152
-msgid "What signs of <br>achievement will there be?"
+msgid "What is the measurable point?"
 msgstr "達成の指標として<br>『なに』をどうするか？"
 
 #: View/Goals/add.ctp:305
@@ -4154,16 +4154,16 @@ msgid "Add more information"
 msgstr "情報を追加する"
 
 #: View/Goals/add.ctp:409
-msgid "Let complement the contents."
+msgid "Add complements."
 msgstr "内容を補足しましょう"
 
 #: View/Goals/add.ctp:411
-msgid "Write details of this goal."
+msgid "Explain this goal in detail."
 msgstr "ゴールの内容を詳しく書く"
 
 #: View/Goals/add.ctp:427
-msgid "Weight of <br>this goal for you"
-msgstr "あなたにとっての<br>このゴールの重要度"
+msgid "Weight of this goal"
+msgstr "このゴールの重要度"
 
 #: View/Goals/add.ctp:440
 msgid "Let's add an image that motivated yourself."
@@ -4194,7 +4194,7 @@ msgid "Goals found"
 msgstr "対象ゴール"
 
 #: View/Goals/index.ctp:87
-msgid "…"
+msgid "..."
 msgstr "件"
 
 #: View/Goals/index.ctp:92
@@ -4202,19 +4202,15 @@ msgid "No Goal"
 msgstr "対象ゴールがありません。"
 
 #: View/Goals/index.ctp:104 View/Notifications/index.ctp:35
-msgid "View more…"
-msgstr "もっと見る ▼"
-
-#: View/Goals/view_actions.ctp:84 View/Users/view_actions.ctp:84
-msgid "View more…"
-msgstr "さらにアクションを読み込む ▼"
+msgid "View more"
+msgstr "もっと見る"
 
 #: View/Goals/view_actions.ctp:94 View/Users/view_actions.ctp:94
-msgid "It was no further action."
-msgstr "これ以上のアクションはありませんでした。"
+msgid "There is no further action."
+msgstr "これ以上のアクションはありません。"
 
 #: View/Goals/view_followers.ctp:20
-msgid "Follower doesn't exist."
+msgid "No one is following."
 msgstr "フォロワーはいません。"
 
 #: View/Goals/view_followers.ctp:31 View/Goals/view_krs.ctp:59
@@ -4231,11 +4227,11 @@ msgid "Goal progress rate"
 msgstr "ゴール進捗率"
 
 #: View/Goals/view_krs.ctp:31
-msgid "Achieve elements of this goal"
+msgid "KRs of this goal"
 msgstr "このゴールの達成要素"
 
 #: View/Goals/view_krs.ctp:47
-msgid "Achievement element is not registered."
+msgid "There is no KR."
 msgstr "達成要素は登録されていません"
 
 #: View/Helper/GoalHelper.php:62
@@ -4243,11 +4239,11 @@ msgid "Collaborating"
 msgstr "コラボり中"
 
 #: View/Helper/GoalHelper.php:87
-msgid "%s other people"
+msgid "%s other members"
 msgstr "他%s人"
 
 #: View/Helper/TimeExHelper.php:104
-msgid "now"
+msgid "Just now"
 msgstr "たった今"
 
 #: View/Helper/TimeExHelper.php:108
@@ -4259,7 +4255,7 @@ msgid "%s mins"
 msgstr "%s分前"
 
 #: View/Helper/TimeExHelper.php:146
-msgid "%s hr"
+msgid "%s hours"
 msgstr "%s時間前"
 
 #: View/Notifications/index.ctp:21
@@ -4272,27 +4268,19 @@ msgid "Create a team."
 msgstr "チームを作成してください。"
 
 #: View/Posts/attached_file_list.ctp:53
-msgid "Load more files ▼"
-msgstr "もっとファイルを読み込む ▼"
-
-#: View/Posts/attached_file_list.ctp:59
-msgid "Load more files ▼"
-msgstr "さらにファイルを読み込む ▼"
+msgid "Load more files"
+msgstr "もっとファイルを読み込む"
 
 #: View/Posts/attached_file_list.ctp:69
 msgid "There was no more files."
-msgstr "これ以上のファイルはありませんでした。"
-
-#: View/Teams/add.ctp:17
-msgid "Create a team."
-msgstr "チームを作成してください"
+msgstr "これ以上のファイルはありません。"
 
 #: View/Teams/add.ctp:128
 msgid "Current period"
 msgstr "現在の期間"
 
 #: View/Teams/add_group_vision.ctp:17
-msgid "Please create a group vision"
+msgid "Create a group vision."
 msgstr "グループビジョンを作成してください"
 
 #: View/Teams/add_group_vision.ctp:36 View/Teams/edit_group_vision.ctp:37
@@ -4300,12 +4288,12 @@ msgid "Group"
 msgstr "グループ"
 
 #: View/Teams/add_group_vision.ctp:43 View/Teams/edit_group_vision.ctp:44
-msgid "Name of group vision"
+msgid "Group vision name"
 msgstr "グループビジョン名"
 
 #: View/Teams/add_group_vision.ctp:44 View/Teams/add_team_vision.ctp:36
 #: View/Teams/edit_group_vision.ctp:45 View/Teams/edit_team_vision.ctp:37
-msgid "e.g.) making an innovation"
+msgid "eg. making an innovation"
 msgstr "例) イノベーションを起こす"
 
 #: View/Teams/add_group_vision.ctp:111

@@ -50,13 +50,13 @@
     <?php
     $next_page_num = 2;
     $month_index = 0;
-    $more_read_text = __("もっとファイルを読み込む ▼");
+    $more_read_text = __("View more files");
     $oldest_post_time = 0;
     $item_num = FILE_LIST_PAGE_NUMBER;
     if ((count($files) != $item_num)) {
         $next_page_num = 1;
         $month_index = 1;
-        $more_read_text = __("さらにファイルを読み込む ▼");
+        $more_read_text = __("View more files");
     }
 
     // サークルの登録日以前の投稿は存在しないので読み込まないようにする
@@ -66,7 +66,7 @@
     ?>
     <div class="panel panel-default feed-read-more" id="FeedMoreRead">
         <div class="panel-body panel-read-more-body">
-            <span class="none" id="ShowMoreNoData"><?= __("これ以上のファイルはありませんでした。") ?></span>
+            <span class="none" id="ShowMoreNoData"><?= __("There is no more file.") ?></span>
             <a href="#" class="btn btn-link click-feed-read-more"
                parent-id="FeedMoreRead"
                no-data-text-id="ShowMoreNoData"
@@ -88,6 +88,6 @@
 
     <?= $this->element('Feed/circle_join_button', compact('current_circle', 'user_status')) ?>
 <?php else: ?>
-    <?= $this->Html->link(__("チームを作成してください。"), ['controller' => 'teams', 'action' => 'add']) ?>
+    <?= $this->Html->link(__("Create a team."), ['controller' => 'teams', 'action' => 'add']) ?>
 <?php endif; ?>
 <!-- END app/View/Posts/attached_file_list.ctp -->

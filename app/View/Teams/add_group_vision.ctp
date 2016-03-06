@@ -14,7 +14,7 @@
 <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default">
-            <div class="panel-heading"><?= __("グループビジョンを作成してください") ?></div>
+            <div class="panel-heading"><?= __("Create a group vision.") ?></div>
             <?=
             $this->Form->create('GroupVision', [
                 'inputDefaults' => [
@@ -33,15 +33,15 @@
             <div class="panel-body add-team-panel-body">
                 <?=
                 $this->Form->input('group_id', [
-                    'label'   => __("グループ"),
+                    'label'   => __("Group"),
                     'type'    => 'select',
                     'options' => $group_list,
                 ]) ?>
                 <hr>
                 <?=
                 $this->Form->input('name',
-                                   ['label'                        => __("グループビジョン名"),
-                                    'placeholder'                  => __("例) イノベーションを起こす"),
+                                   ['label'                        => __("Group vision name"),
+                                    'placeholder'                  => __("eg. making an innovation"),
                                     "data-bv-notempty-message"     => __("入力必須項目です。"),
                                     'rows'                         => 1,
                                     'data-bv-stringlength'         => 'true',
@@ -106,7 +106,7 @@
                 <div class="row">
                     <div class="team-button pull-right">
                         <?=
-                        $this->Form->submit(__("グループビジョンを作成"),
+                        $this->Form->submit(__("Create a group vision"),
                                             ['class' => 'btn btn-primary display-inline', 'div' => false, 'disabled' => 'disabled']) ?>
                     </div>
                 </div>

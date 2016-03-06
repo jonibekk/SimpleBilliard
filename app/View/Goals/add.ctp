@@ -29,11 +29,11 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
     <!--GoalSet01-->
     <div class="col-sm-8 col-sm-offset-2">
         <div class="page-title">
-            <?= isset($this->request->data['Goal']['id']) ? __("Edit goal") : __("新しいゴールを作成") ?>
+            <?= isset($this->request->data['Goal']['id']) ? __("Edit goal") : __("Create a new goal") ?>
         </div>
         <div class="panel panel-default" id="AddGoalFormPurposeWrap">
             <div class="panel-heading goal-set-heading clearfix">
-                <div class="pull-left goal-set-title"><span class='font_bold'>1</span> <?= __("目的を決める") ?>
+                <div class="pull-left goal-set-title"><span class='font_bold'>1</span> <?= __("Decide Your Purpose") ?>
                 </div>
                 <?=
                 $this->Html->link(__("Change"), "#",
@@ -70,13 +70,13 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                     $this->Form->input('Purpose.name',
                                        ['before'                       => '<div class="col col-sm-3 control-label goal-edit-labels">' .
                                            '<label class="no-asterisk">' . __("Purpose") . '</label>' .
-                                           '<div class="label-addiction">' . __("達成したいことは？") . '</div></div>',
+                                           '<div class="label-addiction">' . __("What do you want to achieve?") . '</div></div>',
                                         'label'                        => false,
-                                        'placeholder'                  => __("達成したいことをざっくり書く"),
+                                        'placeholder'                  => __("Describe it roughly."),
                                         'rows'                         => 1,
                                         "data-bv-notempty-message"     => __("入力必須項目です。"),
                                         'afterInput'                   => '<span class="help-block goal-form-addiction">' . __(
-                                                                                                                                "例）新しい価値を人々に提供する") . '</span>',
+                                                                                                                                "eg. Provide a new value to people.") . '</span>',
                                         'data-bv-stringlength'         => 'true',
                                         'data-bv-stringlength-max'     => 200,
                                         'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 200),
@@ -87,7 +87,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                     <div class="row">
                         <div class="pull-right">
                             <?=
-                            $this->Form->submit(__("次のステップ"),
+                            $this->Form->submit(__("Next Step"),
                                                 ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
 
                         </div>
@@ -101,7 +101,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default" id="AddGoalFormKeyResultWrap">
             <div class="panel-heading goal-set-heading clearfix panel-closed-headding">
-                <div class="pull-left goal-set-title"><span class='font_bold'>2</span> <?= __("基準を定める") ?>
+                <div class="pull-left goal-set-title"><span class='font_bold'>2</span> <?= __("Set Reference Values") ?>
                 </div>
                 <?=
                 $this->Html->link(__("Change"), "#",
@@ -137,7 +137,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                     <?=
                     $this->Form->input('goal_category_id', [
                         'label'    => [
-                            'text'  => __("カテゴリ"),
+                            'text'  => __("Category"),
                             'class' => 'col col-sm-3 control-label goal-edit-labels'
                         ],
                         'required' => false,
@@ -150,7 +150,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                        ['before'                       => '<div class="col col-sm-3 control-label set-goal goal-edit-labels">' .
                                            '<label class="no-asterisk">' . __("Goal Name") . '</label>' .
                                            '<div class="label-addiction">' . __(
-                                                                                 "達成の指標として<br>『なに』をどうするか？") . '</div></div>',
+                                                                                 "What is the measurable point?") . '</div></div>',
                                         'label'                        => false,
                                         'placeholder'                  => __("Write in details."),
                                         "data-bv-notempty-message"     => __("入力必須項目です。"),
@@ -303,7 +303,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                             <div class="form-group" id="KeyResult0EvaluateTermContainer">
                                 <label for="KeyResult0EvaluateTerm"
                                        class="col col-sm-3 control-label goal-set-mid-label"><?=
-                                    __("評価期間") ?></label>
+                                    __(" Evaluation terms") ?></label>
 
                                 <div class="col col-sm-9">
                                     <p class="form-control-static"
@@ -359,7 +359,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                             }
                             ?>
                             <?=
-                            $this->Form->submit(__("次のステップ"),
+                            $this->Form->submit(__("Next Step"),
                                                 array_merge(['class' => 'btn btn-primary', 'div' => false],
                                                             $disabled ? ['disabled' => 'disabled'] : [])) ?>
                         </div>
@@ -374,7 +374,8 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default" id="AddGoalFormOtherWrap">
             <div class="panel-heading goal-set-heading clearfix panel-closed-headding">
-                <div class="pull-left goal-set-title"><span class='font_bold'>3</span> <?= __("情報を追加する") ?>
+                <div class="pull-left goal-set-title">
+                    <span class='font_bold'>3</span> <?= __("Add more information") ?>
                 </div>
                 <?=
                 $this->Html->link(__("Change"), "#",
@@ -407,9 +408,9 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                     $this->Form->input('description',
                                        ['before'                       => '<div class="col col-sm-3 control-label set-detail goal-edit-labels">' .
                                            '<label>' . __("Description") . '</label>' .
-                                           '<div class="label-addiction">' . __("内容を補足しましょう") . '</div></div>',
+                                           '<div class="label-addiction">' . __("Add complements") . '</div></div>',
                                         'label'                        => false,
-                                        'placeholder'                  => __("ゴールの内容を詳しく書く"),
+                                        'placeholder'                  => __("Explain this goal in detail."),
                                         'rows'                         => 1,
                                         'required'                     => false,
                                         'data-bv-stringlength'         => 'true',
@@ -425,7 +426,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                     $this->Form->input('Collaborator.0.priority', [
                         'before'   => '<div class="col col-sm-3 control-label set-importance goal-edit-labels">' .
                             '<label>' . __("Weight") . '</label>' .
-                            '<div class="label-addiction">' . __("あなたにとっての<br>このゴールの重要度") . '</div></div>',
+                            '<div class="label-addiction">' . __("Weight of this goal") . '</div></div>',
                         'label'    => false,
                         'type'     => 'select',
                         'default'  => 3,
@@ -438,7 +439,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                         <div class="col col-sm-3 control-label goal-edit-labels">
                             <label for=""><?= __("Goal Image") ?></label>
 
-                            <div class="label-addiction pull-sm-right"><?= __("イメージに合った画像を追加しましょう") ?></div>
+                            <div class="label-addiction pull-sm-right"><?= __("Let's add an image that motivated yourself.") ?></div>
                         </div>
                         <div class="col col-sm-6  goal-set-input">
                             <div class="fileinput_small fileinput-new" data-provides="fileinput">
@@ -488,7 +489,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                     <div class="row">
                         <div class="pull-right">
                             <?=
-                            $this->Form->submit(__("この内容で作成"),
+                            $this->Form->submit(__("Save Goal"),
                                                 ['class' => 'btn btn-primary', 'div' => false]) ?>
                         </div>
                     </div>
@@ -524,7 +525,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
             "data[Goal][start_date]": {
                 validators: {
                     callback: {
-                        message: "<?=__("開始日が期限を過ぎています。")?>",
+                        message: "<?=__("Start date has expired.")?>",
                         callback: function (value, validator) {
                             var m = new moment(value, 'YYYY/MM/DD', true);
                             return m.isBefore($('[name="data[Goal][end_date]"]').val());
@@ -539,7 +540,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
             "data[Goal][end_date]": {
                 validators: {
                     callback: {
-                        message: "<?=__("期限が開始日以前になっています。")?>",
+                        message: "<?=__("The limit date must be after start date.")?>",
                         callback: function (value, validator) {
                             var m = new moment(value, 'YYYY/MM/DD', true);
                             return m.isAfter($('[name="data[Goal][start_date]"]').val());

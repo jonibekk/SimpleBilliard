@@ -23,7 +23,7 @@
 
                     <p class="goal-detail-info-purpose"><?= __('Purpose') ?>： <?= h($goal['Purpose']['name']) ?></p>
 
-                    <p class="goal-detail-info-category"><?= __('カテゴリー') ?>
+                    <p class="goal-detail-info-category"><?= __('Category') ?>
                         ： <?= h($goal['GoalCategory']['name']) ?></p>
                 </div>
             </div>

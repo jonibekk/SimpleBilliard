@@ -223,7 +223,7 @@
                                         'value'                        => (isset($this->request->data['TeamMember'][0]['comment']) && !empty($this->request->data['TeamMember'][0]['comment']))
                                             ? $this->request->data['TeamMember'][0]['comment']
                                             : __(
-                                                  "[What is that you can contribute to the team?]\n\n【[What is the thing you want to achieve in the team?(Specifically)]\n\n[Others]\n\n")]
+                                                  "[What is that you can contribute to the team?]\n\n[What is the thing you want to achieve in the team?(Specifically)]\n\n[Others]\n\n")]
                     )
                     ?>
                     <a href="#" class="target-show-this-del link-dark-gray" target-id="CommentHelp"><?= __(

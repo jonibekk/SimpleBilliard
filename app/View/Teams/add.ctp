@@ -14,7 +14,7 @@
 <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default">
-            <div class="panel-heading"><?= __("チームを作成してください") ?></div>
+            <div class="panel-heading"><?= __("Create a team.") ?></div>
             <?=
             $this->Form->create('Team', [
                 'inputDefaults' => [
@@ -123,7 +123,7 @@
                     'options'                  => $border_months_options
                 ]) ?>
                 <div class="form-group">
-                    <label class="col col-sm-3 control-label form-label"><?= __("現在の期間") ?></label>
+                    <label class="col col-sm-3 control-label form-label"><?= __("Current term") ?></label>
 
                     <div class="col col-sm-6">
                         <p class="form-control-static" id="CurrentTermStr">

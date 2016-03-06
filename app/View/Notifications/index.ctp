@@ -18,7 +18,7 @@
         <div class="noitify-mark-allread-wrap">
             <i class="fa fa-check btn-link notify-mark-allread" id="mark_all_read" style='color:#d2d4d5'></i>
         </div>
-        <?= __("すべてのお知らせ") ?>
+        <?= __("Your Notifications") ?>
     </div>
     <div class="panel-body panel-body-notify-page">
         <ul class="notify-page-cards" role="menu">
@@ -32,7 +32,7 @@
                    get-url="<?=
                    $this->Html->url(['controller' => 'notifications', 'action' => 'ajax_get_old_notify_more']) ?>"
                     >
-                    <?= __("もっと見る ▼") ?></a>
+                    <?= __("View more") ?>▼</a>
             </div>
         <?php endif; ?>
     </div>

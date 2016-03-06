@@ -59,7 +59,7 @@
         <a class="font_lightGray-veryDark no-line plr_18px sp-feed-link inline-block pt_12px height_40px"
            id="SubHeaderMenuFeed"
            href="<?= $this->Html->url(['controller' => 'goal_approval', 'action' => 'index']) ?>">
-            <?= __("処理待ち") ?>
+            <?= __("Waiting") ?>
             <?php if ($unapproved_cnt > 0) { ?>
             <span class="btn btn-danger btn-xs bell-notify-box approval_badge">
             <?php echo $unapproved_cnt; ?>
@@ -69,7 +69,7 @@
     <div class="col col-xxs-6">
         <a class="font_lightGray-veryDark no-line plr_18px sp-feed-link inline-block pt_12px height_40px sp-feed-active"
            id="SubHeaderMenuGoal">
-            <?= __("処理済み") ?><?php if ($done_cnt > 0) {
+            <?= __("Done") ?><?php if ($done_cnt > 0) {
                 echo '(' . $done_cnt . ')';
             } ?></a>
     </div>
@@ -97,7 +97,7 @@
                             <p class="approval_body_text"><?= __("Name") ?>
                                 : <?= h($goal['User']['display_username']); ?></p>
 
-                            <p class="approval_body_text"><?= __("カテゴリ") ?>
+                            <p class="approval_body_text"><?= __("Category") ?>
                                 : <?= h($goal['Goal']['GoalCategory']['name']); ?></p>
 
                             <p class="approval_body_text"><?= __("Goal Name") ?>: <?= h($goal['Goal']['name']); ?></p>
@@ -153,12 +153,12 @@
                                     <div class="approval_botton_area">
                                         <?php if ($goal['my_goal'] === false) { ?>
                                             <?php if ($goal['Collaborator']['valued_flg'] === (string)Collaborator::STATUS_APPROVAL) { ?>
-                                                <?= $this->Form->button(__("評価対象にしない"),
+                                                <?= $this->Form->button(__("Remove from target of evaluation"),
                                                                         ['name' => 'wait_btn', 'class' => 'btn btn-primary approval_button', 'div' => false]) ?>
                                             <?php }
                                             else {
                                                 if ($goal['Collaborator']['valued_flg'] === (string)Collaborator::STATUS_HOLD) { ?>
-                                                    <?= $this->Form->button(__("評価対象にする"),
+                                                    <?= $this->Form->button(__("Set as target of evaluation"),
                                                                             ['name' => 'approval_btn', 'class' => 'btn btn-primary approval_button', 'div' => false]) ?>
                                                 <?php }
                                             } ?>
