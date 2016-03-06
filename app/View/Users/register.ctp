@@ -10,7 +10,7 @@
 <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default">
-            <div class="panel-heading"><?= __("新しいアカウントを作成") ?></div>
+            <div class="panel-heading"><?= __("Create a new account") ?></div>
             <?=
             $this->Form->create('User', [
                 'inputDefaults' => [
@@ -92,7 +92,7 @@
                 <hr>
                 <?=
                 $this->Form->input('password', [
-                    'label'                    => __("パスワードを作成"),
+                    'label'                    => __("Create a password"),
                     'placeholder'              => __('Use at least 8 characters and use a mix of capital characters, small characters and numbers. Symbols are not allowed.'),
                     "data-bv-notempty-message" => __("入力必須項目です。"),
                     'type'                     => 'password',
@@ -106,7 +106,7 @@
                     'maxlength'                => 50,
                 ]) ?>
                 <hr>
-                <?php $tosLink = $this->Html->link(__('利用規約'),
+                <?php $tosLink = $this->Html->link(__('Terms of Use'),
                                                    [
                                                        'controller' => 'pages',
                                                        'action'     => 'display',
@@ -119,7 +119,7 @@
                                                    ]
                 );
 
-                $ppLink = $this->Html->link(__('プライバシーポリシー'),
+                $ppLink = $this->Html->link(__('Privacy Policy'),
                                             [
                                                 'controller' => 'pages',
                                                 'action'     => 'display',
@@ -135,7 +135,7 @@
                     'wrapInput' => 'col col-sm-9 col-sm-offset-3',
                     'type'      => 'checkbox',
                     'label'     => ['class' => null,
-                                    'text'  => __("Goalousの%sと%sに同意します。", $tosLink, $ppLink)],
+                                    'text'  => __("I agree to %s and %s of Goalous.", $tosLink, $ppLink)],
                     'class'     => 'validate-checkbox'
                 ]);
                 //タイムゾーン設定の為のローカル時刻をセット
@@ -150,7 +150,7 @@
             <div class="panel-footer">
                 <div class="row">
                     <div class="col-sm-9 col-sm-offset-3">
-                        <?= $this->Form->submit(__("新規登録"),
+                        <?= $this->Form->submit(__("New registration"),
                                                 ['class' => 'btn btn-primary', 'disabled' => 'disabled']) ?>
                     </div>
                 </div>

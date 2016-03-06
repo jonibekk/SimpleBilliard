@@ -13,7 +13,7 @@
 <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default">
-            <div class="panel-heading"><?= __("パスワードの再設定") ?></div>
+            <div class="panel-heading"><?= __("Password Reset") ?></div>
             <?=
             $this->Form->create('User', [
                 'inputDefaults' => [
@@ -30,7 +30,7 @@
             <div class="panel-body reset-password-panel-body">
                 <?=
                 $this->Form->input('password', [
-                    'label'                    => __("パスワードを作成"),
+                    'label'                    => __("Create a password"),
                     'placeholder'              => __('Use at least 8 characters and use a mix of capital characters, small characters and numbers. Symbols are not allowed.'),
                     "data-bv-notempty-message" => __("入力必須項目です。"),
                     'type'                     => 'password',
@@ -45,7 +45,7 @@
             <div class="panel-footer">
                 <div class="form-group">
                     <div class="col-sm-9 col-sm-offset-3">
-                        <?= $this->Form->submit(__("パスワードを設定"), ['class' => 'btn btn-primary']) ?>
+                        <?= $this->Form->submit(__("Set a password"), ['class' => 'btn btn-primary']) ?>
                     </div>
                 </div>
             </div>

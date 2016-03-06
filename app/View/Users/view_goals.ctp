@@ -41,10 +41,10 @@
             <div class="profile-goals-select-wrap btn-group" role="group">
                 <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user['User']['id'], 'term_id'=>$term_id]) ?>"
                    class="profile-goals-select btn <?= $page_type == "following" ? "btn-unselected" : "btn-selected" ?>">
-                    <?= __("マイゴール(%s)", $my_goals_count) ?></a>
+                    <?= __("My Goal (%s)", $my_goals_count) ?></a>
                 <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user['User']['id'],'term_id'=>$term_id, 'page_type' => 'following']) ?>"
                    class="profile-goals-select btn <?= $page_type == "following" ? "btn-selected" : "btn-unselected" ?>">
-                    <?= __("フォロー中(%s)", $follow_goals_count) ?></a>
+                    <?= __("Following (%s)", $follow_goals_count) ?></a>
             </div>
             <?php foreach ($goals as $goal): ?>
                 <div class="col col-xxs-12 my-goals-item">
@@ -73,10 +73,10 @@
                             <?= $this->element('Goal/goal_menu_on_my_page', ['goal' => $goal]) ?>
                         <?php endif; ?>
                         <div class="col col-xxs-12 font_lightgray font_12px">
-                            <?= __("目的: %s", $goal['Purpose']['name']) ?>
+                            <?= __("Purpose: %s", $goal['Purpose']['name']) ?>
                         </div>
                         <div class="col col-xxs-12 font_lightgray font_12px">
-                            <?= __("認定ステータス: %s",
+                            <?= __("Approval Status: %s",
                                     Collaborator::$STATUS[$goal['Collaborator']['valued_flg']]) ?>
                         </div>
                         <div class="col col-xxs-12">

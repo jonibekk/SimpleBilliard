@@ -18,13 +18,13 @@ $this->set('hidden_sidebar_xxs', true);
     <ul class="nav">
         <li class="active"><a href="#basic_setting"><?= __("Basic settings") ?></a></li>
         <li class=""><a href="#term_setting"><?= __("Term settings") ?></a></li>
-        <li class=""><a href="#invite_member"><?= __("メンバー招待") ?></a></li>
+        <li class=""><a href="#invite_member"><?= __("Invitation") ?></a></li>
         <li class=""><a href="#batch_registration"><?= __("Batch Registration") ?></a></li>
         <li class=""><a href="#goal_category"><?= __("Goal category settings") ?></a></li>
         <li class=""><a href="#evaluation"><?= __("Evaluation settings") ?></a></li>
-        <li class=""><a href="#evaluation_score_setting"><?= __("評価スコア設定") ?></a></li>
+        <li class=""><a href="#evaluation_score_setting"><?= __("Evaluation settings") ?></a></li>
         <li class=""><a href="#evaluation_start"><?= __("Begin evaluation") ?></a></li>
-        <li class=""><a href="#evaluation_freeze"><?= __("評価凍結") ?></a></li>
+        <li class=""><a href="#evaluation_freeze"><?= __("Pause evaluation") ?></a></li>
         <li class=""><a href="#final_evaluation"><?= __("Final evaluation") ?></a></li>
         <li class=""><a href="#progress"><?= __("Evaluation status") ?></a></li>
     </ul>

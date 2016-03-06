@@ -4301,7 +4301,7 @@ msgid "Create a group vision"
 msgstr "グループビジョンを作成"
 
 #: View/Teams/add_team_vision.ctp:16
-msgid "Please create a team vision"
+msgid "Create a team vision."
 msgstr "チームビジョンを作成してください"
 
 #: View/Teams/add_team_vision.ctp:35 View/Teams/edit_team_vision.ctp:36
@@ -4313,31 +4313,31 @@ msgid "Create a team vision"
 msgstr "チームビジョンを作成"
 
 #: View/Teams/edit_group_vision.ctp:17
-msgid "Updating a group vision"
-msgstr "グループビジョンを更新"
+msgid "Update a group vision"
+msgstr "グループビジョンを更新する"
 
 #: View/Teams/edit_group_vision.ctp:114
-msgid "Updating a group vision"
+msgid "Update a group vision"
 msgstr "グループビジョンを更新する"
 
 #: View/Teams/edit_team_vision.ctp:16
-msgid "Updating a team vision"
-msgstr "チームビジョンを更新"
+msgid "Update a team vision"
+msgstr "チームビジョンを更新する"
 
 #: View/Teams/edit_team_vision.ctp:106
-msgid "Updating a team vision"
+msgid "Update a team vision"
 msgstr "チームビジョンを更新する"
 
 #: View/Teams/settings.ctp:21
 msgid "Invitation"
-msgstr "メンバー招待"
+msgstr "招待"
 
 #: View/Teams/settings.ctp:25
-msgid "Evaluation Score"
+msgid "Evaluation settings"
 msgstr "評価スコア設定"
 
 #: View/Teams/settings.ctp:27
-msgid "Freeze on evaluation"
+msgid "Pause evaluation"
 msgstr "評価凍結"
 
 #: View/Users/add_profile.ctp:13
@@ -4349,7 +4349,7 @@ msgid "Register the profile"
 msgstr "プロフィールを登録"
 
 #: View/Users/login.ctp:16
-msgid "Login Goalous"
+msgid "Login Goalous!"
 msgstr "Goalousにログイン！"
 
 #: View/Users/login.ctp:19
@@ -4365,7 +4365,7 @@ msgid "Forgot your password?"
 msgstr "パスワードを忘れた場合はこちら"
 
 #: View/Users/login.ctp:75
-msgid "Do you want to new user registration?"
+msgid "Create a new account?"
 msgstr "新規ユーザ登録はこちら"
 
 #: View/Users/password_reset.ctp:16 View/Users/password_reset_request.ctp:16
@@ -4382,12 +4382,12 @@ msgid "Set a password"
 msgstr "パスワードを設定"
 
 #: View/Users/password_reset_request.ctp:31 View/Users/token_resend.ctp:31
-msgid "Please send it by entering the mail address you have registered with Goalous."
-msgstr "Goalousに登録しているメールアドレスを入力して送信してください。"
+msgid "Enter your email address."
+msgstr "メールアドレスを入力してください。"
 
 #: View/Users/password_reset_request.ctp:33
-msgid "We will send the URL for password reset from Goalous."
-msgstr "Goalousからパスワード再設定用のURLを送信いたします。"
+msgid "We'll send the URL for password reset."
+msgstr "パスワード再設定用のURLを送信いたします。"
 
 #: View/Users/password_reset_request.ctp:45 View/Users/token_resend.ctp:45
 msgid "Send"
@@ -4422,7 +4422,7 @@ msgid "Welcome to Goalous!"
 msgstr "Goalousへようこそ！"
 
 #: View/Users/registration_with_set_password.ctp:33
-msgid "Sign up Goalous"
+msgid "Let's start to sign up Goalous."
 msgstr "Goalousへのユーザ登録を行います。"
 
 #: View/Users/registration_with_set_password.ctp:35
@@ -4438,24 +4438,23 @@ msgid "Congratulations!"
 msgstr "おめでとうございます！"
 
 #: View/Users/sent_mail.ctp:13
-msgid "You have been registered in Goalous as a free trial."
-msgstr "あなたはフリートライアルとしてGoalousに登録されました。"
+msgid "You successfully made your account."
+msgstr "あなたのGoalousアカウントを無事に作成しました。"
 
 #: View/Users/sent_mail.ctp:15
 msgid ""
-"Sent a mail to %s. To authenticate the account, click on the URL listed in "
-"the mail ."
+"Sent an email to %s. Click on the URL in the email to authenticate the account."
 msgstr ""
 "%sへメールを送信しました。アカウントを認証する為に、そのメールに記載されたURL"
 "をクリックして下さい。"
 #: View/Users/token_resend.ctp:16
 
-msgid "Re-authentication of the mail address"
+msgid "Re-authentication of email address"
 msgstr "メールアドレスの再認証"
 
 #: View/Users/token_resend.ctp:33
-msgid "We will send the URL of the mail address authentication from Goalous."
-msgstr "Goalousからメールアドレス認証用のURLを送信いたします。"
+msgid "We'll send the URL of the email address authentication."
+msgstr "メールアドレス認証用のURLを送信いたします。"
 
 #: View/Users/two_fa_auth.ctp:33 View/Users/two_fa_auth_recovery.ctp:29
 msgid "Code"
@@ -4474,13 +4473,12 @@ msgid "Here"
 msgstr "こちら"
 
 #: View/Users/two_fa_auth_recovery.ctp:10
-msgid "Enter Recovery Codes"
+msgid "Enter a Recovery Code"
 msgstr "リカバリーコードを入力する"
 
 #: View/Users/two_fa_auth_recovery.ctp:25
-msgid "You can also login with recovery codes."
-msgstr ""
-"アカウントにログインできない場合は、リカバリーコードを使用してログインできま"
+msgid "You can also login with a recovery code."
+msgstr "アカウントにログインできない場合は、リカバリーコードを使用してログインできま"
 "す。"
 
 #: View/Users/two_fa_auth_recovery.ctp:35

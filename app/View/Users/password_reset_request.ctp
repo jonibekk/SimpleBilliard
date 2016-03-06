@@ -13,7 +13,7 @@
 <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default">
-            <div class="panel-heading"><?= __("パスワードの再設定") ?></div>
+            <div class="panel-heading"><?= __("Password Rest") ?></div>
             <?=
             $this->Form->create('User', [
                 'inputDefaults' => [
@@ -28,9 +28,9 @@
                 'novalidate'    => true
             ]); ?>
             <div class="panel-body reset-password-panel-body">
-                <p><?= __("Goalousに登録しているメールアドレスを入力して送信してください。") ?></p>
+                <p><?= __("Enter your email address.") ?></p>
 
-                <p><?= __("Goalousからパスワード再設定用のURLを送信いたします。") ?></p>
+                <p><?= __("We'll send the URL for password reset.") ?></p>
                 <?=
                 $this->Form->input('email', [
                     'label'                        => __("Email Address"),
@@ -42,7 +42,7 @@
             <div class="panel-footer">
                 <div class="form-group">
                     <div class="col-sm-9 col-sm-offset-3">
-                        <?= $this->Form->submit(__("送信"),
+                        <?= $this->Form->submit(__("Send"),
                                                 ['class' => 'btn btn-primary', 'disabled' => 'disabled']) ?>
                     </div>
                 </div>

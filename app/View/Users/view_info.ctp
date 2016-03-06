@@ -15,11 +15,11 @@
         <div class="panel-body view-info-panel">
             <div class="panel panel-default">
                 <div class="panel-heading" style="background-color:#eee; font-size:100%">
-                    <?= __("プロフィール") ?>
+                    <?= __("Profile") ?>
                     <?php if ($this->Session->read('Auth.User.id') == $user['User']['id']): ?>
                         <span class="pull-right" style="font-weight:normal;">
                             <i class="fa fa-pencil"></i>
-                            <?= $this->Html->link(__('編集'), [
+                            <?= $this->Html->link(__('Edit'), [
                                 'controller' => 'users',
                                 'action'     => 'settings',
                                 '#'          => 'profile']) ?>

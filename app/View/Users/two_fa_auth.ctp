@@ -30,17 +30,17 @@
                 ]); ?>
                 <?=
                 $this->Form->input('two_fa_code', [
-                    'label' => __("コード")
+                    'label' => __("Code")
                 ]) ?>
 
                 <div class="form-group">
                     <div class="col-sm-9 col-sm-offset-3">
                         <?=
-                        $this->Form->submit(__("認証"),
+                        $this->Form->submit(__("Authentication"),
                                             ['class' => 'btn btn-primary']) ?>
                         <span class="help-block">
-                            <?= __("認証アプリを使用できない場合は") ?>
-                            <?= $this->Html->link(__("こちら"), [
+                            <?= __("In case you can't use authenticator.") ?>
+                            <?= $this->Html->link(__("Here"), [
                                 'controller' => 'users',
                                 'action'     => 'two_fa_auth_recovery',
                             ]); ?>

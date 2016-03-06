@@ -10,7 +10,7 @@
 <div class="row add-profile">
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default">
-            <div class="panel-heading"><?= __("プロフィールを入力してください") ?></div>
+            <div class="panel-heading"><?= __("Enter your profile.") ?></div>
             <?=
             $this->Form->create('User', [
                 'inputDefaults' => [
@@ -184,7 +184,7 @@
                     <div class="col-sm-9 col-sm-offset-3">
                         <?= $this->Form->hidden('id', ['value' => $this->Session->read('Auth.User.id')]) ?>
                         <?=
-                        $this->Form->submit(__("プロフィールを登録"),
+                        $this->Form->submit(__("Register the profile"),
                                             ['class' => 'btn btn-primary', 'div' => false]) ?>
                         <?php //招待の場合のスキップはホーム、そうじゃない場合はチーム作成
                         $skip_link = isset($this->request->params['named']['invite_token']) ? "/" : ['controller' => 'teams', 'action' => 'add'];
