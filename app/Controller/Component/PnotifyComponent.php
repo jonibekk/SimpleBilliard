@@ -60,9 +60,9 @@ class PnotifyComponent extends Component
     private function _setDefaultOption()
     {
         $this->options[self::TYPE_INFO]['title'] = __("お知らせ");
-        $this->options[self::TYPE_SUCCESS]['title'] = __("成功");
+        $this->options[self::TYPE_SUCCESS]['title'] = __("Success");
         $this->options[self::TYPE_NOTICE]['title'] = __("注意");
-        $this->options[self::TYPE_ERROR]['title'] = __("エラー");
+        $this->options[self::TYPE_ERROR]['title'] = __("Error");
     }
 
     /**

@@ -552,7 +552,7 @@ class AppController extends Controller
     public function _ajaxPreProcess($method = 'ajax')
     {
         if (!$this->request->is($method)) {
-            throw new RuntimeException(__('不正なアクセスです。'));
+            throw new RuntimeException(__('Invalid access'));
         }
         Configure::write('debug', 0);
         $this->layout = 'ajax';

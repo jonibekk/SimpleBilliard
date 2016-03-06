@@ -318,7 +318,7 @@ class CirclesController extends AppController
             ],
             'self_update' => ($this->Auth->user('id') == $this->request->data['CircleMember']['user_id']) ? true : false,
             'message'     => [
-                'title' => __("成功"),
+                'title' => __("Success"),
                 'text'  => $this->request->data['CircleMember']['admin_flg']
                     ? __("Succeeded to set the administrator.")
                     : __("Succeeded to remove from the administrator."),
@@ -436,7 +436,7 @@ class CirclesController extends AppController
             'result'      => [],     // 更新されたデータ
             'self_update' => false,  // 操作者自身が更新されたか
             'message'     => [
-                'title' => __("エラー"),
+                'title' => __("Error"),
                 'text'  => $message,
             ],
         ];
