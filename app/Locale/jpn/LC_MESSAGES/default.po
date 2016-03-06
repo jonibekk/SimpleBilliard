@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: 2016-03-06 21:44+0000\n"
-"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"PO-Revision-Date: 2016-03-07 03:24+0530\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -14,6 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"X-Generator: Poedit 1.8.7\n"
 
 #: Config/Migration/1435197386_data_migration_for_all_team_0625.php:76;77
 #: Model/Team.php:225;226 Model/User.php:1064
@@ -32,7 +33,9 @@ msgstr "Goalous(ゴーラス)"
 
 #: Controller/AppController.php:169
 msgid ""
-"Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. You can use Goalous on Web and on Mobile App."
+"Goalous is one of the best team communication tools. Let your team open. "
+"Your action will be share with your collegues. You can use Goalous on Web "
+"and on Mobile App."
 msgstr ""
 "Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメン"
 "バーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できま"
@@ -117,11 +120,6 @@ msgstr "サークルから外れました。"
 msgid "Failed to change circle belonging status."
 msgstr "サークルの参加設定の保存に失敗しました。"
 
-#: Controller/CirclesController.php:297;348
-msgid ""
-msgstr "サークルの管理者を１人以上設定する必要があります。"
-"One or more members must be assigned as circle administrators.."
-
 #: Controller/CirclesController.php:306;356
 msgid "An error occurred while processing."
 msgstr "処理中にエラーが発生しました。"
@@ -154,9 +152,11 @@ msgstr "メールアドレス変更をキャンセルしました。"
 
 #: Controller/EvaluationsController.php:27;75
 msgid ""
-"Evaluation setting of the team is not enabled. Please contact the team administrator."
+"Evaluation setting of the team is not enabled. Please contact the team "
+"administrator."
 msgstr ""
-"チームの評価設定が有効になっておりません。チーム管理者にお問い合わせください。"
+"チームの評価設定が有効になっておりません。チーム管理者にお問い合わせくださ"
+"い。"
 
 #: Controller/EvaluationsController.php:179
 msgid "Saved the draft."
@@ -190,9 +190,9 @@ msgstr "評価対象"
 msgid "Out of Evaluation"
 msgstr "評価対象外"
 
-#: Controller/GoalApprovalController.php:288
+#: Controller/GoalApprovalController.php:288 Controller/PostsController.php:987
 msgid "Commented."
-msgstr "コメントを送信しました。"
+msgstr "コメントしました。"
 
 #: Controller/GoalApprovalController.php:292;296
 msgid "Move to Done."
@@ -290,9 +290,9 @@ msgstr "アクションを削除しました。"
 msgid "Quitted a collaborator."
 msgstr "コラボレータから外れました。"
 
-#: Controller/GoalsController.php:750
+#: Controller/GoalsController.php:750 Model/Goal.php:1538;1551
 msgid "The goal doesn't exist."
-msgstr "存在しないゴールです。"
+msgstr "ゴールが存在しません。"
 
 #: Controller/GoalsController.php:761
 msgid "Start to follow."
@@ -319,12 +319,16 @@ msgid "Member Number"
 msgstr "Member Number"
 
 #: Controller/GoalsController.php:1114
+#: View/Elements/User/profile_setting.ctp:69 View/Users/add_profile.ctp:57
+#: View/Users/register.ctp:30
 msgid "Last Name"
-msgstr "Sei"
+msgstr "姓(ローマ字)"
 
 #: Controller/GoalsController.php:1115
+#: View/Elements/User/profile_setting.ctp:79 View/Users/add_profile.ctp:64
+#: View/Users/register.ctp:40
 msgid "First Name"
-msgstr "Mei"
+msgstr "名(ローマ字)"
 
 #: Controller/GoalsController.php:1116
 msgid "LastName"
@@ -344,7 +348,7 @@ msgstr "承認ステータス"
 
 #: Controller/GoalsController.php:1120 View/GoalApproval/done.ctp:126
 #: View/GoalApproval/index.ctp:129 View/Goals/add.ctp:72
-#: View/Goals/view_info.ctp:24
+#: View/Goals/view_info.ctp:24 View/Evaluations/view.ctp:313
 msgid "Purpose"
 msgstr "目的"
 
@@ -383,6 +387,7 @@ msgstr "程度(開始時)"
 #: Controller/GoalsController.php:1127
 #: View/Elements/Goal/modal_add_key_result.ctp:153
 #: View/Elements/Goal/modal_edit_key_result.ctp:177 View/Goals/add.ctp:232
+#: View/GoalApproval/done.ctp:120 View/GoalApproval/index.ctp:123
 msgid "Due Date"
 msgstr "期限"
 
@@ -394,14 +399,19 @@ msgstr "開始日"
 #: View/Elements/Goal/modal_goal_description.ctp:129
 #: View/GoalApproval/done.ctp:129 View/GoalApproval/index.ctp:132
 #: View/Goals/add.ctp:408 View/Goals/view_info.ctp:95
+#: View/Elements/Goal/modal_add_action.ctp:76
+#: View/Elements/Team/evaluation_score_setting.ctp:51
+#: View/Elements/Team/goal_category_setting.ctp:48
+#: View/Teams/add_group_vision.ctp:98 View/Teams/add_team_vision.ctp:90
+#: View/Teams/edit_group_vision.ctp:101 View/Teams/edit_team_vision.ctp:93
 msgid "Description"
-msgstr "詳細"
+msgstr "概要"
 
 #: Controller/GoalsController.php:1130 View/Elements/modal_collabo.ctp:71
 #: View/Elements/Goal/modal_add_key_result.ctp:223
 #: View/Elements/Goal/modal_edit_key_result.ctp:247
 #: View/GoalApproval/done.ctp:123 View/GoalApproval/index.ctp:126
-#: View/Goals/add.ctp:426
+#: View/Goals/add.ctp:426 View/Evaluations/view.ctp:336
 msgid "Weight"
 msgstr "重要度"
 
@@ -489,17 +499,13 @@ msgstr "コメントの変更に失敗しました。"
 msgid "This post was deleted."
 msgstr "この投稿は削除されています。"
 
-#: Controller/PostsController.php:987
-msgid "Commented."
-msgstr "コメントしました。"
-
 #: Controller/PostsController.php:1062;1067;1074
 msgid "This file doesn't exist."
 msgstr "ファイルが存在しません。"
 
-#: Controller/PostsController.php:1202
+#: Controller/PostsController.php:1202 View/Elements/gl_common_js.ctp:70
 msgid "Failed to upload."
-msgstr "アップロードに失敗しました"
+msgstr "アップロードに失敗しました。"
 
 #: Controller/PostsController.php:1224
 msgid "File deleted."
@@ -620,7 +626,8 @@ msgstr "問題があるため、招待に失敗しました。"
 #: Controller/TeamsController.php:477
 msgid "Cancelled sending email to %s people who are already in the circle."
 msgstr ""
-"%s人はすでにチームに参加しているユーザのため、メール送信をキャンセルしました。"
+"%s人はすでにチームに参加しているユーザのため、メール送信をキャンセルしまし"
+"た。"
 
 #: Controller/TeamsController.php:486
 msgid "Invited %s people."
@@ -704,7 +711,8 @@ msgstr "チームビジョンを更新しました。"
 
 #: Controller/TeamsController.php:1014
 msgid ""
-"Unable to create group vision as you do not belong to this group, or the vision already exists."
+"Unable to create group vision as you do not belong to this group, or the "
+"vision already exists."
 msgstr ""
 "グループに所属していないか既に存在している為、グループビジョンは作成できませ"
 "ん。"
@@ -881,6 +889,8 @@ msgstr "秘密"
 #: Model/Collaborator.php:41 View/Elements/gl_common_js.ctp:262
 #: View/Elements/my_goals_area.ctp:83
 #: View/Elements/Goal/modal_goal_description.ctp:99
+#: View/Evaluations/view.ctp:328 View/GoalApproval/done.ctp:106
+#: View/GoalApproval/index.ctp:109
 msgid "Collaborator"
 msgstr "コラボレーター"
 
@@ -901,7 +911,10 @@ msgstr "あなた"
 msgid "Evaluator"
 msgstr "評価者"
 
-#: Model/Evaluation.php:147;151
+#: Model/Evaluation.php:147;151 View/Elements/my_goals_area.ctp:59
+#: View/Elements/Goal/modal_goal_description.ctp:89
+#: View/Evaluations/view.ctp:319 View/GoalApproval/done.ctp:106
+#: View/GoalApproval/index.ctp:109
 msgid "Leader"
 msgstr "リーダー"
 
@@ -1033,25 +1046,17 @@ msgstr "このゴールの編集の権限がありません。"
 msgid "You can't change the goal in the evaluation."
 msgstr "このゴールは評価中のため、変更できません。"
 
-#: Model/Goal.php:1538;1551
-msgid "The goal doesn't exist."
-msgstr "ゴールが存在しません。"
-
 #: Model/GoalCategory.php:95
 msgid "Undefined"
 msgstr "未設定"
 
-#: Model/KeyResult.php:36
-msgstr "%"
-msgid "%"
-
 #: Model/KeyResult.php:37
+msgid "%"
 msgstr "¥"
-msgid "¥"
 
 #: Model/KeyResult.php:38
+msgid "¥"
 msgstr "$"
-msgid "$"
 
 #: Model/KeyResult.php:39
 msgid "Other Unit"
@@ -1351,51 +1356,63 @@ msgstr "年"
 msgid "Please select"
 msgstr "選択してください"
 
-#: Model/Team.php:266
+#: Model/Team.php:266 View/Elements/User/profile_setting.ctp:115
+#: View/Users/add_profile.ctp:97
 msgid "Jan"
 msgstr "１月"
 
-#: Model/Team.php:267
+#: Model/Team.php:267 View/Elements/User/profile_setting.ctp:116
+#: View/Users/add_profile.ctp:98
 msgid "Feb"
 msgstr "２月"
 
-#: Model/Team.php:268
+#: Model/Team.php:268 View/Elements/User/profile_setting.ctp:117
+#: View/Users/add_profile.ctp:99
 msgid "Mar"
 msgstr "３月"
 
-#: Model/Team.php:269
+#: Model/Team.php:269 View/Elements/User/profile_setting.ctp:118
+#: View/Users/add_profile.ctp:100
 msgid "Apr"
 msgstr "４月"
 
-#: Model/Team.php:270
+#: Model/Team.php:270 View/Elements/User/profile_setting.ctp:119
+#: View/Users/add_profile.ctp:101
 msgid "May"
 msgstr "５月"
 
-#: Model/Team.php:271
+#: Model/Team.php:271 View/Elements/User/profile_setting.ctp:120
+#: View/Users/add_profile.ctp:102
 msgid "Jun"
 msgstr "６月"
 
-#: Model/Team.php:272
+#: Model/Team.php:272 View/Elements/User/profile_setting.ctp:121
+#: View/Users/add_profile.ctp:103
 msgid "Jul"
 msgstr "７月"
 
-#: Model/Team.php:273
+#: Model/Team.php:273 View/Elements/User/profile_setting.ctp:122
+#: View/Users/add_profile.ctp:104
 msgid "Aug"
 msgstr "８月"
 
-#: Model/Team.php:274
+#: Model/Team.php:274 View/Elements/User/profile_setting.ctp:123
+#: View/Users/add_profile.ctp:105
 msgid "Sep"
 msgstr "９月"
 
-#: Model/Team.php:275
+#: Model/Team.php:275 View/Elements/User/profile_setting.ctp:124
+#: View/Users/add_profile.ctp:106
 msgid "Oct"
 msgstr "１０月"
 
-#: Model/Team.php:276
+#: Model/Team.php:276 View/Elements/User/profile_setting.ctp:125
+#: View/Users/add_profile.ctp:107
 msgid "Nov"
 msgstr "１１月"
 
-#: Model/Team.php:277
+#: Model/Team.php:277 View/Elements/User/profile_setting.ctp:126
+#: View/Users/add_profile.ctp:108
 msgid "Dec"
 msgstr "１２月"
 
@@ -1403,7 +1420,7 @@ msgstr "１２月"
 msgid "If you want to access this page, please switch to the team."
 msgstr "このページにアクセスするには、チームを切り換えてください。"
 
-#: Model/TeamMember.php:192
+#: Model/TeamMember.php:192 View/Elements/header_logged_in.ctp:80
 msgid "There is no team."
 msgstr "チームが存在しません。"
 
@@ -1413,8 +1430,7 @@ msgstr ""
 "あなたはこのチームにアクセスできません。アカウントが無効化されています。"
 
 #: Model/TeamMember.php:263
-msgid ""
-"Only team administrators are allowed to access to this page."
+msgid "Only team administrators are allowed to access to this page."
 msgstr "あなたはチーム管理者では無いため、このページにはアクセスできません。"
 
 #: Model/TeamMember.php:1006;1173;1253
@@ -1666,7 +1682,7 @@ msgstr "最終評価者によるコメント"
 #: Model/TeamMember.php:1863;1867 View/Users/login.ctp:36
 #: View/Users/password_reset_request.ctp:36
 #: View/Users/registration_with_set_password.ctp:39
-#: View/Users/token_resend.ctp:36
+#: View/Users/token_resend.ctp:36 View/Elements/Team/invite.ctp:43
 msgid "Email Address"
 msgstr "メールアドレス"
 
@@ -1691,6 +1707,7 @@ msgid "Last name"
 msgstr "ラストネーム"
 
 #: Model/TeamMember.php:1916;1920 View/Elements/public_circle_item.ctp:33
+#: View/Elements/modal_add_circle.ctp:63
 msgid "Administrators"
 msgstr "管理者"
 
@@ -1745,6 +1762,8 @@ msgstr "サークルを見る"
 
 #: View/Elements/circle_list.ctp:79
 #: View/Elements/circle_list_in_hamburger.ctp:73
+#: View/Elements/header_logged_in_right.ctp:43
+#: View/Elements/modal_add_circle.ctp:19;144
 msgid "Create a circle"
 msgstr "サークルを作成する"
 
@@ -1763,7 +1782,7 @@ msgstr "すべて表示"
 msgid "Action"
 msgstr "アクション"
 
-#: View/Elements/footer.ctp:23
+#: View/Elements/footer.ctp:23 View/Users/register.ctp:122
 msgid "Privacy Policy"
 msgstr "プライバシーポリシー"
 
@@ -1783,10 +1802,6 @@ msgstr "画像ファイルを選択してください。"
 msgid "{{maxFiles}} is the limit you can upload once."
 msgstr "アップロード出来るファイル数は{{maxFiles}}個までです。"
 
-#: View/Elements/gl_common_js.ctp:70
-msgid "Failed to upload."
-msgstr "アップロードに失敗しました。"
-
 #: View/Elements/gl_common_js.ctp:71
 msgid "Cancelled uploading."
 msgstr "アップロードをキャンセルしました。"
@@ -1798,16 +1813,19 @@ msgstr "アップロードをキャンセルしてよろしいですか？"
 #: View/Elements/gl_common_js.ctp:73
 msgid "Not finished uploading yet, please wait just a moment."
 msgstr ""
-"全てのファイルのアップロードが完了していません。アップロード完了までお待ちください。"
+"全てのファイルのアップロードが完了していません。アップロード完了までお待ちく"
+"ださい。"
 
 #: View/Elements/gl_common_js.ctp:74
 msgid "Uploaded files are invalid due. Please try again."
 msgstr ""
-"アップロードしたファイルの有効期限が切れています。再度アップロードしてください。"
+"アップロードしたファイルの有効期限が切れています。再度アップロードしてくださ"
+"い。"
 
 #: View/Elements/gl_common_js.ctp:78
 msgid ""
-"You haven't finished your input data yet. Do you want to leave without finishing?"
+"You haven't finished your input data yet. Do you want to leave without "
+"finishing?"
 msgstr "入力が途中です。このまま移動しますか？"
 
 #: View/Elements/gl_common_js.ctp:79
@@ -1832,7 +1850,8 @@ msgstr "該当なし"
 
 #: View/Elements/gl_common_js.ctp:88
 msgid ""
-"After leaving secret circle, you can't join again by yourself. Do you really want to leave this secret circle?"
+"After leaving secret circle, you can't join again by yourself. Do you really "
+"want to leave this secret circle?"
 msgstr ""
 "秘密のサークルから脱退すると、自分の操作で再度参加できません。よろしいです"
 "か？"
@@ -1903,7 +1922,7 @@ msgstr "以下のURLをコピーしてください。"
 msgid "Join"
 msgstr "参加"
 
-#: View/Elements/gl_common_js.ctp:106
+#: View/Elements/gl_common_js.ctp:106 View/Goals/index.ctp:87
 msgid "..."
 msgstr "不参加"
 
@@ -1971,6 +1990,7 @@ msgstr "エラー"
 #: View/Elements/Team/modal_final_evaluation_by_csv.ctp:102
 #: View/Elements/User/modal_change_email.ctp:63
 #: View/Elements/User/modal_change_password.ctp:64
+#: View/Elements/User/modal_delete_email.ctp:29
 msgid "Cancel"
 msgstr "キャンセル"
 
@@ -2021,10 +2041,6 @@ msgstr "ゴール"
 msgid "Team"
 msgstr "チーム"
 
-#: View/Elements/header_logged_in.ctp:80
-msgid "There is no team."
-msgstr "チームがありません"
-
 #: View/Elements/header_logged_in.ctp:122
 #: View/Elements/modal_public_circles.ctp:23
 #: View/Elements/Feed/site_info_block.ctp:107
@@ -2035,11 +2051,6 @@ msgstr "サークル"
 #: View/Elements/my_goals_area.ctp:54
 msgid "Create a goal"
 msgstr "ゴールを作成"
-
-#: View/Elements/header_logged_in_right.ctp:43
-#: View/Elements/modal_add_circle.ctp:19;144
-msgid "Create a circle"
-msgstr "サークルを作成"
 
 #: View/Elements/header_logged_in_right.ctp:52 View/Teams/add.ctp:141
 msgid "Create a team"
@@ -2131,10 +2142,6 @@ msgstr "サークル名"
 msgid "eg) the sales division"
 msgstr "例) 営業部"
 
-#: View/Elements/modal_add_circle.ctp:63
-msgid "Administrators"
-msgstr "管理者：%s"
-
 #: View/Elements/modal_add_circle.ctp:68 View/Elements/modal_edit_circle.ctp:60
 msgid "Anyone can see the circle, its members and their posts."
 msgstr ""
@@ -2150,8 +2157,8 @@ msgstr ""
 #: View/Elements/modal_add_circle.ctp:75 View/Elements/modal_edit_circle.ctp:66
 msgid "Privacy"
 msgstr "プライバシー"
-#: View/Elements/modal_add_circle.ctp:84
 
+#: View/Elements/modal_add_circle.ctp:84
 msgid "You can't change this setting later."
 msgstr "この設定は後で変更できません"
 
@@ -2235,6 +2242,8 @@ msgid "Change to another file."
 msgstr "別のファイルに変更する"
 
 #: View/Elements/modal_add_members_by_csv.ctp:99
+#: View/Elements/Feed/add_member_on_message.ctp:58
+#: View/Elements/Goal/key_results.ctp:85 View/Users/view_goals.ctp:129
 msgid "Add"
 msgstr "追加する"
 
@@ -2265,7 +2274,7 @@ msgid "Edit Collaborate"
 msgstr "コラボを編集"
 
 #: View/Elements/modal_collabo.ctp:45 View/GoalApproval/done.ctp:108
-#: View/GoalApproval/index.ctp:111
+#: View/GoalApproval/index.ctp:111 View/Evaluations/view.ctp:317
 msgid "Role"
 msgstr "役割"
 
@@ -2316,8 +2325,8 @@ msgstr "管理者から外す"
 
 #: View/Elements/modal_edit_circle.ctp:209
 msgid ""
-"After leaving this circle, you can't edit any circle setting. Do you really want to "
-"leave the circle?"
+"After leaving this circle, you can't edit any circle setting. Do you really "
+"want to leave the circle?"
 msgstr ""
 "自分自身をサークルから外すとサークル情報の編集が出来なくなりますが、よろしい"
 "ですか？"
@@ -2331,6 +2340,8 @@ msgstr "サークルから外す"
 #: View/Elements/User/modal_change_password.ctp:61
 #: View/Elements/User/notify_setting.ctp:91
 #: View/Elements/User/profile_setting.ctp:251
+#: View/Elements/Feed/comment_edit_form.ctp:66
+#: View/Elements/Feed/post_edit_form.ctp:65
 msgid "Save changes"
 msgstr "変更を保存"
 
@@ -2365,6 +2376,8 @@ msgid "Upload edited users information."
 msgstr "変更したユーザ情報のファイルをアップロードしてください。"
 
 #: View/Elements/modal_edit_members_by_csv.ctp:99 View/Goals/add.ctp:39;107;379
+#: View/Elements/Goal/modal_add_key_result.ctp:191
+#: View/Elements/Goal/modal_edit_key_result.ctp:214 View/Goals/add.ctp:274;322
 msgid "Change"
 msgstr "変更する"
 
@@ -2417,6 +2430,9 @@ msgid "Vision"
 msgstr "ビジョン"
 
 #: View/Elements/my_goals_area.ctp:42
+#: View/Elements/Evaluation/evaluatee_by_evaluator.ctp:27
+#: View/Elements/Evaluation/incomplete_evaluatee.ctp:27
+#: View/Elements/Evaluation/incomplete_evaluator.ctp:24
 msgid "View details"
 msgstr "詳細へ"
 
@@ -2424,14 +2440,7 @@ msgstr "詳細へ"
 msgid "Your goals"
 msgstr "あなたのゴール"
 
-#: View/Elements/my_goals_area.ctp:59
-#: View/Elements/Goal/modal_goal_description.ctp:89
-#: View/Evaluations/view.ctp:319 View/GoalApproval/done.ctp:106
-#: View/GoalApproval/index.ctp:109
-msgid "Leader"
-msgstr "リーダー"
-
-#: View/Elements/my_goals_area.ctp:67
+#: View/Elements/my_goals_area.ctp:67 View/Goals/add.ctp:32
 msgid "Create a new goal"
 msgstr "あたらしいゴールをつくる"
 
@@ -2442,12 +2451,6 @@ msgstr "前期の未評価のあなたのゴール"
 #: View/Elements/public_circle_item.ctp:63
 msgid "%s members"
 msgstr "%s メンバー"
-
-#: View/Elements/Evaluation/evaluatee_by_evaluator.ctp:27
-#: View/Elements/Evaluation/incomplete_evaluatee.ctp:27
-#: View/Elements/Evaluation/incomplete_evaluator.ctp:24
-msgid "View details"
-msgstr "詳細を見る"
 
 #: View/Elements/Evaluation/evaluators_status.ctp:34
 #: View/Elements/Goal/modal_goal_description.ctp:143
@@ -2492,6 +2495,7 @@ msgid "Pending self-evaluation"
 msgstr "自己評価未評価者"
 
 #: View/Elements/Feed/action_posts.ctp:31 View/Elements/Feed/posts.ctp:115
+#: View/Elements/Goal/modal_edit_action_result.ctp:20;80
 msgid "Edit Action"
 msgstr "アクションを編集"
 
@@ -2501,6 +2505,8 @@ msgstr "リンクをコピー"
 
 #: View/Elements/Feed/action_posts.ctp:188 View/Elements/Feed/comment.ctp:148
 #: View/Elements/Feed/posts.ctp:358
+#: View/Elements/Team/insight_result.ctp:55;88;123
+#: View/Elements/User/simplex_top_section.ctp:68
 msgid "Like!"
 msgstr "いいね！"
 
@@ -2515,13 +2521,10 @@ msgstr "件の新しいコメントがあります"
 #: View/Elements/Feed/action_posts.ctp:256
 #: View/Elements/Feed/new_comment_form.ctp:42;74
 #: View/Elements/Feed/posts.ctp:459 View/GoalApproval/done.ctp:192
-#: View/GoalApproval/index.ctp:191
+#: View/GoalApproval/index.ctp:191 View/Elements/Feed/posts.ctp:365
+#: View/Elements/Team/insight_result.ctp:61;94;129
 msgid "Comment"
 msgstr "コメントする"
-
-#: View/Elements/Feed/add_member_on_message.ctp:58
-msgid "Add"
-msgstr "追加する"
 
 #: View/Elements/Feed/attached_file_item.ctp:56;185
 #: View/Elements/User/modal_2fa_register.ctp:59;63
@@ -2559,11 +2562,6 @@ msgstr "コメントを削除"
 #: View/Elements/Feed/comment.ctp:57;65
 msgid "Do you really want to delete this comment?"
 msgstr "本当にこのコメントを削除しますか？"
-
-#: View/Elements/Feed/comment_edit_form.ctp:66
-#: View/Elements/Feed/post_edit_form.ctp:65
-msgid "Save changes"
-msgstr "変更を保存する"
 
 #: View/Elements/Feed/common_form.ctp:63
 #: View/Elements/Feed/site_info_block.ctp:103
@@ -2705,11 +2703,6 @@ msgstr "投稿を削除"
 msgid "Do you really want to delete this post?"
 msgstr "本当にこの投稿を削除しますか？"
 
-#: View/Elements/Feed/posts.ctp:365
-#: View/Elements/Team/insight_result.ctp:61;94;129
-msgid "Comment"
-msgstr "コメント"
-
 #: View/Elements/Feed/posts.ctp:402
 msgid "(%s)"
 msgstr "(%s)"
@@ -2741,14 +2734,6 @@ msgstr "なし"
 #: View/Elements/Goal/add_new_action_form.ctp:85
 msgid "Post an action"
 msgstr "アクション登録"
-
-#: View/Elements/Goal/goal_menu_on_my_page.ctp:26
-#: View/Elements/Goal/modal_add_key_result.ctp:238
-#: View/Elements/Goal/modal_last_kr_confirm.ctp:54
-#: View/Elements/Goal/my_goal_area_items.ctp:99;134;169;235
-#: View/Goals/view_krs.ctp:40
-msgstr "達成要素を追加"
-msgid "Add Key Result."
 
 #: View/Elements/Goal/goal_menu_on_my_page.ctp:32
 #: View/Elements/Goal/my_goal_area_items.ctp:106 View/Goals/add.ctp:32
@@ -2797,10 +2782,6 @@ msgstr "期限"
 msgid "Clear"
 msgstr "クリア"
 
-#: View/Elements/Goal/key_results.ctp:85 View/Users/view_goals.ctp:129
-msgid "Add"
-msgstr "追加"
-
 #: View/Elements/Goal/modal_add_action.ctp:22
 msgid "Add action"
 msgstr "アクションを追加する"
@@ -2808,14 +2789,6 @@ msgstr "アクションを追加する"
 #: View/Elements/Goal/modal_add_action.ctp:52
 msgid "Add an image to show the result of your action."
 msgstr "アクションの結果がわかる画像を追加しよう"
-
-#: View/Elements/Goal/modal_add_action.ctp:76
-#: View/Elements/Team/evaluation_score_setting.ctp:51
-#: View/Elements/Team/goal_category_setting.ctp:48
-#: View/Teams/add_group_vision.ctp:98 View/Teams/add_team_vision.ctp:90
-#: View/Teams/edit_group_vision.ctp:101 View/Teams/edit_team_vision.ctp:93
-msgid "Description"
-msgstr "説明"
 
 #: View/Elements/Goal/modal_add_action.ctp:78
 msgid "Write what you did."
@@ -2904,19 +2877,10 @@ msgstr "開始"
 msgid "(Today)"
 msgstr "（本日）"
 
-#: View/Elements/Goal/modal_add_key_result.ctp:191
-#: View/Elements/Goal/modal_edit_key_result.ctp:214 View/Goals/add.ctp:274;322
-msgid "Change"
-msgstr "変更"
-
 #: View/Elements/Goal/modal_add_key_result.ctp:224
 #: View/Elements/Goal/modal_edit_key_result.ctp:248
 msgid "Weight of Key Result for the Goal"
 msgstr "ゴールにとってこの成果の重要度"
-
-#: View/Elements/Goal/modal_edit_action_result.ctp:20;80
-msgid "Edit Action"
-msgstr "アクションを編集"
 
 #: View/Elements/Goal/modal_edit_key_result.ctp:29;263
 msgid "Update Key Result"
@@ -2991,21 +2955,20 @@ msgid "Batch Registration"
 msgstr "一括登録"
 
 #: View/Elements/Team/batch_setup.ctp:21
-msgid ""
-"Managed registration and update of team members by CSV."
-"file."
+msgid "Managed registration and update of team members by CSV.file."
 msgstr "チームメンバーの登録や更新をCSVで一括処理します。"
 
 #: View/Elements/Team/batch_setup.ctp:23
 #: View/Elements/Team/final_evaluation.ctp:35
-msgid ""
-"Download CSV. After editing, upload it."
+msgid "Download CSV. After editing, upload it."
 msgstr ""
 "ファイルをダウンロードし、フォーマットに従って入力したあと、更新済みのCSVファ"
 "イルをアップロードしてください。"
 
 #: View/Elements/Team/batch_setup.ctp:26
-msgid "Existing accounts will be updated. Non-registered members will be registered and get an invitation email."
+msgid ""
+"Existing accounts will be updated. Non-registered members will be registered "
+"and get an invitation email."
 msgstr ""
 "すでに登録済のメンバーはデータ更新され、新規のメンバーは追加で登録され、招待"
 "メールが送信されます。"
@@ -3024,7 +2987,8 @@ msgid "Confirm to delete goal category"
 msgstr "ゴールカテゴリ削除の確認"
 
 #: View/Elements/Team/confirm_to_inactive_goal_category_modal.ctp:21
-msgid "Even if you delete a goal category, there is no affection to the past data."
+msgid ""
+"Even if you delete a goal category, there is no affection to the past data."
 msgstr "ゴールカテゴリを削除しても、過去のデータには影響ありません。"
 
 #: View/Elements/Team/confirm_to_inactive_goal_category_modal.ctp:23
@@ -3124,8 +3088,9 @@ msgid "Previous term before changed"
 msgstr "現在の前期の期間"
 
 #: View/Elements/Team/edit_term_setting.ctp:116
+#: View/Elements/Team/evaluation_start.ctp:40
 msgid "Current term"
-msgstr "現在の今期の期間"
+msgstr "今期"
 
 #: View/Elements/Team/edit_term_setting.ctp:129
 msgid "Next term"
@@ -3224,7 +3189,7 @@ msgid "Evaluation status"
 msgstr "評価状況"
 
 #: View/Elements/Team/evaluation_score_setting.ctp:28
-msgid "Evaluation score settings
+msgid "Evaluation score setting"
 msgstr "評価スコア設定"
 
 #: View/Elements/Team/evaluation_score_setting.ctp:61
@@ -3236,6 +3201,7 @@ msgid "Add definition"
 msgstr "定義を１つ追加"
 
 #: View/Elements/Team/evaluation_setup.ctp:28 View/Teams/settings.ctp:24
+#: View/Teams/settings.ctp:25
 msgid "Evaluation settings"
 msgstr "評価設定"
 
@@ -3350,10 +3316,6 @@ msgstr "このセクションでは、現在の評価設定に基づき、評価
 #: View/Elements/Team/evaluation_start.ctp:36
 msgid "Notice - These settings can't be canceled."
 msgstr "この設定は取り消すことができませんので気を付けてください。"
-
-#: View/Elements/Team/evaluation_start.ctp:40
-msgid "Current term"
-msgstr "今期"
 
 #: View/Elements/Team/evaluation_start.ctp:49
 msgid "You need to active Evaluation settings before starting Evaluation."
@@ -3517,18 +3479,9 @@ msgstr "トータル"
 msgid "Unique"
 msgstr "ユニーク"
 
-#: View/Elements/Team/insight_result.ctp:55;88;123
-#: View/Elements/User/simplex_top_section.ctp:68
-msgid "Like!"
-msgstr "いいね！"
-
 #: View/Elements/Team/invite.ctp:15
 msgid "Invite new members"
 msgstr "新しいメンバーを招待"
-
-#: View/Elements/Team/invite.ctp:43
-msgid "Email Address"
-msgstr "メールアドレス"
 
 #: View/Elements/Team/invite.ctp:51
 msgid ""
@@ -3561,6 +3514,7 @@ msgid "Final evaluation (%s - %s)"
 msgstr "最終評価 (期間：%s - %s)"
 
 #: View/Elements/Team/modal_final_evaluation_by_csv.ctp:47
+#: View/Elements/Team/modal_final_evaluation_by_csv.ctp:53
 msgid "Download evaluation data"
 msgstr "評価データをダウンロード"
 
@@ -3569,10 +3523,6 @@ msgid "Download and edit csv without any changes in header."
 msgstr ""
 "CSVフォーマットの評価データをダウンロードしてください。テンプレートのヘッダー"
 "は変更しないでください。"
-
-#: View/Elements/Team/modal_final_evaluation_by_csv.ctp:53
-msgid "Download evaluation data"
-msgstr "評価データをダウンロード"
 
 #: View/Elements/Team/modal_final_evaluation_by_csv.ctp:62
 msgid "Upload edited evaluation data."
@@ -3587,6 +3537,7 @@ msgid "Account"
 msgstr "アカウント"
 
 #: View/Elements/User/account_setting.ctp:36 View/Users/register.ctp:61;72
+#: View/Elements/User/notify_setting.ctp:55
 msgid "Email"
 msgstr "メール"
 
@@ -3595,6 +3546,7 @@ msgid "Email address can't be changed because of the authentication."
 msgstr "認証待ちのメールアドレスが存在するため、変更はできません。"
 
 #: View/Elements/User/account_setting.ctp:44;61
+#: View/Elements/User/modal_change_email.ctp:18
 msgid "Change email address"
 msgstr "メールアドレスを変更する"
 
@@ -3627,6 +3579,7 @@ msgid "Password"
 msgstr "パスワード"
 
 #: View/Elements/User/account_setting.ctp:107
+#: View/Elements/User/modal_change_password.ctp:18
 msgid "Change password"
 msgstr "パスワードを変更する"
 
@@ -3694,7 +3647,8 @@ msgstr "確認コードを入力する"
 
 #: View/Elements/User/modal_2fa_register.ctp:79
 msgid "After reading QR, enter the code (6 digits)"
-msgstr "バーコードをスキャンしたら、アプリで生成された6桁の確認コードを入力します。"
+msgstr ""
+"バーコードをスキャンしたら、アプリで生成された6桁の確認コードを入力します。"
 
 #: View/Elements/User/modal_2fa_register.ctp:83
 msgid "code"
@@ -3703,10 +3657,6 @@ msgstr "コード"
 #: View/Elements/User/modal_2fa_register.ctp:91
 msgid "Next"
 msgstr "次へ"
-
-#: View/Elements/User/modal_change_email.ctp:18
-msgid "Change email address"
-msgstr "メールアドレスの変更"
 
 #: View/Elements/User/modal_change_email.ctp:36
 msgid "Finished to change, you'll get confirmation email."
@@ -3732,10 +3682,6 @@ msgstr "パスワード入力"
 msgid "Send confirmation email"
 msgstr "認証メールを送信"
 
-#: View/Elements/User/modal_change_password.ctp:18
-msgid "Change password"
-msgstr "パスワードの変更"
-
 #: View/Elements/User/modal_change_password.ctp:38
 msgid "Current password"
 msgstr "現在のパスワード"
@@ -3747,8 +3693,12 @@ msgstr "新しいパスワード"
 #: View/Elements/User/modal_change_password.ctp:46
 #: View/Users/password_reset.ctp:34 View/Users/register.ctp:96
 #: View/Users/registration_with_set_password.ctp:48
-msgid "Use at least 8 characters and use a mix of capital characters, small characters and numbers. Symbols are not allowed."
-msgstr "8文字以上。アルファベット大文字、小文字、数字が混在している必要があります。記号は使えません。"
+msgid ""
+"Use at least 8 characters and use a mix of capital characters, small "
+"characters and numbers. Symbols are not allowed."
+msgstr ""
+"8文字以上。アルファベット大文字、小文字、数字が混在している必要があります。記"
+"号は使えません。"
 
 #: View/Elements/User/modal_change_password.ctp:53
 #: View/Users/password_reset.ctp:40 View/Users/register.ctp:103
@@ -3764,16 +3714,13 @@ msgstr "確認"
 msgid "Do you really want to cancel the changing of your mail address?%s"
 msgstr "メールアドレス変更をキャンセルしますか？"
 
-#: View/Elements/User/modal_delete_email.ctp:29
-msgid "Cancel"
-msgstr "キャンセル"
-
 #: View/Elements/User/modal_recovery_code.ctp:12
 msgid "Recovery Codes"
 msgstr "リカバリーコード"
 
 #: View/Elements/User/modal_recovery_code.ctp:16
-msgid "Keep them somewhere safe and acessible. Each code can be used only once."
+msgid ""
+"Keep them somewhere safe and acessible. Each code can be used only once."
 msgstr ""
 "これらのコードを印刷するか書き留めて、安全な場所に保管しましょう。各リカバ"
 "リーコードは１回のみ使用できます。"
@@ -3788,7 +3735,8 @@ msgstr "新しいリカバリーコードを作成"
 
 #: View/Elements/User/modal_recovery_code.ctp:33
 msgid "After making new recovery codes, old ones will be unavailable."
-msgstr "新しいリカバリーコードを生成すると、上記のリカバリーコードは無効になります。"
+msgstr ""
+"新しいリカバリーコードを生成すると、上記のリカバリーコードは無効になります。"
 
 #: View/Elements/User/notify_setting.ctp:18 View/Users/settings.ctp:20
 msgid "Notification"
@@ -3801,10 +3749,6 @@ msgstr "Goalousサイト"
 #: View/Elements/User/notify_setting.ctp:48;101
 msgid "You'll get all notification."
 msgstr "すべての通知が送信されます。"
-
-#: View/Elements/User/notify_setting.ctp:55
-msgid "Email"
-msgstr "メール"
 
 #: View/Elements/User/notify_setting.ctp:74
 msgid "Mobile App"
@@ -3840,73 +3784,15 @@ msgstr "名(%s)"
 msgid "eg. Bruce"
 msgstr "例) 太郎"
 
-#: View/Elements/User/profile_setting.ctp:69 View/Users/add_profile.ctp:57
-#: View/Users/register.ctp:30
-msgid "Last Name"
-msgstr "姓(ローマ字)"
-
 #: View/Elements/User/profile_setting.ctp:70 View/Users/add_profile.ctp:58
 #: View/Users/register.ctp:31
 msgid "eg. Armstrong"
 msgstr "例) Suzuki"
 
-#: View/Elements/User/profile_setting.ctp:79 View/Users/add_profile.ctp:64
-#: View/Users/register.ctp:40
-msgid "First Name"
-msgstr "名(ローマ字)"
-
 #: View/Elements/User/profile_setting.ctp:80 View/Users/add_profile.ctp:65
 #: View/Users/register.ctp:41
 msgid "eg. Harry"
 msgstr "例) Hiroshi"
-
-#: View/Elements/User/profile_setting.ctp:115 View/Users/add_profile.ctp:97
-msgid "Jan"
-msgstr "1月"
-
-#: View/Elements/User/profile_setting.ctp:116 View/Users/add_profile.ctp:98
-msgid "Feb"
-msgstr "2月"
-
-#: View/Elements/User/profile_setting.ctp:117 View/Users/add_profile.ctp:99
-msgid "Mar"
-msgstr "3月"
-
-#: View/Elements/User/profile_setting.ctp:118 View/Users/add_profile.ctp:100
-msgid "Apr"
-msgstr "4月"
-
-#: View/Elements/User/profile_setting.ctp:119 View/Users/add_profile.ctp:101
-msgid "May"
-msgstr "5月"
-
-#: View/Elements/User/profile_setting.ctp:120 View/Users/add_profile.ctp:102
-msgid "Jun"
-msgstr "6月"
-
-#: View/Elements/User/profile_setting.ctp:121 View/Users/add_profile.ctp:103
-msgid "Jul"
-msgstr "7月"
-
-#: View/Elements/User/profile_setting.ctp:122 View/Users/add_profile.ctp:104
-msgid "Aug"
-msgstr "8月"
-
-#: View/Elements/User/profile_setting.ctp:123 View/Users/add_profile.ctp:105
-msgid "Sep"
-msgstr "9月"
-
-#: View/Elements/User/profile_setting.ctp:124 View/Users/add_profile.ctp:106
-msgid "Oct"
-msgstr "10月"
-
-#: View/Elements/User/profile_setting.ctp:125 View/Users/add_profile.ctp:107
-msgid "Nov"
-msgstr "11月"
-
-#: View/Elements/User/profile_setting.ctp:126 View/Users/add_profile.ctp:108
-msgid "Dec"
-msgstr "12月"
 
 #: View/Elements/User/profile_setting.ctp:142 View/Users/add_profile.ctp:124
 msgid "Hide birth year"
@@ -3955,16 +3841,7 @@ msgid "Show Examples."
 msgstr "例文を表示"
 
 #: View/Elements/User/profile_setting.ctp:232
-msgid "[Now, What is that you can contribute to the team?]<br>\n
-Consulting UX of your production.<br>\n
-[What is the thing you want to achieve in the team?(Specifically)]<br>\n
-Innovation methods - Remote collaboration - Creativity - UX at C-level - Holocracy<br>\n
-[Others]<br>\n
-Need New Customers?<br>\n
-1. Be focused on culture above all else, get happy employees.<br>\n
-2. Create a culture of innovation, team spirit, collaboration, creativity everywhere<br>\n
-3. Simplify everything
-"
+msgid "[Now, What is that you can contribute to the team?]<br>\\"
 msgstr ""
 "\n"
 "■ 例文１（技術者向け）<br>\n"
@@ -4052,29 +3929,13 @@ msgstr "ゴール評価"
 msgid "Goal Image"
 msgstr "ゴール画像"
 
-#: View/Evaluations/view.ctp:313
-msgid "Purpose"
-msgstr "目的"
-
-#: View/Evaluations/view.ctp:317
-msgid "Role"
-msgstr "役割"
-
 #: View/Evaluations/view.ctp:322
 msgid "Goal Details"
 msgstr "ゴール詳細"
 
-#: View/Evaluations/view.ctp:328
-msgid "Collaborator"
-msgstr "コラボレーター"
-
 #: View/Evaluations/view.ctp:332
 msgid "Progress"
 msgstr "進捗"
-
-#: View/Evaluations/view.ctp:336
-msgid "Weight"
-msgstr "比重"
 
 #: View/GoalApproval/done.ctp:62 View/GoalApproval/index.ctp:62
 msgid "Waiting"
@@ -4085,17 +3946,9 @@ msgid "Done"
 msgstr "処理済み"
 
 #: View/GoalApproval/done.ctp:100 View/GoalApproval/index.ctp:102
-#: View/Goals/add.ctp:140
+#: View/Goals/add.ctp:140 View/Goals/view_info.ctp:26
 msgid "Category"
 msgstr "カテゴリー"
-
-#: View/GoalApproval/done.ctp:106 View/GoalApproval/index.ctp:109
-msgid "Collaborator"
-msgstr "コラボレーター"
-
-#: View/GoalApproval/done.ctp:120 View/GoalApproval/index.ctp:123
-msgid "Due Date"
-msgstr "期限"
 
 #: View/GoalApproval/done.ctp:156 View/GoalApproval/index.ctp:159
 msgid "Remove from target of evaluation"
@@ -4112,10 +3965,6 @@ msgstr "ゴールを修正する"
 #: View/GoalApproval/index.ctp:195
 msgid "Request to modify."
 msgstr "修正を依頼"
-
-#: View/Goals/add.ctp:32
-msgid "Create a new goal"
-msgstr "新しいゴールを作成"
 
 #: View/Goals/add.ctp:36
 msgid "Decide Your Purpose"
@@ -4214,10 +4063,6 @@ msgstr "フォロワーはいません。"
 msgid "Load further"
 msgstr "さらに読み込む"
 
-#: View/Goals/view_info.ctp:26
-msgid "Category"
-msgstr "カテゴリー"
-
 #: View/Goals/view_krs.ctp:20
 msgid "Goal progress rate"
 msgstr "ゴール進捗率"
@@ -4308,29 +4153,17 @@ msgstr "チームビジョン名"
 msgid "Create a team vision"
 msgstr "チームビジョンを作成"
 
-#: View/Teams/edit_group_vision.ctp:17
+#: View/Teams/edit_group_vision.ctp:17 View/Teams/edit_group_vision.ctp:114
 msgid "Update a group vision"
 msgstr "グループビジョンを更新する"
 
-#: View/Teams/edit_group_vision.ctp:114
-msgid "Update a group vision"
-msgstr "グループビジョンを更新する"
-
-#: View/Teams/edit_team_vision.ctp:16
-msgid "Update a team vision"
-msgstr "チームビジョンを更新する"
-
-#: View/Teams/edit_team_vision.ctp:106
+#: View/Teams/edit_team_vision.ctp:16 View/Teams/edit_team_vision.ctp:106
 msgid "Update a team vision"
 msgstr "チームビジョンを更新する"
 
 #: View/Teams/settings.ctp:21
 msgid "Invitation"
 msgstr "招待"
-
-#: View/Teams/settings.ctp:25
-msgid "Evaluation settings"
-msgstr "評価スコア設定"
 
 #: View/Teams/settings.ctp:27
 msgid "Pause evaluation"
@@ -4397,10 +4230,6 @@ msgstr "新しいアカウントを作成"
 msgid "Terms of Use"
 msgstr "利用規約"
 
-#: View/Users/register.ctp:122
-msgid "Privacy Policy"
-msgstr "プライバシーポリシー"
-
 #: View/Users/register.ctp:138
 msgid "I agree to %s and %s of Goalous."
 msgstr "Goalousの%sと%sに同意します。"
@@ -4439,12 +4268,13 @@ msgstr "あなたのGoalousアカウントを無事に作成しました。"
 
 #: View/Users/sent_mail.ctp:15
 msgid ""
-"Sent an email to %s. Click on the URL in the email to authenticate the account."
+"Sent an email to %s. Click on the URL in the email to authenticate the "
+"account."
 msgstr ""
 "%sへメールを送信しました。アカウントを認証する為に、そのメールに記載されたURL"
 "をクリックして下さい。"
-#: View/Users/token_resend.ctp:16
 
+#: View/Users/token_resend.ctp:16
 msgid "Re-authentication of email address"
 msgstr "メールアドレスの再認証"
 
@@ -4474,7 +4304,8 @@ msgstr "リカバリーコードを入力する"
 
 #: View/Users/two_fa_auth_recovery.ctp:25
 msgid "You can also login with a recovery code."
-msgstr "アカウントにログインできない場合は、リカバリーコードを使用してログインできま"
+msgstr ""
+"アカウントにログインできない場合は、リカバリーコードを使用してログインできま"
 "す。"
 
 #: View/Users/two_fa_auth_recovery.ctp:35
