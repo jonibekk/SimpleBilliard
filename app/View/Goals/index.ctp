@@ -84,7 +84,7 @@
                 </div>
             </div>
         </div>
-        <p class="goals-search-count"><?= __("Goals found") ?><span class="goals-search-count-number"><?= $goal_count ?></span><?= __("...") ?></p>
+        <p class="goals-search-count"><?= __("Goals found") ?><span class="goals-search-count-number"><?= $goal_count ?></span></p>
         <div class="goals-page-cards">
             <?php if (empty($goals)): ?>
                 <div class="col col-xxs-12 mt_16px">

@@ -4193,10 +4193,6 @@ msgstr "みんなのゴール"
 msgid "Goals found"
 msgstr "対象ゴール"
 
-#: View/Goals/index.ctp:87
-msgid "..."
-msgstr "件"
-
 #: View/Goals/index.ctp:92
 msgid "No Goal"
 msgstr "対象ゴールがありません。"
