@@ -301,9 +301,9 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                 </div>
                             </div>
                             <div class="form-group" id="KeyResult0EvaluateTermContainer">
-                                <label for="KeyResult0EvaluateTerm"
-                                       class="col col-sm-3 control-label goal-set-mid-label"><?=
-                                    __(" Evaluation terms") ?></label>
+                                <label for="KeyResult0EvaluateTerm" class="col col-sm-3 control-label goal-set-mid-label">
+                                    <?= __("Evaluation terms") ?>
+                                </label>
 
                                 <div class="col col-sm-9">
                                     <p class="form-control-static"
@@ -320,7 +320,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                                 <a href="#" class="target-show-target-del"
                                                    show-target-id="KeyResult0EvaluateTermInputWrap"
                                                    delete-target-id="KeyResult0EvaluateTermDefault">
-                                                    <?= __("変更") ?>
+                                                    <?= __("Change") ?>
                                                 </a>
                                             <?php endif; ?>
                                         </span>

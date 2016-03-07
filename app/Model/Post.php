@@ -1177,7 +1177,7 @@ class Post extends AppModel
                                                         $data[$key]['share_user_name']);
                     }
                     else {
-                        $data[$key]['share_text'] = __('Shared %1$s and %2$s ithers',
+                        $data[$key]['share_text'] = __('Shared %1$s and %2$s others',
                                                         $data[$key]['share_user_name'],
                                                         count($val['PostShareUser']) - 1);
                     }
