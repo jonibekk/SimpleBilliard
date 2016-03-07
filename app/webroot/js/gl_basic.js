@@ -1987,7 +1987,7 @@ $(document).ready(function () {
                         var $checkbox = $(this);
                         var $form = $('#CircleJoinForm');
                         $form.find('input[name="data[Circle][0][join]"]').val(state ? '1' : '0');
-                        $form.find('input[name="data[Circle][0][circle_id]"]').val($checkbox.attr('data-id'));
+                        $form.find('input[name="data[Circle][0][circle_id]"]').val(sanitize($checkbox.attr('data-id')));
 
                         // 秘密サークルの場合は確認ダイアログ表示
                         if ($checkbox.attr('data-secret') == '1') {
@@ -3244,13 +3244,13 @@ function evCircleFeed(options) {
 
     var $obj = $(this);
     var get_url = $obj.attr('get-url');
-    var circle_id = $obj.attr('circle-id');
+    var circle_id = sanitize($obj.attr('circle-id'));
     var image_url = $obj.attr('image-url');
     // DOMから取得し再度DOMに投入するデータなのでサニタイズを行う
     var title = sanitize($obj.attr('title'));
     var public_flg = $obj.attr('public-flg');
     var team_all_flg = $obj.attr('team-all-flg');
-    var oldest_post_time = $obj.attr('oldest-post-time');
+    var oldest_post_time = sanitize($obj.attr('oldest-post-time'));
     updateCakeValue(circle_id, title, image_url);
 
     if ($obj.attr('class') == 'circle-link') {
@@ -4444,7 +4444,7 @@ function initMessageNum() {
 
 function initTitle() {
     var $title = $("title");
-    $title.text($title.attr("origin-title"));
+    $title.text(sanitize($title.attr("origin-title")));
 }
 
 function getBellBoxSelector() {
@@ -5178,7 +5178,7 @@ $(document).ready(function () {
                 $('#' + old_file.file_id).remove();
 
                 // サーバ上から削除
-                $removeFileForm.find('input[name="data[AttachedFile][file_id]"]').val(old_file.file_id);
+                $removeFileForm.find('input[name="data[AttachedFile][file_id]"]').val(sanitize(old_file.file_id));
                 $.ajax({
                         url: cake.url.remove_file,
                         type: 'POST',
