@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2016-03-07 03:25+0530\n"
-"PO-Revision-Date: 2016-03-07 03:41+0530\n"
+"POT-Creation-Date: 2016-03-07 03:44+0530\n"
+"PO-Revision-Date: 2016-03-07 09:41+0530\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -16,20 +16,29 @@ msgstr ""
 "X-Generator: Poedit 1.8.7\n"
 
 #: Config/Migration/1435197386_data_migration_for_all_team_0625.php:76;77
+#: Model/Team.php:225;226 Model/User.php:1064
 msgid "All Team"
 msgstr "チーム全体"
 
 #: Console/Command/DataShell.php:189
 msgid "Import is canceled because there already exist test data."
-msgstr "既にテストデータが存在するため、テストデータのインポートをキャンセルしました。"
+msgstr ""
+"既にテストデータが存在するため、テストデータのインポートをキャンセルしまし"
+"た。"
 
 #: Controller/AppController.php:162;165
 msgid "Goalous"
 msgstr "Goalous(ゴーラス)"
 
 #: Controller/AppController.php:169
-msgid "Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. You can use Goalous on Web and on Mobile App."
-msgstr "Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。スマホアプリ・ブラウザで利用可能です。"
+msgid ""
+"Goalous is one of the best team communication tools. Let your team open. "
+"Your action will be share with your collegues. You can use Goalous on Web "
+"and on Mobile App."
+msgstr ""
+"Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメン"
+"バーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できま"
+"す。スマホアプリ・ブラウザで利用可能です。"
 
 #: Controller/AppController.php:215
 msgid "Logged out because the team you logged in is deleted."
@@ -122,8 +131,9 @@ msgstr "サークル管理者は最低ひとりは必須です。"
 msgid "An error occured while processing."
 msgstr "処理中にエラーが発生しました。"
 
-#: Controller/CirclesController.php:321
+#: Controller/CirclesController.php:321;369
 #: Controller/Component/PnotifyComponent.php:63
+#: View/Elements/gl_common_js.ctp:122
 msgid "Success"
 msgstr "成功"
 
@@ -134,10 +144,6 @@ msgstr "管理者に設定しました。"
 #: Controller/CirclesController.php:324
 msgid "Succeeded to remove from the administrator."
 msgstr "管理者から外しました。"
-
-#: Controller/CirclesController.php:369 View/Elements/gl_common_js.ctp:122
-msgid "Success"
-msgstr "成功"
 
 #: Controller/CirclesController.php:370
 msgid "Removed from the circle members."
@@ -156,6 +162,7 @@ msgstr "設定を更新しました。"
 
 #: Controller/CirclesController.php:439
 #: Controller/Component/PnotifyComponent.php:65
+#: View/Elements/gl_common_js.ctp:123
 msgid "Error"
 msgstr "エラー"
 
@@ -172,8 +179,12 @@ msgid "To change email address is canceled."
 msgstr "メールアドレス変更をキャンセルしました。"
 
 #: Controller/EvaluationsController.php:27;75
-msgid "Evaluation setting of the team is not enabled. Please contact the team administrator."
-msgstr "チームの評価設定が有効になっておりません。チーム管理者にお問い合わせください。"
+msgid ""
+"Evaluation setting of the team is not enabled. Please contact the team "
+"administrator."
+msgstr ""
+"チームの評価設定が有効になっておりません。チーム管理者にお問い合わせくださ"
+"い。"
 
 #: Controller/EvaluationsController.php:179
 msgid "Saved the draft."
@@ -697,7 +708,9 @@ msgstr "問題があるため、招待に失敗しました。"
 
 #: Controller/TeamsController.php:477
 msgid "Cancelled sending email to %s people who are already in the circle."
-msgstr "%s人はすでにチームに参加しているユーザのため、メール送信をキャンセルしました。"
+msgstr ""
+"%s人はすでにチームに参加しているユーザのため、メール送信をキャンセルしまし"
+"た。"
 
 #: Controller/TeamsController.php:486
 msgid "Invited %s people."
@@ -788,8 +801,12 @@ msgid "Updated team vision."
 msgstr "チームビジョンを更新しました。"
 
 #: Controller/TeamsController.php:1014
-msgid "Unable to create group vision as you don't belong to this group or the vision already exists."
-msgstr "グループに所属していないか、すでにグループビジョンがあるので、あたらしいグループビジョンはつくれません。"
+msgid ""
+"Unable to create group vision as you don't belong to this group or the "
+"vision already exists."
+msgstr ""
+"グループに所属していないか、すでにグループビジョンがあるので、あたらしいグ"
+"ループビジョンはつくれません。"
 
 #: Controller/TeamsController.php:1025
 msgid "Added group vision."
@@ -844,8 +861,11 @@ msgid "Code is incorrect."
 msgstr "トークンが正しくありません。"
 
 #: Controller/UsersController.php:381
-msgid "Email address is incorrect. Please enter the address from the email you received."
-msgstr "メールアドレスが一致しません。招待が届いたメールアドレスを入力してください。"
+msgid ""
+"Email address is incorrect. Please enter the address from the email you "
+"received."
+msgstr ""
+"メールアドレスが一致しません。招待が届いたメールアドレスを入力してください。"
 
 #: Controller/UsersController.php:500
 msgid "本登録が完了しました！"
@@ -872,8 +892,12 @@ msgid "Email sent."
 msgstr "メールを送信しました"
 
 #: Controller/UsersController.php:584
-msgid "Password code incorrect. The validity period may have expired. Please resend email again."
-msgstr "パスワードトークンが正しくないか、期限切れの可能性があります。もう一度、再設定用のメールを送信してください。"
+msgid ""
+"Password code incorrect. The validity period may have expired. Please resend "
+"email again."
+msgstr ""
+"パスワードトークンが正しくないか、期限切れの可能性があります。もう一度、再設"
+"定用のメールを送信してください。"
 
 #: Controller/UsersController.php:585
 msgid "Failed to confirm code."
@@ -1258,68 +1282,119 @@ msgid "Other %d circles"
 msgstr ""
 
 #: Model/NotifySetting.php:454
-msgid "<span class=\"notify-card-head-target\">%1$s%2$s</span> posted in <span class=\"notify-card-head-target\">%3$s</span>."
-msgstr "<span class=\"notify-card-head-target\">%1$s%2$s</span>が<span class=\"notify-card-head-target\">%3$s</span>に投稿しました。"
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s%2$s</span> posted in <span "
+"class=\"notify-card-head-target\">%3$s</span>."
+msgstr ""
+"<span class=\"notify-card-head-target\">%1$s%2$s</span>が<span class="
+"\"notify-card-head-target\">%3$s</span>に投稿しました。"
 
 #: Model/NotifySetting.php:457;464;481;487
 msgid "and %s others"
 msgstr ""
 
 #: Model/NotifySetting.php:461
-msgid "<span class=\"notify-card-head-target\">%1$s%2$s</span> commented on <span class=\"notify-card-head-target\">your </span>post."
-msgstr "<span class=\"notify-card-head-target\">%1$s%2$s</span>が<span class=\"notify-card-head-target\">あなた</span>の投稿にコメントしました。"
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s%2$s</span> commented on <span "
+"class=\"notify-card-head-target\">your </span>post."
+msgstr ""
+"<span class=\"notify-card-head-target\">%1$s%2$s</span>が<span class="
+"\"notify-card-head-target\">あなた</span>の投稿にコメントしました。"
 
 #: Model/NotifySetting.php:473;609 View/Evaluations/index.ctp:55
 msgid "his/her"
 msgstr ""
 
 #: Model/NotifySetting.php:478
-msgid "<span class=\"notify-card-head-target\">%1$s%2$s</span> also commented on <span class=\"notify-card-head-target\">%3$s</span>'s post."
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s%2$s</span> also commented on "
+"<span class=\"notify-card-head-target\">%3$s</span>'s post."
 msgstr ""
 
 #: Model/NotifySetting.php:485
-msgid "<span class=\"notify-card-head-target\">%1$s%2$s</span> joined the circle."
-msgstr "<span class=\"notify-card-head-target\">%1$s%2$s</span>がサークルに参加しました。"
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s%2$s</span> joined the circle."
+msgstr ""
+"<span class=\"notify-card-head-target\">%1$s%2$s</span>がサークルに参加しまし"
+"た。"
 
 #: Model/NotifySetting.php:491
-msgid "<span class=\"notify-card-head-target\">%1$s</span>がサークルのプライバシー設定を「<span class=\"notify-card-head-target\">%2$s</span>」に変更しました。"
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s</span>がサークルのプライバシー設"
+"定を「<span class=\"notify-card-head-target\">%2$s</span>」に変更しました。"
 msgstr ""
 
 #: Model/NotifySetting.php:496
-msgid "<span class=\"notify-card-head-target\">%1$s</span> add <span class=\"notify-card-head-target\">you </span>to the circle."
-msgstr "<span class=\"notify-card-head-target\">%1$s</span>がサークルに<span class=\"notify-card-head-target\">あなた</span>を追加しました。"
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s</span> add <span class=\"notify-"
+"card-head-target\">you </span>to the circle."
+msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span>がサークルに<span class="
+"\"notify-card-head-target\">あなた</span>を追加しました。"
 
 #: Model/NotifySetting.php:504
-msgid "<span class=\"notify-card-head-target\">%1$s</span> has followed <span class=\"notify-card-head-target\">%2$s</span>."
-msgstr "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-card-head-target\">%2$s</span>をフォローしました。"
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s</span> has followed <span class="
+"\"notify-card-head-target\">%2$s</span>."
+msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
+"card-head-target\">%2$s</span>をフォローしました。"
 
 #: Model/NotifySetting.php:513;568
-msgid "<span class=\"notify-card-head-target\">%1$s</span> has collaborate with <span class=\"notify-card-head-target\">%2$s</span>."
-msgstr "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-card-head-target\">%2$s</span>にコラボりました。"
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s</span> has collaborate with "
+"<span class=\"notify-card-head-target\">%2$s</span>."
+msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
+"card-head-target\">%2$s</span>にコラボりました。"
 
 #: Model/NotifySetting.php:522
-msgid "<span class=\"notify-card-head-target\">%1$s</span> has changed information on <span class=\"notify-card-head-target\">%2$s</span>."
-msgstr "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-card-head-target\">%2$s</span>の内容を変更しました。"
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s</span> has changed information "
+"on <span class=\"notify-card-head-target\">%2$s</span>."
+msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
+"card-head-target\">%2$s</span>の内容を変更しました。"
 
 #: Model/NotifySetting.php:531
-msgid "<span class=\"notify-card-head-target\">%1$s</span> has evaluated <span class=\"notify-card-head-target\">%2$s</span>."
-msgstr "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-card-head-target\">%2$s</span>を評価対象としました。"
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s</span> has evaluated <span "
+"class=\"notify-card-head-target\">%2$s</span>."
+msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
+"card-head-target\">%2$s</span>を評価対象としました。"
 
 #: Model/NotifySetting.php:540
-msgid "<span class=\"notify-card-head-target\">%1$s</span> requested <span class=\"notify-card-head-target\">%2$s</span> to modify."
-msgstr "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-card-head-target\">%2$s</span>に修正依頼をしました。"
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s</span> requested <span class="
+"\"notify-card-head-target\">%2$s</span> to modify."
+msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
+"card-head-target\">%2$s</span>に修正依頼をしました。"
 
 #: Model/NotifySetting.php:550
-msgid "<span class=\"notify-card-head-target\">%1$s</span> has not evaluated <span class=\"notify-card-head-target\">%2$s</span>."
-msgstr "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-card-head-target\">%2$s</span>を評価対象外としました。"
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s</span> has not evaluated <span "
+"class=\"notify-card-head-target\">%2$s</span>."
+msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
+"card-head-target\">%2$s</span>を評価対象外としました。"
 
 #: Model/NotifySetting.php:559
-msgid "<span class=\"notify-card-head-target\">%1$s</span> created <span class=\"notify-card-head-target\">%2$s</span>."
-msgstr "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-card-head-target\">%2$s</span>を作成しました。"
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s</span> created <span class="
+"\"notify-card-head-target\">%2$s</span>."
+msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
+"card-head-target\">%2$s</span>を作成しました。"
 
 #: Model/NotifySetting.php:577
-msgid "<span class=\"notify-card-head-target\">%1$s</span> has updated <span class=\"notify-card-head-target\">%2$s</span>."
-msgstr "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-card-head-target\">%2$s</span>を修正しました。"
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s</span> has updated <span class="
+"\"notify-card-head-target\">%2$s</span>."
+msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
+"card-head-target\">%2$s</span>を修正しました。"
 
 #: Model/NotifySetting.php:583
 msgid "Begin evaluation term."
@@ -1342,20 +1417,29 @@ msgid "Last evaluator finished evaluation."
 msgstr "最終者が評価を実施しました。"
 
 #: Model/NotifySetting.php:598
-msgid "<span class=\"notify-card-head-target\">%1$s</span> commented on <span class=\"notify-card-head-target\">your </span>action."
-msgstr "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-card-head-target\">あなた</span>のアクションにコメントしました。"
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s</span> commented on <span class="
+"\"notify-card-head-target\">your </span>action."
+msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
+"card-head-target\">あなた</span>のアクションにコメントしました。"
 
 #: Model/NotifySetting.php:614
-msgid "<span class=\"notify-card-head-target\">%1$s</span> also commented on <span class=\"notify-card-head-target\">%2$s</span>'s action"
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s</span> also commented on <span "
+"class=\"notify-card-head-target\">%2$s</span>'s action"
 msgstr ""
 
 #: Model/NotifySetting.php:623
-msgid "<span class=\"notify-card-head-target\">%1$s</span> added an action on<span class=\"notify-card-head-target\">%2$s</span>."
+msgid ""
+"<span class=\"notify-card-head-target\">%1$s</span> added an action on<span "
+"class=\"notify-card-head-target\">%2$s</span>."
 msgstr ""
 
 #: Model/NotifySetting.php:629
 msgid "<span class=\"notify-card-head-target\">%1$s</span> joined this team."
-msgstr "<span class=\"notify-card-head-target\">%1$s</span>がチームに参加しました。"
+msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span>がチームに参加しました。"
 
 #: Model/NotifySetting.php:632
 msgid "<span class=\"notify-card-head-target\">%1$s%2$s</span>"
@@ -1449,10 +1533,6 @@ msgstr "今期から"
 msgid "From next term"
 msgstr "来期から"
 
-#: Model/Team.php:225;226 Model/User.php:1064
-msgid "All Team"
-msgstr "チーム全体"
-
 #: Model/Team.php:254;265
 msgid "Please select"
 msgstr "選択してください"
@@ -1539,7 +1619,8 @@ msgstr "チームが存在しません。"
 
 #: Model/TeamMember.php:195
 msgid "You can't access to this team. Your account has been disabled."
-msgstr "あなたはこのチームにアクセスできません。アカウントが無効化されています。"
+msgstr ""
+"あなたはこのチームにアクセスできません。アカウントが無効化されています。"
 
 #: Model/TeamMember.php:263
 msgid "Only team administrators are allowed to access to this page."
@@ -1668,32 +1749,32 @@ msgid "Birthday"
 msgstr "誕生日"
 
 #: Model/TeamMember.php:1783;1810
-msgid "Gtoup 1"
-msgstr ""
+msgid "Group 1"
+msgstr "グループ1"
 
 #: Model/TeamMember.php:1784;1811
-msgid "Gtoup 2"
-msgstr ""
+msgid "Group 2"
+msgstr "グループ2"
 
 #: Model/TeamMember.php:1785;1812
-msgid "Gtoup 3"
-msgstr ""
+msgid "Group 3"
+msgstr "グループ3"
 
 #: Model/TeamMember.php:1786;1813
-msgid "Gtoup 4"
-msgstr ""
+msgid "Group 4"
+msgstr "グループ4"
 
 #: Model/TeamMember.php:1787;1814
-msgid "Gtoup 5"
-msgstr ""
+msgid "Group 5"
+msgstr "グループ5"
 
 #: Model/TeamMember.php:1788;1815
-msgid "Gtoup 6"
-msgstr ""
+msgid "Group 6"
+msgstr "グループ6"
 
 #: Model/TeamMember.php:1789;1816
-msgid "Gtoup 7"
-msgstr ""
+msgid "Group 7"
+msgstr "グループ7"
 
 #: Model/TeamMember.php:1790;1817;1959
 msgid "Coach ID"
@@ -1868,7 +1949,8 @@ msgid "電話番号が正しくありません。使用できる文字は半角�
 msgstr ""
 
 #: Model/TeamMember.php:1996
-msgid "サポートされていない性別表記です。'male'もしくは'female'で記入してください。"
+msgid ""
+"サポートされていない性別表記です。'male'もしくは'female'で記入してください。"
 msgstr ""
 
 #: Model/TeamMember.php:2003
@@ -1925,7 +2007,9 @@ msgid "このメールアドレスはGoalousに登録されていません。"
 msgstr ""
 
 #: Model/User.php:672
-msgid "このメールアドレスは認証が完了しておりません。Goalousから以前に送信されたメールをご確認ください。"
+msgid ""
+"このメールアドレスは認証が完了しておりません。Goalousから以前に送信されたメー"
+"ルをご確認ください。"
 msgstr ""
 
 #: Model/User.php:677
@@ -1937,7 +2021,8 @@ msgid "メールアドレスが入力されていません"
 msgstr ""
 
 #: Model/User.php:769
-msgid "現在、他のメールアドレスの認証待ちの為、メールアドレス変更はできません。"
+msgid ""
+"現在、他のメールアドレスの認証待ちの為、メールアドレス変更はできません。"
 msgstr ""
 
 #: Model/User.php:1110
@@ -2013,7 +2098,9 @@ msgid "%2$d文字以下で入力してください。"
 msgstr ""
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:25
-msgid "このメールアドレスは既に使用されています。他のメールアドレスを指定してください。"
+msgid ""
+"このメールアドレスは既に使用されています。他のメールアドレスを指定してくださ"
+"い。"
 msgstr ""
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:26
@@ -2021,7 +2108,9 @@ msgid "ファイルサイズが上限を超えています。"
 msgstr ""
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:27
-msgid "画像をアップロードできませんでした。JPG、PNG、GIFのいずれかの形式で保存してください。"
+msgid ""
+"画像をアップロードできませんでした。JPG、PNG、GIFのいずれかの形式で保存してく"
+"ださい。"
 msgstr ""
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:28
@@ -2076,11 +2165,15 @@ msgid "東京・秋葉原にあるIT企業、株式会社ISAO。"
 msgstr ""
 
 #: View/Elements/footer_not_logged_in.ctp:28
-msgid "”世界のシゴトをたのしくするビジョナリーカンパニー”を中長期ビジョンに掲げています。 "
+msgid ""
+"”世界のシゴトをたのしくするビジョナリーカンパニー”を中長期ビジョンに掲げてい"
+"ます。 "
 msgstr ""
 
 #: View/Elements/footer_not_logged_in.ctp:29
-msgid "2015年10月1日（木）より、日本初のバリフラットモデルを導入し、管理職０（ゼロ）、階層０（ナシ）、 チーム力∞（無限大）の組織運営をおこなっています。"
+msgid ""
+"2015年10月1日（木）より、日本初のバリフラットモデルを導入し、管理職０（ゼ"
+"ロ）、階層０（ナシ）、 チーム力∞（無限大）の組織運営をおこなっています。"
 msgstr ""
 
 #: View/Elements/footer_not_logged_in.ctp:32
@@ -2175,18 +2268,24 @@ msgstr "アップロードをキャンセルしてよろしいですか？"
 
 #: View/Elements/gl_common_js.ctp:73
 msgid "Not finished uploading yet, please wait just a moment."
-msgstr "全てのファイルのアップロードが完了していません。アップロード完了までお待ちください。"
+msgstr ""
+"全てのファイルのアップロードが完了していません。アップロード完了までお待ちく"
+"ださい。"
 
 #: View/Elements/gl_common_js.ctp:74
 msgid "Uploaded files are invalid due. Please try again."
-msgstr "アップロードしたファイルの有効期限が切れています。再度アップロードしてください。"
+msgstr ""
+"アップロードしたファイルの有効期限が切れています。再度アップロードしてくださ"
+"い。"
 
 #: View/Elements/gl_common_js.ctp:75 View/Goals/add.ctp:536;551
 msgid "日付はYYYY/MM/DDの形式で入力してください。"
 msgstr ""
 
 #: View/Elements/gl_common_js.ctp:78
-msgid "You haven't finished your input data yet. Do you want to leave without finishing?"
+msgid ""
+"You haven't finished your input data yet. Do you want to leave without "
+"finishing?"
 msgstr "入力が途中です。このまま移動しますか？"
 
 #: View/Elements/gl_common_js.ctp:79
@@ -2222,8 +2321,12 @@ msgid "N/A"
 msgstr "該当なし"
 
 #: View/Elements/gl_common_js.ctp:88
-msgid "After leaving secret circle, you can't join again by yourself. Do you really want to leave this secret circle?"
-msgstr "秘密のサークルから脱退すると、自分の操作で再度参加できません。よろしいですか？"
+msgid ""
+"After leaving secret circle, you can't join again by yourself. Do you really "
+"want to leave this secret circle?"
+msgstr ""
+"秘密のサークルから脱退すると、自分の操作で再度参加できません。よろしいです"
+"か？"
 
 #: View/Elements/gl_common_js.ctp:91
 msgid "Copied the post URL to the clipboard."
@@ -2292,7 +2395,7 @@ msgstr ""
 msgid "Join"
 msgstr "参加"
 
-#: View/Elements/gl_common_js.ctp:106 View/Goals/index.ctp:87
+#: View/Elements/gl_common_js.ctp:106
 msgid "..."
 msgstr "不参加"
 
@@ -2343,10 +2446,6 @@ msgstr "秘密サークルを指定しよう"
 #: View/Elements/gl_common_js.ctp:121
 msgid "You can't switch in the circle page."
 msgstr "サークルページでは切り替えられません"
-
-#: View/Elements/gl_common_js.ctp:123
-msgid "Error"
-msgstr "エラー"
 
 #: View/Elements/gl_common_js.ctp:124 View/Elements/modal_add_circle.ctp:140
 #: View/Elements/modal_add_members_by_csv.ctp:99
@@ -2554,11 +2653,15 @@ msgstr ""
 
 #: View/Elements/modal_add_circle.ctp:68 View/Elements/modal_edit_circle.ctp:60
 msgid "Anyone can see the circle, its members and their posts."
-msgstr "サークル名と参加メンバー、投稿がチーム内に公開されます。チームメンバーは誰でも自由に参加できます。"
+msgstr ""
+"サークル名と参加メンバー、投稿がチーム内に公開されます。チームメンバーは誰で"
+"も自由に参加できます。"
 
 #: View/Elements/modal_add_circle.ctp:70 View/Elements/modal_edit_circle.ctp:62
 msgid "Only members can find the circle and see posts."
-msgstr "サークル名と参加メンバー、投稿はこのサークルの参加メンバーだけに表示されます。サークル管理者だけがメンバーを追加できます。"
+msgstr ""
+"サークル名と参加メンバー、投稿はこのサークルの参加メンバーだけに表示されま"
+"す。サークル管理者だけがメンバーを追加できます。"
 
 #: View/Elements/modal_add_circle.ctp:75 View/Elements/modal_edit_circle.ctp:66
 msgid "Privacy"
@@ -2620,7 +2723,9 @@ msgstr "テンプレートをダウンロード"
 
 #: View/Elements/modal_add_members_by_csv.ctp:45
 msgid "Download CSV template and edit it without any change in header."
-msgstr "CSVフォーマットのテンプレートをダウンロードしてください。テンプレートのヘッダーは変更しないでください。"
+msgstr ""
+"CSVフォーマットのテンプレートをダウンロードしてください。テンプレートのヘッ"
+"ダーは変更しないでください。"
 
 #: View/Elements/modal_add_members_by_csv.ctp:56
 #: View/Elements/modal_edit_members_by_csv.ctp:54
@@ -2725,16 +2830,24 @@ msgid "Set as Admin"
 msgstr ""
 
 #: View/Elements/modal_edit_circle.ctp:190
-msgid "After quitting circle admin, you can't edit circle information. Do you really want to quit admin?"
-msgstr "自分自身を管理者から外すとサークル情報の編集が出来なくなりますが、よろしいですか？"
+msgid ""
+"After quitting circle admin, you can't edit circle information. Do you "
+"really want to quit admin?"
+msgstr ""
+"自分自身を管理者から外すとサークル情報の編集が出来なくなりますが、よろしいで"
+"すか？"
 
 #: View/Elements/modal_edit_circle.ctp:194
 msgid "Remove from admin"
 msgstr "管理者から外す"
 
 #: View/Elements/modal_edit_circle.ctp:209
-msgid "After leaving this circle, you can't edit any circle setting. Do you really want to leave the circle?"
-msgstr "自分自身をサークルから外すとサークル情報の編集が出来なくなりますが、よろしいですか？"
+msgid ""
+"After leaving this circle, you can't edit any circle setting. Do you really "
+"want to leave the circle?"
+msgstr ""
+"自分自身をサークルから外すとサークル情報の編集が出来なくなりますが、よろしい"
+"ですか？"
 
 #: View/Elements/modal_edit_circle.ctp:226
 msgid "Remove from the circle"
@@ -2768,7 +2881,9 @@ msgstr "ユーザ情報をダウンロード"
 
 #: View/Elements/modal_edit_members_by_csv.ctp:44
 msgid "Download csv of users information. Header isn't allowed to change."
-msgstr "CSVフォーマットのユーザ情報をダウンロードしてください。テンプレートのヘッダーは変更しないでください。"
+msgstr ""
+"CSVフォーマットのユーザ情報をダウンロードしてください。テンプレートのヘッダー"
+"は変更しないでください。"
 
 #: View/Elements/modal_edit_members_by_csv.ctp:56
 msgid "Upload edited users information."
@@ -2816,11 +2931,15 @@ msgstr "%s人に共有しました"
 
 #: View/Elements/modal_tutorial.ctp:35
 msgid "You can check who read your posts and get Like from your team members."
-msgstr "ニュースフィードに投稿してみよう。既読管理ができて、いいね！が伝わります。"
+msgstr ""
+"ニュースフィードに投稿してみよう。既読管理ができて、いいね！が伝わります。"
 
 #: View/Elements/modal_tutorial.ctp:39
-msgid "Make circle, join circle. There are 2 type of circles. Secret and Public."
-msgstr "サークルをつくったり、サークルに入ってみよう。サークルには秘密と公開の2種類があります。"
+msgid ""
+"Make circle, join circle. There are 2 type of circles. Secret and Public."
+msgstr ""
+"サークルをつくったり、サークルに入ってみよう。サークルには秘密と公開の2種類が"
+"あります。"
 
 #: View/Elements/modal_tutorial.ctp:43
 msgid "Make a goal. You can set it in details at goal page."
@@ -2887,7 +3006,9 @@ msgid "直接返信されないようお願い申し上げます。"
 msgstr ""
 
 #: View/Elements/Email/no_reply.ctp:10
-msgid "このメールに心当たりの無い方は、お問い合わせフォームからお問い合わせください。"
+msgid ""
+"このメールに心当たりの無い方は、お問い合わせフォームからお問い合わせくださ"
+"い。"
 msgstr ""
 
 #: View/Elements/Email/stop_mail.ctp:4
@@ -3431,8 +3552,14 @@ msgid "他の社内向けSNSと何が違いますか？"
 msgstr ""
 
 #: View/Elements/Homepage/faq.ctp:23
-msgid "「ゴールでつながる社内SNS」であることが決定的な違いです。ゴール（目標）がメンバーによって作成され、そのゴールをフォローやコラボすることでゴールと繋がることができます。ゴールに対して、だれがいつなにをしたかが「フォトアクション」（画像つきの記事）としてホームフィードに掲載され、みんながたのしくチェックできます。\n"
-"また、他の社内SNSにあるような、特定のメンバーをグルーピングして閉じた空間で情報交換することももちろん可能です。"
+msgid ""
+"「ゴールでつながる社内SNS」であることが決定的な違いです。ゴール（目標）がメン"
+"バーによって作成され、そのゴールをフォローやコラボすることでゴールと繋がるこ"
+"とができます。ゴールに対して、だれがいつなにをしたかが「フォトアクション」"
+"（画像つきの記事）としてホームフィードに掲載され、みんながたのしくチェックで"
+"きます。\n"
+"また、他の社内SNSにあるような、特定のメンバーをグルーピングして閉じた空間で情"
+"報交換することももちろん可能です。"
 msgstr ""
 
 #: View/Elements/Homepage/faq.ctp:27
@@ -3440,7 +3567,14 @@ msgid "個人の目標評価はどのようにおこなうのですか？"
 msgstr ""
 
 #: View/Elements/Homepage/faq.ctp:28
-msgid "個人の目標による評価は、期末もしくは来期中に実施することができます。コーチによって認定（評価対象として承認）されたゴールに対してのゴール評価と、そのメンバー個人のトータル評価の2分類があり、あらかじめチーム（組織）で定めたスコアとコメントを評価者が入力します。コーチは1人のみ、評価者は最大7人まで設定でき（兼務可能）、評価者は定められた順番で評価を実施できます。さらに設定によって、「自己評価」と「最終者評価（CSVファイルでの一括評価）」を評価者として追加できます。"
+msgid ""
+"個人の目標による評価は、期末もしくは来期中に実施することができます。コーチに"
+"よって認定（評価対象として承認）されたゴールに対してのゴール評価と、そのメン"
+"バー個人のトータル評価の2分類があり、あらかじめチーム（組織）で定めたスコアと"
+"コメントを評価者が入力します。コーチは1人のみ、評価者は最大7人まで設定でき"
+"（兼務可能）、評価者は定められた順番で評価を実施できます。さらに設定によっ"
+"て、「自己評価」と「最終者評価（CSVファイルでの一括評価）」を評価者として追加"
+"できます。"
 msgstr ""
 
 #: View/Elements/Homepage/faq.ctp:31
@@ -3448,7 +3582,13 @@ msgid "社員が期中で退職したらどうなりますか？"
 msgstr ""
 
 #: View/Elements/Homepage/faq.ctp:32
-msgid "チーム管理者（Goalous上での最高権限をもつチームメンバー）が、退職した社員をチームから「非アクティブ（無効）化」処理をしてください。非アクティブ化された社員は、そのチームへのアクセス権を失います。よって、一切の情報を参照することはできません。また、一度非アクティブ化されたメンバーを復活することもできます。なお、非アクティブ化されたメンバーの情報は、チーム内に残りますので、データが削除されるわけではございません。"
+msgid ""
+"チーム管理者（Goalous上での最高権限をもつチームメンバー）が、退職した社員を"
+"チームから「非アクティブ（無効）化」処理をしてください。非アクティブ化された"
+"社員は、そのチームへのアクセス権を失います。よって、一切の情報を参照すること"
+"はできません。また、一度非アクティブ化されたメンバーを復活することもできま"
+"す。なお、非アクティブ化されたメンバーの情報は、チーム内に残りますので、デー"
+"タが削除されるわけではございません。"
 msgstr ""
 
 #: View/Elements/Homepage/faq.ctp:35
@@ -3456,7 +3596,12 @@ msgid "セキュリティやバックアップはどうなっていますか？"
 msgstr ""
 
 #: View/Elements/Homepage/faq.ctp:36
-msgid "データの分散保管をしていますので、仮に特定のデーターセンターが災害に遭っても別のデーターセンターで稼働します。また、すべてのデータは、常時バックアップをしていますので、1台のサーバーに障害が発生してもデータを復旧できます。不正アクセスへのセキュリティとしては、SSLによる暗号化通信・2段階認証・ログインロックに加え、定期的に第三者機関による脆弱性診断を実施しております。\n"
+msgid ""
+"データの分散保管をしていますので、仮に特定のデーターセンターが災害に遭っても"
+"別のデーターセンターで稼働します。また、すべてのデータは、常時バックアップを"
+"していますので、1台のサーバーに障害が発生してもデータを復旧できます。不正アク"
+"セスへのセキュリティとしては、SSLによる暗号化通信・2段階認証・ログインロック"
+"に加え、定期的に第三者機関による脆弱性診断を実施しております。\n"
 "なお、弊社はプライバシーマークの取得企業ですのでご安心ください。"
 msgstr ""
 
@@ -3465,7 +3610,10 @@ msgid "スマートフォン・タブレットのアプリはありますか？"
 msgstr ""
 
 #: View/Elements/Homepage/faq.ctp:41
-msgid "Android, iPhoneの専用アプリケーションをご用意しております。それぞれのストアからダウンロードしてご利用ください。スマートフォンやタブレットからブラウザでアクセスいただいても、最適化されたビューでご利用できます。"
+msgid ""
+"Android, iPhoneの専用アプリケーションをご用意しております。それぞれのストアか"
+"らダウンロードしてご利用ください。スマートフォンやタブレットからブラウザでア"
+"クセスいただいても、最適化されたビューでご利用できます。"
 msgstr ""
 
 #: View/Elements/Homepage/faq.ctp:44
@@ -3473,7 +3621,8 @@ msgid "企業担当者向けに詳しい説明をしてもらえますか？"
 msgstr ""
 
 #: View/Elements/Homepage/faq.ctp:45
-msgid "ぜひぜひ！お問い合わせフォームからご連絡くださいませ。お待ちしております。"
+msgid ""
+"ぜひぜひ！お問い合わせフォームからご連絡くださいませ。お待ちしております。"
 msgstr ""
 
 #: View/Elements/Homepage/faq.ctp:48
@@ -3481,7 +3630,9 @@ msgid "無償期間（2016年8月31日まで）の後はどうなりますか？
 msgstr ""
 
 #: View/Elements/Homepage/faq.ctp:49
-msgid "機能制限（メンバーの追加不可能など）を予定しておりますが、データの削除などせず引き続きご利用いただけます。"
+msgid ""
+"機能制限（メンバーの追加不可能など）を予定しておりますが、データの削除などせ"
+"ず引き続きご利用いただけます。"
 msgstr ""
 
 #: View/Elements/Homepage/faq.ctp:52
@@ -3489,7 +3640,10 @@ msgid "機能のカスタマイズはできますか？"
 msgstr ""
 
 #: View/Elements/Homepage/faq.ctp:53
-msgid "カスタマイズにはご対応いたしません。ユーザー様からのご要望はいつでも歓迎いたします。ご要望がサービスの改善に役立つと判断した場合は、実装を計画いたしますのでよろしくお願いします。"
+msgid ""
+"カスタマイズにはご対応いたしません。ユーザー様からのご要望はいつでも歓迎いた"
+"します。ご要望がサービスの改善に役立つと判断した場合は、実装を計画いたします"
+"のでよろしくお願いします。"
 msgstr ""
 
 #: View/Elements/Homepage/faq.ctp:56
@@ -3497,7 +3651,10 @@ msgid "使い方がわからない場合、サポートはありますか？"
 msgstr ""
 
 #: View/Elements/Homepage/faq.ctp:57
-msgid "2016年8月31日までの無料キャンペーン中にご登録いただいたお客様は、ログイン後に利用できるサポートツールでお問い合わせください。できる限り早い対応をいたします。"
+msgid ""
+"2016年8月31日までの無料キャンペーン中にご登録いただいたお客様は、ログイン後に"
+"利用できるサポートツールでお問い合わせください。できる限り早い対応をいたしま"
+"す。"
 msgstr ""
 
 #: View/Elements/Homepage/faq.ctp:60
@@ -3505,7 +3662,10 @@ msgid "Goalousの運営会社はどこですか？"
 msgstr ""
 
 #: View/Elements/Homepage/faq.ctp:61
-msgid "\"たのしい！\"をうみだしとどける企業、ISAO（いさお）が運営しております。豊田通商株式会社100％出資の子会社です。1999年に創業を開始しており、オープン・チャレンジ・キズナをスピリッツとした集団です。"
+msgid ""
+"\"たのしい！\"をうみだしとどける企業、ISAO（いさお）が運営しております。豊田"
+"通商株式会社100％出資の子会社です。1999年に創業を開始しており、オープン・チャ"
+"レンジ・キズナをスピリッツとした集団です。"
 msgstr ""
 
 #: View/Elements/Homepage/faq.ctp:68
@@ -3534,11 +3694,17 @@ msgstr ""
 
 #: View/Elements/Team/batch_setup.ctp:24
 msgid "Download CSV. After editing, upload it."
-msgstr "ファイルをダウンロードし、フォーマットに従って入力したあと、更新済みのCSVファイルをアップロードしてください。"
+msgstr ""
+"ファイルをダウンロードし、フォーマットに従って入力したあと、更新済みのCSVファ"
+"イルをアップロードしてください。"
 
 #: View/Elements/Team/batch_setup.ctp:28
-msgid "Existing accounts will be updated. Non-registered members will be registered and get an invitation email."
-msgstr "すでに登録済のメンバーはデータ更新され、新規のメンバーは追加で登録され、招待メールが送信されます。"
+msgid ""
+"Existing accounts will be updated. Non-registered members will be registered "
+"and get an invitation email."
+msgstr ""
+"すでに登録済のメンバーはデータ更新され、新規のメンバーは追加で登録され、招待"
+"メールが送信されます。"
 
 #: View/Elements/Team/batch_setup.ctp:39
 #: View/Elements/Team/final_evaluation.ctp:47
@@ -3558,7 +3724,8 @@ msgid "Comfirm to delete goal category"
 msgstr ""
 
 #: View/Elements/Team/confirm_to_inactive_goal_category_modal.ctp:21
-msgid "Even if you delete a goal category, there is no affection to the past data."
+msgid ""
+"Even if you delete a goal category, there is no affection to the past data."
 msgstr "ゴールカテゴリを削除しても、過去のデータには影響ありません。"
 
 #: View/Elements/Team/confirm_to_inactive_goal_category_modal.ctp:23
@@ -3621,8 +3788,12 @@ msgid "Delete the team"
 msgstr "チームを削除する"
 
 #: View/Elements/Team/edit_basic_setting.ctp:160
-msgid "If the team is deleted, everything such as posts, actions and goals will be deleted. Do you really want to delete the team?"
-msgstr "チームを削除するとゴールやアクション、投稿などチームに属するすべての情報が削除されます。よろしいですか？\\nよろしければ \"OK\" ボタンを押してください。"
+msgid ""
+"If the team is deleted, everything such as posts, actions and goals will be "
+"deleted. Do you really want to delete the team?"
+msgstr ""
+"チームを削除するとゴールやアクション、投稿などチームに属するすべての情報が削"
+"除されます。よろしいですか？\\nよろしければ \"OK\" ボタンを押してください。"
 
 #: View/Elements/Team/edit_term_setting.ctp:25 View/Teams/settings.ctp:20
 msgid "Term settings"
@@ -4060,8 +4231,10 @@ msgid "Email address"
 msgstr ""
 
 #: View/Elements/Team/invite.ctp:51
-msgid "You can set email addresses by comma(,) separated or by newline separated."
-msgstr "メールアドレスはカンマ( , )区切り、もしくは改行区切りで複数指定可能です。"
+msgid ""
+"You can set email addresses by comma(,) separated or by newline separated."
+msgstr ""
+"メールアドレスはカンマ( , )区切り、もしくは改行区切りで複数指定可能です。"
 
 #: View/Elements/Team/invite.ctp:52;55
 msgid "eg. %s"
@@ -4093,7 +4266,9 @@ msgstr "評価データをダウンロード"
 
 #: View/Elements/Team/modal_final_evaluation_by_csv.ctp:49
 msgid "Download and edit csv without any changes in header."
-msgstr "CSVフォーマットの評価データをダウンロードしてください。テンプレートのヘッダーは変更しないでください。"
+msgstr ""
+"CSVフォーマットの評価データをダウンロードしてください。テンプレートのヘッダー"
+"は変更しないでください。"
 
 #: View/Elements/Team/modal_final_evaluation_by_csv.ctp:62
 msgid "Upload edited evaluation data."
@@ -4218,7 +4393,8 @@ msgstr "確認コードを入力する"
 
 #: View/Elements/User/modal_2fa_register.ctp:79
 msgid "After reading QR, enter the code (6 digits)"
-msgstr "バーコードをスキャンしたら、アプリで生成された6桁の確認コードを入力します。"
+msgstr ""
+"バーコードをスキャンしたら、アプリで生成された6桁の確認コードを入力します。"
 
 #: View/Elements/User/modal_2fa_register.ctp:83
 msgid "code"
@@ -4267,8 +4443,12 @@ msgstr "新しいパスワード"
 #: View/Elements/User/modal_change_password.ctp:46
 #: View/Users/password_reset.ctp:34 View/Users/register.ctp:96
 #: View/Users/registration_with_set_password.ctp:48
-msgid "Use at least 8 characters and use a mix of capital characters, small characters and numbers. Symbols are not allowed."
-msgstr "8文字以上。アルファベット大文字、小文字、数字が混在している必要があります。記号は使えません。"
+msgid ""
+"Use at least 8 characters and use a mix of capital characters, small "
+"characters and numbers. Symbols are not allowed."
+msgstr ""
+"8文字以上。アルファベット大文字、小文字、数字が混在している必要があります。記"
+"号は使えません。"
 
 #: View/Elements/User/modal_change_password.ctp:53 View/Users/register.ctp:103
 #: View/Users/registration_with_set_password.ctp:54
@@ -4288,8 +4468,11 @@ msgid "Recovery Codes"
 msgstr "リカバリーコード"
 
 #: View/Elements/User/modal_recovery_code.ctp:16
-msgid "Keep them somewhere safe and acessible. Each code can be used only once."
-msgstr "これらのコードを印刷するか書き留めて、安全な場所に保管しましょう。各リカバリーコードは１回のみ使用できます。"
+msgid ""
+"Keep them somewhere safe and acessible. Each code can be used only once."
+msgstr ""
+"これらのコードを印刷するか書き留めて、安全な場所に保管しましょう。各リカバ"
+"リーコードは１回のみ使用できます。"
 
 #: View/Elements/User/modal_recovery_code.ctp:22
 msgid "Used"
@@ -4301,7 +4484,8 @@ msgstr "新しいリカバリーコードを作成"
 
 #: View/Elements/User/modal_recovery_code.ctp:33
 msgid "After making new recovery codes, old ones will be unavailable."
-msgstr "新しいリカバリーコードを生成すると、上記のリカバリーコードは無効になります。"
+msgstr ""
+"新しいリカバリーコードを生成すると、上記のリカバリーコードは無効になります。"
 
 #: View/Elements/User/notify_setting.ctp:18 View/Users/settings.ctp:20
 msgid "Notification"
@@ -4321,7 +4505,8 @@ msgstr "モバイル"
 
 #: View/Elements/User/notify_setting.ctp:102
 msgid "You'll get important notification."
-msgstr "あなたに関わる重要な通知（サークルへの新しい投稿などを除く）が送信されます。"
+msgstr ""
+"あなたに関わる重要な通知（サークルへの新しい投稿などを除く）が送信されます。"
 
 #: View/Elements/User/notify_setting.ctp:103
 msgid "Nothing will be deliverd."
@@ -4384,34 +4569,36 @@ msgid "It will be shared with members only in this team."
 msgstr "チーム内限定で共有されます。"
 
 #: View/Elements/User/profile_setting.ctp:225
-msgid "[What is that you can contribute to the team?]\n"
+msgid ""
+"[What is that you can contribute to the team?]\n"
 "\n"
 "[What is the thing you want to achieve in the team?(Specifically)]\n"
 "\n"
 "[Others]\n"
 "\n"
-""
-msgstr "【今、チームに貢献できることは？】\n"
+msgstr ""
+"【今、チームに貢献できることは？】\n"
 "\n"
 "【これからチームで実現してみたいことは？(具体的に)】\n"
 "\n"
 "【その他】\n"
 "\n"
-""
 
 #: View/Elements/User/profile_setting.ctp:229
 msgid "Show Examples"
 msgstr ""
 
 #: View/Elements/User/profile_setting.ctp:232
-msgid "\n"
+msgid ""
+"\n"
 "[Now, What is that you can contribute to the team?]<br>\n"
 "\n"
 "Consulting UX of your production.<br>\n"
 "\n"
 "[What is the thing you want to achieve in the team?(Specifically)]<br>\n"
 "\n"
-"Innovation methods - Remote collaboration - Creativity - UX at C-level - Holocracy<br>\n"
+"Innovation methods - Remote collaboration - Creativity - UX at C-level - "
+"Holocracy<br>\n"
 "\n"
 "[Others]<br>\n"
 "\n"
@@ -4419,10 +4606,10 @@ msgid "\n"
 "\n"
 "1. Be focused on culture above all else, get happy employees.<br>\n"
 "\n"
-"2. Create a culture of innovation, team spirit, collaboration, creativity everywhere<br>\n"
+"2. Create a culture of innovation, team spirit, collaboration, creativity "
+"everywhere<br>\n"
 "\n"
 "3. Simplify everything\n"
-""
 msgstr ""
 
 #: View/Elements/User/simplex_top_section.ctp:72
@@ -4455,11 +4642,14 @@ msgid "以下のリンクをクリックしてメールアドレスの認証を�
 msgstr ""
 
 #: View/Emails/text/change_email.ctp:22 View/Emails/text/password_reset.ctp:22
-msgid "もし、このメールに心当たりがない場合は、何もせずにメールを破棄してください。"
+msgid ""
+"もし、このメールに心当たりがない場合は、何もせずにメールを破棄してください。"
 msgstr ""
 
 #: View/Emails/text/contact.ctp:12
-msgid "このたびはGoalous（ゴーラス）へお問い合わせいただき、誠にありがとうございます。"
+msgid ""
+"このたびはGoalous（ゴーラス）へお問い合わせいただき、誠にありがとうございま"
+"す。"
 msgstr ""
 
 #: View/Emails/text/contact.ctp:14 View/Pages/contact_thanks.ctp:88
@@ -4525,7 +4715,9 @@ msgid "パスワードの再設定が完了しました。"
 msgstr ""
 
 #: View/Emails/text/password_reset_complete.ctp:20
-msgid "もし、このメールに心当たりがない場合は、第三者が不正にあなたのパスワードを利用してログインしている可能性があります。"
+msgid ""
+"もし、このメールに心当たりがない場合は、第三者が不正にあなたのパスワードを利"
+"用してログインしている可能性があります。"
 msgstr ""
 
 #: View/Emails/text/password_reset_complete.ctp:22
@@ -4785,7 +4977,10 @@ msgid "Your Notifications"
 msgstr "すべてのお知らせ"
 
 #: View/Pages/contact.ctp:30;46
-msgid "Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。導入のご相談を受け付けています。"
+msgid ""
+"Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメン"
+"バーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できま"
+"す。導入のご相談を受け付けています。"
 msgstr ""
 
 #: View/Pages/contact.ctp:42
@@ -4808,7 +5003,9 @@ msgid "Goalousに関するお問い合わせ"
 msgstr ""
 
 #: View/Pages/contact.ctp:93
-msgid "Goalousは、”世界のシゴトをたのしくするビジョナリーカンパニー”である株式会社ISAOが運営しております。"
+msgid ""
+"Goalousは、”世界のシゴトをたのしくするビジョナリーカンパニー”である株式会社"
+"ISAOが運営しております。"
 msgstr ""
 
 #: View/Pages/contact.ctp:95
@@ -4900,7 +5097,10 @@ msgid "確認画面へ"
 msgstr ""
 
 #: View/Pages/contact_confirm.ctp:30;46
-msgid "Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。お問い合わせ内容の確認です。"
+msgid ""
+"Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメン"
+"バーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できま"
+"す。お問い合わせ内容の確認です。"
 msgstr ""
 
 #: View/Pages/contact_confirm.ctp:42
@@ -4936,7 +5136,10 @@ msgid "送信中..."
 msgstr ""
 
 #: View/Pages/contact_thanks.ctp:30;46
-msgid "Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。お問い合わせありがとうございました。"
+msgid ""
+"Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメン"
+"バーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できま"
+"す。お問い合わせありがとうございました。"
 msgstr ""
 
 #: View/Pages/contact_thanks.ctp:42
@@ -4952,7 +5155,9 @@ msgid "お問い合わせありがとうございました"
 msgstr ""
 
 #: View/Pages/contact_thanks.ctp:89
-msgid "お時間がございましたら、Goalous運営会社・株式会社ISAOのブログやSNSをご覧ください。"
+msgid ""
+"お時間がございましたら、Goalous運営会社・株式会社ISAOのブログやSNSをご覧くだ"
+"さい。"
 msgstr ""
 
 #: View/Pages/contact_thanks.ctp:98
@@ -4992,7 +5197,10 @@ msgid "@ISAOcorp"
 msgstr ""
 
 #: View/Pages/features.ctp:30;46
-msgid "Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。機能の説明はこちら。"
+msgid ""
+"Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメン"
+"バーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できま"
+"す。機能の説明はこちら。"
 msgstr ""
 
 #: View/Pages/features.ctp:42
@@ -5032,11 +5240,16 @@ msgid "一目瞭然、全社員のゴール"
 msgstr ""
 
 #: View/Pages/features.ctp:115
-msgid "チームの1人ひとりのゴール。つまり、何のために何を目指し、どんなアクションをしているのか、全てオープンです。チームフィードにアクセスすると、見えないものが見える。そんな体験が待ってます。"
+msgid ""
+"チームの1人ひとりのゴール。つまり、何のために何を目指し、どんなアクションをし"
+"ているのか、全てオープンです。チームフィードにアクセスすると、見えないものが"
+"見える。そんな体験が待ってます。"
 msgstr ""
 
 #: View/Pages/features.ctp:119
-msgid "全員のゴールを簡単に知る事ができます。今までこの情報を知りうる手段はありましたか？"
+msgid ""
+"全員のゴールを簡単に知る事ができます。今までこの情報を知りうる手段はありまし"
+"たか？"
 msgstr ""
 
 #: View/Pages/features.ctp:127
@@ -5044,11 +5257,15 @@ msgid "視覚に刺さる、フォトアクション"
 msgstr ""
 
 #: View/Pages/features.ctp:131
-msgid "報告も共有も自己アピールも、フォトアクション＝フォトアクで完了。仕事もセルフプロデュースの時代です。"
+msgid ""
+"報告も共有も自己アピールも、フォトアクション＝フォトアクで完了。仕事もセルフ"
+"プロデュースの時代です。"
 msgstr ""
 
 #: View/Pages/features.ctp:133
-msgid "打ち合わせの最後に「フォトアク撮ろう！」の一言で、ほら、なんだか楽しくなってきた。"
+msgid ""
+"打ち合わせの最後に「フォトアク撮ろう！」の一言で、ほら、なんだか楽しくなって"
+"きた。"
 msgstr ""
 
 #: View/Pages/features.ctp:139
@@ -5060,7 +5277,10 @@ msgid "共有はサークルで"
 msgstr ""
 
 #: View/Pages/features.ctp:149
-msgid "部署別、プロジェクト別、同期・・・社内のあらゆるコミュニティ毎に、情報共有の場を作成できます。慣れたSNSのインターフェースで、投稿や写真・ファイルをシェア。"
+msgid ""
+"部署別、プロジェクト別、同期・・・社内のあらゆるコミュニティ毎に、情報共有の"
+"場を作成できます。慣れたSNSのインターフェースで、投稿や写真・ファイルをシェ"
+"ア。"
 msgstr ""
 
 #: View/Pages/features.ctp:153
@@ -5072,7 +5292,10 @@ msgid "メッセージ送受信"
 msgstr ""
 
 #: View/Pages/features.ctp:163
-msgid "アプリでもWebでも、メッセージでコミュニケーション。社内限定だから、安心してやり取りできます。ファイルの添付やグループチャットできるから、もうEメールはいりません。"
+msgid ""
+"アプリでもWebでも、メッセージでコミュニケーション。社内限定だから、安心してや"
+"り取りできます。ファイルの添付やグループチャットできるから、もうEメールはいり"
+"ません。"
 msgstr ""
 
 #: View/Pages/features.ctp:167
@@ -5100,7 +5323,10 @@ msgid "インサイト"
 msgstr ""
 
 #: View/Pages/features.ctp:197
-msgid "社内SNSを導入している企業でよく言われるのが「導入して効果があったのかわからない」という声。インサイトやランキングで、エンゲージメントの増加が目に見えます。"
+msgid ""
+"社内SNSを導入している企業でよく言われるのが「導入して効果があったのかわからな"
+"い」という声。インサイトやランキングで、エンゲージメントの増加が目に見えま"
+"す。"
 msgstr ""
 
 #: View/Pages/features.ctp:201
@@ -5120,7 +5346,9 @@ msgid "隣の部署、別のフロアの人に、以外な共通点があるか�
 msgstr ""
 
 #: View/Pages/features.ctp:219
-msgid "見えないものを見る。その連鎖が、あなたのゴールに助け合いをうみ、それがチームのゴール、成長への道になります。"
+msgid ""
+"見えないものを見る。その連鎖が、あなたのゴールに助け合いをうみ、それがチーム"
+"のゴール、成長への道になります。"
 msgstr ""
 
 #: View/Pages/features.ctp:229
@@ -5128,7 +5356,9 @@ msgid "コーチ"
 msgstr ""
 
 #: View/Pages/features.ctp:230
-msgid "上司、部長、課長・・・評価してるだけでない、日々アクションを見て、アゲてくれる人。1メンバーにつき1人設定します。"
+msgid ""
+"上司、部長、課長・・・評価してるだけでない、日々アクションを見て、アゲてくれ"
+"る人。1メンバーにつき1人設定します。"
 msgstr ""
 
 #: View/Pages/features.ctp:238
@@ -5136,7 +5366,9 @@ msgid "プロフィール"
 msgstr ""
 
 #: View/Pages/features.ctp:239
-msgid "顔と名前の一致に加え、何を目指して毎日どんなアクションをしているか検索できる。これは全社のデータベースです。"
+msgid ""
+"顔と名前の一致に加え、何を目指して毎日どんなアクションをしているか検索でき"
+"る。これは全社のデータベースです。"
 msgstr ""
 
 #: View/Pages/features.ctp:247
@@ -5144,11 +5376,16 @@ msgid "ビジョン"
 msgstr ""
 
 #: View/Pages/features.ctp:248
-msgid "会社のビジョン、どのくらいの社員が知っていますか？いつでも意識できるインターフェースを用意しています。"
+msgid ""
+"会社のビジョン、どのくらいの社員が知っていますか？いつでも意識できるインター"
+"フェースを用意しています。"
 msgstr ""
 
 #: View/Pages/home.ctp:30;46
-msgid "Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。スマホアプリ・ブラウザで利用可能です。"
+msgid ""
+"Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメン"
+"バーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できま"
+"す。スマホアプリ・ブラウザで利用可能です。"
 msgstr ""
 
 #: View/Pages/home.ctp:42
@@ -5188,7 +5425,9 @@ msgid "Goalousで、組織は激変する"
 msgstr ""
 
 #: View/Pages/home.ctp:155
-msgid "「ゴール達成」って？「最強にオープン」って？Goalousは、世界のシゴトをたのしくしたい。それだけのこと。"
+msgid ""
+"「ゴール達成」って？「最強にオープン」って？Goalousは、世界のシゴトをたのしく"
+"したい。それだけのこと。"
 msgstr ""
 
 #: View/Pages/home.ctp:159
@@ -5196,7 +5435,10 @@ msgid "経営ビジョンにずんずん近づく"
 msgstr ""
 
 #: View/Pages/home.ctp:161
-msgid "経営ビジョンが反映され、従業員たちが到達を目指す具体的な指標。それがゴールです。Goalousを使えば使うほど、ゴールへの活動が増えて、組織が前へ前へずんずん進みます。"
+msgid ""
+"経営ビジョンが反映され、従業員たちが到達を目指す具体的な指標。それがゴールで"
+"す。Goalousを使えば使うほど、ゴールへの活動が増えて、組織が前へ前へずんずん進"
+"みます。"
 msgstr ""
 
 #: View/Pages/home.ctp:167
@@ -5208,11 +5450,16 @@ msgid "「それ知らない」が激減する"
 msgstr ""
 
 #: View/Pages/home.ctp:178
-msgid "商談した・ドキュメントを作成した・プレゼンした…など、ゴール( 目標 )に対する日々のアクションや、特定の仲間との会話によって情報量が増えます。情報の不足がなければ、より的確な判断ができます。"
+msgid ""
+"商談した・ドキュメントを作成した・プレゼンした…など、ゴール( 目標 )に対する"
+"日々のアクションや、特定の仲間との会話によって情報量が増えます。情報の不足が"
+"なければ、より的確な判断ができます。"
 msgstr ""
 
 #: View/Pages/home.ctp:184
-msgid "仕事で大変な事も嬉しい事もオープンにしてお互いを理解しましょう！すべてはそこから始まります。"
+msgid ""
+"仕事で大変な事も嬉しい事もオープンにしてお互いを理解しましょう！すべてはそこ"
+"から始まります。"
 msgstr ""
 
 #: View/Pages/home.ctp:194
@@ -5220,7 +5467,10 @@ msgid "協力による成果が出る"
 msgstr ""
 
 #: View/Pages/home.ctp:196
-msgid "チームでミッションを達成するのに、最も大切な要素は「お互いにわかり合う」こと。Goalousを通して、お互いの活動を認め合い、助け合うことで効率よく成果が出るようになります。"
+msgid ""
+"チームでミッションを達成するのに、最も大切な要素は「お互いにわかり合う」こ"
+"と。Goalousを通して、お互いの活動を認め合い、助け合うことで効率よく成果が出る"
+"ようになります。"
 msgstr ""
 
 #: View/Pages/home.ctp:202
@@ -5264,7 +5514,10 @@ msgid "フライヤー資料です。ぜひご活用ください。"
 msgstr ""
 
 #: View/Pages/law.ctp:30;46
-msgid "Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。特定商取引法に基づく表記はこちら。"
+msgid ""
+"Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメン"
+"バーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できま"
+"す。特定商取引法に基づく表記はこちら。"
 msgstr ""
 
 #: View/Pages/law.ctp:42
@@ -5281,7 +5534,10 @@ msgid "Create a team."
 msgstr "チームを作成してください。"
 
 #: View/Pages/pricing.ctp:30;46
-msgid "Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。料金・価格はこちら。"
+msgid ""
+"Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメン"
+"バーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できま"
+"す。料金・価格はこちら。"
 msgstr ""
 
 #: View/Pages/pricing.ctp:42
@@ -5297,7 +5553,9 @@ msgid "今だけ、有料プランも完全無料"
 msgstr ""
 
 #: View/Pages/pricing.ctp:88
-msgid "リリース記念で2016年8月までPlusをご利用いただけます。フィードバックをお待ちしております。"
+msgid ""
+"リリース記念で2016年8月までPlusをご利用いただけます。フィードバックをお待ちし"
+"ております。"
 msgstr ""
 
 #: View/Pages/pricing.ctp:90
@@ -5353,7 +5611,10 @@ msgid "無料相談受付中"
 msgstr ""
 
 #: View/Pages/privacy_policy.ctp:30;46
-msgid "Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。プライバシーポリシーはこちら。"
+msgid ""
+"Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメン"
+"バーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できま"
+"す。プライバシーポリシーはこちら。"
 msgstr ""
 
 #: View/Pages/privacy_policy.ctp:42
@@ -5365,7 +5626,10 @@ msgid "プライバシーポリシー | Goalous (ゴーラス)"
 msgstr ""
 
 #: View/Pages/terms.ctp:31;47
-msgid "Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。利用規約はこちら。"
+msgid ""
+"Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメン"
+"バーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できま"
+"す。利用規約はこちら。"
 msgstr ""
 
 #: View/Pages/terms.ctp:43
@@ -5479,7 +5743,7 @@ msgstr "パスワードを作成"
 
 #: View/Users/password_reset.ctp:40
 msgid "Comfirm your password"
-msgstr ""
+msgstr "パスワードの確認"
 
 #: View/Users/password_reset.ctp:48
 msgid "Set a password"
@@ -5507,7 +5771,7 @@ msgstr "新しいアカウントを作成"
 
 #: View/Users/register.ctp:41
 msgid "Harry"
-msgstr ""
+msgstr "Takashi"
 
 #: View/Users/register.ctp:109
 msgid "Terms of Use"
@@ -5554,8 +5818,12 @@ msgid "You successfully made your account."
 msgstr "あなたのGoalousアカウントを無事に作成しました。"
 
 #: View/Users/sent_mail.ctp:15
-msgid "Sent an email to %s. Click on the URL in the email to authenticate the account."
-msgstr "%sへメールを送信しました。アカウントを認証する為に、そのメールに記載されたURLをクリックして下さい。"
+msgid ""
+"Sent an email to %s. Click on the URL in the email to authenticate the "
+"account."
+msgstr ""
+"%sへメールを送信しました。アカウントを認証する為に、そのメールに記載されたURL"
+"をクリックして下さい。"
 
 #: View/Users/token_resend.ctp:16
 msgid "Re-authentication of email address"
@@ -5587,7 +5855,9 @@ msgstr "リカバリーコードを入力する"
 
 #: View/Users/two_fa_auth_recovery.ctp:25
 msgid "You can also login with a recovery code."
-msgstr "アカウントにログインできない場合は、リカバリーコードを使用してログインできます。"
+msgstr ""
+"アカウントにログインできない場合は、リカバリーコードを使用してログインできま"
+"す。"
 
 #: View/Users/two_fa_auth_recovery.ctp:35
 msgid "Send a code"
@@ -5677,7 +5947,7 @@ msgstr "編集"
 #: auto_timezone_flg;validation auto_language_flg;validation
 #: romanize_flg;validation update_email_flg;validation
 msgid "boolean"
-msgstr ""
+msgstr "boolean"
 
 #: Model/ActionResult.php:validation for field photo1;validation
 #: photo2;validation photo3;validation photo4;validation photo5
@@ -5686,7 +5956,7 @@ msgstr ""
 #: Model/Goal.php:validation Model/Post.php:validation
 #: Model/Team.php:validation Model/User.php:validation
 msgid "image_max_size"
-msgstr ""
+msgstr "image_max_size"
 
 #: Model/ActionResult.php:validation for field photo1;validation
 #: photo2;validation photo3;validation photo4;validation photo5
@@ -5695,7 +5965,7 @@ msgstr ""
 #: Model/Post.php:validation Model/Team.php:validation
 #: Model/User.php:validation
 msgid "image_type"
-msgstr ""
+msgstr "image_type"
 
 #: Model/ActionResult.php:validation for field goal_id;validation key_result_id
 #: Model/ApprovalHistory.php:validation action_status
@@ -5720,7 +5990,7 @@ msgstr ""
 #: border_months Model/TeamInsight.php:validation Model/Thread.php:validation
 #: status Model/User.php:validation team_id;validation default_team_id
 msgid "numeric"
-msgstr ""
+msgstr "numeric"
 
 #: Model/ActionResult.php:validation for field goal_id
 #: Model/Circle.php:validation name Model/Collaborator.php:validation
@@ -5740,7 +6010,7 @@ msgstr ""
 #: old_password;validation password_request;validation
 #: password_request2;validation password;validation password_confirm
 msgid "notEmpty"
-msgstr ""
+msgstr "notEmplty"
 
 #: Model/ActionResult.php:validation for field name
 #: Model/ApprovalHistory.php:validation comment Model/Circle.php:validation
@@ -5759,12 +6029,12 @@ msgstr ""
 #: password_request2;validation password;validation hometown;validation
 #: comment;validation phone_no
 msgid "maxLength"
-msgstr ""
+msgstr "maxLength"
 
 #: Model/ActionResult.php:validation for field name Model/Circle.php:validation
 #: description Model/Comment.php:validation body Model/Post.php:validation
 msgid "Invalid Submission"
-msgstr ""
+msgstr "Invalid Submission"
 
 #: Model/ApprovalHistory.php:validation for field comment
 #: Model/Circle.php:validation name Model/Comment.php:validation site_info_url
@@ -5777,7 +6047,7 @@ msgstr ""
 #: Model/TeamVision.php:validation Model/User.php:validation
 #: gender_type;validation language;validation hometown
 msgid "isString"
-msgstr ""
+msgstr "isString"
 
 #: Model/CircleMember.php:validation for field show_for_all_feed_flg
 msgid "Invalid Status"
@@ -5990,27 +6260,6 @@ msgstr ""
 
 #~ msgid "Quarter"
 #~ msgstr "四半期"
-
-#~ msgid "Group 1"
-#~ msgstr "グループ1"
-
-#~ msgid "Group 2"
-#~ msgstr "グループ2"
-
-#~ msgid "Group 3"
-#~ msgstr "グループ3"
-
-#~ msgid "Group 4"
-#~ msgstr "グループ4"
-
-#~ msgid "Group 5"
-#~ msgstr "グループ5"
-
-#~ msgid "Group 6"
-#~ msgstr "グループ6"
-
-#~ msgid "Group 7"
-#~ msgstr "グループ7"
 
 #~ msgid "First name"
 #~ msgstr "ファーストネーム"

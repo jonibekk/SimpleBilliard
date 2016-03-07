@@ -13,7 +13,7 @@
 <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default">
-            <div class="panel-heading"><?= __("Password Rest") ?></div>
+            <div class="panel-heading"><?= __("Password Reset") ?></div>
             <?=
             $this->Form->create('User', [
                 'inputDefaults' => [
