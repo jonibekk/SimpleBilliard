@@ -1,5 +1,6 @@
 $.ajaxSetup({
-    cache: false
+    cache: false,
+    timeout: 10000 // 10 sec
 });
 if (typeof String.prototype.startsWith != 'function') {
     // see below for better implementation!
