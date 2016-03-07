@@ -4053,7 +4053,6 @@ function evCommentLatestView(options) {
         url: get_url,
         async: true,
         dataType: 'json',
-        timeout: 10000,
         success: function (data) {
             if (!$.isEmptyObject(data.html)) {
                 //取得したhtmlをオブジェクト化
