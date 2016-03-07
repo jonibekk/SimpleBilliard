@@ -57,10 +57,10 @@ echo $this->Html->script('vendor/angular/ng-infinite-scroll.min');
             validate: {
                 a: "<?= __('%1$d文字以上で%2$d文字以下で入力してください。',8,50)?>",
                 b: "<?= __("パスワードが一致しません。")?>",
-                c: "<?= __("10MB以下かつJPG、PNG、GIFのいずれかの形式を選択して下さい。")?>",
+                c: "<?= __("10MB or less, and Please select one of the formats of JPG or PNG and GIF.")?>",
                 d: "<?= __("利用規約に同意してください。")?>",
-                e: "<?= __("数字、英小文字、英大文字の混在にしてください。")?>",
-                f: "<?= __("パスワードにメールアドレスと同一のものを指定する事はできません。")?>",
+                e: "<?= __("Please mix of numbers, lower case letters and upper case letters.")?>",
+                f: "<?= __("It is not possible to use the same as the email address as the password.")?>",
                 g: "<?= __("必須項目です。")?>",
                 invalid_email: "<?= __("メールアドレスが正しくありません。") ?>",
                 checking_email: "<?= __("メールアドレス確認中...") ?>",

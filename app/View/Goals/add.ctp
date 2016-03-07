@@ -569,7 +569,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                         extension: 'jpeg,jpg,png,gif',
                         type: 'image/jpeg,image/png,image/gif',
                         maxSize: 10485760,   // 10mb
-                        message: "<?=__("10MB以下かつJPG、PNG、GIFのいずれかの形式を選択して下さい。")?>"
+                        message: "<?=__("10MB or less, and Please select one of the formats of JPG or PNG and GIF.")?>"
                     }
                 }
             }
