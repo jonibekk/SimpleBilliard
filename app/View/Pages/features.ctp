@@ -55,7 +55,7 @@ $meta_features = [
     ],
     [
         "property" => "og:site_name",
-        "content" => __('Goalous (ゴーラス) │ゴール達成への最強にオープンな社内SNS'),
+        "content" => __('Goalous │ Enterprise SNS the most ever open for Goal'),
     ],
     [
         "property" => "fb:app_id",
@@ -235,7 +235,7 @@ for($i = 0; $i < $num_ogp; $i++){
                         <i class="fa fa-user"></i>
                     </div><!--//icon-->
                     <div class="content col-md-9 col-xs-12">
-                        <h3 class="title"><?= __('プロフィール') ?></h3>
+                        <h3 class="title"><?= __('Profile') ?></h3>
                         <p class="desc"><?= __('顔と名前の一致に加え、何を目指して毎日どんなアクションをしているか検索できる。これは全社のデータベースです。') ?></p>
                     </div><!--//content-->
                 </div><!--//item-->
@@ -244,7 +244,7 @@ for($i = 0; $i < $num_ogp; $i++){
                         <i class="fa fa-rocket"></i>
                     </div><!--//icon-->
                     <div class="content col-md-9 col-xs-12">
-                        <h3 class="title"><?= __('ビジョン') ?></h3>
+                        <h3 class="title"><?= __('Vision') ?></h3>
                         <p class="desc"><?= __('会社のビジョン、どのくらいの社員が知っていますか？いつでも意識できるインターフェースを用意しています。') ?></p>
                     </div><!--//content-->
                 </div><!--//item-->

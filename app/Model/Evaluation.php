@@ -280,10 +280,10 @@ class Evaluation extends AppModel
         foreach ($data as $key => $law) {
             if (!$this->save($law)) {
                 if (!empty($this->validationErrors)) {
-                    throw new RuntimeException(__("入力内容に不足があります。"));
+                    throw new RuntimeException(__("There is something you can't leave empty."));
                 }
                 else {
-                    throw new RuntimeException(__("保存処理に失敗しました。"));
+                    throw new RuntimeException(__("Failed to save."));
                 }
             }
         }

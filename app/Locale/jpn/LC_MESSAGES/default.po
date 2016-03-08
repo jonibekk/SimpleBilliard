@@ -4,16 +4,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2016-03-07 10:32+0530\n"
-"PO-Revision-Date: 2016-03-07 10:43+0530\n"
+"POT-Creation-Date: 2016-03-07 06:01+0000\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
-"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 1.8.7\n"
 
 #: Config/Migration/1435197386_data_migration_for_all_team_0625.php:76;77
 #: Model/Team.php:225;226 Model/User.php:1064
@@ -1090,12 +1088,12 @@ msgid "You can't evaluate in this period or don't have permission to view."
 msgstr "今期は評価できないか、閲覧権限がありません。"
 
 #: Model/Evaluation.php:283
-msgid "入力内容に不足があります。"
-msgstr ""
+msgid "There is something you can't leave empty."
+msgstr "入力内容に不足があります。"
 
 #: Model/Evaluation.php:286
-msgid "保存処理に失敗しました。"
-msgstr ""
+msgid "Failed to save."
+msgstr "保存処理に失敗しました。"
 
 #: Model/Evaluation.php:651 View/Elements/header_logged_in.ctp:112
 #: View/Elements/modal_add_circle.ctp:48
@@ -1629,8 +1627,8 @@ msgid "Only team administrators are allowed to access to this page."
 msgstr "あなたはチーム管理者では無いため、このページにはアクセスできません。"
 
 #: Model/TeamMember.php:996;1162
-msgid "レコード数が一致しません。"
-msgstr ""
+msgid "Number of records do not match."
+msgstr "レコード数が一致しません。"
 
 #: Model/TeamMember.php:1006;1173;1253
 msgid "Numbers are not consistent."
@@ -1879,8 +1877,8 @@ msgid "Comment by final evaluator"
 msgstr "最終評価者によるコメント"
 
 #: Model/TeamMember.php:1863;1873;1892;1906;1916;1926;2049;2074
-msgid "%sは必須項目です。"
-msgstr ""
+msgid "%s is required."
+msgstr "%sは必須項目です。"
 
 #: Model/TeamMember.php:1863;1867 View/Users/login.ctp:36
 #: View/Users/password_reset_request.ctp:36
@@ -1891,15 +1889,15 @@ msgstr "メールアドレス"
 
 #: Model/TeamMember.php:1867;2026;2033;2040
 msgid "%sが正しくありません。"
-msgstr ""
+msgstr "%s is not correct."
 
 #: Model/TeamMember.php:1873;1877
 msgid "Member ID"
 msgstr "メンバーID"
 
 #: Model/TeamMember.php:1877;1888;1902;1936;1952;1976;2010;2016
-msgid "%sは64文字以内で入力してください。"
-msgstr ""
+msgid "%s should be entered in less than 64 characters."
+msgstr "%sは64文字以内で入力してください。"
 
 #: Model/TeamMember.php:1881
 msgid "%s doesn't allow you to specify the ID of you."
@@ -1910,8 +1908,8 @@ msgid "Evaluator ID"
 msgstr "評価者ID"
 
 #: Model/TeamMember.php:1896;1910
-msgid "%sはアルファベットのみで入力してください。"
-msgstr ""
+msgid "%s should be entered in alphabet characters."
+msgstr "%sはアルファベットのみで入力してください。"
 
 #: Model/TeamMember.php:1916;1920 View/Elements/modal_add_circle.ctp:63
 #: View/Elements/public_circle_item.ctp:33
@@ -1919,20 +1917,20 @@ msgid "Administrators"
 msgstr "管理者"
 
 #: Model/TeamMember.php:1920;1930;2053
-msgid "%sは'ON'もしくは'OFF'のいずれかである必要があいます。"
-msgstr ""
+msgid "%s must be either 'ON' or 'OFF'."
+msgstr "%sは'ON'もしくは'OFF'のいずれかである必要があいます。"
 
 #: Model/TeamMember.php:1942;1966
-msgid "%sは左詰めで記入してください。"
-msgstr ""
+msgid "Please %s fill with align left."
+msgstr "%sは左詰めで記入してください。"
 
 #: Model/TeamMember.php:1942;1947;1952
 msgid "Group name"
 msgstr "グループ名"
 
 #: Model/TeamMember.php:1947;1971
-msgid "%sが重複しています。"
-msgstr ""
+msgid "%s is duplicated."
+msgstr "%sが重複しています。"
 
 #: Model/TeamMember.php:1959
 msgid "%sに本人のIDを指定する事はできません。"
@@ -1947,21 +1945,20 @@ msgid "Phone number"
 msgstr "電話番号"
 
 #: Model/TeamMember.php:1989
-msgid "電話番号が正しくありません。使用できる文字は半角数字、'-()'です。"
-msgstr ""
+msgid "Telephone number is incorrect. Single-byte number and '-()' are allowed."
+msgstr "電話番号が正しくありません。使用できる文字は半角数字、'-()'です。"
 
 #: Model/TeamMember.php:1996
-msgid ""
-"サポートされていない性別表記です。'male'もしくは'female'で記入してください。"
-msgstr ""
+msgid "Please fill in 'male' or 'female'."
+msgstr "'male'もしくは'female'で記入してください。"
 
 #: Model/TeamMember.php:2003
 msgid "サポートされていないローカル姓名の言語コードです。"
-msgstr ""
+msgstr "It is unsupported language code of the local first name and last name."
 
 #: Model/TeamMember.php:2022
-msgid "誕生日を記入する場合は年月日のすべての項目を記入してください。"
-msgstr ""
+msgid "If you want to fill in the date of birth, please fill out all of the items of date."
+msgstr "誕生日を記入する場合は年月日のすべての項目を記入してください。"
 
 #: Model/TeamMember.php:2049;2053
 msgid "Active status"
@@ -4225,7 +4222,7 @@ msgid "Unique"
 msgstr "ユニーク"
 
 #: View/Elements/Team/invite.ctp:15
-msgid "Invite ne members"
+msgid "Invite members"
 msgstr ""
 
 #: View/Elements/Team/invite.ctp:43
@@ -4989,11 +4986,11 @@ msgstr ""
 #: View/Pages/contact_thanks.ctp:58 View/Pages/features.ctp:58
 #: View/Pages/home.ctp:58 View/Pages/law.ctp:58 View/Pages/pricing.ctp:58
 #: View/Pages/privacy_policy.ctp:58 View/Pages/terms.ctp:59
-msgid "Goalous (ゴーラス) │ゴール達成への最強にオープンな社内SNS"
-msgstr ""
+msgid "Goalous │ Enterprise SNS the most ever open for Goal"
+msgstr "Goalous (ゴーラス) │ ゴール達成への最強にオープンな社内SNS"
 
 #: View/Pages/contact.ctp:78
-msgid "お問い合わせ | Goalous (ゴーラス)"
+msgid "お問い合わせ | Goalous(ゴーラス)"
 msgstr ""
 
 #: View/Pages/contact.ctp:90
@@ -5160,7 +5157,7 @@ msgstr ""
 
 #: View/Pages/contact_thanks.ctp:98
 msgid "IsaB"
-msgstr ""
+msgstr "IsaB"
 
 #: View/Pages/contact_thanks.ctp:99
 msgid "億人の”シゴト”を熱くする！株式会社ISAOのブログ"
@@ -5168,27 +5165,27 @@ msgstr ""
 
 #: View/Pages/contact_thanks.ctp:100
 msgid "http://blog.isao.co.jp/"
-msgstr ""
+msgstr "http://blog.isao.co.jp/"
 
 #: View/Pages/contact_thanks.ctp:110
 msgid "facebookページ"
 msgstr ""
 
 #: View/Pages/contact_thanks.ctp:111
-msgid "Like us！"
-msgstr ""
+msgid "Like us!"
+msgstr "Like us！"
 
 #: View/Pages/contact_thanks.ctp:112
 msgid "isao.jp"
-msgstr ""
+msgstr "isao.jp"
 
 #: View/Pages/contact_thanks.ctp:122
 msgid "Twitter"
-msgstr ""
+msgstr "Twitter"
 
 #: View/Pages/contact_thanks.ctp:123
-msgid "Follow now！"
-msgstr ""
+msgid "Follow now!"
+msgstr "Follow now！"
 
 #: View/Pages/contact_thanks.ctp:124
 msgid "@ISAOcorp"
@@ -5360,8 +5357,8 @@ msgid ""
 msgstr ""
 
 #: View/Pages/features.ctp:238
-msgid "プロフィール"
-msgstr ""
+msgid "Profile"
+msgstr "プロフィール"
 
 #: View/Pages/features.ctp:239
 msgid ""
@@ -5370,8 +5367,8 @@ msgid ""
 msgstr ""
 
 #: View/Pages/features.ctp:247
-msgid "ビジョン"
-msgstr ""
+msgid "Vision"
+msgstr "ビジョン"
 
 #: View/Pages/features.ctp:248
 msgid ""

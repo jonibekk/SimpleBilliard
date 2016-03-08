@@ -12,7 +12,7 @@
 ?>
 <!-- START app/View/Elements/Team/invite.ctp -->
 <div class="panel panel-default">
-    <div class="panel-heading"><?= __("Invite ne members") ?></div>
+    <div class="panel-heading"><?= __("Invite members") ?></div>
     <?=
     $this->Form->create('Team', [
         'inputDefaults' => [

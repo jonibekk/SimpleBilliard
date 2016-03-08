@@ -55,7 +55,7 @@ $meta_contact = [
     ],
     [
         "property" => "og:site_name",
-        "content" => __('Goalous (ゴーラス) │ゴール達成への最強にオープンな社内SNS'),
+        "content" => __('Goalous │ Enterprise SNS the most ever open for Goal'),
     ],
     [
         "property" => "fb:app_id",
@@ -75,7 +75,7 @@ for($i = 0; $i < $num_ogp; $i++){
     echo $this->Html->meta($meta_contact[$i]);
 }
 ?>
-<title><?= __('お問い合わせ | Goalous (ゴーラス)') ?></title>
+<title><?= __('お問い合わせ | Goalous(ゴーラス)') ?></title>
 <link rel="alternate" hreflang="ja" href="<?= $this->Html->url('/ja/contact') ?>"/>
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/contact') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/contact') ?>"/>

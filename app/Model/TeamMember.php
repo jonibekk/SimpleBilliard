@@ -993,7 +993,7 @@ class TeamMember extends AppModel
 
         //レコード数が同一である事を確認
         if (count($csv_data) - 1 !== count($before_csv_data)) {
-            $res['error_msg'] = __("レコード数が一致しません。");
+            $res['error_msg'] = __("Number of records do not match.");
             return $res;
         }
         //row validation
@@ -1159,7 +1159,7 @@ class TeamMember extends AppModel
         $before_member_numbers = array_column($before_csv_data, 'member_no');
         //レコード数が同一である事を確認
         if (count($csv_data) - 1 !== count($before_csv_data)) {
-            $res['error_msg'] = __("レコード数が一致しません。");
+            $res['error_msg'] = __("Number of records do not match.");
             return $res;
         }
         $score_list = $this->Team->Evaluation->EvaluateScore->getScoreList($this->current_team_id);
@@ -1860,21 +1860,21 @@ class TeamMember extends AppModel
             'email'                 => [
                 'notEmpty' => [
                     'rule'    => 'notEmpty',
-                    'message' => __("%sは必須項目です。", __("Email Address"))
+                    'message' => __("%s is required.", __("Email Address"))
                 ],
                 'email'    => [
                     'rule'    => ['email'],
-                    'message' => __("%sが正しくありません。", __("Email Address"))
+                    'message' => __("%s is not correct.", __("Email Address"))
                 ],
             ],
             'member_no'             => [
                 'notEmpty'        => [
                     'rule'    => 'notEmpty',
-                    'message' => __("%sは必須項目です。", __("Member ID"))
+                    'message' => __("%s is required.", __("Member ID"))
                 ],
                 'maxLength'       => [
                     'rule'    => ['maxLength', 64],
-                    'message' => __("%sは64文字以内で入力してください。", __("Member ID"))
+                    'message' => __("%s should be entered in less than 64 characters.", __("Member ID"))
                 ],
                 'isNotExistArray' => [
                     'rule'       => ['isNotExistArray', 'evaluator_member_no'],
@@ -1885,95 +1885,95 @@ class TeamMember extends AppModel
             'first_name'            => [
                 'maxLength'      => [
                     'rule'    => ['maxLength', 64],
-                    'message' => __("%sは64文字以内で入力してください。", __("First Name"))
+                    'message' => __("%s should be entered in less than 64 characters.", __("First Name"))
                 ],
                 'notEmpty'       => [
                     'rule'    => 'notEmpty',
-                    'message' => __("%sは必須項目です。", __("First Name"))
+                    'message' => __("%s is required.", __("First Name"))
                 ],
                 'isAlphabetOnly' => [
                     'rule'    => 'isAlphabetOnly',
-                    'message' => __("%sはアルファベットのみで入力してください。", __("First Name"))
+                    'message' => __("%s should be entered in alphabet characters.", __("First Name"))
                 ],
             ],
             'last_name'             => [
                 'maxLength'      => [
                     'rule'    => ['maxLength', 64],
-                    'message' => __("%sは64文字以内で入力してください。", __("Last Name"))
+                    'message' => __("%s should be entered in less than 64 characters.", __("Last Name"))
                 ],
                 'notEmpty'       => [
                     'rule'    => 'notEmpty',
-                    'message' => __("%sは必須項目です。", __("Last Name"))
+                    'message' => __("%s is required.", __("Last Name"))
                 ],
                 'isAlphabetOnly' => [
                     'rule'    => 'isAlphabetOnly',
-                    'message' => __("%sはアルファベットのみで入力してください。", __("Last Name"))
+                    'message' => __("%s should be entered in alphabet characters.", __("Last Name"))
                 ],
             ],
             'admin_flg'             => [
                 'notEmpty'  => [
                     'rule'    => 'notEmpty',
-                    'message' => __("%sは必須項目です。", __("Administrators"))
+                    'message' => __("%s is required.", __("Administrators"))
                 ],
                 'isOnOrOff' => [
                     'rule'    => 'isOnOrOff',
-                    'message' => __("%sは'ON'もしくは'OFF'のいずれかである必要があいます。", __('Administrators'))
+                    'message' => __("%s must be either 'ON' or 'OFF'.", __('Administrators'))
                 ],
             ],
             'evaluation_enable_flg' => [
                 'notEmpty'  => [
                     'rule'    => 'notEmpty',
-                    'message' => __("%sは必須項目です。", __("Evaluator"))
+                    'message' => __("%s is required.", __("Evaluator"))
                 ],
                 'isOnOrOff' => [
                     'rule'    => 'isOnOrOff',
-                    'message' => __("%sは'ON'もしくは'OFF'のいずれかである必要があいます。", __('Evaluator'))
+                    'message' => __("%s must be either 'ON' or 'OFF'.", __('Evaluator'))
                 ],
             ],
             'member_type'           => [
                 'maxLength' => [
                     'rule'    => ['maxLength', 64],
-                    'message' => __("%sは64文字以内で入力してください。", __("Member Type"))
+                    'message' => __("%s should be entered in less than 64 characters.", __("Member Type"))
                 ],
             ],
             'group'                 => [
                 'isAlignLeft'     => [
                     'rule'       => 'isAlignLeft',
-                    'message'    => __("%sは左詰めで記入してください。", __("Group name")),
+                    'message'    => __("Please %s fill with align left.", __("Group name")),
                     'allowEmpty' => true,
                 ],
                 'isNotDuplicated' => [
                     'rule'       => 'isNotDuplicated',
-                    'message'    => __("%sが重複しています。", __("Group name")),
+                    'message'    => __("%s is duplicated.", __("Group name")),
                     'allowEmpty' => true,
                 ],
                 'maxLengthArray'  => [
                     'rule'       => ['maxLengthArray', 64],
-                    'message'    => __("%sは64文字以内で入力してください。", __("Group name")),
+                    'message'    => __("%s should be entered in less than 64 characters.", __("Group name")),
                     'allowEmpty' => true,
                 ],
             ],
             'coach_member_no'       => [
                 'isNotEqual' => [
                     'rule'       => ['isNotEqual', 'member_no'],
-                    'message'    => __("%sに本人のIDを指定する事はできません。", __("Coach ID")),
+                    'message'    => __("%s doesn't allow you to specify the ID of you.", __("Coach ID")),
                     'allowEmpty' => true,
                 ],
             ],
             'evaluator_member_no'   => [
                 'isAlignLeft'     => [
                     'rule'       => 'isAlignLeft',
-                    'message'    => __("%sは左詰めで記入してください。", __("Evaluator")),
+                    'message'    => __("Please %s fill with align left.", __("Evaluator")),
                     'allowEmpty' => true,
                 ],
                 'isNotDuplicated' => [
                     'rule'       => 'isNotDuplicated',
-                    'message'    => __("%sが重複しています。", __("Evaluator")),
+                    'message'    => __("%s is duplicated.", __("Evaluator")),
                     'allowEmpty' => true,
                 ],
                 'maxLengthArray'  => [
                     'rule'       => ['maxLengthArray', 64],
-                    'message'    => __("%sは64文字以内で入力してください。", __("Evaluator")),
+                    'message'    => __("%s should be entered in less than 64 characters.", __("Evaluator")),
                     'allowEmpty' => true,
                 ],
             ],
@@ -1986,58 +1986,58 @@ class TeamMember extends AppModel
                 ],
                 'phoneNo'   => [
                     'rule'       => 'phoneNo',
-                    'message'    => __("電話番号が正しくありません。使用できる文字は半角数字、'-()'です。"),
+                    'message'    => __("Telephone number is incorrect. Single-byte number and '-()' are allowed."),
                     'allowEmpty' => true,
                 ],
             ],
             'gender'           => [
                 'inList' => [
                     'rule'       => ['inList', ['male', 'female']],
-                    'message'    => __("サポートされていない性別表記です。'male'もしくは'female'で記入してください。"),
+                    'message'    => __("'male'もしくは'female'で記入してください。"),
                     'allowEmpty' => true,
                 ],
             ],
             'language'         => [
                 'inList' => [
                     'rule'       => ['inList', $this->support_lang_codes],
-                    'message'    => __("サポートされていないローカル姓名の言語コードです。"),
+                    'message'    => __("It is unsupported language code of the local first name and last name."),
                     'allowEmpty' => true,
                 ],
             ],
             'local_first_name' => [
                 'maxLength' => [
                     'rule'    => ['maxLength', 64],
-                    'message' => __("%sは64文字以内で入力してください。", __("Local First Name"))
+                    'message' => __("%s should be entered in less than 64 characters.", __("Local First Name"))
                 ],
             ],
             'local_last_name'  => [
                 'maxLength' => [
                     'rule'    => ['maxLength', 64],
-                    'message' => __("%sは64文字以内で入力してください。", __("Local Last Name"))
+                    'message' => __("%s should be entered in less than 64 characters.", __("Local Last Name"))
                 ],
             ],
             'birth_year'       => [
                 'isAllOrNothing' => [
                     'rule'    => ['isAllOrNothing', ['birth_year', 'birth_month', 'birth_day']],
-                    'message' => __("誕生日を記入する場合は年月日のすべての項目を記入してください。"),
+                    'message' => __("If you want to fill in the date of birth, please fill out all of the items of date."),
                 ],
                 'birthYear'      => [
                     'rule'       => 'birthYear',
-                    'message'    => __("%sが正しくありません。", __("Birth Year")),
+                    'message'    => __("%s is not correct.", __("Birth Year")),
                     'allowEmpty' => true,
                 ],
             ],
             'birth_month'      => [
                 'birthMonth' => [
                     'rule'       => 'birthMonth',
-                    'message'    => __("%sが正しくありません。", __("Birth Month")),
+                    'message'    => __("%s is not correct.", __("Birth Month")),
                     'allowEmpty' => true,
                 ],
             ],
             'birth_day'        => [
                 'birthDay' => [
                     'rule'       => 'birthDay',
-                    'message'    => __("%sが正しくありません。", __("Birthday")),
+                    'message'    => __("%s is not correct.", __("Birthday")),
                     'allowEmpty' => true,
                 ],
             ],
@@ -2046,11 +2046,11 @@ class TeamMember extends AppModel
             'active_flg' => [
                 'notEmpty'  => [
                     'rule'    => 'notEmpty',
-                    'message' => __("%sは必須項目です。", __("Active status"))
+                    'message' => __("%s is required.", __("Active status"))
                 ],
                 'isOnOrOff' => [
                     'rule'    => 'isOnOrOff',
-                    'message' => __("%sは'ON'もしくは'OFF'のいずれかである必要があいます。", __('Active status'))
+                    'message' => __("%s must be either 'ON' or 'OFF'.", __('Active status'))
                 ],
             ],
         ];
@@ -2071,7 +2071,7 @@ class TeamMember extends AppModel
             'total.final.score' => [
                 'notEmpty' => [
                     'rule'    => 'notEmpty',
-                    'message' => __("%sは必須項目です。", __("Score by final evaluator"))
+                    'message' => __("%s is required.", __("Score by final evaluator"))
                 ],
             ],
         ];

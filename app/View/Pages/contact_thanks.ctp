@@ -55,7 +55,7 @@ $meta_contact_thanks = [
     ],
     [
         "property" => "og:site_name",
-        "content" => __('Goalous (ゴーラス) │ゴール達成への最強にオープンな社内SNS'),
+        "content" => __('Goalous │ Enterprise SNS the most ever open for Goal'),
     ],
     [
         "property" => "fb:app_id",
@@ -108,7 +108,7 @@ for($i = 0; $i < $num_ogp; $i++){
                     </div>
                     <div class="details">
                         <h4><?= __('facebookページ') ?></h4>
-                        <p><?= __('Like us！') ?></p>
+                        <p><?= __('Like us!') ?></p>
                         <p><a href="https://www.facebook.com/isao.jp" target="_blank"><?= __('isao.jp') ?></a></p>
                     </div><!--details-->
                 </div><!--//item-inner-->
@@ -120,7 +120,7 @@ for($i = 0; $i < $num_ogp; $i++){
                     </div>
                     <div class="details">
                         <h4><?= __('Twitter') ?></h4>
-                        <p><?= __('Follow now！') ?></p>
+                        <p><?= __('Follow now!') ?></p>
                         <p><a href="https://twitter.com/ISAOcorp" target="_blank"><?= __('@ISAOcorp') ?></a></p>
                     </div><!--details-->
                 </div><!--//item-inner-->

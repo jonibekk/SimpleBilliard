@@ -55,7 +55,7 @@ $meta_contact_confirm = [
     ],
     [
         "property" => "og:site_name",
-        "content" => __('Goalous (ゴーラス) │ゴール達成への最強にオープンな社内SNS'),
+        "content" => __('Goalous │ Enterprise SNS the most ever open for Goal'),
     ],
     [
         "property" => "fb:app_id",
