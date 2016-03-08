@@ -3657,7 +3657,6 @@ function evLike() {
         url: url,
         async: true,
         dataType: 'json',
-        timeout: 5000,
         success: function (data) {
             if (data.error) {
                 alert(cake.message.notice.d);
