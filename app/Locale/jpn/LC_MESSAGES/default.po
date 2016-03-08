@@ -1,18 +1,19 @@
 # LANGUAGE translation of CakePHP Application
 # Copyright YEAR NAME <EMAIL@ADDRESS>
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2016-03-08 08:54+0000\n"
-"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"POT-Creation-Date: 2016-03-08 14:25+0530\n"
+"PO-Revision-Date: 2016-03-08 14:32+0530\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"X-Generator: Poedit 1.8.7\n"
 
 #: Config/Migration/1435197386_data_migration_for_all_team_0625.php:76;77
 #: Model/Team.php:225;226 Model/User.php:1064
@@ -222,8 +223,8 @@ msgid "Commented"
 msgstr "コメントしました"
 
 #: Controller/GoalApprovalController.php:292;296
-msgid "処理済みに移動しました。"
-msgstr ""
+msgid "Move to Done."
+msgstr "処理済みに移動しました。"
 
 #: Controller/GoalApprovalController.php:300
 msgid "Sent amend request."
@@ -314,11 +315,11 @@ msgid "Deleted an action."
 msgstr "アクションを削除しました。"
 
 #: Controller/GoalsController.php:714
-msgid "既にコラボレータから抜けている可能性があります。"
+msgid "He/She might quit collaborating."
 msgstr ""
 
 #: Controller/GoalsController.php:717
-msgid "この操作の権限がありません。"
+msgid "You have no right to operate it."
 msgstr ""
 
 #: Controller/GoalsController.php:725
@@ -482,40 +483,41 @@ msgid "English"
 msgstr "English"
 
 #: Controller/PagesController.php:185
-msgid "指定なし"
-msgstr ""
+msgid "Anyone"
+msgstr "指定なし"
 
 #: Controller/PagesController.php:202 Model/EvaluateScore.php:86
-msgid "選択してください"
-msgstr ""
+#: Model/Team.php:254;265
+msgid "Please select"
+msgstr "選択してください"
 
 #: Controller/PagesController.php:203
-msgid "詳しく知りたい"
-msgstr ""
+msgid "Get more information"
+msgstr "詳しく知りたい"
 
 #: Controller/PagesController.php:204
-msgid "資料がほしい"
-msgstr ""
+msgid "Get documentation"
+msgstr "資料がほしい"
 
 #: Controller/PagesController.php:205
-msgid "協業したい"
-msgstr ""
+msgid "Collaborate with ISAO"
+msgstr "協業したい"
 
 #: Controller/PagesController.php:206
-msgid "取材したい"
-msgstr ""
+msgid "Give us an interview"
+msgstr "取材したい"
 
 #: Controller/PagesController.php:207
-msgid "その他"
-msgstr ""
+msgid "Others"
+msgstr "その他"
 
 #: Controller/PagesController.php:216;227
-msgid "問題が発生したため、処理が完了しませんでした。"
-msgstr ""
+msgid "Ooops. Some problems occured."
+msgstr "問題が発生したため、処理が完了しませんでした。"
 
 #: Controller/PagesController.php:248
-msgid "【Goalous】お問い合わせありがとうございました"
-msgstr ""
+msgid "Goalous - Thanks for your contact."
+msgstr "Goalous】お問い合わせありがとうございました"
 
 #: Controller/PostsController.php:106;109
 msgid "Failed to change members list."
@@ -553,8 +555,12 @@ msgstr "投稿の変更を保存しました。"
 msgid "Failed to save changes."
 msgstr "投稿の変更に失敗しました。"
 
-#: Controller/PostsController.php:313;316;345;348
-msgid "gl"
+#: Controller/PostsController.php:313;345
+msgid "このコメントは存在しません。"
+msgstr ""
+
+#: Controller/PostsController.php:316;348
+msgid "このコメントはあなたのものではありません。"
 msgstr ""
 
 #: Controller/PostsController.php:324
@@ -1533,10 +1539,6 @@ msgstr "今期から"
 #: Model/Team.php:67
 msgid "From next term"
 msgstr "来期から"
-
-#: Model/Team.php:254;265
-msgid "Please select"
-msgstr "選択してください"
 
 #: Model/Team.php:255
 msgid "Quater"
@@ -6102,9 +6104,6 @@ msgstr "passwordSameCheck"
 
 #~ msgid "Wating for modified"
 #~ msgstr "修正待ち"
-
-#~ msgid "Move to Done."
-#~ msgstr "処理済みに移動しました。"
 
 #~ msgid "File deleted."
 #~ msgstr "ファイルを削除しました"
