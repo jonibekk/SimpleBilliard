@@ -711,10 +711,10 @@ class GoalsController extends AppController
         $this->request->allowMethod('post', 'put');
         $this->Goal->Collaborator->id = $collabo_id;
         if (!$this->Goal->Collaborator->exists()) {
-            $this->Pnotify->outError(__("既にコラボレータから抜けている可能性があります。"));
+            $this->Pnotify->outError(__("He/She might quit collaborating."));
         }
         if (!$this->Goal->Collaborator->isOwner($this->Auth->user('id'))) {
-            $this->Pnotify->outError(__("この操作の権限がありません。"));
+            $this->Pnotify->outError(__("You have no right to operate it."));
         }
         $collabo = $this->Goal->Collaborator->findById($collabo_id);
         if (!empty($collabo)) {

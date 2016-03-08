@@ -4,14 +4,16 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2016-03-07 06:01+0000\n"
-"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"POT-Creation-Date: 2016-03-08 14:07+0530\n"
+"PO-Revision-Date: 2016-03-08 14:23+0530\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"X-Generator: Poedit 1.8.7\n"
 
 #: Config/Migration/1435197386_data_migration_for_all_team_0625.php:76;77
 #: Model/Team.php:225;226 Model/User.php:1064
@@ -1888,8 +1890,8 @@ msgid "Email Address"
 msgstr "メールアドレス"
 
 #: Model/TeamMember.php:1867;2026;2033;2040
-msgid "%sが正しくありません。"
-msgstr "%s is not correct."
+msgid "%s is not correct."
+msgstr ""
 
 #: Model/TeamMember.php:1873;1877
 msgid "Member ID"
@@ -1899,7 +1901,7 @@ msgstr "メンバーID"
 msgid "%s should be entered in less than 64 characters."
 msgstr "%sは64文字以内で入力してください。"
 
-#: Model/TeamMember.php:1881
+#: Model/TeamMember.php:1881;1959
 msgid "%s doesn't allow you to specify the ID of you."
 msgstr "%sに本人のIDを指定する事はできません。"
 
@@ -1932,10 +1934,6 @@ msgstr "グループ名"
 msgid "%s is duplicated."
 msgstr "%sが重複しています。"
 
-#: Model/TeamMember.php:1959
-msgid "%sに本人のIDを指定する事はできません。"
-msgstr ""
-
 #: Model/TeamMember.php:1985
 msgid "$%sは20文字以内で入力してください。"
 msgstr ""
@@ -1945,19 +1943,22 @@ msgid "Phone number"
 msgstr "電話番号"
 
 #: Model/TeamMember.php:1989
-msgid "Telephone number is incorrect. Single-byte number and '-()' are allowed."
+msgid ""
+"Telephone number is incorrect. Single-byte number and '-()' are allowed."
 msgstr "電話番号が正しくありません。使用できる文字は半角数字、'-()'です。"
 
 #: Model/TeamMember.php:1996
-msgid "Please fill in 'male' or 'female'."
-msgstr "'male'もしくは'female'で記入してください。"
+msgid "'male'もしくは'female'で記入してください。"
+msgstr ""
 
 #: Model/TeamMember.php:2003
-msgid "サポートされていないローカル姓名の言語コードです。"
-msgstr "It is unsupported language code of the local first name and last name."
+msgid "It is unsupported language code of the local first name and last name."
+msgstr ""
 
 #: Model/TeamMember.php:2022
-msgid "If you want to fill in the date of birth, please fill out all of the items of date."
+msgid ""
+"If you want to fill in the date of birth, please fill out all of the items "
+"of date."
 msgstr "誕生日を記入する場合は年月日のすべての項目を記入してください。"
 
 #: Model/TeamMember.php:2049;2053
@@ -2226,7 +2227,8 @@ msgstr ""
 #: View/Teams/add.ctp:169 View/Teams/add_group_vision.ctp:139
 #: View/Teams/add_team_vision.ctp:131 View/Teams/edit_group_vision.ctp:142
 #: View/Teams/edit_team_vision.ctp:134 View/Users/add_profile.ctp:219
-msgid "10MB or less, and Please select one of the formats of JPG or PNG and GIF."
+msgid ""
+"10MB or less, and Please select one of the formats of JPG or PNG and GIF."
 msgstr "10MB以下かつJPG、PNG、GIFのいずれかの形式を選択して下さい。"
 
 #: View/Elements/gl_common_js.ctp:62
@@ -2234,7 +2236,8 @@ msgid "Please mix of numbers, lower case letters and upper case letters."
 msgstr "数字、英小文字、英大文字の混在にしてください。"
 
 #: View/Elements/gl_common_js.ctp:63
-msgid "It is not possible to use the same as the email address as the password."
+msgid ""
+"It is not possible to use the same as the email address as the password."
 msgstr "パスワードにメールアドレスと同一のものを指定する事はできません。"
 
 #: View/Elements/gl_common_js.ctp:64
@@ -2948,7 +2951,7 @@ msgstr "ゴールをつくりましょう。ゴールページでは、より詳
 msgid "Make your team better by Goalous."
 msgstr "チーム力を向上させよう。Goalousをさっそく使ってみましょう"
 
-#: View/Elements/my_goals_area.ctp:20
+#: View/Elements/my_goals_area.ctp:20 View/Pages/features.ctp:247
 msgid "Vision"
 msgstr "ビジョン"
 
@@ -4511,8 +4514,8 @@ msgstr ""
 msgid "Nothing will be deliverd."
 msgstr ""
 
-#: View/Elements/User/profile_setting.ctp:18 View/Users/settings.ctp:19
-#: View/Users/view_info.ctp:18
+#: View/Elements/User/profile_setting.ctp:18 View/Pages/features.ctp:238
+#: View/Users/settings.ctp:19 View/Users/view_info.ctp:18
 msgid "Profile"
 msgstr "プロフィール"
 
@@ -4874,7 +4877,7 @@ msgstr "情報を追加する"
 
 #: View/Goals/add.ctp:411
 msgid "Add complements"
-msgstr ""
+msgstr "情報を補完する"
 
 #: View/Goals/add.ctp:413
 msgid "Explain this goal in detail."
@@ -4898,7 +4901,7 @@ msgstr "開始日が期限を過ぎています。"
 
 #: View/Goals/add.ctp:543
 msgid "The limit date must be after start date."
-msgstr ""
+msgstr "期限は開始日より後である必要があります。"
 
 #: View/Goals/index.ctp:15
 msgid "Export Data"
@@ -4949,7 +4952,7 @@ msgstr "コラボり中"
 
 #: View/Helper/GoalHelper.php:87
 msgid "Other %s members"
-msgstr ""
+msgstr "他%s人"
 
 #: View/Helper/TimeExHelper.php:104
 msgid "Just now"
@@ -4978,7 +4981,7 @@ msgid ""
 "す。導入のご相談を受け付けています。"
 msgstr ""
 
-#: View/Pages/contact.ctp:42
+#: View/Pages/contact.ctp:42;78
 msgid "お問い合わせ | Goalous(ゴーラス)"
 msgstr ""
 
@@ -4988,10 +4991,6 @@ msgstr ""
 #: View/Pages/privacy_policy.ctp:58 View/Pages/terms.ctp:59
 msgid "Goalous │ Enterprise SNS the most ever open for Goal"
 msgstr "Goalous (ゴーラス) │ ゴール達成への最強にオープンな社内SNS"
-
-#: View/Pages/contact.ctp:78
-msgid "お問い合わせ | Goalous(ゴーラス)"
-msgstr ""
 
 #: View/Pages/contact.ctp:90
 msgid "Goalousに関するお問い合わせ"
@@ -5356,19 +5355,11 @@ msgid ""
 "る人。1メンバーにつき1人設定します。"
 msgstr ""
 
-#: View/Pages/features.ctp:238
-msgid "Profile"
-msgstr "プロフィール"
-
 #: View/Pages/features.ctp:239
 msgid ""
 "顔と名前の一致に加え、何を目指して毎日どんなアクションをしているか検索でき"
 "る。これは全社のデータベースです。"
 msgstr ""
-
-#: View/Pages/features.ctp:247
-msgid "Vision"
-msgstr "ビジョン"
 
 #: View/Pages/features.ctp:248
 msgid ""
@@ -5641,11 +5632,11 @@ msgstr "件の新しい投稿があります。"
 
 #: View/Posts/attached_file_list.ctp:53;59
 msgid "View more files"
-msgstr ""
+msgstr "もっとファイルを見る"
 
 #: View/Posts/attached_file_list.ctp:69
 msgid "There is no more file."
-msgstr ""
+msgstr "これ以上ファイルはありません。"
 
 #: View/Teams/add.ctp:112
 msgid " "
@@ -6087,6 +6078,16 @@ msgstr "passwordCheck"
 #: Model/User.php:validation for field password_confirm
 msgid "passwordSameCheck"
 msgstr "passwordSameCheck"
+
+#~ msgid "%sが正しくありません。"
+#~ msgstr "%s is not correct."
+
+#~ msgid "Please fill in 'male' or 'female'."
+#~ msgstr "'male'もしくは'female'で記入してください。"
+
+#~ msgid "サポートされていないローカル姓名の言語コードです。"
+#~ msgstr ""
+#~ "It is unsupported language code of the local first name and last name."
 
 #~ msgid "Added circle member(s)."
 #~ msgstr "サークルメンバーを追加しました。"

@@ -310,10 +310,10 @@ class PostsController extends AppController
         $this->Post->Comment->id = viaIsSet($this->request->params['named']['comment_id']);;
         $post_id = $this->Post->Comment->field('post_id');
         if (!$this->Post->Comment->exists()) {
-            throw new NotFoundException(__('gl', "このコメントは存在しません。"));
+            throw new NotFoundException(__("このコメントは存在しません。"));
         }
         if (!$this->Post->Comment->isOwner($this->Auth->user('id')) && !$this->User->TeamMember->myStatusWithTeam['TeamMember']['admin_flg']) {
-            throw new NotFoundException(__('gl', "このコメントはあなたのものではありません。"));
+            throw new NotFoundException(__("このコメントはあなたのものではありません。"));
         }
         $this->request->allowMethod('post', 'delete');
         $this->Post->Comment->delete();
@@ -342,10 +342,10 @@ class PostsController extends AppController
 
         // 例外チェック
         if (!$this->Post->Comment->exists()) {
-            throw new NotFoundException(__('gl', "このコメントは存在しません。"));
+            throw new NotFoundException(__("このコメントは存在しません。"));
         }
         if (!$this->Post->Comment->isOwner($this->Auth->user('id'))) {
-            throw new NotFoundException(__('gl', "このコメントはあなたのものではありません。"));
+            throw new NotFoundException(__("このコメントはあなたのものではありません。"));
         }
 
         // ogbをインサートデータに追加

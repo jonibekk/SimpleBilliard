@@ -289,11 +289,11 @@ class GoalApprovalController extends AppController
         }
         elseif (isset($this->request->data['wait_btn']) === true) {
             $res = $this->_wait($data);
-            $this->Pnotify->outSuccess(__("処理済みに移動しました。"));
+            $this->Pnotify->outSuccess(__("Move to Done."));
         }
         elseif (isset($this->request->data['approval_btn']) === true) {
             $res = $this->_approval($data);
-            $this->Pnotify->outSuccess(__("処理済みに移動しました。"));
+            $this->Pnotify->outSuccess(__("Move to Done."));
         }
         elseif (isset($this->request->data['modify_btn']) === true) {
             $res = $this->_modify($data);
