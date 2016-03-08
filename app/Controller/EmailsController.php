@@ -23,10 +23,10 @@ class EmailsController extends AppController
     {
         $this->Email->id = $id;
         if (!$this->Email->exists()) {
-            throw new NotFoundException(__("このメールアドレスは存在しません。"));
+            throw new NotFoundException(__("This email address doesn't exist."));
         }
         if (!$this->Email->isOwner($this->Auth->user('id'))) {
-            throw new NotFoundException(__("このメールアドレスはあなたのものではありません。"));
+            throw new NotFoundException(__("This email address isn't yours."));
         }
 
         $this->request->allowMethod('post', 'delete');

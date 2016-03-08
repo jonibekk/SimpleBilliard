@@ -310,10 +310,10 @@ class PostsController extends AppController
         $this->Post->Comment->id = viaIsSet($this->request->params['named']['comment_id']);;
         $post_id = $this->Post->Comment->field('post_id');
         if (!$this->Post->Comment->exists()) {
-            throw new NotFoundException(__("このコメントは存在しません。"));
+            throw new NotFoundException(__("This comment doesn't exist."));
         }
         if (!$this->Post->Comment->isOwner($this->Auth->user('id')) && !$this->User->TeamMember->myStatusWithTeam['TeamMember']['admin_flg']) {
-            throw new NotFoundException(__("このコメントはあなたのものではありません。"));
+            throw new NotFoundException(__("This isn't your comment."));
         }
         $this->request->allowMethod('post', 'delete');
         $this->Post->Comment->delete();
@@ -1339,7 +1339,7 @@ class PostsController extends AppController
             $this->Pnotify->outSuccess(__("Joined the circle"));
         }
         else {
-            $this->Pnotify->outError(__("Error in joining the circle"));
+            $this->Pnotify->outError(__("Failed to join the circle."));
         }
         return $this->redirect($this->request->referer());
 
