@@ -1126,7 +1126,7 @@ msgstr "Other %d members"
 
 #: Model/NotifySetting.php:437
 msgid "他%dサークル"
-msgstr "Other $d circles"
+msgstr "Other %d circles"
 
 #: Model/NotifySetting.php:442
 msgid ""
@@ -1139,6 +1139,10 @@ msgstr ""
 #: Model/NotifySetting.php:445;452;469;475
 msgid "と他%s人"
 msgstr " and %s others"
+
+#: Model/NotifySetting.php:457
+msgid "と他%sサークル"
+msgstr " and %s other circles"
 
 #: Model/NotifySetting.php:449
 msgid ""

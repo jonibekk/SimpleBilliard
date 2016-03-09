@@ -77,8 +77,13 @@
                             <?= __d('app', "目的: %s", $goal['Purpose']['name']) ?>
                         </div>
                         <div class="col col-xxs-12 font_lightgray font_12px">
-                            <?= __d('app', "認定ステータス: %s",
-                                    Collaborator::$STATUS[$goal['Collaborator']['valued_flg']]) ?>
+                            <?php if ($page_type === 'following'): ?>
+                                <?= __d('app', "認定ステータス: %s",
+                                        Collaborator::$STATUS[$goal['Leader'][0]['valued_flg']]) ?>
+                            <?php else: ?>
+                                <?= __d('app', "認定ステータス: %s",
+                                        Collaborator::$STATUS[$goal['Collaborator'][0]['valued_flg']]) ?>
+                            <?php endif; ?>
                         </div>
                         <div class="col col-xxs-12">
                             <div class="progress mb_0px goals-column-progress-bar">
