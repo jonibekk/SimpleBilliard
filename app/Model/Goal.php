@@ -925,27 +925,25 @@ class Goal extends AppModel
                     'fields'     => ['MyFollow.id'],
                     'conditions' => ['MyFollow.user_id' => $this->my_uid]
                 ],
+                'Leader'            => [
+                    'fields'     => ['Leader.id', 'Leader.user_id', 'Leader.valued_flg'],
+                    'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
+                ],
+                'Collaborator'      => [
+                    'fields'     => ['Collaborator.id', 'Collaborator.user_id', 'Collaborator.valued_flg'],
+                    'conditions' => ['Collaborator.user_id' => $user_id]
+                ],
             ]
         ];
         $goals = $this->find('all', $options);
         $goals = Hash::combine($goals, '{n}.Goal.id', '{n}');
-        //再度ゴールIDを抽出(フォロー中、コーチング、コラボのゴールは期間の抽出ができない為、期間をキーにして再度抽出する必要がある)
-        $goal_ids = Hash::extract($goals, '{n}.Goal.id');
-        // getByGoalIdでは自分のゴールのみ取得するので、フォロー中のゴールのCollaborator情報はEmptyになる。
-        // そのためsetFollowGoalApprovalFlagメソッドにてCollaborator情報を取得し、認定ステータスを設定する
-        $approval_statuses = $this->Collaborator->getOwnersStatus($goal_ids);
-        //のちにゴールデータとマージしやすいように配列のキーをgoal_idに差し替える
-        $approval_statuses = Hash::combine($approval_statuses, '{n}.Collaborator.goal_id', '{n}');
-        //認定ステータスのデータをマージ
-        $goals = Hash::merge($goals, $approval_statuses);
+
         //進捗を計算
         foreach ($goals as $key => $goal) {
             $goals[$key]['Goal']['progress'] = $this->getProgress($goal);
         }
 
-        $res = $this->setFollowGoalApprovalFlag($goals);
-
-        return $res;
+        return $goals;
     }
 
     function getMyFollowedGoals($limit = null, $page = 1, $type = 'all', $user_id = null, $start_date = null, $end_date = null)
@@ -967,19 +965,8 @@ class Goal extends AppModel
             return $this->getByGoalId($goal_ids, $limit, $page, $type, $start_date, $end_date);
         }
         $goals = $this->getByGoalId($goal_ids, $limit, $page, $type, $start_date, $end_date);
-        //のちにコラボデータとマージしやすいように配列のキーをgoal_idに差し替える
-        $goals = Hash::combine($goals, '{n}.Goal.id', '{n}');
-        //再度ゴールIDを抽出(フォロー中、コーチング、コラボのゴールは期間の抽出ができない為、期間をキーにして再度抽出する必要がある)
-        $goal_ids = Hash::extract($goals, '{n}.Goal.id');
-        // getByGoalIdでは自分のゴールのみ取得するので、フォロー中のゴールのCollaborator情報はEmptyになる。
-        // そのためsetFollowGoalApprovalFlagメソッドにてCollaborator情報を取得し、認定ステータスを設定する
-        $approval_statuses = $this->Collaborator->getOwnersStatus($goal_ids);
-        //のちにゴールデータとマージしやすいように配列のキーをgoal_idに差し替える
-        $approval_statuses = Hash::combine($approval_statuses, '{n}.Collaborator.goal_id', '{n}');
-        //認定ステータスのデータをマージ
-        $goals = Hash::merge($goals, $approval_statuses);
-        $res = $this->setFollowGoalApprovalFlag($goals);
-        $res = $this->sortModified($res);
+
+        $res = $this->sortModified($goals);
         $res = $this->sortEndDate($res);
 
         return $res;
@@ -1100,6 +1087,10 @@ class Goal extends AppModel
                     'conditions' => [
                         'MyCollabo.user_id' => $this->my_uid
                     ]
+                ],
+                'Leader'              => [
+                    'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
+                    'fields'     => ['Leader.id', 'Leader.user_id', 'Leader.valued_flg'],
                 ],
             ]
         ];
