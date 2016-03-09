@@ -208,6 +208,17 @@ class NotifySettingTest extends GoalousTestCase
             'share_user_list'   => [1 => 1, 2 => 2],
             'share_circle_list' => [5 => 5],
         ]);
+
+        // サークル共有 サークルメンバーでなく、存在しないサークルがある場合
+        $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_POST, $from_user_names, $count_num, $item_name, [
+            'share_circle_list' => [5 => 5, 1000 => 1000],
+        ]);
+
+        // サークル共有 サークルメンバーでなく、存在しないサークルしかない場合
+        $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_POST, $from_user_names, $count_num, $item_name, [
+            'share_circle_list' => [1000 => 1000, 1001 => 1001],
+        ]);
+
     }
 
     function testGetTitlePlain()

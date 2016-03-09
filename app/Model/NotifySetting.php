@@ -429,24 +429,31 @@ class NotifySetting extends AppModel
                 }
 
                 // サークルに共有されている場合
-                if (isset($options['share_circle_list']) && $options['share_circle_list']) {
+                if (isset($options['share_circle_list']) && !empty($options['share_circle_list'])) {
                     $circleMember = $this->User->CircleMember->isBelong(
                         $options['share_circle_list'],
                         $this->my_uid);
+
                     // 共有先サークルのメンバーの場合
                     if ($circleMember) {
                         $circle = $this->User->CircleMember->Circle->findById($circleMember['CircleMember']['circle_id']);
                     }
+
                     // 共有先サークルのメンバーでない場合
-                    // サークルをランダムに１件取得
                     else {
-                        $circle = $this->User->CircleMember->Circle->findById(current($options['share_circle_list']));
+                        // サークルを正常に取得できないケースがあるので、
+                        // 取得できるまで回す
+                        foreach ($options['share_circle_list'] as $circle_id) {
+                            if ($circle = $this->User->CircleMember->Circle->findById($circle_id)) {
+                                break;
+                            }
+                        }
                     }
 
                     $circle_name = $circle['Circle']['name'];
                     $circle_count = count($options['share_circle_list']);
                     if ($circle_count >= 2) {
-                        $circle_name .= __('Other %d circles', $circle_count - 1);
+                        $circle_name .= __('Other %s circles', $circle_count - 1);
                     }
                     $targets[] = $circle_name;
                 }

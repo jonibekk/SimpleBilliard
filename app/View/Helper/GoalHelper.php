@@ -84,7 +84,7 @@ class GoalHelper extends AppHelper
         }
         $rest_count = count($collaborator) - 2;
         if ($rest_count > 0) {
-            $items[] = __("Other %s members", $rest_count);
+            $items[] = __("Other %d members", $rest_count);
         }
 
         return "( " . implode(", ", $items) . " )";
