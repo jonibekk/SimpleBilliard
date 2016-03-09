@@ -4968,7 +4968,7 @@ msgid "Collaborating"
 msgstr "コラボり中"
 
 #: View/Helper/GoalHelper.php:87
-msgid "Other %s members"
+msgid "Other %d members"
 msgstr "他%s人"
 
 #: View/Helper/TimeExHelper.php:104
