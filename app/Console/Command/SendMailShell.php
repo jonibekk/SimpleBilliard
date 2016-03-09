@@ -43,7 +43,9 @@ class SendMailShell extends AppShell
     {
         parent::startup();
         if ($this->params['session_id']) {
-            CakeSession::destroy();
+            if(CakeSession::started()){
+                CakeSession::destroy();
+            }
             CakeSession::id($this->params['session_id']);
             CakeSession::start();
         }
@@ -245,7 +247,11 @@ class SendMailShell extends AppShell
      */
     private function _sendMailItem($options, $viewVars)
     {
-        $viewVars['message'] = $this->_preventGarbledCharacters($viewVars['message']);
+        // TODO: $viewVars['message']以外の場所もメール本文として使われてる可能性があるため、調査が必要。
+        //       もし上記の場所を発見したら、そのテキストを_preventGarbledCharacters()に通す必要がある。文字化け回避のために。
+        if(isset($viewVars['message'])) {
+            $viewVars['message'] = $this->_preventGarbledCharacters($viewVars['message']);
+        }
         $defaults = array(
             'subject'  => '',
             'template' => '',

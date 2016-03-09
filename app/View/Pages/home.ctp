@@ -30,12 +30,12 @@ $meta_lp = [
         "content" => __('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。スマホアプリ・ブラウザで利用可能です。'),
     ],
     [
-        "name" => "keywords",
+        "name"    => "keywords",
         "content" => "目標管理,目標達成,社内SNS,評価,MBO",
     ],
     [
         "property" => "og:type",
-        "content" => "website",
+        "content"  => "website",
     ],
     [
         "property" => "og:title",
@@ -47,11 +47,11 @@ $meta_lp = [
     ],
     [
         "property" => "og:url",
-        "content" => "https://www.goalous.com/",
+        "content"  => "https://www.goalous.com/",
     ],
     [
         "property" => "og:image",
-        "content" => "https://www.goalous.com/img/homepage/background/promo-bg.jpg",
+        "content"  => "https://www.goalous.com/img/homepage/background/promo-bg.jpg",
     ],
     [
         "property" => "og:site_name",
@@ -59,19 +59,19 @@ $meta_lp = [
     ],
     [
         "property" => "fb:app_id",
-        "content" => "966242223397117",
+        "content"  => "966242223397117",
     ],
     [
-        "name" => "twitter_card",
+        "name"    => "twitter_card",
         "content" => "summary",
     ],
     [
-        "name" => "twitter:site",
+        "name"    => "twitter:site",
         "content" => "@goalous",
     ]
 ];
 $num_ogp = count($meta_lp);
-for($i = 0; $i < $num_ogp; $i++){
+for ($i = 0; $i < $num_ogp; $i++) {
     echo $this->Html->meta($meta_lp[$i]);
 }
 ?>
@@ -245,7 +245,7 @@ for($i = 0; $i < $num_ogp; $i++){
                 <h3><?= __('スマホアプリで、いつでもどこからでも') ?></h3>
                 <p class="lead-text"><?= __('iOS・Androidアプリでもご利用いただけます') ?></p>
                 <?= $this->Html->link(
-                    $this->Html->image('http://linkmaker.itunes.apple.com/images/badges/en-us/badge_appstore-lrg.svg'),
+                    $this->Html->image('https://linkmaker.itunes.apple.com/images/badges/en-us/badge_appstore-lrg.svg'),
                     'https://itunes.apple.com/us/app/goalous-chimu-li-xiang-shangsns/id1060474459?ls=1&mt=8',
                     array(
                         'escape' => false,

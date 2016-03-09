@@ -44,7 +44,7 @@ if (isset($site_info['type']) && (
                                 'error-img'     => "/img/no-image-link.png",
                             ])
                             ?>
-                        <?php elseif ($site_info['image']): ?>
+                        <?php elseif (isset($site_info['image']) && $site_info['image']): ?>
                             <?= $this->Html->image($site_info['image'], [
                                 'class' => 'media-object',
                                 'width' => '80px',
