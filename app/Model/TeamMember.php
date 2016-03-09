@@ -2255,12 +2255,4 @@ class TeamMember extends AppModel
         ]);
     }
 
-    function isMyCoachingUser($user_id, $coach_user_id = null)
-    {
-        if (!$coach_user_id) {
-            $coach_user_id = $this->my_uid;
-        }
-
-        return $this->getCoachId($user_id, $this->current_team_id) == $coach_user_id;
-    }
 }

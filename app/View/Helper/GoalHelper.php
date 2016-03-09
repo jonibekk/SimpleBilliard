@@ -90,4 +90,17 @@ class GoalHelper extends AppHelper
         return "( " . implode(", ", $items) . " )";
     }
 
+    function containMyCoachingUser($goal, $my_coaching_users) {
+        if(!$my_coaching_users || !is_array($my_coaching_users)) {
+            return false;
+        }
+
+        $collabos = Hash::extract($goal['Collaborator'], '{n}.user_id');
+        if(!$collabos) {
+            return false;
+        }
+
+        return (boolean)array_intersect($collabos, $my_coaching_users);
+    }
+
 }

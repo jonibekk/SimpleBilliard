@@ -1236,7 +1236,7 @@ class UsersController extends AppController
 
         $term_base_url = Router::url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user_id, 'page_type' => $page_type]);
 
-        $is_my_coaching_user = $this->User->TeamMember->isMyCoachingUser($user_id);
+        $my_coaching_users = $this->User->TeamMember->getMyMembersList($this->my_uid);
 
         $this->set(compact(
                        'term',
@@ -1248,7 +1248,7 @@ class UsersController extends AppController
                        'goals',
                        'is_mine',
                        'display_action_count',
-                       'is_my_coaching_user'
+                       'my_coaching_users'
                    ));
         return $this->render();
     }
