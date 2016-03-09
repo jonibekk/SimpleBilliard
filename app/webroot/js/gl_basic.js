@@ -1,5 +1,6 @@
 $.ajaxSetup({
-    cache: false
+    cache: false,
+    timeout: 10000 // 10 sec
 });
 if (typeof String.prototype.startsWith != 'function') {
     // see below for better implementation!
@@ -3656,7 +3657,6 @@ function evLike() {
         url: url,
         async: true,
         dataType: 'json',
-        timeout: 5000,
         success: function (data) {
             if (data.error) {
                 alert(cake.message.notice.d);
@@ -4052,7 +4052,6 @@ function evCommentLatestView(options) {
         url: get_url,
         async: true,
         dataType: 'json',
-        timeout: 10000,
         success: function (data) {
             if (!$.isEmptyObject(data.html)) {
                 //取得したhtmlをオブジェクト化
