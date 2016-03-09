@@ -103,14 +103,17 @@ class Invite extends AppModel
      * 招待の認証
      *
      * @param string $token The token that wa sent to the user
+     * @param        $user_id
      *
      * @return array On success it returns the user data record
+     * @throws Exception
      */
-    public function verify($token)
+    public function verify($token, $user_id)
     {
         $this->confirmToken($token);
         $invite = $this->getByToken($token);
         $invite['Invite']['email_verified'] = true;
+        $invite['Invite']['to_user_id'] = $user_id;
         $res = $this->save($invite);
         return $res;
     }
@@ -205,6 +208,9 @@ class Invite extends AppModel
             ],
             'contain'    => [
                 'FromUser' => [
+                    'fields' => $this->FromUser->profileFields
+                ],
+                'ToUser'   => [
                     'fields' => $this->FromUser->profileFields
                 ],
                 'Team'

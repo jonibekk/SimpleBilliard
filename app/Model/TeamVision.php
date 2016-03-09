@@ -44,12 +44,19 @@ class TeamVision extends AppModel
      */
     public $validate = [
         'name'        => [
+            'isString'  => [
+                'rule'       => ['isString',],
+            ],
             'maxLength' => ['rule' => ['maxLength', 200]],
             'notEmpty'  => [
                 'rule' => ['notEmpty'],
             ],
         ],
         'description' => [
+            'isString'  => [
+                'rule'       => ['isString',],
+                'allowEmpty' => true,
+            ],
             'maxLength' => ['rule' => ['maxLength', 2000]],
         ],
         'active_flg'  => [

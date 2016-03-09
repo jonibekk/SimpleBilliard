@@ -382,7 +382,7 @@ class UsersController extends AppController
                 return $this->render();
             }
             $user = $this->User->getUserByEmail($this->request->data['Email']['email']);
-            $this->Invite->verify($this->request->params['named']['invite_token']);
+            $this->Invite->verify($this->request->params['named']['invite_token'], $user['User']['id']);
             //タイムゾーン設定
             //ユーザのローカル環境から取得したタイムゾーンをセット
             $timezone = $this->Timezone->getLocalTimezone($this->request->data['User']['local_date']);
@@ -999,7 +999,8 @@ class UsersController extends AppController
     function _joinTeam($token)
     {
         //トークン認証
-        $invite = $this->Invite->verify($token);
+        $invite = $this->Invite->verify($token, $this->Auth->user('id'));
+
         //チーム参加
         $this->User->TeamMember->add($this->Auth->user('id'), $invite['Invite']['team_id']);
         //デフォルトチーム設定
@@ -1149,7 +1150,7 @@ class UsersController extends AppController
         if ($email) {
             // メールアドレスだけ validate
             $this->User->Email->create(['email' => $email]);
-            $this->User->Email->validates(['fieldList' => 'email']);
+            $this->User->Email->validates(['fieldList' => ['email']]);
             if ($this->User->Email->validationErrors) {
                 $message = $this->User->Email->validationErrors['email'][0];
             }

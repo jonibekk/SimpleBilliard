@@ -28,6 +28,10 @@ class ApprovalHistory extends AppModel
             ],
         ],
         'comment'       => [
+            'isString'  => [
+                'rule'       => ['isString',],
+                'allowEmpty' => true,
+            ],
             'maxLength' => ['rule' => ['maxLength', 5000]],
         ],
         'del_flg'       => [

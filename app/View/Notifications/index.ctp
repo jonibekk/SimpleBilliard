@@ -37,5 +37,5 @@
         <?php endif; ?>
     </div>
 </div>
-
+<?= $this->element('file_upload_form') ?>
 <!-- END app/View/Notifications/index.ctp -->

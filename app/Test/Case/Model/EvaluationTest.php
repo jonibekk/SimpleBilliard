@@ -60,7 +60,6 @@ class EvaluationTest extends GoalousTestCase
     private $current_date;
     private $start_date;
     private $end_date;
-    private $notAllowEmptyArray;
 
     /**
      * setUp method
@@ -593,18 +592,44 @@ class EvaluationTest extends GoalousTestCase
     function testSetAllowEmptyToCommentCaseOfEmpty()
     {
         $this->_setDefault();
-        $this->Evaluation->validate['comment'] = [];
+        $this->Evaluation->validate['comment'] = [
+            'isString'   => [
+                'rule' => ['isString'],
+                'allowEmpty' => true,
+            ],
+            'maxLength' => ['rule' => ['maxLength', 5000]],
+        ];
+        $required = [
+            'isString'   => [
+                'rule' => ['isString'],
+                'allowEmpty' => true,
+            ],
+            'maxLength' => ['rule' => ['maxLength', 5000]],
+        ];
         $this->Evaluation->setAllowEmptyToComment();
-        $this->assertEquals($this->Evaluation->validate['comment'], []);
+        $this->assertEquals($this->Evaluation->validate['comment'], $required);
 
     }
 
     function testSetAllowEmptyToCommentCaseOfNotEmpty()
     {
         $this->_setDefault();
-        $this->Evaluation->validate['comment'] = $this->notAllowEmptyArray;
+        $this->Evaluation->validate['comment'] = [
+            'isString'   => [
+                'rule' => ['isString'],
+            ],
+            'maxLength' => ['rule' => ['maxLength', 5000]],
+            'notEmpty'  => ['rule' => 'notEmpty']
+        ];
+        $required = [
+            'isString'   => [
+                'rule' => ['isString'],
+                'allowEmpty' => true,
+            ],
+            'maxLength' => ['rule' => ['maxLength', 5000]],
+        ];
         $this->Evaluation->setAllowEmptyToComment();
-        $this->assertEquals($this->Evaluation->validate['comment'], []);
+        $this->assertEquals($this->Evaluation->validate['comment'], $required);
     }
 
     /**
@@ -615,18 +640,44 @@ class EvaluationTest extends GoalousTestCase
     public function testSetNotAllowEmptyToCommentCaseOfEmpty()
     {
         $this->_setDefault();
-        $this->Evaluation->validate['comment'] = [];
+        $this->Evaluation->validate['comment'] = [
+            'isString'   => [
+                'rule' => ['isString'],
+                'allowEmpty' => true,
+            ],
+            'maxLength' => ['rule' => ['maxLength', 5000]],
+        ];
+        $required = [
+            'isString'   => [
+                'rule' => ['isString'],
+            ],
+            'maxLength' => ['rule' => ['maxLength', 5000]],
+            'notEmpty'  => ['rule' => 'notEmpty']
+        ];
         $this->Evaluation->setNotAllowEmptyToComment();
-        $this->assertEquals($this->Evaluation->validate['comment'], $this->notAllowEmptyArray);
+        $this->assertEquals($this->Evaluation->validate['comment'], $required);
 
     }
 
     public function testSetNotAllowEmptyToCommentCaseOfNotEmpty()
     {
         $this->_setDefault();
-        $this->Evaluation->validate['comment'] = $this->notAllowEmptyArray;
+        $this->Evaluation->validate['comment'] = [
+            'isString'   => [
+                'rule' => ['isString'],
+            ],
+            'maxLength' => ['rule' => ['maxLength', 5000]],
+            'notEmpty'  => ['rule' => 'notEmpty']
+        ];
+        $required = [
+            'isString'   => [
+                'rule' => ['isString'],
+            ],
+            'maxLength' => ['rule' => ['maxLength', 5000]],
+            'notEmpty'  => ['rule' => 'notEmpty'],
+        ];
         $this->Evaluation->setNotAllowEmptyToComment();
-        $this->assertEquals($this->Evaluation->validate['comment'], $this->notAllowEmptyArray);
+        $this->assertEquals($this->Evaluation->validate['comment'], $required);
     }
 
     /**
@@ -637,17 +688,40 @@ class EvaluationTest extends GoalousTestCase
     public function testSetAllowEmptyToEvaluateScoreIdCaseOfEmpty()
     {
         $this->_setDefault();
-        $this->Evaluation->validate['evaluate_score_id'] = [];
+        $this->Evaluation->validate['evaluate_score_id'] = [
+            'numeric'  => [
+                'rule' => ['numeric'],
+                'allowEmpty' => true,
+            ],
+        ];
+        $required = [
+            'numeric'   => [
+                'rule' => ['numeric'],
+                'allowEmpty' => true,
+            ],
+        ];
         $this->Evaluation->setAllowEmptyToEvaluateScoreId();
-        $this->assertEquals($this->Evaluation->validate['evaluate_score_id'], []);
+        $this->assertEquals($this->Evaluation->validate['evaluate_score_id'], $required);
     }
 
     public function testSetAllowEmptyToEvaluateScoreIdCaseOfNotEmpty()
     {
         $this->_setDefault();
-        $this->Evaluation->validate['evaluate_score_id'] = $this->notAllowEmptyArray;
+        $this->Evaluation->validate['evaluate_score_id'] = [
+            'numeric'  => [
+                'rule' => ['numeric'],
+            ],
+            'notEmpty'  => ['rule' => 'notEmpty'],
+
+        ];
+        $required = [
+            'numeric'   => [
+                'rule' => ['numeric'],
+                'allowEmpty' => true,
+            ],
+        ];
         $this->Evaluation->setAllowEmptyToEvaluateScoreId();
-        $this->assertEquals($this->Evaluation->validate['evaluate_score_id'], []);
+        $this->assertEquals($this->Evaluation->validate['evaluate_score_id'], $required);
     }
 
     /**
@@ -658,17 +732,39 @@ class EvaluationTest extends GoalousTestCase
     public function testSetNotAllowEmptyToEvaluateScoreIdCaseOfEmpty()
     {
         $this->_setDefault();
-        $this->Evaluation->validate['evaluate_score_id'] = [];
+        $this->Evaluation->validate['evaluate_score_id'] = [
+            'numeric'  => [
+                'rule' => ['numeric'],
+                'allowEmpty' => true,
+            ],
+        ];
+        $required = [
+            'numeric'   => [
+                'rule' => ['numeric'],
+            ],
+            'notEmpty'  => ['rule' => 'notEmpty'],
+        ];
         $this->Evaluation->setNotAllowEmptyToEvaluateScoreId();
-        $this->assertEquals($this->Evaluation->validate['evaluate_score_id'], $this->notAllowEmptyArray);
+        $this->assertEquals($this->Evaluation->validate['evaluate_score_id'], $required);
     }
 
     public function testSetNotAllowEmptyToEvaluateScoreIdCaseOfNotEmpty()
     {
         $this->_setDefault();
-        $this->Evaluation->validate['evaluate_score_id'] = $this->notAllowEmptyArray;
+        $this->Evaluation->validate['evaluate_score_id'] = [
+            'numeric'   => [
+                'rule' => ['numeric'],
+            ],
+            'notEmpty'  => ['rule' => 'notEmpty'],
+        ];
+        $required = [
+            'numeric'   => [
+                'rule' => ['numeric'],
+            ],
+            'notEmpty'  => ['rule' => 'notEmpty'],
+        ];
         $this->Evaluation->setNotAllowEmptyToEvaluateScoreId();
-        $this->assertEquals($this->Evaluation->validate['evaluate_score_id'], $this->notAllowEmptyArray);
+        $this->assertEquals($this->Evaluation->validate['evaluate_score_id'], $required);
     }
 
     function testStartEvaluationNotEnabled()
@@ -1337,11 +1433,6 @@ class EvaluationTest extends GoalousTestCase
         $this->current_date = strtotime('2015/7/1');
         $this->start_date = strtotime('2015/7/1');
         $this->end_date = strtotime('2015/10/1');
-        $this->notAllowEmptyArray = [
-            'notEmpty' => [
-                'rule' => 'notEmpty'
-            ]
-        ];
     }
 
 }

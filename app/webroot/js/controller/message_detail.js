@@ -7,24 +7,41 @@ message_app.controller(
               notificationService,
               getPostDetail,
               $pusher,
-              $stateParams,
-              $anchorScroll,
-              $location) {
+              $stateParams
+    ) {
 
         // TODO: 添付ファイルのプレビューを表示するために一時的に高さを少なくする
-        var input_box_height = 280;
+        var input_box_height = 260;
+        var sub_header_height = 40;
 
+        var default_message_box_height;
+        var $message_box = $('#message_box');
+
+        if ($(".layout-main").exists()) {
+            //evMessage経由で呼ばれている場合のレイアウト調整
+            $("#app-webroot-template-message-detail").removeClass("col-sm-offset-2");
+            $("#app-webroot-template-message-detail").removeClass("col-sm-8");
+            $("#app-webroot-template-message-detail").addClass("col-sm-12");
+        }
         // onloadの場合
         $scope.$on('$viewContentLoaded', function () {
-            var $m_box = $("#message_box");
-            $m_box.css("height", window.innerHeight - input_box_height);
-            $m_box.animate({scrollTop: window.innerHeight}, 500);
+            // SP用のサブヘッダが表示されていない場合
+            if($('#SubHeaderMenu').length == 0 || $('#SubHeaderMenu').is(':hidden')) {
+                resizeMessageBox(window.innerHeight - input_box_height + sub_header_height);
+            } else {
+                resizeMessageBox(window.innerHeight - input_box_height);
+            }
+            $message_box.animate({scrollTop: window.innerHeight}, 500);
+
+            // データ挿入等が全て終わりメッセージボックスの高さがFIXされたタイミングで
+            // 高さを取得する
+            default_message_box_height = $message_box.outerHeight();
         });
 
         // ブラウザリサイズの場合、入力フォームサイズ変更+オートスクロール
-        $(window).resize(function () {
+        $(window).on('resize', function () {
             $scope.$apply(function () {
-                $("#message_box").css("height", window.innerHeight - input_box_height);
+                resizeMessageBox(default_message_box_height);
                 bottom_scroll();
             });
         });
@@ -80,8 +97,7 @@ message_app.controller(
             $scope.first_share_user = getPostDetail.first_share_user;
 
             var bottom_scroll = function () {
-                var $m_box = $("#message_box");
-                $m_box.animate({scrollTop: $m_box[0].scrollHeight}, 300);
+                $message_box.animate({scrollTop: $message_box[0].scrollHeight}, 300);
             };
 
             var pushMessage = function (message) {
@@ -213,6 +229,8 @@ message_app.controller(
                     messageTextarea.focus();
                     messageTextarea.style.height = "38px";
 
+                    resizeMessageBox(default_message_box_height);
+
                     if (jQuery.isEmptyObject(response.data)) {
                         //メッセージ送信失敗
                         notificationService.error($translate.instant('PUT_MESSAGE_FAIL'));
@@ -246,8 +264,17 @@ message_app.controller(
                         }, $scope.message_list);
                         // メッセージ表示
                         bottom_scroll();
+
+                        // メーセージ表示後のメッセージボックスの高さを取得
+                        default_message_box_height = $message_box.outerHeight();
                     });
                 });
+            };
+
+            $scope.focusReplyTextarea = function () {
+                if(default_message_box_height != $message_box.outerHeight()) {
+                    resizeMessageBox(default_message_box_height);
+                }
             };
 
             var pushPostMessage = function () {
@@ -271,48 +298,83 @@ message_app.controller(
                 }
             };
 
-            $scope.loadMore = function () {
-                if (document.getElementById("message_box").scrollTop === 0) {
-                    var request = {
-                        method: 'GET',
-                        url: cake.url.ah + $stateParams.post_id + '/' + limit + '/' + page_num
-                    };
-                    $http(request).then(function (response) {
-                        var pushed_message_num = 0;
-                        if (response.data.message_list.length < limit) {
-                            pushPostMessage();
-                            pushed_message_num++;
-                        }
+            var scroll2Target = function ($target) {
+                var speed = 0;
+                var targetPositionTop = $target.offset().top;
 
-                        angular.forEach(response.data.message_list, function (val) {
-                            val.AttachedFileHtml = $sce.trustAsHtml(val.AttachedFileHtml);
-                            pushMessage(val);
-                            pushed_message_num++;
-                        }, $scope.message_list);
-
-                        if (response.data.message_list.length > 0) {
-                            // 新しいメッセージが view に確実に反映されるように少し遅らす
-                            setTimeout(function () {
-                                $anchorScroll();
-                            }, 1);
-                            // １ページ目の表示時
-                            // 確実に画面下に行くようにする
-                            if ($scope.message_list.length === pushed_message_num) {
-                                setTimeout(function () {
-                                    bottom_scroll();
-                                }, 200);
-                            }
-                        }
-                        page_num = page_num + 1;
+                $message_box.stop().animate({
+                        scrollTop: targetPositionTop
+                    },
+                    {
+                        duration: speed
                     });
+
+                return false;
+            }
+
+            var forceLoad = false;
+            $scope.loadMore = function () {
+                if (document.getElementById("message_box").scrollTop !== 0) {
+                    return;
                 }
-            };
+
+                var request = {
+                    method: 'GET',
+                    url: cake.url.ah + $stateParams.post_id + '/' + limit + '/' + page_num
+                };
+                $http(request).then(function (response) {
+                    var pushed_message_num = 0;
+                    if (response.data.message_list.length < limit) {
+                        pushPostMessage();
+                        pushed_message_num++;
+                    }
+
+                    angular.forEach(response.data.message_list, function (val) {
+                        val.AttachedFileHtml = $sce.trustAsHtml(val.AttachedFileHtml);
+                        pushMessage(val);
+                        pushed_message_num++;
+                    }, $scope.message_list);
+
+                    if (response.data.message_list.length > 0) {
+                        // 新しいメッセージが view に確実に反映されるように少し遅らす
+                        setTimeout(function () {
+                            scroll2Target($('#m_'+pushed_message_num));
+                        }, 1);
+                        // １ページ目の表示時
+                        // 確実に画面下に行くようにする
+                        if ($scope.message_list.length === pushed_message_num || forceLoad) {
+                            forceLoad = false;
+                            setTimeout(function () {
+                                bottom_scroll();
+                            }, 200);
+                        }
+                    }
+                    page_num = page_num + 1;
+
+                    //初回検索で最大件数のメッセージが取れているにもかかわらずスクロールバーが出ていない場合には
+                    //infiniteScrollが機能しない可能性があるので強制的にロードする
+                    //(2回検索したらふつースクロールバー出る高さになる)
+                    if ((response.data.message_list.length == limit)
+                        && !$message_box.hasScrollBar()
+                        && page_num == 2
+                    ) {
+                        $scope.$emit('force:load');
+                        forceLoad = true;
+                    }
+                });
+            }
 
             $scope.add_messenger_user = function () {
                 $("#post_messenger").val(post_detail.Post.id);
                 $("#MessageFormShareUser").show();
                 $("#message_add_list").append($("#MessageFormShareUser"));
             }
+
+            var resizeMessageBox = function(message_box_height) {
+                $message_box.css("height", message_box_height);
+                return $message_box;
+            }
+
         }
 
         // 戻るボタンのURL

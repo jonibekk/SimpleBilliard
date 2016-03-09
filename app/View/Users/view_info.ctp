@@ -32,7 +32,8 @@
                 </div>
                 <div class="panel-body" style="border-top: 1px solid #ddd;">
                     <?= __d('app', '性別') ?>
-                    <span class="pull-right"><?= User::$TYPE_GENDER[$user['User']['gender_type']] ?></span>
+                    <span
+                        class="pull-right"><?= $user['User']['gender_type'] ? User::$TYPE_GENDER[$user['User']['gender_type']] : null ?></span>
                 </div>
                 <div class="panel-body" style="border-top: 1px solid #ddd;">
                     <?= __d('app', '誕生日') ?>
