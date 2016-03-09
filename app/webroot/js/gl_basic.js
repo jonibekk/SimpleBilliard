@@ -855,7 +855,7 @@ function evToggleAjaxGet() {
     attrUndefinedCheck(this, 'target-id');
     attrUndefinedCheck(this, 'ajax-url');
     var $obj = $(this);
-    var target_id = sanitize($obj.attr("target-id"));
+    var target_id = $obj.attr("target-id");
     var ajax_url = $obj.attr("ajax-url");
 
     //noinspection JSJQueryEfficiency
@@ -939,12 +939,12 @@ function getAjaxFormReplaceElm() {
     if (!$obj.is(':visible')) {
         return;
     }
-    var replace_elm_parent_id = sanitize($obj.attr("replace-elm-parent-id"));
+    var replace_elm_parent_id = $obj.attr("replace-elm-parent-id");
     var replace_elm = $('#' + replace_elm_parent_id);
-    var click_target_id = sanitize($obj.attr("click-target-id"));
+    var click_target_id = $obj.attr("click-target-id");
     var ajax_url = $obj.attr("ajax-url");
-    var tmp_target_height = sanitize($obj.attr("tmp-target-height"));
-    var post_id = sanitize($obj.attr("post-id"));
+    var tmp_target_height = $obj.attr("tmp-target-height");
+    var post_id = $obj.attr("post-id");
     replace_elm.children().toggle();
     replace_elm.height(tmp_target_height + "px");
     //noinspection JSJQueryEfficiency
@@ -1987,7 +1987,7 @@ $(document).ready(function () {
                         var $checkbox = $(this);
                         var $form = $('#CircleJoinForm');
                         $form.find('input[name="data[Circle][0][join]"]').val(state ? '1' : '0');
-                        $form.find('input[name="data[Circle][0][circle_id]"]').val(sanitize($checkbox.attr('data-id')));
+                        $form.find('input[name="data[Circle][0][circle_id]"]').val($checkbox.attr('data-id'));
 
                         // 秘密サークルの場合は確認ダイアログ表示
                         if ($checkbox.attr('data-secret') == '1') {
@@ -2606,8 +2606,8 @@ function evFollowGoal() {
     attrUndefinedCheck(this, 'goal-id');
     attrUndefinedCheck(this, 'data-class');
     var $obj = $(this);
-    var goal_id = sanitize($obj.attr('goal-id'));
-    var data_class = sanitize($obj.attr('data-class'));
+    var goal_id = $obj.attr('goal-id');
+    var data_class = $obj.attr('data-class');
     var url = cake.url.c;
     $.ajax({
         type: 'GET',
@@ -2724,15 +2724,15 @@ function evFeedMoreView(options) {
     attrUndefinedCheck(this, 'get-url');
 
     var $obj = $(this);
-    var parent_id = sanitize($obj.attr('parent-id'));
-    var next_page_num = sanitize($obj.attr('next-page-num'));
+    var parent_id = $obj.attr('parent-id');
+    var next_page_num = $obj.attr('next-page-num');
     var get_url = $obj.attr('get-url');
-    var month_index = sanitize($obj.attr('month-index'));
-    var no_data_text_id = sanitize($obj.attr('no-data-text-id'));
-    var oldest_post_time = sanitize($obj.attr('oldest-post-time')) || 0;
-    var append_target_id = sanitize($obj.attr('append-target-id'));
+    var month_index = $obj.attr('month-index');
+    var no_data_text_id = $obj.attr('no-data-text-id');
+    var oldest_post_time = $obj.attr('oldest-post-time') || 0;
+    var append_target_id = $obj.attr('append-target-id');
     // この時間より前の投稿のみ読み込む
-    var post_time_before = sanitize($obj.attr('post-time-before')) || 0;
+    var post_time_before = $obj.attr('post-time-before') || 0;
 
     //リンクを無効化
     $obj.attr('disabled', 'disabled');
@@ -3244,13 +3244,13 @@ function evCircleFeed(options) {
 
     var $obj = $(this);
     var get_url = $obj.attr('get-url');
-    var circle_id = sanitize($obj.attr('circle-id'));
+    var circle_id = $obj.attr('circle-id');
     var image_url = $obj.attr('image-url');
     // DOMから取得し再度DOMに投入するデータなのでサニタイズを行う
     var title = sanitize($obj.attr('title'));
-    var public_flg = sanitize($obj.attr('public-flg'));
-    var team_all_flg = sanitize($obj.attr('team-all-flg'));
-    var oldest_post_time = sanitize($obj.attr('oldest-post-time'));
+    var public_flg = $obj.attr('public-flg');
+    var team_all_flg = $obj.attr('team-all-flg');
+    var oldest_post_time = $obj.attr('oldest-post-time');
     updateCakeValue(circle_id, title, image_url);
 
     if ($obj.attr('class') == 'circle-link') {
@@ -3508,7 +3508,7 @@ function evBasicReadMore(options) {
 
     var $obj = $(this);
     var ajax_url = $obj.attr('ajax-url');
-    var next_page_num = sanitize($obj.attr('next-page-num'));
+    var next_page_num = $obj.attr('next-page-num');
     var $list_container = $($obj.attr('list-container'));
 
     // 次ページのURL
@@ -4444,7 +4444,7 @@ function initMessageNum() {
 
 function initTitle() {
     var $title = $("title");
-    $title.text(sanitize($title.attr("origin-title")));
+    $title.text($title.attr("origin-title"));
 }
 
 function getBellBoxSelector() {
@@ -4662,7 +4662,7 @@ $(document).ready(function () {
         dictResponseError: cake.message.validate.dropzone_response_error,
         dictCancelUpload: cake.message.validate.dropzone_cancel_upload,
         dictCancelUploadConfirmation: cake.message.validate.dropzone_cancel_upload_confirmation,
-        clickable: '#' + sanitize($uploadFileAttachButton.attr('id')),
+        clickable: '#' + $uploadFileAttachButton.attr('id'),
         previewTemplate: previewTemplateDefault,
         thumbnailWidth: null,
         thumbnailHeight: 240,
@@ -5178,7 +5178,7 @@ $(document).ready(function () {
                 $('#' + old_file.file_id).remove();
 
                 // サーバ上から削除
-                $removeFileForm.find('input[name="data[AttachedFile][file_id]"]').val(sanitize(old_file.file_id));
+                $removeFileForm.find('input[name="data[AttachedFile][file_id]"]').val(old_file.file_id);
                 $.ajax({
                         url: cake.url.remove_file,
                         type: 'POST',
@@ -5233,7 +5233,7 @@ $(document).ready(function () {
 
                 // 削除済ファイルの hidden を追加
                 var $form = $('#' + $uploadFileForm._params.formID);
-                $form.append($('<input type=hidden name=data[deleted_file_id][]>').val(sanitize(old_file.file_id)));
+                $form.append($('<input type=hidden name=data[deleted_file_id][]>').val(old_file.file_id));
             }
             // 新しくアップロードするファイルの場合
             else {
@@ -5241,7 +5241,7 @@ $(document).ready(function () {
                 $('#' + old_file.file_id).remove();
 
                 // サーバ上から削除
-                $removeFileForm.find('input[name="data[AttachedFile][file_id]"]').val(sanitize(old_file.file_id));
+                $removeFileForm.find('input[name="data[AttachedFile][file_id]"]').val(old_file.file_id);
                 $.ajax({
                         url: cake.url.remove_file,
                         type: 'POST',
