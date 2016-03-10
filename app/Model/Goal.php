@@ -930,7 +930,7 @@ class Goal extends AppModel
                     'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
                 ],
                 'Collaborator'      => [
-                    'fields'     => ['Collaborator.id', 'Collaborator.user_id', 'Collaborator.valued_flg'],
+                    'fields' => ['Collaborator.id', 'Collaborator.user_id', 'Collaborator.valued_flg'],
                 ],
             ]
         ];

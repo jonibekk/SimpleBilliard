@@ -81,7 +81,8 @@
                                 <?= __d('app', "認定ステータス: %s",
                                         Collaborator::$STATUS[$goal['Leader'][0]['valued_flg']]) ?>
                             <?php else: ?>
-                                <?php $my_collabo = Hash::extract($goal['Collaborator'], "{n}[user_id={$user['User']['id']}]"); ?>
+                                <?php $my_collabo = Hash::extract($goal['Collaborator'],
+                                                                  "{n}[user_id={$user['User']['id']}]"); ?>
                                 <?= __d('app', "認定ステータス: %s",
                                         Collaborator::$STATUS[$my_collabo[0]['valued_flg']]) ?>
                             <?php endif; ?>
@@ -106,7 +107,9 @@
                                            href="#"
                                            data-class="toggle-follow"
                                            goal-id="<?= $goal['Goal']['id'] ?>"
-                                            <?php if ($follow_opt['disabled'] || $this->Goal->containMyCoachingUserInCollabos($goal, viaIsSet($my_coaching_users))): ?>
+                                            <?php if ($follow_opt['disabled'] || $this->Goal->containMyCoachingUserInCollabos($goal,
+                                                                                                                              viaIsSet($my_coaching_users))
+                                            ): ?>
                                                 disabled="disabled"
                                             <?php endif ?>
                                             >

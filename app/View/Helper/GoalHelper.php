@@ -96,17 +96,18 @@ class GoalHelper extends AppHelper
      *
      * @return bool
      */
-    function containMyCoachingUserInCollabos($goal, $my_coaching_users) {
-        if(!$my_coaching_users || !is_array($my_coaching_users)) {
+    function containMyCoachingUserInCollabos($goal, $my_coaching_users)
+    {
+        if (!$my_coaching_users || !is_array($my_coaching_users)) {
             return false;
         }
 
-        if(!isset($goal['Collaborator'])) {
+        if (!isset($goal['Collaborator'])) {
             return false;
         }
 
         $collabos = Hash::extract($goal['Collaborator'], '{n}.user_id');
-        if(!$collabos) {
+        if (!$collabos) {
             return false;
         }
 
