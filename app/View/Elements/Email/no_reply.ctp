@@ -1,11 +1,11 @@
 <?php
 echo "\n";
-echo __('■ご注意');
+echo __('Attention');
 echo "\n";
-echo __('このメールは、お問い合わせメールアドレス宛に自動的に送信されています。');
+echo __('This email is automatically sent.');
 echo "\n";
-echo __('直接返信されないようお願い申し上げます。');
+echo __('Don\'t reply to this email address.');
 echo "\n";
 echo "\n";
-echo __('このメールに心当たりの無い方は、お問い合わせフォームからお問い合わせください。');
+echo __('Please let us know if you don\'t have any idea why you get this email.');
 echo "\n";

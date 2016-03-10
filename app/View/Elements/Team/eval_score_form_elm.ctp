@@ -30,7 +30,7 @@ if (!viaIsSet($index) || !is_numeric($index)) {
                             'required'                     => true,
                             'data-bv-stringlength'         => 'true',
                             'data-bv-stringlength-max'     => 200,
-                            'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 200),
+                            'data-bv-stringlength-message' => __("It's over limit characters (%s).", 200),
                         ))
             ?>
         </div>
@@ -52,7 +52,7 @@ if (!viaIsSet($index) || !is_numeric($index)) {
                             'required'                     => true,
                             'data-bv-stringlength'         => 'true',
                             'data-bv-stringlength-max'     => 5,
-                            'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 5),
+                            'data-bv-stringlength-message' => __("It's over limit characters (%s).", 5),
                         ))
             ?>
         </div>
@@ -74,7 +74,7 @@ if (!viaIsSet($index) || !is_numeric($index)) {
                             'required'                     => true,
                             'data-bv-stringlength'         => 'true',
                             'data-bv-stringlength-max'     => 2000,
-                            'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 2000),
+                            'data-bv-stringlength-message' => __("It's over limit characters (%s).", 2000),
                         ))
             ?>
         </div>

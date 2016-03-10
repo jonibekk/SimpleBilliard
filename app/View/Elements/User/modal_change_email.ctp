@@ -42,7 +42,7 @@
                     'placeholder'                  => __("tom@example.com"),
                     'data-bv-stringlength'         => 'true',
                     'data-bv-stringlength-max'     => 200,
-                    'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 200),
+                    'data-bv-stringlength-message' => __("It's over limit characters (%s).", 200),
                     "data-bv-notempty"             => "false",
                     'data-bv-emailaddress'         => "false",
                     "data-bv-callback"             => "true",
@@ -83,7 +83,7 @@
                     validators: {
                         stringLength: {
                             min: 8,
-                            message: "<?=__('%2$d文字以上で入力してください。',"",8)?>"
+                            message: "<?=__('At least %2$d characters is required.',"",8)?>"
                         },
                         notEmpty: {
                             message: "<?=__("変更する場合はパスワード入力が必要です。")?>"

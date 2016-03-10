@@ -44,7 +44,7 @@ $this->Form->create('Comment', [
         'value'                        => $comment['body'],
         'data-bv-stringlength'         => 'true',
         'data-bv-stringlength-max'     => 5000,
-        'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 5000),
+        'data-bv-stringlength-message' => __("It's over limit characters (%s).", 5000),
     ])
     ?>
 </div>

@@ -45,7 +45,7 @@
             'rows'                     => 3,
             'data-bv-stringlength'         => 'true',
             'data-bv-stringlength-max'     => 2000,
-            'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 2000),
+            'data-bv-stringlength-message' => __("It's over limit characters (%s).", 2000),
             "data-bv-notempty-message" => __("Input is required."),
             'afterInput'               => '<span class="help-block">'
                 . '<p class="font_11px">' . __("You can set email addresses by comma(,) separated or by newline separated.") . '</p>'
@@ -65,7 +65,7 @@
             'rows'       => 3,
             'data-bv-stringlength'         => 'true',
             'data-bv-stringlength-max'     => 2000,
-            'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 2000),
+            'data-bv-stringlength-message' => __("It's over limit characters (%s).", 2000),
             'afterInput' => '<span class="help-block font_11px">' . __(
                                                                         "Comment will be added to the body of the invitation email.") . '</span>'
         ]) ?>

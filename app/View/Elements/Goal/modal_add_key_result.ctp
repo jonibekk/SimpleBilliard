@@ -74,7 +74,7 @@
                                     "data-bv-notempty-message"     => __("Input is required."),
                                     'data-bv-stringlength'         => 'true',
                                     'data-bv-stringlength-max'     => 200,
-                                    'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 200),
+                                    'data-bv-stringlength-message' => __("It's over limit characters (%s).", 200),
                                     'rows'                         => 1,
                                     'afterInput'                   => '<span class="help-block font_12px">' . __(
                                                                                                                   "eg) Complete making the web site.") . '</span>'
@@ -112,7 +112,7 @@
                                                 'required'                     => true,
                                                 'data-bv-stringlength'         => 'true',
                                                 'data-bv-stringlength-max'     => 50,
-                                                'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。",
+                                                'data-bv-stringlength-message' => __("It's over limit characters (%s).",
                                                                                       50),
                                                 "data-bv-notempty-message"     => __("Input is required."),
                                                 'data-bv-numeric-message'      => __("数字を入力してください。"),
@@ -129,7 +129,7 @@
                                                 'required'                     => true,
                                                 'data-bv-stringlength'         => 'true',
                                                 'data-bv-stringlength-max'     => 50,
-                                                'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。",
+                                                'data-bv-stringlength-message' => __("It's over limit characters (%s).",
                                                                                       50),
                                                 "data-bv-notempty-message"     => __("Input is required."),
                                                 'data-bv-numeric-message'      => __("数字を入力してください。"),
@@ -169,7 +169,7 @@
                                                    'data-bv-stringlength'         => 'true',
                                                    'data-bv-stringlength-max'     => 10,
                                                    'data-bv-stringlength-message' => __(
-                                                                                         "最大文字数(%s)を超えています。", 10),
+                                                                                         "It's over limit characters (%s).", 10),
                                                    'type'                         => 'text',
                                                    'wrapInput'                    => null,
                                                ]) ?>
@@ -208,7 +208,7 @@
                                                    'data-bv-stringlength'         => 'true',
                                                    'data-bv-stringlength-max'     => 10,
                                                    'data-bv-stringlength-message' => __(
-                                                                                         "最大文字数(%s)を超えています。", 10),
+                                                                                         "It's over limit characters (%s).", 10),
                                                    'type'                         => 'text',
                                                    'wrapInput'                    => null
                                                ]) ?>

@@ -141,7 +141,7 @@ if (!isset($goal_list_for_action_option)) {
                         'data-bv-notempty-message'     => __("Input is required."),
                         'data-bv-stringlength'         => 'true',
                         'data-bv-stringlength-max'     => 10000,
-                        'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 10000),
+                        'data-bv-stringlength-message' => __("It's over limit characters (%s).", 10000),
                     ])
                     ?>
                 </div>
@@ -298,7 +298,7 @@ if (!isset($goal_list_for_action_option)) {
                     'data-bv-notempty-message'     => __("Input is required."),
                     'data-bv-stringlength'         => 'true',
                     'data-bv-stringlength-max'     => 10000,
-                    'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 10000),
+                    'data-bv-stringlength-message' => __("It's over limit characters (%s).", 10000),
                 ])
                 ?>
 
@@ -463,7 +463,7 @@ if (!isset($goal_list_for_action_option)) {
                         'data-bv-notempty-message'     => __("Input is required."),
                         'data-bv-stringlength'         => 'true',
                         'data-bv-stringlength-max'     => 5000,
-                        'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 5000),
+                        'data-bv-stringlength-message' => __("It's over limit characters (%s).", 5000),
                     ]);
                     ?>
                     <div id="messageUploadFilePreviewArea"></div>

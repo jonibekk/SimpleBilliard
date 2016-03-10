@@ -30,21 +30,21 @@
                     'label'                        => __("Last Name"),
                     'placeholder'                  => __("eg. Jobs"),
                     "pattern"                      => '^[a-zA-Z]+$',
-                    "data-bv-regexp-message"       => __("アルファベットのみで入力してください。"),
+                    "data-bv-regexp-message"       => __("Only alphabet characters are allowed."),
                     "data-bv-notempty-message"     => __("Input is required."),
                     'data-bv-stringlength'         => 'true',
                     'data-bv-stringlength-max'     => 128,
-                    'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 128),
+                    'data-bv-stringlength-message' => __("It's over limit characters (%s).", 128),
                 ]);
                 $first_name = $this->Form->input('first_name', [
                     'label'                        => __("First Name"),
                     'placeholder'                  => __("Harry"),
                     "pattern"                      => '^[a-zA-Z]+$',
-                    "data-bv-regexp-message"       => __("アルファベットのみで入力してください。"),
+                    "data-bv-regexp-message"       => __("Only alphabet characters are allowed."),
                     "data-bv-notempty-message"     => __("Input is required."),
                     'data-bv-stringlength'         => 'true',
                     'data-bv-stringlength-max'     => 128,
-                    'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 128),
+                    'data-bv-stringlength-message' => __("It's over limit characters (%s).", 128),
                 ]);
                 if ($last_first) {
                     echo $last_name;
@@ -78,7 +78,7 @@
                         "data-bv-callback-callback"    => "bvCallbackAvailableEmail",
                         'data-bv-stringlength'         => 'true',
                         'data-bv-stringlength-max'     => 200,
-                        'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 200),
+                        'data-bv-stringlength-message' => __("It's over limit characters (%s).", 200),
                     ]) ?>
                 <?php endif; ?>
 

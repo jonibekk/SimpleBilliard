@@ -14,18 +14,18 @@ class ExtValidationErrorI18nBehavior extends ValidationErrorI18nBehavior
         //ここに全てのエラーメッセージを記載する
         $error_messages = array(
             'notEmpty'          => __("Input is required."),
-            'isAlphabetOnly'    => __("アルファベットのみで入力してください。"),
-            'isString'          => __("不正な入力値です。"),
-            'email'             => __("メールアドレスが正しくありません。"),
-            'notBlankCheckbox'  => __("利用規約に同意してください。"),
-            'passwordSameCheck' => __("パスワードが一致しません。"),
-            'passwordCheck'     => __("パスワードが間違っています。"),
-            'minLength'         => __('%2$d文字以上で入力してください。'),
-            'maxLength'         => __('%2$d文字以下で入力してください。'),
-            'emailIsUnique'     => __("このメールアドレスは既に使用されています。他のメールアドレスを指定してください。"),
-            'image_max_size'    => __("ファイルサイズが上限を超えています。"),
-            'image_type'        => __("画像をアップロードできませんでした。JPG、PNG、GIFのいずれかの形式で保存してください。"),
-            'emailsCheck'       => __("幾つかのメールアドレスが正しくありません。"),
+            'isAlphabetOnly'    => __("Only alphabet characters are allowed."),
+            'isString'          => __("Invalid value"),
+            'email'             => __("Email address is incorrect."),
+            'notBlankCheckbox'  => __("Need to agree our terms."),
+            'passwordSameCheck' => __("Both of passwords are not same."),
+            'passwordCheck'     => __("Password is incorrect."),
+            'minLength'         => __('At least %2$d characters is required.'),
+            'maxLength'         => __('%2$d or less than %2$d characters are allowed.'),
+            'emailIsUnique'     => __("This email address has already been used. Use another email address."),
+            'image_max_size'    => __("The file is over limit size."),
+            'image_type'        => __("Failed to upload. jpg, png and gif are allowed."),
+            'emailsCheck'       => __("Some email addresses are incorrect."),
         );
         $this->setErrorMessageI18n($model, $error_messages, false);
         $this->replaceValidationErrorMessagesI18n($model);

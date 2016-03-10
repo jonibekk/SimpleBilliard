@@ -4,15 +4,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2016-03-10 14:56+0800\n"
-"PO-Revision-Date: 2016-03-10 15:05+0800\n"
+"POT-Creation-Date: 2016-03-10 16:26+0000\n"
+"PO-Revision-Date: 2016-03-11 00:28+0800\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
-"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Language: ja\n"
 "X-Generator: Poedit 1.8.7\n"
 
 #: Config/Migration/1435197386_data_migration_for_all_team_0625.php:76;77
@@ -26,7 +26,7 @@ msgstr ""
 "既にテストデータが存在するため、テストデータのインポートをキャンセルしまし"
 "た。"
 
-#: Controller/AppController.php:162;165
+#: Controller/AppController.php:162;165 View/Elements/Email/goalous_web.ctp:7
 msgid "Goalous"
 msgstr "Goalous(ゴーラス)"
 
@@ -700,6 +700,10 @@ msgid "Evaluation started."
 msgstr "評価を開始しました。"
 
 #: Controller/TeamsController.php:438
+#: Model/Behavior/ExtValidationErrorI18nBehavior.php:19
+#: View/Elements/gl_common_js.ctp:65 View/Users/password_reset_request.ctp:37
+#: View/Users/registration_with_set_password.ctp:40
+#: View/Users/token_resend.ctp:37
 msgid "Email address is incorrect."
 msgstr "メールアドレスが正しくありません。"
 
@@ -1274,7 +1278,7 @@ msgstr "重要なもの"
 msgid "Off"
 msgstr "オフ"
 
-#: Model/NotifySetting.php:395;465
+#: Model/NotifySetting.php:395;467
 msgid ","
 msgstr "、"
 
@@ -1282,11 +1286,11 @@ msgstr "、"
 msgid "Other %d members"
 msgstr "他%d人"
 
-#: Model/NotifySetting.php:456
+#: Model/NotifySetting.php:457
 msgid "Other %d circles"
 msgstr "他%dサークル"
 
-#: Model/NotifySetting.php:461
+#: Model/NotifySetting.php:463
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s%2$s</span> posted in <span "
 "class=\"notify-card-head-target\">%3$s</span>."
@@ -1294,11 +1298,11 @@ msgstr ""
 "<span class=\"notify-card-head-target\">%1$s%2$s</span>が<span class="
 "\"notify-card-head-target\">%3$s</span>に投稿しました。"
 
-#: Model/NotifySetting.php:464;471;488;494
+#: Model/NotifySetting.php:466;473;490;496
 msgid "and %s others"
 msgstr "と%s人"
 
-#: Model/NotifySetting.php:468
+#: Model/NotifySetting.php:470
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s%2$s</span> commented on <span "
 "class=\"notify-card-head-target\">your </span>post."
@@ -1306,11 +1310,11 @@ msgstr ""
 "<span class=\"notify-card-head-target\">%1$s%2$s</span>が<span class="
 "\"notify-card-head-target\">あなた</span>の投稿にコメントしました。"
 
-#: Model/NotifySetting.php:480;616 View/Evaluations/index.ctp:55
+#: Model/NotifySetting.php:482;618 View/Evaluations/index.ctp:55
 msgid "his/her"
 msgstr "自分の"
 
-#: Model/NotifySetting.php:485
+#: Model/NotifySetting.php:487
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s%2$s</span> also commented on "
 "<span class=\"notify-card-head-target\">%3$s</span>'s post."
@@ -1318,20 +1322,20 @@ msgstr ""
 "<span class=\"notify-card-head-target\">%1$s%2$s</span>さんも<span class="
 "\"notify-card-head-target\">%3$s</span>さんの投稿にコメントしました。"
 
-#: Model/NotifySetting.php:492
+#: Model/NotifySetting.php:494
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s%2$s</span> joined the circle."
 msgstr ""
 "<span class=\"notify-card-head-target\">%1$s%2$s</span>がサークルに参加しまし"
 "た。"
 
-#: Model/NotifySetting.php:498
+#: Model/NotifySetting.php:500
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span>がサークルのプライバシー設"
 "定を「<span class=\"notify-card-head-target\">%2$s</span>」に変更しました。"
 msgstr ""
 
-#: Model/NotifySetting.php:503
+#: Model/NotifySetting.php:505
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> add <span class=\"notify-"
 "card-head-target\">you </span>to the circle."
@@ -1339,7 +1343,7 @@ msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span>がサークルに<span class="
 "\"notify-card-head-target\">あなた</span>を追加しました。"
 
-#: Model/NotifySetting.php:511
+#: Model/NotifySetting.php:513
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> has followed <span class="
 "\"notify-card-head-target\">%2$s</span>."
@@ -1347,7 +1351,7 @@ msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
 "card-head-target\">%2$s</span>をフォローしました。"
 
-#: Model/NotifySetting.php:520;575
+#: Model/NotifySetting.php:522;577
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> has collaborate with "
 "<span class=\"notify-card-head-target\">%2$s</span>."
@@ -1355,7 +1359,7 @@ msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
 "card-head-target\">%2$s</span>にコラボりました。"
 
-#: Model/NotifySetting.php:529
+#: Model/NotifySetting.php:531
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> has changed information "
 "on <span class=\"notify-card-head-target\">%2$s</span>."
@@ -1363,7 +1367,7 @@ msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
 "card-head-target\">%2$s</span>の内容を変更しました。"
 
-#: Model/NotifySetting.php:538
+#: Model/NotifySetting.php:540
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> has evaluated <span "
 "class=\"notify-card-head-target\">%2$s</span>."
@@ -1371,7 +1375,7 @@ msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
 "card-head-target\">%2$s</span>を評価対象としました。"
 
-#: Model/NotifySetting.php:547
+#: Model/NotifySetting.php:549
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> requested <span class="
 "\"notify-card-head-target\">%2$s</span> to modify."
@@ -1379,7 +1383,7 @@ msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
 "card-head-target\">%2$s</span>に修正依頼をしました。"
 
-#: Model/NotifySetting.php:557
+#: Model/NotifySetting.php:559
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> has not evaluated <span "
 "class=\"notify-card-head-target\">%2$s</span>."
@@ -1387,7 +1391,7 @@ msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
 "card-head-target\">%2$s</span>を評価対象外としました。"
 
-#: Model/NotifySetting.php:566
+#: Model/NotifySetting.php:568
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> created <span class="
 "\"notify-card-head-target\">%2$s</span>."
@@ -1395,7 +1399,7 @@ msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
 "card-head-target\">%2$s</span>を作成しました。"
 
-#: Model/NotifySetting.php:584
+#: Model/NotifySetting.php:586
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> has updated <span class="
 "\"notify-card-head-target\">%2$s</span>."
@@ -1403,27 +1407,27 @@ msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
 "card-head-target\">%2$s</span>を修正しました。"
 
-#: Model/NotifySetting.php:590
+#: Model/NotifySetting.php:592
 msgid "Begin evaluation term."
 msgstr "評価期間に入りました。"
 
-#: Model/NotifySetting.php:593
+#: Model/NotifySetting.php:595
 msgid "Fix evaluation."
 msgstr "評価が凍結されました。"
 
-#: Model/NotifySetting.php:596
+#: Model/NotifySetting.php:598
 msgid "Evaluate yourself."
 msgstr "自己評価を実施してください。"
 
-#: Model/NotifySetting.php:599
+#: Model/NotifySetting.php:601
 msgid "Set the Evaluatees score."
 msgstr "被評価者の評価を実施してください。"
 
-#: Model/NotifySetting.php:602
+#: Model/NotifySetting.php:604
 msgid "Last evaluator finished evaluation."
 msgstr "最終者が評価を実施しました。"
 
-#: Model/NotifySetting.php:605
+#: Model/NotifySetting.php:607
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> commented on <span class="
 "\"notify-card-head-target\">your </span>action."
@@ -1431,7 +1435,7 @@ msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
 "card-head-target\">あなた</span>のアクションにコメントしました。"
 
-#: Model/NotifySetting.php:621
+#: Model/NotifySetting.php:623
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> also commented on <span "
 "class=\"notify-card-head-target\">%2$s</span>'s action"
@@ -1439,7 +1443,7 @@ msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span>さんも<span class="
 "\"notify-card-head-target\">%2$s</span>さんのアクションにコメントしました。"
 
-#: Model/NotifySetting.php:630
+#: Model/NotifySetting.php:632
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> added an action on<span "
 "class=\"notify-card-head-target\">%2$s</span>."
@@ -1447,16 +1451,16 @@ msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span>さんが<span class="
 "\"notify-card-head-target\">%2$s</span>にアクションしました。"
 
-#: Model/NotifySetting.php:636
+#: Model/NotifySetting.php:638
 msgid "<span class=\"notify-card-head-target\">%1$s</span> joined this team."
 msgstr ""
 "<span class=\"notify-card-head-target\">%1$s</span>がチームに参加しました。"
 
-#: Model/NotifySetting.php:639
+#: Model/NotifySetting.php:641
 msgid "<span class=\"notify-card-head-target\">%1$s%2$s</span>"
 msgstr "<span class=\"notify-card-head-target\">%1$s%2$s</span>"
 
-#: Model/NotifySetting.php:641
+#: Model/NotifySetting.php:643
 msgid " +%s"
 msgstr " +%s"
 
@@ -1509,28 +1513,28 @@ msgid "Shared %1$s and %2$s others,%3$s and %4$s circle(s)"
 msgstr "%1$sと他%2$s人、%3$s他%4$sサークルに共有"
 
 #: Model/SendMail.php:61
-msgid "アカウントの仮登録が完了しました"
-msgstr ""
+msgid "Registered tempolarily"
+msgstr "アカウントの仮登録が完了しました"
 
 #: Model/SendMail.php:62
-msgid "パスワードの再設定"
-msgstr ""
+msgid "Reset Password"
+msgstr "パスワードの再設定"
 
 #: Model/SendMail.php:63
-msgid "パスワードの再設定が完了しました"
-msgstr ""
+msgid "Succeeded to reset password"
+msgstr "パスワードの再設定が完了しました"
 
 #: Model/SendMail.php:64
-msgid "メールアドレス認証"
-msgstr ""
+msgid "Authentication email address"
+msgstr "メールアドレス認証"
 
 #: Model/SendMail.php:65
-msgid "メールアドレス変更に伴う認証"
-msgstr ""
+msgid "Authentication for changing email address"
+msgstr "メールアドレス変更に伴う認証"
 
 #: Model/SendMail.php:66
-msgid "Goalousのチームへ招待"
-msgstr ""
+msgid "Invitation for team"
+msgstr "Goalousのチームへ招待"
 
 #: Model/Team.php:59
 msgid "Free Campaign"
@@ -2075,65 +2079,58 @@ msgstr "入力必須項目です。"
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:17
 #: View/Elements/User/profile_setting.ctp:72;82
 #: View/Users/add_profile.ctp:60;67 View/Users/register.ctp:33;43
-msgid "アルファベットのみで入力してください。"
-msgstr ""
+msgid "Only alphabet characters are allowed."
+msgstr "アルファベットのみで入力してください。"
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:18
-msgid "不正な入力値です。"
-msgstr ""
-
-#: Model/Behavior/ExtValidationErrorI18nBehavior.php:19
-#: View/Elements/gl_common_js.ctp:65 View/Users/password_reset_request.ctp:37
-#: View/Users/registration_with_set_password.ctp:40
-#: View/Users/token_resend.ctp:37
-msgid "メールアドレスが正しくありません。"
-msgstr ""
+msgid "Invalid value"
+msgstr "不正な入力値です。"
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:20
 #: View/Elements/gl_common_js.ctp:61
-msgid "利用規約に同意してください。"
-msgstr ""
+msgid "Need to agree our terms."
+msgstr "利用規約に同意してください。"
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:21
 #: View/Elements/gl_common_js.ctp:59
 #: View/Elements/User/modal_change_password.ctp:108
 #: View/Elements/User/profile_setting.ctp:288
-msgid "パスワードが一致しません。"
-msgstr ""
+msgid "Both of passwords are not same."
+msgstr "パスワードが一致しません。"
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:22
-msgid "パスワードが間違っています。"
-msgstr ""
+msgid "Password is incorrect."
+msgstr "パスワードが間違っています。"
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:23
 #: View/Elements/User/modal_change_email.ctp:86
 #: View/Elements/User/profile_setting.ctp:280
-msgid "%2$d文字以上で入力してください。"
-msgstr ""
+msgid "At least %2$d characters is required."
+msgstr "%2$d文字以上で入力してください。"
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:24
-msgid "%2$d文字以下で入力してください。"
-msgstr ""
+msgid "%2$d or less than %2$d characters are allowed."
+msgstr "%2$d文字以下で入力してください。"
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:25
-msgid ""
+msgid "This email address has already been used. Use another email address."
+msgstr ""
 "このメールアドレスは既に使用されています。他のメールアドレスを指定してくださ"
 "い。"
-msgstr ""
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:26
-msgid "ファイルサイズが上限を超えています。"
-msgstr ""
+msgid "The file is over limit size."
+msgstr "ファイルサイズが上限を超えています。"
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:27
-msgid ""
+msgid "Failed to upload. jpg, png and gif are allowed."
+msgstr ""
 "画像をアップロードできませんでした。JPG、PNG、GIFのいずれかの形式で保存してく"
 "ださい。"
-msgstr ""
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:28
-msgid "幾つかのメールアドレスが正しくありません。"
-msgstr ""
+msgid "Some email addresses are incorrect."
+msgstr "メールアドレスが正しくないものがあります。"
 
 #: View/Elements/circle_list.ctp:70
 #: View/Elements/circle_list_in_hamburger.ctp:66
@@ -2166,7 +2163,7 @@ msgstr "アクション"
 msgid "Blog"
 msgstr "ブログ"
 
-#: View/Elements/footer.ctp:23 View/Elements/footer_not_logged_in.ctp:45
+#: View/Elements/footer.ctp:23 View/Elements/footer_not_logged_in.ctp:44
 #: View/Users/register.ctp:122
 msgid "Privacy Policy"
 msgstr "プライバシーポリシー"
@@ -2177,60 +2174,64 @@ msgstr "利用規約"
 
 #: View/Elements/footer_not_logged_in.ctp:25
 msgid "About Us"
-msgstr ""
+msgstr "About Us"
 
 #: View/Elements/footer_not_logged_in.ctp:27
-msgid "東京・秋葉原にあるIT企業、株式会社ISAO。"
-msgstr ""
+msgid "ISAO Corporation, IT company located in Akihabara, Tokyo."
+msgstr "東京・秋葉原にあるIT企業、株式会社ISAO。"
 
 #: View/Elements/footer_not_logged_in.ctp:28
 msgid ""
-"”世界のシゴトをたのしくするビジョナリーカンパニー”を中長期ビジョンに掲げてい"
-"ます。 "
+"\"Visionary Company which make jobs joyful in the world\" is our middle term "
+"vision."
 msgstr ""
+"”世界のシゴトをたのしくするビジョナリーカンパニー”を中長期ビジョンに掲げてい"
+"ます。"
 
 #: View/Elements/footer_not_logged_in.ctp:29
 msgid ""
+"Bari Flat Model - No managing post, No hierarchy but infinite team strength "
+"- is adopted in Japan from 1 Oct 2015."
+msgstr ""
 "2015年10月1日（木）より、日本初のバリフラットモデルを導入し、管理職０（ゼ"
 "ロ）、階層０（ナシ）、 チーム力∞（無限大）の組織運営をおこなっています。"
-msgstr ""
 
-#: View/Elements/footer_not_logged_in.ctp:32
-msgid "HPを見る "
-msgstr ""
+#: View/Elements/footer_not_logged_in.ctp:31
+msgid "Check our website"
+msgstr "HPを見る"
 
-#: View/Elements/footer_not_logged_in.ctp:38
+#: View/Elements/footer_not_logged_in.ctp:37
 msgid "Other Links"
 msgstr "Other Links"
 
-#: View/Elements/footer_not_logged_in.ctp:42 View/Pages/contact.ctp:247
-msgid "利用規約"
+#: View/Elements/footer_not_logged_in.ctp:41 View/Pages/contact.ctp:247
+msgid "Terms of service"
 msgstr "利用規約"
 
-#: View/Elements/footer_not_logged_in.ctp:48
-msgid "特定商取引法に基づく表記"
+#: View/Elements/footer_not_logged_in.ctp:47
+msgid "Inscription by Law"
 msgstr "特定商取引法に基づく表記"
 
-#: View/Elements/footer_not_logged_in.ctp:54
+#: View/Elements/footer_not_logged_in.ctp:53
 msgid "Get in touch"
 msgstr "Get in touch"
 
-#: View/Elements/footer_not_logged_in.ctp:56 View/Elements/header_home.ctp:53
+#: View/Elements/footer_not_logged_in.ctp:55 View/Elements/header_home.ctp:53
 #: View/Elements/Homepage/faq.ctp:98
-msgid "お問い合わせ"
+msgid "Contact us"
 msgstr "お問い合わせ"
 
-#: View/Elements/footer_not_logged_in.ctp:58
-msgid "プレス関連のお問い合わせ"
+#: View/Elements/footer_not_logged_in.ctp:57
+msgid "Contact for press"
 msgstr "プレス関連のお問い合わせ"
 
-#: View/Elements/footer_not_logged_in.ctp:62
-msgid "協業のお問い合わせ"
+#: View/Elements/footer_not_logged_in.ctp:61
+msgid "Contact for cooporation"
 msgstr "協業のお問い合わせ"
 
 #: View/Elements/gl_common_js.ctp:58
 #: View/Elements/User/modal_change_password.ctp:93
-msgid "%1$d文字以上で%2$d文字以下で入力してください。"
+msgid "%1$d or more and %2$d or less characters."
 msgstr "%1$d文字以上で%2$d文字以下で入力してください。"
 
 #: View/Elements/gl_common_js.ctp:60 View/Elements/modal_add_circle.ctp:172
@@ -2256,7 +2257,7 @@ msgid ""
 msgstr "パスワードにメールアドレスと同一のものを指定する事はできません。"
 
 #: View/Elements/gl_common_js.ctp:66
-msgid "メールアドレス確認中..."
+msgid "Checking email address"
 msgstr "メールアドレス確認中..."
 
 #: View/Elements/gl_common_js.ctp:67
@@ -2292,7 +2293,7 @@ msgstr ""
 "い。"
 
 #: View/Elements/gl_common_js.ctp:75 View/Goals/add.ctp:536;551
-msgid "日付はYYYY/MM/DDの形式で入力してください。"
+msgid "Enter such date as YYYY/MM/DD."
 msgstr "日付はYYYY/MM/DDの形式で入力してください。"
 
 #: View/Elements/gl_common_js.ctp:78
@@ -2309,17 +2310,13 @@ msgstr "スペルを入力してください。"
 msgid "An error has occurred. Data can not be retrieved."
 msgstr "エラーが発生しました。データ取得できません。"
 
-#: View/Elements/gl_common_js.ctp:82
-msgid "開始日が期限を過ぎています。"
-msgstr "開始日が期限を過ぎています。"
-
-#: View/Elements/gl_common_js.ctp:83
-msgid "期限が開始日以前になっています。"
-msgstr "期限が開始日以前になっています。"
+#: View/Elements/gl_common_js.ctp:83 View/Goals/add.ctp:543
+msgid "The limit date must be after start date."
+msgstr "期限は開始日より後である必要があります。"
 
 #: View/Elements/gl_common_js.ctp:84
-msgid "コメント送信できませんでした"
-msgstr "コメント送信できませんでした"
+msgid "Failed to comment."
+msgstr "コメントできませんでした。"
 
 #: View/Elements/gl_common_js.ctp:85
 msgid "This comment was deleted."
@@ -2657,7 +2654,7 @@ msgstr "例) 営業部"
 #: View/Teams/add_group_vision.ctp:49;101 View/Teams/add_team_vision.ctp:41;93
 #: View/Teams/edit_group_vision.ctp:50;104
 #: View/Teams/edit_team_vision.ctp:42;96 View/Users/register.ctp:37;47;81
-msgid "最大文字数(%s)を超えています。"
+msgid "It's over limit characters (%s)."
 msgstr "最大文字数(%s)を超えています。"
 
 #: View/Elements/modal_add_circle.ctp:68 View/Elements/modal_edit_circle.ctp:61
@@ -2915,7 +2912,7 @@ msgid "Members in this topic"
 msgstr "会話のメンバー (%s)"
 
 #: View/Elements/modal_public_circles.ctp:23
-msgid "サークル"
+msgid "Circles"
 msgstr "サークル"
 
 #: View/Elements/modal_public_circles.ctp:26
@@ -2982,51 +2979,47 @@ msgstr "前期の未評価のあなたのゴール"
 msgid "%s members"
 msgstr "%s メンバー"
 
-#: View/Elements/Email/goalous_web.ctp:7
-msgid "■Goalous(ゴーラス)"
-msgstr "Goalous"
-
 #: View/Elements/Email/goalous_web.ctp:12
-msgid "■お問い合わせ"
-msgstr "Contact"
+msgid "Contact"
+msgstr "■お問い合わせ"
 
 #: View/Elements/Email/goalous_web.ctp:17
-msgid "■運営会社"
-msgstr "Company"
+msgid "Company"
+msgstr "■運営会社"
 
 #: View/Elements/Email/goalous_web.ctp:19
-msgid "株式会社ISAO"
-msgstr "ISAO Corporation"
+msgid "ISAO Corporation"
+msgstr "株式会社ISAO"
 
 #: View/Elements/Email/login_url.ctp:5
-msgid "◆Goalousログイン"
-msgstr ""
+msgid "Login Goalous"
+msgstr "◆Goalousログイン"
 
 #: View/Elements/Email/no_reply.ctp:3
-msgid "■ご注意"
-msgstr ""
+msgid "Attention"
+msgstr "■ご注意"
 
 #: View/Elements/Email/no_reply.ctp:5
-msgid "このメールは、お問い合わせメールアドレス宛に自動的に送信されています。"
-msgstr ""
+msgid "This email is automatically sent."
+msgstr "このメールは、お問い合わせメールアドレス宛に自動的に送信されています。"
 
 #: View/Elements/Email/no_reply.ctp:7
-msgid "直接返信されないようお願い申し上げます。"
-msgstr ""
+msgid "Don't reply to this email address."
+msgstr "直接返信されないようお願い申し上げます。"
 
 #: View/Elements/Email/no_reply.ctp:10
-msgid ""
+msgid "Please let us know if you don't have any idea why you get this email."
+msgstr ""
 "このメールに心当たりの無い方は、お問い合わせフォームからお問い合わせくださ"
 "い。"
-msgstr ""
 
 #: View/Elements/Email/stop_mail.ctp:4
-msgid "□配信停止"
-msgstr ""
+msgid "Unsubscribe"
+msgstr "□配信停止"
 
 #: View/Elements/Email/stop_mail.ctp:6
-msgid "　[ログイン]->[設定]->[通知]"
-msgstr ""
+msgid "Login -> UserSettings -> Notification"
+msgstr "[ログイン]->[設定]->[通知]"
 
 #: View/Elements/Evaluation/evaluatee_by_evaluator.ctp:27
 #: View/Elements/Evaluation/incomplete_evaluatee.ctp:27
@@ -3188,7 +3181,7 @@ msgstr "メッセージする"
 
 #: View/Elements/Feed/contents.ctp:37
 msgid " new posts"
-msgstr ""
+msgstr " 新しい投稿"
 
 #: View/Elements/Feed/contents.ctp:52
 msgid "Not exist"
@@ -3256,8 +3249,8 @@ msgid "%s people read this post."
 msgstr "この投稿を%s人が読みました。"
 
 #: View/Elements/Feed/photo_upload.ctp:113
-msgid "１つ以上の画像を選択してください。"
-msgstr ""
+msgid "Select pictures."
+msgstr "１つ以上の画像を選択してください。"
 
 #: View/Elements/Feed/posts.ctp:110
 msgid "Edit post"
@@ -3267,10 +3260,6 @@ msgstr "投稿を編集"
 #: View/Elements/Goal/modal_edit_action_result.ctp:86
 msgid "Delete the action"
 msgstr "アクションを削除"
-
-#: View/Elements/Feed/posts.ctp:127
-msgid "Do you really want to delete this action_"
-msgstr ""
 
 #: View/Elements/Feed/posts.ctp:130
 msgid "Delete post"
@@ -3678,12 +3667,12 @@ msgid ""
 msgstr ""
 
 #: View/Elements/Homepage/faq.ctp:68
-msgid "よくあるご質問"
-msgstr ""
+msgid "Frequent questions"
+msgstr "よくあるご質問"
 
 #: View/Elements/Homepage/faq.ctp:97
-msgid "その他のご質問はありますか？"
-msgstr ""
+msgid "Any other question?"
+msgstr "その他のご質問はありますか？"
 
 #: View/Elements/Homepage/signup.ctp:22
 msgid "さぁ、Goalousへ！"
@@ -4904,10 +4893,6 @@ msgstr "この内容で作成"
 msgid "Start date has expired."
 msgstr "開始日が期限を過ぎています。"
 
-#: View/Goals/add.ctp:543
-msgid "The limit date must be after start date."
-msgstr "期限は開始日より後である必要があります。"
-
 #: View/Goals/index.ctp:15
 msgid "Export Data"
 msgstr "CSVの書き出し"
@@ -5124,7 +5109,6 @@ msgstr "戻る"
 
 #: View/Pages/contact_confirm.ctp:136 View/Users/password_reset_request.ctp:45
 #: View/Users/token_resend.ctp:45
-#, fuzzy
 msgid "Send"
 msgstr ""
 "#-#-#-#-#  0catalog.po (PROJECT VERSION)  #-#-#-#-#\n"

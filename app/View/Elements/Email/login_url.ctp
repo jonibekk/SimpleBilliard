@@ -2,7 +2,7 @@
 echo "━━━━━━━━━━━━━━━━━━━━";
 echo "\n";
 echo "\n";
-echo __('◆Goalousログイン');
+echo __('Login Goalous');
 echo "\n";
 echo "->";
 if (isset($vol) && !empty($vol)) {

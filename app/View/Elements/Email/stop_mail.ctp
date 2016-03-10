@@ -1,7 +1,7 @@
 <?php
 echo "━━━━━━━━━━━━━━━━━━━━";
 echo "\n";
-echo __('□配信停止');
+echo __('Unsubscribe');
 echo "\n";
-echo __('　[ログイン]->[設定]->[通知]');
+echo __('Login -> UserSettings -> Notification');
 echo "\n";

@@ -50,7 +50,7 @@ if (!isset($top_lang)) {
                                               array('target' => '_blank')); ?>
                     </li>
                     <li class="nav-item" id="h-nav-contact">
-                        <?= $this->Html->link(__('お問い合わせ'),
+                        <?= $this->Html->link(__('Contact us'),
                                               ['controller' => 'pages', 'action' => 'contact', 'lang' => $top_lang]); ?>
                     </li>
                     <li class="nav-item" id="h-nav-login">

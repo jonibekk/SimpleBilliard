@@ -57,14 +57,14 @@
                     'label'                    => __("Last Name"),
                     'placeholder'              => __("eg. Armstrong"),
                     "pattern"                  => '^[a-zA-Z]+$',
-                    "data-bv-regexp-message"   => __("アルファベットのみで入力してください。"),
+                    "data-bv-regexp-message"   => __("Only alphabet characters are allowed."),
                     "data-bv-notempty-message" => __("Input is required."),
                 ]);
                 $first_name = $this->Form->input('first_name', [
                     'label'                    => __("First Name"),
                     'placeholder'              => __("eg. Harry"),
                     "pattern"                  => '^[a-zA-Z]+$',
-                    "data-bv-regexp-message"   => __("アルファベットのみで入力してください。"),
+                    "data-bv-regexp-message"   => __("Only alphabet characters are allowed."),
                     "data-bv-notempty-message" => __("Input is required."),
                 ]);
                 if ($me['last_first']) {

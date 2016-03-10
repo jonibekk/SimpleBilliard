@@ -110,7 +110,7 @@ if (!isset($id_prefix)) {
                                          'data-bv-message'          => __(
                                                                            "10MB or less, and Please select one of the formats of JPG or PNG and GIF."),
                                          'data-bv-callback'         => "true",
-                                         'data-bv-callback-message' => __("１つ以上の画像を選択してください。"),
+                                         'data-bv-callback-message' => __("Select pictures."),
                                         ]) ?>
             </span>
         </div>

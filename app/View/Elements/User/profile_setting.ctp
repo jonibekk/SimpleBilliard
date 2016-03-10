@@ -41,7 +41,7 @@
                     'required'                     => false,
                     'data-bv-stringlength'         => 'true',
                     'data-bv-stringlength-max'     => 128,
-                    'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 128),
+                    'data-bv-stringlength-message' => __("It's over limit characters (%s).", 128),
                 ]);
                 $local_first_name = $this->Form->input('LocalName.0.first_name', [
                     'label'                        => __("First Name(%s)", $language_name),
@@ -49,7 +49,7 @@
                     'required'                     => false,
                     'data-bv-stringlength'         => 'true',
                     'data-bv-stringlength-max'     => 128,
-                    'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 128),
+                    'data-bv-stringlength-message' => __("It's over limit characters (%s).", 128),
                 ]);
                 if ($me['User']['last_first']) {
                     echo $local_last_name;
@@ -69,21 +69,21 @@
                 'label'                        => __("Last Name"),
                 'placeholder'                  => __("eg. Armstrong"),
                 "pattern"                      => '^[a-zA-Z]+$',
-                "data-bv-regexp-message"       => __("アルファベットのみで入力してください。"),
+                "data-bv-regexp-message"       => __("Only alphabet characters are allowed."),
                 "data-bv-notempty-message"     => __("Input is required."),
                 'data-bv-stringlength'         => 'true',
                 'data-bv-stringlength-max'     => 128,
-                'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 128),
+                'data-bv-stringlength-message' => __("It's over limit characters (%s).", 128),
             ]);
             $first_name = $this->Form->input('first_name', [
                 'label'                        => __("First Name"),
                 'placeholder'                  => __("eg. Harry"),
                 "pattern"                      => '^[a-zA-Z]+$',
-                "data-bv-regexp-message"       => __("アルファベットのみで入力してください。"),
+                "data-bv-regexp-message"       => __("Only alphabet characters are allowed."),
                 "data-bv-notempty-message"     => __("Input is required."),
                 'data-bv-stringlength'         => 'true',
                 'data-bv-stringlength-max'     => 128,
-                'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 128),
+                'data-bv-stringlength-message' => __("It's over limit characters (%s).", 128),
             ]);
             if ($last_first) {
                 echo $last_name;
@@ -151,7 +151,7 @@
                 'required'                     => false,
                 'data-bv-stringlength'         => 'true',
                 'data-bv-stringlength-max'     => 128,
-                'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 128),
+                'data-bv-stringlength-message' => __("It's over limit characters (%s).", 128),
             ]);
             ?>
             <hr>
@@ -219,7 +219,7 @@
                                         'css'                          => false,
                                         'data-bv-stringlength'         => 'true',
                                         'data-bv-stringlength-max'     => 2000,
-                                        'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 2000),
+                                        'data-bv-stringlength-message' => __("It's over limit characters (%s).", 2000),
                                         'value'                        => (isset($this->request->data['TeamMember'][0]['comment']) && !empty($this->request->data['TeamMember'][0]['comment']))
                                             ? $this->request->data['TeamMember'][0]['comment']
                                             : __(
@@ -277,7 +277,7 @@ Need New Customers?<br>\n
                     validators: {
                         stringLength: {
                             min: 8,
-                            message: "<?=__('%2$d文字以上で入力してください。',"",8)?>"
+                            message: "<?=__('At least %2$d characters is required.',"",8)?>"
                         }
                     }
                 },
@@ -285,7 +285,7 @@ Need New Customers?<br>\n
                     validators: {
                         identical: {
                             field: "data[User][password]",
-                            message: "<?=__("パスワードが一致しません。")?>"
+                            message: "<?=__("Both of passwords are not same.")?>"
                         }
                     }
                 }

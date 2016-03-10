@@ -244,7 +244,7 @@ for($i = 0; $i < $num_ogp; $i++){
             <div class="checkbox contact-form-checkbox">
                 <label>
                     <?= $this->Form->checkbox('need') ?>
-                    <?= $this->Html->link(__('利用規約'), [
+                    <?= $this->Html->link(__('Terms of service'), [
                         'controller' => 'pages',
                         'action'     => 'display',
                         'pagename'   => 'terms',

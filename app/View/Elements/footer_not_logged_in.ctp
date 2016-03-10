@@ -24,12 +24,11 @@ if (!isset($top_lang)) {
                     <div class="footer-col-inner">
                         <h3 class="title"><?= __('About Us') ?></h3>
                         <p>
-                            <?= __('東京・秋葉原にあるIT企業、株式会社ISAO。') ?><br>
-                            <?= __('”世界のシゴトをたのしくするビジョナリーカンパニー”を中長期ビジョンに掲げています。 ') ?> <br>
-                            <?= __(
-                                    '2015年10月1日（木）より、日本初のバリフラットモデルを導入し、管理職０（ゼロ）、階層０（ナシ）、 チーム力∞（無限大）の組織運営をおこなっています。') ?>
+                            <?= __('ISAO Corporation, IT company located in Akihabara, Tokyo.') ?><br>
+                            <?= __('"Visionary Company which make jobs joyful in the world" is our middle term vision.') ?> <br>
+                            <?= __( 'Bari Flat Model - No managing post, No hierarchy but infinite team strength - is adopted in Japan from 1 Oct 2015.') ?>
                         </p>
-                        <p><a class="more" href="http://www.isao.co.jp/" target="_blank"><?= __('HPを見る ') ?><i
+                        <p><a class="more" href="http://www.isao.co.jp/" target="_blank"><?= __('Check our website') ?><i
                                     class="fa fa-long-arrow-right"></i></a></p>
                     </div><!--//footer-col-inner-->
                 </div><!--//foooter-col-->
@@ -39,13 +38,13 @@ if (!isset($top_lang)) {
                         <ul class="list-unstyled">
                             <li><a href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'display',
                                                                'pagename'   => 'terms', 'lang' => $top_lang,]) ?>"><i
-                                        class="fa fa-caret-right"></i><?= __('利用規約') ?></a></li>
+                                        class="fa fa-caret-right"></i><?= __('Terms of service') ?></a></li>
                             <li><a href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'display',
                                                                'pagename'   => 'privacy_policy', 'lang' => $top_lang,]) ?>"><i
                                         class="fa fa-caret-right"></i><?= __('Privacy Policy') ?></a></li>
                             <li><a href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'display',
                                                                'pagename'   => 'law', 'lang' => $top_lang,]) ?>"><i
-                                        class="fa fa-caret-right"></i><?= __('特定商取引法に基づく表記') ?></a></li>
+                                        class="fa fa-caret-right"></i><?= __('Inscription by Law') ?></a></li>
                         </ul>
                     </div><!--//footer-col-inner-->
                 </div><!--//foooter-col-->
@@ -53,14 +52,13 @@ if (!isset($top_lang)) {
                     <div class="footer-col-inner">
                         <h3 class="title"><?= __('Get in touch') ?></h3>
                         <div class="row">
-                            <p class="email col-md-12 col-sm-4"><i class="fa fa-envelope"></i><a href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'contact', 'lang' => $top_lang]) ?>"><?= __('お問い合わせ') ?></a></p>
+                            <p class="email col-md-12 col-sm-4"><i class="fa fa-envelope"></i><a href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'contact', 'lang' => $top_lang]) ?>"><?= __('Contact us') ?></a></p>
                             <p class="email col-md-12 col-sm-4"><i class="fa fa-microphone"></i><a
                                     href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'contact', 'lang' => $top_lang, 4]) ?>"><?= __(
-                                                                                                                                                     'プレス関連のお問い合わせ') ?></a>
+                                                                                                                                                     'Contact for press') ?></a>
                             </p>
                             <p class="email col-md-12 col-sm-4"><i class="fa fa-heart"></i><a
-                                    href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'contact', 'lang' => $top_lang, 3]) ?>"><?= __(
-                                                                                                                                                     '協業のお問い合わせ') ?></a>
+                                    href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'contact', 'lang' => $top_lang, 3]) ?>"><?= __('Contact for cooporation') ?></a>
                             </p>
                         </div>
                     </div>

@@ -20,7 +20,7 @@
             $count_non_joined=count($non_joined_circles);
             $count_all=$count_joined+$count_non_joined;
             ?>
-            <h4 class="modal-title"><?= __("サークル")." (".$count_all.")"?></h4>
+            <h4 class="modal-title"><?= __("Circles")." (".$count_all.")"?></h4>
         </div>
         <ul class="nav nav-tabs">
             <li class="active"><a href="#tab1" data-toggle="tab"><?= __("Unjoined")." (".$count_non_joined.")" ?></a></li>

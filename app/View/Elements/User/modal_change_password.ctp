@@ -105,7 +105,7 @@
                     validators: {
                         identical: {
                             field: "data[User][password]",
-                            message: "<?=__("パスワードが一致しません。")?>"
+                            message: "<?=__("Both of passwords are not same.")?>"
                         },
                         notEmpty: {
                             message: "<?=__("Input is required.")?>"

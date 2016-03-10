@@ -79,7 +79,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                                                                                                                 "eg. Provide a new value to people.") . '</span>',
                                         'data-bv-stringlength'         => 'true',
                                         'data-bv-stringlength-max'     => 200,
-                                        'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 200),
+                                        'data-bv-stringlength-message' => __("It's over limit characters (%s).", 200),
                                        ]) ?>
                 </div>
 
@@ -160,7 +160,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                                                                                                       "eg) Increasing the internal market share of A") . '</span>',
                                         'data-bv-stringlength'         => 'true',
                                         'data-bv-stringlength-max'     => 200,
-                                        'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 200),
+                                        'data-bv-stringlength-message' => __("It's over limit characters (%s).", 200),
                                        ]) ?>
                     <div class="row">
                         <div class="col col-sm-3 goal-edit-labels">
@@ -197,7 +197,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                                     'data-bv-stringlength'         => 'true',
                                                     'data-bv-stringlength-max'     => 15,
                                                     'data-bv-stringlength-message' => __(
-                                                                                          "最大文字数(%s)を超えています。", 15),
+                                                                                          "It's over limit characters (%s).", 15),
                                                     "data-bv-notempty-message"     => __("Input is required."),
                                                     'data-bv-numeric-message'      => __("数字を入力してください。"),
                                                    ]) ?>
@@ -212,7 +212,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                                     'data-bv-stringlength'         => 'true',
                                                     'data-bv-stringlength-max'     => 15,
                                                     'data-bv-stringlength-message' => __(
-                                                                                          "最大文字数(%s)を超えています。", 15),
+                                                                                          "It's over limit characters (%s).", 15),
                                                     "data-bv-notempty-message"     => __("Input is required."),
                                                     'data-bv-numeric-message'      => __("数字を入力してください。"),
                                                    ]) ?>
@@ -247,7 +247,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                                            'data-bv-stringlength'         => 'true',
                                                            'data-bv-stringlength-max'     => 10,
                                                            'data-bv-stringlength-message' => __(
-                                                                                                 "最大文字数(%s)を超えています。",
+                                                                                                 "It's over limit characters (%s).",
                                                                                                  10),
                                                            'type'                         => 'text',
                                                            'wrapInput'                    => null
@@ -292,7 +292,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                                            'data-bv-stringlength'         => 'true',
                                                            'data-bv-stringlength-max'     => 10,
                                                            'data-bv-stringlength-message' => __(
-                                                                                                 "最大文字数(%s)を超えています。",
+                                                                                                 "It's over limit characters (%s).",
                                                                                                  10),
                                                            'type'                         => 'text',
                                                            'wrapInput'                    => null
@@ -415,7 +415,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                         'required'                     => false,
                                         'data-bv-stringlength'         => 'true',
                                         'data-bv-stringlength-max'     => 2000,
-                                        'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 2000),
+                                        'data-bv-stringlength-message' => __("It's over limit characters (%s).", 2000),
                                        ]) ?>
                     <?php if (isset($this->request->data['Collaborator'][0]['id'])) {
                         echo $this->Form->hidden('Collaborator.0.id',
@@ -533,7 +533,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                     },
                     date: {
                         format: 'YYYY/MM/DD',
-                        message: '<?=__("日付はYYYY/MM/DDの形式で入力してください。")?>'
+                        message: '<?=__("Enter such date as YYYY/MM/DD.")?>'
                     }
                 }
             },
@@ -548,7 +548,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                     },
                     date: {
                         format: 'YYYY/MM/DD',
-                        message: '<?=__("日付はYYYY/MM/DDの形式で入力してください。")?>'
+                        message: '<?=__("Enter such date as YYYY/MM/DD.")?>'
                     }
                 }
             }

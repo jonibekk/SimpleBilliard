@@ -124,7 +124,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                                                    'action'           => 'delete_action',
                                                                    'action_result_id' => $post['Post']['action_result_id']],
                                                                   null,
-                                                                  __("Do you really want to delete this action_")) ?></li>
+                                                                  __("Do you really want to delete this action?")) ?></li>
                                     <?php else: ?>
                                         <li><?=
                                             $this->Form->postLink(__("Delete post"),

@@ -65,7 +65,7 @@
 <!-- ******FAQ****** -->
 <section id="faq" class="faq section has-bg-color">
     <div class="container">
-        <h2 class="title text-center"><?= __('よくあるご質問') ?></h2>
+        <h2 class="title text-center"><?= __('Frequent questions') ?></h2>
         <div class="row faq-lists">
             <?php foreach ($faq as $key => $value): ?>
                 <div class="col-md-6 col-sm-6 col-xs-12">
@@ -94,8 +94,8 @@
 
         </div><!--//row-->
         <div class="more text-center col-md-6 col-md-offset-3">
-            <h4 class="title"><?= __('その他のご質問はありますか？') ?></h4>
-            <?= $this->Html->link(__('お問い合わせ'), array('controller' => 'contact'),
+            <h4 class="title"><?= __('Any other question?') ?></h4>
+            <?= $this->Html->link(__('Contact us'), array('controller' => 'contact'),
                                   array('class' => 'btn btn-cta btn-cta-secondary btn-lg btn-block')); ?>
         </div>
     </div><!--//container-->

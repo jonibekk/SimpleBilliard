@@ -52,7 +52,7 @@
                                     "data-bv-notempty-message"     => __("Input is required."),
                                     'data-bv-stringlength'         => 'true',
                                     'data-bv-stringlength-max'     => 128,
-                                    'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 128),
+                                    'data-bv-stringlength-message' => __("It's over limit characters (%s).", 128),
                                     'required'                     => true,
                                    ]) ?>
                 <?php if (!$this->request->data['Circle']['team_all_flg']): ?>
@@ -84,7 +84,7 @@
                                         'data-bv-notempty-message'     => __("Input is required."),
                                         'data-bv-stringlength'         => 'true',
                                         'data-bv-stringlength-max'     => 2000,
-                                        'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 2000),
+                                        'data-bv-stringlength-message' => __("It's over limit characters (%s).", 2000),
                                        ]) ?>
                 </div>
 
