@@ -2254,5 +2254,4 @@ class TeamMember extends AppModel
             ],
         ]);
     }
-
 }
