@@ -1982,7 +1982,7 @@ class TeamMember extends AppModel
             'phone_no'         => [
                 'maxLength' => [
                     'rule'    => ['maxLength', 20],
-                    'message' => __("$%sは20文字以内で入力してください。", __("Phone number"))
+                    'message' => __("%s should be entered in less than 20 characters.", __("Phone number"))
                 ],
                 'phoneNo'   => [
                     'rule'       => 'phoneNo',
@@ -1993,7 +1993,7 @@ class TeamMember extends AppModel
             'gender'           => [
                 'inList' => [
                     'rule'       => ['inList', ['male', 'female']],
-                    'message'    => __("'male'もしくは'female'で記入してください。"),
+                    'message'    => __("Choose 'male' or 'female'."),
                     'allowEmpty' => true,
                 ],
             ],

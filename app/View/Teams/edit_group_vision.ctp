@@ -43,7 +43,7 @@
                 $this->Form->input('name',
                                    ['label'                        => __("Group vision name"),
                                     'placeholder'                  => __("eg. making an innovation"),
-                                    "data-bv-notempty-message"     => __("入力必須項目です。"),
+                                    "data-bv-notempty-message"     => __("Input is required."),
                                     'rows'                         => 1,
                                     'data-bv-stringlength'         => 'true',
                                     'data-bv-stringlength-max'     => 200,

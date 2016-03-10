@@ -42,7 +42,7 @@ if (!isset($top_lang)) {
                                         class="fa fa-caret-right"></i><?= __('利用規約') ?></a></li>
                             <li><a href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'display',
                                                                'pagename'   => 'privacy_policy', 'lang' => $top_lang,]) ?>"><i
-                                        class="fa fa-caret-right"></i><?= __('プライバシーポリシー') ?></a></li>
+                                        class="fa fa-caret-right"></i><?= __('Privacy Policy') ?></a></li>
                             <li><a href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'display',
                                                                'pagename'   => 'law', 'lang' => $top_lang,]) ?>"><i
                                         class="fa fa-caret-right"></i><?= __('特定商取引法に基づく表記') ?></a></li>

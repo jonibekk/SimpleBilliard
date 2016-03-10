@@ -31,7 +31,7 @@ $meta_pricing = [
     ],
     [
         "name" => "keywords",
-        "content" => "目標管理,目標達成,社内SNS,評価,MBO",
+        "content" => _("目標管理,目標達成,社内SNS,評価,MBO"),
     ],
     [
         "property" => "og:type",
@@ -39,7 +39,7 @@ $meta_pricing = [
     ],
     [
         "property" => "og:title",
-        "content" => __('料金・価格 | Goalous(ゴーラス)'),
+        "content" => __('Pricing | Goalous'),
     ],
     [
         "property" => "og:description",
@@ -75,7 +75,7 @@ for($i = 0; $i < $num_ogp; $i++){
     echo $this->Html->meta($meta_pricing[$i]);
 }
 ?>
-<title><?= __('料金・価格 | Goalous (ゴーラス)') ?></title>
+<title><?= __('Pricing | Goalous') ?></title>
 <link rel="alternate" hreflang="ja" href="<?= $this->Html->url('/ja/pricing') ?>"/>
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/pricing') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/pricing') ?>"/>
@@ -84,40 +84,43 @@ for($i = 0; $i < $num_ogp; $i++){
 <!-- ******PRICE PLAN****** -->
 <section id="price-plan" class="price-plan section">
     <div class="container text-center">
-        <h2 class="title"><?= __('今だけ、有料プランも完全無料') ?></h2>
-        <p class="intro"><?= __('リリース記念で2016年8月までPlusをご利用いただけます。フィードバックをお待ちしております。') ?></p>
+        <h2 class="title"><?= __('It\'s all free') ?></h2>
+        <p class="intro">
+        <?= __('Released sale, It\'s all free until Augast 2016!') ?>
+        </p>
         <div class="item col-xs-12 col-md-6 col-md-offset-3">
             <h3 class="heading"><?= __('Plus') ?><span class="label label-custom"><?= __(
-                                                                                                 'キャンペーン') ?></span>
+                                                                                                 'Campaign') ?></span>
             </h3>
             <div class="content">
                 <div class="price-figure">
-                    <span class="currency"><?= __('¥') ?>
+                    <!-- ここを単調に翻訳すると$1,980になるので、翻訳保留。 -->
+                    <span class="currency">¥
                         <div class="pricing-line-through"></div></span><span class="number">1,980</span><span
-                        class="unit"><?= __('/月') ?></span>
+                        class="unit"><?= __('/mon') ?></span>
                 </div>
                 <i class="fa fa-arrow-down pricing-figure-mid-icon"></i>
                 <div class="price-figure">
-                    <p><?= __('1ユーザーあたり') ?></p>
+                    <p><?= __('Per User') ?></p>
                     <span class="currency"><?= __('¥') ?></span>
                     <span class="number">0</span>
-                    <span class="unit"><?= __('/月') ?></span>
+                    <span class="unit"><?= __('/mon') ?></span>
                 </div>
                 <ul class="list-unstyled feature-list">
-                    <li><?= __('1チームのアカウント無制限') ?></li>
-                    <li><?= __('20MB/ファイルのアップロード') ?></li>
-                    <li><?= __('ストレージ無制限のファイル共有') ?></li>
-                    <li><?= __('チャットメッセージ') ?></li>
-                    <li><?= __('インサイト分析') ?></li>
-                    <li><?= __('チーム管理機能') ?></li>
-                    <li><?= __('オンラインでのユーザーサポート') ?></li>
+                    <li><?= __('Unlimeted members a team') ?></li>
+                    <li><?= __('20MB file upload') ?></li>
+                    <li><?= __('Unlimited file share') ?></li>
+                    <li><?= __('Chat message') ?></li>
+                    <li><?= __('Insight Analytics') ?></li>
+                    <li><?= __('Team Controll') ?></li>
+                    <li><?= __('Online user support') ?></li>
                 </ul>
                 <a class="pricing-signup btn btn-cta btn-cta-primary" id="RegisterLinkPricingPlus"
                    href="<?= $this->Html->url(['controller' => 'users', 'action' => 'register', '?' => ['type' => 'pricing_plus']]) ?>">
-                    <?= __('今すぐ始める') ?>
+                    <?= __('Start now') ?>
                     <br/>
                         <span class="extra">
-                            <?= __('無料相談受付中') ?>
+                            <?= __('Feel free to ask us') ?>
                         </span>
                 </a>
             </div><!--//content-->

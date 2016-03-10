@@ -124,17 +124,17 @@ for($i = 0; $i < $num_ogp; $i++){
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-4 control-label"><?= __('ご希望の営業担当者') ?></label>
+                    <label class="col-sm-4 control-label"><?= __('Sales person you appointed') ?></label>
                     <div class="col-sm-8">
                         <p class="form-control-static"><?= h($data['sales_people_text']) ?></p>
                     </div>
                 </div>
 
                 <a href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'contact', 'lang' => $top_lang, 'from_confirm' => true]) ?>"
-                   class="btn btn-block btn-cta-secondary"><?= __('戻る') ?></a>
+                   class="btn btn-block btn-cta-secondary"><?= __('Back') ?></a>
                 <a href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'contact_send', 'lang' => $top_lang]) ?>"
                    class="btn btn-block btn-cta-primary contact-confirm-send" id="SendContactLink"><?= __(
-                                                                                      '送信する') ?></a>
+                                                                                      'Send') ?></a>
             </form><!--//form-->
         </div>
     </div><!--//row-->
@@ -146,7 +146,7 @@ for($i = 0; $i < $num_ogp; $i++){
             if ($(this).hasClass('double_click')) {
                 return false;
             }
-            $(this).text("<?=__('送信中...')?>");
+            $(this).text("<?=__('Sending')?>");
             // 2重送信防止クラス
             $(this).addClass('double_click');
         });

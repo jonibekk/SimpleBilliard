@@ -74,7 +74,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                         'label'                        => false,
                                         'placeholder'                  => __("Describe it roughly."),
                                         'rows'                         => 1,
-                                        "data-bv-notempty-message"     => __("入力必須項目です。"),
+                                        "data-bv-notempty-message"     => __("Input is required."),
                                         'afterInput'                   => '<span class="help-block goal-form-addiction">' . __(
                                                                                                                                 "eg. Provide a new value to people.") . '</span>',
                                         'data-bv-stringlength'         => 'true',
@@ -153,7 +153,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                                                                  "What is the measurable point?") . '</div></div>',
                                         'label'                        => false,
                                         'placeholder'                  => __("Write in details."),
-                                        "data-bv-notempty-message"     => __("入力必須項目です。"),
+                                        "data-bv-notempty-message"     => __("Input is required."),
                                         'required'                     => true,
                                         'rows'                         => 1,
                                         'afterInput'                   => '<span class="help-block font_12px">' . __(
@@ -198,7 +198,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                                     'data-bv-stringlength-max'     => 15,
                                                     'data-bv-stringlength-message' => __(
                                                                                           "最大文字数(%s)を超えています。", 15),
-                                                    "data-bv-notempty-message"     => __("入力必須項目です。"),
+                                                    "data-bv-notempty-message"     => __("Input is required."),
                                                     'data-bv-numeric-message'      => __("数字を入力してください。"),
                                                    ]) ?>
                                 <?=
@@ -213,7 +213,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                                     'data-bv-stringlength-max'     => 15,
                                                     'data-bv-stringlength-message' => __(
                                                                                           "最大文字数(%s)を超えています。", 15),
-                                                    "data-bv-notempty-message"     => __("入力必須項目です。"),
+                                                    "data-bv-notempty-message"     => __("Input is required."),
                                                     'data-bv-numeric-message'      => __("数字を入力してください。"),
                                                    ]) ?>
                             </div>
@@ -243,7 +243,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                                            'class'                        => "form-control",
                                                            'required'                     => true,
                                                            "data-bv-notempty-message"     => __(
-                                                                                                 "入力必須項目です。"),
+                                                                                                 "Input is required."),
                                                            'data-bv-stringlength'         => 'true',
                                                            'data-bv-stringlength-max'     => 10,
                                                            'data-bv-stringlength-message' => __(
@@ -288,7 +288,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                                            'class'                        => "form-control",
                                                            'required'                     => true,
                                                            "data-bv-notempty-message"     => __(
-                                                                                                 "入力必須項目です。"),
+                                                                                                 "Input is required."),
                                                            'data-bv-stringlength'         => 'true',
                                                            'data-bv-stringlength-max'     => 10,
                                                            'data-bv-stringlength-message' => __(

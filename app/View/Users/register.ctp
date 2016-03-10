@@ -31,7 +31,7 @@
                     'placeholder'                  => __("eg. Jobs"),
                     "pattern"                      => '^[a-zA-Z]+$',
                     "data-bv-regexp-message"       => __("アルファベットのみで入力してください。"),
-                    "data-bv-notempty-message"     => __("入力必須項目です。"),
+                    "data-bv-notempty-message"     => __("Input is required."),
                     'data-bv-stringlength'         => 'true',
                     'data-bv-stringlength-max'     => 128,
                     'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 128),
@@ -41,7 +41,7 @@
                     'placeholder'                  => __("Harry"),
                     "pattern"                      => '^[a-zA-Z]+$',
                     "data-bv-regexp-message"       => __("アルファベットのみで入力してください。"),
-                    "data-bv-notempty-message"     => __("入力必須項目です。"),
+                    "data-bv-notempty-message"     => __("Input is required."),
                     'data-bv-stringlength'         => 'true',
                     'data-bv-stringlength-max'     => 128,
                     'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 128),
@@ -94,14 +94,14 @@
                 $this->Form->input('password', [
                     'label'                    => __("Create a password"),
                     'placeholder'              => __('Use at least 8 characters and use a mix of capital characters, small characters and numbers. Symbols are not allowed.'),
-                    "data-bv-notempty-message" => __("入力必須項目です。"),
+                    "data-bv-notempty-message" => __("Input is required."),
                     'type'                     => 'password',
                     'maxlength'                => 50,
                 ]) ?>
                 <?=
                 $this->Form->input('password_confirm', [
                     'label'                    => __("Confirm your password"),
-                    "data-bv-notempty-message" => __("入力必須項目です。"),
+                    "data-bv-notempty-message" => __("Input is required."),
                     'type'                     => 'password',
                     'maxlength'                => 50,
                 ]) ?>

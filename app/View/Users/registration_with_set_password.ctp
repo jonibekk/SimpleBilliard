@@ -38,21 +38,21 @@
                 $this->Form->input('Email.email', [
                     'label'                        => __("Email Address"),
                     'data-bv-emailaddress-message' => __("メールアドレスが正しくありません。"),
-                    "data-bv-notempty-message"     => __("入力必須項目です。"),
+                    "data-bv-notempty-message"     => __("Input is required."),
                     'required'                     => true
                 ]) ?>
 
                 <?=
                 $this->Form->input('password', [
-                    'label'                    => __("Create a password_hash"),
+                    'label'                    => __("Create a password"),
                     'placeholder'              => __('Use at least 8 characters and use a mix of capital characters, small characters and numbers. Symbols are not allowed.'),
-                    "data-bv-notempty-message" => __("入力必須項目です。"),
+                    "data-bv-notempty-message" => __("Input is required."),
                     'type'                     => 'password',
                 ]) ?>
                 <?=
                 $this->Form->input('password_confirm', [
                     'label'                    => __("Confirm your password"),
-                    "data-bv-notempty-message" => __("入力必須項目です。"),
+                    "data-bv-notempty-message" => __("Input is required."),
                     'type'                     => 'password',
                 ]) ?>
                 <?=

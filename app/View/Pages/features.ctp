@@ -39,7 +39,7 @@ $meta_features = [
     ],
     [
         "property" => "og:title",
-        "content" => __('機能 | Goalous(ゴーラス)'),
+        "content" => __('機能 | Goalous (ゴーラス))'),
     ],
     [
         "property" => "og:description",

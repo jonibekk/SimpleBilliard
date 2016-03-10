@@ -181,7 +181,7 @@
                                                                                                         "最大文字数(%s)を超えています。",
                                                                                                         5000),
                                                                   'data-bv-notempty-message'     => __(
-                                                                                                        "入力必須項目です。"),
+                                                                                                        "Input is required."),
                                                                   'required'                     => 'required'
                                                               ]) ?>
                                 </div>

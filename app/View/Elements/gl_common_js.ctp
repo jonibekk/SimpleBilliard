@@ -61,7 +61,7 @@ echo $this->Html->script('vendor/angular/ng-infinite-scroll.min');
                 d: "<?= __("利用規約に同意してください。")?>",
                 e: "<?= __("Please mix of numbers, lower case letters and upper case letters.")?>",
                 f: "<?= __("It is not possible to use the same as the email address as the password.")?>",
-                g: "<?= __("必須項目です。")?>",
+                g: "<?= __("Input is required.")?>",
                 invalid_email: "<?= __("メールアドレスが正しくありません。") ?>",
                 checking_email: "<?= __("メールアドレス確認中...") ?>",
                 dropzone_file_too_big: "<?= __('{{maxFilesize}}MB is the limit.')?>",

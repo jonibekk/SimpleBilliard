@@ -81,7 +81,7 @@
             $this->Form->input('2fa_code',
                                ['label'                    => false,
                                 'placeholder'              => __("code"),
-                                "data-bv-notempty-message" => __("入力必須項目です。"),
+                                "data-bv-notempty-message" => __("Input is required."),
                                 'required'                 => true,
                                ]) ?>
             </div>

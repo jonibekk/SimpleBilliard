@@ -46,7 +46,7 @@
             'data-bv-stringlength'         => 'true',
             'data-bv-stringlength-max'     => 2000,
             'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 2000),
-            "data-bv-notempty-message" => __("入力必須項目です。"),
+            "data-bv-notempty-message" => __("Input is required."),
             'afterInput'               => '<span class="help-block">'
                 . '<p class="font_11px">' . __("You can set email addresses by comma(,) separated or by newline separated.") . '</p>'
                 . '<ul class="example-indent font_11px"><li>' . __("eg. %s",

@@ -78,7 +78,7 @@
                                        __("Write what you did.") . '</span></h5></div>',
                                     'label'                    => false,
                                     'placeholder'              => __("eg) I completed making the web site."),
-                                    "data-bv-notempty-message" => __("入力必須項目です。"),
+                                    "data-bv-notempty-message" => __("Input is required."),
                                     'rows'                     => 1,
                                    ]) ?>
             </div>

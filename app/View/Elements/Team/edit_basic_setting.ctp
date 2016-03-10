@@ -33,7 +33,7 @@
         $this->Form->input('name',
                            ['label'                        => __("Team Name"),
                             'placeholder'                  => __("eg. Team Goalous"),
-                            "data-bv-notempty-message"     => __("入力必須項目です。"),
+                            "data-bv-notempty-message"     => __("Input is required."),
                             'data-bv-stringlength'         => 'true',
                             'data-bv-stringlength-max'     => 128,
                             'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 128),

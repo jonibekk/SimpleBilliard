@@ -29,7 +29,7 @@
                             'label'                    => false,
                             'div'                      => false,
                             'required'                 => true,
-                            'data-bv-notempty-message' => __("入力必須項目です。"),
+                            'data-bv-notempty-message' => __("Input is required."),
                             'class'                    => 'form-control disable-change-warning',
                             'id'                       => 'SwitchKrOnMyPage',
                             'options'                  => $kr_select_options,

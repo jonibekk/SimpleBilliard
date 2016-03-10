@@ -33,6 +33,6 @@ echo "\n";
 echo "- " . __('お問い合わせ内容') . ":" . "\n";
 echo "   " . h($data['message']) . "\n";
 echo "\n";
-echo "- " . __('ご希望の営業担当者') . ":" . "\n";
+echo "- " . __('Sales person you appointed') . ":" . "\n";
 echo "   " . h($data['sales_people_text']) . "\n";
 echo "\n";

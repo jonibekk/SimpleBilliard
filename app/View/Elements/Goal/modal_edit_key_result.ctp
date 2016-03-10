@@ -74,7 +74,7 @@
                                                                                                                                                                 "What is set as an indicator of achievement?") . '</span></label></div>',
                                         'label'                        => false,
                                         'placeholder'                  => __("Write in details"),
-                                        "data-bv-notempty-message"     => __("入力必須項目です。"),
+                                        "data-bv-notempty-message"     => __("Input is required."),
                                         'data-bv-stringlength'         => 'true',
                                         'data-bv-stringlength-max'     => 200,
                                         'data-bv-stringlength-message' => __("最大文字数(%s)を超えています。", 200),
@@ -117,7 +117,7 @@
                                                     'data-bv-stringlength-max'     => 15,
                                                     'data-bv-stringlength-message' => __(
                                                                                           "最大文字数(%s)を超えています。", 15),
-                                                    "data-bv-notempty-message"     => __("入力必須項目です。"),
+                                                    "data-bv-notempty-message"     => __("Input is required."),
                                                     'data-bv-numeric-message'      => __("数字を入力してください。"),
                                                    ]) ?>
                             </div>
@@ -135,7 +135,7 @@
                                                     'data-bv-stringlength-max'     => 15,
                                                     'data-bv-stringlength-message' => __(
                                                                                           "最大文字数(%s)を超えています。", 15),
-                                                    "data-bv-notempty-message"     => __("入力必須項目です。"),
+                                                    "data-bv-notempty-message"     => __("Input is required."),
                                                     'data-bv-numeric-message'      => __("数字を入力してください。"),
                                                    ]) ?>
                             </div>
@@ -168,7 +168,7 @@
                                                        'div'                          => false,
                                                        'class'                        => "form-control",
                                                        'required'                     => true,
-                                                       "data-bv-notempty-message"     => __("入力必須項目です。"),
+                                                       "data-bv-notempty-message"     => __("Input is required."),
                                                        'data-bv-stringlength'         => 'true',
                                                        'data-bv-stringlength-max'     => 10,
                                                        'data-bv-stringlength-message' => __(
@@ -206,7 +206,7 @@
                                                        'div'                          => false,
                                                        'class'                        => "form-control",
                                                        'required'                     => true,
-                                                       "data-bv-notempty-message"     => __("入力必須項目です。"),
+                                                       "data-bv-notempty-message"     => __("Input is required."),
                                                        'data-bv-stringlength'         => 'true',
                                                        'data-bv-stringlength-max'     => 10,
                                                        'data-bv-stringlength-message' => __(
@@ -230,7 +230,7 @@
                     'type'                     => 'select',
                     'default'                  => 1,
                     'required'                 => true,
-                    "data-bv-notempty-message" => __("入力必須項目です。"),
+                    "data-bv-notempty-message" => __("Input is required."),
                     'style'                    => 'width:170px',
                     'options'                  => $kr_priority_list,
                     'wrapInput'                => 'modal-edit-kr-set-importance-wrap'

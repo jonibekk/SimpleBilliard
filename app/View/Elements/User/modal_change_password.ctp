@@ -82,7 +82,7 @@
                 "data[User][old_password]": {
                     validators: {
                         notEmpty: {
-                            message: "<?=__("入力必須項目です。")?>"
+                            message: "<?=__("Input is required.")?>"
                         }
                     }
                 },
@@ -93,7 +93,7 @@
                             message: "<?=__('%1$d文字以上で%2$d文字以下で入力してください。',8,50)?>"
                         },
                         notEmpty: {
-                            message: "<?=__("入力必須項目です。")?>"
+                            message: "<?=__("Input is required.")?>"
                         },
                         regexp: {
                             regexp: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{0,}$/,
@@ -108,7 +108,7 @@
                             message: "<?=__("パスワードが一致しません。")?>"
                         },
                         notEmpty: {
-                            message: "<?=__("入力必須項目です。")?>"
+                            message: "<?=__("Input is required.")?>"
                         }
                     }
                 }

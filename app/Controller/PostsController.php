@@ -374,10 +374,10 @@ class PostsController extends AppController
 
         // 例外チェック
         if (!$this->Post->Comment->exists()) {
-            throw new NotFoundException(__("このコメントは存在しません。"));
+            throw new NotFoundException(__("This comment doesn't exist."));
         }
         if (!$this->Post->Comment->isOwner($this->Auth->user('id'))) {
-            throw new NotFoundException(__("このコメントはあなたのものではありません。"));
+            throw new NotFoundException(__("This isn't your comment."));
         }
 
         // ogbをインサートデータに追加

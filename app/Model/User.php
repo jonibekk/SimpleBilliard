@@ -568,7 +568,7 @@ class User extends AppModel
         $currentPassword = $this->field('password', ['User.id' => $data['User']['id']]);
         $hashed_old_password = $this->generateHash($data['User']['old_password']);
         if ($currentPassword !== $hashed_old_password) {
-            throw new RuntimeException(__("現在のパスワードが間違っています。"));
+            throw new RuntimeException(__("Current Password is incorrect."));
         }
 
         $this->id = $data['User']['id'];
@@ -623,10 +623,10 @@ class User extends AppModel
 
         if (empty($user)) {
             throw new RuntimeException(
-                __("トークンが正しくありません。送信されたメールを再度ご確認下さい。"));
+                __("Invitation token is incorrect. Check your email again."));
         }
         if ($user['Email']['email_token_expires'] < REQUEST_TIMESTAMP) {
-            throw new RuntimeException(__('トークンの期限が切れています。'));
+            throw new RuntimeException(__('Invitation token is expired.'));
         }
 
         $user['User']['id'] = $user['Email']['user_id'];
@@ -652,7 +652,7 @@ class User extends AppModel
     {
         //メールアドレスが空で送信されてきた場合はエラーで返却
         if (!isset($postData['User']['email']) || empty($postData['User']['email'])) {
-            $this->invalidate('email', __("メールアドレスを入力してください。"));
+            $this->invalidate('email', __("Enter your email address."));
             return false;
         }
         $options = [
@@ -664,17 +664,17 @@ class User extends AppModel
         $user = $this->Email->find('first', $options);
         //メールアドレスが存在しない場合もしくはユーザが存在しない場合はエラーで返却
         if (empty($user) || !$user['User']['id']) {
-            $this->invalidate('email', __("このメールアドレスはGoalousに登録されていません。"));
+            $this->invalidate('email', __("This email address isn't registered at Goalous."));
             return false;
         }
         //メールアドレスの認証が終わっていない場合
         if (!$user['Email']['email_verified']) {
-            $this->invalidate('email', __("このメールアドレスは認証が完了しておりません。Goalousから以前に送信されたメールをご確認ください。"));
+            $this->invalidate('email', __("This email should be authenticated. Check your email box."));
             return false;
         }
         //ユーザがアクティブではない場合
         if (!$user['User']['active_flg']) {
-            $this->invalidate('email', __("ユーザアカウントが有効ではありません。"));
+            $this->invalidate('email', __("The user account is invalid."));
             return false;
         }
         //ここから認証データ登録
@@ -748,7 +748,7 @@ class User extends AppModel
     public function addEmail($postData, $uid)
     {
         if (!isset($postData['User']['email'])) {
-            throw new RuntimeException(__("メールアドレスが入力されていません"));
+            throw new RuntimeException(__("Email address is empty."));
         }
 
         $this->id = $uid;
@@ -766,7 +766,7 @@ class User extends AppModel
 
         //現在メール認証中の場合は拒否
         if (!$this->Email->isAllVerified($uid)) {
-            throw new RuntimeException(__("現在、他のメールアドレスの認証待ちの為、メールアドレス変更はできません。"));
+            throw new RuntimeException(__("Current email address is not authenticated. So, you can't change email address."));
         }
         //メールアドレスの認証トークンを発行
         $data = [];
@@ -1107,7 +1107,7 @@ class User extends AppModel
             }
             $res[] = [
                 'id'    => 'group_' . $group['Group']['id'],
-                'text'  => h($group['Group']['name'] . ' (' . strval(__('%1$s人 member', count($users))) . ')'),
+                'text'  => h($group['Group']['name'] . ' (' . strval(__('%1$s member', count($users))) . ')'),
                 'users' => $users,
             ];
         }
