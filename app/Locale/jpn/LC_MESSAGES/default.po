@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: 2016-03-10 14:56+0800\n"
-"PO-Revision-Date: 2016-03-10 14:56+0800\n"
+"PO-Revision-Date: 2016-03-10 15:05+0800\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -1436,12 +1436,16 @@ msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> also commented on <span "
 "class=\"notify-card-head-target\">%2$s</span>'s action"
 msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span>さんも<span class="
+"\"notify-card-head-target\">%2$s</span>さんのアクションにコメントしました。"
 
 #: Model/NotifySetting.php:630
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> added an action on<span "
 "class=\"notify-card-head-target\">%2$s</span>."
 msgstr ""
+"<span class=\"notify-card-head-target\">%1$s</span>さんが<span class="
+"\"notify-card-head-target\">%2$s</span>にアクションしました。"
 
 #: Model/NotifySetting.php:636
 msgid "<span class=\"notify-card-head-target\">%1$s</span> joined this team."
@@ -1542,7 +1546,7 @@ msgstr "来期から"
 
 #: Model/Team.php:255
 msgid "Quater"
-msgstr ""
+msgstr "四半期"
 
 #: Model/Team.php:256
 msgid "Half a year"
@@ -1892,7 +1896,7 @@ msgstr "メールアドレス"
 
 #: Model/TeamMember.php:1867;2026;2033;2040
 msgid "%s is not correct."
-msgstr ""
+msgstr "%s が正しくありません。"
 
 #: Model/TeamMember.php:1873;1877
 msgid "Member ID"
@@ -1954,7 +1958,7 @@ msgstr "'male'もしくは'female'で記入してください。"
 
 #: Model/TeamMember.php:2003
 msgid "It is unsupported language code of the local first name and last name."
-msgstr ""
+msgstr "姓名にサポートされていない言語が入っています。"
 
 #: Model/TeamMember.php:2022
 msgid ""
@@ -2019,6 +2023,8 @@ msgstr "このメールアドレスはGoalousに登録されていません。"
 #: Model/User.php:672
 msgid "This email should be authenticated. Check your email box."
 msgstr ""
+"このメールアドレスは認証されていません。以前に送られたメールをご確認くださ"
+"い。"
 
 #: Model/User.php:677
 msgid "The user account is invalid."
@@ -2195,15 +2201,15 @@ msgstr ""
 
 #: View/Elements/footer_not_logged_in.ctp:38
 msgid "Other Links"
-msgstr ""
+msgstr "Other Links"
 
 #: View/Elements/footer_not_logged_in.ctp:42 View/Pages/contact.ctp:247
 msgid "利用規約"
-msgstr ""
+msgstr "利用規約"
 
 #: View/Elements/footer_not_logged_in.ctp:48
 msgid "特定商取引法に基づく表記"
-msgstr ""
+msgstr "特定商取引法に基づく表記"
 
 #: View/Elements/footer_not_logged_in.ctp:54
 msgid "Get in touch"
@@ -2212,20 +2218,20 @@ msgstr "Get in touch"
 #: View/Elements/footer_not_logged_in.ctp:56 View/Elements/header_home.ctp:53
 #: View/Elements/Homepage/faq.ctp:98
 msgid "お問い合わせ"
-msgstr ""
+msgstr "お問い合わせ"
 
 #: View/Elements/footer_not_logged_in.ctp:58
 msgid "プレス関連のお問い合わせ"
-msgstr ""
+msgstr "プレス関連のお問い合わせ"
 
 #: View/Elements/footer_not_logged_in.ctp:62
 msgid "協業のお問い合わせ"
-msgstr ""
+msgstr "協業のお問い合わせ"
 
 #: View/Elements/gl_common_js.ctp:58
 #: View/Elements/User/modal_change_password.ctp:93
 msgid "%1$d文字以上で%2$d文字以下で入力してください。"
-msgstr ""
+msgstr "%1$d文字以上で%2$d文字以下で入力してください。"
 
 #: View/Elements/gl_common_js.ctp:60 View/Elements/modal_add_circle.ctp:172
 #: View/Elements/Feed/photo_upload.ctp:110
@@ -2251,7 +2257,7 @@ msgstr "パスワードにメールアドレスと同一のものを指定する
 
 #: View/Elements/gl_common_js.ctp:66
 msgid "メールアドレス確認中..."
-msgstr ""
+msgstr "メールアドレス確認中..."
 
 #: View/Elements/gl_common_js.ctp:67
 msgid "{{maxFilesize}}MB is the limit."
@@ -2287,7 +2293,7 @@ msgstr ""
 
 #: View/Elements/gl_common_js.ctp:75 View/Goals/add.ctp:536;551
 msgid "日付はYYYY/MM/DDの形式で入力してください。"
-msgstr ""
+msgstr "日付はYYYY/MM/DDの形式で入力してください。"
 
 #: View/Elements/gl_common_js.ctp:78
 msgid ""
@@ -2305,15 +2311,15 @@ msgstr "エラーが発生しました。データ取得できません。"
 
 #: View/Elements/gl_common_js.ctp:82
 msgid "開始日が期限を過ぎています。"
-msgstr ""
+msgstr "開始日が期限を過ぎています。"
 
 #: View/Elements/gl_common_js.ctp:83
 msgid "期限が開始日以前になっています。"
-msgstr ""
+msgstr "期限が開始日以前になっています。"
 
 #: View/Elements/gl_common_js.ctp:84
 msgid "コメント送信できませんでした"
-msgstr ""
+msgstr "コメント送信できませんでした"
 
 #: View/Elements/gl_common_js.ctp:85
 msgid "This comment was deleted."
@@ -2396,7 +2402,7 @@ msgstr "フォロー"
 
 #: View/Elements/gl_common_js.ctp:100
 msgid "Copy the URL"
-msgstr ""
+msgstr "URLをコピー"
 
 #: View/Elements/gl_common_js.ctp:105
 msgid "Join"
@@ -2652,7 +2658,7 @@ msgstr "例) 営業部"
 #: View/Teams/edit_group_vision.ctp:50;104
 #: View/Teams/edit_team_vision.ctp:42;96 View/Users/register.ctp:37;47;81
 msgid "最大文字数(%s)を超えています。"
-msgstr ""
+msgstr "最大文字数(%s)を超えています。"
 
 #: View/Elements/modal_add_circle.ctp:68 View/Elements/modal_edit_circle.ctp:61
 msgid "Anyone can see the circle, its members and their posts."
@@ -2672,7 +2678,7 @@ msgstr "プライバシー"
 
 #: View/Elements/modal_add_circle.ctp:84
 msgid "You can't change this setting lator."
-msgstr ""
+msgstr "この設定は後から変更できません。"
 
 #: View/Elements/modal_add_circle.ctp:88 View/Elements/modal_edit_circle.ctp:78
 msgid "Circle Description"
@@ -2718,7 +2724,7 @@ msgstr "10MB以下"
 
 #: View/Elements/modal_add_members_by_csv.ctp:19
 msgid "Add new members"
-msgstr ""
+msgstr "新規メンバーを追加する"
 
 #: View/Elements/modal_add_members_by_csv.ctp:42;50
 msgid "Download template."
@@ -2742,7 +2748,7 @@ msgstr "編集したファイルをアップロードしてください。"
 
 #: View/Elements/modal_add_members_by_csv.ctp:64
 msgid "Choose a file"
-msgstr ""
+msgstr "ファイルを選択"
 
 #: View/Elements/modal_add_members_by_csv.ctp:65
 #: View/Elements/modal_edit_members_by_csv.ctp:63
@@ -2910,7 +2916,7 @@ msgstr "会話のメンバー (%s)"
 
 #: View/Elements/modal_public_circles.ctp:23
 msgid "サークル"
-msgstr ""
+msgstr "サークル"
 
 #: View/Elements/modal_public_circles.ctp:26
 msgid "Unjoined"
@@ -2978,19 +2984,19 @@ msgstr "%s メンバー"
 
 #: View/Elements/Email/goalous_web.ctp:7
 msgid "■Goalous(ゴーラス)"
-msgstr ""
+msgstr "Goalous"
 
 #: View/Elements/Email/goalous_web.ctp:12
 msgid "■お問い合わせ"
-msgstr ""
+msgstr "Contact"
 
 #: View/Elements/Email/goalous_web.ctp:17
 msgid "■運営会社"
-msgstr ""
+msgstr "Company"
 
 #: View/Elements/Email/goalous_web.ctp:19
 msgid "株式会社ISAO"
-msgstr ""
+msgstr "ISAO Corporation"
 
 #: View/Elements/Email/login_url.ctp:5
 msgid "◆Goalousログイン"
