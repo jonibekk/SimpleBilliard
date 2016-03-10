@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2016-03-09 23:49+0530\n"
-"PO-Revision-Date: 2016-03-10 05:02+0530\n"
+"POT-Creation-Date: 2016-03-10 14:56+0800\n"
+"PO-Revision-Date: 2016-03-10 14:56+0800\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -1225,7 +1225,7 @@ msgstr "トークンの期限が切れています。"
 msgid "%"
 msgstr "¥"
 
-#: Model/KeyResult.php:37 View/Pages/pricing.ctp:95;102
+#: Model/KeyResult.php:37 View/Pages/pricing.ctp:105
 msgid "¥"
 msgstr "$"
 
@@ -2039,7 +2039,7 @@ msgid "%1$s member"
 msgstr "%1$s人のメンバー"
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:16
-#: View/Elements/modal_add_circle.ctp:42;90
+#: View/Elements/gl_common_js.ctp:64 View/Elements/modal_add_circle.ctp:42;90
 #: View/Elements/modal_collabo.ctp:47;60;72
 #: View/Elements/modal_edit_circle.ctp:52;84
 #: View/Elements/Feed/common_form.ctp:141;158;298;463
@@ -2156,11 +2156,12 @@ msgstr "すべて表示"
 msgid "Action"
 msgstr "アクション"
 
-#: View/Elements/footer.ctp:20
+#: View/Elements/footer.ctp:20 View/Elements/header_home.ctp:49
 msgid "Blog"
-msgstr ""
+msgstr "ブログ"
 
-#: View/Elements/footer.ctp:23 View/Users/register.ctp:122
+#: View/Elements/footer.ctp:23 View/Elements/footer_not_logged_in.ctp:45
+#: View/Users/register.ctp:122
 msgid "Privacy Policy"
 msgstr "プライバシーポリシー"
 
@@ -2199,10 +2200,6 @@ msgstr ""
 #: View/Elements/footer_not_logged_in.ctp:42 View/Pages/contact.ctp:247
 msgid "利用規約"
 msgstr ""
-
-#: View/Elements/footer_not_logged_in.ctp:45
-msgid "Privacy Policy"
-msgstr "プライバシーポリシー"
 
 #: View/Elements/footer_not_logged_in.ctp:48
 msgid "特定商取引法に基づく表記"
@@ -2517,15 +2514,11 @@ msgstr "機能"
 msgid "Pricing"
 msgstr "料金"
 
-#: View/Elements/header_home.ctp:49
-msgid "Blog"
-msgstr "ブログ"
-
-#: View/Elements/header_home.ctp:57
+#: View/Elements/header_home.ctp:57 View/Users/login.ctp:58
 msgid "Login"
 msgstr "ログイン"
 
-#: View/Elements/header_home.ctp:63 View/Elements/Homepage/signup.ctp:26
+#: View/Elements/header_home.ctp:63
 msgid "Sign Up"
 msgstr "新規登録"
 
@@ -3692,6 +3685,10 @@ msgstr ""
 
 #: View/Elements/Homepage/signup.ctp:23 View/Pages/home.ctp:103
 msgid "2016年8月31日まで完全無料！今すぐお試しください。"
+msgstr ""
+
+#: View/Elements/Homepage/signup.ctp:26
+msgid "新規登録"
 msgstr ""
 
 #: View/Elements/Team/batch_setup.ctp:14 View/Teams/settings.ctp:22
@@ -5119,9 +5116,15 @@ msgstr ""
 msgid "Back"
 msgstr "戻る"
 
-#: View/Pages/contact_confirm.ctp:136
+#: View/Pages/contact_confirm.ctp:136 View/Users/password_reset_request.ctp:45
+#: View/Users/token_resend.ctp:45
+#, fuzzy
 msgid "Send"
-msgstr "送信する"
+msgstr ""
+"#-#-#-#-#  0catalog.po (PROJECT VERSION)  #-#-#-#-#\n"
+"送信する\n"
+"#-#-#-#-#  0catalog.po (PROJECT VERSION)  #-#-#-#-#\n"
+"送信"
 
 #: View/Pages/contact_confirm.ctp:149
 msgid "Sending"
@@ -5196,7 +5199,7 @@ msgid ""
 msgstr ""
 
 #: View/Pages/features.ctp:42
-msgid "機能 | Goalous (ゴーラス)"
+msgid "機能 | Goalous (ゴーラス))"
 msgstr ""
 
 #: View/Pages/features.ctp:78
@@ -5524,67 +5527,69 @@ msgid ""
 "す。料金・価格はこちら。"
 msgstr ""
 
-#: View/Pages/pricing.ctp:42
+#: View/Pages/pricing.ctp:42;78
 msgid "Pricing | Goalous"
 msgstr "料金・価格 | Goalous(ゴーラス)"
 
 #: View/Pages/pricing.ctp:87
-msgid "It's all free."
-msgstr "今だけ、有料プランも完全無料"
+msgid "It's all free"
+msgstr ""
 
-#: View/Pages/pricing.ctp:88
+#: View/Pages/pricing.ctp:89
 msgid "Released sale, It's all free until Augast 2016!"
-msgstr "リリース記念で2016年8月までPlusをご利用いただけます。フィードバックをお待ちしております。"
+msgstr ""
+"リリース記念で2016年8月までPlusをご利用いただけます。フィードバックをお待ちし"
+"ております。"
 
-#: View/Pages/pricing.ctp:90
+#: View/Pages/pricing.ctp:92
 msgid "Plus"
 msgstr "Plus"
 
-#: View/Pages/pricing.ctp:90
+#: View/Pages/pricing.ctp:92
 msgid "Campaign"
 msgstr "キャンペーン"
 
-#: View/Pages/pricing.ctp:97;104
+#: View/Pages/pricing.ctp:100;107
 msgid "/mon"
 msgstr "/月"
 
-#: View/Pages/pricing.ctp:101
+#: View/Pages/pricing.ctp:104
 msgid "Per User"
 msgstr "1ユーザーあたり"
 
-#: View/Pages/pricing.ctp:107
+#: View/Pages/pricing.ctp:110
 msgid "Unlimeted members a team"
 msgstr "1チームのアカウント無制限"
 
-#: View/Pages/pricing.ctp:108
+#: View/Pages/pricing.ctp:111
 msgid "20MB file upload"
 msgstr "20MB/ファイルのアップロード"
 
-#: View/Pages/pricing.ctp:109
+#: View/Pages/pricing.ctp:112
 msgid "Unlimited file share"
 msgstr "ストレージ無制限のファイル共有"
 
-#: View/Pages/pricing.ctp:110
+#: View/Pages/pricing.ctp:113
 msgid "Chat message"
 msgstr "チャットメッセージ"
 
-#: View/Pages/pricing.ctp:111
+#: View/Pages/pricing.ctp:114
 msgid "Insight Analytics"
 msgstr "インサイト分析"
 
-#: View/Pages/pricing.ctp:112
+#: View/Pages/pricing.ctp:115
 msgid "Team Controll"
 msgstr "チーム管理機能"
 
-#: View/Pages/pricing.ctp:113
+#: View/Pages/pricing.ctp:116
 msgid "Online user support"
 msgstr "オンラインでのユーザーサポート"
 
-#: View/Pages/pricing.ctp:117
+#: View/Pages/pricing.ctp:120
 msgid "Start now"
 msgstr "今すぐ始める"
 
-#: View/Pages/pricing.ctp:120
+#: View/Pages/pricing.ctp:123
 msgid "Feel free to ask us"
 msgstr "無料相談受付中"
 
@@ -5611,8 +5616,8 @@ msgid ""
 msgstr ""
 
 #: View/Pages/terms.ctp:43
-msgid "Terms of service | Goalous"
-msgstr "Goalous利用規約 | Goalous(ゴーラス)"
+msgid "Terms of service | Goalous(ゴーラス)"
+msgstr ""
 
 #: View/Pages/terms.ctp:79
 msgid "Terms of service | Goalous"
@@ -5699,10 +5704,6 @@ msgstr "Goalousにログイン！"
 msgid "Please enable cookie."
 msgstr "Cookieを有効にしてください"
 
-#: View/Users/login.ctp:58
-msgid "Login"
-msgstr "ログイン"
-
 #: View/Users/login.ctp:71
 msgid "Forget your password?"
 msgstr "パスワードを忘れた場合はこちら"
@@ -5716,6 +5717,7 @@ msgid "Password Reset"
 msgstr "パスワードの再設定"
 
 #: View/Users/password_reset.ctp:33 View/Users/register.ctp:95
+#: View/Users/registration_with_set_password.ctp:47
 msgid "Create a password"
 msgstr "パスワードを作成"
 
@@ -5730,10 +5732,6 @@ msgstr "パスワードを設定"
 #: View/Users/password_reset_request.ctp:33
 msgid "We'll send the URL for password reset."
 msgstr "パスワード再設定用のURLを送信いたします。"
-
-#: View/Users/password_reset_request.ctp:45 View/Users/token_resend.ctp:45
-msgid "Send"
-msgstr "送信"
 
 #: View/Users/register.ctp:13
 msgid "Create a new account"
@@ -5770,10 +5768,6 @@ msgstr "Goalousへのユーザ登録を行います。"
 #: View/Users/registration_with_set_password.ctp:35
 msgid "Enter your email address and create your password."
 msgstr "招待を受けたメールアドレスの入力とパスワードの登録をお願いします。"
-
-#: View/Users/registration_with_set_password.ctp:47
-msgid "Create a password"
-msgstr "パスワードを作成"
 
 #: View/Users/registration_with_set_password.ctp:72
 msgid "Registration"
@@ -6066,6 +6060,9 @@ msgstr "passwordCheck"
 #: Model/User.php:validation for field password_confirm
 msgid "passwordSameCheck"
 msgstr "passwordSameCheck"
+
+#~ msgid "It's all free."
+#~ msgstr "今だけ、有料プランも完全無料"
 
 #~ msgid "%sが正しくありません。"
 #~ msgstr "%s is not correct."
