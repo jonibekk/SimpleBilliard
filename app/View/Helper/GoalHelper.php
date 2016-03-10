@@ -90,8 +90,18 @@ class GoalHelper extends AppHelper
         return "( " . implode(", ", $items) . " )";
     }
 
-    function containMyCoachingUser($goal, $my_coaching_users) {
+    /**
+     * @param $goal
+     * @param $my_coaching_users
+     *
+     * @return bool
+     */
+    function containMyCoachingUserInCollabos($goal, $my_coaching_users) {
         if(!$my_coaching_users || !is_array($my_coaching_users)) {
+            return false;
+        }
+
+        if(!isset($goal['Collaborator'])) {
             return false;
         }
 

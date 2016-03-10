@@ -106,7 +106,7 @@
                                            href="#"
                                            data-class="toggle-follow"
                                            goal-id="<?= $goal['Goal']['id'] ?>"
-                                            <?php if ($follow_opt['disabled'] || $this->Goal->containMyCoachingUser($goal, viaIsSet($my_coaching_users))): ?>
+                                            <?php if ($follow_opt['disabled'] || $this->Goal->containMyCoachingUserInCollabos($goal, viaIsSet($my_coaching_users))): ?>
                                                 disabled="disabled"
                                             <?php endif ?>
                                             >
