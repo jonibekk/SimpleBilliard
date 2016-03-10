@@ -450,12 +450,14 @@ class NotifySetting extends AppModel
                         }
                     }
 
-                    $circle_name = $circle['Circle']['name'];
-                    $circle_count = count($options['share_circle_list']);
-                    if ($circle_count >= 2) {
-                        $circle_name .= __('Other %d circles', $circle_count - 1);
+                    if(isset($circle['Circle']['name'])){
+                        $circle_name = $circle['Circle']['name'];
+                        $circle_count = count($options['share_circle_list']);
+                        if ($circle_count >= 2) {
+                            $circle_name .= __('Other %d circles', $circle_count - 1);
+                        }
+                        $targets[] = $circle_name;
                     }
-                    $targets[] = $circle_name;
                 }
 
                 $title = __(
