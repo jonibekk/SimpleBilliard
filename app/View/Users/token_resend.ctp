@@ -13,7 +13,7 @@
 <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default">
-            <div class="panel-heading"><?= __d('app', "メールアドレスの再認証") ?></div>
+            <div class="panel-heading"><?= __("Re-authentication of email address") ?></div>
             <?=
             $this->Form->create('User', [
                 'inputDefaults' => [
@@ -28,21 +28,21 @@
                 'novalidate'    => true
             ]); ?>
             <div class="panel-body">
-                <p><?= __d('app', "Goalousに登録しているメールアドレスを入力して送信してください。") ?></p>
+                <p><?= __("Enter your email address.") ?></p>
 
-                <p><?= __d('app', "Goalousからメールアドレス認証用のURLを送信いたします。") ?></p>
+                <p><?= __("We'll send the URL of the email address authentication.") ?></p>
                 <?=
                 $this->Form->input('email', [
-                    'label'                        => __d('app', "メールアドレス"),
-                    'data-bv-emailaddress-message' => __d('validate', "メールアドレスが正しくありません。"),
-                    "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
+                    'label'                        => __("Email Address"),
+                    'data-bv-emailaddress-message' => __("Email address is incorrect."),
+                    "data-bv-notempty-message"     => __("Input is required."),
                     'required'                     => true
                 ]) ?>
             </div>
             <div class="panel-footer">
                 <div class="form-group">
                     <div class="col-sm-9 col-sm-offset-3">
-                        <?= $this->Form->submit(__d('app', "送信"), ['class' => 'btn btn-primary']) ?>
+                        <?= $this->Form->submit(__("Send"), ['class' => 'btn btn-primary']) ?>
                     </div>
                 </div>
             </div>

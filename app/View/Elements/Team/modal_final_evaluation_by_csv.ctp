@@ -19,7 +19,7 @@
             <div class="modal-header">
                 <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
                     <span class="close-icon">&times;</span></button>
-                <h4 class="modal-title"><?= __d('app', "最終評価を行う (期間：%s - %s)",
+                <h4 class="modal-title"><?= __("Final evaluation (%s - %s)",
                                                 $this->TimeEx->date($start),
                                                 $this->TimeEx->date($end)) ?></h4>
             </div>
@@ -44,29 +44,29 @@
                     'class'         => 'ajax-csv-upload',
                 ]); ?>
                 <div class="form-group">
-                    <label class=""><?= __d('app', "1.評価データをダウンロード") ?></label>
+                    <label class="">1. <?= __("Download evaluation data") ?></label>
 
-                    <p><?= __d('app', "CSVフォーマットの評価データをダウンロードしてください。テンプレートのヘッダーは変更しないでください。") ?></p>
+                    <p><?= __("Download and edit csv without any changes in header.") ?></p>
 
                     <div class="">
                         <?=
-                        $this->Html->link(__d('app', "評価データをダウンロード"),
+                        $this->Html->link(__("Download evaluation data"),
                                           ['action' => 'download_final_evaluations_csv', 'evaluate_term_id' => $evaluate_term_id],
                                           ['class' => 'btn btn-default', 'div' => false])
                         ?>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class=""><?= __d('app', '2.ファイルのアップロード') ?></label>
+                    <label class="">2. <?= __('Upload the file.') ?></label>
 
-                    <p><?= __d('app', "変更した評価データのファイルをアップロードしてください。") ?></p>
+                    <p><?= __("Upload edited evaluation data.") ?></p>
 
                     <div class="">
                         <div class="fileinput fileinput-new fileinput-enabled-submit" data-provides="fileinput"
                              submit-id="FinalEvaluation_<?= $evaluate_term_id ?>_Submit">
                             <span class="btn btn-default btn-file">
-                                <span class="fileinput-new"><?= __d('app', "ファイルを選択") ?></span>
-                                <span class="fileinput-exists"><?= __d('app', "別のファイルに変更する") ?></span>
+                                <span class="fileinput-new"><?= __("Choose a file.") ?></span>
+                                <span class="fileinput-exists"><?= __("Change to another file.") ?></span>
                                 <?=
                                 $this->Form->input('csv_file',
                                                    ['type'         => 'file',
@@ -99,10 +99,9 @@
                             &nbsp;<i class="fa fa-refresh fa-spin"></i>
                         </div>
                         <button type="button" class="btn btn-link design-cancel bd-radius_4px"
-                                data-dismiss="modal"><?= __d('app',
-                                                             "キャンセル") ?></button>
+                                data-dismiss="modal"><?= __("Cancel") ?></button>
                         <?=
-                        $this->Form->submit(__d('app', "更新する"),
+                        $this->Form->submit(__("Upload"),
                                             ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled', 'id' => "FinalEvaluation_{$evaluate_term_id}_Submit"]) ?>
 
                     </div>

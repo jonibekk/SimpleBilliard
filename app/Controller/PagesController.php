@@ -153,8 +153,8 @@ class PagesController extends AppController
     public function _getPageLanguageList()
     {
         $lang_list = [
-            'ja' => __d('lp', "Japanese"),
-            'en' => __d('lp', "English"),
+            'ja' => __("Japanese"),
+            'en' => __("English"),
         ];
         return $lang_list;
     }
@@ -182,7 +182,7 @@ class PagesController extends AppController
         $data = Hash::extract($this->request->data, 'Email');
         if ($Email->validates()) {
             if (empty($data['sales_people'])) {
-                $data['sales_people_text'] = __d('lp', '指定なし');
+                $data['sales_people_text'] = __('Anyone');
             }
             else {
                 $data['sales_people_text'] = implode(', ', $data['sales_people']);
@@ -199,12 +199,12 @@ class PagesController extends AppController
     private function _getContactTypeOption()
     {
         return [
-            null => __d('lp', '選択してください'),
-            1    => __d('lp', '詳しく知りたい'),
-            2    => __d('lp', '資料がほしい'),
-            3    => __d('lp', '協業したい'),
-            4    => __d('lp', '取材したい'),
-            5    => __d('lp', 'その他'),
+            null => __('Please select'),
+            1    => __('Get more information'),
+            2    => __('Get documentation'),
+            3    => __('Collaborate with ISAO'),
+            4    => __('Give us an interview'),
+            5    => __('Others'),
         ];
     }
 
@@ -213,7 +213,7 @@ class PagesController extends AppController
         $this->layout = LAYOUT_HOMEPAGE;
         $data = $this->Session->read('contact_form_data');
         if (empty($data)) {
-            $this->Pnotify->outError(__d('validate', '問題が発生したため、処理が完了しませんでした。'));
+            $this->Pnotify->outError(__('Ooops. Some problems occured.'));
             return $this->redirect($this->referer());
         }
         $this->set(compact('data'));
@@ -224,7 +224,7 @@ class PagesController extends AppController
     {
         $data = $this->Session->read('contact_form_data');
         if (empty($data)) {
-            $this->Pnotify->outError(__d('validate', '問題が発生したため、処理が完了しませんでした。'));
+            $this->Pnotify->outError(__('Ooops. Some problems occured.'));
             return $this->redirect($this->referer());
         }
         $this->Session->delete('contact_form_data');
@@ -245,7 +245,7 @@ class PagesController extends AppController
             ->emailFormat('text')
             ->to([$data['email'] => $data['email']])
             ->bcc(['contact@goalous.com' => 'contact@goalous.com'])
-            ->subject(__d('email', '【Goalous】お問い合わせありがとうございました'))
+            ->subject(__('Goalous - Thanks for your contact.'))
             ->send();
         $lang = $this->_getLangFromParam();
         return $this->redirect(['controller' => 'pages', 'action' => 'display', 'pagename' => 'contact_thanks', 'lang' => $lang,]);

@@ -126,10 +126,10 @@ class GoalApprovalController extends AppController
     private function _setMsg()
     {
         $this->approval_msg_list = [
-            self::WAIT_MY_GOAL_MSG             => __d('app', "認定待ち"),
-            self::MODIFY_MEMBER_GOAL_MSG       => __d('app', "修正待ち"),
-            self::APPROVAL_MEMBER_GOAL_MSG     => __d('app', "評価対象"),
-            self::NOT_APPROVAL_MEMBER_GOAL_MSG => __d('app', "評価対象外"),
+            self::WAIT_MY_GOAL_MSG             => __("Waiting for approval"),
+            self::APPROVAL_MEMBER_GOAL_MSG     => __("In Evaluation"),
+            self::NOT_APPROVAL_MEMBER_GOAL_MSG => __("Out of Evaluation"),
+            self::MODIFY_MEMBER_GOAL_MSG       => __("Waiting for modified"),
         ];
     }
 
@@ -285,22 +285,22 @@ class GoalApprovalController extends AppController
         $res = false;
         if (isset($this->request->data['comment_btn']) === true) {
             $res = $this->_comment($data);
-            $this->Pnotify->outSuccess(__d('app', "コメントを送信しました。"));
+            $this->Pnotify->outSuccess(__("Commented"));
         }
         elseif (isset($this->request->data['wait_btn']) === true) {
             $res = $this->_wait($data);
-            $this->Pnotify->outSuccess(__d('app', "処理済みに移動しました。"));
+            $this->Pnotify->outSuccess(__("Move to Done."));
         }
         elseif (isset($this->request->data['approval_btn']) === true) {
             $res = $this->_approval($data);
-            $this->Pnotify->outSuccess(__d('app', "処理済みに移動しました。"));
+            $this->Pnotify->outSuccess(__("Move to Done."));
         }
         elseif (isset($this->request->data['modify_btn']) === true) {
             $res = $this->_modify($data);
-            $this->Pnotify->outSuccess(__d('app', "修正依頼を送信しました。"));
+            $this->Pnotify->outSuccess(__("Sent amend request."));
         }
         if (!$res) {
-            $this->Pnotify->outError(__d('app', "認定の更新に失敗しました。"));
+            $this->Pnotify->outError(__("Failed to update Approvement."));
         }
         return $res;
     }

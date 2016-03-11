@@ -15,7 +15,7 @@
             <div class="modal-header">
                 <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
                     <span class="close-icon">&times;</span></button>
-                <h4 class="modal-title"><?= __d('app', "パスワードの変更") ?></h4>
+                <h4 class="modal-title"><?= __("Change password") ?></h4>
             </div>
             <?=
             $this->Form->create('User', [
@@ -35,22 +35,22 @@
             <div class="modal-body">
                 <?=
                 $this->Form->input('old_password', [
-                    'label'     => __d('app', "現在のパスワード"),
+                    'label'     => __("Current password"),
                     'type'      => 'password',
                     'required'  => true,
                     'maxlength' => 50,
                 ]) ?>
                 <?=
                 $this->Form->input('password', [
-                    'label'       => __d('app', "新しいパスワード"),
-                    'placeholder' => __d('app', '8文字以上'),
+                    'label'       => __("New password"),
+                    'placeholder' => __('Use at least 8 characters and use a mix of capital characters, small characters and numbers. Symbols are not allowed.'),
                     'type'        => 'password',
                     'required'    => true,
                     'maxlength'   => 50,
                 ]) ?>
                 <?=
                 $this->Form->input('password_confirm', [
-                    'label'     => __d('app', "パスワードを再入力"),
+                    'label'     => __("Confirm your password"),
                     'type'      => 'password',
                     'required'  => true,
                     'maxlength' => 50,
@@ -58,10 +58,10 @@
                 <?= $this->Form->hidden('id', ['value' => $this->Session->read('Auth.User.id')]) ?>
             </div>
             <div class="modal-footer modal_pannel-footer">
-                <?= $this->Form->submit(__d('app', "変更を保存"),
+                <?= $this->Form->submit(__("Save changes"),
                                         ['class' => 'btn btn-primary pull-right', 'disabled' => 'disabled']) ?>
                 <button type="button" class="btn btn-link design-cancel mr_8px bd-radius_4px" data-dismiss="modal">
-                    <?= __d('app', "キャンセル") ?>
+                    <?= __("Cancel") ?>
                 </button>
             </div>
             <?= $this->Form->end() ?>
@@ -82,7 +82,7 @@
                 "data[User][old_password]": {
                     validators: {
                         notEmpty: {
-                            message: "<?=__d('validate', "入力必須項目です。")?>"
+                            message: "<?=__("Input is required.")?>"
                         }
                     }
                 },
@@ -90,10 +90,10 @@
                     validators: {
                         stringLength: {
                             min: 8,
-                            message: "<?=__d('validate', '%1$d文字以上で%2$d文字以下で入力してください。',8,50)?>"
+                            message: "<?=__('%1$d文字以上で%2$d文字以下で入力してください。',8,50)?>"
                         },
                         notEmpty: {
-                            message: "<?=__d('validate', "入力必須項目です。")?>"
+                            message: "<?=__("Input is required.")?>"
                         },
                         regexp: {
                             regexp: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{0,}$/,
@@ -105,10 +105,10 @@
                     validators: {
                         identical: {
                             field: "data[User][password]",
-                            message: "<?=__d('validate', "パスワードが一致しません。")?>"
+                            message: "<?=__("Both of passwords are not same.")?>"
                         },
                         notEmpty: {
-                            message: "<?=__d('validate', "入力必須項目です。")?>"
+                            message: "<?=__("Input is required.")?>"
                         }
                     }
                 }

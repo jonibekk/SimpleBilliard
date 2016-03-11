@@ -32,9 +32,9 @@ class Goal extends AppModel
      */
     private function _setStatusName()
     {
-        self::$STATUS[self::STATUS_DOING] = __d('app', "進行中");
-        self::$STATUS[self::STATUS_PAUSE] = __d('app', "中断");
-        self::$STATUS[self::STATUS_COMPLETE] = __d('app', "完了");
+        self::$STATUS[self::STATUS_DOING] = __("In progress");
+        self::$STATUS[self::STATUS_PAUSE] = __("Interruption");
+        self::$STATUS[self::STATUS_COMPLETE] = __("Completed");
     }
 
     /**
@@ -42,10 +42,10 @@ class Goal extends AppModel
      */
     private function _setPriorityName()
     {
-        $this->priority_list[0] = __d('app', "0 (認定対象外)");
-        $this->priority_list[1] = __d('app', "1 (とても低い)");
-        $this->priority_list[3] = __d('app', "3 (デフォルト)");
-        $this->priority_list[5] = __d('app', "5 (とても高い)");
+        $this->priority_list[0] = __("0 (Certified exempt)");
+        $this->priority_list[1] = __("1 (Very low)");
+        $this->priority_list[3] = __("3 (Default)");
+        $this->priority_list[5] = __("5 (Very high)");
     }
 
     public $priority_list = [
@@ -66,21 +66,21 @@ class Goal extends AppModel
     {
         $res = [
             'term'     => [
-                'present'  => __d('app', "今期"),
-                'next'     => __d('app', "来期"),
-                'previous' => __d('app', "前期"),
-                'before'   => __d('app', "もっと前")],
+                'present'  => __("Current Term"),
+                'next'     => __("Next Term"),
+                'previous' => __("Previous Term"),
+                'before'   => __("More Previous")],
             'progress' => [
-                'all'        => __d('app', "すべて"),
-                'complete'   => __d('app', "達成"),
-                'incomplete' => __d('app', "未達成")],
+                'all'        => __("All"),
+                'complete'   => __("Complete"),
+                'incomplete' => __("Incomplete")],
             'order'    => [
-                'new'      => __d('app', "新着順"),
-                'action'   => __d('app', "アクションが多い順"),
-                'result'   => __d('app', "出した成果が多い順"),
-                'follow'   => __d('app', "フォロワーが多い順"),
-                'collabo'  => __d('app', "コラボが多い順"),
-                'progress' => __d('app', "進捗率が高い順")]
+                'new'      => __("Creation Date"),
+                'action'   => __("Actions number"),
+                'result'   => __("Key results number"),
+                'follow'   => __("Followers number"),
+                'collabo'  => __("Collaborators number"),
+                'progress' => __("Progress rate")]
         ];
         //カテゴリ取得
         $options = [
@@ -91,9 +91,9 @@ class Goal extends AppModel
                              'name'],
         ];
         $goal_categories = $this->GoalCategory->find('all', $options);
-        $res['category'] = ['all' => __d('app', 'すべて')];
+        $res['category'] = ['all' => __('All')];
         foreach ($goal_categories as $val) {
-            $res['category'] += [$val['GoalCategory']['id'] => __d('app', $val['GoalCategory']['name'])];
+            $res['category'] += [$val['GoalCategory']['id'] => __($val['GoalCategory']['name'])];
         }
         return $res;
     }
@@ -367,10 +367,10 @@ class Goal extends AppModel
     {
         $this->id = $id;
         if (!$this->exists()) {
-            throw new RuntimeException(__d('app', "このゴールは存在しません。"));
+            throw new RuntimeException(__("This goal doesn't exist."));
         }
         if (!$this->isOwner($this->my_uid, $id)) {
-            throw new RuntimeException(__d('app', "このゴールの編集の権限がありません。"));
+            throw new RuntimeException(__("You don't have permission to edit this goal."));
         }
         return true;
     }
@@ -384,7 +384,7 @@ class Goal extends AppModel
         ];
         $res = $this->Evaluation->find('first', $options);
         if (!empty($res)) {
-            throw new RuntimeException(__d('app', "このゴールは評価中のため、変更できません。"));
+            throw new RuntimeException(__("You can't change the goal in the evaluation."));
         }
         return true;
     }
@@ -925,27 +925,25 @@ class Goal extends AppModel
                     'fields'     => ['MyFollow.id'],
                     'conditions' => ['MyFollow.user_id' => $this->my_uid]
                 ],
+                'Leader'            => [
+                    'fields'     => ['Leader.id', 'Leader.user_id', 'Leader.valued_flg'],
+                    'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
+                ],
+                'Collaborator'      => [
+                    'fields'     => ['Collaborator.id', 'Collaborator.user_id', 'Collaborator.valued_flg'],
+                    'conditions' => ['Collaborator.user_id' => $user_id]
+                ],
             ]
         ];
         $goals = $this->find('all', $options);
         $goals = Hash::combine($goals, '{n}.Goal.id', '{n}');
-        //再度ゴールIDを抽出(フォロー中、コーチング、コラボのゴールは期間の抽出ができない為、期間をキーにして再度抽出する必要がある)
-        $goal_ids = Hash::extract($goals, '{n}.Goal.id');
-        // getByGoalIdでは自分のゴールのみ取得するので、フォロー中のゴールのCollaborator情報はEmptyになる。
-        // そのためsetFollowGoalApprovalFlagメソッドにてCollaborator情報を取得し、認定ステータスを設定する
-        $approval_statuses = $this->Collaborator->getOwnersStatus($goal_ids);
-        //のちにゴールデータとマージしやすいように配列のキーをgoal_idに差し替える
-        $approval_statuses = Hash::combine($approval_statuses, '{n}.Collaborator.goal_id', '{n}');
-        //認定ステータスのデータをマージ
-        $goals = Hash::merge($goals, $approval_statuses);
+
         //進捗を計算
         foreach ($goals as $key => $goal) {
             $goals[$key]['Goal']['progress'] = $this->getProgress($goal);
         }
 
-        $res = $this->setFollowGoalApprovalFlag($goals);
-
-        return $res;
+        return $goals;
     }
 
     function getMyFollowedGoals($limit = null, $page = 1, $type = 'all', $user_id = null, $start_date = null, $end_date = null)
@@ -967,19 +965,8 @@ class Goal extends AppModel
             return $this->getByGoalId($goal_ids, $limit, $page, $type, $start_date, $end_date);
         }
         $goals = $this->getByGoalId($goal_ids, $limit, $page, $type, $start_date, $end_date);
-        //のちにコラボデータとマージしやすいように配列のキーをgoal_idに差し替える
-        $goals = Hash::combine($goals, '{n}.Goal.id', '{n}');
-        //再度ゴールIDを抽出(フォロー中、コーチング、コラボのゴールは期間の抽出ができない為、期間をキーにして再度抽出する必要がある)
-        $goal_ids = Hash::extract($goals, '{n}.Goal.id');
-        // getByGoalIdでは自分のゴールのみ取得するので、フォロー中のゴールのCollaborator情報はEmptyになる。
-        // そのためsetFollowGoalApprovalFlagメソッドにてCollaborator情報を取得し、認定ステータスを設定する
-        $approval_statuses = $this->Collaborator->getOwnersStatus($goal_ids);
-        //のちにゴールデータとマージしやすいように配列のキーをgoal_idに差し替える
-        $approval_statuses = Hash::combine($approval_statuses, '{n}.Collaborator.goal_id', '{n}');
-        //認定ステータスのデータをマージ
-        $goals = Hash::merge($goals, $approval_statuses);
-        $res = $this->setFollowGoalApprovalFlag($goals);
-        $res = $this->sortModified($res);
+
+        $res = $this->sortModified($goals);
         $res = $this->sortEndDate($res);
 
         return $res;
@@ -1100,6 +1087,10 @@ class Goal extends AppModel
                     'conditions' => [
                         'MyCollabo.user_id' => $this->my_uid
                     ]
+                ],
+                'Leader'              => [
+                    'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
+                    'fields'     => ['Leader.id', 'Leader.user_id', 'Leader.valued_flg'],
                 ],
             ]
         ];
@@ -1535,7 +1526,7 @@ class Goal extends AppModel
     {
         $goal = $this->findById($goal_id);
         if (empty($goal)) {
-            throw new RuntimeException(__d('app', "ゴールが存在しません。"));
+            throw new RuntimeException(__("The goal doesn't exist."));
         }
         $this->id = $goal_id;
         $this->saveField('current_value', $goal['Goal']['target_value']);
@@ -1548,7 +1539,7 @@ class Goal extends AppModel
     {
         $goal = $this->findById($goal_id);
         if (empty($goal)) {
-            throw new RuntimeException(__d('app', "ゴールが存在しません。"));
+            throw new RuntimeException(__("The goal doesn't exist."));
         }
         $goal['Goal']['completed'] = null;
         unset($goal['Goal']['modified']);
@@ -1691,7 +1682,7 @@ class Goal extends AppModel
         if (!$separate_term) {
             $res = $this->find('list', $options);
             if ($with_all_opt) {
-                return [null => __d('app', 'すべて')] + $res;
+                return [null => __('All')] + $res;
             }
             return $res;
         }
@@ -1703,7 +1694,7 @@ class Goal extends AppModel
         $before_term_opt['conditions']['end_date <='] = $start_date;
         $before_goals = $this->find('list', $before_term_opt);
         $res = [];
-        $res += $with_all_opt ? [null => __d('app', 'すべて')] : null;
+        $res += $with_all_opt ? [null => __('All')] : null;
         $res += ['disable_value1' => '----------------------------------------------------------------------------------------'];
         $res += $current_goals;
         $res += ['disable_value2' => '----------------------------------------------------------------------------------------'];

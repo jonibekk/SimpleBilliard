@@ -27,7 +27,7 @@ Page毎に要素が変わるもの
 $meta_contact_thanks = [
     [
         "name" => "description",
-        "content" => __d('lp','Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。お問い合わせありがとうございました。'),
+        "content" => __('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。お問い合わせありがとうございました。'),
     ],
     [
         "name" => "keywords",
@@ -39,11 +39,11 @@ $meta_contact_thanks = [
     ],
     [
         "property" => "og:title",
-        "content" => __d('lp', 'お問い合わせ完了 | Goalous(ゴーラス)'),
+        "content" => __('お問い合わせ完了 | Goalous(ゴーラス)'),
     ],
     [
         "property" => "og:description",
-        "content" =>__d('lp', 'Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。お問い合わせありがとうございました。'),
+        "content" =>__('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。お問い合わせありがとうございました。'),
     ],
     [
         "property" => "og:url",
@@ -55,7 +55,7 @@ $meta_contact_thanks = [
     ],
     [
         "property" => "og:site_name",
-        "content" => __d('lp', 'Goalous (ゴーラス) │ゴール達成への最強にオープンな社内SNS'),
+        "content" => __('Goalous │ Enterprise SNS the most ever open for Goal'),
     ],
     [
         "property" => "fb:app_id",
@@ -75,7 +75,7 @@ for($i = 0; $i < $num_ogp; $i++){
     echo $this->Html->meta($meta_contact_thanks[$i]);
 }
 ?>
-<title><?= __d('lp', 'お問い合わせ完了 | Goalous (ゴーラス)') ?></title>
+<title><?= __('お問い合わせ完了 | Goalous (ゴーラス)') ?></title>
 <link rel="alternate" hreflang="ja" href="<?= $this->Html->url('/ja/contact_thanks') ?>"/>
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/contact_thanks') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/contact_thanks') ?>"/>
@@ -84,9 +84,9 @@ for($i = 0; $i < $num_ogp; $i++){
 <!-- ******CONTACT MAIN****** -->
 <section id="contact-main" class="contact-main section">
     <div class="container text-center">
-        <h2 class="title"><?= __d('lp', 'お問い合わせありがとうございました') ?></h2>
-        <p class="intro"><?= __d('lp', '確認後、弊社担当者よりご連絡いたします。') ?></p>
-        <p class="intro"><?= __d('lp', 'お時間がございましたら、Goalous運営会社・株式会社ISAOのブログやSNSをご覧ください。') ?></p>
+        <h2 class="title"><?= __('Thank you for contacting us.') ?></h2>
+        <p class="intro"><?= __('Support member will reply to you.') ?></p>
+        <p class="intro"><?= __('Please check our Blog and SNS, if you get interested.') ?></p>
 
         <div class="row">
             <div class="item col-md-4 col-sm-12 col-xs-12">
@@ -95,9 +95,9 @@ for($i = 0; $i < $num_ogp; $i++){
                         <i class="fa fa-rss"></i>
                     </div>
                     <div class="details">
-                        <h4><?= __d('lp', 'IsaB') ?></h4>
-                        <p><?= __d('lp', '億人の”シゴト”を熱くする！株式会社ISAOのブログ') ?></p>
-                        <p><a href="http://blog.isao.co.jp/" target="_blank"><?= __d('lp', 'http://blog.isao.co.jp/') ?></a></p>
+                        <h4><?= __('IsaB') ?></h4>
+                        <p><?= __('Make your job joyful! ISAO blog') ?></p>
+                        <p><a href="http://blog.isao.co.jp/" target="_blank"><?= __('http://blog.isao.co.jp/') ?></a></p>
                     </div><!--details-->
                 </div><!--//item-inner-->
             </div><!--//item-->
@@ -107,9 +107,9 @@ for($i = 0; $i < $num_ogp; $i++){
                         <i class="fa fa-facebook"></i>
                     </div>
                     <div class="details">
-                        <h4><?= __d('lp', 'facebookページ') ?></h4>
-                        <p><?= __d('lp', 'Like us！') ?></p>
-                        <p><a href="https://www.facebook.com/isao.jp" target="_blank"><?= __d('lp', 'isao.jp') ?></a></p>
+                        <h4><?= __('facebook page') ?></h4>
+                        <p><?= __('Like us!') ?></p>
+                        <p><a href="https://www.facebook.com/isao.jp" target="_blank"><?= __('isao.jp') ?></a></p>
                     </div><!--details-->
                 </div><!--//item-inner-->
             </div><!--//item-->
@@ -119,9 +119,9 @@ for($i = 0; $i < $num_ogp; $i++){
                         <i class="fa fa-twitter"></i>
                     </div>
                     <div class="details">
-                        <h4><?= __d('lp', 'Twitter') ?></h4>
-                        <p><?= __d('lp', 'Follow now！') ?></p>
-                        <p><a href="https://twitter.com/ISAOcorp" target="_blank"><?= __d('lp', '@ISAOcorp') ?></a></p>
+                        <h4><?= __('Twitter') ?></h4>
+                        <p><?= __('Follow now!') ?></p>
+                        <p><a href="https://twitter.com/ISAOcorp" target="_blank"><?= __('@ISAOcorp') ?></a></p>
                     </div><!--details-->
                 </div><!--//item-inner-->
             </div><!--//item-->

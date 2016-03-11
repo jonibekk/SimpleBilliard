@@ -128,7 +128,7 @@ class EvaluateTerm extends AppModel
         ];
         $res = $this->find('first', $options);
         if (empty($res)) {
-            throw new RuntimeException(__d('app', "この期間は凍結できません。"));
+            throw new RuntimeException(__("This term can not be frozen."));
         }
 
         $isFrozen = $this->checkFrozenEvaluateTerm($id);
@@ -514,13 +514,13 @@ class EvaluateTerm extends AppModel
         $previous = $this->getPreviousTermData();
         $next = $this->getNextTermData();
         if ($start_date >= $current['start_date'] && $end_date <= $current['end_date']) {
-            return __d('app', '今期');
+            return __('Current Term');
         }
         elseif ($start_date >= $previous['start_date'] && $end_date <= $previous['end_date']) {
-            return __d('app', '前期');
+            return __('Previous Term');
         }
         elseif ($start_date >= $next['start_date'] && $end_date <= $next['end_date']) {
-            return __d('app', '来期');
+            return __('Next Term');
         }
 
         return date('Y/m/d', $start_date + $this->me['timezone'] * 3600) . ' - ' .

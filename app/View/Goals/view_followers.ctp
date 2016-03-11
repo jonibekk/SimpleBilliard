@@ -17,7 +17,7 @@
             <div class="goal-detail-follower-cards row borderBottom" id="GoalPageFollowerContainer">
                 <?= $this->element('Goal/followers') ?>
                 <?php if (!$followers): ?>
-                    <?= __d('app', 'フォロワーはいません。') ?>
+                    <?= __('No one is following.') ?>
                 <? endif ?>
             </div>
         </div>
@@ -28,7 +28,7 @@
                list-container="#GoalPageFollowerContainer"
                goal-id="<?= h($goal['Goal']['id']) ?>"
                 >
-                <?= __d('app', 'さらに読み込む') ?></a>
+                <?= __('View more') ?></a>
         </div>
     </div>
 </div>
