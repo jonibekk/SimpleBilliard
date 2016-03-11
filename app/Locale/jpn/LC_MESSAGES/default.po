@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2016-03-11 19:24+0800\n"
-"PO-Revision-Date: 2016-03-11 19:24+0800\n"
+"POT-Creation-Date: 2016-03-11 19:43+0800\n"
+"PO-Revision-Date: 2016-03-11 19:43+0800\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -3671,8 +3671,13 @@ msgid "Could we ask you to support us?"
 msgstr "使い方がわからない場合、サポートはありますか？"
 
 #: View/Elements/Homepage/faq.ctp:55
-msgid "After logged in, you can get contact with us by support tool. We can help you as soon as possible."
-msgstr "2016年8月31日までの無料キャンペーン中にご登録いただいたお客様は、ログイン後に利用できるサポートツールでお問い合わせください。できる限り早い対応をいたします。"
+msgid ""
+"After logged in, you can get contact with us by support tool. We can help "
+"you as soon as possible."
+msgstr ""
+"2016年8月31日までの無料キャンペーン中にご登録いただいたお客様は、ログイン後に"
+"利用できるサポートツールでお問い合わせください。できる限り早い対応をいたしま"
+"す。"
 
 #: View/Elements/Homepage/faq.ctp:58
 msgid "Which company offer Goalous?"
@@ -5284,8 +5289,13 @@ msgid "Messagings"
 msgstr ""
 
 #: View/Pages/features.ctp:163
-msgid "You can communicate with your team members by Web and Mobile app. No more need to use Email."
-msgstr "アプリでもWebでも、メッセージでコミュニケーション。社内限定だから、安心してやり取りできます。ファイルの添付やグループチャットできるから、もうEメールはいりません。"
+msgid ""
+"You can communicate with your team members by Web and Mobile app. No more "
+"need to use Email."
+msgstr ""
+"アプリでもWebでも、メッセージでコミュニケーション。社内限定だから、安心してや"
+"り取りできます。ファイルの添付やグループチャットできるから、もうEメールはいり"
+"ません。"
 
 #: View/Pages/features.ctp:167
 msgid "You can use messanger in Goalous."
@@ -5312,9 +5322,11 @@ msgid "Insight"
 msgstr "インサイト"
 
 #: View/Pages/features.ctp:197
-msgid ""
-"Is it really effective? Just check insight and ranking in Goalous!"
-msgstr "社内SNSを導入している企業でよく言われるのが「導入して効果があったのかわからない」という声。インサイトやランキングで、エンゲージメントの増加が目に見えます。"
+msgid "Is it really effective? Just check insight and ranking in Goalous!"
+msgstr ""
+"社内SNSを導入している企業でよく言われるのが「導入して効果があったのかわからな"
+"い」という声。インサイトやランキングで、エンゲージメントの増加が目に見えま"
+"す。"
 
 #: View/Pages/features.ctp:201
 msgid "Your team works better? Easy to know by Goalous."
@@ -5334,19 +5346,27 @@ msgstr "隣の部署、別のフロアの人に、以外な共通点があるか
 
 #: View/Pages/features.ctp:219
 msgid "To help each other, then you can achieve your goals."
-msgstr "見えないものを見る。その連鎖が、あなたのゴールに助け合いをうみ、それがチームのゴール、成長への道になります。"
+msgstr ""
+"見えないものを見る。その連鎖が、あなたのゴールに助け合いをうみ、それがチーム"
+"のゴール、成長への道になります。"
 
 #: View/Pages/features.ctp:230
 msgid "You can set your coach. Who is for your best?"
-msgstr "上司、部長、課長・・・評価してるだけでない、日々アクションを見て、アゲてくれる人。1メンバーにつき1人設定します。"
+msgstr ""
+"上司、部長、課長・・・評価してるだけでない、日々アクションを見て、アゲてくれ"
+"る人。1メンバーにつき1人設定します。"
 
 #: View/Pages/features.ctp:239
 msgid "You can know everyone in your company. That's nice, isn't it?"
-msgstr "顔と名前の一致に加え、何を目指して毎日どんなアクションをしているか検索できる。これは全社のデータベースです。"
+msgstr ""
+"顔と名前の一致に加え、何を目指して毎日どんなアクションをしているか検索でき"
+"る。これは全社のデータベースです。"
 
 #: View/Pages/features.ctp:248
 msgid "Employees really know the company vision? Make it more known."
-msgstr "会社のビジョン、どのくらいの社員が知っていますか？いつでも意識できるインターフェースを用意しています。"
+msgstr ""
+"会社のビジョン、どのくらいの社員が知っていますか？いつでも意識できるインター"
+"フェースを用意しています。"
 
 #: View/Pages/home.ctp:30;46
 msgid ""
@@ -5398,8 +5418,13 @@ msgid "Get progress to Vision."
 msgstr "経営ビジョンにずんずん近づく"
 
 #: View/Pages/home.ctp:161
-msgid "Every one knows Vision and make their Goals. Goalous let them improve themselves."
-msgstr "経営ビジョンが反映され、従業員たちが到達を目指す具体的な指標。それがゴールです。Goalousを使えば使うほど、ゴールへの活動が増えて、組織が前へ前へずんずん進みます。"
+msgid ""
+"Every one knows Vision and make their Goals. Goalous let them improve "
+"themselves."
+msgstr ""
+"経営ビジョンが反映され、従業員たちが到達を目指す具体的な指標。それがゴールで"
+"す。Goalousを使えば使うほど、ゴールへの活動が増えて、組織が前へ前へずんずん進"
+"みます。"
 
 #: View/Pages/home.ctp:167
 msgid "You get to know your team grow by your achievement of goals."
@@ -5410,8 +5435,13 @@ msgid "You can reduce the words, What is that?"
 msgstr "「それ知らない」が激減する"
 
 #: View/Pages/home.ctp:178
-msgid "What did your colleages did today? Share on Goalous and get to know more and more."
-msgstr "商談した・ドキュメントを作成した・プレゼンした…など、ゴール( 目標 )に対する日々のアクションや、特定の仲間との会話によって情報量が増えます。情報の不足がなければ、より的確な判断ができます。"
+msgid ""
+"What did your colleages did today? Share on Goalous and get to know more and "
+"more."
+msgstr ""
+"商談した・ドキュメントを作成した・プレゼンした…など、ゴール( 目標 )に対する"
+"日々のアクションや、特定の仲間との会話によって情報量が増えます。情報の不足が"
+"なければ、より的確な判断ができます。"
 
 #: View/Pages/home.ctp:184
 msgid ""
@@ -5424,8 +5454,13 @@ msgid "Make results by coorporation."
 msgstr "協力による成果が出る"
 
 #: View/Pages/home.ctp:196
-msgid "What most important for teams is to know each other. Get to know by Goalous, you can get succeeded efficiently."
-msgstr "チームでミッションを達成するのに、最も大切な要素は「お互いにわかり合う」こと。Goalousを通して、お互いの活動を認め合い、助け合うことで効率よく成果が出るようになります。"
+msgid ""
+"What most important for teams is to know each other. Get to know by Goalous, "
+"you can get succeeded efficiently."
+msgstr ""
+"チームでミッションを達成するのに、最も大切な要素は「お互いにわかり合う」こ"
+"と。Goalousを通して、お互いの活動を認め合い、助け合うことで効率よく成果が出る"
+"ようになります。"
 
 #: View/Pages/home.ctp:202
 msgid "Help each other, enjoy with them. How wonderful?"
