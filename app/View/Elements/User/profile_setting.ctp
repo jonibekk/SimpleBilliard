@@ -229,8 +229,7 @@
                     <a href="#" class="target-show-this-del link-dark-gray" target-id="CommentHelp"><?= __(
                                                                                                             "Show Examples") ?></a>
                 <span class="help-block inline-block font_11px" id="CommentHelp" style="display: none">
-                    <?= __("
-[Now, What is that you can contribute to the team?]<br>\n
+                    <?= __("[Now, What is that you can contribute to the team?]<br>\n
 Consulting UX of your production.<br>\n
 [What is the thing you want to achieve in the team?(Specifically)]<br>\n
 Innovation methods - Remote collaboration - Creativity - UX at C-level - Holocracy<br>\n
