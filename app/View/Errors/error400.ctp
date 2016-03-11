@@ -12,7 +12,7 @@
 
     <h1>404</h1>
 
-    <p><?= __("お探しのページが見つかりませんでした。") ?></p>
+    <p><?= __("Ooops, Not Found.") ?></p>
 </div>
 <?php if (Configure::read('debug') > 0):
     echo $this->element('exception_stack_trace');

@@ -4,15 +4,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2016-03-10 16:26+0000\n"
-"PO-Revision-Date: 2016-03-11 00:28+0800\n"
+"POT-Creation-Date: 2016-03-11 12:36+0800\n"
+"PO-Revision-Date: 2016-03-11 12:51+0800\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"Language: ja\n"
 "X-Generator: Poedit 1.8.7\n"
 
 #: Config/Migration/1435197386_data_migration_for_all_team_0625.php:76;77
@@ -850,6 +850,11 @@ msgid "Incorrect recovery code."
 msgstr "リカバリーコードが正しくありません。"
 
 #: Controller/UsersController.php:225
+#: View/Emails/text/account_verification.ctp:14
+#: View/Emails/text/change_email.ctp:14 View/Emails/text/invite.ctp:17
+#: View/Emails/text/password_reset.ctp:14
+#: View/Emails/text/password_reset_complete.ctp:14
+#: View/Emails/text/token_resend.ctp:14
 msgid "Hello %s."
 msgstr "%sさん、こんにちは。"
 
@@ -2230,7 +2235,6 @@ msgid "Contact for cooporation"
 msgstr "協業のお問い合わせ"
 
 #: View/Elements/gl_common_js.ctp:58
-#: View/Elements/User/modal_change_password.ctp:93
 msgid "%1$d or more and %2$d or less characters."
 msgstr "%1$d文字以上で%2$d文字以下で入力してください。"
 
@@ -2309,6 +2313,10 @@ msgstr "スペルを入力してください。"
 #: View/Elements/gl_common_js.ctp:80
 msgid "An error has occurred. Data can not be retrieved."
 msgstr "エラーが発生しました。データ取得できません。"
+
+#: View/Elements/gl_common_js.ctp:82 View/Goals/add.ctp:528
+msgid "Start date has expired."
+msgstr "開始日が期限を過ぎています。"
 
 #: View/Elements/gl_common_js.ctp:83 View/Goals/add.ctp:543
 msgid "The limit date must be after start date."
@@ -3010,7 +3018,7 @@ msgstr "直接返信されないようお願い申し上げます。"
 #: View/Elements/Email/no_reply.ctp:10
 msgid "Please let us know if you don't have any idea why you get this email."
 msgstr ""
-"このメールに心当たりの無い方は、お問い合わせフォームからお問い合わせくださ"
+"このメールに心当たりのない方は、お問い合わせフォームからお問い合わせくださ"
 "い。"
 
 #: View/Elements/Email/stop_mail.ctp:4
@@ -3261,6 +3269,11 @@ msgstr "投稿を編集"
 msgid "Delete the action"
 msgstr "アクションを削除"
 
+#: View/Elements/Feed/posts.ctp:127
+#: View/Elements/Goal/modal_edit_action_result.ctp:88
+msgid "Do you really want to delete this action?"
+msgstr "本当にこのアクションを削除しますか？"
+
 #: View/Elements/Feed/posts.ctp:130
 msgid "Delete post"
 msgstr "投稿を削除"
@@ -3469,10 +3482,6 @@ msgstr "（本日）"
 msgid "Weight of Key Result for the Goal"
 msgstr "ゴールにとってこの成果の重要度"
 
-#: View/Elements/Goal/modal_edit_action_result.ctp:88
-msgid "Do you really want to delete this action?"
-msgstr "本当にこのアクションを削除しますか？"
-
 #: View/Elements/Goal/modal_edit_key_result.ctp:29;242
 msgid "Update Key Result"
 msgstr "達成要素を更新"
@@ -3514,8 +3523,8 @@ msgid "Current point"
 msgstr "現在値"
 
 #: View/Elements/Goal/modal_last_kr_confirm.ctp:42
-msgid "※どちらを選択しても、選択中の成果は「完了」となります。"
-msgstr ""
+msgid "Whichever you choose, this kr will be finished."
+msgstr "※どちらを選択しても、選択中の成果は「完了」となります。"
 
 #: View/Elements/Goal/modal_last_kr_confirm.ctp:59
 msgid "Achieve the goal"
@@ -3546,8 +3555,8 @@ msgid "Collaboration"
 msgstr "コラボ"
 
 #: View/Elements/Homepage/faq.ctp:22
-msgid "他の社内向けSNSと何が違いますか？"
-msgstr ""
+msgid "What is different from other enterprise SNS?"
+msgstr "他の社内向けSNSと何が違いますか？"
 
 #: View/Elements/Homepage/faq.ctp:23
 msgid ""
@@ -3561,8 +3570,8 @@ msgid ""
 msgstr ""
 
 #: View/Elements/Homepage/faq.ctp:27
-msgid "個人の目標評価はどのようにおこなうのですか？"
-msgstr ""
+msgid "How to evaluate personal Goals?"
+msgstr "個人の目標評価はどのようにおこなうのですか？"
 
 #: View/Elements/Homepage/faq.ctp:28
 msgid ""
@@ -3576,8 +3585,8 @@ msgid ""
 msgstr ""
 
 #: View/Elements/Homepage/faq.ctp:31
-msgid "社員が期中で退職したらどうなりますか？"
-msgstr ""
+msgid "What should I do if the member leave our company?"
+msgstr "社員が期中で退職したらどうなりますか？"
 
 #: View/Elements/Homepage/faq.ctp:32
 msgid ""
@@ -3590,8 +3599,8 @@ msgid ""
 msgstr ""
 
 #: View/Elements/Homepage/faq.ctp:35
-msgid "セキュリティやバックアップはどうなっていますか？"
-msgstr ""
+msgid "I'm concerned about security and backup systems."
+msgstr "セキュリティやバックアップはどうなっていますか？"
 
 #: View/Elements/Homepage/faq.ctp:36
 msgid ""
@@ -3604,8 +3613,8 @@ msgid ""
 msgstr ""
 
 #: View/Elements/Homepage/faq.ctp:40
-msgid "スマートフォン・タブレットのアプリはありますか？"
-msgstr ""
+msgid "Is there apps for smartphone and tablet?"
+msgstr "スマートフォン・タブレットのアプリはありますか？"
 
 #: View/Elements/Homepage/faq.ctp:41
 msgid ""
@@ -3615,8 +3624,8 @@ msgid ""
 msgstr ""
 
 #: View/Elements/Homepage/faq.ctp:44
-msgid "企業担当者向けに詳しい説明をしてもらえますか？"
-msgstr ""
+msgid "Can we ask you to explain more in detail?"
+msgstr "企業担当者向けに詳しい説明をしてもらえますか？"
 
 #: View/Elements/Homepage/faq.ctp:45
 msgid ""
@@ -3624,8 +3633,8 @@ msgid ""
 msgstr ""
 
 #: View/Elements/Homepage/faq.ctp:48
-msgid "無償期間（2016年8月31日まで）の後はどうなりますか？"
-msgstr ""
+msgid "What should we do after the campaign?"
+msgstr "無償期間（2016年8月31日まで）の後はどうなりますか？"
 
 #: View/Elements/Homepage/faq.ctp:49
 msgid ""
@@ -3634,8 +3643,8 @@ msgid ""
 msgstr ""
 
 #: View/Elements/Homepage/faq.ctp:52
-msgid "機能のカスタマイズはできますか？"
-msgstr ""
+msgid "Can we customize Goalous?"
+msgstr "機能のカスタマイズはできますか？"
 
 #: View/Elements/Homepage/faq.ctp:53
 msgid ""
@@ -3645,8 +3654,8 @@ msgid ""
 msgstr ""
 
 #: View/Elements/Homepage/faq.ctp:56
-msgid "使い方がわからない場合、サポートはありますか？"
-msgstr ""
+msgid "Could we ask you to support us?"
+msgstr "使い方がわからない場合、サポートはありますか？"
 
 #: View/Elements/Homepage/faq.ctp:57
 msgid ""
@@ -3656,8 +3665,8 @@ msgid ""
 msgstr ""
 
 #: View/Elements/Homepage/faq.ctp:60
-msgid "Goalousの運営会社はどこですか？"
-msgstr ""
+msgid "Which company offer Goalous?"
+msgstr "Goalousの運営会社はどこですか？"
 
 #: View/Elements/Homepage/faq.ctp:61
 msgid ""
@@ -3675,15 +3684,15 @@ msgid "Any other question?"
 msgstr "その他のご質問はありますか？"
 
 #: View/Elements/Homepage/signup.ctp:22
-msgid "さぁ、Goalousへ！"
-msgstr ""
+msgid "Let's go to Goalous!"
+msgstr "さぁ、Goalousへ！"
 
 #: View/Elements/Homepage/signup.ctp:23 View/Pages/home.ctp:103
-msgid "2016年8月31日まで完全無料！今すぐお試しください。"
-msgstr ""
+msgid "It's free until 31 Aug 2016! Try it!"
+msgstr "2016年8月31日まで完全無料！今すぐお試しください。"
 
 #: View/Elements/Homepage/signup.ctp:26
-msgid "新規登録"
+msgid "Sign up"
 msgstr ""
 
 #: View/Elements/Team/batch_setup.ctp:14 View/Teams/settings.ctp:22
@@ -3692,7 +3701,7 @@ msgstr "一括登録"
 
 #: View/Elements/Team/batch_setup.ctp:21
 msgid "Managed registration and update of team members by CSV."
-msgstr ""
+msgstr "CSVによる登録と更新を一括で行います。"
 
 #: View/Elements/Team/batch_setup.ctp:24
 msgid "Download CSV. After editing, upload it."
@@ -3723,7 +3732,7 @@ msgstr "メンバーの情報を更新"
 
 #: View/Elements/Team/confirm_to_inactive_goal_category_modal.ctp:17
 msgid "Comfirm to delete goal category"
-msgstr ""
+msgstr "ゴールカテゴリ削除の確認"
 
 #: View/Elements/Team/confirm_to_inactive_goal_category_modal.ctp:21
 msgid ""
@@ -3832,11 +3841,11 @@ msgstr "現在の前期の期間"
 
 #: View/Elements/Team/edit_term_setting.ctp:116
 msgid "Current term before changed"
-msgstr ""
+msgstr "変更前の今期"
 
 #: View/Elements/Team/edit_term_setting.ctp:129
 msgid "Next term before changed"
-msgstr ""
+msgstr "変更前の来期"
 
 #: View/Elements/Team/edit_term_setting.ctp:141;148
 msgid "Current term after changed"
@@ -3874,7 +3883,7 @@ msgstr "表示順"
 
 #: View/Elements/Team/eval_score_form_elm.ctp:50
 msgid "Input is required"
-msgstr ""
+msgstr "入力必須項目です。"
 
 #: View/Elements/Team/eval_score_form_elm.ctp:51
 msgid "Please enter a number."
@@ -3898,11 +3907,11 @@ msgstr "今期の評価の凍結を解除します。よろしいですか？"
 
 #: View/Elements/Team/evaluation_freeze.ctp:41
 msgid "Pause current terms evaluations."
-msgstr ""
+msgstr "今期の評価を凍結する。"
 
 #: View/Elements/Team/evaluation_freeze.ctp:44
 msgid "Would you like to pause currtent term evaluations?"
-msgstr ""
+msgstr "今期の評価を凍結しますか？"
 
 #: View/Elements/Team/evaluation_freeze.ctp:52
 msgid "Resume previous term evaluations."
@@ -3926,7 +3935,7 @@ msgstr "評価状況"
 
 #: View/Elements/Team/evaluation_score_setting.ctp:28
 msgid "Evaluation score settings"
-msgstr ""
+msgstr "評価スコア設定"
 
 #: View/Elements/Team/evaluation_score_setting.ctp:61
 msgid "Save evaluation score settings"
@@ -4082,7 +4091,7 @@ msgstr "このセクションでは最終評価をCSVにて行うことができ
 
 #: View/Elements/Team/final_evaluation.ctp:36
 msgid "Download CSV. After editting, upload it."
-msgstr ""
+msgstr "CSVファイルをダウンロードして、編集後アップロードしてください。"
 
 #: View/Elements/Team/final_evaluation.ctp:58
 msgid "Perform final evaluation of previous term"
@@ -4152,11 +4161,11 @@ msgstr "アクションされたゴール"
 
 #: View/Elements/Team/insight_form_input.ctp:69
 msgid "Action that had been liked"
-msgstr ""
+msgstr "いいねされたアクション"
 
 #: View/Elements/Team/insight_form_input.ctp:70
 msgid "Action that had been commented"
-msgstr ""
+msgstr "コメントされたアクション"
 
 #: View/Elements/Team/insight_form_input.ctp:71
 msgid "Member who actioned"
@@ -4451,13 +4460,17 @@ msgstr ""
 msgid "Confirm your password"
 msgstr "パスワードを再入力"
 
+#: View/Elements/User/modal_change_password.ctp:93
+msgid "%1$d文字以上で%2$d文字以下で入力してください。"
+msgstr ""
+
 #: View/Elements/User/modal_delete_email.ctp:20
 msgid "Confirm"
 msgstr "確認"
 
 #: View/Elements/User/modal_delete_email.ctp:23
 msgid "Do you really want to cancel changing your email address?"
-msgstr ""
+msgstr "メールアドレスの変更をやめますか？"
 
 #: View/Elements/User/modal_recovery_code.ctp:12
 msgid "Recovery Codes"
@@ -4506,7 +4519,7 @@ msgstr ""
 
 #: View/Elements/User/notify_setting.ctp:103
 msgid "Nothing will be deliverd."
-msgstr ""
+msgstr "何も通知は来ません。"
 
 #: View/Elements/User/profile_setting.ctp:18 View/Pages/features.ctp:238
 #: View/Users/settings.ctp:19 View/Users/view_info.ctp:18
@@ -4524,7 +4537,7 @@ msgstr "例) 鈴木"
 
 #: View/Elements/User/profile_setting.ctp:47 View/Users/add_profile.ctp:39
 msgid "First Name(%s)"
-msgstr ""
+msgstr "名(%s)"
 
 #: View/Elements/User/profile_setting.ctp:48 View/Users/add_profile.ctp:40
 msgid "eg. Bruce"
@@ -4616,31 +4629,25 @@ msgstr "プロフィール編集"
 msgid "Basic Information"
 msgstr "基本データ"
 
-#: View/Emails/text/account_verification.ctp:14
-#: View/Emails/text/change_email.ctp:14 View/Emails/text/invite.ctp:17
-#: View/Emails/text/password_reset.ctp:14
-#: View/Emails/text/password_reset_complete.ctp:14
-#: View/Emails/text/token_resend.ctp:14
-msgid "こんにちは %sさん、"
-msgstr ""
-
 #: View/Emails/text/account_verification.ctp:16
 #: View/Emails/text/token_resend.ctp:16
-msgid "Goalousへようこそ！"
-msgstr ""
+#: View/Users/registration_with_set_password.ctp:31
+msgid "Welcome to Goalous!"
+msgstr "Goalousへようこそ！"
 
 #: View/Emails/text/account_verification.ctp:19
-msgid "以下のリンクをクリックしてアカウントを有効化してください。"
-msgstr ""
+msgid "Click the below link to make your account enable."
+msgstr "以下のリンクをクリックしてアカウントを有効化してください。"
 
 #: View/Emails/text/change_email.ctp:17 View/Emails/text/token_resend.ctp:19
-msgid "以下のリンクをクリックしてメールアドレスの認証を行ってください。"
-msgstr ""
+msgid "Click the below link to authenticate your email address."
+msgstr "以下のリンクをクリックしてメールアドレスの認証を行ってください。"
 
 #: View/Emails/text/change_email.ctp:22 View/Emails/text/password_reset.ctp:22
 msgid ""
-"もし、このメールに心当たりがない場合は、何もせずにメールを破棄してください。"
+"Please trash this email if you don't have any idea why you get this email."
 msgstr ""
+"もし、このメールに心当たりがない場合は、何もせずにメールを破棄してください。"
 
 #: View/Emails/text/contact.ctp:12
 msgid ""
@@ -4683,46 +4690,48 @@ msgid "Sales person you appointed"
 msgstr "ご希望の営業担当者"
 
 #: View/Emails/text/invite.ctp:20
-msgid "こんにちは。"
-msgstr ""
+msgid "Hello."
+msgstr "こんにちは。"
 
 #: View/Emails/text/invite.ctp:25
-msgid "%sさんがGoalous内のチーム「%s」へあなたを招待しています。"
-msgstr ""
+msgid "%s sent you an invitation to team %s."
+msgstr "%sさんがGoalous内のチーム「%s」へあなたを招待しています。"
 
 #: View/Emails/text/invite.ctp:28
-msgid "この招待に応じる場合は、次のリンクをクリックしてください。"
-msgstr ""
+msgid "Click the below link to accept the invitation."
+msgstr "この招待に応じる場合は、次のリンクをクリックしてください。"
 
 #: View/Emails/text/invite.ctp:34
-msgid "%sさんからのメッセージ："
-msgstr ""
+msgid "Message from %s:"
+msgstr "%sさんからのメッセージ："
 
 #: View/Emails/text/notify_basic.ctp:18
-msgid "「%s」"
-msgstr ""
+msgid "\"%s\""
+msgstr "「%s」"
 
 #: View/Emails/text/password_reset.ctp:17
-msgid "以下のリンクをクリックしてパスワードを再設定してください。"
-msgstr ""
+msgid "Click the below link to reset your email address."
+msgstr "以下のリンクをクリックしてパスワードを再設定してください。"
 
 #: View/Emails/text/password_reset_complete.ctp:17
-msgid "パスワードの再設定が完了しました。"
-msgstr ""
+msgid "Succeeded to reset your password."
+msgstr "パスワードの再設定が完了しました。"
 
 #: View/Emails/text/password_reset_complete.ctp:20
 msgid ""
+"If you don't have any idea why you get this email, it might mean someone "
+"irregularly use your email."
+msgstr ""
 "もし、このメールに心当たりがない場合は、第三者が不正にあなたのパスワードを利"
 "用してログインしている可能性があります。"
-msgstr ""
 
 #: View/Emails/text/password_reset_complete.ctp:22
-msgid "その場合は直ちに以下にご連絡ください。"
-msgstr ""
+msgid "Please let us know as soon as possible."
+msgstr "その場合は直ちに以下にご連絡ください。"
 
 #: View/Errors/error400.ctp:15
-msgid "お探しのページが見つかりませんでした。"
-msgstr ""
+msgid "Ooops, Not Found."
+msgstr "お探しのページが見つかりませんでした。"
 
 #: View/Evaluations/index.ctp:44
 msgid "Evaluation is frozen."
@@ -4888,10 +4897,6 @@ msgstr "イメージに合った画像を追加しましょう"
 #: View/Goals/add.ctp:492
 msgid "Save Goal"
 msgstr "この内容で作成"
-
-#: View/Goals/add.ctp:528
-msgid "Start date has expired."
-msgstr "開始日が期限を過ぎています。"
 
 #: View/Goals/index.ctp:15
 msgid "Export Data"
@@ -5747,10 +5752,6 @@ msgstr "新規登録"
 msgid "User Authentication"
 msgstr "ユーザ認証"
 
-#: View/Users/registration_with_set_password.ctp:31
-msgid "Welcome to Goalous!"
-msgstr "Goalousへようこそ！"
-
 #: View/Users/registration_with_set_password.ctp:33
 msgid "Let's start to sign up Goalous."
 msgstr "Goalousへのユーザ登録を行います。"
@@ -5776,7 +5777,7 @@ msgid ""
 "Sent an email to %s. Click on the URL in the email to authenticate the "
 "account."
 msgstr ""
-"%sへメールを送信しました。アカウントを認証する為に、そのメールに記載されたURL"
+"%sへメールを送信しました。アカウントを認証するため、そのメールに記載されたURL"
 "をクリックして下さい。"
 
 #: View/Users/token_resend.ctp:16

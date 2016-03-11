@@ -11,12 +11,12 @@
  * @var CodeCompletionView $this
  */
 
-echo __('こんにちは %sさん、', $to_user_name);
+echo __('Hello %s.', $to_user_name);
 echo "\n";
-echo __('Goalousへようこそ！');
+echo __('Welcome to Goalous!');
 echo "\n";
 echo "\n";
-echo __('以下のリンクをクリックしてアカウントを有効化してください。');
+echo __('Click the below link to make your account enable.');
 echo "\n";
 echo $url;
 echo "\n";

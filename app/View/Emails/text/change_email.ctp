@@ -11,13 +11,13 @@
  * @var CodeCompletionView $this
  */
 
-echo __('こんにちは %sさん、', $to_user_name);
+echo __('Hello %s.', $to_user_name);
 echo "\n";
 echo "\n";
-echo __('以下のリンクをクリックしてメールアドレスの認証を行ってください。');
+echo __('Click the below link to authenticate your email address.');
 echo "\n";
 echo $url;
 echo "\n";
 echo "\n";
-echo __('もし、このメールに心当たりがない場合は、何もせずにメールを破棄してください。');
+echo __('Please trash this email if you don\'t have any idea why you get this email.');
 echo "\n";

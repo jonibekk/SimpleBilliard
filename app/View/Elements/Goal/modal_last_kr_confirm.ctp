@@ -39,7 +39,7 @@
         </div>
         <div class="modal-footer">
             <div class="text-align_l font_12px font_rouge mb_12px">
-                <? __('※どちらを選択しても、選択中の成果は「完了」となります。') ?>
+                <? __('Whichever you choose, this kr will be finished.') ?>
             </div>
             <?=
             $this->Form->create('Post', [

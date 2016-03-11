@@ -11,15 +11,15 @@
  * @var CodeCompletionView $this
  */
 
-echo __('こんにちは %sさん、', $to_user_name);
+echo __('Hello %s.', $to_user_name);
 echo "\n";
 echo "\n";
-echo __('パスワードの再設定が完了しました。');
+echo __('Succeeded to reset your password.');
 echo "\n";
 echo "\n";
-echo __('もし、このメールに心当たりがない場合は、第三者が不正にあなたのパスワードを利用してログインしている可能性があります。');
+echo __('If you don\'t have any idea why you get this email, it might mean someone irregularly use your email.');
 echo "\n";
-echo __('その場合は直ちに以下にご連絡ください。');
+echo __('Please let us know as soon as possible.');
 echo "\n";
 echo SES_FROM_ADDRESS;
 echo "\n";
