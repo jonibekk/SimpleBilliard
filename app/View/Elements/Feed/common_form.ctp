@@ -54,7 +54,7 @@ if (!isset($goal_list_for_action_option)) {
                 <a href="#ActionForm" role="tab" data-toggle="tab"
                    class="switch-action-anchor click-target-focus"
                    target-id="CommonActionName"><i
-                        class="fa fa-check-circle"></i><?= __d('app', "アクション") ?></a><span class="switch-arrow"></span>
+                        class="fa fa-check-circle"></i><?= __("Action") ?></a><span class="switch-arrow"></span>
             </li>
             <li class="switch-post <?php
             // ファイル上部の宣言部を参照
@@ -64,7 +64,7 @@ if (!isset($goal_list_for_action_option)) {
                 <a href="#PostForm" role="tab" data-toggle="tab"
                    class="switch-post-anchor click-target-focus"
                    target-id="CommonPostBody"><i
-                        class="fa fa-comment-o"></i><?= __d('app', "投稿") ?></a><span class="switch-arrow"></span>
+                        class="fa fa-comment-o"></i><?= __("Posts") ?></a><span class="switch-arrow"></span>
             </li>
             <li class="switch-message <?php
             // ファイル上部の宣言部を参照
@@ -78,7 +78,7 @@ if (!isset($goal_list_for_action_option)) {
                 <a href="#MessageForm" role="tab" data-toggle="tab"
                    class="switch-message-anchor click-target-focus"
                    target-id="s2id_autogen1"><i
-                        class="fa fa-paper-plane-o"></i><?= __d('app', "メッセージ") ?></a><span class="switch-arrow"></span>
+                        class="fa fa-paper-plane-o"></i><?= __("Message") ?></a><span class="switch-arrow"></span>
             </li>
         </ul>
     </div>
@@ -88,9 +88,9 @@ if (!isset($goal_list_for_action_option)) {
             <?php if (count($goal_list_for_action_option) <= 1): ?>
                 <div class="post-panel-body plr_11px ptb_7px">
                     <div class="alert alert-warning" role="alert">
-                        <?= __d('app', '今期のゴールがありません。') ?>
+                        <?= __('You have no goal.') ?>
                         <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add']) ?>"
-                           class="alert-link"><?= __d('app', 'ゴールを作成する') ?></a>
+                           class="alert-link"><?= __('Create a goal') ?></a>
                     </div>
                 </div>
             <?php else: ?>
@@ -120,8 +120,8 @@ if (!isset($goal_list_for_action_option)) {
                        target-id="CommonActionSubmit,WrapActionFormName,WrapCommonActionGoal,CommonActionFooter,CommonActionFormShowOptionLink,ActionUploadFileDropArea"
                        delete-method="hide">
                         <span class="action-image-add-button-text"><i
-                                class="fa fa-image action-image-add-button-icon"></i> <span><?= __d('app',
-                                                                                                    'アクション画像をアップロード') ?></span></span>
+                                class="fa fa-image action-image-add-button-icon"></i> <span><?= __(
+                                                                                                    'Upload an image as your action') ?></span></span>
                     </a>
                 </div>
 
@@ -136,12 +136,12 @@ if (!isset($goal_list_for_action_option)) {
                         'wrap'                         => 'soft',
                         'rows'                         => 1,
                         'required'                     => true,
-                        'placeholder'                  => __d('app', "アクションを説明しよう"),
+                        'placeholder'                  => __("Write an action..."),
                         'class'                        => 'form-control change-warning',
-                        'data-bv-notempty-message'     => __d('validate', "入力必須項目です。"),
+                        'data-bv-notempty-message'     => __("Input is required."),
                         'data-bv-stringlength'         => 'true',
                         'data-bv-stringlength-max'     => 10000,
-                        'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 10000),
+                        'data-bv-stringlength-message' => __("It's over limit characters (%s).", 10000),
                     ])
                     ?>
                 </div>
@@ -155,7 +155,7 @@ if (!isset($goal_list_for_action_option)) {
                                 'label'                    => false,
                                 'div'                      => false,
                                 'required'                 => true,
-                                'data-bv-notempty-message' => __d('validate', "入力必須項目です。"),
+                                'data-bv-notempty-message' => __("Input is required."),
                                 'class'                    => 'form-control change-next-select-with-value',
                                 'id'                       => 'GoalSelectOnActionForm',
                                 'options'                  => $goal_list_for_action_option,
@@ -185,7 +185,7 @@ if (!isset($goal_list_for_action_option)) {
                                 'div'      => false,
                                 'required' => false,
                                 'id'       => 'KrSelectOnActionForm',
-                                'options'  => isset($kr_list) ? $kr_list : [null => __d('app', '達成要素を選択する(オプション)')],
+                                'options'  => isset($kr_list) ? $kr_list : [null => __('Select a key result (optional)')],
                             ])
                             ?>
                         </div>
@@ -199,7 +199,7 @@ if (!isset($goal_list_for_action_option)) {
                            id="CommonActionFormShowOptionLink">
                             <div class="panel-body action-form-panel-body font_11px font_lightgray"
                                  id="CommonActionFormShare">
-                                <p class="text-center"><?= __d('app', "オプションを表示") ?></p>
+                                <p class="text-center"><?= __("View options") ?></p>
 
                                 <p class="text-center"><i class="fa fa-chevron-down"></i></p>
                             </div>
@@ -236,7 +236,7 @@ if (!isset($goal_list_for_action_option)) {
 
                             <div class="row form-horizontal form-group post-share-range" id="CommonActionShare">
                                 <?=
-                                $this->Form->submit(__d('app', $is_edit_mode ? "保存する" : "アクション登録"),
+                                $this->Form->submit(__($is_edit_mode ? "保存する" : "アクション登録"),
                                                     ['class' => 'btn btn-primary pull-right post-submit-button', 'id' => 'CommonActionSubmit', 'disabled' => 'disabled']) ?>
                             </div>
                         </div>
@@ -292,13 +292,13 @@ if (!isset($goal_list_for_action_option)) {
                     'type'                         => 'textarea',
                     'wrap'                         => 'soft',
                     'rows'                         => 1,
-                    'placeholder'                  => __d('app', "何か投稿しよう"),
+                    'placeholder'                  => __("Write something..."),
                     'class'                        => 'form-control tiny-form-text-change post-form feed-post-form box-align change-warning',
                     "required"                     => true,
-                    'data-bv-notempty-message'     => __d('validate', "入力必須項目です。"),
+                    'data-bv-notempty-message'     => __("Input is required."),
                     'data-bv-stringlength'         => 'true',
                     'data-bv-stringlength-max'     => 10000,
-                    'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 10000),
+                    'data-bv-stringlength-message' => __("It's over limit characters (%s).", 10000),
                 ])
                 ?>
 
@@ -376,7 +376,7 @@ if (!isset($goal_list_for_action_option)) {
 
                     <div class="row form-horizontal form-group post-share-range" id="PostShare">
                         <?=
-                        $this->Form->submit(__d('app', $is_edit_mode ? "保存する" : "投稿する"),
+                        $this->Form->submit(__($is_edit_mode ? "Save" : "Post"),
                                             ['class'    => 'btn btn-primary pull-right post-submit-button',
                                              'id'       => 'PostSubmit',
                                              'disabled' => $is_edit_mode ? '' : 'disabled']) ?>
@@ -431,7 +431,7 @@ if (!isset($goal_list_for_action_option)) {
             ]); ?>
             <div class="post-message-dest panel-body" id="MessageFormShare">
                 <div class="col col-xxs-10 col-xs-10 post-share-range-list" id="MessagePublicShareInputWrap">
-                    <?= __d('app', "To:") ?>
+                    <?= __("To:") ?>
                     <?=
                     $this->Form->hidden('share_public', [
                         'id'    => 'select2Member',
@@ -457,13 +457,13 @@ if (!isset($goal_list_for_action_option)) {
                         'wrap'                         => 'soft',
                         'rows'                         => 1,
                         'required'                     => true,
-                        'placeholder'                  => __d('app', "メッセージを書こう"),
+                        'placeholder'                  => __("Write a message..."),
                         'class'                        => 'form-control tiny-form-text-change post-form feed-post-form box-align change-warning',
                         'target_show_id'               => "MessageFormFooter",
-                        'data-bv-notempty-message'     => __d('validate', "入力必須項目です。"),
+                        'data-bv-notempty-message'     => __("Input is required."),
                         'data-bv-stringlength'         => 'true',
                         'data-bv-stringlength-max'     => 5000,
-                        'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 5000),
+                        'data-bv-stringlength-message' => __("It's over limit characters (%s).", 5000),
                     ]);
                     ?>
                     <div id="messageUploadFilePreviewArea"></div>
@@ -478,7 +478,7 @@ if (!isset($goal_list_for_action_option)) {
 
                         <div class="row form-horizontal form-group post-share-range" id="MessageShare">
                             <?=
-                            $this->Form->submit(__d('app', "メッセージする"),
+                            $this->Form->submit(__("Send Message"),
                                                 ['class' => 'btn btn-primary pull-right post-submit-button', 'id' => 'MessageSubmit', 'disabled' => 'disabled']) ?>
                         </div>
                     </div>

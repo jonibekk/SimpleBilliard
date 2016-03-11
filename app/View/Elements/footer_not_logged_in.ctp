@@ -22,45 +22,43 @@ if (!isset($top_lang)) {
             <div class="row">
                 <div class="footer-col col-md-5 col-sm-7 col-sm-12 about">
                     <div class="footer-col-inner">
-                        <h3 class="title"><?= __d('lp', 'About Us') ?></h3>
+                        <h3 class="title"><?= __('About Us') ?></h3>
                         <p>
-                            <?= __d('lp', '東京・秋葉原にあるIT企業、株式会社ISAO。') ?><br>
-                            <?= __d('lp', '”世界のシゴトをたのしくするビジョナリーカンパニー”を中長期ビジョンに掲げています。 ') ?> <br>
-                            <?= __d('lp',
-                                    '2015年10月1日（木）より、日本初のバリフラットモデルを導入し、管理職０（ゼロ）、階層０（ナシ）、 チーム力∞（無限大）の組織運営をおこなっています。') ?>
+                            <?= __('ISAO Corporation, IT company located in Akihabara, Tokyo.') ?><br>
+                            <?= __('"Visionary Company which make jobs joyful in the world" is our middle term vision.') ?> <br>
+                            <?= __( 'Bari Flat Model - No managing post, No hierarchy but infinite team strength - is adopted in Japan from 1 Oct 2015.') ?>
                         </p>
-                        <p><a class="more" href="http://www.isao.co.jp/" target="_blank"><?= __d('lp', 'HPを見る ') ?><i
+                        <p><a class="more" href="http://www.isao.co.jp/" target="_blank"><?= __('Check our website') ?><i
                                     class="fa fa-long-arrow-right"></i></a></p>
                     </div><!--//footer-col-inner-->
                 </div><!--//foooter-col-->
                 <div class="footer-col col-md-3 col-sm-4 col-md-offset-1 links">
                     <div class="footer-col-inner">
-                        <h3 class="title"><?= __d('lp', 'Other Links') ?></h3>
+                        <h3 class="title"><?= __('Other Links') ?></h3>
                         <ul class="list-unstyled">
                             <li><a href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'display',
                                                                'pagename'   => 'terms', 'lang' => $top_lang,]) ?>"><i
-                                        class="fa fa-caret-right"></i><?= __d('lp', '利用規約') ?></a></li>
+                                        class="fa fa-caret-right"></i><?= __('Terms of service') ?></a></li>
                             <li><a href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'display',
                                                                'pagename'   => 'privacy_policy', 'lang' => $top_lang,]) ?>"><i
-                                        class="fa fa-caret-right"></i><?= __d('lp', 'プライバシーポリシー') ?></a></li>
+                                        class="fa fa-caret-right"></i><?= __('Privacy Policy') ?></a></li>
                             <li><a href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'display',
                                                                'pagename'   => 'law', 'lang' => $top_lang,]) ?>"><i
-                                        class="fa fa-caret-right"></i><?= __d('lp', '特定商取引法に基づく表記') ?></a></li>
+                                        class="fa fa-caret-right"></i><?= __('Inscription by Law') ?></a></li>
                         </ul>
                     </div><!--//footer-col-inner-->
                 </div><!--//foooter-col-->
                 <div class="footer-col col-md-3 col-sm-12 contact">
                     <div class="footer-col-inner">
-                        <h3 class="title"><?= __d('lp', 'Get in touch') ?></h3>
+                        <h3 class="title"><?= __('Get in touch') ?></h3>
                         <div class="row">
-                            <p class="email col-md-12 col-sm-4"><i class="fa fa-envelope"></i><a href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'contact', 'lang' => $top_lang]) ?>"><?= __d('lp', 'お問い合わせ') ?></a></p>
+                            <p class="email col-md-12 col-sm-4"><i class="fa fa-envelope"></i><a href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'contact', 'lang' => $top_lang]) ?>"><?= __('Contact us') ?></a></p>
                             <p class="email col-md-12 col-sm-4"><i class="fa fa-microphone"></i><a
-                                    href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'contact', 'lang' => $top_lang, 4]) ?>"><?= __d('lp',
-                                                                                                                                                     'プレス関連のお問い合わせ') ?></a>
+                                    href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'contact', 'lang' => $top_lang, 4]) ?>"><?= __(
+                                                                                                                                                     'Contact for press') ?></a>
                             </p>
                             <p class="email col-md-12 col-sm-4"><i class="fa fa-heart"></i><a
-                                    href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'contact', 'lang' => $top_lang, 3]) ?>"><?= __d('lp',
-                                                                                                                                                     '協業のお問い合わせ') ?></a>
+                                    href="<?= $this->Html->url(['controller' => 'pages', 'action' => 'contact', 'lang' => $top_lang, 3]) ?>"><?= __('Contact for cooporation') ?></a>
                             </p>
                         </div>
                     </div>
@@ -73,10 +71,10 @@ if (!isset($top_lang)) {
             <div class="row">
                 <div class="pull-left footer-bottom-left">
                     <small class="copyright">© 2016 ISAO</small>
-                    <!--<ul class="footer-lang list-inline">
+                    <ul class="footer-lang list-inline">
                         <li><a href="<?=$this->Html->url('/en/')?>">English (US)</a></li>
                         <li><a href="<?=$this->Html->url('/ja/')?>">日本語</a></li>
-                    </ul>-->
+                    </ul>
                 </div>
                 <ul class="social list-inline pull-right">
                     <!-- <li><a href="http://instagram.com/goalous" target=" _blank"><i class="fa fa-instagram"></i></a></li> -->

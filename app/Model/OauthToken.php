@@ -1,6 +1,8 @@
 <?php
 App::uses('AppModel', 'Model');
 
+// ToDo - 大樹さん、これもう使わないですよね？
+
 /**
  * OauthToken Model
  *
@@ -20,8 +22,8 @@ class OauthToken extends AppModel
      */
     private function _setProviderTypeName()
     {
-        self::$TYPE[self::TYPE_FB] = __d('app', "Facebook");
-        self::$TYPE[self::TYPE_GOOGLE] = __d('app', "Google");
+        self::$TYPE[self::TYPE_FB] = __("Facebook");
+        self::$TYPE[self::TYPE_GOOGLE] = __("Google");
     }
 
     /**

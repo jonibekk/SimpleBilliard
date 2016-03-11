@@ -34,7 +34,7 @@ App::uses('AppModel', 'Model');
 class Team extends AppModel
 {
     /**
-     * タイプ
+     * Type | タイプ
      */
     // const TYPE_FREE = 1;
     // const TYPE_PRO = 2;
@@ -52,19 +52,19 @@ class Team extends AppModel
     ];
 
     /**
-     * タイプの名前をセット
+     * Set Type name | タイプの名前をセット
      */
     private function _setTypeName()
     {
-        self::$TYPE[self::TYPE_CAMPAIGN] = __d('app', "無料キャンペーン");
-        // self::$TYPE[self::TYPE_FREE] = __d('app', "フリー");
-        // self::$TYPE[self::TYPE_PRO] = __d('app', "プロ");
+        self::$TYPE[self::TYPE_CAMPAIGN] = __("Free Campaign");
+        // self::$TYPE[self::TYPE_FREE] = __("フリー");
+        // self::$TYPE[self::TYPE_PRO] = __("プロ");
     }
 
     private function _setTermOptionName()
     {
-        self::$OPTION_CHANGE_TERM[self::OPTION_CHANGE_TERM_FROM_CURRENT] = __d('app', "今期から");
-        self::$OPTION_CHANGE_TERM[self::OPTION_CHANGE_TERM_FROM_NEXT] = __d('app', "来期から");
+        self::$OPTION_CHANGE_TERM[self::OPTION_CHANGE_TERM_FROM_CURRENT] = __("From this term");
+        self::$OPTION_CHANGE_TERM[self::OPTION_CHANGE_TERM_FROM_NEXT] = __("From next term");
     }
 
     /**
@@ -211,19 +211,19 @@ class Team extends AppModel
         ];
         $postData = array_merge($postData, $team_member);
         $this->saveAll($postData);
-        //デフォルトチームを更新
+        // Update default team | デフォルトチームを更新
         $user = $this->TeamMember->User->findById($uid);
         if (isset($user['User']) && !$user['User']['default_team_id']) {
             $this->TeamMember->User->id = $uid;
             $this->TeamMember->User->saveField('default_team_id', $this->id);
         }
 
-        // 「チーム全体」サークルを追加
+        // Add All team | 「チーム全体」サークルを追加
         $circleData = [
             'Circle'       => [
                 'team_id'      => $this->id,
-                'name'         => __d('app', 'チーム全体'),
-                'description'  => __d('app', 'チーム全体'),
+                'name'         => __('All Team'),
+                'description'  => __('All Team'),
                 'public_flg'   => true,
                 'team_all_flg' => true,
             ],
@@ -236,13 +236,13 @@ class Team extends AppModel
             ]
         ];
         if ($this->Circle->saveAll($circleData)) {
-            // サークルメンバー数を更新
-            // 新しく追加したチームのサークルなので current_team_id を一時的に変更する
+            // Update circle members number | サークルメンバー数を更新
+            // temporarily changed current_team_id | 新しく追加したチームのサークルなので current_team_id を一時的に変更する
             $tmp = $this->Circle->CircleMember->current_team_id;
             $this->Circle->CircleMember->current_team_id = $this->id;
             $this->Circle->CircleMember->updateCounterCache(['circle_id' => $this->Circle->getLastInsertID()]);
             $this->Circle->CircleMember->current_team_id = $tmp;
-            //cache削除
+            // cache clear | cache削除
             Cache::delete($this->getCacheKey(CACHE_KEY_TEAM_LIST, true, null, false), 'team_info');
         }
         return true;
@@ -251,10 +251,10 @@ class Team extends AppModel
     function getBorderMonthsOptions()
     {
         $term_options = [
-            null => __d('app', "選択してください"),
-            3    => __d('app', "四半期"),
-            6    => __d('app', "半年"),
-            12   => __d('app', "年")
+            null => __("Please select"),
+            3    => __("Quater"),
+            6    => __("Half a year"),
+            12   => __("Year")
         ];
         return $term_options;
     }
@@ -262,19 +262,19 @@ class Team extends AppModel
     function getMonths()
     {
         $months = [
-            null => __d('app', "選択して下さい"),
-            1    => __d('app', "１月"),
-            2    => __d('app', "２月"),
-            3    => __d('app', "３月"),
-            4    => __d('app', "４月"),
-            5    => __d('app', "５月"),
-            6    => __d('app', "６月"),
-            7    => __d('app', "７月"),
-            8    => __d('app', "８月"),
-            9    => __d('app', "９月"),
-            10   => __d('app', "１０月"),
-            11   => __d('app', "１１月"),
-            12   => __d('app', "１２月"),
+            null => __("Please select"),
+            1    => __("Jan"),
+            2    => __("Feb"),
+            3    => __("Mar"),
+            4    => __("Apr"),
+            5    => __("May"),
+            6    => __("Jun"),
+            7    => __("Jul"),
+            8    => __("Aug"),
+            9    => __("Sep"),
+            10   => __("Oct"),
+            11   => __("Nov"),
+            12   => __("Dec"),
         ];
         return $months;
     }

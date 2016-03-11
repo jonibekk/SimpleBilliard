@@ -9,6 +9,6 @@
 <?php if ($this->Session->read('current_team_id')): ?>
     <?= $this->element('Feed/contents') ?>
 <?php else: ?>
-    <?= $this->Html->link(__d('app', "チームを作成してください。"), ['controller' => 'teams', 'action' => 'add']) ?>
+    <?= $this->Html->link(__("Create a team."), ['controller' => 'teams', 'action' => 'add']) ?>
 <?php endif; ?>
 <!-- END app/View/Pages/logged_in_home.ctp -->

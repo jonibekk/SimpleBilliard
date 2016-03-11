@@ -31,16 +31,21 @@
             </div>
             <div class="modal-footer">
                 <div class="col-xxs-12 text-align_l tutorial-texts">
-                    <p id="tutorialText1" class="tutorial-text"><?= __d('app',
-                                                                        "ニュースフィードに投稿してみよう。既読管理ができて、いいね！が伝わります。") ?></p>
+                    <p id="tutorialText1" class="tutorial-text">
+                        <?= __("You can check who read your posts and get Like from your team members.") ?>
+                    </p>
 
-                    <p id="tutorialText2" class="tutorial-text"><?= __d('app',
-                                                                        "サークルをつくったり、サークルに入ってみよう。サークルには秘密と公開の2種類があります。") ?></p>
+                    <p id="tutorialText2" class="tutorial-text">
+                        <?= __("Make circle, join circle. There are 2 type of circles. Secret and Public.") ?>
+                    </p>
 
-                    <p id="tutorialText3" class="tutorial-text"><?= __d('app',
-                                                                        "ゴールをつくりましょう。ゴールページでは、より詳細な設定ができます。") ?></p>
+                    <p id="tutorialText3" class="tutorial-text">
+                        <?= __("Make a goal. You can set it in details at goal page.") ?>
+                    </p>
 
-                    <p id="tutorialText4" class="tutorial-text"><?= __d('app', "チーム力を向上させよう。Goalousをさっそく使ってみましょう") ?></p>
+                    <p id="tutorialText4" class="tutorial-text">
+                        <?= __("Make your team better by Goalous.") ?>
+                    </p>
                 </div>
             </div>
         </div>

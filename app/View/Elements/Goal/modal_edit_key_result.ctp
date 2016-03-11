@@ -26,7 +26,7 @@
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= __d('app', "成果を更新") ?></h4>
+            <h4 class="modal-title"><?= __("Update Key Result") ?></h4>
             <ul class="add-key-result-goal-info">
                 <li>
                     <i class="fa fa-flag"></i><?= h($goal['Goal']['name']) ?>
@@ -69,50 +69,30 @@
                     <?=
                     $this->Form->input('KeyResult.name',
                                        ['before'                       => '<div class="set-goal">' .
-                                           '<h5 class="modal-key-result-headings">' . __d('app',
-                                                                                          "成果名") . '<span class="modal-key-result-headings-description">' . __d('app',
-                                                                                                                                                                "達成の指標として『なに』をどうするか？") . '</span></label></div>',
+                                           '<h5 class="modal-key-result-headings">' . __(
+                                                                                          "KR name") . '<span class="modal-key-result-headings-description">' . __(
+                                                                                                                                                                "What is set as an indicator of achievement?") . '</span></label></div>',
                                         'label'                        => false,
-                                        'placeholder'                  => __d('app', "具体的に絞り込んで書く"),
-                                        "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
+                                        'placeholder'                  => __("Write in details"),
+                                        "data-bv-notempty-message"     => __("Input is required."),
                                         'data-bv-stringlength'         => 'true',
                                         'data-bv-stringlength-max'     => 200,
-                                        'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 200),
+                                        'data-bv-stringlength-message' => __("It's over limit characters (%s).", 200),
                                         'rows'                         => 1,
-                                        'afterInput'                   => '<span class="help-block font_12px">' . __d('app',
-                                                                                                                      "例）サービスAの国内市場シェアを増加させる") . '</span>'
+                                        'afterInput'                   => '<span class="help-block font_12px">' . __(
+                                                                                                                      "eg) Increasing the internal market share of A") . '</span>'
                                        ]) ?>
                 </div>
                 <div class="row">
-                    <?php //TODO 一旦、使わないのでコメントアウト
-                    //                echo $this->Form->input('KeyResult.current_value',
-                    //                                        [
-                    //                                            'before'                       => '<div class="control-label set-importance">' .
-                    //                                                '<label>' . __d('app', "現在値") . '</label>' .
-                    //                                                '<div class="label-addiction">' . '</div></div>',
-                    //                                            'label'                        => false,
-                    //                                            'wrapInput'                    => 'goal-set-input',
-                    //                                            'type'                         => 'number',
-                    //                                            'step'                         => '0.1',
-                    //                                            'default'                      => 100,
-                    //                                            'required'                     => true,
-                    //                                            'maxlength'                    => 14,
-                    //                                            'data-bv-stringlength-message' => __d('validate', "文字数がオーバーしています。"),
-                    //                                            "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
-                    //                                            'data-bv-numeric-message'      => __d('validate', "数字を入力してください。"),
-                    //                                        ])
-                    ?>
-                </div>
-                <div class="row">
                     <div class="ddd">
-                        <h5 class="modal-key-result-headings"><?= __d('app', "程度") ?><span
-                                class="modal-key-result-headings-description"><?= __d('app', "どのくらい？") ?></span></h5>
+                        <h5 class="modal-key-result-headings"><?= __("Measurement") ?><span
+                                class="modal-key-result-headings-description"><?= __("How much?") ?></span></h5>
                     </div>
                     <div class="goal-set-input">
                         <div class="eee">
                             <?=
                             $this->Form->input('KeyResult.value_unit',
-                                               ['label'               => __d('app', "単位"),
+                                               ['label'               => __("Unit"),
                                                 'wrapInput'           => 'modal-edit-kr-change-unit',
                                                 'type'                => 'select',
                                                 'class'               => 'change-select-target-hidden form-control addteam_input-design',
@@ -127,7 +107,7 @@
                             <div class="ggg">
                                 <?=
                                 $this->Form->input('KeyResult.target_value',
-                                                   ['label'                        => __d('app', "達成時"),
+                                                   ['label'                        => __("Achieve point"),
                                                     'wrapInput'                    => 'hhh',
                                                     'type'                         => 'number',
                                                     'step'                         => '0.1',
@@ -135,16 +115,16 @@
                                                     'required'                     => true,
                                                     'data-bv-stringlength'         => 'true',
                                                     'data-bv-stringlength-max'     => 15,
-                                                    'data-bv-stringlength-message' => __d('validate',
-                                                                                          "最大文字数(%s)を超えています。", 15),
-                                                    "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
-                                                    'data-bv-numeric-message'      => __d('validate', "数字を入力してください。"),
+                                                    'data-bv-stringlength-message' => __(
+                                                                                          "It's over limit characters (%s).", 15),
+                                                    "data-bv-notempty-message"     => __("Input is required."),
+                                                    'data-bv-numeric-message'      => __("Please enter a number."),
                                                    ]) ?>
                             </div>
                             <div class="iii">
                                 <?=
                                 $this->Form->input('KeyResult.start_value',
-                                                   ['label'                        => __d('app', "開始時"),
+                                                   ['label'                        => __("Initial point"),
                                                     'wrapInput'                    => 'jjj',
                                                     'type'                         => 'number',
                                                     'step'                         => '0.1',
@@ -153,17 +133,17 @@
                                                     'maxlength'                    => 14,
                                                     'data-bv-stringlength'         => 'true',
                                                     'data-bv-stringlength-max'     => 15,
-                                                    'data-bv-stringlength-message' => __d('validate',
-                                                                                          "最大文字数(%s)を超えています。", 15),
-                                                    "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
-                                                    'data-bv-numeric-message'      => __d('validate', "数字を入力してください。"),
+                                                    'data-bv-stringlength-message' => __(
+                                                                                          "It's over limit characters (%s).", 15),
+                                                    "data-bv-notempty-message"     => __("Input is required."),
+                                                    'data-bv-numeric-message'      => __("Please enter a number."),
                                                    ]) ?>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <h5 class="modal-key-result-headings"><?= __d('app', "期間") ?>
+                    <h5 class="modal-key-result-headings"><?= __("Term") ?>
                         <?php if ($this->Session->read('Auth.User.timezone') != $goal_term['timezone']): ?>
                             <span class="modal-key-result-headings-description">
                             <?= $this->TimeEx->getTimezoneText($goal_term['timezone']); ?>
@@ -174,8 +154,7 @@
                     <div class="goal-set-input">
                         <div class="form-group" id="KeyResult0EndDateContainer">
                             <label for="KeyResult0EndDate" class="control-label goal-set-mid-label"><?=
-                                __d('app',
-                                    "期限") ?></label>
+                                __("Due Date") ?></label>
 
                             <div class="input-group date goal-set-date"
                                  data-date-end-date="<?= $limit_end_date ?>"
@@ -189,11 +168,11 @@
                                                        'div'                          => false,
                                                        'class'                        => "form-control",
                                                        'required'                     => true,
-                                                       "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
+                                                       "data-bv-notempty-message"     => __("Input is required."),
                                                        'data-bv-stringlength'         => 'true',
                                                        'data-bv-stringlength-max'     => 10,
-                                                       'data-bv-stringlength-message' => __d('validate',
-                                                                                             "最大文字数(%s)を超えています。", 10),
+                                                       'data-bv-stringlength-message' => __(
+                                                                                             "It's over limit characters (%s).", 10),
                                                        'type'                         => 'text',
                                                        'wrapInput'                    => null,
                                                    ]) ?>
@@ -202,7 +181,7 @@
                         </div>
                         <div class="form-group" id="KeyResult0StartDateContainer">
                             <label for="KeyResult0StartDate" class="control-label goal-set-mid-label"><?=
-                                __d('app', "開始") ?></label>
+                                __("Start") ?></label>
 
                             <p class="form-control-static"
                                id="KeyResult0StartDateDefault_<?= $kr_id ?>">
@@ -211,7 +190,7 @@
                                         &nbsp;&nbsp;<a href="#" class="target-show-target-del"
                                                        show-target-id="KeyResult0StartDateInputWrap_<?= $kr_id ?>"
                                                        delete-target-id="KeyResult0StartDateDefault_<?= $kr_id ?>">
-                                            <?= __d('app', "変更") ?></a>
+                                            <?= __("Change") ?></a>
                                     </span>
                             </p>
 
@@ -227,11 +206,11 @@
                                                        'div'                          => false,
                                                        'class'                        => "form-control",
                                                        'required'                     => true,
-                                                       "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
+                                                       "data-bv-notempty-message"     => __("Input is required."),
                                                        'data-bv-stringlength'         => 'true',
                                                        'data-bv-stringlength-max'     => 10,
-                                                       'data-bv-stringlength-message' => __d('validate',
-                                                                                             "最大文字数(%s)を超えています。", 10),
+                                                       'data-bv-stringlength-message' => __(
+                                                                                             "It's over limit characters (%s).", 10),
                                                        'type'                         => 'text',
                                                        'wrapInput'                    => null
                                                    ]) ?>
@@ -244,14 +223,14 @@
             <div class="row">
                 <?=
                 $this->Form->input('priority', [
-                    'before'                   => '<h5 class="modal-key-result-headings">' . __d('app',
-                                                                                                 "重要度") . '<span class="modal-key-result-headings-description">' . __d('app',
-                                                                                                                                                                       "ゴールにとってこの成果の重要度") . '</span></h5>',
+                    'before'                   => '<h5 class="modal-key-result-headings">' . __(
+                                                                                                 "Weight") . '<span class="modal-key-result-headings-description">' . __(
+                                                                                                                                                                       "Weight of Key Result for the Goal") . '</span></h5>',
                     'label'                    => false,
                     'type'                     => 'select',
                     'default'                  => 1,
                     'required'                 => true,
-                    "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                    "data-bv-notempty-message" => __("Input is required."),
                     'style'                    => 'width:170px',
                     'options'                  => $kr_priority_list,
                     'wrapInput'                => 'modal-edit-kr-set-importance-wrap'
@@ -260,10 +239,10 @@
         </div>
         <div class="modal-footer">
             <?=
-            $this->Form->submit(__d('app', "成果を更新"),
+            $this->Form->submit(__("Update Key Result"),
                                 ['class' => 'btn btn-primary', 'div' => false]) ?>
 
-            <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('app', "閉じる") ?></button>
+            <button type="button" class="btn btn-default" data-dismiss="modal"><?= __("Close") ?></button>
         </div>
         <?= $this->Form->end() ?>
     </div>

@@ -28,7 +28,7 @@
                             'label'                    => false,
                             'div'                      => false,
                             'required'                 => true,
-                            'data-bv-notempty-message' => __d('validate', "入力必須項目です。"),
+                            'data-bv-notempty-message' => __("Input is required."),
                             'class'                    => 'form-control disable-change-warning',
                             'id'                       => 'SwitchGoalOnMyPage',
                             'options'                  => $goal_select_options,
@@ -76,12 +76,12 @@
                     <?php
                     $next_page_num = 2;
                     $month_index = 0;
-                    $more_read_text = __d('app', "もっと読む ▼");
+                    $more_read_text = __("More...");
                     $oldest_post_time = 0;
                     if ((count($posts) != $item_num)) {
                         $next_page_num = 1;
                         $month_index = 1;
-                        $more_read_text = __d('app', "さらにアクションを読み込む ▼");
+                        $more_read_text = __("View more");
                     }
 
                     // ユーザーの登録日以前の投稿は存在しないので読み込まないようにする
@@ -91,7 +91,7 @@
                     ?>
                     <div class="panel panel-default feed-read-more" id="FeedMoreRead">
                         <div class="panel-body panel-read-more-body">
-                            <span class="none" id="ShowMoreNoData"><?= __d('app', "これ以上のアクションはありませんでした。") ?></span>
+                            <span class="none" id="ShowMoreNoData"><?= __("There is no further action.") ?></span>
                             <a href="#" class="click-feed-read-more"
                                parent-id="FeedMoreRead"
                                no-data-text-id="ShowMoreNoData"
