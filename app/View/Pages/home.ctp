@@ -84,7 +84,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
 <!-- ******PROMO****** -->
 <section id="promo" class="promo section">
     <div class="container intro">
-        <h2 class="title"><span class="text"><?= __('オープンがゴールを切り拓く') ?></span></h2>
+        <h2 class="title"><span class="text"><?= __('Be open, achieve Goal.') ?></span></h2>
     </div><!--//intro-->
 
     <div class="bg-slider-wrapper">
@@ -119,12 +119,12 @@ for ($i = 0; $i < $num_ogp; $i++) {
     <div class="container text-center">
         <div class="row text-left">
             <p class="col-md-2 col-md-offset-2 col-sm-3"><?=
-                __('2016年2月5日');
+                __('5 Feb 2016');
                 ?></p>
             <p class="col-md-6 col-sm-9">
                 <?=
                 $this->Html->link(
-                    __('月刊人事マネジメント2016年2月号に掲載されました'),
+                    __('We appeared on a magazine. - Gekkan Jinji Management Feb. -'),
                     'http://blog.isao.co.jp/press_jinjimanage_20160205/',
                     ['target' => '_blank']
                 );
@@ -133,12 +133,12 @@ for ($i = 0; $i < $num_ogp; $i++) {
         </div>
         <div class="row text-left">
             <p class="col-md-2 col-md-offset-2 col-sm-3"><?=
-                __('2016年2月4日');
+                __('4 Feb 2016');
                 ?></p>
             <p class="col-md-6 col-sm-9">
                 <?=
                 $this->Html->link(
-                    __('アイデム 人と仕事の研究所 制度探訪に掲載されました'),
+                    __('We appeared on a web media. - Hito to shigoto no kenkyujo by Idem -'),
                     'https://apj.aidem.co.jp/column/597//',
                     ['target' => '_blank']
                 );
@@ -151,12 +151,12 @@ for ($i = 0; $i < $num_ogp; $i++) {
 <!-- ******WHY****** -->
 <section id="why" class="why section">
     <div class="container">
-        <h2 class="title text-center"><?= __('Goalousで、組織は激変する') ?></h2>
-        <p class="intro text-center"><?= __('「ゴール達成」って？「最強にオープン」って？Goalousは、世界のシゴトをたのしくしたい。それだけのこと。') ?></p>
+        <h2 class="title text-center"><?= __('You can definitely change your organization by Goalous.') ?></h2>
+        <p class="intro text-center"><?= __('Achieve Goals, make your team open, let your job become joyful!') ?></p>
         <div class="item row flex from-left">
             <div
                 class="content col-md-5 col-sm-5 col-xs-12 pull-right col-md-offset-1 col-sm-offset-1 col-xs-offset-0 col-right">
-                <h3 class="title"><?= __('経営ビジョンにずんずん近づく') ?></h3>
+                <h3 class="title"><?= __('Get progress to Vision.') ?></h3>
                 <div class="details">
                     <p><?= __(
                                '経営ビジョンが反映され、従業員たちが到達を目指す具体的な指標。それがゴールです。Goalousを使えば使うほど、ゴールへの活動が増えて、組織が前へ前へずんずん進みます。') ?></p>
@@ -165,7 +165,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
             <div class="figure col-md-6 col-sm-6 col-xs-12 col-left">
                 <?= $this->Html->image('homepage/top/top-1.jpg',
                                        array('alt' => __(
-                                                          '自分のゴールの活動によって組織が成長している事を実感できます！'), 'class' => 'img-responsive')); ?>
+                                                          'You get to know your team grow by your achievement of goals.'), 'class' => 'img-responsive')); ?>
             </div><!--//figure-->
         </div><!--//item-->
 
@@ -173,7 +173,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
 
         <div class="item row flex from-right">
             <div class="content col-md-5 col-sm-5 col-xs-12 col-left">
-                <h3 class="title"><?= __('「それ知らない」が激減する') ?></h3>
+                <h3 class="title"><?= __('You can reduce the words, What is that?') ?></h3>
                 <div class="details">
                     <p><?= __(
                                '商談した・ドキュメントを作成した・プレゼンした…など、ゴール( 目標 )に対する日々のアクションや、特定の仲間との会話によって情報量が増えます。情報の不足がなければ、より的確な判断ができます。') ?></p>
@@ -191,7 +191,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
         <div class="item row flex from-left">
             <div
                 class="content col-md-5 col-sm-5 col-xs-12 pull-right col-md-offset-1 col-sm-offset-1 col-xs-offset-0 col-right">
-                <h3 class="title"><?= __('協力による成果が出る') ?></h3>
+                <h3 class="title"><?= __('Make results by coorporation.') ?></h3>
                 <div class="details">
                     <p><?= __(
                                'チームでミッションを達成するのに、最も大切な要素は「お互いにわかり合う」こと。Goalousを通して、お互いの活動を認め合い、助け合うことで効率よく成果が出るようになります。') ?></p>
@@ -200,7 +200,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
             <div class="figure col-md-6 col-sm-6 col-xs-12 col-left">
                 <?= $this->Html->image('homepage/top/top-3.jpg',
                                        array('alt' => __(
-                                                          '共に助けあい、共に喜び合う。素敵ですよね？'), 'class' => 'img-responsive')); ?>
+                                                          'Help each other, enjoy with them. How wonderful?'), 'class' => 'img-responsive')); ?>
             </div><!--//figure-->
         </div><!--//item-->
     </div><!--//container-->
@@ -221,7 +221,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 id="videoModalLabel" class="modal-title"><?= __('Goalousについて') ?></h4>
+                            <h4 id="videoModalLabel" class="modal-title"><?= __('About Goalous') ?></h4>
                         </div>
                         <div class="modal-body">
                             <div class="video-container">

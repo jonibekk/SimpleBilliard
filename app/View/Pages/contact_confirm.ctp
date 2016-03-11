@@ -75,7 +75,7 @@ for($i = 0; $i < $num_ogp; $i++){
     echo $this->Html->meta($meta_contact_confirm[$i]);
 }
 ?>
-<title><?= __('Confirming | Goalous)') ?></title>
+<title><?= __('Confirming | Goalous') ?></title>
 <link rel="alternate" hreflang="ja" href="<?= $this->Html->url('/ja/contact_confirm') ?>"/>
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/contact_confirm') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/contact_confirm') ?>"/>
@@ -118,7 +118,7 @@ for($i = 0; $i < $num_ogp; $i++){
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-4 control-label"><?= __('お問い合わせ内容') ?></label>
+                    <label class="col-sm-4 control-label"><?= __('What you want to ask') ?></label>
                     <div class="col-sm-8">
                         <p class="form-control-static"><?= nl2br(h($data['message'])) ?></p>
                     </div>

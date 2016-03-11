@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2016-03-11 17:58+0800\n"
-"PO-Revision-Date: 2016-03-11 17:58+0800\n"
+"POT-Creation-Date: 2016-03-11 19:24+0800\n"
+"PO-Revision-Date: 2016-03-11 19:24+0800\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -2500,7 +2500,7 @@ msgstr "サークルを脱退する"
 msgid "Settings"
 msgstr "設定"
 
-#: View/Elements/gl_common_js.ctp:250
+#: View/Elements/gl_common_js.ctp:250 View/Pages/features.ctp:229
 msgid "Coach"
 msgstr "コーチ"
 
@@ -4670,7 +4670,7 @@ msgstr ""
 "このたびはGoalous（ゴーラス）へお問い合わせいただき、誠にありがとうございま"
 "す。"
 
-#: View/Emails/text/contact.ctp:14
+#: View/Emails/text/contact.ctp:14 View/Pages/contact_thanks.ctp:88
 msgid "Support member will reply to you."
 msgstr "確認後、弊社担当者よりご連絡いたします。"
 
@@ -4678,7 +4678,7 @@ msgstr "確認後、弊社担当者よりご連絡いたします。"
 msgid "Just wait a momemt."
 msgstr "どうぞよろしくお願い申し上げます。"
 
-#: View/Emails/text/contact.ctp:18;33
+#: View/Emails/text/contact.ctp:18;33 View/Pages/contact_confirm.ctp:121
 msgid "What you want to ask"
 msgstr "お問い合わせ内容"
 
@@ -5075,7 +5075,7 @@ msgstr "DJやってます"
 
 #: View/Pages/contact.ctp:257
 msgid "・"
-msgstr ""
+msgstr ","
 
 #: View/Pages/contact.ctp:258
 msgid "PrivacyPolicy"
@@ -5100,13 +5100,9 @@ msgid ""
 "す。お問い合わせ内容の確認です。"
 msgstr ""
 
-#: View/Pages/contact_confirm.ctp:42
+#: View/Pages/contact_confirm.ctp:42;78
 msgid "Confirming | Goalous"
 msgstr "入力内容確認 | Goalous (ゴーラス)"
-
-#: View/Pages/contact_confirm.ctp:78
-msgid "Confirming | Goalous)"
-msgstr ""
 
 #: View/Pages/contact_confirm.ctp:87
 msgid "Confirm what you ask us"
@@ -5120,10 +5116,6 @@ msgstr "内容をご確認のうえ、問題なければ送信をクリックし
 msgid "Appointed"
 msgstr "ご希望"
 
-#: View/Pages/contact_confirm.ctp:121
-msgid "お問い合わせ内容"
-msgstr ""
-
 #: View/Pages/contact_confirm.ctp:134
 msgid "Back"
 msgstr "戻る"
@@ -5131,11 +5123,7 @@ msgstr "戻る"
 #: View/Pages/contact_confirm.ctp:136 View/Users/password_reset_request.ctp:45
 #: View/Users/token_resend.ctp:45
 msgid "Send"
-msgstr ""
-"#-#-#-#-#  0catalog.po (PROJECT VERSION)  #-#-#-#-#\n"
-"送信する\n"
-"#-#-#-#-#  0catalog.po (PROJECT VERSION)  #-#-#-#-#\n"
-"送信"
+msgstr "送信する"
 
 #: View/Pages/contact_confirm.ctp:149
 msgid "Sending"
@@ -5157,34 +5145,30 @@ msgid "お問い合わせ完了 | Goalous (ゴーラス)"
 msgstr ""
 
 #: View/Pages/contact_thanks.ctp:87
-msgid "お問い合わせありがとうございました"
-msgstr ""
-
-#: View/Pages/contact_thanks.ctp:88
-msgid "確認後、弊社担当者よりご連絡いたします。"
-msgstr ""
+msgid "Thank you for contacting us."
+msgstr "お問い合わせありがとうございました"
 
 #: View/Pages/contact_thanks.ctp:89
-msgid ""
+msgid "Please check our Blog and SNS, if you get interested."
+msgstr ""
 "お時間がございましたら、Goalous運営会社・株式会社ISAOのブログやSNSをご覧くだ"
 "さい。"
-msgstr ""
 
 #: View/Pages/contact_thanks.ctp:98
 msgid "IsaB"
 msgstr "IsaB"
 
 #: View/Pages/contact_thanks.ctp:99
-msgid "億人の”シゴト”を熱くする！株式会社ISAOのブログ"
-msgstr ""
+msgid "Make your job joyful! ISAO blog"
+msgstr "億人の”シゴト”を熱くする！株式会社ISAOのブログ"
 
 #: View/Pages/contact_thanks.ctp:100
 msgid "http://blog.isao.co.jp/"
 msgstr "http://blog.isao.co.jp/"
 
 #: View/Pages/contact_thanks.ctp:110
-msgid "facebookページ"
-msgstr ""
+msgid "facebook page"
+msgstr "facebookページ"
 
 #: View/Pages/contact_thanks.ctp:111
 msgid "Like us!"
@@ -5204,7 +5188,7 @@ msgstr "Follow now！"
 
 #: View/Pages/contact_thanks.ctp:124
 msgid "@ISAOcorp"
-msgstr ""
+msgstr "@ISAOcorp"
 
 #: View/Pages/features.ctp:30;46
 msgid ""
@@ -5213,92 +5197,93 @@ msgid ""
 "す。機能の説明はこちら。"
 msgstr ""
 
-#: View/Pages/features.ctp:42
-msgid "機能 | Goalous (ゴーラス))"
-msgstr ""
-
-#: View/Pages/features.ctp:78
-msgid "機能 | Goalous (ゴーラス)"
-msgstr ""
+#: View/Pages/features.ctp:42;78
+msgid "Features | Goalous"
+msgstr "機能 | Goalous (ゴーラス)"
 
 #: View/Pages/features.ctp:90
-msgid "Goalousで変えられる、あなたの組織・シゴト"
-msgstr ""
+msgid "You can improve your job and organization!"
+msgstr "Goalousで変えられる、あなたの組織・シゴト"
 
 #: View/Pages/features.ctp:92
-msgid "意思決定のスピードが爆速に"
-msgstr ""
+msgid "Make a dicision much faster."
+msgstr "意思決定のスピードが爆速に"
 
 #: View/Pages/features.ctp:93
-msgid "社員全員へ企業のビジョンを浸透"
-msgstr ""
+msgid "Make your company vision clear to the employees."
+msgstr "社員全員へ企業のビジョンを浸透"
 
 #: View/Pages/features.ctp:94
-msgid "透明性のある評価ができる"
-msgstr ""
+msgid "Make evaluation clear."
+msgstr "透明性のある評価ができる"
 
 #: View/Pages/features.ctp:95
-msgid "組織の壁なんて感じない"
-msgstr ""
+msgid "Make your organization more flat."
+msgstr "組織の壁なんて感じない"
 
 #: View/Pages/features.ctp:96
-msgid "なんだか、仕事が楽しくなる"
-msgstr ""
+msgid "You will find your job much joyful!"
+msgstr "なんだか、仕事が楽しくなる"
 
 #: View/Pages/features.ctp:113
-msgid "一目瞭然、全社員のゴール"
-msgstr ""
+msgid "Make your colleages goal clear."
+msgstr "一目瞭然、全社員のゴール"
 
 #: View/Pages/features.ctp:115
 msgid ""
+"Why you work? What you work for? What are you doing? Make them clear to your "
+"colleages!"
+msgstr ""
 "チームの1人ひとりのゴール。つまり、何のために何を目指し、どんなアクションをし"
 "ているのか、全てオープンです。チームフィードにアクセスすると、見えないものが"
 "見える。そんな体験が待ってます。"
-msgstr ""
 
 #: View/Pages/features.ctp:119
 msgid ""
-"全員のゴールを簡単に知る事ができます。今までこの情報を知りうる手段はありまし"
-"たか？"
+"You can understand your colleages easily, have you ever known another way to "
+"know this?"
 msgstr ""
 
 #: View/Pages/features.ctp:127
-msgid "視覚に刺さる、フォトアクション"
-msgstr ""
+msgid "How visible photo actions are!"
+msgstr "視覚に刺さる、フォトアクション"
 
 #: View/Pages/features.ctp:131
 msgid ""
+"Reporting, sharing and appealing, everything should be done as photo action!"
+msgstr ""
 "報告も共有も自己アピールも、フォトアクション＝フォトアクで完了。仕事もセルフ"
 "プロデュースの時代です。"
-msgstr ""
 
 #: View/Pages/features.ctp:133
-msgid ""
+msgid "We really believe you will like photo action!"
+msgstr ""
 "打ち合わせの最後に「フォトアク撮ろう！」の一言で、ほら、なんだか楽しくなって"
 "きた。"
-msgstr ""
 
 #: View/Pages/features.ctp:139
-msgid "写真によって活動の表現力が格段にあがります。"
-msgstr ""
+msgid "Pictures let us describe better."
+msgstr "写真によって活動の表現力が格段にあがります。"
 
 #: View/Pages/features.ctp:147
-msgid "共有はサークルで"
-msgstr ""
+msgid "Sharing at circle."
+msgstr "共有はサークルで"
 
 #: View/Pages/features.ctp:149
 msgid ""
+"You can share with your project members and with your devision members in "
+"circles."
+msgstr ""
 "部署別、プロジェクト別、同期・・・社内のあらゆるコミュニティ毎に、情報共有の"
 "場を作成できます。慣れたSNSのインターフェースで、投稿や写真・ファイルをシェ"
 "ア。"
-msgstr ""
 
 #: View/Pages/features.ctp:153
-msgid "様々な活動や話題をサークルで共有しよう！"
-msgstr ""
+msgid "Let's start conversation about any activities and topics!"
+msgstr "様々な活動や話題をサークルで共有しよう！"
 
 #: View/Pages/features.ctp:161
-msgid "メッセージ送受信"
+msgid "Messagings"
 msgstr ""
 
 #: View/Pages/features.ctp:163
@@ -5309,28 +5294,28 @@ msgid ""
 msgstr ""
 
 #: View/Pages/features.ctp:167
-msgid "Goalousはメッセンジャー機能も備えています。"
-msgstr ""
+msgid "You can use messanger in Goalous."
+msgstr "Goalousはメッセンジャー機能も備えています。"
 
 #: View/Pages/features.ctp:175
-msgid "根拠のある評価ができる"
-msgstr ""
+msgid "Evaluate reasonably and concretely."
+msgstr "根拠のある評価ができる"
 
 #: View/Pages/features.ctp:179
-msgid "評価面談で「今期は何をやり遂げましたか？」なんて質問は不要です。"
-msgstr ""
+msgid "Ridiculous is meeting for evaluation!"
+msgstr "評価面談で「今期は何をやり遂げましたか？」なんて質問は不要です。"
 
 #: View/Pages/features.ctp:181
-msgid "ゴールの達成度、やってきたアクションをすでに知っているから。"
-msgstr ""
+msgid "You have already known their goals and actions."
+msgstr "ゴールの達成度、やってきたアクションをすでに知っているから。"
 
 #: View/Pages/features.ctp:187
-msgid "評価？もちろんGoalousでできます。"
-msgstr ""
+msgid "Evaluation? Do it in Goalous!"
+msgstr "評価？もちろんGoalousでできます。"
 
 #: View/Pages/features.ctp:195
-msgid "インサイト"
-msgstr ""
+msgid "Insight"
+msgstr "インサイト"
 
 #: View/Pages/features.ctp:197
 msgid ""
@@ -5340,16 +5325,16 @@ msgid ""
 msgstr ""
 
 #: View/Pages/features.ctp:201
-msgid "チーム力が向上しているか？これを見れば分かります。"
-msgstr ""
+msgid "Your team works better? Easy to know by Goalous."
+msgstr "チーム力が向上しているか？これを見れば分かります。"
 
 #: View/Pages/features.ctp:205
-msgid "もっとあります、シゴトをたのしくするGoalousの特徴。"
-msgstr ""
+msgid "There are many other features in Goalous."
+msgstr "もっとあります、シゴトをたのしくするGoalousの特徴。"
 
 #: View/Pages/features.ctp:214
-msgid "ゴールコラボ"
-msgstr ""
+msgid "Collaborating in Goal"
+msgstr "ゴールコラボ"
 
 #: View/Pages/features.ctp:217
 msgid "隣の部署、別のフロアの人に、以外な共通点があるかもしれません。"
@@ -5359,10 +5344,6 @@ msgstr ""
 msgid ""
 "見えないものを見る。その連鎖が、あなたのゴールに助け合いをうみ、それがチーム"
 "のゴール、成長への道になります。"
-msgstr ""
-
-#: View/Pages/features.ctp:229
-msgid "コーチ"
 msgstr ""
 
 #: View/Pages/features.ctp:230
@@ -5399,38 +5380,38 @@ msgid "Goalous (ゴーラス) │最強にオープンな社内SNS"
 msgstr ""
 
 #: View/Pages/home.ctp:87
-msgid "オープンがゴールを切り拓く"
-msgstr ""
+msgid "Be open, achieve Goal."
+msgstr "オープンがゴールを切り拓く"
 
 #: View/Pages/home.ctp:122
-msgid "2016年2月5日"
-msgstr ""
+msgid "5 Feb 2016"
+msgstr "2016年2月5日"
 
 #: View/Pages/home.ctp:127
-msgid "月刊人事マネジメント2016年2月号に掲載されました"
+msgid "We appeared on a magazine. - Gekkan Jinji Management Feb. -"
 msgstr ""
 
 #: View/Pages/home.ctp:136
-msgid "2016年2月4日"
-msgstr ""
+msgid "4 Feb 2016"
+msgstr "2016年2月4日"
 
 #: View/Pages/home.ctp:141
-msgid "アイデム 人と仕事の研究所 制度探訪に掲載されました"
+msgid "We appeared on a web media. - Hito to shigoto no kenkyujo by Idem -"
 msgstr ""
 
 #: View/Pages/home.ctp:154
-msgid "Goalousで、組織は激変する"
-msgstr ""
+msgid "You can definitely change your organization by Goalous."
+msgstr "Goalousで、組織は激変する"
 
 #: View/Pages/home.ctp:155
-msgid ""
+msgid "Achieve Goals, make your team open, let your job become joyful!"
+msgstr ""
 "「ゴール達成」って？「最強にオープン」って？Goalousは、世界のシゴトをたのしく"
 "したい。それだけのこと。"
-msgstr ""
 
 #: View/Pages/home.ctp:159
-msgid "経営ビジョンにずんずん近づく"
-msgstr ""
+msgid "Get progress to Vision."
+msgstr "経営ビジョンにずんずん近づく"
 
 #: View/Pages/home.ctp:161
 msgid ""
@@ -5440,12 +5421,12 @@ msgid ""
 msgstr ""
 
 #: View/Pages/home.ctp:167
-msgid "自分のゴールの活動によって組織が成長している事を実感できます！"
-msgstr ""
+msgid "You get to know your team grow by your achievement of goals."
+msgstr "自分のゴールの活動によって組織が成長している事を実感できます！"
 
 #: View/Pages/home.ctp:176
-msgid "「それ知らない」が激減する"
-msgstr ""
+msgid "You can reduce the words, What is that?"
+msgstr "「それ知らない」が激減する"
 
 #: View/Pages/home.ctp:178
 msgid ""
@@ -5461,8 +5442,8 @@ msgid ""
 msgstr ""
 
 #: View/Pages/home.ctp:194
-msgid "協力による成果が出る"
-msgstr ""
+msgid "Make results by coorporation."
+msgstr "協力による成果が出る"
 
 #: View/Pages/home.ctp:196
 msgid ""
@@ -5472,16 +5453,16 @@ msgid ""
 msgstr ""
 
 #: View/Pages/home.ctp:202
-msgid "共に助けあい、共に喜び合う。素敵ですよね？"
-msgstr ""
+msgid "Help each other, enjoy with them. How wonderful?"
+msgstr "共に助けあい、共に喜び合う。素敵ですよね？"
 
 #: View/Pages/home.ctp:215
 msgid "Watch Video"
 msgstr "Watch Video"
 
 #: View/Pages/home.ctp:224
-msgid "Goalousについて"
-msgstr ""
+msgid "About Goalous"
+msgstr "Goalousについて"
 
 #: View/Pages/home.ctp:245
 msgid "Wherever, Whenever, from your smartphone."
@@ -6056,14 +6037,25 @@ msgstr "passwordCheck"
 msgid "passwordSameCheck"
 msgstr "passwordSameCheck"
 
+#~ msgid "You can understand your collea"
+#~ msgstr ""
+#~ "全員のゴールを簡単に知る事ができます。今までこの情報を知りうる手段はありま"
+#~ "したか？"
+
+#~ msgid "Messaging"
+#~ msgstr "メッセージ送受信"
+
+#~ msgid "We appeared on Gekkan Jinji Management Feb."
+#~ msgstr "月刊人事マネジメント2016年2月号に掲載されました"
+
+#~ msgid "We appeared on Hito to shigoto no kenkyujo by Idem."
+#~ msgstr "アイデム 人と仕事の研究所 制度探訪に掲載されました"
+
 #~ msgid "湯川啓太"
 #~ msgstr "Keita Yukawa"
 
 #~ msgid "Confirming | Goalous(ゴーラス)"
 #~ msgstr "入力内容確認 | Goalous (ゴーラス)"
-
-#~ msgid "About Goalous"
-#~ msgstr "Goalousについて"
 
 #~ msgid "Flier (pdf)"
 #~ msgstr "フライヤー（PDFファイル）"

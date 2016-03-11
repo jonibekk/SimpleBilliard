@@ -84,9 +84,9 @@ for($i = 0; $i < $num_ogp; $i++){
 <!-- ******CONTACT MAIN****** -->
 <section id="contact-main" class="contact-main section">
     <div class="container text-center">
-        <h2 class="title"><?= __('お問い合わせありがとうございました') ?></h2>
-        <p class="intro"><?= __('確認後、弊社担当者よりご連絡いたします。') ?></p>
-        <p class="intro"><?= __('お時間がございましたら、Goalous運営会社・株式会社ISAOのブログやSNSをご覧ください。') ?></p>
+        <h2 class="title"><?= __('Thank you for contacting us.') ?></h2>
+        <p class="intro"><?= __('Support member will reply to you.') ?></p>
+        <p class="intro"><?= __('Please check our Blog and SNS, if you get interested.') ?></p>
 
         <div class="row">
             <div class="item col-md-4 col-sm-12 col-xs-12">
@@ -96,7 +96,7 @@ for($i = 0; $i < $num_ogp; $i++){
                     </div>
                     <div class="details">
                         <h4><?= __('IsaB') ?></h4>
-                        <p><?= __('億人の”シゴト”を熱くする！株式会社ISAOのブログ') ?></p>
+                        <p><?= __('Make your job joyful! ISAO blog') ?></p>
                         <p><a href="http://blog.isao.co.jp/" target="_blank"><?= __('http://blog.isao.co.jp/') ?></a></p>
                     </div><!--details-->
                 </div><!--//item-inner-->
@@ -107,7 +107,7 @@ for($i = 0; $i < $num_ogp; $i++){
                         <i class="fa fa-facebook"></i>
                     </div>
                     <div class="details">
-                        <h4><?= __('facebookページ') ?></h4>
+                        <h4><?= __('facebook page') ?></h4>
                         <p><?= __('Like us!') ?></p>
                         <p><a href="https://www.facebook.com/isao.jp" target="_blank"><?= __('isao.jp') ?></a></p>
                     </div><!--details-->

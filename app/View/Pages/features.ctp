@@ -39,7 +39,7 @@ $meta_features = [
     ],
     [
         "property" => "og:title",
-        "content" => __('機能 | Goalous (ゴーラス))'),
+        "content" => __('Features | Goalous'),
     ],
     [
         "property" => "og:description",
@@ -75,7 +75,7 @@ for($i = 0; $i < $num_ogp; $i++){
     echo $this->Html->meta($meta_features[$i]);
 }
 ?>
-<title><?= __('機能 | Goalous (ゴーラス)') ?></title>
+<title><?= __('Features | Goalous') ?></title>
 <link rel="alternate" hreflang="ja" href="<?= $this->Html->url('/ja/features') ?>"/>
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/features') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/features') ?>"/>
@@ -87,13 +87,13 @@ for($i = 0; $i < $num_ogp; $i++){
     <div class="container">
         <div class="row">
             <div class="features-intro col-md-5 col-sm-6 col-xs-12">
-                <h2 class="title"><?= __('Goalousで変えられる、あなたの組織・シゴト') ?></h2>
+                <h2 class="title"><?= __('You can improve your job and organization!') ?></h2>
                 <ul class="list-unstyled features-list">
-                    <li><i class="fa fa-check"></i><?= __('意思決定のスピードが爆速に') ?></li>
-                    <li><i class="fa fa-check"></i><?= __('社員全員へ企業のビジョンを浸透') ?></li>
-                    <li><i class="fa fa-check"></i><?= __('透明性のある評価ができる') ?></li>
-                    <li><i class="fa fa-check"></i><?= __('組織の壁なんて感じない') ?></li>
-                    <li><i class="fa fa-check"></i><?= __('なんだか、仕事が楽しくなる') ?></li>
+                    <li><i class="fa fa-check"></i><?= __('Make a dicision much faster.') ?></li>
+                    <li><i class="fa fa-check"></i><?= __('Make your company vision clear to the employees.') ?></li>
+                    <li><i class="fa fa-check"></i><?= __('Make evaluation clear.') ?></li>
+                    <li><i class="fa fa-check"></i><?= __('Make your organization more flat.') ?></li>
+                    <li><i class="fa fa-check"></i><?= __('You will find your job much joyful!') ?></li>
                 </ul>
             </div><!--//intro-->
             <div class="features-video col-md-7 col-sm-6 col-xs-12 col-xs-offset-0">
@@ -110,13 +110,13 @@ for($i = 0; $i < $num_ogp; $i++){
     <div class="container">
         <div class="item row flex">
             <div class="content col-md-5 col-sm-5 col-xs-12 pull-right col-md-offset-1 col-sm-offset-1 col-xs-offset-0 from-right col-right">
-                <h3 class="title"><i class="fa fa-flag-o"></i><?= __('一目瞭然、全社員のゴール') ?></h3>
+                <h3 class="title"><i class="fa fa-flag-o"></i><?= __('Make your colleages goal clear.') ?></h3>
                 <div class="details">
-                    <p><?= __('チームの1人ひとりのゴール。つまり、何のために何を目指し、どんなアクションをしているのか、全てオープンです。チームフィードにアクセスすると、見えないものが見える。そんな体験が待ってます。') ?></p>
+                    <p><?= __('Why you work? What you work for? What are you doing? Make them clear to your colleages!') ?></p>
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 from-left col-left">
-                <?= $this->Html->image('homepage/features/screenshot-1.jpg', array('alt' => __('全員のゴールを簡単に知る事ができます。今までこの情報を知りうる手段はありましたか？'), 'class' => 'img-responsive')) ?>
+                <?= $this->Html->image('homepage/features/screenshot-1.jpg', array('alt' => __('You can understand your colleages easily, have you ever known another way to know this?'), 'class' => 'img-responsive')) ?>
             </div><!--//figure-->
         </div><!--//item-->
 
@@ -124,19 +124,19 @@ for($i = 0; $i < $num_ogp; $i++){
 
         <div class="item row flex">
             <div class="content col-md-5 col-sm-5 col-xs-12 from-left col-left">
-                <h3 class="title"><i class="fa fa-image"></i><?= __('視覚に刺さる、フォトアクション') ?></h3>
+                <h3 class="title"><i class="fa fa-image"></i><?= __('How visible photo actions are!') ?></h3>
                 <div class="details">
                     <p>
                         <?=
-                            __('報告も共有も自己アピールも、フォトアクション＝フォトアクで完了。仕事もセルフプロデュースの時代です。').
+                            __('Reporting, sharing and appealing, everything should be done as photo action!').
                             '<br>'.
-                            __('打ち合わせの最後に「フォトアク撮ろう！」の一言で、ほら、なんだか楽しくなってきた。')
+                            __('We really believe you will like photo action!')
                         ?>
                     </p>
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 col-md-offset-1 col-sm-offset-1 col-xs-offset-0 from-right col-right">
-                <?= $this->Html->image('homepage/features/screenshot-2.jpg', array('alt' => __('写真によって活動の表現力が格段にあがります。'), 'class' => 'img-responsive')) ?>
+                <?= $this->Html->image('homepage/features/screenshot-2.jpg', array('alt' => __('Pictures let us describe better.'), 'class' => 'img-responsive')) ?>
             </div><!--//figure-->
         </div><!--//item-->
 
@@ -144,13 +144,13 @@ for($i = 0; $i < $num_ogp; $i++){
 
         <div class="item row flex">
             <div class="content col-md-5 col-sm-5 col-xs-12 pull-right col-md-offset-1 col-sm-offset-1 col-xs-offset-0 from-right col-right">
-                <h3 class="title"><i class="fa fa-circle-o"></i><?= __('共有はサークルで') ?></h3>
+                <h3 class="title"><i class="fa fa-circle-o"></i><?= __('Sharing at circle.') ?></h3>
                 <div class="details">
-                    <p><?= __('部署別、プロジェクト別、同期・・・社内のあらゆるコミュニティ毎に、情報共有の場を作成できます。慣れたSNSのインターフェースで、投稿や写真・ファイルをシェア。') ?></p>
+                    <p><?= __('You can share with your project members and with your devision members in circles.') ?></p>
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 from-left col-left">
-                <?= $this->Html->image('homepage/features/screenshot-3.jpg', array('alt' => __('様々な活動や話題をサークルで共有しよう！'), 'class' => 'img-responsive')) ?>
+                <?= $this->Html->image('homepage/features/screenshot-3.jpg', array('alt' => __('Let\'s start conversation about any activities and topics!'), 'class' => 'img-responsive')) ?>
             </div><!--//figure-->
         </div><!--//item-->
 
@@ -158,13 +158,13 @@ for($i = 0; $i < $num_ogp; $i++){
 
         <div class="item row flex">
             <div class="content col-md-5 col-sm-5 col-xs-12 from-left col-left">
-                <h3 class="title"><i class="fa fa-send-o"></i><?= __('メッセージ送受信') ?></h3>
+                <h3 class="title"><i class="fa fa-send-o"></i><?= __('Messagings') ?></h3>
                 <div class="details">
                     <p><?= __('アプリでもWebでも、メッセージでコミュニケーション。社内限定だから、安心してやり取りできます。ファイルの添付やグループチャットできるから、もうEメールはいりません。') ?></p>
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 col-md-offset-1 col-sm-offset-1 col-xs-offset-0 from-right col-right">
-                <?= $this->Html->image('homepage/features/screenshot-4.jpg', array('alt' => __('Goalousはメッセンジャー機能も備えています。'), 'class' => 'img-responsive')) ?>
+                <?= $this->Html->image('homepage/features/screenshot-4.jpg', array('alt' => __('You can use messanger in Goalous.'), 'class' => 'img-responsive')) ?>
             </div><!--//figure-->
         </div><!--//item-->
 
@@ -172,19 +172,19 @@ for($i = 0; $i < $num_ogp; $i++){
 
         <div class="item row flex">
             <div class="content col-md-5 col-sm-5 col-xs-12 pull-right col-md-offset-1 col-sm-offset-1 col-xs-offset-0 from-right col-right">
-                <h3 class="title"><i class="fa fa-shield"></i><?= __('根拠のある評価ができる') ?></h3>
+                <h3 class="title"><i class="fa fa-shield"></i><?= __('Evaluate reasonably and concretely.') ?></h3>
                 <div class="details">
                     <p>
                         <?=
-                            __('評価面談で「今期は何をやり遂げましたか？」なんて質問は不要です。').
+                            __('Ridiculous is meeting for evaluation!').
                             '<br>'.
-                            __('ゴールの達成度、やってきたアクションをすでに知っているから。')
+                            __('You have already known their goals and actions.')
                         ?>
                     </p>
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 from-left col-left">
-                <?= $this->Html->image('homepage/features/screenshot-5.jpg', array('alt' => __('評価？もちろんGoalousでできます。'), 'class' => 'img-responsive')) ?>
+                <?= $this->Html->image('homepage/features/screenshot-5.jpg', array('alt' => __('Evaluation? Do it in Goalous!'), 'class' => 'img-responsive')) ?>
             </div><!--//figure-->
         </div><!--//item-->
 
@@ -192,17 +192,17 @@ for($i = 0; $i < $num_ogp; $i++){
 
         <div class="item row flex">
             <div class="content col-md-5 col-sm-5 col-xs-12 from-left col-left">
-                <h3 class="title"><i class="fa fa-line-chart"></i><?= __('インサイト') ?></h3>
+                <h3 class="title"><i class="fa fa-line-chart"></i><?= __('Insight') ?></h3>
                 <div class="details">
                     <p><?= __('社内SNSを導入している企業でよく言われるのが「導入して効果があったのかわからない」という声。インサイトやランキングで、エンゲージメントの増加が目に見えます。') ?></p>
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 col-md-offset-1 col-sm-offset-1 col-xs-offset-0 from-right col-right">
-                <?= $this->Html->image('homepage/features/screenshot-6.jpg', array('alt' => __('チーム力が向上しているか？これを見れば分かります。'), 'class' => 'img-responsive')) ?>
+                <?= $this->Html->image('homepage/features/screenshot-6.jpg', array('alt' => __('Your team works better? Easy to know by Goalous.'), 'class' => 'img-responsive')) ?>
             </div><!--//figure-->
         </div><!--//item-->
         <div class="container text-center">
-            <h2 class="title"><?= __('もっとあります、シゴトをたのしくするGoalousの特徴。') ?></h2></div>
+            <h2 class="title"><?= __('There are many other features in Goalous.') ?></h2></div>
            <div class="row">
             <div class="benefits col-md-12">
 
@@ -211,7 +211,7 @@ for($i = 0; $i < $num_ogp; $i++){
                         <i class="fa fa-child"></i>
                     </div><!--//icon-->
                     <div class="content col-md-9 col-xs-12">
-                        <h3 class="title"><?= __('ゴールコラボ') ?></h3>
+                        <h3 class="title"><?= __('Collaborating in Goal') ?></h3>
                         <p class="desc">
                             <?=
                                 __('隣の部署、別のフロアの人に、以外な共通点があるかもしれません。').
@@ -226,7 +226,7 @@ for($i = 0; $i < $num_ogp; $i++){
                         <i class="fa fa-venus-double"></i>
                     </div><!--//icon-->
                     <div class="content col-md-9 col-xs-12">
-                        <h3 class="title"><?= __('コーチ') ?></h3>
+                        <h3 class="title"><?= __('Coach') ?></h3>
                         <p class="desc"><?= __('上司、部長、課長・・・評価してるだけでない、日々アクションを見て、アゲてくれる人。1メンバーにつき1人設定します。') ?></p>
                     </div><!--//content-->
                 </div><!--//item-->
