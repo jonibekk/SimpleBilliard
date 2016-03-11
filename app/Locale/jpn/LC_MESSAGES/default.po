@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2016-03-11 17:24+0800\n"
-"PO-Revision-Date: 2016-03-11 17:24+0800\n"
+"POT-Creation-Date: 2016-03-11 17:58+0800\n"
+"PO-Revision-Date: 2016-03-11 17:58+0800\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -487,7 +487,8 @@ msgid "Anyone"
 msgstr "指定なし"
 
 #: Controller/PagesController.php:202 Model/EvaluateScore.php:86
-#: Model/Team.php:254;265
+#: Model/Team.php:254;265 View/Elements/Team/edit_term_setting.ctp:77;85;97
+#: View/Teams/add.ctp:122
 msgid "Please select"
 msgstr "選択してください"
 
@@ -2099,7 +2100,7 @@ msgstr "利用規約に同意してください。"
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:21
 #: View/Elements/gl_common_js.ctp:59
 #: View/Elements/User/modal_change_password.ctp:108
-#: View/Elements/User/profile_setting.ctp:288
+#: View/Elements/User/profile_setting.ctp:287
 msgid "Both of passwords are not same."
 msgstr "パスワードが一致しません。"
 
@@ -2109,7 +2110,7 @@ msgstr "パスワードが間違っています。"
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:23
 #: View/Elements/User/modal_change_email.ctp:86
-#: View/Elements/User/profile_setting.ctp:280
+#: View/Elements/User/profile_setting.ctp:279
 msgid "At least %2$d characters is required."
 msgstr "%2$d文字以上で入力してください。"
 
@@ -2222,7 +2223,7 @@ msgid "Get in touch"
 msgstr "Get in touch"
 
 #: View/Elements/footer_not_logged_in.ctp:55 View/Elements/header_home.ctp:53
-#: View/Elements/Homepage/faq.ctp:98
+#: View/Elements/Homepage/faq.ctp:96
 msgid "Contact us"
 msgstr "お問い合わせ"
 
@@ -2243,7 +2244,7 @@ msgstr "%1$d文字以上で%2$d文字以下で入力してください。"
 #: View/Elements/Feed/photo_upload_mini.ctp:105
 #: View/Elements/Team/edit_basic_setting.ctp:150
 #: View/Elements/Team/edit_term_setting.ctp:188
-#: View/Elements/User/profile_setting.ctp:272 View/Goals/add.ctp:572
+#: View/Elements/User/profile_setting.ctp:271 View/Goals/add.ctp:572
 #: View/Teams/add.ctp:169 View/Teams/add_group_vision.ctp:139
 #: View/Teams/add_team_vision.ctp:131 View/Teams/edit_group_vision.ctp:142
 #: View/Teams/edit_team_vision.ctp:134 View/Users/add_profile.ctp:219
@@ -2874,7 +2875,7 @@ msgstr "サークルから外す"
 #: View/Elements/User/account_setting.ctp:137
 #: View/Elements/User/modal_change_password.ctp:61
 #: View/Elements/User/notify_setting.ctp:91
-#: View/Elements/User/profile_setting.ctp:248
+#: View/Elements/User/profile_setting.ctp:247
 msgid "Save changes"
 msgstr "変更を保存"
 
@@ -3321,9 +3322,9 @@ msgid "Nothing"
 msgstr "なし"
 
 #: View/Elements/Goal/add_new_action_form.ctp:86
-#: View/Elements/Goal/modal_add_action.ctp:131
+#: View/Elements/Goal/modal_add_action.ctp:22;131
 msgid "Post an action"
-msgstr "アクション登録"
+msgstr "アクションを追加する"
 
 #: View/Elements/Goal/goal_menu_on_my_page.ctp:26
 #: View/Elements/Goal/modal_add_key_result.ctp:29;238
@@ -3380,10 +3381,6 @@ msgstr "期限"
 msgid "Clear"
 msgstr "クリア"
 
-#: View/Elements/Goal/modal_add_action.ctp:22
-msgid "アクションを追加する"
-msgstr ""
-
 #: View/Elements/Goal/modal_add_action.ctp:52
 msgid "Add an image to show the result of your action."
 msgstr "アクションの結果がわかる画像を追加しよう"
@@ -3393,8 +3390,8 @@ msgid "Write what you did."
 msgstr "やった事を書こう"
 
 #: View/Elements/Goal/modal_add_action.ctp:80
-msgid "eg) I completed making the web site."
-msgstr ""
+msgid "eg. I completed making the web site."
+msgstr "例） Webサイトの構築をした。"
 
 #: View/Elements/Goal/modal_add_action.ctp:87
 #: View/Elements/Goal/modal_add_key_result.ctp:69
@@ -3449,9 +3446,9 @@ msgstr "達成時"
 
 #: View/Elements/Goal/modal_add_key_result.ctp:118;135
 #: View/Elements/Goal/modal_edit_key_result.ctp:121;139
-#: View/Goals/add.ctp:202;217
-msgid "数字を入力してください。"
-msgstr ""
+#: View/Elements/Team/eval_score_form_elm.ctp:51 View/Goals/add.ctp:202;217
+msgid "Please enter a number."
+msgstr "数字を入力してください。"
 
 #: View/Elements/Goal/modal_add_key_result.ctp:124
 #: View/Elements/Goal/modal_edit_key_result.ctp:127
@@ -3561,21 +3558,26 @@ msgstr "他の社内向けSNSと何が違いますか？"
 
 #: View/Elements/Homepage/faq.ctp:23
 msgid ""
-"「ゴールでつながる社内SNS」であることが決定的な違いです。ゴール（目標）がメン"
+"People are connected by Goal, this is the different point from others. We "
+"can follow Goals or collaborate with Goals. Just post an action to Goals, "
+"everyone can know what you did, when you did for Goals. Enjoy your team "
+"communication."
+msgstr ""
+"ゴールでつながる社内SNS」であることが決定的な違いです。ゴール（目標）がメン"
 "バーによって作成され、そのゴールをフォローやコラボすることでゴールと繋がるこ"
 "とができます。ゴールに対して、だれがいつなにをしたかが「フォトアクション」"
 "（画像つきの記事）としてホームフィードに掲載され、みんながたのしくチェックで"
-"きます。\n"
-"また、他の社内SNSにあるような、特定のメンバーをグルーピングして閉じた空間で情"
-"報交換することももちろん可能です。"
-msgstr ""
+"きます"
 
-#: View/Elements/Homepage/faq.ctp:27
+#: View/Elements/Homepage/faq.ctp:26
 msgid "How to evaluate personal Goals?"
 msgstr "個人の目標評価はどのようにおこなうのですか？"
 
-#: View/Elements/Homepage/faq.ctp:28
+#: View/Elements/Homepage/faq.ctp:27
 msgid ""
+"Evaluation can be done at end of term or in next term. There are 2 types of "
+"evaluations, Goal evaluation and total evaluation."
+msgstr ""
 "個人の目標による評価は、期末もしくは来期中に実施することができます。コーチに"
 "よって認定（評価対象として承認）されたゴールに対してのゴール評価と、そのメン"
 "バー個人のトータル評価の2分類があり、あらかじめチーム（組織）で定めたスコアと"
@@ -3583,104 +3585,116 @@ msgid ""
 "（兼務可能）、評価者は定められた順番で評価を実施できます。さらに設定によっ"
 "て、「自己評価」と「最終者評価（CSVファイルでの一括評価）」を評価者として追加"
 "できます。"
-msgstr ""
 
-#: View/Elements/Homepage/faq.ctp:31
+#: View/Elements/Homepage/faq.ctp:30
 msgid "What should I do if the member leave our company?"
 msgstr "社員が期中で退職したらどうなりますか？"
 
-#: View/Elements/Homepage/faq.ctp:32
+#: View/Elements/Homepage/faq.ctp:31
 msgid ""
+"Team administrator can make the member left deactivated. Those members can't "
+"access your team but the posts they did would remain your team."
+msgstr ""
 "チーム管理者（Goalous上での最高権限をもつチームメンバー）が、退職した社員を"
 "チームから「非アクティブ（無効）化」処理をしてください。非アクティブ化された"
 "社員は、そのチームへのアクセス権を失います。よって、一切の情報を参照すること"
 "はできません。また、一度非アクティブ化されたメンバーを復活することもできま"
 "す。なお、非アクティブ化されたメンバーの情報は、チーム内に残りますので、デー"
 "タが削除されるわけではございません。"
-msgstr ""
 
-#: View/Elements/Homepage/faq.ctp:35
+#: View/Elements/Homepage/faq.ctp:34
 msgid "I'm concerned about security and backup systems."
 msgstr "セキュリティやバックアップはどうなっていますか？"
 
-#: View/Elements/Homepage/faq.ctp:36
+#: View/Elements/Homepage/faq.ctp:35
 msgid ""
+"We save data as distribution. We reserve backups everyday. Using SSL, 2-Step "
+"Verification and Login lock, you can use Goalous with safe."
+msgstr ""
 "データの分散保管をしていますので、仮に特定のデーターセンターが災害に遭っても"
 "別のデーターセンターで稼働します。また、すべてのデータは、常時バックアップを"
 "していますので、1台のサーバーに障害が発生してもデータを復旧できます。不正アク"
 "セスへのセキュリティとしては、SSLによる暗号化通信・2段階認証・ログインロック"
 "に加え、定期的に第三者機関による脆弱性診断を実施しております。\n"
 "なお、弊社はプライバシーマークの取得企業ですのでご安心ください。"
-msgstr ""
 
-#: View/Elements/Homepage/faq.ctp:40
+#: View/Elements/Homepage/faq.ctp:38
 msgid "Is there apps for smartphone and tablet?"
 msgstr "スマートフォン・タブレットのアプリはありますか？"
 
-#: View/Elements/Homepage/faq.ctp:41
+#: View/Elements/Homepage/faq.ctp:39
 msgid ""
+"You can download Goalous on AppStore and PlayStore. You can use our "
+"application on your mobile. Also, you can access to Goalous on your mobile "
+"browser."
+msgstr ""
 "Android, iPhoneの専用アプリケーションをご用意しております。それぞれのストアか"
 "らダウンロードしてご利用ください。スマートフォンやタブレットからブラウザでア"
 "クセスいただいても、最適化されたビューでご利用できます。"
-msgstr ""
 
-#: View/Elements/Homepage/faq.ctp:44
+#: View/Elements/Homepage/faq.ctp:42
 msgid "Can we ask you to explain more in detail?"
 msgstr "企業担当者向けに詳しい説明をしてもらえますか？"
 
-#: View/Elements/Homepage/faq.ctp:45
+#: View/Elements/Homepage/faq.ctp:43
 msgid ""
-"ぜひぜひ！お問い合わせフォームからご連絡くださいませ。お待ちしております。"
+"Sure! Please contact with us from contact form. We are looking forward your "
+"contact!"
 msgstr ""
+"ぜひぜひ！お問い合わせフォームからご連絡くださいませ。お待ちしております。"
 
-#: View/Elements/Homepage/faq.ctp:48
+#: View/Elements/Homepage/faq.ctp:46
 msgid "What should we do after the campaign?"
 msgstr "無償期間（2016年8月31日まで）の後はどうなりますか？"
 
-#: View/Elements/Homepage/faq.ctp:49
-msgid ""
+#: View/Elements/Homepage/faq.ctp:47
+msgid "There will appear some limit, but data will not be deleted."
+msgstr ""
 "機能制限（メンバーの追加不可能など）を予定しておりますが、データの削除などせ"
 "ず引き続きご利用いただけます。"
-msgstr ""
 
-#: View/Elements/Homepage/faq.ctp:52
+#: View/Elements/Homepage/faq.ctp:50
 msgid "Can we customize Goalous?"
 msgstr "機能のカスタマイズはできますか？"
 
-#: View/Elements/Homepage/faq.ctp:53
+#: View/Elements/Homepage/faq.ctp:51
 msgid ""
+"Definitely not, but we hope to get your feedback. If we find it as good "
+"idea, we immediately accept it."
+msgstr ""
 "カスタマイズにはご対応いたしません。ユーザー様からのご要望はいつでも歓迎いた"
 "します。ご要望がサービスの改善に役立つと判断した場合は、実装を計画いたします"
 "のでよろしくお願いします。"
-msgstr ""
 
-#: View/Elements/Homepage/faq.ctp:56
+#: View/Elements/Homepage/faq.ctp:54
 msgid "Could we ask you to support us?"
 msgstr "使い方がわからない場合、サポートはありますか？"
 
-#: View/Elements/Homepage/faq.ctp:57
+#: View/Elements/Homepage/faq.ctp:55
 msgid ""
 "2016年8月31日までの無料キャンペーン中にご登録いただいたお客様は、ログイン後に"
 "利用できるサポートツールでお問い合わせください。できる限り早い対応をいたしま"
 "す。"
 msgstr ""
 
-#: View/Elements/Homepage/faq.ctp:60
+#: View/Elements/Homepage/faq.ctp:58
 msgid "Which company offer Goalous?"
 msgstr "Goalousの運営会社はどこですか？"
 
-#: View/Elements/Homepage/faq.ctp:61
+#: View/Elements/Homepage/faq.ctp:59
 msgid ""
+"ISAO, make and deliever \"Joyful!\". Found on 1999, our sprits are \"Open, "
+"Challanging, Link\"."
+msgstr ""
 "\"たのしい！\"をうみだしとどける企業、ISAO（いさお）が運営しております。豊田"
 "通商株式会社100％出資の子会社です。1999年に創業を開始しており、オープン・チャ"
 "レンジ・キズナをスピリッツとした集団です。"
-msgstr ""
 
-#: View/Elements/Homepage/faq.ctp:68
+#: View/Elements/Homepage/faq.ctp:66
 msgid "Frequent questions"
 msgstr "よくあるご質問"
 
-#: View/Elements/Homepage/faq.ctp:97
+#: View/Elements/Homepage/faq.ctp:95
 msgid "Any other question?"
 msgstr "その他のご質問はありますか？"
 
@@ -3808,8 +3822,8 @@ msgid "Term settings"
 msgstr "期間設定"
 
 #: View/Elements/Team/edit_term_setting.ctp:50
-msgid "Iterms for change"
-msgstr ""
+msgid "Items for change"
+msgstr "変更適用対象"
 
 #: View/Elements/Team/edit_term_setting.ctp:66
 msgid "Current term can't be changed during the evaluation period."
@@ -3819,10 +3833,6 @@ msgstr "評価期間中は今期の変更ができません。"
 #: View/Elements/User/account_setting.ctp:84 View/Teams/add.ctp:101
 msgid "Timezone"
 msgstr "タイムゾーン"
-
-#: View/Elements/Team/edit_term_setting.ctp:77;85;97 View/Teams/add.ctp:122
-msgid "選択してください。"
-msgstr ""
 
 #: View/Elements/Team/edit_term_setting.ctp:83 View/Teams/add.ctp:109
 msgid "Start date"
@@ -3881,10 +3891,6 @@ msgstr "表示順"
 #: View/Elements/Team/eval_score_form_elm.ctp:50
 msgid "Input is required"
 msgstr "入力必須項目です。"
-
-#: View/Elements/Team/eval_score_form_elm.ctp:51
-msgid "Please enter a number."
-msgstr "数字を入力してください。"
 
 #: View/Elements/Team/eval_score_form_elm.ctp:72
 msgid "Please explain the definition."

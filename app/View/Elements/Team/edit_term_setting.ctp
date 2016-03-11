@@ -47,7 +47,7 @@
         }
         ?>
         <div class="form-group">
-            <label class="col col-sm-3 control-label form-label"><?= __('Iterms for change') ?></label>
+            <label class="col col-sm-3 control-label form-label"><?= __('Items for change') ?></label>
 
             <div class="col col-sm-6">
                 <?=
@@ -74,7 +74,7 @@
             'type'                     => 'select',
             'options'                  => $timezones,
             'required'                 => true,
-            "data-bv-notempty-message" => __("選択してください。"),
+            "data-bv-notempty-message" => __("Please select"),
         ])
         ?>
         <?=
@@ -82,7 +82,7 @@
             'id'                       => "EditTermStartTerm",
             'label'                    => __("Start date"),
             'type'                     => 'select',
-            "data-bv-notempty-message" => __("選択してください。"),
+            "data-bv-notempty-message" => __("Please select"),
             'options'                  => $start_term_month_options,
             'wrapInput'                => 'team-setting-term-begining',
             'afterInput'               => '<span class="help-block font_11px">'
@@ -94,7 +94,7 @@
             'id'                       => "EditTermBorderMonths",
             'label'                    => __("Term"),
             'type'                     => 'select',
-            "data-bv-notempty-message" => __("選択してください。"),
+            "data-bv-notempty-message" => __("Please select"),
             'options'                  => $border_months_options,
             'wrapInput'                => 'team-setting-term-span',
         ]) ?>

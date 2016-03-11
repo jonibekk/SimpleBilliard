@@ -19,7 +19,7 @@
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= __("アクションを追加する") ?></h4>
+            <h4 class="modal-title"><?= __("Post an action") ?></h4>
             <ul class="add-key-result-goal-info">
                 <li>
                     <i class="fa fa-flag"></i> <?= h($goal['Goal']['name']) ?>
@@ -77,7 +77,7 @@
                                        '&nbsp;<i class="fa font_brownRed font_14px">*</i><span class="modal-key-result-headings-description">' .
                                        __("Write what you did.") . '</span></h5></div>',
                                     'label'                    => false,
-                                    'placeholder'              => __("eg) I completed making the web site."),
+                                    'placeholder'              => __("eg. I completed making the web site."),
                                     "data-bv-notempty-message" => __("Input is required."),
                                     'rows'                     => 1,
                                    ]) ?>

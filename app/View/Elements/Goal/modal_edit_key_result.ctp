@@ -118,7 +118,7 @@
                                                     'data-bv-stringlength-message' => __(
                                                                                           "It's over limit characters (%s).", 15),
                                                     "data-bv-notempty-message"     => __("Input is required."),
-                                                    'data-bv-numeric-message'      => __("数字を入力してください。"),
+                                                    'data-bv-numeric-message'      => __("Please enter a number."),
                                                    ]) ?>
                             </div>
                             <div class="iii">
@@ -136,7 +136,7 @@
                                                     'data-bv-stringlength-message' => __(
                                                                                           "It's over limit characters (%s).", 15),
                                                     "data-bv-notempty-message"     => __("Input is required."),
-                                                    'data-bv-numeric-message'      => __("数字を入力してください。"),
+                                                    'data-bv-numeric-message'      => __("Please enter a number."),
                                                    ]) ?>
                             </div>
                         </div>

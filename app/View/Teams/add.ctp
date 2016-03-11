@@ -119,7 +119,7 @@
                 $this->Form->input('border_months', [
                     'label'                    => __("Term"),
                     'type'                     => 'select',
-                    "data-bv-notempty-message" => __("選択してください。"),
+                    "data-bv-notempty-message" => __("Please select"),
                     'options'                  => $border_months_options
                 ]) ?>
                 <div class="form-group">

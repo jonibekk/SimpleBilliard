@@ -199,7 +199,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                                     'data-bv-stringlength-message' => __(
                                                                                           "It's over limit characters (%s).", 15),
                                                     "data-bv-notempty-message"     => __("Input is required."),
-                                                    'data-bv-numeric-message'      => __("数字を入力してください。"),
+                                                    'data-bv-numeric-message'      => __("Please enter a number."),
                                                    ]) ?>
                                 <?=
                                 $this->Form->input('start_value',
@@ -214,7 +214,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                                     'data-bv-stringlength-message' => __(
                                                                                           "It's over limit characters (%s).", 15),
                                                     "data-bv-notempty-message"     => __("Input is required."),
-                                                    'data-bv-numeric-message'      => __("数字を入力してください。"),
+                                                    'data-bv-numeric-message'      => __("Please enter a number."),
                                                    ]) ?>
                             </div>
                         </div>
