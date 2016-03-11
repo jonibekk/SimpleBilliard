@@ -52,7 +52,7 @@
         ],
         [
             'question' => __('Could we ask you to support us?'),
-            'answer' => __('2016年8月31日までの無料キャンペーン中にご登録いただいたお客様は、ログイン後に利用できるサポートツールでお問い合わせください。できる限り早い対応をいたします。')
+            'answer' => __('After logged in, you can get contact with us by support tool. We can help you as soon as possible.')
         ],
         [
             'question' => __('Which company offer Goalous?'),

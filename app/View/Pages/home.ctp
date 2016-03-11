@@ -159,7 +159,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
                 <h3 class="title"><?= __('Get progress to Vision.') ?></h3>
                 <div class="details">
                     <p><?= __(
-                               '経営ビジョンが反映され、従業員たちが到達を目指す具体的な指標。それがゴールです。Goalousを使えば使うほど、ゴールへの活動が増えて、組織が前へ前へずんずん進みます。') ?></p>
+                               'Every one knows Vision and make their Goals. Goalous let them improve themselves.') ?></p>
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 col-left">
@@ -176,7 +176,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
                 <h3 class="title"><?= __('You can reduce the words, What is that?') ?></h3>
                 <div class="details">
                     <p><?= __(
-                               '商談した・ドキュメントを作成した・プレゼンした…など、ゴール( 目標 )に対する日々のアクションや、特定の仲間との会話によって情報量が増えます。情報の不足がなければ、より的確な判断ができます。') ?></p>
+                               'What did your colleages did today? Share on Goalous and get to know more and more.') ?></p>
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 col-md-offset-1 col-sm-offset-1 col-xs-offset-0 col-right">
@@ -194,7 +194,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
                 <h3 class="title"><?= __('Make results by coorporation.') ?></h3>
                 <div class="details">
                     <p><?= __(
-                               'チームでミッションを達成するのに、最も大切な要素は「お互いにわかり合う」こと。Goalousを通して、お互いの活動を認め合い、助け合うことで効率よく成果が出るようになります。') ?></p>
+                               'What most important for teams is to know each other. Get to know by Goalous, you can get succeeded efficiently.') ?></p>
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 col-left">
