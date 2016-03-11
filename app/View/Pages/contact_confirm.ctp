@@ -39,7 +39,7 @@ $meta_contact_confirm = [
     ],
     [
         "property" => "og:title",
-        "content" => __('入力内容確認 | Goalous(ゴーラス)'),
+        "content" => __('Confirming | Goalous'),
     ],
     [
         "property" => "og:description",
@@ -75,7 +75,7 @@ for($i = 0; $i < $num_ogp; $i++){
     echo $this->Html->meta($meta_contact_confirm[$i]);
 }
 ?>
-<title><?= __('入力内容確認 | Goalous (ゴーラス)') ?></title>
+<title><?= __('Confirming | Goalous)') ?></title>
 <link rel="alternate" hreflang="ja" href="<?= $this->Html->url('/ja/contact_confirm') ?>"/>
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/contact_confirm') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/contact_confirm') ?>"/>
@@ -84,8 +84,8 @@ for($i = 0; $i < $num_ogp; $i++){
 <!-- ******CONTACT MAIN****** -->
 <section id="contact-main" class="contact-main section">
     <div class="container text-center">
-        <h2 class="title"><?= __('お問い合わせ内容確認') ?></h2>
-        <p class="intro"><?= __('内容をご確認のうえ、問題なければ送信をクリックしてください。') ?></p>
+        <h2 class="title"><?= __('Confirm what you ask us') ?></h2>
+        <p class="intro"><?= __('Click send, after checking your contents.') ?></p>
     </div><!--//container-->
 </section>
 
@@ -94,25 +94,25 @@ for($i = 0; $i < $num_ogp; $i++){
         <div class="col-md-8 col-md-offset-2 text-left">
             <form class="form-horizontal">
                 <div class="form-group">
-                    <label class="col-sm-4 control-label"><?= __('ご希望') ?></label>
+                    <label class="col-sm-4 control-label"><?= __('Appointed') ?></label>
                     <div class="col-sm-8">
                         <p class="form-control-static"><?= h($data['want_text']) ?></p>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-4 control-label"><?= __('会社名') ?></label>
+                    <label class="col-sm-4 control-label"><?= __('Your company name') ?></label>
                     <div class="col-sm-8">
                         <p class="form-control-static"><?= h($data['company']) ?></p>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-4 control-label"><?= __('お名前') ?></label>
+                    <label class="col-sm-4 control-label"><?= __('Your name') ?></label>
                     <div class="col-sm-8">
                         <p class="form-control-static"><?= h($data['name']) ?></p>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-4 control-label"><?= __('メールアドレス') ?></label>
+                    <label class="col-sm-4 control-label"><?= __('Email address') ?></label>
                     <div class="col-sm-8">
                         <p class="form-control-static"><?= h($data['email']) ?></p>
                     </div>

@@ -9,28 +9,28 @@
  * @var $data
  */
 
-echo __('このたびはGoalous（ゴーラス）へお問い合わせいただき、誠にありがとうございます。') . "\n";
+echo __('Thank you for getting contact with Goalous.') . "\n";
 echo "\n";
-echo __('確認後、弊社担当者よりご連絡いたします。') . "\n";
-echo __('どうぞよろしくお願い申し上げます。') . "\n";
+echo __('Support member will reply to you.') . "\n";
+echo __('Just wait a momemt.') . "\n";
 echo "\n";
 echo "────────────────────\n";
-echo __('お問い合わせ内容') . "\n";
+echo __('What you want to ask') . "\n";
 echo "────────────────────\n";
 echo "\n";
-echo "- " . __('お問い合わせ項目') . ":" . "\n";
+echo "- " . __('Which item you want to ask') . ":" . "\n";
 echo "   " . h($data['want_text']) . "\n";
 echo "\n";
-echo "- " . __('会社名') . ":" . "\n";
+echo "- " . __('Your company name') . ":" . "\n";
 echo "   " . h($data['company']) . "\n";
 echo "\n";
-echo "- " . __('お名前') . ":" . "\n";
+echo "- " . __('Your name') . ":" . "\n";
 echo "   " . h($data['name']) . "\n";
 echo "\n";
-echo "- " . __('メールアドレス') . ":" . "\n";
+echo "- " . __('Email address') . ":" . "\n";
 echo "   " . h($data['email']) . "\n";
 echo "\n";
-echo "- " . __('お問い合わせ内容') . ":" . "\n";
+echo "- " . __('What you want to ask') . ":" . "\n";
 echo "   " . h($data['message']) . "\n";
 echo "\n";
 echo "- " . __('Sales person you appointed') . ":" . "\n";

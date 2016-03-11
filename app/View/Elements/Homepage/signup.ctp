@@ -23,7 +23,7 @@
         <p class="summary"><?= __('It\'s free until 31 Aug 2016! Try it!') ?></p>
         <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'register', '?' => ['type' => 'bottom']]) ?>"
            class="col-md-6 col-md-offset-3" id="RegisterLinkBottom">
-            <button type="submit" class="btn btn-cta btn-cta-primary btn-block btn-lg"><?= __('Sign up') ?></button>
+            <button type="submit" class="btn btn-cta btn-cta-primary btn-block btn-lg"><?= __('Sign Up') ?></button>
         </a>
     </div>
 </section><!--//signup-->

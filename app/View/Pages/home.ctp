@@ -106,7 +106,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
                 <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'register', '?' => ['type' => 'middle']]) ?>"
                    id="RegisterLinkTopMiddle">
                     <button type="submit" class="btn btn-cta btn-cta-primary btn-block"><?= __(
-                                                                                                '新規会員登録') ?></button>
+                                                                                                'Sign Up') ?></button>
                 </a>
             </div>
         </div><!--//contianer-->
@@ -242,8 +242,8 @@ for ($i = 0; $i < $num_ogp; $i++) {
     <div class="container">
         <div class="row flex">
             <div class="col-md-6 col-sm-6 col-xs-12 from-left col-left text-center">
-                <h3><?= __('スマホアプリで、いつでもどこからでも') ?></h3>
-                <p class="lead-text"><?= __('iOS・Androidアプリでもご利用いただけます') ?></p>
+                <h3><?= __('Wherever, Whenever, from your smartphone.') ?></h3>
+                <p class="lead-text"><?= __('You can get iOS and Android apps.') ?></p>
                 <?= $this->Html->link(
                     $this->Html->image('https://linkmaker.itunes.apple.com/images/badges/en-us/badge_appstore-lrg.svg'),
                     'https://itunes.apple.com/us/app/goalous-chimu-li-xiang-shangsns/id1060474459?ls=1&mt=8',
@@ -285,15 +285,15 @@ for ($i = 0; $i < $num_ogp; $i++) {
             </div>
             <div class="media-body">
                 <dt class="bold-text">
-                    <?= __('Goalous紹介資料（PDFファイル）') ?>
+                    <?= __('What is Goalous? (jp, pdf)') ?>
                 </dt>
                 <dd>
-                    <?= __('社内稟議用のサンプル資料です。ぜひご活用ください。') ?>
+                    <?= __('This file is written in Japanese.') ?>
                     <br>
                     <a href="../composition/pdf/jp_GoalousIntroduction_100.pdf" target="_blank"><i
                             class="fa fa-arrow-down document-download-icon"></i>
                         <span class="document-download-text">
-                            <?= __('資料ダウンロード') ?>
+                            <?= __('Download the file') ?>
                         </span>
                     </a>
                 </dd>
@@ -305,15 +305,15 @@ for ($i = 0; $i < $num_ogp; $i++) {
             </div>
             <div class="media-body">
                 <dt class="bold-text">
-                    <?= __('フライヤー（PDFファイル）') ?>
+                    <?= __('Fryer (pdf)') ?>
                 </dt>
                 <dd>
-                    <?= __('フライヤー資料です。ぜひご活用ください。') ?>
+                    <?= __('This is Goalous flyer.') ?>
                     <br>
                     <a href="../composition/pdf/jp_goalous_flier_campaign.pdf" target="_blank"><i
                             class="fa fa-arrow-down document-download-icon"></i>
                         <span class="document-download-text">
-                            <?= __('資料ダウンロード') ?>
+                            <?= __('Download the file') ?>
                         </span>
                     </a>
                 </dd>

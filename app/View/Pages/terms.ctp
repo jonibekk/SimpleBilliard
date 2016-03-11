@@ -40,7 +40,7 @@ $meta_terms = [
     ],
     [
         "property" => "og:title",
-        "content" => __('Terms of service | Goalous(ゴーラス)'),
+        "content" => __('Terms of service | Goalous'),
     ],
     [
         "property" => "og:description",

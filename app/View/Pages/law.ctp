@@ -39,7 +39,7 @@ $meta_law = [
     ],
     [
         "property" => "og:title",
-        "content" => __('特定商取引法に基づく表記 | Goalous(ゴーラス)'),
+        "content" => __('Inscription by Law | Goalous'),
     ],
     [
         "property" => "og:description",
@@ -75,7 +75,7 @@ for($i = 0; $i < $num_ogp; $i++){
     echo $this->Html->meta($meta_law[$i]);
 }
 ?>
-<title><?= __('特定商取引法に基づく表記 | Goalous (ゴーラス)') ?></title>
+<title><?= __('Inscription by Law | Goalous') ?></title>
 <link rel="alternate" hreflang="ja" href="<?= $this->Html->url('/ja/law') ?>"/>
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/law') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/law') ?>"/>
