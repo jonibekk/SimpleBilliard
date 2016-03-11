@@ -71,10 +71,10 @@ if (!isset($top_lang)) {
             <div class="row">
                 <div class="pull-left footer-bottom-left">
                     <small class="copyright">© 2016 ISAO</small>
-                    <!--<ul class="footer-lang list-inline">
+                    <ul class="footer-lang list-inline">
                         <li><a href="<?=$this->Html->url('/en/')?>">English (US)</a></li>
                         <li><a href="<?=$this->Html->url('/ja/')?>">日本語</a></li>
-                    </ul>-->
+                    </ul>
                 </div>
                 <ul class="social list-inline pull-right">
                     <!-- <li><a href="http://instagram.com/goalous" target=" _blank"><i class="fa fa-instagram"></i></a></li> -->
