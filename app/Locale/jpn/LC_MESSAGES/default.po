@@ -5287,11 +5287,8 @@ msgid "Messagings"
 msgstr ""
 
 #: View/Pages/features.ctp:163
-msgid ""
-"アプリでもWebでも、メッセージでコミュニケーション。社内限定だから、安心してや"
-"り取りできます。ファイルの添付やグループチャットできるから、もうEメールはいり"
-"ません。"
-msgstr ""
+msgid "You can communicate with your team members by Web and Mobile app. No more need to use Email."
+msgstr "アプリでもWebでも、メッセージでコミュニケーション。社内限定だから、安心してやり取りできます。ファイルの添付やグループチャットできるから、もうEメールはいりません。"
 
 #: View/Pages/features.ctp:167
 msgid "You can use messanger in Goalous."
@@ -5319,10 +5316,8 @@ msgstr "インサイト"
 
 #: View/Pages/features.ctp:197
 msgid ""
-"社内SNSを導入している企業でよく言われるのが「導入して効果があったのかわからな"
-"い」という声。インサイトやランキングで、エンゲージメントの増加が目に見えま"
-"す。"
-msgstr ""
+"Is it really effective? Just check insight and ranking in Goalous!"
+msgstr "社内SNSを導入している企業でよく言われるのが「導入して効果があったのかわからない」という声。インサイトやランキングで、エンゲージメントの増加が目に見えます。"
 
 #: View/Pages/features.ctp:201
 msgid "Your team works better? Easy to know by Goalous."
@@ -5337,32 +5332,24 @@ msgid "Collaborating in Goal"
 msgstr "ゴールコラボ"
 
 #: View/Pages/features.ctp:217
-msgid "隣の部署、別のフロアの人に、以外な共通点があるかもしれません。"
-msgstr ""
+msgid "You can meet people in another division or another floor."
+msgstr "隣の部署、別のフロアの人に、以外な共通点があるかもしれません。"
 
 #: View/Pages/features.ctp:219
-msgid ""
-"見えないものを見る。その連鎖が、あなたのゴールに助け合いをうみ、それがチーム"
-"のゴール、成長への道になります。"
-msgstr ""
+msgid "To help each other, then you can achieve your goals."
+msgstr "見えないものを見る。その連鎖が、あなたのゴールに助け合いをうみ、それがチームのゴール、成長への道になります。"
 
 #: View/Pages/features.ctp:230
-msgid ""
-"上司、部長、課長・・・評価してるだけでない、日々アクションを見て、アゲてくれ"
-"る人。1メンバーにつき1人設定します。"
-msgstr ""
+msgid "You can set your coach. Who is for your best?"
+msgstr "上司、部長、課長・・・評価してるだけでない、日々アクションを見て、アゲてくれる人。1メンバーにつき1人設定します。"
 
 #: View/Pages/features.ctp:239
-msgid ""
-"顔と名前の一致に加え、何を目指して毎日どんなアクションをしているか検索でき"
-"る。これは全社のデータベースです。"
-msgstr ""
+msgid "You can know everyone in your company. That's nice, isn't it?"
+msgstr "顔と名前の一致に加え、何を目指して毎日どんなアクションをしているか検索できる。これは全社のデータベースです。"
 
 #: View/Pages/features.ctp:248
-msgid ""
-"会社のビジョン、どのくらいの社員が知っていますか？いつでも意識できるインター"
-"フェースを用意しています。"
-msgstr ""
+msgid "Employees really know the company vision? Make it more known."
+msgstr "会社のビジョン、どのくらいの社員が知っていますか？いつでも意識できるインターフェースを用意しています。"
 
 #: View/Pages/home.ctp:30;46
 msgid ""

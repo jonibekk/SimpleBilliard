@@ -160,7 +160,7 @@ for($i = 0; $i < $num_ogp; $i++){
             <div class="content col-md-5 col-sm-5 col-xs-12 from-left col-left">
                 <h3 class="title"><i class="fa fa-send-o"></i><?= __('Messagings') ?></h3>
                 <div class="details">
-                    <p><?= __('アプリでもWebでも、メッセージでコミュニケーション。社内限定だから、安心してやり取りできます。ファイルの添付やグループチャットできるから、もうEメールはいりません。') ?></p>
+                    <p><?= __('You can communicate with your team members by Web and Mobile app. No more need to use Email.') ?></p>
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 col-md-offset-1 col-sm-offset-1 col-xs-offset-0 from-right col-right">
@@ -194,7 +194,7 @@ for($i = 0; $i < $num_ogp; $i++){
             <div class="content col-md-5 col-sm-5 col-xs-12 from-left col-left">
                 <h3 class="title"><i class="fa fa-line-chart"></i><?= __('Insight') ?></h3>
                 <div class="details">
-                    <p><?= __('社内SNSを導入している企業でよく言われるのが「導入して効果があったのかわからない」という声。インサイトやランキングで、エンゲージメントの増加が目に見えます。') ?></p>
+                    <p><?= __('Is it really effective? Just check insight and ranking in Goalous!') ?></p>
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 col-md-offset-1 col-sm-offset-1 col-xs-offset-0 from-right col-right">
@@ -214,9 +214,9 @@ for($i = 0; $i < $num_ogp; $i++){
                         <h3 class="title"><?= __('Collaborating in Goal') ?></h3>
                         <p class="desc">
                             <?=
-                                __('隣の部署、別のフロアの人に、以外な共通点があるかもしれません。').
+                                __('You can meet people in another division or another floor.').
                                 '<br>'.
-                                __('見えないものを見る。その連鎖が、あなたのゴールに助け合いをうみ、それがチームのゴール、成長への道になります。')
+                                __('To help each other, then you can achieve your goals.')
                             ?>
                         </p>
                     </div><!--//content-->
@@ -227,7 +227,7 @@ for($i = 0; $i < $num_ogp; $i++){
                     </div><!--//icon-->
                     <div class="content col-md-9 col-xs-12">
                         <h3 class="title"><?= __('Coach') ?></h3>
-                        <p class="desc"><?= __('上司、部長、課長・・・評価してるだけでない、日々アクションを見て、アゲてくれる人。1メンバーにつき1人設定します。') ?></p>
+                        <p class="desc"><?= __('You can set your coach. Who is for your best?') ?></p>
                     </div><!--//content-->
                 </div><!--//item-->
                 <div class="item clearfix">
@@ -236,7 +236,7 @@ for($i = 0; $i < $num_ogp; $i++){
                     </div><!--//icon-->
                     <div class="content col-md-9 col-xs-12">
                         <h3 class="title"><?= __('Profile') ?></h3>
-                        <p class="desc"><?= __('顔と名前の一致に加え、何を目指して毎日どんなアクションをしているか検索できる。これは全社のデータベースです。') ?></p>
+                        <p class="desc"><?= __('You can know everyone in your company. That\'s nice, isn\'t it?') ?></p>
                     </div><!--//content-->
                 </div><!--//item-->
                 <div class="item clearfix">
@@ -245,7 +245,7 @@ for($i = 0; $i < $num_ogp; $i++){
                     </div><!--//icon-->
                     <div class="content col-md-9 col-xs-12">
                         <h3 class="title"><?= __('Vision') ?></h3>
-                        <p class="desc"><?= __('会社のビジョン、どのくらいの社員が知っていますか？いつでも意識できるインターフェースを用意しています。') ?></p>
+                        <p class="desc"><?= __('Employees really know the company vision? Make it more known.') ?></p>
                     </div><!--//content-->
                 </div><!--//item-->
             </div>
