@@ -15,13 +15,13 @@
         <div class="modal-header none-border">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= __d('app', "サークルを編集") ?></h4>
+            <h4 class="modal-title"><?= __("Edit Circle") ?></h4>
         </div>
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#tab1" data-toggle="tab"><?= __d('app', "基本情報") ?></a></li>
-            <li><a href="#tab2" data-toggle="tab"><?= __d('app', "メンバー一覧") ?></a></li>
+            <li class="active"><a href="#tab1" data-toggle="tab"><?= __("Basic info") ?></a></li>
+            <li><a href="#tab2" data-toggle="tab"><?= __("Members list") ?></a></li>
             <?php if (!$this->request->data['Circle']['team_all_flg']): ?>
-                <li><a href="#tab3" data-toggle="tab"><?= __d('app', "メンバー追加") ?></a></li>
+                <li><a href="#tab3" data-toggle="tab"><?= __("Add member(s)") ?></a></li>
             <?php endif ?>
         </ul>
 
@@ -47,24 +47,24 @@
                 <?= $this->Form->hidden('id') ?>
                 <?=
                 $this->Form->input('name',
-                                   ['label'                        => __d('app', "サークル名"),
-                                    'placeholder'                  => __d('app', "例) 営業部"),
-                                    "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
+                                   ['label'                        => __("Circle name"),
+                                    'placeholder'                  => __("eg) the sales division"),
+                                    "data-bv-notempty-message"     => __("Input is required."),
                                     'data-bv-stringlength'         => 'true',
                                     'data-bv-stringlength-max'     => 128,
-                                    'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 128),
+                                    'data-bv-stringlength-message' => __("It's over limit characters (%s).", 128),
                                     'required'                     => true,
                                    ]) ?>
                 <?php if (!$this->request->data['Circle']['team_all_flg']): ?>
 
                     <?php $privacy_option = Circle::$TYPE_PUBLIC;
-                    $privacy_option[Circle::TYPE_PUBLIC_ON] .= '<span class="help-block font_11px">' . __d('app',
-                                                                                                           "サークル名と参加メンバー、投稿がチーム内に公開されます。チームメンバーは誰でも自由に参加できます。") . '</span>';
-                    $privacy_option[Circle::TYPE_PUBLIC_OFF] .= '<span class="help-block font_11px">' . __d('app',
-                                                                                                            "サークル名と参加メンバー、投稿はこのサークルの参加メンバーだけに表示されます。サークル管理者だけがメンバーを追加できます。") . '</span>';
+                    $privacy_option[Circle::TYPE_PUBLIC_ON] .= '<span class="help-block font_11px">' . __(
+                                                                                                           "Anyone can see the circle, its members and their posts.") . '</span>';
+                    $privacy_option[Circle::TYPE_PUBLIC_OFF] .= '<span class="help-block font_11px">' . __(
+                                                                                                            "Only members can find the circle and see posts.") . '</span>';
                     ?>
                     <div class="form-group">
-                        <label class="control-label modal-label"><?= __d('app', 'プライバシー') ?></label>
+                        <label class="control-label modal-label"><?= __('Privacy') ?></label>
 
                         <div>
                             <span class="font_14px">
@@ -75,21 +75,21 @@
                 <?php endif ?>
 
                 <div class="form-group">
-                    <label class="control-label modal-label"><?= __d('app', 'サークルの説明') ?></label>
+                    <label class="control-label modal-label"><?= __('Circle Description') ?></label>
                     <?=
                     $this->Form->input('description',
                                        ['label'                        => false,
-                                        'placeholder'                  => __d('app', "例) 最新情報を共有しましょう。"),
+                                        'placeholder'                  => __("eg) Let's share the latest information."),
                                         'rows'                         => 1,
-                                        'data-bv-notempty-message'     => __d('validate', "入力必須項目です。"),
+                                        'data-bv-notempty-message'     => __("Input is required."),
                                         'data-bv-stringlength'         => 'true',
                                         'data-bv-stringlength-max'     => 2000,
-                                        'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 2000),
+                                        'data-bv-stringlength-message' => __("It's over limit characters (%s).", 2000),
                                        ]) ?>
                 </div>
 
                 <div class="form-group">
-                    <label for="" class="control-label modal-label"><?= __d('app', "サークル画像") ?></label>
+                    <label for="" class="control-label modal-label"><?= __("Circle Image") ?></label>
 
                     <div class="ccc">
                         <div class="fileinput_small fileinput-new" data-provides="fileinput">
@@ -103,11 +103,11 @@
                             <div>
                         <span class="btn btn-default btn-file">
                             <span class="fileinput-new">
-                                <?=
-                                __d('app',
-                                    "画像を選択") ?>
+                                <?=__("Select an image") ?>
                             </span>
-                            <span class="fileinput-exists"><?= __d('app', "画像を再選択") ?></span>
+                            <span class="fileinput-exists">
+                                <?= __("Reselect an image") ?>
+                            </span>
                             <?=
                             $this->Form->input('photo',
                                                ['type'         => 'file',
@@ -119,7 +119,7 @@
                                                 'required'     => false
                                                ]) ?>
                         </span>
-                                <span class="help-block font_11px inline-block"><?= __d('app', '10MB以下') ?></span>
+                                <span class="help-block font_11px inline-block"><?= __('Smaller than 10MB') ?></span>
                             </div>
                         </div>
 
@@ -161,7 +161,7 @@
                                             <?= $this->Form->hidden('user_id', ['value' => $user['User']['id']]) ?>
                                             <?= $this->Form->hidden('admin_flg', ['value' => 1]) ?>
                                             <?= $this->Form->end() ?>
-                                            <?= $this->Html->link(__d('app', "管理者にする"), '#',
+                                            <?= $this->Html->link(__("Set as Admin"), '#',
                                                                   ['class'   => 'item-for-non-admin',
                                                                    'style'   => $user['CircleMember']['admin_flg'] ? 'display:none' : '',
                                                                    'onclick' => "$('#EditAdminStatusForm1_{$user['User']['id']}').submit(); return false;"]) ?>
@@ -188,11 +188,11 @@
                                             if ($this->Session->read('Auth.User.id') == $user['User']['id']) {
                                                 $onclick =
                                                     "if (confirm('" .
-                                                    __d('app', '自分自身を管理者から外すとサークル情報の編集が出来なくなりますが、よろしいですか？') .
+                                                    __('After quitting circle admin, you can\'t edit circle information. Do you really want to quit admin?') .
                                                     "')) { $('#EditAdminStatusForm2_{$user['User']['id']}').submit(); } return false;";
                                             }
                                             ?>
-                                            <?= $this->Html->link(__d('app', "管理者から外す"), '#',
+                                            <?= $this->Html->link(__("Remove from admin"), '#',
                                                                   ['class'   => 'item-for-admin',
                                                                    'style'   => $user['CircleMember']['admin_flg'] ? '' : 'display:none',
                                                                    'onclick' => $onclick]); ?>
@@ -207,7 +207,7 @@
                                                 if ($this->Session->read('Auth.User.id') == $user['User']['id']) {
                                                     $onclick =
                                                         "if (confirm('" .
-                                                        __d('app', '自分自身をサークルから外すとサークル情報の編集が出来なくなりますが、よろしいですか？') .
+                                                        __('After leaving this circle, you can\'t edit any circle setting. Do you really want to leave the circle?') .
                                                         "')) { $('#LeaveCircleForm_{$user['User']['id']}').submit(); } return false;";
                                                 }
                                                 ?>
@@ -224,7 +224,7 @@
                                                 ]); ?>
                                                 <?= $this->Form->hidden('user_id', ['value' => $user['User']['id']]) ?>
                                                 <?= $this->Form->end() ?>
-                                                <?= $this->Html->link(__d('app', "サークルから外す"), '#',
+                                                <?= $this->Html->link(__("Remove from the circle"), '#',
                                                                       ['onclick' => $onclick]) ?>
                                             </li>
                                         <?php endif ?>
@@ -251,7 +251,7 @@
                         <?php endforeach ?>
                     </div>
                 <?php else: ?>
-                    <?= __d('app', "このサークルにはメンバーがいません。") ?>
+                    <?= __("No one in this circle.") ?>
                 <?php endif ?>
             </div>
 
@@ -270,7 +270,7 @@
                     ]); ?>
                     <?= $this->Form->hidden('id') ?>
                     <div class="form-group">
-                        <label class="control-label modal-label"><?= __d('app', 'メンバー') ?></label>
+                        <label class="control-label modal-label"><?= __('Members') ?></label>
 
                         <div class="bbb">
                             <?=
@@ -293,21 +293,21 @@
 
         <div class="modal-footer tab1-footer">
             <?=
-            $this->Form->button(__d('app', "変更を保存"),
+            $this->Form->button(__("Save changes"),
                                 ['id'      => 'EditCircleFormSubmit',
                                  'class'   => 'btn btn-primary pull-right',
                                  'onclick' => "$(this).attr('disabled', 'disabled'); document.getElementById('EditCircleForm').submit(); return false;",
                                  'div'     => false,]) ?>
             <button type="button" class="btn btn-link design-cancel pull-right mr_8px bd-radius_4px"
-                    data-dismiss="modal"><?= __d('app', "キャンセル") ?></button>
+                    data-dismiss="modal"><?= __("Cancel") ?></button>
             <?php if (!$this->request->data['Circle']['team_all_flg']): ?>
                 <?=
-                $this->Form->postLink(__d('app', "サークルを削除"),
+                $this->Form->postLink(__("Delete circle"),
                                       ['controller' => 'circles',
                                        'action'     => 'delete',
                                        'circle_id'  => $this->request->data['Circle']['id']],
                                       ['class' => 'btn btn-default pull-left'],
-                                      __d('app', "本当にこのサークルを削除しますか？")) ?>
+                                      __("Do you really want to delete the circle?")) ?>
             <?php endif ?>
         </div>
 
@@ -317,7 +317,7 @@
         <?php if (!$this->request->data['Circle']['team_all_flg']): ?>
             <div class="modal-footer tab3-footer" style="display:none">
                 <?=
-                $this->Form->button(__d('app', "メンバー追加"),
+                $this->Form->button(__("Add member(s)"),
                                     ['class'   => 'btn btn-primary pull-right',
                                      'onclick' => "$(this).attr('disabled', 'disabled'); document.getElementById('AddCircleMemberForm').submit(); return false;",
                                      'div'     => false,

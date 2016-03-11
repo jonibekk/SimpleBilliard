@@ -83,7 +83,7 @@ class EvaluateScore extends AppModel
             ]
         ];
         $res = $this->find('list', $options);
-        return [null => __d('app', "選択してください")] + $res;
+        return [null => __("Please select")] + $res;
     }
 
     function getScore($teamId)

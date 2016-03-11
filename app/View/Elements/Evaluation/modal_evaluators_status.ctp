@@ -15,7 +15,7 @@
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
                     class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= __d('app', "%sの評価状況", $evaluatee['EvaluateeUser']['display_username']) ?></h4>
+            <h4 class="modal-title"><?= __("%s Evaluation Status", $evaluatee['EvaluateeUser']['display_username']) ?></h4>
         </div>
         <div class="modal-body modal-feed-body">
             <?php if (!empty($evaluators)): ?>
@@ -27,11 +27,11 @@
                     <?php endforeach ?>
                 </div>
             <?php else: ?>
-                <?= __d('app', "まだ、この投稿を読んだ人はいません。") ?>
+                <?= __("No one has read this comment yet.") ?>
             <?php endif ?>
         </div>
         <div class="modal-footer modal-feed-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('app', "閉じる") ?></button>
+            <button type="button" class="btn btn-default" data-dismiss="modal"><?= __("Close") ?></button>
         </div>
     </div>
 </div>

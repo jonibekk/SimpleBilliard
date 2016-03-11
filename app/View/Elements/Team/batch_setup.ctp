@@ -11,30 +11,32 @@
 ?>
 <!-- START app/View/Elements/Team/batch_setup.ctp -->
 <div class="panel panel-default">
-    <div class="panel-heading"><?= __d('app', "一括登録") ?></div>
+    <div class="panel-heading"><?= __("Batch Registration") ?></div>
     <div class="panel-body">
         <div class="form-group">
             <label for="TeamName" class="col col-sm-3 control-label form-label"></label>
 
             <div class="col col-sm-6">
                 <?php if ($this->Session->read('ua.device_type') == 'Desktop'): ?>
-                    <p class="form-control-static"><?= __d('app', "チームメンバーの登録や更新をCSVで一括処理します。") ?></p>
+                    <p class="form-control-static"><?= __("Managed registration and update of team members by CSV.") ?></p>
 
-                    <p class="form-control-static"><?= __d('app',
-                                                           "ファイルをダウンロードし、フォーマットに従って入力したあと、更新済みのCSVファイルをアップロードしてください。") ?></p>
+                    <p class="form-control-static">
+                        <?= __("Download CSV. After editing, upload it.") ?>
+                    </p>
 
-                    <p class="form-control-static"><?= __d('app',
-                                                           "すでに登録済のメンバーはデータ更新され、新規のメンバーは追加で登録され、招待メールが送信されます。") ?></p>
+                    <p class="form-control-static">
+                    <?= __("Existing accounts will be updated. Non-registered members will be registered and get an invitation email.") ?>
+                    </p>
 
-                    <p class="form-control-static"><?= __d('app', "") ?></p>
+                    <p class="form-control-static"><?= __("") ?></p>
 
-                    <p class="form-control-static"><?= __d('app', "") ?></p>
+                    <p class="form-control-static"><?= __("") ?></p>
 
-                    <p class="form-control-static"><?= __d('app', "") ?></p>
+                    <p class="form-control-static"><?= __("") ?></p>
 
-                    <p class="form-control-static"><?= __d('app', "") ?></p>
+                    <p class="form-control-static"><?= __("") ?></p>
                 <?php else: ?>
-                    <p class="form-control-static"><?= __d('app', "本機能はPCにてご利用できます。") ?></p>
+                    <p class="form-control-static"><?= __("This function can be used only by PC.") ?></p>
                 <?php endif; ?>
             </div>
 
@@ -45,9 +47,9 @@
             <div class="row">
                 <div class="col-sm-9 col-sm-offset-3">
                     <a href="#" class="btn btn-default" data-toggle="modal"
-                       data-target="#ModalAddMembersByCsv"><?= __d('app', '新しいメンバーを追加') ?></a>
+                       data-target="#ModalAddMembersByCsv"><?= __('Add new members.') ?></a>
                     <a href="#" class="btn btn-default" data-toggle="modal"
-                       data-target="#ModalEditMembersByCsv"><?= __d('app', 'メンバーの情報を更新') ?></a>
+                       data-target="#ModalEditMembersByCsv"><?= __('Update members information') ?></a>
                 </div>
             </div>
         </div>

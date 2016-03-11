@@ -4,19 +4,19 @@
  */
 echo "━━━━━━━━━━━━━━━━━━━━";
 echo "\n";
-echo __d('email', '■Goalous(ゴーラス)');
+echo __('Goalous');
 echo "\n";
 echo "https://www.goalous.com";
 echo "\n";
 echo "\n";
-echo __d('email', '■お問い合わせ');
+echo __('Contact');
 echo "\n";
 echo "https://www.goalous.com/contact";
 echo "\n";
 echo "\n";
-echo __d('email', '■運営会社');
+echo __('Company');
 echo "\n";
-echo __d('email', '株式会社ISAO');
+echo __('ISAO Corporation');
 echo "\n";
 echo "http://www.isao.co.jp/";
 echo "\n";

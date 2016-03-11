@@ -19,53 +19,51 @@
 
 <?php $faq = [
         [
-            'question' => __d('lp', '他の社内向けSNSと何が違いますか？'),
-            'answer' => __d('lp', '「ゴールでつながる社内SNS」であることが決定的な違いです。ゴール（目標）がメンバーによって作成され、そのゴールをフォローやコラボすることでゴールと繋がることができます。ゴールに対して、だれがいつなにをしたかが「フォトアクション」（画像つきの記事）としてホームフィードに掲載され、みんながたのしくチェックできます。
-また、他の社内SNSにあるような、特定のメンバーをグルーピングして閉じた空間で情報交換することももちろん可能です。')
+            'question' => __('What is different from other enterprise SNS?'),
+            'answer' => __('People are connected by Goal, this is the different point from others. We can follow Goals or collaborate with Goals. Just post an action to Goals, everyone can know what you did, when you did for Goals. Enjoy your team communication.')
         ],
         [
-            'question' => __d('lp', '個人の目標評価はどのようにおこなうのですか？'),
-            'answer' => __d('lp', '個人の目標による評価は、期末もしくは来期中に実施することができます。コーチによって認定（評価対象として承認）されたゴールに対してのゴール評価と、そのメンバー個人のトータル評価の2分類があり、あらかじめチーム（組織）で定めたスコアとコメントを評価者が入力します。コーチは1人のみ、評価者は最大7人まで設定でき（兼務可能）、評価者は定められた順番で評価を実施できます。さらに設定によって、「自己評価」と「最終者評価（CSVファイルでの一括評価）」を評価者として追加できます。')
+            'question' => __('How to evaluate personal Goals?'),
+            'answer' => __('Evaluation can be done at end of term or in next term. There are 2 types of evaluations, Goal evaluation and total evaluation.')
         ],
         [
-            'question' => __d('lp', '社員が期中で退職したらどうなりますか？'),
-            'answer' => __d('lp', 'チーム管理者（Goalous上での最高権限をもつチームメンバー）が、退職した社員をチームから「非アクティブ（無効）化」処理をしてください。非アクティブ化された社員は、そのチームへのアクセス権を失います。よって、一切の情報を参照することはできません。また、一度非アクティブ化されたメンバーを復活することもできます。なお、非アクティブ化されたメンバーの情報は、チーム内に残りますので、データが削除されるわけではございません。')
+            'question' => __('What should I do if the member leave our company?'),
+            'answer' => __('Team administrator can make the member left deactivated. Those members can\'t access your team but the posts they did would remain your team.')
         ],
         [
-            'question' => __d('lp', 'セキュリティやバックアップはどうなっていますか？'),
-            'answer' =>__d('lp', 'データの分散保管をしていますので、仮に特定のデーターセンターが災害に遭っても別のデーターセンターで稼働します。また、すべてのデータは、常時バックアップをしていますので、1台のサーバーに障害が発生してもデータを復旧できます。不正アクセスへのセキュリティとしては、SSLによる暗号化通信・2段階認証・ログインロックに加え、定期的に第三者機関による脆弱性診断を実施しております。
-なお、弊社はプライバシーマークの取得企業ですのでご安心ください。')
+            'question' => __('I\'m concerned about security and backup systems.'),
+            'answer' =>__('We save data as distribution. We reserve backups everyday. Using SSL, 2-Step Verification and Login lock, you can use Goalous with safe.')
         ],
         [
-            'question' => __d('lp', 'スマートフォン・タブレットのアプリはありますか？'),
-            'answer' => __d('lp', 'Android, iPhoneの専用アプリケーションをご用意しております。それぞれのストアからダウンロードしてご利用ください。スマートフォンやタブレットからブラウザでアクセスいただいても、最適化されたビューでご利用できます。')
+            'question' => __('Is there apps for smartphone and tablet?'),
+            'answer' => __('You can download Goalous on AppStore and PlayStore. You can use our application on your mobile. Also, you can access to Goalous on your mobile browser.')
         ],
         [
-            'question' => __d('lp', '企業担当者向けに詳しい説明をしてもらえますか？'),
-            'answer' => __d('lp', 'ぜひぜひ！お問い合わせフォームからご連絡くださいませ。お待ちしております。')
+            'question' => __('Can we ask you to explain more in detail?'),
+            'answer' => __('Sure! Please contact with us from contact form. We are looking forward your contact!')
         ],
         [
-            'question' => __d('lp', '無償期間（2016年8月31日まで）の後はどうなりますか？'),
-            'answer' => __d('lp', '機能制限（メンバーの追加不可能など）を予定しておりますが、データの削除などせず引き続きご利用いただけます。')
+            'question' => __('What should we do after the campaign?'),
+            'answer' => __('There will appear some limit, but data will not be deleted.')
         ],
         [
-            'question' => __d('lp', '機能のカスタマイズはできますか？') ,
-            'answer' => __d('lp', 'カスタマイズにはご対応いたしません。ユーザー様からのご要望はいつでも歓迎いたします。ご要望がサービスの改善に役立つと判断した場合は、実装を計画いたしますのでよろしくお願いします。')
+            'question' => __('Can we customize Goalous?') ,
+            'answer' => __('Definitely not, but we hope to get your feedback. If we find it as good idea, we immediately accept it.')
         ],
         [
-            'question' => __d('lp', '使い方がわからない場合、サポートはありますか？'),
-            'answer' => __d('lp', '2016年8月31日までの無料キャンペーン中にご登録いただいたお客様は、ログイン後に利用できるサポートツールでお問い合わせください。できる限り早い対応をいたします。')
+            'question' => __('Could we ask you to support us?'),
+            'answer' => __('After logged in, you can get contact with us by support tool. We can help you as soon as possible.')
         ],
         [
-            'question' => __d('lp', 'Goalousの運営会社はどこですか？'),
-            'answer' => __d('lp', '"たのしい！"をうみだしとどける企業、ISAO（いさお）が運営しております。豊田通商株式会社100％出資の子会社です。1999年に創業を開始しており、オープン・チャレンジ・キズナをスピリッツとした集団です。')
+            'question' => __('Which company offer Goalous?'),
+            'answer' => __('ISAO, make and deliever "Joyful!". Found on 1999, our sprits are "Open, Challanging, Link".')
         ],
     ]
 ?>
 <!-- ******FAQ****** -->
 <section id="faq" class="faq section has-bg-color">
     <div class="container">
-        <h2 class="title text-center"><?= __d('lp', 'よくあるご質問') ?></h2>
+        <h2 class="title text-center"><?= __('Frequent questions') ?></h2>
         <div class="row faq-lists">
             <?php foreach ($faq as $key => $value): ?>
                 <div class="col-md-6 col-sm-6 col-xs-12">
@@ -94,8 +92,8 @@
 
         </div><!--//row-->
         <div class="more text-center col-md-6 col-md-offset-3">
-            <h4 class="title"><?= __d('lp', 'その他のご質問はありますか？') ?></h4>
-            <?= $this->Html->link(__d('lp', 'お問い合わせ'), array('controller' => 'contact'),
+            <h4 class="title"><?= __('Any other question?') ?></h4>
+            <?= $this->Html->link(__('Contact us'), array('controller' => 'contact'),
                                   array('class' => 'btn btn-cta btn-cta-secondary btn-lg btn-block')); ?>
         </div>
     </div><!--//container-->

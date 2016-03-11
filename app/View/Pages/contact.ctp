@@ -27,7 +27,7 @@ Page毎に要素が変わるもの
 $meta_contact = [
     [
         "name" => "description",
-        "content" => __d('lp','Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。導入のご相談を受け付けています。'),
+        "content" => __('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。導入のご相談を受け付けています。'),
     ],
     [
         "name" => "keywords",
@@ -39,11 +39,11 @@ $meta_contact = [
     ],
     [
         "property" => "og:title",
-        "content" => __d('lp', 'お問い合わせ | Goalous(ゴーラス)'),
+        "content" => __('Contact us | Goalous'),
     ],
     [
         "property" => "og:description",
-        "content" =>__d('lp', 'Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。導入のご相談を受け付けています。'),
+        "content" =>__('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。導入のご相談を受け付けています。'),
     ],
     [
         "property" => "og:url",
@@ -55,7 +55,7 @@ $meta_contact = [
     ],
     [
         "property" => "og:site_name",
-        "content" => __d('lp', 'Goalous (ゴーラス) │ゴール達成への最強にオープンな社内SNS'),
+        "content" => __('Goalous │ Enterprise SNS the most ever open for Goal'),
     ],
     [
         "property" => "fb:app_id",
@@ -75,7 +75,7 @@ for($i = 0; $i < $num_ogp; $i++){
     echo $this->Html->meta($meta_contact[$i]);
 }
 ?>
-<title><?= __d('lp', 'お問い合わせ | Goalous (ゴーラス)') ?></title>
+<title><?= __('Contact us | Goalous') ?></title>
 <link rel="alternate" hreflang="ja" href="<?= $this->Html->url('/ja/contact') ?>"/>
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/contact') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/contact') ?>"/>
@@ -87,12 +87,12 @@ for($i = 0; $i < $num_ogp; $i++){
     <div class="container">
         <div class="row">
             <div class="contact-intro col-xs-12 text-center">
-                <h2 class="title"><?= __d('lp', 'Goalousに関するお問い合わせ') ?></h2>
+                <h2 class="title"><?= __('Contact us about Goalous') ?></h2>
                 <p class="contact-list">
                     <?=
-                    __d('lp', 'Goalousは、”世界のシゴトをたのしくするビジョナリーカンパニー”である株式会社ISAOが運営しております。') .
+                    __('Goalous is managed by ISAO, Visionary Company which make jobs joyful in the world') .
                     '<br>' .
-                    __d('lp', 'なんでも、お気軽にご相談ください。');
+                    __('Feel free to ask us.');
                     ?>
                 </p>
             </div>
@@ -111,26 +111,26 @@ for($i = 0; $i < $num_ogp; $i++){
         ]); ?>
         <div class="contact-form col-md-8 col-xs-12 col-md-offset-2">
             <div class="form-group name">
-                <span class="label label-danger"><?= __d('lp', '必須') ?></span>
+                <span class="label label-danger"><?= __('Required') ?></span>
                 <?= $this->Form->input('name', [
-                    'placeholder' => __d('lp', '例）鈴木 いさお'),
+                    'placeholder' => __('eg. Isao Suzuki'),
                     'id'          => 'EmailName',
                     'class'       => 'form-control lp-contact-form-control',
                     'label'       => [
-                        'text'  => __d('lp', 'お名前'),
+                        'text'  => __('Your name'),
                         'class' => 'control-label lp-contact-control-label',
                     ],
                 ]) ?>
                 <?= $this->Form->error('name', null, ['class' => 'contact-error-msg-block']) ?>
             </div>
             <div class="form-group email">
-                <span class="label label-danger"><?= __d('lp', '必須') ?></span>
+                <span class="label label-danger"><?= __('Required') ?></span>
                 <?= $this->Form->input('email', [
-                    'placeholder' => __d('lp', '例）example@goalous.com（半角英数字）'),
+                    'placeholder' => __('eg. example@goalous.com'),
                     'id'          => 'email',
                     'class'       => 'form-control lp-contact-form-control',
                     'label'       => [
-                        'text'  => __d('lp', 'メールアドレス'),
+                        'text'  => __('Email address'),
                         'class' => 'control-label lp-contact-control-label',
                     ],
                 ]) ?>
@@ -138,11 +138,11 @@ for($i = 0; $i < $num_ogp; $i++){
             </div>
             <div class="form-group company">
                 <?= $this->Form->input('company', [
-                    'placeholder' => __d('lp', '例）株式会社ISAO'),
+                    'placeholder' => __('eg. ISAO Cooporation'),
                     'id'          => 'company',
                     'class'       => 'form-control lp-contact-form-control',
                     'label'       => [
-                        'text'  => __d('lp', '会社名・団体名など'),
+                        'text'  => __('Company name, Organization name or Something like that.'),
                         'class' => 'control-label lp-contact-control-label',
                     ],
                 ])
@@ -150,13 +150,13 @@ for($i = 0; $i < $num_ogp; $i++){
                 <?= $this->Form->error('company', null, ['class' => 'contact-error-msg-block']) ?>
             </div>
             <div class="form-group want">
-                <span class="label label-danger"><?= __d('lp', '必須') ?></span>
+                <span class="label label-danger"><?= __('Required') ?></span>
                 <?=
                 $this->Form->input('want', [
                     'options' => $type_options, // PagesController - ln.184,
                     'value'   => $selected_type,
                     'label'   => [
-                        'text'  => __d('lp', 'お問い合わせ項目'),
+                        'text'  => __('Which item you want to ask'),
                         'class' => 'control-label lp-contact-control-label',
                         'empty' => false,
                     ],
@@ -165,15 +165,15 @@ for($i = 0; $i < $num_ogp; $i++){
                 <?= $this->Form->error('want', null, ['class' => 'contact-error-msg-block']) ?>
             </div>
             <div class="form-group messsage">
-                <span class="label label-danger"><?= __d('lp', '必須') ?></span>
+                <span class="label label-danger"><?= __('Required') ?></span>
                 <?=
                 $this->Form->input('message', [
                     'class'       => 'form-control lp-contact-form-control',
                     'type'        => 'text',
                     'rows'        => 8,
-                    'placeholder' => __d('lp', '例）導入を希望しています。詳しく説明に来て欲しいです。'),
+                    'placeholder' => __('eg. We want to use it. So, we need more explanation in detail.'),
                     'label'       => [
-                        'text'  => __d('lp', 'お問い合わせ内容（最大3,000文字）'),
+                        'text'  => __('What you ask (3,000 characters are limit)'),
                         'class' => 'control-label lp-contact-control-label',
                     ],
                 ]);
@@ -183,29 +183,29 @@ for($i = 0; $i < $num_ogp; $i++){
         </div>
 
         <div class="contact-form col-md-8 col-xs-12 col-md-offset-2 text-center">
-            <label class="control-label"><?= __d('lp', 'ご希望の営業担当者がいれば、リクエストください。（複数選択可）') ?></label>
+            <label class="control-label"><?= __('You can request your sales person.') ?></label>
             <? $this->Form->unlockField('sales_people') ?>
             <div class="form-group sales text-left">
                 <?php
                 $sales_people = [
                     [
-                        'name'        => __d('lp', '湯川啓太'),
-                        'description' => __d('lp', '唐沢寿明に似てます'),
+                        'name'        => __('Keita Yukawa'),
+                        'description' => __('Cool like Japanese actor'),
                         'img'         => 'homepage/people/sales1.jpg',
                     ],
                     [
-                        'name'        => __d('lp', '菊池厚平'),
-                        'description' => __d('lp', 'Goalousのオーナーです'),
+                        'name'        => __('Kohei Kikuchi'),
+                        'description' => __('Owner of Goalous'),
                         'img'         => 'homepage/people/sales2.jpg',
                     ],
                     [
-                        'name'        => __d('lp', '吉岡真人'),
-                        'description' => __d('lp', '愛をこめた営業をします'),
+                        'name'        => __('Makoto Yoshioka'),
+                        'description' => __('Sales person with full of Joyful'),
                         'img'         => 'homepage/people/sales3.jpg',
                     ],
                     [
-                        'name'        => __d('lp', '石原裕介'),
-                        'description' => __d('lp', 'DJやってます'),
+                        'name'        => __('Yusuke Ishihara'),
+                        'description' => __('I\'m a DJ from teens'),
                         'img'         => 'homepage/people/sales4.jpg',
                     ],
                 ]
@@ -244,7 +244,7 @@ for($i = 0; $i < $num_ogp; $i++){
             <div class="checkbox contact-form-checkbox">
                 <label>
                     <?= $this->Form->checkbox('need') ?>
-                    <?= $this->Html->link(__d('lp', '利用規約'), [
+                    <?= $this->Html->link(__('Terms of service'), [
                         'controller' => 'pages',
                         'action'     => 'display',
                         'pagename'   => 'terms',
@@ -254,8 +254,8 @@ for($i = 0; $i < $num_ogp; $i++){
                                               'target' => '_blank',
                                           ]
                     ) ?>
-                    <?= __d('lp', '・') ?>
-                    <?= $this->Html->link(__d('lp', '個人情報の取り扱い'), [
+                    <?= __('・') ?>
+                    <?= $this->Html->link(__('PrivacyPolicy'), [
                         'controller' => 'pages',
                         'action'     => 'display',
                         'pagename'   => 'privacy_policy',
@@ -265,13 +265,13 @@ for($i = 0; $i < $num_ogp; $i++){
                                               'target' => '_blank',
                                           ]
                     ) ?>
-                    <?= __d('lp', 'について同意の上、問い合わせする') ?>
+                    <?= __(' - Do you agree with them?') ?>
                 </label>
-                <?= $this->Form->error('need', __d('lp', '個人情報保護方針の同意が必要です。'),
+                <?= $this->Form->error('need', __('Need to agree to terms and policy.'),
                                        ['class' => 'contact-error-msg-block']) ?>
             </div>
             <p>
-                <?= $this->Form->submit(__d('lp', '確認画面へ'), ['class' => 'btn btn-block btn-cta-primary']) ?>
+                <?= $this->Form->submit(__('Go to confirm'), ['class' => 'btn btn-block btn-cta-primary']) ?>
             </p>
         </div><!--//contact-form-->
 

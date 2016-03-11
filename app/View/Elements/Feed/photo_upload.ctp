@@ -107,10 +107,10 @@ if (!isset($id_prefix)) {
                                          'data-bv-file-extension'   => 'jpeg,jpg,png,gif',
                                          'data-bv-file-type'        => 'image/jpeg,image/png,image/gif',
                                          'data-bv-file-maxsize'     => 10485760,   // 10mb
-                                         'data-bv-message'          => __d('validate',
-                                                                           "10MB以下かつJPG、PNG、GIFのいずれかの形式を選択して下さい。"),
+                                         'data-bv-message'          => __(
+                                                                           "10MB or less, and Please select one of the formats of JPG or PNG and GIF."),
                                          'data-bv-callback'         => "true",
-                                         'data-bv-callback-message' => __d('validate', "１つ以上の画像を選択してください。"),
+                                         'data-bv-callback-message' => __("Select pictures."),
                                         ]) ?>
             </span>
         </div>
