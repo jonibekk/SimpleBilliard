@@ -32,8 +32,10 @@ class GoalsController extends AppController
         $isExistAdminFlg = viaIsSet($this->User->TeamMember->myStatusWithTeam['TeamMember']['admin_flg']);
         $is_admin = ($isExistAdminFlg) ? true : false;
 
+        $my_coaching_users = $this->Goal->User->TeamMember->getMyMembersList($this->my_uid);
+
         $this->set(compact('is_admin', 'goals', 'current_global_menu', 'search_option', 'search_options',
-                           'search_url', 'goal_count'));
+                           'search_url', 'goal_count', 'my_coaching_users'));
     }
 
     /**
@@ -257,8 +259,9 @@ class GoalsController extends AppController
         $this->_ajaxPreProcess();
         $search_option = $this->_getSearchVal();
         $goals = $this->Goal->getAllGoals(GOAL_INDEX_ITEMS_NUMBER, $search_option, $this->request->params, true);
+        $my_coaching_users = $this->Goal->User->TeamMember->getMyMembersList($this->my_uid);
 
-        $this->set(compact('goals'));
+        $this->set(compact('goals', 'my_coaching_users'));
 
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
@@ -278,7 +281,8 @@ class GoalsController extends AppController
         $goal_id = viaIsSet($this->request->params['named']['goal_id']);
         $this->_ajaxPreProcess();
         $goal = $this->Goal->getGoal($goal_id);
-        $this->set(compact('goal'));
+        $my_coaching_users = $this->Goal->User->TeamMember->getMyMembersList($this->my_uid);
+        $this->set(compact('goal', 'my_coaching_users'));
         //htmlレンダリング結果
         $response = $this->render('Goal/modal_goal_description');
         $html = $response->__toString();

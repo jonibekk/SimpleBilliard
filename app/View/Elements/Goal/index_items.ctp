@@ -58,7 +58,12 @@
                            href="#"
                            data-class="toggle-follow"
                            goal-id="<?= $goal['Goal']['id'] ?>"
-                        <?= h($follow_opt['disabled']) ?>="<?= h($follow_opt['disabled']) ?>">
+                            <?php if ($follow_opt['disabled'] || $this->Goal->isCoachingUserGoal($goal,
+                                                                                                              viaIsSet($my_coaching_users))
+                            ): ?>
+                                disabled="disabled"
+                            <?php endif ?>
+                            >
                         <i class="fa fa-heart font_rougeOrange" style="<?= h($follow_opt['style']) ?>"></i>
                         <span class="ml_5px"><?= h($follow_opt['text']) ?></span>
                         </a>

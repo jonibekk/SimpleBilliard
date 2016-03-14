@@ -38,11 +38,17 @@
                         <? $collabo_opt = $this->Goal->getCollaboOption($goal) ?>
                         <div>
                             <a class="btn btn-white bd-circle_22px mt_16px toggle-follow font_verydark <?= h($follow_opt['class']) ?>"
-                               href="#" <?= h($follow_opt['disabled']) ?>="<?= h($follow_opt['disabled']) ?>"
-                            data-class="toggle-follow"
-                            goal-id="<?= $goal['Goal']['id'] ?>">
-                            <i class="fa fa-heart font_rougeOrange" style="<?= h($follow_opt['style']) ?>"></i>
-                            <span class="ml_5px"><?= h($follow_opt['text']) ?></span>
+                               href="#"
+                               data-class="toggle-follow"
+                               goal-id="<?= $goal['Goal']['id'] ?>"
+                                <?php if ($follow_opt['disabled'] || $this->Goal->isCoachingUserGoal($goal,
+                                                                                                                  viaIsSet($my_coaching_users))
+                                ): ?>
+                                    disabled="disabled"
+                                <?php endif ?>
+                                >
+                                <i class="fa fa-heart font_rougeOrange" style="<?= h($follow_opt['style']) ?>"></i>
+                                <span class="ml_5px"><?= h($follow_opt['text']) ?></span>
                             </a>
                         </div>
                         <div>

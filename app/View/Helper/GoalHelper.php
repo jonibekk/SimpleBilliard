@@ -96,9 +96,9 @@ class GoalHelper extends AppHelper
      *
      * @return bool
      */
-    function containMyCoachingUserInCollabos($goal, $my_coaching_users)
+    function isCoachingUserGoal($goal, $my_coaching_users)
     {
-        if (!$my_coaching_users || !is_array($my_coaching_users)) {
+        if (!is_array($my_coaching_users) || count($my_coaching_users) === 0) {
             return false;
         }
 
@@ -106,12 +106,21 @@ class GoalHelper extends AppHelper
             return false;
         }
 
+        // Case of coaching user is goal leader
+        if (in_array($goal['Leader'][0]['user_id'], $my_coaching_users)) {
+            return true;
+        }
+
         $collabos = Hash::extract($goal['Collaborator'], '{n}.user_id');
         if (!$collabos) {
             return false;
         }
+        // Case of coaching user is goal collaborator
+        if (array_intersect($collabos, $my_coaching_users)) {
+            return true;
+        }
 
-        return (boolean)array_intersect($collabos, $my_coaching_users);
+        return false;
     }
 
 }

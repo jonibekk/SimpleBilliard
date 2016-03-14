@@ -81,10 +81,15 @@
                                 <?= __("Approval Status: %s",
                                         Collaborator::$STATUS[$goal['Leader'][0]['valued_flg']]) ?>
                             <?php else: ?>
-                                <?php $my_collabo = Hash::extract($goal['Collaborator'],
+                                <?php if($goal['Leader'][0]['user_id'] == $user['User']['id']): ?>
+                                    <?php $valued_flg = $goal['Leader'][0]['valued_flg']; ?>
+                                <?php else: ?>
+                                    <?php $my_collabo = Hash::extract($goal['Collaborator'],
                                                                   "{n}[user_id={$user['User']['id']}]"); ?>
+                                    <?php $valued_flg = $my_collabo[0]['valued_flg']; ?>
+                                <?php endif; ?>
                                 <?= __("Approval Status: %s",
-                                        Collaborator::$STATUS[$my_collabo[0]['valued_flg']]) ?>
+                                        Collaborator::$STATUS[$valued_flg]) ?>
                             <?php endif; ?>
                         </div>
                         <div class="col col-xxs-12">
@@ -107,7 +112,7 @@
                                            href="#"
                                            data-class="toggle-follow"
                                            goal-id="<?= $goal['Goal']['id'] ?>"
-                                            <?php if ($follow_opt['disabled'] || $this->Goal->containMyCoachingUserInCollabos($goal,
+                                            <?php if ($follow_opt['disabled'] || $this->Goal->isCoachingUserGoal($goal,
                                                                                                                               viaIsSet($my_coaching_users))
                                             ): ?>
                                                 disabled="disabled"
