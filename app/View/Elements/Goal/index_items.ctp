@@ -30,16 +30,16 @@
             <div class="col col-xxs-12 goals-page-card-title-wrapper">
                 <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_description_modal', 'goal_id' => $goal['Goal']['id']]) ?>"
                    class="modal-ajax-get goals-page-card-title">
-                   <p class="font_verydark goals-page-card-title-text">
-                     <span><?= h($goal['Goal']['name']) ?></span>
-                  </p>
+                    <p class="font_verydark goals-page-card-title-text">
+                        <span><?= h($goal['Goal']['name']) ?></span>
+                    </p>
                 </a>
             </div>
             <div class="col col-xxs-12 font_lightgray font_12px">
                 <?php if (!empty($goal['Leader'])): ?>
                     <?=
                     __("Leader: %s",
-                        h($goal['Leader'][0]['User']['display_username'])) ?>
+                       h($goal['Leader'][0]['User']['display_username'])) ?>
                 <?php endif; ?>
             </div>
             <div class="col col-xxs-12 font_lightgray font_12px">
@@ -59,13 +59,13 @@
                            data-class="toggle-follow"
                            goal-id="<?= $goal['Goal']['id'] ?>"
                             <?php if ($follow_opt['disabled'] || $this->Goal->isCoachingUserGoal($goal,
-                                                                                                              viaIsSet($my_coaching_users))
+                                                                                                 viaIsSet($my_coaching_users))
                             ): ?>
                                 disabled="disabled"
                             <?php endif ?>
                             >
-                        <i class="fa fa-heart font_rougeOrange" style="<?= h($follow_opt['style']) ?>"></i>
-                        <span class="ml_5px"><?= h($follow_opt['text']) ?></span>
+                            <i class="fa fa-heart font_rougeOrange" style="<?= h($follow_opt['style']) ?>"></i>
+                            <span class="ml_5px"><?= h($follow_opt['text']) ?></span>
                         </a>
                     </div>
                     <div class="col col-xxs-5 col-xs-4">
@@ -73,7 +73,8 @@
                            data-toggle="modal"
                            data-target="#ModalCollabo_<?= $goal['Goal']['id'] ?>"
                            href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', 'goal_id' => $goal['Goal']['id']]) ?>">
-                            <i class="fa fa-child font_rougeOrange font_18px" style="<?= h($collabo_opt['style']) ?>"></i>
+                            <i class="fa fa-child font_rougeOrange font_18px"
+                               style="<?= h($collabo_opt['style']) ?>"></i>
                             <span class="ml_5px font_14px"><?= h($collabo_opt['text']) ?></span>
                         </a>
                     </div>

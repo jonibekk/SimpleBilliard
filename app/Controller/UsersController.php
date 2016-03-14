@@ -87,7 +87,8 @@ class UsersController extends AppController
         $ip_address = $this->request->clientIp();
         $is_account_locked = $this->GlRedis->isAccountLocked($this->request->data['User']['email'], $ip_address);
         if ($is_account_locked) {
-            $this->Pnotify->outError(__("Your account is tempolary locked. It will be unlocked after %s mins.", ACCOUNT_LOCK_TTL / 60));
+            $this->Pnotify->outError(__("Your account is tempolary locked. It will be unlocked after %s mins.",
+                                        ACCOUNT_LOCK_TTL / 60));
             return $this->render();
         }
         //メアド、パスの認証(セッションのストアはしていない)
@@ -145,7 +146,8 @@ class UsersController extends AppController
         $is_account_locked = $this->GlRedis->isTwoFaAccountLocked($this->Session->read('user_id'),
                                                                   $this->request->clientIp());
         if ($is_account_locked) {
-            $this->Pnotify->outError(__("Your account is tempolary locked. It will be unlocked after %s mins.", ACCOUNT_LOCK_TTL / 60));
+            $this->Pnotify->outError(__("Your account is tempolary locked. It will be unlocked after %s mins.",
+                                        ACCOUNT_LOCK_TTL / 60));
             return $this->render();
         }
 
@@ -188,7 +190,8 @@ class UsersController extends AppController
         $is_account_locked = $this->GlRedis->isTwoFaAccountLocked($this->Session->read('user_id'),
                                                                   $this->request->clientIp());
         if ($is_account_locked) {
-            $this->Pnotify->outError(__("Your account is tempolary locked. It will be unlocked after %s mins.", ACCOUNT_LOCK_TTL / 60));
+            $this->Pnotify->outError(__("Your account is tempolary locked. It will be unlocked after %s mins.",
+                                        ACCOUNT_LOCK_TTL / 60));
             return $this->render();
         }
 

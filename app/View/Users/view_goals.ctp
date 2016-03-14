@@ -43,7 +43,7 @@
                 <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user['User']['id'], 'term_id' => $term_id]) ?>"
                    class="profile-goals-select btn <?= $page_type == "following" ? "btn-unselected" : "btn-selected" ?>">
                     <?= __("My Goal (%s)", $my_goals_count) ?></a>
-                <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user['User']['id'],'term_id'=>$term_id, 'page_type' => 'following']) ?>"
+                <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user['User']['id'], 'term_id' => $term_id, 'page_type' => 'following']) ?>"
                    class="profile-goals-select btn <?= $page_type == "following" ? "btn-selected" : "btn-unselected" ?>">
                     <?= __("Following (%s)", $follow_goals_count) ?></a>
             </div>
@@ -79,17 +79,17 @@
                         <div class="col col-xxs-12 font_lightgray font_12px">
                             <?php if ($page_type === 'following'): ?>
                                 <?= __("Approval Status: %s",
-                                        Collaborator::$STATUS[$goal['Leader'][0]['valued_flg']]) ?>
+                                       Collaborator::$STATUS[$goal['Leader'][0]['valued_flg']]) ?>
                             <?php else: ?>
-                                <?php if($goal['Leader'][0]['user_id'] == $user['User']['id']): ?>
+                                <?php if ($goal['Leader'][0]['user_id'] == $user['User']['id']): ?>
                                     <?php $valued_flg = $goal['Leader'][0]['valued_flg']; ?>
                                 <?php else: ?>
                                     <?php $my_collabo = Hash::extract($goal['Collaborator'],
-                                                                  "{n}[user_id={$user['User']['id']}]"); ?>
+                                                                      "{n}[user_id={$user['User']['id']}]"); ?>
                                     <?php $valued_flg = $my_collabo[0]['valued_flg']; ?>
                                 <?php endif; ?>
                                 <?= __("Approval Status: %s",
-                                        Collaborator::$STATUS[$valued_flg]) ?>
+                                       Collaborator::$STATUS[$valued_flg]) ?>
                             <?php endif; ?>
                         </div>
                         <div class="col col-xxs-12">
@@ -113,7 +113,7 @@
                                            data-class="toggle-follow"
                                            goal-id="<?= $goal['Goal']['id'] ?>"
                                             <?php if ($follow_opt['disabled'] || $this->Goal->isCoachingUserGoal($goal,
-                                                                                                                              viaIsSet($my_coaching_users))
+                                                                                                                 viaIsSet($my_coaching_users))
                                             ): ?>
                                                 disabled="disabled"
                                             <?php endif ?>
