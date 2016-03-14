@@ -74,7 +74,7 @@ class GoalsController extends AppController
             elseif ($purpose_id) {
                 $isNotOwner = !$this->Goal->Purpose->isOwner($this->Auth->user('id'), $purpose_id);
                 if ($isNotOwner) {
-                    $this->Pnotify->outError(__d('app', "権限がありません。"));
+                    $this->Pnotify->outError(__("You have no permission."));
                     $this->redirect($this->referer());
                 }
                 $this->request->data = $this->Goal->Purpose->findById($purpose_id);
@@ -89,14 +89,14 @@ class GoalsController extends AppController
             $isSavedSuccess = $this->Goal->Purpose->add($this->request->data);
             // 成功
             if ($isSavedSuccess) {
-                $this->Pnotify->outSuccess(__d('app', "ゴールの目的を保存しました。"));
+                $this->Pnotify->outSuccess(__("Set a purpose."));
                 //「ゴールを定める」に進む
                 $url = ['mode' => 2, 'purpose_id' => $this->Goal->Purpose->id, '#' => 'AddGoalFormKeyResultWrap'];
                 $url = $id ? array_merge(['goal_id' => $id], $url) : $url;
                 $this->redirect($url);
             }
             // 失敗
-            $this->Pnotify->outError(__d('app', "ゴールの目的の保存に失敗しました。"));
+            $this->Pnotify->outError(__("Failed to set a purpose."));
             $this->redirect($this->referer());
         }
 
@@ -131,7 +131,7 @@ class GoalsController extends AppController
                     else {
                         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_GOAL, $id);
                     }
-                    $this->Pnotify->outSuccess(__d('app', "ゴールを保存しました。"));
+                    $this->Pnotify->outSuccess(__("Saved a goal."));
                     if ($coach_id) {
                         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coach_id),
                                       'user_data');
@@ -141,7 +141,7 @@ class GoalsController extends AppController
                     break;
                 case 3:
                     //完了
-                    $this->Pnotify->outSuccess(__d('app', "ゴールの作成が完了しました。"));
+                    $this->Pnotify->outSuccess(__("Created a goal."));
                     // pusherに通知
                     $socketId = viaIsSet($this->request->data['socket_id']);
                     $this->NotifyBiz->push($socketId, "all");
@@ -175,7 +175,7 @@ class GoalsController extends AppController
             }
         }
 
-        $this->Pnotify->outError(__d('app', "ゴールの保存に失敗しました。"));
+        $this->Pnotify->outError(__("Failed to save a goal."));
         $this->redirect($this->referer());
     }
 
@@ -214,7 +214,7 @@ class GoalsController extends AppController
         $this->Goal->delete();
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         $this->Goal->ActionResult->releaseGoal($id);
-        $this->Pnotify->outSuccess(__d('app', "ゴールを削除しました。"));
+        $this->Pnotify->outSuccess(__("Deleted a goal."));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         $params_referer = Router::parse($this->referer(null, true));
@@ -236,7 +236,7 @@ class GoalsController extends AppController
         $purpose_id = $this->request->params['named']['purpose_id'];
         try {
             if (!$this->Goal->Purpose->isOwner($this->Auth->user('id'), $purpose_id)) {
-                throw new RuntimeException(__d('app', "権限がありません。"));
+                throw new RuntimeException(__("You have no permission."));
             }
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
@@ -246,7 +246,7 @@ class GoalsController extends AppController
         $this->Goal->Purpose->id = $purpose_id;
         $this->Goal->Purpose->delete();
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
-        $this->Pnotify->outSuccess(__d('app', "ゴールを削除しました。"));
+        $this->Pnotify->outSuccess(__("Deleted a goal."));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->redirect($this->referer());
@@ -431,7 +431,7 @@ class GoalsController extends AppController
         }
 
         //success case.
-        $this->Pnotify->outSuccess(__d('app', "コラボレータを保存しました。"));
+        $this->Pnotify->outSuccess(__("Start to collaborate."));
         //if new
         Cache::delete($this->Goal->Collaborator->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
         Cache::delete($this->Goal->Collaborator->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
@@ -452,7 +452,7 @@ class GoalsController extends AppController
 
     function _editCollaboError()
     {
-        $this->Pnotify->outError(__d('app', "コラボレータの保存に失敗しました。"));
+        $this->Pnotify->outError(__("Failed to collaborate."));
     }
 
     public function add_key_result()
@@ -465,13 +465,13 @@ class GoalsController extends AppController
         try {
             $this->Goal->begin();
             if (!$this->Goal->Collaborator->isCollaborated($goal_id)) {
-                throw new RuntimeException(__d('app', "権限がありません。"));
+                throw new RuntimeException(__("You have no permission."));
             }
             $this->Goal->KeyResult->add($this->request->data, $goal_id);
             $this->Goal->incomplete($goal_id);
             if ($current_kr_id) {
                 if (!$this->Goal->KeyResult->isPermitted($current_kr_id)) {
-                    throw new RuntimeException(__d('app', "権限がありません。"));
+                    throw new RuntimeException(__("You have no permission."));
                 }
                 $this->Goal->KeyResult->complete($current_kr_id);
                 $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_ACHIEVE_KR,
@@ -489,7 +489,7 @@ class GoalsController extends AppController
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_CREATE_KR, $goal_id,
                                    $this->Goal->KeyResult->getLastInsertID());
         $this->_flashClickEvent("KRsOpen_" . $goal_id);
-        $this->Pnotify->outSuccess(__d('app', "達成要素を追加しました。"));
+        $this->Pnotify->outSuccess(__("Added a key result."));
         $params_referer = Router::parse($this->referer(null, true));
         if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home') {
             $this->redirect('/after_click:SubHeaderMenuGoal');
@@ -506,13 +506,13 @@ class GoalsController extends AppController
         $kr = null;
         try {
             if (!$this->Goal->KeyResult->isPermitted($kr_id)) {
-                throw new RuntimeException(__d('app', "権限がありません。"));
+                throw new RuntimeException(__("You have no permission."));
             }
             if ($this->Goal->KeyResult->isCompleted($kr_id)) {
-                throw new RuntimeException(__d('app', "完了済の成果は編集出来ません。"));
+                throw new RuntimeException(__("You can't edit achieved KR."));
             }
             if (!$kr = $this->Goal->KeyResult->saveEdit($this->request->data)) {
-                throw new RuntimeException(__d('app', "達成要素の保存に失敗しました。"));
+                throw new RuntimeException(__("Failed to save KR."));
             }
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
@@ -524,7 +524,7 @@ class GoalsController extends AppController
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_KR, $kr['KeyResult']['goal_id'], $kr_id);
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
 
-        $this->Pnotify->outSuccess(__d('app', "達成要素を更新しました。"));
+        $this->Pnotify->outSuccess(__("Updated KR."));
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         $params_referer = Router::parse($this->referer(null, true));
         if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home') {
@@ -543,7 +543,7 @@ class GoalsController extends AppController
         try {
             $this->Goal->begin();
             if (!$this->Goal->KeyResult->isPermitted($kr_id)) {
-                throw new RuntimeException(__d('app', "権限がありません。"));
+                throw new RuntimeException(__("You have no permission."));
             }
             $this->Goal->KeyResult->complete($kr_id);
             $key_result = $this->Goal->KeyResult->findById($kr_id);
@@ -558,13 +558,13 @@ class GoalsController extends AppController
                 $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_ACHIEVE_GOAL,
                                            $key_result['KeyResult']['goal_id'],
                                            $kr_id);
-                $this->Pnotify->outSuccess(__d('app', "ゴールを完了にしました。"));
+                $this->Pnotify->outSuccess(__("Completed a goal."));
             }
             else {
                 $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_ACHIEVE_KR,
                                            $key_result['KeyResult']['goal_id'],
                                            $kr_id);
-                $this->Pnotify->outSuccess(__d('app', "成果を完了にしました。"));
+                $this->Pnotify->outSuccess(__("Completed a key result."));
             }
         } catch (RuntimeException $e) {
             $this->Goal->rollback();
@@ -603,7 +603,7 @@ class GoalsController extends AppController
         try {
             $this->Goal->begin();
             if (!$this->Goal->KeyResult->isPermitted($kr_id)) {
-                throw new RuntimeException(__d('app', "権限がありません。"));
+                throw new RuntimeException(__("You have no permission."));
             }
             $this->Goal->KeyResult->incomplete($kr_id);
             $key_result = $this->Goal->KeyResult->findById($kr_id);
@@ -617,7 +617,7 @@ class GoalsController extends AppController
         }
         $this->Goal->commit();
         $this->_flashClickEvent("KRsOpen_" . $key_result['KeyResult']['goal_id']);
-        $this->Pnotify->outSuccess(__d('app', "成果を未完了にしました。"));
+        $this->Pnotify->outSuccess(__("Made a key result uncompleted."));
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         $params_referer = Router::parse($this->referer(null, true));
@@ -635,10 +635,10 @@ class GoalsController extends AppController
         $this->request->allowMethod('post', 'delete');
         try {
             if (!$this->Goal->KeyResult->isPermitted($kr_id)) {
-                throw new RuntimeException(__d('app', "権限がありません。"));
+                throw new RuntimeException(__("You have no permission."));
             }
             if ($this->Goal->KeyResult->isCompleted($kr_id)) {
-                throw new RuntimeException(__d('app', "完了済の成果は削除出来ません。"));
+                throw new RuntimeException(__("You can't delete achieved KR."));
             }
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
@@ -655,7 +655,7 @@ class GoalsController extends AppController
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_DELETE_KR, $kr['KeyResult']['goal_id'], $kr_id);
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
 
-        $this->Pnotify->outSuccess(__d('app', "成果を削除しました。"));
+        $this->Pnotify->outSuccess(__("Deleted a key result."));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         $params_referer = Router::parse($this->referer(null, true));
@@ -675,10 +675,10 @@ class GoalsController extends AppController
             if (!$action = $this->Goal->ActionResult->find('first',
                                                            ['conditions' => ['ActionResult.id' => $ar_id],])
             ) {
-                throw new RuntimeException(__d('app', "アクションが存在しません。"));
+                throw new RuntimeException(__("There is no action."));
             }
             if (!$this->Team->TeamMember->isAdmin() && !$this->Goal->Collaborator->isCollaborated($action['ActionResult']['goal_id'])) {
-                throw new RuntimeException(__d('app', "権限がありません。"));
+                throw new RuntimeException(__("You have no permission."));
             }
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
@@ -697,7 +697,7 @@ class GoalsController extends AppController
             $this->_flashClickEvent("ActionListOpen_" . $action['ActionResult']['goal_id']);
         }
 
-        $this->Pnotify->outSuccess(__d('app', "アクションを削除しました。"));
+        $this->Pnotify->outSuccess(__("Deleted an action."));
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_ACTION_COUNT, true), 'user_data');
         /** @noinspection PhpInconsistentReturnPointsInspection */
@@ -711,10 +711,10 @@ class GoalsController extends AppController
         $this->request->allowMethod('post', 'put');
         $this->Goal->Collaborator->id = $collabo_id;
         if (!$this->Goal->Collaborator->exists()) {
-            $this->Pnotify->outError(__('gl', "既にコラボレータから抜けている可能性があります。"));
+            $this->Pnotify->outError(__("He/She might quit collaborating."));
         }
         if (!$this->Goal->Collaborator->isOwner($this->Auth->user('id'))) {
-            $this->Pnotify->outError(__('gl', "この操作の権限がありません。"));
+            $this->Pnotify->outError(__("You have no right to operate it."));
         }
         $collabo = $this->Goal->Collaborator->findById($collabo_id);
         if (!empty($collabo)) {
@@ -722,7 +722,7 @@ class GoalsController extends AppController
                                        $collabo['Collaborator']['goal_id']);
         }
         $this->Goal->Collaborator->delete();
-        $this->Pnotify->outSuccess(__d('app', "コラボレータから外れました。"));
+        $this->Pnotify->outSuccess(__("Quitted a collaborator."));
         Cache::delete($this->Goal->Collaborator->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true), 'user_data');
         Cache::delete($this->Goal->Collaborator->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         $this->redirect($this->referer());
@@ -747,7 +747,7 @@ class GoalsController extends AppController
         //存在チェック
         if (!$this->Goal->isBelongCurrentTeam($goal_id, $this->Session->read('current_team_id'))) {
             $return['error'] = true;
-            $return['msg'] = __d('app', "存在しないゴールです。");
+            $return['msg'] = __("The goal doesn't exist.");
             return $this->_ajaxGetResponse($return);
         }
 
@@ -758,14 +758,14 @@ class GoalsController extends AppController
 
         if ($return['add']) {
             $this->Goal->Follower->addFollower($goal_id);
-            $return['msg'] = __d('app', "フォローしました。");
+            $return['msg'] = __("Start to follow.");
             $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_FOLLOW_GOAL, $goal_id);
             $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_FOLLOW, $goal_id);
         }
         else {
             $this->Goal->Follower->deleteFollower($goal_id);
             $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_FOLLOW_GOAL, $goal_id);
-            $return['msg'] = __d('app', "フォロー解除しました。");
+            $return['msg'] = __("Stop following.");
         }
 
         return $this->_ajaxGetResponse($return);
@@ -1028,10 +1028,10 @@ class GoalsController extends AppController
         $key_result_id = viaIsSet($this->request->params['named']['key_result_id']);
         try {
             if (!$this->Goal->Collaborator->isCollaborated($goal_id)) {
-                throw new RuntimeException(__d('app', "このアクションは編集できません。"));
+                throw new RuntimeException(__("This action can't be edited."));
             }
             if ($key_result_id && !$this->Goal->KeyResult->isPermitted($key_result_id)) {
-                throw new RuntimeException(__d('app', "このアクションは編集できません。"));
+                throw new RuntimeException(__("This action can't be edited."));
             }
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
@@ -1058,7 +1058,7 @@ class GoalsController extends AppController
         $ar_id = $this->request->params['named']['action_result_id'];
 
         if (!$this->Goal->ActionResult->isOwner($this->Auth->user('id'), $ar_id)) {
-            $this->Pnotify->outError(__('gl', "このアクションは編集できません。"));
+            $this->Pnotify->outError(__("This action can't be edited."));
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->redirect($this->referer());
         }
@@ -1067,11 +1067,11 @@ class GoalsController extends AppController
         if ($this->request->is('put')) {
             $this->request->data['ActionResult']['id'] = $ar_id;
             if (!$this->Goal->ActionResult->actionEdit($this->request->data)) {
-                $this->Pnotify->outError(__d('app', "データの保存に失敗しました。"));
+                $this->Pnotify->outError(__("Failed to save data."));
                 /** @noinspection PhpVoidFunctionResultUsedInspection */
                 return $this->redirect($this->referer());
             }
-            $this->Pnotify->outSuccess(__d('app', "アクションを更新しました。"));
+            $this->Pnotify->outSuccess(__("Edited the action."));
             $action = $this->Goal->ActionResult->find('first',
                                                       ['conditions' => ['ActionResult.id' => $ar_id]]);
             $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_ACTION,
@@ -1110,24 +1110,24 @@ class GoalsController extends AppController
 
         //見出し
         $th = [
-            __d('app', "Member Number"),
-            __d('app', "Sei"),
-            __d('app', "Mei"),
-            __d('app', "姓"),
-            __d('app', "名"),
-            __d('app', "Member to be Evaluated"),
-            __d('app', "Approval Status"),
-            __d('app', "目的"),
-            __d('app', "ゴールカテゴリ"),
-            __d('app', "ゴールオーナー種別"),
-            __d('app', "ゴール名"),
-            __d('app', "単位"),
-            __d('app', "程度(達成時)"),
-            __d('app', "程度(開始時)"),
-            __d('app', "期限"),
-            __d('app', "開始日"),
-            __d('app', "詳細"),
-            __d('app', "重要度")
+            __("Member Number"),
+            __("Last Name"),
+            __("First Name"),
+            __("LastName"),
+            __("FirstName"),
+            __("Member to be Evaluated"),
+            __("Approval Status"),
+            __("Purpose"),
+            __("Goal Category"),
+            __("Goal Owner Type"),
+            __("Goal Name"),
+            __("Unit"),
+            __("Measurement(Final)"),
+            __("Measurement(Initial)"),
+            __("Due Date"),
+            __("Start Date"),
+            __("Desctiption"),
+            __("Weight")
         ];
         $user_goals = $this->Goal->getAllUserGoal();
 
@@ -1158,16 +1158,16 @@ class GoalsController extends AppController
                     $approval_status = null;
                     switch ($c_v['valued_flg']) {
                         case Collaborator::STATUS_UNAPPROVED:
-                            $approval_status = __d('app', "Pending approval");
+                            $approval_status = __("Pending approval");
                             break;
                         case Collaborator::STATUS_APPROVAL:
-                            $approval_status = __d('app', "Evaluable");
+                            $approval_status = __("Evaluable");
                             break;
                         case Collaborator::STATUS_HOLD:
-                            $approval_status = __d('app', "Not Evaluable");
+                            $approval_status = __("Not Evaluable");
                             break;
                         case Collaborator::STATUS_MODIFY:
-                            $approval_status = __d('app', "Pending modification");
+                            $approval_status = __("Pending modification");
                             break;
                     }
                     $record = $common_record;
@@ -1179,7 +1179,7 @@ class GoalsController extends AppController
                         $record['purpose'] = $c_v['Goal']['Purpose']['name'];
                         $record['category'] = isset($c_v['Goal']['GoalCategory']['name']) ? $c_v['Goal']['GoalCategory']['name'] : null;
                         $record['collabo_type'] = ($c_v['type'] == Collaborator::TYPE_OWNER) ?
-                            __d('app', "L") : __d('app', "C");
+                            __("L") : __("C");
                         $record['goal'] = $c_v['Goal']['name'];
                         $record['value_unit'] = KeyResult::$UNIT[$c_v['Goal']['value_unit']];
                         $record['target_value'] = (double)$c_v['Goal']['target_value'];
@@ -1213,7 +1213,7 @@ class GoalsController extends AppController
             $goal_id = isset($this->request->data['ActionResult']['goal_id']) ? $this->request->data['ActionResult']['goal_id'] : null;
         }
         if (!$goal_id) {
-            $this->Pnotify->outError(__d('app', "アクションの追加に失敗しました。。"));
+            $this->Pnotify->outError(__("Failed to add an action."));
             $this->redirect($this->referer());
         }
 
@@ -1222,7 +1222,7 @@ class GoalsController extends AppController
         try {
             $this->Goal->begin();
             if (!$this->Goal->Collaborator->isCollaborated($goal_id)) {
-                throw new RuntimeException(__d('app', "権限がありません。"));
+                throw new RuntimeException(__("You have no permission."));
             }
             $share = isset($this->request->data['ActionResult']['share']) ? $this->request->data['ActionResult']['share'] : null;
             //アクション追加,投稿
@@ -1234,7 +1234,7 @@ class GoalsController extends AppController
                                                                                 AttachedFile::TYPE_MODEL_ACTION_RESULT,
                                                                                 $file_ids)
             ) {
-                throw new RuntimeException(__d('app', "アクションの追加に失敗しました。"));
+                throw new RuntimeException(__("Failed to add an action."));
             }
         } catch (RuntimeException $e) {
             $this->Goal->rollback();
@@ -1269,7 +1269,7 @@ class GoalsController extends AppController
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_ACTION_COUNT, true), 'user_data');
 
         // push
-        $this->Pnotify->outSuccess(__d('app', "アクションを追加しました。"));
+        $this->Pnotify->outSuccess(__("Added an action."));
         $post = $this->Goal->Post->getByActionResultId($this->Goal->ActionResult->getLastInsertID());
         $url = $post ? ['controller' => 'posts',
                         'action'     => 'feed',
@@ -1283,7 +1283,7 @@ class GoalsController extends AppController
         $goal_id = $this->request->params['named']['goal_id'];
         $result = [
             'error' => true,
-            'msg'   => __d('app', "エラーが発生しました。"),
+            'msg'   => __("An error has occurred."),
             'html'  => null
         ];
         $this->_ajaxPreProcess();
@@ -1450,7 +1450,7 @@ class GoalsController extends AppController
         $goal_id = $this->_getRequiredParam('goal_id');
         if (!$this->_setGoalPageHeaderInfo($goal_id)) {
             // ゴールが存在しない
-            $this->Pnotify->outError(__d('app', "不正な画面遷移です。"));
+            $this->Pnotify->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
         $followers = $this->Goal->Follower->getFollowerByGoalId($goal_id, [
@@ -1472,7 +1472,7 @@ class GoalsController extends AppController
         $goal_id = $this->_getRequiredParam('goal_id');
         if (!$this->_setGoalPageHeaderInfo($goal_id)) {
             // ゴールが存在しない
-            $this->Pnotify->outError(__d('app', "不正な画面遷移です。"));
+            $this->Pnotify->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
         $members = $this->Goal->Collaborator->getCollaboratorByGoalId($goal_id, [
@@ -1493,7 +1493,7 @@ class GoalsController extends AppController
         $goal_id = $this->_getRequiredParam('goal_id');
         if (!$this->_setGoalPageHeaderInfo($goal_id)) {
             // ゴールが存在しない
-            $this->Pnotify->outError(__d('app', "不正な画面遷移です。"));
+            $this->Pnotify->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
         //コラボってる？
@@ -1526,13 +1526,13 @@ class GoalsController extends AppController
         $goal_id = $this->_getRequiredParam('goal_id');
         if (!$this->_setGoalPageHeaderInfo($goal_id)) {
             // ゴールが存在しない
-            $this->Pnotify->outError(__d('app', "不正な画面遷移です。"));
+            $this->Pnotify->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
         $page_type = $this->_getRequiredParam('page_type');
         $goal_id = viaIsSet($this->request->params['named']['goal_id']);
         if (!in_array($page_type, ['list', 'image'])) {
-            $this->Pnotify->outError(__d('app', "不正な画面遷移です。"));
+            $this->Pnotify->outError(__("Invalid screen transition."));
             $this->redirect($this->referer());
         }
         $key_result_id = viaIsSet($this->request->params['named']['key_result_id']);
@@ -1564,7 +1564,7 @@ class GoalsController extends AppController
         $goal_id = $this->_getRequiredParam('goal_id');
         if (!$this->_setGoalPageHeaderInfo($goal_id)) {
             // ゴールが存在しない
-            $this->Pnotify->outError(__d('app', "不正な画面遷移です。"));
+            $this->Pnotify->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
         // ゴールが属している評価期間データ

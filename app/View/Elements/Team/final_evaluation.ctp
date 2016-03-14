@@ -23,27 +23,28 @@
 ?>
 <!-- START app/View/Elements/Team/final_evaluation.ctp -->
 <div class="panel panel-default">
-    <div class="panel-heading"><?= __d('app', "最終評価") ?></div>
+    <div class="panel-heading"><?= __("Final evaluation") ?></div>
     <div class="panel-body">
         <div class="form-group">
             <label for="TeamName" class="col col-sm-3 control-label form-label"></label>
 
             <div class="col col-sm-6">
                 <?php if ($this->Session->read('ua.device_type') == 'Desktop'): ?>
-                    <p class="form-control-static"><?= __d('app', "このセクションでは最終評価をCSVにて行う事ができます。") ?></p>
+                    <p class="form-control-static"><?= __("Final evaluation is performed by CSV.") ?></p>
 
-                    <p class="form-control-static"><?= __d('app',
-                                                           "ファイルをダウンロードし、フォーマットに従って入力したあと、更新済みのCSVファイルをアップロードしてください。") ?></p>
+                    <p class="form-control-static">
+                        <?= __("Download CSV. After editting, upload it.") ?>
+                    </p>
 
-                    <p class="form-control-static"><?= __d('app', "") ?></p>
+                    <p class="form-control-static"><?= __("") ?></p>
 
-                    <p class="form-control-static"><?= __d('app', "") ?></p>
+                    <p class="form-control-static"><?= __("") ?></p>
 
-                    <p class="form-control-static"><?= __d('app', "") ?></p>
+                    <p class="form-control-static"><?= __("") ?></p>
 
-                    <p class="form-control-static"><?= __d('app', "") ?></p>
+                    <p class="form-control-static"><?= __("") ?></p>
                 <?php else: ?>
-                    <p class="form-control-static"><?= __d('app', "本機能はPCにてご利用できます。") ?></p>
+                    <p class="form-control-static"><?= __("This function can be used only by PC.") ?></p>
                 <?php endif; ?>
             </div>
         </div>
@@ -54,10 +55,10 @@
                 <div class="col-sm-9 col-sm-offset-3">
                     <a href="#" data-toggle="modal" data-target="#ModalFinalEvaluation_<?= $previous_term_id ?>_ByCsv"
                        class="btn btn-primary" <?= $previous_term_id && $previous_eval_is_frozen ? null : 'disabled' ?>>
-                        <?= __d('app', '前期の最終評価を行う') ?></a>
+                        <?= __('Perform final evaluation of previous term') ?></a>
                     <a href="#" data-toggle="modal" data-target="#ModalFinalEvaluation_<?= $current_term_id ?>_ByCsv"
                        class="btn btn-primary" <?= $current_term_id && $current_eval_is_frozen ? null : 'disabled' ?>>
-                        <?= __d('app', '今期の最終評価を行う') ?></a>
+                        <?= __('Perform final evaluation of current term') ?></a>
                 </div>
             </div>
         </div>

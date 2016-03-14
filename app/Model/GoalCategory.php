@@ -92,7 +92,7 @@ class GoalCategory extends AppModel
     {
         $data = [
             [
-                'name'    => __d('app', "未設定"),
+                'name'    => __("Undefined"),
                 'team_id' => $this->current_team_id,
             ],
         ];

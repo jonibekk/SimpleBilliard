@@ -25,12 +25,12 @@ if (!viaIsSet($index) || !is_numeric($index)) {
                             'div'                          => false,
                             'label'                        => false,
                             'class'                        => 'form-control',
-                            'placeholder'                  => __d('app', '名前'),
-                            'data-bv-notempty-message'     => __d('app', "入力必須項目です。"),
+                            'placeholder'                  => __('Name'),
+                            'data-bv-notempty-message'     => __("Input is required."),
                             'required'                     => true,
                             'data-bv-stringlength'         => 'true',
                             'data-bv-stringlength-max'     => 200,
-                            'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 200),
+                            'data-bv-stringlength-message' => __("It's over limit characters (%s).", 200),
                         ))
             ?>
         </div>
@@ -46,13 +46,13 @@ if (!viaIsSet($index) || !is_numeric($index)) {
                             'div'                          => false,
                             'label'                        => false,
                             'class'                        => 'form-control',
-                            'placeholder'                  => __d('app', '表示順'),
-                            'data-bv-notempty-message'     => __d('app', "入力必須項目です。"),
-                            'data-bv-integer-message'      => __d('app', "数字を入力してください。"),
+                            'placeholder'                  => __('Display order'),
+                            'data-bv-notempty-message'     => __("Input is required"),
+                            'data-bv-integer-message'      => __("Please enter a number."),
                             'required'                     => true,
                             'data-bv-stringlength'         => 'true',
                             'data-bv-stringlength-max'     => 5,
-                            'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 5),
+                            'data-bv-stringlength-message' => __("It's over limit characters (%s).", 5),
                         ))
             ?>
         </div>
@@ -69,12 +69,12 @@ if (!viaIsSet($index) || !is_numeric($index)) {
                             'div'                          => false,
                             'label'                        => false,
                             'class'                        => 'form-control',
-                            'placeholder'                  => __d('app', '定義の説明を書きましょう'),
-                            'data-bv-notempty-message'     => __d('app', "入力必須項目です。"),
+                            'placeholder'                  => __('Please explain the definition.'),
+                            'data-bv-notempty-message'     => __("Input is required."),
                             'required'                     => true,
                             'data-bv-stringlength'         => 'true',
                             'data-bv-stringlength-max'     => 2000,
-                            'data-bv-stringlength-message' => __d('validate', "最大文字数(%s)を超えています。", 2000),
+                            'data-bv-stringlength-message' => __("It's over limit characters (%s).", 2000),
                         ))
             ?>
         </div>

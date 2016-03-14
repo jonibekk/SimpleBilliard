@@ -28,7 +28,7 @@ Page毎に要素が変わるもの
 $meta_terms = [
     [
         "name" => "description",
-        "content" => __d('lp','Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。利用規約はこちら。'),
+        "content" => __('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。利用規約はこちら。'),
     ],
     [
         "name" => "keywords",
@@ -40,11 +40,11 @@ $meta_terms = [
     ],
     [
         "property" => "og:title",
-        "content" => __d('lp', 'Goalous利用規約 | Goalous(ゴーラス)'),
+        "content" => __('Terms of service | Goalous'),
     ],
     [
         "property" => "og:description",
-        "content" =>__d('lp', 'Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。利用規約はこちら。'),
+        "content" =>__('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。利用規約はこちら。'),
     ],
     [
         "property" => "og:url",
@@ -56,7 +56,7 @@ $meta_terms = [
     ],
     [
         "property" => "og:site_name",
-        "content" => __d('lp', 'Goalous (ゴーラス) │ゴール達成への最強にオープンな社内SNS'),
+        "content" => __('Goalous │ Enterprise SNS the most ever open for Goal'),
     ],
     [
         "property" => "fb:app_id",
@@ -76,7 +76,7 @@ for($i = 0; $i < $num_ogp; $i++){
     echo $this->Html->meta($meta_terms[$i]);
 }
 ?>
-<title><?= __d('lp', 'Goalous利用規約 | Goalous (ゴーラス)') ?></title>
+<title><?= __('Terms of service | Goalous') ?></title>
 <link rel="alternate" hreflang="ja" href="<?= $this->Html->url('/ja/terms') ?>"/>
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/terms') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/terms') ?>"/>
