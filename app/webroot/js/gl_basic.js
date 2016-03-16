@@ -2136,13 +2136,15 @@ $(document).ready(function () {
     // 投稿フォームが表示されるページのみ
     if ($('#CommonPostBody').size()) {
         require(['ogp'], function (ogp) {
-            // 投稿編集の場合で、OGP情報が登録されている場合
-            if ($('.exist-ogp-info').size()) {
-                getPostOGPInfo(ogp);
+            // 投稿編集の場合で、OGPのurlが登録されている場合
+            if ($('.post-edit').size()) {
+                if($('.post-edit').attr('data-default-ogp-url')) {
+                    getPostOGPInfo(ogp, $('.post-edit').attr('data-default-ogp-url'));
+                }
             }
 
             var onKeyUp = function() {
-                getPostOGPInfo(ogp);
+                getPostOGPInfo(ogp, $('#CommonPostBody').val());
             };
             var timer = null;
             $('#CommonPostBody').on('keyup', function () {
@@ -5529,10 +5531,10 @@ function setDefaultTab() {
     }
 }
 
-function getPostOGPInfo(ogp) {
-    ogp.getOGPSiteInfo({
+function getPostOGPInfo(ogp, text) {
+    var options = {
         // URL が含まれるテキスト
-        text: $('#CommonPostBody').val(),
+        text: text,
 
         // ogp 情報を取得する必要があるかチェック
         readyLoading: function () {
@@ -5568,11 +5570,13 @@ function getPostOGPInfo(ogp) {
             // loading アイコン削除
             $('#PostSiteInfoLoadingIcon').remove();
         }
-    });
+    };
+
+    ogp.getOGPSiteInfo(options);
+
 }
 
 function appendPostOgpInfo(data) {
-    console.log(data);
     var $siteInfoUrl = $('#PostSiteInfoUrl');
     var $siteInfo = $('#PostOgpSiteInfo');
     $siteInfo

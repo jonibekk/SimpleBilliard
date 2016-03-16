@@ -6,7 +6,7 @@
 <!-- START app/View/Post/post_edit.ctp -->
 <div class="col-sm-8 col-sm-offset-2">
     <div class="panel panel-default">
-        <div class="panel-body <?= ($this->request->data('Post.site_info')) ? 'exist-ogp-info' : '' ?>">
+        <div class="panel-body post-edit" data-default-ogp-url="<?= $this->Post->extractOgpUrl($this->request->data('Post.site_info')) ?>">
             <?= $this->element('Feed/common_form') ?>
         </div>
     </div>
