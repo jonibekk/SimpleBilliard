@@ -7,6 +7,7 @@
  */
 
 App::uses('AppHelper', 'View/Helper');
+
 class PostHelper extends AppHelper
 {
 
@@ -15,11 +16,14 @@ class PostHelper extends AppHelper
      *
      * @return string
      */
-    function extractOgpUrl($json_site_info) {
-        if(!$json_site_info) return '';
+    function extractOgpUrl($json_site_info)
+    {
+        if (!$json_site_info) {
+            return '';
+        }
 
         $site_info = json_decode($json_site_info);
-        if(viaIsSet($site_info->url)) {
+        if (viaIsSet($site_info->url)) {
             return $site_info->url;
         }
 
