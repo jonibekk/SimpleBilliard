@@ -45,8 +45,10 @@
             </div>
             <div class="goals-filters-menu btn-group btn-group-justified" role="group">
                 <div class="goals-search-filters-category-wrap btn-group" role="group">
-                    <a href="#" class="goals-search-filters-category dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                        <span class="goals-search-filters-tab-text goal_type_name"><?= h($search_option['category'][1]) ?></span>
+                    <a href="#" class="goals-search-filters-category dropdown-toggle" data-toggle="dropdown"
+                       role="button" aria-expanded="false">
+                        <span
+                            class="goals-search-filters-tab-text goal_type_name"><?= h($search_option['category'][1]) ?></span>
                         <i class="goals-search-filters-tab-caret fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu" role="menu">
@@ -58,8 +60,10 @@
                     </ul>
                 </div>
                 <div class="goals-search-filters-category-wrap btn-group" role="group">
-                    <a href="#" class="goals-search-filters-completed dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                        <span class="goals-search-filters-tab-text goal_type_name"><?= h($search_option['progress'][1]) ?></span>
+                    <a href="#" class="goals-search-filters-completed dropdown-toggle" data-toggle="dropdown"
+                       role="button" aria-expanded="false">
+                        <span
+                            class="goals-search-filters-tab-text goal_type_name"><?= h($search_option['progress'][1]) ?></span>
                         <i class="goals-search-filters-tab-caret fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu" role="menu">
@@ -71,8 +75,10 @@
                     </ul>
                 </div>
                 <div class="goals-search-filters-order-wrap btn-group" role="group">
-                    <a href="#" class="goals-search-filters-order goal-filter-elm dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                        <span class="goals-search-filters-tab-text goal_type_name"><?= h($search_option['order'][1]) ?></span>
+                    <a href="#" class="goals-search-filters-order goal-filter-elm dropdown-toggle"
+                       data-toggle="dropdown" role="button" aria-expanded="false">
+                        <span
+                            class="goals-search-filters-tab-text goal_type_name"><?= h($search_option['order'][1]) ?></span>
                         <i class="goals-search-filters-tab-caret fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu pull-right" role="menu">
@@ -84,7 +90,9 @@
                 </div>
             </div>
         </div>
-        <p class="goals-search-count"><?= __("Goals found") ?><span class="goals-search-count-number"><?= $goal_count ?></span></p>
+        <p class="goals-search-count"><?= __("Goals found") ?><span
+                class="goals-search-count-number"><?= $goal_count ?></span></p>
+
         <div class="goals-page-cards">
             <?php if (empty($goals)): ?>
                 <div class="col col-xxs-12 mt_16px">
@@ -93,7 +101,7 @@
                     </div>
                 </div>
             <?php else: ?>
-                <?= $this->element('Goal/index_items') ?>
+                <?= $this->element('Goal/index_items', compact('goals', 'my_coaching_users')) ?>
                 <? $more_read_url = array_merge($search_url, ['action' => 'ajax_get_more_index_items']) ?>
                 <?php if (count($goals) == GOAL_INDEX_ITEMS_NUMBER): ?>
                     <div class="panel-body panel-read-more-body" id="GoalMoreView">
