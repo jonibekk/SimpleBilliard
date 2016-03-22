@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: 2016-03-11 19:43+0800\n"
-"PO-Revision-Date: 2016-03-11 19:43+0800\n"
+"PO-Revision-Date: 2016-03-22 20:34+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -5245,6 +5245,8 @@ msgid ""
 "You can understand your colleages easily, have you ever known another way to "
 "know this?"
 msgstr ""
+"あなたの同僚についてカンタンに知ることができます。今までこんな方法ありまし"
+"た？"
 
 #: View/Pages/features.ctp:127
 msgid "How visible photo actions are!"
@@ -5393,7 +5395,7 @@ msgstr "2016年2月5日"
 
 #: View/Pages/home.ctp:127
 msgid "We appeared on a magazine. - Gekkan Jinji Management Feb. -"
-msgstr ""
+msgstr "月刊人事マネジメント2016年2月号に掲載されました"
 
 #: View/Pages/home.ctp:136
 msgid "4 Feb 2016"
@@ -5401,7 +5403,7 @@ msgstr "2016年2月4日"
 
 #: View/Pages/home.ctp:141
 msgid "We appeared on a web media. - Hito to shigoto no kenkyujo by Idem -"
-msgstr ""
+msgstr "アイデム 人と仕事の研究所 制度探訪に掲載されました"
 
 #: View/Pages/home.ctp:154
 msgid "You can definitely change your organization by Goalous."
@@ -5656,7 +5658,7 @@ msgstr "チームビジョンを作成してください"
 
 #: View/Teams/add_team_vision.ctp:35 View/Teams/edit_team_vision.ctp:36
 msgid "Team vision name"
-msgstr ""
+msgstr "チームビジョン名"
 
 #: View/Teams/add_team_vision.ctp:101
 msgid "Create a team vision"
