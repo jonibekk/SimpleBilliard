@@ -25,6 +25,12 @@ module.exports = (grunt) ->
   #       '<%= config.app %>/webroot/dest/jscat/ng_controller.js'
   #     ]
 
+  react_vendors:
+    files:
+      '<%= config.app %>/webroot/dest/jsmin/react_vendors.min.js': [
+        '<%= config.app %>/webroot/dest/jscat/react_vendors.js'
+      ]
+
   vendors_target:
     files:
       '<%= config.app %>/webroot/js/vendors.min.js': [
