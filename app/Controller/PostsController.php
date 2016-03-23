@@ -135,14 +135,14 @@ class PostsController extends AppController
             // バリデーションエラーのケース
             if (!empty($this->Post->validationErrors)) {
                 $error_msg = array_shift($this->Post->validationErrors);
-                $this->Pnotify->outError($error_msg[0], ['title' => __d('app', "メンバーの変更に失敗しました。")]);
+                $this->Pnotify->outError($error_msg[0], ['title' => __("Failed to change members list.")]);
             }
             else {
-                $this->Pnotify->outError(__d('app', "メンバーの変更に失敗しました。"));
+                $this->Pnotify->outError(__("Failed to change members list."));
             }
         }
 
-        $this->Pnotify->outSuccess(__d('app', "メンバーを変更しました。"));
+        $this->Pnotify->outSuccess(__("Changed members list."));
         $this->redirect(['controller' => 'posts', 'action' => 'message#', $id]);
     }
 
@@ -161,19 +161,11 @@ class PostsController extends AppController
     public function _addPost()
     {
         $this->request->allowMethod('post');
-        //OGP処理はメッセ、アクション以外の場合に実行
-        if (isset($this->request->data['Post']['site_info_url']) &&
-            !empty($this->request->data['Post']['site_info_url'])
-        ) {
-            // OGP 情報を取得する URL が含まれるテキスト
-            // フロントの JS でプレビューが正しく取得出来た場合は、site_info_url に URL が含まれている
-            // それ以外の場合は body テキスト全体から URL を検出する
-            $url_text = $this->request->data('Post.site_info_url');
-            if (!$url_text) {
-                $url_text = $this->request->data('Post.body');
-            }
-            // ogbをインサートデータに追加
-            $this->request->data['Post'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Post']), $url_text);
+
+        // OGP処理はメッセ、アクション以外の場合に実行
+        if ($url_text = $this->request->data('Post.site_info_url')) {
+            // OGPをインサートデータに追加
+            $this->request->data['Post'] = $this->_addOgpIndexes($this->request->data['Post'], $url_text);
         }
 
         // 公開投稿か秘密サークルへの投稿かを判別
@@ -191,10 +183,10 @@ class PostsController extends AppController
             // バリデーションエラーのケース
             if (!empty($this->Post->validationErrors)) {
                 $error_msg = array_shift($this->Post->validationErrors);
-                $this->Pnotify->outError($error_msg[0], ['title' => __d('app', "投稿に失敗しました。")]);
+                $this->Pnotify->outError($error_msg[0], ['title' => __("Failed to post.")]);
             }
             else {
-                $this->Pnotify->outError(__d('app', "投稿に失敗しました。"));
+                $this->Pnotify->outError(__("Failed to post."));
             }
             return false;
         }
@@ -210,7 +202,7 @@ class PostsController extends AppController
 
         //何らかの原因でsocketIdが無いもしくは、共有先指定なしの場合は以降の処理(通知、イベントトラッキング)を行わない
         if (!$socketId || $share[0] === "") {
-            $this->Pnotify->outSuccess(__d('app', "投稿しました。"));
+            $this->Pnotify->outSuccess(__("Posted."));
             return false;
         }
 
@@ -252,7 +244,7 @@ class PostsController extends AppController
             $this->Mixpanel->trackPost($this->Post->getLastInsertID(), $mixpanel_prop_name);
         }
 
-        $this->Pnotify->outSuccess(__d('app', "投稿しました。"));
+        $this->Pnotify->outSuccess(__("Posted."));
         return true;
     }
 
@@ -266,16 +258,16 @@ class PostsController extends AppController
     {
         $this->Post->id = viaIsSet($this->request->params['named']['post_id']);
         if (!$this->Post->exists()) {
-            throw new NotFoundException(__d('app', "この投稿は存在しません。"));
+            throw new NotFoundException(__("This post doesn't exist."));
         }
         if (!$this->Post->isOwner($this->Auth->user('id')) && !$this->User->TeamMember->myStatusWithTeam['TeamMember']['admin_flg']) {
-            throw new NotFoundException(__d('app', "この投稿はあなたのものではありません。"));
+            throw new NotFoundException(__("This isn't your post."));
         }
         $this->request->allowMethod('post', 'delete');
         $this->Post->delete();
         $this->Post->PostFile->AttachedFile->deleteAllRelatedFiles($this->Post->id,
                                                                    AttachedFile::TYPE_MODEL_POST);
-        $this->Pnotify->outSuccess(__d('app', "投稿を削除しました。"));
+        $this->Pnotify->outSuccess(__("Deleted the post."));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->redirect($this->referer());
@@ -293,25 +285,35 @@ class PostsController extends AppController
 
         // 例外チェック
         if (!$this->Post->exists()) {
-            throw new NotFoundException(__d('app', "この投稿は存在しません。"));
+            throw new NotFoundException(__("This post doesn't exist."));
         }
         if (!$this->Post->isOwner($this->Auth->user('id'))) {
-            throw new NotFoundException(__d('app', "この投稿はあなたのものではありません。"));
+            throw new NotFoundException(__("This isn't your post."));
         }
 
         // フォームが submit された時
         if ($this->request->is('put')) {
             $this->request->data['Post']['id'] = $this->request->params['named']['post_id'];
-            // ogbをインサートデータに追加
-            $this->request->data['Post'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Post']),
-                                                                 viaIsSet($this->request->data['Post']['body']));
+
+            // OGP処理はメッセ、アクション以外の場合に実行
+            if ($url_text = $this->request->data('Post.site_info_url')) {
+                // OGPをインサートデータに追加
+                $this->request->data['Post'] = $this->_addOgpIndexes($this->request->data['Post'], $url_text);
+            }
+            else {
+                // 編集の場合、OGP情報がフォームから渡ってこないとDBに残ってしまうので
+                // 空指定をする必要がある
+                $this->request->data['Post']['site_info'] = null;
+                $this->request->data['Post']['site_photo_file_name'] = null;
+            }
+
             // 投稿を保存
             if ($this->Post->postEdit($this->request->data)) {
-                $this->Pnotify->outSuccess(__d('app', "投稿の変更を保存しました。"));
+                $this->Pnotify->outSuccess(__("Saved changes."));
             }
             else {
                 $error_msg = array_shift($this->Post->validationErrors);
-                $this->Pnotify->outError($error_msg[0], ['title' => __d('app', "投稿の変更に失敗しました。")]);
+                $this->Pnotify->outError($error_msg[0], ['title' => __("Failed to save changes.")]);
             }
             /** @noinspection PhpInconsistentReturnPointsInspection */
             /** @noinspection PhpVoidFunctionResultUsedInspection */
@@ -342,10 +344,10 @@ class PostsController extends AppController
         $this->Post->Comment->id = viaIsSet($this->request->params['named']['comment_id']);;
         $post_id = $this->Post->Comment->field('post_id');
         if (!$this->Post->Comment->exists()) {
-            throw new NotFoundException(__('gl', "このコメントは存在しません。"));
+            throw new NotFoundException(__("This comment doesn't exist."));
         }
         if (!$this->Post->Comment->isOwner($this->Auth->user('id')) && !$this->User->TeamMember->myStatusWithTeam['TeamMember']['admin_flg']) {
-            throw new NotFoundException(__('gl', "このコメントはあなたのものではありません。"));
+            throw new NotFoundException(__("This isn't your comment."));
         }
         $this->request->allowMethod('post', 'delete');
         $this->Post->Comment->delete();
@@ -353,7 +355,7 @@ class PostsController extends AppController
                                                                    AttachedFile::TYPE_MODEL_COMMENT);
         $this->Post->Comment->updateCounterCache(['post_id' => $post_id]);
 
-        $this->Pnotify->outSuccess(__d('app', "コメントを削除しました。"));
+        $this->Pnotify->outSuccess(__("Deleted the comment."));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->redirect($this->referer());
@@ -374,10 +376,10 @@ class PostsController extends AppController
 
         // 例外チェック
         if (!$this->Post->Comment->exists()) {
-            throw new NotFoundException(__('gl', "このコメントは存在しません。"));
+            throw new NotFoundException(__("This comment doesn't exist."));
         }
         if (!$this->Post->Comment->isOwner($this->Auth->user('id'))) {
-            throw new NotFoundException(__('gl', "このコメントはあなたのものではありません。"));
+            throw new NotFoundException(__("This isn't your comment."));
         }
 
         // ogbをインサートデータに追加
@@ -386,11 +388,11 @@ class PostsController extends AppController
 
         // コメントを追加
         if ($this->Post->Comment->commentEdit($this->request->data)) {
-            $this->Pnotify->outSuccess(__d('app', "コメントの変更を保存しました。"));
+            $this->Pnotify->outSuccess(__("Edited the comment."));
         }
         else {
             $error_msg = array_shift($this->Post->Comment->validationErrors);
-            $this->Pnotify->outError($error_msg[0], ['title' => __d('app', "コメントの変更に失敗しました。")]);
+            $this->Pnotify->outError($error_msg[0], ['title' => __("Failed to save changes to the comment.")]);
         }
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
@@ -810,7 +812,7 @@ class PostsController extends AppController
         }
         else {
             $result['error'] = true;
-            $result['msg'] = __d('app', "エラーが発生しました。");
+            $result['msg'] = __("An error has occurred.");
         }
         return $this->_ajaxGetResponse($result);
     }
@@ -834,7 +836,7 @@ class PostsController extends AppController
         }
         else {
             $result['error'] = true;
-            $result['msg'] = __d('app', "エラーが発生しました。");
+            $result['msg'] = __("An error has occurred.");
         }
         return $this->_ajaxGetResponse($result);
     }
@@ -857,7 +859,7 @@ class PostsController extends AppController
         }
         else {
             $result['error'] = true;
-            $result['msg'] = __d('app', "エラーが発生しました。");
+            $result['msg'] = __("An error has occurred.");
         }
         return $this->_ajaxGetResponse($result);
     }
@@ -981,7 +983,7 @@ class PostsController extends AppController
         $type = viaIsSet($post['Post']['type']);
         try {
             if (!$this->Post->exists()) {
-                throw new RuntimeException(__d('app', "この投稿は削除されています。"));
+                throw new RuntimeException(__("This post was deleted."));
             }
 
             // OGP 情報を取得する URL が含まれるテキスト
@@ -1016,7 +1018,7 @@ class PostsController extends AppController
                 //mixpanel
                 $this->Mixpanel->trackComment($type, $this->Post->Comment->getLastInsertID());
 
-                $result['msg'] = __d('app', "コメントしました。");
+                $result['msg'] = __("Commented.");
             }
             else {
                 if (!empty($this->Post->Comment->validationErrors)) {
@@ -1091,19 +1093,19 @@ class PostsController extends AppController
         // データが存在するか確認
         $file = $this->Post->PostFile->AttachedFile->findById($this->request->params['named']['file_id']);
         if (!$file) {
-            throw new NotFoundException(__d('app', "ファイルが存在しません。"));
+            throw new NotFoundException(__("This file doesn't exist."));
         }
 
         // ファイルへのアクセス権限があるか確認
         if (!$this->Post->PostFile->AttachedFile->isReadable($this->request->params['named']['file_id'])) {
-            throw new NotFoundException(__d('app', "ファイルが存在しません。"));
+            throw new NotFoundException(__("This file doesn't exist."));
         }
 
         // ファイルデータを取得
         $url = $this->Post->PostFile->AttachedFile->getFileUrl($this->request->params['named']['file_id']);
         $res = $this->_getHttpSocket()->get(Router::url($url, true));
         if (!$res->body) {
-            throw new NotFoundException(__d('app', "ファイルが存在しません。"));
+            throw new NotFoundException(__("This file doesn't exist."));
         }
 
         // safari は日本語ファイル名が文字化けするので特別扱い
@@ -1231,7 +1233,7 @@ class PostsController extends AppController
         $this->_ajaxPreProcess();
         $file_id = $this->Post->PostFile->AttachedFile->preUploadFile($this->request->params['form']);
         return $this->_ajaxGetResponse(['error' => $file_id ? false : true,
-                                        'msg'   => $file_id ? "" : __d('app', 'アップロードに失敗しました'),
+                                        'msg'   => $file_id ? "" : __('Failed to upload.'),
                                         'id'    => $file_id ? $file_id : "",
                                        ]);
     }
@@ -1253,8 +1255,8 @@ class PostsController extends AppController
         $success = $this->Post->PostFile->AttachedFile->cancelUploadFile($this->request->data('AttachedFile.file_id'));
         return $this->_ajaxGetResponse(['error' => !$success,
                                         'msg'   => $success
-                                            ? __d('app', 'ファイルを削除しました')
-                                            : __d('app', 'ファイルの削除に失敗しました'),
+                                            ? __('Deleted the file.')
+                                            : __('Failed to delete the file.'),
                                         'id'    => "",
                                        ]);
     }
@@ -1363,15 +1365,15 @@ class PostsController extends AppController
     public function join_circle()
     {
         if (!$this->_isAvailCircle()) {
-            $this->Pnotify->outError(__d('app', "アクセスURLに誤りがあります。"));
+            $this->Pnotify->outError(__("Error in the URL."));
             return $this->redirect($this->referer());
         }
 
         if ($this->Post->Circle->CircleMember->joinNewMember($this->request->params['named']['circle_id'])) {
-            $this->Pnotify->outSuccess(__d('app', "You have joined the circle"));
+            $this->Pnotify->outSuccess(__("Joined the circle"));
         }
         else {
-            $this->Pnotify->outError(__d('app', "Error in joining the circle"));
+            $this->Pnotify->outError(__("Failed to join the circle."));
         }
         return $this->redirect($this->request->referer());
 
@@ -1380,16 +1382,16 @@ class PostsController extends AppController
     public function unjoin_circle()
     {
         if (!$this->_isAvailCircle()) {
-            $this->Pnotify->outError(__d('app', "アクセスURLに誤りがあります。"));
+            $this->Pnotify->outError(__("Error in the URL."));
             return $this->redirect($this->referer());
         }
         $circle_id = $this->request->params['named']['circle_id'];
         if ($circle_id == $this->Post->Circle->getTeamAllCircleId()) {
-            $this->Pnotify->outError(__d('app', "このサークルから抜けることはできません。"));
+            $this->Pnotify->outError(__("Not allowed to leave this circle."));
             return $this->redirect($this->referer());
         }
         $this->Post->Circle->CircleMember->unjoinMember($circle_id);
-        $this->Pnotify->outSuccess(__d('app', "You have successfully left the circle"));
+        $this->Pnotify->outSuccess(__("Left the circle"));
         return $this->redirect($this->referer());
     }
 
@@ -1428,7 +1430,7 @@ class PostsController extends AppController
             return $this->redirect($this->request->referer());
         }
         else {
-            throw new NotFoundException(__('gl', "Invalid Request"));
+            throw new NotFoundException(__("Invalid Request"));
         }
     }
 

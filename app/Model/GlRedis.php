@@ -904,7 +904,7 @@ class GlRedis extends AppModel
     function dellKeys($pattern)
     {
         if ($pattern == "*") {
-            throw new RuntimeException(__d('app', "*指定は禁止です！！"));
+            throw new RuntimeException(__("Not allowed to specify."));
         }
         $keys = $this->Db->keys($pattern);
         /** @noinspection PhpInternalEntityUsedInspection */

@@ -15,10 +15,10 @@
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
                 <span class="close-icon">&times;</span></button>
-            <h4 class="modal-title"><?= __d('app', "ゴール概要") ?>&nbsp;&nbsp;
+            <h4 class="modal-title"><?= __("Goal Summary") ?>&nbsp;&nbsp;
                 <a class=""
                    href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal['Goal']['id']]) ?>">
-                    <?= __d('app', 'ゴールページへ') ?>
+                    <?= __('Go to Goal page') ?>
                 </a>
             </h4>
         </div>
@@ -38,11 +38,17 @@
                         <? $collabo_opt = $this->Goal->getCollaboOption($goal) ?>
                         <div>
                             <a class="btn btn-white bd-circle_22px mt_16px toggle-follow font_verydark <?= h($follow_opt['class']) ?>"
-                               href="#" <?= h($follow_opt['disabled']) ?>="<?= h($follow_opt['disabled']) ?>"
-                            data-class="toggle-follow"
-                            goal-id="<?= $goal['Goal']['id'] ?>">
-                            <i class="fa fa-heart font_rougeOrange" style="<?= h($follow_opt['style']) ?>"></i>
-                            <span class="ml_5px"><?= h($follow_opt['text']) ?></span>
+                               href="#"
+                               data-class="toggle-follow"
+                               goal-id="<?= $goal['Goal']['id'] ?>"
+                                <?php if ($follow_opt['disabled'] || $this->Goal->isCoachingUserGoal($goal,
+                                                                                                     viaIsSet($my_coaching_users))
+                                ): ?>
+                                    disabled="disabled"
+                                <?php endif ?>
+                                >
+                                <i class="fa fa-heart font_rougeOrange" style="<?= h($follow_opt['style']) ?>"></i>
+                                <span class="ml_5px"><?= h($follow_opt['text']) ?></span>
                             </a>
                         </div>
                         <div>
@@ -74,19 +80,19 @@
                     <?= h($goal['Purpose']['name']) ?>
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
-                    <i class="fa fa-bullseye"></i><span class="pl_2px"><?= __d('app', '程度') ?></span>
+                    <i class="fa fa-bullseye"></i><span class="pl_2px"><?= __('Measurement') ?></span>
 
-                    <div><?= __d('app', '単位: %s', KeyResult::$UNIT[$goal['Goal']['value_unit']]) ?></div>
+                    <div><?= __('Unit: %s', KeyResult::$UNIT[$goal['Goal']['value_unit']]) ?></div>
                     <?php if ($goal['Goal']['value_unit'] != KeyResult::UNIT_BINARY): ?>
-                        <div><?= __d('app', '達成時: %s', (double)$goal['Goal']['target_value']) ?></div>
-                        <div><?= __d('app', '開始時: %s', (double)$goal['Goal']['start_value']) ?></div>
+                        <div><?= __('Achieve point: %s', (double)$goal['Goal']['target_value']) ?></div>
+                        <div><?= __('Initial point: %s', (double)$goal['Goal']['start_value']) ?></div>
                     <?php endif; ?>
                 </div>
                 <div class="col col-xxs-12">
                     <!-- アクション、フォロワー -->
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
-                    <div><i class="fa fa-sun-o"></i><span class="pl_2px"><?= __d('app', "リーダー") ?></span></div>
+                    <div><i class="fa fa-sun-o"></i><span class="pl_2px"><?= __("Leader") ?></span></div>
                     <?php if (isset($goal['Leader'][0]['User'])): ?>
                         <img src="<?=
                         $this->Upload->uploadUrl($goal['Leader'][0]['User'],
@@ -96,7 +102,7 @@
                     <?php endif; ?>
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
-                    <div><i class="fa fa-child"></i><span class="pl_2px"><?= __d('app', "コラボレータ") ?>
+                    <div><i class="fa fa-child"></i><span class="pl_2px"><?= __("Collaborator") ?>
                             &nbsp;(<?= count($goal['Collaborator']) ?>)</span></div>
                     <?php if (isset($goal['Collaborator']) && !empty($goal['Collaborator'])): ?>
                         <?php foreach ($goal['Collaborator'] as $collabo): ?>
@@ -107,12 +113,16 @@
                                  title="<?= h($collabo['User']['display_username']) ?>">
                         <?php endforeach ?>
                     <?php else: ?>
-                        <?= __d('app', "なし") ?>
+                        <?= __("No Unit") ?>
                     <?php endif; ?>
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
-                    <div><i class="fa fa-heart"></i><span class="pl_2px"><?= __d('app', "フォロワー") ?>
-                            &nbsp;(<?= count($goal['Follower']) ?>)</span></div>
+                    <div>
+                        <i class="fa fa-heart"></i>
+                        <span class="pl_2px">
+                            <?= __("Follower") ?> &nbsp;(<?= count($goal['Follower']) ?>)
+                        </span>
+                    </div>
                     <?php if (isset($goal['Follower']) && !empty($goal['Follower'])): ?>
                         <?php foreach ($goal['Follower'] as $follower): ?>
                             <img src="<?=
@@ -122,38 +132,38 @@
                                  title="<?= h($follower['User']['display_username']) ?>">
                         <?php endforeach ?>
                     <?php else: ?>
-                        <?= __d('app', "なし") ?>
+                        <?= __("No Unit") ?>
                     <?php endif; ?>
                 </div>
                 <div class="col col-xxs-12 bd-b mb-pb_5px">
-                    <div><i class="fa fa-ellipsis-h"></i><span class="pl_2px"><?= __d('app', '詳細') ?></span></div>
+                    <div><i class="fa fa-ellipsis-h"></i><span class="pl_2px"><?= __('Description') ?></span></div>
                     <div>
                         <?= nl2br($this->TextEx->autoLink($goal['Goal']['description'])) ?>
                     </div>
                 </div>
                 <div class="col col-xxs-12">
-                    <div><i class="fa fa-key"></i><span class="pl_2px"><?= __d('app', "達成要素") ?>
+                    <div><i class="fa fa-key"></i><span class="pl_2px"><?= __("Key Results") ?>
                             &nbsp;(<?= count($goal['KeyResult']) ?>)</span></div>
                     <?php if (isset($goal['KeyResult']) && !empty($goal['KeyResult'])): ?>
                         <?php foreach ($goal['KeyResult'] as $key_result): ?>
                             <div class="col col-xxs-12 dot-omission">
                                 <?php if ($key_result['completed']): ?>
-                                    <span class="fin-kr tag-sm tag-info"><?= __d('app', "完了") ?></span>
+                                    <span class="fin-kr tag-sm tag-info"><?= __("Completed") ?></span>
                                 <?php else: ?>
-                                    <span class="unfin-kr tag-sm tag-danger"><?= __d('app', "未完了") ?></span>
+                                    <span class="unfin-kr tag-sm tag-danger"><?= __("Incompleted") ?></span>
                                 <?php endif; ?>
                                 <?= h($key_result['name']) ?>
                             </div>
                         <?php endforeach ?>
                     <?php else: ?>
-                        <?= __d('app', "なし") ?>
+                        <?= __("No Unit") ?>
                     <?php endif; ?>
                 </div>
             <?php endif; ?>
         </div>
 
         <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal"><?= __d('app', "閉じる") ?></button>
+            <button type="button" class="btn btn-default" data-dismiss="modal"><?= __("Close") ?></button>
         </div>
     </div>
 </div>

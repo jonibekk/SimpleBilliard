@@ -23,15 +23,15 @@ class EmailsController extends AppController
     {
         $this->Email->id = $id;
         if (!$this->Email->exists()) {
-            throw new NotFoundException(__('gl', "このメールアドレスは存在しません。"));
+            throw new NotFoundException(__("This email address doesn't exist."));
         }
         if (!$this->Email->isOwner($this->Auth->user('id'))) {
-            throw new NotFoundException(__('gl', "このメールアドレスはあなたのものではありません。"));
+            throw new NotFoundException(__("This email address isn't yours."));
         }
 
         $this->request->allowMethod('post', 'delete');
         $this->Email->delete();
-        $this->Pnotify->outSuccess(__d('app', "メールアドレス変更をキャンセルしました。"));
+        $this->Pnotify->outSuccess(__("To change email address is canceled."));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->redirect($this->referer());

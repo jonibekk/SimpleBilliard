@@ -13,7 +13,7 @@
 <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default">
-            <div class="panel-heading"><?= __d('app', "ユーザ認証") ?></div>
+            <div class="panel-heading"><?= __("User Authentication") ?></div>
             <?=
             $this->Form->create('User', [
                 'inputDefaults' => [
@@ -28,31 +28,31 @@
                 'novalidate'    => true
             ]); ?>
             <div class="panel-body reset-password-panel-body">
-                <p><?= __d('app', "Goalousへようこそ！") ?></p>
+                <p><?= __("Welcome to Goalous!") ?></p>
 
-                <p><?= __d('app', "Goalousへのユーザ登録を行います。") ?></p>
+                <p><?= __("Let's start to sign up Goalous.") ?></p>
 
-                <p><?= __d('app', "招待を受けたメールアドレスの入力とパスワードの登録をお願いします。") ?></p>
+                <p><?= __("Enter your email address and create your password.") ?></p>
 
                 <?=
                 $this->Form->input('Email.email', [
-                    'label'                        => __d('app', "メールアドレス"),
-                    'data-bv-emailaddress-message' => __d('validate', "メールアドレスが正しくありません。"),
-                    "data-bv-notempty-message"     => __d('validate', "入力必須項目です。"),
+                    'label'                        => __("Email Address"),
+                    'data-bv-emailaddress-message' => __("Email address is incorrect."),
+                    "data-bv-notempty-message"     => __("Input is required."),
                     'required'                     => true
                 ]) ?>
 
                 <?=
                 $this->Form->input('password', [
-                    'label'                    => __d('app', "パスワードを作成"),
-                    'placeholder'              => __d('app', '8文字以上'),
-                    "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                    'label'                    => __("Create a password"),
+                    'placeholder'              => __('Use at least 8 characters and use a mix of capital characters, small characters and numbers. Symbols are not allowed.'),
+                    "data-bv-notempty-message" => __("Input is required."),
                     'type'                     => 'password',
                 ]) ?>
                 <?=
                 $this->Form->input('password_confirm', [
-                    'label'                    => __d('app', "パスワードを再入力"),
-                    "data-bv-notempty-message" => __d('validate', "入力必須項目です。"),
+                    'label'                    => __("Confirm your password"),
+                    "data-bv-notempty-message" => __("Input is required."),
                     'type'                     => 'password',
                 ]) ?>
                 <?=
@@ -69,7 +69,7 @@
             <div class="panel-footer">
                 <div class="form-group">
                     <div class="col-sm-9 col-sm-offset-3">
-                        <?= $this->Form->submit(__d('app', "登録"), ['class' => 'btn btn-primary']) ?>
+                        <?= $this->Form->submit(__("Registration"), ['class' => 'btn btn-primary']) ?>
                     </div>
                 </div>
             </div>

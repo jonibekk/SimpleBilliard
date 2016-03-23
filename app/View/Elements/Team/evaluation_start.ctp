@@ -25,19 +25,23 @@
 ?>
 <!-- START app/View/Elements/Team/evaluation_start.ctp -->
 <div class="panel panel-default">
-    <div class="panel-heading"><?= __d('app', "評価開始") ?></div>
+    <div class="panel-heading"><?= __("Begin evaluation") ?></div>
     <div class="panel-body form-horizontal">
         <div class="form-group">
             <label for="TeamName" class="col col-sm-3 control-label form-label"></label>
 
             <div class="col col-sm-6">
-                <p class="form-control-static"><?= __d('app', "このセクションでは、現在の評価設定に基づき、評価を開始できます。") ?></p>
+                <p class="form-control-static">
+                <?= __("You can start evaluation with the current settings.") ?>
+                </p>
 
-                <p class="form-control-static"><?= __d('app', "この設定は取り消すことができませんので気を付けてください。") ?></p>
+                <p class="form-control-static">
+                <?= __("Notice - These settings can't be canceled.") ?>
+                </p>
             </div>
         </div>
         <div class="form-group">
-            <label for="TeamName" class="col col-sm-3 control-label form-label"><?= __d('app', "今期の期間") ?></label>
+            <label for="TeamName" class="col col-sm-3 control-label form-label"><?= __("Current term") ?></label>
 
             <div class="col col-sm-6">
                 <p class="form-control-static"><b><?= $this->TimeEx->date($current_term_start_date) ?>
@@ -46,11 +50,11 @@
         </div>
         <?php if (!$eval_enabled): ?>
             <div class="alert alert-danger" role="alert">
-                <?= __d('app', "現在、評価設定が有効では無い為、評価を開始する事ができません。") ?>
+                <?= __("You need to active Evaluation settings before starting Evaluation.") ?>
             </div>
         <?php elseif (!$eval_start_button_enabled): ?>
             <div class="alert alert-info" role="alert">
-                <?= __d('app', "評価期間中です。") ?>
+                <?= __("In evaluation term") ?>
             </div>
         <?php endif; ?>
     </div>
@@ -59,9 +63,9 @@
             <div class="row">
                 <div class="col-sm-9 col-sm-offset-3">
                     <?=
-                    $this->Form->postLink(__d('app', "今期の評価を開始する"),
+                    $this->Form->postLink(__("Start current term evaluations"),
                                           ['controller' => 'teams', 'action' => 'start_evaluation',],
-                                          ['class' => 'btn btn-primary'], __d('app', "取り消しができません。よろしいですか？")) ?>
+                                          ['class' => 'btn btn-primary'], __("Unable to cancel. Do you really want to start evaluations?")) ?>
                 </div>
             </div>
         </div>

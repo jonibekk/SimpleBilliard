@@ -59,7 +59,7 @@
         <a class="font_lightGray-veryDark no-line plr_18px sp-feed-link inline-block pt_12px height_40px"
            id="SubHeaderMenuFeed"
            href="<?= $this->Html->url(['controller' => 'goal_approval', 'action' => 'index']) ?>">
-            <?= __d('app', "処理待ち") ?>
+            <?= __("Waiting") ?>
             <?php if ($unapproved_cnt > 0) { ?>
             <span class="btn btn-danger btn-xs bell-notify-box approval_badge">
             <?php echo $unapproved_cnt; ?>
@@ -69,7 +69,7 @@
     <div class="col col-xxs-6">
         <a class="font_lightGray-veryDark no-line plr_18px sp-feed-link inline-block pt_12px height_40px sp-feed-active"
            id="SubHeaderMenuGoal">
-            <?= __d('app', "処理済み") ?><?php if ($done_cnt > 0) {
+            <?= __("Done") ?><?php if ($done_cnt > 0) {
                 echo '(' . $done_cnt . ')';
             } ?></a>
     </div>
@@ -94,39 +94,39 @@
                                                                                                                        'User.photo',
                                                                                                                        ['style' => 'small'])]) ?></p>
 
-                            <p class="approval_body_text"><?= __d('app', "名前") ?>
+                            <p class="approval_body_text"><?= __("Name") ?>
                                 : <?= h($goal['User']['display_username']); ?></p>
 
-                            <p class="approval_body_text"><?= __d('app', "カテゴリ") ?>
+                            <p class="approval_body_text"><?= __("Category") ?>
                                 : <?= h($goal['Goal']['GoalCategory']['name']); ?></p>
 
-                            <p class="approval_body_text"><?= __d('app', "ゴール名") ?>: <?= h($goal['Goal']['name']); ?></p>
+                            <p class="approval_body_text"><?= __("Goal Name") ?>: <?= h($goal['Goal']['name']); ?></p>
 
                             <p class="approval_body_text"><?= $goal['Collaborator']['type'] === (string)Collaborator::TYPE_OWNER ?
-                                    __d('app', "リーダー") : __d('app', "コラボレーター"); ?></p>
+                                    __("Leader") : __("Collaborator"); ?></p>
 
-                            <p class="approval_body_text"><?= __d('app', "役割") ?>
+                            <p class="approval_body_text"><?= __("Role") ?>
                                 : <?= h($goal['Collaborator']['role']); ?></p>
 
-                            <p class="approval_body_text"><?= __d('app', "単位") ?>
+                            <p class="approval_body_text"><?= __("Unit") ?>
                                 : <?= h($value_unit_list[$goal['Goal']['value_unit']]); ?></p>
 
-                            <p class="approval_body_text"><?= __d('app', "達成時") ?>
+                            <p class="approval_body_text"><?= __("Achieve point") ?>
                                 : <?= (double)$goal['Goal']['target_value']; ?></p>
 
-                            <p class="approval_body_text"><?= __d('app', "開始時") ?>
+                            <p class="approval_body_text"><?= __("Initial point") ?>
                                 : <?= (double)$goal['Goal']['start_value']; ?></p>
 
-                            <p class="approval_body_text"><?= __d('app', "期限日") ?>
+                            <p class="approval_body_text"><?= __("Due") ?>
                                 : <?= $this->TimeEx->date(h($goal['Goal']['end_date'])) ?></p>
 
-                            <p class="approval_body_text"><?= __d('app', "重要度") ?>
+                            <p class="approval_body_text"><?= __("Weight") ?>
                                 : <?= $goal['Collaborator']['priority']; ?></p>
 
-                            <p class="approval_body_text"><?= __d('app', "目的") ?>
+                            <p class="approval_body_text"><?= __("Purpose") ?>
                                 : <?= h($goal['Goal']['Purpose']['name']); ?></p>
 
-                            <p class="approval_body_text"><?= __d('app', "詳細") ?>
+                            <p class="approval_body_text"><?= __("Description") ?>
                                 : <?= nl2br($this->TextEx->autoLink($goal['Goal']['description'])); ?></p>
 
                             <?=
@@ -153,12 +153,12 @@
                                     <div class="approval_botton_area">
                                         <?php if ($goal['my_goal'] === false) { ?>
                                             <?php if ($goal['Collaborator']['valued_flg'] === (string)Collaborator::STATUS_APPROVAL) { ?>
-                                                <?= $this->Form->button(__d('app', "評価対象にしない"),
+                                                <?= $this->Form->button(__("Remove from target of evaluation"),
                                                                         ['name' => 'wait_btn', 'class' => 'btn btn-primary approval_button', 'div' => false]) ?>
                                             <?php }
                                             else {
                                                 if ($goal['Collaborator']['valued_flg'] === (string)Collaborator::STATUS_HOLD) { ?>
-                                                    <?= $this->Form->button(__d('app', "評価対象にする"),
+                                                    <?= $this->Form->button(__("Set as target of evaluation"),
                                                                             ['name' => 'approval_btn', 'class' => 'btn btn-primary approval_button', 'div' => false]) ?>
                                                 <?php }
                                             } ?>
@@ -177,11 +177,11 @@
                                                                   'placeholder'                  => 'コメントを書く',
                                                                   'data-bv-stringlength'         => 'true',
                                                                   'data-bv-stringlength-max'     => 5000,
-                                                                  'data-bv-stringlength-message' => __d('validate',
-                                                                                                        "最大文字数(%s)を超えています。",
+                                                                  'data-bv-stringlength-message' => __(
+                                                                                                        "It's over limit characters (%s).",
                                                                                                         5000),
-                                                                  'data-bv-notempty-message'     => __d('validate',
-                                                                                                        "入力必須項目です。"),
+                                                                  'data-bv-notempty-message'     => __(
+                                                                                                        "Input is required."),
                                                                   'required'                     => 'required'
                                                               ]) ?>
                                 </div>
@@ -189,7 +189,7 @@
                                 <div class="row">
                                     <div class="approval_botton_area">
                                         <?php if ($goal['my_goal'] === true) { ?>
-                                            <?= $this->Form->button(__d('app', "コメントする"),
+                                            <?= $this->Form->button(__("Comment"),
                                                                     ['name' => 'comment_btn', 'class' => 'btn btn-primary approval_button', 'div' => false]) ?>
                                         <?php } ?>
                                     </div>
