@@ -12,7 +12,7 @@ module.exports = (grunt) ->
   js:
     files: [
       '<%= config.coffee %>/**/*.coffee'
-      '<%= config.js %>/**/*.js'
+      '<%= config.js %>/**/*.js',
     ]
     tasks: ['js']
   css:
