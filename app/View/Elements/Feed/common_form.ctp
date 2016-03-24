@@ -489,7 +489,5 @@ if (!isset($goal_list_for_action_option)) {
         </div>
     </div>
 </div>
-<div id="react-sample-area"></div>
-<script src="/js/react_app.min.js"></script>
 <?= $this->element('file_upload_form') ?>
 <!-- END app/View/Elements/Feed/common_form.ctp -->
