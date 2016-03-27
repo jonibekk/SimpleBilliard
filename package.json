@@ -9,6 +9,7 @@
     "react-redux": "^4.4.1",
     "react-router": "^2.0.1",
     "redux": "^3.3.1",
+    "redux-router": "^0.1.0",
     "redux-thunk": "^2.0.1"
   },
   "devDependencies": {
