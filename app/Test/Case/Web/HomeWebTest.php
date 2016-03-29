@@ -26,30 +26,17 @@ class HomeWebTest extends GoalousWebTestCase
         $this->shareSession(true);
     }
 
+    /**
+     * setUp()処理後に実行される
+     */
+    public function setUpPage()
+    {
+        parent::setUpPage();
+    }
+
     public function tearDown()
     {
         parent::tearDown();
-    }
-
-    protected function login($url, $id, $pass)
-    {
-        $this->url($url);
-        sleep(1);
-        if (strpos($this->url(), '/users/login') === false) {
-            return;
-        }
-
-        $email = $this->byName('data[User][email]');
-        $email->clear();
-        $email->value($id);
-
-        $password = $this->byName('data[User][password]');
-        $password->clear();
-        $password->value($pass);
-
-        $button = $this->byClassName('btn-primary');
-        $this->moveto($button);
-        $this->byId('UserLoginForm')->submit();
     }
 
     /**
@@ -59,11 +46,6 @@ class HomeWebTest extends GoalousWebTestCase
      */
     public function testAccessHome()
     {
-        $this->waitUntil(function() {
-            $this->login($this->login_url, $this->email, $this->password);
-            return true;
-        }, 50000);
-        sleep(3);
         $this->byCssSelector('img.header-logo-img')->click();
         sleep(3);
 
@@ -173,10 +155,13 @@ class HomeWebTest extends GoalousWebTestCase
      */
     public function testBellMarkMoveToPost()
     {
-        $card_head = $this->byXPath('//header/div/div/div[2]/div[3]/div/div/ul/li[1]/a/div/div[1]/span');
-        $heads = $card_head->elements($this->using('css selector')->value('span.notify-card-head-target'));
+        $this->byXPath("//a[@id='click-header-bell']/i")->click();
+        sleep(2);
+        $bells = $this->byCssSelector('ul#bell-dropdown');
+        $card_head = $bells->elements($this->using('css selector')->value('li.notify-card-list'));
+        $heads = $card_head[0]->elements($this->using('css selector')->value('span.notify-card-head-target'));
         $heads_text = $heads[0]->text();
-        $card_head->click();
+        $card_head[0]->click();
         sleep(5);
 
         $panel = $this->byCssSelector('div.posts-panel-body.panel-body');
@@ -205,10 +190,16 @@ class HomeWebTest extends GoalousWebTestCase
      */
     public function testPostListMoveToPost()
     {
-        $post = $this->byXPath("//ul[@class='notify-page-cards']/li[1]/a/div/div[1]/span");
-        $post_header = $post->elements($this->using('css selector')->value('span.notify-card-head-target'));
+        $this->byXPath("//a[@id='click-header-bell']/i")->click();
+        $this->byLinkText("すべて見る")->click();
+        sleep(5);
+
+        $post_card= $this->byCssSelector('ul.notify-page-cards');
+        $posts = $post_card->elements($this->using('css selector')->value('li.notify-card-list'));
+        $post_header = $posts[0]->elements($this->using('css selector')->value('span.notify-card-head-target'));
+
         $header_text = $post_header[0]->text();
-        $post->click();
+        $posts[0]->click();
         $this->waitUntil(function() {
             if ($this->byXPath("//div[@id='container']/div[2]/div[1]/div[1]/div[1]/a/span")) {
                 return true;

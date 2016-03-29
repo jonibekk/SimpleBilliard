@@ -26,30 +26,17 @@ class CommentWebTest extends GoalousWebTestCase
         $this->shareSession(true);
     }
 
+    /**
+     * setUp()処理後に実行される
+     */
+    public function setUpPage()
+    {
+        parent::setUpPage();
+    }
+
     public function tearDown()
     {
         parent::tearDown();
-    }
-
-    protected function login($url, $id, $pass)
-    {
-        $this->url($url);
-        sleep(1);
-        if (strpos($this->url(), '/users/login') === false) {
-            return;
-        }
-
-        $email = $this->byName('data[User][email]');
-        $email->clear();
-        $email->value($id);
-
-        $password = $this->byName('data[User][password]');
-        $password->clear();
-        $password->value($pass);
-
-        $button = $this->byClassName('btn-primary');
-        $this->moveto($button);
-        $this->byId('UserLoginForm')->submit();
     }
 
     /**
@@ -84,29 +71,36 @@ class CommentWebTest extends GoalousWebTestCase
 
         $this->assertEquals($comment, $post_comment->text());
         $this->saveSceenshot('testComment');
-
-        return $latest_comment;
     }
 
     /**
-     * @depends testComment
      * #### コメント投稿のいいね！ボタンが作動するか
      * - クリック後、likedクラスが付与されているか
      * - いいね！カウンターが1増加しているか
-     *
-     * @param $latest_comment
      */
-    public function testClickLikedButtonByComment($latest_comment)
+    public function testClickLikedButtonByComment()
     {
+        $comment_buttons = $this->elements($this->using('css selector')->value('a.feeds-post-comment-btn'));
+        $comment_buttons[0]->click();
+        sleep(1);
+        $button = $this->byCssSelector('input.btn.btn-primary.submit-btn.comment-submit-button');
+        $comment = 'コメントテスト';
+        $this->byName('data[Comment][body]')->value($comment);
+        $button->click();
+        sleep(5);
+
+        $comment_body = $this->elements($this->using('css selector')->value('div.comment-box'));
+        $latest_comment = array_pop($comment_body);
+
         $comment_id = $latest_comment->attribute('comment-id');
-        $liked_counter = $this->byId('CommentLikeCount_' . $comment_id);
-        $before_liked_count = $liked_counter->text();
         $like = $latest_comment->element($this->using('css selector')->value('a.click-like'));
         $classes = $like->attribute('class');
         if (strpos($classes, 'liked') !== false) {
             $like->click();
             sleep(1);
         }
+        $liked_counter = $this->byId('CommentLikeCount_' . $comment_id);
+        $before_liked_count = $liked_counter->text();
         $like = $latest_comment->element($this->using('css selector')->value('a.click-like'));
         $like->click();
         sleep(3);
@@ -125,13 +119,7 @@ class CommentWebTest extends GoalousWebTestCase
      */
     public function testPostComment()
     {
-        $this->byXPath("//a[@id='click-header-bell']/i")->click();
-        $this->byLinkText("すべて見る")->click();
-        sleep(2);
-
-        $post = $this->byXPath("//ul[@class='notify-page-cards']/li[1]/a/div/div[1]/span");
-        $post->click();
-        sleep(2);
+        $this->moveToLatestNotify();
 
         $buttons = $this->byCssSelector('div.feeds-post-btns-wrap-left');
         $buttons->element($this->using('css selector')->value('a.feeds-post-comment-btn.trigger-click'))->click();
@@ -160,10 +148,10 @@ class CommentWebTest extends GoalousWebTestCase
      */
     public function testPostCommentWithImage()
     {
-        $this->execute([
-            'script' => 'scroll(0, 0)',
-            'args' => []
-        ]);
+        $this->moveToLatestNotify();
+
+        $buttons = $this->byCssSelector('div.feeds-post-btns-wrap-left');
+        $buttons->element($this->using('css selector')->value('a.feeds-post-comment-btn.trigger-click'))->click();
         sleep(1);
 
         $this->execute([
@@ -172,7 +160,6 @@ class CommentWebTest extends GoalousWebTestCase
         ]);
         sleep(1);
 
-        $this->byCssSelector('textarea.form-control.comment-post-form.box-align.click-get-ajax-form-replace')->click();
         $this->waitUntil(function() {
             if ($this->byCssSelector('input.btn.btn-primary.submit-btn.comment-submit-button')) {
                 return true;
@@ -231,5 +218,16 @@ class CommentWebTest extends GoalousWebTestCase
 
         $this->assertEquals($comment, $post_comment->text());
         $this->saveSceenshot('testPostCommentWithImage');
+    }
+
+    protected function moveToLatestNotify()
+    {
+        $this->byXPath("//a[@id='click-header-bell']/i")->click();
+        $this->byLinkText("すべて見る")->click();
+        sleep(2);
+
+        $post = $this->byXPath("//ul[@class='notify-page-cards']/li[1]/a/div/div[1]/span");
+        $post->click();
+        sleep(2);
     }
 }

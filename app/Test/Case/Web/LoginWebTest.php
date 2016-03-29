@@ -26,6 +26,10 @@ class LoginWebTest extends GoalousWebTestCase
         $this->shareSession(true);
     }
 
+    public function setUpPage()
+    {
+    }
+
     /**
      * #### ログインテスト
      * - 正しいIDとPASSWORDを入力する

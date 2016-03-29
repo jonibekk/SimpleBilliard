@@ -26,30 +26,16 @@ class MessageWebTest extends GoalousWebTestCase
         $this->shareSession(true);
     }
 
+    /**
+     * setUp()処理後に実行される
+     */
+    public function setUpPage()
+    {
+    }
+
     public function tearDown()
     {
         parent::tearDown();
-    }
-
-    protected function login($url, $id, $pass)
-    {
-        $this->url($url);
-        sleep(1);
-        if (strpos($this->url(), '/users/login') === false) {
-            return;
-        }
-
-        $email = $this->byName('data[User][email]');
-        $email->clear();
-        $email->value($id);
-
-        $password = $this->byName('data[User][password]');
-        $password->clear();
-        $password->value($pass);
-
-        $button = $this->byClassName('btn-primary');
-        $this->moveto($button);
-        $this->byId('UserLoginForm')->submit();
     }
 
     protected function logout()
@@ -95,6 +81,10 @@ class MessageWebTest extends GoalousWebTestCase
      */
     public function testMessageIconMoveToPost()
     {
+        $this->login($this->url . $this->login_url, $this->email, $this->password);
+
+        $this->byXPath("//a[@id='click-header-message']/i")->click();
+        sleep(3);
         $message_drop_down = $this->byCssSelector('ul#message-dropdown');
         $heads = $message_drop_down->elements($this->using('css selector')->value('span.notify-card-head-target'));
         $heads_text = $heads[0]->text();
@@ -112,7 +102,10 @@ class MessageWebTest extends GoalousWebTestCase
      */
     public function testMessageLiked()
     {
-        $liked_button = $this->byXPath('//button[@id=\'like\']');
+        $this->login($this->url . $this->login_url, $this->email, $this->password);
+        $this->moveToMessageList();
+
+        $liked_button = $this->byCssSelector('button#like');
         $liked_button->click();
         sleep(2);
 
@@ -130,6 +123,9 @@ class MessageWebTest extends GoalousWebTestCase
      */
     public function testMessageComment()
     {
+        $this->login($this->url . $this->login_url, $this->email, $this->password);
+        $this->moveToMessageList();
+
         $message = 'メッセージテスト';
         $input = $this->byId('message_text_input');
         $input->click();
@@ -151,6 +147,9 @@ class MessageWebTest extends GoalousWebTestCase
      */
     public function testMessageCommentWithImage()
     {
+        $this->login($this->url . $this->login_url, $this->email, $this->password);
+        $this->moveToMessageList();
+
         $message = 'メッセージ画像添付テスト';
         $input = $this->byId('message_text_input');
         $input->click();
@@ -198,17 +197,8 @@ class MessageWebTest extends GoalousWebTestCase
      */
     public function testMessageIconMoveToPostList()
     {
-        $message_num = $this->byId('messageNum');
-        $num = $message_num->elements($this->using('css selector')->value('span'));
-        // メッセージが１件も無い場合はクリックした時点で一覧ページを表示する
-        if ($num[0]->text() === 0) {
-            $this->byXPath("//a[@id='click-header-message']/i")->click();
-        } else {
-            $this->byXPath("//a[@id='click-header-message']/i")->click();
-            sleep(3);
-            $this->byLinkText("すべて見る")->click();
-        }
-        sleep(3);
+        $this->login($this->url . $this->login_url, $this->email, $this->password);
+        $this->clickHeaderMessage();
 
         $this->assertEquals('すべてのメッセージ', $this->byCssSelector('div.panel-heading.message-list-panel-head')->text());
         $this->saveSceenshot('testMessageIconMoveToPostList');
@@ -263,5 +253,30 @@ class MessageWebTest extends GoalousWebTestCase
         sleep(2);
 
         return true;
+    }
+
+    protected function moveToMessageList()
+    {
+        $this->clickHeaderMessage();
+        $message_cards = $this->byCssSelector('div.message-list-panel-body');
+        $message_list = $message_cards->elements($this->using('css selector')->value('ul'));
+        $message_list[0]->click();
+        sleep(3);
+    }
+
+    protected function clickHeaderMessage()
+    {
+        $message_num = $this->byCssSelector('div#messageNum');
+        $num = $message_num->elements($this->using('css selector')->value('span'));
+
+        // メッセージが１件も無い場合はクリックした時点で一覧ページを表示する
+        if ($num[0]->text() === 0 || $num[0]->text() === '') {
+            $this->byXPath("//a[@id='click-header-message']/i")->click();
+        } else {
+            $this->byXPath("//a[@id='click-header-message']/i")->click();
+            sleep(3);
+            $this->byCssSelector("li.message-all-view-link")->click();
+        }
+        sleep(3);
     }
 }

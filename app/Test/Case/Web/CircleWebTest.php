@@ -27,30 +27,17 @@ class CircleWebTest extends GoalousWebTestCase
         $this->shareSession(true);
     }
 
+    /**
+     * setUp()処理後に実行される
+     */
+    public function setUpPage()
+    {
+        parent::setUpPage();
+    }
+
     public function tearDown()
     {
         parent::tearDown();
-    }
-
-    protected function login($url, $id, $pass)
-    {
-        $this->url($url);
-        sleep(1);
-        if (strpos($this->url(), '/users/login') === false) {
-            return;
-        }
-
-        $email = $this->byName('data[User][email]');
-        $email->clear();
-        $email->value($id);
-
-        $password = $this->byName('data[User][password]');
-        $password->clear();
-        $password->value($pass);
-
-        $button = $this->byClassName('btn-primary');
-        $this->moveto($button);
-        $this->byId('UserLoginForm')->submit();
     }
 
     /**
@@ -59,19 +46,10 @@ class CircleWebTest extends GoalousWebTestCase
      */
     public function testDispCircleModal()
     {
-        $this->waitUntil(function() {
-            $this->login($this->login_url, $this->email, $this->password);
-            return true;
-        }, 30000);
-
-        sleep(2);
-
         $circles = $this->elements($this->using('css selector')->value('div.dashboard-circle-list-row-wrap'));
         $circle_count = count($circles);
 
-        $link = $this->byXPath("//div[@class='dashboard-circle-list-footer']//a[.='サークルを見る']");
-        $link->click();
-        sleep(3);
+        $this->clickCircleWatchLink();
 
         $this->assertRegExp('/\Aサークル \([0-9]+\)\Z/u', $this->byXPath("//div[10]/div/div/div[1]/h4")->text());
         $this->saveSceenshot('testDispCircleModal');
@@ -80,14 +58,15 @@ class CircleWebTest extends GoalousWebTestCase
     }
 
     /**
-     * @depends testDispCircleModal
-     *
-     * @param $circle_count
-     *
-     * @return PHPUnit_Extensions_Selenium2TestCase_Element
+     * #### サークルモーダルの参加しているタブが正常動画するか
      */
-    public function testCircleModalEntryTab($circle_count)
+    public function testCircleModalEntryTab()
     {
+        $circles = $this->elements($this->using('css selector')->value('div.dashboard-circle-list-row-wrap'));
+        $circle_count = count($circles);
+
+        $this->clickCircleWatchLink();
+
         $this->byXPath("//div[10]/div/div/ul/li[2]/a")->click();
         sleep(2);
         $modal_body = $this->byCssSelector('div.modal-body.modal-feed-body.tab-content');
@@ -102,14 +81,18 @@ class CircleWebTest extends GoalousWebTestCase
     }
 
     /**
-     * @depends testCircleModalEntryTab
-     *
-     * @param $modal_body
+     * #### サークルモーダルの参加していないタブが正常動画するか
      */
-    public function testCircleModalUnEntryTab($modal_body)
+    public function testCircleModalUnEntryTab()
     {
+        $circles = $this->elements($this->using('css selector')->value('div.dashboard-circle-list-row-wrap'));
+        $circle_count = count($circles);
+
+        $this->clickCircleWatchLink();
+
         $this->byXPath("//div[10]/div/div/ul/li[1]/a")->click();
         sleep(2);
+        $modal_body = $this->byCssSelector('div.modal-body.modal-feed-body.tab-content');
         $tab = $modal_body->element($this->using('css selector')->value('div#tab1'));
         $classes = $tab->attribute('class');
         $this->assertTrue(strpos($classes, 'active') !== false);
@@ -121,8 +104,13 @@ class CircleWebTest extends GoalousWebTestCase
 //        $this->assertEquals('参加していないサークルはありません。', $this->byCssSelector('#tab1')->text());
     }
 
+    /**
+     * #### サークルモーダルを閉じる
+     */
     public function testCircleModalClose()
     {
+        $this->clickCircleWatchLink();
+
         $this->byXPath("//div[10]/div/div/div[1]/button")->click();
         sleep(2);
         $this->assertFalse($this->byCssSelector('div.modal, .on, .fade')->displayed());
@@ -163,5 +151,12 @@ class CircleWebTest extends GoalousWebTestCase
                 return true;
             }
         }, 30000);
+    }
+
+    protected function clickCircleWatchLink()
+    {
+        $link = $this->byXPath("//div[@class='dashboard-circle-list-footer']//a[.='サークルを見る']");
+        $link->click();
+        sleep(3);
     }
 }

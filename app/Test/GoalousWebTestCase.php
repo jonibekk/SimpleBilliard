@@ -45,7 +45,7 @@ abstract class GoalousWebTestCase extends CakeTestCase
     public static $browsers = [
 //        ['browser' => '*firefox', 'browserName' => 'firefox', 'sessionStrategy' => 'shared'],
         ['browser' => '*chrome', 'browserName' => 'chrome', 'sessionStrategy' => 'shared'],
-//        ['browser' => '*internet explorer', 'browserName' => 'internet explorer', 'sessionStrategy' => 'shared', 'port' => 4444],
+//        ['browser' => '*iexplorer', 'browserName' => 'iexplorer', 'sessionStrategy' => 'shared'],
     ];
 
     public function __construct()
@@ -73,6 +73,14 @@ abstract class GoalousWebTestCase extends CakeTestCase
     }
 
     /**
+     * setUp()処理後に実行される
+     */
+    public function setUpPage()
+    {
+        $this->login($this->url . $this->login_url, $this->email, $this->password);
+    }
+
+    /**
      * tearDown method
      *
      * @return void
@@ -82,6 +90,28 @@ abstract class GoalousWebTestCase extends CakeTestCase
         Cache::clear(false, 'team_info');
         Cache::clear(false, 'user_data');
         parent::tearDown();
+    }
+
+    public function login($url, $id, $pass)
+    {
+        $this->url($url);
+        sleep(1);
+        if (strpos($this->url(), '/users/login') === false) {
+            return;
+        }
+
+        $email = $this->byName('data[User][email]');
+        $email->clear();
+        $email->value($id);
+
+        $password = $this->byName('data[User][password]');
+        $password->clear();
+        $password->value($pass);
+
+        $button = $this->byClassName('btn-primary');
+        $this->moveto($button);
+        $this->byId('UserLoginForm')->submit();
+        sleep(5);
     }
 
     /**
