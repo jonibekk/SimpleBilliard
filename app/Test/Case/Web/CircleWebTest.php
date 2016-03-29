@@ -53,8 +53,6 @@ class CircleWebTest extends GoalousWebTestCase
 
         $this->assertRegExp('/\Aサークル \([0-9]+\)\Z/u', $this->byXPath("//div[10]/div/div/div[1]/h4")->text());
         $this->saveSceenshot('testDispCircleModal');
-
-        return $circle_count;
     }
 
     /**
@@ -76,8 +74,6 @@ class CircleWebTest extends GoalousWebTestCase
         $circle_items = $tab->elements($this->using('css selector')->value('div.circle-item-row'));
         $this->assertEquals($circle_count, count($circle_items));
         $this->saveSceenshot('testCircleModalEntryTab');
-
-        return $modal_body;
     }
 
     /**
@@ -86,7 +82,6 @@ class CircleWebTest extends GoalousWebTestCase
     public function testCircleModalUnEntryTab()
     {
         $circles = $this->elements($this->using('css selector')->value('div.dashboard-circle-list-row-wrap'));
-        $circle_count = count($circles);
 
         $this->clickCircleWatchLink();
 
@@ -97,11 +92,6 @@ class CircleWebTest extends GoalousWebTestCase
         $classes = $tab->attribute('class');
         $this->assertTrue(strpos($classes, 'active') !== false);
         $this->saveSceenshot('testCircleModalUnEntryTab');
-
-//        $circle_items = $tab->elements($this->using('css selector')->value('div.circle-item-row'));
-//        $this->assertEquals($circle_count, count($circle_items));
-        // 参加可能なサークルが無い
-//        $this->assertEquals('参加していないサークルはありません。', $this->byCssSelector('#tab1')->text());
     }
 
     /**
