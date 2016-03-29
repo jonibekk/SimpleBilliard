@@ -21,6 +21,7 @@ module.exports = (grunt) ->
       webroot: 'app/webroot'
       dest: 'app/webroot/dest'
       coffee: 'app/webroot/coffee'
+      react: 'app/webroot/js/react'
       less: 'app/webroot/less'
       docs: 'docs'
       grunt: 'grunt'

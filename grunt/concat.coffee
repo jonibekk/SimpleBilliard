@@ -86,6 +86,16 @@ module.exports = (grunt) ->
   #   options:
   #     separator: ';'
 
+  react_vendors:
+    src: [
+      '<%= config.js %>/vendor/react/react.js',
+      '<%= config.js %>/vendor/react/react-dom.js',
+      '<%= config.js %>/vendor/react/react-router.js'
+    ]
+    dest: '<%= config.dest %>/jscat/react_vendors.js'
+    options:
+      separator: ';'
+
   # modules:
   #   src: '<%= config.js %>/modules/*.js'
   #   dest: '<%= config.js %>/modules/release/modules.js'

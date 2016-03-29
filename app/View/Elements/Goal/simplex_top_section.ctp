@@ -71,18 +71,14 @@
                 <div class="col col-xxs-5 col-xxs-offset-1 col-xs-4 col-xs-offset-2 col-sm-offset-2">
                     <a class="btn btn-white bd-circle_22px toggle-follow p_8px width100_per
                     <?= h($follow_opt['class']) ?>
-                    <?php if ($is_coaching_goal): ?>
-                    follow-on
-                    <?php endif ?>"
-
-                       href="#"
-                       data-class="toggle-follow"
-                       goal-id="<?= $goal['Goal']['id'] ?>"
-                        <?php if ($follow_opt['disabled'] || $is_coaching_goal): ?>
-                            disabled="disabled"
-                        <?php endif ?>
-                        >
-                        <span class="ml_5px"><?= __('Follow') ?></span>
+                       href=" #"
+                    data-class="toggle-follow"
+                    goal-id="<?= $goal['Goal']['id'] ?>"
+                    <?php if ($follow_opt['disabled'] || $is_coaching_goal): ?>
+                        disabled="disabled"
+                    <?php endif ?>
+                    >
+                    <span class="ml_5px"><?= __('Follow') ?></span>
                     </a>
                 </div>
                 <div class="col col-xxs-5 col-xxs-offset-1 col-xs-4">

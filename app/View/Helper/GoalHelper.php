@@ -20,10 +20,7 @@ class GoalHelper extends AppHelper
 
         //if coaching goal then, already following.
         if (viaIsSet($goal['User']['TeamMember'][0]['coach_user_id'])) {
-            $option['class'] = 'follow-on';
-            $option['style'] = 'display:none;';
             $option['disabled'] = "disabled";
-            $option['text'] = __("Following");
             return $option;
         }
 
@@ -88,6 +85,39 @@ class GoalHelper extends AppHelper
         }
 
         return "( " . implode(", ", $items) . " )";
+    }
+
+    /**
+     * @param $goal
+     * @param $my_coaching_users
+     *
+     * @return bool
+     */
+    function isCoachingUserGoal($goal, $my_coaching_users)
+    {
+        if (!is_array($my_coaching_users) || count($my_coaching_users) === 0) {
+            return false;
+        }
+
+        if (!isset($goal['Collaborator'])) {
+            return false;
+        }
+
+        // Case of coaching user is goal leader
+        if (in_array($goal['Leader'][0]['user_id'], $my_coaching_users)) {
+            return true;
+        }
+
+        $collabos = Hash::extract($goal['Collaborator'], '{n}.user_id');
+        if (!$collabos) {
+            return false;
+        }
+        // Case of coaching user is goal collaborator
+        if (array_intersect($collabos, $my_coaching_users)) {
+            return true;
+        }
+
+        return false;
     }
 
 }

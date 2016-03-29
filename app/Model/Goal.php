@@ -931,7 +931,7 @@ class Goal extends AppModel
                 ],
                 'Collaborator'      => [
                     'fields'     => ['Collaborator.id', 'Collaborator.user_id', 'Collaborator.valued_flg'],
-                    'conditions' => ['Collaborator.user_id' => $user_id]
+                    'conditions' => ['Collaborator.type' => Collaborator::TYPE_COLLABORATOR],
                 ],
             ]
         ];

@@ -374,7 +374,9 @@ class OgpComponent extends Object
             return self::_parse($response);
         }
         else {
-            $this->log("Failed to fetch OGP info. url=$URI");
+            // エラーログに出力するとノイズになるためコメントアウト。
+            // fetchとしたURLが存在しないケースは結構ある。
+            // $this->log("Failed to fetch OGP info. url=$URI");
             return false;
         }
     }
