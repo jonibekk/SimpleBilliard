@@ -50,7 +50,7 @@ if (isset($this->request->params['post_id']) && !$posts): ?>
     <?= $this->element("Feed/post_not_found") ?>
 <?php endif ?>
 <div id="app-view-elements-feed-posts">
-<?= $this->element("Feed/posts") ?>
+    <?= $this->element("Feed/posts") ?>
 </div>
 <?php //(投稿が指定件数　もしくは　アイテム作成日から１ヶ月以上経っている)かつパーマリンクでない
 if ((count($posts) == POST_FEED_PAGE_ITEMS_NUMBER || (isset($item_created) && $item_created < REQUEST_TIMESTAMP - (60 * 60 * 24 * 30))) &&
