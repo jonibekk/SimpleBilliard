@@ -47,11 +47,7 @@ if (isset($this->request->params['post_id']) && isset($this->request->params['na
 <?php
 // 投稿単体ページで $posts が空の場合（投稿が削除された場合）
 if (isset($this->request->params['post_id']) && !$posts): ?>
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <?= __('Not exist') ?>
-        </div>
-    </div>
+    <?= $this->element("Feed/post_not_found") ?>
 <?php endif ?>
 <div id="app-view-elements-feed-posts">
 <?= $this->element("Feed/posts") ?>
