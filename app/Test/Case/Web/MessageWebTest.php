@@ -8,6 +8,8 @@ App::uses('GoalousWebTestCase', 'Test');
  * @package GoalousWebTest
  * @version 2016/03/11
  *
+ *
+ *
  */
 class MessageWebTest extends GoalousWebTestCase
 {
@@ -36,14 +38,6 @@ class MessageWebTest extends GoalousWebTestCase
     public function tearDown()
     {
         parent::tearDown();
-    }
-
-    protected function logout()
-    {
-        $this->byXPath('//a[@id=\'header-cog-dropdown\']/i')->click();
-        sleep(2);
-        $this->byXPath('//a[@class=\'header-nav-function-contents-logout\']')->click();
-        sleep(3);
     }
 
     /**
@@ -103,7 +97,7 @@ class MessageWebTest extends GoalousWebTestCase
     public function testMessageLiked()
     {
         $this->login($this->url . $this->login_url, $this->email, $this->password);
-        $this->moveToMessageList();
+        $this->moveToMessage();
 
         $liked_button = $this->byCssSelector('button#like');
         $liked_button->click();
@@ -124,7 +118,7 @@ class MessageWebTest extends GoalousWebTestCase
     public function testMessageComment()
     {
         $this->login($this->url . $this->login_url, $this->email, $this->password);
-        $this->moveToMessageList();
+        $this->moveToMessage();
 
         $message = 'メッセージテスト';
         $input = $this->byId('message_text_input');
@@ -148,7 +142,7 @@ class MessageWebTest extends GoalousWebTestCase
     public function testMessageCommentWithImage()
     {
         $this->login($this->url . $this->login_url, $this->email, $this->password);
-        $this->moveToMessageList();
+        $this->moveToMessage();
 
         $message = 'メッセージ画像添付テスト';
         $input = $this->byId('message_text_input');
@@ -198,13 +192,14 @@ class MessageWebTest extends GoalousWebTestCase
     public function testMessageIconMoveToPostList()
     {
         $this->login($this->url . $this->login_url, $this->email, $this->password);
-        $this->clickHeaderMessage();
+        $this->moveToMessageList();
 
         $this->assertEquals('すべてのメッセージ', $this->byCssSelector('div.panel-heading.message-list-panel-head')->text());
         $this->saveSceenshot('testMessageIconMoveToPostList');
     }
 
     /**
+     * メッセージテストのためメッセージを送信する
      * @param $email
      * @param $to_name
      *
@@ -255,16 +250,22 @@ class MessageWebTest extends GoalousWebTestCase
         return true;
     }
 
-    protected function moveToMessageList()
+    /**
+     * メッセージ画面に移動する
+     */
+    protected function moveToMessage()
     {
-        $this->clickHeaderMessage();
+        $this->moveToMessageList();
         $message_cards = $this->byCssSelector('div.message-list-panel-body');
         $message_list = $message_cards->elements($this->using('css selector')->value('ul'));
         $message_list[0]->click();
         sleep(3);
     }
 
-    protected function clickHeaderMessage()
+    /**
+     * ヘッダーのメッセージアイコンをクリックしてすべてのメッセージ画面に移動する
+     */
+    protected function moveToMessageList()
     {
         $message_num = $this->byCssSelector('div#messageNum');
         $num = $message_num->elements($this->using('css selector')->value('span'));
@@ -277,6 +278,6 @@ class MessageWebTest extends GoalousWebTestCase
             sleep(3);
             $this->byCssSelector("li.message-all-view-link")->click();
         }
-        sleep(3);
+        sleep(5);
     }
 }

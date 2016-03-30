@@ -52,9 +52,11 @@ class CommentWebTest extends GoalousWebTestCase
             return true;
         }, 50000);
         sleep(3);
+
         $comment_buttons = $this->elements($this->using('css selector')->value('a.feeds-post-comment-btn'));
         $comment_buttons[0]->click();
         sleep(1);
+
         $button = $this->byCssSelector('input.btn.btn-primary.submit-btn.comment-submit-button');
         $this->assertFalse($button->enabled());
 
@@ -148,6 +150,7 @@ class CommentWebTest extends GoalousWebTestCase
      */
     public function testPostCommentWithImage()
     {
+        sleep(1);
         $this->moveToLatestNotify();
 
         $buttons = $this->byCssSelector('div.feeds-post-btns-wrap-left');
@@ -207,6 +210,7 @@ class CommentWebTest extends GoalousWebTestCase
         $comment_id = $latest_comment->attribute('comment-id');
         $post_comment = $this->byId('CommentTextBody_' . $comment_id);
         $image_area = $latest_comment->elements($this->using('css selector')->value('div.file-info-wrap'));
+        // アップロードした画像の表示方法が2通りある
 //        if (count($image_area) > 0) {
 //            $file_name = $image_area[0]->element($this->using('css selector')->value('a span'));
 //            $this->assertEquals($image_name, $file_name->text());

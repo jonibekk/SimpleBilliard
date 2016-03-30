@@ -114,6 +114,14 @@ abstract class GoalousWebTestCase extends CakeTestCase
         sleep(5);
     }
 
+    public function logout()
+    {
+        $this->byXPath('//a[@id=\'header-cog-dropdown\']/i')->click();
+        sleep(2);
+        $this->byXPath('//a[@class=\'header-nav-function-contents-logout\']')->click();
+        sleep(3);
+    }
+
     /**
      * スクリーンショットを保存する
      * @param string $file_name
@@ -128,6 +136,24 @@ abstract class GoalousWebTestCase extends CakeTestCase
         $screenshot = $this->currentScreenshot();
         $file_path = $dir_path . '/' . $file_name . '_' . date('YmdHis') . '.png';
         file_put_contents($file_path, $screenshot);
+    }
+
+    /**
+     * 投稿が5件未満の際に投稿を追加する
+     * もっと読み込むテストのために利用する
+     *
+     * @param int $num
+     */
+    public function setUpPost($num = 5)
+    {
+        $post_list = $this->byCssSelector('div#app-view-elements-feed-posts');
+        $panels = $post_list->elements($this->using('css selector')->value('div.panel.panel-default'));
+        if (count($panels) > 5) {
+            return;
+        }
+        for ($i = 0; $i <= $num; $i++) {
+            $this->addPost();
+        }
     }
 
     /**

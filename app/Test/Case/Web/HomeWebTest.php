@@ -46,6 +46,7 @@ class HomeWebTest extends GoalousWebTestCase
      */
     public function testAccessHome()
     {
+        $this->addPost();
         $this->byCssSelector('img.header-logo-img')->click();
         sleep(3);
 
@@ -113,6 +114,8 @@ class HomeWebTest extends GoalousWebTestCase
      */
     public function testMoreRead()
     {
+        $this->setUpPost();
+
         $before_panels = $this->elements($this->using('css selector')->value('div.panel.panel-default'));
         $this->execute([
             'script' => 'window.scrollTo(0, document.documentElement.scrollHeight)',
@@ -141,6 +144,8 @@ class HomeWebTest extends GoalousWebTestCase
      */
     public function testBellMark()
     {
+        $this->setUpNotification($this->send_email, $this->password);
+
         $this->byXPath("//a[@id='click-header-bell']/i")->click();
         sleep(2);
         $notify = $this->byCssSelector('ul.header-nav-notify-contents.notify-dropdown-cards');
@@ -155,16 +160,19 @@ class HomeWebTest extends GoalousWebTestCase
      */
     public function testBellMarkMoveToPost()
     {
+        $this->setUpNotification($this->send_email, $this->password);
+
         $this->byXPath("//a[@id='click-header-bell']/i")->click();
-        sleep(2);
-        $bells = $this->byCssSelector('ul#bell-dropdown');
-        $card_head = $bells->elements($this->using('css selector')->value('li.notify-card-list'));
-        $heads = $card_head[0]->elements($this->using('css selector')->value('span.notify-card-head-target'));
+        sleep(3);
+
+        $notify = $this->byCssSelector('ul.header-nav-notify-contents.notify-dropdown-cards');
+        $notifies = $notify->elements($this->using('css selector')->value('li.notify-card-list'));
+        $heads = $notifies[0]->elements($this->using('css selector')->value('span.notify-card-head-target'));
         $heads_text = $heads[0]->text();
-        $card_head[0]->click();
+        $notifies[0]->click();
         sleep(5);
 
-        $panel = $this->byCssSelector('div.posts-panel-body.panel-body');
+        $panel = $this->byCssSelector('div.posts-panel-body');
         $panel_head = $panel->elements($this->using('css selector')->value('span.font_14px.font_bold.font_verydark'));
         $this->assertEquals($panel_head[0]->text(), $heads_text);
         $this->saveSceenshot('testBellMarkMoveToPost');
@@ -176,6 +184,9 @@ class HomeWebTest extends GoalousWebTestCase
      */
     public function testBellMarkMoveToPostList()
     {
+        sleep(1);
+        $this->setUpNotification($this->send_email, $this->password);
+
         $this->byXPath("//a[@id='click-header-bell']/i")->click();
         $this->byLinkText("すべて見る")->click();
         sleep(5);
@@ -190,6 +201,9 @@ class HomeWebTest extends GoalousWebTestCase
      */
     public function testPostListMoveToPost()
     {
+        sleep(1);
+        $this->setUpNotification($this->send_email, $this->password);
+
         $this->byXPath("//a[@id='click-header-bell']/i")->click();
         $this->byLinkText("すべて見る")->click();
         sleep(5);
@@ -206,7 +220,7 @@ class HomeWebTest extends GoalousWebTestCase
             }
 
             return false;
-        }, 50000);
+        }, 30000);
 
         $this->assertEquals($this->byXPath("//div[@id='container']/div[2]/div[1]/div[1]/div[1]/a/span")->text(), $header_text);
         $this->saveSceenshot('testPostListMoveToPost');
@@ -245,7 +259,7 @@ class HomeWebTest extends GoalousWebTestCase
      */
     public function testPostWithImage()
     {
-        $this->url('http://192.168.50.4');
+        $this->url($this->url);
         sleep(3);
         $text = 'テスト';
 
@@ -276,7 +290,6 @@ class HomeWebTest extends GoalousWebTestCase
             "var blob = base64toBlob(base64Image, 'image/png');" .
             "blob.name = '" . $image_name . "';";
         $script .= 'var form = $(document).data(\'uploadFileForm\'); form[0].dropzone.addFile(blob);';
-//        $script .= '$(document).trigger($.Event( \'keyup\', { keyCode: 27, which: 27 }));';
         $this->execute(['script' => $script, 'args' => []]);
         sleep(3);
 
@@ -297,5 +310,115 @@ class HomeWebTest extends GoalousWebTestCase
         $post = $this->byXPath('//div[2]/div[2]/div[4]/div[1]/div[1]/div[2]');
         $this->assertEquals($text, $post->text());
         $this->saveSceenshot('testPost');
+    }
+
+    /**
+     * 通知のテストのために別のユーザーが投稿する
+     * @param $id
+     * @param $password
+     */
+    protected function setUpNotification($id, $password)
+    {
+        if ($this->isSetUpNotification() === true) {
+            $this->changeLoginUser($id, $password);
+            $this->addPost();
+            sleep(5);
+            $this->logout();
+            sleep(3);
+            $this->login($this->url . $this->login_url, $this->email, $this->password);
+        }
+    }
+
+    /**
+     * 投稿を追加する
+     */
+    protected function addPost()
+    {
+        $text = 'テスト';
+
+        $this->byLinkText("投稿")->click();
+
+        $element = $this->byId("CommonPostBody");
+        $element->click();
+        $element->clear();
+        $element->value($text);
+
+        $button = $this->byClassName('btn-primary');
+        $this->moveto($button);
+        $this->byId("PostSubmit")->click();
+        sleep(3);
+    }
+
+    /**
+     * ログインユーザーを変更する
+     * @param $id
+     * @param $password
+     */
+    protected function changeLoginUser($id, $password)
+    {
+        $this->logout();
+
+        $this->waitUntil(function() use($id, $password) {
+            $this->login($this->login_url, $id, $password);
+            if ($this->byXPath("//ul[@id='CommonFormTabs']//a[.='投稿']")) {
+                return true;
+            }
+
+            return false;
+        }, 30000);
+    }
+
+    /**
+     * 通知テストのセットアップをするか判断
+     * @return bool
+     */
+    protected function isSetUpNotification()
+    {
+        if ($this->isNotificationCountExists() === true) {
+            return false;
+        }
+
+        if ($this->isNotificationCardExists() === true) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * 通知のカウントがあるかどうかを判断する
+     * @return bool
+     */
+    protected function isNotificationCountExists()
+    {
+        $bell_num = $this->byCssSelector('div#bellNum');
+        $num = $bell_num->elements($this->using('css selector')->value('span'));
+
+        if ($num[0]->text() === 0) {
+            return false;
+        }
+
+        if ($num[0]->text() === '') {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * 通知リストが存在するか
+     * li.notify-card-list要素は通知リストが無い場合でも1つあるため1より大きい場合に存在すると判断
+     * @return bool
+     */
+    protected function isNotificationCardExists()
+    {
+        $this->byXPath("//a[@id='click-header-bell']/i")->click();
+        sleep(2);
+        $notify = $this->byCssSelector('ul.header-nav-notify-contents.notify-dropdown-cards');
+        $notifies = $notify->elements($this->using('css selector')->value('li.notify-card-list'));
+        // 再度クリックしてドロップダウンを閉じる
+        $this->byXPath("//a[@id='click-header-bell']/i")->click();
+
+        return count($notifies) > 1;
     }
 }

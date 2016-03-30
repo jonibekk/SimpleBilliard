@@ -46,9 +46,7 @@ class CircleWebTest extends GoalousWebTestCase
      */
     public function testDispCircleModal()
     {
-        $circles = $this->elements($this->using('css selector')->value('div.dashboard-circle-list-row-wrap'));
-        $circle_count = count($circles);
-
+        sleep(1);
         $this->clickCircleWatchLink();
 
         $this->assertRegExp('/\Aサークル \([0-9]+\)\Z/u', $this->byXPath("//div[10]/div/div/div[1]/h4")->text());
@@ -81,8 +79,6 @@ class CircleWebTest extends GoalousWebTestCase
      */
     public function testCircleModalUnEntryTab()
     {
-        $circles = $this->elements($this->using('css selector')->value('div.dashboard-circle-list-row-wrap'));
-
         $this->clickCircleWatchLink();
 
         $this->byXPath("//div[10]/div/div/ul/li[1]/a")->click();
@@ -128,6 +124,8 @@ class CircleWebTest extends GoalousWebTestCase
      */
     public function testMoreRead()
     {
+        $this->setUpPost();
+
         $before_panels = $this->elements($this->using('css selector')->value('div.panel.panel-default'));
         $this->execute([
             'script' => 'window.scrollTo(0,document.body.scrollHeight);',
@@ -145,8 +143,28 @@ class CircleWebTest extends GoalousWebTestCase
 
     protected function clickCircleWatchLink()
     {
-        $link = $this->byXPath("//div[@class='dashboard-circle-list-footer']//a[.='サークルを見る']");
+        $link = $this->byLinkText('サークルを見る');
         $link->click();
+        sleep(5);
+    }
+
+    protected function addPost($text = 'テスト')
+    {
+        $this->byLinkText("投稿")->click();
+        $this->assertFalse($this->byId('PostSubmit')->enabled());
+
+        $this->byId("CommonPostBody")->click();
+        $this->byId("PostShare")->click();
+
+        $element = $this->byId("CommonPostBody");
+        $element->click();
+        $element->clear();
+        $element->value($text);
+        $this->assertTrue($this->byId('PostSubmit')->enabled());
+
+        $button = $this->byClassName('btn-primary');
+        $this->moveto($button);
+        $this->byId("PostSubmit")->click();
         sleep(3);
     }
 }
