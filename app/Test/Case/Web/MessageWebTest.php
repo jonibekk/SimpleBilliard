@@ -33,6 +33,9 @@ class MessageWebTest extends GoalousWebTestCase
      */
     public function setUpPage()
     {
+        //ログイン回数の制限があるのでこのテスト用にユーザーを切り替える
+        $this->email = $this->email3;
+        parent::setUpPage();
     }
 
     public function tearDown()
