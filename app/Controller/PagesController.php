@@ -258,9 +258,9 @@ class PagesController extends AppController
         $url_params = $this->params['url'];
         if($this->Auth->user()) {
             $parsed_referer_url = Router::parse($this->referer('/', true));
-            $status = viaIsSet($url_params['st']);
+            $request_status = viaIsSet($url_params['st']);
             $status_from_referer = $this->_defineStatusFromReferer();
-            if($status !== $status_from_referer) {
+            if($request_status !== $status_from_referer) {
                 return $this->redirect("/?st={$status_from_referer}");
             }
             return true;
@@ -285,7 +285,7 @@ class PagesController extends AppController
 
         // New Registration(Not invite)
         if($controller_name === 'teams' && $action_name === 'invite') {
-            return REFERER_STATUS_SINGNIN;
+            return REFERER_STATUS_SIGNUP;
         }
 
         // Invitation(exist goalous account)

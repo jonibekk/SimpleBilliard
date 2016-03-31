@@ -487,7 +487,7 @@ class TeamsController extends AppController
         $this->Pnotify->outSuccess($msg);
 
         if (!$from_setting) {
-            return $this->redirect('/?st=' . REFERER_STATUS_SINGNIN);
+            return $this->redirect('/?st=' . REFERER_STATUS_SIGNUP);
         }
 
         return $this->redirect($this->referer());

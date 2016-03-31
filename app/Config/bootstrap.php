@@ -203,7 +203,7 @@ define('CACHE_KEY_MY_NOTIFY_SETTING', 'my_notify_setting');
 define('CACHE_KEY_MY_PROFILE', 'my_profile');
 //Referer value name of URL(for Google analytics)
 define('REFERER_STATUS_DEFAULT', 'def');
-define('REFERER_STATUS_SINGNIN', 'new');
+define('REFERER_STATUS_SIGNUP', 'new');
 define('REFERER_STATUS_LOGIN', 'in');
 define('REFERER_STATUS_INVITATION_EXIST', 'inv_ex');
 define('REFERER_STATUS_INVITATION_NOT_EXIST', 'inv_no');
