@@ -280,12 +280,12 @@ class PagesController extends AppController
 
         // Login
         if($controller_name === 'users' && $action_name === 'login') {
-            return URL_REFERER_LOGIN;
+            return REFERER_STATUS_LOGIN;
         }
 
         // New Registration(Not invite)
         if($controller_name === 'teams' && $action_name === 'invite') {
-            return URL_REFERER_SINGNIN;
+            return REFERER_STATUS_SINGNIN;
         }
 
         // Invitation(exist goalous account)
@@ -298,6 +298,6 @@ class PagesController extends AppController
             return URL_REFERER_INVITATION_NOT_EXIST;
         }
 
-        return URL_REFERER_DEFAULT;
+        return REFERER_STATUS_DEFAULT;
     }
 }
