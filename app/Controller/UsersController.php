@@ -455,7 +455,8 @@ class UsersController extends AppController
         //トークン付きの場合は招待のため、ホームへ
         if (isset($this->request->params['named']['invite_token'])) {
             /** @noinspection PhpVoidFunctionResultUsedInspection */
-            return $this->redirect("/?=" . REFERER_STATUS_INVITATION_NOT_EXIST);
+            $this->Session->write('join_team_user_not_exist', true);
+            return $this->redirect("/?st=" . REFERER_STATUS_INVITATION_NOT_EXIST);
         }
         else {
             //チーム作成ページへリダイレクト
@@ -806,6 +807,7 @@ class UsersController extends AppController
             }
 
             if (!$this->Auth->user()) {
+                $this->Session->write('join_team_user_not_exist', true);
                 $this->Auth->redirectUrl(['action' => 'accept_invite', $token]);
                 return $this->redirect(['action' => 'login']);
             }
@@ -817,6 +819,7 @@ class UsersController extends AppController
 
             $team = $this->_joinTeam($token);
             $this->Pnotify->outSuccess(__("Joined %s.", $team['Team']['name']));
+            $this->Session->write('join_team_user_exist', true);
             return $this->redirect("/?st=" . REFERER_STATUS_INVITATION_EXIST);
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());

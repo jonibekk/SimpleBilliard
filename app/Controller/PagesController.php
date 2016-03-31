@@ -256,6 +256,7 @@ class PagesController extends AppController
 
     public function _setUrlParams() {
         $url_params = $this->params['url'];
+
         if($this->Auth->user()) {
             $parsed_referer_url = Router::parse($this->referer('/', true));
             $request_status = viaIsSet($url_params['st']);
@@ -274,14 +275,8 @@ class PagesController extends AppController
 
     public function _defineStatusFromReferer() {
         $parsed_referer_url = Router::parse($this->referer(null, true));
-
         $controller_name = viaIsSet($parsed_referer_url['controller']);
         $action_name = viaIsSet($parsed_referer_url['action']);
-
-        // Login
-        if($controller_name === 'users' && $action_name === 'login') {
-            return REFERER_STATUS_LOGIN;
-        }
 
         // New Registration(Not invite)
         if($controller_name === 'teams' && $action_name === 'invite') {
@@ -289,13 +284,20 @@ class PagesController extends AppController
         }
 
         // Invitation(exist goalous account)
-        if($controller_name === 'users' && $action_name === 'accept_invite') {
-            return URL_REFERER_INVITATION_EXIST;
+        if($this->Session->read('join_team_user_exist')) {
+            $this->Session->delete('join_team_user_exist');
+            return REFERER_STATUS_INVITATION_EXIST;
         }
 
         // Invitation(not exist goalous account)
-        if($controller_name === 'users' && $action_name === 'add_profile') {
-            return URL_REFERER_INVITATION_NOT_EXIST;
+        if($this->Session->read('join_team_user_not_exist')) {
+            $this->Session->delete('join_team_user_not_exist');
+            return REFERER_STATUS_INVITATION_NOT_EXIST;
+        }
+
+        // Login
+        if($controller_name === 'users' && $action_name === 'login') {
+            return REFERER_STATUS_LOGIN;
         }
 
         return REFERER_STATUS_DEFAULT;
