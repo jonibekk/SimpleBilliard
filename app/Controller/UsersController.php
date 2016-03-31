@@ -224,6 +224,7 @@ class UsersController extends AppController
             $this->Session->delete('2fa_secret');
             $this->Session->delete('user_id');
             $this->Session->delete('team_id');
+            $this->Session->write('referer_status', REFERER_STATUS_LOGIN);
             $this->_refreshAuth();
             $this->_setAfterLogin();
             $this->Pnotify->outSuccess(__("Hello %s.", $this->Auth->user('display_username')),
@@ -454,12 +455,13 @@ class UsersController extends AppController
 
         //トークン付きの場合は招待のため、ホームへ
         if (isset($this->request->params['named']['invite_token'])) {
+            $this->Session->write('referer_status', REFERER_STATUS_INVITATION_NOT_EXIST);
             /** @noinspection PhpVoidFunctionResultUsedInspection */
-            $this->Session->write('join_team_user_not_exist', true);
             return $this->redirect("/?st=" . REFERER_STATUS_INVITATION_NOT_EXIST);
         }
         else {
             //チーム作成ページへリダイレクト
+            $this->Session->write('referer_status', REFERER_STATUS_SIGNUP);
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->redirect(['controller' => 'teams', 'action' => 'add']);
         }
@@ -807,7 +809,6 @@ class UsersController extends AppController
             }
 
             if (!$this->Auth->user()) {
-                $this->Session->write('join_team_user_not_exist', true);
                 $this->Auth->redirectUrl(['action' => 'accept_invite', $token]);
                 return $this->redirect(['action' => 'login']);
             }
@@ -818,8 +819,9 @@ class UsersController extends AppController
             }
 
             $team = $this->_joinTeam($token);
+
+            $this->Session->write('referer_status', REFERER_STATUS_INVITATION_EXIST);
             $this->Pnotify->outSuccess(__("Joined %s.", $team['Team']['name']));
-            $this->Session->write('join_team_user_exist', true);
             return $this->redirect("/?st=" . REFERER_STATUS_INVITATION_EXIST);
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
@@ -1090,7 +1092,6 @@ class UsersController extends AppController
         $this->Mixpanel->setUser($this->User->id);
 
         $this->_ifFromUservoiceRedirect();
-
     }
 
     public function _ifFromUservoiceRedirect()

@@ -264,6 +264,7 @@ class PagesController extends AppController
             if($request_status !== $status_from_referer) {
                 return $this->redirect("/?st={$status_from_referer}");
             }
+            $this->Session->delete('referer_status');
             return true;
         }
 
@@ -274,32 +275,26 @@ class PagesController extends AppController
     }
 
     public function _defineStatusFromReferer() {
-        $parsed_referer_url = Router::parse($this->referer(null, true));
-        $controller_name = viaIsSet($parsed_referer_url['controller']);
-        $action_name = viaIsSet($parsed_referer_url['action']);
+        switch ($this->Session->read('referer_status')) {
+            // New Registration(Not invite)
+            case REFERER_STATUS_SIGNUP:
+                return REFERER_STATUS_SIGNUP;
 
-        // New Registration(Not invite)
-        if($controller_name === 'teams' && $action_name === 'invite') {
-            return REFERER_STATUS_SIGNUP;
+            // Invitation(exist goalous account)
+            case REFERER_STATUS_INVITATION_EXIST:
+                return REFERER_STATUS_INVITATION_EXIST;
+
+            // Invitation(not exist goalous account)
+            case REFERER_STATUS_INVITATION_NOT_EXIST:
+                return REFERER_STATUS_INVITATION_NOT_EXIST;
+
+            // Login
+            case REFERER_STATUS_LOGIN:
+                return REFERER_STATUS_LOGIN;
+
+            // Others
+            default:
+                return REFERER_STATUS_DEFAULT;
         }
-
-        // Invitation(exist goalous account)
-        if($this->Session->read('join_team_user_exist')) {
-            $this->Session->delete('join_team_user_exist');
-            return REFERER_STATUS_INVITATION_EXIST;
-        }
-
-        // Invitation(not exist goalous account)
-        if($this->Session->read('join_team_user_not_exist')) {
-            $this->Session->delete('join_team_user_not_exist');
-            return REFERER_STATUS_INVITATION_NOT_EXIST;
-        }
-
-        // Login
-        if($controller_name === 'users' && $action_name === 'login') {
-            return REFERER_STATUS_LOGIN;
-        }
-
-        return REFERER_STATUS_DEFAULT;
     }
 }
