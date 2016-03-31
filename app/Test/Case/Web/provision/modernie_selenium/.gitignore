@@ -1,0 +1,4 @@
+VMs/**/*.*
+Tools/*.exe
+Tools/**/*.exe
+Tools/*.iso
