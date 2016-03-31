@@ -52,7 +52,8 @@ class UsersController extends AppController
                 'recursive' => 0,
             )
         );
-        $this->Auth->loginRedirect = '/';
+        $st_login = URL_REFERER_LOGIN;
+        $this->Auth->loginRedirect = "/?st={$st_login}";
         $this->Auth->logoutRedirect = array(
             'controller' => 'users',
             'action'     => 'login'
@@ -216,7 +217,7 @@ class UsersController extends AppController
 
     function _afterAuthSessionStore()
     {
-        $redirect_url = ($this->Session->read('Auth.redirect')) ? $this->Session->read('Auth.redirect') : "/";
+        $redirect_url = ($this->Session->read('Auth.redirect')) ? $this->Session->read('Auth.redirect') : "/?st=" . URL_REFERER_LOGIN;
         $this->request->data = $this->Session->read('preAuthPost');
         if ($this->Auth->login()) {
             $this->Session->delete('preAuthPost');
@@ -454,7 +455,7 @@ class UsersController extends AppController
         //トークン付きの場合は招待のため、ホームへ
         if (isset($this->request->params['named']['invite_token'])) {
             /** @noinspection PhpVoidFunctionResultUsedInspection */
-            return $this->redirect("/");
+            return $this->redirect("/?=" . URL_REFERER_INVITATION_NOT_EXIST);
         }
         else {
             //チーム作成ページへリダイレクト
@@ -816,7 +817,7 @@ class UsersController extends AppController
 
             $team = $this->_joinTeam($token);
             $this->Pnotify->outSuccess(__("Joined %s.", $team['Team']['name']));
-            return $this->redirect("/");
+            return $this->redirect("/?st=" . URL_REFERER_INVITATION_EXIST);
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
             return $this->redirect("/");

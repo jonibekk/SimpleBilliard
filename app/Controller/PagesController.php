@@ -40,6 +40,9 @@ class PagesController extends AppController
             $page = $path[0];
         }
 
+        // Difine URL params for Google analytics.
+        $this->_setUrlParams();
+
         //title_for_layoutはAppControllerで設定
         $this->set(compact('page', 'subpage'));
 
@@ -249,5 +252,52 @@ class PagesController extends AppController
             ->send();
         $lang = $this->_getLangFromParam();
         return $this->redirect(['controller' => 'pages', 'action' => 'display', 'pagename' => 'contact_thanks', 'lang' => $lang,]);
+    }
+
+    public function _setUrlParams() {
+        $url_params = $this->params['url'];
+        if($this->Auth->user()) {
+            $parsed_referer_url = Router::parse($this->referer('/', true));
+            $status = viaIsSet($url_params['st']);
+            $status_from_referer = $this->_defineStatusFromReferer();
+            if($status !== $status_from_referer) {
+                return $this->redirect("/?st={$status_from_referer}");
+            }
+            return true;
+        }
+
+        if($url_params) {
+            return $this->redirect('/');
+        }
+        return true;
+    }
+
+    public function _defineStatusFromReferer() {
+        $parsed_referer_url = Router::parse($this->referer(null, true));
+
+        $controller_name = viaIsSet($parsed_referer_url['controller']);
+        $action_name = viaIsSet($parsed_referer_url['action']);
+
+        // Login
+        if($controller_name === 'users' && $action_name === 'login') {
+            return URL_REFERER_LOGIN;
+        }
+
+        // New Registration(Not invite)
+        if($controller_name === 'teams' && $action_name === 'invite') {
+            return URL_REFERER_SINGNIN;
+        }
+
+        // Invitation(exist goalous account)
+        if($controller_name === 'users' && $action_name === 'accept_invite') {
+            return URL_REFERER_INVITATION_EXIST;
+        }
+
+        // Invitation(not exist goalous account)
+        if($controller_name === 'users' && $action_name === 'add_profile') {
+            return URL_REFERER_INVITATION_NOT_EXIST;
+        }
+
+        return URL_REFERER_DEFAULT;
     }
 }

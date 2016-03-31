@@ -487,7 +487,7 @@ class TeamsController extends AppController
         $this->Pnotify->outSuccess($msg);
 
         if (!$from_setting) {
-            return $this->redirect('/');
+            return $this->redirect('/?st=' . URL_REFERER_SINGNIN);
         }
 
         return $this->redirect($this->referer());

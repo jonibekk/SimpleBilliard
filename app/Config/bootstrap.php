@@ -201,6 +201,12 @@ define('CACHE_KEY_GROUP_VISION', 'group_vision');
 define('CACHE_KEY_MY_GOAL_AREA', 'my_goal_area');
 define('CACHE_KEY_MY_NOTIFY_SETTING', 'my_notify_setting');
 define('CACHE_KEY_MY_PROFILE', 'my_profile');
+//Referer value name of URL(for Google analytics)
+define('URL_REFERER_DEFAULT', 'def');
+define('URL_REFERER_SINGNIN', 'new');
+define('URL_REFERER_LOGIN', 'in');
+define('URL_REFERER_INVITATION_EXIST', 'inv_ex');
+define('URL_REFERER_INVITATION_NOT_EXIST', 'inv_no');
 
 /**
  * 共通関数
