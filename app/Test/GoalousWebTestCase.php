@@ -38,7 +38,9 @@ abstract class GoalousWebTestCase extends CakeTestCase
 
     protected $url = 'http://192.168.50.4';
     protected $login_url = '/users/login';
-    protected $email = 'goalous.test05@gmail.com';
+    protected $email = 'goalous.test03@gmail.com';
+    protected $email2 = 'goalous.test04@gmail.com';
+    protected $email3 = 'goalous.test05@gmail.com';
     protected $send_email = 'goalous.test02@gmail.com';
     protected $password = '12345678';
 

@@ -31,6 +31,8 @@ class HomeWebTest extends GoalousWebTestCase
      */
     public function setUpPage()
     {
+        //ログイン回数の制限があるのでこのテスト用にユーザーを切り替える
+        $this->email = $this->email2;
         parent::setUpPage();
     }
 
