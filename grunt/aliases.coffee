@@ -12,6 +12,7 @@ module.exports = (grunt) ->
     'concat:ng_app'
     'concat:ng_controller'
     'concat:ng_vendors'
+    'browserify:react'
     'concat:vendors'
     'uglify'
     'copy:js'

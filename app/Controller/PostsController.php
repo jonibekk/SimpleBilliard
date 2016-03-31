@@ -161,19 +161,11 @@ class PostsController extends AppController
     public function _addPost()
     {
         $this->request->allowMethod('post');
-        //OGP処理はメッセ、アクション以外の場合に実行
-        if (isset($this->request->data['Post']['site_info_url']) &&
-            !empty($this->request->data['Post']['site_info_url'])
-        ) {
-            // OGP 情報を取得する URL が含まれるテキスト
-            // フロントの JS でプレビューが正しく取得出来た場合は、site_info_url に URL が含まれている
-            // それ以外の場合は body テキスト全体から URL を検出する
-            $url_text = $this->request->data('Post.site_info_url');
-            if (!$url_text) {
-                $url_text = $this->request->data('Post.body');
-            }
-            // ogbをインサートデータに追加
-            $this->request->data['Post'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Post']), $url_text);
+
+        // OGP処理はメッセ、アクション以外の場合に実行
+        if ($url_text = $this->request->data('Post.site_info_url')) {
+            // OGPをインサートデータに追加
+            $this->request->data['Post'] = $this->_addOgpIndexes($this->request->data['Post'], $url_text);
         }
 
         // 公開投稿か秘密サークルへの投稿かを判別
@@ -302,9 +294,19 @@ class PostsController extends AppController
         // フォームが submit された時
         if ($this->request->is('put')) {
             $this->request->data['Post']['id'] = $this->request->params['named']['post_id'];
-            // ogbをインサートデータに追加
-            $this->request->data['Post'] = $this->_addOgpIndexes(viaIsSet($this->request->data['Post']),
-                                                                 viaIsSet($this->request->data['Post']['body']));
+
+            // OGP処理はメッセ、アクション以外の場合に実行
+            if ($url_text = $this->request->data('Post.site_info_url')) {
+                // OGPをインサートデータに追加
+                $this->request->data['Post'] = $this->_addOgpIndexes($this->request->data['Post'], $url_text);
+            }
+            else {
+                // 編集の場合、OGP情報がフォームから渡ってこないとDBに残ってしまうので
+                // 空指定をする必要がある
+                $this->request->data['Post']['site_info'] = null;
+                $this->request->data['Post']['site_photo_file_name'] = null;
+            }
+
             // 投稿を保存
             if ($this->Post->postEdit($this->request->data)) {
                 $this->Pnotify->outSuccess(__("Saved changes."));
@@ -432,7 +434,12 @@ class PostsController extends AppController
 
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
-        $response = $this->render($view);
+        if ($posts) {
+            $response = $this->render($view);
+        }
+        else {
+            $response = $this->render('Feed/post_not_found');
+        }
         $html = $response->__toString();
         $result = array(
             'html'                => $html,

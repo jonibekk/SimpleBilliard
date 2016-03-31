@@ -87,7 +87,8 @@ class UsersController extends AppController
         $ip_address = $this->request->clientIp();
         $is_account_locked = $this->GlRedis->isAccountLocked($this->request->data['User']['email'], $ip_address);
         if ($is_account_locked) {
-            $this->Pnotify->outError(__("Your account is tempolary locked. It will be unlocked after %s mins.", ACCOUNT_LOCK_TTL / 60));
+            $this->Pnotify->outError(__("Your account is tempolary locked. It will be unlocked after %s mins.",
+                                        ACCOUNT_LOCK_TTL / 60));
             return $this->render();
         }
         //メアド、パスの認証(セッションのストアはしていない)
@@ -145,7 +146,8 @@ class UsersController extends AppController
         $is_account_locked = $this->GlRedis->isTwoFaAccountLocked($this->Session->read('user_id'),
                                                                   $this->request->clientIp());
         if ($is_account_locked) {
-            $this->Pnotify->outError(__("Your account is tempolary locked. It will be unlocked after %s mins.", ACCOUNT_LOCK_TTL / 60));
+            $this->Pnotify->outError(__("Your account is tempolary locked. It will be unlocked after %s mins.",
+                                        ACCOUNT_LOCK_TTL / 60));
             return $this->render();
         }
 
@@ -188,7 +190,8 @@ class UsersController extends AppController
         $is_account_locked = $this->GlRedis->isTwoFaAccountLocked($this->Session->read('user_id'),
                                                                   $this->request->clientIp());
         if ($is_account_locked) {
-            $this->Pnotify->outError(__("Your account is tempolary locked. It will be unlocked after %s mins.", ACCOUNT_LOCK_TTL / 60));
+            $this->Pnotify->outError(__("Your account is tempolary locked. It will be unlocked after %s mins.",
+                                        ACCOUNT_LOCK_TTL / 60));
             return $this->render();
         }
 
@@ -1236,6 +1239,8 @@ class UsersController extends AppController
 
         $term_base_url = Router::url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user_id, 'page_type' => $page_type]);
 
+        $my_coaching_users = $this->User->TeamMember->getMyMembersList($this->my_uid);
+
         $this->set(compact(
                        'term',
                        'term_id',
@@ -1245,7 +1250,8 @@ class UsersController extends AppController
                        'page_type',
                        'goals',
                        'is_mine',
-                       'display_action_count'
+                       'display_action_count',
+                       'my_coaching_users'
                    ));
         return $this->render();
     }
