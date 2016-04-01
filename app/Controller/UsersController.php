@@ -217,7 +217,7 @@ class UsersController extends AppController
 
     function _afterAuthSessionStore()
     {
-        $redirect_url = ($this->Session->read('Auth.redirect')) ? $this->Session->read('Auth.redirect') : "/?st=" . URL_REFERER_LOGIN;
+        $redirect_url = ($this->Session->read('Auth.redirect')) ? $this->Session->read('Auth.redirect') : "/?st=" . REFERER_STATUS_LOGIN;
         $this->request->data = $this->Session->read('preAuthPost');
         if ($this->Auth->login()) {
             $this->Session->delete('preAuthPost');
