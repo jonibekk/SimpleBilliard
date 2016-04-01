@@ -434,7 +434,12 @@ class PostsController extends AppController
 
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
-        $response = $this->render($view);
+        if ($posts) {
+            $response = $this->render($view);
+        }
+        else {
+            $response = $this->render('Feed/post_not_found');
+        }
         $html = $response->__toString();
         $result = array(
             'html'                => $html,
