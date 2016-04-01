@@ -52,7 +52,8 @@ class UsersController extends AppController
                 'recursive' => 0,
             )
         );
-        $this->Auth->loginRedirect = '/';
+        $st_login = REFERER_STATUS_LOGIN;
+        $this->Auth->loginRedirect = "/?st={$st_login}";
         $this->Auth->logoutRedirect = array(
             'controller' => 'users',
             'action'     => 'login'
@@ -216,13 +217,14 @@ class UsersController extends AppController
 
     function _afterAuthSessionStore()
     {
-        $redirect_url = ($this->Session->read('Auth.redirect')) ? $this->Session->read('Auth.redirect') : "/";
+        $redirect_url = ($this->Session->read('Auth.redirect')) ? $this->Session->read('Auth.redirect') : "/?st=" . REFERER_STATUS_LOGIN;
         $this->request->data = $this->Session->read('preAuthPost');
         if ($this->Auth->login()) {
             $this->Session->delete('preAuthPost');
             $this->Session->delete('2fa_secret');
             $this->Session->delete('user_id');
             $this->Session->delete('team_id');
+            $this->Session->write('referer_status', REFERER_STATUS_LOGIN);
             $this->_refreshAuth();
             $this->_setAfterLogin();
             $this->Pnotify->outSuccess(__("Hello %s.", $this->Auth->user('display_username')),
@@ -453,11 +455,13 @@ class UsersController extends AppController
 
         //トークン付きの場合は招待のため、ホームへ
         if (isset($this->request->params['named']['invite_token'])) {
+            $this->Session->write('referer_status', REFERER_STATUS_INVITATION_NOT_EXIST);
             /** @noinspection PhpVoidFunctionResultUsedInspection */
-            return $this->redirect("/");
+            return $this->redirect("/?st=" . REFERER_STATUS_INVITATION_NOT_EXIST);
         }
         else {
             //チーム作成ページへリダイレクト
+            $this->Session->write('referer_status', REFERER_STATUS_SIGNUP);
             /** @noinspection PhpVoidFunctionResultUsedInspection */
             return $this->redirect(['controller' => 'teams', 'action' => 'add']);
         }
@@ -815,8 +819,10 @@ class UsersController extends AppController
             }
 
             $team = $this->_joinTeam($token);
+
+            $this->Session->write('referer_status', REFERER_STATUS_INVITATION_EXIST);
             $this->Pnotify->outSuccess(__("Joined %s.", $team['Team']['name']));
-            return $this->redirect("/");
+            return $this->redirect("/?st=" . REFERER_STATUS_INVITATION_EXIST);
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
             return $this->redirect("/");
@@ -1086,7 +1092,6 @@ class UsersController extends AppController
         $this->Mixpanel->setUser($this->User->id);
 
         $this->_ifFromUservoiceRedirect();
-
     }
 
     public function _ifFromUservoiceRedirect()
