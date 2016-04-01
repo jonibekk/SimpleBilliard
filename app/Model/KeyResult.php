@@ -33,9 +33,9 @@ class KeyResult extends AppModel
      */
     function _setUnitName()
     {
-        self::$UNIT[self::UNIT_PERCENT] = __("%");
-        self::$UNIT[self::UNIT_YEN] = __('¥');
-        self::$UNIT[self::UNIT_DOLLAR] = __('$');
+        self::$UNIT[self::UNIT_PERCENT] = "%";
+        self::$UNIT[self::UNIT_YEN] = '¥';
+        self::$UNIT[self::UNIT_DOLLAR] = '$';
         self::$UNIT[self::UNIT_NUMBER] = __("Other Unit");
         self::$UNIT[self::UNIT_BINARY] = __('No Unit');
     }
