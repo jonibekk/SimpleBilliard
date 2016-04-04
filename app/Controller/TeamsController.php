@@ -475,7 +475,7 @@ class TeamsController extends AppController
         $already_joined_usr_msg = null;
         if (!empty($alreadyBelongTeamEmails)) {
             $already_joined_usr_msg .= __("Cancelled sending email to %s people who are already in the circle.",
-                                           count($alreadyBelongTeamEmails));
+                                          count($alreadyBelongTeamEmails));
         }
 
         if (empty($sentEmails)) {
@@ -529,7 +529,8 @@ class TeamsController extends AppController
                 $result['title'] = __("Error in extension data.");
             }
             else {
-                $result['title'] = __("Error in column %s (Column number included in text)", $save_res['error_line_no']);
+                $result['title'] = __("Error in column %s (Column number included in text)",
+                                      $save_res['error_line_no']);
             }
         }
         else {
@@ -563,7 +564,8 @@ class TeamsController extends AppController
                 $result['title'] = __("Error occurred.");
             }
             else {
-                $result['title'] = __("Error in the column %s (Column number included in text).", $save_res['error_line_no']);
+                $result['title'] = __("Error in the column %s (Column number included in text).",
+                                      $save_res['error_line_no']);
             }
         }
         else {
@@ -625,7 +627,8 @@ class TeamsController extends AppController
                 $result['title'] = __("Error in extension data.");
             }
             else {
-                $result['title'] = __("Error in the column %s (Column number included in text)", $save_res['error_line_no']);
+                $result['title'] = __("Error in the column %s (Column number included in text)",
+                                      $save_res['error_line_no']);
             }
         }
         else {
