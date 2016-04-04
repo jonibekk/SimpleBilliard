@@ -1,9 +1,37 @@
 /**
  * setup_guide.less
  */
+
+.setup-container {
+  overflow: hidden;
+}
+
+.setup-status {
+  overflow: hidden;
+  position: relative;
+  height: 60px;
+}
+
+.setup-status-wrapper-progress {
+  position: relative;
+  height: 100%;
+}
+
+.setup-status-progress {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  margin-bottom: 0!important;
+}
+
+.setup-status-number {
+  font-size: 50px;
+  color: @serviceColor;
+  font-weight: 400;
+}
+
 .setup-items {
   margin-bottom: 20px;
-  overflow: hidden;
 }
 
 .setup-items-item {
@@ -11,8 +39,9 @@
   padding: 9px;
   background-color: #fff;
   border: 2px solid @subColor4;
-  display: table-cell;
-	vertical-align: middle;
+  display: block;
+  width: 100%!important;
+  overflow: hidden;
 }
 
 .setup-items-item-radius-number {
