@@ -24,6 +24,9 @@ class AppHelper extends UrlCacheAppHelper
         if(viaIsSet($this->request->params['controller']) === 'posts' && viaIsSet($this->request->params['action']) === 'message') {
             return false;
         }
+        if(viaIsSet($this->request->params['controller']) === 'setup') {
+            return false;
+        }
         return true;
     }
 }
