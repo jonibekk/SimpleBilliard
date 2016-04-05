@@ -6,7 +6,7 @@
         <?= __("Set up Goalous") ?>
       </div>
       <div class="setup-status">
-        <div class="setup-status-wrapper-progress col col-sm-10 col-xs-8">
+        <div class="setup-status-wrapper-progress col col-sm-9 col-xs-8">
           <div class="setup-status-progress progress">
             <div class="progress-bar progress-bar-info" role="progressbar"
                  aria-valuenow="50" aria-valuemin="0"
@@ -15,10 +15,11 @@
             </div>
           </div>
         </div>
-        <div class="setup-status-number col col-sm-2 col-xs-4 text-right font_bold">
-          4
+        <div class="setup-status-number col col-sm-3 col-xs-4 text-right font_bold">
+          <div class="setup-status-number-elem">4</div>
         </div>
       </div>
+      <div class="setup-status-footer text-right font_18px"><?= __("STEPS LEFT") ?></div>
 
       <!-- Setup guide items -->
       <div class="setup-items">
