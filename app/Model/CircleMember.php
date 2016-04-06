@@ -618,4 +618,13 @@ class CircleMember extends AppModel
         }
         return $count_list;
     }
+
+    function isJoinedForSetupBy($user_id) {
+        return (bool)$this->find('first', [
+            'conditions' => [
+                'user_id' => $user_id
+            ],
+            'fields' => ['CircleMember.id']
+        ]);
+    }
 }
