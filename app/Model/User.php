@@ -286,6 +286,7 @@ class User extends AppModel
         'Collaborator',
         'Evaluator',
         'RecoveryCode',
+        'Device'
     ];
 
     /**
@@ -1350,6 +1351,18 @@ class User extends AppModel
             ]
         ]);
         return viaIsSet($res['User']['photo_file_name']) && viaIsSet($res['TeamMember'][0]['comment']);
+    }
+
+    function isInstalledMobileApp()
+    {
+        return (bool)$this->Device->find('first', [
+            'conditions' => [
+                'Device.user_id' => $this->my_uid
+            ],
+            'fields'     => [
+                'Device.id'
+            ]
+        ]);
     }
 
 }

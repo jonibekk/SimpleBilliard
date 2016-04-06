@@ -31,6 +31,7 @@ class UserTest extends GoalousTestCase
         'app.post',
         'app.notify_setting',
         'app.member_group',
+        'app.device',
     );
 
     public $basicUserDefault = [
@@ -1028,6 +1029,20 @@ class UserTest extends GoalousTestCase
         $this->User->save(['id' => 1, 'photo_file_name' => null]);
         $this->User->TeamMember->save(['id' => 1, 'team_id' => 1, 'user_id' => 1, 'comment' => null]);
         $res = $this->User->isCompletedProfileForSetup();
+        $this->assertFalse($res);
+    }
+
+    function testIsInstalledMobileApp()
+    {
+        $this->User->my_uid = 1;
+        // In case that mobile app is installed
+        $this->User->Device->save(['user_id' => $this->User->my_uid, 'device_token' => 1, 'os_type' => 1]);
+        $res = $this->User->isInstalledMobileApp($this->User->my_uid);
+        $this->assertTrue($res);
+
+        // In case that mobile app is not installed
+        $this->User->Device->deleteAll(['user_id' => $this->User->my_uid]);
+        $res = $this->User->isInstalledMobileApp($this->User->my_uid);
         $this->assertFalse($res);
     }
 
