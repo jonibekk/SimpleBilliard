@@ -1986,4 +1986,23 @@ class Post extends AppModel
         }
         return $this->find('all', $options);
     }
+
+    public function isPostedCircleForSetupBy($user_id) {
+      $res = $this->find('first', [
+          'conditions' => [
+              'Post.user_id' => $user_id,
+              'Post.created >=' => $this->Team->EvaluateTerm->getPreviousTermData()['start_date'],
+              'Post.created <=' => $this->Team->EvaluateTerm->getCurrentTermData()['end_date'],
+          ],
+          'fields'     => ['Post.id'],
+          'contain'    => [
+              'PostShareCircle' => [
+                  'fields'     => [
+                      'PostShareCircle.id'
+                  ]
+              ]
+          ]
+      ]);
+      return (bool)viaIsSet($res['PostShareCircle'][0]['id']);
+    }
 }
