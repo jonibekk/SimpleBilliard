@@ -1325,4 +1325,31 @@ class User extends AppModel
         return $res;
     }
 
+    /**
+     * check registered profile for setup-guide
+     *
+     * @return boolean isCompleted
+     */
+    function isCompletedProfileForSetup()
+    {
+        $res = $this->find('first', [
+            'conditions' => [
+                'User.id' => $this->my_uid
+            ],
+            'fields'     => ['User.id', 'User.photo_file_name'],
+            'contain'    => [
+                'TeamMember' => [
+                    'conditions' => [
+                        'TeamMember.user_id' => $this->my_uid,
+                        'TeamMember.team_id' => $this->current_team_id
+                    ],
+                    'fields'     => [
+                        'TeamMember.id', 'TeamMember.comment'
+                    ]
+                ]
+            ]
+        ]);
+        return viaIsSet($res['User']['photo_file_name']) && viaIsSet($res['TeamMember'][0]['comment']);
+    }
+
 }
