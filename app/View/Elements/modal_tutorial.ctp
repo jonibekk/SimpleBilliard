@@ -15,19 +15,6 @@
             <div class="modal-body modal-close-base tutorial-body">
                 <div id="modalTutorialBox" class="tutorial-box1 col-xxs-12">
                 </div>
-                <button type="button" class="close font_33px close-design modal-close-wrap" data-dismiss="modal"
-                        aria-hidden="true">
-                    <i class="fa fa-close modal-close-icon"></i>
-                </button>
-                <a href="#" id="modalTutorialPrev" class="modalTutorial-btnPrev no-line">
-                    <i class="fa fa-angle-left font_72px modalTutorial-btnIcon"></i>
-                </a>
-<!--                <a href="#" id="modalTutorialNext" class="modalTutorial-btnNext no-line">-->
-<!--                    <i class="fa fa-angle-right font_72px modalTutorial-btnIcon"></i>-->
-<!--                </a>-->
-                <a href="#" id="modalTutorialGo" class="modalTutorial-btnGo no-line" data-dismiss="modal">
-                    <span class="font_33px modalTutorial-btnIcon">Go</span>
-                </a>
             </div>
             <div class="modal-footer setup-tutorial-modal-footer">
                 <div class="col-xxs-12 text-align_l setup-tutorial-texts">
@@ -54,12 +41,22 @@
                     <span class="setup-tutorial-navigation-skip" data-dismiss="modal" aria-hidden="true">
                         SKIP
                     </span>
-                    <span class ="setup-tutorial-navigation-indicator">
-                        ●●●
+                    <span class="setup-tutorial-navigation-indicator">
+                        <span id="tutorialIndicator1">
+                        ●
+                        </span>
+                        <span id="tutorialIndicator2">
+                        ●
+                        </span>
+                        <span id="tutorialIndicator3">
+                        ●
+                        </span>
                     </span>
                     <span class="setup-tutorial-navigation-next" id="modalTutorialNext">
                         →
-
+                    </span>
+                    <span class="setup-tutorial-navigation-next" id="modalTutorialFinish" data-dismiss="modal" aria-hidden="true">
+                        →
                     </span>
                 </div>
             </div>
