@@ -1696,10 +1696,9 @@ $(function () {
             else if (tutorialNum == 3) {
                 $("#modalTutorialBox").addClass("tutorial-box4").removeClass("tutorial-box3");
                 $("#tutorialText3").hide();
-                $("#tutorialText4").show();
                 $(this).hide();
-                $("#modalTutorialGo").show();
                 tutorialNum++;
+                location.href = "/setup/";
             }
         }
     );
