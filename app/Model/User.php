@@ -49,6 +49,13 @@ class User extends AppModel
         self::$TYPE_GENDER[self::TYPE_GENDER_NEITHER] = __("Neither");
     }
 
+    const SETUP_PROFILE = 1;
+    const SETUP_MOBILE_APP = 2;
+    const SETUP_GOAL_CREATED = 3;
+    const SETUP_ACTION_POSTED = 4;
+    const SETUP_CIRCLE_JOINED_OR_CREATED = 5;
+    const SETUP_CIRCLE_POSTED = 6;
+
     public $actsAs = [
         'Upload' => [
             'photo' => [
@@ -1363,6 +1370,17 @@ class User extends AppModel
                 'Device.id'
             ]
         ]);
+    }
+
+    function generateSetupStatusDict() {
+        return [
+            self::SETUP_PROFILE => $this->isCompletedProfileForSetup(),
+            self::SETUP_MOBILE_APP => $this->isInstalledMobileApp(),
+            self::SETUP_GOAL_CREATED => $this->Goal->isCreatedForSetupBy($this->my_uid),
+            self::SETUP_ACTION_POSTED => $this->Goal->ActionResult->isPostedActionForSetupBy(),
+            self::SETUP_CIRCLE_JOINED_OR_CREATED => $this->CircleMember->isJoinedForSetupBy(),
+            self::SETUP_CIRCLE_POSTED => $this->Post->isPostedCircleForSetupBy(),
+        ];
     }
 
 }
