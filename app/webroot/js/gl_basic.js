@@ -3037,7 +3037,6 @@ function evNotifications(options) {
 }
 
 function evSetup(options){
-    console.log("setup called.");
     location.href = "/setup/";
 }
 
