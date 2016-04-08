@@ -56,6 +56,9 @@ class User extends AppModel
     const SETUP_CIRCLE_JOINED_OR_CREATED = 5;
     const SETUP_CIRCLE_POSTED = 6;
 
+    const SETUP_GUIDE_IS_NOT_COMPLETED = 0;
+    const SETUP_GUIDE_IS_COMPLETED = 1;
+
     public $actsAs = [
         'Upload' => [
             'photo' => [
@@ -1338,17 +1341,17 @@ class User extends AppModel
      *
      * @return boolean isCompleted
      */
-    function isCompletedProfileForSetup()
+    function isCompletedProfileForSetup($user_id)
     {
         $res = $this->find('first', [
             'conditions' => [
-                'User.id' => $this->my_uid
+                'User.id' => $user_id
             ],
             'fields'     => ['User.id', 'User.photo_file_name'],
             'contain'    => [
                 'TeamMember' => [
                     'conditions' => [
-                        'TeamMember.user_id' => $this->my_uid,
+                        'TeamMember.user_id' => $user_id,
                         'TeamMember.team_id' => $this->current_team_id
                     ],
                     'fields'     => [
@@ -1360,11 +1363,11 @@ class User extends AppModel
         return viaIsSet($res['User']['photo_file_name']) && viaIsSet($res['TeamMember'][0]['comment']);
     }
 
-    function isInstalledMobileApp()
+    function isInstalledMobileApp($user_id)
     {
         return (bool)$this->Device->find('first', [
             'conditions' => [
-                'Device.user_id' => $this->my_uid
+                'Device.user_id' => $user_id
             ],
             'fields'     => [
                 'Device.id'
@@ -1372,14 +1375,14 @@ class User extends AppModel
         ]);
     }
 
-    function generateSetupStatusDict() {
+    function generateSetupGuideStatusDict($user_id) {
         return [
-            self::SETUP_PROFILE => $this->isCompletedProfileForSetup(),
-            self::SETUP_MOBILE_APP => $this->isInstalledMobileApp(),
-            self::SETUP_GOAL_CREATED => $this->Goal->isCreatedForSetupBy($this->my_uid),
-            self::SETUP_ACTION_POSTED => $this->Goal->ActionResult->isPostedActionForSetupBy(),
-            self::SETUP_CIRCLE_JOINED_OR_CREATED => $this->CircleMember->isJoinedForSetupBy(),
-            self::SETUP_CIRCLE_POSTED => $this->Post->isPostedCircleForSetupBy(),
+            self::SETUP_PROFILE => $this->isCompletedProfileForSetup($user_id),
+            self::SETUP_MOBILE_APP => $this->isInstalledMobileApp($user_id),
+            self::SETUP_GOAL_CREATED => $this->Goal->isCreatedForSetupBy($user_id),
+            self::SETUP_ACTION_POSTED => $this->Goal->ActionResult->isPostedActionForSetupBy($user_id),
+            self::SETUP_CIRCLE_JOINED_OR_CREATED => $this->CircleMember->isJoinedForSetupBy($user_id),
+            self::SETUP_CIRCLE_POSTED => $this->Post->isPostedCircleForSetupBy($user_id),
         ];
     }
 

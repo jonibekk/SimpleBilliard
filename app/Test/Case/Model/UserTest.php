@@ -1022,13 +1022,13 @@ class UserTest extends GoalousTestCase
         // In case that profile register is complete
         $this->User->save(['id' => 1, 'photo_file_name' => 'photo_file_name.png']);
         $this->User->TeamMember->save(['id' => 1, 'team_id' => 1, 'user_id' => 1, 'comment' => 'This is amazing comment']);
-        $res = $this->User->isCompletedProfileForSetup();
+        $res = $this->User->isCompletedProfileForSetup($this->User->my_uid);
         $this->assertTrue($res);
 
         // In case that profile register is incomplete
         $this->User->save(['id' => 1, 'photo_file_name' => null]);
         $this->User->TeamMember->save(['id' => 1, 'team_id' => 1, 'user_id' => 1, 'comment' => null]);
-        $res = $this->User->isCompletedProfileForSetup();
+        $res = $this->User->isCompletedProfileForSetup($this->User->my_uid);
         $this->assertFalse($res);
     }
 

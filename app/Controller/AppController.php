@@ -252,10 +252,10 @@ class AppController extends Controller
                 $this->_setUnApprovedCnt($login_uid);
                 $this->_setEvaluableCnt();
                 $this->_setNotifyCnt();
+                $this->_setSetupGuideStatus();
                 $this->_setMyCircle();
                 $this->_setActionCnt();
                 $this->_setBrowserToSession();
-
             }
             $this->set('current_term', $this->Team->EvaluateTerm->getCurrentTermData());
             $this->_setMyMemberStatus();
@@ -860,6 +860,25 @@ class AppController extends Controller
         }
         $this->response->type('application/octet-stream');
 
+    }
+
+    function _setSetupGuideStatus() {
+        $setup_status = $this->Auth->user('setup_complete_flg');
+        if($setup_status == User::SETUP_GUIDE_IS_COMPLETED) {
+            $this->set('setup_status', null);
+            $this->set('setup_rest_count', 0);
+            return;
+        }
+
+        $status_from_redis = $this->GlRedis->getSetupGuideStatus($this->Auth->user('id'));
+        if(!$status_from_redis) {
+            $status_from_mysql = $this->User->generateSetupGuideStatusDict($this->Auth->user('id'));
+            $this->GlRedis->saveSetupGuideStatus($this->Auth->user('id'), $status_from_mysql);
+            $status_from_redis = $status_from_mysql;
+        }
+        $this->set('setup_status', $status_from_redis);
+        $this->set('setup_rest_count', count(array_filter($status_from_redis)));
+        return;
     }
 
 }
