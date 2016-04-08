@@ -48,6 +48,7 @@ class GlRedis extends AppModel
     const KEY_TYPE_CIRCLE_INSIGHT = 'circle_insight';
     const KEY_TYPE_TEAM_RANKING = 'team_ranking';
     const KEY_TYPE_GROUP_RANKING = 'group_ranking';
+    const KEY_TYPE_SETUP_GUIDE_STATUS = 'setup_guide_status';
 
     const FIELD_COUNT_NEW_NOTIFY = 'new_notify';
 
@@ -69,6 +70,7 @@ class GlRedis extends AppModel
         self::KEY_TYPE_CIRCLE_INSIGHT,
         self::KEY_TYPE_TEAM_RANKING,
         self::KEY_TYPE_GROUP_RANKING,
+        self::KEY_TYPE_SETUP_GUIDE_STATUS
     ];
 
     /**
@@ -275,6 +277,16 @@ class GlRedis extends AppModel
         'timezone'      => null,
         'group'         => null,
         'group_ranking' => null,
+    ];
+
+    /**
+     * Key Name: user:[user_id]
+     *
+     * @var array
+     */
+    private /** @noinspection PhpUnusedPrivateFieldInspection */
+        $setup_guide_status = [
+        'user' => null,
     ];
 
     public function changeDbSource($config_name = "redis_test")
@@ -1012,7 +1024,6 @@ class GlRedis extends AppModel
                                  $timezone, $start_date, $end_date, $group_id);
         $this->Db->set($key, json_encode($insight));
         return $this->Db->setTimeout($key, $expire);
-
     }
 
     /**
@@ -1071,7 +1082,6 @@ class GlRedis extends AppModel
                                                         null, null, null, null, null, null, null,
                                                         $timezone, $start_date, $end_date));
         return json_decode($insight_str, true);
-
     }
 
     /**
@@ -1157,5 +1167,14 @@ class GlRedis extends AppModel
                                                          $timezone, $start_date, $end_date, $group_id), $type);
         return json_decode($ranking_str, true);
     }
-}
 
+    function saveSetupGuideStatus($user_id, $status, $expire = WEEK) {
+        $this->Db->set($key = $this->getKeyName(self::KEY_TYPE_SETUP_GUIDE_STATUS, null, $user_id), json_encode($status));
+        return $this->Db->setTimeout($key, $expire);
+    }
+
+    function getSetupGuideStatus($user_id) {
+        $setup_guide_status = $this->Db->get($this->getKeyName(self::KEY_TYPE_SETUP_GUIDE_STATUS, null, $user_id));
+        return json_decode($setup_guide_status, true);
+    }
+}
