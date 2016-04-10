@@ -53,21 +53,21 @@ class Evaluation extends AppModel
             ]
         ],
         'comment'           => [
-            'isString'   => [
-                'rule' => ['isString'],
+            'isString'  => [
+                'rule'       => ['isString'],
                 'allowEmpty' => true,
             ],
             'maxLength' => ['rule' => ['maxLength', 5000]],
         ],
         'evaluate_score_id' => [
-            'numeric'  => [
-                'rule' => ['numeric'],
+            'numeric' => [
+                'rule'       => ['numeric'],
                 'allowEmpty' => true,
             ],
         ],
-        'evaluate_type' => [
-            'numeric'  => [
-                'rule' => ['numeric'],
+        'evaluate_type'     => [
+            'numeric' => [
+                'rule'       => ['numeric'],
                 'allowEmpty' => true,
             ],
         ],
@@ -222,9 +222,6 @@ class Evaluation extends AppModel
         $my_team_member_status = $this->Team->TeamMember->getWithTeam();
         if (!viaIsSet($my_team_member_status['TeamMember'])) {
             throw new RuntimeException(__("You don't have access right to this page."));
-        }
-        if (!$my_team_member_status['TeamMember']['evaluation_enable_flg']) {
-            throw new RuntimeException(__("Evaluation setting is turned off. Please ask your team administrator."));
         }
         return true;
     }
@@ -648,7 +645,7 @@ class Evaluation extends AppModel
             }
             //自己評価で被評価者が自分以外の場合は「メンバー」
             elseif ($val['evaluate_type'] == self::TYPE_ONESELF && $val['evaluatee_user_id'] != $this->my_uid) {
-                $name = __('Members') ;
+                $name = __('Members');
             }
             $flow[] = [
                 'name'      => $name,

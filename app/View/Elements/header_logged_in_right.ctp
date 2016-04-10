@@ -20,6 +20,13 @@
                                                                                                 'Home') ?></a>
     <?php endif; ?>
 
+    <a href="#" id="setup">
+    <i class="fa fa-book  header-icons header-dropdown-icon-add header-function-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>" id="setupIcon"></i>
+        <div class="btn btn-xs bell-notify-box notify-bell-numbers" id="setupNum" style="opacity: 0;">
+            <span>5</span>
+        </div>
+    </a>
+
     <div class="header-dropdown-add">
         <a href="#" data-toggle="dropdown" id="download" class="btn-addition-header">
             <i class="fa fa-plus-circle header-icons header-dropdown-icon-add <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"></i>

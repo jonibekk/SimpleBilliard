@@ -40,6 +40,9 @@ class PagesController extends AppController
             $page = $path[0];
         }
 
+        // Difine URL params for Google analytics.
+        $this->_setUrlParams();
+
         //title_for_layoutはAppControllerで設定
         $this->set(compact('page', 'subpage'));
 
@@ -249,5 +252,49 @@ class PagesController extends AppController
             ->send();
         $lang = $this->_getLangFromParam();
         return $this->redirect(['controller' => 'pages', 'action' => 'display', 'pagename' => 'contact_thanks', 'lang' => $lang,]);
+    }
+
+    public function _setUrlParams() {
+        $url_params = $this->params['url'];
+
+        if($this->Auth->user()) {
+            $parsed_referer_url = Router::parse($this->referer('/', true));
+            $request_status = viaIsSet($url_params['st']);
+            $status_from_referer = $this->_defineStatusFromReferer();
+            if($request_status !== $status_from_referer) {
+                return $this->redirect("/?st={$status_from_referer}");
+            }
+            $this->Session->delete('referer_status');
+            return true;
+        }
+
+        if($url_params) {
+            return $this->redirect('/');
+        }
+        return true;
+    }
+
+    public function _defineStatusFromReferer() {
+        switch ($this->Session->read('referer_status')) {
+            // New Registration(Not invite)
+            case REFERER_STATUS_SIGNUP:
+                return REFERER_STATUS_SIGNUP;
+
+            // Invitation(exist goalous account)
+            case REFERER_STATUS_INVITATION_EXIST:
+                return REFERER_STATUS_INVITATION_EXIST;
+
+            // Invitation(not exist goalous account)
+            case REFERER_STATUS_INVITATION_NOT_EXIST:
+                return REFERER_STATUS_INVITATION_NOT_EXIST;
+
+            // Login
+            case REFERER_STATUS_LOGIN:
+                return REFERER_STATUS_LOGIN;
+
+            // Others
+            default:
+                return REFERER_STATUS_DEFAULT;
+        }
     }
 }

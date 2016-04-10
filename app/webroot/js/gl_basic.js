@@ -352,6 +352,7 @@ $(document).ready(function () {
     $(document).on("click", ".toggle-ajax-get", evToggleAjaxGet);
     $(document).on("click", ".ajax-get", evAjaxGetElmWithIndex);
     $(document).on("click", ".click-target-remove", evTargetRemove);
+    $(document).on("click", "#setupIcon", evSetup);
     //dynamic modal
     $(document).on("click", '.modal-ajax-get', function (e) {
         e.preventDefault();
@@ -1676,69 +1677,41 @@ function ajaxAppendCount(id, url) {
 
 $(function () {
     var tutorialNum = 1;
-    if (tutorialNum == 1) {
-        $("#modalTutorialPrev").hide();
-    }
-    $("#modalTutorialNext").on("click", function () {
-            if (tutorialNum == 1) {
-                $("#modalTutorialBox").addClass("tutorial-box2").removeClass("tutorial-box1");
-                $("#tutorialText1").hide();
-                $("#tutorialText2").show();
-                tutorialNum++;
-                $("#modalTutorialPrev").show();
-            }
-            else if (tutorialNum == 2) {
-                $("#modalTutorialBox").addClass("tutorial-box3").removeClass("tutorial-box2");
-                $("#tutorialText2").hide();
-                $("#tutorialText3").show();
-                tutorialNum++;
-            }
-            else if (tutorialNum == 3) {
-                $("#modalTutorialBox").addClass("tutorial-box4").removeClass("tutorial-box3");
-                $("#tutorialText3").hide();
-                $("#tutorialText4").show();
-                $(this).hide();
-                $("#modalTutorialGo").show();
-                tutorialNum++;
-            }
-        }
-    );
-    $("#modalTutorialPrev").on("click", function () {
-            if (tutorialNum == 2) {
-                $("#modalTutorialBox").addClass("tutorial-box1").removeClass("tutorial-box2");
-                $("#tutorialText2").hide();
-                $("#tutorialText1").show();
-                tutorialNum--;
-                $("#modalTutorialPrev").hide();
-            }
-            else if (tutorialNum == 3) {
-                $("#modalTutorialBox").addClass("tutorial-box2").removeClass("tutorial-box3");
-                $("#tutorialText3").hide();
-                $("#tutorialText2").show();
-                tutorialNum--;
-            }
-            else {
-                $("#modalTutorialBox").addClass("tutorial-box3").removeClass("tutorial-box4");
-                $("#tutorialText4").hide();
-                $("#tutorialText3").show();
-                $("#modalTutorialNext").show();
-                $("#modalTutorialGo").hide();
-                tutorialNum--;
-            }
-        }
-    );
-    $("#modalTutorialGo").on("click", function () {
-            $(this).fadeOut(function () {
-                $("#modalTutorialBox").addClass("tutorial-box1").removeClass("tutorial-box4");
-                $("#tutorialText4").hide();
-                $("#tutorialText1").show();
-                $("#modalTutorialNext").show();
-                $("#modalTutorialPrev").hide();
-            });
-            tutorialNum = 1;
-        }
-    );
+    $("#modalTutorialPrev").hide();
+    $("#tutorialText2").hide();
+    $("#modalTutorialFinish").hide();
+    $("#tutorialIndicator1").addClass("setup-tutorial-navigation-indicator-selected");
 
+    $("#modalTutorialNext").on("click", function () {
+        if (tutorialNum == 1) {
+            $("#modalTutorialBox").addClass("tutorial-box2").removeClass("tutorial-box1");
+            $("#tutorialText1").hide();
+            $("#tutorialText2").show();
+            tutorialNum++;
+            $("#tutorialIndicator1").removeClass("setup-tutorial-navigation-indicator-selected");
+            $("#tutorialIndicator2").addClass("setup-tutorial-navigation-indicator-selected");
+        }
+        else if (tutorialNum == 2) {
+            $("#modalTutorialBox").addClass("tutorial-box3").removeClass("tutorial-box2");
+            $("#tutorialText2").hide();
+            $("#tutorialText3").show();
+            $("#modalTutorialNext").hide();
+            $("#modalTutorialFinish").show();
+            tutorialNum++;
+            $("#tutorialIndicator2").removeClass("setup-tutorial-navigation-indicator-selected");
+            $("#tutorialIndicator3").addClass("setup-tutorial-navigation-indicator-selected");
+        }
+    });
+    $("#modalTutorialFinish").on("click", function () {
+        $("#modalTutorialBox").addClass("tutorial-box1").removeClass("tutorial-box3");
+        $("#tutorialText3").hide();
+        $("#modalTutorialNext").show();
+        $("#modalTutorialFinish").hide();
+        tutorialNum = 1;
+        location.href = "/setup/";
+        $("#tutorialIndicator3").removeClass("setup-tutorial-navigation-indicator-selected");
+        $("#tutorialIndicator1").addClass("setup-tutorial-navigation-indicator-selected");
+    });
 });
 
 //入力途中での警告表示
@@ -3061,6 +3034,10 @@ function evNotifications(options) {
         },
     });
     return false;
+}
+
+function evSetup(options){
+    location.href = "/setup/";
 }
 
 // 通知から投稿、メッセージに移動
