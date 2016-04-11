@@ -412,4 +412,21 @@ class GlRedisTest extends GoalousTestCase
         $this->assertEquals($save_hash_status, $res);
     }
 
+    function testDeleteSetupGuideStatus()
+    {
+        $this->GlRedis->saveSetupGuideStatus(
+            $user_id = 1,
+            $save_hash_status = [
+                1 => 1,
+                2 => 1,
+                3 => 1,
+                4 => 1,
+                5 => 0,
+                6 => 1,
+            ]
+        );
+        $this->GlRedis->deleteSetupGuideStatus($user_id);
+        $this->assertFalse((bool)$this->GlRedis->getSetupGuideStatus($user_id));
+    }
+
 }

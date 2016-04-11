@@ -1168,13 +1168,38 @@ class GlRedis extends AppModel
         return json_decode($ranking_str, true);
     }
 
+    /**
+     * Save Setup guide complete status
+     * @param  $user_id
+     * @param  $status
+     * @param  $expire
+     *
+     * @return bool
+     */
     function saveSetupGuideStatus($user_id, $status, $expire = WEEK) {
         $this->Db->set($key = $this->getKeyName(self::KEY_TYPE_SETUP_GUIDE_STATUS, null, $user_id), json_encode($status));
         return $this->Db->setTimeout($key, $expire);
     }
 
+    /**
+     * Get Setup guide complete status
+     * @param  $user_id
+     *
+     * @return mixed
+     */
     function getSetupGuideStatus($user_id) {
         $setup_guide_status = $this->Db->get($this->getKeyName(self::KEY_TYPE_SETUP_GUIDE_STATUS, null, $user_id));
         return json_decode($setup_guide_status, true);
+    }
+
+    /**
+     * Delete setup guide complete status
+     * @param  $user_id
+     *
+     * @return bool
+     */
+    function deleteSetupGuideStatus($user_id)
+    {
+        return $this->Db->del($this->getKeyName(self::KEY_TYPE_SETUP_GUIDE_STATUS, null, $user_id));
     }
 }
