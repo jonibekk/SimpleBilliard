@@ -881,7 +881,7 @@ class AppController extends Controller
         return;
     }
 
-    function updateSetupStatus() {
+    function updateSetupStatusIfNotCompleted() {
         $setup_guide_is_completed = $this->Auth->user('setup_complete_flg');
         if($setup_guide_is_completed) return true;
 

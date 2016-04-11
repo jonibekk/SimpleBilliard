@@ -1991,6 +1991,7 @@ class Post extends AppModel
       $res = $this->find('first', [
           'conditions' => [
               'Post.user_id' => $user_id,
+              'Post.type' => self::TYPE_NORMAL,
               'Post.created >=' => $this->Team->EvaluateTerm->getPreviousTermData()['start_date'],
               'Post.created <=' => $this->Team->EvaluateTerm->getCurrentTermData()['end_date'],
           ],
