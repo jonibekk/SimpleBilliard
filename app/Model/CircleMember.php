@@ -620,11 +620,15 @@ class CircleMember extends AppModel
     }
 
     function isJoinedForSetupBy($user_id) {
-        return (bool)$this->find('first', [
+        $join_circle_count = $this->find('count', [
             'conditions' => [
                 'user_id' => $user_id
             ],
             'fields' => ['CircleMember.id']
         ]);
+        // 全ユーザーはチーム参加時にチーム全体サークルに強制的に加入するため、
+        // セットアップガイドにおけるサークル作成/参加判定においては、
+        // 2つ以上のサークルに所属しているかどうかを見る。
+        return $join_circle_count >= 2;
     }
 }
