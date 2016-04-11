@@ -49,12 +49,23 @@ class User extends AppModel
         self::$TYPE_GENDER[self::TYPE_GENDER_NEITHER] = __("Neither");
     }
 
+    /**
+     * STATUS_TYPE_OF_SETUP_GUIDE
+     */
     const SETUP_PROFILE = 1;
     const SETUP_MOBILE_APP = 2;
     const SETUP_GOAL_CREATED = 3;
     const SETUP_ACTION_POSTED = 4;
     const SETUP_CIRCLE_JOINED_OR_CREATED = 5;
     const SETUP_CIRCLE_POSTED = 6;
+    static public $TYPE_SETUP_GUIDE = [
+        self::SETUP_PROFILE => "",
+        self::SETUP_MOBILE_APP => "",
+        self::SETUP_GOAL_CREATED => "",
+        self::SETUP_ACTION_POSTED => "",
+        self::SETUP_CIRCLE_JOINED_OR_CREATED => "",
+        self::SETUP_CIRCLE_POSTED => ""
+    ];
 
     const SETUP_GUIDE_IS_NOT_COMPLETED = 0;
     const SETUP_GUIDE_IS_COMPLETED = 1;
@@ -1384,6 +1395,11 @@ class User extends AppModel
             self::SETUP_CIRCLE_JOINED_OR_CREATED => $this->CircleMember->isJoinedForSetupBy($user_id),
             self::SETUP_CIRCLE_POSTED => $this->Post->isPostedCircleForSetupBy($user_id),
         ];
+    }
+
+    function completeSetupGuide($user_id) {
+        $this->id = $user_id;
+        return $this->saveField('setup_complete_flg', self::SETUP_GUIDE_IS_COMPLETED);
     }
 
 }

@@ -881,4 +881,19 @@ class AppController extends Controller
         return;
     }
 
+    function updateSetupStatus() {
+        $setup_guide_is_completed = $this->Auth->user('setup_complete_flg');
+        if($setup_guide_is_completed) return true;
+
+        $user_id = $this->Auth->user('id');
+        $this->GlRedis->deleteSetupGuideStatus($user_id);
+        $status_from_mysql = $this->User->generateSetupGuideStatusDict($user_id);
+        if(count(array_filter($status_from_mysql)) === count(User::$TYPE_SETUP_GUIDE)) {
+            $this->User->completeSetupGuide($user_id);
+            return true;
+        }
+        $this->GlRedis->saveSetupGuideStatus($user_id, $status_from_mysql);
+        return true;
+    }
+
 }
