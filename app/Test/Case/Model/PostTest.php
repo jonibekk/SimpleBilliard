@@ -1187,39 +1187,40 @@ class PostTest extends GoalousTestCase
         $this->assertNotEmpty($this->Post->getConditionAllGoalPostId([1]));
     }
 
-    function testIsPostedCircleForSetupBy() {
+    function testIsPostedCircleForSetupBy()
+    {
         $this->_setDefault();
         $this->_setTerm();
 
         // In case that user posted circle post
         $this->Post->save([
-            'id'       => 1,
-            'body'     => 'test',
-            'team_id'  => $this->Post->current_team_id,
-            'user_id'  => 1,
-            'type'     => Post::TYPE_NORMAL,
-            'created' => $this->start_date,
-        ]);
+                              'id'      => 1,
+                              'body'    => 'test',
+                              'team_id' => $this->Post->current_team_id,
+                              'user_id' => 1,
+                              'type'    => Post::TYPE_NORMAL,
+                              'created' => $this->start_date,
+                          ]);
         $this->Post->PostShareCircle->save([
-            'id'       => 1,
-            'post_id' => 1,
-            'circle_id' => 1,
-            'team_id' => 1,
-            'created' => $this->start_date,
-        ]);
+                                               'id'        => 1,
+                                               'post_id'   => 1,
+                                               'circle_id' => 1,
+                                               'team_id'   => 1,
+                                               'created'   => $this->start_date,
+                                           ]);
         $res = $this->Post->isPostedCircleForSetupBy($this->Post->my_uid);
         $this->assertTrue($res);
 
         // In case that user posted notithing
         $this->Post->deleteAll([
-            'Post.user_id' => $this->Post->my_uid,
-            'Post.created >=' => $this->Post->Team->EvaluateTerm->getPreviousTermData()['start_date'],
-            'Post.created <=' => $this->end_date
-        ]);
+                                   'Post.user_id'    => $this->Post->my_uid,
+                                   'Post.created >=' => $this->Post->Team->EvaluateTerm->getPreviousTermData()['start_date'],
+                                   'Post.created <=' => $this->end_date
+                               ]);
         $this->Post->PostShareCircle->deleteAll([
-            'PostShareCircle.created >=' => $this->Post->Team->EvaluateTerm->getPreviousTermData()['start_date'],
-            'PostShareCircle.created <=' => $this->end_date
-        ]);
+                                                    'PostShareCircle.created >=' => $this->Post->Team->EvaluateTerm->getPreviousTermData()['start_date'],
+                                                    'PostShareCircle.created <=' => $this->end_date
+                                                ]);
         $res = $this->Post->isPostedCircleForSetupBy($this->Post->my_uid);
         $this->assertFalse($res);
     }
@@ -1254,7 +1255,8 @@ class PostTest extends GoalousTestCase
         $this->Post->Team->EvaluateTerm->my_uid = $uid;
     }
 
-    function _setTerm() {
+    function _setTerm()
+    {
         $this->Post->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $this->Post->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
         $this->Post->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
