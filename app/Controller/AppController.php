@@ -877,7 +877,7 @@ class AppController extends Controller
             $status_from_redis = $status_from_mysql;
         }
         $this->set('setup_status', $status_from_redis);
-        $this->set('setup_rest_count', count(array_filter($status_from_redis)));
+        $this->set('setup_rest_count', count(User::$TYPE_SETUP_GUIDE) - count(array_filter($status_from_redis)));
         return;
     }
 
