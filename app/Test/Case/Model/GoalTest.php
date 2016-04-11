@@ -959,4 +959,53 @@ class GoalTest extends GoalousTestCase
         $res = $this->Goal->getCollaboModalItem(1);
         $this->assertNotEmpty($res);
     }
+
+    function testIsCreatedsForSetupBy()
+    {
+        $this->setDefault();
+
+        // In case that goal is created in current term or previous term
+        $this->Goal->save([
+                              'user_id'    => $this->Goal->my_uid,
+                              'team_id'    => $this->Goal->current_team_id,
+                              'start_date' => $this->start_date,
+                              'end_date'   => $this->end_date,
+                          ]);
+        $res = $this->Goal->isCreatedForSetupBy($this->Goal->my_uid);
+        $this->assertTrue($res);
+
+        // In case that goal is not created in current term or previous term
+        $this->Goal->deleteAll([
+                                   'Goal.user_id'       => $this->Goal->my_uid,
+                                   'Goal.team_id'       => $this->Goal->current_team_id,
+                                   'Goal.start_date >=' => $this->Goal->Team->EvaluateTerm->getPreviousTermData()['start_date'],
+                                   'Goal.end_date <='   => $this->end_date
+                               ]);
+        $res = $this->Goal->isCreatedForSetupBy($this->Goal->my_uid);
+        $this->assertFalse($res);
+    }
+
+    function testIsPostedActionForSetupBy()
+    {
+        $this->setDefault();
+
+        // In case that action is posted in current term or previous term
+        $this->Goal->ActionResult->save([
+                                            'user_id' => $this->Goal->my_uid,
+                                            'team_id' => $this->Goal->current_team_id,
+                                            'created' => $this->start_date,
+                                        ]);
+        $res = $this->Goal->ActionResult->isPostedActionForSetupBy($this->Goal->my_uid);
+        $this->assertTrue($res);
+
+        // In case that action is not posted in current term or previous term
+        $this->Goal->ActionResult->deleteAll([
+                                                 'ActionResult.user_id'    => $this->Goal->my_uid,
+                                                 'ActionResult.created >=' => $this->Goal->Team->EvaluateTerm->getPreviousTermData()['start_date'],
+                                                 'ActionResult.created <=' => $this->end_date
+                                             ]);
+        $res = $this->Goal->ActionResult->isPostedActionForSetupBy($this->Goal->my_uid);
+        $this->assertFalse($res);
+    }
+
 }

@@ -167,7 +167,7 @@ class AppController extends Controller
         $this->set('title_for_layout', $this->title_for_layout);
         //全ページ共通のdescriptionのmetaタグの内容をセット(書き換える場合はこの変数の値を変更の上、再度アクションメソッド側でsetする)
         $this->meta_description = __(
-                                      'Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. You can use Goalous on Web and on Mobile App.');
+            'Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. You can use Goalous on Web and on Mobile App.');
         $this->set('meta_description', $this->meta_description);
 
         $this->_setSecurity();
@@ -252,10 +252,10 @@ class AppController extends Controller
                 $this->_setUnApprovedCnt($login_uid);
                 $this->_setEvaluableCnt();
                 $this->_setNotifyCnt();
+                $this->_setSetupGuideStatus();
                 $this->_setMyCircle();
                 $this->_setActionCnt();
                 $this->_setBrowserToSession();
-
             }
             $this->set('current_term', $this->Team->EvaluateTerm->getCurrentTermData());
             $this->_setMyMemberStatus();
@@ -860,6 +860,44 @@ class AppController extends Controller
         }
         $this->response->type('application/octet-stream');
 
+    }
+
+    function _setSetupGuideStatus()
+    {
+        $setup_guide_is_completed = $this->Auth->user('setup_complete_flg');
+        if ($setup_guide_is_completed == User::SETUP_GUIDE_IS_COMPLETED) {
+            $this->set('setup_status', null);
+            $this->set('setup_rest_count', 0);
+            return;
+        }
+
+        $status_from_redis = $this->GlRedis->getSetupGuideStatus($this->Auth->user('id'));
+        if (!$status_from_redis) {
+            $status_from_mysql = $this->User->generateSetupGuideStatusDict($this->Auth->user('id'));
+            $this->GlRedis->saveSetupGuideStatus($this->Auth->user('id'), $status_from_mysql);
+            $status_from_redis = $status_from_mysql;
+        }
+        $this->set('setup_status', $status_from_redis);
+        $this->set('setup_rest_count', count(User::$TYPE_SETUP_GUIDE) - count(array_filter($status_from_redis)));
+        return;
+    }
+
+    function updateSetupStatusIfNotCompleted()
+    {
+        $setup_guide_is_completed = $this->Auth->user('setup_complete_flg');
+        if ($setup_guide_is_completed) {
+            return true;
+        }
+
+        $user_id = $this->Auth->user('id');
+        $this->GlRedis->deleteSetupGuideStatus($user_id);
+        $status_from_mysql = $this->User->generateSetupGuideStatusDict($user_id);
+        if (count(array_filter($status_from_mysql)) === count(User::$TYPE_SETUP_GUIDE)) {
+            $this->User->completeSetupGuide($user_id);
+            return true;
+        }
+        $this->GlRedis->saveSetupGuideStatus($user_id, $status_from_mysql);
+        return true;
     }
 
 }
