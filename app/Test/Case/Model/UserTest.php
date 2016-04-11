@@ -32,6 +32,10 @@ class UserTest extends GoalousTestCase
         'app.notify_setting',
         'app.member_group',
         'app.device',
+        'app.evaluate_term',
+        'app.goal',
+        'app.action_result',
+        'app.post_share_circle',
     );
 
     public $basicUserDefault = [
@@ -1044,6 +1048,33 @@ class UserTest extends GoalousTestCase
         $this->User->Device->deleteAll(['user_id' => $this->User->my_uid]);
         $res = $this->User->isInstalledMobileApp($this->User->my_uid);
         $this->assertFalse($res);
+    }
+
+    function testGenerateSetupGuideStatusDict()
+    {
+        $this->User->my_uid = 1;
+        $this->User->current_team_id = 1;
+        $this->User->me['language'] = "jpn";
+        $this->User->TeamMember->current_team_id = 1;
+        $this->User->TeamMember->my_uid = 1;
+        $this->User->TeamMember->Team->current_team_id = 1;
+        $this->User->TeamMember->Team->my_uid = 1;
+        $this->User->LocalName->my_uid = 1;
+        $this->User->LocalName->current_team_id = 1;
+        $this->User->TeamMember->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->User->TeamMember->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
+        $this->User->TeamMember->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
+        $this->current_date = strtotime('2015/7/1');
+        $this->start_date = strtotime('2015/7/1');
+        $this->end_date = strtotime('2015/10/1');
+        $this->User->generateSetupGuideStatusDict($this->User->my_uid);
+    }
+
+    function testCompleteSetupGuide()
+    {
+        $this->User->my_uid = 1;
+        $this->User->current_team_id = 1;
+        $this->User->completeSetupGuide($this->User->my_uid);
     }
 
 }
