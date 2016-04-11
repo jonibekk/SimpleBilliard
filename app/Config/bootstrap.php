@@ -207,6 +207,8 @@ define('REFERER_STATUS_SIGNUP', 'new');
 define('REFERER_STATUS_LOGIN', 'in');
 define('REFERER_STATUS_INVITATION_EXIST', 'inv_ex');
 define('REFERER_STATUS_INVITATION_NOT_EXIST', 'inv_no');
+//
+define('SETUP_GUIDE_EXIPIRE_SEC_BY_REDIS', 1209600); //2 weeks
 
 /**
  * 共通関数
