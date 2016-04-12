@@ -27,7 +27,7 @@ Page毎に要素が変わるもの
 $meta_law = [
     [
         "name" => "description",
-        "content" => __d('lp','Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。特定商取引法に基づく表記はこちら。'),
+        "content" => __('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。特定商取引法に基づく表記はこちら。'),
     ],
     [
         "name" => "keywords",
@@ -39,11 +39,11 @@ $meta_law = [
     ],
     [
         "property" => "og:title",
-        "content" => __d('lp', '特定商取引法に基づく表記 | Goalous(ゴーラス)'),
+        "content" => __('Inscription by Law | Goalous'),
     ],
     [
         "property" => "og:description",
-        "content" =>__d('lp', 'Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。特定商取引法に基づく表記はこちら。'),
+        "content" =>__('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。特定商取引法に基づく表記はこちら。'),
     ],
     [
         "property" => "og:url",
@@ -55,7 +55,7 @@ $meta_law = [
     ],
     [
         "property" => "og:site_name",
-        "content" => __d('lp', 'Goalous (ゴーラス) │ゴール達成への最強にオープンな社内SNS'),
+        "content" => __('Goalous │ Enterprise SNS the most ever open for Goal'),
     ],
     [
         "property" => "fb:app_id",
@@ -75,7 +75,7 @@ for($i = 0; $i < $num_ogp; $i++){
     echo $this->Html->meta($meta_law[$i]);
 }
 ?>
-<title><?= __d('lp', '特定商取引法に基づく表記 | Goalous (ゴーラス)') ?></title>
+<title><?= __('Inscription by Law | Goalous') ?></title>
 <link rel="alternate" hreflang="ja" href="<?= $this->Html->url('/ja/law') ?>"/>
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/law') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/law') ?>"/>

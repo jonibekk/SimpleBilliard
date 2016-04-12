@@ -53,21 +53,21 @@ class Evaluation extends AppModel
             ]
         ],
         'comment'           => [
-            'isString'   => [
-                'rule' => ['isString'],
+            'isString'  => [
+                'rule'       => ['isString'],
                 'allowEmpty' => true,
             ],
             'maxLength' => ['rule' => ['maxLength', 5000]],
         ],
         'evaluate_score_id' => [
-            'numeric'  => [
-                'rule' => ['numeric'],
+            'numeric' => [
+                'rule'       => ['numeric'],
                 'allowEmpty' => true,
             ],
         ],
-        'evaluate_type' => [
-            'numeric'  => [
-                'rule' => ['numeric'],
+        'evaluate_type'     => [
+            'numeric' => [
+                'rule'       => ['numeric'],
                 'allowEmpty' => true,
             ],
         ],
@@ -141,14 +141,14 @@ class Evaluation extends AppModel
      */
     private function _setTypeName()
     {
-        self::$TYPE[self::TYPE_ONESELF]['index'] = __d('app', "あなた");
-        self::$TYPE[self::TYPE_EVALUATOR]['index'] = __d('app', "評価者");
-        self::$TYPE[self::TYPE_FINAL_EVALUATOR]['index'] = __d('app', "最終者");
-        self::$TYPE[self::TYPE_LEADER]['index'] = __d('app', "リーダ");
-        self::$TYPE[self::TYPE_ONESELF]['view'] = __d('app', "本人");
-        self::$TYPE[self::TYPE_EVALUATOR]['view'] = __d('app', "評価者");
-        self::$TYPE[self::TYPE_FINAL_EVALUATOR]['view'] = __d('app', "最終評価者");
-        self::$TYPE[self::TYPE_LEADER]['view'] = __d('app', "リーダ");
+        self::$TYPE[self::TYPE_ONESELF]['index'] = __("You");
+        self::$TYPE[self::TYPE_EVALUATOR]['index'] = __("Evaluator");
+        self::$TYPE[self::TYPE_FINAL_EVALUATOR]['index'] = __("Final Evaluator");
+        self::$TYPE[self::TYPE_LEADER]['index'] = __("Leader");
+        self::$TYPE[self::TYPE_ONESELF]['view'] = __("You");
+        self::$TYPE[self::TYPE_EVALUATOR]['view'] = __("Evaluator");
+        self::$TYPE[self::TYPE_FINAL_EVALUATOR]['view'] = __("Final Evaluator");
+        self::$TYPE[self::TYPE_LEADER]['view'] = __("Leader");
     }
 
     function __construct($id = false, $table = null, $ds = null)
@@ -192,15 +192,15 @@ class Evaluation extends AppModel
         $evaluator_type_name = '';
 
         if ($evaluate_type == self::TYPE_ONESELF) {
-            $evaluator_type_name = __d('app', "自己");
+            $evaluator_type_name = __("Self");
         }
         else {
             if ($evaluate_type == self::TYPE_FINAL_EVALUATOR) {
-                $evaluator_type_name = __d('app', "最終評価者");
+                $evaluator_type_name = __("Final Evaluator");
             }
             else {
                 if ($evaluate_type == self::TYPE_EVALUATOR) {
-                    $evaluator_type_name = __d('app', "評価者{$index_num}");
+                    $evaluator_type_name = __("評価者{$index_num}");
                 }
             }
         }
@@ -221,10 +221,7 @@ class Evaluation extends AppModel
     {
         $my_team_member_status = $this->Team->TeamMember->getWithTeam();
         if (!viaIsSet($my_team_member_status['TeamMember'])) {
-            throw new RuntimeException(__d('app', "この画面にはアクセスできません。"));
-        }
-        if (!$my_team_member_status['TeamMember']['evaluation_enable_flg']) {
-            throw new RuntimeException(__d('app', "評価設定がoffになっています。チーム管理者にご確認ください"));
+            throw new RuntimeException(__("You don't have access right to this page."));
         }
         return true;
     }
@@ -238,15 +235,15 @@ class Evaluation extends AppModel
     function checkAvailParameterInEvalForm($termId, $evaluateeId)
     {
         if (!$termId || !$evaluateeId) {
-            throw new RuntimeException(__d('app', "パラメータが不正です。"));
+            throw new RuntimeException(__("Parameter is invalid."));
         }
 
         if (!$this->Team->EvaluateTerm->isStartedEvaluation($termId)) {
-            throw new RuntimeException(__d('app', "この期間の評価はできないか、表示する権限がありません。"));
+            throw new RuntimeException(__("You can't evaluate in this period or don't have permission to view."));
         }
 
         if ($this->getStatus($termId, $evaluateeId, $this->my_uid) === null) {
-            throw new RuntimeException(__d('app', "この期間の評価はできないか、表示する権限がありません。"));
+            throw new RuntimeException(__("You can't evaluate in this period or don't have permission to view."));
         }
 
         return true;
@@ -280,10 +277,10 @@ class Evaluation extends AppModel
         foreach ($data as $key => $law) {
             if (!$this->save($law)) {
                 if (!empty($this->validationErrors)) {
-                    throw new RuntimeException(__d('validate', "入力内容に不足があります。"));
+                    throw new RuntimeException(__("There is something you can't leave empty."));
                 }
                 else {
-                    throw new RuntimeException(__d('validate', "保存処理に失敗しました。"));
+                    throw new RuntimeException(__("Failed to save."));
                 }
             }
         }
@@ -639,7 +636,7 @@ class Evaluation extends AppModel
             $name = self::$TYPE[$val['evaluate_type']]['index'];
             if ($val['evaluate_type'] == self::TYPE_EVALUATOR) {
                 if ($val['evaluator_user_id'] == $this->my_uid) {
-                    $name = __d('app', "あなた");
+                    $name = __("You");
                 }
                 else {
                     $name .= $evaluator_index;
@@ -648,7 +645,7 @@ class Evaluation extends AppModel
             }
             //自己評価で被評価者が自分以外の場合は「メンバー」
             elseif ($val['evaluate_type'] == self::TYPE_ONESELF && $val['evaluatee_user_id'] != $this->my_uid) {
-                $name = __d('app', 'メンバー');
+                $name = __('Members');
             }
             $flow[] = [
                 'name'      => $name,
@@ -660,17 +657,17 @@ class Evaluation extends AppModel
                 continue;
             }
             if ($val['evaluator_user_id'] != $this->my_uid) {
-                $status_text['body'] = __d('app', "%sの評価待ちです", $name);
+                $status_text['body'] = __("Waiting for the evaluation by %s.", $name);
                 continue;
             }
             //your turn
             $status_text['your_turn'] = true;
             switch ($val['evaluate_type']) {
                 case self::TYPE_ONESELF:
-                    $status_text['body'] = __d('app', "自己評価をしてください");
+                    $status_text['body'] = __("Please evaluate yourself.");
                     break;
                 case self::TYPE_EVALUATOR:
-                    $status_text['body'] = __d('app', "評価をしてください");
+                    $status_text['body'] = __("Please evaluate.");
                     break;
             }
         }
@@ -941,12 +938,12 @@ class Evaluation extends AppModel
         }
         $evaluation_statuses = [
             self::TYPE_ONESELF   => [
-                'label'          => __d('app', "自己"),
+                'label'          => __("Self"),
                 'all_num'        => 0,
                 'incomplete_num' => 0,
             ],
             self::TYPE_EVALUATOR => [
-                'label'          => __d('app', "評価者"),
+                'label'          => __("Evaluator"),
                 'all_num'        => 0,
                 'incomplete_num' => 0,
             ],

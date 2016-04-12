@@ -18,7 +18,7 @@
         <div class="noitify-mark-allread-wrap">
             <i class="fa fa-check btn-link notify-mark-allread" id="mark_all_read" style='color:#d2d4d5'></i>
         </div>
-        <?= __d('app', "すべてのお知らせ") ?>
+        <?= __("Your Notifications") ?>
     </div>
     <div class="panel-body panel-body-notify-page">
         <ul class="notify-page-cards" role="menu">
@@ -27,12 +27,12 @@
         </ul>
         <?php if ($isExistMoreNotify): ?>
             <div class="panel-read-more-body">
-                <span class="none" id="ShowMoreNoData"><?= __d('app', "これ以上のデータがありません。") ?></span>
+                <span class="none" id="ShowMoreNoData"><?= __("There is no more data.") ?></span>
                 <a id="FeedMoreReadLink" href="#" class="btn btn-link font_bold click-notify-read-more-page"
                    get-url="<?=
                    $this->Html->url(['controller' => 'notifications', 'action' => 'ajax_get_old_notify_more']) ?>"
                     >
-                    <?= __d('app', "もっと見る ▼") ?></a>
+                    <?= __("View more") ?>▼</a>
             </div>
         <?php endif; ?>
     </div>

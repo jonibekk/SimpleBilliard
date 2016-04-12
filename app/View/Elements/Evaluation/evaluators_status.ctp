@@ -28,10 +28,10 @@
 
             <div class="font_12px font_lightgray modalFeedTextPaddingSmall">
                 <?php if ($user['Evaluation']['status'] == Evaluation::TYPE_STATUS_DONE): ?>
-                    <?= __d('app', "完了") ?>(<?= $this->TimeEx->elapsedTime(h($user['Evaluation']['modified']),
+                    <?= __("Completed") ?>(<?= $this->TimeEx->elapsedTime(h($user['Evaluation']['modified']),
                                                                           viaIsSet($type)) ?>)
                 <?php else: ?>
-                    <span style="color:red"><?= __d('app', "未完了") ?></span>
+                    <span style="color:red"><?= __("Incompleted") ?></span>
                 <?php endif; ?>
             </div>
         </div>

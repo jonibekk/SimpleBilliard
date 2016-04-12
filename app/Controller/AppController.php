@@ -159,15 +159,15 @@ class AppController extends Controller
         parent::beforeFilter();
         //全ページ共通のタイトルセット(書き換える場合はこの変数の値を変更の上、再度アクションメソッド側でsetする)
         if (ENV_NAME == "www") {
-            $this->title_for_layout = __d('app', 'Goalous(ゴーラス)');
+            $this->title_for_layout = __('Goalous');
         }
         else {
-            $this->title_for_layout = "[" . ENV_NAME . "]" . __d('app', 'Goalous(ゴーラス)');
+            $this->title_for_layout = "[" . ENV_NAME . "]" . __('Goalous');
         }
         $this->set('title_for_layout', $this->title_for_layout);
         //全ページ共通のdescriptionのmetaタグの内容をセット(書き換える場合はこの変数の値を変更の上、再度アクションメソッド側でsetする)
-        $this->meta_description = __d('app',
-                                      'Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。スマホアプリ・ブラウザで利用可能です。');
+        $this->meta_description = __(
+                                      'Goalous is one of the best team communication tools. Let your team open. Your action will be share with your collegues. You can use Goalous on Web and on Mobile App.');
         $this->set('meta_description', $this->meta_description);
 
         $this->_setSecurity();
@@ -211,7 +211,7 @@ class AppController extends Controller
                     if ($this->Auth->user('default_team_id') == $this->current_team_id) {
                         $this->User->updateDefaultTeam(null, true, $login_uid);
                     }
-                    $this->Pnotify->outError(__d('app', "ログイン中のチームが削除されたため、ログアウトされました。"));
+                    $this->Pnotify->outError(__("Logged out because the team you logged in is deleted."));
                     $this->Auth->logout();
                     return;
                 }
@@ -552,7 +552,7 @@ class AppController extends Controller
     public function _ajaxPreProcess($method = 'ajax')
     {
         if (!$this->request->is($method)) {
-            throw new RuntimeException(__d('validate', '不正なアクセスです。'));
+            throw new RuntimeException(__('Invalid access'));
         }
         Configure::write('debug', 0);
         $this->layout = 'ajax';
@@ -640,7 +640,7 @@ class AppController extends Controller
             $team_list = $this->User->TeamMember->getActiveTeamList($this->Auth->user('id'));
             if (!array_key_exists($request_team_id, $team_list)) {
                 //所属しているチームでは無い場合はエラー表示でtopにリダイレクト
-                $this->Pnotify->outError(__d('app', "このチームへのアクセス権限がありません。"));
+                $this->Pnotify->outError(__("You don't have access right to this team."));
                 $this->redirect('/');
             }
             else {
@@ -739,7 +739,7 @@ class AppController extends Controller
                 $this->Team->EvaluateTerm->getCurrentTermData()['start_date'],
                 $this->Team->EvaluateTerm->getCurrentTermData()['end_date']
             );
-            $goal_list_for_action_option = [null => __d('app', 'ゴールを選択する')] + $current_term_goals_name_list;
+            $goal_list_for_action_option = [null => __('Select a goal.')] + $current_term_goals_name_list;
             Cache::set('duration', 60 * 15, 'user_data');//15 minutes
             Cache::write($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true),
                          compact('goal_list_for_action_option', 'my_goals', 'collabo_goals',
@@ -779,7 +779,7 @@ class AppController extends Controller
     {
         $id = viaIsSet($this->request->params['named'][$name]);
         if (!$id) {
-            $this->Pnotify->outError(__d('app', "不正な画面遷移です。"));
+            $this->Pnotify->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
         return $id;

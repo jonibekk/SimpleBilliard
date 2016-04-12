@@ -34,7 +34,7 @@ if (!isset($this->request->params['post_id'])) {
 }
 ?>
 <a href="" class="alert alert-info feed-notify-box" role="alert" style="margin-bottom:5px;display:none;opacity:0;">
-    <span class="num"></span><?= __d('app', "件の新しい投稿があります。") ?></a>
+    <span class="num"></span><?= __(" new posts") ?></a>
 
 <?= $this->element('Feed/circle_join_button', compact('current_circle', 'user_status')) ?>
 <?php
@@ -47,14 +47,10 @@ if (isset($this->request->params['post_id']) && isset($this->request->params['na
 <?php
 // 投稿単体ページで $posts が空の場合（投稿が削除された場合）
 if (isset($this->request->params['post_id']) && !$posts): ?>
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <?= __d('app', '存在しません。') ?>
-        </div>
-    </div>
+    <?= $this->element("Feed/post_not_found") ?>
 <?php endif ?>
 <div id="app-view-elements-feed-posts">
-<?= $this->element("Feed/posts") ?>
+    <?= $this->element("Feed/posts") ?>
 </div>
 <?php //(投稿が指定件数　もしくは　アイテム作成日から１ヶ月以上経っている)かつパーマリンクでない
 if ((count($posts) == POST_FEED_PAGE_ITEMS_NUMBER || (isset($item_created) && $item_created < REQUEST_TIMESTAMP - (60 * 60 * 24 * 30))) &&
@@ -63,12 +59,12 @@ if ((count($posts) == POST_FEED_PAGE_ITEMS_NUMBER || (isset($item_created) && $i
     ?>
     <?php $next_page_num = 2;
     $month_index = 0;
-    $more_read_text = __d('app', "もっと読む ▼");
+    $more_read_text = __("More...");
     $oldest_post_time = 0;
     if ((count($posts) != POST_FEED_PAGE_ITEMS_NUMBER)) {
         $next_page_num = 1;
         $month_index = 1;
-        $more_read_text = __d('app', "さらに投稿を読み込む ▼");
+        $more_read_text = __("View previous posts ▼");
     }
 
     // １件目の投稿の更新時間
@@ -97,7 +93,7 @@ if ((count($posts) == POST_FEED_PAGE_ITEMS_NUMBER || (isset($item_created) && $i
     ?>
     <div class="panel panel-default feed-read-more" id="FeedMoreRead">
         <div class="panel-body panel-read-more-body">
-            <span class="none" id="ShowMoreNoData"><?= __d('app', "これ以上の投稿はありませんでした。") ?></span>
+            <span class="none" id="ShowMoreNoData"><?= __("There is no more post to show.") ?></span>
             <a href="#" class="click-feed-read-more"
                parent-id="FeedMoreRead"
                no-data-text-id="ShowMoreNoData"

@@ -12,9 +12,9 @@
     <div id="<?= h($item_id) ?>" class="insight-value-container">
         <?php if ($item_cmp_percent !== null): ?>
             <?php if ($item_cmp_percent >= 0): ?>
-                <div class="insight-cmp-percent insight-cmp-percent-plus"><?= __d('app', '▲') ?> <?= h($item_cmp_percent) ?>%</div>
+                <div class="insight-cmp-percent insight-cmp-percent-plus"><?= __('▲') ?> <?= h($item_cmp_percent) ?>%</div>
             <?php elseif ($item_cmp_percent < 0): ?>
-                <div class="insight-cmp-percent insight-cmp-percent-minus"><?= __d('app', '▼') ?> <?= h(abs($item_cmp_percent)) ?>%</div>
+                <div class="insight-cmp-percent insight-cmp-percent-minus"><?= __('▼') ?> <?= h(abs($item_cmp_percent)) ?>%</div>
             <?php endif ?>
         <?php endif ?>
 

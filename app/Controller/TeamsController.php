@@ -28,12 +28,12 @@ class TeamsController extends AppController
         }
 
         if (!$this->Team->add($this->request->data, $this->Auth->user('id'))) {
-            $this->Pnotify->outError(__d('app', "チーム作成に失敗しました。"));
+            $this->Pnotify->outError(__("Failed to create a team."));
             return $this->render();
         }
         $this->_refreshAuth($this->Auth->user('id'));
         $this->Session->write('current_team_id', $this->Team->getLastInsertID());
-        $this->Pnotify->outSuccess(__d('app', "チームを作成しました。"));
+        $this->Pnotify->outSuccess(__("Created a team."));
         return $this->redirect(['action' => 'invite']);
     }
 
@@ -43,10 +43,10 @@ class TeamsController extends AppController
         $this->Team->id = $this->current_team_id;
         if ($this->Team->save($this->request->data)) {
             Cache::clear(false, 'team_info');
-            $this->Pnotify->outSuccess(__d('app', "チームの基本設定を更新しました。"));
+            $this->Pnotify->outSuccess(__("Changed basic team settings."));
         }
         else {
-            $this->Pnotify->outError(__d('app', "チームの基本設定の更新に失敗しました。"));
+            $this->Pnotify->outError(__("Failed to change basic team settings."));
         }
         return $this->redirect($this->referer());
     }
@@ -56,11 +56,11 @@ class TeamsController extends AppController
         $this->request->allowMethod('post');
         $this->Team->begin();
         if ($this->Team->saveEditTerm($this->current_team_id, $this->request->data)) {
-            $this->Pnotify->outSuccess(__d('app', "期間設定を更新しました。"));
+            $this->Pnotify->outSuccess(__("Changed terms setting."));
             $this->Team->commit();
         }
         else {
-            $this->Pnotify->outError(__d('app', "期間設定の更新に失敗しました。"));
+            $this->Pnotify->outError(__("Failed to change terms setting."));
             $this->Team->rollback();
         }
         return $this->redirect($this->referer());
@@ -90,7 +90,7 @@ class TeamsController extends AppController
         )
         ) {
             $this->Team->rollback();
-            $this->Pnotify->outError(__d('app', "チーム削除に失敗しました。"));
+            $this->Pnotify->outError(__("Failed to delete a team."));
             return $this->redirect($this->referer());
         }
         $this->Team->commit();
@@ -114,7 +114,7 @@ class TeamsController extends AppController
             $this->Session->write('current_team_id', null);
             $url = ['controller' => 'teams', 'action' => 'add'];
         }
-        $this->Pnotify->outSuccess(__d('app', "チームを削除しました。"));
+        $this->Pnotify->outSuccess(__("Deleted the team."));
         return $this->redirect($url);
     }
 
@@ -227,12 +227,12 @@ class TeamsController extends AppController
         $this->Team->begin();
         if ($this->Team->EvaluationSetting->save($this->request->data['EvaluationSetting'])) {
             $this->Team->commit();
-            $this->Pnotify->outSuccess(__d('app', "評価設定を保存しました。"));
+            $this->Pnotify->outSuccess(__("Changed evaluation setting."));
             Cache::delete($this->Team->getCacheKey(CACHE_KEY_TEAM_EVAL_SETTING, false), 'team_info');
         }
         else {
             $this->Team->rollback();
-            $this->Pnotify->outError(__d('app', "評価設定が保存できませんでした。"));
+            $this->Pnotify->outError(__("Failed to change evaluation setting."));
         }
         return $this->redirect($this->referer());
     }
@@ -245,11 +245,11 @@ class TeamsController extends AppController
                                                                $this->Session->read('current_team_id'))
         ) {
             $this->Team->commit();
-            $this->Pnotify->outSuccess(__d('app', "評価スコア設定を保存しました。"));
+            $this->Pnotify->outSuccess(__("Changed evaluation score setting."));
         }
         else {
             $this->Team->rollback();
-            $this->Pnotify->outError(__d('app', "評価スコア設定が保存できませんでした。"));
+            $this->Pnotify->outError(__("Failed to change evaluation score setting."));
         }
         return $this->redirect($this->referer());
     }
@@ -262,11 +262,11 @@ class TeamsController extends AppController
                                                           $this->Session->read('current_team_id'))
         ) {
             $this->Team->commit();
-            $this->Pnotify->outSuccess(__d('app', "ゴールカテゴリ設定を保存しました。"));
+            $this->Pnotify->outSuccess(__("Saved goal category setting."));
         }
         else {
             $this->Team->rollback();
-            $this->Pnotify->outError(__d('app', "ゴールカテゴリ設定が保存できませんでした。"));
+            $this->Pnotify->outError(__("Failed to save goal category setting."));
         }
         return $this->redirect($this->referer());
 
@@ -277,7 +277,7 @@ class TeamsController extends AppController
         $id = viaIsSet($this->request->params['named']['team_id']);
         $this->request->allowMethod(['post']);
         $this->Team->Evaluation->EvaluateScore->setToInactive($id);
-        $this->Pnotify->outSuccess(__d('app', "スコア定義を削除しました。"));
+        $this->Pnotify->outSuccess(__("Deleted score definition."));
         return $this->redirect($this->referer());
     }
 
@@ -328,7 +328,7 @@ class TeamsController extends AppController
         $id = viaIsSet($this->request->params['named']['team_id']);
         $this->request->allowMethod(['post']);
         $this->Goal->GoalCategory->setToInactive($id);
-        $this->Pnotify->outSuccess(__d('app', "ゴールカテゴリを削除しました。"));
+        $this->Pnotify->outSuccess(__("Deleted goal category."));
         return $this->redirect($this->referer());
     }
 
@@ -390,7 +390,7 @@ class TeamsController extends AppController
         $this->request->allowMethod('post');
         try {
             if (!$this->Team->EvaluationSetting->isEnabled()) {
-                throw new RuntimeException(__d('app', "評価設定が有効ではありません。"));
+                throw new RuntimeException(__("Evaluation setting is not active."));
             }
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
@@ -400,11 +400,11 @@ class TeamsController extends AppController
         $this->Team->Evaluation->begin();
         if (!$this->Team->Evaluation->startEvaluation()) {
             $this->Team->Evaluation->rollback();
-            $this->Pnotify->outError(__d('app', "評価を開始できませんでした。"));
+            $this->Pnotify->outError(__("Evaluation could not start."));
             return $this->redirect($this->referer());
         }
         $this->Team->Evaluation->commit();
-        $this->Pnotify->outSuccess(__d('app', "評価を開始しました。"));
+        $this->Pnotify->outSuccess(__("Evaluation started."));
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_START,
                                          $this->Team->EvaluateTerm->getCurrentTermId());
         Cache::clear(false, 'team_info');
@@ -435,14 +435,14 @@ class TeamsController extends AppController
 
         //not exists correct email address.
         if (!$email_list) {
-            $this->Pnotify->outError(__d('app', "メールアドレスが正しくありません。"));
+            $this->Pnotify->outError(__("Email address is incorrect."));
             return $this->redirect($this->referer());
         }
 
         //max 100 invitation
         $max_invitation_count = 100;
         if (count($email_list) > $max_invitation_count) {
-            $this->Pnotify->outError(__d('app', "一度に送信できる招待は%s件までです。", $max_invitation_count));
+            $this->Pnotify->outError(__("%s invitations are the limits in one time.", $max_invitation_count));
             return $this->redirect($this->referer());
         }
 
@@ -463,7 +463,7 @@ class TeamsController extends AppController
                 !empty($data['Team']['comment']) ? $data['Team']['comment'] : null
             );
             if (!$invite) {
-                $this->Pnotify->outError(__d('app', "問題がある為、招待に失敗しました。"));
+                $this->Pnotify->outError(__("Error, failed to invite."));
                 return $this->redirect($this->referer());
             }
             //send invite mail
@@ -474,8 +474,8 @@ class TeamsController extends AppController
 
         $already_joined_usr_msg = null;
         if (!empty($alreadyBelongTeamEmails)) {
-            $already_joined_usr_msg .= __d('app', "%s人は既にチームに参加しているユーザの為、メール送信をキャンセルしました。",
-                                           count($alreadyBelongTeamEmails));
+            $already_joined_usr_msg .= __("Cancelled sending email to %s people who are already in the circle.",
+                                          count($alreadyBelongTeamEmails));
         }
 
         if (empty($sentEmails)) {
@@ -483,7 +483,7 @@ class TeamsController extends AppController
             return $this->redirect($this->referer());
         }
 
-        $msg = __d('app', "%s人に招待メールを送信しました。", count($sentEmails)) . "\n" . $already_joined_usr_msg;
+        $msg = __("Invited %s people.", count($sentEmails)) . "\n" . $already_joined_usr_msg;
         $this->Pnotify->outSuccess($msg);
 
         if (!$from_setting) {
@@ -513,7 +513,7 @@ class TeamsController extends AppController
         $result = [
             'error' => false,
             'css'   => 'alert-success',
-            'title' => __d('app', "正常に更新が完了しました。"),
+            'title' => __("Update completed"),
             'msg'   => '',
         ];
         $this->_ajaxPreProcess('post');
@@ -526,15 +526,16 @@ class TeamsController extends AppController
             $result['css'] = 'alert-danger';
             $result['msg'] = $save_res['error_msg'];
             if ($save_res['error_line_no'] == 0) {
-                $result['title'] = __d('app', "更新データに誤りがあります。");
+                $result['title'] = __("Error in extension data.");
             }
             else {
-                $result['title'] = __d('app', "%s行目でエラーがあります(行番号は見出し含む)。", $save_res['error_line_no']);
+                $result['title'] = __("Error in column %s (Column number included in text)",
+                                      $save_res['error_line_no']);
             }
         }
         else {
             $this->Team->TeamMember->commit();
-            $result['msg'] = __d('app', "%s人のメンバーを更新しました。", $save_res['success_count']);
+            $result['msg'] = __("%s members updated.", $save_res['success_count']);
             //Cacheをすべて削除
             Cache::clear(false, 'team_info');
         }
@@ -547,7 +548,7 @@ class TeamsController extends AppController
         $result = [
             'error' => false,
             'css'   => 'alert-success',
-            'title' => __d('app', "正常に登録が完了しました。"),
+            'title' => __("Registration completed."),
             'msg'   => '',
         ];
         $this->_ajaxPreProcess('post');
@@ -560,10 +561,11 @@ class TeamsController extends AppController
             $result['css'] = 'alert-danger';
             $result['msg'] = $save_res['error_msg'];
             if ($save_res['error_line_no'] == 0) {
-                $result['title'] = __d('app', "エラーがあります。");
+                $result['title'] = __("Error occurred.");
             }
             else {
-                $result['title'] = __d('app', "%s行目でエラーがあります(行番号は見出し含む)。", $save_res['error_line_no']);
+                $result['title'] = __("Error in the column %s (Column number included in text).",
+                                      $save_res['error_line_no']);
             }
         }
         else {
@@ -582,7 +584,7 @@ class TeamsController extends AppController
                 $this->GlEmail->sendMailInvite($invite, $team['Team']['name']);
             }
 
-            $result['msg'] = __d('app', "%s人のメンバーを追加しました。", $save_res['success_count']);
+            $result['msg'] = __("%s members are added.", $save_res['success_count']);
         }
         return $this->_ajaxGetResponse($result);
     }
@@ -609,7 +611,7 @@ class TeamsController extends AppController
         $result = [
             'error' => false,
             'css'   => 'alert-success',
-            'title' => __d('app', "正常に最終評価が完了しました。"),
+            'title' => __("Last evaluation is completed."),
             'msg'   => '',
         ];
         $this->_ajaxPreProcess('post');
@@ -622,15 +624,16 @@ class TeamsController extends AppController
             $result['css'] = 'alert-danger';
             $result['msg'] = $save_res['error_msg'];
             if ($save_res['error_line_no'] == 0) {
-                $result['title'] = __d('app', "更新データに誤りがあります。");
+                $result['title'] = __("Error in extension data.");
             }
             else {
-                $result['title'] = __d('app', "%s行目でエラーがあります(行番号は見出し含む)。", $save_res['error_line_no']);
+                $result['title'] = __("Error in the column %s (Column number included in text)",
+                                      $save_res['error_line_no']);
             }
         }
         else {
             $this->Team->TeamMember->commit();
-            $result['msg'] = __d('app', "%s人の最終評価を更新しました。", $save_res['success_count']);
+            $result['msg'] = __("%s people's last evaluations are completed.", $save_res['success_count']);
             $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_DONE_FINAL,
                                              $this->Team->EvaluateTerm->getCurrentTermId());
             Cache::clear(false, 'team_info');
@@ -662,17 +665,17 @@ class TeamsController extends AppController
         $redirect_url = Router::url("/", true);
         $this->set(compact("redirect_url"));
         if (!$team_id || !$this->request->is('ajax')) {
-            $this->Pnotify->outError(__d('app', "不正なアクセスです"));
+            $this->Pnotify->outError(__("Invalid access."));
             return $this->render();
         }
         //チーム所属チェック
         $my_teams = $this->Team->TeamMember->getActiveTeamList($this->Auth->user('id'));
         if (!array_key_exists($team_id, $my_teams)) {
-            $this->Pnotify->outError(__d('app', "このチームには所属していません"));
+            $this->Pnotify->outError(__("You are not a member of this team."));
             return $this->render();
         }
         $this->_switchTeam($team_id, $this->Auth->user('id'));
-        $this->Pnotify->outSuccess(__d('app', "チームを「%s」に切り換えました。", $my_teams[$team_id]));
+        $this->Pnotify->outSuccess(__("Changed team to %s.", $my_teams[$team_id]));
         return $this->render();
     }
 
@@ -687,12 +690,12 @@ class TeamsController extends AppController
             return $this->redirect($this->referer());
         }
         if ($res['EvaluateTerm']['evaluate_status'] == EvaluateTerm::STATUS_EVAL_FROZEN) {
-            $this->Pnotify->outSuccess(__d('app', "評価を凍結しました。"));
+            $this->Pnotify->outSuccess(__("Evaluation suspended."));
             $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_FREEZE,
                                              $this->Team->EvaluateTerm->getCurrentTermId());
         }
         else {
-            $this->Pnotify->outSuccess(__d('app', "評価の凍結を解除しました。"));
+            $this->Pnotify->outSuccess(__("Removed evaluation suspension."));
         }
         CAche::clear(false, 'team_info');
         return $this->redirect($this->referer());
@@ -946,7 +949,7 @@ class TeamsController extends AppController
         try {
             $this->Team->TeamMember->adminCheck();
             if (!empty($this->Team->TeamVision->getTeamVision($this->Session->read('current_team_id'), true))) {
-                throw new RuntimeException(__d('app', "既にチームビジョンが存在する為、新規の追加はできません。"));
+                throw new RuntimeException(__("Team vision already exists, new one cannot be made."));
             }
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
@@ -958,12 +961,12 @@ class TeamsController extends AppController
         }
 
         if ($this->Team->TeamVision->saveTeamVision($this->request->data)) {
-            $this->Pnotify->outSuccess(__d('app', "チームビジョンを追加しました。"));
+            $this->Pnotify->outSuccess(__("Team vision is added."));
             //TODO 遷移先はビジョン一覧ページ。未実装の為、仮でホームに遷移させている。
             return $this->redirect("/");
         }
         else {
-            $this->Pnotify->outError(__d('app', "チームビジョンの保存に失敗しました。"));
+            $this->Pnotify->outError(__("Failed to save team vision."));
             return $this->redirect($this->referer());
         }
         return $this->render();
@@ -980,11 +983,11 @@ class TeamsController extends AppController
         }
 
         if (!$team_vision_id = viaIsSet($this->request->params['named']['team_vision_id'])) {
-            $this->Pnotify->outError(__d('app', "不正な画面遷移です。"));
+            $this->Pnotify->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
         if (!$this->Team->TeamVision->exists($team_vision_id)) {
-            $this->Pnotify->outError(__d('app', "ページが存在しません。"));
+            $this->Pnotify->outError(__("Page does not exist."));
             return $this->redirect($this->referer());
         }
 
@@ -994,12 +997,12 @@ class TeamsController extends AppController
         }
 
         if ($this->Team->TeamVision->saveTeamVision($this->request->data, false)) {
-            $this->Pnotify->outSuccess(__d('app', "チームビジョンを更新しました。"));
+            $this->Pnotify->outSuccess(__("Updated team vision."));
             //TODO 遷移先はビジョン一覧ページ。未実装の為、仮でホームに遷移させている。
             return $this->redirect("/");
         }
         else {
-            $this->Pnotify->outError(__d('app', "チームビジョンの保存に失敗しました。"));
+            $this->Pnotify->outError(__("Failed to save team vision."));
             return $this->redirect($this->referer());
         }
         return $this->render();
@@ -1011,7 +1014,7 @@ class TeamsController extends AppController
         $group_list = $this->Team->Group->MemberGroup->getMyGroupListNotExistsVision();
 
         if (empty($group_list)) {
-            $this->Pnotify->outError(__d('app', "グループに所属していないか既に存在している為、グループビジョンは作成できません。"));
+            $this->Pnotify->outError(__("Unable to create group vision as you don't belong to this group or the vision already exists."));
             return $this->redirect($this->referer());
         }
 
@@ -1022,12 +1025,12 @@ class TeamsController extends AppController
         }
 
         if ($this->Team->GroupVision->saveGroupVision($this->request->data)) {
-            $this->Pnotify->outSuccess(__d('app', "グループビジョンを追加しました。"));
+            $this->Pnotify->outSuccess(__("Added group vision."));
             //TODO 遷移先はビジョン一覧ページ。未実装の為、仮でホームに遷移させている。
             return $this->redirect("/");
         }
         else {
-            $this->Pnotify->outError(__d('app', "グループビジョンの保存に失敗しました。"));
+            $this->Pnotify->outError(__("Failed to save group vision."));
             return $this->redirect($this->referer());
         }
 
@@ -1039,11 +1042,11 @@ class TeamsController extends AppController
         $this->layout = LAYOUT_ONE_COLUMN;
 
         if (!$group_vision_id = viaIsSet($this->request->params['named']['group_vision_id'])) {
-            $this->Pnotify->outError(__d('app', "不正な画面遷移です。"));
+            $this->Pnotify->outError(__("Invalid screen transition."));
             return $this->redirect($this->referer());
         }
         if (!$this->Team->GroupVision->exists($group_vision_id)) {
-            $this->Pnotify->outError(__d('app', "ページが存在しません。"));
+            $this->Pnotify->outError(__("Page does not exist."));
             return $this->redirect($this->referer());
         }
         $group_list = $this->Team->Group->MemberGroup->getMyGroupList();
@@ -1055,12 +1058,12 @@ class TeamsController extends AppController
         }
 
         if ($this->Team->GroupVision->saveGroupVision($this->request->data, false)) {
-            $this->Pnotify->outSuccess(__d('app', "グループビジョンを更新しました。"));
+            $this->Pnotify->outSuccess(__("Updated group vision."));
             //TODO 遷移先はビジョン一覧ページ。未実装の為、仮でホームに遷移させている。
             return $this->redirect("/");
         }
         else {
-            $this->Pnotify->outError(__d('app', "グループビジョンの保存に失敗しました。"));
+            $this->Pnotify->outError(__("Failed to save group vision."));
             return $this->redirect($this->referer());
         }
         return $this->render();

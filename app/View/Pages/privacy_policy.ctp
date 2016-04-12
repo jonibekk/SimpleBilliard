@@ -27,7 +27,7 @@ Page毎に要素が変わるもの
 $meta_privacy_policy = [
     [
         "name" => "description",
-        "content" => __d('lp','Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。プライバシーポリシーはこちら。'),
+        "content" => __('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。プライバシーポリシーはこちら。'),
     ],
     [
         "name" => "keywords",
@@ -39,11 +39,11 @@ $meta_privacy_policy = [
     ],
     [
         "property" => "og:title",
-        "content" => __d('lp', 'プライバシーポリシー | Goalous(ゴーラス)'),
+        "content" => __('PrivacyPolicy | Goalous'),
     ],
     [
         "property" => "og:description",
-        "content" =>__d('lp', 'Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。プライバシーポリシーはこちら。'),
+        "content" =>__('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。プライバシーポリシーはこちら。'),
     ],
     [
         "property" => "og:url",
@@ -55,7 +55,7 @@ $meta_privacy_policy = [
     ],
     [
         "property" => "og:site_name",
-        "content" => __d('lp', 'Goalous (ゴーラス) │ゴール達成への最強にオープンな社内SNS'),
+        "content" => __('Goalous │ Enterprise SNS the most ever open for Goal'),
     ],
     [
         "property" => "fb:app_id",
@@ -75,7 +75,7 @@ for($i = 0; $i < $num_ogp; $i++){
     echo $this->Html->meta($meta_privacy_policy[$i]);
 }
 ?>
-<title><?= __d('lp', 'プライバシーポリシー | Goalous (ゴーラス)') ?></title>
+<title><?= __('PrivacyPolicy | Goalous') ?></title>
 <link rel="alternate" hreflang="ja" href="<?= $this->Html->url('/ja/privacy_policy') ?>"/>
 <link rel="alternate" hreflang="en" href="<?= $this->Html->url('/en/privacy_policy') ?>"/>
 <link rel="alternate" hreflang="x-default" href="<?= $this->Html->url('/privacy_policy') ?>"/>
