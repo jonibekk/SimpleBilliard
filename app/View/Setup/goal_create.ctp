@@ -43,6 +43,7 @@
           </div>
         </div>
         <div class="panel-body add-team-panel-body">
+          <span class="help-block"><?= __("Goal Image") ?></span>
           <div class="form-inline">
             <div class="fileinput_small fileinput-new" data-provides="fileinput">
               <div class="fileinput-preview thumbnail nailthumb-container photo-design form-group" data-trigger="fileinput" style="width: 96px; height: 96px; line-height: 96px;">
