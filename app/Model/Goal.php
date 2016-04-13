@@ -1777,4 +1777,16 @@ class Goal extends AppModel
         $g_list = array_merge($g_list, $this->User->TeamMember->getCoachingGoalList($user_id));
         return $g_list;
     }
+
+    public function isCreatedForSetupBy($user_id)
+    {
+        return (bool)$this->find('first', [
+            'conditions' => [
+                'Goal.user_id'       => $user_id,
+                'Goal.start_date >=' => $this->Team->EvaluateTerm->getPreviousTermData()['start_date'],
+                'Goal.end_date >='   => $this->Team->EvaluateTerm->getCurrentTermData()['end_date'],
+            ],
+            'fields'     => ['Goal.id']
+        ]);
+    }
 }

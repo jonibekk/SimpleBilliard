@@ -49,6 +49,27 @@ class User extends AppModel
         self::$TYPE_GENDER[self::TYPE_GENDER_NEITHER] = __("Neither");
     }
 
+    /**
+     * STATUS_TYPE_OF_SETUP_GUIDE
+     */
+    const SETUP_PROFILE = 1;
+    const SETUP_MOBILE_APP = 2;
+    const SETUP_GOAL_CREATED = 3;
+    const SETUP_ACTION_POSTED = 4;
+    const SETUP_CIRCLE_JOINED_OR_CREATED = 5;
+    const SETUP_CIRCLE_POSTED = 6;
+    static public $TYPE_SETUP_GUIDE = [
+        self::SETUP_PROFILE                  => "",
+        self::SETUP_MOBILE_APP               => "",
+        self::SETUP_GOAL_CREATED             => "",
+        self::SETUP_ACTION_POSTED            => "",
+        self::SETUP_CIRCLE_JOINED_OR_CREATED => "",
+        self::SETUP_CIRCLE_POSTED            => ""
+    ];
+
+    const SETUP_GUIDE_IS_NOT_COMPLETED = 0;
+    const SETUP_GUIDE_IS_COMPLETED = 1;
+
     public $actsAs = [
         'Upload' => [
             'photo' => [
@@ -286,6 +307,7 @@ class User extends AppModel
         'Collaborator',
         'Evaluator',
         'RecoveryCode',
+        'Device'
     ];
 
     /**
@@ -1323,6 +1345,63 @@ class User extends AppModel
             $res[] = $data;
         }
         return $res;
+    }
+
+    /**
+     * check registered profile for setup-guide
+     *
+     * @return boolean isCompleted
+     */
+    function isCompletedProfileForSetup($user_id)
+    {
+        $res = $this->find('first', [
+            'conditions' => [
+                'User.id' => $user_id
+            ],
+            'fields'     => ['User.id', 'User.photo_file_name'],
+            'contain'    => [
+                'TeamMember' => [
+                    'conditions' => [
+                        'TeamMember.user_id' => $user_id,
+                        'TeamMember.team_id' => $this->current_team_id
+                    ],
+                    'fields'     => [
+                        'TeamMember.id', 'TeamMember.comment'
+                    ]
+                ]
+            ]
+        ]);
+        return viaIsSet($res['User']['photo_file_name']) && viaIsSet($res['TeamMember'][0]['comment']);
+    }
+
+    function isInstalledMobileApp($user_id)
+    {
+        return (bool)$this->Device->find('first', [
+            'conditions' => [
+                'Device.user_id' => $user_id
+            ],
+            'fields'     => [
+                'Device.id'
+            ]
+        ]);
+    }
+
+    function generateSetupGuideStatusDict($user_id)
+    {
+        return [
+            self::SETUP_PROFILE                  => $this->isCompletedProfileForSetup($user_id),
+            self::SETUP_MOBILE_APP               => $this->isInstalledMobileApp($user_id),
+            self::SETUP_GOAL_CREATED             => $this->Goal->isCreatedForSetupBy($user_id),
+            self::SETUP_ACTION_POSTED            => $this->Goal->ActionResult->isPostedActionForSetupBy($user_id),
+            self::SETUP_CIRCLE_JOINED_OR_CREATED => $this->CircleMember->isJoinedForSetupBy($user_id),
+            self::SETUP_CIRCLE_POSTED            => $this->Post->isPostedCircleForSetupBy($user_id),
+        ];
+    }
+
+    function completeSetupGuide($user_id)
+    {
+        $this->id = $user_id;
+        return $this->saveField('setup_complete_flg', self::SETUP_GUIDE_IS_COMPLETED);
     }
 
 }
