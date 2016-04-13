@@ -438,9 +438,10 @@ class PostsController extends AppController
         //1,2どちらのケースでもこのコードが実行されるが、「not exist」メッセージを出すのは2のケースのみのため、
         //ここで分岐をする必要がある。
         $is_notify_post_permanent_page = isset($this->request->params['post_id']) && isset($this->request->params['named']['notify_id']);
-        if($is_notify_post_permanent_page && !$posts) {
+        if ($is_notify_post_permanent_page && !$posts) {
             $response = $this->render('Feed/post_not_found');
-        } else {
+        }
+        else {
             $response = $this->render($view);
         }
 
