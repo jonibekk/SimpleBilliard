@@ -9,5 +9,6 @@
           <img src='/img/setup/goal.png' class='setup-explain-img' alt='setup goal' />
       </div>
       <a href="/setup/purpose_select" class="btn btn-primary">Next</a>
+    </div>
   </div>
 </div>
