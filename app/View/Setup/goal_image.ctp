@@ -5,8 +5,8 @@
       <div class="setup-pankuzu font_18px">
         <?= __("Set up Goalous") ?> < <?= __("Create a goal") ?>
       </div>
-      <div>
-          <img src='/img/tutorial/setup_goal.png' alt='setup goal' />
+      <div class="setup-explain">
+          <img src='/img/setup/goal.png' class='setup-explain-img' alt='setup goal' />
       </div>
       <a href="/setup/purpose_select" class="btn btn-primary">Next</a>
   </div>
