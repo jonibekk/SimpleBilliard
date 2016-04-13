@@ -18,8 +18,10 @@ class SetupController extends AppController
 
     public function goal_image() {}
 
-    public function select_purpose() {}
+    public function purpose_select() {}
 
-    public function select_goal() {}
+    public function goal_select() {}
+
+    public function goal_create() {}
 
 }

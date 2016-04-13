@@ -3,13 +3,13 @@
     <div class="setup-inner col col-xxs-10 col-xxs-offset-1 pb_8px pt_20px font_verydark">
       <!-- Setup guide header -->
       <div class="setup-pankuzu font_18px">
-        <?= __("Set up Goalous") ?> < <?= __("Create a Goal") ?>
+        <?= __("Set up Goalous") ?> < <?= __("Create a goal") ?>
       </div>
 
       <!-- Setup guide items -->
       <div class="setup-items">
 
-        <a class="setup-items-item pt_10px mt_12px bd-radius_14px" href="/setup/select_goal">
+        <a class="setup-items-item pt_10px mt_12px bd-radius_14px" href="/setup/goal_create">
           <div class="pull-left mt_3px ml_2px">
             <div class="setup-items-item-icon">
               <img src='/img/tutorial/aragaki.jpg' class="setup-items-item-icon-img" alt='aragaki' />
@@ -23,7 +23,7 @@
           </div>
         </a>
 
-        <a class="setup-items-item pt_10px mt_12px bd-radius_14px" href="/setup/select_goal">
+        <a class="setup-items-item pt_10px mt_12px bd-radius_14px" href="/setup/goal_create">
           <div class="pull-left mt_3px ml_2px">
             <div class="setup-items-item-icon">
               <img src='/img/tutorial/aragaki.jpg' class="setup-items-item-icon-img" alt='aragaki' />
@@ -37,7 +37,7 @@
           </div>
         </a>
 
-        <a class="setup-items-item pt_10px mt_12px bd-radius_14px" href="/setup/select_goal">
+        <a class="setup-items-item pt_10px mt_12px bd-radius_14px" href="/setup/goal_create">
           <div class="pull-left mt_3px ml_2px">
             <div class="setup-items-item-icon">
               <img src='/img/tutorial/aragaki.jpg' class="setup-items-item-icon-img" alt='aragaki' />
