@@ -12,7 +12,7 @@
         <a class="setup-items-item pt_10px mt_12px bd-radius_14px" href="/setup/goal_select">
           <div class="pull-left mt_3px ml_2px">
             <div class="setup-items-item-icon">
-              <img src='/img/tutorial/aragaki.jpg' class="setup-items-item-icon-img" alt='aragaki' />
+              <img src='/img/setup/sample_men.png' class="setup-items-item-icon-img" alt='aragaki' />
             </div>
           </div>
           <div class="setup-items-item-explain pull-left">
@@ -27,7 +27,7 @@
         <a class="setup-items-item pt_10px mt_12px bd-radius_14px" href="/setup/goal_select">
           <div class="pull-left mt_3px ml_2px">
             <div class="setup-items-item-icon">
-              <img src='/img/tutorial/aragaki.jpg' class="setup-items-item-icon-img" alt='aragaki' />
+              <img src='/img/setup/sample_men.png' class="setup-items-item-icon-img" alt='aragaki' />
             </div>
           </div>
           <div class="setup-items-item-explain pull-left">
@@ -42,7 +42,7 @@
         <a class="setup-items-item pt_10px mt_12px bd-radius_14px" href="/setup/goal_select">
           <div class="pull-left mt_3px ml_2px">
             <div class="setup-items-item-icon">
-              <img src='/img/tutorial/aragaki.jpg' class="setup-items-item-icon-img" alt='aragaki' />
+              <img src='/img/setup/sample_men.png' class="setup-items-item-icon-img" alt='aragaki' />
             </div>
           </div>
           <div class="setup-items-item-explain pull-left">
