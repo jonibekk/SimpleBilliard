@@ -16,4 +16,16 @@ class SetupController extends AppController
         $this->set('without_footer', true);
         return $this->render();
     }
+
+    public function profile_index() {
+        $this->layout = LAYOUT_ONE_COLUMN;
+        $this->set('without_footer', true);
+        return $this->render();
+    }
+
+    public function profile_add() {
+        $this->layout = LAYOUT_ONE_COLUMN;
+        $this->set('without_footer', true);
+        return $this->render();
+    }
 }
