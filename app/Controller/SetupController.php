@@ -14,14 +14,24 @@ class SetupController extends AppController
         return $this->render();
     }
 
-    public function index() {}
+    public function index()
+    {
+    }
 
-    public function goal_image() {}
+    public function goal_image()
+    {
+    }
 
-    public function purpose_select() {}
+    public function purpose_select()
+    {
+    }
 
-    public function goal_select() {}
+    public function goal_select()
+    {
+    }
 
-    public function goal_create() {}
+    public function goal_create()
+    {
+    }
 
 }
