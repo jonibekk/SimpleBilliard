@@ -23,7 +23,7 @@ const reducer = combineReducers({
 const store = createStore(reducer)
 const history = syncHistoryWithStore(browserHistory, store)
 
-// Define setup-tuide routes
+// Define setup-guide routes
 ReactDOM.render((
   <Provider store={store}>
     <Router history={history}>
@@ -33,10 +33,7 @@ ReactDOM.render((
         <Route path="purpose_select" component={PurposeSelect} />
         <Route path="goal_select" component={GoalSelect} />
         <Route path="goal_create" component={GoalCreate} />
-          {/*<Route path="select" component={GoalSelect} >
-            <Route path="detail" component={GoalSelectDetail} />
-          </Route>*/}
       </Route>
     </Router>
   </Provider>
-), document.getElementById("setup-guide-read-module"));
+), document.getElementById("setup-guide-app"));
