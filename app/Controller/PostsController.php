@@ -434,12 +434,17 @@ class PostsController extends AppController
 
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
-        if ($posts) {
-            $response = $this->render($view);
-        }
-        else {
+        //1.フィードのスクロールによる投稿取得 2.notifyから投稿詳細ページに遷移した場合の投稿取得
+        //1,2どちらのケースでもこのコードが実行されるが、「not exist」メッセージを出すのは2のケースのみのため、
+        //ここで分岐をする必要がある。
+        $is_notify_post_permanent_page = isset($this->request->params['post_id']) && isset($this->request->params['named']['notify_id']);
+        if ($is_notify_post_permanent_page && !$posts) {
             $response = $this->render('Feed/post_not_found');
         }
+        else {
+            $response = $this->render($view);
+        }
+
         $html = $response->__toString();
         $result = array(
             'html'                => $html,
