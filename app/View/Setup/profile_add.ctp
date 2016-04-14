@@ -54,11 +54,11 @@
                 <div class="panel-body profile-setting-panel-body">
                     <hr>
                     <div class="form-group">
-                        <label for="" class="col col-sm-3 control-label form-label">
+                        <label for="" class="col control-label form-label">
                             <?= __("Profile Image") ?>
                         </label>
 
-                        <div class="col col-sm-6">
+                        <div class="col">
                             <div class="fileinput fileinput-new" data-provides="fileinput">
                                 <div class="fileinput-preview thumbnail nailthumb-container" data-trigger="fileinput"
                                      style="width: 150px; height: 150px;">
