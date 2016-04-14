@@ -618,6 +618,7 @@ class UserTest extends GoalousTestCase
         $uid = $this->generateBasicUser();
         $this->User->my_uid = $uid;
         $this->User->me['default_team_id'] = null;
+        $this->User->me['language'] = 'jpn';
         $res = $this->User->updateDefaultTeam('team_aaaaaaa');
         $this->assertTrue($res, "[正常]デフォルトチーム更新");
 

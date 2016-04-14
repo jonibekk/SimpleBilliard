@@ -1684,6 +1684,7 @@ class TeamMemberTest extends GoalousTestCase
     function testValidateUpdateFinalEvaluationCsvDataUnMatchColumnCount()
     {
         $this->setDefault();
+        $this->_saveEvaluations();
 
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeadingEvaluation();
@@ -1705,6 +1706,7 @@ class TeamMemberTest extends GoalousTestCase
     function testValidateUpdateFinalEvaluationCsvDataUnMatchTitle()
     {
         $this->setDefault();
+        $this->_saveEvaluations();
 
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeadingEvaluation();
@@ -1725,6 +1727,7 @@ class TeamMemberTest extends GoalousTestCase
     function testValidateUpdateFinalEvaluationCsvDataNotExistsMember()
     {
         $this->setDefault();
+        $this->_saveEvaluations();
 
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeadingEvaluation();
@@ -1748,6 +1751,7 @@ class TeamMemberTest extends GoalousTestCase
     function testValidateUpdateFinalEvaluationCsvDataNotExistsScore()
     {
         $this->setDefault();
+        $this->_saveEvaluations();
 
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeadingEvaluation();
@@ -1771,6 +1775,7 @@ class TeamMemberTest extends GoalousTestCase
     function testValidateUpdateFinalEvaluationCsvDataMemberIdDuplicated()
     {
         $this->setDefault();
+        $this->_saveEvaluations();
         $eval_data = [
             'team_id'           => 1,
             'evaluatee_user_id' => 2,
@@ -2485,6 +2490,90 @@ class TeamMemberTest extends GoalousTestCase
         $this->setDefault();
         $actual = $this->TeamMember->isAdmin();
         $this->assertNotEmpty($actual);
+    }
+
+    function _saveEvaluations()
+    {
+        $records = [
+            [
+                'team_id'           => 1,
+                'evaluatee_user_id' => 1,
+                'evaluator_user_id' => 2,
+                'evaluate_term_id'  => 1,
+                'evaluate_type'     => 0,
+                'comment'           => 'あいうえお',
+                'evaluate_score_id' => 1,
+                'index_num'         => 0,
+            ],
+            [
+                'team_id'           => 1,
+                'evaluatee_user_id' => 1,
+                'evaluator_user_id' => 1,
+                'evaluate_term_id'  => 1,
+                'evaluate_type'     => 0,
+                'comment'           => 'かきくけこ',
+                'evaluate_score_id' => 1,
+                'index_num'         => 1,
+                'goal_id'           => 1,
+            ],
+            [
+                'team_id'           => 1,
+                'evaluatee_user_id' => 1,
+                'evaluator_user_id' => 1,
+                'evaluate_term_id'  => 1,
+                'evaluate_type'     => 0,
+                'comment'           => 'さしすせそ',
+                'evaluate_score_id' => 1,
+                'index_num'         => 2,
+                'goal_id'           => 2,
+            ],
+            [
+                'team_id'           => 1,
+                'evaluatee_user_id' => 1,
+                'evaluator_user_id' => 1,
+                'evaluate_term_id'  => 1,
+                'evaluate_type'     => 0,
+                'comment'           => 'たちつてと',
+                'evaluate_score_id' => 1,
+                'index_num'         => 3,
+                'goal_id'           => 3,
+            ],
+            [
+                'team_id'           => 2,
+                'evaluatee_user_id' => 2,
+                'evaluator_user_id' => 2,
+                'evaluate_term_id'  => 2,
+                'evaluate_type'     => 0,
+                'comment'           => 'なにぬねの',
+                'evaluate_score_id' => 1,
+                'index_num'         => 0,
+                'goal_id'           => 10,
+            ],
+            [
+                'team_id'           => 2,
+                'evaluatee_user_id' => 2,
+                'evaluator_user_id' => 2,
+                'evaluate_term_id'  => 2,
+                'evaluate_type'     => 0,
+                'comment'           => 'はひふへほ',
+                'evaluate_score_id' => 1,
+                'index_num'         => 1,
+                'goal_id'           => 11,
+            ],
+            [
+                'team_id'           => 2,
+                'evaluatee_user_id' => 2,
+                'evaluator_user_id' => 2,
+                'evaluate_term_id'  => 2,
+                'evaluate_type'     => 0,
+                'comment'           => 'まみむめも',
+                'evaluate_score_id' => 1,
+                'index_num'         => 2,
+                'goal_id'           => 12,
+            ],
+        ];
+        
+        $this->TeamMember->Team->Evaluation->saveAll($records);
     }
 
 }
