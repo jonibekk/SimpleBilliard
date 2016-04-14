@@ -190,6 +190,8 @@ class EvaluationTest extends GoalousTestCase
                     'team_id'           => 1,
                     'comment'           => 'あいうえお',
                     'evaluate_score_id' => 1,
+                    'evaluatee_user_id' => 1,
+                    'evaluate_term_id'  => 1,
                 ],
             ],
             [
@@ -198,6 +200,8 @@ class EvaluationTest extends GoalousTestCase
                     'team_id'           => 1,
                     'comment'           => 'かきくけこ',
                     'evaluate_score_id' => 1,
+                    'evaluatee_user_id' => 1,
+                    'evaluate_term_id'  => 1,
                 ],
             ],
             [
@@ -206,6 +210,8 @@ class EvaluationTest extends GoalousTestCase
                     'team_id'           => 1,
                     'comment'           => 'さしすせそ',
                     'evaluate_score_id' => 1,
+                    'evaluatee_user_id' => 1,
+                    'evaluate_term_id'  => 1,
                 ],
             ],
         ];
@@ -234,6 +240,8 @@ class EvaluationTest extends GoalousTestCase
                     'team_id'           => 1,
                     'comment'           => 'あいうえお',
                     'evaluate_score_id' => 1,
+                    'evaluatee_user_id' => 1,
+                    'evaluate_term_id'  => 1,
                 ],
             ],
             [
@@ -242,6 +250,8 @@ class EvaluationTest extends GoalousTestCase
                     'team_id'           => 1,
                     'comment'           => 'かきくけこ',
                     'evaluate_score_id' => 1,
+                    'evaluatee_user_id' => 1,
+                    'evaluate_term_id'  => 1,
                 ],
             ],
             [
@@ -250,6 +260,8 @@ class EvaluationTest extends GoalousTestCase
                     'team_id'           => 1,
                     'comment'           => 'さしすせそ',
                     'evaluate_score_id' => 1,
+                    'evaluatee_user_id' => 1,
+                    'evaluate_term_id'  => 1,
                 ],
             ],
         ];
@@ -271,7 +283,6 @@ class EvaluationTest extends GoalousTestCase
     function testAddRegisterAsEvaluatorHadNextEvaluator()
     {
         $this->_setDefault();
-        $this->Evaluation->deleteAll(['Evaluation.id >' => 0]);
         $this->_saveEvaluations();
         $registerData = [
             [
