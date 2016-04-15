@@ -3,39 +3,10 @@
         <div class="setup-inner col col-xxs-10 col-xxs-offset-1 pb_8px pt_20px font_verydark">
             <!-- Setup guide header -->
             <div class="setup-pankuzu font_18px">
-                <?= __("Set up Goalous < Input your profile") ?>
+                <?= __("Set up Goalous") ?> < <?= __("Input your profile") ?>
             </div>
-        </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-        <?php
-        /**
-         * Created by PhpStorm.
-         * User: bigplants
-         * Date: 6/19/14
-         * Time: 2:41 PM
-         *
-         * @var CodeCompletionView $this
-         * @var boolean            $last_first
-         * @var string             $language_name
-         * @var array              $me
-         * @var boolean            $is_not_use_local_name
-         */
-        ?>
-        <!-- START app/View/Elements/User/profile_setting.ctp -->
-        <div id="profile">
-            <div class="panel panel-default">
+            <div id="profile-panel" class="panel">
                 <?=
                 $this->Form->create('User', [
                     'inputDefaults' => [
@@ -46,21 +17,20 @@
                         'wrapInput' => 'col col-sm-6',
                         'class'     => 'form-control setting_input-design'
                     ],
-                    'class'         => 'form-horizontal',
                     'novalidate'    => true,
                     'type'          => 'file',
                     'id'            => 'ChangeProfileForm'
                 ]); ?>
                 <div class="panel-body profile-setting-panel-body">
-                    <hr>
                     <div class="form-group">
-                        <label for="" class="col control-label form-label">
-                            <?= __("Profile Image") ?>
+                        <label for="" class="col control-label">
+                            <?= __("Your profile picture") ?>
                         </label>
 
                         <div class="col">
                             <div class="fileinput fileinput-new" data-provides="fileinput">
-                                <div class="fileinput-preview thumbnail nailthumb-container" data-trigger="fileinput"
+                                <div class="fileinput-preview thumbnail nailthumb-container"
+                                     data-trigger="fileinput"
                                      style="width: 150px; height: 150px;">
                                     <?=
                                     $this->Upload->uploadImage($this->request->data, 'User.photo',
@@ -83,7 +53,6 @@
                                                 'required'     => false
                                                ]) ?>
                         </span>
-                                    <span class="help-block inline-block font_11px"><?= __('Smaller than 10MB') ?></span>
                                 </div>
                             </div>
 
@@ -97,14 +66,11 @@
                         </div>
 
                     </div>
-                    <hr>
                     <div class="form-group">
-                        <div class="col col-sm-3 control-label form-label">
-                            <label for="UserComment" class=""><?= __("About me") ?></label>
-
-                            <div class="label-addiction"><?= __("It will be shared with members only in this team.") ?></div>
+                        <div class="col col-sm-3 control-label">
+                            <label for="UserComment" class=""><?= __("Your self-info.") ?></label>
                         </div>
-                        <div class="col col-sm-6">
+                        <div class="col">
                             <?php if (isset($this->request->data['TeamMember'][0]['id'])): ?>
                                 <?= $this->Form->hidden('TeamMember.0.id',
                                                         ['value' => $this->request->data['TeamMember'][0]['id']]) ?>
@@ -117,15 +83,14 @@
                                                 'css'                          => false,
                                                 'data-bv-stringlength'         => 'true',
                                                 'data-bv-stringlength-max'     => 2000,
-                                                'data-bv-stringlength-message' => __("It's over limit characters (%s).", 2000),
+                                                'data-bv-stringlength-message' => __("It's over limit characters (%s).",
+                                                                                     2000),
                                                 'value'                        => (isset($this->request->data['TeamMember'][0]['comment']) && !empty($this->request->data['TeamMember'][0]['comment']))
                                                     ? $this->request->data['TeamMember'][0]['comment']
                                                     : __(
                                                         "[What is that you can contribute to the team?]\n\n[What is the thing you want to achieve in the team?(Specifically)]\n\n[Others]\n\n")]
                             )
                             ?>
-                            <a href="#" class="target-show-this-del link-dark-gray" target-id="CommentHelp"><?= __(
-                                    "Show Examples") ?></a>
                 <span class="help-block inline-block font_11px" id="CommentHelp" style="display: none">
                     <?= __("[Now, What is that you can contribute to the team?]<br>\n
 Consulting UX of your production.<br>\n
@@ -141,8 +106,8 @@ Need New Customers?<br>\n
                         </div>
                     </div>
                 </div>
-                <div class="panel-footer setting_pannel-footer">
-                    <?= $this->Form->submit(__("Save changes"), ['class' => 'btn btn-primary pull-right']) ?>
+                <div class="">
+                    <?= $this->Form->submit(__("Save changes"), ['class' => 'btn btn-primary']) ?>
                     <div class="clearfix"></div>
                 </div>
                 <?= $this->Form->end(); ?>
@@ -174,7 +139,7 @@ Need New Customers?<br>\n
                             validators: {
                                 stringLength: {
                                     min: 8,
-                                    message: "<?=__('At least %2$d characters is required.',"",8)?>"
+                                    message: "<?=__('At least %2$d characters is required.', "", 8)?>"
                                 }
                             }
                         },
@@ -194,32 +159,5 @@ Need New Customers?<br>\n
         <!-- END app/View/Elements/User/profile_setting.ctp -->
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     </div>
-</div>
 

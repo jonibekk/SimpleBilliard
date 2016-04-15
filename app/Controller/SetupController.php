@@ -34,10 +34,11 @@ class SetupController extends AppController
     {
     }
 
-
-    public function profile_index() {
+    public function profile_image()
+    {
     }
 
-    public function profile_add() {
+    public function profile_add()
+    {
     }
 }
