@@ -43,11 +43,11 @@ if (isset($this->request->params['post_id']) && isset($this->request->params['na
     <a href="#" get-url="<?= $this->Html->url(['controller' => 'notifications']) ?>" class="btn-back-notifications">
         <i class="fa fa-chevron-left font_18px font_lightgray lh_20px"></i>
     </a>
-<?php endif ?>
-<?php
-// 投稿単体ページで $posts が空の場合（投稿が削除された場合）
-if (isset($this->request->params['post_id']) && !$posts): ?>
-    <?= $this->element("Feed/post_not_found") ?>
+    <?php
+    // 削除された投稿へのリクエストの場合
+    if (!$posts): ?>
+        <?= $this->element("Feed/post_not_found") ?>
+    <?php endif ?>
 <?php endif ?>
 <div id="app-view-elements-feed-posts">
     <?= $this->element("Feed/posts") ?>
