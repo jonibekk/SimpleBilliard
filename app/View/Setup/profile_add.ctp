@@ -1,6 +1,6 @@
 <div id="setup-guide-app">
     <div class="setup-container col col-sm-8 col-sm-offset-2 panel">
-        <div class="setup-inner col col-xxs-10 col-xxs-offset-1 pb_8px pt_20px font_verydark">
+        <div class="setup-inner col col-xxs-offset-1 pb_8px pt_20px font_verydark">
             <!-- Setup guide header -->
             <div class="setup-pankuzu font_18px">
                 <?= __("Set up Goalous") ?> < <?= __("Input your profile") ?>
@@ -22,14 +22,14 @@
                     'id'            => 'ChangeProfileForm'
                 ]); ?>
                 <div class="panel-body profile-setting-panel-body">
-                    <div class="form-group">
-                        <label for="" class="col control-label">
+<!--                    <div class="form-group">-->
+                        <label for="" class="col control-label setup-profile-add-picture-title">
                             <?= __("Your profile picture") ?>
                         </label>
 
-                        <div class="col">
+                        <div class="col setup-profile-add-picture-container">
                             <div class="fileinput fileinput-new" data-provides="fileinput">
-                                <div class="fileinput-preview thumbnail nailthumb-container"
+                                <div class="fileinput-preview thumbnail nailthumb-container setup-profile-add-picture-thumbnail"
                                      data-trigger="fileinput"
                                      style="width: 150px; height: 150px;">
                                     <?=
@@ -37,7 +37,7 @@
                                                                ['style' => 'x_large']) ?>
                                 </div>
                                 <div>
-                        <span class="btn btn-default btn-file">
+                        <span class="btn btn-default btn-file setup-profile-add-picture-upload-btn">
                             <span class="fileinput-new">
                                 <?= __("Select an image") ?>
                             </span>
@@ -65,7 +65,7 @@
                             </div>
                         </div>
 
-                    </div>
+<!--                    </div>-->
                     <div class="form-group">
                         <div class="col col-sm-3 control-label">
                             <label for="UserComment" class=""><?= __("Your self-info.") ?></label>
@@ -91,7 +91,7 @@
                                                         "[What is that you can contribute to the team?]\n\n[What is the thing you want to achieve in the team?(Specifically)]\n\n[Others]\n\n")]
                             )
                             ?>
-                <span class="help-block inline-block font_11px" id="CommentHelp" style="display: none">
+                            <span class="help-block inline-block font_11px" id="CommentHelp" style="display: none">
                     <?= __("[Now, What is that you can contribute to the team?]<br>\n
 Consulting UX of your production.<br>\n
 [What is the thing you want to achieve in the team?(Specifically)]<br>\n
@@ -106,10 +106,8 @@ Need New Customers?<br>\n
                         </div>
                     </div>
                 </div>
-                <div class="">
-                    <?= $this->Form->submit(__("Save changes"), ['class' => 'btn btn-primary']) ?>
-                    <div class="clearfix"></div>
-                </div>
+                <input class="setup-back-btn" value="<?= __("Back") ?>" type="submit">
+                <?= $this->Form->submit(__("Submit"), ['class' => 'btn-primary setup-next-btn']) ?>
                 <?= $this->Form->end(); ?>
             </div>
         </div>
