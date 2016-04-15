@@ -1,9 +1,18 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 import { Link, browserHistory } from 'react-router'
+import axios from 'axios'
 
 export default class Top extends React.Component {
   constructor(props, context) {
     super(props, context);
+    this.state = {setup_rest_count: ''};
+  }
+  componentDidMount() {
+    axios.get('/setup/ajax_get_setup_status').then((response) => {
+      this.setState({setup_rest_count: response.data.setup_rest_count})
+    }).catch((response) => {
+      alert('fetch failed')
+    })
   }
   listData() {
     return ([
@@ -75,12 +84,12 @@ export default class Top extends React.Component {
               <div className="progress-bar progress-bar-info" role="progressbar"
                    aria-valuenow="50" aria-valuemin="0"
                    aria-valuemax="100">
-                  <span className="ml_12px">50%</span>
+                <span className="ml_12px">50%</span>
               </div>
             </div>
           </div>
           <div className="setup-status-number col col-sm-3 col-xs-4 text-right font_bold">
-            <div className="setup-status-number-elem">4</div>
+            <div className="setup-status-number-elem">{this.props.setup_rest_count}</div>
           </div>
         </div>
         <div className="setup-status-footer text-right font_18px">:STEPS LEFT</div>
@@ -91,4 +100,8 @@ export default class Top extends React.Component {
       </div>
     )
   }
+}
+
+Top.propTypes = {
+  setup_rest_count: PropTypes.number.isRequired
 }
