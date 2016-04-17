@@ -11,7 +11,7 @@ export default class Top extends React.Component {
         index: 1,
         subject: 'Input your profile',
         explain: 'Set your profile picture and self-info.',
-        link: '/setup'
+        link: '/setup/profile_image'
       },
       {
         index: 2,

@@ -13,6 +13,8 @@ import GoalImage from '../components/goal/goal_image'
 import PurposeSelect from '../components/goal/purpose_select'
 import GoalSelect from '../components/goal/goal_select'
 import GoalCreate from '../components/goal/goal_create'
+import ProfileImage from '../components/profile/profile_image'
+import ProfileAdd from '../components/profile/profile_add'
 
 const reducer = combineReducers({
   reducers,
@@ -34,6 +36,8 @@ export default class Routes extends Component {
               <Route path="purpose_select" component={PurposeSelect} />
               <Route path="goal_select" component={GoalSelect} />
               <Route path="goal_create" component={GoalCreate} />
+              <Route path="profile_image" component={ProfileImage} />
+              <Route path="profile_add" component={ProfileAdd} />
             </Route>
           </Router>
         </Provider>
