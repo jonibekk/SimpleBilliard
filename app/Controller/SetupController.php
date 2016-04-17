@@ -54,4 +54,11 @@ class SetupController extends AppController
         return true;
     }
 
+    public function profile_image()
+    {
+    }
+
+    public function profile_add()
+    {
+    }
 }
