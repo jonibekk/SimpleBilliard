@@ -1,3 +1,4 @@
+import React, { Component } from 'react'
 import { createStore, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
@@ -17,10 +18,10 @@ const reducer = combineReducers({
   reducers,
   routing: routerReducer
 })
-
 const store = createStore(reducer)
 const history = syncHistoryWithStore(browserHistory, store)
 
+// Define setup-guide routes
 export default class Routes extends Component {
   render() {
     return (
@@ -36,7 +37,6 @@ export default class Routes extends Component {
             </Route>
           </Router>
         </Provider>
-        <DevTools store={store} />
       </div>
     );
   }

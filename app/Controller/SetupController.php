@@ -50,7 +50,7 @@ class SetupController extends AppController
     }
 
     public function ajax_add_goal() {
-        $this->_ajaxPreProcess();
+        $this->log($this->request->data);
         return true;
     }
 
