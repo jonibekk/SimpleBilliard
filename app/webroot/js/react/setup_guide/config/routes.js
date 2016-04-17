@@ -1,10 +1,8 @@
 import React, { Component } from 'react'
-import { createStore, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
-import { Router, Route, IndexRoute, browserHistory } from 'react-router'
-import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
-
-import * as reducers from '../reducers'
+import { Router, Route, IndexRoute,　browserHistory } from 'react-router'
+import configureStore from '../store/configureStore';
+import { syncHistoryWithStore } from 'react-router-redux'
 
 // How do I write this simply?
 import Index from '../components/index'
@@ -16,11 +14,7 @@ import GoalCreate from '../components/goal/goal_create'
 import ProfileImage from '../components/profile/profile_image'
 import ProfileAdd from '../components/profile/profile_add'
 
-const reducer = combineReducers({
-  reducers,
-  routing: routerReducer
-})
-const store = createStore(reducer)
+const store = configureStore()
 const history = syncHistoryWithStore(browserHistory, store)
 
 // Define setup-guide routes
