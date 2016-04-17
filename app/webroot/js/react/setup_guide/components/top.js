@@ -1,18 +1,9 @@
 import React, { PropTypes } from 'react'
 import { Link, browserHistory } from 'react-router'
-import axios from 'axios'
 
 export default class Top extends React.Component {
   constructor(props, context) {
     super(props, context);
-    this.state = {setup_rest_count: ''};
-  }
-  componentDidMount() {
-    axios.get('/setup/ajax_get_setup_status').then((response) => {
-      this.setState({setup_rest_count: response.data.setup_rest_count})
-    }).catch((response) => {
-      alert('fetch failed')
-    })
   }
   listData() {
     return ([

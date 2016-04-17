@@ -1,4 +1,2 @@
-export const DATA_FETCHED = 'DATA_FETCHED';
-export const DATA_SUCCEEDED = 'DATA_SUCCEEDED';
-export const DATA_FAILED = 'DATA_FAILED';
-export const TITLE_CHANGED = 'TITLE_CHANGED';
+export const SETUP_STATUS_UPDATE = 'SETUP_STATUS_UPDATE'
+export const SUBMIT_GOAL = 'SUBMIT_GOAL'
