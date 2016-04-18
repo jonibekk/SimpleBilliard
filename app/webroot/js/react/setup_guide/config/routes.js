@@ -2,12 +2,12 @@ import React, { Component } from 'react'
 import { Provider } from 'react-redux'
 import { createStore, combineReducers } from 'redux'
 import { Router, Route, IndexRoute,　browserHistory } from 'react-router'
-import configureStore from '../store/configureStore';
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 import { createDevTools } from 'redux-devtools'
 import LogMonitor from 'redux-devtools-log-monitor'
 import DockMonitor from 'redux-devtools-dock-monitor'
 import * as reducers from '../reducers'
+import { updateSetupStatus } from '../actions/home_actions'
 
 // How do I write this simply?
 import Index from '../components/index'
@@ -34,6 +34,9 @@ const store = createStore(
   reducer,
   DevTools.instrument()
 )
+
+// initialize store
+store.dispatch(updateSetupStatus)
 
 const history = syncHistoryWithStore(browserHistory, store)
 
