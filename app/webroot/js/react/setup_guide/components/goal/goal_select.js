@@ -12,7 +12,7 @@ export default class GoalSelect extends React.Component {
           :Set up Goalous <i className="fa fa-angle-right" aria-hidden="true"></i> :Create a goal
         </div>
         <div className="setup-items">
-          <Link to="/setup/goal_create" className="setup-items-item pt_10px mt_12px bd-radius_14px">
+          <Link to="/setup/goal/create" className="setup-items-item pt_10px mt_12px bd-radius_14px">
             <div className="pull-left mt_3px ml_2px">
               <div className="setup-items-item-icon">
                 <img src='/img/setup/sample_men.png' className="setup-items-item-icon-img" alt='aragaki' />
@@ -26,7 +26,7 @@ export default class GoalSelect extends React.Component {
             </div>
           </Link>
 
-          <Link to="/setup/goal_create" className="setup-items-item pt_10px mt_12px bd-radius_14px">
+          <Link to="/setup/goal/create" className="setup-items-item pt_10px mt_12px bd-radius_14px">
             <div className="pull-left mt_3px ml_2px">
               <div className="setup-items-item-icon">
                 <img src='/img/setup/sample_men.png' className="setup-items-item-icon-img" alt='aragaki' />
@@ -40,7 +40,7 @@ export default class GoalSelect extends React.Component {
             </div>
           </Link>
 
-          <Link to="/setup/goal_create" className="setup-items-item pt_10px mt_12px bd-radius_14px">
+          <Link to="/setup/goal/create" className="setup-items-item pt_10px mt_12px bd-radius_14px">
             <div className="pull-left mt_3px ml_2px">
               <div className="setup-items-item-icon">
                 <img src='/img/setup/sample_men.png' className="setup-items-item-icon-img" alt='aragaki' />

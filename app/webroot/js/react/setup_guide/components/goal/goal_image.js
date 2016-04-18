@@ -14,7 +14,7 @@ export default class GoalImage extends React.Component {
         <div className="setup-explain">
             <img src='/img/setup/goal.png' className='setup-explain-img' alt='setup goal' />
         </div>
-        <Link to="/setup/purpose_select" className="btn btn-primary">Next</Link>
+        <Link to="/setup/goal/purpose_select" className="btn btn-primary">Next</Link>
       </div>
     )
   }

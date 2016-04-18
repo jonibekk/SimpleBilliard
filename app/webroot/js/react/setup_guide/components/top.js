@@ -11,7 +11,7 @@ export default class Top extends React.Component {
         index: 1,
         subject: 'Input your profile',
         explain: 'Set your profile picture and self-info.',
-        link: '/setup/profile_image'
+        link: '/setup/profile/image'
       },
       {
         index: 2,
@@ -23,7 +23,7 @@ export default class Top extends React.Component {
         index: 3,
         subject: 'Create a goal',
         explain: 'Create or collaborate with a goal.',
-        link: '/setup/goal_image'
+        link: '/setup/goal/image'
       },
       {
         index: 4,

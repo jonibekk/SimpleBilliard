@@ -7,11 +7,13 @@ import { createDevTools } from 'redux-devtools'
 import LogMonitor from 'redux-devtools-log-monitor'
 import DockMonitor from 'redux-devtools-dock-monitor'
 import * as reducers from '../reducers'
-import { updateSetupStatus } from '../actions/home_actions'
+import { initSetupStatus } from '../actions/home_actions'
 
 // How do I write this simply?
+import GoalContainer from '../containers/goal'
+import ProfileContainer from '../containers/profile'
+import TopContainer from '../containers/top'
 import Index from '../components/index'
-import Top from '../components/top'
 import GoalImage from '../components/goal/goal_image'
 import PurposeSelect from '../components/goal/purpose_select'
 import GoalSelect from '../components/goal/goal_select'
@@ -35,8 +37,8 @@ const store = createStore(
   DevTools.instrument()
 )
 
-// initialize store
-store.dispatch(updateSetupStatus)
+// dispatch initial data to store
+store.dispatch(initSetupStatus())
 
 const history = syncHistoryWithStore(browserHistory, store)
 
@@ -48,13 +50,19 @@ export default class Routes extends Component {
         <div>
           <Router history={history}>
             <Route path="/setup" component={Index} >
-              <IndexRoute component={Top} />
-              <Route path="goal_image" component={GoalImage} />
-              <Route path="purpose_select" component={PurposeSelect} />
-              <Route path="goal_select" component={GoalSelect} />
-              <Route path="goal_create" component={GoalCreate} />
-              <Route path="profile_image" component={ProfileImage} />
-              <Route path="profile_add" component={ProfileAdd} />
+              <IndexRoute component={TopContainer} />
+              <Route path="goal" component={GoalContainer} >
+                <IndexRoute component={GoalImage} />
+                <Route path="image" component={GoalImage} />
+                <Route path="purpose_select" component={PurposeSelect} />
+                <Route path="select" component={GoalSelect} />
+                <Route path="create" component={GoalCreate} />
+              </Route>
+              <Route path="profile" component={ProfileContainer} >
+                <IndexRoute component={ProfileImage} />
+                <Route path="image" component={ProfileImage} />
+                <Route path="add" component={ProfileAdd} />
+              </Route>
             </Route>
           </Router>
           <DevTools />

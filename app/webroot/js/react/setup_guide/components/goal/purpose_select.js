@@ -13,7 +13,7 @@ export default class PurposeSelect extends React.Component {
         </div>
 
         <div className="setup-items">
-          <Link to="/setup/goal_select" className="setup-items-item pt_10px mt_12px bd-radius_14px">
+          <Link to="/setup/goal/select" className="setup-items-item pt_10px mt_12px bd-radius_14px">
             <div className="pull-left mt_3px ml_2px">
               <div className="setup-items-item-icon">
                 <img src='/img/setup/sample_men.png' className="setup-items-item-icon-img" alt='aragaki' />
@@ -28,7 +28,7 @@ export default class PurposeSelect extends React.Component {
             </div>
           </Link>
 
-          <Link to="/setup/goal_select" className="setup-items-item pt_10px mt_12px bd-radius_14px">
+          <Link to="/setup/goal/select" className="setup-items-item pt_10px mt_12px bd-radius_14px">
             <div className="pull-left mt_3px ml_2px">
               <div className="setup-items-item-icon">
                 <img src='/img/setup/sample_men.png' className="setup-items-item-icon-img" alt='aragaki' />
@@ -43,7 +43,7 @@ export default class PurposeSelect extends React.Component {
             </div>
           </Link>
 
-          <Link to="/setup/goal_select" className="setup-items-item pt_10px mt_12px bd-radius_14px">
+          <Link to="/setup/goal/select" className="setup-items-item pt_10px mt_12px bd-radius_14px">
             <div className="pull-left mt_3px ml_2px">
               <div className="setup-items-item-icon">
                 <img src='/img/setup/sample_men.png' className="setup-items-item-icon-img" alt='aragaki' />
