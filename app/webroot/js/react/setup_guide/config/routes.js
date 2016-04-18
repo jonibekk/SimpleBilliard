@@ -1,8 +1,13 @@
 import React, { Component } from 'react'
 import { Provider } from 'react-redux'
+import { createStore, combineReducers } from 'redux'
 import { Router, Route, IndexRoute,　browserHistory } from 'react-router'
 import configureStore from '../store/configureStore';
-import { syncHistoryWithStore } from 'react-router-redux'
+import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
+import { createDevTools } from 'redux-devtools'
+import LogMonitor from 'redux-devtools-log-monitor'
+import DockMonitor from 'redux-devtools-dock-monitor'
+import * as reducers from '../reducers'
 
 // How do I write this simply?
 import Index from '../components/index'
@@ -14,15 +19,30 @@ import GoalCreate from '../components/goal/goal_create'
 import ProfileImage from '../components/profile/profile_image'
 import ProfileAdd from '../components/profile/profile_add'
 
-const store = configureStore()
+const DevTools = createDevTools(
+  <DockMonitor toggleVisibilityKey="ctrl-h" changePositionKey="ctrl-q">
+    <LogMonitor theme="tomorrow" preserveScrollTop={false} />
+  </DockMonitor>
+)
+
+const reducer = combineReducers({
+  reducers,
+  routing: routerReducer
+})
+
+const store = createStore(
+  reducer,
+  DevTools.instrument()
+)
+
 const history = syncHistoryWithStore(browserHistory, store)
 
 // Define setup-guide routes
 export default class Routes extends Component {
   render() {
     return (
-      <div>
-        <Provider store={store}>
+      <Provider store={store}>
+        <div>
           <Router history={history}>
             <Route path="/setup" component={Index} >
               <IndexRoute component={Top} />
@@ -34,8 +54,9 @@ export default class Routes extends Component {
               <Route path="profile_add" component={ProfileAdd} />
             </Route>
           </Router>
-        </Provider>
-      </div>
+          <DevTools />
+        </div>
+      </Provider>
     );
   }
 };
