@@ -4,11 +4,15 @@
   "description": "Automate the frontend-tasks with Grunt for Goalous",
   "main": "index.js",
   "dependencies": {
+    "axios": "^0.9.1",
     "react": "^0.14.7",
+    "react-bootstrap": "^0.28.5",
     "react-dom": "^0.14.7",
     "react-redux": "^4.4.1",
     "react-router": "^2.0.1",
-    "redux": "^3.3.1"
+    "react-router-redux": "^4.0.0",
+    "redux": "^3.3.1",
+    "redux-thunk": "^2.0.1"
   },
   "devDependencies": {
     "babel": "^6.5.2",
@@ -37,6 +41,9 @@
     "grunt-lesslint": "^1.1.*",
     "grunt-styledocco": "^0.3.0",
     "load-grunt-config": "^0.17.*",
+    "redux-devtools": "^3.1.1",
+    "redux-devtools-dock-monitor": "^1.1.1",
+    "redux-devtools-log-monitor": "^1.0.11",
     "time-grunt": "^1.1.*"
   },
   "scripts": {

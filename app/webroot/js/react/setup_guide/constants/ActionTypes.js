@@ -1,0 +1,2 @@
+export const FETCH_SETUP_STATUS = 'FETCH_SETUP_STATUS'
+export const SUBMIT_GOAL = 'SUBMIT_GOAL'

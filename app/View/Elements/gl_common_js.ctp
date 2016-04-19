@@ -53,6 +53,7 @@ echo $this->Html->script('vendor/angular/ng-infinite-scroll.min');
 <!--suppress JSDuplicatedDeclaration -->
 <script type="text/javascript">
     var cake = {
+        env_name: "<?= ENV_NAME ?>",
         message: {
             validate: {
                 a: "<?= __('%1$d or more and %2$d or less characters.',8,50)?>",
@@ -302,7 +303,7 @@ echo $this->Html->script('vendor/angular/ng-infinite-scroll.min');
         pre_file_ttl: <?= PRE_FILE_TTL ?>,
         notify_setting: <?= isset($notify_setting)?json_encode($notify_setting):"''" ?>,
         unread_msg_post_ids: <?=isset($unread_msg_post_ids)?json_encode($unread_msg_post_ids):"''"?>,
-        select2_query_limit: <?=SELECT2_QUERY_LIMIT?>
+        select2_query_limit: <?=SELECT2_QUERY_LIMIT?>,
     };
 
 

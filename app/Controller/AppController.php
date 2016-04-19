@@ -871,12 +871,7 @@ class AppController extends Controller
             return;
         }
 
-        $status_from_redis = $this->GlRedis->getSetupGuideStatus($this->Auth->user('id'));
-        if (!$status_from_redis) {
-            $status_from_mysql = $this->User->generateSetupGuideStatusDict($this->Auth->user('id'));
-            $this->GlRedis->saveSetupGuideStatus($this->Auth->user('id'), $status_from_mysql);
-            $status_from_redis = $status_from_mysql;
-        }
+        $status_from_redis = $this->getStatusWithRedisSave();
         $this->set('setup_status', $status_from_redis);
         $this->set('setup_rest_count', count(User::$TYPE_SETUP_GUIDE) - count(array_filter($status_from_redis)));
         return;
@@ -892,12 +887,27 @@ class AppController extends Controller
         $user_id = $this->Auth->user('id');
         $this->GlRedis->deleteSetupGuideStatus($user_id);
         $status_from_mysql = $this->User->generateSetupGuideStatusDict($user_id);
-        if (count(array_filter($status_from_mysql)) === count(User::$TYPE_SETUP_GUIDE)) {
+        if ($this->calcStatusRestCount($status_from_mysql) === 0) {
             $this->User->completeSetupGuide($user_id);
             return true;
         }
         $this->GlRedis->saveSetupGuideStatus($user_id, $status_from_mysql);
         return true;
+    }
+
+    function getStatusWithRedisSave()
+    {
+        $status = $this->GlRedis->getSetupGuideStatus($this->Auth->user('id'));
+        if (!$status) {
+            $status = $this->User->generateSetupGuideStatusDict($this->Auth->user('id'));
+            $this->GlRedis->saveSetupGuideStatus($this->Auth->user('id'), $status);
+        }
+        return $status;
+    }
+
+    function calcSetupRestCount($status)
+    {
+        return count(User::$TYPE_SETUP_GUIDE) - count(array_filter($status));
     }
 
 }
