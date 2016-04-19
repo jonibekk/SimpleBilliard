@@ -39,7 +39,7 @@
           </div>
         </a>
 
-        <a class="setup-items-item pt_10px mt_12px bd-radius_14px" href="">
+        <a class="setup-items-item pt_10px mt_12px bd-radius_14px" href="/setup/app_image">
           <div class="pull-left mt_3px ml_2px">
             <div class="setup-items-item-radius-number inline-block">
               2
