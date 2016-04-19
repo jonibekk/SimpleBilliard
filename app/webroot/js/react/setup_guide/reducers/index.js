@@ -1,4 +1,4 @@
-import { SETUP_STATUS_UPDATE } from '../constants/ActionTypes'
+import { FETCH_SETUP_STATUS } from '../constants/ActionTypes'
 
 let defaultState = {
   setup_status: {
@@ -14,9 +14,10 @@ let defaultState = {
 
 export default function(state = defaultState, action) {
   switch (action.type) {
-    case SETUP_STATUS_UPDATE:
+    case FETCH_SETUP_STATUS:
       return Object.assign({}, state, {
-        setup_status: action.status
+        status: action.status,
+        setup_rest_count: action.setup_rest_count,
       })
     default:
       return state;

@@ -18,25 +18,17 @@ class SetupController extends AppController
         return $this->render();
     }
 
-    public function goal_image()
+    public function goal()
     {
         return $this->render('index');
     }
 
-    public function purpose_select()
+    public function profile()
     {
         return $this->render('index');
     }
 
-    public function goal_select()
-    {
-        return $this->render('index');
-    }
 
-    public function goal_create()
-    {
-        return $this->render('index');
-    }
 
     public function ajax_get_setup_status()
     {
@@ -50,15 +42,6 @@ class SetupController extends AppController
     }
 
     public function ajax_add_goal() {
-        $this->log($this->request->data);
         return true;
-    }
-
-    public function profile_image()
-    {
-    }
-
-    public function profile_add()
-    {
     }
 }
