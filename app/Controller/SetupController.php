@@ -28,7 +28,10 @@ class SetupController extends AppController
         return $this->render('index');
     }
 
-
+    public function circle()
+    {
+        return $this->render('index');
+    }
 
     public function ajax_get_setup_status()
     {

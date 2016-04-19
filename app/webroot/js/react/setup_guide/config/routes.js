@@ -13,6 +13,7 @@ import { initSetupStatus } from '../actions/home_actions'
 import GoalContainer from '../containers/goal'
 import ProfileContainer from '../containers/profile'
 import TopContainer from '../containers/top'
+import CircleContainer from '../containers/circle'
 import Index from '../components/index'
 import GoalImage from '../components/goal/goal_image'
 import PurposeSelect from '../components/goal/purpose_select'
@@ -20,6 +21,8 @@ import GoalSelect from '../components/goal/goal_select'
 import GoalCreate from '../components/goal/goal_create'
 import ProfileImage from '../components/profile/profile_image'
 import ProfileAdd from '../components/profile/profile_add'
+import CircleImage from '../components/circle/circle_image'
+import CircleSelect from '../components/circle/circle_select'
 
 const DevTools = createDevTools(
   <DockMonitor toggleVisibilityKey="ctrl-h" changePositionKey="ctrl-q">
@@ -62,6 +65,11 @@ export default class Routes extends Component {
                 <IndexRoute component={ProfileImage} />
                 <Route path="image" component={ProfileImage} />
                 <Route path="add" component={ProfileAdd} />
+              </Route>
+              <Route path="circle" component={CircleContainer} >
+                <IndexRoute component={CircleImage} />
+                <Route path="image" component={CircleImage} />
+                <Route path="select" component={CircleSelect} />
               </Route>
             </Route>
           </Router>

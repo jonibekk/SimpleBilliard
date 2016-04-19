@@ -35,7 +35,7 @@ export default class Top extends React.Component {
         index: 5,
         subject: 'Join a circle',
         explain: 'Create a circle or join.',
-        link: '/setup'
+        link: '/setup/circle/image'
       },
       {
         index: 6,
@@ -80,10 +80,10 @@ export default class Top extends React.Component {
             </div>
           </div>
           <div className="setup-status-number col col-sm-3 col-xs-4 text-right font_bold">
-            <div className="setup-status-number-elem">{this.props.setup_rest_count}</div>
+            <div className="setup-status-number-elem">2</div>
           </div>
         </div>
-        <div className="setup-status-footer text-right font_18px">:STEPS LEFT</div>
+        <div className="setup-status-footer text-right font_18px">STEPS LEFT</div>
 
         <div className="setup-items">
           {items}
