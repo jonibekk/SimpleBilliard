@@ -11,34 +11,37 @@ class SetupController extends AppController
         parent::beforeFilter();
         $this->layout = LAYOUT_ONE_COLUMN;
         $this->set('without_footer', true);
-        return $this->render();
     }
 
     public function index()
     {
+        return $this->render();
     }
 
-    public function goal_image()
+    public function goal()
     {
+        return $this->render('index');
     }
 
-    public function purpose_select()
+    public function profile()
     {
+        return $this->render('index');
     }
 
-    public function goal_select()
+
+
+    public function ajax_get_setup_status()
     {
+        $this->layout = false;
+        $status = $this->getStatusWithRedisSave();
+        $res = [
+          'status' => $status,
+          'setup_rest_count' => $this->calcSetupRestCount($status)
+        ];
+        return $this->_ajaxGetResponse($res);
     }
 
-    public function goal_create()
-    {
-    }
-
-    public function profile_image()
-    {
-    }
-
-    public function profile_add()
-    {
+    public function ajax_add_goal() {
+        return true;
     }
 }
