@@ -34,7 +34,8 @@ export default class CircleSelect extends React.Component {
             </div>
           </Link>
         </div>
-        <input type="submit" className="btn btn-primary" onClick={this.onSubmitJoin} defaultValue="Join a circle" />
+        <Link to="/setup/" className="btn btn-secondary setup-back-btn">Back</Link>
+        <Link to="/setup/circle/select" className="btn btn-primary setup-next-btn pull-right">Join a circle</Link>
       </div>
     )
   }

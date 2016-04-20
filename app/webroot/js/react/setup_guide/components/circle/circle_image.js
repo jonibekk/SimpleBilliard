@@ -14,7 +14,12 @@ export default class CircleImage extends React.Component {
         <div className="setup-explain">
             <img src='/img/setup/circle.png' className='setup-explain-img' alt='setup goalous' />
         </div>
-        <Link to="/setup/circle/select" className="btn btn-primary">Next</Link>
+        <div className="row">
+          <div className="col-sm-12">
+            <Link to="/setup/" className="btn btn-secondary setup-back-btn">Back</Link>
+            <Link to="/setup/circle/select" className="btn btn-primary setup-next-btn pull-right">Next</Link>
+          </div>
+        </div>
       </div>
     )
   }
