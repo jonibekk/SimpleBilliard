@@ -12,6 +12,7 @@ import { initSetupStatus } from '../actions/home_actions'
 // How do I write this simply?
 import GoalContainer from '../containers/goal'
 import ProfileContainer from '../containers/profile'
+import AppContainer from '../containers/app'
 import TopContainer from '../containers/top'
 import CircleContainer from '../containers/circle'
 import Index from '../components/index'
@@ -23,6 +24,8 @@ import ProfileImage from '../components/profile/profile_image'
 import ProfileAdd from '../components/profile/profile_add'
 import CircleImage from '../components/circle/circle_image'
 import CircleSelect from '../components/circle/circle_select'
+import AppImage from '../components/app/app_image'
+import AppSelect from '../components/app/app_select'
 
 const DevTools = createDevTools(
   <DockMonitor toggleVisibilityKey="ctrl-h" changePositionKey="ctrl-q">
@@ -70,6 +73,11 @@ export default class Routes extends Component {
                 <IndexRoute component={CircleImage} />
                 <Route path="image" component={CircleImage} />
                 <Route path="select" component={CircleSelect} />
+              </Route>
+              <Route path="app" component={AppContainer} >
+                <IndexRoute component={AppImage} />
+                <Route path="image" component={AppImage} />
+                <Route path="select" component={AppSelect} />
               </Route>
             </Route>
           </Router>

@@ -33,18 +33,25 @@ class SetupController extends AppController
         return $this->render('index');
     }
 
+    public function app()
+    {
+        return $this->render('index');
+    }
+
     public function ajax_get_setup_status()
     {
         $this->layout = false;
         $status = $this->getStatusWithRedisSave();
         $res = [
-          'status' => $status,
-          'setup_rest_count' => $this->calcSetupRestCount($status)
+            'status'           => $status,
+            'setup_rest_count' => $this->calcSetupRestCount($status)
         ];
         return $this->_ajaxGetResponse($res);
     }
 
-    public function ajax_add_goal() {
+    public function ajax_add_goal()
+    {
         return true;
     }
+
 }

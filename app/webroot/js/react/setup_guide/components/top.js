@@ -17,7 +17,7 @@ export default class Top extends React.Component {
         index: 2,
         subject: 'Login from mobile app',
         explain: 'Install Goalous iOS and Android apps.',
-        link: '/setup'
+        link: '/setup/app/image'
       },
       {
         index: 3,
