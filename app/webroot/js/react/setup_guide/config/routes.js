@@ -12,6 +12,7 @@ import { initSetupStatus } from '../actions/home_actions'
 // How do I write this simply?
 import GoalContainer from '../containers/goal'
 import ProfileContainer from '../containers/profile'
+import AppContainer from '../containers/app'
 import TopContainer from '../containers/top'
 import Index from '../components/index'
 import GoalImage from '../components/goal/goal_image'
@@ -20,6 +21,8 @@ import GoalSelect from '../components/goal/goal_select'
 import GoalCreate from '../components/goal/goal_create'
 import ProfileImage from '../components/profile/profile_image'
 import ProfileAdd from '../components/profile/profile_add'
+import AppImage from '../components/app/app_image'
+import AppSelect from '../components/app/app_select'
 
 const DevTools = createDevTools(
   <DockMonitor toggleVisibilityKey="ctrl-h" changePositionKey="ctrl-q">
@@ -62,6 +65,11 @@ export default class Routes extends Component {
                 <IndexRoute component={ProfileImage} />
                 <Route path="image" component={ProfileImage} />
                 <Route path="add" component={ProfileAdd} />
+              </Route>
+              <Route path="app" component={AppContainer} >
+                <IndexRoute component={AppImage} />
+                <Route path="image" component={AppImage} />
+                <Route path="select" component={AppSelect} />
               </Route>
             </Route>
           </Router>
