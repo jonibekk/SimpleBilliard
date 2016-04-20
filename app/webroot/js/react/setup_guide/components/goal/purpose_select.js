@@ -20,8 +20,8 @@ export default class PurposeSelect extends React.Component {
               </div>
             </div>
             <div className="setup-items-item-explain pull-left">
-              <p className="font_bold font_verydark">Do something with team members</p>
-              <p className="font_11px font_lightgray">You do something worthwhile.</p>
+              <p className="font_bold font_verydark">Install Android app</p>
+              <p className="font_11px font_lightgray">Requires Android 4.4 or later.</p>
             </div>
             <div className="setup-items-item-to-right pull-right mt_12px mr_5px">
               <i className="fa fa-chevron-right font_18px"></i>
@@ -35,8 +35,8 @@ export default class PurposeSelect extends React.Component {
               </div>
             </div>
             <div className="setup-items-item-explain pull-left">
-              <p className="font_bold font_verydark">Open yourself</p>
-              <p className="font_11px font_lightgray">Increasing people who know you.</p>
+              <p className="font_bold font_verydark">Install iOS app</p>
+              <p className="font_11px font_lightgray">Requires iOS 8.4 or later.</p>
             </div>
             <div className="setup-items-item-to-right pull-right mt_12px mr_5px">
               <i className="fa fa-chevron-right font_18px"></i>
@@ -50,8 +50,8 @@ export default class PurposeSelect extends React.Component {
               </div>
             </div>
             <div className="setup-items-item-explain pull-left">
-              <p className="font_bold font_verydark">Give something to team members</p>
-              <p className="font_11px font_lightgray">Be happy everyone.</p>
+              <p className="font_bold font_verydark">I have no iOS/Android devices</p>
+              <p className="font_11px font_lightgray">If you don't have a mobile device.</p>
             </div>
             <div className="setup-items-item-to-right pull-right mt_12px mr_5px">
               <i className="fa fa-chevron-right font_18px"></i>
