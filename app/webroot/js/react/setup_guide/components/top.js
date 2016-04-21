@@ -84,7 +84,6 @@ export default class Top extends React.Component {
           </div>
         </div>
         <div className="setup-status-footer text-right font_18px">STEPS LEFT</div>
-
         <div className="setup-items">
           {items}
         </div>

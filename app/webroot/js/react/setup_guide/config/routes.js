@@ -24,6 +24,7 @@ import ProfileImage from '../components/profile/profile_image'
 import ProfileAdd from '../components/profile/profile_add'
 import CircleImage from '../components/circle/circle_image'
 import CircleSelect from '../components/circle/circle_select'
+import CircleCreate from '../components/circle/circle_create'
 import AppImage from '../components/app/app_image'
 import AppSelect from '../components/app/app_select'
 
@@ -73,6 +74,7 @@ export default class Routes extends Component {
                 <IndexRoute component={CircleImage} />
                 <Route path="image" component={CircleImage} />
                 <Route path="select" component={CircleSelect} />
+                <Route path="create" component={CircleCreate} />
               </Route>
               <Route path="app" component={AppContainer} >
                 <IndexRoute component={AppImage} />
