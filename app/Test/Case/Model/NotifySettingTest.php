@@ -74,16 +74,16 @@ class NotifySettingTest extends GoalousTestCase
         $res = $this->NotifySetting->getUserNotifySetting($uid, NotifySetting::TYPE_FEED_POST);
         $expected = [
             $uid => ['app'    => true,
-                     'email'  => in_array('primary', NotifySetting::$TYPE[NotifySetting::TYPE_FEED_POST]['groups']),
-                     'mobile' => in_array('primary', NotifySetting::$TYPE[NotifySetting::TYPE_FEED_POST]['groups'])]
+                     'email'  => in_array('all', NotifySetting::$TYPE[NotifySetting::TYPE_FEED_POST]['groups']),
+                     'mobile' => in_array('all', NotifySetting::$TYPE[NotifySetting::TYPE_FEED_POST]['groups'])]
         ];
         $this->assertEquals($expected, $res, "通知設定なし");
         $res = $this->NotifySetting->getUserNotifySetting($uid, NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST);
         $expected = [
             $uid => ['app'    => true,
-                     'email'  => in_array('primary',
+                     'email'  => in_array('all',
                                           NotifySetting::$TYPE[NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST]['groups']),
-                     'mobile' => in_array('primary',
+                     'mobile' => in_array('all',
                                           NotifySetting::$TYPE[NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST]['groups'])]
         ];
         $this->assertEquals($expected, $res, "通知設定なし 2");
@@ -112,8 +112,8 @@ class NotifySettingTest extends GoalousTestCase
         $expected = [
             $uid  => ['app' => true, 'email' => true, 'mobile' => false],
             $uid2 => ['app'    => true,
-                      'email'  => in_array('primary', NotifySetting::$TYPE[NotifySetting::TYPE_FEED_POST]['groups']),
-                      'mobile' => in_array('primary', NotifySetting::$TYPE[NotifySetting::TYPE_FEED_POST]['groups'])]
+                      'email'  => in_array('all', NotifySetting::$TYPE[NotifySetting::TYPE_FEED_POST]['groups']),
+                      'mobile' => in_array('all', NotifySetting::$TYPE[NotifySetting::TYPE_FEED_POST]['groups'])]
         ];
         $this->assertEquals($expected, $res, "通知設定ありなし混在。複数ユーザ");
 
