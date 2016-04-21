@@ -306,6 +306,13 @@ echo $this->Html->script('vendor/angular/ng-infinite-scroll.min');
         select2_query_limit: <?=SELECT2_QUERY_LIMIT?>,
     };
 
+    function __(text) {
+        if(cake[text] !== undefined) {
+            return cake[text];
+        }
+        return text;
+    }
+
 
     <?php if(isset($mode_view)):?>
     <?php if($mode_view == MODE_VIEW_TUTORIAL):?>
