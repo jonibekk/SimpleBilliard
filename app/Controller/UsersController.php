@@ -705,8 +705,8 @@ class UsersController extends AppController
         $language_name = $this->Lang->availableLanguages[$me['User']['language']];
 
         // 通知設定のプルダウンデフォルト
-        $this->request->data['NotifySetting']['email'] = 'primary';
-        $this->request->data['NotifySetting']['mobile'] = 'primary';
+        $this->request->data['NotifySetting']['email'] = 'all';
+        $this->request->data['NotifySetting']['mobile'] = 'all';
         // 既に通知設定が保存されている場合
         foreach (['email', 'mobile'] as $notify_target) {
             foreach (array_keys(NotifySetting::$TYPE_GROUP) as $type_group) {
