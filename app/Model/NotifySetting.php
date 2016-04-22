@@ -317,11 +317,11 @@ class NotifySetting extends AppModel
         if (!is_array($user_ids)) {
             $user_ids = [$user_ids];
         }
-        // email と mobile のデフォルトは「重要なもの」
+        // email と mobile のデフォルトは「すべて」
         $default_data = [
             'app'    => true,
-            'email'  => in_array('primary', self::$TYPE[$type]['groups']),
-            'mobile' => in_array('primary', self::$TYPE[$type]['groups']),
+            'email'  => in_array('all', self::$TYPE[$type]['groups']),
+            'mobile' => in_array('all', self::$TYPE[$type]['groups']),
         ];
         $options = array(
             'conditions' => array(
