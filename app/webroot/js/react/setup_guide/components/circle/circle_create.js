@@ -14,7 +14,7 @@ export default class CircleCreate extends React.Component {
     let public_flg = ReactDOM.findDOMNode(this.refs.public_flg).value
     let circle_description = ReactDOM.findDOMNode(this.refs.circle_description).value
     let circle_image = ReactDOM.findDOMNode(this.refs.circle_image).files[0]
-    postCircleCreate({
+    const res = postCircleCreate({
       _Token: cake.data.csrf_token.key,
       body: {
         circle_name: circle_name,
@@ -32,7 +32,7 @@ export default class CircleCreate extends React.Component {
           {__("Set up Goalous")} <i className="fa fa-angle-right" aria-hidden="true"></i> {__("Join a circle")}
         </div>
         <p className="font_bold font_verydark">{__("Create a new circle")}</p>
-        <form onSubmit={e => {this.handleSubmit(e)}} className="form-horizontal" encType="multipart/form-data" method="post" acceptCharset="utf-8">
+        <form onSubmit={e => {this.props.handleSubmit(e)}} className="form-horizontal" encType="multipart/form-data" method="post" acceptCharset="utf-8">
           <div className="panel-body">
             <span className="help-block">{__("Circle Name")}</span>
             <input ref="circle_name" className="form-control addteam_input-design" />
