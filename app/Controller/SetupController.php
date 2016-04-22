@@ -9,6 +9,8 @@ class SetupController extends AppController
     public function beforeFilter()
     {
         parent::beforeFilter();
+        $this->Security->validatePost = false;
+        $this->Security->csrfCheck = false;
         $this->layout = LAYOUT_ONE_COLUMN;
         $this->set('without_footer', true);
     }
@@ -52,6 +54,18 @@ class SetupController extends AppController
     public function ajax_add_goal()
     {
         return true;
+    }
+
+    public function ajax_create_circle()
+    {
+        $this->layout = false;
+        $this->log($this->request->data);
+        return $this->_ajaxGetResponse([]);
+    }
+
+    public function ajax_select_circle()
+    {
+
     }
 
 }
