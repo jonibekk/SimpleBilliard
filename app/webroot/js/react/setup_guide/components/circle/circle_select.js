@@ -1,16 +1,9 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
+import React, { PropTypes } from 'react'
 import { Link, browserHistory } from 'react-router'
 
 export default class CircleSelect extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = { selected: false, show_check: false };
-  }
-  onSubmitJoin() {
-  }
-  onClickSelectCircle(e, id) {
-    this.setState({ selected: true, show_check: true })
+  constructor(props) {
+    super(props);
   }
   listData() {
     return ([
@@ -28,6 +21,8 @@ export default class CircleSelect extends React.Component {
       },
     ])
   }
+  // { text.id == this.props.selected_circle_id ? check_icon : null }
+
   render() {
     var check_icon = () => {
       return (
@@ -36,11 +31,11 @@ export default class CircleSelect extends React.Component {
     }
     var circles = this.listData().map((text) => {
       return (
-        <div className="setup-items-item pt_10px mt_12px bd-radius_14px" onClick={this.onClickSelectCircle.bind(this, text.id)} key={text.id}>
+        <div className="setup-items-item pt_10px mt_12px bd-radius_14px" onClick={(e) => { this.props.onClickSelectCircle(text.id)}} key={text.id}>
           <div className="row">
             <div className="setup-items-select-circle pull-left">{text.text}</div>
             <span className="pull-right setup-items-select-circle-check">
-              { this.state.show_check ? check_icon : null }
+              { this.props.select_circle.selected_circle_id == text.id ? check_icon() : null }
             </span>
           </div>
         </div>
@@ -58,10 +53,15 @@ export default class CircleSelect extends React.Component {
           <Link to="/setup/circle/create">Create your own <i className="fa fa-angle-right" aria-hidden="true"></i> </Link>
         </div>
         <div>
-          <Link to="/setup/circle/create" className="btn btn-secondary setup-back-btn">Back</Link>
-          <Link to="/setup/circle/select" className="btn btn-primary setup-next-btn pull-right" disabled={!this.state.selected}>Join a circle</Link>
+          <Link to="/setup/circle/image" className="btn btn-secondary setup-back-btn">Back</Link>
+          <Link to="/setup/circle/select" className="btn btn-primary setup-next-btn pull-right" disabled={!Boolean(this.props.select_circle.selected_circle_id)}>Join a circle</Link>
         </div>
       </div>
     )
   }
+}
+
+CircleSelect.propTypes = {
+  onClickSelectCircle: PropTypes.func,
+  selected_circle_id: PropTypes.number
 }

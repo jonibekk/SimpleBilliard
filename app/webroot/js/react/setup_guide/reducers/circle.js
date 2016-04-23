@@ -1,28 +1,48 @@
-import { FETCH_SETUP_STATUS } from '../constants/ActionTypes'
+import { combineReducers } from 'redux'
+import { CREATE_CIRCLE, SELECT_CIRCLE } from '../constants/ActionTypes'
 
-let defaultState = {
-  setup_status: {
-    1: 0,
-    2: 0,
-    3: 0,
-    4: 0,
-    5: 0,
-    6: 0
+const initialState = {
+  form_input: {
+    circle_name: '',
+    members: '',
+    public_flg: '',
+    circle_description: '',
+    circle_image: ''
   },
-  setup_rest_count: 0
-};
+  selected_circle_id: ''
+}
 
-function messageModal(state = defaultState, action) {
-  const { type, title, message } = action;
-
-  switch (type) {
-    case ActionTypes.FETCH_SETUP_STATUS:
-      return {
-        visibility: "show",
-        title: title,
-        message: message
-      };
+function create_circle(state = initialState, action) {
+  switch (action.type) {
+    case CREATE_CIRCLE:
+      return Object.assign({}, state, {
+        form_input: {
+          circle_name: action.circle_name
+        }
+      })
 
     default:
       return state;
   }
+}
+
+function select_circle(state = initialState, action) {
+  switch (action.type) {
+    case SELECT_CIRCLE:
+      return Object.assign({}, state, {
+        selected_circle_id: action.selected_circle_id
+      })
+
+    default:
+      return state;
+  }
+}
+
+export default function createReducer(obj) {
+  return combineReducers(
+    Object.assign({}, {
+      create_circle,
+      select_circle,
+    }, obj)
+  )
+}

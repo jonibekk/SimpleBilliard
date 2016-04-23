@@ -1,29 +1,9 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
+import React, { PropTypes } from 'react'
 import { Link, browserHistory } from 'react-router'
-import { postCircleCreate } from '../../actions/circle_actions'
 
 export default class CircleCreate extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-  }
-  handleSubmit(e) {
-    e.preventDefault()
-    let circle_name = ReactDOM.findDOMNode(this.refs.circle_name).value
-    let members = ReactDOM.findDOMNode(this.refs.members).value
-    let public_flg = ReactDOM.findDOMNode(this.refs.public_flg).value
-    let circle_description = ReactDOM.findDOMNode(this.refs.circle_description).value
-    let circle_image = ReactDOM.findDOMNode(this.refs.circle_image).files[0]
-    const res = postCircleCreate({
-      _Token: cake.data.csrf_token.key,
-      body: {
-        circle_name: circle_name,
-        members: members,
-        public_flg: public_flg,
-        circle_description: circle_description,
-        circle_image: circle_image
-      }
-    })
+  constructor(props) {
+    super(props);
   }
   render() {
     return (
@@ -32,7 +12,7 @@ export default class CircleCreate extends React.Component {
           {__("Set up Goalous")} <i className="fa fa-angle-right" aria-hidden="true"></i> {__("Join a circle")}
         </div>
         <p className="font_bold font_verydark">{__("Create a new circle")}</p>
-        <form onSubmit={e => {this.props.handleSubmit(e)}} className="form-horizontal" encType="multipart/form-data" method="post" acceptCharset="utf-8">
+        <form onSubmit={e => {this.props.handleSubmit(e, this.refs)}} className="form-horizontal" encType="multipart/form-data" method="post" acceptCharset="utf-8">
           <div className="panel-body">
             <span className="help-block">{__("Circle Name")}</span>
             <input ref="circle_name" className="form-control addteam_input-design" />
@@ -79,4 +59,9 @@ export default class CircleCreate extends React.Component {
       </div>
     )
   }
+}
+
+
+CircleCreate.propTypes = {
+  handleSubmit: PropTypes.func
 }
