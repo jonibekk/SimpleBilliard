@@ -1,9 +1,8 @@
 import ReactDOM from 'react-dom'
 import axios from 'axios'
-import { CREATE_CIRCLE, SELECT_CIRCLE, FETCH_CIRCLES } from '../constants/ActionTypes'
+import { CREATE_CIRCLE, SELECT_CIRCLE, FETCH_CIRCLES, JOIN_CIRCLE } from '../constants/ActionTypes'
 
 export function postCircleCreate(circle) {
-  var res
   axios.post('/setup/ajax_create_circle', circle)
   .then(function (response) {
   })
@@ -57,5 +56,15 @@ export function fetchCircles(dispatch) {
       type: FETCH_CIRCLES,
       circles: response
     })
+  })
+}
+
+export function joinCircle(event, history, circle_id) {
+  event.preventDefault();
+  return axios.post('/setup/ajax_get_circles', circle_id).then((response) => {
+    history.pushState(null, '/setup')
+  }).catch((response) => {
+    console.log(response)
+    history.pushState(null, '/setup')
   })
 }

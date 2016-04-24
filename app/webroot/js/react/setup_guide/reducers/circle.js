@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { CREATE_CIRCLE, SELECT_CIRCLE, FETCH_CIRCLES } from '../constants/ActionTypes'
+import { CREATE_CIRCLE, SELECT_CIRCLE, FETCH_CIRCLES, JOIN_CIRCLE } from '../constants/ActionTypes'
 
 const initialState = {
   form_input: {
@@ -10,7 +10,8 @@ const initialState = {
     circle_image: ''
   },
   selected_circle_id: '',
-  circles: []
+  circles: [],
+  joined: false
 }
 
 function create_circle(state = initialState, action) {
@@ -44,6 +45,17 @@ function fetch_circles(state = initialState, action) {
     case FETCH_CIRCLES:
       return Object.assign({}, state, {
         circles: action.circles
+      })
+    default:
+      return state
+  }
+}
+
+export default function joinCircle(state = initialState, action) {
+  switch (action.types) {
+    case JOIN_CIRCLE:
+      return Object.assign({}, state, {
+        joined: true
       })
     default:
       return state
