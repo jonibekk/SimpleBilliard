@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { CREATE_CIRCLE, SELECT_CIRCLE } from '../constants/ActionTypes'
+import { CREATE_CIRCLE, SELECT_CIRCLE, FETCH_CIRCLES } from '../constants/ActionTypes'
 
 const initialState = {
   form_input: {
@@ -9,7 +9,8 @@ const initialState = {
     circle_description: '',
     circle_image: ''
   },
-  selected_circle_id: ''
+  selected_circle_id: '',
+  circles: []
 }
 
 function create_circle(state = initialState, action) {
@@ -38,11 +39,23 @@ function select_circle(state = initialState, action) {
   }
 }
 
+function fetch_circles(state = initialState, action) {
+  switch (action.type) {
+    case FETCH_CIRCLES:
+      return Object.assign({}, state, {
+        circles: action.circles
+      })
+    default:
+      return state
+  }
+}
+
 export default function createReducer(obj) {
   return combineReducers(
     Object.assign({}, {
       create_circle,
       select_circle,
+      fetch_circles
     }, obj)
   )
 }

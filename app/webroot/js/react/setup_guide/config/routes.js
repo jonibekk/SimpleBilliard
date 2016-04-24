@@ -8,6 +8,7 @@ import LogMonitor from 'redux-devtools-log-monitor'
 import DockMonitor from 'redux-devtools-dock-monitor'
 import createReducer from '../reducers/circle'
 import { initSetupStatus } from '../actions/home_actions'
+import { fetchCircles } from '../actions/circle_actions'
 
 // How do I write this simply?
 import GoalContainer from '../containers/goal'
@@ -41,6 +42,9 @@ const store = createStore(
   reducer,
   DevTools.instrument()
 )
+
+// Init circle list for circle select page
+fetchCircles(store.dispatch)
 
 const history = syncHistoryWithStore(browserHistory, store)
 

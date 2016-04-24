@@ -1,11 +1,15 @@
 <?php
 App::uses('AppController', 'Controller');
+App::uses('Circle', 'Model');
 
 /**
  * Setup Controller
  */
 class SetupController extends AppController
 {
+    var $uses = [
+        'Circle'
+    ];
     public function beforeFilter()
     {
         parent::beforeFilter();
@@ -54,6 +58,17 @@ class SetupController extends AppController
     public function ajax_add_goal()
     {
         return true;
+    }
+
+    public function ajax_get_circles()
+    {
+        $this->layout = false;
+        $not_joined_circles = $this->Circle->getCirclesForSetupGuide();
+        $this->log($not_joined_circles);
+        $res = [
+            'not_joined_circles' => $not_joined_circles,
+        ];
+        return $this->_ajaxGetResponse($res);
     }
 
     public function ajax_create_circle()

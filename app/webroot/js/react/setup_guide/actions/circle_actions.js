@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom'
 import axios from 'axios'
-import { CREATE_CIRCLE, SELECT_CIRCLE } from '../constants/ActionTypes'
+import { CREATE_CIRCLE, SELECT_CIRCLE, FETCH_CIRCLES } from '../constants/ActionTypes'
 
 export function postCircleCreate(circle) {
   var res
@@ -43,4 +43,19 @@ export function selectCircle(circle_id) {
     type: SELECT_CIRCLE,
     selected_circle_id: circle_id
   }
+}
+
+export function fetchCircles(dispatch) {
+  return axios.get('/setup/ajax_get_circles').then((response) => {
+    var circles = response.data.not_joined_circles
+    dispatch({
+      type: FETCH_CIRCLES,
+      circles: circles
+    })
+  }).catch((response) => {
+    dispatch({
+      type: FETCH_CIRCLES,
+      circles: response
+    })
+  })
 }

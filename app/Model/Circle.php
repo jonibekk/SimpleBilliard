@@ -595,4 +595,26 @@ class Circle extends AppModel
         }
         return ['results' => $res];
     }
+
+    public function getCirclesForSetupGuide()
+    {
+        $default_team_circle = $this->CircleMember->find('first', [
+            'conditions' => [
+                'team_id' => $this->current_team_id,
+                'user_id' => $this->my_uid,
+            ],
+            'fields'     => ['CircleMember.circle_id']
+        ]);
+        $default_team_circle_id = $default_team_circle['CircleMember']['circle_id'];
+        return $this->find('all', [
+            'conditions' => [
+                'team_id' => $this->current_team_id,
+                'public_flg' => self::TYPE_PUBLIC_ON,
+                'NOT' => [
+                    'id' => [$default_team_circle_id]
+                ],
+            ],
+            'limit' => 3
+        ]);
+    }
 }

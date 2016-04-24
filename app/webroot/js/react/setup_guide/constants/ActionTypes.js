@@ -4,3 +4,4 @@ export const SUBMIT_GOAL = 'SUBMIT_GOAL'
 // circle
 export const SELECT_CIRCLE = 'SELECT_CIRCLE'
 export const CREATE_CIRCLE = 'CREATE_CIRCLE'
+export const FETCH_CIRCLES = 'FETCH_CIRCLES'

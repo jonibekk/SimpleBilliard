@@ -5,37 +5,22 @@ export default class CircleSelect extends React.Component {
   constructor(props) {
     super(props);
   }
-  listData() {
-    return ([
-      {
-        id: 1,
-        text: "News"
-      },
-      {
-        id: 2,
-        text: "Gourmet"
-      },
-      {
-        id: 3,
-        text: "President's room"
-      },
-    ])
+  getCircles() {
+    return this.props.fetch_circles.circles
   }
-  // { text.id == this.props.selected_circle_id ? check_icon : null }
-
   render() {
     var check_icon = () => {
       return (
         <i className="fa fa-check font_33px" aria-hidden="true"></i>
       )
     }
-    var circles = this.listData().map((text) => {
+    var circles = this.getCircles().map((circle) => {
       return (
-        <div className="setup-items-item pt_10px mt_12px bd-radius_14px" onClick={(e) => { this.props.onClickSelectCircle(text.id)}} key={text.id}>
+        <div className="setup-items-item pt_10px mt_12px bd-radius_14px" onClick={(e) => { this.props.onClickSelectCircle(circle.Circle.id)}} key={circle.Circle.id}>
           <div className="row">
-            <div className="setup-items-select-circle pull-left">{text.text}</div>
+            <div className="setup-items-select-circle pull-left">{circle.Circle.name}</div>
             <span className="pull-right setup-items-select-circle-check">
-              { this.props.select_circle.selected_circle_id == text.id ? check_icon() : null }
+              { this.props.select_circle.selected_circle_id == circle.Circle.id ? check_icon() : null }
             </span>
           </div>
         </div>
