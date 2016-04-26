@@ -2,11 +2,11 @@ import React, { Component } from 'react'
 import { Provider } from 'react-redux'
 import { createStore, combineReducers } from 'redux'
 import { Router, Route, IndexRoute,　browserHistory } from 'react-router'
-import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
+import { syncHistoryWithStore } from 'react-router-redux'
 import { createDevTools } from 'redux-devtools'
 import LogMonitor from 'redux-devtools-log-monitor'
 import DockMonitor from 'redux-devtools-dock-monitor'
-import createReducer from '../reducers/circle'
+import createReducer from '../reducers/index'
 import { initSetupStatus } from '../actions/home_actions'
 import { fetchCircles } from '../actions/circle_actions'
 
@@ -36,7 +36,7 @@ const DevTools = createDevTools(
   </DockMonitor>
 )
 
-const reducer = createReducer({routing: routerReducer})
+const reducer = createReducer()
 
 const store = createStore(
   reducer,
