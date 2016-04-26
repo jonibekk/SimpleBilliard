@@ -89,6 +89,8 @@ class NotifyBizComponent extends Component
      */
     function sendNotify($notify_type, $model_id, $sub_model_id = null, $to_user_list = null, $user_id, $team_id)
     {
+        error_log("FURU:NOTIFY:$notify_type,$model_id,$sub_model_id,$to_user_list,$user_id,$team_id\n",3,"/tmp/hoge.log");
+
         $this->notify_option['from_user_id'] = $user_id;
         $this->notify_option['options']['from_user_id'] = $user_id;
         $this->_setModelProperty($user_id, $team_id);

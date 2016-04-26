@@ -400,6 +400,23 @@ class User extends AppModel
         return $this->Email->find('first', $options);
     }
 
+
+    public function getUsersSetupNotCompleted($team_id = false){
+        $options = [
+            'conditions' => [
+                'User.setup_complete_flg' => false,
+                'TeamMember.team_id' => $team_id,
+            ],
+        ];
+        echo("#1:".print_r($options,true)."\n");
+
+        if($team_id){
+            $options['contain']['TeamMember']['conditions']['TeamMember.team_id'] = $team_id;
+        }
+        echo("#2:".print_r($options,true)."\n");
+        return $this->find('all', $options);
+    }
+
     public function getDetail($id)
     {
         $options = [

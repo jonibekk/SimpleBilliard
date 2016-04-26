@@ -887,10 +887,11 @@ class AppController extends Controller
         $user_id = $this->Auth->user('id');
         $this->GlRedis->deleteSetupGuideStatus($user_id);
         $status_from_mysql = $this->User->generateSetupGuideStatusDict($user_id);
-        if ($this->calcStatusRestCount($status_from_mysql) === 0) {
-            $this->User->completeSetupGuide($user_id);
-            return true;
-        }
+// エラーになるので暫定的にコメントアウト commitする時には対象外にする FURU
+//        if ($this->calcStatusRestCount($status_from_mysql) === 0) {
+//            $this->User->completeSetupGuide($user_id);
+//            return true;
+//        }
         $this->GlRedis->saveSetupGuideStatus($user_id, $status_from_mysql);
         return true;
     }
