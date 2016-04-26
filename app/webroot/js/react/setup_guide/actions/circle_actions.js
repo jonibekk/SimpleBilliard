@@ -78,7 +78,6 @@ export function joinCircle(dispatch, circle_id) {
     }
   }
   return axios.post('/setup/ajax_join_circle', post_data).then((response) => {
-    console.log(response)
     dispatch({
       type: JOIN_CIRCLE,
       joined: true
