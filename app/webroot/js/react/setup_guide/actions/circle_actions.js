@@ -2,39 +2,44 @@ import ReactDOM from 'react-dom'
 import axios from 'axios'
 import { CREATE_CIRCLE, SELECT_CIRCLE, FETCH_CIRCLES, JOIN_CIRCLE } from '../constants/ActionTypes'
 
-export function postCircleCreate(circle) {
-  axios.post('/setup/ajax_create_circle', circle)
+export function postCircleCreate(dispatch, circle) {
+  axios.post('/setup/ajax_create_circle', circle, {
+    timeout: 10000,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+    }
+  })
   .then(function (response) {
+    dispatch({
+      type: CREATE_CIRCLE,
+      form_input: circle.Circle
+    })
   })
   .catch(function (response) {
+    dispatch({
+      type: CREATE_CIRCLE,
+      form_input: circle.Circle
+    })
   })
 }
 
-export function createCircle(event, refs) {
+export function createCircle(dispatch, event, refs) {
   event.preventDefault()
   let circle_name = ReactDOM.findDOMNode(refs.circle_name).value
   let members = ReactDOM.findDOMNode(refs.members).value
   let public_flg = ReactDOM.findDOMNode(refs.public_flg).value
   let circle_description = ReactDOM.findDOMNode(refs.circle_description).value
   let circle_image = ReactDOM.findDOMNode(refs.circle_image).files[0]
-  // const res = postCircleCreate({
-  //   _Token: cake.data.csrf_token.key,
-  //   body: {
-  //     circle_name: circle_name,
-  //     members: members,
-  //     public_flg: public_flg,
-  //     circle_description: circle_description,
-  //     circle_image: circle_image
-  //   }
-  // })
-  return {
-    type: CREATE_CIRCLE,
-    circle_name: circle_name,
-    members: members,
-    public_flg: public_flg,
-    circle_description: circle_description,
-    circle_image: circle_image
-  }
+  return postCircleCreate(dispatch, {
+    _Token: cake.data.csrf_token.key,
+    Circle: {
+      circle_name: circle_name,
+      members: members,
+      public_flg: public_flg,
+      circle_description: circle_description,
+      circle_image: circle_image
+    }
+  })
 }
 
 export function selectCircle(circle_id) {

@@ -18,9 +18,7 @@ function create_circle(state = initialState, action) {
   switch (action.type) {
     case CREATE_CIRCLE:
       return Object.assign({}, state, {
-        form_input: {
-          circle_name: action.circle_name
-        }
+        form_input: action.form_input
       })
 
     default:
@@ -51,7 +49,7 @@ function fetch_circles(state = initialState, action) {
   }
 }
 
-export default function joinCircle(state = initialState, action) {
+function joinCircle(state = initialState, action) {
   switch (action.types) {
     case JOIN_CIRCLE:
       return Object.assign({}, state, {
@@ -62,7 +60,7 @@ export default function joinCircle(state = initialState, action) {
   }
 }
 
-export default function createReducer(obj) {
+function createReducer(obj) {
   return combineReducers(
     Object.assign({}, {
       create_circle,

@@ -11,7 +11,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    handleSubmit: (e, refs) => { dispatch(createCircle(e, refs)) }
+    onSubmitCircle: (e, refs) => { createCircle(dispatch, e, refs) }
   }
 }
 

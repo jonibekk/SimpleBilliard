@@ -12,7 +12,11 @@ export default class CircleCreate extends React.Component {
           {__("Set up Goalous")} <i className="fa fa-angle-right" aria-hidden="true"></i> {__("Join a circle")}
         </div>
         <p className="font_bold font_verydark">{__("Create a new circle")}</p>
-        <form onSubmit={e => {this.props.handleSubmit(e, this.refs)}} className="form-horizontal" encType="multipart/form-data" method="post" acceptCharset="utf-8">
+        <form onSubmit={e => {this.props.onSubmitCircle(e, this.refs)}}
+              className="form-horizontal"
+              encType="multipart/form-data"
+              method="post"
+              acceptCharset="utf-8">
           <div className="panel-body">
             <span className="help-block">{__("Circle Name")}</span>
             <input ref="circle_name" className="form-control addteam_input-design" />
@@ -22,10 +26,10 @@ export default class CircleCreate extends React.Component {
             <input ref="members" className="form-control addteam_input-design" />
           </div>
           <div className="panel-body setup-circle-public-group">
-              <input type="radio" ref="public_flg" name="public_flg" id="CirclePublicFlg1" value="1" checked="checked" /> {__("Public")}
+              <input type="radio" ref="public_flg" name="public_flg" id="CirclePublicFlg1" defaultValue="1" /> {__("Public")}
               <span className="help-block font_11px">
                 {__("Anyone can see the circle, its members and their posts.")}</span>
-              <input type="radio" ref="public_flg" name="public_flg" id="CirclePublicFlg0" value="0" /> {__("Privacy")}
+              <input type="radio" ref="public_flg" name="public_flg" id="CirclePublicFlg0" defaultValue="0" /> {__("Privacy")}
               <span className="help-block font_11px">
                 {__("Only members can find the circle and see posts.")}
               </span>
@@ -61,7 +65,6 @@ export default class CircleCreate extends React.Component {
   }
 }
 
-
 CircleCreate.propTypes = {
-  handleSubmit: PropTypes.func
+  onSubmitCircle: PropTypes.func
 }

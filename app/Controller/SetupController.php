@@ -10,6 +10,7 @@ class SetupController extends AppController
     var $uses = [
         'Circle'
     ];
+    var $components = ['RequestHandler'];
     public function beforeFilter()
     {
         parent::beforeFilter();
@@ -64,7 +65,6 @@ class SetupController extends AppController
     {
         $this->layout = false;
         $not_joined_circles = $this->Circle->getCirclesForSetupGuide();
-        $this->log($not_joined_circles);
         $res = [
             'not_joined_circles' => $not_joined_circles,
         ];
@@ -73,14 +73,10 @@ class SetupController extends AppController
 
     public function ajax_create_circle()
     {
+        // $this->_ajaxPreProcess();
         $this->layout = false;
         $this->log($this->request->data);
         return $this->_ajaxGetResponse([]);
-    }
-
-    public function ajax_select_circle()
-    {
-
     }
 
 }
