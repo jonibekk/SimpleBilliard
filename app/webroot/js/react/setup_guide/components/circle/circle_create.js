@@ -4,26 +4,32 @@ import { Link, browserHistory } from 'react-router'
 export default class CircleCreate extends React.Component {
   constructor(props) {
     super(props);
+    bindSelect2Members($('#modal_add_circle'))
   }
   render() {
     return (
-      <div>
+      <div id="modal_add_circle">
         <div className="setup-pankuzu font_18px">
           {__("Set up Goalous")} <i className="fa fa-angle-right" aria-hidden="true"></i> {__("Join a circle")}
         </div>
         <p className="font_bold font_verydark">{__("Create a new circle")}</p>
         <form onSubmit={e => {this.props.onSubmitCircle(e, this.refs)}}
-              className="form-horizontal"
+              className="form-horizontal setup-circle-create-form"
               encType="multipart/form-data"
               method="post"
-              acceptCharset="utf-8">
+              acceptCharset="utf-8"
+              ref="circle_form">
           <div className="panel-body">
             <span className="help-block">{__("Circle Name")}</span>
             <input ref="circle_name" className="form-control addteam_input-design" />
           </div>
           <div className="panel-body">
             <span className="help-block">{__("Members")}</span>
-            <input ref="members" className="form-control addteam_input-design" />
+            <div className="ddd">
+                <input type="hidden" name="members" ref="members" className="ajax_add_select2_members select2-offscreen" data-url="/users/ajax_select2_get_users?with_group=1" id="CircleMembers" />
+
+                <span className="help-block font_11px">{__("Administrators")}</span>
+            </div>
           </div>
           <div className="panel-body setup-circle-public-group">
               <input type="radio" ref="public_flg" name="public_flg" id="CirclePublicFlg1" defaultValue="1" /> {__("Public")}

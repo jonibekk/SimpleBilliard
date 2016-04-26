@@ -60,7 +60,7 @@ function joinCircle(state = initialState, action) {
   }
 }
 
-function createReducer(obj) {
+export default function createReducer(obj) {
   return combineReducers(
     Object.assign({}, {
       create_circle,

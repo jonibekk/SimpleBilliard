@@ -75,8 +75,18 @@ class SetupController extends AppController
     {
         // $this->_ajaxPreProcess();
         $this->layout = false;
-        $this->log($this->request->data);
-        return $this->_ajaxGetResponse([]);
+        $this->request->allowMethod('post');
+        $this->Circle->create();
+        if ($res = $this->Circle->add($this->request->data)) {
+            if (!empty($this->Circle->add_new_member_list)) {
+                $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_ADD_USER, $this->Circle->id,
+                                                 null, $this->Circle->add_new_member_list);
+            }
+            $this->updateSetupStatusIfNotCompleted();
+            $this->Pnotify->outSuccess(__("Created a circle."));
+        }
+
+        return $this->_ajaxGetResponse(['res' => $res]);
     }
 
 }
