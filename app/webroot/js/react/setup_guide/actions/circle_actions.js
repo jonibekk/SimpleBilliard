@@ -68,12 +68,23 @@ export function fetchCircles(dispatch) {
   })
 }
 
-export function joinCircle(event, history, circle_id) {
-  event.preventDefault();
-  return axios.post('/setup/ajax_get_circles', circle_id).then((response) => {
-    history.pushState(null, '/setup')
-  }).catch((response) => {
+export function joinCircle(dispatch, circle_id) {
+  let post_data = {
+    'Circle': {
+      0: {
+        'circle_id': circle_id,
+        'join': true
+      }
+    }
+  }
+  return axios.post('/setup/ajax_join_circle', post_data).then((response) => {
     console.log(response)
-    history.pushState(null, '/setup')
+    dispatch({
+      type: JOIN_CIRCLE,
+      joined: true
+    })
+    browserHistory.push('/setup')
+  }).catch((response) => {
+    browserHistory.push('/setup')
   })
 }

@@ -89,4 +89,32 @@ class SetupController extends AppController
         return $this->_ajaxGetResponse(['res' => $res]);
     }
 
+    /**
+     * サークルの 参加/不参加 切り替え
+     *
+     * @return CakeResponse
+     */
+    public function ajax_join_circle()
+    {
+        $this->layout = false;
+        $this->request->allowMethod('post');
+        $msg = null;
+        if ($this->Circle->CircleMember->joinCircle($this->request->data)) {
+            if (!empty($this->Circle->CircleMember->new_joined_circle_list)) {
+                foreach ($this->Circle->CircleMember->new_joined_circle_list as $circle_id) {
+                    $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_USER_JOIN, $circle_id);
+                }
+                $this->updateSetupStatusIfNotCompleted();
+                $msg = __("Join a circle.");
+            }
+            else {
+                $msg = __("Leave a circle.");
+            }
+        }
+        else {
+            $msg = __("Failed to change circle belonging status.");
+        }
+        return $this->_ajaxGetResponse(['msg' => $msg]);
+    }
+
 }

@@ -1,7 +1,5 @@
 import React from 'react'
-import { Link, browserHistory } from 'react-router'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 import { selectCircle, joinCircle } from '../../actions/circle_actions'
 import CircleSelect from '../../components/circle/circle_select'
 
@@ -12,7 +10,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     onClickSelectCircle: (selected_circle_id) => { dispatch(selectCircle(selected_circle_id)) },
-    onClickJoinCircle: (event, history, selected_circle_id) => { dispatch(joinCircle(event, history, selected_circle_id)) }
+    onClickJoinCircle: (selected_circle_id) => { joinCircle(dispatch, selected_circle_id) }
   }
 }
 

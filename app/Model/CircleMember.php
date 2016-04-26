@@ -340,6 +340,7 @@ class CircleMember extends AppModel
 
     function joinCircle($postData)
     {
+        $this->log($postData);
         if (!isset($postData['Circle']) || empty($postData['Circle'])) {
             return false;
         }

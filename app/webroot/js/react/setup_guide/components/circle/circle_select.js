@@ -42,7 +42,7 @@ export default class CircleSelect extends React.Component {
           <Link to="/setup/circle/select"
             className="btn btn-primary setup-next-btn pull-right"
             disabled={!Boolean(this.props.select_circle.selected_circle_id)}
-            onClick={(e) => { this.props.onClickJoinCircle(e, this.props.history, this.props.select_circle.selected_circle_id) }}
+            onClick={(e) => { this.props.onClickJoinCircle( this.props.select_circle.selected_circle_id) }}
           >Join a circle</Link>
         </div>
       </div>
