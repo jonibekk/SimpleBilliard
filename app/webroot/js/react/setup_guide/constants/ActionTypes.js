@@ -1,2 +1,8 @@
 export const FETCH_SETUP_STATUS = 'FETCH_SETUP_STATUS'
 export const SUBMIT_GOAL = 'SUBMIT_GOAL'
+
+// circle
+export const SELECT_CIRCLE = 'SELECT_CIRCLE'
+export const CREATE_CIRCLE = 'CREATE_CIRCLE'
+export const FETCH_CIRCLES = 'FETCH_CIRCLES'
+export const JOIN_CIRCLE = 'JOIN_CIRCLE'

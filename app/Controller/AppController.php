@@ -887,7 +887,7 @@ class AppController extends Controller
         $user_id = $this->Auth->user('id');
         $this->GlRedis->deleteSetupGuideStatus($user_id);
         $status_from_mysql = $this->User->generateSetupGuideStatusDict($user_id);
-        if ($this->calcStatusRestCount($status_from_mysql) === 0) {
+        if ($this->calcSetupRestCount($status_from_mysql) === 0) {
             $this->User->completeSetupGuide($user_id);
             return true;
         }
