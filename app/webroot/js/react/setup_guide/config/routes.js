@@ -7,7 +7,6 @@ import { createDevTools } from 'redux-devtools'
 import LogMonitor from 'redux-devtools-log-monitor'
 import DockMonitor from 'redux-devtools-dock-monitor'
 import createReducer from '../reducers/index'
-import { initSetupStatus } from '../actions/top_actions'
 import { fetchCircles } from '../actions/circle_actions'
 
 // How do I write this simply?

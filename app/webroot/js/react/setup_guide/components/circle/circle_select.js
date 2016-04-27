@@ -6,7 +6,6 @@ export default class CircleSelect extends React.Component {
     super(props);
   }
   getCircles() {
-    console.log(this.props)
     return this.props.circles.circles
   }
   render() {

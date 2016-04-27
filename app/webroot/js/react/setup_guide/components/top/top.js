@@ -3,7 +3,8 @@ import { Link, browserHistory } from 'react-router'
 
 export default class Top extends React.Component {
   constructor(props, context) {
-    super(props, context);
+    super(props, context)
+    this.props.fetchSetupStatus()
   }
   listData() {
     return ([

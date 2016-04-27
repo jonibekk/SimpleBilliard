@@ -10,7 +10,7 @@ let initialState = {
     6: 0
   },
   setup_rest_count: 0
-};
+}
 
 export default function top(state = initialState, action) {
   switch (action.type) {
