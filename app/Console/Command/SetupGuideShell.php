@@ -123,7 +123,8 @@ class SetupGuideShell extends AppShell
         $timezone = viaIsSet($this->params['timezone']);
         echo("TIMEZONE:".$timezone);
         $to_user_list = $this->User->getUsersSetupNotCompleted($team_id);
-//        echo("USER:".print_r($to_user_list,true)."\n");
+        echo("USER:".print_r($to_user_list,true)."\n");
+        echo("USER:".count($to_user_list)."\n");
         $this->NotifyBiz->sendNotify(1,     // 1
                                      66,    // 63
                                      null,  // null

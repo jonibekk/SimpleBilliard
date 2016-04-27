@@ -254,6 +254,7 @@ class User extends AppModel
         'phone_no'          => [
             'maxLength' => ['rule' => ['maxLength', 20]],
         ],
+        'setup_complete_flg' => ['boolean' => ['rule' => ['boolean'], 'allowEmpty' => true,],],
     ];
 
     public $profileFields = [
@@ -400,20 +401,26 @@ class User extends AppModel
         return $this->Email->find('first', $options);
     }
 
-
-    public function getUsersSetupNotCompleted($team_id = false){
+    public function getUsersSetupNotCompleted($team_id = false)
+    {
         $options = [
             'conditions' => [
                 'User.setup_complete_flg' => false,
-                'TeamMember.team_id' => $team_id,
             ],
         ];
-        echo("#1:".print_r($options,true)."\n");
 
-        if($team_id){
-            $options['contain']['TeamMember']['conditions']['TeamMember.team_id'] = $team_id;
+        if ($team_id) {
+            $options['joins'][] = [
+                'type'       => 'INNER',
+                'table'      => 'team_members',
+                'alias'      => 'TeamMember',
+                'conditions' => [
+                    'TeamMember.user_id = User.id',
+                    'TeamMember.team_id' => $team_id,
+                ]
+            ];
         }
-        echo("#2:".print_r($options,true)."\n");
+        echo("#2:" . print_r($options, true) . "\n");
         return $this->find('all', $options);
     }
 
