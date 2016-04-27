@@ -5,7 +5,7 @@ export default class Top extends React.Component {
   constructor(props, context) {
     super(props, context)
   }
-  componentDidMount() {
+  componentWillMount() {
     this.props.fetchSetupStatus()
   }
   listData() {

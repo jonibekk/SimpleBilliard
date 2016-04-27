@@ -11,7 +11,6 @@ import { fetchCircles } from '../actions/circle_actions'
 
 // How do I write this simply?
 import GoalContainer from '../containers/goal'
-import ProfileContainer from '../containers/profile'
 import AppContainer from '../containers/app'
 import TopContainer from '../containers/top/top'
 import Index from '../components/index'
@@ -19,13 +18,16 @@ import GoalImage from '../components/goal/goal_image'
 import PurposeSelect from '../components/goal/purpose_select'
 import GoalSelect from '../components/goal/goal_select'
 import GoalCreate from '../components/goal/goal_create'
-import ProfileImage from '../components/profile/profile_image'
-import ProfileAdd from '../components/profile/profile_add'
+
+import ProfileContainer from '../containers/profile/index'
+import ProfileImageContainer from '../containers/profile/profile_image'
+import ProfileAddContainer from '../containers/profile/profile_add'
 
 import CircleContainer from '../containers/circle/index'
 import CircleImageContainer from '../containers/circle/circle_image'
 import CircleSelectContainer from '../containers/circle/circle_select'
 import CircleCreateContainer from '../containers/circle/circle_create'
+
 import AppImage from '../components/app/app_image'
 import AppSelect from '../components/app/app_select'
 
@@ -64,9 +66,9 @@ export default class Routes extends Component {
                 <Route path="create" component={GoalCreate} />
               </Route>
               <Route path="profile" component={ProfileContainer} >
-                <IndexRoute component={ProfileImage} />
-                <Route path="image" component={ProfileImage} />
-                <Route path="add" component={ProfileAdd} />
+                <IndexRoute component={ProfileImageContainer} />
+                <Route path="image" component={ProfileImageContainer} />
+                <Route path="add" component={ProfileAddContainer} />
               </Route>
               <Route path="circle" component={CircleContainer} >
                 <IndexRoute component={CircleImageContainer} />
