@@ -61,15 +61,16 @@ export default class Top extends React.Component {
     }
     const check_icon = () => {
       return (
-        <i className="fa fa-check font_33px" aria-hidden="true"></i>
+        <span className="setup-items-item-complete-check">
+          <i className="fa fa-check font_33px" aria-hidden="true"></i>
+        </span>
       )
     }
     var items = this.listData().map((text) => {
-      console.log(this.props.top.setup_status)
       return (
         <Link to={text.link} className="setup-items-item pt_10px mt_12px bd-radius_14px">
           <div className="pull-left mt_3px ml_2px">
-            {this.props.top.setup_status[text.index] ? check_icon : number_radius_box(text.index)}
+            {this.props.top.status[text.index] ? check_icon() : number_radius_box(text.index)}
           </div>
           <div className="setup-items-item-explain pull-left">
             <p className="font_bold font_verydark">{text.subject}</p>

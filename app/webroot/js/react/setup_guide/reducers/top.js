@@ -1,13 +1,13 @@
 import { FETCH_SETUP_STATUS } from '../constants/ActionTypes'
 
 let initialState = {
-  setup_status: {
-    1: 0,
-    2: 0,
-    3: 0,
-    4: 0,
-    5: 0,
-    6: 0
+  status: {
+    1: false,
+    2: false,
+    3: false,
+    4: false,
+    5: false,
+    6: false
   },
   setup_rest_count: 0,
   setup_complete_percent: 0
