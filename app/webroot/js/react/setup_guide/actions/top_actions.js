@@ -9,11 +9,8 @@ export function fetchSetupStatus(dispatch) {
       type: FETCH_SETUP_STATUS,
       status: response.data.status,
       setup_rest_count: response.data.setup_rest_count,
+      setup_complete_percent: 100 * (response.data.setup_rest_count / 6)
     })
   }).catch((response) => {
   })
-}
-
-export function initSetupStatus() {
-  return fetchSetupStatus()
 }

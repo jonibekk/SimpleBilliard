@@ -10,7 +10,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchSetupStatus: fetchSetupStatus(dispatch)
+    fetchSetupStatus: () => {fetchSetupStatus(dispatch)}
   }
 }
 

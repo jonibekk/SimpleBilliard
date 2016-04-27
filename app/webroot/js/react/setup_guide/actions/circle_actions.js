@@ -56,7 +56,6 @@ export function selectCircle(circle_id) {
 export function fetchCircles(dispatch) {
   return axios.get('/setup/ajax_get_circles').then((response) => {
     var circles = response.data.not_joined_circles
-    console.log(circles)
     dispatch({
       type: FETCH_CIRCLES,
       circles: circles
