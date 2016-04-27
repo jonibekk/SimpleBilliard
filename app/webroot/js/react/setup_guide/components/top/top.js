@@ -68,7 +68,7 @@ export default class Top extends React.Component {
     }
     var items = this.listData().map((text) => {
       return (
-        <Link to={text.link} className="setup-items-item pt_10px mt_12px bd-radius_14px">
+        <Link to={text.link} className="setup-items-item pt_10px mt_12px bd-radius_14px" key={text.index} >
           <div className="pull-left mt_3px ml_2px">
             {this.props.top.status[text.index] ? check_icon() : number_radius_box(text.index)}
           </div>
@@ -111,6 +111,7 @@ export default class Top extends React.Component {
 }
 
 Top.propTypes = {
-  setup_rest_count: PropTypes.number.isRequired,
-  setup_complete_percent: PropTypes.number.isRequired
+  status: PropTypes.array,
+  setup_rest_count: PropTypes.number,
+  setup_complete_percent: PropTypes.number
 }

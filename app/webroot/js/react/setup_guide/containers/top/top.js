@@ -5,7 +5,7 @@ import Top from '../../components/top/top'
 import { fetchSetupStatus } from '../../actions/top_actions'
 
 function mapStateToProps(state) {
-  return state
+  return { top: state.top }
 }
 
 function mapDispatchToProps(dispatch) {
