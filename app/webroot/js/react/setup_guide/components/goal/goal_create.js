@@ -8,7 +8,6 @@ export default class GoalCreate extends React.Component {
   }
   handleSubmit(e) {
     e.preventDefault()
-    console.log(ReactDOM.findDOMNode(this));
 //    dispatch(addTodo(input.value))
   }
   render() {

@@ -2,19 +2,18 @@ import React, { Component } from 'react'
 import { Provider } from 'react-redux'
 import { createStore, combineReducers } from 'redux'
 import { Router, Route, IndexRoute,　browserHistory } from 'react-router'
-import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
+import { syncHistoryWithStore } from 'react-router-redux'
 import { createDevTools } from 'redux-devtools'
 import LogMonitor from 'redux-devtools-log-monitor'
 import DockMonitor from 'redux-devtools-dock-monitor'
-import createReducer from '../reducers/circle'
-import { initSetupStatus } from '../actions/home_actions'
+import createReducer from '../reducers/index'
 import { fetchCircles } from '../actions/circle_actions'
 
 // How do I write this simply?
 import GoalContainer from '../containers/goal'
 import ProfileContainer from '../containers/profile'
 import AppContainer from '../containers/app'
-import TopContainer from '../containers/top'
+import TopContainer from '../containers/top/top'
 import Index from '../components/index'
 import GoalImage from '../components/goal/goal_image'
 import PurposeSelect from '../components/goal/purpose_select'
@@ -36,7 +35,7 @@ const DevTools = createDevTools(
   </DockMonitor>
 )
 
-const reducer = createReducer({routing: routerReducer})
+const reducer = createReducer()
 
 const store = createStore(
   reducer,
@@ -82,7 +81,6 @@ export default class Routes extends Component {
               </Route>
             </Route>
           </Router>
-          <DevTools />
         </div>
       </Provider>
     );
