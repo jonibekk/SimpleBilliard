@@ -425,4 +425,19 @@ class CircleTest extends GoalousTestCase
             }
         }
     }
+
+    public function testGetCirclesForSetupGuide()
+    {
+        $this->_setDefault();
+        $data = [
+            'Circle' => [
+                'name'       => 'test',
+                'public_flg' => true,
+                'members'    => 'user_1,user_2,user_3',
+            ]
+        ];
+        $this->Circle->save($data);
+        $circle_list = $this->Circle->getCirclesForSetupGuide();
+        $this->assertNotEmpty($circle_list);
+    }
 }

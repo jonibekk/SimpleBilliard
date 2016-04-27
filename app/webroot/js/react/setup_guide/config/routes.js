@@ -2,18 +2,18 @@ import React, { Component } from 'react'
 import { Provider } from 'react-redux'
 import { createStore, combineReducers } from 'redux'
 import { Router, Route, IndexRoute,　browserHistory } from 'react-router'
-import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
+import { syncHistoryWithStore } from 'react-router-redux'
 import { createDevTools } from 'redux-devtools'
 import LogMonitor from 'redux-devtools-log-monitor'
 import DockMonitor from 'redux-devtools-dock-monitor'
-import * as reducers from '../reducers'
-import { initSetupStatus } from '../actions/home_actions'
+import createReducer from '../reducers/index'
+import { fetchCircles } from '../actions/circle_actions'
 
 // How do I write this simply?
 import GoalContainer from '../containers/goal'
 import ProfileContainer from '../containers/profile'
 import AppContainer from '../containers/app'
-import TopContainer from '../containers/top'
+import TopContainer from '../containers/top/top'
 import Index from '../components/index'
 import GoalImage from '../components/goal/goal_image'
 import PurposeSelect from '../components/goal/purpose_select'
@@ -21,6 +21,11 @@ import GoalSelect from '../components/goal/goal_select'
 import GoalCreate from '../components/goal/goal_create'
 import ProfileImage from '../components/profile/profile_image'
 import ProfileAdd from '../components/profile/profile_add'
+
+import CircleContainer from '../containers/circle/index'
+import CircleImageContainer from '../containers/circle/circle_image'
+import CircleSelectContainer from '../containers/circle/circle_select'
+import CircleCreateContainer from '../containers/circle/circle_create'
 import AppImage from '../components/app/app_image'
 import AppSelect from '../components/app/app_select'
 
@@ -30,18 +35,15 @@ const DevTools = createDevTools(
   </DockMonitor>
 )
 
-const reducer = combineReducers({
-  reducers,
-  routing: routerReducer
-})
+const reducer = createReducer()
 
 const store = createStore(
   reducer,
   DevTools.instrument()
 )
 
-// dispatch initial data to store
-store.dispatch(initSetupStatus())
+// Init circle list for circle select page
+fetchCircles(store.dispatch)
 
 const history = syncHistoryWithStore(browserHistory, store)
 
@@ -66,6 +68,12 @@ export default class Routes extends Component {
                 <Route path="image" component={ProfileImage} />
                 <Route path="add" component={ProfileAdd} />
               </Route>
+              <Route path="circle" component={CircleContainer} >
+                <IndexRoute component={CircleImageContainer} />
+                <Route path="image" component={CircleImageContainer} />
+                <Route path="select" component={CircleSelectContainer} />
+                <Route path="create" component={CircleCreateContainer} />
+              </Route>
               <Route path="app" component={AppContainer} >
                 <IndexRoute component={AppImage} />
                 <Route path="image" component={AppImage} />
@@ -77,4 +85,4 @@ export default class Routes extends Component {
       </Provider>
     );
   }
-};
+}

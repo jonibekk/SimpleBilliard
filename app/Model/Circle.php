@@ -144,6 +144,7 @@ class Circle extends AppModel
         if (!isset($data['Circle']) || empty($data['Circle'])) {
             return false;
         }
+
         $data['Circle']['team_id'] = $this->current_team_id;
         $data['CircleMember'][0]['team_id'] = $this->current_team_id;
         $data['CircleMember'][0]['admin_flg'] = true;
@@ -166,7 +167,6 @@ class Circle extends AppModel
         Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_ALL, true), 'user_data');
         Cache::delete($this->getCacheKey(CACHE_KEY_CHANNEL_CIRCLES_NOT_HIDE, true), 'user_data');
         Cache::delete($this->getCacheKey(CACHE_KEY_MY_CIRCLE_LIST, true), 'user_data');
-
         if ($res = $this->saveAll($data)) {
             $this->CircleMember->updateCounterCache(['circle_id' => $this->getLastInsertID()]);
 
@@ -594,5 +594,27 @@ class Circle extends AppModel
             $res[] = $data;
         }
         return ['results' => $res];
+    }
+
+    public function getCirclesForSetupGuide()
+    {
+        $default_team_circle = $this->CircleMember->find('first', [
+            'conditions' => [
+                'team_id' => $this->current_team_id,
+                'user_id' => $this->my_uid,
+            ],
+            'fields'     => ['CircleMember.circle_id']
+        ]);
+        $default_team_circle_id = $default_team_circle['CircleMember']['circle_id'];
+        return $this->find('all', [
+            'conditions' => [
+                'team_id' => $this->current_team_id,
+                'public_flg' => self::TYPE_PUBLIC_ON,
+                'NOT' => [
+                    'id' => [$default_team_circle_id]
+                ],
+            ],
+            'limit' => 3
+        ]);
     }
 }
