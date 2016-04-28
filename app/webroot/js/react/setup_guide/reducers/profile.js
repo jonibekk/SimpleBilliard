@@ -7,7 +7,9 @@ const initialState = {
       photo: ''
     },
     TeamMember: {
-      comment: ''
+      0: {
+        comment: ''
+      }
     }
   }
 }

@@ -44,9 +44,6 @@ const store = createStore(
   DevTools.instrument()
 )
 
-// Init circle list for circle select page
-fetchCircles(store.dispatch)
-
 const history = syncHistoryWithStore(browserHistory, store)
 
 // Define setup-guide routes
@@ -83,7 +80,6 @@ export default class Routes extends Component {
               </Route>
             </Route>
           </Router>
-          <DevTools />
         </div>
       </Provider>
     );

@@ -4,7 +4,7 @@ import { browserHistory } from 'react-router'
 import { CAN_SUBMIT_PROFILE, CAN_NOT_SUBMIT_PROFILE, ADD_PROFILE } from '../constants/ActionTypes'
 
 export function postProfile(dispatch, profile) {
-  axios.post('/setup/ajax_add_profile', profile, {
+  axios.put('/setup/ajax_add_profile', profile, {
     timeout: 10000,
     headers: {
       'Content-Type': 'application/json; charset=UTF-8'
@@ -12,10 +12,20 @@ export function postProfile(dispatch, profile) {
     dataType: 'json',
   })
   .then(function (response) {
+    console.log(response)
+    PNotify.removeAll()
     dispatch({
       type: ADD_PROFILE,
       form_input: profile
     })
+    new PNotify({
+        type: 'success',
+        title: cake.word.success,
+        text: response.data.msg,
+        icon: "fa fa-check-circle",
+        delay: 4000,
+        mouse_reset: false
+    });
     browserHistory.push('/setup')
   })
   .catch(function (response) {
@@ -23,6 +33,14 @@ export function postProfile(dispatch, profile) {
       type: ADD_PROFILE,
       form_input: profile
     })
+    new PNotify({
+        type: 'success',
+        title: cake.word.error,
+        text: response.data.msg,
+        icon: "fa fa-check-circle",
+        delay: 4000,
+        mouse_reset: false
+    });
     browserHistory.push('/setup')
   })
 }
@@ -34,11 +52,13 @@ export function submitProfile(dispatch, event, refs) {
 
   return postProfile(dispatch, {
     // _Token: cake.data.csrf_token.key,
-    User: {
-      photo: profile_image
-    },
+    // User: {
+    //   photo: profile_image
+    // },
     TeamMember: {
-      comment: comment
+      0: {
+        comment: comment
+      }
     }
   })
 }
