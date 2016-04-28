@@ -1080,10 +1080,18 @@ class UserTest extends GoalousTestCase
 
     function testGetUsersSetupNotCompleted()
     {
-//        $this->User->my_uid = 1;
-        $res = $this->User->getUsersSetupNotCompleted(3);
-        echo(count($res));
+        $res = $this->User->getUsersSetupNotCompleted();
         $this->assertNotEmpty($res);
     }
 
+    function testGetUsersSetupNotCompleted2()
+    {
+        $res = $this->User->getUsersSetupNotCompleted(1);
+        $this->assertNotEmpty($res);
+    }
+    function testGetUsersSetupNotCompletedNoData()
+    {
+        $res = $this->User->getUsersSetupNotCompleted(9999);
+        $this->assertEmpty($res);
+    }
 }
