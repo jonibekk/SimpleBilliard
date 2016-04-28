@@ -39,7 +39,9 @@
                              'goal_id'    => $row['Goal']['id']
                             ]) ?>"><?= $this->Upload->uploadImage($row['Goal'],
                                                                   'Goal.photo',
-                                                                  ['style' => 'small']) ?></a>
+                                                                  ['style' => 'small'],
+                                                                  ['class' => 'insight-ranking-result-table-images']
+                                                                  ) ?></a>
                     <?php else: ?>
                         <a href="<?= $this->Html->url(
                             ['controller' => 'users',
