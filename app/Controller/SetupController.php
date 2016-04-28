@@ -131,7 +131,6 @@ class SetupController extends AppController
         $this->request->data['TeamMember'][0]['id'] = $team_member_id;
         // キャッシュ削除
         Cache::delete($this->User->getCacheKey(CACHE_KEY_MY_PROFILE, true, null, false), 'user_data');
-        $this->log($this->request->data);
         if ($this->User->saveAll($this->request->data)) {
             //セットアップガイドステータスの更新
             $this->updateSetupStatusIfNotCompleted();

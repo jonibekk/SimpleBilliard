@@ -12,7 +12,6 @@ export function postProfile(dispatch, profile) {
     dataType: 'json',
   })
   .then(function (response) {
-    console.log(response)
     PNotify.removeAll()
     dispatch({
       type: ADD_PROFILE,
