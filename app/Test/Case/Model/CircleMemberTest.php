@@ -528,7 +528,6 @@ class CircleMemberTest extends GoalousTestCase
                                           'team_id'   => 1,
                                       ]
                                   ]);
-        debug($this->CircleMember->find('all'));
         $res = $this->CircleMember->isJoinedForSetupBy($this->CircleMember->my_uid);
         $this->assertTrue($res);
     }

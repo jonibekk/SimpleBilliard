@@ -2254,4 +2254,19 @@ class TeamMember extends AppModel
             ],
         ]);
     }
+
+    function getIdByTeamAndUserId($team_id, $user_id)
+    {
+        $team_member = $this->find('first', [
+            'conditions' => [
+                'TeamMember.team_id' => $team_id,
+                'TeamMember.user_id' => $user_id,
+            ],
+            'fields' => ['id']
+        ]);
+        if($team_member_id = viaIsSet($team_member['TeamMember']['id'])) {
+            return $team_member_id;
+        }
+        return null;
+    }
 }

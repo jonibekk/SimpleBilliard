@@ -1,6 +1,7 @@
 <?php
 App::uses('AppController', 'Controller');
 App::uses('Circle', 'Model');
+App::uses('User', 'Model');
 
 /**
  * Setup Controller
@@ -8,7 +9,7 @@ App::uses('Circle', 'Model');
 class SetupController extends AppController
 {
     var $uses = [
-        'Circle'
+        'Circle', 'User'
     ];
     var $components = ['RequestHandler'];
     public function beforeFilter()
@@ -64,7 +65,8 @@ class SetupController extends AppController
     public function ajax_get_circles()
     {
         $this->layout = false;
-        $not_joined_circles = $this->Circle->getCirclesForSetupGuide();
+
+        $not_joined_circles = array_values($this->Circle->getPublicCircles('non-joined'));
         $res = [
             'not_joined_circles' => $not_joined_circles,
         ];
@@ -113,6 +115,29 @@ class SetupController extends AppController
         }
         else {
             $msg = __("Failed to change circle belonging status.");
+        }
+        return $this->_ajaxGetResponse(['msg' => $msg]);
+    }
+
+    public function ajax_add_profile()
+    {
+        $this->request->allowMethod('put');
+        $this->layout = false;
+        $this->autoRender = false;
+
+        $msg = null;
+        $this->User->id = $this->Auth->user('id');
+        $team_member_id = $this->User->TeamMember->getIdByTeamAndUserId($this->current_team_id, $this->my_uid);
+        $this->request->data['TeamMember'][0]['id'] = $team_member_id;
+        // キャッシュ削除
+        Cache::delete($this->User->getCacheKey(CACHE_KEY_MY_PROFILE, true, null, false), 'user_data');
+        if ($this->User->saveAll($this->request->data)) {
+            //セットアップガイドステータスの更新
+            $this->updateSetupStatusIfNotCompleted();
+            $msg = __("Saved user profile.");
+        }
+        else {
+            $msg = __("Failed to save user profile.");
         }
         return $this->_ajaxGetResponse(['msg' => $msg]);
     }

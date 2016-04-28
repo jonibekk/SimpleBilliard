@@ -5,6 +5,9 @@ export default class CircleSelect extends React.Component {
   constructor(props) {
     super(props);
   }
+  componentWillMount() {
+    this.props.fetchCircles()
+  }
   getCircles() {
     return this.props.circles.circles
   }
@@ -51,6 +54,7 @@ export default class CircleSelect extends React.Component {
 }
 
 CircleSelect.propTypes = {
+  fetchCircles: PropTypes.func,
   onClickSelectCircle: PropTypes.func,
   onClickJoinCircle: PropTypes.func,
   selected_circle_id: PropTypes.number,
