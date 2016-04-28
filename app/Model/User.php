@@ -58,6 +58,7 @@ class User extends AppModel
     const SETUP_ACTION_POSTED = 4;
     const SETUP_CIRCLE_JOINED_OR_CREATED = 5;
     const SETUP_CIRCLE_POSTED = 6;
+
     static public $TYPE_SETUP_GUIDE = [
         self::SETUP_PROFILE                  => "",
         self::SETUP_MOBILE_APP               => "",

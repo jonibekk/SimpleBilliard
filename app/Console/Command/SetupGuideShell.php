@@ -12,30 +12,30 @@ App::uses('NotifyBizComponent', 'Controller/Component');
  *  - mail
  *  - push notify
  *  - feed
- *
  * # 通知タイミング
  *  - 以下で定義
  *  app/Config/extra_defines.php
  *   SETUP_GUIDE_NOTIFY_DAYSに会員登録してから送信するまでの日数を,区切りで指定。
- *   通知対象者が、バッチ起動時に、指定された日数、会員登録から経過している場合、通知を行う
- *
+ *   通知対象者が、バッチ起動時に、指定された日数、前回のセットアップガイド項目完了から経過している場合、通知を行う
+ *       -> 前回のセットアップガイド項目完了 = redisの該当アイテム更新日時
  * ex) SETUP_GUIDE_NOTIFY_DAYS=2,5,10
- *      会員登録してから、2日目、5日目、10日目になってもセットアップガイドが完了していなければ通知する
- *
+ *      会員登録以降、セットアップガイド完了まで、前回のセットアップガイドの項目完了から、
+ *      2日目、5日目、10日目になってもセットアップガイドが完了していなければ通知する
  * TBD:タイムゾーンを意識するか？しないか？ する場合、バッチ起動時にタイムゾーンも指定し、該当するタイムゾーンのユーザーのみ対象にする
- *
  * # 通知対象ユーザー
  *  バッチ起動タイミングで、セットアップガイドが完了していないユーザー
  *  users.setup_complete_flg != true
- *
  * タイムゾーンが指定されている場合には、指定されたタイムゾーンのユーザー
  *  users.timezone = '指定されたタイムゾーン' (数字 JSTの場合:9)
- *
  * チームIDが指定されている場合には、指定されたチームのみ対象とする
- *
  * # 通知内容
- *
- *
+ * 以下の優先順位で残ったセットアップガイドに関する通知を行う
+ * - プロフィール
+ * - APP
+ * - ゴール
+ * - サークル
+ * - POST
+ * - Action
  * # Usage
  * Console/cake setupGuide -t timezone -o team_id
  *
@@ -101,12 +101,17 @@ class SetupGuideShell extends AppShell
 
         $options = [
             'timezone' => ['short' => 't', 'help' => 'タイムゾーン', 'required' => false,],
-            'team_id'      => ['short' => 'o', 'help' => 'チームID', 'required' => false,],
+            'team_id'  => ['short' => 'o', 'help' => 'チームID', 'required' => false,],
         ];
         $parser->addOptions($options);
         return $parser;
     }
 
+    /**
+     * 1.セットアップ通知対象のユーザーを取得する
+     * 2.ユーザーごとに、送信すべき通知の種類を確定させる
+     * 3.通知する
+     */
     public function main()
     {
         echo "MAIN\n";
@@ -118,27 +123,33 @@ class SetupGuideShell extends AppShell
 //        }
 
         $team_id = viaIsSet($this->params['team_id']);
-        echo("team_id:".$team_id."\n");
-
         $timezone = viaIsSet($this->params['timezone']);
-        echo("TIMEZONE:".$timezone);
+
         $to_user_list = $this->User->getUsersSetupNotCompleted($team_id);
-        echo("USER:".print_r($to_user_list,true)."\n");
-        echo("USER:".count($to_user_list)."\n");
-        $this->NotifyBiz->sendNotify(1,     // 1
-                                     66,    // 63
-                                     null,  // null
-                                     null,  // null
-                                     3,     // 11
-                                     1      // 1
-        );
+
+        foreach ($to_user_list as $to_user) {
+            echo $to_user['User']['id'] . "\n";
+            $user_id = $to_user['User']['id'];
+            $status = $this->AppController->getStatusWithRedisSave($user_id);
+            echo print_r($status, true) . "\n";
+        }
+
+//        $this->NotifyBiz->sendNotify(1,     // 1
+//                                     66,    // 63
+//                                     null,  // null
+//                                     null,  // null
+//                                     3,     // 11
+//                                     1      // 1
+//        );
     }
 
     /**
      * get setup-guide notify target user list.
+     *
      * @return null
      */
-    function _getToUserList(){
+    function _getToUserList()
+    {
 
         return null;
     }
