@@ -713,7 +713,6 @@ $(document).ready(function () {
                     for (var i = 0; i < 10; i++) {
                         $list_items.eq(i).text(res.codes[i].slice(0, 4) + ' ' + res.codes[i].slice(-4));
                     }
-
                     new PNotify({
                         type: 'success',
                         title: cake.word.success,
