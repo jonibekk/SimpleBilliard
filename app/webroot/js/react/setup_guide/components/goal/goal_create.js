@@ -19,7 +19,7 @@ export default class GoalCreate extends React.Component {
         <form onSubmit={this.handleSubmit.bind(this)} className="form-horizontal" encType="multipart/form-data" method="post" acceptCharset="utf-8">
           <div className="panel-body">
             <span className="help-block">Goal Name</span>
-            <textarea ref="goal_name" className="form-control addteam_input-design" required="required" rows="1" cols="30"></textarea>
+            <textarea ref="goal_name" defaultValue={this.props.goal.selected_goal.name} className="form-control addteam_input-design" required="required" rows="1" cols="30"></textarea>
           </div>
           <div className="panel-body">
             <div className="form-inline">

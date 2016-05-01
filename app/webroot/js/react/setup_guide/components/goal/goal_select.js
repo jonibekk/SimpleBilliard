@@ -1,60 +1,59 @@
-import React from 'react'
-import { Link, browserHistory } from 'react-router'
+import React, { PropTypes } from 'react'
 
 export default class GoalSelect extends React.Component {
   constructor(props) {
     super(props);
   }
+  goalList() {
+    return ([
+      {
+        id: 1,
+        pic: '/img/setup/sample_men.png',
+        name: __("Talk with team members")
+      },
+      {
+        id: 2,
+        pic: '/img/setup/sample_men.png',
+        name: __("Lunch with team members")
+      },
+      {
+        id: 3,
+        pic: '/img/setup/sample_men.png',
+        name: __("Hear complaints of team members")
+      }
+    ])
+  }
   render() {
+    const goals = this.goalList().map((goal) => {
+      return (
+        <div className="setup-items-item pt_10px mt_16px bd-radius_14px"
+             key={goal.id}
+             onClick={(e) => { this.props.onClickSelectGoal(goal.name) }}>
+          <div className="setup-items-item-pic pull-left mt_3px ml_2px">
+            <img src={goal.pic} className="setup-items-item-pic-img" alt='' />
+          </div>
+          <div className="setup-items-item-explain pull-left">
+            <p className="font_bold font_verydark">{goal.name}</p>
+          </div>
+          <div className="setup-items-item-to-right pull-right mt_12px mr_5px">
+            <i className="fa fa-chevron-right font_18px"></i>
+          </div>
+        </div>
+      )
+    })
     return (
       <div>
         <div className="setup-pankuzu font_18px">
           {__("Set up Goalous")} <i className="fa fa-angle-right" aria-hidden="true"></i> {__("Create a goal")}
         </div>
         <div className="setup-items">
-          <Link to="/setup/goal/create" className="setup-items-item pt_10px mt_12px bd-radius_14px">
-            <div className="pull-left mt_3px ml_2px">
-              <div className="setup-items-item-icon">
-                <img src='/img/setup/sample_men.png' className="setup-items-item-icon-img" alt='' />
-              </div>
-            </div>
-            <div className="setup-items-item-explain pull-left">
-              <p className="font_bold font_verydark">{__("Talk with team members")}</p>
-            </div>
-            <div className="setup-items-item-to-right pull-right mt_12px mr_5px">
-              <i className="fa fa-chevron-right font_18px"></i>
-            </div>
-          </Link>
-
-          <Link to="/setup/goal/create" className="setup-items-item pt_10px mt_12px bd-radius_14px">
-            <div className="pull-left mt_3px ml_2px">
-              <div className="setup-items-item-icon">
-                <img src='/img/setup/sample_men.png' className="setup-items-item-icon-img" alt='' />
-              </div>
-            </div>
-            <div className="setup-items-item-explain pull-left">
-              <p className="font_bold font_verydark">{__("Lunch with team members")}</p>
-            </div>
-            <div className="setup-items-item-to-right pull-right mt_12px mr_5px">
-              <i className="fa fa-chevron-right font_18px"></i>
-            </div>
-          </Link>
-
-          <Link to="/setup/goal/create" className="setup-items-item pt_10px mt_12px bd-radius_14px">
-            <div className="pull-left mt_3px ml_2px">
-              <div className="setup-items-item-icon">
-                <img src='/img/setup/sample_men.png' className="setup-items-item-icon-img" alt='' />
-              </div>
-            </div>
-            <div className="setup-items-item-explain pull-left">
-              <p className="font_bold font_verydark">{__("Hear complaints of team members")}</p>
-            </div>
-            <div className="setup-items-item-to-right pull-right mt_12px mr_5px">
-              <i className="fa fa-chevron-right font_18px"></i>
-            </div>
-          </Link>
+          {goals}
         </div>
       </div>
     )
   }
+}
+
+GoalSelect.propTypes = {
+  onClickSelectGoal: PropTypes.func
 }
