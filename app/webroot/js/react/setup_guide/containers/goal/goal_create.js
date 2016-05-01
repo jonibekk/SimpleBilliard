@@ -6,4 +6,12 @@ function mapStateToProps(state) {
   return state
 }
 
-export default connect(mapStateToProps)(GoalCreate)
+function mapDispatchToProps(dispatch) {
+  return {
+    onSubmit: (event) => {
+      createGoal(dispatch, event)
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(GoalCreate)

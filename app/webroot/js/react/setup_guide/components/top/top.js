@@ -69,7 +69,7 @@ export default class Top extends React.Component {
     var items = this.listData().map((text) => {
       return (
         <Link to={text.link} className="setup-items-item pt_10px mt_12px bd-radius_14px" key={text.index} >
-          <div className="pull-left mt_3px ml_2px">
+          <div className="setup-items-item-pic pull-left mt_3px">
             {this.props.top.status[text.index] ? check_icon() : number_radius_box(text.index)}
           </div>
           <div className="setup-items-item-explain pull-left">
@@ -81,14 +81,14 @@ export default class Top extends React.Component {
           </div>
         </Link>
       )
-    });
+    })
     return (
       <div>
         <div className="setup-pankuzu font_18px">
           Set up Goalous
         </div>
         <div className="setup-status">
-          <div className="setup-status-wrapper-progress col col-sm-9 col-xs-8">
+          <div className="setup-status-wrapper-progress col">
             <div className="setup-status-progress progress">
               <div className="progress-bar progress-bar-info" role="progressbar"
                    aria-valuenow="50" aria-valuemin="0"
@@ -97,7 +97,7 @@ export default class Top extends React.Component {
               </div>
             </div>
           </div>
-          <div className="setup-status-number col col-sm-3 col-xs-4 text-right font_bold">
+          <div className="setup-status-number text-right font_bold">
             <div className="setup-status-number-elem">{this.props.top.setup_rest_count}</div>
           </div>
         </div>
