@@ -6,29 +6,25 @@ App::uses('SessionComponent', 'Controller/Component');
 App::uses('NotifyBizComponent', 'Controller/Component');
 
 /**
- * セットアップガイドバッチ
+ * # セットアップガイドバッチ
  * 対象者にセットアップを促す通知を送信する。
- * # 方法
- *  - mail
- *  - push notify
- *  - feed
- * # 通知タイミング
- *  - 以下で定義
- *  app/Config/extra_defines.php
- *   SETUP_GUIDE_NOTIFY_DAYSに会員登録してから送信するまでの日数を,区切りで指定。
- *   通知対象者が、バッチ起動時に、指定された日数、前回のセットアップガイド項目完了から経過している場合、通知を行う
- *       -> 前回のセットアップガイド項目完了 = redisの該当アイテム更新日時
- * ex) SETUP_GUIDE_NOTIFY_DAYS=2,5,10
- *      会員登録以降、セットアップガイド完了まで、前回のセットアップガイドの項目完了から、
- *      2日目、5日目、10日目になってもセットアップガイドが完了していなければ通知する
- * TBD:タイムゾーンを意識するか？しないか？ する場合、バッチ起動時にタイムゾーンも指定し、該当するタイムゾーンのユーザーのみ対象にする
- * # 通知対象ユーザー
+ * ## 通知方法
+ * - mail
+ * - push notify
+ * ## 通知タイミング
+ * - 以下で定義
+ *    app/Config/extra_defines.php
+ *   SETUP_GUIDE_NOTIFY_DAYS
+ *    会員登録,または前回のセットアップガイド項目完了から送信するまでの日数を,区切りで指定。
+ *      ex) SETUP_GUIDE_NOTIFY_DAYS=2,5,10
+ *   SETUP_GUIDE_NOTIFY_HOUR
+ *    通知される時間を指定。対象ユーザーのTIMEZONE上で該当時間の場合のみ送信する。
+ *      ex) SETUP_GUIDE_HOUR=11
+ *    ※ バッチは1時間に1度起動される想定
+ * ## 通知対象ユーザー
  *  バッチ起動タイミングで、セットアップガイドが完了していないユーザー
  *  users.setup_complete_flg != true
- * タイムゾーンが指定されている場合には、指定されたタイムゾーンのユーザー
- *  users.timezone = '指定されたタイムゾーン' (数字 JSTの場合:9)
- * チームIDが指定されている場合には、指定されたチームのみ対象とする
- * # 通知内容
+ * ## 通知内容
  * 以下の優先順位で残ったセットアップガイドに関する通知を行う
  * - プロフィール
  * - APP
@@ -36,8 +32,11 @@ App::uses('NotifyBizComponent', 'Controller/Component');
  * - サークル
  * - POST
  * - Action
- * # Usage
- * Console/cake setupGuide -t timezone -o team_id
+ * ## その他
+ * o teamid :チームIDが指定されている場合には、指定されたチームのみ対象とする
+ * f 強制。時間に関係なく即座に通知を行う
+ * ## Usage
+ * Console/cake setupGuide -o team_id -f true
  *
  * @property Team          $Team
  * @property TeamMember    $TeamMember
@@ -100,39 +99,94 @@ class SetupGuideShell extends AppShell
         $parser = parent::getOptionParser();
 
         $options = [
-            'timezone' => ['short' => 't', 'help' => 'タイムゾーン', 'required' => false,],
-            'team_id'  => ['short' => 'o', 'help' => 'チームID', 'required' => false,],
+            'force'   => ['short' => 'f', 'help' => '強制', 'required' => false,],
+            'team_id' => ['short' => 'o', 'help' => 'チームID', 'required' => false,],
         ];
         $parser->addOptions($options);
         return $parser;
     }
 
     /**
-     * 1.セットアップ通知対象のユーザーを取得する
-     * 2.ユーザーごとに、送信すべき通知の種類を確定させる
-     * 3.通知する
+     * - セットアップが完了していないユーザーを取得する
+     *  ※ team_idが指定されている場合は、指定されているteamのみ
+     * - ユーザー毎にループ
+     * - もしforceが指定されていなければ、ユーザーのtimezoneを取得し、ユーザーにとっての現在時間が
+     *   SETUP_GUIDE_NOTIFY_HOURで指定された時間と一致していなければスキップする
+     * - セットアップの最終更新時間から現在までの日数が、SETUP_GUIDE_NOTIFY_DAYSに指定された日数と一致しなければスキップする
+     * - ユーザーごとに、優先順位に従って送信すべき通知の種類を確定させる
+     * - 通知する
      */
     public function main()
     {
         echo "MAIN\n";
 
-        //FURU:NOTIFY:1,63,,,11,1
-//        $to_user_list = null;
-//        if (isset($this->params['user_list'])) {
-//            $to_user_list = json_decode(base64_decode($this->params['user_list']), true);
-//        }
-
         $team_id = viaIsSet($this->params['team_id']);
-        $timezone = viaIsSet($this->params['timezone']);
+        $force = viaIsSet($this->params['force']);
 
         $to_user_list = $this->User->getUsersSetupNotCompleted($team_id);
 
         foreach ($to_user_list as $to_user) {
-            echo $to_user['User']['id'] . "\n";
+            if (!$force && !$this->_isNotifySendTime($to_user['User']['timezone'])) {
+                continue;
+            }
+
             $user_id = $to_user['User']['id'];
-            $status = $this->AppController->getStatusWithRedisSave($user_id);
-            echo print_r($status, true) . "\n";
+            if ($this->_isNotifyDay($user_id)) {
+                $this->_sendNotify($user_id);
+            }
         }
+
+        return;
+
+
+    }
+
+    /**
+     * 送信すべきnotifyの種類を確定し送付する
+     * @param $user_id
+     */
+    function _sendNotify($user_id)
+    {
+        $status = $this->AppController->getStatusWithRedisSave($user_id);
+        $target_key = 0;;
+        foreach ($status as $key => $value){
+            if(empty($value)){
+                $target_key = $key;
+                break;
+            }
+
+        }
+        echo $target_key."\n";
+
+        switch($target_key){
+            case 1:
+                echo "プロファイル\n";
+                break;
+            case 2:
+                echo "アプリ\n";
+                break;
+            case 3:
+                echo "ゴール\n";
+                break;
+            case 4:
+                echo "アクション\n";
+                break;
+            case 5:
+                echo "サークル\n";
+                break;
+            case 6:
+                echo "ポスト\n";
+                break;
+            default:
+                echo "プロファイル:デフォルト\n";
+                break;
+        }
+        echo print_r($status,true)."\n";
+
+//            echo $to_user['User']['id'] . "\n";
+//            $user_id = $to_user['User']['id'];
+//            $status = $this->AppController->getStatusWithRedisSave($user_id);
+//            echo print_r($status, true) . "\n";
 
 //        $this->NotifyBiz->sendNotify(1,     // 1
 //                                     66,    // 63
@@ -141,6 +195,50 @@ class SetupGuideShell extends AppShell
 //                                     3,     // 11
 //                                     1      // 1
 //        );
+    }
+
+    /**
+     * 現在時間が最終セットアップ更新時間からSETUP_GUIDE_NOTIFY_DAYSの範囲内であればtrue
+     *
+     * @param $user_id
+     *
+     * @return bool
+     */
+    function _isNotifyDay($user_id)
+    {
+        $status = $this->AppController->getStatusWithRedisSave($user_id);
+        $notify_days = explode(",", SETUP_GUIDE_NOTIFY_DAYS);
+        $now = time();
+        foreach ($notify_days as $notify_day) {
+            $setup_last_update_time = viaIsSet($status['setup_last_update_time']);
+            $from_notify_time = $setup_last_update_time + ($notify_day * 24 * 60 * 60);
+            $to_notify_time = $setup_last_update_time + (($notify_day + 1) * 24 * 60 * 60);
+
+            if (empty($setup_last_update_time) || ($from_notify_time <= $now && $to_notify_time > $now)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 今がtimezone(+9とか)を加味してSETUP_GUIDE_NOTIFY_HOURに指定されているpush通知を送る時間であればtrueを返す
+     *
+     * @param $timezone
+     *
+     * @return bool
+     */
+    function _isNotifySendTime($timezone)
+    {
+        $utcCurrentHour = gmdate("H");
+        $now = intval($utcCurrentHour) + $timezone;
+        if ($now < 0) {
+            $now = 24 + $now;
+        }
+        if (SETUP_GUIDE_NOTIFY_HOUR == $now) {
+            return true;
+        }
+        return false;
     }
 
     /**
