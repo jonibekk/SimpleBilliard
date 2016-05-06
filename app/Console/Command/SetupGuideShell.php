@@ -75,7 +75,6 @@ class SetupGuideShell extends AppShell
     public function startup()
     {
         parent::startup();
-        echo "START!\n";
 
         $sessionId = viaIsSet($this->params['session_id']);
         $baseUrl = viaIsSet($this->params['base_url']);
@@ -118,8 +117,6 @@ class SetupGuideShell extends AppShell
      */
     public function main()
     {
-        echo "MAIN\n";
-
         $team_id = viaIsSet($this->params['team_id']);
         $force = viaIsSet($this->params['force']);
 
@@ -137,8 +134,6 @@ class SetupGuideShell extends AppShell
         }
 
         return;
-
-
     }
 
     /**
@@ -149,52 +144,42 @@ class SetupGuideShell extends AppShell
     {
         $status = $this->AppController->getStatusWithRedisSave($user_id);
         $target_key = 0;;
-        foreach ($status as $key => $value){
-            if(empty($value)){
+        foreach ($status as $key => $value) {
+            if (empty($value)) {
                 $target_key = $key;
                 break;
             }
 
         }
-        echo $target_key."\n";
+        $notify_type = NotifySetting::TYPE_SETUP_PROFILE;
 
-        switch($target_key){
+        switch ($target_key) {
             case 1:
-                echo "プロファイル\n";
+                $notify_type = NotifySetting::TYPE_SETUP_PROFILE;
                 break;
             case 2:
-                echo "アプリ\n";
+                $notify_type = NotifySetting::TYPE_SETUP_APP;
                 break;
             case 3:
-                echo "ゴール\n";
+                $notify_type = NotifySetting::TYPE_SETUP_GOAL;
                 break;
             case 4:
-                echo "アクション\n";
+                $notify_type = NotifySetting::TYPE_SETUP_ACTION;
                 break;
             case 5:
-                echo "サークル\n";
+                $notify_type = NotifySetting::TYPE_SETUP_CIRCLE;
                 break;
             case 6:
-                echo "ポスト\n";
-                break;
-            default:
-                echo "プロファイル:デフォルト\n";
+                $notify_type = NotifySetting::TYPE_SETUP_POST;
                 break;
         }
-        echo print_r($status,true)."\n";
-
-//            echo $to_user['User']['id'] . "\n";
-//            $user_id = $to_user['User']['id'];
-//            $status = $this->AppController->getStatusWithRedisSave($user_id);
-//            echo print_r($status, true) . "\n";
-
-//        $this->NotifyBiz->sendNotify(1,     // 1
-//                                     66,    // 63
-//                                     null,  // null
-//                                     null,  // null
-//                                     3,     // 11
-//                                     1      // 1
-//        );
+        $this->NotifyBiz->sendNotify($notify_type,
+                                     null,
+                                     null,
+                                     null,
+                                     $user_id,
+                                     null
+        );
     }
 
     /**
@@ -254,7 +239,6 @@ class SetupGuideShell extends AppShell
 
     protected function _usageString()
     {
-        echo "USE\n";
         return 'Usage: cake insight YYYY-MM-DD time_offset';
     }
 }

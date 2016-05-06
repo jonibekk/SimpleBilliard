@@ -174,6 +174,15 @@ class NotifyBizComponent extends Component
             case NotifySetting::TYPE_USER_JOINED_TO_INVITED_TEAM:
                 $this->_setTeamJoinOption($model_id);
                 break;
+            case NotifySetting::TYPE_SETUP_PROFILE:
+                echo "プロファイル！";
+                $this->_setSetupProfileOption();
+                return;
+//                const TYPE_SETUP_APP = 27;
+//                const TYPE_SETUP_GOAL = 28;
+//                const TYPE_SETUP_ACTION = 29;
+//                const TYPE_SETUP_CIRCLE = 30;
+//                const TYPE_SETUP_POST = 31;
             default:
                 break;
         }
@@ -444,6 +453,28 @@ class NotifyBizComponent extends Component
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $members);
 
     }
+
+
+    /**
+     * プロフィールの入力を促す
+     * これは通知設定にかかわらず必ず通知される
+     *
+     * @param $post_id
+     *
+     * @throws RuntimeException
+     */
+    private function _setSetupProfileOption()
+    {
+        //対象ユーザの通知設定確認
+        $this->notify_settings = true;
+        $this->notify_option['notify_type'] = NotifySetting::TYPE_SETUP_PROFILE;
+        $this->notify_option['url_data'] = ['controller' => 'setup', 'action' => 'profile', 'image'];
+        $this->notify_option['model_id'] = null;
+        $this->notify_option['item_name'] = null; //メッセージほんぶん？
+    }
+
+
+
 
     /**
      * 招待したユーザがチーム参加したときのオプション
