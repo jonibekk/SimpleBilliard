@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import GoalCreate from '../../components/goal/goal_create'
+import { createGoal } from '../../actions/goal_actions'
 
 function mapStateToProps(state) {
   return state
@@ -8,8 +9,9 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onSubmit: (event) => {
-      createGoal(dispatch, event)
+    onSubmit: (event, refs) => {
+      event.preventDefault()
+      dispatch(createGoal(refs))
     }
   }
 }

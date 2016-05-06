@@ -1,4 +1,4 @@
-import { SUBMIT_GOAL, SELECT_PURPOSE, SELECT_GOAL } from '../constants/ActionTypes'
+import { CREATE_GOAL, SELECT_PURPOSE, SELECT_GOAL } from '../constants/ActionTypes'
 
 const initialState = {
   selected_purpose: {
@@ -6,6 +6,9 @@ const initialState = {
   },
   selected_goal: {
     name: ''
+  },
+  input_goal: {
+
   }
 }
 
@@ -19,7 +22,10 @@ export default function goal(state = initialState, action) {
       return Object.assign({}, state, {
         selected_goal: action.selected_goal
       })
-
+    case CREATE_GOAL:
+      return Object.assign({}, state, {
+        input_goal: action.goal
+      })
     default:
       return state;
   }

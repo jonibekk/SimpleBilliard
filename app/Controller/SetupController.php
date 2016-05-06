@@ -1,7 +1,5 @@
 <?php
 App::uses('AppController', 'Controller');
-App::uses('Circle', 'Model');
-App::uses('User', 'Model');
 
 /**
  * Setup Controller
@@ -9,7 +7,7 @@ App::uses('User', 'Model');
 class SetupController extends AppController
 {
     var $uses = [
-        'Circle', 'User'
+        'Circle', 'User', 'Goal', 'Team', 'KeyResult'
     ];
     var $components = ['RequestHandler'];
     public function beforeFilter()
@@ -18,7 +16,12 @@ class SetupController extends AppController
         $this->Security->validatePost = false;
         $this->Security->csrfCheck = false;
         $this->layout = LAYOUT_ONE_COLUMN;
-        $this->set('without_footer', true);
+        $this->Goal->KeyResult->_setUnitName();
+        $current_term = $this->Team->EvaluateTerm->getCurrentTermData();
+        $current_term_start_date_format = date('Y/m/d', $current_term['start_date'] + $current_term['timezone'] * HOUR);
+        $current_term_end_date_format = date('Y/m/d', $current_term['end_date'] + $current_term['timezone'] * HOUR);
+        $without_footer = true;
+        $this->set(compact('without_footer', 'current_term_start_date_format', 'current_term_end_date_format'));
     }
 
     public function index()
@@ -28,6 +31,7 @@ class SetupController extends AppController
 
     public function goal()
     {
+        $this->KeyResult->_setUnitName();
         return $this->render('index');
     }
 
@@ -57,9 +61,23 @@ class SetupController extends AppController
         return $this->_ajaxGetResponse($res);
     }
 
-    public function ajax_add_goal()
+    public function ajax_create_goal()
     {
-        return true;
+      $this->_ajaxPreProcess();
+
+      // Purpose保存
+      $this->Goal->Purpose->add($this->request->data);
+      $purpose_id = $this->Goal->Purpose->id;
+      $this->request->data['Goal']['purpose_id'] = $purpose_id;
+
+      // $_FILESとGoalオブジェクトマージ
+      $this->request->data['Goal']['photo'] = $_FILES['photo'];
+
+      // Goal保存
+      $res = $this->Goal->add(['Goal' => $this->request->data['Goal']]);
+
+      $this->updateSetupStatusIfNotCompleted();
+      return $this->_ajaxGetResponse(['res' => $res, 'validate_errors' => $this->Goal->validateErrors]);
     }
 
     public function ajax_get_circles()
