@@ -1,5 +1,4 @@
 export const FETCH_SETUP_STATUS = 'FETCH_SETUP_STATUS'
-export const SUBMIT_GOAL = 'SUBMIT_GOAL'
 
 // circle
 export const SELECT_CIRCLE = 'SELECT_CIRCLE'
@@ -11,3 +10,8 @@ export const JOIN_CIRCLE = 'JOIN_CIRCLE'
 export const CAN_SUBMIT_PROFILE = 'CAN_SUBMIT_PROFILE'
 export const CAN_NOT_SUBMIT_PROFILE = 'CAN_NOT_SUBMIT_PROFILE'
 export const ADD_PROFILE = 'ADD_PROFILE'
+
+// goal
+export const SELECT_PURPOSE = 'SELECT_PURPOSE'
+export const SELECT_GOAL = 'SELECT_GOAL'
+export const CREATE_GOAL = 'CREATE_GOAL'

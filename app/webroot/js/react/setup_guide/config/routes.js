@@ -10,24 +10,25 @@ import createReducer from '../reducers/index'
 import { fetchCircles } from '../actions/circle_actions'
 
 // How do I write this simply?
-import GoalContainer from '../containers/goal'
 import AppContainer from '../containers/app'
 import TopContainer from '../containers/top/top'
 import Index from '../components/index'
-import GoalImage from '../components/goal/goal_image'
-import PurposeSelect from '../components/goal/purpose_select'
-import GoalSelect from '../components/goal/goal_select'
-import GoalCreate from '../components/goal/goal_create'
-
+// Profile
 import ProfileContainer from '../containers/profile/index'
 import ProfileImageContainer from '../containers/profile/profile_image'
 import ProfileAddContainer from '../containers/profile/profile_add'
-
+// Goal
+import GoalContainer from '../containers/goal/index'
+import GoalImageContainer from '../containers/goal/goal_image'
+import PurposeSelectContainer from '../containers/goal/purpose_select'
+import GoalSelectContainer from '../containers/goal/goal_select'
+import GoalCreateContainer from '../containers/goal/goal_create'
+// Circle
 import CircleContainer from '../containers/circle/index'
 import CircleImageContainer from '../containers/circle/circle_image'
 import CircleSelectContainer from '../containers/circle/circle_select'
 import CircleCreateContainer from '../containers/circle/circle_create'
-
+// App
 import AppImage from '../components/app/app_image'
 import AppSelect from '../components/app/app_select'
 
@@ -56,11 +57,11 @@ export default class Routes extends Component {
             <Route path="/setup" component={Index} >
               <IndexRoute component={TopContainer} />
               <Route path="goal" component={GoalContainer} >
-                <IndexRoute component={GoalImage} />
-                <Route path="image" component={GoalImage} />
-                <Route path="purpose_select" component={PurposeSelect} />
-                <Route path="select" component={GoalSelect} />
-                <Route path="create" component={GoalCreate} />
+                <IndexRoute component={GoalImageContainer} />
+                <Route path="image" component={GoalImageContainer} />
+                <Route path="purpose_select" component={PurposeSelectContainer} />
+                <Route path="select" component={GoalSelectContainer} />
+                <Route path="create" component={GoalCreateContainer} />
               </Route>
               <Route path="profile" component={ProfileContainer} >
                 <IndexRoute component={ProfileImageContainer} />
@@ -80,6 +81,7 @@ export default class Routes extends Component {
               </Route>
             </Route>
           </Router>
+          <DevTools />
         </div>
       </Provider>
     );
