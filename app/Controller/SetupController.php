@@ -31,7 +31,6 @@ class SetupController extends AppController
 
     public function goal()
     {
-        $this->KeyResult->_setUnitName();
         return $this->render('index');
     }
 
@@ -46,6 +45,11 @@ class SetupController extends AppController
     }
 
     public function app()
+    {
+        return $this->render('index');
+    }
+
+    public function action()
     {
         return $this->render('index');
     }

@@ -12,7 +12,7 @@ export default class GoalImage extends React.Component {
           {__('Set up Goalous')} <i className="fa fa-angle-right" aria-hidden="true"></i> {__('Create a goal')}
         </div>
         <div className="setup-explain">
-          <img src='/img/setup/goal.png' className='setup-explain-img' alt='setup goal' />
+          <img src='/img/setup/setup_goal.png' className='setup-explain-img' alt='setup goal' />
         </div>
         <div>
           <Link to="/setup/" className="btn btn-secondary setup-back-btn">{__('Back')}</Link>

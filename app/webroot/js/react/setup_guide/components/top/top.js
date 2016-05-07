@@ -12,38 +12,38 @@ export default class Top extends React.Component {
     return ([
       {
         index: 1,
-        subject: 'Input your profile',
-        explain: 'Set your profile picture and self-info.',
+        subject: __('Input your profile'),
+        explain: __('Set your profile picture and self-info.'),
         link: '/setup/profile/image'
       },
       {
         index: 2,
-        subject: 'Login from mobile app',
-        explain: 'Install Goalous iOS and Android apps.',
+        subject: __('Login from mobile app'),
+        explain: __('Install Goalous iOS and Android apps.'),
         link: '/setup/app/image'
       },
       {
         index: 3,
-        subject: 'Create a goal',
-        explain: 'Create or collaborate with a goal.',
+        subject: __('Create a goal'),
+        explain: __('Create or collaborate with a goal.'),
         link: '/setup/goal/image'
       },
       {
         index: 4,
-        subject: 'Do an action',
-        explain: 'Add an Action for your Goal.',
-        link: '/setup'
+        subject: __('Do an action'),
+        explain: __('Add an Action for your Goal.'),
+        link: '/setup/action/image'
       },
       {
         index: 5,
-        subject: 'Join a circle',
-        explain: 'Create a circle or join.',
+        subject: __('Join a circle'),
+        explain: __('Create a circle or join.'),
         link: '/setup/circle/image'
       },
       {
         index: 6,
-        subject: 'Post to a circle',
-        explain: 'Share your topic with a circle.',
+        subject: __('Post to a circle'),
+        explain: __('Share your topic with a circle.'),
         link: '/setup'
       }
     ])
