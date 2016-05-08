@@ -175,9 +175,9 @@ class NotifyBizComponent extends Component
                 $this->_setTeamJoinOption($model_id);
                 break;
             case NotifySetting::TYPE_SETUP_PROFILE:
-                echo "プロファイル！";
-                $this->_setSetupProfileOption();
-                return;
+                echo "プロファイル！\n";
+                $this->_setSetupProfileOption($user_id);
+
 //                const TYPE_SETUP_APP = 27;
 //                const TYPE_SETUP_GOAL = 28;
 //                const TYPE_SETUP_ACTION = 29;
@@ -463,14 +463,14 @@ class NotifyBizComponent extends Component
      *
      * @throws RuntimeException
      */
-    private function _setSetupProfileOption()
+    private function _setSetupProfileOption($user_id)
     {
         //対象ユーザの通知設定確認
-        $this->notify_settings = true;
+        $this->notify_settings = [$user_id => ['app' => false, 'email' => true, 'mobile' => true]];
         $this->notify_option['notify_type'] = NotifySetting::TYPE_SETUP_PROFILE;
         $this->notify_option['url_data'] = ['controller' => 'setup', 'action' => 'profile', 'image'];
         $this->notify_option['model_id'] = null;
-        $this->notify_option['item_name'] = null; //メッセージほんぶん？
+        $this->notify_option['item_name'] = json_encode(["セットアッププロファイル"]); //メッセージほんぶん？
     }
 
 
@@ -1030,8 +1030,6 @@ class NotifyBizComponent extends Component
                 "userSettingValue":{"url":"' . $post_url . '"}},
                 "deliveryExpirationTime":"1 day"
             }';
-            error_log("FURU:result:" . $body . "\n", 3, "/tmp/hoge.log");
-
             $options['http']['content'] = $body;
 
             $header['content-length'] = 'Content-Length: ' . strlen($body);
@@ -1040,8 +1038,6 @@ class NotifyBizComponent extends Component
             $url = "https://" . NCMB_REST_API_FQDN . "/" . NCMB_REST_API_VER . "/" . NCMB_REST_API_PUSH;
             $ret = file_get_contents($url, false, stream_context_create($options));
             $sent_device_tokens = array_merge($sent_device_tokens, $device_tokens);
-
-            error_log("FURU:result:" . $ret . "\n", 3, "/tmp/hoge.log");
         }
 
         //変更したlangをログインユーザーのものに書き戻しておく

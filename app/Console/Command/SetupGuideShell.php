@@ -126,9 +126,8 @@ class SetupGuideShell extends AppShell
             if (!$force && !$this->_isNotifySendTime($to_user['User']['timezone'])) {
                 continue;
             }
-
             $user_id = $to_user['User']['id'];
-            if ($this->_isNotifyDay($user_id)) {
+            if ($force || $this->_isNotifyDay($user_id)) {
                 $this->_sendNotify($user_id);
             }
         }
