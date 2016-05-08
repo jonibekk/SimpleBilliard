@@ -15,3 +15,7 @@ export const ADD_PROFILE = 'ADD_PROFILE'
 export const SELECT_PURPOSE = 'SELECT_PURPOSE'
 export const SELECT_GOAL = 'SELECT_GOAL'
 export const CREATE_GOAL = 'CREATE_GOAL'
+
+// action
+export const SELECT_ACTION_GOAL = 'SELECT_ACTION_GOAL'
+export const FETCH_GOALS = 'FETCH_GOALS'

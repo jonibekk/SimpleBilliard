@@ -1,5 +1,6 @@
 <?php
 App::uses('AppController', 'Controller');
+App::uses('Post', 'Model');
 
 /**
  * Setup Controller
@@ -7,7 +8,7 @@ App::uses('AppController', 'Controller');
 class SetupController extends AppController
 {
     var $uses = [
-        'Circle', 'User', 'Goal', 'Team', 'KeyResult'
+        'Circle', 'User', 'Goal', 'Team', 'KeyResult', 'Post'
     ];
     var $components = ['RequestHandler'];
     public function beforeFilter()
@@ -67,21 +68,21 @@ class SetupController extends AppController
 
     public function ajax_create_goal()
     {
-      $this->_ajaxPreProcess();
+        $this->_ajaxPreProcess();
 
-      // Purpose保存
-      $this->Goal->Purpose->add($this->request->data);
-      $purpose_id = $this->Goal->Purpose->id;
-      $this->request->data['Goal']['purpose_id'] = $purpose_id;
+        // Purpose保存
+        $this->Goal->Purpose->add($this->request->data);
+        $purpose_id = $this->Goal->Purpose->id;
+        $this->request->data['Goal']['purpose_id'] = $purpose_id;
 
-      // $_FILESとGoalオブジェクトマージ
-      $this->request->data['Goal']['photo'] = $_FILES['photo'];
+        // $_FILESとGoalオブジェクトマージ
+        $this->request->data['Goal']['photo'] = $_FILES['photo'];
 
-      // Goal保存
-      $res = $this->Goal->add(['Goal' => $this->request->data['Goal']]);
+        // Goal保存
+        $res = $this->Goal->add(['Goal' => $this->request->data['Goal']]);
 
-      $this->updateSetupStatusIfNotCompleted();
-      return $this->_ajaxGetResponse(['res' => $res, 'validate_errors' => $this->Goal->validateErrors]);
+        $this->updateSetupStatusIfNotCompleted();
+        return $this->_ajaxGetResponse(['res' => $res, 'validate_errors' => $this->Goal->validateErrors]);
     }
 
     public function ajax_get_circles()
@@ -162,6 +163,48 @@ class SetupController extends AppController
             $msg = __("Failed to save user profile.");
         }
         return $this->_ajaxGetResponse(['msg' => $msg]);
+    }
+
+    public function ajax_get_goals()
+    {
+        $this->_ajaxPreProcess();
+
+        $goals = $this->Goal->getGoalsForSetupBy($this->Auth->user('id'));
+        $res = [
+            'goals' => $goals,
+        ];
+        return $this->_ajaxGetResponse($res);
+    }
+
+    public function ajax_post_action()
+    {
+      $this->_ajaxPreProcess();
+      $this->log($this->request->data);
+      $res = [
+          'res' => true,
+      ];
+      return $this->_ajaxGetResponse($res);
+    }
+
+    /**
+     * ファイルアップロード
+     * JSON レスポンス形式
+     * {
+     *   error: bool,   // エラーが発生した場合に true
+     *   msg: string,   // 処理結果を示すメッセージ
+     *   id: string,    // ファイルID
+     * }
+     *
+     * @return CakeResponse
+     */
+    public function ajax_upload_file()
+    {
+        $this->_ajaxPreProcess();
+        $file_id = $this->Post->PostFile->AttachedFile->preUploadFile($this->request->params['form']);
+        return $this->_ajaxGetResponse(['error' => $file_id ? false : true,
+                                        'msg'   => $file_id ? "" : __('Failed to upload.'),
+                                        'id'    => $file_id ? $file_id : "",
+                                       ]);
     }
 
 }

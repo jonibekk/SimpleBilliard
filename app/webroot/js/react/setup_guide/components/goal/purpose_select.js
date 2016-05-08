@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import { Link } from 'react-router'
 
 export default class PurposeSelect extends React.Component {
   constructor(props) {
@@ -52,6 +53,9 @@ export default class PurposeSelect extends React.Component {
         </div>
         <div className="setup-items">
           {purposes}
+        </div>
+        <div>
+          <Link to="/setup/goal/image" className="btn btn-secondary setup-back-btn-full">{__('Back')}</Link>
         </div>
       </div>
     )

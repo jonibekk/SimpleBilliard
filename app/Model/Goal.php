@@ -1789,4 +1789,22 @@ class Goal extends AppModel
             'fields'     => ['Goal.id']
         ]);
     }
+
+    public function getGoalsForSetupBy($user_id)
+    {
+      $start_date = $this->Team->EvaluateTerm->getCurrentTermData()['start_date'];
+      $end_date = $this->Team->EvaluateTerm->getCurrentTermData()['end_date'];
+      $options = [
+          'conditions' => [
+              'Goal.user_id'     => $user_id,
+              'Goal.team_id'     => $this->current_team_id,
+              'Goal.end_date >=' => $start_date,
+              'Goal.end_date <=' => $end_date,
+          ],
+          'fields' => [
+            'Goal.id', 'Goal.name', 'Goal.photo_file_name'
+          ]
+      ];
+      return $this->find('all', $options);
+    }
 }
