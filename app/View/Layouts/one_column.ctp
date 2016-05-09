@@ -41,6 +41,7 @@ else {
 <?= $this->fetch('modal') ?>
 <!-- END fetch modal -->
 <?= $this->element('gl_common_js') ?>
+<?= $this->Html->script('react_app.min')?>
 <!-- START fetch script -->
 <?= $this->fetch('script') ?>
 <!-- END fetch script -->

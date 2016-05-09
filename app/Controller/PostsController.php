@@ -191,6 +191,8 @@ class PostsController extends AppController
             return false;
         }
 
+        $this->updateSetupStatusIfNotCompleted();
+
         $notify_type = NotifySetting::TYPE_FEED_POST;
         if (viaIsSet($this->request->data['Post']['type']) == Post::TYPE_MESSAGE) {
             $notify_type = NotifySetting::TYPE_FEED_MESSAGE;

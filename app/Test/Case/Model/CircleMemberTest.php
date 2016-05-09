@@ -482,4 +482,54 @@ class CircleMemberTest extends GoalousTestCase
         $this->assertFalse(isset($rows[$user_id]));
     }
 
+    function testIsJoinedForSetupBy()
+    {
+        $this->_setDefault(1, 1);
+
+        // In case that user don't join any circle
+        $this->CircleMember->deleteAll([
+                                           'CircleMember.user_id' => $this->CircleMember->my_uid
+                                       ]);
+        $res = $this->CircleMember->isJoinedForSetupBy($this->CircleMember->my_uid);
+        $this->assertFalse($res);
+
+        // In case that user join only one circle(default circle)
+        $this->CircleMember->Circle->saveAll([
+                                                 [
+                                                     'id'         => 1,
+                                                     'name'       => 'circle1',
+                                                     'public_flg' => true,
+                                                     'team_id'    => 1,
+                                                 ],
+                                                 [
+                                                     'id'         => 2,
+                                                     'name'       => 'circle2',
+                                                     'public_flg' => true,
+                                                     'team_id'    => 1,
+                                                 ]
+                                             ]);
+        $this->CircleMember->save([
+                                      'CircleMember' => [
+                                          'id'        => 1,
+                                          'user_id'   => 1,
+                                          'circle_id' => 1,
+                                          'team_id'   => 1,
+                                      ]
+                                  ]);
+        $res = $this->CircleMember->isJoinedForSetupBy($this->CircleMember->my_uid);
+        $this->assertFalse($res);
+
+        // In case that user join or create more one circle
+        $this->CircleMember->save([
+                                      'CircleMember' => [
+                                          'id'        => 2,
+                                          'user_id'   => 1,
+                                          'circle_id' => 2,
+                                          'team_id'   => 1,
+                                      ]
+                                  ]);
+        $res = $this->CircleMember->isJoinedForSetupBy($this->CircleMember->my_uid);
+        $this->assertTrue($res);
+    }
+
 }

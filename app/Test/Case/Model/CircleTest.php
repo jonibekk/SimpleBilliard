@@ -425,4 +425,5 @@ class CircleTest extends GoalousTestCase
             }
         }
     }
+
 }

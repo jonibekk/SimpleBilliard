@@ -18,6 +18,10 @@
     "dereuromark/cakephp-url-cache": "dev-master",
     "kaz29/cake_slack": "dev-master"
   },
+  "require-dev": {
+    "phpunit/phpunit-selenium": ">=1.2",
+    "apigen/apigen": "*"
+  },
   "config": {
     "vendor-dir": "Vendor/"
   }

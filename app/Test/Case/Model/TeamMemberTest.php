@@ -2492,6 +2492,12 @@ class TeamMemberTest extends GoalousTestCase
         $this->assertNotEmpty($actual);
     }
 
+    function testGetIdByTeamAndUserId()
+    {
+        $this->setDefault();
+        $this->assertNotEmpty($this->TeamMember->getIdByTeamAndUserId(1, 1));
+    }
+
     function _saveEvaluations()
     {
         $records = [
@@ -2572,7 +2578,7 @@ class TeamMemberTest extends GoalousTestCase
                 'goal_id'           => 12,
             ],
         ];
-        
+
         $this->TeamMember->Team->Evaluation->saveAll($records);
     }
 

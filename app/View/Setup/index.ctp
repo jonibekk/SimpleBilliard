@@ -1,2 +1,1 @@
-<div id="setup-guide"></div>
-<script src="/js/react_app.min.js"></script>
+<div id="setup-guide-app"></div>

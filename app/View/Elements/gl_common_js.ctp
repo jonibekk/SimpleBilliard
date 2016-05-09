@@ -53,6 +53,7 @@ echo $this->Html->script('vendor/angular/ng-infinite-scroll.min');
 <!--suppress JSDuplicatedDeclaration -->
 <script type="text/javascript">
     var cake = {
+        env_name: "<?= ENV_NAME ?>",
         message: {
             validate: {
                 a: "<?= __('%1$d or more and %2$d or less characters.',8,50)?>",
@@ -286,7 +287,8 @@ echo $this->Html->script('vendor/angular/ng-infinite-scroll.min');
                 }
                 callback(data);
             },
-            user_id: "<?= $this->Session->read('Auth.User.id')?>"
+            user_id: "<?= $this->Session->read('Auth.User.id')?>",
+            kr_value_unit_list: <?= json_encode(KeyResult::$UNIT)?>
         },
         pusher: {
             key: "<?=PUSHER_KEY?>",
@@ -302,8 +304,17 @@ echo $this->Html->script('vendor/angular/ng-infinite-scroll.min');
         pre_file_ttl: <?= PRE_FILE_TTL ?>,
         notify_setting: <?= isset($notify_setting)?json_encode($notify_setting):"''" ?>,
         unread_msg_post_ids: <?=isset($unread_msg_post_ids)?json_encode($unread_msg_post_ids):"''"?>,
-        select2_query_limit: <?=SELECT2_QUERY_LIMIT?>
+        select2_query_limit: <?=SELECT2_QUERY_LIMIT?>,
+        current_term_start_date_format: "<?= viaIsSet($current_term_start_date_format) ?>",
+        current_term_end_date_format: "<?= viaIsSet($current_term_end_date_format) ?>"
     };
+
+    function __(text) {
+        if(cake[text] !== undefined) {
+            return cake[text];
+        }
+        return text;
+    }
 
 
     <?php if(isset($mode_view)):?>

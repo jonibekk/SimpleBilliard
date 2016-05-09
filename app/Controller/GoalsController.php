@@ -147,7 +147,8 @@ class GoalsController extends AppController
                     // pusherに通知
                     $socketId = viaIsSet($this->request->data['socket_id']);
                     $this->NotifyBiz->push($socketId, "all");
-
+                    //セットアップガイドステータスの更新
+                    $this->updateSetupStatusIfNotCompleted();
                     // ゴールを変更した場合は、ゴールリーター、コラボレーターの認定フラグを処理前に戻す
                     // ただし重要度0のゴールであれば認定フラグは対象外にセットする
                     foreach ($this->request->data['Collaborator'] as $val) {
@@ -1274,6 +1275,9 @@ class GoalsController extends AppController
 
         // push
         $this->Pnotify->outSuccess(__("Added an action."));
+        //セットアップガイドステータスの更新
+        $this->updateSetupStatusIfNotCompleted();
+
         $post = $this->Goal->Post->getByActionResultId($this->Goal->ActionResult->getLastInsertID());
         $url = $post ? ['controller' => 'posts',
                         'action'     => 'feed',
