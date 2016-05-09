@@ -39,7 +39,6 @@ export function createGoal(refs) {
     dataType: 'json',
   })
   .then(function (response) {
-    console.log(response)
     browserHistory.push('/setup')
   })
   .catch(function (response) {

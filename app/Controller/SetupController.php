@@ -139,14 +139,13 @@ class SetupController extends AppController
 
     public function ajax_add_profile()
     {
-        $this->request->allowMethod('put');
-        $this->layout = false;
-        $this->autoRender = false;
+        $this->_ajaxPreProcess();
 
         $msg = null;
-        $this->User->id = $this->Auth->user('id');
         $team_member_id = $this->User->TeamMember->getIdByTeamAndUserId($this->current_team_id, $this->my_uid);
         $this->request->data['TeamMember'][0]['id'] = $team_member_id;
+        $this->request->data['User']['id'] = $this->User->id = $this->my_uid;
+        $this->request->data['User']['photo'] = $_FILES['photo'];
         // キャッシュ削除
         Cache::delete($this->User->getCacheKey(CACHE_KEY_MY_PROFILE, true, null, false), 'user_data');
         if ($this->User->saveAll($this->request->data)) {
