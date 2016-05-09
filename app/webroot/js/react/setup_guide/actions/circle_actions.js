@@ -57,21 +57,14 @@ export function postCircleCreate(dispatch, circle) {
 }
 
 export function createCircle(dispatch, refs) {
-  const circle_name = ReactDOM.findDOMNode(refs.circle_name).value
-  const members = ReactDOM.findDOMNode(refs.members).value
-  const public_flg = ReactDOM.findDOMNode(refs.public_flg).value
-  const circle_description = ReactDOM.findDOMNode(refs.circle_description).value
-  const circle_image = ReactDOM.findDOMNode(refs.circle_image).files[0]
+  let form_data = new FormData()
+  form_data.append("photo", ReactDOM.findDOMNode(refs.circle_image).files[0])
+  form_data.append("Circle[name]", ReactDOM.findDOMNode(refs.circle_name).value)
+  form_data.append("Circle[public_flg]", ReactDOM.findDOMNode(refs.public_flg).value)
+  form_data.append("Circle[description]", ReactDOM.findDOMNode(refs.circle_description).value)
+  form_data.append("Circle[members]", ReactDOM.findDOMNode(refs.members).value)
 
-  return postCircleCreate(dispatch, {
-    // _Token: cake.data.csrf_token.key,
-    Circle: {
-      name: circle_name,
-      public_flg: public_flg,
-      description: circle_description,
-      members: members
-    },
-  })
+  return postCircleCreate(dispatch, form_data)
 }
 
 export function selectCircle(circle_id) {

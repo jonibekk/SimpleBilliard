@@ -102,9 +102,9 @@ class SetupController extends AppController
 
     public function ajax_create_circle()
     {
-        // $this->_ajaxPreProcess();
-        $this->layout = false;
-        $this->request->allowMethod('post');
+        $this->_ajaxPreProcess();
+        $this->request->data['Circle']['photo'] = $_FILES['photo'];
+        $this->log($this->request->data);
         $this->Circle->create();
         if ($res = $this->Circle->add($this->request->data)) {
             if (!empty($this->Circle->add_new_member_list)) {
