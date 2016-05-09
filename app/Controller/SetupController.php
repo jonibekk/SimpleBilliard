@@ -1,5 +1,6 @@
 <?php
 App::uses('AppController', 'Controller');
+App::uses('Circle', 'Model');
 
 /**
  * Setup Controller
@@ -7,7 +8,7 @@ App::uses('AppController', 'Controller');
 class SetupController extends AppController
 {
     var $uses = [
-        'Circle', 'User', 'Goal', 'Team', 'KeyResult'
+        'User', 'Goal', 'Team', 'KeyResult'
     ];
     var $components = ['RequestHandler'];
     public function beforeFilter()
@@ -46,6 +47,11 @@ class SetupController extends AppController
     }
 
     public function app()
+    {
+        return $this->render('index');
+    }
+
+    public function post()
     {
         return $this->render('index');
     }
@@ -158,6 +164,13 @@ class SetupController extends AppController
             $msg = __("Failed to save user profile.");
         }
         return $this->_ajaxGetResponse(['msg' => $msg]);
+    }
+
+    public function ajax_get_circles_for_post()
+    {
+        $this->_ajaxPreProcess();
+        $circles = $this->Circle->CircleMember->getMyCircle();
+        return $this->_ajaxGetResponse(['circles' => []]);
     }
 
 }

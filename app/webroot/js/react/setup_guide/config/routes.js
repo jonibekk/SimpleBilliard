@@ -31,6 +31,11 @@ import CircleCreateContainer from '../containers/circle/circle_create'
 // App
 import AppImage from '../components/app/app_image'
 import AppSelect from '../components/app/app_select'
+// Post
+import PostContainer from '../containers/post/index'
+import PostImageContainer from '../containers/post/post_image'
+import PostCircleSelectContainer from '../containers/post/post_circle_select'
+import PostCreateContainer from '../containers/post/post_create'
 
 const DevTools = createDevTools(
   <DockMonitor toggleVisibilityKey="ctrl-h" changePositionKey="ctrl-q">
@@ -73,6 +78,12 @@ export default class Routes extends Component {
                 <Route path="image" component={CircleImageContainer} />
                 <Route path="select" component={CircleSelectContainer} />
                 <Route path="create" component={CircleCreateContainer} />
+              </Route>
+              <Route path="post" component={PostContainer} >
+                <IndexRoute component={PostImageContainer} />
+                <Route path="image" component={PostImageContainer} />
+                <Route path="circle_select" component={PostCircleSelectContainer} />
+                <Route path="create" component={PostCreateContainer} />
               </Route>
               <Route path="app" component={AppContainer} >
                 <IndexRoute component={AppImage} />

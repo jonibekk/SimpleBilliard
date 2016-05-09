@@ -4,6 +4,7 @@ import circles from './circle'
 import top from './top'
 import profile from './profile'
 import goal from './goal'
+import post from './post'
 
 export default function createReducer() {
   return combineReducers(
@@ -11,7 +12,8 @@ export default function createReducer() {
       circles,
       top,
       profile,
-      goal
+      goal,
+      post
     },
     {
       routing: routerReducer
