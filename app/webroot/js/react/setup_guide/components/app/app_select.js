@@ -10,7 +10,7 @@ export default class AppSelect extends React.Component {
         return (
             <div>
                 <div className="setup-pankuzu font_18px">
-                    :Set up Goalous <i className="fa fa-angle-right" aria-hidden="true"></i> :Login from mobile app
+                    {__('Set up Goalous')} <i className="fa fa-angle-right" aria-hidden="true"></i> {__('Login from mobile app')}
                 </div>
 
                 <div className="setup-items">
@@ -22,8 +22,8 @@ export default class AppSelect extends React.Component {
                             </div>
                         </div>
                         <div className="setup-items-item-explain pull-left">
-                            <p className="font_bold font_verydark">Install Android app</p>
-                            <p className="font_11px font_lightgray">Requires Android 4.4 or later.</p>
+                            <p className="font_bold font_verydark">{__('Install Android app')}</p>
+                            <p className="font_11px font_lightgray">{__('Requires Android 4.4 or later.')}</p>
                         </div>
                         <div className="setup-items-item-to-right pull-right mt_12px mr_5px">
                             <i className="fa fa-chevron-right font_18px"></i>
@@ -38,15 +38,16 @@ export default class AppSelect extends React.Component {
                             </div>
                         </div>
                         <div className="setup-items-item-explain pull-left">
-                            <p className="font_bold font_verydark">Install iOS app</p>
-                            <p className="font_11px font_lightgray">Requires iOS 8.4 or later.</p>
+                            <p className="font_bold font_verydark">{__('Install iOS app')}</p>
+                            <p className="font_11px font_lightgray">{__('Requires iOS 8.4 or later.')}</p>
                         </div>
                         <div className="setup-items-item-to-right pull-right mt_12px mr_5px">
                             <i className="fa fa-chevron-right font_18px"></i>
                         </div>
                     </a>
 
-                    <Link to="/setup/" className="setup-items-item pt_10px mt_12px bd-radius_14px">
+                    <div className="setup-items-item pt_10px mt_12px bd-radius_14px"
+                         onClick={this.props.onClickNoDevices}>
                         <div className="pull-left mt_3px ml_2px">
                             <div className="setup-items-item-icon">
                                 <i className="fa fa-ban setup-items-item-icon-fa"></i>
@@ -54,12 +55,12 @@ export default class AppSelect extends React.Component {
                         </div>
                         <div className="setup-items-item-explain pull-left">
                             <p className="font_bold font_verydark">I have no iOS/Android devices</p>
-                            <p className="font_11px font_lightgray">If you don't have a mobile device.</p>
+                            <p className="font_11px font_lightgray">{__("If you don't have a mobile device.")}</p>
                         </div>
                         <div className="setup-items-item-to-right pull-right mt_12px mr_5px">
                             <i className="fa fa-chevron-right font_18px"></i>
                         </div>
-                    </Link>
+                    </div>
                 </div>
             </div>
         )

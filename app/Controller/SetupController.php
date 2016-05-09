@@ -7,7 +7,7 @@ App::uses('AppController', 'Controller');
 class SetupController extends AppController
 {
     var $uses = [
-        'Circle', 'User', 'Goal', 'Team', 'KeyResult'
+        'Circle', 'User', 'Goal', 'Team', 'KeyResult', 'Device'
     ];
     var $components = ['RequestHandler'];
     public function beforeFilter()
@@ -157,6 +157,24 @@ class SetupController extends AppController
             $msg = __("Failed to save user profile.");
         }
         return $this->_ajaxGetResponse(['msg' => $msg]);
+    }
+
+    public function ajax_register_no_device()
+    {
+        $this->_ajaxPreProcess();
+        if($this->User->isInstalledMobileApp($this->my_uid)) {
+            $res = false;
+        } else {
+            $res = $this->Device->add([
+                'Device' => [
+                  'user_id' => $this->my_uid,
+                  'os_type' => 99,
+                  'device_token' => 'No devices.'
+                ]
+            ]);
+        }
+        $this->updateSetupStatusIfNotCompleted();
+        return $this->_ajaxGetResponse(['res' => $res]);
     }
 
 }
