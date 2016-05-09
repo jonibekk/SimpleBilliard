@@ -62,6 +62,9 @@ export default class AppSelect extends React.Component {
                         </div>
                     </div>
                 </div>
+                <div>
+                  <Link to="/setup/app/image" className="btn btn-secondary setup-back-btn-full">{__('Back')}</Link>
+                </div>
             </div>
         )
     }

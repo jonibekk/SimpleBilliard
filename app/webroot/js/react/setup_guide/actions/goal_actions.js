@@ -40,12 +40,20 @@ export function createGoal(refs) {
   })
   .then(function (response) {
     browserHistory.push('/setup')
+    PNotify.removeAll()
+    new PNotify({
+        type: 'success',
+        title: cake.word.success,
+        text: response.data.msg,
+        icon: "fa fa-check-circle",
+        delay: 4000,
+        mouse_reset: false
+    });
   })
   .catch(function (response) {
     console.log(response)
   })
   return {
-    type: CREATE_GOAL,
-    status
+    type: CREATE_GOAL
   }
 }

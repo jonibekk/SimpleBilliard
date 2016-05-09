@@ -14,14 +14,25 @@ export function postProfile(dispatch, form_data) {
   .then(function (response) {
     browserHistory.push('/setup')
     PNotify.removeAll()
-    new PNotify({
-        type: 'success',
-        title: cake.word.success,
-        text: response.data.msg,
-        icon: "fa fa-check-circle",
-        delay: 4000,
-        mouse_reset: false
-    });
+    if(renponse.data.error) {
+      new PNotify({
+          type: 'error',
+          title: cake.word.error,
+          text: response.data.msg,
+          icon: "fa fa-check-circle",
+          delay: 4000,
+          mouse_reset: false
+      })
+    } else {
+      new PNotify({
+          type: 'success',
+          title: cake.word.success,
+          text: response.data.msg,
+          icon: "fa fa-check-circle",
+          delay: 4000,
+          mouse_reset: false
+      });
+    }
     dispatch({
       type: ADD_PROFILE,
       form_input: profile

@@ -52,7 +52,7 @@ class SetupController extends AppController
 
     public function ajax_get_setup_status()
     {
-        $this->layout = false;
+        $this->_ajaxPreProcess();
         $status = $this->getStatusWithRedisSave();
         $res = [
             'status'           => $status,
@@ -76,8 +76,16 @@ class SetupController extends AppController
       // Goal保存
       $res = $this->Goal->add(['Goal' => $this->request->data['Goal']]);
 
+      if($res) {
+          $msg = __("Created a goal.");
+          $error = false;
+      } else {
+          $msg = __("Failed to save a goal.");
+          $error = true;
+      }
+
       $this->updateSetupStatusIfNotCompleted();
-      return $this->_ajaxGetResponse(['res' => $res, 'validate_errors' => $this->Goal->validateErrors]);
+      return $this->_ajaxGetResponse(['error' => $error, 'msg' => $msg]);
     }
 
     public function ajax_get_circles()
@@ -152,11 +160,13 @@ class SetupController extends AppController
             //セットアップガイドステータスの更新
             $this->updateSetupStatusIfNotCompleted();
             $msg = __("Saved user profile.");
+            $error = false;
         }
         else {
             $msg = __("Failed to save user profile.");
+            $error = true;
         }
-        return $this->_ajaxGetResponse(['msg' => $msg]);
+        return $this->_ajaxGetResponse(['msg' => $msg, 'error' => $error]);
     }
 
     public function ajax_register_no_device()
@@ -174,7 +184,7 @@ class SetupController extends AppController
             ]);
         }
         $this->updateSetupStatusIfNotCompleted();
-        return $this->_ajaxGetResponse(['res' => $res]);
+        return $this->_ajaxGetResponse(['error' => !$res]);
     }
 
 }

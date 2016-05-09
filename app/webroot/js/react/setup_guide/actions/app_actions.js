@@ -12,13 +12,14 @@ export function selectNoDevices(dispatch) {
     dataType: 'json',
   })
   .then(function (response) {
-    if(!response.data.res) {
+    if(response.data.error) {
       console.log(response)
+    } else {
+      dispatch({
+        type: SELECT_NO_DEVICES,
+        select_no_devices: true
+      })
     }
-    dispatch({
-      type: SELECT_NO_DEVICES,
-      select_no_devices: true
-    })
   })
   .catch(function (response) {
     console.log(response)

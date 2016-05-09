@@ -7,9 +7,7 @@ const initialState = {
   selected_goal: {
     name: ''
   },
-  input_goal: {
-
-  }
+  input_goal: {}
 }
 
 export default function goal(state = initialState, action) {
