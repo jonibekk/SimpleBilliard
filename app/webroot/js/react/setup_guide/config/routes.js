@@ -10,7 +10,6 @@ import createReducer from '../reducers/index'
 import { fetchCircles } from '../actions/circle_actions'
 
 // How do I write this simply?
-import AppContainer from '../containers/app'
 import TopContainer from '../containers/top/top'
 import Index from '../components/index'
 // Profile
@@ -29,8 +28,9 @@ import CircleImageContainer from '../containers/circle/circle_image'
 import CircleSelectContainer from '../containers/circle/circle_select'
 import CircleCreateContainer from '../containers/circle/circle_create'
 // App
-import AppImage from '../components/app/app_image'
-import AppSelect from '../components/app/app_select'
+import AppContainer from '../containers/app/index'
+import AppImageContainer from '../containers/app/app_image'
+import AppSelectContainer from '../containers/app/app_select'
 
 const DevTools = createDevTools(
   <DockMonitor toggleVisibilityKey="ctrl-h" changePositionKey="ctrl-q">
@@ -75,9 +75,9 @@ export default class Routes extends Component {
                 <Route path="create" component={CircleCreateContainer} />
               </Route>
               <Route path="app" component={AppContainer} >
-                <IndexRoute component={AppImage} />
-                <Route path="image" component={AppImage} />
-                <Route path="select" component={AppSelect} />
+                <IndexRoute component={AppImageContainer} />
+                <Route path="image" component={AppImageContainer} />
+                <Route path="select" component={AppSelectContainer} />
               </Route>
             </Route>
           </Router>

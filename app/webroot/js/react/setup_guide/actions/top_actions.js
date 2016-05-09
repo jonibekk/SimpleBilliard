@@ -4,7 +4,14 @@ import axios from 'axios'
 export function fetchSetupStatus(dispatch) {
   let status = {}
   let setup_rest_count = 0
-  axios.get('/setup/ajax_get_setup_status').then((response) => {
+  axios.get('/setup/ajax_get_setup_status', {
+    timeout: 10000,
+    headers: {
+      'X-Requested-With': 'XMLHttpRequest',
+    },
+    dataType: 'json',
+  })
+  .then(function (response) {
     let complete_percent = 0
     if(response.data.setup_rest_count !== 0) {
       complete_percent = Math.round(100 * ((6 - response.data.setup_rest_count) / 6))
@@ -17,4 +24,5 @@ export function fetchSetupStatus(dispatch) {
     })
   }).catch((response) => {
   })
+
 }
