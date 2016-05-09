@@ -48,7 +48,7 @@ export function createGoal(refs) {
         icon: "fa fa-check-circle",
         delay: 4000,
         mouse_reset: false
-    });
+    })
   })
   .catch(function (response) {
     console.log(response)

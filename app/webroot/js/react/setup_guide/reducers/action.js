@@ -4,7 +4,7 @@ const initialState = {
   select_no_devices: false
 }
 
-export default function actions(state = initialState, action) {
+export default function action(state = initialState, action) {
   switch (action.type) {
     case SELECT_NO_DEVICES:
       return Object.assign({}, state, {

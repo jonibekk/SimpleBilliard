@@ -90,11 +90,12 @@ class SetupController extends AppController
 
     public function ajax_get_circles()
     {
-        $this->layout = false;
+        $this->_ajaxPreProcess();
 
         $not_joined_circles = array_values($this->Circle->getPublicCircles('non-joined'));
         $res = [
             'not_joined_circles' => $not_joined_circles,
+            'error' => false
         ];
         return $this->_ajaxGetResponse($res);
     }
@@ -111,10 +112,14 @@ class SetupController extends AppController
                                                  null, $this->Circle->add_new_member_list);
             }
             $this->updateSetupStatusIfNotCompleted();
-            $this->Pnotify->outSuccess(__("Created a circle."));
+            $msg = __("Created a circle.");
+            $error = false;
+        } else {
+            $msg = __("Failed to create a circle.");
+            $error = true;
         }
 
-        return $this->_ajaxGetResponse(['res' => $res]);
+        return $this->_ajaxGetResponse(['msg' => $msg, 'error' => $error]);
     }
 
     /**
@@ -138,11 +143,13 @@ class SetupController extends AppController
             else {
                 $msg = __("Leave a circle.");
             }
+            $error = false;
         }
         else {
             $msg = __("Failed to change circle belonging status.");
+            $error = true;
         }
-        return $this->_ajaxGetResponse(['msg' => $msg]);
+        return $this->_ajaxGetResponse(['msg' => $msg, 'error' => $error]);
     }
 
     public function ajax_add_profile()
