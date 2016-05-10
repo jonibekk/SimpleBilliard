@@ -148,37 +148,38 @@ class SetupGuideShell extends AppShell
                 $target_key = $key;
                 break;
             }
-
         }
-        $notify_type = NotifySetting::TYPE_SETUP_PROFILE;
 
         switch ($target_key) {
             case 1:
-                $notify_type = NotifySetting::TYPE_SETUP_PROFILE;
+                $message = __("Please input your profile to Goalous.");
+                $url_data = ['controller' => 'setup', 'action' => 'profile', 'image'];
                 break;
             case 2:
-                $notify_type = NotifySetting::TYPE_SETUP_APP;
+                $message = __("Please install the Goalous mobile application and login.");
+                $url_data = ['controller' => 'setup', 'action' => 'app', 'image'];
                 break;
             case 3:
-                $notify_type = NotifySetting::TYPE_SETUP_GOAL;
+                $message = __("Please create your GOAL.");
+                $url_data = ['controller' => 'setup', 'action' => 'goal', 'image'];
                 break;
             case 4:
-                $notify_type = NotifySetting::TYPE_SETUP_ACTION;
+                $message = __("Please action on Goalous.");
+                $url_data = ['controller' => 'setup', 'action' => 'action', 'image'];
                 break;
             case 5:
-                $notify_type = NotifySetting::TYPE_SETUP_CIRCLE;
+                $message = __("Please join a circle.");
+                $url_data = ['controller' => 'setup', 'action' => 'circle', 'image'];
                 break;
             case 6:
-                $notify_type = NotifySetting::TYPE_SETUP_POST;
+                $message = __("Please post on Goalous.");
+                $url_data = ['controller' => 'setup', 'action' => 'post', 'image'];
                 break;
+            default:
+                return;
         }
-        $this->NotifyBiz->sendNotify($notify_type,
-                                     null,
-                                     null,
-                                     null,
-                                     $user_id,
-                                     null
-        );
+
+        $this->NotifyBiz->sendSetupNotify($user_id,$message, $url_data);
     }
 
     /**
