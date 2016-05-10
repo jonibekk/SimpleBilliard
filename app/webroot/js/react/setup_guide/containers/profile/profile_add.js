@@ -11,8 +11,11 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    toggleButtonClickable: (refs) => { toggleButtonClickable(dispatch, refs) },
-    onSubmitProfile: (e, refs) => { submitProfile(dispatch, e, refs) }
+    toggleButtonClickable: (refs) => { dispatch(toggleButtonClickable(refs)) },
+    onSubmitProfile: (event, refs) => {
+      event.preventDefault()
+      submitProfile(dispatch, refs)
+    }
   }
 }
 
