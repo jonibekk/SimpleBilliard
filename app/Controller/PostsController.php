@@ -162,6 +162,8 @@ class PostsController extends AppController
     {
         $this->request->allowMethod('post');
 
+        $this->log($this->request->data);
+
         // OGP処理はメッセ、アクション以外の場合に実行
         if ($url_text = $this->request->data('Post.site_info_url')) {
             // OGPをインサートデータに追加
