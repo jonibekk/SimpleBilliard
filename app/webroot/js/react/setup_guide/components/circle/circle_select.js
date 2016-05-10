@@ -9,7 +9,7 @@ export default class CircleSelect extends React.Component {
     this.props.fetchCircles()
   }
   getCircles() {
-    return this.props.circles.circles
+    return this.props.circle.circles
   }
   render() {
     var check_icon = () => {
@@ -23,7 +23,7 @@ export default class CircleSelect extends React.Component {
           <div className="row">
             <div className="setup-items-select-circle pull-left">{circle.Circle.name}</div>
             <span className="pull-right setup-items-select-circle-check">
-              { this.props.circles.selected_circle_id == circle.Circle.id ? check_icon() : null }
+              { this.props.circle.selected_circle_id == circle.Circle.id ? check_icon() : null }
             </span>
           </div>
         </div>
@@ -44,8 +44,8 @@ export default class CircleSelect extends React.Component {
           <Link to="/setup/circle/image" className="btn btn-secondary setup-back-btn">Back</Link>
           <Link to="/setup/circle/select"
             className="btn btn-primary setup-next-btn pull-right"
-            disabled={!Boolean(this.props.circles.selected_circle_id)}
-            onClick={(e) => { this.props.onClickJoinCircle( this.props.circles.selected_circle_id) }}
+            disabled={!Boolean(this.props.circle.selected_circle_id)}
+            onClick={(e) => { this.props.onClickJoinCircle( this.props.circle.selected_circle_id) }}
           >Join a circle</Link>
         </div>
       </div>

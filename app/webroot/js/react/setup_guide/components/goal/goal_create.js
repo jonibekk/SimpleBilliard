@@ -25,7 +25,7 @@ export default class GoalCreate extends React.Component {
           <div className="panel-body">
             <div className="form-inline">
               <div className="form-group">
-                <span className="help-block">Unit</span>
+                <span className="help-block">{__('Unit')}</span>
                 <select name="value_unit" ref="value_unit" className="form-control addteam_input-design" required="required">
                   <option value="0">{unit_list[0]}</option>
                   <option value="3">{unit_list[3]}</option>

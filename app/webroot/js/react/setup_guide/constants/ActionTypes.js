@@ -15,6 +15,7 @@ export const ADD_PROFILE = 'ADD_PROFILE'
 export const SELECT_PURPOSE = 'SELECT_PURPOSE'
 export const SELECT_GOAL = 'SELECT_GOAL'
 export const CREATE_GOAL = 'CREATE_GOAL'
-
 // post
 export const SELECT_CIRCLE_FOR_POST = 'SELECT_CIRCLE_FOR_POST'
+// app
+export const SELECT_NO_DEVICES = 'SELECT_NO_DEVICES'
