@@ -79,8 +79,21 @@ class NotifyBizComponent extends Component
         }
     }
 
-    function sendSetupNotify($user_id, $message, $url_data){
+    /**
+     * セットアップガイドの通知を送る
+     * @param $user_id
+     * @param $message
+     * @param $url_data
+     */
+    function sendSetupNotify($user_id, $message, $url_data)
+    {
         $this->GlEmail->sendMailSetup($user_id, $message, $url_data);
+
+        $this->notify_settings = [$user_id => ['mobile' => true]];
+        $this->notify_option['url_data'] = $url_data;
+        $this->notify_option['message'] = $message;
+        $this->notify_option['from_user_id'] = $user_id; // dummy
+        $this->_sendPushNotify();
     }
 
     /**
@@ -998,17 +1011,25 @@ class NotifyBizComponent extends Component
             $this->_setLangByUserId($to_user_id, $original_lang);
             $from_user = $this->NotifySetting->User->getUsersProf($this->notify_option['from_user_id']);
             $from_user_name = $from_user[0]['User']['display_username'];
-            $title = $this->NotifySetting->getTitle($this->notify_option['notify_type'],
-                                                    $from_user_name,
-                                                    1,
-                                                    $this->notify_option['item_name'],
-                                                    $this->notify_option['options']);
 
-            //メッセージの場合は本文も出ていたほうがいいので出してみる
-            $item_name = json_decode($this->notify_option['item_name']);
-            if (!empty($item_name)) {
-                $item_name = mb_strimwidth($item_name[0], 0, 40, "...");
-                $title .= " : " . $item_name;
+            // messageが設定されている場合は、それを優先して設定する。セットアップガイド用。
+            $title = "";
+            if (isset($this->notify_option['message'])) {
+                $title = $this->notify_option['message'];
+            }
+            else {
+                $title = $this->NotifySetting->getTitle($this->notify_option['notify_type'],
+                                                        $from_user_name,
+                                                        1,
+                                                        $this->notify_option['item_name'],
+                                                        $this->notify_option['options']);
+
+                //メッセージの場合は本文も出ていたほうがいいので出してみる
+                $item_name = json_decode($this->notify_option['item_name']);
+                if (!empty($item_name)) {
+                    $item_name = mb_strimwidth($item_name[0], 0, 40, "...");
+                    $title .= " : " . $item_name;
+                }
             }
             $title = json_encode($title, JSON_HEX_QUOT);
 
