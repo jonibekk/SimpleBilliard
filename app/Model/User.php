@@ -421,7 +421,6 @@ class User extends AppModel
                 ]
             ];
         }
-        echo("#2:" . print_r($options, true) . "\n");
         return $this->find('all', $options);
     }
 

@@ -872,13 +872,8 @@ class AppController extends Controller
         }
 
         $status_from_redis = $this->getStatusWithRedisSave();
-
-        error_log("FURU:setup_redis1" . print_r($status_from_redis, true) . "\n", 3, "/tmp/hoge.log");
-
         // remove last update time
         unset($status_from_redis[GlRedis::FIELD_SETUP_LAST_UPDATE_TIME]);
-
-        error_log("FURU:setup_redis2" . print_r($status_from_redis, true) . "\n", 3, "/tmp/hoge.log");
 
         $this->set('setup_status', $status_from_redis);
         $this->set('setup_rest_count', count(User::$TYPE_SETUP_GUIDE) - count(array_filter($status_from_redis)));

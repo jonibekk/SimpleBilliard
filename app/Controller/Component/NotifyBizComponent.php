@@ -1132,8 +1132,6 @@ class NotifyBizComponent extends Component
         }
         $signature_string .= $header_string;
 
-        error_log("FURU:sign=" . $signature_string . "\n", 3, "/tmp/hoge.log");
-
         return base64_encode(hash_hmac("sha256", $signature_string, $client_key, true));
     }
 
@@ -1491,8 +1489,6 @@ class NotifyBizComponent extends Component
         if (!$app_key) {
             return false;
         }
-        error_log("FURU:saveDeviceInfo:$user_id:$installation_id\n", 3, "/tmp/hoge.log");
-
         $timestamp = $this->_getTimestamp();
         $path = "/" . NCMB_REST_API_VER . "/" . NCMB_REST_API_GET_INSTALLATION . "/" . $installation_id;
         $signature = $this->_getNCMBSignature($timestamp, NCMB_REST_API_GET_METHOD, $path, $app_key, $client_key);
@@ -1513,11 +1509,7 @@ class NotifyBizComponent extends Component
         $options['http']['header'] = implode("\r\n", $header);
 
         $url = "https://" . NCMB_REST_API_FQDN . $path;
-        error_log("FURU:url:" . $url . "\n", 3, "/tmp/hoge.log");
         $ret = file_get_contents($url, false, stream_context_create($options));
-
-        error_log("FURU:result:" . $ret . "\n", 3, "/tmp/hoge.log");
-
         $ret_array = json_decode($ret, true);
 
         if (!array_key_exists('deviceToken', $ret_array)) {
@@ -1548,8 +1540,6 @@ class NotifyBizComponent extends Component
                 'os_type'      => $os_type,
             ]
         ];
-
-        error_log("FURU:device_token:" . $ret_array['deviceToken'] . "\n", 3, "/tmp/hoge.log");
 
         $ret = $this->Device->add($data);
         if (!$ret) {
