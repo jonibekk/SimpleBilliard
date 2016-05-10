@@ -460,25 +460,6 @@ class NotifyBizComponent extends Component
 
     }
 
-
-    /**
-     * プロフィールの入力を促す
-     * これは通知設定にかかわらず必ず通知される
-     *
-     * @param $post_id
-     *
-     * @throws RuntimeException
-     */
-    private function _setSetupProfileOption($user_id)
-    {
-        //対象ユーザの通知設定確認
-        $this->notify_settings = [$user_id => ['app' => false, 'email' => true, 'mobile' => true]];
-        $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_POST;
-        $this->notify_option['url_data'] = ['controller' => 'setup', 'action' => 'profile', 'image'];
-        $this->notify_option['model_id'] = null;
-        $this->notify_option['item_name'] = json_encode(["セットアッププロファイル"]); //メッセージほんぶん？
-    }
-
     /**
      * 招待したユーザがチーム参加したときのオプション
      *

@@ -36,12 +36,6 @@ class NotifySetting extends AppModel
     const TYPE_FEED_CAN_SEE_ACTION = 23;
     const TYPE_USER_JOINED_TO_INVITED_TEAM = 24;
     const TYPE_FEED_MESSAGE = 25;
-    const TYPE_SETUP_PROFILE = 26;
-    const TYPE_SETUP_APP = 27;
-    const TYPE_SETUP_GOAL = 28;
-    const TYPE_SETUP_ACTION = 29;
-    const TYPE_SETUP_CIRCLE = 30;
-    const TYPE_SETUP_POST = 31;
 
     static public $TYPE = [
         self::TYPE_FEED_POST                             => [
