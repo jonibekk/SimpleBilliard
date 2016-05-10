@@ -204,7 +204,7 @@ class SetupController extends AppController
     {
         $this->_ajaxPreProcess();
         $circles = $this->Circle->CircleMember->getMyCircle();
-        return $this->_ajaxGetResponse(['circles' => []]);
+        return $this->_ajaxGetResponse(['circles' => $circles]);
     }
 
 }

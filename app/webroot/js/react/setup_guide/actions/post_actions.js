@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom'
 import axios from 'axios'
 import { browserHistory } from 'react-router'
-import { SELECT_CIRCLE_FOR_POST } from '../constants/ActionTypes'
+import { SELECT_CIRCLE_FOR_POST, FETCH_CIRCLES_FOR_POST } from '../constants/ActionTypes'
 
 export function selectCirclePost(circle_id) {
   return {
@@ -20,7 +20,7 @@ export function fetchCirclesForPost(dispatch) {
     }).then(function (response) {
       const circles = response.data.circles
       dispatch({
-        type: SELECT_CIRCLE_FOR_POST,
+        type: FETCH_CIRCLES_FOR_POST,
         circles: circles
       })
     })

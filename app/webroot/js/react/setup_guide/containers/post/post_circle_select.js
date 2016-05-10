@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { browserHistory } from 'react-router'
 import { selectCirclePost, fetchCirclesForPost } from '../../actions/post_actions'
 import PostCircleSelect from '../../components/post/post_circle_select'
 
@@ -9,7 +10,10 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    selectCirclePost: (circle_id) => { dispatch(fetchCircles(circle_id)) },
+    selectCirclePost: (circle_id) => {
+      dispatch(selectCirclePost(circle_id))
+      browserHistory.push('/setup/post/create')
+    },
     fetchCirclesForPost: () => { fetchCirclesForPost(dispatch) }
   }
 }
