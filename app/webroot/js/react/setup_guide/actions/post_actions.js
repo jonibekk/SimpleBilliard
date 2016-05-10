@@ -3,10 +3,10 @@ import axios from 'axios'
 import { browserHistory } from 'react-router'
 import { SELECT_CIRCLE_FOR_POST, FETCH_CIRCLES_FOR_POST } from '../constants/ActionTypes'
 
-export function selectCirclePost(circle_id) {
+export function selectCirclePost(circle) {
   return {
     type: SELECT_CIRCLE_FOR_POST,
-    selected_circle_id_for_post: circle_id
+    selected_circle: circle
   }
 }
 

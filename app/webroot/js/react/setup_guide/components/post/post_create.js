@@ -1,16 +1,38 @@
 import React, { PropTypes } from 'react'
 import ReactDOM from 'react-dom'
-import { Link } from 'react-router'
+import { Link, browserHistory } from 'react-router'
 
 export default class PostCreate extends React.Component {
   constructor(props) {
     super(props)
+  }
+  componentWillMount() {
+    if(Object.keys(this.props.post.selected_circle).length === 0) {
+      browserHistory.push('/setup/post/circle_select')
+    }
+  }
+  componentDidMount() {
+    ReactDOM.findDOMNode(this.refs.postShareRangeToggleButton).setAttribute("data-toggle-enabled", "")
   }
   render() {
     const textareaStyle = {
       overflow: 'hidden',
       "resize": "none",
       "height": "25px"
+    }
+    const share_type_hidden_input = () => {
+      return (
+        <div>
+          <div className="col col-xxs-10 col-xs-10 post-share-range-list" id="PostPublicShareInputWrap">
+            <input type="hidden" ref="share_public" id="select2PostCircleMember" name="share_public"
+                   value={this.props.post.selected_circle.public_flg ? 'circle_' + this.props.post.selected_circle.id : ''} />
+          </div>
+          <div className="col col-xxs-10 col-xs-10 post-share-range-list" id="PostSecretShareInputWrap">
+            <input type="hidden" ref="share_private" id="select2PostSecretCircle" name="share_secret"
+                   value={this.props.post.selected_circle.public_flg ?  '' : 'circle_' + this.props.post.selected_circle.id} />
+          </div>
+        </div>
+      )
     }
     return (
       <div>
@@ -52,15 +74,9 @@ export default class PostCreate extends React.Component {
                 <div id="PostUploadFilePreview" className="post-upload-file-preview"></div>
               </div>
               <div className="panel-body post-share-range-panel-body" id="PostFormShare">
-                <div className="col col-xxs-10 col-xs-10 post-share-range-list" id="PostPublicShareInputWrap">
-                  <input type="hidden" id="select2PostCircleMember" name="share_public" />
-                </div>
-                <div className="col col-xxs-10 col-xs-10 post-share-range-list" id="PostSecretShareInputWrap">
-                  <input type="hidden" id="select2PostSecretCircle" name="share_secret" />
-                </div>
+                {share_type_hidden_input}
                 <div className="col col-xxs-2 col-xs-2 text-center post-share-range-toggle-button-container">
-                  <Link to="#" className="btn btn-lightGray btn-white post-share-range-toggle-button" data-toggle-enabled="">
-                    <input type="hidden" id="postShareRange" name="share_range" value="value" />
+                  <Link to="#" id="postShareRangeToggleButton" className="btn btn-lightGray btn-white post-share-range-toggle-button" ref="postShareRangeToggleButton">
                   </Link>
                 </div>
               </div>

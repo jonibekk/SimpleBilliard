@@ -12,12 +12,12 @@ export default class CircleSelect extends React.Component {
     return this.props.post.circles
   }
   render() {
-    var circles = this.getCircles().map((circle) => {
+    var circles = this.getCircles().map((circle, index) => {
       return (
         <div className="setup-items-item pt_10px mt_12px bd-radius_14px"
           onClick={(e) => {
             e.preventDefault()
-            this.props.selectCirclePost(circle.Circle.id)}
+            this.props.selectCirclePost(circle.Circle)}
           }
           key={circle.Circle.id}>
           <div className="row">

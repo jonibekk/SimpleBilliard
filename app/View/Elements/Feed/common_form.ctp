@@ -357,10 +357,6 @@ if (!isset($goal_list_for_action_option)) {
                             'class'               => "btn btn-lightGray btn-white post-share-range-toggle-button",
                             'data-toggle-enabled' => (isset($current_circle)) ? '' : '1',
                         ]) ?>
-                        <?= $this->Form->hidden('share_range', [
-                            'id'    => 'postShareRange',
-                            'value' => $secret_share_default ? 'secret' : 'public',
-                        ]) ?>
                     </div>
                     <?php $this->Form->unlockField('Post.share_range') ?>
                 </div>

@@ -1,15 +1,15 @@
 import { SELECT_CIRCLE_FOR_POST, FETCH_CIRCLES_FOR_POST } from '../constants/ActionTypes'
 
 const initialState = {
-  selected_circle_id_for_post: '',
-  circles: []
+  circles: [],
+  selected_circle: {}
 }
 
-export default function profile(state = initialState, action) {
+export default function post(state = initialState, action) {
   switch (action.type) {
     case SELECT_CIRCLE_FOR_POST:
       return Object.assign({}, state, {
-        selected_circle_id_for_post: action.selected_circle_id
+        selected_circle: action.selected_circle
       })
     case FETCH_CIRCLES_FOR_POST:
       return Object.assign({}, state, {

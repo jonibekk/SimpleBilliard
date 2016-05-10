@@ -10,8 +10,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    selectCirclePost: (circle_id) => {
-      dispatch(selectCirclePost(circle_id))
+    selectCirclePost: (circle) => {
+      dispatch(selectCirclePost(circle))
       browserHistory.push('/setup/post/create')
     },
     fetchCirclesForPost: () => { fetchCirclesForPost(dispatch) }
