@@ -1457,7 +1457,11 @@ class PostsController extends AppController
         $res = $this->_addPost();
         // 非同期処理のためフラッシュメッセージは不要。
         $this->Session->delete('Message');
-        return $this->_ajaxGetResponse(['res' => $res]);
+        $msg = __("Posted.");
+        if(!$res) {
+          $msg = __("Failed to post.");
+        }
+        return $this->_ajaxGetResponse(['error' => !$res, 'msg' => $msg]);
     }
 
 }

@@ -1,7 +1,20 @@
 import ReactDOM from 'react-dom'
 import axios from 'axios'
 import { browserHistory } from 'react-router'
-import { SELECT_CIRCLE_FOR_POST, FETCH_CIRCLES_FOR_POST, FETCH_FILE_UPLOAD_ELEMENT } from '../constants/ActionTypes'
+import { CAN_SUBMIT_POST, CAN_NOT_SUBMIT_POST, SELECT_CIRCLE_FOR_POST, FETCH_CIRCLES_FOR_POST, FETCH_FILE_UPLOAD_ELEMENT } from '../constants/ActionTypes'
+
+export function toggleButtonClickable(refs) {
+  const post_body = ReactDOM.findDOMNode(refs.post_body).value.trim()
+  if(post_body) {
+    return {
+      type: CAN_SUBMIT_POST,
+    }
+  } else {
+    return {
+      type: CAN_NOT_SUBMIT_POST,
+    }
+  }
+}
 
 export function selectCirclePost(circle) {
   return {
@@ -50,9 +63,10 @@ export function fetchFileUploadFormElement(dispatch) {
 
 export function submitPost(dispatch, refs) {
   let form_data = new FormData()
-  form_data.append("Post[body]", ReactDOM.findDOMNode(refs.post_body).value);
+  form_data.append("Post[body]", ReactDOM.findDOMNode(refs.post_body).value.trim());
   form_data.append("Post[share_public]", ReactDOM.findDOMNode(refs.share_public).value);
   form_data.append("Post[share_secret]", ReactDOM.findDOMNode(refs.share_secret).value);
+  form_data.append("Post[share_range]", ReactDOM.findDOMNode(refs.share_range).value);
   axios.post('/posts/ajax_add_post_for_setup_guide', form_data, {
     timeout: 10000,
     headers: {

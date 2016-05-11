@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { fetchFileUploadFormElement, submitPost } from '../../actions/post_actions'
+import { toggleButtonClickable, fetchFileUploadFormElement, submitPost } from '../../actions/post_actions'
 import PostCreate from '../../components/post/post_create'
 
 function mapStateToProps(state) {
@@ -13,7 +13,8 @@ function mapDispatchToProps(dispatch) {
     onSubmitPost: (event, refs) => {
       event.preventDefault()
       submitPost(dispatch, refs)
-    }
+    },
+    toggleButtonClickable: (refs) => { dispatch(toggleButtonClickable(refs)) }
   }
 }
 
