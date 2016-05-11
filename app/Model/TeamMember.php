@@ -122,7 +122,21 @@ class TeamMember extends AppModel
     {
         $team_member = $this->find('first', ['conditions' => ['user_id' => $uid, 'team_id' => $team_id]]);
         $team_member['TeamMember']['last_login'] = REQUEST_TIMESTAMP;
+
+        $enable_with_team_id = false;
+        if ($this->Behaviors->loaded('WithTeamId')) {
+            $enable_with_team_id = true;
+        }
+        if ($enable_with_team_id) {
+            $this->Behaviors->disable('WithTeamId');
+        }
+
         $res = $this->save($team_member);
+
+        if ($enable_with_team_id) {
+            $this->Behaviors->enable('WithTeamId');
+        }
+
         return $res;
     }
 
