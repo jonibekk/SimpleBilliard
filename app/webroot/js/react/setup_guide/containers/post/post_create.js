@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import {  } from '../../actions/post_actions'
+import { fetchFileUploadFormElement, submitPost } from '../../actions/post_actions'
 import PostCreate from '../../components/post/post_create'
 
 function mapStateToProps(state) {
@@ -9,6 +9,11 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    fetchFileUploadFormElement: () => { fetchFileUploadFormElement(dispatch) },
+    onSubmitPost: (event, refs) => {
+      event.preventDefault()
+      submitPost(dispatch, refs)
+    }
   }
 }
 

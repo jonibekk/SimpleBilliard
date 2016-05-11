@@ -1,5 +1,6 @@
 <?php
 App::uses('AppController', 'Controller');
+App::uses('PostsController', 'Controller');
 App::uses('Circle', 'Model');
 
 /**
@@ -205,6 +206,14 @@ class SetupController extends AppController
         $this->_ajaxPreProcess();
         $circles = $this->Circle->CircleMember->getMyCircle();
         return $this->_ajaxGetResponse(['circles' => $circles]);
+    }
+
+    public function ajax_get_file_upload_form_element()
+    {
+        $this->_ajaxPreProcess();
+        $response = $this->render('/Elements/file_upload_form');
+        $html = $response->__toString();
+        return $this->_ajaxGetResponse(['html' => $html]);
     }
 
 }

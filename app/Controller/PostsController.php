@@ -18,6 +18,11 @@ class PostsController extends AppController
         if ($this->request->params['action'] == 'ajax_put_message') {
             $this->Security->validatePost = false;
         }
+
+        if($this->request->params['action'] === 'ajax_add_post_for_setup_guide') {
+            $this->Security->validatePost = false;
+            $this->Security->csrfCheck = false;
+        }
     }
 
     public function message()
@@ -161,8 +166,6 @@ class PostsController extends AppController
     public function _addPost()
     {
         $this->request->allowMethod('post');
-
-        $this->log($this->request->data);
 
         // OGP処理はメッセ、アクション以外の場合に実行
         if ($url_text = $this->request->data('Post.site_info_url')) {
@@ -1446,6 +1449,15 @@ class PostsController extends AppController
         else {
             throw new NotFoundException(__("Invalid Request"));
         }
+    }
+
+    public function ajax_add_post_for_setup_guide()
+    {
+        $this->_ajaxPreProcess();
+        $res = $this->_addPost();
+        // 非同期処理のためフラッシュメッセージは不要。
+        $this->Session->delete('Message');
+        return $this->_ajaxGetResponse(['res' => $res]);
     }
 
 }
