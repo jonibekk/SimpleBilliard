@@ -18,6 +18,11 @@ class PostsController extends AppController
         if ($this->request->params['action'] == 'ajax_put_message') {
             $this->Security->validatePost = false;
         }
+
+        if ($this->request->params['action'] === 'ajax_add_post_for_setup_guide') {
+            $this->Security->validatePost = false;
+            $this->Security->csrfCheck = false;
+        }
     }
 
     public function message()
@@ -1444,6 +1449,25 @@ class PostsController extends AppController
         else {
             throw new NotFoundException(__("Invalid Request"));
         }
+    }
+
+    public function ajax_add_post_for_setup_guide()
+    {
+        $this->_ajaxPreProcess();
+        $res = $this->_addPost();
+        // 非同期処理のためcakeによるフラッシュメッセージは不要。
+        $this->Session->delete('Message');
+        $msg = __("Posted.");
+        $error = false;
+        if (!$res) {
+            $msg = __("Failed to post.");
+            $error = true;
+        }
+        return $this->_ajaxGetResponse([
+                                           'error'             => $error,
+                                           'msg'               => $msg,
+                                           'validation_errors' => array_values($this->Post->validationErrors)
+                                       ]);
     }
 
 }

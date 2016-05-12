@@ -2,8 +2,8 @@ import React from 'react'
 import { Link, browserHistory } from 'react-router'
 
 export default class CircleImage extends React.Component {
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props);
   }
   render() {
     return (

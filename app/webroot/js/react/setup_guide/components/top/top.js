@@ -44,7 +44,7 @@ export default class Top extends React.Component {
         index: 6,
         subject: __('Post to a circle'),
         explain: __('Share your topic with a circle.'),
-        link: '/setup'
+        link: '/setup/post/image'
       }
     ])
   }

@@ -12,7 +12,6 @@ export default class CircleCreate extends React.Component {
         <div className="setup-pankuzu font_18px">
           {__("Set up Goalous")} <i className="fa fa-angle-right" aria-hidden="true"></i> {__("Join a circle")}
         </div>
-        <p className="font_bold font_verydark">{__("Create a new circle")}</p>
         <form onSubmit={e => {this.props.onSubmitCircle(e, this.refs)}}
               className="form-horizontal setup-circle-create-form"
               encType="multipart/form-data"

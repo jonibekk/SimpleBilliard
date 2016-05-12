@@ -13,7 +13,7 @@ const initialState = {
   joined: false
 }
 
-export default function circles(state = initialState, action) {
+export default function circle(state = initialState, action) {
   switch (action.type) {
     case CREATE_CIRCLE:
       return Object.assign({}, state, {

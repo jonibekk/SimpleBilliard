@@ -50,6 +50,9 @@ export default class GoalSelect extends React.Component {
         <div className="setup-items">
           {goals}
         </div>
+        <div className="mb_13px">
+          <Link to="/setup/goal/create">{__('Create your own')} <i className="fa fa-angle-right" aria-hidden="true"></i> </Link>
+        </div>
         <div>
           <Link to="/setup/goal/purpose_select" className="btn btn-secondary setup-back-btn-full">{__('Back')}</Link>
         </div>

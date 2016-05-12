@@ -20,14 +20,14 @@ export default class ProfileAdd extends React.Component {
             <span className="help-block">{__("Your profile picture")}</span>
             <div className="form-inline">
               <div className="fileinput_small fileinput-new" data-provides="fileinput">
-                <div className="fileinput-preview thumbnail nailthumb-container photo-design form-group" data-trigger="fileinput" onChange={() => {this.props.toggleButtonClickable(this.refs)}}>
+                <div className="fileinput-preview thumbnail nailthumb-container photo-design form-group" data-trigger="fileinput">
                   <i className="fa fa-plus photo-plus-large"></i>
                 </div>
                 <div className="form-group">
                   <span className="btn btn-default btn-file ml_16px">
                   <span className="fileinput-new">{__("Select an image")}</span>
                   <span className="fileinput-exists">{__("Reselect an image")}</span>
-                    <input type="file" name="profile_image" ref="profile_image" className="form-control addteam_input-design" id="ProfilePhoto" />
+                    <input type="file" name="profile_image" ref="profile_image" className="form-control addteam_input-design" onChange={() => {this.props.toggleButtonClickable(this.refs)}} />
                   </span>
                 </div>
               </div>
@@ -45,7 +45,7 @@ export default class ProfileAdd extends React.Component {
           <div>
             <Link to="/setup/profile/image" className="btn btn-secondary setup-back-btn">Back</Link>
             <input type="submit" className="btn btn-primary setup-next-btn pull-right" defaultValue={__("Submit")}
-            disabled={!Boolean(this.props.profile.can_click_submit_button)}/>
+            disabled={!Boolean(this.props.profile.can_click_submit_button)} />
           </div>
         </form>
       </div>

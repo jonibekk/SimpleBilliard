@@ -1,5 +1,7 @@
 <?php
 App::uses('AppController', 'Controller');
+App::uses('PostsController', 'Controller');
+App::uses('Circle', 'Model');
 App::uses('Post', 'Model');
 
 /**
@@ -8,9 +10,10 @@ App::uses('Post', 'Model');
 class SetupController extends AppController
 {
     var $uses = [
-        'Circle', 'User', 'Goal', 'Team', 'KeyResult', 'Post'
+        'Circle', 'User', 'Goal', 'Team', 'KeyResult', 'Post', 'Device'
     ];
     var $components = ['RequestHandler'];
+
     public function beforeFilter()
     {
         parent::beforeFilter();
@@ -55,9 +58,14 @@ class SetupController extends AppController
         return $this->render('index');
     }
 
+    public function post()
+    {
+        return $this->render('index');
+    }
+
     public function ajax_get_setup_status()
     {
-        $this->layout = false;
+        $this->_ajaxPreProcess();
         $status = $this->getStatusWithRedisSave();
         $res = [
             'status'           => $status,
@@ -81,26 +89,35 @@ class SetupController extends AppController
         // Goal保存
         $res = $this->Goal->add(['Goal' => $this->request->data['Goal']]);
 
+        if ($res) {
+            $msg = __("Created a goal.");
+            $error = false;
+        }
+        else {
+            $msg = __("Failed to save a goal.");
+            $error = true;
+        }
+
         $this->updateSetupStatusIfNotCompleted();
-        return $this->_ajaxGetResponse(['res' => $res, 'validate_errors' => $this->Goal->validateErrors]);
+        return $this->_ajaxGetResponse(['error' => $error, 'msg' => $msg]);
     }
 
     public function ajax_get_circles()
     {
-        $this->layout = false;
+        $this->_ajaxPreProcess();
 
         $not_joined_circles = array_values($this->Circle->getPublicCircles('non-joined'));
         $res = [
             'not_joined_circles' => $not_joined_circles,
+            'error'              => false
         ];
         return $this->_ajaxGetResponse($res);
     }
 
     public function ajax_create_circle()
     {
-        // $this->_ajaxPreProcess();
-        $this->layout = false;
-        $this->request->allowMethod('post');
+        $this->_ajaxPreProcess();
+        $this->request->data['Circle']['photo'] = $_FILES['photo'];
         $this->Circle->create();
         if ($res = $this->Circle->add($this->request->data)) {
             if (!empty($this->Circle->add_new_member_list)) {
@@ -108,10 +125,15 @@ class SetupController extends AppController
                                                  null, $this->Circle->add_new_member_list);
             }
             $this->updateSetupStatusIfNotCompleted();
-            $this->Pnotify->outSuccess(__("Created a circle."));
+            $msg = __("Created a circle.");
+            $error = false;
+        }
+        else {
+            $msg = __("Failed to create a circle.");
+            $error = true;
         }
 
-        return $this->_ajaxGetResponse(['res' => $res]);
+        return $this->_ajaxGetResponse(['msg' => $msg, 'error' => $error]);
     }
 
     /**
@@ -135,34 +157,71 @@ class SetupController extends AppController
             else {
                 $msg = __("Leave a circle.");
             }
+            $error = false;
         }
         else {
             $msg = __("Failed to change circle belonging status.");
+            $error = true;
         }
-        return $this->_ajaxGetResponse(['msg' => $msg]);
+        return $this->_ajaxGetResponse(['msg' => $msg, 'error' => $error]);
     }
 
     public function ajax_add_profile()
     {
-        $this->request->allowMethod('put');
-        $this->layout = false;
-        $this->autoRender = false;
+        $this->_ajaxPreProcess();
 
         $msg = null;
-        $this->User->id = $this->Auth->user('id');
         $team_member_id = $this->User->TeamMember->getIdByTeamAndUserId($this->current_team_id, $this->my_uid);
         $this->request->data['TeamMember'][0]['id'] = $team_member_id;
+        $this->request->data['User']['id'] = $this->User->id = $this->my_uid;
+        $this->request->data['User']['photo'] = $_FILES['photo'];
         // キャッシュ削除
         Cache::delete($this->User->getCacheKey(CACHE_KEY_MY_PROFILE, true, null, false), 'user_data');
         if ($this->User->saveAll($this->request->data)) {
             //セットアップガイドステータスの更新
             $this->updateSetupStatusIfNotCompleted();
             $msg = __("Saved user profile.");
+            $error = false;
         }
         else {
             $msg = __("Failed to save user profile.");
+            $error = true;
         }
-        return $this->_ajaxGetResponse(['msg' => $msg]);
+        return $this->_ajaxGetResponse(['msg' => $msg, 'error' => $error]);
+    }
+
+    public function ajax_register_no_device()
+    {
+        $this->_ajaxPreProcess();
+        if ($this->User->isInstalledMobileApp($this->my_uid)) {
+            $res = false;
+        }
+        else {
+            $res = $this->Device->add([
+                                          'Device' => [
+                                              'user_id'      => $this->my_uid,
+                                              'os_type'      => 99,
+                                              'device_token' => 'No devices.'
+                                          ]
+                                      ]);
+        }
+        $this->updateSetupStatusIfNotCompleted();
+        return $this->_ajaxGetResponse(['error' => !$res]);
+    }
+
+    public function ajax_get_circles_for_post()
+    {
+        $this->_ajaxPreProcess();
+        $circles = $this->Circle->CircleMember->getMyCircle();
+        return $this->_ajaxGetResponse(['circles' => $circles]);
+    }
+
+    public function ajax_get_file_upload_form_element()
+    {
+        $this->_ajaxPreProcess();
+        $response = $this->render('/Elements/file_upload_form');
+        $html = $response->__toString();
+        return $this->_ajaxGetResponse(['html' => $html]);
     }
 
     public function ajax_get_goals()

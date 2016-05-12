@@ -10,7 +10,6 @@ import createReducer from '../reducers/index'
 import { fetchCircles } from '../actions/circle_actions'
 
 // How do I write this simply?
-import AppContainer from '../containers/app'
 import TopContainer from '../containers/top/top'
 import Index from '../components/index'
 // Profile
@@ -28,14 +27,20 @@ import CircleContainer from '../containers/circle/index'
 import CircleImageContainer from '../containers/circle/circle_image'
 import CircleSelectContainer from '../containers/circle/circle_select'
 import CircleCreateContainer from '../containers/circle/circle_create'
-// App
-import AppImage from '../components/app/app_image'
-import AppSelect from '../components/app/app_select'
 // Action
 import ActionContainer from '../containers/action/index'
 import ActionImageContainer from '../containers/action/action_image'
 import ActionGoalSelectContainer from '../containers/action/action_goal_select'
 import ActionCreateContainer from '../containers/action/action_create'
+// App
+import AppContainer from '../containers/app/index'
+import AppImageContainer from '../containers/app/app_image'
+import AppSelectContainer from '../containers/app/app_select'
+// Post
+import PostContainer from '../containers/post/index'
+import PostImageContainer from '../containers/post/post_image'
+import PostCircleSelectContainer from '../containers/post/post_circle_select'
+import PostCreateContainer from '../containers/post/post_create'
 
 const DevTools = createDevTools(
   <DockMonitor toggleVisibilityKey="ctrl-h" changePositionKey="ctrl-q">
@@ -85,10 +90,16 @@ export default class Routes extends Component {
                 <Route path="goal_select" component={ActionGoalSelectContainer} />
                 <Route path="create" component={ActionCreateContainer} />
               </Route>
+              <Route path="post" component={PostContainer} >
+                <IndexRoute component={PostImageContainer} />
+                <Route path="image" component={PostImageContainer} />
+                <Route path="circle_select" component={PostCircleSelectContainer} />
+                <Route path="create" component={PostCreateContainer} />
+              </Route>
               <Route path="app" component={AppContainer} >
-                <IndexRoute component={AppImage} />
-                <Route path="image" component={AppImage} />
-                <Route path="select" component={AppSelect} />
+                <IndexRoute component={AppImageContainer} />
+                <Route path="image" component={AppImageContainer} />
+                <Route path="select" component={AppSelectContainer} />
               </Route>
             </Route>
           </Router>

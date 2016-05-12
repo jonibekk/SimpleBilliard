@@ -9,7 +9,10 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onSubmitCircle: (e, refs) => { createCircle(dispatch, e, refs) }
+    onSubmitCircle: (event, refs) => {
+      event.preventDefault()
+      createCircle(dispatch, refs)
+    }
   }
 }
 
