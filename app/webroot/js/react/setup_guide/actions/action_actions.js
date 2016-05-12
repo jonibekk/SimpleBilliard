@@ -49,7 +49,7 @@ export function selectActionGoal(goal) {
 export function submitAction(dispatch, refs, socket_id, goal_id) {
   let form_data = new FormData()
   const files = $('#CommonActionDisplayForm').find('[name="data[file_id][]"]')
-  const file_limit_num = 12
+  const file_limit_num = 11
   form_data.append("ActionResult[name]", ReactDOM.findDOMNode(refs.body).value.trim())
   form_data.append("ActionResult[goal_id]", goal_id)
   form_data.append("socket_id", socket_id)
@@ -79,7 +79,7 @@ export function submitAction(dispatch, refs, socket_id, goal_id) {
           mouse_reset: false
       })
     } else {
-      document.location.href = "/"
+      document.location.href = "/setup"
     }
 
   })

@@ -72,6 +72,12 @@ export function submitPost(dispatch, refs, socket_id) {
   form_data.append("Post[share_secret]", ReactDOM.findDOMNode(refs.share_secret).value);
   form_data.append("Post[share_range]", ReactDOM.findDOMNode(refs.share_range).value);
   form_data.append("socket_id", socket_id);
+  const files = $('#PostDisplayForm').find('[name="data[file_id][]"]')
+  const file_limit_num = 11
+  Array.from(Array(file_limit_num).keys()).map((i) => {
+    if(files[i] === undefined) return
+    form_data.append("file_id[]", files[i].value)
+  })
   axios.post('/posts/ajax_add_post_for_setup_guide', form_data, {
     timeout: 10000,
     headers: {
@@ -98,18 +104,8 @@ export function submitPost(dispatch, refs, socket_id) {
         })
       }
     } else {
-      browserHistory.push('/setup')
-      PNotify.removeAll()
-      new PNotify({
-          type: 'success',
-          title: cake.word.success,
-          text: response.data.msg,
-          icon: "fa fa-check-circle",
-          delay: 4000,
-          mouse_reset: false
-      })
+      document.location.href = "/setup"
     }
-
   })
   .catch(function (response) {
     browserHistory.push('/setup')
