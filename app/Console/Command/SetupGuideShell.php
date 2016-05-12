@@ -142,7 +142,7 @@ class SetupGuideShell extends AppShell
     function _sendNotify($user_id)
     {
         $status = $this->AppController->getStatusWithRedisSave($user_id);
-        $target_key = 0;;
+        $target_key = 0;
         foreach ($status as $key => $value) {
             if (empty($value)) {
                 $target_key = $key;
@@ -195,11 +195,11 @@ class SetupGuideShell extends AppShell
         $notify_days = explode(",", SETUP_GUIDE_NOTIFY_DAYS);
         $now = time();
         foreach ($notify_days as $notify_day) {
-            $setup_last_update_time = viaIsSet($status['setup_last_update_time']);
-            $from_notify_time = $setup_last_update_time + ($notify_day * 24 * 60 * 60);
-            $to_notify_time = $setup_last_update_time + (($notify_day + 1) * 24 * 60 * 60);
+            $update_time = viaIsSet($status['setup_last_update_time']);
+            $from_notify_time = $update_time + ($notify_day * 24 * 60 * 60);
+            $to_notify_time = $update_time + (($notify_day + 1) * 24 * 60 * 60);
 
-            if (empty($setup_last_update_time) || ($from_notify_time <= $now && $to_notify_time > $now)) {
+            if (empty($update_time) || ($from_notify_time <= $now && $to_notify_time > $now)) {
                 return true;
             }
         }
