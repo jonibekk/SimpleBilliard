@@ -45,3 +45,54 @@ export function selectActionGoal(goal) {
     selected_action_goal: goal
   }
 }
+
+export function submitAction(dispatch, refs, socket_id, goal_id) {
+  let form_data = new FormData()
+  const files = $('#CommonActionDisplayForm').find('[name="data[file_id][]"]')
+  const file_limit_num = 12
+  form_data.append("ActionResult[name]", ReactDOM.findDOMNode(refs.body).value.trim())
+  form_data.append("ActionResult[goal_id]", goal_id)
+  form_data.append("socket_id", socket_id)
+  Array.from(Array(file_limit_num).keys()).map((i) => {
+    if(files[i] === undefined) return
+    form_data.append("file_id[]", files[i].value)
+  })
+
+  axios.post('/setup/ajax_add_action', form_data, {
+    timeout: 10000,
+    headers: {
+      'X-Requested-With': 'XMLHttpRequest'
+    },
+    dataType: 'json'
+  })
+  .then(function (response) {
+    let msg = ''
+    if(response.data.error) {
+      browserHistory.push('/setup')
+      PNotify.removeAll()
+      new PNotify({
+          type: 'error',
+          title: cake.word.error,
+          text: response.data.msg,
+          icon: "fa fa-check-circle",
+          delay: 4000,
+          mouse_reset: false
+      })
+    } else {
+      document.location.href = "/"
+    }
+
+  })
+  .catch(function (response) {
+    browserHistory.push('/setup')
+    PNotify.removeAll()
+    new PNotify({
+        type: 'error',
+        title: cake.word.error,
+        text: __("Failed to add an action."),
+        icon: "fa fa-check-circle",
+        delay: 4000,
+        mouse_reset: false
+    })
+  })
+}

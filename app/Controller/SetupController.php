@@ -10,7 +10,7 @@ App::uses('Post', 'Model');
 class SetupController extends AppController
 {
     var $uses = [
-        'Circle', 'User', 'Goal', 'Team', 'KeyResult', 'Post', 'Device'
+        'Circle', 'User', 'Goal', 'Team', 'KeyResult', 'Post', 'Device', 'ActionResult'
     ];
     var $components = ['RequestHandler'];
 
@@ -241,34 +241,84 @@ class SetupController extends AppController
         return $this->_ajaxGetResponse($res);
     }
 
-    public function ajax_post_action()
+    public function ajax_add_action()
     {
       $this->_ajaxPreProcess();
+
+      if (!$goal_id = isset($this->request->params['named']['goal_id']) ? $this->request->params['named']['goal_id'] : null) {
+          $goal_id = isset($this->request->data['ActionResult']['goal_id']) ? $this->request->data['ActionResult']['goal_id'] : null;
+      }
+      if (!$goal_id) {
+          throw new RuntimeException(__("You have no permission."));
+      }
+
+      $this->request->allowMethod('post');
+      $file_ids = $this->request->data('file_id');
+      try {
+          $this->Goal->begin();
+          if (!$this->Goal->Collaborator->isCollaborated($goal_id)) {
+              throw new RuntimeException(__("You have no permission."));
+          }
+          $share = isset($this->request->data['ActionResult']['share']) ? $this->request->data['ActionResult']['share'] : null;
+          //アクション追加,投稿
+          if (!$this->Goal->ActionResult->addCompletedAction($this->request->data, $goal_id)
+              || !$this->Goal->Post->addGoalPost(Post::TYPE_ACTION, $goal_id, $this->Auth->user('id'), false,
+                                                 $this->Goal->ActionResult->getLastInsertID(), $share,
+                                                 PostShareCircle::SHARE_TYPE_ONLY_NOTIFY)
+              || !$this->Goal->Post->PostFile->AttachedFile->saveRelatedFiles($this->Goal->ActionResult->getLastInsertID(),
+                                                                              AttachedFile::TYPE_MODEL_ACTION_RESULT,
+                                                                              $file_ids)
+          ) {
+              throw new RuntimeException(__("Failed to add an action."));
+          }
+      } catch (RuntimeException $e) {
+          $this->Goal->rollback();
+          if ($action_result_id = $this->Goal->ActionResult->getLastInsertID()) {
+              $this->Goal->Post->PostFile->AttachedFile->deleteAllRelatedFiles($action_result_id,
+                                                                               AttachedFile::TYPE_MODEL_ACTION_RESULT);
+          }
+          $msg = $e->getMessage();
+          $res = [
+              'error' => true,
+              'msg' => $msg
+          ];
+          return $this->_ajaxGetResponse($res);
+      }
+      $this->Goal->commit();
+
+      // 添付ファイルが存在する場合は一時データを削除
+      if (is_array($file_ids)) {
+          foreach ($file_ids as $hash) {
+              $this->GlRedis->delPreUploadedFile($this->current_team_id, $this->my_uid, $hash);
+          }
+      }
+
+      // pusherに通知
+      $socket_id = viaIsSet($this->request->data['socket_id']);
+      $channelName = "goal_" . $goal_id;
+      $this->NotifyBiz->push($socket_id, $channelName);
+
+      $kr_id = isset($this->request->data['ActionResult']['key_result_id']) ? $this->request->data['ActionResult']['key_result_id'] : null;
+      // $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_CREATE_ACTION, $goal_id, $kr_id,
+      //                            $this->Goal->ActionResult->getLastInsertID());
+      $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_CAN_SEE_ACTION,
+                                       $this->Goal->ActionResult->getLastInsertID());
+
+      Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
+      Cache::delete($this->Goal->getCacheKey(CACHE_KEY_ACTION_COUNT, true), 'user_data');
+
+      // push
+      $this->Pnotify->outSuccess($msg = __("Added an action."));
+      //セットアップガイドステータスの更新
+      $this->updateSetupStatusIfNotCompleted();
+
       $res = [
-          'res' => true,
+          'error' => false,
+          'msg' => $msg
       ];
       return $this->_ajaxGetResponse($res);
     }
 
-    /**
-     * ファイルアップロード
-     * JSON レスポンス形式
-     * {
-     *   error: bool,   // エラーが発生した場合に true
-     *   msg: string,   // 処理結果を示すメッセージ
-     *   id: string,    // ファイルID
-     * }
-     *
-     * @return CakeResponse
-     */
-    public function ajax_upload_file()
-    {
-        $this->_ajaxPreProcess();
-        $file_id = $this->Post->PostFile->AttachedFile->preUploadFile($this->request->params['form']);
-        return $this->_ajaxGetResponse(['error' => $file_id ? false : true,
-                                        'msg'   => $file_id ? "" : __('Failed to upload.'),
-                                        'id'    => $file_id ? $file_id : "",
-                                       ]);
-    }
+
 
 }

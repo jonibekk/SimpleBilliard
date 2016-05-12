@@ -19,9 +19,6 @@ export default class ActionCreate extends React.Component {
     // Set data attributes
     ReactDOM.findDOMNode(this.refs.ActionImageAddButton).setAttribute("target-id", "CommonActionSubmit,WrapActionFormName,WrapCommonActionGoal,CommonActionFooter,CommonActionFormShowOptionLink,ActionUploadFileDropArea")
     ReactDOM.findDOMNode(this.refs.ActionImageAddButton).setAttribute("delete-method", "hide")
-
-    ReactDOM.findDOMNode(this.refs.CommonActionFormShowOptionLink).setAttribute("target-id", "ActionFormOptionFields")
-
   }
   render() {
     return (
@@ -43,7 +40,11 @@ export default class ActionCreate extends React.Component {
           </div>
           <div className="tab-content">
             <div id="ActionForm">
-              <form id="CommonActionDisplayForm" encType="multipart/form-data" method="post" acceptCharset="utf-8" type="file" className="form-feed-notify">
+              <form id="CommonActionDisplayForm" encType="multipart/form-data" method="post"
+                    acceptCharset="utf-8" type="file" className="form-feed-notify"
+                    onSubmit={(e) => this.props.onSubmitAction(e, this.refs, cake.pusher.socket_id, this.props.action.selected_action_goal.id)}
+                    action=""
+                    >
                 <div className="post-panel-body plr_11px ptb_7px">
                   <a href="#"
                      id="ActionImageAddButton"
@@ -57,7 +58,7 @@ export default class ActionCreate extends React.Component {
                 </div>
                 <div id="ActionUploadFilePhotoPreview" className="pull-left action-upload-main-image-preview"></div>
                 <div id="WrapActionFormName" className="panel-body action-form-panel-body none pull-left action-input-name">
-                  <textarea name="body" ref="body" className="form-control change-warning" placeholder={__("Write an action...")} onChange={() => {this.props.toggleButtonClickable(this.refs)}}></textarea>
+                  <textarea name="body" ref="body" className="form-control change-warning" placeholder={__("Write an action...")} onChange={() => {this.props.onChangeTextField(this.refs)}}></textarea>
                 </div>
                 <div id="ActionUploadFileDropArea" className="action-upload-file-drop-area">
                   <div id="ActionUploadFilePreview" className="action-upload-file-preview">

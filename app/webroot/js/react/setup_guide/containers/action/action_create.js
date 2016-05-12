@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { toggleButtonClickable } from '../../actions/circle_actions'
+import { toggleButtonClickable, submitAction } from '../../actions/action_actions'
 import ActionCreate from '../../components/action/action_create'
 
 function mapStateToProps(state) {
@@ -9,8 +9,12 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    toggleButtonClickable: (refs) => {
-      toggleButtonClickable(refs)
+    onChangeTextField: (refs) => {
+      dispatch(toggleButtonClickable(refs))
+    },
+    onSubmitAction: (event, refs, socket_id, goal_id) => {
+      event.preventDefault()
+      submitAction(dispatch, refs, socket_id, goal_id)
     }
   }
 }
