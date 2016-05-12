@@ -10,11 +10,12 @@ export default class PostCreate extends React.Component {
     if(Object.keys(this.props.post.selected_circle).length === 0) {
       browserHistory.push('/setup/post/circle_select')
     }
-    this.props.fetchFileUploadFormElement()
+    let pusher = new Pusher(cake.pusher.key)
+    pusher.connection.bind('connected', function () {
+        cake.pusher.socket_id = pusher.connection.socket_id
+    });
   }
   componentDidMount() {
-    const html = this.props.post.file_upload_html
-    $('.file-upload-form-for-setup').append(html)
   }
   render() {
     const textareaStyle = {
@@ -31,11 +32,15 @@ export default class PostCreate extends React.Component {
       }
       return val
     }
+    const validation_errors = this.props.post.validation_errors.map((error) => {
+      <small className="help-block">{error[0]}</small>
+    })
     return (
       <div>
         <div className="setup-pankuzu font_18px">
           {__("Set up Goalous")} <i className="fa fa-angle-right"></i> {__('Post to a circle')}
         </div>
+        {validation_errors}
         <div className="panel panel-default global-form" id="GlobalForms">
           <div className="tab-pane active" id="PostForm">
             <form id="PostDisplayForm"
@@ -43,7 +48,7 @@ export default class PostCreate extends React.Component {
                   encType="multipart/form-data"
                   method="post"
                   acceptCharset="utf-8"
-                  onSubmit={(e) => {this.props.onSubmitPost(e, this.refs)}}>
+                  onSubmit={(e) => {this.props.onSubmitPost(e, this.refs, cake.pusher.socket_id)}}>
               <input type="hidden" ref="share_public"
                      value={share_public_value()} />
               <input type="hidden" ref="share_secret"
@@ -62,6 +67,7 @@ export default class PostCreate extends React.Component {
                             required="required"
                             wordWrap="break-word"
                             style={textareaStyle}
+                            maxLength="10000"
                             onChange={() => {this.props.toggleButtonClickable(this.refs)}}></textarea>
                 </div>
                 <div id="PostUploadFilePreview" className="post-upload-file-preview"></div>
@@ -71,11 +77,6 @@ export default class PostCreate extends React.Component {
               </div>
               <div className="post-panel-footer">
                 <div className="font_12px" id="PostFormFooter">
-                  <a href="#" className="link-red" id="PostUploadFileButton">
-                    <button type="button" className="btn pull-left photo-up-btn">
-                      <i className="fa fa-paperclip post-camera-icon"></i>
-                    </button>
-                  </a>
                   <div className="row form-horizontal form-group post-share-range" id="PostShare">
                     <div className="submit">
                       <input className="btn btn-primary pull-right post-submit-button" id="PostSubmit" type="submit" value="Post"
@@ -85,7 +86,6 @@ export default class PostCreate extends React.Component {
                 </div>
               </div>
             </form>
-            <div className="file-upload-form-for-setup"></div>
           </div>
         </div>
         <div>

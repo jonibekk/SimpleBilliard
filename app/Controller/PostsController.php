@@ -1455,13 +1455,19 @@ class PostsController extends AppController
     {
         $this->_ajaxPreProcess();
         $res = $this->_addPost();
-        // 非同期処理のためフラッシュメッセージは不要。
+        // 非同期処理のためcakeによるフラッシュメッセージは不要。
         $this->Session->delete('Message');
         $msg = __("Posted.");
+        $error = false;
         if(!$res) {
           $msg = __("Failed to post.");
+          $error = true;
         }
-        return $this->_ajaxGetResponse(['error' => !$res, 'msg' => $msg]);
+        return $this->_ajaxGetResponse([
+          'error' => $error,
+          'msg' => $msg,
+          'validation_errors' => array_values($this->Post->validationErrors)
+        ]);
     }
 
 }

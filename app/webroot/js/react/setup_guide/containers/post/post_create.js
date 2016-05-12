@@ -10,9 +10,9 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     fetchFileUploadFormElement: () => { fetchFileUploadFormElement(dispatch) },
-    onSubmitPost: (event, refs) => {
+    onSubmitPost: (event, refs, socket_id) => {
       event.preventDefault()
-      submitPost(dispatch, refs)
+      submitPost(dispatch, refs, socket_id)
     },
     toggleButtonClickable: (refs) => { dispatch(toggleButtonClickable(refs)) }
   }
