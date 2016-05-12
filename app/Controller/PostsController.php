@@ -19,7 +19,7 @@ class PostsController extends AppController
             $this->Security->validatePost = false;
         }
 
-        if($this->request->params['action'] === 'ajax_add_post_for_setup_guide') {
+        if ($this->request->params['action'] === 'ajax_add_post_for_setup_guide') {
             $this->Security->validatePost = false;
             $this->Security->csrfCheck = false;
         }
@@ -1459,15 +1459,15 @@ class PostsController extends AppController
         $this->Session->delete('Message');
         $msg = __("Posted.");
         $error = false;
-        if(!$res) {
-          $msg = __("Failed to post.");
-          $error = true;
+        if (!$res) {
+            $msg = __("Failed to post.");
+            $error = true;
         }
         return $this->_ajaxGetResponse([
-          'error' => $error,
-          'msg' => $msg,
-          'validation_errors' => array_values($this->Post->validationErrors)
-        ]);
+                                           'error'             => $error,
+                                           'msg'               => $msg,
+                                           'validation_errors' => array_values($this->Post->validationErrors)
+                                       ]);
     }
 
 }
