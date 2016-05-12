@@ -45,7 +45,7 @@ export default class ProfileAdd extends React.Component {
           <div>
             <Link to="/setup/profile/image" className="btn btn-secondary setup-back-btn">Back</Link>
             <input type="submit" className="btn btn-primary setup-next-btn pull-right" defaultValue={__("Submit")}
-            disabled={!Boolean(this.props.profile.can_click_submit_button)}/>
+            disabled={!Boolean(this.props.profile.can_click_submit_button)} />
           </div>
         </form>
       </div>

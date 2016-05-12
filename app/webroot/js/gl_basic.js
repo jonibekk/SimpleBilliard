@@ -4533,6 +4533,7 @@ $(document).ready(function () {
      */
     // ファイルアップロード用フォーム
     var $uploadFileForm = $('#UploadFileForm');
+
     // ファイル削除用フォーム
     var $removeFileForm = $('#RemoveFileForm');
     // 手動ファイル添付用ボタン

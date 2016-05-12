@@ -1,5 +1,7 @@
 <?php
 App::uses('AppController', 'Controller');
+App::uses('PostsController', 'Controller');
+App::uses('Circle', 'Model');
 
 /**
  * Setup Controller
@@ -10,6 +12,7 @@ class SetupController extends AppController
         'Circle', 'User', 'Goal', 'Team', 'KeyResult', 'Device'
     ];
     var $components = ['RequestHandler'];
+
     public function beforeFilter()
     {
         parent::beforeFilter();
@@ -50,6 +53,11 @@ class SetupController extends AppController
         return $this->render('index');
     }
 
+    public function post()
+    {
+        return $this->render('index');
+    }
+
     public function ajax_get_setup_status()
     {
         $this->_ajaxPreProcess();
@@ -63,29 +71,30 @@ class SetupController extends AppController
 
     public function ajax_create_goal()
     {
-      $this->_ajaxPreProcess();
+        $this->_ajaxPreProcess();
 
-      // Purpose保存
-      $this->Goal->Purpose->add($this->request->data);
-      $purpose_id = $this->Goal->Purpose->id;
-      $this->request->data['Goal']['purpose_id'] = $purpose_id;
+        // Purpose保存
+        $this->Goal->Purpose->add($this->request->data);
+        $purpose_id = $this->Goal->Purpose->id;
+        $this->request->data['Goal']['purpose_id'] = $purpose_id;
 
-      // $_FILESとGoalオブジェクトマージ
-      $this->request->data['Goal']['photo'] = $_FILES['photo'];
+        // $_FILESとGoalオブジェクトマージ
+        $this->request->data['Goal']['photo'] = $_FILES['photo'];
 
-      // Goal保存
-      $res = $this->Goal->add(['Goal' => $this->request->data['Goal']]);
+        // Goal保存
+        $res = $this->Goal->add(['Goal' => $this->request->data['Goal']]);
 
-      if($res) {
-          $msg = __("Created a goal.");
-          $error = false;
-      } else {
-          $msg = __("Failed to save a goal.");
-          $error = true;
-      }
+        if ($res) {
+            $msg = __("Created a goal.");
+            $error = false;
+        }
+        else {
+            $msg = __("Failed to save a goal.");
+            $error = true;
+        }
 
-      $this->updateSetupStatusIfNotCompleted();
-      return $this->_ajaxGetResponse(['error' => $error, 'msg' => $msg]);
+        $this->updateSetupStatusIfNotCompleted();
+        return $this->_ajaxGetResponse(['error' => $error, 'msg' => $msg]);
     }
 
     public function ajax_get_circles()
@@ -95,7 +104,7 @@ class SetupController extends AppController
         $not_joined_circles = array_values($this->Circle->getPublicCircles('non-joined'));
         $res = [
             'not_joined_circles' => $not_joined_circles,
-            'error' => false
+            'error'              => false
         ];
         return $this->_ajaxGetResponse($res);
     }
@@ -104,7 +113,6 @@ class SetupController extends AppController
     {
         $this->_ajaxPreProcess();
         $this->request->data['Circle']['photo'] = $_FILES['photo'];
-        $this->log($this->request->data);
         $this->Circle->create();
         if ($res = $this->Circle->add($this->request->data)) {
             if (!empty($this->Circle->add_new_member_list)) {
@@ -114,7 +122,8 @@ class SetupController extends AppController
             $this->updateSetupStatusIfNotCompleted();
             $msg = __("Created a circle.");
             $error = false;
-        } else {
+        }
+        else {
             $msg = __("Failed to create a circle.");
             $error = true;
         }
@@ -179,19 +188,35 @@ class SetupController extends AppController
     public function ajax_register_no_device()
     {
         $this->_ajaxPreProcess();
-        if($this->User->isInstalledMobileApp($this->my_uid)) {
+        if ($this->User->isInstalledMobileApp($this->my_uid)) {
             $res = false;
-        } else {
+        }
+        else {
             $res = $this->Device->add([
-                'Device' => [
-                  'user_id' => $this->my_uid,
-                  'os_type' => 99,
-                  'device_token' => 'No devices.'
-                ]
-            ]);
+                                          'Device' => [
+                                              'user_id'      => $this->my_uid,
+                                              'os_type'      => 99,
+                                              'device_token' => 'No devices.'
+                                          ]
+                                      ]);
         }
         $this->updateSetupStatusIfNotCompleted();
         return $this->_ajaxGetResponse(['error' => !$res]);
+    }
+
+    public function ajax_get_circles_for_post()
+    {
+        $this->_ajaxPreProcess();
+        $circles = $this->Circle->CircleMember->getMyCircle();
+        return $this->_ajaxGetResponse(['circles' => $circles]);
+    }
+
+    public function ajax_get_file_upload_form_element()
+    {
+        $this->_ajaxPreProcess();
+        $response = $this->render('/Elements/file_upload_form');
+        $html = $response->__toString();
+        return $this->_ajaxGetResponse(['html' => $html]);
     }
 
 }
