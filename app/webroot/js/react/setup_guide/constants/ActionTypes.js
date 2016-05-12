@@ -20,6 +20,8 @@ export const CREATE_GOAL = 'CREATE_GOAL'
 // action
 export const SELECT_ACTION_GOAL = 'SELECT_ACTION_GOAL'
 export const FETCH_GOALS = 'FETCH_GOALS'
+export const CAN_SUBMIT_ACTION = 'CAN_SUBMIT_ACTION'
+export const CAN_NOT_SUBMIT_ACTION = 'CAN_NOT_SUBMIT_ACTION'
 
 // post
 export const CAN_SUBMIT_POST = 'CAN_SUBMIT_POST'

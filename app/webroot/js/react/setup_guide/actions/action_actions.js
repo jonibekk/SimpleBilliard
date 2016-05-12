@@ -1,7 +1,24 @@
 import ReactDOM from 'react-dom'
 import axios from 'axios'
 import { browserHistory } from 'react-router'
-import { FETCH_GOALS, SELECT_ACTION_GOAL } from '../constants/ActionTypes'
+import { FETCH_GOALS, SELECT_ACTION_GOAL, CAN_SUBMIT_ACTION, CAN_NOT_SUBMIT_ACTION } from '../constants/ActionTypes'
+
+export function toggleButtonClickable(refs) {
+  const body = ReactDOM.findDOMNode(refs.body).value.trim()
+  return body ? enableSubmitButton() : disableSubmitButton()
+}
+
+export function enableSubmitButton() {
+  return {
+    type: CAN_SUBMIT_ACTION,
+  }
+}
+
+export function disableSubmitButton() {
+  return {
+    type: CAN_NOT_SUBMIT_ACTION,
+  }
+}
 
 export function fetchGoals(dispatch) {
   return axios.get('/setup/ajax_get_goals', {
@@ -22,11 +39,9 @@ export function fetchGoals(dispatch) {
     })
 }
 
-export function selectActionGoal(goal_id) {
+export function selectActionGoal(goal) {
   return {
     type: SELECT_ACTION_GOAL,
-    selected_action_goal: {
-      id: goal_id
-    }
+    selected_action_goal: goal
   }
 }

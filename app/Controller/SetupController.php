@@ -228,7 +228,13 @@ class SetupController extends AppController
     {
         $this->_ajaxPreProcess();
 
+        App::uses('UploadHelper', 'View/Helper');
+        $this->Upload = new UploadHelper(new View());
+
         $goals = $this->Goal->getGoalsForSetupBy($this->Auth->user('id'));
+        foreach($goals as $key => $goal) {
+            $goals[$key]['Goal']['photo_file_path'] = $this->Upload->uploadUrl($goal, 'Goal.photo', ['style' => 'medium']);
+        }
         $res = [
             'goals' => $goals,
         ];
@@ -238,7 +244,6 @@ class SetupController extends AppController
     public function ajax_post_action()
     {
       $this->_ajaxPreProcess();
-      $this->log($this->request->data);
       $res = [
           'res' => true,
       ];

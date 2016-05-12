@@ -15,10 +15,10 @@ export default class ActionGoalSelect extends React.Component {
     const goals = this.getGoals().map((goal) => {
       return (
         <div className="setup-items-item pt_10px mt_16px bd-radius_14px"
-             key={goal.id}
-             onClick={(e) => { this.props.onClickSelectActionGoal(goal.Goal.id) }}>
+             key={goal.Goal.id}
+             onClick={(e) => { this.props.onClickSelectActionGoal(goal.Goal) }}>
           <div className="setup-items-item-pic pull-left mt_3px ml_2px">
-            <img src={goal.Goal.photo_file_name} className="setup-items-item-pic-img lazy" alt='' />
+            <img src={goal.Goal.photo_file_path} className="setup-items-item-pic-img lazy" alt='' />
           </div>
           <div className="setup-items-item-explain pull-left">
             <p className="font_bold font_verydark">{goal.Goal.name}</p>
