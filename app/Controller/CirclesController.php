@@ -27,7 +27,6 @@ class CirclesController extends AppController
     {
         $this->request->allowMethod('post');
         $this->Circle->create();
-
         if ($this->Circle->add($this->request->data)) {
             if (!empty($this->Circle->add_new_member_list)) {
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_ADD_USER, $this->Circle->id,

@@ -105,7 +105,6 @@ class SetupController extends AppController
     public function ajax_get_circles()
     {
         $this->_ajaxPreProcess();
-
         $not_joined_circles = array_values($this->Circle->getPublicCircles('non-joined'));
         $res = [
             'not_joined_circles' => $not_joined_circles,
@@ -125,8 +124,9 @@ class SetupController extends AppController
                                                  null, $this->Circle->add_new_member_list);
             }
             $this->updateSetupStatusIfNotCompleted();
-            $msg = __("Created a circle.");
+            $msg = __("Added an action.");
             $error = false;
+            $this->Pnotify->outSuccess($msg = __("Added an action."));
         }
         else {
             $msg = __("Failed to create a circle.");
