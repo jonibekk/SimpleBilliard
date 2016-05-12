@@ -83,21 +83,19 @@ export function fetchCircles(dispatch) {
     dataType: 'json'
   }).then((response) => {
     if(response.data.error) {
-      dispatch({
-        type: FETCH_CIRCLES,
-        circles: []
-      })
+      browserHistory.push('/setup/circle/create')
     } else {
-      dispatch({
-        type: FETCH_CIRCLES,
-        circles: response.data.not_joined_circles
-      })
+      if(response.data.not_joined_circles.length === 0) {
+        browserHistory.push('/setup/circle/create')
+      } else {
+        dispatch({
+          type: FETCH_CIRCLES,
+          circles: response.data.not_joined_circles
+        })
+      }
     }
   }).catch((response) => {
-    dispatch({
-      type: FETCH_CIRCLES,
-      circles: []
-    })
+    browserHistory.push('/setup/circle/create')
   })
 }
 
