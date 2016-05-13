@@ -27,6 +27,11 @@ import CircleContainer from '../containers/circle/index'
 import CircleImageContainer from '../containers/circle/circle_image'
 import CircleSelectContainer from '../containers/circle/circle_select'
 import CircleCreateContainer from '../containers/circle/circle_create'
+// Action
+import ActionContainer from '../containers/action/index'
+import ActionImageContainer from '../containers/action/action_image'
+import ActionGoalSelectContainer from '../containers/action/action_goal_select'
+import ActionCreateContainer from '../containers/action/action_create'
 // App
 import AppContainer from '../containers/app/index'
 import AppImageContainer from '../containers/app/app_image'
@@ -78,6 +83,12 @@ export default class Routes extends Component {
                 <Route path="image" component={CircleImageContainer} />
                 <Route path="select" component={CircleSelectContainer} />
                 <Route path="create" component={CircleCreateContainer} />
+              </Route>
+              <Route path="action" component={ActionContainer} >
+                <IndexRoute component={ActionImageContainer} />
+                <Route path="image" component={ActionImageContainer} />
+                <Route path="goal_select" component={ActionGoalSelectContainer} />
+                <Route path="create" component={ActionCreateContainer} />
               </Route>
               <Route path="post" component={PostContainer} >
                 <IndexRoute component={PostImageContainer} />

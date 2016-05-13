@@ -12,7 +12,7 @@ export default class CircleImage extends React.Component {
           Set up Goalous <i className="fa fa-angle-right" aria-hidden="true"></i> Join a circle
         </div>
         <div className="setup-explain">
-            <img src='/img/setup/circle.png' className='setup-explain-img' alt='setup goalous' />
+            <img src='/img/setup/setup_circle.png' className='setup-explain-img' alt='setup goalous' />
         </div>
         <div className="row">
           <div className="col-sm-12">

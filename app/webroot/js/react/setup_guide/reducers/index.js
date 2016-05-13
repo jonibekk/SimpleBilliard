@@ -4,6 +4,7 @@ import circle from './circle'
 import top from './top'
 import profile from './profile'
 import goal from './goal'
+import action from './action'
 import post from './post'
 
 export default function createReducer() {
@@ -13,6 +14,7 @@ export default function createReducer() {
       top,
       profile,
       goal,
+      action,
       post
     },
     {
