@@ -32,13 +32,13 @@ export default class CircleSelect extends React.Component {
     return (
       <div>
         <div className="setup-pankuzu font_18px">
-          Set up Goalous <i className="fa fa-angle-right" aria-hidden="true"></i> Create a circle
+          {__('Set up Goalous')} <i className="fa fa-angle-right" aria-hidden="true"></i> {__('Create a circle')}
         </div>
         <div className="setup-items">
           {circles}
         </div>
         <div className="mb_13px">
-          <Link to="/setup/circle/create">Create your own <i className="fa fa-angle-right" aria-hidden="true"></i> </Link>
+          <Link to="/setup/circle/create">{__('Create your own')} <i className="fa fa-angle-right" aria-hidden="true"></i> </Link>
         </div>
         <div>
           <Link to="/setup/circle/image" className="btn btn-secondary setup-back-btn">Back</Link>
@@ -46,7 +46,7 @@ export default class CircleSelect extends React.Component {
             className="btn btn-primary setup-next-btn pull-right"
             disabled={!Boolean(this.props.circle.selected_circle_id)}
             onClick={(e) => { this.props.onClickJoinCircle( this.props.circle.selected_circle_id) }}
-          >Join a circle</Link>
+          >{__('Join a circle')}</Link>
         </div>
       </div>
     )
