@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2016-05-13 17:26+0900\n"
-"PO-Revision-Date: 2016-05-13 17:27+0900\n"
+"POT-Creation-Date: 2016-05-13 18:12+0900\n"
+"PO-Revision-Date: 2016-05-13 18:13+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -2772,6 +2772,10 @@ msgstr ""
 
 #: View/Elements/gl_common_js.ctp:369
 msgid "Share your topic with a circle."
+msgstr ""
+
+#: View/Elements/gl_common_js.ctp:370
+msgid "STEPS LEFT"
 msgstr ""
 
 #: View/Elements/header_home.ctp:25
