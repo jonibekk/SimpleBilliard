@@ -44,7 +44,7 @@ msgstr ""
 
 #: Console/Command/SetupGuideShell.php:171
 msgid "Please join a circle."
-msgstr ""
+msgstr "サークルに参加するしてください。"
 
 #: Console/Command/SetupGuideShell.php:175
 msgid "Please post on Goalous."
@@ -2544,7 +2544,7 @@ msgstr ""
 
 #: View/Elements/gl_common_js.ctp:301;310;364
 msgid "Do an action"
-msgstr ""
+msgstr "アクションする"
 
 #: View/Elements/gl_common_js.ctp:303 View/Elements/Feed/common_form.ctp:123
 msgid "Upload an image as your action"
@@ -2556,7 +2556,7 @@ msgstr "アクションを説明しよう"
 
 #: View/Elements/gl_common_js.ctp:307
 msgid "Create another goal"
-msgstr ""
+msgstr "別のゴールを作成する"
 
 #: View/Elements/gl_common_js.ctp:308 View/Pages/contact_confirm.ctp:134
 #: View/Setup/profile_add.ctp:109
@@ -2570,31 +2570,31 @@ msgstr "次へ"
 
 #: View/Elements/gl_common_js.ctp:312;360
 msgid "Login from mobile app"
-msgstr ""
+msgstr "スマホアプリからログインする"
 
 #: View/Elements/gl_common_js.ctp:313
 msgid "Install Android app"
-msgstr ""
+msgstr "Androidアプリをインストール"
 
 #: View/Elements/gl_common_js.ctp:314
 msgid "Requires Android 4.4 or later."
-msgstr ""
+msgstr "4.4以上のOSバージョンの方"
 
 #: View/Elements/gl_common_js.ctp:315
 msgid "Install iOS app"
-msgstr ""
+msgstr "iOSアプリをインストール"
 
 #: View/Elements/gl_common_js.ctp:316
 msgid "Requires iOS 8.4 or later."
-msgstr ""
+msgstr "8.4以上のOSバージョンの方"
 
 #: View/Elements/gl_common_js.ctp:317
 msgid "If you don't have a mobile device."
-msgstr ""
+msgstr "該当するスマホを持っていない方"
 
 #: View/Elements/gl_common_js.ctp:318;366
 msgid "Join a circle"
-msgstr ""
+msgstr "サークルに参加する"
 
 #: View/Elements/gl_common_js.ctp:319 View/Elements/modal_add_circle.ctp:40
 #: View/Elements/modal_edit_circle.ctp:50
@@ -2683,51 +2683,51 @@ msgstr "ゴール画像"
 
 #: View/Elements/gl_common_js.ctp:341
 msgid "Talk with team members"
-msgstr ""
+msgstr "社員とはなしをする"
 
 #: View/Elements/gl_common_js.ctp:342
 msgid "Lunch with team members"
-msgstr ""
+msgstr "社員とランチに行く"
 
 #: View/Elements/gl_common_js.ctp:343
 msgid "Hear complaints of team members"
-msgstr ""
+msgstr "社員の不満を聞く"
 
 #: View/Elements/gl_common_js.ctp:344
 msgid "Create your own"
-msgstr ""
+msgstr "自分でつくってみる"
 
 #: View/Elements/gl_common_js.ctp:345
 msgid "Do something with team members"
-msgstr ""
+msgstr "社員と ◯ ◯ ◯"
 
 #: View/Elements/gl_common_js.ctp:346
 msgid "You do something worthwhile."
-msgstr ""
+msgstr "社員となんかしよう"
 
 #: View/Elements/gl_common_js.ctp:347
 msgid "Open yourself"
-msgstr ""
+msgstr "あなたのことを ◯ ◯ ◯"
 
 #: View/Elements/gl_common_js.ctp:348
 msgid "Increasing people who know you."
-msgstr ""
+msgstr "みんなに理解してもらおう"
 
 #: View/Elements/gl_common_js.ctp:349
 msgid "Give something to team members"
-msgstr ""
+msgstr "社員に対して ◯ ◯ ◯"
 
 #: View/Elements/gl_common_js.ctp:350
 msgid "Be happy everyone."
-msgstr ""
+msgstr "社員になにかを与えよう"
 
 #: View/Elements/gl_common_js.ctp:351;353;368
 msgid "Post to a circle"
-msgstr ""
+msgstr "投稿する"
 
 #: View/Elements/gl_common_js.ctp:352
 msgid "Create another circle"
-msgstr ""
+msgstr "自分でつくってみる"
 
 #: View/Elements/gl_common_js.ctp:354 View/Elements/Feed/common_form.ctp:295
 msgid "Write something..."
@@ -2735,11 +2735,11 @@ msgstr "何か投稿しよう"
 
 #: View/Elements/gl_common_js.ctp:355 View/Setup/profile_add.ctp:6
 msgid "Input your profile"
-msgstr ""
+msgstr "プロフィールを入力する"
 
 #: View/Elements/gl_common_js.ctp:356 View/Setup/profile_add.ctp:27
 msgid "Your profile picture"
-msgstr ""
+msgstr "あなたの顔写真"
 
 #: View/Elements/gl_common_js.ctp:357
 msgid "Your self-info"
@@ -2748,35 +2748,35 @@ msgstr ""
 #: View/Elements/gl_common_js.ctp:358 View/Evaluations/view.ctp:225;511
 #: View/Setup/profile_add.ctp:110
 msgid "Submit"
-msgstr "提出"
+msgstr "送信"
 
 #: View/Elements/gl_common_js.ctp:359
 msgid "Set your profile picture and self-info."
-msgstr ""
+msgstr "顔写真と自己紹介を登録しよう"
 
 #: View/Elements/gl_common_js.ctp:361
-msgid "Install Goalous iOS and Android apps."
-msgstr ""
+msgid "Install Goalous's iOS and Android apps."
+msgstr "iOSかAndroidのアプリをインストール"
 
 #: View/Elements/gl_common_js.ctp:363
 msgid "Create or collaborate with a goal."
-msgstr ""
+msgstr "達成したいゴールを作成しよう"
 
 #: View/Elements/gl_common_js.ctp:365
 msgid "Add an Action for your Goal."
-msgstr ""
+msgstr "ゴールにアクションを登録しよう"
 
 #: View/Elements/gl_common_js.ctp:367
 msgid "Create a circle or join."
-msgstr ""
+msgstr "サークル作成するか参加しよう"
 
 #: View/Elements/gl_common_js.ctp:369
 msgid "Share your topic with a circle."
-msgstr ""
+msgstr "サークルに投稿してみよう"
 
 #: View/Elements/gl_common_js.ctp:370
 msgid "STEPS LEFT"
-msgstr ""
+msgstr "残りのSTEP"
 
 #: View/Elements/header_home.ctp:25
 msgid "Enterprise SNS the most ever open for Goal"
@@ -3166,7 +3166,7 @@ msgstr "%s人に共有しました"
 
 #: View/Elements/modal_tutorial.ctp:22
 msgid "Create a goal."
-msgstr ""
+msgstr "ゴールを作成する"
 
 #: View/Elements/modal_tutorial.ctp:23
 msgid "The goal that should be accomplished."
@@ -5822,11 +5822,11 @@ msgstr "これ以上ファイルはありません。"
 
 #: View/Setup/profile_add.ctp:71
 msgid "Your self-info."
-msgstr ""
+msgstr "あなたの自己紹介"
 
 #: View/Setup/profile_image.ctp:5
 msgid "Set up Goalous < Input your profile"
-msgstr ""
+msgstr "プロフィールを入力する"
 
 #: View/Teams/add.ctp:112
 msgid " "
