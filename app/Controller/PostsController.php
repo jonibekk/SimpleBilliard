@@ -1462,6 +1462,8 @@ class PostsController extends AppController
         if (!$res) {
             $msg = __("Failed to post.");
             $error = true;
+        } else {
+          $this->Pnotify->outSuccess(__("Posted."));
         }
         return $this->_ajaxGetResponse([
                                            'error'             => $error,

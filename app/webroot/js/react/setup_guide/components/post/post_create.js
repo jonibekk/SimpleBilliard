@@ -77,6 +77,11 @@ export default class PostCreate extends React.Component {
               </div>
               <div className="post-panel-footer">
                 <div className="font_12px" id="PostFormFooter">
+                  <a href="#" className="link-red" id="PostUploadFileButton">
+                    <button type="button" className="btn pull-left photo-up-btn"><i
+                            className="fa fa-paperclip post-camera-icon"></i>
+                    </button>
+                  </a>
                   <div className="row form-horizontal form-group post-share-range" id="PostShare">
                     <div className="submit">
                       <input className="btn btn-primary pull-right post-submit-button" id="PostSubmit" type="submit" value="Post"
