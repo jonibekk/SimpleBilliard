@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { createCircle } from '../../actions/circle_actions'
+import { createCircle, toggleButtonClickable } from '../../actions/circle_actions'
 import CircleCreate from '../../components/circle/circle_create'
 
 function mapStateToProps(state) {
@@ -9,9 +9,11 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onSubmitCircle: (event, refs) => {
-      event.preventDefault()
-      createCircle(dispatch, refs)
+    onSubmitCircle: (input_circle) => {
+      createCircle(dispatch, input_circle)
+    },
+    toggleButtonClickable: (circle) => {
+      dispatch(toggleButtonClickable(circle))
     }
   }
 }

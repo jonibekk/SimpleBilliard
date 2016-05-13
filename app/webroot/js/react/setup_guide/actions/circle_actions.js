@@ -1,7 +1,22 @@
-import ReactDOM from 'react-dom'
 import axios from 'axios'
 import { browserHistory } from 'react-router'
-import { CREATE_CIRCLE, SELECT_CIRCLE, FETCH_CIRCLES, JOIN_CIRCLE } from '../constants/ActionTypes'
+import { SELECT_CIRCLE, FETCH_CIRCLES, JOIN_CIRCLE, CAN_SUBMIT_CIRCLE, CAN_NOT_SUBMIT_CIRCLE } from '../constants/ActionTypes'
+
+export function toggleButtonClickable(circle) {
+  return circle.circle_name && circle.circle_description ? enableSubmitButton() : disableSubmitButton()
+}
+
+export function enableSubmitButton() {
+  return {
+    type: CAN_SUBMIT_CIRCLE,
+  }
+}
+
+export function disableSubmitButton() {
+  return {
+    type: CAN_NOT_SUBMIT_CIRCLE,
+  }
+}
 
 export function postCircleCreate(dispatch, circle) {
   axios.post('/setup/ajax_create_circle', circle, {
@@ -12,7 +27,6 @@ export function postCircleCreate(dispatch, circle) {
     dataType: 'json'
   })
   .then(function (response) {
-    browserHistory.push('/setup')
     PNotify.removeAll()
     if(response.data.error) {
       new PNotify({
@@ -24,19 +38,8 @@ export function postCircleCreate(dispatch, circle) {
           mouse_reset: false
       })
     } else {
-      new PNotify({
-          type: 'success',
-          title: cake.word.success,
-          text: response.data.msg,
-          icon: "fa fa-check-circle",
-          delay: 4000,
-          mouse_reset: false
-      })
+      document.location.href = "/setup"
     }
-    dispatch({
-      type: CREATE_CIRCLE,
-      form_input: circle.Circle
-    })
   })
   .catch(function (response) {
     browserHistory.push('/setup')
@@ -49,20 +52,16 @@ export function postCircleCreate(dispatch, circle) {
         delay: 4000,
         mouse_reset: false
     })
-    dispatch({
-      type: CREATE_CIRCLE,
-      form_input: circle.Circle
-    })
   })
 }
 
-export function createCircle(dispatch, refs) {
+export function createCircle(dispatch, input_circle) {
   let form_data = new FormData()
-  form_data.append("photo", ReactDOM.findDOMNode(refs.circle_image).files[0])
-  form_data.append("Circle[name]", ReactDOM.findDOMNode(refs.circle_name).value)
-  form_data.append("Circle[public_flg]", ReactDOM.findDOMNode(refs.public_flg).value)
-  form_data.append("Circle[description]", ReactDOM.findDOMNode(refs.circle_description).value)
-  form_data.append("Circle[members]", ReactDOM.findDOMNode(refs.members).value)
+  form_data.append("photo", input_circle['circle_image'])
+  form_data.append("Circle[name]", input_circle['circle_name'])
+  form_data.append("Circle[public_flg]", input_circle['public_flg'])
+  form_data.append("Circle[description]", input_circle['circle_description'])
+  form_data.append("Circle[members]", input_circle['members'])
 
   return postCircleCreate(dispatch, form_data)
 }
@@ -83,21 +82,19 @@ export function fetchCircles(dispatch) {
     dataType: 'json'
   }).then((response) => {
     if(response.data.error) {
-      dispatch({
-        type: FETCH_CIRCLES,
-        circles: []
-      })
+      browserHistory.push('/setup/circle/create')
     } else {
-      dispatch({
-        type: FETCH_CIRCLES,
-        circles: response.data.not_joined_circles
-      })
+      if(response.data.not_joined_circles.length === 0) {
+        browserHistory.push('/setup/circle/create')
+      } else {
+        dispatch({
+          type: FETCH_CIRCLES,
+          circles: response.data.not_joined_circles
+        })
+      }
     }
   }).catch((response) => {
-    dispatch({
-      type: FETCH_CIRCLES,
-      circles: []
-    })
+    browserHistory.push('/setup/circle/create')
   })
 }
 
@@ -117,7 +114,6 @@ export function joinCircle(dispatch, circle_id) {
     },
     dataType: 'json'
   }).then((response) => {
-    browserHistory.push('/setup')
     PNotify.removeAll()
     if(response.data.error) {
       new PNotify({
@@ -129,18 +125,7 @@ export function joinCircle(dispatch, circle_id) {
           mouse_reset: false
       })
     } else {
-      new PNotify({
-          type: 'success',
-          title: cake.word.success,
-          text: response.data.msg,
-          icon: "fa fa-check-circle",
-          delay: 4000,
-          mouse_reset: false
-      })
-      dispatch({
-        type: JOIN_CIRCLE,
-        joined: true
-      })
+      document.location.href = "/setup"
     }
   }).catch((response) => {
     browserHistory.push('/setup')
