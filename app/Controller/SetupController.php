@@ -174,18 +174,19 @@ class SetupController extends AppController
         $team_member_id = $this->User->TeamMember->getIdByTeamAndUserId($this->current_team_id, $this->my_uid);
         $this->request->data['TeamMember'][0]['id'] = $team_member_id;
         $this->request->data['User']['id'] = $this->User->id = $this->my_uid;
-        if(isset($_FILES['photo']) && !empty($_FILES['photo'])) {
-            $this->request->data['User']['photo'] = $_FILES['photo'];
-        }
+        $this->request->data['User']['photo'] = $_FILES['photo'];
         // キャッシュ削除
         Cache::delete($this->User->getCacheKey(CACHE_KEY_MY_PROFILE, true, null, false), 'user_data');
-        $this->User->saveAll($this->request->data);
-
-        //セットアップガイドステータスの更新
-        $this->updateSetupStatusIfNotCompleted();
-        $msg = __("Saved user profile.");
-        $error = false;
-        $this->Pnotify->outSuccess($msg);
+        if ($this->User->saveAll($this->request->data)) {
+            //セットアップガイドステータスの更新
+            $this->updateSetupStatusIfNotCompleted();
+            $msg = __("Saved user profile.");
+            $error = false;
+        }
+        else {
+            $msg = __("Failed to save user profile.");
+            $error = true;
+        }
         return $this->_ajaxGetResponse(['msg' => $msg, 'error' => $error]);
     }
 
@@ -318,23 +319,5 @@ class SetupController extends AppController
         ];
         return $this->_ajaxGetResponse($res);
     }
-
-    public function ajax_get_default_user_profile()
-    {
-        $this->_ajaxPreProcess();
-
-        App::uses('UploadHelper', 'View/Helper');
-        $me = $this->User->getDetail($this->Auth->user('id'));
-        $this->Upload = new UploadHelper(new View());
-        $res = [
-            'error' => false,
-            'default_profile' => [
-                'photo_file_path' => $this->Upload->uploadUrl($me, 'User.photo', ['style' => 'x_large']),
-                'comment' => $me['TeamMember'][0]['comment']
-            ]
-        ];
-        return $this->_ajaxGetResponse($res);
-    }
-
 
 }
