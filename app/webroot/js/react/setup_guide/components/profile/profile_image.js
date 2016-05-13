@@ -5,9 +5,6 @@ export default class ProfileImage extends React.Component {
   constructor(props) {
     super(props);
   }
-  componentDidMount() {
-    this.props.fetchDefaultProfile()
-  }
   render() {
     return (
       <div>

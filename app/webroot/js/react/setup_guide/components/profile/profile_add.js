@@ -10,7 +10,12 @@ export default class ProfileAdd extends React.Component {
     this.props.fetchDefaultProfile()
   }
   componentDidMount() {
-    this.props.toggleButtonClickable(this.getInputDomData())
+    // デフォルト値がセットされる前にイベント発火させるとそこで処理が終了してしまうため、
+    // デフォルト値がセットされたタイミングでイベント発火させる
+    console.log(this.props.profile.default_profile.comment)
+    if(this.props.profile.default_profile.comment){
+      this.props.toggleButtonClickable(this.getInputDomData())
+    }
   }
   getInputDomData() {
     return {
@@ -18,6 +23,17 @@ export default class ProfileAdd extends React.Component {
     }
   }
   render() {
+    const user_image = () => {
+      return (
+        <img src={this.props.profile.default_profile.photo_file_path} className="lazy" alt='' />
+      )
+    }
+    const default_image = () => {
+      return (
+        <i className="fa fa-plus photo-plus-large"></i>
+      )
+    }
+    const default_user_image = this.props.profile.default_profile.photo_file_path ? user_image() : default_image()
     return (
       <div>
         <div className="setup-pankuzu font_18px">
@@ -32,8 +48,8 @@ export default class ProfileAdd extends React.Component {
             <span className="help-block">{__("Your profile picture")}</span>
             <div className="form-inline">
               <div className="fileinput_small fileinput-new" data-provides="fileinput">
-                <div className="fileinput-preview thumbnail nailthumb-container photo-design form-group" data-trigger="fileinput">
-                  <img src={this.props.profile.default_profile.photo_file_path} className="lazy" alt='' />
+                <div className="fileinput-preview thumbnail nailthumb-container photo-design form-group setup-gude-preview" data-trigger="fileinput">
+                  {default_user_image}
                 </div>
                 <div className="form-group">
                   <span className="btn btn-default btn-file ml_16px">
@@ -48,7 +64,9 @@ export default class ProfileAdd extends React.Component {
           <div className="panel-body">
             <span className="help-block">{__("Your self-info")}</span>
             <textarea ref="comment" className="form-control addteam_input-design" rows="6"
-                      onChange={() => {this.props.toggleButtonClickable(this.getInputDomData())}} defaultValue={this.props.profile.default_profile.comment} />
+                      onChange={() => {this.props.toggleButtonClickable(this.getInputDomData())}}
+                      name="comment"
+                      defaultValue={this.props.profile.default_profile.comment} />
           </div>
           <div>
             <Link to="/setup/profile/image" className="btn btn-secondary setup-back-btn">{__('Back')}</Link>
