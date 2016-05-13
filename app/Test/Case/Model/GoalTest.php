@@ -1008,4 +1008,18 @@ class GoalTest extends GoalousTestCase
         $this->assertFalse($res);
     }
 
+    function testGetGoalsForSetupBy()
+    {
+        $this->setDefault();
+        $goal_data = [
+            'user_id'    => 1,
+            'team_id'    => 1,
+            'start_date' => $this->start_date,
+            'end_date'   => $this->end_date,
+        ];
+        $this->Goal->save($goal_data);
+        $goals = $this->Goal->getGoalsForSetupBy(1);
+        $this->assertNotEmpty($goals);
+    }
+
 }
