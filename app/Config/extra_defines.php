@@ -60,3 +60,5 @@ define('LOG_SLACK_TOKEN', null);
 define('LOG_SLACK_ERROR_CHANNEL', null);
 define('LOG_SLACK_DEBUG_CHANNEL', null);
 define('CACHE_HOMEPAGE', false);
+define('SETUP_GUIDE_NOTIFY_DAYS',"2,5,10");
+define('SETUP_GUIDE_NOTIFY_HOUR',"11");

@@ -58,6 +58,7 @@ class User extends AppModel
     const SETUP_ACTION_POSTED = 4;
     const SETUP_CIRCLE_JOINED_OR_CREATED = 5;
     const SETUP_CIRCLE_POSTED = 6;
+
     static public $TYPE_SETUP_GUIDE = [
         self::SETUP_PROFILE                  => "",
         self::SETUP_MOBILE_APP               => "",
@@ -254,6 +255,7 @@ class User extends AppModel
         'phone_no'          => [
             'maxLength' => ['rule' => ['maxLength', 20]],
         ],
+        'setup_complete_flg' => ['boolean' => ['rule' => ['boolean'], 'allowEmpty' => true,],],
     ];
 
     public $profileFields = [
@@ -398,6 +400,28 @@ class User extends AppModel
             'contain'    => ['User']
         ];
         return $this->Email->find('first', $options);
+    }
+
+    public function getUsersSetupNotCompleted($team_id = false)
+    {
+        $options = [
+            'conditions' => [
+                'User.setup_complete_flg' => false,
+            ],
+        ];
+
+        if ($team_id) {
+            $options['joins'][] = [
+                'type'       => 'INNER',
+                'table'      => 'team_members',
+                'alias'      => 'TeamMember',
+                'conditions' => [
+                    'TeamMember.user_id = User.id',
+                    'TeamMember.team_id' => $team_id,
+                ]
+            ];
+        }
+        return $this->find('all', $options);
     }
 
     public function getDetail($id)

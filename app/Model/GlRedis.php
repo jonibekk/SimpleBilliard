@@ -51,6 +51,7 @@ class GlRedis extends AppModel
     const KEY_TYPE_SETUP_GUIDE_STATUS = 'setup_guide_status';
 
     const FIELD_COUNT_NEW_NOTIFY = 'new_notify';
+    const FIELD_SETUP_LAST_UPDATE_TIME = "setup_last_update_time";
 
     static public $KEY_TYPES = [
         self::KEY_TYPE_NOTIFICATION_USER,
@@ -1179,6 +1180,9 @@ class GlRedis extends AppModel
      */
     function saveSetupGuideStatus($user_id, $status, $expire = SETUP_GUIDE_EXIPIRE_SEC_BY_REDIS)
     {
+        //set update time
+        $status[self::FIELD_SETUP_LAST_UPDATE_TIME] = time();
+
         $this->Db->set($key = $this->getKeyName(self::KEY_TYPE_SETUP_GUIDE_STATUS, null, $user_id),
                        json_encode($status));
         return $this->Db->setTimeout($key, $expire);

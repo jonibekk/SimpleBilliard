@@ -22,6 +22,7 @@ class SendMail extends AppModel
     const TYPE_TMPL_CHANGE_EMAIL_VERIFY = 5;
     const TYPE_TMPL_INVITE = 6;
     const TYPE_TMPL_NOTIFY = 7;
+    const TYPE_TMPL_SETUP = 8;
 
     static public $TYPE_TMPL = [
         self::TYPE_TMPL_ACCOUNT_VERIFY          => [
@@ -54,6 +55,11 @@ class SendMail extends AppModel
             'template' => 'invite',
             'layout'   => 'default',
         ],
+        self::TYPE_TMPL_SETUP                  => [
+            'subject'  => null,
+            'template' => 'setup',
+            'layout'   => 'default',
+        ],
     ];
 
     private function _setTemplateSubject()
@@ -64,6 +70,7 @@ class SendMail extends AppModel
         self::$TYPE_TMPL[self::TYPE_TMPL_TOKEN_RESEND]['subject'] = __("Authentication email address");
         self::$TYPE_TMPL[self::TYPE_TMPL_CHANGE_EMAIL_VERIFY]['subject'] = __("Authentication for changing email address");
         self::$TYPE_TMPL[self::TYPE_TMPL_INVITE]['subject'] = __("Invitation for team");
+        self::$TYPE_TMPL[self::TYPE_TMPL_SETUP]['subject'] = __("Could you setup Goalous?");
     }
 
     function __construct($id = false, $table = null, $ds = null)

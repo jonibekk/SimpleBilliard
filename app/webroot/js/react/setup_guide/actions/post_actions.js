@@ -73,7 +73,7 @@ export function submitPost(dispatch, refs, socket_id) {
   form_data.append("Post[share_range]", ReactDOM.findDOMNode(refs.share_range).value);
   form_data.append("socket_id", socket_id);
   const files = $('#PostDisplayForm').find('[name="data[file_id][]"]')
-  const file_limit_num = 11
+  const file_limit_num = 10
   Array.from(Array(file_limit_num).keys()).map((i) => {
     if(files[i] === undefined) return
     form_data.append("file_id[]", files[i].value)
