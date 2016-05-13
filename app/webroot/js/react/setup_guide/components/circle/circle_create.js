@@ -41,7 +41,7 @@ export default class CircleCreate extends React.Component {
               acceptCharset="utf-8"
               ref="circle_form">
           <div className="panel-body">
-            <span className="help-block">{__("Circle Name")}</span>
+            <span className="help-block">{__("Circle name")}</span>
             <input ref="circle_name" className="form-control addteam_input-design"
                    onChange={() => {this.props.toggleButtonClickable(this.getInputDomData()) }} />
           </div>
