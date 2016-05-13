@@ -101,7 +101,7 @@ export default class Top extends React.Component {
             <div className="setup-status-number-elem">{this.props.top.setup_rest_count}</div>
           </div>
         </div>
-        <div className="setup-status-footer text-right font_18px">STEPS LEFT</div>
+        <div className="setup-status-footer text-right font_18px">{__('STEPS LEFT')}</div>
         <div className="setup-items">
           {items}
         </div>
