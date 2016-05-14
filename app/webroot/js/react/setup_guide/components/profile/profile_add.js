@@ -12,7 +12,6 @@ export default class ProfileAdd extends React.Component {
   componentDidMount() {
     // デフォルト値がセットされる前にイベント発火させるとそこで処理が終了してしまうため、
     // デフォルト値がセットされたタイミングでイベント発火させる
-    console.log(this.props.profile.default_profile.comment)
     if(this.props.profile.default_profile.comment){
       this.props.toggleButtonClickable(this.getInputDomData())
     }
