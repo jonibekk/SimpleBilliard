@@ -2,7 +2,7 @@ import React from 'react'
 import { Link, browserHistory } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { toggleButtonClickable, submitProfile } from '../../actions/profile_actions'
+import { toggleButtonClickable, submitProfile, fetchDefaultProfile, changedTextarea, enableSubmitButton } from '../../actions/profile_actions'
 import ProfileAdd from '../../components/profile/profile_add'
 
 function mapStateToProps(state) {
@@ -11,11 +11,13 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    toggleButtonClickable: (refs) => { dispatch(toggleButtonClickable(refs)) },
-    onSubmitProfile: (event, refs) => {
-      event.preventDefault()
-      submitProfile(dispatch, refs)
-    }
+    toggleButtonClickable: (profile) => {
+      dispatch(toggleButtonClickable(profile))
+      dispatch(changedTextarea())
+    },
+    onSubmitProfile: (profile) => { submitProfile(dispatch, profile) },
+    fetchDefaultProfile: () => { fetchDefaultProfile(dispatch) },
+    enableSubmitButton: () => { dispatch(enableSubmitButton()) }
   }
 }
 

@@ -41,7 +41,7 @@ export default class CircleSelect extends React.Component {
           <Link to="/setup/circle/create">{__('Create your own')} <i className="fa fa-angle-right" aria-hidden="true"></i> </Link>
         </div>
         <div>
-          <Link to="/setup/circle/image" className="btn btn-secondary setup-back-btn">Back</Link>
+          <Link to="/setup/circle/image" className="btn btn-secondary setup-back-btn">{__('Back')}</Link>
           <Link to="/setup/circle/select"
             className="btn btn-primary setup-next-btn pull-right"
             disabled={!Boolean(this.props.circle.selected_circle_id)}

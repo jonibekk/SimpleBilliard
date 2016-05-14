@@ -58,11 +58,11 @@ export default class GoalCreate extends React.Component {
             <span className="help-block">{__("Goal Image")}</span>
             <div className="form-inline">
               <div className="fileinput_small fileinput-new" data-provides="fileinput">
-                <div className="fileinput-preview thumbnail nailthumb-container photo-design form-group" data-trigger="fileinput">
+                <div className="fileinput-preview thumbnail nailthumb-container photo-design form-group setup-guide-file-preview" data-trigger="fileinput">
                   <i className="fa fa-plus photo-plus-large"></i>
                 </div>
                 <div className="form-group">
-                  <span className="btn btn-default btn-file ml_16px">
+                  <span className="btn btn-default btn-file ml_16px setup-guide-file-select-btn">
                     <span className="fileinput-new">{__("Select an image")}</span>
                     <span className="fileinput-exists">{__("Reselect an image")}</span>
                     <input type="file" name="photo" ref="photo" className="form-control addteam_input-design" id="GoalPhoto" />

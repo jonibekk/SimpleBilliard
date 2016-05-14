@@ -1380,7 +1380,7 @@ class User extends AppModel
     {
         $res = $this->find('first', [
             'conditions' => [
-                'User.id' => $user_id
+                'User.id' => $user_id,
             ],
             'fields'     => ['User.id', 'User.photo_file_name'],
             'contain'    => [

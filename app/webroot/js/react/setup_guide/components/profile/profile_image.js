@@ -16,7 +16,7 @@ export default class ProfileImage extends React.Component {
         </div>
         <div className="row">
           <div className="col-sm-12">
-            <Link to="/setup/" className="btn btn-secondary setup-back-btn">Back</Link>
+            <Link to="/setup/" className="btn btn-secondary setup-back-btn">{__('Back')}</Link>
             <Link to="/setup/profile/add" className="btn btn-primary setup-next-btn pull-right">{__("Next")}</Link>
           </div>
         </div>
