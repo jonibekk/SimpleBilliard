@@ -4,73 +4,77 @@ import { Link, browserHistory } from 'react-router'
 
 export default class ProfileAdd extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
   }
   componentWillMount() {
     this.props.fetchDefaultProfile()
   }
   componentDidMount() {
-    // デフォルト値がセットされる前にイベント発火させるとそこで処理が終了してしまうため、
-    // デフォルト値がセットされたタイミングでイベント発火させる
-    if(this.props.profile.default_profile.comment){
-      this.props.toggleButtonClickable(this.getInputDomData())
+    if(this.props.profile.default_profile.comment) {
+      this.props.enableSubmitButton()
     }
   }
   getInputDomData() {
     return {
-      comment: ReactDOM.findDOMNode(this.refs.comment).value.trim()
+      comment: ReactDOM.findDOMNode(this.refs.comment).value.trim(),
+      profile_image: ReactDOM.findDOMNode(this.refs.profile_image).files[0]
     }
   }
   render() {
-    const user_image = () => {
-      return (
-        <img src={this.props.profile.default_profile.photo_file_path} className="lazy" alt='' />
-      )
+    // FIXME: コンポーネントマウント時のデフォルト画像表示をもっとスマートに書く
+    let not_exist_image_fa_style = {
+      display: this.props.profile.default_profile.photo_file_name ? 'none' : 'inline-block'
     }
-    const default_image = () => {
-      return (
-        <i className="fa fa-plus photo-plus-large"></i>
-      )
+    let default_image_style = {
+      display: this.props.profile.default_profile.photo_file_name ? 'inline-block' : 'none'
     }
-    const default_user_image = this.props.profile.default_profile.photo_file_path ? user_image() : default_image()
+
+    // FIXME: コンポーネントマウント時のプロフィールコメントの表示のもっとスマートに書く(できればjQuery使わない方法で)
+    if(!$('.setup-guide-add-profile-textarea').val() && !this.props.profile.textarea_changed) {
+      $('.setup-guide-add-profile-textarea').val(this.props.profile.default_profile.comment)
+    }
     return (
       <div>
         <div className="setup-pankuzu font_18px">
           {__("Set up Goalous")} <i className="fa fa-angle-right" aria-hidden="true"></i> {__("Input your profile")}
         </div>
-        <form onSubmit={e => {this.props.onSubmitProfile(e, this.refs)}}
-              className="form-horizontal setup-circle-create-form"
+        <form className="form-horizontal setup-circle-create-form"
               encType="multipart/form-data"
               method="post"
-              acceptCharset="utf-8">
+              acceptCharset="utf-8"
+              onSubmit={e => {
+                e.preventDefault()
+                this.props.onSubmitProfile(this.getInputDomData())
+              }}>
           <div className="panel-body">
             <span className="help-block">{__("Your profile picture")}</span>
             <div className="form-inline">
               <div className="fileinput_small fileinput-new" data-provides="fileinput">
-                <div className="fileinput-preview thumbnail nailthumb-container photo-design form-group setup-gude-preview" data-trigger="fileinput">
-                  {default_user_image}
+                <div className="fileinput-preview thumbnail nailthumb-container photo-design setup-guide-file-preview" data-trigger="fileinput">
+                  <i className="fa fa-plus photo-plus-large" style={not_exist_image_fa_style}></i>
+                  <img src={this.props.profile.default_profile.photo_file_path} style={default_image_style} />
                 </div>
                 <div className="form-group">
-                  <span className="btn btn-default btn-file ml_16px">
-                  <span className="fileinput-new">{__("Select an image")}</span>
-                  <span className="fileinput-exists">{__("Reselect an image")}</span>
-                    <input type="file" name="profile_image" ref="profile_image" className="form-control addteam_input-design" onChange={() => {this.props.toggleButtonClickable(this.getInputDomData())}} />
-                  </span>
+                  <div className="btn btn-default btn-file ml_16px setup-guide-file-select-btn">
+                    <span className="fileinput-new">{__("Select an image")}</span>
+                    <span className="fileinput-exists">{__("Reselect an image")}</span>
+                    <input type="file" name="profile_image" ref="profile_image" className="form-control addteam_input-design" />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
           <div className="panel-body">
             <span className="help-block">{__("Your self-info")}</span>
-            <textarea ref="comment" className="form-control addteam_input-design" rows="6"
-                      onChange={() => {this.props.toggleButtonClickable(this.getInputDomData())}}
-                      name="comment"
-                      defaultValue={this.props.profile.default_profile.comment} />
+            <textarea ref="comment" className="form-control addteam_input-design setup-guide-add-profile-textarea"
+                      rows="6" name="comment" cols="5" maxLength="10000"
+                      onChange={() => {this.props.toggleButtonClickable(this.getInputDomData())}} />
           </div>
           <div>
             <Link to="/setup/profile/image" className="btn btn-secondary setup-back-btn">{__('Back')}</Link>
-            <input type="submit" className="btn btn-primary setup-next-btn pull-right" defaultValue={__("Submit")}
-            disabled={!Boolean(this.props.profile.can_click_submit_button)} />
+            <input type="submit" className="btn btn-primary setup-next-btn pull-right"
+                   defaultValue={__("Submit")}
+                   disabled={!Boolean(this.props.profile.can_click_submit_button)} />
           </div>
         </form>
       </div>

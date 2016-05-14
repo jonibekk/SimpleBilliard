@@ -332,10 +332,11 @@ class SetupController extends AppController
             'error'           => false,
             'default_profile' => [
                 'photo_file_path' => $this->Upload->uploadUrl($me, 'User.photo', ['style' => 'x_large']),
-                'comment'         => $me['TeamMember'][0]['comment']
+                'photo_file_name' => $me['User']['photo_file_name'],
+                'comment'         => $me['TeamMember'][0]['comment'],
             ]
         ];
-        
+
         return $this->_ajaxGetResponse($res);
     }
 }
