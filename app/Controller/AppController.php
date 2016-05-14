@@ -892,6 +892,7 @@ class AppController extends Controller
         $status_from_mysql = $this->User->generateSetupGuideStatusDict($user_id);
         if ($this->calcSetupRestCount($status_from_mysql) === 0) {
             $this->User->completeSetupGuide($user_id);
+            $this->_refreshAuth($this->Auth->user('id'));
             return true;
         }
         $this->GlRedis->saveSetupGuideStatus($user_id, $status_from_mysql);
@@ -909,12 +910,26 @@ class AppController extends Controller
 
             $status = $this->GlRedis->getSetupGuideStatus($user_id);
         }
+        // remove last update time
+        unset($status[GlRedis::FIELD_SETUP_LAST_UPDATE_TIME]);
+
         return $status;
     }
 
     function calcSetupRestCount($status)
     {
         return count(User::$TYPE_SETUP_GUIDE) - count(array_filter($status));
+    }
+
+    function calcSetupCompletePercent($status)
+    {
+        $rest_count = $this->calcSetupRestCount($status);
+        if($rest_count <= 0) return 100;
+
+        $complete_count = count(User::$TYPE_SETUP_GUIDE) - $rest_count;
+        if($complete_count === 0) return 0;
+
+        return 100 - floor(($rest_count / count(User::$TYPE_SETUP_GUIDE) * 100));
     }
 
 }

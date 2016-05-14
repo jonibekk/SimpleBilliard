@@ -70,7 +70,8 @@ class SetupController extends AppController
         $status = $this->getStatusWithRedisSave();
         $res = [
             'status'           => $status,
-            'setup_rest_count' => $this->calcSetupRestCount($status)
+            'rest_count' => $this->calcSetupRestCount($status),
+            'complete_percent' => $this->calcSetupCompletePercent($status),
         ];
 
         return $this->_ajaxGetResponse($res);
