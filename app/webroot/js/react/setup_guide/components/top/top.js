@@ -49,9 +49,6 @@ export default class Top extends React.Component {
     ])
   }
   render() {
-    const progressBarStyle = {
-      width: String(this.props.top.setup_complete_percent) + '%'
-    }
     const number_radius_box = (index) => {
       return (
         <div className="setup-items-item-radius-number inline-block">
@@ -66,44 +63,52 @@ export default class Top extends React.Component {
         </span>
       )
     }
-    var items = this.listData().map((text) => {
-      return (
-        <Link to={text.link} className="setup-items-item pt_10px mt_12px bd-radius_14px" key={text.index} >
-          <div className="setup-items-item-pic pull-left mt_3px">
-            {this.props.top.status[text.index] ? check_icon() : number_radius_box(text.index)}
-          </div>
-          <div className="setup-items-item-explain pull-left">
-            <p className="font_bold font_verydark">{text.subject}</p>
-            <p className="font_11px font_lightgray">{text.explain}</p>
-          </div>
-          <div className="setup-items-item-to-right pull-right mt_12px mr_5px">
-            <i className="fa fa-chevron-right font_18px"></i>
-          </div>
-        </Link>
-      )
-    })
     return (
       <div>
         <div className="setup-pankuzu font_18px">
-          Set up Goalous
+          {__('Set up Goalous')}
         </div>
         <div className="setup-status">
           <div className="setup-status-wrapper-progress col">
             <div className="setup-status-progress progress">
               <div className="progress-bar progress-bar-info" role="progressbar"
                    aria-valuenow="50" aria-valuemin="0"
-                   aria-valuemax="100" style={progressBarStyle}>
+                   aria-valuemax="100" style={{width: String(this.props.top.setup_complete_percent) + '%'}}>
                 <span className="ml_12px">{this.props.top.setup_complete_percent}%</span>
               </div>
             </div>
           </div>
-          <div className="setup-status-number text-right font_bold">
-            <div className="setup-status-number-elem">{this.props.top.setup_rest_count}</div>
+          <div className="setup-status-completed"
+               style={{display: this.props.top.setup_rest_count ? 'none' : 'block'}}>
+            <div className="setup-status-completed-text font_18px font_bold text-right">Completed</div>
+          </div>
+          <div className="setup-status-number text-right"
+               style={{display: this.props.top.setup_rest_count ? 'block' : 'none'}}>
+            <div className="setup-status-number-elem font_bold">{this.props.top.setup_rest_count}</div>
           </div>
         </div>
-        <div className="setup-status-footer text-right font_18px">{__('STEPS LEFT')}</div>
+        <div className="setup-status-footer text-right font_13px">
+          {this.props.top.setup_rest_count == 0 ? __('Excellent!') : __('STEPS LEFT')}
+        </div>
         <div className="setup-items">
-          {items}
+          {
+            this.listData().map((text) => {
+              return (
+                <Link to={text.link} className="setup-items-item pt_10px mt_12px bd-radius_14px" key={text.index} >
+                  <div className="setup-items-item-pic pull-left mt_3px">
+                    {this.props.top.status[text.index] ? check_icon() : number_radius_box(text.index)}
+                  </div>
+                  <div className="setup-items-item-explain pull-left">
+                    <p className="font_bold font_verydark">{text.subject}</p>
+                    <p className="font_11px font_lightgray">{text.explain}</p>
+                  </div>
+                  <div className="setup-items-item-to-right pull-right mt_12px mr_5px">
+                    <i className="fa fa-chevron-right font_18px"></i>
+                  </div>
+                </Link>
+              )
+            })
+          }
         </div>
       </div>
     )
