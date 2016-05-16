@@ -367,7 +367,8 @@ echo $this->Html->script('vendor/angular/ng-infinite-scroll.min');
           'Create a circle or join.': "<?= __('Create a circle or join.') ?>",
           'Post to a circle': "<?= __('Post to a circle') ?>",
           'Share your topic with a circle.': "<?= __('Share your topic with a circle.') ?>",
-          'STEPS LEFT': "<?= __('STEPS LEFT') ?>"
+          'STEPS LEFT': "<?= __('STEPS LEFT') ?>",
+          'Create a circle': "<?= __('Create a circle') ?>"
         },
         notify_auto_update_sec: <?=NOTIFY_AUTO_UPDATE_SEC?>,
         new_notify_cnt: <?=isset($new_notify_cnt)?$new_notify_cnt:0?>,
