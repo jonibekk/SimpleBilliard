@@ -1,7 +1,7 @@
 import { SELECT_CIRCLE, FETCH_CIRCLES, JOIN_CIRCLE, CAN_SUBMIT_CIRCLE, CAN_NOT_SUBMIT_CIRCLE } from '../constants/ActionTypes'
 
 const initialState = {
-  selected_circle_id: '',
+  selected_circle_id_list: [],
   circles: [],
   joined: false,
   can_click_submit_button: false
@@ -11,7 +11,7 @@ export default function circle(state = initialState, action) {
   switch (action.type) {
     case SELECT_CIRCLE:
       return Object.assign({}, state, {
-        selected_circle_id: action.selected_circle_id
+        selected_circle_id_list: action.selected_circle_id_list
       })
     case FETCH_CIRCLES:
       return Object.assign({}, state, {

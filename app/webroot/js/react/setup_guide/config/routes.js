@@ -103,6 +103,7 @@ export default class Routes extends Component {
               </Route>
             </Route>
           </Router>
+          <DevTools />
         </div>
       </Provider>
     );

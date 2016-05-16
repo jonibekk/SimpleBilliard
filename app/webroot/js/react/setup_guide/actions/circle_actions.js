@@ -66,10 +66,17 @@ export function createCircle(dispatch, input_circle) {
   return postCircleCreate(dispatch, form_data)
 }
 
-export function selectCircle(circle_id) {
+export function selectCircle(selected_circle_id_list, selected_circle_id) {
+  if(selected_circle_id_list.indexOf(selected_circle_id) >= 0) {
+    selected_circle_id_list = selected_circle_id_list.filter(function(value){
+        return value != selected_circle_id;
+    });
+  } else {
+    selected_circle_id_list.push(selected_circle_id)
+  }
   return {
     type: SELECT_CIRCLE,
-    selected_circle_id: circle_id
+    selected_circle_id_list: selected_circle_id_list
   }
 }
 
@@ -98,13 +105,15 @@ export function fetchCircles(dispatch) {
   })
 }
 
-export function joinCircle(dispatch, circle_id) {
-  const post_data = {
-    'Circle': {
-      0: {
-        'circle_id': circle_id,
-        'join': true
-      }
+export function joinCircle(dispatch, circle_id_list) {
+  let post_data = {
+    Circle: {
+    }
+  }
+  for (var i = 0; i < circle_id_list.length; i++) {
+    post_data.Circle[i] = {
+      'circle_id': circle_id_list[i],
+      'join': true
     }
   }
   return axios.post('/setup/ajax_join_circle', post_data, {
