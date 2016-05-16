@@ -90,7 +90,7 @@ class SetupController extends AppController
         // Goal保存
         $res = $this->Goal->add(['Goal' => $this->request->data['Goal']]);
         if ($res) {
-            $msg = __("Created a goal.");
+            $this->Pnotify->outSuccess($msg = __("Created a goal."));
             $error = false;
         }
         else {
@@ -126,7 +126,6 @@ class SetupController extends AppController
                                                  null, $this->Circle->add_new_member_list);
             }
             $this->updateSetupStatusIfNotCompleted();
-            $msg = __("Added an action.");
             $error = false;
             $this->Pnotify->outSuccess($msg = __("Created a circle."));
         }
