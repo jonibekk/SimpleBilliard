@@ -19,7 +19,7 @@ export default class CircleSelect extends React.Component {
     }
     var circles = this.getCircles().map((circle) => {
       return (
-        <div className="setup-items-item pt_10px mt_12px bd-radius_14px"
+        <div className="setup-items-item pt_10px mt_12px bd-radius_14px setup-items-circle-item"
              key={circle.Circle.id}
              onClick={(e) => { this.props.onClickSelectCircle(this.props.circle.selected_circle_id_list, circle.Circle.id)}}>
           <div className="row">
@@ -46,8 +46,10 @@ export default class CircleSelect extends React.Component {
           <Link to="/setup/circle/image" className="btn btn-secondary setup-back-btn">{__('Back')}</Link>
           <Link to="/setup/circle/select"
                 className="btn btn-primary setup-next-btn pull-right"
-                disabled={!Boolean(this.props.circle.selected_circle_id_list.length)}
-                onClick={(e) => { this.props.onClickJoinCircle( this.props.circle.selected_circle_id_list) }}>
+                disabled={!Boolean(this.props.circle.can_join_circle)}
+                onClick={(e) => {
+                  this.props.onClickJoinCircle( this.props.circle.selected_circle_id_list) }
+                }>
             {__('Join a circle')}
           </Link>
         </div>

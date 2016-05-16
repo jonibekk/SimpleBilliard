@@ -159,6 +159,7 @@ class SetupController extends AppController
             else {
                 $msg = __("Leave a circle.");
             }
+            $this->Pnotify->outSuccess($msg);
             $error = false;
         }
         else {

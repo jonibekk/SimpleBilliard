@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { browserHistory } from 'react-router'
-import { SELECT_CIRCLE, FETCH_CIRCLES, JOIN_CIRCLE, CAN_SUBMIT_CIRCLE, CAN_NOT_SUBMIT_CIRCLE } from '../constants/ActionTypes'
+import { SELECT_CIRCLE, FETCH_CIRCLES, JOIN_CIRCLE, CAN_SUBMIT_CIRCLE, CAN_NOT_SUBMIT_CIRCLE, CAN_JOIN_CIRCLE, CAN_NOT_JOIN_CIRCLE } from '../constants/ActionTypes'
 
 export function toggleButtonClickable(circle) {
   return circle.circle_name && circle.circle_description ? enableSubmitButton() : disableSubmitButton()
@@ -8,13 +8,25 @@ export function toggleButtonClickable(circle) {
 
 export function enableSubmitButton() {
   return {
-    type: CAN_SUBMIT_CIRCLE,
+    type: CAN_SUBMIT_CIRCLE
   }
 }
 
 export function disableSubmitButton() {
   return {
-    type: CAN_NOT_SUBMIT_CIRCLE,
+    type: CAN_NOT_SUBMIT_CIRCLE
+  }
+}
+
+export function enableJoinCircleButton() {
+  return {
+    type: CAN_JOIN_CIRCLE
+  }
+}
+
+export function disableJoinCircleButton() {
+  return {
+    type: CAN_NOT_JOIN_CIRCLE
   }
 }
 
@@ -66,7 +78,7 @@ export function createCircle(dispatch, input_circle) {
   return postCircleCreate(dispatch, form_data)
 }
 
-export function selectCircle(selected_circle_id_list, selected_circle_id) {
+export function selectCircle(dispatch, selected_circle_id_list, selected_circle_id) {
   if(selected_circle_id_list.indexOf(selected_circle_id) >= 0) {
     selected_circle_id_list = selected_circle_id_list.filter(function(value){
         return value != selected_circle_id;
@@ -74,10 +86,15 @@ export function selectCircle(selected_circle_id_list, selected_circle_id) {
   } else {
     selected_circle_id_list.push(selected_circle_id)
   }
-  return {
+  if(selected_circle_id_list.length > 0) {
+    dispatch(enableJoinCircleButton())
+  } else {
+    dispatch(disableJoinCircleButton())
+  }
+  dispatch({
     type: SELECT_CIRCLE,
     selected_circle_id_list: selected_circle_id_list
-  }
+  })
 }
 
 export function fetchCircles(dispatch) {
@@ -106,6 +123,7 @@ export function fetchCircles(dispatch) {
 }
 
 export function joinCircle(dispatch, circle_id_list) {
+  dispatch(disableJoinCircleButton())
   let post_data = {
     Circle: {
     }
@@ -133,6 +151,7 @@ export function joinCircle(dispatch, circle_id_list) {
           delay: 4000,
           mouse_reset: false
       })
+      dispatch(enableJoinCircleButton())
     } else {
       document.location.href = "/setup"
     }
@@ -146,5 +165,6 @@ export function joinCircle(dispatch, circle_id_list) {
         delay: 4000,
         mouse_reset: false
     })
+    dispatch(enableJoinCircleButton())
   })
 }

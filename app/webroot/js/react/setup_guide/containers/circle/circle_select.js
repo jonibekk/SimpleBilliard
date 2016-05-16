@@ -11,7 +11,7 @@ function mapDispatchToProps(dispatch) {
   return {
     fetchCircles: () => { fetchCircles(dispatch) },
     onClickSelectCircle: (selected_circle_id_list, selected_circle_id) => {
-      dispatch(selectCircle(selected_circle_id_list, selected_circle_id))
+      selectCircle(dispatch, selected_circle_id_list, selected_circle_id)
     },
     onClickJoinCircle: (selected_circle_id_list) => { joinCircle(dispatch, selected_circle_id_list) }
   }
