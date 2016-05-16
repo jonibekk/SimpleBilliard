@@ -2778,11 +2778,11 @@ msgstr "残りのSTEP"
 
 #: View/Elements/gl_common_js.ctp:370
 msgid "Excellent!"
-msgstr ""
+msgstr "スバらしい"
 
 #: View/Elements/gl_common_js.ctp:371
 msgid "I have no iOS/Android devices"
-msgstr ""
+msgstr "を持っていない"
 
 #: View/Elements/header_home.ctp:25
 msgid "Enterprise SNS the most ever open for Goal"
