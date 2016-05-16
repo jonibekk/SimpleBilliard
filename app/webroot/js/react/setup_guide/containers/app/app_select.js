@@ -1,5 +1,4 @@
 import React from 'react'
-import { browserHistory } from 'react-router'
 import { connect } from 'react-redux'
 import { selectNoDevices } from '../../actions/app_actions'
 import AppSelect from '../../components/app/app_select'
@@ -11,8 +10,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     onClickNoDevices: () => {
-      selectNoDevices(dispatch)
-      browserHistory.push('/setup/')
+      selectNoDevices()
     }
   }
 }
