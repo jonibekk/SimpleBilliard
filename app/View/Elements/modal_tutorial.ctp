@@ -20,17 +20,17 @@
                 <div class="col-xxs-12 text-align_l setup-tutorial-texts">
                     <div id="tutorialText1" class="tutorial-text">
                         <div class="setup-tutorial-text-title"><?= __("Create a goal.") ?></div>
-                        <?= __("The goal that should be accomplished.") ?>
+                        <?= __("Make a good goal to discuss with your project members.") ?>
                     </div>
 
                     <div id="tutorialText2" class="tutorial-text">
-                        <div class="setup-tutorial-text-title"><?= __("Circle Conversations") ?></div>
-                        <?= __("If someone is added to a group conversation.") ?>
+                        <div class="setup-tutorial-text-title"><?= __("Have a common goal") ?></div>
+                        <?= __("Collaborate with achieving the goal.") ?>
                     </div>
 
                     <div id="tutorialText3" class="tutorial-text">
-                        <div class="setup-tutorial-text-title"><?= __("Messenger") ?></div>
-                        <?= __("Messenger is jus lie texting, but you don't have to pay for every message.") ?>
+                        <div class="setup-tutorial-text-title"><?= __("Action for your goal") ?></div>
+                        <?= __("Let's action to show your activity.") ?>
                     </div>
 
                     <p id="tutorialText4" class="tutorial-text">
