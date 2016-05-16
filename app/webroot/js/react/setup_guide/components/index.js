@@ -8,7 +8,7 @@ export default class Index extends React.Component {
   render() {
     return (
       <div className="setup-container col col-sm-8 col-sm-offset-2 panel">
-        <div className="setup-inner col col-xxs-10 col-xxs-offset-1 pb_8px pt_20px font_verydark">
+        <div className="setup-inner font_verydark">
           {this.props.children}
         </div>
       </div>

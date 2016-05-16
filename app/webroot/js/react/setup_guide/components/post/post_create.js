@@ -41,7 +41,7 @@ export default class PostCreate extends React.Component {
           {__("Set up Goalous")} <i className="fa fa-angle-right"></i> {__('Post to a circle')}
         </div>
         {validation_errors}
-        <div className="panel panel-default global-form" id="GlobalForms">
+        <div className="panel panel-default global-form setup-post-form" id="GlobalForms">
           <div className="tab-pane active" id="PostForm">
             <form id="PostDisplayForm"
                   className="form-feed-notify bv-form"
