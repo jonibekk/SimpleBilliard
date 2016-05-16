@@ -2540,7 +2540,7 @@ msgstr "フォロワー"
 
 #: View/Elements/gl_common_js.ctp:300;305;309;331 View/Setup/profile_add.ctp:6
 msgid "Set up Goalous"
-msgstr ""
+msgstr "セットアップ"
 
 #: View/Elements/gl_common_js.ctp:301;310;364
 msgid "Do an action"
@@ -2743,7 +2743,7 @@ msgstr "あなたの顔写真"
 
 #: View/Elements/gl_common_js.ctp:357
 msgid "Your self-info"
-msgstr ""
+msgstr "あなたの自己紹介"
 
 #: View/Elements/gl_common_js.ctp:358 View/Evaluations/view.ctp:225;511
 #: View/Setup/profile_add.ctp:110
