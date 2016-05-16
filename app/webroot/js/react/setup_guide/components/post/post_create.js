@@ -94,7 +94,10 @@ export default class PostCreate extends React.Component {
           </div>
         </div>
         <div>
-          <Link to="/setup/post/image" className="btn btn-secondary setup-back-btn-full">{__('Back')}</Link>
+          <Link className="btn btn-secondary setup-back-btn-full"
+                to={this.props.post.circles.length ? "/setup/post/circle_select" : "/setup/post/image"} >
+            {__('Back')}
+          </Link>
         </div>
       </div>
     )

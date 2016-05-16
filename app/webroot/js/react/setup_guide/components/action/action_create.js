@@ -89,7 +89,10 @@ export default class ActionCreate extends React.Component {
           </div>
         </div>
         <div>
-          <Link to="/setup/post/image" className="btn btn-secondary setup-back-btn-full">{__('Back')}</Link>
+          <Link className="btn btn-secondary setup-back-btn-full"
+                to={this.props.action.goals.length ? "/setup/action/goal_select" : "/setup/action/image"}>
+            {__('Back')}
+          </Link>
         </div>
       </div>
     )

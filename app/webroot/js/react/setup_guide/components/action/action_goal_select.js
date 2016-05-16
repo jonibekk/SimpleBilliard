@@ -44,7 +44,7 @@ export default class ActionGoalSelect extends React.Component {
           <Link to="/setup/goal/create">{__('Create another goal')} <i className="fa fa-angle-right" aria-hidden="true"></i> </Link>
         </div>
         <div>
-          <Link to="/setup/" className="btn btn-secondary setup-back-btn-full">{__('Back')}</Link>
+          <Link to="/setup/action/image" className="btn btn-secondary setup-back-btn-full">{__('Back')}</Link>
         </div>
       </div>
     )

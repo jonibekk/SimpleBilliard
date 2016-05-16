@@ -83,7 +83,10 @@ export default class CircleCreate extends React.Component {
             </div>
           </div>
           <div>
-            <Link to="/setup/circle/select" className="btn btn-secondary setup-back-btn">{__('Back')}</Link>
+            <Link className="btn btn-secondary setup-back-btn"
+                  to={this.props.circle.circles.length ? "/setup/circle/select" : "/setup/circle/image"}>
+              {__('Back')}
+            </Link>
             <input type="submit" className="btn btn-primary setup-next-btn pull-right" defaultValue={__("Create")} disabled={!Boolean(this.props.circle.can_click_submit_button)} />
           </div>
         </form>
