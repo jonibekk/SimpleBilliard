@@ -64,7 +64,7 @@ export default class ProfileAdd extends React.Component {
               </div>
             </div>
           </div>
-          <div className="panel-body">
+          <div className="panel-body setup-profile-form">
             <span className="help-block">{__("Your self-info")}</span>
             <textarea ref="comment" className="form-control addteam_input-design setup-guide-add-profile-textarea"
                       rows="6" name="comment" cols="5" maxLength="10000"
