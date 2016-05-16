@@ -12,12 +12,10 @@ export function selectNoDevices(dispatch) {
   })
   .then(function (response) {
     if(response.data.error) {
-      console.log(response)
     } else {
-      document.location.href = "/setup"
     }
   })
   .catch(function (response) {
-    console.log(response)
   })
+  document.location.href = "/setup"
 }
