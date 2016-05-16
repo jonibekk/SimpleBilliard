@@ -366,9 +366,13 @@ echo $this->Html->script('vendor/angular/ng-infinite-scroll.min');
           'Share your topic with a circle.': "<?= __('Share your topic with a circle.') ?>",
           'STEPS LEFT': "<?= __('STEPS LEFT') ?>",
           'Create a circle': "<?= __('Create a circle') ?>",
-          'Completed': "<? __('Completed') ?>",
-          'Excellent!': "<? __('Excellent!') ?>",
-          'I have no iOS/Android devices': "<?= __('I have no iOS/Android devices') ?>"
+          'Completed': "<?= __('Completed') ?>",
+          'Excellent!': "<?= __('Excellent!') ?>",
+          'I have no iOS/Android devices': "<?= __('I have no iOS/Android devices') ?>",
+          'Make a good goal to discuss with your project members.': "<?= __('Make a good goal to discuss with your project members.') ?>",
+          'Have a common goal': "<?= __('Have a common goal') ?>",
+          'Action for your goal': "<?= __('Action for your goal') ?>",
+          "Let's action to show your activity.": "<?= __("Let's action to show your activity.") ?>"
         },
         notify_auto_update_sec: <?=NOTIFY_AUTO_UPDATE_SEC?>,
         new_notify_cnt: <?=isset($new_notify_cnt)?$new_notify_cnt:0?>,
