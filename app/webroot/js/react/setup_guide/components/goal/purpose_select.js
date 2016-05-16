@@ -9,20 +9,20 @@ export default class PurposeSelect extends React.Component {
     return ([
       {
         id: 1,
-        pic: '/img/setup/sample_men.png',
+        pic: '/img/setup/1_dosome.png',
         name: __("Do something with team members"),
         explain: __("You do something worthwhile.")
       },
       {
         id: 2,
-        pic: '/img/setup/sample_men.png',
+        pic: '/img/setup/2_openyour.png',
         name: __("Open yourself"),
         explain: __("Increasing people who know you.")
       },
       {
         id: 3,
-        pic: '/img/setup/sample_men.png',
-        name: __("Give something to team members"),
+        pic: '/img/setup/3_improve.png',
+        name: __("Improve your orgainization"),
         explain: __("Be happy everyone.")
       }
     ])
@@ -32,7 +32,7 @@ export default class PurposeSelect extends React.Component {
       return (
         <div className="setup-items-item pt_10px mt_16px bd-radius_14px"
              key={purpose.id}
-             onClick={(e) => { this.props.onClickSelectPurpose(purpose.name) }}>
+             onClick={(e) => { this.props.onClickSelectPurpose(purpose) }}>
           <div className="setup-items-item-pic pull-left mt_3px ml_2px">
             <img src={purpose.pic} className="setup-items-item-pic-img" alt='' />
           </div>
@@ -51,10 +51,11 @@ export default class PurposeSelect extends React.Component {
         <div className="setup-pankuzu font_18px">
           {__("Set up Goalous")} <i className="fa fa-angle-right" aria-hidden="true"></i> {__('Create a goal')}
         </div>
+        <p className="setup-items-header-comment">{__("Please choose one.")}</p>
         <div className="setup-items">
           {purposes}
         </div>
-        <div className="mb_13px">
+        <div className="mb_12px">
           <Link to="/setup/goal/create">{__('Create your own')} <i className="fa fa-angle-right" aria-hidden="true"></i> </Link>
         </div>
         <div>

@@ -3,12 +3,10 @@ import axios from 'axios'
 import { browserHistory } from 'react-router'
 import { CREATE_GOAL, SELECT_PURPOSE, SELECT_GOAL } from '../constants/ActionTypes';
 
-export function selectPurpose(purpose_name) {
+export function selectPurpose(purpose) {
   return {
     type: SELECT_PURPOSE,
-    selected_purpose: {
-      name: purpose_name
-    }
+    selected_purpose: purpose
   }
 }
 

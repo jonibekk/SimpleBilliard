@@ -37,7 +37,7 @@ export default class ActionGoalSelect extends React.Component {
         <div className="setup-items">
           {goals}
         </div>
-        <div className="mb_13px">
+        <div className="mb_12px">
           <Link to="/setup/goal/create">{__('Create another goal')} <i className="fa fa-angle-right" aria-hidden="true"></i> </Link>
         </div>
         <div>
