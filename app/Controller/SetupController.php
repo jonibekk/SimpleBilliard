@@ -128,7 +128,7 @@ class SetupController extends AppController
             $this->updateSetupStatusIfNotCompleted();
             $msg = __("Added an action.");
             $error = false;
-            $this->Pnotify->outSuccess($msg = __("Added an action."));
+            $this->Pnotify->outSuccess($msg = __("Created a circle."));
         }
         else {
             $msg = __("Failed to create a circle.");
