@@ -54,7 +54,7 @@ export default class AppSelect extends React.Component {
                             </div>
                         </div>
                         <div className="setup-items-item-explain pull-left">
-                            <p className="font_bold font_verydark">I have no iOS/Android devices</p>
+                            <p className="font_bold font_verydark">{__('I have no iOS/Android devices')}</p>
                             <p className="font_11px font_lightgray">{__("If you don't have a mobile device.")}</p>
                         </div>
                         <div className="setup-items-item-to-right pull-right mt_12px mr_5px">
