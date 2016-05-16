@@ -377,7 +377,7 @@ echo $this->Html->script('vendor/angular/ng-infinite-scroll.min');
           "Please choose one.": "<?= __("Please choose one.") ?>",
           "Writing working columns": "<?= __("Writing working columns") ?>",
           "Sharing your lovely foods": "<?= __("Sharing your lovely foods") ?>",
-          "Writing your insistence": "<?= __("Writing your insistence") ?>"
+          "Writing your insistence": "<?= __("Writing your insistence") ?>",
           "Embodying the orgainization motto": "<?= __("Embodying the orgainization motto") ?>",
           "Prasing someone": "<?= __("Prasing someone") ?>",
           "Including your orgainization improvements": "<?= __("Including your orgainization improvements") ?>"
