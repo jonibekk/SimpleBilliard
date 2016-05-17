@@ -341,13 +341,12 @@ class GoalTest extends GoalousTestCase
                 'start_value'      => 0,
                 'start_date'       => $this->start_date_format,
                 'end_date'         => $this->end_date_format,
-                'img_url'=>'http://127.0.0.1/img/setup/1_1_conversation.png',
+                'img_url'          => 'https://placeholdit.imgix.net/~text?txtsize=14&txt=test&w=1&h=1',
             ]
         ];
         $res = $this->Goal->add($data);
         $this->assertTrue($res);
     }
-
 
     function testAddNewSuccessUnitValue()
     {
