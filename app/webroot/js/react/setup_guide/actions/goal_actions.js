@@ -10,25 +10,24 @@ export function selectPurpose(purpose) {
   }
 }
 
-export function selectGoal(goal_name) {
+export function selectGoal(goal) {
   return {
     type: SELECT_GOAL,
-    selected_goal: {
-      name: goal_name
-    }
+    selected_goal: goal
   }
 }
 
-export function createGoal(refs) {
+export function createGoal(goal) {
   let form_data = new FormData()
-  form_data.append("photo", ReactDOM.findDOMNode(refs.photo).files[0]);
-  form_data.append("Goal[name]", ReactDOM.findDOMNode(refs.name).value);
-  form_data.append("Goal[value_unit]", ReactDOM.findDOMNode(refs.value_unit).value);
-  form_data.append("Goal[start_value]", ReactDOM.findDOMNode(refs.start_value).value);
-  form_data.append("Goal[target_value]", ReactDOM.findDOMNode(refs.target_value).value);
-  form_data.append("Goal[start_date]", cake.current_term_start_date_format)
-  form_data.append("Goal[end_date]", ReactDOM.findDOMNode(refs.end_date).value);
-  form_data.append("Purpose[name]", ReactDOM.findDOMNode(refs.purpose_name).value);
+  form_data.append("photo", goal.photo)
+  form_data.append("Goal[name]", goal.name)
+  form_data.append("Goal[value_unit]", goal.value_unit)
+  form_data.append("Goal[start_value]", goal.start_value)
+  form_data.append("Goal[target_value]", goal.target_value)
+  form_data.append("Goal[start_date]", goal.start_date)
+  form_data.append("Goal[end_date]", goal.end_date)
+  form_data.append("Goal[img_url]", goal.img_url)
+  form_data.append("Purpose[name]", goal.purpose_name)
   axios.post('/setup/ajax_create_goal', form_data, {
     timeout: 10000,
     headers: {

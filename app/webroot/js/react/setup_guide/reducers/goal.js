@@ -2,9 +2,7 @@ import { CREATE_GOAL, SELECT_PURPOSE, SELECT_GOAL } from '../constants/ActionTyp
 
 const initialState = {
   selected_purpose: {},
-  selected_goal: {
-    name: ''
-  },
+  selected_goal: {},
   input_goal: {}
 }
 

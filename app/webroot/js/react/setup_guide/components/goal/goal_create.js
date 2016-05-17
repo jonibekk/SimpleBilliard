@@ -6,6 +6,19 @@ export default class GoalCreate extends React.Component {
   constructor(props) {
     super(props);
   }
+  getInputDomData() {
+    return {
+      photo: ReactDOM.findDOMNode(this.refs.photo).files[0],
+      name: ReactDOM.findDOMNode(this.refs.name).value.trim(),
+      value_unit: ReactDOM.findDOMNode(this.refs.value_unit).value,
+      start_value: ReactDOM.findDOMNode(this.refs.start_value).value,
+      target_value: ReactDOM.findDOMNode(this.refs.target_value).value,
+      start_date: cake.current_term_start_date_format,
+      end_date: ReactDOM.findDOMNode(this.refs.end_date).value,
+      purpose_name: ReactDOM.findDOMNode(this.refs.purpose_name).value,
+      img_url: this.props.goal.selected_goal.pic_url
+    }
+  }
   render() {
     const unit_list = cake.data.kr_value_unit_list
     return (
@@ -13,7 +26,14 @@ export default class GoalCreate extends React.Component {
         <div className="setup-pankuzu font_18px">
           {__("Set up Goalous")} <i className="fa fa-angle-right" aria-hidden="true"></i> {__("Create a goal")}
         </div>
-        <form onSubmit={(e) => {this.props.onSubmit(e, this.refs)}} className="form-horizontal setup-goal-create-form form-feed-notify" encType="multipart/form-data" method="post" acceptCharset="utf-8">
+        <form className="form-horizontal setup-goal-create-form form-feed-notify"
+              encType="multipart/form-data"
+              method="post"
+              acceptCharset="utf-8"
+              onSubmit={(e) => {
+                e.preventDefault()
+                this.props.onSubmit(this.getInputDomData())
+              }}>
           <div className="panel-body">
             <span className="help-block">{__("Purpose")}</span>
             <textarea name="purpose_name" ref="purpose_name" defaultValue={this.props.goal.selected_purpose.name} className="form-control addteam_input-design" required="required" rows="1" cols="30"></textarea>
@@ -59,7 +79,11 @@ export default class GoalCreate extends React.Component {
             <div className="form-inline">
               <div className="fileinput_small fileinput-new" data-provides="fileinput">
                 <div className="fileinput-preview thumbnail nailthumb-container photo-design form-group setup-guide-file-preview" data-trigger="fileinput">
-                  <i className="fa fa-plus photo-plus-large"></i>
+                  <i className="fa fa-plus photo-plus-large"
+                     style={{display: this.props.goal.selected_goal.pic_url ? 'none' : 'block'}}>
+                  </i>
+                  <img src={this.props.goal.selected_goal.pic_url}
+                       style={{display: this.props.goal.selected_goal.pic_url ? 'block' : 'none'}} />
                 </div>
                 <div className="form-group">
                   <span className="btn btn-default btn-file ml_16px setup-guide-file-select-btn">

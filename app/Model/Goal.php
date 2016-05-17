@@ -345,13 +345,13 @@ class Goal extends AppModel
             $data['Collaborator'][0]['type'] = Collaborator::TYPE_OWNER;
         }
         // setting default image if default image is chosen and image is not selected.
-        if (viaIsSet($data['Goal']['img_url']) || !empty($data['Goal']['img_url'])
+        if ((viaIsSet($data['Goal']['img_url']) || !empty($data['Goal']['img_url']))
             && (!viaIsSet($data['Goal']['photo']) || empty($data['Goal']['photo']))
         ) {
             $data['Goal']['photo'] = $data['Goal']['img_url'];
             unset($data['Goal']['img_url']);
         }
-        
+
         $this->create();
         $res = $this->saveAll($data);
         Cache::delete($this->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');

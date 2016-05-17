@@ -195,6 +195,7 @@ echo $this->Html->script('vendor/angular/ng-infinite-scroll.min');
             ogp_info: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_ogp_info']) ?>",
             regenerate_recovery_code: "<?= $this->Html->url(['controller' => 'users', 'action' => 'ajax_regenerate_recovery_code']) ?>",
             circle_setting: "<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_change_setting']) ?>",
+            route_url: "<?= FULL_BASE_URL ?>"
         },
         data: {
             a: <?=isset($select2_default)?$select2_default:"[]"?>,
