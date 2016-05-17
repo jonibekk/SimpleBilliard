@@ -344,6 +344,14 @@ class Goal extends AppModel
             $data['Collaborator'][0]['team_id'] = $this->current_team_id;
             $data['Collaborator'][0]['type'] = Collaborator::TYPE_OWNER;
         }
+        // setting default image if default image is chosen and image is not selected.
+        if (viaIsSet($data['Goal']['img_url']) || !empty($data['Goal']['img_url'])
+            && (!viaIsSet($data['Goal']['photo']) || empty($data['Goal']['photo']))
+        ) {
+            $data['Goal']['photo'] = $data['Goal']['img_url'];
+            unset($data['Goal']['img_url']);
+        }
+        
         $this->create();
         $res = $this->saveAll($data);
         Cache::delete($this->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
@@ -1792,19 +1800,19 @@ class Goal extends AppModel
 
     public function getGoalsForSetupBy($user_id)
     {
-      $start_date = $this->Team->EvaluateTerm->getCurrentTermData()['start_date'];
-      $end_date = $this->Team->EvaluateTerm->getCurrentTermData()['end_date'];
-      $options = [
-          'conditions' => [
-              'Goal.user_id'     => $user_id,
-              'Goal.team_id'     => $this->current_team_id,
-              'Goal.end_date >=' => $start_date,
-              'Goal.end_date <=' => $end_date,
-          ],
-          'fields' => [
-            'Goal.id', 'Goal.name', 'Goal.photo_file_name'
-          ]
-      ];
-      return $this->find('all', $options);
+        $start_date = $this->Team->EvaluateTerm->getCurrentTermData()['start_date'];
+        $end_date = $this->Team->EvaluateTerm->getCurrentTermData()['end_date'];
+        $options = [
+            'conditions' => [
+                'Goal.user_id'     => $user_id,
+                'Goal.team_id'     => $this->current_team_id,
+                'Goal.end_date >=' => $start_date,
+                'Goal.end_date <=' => $end_date,
+            ],
+            'fields'     => [
+                'Goal.id', 'Goal.name', 'Goal.photo_file_name'
+            ]
+        ];
+        return $this->find('all', $options);
     }
 }
