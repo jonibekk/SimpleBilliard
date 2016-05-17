@@ -79,7 +79,7 @@ export default class Top extends React.Component {
         <div className="setup-status">
           <div className="setup-status-wrapper-progress col">
             <div className="setup-status-progress progress">
-              <div className="progress-bar progress-bar-info" role="progressbar"
+              <div className="progress-bar setup-progress-bar-info" role="progressbar"
                    aria-valuenow="50" aria-valuemin="0"
                    aria-valuemax="100" style={{width: String(this.props.top.setup_complete_percent) + '%'}}>
                 <span className="ml_12px">{this.props.top.setup_complete_percent}%</span>
