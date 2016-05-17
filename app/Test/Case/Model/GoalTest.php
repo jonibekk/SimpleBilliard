@@ -328,6 +328,27 @@ class GoalTest extends GoalousTestCase
         $this->assertTrue($res);
     }
 
+    function testAddNewSuccessWithImgUrl()
+    {
+        $this->setDefault();
+        $data = [
+            'Goal' => [
+                'purpose_id'       => 1,
+                'goal_category_id' => 1,
+                'name'             => 'test',
+                'value_unit'       => 0,
+                'target_value'     => 100,
+                'start_value'      => 0,
+                'start_date'       => $this->start_date_format,
+                'end_date'         => $this->end_date_format,
+                'img_url'=>'http://127.0.0.1/img/setup/1_1_conversation.png',
+            ]
+        ];
+        $res = $this->Goal->add($data);
+        $this->assertTrue($res);
+    }
+
+
     function testAddNewSuccessUnitValue()
     {
         $this->setDefault();
