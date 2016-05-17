@@ -2006,7 +2006,7 @@ msgstr "メンバーアクティブ状態"
 #: View/Elements/header_logged_in_right.ctp:44
 #: View/Elements/my_goals_area.ctp:54 View/Elements/Feed/common_form.ctp:93
 msgid "Create a goal"
-msgstr "ゴールを作成"
+msgstr "ゴールを作成する"
 
 #: Model/Thread.php:30
 msgid "Feedback"
@@ -2567,11 +2567,11 @@ msgstr "次へ"
 
 #: View/Elements/gl_common_js.ctp:310;357
 msgid "Login from mobile app"
-msgstr "スマホアプリからログインする"
+msgstr "スマホアプリでログイン"
 
 #: View/Elements/gl_common_js.ctp:311
 msgid "Install Android app"
-msgstr "Androidアプリをインストール"
+msgstr "Androidアプリ"
 
 #: View/Elements/gl_common_js.ctp:312
 msgid "Requires Android 4.4 or later."
@@ -2579,7 +2579,7 @@ msgstr "4.4以上のOSバージョンの方"
 
 #: View/Elements/gl_common_js.ctp:313
 msgid "Install iOS app"
-msgstr "iOSアプリをインストール"
+msgstr "iOSアプリ"
 
 #: View/Elements/gl_common_js.ctp:314
 msgid "Requires iOS 8.4 or later."
@@ -2653,7 +2653,7 @@ msgstr "画像を再選択"
 
 #: View/Elements/gl_common_js.ctp:328
 msgid "Create"
-msgstr ""
+msgstr "作成する"
 
 #: View/Elements/gl_common_js.ctp:333
 #: View/Elements/Goal/modal_add_key_result.ctp:124
@@ -2753,7 +2753,7 @@ msgstr "顔写真と自己紹介を登録しよう"
 
 #: View/Elements/gl_common_js.ctp:358
 msgid "Install Goalous's iOS and Android apps."
-msgstr "iOSかAndroidのアプリをインストール"
+msgstr "iOS/Androidアプリをインストール"
 
 #: View/Elements/gl_common_js.ctp:360
 msgid "Create or collaborate with a goal."
@@ -2781,55 +2781,55 @@ msgstr "スバらしい"
 
 #: View/Elements/gl_common_js.ctp:371
 msgid "I have no iOS/Android devices"
-msgstr "を持っていない"
+msgstr "スマホを持っていない"
 
 #: View/Elements/gl_common_js.ctp:372 View/Elements/modal_tutorial.ctp:23
 msgid "Make a good goal to discuss with your project members."
-msgstr ""
+msgstr "メンバーとともに価値あるゴールを作ろう。"
 
 #: View/Elements/gl_common_js.ctp:373 View/Elements/modal_tutorial.ctp:27
 msgid "Have a common goal"
-msgstr ""
+msgstr "ゴールを共有する"
 
 #: View/Elements/gl_common_js.ctp:374 View/Elements/modal_tutorial.ctp:32
 msgid "Action for your goal"
-msgstr ""
+msgstr "ゴールにアクションする"
 
 #: View/Elements/gl_common_js.ctp:375 View/Elements/modal_tutorial.ctp:33
 msgid "Let's action to show your activity."
-msgstr ""
+msgstr "活動内容を写真でみんなにシェアしよう。"
 
 #: View/Elements/gl_common_js.ctp:376
 msgid "Improve your orgainization"
-msgstr ""
+msgstr "組織に〇〇〇"
 
 #: View/Elements/gl_common_js.ctp:377
 msgid "Please choose one."
-msgstr ""
+msgstr "どれかを選ぼう。"
 
 #: View/Elements/gl_common_js.ctp:378
 msgid "Writing working columns"
-msgstr ""
+msgstr "シゴトのポリシーを書く"
 
 #: View/Elements/gl_common_js.ctp:379
 msgid "Sharing your lovely foods"
-msgstr ""
+msgstr "好きな食べ物を共有する"
 
 #: View/Elements/gl_common_js.ctp:380
 msgid "Writing your insistence"
-msgstr ""
+msgstr "自分の改善点を共有する"
 
 #: View/Elements/gl_common_js.ctp:381
 msgid "Embodying the orgainization motto"
-msgstr ""
+msgstr "組織の行動指針を体現する"
 
 #: View/Elements/gl_common_js.ctp:382
 msgid "Prasing someone"
-msgstr ""
+msgstr "誰かをホメる"
 
 #: View/Elements/gl_common_js.ctp:383
 msgid "Including your orgainization improvements"
-msgstr ""
+msgstr "組織改善案を共有する"
 
 #: View/Elements/header_home.ctp:25
 msgid "Enterprise SNS the most ever open for Goal"
@@ -3223,7 +3223,7 @@ msgstr "ゴールを作成する"
 
 #: View/Elements/modal_tutorial.ctp:28
 msgid "Collaborate with achieving the goal."
-msgstr ""
+msgstr "ゴール達成のために共有しよう。"
 
 #: View/Elements/modal_tutorial.ctp:37
 msgid "Make your team better by Goalous."
