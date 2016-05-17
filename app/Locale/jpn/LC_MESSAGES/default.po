@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2016-05-16 17:07+0900\n"
-"PO-Revision-Date: 2016-05-16 17:08+0900\n"
+"POT-Creation-Date: 2016-05-17 12:33+0900\n"
+"PO-Revision-Date: 2016-05-17 12:33+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -87,11 +87,11 @@ msgstr "ゴールを選択する"
 msgid "Invalid screen transition."
 msgstr "不正な画面遷移です。"
 
-#: Controller/CirclesController.php:36
+#: Controller/CirclesController.php:36 Controller/SetupController.php:130
 msgid "Created a circle."
 msgstr "サークルを作成しました。"
 
-#: Controller/CirclesController.php:39 Controller/SetupController.php:134
+#: Controller/CirclesController.php:39 Controller/SetupController.php:133
 msgid "Failed to create a circle."
 msgstr "サークルの作成に失敗しました。"
 
@@ -135,11 +135,11 @@ msgstr "チーム全体サークルは削除できません。"
 msgid "Deleted a circle."
 msgstr "サークルを削除しました。"
 
-#: Controller/CirclesController.php:252 Controller/SetupController.php:157
+#: Controller/CirclesController.php:252 Controller/SetupController.php:156
 msgid "Join a circle."
 msgstr "サークルに参加しました。"
 
-#: Controller/CirclesController.php:255 Controller/SetupController.php:160
+#: Controller/CirclesController.php:255 Controller/SetupController.php:159
 msgid "Leave a circle."
 msgstr "サークルから外れました。"
 
@@ -497,8 +497,7 @@ msgstr "C"
 msgid "Failed to add an action."
 msgstr "アクションの追加に失敗しました。"
 
-#: Controller/GoalsController.php:1277
-#: Controller/SetupController.php:129;131;314
+#: Controller/GoalsController.php:1277 Controller/SetupController.php:314
 msgid "Added an action."
 msgstr "アクションを追加しました。"
 
@@ -2784,6 +2783,54 @@ msgstr "スバらしい"
 msgid "I have no iOS/Android devices"
 msgstr "を持っていない"
 
+#: View/Elements/gl_common_js.ctp:372 View/Elements/modal_tutorial.ctp:23
+msgid "Make a good goal to discuss with your project members."
+msgstr ""
+
+#: View/Elements/gl_common_js.ctp:373 View/Elements/modal_tutorial.ctp:27
+msgid "Have a common goal"
+msgstr ""
+
+#: View/Elements/gl_common_js.ctp:374 View/Elements/modal_tutorial.ctp:32
+msgid "Action for your goal"
+msgstr ""
+
+#: View/Elements/gl_common_js.ctp:375 View/Elements/modal_tutorial.ctp:33
+msgid "Let's action to show your activity."
+msgstr ""
+
+#: View/Elements/gl_common_js.ctp:376
+msgid "Improve your orgainization"
+msgstr ""
+
+#: View/Elements/gl_common_js.ctp:377
+msgid "Please choose one."
+msgstr ""
+
+#: View/Elements/gl_common_js.ctp:378
+msgid "Writing working columns"
+msgstr ""
+
+#: View/Elements/gl_common_js.ctp:379
+msgid "Sharing your lovely foods"
+msgstr ""
+
+#: View/Elements/gl_common_js.ctp:380
+msgid "Writing your insistence"
+msgstr ""
+
+#: View/Elements/gl_common_js.ctp:381
+msgid "Embodying the orgainization motto"
+msgstr ""
+
+#: View/Elements/gl_common_js.ctp:382
+msgid "Prasing someone"
+msgstr ""
+
+#: View/Elements/gl_common_js.ctp:383
+msgid "Including your orgainization improvements"
+msgstr ""
+
 #: View/Elements/header_home.ctp:25
 msgid "Enterprise SNS the most ever open for Goal"
 msgstr "最強にオープンな社内SNS"
@@ -3174,25 +3221,8 @@ msgstr "%s人に共有しました"
 msgid "Create a goal."
 msgstr "ゴールを作成する"
 
-#: View/Elements/modal_tutorial.ctp:23
-msgid "The goal that should be accomplished."
-msgstr ""
-
-#: View/Elements/modal_tutorial.ctp:27
-msgid "Circle Conversations"
-msgstr ""
-
 #: View/Elements/modal_tutorial.ctp:28
-msgid "If someone is added to a group conversation."
-msgstr ""
-
-#: View/Elements/modal_tutorial.ctp:32
-msgid "Messenger"
-msgstr ""
-
-#: View/Elements/modal_tutorial.ctp:33
-msgid ""
-"Messenger is jus lie texting, but you don't have to pay for every message."
+msgid "Collaborate with achieving the goal."
 msgstr ""
 
 #: View/Elements/modal_tutorial.ctp:37
