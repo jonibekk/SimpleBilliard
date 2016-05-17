@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import { browserHistory } from 'react-router'
 import { Link } from 'react-router'
 
 export default class GoalSelect extends React.Component {
@@ -10,17 +11,17 @@ export default class GoalSelect extends React.Component {
       return ([
         {
           id: 1,
-          pic: '/img/setup/1_1_conversation.png',
+          pic_url: cake.url.route_url + '/img/setup/1_1_conversation.png',
           name: __("Talk with team members")
         },
         {
           id: 2,
-          pic: '/img/setup/1_2_lunch.png',
+          pic_url: cake.url.route_url + '/img/setup/1_2_lunch.png',
           name: __("Lunch with team members")
         },
         {
           id: 3,
-          pic: '/img/setup/1_3_complaint.png',
+          pic_url: cake.url.route_url + '/img/setup/1_3_complaint.png',
           name: __("Hear complaints of team members")
         }
       ])
@@ -28,17 +29,17 @@ export default class GoalSelect extends React.Component {
       return ([
         {
           id: 4,
-          pic: '/img/setup/2_1_column.png',
+          pic_url: cake.url.route_url + '/img/setup/2_1_column.png',
           name: __("Writing working columns")
         },
         {
           id: 5,
-          pic: '/img/setup/2_2_food.png',
+          pic_url: cake.url.route_url + '/img/setup/2_2_food.png',
           name: __("Sharing your lovely foods")
         },
         {
           id: 6,
-          pic: '/img/setup/2_3_idea.png',
+          pic_url: cake.url.route_url + '/img/setup/2_3_idea.png',
           name: __("Writing your insistence")
         }
       ])
@@ -46,17 +47,17 @@ export default class GoalSelect extends React.Component {
       return ([
         {
           id: 7,
-          pic: '/img/setup/3_1_spirit.png',
+          pic_url: cake.url.route_url + '/img/setup/3_1_spirit.png',
           name: __("Embodying the orgainization motto")
         },
         {
           id: 8,
-          pic: '/img/setup/3_2_prise.png',
+          pic_url: cake.url.route_url + '/img/setup/3_2_prise.png',
           name: __("Prasing someone")
         },
         {
           id: 9,
-          pic: '/img/setup/3_3_improve.png',
+          pic_url: cake.url.route_url + '/img/setup/3_3_improve.png',
           name: __("Including your orgainization improvements")
         }
       ])
@@ -67,9 +68,12 @@ export default class GoalSelect extends React.Component {
       return (
         <div className="setup-items-item pt_10px mt_16px bd-radius_14px"
              key={goal.id}
-             onClick={(e) => { this.props.onClickSelectGoal(goal.name) }}>
+             onClick={(e) => {
+               this.props.onClickSelectGoal(goal)
+               browserHistory.push('/setup/goal/create')
+             }}>
           <div className="setup-items-item-pic pull-left mt_3px ml_2px">
-            <img src={goal.pic} className="setup-items-item-pic-img" alt='' />
+            <img src={goal.pic_url} className="setup-items-item-pic-img" alt='' />
           </div>
           <div className="setup-items-item-explain pull-left">
             <p className="font_bold font_verydark">{goal.name}</p>

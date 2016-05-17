@@ -9,10 +9,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onSubmit: (event, refs) => {
-      event.preventDefault()
-      dispatch(createGoal(refs))
-    }
+    onSubmit: (goal) => { dispatch(createGoal(goal)) }
   }
 }
 
