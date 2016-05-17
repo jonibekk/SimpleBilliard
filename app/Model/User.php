@@ -1142,7 +1142,7 @@ class User extends AppModel
                 if ($this->my_uid != $member['User']['id']) {
                     $users[] = [
                         'id'    => 'user_' . $member['User']['id'],
-                        'text'  => h($member['User']['display_username'] . " (" . $member['User']['roman_username'] . ")"),
+                        'text'  => $member['User']['display_username'] . " (" . $member['User']['roman_username'] . ")",
                         'image' => $Upload->uploadUrl($member, 'User.photo', ['style' => 'small']),
                     ];
                 }
@@ -1153,7 +1153,7 @@ class User extends AppModel
             }
             $res[] = [
                 'id'    => 'group_' . $group['Group']['id'],
-                'text'  => h($group['Group']['name'] . ' (' . strval(__('%1$s member', count($users))) . ')'),
+                'text'  => $group['Group']['name'] . ' (' . strval(__('%1$s member', count($users))) . ')',
                 'users' => $users,
             ];
         }
@@ -1364,7 +1364,7 @@ class User extends AppModel
         foreach ($users as $val) {
             $data = [];
             $data['id'] = 'user_' . $val['User']['id'];
-            $data['text'] = h($val['User']['display_username'] . " (" . $val['User']['roman_username'] . ")");
+            $data['text'] = $val['User']['display_username'] . " (" . $val['User']['roman_username'] . ")";
             $data['image'] = $Upload->uploadUrl($val, 'User.photo', ['style' => 'small']);
             $res[] = $data;
         }
