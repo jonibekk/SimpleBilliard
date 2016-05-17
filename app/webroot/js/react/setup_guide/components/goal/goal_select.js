@@ -6,23 +6,61 @@ export default class GoalSelect extends React.Component {
     super(props);
   }
   goalList() {
-    return ([
-      {
-        id: 1,
-        pic: '/img/setup/sample_men.png',
-        name: __("Talk with team members")
-      },
-      {
-        id: 2,
-        pic: '/img/setup/sample_men.png',
-        name: __("Lunch with team members")
-      },
-      {
-        id: 3,
-        pic: '/img/setup/sample_men.png',
-        name: __("Hear complaints of team members")
-      }
-    ])
+    if(this.props.goal.selected_purpose.id == 1) {
+      return ([
+        {
+          id: 1,
+          pic: '/img/setup/1_1_conversation.png',
+          name: __("Talk with team members")
+        },
+        {
+          id: 2,
+          pic: '/img/setup/1_2_lunch.png',
+          name: __("Lunch with team members")
+        },
+        {
+          id: 3,
+          pic: '/img/setup/1_3_complaint.png',
+          name: __("Hear complaints of team members")
+        }
+      ])
+    } else if (this.props.goal.selected_purpose.id == 2) {
+      return ([
+        {
+          id: 4,
+          pic: '/img/setup/2_1_column.png',
+          name: __("Writing working columns")
+        },
+        {
+          id: 5,
+          pic: '/img/setup/2_2_food.png',
+          name: __("Sharing your lovely foods")
+        },
+        {
+          id: 6,
+          pic: '/img/setup/2_3_idea.png',
+          name: __("Writing your insistence")
+        }
+      ])
+    } else {
+      return ([
+        {
+          id: 7,
+          pic: '/img/setup/3_1_spirit.png',
+          name: __("Embodying the orgainization motto")
+        },
+        {
+          id: 8,
+          pic: '/img/setup/3_2_prise.png',
+          name: __("Prasing someone")
+        },
+        {
+          id: 9,
+          pic: '/img/setup/3_3_improve.png',
+          name: __("Including your orgainization improvements")
+        }
+      ])
+    }
   }
   render() {
     const goals = this.goalList().map((goal) => {
@@ -47,10 +85,11 @@ export default class GoalSelect extends React.Component {
         <div className="setup-pankuzu font_18px">
           {__("Set up Goalous")} <i className="fa fa-angle-right" aria-hidden="true"></i> {__("Create a goal")}
         </div>
+        <p className="setup-items-header-comment">{__("Please choose one.")}</p>
         <div className="setup-items">
           {goals}
         </div>
-        <div className="mb_13px">
+        <div className="mb_12px">
           <Link to="/setup/goal/create">{__('Create your own')} <i className="fa fa-angle-right" aria-hidden="true"></i> </Link>
         </div>
         <div>

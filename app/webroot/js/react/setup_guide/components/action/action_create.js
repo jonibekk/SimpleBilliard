@@ -26,7 +26,7 @@ export default class ActionCreate extends React.Component {
         <div className="setup-pankuzu font_18px">
           {__("Set up Goalous")} <i className="fa fa-angle-right" aria-hidden="true"></i> {__("Do an action")}
         </div>
-        <div className="panel panel-default global-form" id="GlobalForms">
+        <div className="panel panel-default global-form setup-post-form" id="GlobalForms">
           <div className="post-panel-heading ptb_7px plr_11px">
             <ul className="feed-switch clearfix plr_0px" id="CommonFormTabs">
               <li className="switch-action">
@@ -87,6 +87,12 @@ export default class ActionCreate extends React.Component {
               </form>
             </div>
           </div>
+        </div>
+        <div>
+          <Link className="btn btn-secondary setup-back-btn-full"
+                to={this.props.action.goals.length ? "/setup/action/goal_select" : "/setup/action/image"}>
+            {__('Back')}
+          </Link>
         </div>
       </div>
     )

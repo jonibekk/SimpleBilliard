@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { Link } from 'react-router'
+import { Link, browserHistory } from 'react-router'
 
 export default class ActionGoalSelect extends React.Component {
   constructor(props) {
@@ -7,6 +7,9 @@ export default class ActionGoalSelect extends React.Component {
   }
   componentWillMount() {
     this.props.fetchGoals()
+    if(this.props.action.goals.length == 0) {
+      browserHistory.push('/setup/goal/create')
+    }
   }
   getGoals() {
     return this.props.action.goals
@@ -37,11 +40,11 @@ export default class ActionGoalSelect extends React.Component {
         <div className="setup-items">
           {goals}
         </div>
-        <div className="mb_13px">
+        <div className="mb_12px">
           <Link to="/setup/goal/create">{__('Create another goal')} <i className="fa fa-angle-right" aria-hidden="true"></i> </Link>
         </div>
         <div>
-          <Link to="/setup/" className="btn btn-secondary setup-back-btn-full">{__('Back')}</Link>
+          <Link to="/setup/action/image" className="btn btn-secondary setup-back-btn-full">{__('Back')}</Link>
         </div>
       </div>
     )

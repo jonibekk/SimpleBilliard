@@ -39,7 +39,7 @@ export default class CircleSelect extends React.Component {
         <div className="setup-items">
           {circles}
         </div>
-        <div className="mb_13px">
+        <div className="mb_12px">
           <Link to="/setup/circle/create">{__('Create your own')} <i className="fa fa-angle-right" aria-hidden="true"></i> </Link>
         </div>
         <div>

@@ -29,10 +29,12 @@ export function fetchGoals(dispatch) {
       dataType: 'json'
     }).then(function (response) {
       const goals = response.data.goals
-      dispatch({
-        type: FETCH_GOALS,
-        goals: goals
-      })
+      if(goals.length > 0) {
+        dispatch({
+          type: FETCH_GOALS,
+          goals: goals
+        })
+      }
     })
     .catch(function (response) {
       console.log(response)

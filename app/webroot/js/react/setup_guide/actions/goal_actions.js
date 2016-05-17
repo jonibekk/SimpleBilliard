@@ -3,12 +3,10 @@ import axios from 'axios'
 import { browserHistory } from 'react-router'
 import { CREATE_GOAL, SELECT_PURPOSE, SELECT_GOAL } from '../constants/ActionTypes';
 
-export function selectPurpose(purpose_name) {
+export function selectPurpose(purpose) {
   return {
     type: SELECT_PURPOSE,
-    selected_purpose: {
-      name: purpose_name
-    }
+    selected_purpose: purpose
   }
 }
 
@@ -39,19 +37,32 @@ export function createGoal(refs) {
     dataType: 'json',
   })
   .then(function (response) {
+    if(response.data.error) {
+      browserHistory.push('/setup')
+      PNotify.removeAll()
+      new PNotify({
+          type: 'error',
+          title: cake.word.error,
+          text: __("Failed to add an action."),
+          icon: "fa fa-check-circle",
+          delay: 4000,
+          mouse_reset: false
+      })
+    } else {
+      document.location.href = "/setup"
+    }
+  })
+  .catch(function (response) {
     browserHistory.push('/setup')
     PNotify.removeAll()
     new PNotify({
-        type: 'success',
-        title: cake.word.success,
-        text: response.data.msg,
+        type: 'error',
+        title: cake.word.error,
+        text: __("Failed to add an action."),
         icon: "fa fa-check-circle",
         delay: 4000,
         mouse_reset: false
     })
-  })
-  .catch(function (response) {
-    console.log(response)
   })
   return {
     type: CREATE_GOAL

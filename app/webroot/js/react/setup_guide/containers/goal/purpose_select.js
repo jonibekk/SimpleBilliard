@@ -10,8 +10,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onClickSelectPurpose: (purpose_name) => {
-      dispatch(selectPurpose(purpose_name))
+    onClickSelectPurpose: (purpose) => {
+      dispatch(selectPurpose(purpose))
       browserHistory.push('/setup/goal/select')
     }
   }

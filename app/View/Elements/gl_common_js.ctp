@@ -372,7 +372,15 @@ echo $this->Html->script('vendor/angular/ng-infinite-scroll.min');
           'Make a good goal to discuss with your project members.': "<?= __('Make a good goal to discuss with your project members.') ?>",
           'Have a common goal': "<?= __('Have a common goal') ?>",
           'Action for your goal': "<?= __('Action for your goal') ?>",
-          "Let's action to show your activity.": "<?= __("Let's action to show your activity.") ?>"
+          "Let's action to show your activity.": "<?= __("Let's action to show your activity.") ?>",
+          "Improve your orgainization": "<?= __("Improve your orgainization") ?>",
+          "Please choose one.": "<?= __("Please choose one.") ?>",
+          "Writing working columns": "<?= __("Writing working columns") ?>",
+          "Sharing your lovely foods": "<?= __("Sharing your lovely foods") ?>",
+          "Writing your insistence": "<?= __("Writing your insistence") ?>",
+          "Embodying the orgainization motto": "<?= __("Embodying the orgainization motto") ?>",
+          "Prasing someone": "<?= __("Prasing someone") ?>",
+          "Including your orgainization improvements": "<?= __("Including your orgainization improvements") ?>"
         },
         notify_auto_update_sec: <?=NOTIFY_AUTO_UPDATE_SEC?>,
         new_notify_cnt: <?=isset($new_notify_cnt)?$new_notify_cnt:0?>,

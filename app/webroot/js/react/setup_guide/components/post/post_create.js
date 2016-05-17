@@ -41,7 +41,7 @@ export default class PostCreate extends React.Component {
           {__("Set up Goalous")} <i className="fa fa-angle-right"></i> {__('Post to a circle')}
         </div>
         {validation_errors}
-        <div className="panel panel-default global-form" id="GlobalForms">
+        <div className="panel panel-default global-form setup-post-form" id="GlobalForms">
           <div className="tab-pane active" id="PostForm">
             <form id="PostDisplayForm"
                   className="form-feed-notify bv-form"
@@ -94,7 +94,10 @@ export default class PostCreate extends React.Component {
           </div>
         </div>
         <div>
-          <Link to="/setup/post/image" className="btn btn-secondary setup-back-btn-full">{__('Back')}</Link>
+          <Link className="btn btn-secondary setup-back-btn-full"
+                to={this.props.post.circles.length ? "/setup/post/circle_select" : "/setup/post/image"} >
+            {__('Back')}
+          </Link>
         </div>
       </div>
     )
