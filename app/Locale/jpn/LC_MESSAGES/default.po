@@ -1335,15 +1335,15 @@ msgstr ""
 
 #: Model/NotifySetting.php:482;618 View/Evaluations/index.ctp:55
 msgid "his/her"
-msgstr "自分の"
+msgstr "自分"
 
 #: Model/NotifySetting.php:487
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s%2$s</span> also commented on "
 "<span class=\"notify-card-head-target\">%3$s</span>'s post."
 msgstr ""
-"<span class=\"notify-card-head-target\">%1$s%2$s</span>さんも<span class="
-"\"notify-card-head-target\">%3$s</span>さんの投稿にコメントしました。"
+"<span class=\"notify-card-head-target\">%1$s%2$s</span>も<span class="
+"\"notify-card-head-target\">%3$s</span>の投稿にコメントしました。"
 
 #: Model/NotifySetting.php:494
 msgid ""
@@ -1463,15 +1463,15 @@ msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> also commented on <span "
 "class=\"notify-card-head-target\">%2$s</span>'s action"
 msgstr ""
-"<span class=\"notify-card-head-target\">%1$s</span>さんも<span class="
-"\"notify-card-head-target\">%2$s</span>さんのアクションにコメントしました。"
+"<span class=\"notify-card-head-target\">%1$s</span>も<span class="
+"\"notify-card-head-target\">%2$s</span>のアクションにコメントしました。"
 
 #: Model/NotifySetting.php:632
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> added an action on<span "
 "class=\"notify-card-head-target\">%2$s</span>."
 msgstr ""
-"<span class=\"notify-card-head-target\">%1$s</span>さんが<span class="
+"<span class=\"notify-card-head-target\">%1$s</span>が<span class="
 "\"notify-card-head-target\">%2$s</span>にアクションしました。"
 
 #: Model/NotifySetting.php:638
@@ -4940,7 +4940,7 @@ msgstr "こんにちは。"
 
 #: View/Emails/text/invite.ctp:25
 msgid "%s sent you an invitation to team %s."
-msgstr "%sさんがGoalous内のチーム「%s」へあなたを招待しています。"
+msgstr "%sがGoalous内のチーム「%s」へあなたを招待しています。"
 
 #: View/Emails/text/invite.ctp:28
 msgid "Click the below link to accept the invitation."
@@ -4948,7 +4948,7 @@ msgstr "この招待に応じる場合は、次のリンクをクリックして
 
 #: View/Emails/text/invite.ctp:34
 msgid "Message from %s:"
-msgstr "%sさんからのメッセージ："
+msgstr "%sからのメッセージ："
 
 #: View/Emails/text/notify_basic.ctp:18
 msgid "\"%s\""
