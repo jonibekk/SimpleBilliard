@@ -61,6 +61,7 @@ class NotifyBizComponent extends Component
     public function initialize(Controller $controller)
     {
         $this->startup($controller);
+        $this->Controller = $controller;
         $this->initialized = true;
     }
 
@@ -1526,6 +1527,9 @@ class NotifyBizComponent extends Component
         if (!$ret) {
             return false;
         }
+
+        //セットアップガイドステータスの更新
+        $this->Controller->updateSetupStatusIfNotCompleted();
 
         return true;
     }
