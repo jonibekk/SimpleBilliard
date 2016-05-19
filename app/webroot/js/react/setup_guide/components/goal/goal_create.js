@@ -72,8 +72,7 @@ export default class GoalCreate extends React.Component {
             <div className="input-group date goal-set-date">
                 <input name="end_date" ref="end_date" className="form-control"
                        required="required" type="text"
-                       defaultValue={cake.current_term_end_date_format}
-                       default={cake.current_term_end_date_format} />
+                       defaultValue={cake.current_term_end_date_format} />
                 <span className="input-group-addon"><i className="fa fa-th"></i></span>
             </div>
           </div>
