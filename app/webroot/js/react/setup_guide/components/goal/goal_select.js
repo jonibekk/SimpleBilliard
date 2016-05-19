@@ -12,17 +12,26 @@ export default class GoalSelect extends React.Component {
         {
           id: 1,
           pic_url: cake.url.route_url + '/img/setup/1_1_conversation.png',
-          name: __("Talk with team members")
+          name: __("Talk with team members"),
+          value_unit: 1,
+          start_value: 0,
+          target_value: 5
         },
         {
           id: 2,
           pic_url: cake.url.route_url + '/img/setup/1_2_lunch.png',
-          name: __("Lunch with team members")
+          name: __("Lunch with team members"),
+          value_unit: 1,
+          start_value: 0,
+          target_value: 5
         },
         {
           id: 3,
           pic_url: cake.url.route_url + '/img/setup/1_3_complaint.png',
-          name: __("Hear complaints of team members")
+          name: __("Hear complaints of team members"),
+          value_unit: 1,
+          start_value: 0,
+          target_value: 5
         }
       ])
     } else if (this.props.goal.selected_purpose.id == 2) {
@@ -30,17 +39,26 @@ export default class GoalSelect extends React.Component {
         {
           id: 4,
           pic_url: cake.url.route_url + '/img/setup/2_1_column.png',
-          name: __("Writing working columns")
+          name: __("Writing working columns"),
+          value_unit: 1,
+          start_value: 0,
+          target_value: 5
         },
         {
           id: 5,
           pic_url: cake.url.route_url + '/img/setup/2_2_food.png',
-          name: __("Sharing your lovely foods")
+          name: __("Sharing your lovely foods"),
+          value_unit: 1,
+          start_value: 0,
+          target_value: 5
         },
         {
           id: 6,
           pic_url: cake.url.route_url + '/img/setup/2_3_idea.png',
-          name: __("Writing your insistence")
+          name: __("Writing your insistence"),
+          value_unit: 1,
+          start_value: 0,
+          target_value: 5
         }
       ])
     } else {
@@ -48,17 +66,26 @@ export default class GoalSelect extends React.Component {
         {
           id: 7,
           pic_url: cake.url.route_url + '/img/setup/3_1_spirit.png',
-          name: __("Embodying the orgainization motto")
+          name: __("Embodying the orgainization motto"),
+          value_unit: 1,
+          start_value: 0,
+          target_value: 5
         },
         {
           id: 8,
           pic_url: cake.url.route_url + '/img/setup/3_2_prise.png',
-          name: __("Prasing someone")
+          name: __("Prasing someone"),
+          value_unit: 1,
+          start_value: 0,
+          target_value: 5
         },
         {
           id: 9,
           pic_url: cake.url.route_url + '/img/setup/3_3_improve.png',
-          name: __("Including your orgainization improvements")
+          name: __("Including your orgainization improvements"),
+          value_unit: 1,
+          start_value: 0,
+          target_value: 5
         }
       ])
     }
