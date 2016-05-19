@@ -1465,6 +1465,10 @@ class PostsController extends AppController
         } else {
           $this->Pnotify->outSuccess(__("Posted."));
         }
+
+        //セットアップガイドステータスの更新
+        $this->updateSetupStatusIfNotCompleted();
+
         return $this->_ajaxGetResponse([
                                            'error'             => $error,
                                            'msg'               => $msg,
