@@ -47,30 +47,33 @@ export default class GoalCreate extends React.Component {
               <div className="form-group">
                 <span className="help-block">{__('Unit')}</span>
                 <select name="value_unit" ref="value_unit" className="form-control addteam_input-design" required="required">
-                  <option value="0">{unit_list[0]}</option>
-                  <option value="3">{unit_list[3]}</option>
-                  <option value="4">{unit_list[4]}</option>
-                  <option value="1">{unit_list[1]}</option>
-                  <option value="2">{unit_list[2]}</option>
+                  <option value="0" selected={this.props.goal.selected_goal.value_unit == 0}>{unit_list[0]}</option>
+                  <option value="3" selected={this.props.goal.selected_goal.value_unit == 3}>{unit_list[3]}</option>
+                  <option value="4" selected={this.props.goal.selected_goal.value_unit == 4}>{unit_list[4]}</option>
+                  <option value="1" selected={this.props.goal.selected_goal.value_unit == 1}>{unit_list[1]}</option>
+                  <option value="2" selected={this.props.goal.selected_goal.value_unit == 2}>{unit_list[2]}</option>
                 </select>
               </div>
               <div className="form-group">
                 <span className="help-block">{__("Initial point")}</span>
-                <input name="start_value" ref="start_value" className="form-control addteam_input-design" step="0.1" required="required" type="number" defaultValue="0" />
+                <input name="start_value" ref="start_value" className="form-control addteam_input-design" step="0.1" required="required" type="number" defaultValue={this.props.goal.selected_goal.start_value} />
               </div>
               <div className="form-group setup-form-arrow">
                 <i className="fa fa-arrow-right font_18px"></i>
               </div>
               <div className="form-group">
                 <span className="help-block">{__("Achieve point")}</span>
-                <input name="target_value" ref="target_value" className="form-control addteam_input-design" step="0.1" required="required" type="number" defaultValue="100" />
+                <input name="target_value" ref="target_value" className="form-control addteam_input-design" step="0.1" required="required" type="number" defaultValue={this.props.goal.selected_goal.target_value} />
               </div>
             </div>
           </div>
           <div className="panel-body">
             <span className="help-block">{__("Due Date")}</span>
             <div className="input-group date goal-set-date">
-                <input name="end_date" ref="end_date" className="form-control" defaultValue={cake.current_term_end_date_format} default={cake.current_term_end_date_format} required="required" type="text" />
+                <input name="end_date" ref="end_date" className="form-control"
+                       required="required" type="text"
+                       defaultValue={cake.current_term_end_date_format}
+                       default={cake.current_term_end_date_format} />
                 <span className="input-group-addon"><i className="fa fa-th"></i></span>
             </div>
           </div>
