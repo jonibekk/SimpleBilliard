@@ -26,8 +26,6 @@ class DevicesController extends AppController
         $user_id = $this->request->data['user_id'];
         $installation_id = $this->request->data['installation_id'];
 
-        $this->log("DeviceController#add:$installation_id\n");
-
         //デバイス情報を保存する
         $saved = $this->NotifyBiz->saveDeviceInfo($user_id, $installation_id);
         if ($saved === false) {
