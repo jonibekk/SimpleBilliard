@@ -13,7 +13,7 @@ export default class ActionCreate extends React.Component {
     let pusher = new Pusher(cake.pusher.key)
     pusher.connection.bind('connected', function () {
         cake.pusher.socket_id = pusher.connection.socket_id
-    });
+    })
   }
   componentDidMount() {
     // Set data attributes
