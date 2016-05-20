@@ -19,6 +19,11 @@ export default class ActionCreate extends React.Component {
     // Set data attributes
     ReactDOM.findDOMNode(this.refs.ActionImageAddButton).setAttribute("target-id", "CommonActionSubmit,WrapActionFormName,WrapCommonActionGoal,CommonActionFooter,CommonActionFormShowOptionLink,ActionUploadFileDropArea")
     ReactDOM.findDOMNode(this.refs.ActionImageAddButton).setAttribute("delete-method", "hide")
+
+    // Dropzoneファイルアップロード上限数のリセット
+    if (typeof Dropzone.instances[0] !== undefined && Dropzone.instances[0].files.length > 0) {
+        Dropzone.instances[0].files.length = 0;
+    }
   }
   render() {
     return (
