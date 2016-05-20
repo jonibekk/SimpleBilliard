@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom'
 import axios from 'axios'
 import { browserHistory } from 'react-router'
-import { CREATE_GOAL, SELECT_PURPOSE, SELECT_GOAL } from '../constants/ActionTypes';
+import { CREATE_GOAL, SELECT_PURPOSE, SELECT_GOAL, INITIALIZE_SELECTED_GOAL } from '../constants/ActionTypes';
 
 export function selectPurpose(purpose) {
   return {
@@ -65,5 +65,11 @@ export function createGoal(goal) {
   })
   return {
     type: CREATE_GOAL
+  }
+}
+
+export function initSelectedGoalData() {
+  return {
+    type: INITIALIZE_SELECTED_GOAL
   }
 }

@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react'
-import { browserHistory } from 'react-router'
-import { Link } from 'react-router'
+import { Link, browserHistory } from 'react-router'
 
 export default class GoalSelect extends React.Component {
   constructor(props) {
@@ -121,7 +120,10 @@ export default class GoalSelect extends React.Component {
           {goals}
         </div>
         <div className="mb_12px">
-          <Link to="/setup/goal/create">{__('Create your own')} <i className="fa fa-angle-right" aria-hidden="true"></i> </Link>
+          <Link to="/setup/goal/create"
+                onClick={() => { this.props.initSelectedGoalData() }}>
+            {__('Create your own')} <i className="fa fa-angle-right" aria-hidden="true"></i>
+          </Link>
         </div>
         <div>
           <Link to="/setup/goal/purpose_select" className="btn btn-secondary setup-back-btn-full">{__('Back')}</Link>

@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { selectGoal } from '../../actions/goal_actions'
+import { selectGoal, initSelectedGoalData } from '../../actions/goal_actions'
 import GoalSelect from '../../components/goal/goal_select'
 
 function mapStateToProps(state) {
@@ -9,7 +9,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    onClickSelectGoal: (goal) => { dispatch(selectGoal(goal)) }
+    onClickSelectGoal: (goal) => { dispatch(selectGoal(goal)) },
+    initSelectedGoalData: () => { dispatch(initSelectedGoalData()) }
   }
 }
 
