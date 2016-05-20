@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react'
-import { Link } from 'react-router'
+import { Link, browserHistory } from 'react-router'
 
 export default class PurposeSelect extends React.Component {
   constructor(props) {
@@ -32,7 +32,10 @@ export default class PurposeSelect extends React.Component {
       return (
         <div className="setup-items-item pt_10px mt_16px bd-radius_14px"
              key={purpose.id}
-             onClick={(e) => { this.props.onClickSelectPurpose(purpose) }}>
+             onClick={(e) => {
+               this.props.onClickSelectPurpose(purpose)
+               browserHistory.push('/setup/goal/select')
+             }}>
           <div className="setup-items-item-pic pull-left mt_3px ml_2px">
             <img src={purpose.pic} className="setup-items-item-pic-img" alt='' />
           </div>
@@ -56,7 +59,10 @@ export default class PurposeSelect extends React.Component {
           {purposes}
         </div>
         <div className="mb_12px">
-          <Link to="/setup/goal/create">{__('Create your own')} <i className="fa fa-angle-right" aria-hidden="true"></i> </Link>
+          <Link to="/setup/goal/create"
+                onClick={() => { this.props.initSelectedGoalData() }}>
+            {__('Create your own')} <i className="fa fa-angle-right" aria-hidden="true"></i>
+          </Link>
         </div>
         <div>
           <Link to="/setup/goal/image" className="btn btn-secondary setup-back-btn-full">{__('Back')}</Link>
