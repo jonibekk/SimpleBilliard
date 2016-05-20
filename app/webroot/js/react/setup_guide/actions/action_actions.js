@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom'
 import axios from 'axios'
 import { browserHistory } from 'react-router'
-import { FETCH_GOALS, SELECT_ACTION_GOAL, CAN_SUBMIT_ACTION, CAN_NOT_SUBMIT_ACTION } from '../constants/ActionTypes'
+import { FETCH_GOALS, SELECT_ACTION_GOAL, CAN_SUBMIT_ACTION, CAN_NOT_SUBMIT_ACTION, FETCHED_GOALS } from '../constants/ActionTypes'
 
 export function toggleButtonClickable(refs) {
   const body = ReactDOM.findDOMNode(refs.body).value.trim()
@@ -35,9 +35,14 @@ export function fetchGoals(dispatch) {
           goals: goals
         })
       }
+      dispatch({
+        type: FETCHED_GOALS
+      })
     })
     .catch(function (response) {
-      console.log(response)
+      dispatch({
+        type: FETCHED_GOALS
+      })
     })
 }
 

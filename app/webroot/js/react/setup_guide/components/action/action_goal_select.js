@@ -5,9 +5,13 @@ export default class ActionGoalSelect extends React.Component {
   constructor(props) {
     super(props);
   }
-  componentWillMount() {
-    this.props.fetchGoals()
-    if(this.props.action.goals.length == 0) {
+  componentDidMount() {
+    if(this.props.action.fetched_goals == false) {
+      this.props.fetchGoals()
+    }
+  }
+  componentWillReceiveProps() {
+    if(this.props.action.fetched_goals == true && this.props.action.goals.length == 0) {
       browserHistory.push('/setup/goal/create')
     }
   }

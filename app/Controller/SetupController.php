@@ -246,7 +246,6 @@ class SetupController extends AppController
         $res = [
             'goals' => $goals,
         ];
-
         return $this->_ajaxGetResponse($res);
     }
 
