@@ -8,11 +8,13 @@ export default class ActionGoalSelect extends React.Component {
   componentDidMount() {
     if(this.props.action.fetched_goals == false) {
       this.props.fetchGoals()
+    } else if(this.props.action.goals.length == 0) {
+      browserHistory.push("/setup/goal/purpose_select")
     }
   }
   componentWillReceiveProps() {
     if(this.props.action.fetched_goals == true && this.props.action.goals.length == 0) {
-      browserHistory.push('/setup/goal/create')
+      browserHistory.push("/setup/goal/purpose_select")
     }
   }
   getGoals() {
@@ -39,13 +41,13 @@ export default class ActionGoalSelect extends React.Component {
     return (
       <div>
         <div className="setup-pankuzu font_18px">
-          {__("Set up Goalous")} <i className="fa fa-angle-right" aria-hidden="true"></i> {__("Create a goal")}
+          {__("Set up Goalous")} <i className="fa fa-angle-right" aria-hidden="true"></i> {__("Do an action")}
         </div>
         <div className="setup-items">
           {goals}
         </div>
         <div className="mb_12px">
-          <Link to="/setup/goal/create">{__('Create another goal')} <i className="fa fa-angle-right" aria-hidden="true"></i> </Link>
+          <Link to="/setup/goal/purpose_select">{__('Create another goal')} <i className="fa fa-angle-right" aria-hidden="true"></i> </Link>
         </div>
         <div>
           <Link to="/setup/action/image" className="btn btn-secondary setup-back-btn-full">{__('Back')}</Link>
