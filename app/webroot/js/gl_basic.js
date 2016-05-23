@@ -352,7 +352,6 @@ $(document).ready(function () {
     $(document).on("click", ".toggle-ajax-get", evToggleAjaxGet);
     $(document).on("click", ".ajax-get", evAjaxGetElmWithIndex);
     $(document).on("click", ".click-target-remove", evTargetRemove);
-    $(document).on("click", "#setupIcon", evSetup);
     //dynamic modal
     $(document).on("click", '.modal-ajax-get', function (e) {
         e.preventDefault();
@@ -3033,10 +3032,6 @@ function evNotifications(options) {
         },
     });
     return false;
-}
-
-function evSetup(options){
-    location.href = "/setup/";
 }
 
 // 通知から投稿、メッセージに移動
