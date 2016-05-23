@@ -342,6 +342,7 @@ class AppModel extends Model
                 $this->alias . '.' . $this->primaryKey => $id
             ),
             'recursive'  => -1,
+            //TODO callbacksはtrueに変更する。影響範囲がかなりデカイので慎重にテストした上で行う。
             'callbacks'  => false
         ));
     }

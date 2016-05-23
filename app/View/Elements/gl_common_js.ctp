@@ -53,6 +53,7 @@ echo $this->Html->script('vendor/angular/ng-infinite-scroll.min');
 <!--suppress JSDuplicatedDeclaration -->
 <script type="text/javascript">
     var cake = {
+        env_name: "<?= ENV_NAME ?>",
         message: {
             validate: {
                 a: "<?= __('%1$d or more and %2$d or less characters.',8,50)?>",
@@ -194,6 +195,7 @@ echo $this->Html->script('vendor/angular/ng-infinite-scroll.min');
             ogp_info: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_ogp_info']) ?>",
             regenerate_recovery_code: "<?= $this->Html->url(['controller' => 'users', 'action' => 'ajax_regenerate_recovery_code']) ?>",
             circle_setting: "<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_change_setting']) ?>",
+            route_url: "<?= FULL_BASE_URL ?>"
         },
         data: {
             a: <?=isset($select2_default)?$select2_default:"[]"?>,
@@ -286,11 +288,100 @@ echo $this->Html->script('vendor/angular/ng-infinite-scroll.min');
                 }
                 callback(data);
             },
-            user_id: "<?= $this->Session->read('Auth.User.id')?>"
+            user_id: "<?= $this->Session->read('Auth.User.id')?>",
+            kr_value_unit_list: <?= json_encode(KeyResult::$UNIT)?>
         },
         pusher: {
             key: "<?=PUSHER_KEY?>",
             socket_id: ""
+        },
+        translation: {
+          "Failed to add an action.": "<?= __("Failed to add an action.") ?>",
+          "Failed to post.": "<?= __("Failed to post.")?>",
+          "Do an action": "<?= __("Do an action") ?>",
+          "Action": "<?= __("Action") ?>",
+          'Upload an image as your action': "<?= __('Upload an image as your action') ?>",
+          "Write an action...": "<?= __("Write an action...") ?>",
+          "Create a goal": "<?= __("Create a goal") ?>",
+          'Create another goal': "<?= __('Create another goal') ?>",
+          'Back': "<?= __('Back') ?>",
+          "Set up Goalous": "<?= __("Set up Goalous") ?>",
+          "Do an action": "<?= __("Do an action") ?>",
+          "Next": "<?= __("Next") ?>",
+          'Login from mobile app': "<?= __('Login from mobile app') ?>",
+          'Install Android app': "<?= __('Install Android app') ?>",
+          'Requires Android 4.4 or later.': "<?= __('Requires Android 4.4 or later.') ?>",
+          'Install iOS app': "<?= __('Install iOS app') ?>",
+          'Requires iOS 8.4 or later.': "<?= __('Requires iOS 8.4 or later.') ?>",
+          "If you don't have a mobile device.": "<?= __("If you don't have a mobile device.") ?>",
+          "Join a circle": "<?= __("Join a circle") ?>",
+          "Circle name": "<?= __("Circle name") ?>",
+          "Members": "<?= __("Members") ?>",
+          "Administrators": "<?= __("Administrators") ?>",
+          "Public": "<?= __("Public") ?>",
+          "Anyone can see the circle, its members and their posts.": "<?= __("Anyone can see the circle, its members and their posts.") ?>",
+          "Privacy": "<?= __("Privacy") ?>",
+          "Only members can find the circle and see posts.": "<?= __("Only members can find the circle and see posts.") ?>",
+          "Circle Description": "<?= __("Circle Description") ?>",
+          "Circle Image": "<?= __("Circle Image") ?>",
+          "Select an image": "<?= __("Select an image") ?>",
+          "Reselect an image": "<?= __("Reselect an image") ?>",
+          "Create": "<?= __("Create") ?>",
+          "Create a goal": "<?= __("Create a goal") ?>",
+          "Purpose": "<?= __("Purpose") ?>",
+          "Goal Name": "<?= __("Goal Name") ?>",
+          'Unit': "<?= __('Unit') ?>",
+          "Initial point": "<?= __("Initial point") ?>",
+          "Achieve point": "<?= __("Achieve point") ?>",
+          "Due Date": "<?= __("Due Date") ?>",
+          "Goal Image": "<?= __("Goal Image") ?>",
+          "Select an image": "<?= __("Select an image") ?>",
+          "Talk with team members": "<?= __("Talk with team members") ?>",
+          "Lunch with team members": "<?= __("Lunch with team members") ?>",
+          "Hear complaints of team members": "<?= __("Hear complaints of team members") ?>",
+          'Create your own': "<?= __('Create your own') ?>",
+          "Do something with team members": "<?= __("Do something with team members") ?>",
+          "You do something worthwhile.": "<?= __("You do something worthwhile.") ?>",
+          "Open yourself": "<?= __("Open yourself") ?>",
+          "Increasing people who know you.": "<?= __("Increasing people who know you.") ?>",
+          "Give something to team members": "<?= __("Give something to team members") ?>",
+          "Be happy everyone.": "<?= __("Be happy everyone.") ?>",
+          'Post to a circle': "<?= __('Post to a circle') ?>",
+          'Create another circle': "<?= __('Create another circle') ?>",
+          'Post to a circle': "<?= __('Post to a circle') ?>",
+          "Write something...": "<?= __("Write something...") ?>",
+          "Input your profile": "<?= __("Input your profile") ?>",
+          "Your profile picture": "<?= __("Your profile picture") ?>",
+          "Your self-info": "<?= __("Your self-info") ?>",
+          "Submit": "<?= __("Submit") ?>",
+          'Set your profile picture and self-info.': "<?= __('Set your profile picture and self-info.') ?>",
+          'Login from mobile app': "<?= __('Login from mobile app') ?>",
+          "Install Goalous's iOS and Android apps.": "<?= __("Install Goalous's iOS and Android apps.") ?>",
+          'Create a goal': "<?= __('Create a goal') ?>",
+          'Create or collaborate with a goal.': "<?= __('Create or collaborate with a goal.') ?>",
+          'Do an action': "<?= __('Do an action') ?>",
+          'Add an Action for your Goal.': "<?= __('Add an Action for your Goal.') ?>",
+          'Join a circle': "<?= __('Join a circle') ?>",
+          'Create a circle or join.': "<?= __('Create a circle or join.') ?>",
+          'Post to a circle': "<?= __('Post to a circle') ?>",
+          'Share your topic with a circle.': "<?= __('Share your topic with a circle.') ?>",
+          'STEPS LEFT': "<?= __('STEPS LEFT') ?>",
+          'Create a circle': "<?= __('Create a circle') ?>",
+          'Completed': "<?= __('Completed') ?>",
+          'Excellent!': "<?= __('Excellent!') ?>",
+          'I have no iOS/Android devices': "<?= __('I have no iOS/Android devices') ?>",
+          'Make a good goal to discuss with your project members.': "<?= __('Make a good goal to discuss with your project members.') ?>",
+          'Have a common goal': "<?= __('Have a common goal') ?>",
+          'Action for your goal': "<?= __('Action for your goal') ?>",
+          "Let's action to show your activity.": "<?= __("Let's action to show your activity.") ?>",
+          "Improve your orgainization": "<?= __("Improve your orgainization") ?>",
+          "Please choose one.": "<?= __("Please choose one.") ?>",
+          "Writing working columns": "<?= __("Writing working columns") ?>",
+          "Sharing your lovely foods": "<?= __("Sharing your lovely foods") ?>",
+          "Writing your insistence": "<?= __("Writing your insistence") ?>",
+          "Embodying the orgainization motto": "<?= __("Embodying the orgainization motto") ?>",
+          "Prasing someone": "<?= __("Prasing someone") ?>",
+          "Including your orgainization improvements": "<?= __("Including your orgainization improvements") ?>"
         },
         notify_auto_update_sec: <?=NOTIFY_AUTO_UPDATE_SEC?>,
         new_notify_cnt: <?=isset($new_notify_cnt)?$new_notify_cnt:0?>,
@@ -302,8 +393,17 @@ echo $this->Html->script('vendor/angular/ng-infinite-scroll.min');
         pre_file_ttl: <?= PRE_FILE_TTL ?>,
         notify_setting: <?= isset($notify_setting)?json_encode($notify_setting):"''" ?>,
         unread_msg_post_ids: <?=isset($unread_msg_post_ids)?json_encode($unread_msg_post_ids):"''"?>,
-        select2_query_limit: <?=SELECT2_QUERY_LIMIT?>
+        select2_query_limit: <?=SELECT2_QUERY_LIMIT?>,
+        current_term_start_date_format: "<?= viaIsSet($current_term_start_date_format) ?>",
+        current_term_end_date_format: "<?= viaIsSet($current_term_end_date_format) ?>"
     };
+
+    function __(text) {
+        if(cake.translation[text] !== undefined) {
+            return cake.translation[text];
+        }
+        return text;
+    }
 
 
     <?php if(isset($mode_view)):?>

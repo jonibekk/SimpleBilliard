@@ -27,12 +27,12 @@ class CirclesController extends AppController
     {
         $this->request->allowMethod('post');
         $this->Circle->create();
-
         if ($this->Circle->add($this->request->data)) {
             if (!empty($this->Circle->add_new_member_list)) {
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_ADD_USER, $this->Circle->id,
                                                  null, $this->Circle->add_new_member_list);
             }
+            $this->updateSetupStatusIfNotCompleted();
             $this->Pnotify->outSuccess(__("Created a circle."));
         }
         else {
@@ -248,6 +248,7 @@ class CirclesController extends AppController
                 foreach ($this->Circle->CircleMember->new_joined_circle_list as $circle_id) {
                     $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_USER_JOIN, $circle_id);
                 }
+                $this->updateSetupStatusIfNotCompleted();
                 $msg = __("Join a circle.");
             }
             else {

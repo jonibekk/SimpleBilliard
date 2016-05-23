@@ -122,7 +122,21 @@ class TeamMember extends AppModel
     {
         $team_member = $this->find('first', ['conditions' => ['user_id' => $uid, 'team_id' => $team_id]]);
         $team_member['TeamMember']['last_login'] = REQUEST_TIMESTAMP;
+
+        $enable_with_team_id = false;
+        if ($this->Behaviors->loaded('WithTeamId')) {
+            $enable_with_team_id = true;
+        }
+        if ($enable_with_team_id) {
+            $this->Behaviors->disable('WithTeamId');
+        }
+
         $res = $this->save($team_member);
+
+        if ($enable_with_team_id) {
+            $this->Behaviors->enable('WithTeamId');
+        }
+
         return $res;
     }
 
@@ -2253,5 +2267,20 @@ class TeamMember extends AppModel
                 'TeamMember.active_flg' => true,
             ],
         ]);
+    }
+
+    function getIdByTeamAndUserId($team_id, $user_id)
+    {
+        $team_member = $this->find('first', [
+            'conditions' => [
+                'TeamMember.team_id' => $team_id,
+                'TeamMember.user_id' => $user_id,
+            ],
+            'fields' => ['id']
+        ]);
+        if($team_member_id = viaIsSet($team_member['TeamMember']['id'])) {
+            return $team_member_id;
+        }
+        return null;
     }
 }
