@@ -503,13 +503,15 @@ class ActionResult extends AppModel
 
     function isPostedActionForSetupBy($user_id)
     {
-        return (bool)$this->find('first', [
+        $options = [
             'conditions' => [
                 'ActionResult.user_id'    => $user_id,
                 'ActionResult.created >=' => $this->Team->EvaluateTerm->getPreviousTermData()['start_date'],
                 'ActionResult.created <=' => $this->Team->EvaluateTerm->getCurrentTermData()['end_date'],
             ],
             'fields'     => ['ActionResult.id']
-        ]);
+        ];
+
+        return (bool)$this->findWithoutTeamId('all', $options);
     }
 }

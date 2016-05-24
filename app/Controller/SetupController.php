@@ -70,7 +70,7 @@ class SetupController extends AppController
         $status = $this->getStatusWithRedisSave();
         $res = [
             'status'           => $status,
-            'rest_count' => $this->calcSetupRestCount($status),
+            'rest_count'       => $this->calcSetupRestCount($status),
             'complete_percent' => $this->calcSetupCompletePercent($status),
         ];
 
@@ -196,7 +196,7 @@ class SetupController extends AppController
     {
         $this->_ajaxPreProcess();
 
-        if ($this->User->isInstalledMobileApp($this->my_uid)) {
+        if ($this->Device->isInstalledMobileApp($this->my_uid)) {
             $res = false;
         }
         else {
