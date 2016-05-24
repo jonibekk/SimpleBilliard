@@ -86,12 +86,12 @@ class NotifyBizComponent extends Component
      * @param $message
      * @param $url_data
      */
-    function sendSetupNotify($user_id, $message, $url_data)
+    function sendSetupNotify($user_id, $message, $url)
     {
-        $this->GlEmail->sendMailSetup($user_id, $message, $url_data);
+        $this->GlEmail->sendMailSetup($user_id, $message, null);
 
         $this->notify_settings = [$user_id => ['mobile' => true]];
-        $this->notify_option['url_data'] = $url_data;
+        $this->notify_option['url'] = $url;
         $this->notify_option['message'] = $message;
         $this->notify_option['from_user_id'] = $user_id; // dummy
         $this->_sendPushNotify();
@@ -970,7 +970,13 @@ class NotifyBizComponent extends Component
         $this->notify_option['options']['style'] = 'plain';
         $original_lang = Configure::read('Config.language');
 
-        $post_url = Router::url($this->notify_option['url_data'], true);
+        $post_url = null;
+        if ($this->notify_option['url']) {
+            $post_url = $this->notify_option['url'];
+        }
+        else {
+            $post_url = Router::url($this->notify_option['url_data'], true);
+        }
 
         $sent_device_tokens = [];
 

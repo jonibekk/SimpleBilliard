@@ -62,3 +62,4 @@ define('LOG_SLACK_DEBUG_CHANNEL', null);
 define('CACHE_HOMEPAGE', false);
 define('SETUP_GUIDE_NOTIFY_DAYS',"2,5,10");
 define('SETUP_GUIDE_NOTIFY_HOUR',"11");
+define('SETUP_GUIDE_NOTIFY_URL',"http://192.168.50.4");
