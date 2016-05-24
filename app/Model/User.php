@@ -1382,12 +1382,8 @@ class User extends AppModel
             'conditions' => [
                 'User.id' => $user_id,
             ],
-            'fields'     => ['User.id', 'User.photo_file_name'],
             'contain'    => [
                 'TeamMember' => [
-                    'conditions' => [
-                        'TeamMember.user_id' => $user_id
-                    ],
                     'fields'     => [
                         'TeamMember.id', 'TeamMember.comment'
                     ]
@@ -1395,9 +1391,11 @@ class User extends AppModel
             ]
         ];
         $res = $this->findWithoutTeamId('first', $options);
-
         $profile_photo_is_registered = (bool)viaIsSet($res['User']['photo_file_name']);
         $comment_is_registered = false;
+        if(!isset($res['TeamMember'])) {
+          return false;
+        }
         foreach ($res['TeamMember'] as $team_member) {
             if ($team_member['comment']) {
                 $comment_is_registered = true;
