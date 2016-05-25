@@ -493,20 +493,21 @@ class CircleMemberTest extends GoalousTestCase
         $res = $this->CircleMember->isJoinedForSetupBy($this->CircleMember->my_uid);
         $this->assertFalse($res);
 
-        // In case that user join only one circle(default circle)
+        // In case that user join only team-all-circle
         $this->CircleMember->Circle->saveAll([
                                                  [
-                                                     'id'         => 1,
-                                                     'name'       => 'circle1',
-                                                     'public_flg' => true,
-                                                     'team_id'    => 1,
+                                                     'id'           => 1,
+                                                     'name'         => 'circle1',
+                                                     'public_flg'   => true,
+                                                     'team_id'      => 1,
+                                                     'team_all_flg' => true
                                                  ],
                                                  [
                                                      'id'         => 2,
                                                      'name'       => 'circle2',
                                                      'public_flg' => true,
-                                                     'team_id'    => 1,
-                                                 ]
+                                                     'team_id'    => 1
+                                                 ],
                                              ]);
         $this->CircleMember->save([
                                       'CircleMember' => [
@@ -530,6 +531,7 @@ class CircleMemberTest extends GoalousTestCase
                                   ]);
         $res = $this->CircleMember->isJoinedForSetupBy($this->CircleMember->my_uid);
         $this->assertTrue($res);
+
     }
 
 }

@@ -1462,8 +1462,9 @@ class PostsController extends AppController
         if (!$res) {
             $msg = __("Failed to post.");
             $error = true;
-        } else {
-          $this->Pnotify->outSuccess(__("Posted."));
+        }
+        else {
+            $this->Pnotify->outSuccess(__("Posted."));
         }
 
         //セットアップガイドステータスの更新

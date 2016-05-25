@@ -1989,7 +1989,7 @@ class Post extends AppModel
 
     public function isPostedCircleForSetupBy($user_id)
     {
-        return (bool)$this->find('first', [
+        $options = [
             'conditions' => [
                 'Post.user_id'    => $user_id,
                 'Post.type'       => self::TYPE_NORMAL,
@@ -1997,6 +1997,8 @@ class Post extends AppModel
                 'Post.created <=' => $this->Team->EvaluateTerm->getCurrentTermData()['end_date'],
             ],
             'fields'     => ['Post.id']
-        ]);
+        ];
+
+        return (bool)$this->findWithoutTeamId('all', $options);
     }
 }
