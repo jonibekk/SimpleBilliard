@@ -1391,11 +1391,15 @@ class User extends AppModel
             ]
         ];
         $res = $this->findWithoutTeamId('first', $options);
+
         $profile_photo_is_registered = (bool)viaIsSet($res['User']['photo_file_name']);
         $comment_is_registered = false;
+
         if(!isset($res['TeamMember'])) {
           return false;
         }
+
+        // Because profile comment stride mult team, should check all comment of each teams.
         foreach ($res['TeamMember'] as $team_member) {
             if ($team_member['comment']) {
                 $comment_is_registered = true;
@@ -1414,7 +1418,7 @@ class User extends AppModel
             self::SETUP_GOAL_CREATED             => $this->Goal->isCreatedForSetupBy($user_id),
             self::SETUP_ACTION_POSTED            => $this->Goal->ActionResult->isPostedActionForSetupBy($user_id),
             self::SETUP_CIRCLE_JOINED_OR_CREATED => $this->CircleMember->isJoinedForSetupBy($user_id),
-            self::SETUP_CIRCLE_POSTED            => $this->Post->isPostedCircleForSetupBy($user_id),
+            self::SETUP_CIRCLE_POSTED            => $this->Post->isPostedCircleForSetupBy($user_id)
         ];
     }
 
