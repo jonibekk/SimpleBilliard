@@ -216,6 +216,7 @@ class CircleTest extends GoalousTestCase
     {
         $this->Circle->current_team_id = 1;
         $this->Circle->CircleMember->current_team_id = 1;
+        $this->Circle->CircleMember->User->TeamMember->current_team_id = 1;
 
         // パラメータ不正
         $data = [
