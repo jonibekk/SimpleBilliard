@@ -32,7 +32,14 @@ class TeamMember extends AppModel
             ],
             'maxLength' => ['rule' => ['maxLength', 2000]],
         ],
-        'active_flg'            => ['boolean' => ['rule' => ['boolean'],],],
+        'active_flg'            => [
+            'isVerifiedEmail' => [
+                'rule' => ['isVerifiedEmail']
+            ],
+            'boolean' => [
+                'rule' => ['boolean'],
+            ]
+        ],
         'evaluation_enable_flg' => ['boolean' => ['rule' => ['boolean'],],],
         'invitation_flg'        => ['boolean' => ['rule' => ['boolean'],],],
         'admin_flg'             => ['boolean' => ['rule' => ['boolean'],],],
@@ -346,7 +353,7 @@ class TeamMember extends AppModel
         $this->deleteCacheMember($member_id);
         $this->id = $member_id;
         $flag = $flag == 'ON' ? 1 : 0;
-        return $this->saveField('active_flg', $flag);
+        return $this->saveField('active_flg', $flag, true);
     }
 
     public function setEvaluationFlag($member_id, $flag)
