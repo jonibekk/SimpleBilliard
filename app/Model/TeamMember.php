@@ -36,7 +36,7 @@ class TeamMember extends AppModel
             'isVerifiedEmail' => [
                 'rule' => ['isVerifiedEmail']
             ],
-            'boolean' => [
+            'boolean'         => [
                 'rule' => ['boolean'],
             ]
         ],
@@ -2283,9 +2283,9 @@ class TeamMember extends AppModel
                 'TeamMember.team_id' => $team_id,
                 'TeamMember.user_id' => $user_id,
             ],
-            'fields' => ['id']
+            'fields'     => ['id']
         ]);
-        if($team_member_id = viaIsSet($team_member['TeamMember']['id'])) {
+        if ($team_member_id = viaIsSet($team_member['TeamMember']['id'])) {
             return $team_member_id;
         }
         return null;
