@@ -233,7 +233,7 @@ class TeamTest extends GoalousTestCase
                 ]
             ]
         );
-        $actual = $this->Team->getList();
+        $actual = $this->Team->getListWithTeamId();
         $expected = [
             (int)100 => 'test1',
             (int)200 => 'test2'
