@@ -170,6 +170,11 @@ class CircleMember extends AppModel
             $options['conditions']['NOT']['user_id'] = $this->my_uid;
         }
         $res = $this->find('list', $options);
+
+        // fetching active members list
+        $active_user_ids = $this->User->TeamMember->getActiveTeamMembersList();
+        // only active circle members list
+        $res = array_intersect($active_user_ids, $res);
         $this->primaryKey = $primary_backup;
         return $res;
     }
