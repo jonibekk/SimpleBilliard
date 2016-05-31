@@ -1919,6 +1919,11 @@ class TeamMemberTest extends GoalousTestCase
         $user_id = 777;
         $team_id = 888;
 
+        $this->TeamMember->User->Email->save([
+            'user_id' => $user_id,
+            'email_verified' => true
+        ], false);
+
         $params = [
             'user_id'               => $user_id,
             'team_id'               => $team_id,
@@ -2140,11 +2145,19 @@ class TeamMemberTest extends GoalousTestCase
     function testSetActiveFlagPatternON()
     {
         $member_id = 999;
+        $this->TeamMember->User->save([
+            'id'         => $member_id,
+        ]);
+        $this->TeamMember->User->Email->save([
+            'user_id' => $member_id,
+            'email_verified' => true
+        ], false);
         $params = [
             'id'         => $member_id,
+            'user_id'    => $member_id,
             'active_flg' => 0,
         ];
-        $this->TeamMember->save($params);
+        $this->TeamMember->save($params, false);
         $this->TeamMember->setActiveFlag($member_id, 'ON');
 
         $options['conditions']['id'] = $member_id;
@@ -2206,6 +2219,11 @@ class TeamMemberTest extends GoalousTestCase
         ];
         $this->TeamMember->User->save($params);
 
+        $this->TeamMember->User->Email->save([
+            'user_id' => $user_id,
+            'email_verified' => true
+        ], false);
+
         $team_id = 999;
         $params = [
             'user_id' => $user_id,
@@ -2226,6 +2244,11 @@ class TeamMemberTest extends GoalousTestCase
         ];
         $this->TeamMember->User->save($params);
 
+        $this->TeamMember->User->Email->save([
+            'user_id' => $user_id,
+            'email_verified' => true
+        ], false);
+
         $team_id = 999;
         $params = [
             'user_id' => $user_id,
@@ -2244,6 +2267,11 @@ class TeamMemberTest extends GoalousTestCase
             'id' => $user_id,
         ];
         $this->TeamMember->User->save($params);
+
+        $this->TeamMember->User->Email->save([
+            'user_id' => $user_id,
+            'email_verified' => true
+        ], false);
 
         $team_id = 888;
         $params = [
@@ -2264,6 +2292,11 @@ class TeamMemberTest extends GoalousTestCase
         ];
         $this->TeamMember->User->save($params);
 
+        $this->TeamMember->User->Email->save([
+            'user_id' => $user_id,
+            'email_verified' => true
+        ], false);
+
         $team_id = 888;
         $params = [
             'user_id'   => $user_id,
@@ -2283,6 +2316,11 @@ class TeamMemberTest extends GoalousTestCase
         ];
         $this->TeamMember->User->save($params);
 
+        $this->TeamMember->User->Email->save([
+            'user_id' => $user_id,
+            'email_verified' => true
+        ], false);
+
         $team_id = 888;
         $params = [
             'user_id' => $user_id,
@@ -2300,6 +2338,11 @@ class TeamMemberTest extends GoalousTestCase
             'id' => $user_id,
         ];
         $this->TeamMember->User->save($params);
+
+        $this->TeamMember->User->Email->save([
+            'user_id' => $user_id,
+            'email_verified' => true
+        ], false);
 
         $team_id = 888;
         $params = [
@@ -2340,6 +2383,9 @@ class TeamMemberTest extends GoalousTestCase
                 ],
                 'CoachUser' => [
                     'fields' => $this->TeamMember->User->profileFields
+                ],
+                'Email' => [
+                    'fields' => ['Email.id', 'Email.user_id', 'Email.email_verified']
                 ]
             ]
         ];
@@ -2355,6 +2401,11 @@ class TeamMemberTest extends GoalousTestCase
             'id' => $user_id,
         ];
         $this->TeamMember->User->save($params);
+
+        $this->TeamMember->User->Email->save([
+            'user_id' => $user_id,
+            'email_verified' => true
+        ], false);
 
         // coach
         $coach_user_id = 777;
