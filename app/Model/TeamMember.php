@@ -454,7 +454,7 @@ class TeamMember extends AppModel
                 'CoachUser' => [
                     'fields' => $this->User->profileFields
                 ],
-                'Email' => [
+                'Email'     => [
                     'fields' => ['Email.id', 'Email.user_id', 'Email.email_verified']
                 ]
             ]
