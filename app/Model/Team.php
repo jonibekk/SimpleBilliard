@@ -391,9 +391,14 @@ class Team extends AppModel
     /**
      * チームのリストを取得する
      */
-    function getList()
+    function getListWithTeamId()
     {
-        return $this->find('list');
+        $out_list = [];
+        $teamList = $this->find('list');
+        foreach($teamList as $id=>$name){
+            $out_list[$id] = $id.'_'.$name;
+        }
+        return $out_list;
     }
 
     /**
