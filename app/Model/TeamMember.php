@@ -1643,7 +1643,7 @@ class TeamMember extends AppModel
                 break;
         }
 
-        // exclude email envirifed user
+        // exclude email unverified user
         $all_users_include_unverified_user = $this->find('all', $options);
         foreach ($all_users_include_unverified_user as $key => $user) {
             if (viaIsSet($user['User']['Email'][0]['email_verified'])) {
