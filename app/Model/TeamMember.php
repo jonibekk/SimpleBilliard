@@ -1627,7 +1627,7 @@ class TeamMember extends AppModel
                     'PrimaryEmail' => [
                         'fields' => ['email'],
                     ],
-                    'Email' => [
+                    'Email'        => [
                         'fields' => ['email_verified']
                     ]
                 ];
@@ -1645,8 +1645,8 @@ class TeamMember extends AppModel
 
         // exclude email envirifed user
         $all_users_include_unverified_user = $this->find('all', $options);
-        foreach($all_users_include_unverified_user as $key => $user) {
-            if(viaIsSet($user['User']['Email'][0]['email_verified'])) {
+        foreach ($all_users_include_unverified_user as $key => $user) {
+            if (viaIsSet($user['User']['Email'][0]['email_verified'])) {
                 $all_users[] = $user;
             }
         }
