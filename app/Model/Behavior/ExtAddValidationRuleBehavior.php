@@ -244,4 +244,53 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
         return $value !== $target_value;
     }
 
+    /**
+     * Checking verified email before team member activate
+     *
+     * @param  Model $Model [description]
+     * @param  [type]  $check [description]
+     *
+     * @return boolean        [description]
+     */
+    function isVerifiedEmail(/** @noinspection PhpUnusedParameterInspection */
+        Model $Model, $check)
+    {
+        // This method is for to activate sisuation
+        // So it's not needed in to inactivate situation
+        if (isset($Model->data['TeamMember']['active_flg'])
+            && $Model->data['TeamMember']['active_flg'] == false
+        ) {
+            return true;
+        }
+
+        if (!$user_id = viaIsSet($Model->data['TeamMember']['user_id'])) {
+            if (!$team_member_id = viaIsSet($Model->data['TeamMember']['id'])) {
+                return false;
+            }
+
+            $res = $Model->find('first', [
+                'conditions' => [
+                    'id' => $team_member_id
+                ],
+                'fields'     => [
+                    'id', 'user_id'
+                ]
+            ]);
+            if (!$user_id = viaIsSet($res['TeamMember']['user_id'])) {
+                return false;
+            }
+        }
+
+        $email = $Model->User->Email->find('first', [
+            'conditions' => [
+                'user_id' => $user_id
+            ],
+            'fields'     => ['id', 'email_verified']
+        ]);
+        if (viaIsSet($email['Email']['email_verified']) == true) {
+            return true;
+        }
+        return false;
+    }
+
 }

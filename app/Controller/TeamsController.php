@@ -2318,7 +2318,7 @@ class TeamsController extends AppController
         }
 
         // チーム選択を出来るようにする
-        $team_list = $this->Team->getList();
+        $team_list = $this->Team->getListWithTeamId();
         $this->set('team_list', $team_list);
 
         // team のパラメータがあれば、モデルの team_id を上書きする
