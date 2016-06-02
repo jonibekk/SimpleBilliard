@@ -1776,6 +1776,11 @@ class Post extends AppModel
             $item['PostUser']['photo_path'] =
                 $upload->uploadUrl($item['PostUser'], 'User.photo', ['style' => 'medium_large']);
 
+            // if share with no one then show postuser pic
+            if(empty($item['PostShareUser'])) {
+                $item['PostShareUser'][0]['User']['photo_path'] =
+                    $item['PostShareUser']['photo_path'];
+            }
             // メッセージ受信者の画像
             foreach ($item['PostShareUser'] as $k => $v) {
                 $v['User']['photo_path'] = $upload->uploadUrl($v['User'], 'User.photo', ['style' => 'medium_large']);
