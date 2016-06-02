@@ -28,10 +28,5 @@ if ($message) {
     echo "\n";
 }
 echo "\n";
-echo __('Click the below link to setup Goalous.');
 echo "\n";
-echo $url;
-echo "\n";
-echo "\n";
-
 echo "\n";

@@ -137,6 +137,7 @@ class SetupGuideShell extends AppShell
 
     /**
      * 送信すべきnotifyの種類を確定し送付する
+     *
      * @param $user_id
      */
     function _sendNotify($user_id)
@@ -153,33 +154,40 @@ class SetupGuideShell extends AppShell
         switch ($target_key) {
             case 1:
                 $message = __("Please input your profile to Goalous.");
-                $url_data = ['controller' => 'setup', 'action' => 'profile', 'image'];
+                $url = "/setup/profile/image";
                 break;
             case 2:
                 $message = __("Please install the Goalous mobile application and login.");
-                $url_data = ['controller' => 'setup', 'action' => 'app', 'image'];
+                $url = "/setup/app/image";
                 break;
             case 3:
                 $message = __("Please create your GOAL.");
-                $url_data = ['controller' => 'setup', 'action' => 'goal', 'image'];
+                $url = "/setup/goal/image";
                 break;
             case 4:
                 $message = __("Please action on Goalous.");
-                $url_data = ['controller' => 'setup', 'action' => 'action', 'image'];
+                $url = "/setup/action/image";
                 break;
             case 5:
                 $message = __("Please join a circle.");
-                $url_data = ['controller' => 'setup', 'action' => 'circle', 'image'];
+                $url = "/setup/circle/image";
                 break;
             case 6:
                 $message = __("Please post on Goalous.");
-                $url_data = ['controller' => 'setup', 'action' => 'post', 'image'];
+                $url = "/setup/post/image";
                 break;
             default:
                 return;
         }
 
-        $this->NotifyBiz->sendSetupNotify($user_id,$message, $url_data);
+        $url = SETUP_GUIDE_NOTIFY_URL . $url;
+
+        $message .= "\n\n";
+        $message .= __('Click the below link to setup Goalous.');
+        $message .= "\n";
+        $message .= $url;
+
+        $this->NotifyBiz->sendSetupNotify($user_id, $message, $url);
     }
 
     /**

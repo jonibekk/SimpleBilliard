@@ -233,10 +233,10 @@ class TeamTest extends GoalousTestCase
                 ]
             ]
         );
-        $actual = $this->Team->getList();
+        $actual = $this->Team->getListWithTeamId();
         $expected = [
-            (int)100 => 'test1',
-            (int)200 => 'test2'
+            (int)100 => '100_test1',
+            (int)200 => '200_test2'
         ];
 
         $this->assertEquals($expected, $actual);

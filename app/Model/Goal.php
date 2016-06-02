@@ -1788,14 +1788,16 @@ class Goal extends AppModel
 
     public function isCreatedForSetupBy($user_id)
     {
-        return (bool)$this->find('first', [
+        $options = [
             'conditions' => [
                 'Goal.user_id'       => $user_id,
                 'Goal.start_date >=' => $this->Team->EvaluateTerm->getPreviousTermData()['start_date'],
-                'Goal.end_date >='   => $this->Team->EvaluateTerm->getCurrentTermData()['end_date'],
+                'Goal.end_date <='   => $this->Team->EvaluateTerm->getCurrentTermData()['end_date']
             ],
             'fields'     => ['Goal.id']
-        ]);
+        ];
+
+        return (bool)$this->findWithoutTeamId('first', $options);
     }
 
     public function getGoalsForSetupBy($user_id)

@@ -214,4 +214,18 @@ class DeviceTest extends GoalousTestCase
         $this->assertTrue(empty($data));
     }
 
+    function testIsInstalledMobileApp()
+    {
+        $this->Device->my_uid = 1;
+        // In case that mobile app is installed
+        $this->Device->save(['user_id' => $this->Device->my_uid, 'device_token' => 1, 'os_type' => 1]);
+        $res = $this->Device->isInstalledMobileApp($this->Device->my_uid);
+        $this->assertTrue($res);
+
+        // In case that mobile app is not installed
+        $this->Device->deleteAll(['user_id' => $this->Device->my_uid]);
+        $res = $this->Device->isInstalledMobileApp($this->Device->my_uid);
+        $this->assertFalse($res);
+    }
+
 }

@@ -1037,20 +1037,6 @@ class UserTest extends GoalousTestCase
         $this->assertFalse($res);
     }
 
-    function testIsInstalledMobileApp()
-    {
-        $this->User->my_uid = 1;
-        // In case that mobile app is installed
-        $this->User->Device->save(['user_id' => $this->User->my_uid, 'device_token' => 1, 'os_type' => 1]);
-        $res = $this->User->isInstalledMobileApp($this->User->my_uid);
-        $this->assertTrue($res);
-
-        // In case that mobile app is not installed
-        $this->User->Device->deleteAll(['user_id' => $this->User->my_uid]);
-        $res = $this->User->isInstalledMobileApp($this->User->my_uid);
-        $this->assertFalse($res);
-    }
-
     function testGenerateSetupGuideStatusDict()
     {
         $this->User->my_uid = 1;
@@ -1089,6 +1075,7 @@ class UserTest extends GoalousTestCase
         $res = $this->User->getUsersSetupNotCompleted(1);
         $this->assertNotEmpty($res);
     }
+
     function testGetUsersSetupNotCompletedNoData()
     {
         $res = $this->User->getUsersSetupNotCompleted(9999);
