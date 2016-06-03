@@ -1648,7 +1648,7 @@ class TeamMember extends AppModel
         $all_users = [];
         foreach ($all_users_include_unverified_user as $key => $user) {
             if (viaIsSet($user['User']['Email'][0]['email_verified'])) {
-                unset($user['User']);
+                unset($user['User']['Email']);
                 $all_users[] = $user;
             }
         }
