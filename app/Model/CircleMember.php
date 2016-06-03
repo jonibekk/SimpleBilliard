@@ -170,6 +170,11 @@ class CircleMember extends AppModel
             $options['conditions']['NOT']['user_id'] = $this->my_uid;
         }
         $res = $this->find('list', $options);
+
+        // fetching active members list
+        $active_user_ids = $this->User->TeamMember->getActiveTeamMembersList();
+        // only active circle members list
+        $res = array_intersect($active_user_ids, $res);
         $this->primaryKey = $primary_backup;
         return $res;
     }
@@ -274,7 +279,8 @@ class CircleMember extends AppModel
         // 既にサークルメンバーになっているユーザーを除外してから返却データに追加
         if ($with_group) {
             $group_res = $this->User->getGroupsSelect2($keyword, $limit);
-            $user_res = array_merge($user_res, $this->User->excludeGroupMemberSelect2($group_res['results'], $member_list));
+            $user_res = array_merge($user_res,
+                                    $this->User->excludeGroupMemberSelect2($group_res['results'], $member_list));
         }
 
         return ['results' => $user_res];
@@ -617,5 +623,35 @@ class CircleMember extends AppModel
             }
         }
         return $count_list;
+    }
+
+    function isJoinedForSetupBy($user_id)
+    {
+        $options = [
+            'conditions' => [
+                'user_id' => $user_id
+            ],
+            'fields'     => ['CircleMember.id'],
+            'contain'    => [
+                'Circle' => [
+                    'conditions' => [
+                        'Circle.team_all_flg' => false
+                    ],
+                    'fields'     => ['Circle.id']
+                ]
+            ]
+        ];
+
+        $circles = $this->findWithoutTeamId('all', $options);
+
+        $is_joined_circle = false;
+        foreach ($circles as $circle) {
+            if (viaIsSet($circle['Circle']['id'])) {
+                $is_joined_circle = true;
+                break;
+            }
+        }
+
+        return $is_joined_circle;
     }
 }

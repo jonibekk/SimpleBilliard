@@ -1998,14 +1998,15 @@ class TeamsController extends AppController
         $circle_insights = [];
         $public_circle_list = $this->Team->Circle->getPublicCircleList();
         foreach ($public_circle_list as $circle_id => $circle_name) {
-            // 登録メンバー数
-            $circle_member_list = $this->Team->Circle->CircleMember->getMemberList($circle_id, true);
+            // fetching active members count in circle
+            $circle_member_count = $this->Team->CircleInsight->getTotal($circle_id, $start_date, $end_date, $timezone);
 
             // 投稿数
             $circle_post_count = $this->Post->PostShareCircle->getPostCountByCircleId($circle_id, [
                 'start' => $start_time,
                 'end'   => $end_time,
             ]);
+
 
             // リーチ数
             // 指定期間内の投稿を読んだメンバーの合計数（現在まで）
@@ -2019,17 +2020,19 @@ class TeamsController extends AppController
                 'start' => $start_time,
                 'end'   => $end_time,
             ]);
+
             $engage_percent = $circle_post_read_count ?
                 round($circle_post_like_count / $circle_post_read_count * 100, 1) : 0;
 
             $circle_insights[$circle_id] = [
                 'circle_id'       => $circle_id,
-                'user_count'      => count($circle_member_list),
+                'user_count'      => $circle_member_count,
                 'post_count'      => $circle_post_count,
                 'post_read_count' => $circle_post_read_count,
                 'engage_percent'  => $engage_percent,
             ];
         }
+
 
         // 並び順変更
         // チーム全体サークルは常に先頭、それ以外はリーチの多い順
@@ -2315,7 +2318,7 @@ class TeamsController extends AppController
         }
 
         // チーム選択を出来るようにする
-        $team_list = $this->Team->getList();
+        $team_list = $this->Team->getListWithTeamId();
         $this->set('team_list', $team_list);
 
         // team のパラメータがあれば、モデルの team_id を上書きする

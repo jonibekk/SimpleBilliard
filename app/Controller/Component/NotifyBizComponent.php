@@ -61,6 +61,7 @@ class NotifyBizComponent extends Component
     public function initialize(Controller $controller)
     {
         $this->startup($controller);
+        $this->Controller = $controller;
         $this->initialized = true;
     }
 
@@ -77,6 +78,23 @@ class NotifyBizComponent extends Component
             $this->GlRedis = ClassRegistry::init('GlRedis');
             $this->GlEmail->startup($controller);
         }
+    }
+
+    /**
+     * セットアップガイドの通知を送る
+     * @param $user_id
+     * @param $message
+     * @param $url_data
+     */
+    function sendSetupNotify($user_id, $message, $url)
+    {
+        $this->GlEmail->sendMailSetup($user_id, $message, null);
+
+        $this->notify_settings = [$user_id => ['mobile' => true]];
+        $this->notify_option['url'] = $url;
+        $this->notify_option['message'] = $message;
+        $this->notify_option['from_user_id'] = $user_id; // dummy
+        $this->_sendPushNotify();
     }
 
     /**
@@ -952,7 +970,13 @@ class NotifyBizComponent extends Component
         $this->notify_option['options']['style'] = 'plain';
         $original_lang = Configure::read('Config.language');
 
-        $post_url = Router::url($this->notify_option['url_data'], true);
+        $post_url = null;
+        if (viaIsSet($this->notify_option['url'])) {
+            $post_url = $this->notify_option['url'];
+        }
+        else {
+            $post_url = Router::url($this->notify_option['url_data'], true);
+        }
 
         $sent_device_tokens = [];
 
@@ -975,17 +999,25 @@ class NotifyBizComponent extends Component
             $this->_setLangByUserId($to_user_id, $original_lang);
             $from_user = $this->NotifySetting->User->getUsersProf($this->notify_option['from_user_id']);
             $from_user_name = $from_user[0]['User']['display_username'];
-            $title = $this->NotifySetting->getTitle($this->notify_option['notify_type'],
-                                                    $from_user_name,
-                                                    1,
-                                                    $this->notify_option['item_name'],
-                                                    $this->notify_option['options']);
 
-            //メッセージの場合は本文も出ていたほうがいいので出してみる
-            $item_name = json_decode($this->notify_option['item_name']);
-            if (!empty($item_name)) {
-                $item_name = mb_strimwidth($item_name[0], 0, 40, "...");
-                $title .= " : " . $item_name;
+            // messageが設定されている場合は、それを優先して設定する。セットアップガイド用。
+            $title = "";
+            if (isset($this->notify_option['message'])) {
+                $title = $this->notify_option['message'];
+            }
+            else {
+                $title = $this->NotifySetting->getTitle($this->notify_option['notify_type'],
+                                                        $from_user_name,
+                                                        1,
+                                                        $this->notify_option['item_name'],
+                                                        $this->notify_option['options']);
+
+                //メッセージの場合は本文も出ていたほうがいいので出してみる
+                $item_name = json_decode($this->notify_option['item_name']);
+                if (!empty($item_name)) {
+                    $item_name = mb_strimwidth($item_name[0], 0, 40, "...");
+                    $title .= " : " . $item_name;
+                }
             }
             $title = json_encode($title, JSON_HEX_QUOT);
 
@@ -997,8 +1029,6 @@ class NotifyBizComponent extends Component
                 "userSettingValue":{"url":"' . $post_url . '"}},
                 "deliveryExpirationTime":"1 day"
             }';
-            error_log("FURU:result:" . $body . "\n", 3, "/tmp/hoge.log");
-
             $options['http']['content'] = $body;
 
             $header['content-length'] = 'Content-Length: ' . strlen($body);
@@ -1007,8 +1037,6 @@ class NotifyBizComponent extends Component
             $url = "https://" . NCMB_REST_API_FQDN . "/" . NCMB_REST_API_VER . "/" . NCMB_REST_API_PUSH;
             $ret = file_get_contents($url, false, stream_context_create($options));
             $sent_device_tokens = array_merge($sent_device_tokens, $device_tokens);
-
-            error_log("FURU:result:" . $ret . "\n", 3, "/tmp/hoge.log");
         }
 
         //変更したlangをログインユーザーのものに書き戻しておく
@@ -1091,8 +1119,6 @@ class NotifyBizComponent extends Component
             $signature_string .= "/" . NCMB_REST_API_VER . "/" . NCMB_REST_API_PUSH . "\n";
         }
         $signature_string .= $header_string;
-
-        error_log("FURU:sign=" . $signature_string . "\n", 3, "/tmp/hoge.log");
 
         return base64_encode(hash_hmac("sha256", $signature_string, $client_key, true));
     }
@@ -1451,8 +1477,6 @@ class NotifyBizComponent extends Component
         if (!$app_key) {
             return false;
         }
-        error_log("FURU:saveDeviceInfo:$user_id:$installation_id\n", 3, "/tmp/hoge.log");
-
         $timestamp = $this->_getTimestamp();
         $path = "/" . NCMB_REST_API_VER . "/" . NCMB_REST_API_GET_INSTALLATION . "/" . $installation_id;
         $signature = $this->_getNCMBSignature($timestamp, NCMB_REST_API_GET_METHOD, $path, $app_key, $client_key);
@@ -1473,11 +1497,7 @@ class NotifyBizComponent extends Component
         $options['http']['header'] = implode("\r\n", $header);
 
         $url = "https://" . NCMB_REST_API_FQDN . $path;
-        error_log("FURU:url:" . $url . "\n", 3, "/tmp/hoge.log");
         $ret = file_get_contents($url, false, stream_context_create($options));
-
-        error_log("FURU:result:" . $ret . "\n", 3, "/tmp/hoge.log");
-
         $ret_array = json_decode($ret, true);
 
         if (!array_key_exists('deviceToken', $ret_array)) {
@@ -1509,12 +1529,13 @@ class NotifyBizComponent extends Component
             ]
         ];
 
-        error_log("FURU:device_token:" . $ret_array['deviceToken'] . "\n", 3, "/tmp/hoge.log");
-
         $ret = $this->Device->add($data);
         if (!$ret) {
             return false;
         }
+
+        //セットアップガイドステータスの更新
+        $this->Controller->updateSetupStatusIfNotCompleted();
 
         return true;
     }

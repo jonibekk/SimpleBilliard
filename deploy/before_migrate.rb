@@ -7,12 +7,14 @@ bash "composer update" do
 end
 bash "npm install" do
   code <<-EOS
+  source /usr/local/nvm/nvm.sh
   cd #{release_path}; npm install
   EOS
 end
 
 bash "run grunt chef" do
   code <<-EOS
+  source /usr/local/nvm/nvm.sh
   cd #{release_path}; grunt chef
   EOS
 end

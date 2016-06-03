@@ -31,6 +31,11 @@ class UserTest extends GoalousTestCase
         'app.post',
         'app.notify_setting',
         'app.member_group',
+        'app.device',
+        'app.evaluate_term',
+        'app.goal',
+        'app.action_result',
+        'app.post_share_circle',
     );
 
     public $basicUserDefault = [
@@ -237,7 +242,7 @@ class UserTest extends GoalousTestCase
     function testVerifyEmail()
     {
         $token = "12345678";
-        $user_id = "2";
+        $user_id = "15";
         $before_data = $this->User->find('first', ['conditions' => ['User.id' => $user_id], 'contain' => ['Email']]);
         $before_data = [
             'User'  => [
@@ -613,6 +618,7 @@ class UserTest extends GoalousTestCase
         $uid = $this->generateBasicUser();
         $this->User->my_uid = $uid;
         $this->User->me['default_team_id'] = null;
+        $this->User->me['language'] = 'jpn';
         $res = $this->User->updateDefaultTeam('team_aaaaaaa');
         $this->assertTrue($res, "[正常]デフォルトチーム更新");
 
@@ -1008,5 +1014,71 @@ class UserTest extends GoalousTestCase
         $this->User->my_uid = 1;
         $res = $this->User->getMyProf();
         $this->assertNotEmpty($res);
+    }
+
+    function testIsCompletedProfileForSetup()
+    {
+        $this->User->my_uid = 1;
+        $this->User->current_team_id = 1;
+        $this->User->me['language'] = "jpn";
+        $this->User->TeamMember->current_team_id = 1;
+        $this->User->TeamMember->my_uid = 1;
+
+        // In case that profile register is complete
+        $this->User->save(['id' => 1, 'photo_file_name' => 'photo_file_name.png']);
+        $this->User->TeamMember->save(['id' => 1, 'team_id' => 1, 'user_id' => 1, 'comment' => 'This is amazing comment']);
+        $res = $this->User->isCompletedProfileForSetup($this->User->my_uid);
+        $this->assertTrue($res);
+
+        // In case that profile register is incomplete
+        $this->User->save(['id' => 1, 'photo_file_name' => null]);
+        $this->User->TeamMember->save(['id' => 1, 'team_id' => 1, 'user_id' => 1, 'comment' => null]);
+        $res = $this->User->isCompletedProfileForSetup($this->User->my_uid);
+        $this->assertFalse($res);
+    }
+
+    function testGenerateSetupGuideStatusDict()
+    {
+        $this->User->my_uid = 1;
+        $this->User->current_team_id = 1;
+        $this->User->me['language'] = "jpn";
+        $this->User->TeamMember->current_team_id = 1;
+        $this->User->TeamMember->my_uid = 1;
+        $this->User->TeamMember->Team->current_team_id = 1;
+        $this->User->TeamMember->Team->my_uid = 1;
+        $this->User->LocalName->my_uid = 1;
+        $this->User->LocalName->current_team_id = 1;
+        $this->User->TeamMember->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->User->TeamMember->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
+        $this->User->TeamMember->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
+        $this->current_date = strtotime('2015/7/1');
+        $this->start_date = strtotime('2015/7/1');
+        $this->end_date = strtotime('2015/10/1');
+        $this->User->generateSetupGuideStatusDict($this->User->my_uid);
+    }
+
+    function testCompleteSetupGuide()
+    {
+        $this->User->my_uid = 1;
+        $this->User->current_team_id = 1;
+        $this->User->completeSetupGuide($this->User->my_uid);
+    }
+
+    function testGetUsersSetupNotCompleted()
+    {
+        $res = $this->User->getUsersSetupNotCompleted();
+        $this->assertNotEmpty($res);
+    }
+
+    function testGetUsersSetupNotCompleted2()
+    {
+        $res = $this->User->getUsersSetupNotCompleted(1);
+        $this->assertNotEmpty($res);
+    }
+
+    function testGetUsersSetupNotCompletedNoData()
+    {
+        $res = $this->User->getUsersSetupNotCompleted(9999);
+        $this->assertEmpty($res);
     }
 }

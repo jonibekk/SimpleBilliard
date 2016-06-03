@@ -1684,6 +1684,7 @@ class TeamMemberTest extends GoalousTestCase
     function testValidateUpdateFinalEvaluationCsvDataUnMatchColumnCount()
     {
         $this->setDefault();
+        $this->_saveEvaluations();
 
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeadingEvaluation();
@@ -1705,6 +1706,7 @@ class TeamMemberTest extends GoalousTestCase
     function testValidateUpdateFinalEvaluationCsvDataUnMatchTitle()
     {
         $this->setDefault();
+        $this->_saveEvaluations();
 
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeadingEvaluation();
@@ -1725,6 +1727,7 @@ class TeamMemberTest extends GoalousTestCase
     function testValidateUpdateFinalEvaluationCsvDataNotExistsMember()
     {
         $this->setDefault();
+        $this->_saveEvaluations();
 
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeadingEvaluation();
@@ -1748,6 +1751,7 @@ class TeamMemberTest extends GoalousTestCase
     function testValidateUpdateFinalEvaluationCsvDataNotExistsScore()
     {
         $this->setDefault();
+        $this->_saveEvaluations();
 
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeadingEvaluation();
@@ -1771,6 +1775,7 @@ class TeamMemberTest extends GoalousTestCase
     function testValidateUpdateFinalEvaluationCsvDataMemberIdDuplicated()
     {
         $this->setDefault();
+        $this->_saveEvaluations();
         $eval_data = [
             'team_id'           => 1,
             'evaluatee_user_id' => 2,
@@ -1913,6 +1918,11 @@ class TeamMemberTest extends GoalousTestCase
     {
         $user_id = 777;
         $team_id = 888;
+
+        $this->TeamMember->User->Email->save([
+                                                 'user_id'        => $user_id,
+                                                 'email_verified' => true
+                                             ], false);
 
         $params = [
             'user_id'               => $user_id,
@@ -2135,11 +2145,19 @@ class TeamMemberTest extends GoalousTestCase
     function testSetActiveFlagPatternON()
     {
         $member_id = 999;
+        $this->TeamMember->User->save([
+                                          'id' => $member_id,
+                                      ]);
+        $this->TeamMember->User->Email->save([
+                                                 'user_id'        => $member_id,
+                                                 'email_verified' => true
+                                             ], false);
         $params = [
             'id'         => $member_id,
+            'user_id'    => $member_id,
             'active_flg' => 0,
         ];
-        $this->TeamMember->save($params);
+        $this->TeamMember->save($params, false);
         $this->TeamMember->setActiveFlag($member_id, 'ON');
 
         $options['conditions']['id'] = $member_id;
@@ -2201,6 +2219,11 @@ class TeamMemberTest extends GoalousTestCase
         ];
         $this->TeamMember->User->save($params);
 
+        $this->TeamMember->User->Email->save([
+                                                 'user_id'        => $user_id,
+                                                 'email_verified' => true
+                                             ], false);
+
         $team_id = 999;
         $params = [
             'user_id' => $user_id,
@@ -2221,6 +2244,11 @@ class TeamMemberTest extends GoalousTestCase
         ];
         $this->TeamMember->User->save($params);
 
+        $this->TeamMember->User->Email->save([
+                                                 'user_id'        => $user_id,
+                                                 'email_verified' => true
+                                             ], false);
+
         $team_id = 999;
         $params = [
             'user_id' => $user_id,
@@ -2239,6 +2267,11 @@ class TeamMemberTest extends GoalousTestCase
             'id' => $user_id,
         ];
         $this->TeamMember->User->save($params);
+
+        $this->TeamMember->User->Email->save([
+                                                 'user_id'        => $user_id,
+                                                 'email_verified' => true
+                                             ], false);
 
         $team_id = 888;
         $params = [
@@ -2259,6 +2292,11 @@ class TeamMemberTest extends GoalousTestCase
         ];
         $this->TeamMember->User->save($params);
 
+        $this->TeamMember->User->Email->save([
+                                                 'user_id'        => $user_id,
+                                                 'email_verified' => true
+                                             ], false);
+
         $team_id = 888;
         $params = [
             'user_id'   => $user_id,
@@ -2278,6 +2316,11 @@ class TeamMemberTest extends GoalousTestCase
         ];
         $this->TeamMember->User->save($params);
 
+        $this->TeamMember->User->Email->save([
+                                                 'user_id'        => $user_id,
+                                                 'email_verified' => true
+                                             ], false);
+
         $team_id = 888;
         $params = [
             'user_id' => $user_id,
@@ -2295,6 +2338,11 @@ class TeamMemberTest extends GoalousTestCase
             'id' => $user_id,
         ];
         $this->TeamMember->User->save($params);
+
+        $this->TeamMember->User->Email->save([
+                                                 'user_id'        => $user_id,
+                                                 'email_verified' => true
+                                             ], false);
 
         $team_id = 888;
         $params = [
@@ -2335,6 +2383,9 @@ class TeamMemberTest extends GoalousTestCase
                 ],
                 'CoachUser' => [
                     'fields' => $this->TeamMember->User->profileFields
+                ],
+                'Email'     => [
+                    'fields' => ['Email.id', 'Email.user_id', 'Email.email_verified']
                 ]
             ]
         ];
@@ -2350,6 +2401,11 @@ class TeamMemberTest extends GoalousTestCase
             'id' => $user_id,
         ];
         $this->TeamMember->User->save($params);
+
+        $this->TeamMember->User->Email->save([
+                                                 'user_id'        => $user_id,
+                                                 'email_verified' => true
+                                             ], false);
 
         // coach
         $coach_user_id = 777;
@@ -2485,6 +2541,96 @@ class TeamMemberTest extends GoalousTestCase
         $this->setDefault();
         $actual = $this->TeamMember->isAdmin();
         $this->assertNotEmpty($actual);
+    }
+
+    function testGetIdByTeamAndUserId()
+    {
+        $this->setDefault();
+        $this->assertNotEmpty($this->TeamMember->getIdByTeamAndUserId(1, 1));
+    }
+
+    function _saveEvaluations()
+    {
+        $records = [
+            [
+                'team_id'           => 1,
+                'evaluatee_user_id' => 1,
+                'evaluator_user_id' => 2,
+                'evaluate_term_id'  => 1,
+                'evaluate_type'     => 0,
+                'comment'           => 'あいうえお',
+                'evaluate_score_id' => 1,
+                'index_num'         => 0,
+            ],
+            [
+                'team_id'           => 1,
+                'evaluatee_user_id' => 1,
+                'evaluator_user_id' => 1,
+                'evaluate_term_id'  => 1,
+                'evaluate_type'     => 0,
+                'comment'           => 'かきくけこ',
+                'evaluate_score_id' => 1,
+                'index_num'         => 1,
+                'goal_id'           => 1,
+            ],
+            [
+                'team_id'           => 1,
+                'evaluatee_user_id' => 1,
+                'evaluator_user_id' => 1,
+                'evaluate_term_id'  => 1,
+                'evaluate_type'     => 0,
+                'comment'           => 'さしすせそ',
+                'evaluate_score_id' => 1,
+                'index_num'         => 2,
+                'goal_id'           => 2,
+            ],
+            [
+                'team_id'           => 1,
+                'evaluatee_user_id' => 1,
+                'evaluator_user_id' => 1,
+                'evaluate_term_id'  => 1,
+                'evaluate_type'     => 0,
+                'comment'           => 'たちつてと',
+                'evaluate_score_id' => 1,
+                'index_num'         => 3,
+                'goal_id'           => 3,
+            ],
+            [
+                'team_id'           => 2,
+                'evaluatee_user_id' => 2,
+                'evaluator_user_id' => 2,
+                'evaluate_term_id'  => 2,
+                'evaluate_type'     => 0,
+                'comment'           => 'なにぬねの',
+                'evaluate_score_id' => 1,
+                'index_num'         => 0,
+                'goal_id'           => 10,
+            ],
+            [
+                'team_id'           => 2,
+                'evaluatee_user_id' => 2,
+                'evaluator_user_id' => 2,
+                'evaluate_term_id'  => 2,
+                'evaluate_type'     => 0,
+                'comment'           => 'はひふへほ',
+                'evaluate_score_id' => 1,
+                'index_num'         => 1,
+                'goal_id'           => 11,
+            ],
+            [
+                'team_id'           => 2,
+                'evaluatee_user_id' => 2,
+                'evaluator_user_id' => 2,
+                'evaluate_term_id'  => 2,
+                'evaluate_type'     => 0,
+                'comment'           => 'まみむめも',
+                'evaluate_score_id' => 1,
+                'index_num'         => 2,
+                'goal_id'           => 12,
+            ],
+        ];
+
+        $this->TeamMember->Team->Evaluation->saveAll($records);
     }
 
 }

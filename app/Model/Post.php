@@ -1174,12 +1174,12 @@ class Post extends AppModel
                 case self::SHARE_PEOPLE:
                     if (count($val['PostShareUser']) == 1) {
                         $data[$key]['share_text'] = __("Shared %s",
-                                                        $data[$key]['share_user_name']);
+                                                       $data[$key]['share_user_name']);
                     }
                     else {
                         $data[$key]['share_text'] = __('Shared %1$s and %2$s others',
-                                                        $data[$key]['share_user_name'],
-                                                        count($val['PostShareUser']) - 1);
+                                                       $data[$key]['share_user_name'],
+                                                       count($val['PostShareUser']) - 1);
                     }
                     break;
                 case self::SHARE_ONLY_ME:
@@ -1191,26 +1191,26 @@ class Post extends AppModel
                     if (count($val['PostShareUser']) == 0) {
                         if (count($val['PostShareCircle']) == 1) {
                             $data[$key]['share_text'] = __("Shared %s",
-                                                            $data[$key]['share_circle_name']);
+                                                           $data[$key]['share_circle_name']);
                         }
                         else {
                             $data[$key]['share_text'] = __('Shared %1$s and %2$s circle(s)',
-                                                            $data[$key]['share_circle_name'],
-                                                            count($val['PostShareCircle']) - 1);
+                                                           $data[$key]['share_circle_name'],
+                                                           count($val['PostShareCircle']) - 1);
                         }
                     }
                     //共有ユーザが１人いる場合
                     elseif (count($val['PostShareUser']) == 1) {
                         if (count($val['PostShareCircle']) == 1) {
                             $data[$key]['share_text'] = __('Shared %1$s and %2$s',
-                                                            $data[$key]['share_circle_name'],
-                                                            $data[$key]['share_user_name']);
+                                                           $data[$key]['share_circle_name'],
+                                                           $data[$key]['share_user_name']);
                         }
                         else {
                             $data[$key]['share_text'] = __('Shared %1$s, %2$s and %3$s others',
-                                                            $data[$key]['share_user_name'],
-                                                            $data[$key]['share_circle_name'],
-                                                            count($val['PostShareCircle']) - 1);
+                                                           $data[$key]['share_user_name'],
+                                                           $data[$key]['share_circle_name'],
+                                                           count($val['PostShareCircle']) - 1);
                         }
 
                     }
@@ -1218,16 +1218,16 @@ class Post extends AppModel
                     else {
                         if (count($val['PostShareCircle']) == 1) {
                             $data[$key]['share_text'] = __('Shared %1$s, %2$s and %3$s others',
-                                                            $data[$key]['share_circle_name'],
-                                                            $data[$key]['share_user_name'],
-                                                            count($val['PostShareUser']) - 1);
+                                                           $data[$key]['share_circle_name'],
+                                                           $data[$key]['share_user_name'],
+                                                           count($val['PostShareUser']) - 1);
                         }
                         else {
                             $data[$key]['share_text'] = __('Shared %1$s and %2$s others,%3$s and %4$s circle(s)',
-                                                            $data[$key]['share_user_name'],
-                                                            count($val['PostShareUser']) - 1,
-                                                            $data[$key]['share_circle_name'],
-                                                            count($val['PostShareCircle']) - 1);
+                                                           $data[$key]['share_user_name'],
+                                                           count($val['PostShareUser']) - 1,
+                                                           $data[$key]['share_circle_name'],
+                                                           count($val['PostShareCircle']) - 1);
                         }
                     }
 
@@ -1776,10 +1776,19 @@ class Post extends AppModel
             $item['PostUser']['photo_path'] =
                 $upload->uploadUrl($item['PostUser'], 'User.photo', ['style' => 'medium_large']);
 
-            // メッセージ受信者の画像
-            foreach ($item['PostShareUser'] as $k => $v) {
-                $v['User']['photo_path'] = $upload->uploadUrl($v['User'], 'User.photo', ['style' => 'medium_large']);
-                $item['PostShareUser'][$k] = $v;
+            // if share with no one then show postuser pic
+            if(empty($item['PostShareUser'])) {
+                $item['PostShareUser'][0]['User']['photo_path'] =
+                    $item['PostUser']['photo_path'];
+                $item['PostShareUser'][0]['User']['display_first_name'] =
+                    $item['PostUser']['display_first_name'];
+            } else {
+                // メッセージ受信者の画像
+                foreach ($item['PostShareUser'] as $k => $v) {
+                    $v['User']['photo_path'] = $upload->uploadUrl($v['User'], 'User.photo',
+                                                                  ['style' => 'medium_large']);
+                    $item['PostShareUser'][$k] = $v;
+                }
             }
             $new_data[] = $item;
         }
@@ -1985,5 +1994,20 @@ class Post extends AppModel
             $options['contain'][] = 'User';
         }
         return $this->find('all', $options);
+    }
+
+    public function isPostedCircleForSetupBy($user_id)
+    {
+        $options = [
+            'conditions' => [
+                'Post.user_id'    => $user_id,
+                'Post.type'       => self::TYPE_NORMAL,
+                'Post.created >=' => $this->Team->EvaluateTerm->getPreviousTermData()['start_date'],
+                'Post.created <=' => $this->Team->EvaluateTerm->getCurrentTermData()['end_date'],
+            ],
+            'fields'     => ['Post.id']
+        ];
+
+        return (bool)$this->findWithoutTeamId('all', $options);
     }
 }

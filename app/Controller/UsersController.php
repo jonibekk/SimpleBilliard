@@ -105,6 +105,8 @@ class UsersController extends AppController
         $installation_id = $this->request->data['User']['installation_id'];
         if (!empty($installation_id)) {
             $this->NotifyBiz->saveDeviceInfo($user_id, $installation_id);
+            //セットアップガイドステータスの更新
+            $this->updateSetupStatusIfNotCompleted();
         }
 
         $is_2fa_auth_enabled = true;
@@ -675,6 +677,8 @@ class UsersController extends AppController
                 $this->_autoLogin($this->Auth->user('id'), true);
                 //言語設定
                 $this->_setAppLanguage();
+                //セットアップガイドステータスの更新
+                $this->updateSetupStatusIfNotCompleted();
 
                 $this->Pnotify->outSuccess(__("Saved user setting."));
             }
@@ -701,8 +705,8 @@ class UsersController extends AppController
         $language_name = $this->Lang->availableLanguages[$me['User']['language']];
 
         // 通知設定のプルダウンデフォルト
-        $this->request->data['NotifySetting']['email'] = 'primary';
-        $this->request->data['NotifySetting']['mobile'] = 'primary';
+        $this->request->data['NotifySetting']['email'] = 'all';
+        $this->request->data['NotifySetting']['mobile'] = 'all';
         // 既に通知設定が保存されている場合
         foreach (['email', 'mobile'] as $notify_target) {
             foreach (array_keys(NotifySetting::$TYPE_GROUP) as $type_group) {

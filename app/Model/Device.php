@@ -139,4 +139,18 @@ class Device extends AppModel
         return $deviceTokens;
     }
 
+    function isInstalledMobileApp($user_id)
+    {
+        $options = [
+            'conditions' => [
+                'Device.user_id' => $user_id
+            ],
+            'fields'     => [
+                'Device.id'
+            ]
+        ];
+
+        return (bool)$this->findWithoutTeamId('first', $options);
+    }
+
 }

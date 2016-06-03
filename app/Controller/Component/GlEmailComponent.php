@@ -184,6 +184,27 @@ class GlEmailComponent extends Component
         return true;
     }
 
+    /**
+     * メールにてセットアップガイドメールを送信
+     *
+     * @param $to_user_id
+     * @param $message
+     * @param $url_data
+     */
+    public function sendMailSetup($to_user_id, $message, $url_data)
+    {
+        $url = Router::url($url_data, true);
+        $item = [
+            'url'     => $url,
+            'message' => $message
+        ];
+        $this->SendMail->saveMailData($to_user_id,
+                                      SendMail::TYPE_TMPL_SETUP,
+                                      $item
+        );
+        $this->execSendMailById($this->SendMail->id);
+    }
+
     public function sendMailNotify($data, $send_to_users)
     {
         if (empty($data)) {

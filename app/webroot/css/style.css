@@ -551,6 +551,10 @@ textarea{
     padding-top: 12px;
 }
 
+.pt_20px {
+  padding-top: 20px;
+}
+
 .pr_5px {
     padding-right: 5px;
 }
@@ -1797,7 +1801,6 @@ textarea.comment-post-form {
 }
 
 .header-drop-icons {
-    padding-right: 4px;
     width: 18px;
     text-align: center;
 }

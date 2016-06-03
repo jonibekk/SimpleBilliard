@@ -500,4 +500,18 @@ class ActionResult extends AppModel
         $res = $this->find('list', $options);
         return $res;
     }
+
+    function isPostedActionForSetupBy($user_id)
+    {
+        $options = [
+            'conditions' => [
+                'ActionResult.user_id'    => $user_id,
+                'ActionResult.created >=' => $this->Team->EvaluateTerm->getPreviousTermData()['start_date'],
+                'ActionResult.created <=' => $this->Team->EvaluateTerm->getCurrentTermData()['end_date'],
+            ],
+            'fields'     => ['ActionResult.id']
+        ];
+
+        return (bool)$this->findWithoutTeamId('all', $options);
+    }
 }

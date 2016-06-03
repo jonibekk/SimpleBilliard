@@ -18,6 +18,11 @@ class PostsController extends AppController
         if ($this->request->params['action'] == 'ajax_put_message') {
             $this->Security->validatePost = false;
         }
+
+        if ($this->request->params['action'] === 'ajax_add_post_for_setup_guide') {
+            $this->Security->validatePost = false;
+            $this->Security->csrfCheck = false;
+        }
     }
 
     public function message()
@@ -190,6 +195,8 @@ class PostsController extends AppController
             }
             return false;
         }
+
+        $this->updateSetupStatusIfNotCompleted();
 
         $notify_type = NotifySetting::TYPE_FEED_POST;
         if (viaIsSet($this->request->data['Post']['type']) == Post::TYPE_MESSAGE) {
@@ -434,12 +441,17 @@ class PostsController extends AppController
 
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
-        if ($posts) {
-            $response = $this->render($view);
-        }
-        else {
+        //1.フィードのスクロールによる投稿取得 2.notifyから投稿詳細ページに遷移した場合の投稿取得
+        //1,2どちらのケースでもこのコードが実行されるが、「not exist」メッセージを出すのは2のケースのみのため、
+        //ここで分岐をする必要がある。
+        $is_notify_post_permanent_page = isset($this->request->params['post_id']) && isset($this->request->params['named']['notify_id']);
+        if ($is_notify_post_permanent_page && !$posts) {
             $response = $this->render('Feed/post_not_found');
         }
+        else {
+            $response = $this->render($view);
+        }
+
         $html = $response->__toString();
         $result = array(
             'html'                => $html,
@@ -1437,6 +1449,32 @@ class PostsController extends AppController
         else {
             throw new NotFoundException(__("Invalid Request"));
         }
+    }
+
+    public function ajax_add_post_for_setup_guide()
+    {
+        $this->_ajaxPreProcess();
+        $res = $this->_addPost();
+        // 非同期処理のためcakeによるフラッシュメッセージは不要。
+        $this->Session->delete('Message');
+        $msg = __("Posted.");
+        $error = false;
+        if (!$res) {
+            $msg = __("Failed to post.");
+            $error = true;
+        }
+        else {
+            $this->Pnotify->outSuccess(__("Posted."));
+        }
+
+        //セットアップガイドステータスの更新
+        $this->updateSetupStatusIfNotCompleted();
+
+        return $this->_ajaxGetResponse([
+                                           'error'             => $error,
+                                           'msg'               => $msg,
+                                           'validation_errors' => array_values($this->Post->validationErrors)
+                                       ]);
     }
 
 }

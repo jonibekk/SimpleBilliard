@@ -48,6 +48,9 @@ GoalousはIsao発の「チーム力向上のスパイラルを生み出す」目
 - [CakePHP Plugin](docs/guidelines/CodingGuideCakePHP.md)
 - [PHPライブラリ](docs/guidelines/LibraryForPHP.md)
 
+#### Seleniumを使用したUI自動テスト
+- [UITest](docs/guidelines/UITest.md)
+
 ### 手順書
 - [開発環境構築手順書](docs/process_docs/LocalDevEnv.md)
 - [PhpStorm設定](docs/process_docs/PhpStormSetting.md)

@@ -80,9 +80,10 @@ class CircleInsightTest extends GoalousTestCase
         $end_date = '2015-01-02';
         $timezone = 9;
         $total = $this->CircleInsight->getTotal(1, $start_date, $end_date, $timezone);
-        $this->assertEquals(10, $total[0]['max_user_count']);
+
+        $this->assertEquals(10, $total);
         $total = $this->CircleInsight->getTotal(3, $start_date, $end_date, $timezone);
-        $this->assertEquals(2, $total[0]['max_user_count']);
+        $this->assertEquals(2, $total);
     }
 
 }

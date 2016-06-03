@@ -712,7 +712,6 @@ $(document).ready(function () {
                     for (var i = 0; i < 10; i++) {
                         $list_items.eq(i).text(res.codes[i].slice(0, 4) + ' ' + res.codes[i].slice(-4));
                     }
-
                     new PNotify({
                         type: 'success',
                         title: cake.word.success,
@@ -1676,69 +1675,41 @@ function ajaxAppendCount(id, url) {
 
 $(function () {
     var tutorialNum = 1;
-    if (tutorialNum == 1) {
-        $("#modalTutorialPrev").hide();
-    }
-    $("#modalTutorialNext").on("click", function () {
-            if (tutorialNum == 1) {
-                $("#modalTutorialBox").addClass("tutorial-box2").removeClass("tutorial-box1");
-                $("#tutorialText1").hide();
-                $("#tutorialText2").show();
-                tutorialNum++;
-                $("#modalTutorialPrev").show();
-            }
-            else if (tutorialNum == 2) {
-                $("#modalTutorialBox").addClass("tutorial-box3").removeClass("tutorial-box2");
-                $("#tutorialText2").hide();
-                $("#tutorialText3").show();
-                tutorialNum++;
-            }
-            else if (tutorialNum == 3) {
-                $("#modalTutorialBox").addClass("tutorial-box4").removeClass("tutorial-box3");
-                $("#tutorialText3").hide();
-                $("#tutorialText4").show();
-                $(this).hide();
-                $("#modalTutorialGo").show();
-                tutorialNum++;
-            }
-        }
-    );
-    $("#modalTutorialPrev").on("click", function () {
-            if (tutorialNum == 2) {
-                $("#modalTutorialBox").addClass("tutorial-box1").removeClass("tutorial-box2");
-                $("#tutorialText2").hide();
-                $("#tutorialText1").show();
-                tutorialNum--;
-                $("#modalTutorialPrev").hide();
-            }
-            else if (tutorialNum == 3) {
-                $("#modalTutorialBox").addClass("tutorial-box2").removeClass("tutorial-box3");
-                $("#tutorialText3").hide();
-                $("#tutorialText2").show();
-                tutorialNum--;
-            }
-            else {
-                $("#modalTutorialBox").addClass("tutorial-box3").removeClass("tutorial-box4");
-                $("#tutorialText4").hide();
-                $("#tutorialText3").show();
-                $("#modalTutorialNext").show();
-                $("#modalTutorialGo").hide();
-                tutorialNum--;
-            }
-        }
-    );
-    $("#modalTutorialGo").on("click", function () {
-            $(this).fadeOut(function () {
-                $("#modalTutorialBox").addClass("tutorial-box1").removeClass("tutorial-box4");
-                $("#tutorialText4").hide();
-                $("#tutorialText1").show();
-                $("#modalTutorialNext").show();
-                $("#modalTutorialPrev").hide();
-            });
-            tutorialNum = 1;
-        }
-    );
+    $("#modalTutorialPrev").hide();
+    $("#tutorialText2").hide();
+    $("#modalTutorialFinish").hide();
+    $("#tutorialIndicator1").addClass("setup-tutorial-navigation-indicator-selected");
 
+    $("#modalTutorialNext").on("click", function () {
+        if (tutorialNum == 1) {
+            $("#modalTutorialBox").addClass("tutorial-box2").removeClass("tutorial-box1");
+            $("#tutorialText1").hide();
+            $("#tutorialText2").show();
+            tutorialNum++;
+            $("#tutorialIndicator1").removeClass("setup-tutorial-navigation-indicator-selected");
+            $("#tutorialIndicator2").addClass("setup-tutorial-navigation-indicator-selected");
+        }
+        else if (tutorialNum == 2) {
+            $("#modalTutorialBox").addClass("tutorial-box3").removeClass("tutorial-box2");
+            $("#tutorialText2").hide();
+            $("#tutorialText3").show();
+            $("#modalTutorialNext").hide();
+            $("#modalTutorialFinish").show();
+            tutorialNum++;
+            $("#tutorialIndicator2").removeClass("setup-tutorial-navigation-indicator-selected");
+            $("#tutorialIndicator3").addClass("setup-tutorial-navigation-indicator-selected");
+        }
+    });
+    $("#modalTutorialFinish").on("click", function () {
+        $("#modalTutorialBox").addClass("tutorial-box1").removeClass("tutorial-box3");
+        $("#tutorialText3").hide();
+        $("#modalTutorialNext").show();
+        $("#modalTutorialFinish").hide();
+        tutorialNum = 1;
+        location.href = "/setup/";
+        $("#tutorialIndicator3").removeClass("setup-tutorial-navigation-indicator-selected");
+        $("#tutorialIndicator1").addClass("setup-tutorial-navigation-indicator-selected");
+    });
 });
 
 //入力途中での警告表示
@@ -4557,6 +4528,7 @@ $(document).ready(function () {
      */
     // ファイルアップロード用フォーム
     var $uploadFileForm = $('#UploadFileForm');
+
     // ファイル削除用フォーム
     var $removeFileForm = $('#RemoveFileForm');
     // 手動ファイル添付用ボタン

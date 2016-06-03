@@ -41,7 +41,8 @@ class PostTest extends GoalousTestCase
         'app.post_shared_log',
         'app.circle',
         'app.circle_member',
-        'app.team_member'
+        'app.team_member',
+        'app.evaluate_term',
     );
 
     /**
@@ -1186,6 +1187,44 @@ class PostTest extends GoalousTestCase
         $this->assertNotEmpty($this->Post->getConditionAllGoalPostId([1]));
     }
 
+    function testIsPostedCircleForSetupBy()
+    {
+        $this->_setDefault();
+        $this->_setTerm();
+
+        // In case that user posted circle post
+        $this->Post->save([
+                              'id'      => 1,
+                              'body'    => 'test',
+                              'team_id' => $this->Post->current_team_id,
+                              'user_id' => 1,
+                              'type'    => Post::TYPE_NORMAL,
+                              'created' => $this->start_date,
+                          ]);
+        $this->Post->PostShareCircle->save([
+                                               'id'        => 1,
+                                               'post_id'   => 1,
+                                               'circle_id' => 1,
+                                               'team_id'   => 1,
+                                               'created'   => $this->start_date,
+                                           ]);
+        $res = $this->Post->isPostedCircleForSetupBy($this->Post->my_uid);
+        $this->assertTrue($res);
+
+        // In case that user posted notithing
+        $this->Post->deleteAll([
+                                   'Post.user_id'    => $this->Post->my_uid,
+                                   'Post.created >=' => $this->Post->Team->EvaluateTerm->getPreviousTermData()['start_date'],
+                                   'Post.created <=' => $this->end_date
+                               ]);
+        $this->Post->PostShareCircle->deleteAll([
+                                                    'PostShareCircle.created >=' => $this->Post->Team->EvaluateTerm->getPreviousTermData()['start_date'],
+                                                    'PostShareCircle.created <=' => $this->end_date
+                                                ]);
+        $res = $this->Post->isPostedCircleForSetupBy($this->Post->my_uid);
+        $this->assertFalse($res);
+    }
+
     function _setDefault()
     {
         $uid = '1';
@@ -1204,13 +1243,29 @@ class PostTest extends GoalousTestCase
         $this->Post->PostShareUser->current_team_id = $team_id;
         $this->Post->User->CircleMember->my_uid = $uid;
         $this->Post->User->CircleMember->current_team_id = $team_id;
+        $this->Post->Team->my_uid = $uid;
+        $this->Post->Team->current_team_id = $team_id;
         $this->Post->Team->TeamMember->my_uid = $uid;
         $this->Post->Team->TeamMember->current_team_id = $team_id;
         $this->Post->Goal->my_uid = $uid;
         $this->Post->Goal->current_team_id = $team_id;
         $this->Post->Goal->Collaborator->my_uid = $uid;
         $this->Post->Goal->Collaborator->current_team_id = $team_id;
+        $this->Post->Team->EvaluateTerm->current_team_id = $team_id;
+        $this->Post->Team->EvaluateTerm->my_uid = $uid;
+    }
 
+    function _setTerm()
+    {
+        $this->Post->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
+        $this->Post->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_PREVIOUS);
+        $this->Post->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_NEXT);
+        $this->current_date = REQUEST_TIMESTAMP;
+        $this->start_date = $this->Post->Team->EvaluateTerm->getCurrentTermData()['start_date'];
+        $this->end_date = $this->Post->Team->EvaluateTerm->getCurrentTermData()['end_date'];
+        $timezone = $this->Post->Team->EvaluateTerm->getCurrentTermData()['timezone'];
+        $this->start_date_format = date('Y-m-d', $this->start_date + $timezone * HOUR);
+        $this->end_date_format = date('Y-m-d', $this->end_date + $timezone * HOUR);
     }
 
 }

@@ -49,6 +49,28 @@ class User extends AppModel
         self::$TYPE_GENDER[self::TYPE_GENDER_NEITHER] = __("Neither");
     }
 
+    /**
+     * STATUS_TYPE_OF_SETUP_GUIDE
+     */
+    const SETUP_PROFILE = 1;
+    const SETUP_MOBILE_APP = 2;
+    const SETUP_GOAL_CREATED = 3;
+    const SETUP_ACTION_POSTED = 4;
+    const SETUP_CIRCLE_JOINED_OR_CREATED = 5;
+    const SETUP_CIRCLE_POSTED = 6;
+
+    static public $TYPE_SETUP_GUIDE = [
+        self::SETUP_PROFILE                  => "",
+        self::SETUP_MOBILE_APP               => "",
+        self::SETUP_GOAL_CREATED             => "",
+        self::SETUP_ACTION_POSTED            => "",
+        self::SETUP_CIRCLE_JOINED_OR_CREATED => "",
+        self::SETUP_CIRCLE_POSTED            => ""
+    ];
+
+    const SETUP_GUIDE_IS_NOT_COMPLETED = 0;
+    const SETUP_GUIDE_IS_COMPLETED = 1;
+
     public $actsAs = [
         'Upload' => [
             'photo' => [
@@ -99,75 +121,75 @@ class User extends AppModel
      * @var array
      */
     public $validate = [
-        'team_id'           => [
+        'team_id'            => [
             'numeric' => [
                 'rule'       => ['numeric'],
                 'allowEmpty' => true,
             ],
         ],
-        'first_name'        => [
+        'first_name'         => [
             'maxLength'      => ['rule' => ['maxLength', 128]],
             'notEmpty'       => ['rule' => 'notEmpty'],
             'isAlphabetOnly' => ['rule' => 'isAlphabetOnly'],
         ],
-        'last_name'         => [
+        'last_name'          => [
             'maxLength'      => ['rule' => ['maxLength', 128]],
             'notEmpty'       => ['rule' => 'notEmpty'],
             'isAlphabetOnly' => ['rule' => 'isAlphabetOnly'],
         ],
-        'gender_type'       => [
+        'gender_type'        => [
             'isString' => [
                 'rule'       => ['isString',],
                 'allowEmpty' => true,
             ],
         ],
-        'birth_day'         => [
+        'birth_day'          => [
             'rule'       => ['date', 'ymd'],
             'allowEmpty' => true
         ],
-        'hide_year_flg'     => [
+        'hide_year_flg'      => [
             'boolean' => [
                 'rule'       => ['boolean',],
                 'allowEmpty' => true,
             ],
         ],
-        'no_pass_flg'       => ['boolean' => ['rule' => ['boolean'],],],
-        'active_flg'        => ['boolean' => ['rule' => ['boolean'],],],
-        'admin_flg'         => ['boolean' => ['rule' => ['boolean'],],],
-        'auto_timezone_flg' => ['boolean' => ['rule' => ['boolean'], 'allowEmpty' => true,],],
-        'auto_language_flg' => ['boolean' => ['rule' => ['boolean'], 'allowEmpty' => true,],],
-        'romanize_flg'      => ['boolean' => ['rule' => ['boolean'], 'allowEmpty' => true,],],
-        'update_email_flg'  => [
+        'no_pass_flg'        => ['boolean' => ['rule' => ['boolean'],],],
+        'active_flg'         => ['boolean' => ['rule' => ['boolean'],],],
+        'admin_flg'          => ['boolean' => ['rule' => ['boolean'],],],
+        'auto_timezone_flg'  => ['boolean' => ['rule' => ['boolean'], 'allowEmpty' => true,],],
+        'auto_language_flg'  => ['boolean' => ['rule' => ['boolean'], 'allowEmpty' => true,],],
+        'romanize_flg'       => ['boolean' => ['rule' => ['boolean'], 'allowEmpty' => true,],],
+        'update_email_flg'   => [
             'boolean' => [
                 'rule'       => ['boolean',],
                 'allowEmpty' => true,
             ],
         ],
-        'language'          => [
+        'language'           => [
             'isString' => [
                 'rule'       => ['isString',],
                 'allowEmpty' => true,
             ],
         ],
-        'timezone'          => [
+        'timezone'           => [
             'numeric' => [
                 'rule'       => ['numeric'],
                 'allowEmpty' => true,
             ],
         ],
-        'default_team_id'   => [
+        'default_team_id'    => [
             'numeric' => [
                 'rule'       => ['numeric'],
                 'allowEmpty' => true,
             ],
         ],
-        'agree_tos'         => [
+        'agree_tos'          => [
             'notBlankCheckbox' => [
                 'rule' => ['custom', '[1]'],
             ]
         ],
-        'del_flg'           => ['boolean' => ['rule' => ['boolean'],],],
-        'old_password'      => [
+        'del_flg'            => ['boolean' => ['rule' => ['boolean'],],],
+        'old_password'       => [
             'notEmpty'  => [
                 'rule' => 'notEmpty',
             ],
@@ -175,7 +197,7 @@ class User extends AppModel
                 'rule' => ['minLength', 8],
             ]
         ],
-        'password_request'  => [
+        'password_request'   => [
             'maxLength'     => ['rule' => ['maxLength', 50]],
             'notEmpty'      => [
                 'rule' => 'notEmpty',
@@ -187,7 +209,7 @@ class User extends AppModel
                 'rule' => ['passwordCheck', 'password_request'],
             ]
         ],
-        'password_request2' => [
+        'password_request2'  => [
             'maxLength'     => ['rule' => ['maxLength', 50]],
             'notEmpty'      => [
                 'rule' => 'notEmpty',
@@ -199,7 +221,7 @@ class User extends AppModel
                 'rule' => ['passwordCheck', 'password_request2'],
             ]
         ],
-        'password'          => [
+        'password'           => [
             'maxLength' => ['rule' => ['maxLength', 50]],
             'notEmpty'  => [
                 'rule' => 'notEmpty',
@@ -208,7 +230,7 @@ class User extends AppModel
                 'rule' => ['minLength', 8],
             ]
         ],
-        'password_confirm'  => [
+        'password_confirm'   => [
             'notEmpty'          => [
                 'rule' => 'notEmpty',
             ],
@@ -216,23 +238,24 @@ class User extends AppModel
                 'rule' => ['passwordSameCheck', 'password'],
             ],
         ],
-        'photo'             => [
+        'photo'              => [
             'image_max_size' => ['rule' => ['attachmentMaxSize', 10485760],], //10mb
             'image_type'     => ['rule' => ['attachmentContentType', ['image/jpeg', 'image/gif', 'image/png']],]
         ],
-        'hometown'          => [
+        'hometown'           => [
             'maxLength' => ['rule' => ['maxLength', 128]],
             'isString'  => [
                 'rule'       => ['isString',],
                 'allowEmpty' => true,
             ],
         ],
-        'comment'           => [
+        'comment'            => [
             'maxLength' => ['rule' => ['maxLength', 2000]],
         ],
-        'phone_no'          => [
+        'phone_no'           => [
             'maxLength' => ['rule' => ['maxLength', 20]],
         ],
+        'setup_complete_flg' => ['boolean' => ['rule' => ['boolean'], 'allowEmpty' => true,],],
     ];
 
     public $profileFields = [
@@ -286,6 +309,7 @@ class User extends AppModel
         'Collaborator',
         'Evaluator',
         'RecoveryCode',
+        'Device'
     ];
 
     /**
@@ -376,6 +400,28 @@ class User extends AppModel
             'contain'    => ['User']
         ];
         return $this->Email->find('first', $options);
+    }
+
+    public function getUsersSetupNotCompleted($team_id = false)
+    {
+        $options = [
+            'conditions' => [
+                'User.setup_complete_flg' => false,
+            ],
+        ];
+
+        if ($team_id) {
+            $options['joins'][] = [
+                'type'       => 'INNER',
+                'table'      => 'team_members',
+                'alias'      => 'TeamMember',
+                'conditions' => [
+                    'TeamMember.user_id = User.id',
+                    'TeamMember.team_id' => $team_id,
+                ]
+            ];
+        }
+        return $this->find('all', $options);
     }
 
     public function getDetail($id)
@@ -1323,6 +1369,63 @@ class User extends AppModel
             $res[] = $data;
         }
         return $res;
+    }
+
+    /**
+     * check registered profile for setup-guide
+     *
+     * @return boolean isCompleted
+     */
+    function isCompletedProfileForSetup($user_id)
+    {
+        $options = [
+            'conditions' => [
+                'User.id' => $user_id,
+            ],
+            'contain'    => [
+                'TeamMember' => [
+                    'fields'     => [
+                        'TeamMember.id', 'TeamMember.comment'
+                    ]
+                ]
+            ]
+        ];
+        $res = $this->findWithoutTeamId('first', $options);
+
+        $profile_photo_is_registered = (bool)viaIsSet($res['User']['photo_file_name']);
+        $comment_is_registered = false;
+
+        if(!isset($res['TeamMember'])) {
+          return false;
+        }
+
+        // Because profile comment stride mult team, should check all comment of each teams.
+        foreach ($res['TeamMember'] as $team_member) {
+            if ($team_member['comment']) {
+                $comment_is_registered = true;
+                break;
+            }
+        }
+
+        return $profile_photo_is_registered && $comment_is_registered;
+    }
+
+    function generateSetupGuideStatusDict($user_id)
+    {
+        return [
+            self::SETUP_PROFILE                  => $this->isCompletedProfileForSetup($user_id),
+            self::SETUP_MOBILE_APP               => $this->Device->isInstalledMobileApp($user_id),
+            self::SETUP_GOAL_CREATED             => $this->Goal->isCreatedForSetupBy($user_id),
+            self::SETUP_ACTION_POSTED            => $this->Goal->ActionResult->isPostedActionForSetupBy($user_id),
+            self::SETUP_CIRCLE_JOINED_OR_CREATED => $this->CircleMember->isJoinedForSetupBy($user_id),
+            self::SETUP_CIRCLE_POSTED            => $this->Post->isPostedCircleForSetupBy($user_id)
+        ];
+    }
+
+    function completeSetupGuide($user_id)
+    {
+        $this->id = $user_id;
+        return $this->saveField('setup_complete_flg', self::SETUP_GUIDE_IS_COMPLETED);
     }
 
 }

@@ -94,24 +94,6 @@ class EvaluationTest extends GoalousTestCase
         $this->assertTrue(isset($e));
     }
 
-    function testCheckAvailViewEvaluateListNotEnabled()
-    {
-        $this->Evaluation->Team->TeamMember->deleteAll(['TeamMember.team_id' => 1]);
-        $data = [
-            'team_id'               => 1,
-            'user_id'               => 1,
-            'evaluation_enable_flg' => 0,
-        ];
-        $this->Evaluation->Team->TeamMember->save($data);
-        $this->Evaluation->Team->TeamMember->current_team_id = 1;
-        $this->Evaluation->Team->TeamMember->my_uid = 1;
-        try {
-            $this->Evaluation->checkAvailViewEvaluationList();
-        } catch (RuntimeException $e) {
-        }
-        $this->assertTrue(isset($e));
-    }
-
     function testCheckAvailParameterInEvalFormParameterIsNull()
     {
         $this->_setDefault();
@@ -208,6 +190,8 @@ class EvaluationTest extends GoalousTestCase
                     'team_id'           => 1,
                     'comment'           => 'あいうえお',
                     'evaluate_score_id' => 1,
+                    'evaluatee_user_id' => 1,
+                    'evaluate_term_id'  => 1,
                 ],
             ],
             [
@@ -216,6 +200,8 @@ class EvaluationTest extends GoalousTestCase
                     'team_id'           => 1,
                     'comment'           => 'かきくけこ',
                     'evaluate_score_id' => 1,
+                    'evaluatee_user_id' => 1,
+                    'evaluate_term_id'  => 1,
                 ],
             ],
             [
@@ -224,6 +210,8 @@ class EvaluationTest extends GoalousTestCase
                     'team_id'           => 1,
                     'comment'           => 'さしすせそ',
                     'evaluate_score_id' => 1,
+                    'evaluatee_user_id' => 1,
+                    'evaluate_term_id'  => 1,
                 ],
             ],
         ];
@@ -252,6 +240,8 @@ class EvaluationTest extends GoalousTestCase
                     'team_id'           => 1,
                     'comment'           => 'あいうえお',
                     'evaluate_score_id' => 1,
+                    'evaluatee_user_id' => 1,
+                    'evaluate_term_id'  => 1,
                 ],
             ],
             [
@@ -260,6 +250,8 @@ class EvaluationTest extends GoalousTestCase
                     'team_id'           => 1,
                     'comment'           => 'かきくけこ',
                     'evaluate_score_id' => 1,
+                    'evaluatee_user_id' => 1,
+                    'evaluate_term_id'  => 1,
                 ],
             ],
             [
@@ -268,6 +260,8 @@ class EvaluationTest extends GoalousTestCase
                     'team_id'           => 1,
                     'comment'           => 'さしすせそ',
                     'evaluate_score_id' => 1,
+                    'evaluatee_user_id' => 1,
+                    'evaluate_term_id'  => 1,
                 ],
             ],
         ];
@@ -289,7 +283,6 @@ class EvaluationTest extends GoalousTestCase
     function testAddRegisterAsEvaluatorHadNextEvaluator()
     {
         $this->_setDefault();
-        $this->Evaluation->deleteAll(['Evaluation.id >' => 0]);
         $this->_saveEvaluations();
         $registerData = [
             [
