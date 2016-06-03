@@ -261,6 +261,16 @@ class PagesController extends AppController
             $parsed_referer_url = Router::parse($this->referer('/', true));
             $request_status = viaIsSet($url_params['st']);
             $status_from_referer = $this->_defineStatusFromReferer();
+
+            // When parametes separated from google analitics already exists,
+            // ignore redirect for google analitics.
+            $reserved_params = ['notify_id', 'after_click', 'common_form', 'team_id', 'from'];
+            foreach($reserved_params as $param) {
+                if(viaIsSet($this->request->params[$param]) || viaIsSet($this->request->params['named'][$param])) {
+                    return true;
+                }
+            }
+
             if($request_status !== $status_from_referer) {
                 return $this->redirect("/?st={$status_from_referer}");
             }
