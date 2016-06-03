@@ -1711,7 +1711,26 @@ class TeamsController extends AppController
                 }
                 break;
         }
-        $this->set('ranking', $ranking);
+
+        // calculating rank logic
+        // $count_rank with key as count and value as rank
+        $count_rank = $filter_ranking = [];
+        $rank = 1;
+        $max_ranking_no = 30;
+        foreach($ranking as $rankGoalIdKey=>$rankArrVal) {
+            if(!isset($count_rank[$rankArrVal['count']])) {
+                if($rank > $max_ranking_no) {
+                    break;
+                }
+                $count_rank[$rankArrVal['count']] = $rank;
+                $ranking[$rankGoalIdKey]['rank'] = $count_rank[$rankArrVal['count']];
+            } else {
+                $ranking[$rankGoalIdKey]['rank'] = $count_rank[$rankArrVal['count']];
+            }
+            $filter_ranking[$rankGoalIdKey] = $ranking[$rankGoalIdKey];
+            $rank++;
+        }
+        $this->set('ranking', $filter_ranking);
 
         $response = $this->render('Team/insight_ranking_result');
         $html = $response->__toString();
@@ -2205,7 +2224,7 @@ class TeamsController extends AppController
                 'goal_user_id' => $user_ids,
                 'start'        => $start_time,
                 'end'          => $end_time,
-                'limit'        => 30,
+//                'limit'        => 30,
 
             ]);
 
