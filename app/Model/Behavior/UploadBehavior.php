@@ -235,6 +235,11 @@ class UploadBehavior extends ModelBehavior
             foreach ($this->toWrite as $field => $toWrite) {
                 $settings = $this->_interpolate($model, $field, $toWrite['name'], 'original');
                 $destDir = dirname($settings['path']);
+                $parentDir = dirname($destDir);
+                if (!file_exists($parentDir)) {
+                    @mkdir($parentDir, 0777, true);
+                    @chmod($parentDir, 0777);
+                }
                 if (!file_exists($destDir)) {
                     @mkdir($destDir, 0777, true);
                     @chmod($destDir, 0777);
