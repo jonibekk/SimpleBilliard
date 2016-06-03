@@ -1627,6 +1627,9 @@ class TeamMember extends AppModel
                     'PrimaryEmail' => [
                         'fields' => ['email'],
                     ],
+                    'Email'        => [
+                        'fields' => ['email_verified']
+                    ]
                 ];
                 break;
             case 'final_evaluation':
@@ -1634,9 +1637,22 @@ class TeamMember extends AppModel
                 $options['conditions'] += [
                     'TeamMember.user_id' => $uids,
                 ];
+                $options['contain']['User']['Email'] = [
+                    'fields' => ['email_verified']
+                ];
                 break;
         }
-        $this->all_users = $this->find('all', $options);
+
+        // exclude email unverified user
+        $all_users_include_unverified_user = $this->find('all', $options);
+        $all_users = [];
+        foreach ($all_users_include_unverified_user as $key => $user) {
+            if (viaIsSet($user['User']['Email'][0]['email_verified'])) {
+                unset($user['User']['Email']);
+                $all_users[] = $user;
+            }
+        }
+        $this->all_users = $all_users;
         return;
     }
 

@@ -242,7 +242,7 @@ class UserTest extends GoalousTestCase
     function testVerifyEmail()
     {
         $token = "12345678";
-        $user_id = "2";
+        $user_id = "15";
         $before_data = $this->User->find('first', ['conditions' => ['User.id' => $user_id], 'contain' => ['Email']]);
         $before_data = [
             'User'  => [

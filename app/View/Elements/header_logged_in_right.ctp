@@ -20,14 +20,16 @@
                                                                                                 'Home') ?></a>
     <?php endif; ?>
 
-    <a href="/setup/" class="header-setup" id="setup">
-        <i class="fa fa-book  header-icons header-dropdown-icon-add header-function-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>" id="setupIcon"></i>
-        <?php if($setup_rest_count >= 1): ?>
-        <div class="btn btn-xs bell-notify-box notify-setup-numbers" id="setupNum">
-            <span><?= $setup_rest_count ?></span>
-        </div>
-        <?php endif; ?>
-    </a>
+    <div class="header-setup" id="setup">
+        <a href="/setup/" class="btn-header-setup">
+            <i class="fa fa-book  header-icons header-dropdown-icon-add header-function-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>" id="setupIcon"></i>
+            <?php if($setup_rest_count >= 1): ?>
+            <div class="btn btn-xs bell-notify-box notify-setup-numbers" id="setupNum">
+                <span><?= $setup_rest_count ?></span>
+            </div>
+            <?php endif; ?>
+        </a>
+    </div>
 
     <div class="header-dropdown-add">
         <a href="#" data-toggle="dropdown" id="download" class="btn-addition-header">
