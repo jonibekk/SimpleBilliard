@@ -971,7 +971,7 @@ class NotifyBizComponent extends Component
         $original_lang = Configure::read('Config.language');
 
         $post_url = null;
-        if ($this->notify_option['url']) {
+        if (viaIsSet($this->notify_option['url'])) {
             $post_url = $this->notify_option['url'];
         }
         else {
