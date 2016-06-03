@@ -237,12 +237,12 @@ class UploadBehavior extends ModelBehavior
                 $destDir = dirname($settings['path']);
                 $parentDir = dirname($destDir);
                 if (!file_exists($parentDir)) {
-                    @mkdir($parentDir, 0777, true);
-                    @chmod($parentDir, 0777);
+                    @mkdir($parentDir, 0775, true);
+                    @chmod($parentDir, 0775);
                 }
                 if (!file_exists($destDir)) {
-                    @mkdir($destDir, 0777, true);
-                    @chmod($destDir, 0777);
+                    @mkdir($destDir, 0775, true);
+                    @chmod($destDir, 0775);
                 }
                 if (is_dir($destDir) && is_writable($destDir)) {
                     $move = !empty($toWrite['remote']) ? 'rename' : 'move_uploaded_file';
