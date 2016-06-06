@@ -155,6 +155,7 @@ class Follower extends AppModel
                 'conditions' => [
                     'MemberGroup.user_id = User.id',
                     'MemberGroup.index_num' => 0,
+                    'MemberGroup.team_id'   => $this->current_team_id,
                 ],
             ];
             $options['joins'][] = [
@@ -163,6 +164,7 @@ class Follower extends AppModel
                 'alias'      => 'Group',
                 'conditions' => [
                     'Group.id = MemberGroup.group_id',
+                    'Group.team_id' => $this->current_team_id,
                 ],
             ];
             $options['fields'][] = 'Group.*';

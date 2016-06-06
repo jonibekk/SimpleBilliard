@@ -19,7 +19,8 @@ $this->set('hidden_sidebar_xxs', true);
         <li class="active"><a href="#basic_setting"><?= __("Basic settings") ?></a></li>
         <li class=""><a href="#term_setting"><?= __("Term settings") ?></a></li>
         <li class=""><a href="#invite_member"><?= __("Invitation") ?></a></li>
-        <li class=""><a href="#batch_registration"><?= __("Batch Registration") ?></a></li>
+        <? //TODO 修正完了まで一時的にコメントアウト?>
+<!--        <li class=""><a href="#batch_registration">--><?//= __("Batch Registration") ?><!--</a></li>-->
         <li class=""><a href="#goal_category"><?= __("Goal category settings") ?></a></li>
         <li class=""><a href="#evaluation"><?= __("Evaluation settings") ?></a></li>
         <li class=""><a href="#evaluation_score_setting"><?= __("Evaluation settings") ?></a></li>
@@ -39,9 +40,10 @@ $this->set('hidden_sidebar_xxs', true);
 <div id="invite_member">
     <?= $this->element('Team/invite') ?>
 </div>
-<div id="batch_registration">
-    <?= $this->element('Team/batch_setup') ?>
-</div>
+<? //TODO 修正完了まで一時的にコメントアウト?>
+<!--<div id="batch_registration">-->
+<!--    --><?//= $this->element('Team/batch_setup') ?>
+<!--</div>-->
 <div id="goal_category">
     <?= $this->element('Team/goal_category_setting') ?>
 </div>
