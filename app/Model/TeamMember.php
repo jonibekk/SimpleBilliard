@@ -739,17 +739,20 @@ class TeamMember extends AppModel
                 ]
             ];
             $user = $this->User->Email->find('first', $options);
+
             if (viaIsSet($user['User'])) {
                 $this->csv_datas[$k]['User'] = $user['User'];
             }
             if (viaIsSet($user['User']['TeamMember'][0]['id'])) {
                 $this->csv_datas[$k]['TeamMember']['id'] = $user['User']['TeamMember'][0]['id'];
-                $this->save($this->csv_datas[$k]['TeamMember']);
             }
             else {
                 $this->create();
-                $this->save($this->csv_datas[$k]['TeamMember']);
             }
+
+            // 意図しないカラムの更新を防ぐために、明示的に更新するカラムを指定する
+            $team_member_update_fields = array_keys($this->csv_datas[$k]['TeamMember']);
+            $this->save($this->csv_datas[$k]['TeamMember'], true, $team_member_update_fields);
         }
 
         /**
@@ -892,7 +895,9 @@ class TeamMember extends AppModel
                 $this->csv_datas[$row_k]['Email'] = $user['Email'];
                 //ユーザが存在した場合は、ユーザ情報を書き換える。User,LocalName
                 $user['User'] = array_merge($user['User'], $row_v['User']);
-                $user = $this->User->save($user['User']);
+                // 意図しないカラムの更新を防ぐために、明示的に更新するカラムを指定する
+                $user_update_fields = array_keys($user['User']);
+                $user = $this->User->save($user['User'], true, $user_update_fields);
             }
             else {
                 //なければ、ユーザ情報(User,Email)を登録。
