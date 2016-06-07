@@ -36,6 +36,8 @@ class UserTest extends GoalousTestCase
         'app.goal',
         'app.action_result',
         'app.post_share_circle',
+        'app.job_category',
+        'app.member_type'
     );
 
     public $basicUserDefault = [
@@ -1066,19 +1068,61 @@ class UserTest extends GoalousTestCase
 
     function testGetUsersSetupNotCompleted()
     {
-        $res = $this->User->getUsersSetupNotCompleted();
-        $this->assertNotEmpty($res);
+        // user: active, team: active, team_member: active
+        $this->_saveUserRecords(['id' => $user_id = 1, 'setup_complete_flg' => false, 'active_flg' => true], $exec_delete_all = true);
+        $this->_saveTeamRecords(['id' => $team_id = 1, 'del_flg' => false], $exec_delete_all = true);
+        $this->_saveTeamMemberRecords(['user_id' => $user_id, 'team_id' => $team_id, 'active_flg' => true], $exec_delete_all = true);
+        $this->assertTrue((bool)$this->User->getUsersSetupNotCompleted());
+        // assign team_id
+        $this->_saveUserRecords(['id' => $user_id = 1, 'setup_complete_flg' => false, 'active_flg' => true], $exec_delete_all = true);
+        $this->_saveTeamRecords(['id' => $team_id = 1, 'del_flg' => false], $exec_delete_all = true);
+        $this->_saveTeamMemberRecords(['user_id' => $user_id, 'team_id' => $team_id, 'active_flg' => true], $exec_delete_all = true);
+        $this->assertTrue((bool)$this->User->getUsersSetupNotCompleted($team_id));
+
+        // user: active, team: INACTIVE, team_member: active
+        $this->_saveUserRecords(['id' => $user_id = 1, 'setup_complete_flg' => false, 'active_flg' => true], $exec_delete_all = true);
+        $this->_saveTeamRecords(['id' => $team_id = 1, 'del_flg' => true], $exec_delete_all = true);
+        $this->_saveTeamMemberRecords(['user_id' => $user_id, 'team_id' => $team_id, 'active_flg' => true], $exec_delete_all = true);
+        $this->assertFalse((bool)$this->User->getUsersSetupNotCompleted());
+
+        // user: active, team: active, team_member: INACTIVE
+        $this->_saveUserRecords(['id' => $user_id = 1, 'setup_complete_flg' => false, 'active_flg' => true], $exec_delete_all = true);
+        $this->_saveTeamRecords(['id' => $team_id = 1, 'del_flg' => false], $exec_delete_all = true);
+        $this->_saveTeamMemberRecords(['user_id' => $user_id, 'team_id' => $team_id, 'active_flg' => false], $exec_delete_all = true);
+        $this->assertFalse((bool)$this->User->getUsersSetupNotCompleted());
+
+        // user: INACTIVE, team: active, team_member: active
+        $this->_saveUserRecords(['id' => $user_id = 1, 'setup_complete_flg' => false, 'active_flg' => false], $exec_delete_all = true);
+        $this->_saveTeamRecords(['id' => $team_id = 1, 'del_flg' => false], $exec_delete_all = true);
+        $this->_saveTeamMemberRecords(['user_id' => $user_id, 'team_id' => $team_id, 'active_flg' => true], $exec_delete_all = true);
+        $this->assertFalse((bool)$this->User->getUsersSetupNotCompleted());
     }
 
-    function testGetUsersSetupNotCompleted2()
+    function _saveUserRecords($data, $exec_delete_all = false)
     {
-        $res = $this->User->getUsersSetupNotCompleted(1);
-        $this->assertNotEmpty($res);
+        if ($exec_delete_all) {
+            $this->User->deleteAll(['User.id >' => 0]);
+        }
+        $this->User->saveAll($data, ['validate' => false]);
+        return;
     }
 
-    function testGetUsersSetupNotCompletedNoData()
+    function _saveTeamRecords($data, $exec_delete_all = false)
     {
-        $res = $this->User->getUsersSetupNotCompleted(9999);
-        $this->assertEmpty($res);
+        if ($exec_delete_all) {
+            $this->User->TeamMember->Team->deleteAll(['Team.id >' => 0]);
+        }
+        $this->User->TeamMember->Team->saveAll($data, ['validate' => false]);
+        return;
     }
+
+    function _saveTeamMemberRecords($data, $exec_delete_all = false)
+    {
+        if ($exec_delete_all) {
+            $this->User->TeamMember->deleteAll(['TeamMember.id >' => 0]);
+        }
+        $this->User->TeamMember->saveAll($data, ['validate' => false]);
+        return;
+    }
+
 }
