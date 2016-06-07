@@ -28,7 +28,10 @@
                         <?php if (isset($circle["{$key}_cmp"])): ?>
                             <?php if ($circle["{$key}_cmp"] >= 0): ?>
                                 <div class="insight-circle-cmp-percent insight-cmp-percent-plus">
-                                    <?= __('▲') ?> <?= h($circle["{$key}_cmp"]) ?>%
+                                    <?php if ($circle["{$key}_cmp"] > 0): ?>
+                                        <?= __('▲') ?>
+                                    <?php endif ?>
+                                    <?= h($circle["{$key}_cmp"]) ?>%
                                 </div>
                             <?php elseif ($circle["{$key}_cmp"] < 0): ?>
                                 <div class="insight-circle-cmp-percent insight-cmp-percent-minus">

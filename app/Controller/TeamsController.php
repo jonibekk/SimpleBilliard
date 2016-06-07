@@ -1711,7 +1711,27 @@ class TeamsController extends AppController
                 }
                 break;
         }
-        $this->set('ranking', $ranking);
+
+        // calculating rank logic
+        // $count_rank with key as count and value as rank
+        $count_rank = $filter_ranking = [];
+        $rank = 1;
+        $max_ranking_no = 30;
+        foreach($ranking as $rankKey=>$rankArrVal) {
+            if(!isset($count_rank[$rankArrVal['count']])) {
+                if($rank > $max_ranking_no) {
+                    break;
+                }
+                $count_rank[$rankArrVal['count']] = $rank;
+                $ranking[$rankKey]['rank'] = $count_rank[$rankArrVal['count']];
+            } else {
+                $ranking[$rankKey]['rank'] = $count_rank[$rankArrVal['count']];
+            }
+            $filter_ranking[$rankKey] = $ranking[$rankKey];
+            $rank++;
+        }
+
+        $this->set('ranking', $filter_ranking);
 
         $response = $this->render('Team/insight_ranking_result');
         $html = $response->__toString();
@@ -2106,8 +2126,9 @@ class TeamsController extends AppController
                 'post_user_id'    => $user_ids,
                 'post_type'       => Post::TYPE_NORMAL,
                 'share_circle_id' => array_keys($public_circle_list),
-                'limit'           => 30,
             ]);
+
+
 
         // 最もいいねされたアクション
         $action_like_ranking = $this->Post->PostLike->getRanking(
@@ -2116,7 +2137,6 @@ class TeamsController extends AppController
                 'post_type'    => Post::TYPE_ACTION,
                 'start'        => $start_time,
                 'end'          => $end_time,
-                'limit'        => 30,
 
             ]);
 
@@ -2128,7 +2148,6 @@ class TeamsController extends AppController
                 'start'           => $start_time,
                 'end'             => $end_time,
                 'share_circle_id' => array_keys($public_circle_list),
-                'limit'           => 30,
 
             ]);
 
@@ -2139,7 +2158,6 @@ class TeamsController extends AppController
                 'post_type'    => Post::TYPE_ACTION,
                 'start'        => $start_time,
                 'end'          => $end_time,
-                'limit'        => 30,
 
             ]);
 
@@ -2208,7 +2226,6 @@ class TeamsController extends AppController
                 'goal_user_id' => $user_ids,
                 'start'        => $start_time,
                 'end'          => $end_time,
-                'limit'        => 30,
 
             ]);
 
@@ -2274,7 +2291,6 @@ class TeamsController extends AppController
                 'user_id' => $user_ids,
                 'start'   => $start_time,
                 'end'     => $end_time,
-                'limit'   => 30,
 
             ]);
 
@@ -2284,7 +2300,6 @@ class TeamsController extends AppController
                 'user_id' => $user_ids,
                 'start'   => $start_time,
                 'end'     => $end_time,
-                'limit'   => 30,
 
             ]);
 
