@@ -12,16 +12,7 @@ module.exports = (grunt) ->
     'concat:ng_app'
     'concat:ng_controller'
     'concat:ng_vendors'
-    'browserify:react'
     'concat:vendors'
-    'uglify'
-    'copy:js'
-    'copy:jsMap'
-    'clean:dest'
-  ]
-
-  grunt.registerTask 'react', [
-    'browserify:react'
     'uglify'
     'copy:js'
     'copy:jsMap'
@@ -47,6 +38,7 @@ module.exports = (grunt) ->
   # chef task (!watch)
   #
   grunt.registerTask 'chef', [
+    'browserify:react'
     'js'
     'css'
   ]

@@ -21,3 +21,8 @@ module.exports = (grunt) ->
       '<%= config.css %>/**/*.css'
     ]
     tasks: ['css']
+  react:
+    files: [
+      '<%= config.js %>/react/**/*.js'
+    ]
+    tasks: ['browserify:react']
