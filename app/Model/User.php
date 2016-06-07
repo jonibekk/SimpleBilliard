@@ -1466,4 +1466,19 @@ class User extends AppModel
         return $this->saveField('setup_complete_flg', self::SETUP_GUIDE_IS_COMPLETED);
     }
 
+    function filterActiveUserList($uids)
+    {
+        $options = [
+            'conditions' => [
+                'id'    => $uids,
+                'active_flg' => true,
+            ],
+            'fields'     => [
+                'id', 'id'
+            ]
+        ];
+        $res = $this->find('list', $options);
+        return $res;
+    }
+
 }

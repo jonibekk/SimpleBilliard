@@ -114,6 +114,10 @@ class TeamMember extends AppModel
         if (!empty($this->active_member_list)) {
             return $this->active_member_list;
         }
+        //if team is not exist
+        if (!$this->Team->findById($this->current_team_id)) {
+            return [];
+        }
         $options = [
             'conditions' => [
                 'active_flg' => true,
@@ -122,6 +126,8 @@ class TeamMember extends AppModel
             'fields'     => ['user_id', 'user_id']
         ];
         $this->active_member_list = $this->find('list', $options);
+        $this->active_member_list = $this->User->filterActiveUserList($this->active_member_list);
+
         return $this->active_member_list;
     }
 

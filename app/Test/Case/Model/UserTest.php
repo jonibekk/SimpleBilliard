@@ -1125,4 +1125,18 @@ class UserTest extends GoalousTestCase
         return;
     }
 
+    function testFilterActiveUserList()
+    {
+        $this->User->my_uid = 1;
+        $this->User->current_team_id = 1;
+
+        $current_list = $this->User->filterActiveUserList([1, 2, 3, 4, 5]);
+        //to be inactive 1 user
+        foreach ($current_list as $val) {
+            $this->User->save(['id' => $val, 'active_flg' => false]);
+            break;
+        }
+        $after_list = $this->User->filterActiveUserList([1, 2, 3, 4, 5]);
+        $this->assertEquals(count($current_list), count($after_list) + 1);
+    }
 }

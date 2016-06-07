@@ -82,6 +82,7 @@ class NotifyBizComponent extends Component
 
     /**
      * セットアップガイドの通知を送る
+     *
      * @param $user_id
      * @param $message
      * @param $url_data
@@ -385,9 +386,13 @@ class NotifyBizComponent extends Component
         }
         //宛先は閲覧可能な全ユーザ
         $members = $this->Post->getShareAllMemberList($post_id);
+        //exclude inactive users
+        $members = array_intersect($members, $this->Team->TeamMember->getActiveTeamMembersList());
 
         // 共有した個人一覧
         $share_user_list = $this->Post->PostShareUser->getShareUserListByPost($post_id);
+        //exclude inactive users
+        $share_user_list = array_intersect($share_user_list, $this->Team->TeamMember->getActiveTeamMembersList());
 
         // 共有したサークル一覧
         $share_circle_list = $this->Post->PostShareCircle->getShareCircleList($post_id);
@@ -448,6 +453,8 @@ class NotifyBizComponent extends Component
 
         //宛先は閲覧可能な全ユーザ
         $members = $this->Post->getShareAllMemberList($post_id);
+        //exclude inactive users
+        $members = array_intersect($members, $this->Team->TeamMember->getActiveTeamMembersList());
 
         //対象ユーザの通知設定確認
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($members,
@@ -471,6 +478,10 @@ class NotifyBizComponent extends Component
         //宛先は招待した人
         $invite = $this->Team->Invite->getInviteById($invite_id);
         if (!viaIsSet($invite['FromUser']['id']) || !viaIsSet($invite['Team']['name'])) {
+            return;
+        }
+        //inactive user
+        if (!$this->Team->TeamMember->isActive($invite['FromUser']['id'])) {
             return;
         }
 
@@ -509,6 +520,9 @@ class NotifyBizComponent extends Component
         $share_members = $this->Post->getShareAllMemberList($post['Post']['id']);
 
         $members = $share_members + $collaborators + $followers + [$coach_id => $coach_id];
+        //exclude inactive users
+        $members = array_intersect($members, $this->Team->TeamMember->getActiveTeamMembersList());
+
         unset($members[$this->Team->my_uid]);
 
         //対象ユーザの通知設定確認
@@ -538,6 +552,8 @@ class NotifyBizComponent extends Component
         if (empty($circle_member_list)) {
             return;
         }
+        //exclude inactive users
+        $circle_member_list = array_intersect($circle_member_list, $this->Team->TeamMember->getActiveTeamMembersList());
         $circle = $this->Post->User->CircleMember->Circle->findById($circle_id);
         if (empty($circle)) {
             return;
@@ -568,6 +584,8 @@ class NotifyBizComponent extends Component
         if (empty($circle_member_list)) {
             return;
         }
+        //exclude inactive users
+        $circle_member_list = array_intersect($circle_member_list, $this->Team->TeamMember->getActiveTeamMembersList());
         $circle = $this->Post->User->CircleMember->Circle->findById($circle_id);
         if (empty($circle)) {
             return;
@@ -598,6 +616,10 @@ class NotifyBizComponent extends Component
         if (empty($circle)) {
             return;
         }
+        //if inactive user
+        if (!$this->Team->TeamMember->isActive($user_id)) {
+            return;
+        }
         //対象ユーザの通知設定
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($user_id,
                                                                             NotifySetting::TYPE_CIRCLE_ADD_USER);
@@ -620,6 +642,8 @@ class NotifyBizComponent extends Component
             return;
         }
         $collaborators = $this->Goal->Collaborator->getCollaboratorListByGoalId($goal_id);
+        //exclude inactive users
+        $collaborators = array_intersect($collaborators, $this->Team->TeamMember->getActiveTeamMembersList());
         //対象ユーザの通知設定
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($collaborators,
                                                                             NotifySetting::TYPE_MY_GOAL_FOLLOW);
@@ -644,6 +668,8 @@ class NotifyBizComponent extends Component
             return;
         }
         $collaborators = $this->Goal->Collaborator->getCollaboratorListByGoalId($goal_id);
+        //exclude inactive users
+        $collaborators = array_intersect($collaborators, $this->Team->TeamMember->getActiveTeamMembersList());
         //exclude me
         unset($collaborators[$user_id]);
         //対象ユーザの通知設定
@@ -670,6 +696,8 @@ class NotifyBizComponent extends Component
             return;
         }
         $collaborators = $this->Goal->Collaborator->getCollaboratorListByGoalId($goal_id);
+        //exclude inactive users
+        $collaborators = array_intersect($collaborators, $this->Team->TeamMember->getActiveTeamMembersList());
         //exclude me
         unset($collaborators[$user_id]);
         if (empty($collaborators)) {
@@ -698,6 +726,10 @@ class NotifyBizComponent extends Component
     {
         $goal = $this->Goal->getGoal($goal_id);
         if (empty($goal)) {
+            return;
+        }
+        //inactive user
+        if (!$this->Team->TeamMember->isActive($to_user_id)) {
             return;
         }
         //対象ユーザの通知設定
@@ -733,6 +765,10 @@ class NotifyBizComponent extends Component
     private function _setForNextEvaluatorOption($evaluate_id)
     {
         $evaluation = $this->Goal->Evaluation->findById($evaluate_id);
+        //inactive user
+        if (!$this->Team->TeamMember->isActive($evaluation['Evaluation']['evaluator_user_id'])) {
+            return;
+        }
         //対象ユーザの通知設定
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($evaluation['Evaluation']['evaluator_user_id'],
                                                                             NotifySetting::TYPE_EVALUATION_CAN_AS_EVALUATOR);
@@ -765,6 +801,8 @@ class NotifyBizComponent extends Component
         $evaluatees = $this->Goal->Evaluation->getEvaluateeIdsByTermId($term_id);
         $evaluators = $this->Goal->Evaluation->getEvaluatorIdsByTermId($term_id);
         $to_user_ids = $evaluatees + $evaluators;
+        //exclude inactive users
+        $to_user_ids = array_intersect($to_user_ids, $this->Team->TeamMember->getActiveTeamMembersList());
         if (isset($to_user_ids[$user_id])) {
             unset($to_user_ids[$user_id]);
         }
@@ -802,6 +840,9 @@ class NotifyBizComponent extends Component
         if (empty($commented_user_list)) {
             return;
         }
+        //exclude inactive users
+        $commented_user_list = array_intersect($commented_user_list,
+                                               $this->Team->TeamMember->getActiveTeamMembersList());
         $post = $this->Post->findById($post_id);
         if (empty($post)) {
             return;
@@ -842,6 +883,10 @@ class NotifyBizComponent extends Component
         }
         //自分の投稿へのコメントの場合は処理しない
         if ($post['Post']['user_id'] == $this->NotifySetting->my_uid) {
+            return;
+        }
+        // if inactive user
+        if (!$this->Team->TeamMember->isActive($post['Post']['user_id'])) {
             return;
         }
         //通知対象者の通知設定確認
