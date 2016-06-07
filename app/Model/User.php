@@ -459,7 +459,7 @@ class User extends AppModel
             }
         }
 
-        return $this->find('all', $options);
+        return $active_users_only;
     }
 
     public function getDetail($id)
