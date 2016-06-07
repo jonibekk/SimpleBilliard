@@ -407,21 +407,21 @@ class User extends AppModel
         $options = [
             'conditions' => [
                 'User.setup_complete_flg' => false,
-                'User.active_flg' => true,
+                'User.active_flg'         => true,
             ],
-            'contain' => [
+            'contain'    => [
                 'TeamMember' => [
                     'conditions' => [
                         'TeamMember.active_flg' => true
                     ],
-                    'fields' => [
+                    'fields'     => [
                         'TeamMember.id', 'TeamMember.team_id'
                     ],
-                    'Team' => [
+                    'Team'       => [
                         'conditions' => [
                             'Team.del_flg' => false
                         ],
-                        'fields' => [
+                        'fields'     => [
                             'Team.id'
                         ]
                     ]
@@ -444,15 +444,15 @@ class User extends AppModel
         $all_users_contain_team_is_inactive = $this->find('all', $options);
         $active_users_only = [];
 
-        foreach($all_users_contain_team_is_inactive as $user) {
+        foreach ($all_users_contain_team_is_inactive as $user) {
             // Checking belongs to any teams.
-            if(count($team_member_list = $user['TeamMember']) === 0) {
+            if (count($team_member_list = $user['TeamMember']) === 0) {
                 continue;
             }
 
             // Checking teams that belongs to is active
-            foreach($team_member_list as $team_member) {
-                if(viaIsSet($team_member['Team']['id'])) {
+            foreach ($team_member_list as $team_member) {
+                if (viaIsSet($team_member['Team']['id'])) {
                     $active_users_only[] = $user;
                     break;
                 }
@@ -1422,7 +1422,7 @@ class User extends AppModel
             ],
             'contain'    => [
                 'TeamMember' => [
-                    'fields'     => [
+                    'fields' => [
                         'TeamMember.id', 'TeamMember.comment'
                     ]
                 ]
@@ -1433,8 +1433,8 @@ class User extends AppModel
         $profile_photo_is_registered = (bool)viaIsSet($res['User']['photo_file_name']);
         $comment_is_registered = false;
 
-        if(!isset($res['TeamMember'])) {
-          return false;
+        if (!isset($res['TeamMember'])) {
+            return false;
         }
 
         // Because profile comment stride mult team, should check all comment of each teams.
