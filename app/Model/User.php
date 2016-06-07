@@ -1384,7 +1384,7 @@ class User extends AppModel
             ],
             'contain'    => [
                 'TeamMember' => [
-                    'fields'     => [
+                    'fields' => [
                         'TeamMember.id', 'TeamMember.comment'
                     ]
                 ]
@@ -1395,8 +1395,8 @@ class User extends AppModel
         $profile_photo_is_registered = (bool)viaIsSet($res['User']['photo_file_name']);
         $comment_is_registered = false;
 
-        if(!isset($res['TeamMember'])) {
-          return false;
+        if (!isset($res['TeamMember'])) {
+            return false;
         }
 
         // Because profile comment stride mult team, should check all comment of each teams.
@@ -1426,6 +1426,21 @@ class User extends AppModel
     {
         $this->id = $user_id;
         return $this->saveField('setup_complete_flg', self::SETUP_GUIDE_IS_COMPLETED);
+    }
+
+    function filterActiveUserList($uids)
+    {
+        $options = [
+            'conditions' => [
+                'id'    => $uids,
+                'active_flg' => true,
+            ],
+            'fields'     => [
+                'id', 'id'
+            ]
+        ];
+        $res = $this->find('list', $options);
+        return $res;
     }
 
 }

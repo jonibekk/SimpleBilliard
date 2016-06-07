@@ -126,6 +126,8 @@ class TeamMember extends AppModel
             'fields'     => ['user_id', 'user_id']
         ];
         $this->active_member_list = $this->find('list', $options);
+        $this->active_member_list = $this->User->filterActiveUserList($this->active_member_list);
+
         return $this->active_member_list;
     }
 
