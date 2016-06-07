@@ -1073,6 +1073,11 @@ class UserTest extends GoalousTestCase
         $this->_saveTeamRecords(['id' => $team_id = 1, 'del_flg' => false], $exec_delete_all = true);
         $this->_saveTeamMemberRecords(['user_id' => $user_id, 'team_id' => $team_id, 'active_flg' => true], $exec_delete_all = true);
         $this->assertTrue((bool)$this->User->getUsersSetupNotCompleted());
+        // assign team_id
+        $this->_saveUserRecords(['id' => $user_id = 1, 'setup_complete_flg' => false, 'active_flg' => true], $exec_delete_all = true);
+        $this->_saveTeamRecords(['id' => $team_id = 1, 'del_flg' => false], $exec_delete_all = true);
+        $this->_saveTeamMemberRecords(['user_id' => $user_id, 'team_id' => $team_id, 'active_flg' => true], $exec_delete_all = true);
+        $this->assertTrue((bool)$this->User->getUsersSetupNotCompleted($team_id));
 
         // user: active, team: INACTIVE, team_member: active
         $this->_saveUserRecords(['id' => $user_id = 1, 'setup_complete_flg' => false, 'active_flg' => true], $exec_delete_all = true);
