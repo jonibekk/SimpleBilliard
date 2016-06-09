@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2016-05-18 19:52+0900\n"
-"PO-Revision-Date: 2016-05-18 19:53+0900\n"
+"POT-Creation-Date: 2016-06-06 17:47+0900\n"
+"PO-Revision-Date: 2016-06-06 17:49+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -26,28 +26,32 @@ msgstr ""
 "既にテストデータが存在するため、テストデータのインポートをキャンセルしまし"
 "た。"
 
-#: Console/Command/SetupGuideShell.php:155
+#: Console/Command/SetupGuideShell.php:156
 msgid "Please input your profile to Goalous."
 msgstr ""
 
-#: Console/Command/SetupGuideShell.php:159
+#: Console/Command/SetupGuideShell.php:160
 msgid "Please install the Goalous mobile application and login."
 msgstr ""
 
-#: Console/Command/SetupGuideShell.php:163
+#: Console/Command/SetupGuideShell.php:164
 msgid "Please create your GOAL."
 msgstr ""
 
-#: Console/Command/SetupGuideShell.php:167
+#: Console/Command/SetupGuideShell.php:168
 msgid "Please action on Goalous."
 msgstr ""
 
-#: Console/Command/SetupGuideShell.php:171
+#: Console/Command/SetupGuideShell.php:172
 msgid "Please join a circle."
 msgstr "サークルに参加するしてください。"
 
-#: Console/Command/SetupGuideShell.php:175
+#: Console/Command/SetupGuideShell.php:176
 msgid "Please post on Goalous."
+msgstr ""
+
+#: Console/Command/SetupGuideShell.php:186
+msgid "Click the below link to setup Goalous."
 msgstr ""
 
 #: Controller/AppController.php:162;165 View/Elements/Email/goalous_web.ctp:7
@@ -259,7 +263,7 @@ msgid "Failed to update Approvement."
 msgstr "認定の更新に失敗しました。"
 
 #: Controller/GoalsController.php:79;242;473;479;514;551;611;643;686;1230
-#: Controller/SetupController.php:261;268
+#: Controller/SetupController.php:260;267
 msgid "You have no permission."
 msgstr "権限がありません。"
 
@@ -379,13 +383,13 @@ msgstr "アクションを更新しました。"
 msgid "Member Number"
 msgstr "Member Number"
 
-#: Controller/GoalsController.php:1119 Model/TeamMember.php:1916;1920;1924
+#: Controller/GoalsController.php:1119 Model/TeamMember.php:1960;1964;1968
 #: View/Elements/User/profile_setting.ctp:69 View/Users/add_profile.ctp:57
 #: View/Users/register.ctp:30
 msgid "Last Name"
 msgstr "姓(ローマ字)"
 
-#: Controller/GoalsController.php:1120 Model/TeamMember.php:1902;1906;1910
+#: Controller/GoalsController.php:1120 Model/TeamMember.php:1946;1950;1954
 #: View/Elements/User/profile_setting.ctp:79 View/Users/add_profile.ctp:64
 #: View/Users/register.ctp:40
 msgid "First Name"
@@ -492,12 +496,12 @@ msgstr "L"
 msgid "C"
 msgstr "C"
 
-#: Controller/GoalsController.php:1221;1242 Controller/SetupController.php:280
+#: Controller/GoalsController.php:1221;1242 Controller/SetupController.php:279
 #: View/Elements/gl_common_js.ctp:299
 msgid "Failed to add an action."
 msgstr "アクションの追加に失敗しました。"
 
-#: Controller/GoalsController.php:1277 Controller/SetupController.php:314
+#: Controller/GoalsController.php:1277 Controller/SetupController.php:313
 msgid "Added an action."
 msgstr "アクションを追加しました。"
 
@@ -560,7 +564,7 @@ msgstr "メンバーを変更しました。"
 msgid "Failed to post."
 msgstr "投稿に失敗しました。"
 
-#: Controller/PostsController.php:212;254;1460;1466
+#: Controller/PostsController.php:212;254;1460;1467
 msgid "Posted."
 msgstr "投稿しました。"
 
@@ -1101,7 +1105,7 @@ msgid "You"
 msgstr "あなた"
 
 #: Model/Evaluation.php:145;149;946
-#: Model/TeamMember.php:1940;1944;1980;1985;1990
+#: Model/TeamMember.php:1984;1988;2024;2029;2034
 msgid "Evaluator"
 msgstr "評価者"
 
@@ -1463,16 +1467,16 @@ msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> also commented on <span "
 "class=\"notify-card-head-target\">%2$s</span>'s action"
 msgstr ""
-"<span class=\"notify-card-head-target\">%1$s</span>も<span class="
-"\"notify-card-head-target\">%2$s</span>のアクションにコメントしました。"
+"<span class=\"notify-card-head-target\">%1$s</span>も<span class=\"notify-"
+"card-head-target\">%2$s</span>のアクションにコメントしました。"
 
 #: Model/NotifySetting.php:632
 msgid ""
 "<span class=\"notify-card-head-target\">%1$s</span> added an action on<span "
 "class=\"notify-card-head-target\">%2$s</span>."
 msgstr ""
-"<span class=\"notify-card-head-target\">%1$s</span>が<span class="
-"\"notify-card-head-target\">%2$s</span>にアクションしました。"
+"<span class=\"notify-card-head-target\">%1$s</span>が<span class=\"notify-"
+"card-head-target\">%2$s</span>にアクションしました。"
 
 #: Model/NotifySetting.php:638
 msgid "<span class=\"notify-card-head-target\">%1$s</span> joined this team."
@@ -1647,363 +1651,363 @@ msgstr "１１月"
 msgid "Dec"
 msgstr "１２月"
 
-#: Model/TeamMember.php:200
+#: Model/TeamMember.php:207
 msgid "If you want to access this page, please switch to the team."
 msgstr "このページにアクセスするには、チームを切り換えてください。"
 
-#: Model/TeamMember.php:206 View/Elements/header_logged_in.ctp:80
+#: Model/TeamMember.php:213 View/Elements/header_logged_in.ctp:80
 msgid "There is no team."
 msgstr "チームが存在しません。"
 
-#: Model/TeamMember.php:209
+#: Model/TeamMember.php:216
 msgid "You can't access to this team. Your account has been disabled."
 msgstr ""
 "あなたはこのチームにアクセスできません。アカウントが無効化されています。"
 
-#: Model/TeamMember.php:277
+#: Model/TeamMember.php:284
 msgid "Only team administrators are allowed to access to this page."
 msgstr "あなたはチーム管理者では無いため、このページにはアクセスできません。"
 
-#: Model/TeamMember.php:1010;1176
+#: Model/TeamMember.php:1038;1204
 msgid "Number of records do not match."
 msgstr "レコード数が一致しません。"
 
-#: Model/TeamMember.php:1020;1187;1267
+#: Model/TeamMember.php:1048;1215;1295
 msgid "Numbers are not consistent."
 msgstr "項目数が一致しません。"
 
-#: Model/TeamMember.php:1025;1192;1258
+#: Model/TeamMember.php:1053;1220;1286
 msgid "Headding are not consistent."
 msgstr "見出しが一致しません。"
 
-#: Model/TeamMember.php:1044
+#: Model/TeamMember.php:1072
 msgid "You can't change first name."
 msgstr "ファーストネームは変更できません。"
 
-#: Model/TeamMember.php:1049
+#: Model/TeamMember.php:1077
 msgid "You can't change last name."
 msgstr "ラストネームは変更できません。"
 
-#: Model/TeamMember.php:1098
+#: Model/TeamMember.php:1126
 msgid "At least one active admin is required."
 msgstr "最低１人は管理者かつアクティブにしてください。"
 
-#: Model/TeamMember.php:1109;1338
+#: Model/TeamMember.php:1137;1366
 msgid "Duplicated email address."
 msgstr "重複したメールアドレスが含まれています。"
 
-#: Model/TeamMember.php:1118;1224;1357
+#: Model/TeamMember.php:1146;1252;1385
 msgid "Duplicated member ID."
 msgstr "重複したメンバーIDが含まれています。"
 
-#: Model/TeamMember.php:1128;1397
+#: Model/TeamMember.php:1156;1425
 msgid "Invalid member ID set in coach ID."
 msgstr "存在しないメンバーIDがコーチIDに含まれています。"
 
-#: Model/TeamMember.php:1150;1437
+#: Model/TeamMember.php:1178;1465
 msgid "Invalid member ID set in evaluator ID."
 msgstr "存在しないメンバーIDが評価者IDに含まれています。"
 
-#: Model/TeamMember.php:1205
+#: Model/TeamMember.php:1233
 msgid "Invalid member ID."
 msgstr "存在しないメンバーIDです。"
 
-#: Model/TeamMember.php:1211
+#: Model/TeamMember.php:1239
 msgid "Invalid score."
 msgstr "定義されていないスコアです。"
 
-#: Model/TeamMember.php:1250
+#: Model/TeamMember.php:1278
 msgid "At least one data is required."
 msgstr "データが１件もありません。"
 
-#: Model/TeamMember.php:1347
+#: Model/TeamMember.php:1375
 msgid "This email address is found in this team."
 msgstr "すでにチームに参加しているメールアドレスです。"
 
-#: Model/TeamMember.php:1370
+#: Model/TeamMember.php:1398
 msgid "This Member ID is found in this team."
 msgstr "すでに存在するメンバーIDです。"
 
-#: Model/TeamMember.php:1782
+#: Model/TeamMember.php:1826
 msgid "Email(*)"
 msgstr "メール(*)"
 
-#: Model/TeamMember.php:1783;1819;1847
+#: Model/TeamMember.php:1827;1863;1891
 msgid "Member ID(*)"
 msgstr "メンバーID(*)"
 
-#: Model/TeamMember.php:1784
+#: Model/TeamMember.php:1828
 msgid "First Name(*)"
 msgstr "ローマ字名(*)"
 
-#: Model/TeamMember.php:1785
+#: Model/TeamMember.php:1829
 msgid "Last Name(*)"
 msgstr "ローマ字姓(*)"
 
-#: Model/TeamMember.php:1786;1821
+#: Model/TeamMember.php:1830;1865
 msgid "Administrator(*)"
 msgstr "管理者(*)"
 
-#: Model/TeamMember.php:1787;1822
+#: Model/TeamMember.php:1831;1866
 msgid "Evaluated(*)"
 msgstr "評価対象(*)"
 
-#: Model/TeamMember.php:1788;1823;1848;1950
+#: Model/TeamMember.php:1832;1867;1892;1994
 msgid "Member Type"
 msgstr "メンバータイプ"
 
-#: Model/TeamMember.php:1789
+#: Model/TeamMember.php:1833
 msgid "Language of Local Name"
 msgstr "ローカル姓名の言語コード"
 
-#: Model/TeamMember.php:1790;2024
+#: Model/TeamMember.php:1834;2068
 msgid "Local First Name"
 msgstr "ローカル名"
 
-#: Model/TeamMember.php:1791;2030
+#: Model/TeamMember.php:1835;2074
 msgid "Local Last Name"
 msgstr "ローカル姓"
 
-#: Model/TeamMember.php:1792
+#: Model/TeamMember.php:1836
 msgid "Telephone Number"
 msgstr "電話"
 
-#: Model/TeamMember.php:1793 View/Elements/User/profile_setting.ctp:103
+#: Model/TeamMember.php:1837 View/Elements/User/profile_setting.ctp:103
 #: View/Users/add_profile.ctp:85 View/Users/view_info.ctp:34
 msgid "Gender"
 msgstr "性別"
 
-#: Model/TeamMember.php:1794;2040
+#: Model/TeamMember.php:1838;2084
 msgid "Birth Year"
 msgstr "誕生年"
 
-#: Model/TeamMember.php:1795;2047
+#: Model/TeamMember.php:1839;2091
 msgid "Birth Month"
 msgstr "誕生月"
 
-#: Model/TeamMember.php:1796;2054 View/Elements/User/profile_setting.ctp:129
+#: Model/TeamMember.php:1840;2098 View/Elements/User/profile_setting.ctp:129
 #: View/Users/add_profile.ctp:111 View/Users/view_info.ctp:39
 msgid "Birthday"
 msgstr "誕生日"
 
-#: Model/TeamMember.php:1797;1824
+#: Model/TeamMember.php:1841;1868
 msgid "Group 1"
 msgstr "グループ1"
 
-#: Model/TeamMember.php:1798;1825
+#: Model/TeamMember.php:1842;1869
 msgid "Group 2"
 msgstr "グループ2"
 
-#: Model/TeamMember.php:1799;1826
+#: Model/TeamMember.php:1843;1870
 msgid "Group 3"
 msgstr "グループ3"
 
-#: Model/TeamMember.php:1800;1827
+#: Model/TeamMember.php:1844;1871
 msgid "Group 4"
 msgstr "グループ4"
 
-#: Model/TeamMember.php:1801;1828
+#: Model/TeamMember.php:1845;1872
 msgid "Group 5"
 msgstr "グループ5"
 
-#: Model/TeamMember.php:1802;1829
+#: Model/TeamMember.php:1846;1873
 msgid "Group 6"
 msgstr "グループ6"
 
-#: Model/TeamMember.php:1803;1830
+#: Model/TeamMember.php:1847;1874
 msgid "Group 7"
 msgstr "グループ7"
 
-#: Model/TeamMember.php:1804;1831;1973
+#: Model/TeamMember.php:1848;1875;2017
 msgid "Coach ID"
 msgstr "コーチID"
 
-#: Model/TeamMember.php:1805;1832
+#: Model/TeamMember.php:1849;1876
 msgid "Evaluator 1"
 msgstr "評価者1"
 
-#: Model/TeamMember.php:1806;1833
+#: Model/TeamMember.php:1850;1877
 msgid "Evaluator 2"
 msgstr "評価者2"
 
-#: Model/TeamMember.php:1807;1834
+#: Model/TeamMember.php:1851;1878
 msgid "Evaluator 3"
 msgstr "評価者3"
 
-#: Model/TeamMember.php:1808;1835
+#: Model/TeamMember.php:1852;1879
 msgid "Evaluator 4"
 msgstr "評価者4"
 
-#: Model/TeamMember.php:1809;1836
+#: Model/TeamMember.php:1853;1880
 msgid "Evaluator 5"
 msgstr "評価者5"
 
-#: Model/TeamMember.php:1810;1837
+#: Model/TeamMember.php:1854;1881
 msgid "Evaluator 6"
 msgstr "評価者6"
 
-#: Model/TeamMember.php:1811;1838
+#: Model/TeamMember.php:1855;1882
 msgid "Evaluator 7"
 msgstr "評価者7"
 
-#: Model/TeamMember.php:1816
+#: Model/TeamMember.php:1860
 msgid "Email(*, Not changed)"
 msgstr "メール(*, 変更できません)"
 
-#: Model/TeamMember.php:1817
+#: Model/TeamMember.php:1861
 msgid "First Name(*, Not changed)"
 msgstr "ローマ字名(*, 変更できません)"
 
-#: Model/TeamMember.php:1818
+#: Model/TeamMember.php:1862
 msgid "Last Name(*, Not changed)"
 msgstr "ローマ字姓(*, 変更できません)"
 
-#: Model/TeamMember.php:1820
+#: Model/TeamMember.php:1864
 msgid "Member active status(*)"
 msgstr "メンバーアクティブ状態(*)"
 
-#: Model/TeamMember.php:1849
+#: Model/TeamMember.php:1893
 msgid "Member name"
 msgstr "メンバー姓名"
 
-#: Model/TeamMember.php:1850
+#: Model/TeamMember.php:1894
 msgid "Coach name"
 msgstr "コーチ姓名"
 
-#: Model/TeamMember.php:1851
+#: Model/TeamMember.php:1895
 msgid "Number of goals"
 msgstr "ゴール数"
 
-#: Model/TeamMember.php:1852
+#: Model/TeamMember.php:1896
 msgid "Number of key results"
 msgstr "出した成果数"
 
-#: Model/TeamMember.php:1853
+#: Model/TeamMember.php:1897
 msgid "Number of actions"
 msgstr "アクション数"
 
-#: Model/TeamMember.php:1854
+#: Model/TeamMember.php:1898
 msgid "Progress(%)"
 msgstr "ゴール全体の進捗率(%)"
 
-#: Model/TeamMember.php:1855
+#: Model/TeamMember.php:1899
 msgid "Score by him/herself"
 msgstr "本人によるスコア"
 
-#: Model/TeamMember.php:1856
+#: Model/TeamMember.php:1900
 msgid "Comment by him/herself"
 msgstr "本人によるコメント"
 
-#: Model/TeamMember.php:1860
+#: Model/TeamMember.php:1904
 msgid "Name of evaluator %s"
 msgstr "評価者%sの姓名"
 
-#: Model/TeamMember.php:1861
+#: Model/TeamMember.php:1905
 msgid "Score of evaluator %s"
 msgstr "評価者%sによるスコア"
 
-#: Model/TeamMember.php:1862
+#: Model/TeamMember.php:1906
 msgid "Comment by evaluator %s"
 msgstr "評価者%sによるコメント"
 
-#: Model/TeamMember.php:1865;2088
+#: Model/TeamMember.php:1909;2132
 msgid "Score by final evaluator"
 msgstr "最終評価者によるスコア"
 
-#: Model/TeamMember.php:1866
+#: Model/TeamMember.php:1910
 msgid "Comment by final evaluator"
 msgstr "最終評価者によるコメント"
 
-#: Model/TeamMember.php:1877;1887;1906;1920;1930;1940;2063;2088
+#: Model/TeamMember.php:1921;1931;1950;1964;1974;1984;2107;2132
 msgid "%s is required."
 msgstr "%sは必須項目です。"
 
-#: Model/TeamMember.php:1877;1881 View/Users/login.ctp:36
+#: Model/TeamMember.php:1921;1925 View/Users/login.ctp:36
 #: View/Users/password_reset_request.ctp:36
 #: View/Users/registration_with_set_password.ctp:39
 #: View/Users/token_resend.ctp:36
 msgid "Email Address"
 msgstr "メールアドレス"
 
-#: Model/TeamMember.php:1881;2040;2047;2054
+#: Model/TeamMember.php:1925;2084;2091;2098
 msgid "%s is not correct."
 msgstr "%s が正しくありません。"
 
-#: Model/TeamMember.php:1887;1891
+#: Model/TeamMember.php:1931;1935
 msgid "Member ID"
 msgstr "メンバーID"
 
-#: Model/TeamMember.php:1891;1902;1916;1950;1966;1990;2024;2030
+#: Model/TeamMember.php:1935;1946;1960;1994;2010;2034;2068;2074
 msgid "%s should be entered in less than 64 characters."
 msgstr "%sは64文字以内で入力してください。"
 
-#: Model/TeamMember.php:1895;1973
+#: Model/TeamMember.php:1939;2017
 msgid "%s doesn't allow you to specify the ID of you."
 msgstr "%sに本人のIDを指定する事はできません。"
 
-#: Model/TeamMember.php:1895
+#: Model/TeamMember.php:1939
 msgid "Evaluator ID"
 msgstr "評価者ID"
 
-#: Model/TeamMember.php:1910;1924
+#: Model/TeamMember.php:1954;1968
 msgid "%s should be entered in alphabet characters."
 msgstr "%sはアルファベットのみで入力してください。"
 
-#: Model/TeamMember.php:1930;1934 View/Elements/gl_common_js.ctp:320
+#: Model/TeamMember.php:1974;1978 View/Elements/gl_common_js.ctp:320
 #: View/Elements/modal_add_circle.ctp:63
 #: View/Elements/public_circle_item.ctp:33
 msgid "Administrators"
 msgstr "管理者"
 
-#: Model/TeamMember.php:1934;1944;2067
+#: Model/TeamMember.php:1978;1988;2111
 msgid "%s must be either 'ON' or 'OFF'."
 msgstr "%sは'ON'もしくは'OFF'のいずれかである必要があいます。"
 
-#: Model/TeamMember.php:1956;1980
+#: Model/TeamMember.php:2000;2024
 msgid "Please %s fill with align left."
 msgstr "%sは左詰めで記入してください。"
 
-#: Model/TeamMember.php:1956;1961;1966
+#: Model/TeamMember.php:2000;2005;2010
 msgid "Group name"
 msgstr "グループ名"
 
-#: Model/TeamMember.php:1961;1985
+#: Model/TeamMember.php:2005;2029
 msgid "%s is duplicated."
 msgstr "%sが重複しています。"
 
-#: Model/TeamMember.php:1999
+#: Model/TeamMember.php:2043
 msgid "%s should be entered in less than 20 characters."
 msgstr "%sは20文字以内で入力してください。"
 
-#: Model/TeamMember.php:1999
+#: Model/TeamMember.php:2043
 msgid "Phone number"
 msgstr "電話番号"
 
-#: Model/TeamMember.php:2003
+#: Model/TeamMember.php:2047
 msgid ""
 "Telephone number is incorrect. Single-byte number and '-()' are allowed."
 msgstr "電話番号が正しくありません。使用できる文字は半角数字、'-()'です。"
 
-#: Model/TeamMember.php:2010
+#: Model/TeamMember.php:2054
 msgid "Choose 'male' or 'female'."
 msgstr "'male'もしくは'female'で記入してください。"
 
-#: Model/TeamMember.php:2017
+#: Model/TeamMember.php:2061
 msgid "It is unsupported language code of the local first name and last name."
 msgstr "姓名にサポートされていない言語が入っています。"
 
-#: Model/TeamMember.php:2036
+#: Model/TeamMember.php:2080
 msgid ""
 "If you want to fill in the date of birth, please fill out all of the items "
 "of date."
 msgstr "誕生日を記入する場合は年月日のすべての項目を記入してください。"
 
-#: Model/TeamMember.php:2063;2067
+#: Model/TeamMember.php:2107;2111
 msgid "Active status"
 msgstr "メンバーアクティブ状態"
 
 #: Model/Thread.php:29 View/Elements/gl_common_js.ctp:305;330;360
-#: View/Elements/header_logged_in_right.ctp:44
+#: View/Elements/header_logged_in_right.ctp:46
 #: View/Elements/my_goals_area.ctp:54 View/Elements/Feed/common_form.ctp:93
 msgid "Create a goal"
 msgstr "ゴールを作成する"
@@ -2169,7 +2173,7 @@ msgstr "サークルを見る"
 #: View/Elements/circle_list.ctp:79
 #: View/Elements/circle_list_in_hamburger.ctp:73
 #: View/Elements/gl_common_js.ctp:369
-#: View/Elements/header_logged_in_right.ctp:52
+#: View/Elements/header_logged_in_right.ctp:54
 #: View/Elements/modal_add_circle.ctp:19;143
 msgid "Create a circle"
 msgstr "サークルを作成する"
@@ -2876,61 +2880,61 @@ msgstr "チーム"
 msgid "Circle"
 msgstr "サークル"
 
-#: View/Elements/header_logged_in_right.ctp:61 View/Teams/add.ctp:139
+#: View/Elements/header_logged_in_right.ctp:63 View/Teams/add.ctp:139
 msgid "Create a team"
 msgstr "チームを作成"
 
-#: View/Elements/header_logged_in_right.ctp:80
+#: View/Elements/header_logged_in_right.ctp:82
 msgid "No new message"
 msgstr "未読のメッセージはありません。"
 
-#: View/Elements/header_logged_in_right.ctp:100
+#: View/Elements/header_logged_in_right.ctp:102
 msgid "Mark All as Read"
 msgstr "すべて既読にする"
 
-#: View/Elements/header_logged_in_right.ctp:106
+#: View/Elements/header_logged_in_right.ctp:108
 #: View/Elements/Notification/message_notify_items_in_list_box.ctp:18
 msgid "No new notification"
 msgstr "未読の通知はありません。"
 
-#: View/Elements/header_logged_in_right.ctp:119
+#: View/Elements/header_logged_in_right.ctp:121
 #: View/Elements/Notification/message_notify_items_in_list_box.ctp:23
 msgid "See All"
 msgstr "すべて見る"
 
-#: View/Elements/header_logged_in_right.ctp:141
+#: View/Elements/header_logged_in_right.ctp:143
 msgid "User Setting"
 msgstr "ユーザー設定"
 
-#: View/Elements/header_logged_in_right.ctp:149
+#: View/Elements/header_logged_in_right.ctp:151
 msgid "Team Setting"
 msgstr "チーム設定"
 
-#: View/Elements/header_logged_in_right.ctp:161 View/Evaluations/index.ctp:19
+#: View/Elements/header_logged_in_right.ctp:163 View/Evaluations/index.ctp:19
 msgid "Evaluation"
 msgstr "評価"
 
-#: View/Elements/header_logged_in_right.ctp:172
+#: View/Elements/header_logged_in_right.ctp:174
 msgid "Goal Approval"
 msgstr "ゴール認定"
 
-#: View/Elements/header_logged_in_right.ctp:178
+#: View/Elements/header_logged_in_right.ctp:180
 msgid "User Guide (jp)"
 msgstr "ユーザー利用ガイド"
 
-#: View/Elements/header_logged_in_right.ctp:184
+#: View/Elements/header_logged_in_right.ctp:186
 msgid "How to make a Goal (jp)"
 msgstr "ゴール作成方法"
 
-#: View/Elements/header_logged_in_right.ctp:190
+#: View/Elements/header_logged_in_right.ctp:192
 msgid "Tutorial"
 msgstr "チュートリアル"
 
-#: View/Elements/header_logged_in_right.ctp:196
+#: View/Elements/header_logged_in_right.ctp:198
 msgid "Support"
 msgstr "サポート"
 
-#: View/Elements/header_logged_in_right.ctp:201
+#: View/Elements/header_logged_in_right.ctp:203
 msgid "Logout"
 msgstr "ログアウト"
 
@@ -4526,6 +4530,30 @@ msgstr "変更した評価データのファイルをアップロードしてく
 msgid "Upload"
 msgstr "アップロード"
 
+#: View/Elements/Team/side_menu.ctp:10
+msgid "Team Members"
+msgstr "チームメンバー"
+
+#: View/Elements/Team/side_menu.ctp:11
+msgid "Team Visions"
+msgstr "チームビジョン"
+
+#: View/Elements/Team/side_menu.ctp:12
+msgid "Group Visions"
+msgstr "グループビジョン"
+
+#: View/Elements/Team/side_menu.ctp:13
+msgid "Insights"
+msgstr "インサイト"
+
+#: View/Elements/Team/side_menu.ctp:14
+msgid "Rankings"
+msgstr "ランキング"
+
+#: View/Elements/Team/side_menu.ctp:15
+msgid "Usage status of Circles"
+msgstr "サークル利用状況"
+
 #: View/Elements/User/account_setting.ctp:20 View/Users/settings.ctp:18
 msgid "Account"
 msgstr "アカウント"
@@ -4973,10 +5001,6 @@ msgstr ""
 #: View/Emails/text/password_reset_complete.ctp:22
 msgid "Please let us know as soon as possible."
 msgstr "その場合は直ちに以下にご連絡ください。"
-
-#: View/Emails/text/setup.ctp:31
-msgid "Click the below link to setup Goalous."
-msgstr ""
 
 #: View/Errors/error400.ctp:15
 msgid "Ooops, Not Found."
@@ -6255,6 +6279,10 @@ msgstr "emailUnique"
 #: Model/Team.php:validation for field emails
 msgid "emailsCheck"
 msgstr "emailCheck"
+
+#: Model/TeamMember.php:validation for field active_flg
+msgid "isVerifiedEmail"
+msgstr ""
 
 #: Model/User.php:validation for field first_name;validation last_name
 msgid "isAlphabetOnly"
