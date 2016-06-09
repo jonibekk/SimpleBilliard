@@ -27,10 +27,9 @@
             <th><i class="fa <?= h($icon[$type]['count']) ?>"></i></th>
         </tr>
         <?php
-        $no = 1;
         foreach ($ranking as $id => $row): ?>
             <tr class="insight-ranking-table-row">
-                <td><?= h($no++) ?></td>
+                <td><?= h($row['rank']) ?></td>
                 <td>
                     <?php if ($type == 'action_goal_ranking'): ?>
                         <a href="<?= $this->Html->url(
