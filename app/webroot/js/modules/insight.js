@@ -19,7 +19,6 @@ define(function () {
             setTimeout(function(){
                 $('#after-long').html("Ironing your data. Please wait...");
                 $('#after-long').removeAttr("style");
-                //console.log('hi');
             }, 10000 );
 
             // イベント外す
