@@ -1558,8 +1558,30 @@ class TeamsController extends AppController
             $circle_insights[$circle_id]['name'] = $circle_list[$circle_id];
         }
 
-        $this->set('circle_insights', $circle_insights);
 
+        // sorting by columns
+        if(!empty($this->request->query('sort_by'))) {
+            $sort_by = $this->request->query('sort_by');
+            $sort_type = 'desc';
+            if(!empty($this->request->query('sort_type'))) {
+                $sort_type = $this->request->query('sort_type');
+            }
+
+            uasort($circle_insights, function ($a, $b) use ($sort_by, $sort_type) {
+                if ($a[$sort_by] == $b[$sort_by]) {
+                    return 0;
+                }
+                $ret = ($a[$sort_by] > $b[$sort_by]) ? -1 : 1;
+                if($sort_type == 'asc') {
+                    $ret = ($a[$sort_by] < $b[$sort_by]) ? -1 : 1;
+                }
+                return $ret;
+            });
+        }
+
+        $this->set('circle_insights', $circle_insights);
+        $this->set('sort_type', $sort_type);
+        $this->set('sort_by', $sort_by);
         $response = $this->render('Team/insight_circle_result');
         $html = $response->__toString();
 
@@ -2057,6 +2079,8 @@ class TeamsController extends AppController
         // 並び順変更
         // チーム全体サークルは常に先頭、それ以外はリーチの多い順
         $team_all_circle_id = $this->Post->Circle->getTeamAllCircleId();
+        $circle_insights[3]['post_count'] = 20;
+        $circle_insights[4]['post_read_count'] = 40;
         uasort($circle_insights, function ($a, $b) use ($team_all_circle_id) {
             if ($a['circle_id'] == $team_all_circle_id) {
                 return -1;
