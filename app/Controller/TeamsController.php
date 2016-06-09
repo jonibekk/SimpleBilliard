@@ -2079,8 +2079,6 @@ class TeamsController extends AppController
         // 並び順変更
         // チーム全体サークルは常に先頭、それ以外はリーチの多い順
         $team_all_circle_id = $this->Post->Circle->getTeamAllCircleId();
-        $circle_insights[3]['post_count'] = 20;
-        $circle_insights[4]['post_read_count'] = 40;
         uasort($circle_insights, function ($a, $b) use ($team_all_circle_id) {
             if ($a['circle_id'] == $team_all_circle_id) {
                 return -1;
