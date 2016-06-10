@@ -19,6 +19,14 @@ module.exports = (grunt) ->
     'clean:dest'
   ]
 
+  grunt.registerTask 'react', [
+    'browserify:react'
+    'uglify'
+    'copy:js'
+    'copy:jsMap'
+    'clean:dest'
+  ]
+
   #
   # setting of css task.
   # This task is watched. The task is going to run, when less(app/webroot/less/**/*.less) is changed.
@@ -38,8 +46,8 @@ module.exports = (grunt) ->
   # chef task (!watch)
   #
   grunt.registerTask 'chef', [
-    'browserify:react'
     'js'
+    'react'
     'css'
   ]
 
