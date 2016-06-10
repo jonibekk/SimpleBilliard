@@ -127,7 +127,8 @@ echo $this->Html->script('vendor/angular/ng-infinite-scroll.min');
             search_placeholder_goal: "<?=__("Goal Name?")?>",
             search_placeholder_circle: "<?=__("Circle Name?")?>",
             leave_circle: "<?=__("Leave circle.")?>",
-            config: "<?=__("Settings")?>"
+            config: "<?=__("Settings")?>",
+            waiting_message: "<?=__("Ironing your data. Please wait...")?>"
         },
         url: {
             a: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_users'])?>",

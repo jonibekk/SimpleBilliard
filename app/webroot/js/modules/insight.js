@@ -17,7 +17,7 @@ define(function () {
 
             // 10000 means after 10 sec the text will display
             setTimeout(function(){
-                $('#after-long').html("Ironing your data. Please wait...");
+                $('#after-long').html(cake.word.waiting_message);
                 $('#after-long').removeAttr("style");
             }, 10000 );
 
