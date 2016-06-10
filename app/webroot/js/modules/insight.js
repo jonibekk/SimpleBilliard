@@ -14,7 +14,13 @@ define(function () {
             var $result = $('#' + result_container_id);
 
             // ローダー表示
-            $result.html('<div class="text-align_c"><i class="fa fa-refresh fa-spin"></i></div>');
+            $result.html('<div class="text-align_c"><i class="fa fa-refresh fa-spin"></i><div id="after-long" style="display: none"></div></div>');
+
+            // 10000 means after 10 sec the text will display
+            setTimeout(function(){
+                $('#after-long').html(cake.word.waiting_message);
+                $('#after-long').removeAttr("style");
+            }, 10000 );
 
             // イベント外す
             $formInputs.off('change', onInsightFormChange);
@@ -23,6 +29,7 @@ define(function () {
                 url: ajax_url,
                 data: $form.serialize(),
                 dataType: 'json',
+                timeout: 60000, //60 sec
                 success: function (data) {
                     if (data.html) {
                         $result.html(data.html);
@@ -107,6 +114,7 @@ define(function () {
             url: cake.url.insight_graph,
             data: serialized,
             dataType: 'json',
+            timeout: 60000, //60 sec
             success: function (data) {
                 if (data.insights) {
                     insightGraphDataCache[serialized] = data.insights;
