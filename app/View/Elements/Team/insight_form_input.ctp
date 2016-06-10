@@ -12,6 +12,8 @@ $sort_type = isset($this->request->query['sort_type']) ? $this->request->query['
 $team = isset($this->request->query['team']) ? $this->request->query['team'] : 1;
 $date_range = isset($this->request->query['date_range']) ? $this->request->query['date_range'] : 'current_week';
 $timezone = isset($this->request->query['timezone']) ? $this->request->query['timezone'] : 9;
+$group = isset($this->request->query['group']) ? $this->request->query['group'] : '';
+$type = isset($this->request->query['type']) ? $this->request->query['type'] : 'action_goal_ranking';
 ?>
 <!-- START app/View/Elements/Team/insight_form_input.ctp -->
 <?php if (in_array('team', $use)): ?>
@@ -64,6 +66,7 @@ $timezone = isset($this->request->query['timezone']) ? $this->request->query['ti
         'type'    => 'select',
         'empty'   => __('All Members'),
         'options' => $group_list,
+        'selected' => $group,
         'wrapInput' => 'team-ranking-members'])
     ?>
 <?php endif ?>
@@ -81,6 +84,7 @@ $timezone = isset($this->request->query['timezone']) ? $this->request->query['ti
                       'post_like_ranking'      => __('Post that had been liked'),
                       'post_comment_ranking'   => __('Post that had been commented'),
         ],
+        'selected' => $type,
         'wrapInput' => 'team-ranking-types',
     ])
     ?>
@@ -102,8 +106,10 @@ $timezone = isset($this->request->query['timezone']) ? $this->request->query['ti
     ?>
 <?php endif ?>
 
-<?= $this->Form->hidden('sort_by', array('value'=> $sort_by));?>
-<?= $this->Form->hidden('sort_type', array('value'=> $sort_type));?>
+<?php if (in_array('sort_logic', $use)): ?>
+    <?= $this->Form->hidden('sort_by', array('value'=> $sort_by));?>
+    <?= $this->Form->hidden('sort_type', array('value'=> $sort_type));?>
+<?php endif ?>
 
 
 <?php if (in_array('graph_type', $use)): ?>
