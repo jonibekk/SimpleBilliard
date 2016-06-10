@@ -23,6 +23,6 @@ $active = isset($active) ? $active : '';
                     href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'insight_ranking']) ?>"><i
                 class="fa fa-trophy"></i> <?= __('Rankings') ?></a></li>
     <li class=""><a class="<?php if ($active == 'insight_circle'): ?>active<?php endif ?>"
-                    href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'insight_circles']) ?>"><i
+                    href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'insight_circle']) ?>"><i
                 class="fa fa-circle-o"></i> <?= __('Usage status of Circles') ?></a></li>
 </ul>
