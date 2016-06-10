@@ -6,6 +6,12 @@
  * @var $today_time
  */
 $use = isset($use) ? $use : [];
+
+$sort_by = isset($this->request->query['sort_by']) ? $this->request->query['sort_by'] : 'post_count';
+$sort_type = isset($this->request->query['sort_type']) ? $this->request->query['sort_type'] : 'desc';
+$team = isset($this->request->query['team']) ? $this->request->query['team'] : 1;
+$date_range = isset($this->request->query['date_range']) ? $this->request->query['date_range'] : 'current_week';
+$timezone = isset($this->request->query['timezone']) ? $this->request->query['timezone'] : 9;
 ?>
 <!-- START app/View/Elements/Team/insight_form_input.ctp -->
 <?php if (in_array('team', $use)): ?>
@@ -16,6 +22,7 @@ $use = isset($use) ? $use : [];
             'id'      => 'InsightInputTeam',
             'type'    => 'select',
             'options' => $team_list,
+            'selected' => $team,
             'wrapInput' => 'circle-insight-team-select']) ?>
     <?php endif ?>
 <?php endif ?>
@@ -46,6 +53,7 @@ $use = isset($use) ? $use : [];
                                                          str_replace('-', '/', $date_ranges['prev_term']['start']),
                                                          str_replace('-', '/', $date_ranges['prev_term']['end'])),
         ],
+        'selected' => $date_range,
         'wrapInput' => 'team-ranking-periods'
         ]) ?>
 <?php endif ?>
@@ -88,13 +96,14 @@ $use = isset($use) ? $use : [];
                       '1'   => __('(GMT+01:00) Berlin'),
                       '-8'  => __('(GMT-08:00) Pacific Ocean Time (USA & Canada)')
         ],
+        'selected' => $timezone,
         'wrapInput' => 'team-ranking-timezones'
     ])
     ?>
 <?php endif ?>
 
-<?= $this->Form->hidden('sort_by', array('value'=>'post_read_count'));?>
-<?= $this->Form->hidden('sort_type', array('value'=>'desc'));?>
+<?= $this->Form->hidden('sort_by', array('value'=> $sort_by));?>
+<?= $this->Form->hidden('sort_type', array('value'=> $sort_type));?>
 
 
 <?php if (in_array('graph_type', $use)): ?>
