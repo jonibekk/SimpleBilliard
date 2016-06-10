@@ -3,6 +3,7 @@ define(function () {
     var $formInputs = $('#InsightInputDateRange, #InsightInputGroup, #InsightInputType, #InsightInputTimezone, #InsightInputTeam');
 
     var createCallback = function (ajax_url, result_container_id, options) {
+
         options = $.extend({
             afterSuccess: function() {
             }
@@ -17,7 +18,6 @@ define(function () {
 
             // イベント外す
             $formInputs.off('change', onInsightFormChange);
-
             $.ajax({
                 type: 'GET',
                 url: ajax_url,
@@ -29,11 +29,34 @@ define(function () {
                         options.afterSuccess();
                     }
                     $formInputs.on('change', onInsightFormChange);
+
+                    // this code block is related to sorting by column on circle insight page
+                    $('.table .insight-circle-table-header th').on('click', function(){
+                        var $th = $( this );
+                        var name_arr = $th.attr( "id" ).split('_header');
+                        // setting sortby value
+                        var sort_by_old = $('#TeamInsightSortBy').val();
+                        $('#TeamInsightSortBy').val(name_arr[0]);
+
+                        // setting the sort type by default starts from desc
+                        if (sort_by_old !== name_arr[0]) {
+                            $('#TeamInsightSortType').val('desc');
+                        } else {
+                            if ($('#TeamInsightSortType').val() == 'desc') {
+                                $('#TeamInsightSortType').val('asc');
+                            } else {
+                                $('#TeamInsightSortType').val('desc');
+                            }
+                        }
+
+                        createCallback(cake.url.insight_circle, 'InsightCircleResult')();
+                    });
                 }
             });
         };
         return onInsightFormChange;
     };
+
 
     /////////////////////////////////////////////////////
     // インサイト
