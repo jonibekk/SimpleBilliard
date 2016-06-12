@@ -243,7 +243,7 @@ class TeamMember extends AppModel
             $is_default = true;
             $res = Cache::read($this->getCacheKey(CACHE_KEY_MEMBER_IS_ACTIVE, true), 'team_info');
             if ($res !== false) {
-                if (!empty($res)) {
+                if (!empty($res) && !empty($res['User']) && !empty($res['Team'])) {
                     return true;
                 }
                 return false;
@@ -251,17 +251,28 @@ class TeamMember extends AppModel
         }
         $options = [
             'conditions' => [
-                'team_id'    => $team_id,
-                'user_id'    => $uid,
-                'active_flg' => true,
+                'TeamMember.team_id'    => $team_id,
+                'TeamMember.user_id'    => $uid,
+                'TeamMember.active_flg' => true,
             ],
-            'fields'     => ['id']
+            'fields'     => ['TeamMember.id', 'TeamMember.user_id', 'TeamMember.team_id'],
+            'contain'    => [
+                'User' => [
+                    'conditions' => [
+                        'User.active_flg' => true,
+                    ],
+                    'fields'     => ['User.id']
+                ],
+                'Team' => [
+                    'fields' => ['Team.id']
+                ]
+            ]
         ];
         $res = $this->find('first', $options);
         if ($is_default) {
             Cache::write($this->getCacheKey(CACHE_KEY_MEMBER_IS_ACTIVE, true), $res, 'team_info');
         }
-        if ($res) {
+        if (!empty($res) && !empty($res['User']) && !empty($res['Team'])) {
             return true;
         }
         return false;
