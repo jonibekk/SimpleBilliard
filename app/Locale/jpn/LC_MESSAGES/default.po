@@ -1561,7 +1561,7 @@ msgstr "Goalousのチームへ招待"
 
 #: Model/SendMail.php:73
 msgid "Could you setup Goalous?"
-msgstr ""
+msgstr "Goalousのセットアップをしませんか？"
 
 #: Model/Team.php:59
 msgid "Free Campaign"
