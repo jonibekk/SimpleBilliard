@@ -407,7 +407,26 @@ class User extends AppModel
         $options = [
             'conditions' => [
                 'User.setup_complete_flg' => false,
+                'User.active_flg'         => true,
             ],
+            'contain'    => [
+                'TeamMember' => [
+                    'conditions' => [
+                        'TeamMember.active_flg' => true
+                    ],
+                    'fields'     => [
+                        'TeamMember.id', 'TeamMember.team_id'
+                    ],
+                    'Team'       => [
+                        'conditions' => [
+                            'Team.del_flg' => false
+                        ],
+                        'fields'     => [
+                            'Team.id'
+                        ]
+                    ]
+                ]
+            ]
         ];
 
         if ($team_id) {
@@ -421,7 +440,26 @@ class User extends AppModel
                 ]
             ];
         }
-        return $this->find('all', $options);
+
+        $all_users_contain_team_is_inactive = $this->find('all', $options);
+        $active_users_only = [];
+
+        foreach ($all_users_contain_team_is_inactive as $user) {
+            // Checking belongs to any teams.
+            if (count($team_member_list = $user['TeamMember']) === 0) {
+                continue;
+            }
+
+            // Checking teams that belongs to is active
+            foreach ($team_member_list as $team_member) {
+                if (viaIsSet($team_member['Team']['id'])) {
+                    $active_users_only[] = $user;
+                    break;
+                }
+            }
+        }
+
+        return $active_users_only;
     }
 
     public function getDetail($id)
@@ -1384,7 +1422,7 @@ class User extends AppModel
             ],
             'contain'    => [
                 'TeamMember' => [
-                    'fields'     => [
+                    'fields' => [
                         'TeamMember.id', 'TeamMember.comment'
                     ]
                 ]
@@ -1395,8 +1433,8 @@ class User extends AppModel
         $profile_photo_is_registered = (bool)viaIsSet($res['User']['photo_file_name']);
         $comment_is_registered = false;
 
-        if(!isset($res['TeamMember'])) {
-          return false;
+        if (!isset($res['TeamMember'])) {
+            return false;
         }
 
         // Because profile comment stride mult team, should check all comment of each teams.
@@ -1426,6 +1464,21 @@ class User extends AppModel
     {
         $this->id = $user_id;
         return $this->saveField('setup_complete_flg', self::SETUP_GUIDE_IS_COMPLETED);
+    }
+
+    function filterActiveUserList($uids)
+    {
+        $options = [
+            'conditions' => [
+                'id'    => $uids,
+                'active_flg' => true,
+            ],
+            'fields'     => [
+                'id', 'id'
+            ]
+        ];
+        $res = $this->find('list', $options);
+        return $res;
     }
 
 }

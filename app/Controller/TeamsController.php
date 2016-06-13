@@ -1558,8 +1558,30 @@ class TeamsController extends AppController
             $circle_insights[$circle_id]['name'] = $circle_list[$circle_id];
         }
 
-        $this->set('circle_insights', $circle_insights);
 
+        // sorting by columns
+        if(!empty($this->request->query('sort_by'))) {
+            $sort_by = $this->request->query('sort_by');
+            $sort_type = 'desc';
+            if(!empty($this->request->query('sort_type'))) {
+                $sort_type = $this->request->query('sort_type');
+            }
+
+            uasort($circle_insights, function ($a, $b) use ($sort_by, $sort_type) {
+                if ($a[$sort_by] == $b[$sort_by]) {
+                    return 0;
+                }
+                $ret = ($a[$sort_by] > $b[$sort_by]) ? -1 : 1;
+                if($sort_type == 'asc') {
+                    $ret = ($a[$sort_by] < $b[$sort_by]) ? -1 : 1;
+                }
+                return $ret;
+            });
+        }
+
+        $this->set('circle_insights', $circle_insights);
+        $this->set('sort_type', $sort_type);
+        $this->set('sort_by', $sort_by);
         $response = $this->render('Team/insight_circle_result');
         $html = $response->__toString();
 
