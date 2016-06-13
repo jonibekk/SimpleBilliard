@@ -272,7 +272,7 @@ class TeamMember extends AppModel
         if ($is_default) {
             Cache::write($this->getCacheKey(CACHE_KEY_MEMBER_IS_ACTIVE, true), $res, 'team_info');
         }
-        if (!empty($res) && !empty($res['User']) && !empty($res['Team'])) {
+        if (!empty($res) && viaIsSet($res['User']['id']) && viaIsSet($res['Team']['id'])) {
             return true;
         }
         return false;
