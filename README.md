@@ -55,12 +55,6 @@ GoalousはIsao発の「最強にオープンな社内SNS」です。
   - [CakePhp Plugins](docs/guidelines/guidelines_plugins_libraries.md#cakephp-plugins)
   - [PHP Libraries](docs/guidelines/guidelines_plugins_libraries.md#php-plugins)
 
-<!-- ToDo ファイル消す
-- [jQuery Plugin](docs/guidelines/jQueryPlugins.md)
-- [CakePHP Plugin](docs/guidelines/CodingGuideCakePHP.md)
-- [PHPライブラリ](docs/guidelines/LibraryForPHP.md)
- -->
-
 #### Seleniumを使用したUI自動テスト
 - [UITest](docs/guidelines/UITest.md)
 
