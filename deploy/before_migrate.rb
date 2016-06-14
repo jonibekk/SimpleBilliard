@@ -8,7 +8,7 @@ end
 bash "npm install" do
   code <<-EOS
   source /usr/local/nvm/nvm.sh
-  cd #{release_path}; npm install
+  cd #{release_path}; pnpm install
   EOS
 end
 
