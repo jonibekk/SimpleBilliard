@@ -288,13 +288,15 @@ class CircleMemberTest extends GoalousTestCase
 
     function testGetActiveMemberCount()
     {
-        $this->CircleMember->current_team_id = 9000;
-        $this->CircleMember->my_uid = 9001;
-        $this->CircleMember->User->TeamMember->current_team_id = 9000;
-        $this->CircleMember->User->TeamMember->my_uid = 9001;
+        $this->CircleMember->current_team_id = 1;
+        $this->CircleMember->my_uid = 1;
+        $this->CircleMember->Team->current_team_id = 1;
+        $this->CircleMember->Team->my_uid = 1;
+        $this->CircleMember->Team->TeamMember->current_team_id = 1;
+        $this->CircleMember->Team->TeamMember->my_uid = 1;
 
-        $res = $this->CircleMember->getActiveMemberCount(9000);
-        $this->assertEquals(2, $res);
+        $res = $this->CircleMember->getActiveMemberCount(1);
+        $this->assertEquals(3, $res);
     }
 
     function testGetActiveMemberCountList()

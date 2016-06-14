@@ -93,6 +93,10 @@ $use = isset($use) ? $use : [];
     ?>
 <?php endif ?>
 
+<?= $this->Form->hidden('sort_by', array('value'=>'post_read_count'));?>
+<?= $this->Form->hidden('sort_type', array('value'=>'desc'));?>
+
+
 <?php if (in_array('graph_type', $use)): ?>
     <div class="form-group text-align_r">
         <label class="insight-graph-icon"><i class="fa fa-area-chart"></i>&nbsp;:&nbsp; </label>

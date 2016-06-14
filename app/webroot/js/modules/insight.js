@@ -3,6 +3,7 @@ define(function () {
     var $formInputs = $('#InsightInputDateRange, #InsightInputGroup, #InsightInputType, #InsightInputTimezone, #InsightInputTeam');
 
     var createCallback = function (ajax_url, result_container_id, options) {
+
         options = $.extend({
             afterSuccess: function() {
             }
@@ -13,27 +14,56 @@ define(function () {
             var $result = $('#' + result_container_id);
 
             // ローダー表示
-            $result.html('<div class="text-align_c"><i class="fa fa-refresh fa-spin"></i></div>');
+            $result.html('<div class="text-align_c"><i class="fa fa-refresh fa-spin"></i><div id="after-long" style="display: none"></div></div>');
+
+            // 10000 means after 10 sec the text will display
+            setTimeout(function(){
+                $('#after-long').html(cake.word.waiting_message);
+                $('#after-long').removeAttr("style");
+            }, 10000 );
 
             // イベント外す
             $formInputs.off('change', onInsightFormChange);
-
             $.ajax({
                 type: 'GET',
                 url: ajax_url,
                 data: $form.serialize(),
                 dataType: 'json',
+                timeout: 60000, //60 sec
                 success: function (data) {
                     if (data.html) {
                         $result.html(data.html);
                         options.afterSuccess();
                     }
                     $formInputs.on('change', onInsightFormChange);
+
+                    // this code block is related to sorting by column on circle insight page
+                    $('.table .insight-circle-table-header th').on('click', function(){
+                        var $th = $( this );
+                        var name_arr = $th.attr( "id" ).split('_header');
+                        // setting sortby value
+                        var sort_by_old = $('#TeamInsightSortBy').val();
+                        $('#TeamInsightSortBy').val(name_arr[0]);
+
+                        // setting the sort type by default starts from desc
+                        if (sort_by_old !== name_arr[0]) {
+                            $('#TeamInsightSortType').val('desc');
+                        } else {
+                            if ($('#TeamInsightSortType').val() == 'desc') {
+                                $('#TeamInsightSortType').val('asc');
+                            } else {
+                                $('#TeamInsightSortType').val('desc');
+                            }
+                        }
+
+                        createCallback(cake.url.insight_circle, 'InsightCircleResult')();
+                    });
                 }
             });
         };
         return onInsightFormChange;
     };
+
 
     /////////////////////////////////////////////////////
     // インサイト
@@ -84,6 +114,7 @@ define(function () {
             url: cake.url.insight_graph,
             data: serialized,
             dataType: 'json',
+            timeout: 60000, //60 sec
             success: function (data) {
                 if (data.insights) {
                     insightGraphDataCache[serialized] = data.insights;
