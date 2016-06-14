@@ -85,35 +85,17 @@ GoalousはIsao発の「最強にオープンな社内SNS」です。
 ### Tips
 
 - [使用ツールについて](guidelines_tools.md)
+  - [ツール一覧](docs/guidelines/guidelines_tools.md#tool-list)
+  - [ツール各論](docs/guidelines/guidelines_tools.md#tool-details)
 
-<!--
-- [開発支援ツール](docs/others/SupportDevTools.md)
-- [GitHub](docs/tips/GitHub.md)
-- [Git](docs/tips/Git.md)
-- [PhpStorm](docs/tips/PhpStorm.md)
-- [Travis](docs/tips/Travis.md)
-- [Mixpanel](docs/others/Mixpanel.md)
+[仮想マシンを動かすOSについて]
 
- -->
-
-[仮想マシンを動かすOSについて](guidelines_os.md)
-
-何も書いてない。
-
-<!--
-- [Mac](docs/tips/Mac.md)
-- [Windows](docs/tips/Windows.md)
- -->
-
-
+とくになし。
 
 ### 調査内容
 
 - [リサーチ](guidelines_research.md)
-
-<!--
-- [SQL](docs/investigations/SQL.md)
- -->
+  - [SQL](docs/guidelines/guidelines_research.md#sql)
 
 ### その他
 - [議事録](docs/others/Minutes.md)

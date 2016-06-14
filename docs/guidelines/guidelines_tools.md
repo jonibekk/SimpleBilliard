@@ -2,6 +2,8 @@
 Goalous開発チームでは、有償、無償に限らず積極的に開発支援ツールを採用しています。
 新たに採用したいツールがあれば相談の上、随時採用していく。
 
+<hr id="tool-list">
+
 ## 採用している開発支援ツール一覧
 - Mixpanel
 - Waffle
@@ -11,7 +13,6 @@ Goalous開発チームでは、有償、無償に限らず積極的に開発支�
 - AWS
 - Slack
 - Google Docs
-- Google Hangouts
 - join.me
 
 # Cloud Tools For Project
@@ -42,6 +43,7 @@ Goalousプロジェクトで利用しているクラウドツールについて�
 http://app.uservoice.com/signin  
 idとパスは直接確認ください。
 
+<hr id="tool-details">
 
 ## GitHub
 

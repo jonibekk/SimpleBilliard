@@ -1,3 +1,4 @@
+<hr id="sql">
 # インデックスの調査
 
 ## select count(*)
