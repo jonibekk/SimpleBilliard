@@ -1066,7 +1066,7 @@ class PostTest extends GoalousTestCase
         $this->_setDefault();
         $actual = $this->Post->getConditionGetMyPostList();
         $expected = ['Post.user_id' => $this->Post->my_uid];
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals($this->repQuote($expected), $this->repQuote($actual));
     }
 
     function testGetSubQueryFilterPostIdShareWithMe()
@@ -1078,7 +1078,7 @@ class PostTest extends GoalousTestCase
         $db = $this->Post->getDataSource();
         $actual = $this->Post->getSubQueryFilterPostIdShareWithMe($db, 0, 1);
         $expected = "SELECT PostShareUser.post_id FROM {$db->fullTableName($this->Post->PostShareUser)} AS `PostShareUser`   WHERE `PostShareUser`.`user_id` = 1 AND `PostShareUser`.`team_id` = 1 AND `PostShareUser`.`modified` BETWEEN 0 AND 1";
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals($this->repQuote($expected), $this->repQuote($actual));
     }
 
     function testGetSubQueryFilterPostIdShareWithMeWithUserId()
@@ -1090,7 +1090,7 @@ class PostTest extends GoalousTestCase
         $db = $this->Post->getDataSource();
         $actual = $this->Post->getSubQueryFilterPostIdShareWithMe($db, 0, 1, ['user_id' => 1]);
         $expected = "SELECT PostShareUser.post_id FROM {$db->fullTableName($this->Post->PostShareUser)} AS `PostShareUser` LEFT JOIN {$db->fullTableName($this->Post)} AS `Post` ON (`PostShareUser`.`post_id`=`Post`.`id`)  WHERE `PostShareUser`.`user_id` = 1 AND `PostShareUser`.`team_id` = 1 AND `PostShareUser`.`modified` BETWEEN 0 AND 1 AND `Post`.`user_id` = 1";
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals($this->repQuote($expected), $this->repQuote($actual));
     }
 
     function testGetSubQueryFilterMyCirclePostId()
@@ -1102,7 +1102,7 @@ class PostTest extends GoalousTestCase
         $db = $this->Post->getDataSource();
         $expected = "SELECT PostShareCircle.post_id FROM {$db->fullTableName($this->Post->PostShareCircle)} AS `PostShareCircle`   WHERE `PostShareCircle`.`circle_id` IN (1, 2, 3, 4) AND `PostShareCircle`.`team_id` = 1 AND `PostShareCircle`.`modified` BETWEEN 0 AND 1";
         $actual = $this->Post->getSubQueryFilterMyCirclePostId($db, 0, 1);
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals($this->repQuote($expected), $this->repQuote($actual));
     }
 
     function testGetSubQueryFilterMyCirclePostIdWithAllParams()
@@ -1114,7 +1114,7 @@ class PostTest extends GoalousTestCase
         $db = $this->Post->getDataSource();
         $actual = $this->Post->getSubQueryFilterMyCirclePostId($db, 0, 1, [1], PostShareCircle::SHARE_TYPE_SHARED);
         $expected = "SELECT PostShareCircle.post_id FROM {$db->fullTableName($this->Post->PostShareCircle)} AS `PostShareCircle`   WHERE `PostShareCircle`.`circle_id` = (1) AND `PostShareCircle`.`team_id` = 1 AND `PostShareCircle`.`modified` BETWEEN 0 AND 1 AND `PostShareCircle`.`share_type` = 0";
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals($this->repQuote($expected), $this->repQuote($actual));
     }
 
     function testGetSubQueryFilterMyCirclePostIdTeamAllCircle()
@@ -1142,7 +1142,7 @@ class PostTest extends GoalousTestCase
         );
         $actual = $this->Post->getSubQueryFilterMyCirclePostId($db, 0, 1, $this->Post->Circle->getLastInsertID());
         $expected = "SELECT PostShareCircle.post_id FROM {$db->fullTableName($this->Post->PostShareCircle)} AS `PostShareCircle`   WHERE `PostShareCircle`.`circle_id` = " . $this->Post->Circle->getLastInsertID() . " AND `PostShareCircle`.`team_id` = 1 AND `PostShareCircle`.`modified` BETWEEN 0 AND 1 AND NOT (`type` IN (3, 2, 6, 5))";
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals($this->repQuote($expected), $this->repQuote($actual));
     }
 
     function testGetSubQueryFilterGoalPostList()
@@ -1155,7 +1155,7 @@ class PostTest extends GoalousTestCase
         $this->Post->orgParams['author_id'] = 1;
         $actual = $this->Post->getSubQueryFilterGoalPostList($db, 1, Post::TYPE_ACTION, 0, 1);
         $expected = "SELECT Post.id FROM {$db->fullTableName($this->Post)} AS `Post`   WHERE `Post`.`type` = 3 AND `Post`.`team_id` = 1 AND `Post`.`goal_id` = 1 AND `Post`.`user_id` = 1";
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals($this->repQuote($expected), $this->repQuote($actual));
     }
 
     function testGetSubQueryFilterKrPostList()
@@ -1167,7 +1167,7 @@ class PostTest extends GoalousTestCase
         $db = $this->Post->getDataSource();
         $actual = $this->Post->getSubQueryFilterKrPostList($db, 1, Post::TYPE_ACTION, 0, 1);
         $expected = "SELECT Post.id FROM {$db->fullTableName($this->Post)} AS `Post` LEFT JOIN {$db->fullTableName($this->Post->ActionResult)} AS `ActionResult` ON (`ActionResult`.`id`=`Post`.`action_result_id`)  WHERE `Post`.`type` = 3 AND `Post`.`team_id` = 1 AND `ActionResult`.`key_result_id` = 1 AND `Post`.`modified` BETWEEN 0 AND 1";
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals($this->repQuote($expected), $this->repQuote($actual));
     }
 
     function testGetSubQueryFilterRelatedGoalPost()
@@ -1266,6 +1266,11 @@ class PostTest extends GoalousTestCase
         $timezone = $this->Post->Team->EvaluateTerm->getCurrentTermData()['timezone'];
         $this->start_date_format = date('Y-m-d', $this->start_date + $timezone * HOUR);
         $this->end_date_format = date('Y-m-d', $this->end_date + $timezone * HOUR);
+    }
+
+    function repQuote($str)
+    {
+        return str_replace($str,'`','"');
     }
 
 }
