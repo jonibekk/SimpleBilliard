@@ -92,7 +92,7 @@ class LocalNameFixture extends CakeTestFixture
             'modified'   => 5
         ),
         array(
-            'id'         => '',
+            'id'         => '6',
             'user_id'    => '',
             'language'   => 'Lorem ipsum dolor sit amet',
             'first_name' => 'Lorem ipsum dolor sit amet',
@@ -103,7 +103,7 @@ class LocalNameFixture extends CakeTestFixture
             'modified'   => 6
         ),
         array(
-            'id'         => '',
+            'id'         => '7',
             'user_id'    => '',
             'language'   => 'Lorem ipsum dolor sit amet',
             'first_name' => 'Lorem ipsum dolor sit amet',
@@ -114,7 +114,7 @@ class LocalNameFixture extends CakeTestFixture
             'modified'   => 7
         ),
         array(
-            'id'         => '',
+            'id'         => '8',
             'user_id'    => '',
             'language'   => 'Lorem ipsum dolor sit amet',
             'first_name' => 'Lorem ipsum dolor sit amet',
@@ -125,7 +125,7 @@ class LocalNameFixture extends CakeTestFixture
             'modified'   => 8
         ),
         array(
-            'id'         => '',
+            'id'         => '9',
             'user_id'    => '',
             'language'   => 'Lorem ipsum dolor sit amet',
             'first_name' => 'Lorem ipsum dolor sit amet',
@@ -136,7 +136,7 @@ class LocalNameFixture extends CakeTestFixture
             'modified'   => 9
         ),
         array(
-            'id'         => '',
+            'id'         => '10',
             'user_id'    => '',
             'language'   => 'Lorem ipsum dolor sit amet',
             'first_name' => 'Lorem ipsum dolor sit amet',

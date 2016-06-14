@@ -37,6 +37,7 @@ class PurposeFixture extends CakeTestFixture
      */
     public $records = array(
         array(
+            'id'       => 1,
             'name'     => 'test',
             'user_id'  => 1,
             'team_id'  => 1,

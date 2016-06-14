@@ -17,13 +17,11 @@ class TeamTest extends GoalousTestCase
     public $fixtures = array(
         'app.local_name',
         'app.team',
-        'app.image',
         'app.user',
         'app.notify_setting',
         'app.badge',
         'app.post',
         'app.evaluation_setting',
-        'app.images_post',
         'app.group',
         'app.circle',
         'app.circle_member',

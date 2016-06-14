@@ -36,7 +36,7 @@ class ImageFixture extends CakeTestFixture
      */
     public $records = array(
         array(
-            'id'             => '',
+            'id'             => '1',
             'user_id'        => '',
             'type'           => 1,
             'name'           => 'Lorem ipsum dolor sit amet',
@@ -47,7 +47,7 @@ class ImageFixture extends CakeTestFixture
             'modified'       => 1
         ),
         array(
-            'id'             => '',
+            'id'             => '2',
             'user_id'        => '',
             'type'           => 2,
             'name'           => 'Lorem ipsum dolor sit amet',
@@ -58,7 +58,7 @@ class ImageFixture extends CakeTestFixture
             'modified'       => 2
         ),
         array(
-            'id'             => '',
+            'id'             => '3',
             'user_id'        => '',
             'type'           => 3,
             'name'           => 'Lorem ipsum dolor sit amet',
@@ -69,7 +69,7 @@ class ImageFixture extends CakeTestFixture
             'modified'       => 3
         ),
         array(
-            'id'             => '',
+            'id'             => '4',
             'user_id'        => '',
             'type'           => 4,
             'name'           => 'Lorem ipsum dolor sit amet',
@@ -80,7 +80,7 @@ class ImageFixture extends CakeTestFixture
             'modified'       => 4
         ),
         array(
-            'id'             => '',
+            'id'             => '5',
             'user_id'        => '',
             'type'           => 5,
             'name'           => 'Lorem ipsum dolor sit amet',

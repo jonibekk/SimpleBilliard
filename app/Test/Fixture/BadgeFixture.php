@@ -45,7 +45,7 @@ class BadgeFixture extends CakeTestFixture
      */
     public $records = array(
         array(
-            'id'               => '',
+            'id'               => '1',
             'user_id'          => '',
             'team_id'          => '',
             'name'             => 'Lorem ipsum dolor sit amet',
@@ -62,7 +62,7 @@ class BadgeFixture extends CakeTestFixture
             'modified'         => '2014-05-22 02:28:02'
         ),
         array(
-            'id'               => '',
+            'id'               => '2',
             'user_id'          => '',
             'team_id'          => '',
             'name'             => 'Lorem ipsum dolor sit amet',
@@ -79,7 +79,7 @@ class BadgeFixture extends CakeTestFixture
             'modified'         => '2014-05-22 02:28:02'
         ),
         array(
-            'id'               => '',
+            'id'               => '3',
             'user_id'          => '',
             'team_id'          => '',
             'name'             => 'Lorem ipsum dolor sit amet',
@@ -96,7 +96,7 @@ class BadgeFixture extends CakeTestFixture
             'modified'         => '2014-05-22 02:28:02'
         ),
         array(
-            'id'               => '',
+            'id'               => '4',
             'user_id'          => '',
             'team_id'          => '',
             'name'             => 'Lorem ipsum dolor sit amet',
@@ -113,7 +113,7 @@ class BadgeFixture extends CakeTestFixture
             'modified'         => '2014-05-22 02:28:02'
         ),
         array(
-            'id'               => '',
+            'id'               => '5',
             'user_id'          => '',
             'team_id'          => '',
             'name'             => 'Lorem ipsum dolor sit amet',
@@ -130,7 +130,7 @@ class BadgeFixture extends CakeTestFixture
             'modified'         => '2014-05-22 02:28:02'
         ),
         array(
-            'id'               => '',
+            'id'               => '6',
             'user_id'          => '',
             'team_id'          => '',
             'name'             => 'Lorem ipsum dolor sit amet',
@@ -147,7 +147,7 @@ class BadgeFixture extends CakeTestFixture
             'modified'         => '2014-05-22 02:28:02'
         ),
         array(
-            'id'               => '',
+            'id'               => '7',
             'user_id'          => '',
             'team_id'          => '',
             'name'             => 'Lorem ipsum dolor sit amet',
@@ -164,7 +164,7 @@ class BadgeFixture extends CakeTestFixture
             'modified'         => '2014-05-22 02:28:02'
         ),
         array(
-            'id'               => '',
+            'id'               => '8',
             'user_id'          => '',
             'team_id'          => '',
             'name'             => 'Lorem ipsum dolor sit amet',
@@ -181,7 +181,7 @@ class BadgeFixture extends CakeTestFixture
             'modified'         => '2014-05-22 02:28:02'
         ),
         array(
-            'id'               => '',
+            'id'               => '9',
             'user_id'          => '',
             'team_id'          => '',
             'name'             => 'Lorem ipsum dolor sit amet',
@@ -198,7 +198,7 @@ class BadgeFixture extends CakeTestFixture
             'modified'         => '2014-05-22 02:28:02'
         ),
         array(
-            'id'               => '',
+            'id'               => '10',
             'user_id'          => '',
             'team_id'          => '',
             'name'             => 'Lorem ipsum dolor sit amet',

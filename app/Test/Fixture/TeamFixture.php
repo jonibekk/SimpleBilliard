@@ -113,7 +113,7 @@ class TeamFixture extends CakeTestFixture
             'modified'           => '2014-05-22 02:28:04'
         ),
         array(
-            'id'                 => '',
+            'id'                 => '6',
             'name'               => 'Lorem ipsum dolor sit amet',
             'photo_file_name'    => 'Lorem ipsum dolor sit amet',
             'type'               => 6,
@@ -128,7 +128,7 @@ class TeamFixture extends CakeTestFixture
             'modified'           => 6
         ),
         array(
-            'id'                 => '',
+            'id'                 => '7',
             'name'               => 'Lorem ipsum dolor sit amet',
             'photo_file_name'    => 'Lorem ipsum dolor sit amet',
             'type'               => 7,
@@ -143,7 +143,7 @@ class TeamFixture extends CakeTestFixture
             'modified'           => 7
         ),
         array(
-            'id'                 => '',
+            'id'                 => '8',
             'name'               => 'Lorem ipsum dolor sit amet',
             'photo_file_name'    => 'Lorem ipsum dolor sit amet',
             'type'               => 8,
@@ -158,7 +158,7 @@ class TeamFixture extends CakeTestFixture
             'modified'           => 8
         ),
         array(
-            'id'                 => '',
+            'id'                 => '9',
             'name'               => 'Lorem ipsum dolor sit amet',
             'photo_file_name'    => 'Lorem ipsum dolor sit amet',
             'type'               => 9,
@@ -173,7 +173,7 @@ class TeamFixture extends CakeTestFixture
             'modified'           => 9
         ),
         array(
-            'id'                 => '',
+            'id'                 => '10',
             'name'               => 'Lorem ipsum dolor sit amet',
             'photo_file_name'    => 'Lorem ipsum dolor sit amet',
             'type'               => 10,

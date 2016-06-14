@@ -27,7 +27,6 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
         'app.local_name',
         'app.cake_session',
         'app.team',
-        'app.image',
         'app.user',
         'app.notify_setting',
         'app.email',
@@ -40,7 +39,6 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
         'app.post_like',
         'app.post_mention',
         'app.post_read',
-        'app.images_post',
         'app.comment_read',
 
         'app.oauth_token',

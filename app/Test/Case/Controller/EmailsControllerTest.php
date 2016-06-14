@@ -29,8 +29,6 @@ class EmailsControllerTest extends GoalousControllerTestCase
         'app.post_like',
         'app.post_mention',
         'app.post_read',
-        'app.image',
-        'app.images_post',
         'app.comment_read',
         'app.group',
         'app.team_member',

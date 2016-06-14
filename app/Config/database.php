@@ -13,12 +13,10 @@ class DATABASE_CONFIG
     );
 
     public $test = array(
-        'datasource' => 'Database/Mysql',
+        'datasource' => 'Database/Sqlite',
         'persistent' => false,
-        'host'       => 'localhost',
-        'login'      => 'root',
-        'password'   => '',
-        'database'   => 'myapp_test',
+        'database'   => ':memory:',
+        'prefix'     => '',
     );
 
     public $bench = array(
