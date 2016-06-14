@@ -12,9 +12,9 @@ class PostFixture extends CakeTestFixture
      * @var array
      */
     public $fields = array(
-        'id'                   => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => '投稿ID'),
-        'user_id'              => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '投稿作成ユーザID(belongsToでUserモデルに関連)'),
-        'team_id'              => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'チームID(belongsToでTeamモデルに関連)'),
+        'id'                   => array('type' => 'biginteger', 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => '投稿ID'),
+        'user_id'              => array('type' => 'biginteger', 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '投稿作成ユーザID(belongsToでUserモデルに関連)'),
+        'team_id'              => array('type' => 'biginteger', 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'チームID(belongsToでTeamモデルに関連)'),
         'body'                 => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '投稿本文', 'charset' => 'utf8'),
         'type'                 => array('type' => 'integer', 'null' => false, 'default' => '1', 'length' => 3, 'unsigned' => true, 'key' => 'index', 'comment' => '投稿タイプ(1:Nomal,2:バッジ,3:ゴール作成,4:etc ... )'),
         'comment_count'        => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false, 'comment' => 'コメント数(commentsテーブルにレコードが追加されたらカウントアップされる)'),
@@ -298,12 +298,12 @@ class PostFixture extends CakeTestFixture
             'post_like_count' => 2,
             'post_read_count' => 2,
 
-            'important_flg'   => 1,
-            'goal_id'         => '',
-            'del_flg'         => 1,
-            'deleted'         => 2,
-            'created'         => 2,
-            'modified'        => 2,
+            'important_flg' => 1,
+            'goal_id'       => '',
+            'del_flg'       => 1,
+            'deleted'       => 2,
+            'created'       => 2,
+            'modified'      => 2,
 
         ),
         array(
@@ -316,12 +316,12 @@ class PostFixture extends CakeTestFixture
             'post_like_count' => 3,
             'post_read_count' => 3,
 
-            'important_flg'   => 1,
-            'goal_id'         => '',
-            'del_flg'         => 1,
-            'deleted'         => 3,
-            'created'         => 3,
-            'modified'        => 3,
+            'important_flg' => 1,
+            'goal_id'       => '',
+            'del_flg'       => 1,
+            'deleted'       => 3,
+            'created'       => 3,
+            'modified'      => 3,
 
         ),
         array(
@@ -334,12 +334,12 @@ class PostFixture extends CakeTestFixture
             'post_like_count' => 4,
             'post_read_count' => 4,
 
-            'important_flg'   => 1,
-            'goal_id'         => '',
-            'del_flg'         => 1,
-            'deleted'         => 4,
-            'created'         => 4,
-            'modified'        => 4,
+            'important_flg' => 1,
+            'goal_id'       => '',
+            'del_flg'       => 1,
+            'deleted'       => 4,
+            'created'       => 4,
+            'modified'      => 4,
 
         ),
         array(
@@ -352,12 +352,12 @@ class PostFixture extends CakeTestFixture
             'post_like_count' => 5,
             'post_read_count' => 5,
 
-            'important_flg'   => 1,
-            'goal_id'         => '',
-            'del_flg'         => 1,
-            'deleted'         => 5,
-            'created'         => 5,
-            'modified'        => 5,
+            'important_flg' => 1,
+            'goal_id'       => '',
+            'del_flg'       => 1,
+            'deleted'       => 5,
+            'created'       => 5,
+            'modified'      => 5,
 
         ),
         array(
@@ -370,12 +370,12 @@ class PostFixture extends CakeTestFixture
             'post_like_count' => 6,
             'post_read_count' => 6,
 
-            'important_flg'   => 1,
-            'goal_id'         => '',
-            'del_flg'         => 1,
-            'deleted'         => 6,
-            'created'         => 6,
-            'modified'        => 6,
+            'important_flg' => 1,
+            'goal_id'       => '',
+            'del_flg'       => 1,
+            'deleted'       => 6,
+            'created'       => 6,
+            'modified'      => 6,
 
         ),
         array(
@@ -388,12 +388,12 @@ class PostFixture extends CakeTestFixture
             'post_like_count' => 7,
             'post_read_count' => 7,
 
-            'important_flg'   => 1,
-            'goal_id'         => '',
-            'del_flg'         => 1,
-            'deleted'         => 7,
-            'created'         => 7,
-            'modified'        => 7,
+            'important_flg' => 1,
+            'goal_id'       => '',
+            'del_flg'       => 1,
+            'deleted'       => 7,
+            'created'       => 7,
+            'modified'      => 7,
 
         ),
         array(
@@ -406,12 +406,12 @@ class PostFixture extends CakeTestFixture
             'post_like_count' => 8,
             'post_read_count' => 8,
 
-            'important_flg'   => 1,
-            'goal_id'         => '',
-            'del_flg'         => 1,
-            'deleted'         => 8,
-            'created'         => 8,
-            'modified'        => 8,
+            'important_flg' => 1,
+            'goal_id'       => '',
+            'del_flg'       => 1,
+            'deleted'       => 8,
+            'created'       => 8,
+            'modified'      => 8,
 
         ),
         array(
@@ -424,12 +424,12 @@ class PostFixture extends CakeTestFixture
             'post_like_count' => 9,
             'post_read_count' => 9,
 
-            'important_flg'   => 1,
-            'goal_id'         => '',
-            'del_flg'         => 1,
-            'deleted'         => 9,
-            'created'         => 9,
-            'modified'        => 9,
+            'important_flg' => 1,
+            'goal_id'       => '',
+            'del_flg'       => 1,
+            'deleted'       => 9,
+            'created'       => 9,
+            'modified'      => 9,
 
         ),
         array(
@@ -442,12 +442,12 @@ class PostFixture extends CakeTestFixture
             'post_like_count' => 10,
             'post_read_count' => 10,
 
-            'important_flg'   => 1,
-            'goal_id'         => '',
-            'del_flg'         => 1,
-            'deleted'         => 10,
-            'created'         => 10,
-            'modified'        => 10,
+            'important_flg' => 1,
+            'goal_id'       => '',
+            'del_flg'       => 1,
+            'deleted'       => 10,
+            'created'       => 10,
+            'modified'      => 10,
 
         ),
     );
