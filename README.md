@@ -1,12 +1,13 @@
 # Goalous 2.0
-Goalous 2.0のリポジトリです。
-旧Goalousとは別に管理しています。[旧Goalousはこちら](https://github.com/IsaoCorp/goalous)
-当プロジェクトで管理しているソース、ドキュメント、その他のツールのすべてはここから辿れるようになっています。
+Goalous 2.0のリポジトリです。  - [旧Goalousはこちら](https://github.com/IsaoCorp/goalous)
+当プロジェクトで管理しているソース、ドキュメント、一切のものはこのページより見つけられます。
 
 ## Health
-|master|develop|
-|:--|:--|
-|[![Build Status](https://magnum.travis-ci.com/IsaoCorp/goalous2.svg?token=33yEbgmrzpwqFzcbu6xi&branch=master)](https://magnum.travis-ci.com/IsaoCorp/goalous2) <br> [![Coverage Status](https://coveralls.io/repos/IsaoCorp/goalous2/badge.svg?branch=master&service=github&t=1Y8INm)](https://coveralls.io/github/IsaoCorp/goalous2?branch=master)  |  [![Build Status](https://magnum.travis-ci.com/IsaoCorp/goalous2.svg?token=33yEbgmrzpwqFzcbu6xi&branch=develop)](https://magnum.travis-ci.com/IsaoCorp/goalous2) <br> [![Coverage Status](https://coveralls.io/repos/IsaoCorp/goalous2/badge.svg?branch=develop&service=github&t=1Y8INm)](https://coveralls.io/github/IsaoCorp/goalous2?branch=develop) <br> [![Code Climate](https://codeclimate.com/repos/53b685e0695680777500d34f/badges/cf08317ef617dba84379/gpa.svg)](https://codeclimate.com/repos/53b685e0695680777500d34f/feed)  |
+
+| |TravisCI|Coveralls|Code Climate|
+|:--|:--|:--|
+|master|[![Build Status](https://magnum.travis-ci.com/IsaoCorp/goalous2.svg?token=33yEbgmrzpwqFzcbu6xi&branch=master)](https://magnum.travis-ci.com/IsaoCorp/goalous2)|[![Coverage Status](https://coveralls.io/repos/IsaoCorp/goalous2/badge.svg?branch=master&service=github&t=1Y8INm)](https://coveralls.io/github/IsaoCorp/goalous2?branch=master)| - |
+|develop|[![Build Status](https://magnum.travis-ci.com/IsaoCorp/goalous2.svg?token=33yEbgmrzpwqFzcbu6xi&branch=develop)](https://magnum.travis-ci.com/IsaoCorp/goalous2)|[![Coverage Status](https://coveralls.io/repos/IsaoCorp/goalous2/badge.svg?branch=develop&service=github&t=1Y8INm)](https://coveralls.io/github/IsaoCorp/goalous2?branch=develop)|[![Code Climate](https://codeclimate.com/repos/53b685e0695680777500d34f/badges/cf08317ef617dba84379/gpa.svg)](https://codeclimate.com/repos/53b685e0695680777500d34f/feed)|
 
 ## Progress
 - [Waffle(Kanban Bord)](https://waffle.io/isaocorp/goalous2) ... Goalousの開発状況はこのかんばんボードで管理しています。
@@ -20,11 +21,11 @@ GoalousはIsao発の「最強にオープンな社内SNS」です。
 - [ホットフィックス](https://hotfix2.goalous.com)
 
 ## ドキュメンテーション
-- 全てのドキュメントはここから辿れるようにしてください。
+- すべてのドキュメントはページからアクセスできるようにしてあります。
 - はじめてGoalous開発に参加される方はまずこのドキュメントのすべてに目を通してください。
 - いち早く環境構築を済ませたい方は、開発ガイドラインの[開発環境構築手順](guideline_development.md#setup_stack)の項をご参照ください
 
-より詳しくは、基本ポリシー内の[ドキュメンテーション](guideline_general.md#Documentation)の項目をご参照ください。
+より詳しくは、基本ポリシー内の[ドキュメンテーション](guideline_general.md#documentation)の項目をご参照ください。
 
 ### ガイドライン
 
@@ -59,22 +60,30 @@ GoalousはIsao発の「最強にオープンな社内SNS」です。
 - [UITest](docs/guidelines/UITest.md)
 
 ### 手順書
-- [開発環境構築手順書](docs/process_docs/LocalDevEnv.md)
-- [PhpStorm設定](docs/process_docs/PhpStormSetting.md)
-- [GitHub,Waffle運用手順書](docs/process_docs/OperationGitHubAndWaffle.md)
 - [負荷試験環境構築手順書](docs/process_docs/StressTest.md)
 - [AWS Operation](docs/process_docs/OperationForAWS.md)
 - [CakePHP](docs/process_docs/OperationForCakePHP.md)
 - [翻訳手順書](docs/process_docs/Translation.md)
 - [海外開発拠点用プロキシサーバ運用手順書](docs/process_docs/OperationForDevProxy.md)
 - [海外開発者向け環境構築手順書](docs/process_docs/BuildDevEnvForForeigner.md)
+
+- [各種マニュアル](docs/manuals.md)
+  - [DB接続](docs/manuals.md#db)
+  - [トラブルシュート](docs/manuals.md#trouble-shooting)
+
+
+<!-- ToDo
+- [開発環境構築手順書](docs/process_docs/LocalDevEnv.md)
+- [PhpStorm設定](docs/process_docs/PhpStormSetting.md)
+- [GitHub,Waffle運用手順書](docs/process_docs/OperationGitHubAndWaffle.md)
 - [トラブルシュート](docs/process_docs/TroubleShooting.md)
+-->
 
 ### 仕様書
 - [サービス概要](docs/design_specifications/GoalousOverview.md)
 - [システム概要](docs/design_specifications/SystemOverview.md)
 - [ER図](docs/design_specifications/ERD.md)
-- [要件定義](http://bit.ly/1TnQZfX)
+- [要件定義](http://bit.ly/1TnQZfX) **Last Edit - 2015年7月**
 
 #### 機能一覧
 - ゴール
@@ -105,16 +114,6 @@ GoalousはIsao発の「最強にオープンな社内SNS」です。
 
 ## Members
 [Goalous Developers](https://github.com/orgs/IsaoCorp/teams/goalous_developers)
-
-* Kohei Kikuchi(PO)
-  * Daiki Hirakata(chief developer)
-    * Hyungdoo Kil(developer)
-    * Shohei Saeki(developer)
-    * Siddharth(developer)
-  * Naruhito Kubota(front-end engineer)
-
- <!-- - [体制図](docs/others/ProjectOrganizationDiagram.md) -->
-
 
 ## Commands
 browse-sync  
