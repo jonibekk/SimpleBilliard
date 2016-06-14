@@ -12,41 +12,54 @@ Goalous 2.0のリポジトリです。
 - [Waffle(Kanban Bord)](https://waffle.io/isaocorp/goalous2) ... Goalousの開発状況はこのかんばんボードで管理しています。
 
 ## What's Goalous ?
-GoalousはIsao発の「チーム力向上のスパイラルを生み出す」目標達成ツールです。
+GoalousはIsao発の「最強にオープンな社内SNS」です。
 
-- 本番環境 -> https://www2.goalous.com
-- ステージング環境 -> https://stg2.goalous.com
+- [本番環境](https://www.goalous.com)
+- [リリース環境](https://isao.goalous.com)
+- [ステージング環境](https://stg2.goalous.com)
+- [ホットフィックス](https://hotfix2.goalous.com)
 
-## Documentation
+## ドキュメンテーション
 - 全てのドキュメントはここから辿れるようにしてください。
 - はじめてGoalous開発に参加される方はまずこのドキュメントのすべてに目を通してください。
-- 手っ取り早くソース弄ってみたいという方は[開発環境構築手順](docs/process_docs/StartDevelop.md)を見て環境を作ってください。
+- いち早く環境構築を済ませたい方は、開発ガイドラインの[開発環境構築手順](guideline_development.md#setup_stack)の項をご参照ください
+
+より詳しくは、基本ポリシー内の[ドキュメンテーション](guideline_general.md#Documentation)の項目をご参照ください。
 
 ### ガイドライン
-#### 基本ポリシー
-- [チームのポリシー](docs/guidelines/TeamPolicy.md)
-- [禁止事項](docs/guidelines/Prohibited.md)
-- [ドキュメントについて](docs/guidelines/Documentation.md)
-- [チームメンバー以外の方のプロジェクトへの貢献について](CONTRIBUTING.md)
 
-#### 開発ガイドライン
-- [開発フローと操作手順](docs/guidelines/DevelopmentCycle.md)
-- [アジャイル開発](docs/guidelines/Ajile.md)
-- [イテレーションについて](docs/guidelines/Iteration.md)
+- [基本ポリシー](guidelines_general.md)
+  - [はじめに](guidelines_general.md#intro)
+  - [チームのポリシー](guidelines_general.md#team-policiy)
+  - [禁止事項](guidelines_general.md#forbidden)
+  - [ドキュメントについて](guidelines_general.md#documentation)
+  - [チームメンバー以外のプロジェクトへの貢献について](guidelines_general.md#contributing)
 
-#### 運用ガイドライン
-- [GitHub運用ガイドライン](docs/guidelines/GitHub.md)
-- [Waffle運用ガイドライン](docs/guidelines/Waffle.md)
-- [レビュー前チェックリストの運用ガイドライン](docs/guidelines/ReviewChecklist.md)
+- [開発ガイドライン](guidelines_development.md)
+  - [開発環境構築手順](guidelines_development.md#setup_stack)
+  - [開発フロー](guidelines_development.md#development_flow)
+  - [アジャイル開発](guidelines_development.md#agile)
+  - [イテレーション](guidelines_development.md#iteration)
 
-#### コーディングガイド
-- [CSSコーディングガイド](docs/guidelines/CSS.md)
-- [CakePHPコーディングガイド](docs/guidelines/CodingGuideCakePHP.md)
+- [運用ガイドライン](guidelines_operation.md)
+  - [GitHub運用について](docs/guidelines/guidelines_operations.md#github)
+  - [Waffle.ioの運用について](docs/guidelines/guidelines_operations.md#waffleio)
+  - [コードレビューについて](docs/guidelines/guidelines_operations.md#review)
 
-#### プラグイン・ライブラリ
+- [コーディングガイドライン](guidelines_coding.md)
+  - [CSSコーディングガイドライン](docs/guidelines/guidelines_coding.md#css)
+  - [CakePHPコーディングガイドライン](docs/guidelines/guidelines_coding.md#cakephp)
+
+- [プラグイン・ライブラリ](guidelines_plugins_libraries.md)
+  - [jQuery Libraries](docs/guidelines/guidelines_plugins_libraries.md#jquery-libs)
+  - [CakePhp Plugins](docs/guidelines/guidelines_plugins_libraries.md#cakephp-plugins)
+  - [PHP Libraries](docs/guidelines/guidelines_plugins_libraries.md#php-plugins)
+
+<!-- ToDo ファイル消す
 - [jQuery Plugin](docs/guidelines/jQueryPlugins.md)
 - [CakePHP Plugin](docs/guidelines/CodingGuideCakePHP.md)
 - [PHPライブラリ](docs/guidelines/LibraryForPHP.md)
+ -->
 
 #### Seleniumを使用したUI自動テスト
 - [UITest](docs/guidelines/UITest.md)
@@ -76,33 +89,61 @@ GoalousはIsao発の「チーム力向上のスパイラルを生み出す」目
 - [コーチ認定](docs/design_specifications/features/CoachApproval.md)
 
 ### Tips
+
+- [使用ツールについて](guidelines_tools.md)
+
+<!--
+- [開発支援ツール](docs/others/SupportDevTools.md)
 - [GitHub](docs/tips/GitHub.md)
 - [Git](docs/tips/Git.md)
 - [PhpStorm](docs/tips/PhpStorm.md)
 - [Travis](docs/tips/Travis.md)
+- [Mixpanel](docs/others/Mixpanel.md)
+
+ -->
+
+[仮想マシンを動かすOSについて](guidelines_os.md)
+
+何も書いてない。
+
+<!--
 - [Mac](docs/tips/Mac.md)
 - [Windows](docs/tips/Windows.md)
+ -->
+
+
 
 ### 調査内容
+
+- [リサーチ](guidelines_research.md)
+
+<!--
 - [SQL](docs/investigations/SQL.md)
+ -->
 
 ### その他
-- [体制図](docs/others/ProjectOrganizationDiagram.md)
 - [議事録](docs/others/Minutes.md)
 - [気付いた事](docs/others/Suggestions.md)
-- [各種チートシート](docs/others/Cheetsheets.md)
-- [開発支援ツール](docs/others/SupportDevTools.md)
 - [UI手記](docs/others/MemoForUI.md)
-- [Mixpanel](docs/others/Mixpanel.md)
 - [古いブランチの墓場](docs/others/BornyardOfOldBranch.md)
 
-## Developers
+## Members
 [Goalous Developers](https://github.com/orgs/IsaoCorp/teams/goalous_developers)
 
-## browse-syncを使うためのコマンド
+* Kohei Kikuchi(PO)
+  * Daiki Hirakata(chief developer)
+    * Hyungdoo Kil(developer)
+    * Shohei Saeki(developer)
+    * Siddharth(developer)
+  * Naruhito Kubota(front-end engineer)
 
-vagrantを立ち上げつつ、すべてのファイル変更を検知して自動更新します。
+ <!-- - [体制図](docs/others/ProjectOrganizationDiagram.md) -->
+
+
+## Commands
+browse-sync  
+すべてのファイル変更を検知して自動更新します。
 
 ```
-vagrant up && browser-sync start --proxy "192.168.50.4" --files "**/*.css, **/*.js, **/*ctp, ***/.php **/*.html"
+browser-sync start --proxy "192.168.50.4" --files "**/*.css, **/*.js, **/*ctp, ***/.php **/*.html"
 ```
