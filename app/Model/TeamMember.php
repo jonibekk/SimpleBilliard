@@ -32,7 +32,14 @@ class TeamMember extends AppModel
             ],
             'maxLength' => ['rule' => ['maxLength', 2000]],
         ],
-        'active_flg'            => ['boolean' => ['rule' => ['boolean'],],],
+        'active_flg'            => [
+            'isVerifiedEmail' => [
+                'rule' => ['isVerifiedEmail']
+            ],
+            'boolean'         => [
+                'rule' => ['boolean'],
+            ]
+        ],
         'evaluation_enable_flg' => ['boolean' => ['rule' => ['boolean'],],],
         'invitation_flg'        => ['boolean' => ['rule' => ['boolean'],],],
         'admin_flg'             => ['boolean' => ['rule' => ['boolean'],],],
@@ -107,6 +114,10 @@ class TeamMember extends AppModel
         if (!empty($this->active_member_list)) {
             return $this->active_member_list;
         }
+        //if team is not exist
+        if (!$this->Team->findById($this->current_team_id)) {
+            return [];
+        }
         $options = [
             'conditions' => [
                 'active_flg' => true,
@@ -115,6 +126,8 @@ class TeamMember extends AppModel
             'fields'     => ['user_id', 'user_id']
         ];
         $this->active_member_list = $this->find('list', $options);
+        $this->active_member_list = $this->User->filterActiveUserList($this->active_member_list);
+
         return $this->active_member_list;
     }
 
@@ -230,7 +243,7 @@ class TeamMember extends AppModel
             $is_default = true;
             $res = Cache::read($this->getCacheKey(CACHE_KEY_MEMBER_IS_ACTIVE, true), 'team_info');
             if ($res !== false) {
-                if (!empty($res)) {
+                if (!empty($res) && viaIsSet($res['User']['id']) && viaIsSet($res['Team']['id'])) {
                     return true;
                 }
                 return false;
@@ -238,17 +251,28 @@ class TeamMember extends AppModel
         }
         $options = [
             'conditions' => [
-                'team_id'    => $team_id,
-                'user_id'    => $uid,
-                'active_flg' => true,
+                'TeamMember.team_id'    => $team_id,
+                'TeamMember.user_id'    => $uid,
+                'TeamMember.active_flg' => true,
             ],
-            'fields'     => ['id']
+            'fields'     => ['TeamMember.id', 'TeamMember.user_id', 'TeamMember.team_id'],
+            'contain'    => [
+                'User' => [
+                    'conditions' => [
+                        'User.active_flg' => true,
+                    ],
+                    'fields'     => ['User.id']
+                ],
+                'Team' => [
+                    'fields' => ['Team.id']
+                ]
+            ]
         ];
         $res = $this->find('first', $options);
         if ($is_default) {
             Cache::write($this->getCacheKey(CACHE_KEY_MEMBER_IS_ACTIVE, true), $res, 'team_info');
         }
-        if ($res) {
+        if (!empty($res) && viaIsSet($res['User']['id']) && viaIsSet($res['Team']['id'])) {
             return true;
         }
         return false;
@@ -346,7 +370,7 @@ class TeamMember extends AppModel
         $this->deleteCacheMember($member_id);
         $this->id = $member_id;
         $flag = $flag == 'ON' ? 1 : 0;
-        return $this->saveField('active_flg', $flag);
+        return $this->saveField('active_flg', $flag, true);
     }
 
     public function setEvaluationFlag($member_id, $flag)
@@ -446,6 +470,9 @@ class TeamMember extends AppModel
                 ],
                 'CoachUser' => [
                     'fields' => $this->User->profileFields
+                ],
+                'Email'     => [
+                    'fields' => ['Email.id', 'Email.user_id', 'Email.email_verified']
                 ]
             ]
         ];
@@ -530,6 +557,12 @@ class TeamMember extends AppModel
             $coach_users = $this->User->find('all', $contain['CoachUser']);
             $coach_users = Hash::combine($coach_users, '{n}.User.id', '{n}');
         }
+        //Email情報をまとめて取得
+        if (viaIsSet($contain['Email'])) {
+            $contain['Email']['conditions']['user_id'] = $user_ids;
+            $user_emails = $this->User->Email->find('all', $contain['Email']);
+            $user_emails = Hash::combine($user_emails, '{n}.Email.user_id', '{n}.Email.email_verified');
+        }
         //ユーザ情報とグループ情報を取得して、ユーザ情報にマージ
         if (viaIsSet($contain['User'])) {
             //ユーザ情報を取得
@@ -579,6 +612,13 @@ class TeamMember extends AppModel
             }
             $team_members[$user_id]['CoachUser'] = $coach;
         }
+        // チームメンバー情報からEmail未確認ユーザーを除外
+        foreach ($team_members as $user_id => $val) {
+            if (!viaIsSet($user_emails[$user_id])) {
+                unset($team_members[$user_id]);
+            }
+        }
+
         $res = array_values($team_members);
 
         return $res;
@@ -716,17 +756,20 @@ class TeamMember extends AppModel
                 ]
             ];
             $user = $this->User->Email->find('first', $options);
+
             if (viaIsSet($user['User'])) {
                 $this->csv_datas[$k]['User'] = $user['User'];
             }
             if (viaIsSet($user['User']['TeamMember'][0]['id'])) {
                 $this->csv_datas[$k]['TeamMember']['id'] = $user['User']['TeamMember'][0]['id'];
-                $this->save($this->csv_datas[$k]['TeamMember']);
             }
             else {
                 $this->create();
-                $this->save($this->csv_datas[$k]['TeamMember']);
             }
+
+            // 意図しないカラムの更新を防ぐために、明示的に更新するカラムを指定する
+            $team_member_update_fields = array_keys($this->csv_datas[$k]['TeamMember']);
+            $this->save($this->csv_datas[$k]['TeamMember'], true, $team_member_update_fields);
         }
 
         /**
@@ -869,7 +912,9 @@ class TeamMember extends AppModel
                 $this->csv_datas[$row_k]['Email'] = $user['Email'];
                 //ユーザが存在した場合は、ユーザ情報を書き換える。User,LocalName
                 $user['User'] = array_merge($user['User'], $row_v['User']);
-                $user = $this->User->save($user['User']);
+                // 意図しないカラムの更新を防ぐために、明示的に更新するカラムを指定する
+                $user_update_fields = array_keys($user['User']);
+                $user = $this->User->save($user['User'], true, $user_update_fields);
             }
             else {
                 //なければ、ユーザ情報(User,Email)を登録。
@@ -1604,6 +1649,9 @@ class TeamMember extends AppModel
                     'PrimaryEmail' => [
                         'fields' => ['email'],
                     ],
+                    'Email'        => [
+                        'fields' => ['email_verified']
+                    ]
                 ];
                 break;
             case 'final_evaluation':
@@ -1611,9 +1659,22 @@ class TeamMember extends AppModel
                 $options['conditions'] += [
                     'TeamMember.user_id' => $uids,
                 ];
+                $options['contain']['User']['Email'] = [
+                    'fields' => ['email_verified']
+                ];
                 break;
         }
-        $this->all_users = $this->find('all', $options);
+
+        // exclude email unverified user
+        $all_users_include_unverified_user = $this->find('all', $options);
+        $all_users = [];
+        foreach ($all_users_include_unverified_user as $key => $user) {
+            if (viaIsSet($user['User']['Email'][0]['email_verified'])) {
+                unset($user['User']['Email']);
+                $all_users[] = $user;
+            }
+        }
+        $this->all_users = $all_users;
         return;
     }
 
@@ -2276,9 +2337,9 @@ class TeamMember extends AppModel
                 'TeamMember.team_id' => $team_id,
                 'TeamMember.user_id' => $user_id,
             ],
-            'fields' => ['id']
+            'fields'     => ['id']
         ]);
-        if($team_member_id = viaIsSet($team_member['TeamMember']['id'])) {
+        if ($team_member_id = viaIsSet($team_member['TeamMember']['id'])) {
             return $team_member_id;
         }
         return null;

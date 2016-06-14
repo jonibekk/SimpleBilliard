@@ -61,6 +61,11 @@ class CircleInsight extends AppModel
                 'CircleInsight.timezone'       => $timezone,
             ],
         ];
-        return $this->find('first', $options);
+        $res = $this->find('first', $options);
+        $total = 0;
+        if (!empty($res) && !empty($res[0]['max_user_count'])) {
+            $total = $res[0]['max_user_count'];
+        }
+        return $total;
     }
 }

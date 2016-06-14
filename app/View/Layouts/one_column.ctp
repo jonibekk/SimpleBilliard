@@ -41,7 +41,13 @@ else {
 <?= $this->fetch('modal') ?>
 <!-- END fetch modal -->
 <?= $this->element('gl_common_js') ?>
+
+<!-- START import react code for setup -->
+<?php if(viaIsSet($this->request->params['controller']) === 'setup'): ?>
 <?= $this->Html->script('react_app.min')?>
+<?php endif; ?>
+<!-- END import react code for setup -->
+
 <!-- START fetch script -->
 <?= $this->fetch('script') ?>
 <!-- END fetch script -->
