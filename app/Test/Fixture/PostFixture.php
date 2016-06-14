@@ -12,7 +12,7 @@ class PostFixture extends CakeTestFixture
      * @var array
      */
     public $fields = array(
-        'id'                   => array('type' => 'biginteger', 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => '投稿ID'),
+        'id'                   => array('type' => 'primary_key', 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => '投稿ID'),
         'user_id'              => array('type' => 'biginteger', 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '投稿作成ユーザID(belongsToでUserモデルに関連)'),
         'team_id'              => array('type' => 'biginteger', 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'チームID(belongsToでTeamモデルに関連)'),
         'body'                 => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '投稿本文', 'charset' => 'utf8'),

@@ -12,7 +12,7 @@ class AccessUserFixture extends CakeTestFixture
      * @var array
      */
     public $fields = [
-        'id'              => ['type' => 'biginteger', 'default' => null, 'unsigned' => true, 'key' => 'primary'],
+        'id'              => ['type' => 'primary_key', 'default' => null, 'unsigned' => true, 'key' => 'primary'],
         'team_id'         => ['type' => 'biginteger', 'default' => null, 'unsigned' => true, 'key' => 'index'],
         'user_id'         => ['type' => 'biginteger', 'default' => null, 'unsigned' => true],
         'access_date'     => ['type' => 'date', 'null' => true, 'default' => null],

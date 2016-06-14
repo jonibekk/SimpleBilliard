@@ -12,7 +12,7 @@ class RecoveryCodeFixture extends CakeTestFixture
      * @var array
      */
     public $fields = array(
-        'id'              => array('type' => 'biginteger', 'default' => null, 'unsigned' => true, 'key' => 'primary'),
+        'id'              => array('type' => 'primary_key', 'default' => null, 'unsigned' => true, 'key' => 'primary'),
         'user_id'         => array('type' => 'biginteger', 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'コード持ち主のuser_id'),
         'code'            => array('type' => 'string', 'null' => false, 'collate' => 'utf8_general_ci', 'comment' => 'アプリ側で暗号化済のコード', 'charset' => 'utf8'),
         'used'            => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'コードを利用した日時'),

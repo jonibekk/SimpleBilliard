@@ -17,6 +17,12 @@ class DATABASE_CONFIG
         'persistent' => false,
         'database'   => ':memory:',
         'prefix'     => '',
+        //        'datasource' => 'Database/Mysql',
+        //        'persistent' => false,
+        //        'host'       => 'localhost',
+        //        'login'      => 'root',
+        //        'password'   => '',
+        //        'database'   => 'myapp_test',
     );
 
     public $bench = array(

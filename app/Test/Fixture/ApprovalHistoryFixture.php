@@ -12,7 +12,7 @@ class ApprovalHistoryFixture extends CakeTestFixture
      * @var array
      */
     public $fields = [
-        'id'              => ['type' => 'biginteger', 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'ID'],
+        'id'              => ['type' => 'primary_key', 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'ID'],
         'collaborator_id' => ['type' => 'biginteger', 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'コラボレーターID(hasManyでcollaboratorモデルに関連)'],
         'user_id'         => ['type' => 'biginteger', 'default' => null, 'unsigned' => true, 'comment' => 'ユーザーID(belongsToでUserモデルに関連)'],
         'comment'         => ['type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'コメント', 'charset' => 'utf8'],
@@ -37,7 +37,7 @@ class ApprovalHistoryFixture extends CakeTestFixture
      */
     public $records = [
         [
-            'id'              => '',
+            'id'              => '1',
             'collaborator_id' => '',
             'user_id'         => '',
             'comment'         => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',

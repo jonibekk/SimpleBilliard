@@ -12,7 +12,7 @@ class NotifySettingFixture extends CakeTestFixture
      * @var array
      */
     public $fields = array(
-        'id'                                               => array('type' => 'biginteger', 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'ID'),
+        'id'                                               => array('type' => 'primary_key', 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'ID'),
         'user_id'                                          => array('type' => 'biginteger', 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'ユーザID(belongsToでUserモデルに関連)'),
         'feed_post_app_flg'                                => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '閲覧可能な投稿があった際のアプリ通知'),
         'feed_post_email_flg'                              => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '閲覧可能な投稿があった際のメール通知'),
@@ -110,7 +110,7 @@ class NotifySettingFixture extends CakeTestFixture
      */
     public $records = array(
         array(
-            'id'                                            => '',
+            'id'                                            => '1',
             'user_id'                                       => '',
             'feed_post_app_flg'                             => 1,
             'feed_post_email_flg'                           => 1,

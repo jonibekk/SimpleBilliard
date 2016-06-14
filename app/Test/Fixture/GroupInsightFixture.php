@@ -12,7 +12,7 @@ class GroupInsightFixture extends CakeTestFixture
      * @var array
      */
     public $fields = array(
-        'id'              => array('type' => 'biginteger', 'default' => null, 'unsigned' => true, 'key' => 'primary'),
+        'id'              => array('type' => 'primary_key', 'default' => null, 'unsigned' => true, 'key' => 'primary'),
         'team_id'         => array('type' => 'biginteger', 'default' => null, 'unsigned' => true, 'key' => 'index'),
         'group_id'        => array('type' => 'biginteger', 'default' => null, 'unsigned' => true, 'key' => 'index'),
         'target_date'     => array('type' => 'date', 'null' => true, 'default' => null),
