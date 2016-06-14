@@ -17,7 +17,6 @@ cache:
   - $HOME/redis-2.2.7
 services:
   - redis-server
-sudo: false
 git:
   submodules: false
 before_script:
