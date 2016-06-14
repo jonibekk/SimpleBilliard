@@ -110,6 +110,8 @@ class SendMailShell extends AppShell
         if (!empty($to_user_ids)) {
             foreach ($to_user_ids as $to_user_id) {
                 $data = $this->_getLangToUserData($to_user_id);
+                Configure::write('Config.language', $data['ToUser']['language']);
+                $this->SendMail->_setTemplateSubject();
                 $options = array_merge(SendMail::$TYPE_TMPL[$tmpl_type],
                                        ['to' => (isset($data['ToUser']['PrimaryEmail']['email'])) ? $data['ToUser']['PrimaryEmail']['email'] : null]
                 );
