@@ -143,6 +143,7 @@
             <?php if (isset($my_member_status) && $my_member_status): ?>
             "team_id": <?= h(intval($my_member_status['TeamMember']['team_id'])) ?>,
             "team_name": "<?= h($my_member_status['Team']['name']) ?>",
+            "team_temp_name": "<?= h($my_member_status['Team']['name']) ?>",
             "team_admin": <?= h(intval($my_member_status['TeamMember']['admin_flg'])) ?>,
             <?php endif ?>
             "widget": {
