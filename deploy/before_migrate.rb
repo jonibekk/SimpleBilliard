@@ -1,14 +1,14 @@
 # デプロイフックでcake関連のデプロイ処理を行う
 
-bash "composer update" do
+bash "composer install" do
   code <<-EOS
-  cd #{release_path}; composer self-update; composer update --no-interaction --no-dev --prefer-dist
+  cd #{release_path}; composer self-update; composer install --no-interaction --no-dev --prefer-dist
   EOS
 end
 bash "npm install" do
   code <<-EOS
   source /usr/local/nvm/nvm.sh
-  cd #{release_path}; npm install
+  cd #{release_path}; pnpm install
   EOS
 end
 

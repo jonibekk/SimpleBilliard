@@ -62,7 +62,7 @@ class SendMail extends AppModel
         ],
     ];
 
-    private function _setTemplateSubject()
+    public function _setTemplateSubject()
     {
         self::$TYPE_TMPL[self::TYPE_TMPL_ACCOUNT_VERIFY]['subject'] = __("Registered tempolarily");
         self::$TYPE_TMPL[self::TYPE_TMPL_PASSWORD_RESET]['subject'] = __("Reset Password");
