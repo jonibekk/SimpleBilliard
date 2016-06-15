@@ -399,7 +399,11 @@ class AppController extends Controller
         $my_teams = [];
         foreach ($this->User->TeamMember->getActiveTeamList($this->Auth->user('id')) as $key => $my_team) {
             $new_notify_cnt = $this->NotifyBiz->_getCountNewNotificationForTeams($key);
-            $my_teams[$key] = $my_team." ($new_notify_cnt)";
+            if ($new_notify_cnt == 0) {
+                $my_teams[$key] = $my_team;
+            } else {
+                $my_teams[$key] = $my_team . " ($new_notify_cnt)";
+            }
         }
         $this->set('my_teams', $my_teams);
     }
