@@ -128,6 +128,7 @@ class SetupGuideShell extends AppShell
             }
             $user_id = $to_user['User']['id'];
             if ($force || $this->_isNotifyDay($user_id)) {
+                Configure::write('Config.language', $to_user['User']['language']);
                 $this->_sendNotify($user_id);
             }
         }
