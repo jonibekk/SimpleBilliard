@@ -14,6 +14,11 @@ $date_range = isset($this->request->query['date_range']) ? $this->request->query
 $timezone = isset($this->request->query['timezone']) ? $this->request->query['timezone'] : 9;
 $group = isset($this->request->query['group']) ? $this->request->query['group'] : '';
 $type = isset($this->request->query['type']) ? $this->request->query['type'] : 'action_goal_ranking';
+
+// 月曜日に表示した時は「先週」をデフォルト選択する
+if(empty($this->request->query['date_range'])) {
+    $date_range = (date('w', $today_time) == 1) ? 'prev_week' : 'current_week';
+}
 ?>
 <!-- START app/View/Elements/Team/insight_form_input.ctp -->
 <?php if (in_array('team', $use)): ?>
@@ -33,8 +38,6 @@ $type = isset($this->request->query['type']) ? $this->request->query['type'] : '
     <?= $this->Form->input('date_range', [
         'id'      => 'InsightInputDateRange',
         'type'    => 'select',
-        // 月曜日に表示した時は「先週」をデフォルト選択する
-        'value' => (date('w', $today_time) == 1) ? 'prev_week' : 'current_week',
         'options' => [
             'current_week'  => __('Current Week') . sprintf(" (%s - %s)",
                                                          str_replace('-', '/', $date_ranges['current_week']['start']),
