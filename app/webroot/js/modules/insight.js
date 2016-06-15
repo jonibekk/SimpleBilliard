@@ -22,6 +22,9 @@ define(function () {
                 $('#after-long').removeAttr("style");
             }, 10000 );
 
+            // setting the browser url without loading the page
+            window.history.pushState({state:1,rand:Math.random()}, "State 1", "?"+$form.serialize());
+
             // イベント外す
             $formInputs.off('change', onInsightFormChange);
             $.ajax({
