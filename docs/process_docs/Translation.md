@@ -31,20 +31,14 @@
 
   ```
 
-1. コミットする(cookbooksを除く)。
-1. プルリク作成(親issue)に紐付け。
-1. `develop`にプルリクをマージ。
 1. 新しいブランチを`develop`から作成。(developにチェックアウト -> Pullする -> ブランチ作成)
 1. poeditを開く。(※インストールされていない場合は、https://poedit.net/download からダウンロード、インストール)
 1. `Edit a translation`で該当のファイルを開く。  
-  ファイルパス: `goalous2/app/Locale/eng/LC_MESSAGES/*.po`
-  ![open_and_poedit_and_editing_goalous2_translation_md_at_doc-translate_ _isaocorp_goalous2_and_authy](https://cloud.githubusercontent.com/assets/3040037/7676825/28f040ae-fd82-11e4-941f-28d3d17b582a.png)
+  ファイルパス: `goalous2/app/Locale/jpn/LC_MESSAGES/default.po`
 1. poeditのメニュー[Catalog]->[Update from POT file]を選択。
 1. 対象の`pot`ファイルを指定(拡張子以外が同名)。
-   ファイルパス: `goalous2/app/Locale/*.pot`
-   ![open](https://cloud.githubusercontent.com/assets/3040037/7676892/b08129de-fd82-11e4-8769-567e049b06ea.png)
+   ファイルパス: `goalous2/app/Locale/default.pot`
 1. cmd + s で上書き保存。(※エラーが出ても気にしない。)
-1. 同様の手順で全ファイルを更新。
 1. コミット。(*.moファイルは不要なファイルなので削除してからコミット)
 1. プルリクを発行する(親issueに紐付ける)。
 1. プルリクのDescriptionに修正対象ファイルと翻訳手順を記載。
@@ -53,23 +47,15 @@
 # 依頼内容(以下のMarkdownをコピってください。翻訳対象ファイルのファイルパスのリンクは必ず書き換えてください。)
 
 ## 翻訳対象ファイル
-- [ ] exception.po  
-https://github.com/IsaoCorp/goalous2/blob/BranchName/app/Locale/eng/LC_MESSAGES/exception.po
-- [ ] gl.po  
-https://github.com/IsaoCorp/goalous2/blob/BranchName/app/Locale/eng/LC_MESSAGES/gl.po
-- [ ] mail.po  
-https://github.com/IsaoCorp/goalous2/blob/BranchName/app/Locale/eng/LC_MESSAGES/mail.po
-- [ ] notify.po  
-https://github.com/IsaoCorp/goalous2/blob/BranchName/app/Locale/eng/LC_MESSAGES/notify.po
-- [ ] validate.po  
-https://github.com/IsaoCorp/goalous2/blob/BranchName/app/Locale/eng/LC_MESSAGES/validate.po
+- [ ] default.po  
+https://github.com/IsaoCorp/goalous2/blob/BranchName/app/Locale/jpn/LC_MESAGES/default.po
 
 ## 翻訳の手順
 
 1. 上記のリンクをクリック。
 1. 編集ボタンをクリック。  
 ![goalous2_exception_po_at_topic-translate-english_ _isaocorp_goalous2](https://cloud.githubusercontent.com/assets/3040037/5136256/2306cf10-7168-11e4-80cb-9686fadab037.png)
-1. ファイルを編集。  
+1. ファイルを編集。(英語→日本語の翻訳をする)  
 ![editing_goalous2_exception_po_at_topic-translate-english_ _isaocorp_goalous2](https://cloud.githubusercontent.com/assets/3040037/5136289/d95a89b4-7168-11e4-8169-ba5218d3bc2d.png)
 1. 変更内容を記載し、「commit changes」ボタンを押す。  
 ![editing_goalous2_exception_po_at_topic-translate-english_ _isaocorp_goalous2](https://cloud.githubusercontent.com/assets/3040037/5136273/7528bd44-7168-11e4-8541-9ff3a8141e9d.png)
