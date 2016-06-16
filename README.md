@@ -2,6 +2,8 @@
 Goalous 2.0のリポジトリです。  - [旧Goalousはこちら](https://github.com/IsaoCorp/goalous)
 当プロジェクトで管理しているソース、ドキュメント、一切のものはこのページより見つけられます。
 
+かんこテスト
+
 ## Health
 
 | |TravisCI|Coveralls|Code Climate|
