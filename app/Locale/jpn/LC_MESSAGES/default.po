@@ -28,27 +28,27 @@ msgstr ""
 
 #: Console/Command/SetupGuideShell.php:156
 msgid "Please input your profile to Goalous."
-msgstr ""
+msgstr "Goalousにプロフィールをいれましょう。"
 
 #: Console/Command/SetupGuideShell.php:160
 msgid "Please install the Goalous mobile application and login."
-msgstr ""
+msgstr "Goalousアプリをインストールしてログインしましょう。"
 
 #: Console/Command/SetupGuideShell.php:164
 msgid "Please create your GOAL."
-msgstr ""
+msgstr "Goalousでゴールを登録してみよう。"
 
 #: Console/Command/SetupGuideShell.php:168
 msgid "Please action on Goalous."
-msgstr ""
+msgstr "Goalousでアクションしてみよう。"
 
 #: Console/Command/SetupGuideShell.php:172
 msgid "Please join a circle."
-msgstr "サークルに参加するしてください。"
+msgstr "Goalousでサークルに参加してみよう。"
 
 #: Console/Command/SetupGuideShell.php:176
 msgid "Please post on Goalous."
-msgstr ""
+msgstr "Goalousでサークルに投稿してみよう。"
 
 #: Console/Command/SetupGuideShell.php:186
 msgid "Click the below link to setup Goalous."
@@ -658,7 +658,7 @@ msgstr "不正なリクエストです。"
 
 #: Controller/SetupController.php:188
 msgid "Saved user profile."
-msgstr ""
+msgstr "プロフィールが保存されました。"
 
 #: Controller/TeamsController.php:31
 msgid "Failed to create a team."
@@ -1565,7 +1565,7 @@ msgstr "Goalousのチームへ招待"
 
 #: Model/SendMail.php:73
 msgid "Could you setup Goalous?"
-msgstr ""
+msgstr "Goalousのセットアップをしませんか？"
 
 #: Model/Team.php:59
 msgid "Free Campaign"
@@ -5001,6 +5001,10 @@ msgstr ""
 #: View/Emails/text/password_reset_complete.ctp:22
 msgid "Please let us know as soon as possible."
 msgstr "その場合は直ちに以下にご連絡ください。"
+
+#: View/Emails/text/setup.ctp:31
+msgid "Click the below link to setup Goalous."
+msgstr "以下のリンクをクリックしてGoalousのセットアップをしてください。"
 
 #: View/Errors/error400.ctp:15
 msgid "Ooops, Not Found."
