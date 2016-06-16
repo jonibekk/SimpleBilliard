@@ -2,8 +2,8 @@
 
 1. 翻訳用のissue作成
 1. `vagrant up default` でvmを起動
+1. `vagrant provision default` でvmをアップデート
 1. `vagrant ssh default` でvmにログイン
-1. `cd ..;sh etc/local/ubuntu_update_app.sh` でアップデート
 1. `/vagrant_data/app/Console/cake i18n extract` を実行
 1. 以下の通り応対
    ```
