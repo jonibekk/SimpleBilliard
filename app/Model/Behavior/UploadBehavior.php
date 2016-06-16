@@ -336,7 +336,7 @@ class UploadBehavior extends ModelBehavior
                                           'webroot'    => preg_replace('/\/$/', '', WWW_ROOT),
                                           'model'      => Inflector::tableize($modelName),
                                           'basename'   => !empty($filename) ? $pathinfo['filename'] : null,
-                                          'extension'  => !empty($filename) ? $pathinfo['extension'] : null,
+                                          'extension'  => !empty($pathinfo['extension']) ? $pathinfo['extension'] : null,
                                           'id'         => $modelId,
                                           'style'      => $style,
                                           'attachment' => Inflector::pluralize($field),
