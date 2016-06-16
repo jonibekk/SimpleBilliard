@@ -1407,6 +1407,19 @@ class NotifyBizComponent extends Component
     }
 
     /**
+     * get count of new notifications from redis. on the basis of team_id
+     *
+     * @return int
+     */
+    function _getCountNewNotificationForTeams($team_id)
+    {
+        return $this->GlRedis->getCountOfNewNotification(
+            $team_id,
+            $this->NotifySetting->my_uid
+        );
+    }
+
+    /**
      * get count of new notifications from redis.
      *
      * @return int
