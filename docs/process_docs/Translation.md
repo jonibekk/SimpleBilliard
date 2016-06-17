@@ -53,10 +53,10 @@ https://github.com/IsaoCorp/goalous2/blob/BranchName/app/Locale/jpn/LC_MESAGES/d
 ## 翻訳の手順
 
 1. 上記のページにて、編集ボタンをクリック。  
-<img src="https://cloud.githubusercontent.com/assets/3040037/5136256/2306cf10-7168-11e4-80cb-9686fadab037.png" alt="goalous2_exception_po_at_topic-translate-english_ _isaocorp_goalous2" width="480">
+<img width="480" alt="goalous2_default_po_at_update-translation-document_ _isaocorp_goalous2" src="https://cloud.githubusercontent.com/assets/7731249/16140689/52c15a5a-348e-11e6-8930-97f7dd11d374.png">
 
 1. ファイルを編集。(英語→日本語の翻訳をする)  
-<img src="https://cloud.githubusercontent.com/assets/3040037/5136289/d95a89b4-7168-11e4-8169-ba5218d3bc2d.png" alt="editing_goalous2_exception_po_at_topic-translate-english_ _isaocorp_goalous2" width="480">
+<img width="480" alt="goalous2_default_po_at_update-translation-document_ _isaocorp_goalous2" src="https://cloud.githubusercontent.com/assets/7731249/16140808/81282490-348f-11e6-96c0-f3952a2f9d7e.png">
 
 1. 変更内容を記載し、「commit changes」ボタンを押す。  
 <img src="https://cloud.githubusercontent.com/assets/3040037/5136273/7528bd44-7168-11e4-8541-9ff3a8141e9d.png" alt="editing_goalous2_exception_po_at_topic-translate-english_ _isaocorp_goalous2" width="480">  
