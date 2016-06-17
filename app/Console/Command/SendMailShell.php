@@ -261,8 +261,8 @@ class SendMailShell extends AppShell
             'layout'   => 'default'
         );
         $options = array_merge($defaults, $options);
-        $team_name = $viewVars['team_name'];
-        $options['subject'] = "[" . $team_name . "]" . $options['subject'];
+        $team_name = (!empty($viewVars['team_name'])) ? "[" . $viewVars['team_name']. "]" : '';
+        $options['subject'] = $team_name . $options['subject'];
         /**
          * @var CakeEmail $Email
          */
