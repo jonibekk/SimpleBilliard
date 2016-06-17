@@ -44,7 +44,7 @@
 1. プルリクのDescriptionに修正対象ファイルと翻訳手順を記載。
 1. 担当の方をアサインし、連絡。
 
-# 依頼内容(以下のMarkdownをコピってください。翻訳対象ファイルのファイルパスのリンクは必ず書き換えてください。)
+# 翻訳手順
 
 ## 翻訳対象ファイル
 - [ ] default.po  
@@ -52,16 +52,18 @@ https://github.com/IsaoCorp/goalous2/blob/BranchName/app/Locale/jpn/LC_MESAGES/d
 
 ## 翻訳の手順
 
-1. 上記のリンクをクリック。
-1. 編集ボタンをクリック。  
-![goalous2_exception_po_at_topic-translate-english_ _isaocorp_goalous2](https://cloud.githubusercontent.com/assets/3040037/5136256/2306cf10-7168-11e4-80cb-9686fadab037.png)
-1. ファイルを編集。(英語→日本語の翻訳をする)  
-![editing_goalous2_exception_po_at_topic-translate-english_ _isaocorp_goalous2](https://cloud.githubusercontent.com/assets/3040037/5136289/d95a89b4-7168-11e4-8169-ba5218d3bc2d.png)
-1. 変更内容を記載し、「commit changes」ボタンを押す。  
-![editing_goalous2_exception_po_at_topic-translate-english_ _isaocorp_goalous2](https://cloud.githubusercontent.com/assets/3040037/5136273/7528bd44-7168-11e4-8541-9ff3a8141e9d.png)
-1. 以上
+1. 上記のページにて、編集ボタンをクリック。  
+<img src="https://cloud.githubusercontent.com/assets/3040037/5136256/2306cf10-7168-11e4-80cb-9686fadab037.png" alt="goalous2_exception_po_at_topic-translate-english_ _isaocorp_goalous2" width="480">
 
-## 補足
-- Commit Changesを押さないでページを閉じた場合、変更内容が破棄されるので気をつけてください。
+1. ファイルを編集。(英語→日本語の翻訳をする)  
+<img src="https://cloud.githubusercontent.com/assets/3040037/5136289/d95a89b4-7168-11e4-8169-ba5218d3bc2d.png" alt="editing_goalous2_exception_po_at_topic-translate-english_ _isaocorp_goalous2" width="480">
+
+1. 変更内容を記載し、「commit changes」ボタンを押す。  
+<img src="https://cloud.githubusercontent.com/assets/3040037/5136273/7528bd44-7168-11e4-8541-9ff3a8141e9d.png" alt="editing_goalous2_exception_po_at_topic-translate-english_ _isaocorp_goalous2" width="480">  
+**ここを忘れると変更内容は消えるので注意**
+
+以上
+
+### 補足
 - %sなどの記号はシステムで置き換えられる部分なので翻訳後の文章にも入れておいてください。
 - 翻訳前の文章が記号のみの場合は、なにも入れなくて大丈夫です。
