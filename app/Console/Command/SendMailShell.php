@@ -107,7 +107,7 @@ class SendMailShell extends AppShell
 
         $this->item = json_decode($data['SendMail']['item'], true);
         $tmpl_type = $data['SendMail']['template_type'];
-        $team_name = $data['Team']['name'];
+        $team_name = isset($data['Team']['name']) ? $data['Team']['name'] : null;
         $to_user_ids = $this->SendMail->SendMailToUser->getToUserList($data['SendMail']['id']);
         if (!empty($to_user_ids)) {
             foreach ($to_user_ids as $to_user_id) {
@@ -163,7 +163,7 @@ class SendMailShell extends AppShell
             return;
         }
 
-        $team_name = $data['Team']['name'];
+        $team_name = isset($data['Team']['name']) ? $data['Team']['name'] : null;
         $this->item = json_decode($data['SendMail']['item'], true);
         $to_user_ids = $this->SendMail->SendMailToUser->getToUserList($data['SendMail']['id']);
 
