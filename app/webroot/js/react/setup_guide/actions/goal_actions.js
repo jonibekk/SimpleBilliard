@@ -48,7 +48,7 @@ export function createGoal(goal) {
           mouse_reset: false
       })
     } else {
-      document.location.href = "/setup?from=goal"
+      document.location.href = "/setup/?from=goal"
     }
   })
   .catch(function (response) {

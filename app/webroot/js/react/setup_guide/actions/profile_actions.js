@@ -41,7 +41,7 @@ export function postProfile(dispatch, form_data) {
       })
       dispatch(enableSubmitButton())
     } else {
-      document.location.href = "/setup?from=profile"
+      document.location.href = "/setup/?from=profile"
     }
   })
   .catch(function (response) {

@@ -17,5 +17,5 @@ export function selectNoDevices(dispatch) {
   })
   .catch(function (response) {
   })
-  document.location.href = "/setup?from=splogin"
+  document.location.href = "/setup/?from=splogin"
 }

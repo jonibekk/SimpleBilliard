@@ -86,7 +86,7 @@ export function submitAction(dispatch, refs, socket_id, goal_id) {
           mouse_reset: false
       })
     } else {
-      document.location.href = "/setup?from=action"
+      document.location.href = "/setup/?from=action"
     }
 
   })
