@@ -182,13 +182,20 @@ class SetupGuideShell extends AppShell
         }
 
         $url = SETUP_GUIDE_NOTIFY_URL . $url;
+        $mail_url = $url . '/?from=email';
+        $push_url = $url . '/?from=pushnotifi';
 
-        $message .= "\n\n";
-        $message .= __('Click the below link to setup Goalous.');
-        $message .= "\n";
-        $message .= $url;
+        $mail_message = $push_message = $message;
+        $mail_message .= "\n\n";
+        $mail_message .= __('Click the below link to setup Goalous.');
+        $mail_message .= "\n";
+        $mail_message .= $mail_url;
 
-        $this->NotifyBiz->sendSetupNotify($user_id, $message, $url);
+        $this->NotifyBiz->sendSetupNotify(
+          $user_id,
+          $messages = ['mail' => $mail_message, 'push' => $push_message],
+          $urls = ['mail' => $mail_url, 'push' => $push_url]
+        );
     }
 
     /**
