@@ -192,9 +192,9 @@ class SetupGuideShell extends AppShell
         $mail_message .= $mail_url;
 
         $this->NotifyBiz->sendSetupNotify(
-          $user_id,
-          $messages = ['mail' => $mail_message, 'push' => $push_message],
-          $urls = ['mail' => $mail_url, 'push' => $push_url]
+            $user_id,
+            $messages = ['mail' => $mail_message, 'push' => $push_message],
+            $urls = ['mail' => $mail_url, 'push' => $push_url]
         );
     }
 
