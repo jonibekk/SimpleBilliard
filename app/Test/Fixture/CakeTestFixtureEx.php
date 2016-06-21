@@ -34,11 +34,22 @@ class CakeTestFixtureEx extends CakeTestFixture
         if (!isset($this->fields) || empty($this->fields)) {
             return false;
         }
+        //fix field type of primary 
         if ($db->config['datasource'] == 'Database/Mysql') {
             $this->fields['id']['type'] = 'integer';
         }
         elseif ($db->config['datasource'] == 'Database/Sqlite') {
             $this->fields['id']['type'] = 'primary_key';
+        }
+        //fix sqlite setting
+        if ($db->config['datasource'] == 'Database/Sqlite') {
+            foreach ($this->fields as $k => $field) {
+                if (isset($field['null']) && $field['null'] === false &&
+                    isset($field['default']) && $field['default'] === null
+                ) {
+                    unset($this->fields[$k]['null']);
+                }
+            }
         }
 
         if (empty($this->fields['tableParameters']['engine'])) {
