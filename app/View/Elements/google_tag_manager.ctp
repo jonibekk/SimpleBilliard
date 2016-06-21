@@ -12,7 +12,7 @@ if (!isset($page_type)) {
 
 ?>
 <!-- START app/View/Elements/google_tag_manager.ctp -->
-<? if (GOOGLE_TAG_MANAGER_ID !== 111): ?>
+<? if (GOOGLE_TAG_MANAGER_ID): ?>
     <!-- Google Tag Manager -->
     <!--suppress JSUnresolvedVariable -->
     <noscript>
