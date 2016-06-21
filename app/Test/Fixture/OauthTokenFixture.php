@@ -1,9 +1,9 @@
-<?php
+<?php App::uses('CakeTestFixtureEx', 'Test/Fixture');
 
 /**
  * OauthTokenFixture
  */
-class OauthTokenFixture extends CakeTestFixture
+class OauthTokenFixture extends CakeTestFixtureEx
 {
 
     /**

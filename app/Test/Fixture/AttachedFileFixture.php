@@ -1,9 +1,9 @@
-<?php
+<?php App::uses('CakeTestFixtureEx', 'Test/Fixture');
 
 /**
  * AttachedFileFixture
  */
-class AttachedFileFixture extends CakeTestFixture
+class AttachedFileFixture extends CakeTestFixtureEx
 {
 
     /**

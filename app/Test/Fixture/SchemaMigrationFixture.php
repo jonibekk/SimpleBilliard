@@ -1,9 +1,9 @@
-<?php
+<?php App::uses('CakeTestFixtureEx', 'Test/Fixture');
 
 /**
  * SchemaMigrationFixture
  */
-class SchemaMigrationFixture extends CakeTestFixture
+class SchemaMigrationFixture extends CakeTestFixtureEx
 {
 
     /**

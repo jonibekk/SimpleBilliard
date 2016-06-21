@@ -267,7 +267,7 @@ class CircleMember extends AppModel
                     'table'      => 'local_names',
                     'alias'      => 'SearchLocalName',
                     'conditions' => [
-                        '`SearchLocalName.user_id`=`User.id`',
+                        'SearchLocalName.user_id = User.id',
                     ],
                 ]
             ]

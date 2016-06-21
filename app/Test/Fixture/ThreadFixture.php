@@ -1,9 +1,9 @@
-<?php
+<?php App::uses('CakeTestFixtureEx', 'Test/Fixture');
 
 /**
  * ThreadFixture
  */
-class ThreadFixture extends CakeTestFixture
+class ThreadFixture extends CakeTestFixtureEx
 {
 
     /**
