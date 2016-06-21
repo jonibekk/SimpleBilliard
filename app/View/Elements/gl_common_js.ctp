@@ -407,7 +407,7 @@ echo $this->Html->script('vendor/angular/ng-infinite-scroll.min');
         return text;
     }
 
-    function runGoogleTagManager(page_type) {
+    function sendToGoogleTagManager(page_type) {
         dataLayer = [{
             "loggedIn": cake.data.user_id ? "true" : "false",
             "teamId": cake.data.team_id,

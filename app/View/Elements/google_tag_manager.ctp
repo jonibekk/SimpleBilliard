@@ -20,7 +20,7 @@ if (!isset($page_type)) {
                 height="0" width="0" style="display:none;visibility:hidden"></iframe>
     </noscript>
     <script>
-        cake.runGoogleTagManager("<? $page_type ?>");
+        sendToGoogleTagManager("<?= $page_type ?>");
     </script>
     <!-- End Google Tag Manager -->
 <? endif; ?>
