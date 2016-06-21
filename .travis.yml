@@ -3,8 +3,8 @@ language: php
 php:
   - 5.5
 
-#services:
-#  - sqlite3
+env:
+  - DB=mysql
 
 cache:
   - bundler
@@ -47,10 +47,76 @@ before_script:
   - echo 'browscap = "/home/travis/browscap.ini"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - sudo service apache2 restart
   - composer install --prefer-dist --no-interaction --no-dev
+  - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE cakephp_test;'; fi"
+  - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE cakephp;'; fi"
   - mkdir ./app/tmp
   - chmod -R 777 ./app/tmp
+  - echo "<?php
+    class DATABASE_CONFIG {
+    private \$identities = array(
+      'mysql' => array(
+        'datasource' => 'Database/Mysql',
+        'host' => '0.0.0.0',
+        'login' => 'travis'
+      ),
+    );
+    public \$default = array(
+      'persistent' => false,
+      'host' => '',
+      'login' => '',
+      'password' => '',
+      'database' => 'cakephp',
+      'prefix' => ''
+    );
+    public \$test = array(
+        'datasource' => 'Database/Sqlite',
+        'persistent' => false,
+        'database'   => ':memory:',
+        'prefix'     => '',
+    );
+    public \$redis = array(
+        'datasource'  => 'Redis.RedisSource',
+        'host'        => 'localhost',
+        'port'        => 6379,
+        'password'    => '',
+        'database'    => 0,
+        'timeout'     => 0,
+        'persistent'  => false,
+        'unix_socket' => '',
+        'prefix'      => '',
+    );
+    public \$redis_test = array(
+        'datasource'  => 'Redis.RedisSource',
+        'host'        => 'localhost',
+        'port'        => 6379,
+        'password'    => '',
+        'database'    => 0,
+        'timeout'     => 0,
+        'persistent'  => false,
+        'unix_socket' => '',
+        'prefix'      => 'test',
+    );
+
+    public function __construct() {
+      \$db = 'mysql';
+      if (!empty(\$_SERVER['DB'])) {
+        \$db = \$_SERVER['DB'];
+      }
+      foreach (array('default') as \$source) {
+        \$config = array_merge(\$this->{\$source}, \$this->identities[\$db]);
+        if (is_array(\$config['database'])) {
+          \$config['database'] = \$config['database'][\$source];
+        }
+        if (!empty(\$config['schema']) && is_array(\$config['schema'])) {
+          \$config['schema'] = \$config['schema'][\$source];
+        }
+        \$this->{\$source} = \$config;
+      }
+    }
+    }" > app/Config/database.php
   - mkdir -p build/logs
   - cd ./app
+  - echo -ne '\n\n' | ./Console/cake schema create
 
 script:
   - ./Console/cake test app AllTests --stderr --coverage-clover ../build/logs/clover.xml --configuration ../phpunit.xml.dist
