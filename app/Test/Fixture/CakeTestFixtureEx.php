@@ -45,7 +45,7 @@ class CakeTestFixtureEx extends CakeTestFixture
         if ($db->config['datasource'] == 'Database/Sqlite') {
             foreach ($this->fields as $field_name => $attr) {
                 if (isset($attr['null']) && $attr['null'] == false &&
-                    is_null($attr['default'])
+                    array_key_exists('default', $attr) && is_null($attr['default'])
                 ) {
                     unset($this->fields[$field_name]['null']);
                 }
