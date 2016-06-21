@@ -326,7 +326,6 @@ class CircleMember extends AppModel
         if ($without_me) {
             $conditions['NOT']['CircleMember.user_id'] = $this->my_uid;
         }
-
         $res = $this->updateAll(['CircleMember.unread_count' => 'CircleMember.unread_count + 1'], $conditions);
         return $res;
     }

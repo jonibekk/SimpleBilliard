@@ -177,6 +177,8 @@ class PostTest extends GoalousTestCase
         $this->Post->Circle->current_team_id = $team_id;
         $this->Post->PostShareCircle->my_uid = $uid;
         $this->Post->PostShareCircle->current_team_id = $team_id;
+        $this->Post->User->CircleMember->my_uid = $uid;
+        $this->Post->User->CircleMember->current_team_id = $team_id;
         $postData = [
             'Post' => [
                 'team_id' => 1,
@@ -336,7 +338,7 @@ class PostTest extends GoalousTestCase
             'user_id' => $uid,
             'team_id' => $team_id,
 
-            'body'    => 'test'
+            'body' => 'test'
         ];
         $this->Post->save($data);
         $res = $this->Post->isMyPost($this->Post->id);
@@ -803,9 +805,9 @@ class PostTest extends GoalousTestCase
 
         $expected = [
             'Post' => [
-                'user_id'   => '1',
-                'team_id'   => '1',
-                'type'      => (int)7,
+                'user_id' => '1',
+                'team_id' => '1',
+                'type'    => (int)7,
 
                 'circle_id' => (int)1,
             ]
@@ -1270,7 +1272,7 @@ class PostTest extends GoalousTestCase
 
     function repQuote($str)
     {
-        return str_replace($str,'`','"');
+        return str_replace($str, '`', '"');
     }
 
 }
