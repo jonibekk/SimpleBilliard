@@ -57,6 +57,14 @@ const store = createStore(
 
 const history = syncHistoryWithStore(browserHistory, store)
 
+export function listen() {
+  history.listen(location => {
+    if(cake.data.google_tag_manager_id !== "") {
+      runGoogleTagManager('app')
+    }
+  })
+}
+
 // Define setup-guide routes
 export default class Routes extends Component {
   render() {
