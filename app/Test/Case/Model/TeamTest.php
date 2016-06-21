@@ -218,7 +218,7 @@ class TeamTest extends GoalousTestCase
     function testGetList()
     {
         $this->_setDefault();
-        $this->Team->query('truncate table teams');
+        $this->Team->deleteAll(['1==1']);
         $this->Team->saveAll(
             [
                 [
