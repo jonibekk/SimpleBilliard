@@ -34,8 +34,12 @@ class CakeTestFixtureEx extends CakeTestFixture
         if (!isset($this->fields) || empty($this->fields)) {
             return false;
         }
-//		debug($this->fields);
-//		debug($db->config);
+        if ($db->config['datasource'] == 'Database/Mysql') {
+            $this->fields['id']['type'] = 'integer';
+        }
+        elseif ($db->config['datasource'] == 'Database/Sqlite') {
+            $this->fields['id']['type'] = 'primary_key';
+        }
 
         if (empty($this->fields['tableParameters']['engine'])) {
             $canUseMemory = $this->canUseMemory;
