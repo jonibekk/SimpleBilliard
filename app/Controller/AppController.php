@@ -396,7 +396,16 @@ class AppController extends Controller
 
     public function _setMyTeam()
     {
-        $this->set('my_teams', $this->User->TeamMember->getActiveTeamList($this->Auth->user('id')));
+        $my_teams = [];
+        foreach ($this->User->TeamMember->getActiveTeamList($this->Auth->user('id')) as $key => $my_team) {
+            $new_notify_cnt = $this->NotifyBiz->_getCountNewNotificationForTeams($key);
+            if ($new_notify_cnt == 0) {
+                $my_teams[$key] = $my_team;
+            } else {
+                $my_teams[$key] = $my_team . " ($new_notify_cnt)";
+            }
+        }
+        $this->set('my_teams', $my_teams);
     }
 
     public function _setMyMemberStatus()
