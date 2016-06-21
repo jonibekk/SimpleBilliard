@@ -218,7 +218,7 @@ class TeamTest extends GoalousTestCase
     function testGetList()
     {
         $this->_setDefault();
-        $this->Team->deleteAll(['1==1']);
+        $this->Team->deleteAll(['1' => '1']);
         $this->Team->saveAll(
             [
                 [

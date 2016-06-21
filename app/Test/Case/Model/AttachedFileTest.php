@@ -568,16 +568,20 @@ class AttachedFileTest extends GoalousTestCase
     function _resetTable()
     {
         $this->AttachedFile->query("DELETE FROM {$this->AttachedFile->useTable}");
-//        $this->AttachedFile->query("ALTER TABLE {$this->AttachedFile->useTable} AUTO_INCREMENT = 1");
-        $this->AttachedFile->query("delete from sqlite_sequence where name='{$this->AttachedFile->useTable}'");
         $this->AttachedFile->query("DELETE FROM {$this->AttachedFile->PostFile->useTable}");
-//        $this->AttachedFile->query("ALTER TABLE {$this->AttachedFile->PostFile->useTable} AUTO_INCREMENT = 1");
-        $this->AttachedFile->query("delete from sqlite_sequence where name='{$this->AttachedFile->PostFile->useTable}'");
         $this->AttachedFile->query("DELETE FROM {$this->AttachedFile->ActionResultFile->useTable}");
-//        $this->AttachedFile->query("ALTER TABLE {$this->AttachedFile->ActionResultFile->useTable} AUTO_INCREMENT = 1");
-        $this->AttachedFile->query("delete from sqlite_sequence where name='{$this->AttachedFile->ActionResultFile->useTable}'");
         $this->AttachedFile->query("DELETE FROM {$this->AttachedFile->CommentFile->useTable}");
-//        $this->AttachedFile->query("ALTER TABLE {$this->AttachedFile->CommentFile->useTable} AUTO_INCREMENT = 1");
-        $this->AttachedFile->query("delete from sqlite_sequence where name='{$this->AttachedFile->CommentFile->useTable}'");
+        if ($this->getDataSource()->config['datasource'] == 'Database/Sqlite') {
+            $this->AttachedFile->query("delete from sqlite_sequence where name='{$this->AttachedFile->useTable}'");
+            $this->AttachedFile->query("delete from sqlite_sequence where name='{$this->AttachedFile->PostFile->useTable}'");
+            $this->AttachedFile->query("delete from sqlite_sequence where name='{$this->AttachedFile->ActionResultFile->useTable}'");
+            $this->AttachedFile->query("delete from sqlite_sequence where name='{$this->AttachedFile->CommentFile->useTable}'");
+        }
+        else {
+            $this->AttachedFile->query("ALTER TABLE {$this->AttachedFile->useTable} AUTO_INCREMENT = 1");
+            $this->AttachedFile->query("ALTER TABLE {$this->AttachedFile->PostFile->useTable} AUTO_INCREMENT = 1");
+            $this->AttachedFile->query("ALTER TABLE {$this->AttachedFile->ActionResultFile->useTable} AUTO_INCREMENT = 1");
+            $this->AttachedFile->query("ALTER TABLE {$this->AttachedFile->CommentFile->useTable} AUTO_INCREMENT = 1");
+        }
     }
 }
