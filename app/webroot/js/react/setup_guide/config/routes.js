@@ -56,14 +56,13 @@ const store = createStore(
 )
 
 const history = syncHistoryWithStore(browserHistory, store)
-
-export function listen() {
+export const unlisten = history.listen(location => {
   history.listen(location => {
-    if(cake.data.google_tag_manager_id !== "") {
+    if(cake.data.google_tag_manager_id !== "" && location.action == 'PUSH') {
       sendToGoogleTagManager('app')
     }
   })
-}
+})
 
 // Define setup-guide routes
 export default class Routes extends Component {
