@@ -3801,7 +3801,7 @@ $(document).ready(function () {
             setNotifyCntToBellAndTitle(getCurrentUnreadNotifyCnt() + 1);
         });
     }
-    pusher.subscribe('user_' + cake.data.user_id + '_team_' + cake.data.i).bind('msg_count', function (data) {
+    pusher.subscribe('user_' + cake.data.user_id + '_team_' + cake.data.team_id).bind('msg_count', function (data) {
         //通知設定がoffもしくは自分自身が送信者の場合はなにもしない。
         if (!cake.notify_setting[data.flag_name]) {
             return;
@@ -4150,7 +4150,7 @@ $(function () {
 
 // Auto update notify cnt
 $(function () {
-    if (cake.data.i) {
+    if (cake.data.team_id) {
         setIntervalToGetNotifyCnt(cake.notify_auto_update_sec);
     }
 
