@@ -43,11 +43,11 @@ class CakeTestFixtureEx extends CakeTestFixture
         }
         //fix sqlite setting
         if ($db->config['datasource'] == 'Database/Sqlite') {
-            foreach ($this->fields as $k => $field) {
-                if (isset($field['null']) && $field['null'] === false &&
-                    isset($field['default']) && $field['default'] === null
+            foreach ($this->fields as $field_name => $attr) {
+                if (isset($attr['null']) && $attr['null'] == false &&
+                    is_null($attr['default'])
                 ) {
-                    unset($this->fields[$k]['null']);
+                    unset($this->fields[$field_name]['null']);
                 }
             }
         }
