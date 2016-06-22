@@ -71,7 +71,7 @@ const config = {
       assets_dir + '/js/vendor/angular/angular-translate-loader-static-files.js',
       assets_dir + '/js/vendor/angular/ui-bootstrap-tpls-0.13.0.js',
       assets_dir + '/js/vendor/angular/angular-pnotify.js',
-      assets_dir + '/js/vendor/angular/angular-sanitize.js',
+      assets_dir + '/js/vendor/angular/angular-sanitize.js'
     ],
     output: {
       file_name: 'ng_vendors',
@@ -81,13 +81,13 @@ const config = {
       assets_dir + '/js/vendor/angular/**/*.js'
     ]
   },
-  react: {
-    src: './frontend/js/react/app.js',
+  react_setup: {
+    src: [assets_dir + '/js/react/setup_guide/app.js'],
     output: {
-      file_name: 'react',
-      path: './public/js'
+      file_name: 'react_app',
+      path: assets_dir + '/js'
     },
-    wacth_files: ['./frontend/js/react/**/*.js', './frontend/js/react/**/*.jsx'],
+    wacth_files: [assets_dir + '/js/react/setup/**/*.js']
   },
   css: {
     src: {

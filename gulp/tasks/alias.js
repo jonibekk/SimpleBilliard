@@ -5,13 +5,20 @@ import config from '../config.js'
 // all
 gulp.task('all', done => {
   return runSequence(
-    ['js', 'react', 'css'],
+    ['js', 'css'],
+    done
+  )
+})
+
+gulp.task('js', done => {
+  return runSequence(
+    ['js_app', 'js_vendor', 'angular_app', 'angular_vendor', 'react'],
     done
   )
 })
 
 // js
-gulp.task('js', done => {
+gulp.task('js_app', done => {
   return runSequence(
     'js:clean',
     'js:coffeelint',
@@ -57,12 +64,12 @@ gulp.task('angular_vendor', done => {
 })
 
 // react
-gulp.task('react', done => {
+gulp.task('react_setup', done => {
   return runSequence(
-    'react:clean',
-    'react:browserify',
-    'react:uglify',
-    'react:clean',
+    'react_setup:clean',
+    'react_setup:browserify',
+    'react_setup:uglify',
+    'react_setup:clean',
     done
   )
 })

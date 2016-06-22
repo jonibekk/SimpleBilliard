@@ -41,13 +41,13 @@ gulp.task("angular_app:uglify", () => {
     .pipe(gulp.dest(config.angular_app.output.path))
 })
 
-gulp.task("react:uglify", () => {
-  gulp.src('./.tmp/react/' + config.react.output.file_name + '.js')
+gulp.task("react_setup:uglify", () => {
+  gulp.src(config.dest + config.react.output.file_name + '.js')
     .pipe(uglify())
     .pipe(rename({
         suffix: '.min'
     }))
-    .pipe(gulp.dest(config.react.output.path))
+    .pipe(gulp.dest(config.react_setup.output.path))
 })
 
 gulp.task('css:min', () => {

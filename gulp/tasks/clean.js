@@ -12,7 +12,7 @@ gulp.task('js_vendor:clean', function() {
     .pipe(rimraf({ force: true }))
 })
 
-gulp.task('angular_vendor:clean', function() {
+gulp.task('angular_app:clean', function() {
   return gulp.src([config.dest + '/angular_app_cat'], { read: false })
     .pipe(rimraf({ force: true }))
 })
