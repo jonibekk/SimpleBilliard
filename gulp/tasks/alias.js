@@ -26,12 +26,10 @@ gulp.task('js', done => {
 // js vendor
 gulp.task('js_vendor', done => {
   return runSequence(
-    'js:clean',
-    'js:coffeelint',
-    'js:coffee',
-    'js:concat',
-    'js:uglify',
-    'js:clean',
+    'js_vendor:clean',
+    'js_vendor:concat',
+    'js_vendor:uglify',
+    'js_vendor:clean',
     done
   )
 })

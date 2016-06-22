@@ -3,7 +3,12 @@ import rimraf from 'gulp-rimraf'
 import config from '../config.js'
 
 gulp.task('js:clean', function() {
- return gulp.src([condig.dest + '/js_cat'], { read: false })
+ return gulp.src([config.dest + '/js_cat', config.dest + '/js'], { read: false })
+   .pipe(rimraf({ force: true }))
+})
+
+gulp.task('js_vendor:clean', function() {
+ return gulp.src([config.dest + '/js_vendor_cat'], { read: false })
    .pipe(rimraf({ force: true }))
 })
 
