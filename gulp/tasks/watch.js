@@ -2,12 +2,7 @@ import gulp from 'gulp'
 import config from '../config.js'
 import runSequence from 'run-sequence'
 
-gulp.task('watch', done => {
-  return runSequence(
-    ['css:watch', 'js:watch', 'react:watch'],
-    done
-  )
-})
+gulp.task('watch', ['css:watch', 'js:watch', 'js_vendor:watch', 'angular_app:watch', 'angular_vendor:watch', 'react_setup:watch'])
 
 gulp.task('js:watch', () => {
   var watcher = gulp.watch(config.js.watch_files, ['js_app'])

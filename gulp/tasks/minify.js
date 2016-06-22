@@ -6,7 +6,7 @@ import uglify from 'gulp-uglify'
 import config from '../config.js'
 
 gulp.task("js:uglify", () => {
-  gulp.src(config.dest + "/js_cat/" + config.js.output.file_name + '.js')
+  return gulp.src(config.dest + "/js_cat/" + config.js.output.file_name + '.js')
     .pipe(uglify())
     .pipe(rename({
         suffix: '.min'
@@ -15,7 +15,7 @@ gulp.task("js:uglify", () => {
 })
 
 gulp.task("js_vendor:uglify", () => {
-  gulp.src(config.dest + "/js_vendor_cat/" + config.js_vendor.output.file_name + '.js')
+  return gulp.src(config.dest + "/js_vendor_cat/" + config.js_vendor.output.file_name + '.js')
     .pipe(uglify())
     .pipe(rename({
         suffix: '.min'
@@ -24,7 +24,7 @@ gulp.task("js_vendor:uglify", () => {
 })
 
 gulp.task("angular_vendor:uglify", () => {
-  gulp.src(config.dest + "/angular_vendor_cat/" + config.angular_vendor.output.file_name + '.js')
+  return gulp.src(config.dest + "/angular_vendor_cat/" + config.angular_vendor.output.file_name + '.js')
     .pipe(uglify())
     .pipe(rename({
         suffix: '.min'
@@ -33,7 +33,7 @@ gulp.task("angular_vendor:uglify", () => {
 })
 
 gulp.task("angular_app:uglify", () => {
-  gulp.src(config.dest + "/angular_app_cat/" + config.angular_app.output.file_name + '.js')
+  return gulp.src(config.dest + "/angular_app_cat/" + config.angular_app.output.file_name + '.js')
     .pipe(uglify())
     .pipe(rename({
         suffix: '.min'
@@ -42,7 +42,7 @@ gulp.task("angular_app:uglify", () => {
 })
 
 gulp.task("react_setup:uglify", () => {
-  gulp.src(config.dest + config.react.output.file_name + '.js')
+  return gulp.src(config.dest + '/react_setup/' + config.react_setup.output.file_name + '.js')
     .pipe(uglify())
     .pipe(rename({
         suffix: '.min'

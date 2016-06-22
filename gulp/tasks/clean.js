@@ -1,5 +1,6 @@
 import gulp from 'gulp'
 import rimraf from 'gulp-rimraf'
+import del from 'del'
 import config from '../config.js'
 
 gulp.task('js:clean', function() {
@@ -23,8 +24,8 @@ gulp.task('angular_vendor:clean', function() {
 })
 
 gulp.task('react_setup:clean', function() {
-  return gulp.src([config.dest + '/react_setup'], { read: false })
-    .pipe(rimraf({ force: true }))
+  // return gulp.src([config.dest + '/react_setup'], { read: false })
+  //   .pipe(rimraf({ force: true }))
 })
 
 gulp.task('css:clean', function() {

@@ -5,7 +5,7 @@ import autoprefixer from 'gulp-autoprefixer'
 import config from '../config.js'
 
 gulp.task('js:concat', () => {
-  return gulp.src(config.js.src + [config.dest + '/js/**/*.js'])
+  return gulp.src([...config.js.src, config.dest + '/js/**/*.js'])
     .pipe(plumber())
     .pipe(concat(config.js.output.file_name + '.js'))
     .pipe(gulp.dest(config.dest + '/js_cat'))
@@ -35,7 +35,7 @@ gulp.task('angular_vendor:concat', () => {
 gulp.task('css:concat', () => {
   return gulp.src([...config.css.src, ...[config.dest + '/css/**/*.css']])
     .pipe(plumber())
-    .pipe(concat(config.css.output.file_name + '.css'))
     .pipe(autoprefixer())
+    .pipe(concat(config.css.output.file_name + '.css'))
     .pipe(gulp.dest(config.dest + '/css_cat'))
 })

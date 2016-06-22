@@ -2,25 +2,13 @@ import gulp from 'gulp'
 import runSequence from 'run-sequence'
 import config from '../config.js'
 
-// all
-gulp.task('all', done => {
-  return runSequence(
-    ['js', 'css'],
-    done
-  )
-})
+gulp.task('all', ['js', 'css'])
 
-gulp.task('js', done => {
-  return runSequence(
-    ['js_app', 'js_vendor', 'angular_app', 'angular_vendor', 'react_setup'],
-    done
-  )
-})
+gulp.task('js', ['js_app', 'js_vendor', 'angular_app', 'angular_vendor', 'react_setup'])
 
 // js
 gulp.task('js_app', done => {
-  return runSequence(
-    'js:clean',
+  runSequence(
     'js:coffeelint',
     'js:coffee',
     'js:concat',
@@ -32,8 +20,7 @@ gulp.task('js_app', done => {
 
 // js vendor
 gulp.task('js_vendor', done => {
-  return runSequence(
-    'js_vendor:clean',
+  runSequence(
     'js_vendor:concat',
     'js_vendor:uglify',
     'js_vendor:clean',
@@ -43,8 +30,7 @@ gulp.task('js_vendor', done => {
 
 // angular app
 gulp.task('angular_app', done => {
-  return runSequence(
-    'angular_app:clean',
+  runSequence(
     'angular_app:concat',
     'angular_app:uglify',
     'angular_app:clean',
@@ -54,8 +40,7 @@ gulp.task('angular_app', done => {
 
 // angular vendor
 gulp.task('angular_vendor', done => {
-  return runSequence(
-    'angular_vendor:clean',
+  runSequence(
     'angular_vendor:concat',
     'angular_vendor:uglify',
     'angular_vendor:clean',
@@ -65,8 +50,7 @@ gulp.task('angular_vendor', done => {
 
 // react
 gulp.task('react_setup', done => {
-  return runSequence(
-    'react_setup:clean',
+  runSequence(
     'react_setup:browserify',
     'react_setup:uglify',
     'react_setup:clean',
@@ -76,8 +60,7 @@ gulp.task('react_setup', done => {
 
 // css
 gulp.task('css', done => {
-  return runSequence(
-    'css:clean',
+  runSequence(
     'css:less',
     'css:concat',
     'css:min',

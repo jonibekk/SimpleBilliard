@@ -37,8 +37,7 @@ const config = {
       assets_dir + '/js/vendor/bootstrap.youtubepopup.js',
       assets_dir + '/js/vendor/fastClick.js',
       assets_dir + '/js/vendor/require.js',
-      assets_dir + '/js/vendor/exif.js',
-      assets_dir + '/js/gl_basic.js'
+      assets_dir + '/js/vendor/exif.js'
     ],
     output: {
       file_name: 'vendors',
