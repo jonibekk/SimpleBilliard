@@ -1,8 +1,9 @@
 import gulp from 'gulp'
 import rimraf from 'gulp-rimraf'
+import config from '../config.js'
 
 gulp.task('js:clean', function() {
- return gulp.src('./.tmp/js', { read: false })
+ return gulp.src([condig.dest + '/js_cat'], { read: false })
    .pipe(rimraf({ force: true }))
 })
 

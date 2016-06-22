@@ -4,9 +4,9 @@ import concat from 'gulp-concat'
 import config from '../config.js'
 
 gulp.task('js_vendor:concat', () => {
-  return gulp.src(config.js.modules)
+  return gulp.src(config.js.vendors)
     .pipe(plumber())
-    .pipe(concat(config.js.output.file_name + '.js'))
+    .pipe(concat(config.js.output.file_name.js + '.js'))
     .pipe(gulp.dest(config.dest + '/js_cat'))
 })
 
