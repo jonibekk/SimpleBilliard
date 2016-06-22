@@ -117,7 +117,7 @@ const config = {
     }
   },
   less: {
-    src: [assets_dir + '/less/**/*.less'],
+    src: [assets_dir + '/less/goalous.less'],
     watch_files: [assets_dir + '/less/**/*.less']
   }
 }
