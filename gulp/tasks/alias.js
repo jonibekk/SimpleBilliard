@@ -34,13 +34,13 @@ gulp.task('js_vendor', done => {
   )
 })
 
-// angular
-gulp.task('angular', done => {
+// angular vendor
+gulp.task('angular_vendor', done => {
   return runSequence(
-    'react:clean',
-    'react:browserify',
-    'react:uglify',
-    'react:clean',
+    'angular_vendor:clean',
+    'angular_vendor:concat',
+    'angular_vendor:uglify',
+    'angular_vendor:clean',
     done
   )
 })

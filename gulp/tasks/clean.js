@@ -12,6 +12,11 @@ gulp.task('js_vendor:clean', function() {
     .pipe(rimraf({ force: true }))
 })
 
+gulp.task('angular_vendor:clean', function() {
+  return gulp.src([config.dest + '/angular_vendor_cat'], { read: false })
+    .pipe(rimraf({ force: true }))
+})
+
 gulp.task('css:clean', function() {
   return gulp.src('./.tmp/css', { read: false })
     .pipe(rimraf({ force: true }))

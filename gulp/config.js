@@ -7,7 +7,7 @@ const config = {
       file_name: 'goalous'
       path: assets_dir + '/js',
     },
-    wacth_files: [assets_dir + '/js/gl_basic.js', assets_dir + '/coffee/**/*.coffee']
+    wacth_files: [assets_dir + '/js/gl_basic.js']
   },
   js_vendor: {
     src: [
@@ -49,13 +49,24 @@ const config = {
     src: [assets_dir + '/coffee/**/*.coffee'],
     wacth_files: [assets_dir + '/coffee/**/*.coffee']
   },
-  angular: {
-    src: './frontend/js/react/app.js',
+  angular_vendor: {
+    src: [
+      assets_dir + '/js/vendor/angular/angular.js'
+      assets_dir + '/js/vendor/angular/angular-ui-router.js'
+      assets_dir + '/js/vendor/angular/angular-route.js'
+      assets_dir + '/js/vendor/angular/angular-translate.js'
+      assets_dir + '/js/vendor/angular/angular-translate-loader-static-files.js'
+      assets_dir + '/js/vendor/angular/ui-bootstrap-tpls-0.13.0.js'
+      assets_dir + '/js/vendor/angular/angular-pnotify.js'
+      assets_dir + '/js/vendor/angular/angular-sanitize.js'
+    ],
     output: {
-      file_name: 'react',
-      path: assets_dir + './public/js'
+      file_name: 'ng_vendors',
+      path: assets_dir + '/js'
     },
-    wacth_files: ['./frontend/js/react/**/*.js', './frontend/js/react/**/*.jsx'],
+    wacth_files: [
+      assets_dir + '/js/vendor/angular/**/*.js'
+    ]
   },
   react: {
     src: './frontend/js/react/app.js',
