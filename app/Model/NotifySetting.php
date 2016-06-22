@@ -394,7 +394,7 @@ class NotifySetting extends AppModel
                 if ($key !== 0) {
                     $user_text .= __(",");
                 }
-                $user_text .= $name.' ';
+                $user_text .= $name;
             }
         }
         $title = null;
