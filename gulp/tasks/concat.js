@@ -17,6 +17,13 @@ gulp.task('js_vendor:concat', () => {
     .pipe(gulp.dest(config.dest + '/js_vendor_cat'))
 })
 
+gulp.task('angular_app:concat', () => {
+  return gulp.src(config.angular_app.src)
+    .pipe(plumber())
+    .pipe(concat(config.angular_app.output.file_name + '.js'))
+    .pipe(gulp.dest(config.dest + '/angular_app_cat'))
+})
+
 gulp.task('angular_vendor:concat', () => {
   return gulp.src(config.angular_vendor.src)
     .pipe(plumber())

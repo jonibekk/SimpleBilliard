@@ -49,16 +49,29 @@ const config = {
     src: [assets_dir + '/coffee/**/*.coffee'],
     wacth_files: [assets_dir + '/coffee/**/*.coffee']
   },
+  angular_app: {
+    src: [
+      assets_dir + '/js/angular/app/**/*.js',
+      assets_dir + '/js/angular/controller/**/*.js'
+    ],
+    output: {
+      file_name: 'ng_app',
+      path: assets_dir + '/js'
+    },
+    wacth_files: [
+      assets_dir + '/js/vendor/angular/**/*.js'
+    ]
+  },
   angular_vendor: {
     src: [
-      assets_dir + '/js/vendor/angular/angular.js'
-      assets_dir + '/js/vendor/angular/angular-ui-router.js'
-      assets_dir + '/js/vendor/angular/angular-route.js'
-      assets_dir + '/js/vendor/angular/angular-translate.js'
-      assets_dir + '/js/vendor/angular/angular-translate-loader-static-files.js'
-      assets_dir + '/js/vendor/angular/ui-bootstrap-tpls-0.13.0.js'
-      assets_dir + '/js/vendor/angular/angular-pnotify.js'
-      assets_dir + '/js/vendor/angular/angular-sanitize.js'
+      assets_dir + '/js/vendor/angular/angular.js',
+      assets_dir + '/js/vendor/angular/angular-ui-router.js',
+      assets_dir + '/js/vendor/angular/angular-route.js',
+      assets_dir + '/js/vendor/angular/angular-translate.js',
+      assets_dir + '/js/vendor/angular/angular-translate-loader-static-files.js',
+      assets_dir + '/js/vendor/angular/ui-bootstrap-tpls-0.13.0.js',
+      assets_dir + '/js/vendor/angular/angular-pnotify.js',
+      assets_dir + '/js/vendor/angular/angular-sanitize.js',
     ],
     output: {
       file_name: 'ng_vendors',

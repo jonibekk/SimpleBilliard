@@ -32,6 +32,15 @@ gulp.task("angular_vendor:uglify", () => {
     .pipe(gulp.dest(config.angular_vendor.output.path))
 })
 
+gulp.task("angular_app:uglify", () => {
+  gulp.src(config.dest + "/angular_app_cat/" + config.angular_app.output.file_name + '.js')
+    .pipe(uglify())
+    .pipe(rename({
+        suffix: '.min'
+    }))
+    .pipe(gulp.dest(config.angular_app.output.path))
+})
+
 gulp.task("react:uglify", () => {
   gulp.src('./.tmp/react/' + config.react.output.file_name + '.js')
     .pipe(uglify())
