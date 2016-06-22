@@ -3,7 +3,7 @@ import rimraf from 'gulp-rimraf'
 import config from '../config.js'
 
 gulp.task('js:clean', function() {
-  return gulp.src([config.dest + '/js_cat', config.dest + '/js'], { read: false })
+  return gulp.src([config.dest + '/js', config.dest + '/js_cat'], { read: false })
     .pipe(rimraf({ force: true }))
 })
 
@@ -22,12 +22,12 @@ gulp.task('angular_vendor:clean', function() {
     .pipe(rimraf({ force: true }))
 })
 
-gulp.task('css:clean', function() {
-  return gulp.src('./.tmp/css', { read: false })
+gulp.task('react:clean', function() {
+  return gulp.src([config.dest + '/react_setup'], { read: false })
     .pipe(rimraf({ force: true }))
 })
 
-gulp.task('react:clean', function() {
-  return gulp.src('./.tmp/react', { read: false })
+gulp.task('css:clean', function() {
+  return gulp.src([config.dest + '/css', config.dest + '/css_cat'], { read: false })
     .pipe(rimraf({ force: true }))
 })

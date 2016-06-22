@@ -78,7 +78,7 @@ gulp.task('react_setup', done => {
 gulp.task('css', done => {
   return runSequence(
     'css:clean',
-    'css:sass',
+    'css:less',
     'css:vendor',
     'css:concat',
     'css:min',

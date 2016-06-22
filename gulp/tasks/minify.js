@@ -51,7 +51,7 @@ gulp.task("react_setup:uglify", () => {
 })
 
 gulp.task('css:min', () => {
-  return gulp.src('./.tmp/css/app.css')
+  return gulp.src(config.dest + '/css_cat')
     .pipe(plumber())
     .pipe(cssmin())
     .pipe(rename({

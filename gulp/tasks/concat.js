@@ -1,6 +1,7 @@
 import gulp from 'gulp'
 import plumber from 'gulp-plumber'
 import concat from 'gulp-concat'
+import autoprefixer from 'gulp-autoprefixer'
 import config from '../config.js'
 
 gulp.task('js:concat', () => {
@@ -32,8 +33,9 @@ gulp.task('angular_vendor:concat', () => {
 })
 
 gulp.task('css:concat', () => {
-  return gulp.src(['./.tmp/css/*.css'])
+  return gulp.src([...config.css.src, ...[config.dest + '/css/**/*.css']])
     .pipe(plumber())
-    .pipe(concat('app.css'))
-    .pipe(gulp.dest('./.tmp/css'))
+    .pipe(concat(config.css.output.file_name + '.css'))
+    .pipe(autoprefixer())
+    .pipe(gulp.dest(config.dest + '/css_cat'))
 })

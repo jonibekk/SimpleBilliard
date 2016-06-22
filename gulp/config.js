@@ -91,24 +91,34 @@ const config = {
     watch_files: [assets_dir + '/js/react/setup/**/*.js']
   },
   css: {
-    src: {
-      css: [
-        './frontend/css/**/*.css'
-      ],
-      less: [
-        './frontend/sass/**/*.less'
-      ]
-    },
-    modules: [
-      './node_modules/skeleton-css/css/normalize.css',
-      './node_modules/skeleton-css/css/skeleton.css',
-      './node_modules/purecss/build/pure-min.css'
+    src: [
+      assets_dir + '/css/goalstrap.css',
+      assets_dir + '/css/jasny-bootstrap.css',
+      assets_dir + '/css/font-awesome.css',
+      assets_dir + '/css/jquery.nailthumb.1.1.css',
+      assets_dir + '/css/bootstrapValidator.css',
+      assets_dir + '/css/bootstrap-switch.css',
+      assets_dir + '/css/pnotify.custom.css',
+      assets_dir + '/css/lightbox.css',
+      assets_dir + '/css/showmore.css',
+      assets_dir + '/css/bootstrap-ext-col.css',
+      assets_dir + '/css/customRadioCheck.css',
+      assets_dir + '/css/select2.css',
+      assets_dir + '/css/select2-bootstrap.css',
+      assets_dir + '/css/datepicker3.css',
+      assets_dir + '/css/style.css',
+      assets_dir + '/css/nav.css',
+      assets_dir + '/css/nav_media.css'
     ],
-    watch_files: ['./frontend/sass/**/*.scss', './frontend/css/**/*.css'],
+    watch_files: [assets_dir + '/css/**/*.css', assets_dir + '!' + assets_dir + '/css/goalous.min.js'],
     output: {
-      file_name: 'app',
-      path: './public/css'
+      file_name: 'goalous',
+      path: assets_dir + '/css'
     }
+  },
+  less: {
+    src: [assets_dir + '/less/**/*.less'],
+    watch_files: [assets_dir + '/less/**/*.less']
   }
 }
 
