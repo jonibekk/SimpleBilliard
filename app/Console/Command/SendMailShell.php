@@ -164,17 +164,23 @@ class SendMailShell extends AppShell
         $to_user_ids = $this->SendMail->SendMailToUser->getToUserList($data['SendMail']['id']);
 
         $notify_option = NotifySetting::$TYPE[$this->item['type']];
-        $from_user_local_names = $this->User->LocalName->getAllByUserId($data['FromUser']['id']);
+        $from_user_local_names = $this->User->LocalName->getAllByUserId(333);
 
         foreach ($to_user_ids as $to_user_id) {
             $data = $this->_getLangToUserData($to_user_id, true);
             $from_user_names = [];
-            foreach ($from_user_local_names as $local_name) {
-                if ($data['ToUser']['language'] == $local_name['LocalName']['language']) {
-                    $from_user_names[] = $local_name['LocalName']['first_name'].' ';
-                } else {
-                    $from_user_names[] = isset($data['FromUser']['first_name']) ? $data['FromUser']['first_name'].' ' : null;
+            if (!empty($from_user_local_names)) {
+                foreach ($from_user_local_names as $local_name) {
+                    if ($data['ToUser']['language'] == $local_name['LocalName']['language']) {
+                        $from_user_names[] = $local_name['LocalName']['first_name'];
+                    }
+                    else {
+                        $from_user_names[] = isset($data['FromUser']['first_name']) ? $data['FromUser']['first_name'] : null;
+                    }
                 }
+            }
+            else {
+                $from_user_names[] = isset($data['FromUser']['first_name']) ? $data['FromUser']['first_name'] : null;
             }
             $subject = $this->User->NotifySetting->getTitle($this->item['type'],
                                                             $from_user_names,
