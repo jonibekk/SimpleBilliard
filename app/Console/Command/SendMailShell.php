@@ -164,7 +164,7 @@ class SendMailShell extends AppShell
         $to_user_ids = $this->SendMail->SendMailToUser->getToUserList($data['SendMail']['id']);
 
         $notify_option = NotifySetting::$TYPE[$this->item['type']];
-        $from_user_local_names = $this->User->LocalName->getAllByUserId(333);
+        $from_user_local_names = $this->User->LocalName->getAllByUserId($data['FromUser']['id']);
 
         foreach ($to_user_ids as $to_user_id) {
             $data = $this->_getLangToUserData($to_user_id, true);
