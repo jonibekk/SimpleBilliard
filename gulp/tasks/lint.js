@@ -4,7 +4,7 @@ import coffeelint from 'gulp-coffeelint'
 import config from '../config.js'
 
 gulp.task('js:coffeelint', () => {
-  return gulp.src(config.js.src.coffee)
+  return gulp.src(config.coffee.src)
     .pipe(plumber())
     .pipe(coffeelint('./coffeelint.json'))
     .pipe(coffeelint.reporter())

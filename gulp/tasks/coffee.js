@@ -4,7 +4,7 @@ import coffee from 'coffee'
 import config from '../config.js'
 
 gulp.task('js:coffee', () => {
-  return gulp.src(config.js.src.coffee)
+  return gulp.src(config.coffee.src)
     .pipe(plumber())
     .pipe(coffee())
     .pipe(gulp.dest(config.dest + '/js'))

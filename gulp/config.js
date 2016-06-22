@@ -47,10 +47,6 @@ const config = {
   },
   coffee: {
     src: [assets_dir + '/coffee/**/*.coffee'],
-    output: {
-      file_name: 'goalous',
-      path: './public/js'
-    },
     wacth_files: [assets_dir + '/coffee/**/*.coffee']
   },
   angular: {
