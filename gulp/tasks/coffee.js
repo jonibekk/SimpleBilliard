@@ -1,6 +1,6 @@
 import gulp from 'gulp'
 import plumber from 'gulp-plumber'
-import coffee from 'coffee'
+import coffee from 'gulp-coffee'
 import config from '../config.js'
 
 gulp.task('js:coffee', () => {

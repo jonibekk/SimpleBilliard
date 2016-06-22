@@ -1,10 +1,10 @@
-const assets_dir = assets_dir + ''
+const assets_dir = './app/webroot'
 const config = {
   dest: assets_dir + '/dest',
   js: {
     src: [assets_dir + '/js/gl_basic.js'],
     output: {
-      file_name: 'goalous'
+      file_name: 'goalous',
       path: assets_dir + '/js',
     },
     watch_files: [assets_dir + '/js/gl_basic.js']
@@ -17,7 +17,7 @@ const config = {
       assets_dir + '/js/vendor/bootstrapValidator.js',
       assets_dir + '/js/vendor/bootstrap-switch.js',
       assets_dir + '/js/vendor/bvAddition.js',
-      assets_dir + '/js/vendor/pnotify.custom.js'
+      assets_dir + '/js/vendor/pnotify.custom.js',
       assets_dir + '/js/vendor/jquery.nailthumb.1.1.js',
       assets_dir + '/js/vendor/jquery.autosize.js',
       assets_dir + '/js/vendor/jquery.lazy.js',
@@ -42,7 +42,7 @@ const config = {
     ],
     output: {
       file_name: 'vendors',
-      path: assets_dir + '/js',
+      path: assets_dir + '/js'
     },
     watch_files: [assets_dir + '/js/vendor/*.js']
   },

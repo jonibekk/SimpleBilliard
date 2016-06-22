@@ -7,9 +7,3 @@ gulp.task('js:vendor', () =>  {
     .pipe(plumber())
     .pipe(gulp.dest(config.dest + '/js_vendors'))
 })
-
-gulp.task('css:vendor', () =>  {
-  return gulp.src(config.css.modules)
-    .pipe(plumber())
-    .pipe(gulp.dest('./.tmp/css'))
-})

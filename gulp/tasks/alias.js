@@ -12,7 +12,7 @@ gulp.task('all', done => {
 
 gulp.task('js', done => {
   return runSequence(
-    ['js_app', 'js_vendor', 'angular_app', 'angular_vendor', 'react'],
+    ['js_app', 'js_vendor', 'angular_app', 'angular_vendor', 'react_setup'],
     done
   )
 })
@@ -79,7 +79,6 @@ gulp.task('css', done => {
   return runSequence(
     'css:clean',
     'css:less',
-    'css:vendor',
     'css:concat',
     'css:min',
     'css:clean',

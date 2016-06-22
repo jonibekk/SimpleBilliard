@@ -22,7 +22,7 @@ gulp.task('angular_vendor:clean', function() {
     .pipe(rimraf({ force: true }))
 })
 
-gulp.task('react:clean', function() {
+gulp.task('react_setup:clean', function() {
   return gulp.src([config.dest + '/react_setup'], { read: false })
     .pipe(rimraf({ force: true }))
 })
