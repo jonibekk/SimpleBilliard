@@ -89,15 +89,22 @@ class NotifyBizComponent extends Component
      */
     function sendSetupNotify($user_id, $messages, $urls)
     {
+        // User notify settings
+        $settings = $this->NotifySetting->getUserNotifySetting($user_id, NotifySetting::TYPE_SETUP_GUIDE);
+
         // Send by mail
-        $this->GlEmail->sendMailSetup($user_id, $messages['mail'], null);
+        if($user_allow_send_mail = $settings[$user_id]['email']) {
+            $this->GlEmail->sendMailSetup($user_id, $messages['mail'], null);
+        }
 
         // Send by push notification
-        $this->notify_settings = [$user_id => ['mobile' => true]];
-        $this->notify_option['url'] = $urls['push'];
-        $this->notify_option['message'] = $messages['push'];
-        $this->notify_option['from_user_id'] = $user_id; // dummy
-        $this->_sendPushNotify();
+        if($user_allow_push_mobile_notify = $settings[$user_id]['mobile']) {
+            $this->notify_settings = [$user_id => ['mobile' => true]];
+            $this->notify_option['url'] = $urls['push'];
+            $this->notify_option['message'] = $messages['push'];
+            $this->notify_option['from_user_id'] = $user_id; // dummy
+            $this->_sendPushNotify();
+        }
     }
 
     /**
