@@ -7,7 +7,7 @@ const config = {
       file_name: 'goalous'
       path: assets_dir + '/js',
     },
-    wacth_files: [assets_dir + '/js/gl_basic.js']
+    watch_files: [assets_dir + '/js/gl_basic.js']
   },
   js_vendor: {
     src: [
@@ -43,11 +43,12 @@ const config = {
     output: {
       file_name: 'vendors',
       path: assets_dir + '/js',
-    }
+    },
+    watch_files: [assets_dir + '/js/vendor/*.js']
   },
   coffee: {
     src: [assets_dir + '/coffee/**/*.coffee'],
-    wacth_files: [assets_dir + '/coffee/**/*.coffee']
+    watch_files: [assets_dir + '/coffee/**/*.coffee']
   },
   angular_app: {
     src: [
@@ -58,7 +59,7 @@ const config = {
       file_name: 'ng_app',
       path: assets_dir + '/js'
     },
-    wacth_files: [
+    watch_files: [
       assets_dir + '/js/vendor/angular/**/*.js'
     ]
   },
@@ -77,7 +78,7 @@ const config = {
       file_name: 'ng_vendors',
       path: assets_dir + '/js'
     },
-    wacth_files: [
+    watch_files: [
       assets_dir + '/js/vendor/angular/**/*.js'
     ]
   },
@@ -87,7 +88,7 @@ const config = {
       file_name: 'react_app',
       path: assets_dir + '/js'
     },
-    wacth_files: [assets_dir + '/js/react/setup/**/*.js']
+    watch_files: [assets_dir + '/js/react/setup/**/*.js']
   },
   css: {
     src: {
@@ -103,7 +104,7 @@ const config = {
       './node_modules/skeleton-css/css/skeleton.css',
       './node_modules/purecss/build/pure-min.css'
     ],
-    wacth_files: ['./frontend/sass/**/*.scss', './frontend/css/**/*.css'],
+    watch_files: ['./frontend/sass/**/*.scss', './frontend/css/**/*.css'],
     output: {
       file_name: 'app',
       path: './public/css'
