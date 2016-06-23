@@ -176,6 +176,7 @@ class SetupGuideShell extends AppShell
         // remove last update time for calc rest count
         unset($status[GlRedis::FIELD_SETUP_LAST_UPDATE_TIME]);
 
+        // define base time for notify
         $setup_rest_count = $this->AppController->calcSetupRestCount($status);
         if($user_do_nothing_for_setup = $setup_rest_count == count(User::$TYPE_SETUP_GUIDE)) {
             $base_update_time = $user_singup_time;
@@ -183,9 +184,9 @@ class SetupGuideShell extends AppShell
             $base_update_time = $setup_update_time;
         }
 
+        // check can notify compare with base time
         $notify_days = explode(",", SETUP_GUIDE_NOTIFY_DAYS);
         $now = time();
-
         foreach ($notify_days as $notify_day) {
             $from_notify_time = $base_update_time + ($notify_day * 24 * 60 * 60);
             $to_notify_time = $base_update_time + (($notify_day + 1) * 24 * 60 * 60);
