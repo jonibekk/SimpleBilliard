@@ -36,7 +36,7 @@ class CakeTestFixtureEx extends CakeTestFixture
         }
         //fix field type of primary 
         if ($db->config['datasource'] == 'Database/Mysql') {
-            $this->fields['id']['type'] = 'integer';
+            $this->fields['id']['type'] = 'biginteger';
         }
         elseif ($db->config['datasource'] == 'Database/Sqlite') {
             $this->fields['id']['type'] = 'primary_key';

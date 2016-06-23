@@ -289,7 +289,7 @@ class PostFixture extends CakeTestFixtureEx
             'modified'         => 1,
         ),
         array(
-            'id'              => '15',
+            'id'              => 15,
             'user_id'         => '',
             'team_id'         => '',
             'body'            => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
@@ -307,7 +307,7 @@ class PostFixture extends CakeTestFixtureEx
 
         ),
         array(
-            'id'              => '16',
+            'id'              => 16,
             'user_id'         => '',
             'team_id'         => '',
             'body'            => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
@@ -325,7 +325,7 @@ class PostFixture extends CakeTestFixtureEx
 
         ),
         array(
-            'id'              => '17',
+            'id'              => 17,
             'user_id'         => '',
             'team_id'         => '',
             'body'            => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
@@ -343,7 +343,7 @@ class PostFixture extends CakeTestFixtureEx
 
         ),
         array(
-            'id'              => '18',
+            'id'              => 18,
             'user_id'         => '',
             'team_id'         => '',
             'body'            => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
@@ -361,7 +361,7 @@ class PostFixture extends CakeTestFixtureEx
 
         ),
         array(
-            'id'              => '19',
+            'id'              => 19,
             'user_id'         => '',
             'team_id'         => '',
             'body'            => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
@@ -379,7 +379,7 @@ class PostFixture extends CakeTestFixtureEx
 
         ),
         array(
-            'id'              => '20',
+            'id'              => 20,
             'user_id'         => '',
             'team_id'         => '',
             'body'            => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
@@ -397,7 +397,7 @@ class PostFixture extends CakeTestFixtureEx
 
         ),
         array(
-            'id'              => '21',
+            'id'              => 21,
             'user_id'         => '',
             'team_id'         => '',
             'body'            => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
@@ -415,7 +415,7 @@ class PostFixture extends CakeTestFixtureEx
 
         ),
         array(
-            'id'              => '22',
+            'id'              => 22,
             'user_id'         => '',
             'team_id'         => '',
             'body'            => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
@@ -433,7 +433,7 @@ class PostFixture extends CakeTestFixtureEx
 
         ),
         array(
-            'id'              => '23',
+            'id'              => 23,
             'user_id'         => '',
             'team_id'         => '',
             'body'            => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
