@@ -1,5 +1,5 @@
 {
-  "name": "grunt-for-goalous",
+  "name": "gulp-for-goalous",
   "version": "0.2.0",
   "description": "Automate the frontend-tasks with Grunt for Goalous",
   "main": "index.js",
