@@ -146,18 +146,6 @@ class CircleMemberFixture extends CakeTestFixtureEx
             'created'      => 1,
             'modified'     => 1
         ),
-        array(
-            'id'           => 10,
-            'circle_id'    => 3,
-            'team_id'      => 1,
-            'user_id'      => 2,
-            'admin_flg'    => 1,
-            'unread_count' => 0,
-            'del_flg'      => 0,
-            'deleted'      => null,
-            'created'      => 1,
-            'modified'     => 1
-        ),
     );
 
 }
