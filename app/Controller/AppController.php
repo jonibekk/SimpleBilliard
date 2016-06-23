@@ -908,11 +908,15 @@ class AppController extends Controller
         return true;
     }
 
-    function getStatusWithRedisSave($user_id = false)
+    function getAllSetupDataFromRedis($user_id = false)
     {
         $user_id = ($user_id === false) ? $this->Auth->user('id') : $user_id;
+        return $this->GlRedis->getSetupGuideStatus($user_id);
+    }
 
-        $status = $this->GlRedis->getSetupGuideStatus($user_id);
+    function getStatusWithRedisSave($user_id = false)
+    {
+        $status = $this->getAllSetupDataFromRedis($user_id);
         if (!$status) {
             $status = $this->User->generateSetupGuideStatusDict($user_id);
             $this->GlRedis->saveSetupGuideStatus($user_id, $status);

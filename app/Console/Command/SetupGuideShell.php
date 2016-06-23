@@ -123,12 +123,13 @@ class SetupGuideShell extends AppShell
         $to_user_list = $this->User->getUsersSetupNotCompleted($team_id);
 
         foreach ($to_user_list as $to_user) {
-            if (!$force && !$this->_isNotifySendTime($to_user['User']['timezone'])) {
-                continue;
-            }
+            $user_time_zone = $to_user['User']['timezone'];
             $user_id = $to_user['User']['id'];
-            if ($force || $this->_isNotifyDay($user_id)) {
-                Configure::write('Config.language', $to_user['User']['language']);
+            $user_singup_time = $to_user['User']['created'];
+            $is_timing_to_send = $this->_isNotifyDay($user_id, $user_singup_time) && $this->_isNotifySendTime($user_time_zone);
+
+            if ($force || $is_timing_to_send) {
+                Configure::write('Config.language', $user_time_zone);
                 $this->_sendNotify($user_id);
             }
         }
@@ -167,17 +168,29 @@ class SetupGuideShell extends AppShell
      *
      * @return bool
      */
-    function _isNotifyDay($user_id)
+    function _isNotifyDay($user_id, $user_singup_time)
     {
-        $status = $this->AppController->getStatusWithRedisSave($user_id);
+        $status = $this->AppController->getAllSetupDataFromRedis($user_id);
+        $setup_update_time = viaIsSet($status['setup_last_update_time']);
+
+        // remove last update time for calc rest count
+        unset($status[GlRedis::FIELD_SETUP_LAST_UPDATE_TIME]);
+
+        $setup_rest_count = $this->AppController->calcSetupRestCount($status);
+        if($user_do_nothing_for_setup = $setup_rest_count == count(User::$TYPE_SETUP_GUIDE)) {
+            $base_update_time = $user_singup_time;
+        } else {
+            $base_update_time = $setup_update_time;
+        }
+
         $notify_days = explode(",", SETUP_GUIDE_NOTIFY_DAYS);
         $now = time();
-        foreach ($notify_days as $notify_day) {
-            $update_time = viaIsSet($status['setup_last_update_time']);
-            $from_notify_time = $update_time + ($notify_day * 24 * 60 * 60);
-            $to_notify_time = $update_time + (($notify_day + 1) * 24 * 60 * 60);
 
-            if (empty($update_time) || ($from_notify_time <= $now && $to_notify_time > $now)) {
+        foreach ($notify_days as $notify_day) {
+            $from_notify_time = $base_update_time + ($notify_day * 24 * 60 * 60);
+            $to_notify_time = $base_update_time + (($notify_day + 1) * 24 * 60 * 60);
+
+            if ($from_notify_time <= $now && $to_notify_time > $now) {
                 return true;
             }
         }
