@@ -21,7 +21,7 @@ class UserFixture extends CakeTestFixtureEx
         'no_pass_flg'        => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => 'パスワード未使用フラグ(ソーシャルログインのみ利用時)'),
         'photo_file_name'    => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'プロフィール画像', 'charset' => 'utf8'),
         'primary_email_id'   => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'プライマリメールアドレスID(hasOneでEmailモデルに関連)'),
-        'active_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => 'アクティブフラグ(ユーザ認証済みの場合On)'),
+        'active_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0', 'key' => 'index', 'comment' => 'アクティブフラグ(ユーザ認証済みの場合On)'),
         'last_login'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '最終ログイン日時'),
         'admin_flg'          => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '管理者フラグ(管理画面が開ける人)'),
         'default_team_id'    => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'デフォルトチーム(belongsToでTeamモデルに関連)'),
@@ -31,7 +31,7 @@ class UserFixture extends CakeTestFixtureEx
         'auto_language_flg'  => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '自動言語設定フラグ(Onの場合はブラウザから言語を取得する)'),
         'romanize_flg'       => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => 'ローマ字表記フラグ(Onの場合は自分の名前がアプリ内で英語表記になる)。local_first_name,local_last_nameが入力されていても、first_name,last_nameがつかわれる。'),
         'update_email_flg'   => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '更新情報メールフラグ(Onの場合はアプリから更新情報がメールで届く)'),
-        'del_flg'            => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
+        'del_flg'            => array('type' => 'boolean', 'null' => false, 'default' => '0', 'key' => 'index', 'comment' => '削除フラグ'),
         'deleted'            => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'ユーザが退会した日付時刻'),
         'gender_type'        => array('type' => 'integer', 'null' => true, 'default' => null, 'length' => 3, 'unsigned' => true, 'comment' => '性別(1:男,2:女)'),
         'birth_day'          => array('type' => 'date', 'null' => true, 'default' => null, 'comment' => '誕生日'),
@@ -39,10 +39,10 @@ class UserFixture extends CakeTestFixtureEx
         'phone_no'           => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 20, 'collate' => 'utf8_general_ci', 'comment' => '電話番号', 'charset' => 'utf8'),
         'hometown'           => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 128, 'collate' => 'utf8_general_ci', 'comment' => '出身地', 'charset' => 'utf8'),
         'comment'            => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'コメント', 'charset' => 'utf8'),
-        'first_name'         => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 128, 'key' => 'index', 'collate' => 'utf8_general_ci', 'comment' => '英名', 'charset' => 'utf8'),
-        'last_name'          => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 128, 'key' => 'index', 'collate' => 'utf8_general_ci', 'comment' => '英姓', 'charset' => 'utf8'),
+        'first_name'         => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 128, 'collate' => 'utf8_general_ci', 'comment' => '英名', 'charset' => 'utf8'),
+        'last_name'          => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 128, 'collate' => 'utf8_general_ci', 'comment' => '英姓', 'charset' => 'utf8'),
         'middle_name'        => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 128, 'collate' => 'utf8_general_ci', 'comment' => '英ミドルネーム', 'charset' => 'utf8'),
-        'setup_complete_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
+        'setup_complete_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => 'セットアップが完了したかどうか'),
         'created'            => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'ユーザーデータを登録した日付時刻'),
         'modified'           => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'ユーザーデータを最後に更新した日付時刻'),
         'indexes'            => array(
@@ -50,8 +50,8 @@ class UserFixture extends CakeTestFixtureEx
             'primary_email_id' => array('column' => 'primary_email_id', 'unique' => 0),
             'default_team_id'  => array('column' => 'default_team_id', 'unique' => 0),
             'password_token'   => array('column' => 'password_token', 'unique' => 0),
-            'first_name'       => array('column' => 'first_name', 'unique' => 0),
-            'last_name'        => array('column' => 'last_name', 'unique' => 0)
+            'del_flg'          => array('column' => 'del_flg', 'unique' => 0),
+            'active_flg'       => array('column' => 'active_flg', 'unique' => 0)
         ),
         'tableParameters'    => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );

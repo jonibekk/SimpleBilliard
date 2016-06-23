@@ -22,13 +22,12 @@ class CircleFixture extends CakeTestFixtureEx
         'circle_member_count' => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => true, 'comment' => 'メンバー数'),
         'del_flg'             => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
         'deleted'             => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '部署を削除した日付時刻'),
-        'created'             => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '部署を追加した日付時刻'),
+        'created'             => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '部署を追加した日付時刻'),
         'modified'            => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '部署を更新した日付時刻'),
         'indexes'             => array(
             'PRIMARY' => array('column' => 'id', 'unique' => 1),
             'team_id' => array('column' => 'team_id', 'unique' => 0),
-            'name'    => array('column' => 'name', 'unique' => 0),
-            'created' => array('column' => 'created', 'unique' => 0)
+            'name'    => array('column' => 'name', 'unique' => 0)
         ),
         'tableParameters'     => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
