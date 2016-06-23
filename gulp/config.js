@@ -82,7 +82,7 @@ const config = {
     ]
   },
   react_setup: {
-    src: [assets_dir + '/js/react/setup_guide/app.js'],
+    src: assets_dir + '/js/react/setup_guide/app.js',
     output: {
       file_name: 'react_app',
       path: assets_dir + '/js'
