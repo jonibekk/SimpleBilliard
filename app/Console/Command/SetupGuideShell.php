@@ -123,15 +123,15 @@ class SetupGuideShell extends AppShell
         $utcCurrentHour = gmdate("H");
 
         foreach ($to_user_list as $to_user) {
-            $user_time_zone = $to_user['User']['timezone'];
             $user_id = $to_user['User']['id'];
+            $user_language = $to_user['User']['language'];
+            $user_time_zone = $to_user['User']['timezone'];
             $user_singup_time = $to_user['User']['created'];
 
             $now = intval($utcCurrentHour) + $user_time_zone;
             $is_timing_to_send = $this->_isNotifyDay($user_id, $user_singup_time) && $this->_isNotifySendTime($now);
-
             if ($force || $is_timing_to_send) {
-                Configure::write('Config.language', $user_time_zone);
+                Configure::write('Config.language', $user_language);
                 $this->_sendNotify($user_id);
             }
         }
