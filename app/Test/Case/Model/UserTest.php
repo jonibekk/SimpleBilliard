@@ -20,7 +20,6 @@ class UserTest extends GoalousTestCase
         'app.evaluator',
         'app.local_name',
         'app.user',
-        'app.image',
         'app.team',
         'app.circle',
         'app.circle_member',

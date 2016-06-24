@@ -1,9 +1,9 @@
-<?php
+<?php App::uses('CakeTestFixtureEx', 'Test/Fixture');
 
 /**
  * InviteFixture
  */
-class InviteFixture extends CakeTestFixture
+class InviteFixture extends CakeTestFixtureEx
 {
 
     /**
@@ -120,7 +120,7 @@ class InviteFixture extends CakeTestFixture
             'modified'            => 1400725683
         ),
         array(
-            'id'                  => '',
+            'id'                  => '6',
             'from_user_id'        => '',
             'to_user_id'          => '',
             'team_id'             => '',
@@ -135,7 +135,7 @@ class InviteFixture extends CakeTestFixture
             'modified'            => 6
         ),
         array(
-            'id'                  => '',
+            'id'                  => '7',
             'from_user_id'        => '',
             'to_user_id'          => '',
             'team_id'             => '',
@@ -150,7 +150,7 @@ class InviteFixture extends CakeTestFixture
             'modified'            => 7
         ),
         array(
-            'id'                  => '',
+            'id'                  => '8',
             'from_user_id'        => '',
             'to_user_id'          => '',
             'team_id'             => '',
@@ -165,7 +165,7 @@ class InviteFixture extends CakeTestFixture
             'modified'            => 8
         ),
         array(
-            'id'                  => '',
+            'id'                  => '9',
             'from_user_id'        => '',
             'to_user_id'          => '',
             'team_id'             => '',
@@ -180,7 +180,7 @@ class InviteFixture extends CakeTestFixture
             'modified'            => 9
         ),
         array(
-            'id'                  => '',
+            'id'                  => '10',
             'from_user_id'        => '',
             'to_user_id'          => '',
             'team_id'             => '',

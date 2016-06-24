@@ -32,7 +32,7 @@ before_script:
   - cp app/Test/travis/travis-ci-apache build/travis-ci-apache
   - sudo cp -f build/travis-ci-apache /etc/apache2/sites-available/default
   - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default
-  - sudo apt-get install php5-xdebug php5-curl php5-mcrypt
+  - sudo apt-get install php5-xdebug php5-curl php5-mcrypt sqlite3 php5-sqlite
   - sudo apt-get install php-pear php5-dev
   - pecl install oauth-1.2.3
   - sh -c "if [ ! -e apcu-4.0.2 ]; then wget http://pecl.php.net/get/apcu-4.0.2.tgz && tar -xzf apcu-4.0.2.tgz ; fi"
@@ -69,12 +69,10 @@ before_script:
       'prefix' => ''
     );
     public \$test = array(
-      'persistent' => false,
-      'host' => '',
-      'login' => '',
-      'password' => '',
-      'database' => 'cakephp_test',
-      'prefix' => ''
+        'datasource' => 'Database/Sqlite',
+        'persistent' => false,
+        'database'   => ':memory:',
+        'prefix'     => '',
     );
     public \$redis = array(
         'datasource'  => 'Redis.RedisSource',
@@ -104,7 +102,7 @@ before_script:
       if (!empty(\$_SERVER['DB'])) {
         \$db = \$_SERVER['DB'];
       }
-      foreach (array('default', 'test') as \$source) {
+      foreach (array('default') as \$source) {
         \$config = array_merge(\$this->{\$source}, \$this->identities[\$db]);
         if (is_array(\$config['database'])) {
           \$config['database'] = \$config['database'][\$source];

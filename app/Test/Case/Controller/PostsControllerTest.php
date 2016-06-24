@@ -51,8 +51,6 @@ class PostsControllerTest extends GoalousControllerTestCase
         'app.email',
         'app.oauth_token',
         'app.local_name',
-        'app.image',
-        'app.images_post',
         'app.post_share_user',
         'app.post_share_circle',
         'app.circle',

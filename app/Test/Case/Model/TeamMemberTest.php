@@ -2146,7 +2146,9 @@ class TeamMemberTest extends GoalousTestCase
     {
         $member_id = 999;
         $this->TeamMember->User->save([
-                                          'id' => $member_id,
+                                          'id'         => $member_id,
+                                          'first_name' => 'test',
+                                          'last_name'  => 'test',
                                       ]);
         $this->TeamMember->User->Email->save([
                                                  'user_id'        => $member_id,
@@ -2200,6 +2202,8 @@ class TeamMemberTest extends GoalousTestCase
         $member_id = 999;
         $params = [
             'id'                    => $member_id,
+            'first_name'            => 'test',
+            'last_name'             => 'test',
             'evaluation_enable_flg' => 0,
         ];
         $this->TeamMember->save($params);
@@ -2215,6 +2219,8 @@ class TeamMemberTest extends GoalousTestCase
         $user_id = 999;
         $params = [
             'id'         => $user_id,
+            'first_name' => 'test',
+            'last_name'  => 'test',
             '2fa_secret' => null,
         ];
         $this->TeamMember->User->save($params);
@@ -2240,6 +2246,8 @@ class TeamMemberTest extends GoalousTestCase
         $user_id = 999;
         $params = [
             'id'         => $user_id,
+            'first_name' => 'test',
+            'last_name'  => 'test',
             '2fa_secret' => 'test',
         ];
         $this->TeamMember->User->save($params);
@@ -2264,9 +2272,11 @@ class TeamMemberTest extends GoalousTestCase
     {
         $user_id = 999;
         $params = [
-            'id' => $user_id,
+            'id'         => $user_id,
+            'first_name' => 'test',
+            'last_name'  => 'test',
         ];
-        $this->TeamMember->User->save($params);
+        $res = $this->TeamMember->User->save($params);
 
         $this->TeamMember->User->Email->save([
                                                  'user_id'        => $user_id,
@@ -2288,7 +2298,9 @@ class TeamMemberTest extends GoalousTestCase
     {
         $user_id = 999;
         $params = [
-            'id' => $user_id,
+            'id'         => $user_id,
+            'first_name' => 'test',
+            'last_name'  => 'test',
         ];
         $this->TeamMember->User->save($params);
 
@@ -2312,7 +2324,9 @@ class TeamMemberTest extends GoalousTestCase
     {
         $user_id = 999;
         $params = [
-            'id' => $user_id,
+            'id'         => $user_id,
+            'first_name' => 'test',
+            'last_name'  => 'test',
         ];
         $this->TeamMember->User->save($params);
 
@@ -2335,7 +2349,9 @@ class TeamMemberTest extends GoalousTestCase
     {
         $user_id = 999;
         $params = [
-            'id' => $user_id,
+            'id'         => $user_id,
+            'first_name' => 'test',
+            'last_name'  => 'test',
         ];
         $this->TeamMember->User->save($params);
 
@@ -2398,7 +2414,9 @@ class TeamMemberTest extends GoalousTestCase
         // me
         $user_id = 999;
         $params = [
-            'id' => $user_id,
+            'id'         => $user_id,
+            'first_name' => 'test',
+            'last_name'  => 'test',
         ];
         $this->TeamMember->User->save($params);
 
