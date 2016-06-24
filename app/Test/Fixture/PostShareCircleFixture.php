@@ -1,9 +1,9 @@
-<?php
+<?php App::uses('CakeTestFixtureEx', 'Test/Fixture');
 
 /**
  * PostShareCircleFixture
  */
-class PostShareCircleFixture extends CakeTestFixture
+class PostShareCircleFixture extends CakeTestFixtureEx
 {
 
     /**
@@ -88,7 +88,7 @@ class PostShareCircleFixture extends CakeTestFixture
             'modified'  => 1
         ),
         array(
-            'id'        => '',
+            'id'        => '6',
             'post_id'   => '',
             'circle_id' => '',
             'team_id'   => '',
@@ -98,7 +98,7 @@ class PostShareCircleFixture extends CakeTestFixture
             'modified'  => 2
         ),
         array(
-            'id'        => '',
+            'id'        => '7',
             'post_id'   => '',
             'circle_id' => '',
             'team_id'   => '',
@@ -108,7 +108,7 @@ class PostShareCircleFixture extends CakeTestFixture
             'modified'  => 3
         ),
         array(
-            'id'        => '',
+            'id'        => '8',
             'post_id'   => '',
             'circle_id' => '',
             'team_id'   => '',
@@ -118,7 +118,7 @@ class PostShareCircleFixture extends CakeTestFixture
             'modified'  => 4
         ),
         array(
-            'id'        => '',
+            'id'        => '9',
             'post_id'   => '',
             'circle_id' => '',
             'team_id'   => '',
@@ -128,7 +128,7 @@ class PostShareCircleFixture extends CakeTestFixture
             'modified'  => 5
         ),
         array(
-            'id'        => '',
+            'id'        => '10',
             'post_id'   => '',
             'circle_id' => '',
             'team_id'   => '',
@@ -138,7 +138,7 @@ class PostShareCircleFixture extends CakeTestFixture
             'modified'  => 6
         ),
         array(
-            'id'        => '',
+            'id'        => '11',
             'post_id'   => '',
             'circle_id' => '',
             'team_id'   => '',
@@ -148,7 +148,7 @@ class PostShareCircleFixture extends CakeTestFixture
             'modified'  => 7
         ),
         array(
-            'id'        => '',
+            'id'        => '12',
             'post_id'   => '',
             'circle_id' => '',
             'team_id'   => '',
@@ -158,7 +158,7 @@ class PostShareCircleFixture extends CakeTestFixture
             'modified'  => 8
         ),
         array(
-            'id'        => '',
+            'id'        => '13',
             'post_id'   => '',
             'circle_id' => '',
             'team_id'   => '',
@@ -168,7 +168,7 @@ class PostShareCircleFixture extends CakeTestFixture
             'modified'  => 9
         ),
         array(
-            'id'        => '',
+            'id'        => '14',
             'post_id'   => '',
             'circle_id' => '',
             'team_id'   => '',

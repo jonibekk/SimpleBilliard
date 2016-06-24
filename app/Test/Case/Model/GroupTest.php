@@ -116,5 +116,4 @@ class GroupTest extends GoalousTestCase
         $this->Group->current_team_id = 1;
         $this->Group->my_uid = 1;
     }
-
 }

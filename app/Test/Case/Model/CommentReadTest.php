@@ -90,7 +90,7 @@ class CommentReadTest extends GoalousTestCase
         //自分のコメントは既読にならない
         $before_data = $this->CommentRead->find('first', $options);
         $my_comment = $test_save_data;
-        $my_comment['Comment']['user_id'] = $uid;
+        $my_comment['Comment'][0]['user_id'] = $uid;
         $this->CommentRead->Comment->Post->saveAll($my_comment);
         $this->CommentRead->red($this->CommentRead->Comment->getLastInsertID());
         $after_data = $this->CommentRead->find('first', $options);

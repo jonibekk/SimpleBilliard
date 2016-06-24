@@ -1,9 +1,9 @@
-<?php
+<?php App::uses('CakeTestFixtureEx', 'Test/Fixture');
 
 /**
  * PostFixture
  */
-class PostFixture extends CakeTestFixture
+class PostFixture extends CakeTestFixtureEx
 {
 
     /**
@@ -289,7 +289,7 @@ class PostFixture extends CakeTestFixture
             'modified'         => 1,
         ),
         array(
-            'id'              => '',
+            'id'              => 15,
             'user_id'         => '',
             'team_id'         => '',
             'body'            => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
@@ -298,16 +298,16 @@ class PostFixture extends CakeTestFixture
             'post_like_count' => 2,
             'post_read_count' => 2,
 
-            'important_flg'   => 1,
-            'goal_id'         => '',
-            'del_flg'         => 1,
-            'deleted'         => 2,
-            'created'         => 2,
-            'modified'        => 2,
+            'important_flg' => 1,
+            'goal_id'       => '',
+            'del_flg'       => 1,
+            'deleted'       => 2,
+            'created'       => 2,
+            'modified'      => 2,
 
         ),
         array(
-            'id'              => '',
+            'id'              => 16,
             'user_id'         => '',
             'team_id'         => '',
             'body'            => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
@@ -316,16 +316,16 @@ class PostFixture extends CakeTestFixture
             'post_like_count' => 3,
             'post_read_count' => 3,
 
-            'important_flg'   => 1,
-            'goal_id'         => '',
-            'del_flg'         => 1,
-            'deleted'         => 3,
-            'created'         => 3,
-            'modified'        => 3,
+            'important_flg' => 1,
+            'goal_id'       => '',
+            'del_flg'       => 1,
+            'deleted'       => 3,
+            'created'       => 3,
+            'modified'      => 3,
 
         ),
         array(
-            'id'              => '',
+            'id'              => 17,
             'user_id'         => '',
             'team_id'         => '',
             'body'            => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
@@ -334,16 +334,16 @@ class PostFixture extends CakeTestFixture
             'post_like_count' => 4,
             'post_read_count' => 4,
 
-            'important_flg'   => 1,
-            'goal_id'         => '',
-            'del_flg'         => 1,
-            'deleted'         => 4,
-            'created'         => 4,
-            'modified'        => 4,
+            'important_flg' => 1,
+            'goal_id'       => '',
+            'del_flg'       => 1,
+            'deleted'       => 4,
+            'created'       => 4,
+            'modified'      => 4,
 
         ),
         array(
-            'id'              => '',
+            'id'              => 18,
             'user_id'         => '',
             'team_id'         => '',
             'body'            => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
@@ -352,16 +352,16 @@ class PostFixture extends CakeTestFixture
             'post_like_count' => 5,
             'post_read_count' => 5,
 
-            'important_flg'   => 1,
-            'goal_id'         => '',
-            'del_flg'         => 1,
-            'deleted'         => 5,
-            'created'         => 5,
-            'modified'        => 5,
+            'important_flg' => 1,
+            'goal_id'       => '',
+            'del_flg'       => 1,
+            'deleted'       => 5,
+            'created'       => 5,
+            'modified'      => 5,
 
         ),
         array(
-            'id'              => '',
+            'id'              => 19,
             'user_id'         => '',
             'team_id'         => '',
             'body'            => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
@@ -370,16 +370,16 @@ class PostFixture extends CakeTestFixture
             'post_like_count' => 6,
             'post_read_count' => 6,
 
-            'important_flg'   => 1,
-            'goal_id'         => '',
-            'del_flg'         => 1,
-            'deleted'         => 6,
-            'created'         => 6,
-            'modified'        => 6,
+            'important_flg' => 1,
+            'goal_id'       => '',
+            'del_flg'       => 1,
+            'deleted'       => 6,
+            'created'       => 6,
+            'modified'      => 6,
 
         ),
         array(
-            'id'              => '',
+            'id'              => 20,
             'user_id'         => '',
             'team_id'         => '',
             'body'            => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
@@ -388,16 +388,16 @@ class PostFixture extends CakeTestFixture
             'post_like_count' => 7,
             'post_read_count' => 7,
 
-            'important_flg'   => 1,
-            'goal_id'         => '',
-            'del_flg'         => 1,
-            'deleted'         => 7,
-            'created'         => 7,
-            'modified'        => 7,
+            'important_flg' => 1,
+            'goal_id'       => '',
+            'del_flg'       => 1,
+            'deleted'       => 7,
+            'created'       => 7,
+            'modified'      => 7,
 
         ),
         array(
-            'id'              => '',
+            'id'              => 21,
             'user_id'         => '',
             'team_id'         => '',
             'body'            => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
@@ -406,16 +406,16 @@ class PostFixture extends CakeTestFixture
             'post_like_count' => 8,
             'post_read_count' => 8,
 
-            'important_flg'   => 1,
-            'goal_id'         => '',
-            'del_flg'         => 1,
-            'deleted'         => 8,
-            'created'         => 8,
-            'modified'        => 8,
+            'important_flg' => 1,
+            'goal_id'       => '',
+            'del_flg'       => 1,
+            'deleted'       => 8,
+            'created'       => 8,
+            'modified'      => 8,
 
         ),
         array(
-            'id'              => '',
+            'id'              => 22,
             'user_id'         => '',
             'team_id'         => '',
             'body'            => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
@@ -424,16 +424,16 @@ class PostFixture extends CakeTestFixture
             'post_like_count' => 9,
             'post_read_count' => 9,
 
-            'important_flg'   => 1,
-            'goal_id'         => '',
-            'del_flg'         => 1,
-            'deleted'         => 9,
-            'created'         => 9,
-            'modified'        => 9,
+            'important_flg' => 1,
+            'goal_id'       => '',
+            'del_flg'       => 1,
+            'deleted'       => 9,
+            'created'       => 9,
+            'modified'      => 9,
 
         ),
         array(
-            'id'              => '',
+            'id'              => 23,
             'user_id'         => '',
             'team_id'         => '',
             'body'            => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
@@ -442,12 +442,12 @@ class PostFixture extends CakeTestFixture
             'post_like_count' => 10,
             'post_read_count' => 10,
 
-            'important_flg'   => 1,
-            'goal_id'         => '',
-            'del_flg'         => 1,
-            'deleted'         => 10,
-            'created'         => 10,
-            'modified'        => 10,
+            'important_flg' => 1,
+            'goal_id'       => '',
+            'del_flg'       => 1,
+            'deleted'       => 10,
+            'created'       => 10,
+            'modified'      => 10,
 
         ),
     );

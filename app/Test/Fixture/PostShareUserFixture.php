@@ -1,9 +1,9 @@
-<?php
+<?php App::uses('CakeTestFixtureEx', 'Test/Fixture');
 
 /**
  * PostShareUserFixture
  */
-class PostShareUserFixture extends CakeTestFixture
+class PostShareUserFixture extends CakeTestFixtureEx
 {
 
     /**
@@ -23,9 +23,9 @@ class PostShareUserFixture extends CakeTestFixture
         'modified'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '投稿を更新した日付時刻'),
         'indexes'         => array(
             'PRIMARY' => array('column' => 'id', 'unique' => 1),
-            'post_id' => array('column' => 'post_id', 'unique' => 0),
-            'user_id' => array('column' => 'user_id', 'unique' => 0),
-            'team_id' => array('column' => 'team_id', 'unique' => 0),
+            'post_id'  => array('column' => 'post_id', 'unique' => 0),
+            'user_id'  => array('column' => 'user_id', 'unique' => 0),
+            'team_id'  => array('column' => 'team_id', 'unique' => 0),
             'created' => array('column' => 'created', 'unique' => 0)
         ),
         'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
@@ -88,7 +88,7 @@ class PostShareUserFixture extends CakeTestFixture
             'modified' => 1
         ),
         array(
-            'id'       => '',
+            'id'       => '6',
             'post_id'  => '',
             'user_id'  => '',
             'team_id'  => '',
@@ -98,7 +98,7 @@ class PostShareUserFixture extends CakeTestFixture
             'modified' => 2
         ),
         array(
-            'id'       => '',
+            'id'       => '7',
             'post_id'  => '',
             'user_id'  => '',
             'team_id'  => '',
@@ -108,7 +108,7 @@ class PostShareUserFixture extends CakeTestFixture
             'modified' => 3
         ),
         array(
-            'id'       => '',
+            'id'       => '8',
             'post_id'  => '',
             'user_id'  => '',
             'team_id'  => '',
@@ -118,7 +118,7 @@ class PostShareUserFixture extends CakeTestFixture
             'modified' => 4
         ),
         array(
-            'id'       => '',
+            'id'       => '9',
             'post_id'  => '',
             'user_id'  => '',
             'team_id'  => '',
@@ -128,7 +128,7 @@ class PostShareUserFixture extends CakeTestFixture
             'modified' => 5
         ),
         array(
-            'id'       => '',
+            'id'       => '10',
             'post_id'  => '',
             'user_id'  => '',
             'team_id'  => '',
@@ -138,7 +138,7 @@ class PostShareUserFixture extends CakeTestFixture
             'modified' => 6
         ),
         array(
-            'id'       => '',
+            'id'       => '11',
             'post_id'  => '',
             'user_id'  => '',
             'team_id'  => '',
@@ -148,7 +148,7 @@ class PostShareUserFixture extends CakeTestFixture
             'modified' => 7
         ),
         array(
-            'id'       => '',
+            'id'       => '12',
             'post_id'  => '',
             'user_id'  => '',
             'team_id'  => '',
@@ -158,7 +158,7 @@ class PostShareUserFixture extends CakeTestFixture
             'modified' => 8
         ),
         array(
-            'id'       => '',
+            'id'       => '13',
             'post_id'  => '',
             'user_id'  => '',
             'team_id'  => '',
@@ -168,7 +168,7 @@ class PostShareUserFixture extends CakeTestFixture
             'modified' => 9
         ),
         array(
-            'id'       => '',
+            'id'       => '14',
             'post_id'  => '',
             'user_id'  => '',
             'team_id'  => '',

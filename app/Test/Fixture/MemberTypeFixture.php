@@ -1,9 +1,9 @@
-<?php
+<?php App::uses('CakeTestFixtureEx', 'Test/Fixture');
 
 /**
  * MemberTypeFixture
  */
-class MemberTypeFixture extends CakeTestFixture
+class MemberTypeFixture extends CakeTestFixtureEx
 {
 
     /**
@@ -22,7 +22,7 @@ class MemberTypeFixture extends CakeTestFixture
         'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '部署を追加した日付時刻'),
         'modified'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '部署を更新した日付時刻'),
         'indexes'         => array(
-            'PRIMARY'    => array('column' => 'id', 'unique' => 1),
+            'PRIMARY' => array('column' => 'id', 'unique' => 1),
             'team_id'    => array('column' => 'team_id', 'unique' => 0),
             'del_flg'    => array('column' => 'del_flg', 'unique' => 0),
             'active_flg' => array('column' => 'active_flg', 'unique' => 0)

@@ -1,9 +1,9 @@
-<?php
+<?php App::uses('CakeTestFixtureEx', 'Test/Fixture');
 
 /**
  * KeyResultFixture
  */
-class KeyResultFixture extends CakeTestFixture
+class KeyResultFixture extends CakeTestFixtureEx
 {
 
     /**
@@ -33,11 +33,11 @@ class KeyResultFixture extends CakeTestFixture
         'created'             => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '追加した日付時刻'),
         'modified'            => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '更新した日付時刻'),
         'indexes'             => array(
-            'PRIMARY'  => array('column' => 'id', 'unique' => 1),
-            'team_id'  => array('column' => 'team_id', 'unique' => 0),
+            'PRIMARY'    => array('column' => 'id', 'unique' => 1),
+            'team_id'    => array('column' => 'team_id', 'unique' => 0),
             'del_flg'  => array('column' => 'del_flg', 'unique' => 0),
-            'goal_id'  => array('column' => 'goal_id', 'unique' => 0),
-            'modified' => array('column' => 'modified', 'unique' => 0),
+            'goal_id'    => array('column' => 'goal_id', 'unique' => 0),
+            'modified'   => array('column' => 'modified', 'unique' => 0),
             'user_id'  => array('column' => 'user_id', 'unique' => 0)
         ),
         'tableParameters'     => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
