@@ -1,9 +1,9 @@
-<?php
+<?php App::uses('CakeTestFixtureEx', 'Test/Fixture');
 
 /**
  * CommentFixture
  */
-class CommentFixture extends CakeTestFixture
+class CommentFixture extends CakeTestFixtureEx
 {
 
     /**
@@ -40,6 +40,7 @@ class CommentFixture extends CakeTestFixture
         ),
         'tableParameters'      => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
     );
+
 
     /**
      * Records
@@ -126,7 +127,7 @@ class CommentFixture extends CakeTestFixture
             'modified'           => 1
         ),
         array(
-            'id'                 => '',
+            'id'                 => '7',
             'post_id'            => '',
             'user_id'            => '',
             'team_id'            => '',
@@ -139,7 +140,7 @@ class CommentFixture extends CakeTestFixture
             'modified'           => 1400725683
         ),
         array(
-            'id'                 => '',
+            'id'                 => '8',
             'post_id'            => '',
             'user_id'            => '',
             'team_id'            => '',
@@ -152,7 +153,7 @@ class CommentFixture extends CakeTestFixture
             'modified'           => 1400725683
         ),
         array(
-            'id'                 => '',
+            'id'                 => '9',
             'post_id'            => '',
             'user_id'            => '',
             'team_id'            => '',
@@ -165,7 +166,7 @@ class CommentFixture extends CakeTestFixture
             'modified'           => 1400725683
         ),
         array(
-            'id'                 => '',
+            'id'                 => '10',
             'post_id'            => '',
             'user_id'            => '',
             'team_id'            => '',
@@ -178,7 +179,7 @@ class CommentFixture extends CakeTestFixture
             'modified'           => 1400725683
         ),
         array(
-            'id'                 => '',
+            'id'                 => '11',
             'post_id'            => '',
             'user_id'            => '',
             'team_id'            => '',
@@ -191,7 +192,7 @@ class CommentFixture extends CakeTestFixture
             'modified'           => 1400725683
         ),
         array(
-            'id'                 => '',
+            'id'                 => '12',
             'post_id'            => '',
             'user_id'            => '',
             'team_id'            => '',
@@ -204,7 +205,7 @@ class CommentFixture extends CakeTestFixture
             'modified'           => 1400725683
         ),
         array(
-            'id'                 => '',
+            'id'                 => '13',
             'post_id'            => '',
             'user_id'            => '',
             'team_id'            => '',
@@ -217,7 +218,7 @@ class CommentFixture extends CakeTestFixture
             'modified'           => 1400725683
         ),
         array(
-            'id'                 => '',
+            'id'                 => '14',
             'post_id'            => '',
             'user_id'            => '',
             'team_id'            => '',

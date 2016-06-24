@@ -1,9 +1,9 @@
-<?php
+<?php App::uses('CakeTestFixtureEx', 'Test/Fixture');
 
 /**
  * LocalNameFixture
  */
-class LocalNameFixture extends CakeTestFixture
+class LocalNameFixture extends CakeTestFixtureEx
 {
 
     /**
@@ -22,8 +22,8 @@ class LocalNameFixture extends CakeTestFixture
         'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'メアドを登録した日付時刻'),
         'modified'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'メアドを最後に更新した日付時刻'),
         'indexes'         => array(
-            'PRIMARY'  => array('column' => 'id', 'unique' => 1),
-            'user_id'  => array('column' => 'user_id', 'unique' => 0),
+            'PRIMARY'    => array('column' => 'id', 'unique' => 1),
+            'user_id'    => array('column' => 'user_id', 'unique' => 0),
             'del_flg'  => array('column' => 'del_flg', 'unique' => 0),
             'language' => array('column' => 'language', 'unique' => 0)
         ),
@@ -92,7 +92,7 @@ class LocalNameFixture extends CakeTestFixture
             'modified'   => 5
         ),
         array(
-            'id'         => '',
+            'id'         => '6',
             'user_id'    => '',
             'language'   => 'Lorem ipsum dolor sit amet',
             'first_name' => 'Lorem ipsum dolor sit amet',
@@ -103,7 +103,7 @@ class LocalNameFixture extends CakeTestFixture
             'modified'   => 6
         ),
         array(
-            'id'         => '',
+            'id'         => '7',
             'user_id'    => '',
             'language'   => 'Lorem ipsum dolor sit amet',
             'first_name' => 'Lorem ipsum dolor sit amet',
@@ -114,7 +114,7 @@ class LocalNameFixture extends CakeTestFixture
             'modified'   => 7
         ),
         array(
-            'id'         => '',
+            'id'         => '8',
             'user_id'    => '',
             'language'   => 'Lorem ipsum dolor sit amet',
             'first_name' => 'Lorem ipsum dolor sit amet',
@@ -125,7 +125,7 @@ class LocalNameFixture extends CakeTestFixture
             'modified'   => 8
         ),
         array(
-            'id'         => '',
+            'id'         => '9',
             'user_id'    => '',
             'language'   => 'Lorem ipsum dolor sit amet',
             'first_name' => 'Lorem ipsum dolor sit amet',
@@ -136,7 +136,7 @@ class LocalNameFixture extends CakeTestFixture
             'modified'   => 9
         ),
         array(
-            'id'         => '',
+            'id'         => '10',
             'user_id'    => '',
             'language'   => 'Lorem ipsum dolor sit amet',
             'first_name' => 'Lorem ipsum dolor sit amet',

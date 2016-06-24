@@ -327,7 +327,7 @@ class NotifySettingTest extends GoalousTestCase
     {
         $this->NotifySetting->my_uid = 1;
         $res_1 = $this->NotifySetting->getMySettings();
-        $this->assertNull($res_1['id']);
+        $this->assertEmpty($res_1['id']);
     }
 
     function testGetMySettingExistData()

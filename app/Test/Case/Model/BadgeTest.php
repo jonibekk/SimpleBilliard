@@ -18,7 +18,6 @@ class BadgeTest extends GoalousTestCase
         'app.badge',
         'app.user', 'app.notify_setting',
         'app.team',
-        'app.image',
     );
 
     /**
