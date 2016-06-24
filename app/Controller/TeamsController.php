@@ -928,7 +928,7 @@ class TeamsController extends AppController
         // for cancel the old invite
         $res = $this->Team->Invite->delete($invite_id);
 
-        if ($action_flg == 'REINVITED') {
+        if ($action_flg == 'Invited') {
             //save invite mail data
             $invite = $this->Team->Invite->saveInvite(
                 $invite_data['Invite']['email'],
@@ -945,7 +945,7 @@ class TeamsController extends AppController
             $this->GlEmail->sendMailInvite($invite, $team_name);
             $sentEmails[] = $email;
         }
-        $res['msg'] = $error_msg;
+        $res['title'] = $error_msg;
         $res['error'] = $error;
         return $this->_ajaxGetResponse($res);
     }
