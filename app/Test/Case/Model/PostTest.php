@@ -187,6 +187,13 @@ class PostTest extends GoalousTestCase
                 'share'   => 'public',
             ],
         ];
+        //save circle member
+        $this->Post->User->CircleMember->save([
+                                                  'user_id'   => 2,
+                                                  'circle_id' => 3,
+                                                  'team_id'   => 1,
+                                              ]);
+
         $res = $this->Post->addNormal($postData);
         $this->assertNotEmpty($res);
 
