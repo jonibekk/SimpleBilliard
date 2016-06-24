@@ -104,7 +104,7 @@ export function submitPost(dispatch, refs, socket_id) {
         })
       }
     } else {
-      document.location.href = "/setup"
+      document.location.href = "/setup/?from=post"
     }
   })
   .catch(function (response) {

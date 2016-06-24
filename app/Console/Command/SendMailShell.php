@@ -104,8 +104,10 @@ class SendMailShell extends AppShell
         } catch (RuntimeException $e) {
             return;
         }
+
         $this->item = json_decode($data['SendMail']['item'], true);
         $tmpl_type = $data['SendMail']['template_type'];
+        $team_name = isset($data['Team']['name']) ? $data['Team']['name'] : null;
         $to_user_ids = $this->SendMail->SendMailToUser->getToUserList($data['SendMail']['id']);
         if (!empty($to_user_ids)) {
             foreach ($to_user_ids as $to_user_id) {
@@ -126,7 +128,7 @@ class SendMailShell extends AppShell
                 if (is_array($this->item)) {
                     $viewVars = array_merge($this->item, $viewVars);
                 }
-                $this->_sendMailItem($options, $viewVars);
+                $this->_sendMailItem($options, $viewVars, $team_name);
                 $this->SendMail->id = $data['SendMail']['id'];
                 $this->SendMail->save(['sent_datetime' => REQUEST_TIMESTAMP]);
             }
@@ -144,7 +146,7 @@ class SendMailShell extends AppShell
             if (is_array($this->item)) {
                 $viewVars = array_merge($this->item, $viewVars);
             }
-            $this->_sendMailItem($options, $viewVars);
+            $this->_sendMailItem($options, $viewVars, $team_name);
             $this->SendMail->id = $data['SendMail']['id'];
             $this->SendMail->save(['sent_datetime' => REQUEST_TIMESTAMP]);
         }
@@ -160,6 +162,8 @@ class SendMailShell extends AppShell
         } catch (RuntimeException $e) {
             return;
         }
+
+        $team_name = isset($data['Team']['name']) ? $data['Team']['name'] : null;
         $this->item = json_decode($data['SendMail']['item'], true);
         $to_user_ids = $this->SendMail->SendMailToUser->getToUserList($data['SendMail']['id']);
 
@@ -204,7 +208,7 @@ class SendMailShell extends AppShell
                 'body_title'     => $subject,
                 'body'           => $this->item['item_name'],
             ];
-            $this->_sendMailItem($options, $viewVars);
+            $this->_sendMailItem($options, $viewVars, $team_name);
 
         }
         $this->SendMail->id = $data['SendMail']['id'];
@@ -261,7 +265,7 @@ class SendMailShell extends AppShell
      *
      * @internal param \unknown $val
      */
-    private function _sendMailItem($options, $viewVars)
+    private function _sendMailItem($options, $viewVars, $team_name)
     {
         // TODO: $viewVars['message']以外の場所もメール本文として使われてる可能性があるため、調査が必要。
         //       もし上記の場所を発見したら、そのテキストを_preventGarbledCharacters()に通す必要がある。文字化け回避のために。
@@ -275,7 +279,8 @@ class SendMailShell extends AppShell
             'layout'   => 'default'
         );
         $options = array_merge($defaults, $options);
-        $options['subject'] = "[" . SERVICE_NAME . "]" . $options['subject'];
+        $team_name = (!empty($team_name)) ? "[" . $team_name. "] " : '';
+        $options['subject'] = $team_name . $options['subject'];
         /**
          * @var CakeEmail $Email
          */
