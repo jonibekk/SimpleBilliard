@@ -918,6 +918,38 @@ class TeamsController extends AppController
         return $this->_ajaxGetResponse($res);
     }
 
+    function ajax_invite_setting($invite_id, $action_flg)
+    {
+        $this->_ajaxPreProcess();
+        $error = false;
+        $error_msg = '';
+        $invite_data = $this->Team->Invite->findById($invite_id);
+
+        // for cancel the old invite
+        $res = $this->Team->Invite->delete($invite_id);
+
+        if ($action_flg == 'REINVITED') {
+            //save invite mail data
+            $invite = $this->Team->Invite->saveInvite(
+                $invite_data['Invite']['email'],
+                $invite_data['Invite']['team_id'],
+                $invite_data['Invite']['from_user_id'],
+                !empty($invite_data['Invite']['message']) ?$invite_data['Invite']['message'] : null
+            );
+            if (!$invite) {
+                $error = true;
+                $error_msg = (__("Error, failed to invite."));
+            }
+            //send invite mail
+            $team_name = $this->Team->TeamMember->myTeams[$this->Session->read('current_team_id')];
+            $this->GlEmail->sendMailInvite($invite, $team_name);
+            $sentEmails[] = $email;
+        }
+        $res['msg'] = $error_msg;
+        $res['error'] = $error;
+        return $this->_ajaxGetResponse($res);
+    }
+
     function ajax_set_current_team_admin_user_flag($member_id, $active_flg)
     {
         $this->_ajaxPreProcess();

@@ -163,6 +163,37 @@
 
                     <div ng-bind-html="item.Invite.created"></div>
                 </td>
+                <td>
+                    <div ng-if="login_user_admin_flg == true" class="team-members-card-function-box pull-right">
+                        <div ng-if="item.Invite.del_flg == '1'"
+                             ng-class="item.Invite.del_flg == '1' ? 'cacel_or_invite' : ''" class="team-members-card">
+                            {{ invite_msg[$index] }}
+                        </div>
+                        <div class="pull-right header-function dropdown team-members-card-function"
+                             ng-if="(admin_user_cnt > 1 || login_user_id != item.User.id) && item.Invite.del_flg == '0'">
+                            <button class="btn team_member_setting_btn dropdown-toggle" type="button"
+                                    id="dropdownMenu1"
+                                    data-toggle="dropdown" aria-expanded="true">
+                                <i class="fa fa-cog header-function-icon"
+                                   style="color: rgb(80, 80, 80); opacity: 0.88;"></i>
+                            </button>
+
+                            <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
+                                aria-labelledby="dropdownMenu1">
+                                <li role="presentation">
+                                    <a role="menuitem" tabindex="-1"
+                                       ng-click="settingInvite($index, item.Invite.id, 'CANCELD')">Cancel Invite</a>
+                                </li>
+
+                                <li role="presentation">
+                                    <a role="menuitem" tabindex="-1"
+                                       ng-click="settingInvite($index, item.Invite.id, 'REINVITED')">ReInvite</a>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </div>
+                </td>
             </tr>
         </table>
     </div>

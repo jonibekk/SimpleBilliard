@@ -36,6 +36,7 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
             $scope.group_field_show = false;
             $scope.name_field = '';
             $scope.group_id = null;
+            $scope.invite_msg = [];
 
         };
         init();
@@ -110,6 +111,15 @@ app.controller("TeamMemberMainController", function ($scope, $http, $sce) {
                     active_show_flg = true;
                 }
                 $scope.team_list[index].TeamMember.active_flg = active_show_flg;
+            });
+        };
+
+        // cancel invite
+        $scope.settingInvite = function (index, invite_id, action_flg) {
+            var change_active_flag_url = url_list.am + invite_id + '/' + action_flg;
+            $http.get(change_active_flag_url).success(function (data) {
+                $scope.invite_msg[index] = action_flg;
+                $scope.invite_list[index].Invite.del_flg = true;
             });
         };
 

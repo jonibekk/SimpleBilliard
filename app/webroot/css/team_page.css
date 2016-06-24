@@ -28,6 +28,10 @@
     background-color: lightgray;
 }
 
+.cacel_or_invite {
+    color:red;
+}
+
 .vision_detail_block {
     padding: 10px;
 }

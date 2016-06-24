@@ -223,7 +223,7 @@ class Invite extends AppModel
     function getInviteUserList($team_id)
     {
         $options = [
-            'fields'     => ['email', 'created'],
+            'fields'     => ['email', 'created', 'id', 'del_flg'],
             'conditions' => [
                 'team_id' => $team_id
             ]
