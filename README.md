@@ -27,59 +27,54 @@ GoalousはIsao発の「最強にオープンな社内SNS」です。
 - はじめてGoalous開発に参加される方はまずこのドキュメントのすべてに目を通してください。
 - いち早く環境構築を済ませたい方は、開発ガイドラインの[開発環境構築手順](guideline_development.md#setup_stack)の項をご参照ください
 
-より詳しくは、基本ポリシー内の[ドキュメンテーション](guideline_general.md#documentation)の項目をご参照ください。
+より詳しくは、基本ポリシー内の[ドキュメンテーション](docs/guidelines/general.md#documentation)の項目をご参照ください。
 
 ### ガイドライン
 
-- [基本ポリシー](guidelines_general.md)
-  - [はじめに](guidelines_general.md#intro)
-  - [チームのポリシー](guidelines_general.md#team-policiy)
-  - [禁止事項](guidelines_general.md#forbidden)
-  - [ドキュメントについて](guidelines_general.md#documentation)
-  - [チームメンバー以外のプロジェクトへの貢献について](guidelines_general.md#contributing)
+- [基本ポリシー](docs/guidelines/general.md)
+  - [はじめに](docs/guidelines/general.md#intro)
+  - [チームのポリシー](docs/guidelines/general.md#team-policiy)
+  - [禁止事項](docs/guidelines/general.md#forbidden)
+  - [ドキュメントについて](docs/guidelines/general.md#documentation)
+  - [チームメンバー以外のプロジェクトへの貢献について](docs/guidelines/general.md#contributing)
 
-- [開発ガイドライン](guidelines_development.md)
-  - [開発環境構築手順](guidelines_development.md#setup_stack)
-  - [開発フロー](guidelines_development.md#development_flow)
-  - [アジャイル開発](guidelines_development.md#agile)
-  - [イテレーション](guidelines_development.md#iteration)
+- [開発ガイドライン](docs/guidelines/development.md)
+  - [開発環境構築手順](docs/guidelines/development.md#setup_stack)
+  - [開発フロー](docs/guidelines/development.md#development_flow)
+  - [アジャイル開発](docs/guidelines/development.md#agile)
+  - [イテレーション](docs/guidelines/development.md#iteration)
 
-- [運用ガイドライン](guidelines_operation.md)
-  - [GitHub運用について](docs/guidelines/guidelines_operations.md#github)
-  - [Waffle.ioの運用について](docs/guidelines/guidelines_operations.md#waffleio)
-  - [コードレビューについて](docs/guidelines/guidelines_operations.md#review)
+- [運用ガイドライン](docs/guidelines/operation.md)
+  - [GitHub運用について](docs/guidelines/operations.md#github)
+  - [Waffle.ioの運用について](docs/guidelines/operations.md#waffleio)
+  - [コードレビューについて](docs/guidelines/operations.md#review)
 
-- [コーディングガイドライン](guidelines_coding.md)
+- [コーディングガイドライン](docs/guidelines/guidelines_coding.md)
   - [CSSコーディングガイドライン](docs/guidelines/guidelines_coding.md#css)
   - [CakePHPコーディングガイドライン](docs/guidelines/guidelines_coding.md#cakephp)
 
-- [プラグイン・ライブラリ](guidelines_plugins_libraries.md)
-  - [jQuery Libraries](docs/guidelines/guidelines_plugins_libraries.md#jquery-libs)
-  - [CakePhp Plugins](docs/guidelines/guidelines_plugins_libraries.md#cakephp-plugins)
-  - [PHP Libraries](docs/guidelines/guidelines_plugins_libraries.md#php-plugins)
+- [プラグイン・ライブラリ](docs/guidelines/plugins_libraries.md)
+  - [jQuery Libraries](docs/guidelines/plugins_libraries.md#jquery-libs)
+  - [CakePhp Plugins](docs/guidelines/plugins_libraries.md#cakephp-plugins)
+  - [PHP Libraries](docs/guidelines/plugins_libraries.md#php-plugins)
 
-#### Seleniumを使用したUI自動テスト
-- [UITest](docs/guidelines/UITest.md)
+- [構築・運用手順書（マニュアル）](docs/guidelines/manuals.md)
+  - [海外開発拠点用プロキシサーバ運用手順書](docs/guidelines/manuals.md#env4foreigner)
+  - [海外開発者向け環境構築手順書](docs/guidelines/manuals.md#proxy4foreigner)
+  - [AWSオペレーション](docs/guidelines/manuals.md#aws-operation)
+  - [DB接続](docs/guidelines/manuals.md#db-connection)
+  - [DBマイグレーション](docs/guidelines/manuals.md#db-migration)
+  - [GitHubとWaffleの運用](docs/guidelines/manuals.md#github-waffle)
+
+- [翻訳手順書](docs/guidelinest/translation.md)
+
+- [テスト手順書（マニュアル）](docs/guidelines/manuals-test.md)
+  - [負荷試験環境構築手順書](docs/guidelines/manuals-test.md#stress-test#stress)
+  - [Seleniumを使用したUI自動テスト](docs/guidelines/manuals-test.md#selenium)
+  - [PHP Docからドキュメントを生成するapigen](docs/guidelines/manuals-test.md#api-gen)
 
 ### 手順書
-- [負荷試験環境構築手順書](docs/process_docs/StressTest.md)
-- [AWS Operation](docs/process_docs/OperationForAWS.md)
-- [CakePHP](docs/process_docs/OperationForCakePHP.md)
-- [翻訳手順書](docs/process_docs/Translation.md)
-- [海外開発拠点用プロキシサーバ運用手順書](docs/process_docs/OperationForDevProxy.md)
-- [海外開発者向け環境構築手順書](docs/process_docs/BuildDevEnvForForeigner.md)
-
 - [各種マニュアル](docs/manuals.md)
-  - [DB接続](docs/manuals.md#db)
-  - [トラブルシュート](docs/manuals.md#trouble-shooting)
-
-
-<!-- ToDo
-- [開発環境構築手順書](docs/process_docs/LocalDevEnv.md)
-- [PhpStorm設定](docs/process_docs/PhpStormSetting.md)
-- [GitHub,Waffle運用手順書](docs/process_docs/OperationGitHubAndWaffle.md)
-- [トラブルシュート](docs/process_docs/TroubleShooting.md)
--->
 
 ### 仕様書
 - [サービス概要](docs/design_specifications/GoalousOverview.md)
@@ -98,10 +93,6 @@ GoalousはIsao発の「最強にオープンな社内SNS」です。
 - [使用ツールについて](guidelines_tools.md)
   - [ツール一覧](docs/guidelines/guidelines_tools.md#tool-list)
   - [ツール各論](docs/guidelines/guidelines_tools.md#tool-details)
-
-[仮想マシンを動かすOSについて]
-
-とくになし。
 
 ### 調査内容
 
