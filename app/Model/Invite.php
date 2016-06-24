@@ -227,7 +227,7 @@ class Invite extends AppModel
             'order'=>'Invite.created DESC',
             'conditions' => [
                 'team_id' => $team_id,
-                'to_user_id' => null
+                'email_verified' => 0
             ]
         ];
         $res = $this->find('all', $options);
