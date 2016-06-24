@@ -75,7 +75,6 @@ class SetupGuideShell extends AppShell
     public function startup()
     {
         parent::startup();
-
         $sessionId = viaIsSet($this->params['session_id']);
         $baseUrl = viaIsSet($this->params['base_url']);
 
@@ -121,12 +120,15 @@ class SetupGuideShell extends AppShell
         $force = viaIsSet($this->params['force']);
 
         $to_user_list = $this->User->getUsersSetupNotCompleted($team_id);
+        $utcCurrentHour = gmdate("H");
 
         foreach ($to_user_list as $to_user) {
             $user_time_zone = $to_user['User']['timezone'];
             $user_id = $to_user['User']['id'];
             $user_singup_time = $to_user['User']['created'];
-            $is_timing_to_send = $this->_isNotifyDay($user_id, $user_singup_time) && $this->_isNotifySendTime($user_time_zone);
+
+            $now = intval($utcCurrentHour) + $user_time_zone;
+            $is_timing_to_send = $this->_isNotifyDay($user_id, $user_singup_time) && $this->_isNotifySendTime($now);
 
             if ($force || $is_timing_to_send) {
                 Configure::write('Config.language', $user_time_zone);
@@ -172,7 +174,6 @@ class SetupGuideShell extends AppShell
     {
         $status = $this->AppController->getAllSetupDataFromRedis($user_id);
         $setup_update_time = viaIsSet($status['setup_last_update_time']);
-
         // remove last update time for calc rest count
         unset($status[GlRedis::FIELD_SETUP_LAST_UPDATE_TIME]);
 
@@ -205,10 +206,8 @@ class SetupGuideShell extends AppShell
      *
      * @return bool
      */
-    function _isNotifySendTime($timezone)
+    function _isNotifySendTime($now)
     {
-        $utcCurrentHour = gmdate("H");
-        $now = intval($utcCurrentHour) + $timezone;
         if ($now < 0) {
             $now = 24 + $now;
         }
@@ -216,17 +215,6 @@ class SetupGuideShell extends AppShell
             return true;
         }
         return false;
-    }
-
-    /**
-     * get setup-guide notify target user list.
-     *
-     * @return null
-     */
-    function _getToUserList()
-    {
-
-        return null;
     }
 
     function _getNotifyDataByTargetKey($target_key)

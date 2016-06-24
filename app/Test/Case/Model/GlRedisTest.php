@@ -406,10 +406,10 @@ class GlRedisTest extends GoalousTestCase
                 4 => 1,
                 5 => 0,
                 6 => 1,
+                GlRedis::FIELD_SETUP_LAST_UPDATE_TIME => time()
             ]
         );
         $res = $this->GlRedis->getSetupGuideStatus($user_id);
-        unset($res['setup_last_update_time']);
         $this->assertEquals($save_hash_status, $res);
     }
 
@@ -424,6 +424,7 @@ class GlRedisTest extends GoalousTestCase
                 4 => 1,
                 5 => 0,
                 6 => 1,
+                GlRedis::FIELD_SETUP_LAST_UPDATE_TIME => time()
             ]
         );
         $this->GlRedis->deleteSetupGuideStatus($user_id);

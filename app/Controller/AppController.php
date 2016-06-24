@@ -904,6 +904,9 @@ class AppController extends Controller
             $this->_refreshAuth($this->Auth->user('id'));
             return true;
         }
+        //set update time
+        $status[self::FIELD_SETUP_LAST_UPDATE_TIME] = time();
+
         $this->GlRedis->saveSetupGuideStatus($user_id, $status_from_mysql);
         return true;
     }
@@ -919,6 +922,8 @@ class AppController extends Controller
         $status = $this->getAllSetupDataFromRedis($user_id);
         if (!$status) {
             $status = $this->User->generateSetupGuideStatusDict($user_id);
+            //set update time
+            $status[self::FIELD_SETUP_LAST_UPDATE_TIME] = time();
             $this->GlRedis->saveSetupGuideStatus($user_id, $status);
 
             $status = $this->GlRedis->getSetupGuideStatus($user_id);
