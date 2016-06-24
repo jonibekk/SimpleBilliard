@@ -87,7 +87,7 @@ const config = {
       file_name: 'react_app',
       path: assets_dir + '/js'
     },
-    watch_files: [assets_dir + '/js/react/setup/**/*.js']
+    watch_files: assets_dir + '/js/react/setup_guide/**/*.js'
   },
   css: {
     src: [
