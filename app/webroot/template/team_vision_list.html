@@ -11,10 +11,18 @@
     </div>
 </div>
 
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <i class="fa fa-rocket"></i> チームビジョン ( {{teamVisionCount}} )
+    </div>
+    <div class="teamvision-list-panel-body">
+
+    </div>
+</div>
+
 <table class="table table-hover team_member_table">
-    <tr>
-        <th colspan="2"><i class="fa fa-rocket"></i> チームビジョン ( {{teamVisionCount}} )</th>
-    </tr>
     <tr ng-repeat="item in teamVisionList">
         <td class="pointer" width="20%"
             ui-sref="vision_detail({team_vision_id:item.TeamVision.id, active_flg:item.TeamVision.active_flg === true ? 1 : 0})">
