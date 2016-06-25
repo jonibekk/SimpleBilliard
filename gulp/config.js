@@ -1,5 +1,5 @@
 const assets_dir = './app/webroot'
-const config = {
+module.exports = {
   dest: assets_dir + '/dest',
   js: {
     src: [assets_dir + '/js/gl_basic.js'],
@@ -120,5 +120,3 @@ const config = {
     watch_files: [assets_dir + '/less/**/*.less']
   }
 }
-
-export default config

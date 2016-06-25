@@ -1,7 +1,7 @@
-import gulp from 'gulp'
-import config from '../config.js'
-import duration from 'gulp-duration'
-import runSequence from 'run-sequence'
+const gulp = require('gulp')
+const config = require('../config.js')
+const duration = require('gulp-duration')
+const runSequence = require('run-sequence')
 
 gulp.task('watch', ['css:watch', 'js:watch',  'angular_app:watch', 'react_setup:watch'])
 

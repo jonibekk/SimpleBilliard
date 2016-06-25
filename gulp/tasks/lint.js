@@ -1,12 +1,12 @@
-import gulp from 'gulp'
-import plumber from 'gulp-plumber'
-import coffeelint from 'gulp-coffeelint'
-import duration from 'gulp-duration'
-import config from '../config.js'
+const gulp = require('gulp')
+const plumber = require('gulp-plumber')
+const coffeelint = require('gulp-coffeelint')
+const duration = require('gulp-duration')
+const config = require('../config.js')
 
 gulp.task('js:coffeelint', () => {
-  return gulp.src(config.coffee.src)
-    .pipe(plumber())
-    .pipe(coffeelint('./coffeelint.json'))
-    .pipe(duration('js:coffeelint'))
+  // return gulp.src(config.coffee.src)
+  //   .pipe(plumber())
+  //   .pipe(coffeelint('./coffeelint.json'))
+  //   .pipe(duration('js:coffeelint'))
 })
