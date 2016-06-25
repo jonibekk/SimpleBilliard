@@ -28,7 +28,7 @@
                 <?php //姓と名は言語によって表示順を変える
                 $last_name = $this->Form->input('last_name', [
                     'label'                        => __("Last Name"),
-                    'placeholder'                  => __("eg. Jobs"),
+                    'placeholder'                  => __("eg. Armstrong"),
                     "pattern"                      => '^[a-zA-Z]+$',
                     "data-bv-regexp-message"       => __("Only alphabet characters are allowed."),
                     "data-bv-notempty-message"     => __("Input is required."),
@@ -38,7 +38,7 @@
                 ]);
                 $first_name = $this->Form->input('first_name', [
                     'label'                        => __("First Name"),
-                    'placeholder'                  => __("Harry"),
+                    'placeholder'                  => __("eg. Harry"),
                     "pattern"                      => '^[a-zA-Z]+$',
                     "data-bv-regexp-message"       => __("Only alphabet characters are allowed."),
                     "data-bv-notempty-message"     => __("Input is required."),

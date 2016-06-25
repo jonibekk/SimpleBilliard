@@ -56,6 +56,14 @@ const store = createStore(
 )
 
 const history = syncHistoryWithStore(browserHistory, store)
+export const unlisten = history.listen(location => {
+  history.listen(location => {
+    // Ignore First page loading because in this timing it's sent by server-side
+    if(cake.data.google_tag_manager_id !== "" && location.action == 'PUSH') {
+      sendToGoogleTagManager('app')
+    }
+  })
+})
 
 // Define setup-guide routes
 export default class Routes extends Component {

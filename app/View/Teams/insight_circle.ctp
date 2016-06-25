@@ -23,7 +23,7 @@
                 'id'            => 'InsightForm',
                 'type'          => 'get',
             ]); ?>
-            <?= $this->element('Team/insight_form_input', ['use' => ['team', 'date_range', 'timezone']]) ?>
+            <?= $this->element('Team/insight_form_input', ['use' => ['team', 'date_range', 'timezone', 'sort_logic']]) ?>
             <?= $this->Form->end() ?>
 
             <div id="InsightCircleResult" class="mt_18px"></div>

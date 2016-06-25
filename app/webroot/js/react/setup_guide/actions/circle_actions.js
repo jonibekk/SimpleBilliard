@@ -50,7 +50,7 @@ export function postCircleCreate(dispatch, circle) {
           mouse_reset: false
       })
     } else {
-      document.location.href = "/setup"
+      document.location.href = "/setup/?from=circle&type=create"
     }
   })
   .catch(function (response) {
@@ -153,7 +153,7 @@ export function joinCircle(dispatch, circle_id_list) {
       })
       dispatch(enableJoinCircleButton())
     } else {
-      document.location.href = "/setup"
+      document.location.href = "/setup/?from=circle&type=join"
     }
   }).catch((response) => {
     browserHistory.push('/setup')

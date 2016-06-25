@@ -20,7 +20,6 @@ class SendMailTest extends GoalousTestCase
         'app.send_mail_to_user',
 
         'app.team',
-        'app.image',
         'app.user',
         'app.notify_setting',
         'app.email',
@@ -33,7 +32,6 @@ class SendMailTest extends GoalousTestCase
         'app.post_like',
         'app.post_mention',
         'app.post_read',
-        'app.images_post',
         'app.comment_read',
 
         'app.oauth_token',

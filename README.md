@@ -3,6 +3,8 @@ Goalous 2.0のリポジトリです。
 旧Goalousとは別に管理しています。[旧Goalousはこちら](https://github.com/IsaoCorp/goalous)
 当プロジェクトで管理しているソース、ドキュメント、その他のツールのすべてはここから辿れるようになっています。
 
+かんこテスト
+
 ## Health
 |master|develop|
 |:--|:--|

@@ -1,9 +1,9 @@
-<?php
+<?php App::uses('CakeTestFixtureEx', 'Test/Fixture');
 
 /**
  * GroupFixture
  */
-class GroupFixture extends CakeTestFixture
+class GroupFixture extends CakeTestFixtureEx
 {
 
     /**
@@ -22,7 +22,7 @@ class GroupFixture extends CakeTestFixture
         'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '部署を追加した日付時刻'),
         'modified'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '部署を更新した日付時刻'),
         'indexes'         => array(
-            'PRIMARY'    => array('column' => 'id', 'unique' => 1),
+            'PRIMARY' => array('column' => 'id', 'unique' => 1),
             'team_id'    => array('column' => 'team_id', 'unique' => 0),
             'del_flg'    => array('column' => 'del_flg', 'unique' => 0),
             'active_flg' => array('column' => 'active_flg', 'unique' => 0)
@@ -103,7 +103,7 @@ class GroupFixture extends CakeTestFixture
             'modified'    => 4
         ),
         array(
-            'id'          => '',
+            'id'          => '7',
             'team_id'     => '',
             'name'        => 'Lorem ipsum dolor sit amet',
             'description' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
@@ -114,7 +114,7 @@ class GroupFixture extends CakeTestFixture
             'modified'    => 5
         ),
         array(
-            'id'          => '',
+            'id'          => '8',
             'team_id'     => '',
             'name'        => 'Lorem ipsum dolor sit amet',
             'description' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
@@ -125,7 +125,7 @@ class GroupFixture extends CakeTestFixture
             'modified'    => 6
         ),
         array(
-            'id'          => '',
+            'id'          => '9',
             'team_id'     => '',
             'name'        => 'Lorem ipsum dolor sit amet',
             'description' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
@@ -136,7 +136,7 @@ class GroupFixture extends CakeTestFixture
             'modified'    => 7
         ),
         array(
-            'id'          => '',
+            'id'          => '10',
             'team_id'     => '',
             'name'        => 'Lorem ipsum dolor sit amet',
             'description' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
@@ -147,7 +147,7 @@ class GroupFixture extends CakeTestFixture
             'modified'    => 8
         ),
         array(
-            'id'          => '',
+            'id'          => '11',
             'team_id'     => '',
             'name'        => 'Lorem ipsum dolor sit amet',
             'description' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
@@ -158,7 +158,7 @@ class GroupFixture extends CakeTestFixture
             'modified'    => 9
         ),
         array(
-            'id'          => '',
+            'id'          => '12',
             'team_id'     => '',
             'name'        => 'Lorem ipsum dolor sit amet',
             'description' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',

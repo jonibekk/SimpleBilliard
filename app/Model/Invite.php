@@ -224,8 +224,10 @@ class Invite extends AppModel
     {
         $options = [
             'fields'     => ['email', 'created'],
+            'order'=>'Invite.created DESC',
             'conditions' => [
-                'team_id' => $team_id
+                'team_id' => $team_id,
+                'email_verified' => 0
             ]
         ];
         $res = $this->find('all', $options);

@@ -151,44 +151,13 @@ class SetupGuideShell extends AppShell
                 break;
             }
         }
+        $notify_data = $this->_getNotifyDataByTargetKey($target_key);
 
-        switch ($target_key) {
-            case 1:
-                $message = __("Please input your profile to Goalous.");
-                $url = "/setup/profile/image";
-                break;
-            case 2:
-                $message = __("Please install the Goalous mobile application and login.");
-                $url = "/setup/app/image";
-                break;
-            case 3:
-                $message = __("Please create your GOAL.");
-                $url = "/setup/goal/image";
-                break;
-            case 4:
-                $message = __("Please action on Goalous.");
-                $url = "/setup/action/image";
-                break;
-            case 5:
-                $message = __("Please join a circle.");
-                $url = "/setup/circle/image";
-                break;
-            case 6:
-                $message = __("Please post on Goalous.");
-                $url = "/setup/post/image";
-                break;
-            default:
-                return;
-        }
-
-        $url = SETUP_GUIDE_NOTIFY_URL . $url;
-
-        $message .= "\n\n";
-        $message .= __('Click the below link to setup Goalous.');
-        $message .= "\n";
-        $message .= $url;
-
-        $this->NotifyBiz->sendSetupNotify($user_id, $message, $url);
+        $this->NotifyBiz->sendSetupNotify(
+            $user_id,
+            $messages = $notify_data['messages'],
+            $urls = $notify_data['urls']
+        );
     }
 
     /**
@@ -244,6 +213,53 @@ class SetupGuideShell extends AppShell
     {
 
         return null;
+    }
+
+    function _getNotifyDataByTargetKey($target_key)
+    {
+        switch ($target_key) {
+            case 1:
+                $message = __("Please input your profile to Goalous.");
+                $url = "/setup/profile/image";
+                break;
+            case 2:
+                $message = __("Please install the Goalous mobile application and login.");
+                $url = "/setup/app/image";
+                break;
+            case 3:
+                $message = __("Please create your GOAL.");
+                $url = "/setup/goal/image";
+                break;
+            case 4:
+                $message = __("Please action on Goalous.");
+                $url = "/setup/action/image";
+                break;
+            case 5:
+                $message = __("Please join a circle.");
+                $url = "/setup/circle/image";
+                break;
+            case 6:
+                $message = __("Please post on Goalous.");
+                $url = "/setup/post/image";
+                break;
+            default:
+                return;
+        }
+
+        $url = SETUP_GUIDE_NOTIFY_URL . $url;
+        $mail_url = $url . '/?from=email';
+        $push_url = $url . '/?from=pushnotifi';
+
+        $mail_message = $push_message = $message;
+        $mail_message .= "\n\n";
+        $mail_message .= __('Click the below link to setup Goalous.');
+        $mail_message .= "\n";
+        $mail_message .= $mail_url;
+
+        return [
+            'messages' => ['mail' => $mail_message, 'push' => $push_message],
+            'urls' => ['mail' => $mail_url, 'push' => $push_url]
+        ];
     }
 
     protected function _usageString()
