@@ -56,6 +56,8 @@ gulp.task('angular_vendor', done => {
 gulp.task('react_setup', done => {
   return runSequence(
     'react_setup:browserify',
+    'react_setup:uglify',
+    'react_setup:clean',
     done
   )
 })

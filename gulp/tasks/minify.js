@@ -46,6 +46,16 @@ gulp.task("angular_app:uglify", () => {
     .pipe(duration('angular_app:uglify'))
 })
 
+gulp.task("react_setup:uglify", () => {
+  return gulp.src(config.dest + "/react_setup/" + config.react_setup.output.file_name + '.js')
+    .pipe(uglify())
+    .pipe(rename({
+        suffix: '.min'
+    }))
+    .pipe(gulp.dest(config.react_setup.output.path))
+    .pipe(duration('react_setup:uglify'))
+})
+
 gulp.task('css:minify', () => {
   return gulp.src(config.dest + '/css_cat')
     .pipe(plumber())

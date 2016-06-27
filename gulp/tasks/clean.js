@@ -31,13 +31,13 @@ gulp.task('angular_vendor:clean', () => {
 
 gulp.task('react_setup:clean', ['react_setup:clean_files', 'react_setup:clean_dir']);
 
-gulp.task('react_setup:clean_files', cb => {
-  return del([config.dest + '/react_setup/**/*.js'], cb)
+gulp.task('react_setup:clean_files', () => {
+  return gulp.src([config.dest + '/react_setup/**/*.js'], { read: false })
     .pipe(duration('react_setup:clean_files'))
 })
 
 gulp.task('react_setup:clean_dir', ['react_setup:clean_files'], cb => {
-  return del([config.dest + '/react_setup'], cb)
+  return gulp.src([config.dest + '/react_setup'], { read: false })
     .pipe(duration('react_setup:clean_dir'))
 })
 
