@@ -1,8 +1,8 @@
-const gulp = require('gulp')
-const plumber = require('gulp-plumber')
-const coffee = require('gulp-coffee')
-const duration = require('gulp-duration')
-const config = require('../config.js')
+import gulp from 'gulp'
+import plumber from 'gulp-plumber'
+import coffee from 'gulp-coffee'
+import duration from 'gulp-duration'
+import config from '../config.js'
 
 gulp.task('js:coffee', () => {
   return gulp.src(config.coffee.src)

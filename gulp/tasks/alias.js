@@ -1,6 +1,6 @@
-const gulp = require('gulp')
-const runSequence = require('run-sequence')
-const config = require('../config.js')
+import gulp from 'gulp'
+import runSequence from 'run-sequence'
+import config from '../config.js'
 
 gulp.task('all', done => {
   return runSequence(['js', 'css'], done)
