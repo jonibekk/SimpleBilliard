@@ -2,6 +2,8 @@
 Goalous開発チームでは、有償、無償に限らず積極的に開発支援ツールを採用しています。
 新たに採用したいツールがあれば相談の上、随時採用していく。
 
+<hr id="tool-list">
+
 ## 採用している開発支援ツール一覧
 - Mixpanel
 - Waffle
@@ -11,7 +13,6 @@ Goalous開発チームでは、有償、無償に限らず積極的に開発支�
 - AWS
 - Slack
 - Google Docs
-- Google Hangouts
 - join.me
 
 # Cloud Tools For Project
@@ -41,3 +42,53 @@ Goalousプロジェクトで利用しているクラウドツールについて�
 ### User Voiceについて
 http://app.uservoice.com/signin  
 idとパスは直接確認ください。
+
+<hr id="tool-details">
+
+## GitHub
+
+## Git
+
+## PhpStorm
+
+## プラグイン
+### 必須
+- CakeStorm
+- Markdown
+
+### あったほうがいいやつ
+- .ignore
+- Bootstrap
+- RegexpTester
+- BashSupport
+
+## 設定
+### DB
+
+## 便利なショートカット
+
+## 便利な使い方
+### リフォーマット
+### マージ
+### Open on GitHub
+### Vagrant
+
+## Travis
+
+##  Mixpanel
+
+# サービス概要
+WEBサイトのアクセス解析ツール。
+https://mixpanel.com/
+
+# 導入方法
+1. サインナップする
+1. プロジェクト作成
+1.
+
+# Font Awesome
+
+## Font Awesome Cheat Sheet
+http://fortawesome.github.io/Font-Awesome/cheatsheet/
+
+https://drive.google.com/drive/#folders/0B9rLm-viS0v7d3VWRnpXUmVfNWs/0B9rLm-viS0v7enMyckJnNFBoMlk
