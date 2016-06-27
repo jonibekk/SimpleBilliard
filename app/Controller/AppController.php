@@ -270,7 +270,11 @@ class AppController extends Controller
     {
         //UA情報をSessionにセット
         if (!$this->Session->read('ua')) {
-            $this->Session->write('ua', $this->getBrowser());
+            $ua = $this->getBrowser();
+            if (empty($ua['istablet']) && $ua['device_type'] == 'unknown') {
+                $ua['device_type'] = 'Desktop';
+            }
+            $this->Session->write('ua', $ua);
         }
     }
 
