@@ -37,6 +37,15 @@
     padding-top: 10px;
 }
 
+.expired_invite {
+    color: #e83b59;
+    padding-left: 10px;
+}
+
+.left_align {
+    float: left;
+}
+
 .vision_detail_block {
     padding: 10px;
 }

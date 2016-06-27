@@ -223,14 +223,21 @@ class Invite extends AppModel
     function getInviteUserList($team_id)
     {
         $options = [
-            'fields'     => ['email', 'created', 'id', 'del_flg'],
+            'fields'     => ['email', 'created', 'id', 'del_flg', 'email_token_expires'],
             'conditions' => [
                 'team_id' => $team_id
             ]
         ];
         $res = $this->find('all', $options);
+
         $time = new TimeExHelper(new View());
         foreach ($res as $key => $val) {
+            // check if token expired
+            $token_expired_flg = false;
+            if ($res[$key]['Invite']['email_token_expires'] < REQUEST_TIMESTAMP) {
+                $token_expired_flg = true;
+            }
+            $res[$key]['Invite']['token_expired_flg'] = $token_expired_flg;
             $res[$key]['Invite']['created'] = $time->elapsedTime(h($val['Invite']['created']));
         }
         return $res;
