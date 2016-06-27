@@ -11,17 +11,14 @@
 ?>
 <!-- START app/View/Elements/cube_img_blocks.ctp -->
 <?php if (isset($posts) && !empty($posts)): ?>
-    <div class="cube-img-blocks">
+    <div class="cube-img-column">
         <?php foreach ($posts as $post): ?>
-            <div class="cube-img-block">
-                <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']]) ?>"
-                   title="<?= h($post['ActionResult']['name']) ?>">
+            <div class="cube-img-column-frame">
                     <?php if (viaIsSet($post['ActionResult']['ActionResultFile'][0]['AttachedFile'])): ?>
+                        <!-- アクション画像がある場合 -->
                         <?= $this->Html->image('ajax-loader.gif',
                                                [
-                                                   'class'         => 'lazy img-responsive',
-                                                   'width'         => '186',
-                                                   'height'        => '186',
+                                                   'class'         => 'cube-img-blocks-img lazy img-responsive',
                                                    'data-original' => $this->Upload->uploadUrl($post['ActionResult']['ActionResultFile'][0]['AttachedFile'],
                                                                                                "AttachedFile.attached",
                                                                                                ['style' => 'small']),
@@ -30,6 +27,7 @@
                         ?>
 
                     <?php else: ?>
+                        <!-- アクション画像がない場合 -->
                         <?php for ($i = 1; $i <= 5; $i++): ?>
                             <?php
                             if (!empty($post['ActionResult']["photo{$i}_file_name"]) || $i == 5) {
@@ -48,7 +46,7 @@
                             ?>
                         <?php endfor; ?>
                     <?php endif; ?>
-                </a>
+
             </div>
         <?php endforeach; ?>
     </div>

@@ -1,11 +1,11 @@
 /*
 goalous独自に追加したスマホ横のブレイクポイント
 */
-@media (min-width: 768px) {
+/*@media (min-width: 768px) {
     .container {
         width: 750px;
     }
-}
+}*/
 
 @media (min-width: 992px) {
     .container {
