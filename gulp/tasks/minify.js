@@ -1,10 +1,10 @@
-const gulp = require('gulp')
-const cssmin = require('gulp-cssmin')
-const rename = require('gulp-rename')
-const plumber = require('gulp-plumber')
-const uglify = require('gulp-uglify')
-const duration = require('gulp-duration')
-const config = require('../config.js')
+import gulp from 'gulp'
+import cssmin from 'gulp-cssmin'
+import rename from 'gulp-rename'
+import plumber from 'gulp-plumber'
+import uglify from 'gulp-uglify'
+import duration from 'gulp-duration'
+import config from '../config.js'
 
 gulp.task("js:uglify", () => {
   return gulp.src(config.dest + "/js_cat/" + config.js.output.file_name + '.js')

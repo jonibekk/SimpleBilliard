@@ -1,9 +1,9 @@
-const gulp = require('gulp')
-const rimraf = require('gulp-rimraf')
-const del = require('del')
-const runSequence = require('run-sequence')
-const duration = require('gulp-duration')
-const config = require('../config.js')
+import gulp from 'gulp'
+import rimraf from 'gulp-rimraf'
+import del from 'del'
+import runSequence from 'run-sequence'
+import duration from 'gulp-duration'
+import config from '../config.js'
 
 gulp.task('js:clean', () => {
   return gulp.src([config.dest + '/js', config.dest + '/js_cat'], { read: false })

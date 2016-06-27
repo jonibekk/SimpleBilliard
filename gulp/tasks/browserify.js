@@ -1,9 +1,9 @@
-const gulp = require('gulp')
-const browserify = require('browserify')
-const babelify = require('babelify')
-const source = require('vinyl-source-stream')
-const duration = require('gulp-duration')
-const config = require('../config.js')
+import gulp from 'gulp'
+import browserify from 'browserify'
+import babelify from 'babelify'
+import source from 'vinyl-source-stream'
+import duration from 'gulp-duration'
+import config from '../config.js'
 
 gulp.task('react_setup:browserify', () => {
   return browserify({entries: [config.react_setup.src]})

@@ -1,9 +1,9 @@
-const gulp = require('gulp')
-const plumber = require('gulp-plumber')
-const concat = require('gulp-concat')
-const autoprefixer = require('gulp-autoprefixer')
-const duration = require ('gulp-duration')
-const config = require('../config.js')
+import gulp from 'gulp'
+import plumber from 'gulp-plumber'
+import concat from 'gulp-concat'
+import autoprefixer from 'gulp-autoprefixer'
+import duration from 'gulp-duration'
+import config from '../config.js'
 
 gulp.task('js:concat', () => {
   return gulp.src([...config.js.src, config.dest + '/js/*.js'])
