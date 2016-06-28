@@ -108,6 +108,7 @@ class FollowerTest extends GoalousTestCase
         // limit + page 指定
         $followers3 = $this->Follower->getFollowerByGoalId(2, ['limit' => 1, 'page' => 2]);
         $this->assertCount(1, $followers3);
+
         $this->assertNotEquals($followers2[0]['User']['id'], $followers3[0]['User']['id']);
 
         // グループ情報付き

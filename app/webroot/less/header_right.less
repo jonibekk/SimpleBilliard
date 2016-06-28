@@ -1,0 +1,66 @@
+/*
+  歯車メニューのスタイル
+ */
+
+.header-nav-function-contents-list {
+  position: relative;
+  @media screen and (max-width: 991px) {
+    height: 40px;
+  }
+}
+
+.header-nav-function-contents-evaluation {
+  &:hover + .header-nav-function-eval-count {
+    background: @whiteColor;
+    color: @goalous;
+    border-color: @acidRed;
+    font-weight: bold;
+  }
+}
+
+.header-nav-function-eval-count {
+  background-color: @acidRed;
+  border: 1px solid @goalous;
+  border-radius: 50%;
+  color: @whiteColor;
+  font-size: @fontSmallest;
+  width:19px;
+  height: 19px;
+  line-height: 18px;
+  text-align: center;
+  position: absolute;
+  right: 8px;
+  top: 2px;
+  cursor: pointer;
+  @media screen and (max-width: 991px) {
+    top: 14px;
+  }
+}
+
+.header-nav-function-contents-approve {
+  &:hover + .header-nav-function-approve-count {
+    background: @whiteColor;
+    color: @goalous;
+    border-color: @acidRed;
+    font-weight: bold;
+  }
+}
+
+.header-nav-function-approve-count {
+  background-color: @acidRed;
+  border: 1px solid @goalous;
+  border-radius: 50%;
+  color: @whiteColor;
+  font-size: @fontSmallest;
+  width:19px;
+  height: 19px;
+  line-height: 18px;
+  text-align: center;
+  position: absolute;
+  right: 8px;
+  top: 2px;
+  cursor: pointer;
+  @media screen and (max-width: 991px) {
+    top: 14px;
+  }
+}

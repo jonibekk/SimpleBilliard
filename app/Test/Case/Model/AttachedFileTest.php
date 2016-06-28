@@ -567,13 +567,20 @@ class AttachedFileTest extends GoalousTestCase
 
     function _resetTable()
     {
-        $this->AttachedFile->query("DELETE FROM {$this->AttachedFile->useTable}");
-        $this->AttachedFile->query("ALTER TABLE {$this->AttachedFile->useTable} AUTO_INCREMENT = 1");
-        $this->AttachedFile->query("DELETE FROM {$this->AttachedFile->PostFile->useTable}");
-        $this->AttachedFile->query("ALTER TABLE {$this->AttachedFile->PostFile->useTable} AUTO_INCREMENT = 1");
-        $this->AttachedFile->query("DELETE FROM {$this->AttachedFile->ActionResultFile->useTable}");
-        $this->AttachedFile->query("ALTER TABLE {$this->AttachedFile->ActionResultFile->useTable} AUTO_INCREMENT = 1");
-        $this->AttachedFile->query("DELETE FROM {$this->AttachedFile->CommentFile->useTable}");
-        $this->AttachedFile->query("ALTER TABLE {$this->AttachedFile->CommentFile->useTable} AUTO_INCREMENT = 1");
+        $tables = [
+            $this->AttachedFile->useTable,
+            $this->AttachedFile->PostFile->useTable,
+            $this->AttachedFile->ActionResultFile->useTable,
+            $this->AttachedFile->CommentFile->useTable,
+        ];
+        foreach ($tables as $table) {
+            $this->AttachedFile->query("DELETE FROM {$table}");
+            if ($this->AttachedFile->getDataSource()->config['datasource'] == 'Database/Sqlite') {
+                $this->AttachedFile->query("delete from sqlite_sequence where name='{$table}'");
+            }
+            else {
+                $this->AttachedFile->query("ALTER TABLE {$table} AUTO_INCREMENT = 1");
+            }
+        }
     }
 }

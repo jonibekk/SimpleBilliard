@@ -267,7 +267,7 @@ class CircleMember extends AppModel
                     'table'      => 'local_names',
                     'alias'      => 'SearchLocalName',
                     'conditions' => [
-                        '`SearchLocalName.user_id`=`User.id`',
+                        'SearchLocalName.user_id = User.id',
                     ],
                 ]
             ]
@@ -326,7 +326,6 @@ class CircleMember extends AppModel
         if ($without_me) {
             $conditions['NOT']['CircleMember.user_id'] = $this->my_uid;
         }
-
         $res = $this->updateAll(['CircleMember.unread_count' => 'CircleMember.unread_count + 1'], $conditions);
         return $res;
     }

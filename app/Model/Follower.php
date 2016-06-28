@@ -135,10 +135,6 @@ class Follower extends AppModel
                 'Follower.goal_id' => $goal_id,
                 'Follower.team_id' => $this->current_team_id,
             ],
-            'fields'     => [
-                'Follower.*',
-                'User.*',
-            ],
             'contain'    => ['User'],
             'limit'      => $params['limit'],
             'page'       => $params['page'],
