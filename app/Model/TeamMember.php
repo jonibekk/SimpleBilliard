@@ -109,9 +109,9 @@ class TeamMember extends AppModel
         $this->myTeams = $res;
     }
 
-    public function getActiveTeamMembersList()
+    public function getActiveTeamMembersList($use_cache = true)
     {
-        if (!empty($this->active_member_list)) {
+        if ($use_cache && !empty($this->active_member_list)) {
             return $this->active_member_list;
         }
         //if team is not exist
