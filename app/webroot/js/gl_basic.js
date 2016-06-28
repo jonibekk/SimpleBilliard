@@ -5074,6 +5074,14 @@ $(document).ready(function () {
     var actionImageParams = {
         formID: 'CommonActionDisplayForm',
         previewContainerID: 'ActionUploadFilePhotoPreview',
+        beforeSending: function (file) {
+            if ($uploadFileForm._sending) {
+                return;
+            }
+            $uploadFileForm._sending = true;
+            // ファイルの送信中はsubmitできないようにする(クリックはできるがsubmit処理は走らない)
+            $('#CommonActionSubmit').on('click', $uploadFileForm._forbitSubmit);
+        },
         beforeAccept: function (file) {
             var $oldPreview = $('#' + $uploadFileForm._params.previewContainerID).find('.dz-preview:visible');
 
@@ -5111,7 +5119,12 @@ $(document).ready(function () {
                 evTargetShowThisDelete.call($button.get(0));
             }
             $(file.previewTemplate).show();
-        }
+        },
+        afterQueueComplete: function (file) {
+            $uploadFileForm._sending = false;
+            // フォームをsubmit可能にする
+            $('#CommonActionSubmit').off('click', $uploadFileForm._forbitSubmit);
+        },
     };
     var actionImageDzOptions = {
         acceptedFiles: "image/*",
@@ -5128,6 +5141,14 @@ $(document).ready(function () {
         formID: 'CommonActionDisplayForm',
         previewContainerID: 'ActionUploadFilePhotoPreview',
         disableMultiple: true,
+        beforeSending: function (file) {
+            if ($uploadFileForm._sending) {
+                return;
+            }
+            $uploadFileForm._sending = true;
+            // ファイルの送信中はsubmitできないようにする(クリックはできるがsubmit処理は走らない)
+            $('#CommonActionSubmit').on('click', $uploadFileForm._forbitSubmit);
+        },
         beforeAccept: function (file) {
             var $oldPreview = $('#' + $uploadFileForm._params.previewContainerID).find('.dz-preview:visible');
 
@@ -5180,7 +5201,12 @@ $(document).ready(function () {
             if ($firstHidden.val() != file_id) {
                 $('#' + file_id).insertBefore($firstHidden);
             }
-        }
+        },
+        afterQueueComplete: function (file) {
+            $uploadFileForm._sending = false;
+            // フォームをsubmit可能にする
+            $('#CommonActionSubmit').off('click', $uploadFileForm._forbitSubmit);
+        },
     };
     var actionImage2DzOptions = {
         acceptedFiles: "image/*",
