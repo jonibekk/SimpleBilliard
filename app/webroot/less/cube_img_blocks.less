@@ -1,12 +1,12 @@
 .cube-img-column {
   font-size: 0;
   border-bottom: 1px solid @lightGray;
-  text-align: center;
   padding: 0 0 2px;
 }
 
 .cube-img-column-frame {
-  border: 1px solid @subColor9;
+  background: @backgroundColor1;
+  border: 2px solid @backgroundColor2;
   width: 32.1vw;
   height: 32.1vw;
   margin: 0 -1px;
@@ -14,6 +14,7 @@
   float: none;
   display: inline-block;
   vertical-align: middle;
+  position: relative;
   &:hover,
   &:target,
   &:active,
@@ -37,6 +38,9 @@
 }
 
 .cube-img-blocks-img {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
   // object-fit: cover;
-  // なぜかobject-fitが効かないので頭を悩ませる。
+  // なぜかobject-fitが効かなかった。lazyだからか？
 }
