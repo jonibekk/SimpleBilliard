@@ -301,3 +301,26 @@ Goalousプロジェクトにおける活動は全て**アジャイル**の原則
 |各自|レビューが問題無ければReadyに移動|Ready|
 |菊|Issue完了判断、マージ|Done|
 |菊|ステージングで動作確認|Done|
+
+----
+
+次のドキュメントへ進んでください。  
+[運用ガイドライン](./operations.md)
+
+トップへ戻りますか？  
+[GitHub - Goalous](https://github.com/IsaoCorp/goalous2)
+
+----
+
+**他の情報をお探しですか？**
+
+- [基本ポリシー](./general.md)
+- [開発ガイドライン](./development.md)
+- [運用ガイドライン](./operations.md)
+- [コーディングガイドライン](./coding.md)
+- [プラグイン・ライブラリ](./plugins_libraries.md)
+- [構築・運用手順書（マニュアル）](./manuals.md)
+- [翻訳手順書](./translation.md)
+- [テスト手順書（マニュアル）](./manuals-test.md)
+- [使用ツールについて](./tools.md)
+- [リサーチ](./research.md)

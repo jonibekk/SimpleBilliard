@@ -720,6 +720,15 @@ https://github.com/IsaoCorp/goalous2/blob/develop/app/Config/routes.php
 ### View
 テスト不要。
 
+---
+
+次のドキュメントへ進んでください。  
+[プラグイン・ライブラリ](./plugins_libraries.md)
+
+トップへ戻りますか？  
+[GitHub - Goalous](https://github.com/IsaoCorp/goalous2)
+
+----
 
 **他の情報をお探しですか？**
 
