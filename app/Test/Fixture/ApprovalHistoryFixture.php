@@ -1,9 +1,9 @@
-<?php
+<?php App::uses('CakeTestFixtureEx', 'Test/Fixture');
 
 /**
  * ApprovalHistoryFixture
  */
-class ApprovalHistoryFixture extends CakeTestFixture
+class ApprovalHistoryFixture extends CakeTestFixtureEx
 {
 
     /**
@@ -37,7 +37,7 @@ class ApprovalHistoryFixture extends CakeTestFixture
      */
     public $records = [
         [
-            'id'              => '',
+            'id'              => '1',
             'collaborator_id' => '',
             'user_id'         => '',
             'comment'         => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',

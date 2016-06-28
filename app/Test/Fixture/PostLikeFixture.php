@@ -1,9 +1,9 @@
-<?php
+<?php App::uses('CakeTestFixtureEx', 'Test/Fixture');
 
 /**
  * PostLikeFixture
  */
-class PostLikeFixture extends CakeTestFixture
+class PostLikeFixture extends CakeTestFixtureEx
 {
 
     /**
@@ -21,10 +21,10 @@ class PostLikeFixture extends CakeTestFixture
         'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '投稿を追加した日付時刻'),
         'modified'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '投稿を更新した日付時刻'),
         'indexes'         => array(
-            'PRIMARY'   => array('column' => 'id', 'unique' => 1),
-            'post_id'   => array('column' => 'post_id', 'unique' => 0),
+            'PRIMARY'          => array('column' => 'id', 'unique' => 1),
+            'post_id'          => array('column' => 'post_id', 'unique' => 0),
             'post_id_2' => array('column' => ['post_id', 'user_id'], 'unique' => 1),
-            'user_id'   => array('column' => 'user_id', 'unique' => 0),
+            'user_id'          => array('column' => 'user_id', 'unique' => 0),
             'team_id'   => array('column' => 'team_id', 'unique' => 0),
             'del_flg'   => array('column' => 'del_flg', 'unique' => 0)
         ),

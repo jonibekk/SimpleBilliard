@@ -19,8 +19,8 @@ module.exports = (grunt) ->
     files: [
       '<%= config.less %>/**/*.less'
       '<%= config.css %>/**/*.css'
-      '<%= config.css %>/release.css'
-      '<%= config.css %>/**/*.min.css'
+      '!<%= config.css %>/release.css'
+      '!<%= config.css %>/**/*.min.css'
     ]
     tasks: ['css']
   react:
