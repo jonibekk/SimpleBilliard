@@ -1,5 +1,5 @@
 <!-- start app/webroot/template/team_vision_list.html -->
-<div class="row" style="padding-bottom:10px;">
+<div class="row teamvision-visionadd-btnarea">
     <div class="col-xs-4">
         <a href="/teams/add_team_vision" class="font_gargoyleGray-brownRed btn-goals-column-plus add-vision-button" ng-class="{disabled: !(isTeamAdmin && teamVisionCount == 0)}">
             <i class="fa fa-plus-circle font_brownRed"></i>ビジョンを追加</a>
@@ -13,14 +13,58 @@
 
 
 
-<div class="panel panel-default">
-    <div class="panel-heading">
+
+<div class="teamvision-list-panel-base">
+    <div class="teamvision-list-panel-head">
         <i class="fa fa-rocket"></i> チームビジョン ( {{teamVisionCount}} )
     </div>
-    <div class="teamvision-list-panel-body">
 
+
+
+
+    <div class="teamvision-list-panel-cards" ng-repeat="item in teamVisionList">
+        <img class="teamvision-list-panel-image" ng-src="{{item.TeamVision.photo_path}}"/>
+        <p class="teamvision-list-title" ui-sref="vision_detail({team_vision_id:item.TeamVision.id, active_flg:item.TeamVision.active_flg === true ? 1 : 0})">{{item.TeamVision.name}}</p>
+        <div class="vision_modified_date">
+            最終更新日:<span ng-bind-html="item.TeamVision.modified"/>
+        </div>
+        <div class="pull-right">
+            <button class="btn teamvision_setting_btn dropdown-toggle" type="button"
+                    id="dropdownMenu1"
+                    data-toggle="dropdown" aria-expanded="true">
+                <i class="fa fa-cog header-function-icon"
+                   style="color: rgb(80, 80, 80); opacity: 0.88;"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
+                aria-labelledby="dropdownMenu1">
+                <li role="presentation">
+                    <a role="menuitem" tabindex="-1"
+                       ng-if="archive_flag === false"
+                       ui-sref="set_vision_archive({team_vision_id:item.TeamVision.id, active_flg:0})">アーカイブ</a>
+                    <a role="menuitem" tabindex="-1"
+                       ng-if="archive_flag === false"
+                       ng-href="/teams/edit_team_vision/team_vision_id:{{item.TeamVision.id}}">編集</a>
+                    <a role="menuitem" tabindex="-1"
+                       ng-if="archive_flag === true"
+                       ng-click="viewDeleteModal(item.TeamVision.id, item.TeamVision.name)">削除</a>
+                </li>
+            </ul>
+        </div>
     </div>
+
+
+    <div class="teamvision-list-panel-cards" ng-repeat="item in teamVisionList">
+        <img class="teamvision-list-panel-image" ng-src="{{item.TeamVision.photo_path}}"/>
+        <p class="teamvision-list-title" ui-sref="vision_detail({team_vision_id:item.TeamVision.id, active_flg:item.TeamVision.active_flg === true ? 1 : 0})">{{item.TeamVision.name}}</p>
+        <div class="vision_modified_date">
+            最終更新日:<span ng-bind-html="item.TeamVision.modified"/>
+        </div>
+    </div>
+
 </div>
+
+
+
 
 <table class="table table-hover team_member_table">
     <tr ng-repeat="item in teamVisionList">
