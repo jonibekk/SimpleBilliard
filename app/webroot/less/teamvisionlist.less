@@ -23,31 +23,42 @@
 .teamvision-list-panel-cards{
   display: block;
   position: relative;
-  height: 80px;
+  height: 60px;
   width: 100%;
   border-top: 1px solid #ddd;
   padding: 0;
 }
+@media @small {
+  .teamvision-list-panel-cards{
+    height: 80px;
+  }
+}
+
+
   .teamvision-list-panel-cards:hover{
     background-color: @smokyWhite;
   }
 
-.teamvision-list-panel-image{
+.teamvision-list-panel-imagebox{
   float: left;
-  margin: 8px;
+  margin: 0 8px 8px 8px;
   width: 44px;
+  height: 44px;
+  overflow: hidden;
 }
 
 @media @small {
-  .teamvision-list-panel-image{
+  .teamvision-list-panel-imagebox{
     width: 64px;
-    margin: 8px 20px 8px 8px;
+    height: 64px;
+    margin: 0 20px 8px 8px;
   }
 }
 
+
 .teamvision-list-title{
   font-weight: bold;
-  margin-top: 10px;
+  margin-top: 8px;
 }
 
 .teamvision_setting_btn{
@@ -55,10 +66,13 @@
   background-color: @white;
   border-color: #ddd;
   position: absolute;
-  top: 20px;
-  right: 15px;
+  top: 10px;
+  right: 5px;
 }
 
-.a{
-
+  @media @small {
+    .teamvision_setting_btn{
+      top: 20px;
+      right: 15px;
+    }
 }
