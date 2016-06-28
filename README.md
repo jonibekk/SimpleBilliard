@@ -23,7 +23,7 @@ GoalousはIsao発の「最強にオープンな社内SNS」です。
 ## ドキュメンテーション
 - すべてのドキュメントはページからアクセスできるようにしてあります。
 - はじめてGoalous開発に参加される方はまずこのドキュメントのすべてに目を通してください。
-- いち早く環境構築を済ませたい方は、開発ガイドラインの[開発環境構築手順](guideline_development.md#setup_stack)の項をご参照ください
+- いち早く環境構築を済ませたい方は、開発ガイドラインの[開発環境構築手順](docs/guidelines/development.md#setup_stack)の項をご参照ください
 
 より詳しくは、基本ポリシー内の[ドキュメンテーション](docs/guidelines/general.md#documentation)の項目をご参照ください。
 
@@ -42,14 +42,14 @@ GoalousはIsao発の「最強にオープンな社内SNS」です。
   - [アジャイル開発](docs/guidelines/development.md#agile)
   - [イテレーション](docs/guidelines/development.md#iteration)
 
-- [運用ガイドライン](docs/guidelines/operation.md)
+- [運用ガイドライン](docs/guidelines/operations.md)
   - [GitHub運用について](docs/guidelines/operations.md#github)
   - [Waffle.ioの運用について](docs/guidelines/operations.md#waffleio)
   - [コードレビューについて](docs/guidelines/operations.md#review)
 
-- [コーディングガイドライン](docs/guidelines/guidelines_coding.md)
-  - [CSSコーディングガイドライン](docs/guidelines/guidelines_coding.md#css)
-  - [CakePHPコーディングガイドライン](docs/guidelines/guidelines_coding.md#cakephp)
+- [コーディングガイドライン](docs/guidelines/coding.md)
+  - [CSSコーディングガイドライン](docs/guidelines/coding.md#css)
+  - [CakePHPコーディングガイドライン](docs/guidelines/coding.md#cakephp)
 
 - [プラグイン・ライブラリ](docs/guidelines/plugins_libraries.md)
   - [jQuery Libraries](docs/guidelines/plugins_libraries.md#jquery-libs)
@@ -64,7 +64,7 @@ GoalousはIsao発の「最強にオープンな社内SNS」です。
   - [DBマイグレーション](docs/guidelines/manuals.md#db-migration)
   - [GitHubとWaffleの運用](docs/guidelines/manuals.md#github-waffle)
 
-- [翻訳手順書](docs/guidelinest/translation.md)
+- [翻訳手順書](docs/guidelines/translation.md)
 
 - [テスト手順書（マニュアル）](docs/guidelines/manuals-test.md)
   - [負荷試験環境構築手順書](docs/guidelines/manuals-test.md#stress-test#stress)
