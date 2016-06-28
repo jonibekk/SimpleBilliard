@@ -170,6 +170,7 @@ echo $this->Html->script('vendor/angular/ng-infinite-scroll.min');
             aj: "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_get_message_info'])?>/",
             ak: "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_put_message_read'])?>/",
             al: "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_get_message_list'])?>/",
+            am: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_invite_setting'])?>/",
             add_member_on_message: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select_only_add_users'])?>",
             select2_secret_circle: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_secret_circles'])?>/",
             select2_circle_user: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_circles_users'])?>",
