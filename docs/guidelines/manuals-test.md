@@ -133,7 +133,7 @@ http://docs.seleniumhq.org/download/
 このページの中にある**The Internet Explorer Driver Server** というのと
 サードパーティの**ChromeDriver**をダウンロード。
 
- - ``` /usr/local/Cellar/selenium-server-standalone/2.41.0/bin ```にchromedriver を配置。
+ - `/usr/local/Cellar/selenium-server-standalone/2.41.0/bin` にchromedriver を配置。
    ` 2.41.0 `はバージョンなので適宜読み替えて頂ければと思います。
  - それ以外はjarファイルと同じディレクトリ
 
@@ -248,14 +248,17 @@ VirtualBox5.0.x系では動作しない
  - 問題のチケット:https://www.virtualbox.org/ticket/14336
 
 ## 実行方法
-``` app/Test/Case/Web/provision/modernie_selenium ```に移動
-``` $ make fetch ``` # **ツール類のダウンロード**
-``` $ make fetch_vm_win8_ie10 ``` # **仮想マシンのダウンロード**
-``` $ /bin/bash mkvm.sh VMs/IE10.Win8/IE10\ -\ Win8.ova ``` # **仮想マシンの作成**
+` app/Test/Case/Web/provision/modernie_selenium `に移動
+` $ make fetch ` # **ツール類のダウンロード**
+` $ make fetch_vm_win8_ie10 ` # **仮想マシンのダウンロード**
+` $ /bin/bash mkvm.sh VMs/IE10.Win8/IE10\ -\ Win8.ova ` # **仮想マシンの作成**
 
 ### ツール類のダウンロード。
 
-``` $ make fetch ```
+```
+$ make fetch
+```
+
 ダウンロードするツール類
 - selenium-server-standalone.jar
 - deuac.iso
@@ -267,32 +270,61 @@ VirtualBox5.0.x系では動作しない
 
 ### 仮想マシンのダウンロード
 2通りあります。
-``` $ make fetch_vms ```
+```
+$ make fetch_vms
+```
 Windows仮想マシンを一括してダウンロードします。
 
-``` $ make fetch_vm_{osのバージョン}_{IEのバージョン} ```
+```
+$ make fetch_vm_{osのバージョン}_{IEのバージョン}
+```
+
 Windows仮想マシンを指定してダウンロードします。
-例えば、``` $ make fetch_vm_win8_ie10 ```はWindows8のIE10がインストールされているVMです。
+例えば、` $ make fetch_vm_win8_ie10 ` はWindows8のIE10がインストールされているVMです。
 ※詳細はMakefile参照
 仮想マシンは3G〜5Gあるので後者をおすすめします。
 
 ### 仮想マシンの作成
 下記でVirtualBox上にWindowsマシンを構築します。
-``` $ /bin/bash mkvm.sh path/to/*.ova ```
+
+```
+$ /bin/bash mkvm.sh path/to/*.ova
+```
 
 例えば、Windows8のIE10の仮想マシンであれば下記のようになります。
-``` $ /bin/bash mkvm.sh VMs/IE10.Win8/IE10\ -\ Win8.ova ```
+
+```
+$ /bin/bash mkvm.sh VMs/IE10.Win8/IE10\ -\ Win8.ova
+```
 
 エラーが起きなければ完了です。
 プロビジョニング直後、VMはヘッドレスで動いているので、
 VirtualBoxから電源OFF->起動でGUI操作できます。
 
-
-
-
-
-
-
 ### TODO
  - vagrant環境->VM(Windows)間でSeleniumを動作させる
  - VM環境の言語、タイムゾーンの設定を追加する
+
+ ---
+
+ 次のドキュメントへ進んでください。  
+
+ **リンク貼る予定です**
+
+ トップへ戻りますか？  
+ [GitHub - Goalous](https://github.com/IsaoCorp/goalous2)
+
+ ----
+
+ **他の情報をお探しですか？**
+
+ - [基本ポリシー](./general.md)
+ - [開発ガイドライン](./development.md)
+ - [運用ガイドライン](./operations.md)
+ - [コーディングガイドライン](./coding.md)
+ - [プラグイン・ライブラリ](./plugins_libraries.md)
+ - [構築・運用手順書（マニュアル）](./manuals.md)
+ - [翻訳手順書](./translation.md)
+ - [テスト手順書（マニュアル）](./manuals-test.md)
+ - [使用ツールについて](./tools.md)
+ - [リサーチ](./research.md)
