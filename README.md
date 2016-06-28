@@ -88,14 +88,14 @@ GoalousはIsao発の「最強にオープンな社内SNS」です。
 
 ### Tips
 
-- [使用ツールについて](guidelines_tools.md)
-  - [ツール一覧](docs/guidelines/guidelines_tools.md#tool-list)
-  - [ツール各論](docs/guidelines/guidelines_tools.md#tool-details)
+- [使用ツールについて](docs/guidelines/tools.md)
+  - [ツール一覧](docs/guidelines/tools.md#tool-list)
+  - [ツール各論](docs/guidelines/tools.md#tool-details)
 
 ### 調査内容
 
-- [リサーチ](guidelines_research.md)
-  - [SQL](docs/guidelines/guidelines_research.md#sql)
+- [リサーチ](docs/guidelines/research.md)
+  - [SQL](docs/guidelines/research.md#sql)
 
 ### その他
 - [議事録](docs/others/Minutes.md)
