@@ -18,7 +18,7 @@
                         <!-- アクション画像がある場合 -->
                         <?= $this->Html->image('ajax-loader.gif',
                                                [
-                                                   'class'         => 'cube-img-blocks-img lazy img-responsive',
+                                                   'class'         => 'cube-img-blocks-img lazy',
                                                    'data-original' => $this->Upload->uploadUrl($post['ActionResult']['ActionResultFile'][0]['AttachedFile'],
                                                                                                "AttachedFile.attached",
                                                                                                ['style' => 'small']),
