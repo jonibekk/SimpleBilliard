@@ -14,18 +14,18 @@
     <div class="cube-img-column">
         <?php foreach ($posts as $post): ?>
             <div class="cube-img-column-frame">
+                <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']]) ?>"
                     <?php if (viaIsSet($post['ActionResult']['ActionResultFile'][0]['AttachedFile'])): ?>
                         <!-- アクション画像がある場合 -->
-                        <?= $this->Html->image('ajax-loader.gif',
-                                               [
-                                                   'class'         => 'cube-img-blocks-img lazy',
-                                                   'data-original' => $this->Upload->uploadUrl($post['ActionResult']['ActionResultFile'][0]['AttachedFile'],
-                                                                                               "AttachedFile.attached",
-                                                                                               ['style' => 'small']),
-                                               ]
-                        );
-                        ?>
-
+                            <?= $this->Html->image('ajax-loader.gif',
+                                                   [
+                                                       'class'         => 'cube-img-blocks-img lazy',
+                                                       'data-original' => $this->Upload->uploadUrl($post['ActionResult']['ActionResultFile'][0]['AttachedFile'],
+                                                                                                   "AttachedFile.attached",
+                                                                                                   ['style' => 'small']),
+                                                   ]
+                            );
+                            ?>
                     <?php else: ?>
                         <!-- アクション画像がない場合 -->
                         <?php for ($i = 1; $i <= 5; $i++): ?>
@@ -46,7 +46,7 @@
                             ?>
                         <?php endfor; ?>
                     <?php endif; ?>
-
+                </a>
             </div>
         <?php endforeach; ?>
     </div>
