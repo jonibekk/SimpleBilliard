@@ -1,0 +1,78 @@
+/*
+  teamVisionListで使うスタイル
+ */
+
+ .teamvision-visionadd-btnarea{
+   padding: 15px 0;
+ }
+
+.teamvision-list-panel-base{
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 1px 1px 0.5;
+}
+
+.teamvision-list-panel-head{
+  font-weight: bold;
+  font-size: 18px;
+  padding: 10px 15px;
+  color: @black;
+}
+
+.teamvision-list-panel-cards{
+  display: block;
+  position: relative;
+  height: 60px;
+  width: 100%;
+  border-top: 1px solid #ddd;
+  padding: 0;
+}
+@media @small {
+  .teamvision-list-panel-cards{
+    height: 80px;
+  }
+}
+
+
+  .teamvision-list-panel-cards:hover{
+    background-color: @smokyWhite;
+  }
+
+.teamvision-list-panel-imagebox{
+  float: left;
+  margin: 0 8px 8px 8px;
+  width: 44px;
+  height: 44px;
+  overflow: hidden;
+}
+
+@media @small {
+  .teamvision-list-panel-imagebox{
+    width: 64px;
+    height: 64px;
+    margin: 0 20px 8px 8px;
+  }
+}
+
+
+.teamvision-list-title{
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+.teamvision_setting_btn{
+  color: @white;
+  background-color: @white;
+  border-color: #ddd;
+  position: absolute;
+  top: 10px;
+  right: 5px;
+}
+
+  @media @small {
+    .teamvision_setting_btn{
+      top: 20px;
+      right: 15px;
+    }
+}
