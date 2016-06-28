@@ -32,9 +32,9 @@
     "TO_CHANGE_TO_INACTIVE": "Make inactive",
     "TO_CHANGE_TO_ACTIVE": "Make active",
     "TO_CHANGE_TO_ADMIN": "Make admin",
-    "TO_CHANGE_TO_NOT_ADMIN": "Make not admin",
-    "TO_CHANGE_TO_EVALUATEE": "Change to be evaluatee",
-    "TO_CHANGE_TO_NOT_EVALUATEE": "Remove from evaluation",
+    "TO_CHANGE_TO_NOT_ADMIN": "Remove admin",
+    "TO_CHANGE_TO_EVALUATEE": "Add in evaluatee",
+    "TO_CHANGE_TO_NOT_EVALUATEE": "Remove from the evaluation",
     "CANCEL_THE_INVITATION": "Cancel the invitation",
     "INVITE_AGAIN": "Invite again"
   },
