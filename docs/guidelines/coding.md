@@ -719,3 +719,18 @@ https://github.com/IsaoCorp/goalous2/blob/develop/app/Config/routes.php
 
 ### View
 テスト不要。
+
+
+**他の情報をお探しですか？**
+
+- [トップ](/)
+- [基本ポリシー](docs/guidelines/general.md)
+- [開発ガイドライン](docs/guidelines/development.md)
+- [運用ガイドライン](docs/guidelines/operations.md)
+- [コーディングガイドライン](docs/guidelines/coding.md)
+- [プラグイン・ライブラリ](docs/guidelines/plugins_libraries.md)
+- [構築・運用手順書（マニュアル）](docs/guidelines/manuals.md)
+- [翻訳手順書](docs/guidelines/translation.md)
+- [テスト手順書（マニュアル）](docs/guidelines/manuals-test.md)
+- [使用ツールについて](docs/guidelines/tools.md)
+- [リサーチ](docs/guidelines/research.md)
