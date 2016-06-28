@@ -723,7 +723,6 @@ https://github.com/IsaoCorp/goalous2/blob/develop/app/Config/routes.php
 
 **他の情報をお探しですか？**
 
-- [トップ](./)
 - [基本ポリシー](./general.md)
 - [開発ガイドライン](./development.md)
 - [運用ガイドライン](./operations.md)
