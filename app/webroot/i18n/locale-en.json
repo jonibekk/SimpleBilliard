@@ -1,26 +1,42 @@
 {
-    "FILTER_ALL": "All",
-    "FILTER_COACH_NAME": "Coach Name",
-    "FILTER_GROUP_NAME": "Group Name",
-    "FILTER_ADMIN": "Admin",
-    "FILTER_TWO_STEP": "2 Step Auth",
-    "FILTER_INVITES": "pending",
-    "PLACEHOLDER_NAME_FIELD": "Please Input User Name.",
-    "PLACEHOLDER_COACH_NAME_FIELD": "Please Input Coach User Name.",
-
-    "TEAM_VISION": {
-        "ARCHIVE_FAILED_MASSAGE": "Failed.",
-        "ARCHIVE_SUCCESS_MASSAGE": "Success.",
-        "DELETE_FAILED_MASSAGE": "Failed.",
-        "DELETE_SUCCESS_MASSAGE": "Success."
-    },
-
-    "GROUP_VISION": {
-        "ARCHIVE_FAILED_MASSAGE": "Failed.",
-        "ARCHIVE_SUCCESS_MASSAGE": "Success.",
-        "DELETE_FAILED_MASSAGE": "Failed.",
-        "DELETE_SUCCESS_MASSAGE": "Success."
-    },
-
-    "ACCESS_MESSAGE_DETAIL_MESSAGE" : "Access Failed."
+  "FILTER_ALL": "All",
+  "FILTER_COACH_NAME": "Coach Name",
+  "FILTER_GROUP_NAME": "Group Name",
+  "FILTER_ADMIN": "Admin",
+  "FILTER_TWO_STEP": "2 Step Auth",
+  "FILTER_INVITES": "pending",
+  "PLACEHOLDER_NAME_FIELD": "Please Input User Name.",
+  "PLACEHOLDER_COACH_NAME_FIELD": "Please Input Coach User Name.",
+  "TEAM_VISION": {
+    "ARCHIVE_FAILED_MASSAGE": "Failed.",
+    "ARCHIVE_SUCCESS_MASSAGE": "Success.",
+    "DELETE_FAILED_MASSAGE": "Failed.",
+    "DELETE_SUCCESS_MASSAGE": "Success."
+  },
+  "GROUP_VISION": {
+    "ARCHIVE_FAILED_MASSAGE": "Failed.",
+    "ARCHIVE_SUCCESS_MASSAGE": "Success.",
+    "DELETE_FAILED_MASSAGE": "Failed.",
+    "DELETE_SUCCESS_MASSAGE": "Success."
+  },
+  "TEAM_MEMBER_LIST": {
+    "MEMBER_LIST": "Member List",
+    "INVITE_MEMBERS": "Invite members",
+    "ALL": "All",
+    "SHOW_INACTIVE_MEMBERS": "Show inactive members",
+    "TARGET_MEMBERS": "Target members",
+    "NO_GROUPS": "No Groups",
+    "NO_COACH": "No Coach",
+    "IS_EVALUATEE": "Is Evaluatee",
+    "IS_NOT_EVALUATEE": "Is Not Evaluatee",
+    "TO_CHANGE_TO_INACTIVE": "Change to inactive",
+    "TO_CHANGE_TO_ACTIVE": "Change to active",
+    "TO_CHANGE_TO_ADMIN": "Change to be admin",
+    "TO_CHANGE_TO_NOT_ADMIN": "Change to be not admin",
+    "TO_CHANGE_TO_EVALUATEE": "Change to be evaluatee",
+    "TO_CHANGE_TO_NOT_EVALUATEE": "Change to be not evaluatee",
+    "CANCEL_THE_INVITATION": "Cancel the invitation",
+    "INVITE_AGAIN": "Invite again"
+  },
+  "ACCESS_MESSAGE_DETAIL_MESSAGE": "Access Failed."
 }
