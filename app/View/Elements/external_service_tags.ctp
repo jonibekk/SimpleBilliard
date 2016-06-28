@@ -130,7 +130,15 @@
         mixpanel.init("<?= MIXPANEL_TOKEN?>");</script>
     <!-- end Mixpanel -->
 <?php endif; ?>
+
 <?php if(INTERCOM_APP_ID):?>
+
+    <?php
+        $fa_secret = 'OFF';
+		if (!empty($this->Session->read('Auth.User.2fa_secret'))):
+            $fa_secret = 'ON';
+        endif;
+	?>
     <!-- start Intercom -->
     <script>
         window.intercomSettings = {
@@ -139,11 +147,16 @@
             name: "<?= h($this->Session->read('Auth.User.display_username')) ?>", // Full name
             email: "<?= h($this->Session->read('Auth.User.PrimaryEmail.email')) ?>", // Email address
             created_at: <?= h($this->Session->read('Auth.User.created')) ?>, // Signup date as a Unix timestamp
+            user_id: <?= h(intval($this->Session->read('Auth.User.id'))) ?>, // User Id
+            setup: <?= h(intval($this->Session->read('Auth.User.setup_complete_flg'))) ?>, // Setup Complete Flag
+            language: "<?= h($this->Session->read('Auth.User.language')) ?>", // Language
+            "2SV": "<?= h($fa_secret) ?>", // 2fa Secret
             <?php endif ?>
             <?php if (isset($my_member_status) && $my_member_status): ?>
             "team_id": <?= h(intval($my_member_status['TeamMember']['team_id'])) ?>,
             "team_name": "<?= h($my_member_status['Team']['name']) ?>",
             "team_admin": <?= h(intval($my_member_status['TeamMember']['admin_flg'])) ?>,
+            "teams_belong": <?= h(intval(count($my_teams))) ?>, // Teams count that user belongs to
             <?php endif ?>
             "widget": {
                 "activator": "#Intercom"
