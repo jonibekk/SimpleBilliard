@@ -909,7 +909,7 @@ class AppController extends Controller
             return true;
         }
         //set update time
-        $status[GlRedis::FIELD_SETUP_LAST_UPDATE_TIME] = time();
+        $status_from_mysql[GlRedis::FIELD_SETUP_LAST_UPDATE_TIME] = time();
 
         $this->GlRedis->saveSetupGuideStatus($user_id, $status_from_mysql);
         return true;
