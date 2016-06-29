@@ -28,10 +28,17 @@
   min-height: 90px;
 }
 
-
   .teamvision-list-panel-cards:hover{
     background-color: @smokyWhite;
   }
+
+
+  .teamvision-list-panel-cards::after{
+    content: "";
+    clear: both;
+    display: block;
+  }
+
 
 .teamvision-list-panel-imagebox{
   float: left;
