@@ -74,17 +74,11 @@
   background-color: #fff;
   border: 2px solid @subColor4;
   display: block;
-  width: 100% !important;
+  width: 100%;
   overflow: hidden;
   cursor: pointer;
-  &:active {
-    border-color: #ae2f2f;
-  }
-  &:hover {
-    border-color: #ae2f2f;
-  }
-  &:focus {
-    border-color: #ae2f2f;
+  &:active, &:hover, &:focus {
+    border-color: @subColor3;
   }
 }
 
