@@ -25,6 +25,7 @@
   width: 100%;
   border-top: 1px solid #ddd;
   padding: 0;
+  min-height: 90px;
 }
 
 
@@ -53,14 +54,23 @@
   display: inline-block;
   font-weight: bold;
   margin: 8px 0;
-  width: 300px;
+  width: 65%;
 }
-@media @small {
-  .teamvision-list-title{
-    width: 75%;
-  }
+  @media @small {
+    .teamvision-list-title{
+      width: 60%;
+    }
 }
-
+  @media @medium {
+    .teamvision-list-title{
+      width: 70%;
+    }
+}
+  @media @large {
+    .teamvision-list-title{
+      width: 75%;
+      }
+}
 
 .teamvision_modified_date{
   padding: 5px;
