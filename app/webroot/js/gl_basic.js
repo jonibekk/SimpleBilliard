@@ -104,17 +104,27 @@ $(document).ready(function () {
 
     //Monitoring of the communication state of App Server | Appサーバーの通信状態の監視
     var network_reachable = true;
-    setInterval(function () {
-        networkReachable(function () {
-            if (network_reachable === false) {
-                updateNotifyCnt();
-                updateMessageNotifyCnt();
-                network_reachable = true;
-            }
-        }, function () {
-            network_reachable = false;
-        });
-    }, 5000);
+    var timer = null;
+    var execTimer = function() {
+        var callback = function() {
+            networkReachable(function() {
+                if (network_reachable === false) {
+                    updateNotifyCnt();
+                    updateMessageNotifyCnt();
+                    network_reachable = true;
+                }
+            }, function() {
+                network_reachable = false;
+            }, function($jqXhr) {
+                $jqXhr = null;
+                clearTimeout(timer);
+                execTimer();
+                callback = null;
+            });
+        }
+        timer = setTimeout(callback, 5000);
+    }
+    execTimer();
 
     $(document).on('keyup', '#message_text_input', function () {
         $(this).autosize();
@@ -5617,14 +5627,15 @@ function isMobile() {
     }
     return false;
 }
-function networkReachable(success_callback, error_callback) {
+function networkReachable(success_callback, error_callback, complete_callback) {
     var path = window.location.protocol + '//' + window.location.hostname + '/';
     $.ajax({
         url: path + "img/no-image.jpg",
         type: "HEAD",
         timeout: 3000,
         success: success_callback,
-        error: error_callback
+        error: error_callback,
+        complete: complete_callback
     });
 }
 
