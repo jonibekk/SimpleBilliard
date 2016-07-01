@@ -12,6 +12,9 @@ if (typeof String.prototype.startsWith != 'function') {
 require.config({
     baseUrl: '/js/modules/'
 });
+
+var network_reachable = true;
+
 function bindPostBalancedGallery($obj) {
     $obj.removeClass('none');
     $obj.BalancedGallery({
@@ -103,28 +106,16 @@ $(document).ready(function () {
     }
 
     //Monitoring of the communication state of App Server | Appサーバーの通信状態の監視
-    var network_reachable = true;
-    var timer = null;
-    var execTimer = function() {
-        var callback = function() {
-            networkReachable(function() {
-                if (network_reachable === false) {
-                    updateNotifyCnt();
-                    updateMessageNotifyCnt();
-                    network_reachable = true;
-                }
-            }, function() {
-                network_reachable = false;
-            }, function($jqXhr) {
-                $jqXhr = null;
-                clearTimeout(timer);
-                execTimer();
-                callback = null;
-            });
-        }
-        timer = setTimeout(callback, 5000);
-    }
-    execTimer();
+    window.addEventListener("online", function() {
+        updateNotifyCnt();
+        updateMessageNotifyCnt();
+        network_reachable = true;
+    }, false);
+
+    window.addEventListener("offline", function() {
+        network_reachable = false;
+    }, false);
+
 
     $(document).on('keyup', '#message_text_input', function () {
         $(this).autosize();
@@ -4480,15 +4471,15 @@ $(document).ready(function () {
             if (!autoload_more) {
                 autoload_more = true;
 
-                networkReachable(function () {
+                if(network_reachable) {
                     $('#FeedMoreReadLink').trigger('click');
                     $('#GoalPageFollowerMoreLink').trigger('click');
                     $('#GoalPageMemberMoreLink').trigger('click');
                     $('#GoalPageKeyResultMoreLink').trigger('click');
-                }, function () {
+                } else {
                     autoload_more = false;
                     return false;
-                });
+                };
             }
         }
     }).ajaxError(function (event, request, setting) {
@@ -5626,17 +5617,6 @@ function isMobile() {
         return true;
     }
     return false;
-}
-function networkReachable(success_callback, error_callback, complete_callback) {
-    var path = window.location.protocol + '//' + window.location.hostname + '/';
-    $.ajax({
-        url: path + "img/no-image.jpg",
-        type: "HEAD",
-        timeout: 3000,
-        success: success_callback,
-        error: error_callback,
-        complete: complete_callback
-    });
 }
 
 /**
