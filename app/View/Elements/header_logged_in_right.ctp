@@ -155,25 +155,26 @@
             <?php endif; ?>
             <?php if ($is_evaluation_available): ?>
                 <li class="header-nav-function-contents-list">
-                    <?php if (viaIsSet($evaluable_cnt) && $evaluable_cnt > 0): ?>
-                        <div class="btn btn-danger btn-xs sub_cnt_alert"><?= $evaluable_cnt ?></div>
-                    <?php endif; ?>
-
                     <?=
-                    $this->Html->link(__('Evaluation'),
+                        $this->Html->link(__('Evaluation'),
                                       ['controller' => 'evaluations', 'action' => 'index'],
-                                      ['class' => 'header-nav-function-contents-evaluation']) ?>
+                                      ['class' => 'header-nav-function-contents-evaluation'])
+                    ?>
+                  <?php if (viaIsSet($evaluable_cnt) && $evaluable_cnt > 0): ?>
+                      <span class="header-nav-function-eval-count"><?= $evaluable_cnt ?></span>
+                  <?php endif; ?>
                 </li>
             <?php endif; ?>
             <li class="header-nav-function-contents-list">
+                <?= $this->Html->link(__('Goal Approval'),
+                                      ['controller' => 'goal_approval', 'action' => 'index'],
+                                      ['class' => 'header-nav-function-contents-approvement'])
+                ?>
                 <?php if (isset($unapproved_cnt) === true && $unapproved_cnt > 0) { ?>
-                    <div class="btn btn-danger btn-xs sub_cnt_alert">
+                    <div class="header-nav-function-approve-count">
                         <?php echo $unapproved_cnt; ?>
                     </div>
                 <?php } ?>
-                <?= $this->Html->link(__('Goal Approval'),
-                                      ['controller' => 'goal_approval', 'action' => 'index'],
-                                      ['class' => 'header-nav-function-contents-approvement']) ?>
             </li>
             <li class="header-nav-function-contents-list">
                 <?=

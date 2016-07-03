@@ -1,9 +1,9 @@
-<?php
+<?php App::uses('CakeTestFixtureEx', 'Test/Fixture');
 
 /**
  * SubscribeEmailFixture
  */
-class SubscribeEmailFixture extends CakeTestFixture
+class SubscribeEmailFixture extends CakeTestFixtureEx
 {
 
     /**
@@ -32,7 +32,7 @@ class SubscribeEmailFixture extends CakeTestFixture
      */
     public $records = array(
         array(
-            'id'       => '',
+            'id'       => '1',
             'email'    => 'Lorem ipsum dolor sit amet',
             'del_flg'  => 1,
             'deleted'  => 1,

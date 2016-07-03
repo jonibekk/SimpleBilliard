@@ -65,7 +65,7 @@ class Circle extends AppModel
      */
     public $validate = [
         'name'         => [
-            'isString' => [
+            'isString'  => [
                 'rule'       => ['isString',],
                 'allowEmpty' => true,
             ],
@@ -74,7 +74,7 @@ class Circle extends AppModel
                 'rule' => ['notEmpty'],
             ],
         ],
-        'description'      => [
+        'description'  => [
             'isString' => [
                 'rule'       => ['isString',],
                 'allowEmpty' => true,
@@ -465,6 +465,10 @@ class Circle extends AppModel
             ],
             'order'      => 'rand()',
         ];
+        if ($this->getDataSource()->config['datasource'] == 'Database/Sqlite') {
+            $options['order'] = 'random()';
+        }
+
         $res = $this->find('first', $options);
         if (isset($res['Circle']['name'])) {
             return $res['Circle']['name'];

@@ -1255,6 +1255,10 @@ class User extends AppModel
             'fields'     => $this->profileFields,
             'order'      => 'rand()',
         ];
+        if ($this->getDataSource()->config['datasource'] == 'Database/Sqlite') {
+            $options['order'] = 'random()';
+        }
+
         $res = $this->find('first', $options);
         if (isset($res['User']['display_username'])) {
             return $res['User']['display_username'];
@@ -1470,7 +1474,7 @@ class User extends AppModel
     {
         $options = [
             'conditions' => [
-                'id'    => $uids,
+                'id'         => $uids,
                 'active_flg' => true,
             ],
             'fields'     => [

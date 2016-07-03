@@ -1,9 +1,9 @@
-<?php
+<?php App::uses('CakeTestFixtureEx', 'Test/Fixture');
 
 /**
  * CommentReadFixture
  */
-class CommentReadFixture extends CakeTestFixture
+class CommentReadFixture extends CakeTestFixtureEx
 {
 
     /**
@@ -21,8 +21,8 @@ class CommentReadFixture extends CakeTestFixture
         'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'コメントを追加した日付時刻'),
         'modified'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'コメントを更新した日付時刻'),
         'indexes'         => array(
-            'PRIMARY'      => array('column' => 'id', 'unique' => 1),
-            'comment_id'   => array('column' => 'comment_id', 'unique' => 0),
+            'PRIMARY'             => array('column' => 'id', 'unique' => 1),
+            'comment_id'          => array('column' => 'comment_id', 'unique' => 0),
             'comment_id_2' => array('column' => ['comment_id', 'user_id'], 'unique' => 1),
             'user_id'      => array('column' => 'user_id', 'unique' => 0),
             'team_id'      => array('column' => 'team_id', 'unique' => 0),

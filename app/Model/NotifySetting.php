@@ -36,6 +36,7 @@ class NotifySetting extends AppModel
     const TYPE_FEED_CAN_SEE_ACTION = 23;
     const TYPE_USER_JOINED_TO_INVITED_TEAM = 24;
     const TYPE_FEED_MESSAGE = 25;
+    const TYPE_SETUP_GUIDE = 26;
 
     static public $TYPE = [
         self::TYPE_FEED_POST                             => [
@@ -213,6 +214,13 @@ class NotifySetting extends AppModel
             'icon_class'      => 'fa-paper-plane-o',
             'groups'          => ['all', 'primary'],
         ],
+        self::TYPE_SETUP_GUIDE                           => [
+            'mail_template'   => "notify_basic",
+            'field_real_name' => null,
+            'field_prefix'    => 'setup_guide',
+            'icon_class'      => 'fa-book',
+            'groups'          => ['all'],
+        ]
     ];
 
     static public $TYPE_GROUP = [
@@ -394,7 +402,7 @@ class NotifySetting extends AppModel
                 if ($key !== 0) {
                     $user_text .= __(",");
                 }
-                $user_text .= $name;
+                $user_text .= $name.' ';
             }
         }
         $title = null;

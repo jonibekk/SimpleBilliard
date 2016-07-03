@@ -1,6 +1,6 @@
 {
-  "name": "GruntForGoalous",
-  "version": "0.1.0",
+  "name": "grunt-for-goalous",
+  "version": "0.2.0",
   "description": "Automate the frontend-tasks with Grunt for Goalous",
   "main": "index.js",
   "dependencies": {
@@ -53,12 +53,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/IsaoCorp/goalous2"
+    "url": "git+https://github.com/IsaoCorp/goalous2.git"
   },
   "author": "ISAOcorp",
-  "license": "Copyright (c) 2015 ISAO corp.",
+  "license": "UNLICENSED",
   "bugs": {
     "url": "https://github.com/IsaoCorp/goalous2/issues"
   },
-  "homepage": "https://github.com/IsaoCorp/goalous2"
+  "homepage": "https://github.com/IsaoCorp/goalous2",
+  "directories": {
+    "doc": "docs"
+  },
+  "keywords": [
+    "goalous"
+  ]
 }

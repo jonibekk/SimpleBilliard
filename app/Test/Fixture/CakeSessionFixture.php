@@ -1,11 +1,11 @@
-<?php
+<?php App::uses('CakeTestFixtureEx', 'Test/Fixture');
 
 /**
  * CakeSessionFixture
  */
 
 /** @noinspection PhpUndefinedClassInspection */
-class CakeSessionFixture extends CakeTestFixture
+class CakeSessionFixture extends CakeTestFixtureEx
 {
 
     /**

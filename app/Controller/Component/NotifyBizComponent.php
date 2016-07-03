@@ -87,15 +87,24 @@ class NotifyBizComponent extends Component
      * @param $message
      * @param $url_data
      */
-    function sendSetupNotify($user_id, $message, $url)
+    function sendSetupNotify($user_id, $messages, $urls)
     {
-        $this->GlEmail->sendMailSetup($user_id, $message, null);
+        // User notify settings
+        $settings = $this->NotifySetting->getUserNotifySetting($user_id, NotifySetting::TYPE_SETUP_GUIDE);
 
-        $this->notify_settings = [$user_id => ['mobile' => true]];
-        $this->notify_option['url'] = $url;
-        $this->notify_option['message'] = $message;
-        $this->notify_option['from_user_id'] = $user_id; // dummy
-        $this->_sendPushNotify();
+        // Send by mail
+        if($user_allow_send_mail = $settings[$user_id]['email']) {
+            $this->GlEmail->sendMailSetup($user_id, $messages['mail'], null);
+        }
+
+        // Send by push notification
+        if($user_allow_push_mobile_notify = $settings[$user_id]['mobile']) {
+            $this->notify_settings = [$user_id => ['mobile' => true]];
+            $this->notify_option['url'] = $urls['push'];
+            $this->notify_option['message'] = $messages['push'];
+            $this->notify_option['from_user_id'] = $user_id; // dummy
+            $this->_sendPushNotify();
+        }
     }
 
     /**
@@ -1402,6 +1411,19 @@ class NotifyBizComponent extends Component
     {
         return $this->GlRedis->getCountOfNewNotification(
             $this->NotifySetting->current_team_id,
+            $this->NotifySetting->my_uid
+        );
+    }
+
+    /**
+     * get count of new notifications from redis. on the basis of team_id
+     *
+     * @return int
+     */
+    function _getCountNewNotificationForTeams($team_id)
+    {
+        return $this->GlRedis->getCountOfNewNotification(
+            $team_id,
             $this->NotifySetting->my_uid
         );
     }
