@@ -4479,7 +4479,7 @@ $(document).ready(function () {
                 } else {
                     autoload_more = false;
                     return false;
-                };
+                }
             }
         }
     }).ajaxError(function (event, request, setting) {
