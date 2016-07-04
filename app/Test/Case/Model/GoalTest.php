@@ -771,6 +771,11 @@ class GoalTest extends GoalousTestCase
         $this->assertFalse($res);
 
     }
+    
+    function testIsPresentTermGoalNullFalse()
+    {
+        $this->assertFalse($this->Goal->isPresentTermGoal(null));
+    }
 
     function testGetAllUserGoal()
     {

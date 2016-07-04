@@ -1,5 +1,5 @@
 <!-- start app/webroot/template/team_vision_list.html -->
-<div class="row" style="padding-bottom:10px;">
+<div class="row teamvision-visionadd-btnarea">
     <div class="col-xs-4">
         <a href="/teams/add_team_vision" class="font_gargoyleGray-brownRed btn-goals-column-plus add-vision-button" ng-class="{disabled: !(isTeamAdmin && teamVisionCount == 0)}">
             <i class="fa fa-plus-circle font_brownRed"></i>ビジョンを追加</a>
@@ -11,39 +11,26 @@
     </div>
 </div>
 
-<table class="table table-hover team_member_table">
-    <tr>
-        <th colspan="2"><i class="fa fa-rocket"></i> チームビジョン ( {{teamVisionCount}} )</th>
-    </tr>
-    <tr ng-repeat="item in teamVisionList">
-        <td class="pointer" width="20%"
-            ui-sref="vision_detail({team_vision_id:item.TeamVision.id, active_flg:item.TeamVision.active_flg === true ? 1 : 0})">
-            <img width="64px" ng-src="{{item.TeamVision.photo_path}}"/>
-        </td>
 
-        <td class="pointer"
-            ui-sref="vision_detail({team_vision_id:item.TeamVision.id, active_flg:item.TeamVision.active_flg === true ? 1 : 0})">
-            <div class="row">
-                <div class="col-xs-11">
-                    <p class="vision_title">{{item.TeamVision.name}}</p>
 
-                    <div class="vision_modified_date">
-                        最終更新日:
-                        <span ng-bind-html="item.TeamVision.modified"/>
-                    </div>
-                </div>
-            </div>
-        </td>
 
-        <td ng-if="login_user_admin_flg === true">
-            <div class="pull-right header-function dropdown">
-                <button class="btn team_member_setting_btn dropdown-toggle" type="button"
+<div class="teamvision-list-panel-base">
+    <div class="teamvision-list-panel-head">
+        <i class="fa fa-rocket"></i> チームビジョン ( {{teamVisionCount}} )
+    </div>
+
+
+
+<!-- repeatstart -->
+    <div class="pointer teamvision-list-panel-cards" ng-repeat="item in teamVisionList">
+        <div class="pull-right ng-if="login_user_admin_flg === true"">
+            <div class="dropdown teamvision_setting_btn">
+                <button class="btn dropdown-toggle teamvision_setting_btn_border" type="button"
                         id="dropdownMenu1"
                         data-toggle="dropdown" aria-expanded="true">
                     <i class="fa fa-cog header-function-icon"
                        style="color: rgb(80, 80, 80); opacity: 0.88;"></i>
                 </button>
-
                 <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
                     aria-labelledby="dropdownMenu1">
                     <li role="presentation">
@@ -59,7 +46,21 @@
                     </li>
                 </ul>
             </div>
-        </td>
-    </tr>
-</table>
+        </div>
+        <div ui-sref="vision_detail({team_vision_id:item.TeamVision.id, active_flg:item.TeamVision.active_flg === true ? 1 : 0})">
+            <div class="teamvision-list-panel-imagebox">
+                <img ng-src="{{item.TeamVision.photo_path}}"/>
+            </div>
+            <p class="teamvision-list-title">{{item.TeamVision.name}}</p>
+        </div>
+
+            <div class="teamvision_modified_date">
+                最終更新日:<span ng-bind-html="item.TeamVision.modified"/>
+            </div>
+    </div>
+<!-- repeatEND -->
+
+
+
+</div>
 <!-- end app/webroot/template/team_vision_list.html -->

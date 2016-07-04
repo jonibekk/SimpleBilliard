@@ -1,6 +1,0 @@
-* Kohei Kikuchi(PO)
-  * Daiki Hirakata(chief developer)
-    * Hyungdoo Kil(developer)
-    * Shohei Saeki(developer)
-    * Siddharth(developer)
-  * Naruhito Kubota(front-end engineer)

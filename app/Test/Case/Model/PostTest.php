@@ -1234,6 +1234,31 @@ class PostTest extends GoalousTestCase
         $this->assertFalse($res);
     }
 
+    function testGetByActionResultId()
+    {
+        $this->_setDefault();
+        $this->Post->ActionResult->save(
+            [
+                'goal_id' => 99999,
+                'post_id' => $this->Post->getLastInsertID(),
+                'team_id' => 1,
+                'name'    => 'test',
+                'type'    => ActionResult::TYPE_GOAL,
+            ]
+        );
+        $this->Post->save(
+            [
+                'user_id'          => 1,
+                'team_id'          => 1,
+                'action_result_id' => $this->Post->ActionResult->getLastInsertID(),
+                'body'             => 'test',
+                'type'             => Post::TYPE_ACTION,
+            ]
+        );
+        $res = $this->Post->getByActionResultId($this->Post->ActionResult->getLastInsertID());
+        $this->assertNotEmpty($res);
+    }
+
     function _setDefault()
     {
         $uid = '1';

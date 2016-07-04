@@ -28,6 +28,24 @@
     background-color: lightgray;
 }
 
+.cacel_or_invite {
+    color: #e83b59;
+    padding-top: 10px;
+}
+.invite_loder {
+    padding-right: 10px;
+    padding-top: 10px;
+}
+
+.expired_invite {
+    color: #e83b59;
+    padding-left: 10px;
+}
+
+.left_align {
+    float: left;
+}
+
 .vision_detail_block {
     padding: 10px;
 }

@@ -1,75 +1,84 @@
 # Goalous 2.0
-Goalous 2.0のリポジトリです。
-旧Goalousとは別に管理しています。[旧Goalousはこちら](https://github.com/IsaoCorp/goalous)
-当プロジェクトで管理しているソース、ドキュメント、その他のツールのすべてはここから辿れるようになっています。
-
-かんこテスト
+Goalous 2.0のリポジトリです。  - [旧Goalousはこちら](https://github.com/IsaoCorp/goalous)
+当プロジェクトで管理しているソース、ドキュメント、一切のものはこのページより見つけられます。
 
 ## Health
-|master|develop|
-|:--|:--|
-|[![Build Status](https://magnum.travis-ci.com/IsaoCorp/goalous2.svg?token=33yEbgmrzpwqFzcbu6xi&branch=master)](https://magnum.travis-ci.com/IsaoCorp/goalous2) <br> [![Coverage Status](https://coveralls.io/repos/IsaoCorp/goalous2/badge.svg?branch=master&service=github&t=1Y8INm)](https://coveralls.io/github/IsaoCorp/goalous2?branch=master)  |  [![Build Status](https://magnum.travis-ci.com/IsaoCorp/goalous2.svg?token=33yEbgmrzpwqFzcbu6xi&branch=develop)](https://magnum.travis-ci.com/IsaoCorp/goalous2) <br> [![Coverage Status](https://coveralls.io/repos/IsaoCorp/goalous2/badge.svg?branch=develop&service=github&t=1Y8INm)](https://coveralls.io/github/IsaoCorp/goalous2?branch=develop) <br> [![Code Climate](https://codeclimate.com/repos/53b685e0695680777500d34f/badges/cf08317ef617dba84379/gpa.svg)](https://codeclimate.com/repos/53b685e0695680777500d34f/feed)  |
+
+|  | TravisCI | Coveralls | Code Climate |  
+|:---|:---|:---|:---|
+| master | [![Build Status](https://magnum.travis-ci.com/IsaoCorp/goalous2.svg?token=33yEbgmrzpwqFzcbu6xi&branch=master)](https://magnum.travis-ci.com/IsaoCorp/goalous2) | [![Coverage Status](https://coveralls.io/repos/IsaoCorp/goalous2/badge.svg?branch=master&service=github&t=1Y8INm)](https://coveralls.io/github/IsaoCorp/goalous2?branch=master) | - |
+| develop | [![Build Status](https://magnum.travis-ci.com/IsaoCorp/goalous2.svg?token=33yEbgmrzpwqFzcbu6xi&branch=develop)](https://magnum.travis-ci.com/IsaoCorp/goalous2) | [![Coverage Status](https://coveralls.io/repos/IsaoCorp/goalous2/badge.svg?branch=develop&service=github&t=1Y8INm)](https://coveralls.io/github/IsaoCorp/goalous2?branch=develop) | [![Code Climate](https://codeclimate.com/repos/53b685e0695680777500d34f/badges/cf08317ef617dba84379/gpa.svg)](https://codeclimate.com/repos/53b685e0695680777500d34f/feed) |
 
 ## Progress
 - [Waffle(Kanban Bord)](https://waffle.io/isaocorp/goalous2) ... Goalousの開発状況はこのかんばんボードで管理しています。
 
 ## What's Goalous ?
-GoalousはIsao発の「チーム力向上のスパイラルを生み出す」目標達成ツールです。
+GoalousはIsao発の「最強にオープンな社内SNS」です。
 
-- 本番環境 -> https://www2.goalous.com
-- ステージング環境 -> https://stg2.goalous.com
+- [本番環境](https://www.goalous.com)
+- [リリース環境](https://isao.goalous.com)
+- [ステージング環境](https://stg2.goalous.com)
+- [ホットフィックス](https://hotfix2.goalous.com)
 
-## Documentation
-- 全てのドキュメントはここから辿れるようにしてください。
+## ドキュメンテーション
+- すべてのドキュメントはページからアクセスできるようにしてあります。
 - はじめてGoalous開発に参加される方はまずこのドキュメントのすべてに目を通してください。
-- 手っ取り早くソース弄ってみたいという方は[開発環境構築手順](docs/process_docs/StartDevelop.md)を見て環境を作ってください。
+- いち早く環境構築を済ませたい方は、開発ガイドラインの[開発環境構築手順](docs/guidelines/development.md#setup_stack)の項をご参照ください
+
+より詳しくは、基本ポリシー内の[ドキュメンテーション](docs/guidelines/general.md#documentation)の項目をご参照ください。
 
 ### ガイドライン
-#### 基本ポリシー
-- [チームのポリシー](docs/guidelines/TeamPolicy.md)
-- [禁止事項](docs/guidelines/Prohibited.md)
-- [ドキュメントについて](docs/guidelines/Documentation.md)
-- [チームメンバー以外の方のプロジェクトへの貢献について](CONTRIBUTING.md)
 
-#### 開発ガイドライン
-- [開発フローと操作手順](docs/guidelines/DevelopmentCycle.md)
-- [アジャイル開発](docs/guidelines/Ajile.md)
-- [イテレーションについて](docs/guidelines/Iteration.md)
+- [基本ポリシー](docs/guidelines/general.md)
+  - [はじめに](docs/guidelines/general.md#intro)
+  - [チームのポリシー](docs/guidelines/general.md#team-policiy)
+  - [禁止事項](docs/guidelines/general.md#forbidden)
+  - [ドキュメントについて](docs/guidelines/general.md#documentation)
+  - [チームメンバー以外のプロジェクトへの貢献について](docs/guidelines/general.md#contributing)
 
-#### 運用ガイドライン
-- [GitHub運用ガイドライン](docs/guidelines/GitHub.md)
-- [Waffle運用ガイドライン](docs/guidelines/Waffle.md)
-- [レビュー前チェックリストの運用ガイドライン](docs/guidelines/ReviewChecklist.md)
+- [開発ガイドライン](docs/guidelines/development.md)
+  - [開発環境構築手順](docs/guidelines/development.md#setup_stack)
+  - [開発フロー](docs/guidelines/development.md#development_flow)
+  - [アジャイル開発](docs/guidelines/development.md#agile)
+  - [イテレーション](docs/guidelines/development.md#iteration)
 
-#### コーディングガイド
-- [CSSコーディングガイド](docs/guidelines/CSS.md)
-- [CakePHPコーディングガイド](docs/guidelines/CodingGuideCakePHP.md)
+- [運用ガイドライン](docs/guidelines/operations.md)
+  - [GitHub運用について](docs/guidelines/operations.md#github)
+  - [Waffle.ioの運用について](docs/guidelines/operations.md#waffleio)
+  - [コードレビューについて](docs/guidelines/operations.md#review)
 
-#### プラグイン・ライブラリ
-- [jQuery Plugin](docs/guidelines/jQueryPlugins.md)
-- [CakePHP Plugin](docs/guidelines/CodingGuideCakePHP.md)
-- [PHPライブラリ](docs/guidelines/LibraryForPHP.md)
+- [コーディングガイドライン](docs/guidelines/coding.md)
+  - [CSSコーディングガイドライン](docs/guidelines/coding.md#css)
+  - [CakePHPコーディングガイドライン](docs/guidelines/coding.md#cakephp)
 
-#### Seleniumを使用したUI自動テスト
-- [UITest](docs/guidelines/UITest.md)
+- [プラグイン・ライブラリ](docs/guidelines/plugins_libraries.md)
+  - [jQuery Libraries](docs/guidelines/plugins_libraries.md#jquery-libs)
+  - [CakePhp Plugins](docs/guidelines/plugins_libraries.md#cakephp-plugins)
+  - [PHP Libraries](docs/guidelines/plugins_libraries.md#php-plugins)
+
+- [構築・運用手順書（マニュアル）](docs/guidelines/manuals.md)
+  - [海外開発拠点用プロキシサーバ運用手順書](docs/guidelines/manuals.md#env4foreigner)
+  - [海外開発者向け環境構築手順書](docs/guidelines/manuals.md#proxy4foreigner)
+  - [AWSオペレーション](docs/guidelines/manuals.md#aws-operation)
+  - [DB接続](docs/guidelines/manuals.md#db-connection)
+  - [DBマイグレーション](docs/guidelines/manuals.md#db-migration)
+  - [GitHubとWaffleの運用](docs/guidelines/manuals.md#github-waffle)
+
+- [翻訳手順書](docs/guidelines/translation.md)
+
+- [テスト手順書（マニュアル）](docs/guidelines/manuals-test.md)
+  - [負荷試験環境構築手順書](docs/guidelines/manuals-test.md#stress-test#stress)
+  - [Seleniumを使用したUI自動テスト](docs/guidelines/manuals-test.md#selenium)
+  - [PHP Docからドキュメントを生成するapigen](docs/guidelines/manuals-test.md#api-gen)
 
 ### 手順書
-- [開発環境構築手順書](docs/process_docs/LocalDevEnv.md)
-- [PhpStorm設定](docs/process_docs/PhpStormSetting.md)
-- [GitHub,Waffle運用手順書](docs/process_docs/OperationGitHubAndWaffle.md)
-- [負荷試験環境構築手順書](docs/process_docs/StressTest.md)
-- [AWS Operation](docs/process_docs/OperationForAWS.md)
-- [CakePHP](docs/process_docs/OperationForCakePHP.md)
-- [翻訳手順書](docs/process_docs/Translation.md)
-- [海外開発拠点用プロキシサーバ運用手順書](docs/process_docs/OperationForDevProxy.md)
-- [海外開発者向け環境構築手順書](docs/process_docs/BuildDevEnvForForeigner.md)
-- [トラブルシュート](docs/process_docs/TroubleShooting.md)
+- [各種マニュアル](docs/manuals.md)
 
 ### 仕様書
 - [サービス概要](docs/design_specifications/GoalousOverview.md)
 - [システム概要](docs/design_specifications/SystemOverview.md)
 - [ER図](docs/design_specifications/ERD.md)
-- [要件定義](http://bit.ly/1TnQZfX)
+- [要件定義](http://bit.ly/1TnQZfX) **Last Edit - 2015年7月**
 
 #### 機能一覧
 - ゴール
@@ -78,33 +87,36 @@ GoalousはIsao発の「チーム力向上のスパイラルを生み出す」目
 - [コーチ認定](docs/design_specifications/features/CoachApproval.md)
 
 ### Tips
-- [GitHub](docs/tips/GitHub.md)
-- [Git](docs/tips/Git.md)
-- [PhpStorm](docs/tips/PhpStorm.md)
-- [Travis](docs/tips/Travis.md)
-- [Mac](docs/tips/Mac.md)
-- [Windows](docs/tips/Windows.md)
+
+- [使用ツールについて](docs/guidelines/tools.md)
+  - [ツール一覧](docs/guidelines/tools.md#tool-list)
+  - [ツール各論](docs/guidelines/tools.md#tool-details)
 
 ### 調査内容
-- [SQL](docs/investigations/SQL.md)
+
+- [リサーチ](docs/guidelines/research.md)
+  - [SQL](docs/guidelines/research.md#sql)
 
 ### その他
-- [体制図](docs/others/ProjectOrganizationDiagram.md)
 - [議事録](docs/others/Minutes.md)
 - [気付いた事](docs/others/Suggestions.md)
-- [各種チートシート](docs/others/Cheetsheets.md)
-- [開発支援ツール](docs/others/SupportDevTools.md)
 - [UI手記](docs/others/MemoForUI.md)
-- [Mixpanel](docs/others/Mixpanel.md)
 - [古いブランチの墓場](docs/others/BornyardOfOldBranch.md)
 
-## Developers
+## Members
 [Goalous Developers](https://github.com/orgs/IsaoCorp/teams/goalous_developers)
 
-## browse-syncを使うためのコマンド
+## Commands
 
-vagrantを立ち上げつつ、すべてのファイル変更を検知して自動更新します。
+- Chefのアップデート
 
 ```
-vagrant up && browser-sync start --proxy "192.168.50.4" --files "**/*.css, **/*.js, **/*ctp, ***/.php **/*.html"
+sh ./etc/local/update_app.sh
+```
+
+- browse-sync  
+すべてのファイル変更を検知して自動更新します。
+
+```
+browser-sync start --proxy "192.168.50.4" --files "**/*.css, **/*.js, **/*ctp, ***/.php **/*.html"
 ```
