@@ -876,6 +876,13 @@ class AppController extends Controller
 
     function _setSetupGuideStatus()
     {
+        $setup_guide_is_completed = $this->Auth->user('setup_complete_flg');
+        if ($setup_guide_is_completed == User::SETUP_GUIDE_IS_COMPLETED) {
+            $this->set('setup_status', null);
+            $this->set('setup_rest_count', 0);
+            return;
+        }
+
         $status_from_redis = $this->getStatusWithRedisSave();
         // remove last update time
         unset($status_from_redis[GlRedis::FIELD_SETUP_LAST_UPDATE_TIME]);
