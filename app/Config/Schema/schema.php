@@ -22,7 +22,7 @@ class AppSchema extends CakeSchema {
 			'PRIMARY' => array('column' => 'id', 'unique' => 1),
 			'team_id_access_date' => array('column' => array('team_id', 'access_date'), 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $action_result_files = array(
@@ -41,7 +41,7 @@ class AppSchema extends CakeSchema {
 			'team_id' => array('column' => 'team_id', 'unique' => 0),
 			'attached_file_id' => array('column' => 'attached_file_id', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $action_results = array(
@@ -72,7 +72,7 @@ class AppSchema extends CakeSchema {
 			'user_id' => array('column' => 'user_id', 'unique' => 0),
 			'created' => array('column' => 'created', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $approval_histories = array(
@@ -90,7 +90,7 @@ class AppSchema extends CakeSchema {
 			'collaborator_id' => array('column' => 'collaborator_id', 'unique' => 0),
 			'created' => array('column' => 'created', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $attached_files = array(
@@ -113,7 +113,7 @@ class AppSchema extends CakeSchema {
 			'post_id' => array('column' => 'user_id', 'unique' => 0),
 			'team_id' => array('column' => 'team_id', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $circle_insights = array(
@@ -132,7 +132,7 @@ class AppSchema extends CakeSchema {
 			'team_id_target_date' => array('column' => array('team_id', 'target_date'), 'unique' => 0),
 			'circle_id' => array('column' => 'circle_id', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $circle_members = array(
@@ -154,7 +154,7 @@ class AppSchema extends CakeSchema {
 			'circle_id' => array('column' => 'circle_id', 'unique' => 0),
 			'user_id' => array('column' => 'user_id', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $circles = array(
@@ -176,7 +176,7 @@ class AppSchema extends CakeSchema {
 			'name' => array('column' => 'name', 'unique' => 0),
 			'created' => array('column' => 'created', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $collaborators = array(
@@ -200,7 +200,7 @@ class AppSchema extends CakeSchema {
 			'goal_id' => array('column' => 'goal_id', 'unique' => 0),
 			'created' => array('column' => 'created', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $comment_files = array(
@@ -219,7 +219,7 @@ class AppSchema extends CakeSchema {
 			'team_id' => array('column' => 'team_id', 'unique' => 0),
 			'attached_file_id' => array('column' => 'attached_file_id', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $comment_likes = array(
@@ -239,7 +239,7 @@ class AppSchema extends CakeSchema {
 			'user_id' => array('column' => 'user_id', 'unique' => 0),
 			'created' => array('column' => 'created', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $comment_mentions = array(
@@ -257,7 +257,7 @@ class AppSchema extends CakeSchema {
 			'user_id' => array('column' => 'user_id', 'unique' => 0),
 			'team_id' => array('column' => 'team_id', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $comment_reads = array(
@@ -276,7 +276,7 @@ class AppSchema extends CakeSchema {
 			'comment_id' => array('column' => 'comment_id', 'unique' => 0),
 			'user_id' => array('column' => 'user_id', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $comments = array(
@@ -306,7 +306,7 @@ class AppSchema extends CakeSchema {
 			'created' => array('column' => 'created', 'unique' => 0),
 			'modified' => array('column' => 'modified', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $devices = array(
@@ -322,7 +322,7 @@ class AppSchema extends CakeSchema {
 			'PRIMARY' => array('column' => 'id', 'unique' => 1),
 			'user_id' => array('column' => 'user_id', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $emails = array(
@@ -342,7 +342,7 @@ class AppSchema extends CakeSchema {
 			'user_id' => array('column' => 'user_id', 'unique' => 0),
 			'email_token' => array('column' => 'email_token', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $evaluate_scores = array(
@@ -361,7 +361,7 @@ class AppSchema extends CakeSchema {
 			'team_id' => array('column' => 'team_id', 'unique' => 0),
 			'created' => array('column' => 'created', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $evaluate_terms = array(
@@ -380,7 +380,7 @@ class AppSchema extends CakeSchema {
 			'team_id' => array('column' => 'team_id', 'unique' => 0),
 			'created' => array('column' => 'created', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $evaluation_settings = array(
@@ -424,7 +424,7 @@ class AppSchema extends CakeSchema {
 			'team_id' => array('column' => 'team_id', 'unique' => 0),
 			'created' => array('column' => 'created', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $evaluations = array(
@@ -453,7 +453,7 @@ class AppSchema extends CakeSchema {
 			'evaluator_user_id' => array('column' => 'evaluator_user_id', 'unique' => 0),
 			'goal_id' => array('column' => 'goal_id', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $evaluators = array(
@@ -473,7 +473,7 @@ class AppSchema extends CakeSchema {
 			'evaluator_user_id' => array('column' => 'evaluator_user_id', 'unique' => 0),
 			'evaluatee_user_id' => array('column' => 'evaluatee_user_id', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $followers = array(
@@ -492,7 +492,7 @@ class AppSchema extends CakeSchema {
 			'modified' => array('column' => 'modified', 'unique' => 0),
 			'goal_id' => array('column' => 'goal_id', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $given_badges = array(
@@ -513,7 +513,7 @@ class AppSchema extends CakeSchema {
 			'post_id' => array('column' => 'post_id', 'unique' => 0),
 			'created' => array('column' => 'created', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $goal_categories = array(
@@ -530,7 +530,7 @@ class AppSchema extends CakeSchema {
 			'PRIMARY' => array('column' => 'id', 'unique' => 1),
 			'team_id' => array('column' => 'team_id', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $goals = array(
@@ -566,7 +566,7 @@ class AppSchema extends CakeSchema {
 			'start_date' => array('column' => 'start_date', 'unique' => 0),
 			'end_date' => array('column' => 'end_date', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $group_insights = array(
@@ -585,7 +585,7 @@ class AppSchema extends CakeSchema {
 			'group_id_target_date' => array('column' => array('group_id', 'target_date'), 'unique' => 0),
 			'team_id' => array('column' => 'team_id', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $group_visions = array(
@@ -609,7 +609,7 @@ class AppSchema extends CakeSchema {
 			'group_id' => array('column' => 'group_id', 'unique' => 0),
 			'team_id' => array('column' => 'team_id', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $groups = array(
@@ -626,7 +626,7 @@ class AppSchema extends CakeSchema {
 			'PRIMARY' => array('column' => 'id', 'unique' => 1),
 			'team_id' => array('column' => 'team_id', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $invites = array(
@@ -652,7 +652,7 @@ class AppSchema extends CakeSchema {
 			'email' => array('column' => 'email', 'unique' => 0),
 			'email_token' => array('column' => 'email_token', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $job_categories = array(
@@ -669,7 +669,7 @@ class AppSchema extends CakeSchema {
 			'PRIMARY' => array('column' => 'id', 'unique' => 1),
 			'team_id' => array('column' => 'team_id', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $key_results = array(
@@ -702,7 +702,7 @@ class AppSchema extends CakeSchema {
 			'start_date' => array('column' => 'start_date', 'unique' => 0),
 			'end_date' => array('column' => 'end_date', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $local_names = array(
@@ -722,7 +722,7 @@ class AppSchema extends CakeSchema {
 			'first_name' => array('column' => 'first_name', 'unique' => 0),
 			'last_name' => array('column' => 'last_name', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $member_groups = array(
@@ -741,7 +741,7 @@ class AppSchema extends CakeSchema {
 			'user_id' => array('column' => 'user_id', 'unique' => 0),
 			'group_id' => array('column' => 'group_id', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $member_types = array(
@@ -758,7 +758,7 @@ class AppSchema extends CakeSchema {
 			'PRIMARY' => array('column' => 'id', 'unique' => 1),
 			'team_id' => array('column' => 'team_id', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $messages = array(
@@ -778,7 +778,7 @@ class AppSchema extends CakeSchema {
 			'thread_id' => array('column' => 'thread_id', 'unique' => 0),
 			'created' => array('column' => 'created', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $notify_settings = array(
@@ -873,7 +873,7 @@ class AppSchema extends CakeSchema {
 			'PRIMARY' => array('column' => 'id', 'unique' => 1),
 			'user_id' => array('column' => 'user_id', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $oauth_tokens = array(
@@ -892,7 +892,7 @@ class AppSchema extends CakeSchema {
 			'uid' => array('column' => 'uid', 'unique' => 0),
 			'user_id' => array('column' => 'user_id', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $post_files = array(
@@ -911,7 +911,7 @@ class AppSchema extends CakeSchema {
 			'team_id' => array('column' => 'team_id', 'unique' => 0),
 			'attached_file_id' => array('column' => 'attached_file_id', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $post_likes = array(
@@ -931,7 +931,7 @@ class AppSchema extends CakeSchema {
 			'user_id' => array('column' => 'user_id', 'unique' => 0),
 			'created' => array('column' => 'created', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $post_mentions = array(
@@ -950,7 +950,7 @@ class AppSchema extends CakeSchema {
 			'team_id' => array('column' => 'team_id', 'unique' => 0),
 			'created' => array('column' => 'created', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $post_reads = array(
@@ -969,7 +969,7 @@ class AppSchema extends CakeSchema {
 			'post_id' => array('column' => 'post_id', 'unique' => 0),
 			'user_id' => array('column' => 'user_id', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $post_share_circles = array(
@@ -990,7 +990,7 @@ class AppSchema extends CakeSchema {
 			'created' => array('column' => 'created', 'unique' => 0),
 			'modified' => array('column' => 'modified', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $post_share_users = array(
@@ -1011,7 +1011,7 @@ class AppSchema extends CakeSchema {
 			'created' => array('column' => 'created', 'unique' => 0),
 			'modified' => array('column' => 'modified', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $post_shared_logs = array(
@@ -1031,7 +1031,7 @@ class AppSchema extends CakeSchema {
 			'team_id' => array('column' => 'team_id', 'unique' => 0),
 			'created' => array('column' => 'created', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $posts = array(
@@ -1071,7 +1071,7 @@ class AppSchema extends CakeSchema {
 			'circle_id' => array('column' => 'circle_id', 'unique' => 0),
 			'created' => array('column' => 'created', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $purposes = array(
@@ -1090,7 +1090,7 @@ class AppSchema extends CakeSchema {
 			'team_id' => array('column' => 'team_id', 'unique' => 0),
 			'created' => array('column' => 'created', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $recovery_codes = array(
@@ -1107,7 +1107,7 @@ class AppSchema extends CakeSchema {
 			'PRIMARY' => array('column' => 'id', 'unique' => 1),
 			'user_id' => array('column' => 'user_id', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $send_mail_to_users = array(
@@ -1126,7 +1126,7 @@ class AppSchema extends CakeSchema {
 			'team_id' => array('column' => 'team_id', 'unique' => 0),
 			'modified' => array('column' => 'modified', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $send_mails = array(
@@ -1145,7 +1145,7 @@ class AppSchema extends CakeSchema {
 			'from_user_id' => array('column' => 'from_user_id', 'unique' => 0),
 			'team_id' => array('column' => 'team_id', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $subscribe_emails = array(
@@ -1159,7 +1159,7 @@ class AppSchema extends CakeSchema {
 			'PRIMARY' => array('column' => 'id', 'unique' => 1),
 			'email' => array('column' => 'email', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $team_insights = array(
@@ -1176,7 +1176,7 @@ class AppSchema extends CakeSchema {
 			'PRIMARY' => array('column' => 'id', 'unique' => 1),
 			'team_id_target_date' => array('column' => array('team_id', 'target_date'), 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $team_members = array(
@@ -1207,7 +1207,7 @@ class AppSchema extends CakeSchema {
 			'member_type_id' => array('column' => 'member_type_id', 'unique' => 0),
 			'member_no' => array('column' => 'member_no', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $team_visions = array(
@@ -1229,7 +1229,7 @@ class AppSchema extends CakeSchema {
 			'modify_user_id' => array('column' => 'modify_user_id', 'unique' => 0),
 			'team_id' => array('column' => 'team_id', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $teams = array(
@@ -1249,7 +1249,7 @@ class AppSchema extends CakeSchema {
 		'indexes' => array(
 			'PRIMARY' => array('column' => 'id', 'unique' => 1)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $threads = array(
@@ -1272,7 +1272,7 @@ class AppSchema extends CakeSchema {
 			'created' => array('column' => 'created', 'unique' => 0),
 			'modified' => array('column' => 'modified', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 	public $users = array(
@@ -1316,7 +1316,7 @@ class AppSchema extends CakeSchema {
 			'first_name' => array('column' => 'first_name', 'unique' => 0),
 			'last_name' => array('column' => 'last_name', 'unique' => 0)
 		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
 
 }
