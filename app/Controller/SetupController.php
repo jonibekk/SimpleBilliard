@@ -33,6 +33,11 @@ class SetupController extends AppController
         return $this->render();
     }
 
+    public function top()
+    {
+        return $this->render('index');
+    }
+
     public function goal()
     {
         return $this->render('index');
@@ -67,7 +72,19 @@ class SetupController extends AppController
     {
         $this->_ajaxPreProcess();
 
-        $status = $this->getStatusWithRedisSave();
+        $setup_guide_is_completed = $this->Auth->user('setup_complete_flg');
+        if ($setup_guide_is_completed == User::SETUP_GUIDE_IS_COMPLETED) {
+            $status =  [
+                1 => true,
+                2 => true,
+                3 => true,
+                4 => true,
+                5 => true,
+                6 => true,
+            ];
+        } else {
+            $status = $this->getStatusWithRedisSave();
+        }
         $res = [
             'status'           => $status,
             'rest_count'       => $this->calcSetupRestCount($status),
