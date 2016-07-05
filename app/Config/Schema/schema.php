@@ -312,7 +312,9 @@ class AppSchema extends CakeSchema {
 	public $devices = array(
 		'id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'ID'),
 		'user_id' => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'UserID(belongsToでUserモデルに関連)'),
-		'device_token' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => 'アプリインストール毎に発行される識別子', 'charset' => 'utf8mb4'),
+		'device_token' => array('type' => 'string', 'null' => false, 'key' => 'index', 'collate' => 'utf8mb4_general_ci', 'comment' => 'nitfy cloud id', 'charset' => 'utf8mb4'),
+		'installation_id' => array('type' => 'string', 'null' => false, 'key' => 'index', 'collate' => 'utf8mb4_general_ci', 'comment' => 'アプリインストール毎に発行される識別子', 'charset' => 'utf8mb4'),
+		'version' => array('type' => 'string', 'null' => false, 'collate' => 'utf8mb4_general_ci', 'comment' => 'アプリバージョン', 'charset' => 'utf8mb4'),
 		'os_type' => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false, 'comment' => '0:ios 1:android 99:other'),
 		'del_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '削除フラグ'),
 		'deleted' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '削除した日付時刻'),
@@ -320,7 +322,9 @@ class AppSchema extends CakeSchema {
 		'modified' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '最後に更新した日付時刻'),
 		'indexes' => array(
 			'PRIMARY' => array('column' => 'id', 'unique' => 1),
-			'user_id' => array('column' => 'user_id', 'unique' => 0)
+			'user_id' => array('column' => 'user_id', 'unique' => 0),
+			'device_token' => array('column' => 'device_token', 'unique' => 0, 'length' => array('device_token' => '191')),
+			'installation_id' => array('column' => 'installation_id', 'unique' => 0, 'length' => array('installation_id' => '191'))
 		),
 		'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
 	);
