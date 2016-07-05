@@ -3,6 +3,7 @@
   height: 350px;
   margin: 0px;
   padding: 10px 8px 11px;
+  -webkit-overflow-scroll: touch;
 }
 
 .message-detail-reply-input-area {
@@ -11,6 +12,16 @@
   word-wrap: break-word;
   resize: none;
   font-size: @fontSmall;
+}
+
+.message-detail-maintxt-area{
+  width: 82%;
+}
+
+@media @large {
+  .message-detail-maintxt-area {
+    width: 89%;
+  }
 }
 
 [ng\:cloak] [ng-cloak] [data-ng-cloak] [x-ng-cloak] .ng-cloak .x-ng-cloak {

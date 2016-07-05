@@ -418,3 +418,27 @@ vagrant@precise64:/vagrant/app$
 1. `develop`に`hotfix`をマージ。
 1. `hotfix`ブランチを削除。
 1. 以上。
+
+---
+
+次のドキュメントへ進んでください。  
+
+**リンク貼る予定です**
+
+トップへ戻りますか？  
+[GitHub - Goalous](https://github.com/IsaoCorp/goalous2)
+
+----
+
+**他の情報をお探しですか？**
+
+- [基本ポリシー](./general.md)
+- [開発ガイドライン](./development.md)
+- [運用ガイドライン](./operations.md)
+- [コーディングガイドライン](./coding.md)
+- [プラグイン・ライブラリ](./plugins_libraries.md)
+- [構築・運用手順書（マニュアル）](./manuals.md)
+- [翻訳手順書](./translation.md)
+- [テスト手順書（マニュアル）](./manuals-test.md)
+- [使用ツールについて](./tools.md)
+- [リサーチ](./research.md)

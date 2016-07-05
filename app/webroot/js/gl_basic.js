@@ -12,6 +12,9 @@ if (typeof String.prototype.startsWith != 'function') {
 require.config({
     baseUrl: '/js/modules/'
 });
+
+var network_reachable = true;
+
 function bindPostBalancedGallery($obj) {
     $obj.removeClass('none');
     $obj.BalancedGallery({
@@ -103,18 +106,16 @@ $(document).ready(function () {
     }
 
     //Monitoring of the communication state of App Server | Appサーバーの通信状態の監視
-    var network_reachable = true;
-    setInterval(function () {
-        networkReachable(function () {
-            if (network_reachable === false) {
-                updateNotifyCnt();
-                updateMessageNotifyCnt();
-                network_reachable = true;
-            }
-        }, function () {
-            network_reachable = false;
-        });
-    }, 5000);
+    window.addEventListener("online", function() {
+        updateNotifyCnt();
+        updateMessageNotifyCnt();
+        network_reachable = true;
+    }, false);
+
+    window.addEventListener("offline", function() {
+        network_reachable = false;
+    }, false);
+
 
     $(document).on('keyup', '#message_text_input', function () {
         $(this).autosize();
@@ -4470,15 +4471,15 @@ $(document).ready(function () {
             if (!autoload_more) {
                 autoload_more = true;
 
-                networkReachable(function () {
+                if(network_reachable) {
                     $('#FeedMoreReadLink').trigger('click');
                     $('#GoalPageFollowerMoreLink').trigger('click');
                     $('#GoalPageMemberMoreLink').trigger('click');
                     $('#GoalPageKeyResultMoreLink').trigger('click');
-                }, function () {
+                } else {
                     autoload_more = false;
                     return false;
-                });
+                }
             }
         }
     }).ajaxError(function (event, request, setting) {
@@ -5074,6 +5075,14 @@ $(document).ready(function () {
     var actionImageParams = {
         formID: 'CommonActionDisplayForm',
         previewContainerID: 'ActionUploadFilePhotoPreview',
+        beforeSending: function (file) {
+            if ($uploadFileForm._sending) {
+                return;
+            }
+            $uploadFileForm._sending = true;
+            // ファイルの送信中はsubmitできないようにする(クリックはできるがsubmit処理は走らない)
+            $('#CommonActionSubmit').on('click', $uploadFileForm._forbitSubmit);
+        },
         beforeAccept: function (file) {
             var $oldPreview = $('#' + $uploadFileForm._params.previewContainerID).find('.dz-preview:visible');
 
@@ -5111,7 +5120,12 @@ $(document).ready(function () {
                 evTargetShowThisDelete.call($button.get(0));
             }
             $(file.previewTemplate).show();
-        }
+        },
+        afterQueueComplete: function (file) {
+            $uploadFileForm._sending = false;
+            // フォームをsubmit可能にする
+            $('#CommonActionSubmit').off('click', $uploadFileForm._forbitSubmit);
+        },
     };
     var actionImageDzOptions = {
         acceptedFiles: "image/*",
@@ -5128,6 +5142,14 @@ $(document).ready(function () {
         formID: 'CommonActionDisplayForm',
         previewContainerID: 'ActionUploadFilePhotoPreview',
         disableMultiple: true,
+        beforeSending: function (file) {
+            if ($uploadFileForm._sending) {
+                return;
+            }
+            $uploadFileForm._sending = true;
+            // ファイルの送信中はsubmitできないようにする(クリックはできるがsubmit処理は走らない)
+            $('#CommonActionSubmit').on('click', $uploadFileForm._forbitSubmit);
+        },
         beforeAccept: function (file) {
             var $oldPreview = $('#' + $uploadFileForm._params.previewContainerID).find('.dz-preview:visible');
 
@@ -5180,7 +5202,12 @@ $(document).ready(function () {
             if ($firstHidden.val() != file_id) {
                 $('#' + file_id).insertBefore($firstHidden);
             }
-        }
+        },
+        afterQueueComplete: function (file) {
+            $uploadFileForm._sending = false;
+            // フォームをsubmit可能にする
+            $('#CommonActionSubmit').off('click', $uploadFileForm._forbitSubmit);
+        },
     };
     var actionImage2DzOptions = {
         acceptedFiles: "image/*",
@@ -5590,16 +5617,6 @@ function isMobile() {
         return true;
     }
     return false;
-}
-function networkReachable(success_callback, error_callback) {
-    var path = window.location.protocol + '//' + window.location.hostname + '/';
-    $.ajax({
-        url: path + "img/no-image.jpg",
-        type: "HEAD",
-        timeout: 3000,
-        success: success_callback,
-        error: error_callback
-    });
 }
 
 /**

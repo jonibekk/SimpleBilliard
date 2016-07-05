@@ -270,7 +270,11 @@ class AppController extends Controller
     {
         //UA情報をSessionにセット
         if (!$this->Session->read('ua')) {
-            $this->Session->write('ua', $this->getBrowser());
+            $ua = $this->getBrowser();
+            if (empty($ua['istablet']) && $ua['device_type'] == 'unknown') {
+                $ua['device_type'] = 'Desktop';
+            }
+            $this->Session->write('ua', $ua);
         }
     }
 
@@ -905,7 +909,7 @@ class AppController extends Controller
             return true;
         }
         //set update time
-        $status[GlRedis::FIELD_SETUP_LAST_UPDATE_TIME] = time();
+        $status_from_mysql[GlRedis::FIELD_SETUP_LAST_UPDATE_TIME] = time();
 
         $this->GlRedis->saveSetupGuideStatus($user_id, $status_from_mysql);
         return true;
