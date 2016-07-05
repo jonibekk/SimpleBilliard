@@ -344,7 +344,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                         } ?>
                                         <?php
                                         // For editing next term goal
-                                        if (viaIsSet($this->request->data['Goal']['term_type']) === 'next') {
+                                        if (viaIsSet($is_next_term_goal)) {
                                             echo $this->Form->hidden('term_type', ['value' => 'next']);
                                         }
                                         ?>
@@ -590,8 +590,8 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
         language: "ja",
         autoclose: true,
         todayHighlight: true,
-        startDate: "<?=$current_term_start_date_format?>",
-        endDate: "<?=$current_term_end_date_format?>"
+        startDate: "<?=$is_next_term_goal ? $next_term_start_date_format : $current_term_start_date_format?>",
+        endDate: "<?=$is_next_term_goal ? $next_term_end_date_format : $current_term_end_date_format?>"
     })
         .on('hide', function (e) {
             $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[Goal][start_date]");
@@ -606,8 +606,8 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
         language: "ja",
         autoclose: true,
         todayHighlight: true,
-        startDate: "<?=$current_term_start_date_format?>",
-        endDate: "<?=$current_term_end_date_format?>"
+        startDate: "<?=$is_next_term_goal ? $next_term_start_date_format : $current_term_start_date_format?>",
+        endDate: "<?=$is_next_term_goal ? $next_term_end_date_format : $current_term_end_date_format?>"
     })
         .on('hide', function (e) {
             $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[Goal][end_date]");
