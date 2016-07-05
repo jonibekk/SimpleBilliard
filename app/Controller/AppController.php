@@ -872,18 +872,10 @@ class AppController extends Controller
                                             rawurlencode($filename . '.csv')));
         }
         $this->response->type('application/octet-stream');
-
     }
 
     function _setSetupGuideStatus()
     {
-        $setup_guide_is_completed = $this->Auth->user('setup_complete_flg');
-        if ($setup_guide_is_completed == User::SETUP_GUIDE_IS_COMPLETED) {
-            $this->set('setup_status', null);
-            $this->set('setup_rest_count', 0);
-            return;
-        }
-
         $status_from_redis = $this->getStatusWithRedisSave();
         // remove last update time
         unset($status_from_redis[GlRedis::FIELD_SETUP_LAST_UPDATE_TIME]);
@@ -923,6 +915,7 @@ class AppController extends Controller
 
     function getStatusWithRedisSave($user_id = false)
     {
+        $user_id = ($user_id === false) ? $this->Auth->user('id') : $user_id;
         $status = $this->getAllSetupDataFromRedis($user_id);
         if (!$status) {
             $status = $this->User->generateSetupGuideStatusDict($user_id);

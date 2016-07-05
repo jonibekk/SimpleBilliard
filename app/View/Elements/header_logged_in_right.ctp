@@ -21,7 +21,7 @@
     <?php endif; ?>
 
     <div class="header-setup" id="setup">
-        <a href="/setup/" class="btn-header-setup">
+        <a href="/setup/top" class="btn-header-setup">
             <i class="fa fa-book  header-icons header-dropdown-icon-add header-function-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>" id="setupIcon"></i>
             <?php if($setup_rest_count >= 1): ?>
             <div class="btn btn-xs bell-notify-box notify-setup-numbers" id="setupNum">
