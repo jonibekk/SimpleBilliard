@@ -28,7 +28,7 @@ class FollowerFixture extends CakeTestFixtureEx
             'modified' => array('column' => 'modified', 'unique' => 0),
             'goal_id'  => array('column' => 'goal_id', 'unique' => 0)
         ),
-        'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+        'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
     );
 
     /**

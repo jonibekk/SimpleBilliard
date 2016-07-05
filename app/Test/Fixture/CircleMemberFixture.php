@@ -30,7 +30,7 @@ class CircleMemberFixture extends CakeTestFixtureEx
             'circle_id' => array('column' => 'circle_id', 'unique' => 0),
             'user_id'   => array('column' => 'user_id', 'unique' => 0)
         ),
-        'tableParameters'       => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+        'tableParameters'       => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
     );
     /**
      * Records

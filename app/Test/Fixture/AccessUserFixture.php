@@ -25,7 +25,7 @@ class AccessUserFixture extends CakeTestFixtureEx
             'PRIMARY'             => ['column' => 'id', 'unique' => 1],
             'team_id_access_date' => ['column' => ['team_id', 'access_date'], 'unique' => 0]
         ],
-        'tableParameters' => ['charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB']
+        'tableParameters' => ['charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB']
     ];
 
     /**
