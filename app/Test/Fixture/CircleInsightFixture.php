@@ -27,7 +27,7 @@ class CircleInsightFixture extends CakeTestFixtureEx
             'team_id_target_date' => array('column' => array('team_id', 'target_date'), 'unique' => 0),
             'circle_id'           => array('column' => 'circle_id', 'unique' => 0)
         ),
-        'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+        'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
     );
 
     /**

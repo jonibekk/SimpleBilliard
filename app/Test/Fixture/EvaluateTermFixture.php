@@ -27,7 +27,7 @@ class EvaluateTermFixture extends CakeTestFixtureEx
             'team_id' => array('column' => 'team_id', 'unique' => 0),
             'created' => array('column' => 'created', 'unique' => 0)
         ),
-        'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+        'tableParameters' => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
     );
 
     /**
