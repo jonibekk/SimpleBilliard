@@ -1648,6 +1648,9 @@ class Goal extends AppModel
 
     function isPresentTermGoal($goal_id)
     {
+        if(empty($goal_id)){
+            return false;
+        }
         $options = [
             'fields'     => ['start_date', 'end_date'],
             'conditions' => ['id' => $goal_id],

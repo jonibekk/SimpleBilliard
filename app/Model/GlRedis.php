@@ -1180,9 +1180,6 @@ class GlRedis extends AppModel
      */
     function saveSetupGuideStatus($user_id, $status, $expire = SETUP_GUIDE_EXIPIRE_SEC_BY_REDIS)
     {
-        //set update time
-        $status[self::FIELD_SETUP_LAST_UPDATE_TIME] = time();
-
         $this->Db->set($key = $this->getKeyName(self::KEY_TYPE_SETUP_GUIDE_STATUS, null, $user_id),
                        json_encode($status));
         return $this->Db->setTimeout($key, $expire);

@@ -1373,6 +1373,7 @@ class GoalsController extends AppController
         $next_term_start_date_format = date('Y/m/d', $next_term['start_date'] + $next_term['timezone'] * HOUR);
         $next_term_end_date_format = date('Y/m/d', $next_term['end_date'] + $next_term['timezone'] * HOUR);
         $today_format = date('Y/m/d', REQUEST_TIMESTAMP + $current_term['timezone'] * HOUR);
+        $is_next_term_goal = false;
 
         // ゴール編集時
         if (isset($this->request->data['Goal']) && !empty($this->request->data['Goal'])) {
@@ -1388,6 +1389,7 @@ class GoalsController extends AppController
                 $this->request->data['Goal']['end_date'] <= $next_term['end_date']
             ) {
                 $this->request->data['Goal']['term_type'] = 'next';
+                $is_next_term_goal = true;
             }
         }
         // ゴール新規登録時
@@ -1407,7 +1409,8 @@ class GoalsController extends AppController
                            'next_term_end_date_format',
                            'today_format',
                            'current_term',
-                           'next_term'
+                           'next_term',
+                           'is_next_term_goal'
                    ));
     }
 

@@ -75,7 +75,6 @@ class SetupGuideShell extends AppShell
     public function startup()
     {
         parent::startup();
-
         $sessionId = viaIsSet($this->params['session_id']);
         $baseUrl = viaIsSet($this->params['base_url']);
 
@@ -121,14 +120,18 @@ class SetupGuideShell extends AppShell
         $force = viaIsSet($this->params['force']);
 
         $to_user_list = $this->User->getUsersSetupNotCompleted($team_id);
+        $utcCurrentHour = gmdate("H");
 
         foreach ($to_user_list as $to_user) {
-            if (!$force && !$this->_isNotifySendTime($to_user['User']['timezone'])) {
-                continue;
-            }
             $user_id = $to_user['User']['id'];
-            if ($force || $this->_isNotifyDay($user_id)) {
-                Configure::write('Config.language', $to_user['User']['language']);
+            $user_language = $to_user['User']['language'];
+            $user_time_zone = $to_user['User']['timezone'];
+            $user_singup_time = $to_user['User']['created'];
+
+            $now = intval($utcCurrentHour) + $user_time_zone;
+            $is_timing_to_send = $this->_isNotifyDay($user_id, $user_singup_time) && $this->_isNotifySendTime($now);
+            if ($force || $is_timing_to_send) {
+                Configure::write('Config.language', $user_language);
                 $this->_sendNotify($user_id);
             }
         }
@@ -167,17 +170,29 @@ class SetupGuideShell extends AppShell
      *
      * @return bool
      */
-    function _isNotifyDay($user_id)
+    function _isNotifyDay($user_id, $user_singup_time)
     {
-        $status = $this->AppController->getStatusWithRedisSave($user_id);
+        $status = $this->AppController->getAllSetupDataFromRedis($user_id);
+        $setup_update_time = viaIsSet($status['setup_last_update_time']);
+        // remove last update time for calc rest count
+        unset($status[GlRedis::FIELD_SETUP_LAST_UPDATE_TIME]);
+
+        // define base time for notify
+        $setup_rest_count = $this->AppController->calcSetupRestCount($status);
+        if($user_do_nothing_for_setup = $setup_rest_count == count(User::$TYPE_SETUP_GUIDE)) {
+            $base_update_time = $user_singup_time;
+        } else {
+            $base_update_time = $setup_update_time;
+        }
+
+        // check can notify compare with base time
         $notify_days = explode(",", SETUP_GUIDE_NOTIFY_DAYS);
         $now = time();
         foreach ($notify_days as $notify_day) {
-            $update_time = viaIsSet($status['setup_last_update_time']);
-            $from_notify_time = $update_time + ($notify_day * 24 * 60 * 60);
-            $to_notify_time = $update_time + (($notify_day + 1) * 24 * 60 * 60);
+            $from_notify_time = $base_update_time + ($notify_day * 24 * 60 * 60);
+            $to_notify_time = $base_update_time + (($notify_day + 1) * 24 * 60 * 60);
 
-            if (empty($update_time) || ($from_notify_time <= $now && $to_notify_time > $now)) {
+            if ($from_notify_time <= $now && $to_notify_time > $now) {
                 return true;
             }
         }
@@ -191,10 +206,8 @@ class SetupGuideShell extends AppShell
      *
      * @return bool
      */
-    function _isNotifySendTime($timezone)
+    function _isNotifySendTime($now)
     {
-        $utcCurrentHour = gmdate("H");
-        $now = intval($utcCurrentHour) + $timezone;
         if ($now < 0) {
             $now = 24 + $now;
         }
@@ -202,17 +215,6 @@ class SetupGuideShell extends AppShell
             return true;
         }
         return false;
-    }
-
-    /**
-     * get setup-guide notify target user list.
-     *
-     * @return null
-     */
-    function _getToUserList()
-    {
-
-        return null;
     }
 
     function _getNotifyDataByTargetKey($target_key)

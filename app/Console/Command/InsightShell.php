@@ -159,7 +159,7 @@ class InsightShell extends AppShell
                 ]);
                 if (!$row) {
                     // 登録者数
-                    $circle_member_count = $this->CircleMember->getActiveMemberCount($circle_id);
+                    $circle_member_count = $this->CircleMember->getActiveMemberCount($circle_id, false);
                     $data = [
                         'team_id'     => $team['Team']['id'],
                         'circle_id'   => $circle_id,

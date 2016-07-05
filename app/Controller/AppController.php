@@ -270,7 +270,11 @@ class AppController extends Controller
     {
         //UA情報をSessionにセット
         if (!$this->Session->read('ua')) {
-            $this->Session->write('ua', $this->getBrowser());
+            $ua = $this->getBrowser();
+            if (empty($ua['istablet']) && $ua['device_type'] == 'unknown') {
+                $ua['device_type'] = 'Desktop';
+            }
+            $this->Session->write('ua', $ua);
         }
     }
 
@@ -868,7 +872,6 @@ class AppController extends Controller
                                             rawurlencode($filename . '.csv')));
         }
         $this->response->type('application/octet-stream');
-
     }
 
     function _setSetupGuideStatus()
@@ -904,17 +907,27 @@ class AppController extends Controller
             $this->_refreshAuth($this->Auth->user('id'));
             return true;
         }
+        //set update time
+        $status_from_mysql[GlRedis::FIELD_SETUP_LAST_UPDATE_TIME] = time();
+
         $this->GlRedis->saveSetupGuideStatus($user_id, $status_from_mysql);
         return true;
+    }
+
+    function getAllSetupDataFromRedis($user_id = false)
+    {
+        $user_id = ($user_id === false) ? $this->Auth->user('id') : $user_id;
+        return $this->GlRedis->getSetupGuideStatus($user_id);
     }
 
     function getStatusWithRedisSave($user_id = false)
     {
         $user_id = ($user_id === false) ? $this->Auth->user('id') : $user_id;
-
-        $status = $this->GlRedis->getSetupGuideStatus($user_id);
+        $status = $this->getAllSetupDataFromRedis($user_id);
         if (!$status) {
             $status = $this->User->generateSetupGuideStatusDict($user_id);
+            //set update time
+            $status[GlRedis::FIELD_SETUP_LAST_UPDATE_TIME] = time();
             $this->GlRedis->saveSetupGuideStatus($user_id, $status);
 
             $status = $this->GlRedis->getSetupGuideStatus($user_id);
