@@ -342,6 +342,12 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                             ];
                                             echo $this->Form->input('term_type', $input_option);
                                         } ?>
+                                        <?php
+                                        // For editing next term goal
+                                        if (viaIsSet($this->request->data['Goal']['term_type']) === 'next') {
+                                            echo $this->Form->hidden('term_type', ['value' => 'next']);
+                                        }
+                                        ?>
                                     </div>
                                 </div>
                             </div>
