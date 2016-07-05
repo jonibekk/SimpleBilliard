@@ -42,4 +42,13 @@ class DevicesController extends AppController
             'installation_id' => $installation_id,
         ]]);
     }
+
+    public function get_version_info()
+    {
+        $this->request->allowMethod('post');
+        $user_id = $this->request->data['user_id'];
+        $installation_id = $this->request->data['installation_id'];
+        $current_version = $this->request->data['current_version'];
+
+    }
 }
