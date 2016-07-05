@@ -9,8 +9,9 @@ class DevicesController extends AppController
     public function beforeFilter()
     {
         parent::beforeFilter();
+        $allowed_actions = ['add', 'get_version_info'];
         //アプリからのPOSTではフォーム改ざんチェック用のハッシュ生成ができない為、ここで改ざんチェックを除外指定
-        if ($this->request->params['action'] === 'add') {
+        if (in_array($this->request->params['action'], $allowed_actions)) {
             $this->Security->validatePost = false;
         }
     }
@@ -30,15 +31,15 @@ class DevicesController extends AppController
         $saved = $this->NotifyBiz->saveDeviceInfo($user_id, $installation_id);
         if ($saved === false) {
             return $this->_ajaxGetResponse(['response' => [
-                'message' => 'error do not save',
-                'user_id' => $user_id,
+                'message'         => 'error do not save',
+                'user_id'         => $user_id,
                 'installation_id' => $installation_id,
             ]]);
         }
 
         return $this->_ajaxGetResponse(['response' => [
-            'message' => 'saved',
-            'user_id' => $user_id,
+            'message'         => 'saved',
+            'user_id'         => $user_id,
             'installation_id' => $installation_id,
         ]]);
     }
