@@ -15,6 +15,7 @@ end
 bash "run grunt chef" do
   code <<-EOS
   source /usr/local/nvm/nvm.sh
+  cd #{release_path}; gulp build
   EOS
 end
 
