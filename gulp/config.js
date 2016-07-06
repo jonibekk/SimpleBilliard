@@ -9,9 +9,17 @@ const config =  {
     },
     watch_files: [assets_dir + '/js/gl_basic.js']
   },
+  js_prerender: {
+    src: [
+      assets_dir + '/js/vendor/jquery-1.11.1.min.js'
+    ],
+    output: {
+      file_name: 'goalous.prerender',
+      path: assets_dir + '/js'
+    }
+  },
   js_vendor: {
     src: [
-      assets_dir + '/js/vendor/jquery-1.11.1.min.js',
       assets_dir + '/js/vendor/bootstrap.js',
       assets_dir + '/js/vendor/jasny-bootstrap.js',
       assets_dir + '/js/vendor/bootstrapValidator.js',
@@ -71,7 +79,9 @@ const config =  {
       assets_dir + '/js/vendor/angular/angular-translate-loader-static-files.js',
       assets_dir + '/js/vendor/angular/ui-bootstrap-tpls-0.13.0.js',
       assets_dir + '/js/vendor/angular/angular-pnotify.js',
-      assets_dir + '/js/vendor/angular/angular-sanitize.js'
+      assets_dir + '/js/vendor/angular/angular-sanitize.js',
+      assets_dir + '/js/vendor/angular/pusher-angular.min.js',
+      assets_dir + '/js/vendor/angular/ng-infinite-scroll.min.js',
     ],
     output: {
       file_name: 'ng_vendors',

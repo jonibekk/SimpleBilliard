@@ -17,6 +17,12 @@ gulp.task('js_vendor:clean', () => {
     .pipe(duration('js_vendor:clean'))
 })
 
+gulp.task('js_prerender:clean', () => {
+  return gulp.src([config.dest + '/js_prerender_cat'], { read: false })
+    .pipe(rimraf({ force: true }))
+    .pipe(duration('js_prerender:clean'))
+})
+
 gulp.task('angular_app:clean', () => {
   return gulp.src([config.dest + '/angular_app_cat'], { read: false })
     .pipe(rimraf({ force: true }))

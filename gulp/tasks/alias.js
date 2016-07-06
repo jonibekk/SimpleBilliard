@@ -7,7 +7,7 @@ gulp.task('build', done => {
 })
 
 gulp.task('js', done => {
-  return runSequence(['js_app', 'js_vendor', 'angular_app', 'angular_vendor', 'react_setup'], done)
+  return runSequence(['js_app', 'js_vendor', 'js_prerender', 'angular_app', 'angular_vendor', 'react_setup'], done)
 })
 
 // js app
@@ -19,6 +19,16 @@ gulp.task('js_app', done => {
     'js:concat',
     'js:uglify',
     'js:clean',
+    done
+  )
+})
+
+// js prerender
+gulp.task('js_prerender', done => {
+  return runSequence(
+    'js_prerender:concat',
+    'js_prerender:uglify',
+    'js_prerender:clean',
     done
   )
 })

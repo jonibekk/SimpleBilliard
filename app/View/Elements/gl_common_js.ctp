@@ -15,13 +15,12 @@
 ?>
 <!-- START app/View/Elements/gl_common_js.ctp -->
 <?php
+echo $this->Html->script('ng_vendors.min');
 echo $this->Html->script('vendors.min');
 echo $this->Html->script('goalous.min');
 echo $this->Html->script('ng_app.min');
-echo $this->Html->script('vendor/angular/pusher-angular.min');
-echo $this->Html->script('vendor/angular/ng-infinite-scroll.min');
-
 ?>
+
 <!--suppress JSDuplicatedDeclaration -->
 <script type="text/javascript">
     var cake = {

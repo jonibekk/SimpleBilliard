@@ -23,6 +23,14 @@ gulp.task('js_vendor:concat', () => {
     .pipe(duration('js_vendor:concat'))
 })
 
+gulp.task('js_prerender:concat', () => {
+  return gulp.src(config.js_prerender.src)
+    .pipe(plumber())
+    .pipe(concat(config.js_prerender.output.file_name + '.js'))
+    .pipe(gulp.dest(config.dest + '/js_prerender_cat'))
+    .pipe(duration('js_prerender:concat'))
+})
+
 gulp.task('angular_app:concat', () => {
   return gulp.src(config.angular_app.src)
     .pipe(plumber())

@@ -27,17 +27,12 @@
     // クリックジャッキング対策
     echo $this->Html->meta(['name' => 'X-FRA#2960ME-OPTIONS', 'content' => 'SAMEORIGIN']);
 
-    echo $this->Html->css('goalous.min', array('media' => 'screen'));
-
-    echo $this->fetch('css');
     echo $this->fetch('meta');
+    echo $this->fetch('css');
 
-    echo $this->Html->script('ng_vendors.min');
+    echo $this->Html->css('goalous.min', array('media' => 'screen'));
+    echo $this->Html->script('goalous.prerender.min');
 
-    ?>
-    <?php
-    // todo pre_load_js.ctpとしてまとめる
-    echo $this->Html->script('vendor/jquery-1.11.1.min');
     ?>
     <?php if ($this->request->params['action'] === 'display'): //上部のタブメニューの表示切替えの為?>
         <style>
