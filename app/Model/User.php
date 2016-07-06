@@ -34,9 +34,9 @@ class User extends AppModel
     /**
      * 性別タイプ
      */
-    const TYPE_GENDER_MALE = 1;
-    const TYPE_GENDER_FEMALE = 2;
-    const TYPE_GENDER_NEITHER = 3;
+    const TYPE_GENDER_MALE = '1';
+    const TYPE_GENDER_FEMALE = '2';
+    const TYPE_GENDER_NEITHER = '3';
     static public $TYPE_GENDER = [self::TYPE_GENDER_MALE => "", self::TYPE_GENDER_FEMALE => "", self::TYPE_GENDER_NEITHER => ""];
 
     /**

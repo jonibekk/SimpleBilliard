@@ -100,7 +100,7 @@ class NotifySettingFixture extends CakeTestFixtureEx
             'PRIMARY' => array('column' => 'id', 'unique' => 1),
             'user_id' => array('column' => 'user_id', 'unique' => 0)
         ),
-        'tableParameters'                                  => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+        'tableParameters'                                  => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
     );
 
     /**

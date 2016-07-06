@@ -29,7 +29,7 @@ class EvaluatorFixture extends CakeTestFixtureEx
             'evaluator_user_id' => array('column' => 'evaluator_user_id', 'unique' => 0),
             'evaluatee_user_id' => array('column' => 'evaluatee_user_id', 'unique' => 0)
         ),
-        'tableParameters'   => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+        'tableParameters'   => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
     );
 
     /**

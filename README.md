@@ -107,7 +107,14 @@ GoalousはIsao発の「最強にオープンな社内SNS」です。
 [Goalous Developers](https://github.com/orgs/IsaoCorp/teams/goalous_developers)
 
 ## Commands
-browse-sync  
+
+- Chefのアップデート
+
+```
+sh ./etc/local/update_app.sh
+```
+
+- browse-sync  
 すべてのファイル変更を検知して自動更新します。
 
 ```
