@@ -872,7 +872,6 @@ class AppController extends Controller
                                             rawurlencode($filename . '.csv')));
         }
         $this->response->type('application/octet-stream');
-
     }
 
     function _setSetupGuideStatus()
@@ -923,6 +922,7 @@ class AppController extends Controller
 
     function getStatusWithRedisSave($user_id = false)
     {
+        $user_id = ($user_id === false) ? $this->Auth->user('id') : $user_id;
         $status = $this->getAllSetupDataFromRedis($user_id);
         if (!$status) {
             $status = $this->User->generateSetupGuideStatusDict($user_id);
