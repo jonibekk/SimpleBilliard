@@ -4,35 +4,41 @@ import del from 'del'
 import runSequence from 'run-sequence'
 import duration from 'gulp-duration'
 import config from '../config.js'
+import gutil from 'gulp-util'
 
 gulp.task('js:clean', () => {
   return gulp.src([config.dest + '/js', config.dest + '/js_cat'], { read: false })
     .pipe(rimraf({ force: true }))
     .pipe(duration('js:clean'))
+    .on('end', function(){ gutil.log('----------------- js task finished --------------------------'); });
 })
 
 gulp.task('js_vendor:clean', () => {
   return gulp.src([config.dest + '/js_vendor_cat'], { read: false })
     .pipe(rimraf({ force: true }))
     .pipe(duration('js_vendor:clean'))
+    .on('end', function(){ gutil.log('----------------- js_vendor task finished --------------------------'); });
 })
 
 gulp.task('js_prerender:clean', () => {
   return gulp.src([config.dest + '/js_prerender_cat'], { read: false })
     .pipe(rimraf({ force: true }))
     .pipe(duration('js_prerender:clean'))
+    .on('end', function(){ gutil.log('----------------- js_prerender task finished --------------------------'); });
 })
 
 gulp.task('angular_app:clean', () => {
   return gulp.src([config.dest + '/angular_app_cat'], { read: false })
     .pipe(rimraf({ force: true }))
     .pipe(duration('angular_app:clean'))
+    .on('end', function(){ gutil.log('----------------- angular_app task finished --------------------------'); });
 })
 
 gulp.task('angular_vendor:clean', () => {
   return gulp.src([config.dest + '/angular_vendor_cat'], { read: false })
     .pipe(rimraf({ force: true }))
     .pipe(duration('angular_vendor:clean'))
+    .on('end', function(){ gutil.log('----------------- angular_vendor task finished --------------------------'); });
 })
 
 gulp.task('react_setup:clean', ['react_setup:clean_files', 'react_setup:clean_dir']);
@@ -45,10 +51,12 @@ gulp.task('react_setup:clean_files', () => {
 gulp.task('react_setup:clean_dir', ['react_setup:clean_files'], cb => {
   return gulp.src([config.dest + '/react_setup'], { read: false })
     .pipe(duration('react_setup:clean_dir'))
+    .on('end', function(){ gutil.log('----------------- react_setup task finished --------------------------'); });
 })
 
 gulp.task('css:clean', () => {
   return gulp.src([config.dest + '/css', config.dest + '/css_cat'], { read: false })
     .pipe(rimraf({ force: true }))
     .pipe(duration('css:clean'))
+    .on('end', function(){ gutil.log('----------------- css task finished --------------------------'); });
 })
