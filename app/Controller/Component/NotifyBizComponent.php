@@ -1580,11 +1580,12 @@ class NotifyBizComponent extends Component
         }
 
         $device_type = $ret_array['deviceType'];
-        $os_type = 99;
+        App::uses('Device', 'Model');
+        $os_type = Device::OS_TYPE_OTHER;
         if ($device_type == "android") {
-            $os_type = 1;
+            $os_type = Device::OS_TYPE_ANDROID;
         } elseif ($device_type == "ios") {
-            $os_type = 0;
+            $os_type = Device::OS_TYPE_IOS;
         }
 
         $data = [
