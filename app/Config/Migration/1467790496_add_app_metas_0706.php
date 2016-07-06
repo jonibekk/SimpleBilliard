@@ -111,6 +111,32 @@ class AddAppMetas0706 extends CakeMigration
      */
     public function after($direction)
     {
+        if($direction == 'up'){
+            //insert default records
+            /**
+             * @var AppMeta $AppMeta
+             */
+            $AppMeta = ClassRegistry::init('AppMeta');
+            $AppMeta->saveAll([
+                [
+                    'key_name' => 'iOS_version',
+                    'value'    => '1.0.0',
+                ],
+                [
+                    'key_name' => 'iOS_install_url',
+                    'value'    => 'https://itunes.apple.com/jp/app/goalous-business-sns/id1060474459?l=en&mt=8',
+                ],
+                [
+                    'key_name' => 'android_version',
+                    'value'    => '1.0.0',
+                ],
+                [
+                    'key_name' => 'android_install_url',
+                    'value'    => 'https://play.google.com/store/apps/details?id=jp.co.isao.android.goalous&hl=ja',
+                ],
+            ]);
+        }
+
         return true;
     }
 }
