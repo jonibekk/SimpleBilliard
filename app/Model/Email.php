@@ -143,6 +143,7 @@ class Email extends AppModel
         $options = [
             'conditions' => [
                 'Email.email' => $emails,
+                'Email.email_verified' => 1,
             ],
             'fields'     => ['user_id', 'email'],
             'contain'    => [

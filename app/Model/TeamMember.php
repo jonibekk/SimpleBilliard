@@ -68,8 +68,10 @@ class TeamMember extends AppModel
     public $csv_datas = [];
     private $csv_emails = [];
     private $csv_member_ids = [];
+    private $csv_group_member_ids = [];
     private $csv_coach_ids = [];
     private $csv_evaluator_ids = [];
+    private $csv_existing_evaluator_ids = [];
     private $all_users = [];
     private $evaluations = [];
     private $active_member_list = [];
@@ -870,24 +872,52 @@ class TeamMember extends AppModel
         if ($validate['error']) {
             return array_merge($res, $validate);
         }
+
         //save process
 
         /**
          * グループ登録処理
          * グループが既に存在すれば、存在するIdをセット。でなければ、グループを新規登録し、IDをセット
          */
+        $this->log('full:=');
+        $this->log($this->csv_datas);
         foreach ($this->csv_datas as $row_k => $row_v) {
+            // fetching the all joined group members list
+            $member_group_ids = $this->User->MemberGroup->getAllGroupMemberIds($this->current_team_id, $row_v['User']['id']);
+
+            $this->csv_group_member_ids = [];
             if (viaIsSet($row_v['Group'])) {
                 foreach ($row_v['Group'] as $k => $v) {
                     $group = $this->User->MemberGroup->Group->getByNameIfNotExistsSave($v);
-                    $this->csv_datas[$row_k]['MemberGroup'][] = [
-                        'group_id'  => $group['Group']['id'],
-                        'index_num' => $k
-                    ];
+
+                    // if user with same team and group exists then don't need to insert again
+                    $group_member = $this->User->MemberGroup->getGroupMemberId($this->current_team_id,
+                                                                              $row_v['User']['id'], $group['Group']['id']);
+                    $this->csv_group_member_ids[] = $group_member['MemberGroup']['id'];
+
+                    if(empty($group_member)) {
+                        $this->csv_datas[$row_k]['MemberGroup'][] = [
+                            'group_id'  => $group['Group']['id'],
+                            'index_num' => $k
+                        ];
+                    }
                 }
                 unset($this->csv_datas[$row_k]['Group']);
+            } else {
+                foreach($member_group_ids as $member_group_id) {
+                    $this->User->MemberGroup->delete($member_group_id);
+                }
+            }
+
+            // delete extra records from member group table
+            if (!empty($this->csv_group_member_ids)) {
+                $ids_to_be_delete = array_diff($member_group_ids, $this->csv_group_member_ids);
+                foreach ($ids_to_be_delete as $member_group_id) {
+                    $this->User->MemberGroup->delete($member_group_id);
+                }
             }
         }
+//        $this->log($this->csv_datas);
         /**
          * メンバータイプ
          * メンバータイプを検索し、存在すればIDをセット。でなければメンバータイプを新規登録し、IDをセット
@@ -908,13 +938,21 @@ class TeamMember extends AppModel
         foreach ($this->csv_datas as $row_k => $row_v) {
             //メアド存在確認
             $user = $this->User->getUserByEmail($row_v['Email']['email']);
+
             if (viaIsSet($user['User'])) {
                 $this->csv_datas[$row_k]['Email'] = $user['Email'];
                 //ユーザが存在した場合は、ユーザ情報を書き換える。User,LocalName
                 $user['User'] = array_merge($user['User'], $row_v['User']);
+                // if no_pass_flg true, don't update password
+                if ($user['User']['no_pass_flg'] == 1) {
+                    unset($user['User']['password']);
+                }
+
                 // 意図しないカラムの更新を防ぐために、明示的に更新するカラムを指定する
                 $user_update_fields = array_keys($user['User']);
-                $user = $this->User->save($user['User'], true, $user_update_fields);
+
+                $this->User->save($user['User'], true, $user_update_fields);
+                $this->log($this->User->validationErrors);
             }
             else {
                 //なければ、ユーザ情報(User,Email)を登録。
@@ -923,28 +961,35 @@ class TeamMember extends AppModel
                 $row_v['User']['no_pass_flg'] = true;
                 $row_v['User']['default_team_id'] = $this->current_team_id;
                 $row_v['User']['language'] = viaIsSet($row_v['LocalName']['language']) ? $row_v['LocalName']['language'] : 'eng';
+
+                $this->log('USER:=');
+
                 $user = $this->User->save($row_v['User']);
+                $this->log($this->User->validationErrors);
                 $row_v['Email']['user_id'] = $user['User']['id'];
                 //create Email
                 $this->User->Email->create();
                 $email = $this->User->Email->save($row_v['Email']);
+
+
                 $this->csv_datas[$row_k]['Email'] = $email['Email'];
                 $user['User']['primary_email_id'] = $email['Email']['id'];
                 $this->User->id = $user['User']['id'];
+
                 $this->User->saveField('primary_email_id', $email['Email']['id']);
             }
             $this->csv_datas[$row_k]['User'] = $user['User'];
 
             //LocalName
             if (viaIsSet($row_v['LocalName'])) {
-                //save LocalName
+                //save LocalName (if only lang update)
                 $options = [
                     'conditions' => [
-                        'user_id'  => $user['User']['id'],
-                        'language' => $row_v['LocalName']['language']
+                        'user_id'  => $user['User']['id']
                     ]
                 ];
                 $local_name = $this->User->LocalName->find('first', $options);
+
                 if (viaIsSet($local_name['LocalName'])) {
                     $local_name['LocalName'] = array_merge($local_name['LocalName'], $row_v['LocalName']);
                     $local_name = $this->User->LocalName->save($local_name);
@@ -956,6 +1001,11 @@ class TeamMember extends AppModel
                 }
 
                 $this->csv_datas[$row_k]['LocalName'] = $local_name['LocalName'];
+            } else {
+                $exists_local_name = $this->User->LocalName->findByUserId($user['User']['id']);
+                if (!empty($exists_local_name)) {
+                    $this->User->LocalName->delete($exists_local_name['LocalName']['id']);
+                }
             }
 
             //MemberGroupの登録
@@ -986,6 +1036,7 @@ class TeamMember extends AppModel
                     'team_id'   => $this->current_team_id,
                     'user_id'   => $user['User']['id'],
                 ];
+
                 $this->Team->Circle->CircleMember->create();
                 $this->Team->Circle->CircleMember->save($row);
             }
@@ -1012,17 +1063,46 @@ class TeamMember extends AppModel
          */
         $save_evaluator_data = [];
         foreach ($this->csv_datas as $row_k => $row_v) {
+            // all existing evaluator records
+            $existing_evaluator_ids = $this->Team->Evaluator->getExistingEvaluatorsIds($this->current_team_id, $row_v['User']['id']);
+
             if (!viaIsSet($row_v['Evaluator'])) {
+                foreach($existing_evaluator_ids as $existing_evaluator_id) {
+                    $this->Team->Evaluator->delete($existing_evaluator_id);
+                }
                 continue;
             }
             foreach ($row_v['Evaluator'] as $r_k => $r_v) {
                 if ($evaluator_team_member = $this->getByMemberNo($r_v)) {
-                    $save_evaluator_data[] = [
-                        'index_num'         => $r_k,
-                        'team_id'           => $this->current_team_id,
-                        'evaluatee_user_id' => $row_v['User']['id'],
-                        'evaluator_user_id' => $evaluator_team_member['TeamMember']['user_id'],
+                    // check if already exists then don't need to insert again
+                    $options = [
+                        'conditions' => [
+                            'team_id' => $this->current_team_id,
+                            'evaluatee_user_id' => $row_v['User']['id'],
+                            'evaluator_user_id' => $evaluator_team_member['TeamMember']['user_id'],
+                        ]
                     ];
+                    $existing_evaluator = $this->Team->Evaluator->find('first', $options);
+
+                    if (empty($existing_evaluator)) {
+                        $save_evaluator_data[] = [
+                            'index_num'         => $r_k,
+                            'team_id'           => $this->current_team_id,
+                            'evaluatee_user_id' => $row_v['User']['id'],
+                            'evaluator_user_id' => $evaluator_team_member['TeamMember']['user_id'],
+                        ];
+                    } else {
+                        $this->csv_existing_evaluator_ids[] = $existing_evaluator['Evaluator']['id'];
+                    }
+
+                }
+            }
+
+            // delete extra old records from evaluator table
+            if (!empty($this->csv_existing_evaluator_ids)) {
+                $ids_to_be_delete = array_diff($existing_evaluator_ids, $this->csv_existing_evaluator_ids);
+                foreach ($ids_to_be_delete as $existing_evaluator_id) {
+                    $this->Team->Evaluator->delete($existing_evaluator_id);
                 }
             }
         }
@@ -1323,6 +1403,20 @@ class TeamMember extends AppModel
             $this->csv_emails[] = $row['email'];
             $this->csv_datas[$key]['Email'] = ['email' => $row['email']];
 
+            // add flg which records to be update
+            $options = [
+                'fields'     => ['email', 'id', 'to_user_id', 'email_token_expires'],
+                'conditions' => [
+                    'email' => $row['email'],
+                    'team_id' => $this->current_team_id,
+                    'email_verified' => 0
+                ]
+            ];
+            $checkInvite = $this->Team->Invite->find('first', $options);
+            if (!empty($checkInvite['Invite'])) {
+                $this->csv_datas[$key]['User']['id'] = $checkInvite['Invite']['to_user_id'];
+            }
+
             //exists member id check(after check)
             $this->csv_member_ids[] = $row['member_no'];
             $this->csv_datas[$key]['TeamMember']['member_no'] = $row['member_no'];
@@ -1330,23 +1424,41 @@ class TeamMember extends AppModel
             $this->csv_datas[$key]['User']['last_name'] = $row['last_name'];
             $this->csv_datas[$key]['TeamMember']['admin_flg'] = strtolower($row['admin_flg']) === 'on' ? true : false;
             $this->csv_datas[$key]['TeamMember']['evaluation_enable_flg'] = strtolower($row['evaluation_enable_flg']) === 'on' ? true : false;
+
+            // for coach id set null if not set
+            if (!viaIsSet($row['coach_member_no'])) {
+                $this->csv_datas[$key]['TeamMember']['coach_user_id'] = null;
+            }
+
             if (viaIsSet($row['member_type'])) {
                 $this->csv_datas[$key]['MemberType']['name'] = $row['member_type'];
+            } else {
+                $this->csv_datas[$key]['TeamMember']['member_type_id'] = null;
             }
+
             if (viaIsSet($row['language']) && viaIsSet($row['local_first_name']) && viaIsSet($row['local_last_name'])) {
                 $this->csv_datas[$key]['LocalName']['language'] = $row['language'];
                 $this->csv_datas[$key]['LocalName']['first_name'] = $row['local_first_name'];
                 $this->csv_datas[$key]['LocalName']['last_name'] = $row['local_last_name'];
             }
+
             if (viaIsSet($row['phone_no'])) {
                 $this->csv_datas[$key]['User']['phone_no'] = str_replace(["-", "(", ")"], '', $row['phone_no']);
+            } else {
+                $this->csv_datas[$key]['User']['phone_no'] = null;
             }
+
             if (viaIsSet($row['gender'])) {
                 $this->csv_datas[$key]['User']['gender_type'] = $row['gender'] === 'male' ? User::TYPE_GENDER_MALE : User::TYPE_GENDER_FEMALE;
+            } else {
+                $this->csv_datas[$key]['User']['gender_type'] = null;
             }
+
             //[12]Birth Year
             if (viaIsSet($row['birth_year']) && viaIsSet($row['birth_month']) && viaIsSet($row['birth_day'])) {
                 $this->csv_datas[$key]['User']['birth_day'] = $row['birth_year'] . '/' . $row['birth_month'] . '/' . $row['birth_day'];
+            } else {
+                $this->csv_datas[$key]['User']['birth_day'] = null;
             }
 
             //[15]-[21]Group
@@ -1403,21 +1515,48 @@ class TeamMember extends AppModel
             return $res;
         }
 
+
         //exists member id check
         $members = $this->find('all',
                                [
                                    'conditions' => ['team_id' => $this->current_team_id, 'member_no' => $this->csv_member_ids],
-                                   'fields'     => ['member_no']
+                                   'fields'     => ['member_no', 'user_id', 'id']
                                ]
         );
-        if (viaIsSet($members[0]['TeamMember']['member_no'])) {
-            $res['error_line_no'] = array_search($members[0]['TeamMember']['member_no'], $this->csv_member_ids) + 2;
-            $res['error_msg'] = __("This Member ID is found in this team.");
-            return $res;
+
+        if (!empty($members)) {
+            foreach ($members as $member) {
+                foreach ($this->csv_datas as $csv_data_key => $this_csv_data) {
+                    if ($member['TeamMember']['member_no'] == $this_csv_data['TeamMember']['member_no']) {
+                        if (!empty($this_csv_data['User']['id']) && $member['TeamMember']['user_id'] ==
+                                                                        $this_csv_data['User']['id']) {
+                            $this->csv_datas[$csv_data_key]['TeamMember']['id'] = $member['TeamMember']['id'];
+                            $this->csv_datas[$csv_data_key]['TeamMember']['user_id'] = $member['TeamMember']['user_id'];
+                        } else {
+                            $res['error_line_no'] = array_search($member['TeamMember']['member_no'],
+                                                                 $this->csv_member_ids) + 2;
+                            $res['error_msg'] = __("This Member ID is found in this team.");
+                            return $res;
+                        }
+                    }
+                }
+            }
+        } else {
+            foreach ($this->csv_datas as $csv_data_key => $this_csv_data) {
+                $this->log('no mem no');
+                $this->log($this->csv_datas);
+                $member = $this->findByUserId($this_csv_data['User']['id']);
+                $this->log($member);
+                $this->csv_datas[$csv_data_key]['TeamMember']['id'] = $member['TeamMember']['id'];
+                $this->csv_datas[$csv_data_key]['TeamMember']['user_id'] = $member['TeamMember']['user_id'];
+            }
         }
+
+
 
         //coach id check
         $this->csv_coach_ids = array_filter($this->csv_coach_ids, "strlen");
+
         //Coach ID must be already been registered or must be included in the member ID
         //First check coach ID whether registered
         $exists_coach_ids = $this->find('all',
