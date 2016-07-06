@@ -27,32 +27,6 @@
     // クリックジャッキング対策
     echo $this->Html->meta(['name' => 'X-FRA#2960ME-OPTIONS', 'content' => 'SAMEORIGIN']);
 
-    //    echo $this->Html->css('bw-simplex.min', array('media' => 'screen'));
-    //    echo $this->Html->css('bw-simplex', array('media' => 'screen'));
-
-    echo $this->Html->css('release.min');
-
-/* gruntタスク化
-    echo $this->Html->css('goalstrap', array('media' => 'screen'));
-    echo $this->Html->css('jasny-bootstrap.min');
-    echo $this->Html->css('font-awesome.min');
-    echo $this->Html->css('jquery.nailthumb.1.1');
-    echo $this->Html->css('bootstrapValidator.min');
-    echo $this->Html->css('bootstrap-switch.min');
-    echo $this->Html->css('pnotify.custom.min');
-    echo $this->Html->css('lightbox');
-    echo $this->Html->css('showmore');
-    echo $this->Html->css('bootstrap-ext-col');
-    echo $this->Html->css('customRadioCheck.min');
-    echo $this->Html->css('select2');
-    echo $this->Html->css('select2-bootstrap');
-    echo $this->Html->css('bootstrap-ext-col');
-    echo $this->Html->css('datepicker3');
-    echo $this->Html->css('style', array('media' => 'screen'));
-    echo $this->Html->css('nav');
-    echo $this->Html->css('nav_media');
-*/
-
     echo $this->Html->css('goalous.min', array('media' => 'screen'));
 
     echo $this->fetch('css');

@@ -3,6 +3,8 @@ import plumber from 'gulp-plumber'
 import concat from 'gulp-concat'
 import autoprefixer from 'gulp-autoprefixer'
 import duration from 'gulp-duration'
+import ngAnnotate from 'gulp-ng-annotate'
+import tap from 'gulp-tap'
 import config from '../config.js'
 
 gulp.task('js:concat', () => {
@@ -24,6 +26,11 @@ gulp.task('js_vendor:concat', () => {
 gulp.task('angular_app:concat', () => {
   return gulp.src(config.angular_app.src)
     .pipe(plumber())
+    .pipe(ngAnnotate({
+      remove: true,
+      add: true,
+      single_quotes: true
+    }))
     .pipe(concat(config.angular_app.output.file_name + '.js'))
     .pipe(gulp.dest(config.dest + '/angular_app_cat'))
     .pipe(duration('angular_app:concat'))
