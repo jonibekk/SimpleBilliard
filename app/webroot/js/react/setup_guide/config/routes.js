@@ -74,6 +74,7 @@ export default class Routes extends Component {
           <Router history={history}>
             <Route path="/setup" component={Index} >
               <IndexRoute component={TopContainer} />
+              <Route path="top" component={TopContainer} />
               <Route path="goal" component={GoalContainer} >
                 <IndexRoute component={GoalImageContainer} />
                 <Route path="image" component={GoalImageContainer} />

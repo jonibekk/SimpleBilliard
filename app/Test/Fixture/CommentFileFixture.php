@@ -27,7 +27,7 @@ class CommentFileFixture extends CakeTestFixtureEx
             'team_id'          => array('column' => 'team_id', 'unique' => 0),
             'attached_file_id' => array('column' => 'attached_file_id', 'unique' => 0)
         ),
-        'tableParameters'  => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
+        'tableParameters'  => array('charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB')
     );
 
     /**
