@@ -2,7 +2,7 @@ import gulp from 'gulp'
 import runSequence from 'run-sequence'
 import config from '../config.js'
 
-gulp.task('all', done => {
+gulp.task('build', done => {
   return runSequence(['js', 'css'], done)
 })
 
@@ -13,6 +13,7 @@ gulp.task('js', done => {
 // js app
 gulp.task('js_app', done => {
   return runSequence(
+    'js:eslint',
     'js:coffeelint',
     'js:coffee',
     'js:concat',
@@ -55,6 +56,7 @@ gulp.task('angular_vendor', done => {
 // react
 gulp.task('react_setup', done => {
   return runSequence(
+    'react_setup:eslint',
     'react_setup:browserify',
     'react_setup:uglify',
     'react_setup:clean',
@@ -65,6 +67,7 @@ gulp.task('react_setup', done => {
 // css
 gulp.task('css', done => {
   return runSequence(
+    'css:lesshint',
     'css:less',
     'css:concat',
     'css:minify',
