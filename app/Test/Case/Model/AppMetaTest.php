@@ -39,5 +39,10 @@ class AppMetaTest extends GoalousTestCase
 
         parent::tearDown();
     }
+    
+    function testDummy()
+    {
+        
+    }
 
 }
