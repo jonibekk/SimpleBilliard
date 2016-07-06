@@ -93,12 +93,12 @@ class NotifyBizComponent extends Component
         $settings = $this->NotifySetting->getUserNotifySetting($user_id, NotifySetting::TYPE_SETUP_GUIDE);
 
         // Send by mail
-        if($user_allow_send_mail = $settings[$user_id]['email']) {
+        if ($user_allow_send_mail = $settings[$user_id]['email']) {
             $this->GlEmail->sendMailSetup($user_id, $messages['mail'], null);
         }
 
         // Send by push notification
-        if($user_allow_push_mobile_notify = $settings[$user_id]['mobile']) {
+        if ($user_allow_push_mobile_notify = $settings[$user_id]['mobile']) {
             $this->notify_settings = [$user_id => ['mobile' => true]];
             $this->notify_option['url'] = $urls['push'];
             $this->notify_option['message'] = $messages['push'];
@@ -130,11 +130,11 @@ class NotifyBizComponent extends Component
                 break;
             case NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST:
                 $this->_setFeedCommentedOnMineOption(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST, $model_id,
-                                                     $sub_model_id);
+                    $sub_model_id);
                 break;
             case NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST:
                 $this->_setFeedCommentedOnMyCommentedOption(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST,
-                                                            $model_id, $sub_model_id);
+                    $model_id, $sub_model_id);
                 break;
             case NotifySetting::TYPE_CIRCLE_USER_JOIN:
                 $this->_setCircleUserJoinOption($model_id);
@@ -188,11 +188,11 @@ class NotifyBizComponent extends Component
                 break;
             case NotifySetting::TYPE_FEED_COMMENTED_ON_MY_ACTION:
                 $this->_setFeedCommentedOnMineOption(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_ACTION, $model_id,
-                                                     $sub_model_id);
+                    $sub_model_id);
                 break;
             case NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION:
                 $this->_setFeedCommentedOnMyCommentedOption(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION,
-                                                            $model_id, $sub_model_id);
+                    $model_id, $sub_model_id);
                 break;
             case NotifySetting::TYPE_FEED_CAN_SEE_ACTION:
                 $this->_setFeedActionOption($model_id);
@@ -231,18 +231,15 @@ class NotifyBizComponent extends Component
         // アクション投稿のケース
         if (strpos($share, "goal") !== false) {
             $feedType = "goal";
-        }
-        // サークル投稿のケース
+        } // サークル投稿のケース
         else {
             if (strpos($share, "circle") !== false) {
                 $feedType = $share;
                 // ユーザー向け投稿のケース
-            }
-            else {
+            } else {
                 if (strpos($share, "user") !== false) {
                     $feedType = "all";
-                }
-                // その他
+                } // その他
                 else {
                     $channelName = "team_all_" . $teamId;
                     $feedType = "all";
@@ -284,8 +281,7 @@ class NotifyBizComponent extends Component
         }
         if ($channel_type == self::PUSHER_CHANNEL_TYPE_ALL_TEAM) {
             $this->push_channels[] = $channel_type . '_' . $this->NotifySetting->current_team_id;
-        }
-        else {
+        } else {
             foreach ($item_ids as $id) {
                 $this->push_channels[] = $channel_type . '_' . $id . '_team_' . $this->NotifySetting->current_team_id;
             }
@@ -423,9 +419,13 @@ class NotifyBizComponent extends Component
 
         //対象ユーザの通知設定確認
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($members,
-                                                                            NotifySetting::TYPE_FEED_POST);
+            NotifySetting::TYPE_FEED_POST);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_POST;
-        $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
+        $this->notify_option['url_data'] = [
+            'controller' => 'posts',
+            'action'     => 'feed',
+            'post_id'    => $post['Post']['id']
+        ];
         $this->notify_option['model_id'] = null;
         $this->notify_option['item_name'] = !empty($post['Post']['body']) ?
             json_encode([trim($post['Post']['body'])]) : null;
@@ -467,7 +467,7 @@ class NotifyBizComponent extends Component
 
         //対象ユーザの通知設定確認
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($members,
-                                                                            NotifySetting::TYPE_FEED_MESSAGE);
+            NotifySetting::TYPE_FEED_MESSAGE);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_MESSAGE;
         $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'message#', $post['Post']['id']];
         $this->notify_option['model_id'] = null;
@@ -496,9 +496,13 @@ class NotifyBizComponent extends Component
 
         //対象ユーザの通知設定確認
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($invite['FromUser']['id'],
-                                                                            NotifySetting::TYPE_USER_JOINED_TO_INVITED_TEAM);
+            NotifySetting::TYPE_USER_JOINED_TO_INVITED_TEAM);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_USER_JOINED_TO_INVITED_TEAM;
-        $this->notify_option['url_data'] = ['controller' => 'users', 'action' => 'view_info', 'user_id' => $invite['ToUser']['id']];
+        $this->notify_option['url_data'] = [
+            'controller' => 'users',
+            'action'     => 'view_info',
+            'user_id'    => $invite['ToUser']['id']
+        ];
         $this->notify_option['model_id'] = null;
         $this->notify_option['item_name'] = json_encode([$invite['Team']['name']]);
         $this->setBellPushChannels(self::PUSHER_CHANNEL_TYPE_USER, $invite['FromUser']['id']);
@@ -536,9 +540,13 @@ class NotifyBizComponent extends Component
 
         //対象ユーザの通知設定確認
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($members,
-                                                                            NotifySetting::TYPE_FEED_CAN_SEE_ACTION);
+            NotifySetting::TYPE_FEED_CAN_SEE_ACTION);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_FEED_CAN_SEE_ACTION;
-        $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
+        $this->notify_option['url_data'] = [
+            'controller' => 'posts',
+            'action'     => 'feed',
+            'post_id'    => $post['Post']['id']
+        ];
         $this->notify_option['model_id'] = null;
         $this->notify_option['item_name'] = !empty($action['ActionResult']['name']) ?
             json_encode([trim($action['ActionResult']['name'])]) : null;
@@ -569,7 +577,7 @@ class NotifyBizComponent extends Component
         }
         //サークルメンバーの通知設定
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($circle_member_list,
-                                                                            NotifySetting::TYPE_CIRCLE_USER_JOIN);
+            NotifySetting::TYPE_CIRCLE_USER_JOIN);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_CIRCLE_USER_JOIN;
         //通知先ユーザ分を-1
         $this->notify_option['count_num'] = count($circle_member_list);
@@ -602,7 +610,7 @@ class NotifyBizComponent extends Component
         $privacy_name = Circle::$TYPE_PUBLIC[$circle['Circle']['public_flg']];
         //サークルメンバーの通知設定
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($circle_member_list,
-                                                                            NotifySetting::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING);
+            NotifySetting::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING;
         $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle_id];
         $this->notify_option['model_id'] = $circle_id;
@@ -631,7 +639,7 @@ class NotifyBizComponent extends Component
         }
         //対象ユーザの通知設定
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($user_id,
-                                                                            NotifySetting::TYPE_CIRCLE_ADD_USER);
+            NotifySetting::TYPE_CIRCLE_ADD_USER);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_CIRCLE_ADD_USER;
         $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle_id];
         $this->notify_option['model_id'] = $circle_id;
@@ -655,7 +663,7 @@ class NotifyBizComponent extends Component
         $collaborators = array_intersect($collaborators, $this->Team->TeamMember->getActiveTeamMembersList());
         //対象ユーザの通知設定
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($collaborators,
-                                                                            NotifySetting::TYPE_MY_GOAL_FOLLOW);
+            NotifySetting::TYPE_MY_GOAL_FOLLOW);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_MY_GOAL_FOLLOW;
         $this->notify_option['url_data'] = ['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal_id];
         $this->notify_option['model_id'] = $goal_id;
@@ -683,7 +691,7 @@ class NotifyBizComponent extends Component
         unset($collaborators[$user_id]);
         //対象ユーザの通知設定
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($collaborators,
-                                                                            NotifySetting::TYPE_MY_GOAL_COLLABORATE);
+            NotifySetting::TYPE_MY_GOAL_COLLABORATE);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_MY_GOAL_COLLABORATE;
         $this->notify_option['url_data'] = ['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal_id];
         $this->notify_option['model_id'] = $goal_id;
@@ -714,7 +722,7 @@ class NotifyBizComponent extends Component
         }
         //対象ユーザの通知設定
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($collaborators,
-                                                                            NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER);
+            NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER);
         $this->notify_option['notify_type'] = NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER;
         $this->notify_option['url_data'] = ['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal_id];
         $this->notify_option['model_id'] = $goal_id;
@@ -754,9 +762,12 @@ class NotifyBizComponent extends Component
         ];
         if (in_array($notify_type, $go_to_goal)) {
             $url = ['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal_id];
-        }
-        else {
-            $url = ['controller' => 'goal_approval', 'action' => $action, 'team_id' => $this->NotifySetting->current_team_id];
+        } else {
+            $url = [
+                'controller' => 'goal_approval',
+                'action'     => $action,
+                'team_id'    => $this->NotifySetting->current_team_id
+            ];
         }
         $this->notify_option['notify_type'] = $notify_type;
         $this->notify_option['url_data'] = $url;
@@ -780,14 +791,16 @@ class NotifyBizComponent extends Component
         }
         //対象ユーザの通知設定
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($evaluation['Evaluation']['evaluator_user_id'],
-                                                                            NotifySetting::TYPE_EVALUATION_CAN_AS_EVALUATOR);
+            NotifySetting::TYPE_EVALUATION_CAN_AS_EVALUATOR);
         $evaluatee = $this->Goal->User->getUsersProf($evaluation['Evaluation']['evaluatee_user_id']);
 
-        $url = ['controller'       => 'evaluations',
-                'action'           => 'view',
-                'evaluate_term_id' => $evaluation['Evaluation']['evaluate_term_id'],
-                'user_id'          => $evaluation['Evaluation']['evaluatee_user_id'],
-                'team_id'          => $this->NotifySetting->current_team_id];
+        $url = [
+            'controller'       => 'evaluations',
+            'action'           => 'view',
+            'evaluate_term_id' => $evaluation['Evaluation']['evaluate_term_id'],
+            'user_id'          => $evaluation['Evaluation']['evaluatee_user_id'],
+            'team_id'          => $this->NotifySetting->current_team_id
+        ];
 
         $this->notify_option['from_user_id'] = null;
         $this->notify_option['notify_type'] = NotifySetting::TYPE_EVALUATION_CAN_AS_EVALUATOR;
@@ -817,12 +830,14 @@ class NotifyBizComponent extends Component
         }
         //対象ユーザの通知設定
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($to_user_ids,
-                                                                            $notify_type);
+            $notify_type);
 
-        $notify_list_url = ['controller' => 'evaluations',
-                            'action'     => 'index',
-                            'term'       => 'present',
-                            'team_id'    => $this->NotifySetting->current_team_id];
+        $notify_list_url = [
+            'controller' => 'evaluations',
+            'action'     => 'index',
+            'term'       => 'present',
+            'team_id'    => $this->NotifySetting->current_team_id
+        ];
 
         /** @noinspection PhpUndefinedMethodInspection */
         $team_name = $this->Goal->Team->findById($this->NotifySetting->current_team_id);
@@ -851,7 +866,7 @@ class NotifyBizComponent extends Component
         }
         //exclude inactive users
         $commented_user_list = array_intersect($commented_user_list,
-                                               $this->Team->TeamMember->getActiveTeamMembersList());
+            $this->Team->TeamMember->getActiveTeamMembersList());
         $post = $this->Post->findById($post_id);
         if (empty($post)) {
             return;
@@ -863,12 +878,16 @@ class NotifyBizComponent extends Component
         }
         //通知対象者の通知設定確認
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($commented_user_list,
-                                                                            $notify_type);
+            $notify_type);
         $comment = $this->Post->Comment->read(null, $comment_id);
 
         $this->notify_option['notify_type'] = $notify_type;
         $this->notify_option['count_num'] = count($commented_user_list);
-        $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
+        $this->notify_option['url_data'] = [
+            'controller' => 'posts',
+            'action'     => 'feed',
+            'post_id'    => $post['Post']['id']
+        ];
         $this->notify_option['model_id'] = $post_id;
         $this->notify_option['item_name'] = !empty($comment) ?
             json_encode([trim($comment['Comment']['body'])]) : null;
@@ -900,14 +919,18 @@ class NotifyBizComponent extends Component
         }
         //通知対象者の通知設定確認
         $this->notify_settings = $this->NotifySetting->getUserNotifySetting($post['Post']['user_id'],
-                                                                            $notify_type);
+            $notify_type);
         $comment = $this->Post->Comment->read(null, $comment_id);
 
         $this->notify_option['to_user_id'] = $post['Post']['user_id'];
         $this->notify_option['notify_type'] = $notify_type;
         $this->notify_option['count_num'] = $this->Post->Comment->getCountCommentUniqueUser($post_id,
-                                                                                            [$post['Post']['user_id']]);
-        $this->notify_option['url_data'] = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']];
+            [$post['Post']['user_id']]);
+        $this->notify_option['url_data'] = [
+            'controller' => 'posts',
+            'action'     => 'feed',
+            'post_id'    => $post['Post']['id']
+        ];
         $this->notify_option['model_id'] = $post_id;
         $this->notify_option['item_name'] = !empty($comment) ?
             json_encode([trim($comment['Comment']['body'])]) : null;
@@ -948,8 +971,7 @@ class NotifyBizComponent extends Component
         $flag_name = $this->NotifySetting->getFlagPrefixByType($this->notify_option['notify_type']) . '_app_flg';
         if ($this->notify_option['notify_type'] == NotifySetting::TYPE_FEED_MESSAGE) {
             $this->msgNotifyPush($this->notify_option['from_user_id'], $flag_name, $this->notify_option['post_id']);
-        }
-        else {
+        } else {
             $this->bellPush($this->notify_option['from_user_id'], $flag_name);
         }
         return true;
@@ -1010,11 +1032,13 @@ class NotifyBizComponent extends Component
             'Content-Type: application/json'
         );
 
-        $options = array('http' => array(
-            'ignore_errors' => true,    // APIリクエストの結果がエラーでもレスポンスボディを取得する
-            'max_redirects' => 0,       // リダイレクトはしない
-            'method'        => NCMB_REST_API_PUSH_METHOD
-        ));
+        $options = array(
+            'http' => array(
+                'ignore_errors' => true,    // APIリクエストの結果がエラーでもレスポンスボディを取得する
+                'max_redirects' => 0,       // リダイレクトはしない
+                'method'        => NCMB_REST_API_PUSH_METHOD
+            )
+        );
 
         $uids = $this->_getSendMobileNotifyUserList();
         if (empty($uids)) {
@@ -1027,8 +1051,7 @@ class NotifyBizComponent extends Component
         $post_url = null;
         if (viaIsSet($this->notify_option['url'])) {
             $post_url = $this->notify_option['url'];
-        }
-        else {
+        } else {
             $post_url = Router::url($this->notify_option['url_data'], true);
         }
 
@@ -1058,13 +1081,12 @@ class NotifyBizComponent extends Component
             $title = "";
             if (isset($this->notify_option['message'])) {
                 $title = $this->notify_option['message'];
-            }
-            else {
+            } else {
                 $title = $this->NotifySetting->getTitle($this->notify_option['notify_type'],
-                                                        $from_user_name,
-                                                        1,
-                                                        $this->notify_option['item_name'],
-                                                        $this->notify_option['options']);
+                    $from_user_name,
+                    1,
+                    $this->notify_option['item_name'],
+                    $this->notify_option['options']);
 
                 //メッセージの場合は本文も出ていたほうがいいので出してみる
                 $item_name = json_decode($this->notify_option['item_name']);
@@ -1109,8 +1131,7 @@ class NotifyBizComponent extends Component
         $to_user = $this->NotifySetting->User->getProfileAndEmail($user_id);
         if (isset($to_user['User']['language'])) {
             $lang = $to_user['User']['language'];
-        }
-        else {
+        } else {
             $lang = $default_lang;
         }
         $this->_setLang($lang);
@@ -1157,8 +1178,13 @@ class NotifyBizComponent extends Component
      *
      * @return string X-NCMB-SIGNATUREの値
      */
-    private function _getNCMBSignature($timestamp, $method = null, $path = null, $app_key = NCMB_APPLICATION_KEY, $client_key = NCMB_CLIENT_KEY)
-    {
+    private function _getNCMBSignature(
+        $timestamp,
+        $method = null,
+        $path = null,
+        $app_key = NCMB_APPLICATION_KEY,
+        $client_key = NCMB_CLIENT_KEY
+    ) {
         $header_string = "SignatureMethod=HmacSHA256&";
         $header_string .= "SignatureVersion=2&";
         $header_string .= "X-NCMB-Application-Key=" . $app_key . "&";
@@ -1168,8 +1194,7 @@ class NotifyBizComponent extends Component
         $signature_string .= NCMB_REST_API_FQDN . "\n";
         if ($path) {
             $signature_string .= $path . "\n";
-        }
-        else {
+        } else {
             $signature_string .= "/" . NCMB_REST_API_VER . "/" . NCMB_REST_API_PUSH . "\n";
         }
         $signature_string .= $header_string;
@@ -1293,10 +1318,10 @@ class NotifyBizComponent extends Component
             }
             //get title
             $title = $this->NotifySetting->getTitle($data[$k]['Notification']['type'],
-                                                    $user_name, 1,
-                                                    $data[$k]['Notification']['body'],
-                                                    array_merge($data[$k]['Notification']['options'],
-                                                                ['from_user_id' => $user_id]));
+                $user_name, 1,
+                $data[$k]['Notification']['body'],
+                array_merge($data[$k]['Notification']['options'],
+                    ['from_user_id' => $user_id]));
             $data[$k]['Notification']['title'] = $title;
         }
         return $data;
@@ -1372,8 +1397,8 @@ class NotifyBizComponent extends Component
             }
             //get title
             $title = $this->NotifySetting->getTitle($data[$k]['Notification']['type'],
-                                                    $user_name, $to_user_count,
-                                                    $data[$k]['Notification']['body']);
+                $user_name, $to_user_count,
+                $data[$k]['Notification']['body']);
             $data[$k]['Notification']['title'] = $title;
         }
         return $data;
@@ -1532,42 +1557,17 @@ class NotifyBizComponent extends Component
      * installation_idでNCMBからdevice_tokenをとってきて
      * Deviceに保存する
      *
-     * @param        $user_id
-     * @param        $installation_id
-     * @param string $app_key
-     * @param string $client_key
+     * @param $user_id
+     * @param $installation_id
      *
      * @return bool
+     * @internal param string $app_key
+     * @internal param string $client_key
      */
-    function saveDeviceInfo($user_id, $installation_id, $app_key = NCMB_APPLICATION_KEY, $client_key = NCMB_CLIENT_KEY)
+    function saveDeviceInfo($user_id, $installation_id)
     {
-        if (!$app_key) {
-            return false;
-        }
-        $timestamp = $this->_getTimestamp();
-        $path = "/" . NCMB_REST_API_VER . "/" . NCMB_REST_API_GET_INSTALLATION . "/" . $installation_id;
-        $signature = $this->_getNCMBSignature($timestamp, NCMB_REST_API_GET_METHOD, $path, $app_key, $client_key);
-
-        $header = array(
-            'X-NCMB-Application-Key: ' . $app_key,
-            'X-NCMB-Signature: ' . $signature,
-            'X-NCMB-Timestamp: ' . $timestamp,
-            'Content-Type: application/json'
-        );
-
-        $options = array('http' => array(
-            'ignore_errors' => true,    // APIリクエストの結果がエラーでもレスポンスボディを取得する
-            'max_redirects' => 0,       // リダイレクトはしない
-            'method'        => NCMB_REST_API_GET_METHOD
-        ));
-
-        $options['http']['header'] = implode("\r\n", $header);
-
-        $url = "https://" . NCMB_REST_API_FQDN . $path;
-        $ret = file_get_contents($url, false, stream_context_create($options));
-        $ret_array = json_decode($ret, true);
-
-        if (!array_key_exists('deviceToken', $ret_array)) {
+        $ret_array = $this->getDeviceInfo($installation_id);
+        if ($ret_array === false) {
             return false;
         }
         $device_token = $ret_array['deviceToken'];
@@ -1583,8 +1583,7 @@ class NotifyBizComponent extends Component
         $os_type = 99;
         if ($device_type == "android") {
             $os_type = 1;
-        }
-        elseif ($device_type == "ios") {
+        } elseif ($device_type == "ios") {
             $os_type = 0;
         }
 
@@ -1608,10 +1607,51 @@ class NotifyBizComponent extends Component
     }
 
     /**
-     * check notification available
+     * installation_idでNCMBからデバイス情報をとってくる
+     *
+     * @param        $installation_id
+     * @param string $app_key
+     * @param string $client_key
      *
      * @return bool
      */
+    function getDeviceInfo($installation_id, $app_key = NCMB_APPLICATION_KEY, $client_key = NCMB_CLIENT_KEY)
+    {
+        if (!$app_key) {
+            return false;
+        }
+        $timestamp = $this->_getTimestamp();
+        $path = "/" . NCMB_REST_API_VER . "/" . NCMB_REST_API_GET_INSTALLATION . "/" . $installation_id;
+        $signature = $this->_getNCMBSignature($timestamp, NCMB_REST_API_GET_METHOD, $path, $app_key, $client_key);
+
+        $header = array(
+            'X-NCMB-Application-Key: ' . $app_key,
+            'X-NCMB-Signature: ' . $signature,
+            'X-NCMB-Timestamp: ' . $timestamp,
+            'Content-Type: application/json'
+        );
+
+        $options = array(
+            'http' => array(
+                'ignore_errors' => true,    // APIリクエストの結果がエラーでもレスポンスボディを取得する
+                'max_redirects' => 0,       // リダイレクトはしない
+                'method'        => NCMB_REST_API_GET_METHOD
+            )
+        );
+
+        $options['http']['header'] = implode("\r\n", $header);
+
+        $url = "https://" . NCMB_REST_API_FQDN . $path;
+        $ret = file_get_contents($url, false, stream_context_create($options));
+        $ret_array = json_decode($ret, true);
+
+        if (!array_key_exists('deviceToken', $ret_array)) {
+            return false;
+        }
+
+        return $ret_array;
+    }
+
     function _canNotify()
     {
         // 通知先ユーザが存在しない場合　
