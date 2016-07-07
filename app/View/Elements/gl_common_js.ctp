@@ -15,41 +15,12 @@
 ?>
 <!-- START app/View/Elements/gl_common_js.ctp -->
 <?php
+echo $this->Html->script('ng_vendors.min');
 echo $this->Html->script('vendors.min');
-// echo $this->Html->script('vendor/jquery-2.1.0.min');
-// echo $this->Html->script('vendor/bootstrap.min');
-// echo $this->Html->script('vendor/jasny-bootstrap.min');
-// echo $this->Html->script('vendor/bootstrapValidator.min');
-// echo $this->Html->script('vendor/bootstrap-switch.min');
-// echo $this->Html->script('vendor/bvAddition');
-// echo $this->Html->script('vendor/pnotify.custom.min');
-// echo $this->Html->script('vendor/jquery.nailthumb.1.1.min');
-// echo $this->Html->script('vendor/jquery.autosize.min');
-// echo $this->Html->script('vendor/jquery.lazy.min');
-// echo $this->Html->script('vendor/lightbox-custom');
-// echo $this->Html->script('vendor/jquery.showmore.min');
-// echo $this->Html->script('vendor/placeholders.min');
-// echo $this->Html->script('vendor/customRadioCheck.min');
-// echo $this->Html->script('vendor/select2.min');
-// echo $this->Html->script('vendor/bootstrap-datepicker.min');
-// echo $this->Html->script('vendor/locales/bootstrap-datepicker.ja');
-// echo $this->Html->script('vendor/moment.min');
-// echo $this->Html->script('vendor/pusher.min');
-// echo $this->Html->script('vendor/dropzone.js');
-// echo $this->Html->script('vendor/jquery.flot.js');
-// echo $this->Html->script('vendor/jquery.balanced-gallery');
-// echo $this->Html->script('vendor/imagesloaded.pkgd.min');
-// echo $this->Html->script('vendor/bootstrap.youtubepopup');
-// echo $this->Html->script('vendor/require');
-// echo $this->Html->script('vendor/exif');
-// echo $this->Html->script('gl_basic');
 echo $this->Html->script('goalous.min');
 echo $this->Html->script('ng_app.min');
-echo $this->Html->script('ng_controller');
-echo $this->Html->script('vendor/angular/pusher-angular.min');
-echo $this->Html->script('vendor/angular/ng-infinite-scroll.min');
-
 ?>
+
 <!--suppress JSDuplicatedDeclaration -->
 <script type="text/javascript">
     var cake = {
