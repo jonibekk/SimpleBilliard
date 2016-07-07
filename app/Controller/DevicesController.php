@@ -92,14 +92,8 @@ class DevicesController extends AppController
 
             //バージョン情報を比較
             $key_name = $device['Device']['os_type'] == Device::OS_TYPE_IOS ? "iOS_version" : "android_version";
-            $store_url = $device['Device']['os_type'] == Device::OS_TYPE_IOS ? $app_metas['iOS_install_url'] : $app_metas['android_install_url'];
-
             $is_latest_version = version_compare($current_version, $app_metas[$key_name]) === -1 ? false : true;
-            $message = __('This device is latest version.');
-            //最新バージョンでなければメッセージを更新
-            if ($is_latest_version === false) {
-                $message = __('This device is not latest version.');
-            }
+
             //DBに保存されているバージョンとcurrent_versionが一致しない場合は、dbの情報を更新
             if ($device['Device']['version'] !== $current_version) {
                 $this->Device->id = $device['Device']['id'];
@@ -108,11 +102,11 @@ class DevicesController extends AppController
             $ret_array = [
                 'response' => [
                     'error'             => false,
-                    'message'           => $message,
+                    'message'           => $is_latest_version ? __('This device is latest version.') : __('This device is not latest version.'),
                     'is_latest_version' => $is_latest_version,
                     'user_id'           => $user_id,
                     'installation_id'   => $installation_id,
-                    'store_url'         => $store_url,
+                    'store_url'         => $device['Device']['os_type'] == Device::OS_TYPE_IOS ? $app_metas['iOS_install_url'] : $app_metas['android_install_url'],
                 ]
             ];
         } catch (RuntimeException $e) {
