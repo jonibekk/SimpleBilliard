@@ -2343,17 +2343,26 @@ class TeamMember extends AppModel
             'conditions' => [
                 'TeamMember.user_id' => $user_id,
             ],
-            'fields'     => ['TeamMember.team_id', 'Team.name', 'TeamMember.active_flg'],
+            'fields'     => [
+                'TeamMember.team_id',
+                'TeamMember.user_id',
+                'Team.name',
+                'TeamMember.active_flg',
+                'TeamMember.admin_flg',
+            ],
             'contain'    => ['Team']
         ];
         $teams = $this->findWithoutTeamId('all', $options);
-        foreach($teams as $k => $v){
-            if(!$v['Team']['name']){
+        foreach ($teams as $k => $v) {
+            if (!$v['Team']['name']) {
                 unset($teams[$k]);
             }
         }
-        if($reformat_for_shell){
-            $teams = Hash::combine($teams,'{n}',['TeamName:%s, TeamId:%s', '{n}.Team.name', '{n}.Team.id']);
+        if ($reformat_for_shell) {
+            $teams = Hash::format($teams,
+                ['{n}.Team.name', '{n}.Team.id', '{n}.TeamMember.active_flg', '{n}.TeamMember.admin_flg'],
+                'TeamName:%s, TeamId:%s, TeamMemberActive:%s, TeamAdmin:%s'
+            );
         }
         return $teams;
     }
