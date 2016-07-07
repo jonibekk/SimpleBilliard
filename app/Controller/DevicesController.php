@@ -79,6 +79,7 @@ class DevicesController extends AppController
                     throw new RuntimeException(__('Device Information not exists'));
                 }
                 //installation_idを保存
+                $this->Device->id = $device['Device']['id'];
                 $this->Device->saveField('installation_id', $installation_id);
             }
             /* @var AppMeta $AppMeta */
@@ -95,10 +96,14 @@ class DevicesController extends AppController
 
             $is_latest_version = version_compare($current_version, $app_metas[$key_name]) === -1 ? false : true;
             $message = __('This device is latest version.');
-            //最新バージョンでなければdbのバージョン情報を更新
+            //最新バージョンでなければメッセージを更新
             if ($is_latest_version === false) {
-                $this->Device->saveField('version', $current_version);
                 $message = __('This device is not latest version.');
+            }
+            //DBに保存されているバージョンとcurrent_versionが一致しない場合は、dbの情報を更新
+            if ($device['Device']['version'] !== $current_version) {
+                $this->Device->id = $device['Device']['id'];
+                $this->Device->saveField('version', $current_version);
             }
             $ret_array = [
                 'response' => [
