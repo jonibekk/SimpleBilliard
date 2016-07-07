@@ -84,6 +84,10 @@ class DevicesController extends AppController
             /* @var AppMeta $AppMeta */
             $AppMeta = ClassRegistry::init('AppMeta');
             $app_metas = $AppMeta->getMetas();
+            if (count($app_metas) < 4) {
+                $this->log('App Meta does not exists.');
+                throw new RuntimeException(__('Internal Server Error'));
+            }
 
             //バージョン情報を比較
             $key_name = $device['Device']['os_type'] == Device::OS_TYPE_IOS ? "iOS_version" : "android_version";
