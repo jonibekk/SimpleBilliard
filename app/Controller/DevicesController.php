@@ -63,7 +63,6 @@ class DevicesController extends AppController
             if (empty($device)) {
                 //もしなければNifty CloudからDeviceTokenを取得
                 $device_info = $this->NotifyBiz->getDeviceInfo($installation_id);
-                $device_info['deviceToken'] = 'device_token_test';
                 if (!isset($device_info['deviceToken'])) {
                     throw new RuntimeException(__('Device Information not exists'));
                 }
@@ -81,7 +80,7 @@ class DevicesController extends AppController
             $AppMeta = ClassRegistry::init('AppMeta');
             $app_metas = $AppMeta->getMetas();
             if (count($app_metas) < 4) {
-                $this->log('App Meta does not exists.');
+                $this->log('##### App Meta does not exists. ####');
                 throw new RuntimeException(__('Internal Server Error'));
             }
 
