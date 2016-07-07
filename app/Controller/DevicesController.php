@@ -51,7 +51,6 @@ class DevicesController extends AppController
     }
 
     public function get_version_info()
-//    public function get_version_info($user_id,$current_version,$installation_id)
     {
         $this->request->allowMethod('post');
         $user_id = $this->request->data['user_id'];
@@ -64,7 +63,8 @@ class DevicesController extends AppController
             if (empty($device)) {
                 //もしなければNifty CloudからDeviceTokenを取得
                 $device_info = $this->NotifyBiz->getDeviceInfo($installation_id);
-                if (isset($device_info['deviceToken'])) {
+                $device_info['deviceToken'] = 'device_token_test';
+                if (!isset($device_info['deviceToken'])) {
                     throw new RuntimeException(__('Device Information not exists'));
                 }
                 //device_tokenとuser_idをキーにしてdbからデータ取ってくる
@@ -107,8 +107,8 @@ class DevicesController extends AppController
         } catch (RuntimeException $e) {
             $ret_array = [
                 'response' => [
-                    'error'   => true,
-                    'message' => $e->getMessage(),
+                    'error'             => true,
+                    'message'           => $e->getMessage(),
                     'is_latest_version' => "",
                     'user_id'           => $user_id,
                     'installation_id'   => $installation_id,

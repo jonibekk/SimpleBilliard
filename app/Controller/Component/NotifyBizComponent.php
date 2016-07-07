@@ -1561,8 +1561,6 @@ class NotifyBizComponent extends Component
      * @param $installation_id
      *
      * @return bool
-     * @internal param string $app_key
-     * @internal param string $client_key
      */
     function saveDeviceInfo($user_id, $installation_id)
     {
