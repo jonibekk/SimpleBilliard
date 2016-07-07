@@ -72,6 +72,23 @@ class AppMetaFixture extends CakeTestFixtureEx
      *
      * @var array
      */
-    public $records = [];
+    public $records = [
+        [
+            'key_name' => 'iOS_version',
+            'value'    => '1.0.0',
+        ],
+        [
+            'key_name' => 'iOS_install_url',
+            'value'    => 'http://ios',
+        ],
+        [
+            'key_name' => 'android_version',
+            'value'    => '1.0.0',
+        ],
+        [
+            'key_name' => 'android_install_url',
+            'value'    => 'http://android',
+        ],
+    ];
 
 }

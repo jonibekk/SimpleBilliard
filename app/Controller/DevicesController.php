@@ -57,27 +57,64 @@ class DevicesController extends AppController
         $installation_id = $this->request->data['installation_id'];
         $current_version = $this->request->data['current_version'];
         try {
-            //まずinstalltion_idとuser_idをキーにしてdbからデータとってくる
+            //まずinstallation_idとuser_idをキーにしてdbからデータとってくる
             $device = $this->Device->find('first',
                 [
                     'conditions' =>
                         ['user_id' => $user_id, 'installation_id' => $installation_id]
                 ]);
-            if (!empty($device)) {
-                //あればバージョン情報を取得
-                $version = $device['Device']['version'];
-
-            } else {
+            if (empty($device)) {
                 //もしなければNifty CloudからDeviceTokenを取得
                 $device_info = $this->NotifyBiz->getDeviceInfo($installation_id);
                 if (isset($device_info['deviceToken'])) {
                     throw new RuntimeException(__('Device Information not exists'));
                 }
-                
+                //device_tokenとuser_idをキーにしてdbからデータ取ってくる
+                $device = $this->Device->find('first',
+                    [
+                        'conditions' =>
+                            ['user_id' => $user_id, 'device_token' => $device_info['deviceToken']]
+                    ]);
+                if (empty($device)) {
+                    throw new RuntimeException(__('Device Information not exists'));
+                }
+                //installation_idを保存
+                $this->Device->saveField('installation_id', $installation_id);
             }
-        } catch (RuntimeException $e) {
+            /* @var AppMeta $AppMeta */
+            $AppMeta = ClassRegistry::init('AppMeta');
+            $app_metas = $AppMeta->getMetas();
 
+            //バージョン情報を比較
+            $key_name = $device['Device']['os_type'] == Device::OS_TYPE_IOS ? "iOS_version" : "android_version";
+            $store_url = $device['Device']['os_type'] == Device::OS_TYPE_IOS ? $app_metas['iOS_install_url'] : $app_metas['android_install_url'];
+
+            $is_latest_version = version_compare($current_version, $app_metas[$key_name]) === -1 ? false : true;
+            $message = __('This device is latest version.');
+            //最新バージョンでなければdbのバージョン情報を更新
+            if ($is_latest_version === false) {
+                $this->Device->saveField('version', $current_version);
+                $message = __('This device is not latest version.');
+            }
+            $ret_array = [
+                'response' => [
+                    'error'             => false,
+                    'message'           => $message,
+                    'is_latest_version' => $is_latest_version,
+                    'user_id'           => $user_id,
+                    'installation_id'   => $installation_id,
+                    'store_url'         => $store_url,
+                ]
+            ];
+        } catch (RuntimeException $e) {
+            $ret_array = [
+                'response' => [
+                    'error'   => true,
+                    'message' => $e->getMessage(),
+                ]
+            ];
         }
 
+        return $this->_ajaxGetResponse($ret_array);
     }
 }

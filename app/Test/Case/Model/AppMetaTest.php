@@ -1,8 +1,10 @@
 <?php
 App::uses('AppMeta', 'Model');
 App::uses('GoalousTestCase', 'Test');
+
 /**
  * AppMeta Test Case
+ *
  * @property AppMeta $AppMeta
  */
 class AppMetaTest extends GoalousTestCase
@@ -39,10 +41,11 @@ class AppMetaTest extends GoalousTestCase
 
         parent::tearDown();
     }
-    
-    function testDummy()
+
+    function testGetMetas()
     {
-        
+        $res = $this->AppMeta->getMetas();
+        $this->assertNotEmpty($res);
     }
 
 }
