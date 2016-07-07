@@ -12,10 +12,10 @@ bash "npm install" do
   EOS
 end
 
-bash "run gulp build" do
+bash "run grunt chef" do
   code <<-EOS
   source /usr/local/nvm/nvm.sh
-  cd #{release_path}; gulp build
+  cd #{release_path}; grunt chef
   EOS
 end
 
