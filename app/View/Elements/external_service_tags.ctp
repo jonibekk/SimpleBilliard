@@ -130,17 +130,20 @@
         mixpanel.init("<?= MIXPANEL_TOKEN?>");</script>
     <!-- end Mixpanel -->
 <?php endif; ?>
-
-<?php if(INTERCOM_APP_ID):?>
+<?php if (INTERCOM_APP_ID): ?>
 
     <?php
-        $fa_secret = 'OFF';
-		if (!empty($this->Session->read('Auth.User.2fa_secret'))):
-            $fa_secret = 'ON';
-        endif;
-	?>
+    $fa_secret = 'OFF';
+    if (!empty($this->Session->read('Auth.User.2fa_secret'))):
+        $fa_secret = 'ON';
+    endif;
+    ?>
     <!-- start Intercom -->
     <script>
+        enabled_intercom_icon = true;
+        if (window.innerWidth <= 480) {
+            enabled_intercom_icon = false;
+        }
         window.intercomSettings = {
             app_id: "<?=INTERCOM_APP_ID?>",
             <?php if ($this->Session->read('Auth.User.id')): ?>
@@ -158,12 +161,45 @@
             "team_admin": <?= h(intval($my_member_status['TeamMember']['admin_flg'])) ?>,
             "teams_belong": <?= h(intval(count($my_teams))) ?>, // Teams count that user belongs to
             <?php endif ?>
-            "widget": {
-                "activator": "#Intercom"
-            }
         };
+        if (!enabled_intercom_icon) {
+            window.intercomSettings["widget"] = {
+                "activator": "#Intercom"
+            };
+        }
     </script>
-    <script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/<?=INTERCOM_APP_ID?>';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})()</script>
+    <script>(function () {
+            var w = window;
+            var ic = w.Intercom;
+            if (typeof ic === "function") {
+                ic('reattach_activator');
+                ic('update', intercomSettings);
+            } else {
+                var d = document;
+                var i = function () {
+                    i.c(arguments)
+                };
+                i.q = [];
+                i.c = function (args) {
+                    i.q.push(args)
+                };
+                w.Intercom = i;
+                function l() {
+                    var s = d.createElement('script');
+                    s.type = 'text/javascript';
+                    s.async = true;
+                    s.src = 'https://widget.intercom.io/widget/<?=INTERCOM_APP_ID?>';
+                    var x = d.getElementsByTagName('script')[0];
+                    x.parentNode.insertBefore(s, x);
+                }
+
+                if (w.attachEvent) {
+                    w.attachEvent('onload', l);
+                } else {
+                    w.addEventListener('load', l, false);
+                }
+            }
+        })()</script>
     <!-- end Intercom -->
-<?php endif;?>
+<?php endif; ?>
 <!-- END app/View/Elements/external_service_tags.ctp -->

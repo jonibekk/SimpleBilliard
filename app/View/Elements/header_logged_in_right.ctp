@@ -17,16 +17,17 @@
         </span>
         </a>
         <a href="<?= $this->Html->url('/') ?>" class="header-user-home  js-header-link"><?= __(
-                                                                                                'Home') ?></a>
+                'Home') ?></a>
     <?php endif; ?>
 
     <div class="header-setup" id="setup">
         <a href="/setup/top/" class="btn-header-setup">
-            <i class="fa fa-book  header-icons header-dropdown-icon-add header-function-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>" id="setupIcon"></i>
-            <?php if($setup_rest_count >= 1): ?>
-            <div class="btn btn-xs bell-notify-box notify-setup-numbers" id="setupNum">
-                <span><?= $setup_rest_count ?></span>
-            </div>
+            <i class="fa fa-book  header-icons header-dropdown-icon-add header-function-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"
+               id="setupIcon"></i>
+            <?php if ($setup_rest_count >= 1): ?>
+                <div class="btn btn-xs bell-notify-box notify-setup-numbers" id="setupNum">
+                    <span><?= $setup_rest_count ?></span>
+                </div>
             <?php endif; ?>
         </a>
     </div>
@@ -156,13 +157,13 @@
             <?php if ($is_evaluation_available): ?>
                 <li class="header-nav-function-contents-list">
                     <?=
-                        $this->Html->link(__('Evaluation'),
+                    $this->Html->link(__('Evaluation'),
                                       ['controller' => 'evaluations', 'action' => 'index'],
                                       ['class' => 'header-nav-function-contents-evaluation'])
                     ?>
-                  <?php if (viaIsSet($evaluable_cnt) && $evaluable_cnt > 0): ?>
-                      <span class="header-nav-function-eval-count"><?= $evaluable_cnt ?></span>
-                  <?php endif; ?>
+                    <?php if (viaIsSet($evaluable_cnt) && $evaluable_cnt > 0): ?>
+                        <span class="header-nav-function-eval-count"><?= $evaluable_cnt ?></span>
+                    <?php endif; ?>
                 </li>
             <?php endif; ?>
             <li class="header-nav-function-contents-list">
@@ -194,7 +195,7 @@
                 </a>
             </li>
             <?php if (defined('INTERCOM_APP_ID') && INTERCOM_APP_ID): ?>
-                <li class="header-nav-function-contents-list">
+                <li class="header-nav-function-contents-list" id="IntercomLink">
                     <a href="mailto:<?= INTERCOM_APP_ID ?>@incoming.intercom.io"
                        class="header-nav-function-contents-support" id="Intercom"><?= __('Support') ?></a>
                 </li>
