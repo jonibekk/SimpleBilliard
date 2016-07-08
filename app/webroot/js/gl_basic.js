@@ -1709,37 +1709,6 @@ $(function () {
         $('.setup-tutorial-texts').children('div').hide();
         $('.setup-tutorial-navigation-indicator').children('span').removeClass('setup-tutorial-navigation-indicator-selected');
     }
-
-    // $("#modalTutorialNext").on("click", function () {
-    //     if (tutorialNum == 1) {
-    //         $("#modalTutorialBox").addClass("tutorial-box2").removeClass("tutorial-box1");
-    //         $("#tutorialText1").hide();
-    //         $("#tutorialText2").show();
-    //         tutorialNum++;
-    //         $("#tutorialIndicator1").removeClass("setup-tutorial-navigation-indicator-selected");
-    //         $("#tutorialIndicator2").addClass("setup-tutorial-navigation-indicator-selected");
-    //     }
-    //     else if (tutorialNum == 2) {
-    //         $("#modalTutorialBox").addClass("tutorial-box3").removeClass("tutorial-box2");
-    //         $("#tutorialText2").hide();
-    //         $("#tutorialText3").show();
-    //         $("#modalTutorialNext").hide();
-    //         $("#modalTutorialFinish").show();
-    //         tutorialNum++;
-    //         $("#tutorialIndicator2").removeClass("setup-tutorial-navigation-indicator-selected");
-    //         $("#tutorialIndicator3").addClass("setup-tutorial-navigation-indicator-selected");
-    //     }
-    // });
-    // $("#modalTutorialFinish").on("click", function () {
-    //     $("#modalTutorialBox").addClass("tutorial-box1").removeClass("tutorial-box3");
-    //     $("#tutorialText3").hide();
-    //     $("#modalTutorialNext").show();
-    //     $("#modalTutorialFinish").hide();
-    //     tutorialNum = 1;
-    //     location.href = "/setup/";
-    //     $("#tutorialIndicator3").removeClass("setup-tutorial-navigation-indicator-selected");
-    //     $("#tutorialIndicator1").addClass("setup-tutorial-navigation-indicator-selected");
-    // });
 });
 
 //入力途中での警告表示
