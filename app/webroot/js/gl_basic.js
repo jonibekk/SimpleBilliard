@@ -1675,42 +1675,69 @@ function ajaxAppendCount(id, url) {
 }
 
 $(function () {
-    var tutorialNum = 1;
-    $("#modalTutorialPrev").hide();
-    $("#tutorialText2").hide();
-    $("#modalTutorialFinish").hide();
-    $("#tutorialIndicator1").addClass("setup-tutorial-navigation-indicator-selected");
+    var current_slide_id = 1;
 
-    $("#modalTutorialNext").on("click", function () {
-        if (tutorialNum == 1) {
-            $("#modalTutorialBox").addClass("tutorial-box2").removeClass("tutorial-box1");
-            $("#tutorialText1").hide();
-            $("#tutorialText2").show();
-            tutorialNum++;
-            $("#tutorialIndicator1").removeClass("setup-tutorial-navigation-indicator-selected");
-            $("#tutorialIndicator2").addClass("setup-tutorial-navigation-indicator-selected");
-        }
-        else if (tutorialNum == 2) {
-            $("#modalTutorialBox").addClass("tutorial-box3").removeClass("tutorial-box2");
-            $("#tutorialText2").hide();
-            $("#tutorialText3").show();
-            $("#modalTutorialNext").hide();
-            $("#modalTutorialFinish").show();
-            tutorialNum++;
-            $("#tutorialIndicator2").removeClass("setup-tutorial-navigation-indicator-selected");
-            $("#tutorialIndicator3").addClass("setup-tutorial-navigation-indicator-selected");
-        }
+    // インジケータークリック時
+    $(document).on('click', '.setup-tutorial-indicator', function() {
+        resetDisplayStatus();
+        changeTutorialContent($(this).attr('data-id'));
     });
-    $("#modalTutorialFinish").on("click", function () {
-        $("#modalTutorialBox").addClass("tutorial-box1").removeClass("tutorial-box3");
-        $("#tutorialText3").hide();
-        $("#modalTutorialNext").show();
-        $("#modalTutorialFinish").hide();
-        tutorialNum = 1;
-        location.href = "/setup/";
-        $("#tutorialIndicator3").removeClass("setup-tutorial-navigation-indicator-selected");
-        $("#tutorialIndicator1").addClass("setup-tutorial-navigation-indicator-selected");
+
+    // ネクストボタンクリック時
+    $(document).on('click', '.tutorial-next-btn', function() {
+        if(current_slide_id == 3) {
+            location.href = "/setup/";
+            return;
+        }
+        resetDisplayStatus();
+        changeTutorialContent(current_slide_id + 1);
     });
+
+    function changeTutorialContent(content_id) {
+        // 各要素をカレントステータスに設定
+        $('.tutorial-box' + content_id).show();
+        $('.tutorial-text' + content_id).show();
+        $('.setup-tutorial-indicator' + content_id).addClass('setup-tutorial-navigation-indicator-selected');
+
+        current_slide_id = content_id;
+    }
+
+    function resetDisplayStatus() {
+        $('.tutorial-body').children('div').hide();
+        $('.setup-tutorial-texts').children('div').hide();
+        $('.setup-tutorial-navigation-indicator').children('span').removeClass('setup-tutorial-navigation-indicator-selected');
+    }
+
+    // $("#modalTutorialNext").on("click", function () {
+    //     if (tutorialNum == 1) {
+    //         $("#modalTutorialBox").addClass("tutorial-box2").removeClass("tutorial-box1");
+    //         $("#tutorialText1").hide();
+    //         $("#tutorialText2").show();
+    //         tutorialNum++;
+    //         $("#tutorialIndicator1").removeClass("setup-tutorial-navigation-indicator-selected");
+    //         $("#tutorialIndicator2").addClass("setup-tutorial-navigation-indicator-selected");
+    //     }
+    //     else if (tutorialNum == 2) {
+    //         $("#modalTutorialBox").addClass("tutorial-box3").removeClass("tutorial-box2");
+    //         $("#tutorialText2").hide();
+    //         $("#tutorialText3").show();
+    //         $("#modalTutorialNext").hide();
+    //         $("#modalTutorialFinish").show();
+    //         tutorialNum++;
+    //         $("#tutorialIndicator2").removeClass("setup-tutorial-navigation-indicator-selected");
+    //         $("#tutorialIndicator3").addClass("setup-tutorial-navigation-indicator-selected");
+    //     }
+    // });
+    // $("#modalTutorialFinish").on("click", function () {
+    //     $("#modalTutorialBox").addClass("tutorial-box1").removeClass("tutorial-box3");
+    //     $("#tutorialText3").hide();
+    //     $("#modalTutorialNext").show();
+    //     $("#modalTutorialFinish").hide();
+    //     tutorialNum = 1;
+    //     location.href = "/setup/";
+    //     $("#tutorialIndicator3").removeClass("setup-tutorial-navigation-indicator-selected");
+    //     $("#tutorialIndicator1").addClass("setup-tutorial-navigation-indicator-selected");
+    // });
 });
 
 //入力途中での警告表示
