@@ -310,6 +310,26 @@ Issueを再び開いて作業を続行するとき。
 1. `hotfix`ブランチを削除。
 1. 以上。
 
+# CSオペレーション
+## 概要
+- CLIによって処理を行います。
+
+## 本番環境にssh接続
+- 以下で接続
+```shell
+ssh -i ~/.ssh/isao-goalous-opsworks.pem ubuntu@52.68.180.173
+```
+- sshキーが存在しない場合
+  1. http://bit.ly/29ytWhO から`isao-goalous-opsworks.pem`をダウンロード。
+  1. `~/.ssh/`にコピー。
+  1. `chmod 600 ~/.ssh/isao-goalous-opsworks.pem`で権限を変更。
+
+## ユーザ退会処理
+以下を実行。
+```shell
+ubuntu@goalous2-app1:/srv/www/cake/current/app$ Console/cake cs_operation user_withdrawal -u [user_id]
+```
+
 ---
 
 次のドキュメントへ進んでください。  
