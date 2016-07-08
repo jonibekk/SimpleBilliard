@@ -17,10 +17,7 @@
                     <?=
                     $this->Html->image('tutorial/slide01.png',
                                        [
-                                           'class'         => 'modal-tutorial-image',
-                                           'width'         => '16px',
-                                           'height'        => '16px',
-                                           'error-img'     => "/img/no-image-circle.jpg",
+                                           'class'         => 'modal-tutorial-image'
                                        ]
                     )
                     ?>
@@ -29,9 +26,7 @@
                     <?=
                     $this->Html->image('tutorial/slide02.png',
                                        [
-                                           'class'         => 'modal-tutorial-image',
-                                           'width'         => '16px',
-                                           'height'        => '16px'
+                                           'class'         => 'modal-tutorial-image'
                                        ]
                     )
                     ?>
@@ -40,9 +35,7 @@
                     <?=
                     $this->Html->image('tutorial/slide03.png',
                                        [
-                                           'class'         => 'modal-tutorial-image',
-                                           'width'         => '16px',
-                                           'height'        => '16px'
+                                           'class'         => 'modal-tutorial-image'
                                        ]
                     )
                     ?>
