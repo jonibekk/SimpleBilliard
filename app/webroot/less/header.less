@@ -19,7 +19,6 @@
   display: inline-block;
   background: @bgcolor;
   border: none;
-  height: 50px;
   margin: 0;
   padding-left: 18px;
   padding-right: 18px;
@@ -36,10 +35,14 @@
 
 .header-toggle-icon {
   .mixin-header-toggle-icon();
+  height: 50px;
+  line-height: 50px;
 }
 
 .mb-app-header-toggle-icon {
   .mixin-header-toggle-icon(#f6f5f1);
+  height: 45px;
+  line-height: 50px;
 }
 
 .nav-container {
@@ -74,8 +77,6 @@
   position: relative;
   .navbar-nav-fix;
   width: 36px;
-  height: 50px;
-  line-height: 50px;
   padding: 0;
   display: inline-block;
 }
@@ -112,22 +113,44 @@
 
 .header-dropdown-user {
   .header-dropdowns;
+  height: 50px;
+  line-height: 50px;
 }
 
 .header-dropdown-add {
   .header-dropdowns;
+  height: 50px;
+  line-height: 50px;
+}
+
+.mb-app-header-dropdown-add {
+  .header-dropdowns;
+  height: 45px;
+  line-height: 50px;
 }
 
 .header-dropdown-message {
   .header-dropdowns;
+  height: 50px;
+  line-height: 50px;
 }
 
 .header-dropdown-notify {
   .header-dropdowns;
+  height: 50px;
+  line-height: 50px;
 }
 
 .header-dropdown-functions {
   .header-dropdowns;
+  height: 50px;
+  line-height: 50px;
+}
+
+.mb-app-header-dropdown-functions {
+  .header-dropdowns;
+  height: 45px;
+  line-height: 50px;
 }
 
 .header-dropdown-icons {
@@ -163,7 +186,7 @@
 }
 
 .mb-app-body {
-  padding: 0 0 0;
+  padding: 45px 0 0;
 }
 
 .container {
@@ -295,7 +318,7 @@
   vertical-align: top;
   margin: 0 0 0 auto;
   font-size: 0;
-  height: 50px;
+  height: 45px;
 }
 
 .header-right-navigations-mb-app {
@@ -372,6 +395,14 @@
 
 .header-setup {
   .header-dropdowns;
+  height: 50px;
+  line-height: 50px;
+}
+
+.mb-app-header-setup {
+  .header-dropdowns;
+  height: 45px;
+  line-height: 50px;
 }
 
 .header-nav-function-contents-anchor {
@@ -447,7 +478,7 @@
 .message-all-view-link {
   .link;
   height: 40px;
-  line-height: 40px;
+  line-height: 50px;
   text-align: center;
   border-top: 1px solid @lightGray;
 }
