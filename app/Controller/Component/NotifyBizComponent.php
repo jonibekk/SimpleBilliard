@@ -1008,6 +1008,7 @@ class NotifyBizComponent extends Component
     private function _sendNotifyEmail()
     {
         $uids = $this->_getSendEmailNotifyUserList();
+        $this->notify_option['style'] = 'plain';
         $this->GlEmail->sendMailNotify($this->notify_option, $uids);
     }
 

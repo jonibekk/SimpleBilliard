@@ -13,7 +13,7 @@
             $this->Upload->uploadImage($my_prof, 'User.photo', ['style' => 'small'],
                                        ['width' => '24', 'height' => '24', 'alt' => 'icon', 'class' => 'header-nav-avatar']) ?>
             <span class="header-user-name js-header-link">
-            <?= $this->Session->read('Auth.User.display_first_name') ?>
+            <?= h($this->Session->read('Auth.User.display_first_name')) ?>
         </span>
         </a>
         <a href="<?= $this->Html->url('/') ?>" class="header-user-home  js-header-link"><?= __(
