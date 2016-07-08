@@ -162,7 +162,7 @@
                     <p>{{ item.Invite.email }}</p>
 
                     <div ng-bind-html="item.Invite.created" class="left_align"></div>
-                    <div ng-if="item.Invite.token_expired_flg == true" class="expired_invite left_align"> Expired </div>
+                    <div ng-if="item.Invite.token_expired_flg == true && item.Invite.del_flg == false" class="expired_invite left_align"> Expired </div>
                 </td>
                 <td>
                     <div ng-if="login_user_admin_flg == true" class="team-members-card-function-box pull-right">

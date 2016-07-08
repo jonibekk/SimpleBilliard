@@ -75,6 +75,7 @@ class TeamMember extends AppModel
     private $all_users = [];
     private $evaluations = [];
     private $active_member_list = [];
+    private $local_lang_list = [];
 
     /**
      * 現在有効なチーム一覧を取得
@@ -879,8 +880,6 @@ class TeamMember extends AppModel
          * グループ登録処理
          * グループが既に存在すれば、存在するIdをセット。でなければ、グループを新規登録し、IDをセット
          */
-        $this->log('full:=');
-        $this->log($this->csv_datas);
         foreach ($this->csv_datas as $row_k => $row_v) {
             // fetching the all joined group members list
             $member_group_ids = $this->User->MemberGroup->getAllGroupMemberIds($this->current_team_id, $row_v['User']['id']);
@@ -893,13 +892,19 @@ class TeamMember extends AppModel
                     // if user with same team and group exists then don't need to insert again
                     $group_member = $this->User->MemberGroup->getGroupMemberId($this->current_team_id,
                                                                               $row_v['User']['id'], $group['Group']['id']);
-                    $this->csv_group_member_ids[] = $group_member['MemberGroup']['id'];
 
                     if(empty($group_member)) {
                         $this->csv_datas[$row_k]['MemberGroup'][] = [
                             'group_id'  => $group['Group']['id'],
                             'index_num' => $k
                         ];
+                    } else {
+                        $this->csv_datas[$row_k]['MemberGroup'][] = [
+                            'id'        => $group_member['MemberGroup']['id'],
+                            'group_id'  => $group['Group']['id'],
+                            'index_num' => $k
+                        ];
+                        $this->csv_group_member_ids[] = $group_member['MemberGroup']['id'];
                     }
                 }
                 unset($this->csv_datas[$row_k]['Group']);
@@ -917,7 +922,7 @@ class TeamMember extends AppModel
                 }
             }
         }
-//        $this->log($this->csv_datas);
+
         /**
          * メンバータイプ
          * メンバータイプを検索し、存在すればIDをセット。でなければメンバータイプを新規登録し、IDをセット
@@ -952,7 +957,6 @@ class TeamMember extends AppModel
                 $user_update_fields = array_keys($user['User']);
 
                 $this->User->save($user['User'], true, $user_update_fields);
-                $this->log($this->User->validationErrors);
             }
             else {
                 //なければ、ユーザ情報(User,Email)を登録。
@@ -962,10 +966,7 @@ class TeamMember extends AppModel
                 $row_v['User']['default_team_id'] = $this->current_team_id;
                 $row_v['User']['language'] = viaIsSet($row_v['LocalName']['language']) ? $row_v['LocalName']['language'] : 'eng';
 
-                $this->log('USER:=');
-
                 $user = $this->User->save($row_v['User']);
-                $this->log($this->User->validationErrors);
                 $row_v['Email']['user_id'] = $user['User']['id'];
                 //create Email
                 $this->User->Email->create();
@@ -981,28 +982,28 @@ class TeamMember extends AppModel
             $this->csv_datas[$row_k]['User'] = $user['User'];
 
             //LocalName
+            $options = [
+                'conditions' => [
+                    'user_id'  => $user['User']['id']
+                ]
+            ];
             if (viaIsSet($row_v['LocalName'])) {
                 //save LocalName (if only lang update)
-                $options = [
-                    'conditions' => [
-                        'user_id'  => $user['User']['id']
-                    ]
-                ];
-                $local_name = $this->User->LocalName->find('first', $options);
+                $existing_local_name = $this->User->LocalName->find('first', $options);
 
-                if (viaIsSet($local_name['LocalName'])) {
-                    $local_name['LocalName'] = array_merge($local_name['LocalName'], $row_v['LocalName']);
-                    $local_name = $this->User->LocalName->save($local_name);
+                if (viaIsSet($existing_local_name['LocalName'])) {
+                    $existing_local_name['LocalName'] = array_merge($existing_local_name['LocalName'], $row_v['LocalName']);
+                    $existing_local_name = $this->User->LocalName->save($existing_local_name);
                 }
                 else {
                     $row_v['LocalName']['user_id'] = $user['User']['id'];
                     $this->User->LocalName->create();
-                    $local_name = $this->User->LocalName->save($row_v['LocalName']);
+                    $existing_local_name = $this->User->LocalName->save($row_v['LocalName']);
                 }
 
-                $this->csv_datas[$row_k]['LocalName'] = $local_name['LocalName'];
+                $this->csv_datas[$row_k]['LocalName'] = $existing_local_name['LocalName'];
             } else {
-                $exists_local_name = $this->User->LocalName->findByUserId($user['User']['id']);
+                $exists_local_name = $this->User->LocalName->find('first', $options);
                 if (!empty($exists_local_name)) {
                     $this->User->LocalName->delete($exists_local_name['LocalName']['id']);
                 }
@@ -1092,6 +1093,13 @@ class TeamMember extends AppModel
                             'evaluator_user_id' => $evaluator_team_member['TeamMember']['user_id'],
                         ];
                     } else {
+                        $save_evaluator_data[] = [
+                            'id'                => $existing_evaluator['Evaluator']['id'],
+                            'index_num'         => $r_k,
+                            'team_id'           => $this->current_team_id,
+                            'evaluatee_user_id' => $row_v['User']['id'],
+                            'evaluator_user_id' => $evaluator_team_member['TeamMember']['user_id'],
+                        ];
                         $this->csv_existing_evaluator_ids[] = $existing_evaluator['Evaluator']['id'];
                     }
 
@@ -1394,6 +1402,9 @@ class TeamMember extends AppModel
             }
 
             $row = Hash::expand($row);
+            if (viaIsSet($row['gender'])) {
+                $row['gender'] = strtolower($row['gender']);
+            }
             $this->set($row);
             if (!$this->validates()) {
                 $res['error_msg'] = current(array_shift($this->validationErrors));
@@ -1436,10 +1447,15 @@ class TeamMember extends AppModel
                 $this->csv_datas[$key]['TeamMember']['member_type_id'] = null;
             }
 
-            if (viaIsSet($row['language']) && viaIsSet($row['local_first_name']) && viaIsSet($row['local_last_name'])) {
+            // for local name
+            if (viaIsSet($row['language']) && (viaIsSet($row['local_first_name']) || viaIsSet($row['local_last_name']))) {
                 $this->csv_datas[$key]['LocalName']['language'] = $row['language'];
-                $this->csv_datas[$key]['LocalName']['first_name'] = $row['local_first_name'];
-                $this->csv_datas[$key]['LocalName']['last_name'] = $row['local_last_name'];
+                $this->csv_datas[$key]['LocalName']['first_name'] = viaIsSet($row['local_first_name']) ? $row['local_first_name'] : '';
+                $this->csv_datas[$key]['LocalName']['last_name'] = viaIsSet($row['local_last_name']) ? $row['local_last_name'] : '';
+            } else {
+                if (viaIsSet($row['language'])) {
+                    $this->local_lang_list[$key] = $row['language'];
+                }
             }
 
             if (viaIsSet($row['phone_no'])) {
@@ -1483,7 +1499,7 @@ class TeamMember extends AppModel
             }
             //evaluator id check(after check)
             $this->csv_evaluator_ids[] = array_filter($row['evaluator_member_no'], "strlen");
-        }
+        } // end of foreach csv_data
 
         //email exists check
         //E-mail address should not be duplicated
@@ -1494,6 +1510,16 @@ class TeamMember extends AppModel
             $res['error_line_no'] = array_search($duplicate_email, $this->csv_emails) + 2;
             $res['error_msg'] = __("Duplicated email address.");
             return $res;
+        }
+
+        // if only language of local name (without Local first name or local last name)  then show error
+        if(!empty($this->local_lang_list)) {
+            foreach ($this->local_lang_list as $local_k => $local_v) {
+                //set line no
+                $res['error_line_no'] = $local_k + 1;
+                $res['error_msg'] = __("Local first name or local last name required with language of local name.");
+                return $res;
+            }
         }
 
         //already joined team check
@@ -1543,10 +1569,7 @@ class TeamMember extends AppModel
             }
         } else {
             foreach ($this->csv_datas as $csv_data_key => $this_csv_data) {
-                $this->log('no mem no');
-                $this->log($this->csv_datas);
                 $member = $this->findByUserId($this_csv_data['User']['id']);
-                $this->log($member);
                 $this->csv_datas[$csv_data_key]['TeamMember']['id'] = $member['TeamMember']['id'];
                 $this->csv_datas[$csv_data_key]['TeamMember']['user_id'] = $member['TeamMember']['user_id'];
             }
