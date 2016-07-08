@@ -7,6 +7,7 @@
  * @property Team       $Team
  * @property User       $User
  * @property TeamMember $TeamMember
+ * @property Device     $Device
  */
 class CsOperationShell extends AppShell
 {
@@ -16,7 +17,8 @@ class CsOperationShell extends AppShell
     public $uses = array(
         'Team',
         'User',
-        'TeamMember'
+        'TeamMember',
+        'Device',
     );
 
     function startup()
@@ -86,7 +88,42 @@ class CsOperationShell extends AppShell
             return;
         }
 
+        /**
+         * ここから退会処理
+         */
+        //ユーザ情報削除
+        $this->User->delete($user_id);
+        //Email削除
+        foreach ($this->User->Email->find('list', ['conditions' => ['user_id' => $user_id]]) as $email_id) {
+            $this->User->Email->delete($email_id);
+        }
+        //デバイス情報削除
+        foreach ($this->Device->find('list', ['conditions' => ['user_id' => $user_id]]) as $device_id) {
+            $this->Device->delete($device_id);
+        }
+
+        //キャッシュを削除
+        $this->_removeCache();
+
+        $this->out("正常にユーザの削除が完了しました。");
         $total_time = round(microtime(true) - $this->start_time, 2);
         $this->out("Total Time: {$total_time}sec");
+    }
+
+    function _removeCache()
+    {
+        $ignore_configs = [
+            'session',
+            'default',
+        ];
+
+        $config_list = Cache::configured();
+        foreach ($config_list as $value) {
+            if (in_array($value, $ignore_configs)) {
+                continue;
+            }
+            Cache::clear(false, $value);
+        }
+        clearCache();
     }
 }
