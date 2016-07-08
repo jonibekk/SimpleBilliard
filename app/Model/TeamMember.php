@@ -882,7 +882,10 @@ class TeamMember extends AppModel
          */
         foreach ($this->csv_datas as $row_k => $row_v) {
             // fetching the all joined group members list
-            $member_group_ids = $this->User->MemberGroup->getAllGroupMemberIds($this->current_team_id, $row_v['User']['id']);
+            $member_group_ids = [];
+            if (!empty($this_csv_data['User']['id'])) {
+                $member_group_ids = $this->User->MemberGroup->getAllGroupMemberIds($this->current_team_id,$row_v['User']['id']);
+            }
 
             $this->csv_group_member_ids = [];
             if (viaIsSet($row_v['Group'])) {
@@ -909,16 +912,20 @@ class TeamMember extends AppModel
                 }
                 unset($this->csv_datas[$row_k]['Group']);
             } else {
-                foreach($member_group_ids as $member_group_id) {
-                    $this->User->MemberGroup->delete($member_group_id);
+                if (!empty($member_group_ids)) {
+                    foreach ($member_group_ids as $member_group_id) {
+                        $this->User->MemberGroup->delete($member_group_id);
+                    }
                 }
             }
 
             // delete extra records from member group table
             if (!empty($this->csv_group_member_ids)) {
-                $ids_to_be_delete = array_diff($member_group_ids, $this->csv_group_member_ids);
-                foreach ($ids_to_be_delete as $member_group_id) {
-                    $this->User->MemberGroup->delete($member_group_id);
+                if (!empty($member_group_ids)) {
+                    $ids_to_be_delete = array_diff($member_group_ids, $this->csv_group_member_ids);
+                    foreach ($ids_to_be_delete as $member_group_id) {
+                        $this->User->MemberGroup->delete($member_group_id);
+                    }
                 }
             }
         }
