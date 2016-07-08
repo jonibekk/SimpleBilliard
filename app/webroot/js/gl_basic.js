@@ -1690,7 +1690,9 @@ $(function () {
             return;
         }
         resetDisplayStatus();
-        changeTutorialContent(current_slide_id + 1);
+
+        var next_id = String(Number(current_slide_id) + 1);
+        changeTutorialContent(next_id);
     });
 
     function changeTutorialContent(content_id) {
