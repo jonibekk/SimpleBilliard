@@ -1569,9 +1569,11 @@ class TeamMember extends AppModel
             }
         } else {
             foreach ($this->csv_datas as $csv_data_key => $this_csv_data) {
-                $member = $this->findByUserId($this_csv_data['User']['id']);
-                $this->csv_datas[$csv_data_key]['TeamMember']['id'] = $member['TeamMember']['id'];
-                $this->csv_datas[$csv_data_key]['TeamMember']['user_id'] = $member['TeamMember']['user_id'];
+                if (!empty($this_csv_data['User']['id'])) {
+                    $member = $this->findByUserId($this_csv_data['User']['id']);
+                    $this->csv_datas[$csv_data_key]['TeamMember']['id'] = $member['TeamMember']['id'];
+                    $this->csv_datas[$csv_data_key]['TeamMember']['user_id'] = $member['TeamMember']['user_id'];
+                }
             }
         }
 
