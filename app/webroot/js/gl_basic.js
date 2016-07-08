@@ -14,6 +14,7 @@ require.config({
 });
 
 var network_reachable = true;
+var enabled_intercom_icon = (typeof enabled_intercom_icon === "undefined") ? null : enabled_intercom_icon;
 
 function bindPostBalancedGallery($obj) {
     $obj.removeClass('none');
