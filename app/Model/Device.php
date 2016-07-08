@@ -8,7 +8,10 @@ App::uses('AppModel', 'Model');
  */
 class Device extends AppModel
 {
-
+    const OS_TYPE_IOS = 0;
+    const OS_TYPE_ANDROID = 1;
+    const OS_TYPE_OTHER = 99;
+    
     /**
      * Validation rules
      *
