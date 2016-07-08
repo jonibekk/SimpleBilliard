@@ -386,7 +386,7 @@ class NotifySetting extends AppModel
             [
                 'style' => 'html',
             ], $options);
-        $is_plane_mode = $options['style'] === 'plane';
+        $is_plain_mode = $options['style'] === 'plain';
 
         if ($item_name && !is_array($item_name)) {
             $item_name = json_decode($item_name, true);
@@ -469,7 +469,7 @@ class NotifySetting extends AppModel
                     }
                 }
 
-                if($is_plane_mode) {
+                if($is_plain_mode) {
                     $title = __(
                                  '<span class="notify-card-head-target">%1$s%2$s</span> posted in <span class="notify-card-head-target">%3$s</span>.',
                                  $user_text,
@@ -484,7 +484,7 @@ class NotifySetting extends AppModel
                 }
                 break;
             case self::TYPE_FEED_COMMENTED_ON_MY_POST:
-                if($is_plane_mode) {
+                if($is_plain_mode) {
                     $title = __(
                                  '<span class="notify-card-head-target">%1$s%2$s</span> commented on <span class="notify-card-head-target">your </span>post.',
                                  $user_text,
@@ -508,7 +508,7 @@ class NotifySetting extends AppModel
                     $user = $this->User->findById($options['post_user_id']);
                     $target_user_name = $user['User']['display_username'];
                 }
-                if($is_plane_mode) {
+                if($is_plain_mode) {
                     $title = __(
                                  '<span class="notify-card-head-target">%1$s%2$s</span> also commented on <span class="notify-card-head-target">%3$s</span>\'s post.',
                                  $user_text,
@@ -523,7 +523,7 @@ class NotifySetting extends AppModel
                 }
                 break;
             case self::TYPE_CIRCLE_USER_JOIN:
-                if($is_plane_mode) {
+                if($is_plain_mode) {
                     $title = __('<span class="notify-card-head-target">%1$s%2$s</span> joined the circle.',
                                  $user_text,
                                  ($count_num > 0) ? (__("and %s others", $count_num)) : null);
@@ -535,7 +535,7 @@ class NotifySetting extends AppModel
                 break;
             case self::TYPE_CIRCLE_CHANGED_PRIVACY_SETTING:
                 // ToDo - 大樹さん、すでにサークルのプライバシー設定変更はできなくなっていると思うので削除よろしくお願いします。
-                if($is_plane_mode) {
+                if($is_plain_mode) {
                     $title = __(
                                  '<span class="notify-card-head-target">%1$s</span>がサークルのプライバシー設定を「<span class="notify-card-head-target">%2$s</span>」に変更しました。',
                                  $user_text, $item_name[1]);
@@ -546,7 +546,7 @@ class NotifySetting extends AppModel
                 }
                 break;
             case self::TYPE_CIRCLE_ADD_USER:
-                if($is_plane_mode) {
+                if($is_plain_mode) {
                     $title = __(
                                  '<span class="notify-card-head-target">%1$s</span> add <span class="notify-card-head-target">you </span>to the circle.',
                                  $user_text);
@@ -560,7 +560,7 @@ class NotifySetting extends AppModel
                 // この通知で必要なオプション値
                 //   - goal_id: フォローしたゴールID
                 $goal = $this->User->Goal->findById($options['goal_id']);
-                if($is_plane_mode) {
+                if($is_plain_mode) {
                     $title = __(
                                  '<span class="notify-card-head-target">%1$s</span> has followed <span class="notify-card-head-target">%2$s</span>.',
                                  $user_text,
@@ -576,7 +576,7 @@ class NotifySetting extends AppModel
                 // この通知で必要なオプション値
                 //   - goal_id: コラボしたゴールID
                 $goal = $this->User->Goal->findById($options['goal_id']);
-                if($is_plane_mode) {
+                if($is_plain_mode) {
                     $title = __(
                                  '<span class="notify-card-head-target">%1$s</span> has collaborate with <span class="notify-card-head-target">%2$s</span>.',
                                  $user_text,
@@ -592,7 +592,7 @@ class NotifySetting extends AppModel
                 // この通知で必要なオプション値
                 //   - goal_id: 内容を変更したゴールID
                 $goal = $this->User->Goal->findById($options['goal_id']);
-                if($is_plane_mode) {
+                if($is_plain_mode) {
                     $title = __(
                                  '<span class="notify-card-head-target">%1$s</span> has changed information on <span class="notify-card-head-target">%2$s</span>.',
                                  $user_text,
@@ -608,7 +608,7 @@ class NotifySetting extends AppModel
                 // この通知で必要なオプション値
                 //   - goal_id: 評価対象にしたゴールID
                 $goal = $this->User->Goal->findById($options['goal_id']);
-                if($is_plane_mode) {
+                if($is_plain_mode) {
                     $title = __(
                                  '<span class="notify-card-head-target">%1$s</span> has evaluated <span class="notify-card-head-target">%2$s</span>.',
                                  $user_text,
@@ -624,7 +624,7 @@ class NotifySetting extends AppModel
                 // この通知で必要なオプション値
                 //   - goal_id: 修正依頼をしたゴールID
                 $goal = $this->User->Goal->findById($options['goal_id']);
-                if($is_plane_mode) {
+                if($is_plain_mode) {
                     $title = __(
                                  '<span class="notify-card-head-target">%1$s</span> requested <span class="notify-card-head-target">%2$s</span> to modify.',
                                  $user_text,
@@ -640,7 +640,7 @@ class NotifySetting extends AppModel
                 // この通知で必要なオプション値
                 //   - goal_id: 評価対象外にしたゴールID
                 $goal = $this->User->Goal->findById($options['goal_id']);
-                if($is_plane_mode) {
+                if($is_plain_mode) {
                     $title = __(
                                  '<span class="notify-card-head-target">%1$s</span> has not evaluated <span class="notify-card-head-target">%2$s</span>.',
                                  $user_text,
@@ -656,7 +656,7 @@ class NotifySetting extends AppModel
                 // この通知で必要なオプション値
                 //   - goal_id: 新しく作成したゴールID
                 $goal = $this->User->Goal->findById($options['goal_id']);
-                if($is_plane_mode) {
+                if($is_plain_mode) {
                     $title = __(
                                  '<span class="notify-card-head-target">%1$s</span> created <span class="notify-card-head-target">%2$s</span>.',
                                  $user_text,
@@ -672,7 +672,7 @@ class NotifySetting extends AppModel
                 // この通知で必要なオプション値
                 //   - goal_id: コラボしたゴールID
                 $goal = $this->User->Goal->findById($options['goal_id']);
-                if($is_plane_mode) {
+                if($is_plain_mode) {
                     $title = __(
                                  '<span class="notify-card-head-target">%1$s</span> has collaborate with <span class="notify-card-head-target">%2$s</span>.',
                                  $user_text,
@@ -688,7 +688,7 @@ class NotifySetting extends AppModel
                 // この通知で必要なオプション値
                 //   - goal_id: 内容を修正したゴールID
                 $goal = $this->User->Goal->findById($options['goal_id']);
-                if($is_plane_mode) {
+                if($is_plain_mode) {
                     $title = __(
                                  '<span class="notify-card-head-target">%1$s</span> has updated <span class="notify-card-head-target">%2$s</span>.',
                                  $user_text,
@@ -716,7 +716,7 @@ class NotifySetting extends AppModel
                 $title = __('Last evaluator finished evaluation.');
                 break;
             case self::TYPE_FEED_COMMENTED_ON_MY_ACTION:
-                if($is_plane_mode) {
+                if($is_plain_mode) {
                     $title = __(
                                  '<span class="notify-card-head-target">%1$s</span> commented on <span class="notify-card-head-target">your </span>action.',
                                  $user_text);
@@ -738,7 +738,7 @@ class NotifySetting extends AppModel
                     $user = $this->User->findById($options['post_user_id']);
                     $target_user_name = $user['User']['display_username'];
                 }
-                if($is_plane_mode) {
+                if($is_plain_mode) {
                     $title = __(
                                  '<span class="notify-card-head-target">%1$s</span> also commented on <span class="notify-card-head-target">%2$s</span>\'s action',
                                  $user_text,
@@ -755,7 +755,7 @@ class NotifySetting extends AppModel
                 // この通知で必要なオプション値
                 //   - goal_id: アクションしたゴール
                 $goal = $this->User->Goal->findById($options['goal_id']);
-                if($is_plane_mode) {
+                if($is_plain_mode) {
                     $title = __(
                               '<span class="notify-card-head-target">%1$s</span> added an action on<span class="notify-card-head-target">%2$s</span>.',
                               $user_text,
@@ -769,14 +769,14 @@ class NotifySetting extends AppModel
 
                 break;
             case self::TYPE_USER_JOINED_TO_INVITED_TEAM:
-                if($is_plane_mode) {
+                if($is_plain_mode) {
                     $title = __('<span class="notify-card-head-target">%1$s</span> joined this team.', $user_text);
                 } else {
                     $title = __('<span class="notify-card-head-target">%1$s</span> joined this team.', h($user_text));
                 }
                 break;
             case self::TYPE_FEED_MESSAGE:
-                if($is_plane_mode) {
+                if($is_plain_mode) {
                     $title = __('<span class="notify-card-head-target">%1$s%2$s</span>',
                                  $user_text,
                                  ($count_num > 0) ? __(" +%s", $count_num) : null);
