@@ -23,7 +23,8 @@ class TeamMemberTest extends GoalousTestCase
         'app.email',
         'app.local_name',
         'app.member_type',
-        'app.user', 'app.notify_setting',
+        'app.user',
+        'app.notify_setting',
         'app.team',
         'app.group',
         'app.job_category',
@@ -290,7 +291,16 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[0] = $this->TeamMember->_getCsvHeading();
         $csv_data[1] = $this->getEmptyRowOnCsv();
         $test_data = [
-            'csv_test@email.com', 'aaa', 'first', 'last', 'on', 'off', null, 'jpn', 'ふぁーすと', 'ラスト'
+            'csv_test@email.com',
+            'aaa',
+            'first',
+            'last',
+            'on',
+            'off',
+            null,
+            'jpn',
+            'ふぁーすと',
+            'ラスト'
         ];
         $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
@@ -619,7 +629,19 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading();
         $csv_data[1] = $this->getEmptyRowOnCsv();
-        $test_data = ['aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON', '', 'jpn', 'localfirstname', 'locallastname', 'aaaaaaa',];
+        $test_data = [
+            'aaa@aaa.com',
+            'member_id',
+            'firstname',
+            'lastname',
+            'ON',
+            'ON',
+            '',
+            'jpn',
+            'localfirstname',
+            'locallastname',
+            'aaaaaaa',
+        ];
         $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
@@ -640,7 +662,20 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading();
         $csv_data[1] = $this->getEmptyRowOnCsv();
-        $test_data = ['aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON', '', 'jpn', 'localfirstname', 'locallastname', '000-0000-0000', 'aaaa',];
+        $test_data = [
+            'aaa@aaa.com',
+            'member_id',
+            'firstname',
+            'lastname',
+            'ON',
+            'ON',
+            '',
+            'jpn',
+            'localfirstname',
+            'locallastname',
+            '000-0000-0000',
+            'aaaa',
+        ];
         $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
@@ -661,7 +696,23 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading();
         $csv_data[1] = $this->getEmptyRowOnCsv();
-        $test_data = ['aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON', '', 'jpn', 'localfirstname', 'locallastname', '000-0000-0000', 'male', '1999', '', '',];
+        $test_data = [
+            'aaa@aaa.com',
+            'member_id',
+            'firstname',
+            'lastname',
+            'ON',
+            'ON',
+            '',
+            'jpn',
+            'localfirstname',
+            'locallastname',
+            '000-0000-0000',
+            'male',
+            '1999',
+            '',
+            '',
+        ];
         $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
@@ -682,7 +733,23 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading();
         $csv_data[1] = $this->getEmptyRowOnCsv();
-        $test_data = ['aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON', '', 'jpn', 'localfirstname', 'locallastname', '000-0000-0000', 'male', 'aaaaa', '1', '1',];
+        $test_data = [
+            'aaa@aaa.com',
+            'member_id',
+            'firstname',
+            'lastname',
+            'ON',
+            'ON',
+            '',
+            'jpn',
+            'localfirstname',
+            'locallastname',
+            '000-0000-0000',
+            'male',
+            'aaaaa',
+            '1',
+            '1',
+        ];
         $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
@@ -703,7 +770,23 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading();
         $csv_data[1] = $this->getEmptyRowOnCsv();
-        $test_data = ['aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON', '', 'jpn', 'localfirstname', 'locallastname', '000-0000-0000', 'male', '1999', 'aaaa', '1',];
+        $test_data = [
+            'aaa@aaa.com',
+            'member_id',
+            'firstname',
+            'lastname',
+            'ON',
+            'ON',
+            '',
+            'jpn',
+            'localfirstname',
+            'locallastname',
+            '000-0000-0000',
+            'male',
+            '1999',
+            'aaaa',
+            '1',
+        ];
         $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
@@ -724,7 +807,23 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading();
         $csv_data[1] = $this->getEmptyRowOnCsv();
-        $test_data = ['aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON', '', 'jpn', 'localfirstname', 'locallastname', '000-0000-0000', 'male', '1999', '11', 'aaaa',];
+        $test_data = [
+            'aaa@aaa.com',
+            'member_id',
+            'firstname',
+            'lastname',
+            'ON',
+            'ON',
+            '',
+            'jpn',
+            'localfirstname',
+            'locallastname',
+            '000-0000-0000',
+            'male',
+            '1999',
+            '11',
+            'aaaa',
+        ];
         $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
@@ -745,7 +844,30 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading();
         $csv_data[1] = $this->getEmptyRowOnCsv();
-        $test_data = ['aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON', '', 'jpn', 'localfirstname', 'locallastname', '000-0000-0000', 'male', '1999', '11', '11', 'group1', '', 'group3', '', '', '', '',];
+        $test_data = [
+            'aaa@aaa.com',
+            'member_id',
+            'firstname',
+            'lastname',
+            'ON',
+            'ON',
+            '',
+            'jpn',
+            'localfirstname',
+            'locallastname',
+            '000-0000-0000',
+            'male',
+            '1999',
+            '11',
+            '11',
+            'group1',
+            '',
+            'group3',
+            '',
+            '',
+            '',
+            '',
+        ];
         $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
@@ -766,7 +888,30 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading();
         $csv_data[1] = $this->getEmptyRowOnCsv();
-        $test_data = ['aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON', '', 'jpn', 'localfirstname', 'locallastname', '000-0000-0000', 'male', '1999', '11', '11', 'group1', 'group1', '', '', '', '', '',];
+        $test_data = [
+            'aaa@aaa.com',
+            'member_id',
+            'firstname',
+            'lastname',
+            'ON',
+            'ON',
+            '',
+            'jpn',
+            'localfirstname',
+            'locallastname',
+            '000-0000-0000',
+            'male',
+            '1999',
+            '11',
+            '11',
+            'group1',
+            'group1',
+            '',
+            '',
+            '',
+            '',
+            '',
+        ];
         $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
@@ -787,7 +932,31 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading();
         $csv_data[1] = $this->getEmptyRowOnCsv();
-        $test_data = ['aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON', '', 'jpn', 'localfirstname', 'locallastname', '000-0000-0000', 'male', '1999', '11', '11', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'member_id',];
+        $test_data = [
+            'aaa@aaa.com',
+            'member_id',
+            'firstname',
+            'lastname',
+            'ON',
+            'ON',
+            '',
+            'jpn',
+            'localfirstname',
+            'locallastname',
+            '000-0000-0000',
+            'male',
+            '1999',
+            '11',
+            '11',
+            'group1',
+            'group2',
+            'group3',
+            'group4',
+            'group5',
+            'group6',
+            'group7',
+            'member_id',
+        ];
         $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
@@ -808,7 +977,38 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading();
         $csv_data[1] = $this->getEmptyRowOnCsv();
-        $test_data = ['aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON', '', 'jpn', 'localfirstname', 'locallastname', '000-0000-0000', 'male', '1999', '11', '11', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'coach_id', 'rater1', '', 'rater3', 'rater4', 'rater5', 'rater6', 'rater7',];
+        $test_data = [
+            'aaa@aaa.com',
+            'member_id',
+            'firstname',
+            'lastname',
+            'ON',
+            'ON',
+            '',
+            'jpn',
+            'localfirstname',
+            'locallastname',
+            '000-0000-0000',
+            'male',
+            '1999',
+            '11',
+            '11',
+            'group1',
+            'group2',
+            'group3',
+            'group4',
+            'group5',
+            'group6',
+            'group7',
+            'coach_id',
+            'rater1',
+            '',
+            'rater3',
+            'rater4',
+            'rater5',
+            'rater6',
+            'rater7',
+        ];
         $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
@@ -829,7 +1029,38 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading();
         $csv_data[1] = $this->getEmptyRowOnCsv();
-        $test_data = ['aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON', '', 'jpn', 'localfirstname', 'locallastname', '000-0000-0000', 'male', '1999', '11', '11', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'coach_id', 'member_id', 'rater2', 'rater3', 'rater4', 'rater5', 'rater6', 'rater7',];
+        $test_data = [
+            'aaa@aaa.com',
+            'member_id',
+            'firstname',
+            'lastname',
+            'ON',
+            'ON',
+            '',
+            'jpn',
+            'localfirstname',
+            'locallastname',
+            '000-0000-0000',
+            'male',
+            '1999',
+            '11',
+            '11',
+            'group1',
+            'group2',
+            'group3',
+            'group4',
+            'group5',
+            'group6',
+            'group7',
+            'coach_id',
+            'member_id',
+            'rater2',
+            'rater3',
+            'rater4',
+            'rater5',
+            'rater6',
+            'rater7',
+        ];
         $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
@@ -850,7 +1081,38 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading();
         $csv_data[1] = $this->getEmptyRowOnCsv();
-        $test_data = ['aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON', '', 'jpn', 'localfirstname', 'locallastname', '000-0000-0000', 'male', '1999', '11', '11', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'coach_id', 'rater2', 'rater2', 'rater3', 'rater4', 'rater5', 'rater6', 'rater7',];
+        $test_data = [
+            'aaa@aaa.com',
+            'member_id',
+            'firstname',
+            'lastname',
+            'ON',
+            'ON',
+            '',
+            'jpn',
+            'localfirstname',
+            'locallastname',
+            '000-0000-0000',
+            'male',
+            '1999',
+            '11',
+            '11',
+            'group1',
+            'group2',
+            'group3',
+            'group4',
+            'group5',
+            'group6',
+            'group7',
+            'coach_id',
+            'rater2',
+            'rater2',
+            'rater3',
+            'rater4',
+            'rater5',
+            'rater6',
+            'rater7',
+        ];
         $csv_data[1] = Hash::merge($csv_data[1], $test_data);
 
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
@@ -873,12 +1135,22 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[1] = $this->getEmptyRowOnCsv();
         $csv_data[2] = $this->getEmptyRowOnCsv();
         $test_data_a = [
-            'aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON',
+            'aaa@aaa.com',
+            'member_id',
+            'firstname',
+            'lastname',
+            'ON',
+            'ON',
         ];
         $csv_data[1] = Hash::merge($csv_data[1], $test_data_a);
 
         $test_data_b = [
-            'aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON',
+            'aaa@aaa.com',
+            'member_id',
+            'firstname',
+            'lastname',
+            'ON',
+            'ON',
         ];
         $csv_data[2] = Hash::merge($csv_data[2], $test_data_b);
 
@@ -902,7 +1174,12 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[1] = $this->getEmptyRowOnCsv();
 
         $test_data_a = [
-            'from@email.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON',
+            'from@email.com',
+            'member_id',
+            'firstname',
+            'lastname',
+            'ON',
+            'ON',
         ];
         $csv_data[1] = Hash::merge($csv_data[1], $test_data_a);
 
@@ -927,12 +1204,22 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[2] = $this->getEmptyRowOnCsv();
 
         $test_data_a = [
-            'aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON',
+            'aaa@aaa.com',
+            'member_id',
+            'firstname',
+            'lastname',
+            'ON',
+            'ON',
         ];
         $csv_data[1] = Hash::merge($csv_data[1], $test_data_a);
 
         $test_data_b = [
-            'bbb@bbb.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON',
+            'bbb@bbb.com',
+            'member_id',
+            'firstname',
+            'lastname',
+            'ON',
+            'ON',
         ];
         $csv_data[2] = Hash::merge($csv_data[2], $test_data_b);
 
@@ -955,7 +1242,12 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[0] = $this->TeamMember->_getCsvHeading();
         $csv_data[1] = $this->getEmptyRowOnCsv();
         $test_data_a = [
-            'aaa@aaa.com', 'member_1', 'firstname', 'lastname', 'ON', 'ON',
+            'aaa@aaa.com',
+            'member_1',
+            'firstname',
+            'lastname',
+            'ON',
+            'ON',
         ];
         $csv_data[1] = Hash::merge($csv_data[1], $test_data_a);
 
@@ -978,8 +1270,70 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[] = $this->TeamMember->_getCsvHeading();
         $csv_data[] = $this->getEmptyRowOnCsv();
 
-        $csv_data[1] = ['aaa@aaa.com', 'member_id', 'firstname', 'lastname', 'ON', 'ON', '', 'jpn', 'localfirstname', 'locallastname', '000-0000-0000', 'male', '1999', '11', '11', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'member_1', 'rater1', 'rater2', 'rater3', 'rater4', 'rater5', 'rater6', 'rater7',];
-        $csv_data[2] = ['aaax@aaa.com', 'member_2', 'firstname', 'lastname', 'ON', 'ON', '', 'jpn', 'localfirstname', 'locallastname', '000-0000-0000', 'male', '1999', '11', '11', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'not_exists_coach_id', 'rater1', 'rater2', 'rater3', 'rater4', 'rater5', 'rater6', 'rater7',];
+        $csv_data[1] = [
+            'aaa@aaa.com',
+            'member_id',
+            'firstname',
+            'lastname',
+            'ON',
+            'ON',
+            '',
+            'jpn',
+            'localfirstname',
+            'locallastname',
+            '000-0000-0000',
+            'male',
+            '1999',
+            '11',
+            '11',
+            'group1',
+            'group2',
+            'group3',
+            'group4',
+            'group5',
+            'group6',
+            'group7',
+            'member_1',
+            'rater1',
+            'rater2',
+            'rater3',
+            'rater4',
+            'rater5',
+            'rater6',
+            'rater7',
+        ];
+        $csv_data[2] = [
+            'aaax@aaa.com',
+            'member_2',
+            'firstname',
+            'lastname',
+            'ON',
+            'ON',
+            '',
+            'jpn',
+            'localfirstname',
+            'locallastname',
+            '000-0000-0000',
+            'male',
+            '1999',
+            '11',
+            '11',
+            'group1',
+            'group2',
+            'group3',
+            'group4',
+            'group5',
+            'group6',
+            'group7',
+            'not_exists_coach_id',
+            'rater1',
+            'rater2',
+            'rater3',
+            'rater4',
+            'rater5',
+            'rater6',
+            'rater7',
+        ];
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
             unset($actual['error_msg']);
@@ -999,8 +1353,70 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[] = $this->TeamMember->_getCsvHeading();
         $csv_data[] = $this->getEmptyRowOnCsv();
 
-        $csv_data[1] = ['aaa@aaa.com', 'abc', 'firstname', 'lastname', 'ON', 'ON', '', 'jpn', 'localfirstname', 'locallastname', '000-0000-0000', 'male', '1999', '11', '11', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', '', 'member_1', 'rater2', 'rater3', 'rater4', 'rater5', 'rater6', 'rater7',];
-        $csv_data[2] = ['aaax@aaa.com', 'member_z', 'firstname', 'lastname', 'ON', 'ON', '', 'jpn', 'localfirstname', 'locallastname', '000-0000-0000', 'male', '1999', '11', '11', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', '', 'abc', 'rater2', 'rater3', 'rater4', 'rater5', 'rater6', 'rater7',];
+        $csv_data[1] = [
+            'aaa@aaa.com',
+            'abc',
+            'firstname',
+            'lastname',
+            'ON',
+            'ON',
+            '',
+            'jpn',
+            'localfirstname',
+            'locallastname',
+            '000-0000-0000',
+            'male',
+            '1999',
+            '11',
+            '11',
+            'group1',
+            'group2',
+            'group3',
+            'group4',
+            'group5',
+            'group6',
+            'group7',
+            '',
+            'member_1',
+            'rater2',
+            'rater3',
+            'rater4',
+            'rater5',
+            'rater6',
+            'rater7',
+        ];
+        $csv_data[2] = [
+            'aaax@aaa.com',
+            'member_z',
+            'firstname',
+            'lastname',
+            'ON',
+            'ON',
+            '',
+            'jpn',
+            'localfirstname',
+            'locallastname',
+            '000-0000-0000',
+            'male',
+            '1999',
+            '11',
+            '11',
+            'group1',
+            'group2',
+            'group3',
+            'group4',
+            'group5',
+            'group6',
+            'group7',
+            '',
+            'abc',
+            'rater2',
+            'rater3',
+            'rater4',
+            'rater5',
+            'rater6',
+            'rater7',
+        ];
         $actual = $this->TeamMember->validateNewMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
             unset($actual['error_msg']);
@@ -1019,9 +1435,9 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+            ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+            ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
@@ -1041,13 +1457,13 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+            ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+            ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+            ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+            ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
 
         unset($csv_data[0]['email']);
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
@@ -1069,13 +1485,13 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+            ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+            ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+            ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+            ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
 
         $csv_data[0]['email'] = 'test';
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
@@ -1097,13 +1513,13 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+            ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+            ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+            ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
+            ['aaa@aaa.com', 'firstname', 'lastname', 'member_id', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
@@ -1124,13 +1540,13 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstnamex', 'lastname', 'member_1', 'ON', 'ON', 'ON']);
+            ['from@email.com', 'firstnamex', 'lastname', 'member_1', 'ON', 'ON', 'ON']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
@@ -1150,13 +1566,13 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastnamex', 'member_1', 'ON', 'ON', 'ON']);
+            ['from@email.com', 'firstname', 'lastnamex', 'member_1', 'ON', 'ON', 'ON']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
@@ -1176,13 +1592,13 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', '', 'ON', 'ON', 'ON']);
+            ['from@email.com', 'firstname', 'lastname', '', 'ON', 'ON', 'ON']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
@@ -1203,13 +1619,13 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', 'member_1', '', 'ON', 'ON']);
+            ['from@email.com', 'firstname', 'lastname', 'member_1', '', 'ON', 'ON']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
@@ -1230,13 +1646,13 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'aaa', 'ON', 'ON']);
+            ['from@email.com', 'firstname', 'lastname', 'member_1', 'aaa', 'ON', 'ON']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
@@ -1257,13 +1673,13 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', '', 'ON']);
+            ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', '', 'ON']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
@@ -1284,13 +1700,13 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'aa', 'ON']);
+            ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'aa', 'ON']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
@@ -1311,13 +1727,13 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', '']);
+            ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', '']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
@@ -1338,13 +1754,13 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'aaa']);
+            ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'aaa']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
@@ -1365,13 +1781,13 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', '', 'group2']);
+            ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', '', 'group2']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
@@ -1392,13 +1808,13 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', 'group1', 'group1']);
+            ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', 'group1', 'group1']);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
@@ -1419,13 +1835,13 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON',]);
+            ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON',]);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
@@ -1446,13 +1862,30 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'member_1']);
+            [
+                'from@email.com',
+                'firstname',
+                'lastname',
+                'member_1',
+                'ON',
+                'ON',
+                'ON',
+                '',
+                'group1',
+                'group2',
+                'group3',
+                'group4',
+                'group5',
+                'group6',
+                'group7',
+                'member_1'
+            ]);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
@@ -1473,13 +1906,32 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'member_2', '', 'rater2']);
+            [
+                'from@email.com',
+                'firstname',
+                'lastname',
+                'member_1',
+                'ON',
+                'ON',
+                'ON',
+                '',
+                'group1',
+                'group2',
+                'group3',
+                'group4',
+                'group5',
+                'group6',
+                'group7',
+                'member_2',
+                '',
+                'rater2'
+            ]);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
@@ -1500,13 +1952,32 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'member_2', 'member_1', 'rater2']);
+            [
+                'from@email.com',
+                'firstname',
+                'lastname',
+                'member_1',
+                'ON',
+                'ON',
+                'ON',
+                '',
+                'group1',
+                'group2',
+                'group3',
+                'group4',
+                'group5',
+                'group6',
+                'group7',
+                'member_2',
+                'member_1',
+                'rater2'
+            ]);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
@@ -1527,13 +1998,32 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'member_2', 'rater1', 'rater1']);
+            [
+                'from@email.com',
+                'firstname',
+                'lastname',
+                'member_1',
+                'ON',
+                'ON',
+                'ON',
+                '',
+                'group1',
+                'group2',
+                'group3',
+                'group4',
+                'group5',
+                'group6',
+                'group7',
+                'member_2',
+                'rater1',
+                'rater1'
+            ]);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
@@ -1554,13 +2044,32 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'OFF', 'OFF', 'ON', '', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'member_2', 'rater1', 'rater2']);
+            [
+                'from@email.com',
+                'firstname',
+                'lastname',
+                'member_1',
+                'OFF',
+                'OFF',
+                'ON',
+                '',
+                'group1',
+                'group2',
+                'group3',
+                'group4',
+                'group5',
+                'group6',
+                'group7',
+                'member_2',
+                'rater1',
+                'rater2'
+            ]);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'OFF', 'OFF', 'ON']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'OFF', 'OFF', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'OFF', 'OFF', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'OFF', 'OFF', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'OFF', 'OFF', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'OFF', 'OFF', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
@@ -1581,13 +2090,32 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'member_2', 'rater1', 'rater2']);
+            [
+                'from@email.com',
+                'firstname',
+                'lastname',
+                'member_1',
+                'ON',
+                'ON',
+                'ON',
+                '',
+                'group1',
+                'group2',
+                'group3',
+                'group4',
+                'group5',
+                'group6',
+                'group7',
+                'member_2',
+                'rater1',
+                'rater2'
+            ]);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+            ['from@email.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
@@ -1608,13 +2136,32 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'member_2', 'rater1', 'rater2']);
+            [
+                'test@aaa.com',
+                'firstname',
+                'lastname',
+                'member_1',
+                'ON',
+                'ON',
+                'ON',
+                '',
+                'group1',
+                'group2',
+                'group3',
+                'group4',
+                'group5',
+                'group6',
+                'group7',
+                'member_2',
+                'rater1',
+                'rater2'
+            ]);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+            ['from@email.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
         if (viaIsSet($actual['error_msg'])) {
@@ -1634,13 +2181,32 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'xxxxxxxxxx', 'rater1', 'rater2']);
+            [
+                'from@email.com',
+                'firstname',
+                'lastname',
+                'member_1',
+                'ON',
+                'ON',
+                'ON',
+                '',
+                'group1',
+                'group2',
+                'group3',
+                'group4',
+                'group5',
+                'group6',
+                'group7',
+                'xxxxxxxxxx',
+                'rater1',
+                'rater2'
+            ]);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
@@ -1661,13 +2227,33 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data = [];
         $csv_data[0] = $this->TeamMember->_getCsvHeading(false);
         $csv_data[1] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['from@email.com', 'firstname', 'lastname', 'member_1', 'ON', 'ON', 'ON', '', 'group1', 'group2', 'group3', 'group4', 'group5', 'group6', 'group7', 'member_2', 'rater1', 'rater2', 'xxxxxxxxxx']);
+            [
+                'from@email.com',
+                'firstname',
+                'lastname',
+                'member_1',
+                'ON',
+                'ON',
+                'ON',
+                '',
+                'group1',
+                'group2',
+                'group3',
+                'group4',
+                'group5',
+                'group6',
+                'group7',
+                'member_2',
+                'rater1',
+                'rater2',
+                'xxxxxxxxxx'
+            ]);
         $csv_data[2] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
+            ['test@aaa.com', 'firstname', 'lastname', 'member_2', 'ON', 'ON', 'ON']);
         $csv_data[3] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
+            ['to@email.com', 'firstname', 'lastname', 'member_3', 'ON', 'ON', 'ON']);
         $csv_data[4] = Hash::merge($this->getEmptyRowOnCsv(23),
-                                   ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
+            ['xxxxxxx@email.com', 'firstname', 'lastname', 'member_4', 'ON', 'ON', 'ON']);
 
         $actual = $this->TeamMember->validateUpdateMemberCsvData($csv_data);
 
@@ -1734,7 +2320,7 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[1] = $this->getEmptyRowOnCsv(33);
         $csv_data[1] = copyKeyName($this->TeamMember->_getCsvHeadingEvaluation(), $csv_data[1]);
         $csv_data[1] = Hash::merge($csv_data[1],
-                                   ['member_no' => 'test', 'total.final.score' => 'aaaaa']);
+            ['member_no' => 'test', 'total.final.score' => 'aaaaa']);
         $actual = $this->TeamMember->validateUpdateFinalEvaluationCsvData($csv_data, 1);
 
         if (viaIsSet($actual['error_msg'])) {
@@ -1758,7 +2344,7 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[1] = $this->getEmptyRowOnCsv(33);
         $csv_data[1] = copyKeyName($this->TeamMember->_getCsvHeadingEvaluation(), $csv_data[1]);
         $csv_data[1] = Hash::merge($csv_data[1],
-                                   ['member_no' => 'member_1', 'total.final.score' => 'aaaaa']);
+            ['member_no' => 'member_1', 'total.final.score' => 'aaaaa']);
         $actual = $this->TeamMember->validateUpdateFinalEvaluationCsvData($csv_data, 1);
 
         if (viaIsSet($actual['error_msg'])) {
@@ -1795,11 +2381,11 @@ class TeamMemberTest extends GoalousTestCase
         $csv_data[1] = $this->getEmptyRowOnCsv(33);
         $csv_data[1] = copyKeyName($this->TeamMember->_getCsvHeadingEvaluation(), $csv_data[1]);
         $csv_data[1] = Hash::merge($csv_data[1],
-                                   ['member_no' => 'member_1', 'total.final.score' => 'A']);
+            ['member_no' => 'member_1', 'total.final.score' => 'A']);
         $csv_data[2] = $this->getEmptyRowOnCsv(33);
         $csv_data[2] = copyKeyName($this->TeamMember->_getCsvHeadingEvaluation(), $csv_data[2]);
         $csv_data[2] = Hash::merge($csv_data[2],
-                                   ['member_no' => 'member_1', 'total.final.score' => 'A']);
+            ['member_no' => 'member_1', 'total.final.score' => 'A']);
         $actual = $this->TeamMember->validateUpdateFinalEvaluationCsvData($csv_data, 1);
 
         if (viaIsSet($actual['error_msg'])) {
@@ -1920,9 +2506,9 @@ class TeamMemberTest extends GoalousTestCase
         $team_id = 888;
 
         $this->TeamMember->User->Email->save([
-                                                 'user_id'        => $user_id,
-                                                 'email_verified' => true
-                                             ], false);
+            'user_id'        => $user_id,
+            'email_verified' => true
+        ], false);
 
         $params = [
             'user_id'               => $user_id,
@@ -2146,14 +2732,14 @@ class TeamMemberTest extends GoalousTestCase
     {
         $member_id = 999;
         $this->TeamMember->User->save([
-                                          'id'         => $member_id,
-                                          'first_name' => 'test',
-                                          'last_name'  => 'test',
-                                      ]);
+            'id'         => $member_id,
+            'first_name' => 'test',
+            'last_name'  => 'test',
+        ]);
         $this->TeamMember->User->Email->save([
-                                                 'user_id'        => $member_id,
-                                                 'email_verified' => true
-                                             ], false);
+            'user_id'        => $member_id,
+            'email_verified' => true
+        ], false);
         $params = [
             'id'         => $member_id,
             'user_id'    => $member_id,
@@ -2226,9 +2812,9 @@ class TeamMemberTest extends GoalousTestCase
         $this->TeamMember->User->save($params);
 
         $this->TeamMember->User->Email->save([
-                                                 'user_id'        => $user_id,
-                                                 'email_verified' => true
-                                             ], false);
+            'user_id'        => $user_id,
+            'email_verified' => true
+        ], false);
 
         $team_id = 999;
         $params = [
@@ -2253,9 +2839,9 @@ class TeamMemberTest extends GoalousTestCase
         $this->TeamMember->User->save($params);
 
         $this->TeamMember->User->Email->save([
-                                                 'user_id'        => $user_id,
-                                                 'email_verified' => true
-                                             ], false);
+            'user_id'        => $user_id,
+            'email_verified' => true
+        ], false);
 
         $team_id = 999;
         $params = [
@@ -2279,9 +2865,9 @@ class TeamMemberTest extends GoalousTestCase
         $res = $this->TeamMember->User->save($params);
 
         $this->TeamMember->User->Email->save([
-                                                 'user_id'        => $user_id,
-                                                 'email_verified' => true
-                                             ], false);
+            'user_id'        => $user_id,
+            'email_verified' => true
+        ], false);
 
         $team_id = 888;
         $params = [
@@ -2305,9 +2891,9 @@ class TeamMemberTest extends GoalousTestCase
         $this->TeamMember->User->save($params);
 
         $this->TeamMember->User->Email->save([
-                                                 'user_id'        => $user_id,
-                                                 'email_verified' => true
-                                             ], false);
+            'user_id'        => $user_id,
+            'email_verified' => true
+        ], false);
 
         $team_id = 888;
         $params = [
@@ -2331,9 +2917,9 @@ class TeamMemberTest extends GoalousTestCase
         $this->TeamMember->User->save($params);
 
         $this->TeamMember->User->Email->save([
-                                                 'user_id'        => $user_id,
-                                                 'email_verified' => true
-                                             ], false);
+            'user_id'        => $user_id,
+            'email_verified' => true
+        ], false);
 
         $team_id = 888;
         $params = [
@@ -2356,9 +2942,9 @@ class TeamMemberTest extends GoalousTestCase
         $this->TeamMember->User->save($params);
 
         $this->TeamMember->User->Email->save([
-                                                 'user_id'        => $user_id,
-                                                 'email_verified' => true
-                                             ], false);
+            'user_id'        => $user_id,
+            'email_verified' => true
+        ], false);
 
         $team_id = 888;
         $params = [
@@ -2421,9 +3007,9 @@ class TeamMemberTest extends GoalousTestCase
         $this->TeamMember->User->save($params);
 
         $this->TeamMember->User->Email->save([
-                                                 'user_id'        => $user_id,
-                                                 'email_verified' => true
-                                             ], false);
+            'user_id'        => $user_id,
+            'email_verified' => true
+        ], false);
 
         // coach
         $coach_user_id = 777;
@@ -2565,6 +3151,24 @@ class TeamMemberTest extends GoalousTestCase
     {
         $this->setDefault();
         $this->assertNotEmpty($this->TeamMember->getIdByTeamAndUserId(1, 1));
+    }
+
+    function testGetAllTeamNotFormat()
+    {
+        $this->setDefault();
+        $res = $this->TeamMember->getAllTeam(1);
+        $this->assertNotEmpty($res);
+        $this->assertArrayHasKey('TeamMember', $res[0]);
+        $this->assertArrayHasKey('Team', $res[0]);
+    }
+
+    function testGetAllTeamFormat()
+    {
+        $this->setDefault();
+        $res = $this->TeamMember->getAllTeam(1, true);
+        $this->assertNotEmpty($res);
+        $this->assertFalse(isset($res[0]['TeamMember']));
+        $this->assertFalse(isset($res[0]['Team']));
     }
 
     function _saveEvaluations()
