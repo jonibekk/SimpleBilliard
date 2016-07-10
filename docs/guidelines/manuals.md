@@ -419,6 +419,7 @@ vagrant@precise64:/vagrant/app$
 1. `hotfix`ブランチを削除。
 1. 以上。
 
+<hr id="cs-operation">
 # CSオペレーション
 ## 概要
 - CLIによって処理を行います。
@@ -436,7 +437,7 @@ ssh -i ~/.ssh/isao-goalous-opsworks.pem ubuntu@52.68.180.173
 ## ユーザ退会処理
 以下を実行。
 ```shell
-ubuntu@goalous2-app1:/srv/www/cake/current/app$ Console/cake cs_operation user_withdrawal -u [user_id]
+ubuntu@goalous2-app1:/srv/www/cake/current/app$ sudo Console/cake cs_operation user_withdrawal -u [user_id]
 ```
 
 ---
