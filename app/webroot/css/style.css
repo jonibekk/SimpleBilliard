@@ -1868,10 +1868,7 @@ textarea.comment-post-form {
 }
 
 .disp_bx {
-    display: box;
-    display: -webkit-box;
-    display: -ms-box;
-    display: -o-box;
+    display: flex;
 }
 
 .disp_blk {
