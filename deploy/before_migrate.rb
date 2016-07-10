@@ -8,7 +8,8 @@ end
 bash "npm install" do
   code <<-EOS
   source /usr/local/nvm/nvm.sh
-  cd #{release_path}; pnpm install
+  npm set progress=false
+  cd #{release_path}; pnpm i --no-bin-links
   EOS
 end
 
