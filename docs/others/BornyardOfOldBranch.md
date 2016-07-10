@@ -7,6 +7,13 @@
 合掌
 
 # ブランチの位牌堂
+- visible-added-username-02  
+  8e09fd37f3dd27e6fc2cd3db12f969226a312346  
+  PR #3463
+
+- gulp-setting  
+  b2f63071d3b3b02eb1244d41a5a44585c2e2ca5d
+
 - zzz-trial-plant-uml  
   79c42ac8c2b17b0e8d5b91bd5e43ed0e09c8c523
 
