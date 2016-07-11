@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: 2016-07-12 00:50+0900\n"
-"PO-Revision-Date: 2016-07-12 00:50+0900\n"
+"PO-Revision-Date: 2016-07-12 00:54+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -196,24 +196,24 @@ msgstr "エラー"
 
 #: Controller/DevicesController.php:45;120
 msgid "Internal Server Error"
-msgstr ""
+msgstr "サーバー内部のエラーが発生しました。"
 
 #: Controller/DevicesController.php:51
 msgid "Version Info not exists"
-msgstr ""
+msgstr "バージョン情報が存在しません。"
 
 #: Controller/DevicesController.php:54;135
 msgid "This device is latest version."
-msgstr ""
+msgstr "このデバイスは最新バージョンです。"
 
 #: Controller/DevicesController.php:56;135
 msgid "This device is not latest version."
-msgstr ""
+msgstr "このデバイスは最新バージョンではありません。"
 
 #: Controller/DevicesController.php:103;109
 #: Controller/Component/NotifyBizComponent.php:1580
 msgid "Device Information not exists"
-msgstr ""
+msgstr "デバイス情報が見つかりません。"
 
 #: Controller/EmailsController.php:26
 msgid "This email address doesn't exist."
@@ -1061,11 +1061,11 @@ msgstr "日本語"
 
 #: Controller/Component/NotifyBizComponent.php:1571
 msgid "Parameters were wrong"
-msgstr ""
+msgstr "不正なパラメータです。"
 
 #: Controller/Component/NotifyBizComponent.php:1611
 msgid "Failed to save a Device Information."
-msgstr ""
+msgstr "デバイス情報の保存に失敗しました。"
 
 #: Controller/Component/OgpComponent.php:200
 #: View/Elements/Feed/post_body.ctp:21;24
