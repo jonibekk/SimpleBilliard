@@ -103,10 +103,26 @@ class UsersController extends AppController
         //デバイス情報を保存する
         $user_id = $user_info['id'];
         $installation_id = $this->request->data['User']['installation_id'];
+        if ($installation_id == "no_value") {
+            $installation_id = null;
+        }
+        $app_version = $this->request->data['User']['app_version'];
+        if ($app_version == "no_value") {
+            $app_version = null;
+        }
         if (!empty($installation_id)) {
-            $this->NotifyBiz->saveDeviceInfo($user_id, $installation_id, null);
-            //セットアップガイドステータスの更新
-            $this->updateSetupStatusIfNotCompleted();
+            try {
+                $this->NotifyBiz->saveDeviceInfo($user_id, $installation_id, $app_version);
+                //セットアップガイドステータスの更新
+                $this->updateSetupStatusIfNotCompleted();
+            } catch (RuntimeException $e) {
+                $this->log([
+                    'where'           => 'login page',
+                    'error_msg'       => $e->getMessage(),
+                    'user_id'         => $user_id,
+                    'installation_id' => $installation_id,
+                ]);
+            }
         }
 
         $is_2fa_auth_enabled = true;

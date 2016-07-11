@@ -25,7 +25,7 @@ class DevicesController extends AppController
      * $this->request->data['user_id']
      * $this->request->data['installation_id']
      * $this->request->data['current_version']
-     * 
+     *
      * @return CakeResponse
      */
     public function add()
@@ -56,6 +56,9 @@ class DevicesController extends AppController
                     $msg = __('This device is not latest version.');
                 }
             }
+
+            //セットアップガイドのカウント更新
+            $this->updateSetupStatusIfNotCompleted();
 
             $ret_array = [
                 'response' => [

@@ -1618,8 +1618,6 @@ class NotifyBizComponent extends Component
             $this->Device->id = $device['Device']['id'];
             $device = Hash::merge($device, $this->Device->saveField('version', $version));
         }
-        //セットアップガイドのカウント更新
-        $this->Controller->updateSetupStatusIfNotCompleted();
         return $device;
     }
 
