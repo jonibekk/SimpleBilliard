@@ -1618,6 +1618,8 @@ class NotifyBizComponent extends Component
             $this->Device->id = $device['Device']['id'];
             $device = Hash::merge($device, $this->Device->saveField('version', $version));
         }
+        //sessionのアプリバージョン情報を更新
+        $this->Session->write('app_version', $version);
         return $device;
     }
 
