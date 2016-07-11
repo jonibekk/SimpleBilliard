@@ -117,30 +117,6 @@ class Device extends AppModel
         return $data;
     }
 
-    /**
-     * ユーザーId,device_token でDeviceを取得する
-     *
-     * @param $user_id
-     * @param $installation_id
-     *
-     * @return array|bool|null
-     */
-    function getDevicesByUserIdAndInstallationId($user_id, $installation_id)
-    {
-        if (empty($user_id) || empty($installation_id)) {
-            return false;
-        }
-
-        $options = [
-            'conditions' => [
-                'user_id'         => $user_id,
-                'installation_id' => $installation_id,
-            ],
-        ];
-
-        $data = $this->find('all', $options);
-        return $data;
-    }
 
     /**
      * ユーザーIDでDevice.device_tokenのみを配列で取得する
