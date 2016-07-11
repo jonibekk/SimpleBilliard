@@ -119,7 +119,7 @@ const config =  {
       assets_dir + '/css/nav.css',
       assets_dir + '/css/nav_media.css'
     ],
-    watch_files: [assets_dir + '/css/**/*.css', assets_dir + '!' + assets_dir + '/css/goalous.min.js'],
+    watch_files: [assets_dir + '/css/**/*.css', '!' + assets_dir + '/css/goalous.min.css'],
     output: {
       file_name: 'goalous',
       path: assets_dir + '/css'
