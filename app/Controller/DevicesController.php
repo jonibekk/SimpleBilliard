@@ -20,7 +20,12 @@ class DevicesController extends AppController
 
     /**
      * デバイス情報を追加する
-     *
+     * POSTのみ受け付ける
+     * 以下のフィールドを渡してあげる
+     * $this->request->data['user_id']
+     * $this->request->data['installation_id']
+     * $this->request->data['current_version']
+     * 
      * @return CakeResponse
      */
     public function add()
@@ -42,12 +47,20 @@ class DevicesController extends AppController
 
             //バージョン情報を比較
             $key_name = $device['Device']['os_type'] == Device::OS_TYPE_IOS ? "iOS_version" : "android_version";
-            $is_latest_version = version_compare($current_version, $app_metas[$key_name]) === -1 ? false : true;
+            $is_latest_version = "";
+            $msg = __('Version Info not exists');
+            if ($current_version) {
+                if ($is_latest_version = version_compare($current_version, $app_metas[$key_name]) > -1) {
+                    $msg = __('This device is latest version.');
+                } else {
+                    $msg = __('This device is not latest version.');
+                }
+            }
 
             $ret_array = [
                 'response' => [
                     'error'             => false,
-                    'message'           => $is_latest_version ? __('This device is latest version.') : __('This device is not latest version.'),
+                    'message'           => $msg,
                     'is_latest_version' => $is_latest_version,
                     'user_id'           => $user_id,
                     'installation_id'   => $installation_id,
