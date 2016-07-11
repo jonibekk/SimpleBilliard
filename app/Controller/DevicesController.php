@@ -31,26 +31,7 @@ class DevicesController extends AppController
         $current_version = isset($this->request->data['current_version']) ? $this->request->data['current_version'] : null;
 
         try {
-            //まずinstallation_idとuser_idをキーにしてdbからデータとってくる
-            $device = $this->Device->find('first',
-                ['conditions' => ['user_id' => $user_id, 'installation_id' => $installation_id]]);
-            if (empty($device)) {
-                //もしなければNifty CloudからDeviceTokenを取得
-                $device_info = $this->NotifyBiz->getDeviceInfo($installation_id);
-                if (!isset($device_info['deviceToken'])) {
-                    throw new RuntimeException(__('Device Information not exists'));
-                }
-                //device_tokenとuser_idをキーにしてdbからデータ取ってくる
-                $device = $this->Device->find('first',
-                    ['conditions' => ['user_id' => $user_id, 'device_token' => $device_info['deviceToken']]]);
-                if (empty($device)) {
-                    throw new RuntimeException(__('Device Information not exists'));
-                } else {
-                    //installation_idを保存
-                    $this->Device->id = $device['Device']['id'];
-                    $this->Device->saveField('installation_id', $installation_id);
-                }
-            }
+            $device = $this->NotifyBiz->saveDeviceInfo($user_id, $installation_id, $current_version);
             /* @var AppMeta $AppMeta */
             $AppMeta = ClassRegistry::init('AppMeta');
             $app_metas = $AppMeta->getMetas();
@@ -63,11 +44,6 @@ class DevicesController extends AppController
             $key_name = $device['Device']['os_type'] == Device::OS_TYPE_IOS ? "iOS_version" : "android_version";
             $is_latest_version = version_compare($current_version, $app_metas[$key_name]) === -1 ? false : true;
 
-            //DBに保存されているバージョンとcurrent_versionが一致しない場合は、dbの情報を更新
-            if ($device['Device']['version'] !== $current_version) {
-                $this->Device->id = $device['Device']['id'];
-                $this->Device->saveField('version', $current_version);
-            }
             $ret_array = [
                 'response' => [
                     'error'             => false,
@@ -92,26 +68,6 @@ class DevicesController extends AppController
         }
 
         return $this->_ajaxGetResponse($ret_array);
-
-        //デバイス情報を保存する
-        $saved = $this->NotifyBiz->saveDeviceInfo($user_id, $installation_id, $current_version);
-        if ($saved === false) {
-            return $this->_ajaxGetResponse([
-                'response' => [
-                    'message'         => 'error do not save',
-                    'user_id'         => $user_id,
-                    'installation_id' => $installation_id,
-                ]
-            ]);
-        }
-
-        return $this->_ajaxGetResponse([
-            'response' => [
-                'message'         => 'saved',
-                'user_id'         => $user_id,
-                'installation_id' => $installation_id,
-            ]
-        ]);
     }
 
     public function get_version_info()

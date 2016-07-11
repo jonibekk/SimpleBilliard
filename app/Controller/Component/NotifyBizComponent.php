@@ -13,6 +13,7 @@ App::uses('ModelType', 'Model');
  * @property Goal             $Goal
  * @property GlRedis          $GlRedis
  * @property Team             $Team
+ * @property AppController    $Controller
  */
 class NotifyBizComponent extends Component
 {
@@ -1566,47 +1567,56 @@ class NotifyBizComponent extends Component
      */
     function saveDeviceInfo($user_id, $installation_id, $version = null)
     {
-        $ret_array = $this->getDeviceInfo($installation_id);
-        if ($ret_array === false) {
-            return false;
+        //まずinstallation_idとuser_idをキーにしてdbからデータとってくる
+        $device = $this->Device->find('first',
+            ['conditions' => ['user_id' => $user_id, 'installation_id' => $installation_id]]);
+        if (empty($device)) {
+            //もしなければNifty CloudからDeviceTokenを取得
+            $device_info = $this->getDeviceInfo($installation_id);
+            if (!isset($device_info['deviceToken'])) {
+                throw new RuntimeException(__('Device Information not exists'));
+            }
+            //device_tokenとuser_idをキーにしてdbからデータ取ってくる
+            $device = $this->Device->find('first',
+                ['conditions' => ['user_id' => $user_id, 'device_token' => $device_info['deviceToken']]]);
+            if (empty($device)) {
+                //新規でdevice tokenを保存
+                $device_type = $device_info['deviceType'];
+                App::uses('Device', 'Model');
+                $os_type = Device::OS_TYPE_OTHER;
+                if ($device_type == "android") {
+                    $os_type = Device::OS_TYPE_ANDROID;
+                } elseif ($device_type == "ios") {
+                    $os_type = Device::OS_TYPE_IOS;
+                }
+                $this->Device->create();
+                $device = $this->Device->save([
+                    'Device' => [
+                        'user_id'         => $user_id,
+                        'device_token'    => $device_info['deviceToken'],
+                        'os_type'         => $os_type,
+                        'version'         => $version,
+                        'installation_id' => $installation_id,
+                    ]
+                ]);
+                if (empty($device)) {
+                    throw new RuntimeException(__('Failed to save a Device Information.'));
+                }
+            } else {
+                //installation_idを保存
+                $this->Device->id = $device['Device']['id'];
+                $device = $this->Device->saveField('installation_id', $installation_id);
+            }
         }
-        $device_token = $ret_array['deviceToken'];
 
-        //既に存在する場合には登録しない
-        $devices = $this->Device->getDevicesByUserIdAndDeviceToken($user_id, $device_token);
-        if (!empty($devices)) {
-            //既に登録済みは成功
-            return true;
+        //DBに保存されているバージョンとcurrent_versionが一致しない場合は、dbの情報を更新
+        if ($device['Device']['version'] !== $version) {
+            $this->Device->id = $device['Device']['id'];
+            $device = $this->Device->saveField('version', $version);
         }
-
-        $device_type = $ret_array['deviceType'];
-        App::uses('Device', 'Model');
-        $os_type = Device::OS_TYPE_OTHER;
-        if ($device_type == "android") {
-            $os_type = Device::OS_TYPE_ANDROID;
-        } elseif ($device_type == "ios") {
-            $os_type = Device::OS_TYPE_IOS;
-        }
-
-        $data = [
-            'Device' => [
-                'user_id'         => $user_id,
-                'device_token'    => $device_token,
-                'os_type'         => $os_type,
-                'version'         => $version,
-                'installation_id' => $installation_id,
-            ]
-        ];
-
-        $ret = $this->Device->add($data);
-        if (!$ret) {
-            return false;
-        }
-
-        //セットアップガイドステータスの更新
+        //セットアップガイドのカウント更新
         $this->Controller->updateSetupStatusIfNotCompleted();
-
-        return true;
+        return $device;
     }
 
     /**
