@@ -11,7 +11,7 @@ class Device extends AppModel
     const OS_TYPE_IOS = 0;
     const OS_TYPE_ANDROID = 1;
     const OS_TYPE_OTHER = 99;
-    
+
     /**
      * Validation rules
      *
@@ -110,6 +110,31 @@ class Device extends AppModel
                 'Device.user_id'      => $user_id,
                 'Device.device_token' => $device_token,
                 'Device.del_flg'      => false,
+            ],
+        ];
+
+        $data = $this->find('all', $options);
+        return $data;
+    }
+
+    /**
+     * ユーザーId,device_token でDeviceを取得する
+     *
+     * @param $user_id
+     * @param $installation_id
+     *
+     * @return array|bool|null
+     */
+    function getDevicesByUserIdAndInstallationId($user_id, $installation_id)
+    {
+        if (empty($user_id) || empty($installation_id)) {
+            return false;
+        }
+
+        $options = [
+            'conditions' => [
+                'user_id'         => $user_id,
+                'installation_id' => $installation_id,
             ],
         ];
 

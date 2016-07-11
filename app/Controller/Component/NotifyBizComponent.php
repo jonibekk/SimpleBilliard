@@ -84,8 +84,8 @@ class NotifyBizComponent extends Component
      * セットアップガイドの通知を送る
      *
      * @param $user_id
-     * @param $message
-     * @param $url_data
+     * @param $messages
+     * @param $urls
      */
     function sendSetupNotify($user_id, $messages, $urls)
     {
@@ -1560,10 +1560,11 @@ class NotifyBizComponent extends Component
      *
      * @param $user_id
      * @param $installation_id
+     * @param $version
      *
      * @return bool
      */
-    function saveDeviceInfo($user_id, $installation_id)
+    function saveDeviceInfo($user_id, $installation_id, $version = null)
     {
         $ret_array = $this->getDeviceInfo($installation_id);
         if ($ret_array === false) {
@@ -1589,9 +1590,11 @@ class NotifyBizComponent extends Component
 
         $data = [
             'Device' => [
-                'user_id'      => $user_id,
-                'device_token' => $device_token,
-                'os_type'      => $os_type,
+                'user_id'         => $user_id,
+                'device_token'    => $device_token,
+                'os_type'         => $os_type,
+                'version'         => $version,
+                'installation_id' => $installation_id,
             ]
         ];
 
