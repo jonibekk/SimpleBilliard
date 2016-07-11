@@ -11,7 +11,7 @@
  */
 ?>
 <!-- START app/View/Elements/modal_collabo.ctp -->
-<div class="modal-dialog">
+<div class="modal-dialog modal-collabo-dialog">
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true">
@@ -43,7 +43,7 @@
             <?=
             $this->Form->input('role',
                                ['label'                    => __("Role"),
-                                'placeholder'              => __("eg) **"),
+                                'placeholder'              => __("eg) Increasing the number of users"),
                                 "data-bv-notempty-message" => __("Input is required."),
                                 'data-bv-stringlength'         => 'true',
                                 'data-bv-stringlength-max'     => 200,
@@ -56,7 +56,7 @@
             <?=
             $this->Form->input('description',
                                ['label'                    => __("Description"),
-                                'placeholder'              => __("eg) **"),
+                                'placeholder'              => __("eg) I will get the users by advertising."),
                                 "data-bv-notempty-message" => __("Input is required."),
                                 'data-bv-stringlength'         => 'true',
                                 'data-bv-stringlength-max'     => 2000,
