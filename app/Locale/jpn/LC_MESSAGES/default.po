@@ -3239,7 +3239,7 @@ msgstr "ビジョン"
 
 #: View/Elements/my_goals_area.ctp:42
 msgid "View detail"
-msgstr "詳細を見る"
+msgstr "ビジョンを詳しく見る"
 
 #: View/Elements/my_goals_area.ctp:48
 msgid "Your goals"

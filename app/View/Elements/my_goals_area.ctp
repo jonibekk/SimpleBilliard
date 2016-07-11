@@ -39,7 +39,7 @@
 
             <a class="vision-more-read"
                href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'main', '#' => "{$method}/{$vision['id']}/true"]) ?>">
-                <?= __('View detail') ?>
+                <i class="fa fa-arrow-circle-right mr_5px"></i><?= __('View detail') ?>
             </a>
         </div>
 
