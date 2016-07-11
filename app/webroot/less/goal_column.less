@@ -36,7 +36,33 @@
 }
 
 .right-column-vision-objective {
-  .line-number-limit-2(@baseGray);
+  .line-number-limit-vision(@whiteColor);
+  max-height: 88px;
+  overflow: hidden;
+}
+
+/*goals-column-teamvision*/
+.goals-column-teamvision-panel-base{
+  background: @whiteColor;
+  clear: both;
+  margin-bottom: 30px;
+  padding: 8px 4px;
+  position: relative;
+  border-radius: 8px;
+  .shadow-default;
+}
+
+.feed-img-teamvision{
+  height: 60px;
+  width: 60px;
+  margin: 5px 10px 10px;
+  border-radius: 4px;
+  border: 1px solid #808080;
+}
+
+.goals-column-teamvision-name {
+  display: block;
+  height: 40px;
   overflow: hidden;
 }
 
