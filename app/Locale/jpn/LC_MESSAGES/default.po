@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 1.8.7\n"
+"X-Generator: Poedit 1.8.8\n"
 
 #: Config/Migration/1435197386_data_migration_for_all_team_0625.php:76;77
 #: Model/Team.php:225;226 Model/User.php:1148
@@ -87,7 +87,7 @@ msgstr "ゴールを選択する"
 #: Controller/AppController.php:795
 #: Controller/GoalsController.php:1464;1486;1507;1540;1546;1578
 #: Controller/TeamsController.php:1018;1077
-#: Controller/UsersController.php:1194;1293;1315;1335;1365
+#: Controller/UsersController.php:1182;1278;1300;1320;1345
 msgid "Invalid screen transition."
 msgstr "不正な画面遷移です。"
 
@@ -179,7 +179,7 @@ msgstr "サークルから外しました。"
 
 #: Controller/CirclesController.php:421 Controller/GoalsController.php:1294
 #: Controller/PostsController.php:832;856;879
-#: Controller/UsersController.php:227;901;904;979
+#: Controller/UsersController.php:212;890;893;967
 #: View/Elements/gl_common_js.ctp:53
 msgid "An error has occurred."
 msgstr "エラーが発生しました。"
@@ -3109,9 +3109,9 @@ msgstr "コラボを編集"
 msgid "Role"
 msgstr "役割"
 
-#: View/Elements/modal_collabo.ctp:46;59
-msgid "eg) **"
-msgstr "例) ○○"
+#: View/Elements/modal_collabo.ctp:46
+msgid "eg) Increasing the number of users"
+msgstr "例） ユーザー数を増やす"
 
 #: View/Elements/modal_collabo.ctp:58
 #: View/Elements/Goal/modal_add_action.ctp:76
@@ -3124,6 +3124,10 @@ msgstr "例) ○○"
 #: View/Teams/edit_group_vision.ctp:99 View/Teams/edit_team_vision.ctp:91
 msgid "Description"
 msgstr "概要"
+
+#: View/Elements/modal_collabo.ctp:59
+msgid "eg) I will get the users by advertising."
+msgstr "例） 広告でユーザーを獲得する"
 
 #: View/Elements/modal_collabo.ctp:93
 msgid "Quit the collaboration"
