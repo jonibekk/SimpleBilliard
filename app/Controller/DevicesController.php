@@ -83,6 +83,6 @@ class DevicesController extends AppController
             ];
         }
 
-        return $this->_ajaxGetResponse($ret_array);
+        return $this->_ajaxGetResponse($ret_array, JSON_UNESCAPED_UNICODE);
     }
 }
