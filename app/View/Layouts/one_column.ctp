@@ -14,7 +14,7 @@ if (!isset($without_footer)) {
 <!--suppress ALL -->
 <html lang="ja">
 <?= $this->element('head') ?>
-<body class="body">
+<body class="<?= $is_mb_app ? 'mb-app-body' : 'body' ?>">
 <?php if (extension_loaded('newrelic')) {
     /** @noinspection PhpUndefinedFunctionInspection */
     echo newrelic_get_browser_timing_header();

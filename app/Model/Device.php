@@ -11,7 +11,7 @@ class Device extends AppModel
     const OS_TYPE_IOS = 0;
     const OS_TYPE_ANDROID = 1;
     const OS_TYPE_OTHER = 99;
-    
+
     /**
      * Validation rules
      *
@@ -116,6 +116,7 @@ class Device extends AppModel
         $data = $this->find('all', $options);
         return $data;
     }
+
 
     /**
      * ユーザーIDでDevice.device_tokenのみを配列で取得する

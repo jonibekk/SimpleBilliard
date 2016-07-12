@@ -1,6 +1,23 @@
 {
+  "env": {
+    "browser": true,
+    "es6": true
+  },
   "globals": {
     "window": true,
     "cake": true
+  },
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "ecmaFeatures": {
+    "jsx": true
+  },
+  "plugins": [
+    "react"
+  ],
+  "rules": {
+    "react/jsx-uses-vars": 1
   }
 }

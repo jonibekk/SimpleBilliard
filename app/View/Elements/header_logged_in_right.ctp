@@ -13,14 +13,14 @@
             $this->Upload->uploadImage($my_prof, 'User.photo', ['style' => 'small'],
                                        ['width' => '24', 'height' => '24', 'alt' => 'icon', 'class' => 'header-nav-avatar']) ?>
             <span class="header-user-name js-header-link">
-            <?= $this->Session->read('Auth.User.display_first_name') ?>
+            <?= h($this->Session->read('Auth.User.display_first_name')) ?>
         </span>
         </a>
         <a href="<?= $this->Html->url('/') ?>" class="header-user-home  js-header-link"><?= __(
                 'Home') ?></a>
     <?php endif; ?>
 
-    <div class="header-setup" id="setup">
+    <div class="<?= $is_mb_app ? "mb-app-header-setup" : "header-setup" ?>" id="setup">
         <a href="/setup/top/" class="btn-header-setup">
             <i class="fa fa-book  header-icons header-dropdown-icon-add header-function-icon header-icons <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"
                id="setupIcon"></i>
@@ -32,7 +32,7 @@
         </a>
     </div>
 
-    <div class="header-dropdown-add">
+    <div class="<?= $is_mb_app ? "mb-app-header-dropdown-add" : "header-dropdown-add" ?>">
         <a href="#" data-toggle="dropdown" id="download" class="btn-addition-header">
             <i class="fa fa-plus-circle header-icons header-dropdown-icon-add <?= $is_mb_app ? "mb-app-nav-icon" : "header-drop-icons js-header-link" ?>"></i>
         </a>
@@ -124,7 +124,7 @@
             </a>
         </div>
     </div>
-    <div class="header-dropdown-functions header-function">
+    <div class="<?= $is_mb_app ? "mb-app-header-dropdown-functions" : "header-dropdown-functions" ?>" header-function">
         <a href="#"
            class="btn-function-header"
            data-toggle="dropdown"
