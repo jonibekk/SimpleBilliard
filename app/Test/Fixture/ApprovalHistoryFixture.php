@@ -15,7 +15,7 @@ class ApprovalHistoryFixture extends CakeTestFixtureEx
         'id'              => ['type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'ID'],
         'collaborator_id' => ['type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'コラボレーターID(hasManyでcollaboratorモデルに関連)'],
         'user_id'         => ['type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'comment' => 'ユーザーID(belongsToでUserモデルに関連)'],
-        'comment'         => ['type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'コメント', 'charset' => 'utf8'],
+        'comment'         => ['type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => 'コメント', 'charset' => 'utf8mb4'],
         'action_status'   => ['type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => true, 'comment' => ' 状態(0 = アクションなし,1 =コメントのみ, 2 = 評価対象にする, 3 = 評価対象にしない, 4 =修正依頼)'],
         'del_flg'         => ['type' => 'boolean', 'null' => false, 'default' => '0', 'key' => 'index', 'comment' => '削除フラグ'],
         'deleted'         => ['type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '削除した日付時刻'],
@@ -27,7 +27,7 @@ class ApprovalHistoryFixture extends CakeTestFixtureEx
             'del_flg'         => ['column' => 'del_flg', 'unique' => 0],
             'created'         => ['column' => 'created', 'unique' => 0]
         ],
-        'tableParameters' => ['charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB']
+        'tableParameters' => ['charset' => 'utf8mb4', 'collate' => 'utf8mb4_general_ci', 'engine' => 'InnoDB']
     ];
 
     /**

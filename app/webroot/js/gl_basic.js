@@ -14,6 +14,7 @@ require.config({
 });
 
 var network_reachable = true;
+var enabled_intercom_icon = (typeof enabled_intercom_icon === "undefined") ? null : enabled_intercom_icon;
 
 function bindPostBalancedGallery($obj) {
     $obj.removeClass('none');
@@ -86,7 +87,7 @@ jQuery.fn.exists = function () {
 }
 
 // scrollbarの存在確認用
-jQuery.fn.hasScrollBar = function() {
+jQuery.fn.hasScrollBar = function () {
     return this.get(0) ? this.get(0).scrollHeight > this.innerHeight() : false;
 }
 
@@ -99,20 +100,24 @@ $(window).load(function () {
 
 $(document).ready(function () {
 
+    //intercomのリンクを非表示にする
+    if (enabled_intercom_icon) {
+        $('#IntercomLink').hide();
+    }
     // Androidアプリかiosアプリの場合のみfastClickを実行する。
     // 　→iosでsafari/chromeでfastClick使用時、チェックボックス操作に不具合が見つかったため。
-    if(cake.is_mb_app === 'true' || cake.is_mb_app_ios === 'true') {
+    if (cake.is_mb_app === 'true' || cake.is_mb_app_ios === 'true') {
         fastClick();
     }
 
     //Monitoring of the communication state of App Server | Appサーバーの通信状態の監視
-    window.addEventListener("online", function() {
+    window.addEventListener("online", function () {
         updateNotifyCnt();
         updateMessageNotifyCnt();
         network_reachable = true;
     }, false);
 
-    window.addEventListener("offline", function() {
+    window.addEventListener("offline", function () {
         network_reachable = false;
     }, false);
 
@@ -202,7 +207,7 @@ $(document).ready(function () {
     })
 
     $('.fileinput-enabled-submit').fileinput()
-        //ファイル選択時にsubmitボタンを有効化する
+    //ファイル選択時にsubmitボタンを有効化する
         .on('change.bs.fileinput', function () {
             attrUndefinedCheck(this, 'submit-id');
             var id = $(this).attr('submit-id');
@@ -689,12 +694,12 @@ $(document).ready(function () {
         e.preventDefault();
         var $form = $('#RegenerateRecoveryCodeForm');
         $.ajax({
-                url: cake.url.regenerate_recovery_code,
-                type: 'POST',
-                dataType: 'json',
-                processData: false,
-                data: $form.serialize()
-            })
+            url: cake.url.regenerate_recovery_code,
+            type: 'POST',
+            dataType: 'json',
+            processData: false,
+            data: $form.serialize()
+        })
             .done(function (res) {
                 PNotify.removeAll();
                 if (res.error) {
@@ -1105,14 +1110,14 @@ function uploadCsvFileByForm(e) {
 
     var $f = $(this);
     $.ajax({
-            url: $f.prop('action'),
-            method: 'post',
-            dataType: 'json',
-            processData: false,
-            contentType: false,
-            data: new FormData(this),
-            timeout: 600000 //10min
-        })
+        url: $f.prop('action'),
+        method: 'post',
+        dataType: 'json',
+        processData: false,
+        contentType: false,
+        data: new FormData(this),
+        timeout: 600000 //10min
+    })
         .done(function (data) {
             // 通信が成功したときの処理
             $result_msg
@@ -1170,14 +1175,14 @@ function addComment(e) {
     var $f = $(e.target);
     var ajaxProcess = $.Deferred();
     $.ajax({
-            url: $f.prop('action'),
-            method: 'post',
-            dataType: 'json',
-            processData: false,
-            contentType: false,
-            data: new FormData(e.target),
-            timeout: 300000 //5min
-        })
+        url: $f.prop('action'),
+        method: 'post',
+        dataType: 'json',
+        processData: false,
+        contentType: false,
+        data: new FormData(e.target),
+        timeout: 300000 //5min
+    })
         .done(function (data) {
             if (!data.error) {
                 // 通信が成功したときの処理
@@ -1675,42 +1680,40 @@ function ajaxAppendCount(id, url) {
 }
 
 $(function () {
-    var tutorialNum = 1;
-    $("#modalTutorialPrev").hide();
-    $("#tutorialText2").hide();
-    $("#modalTutorialFinish").hide();
-    $("#tutorialIndicator1").addClass("setup-tutorial-navigation-indicator-selected");
+    var current_slide_id = 1;
 
-    $("#modalTutorialNext").on("click", function () {
-        if (tutorialNum == 1) {
-            $("#modalTutorialBox").addClass("tutorial-box2").removeClass("tutorial-box1");
-            $("#tutorialText1").hide();
-            $("#tutorialText2").show();
-            tutorialNum++;
-            $("#tutorialIndicator1").removeClass("setup-tutorial-navigation-indicator-selected");
-            $("#tutorialIndicator2").addClass("setup-tutorial-navigation-indicator-selected");
-        }
-        else if (tutorialNum == 2) {
-            $("#modalTutorialBox").addClass("tutorial-box3").removeClass("tutorial-box2");
-            $("#tutorialText2").hide();
-            $("#tutorialText3").show();
-            $("#modalTutorialNext").hide();
-            $("#modalTutorialFinish").show();
-            tutorialNum++;
-            $("#tutorialIndicator2").removeClass("setup-tutorial-navigation-indicator-selected");
-            $("#tutorialIndicator3").addClass("setup-tutorial-navigation-indicator-selected");
-        }
+    // インジケータークリック時
+    $(document).on('click', '.setup-tutorial-indicator', function() {
+        resetDisplayStatus();
+        changeTutorialContent($(this).attr('data-id'));
     });
-    $("#modalTutorialFinish").on("click", function () {
-        $("#modalTutorialBox").addClass("tutorial-box1").removeClass("tutorial-box3");
-        $("#tutorialText3").hide();
-        $("#modalTutorialNext").show();
-        $("#modalTutorialFinish").hide();
-        tutorialNum = 1;
-        location.href = "/setup/";
-        $("#tutorialIndicator3").removeClass("setup-tutorial-navigation-indicator-selected");
-        $("#tutorialIndicator1").addClass("setup-tutorial-navigation-indicator-selected");
+
+    // ネクストボタンクリック時
+    $(document).on('click', '.tutorial-next-btn', function() {
+        if(current_slide_id == 3) {
+            location.href = "/setup/";
+            return;
+        }
+        resetDisplayStatus();
+
+        var next_id = String(Number(current_slide_id) + 1);
+        changeTutorialContent(next_id);
     });
+
+    function changeTutorialContent(content_id) {
+        // 各要素をカレントステータスに設定
+        $('.tutorial-box' + content_id).show();
+        $('.tutorial-text' + content_id).show();
+        $('.setup-tutorial-indicator' + content_id).addClass('setup-tutorial-navigation-indicator-selected');
+
+        current_slide_id = content_id;
+    }
+
+    function resetDisplayStatus() {
+        $('.tutorial-body').children('div').hide();
+        $('.setup-tutorial-texts').children('div').hide();
+        $('.setup-tutorial-navigation-indicator').children('span').removeClass('setup-tutorial-navigation-indicator-selected');
+    }
 });
 
 //入力途中での警告表示
@@ -1950,12 +1953,12 @@ $(document).ready(function () {
                 $modal_elm.append(data);
                 $modal_elm.modal();
                 $modal_elm.find(".bt-switch").bootstrapSwitch({
-                        size: "small",
-                        onText: cake.word.b,
-                        offText: cake.word.c
-                    })
-                    // 参加/不参加 のスイッチ切り替えた時
-                    // 即時データを更新する
+                    size: "small",
+                    onText: cake.word.b,
+                    offText: cake.word.c
+                })
+                // 参加/不参加 のスイッチ切り替えた時
+                // 即時データを更新する
                     .on('switchChange.bootstrapSwitch', function (e, state) {
                         var $checkbox = $(this);
                         var $form = $('#CircleJoinForm');
@@ -1972,12 +1975,12 @@ $(document).ready(function () {
                         }
 
                         $.ajax({
-                                url: cake.url.join_circle,
-                                type: 'POST',
-                                dataType: 'json',
-                                processData: false,
-                                data: $form.serialize()
-                            })
+                            url: cake.url.join_circle,
+                            type: 'POST',
+                            dataType: 'json',
+                            processData: false,
+                            data: $form.serialize()
+                        })
                             .done(function (res) {
                                 PNotify.removeAll();
                                 new PNotify({
@@ -2034,18 +2037,18 @@ $(document).ready(function () {
             $modal_elm.append(data);
             $modal_elm.modal();
             $modal_elm.find(".bt-switch").bootstrapSwitch({
-                    size: "small"
-                })
-                // スイッチ切り替えた時、即時データを更新する
+                size: "small"
+            })
+            // スイッチ切り替えた時、即時データを更新する
                 .on('switchChange.bootstrapSwitch', function () {
                     var $form = $('#CircleSettingForm');
                     $.ajax({
-                            url: cake.url.circle_setting,
-                            type: 'POST',
-                            dataType: 'json',
-                            processData: false,
-                            data: $form.serialize()
-                        })
+                        url: cake.url.circle_setting,
+                        type: 'POST',
+                        dataType: 'json',
+                        processData: false,
+                        data: $form.serialize()
+                    })
                         .done(function (res) {
                             PNotify.removeAll();
                             if (res.error) {
@@ -2110,12 +2113,12 @@ $(document).ready(function () {
         require(['ogp'], function (ogp) {
             // 投稿編集の場合で、OGPのurlが登録されている場合
             if ($('.post-edit').size()) {
-                if($('.post-edit').attr('data-default-ogp-url')) {
+                if ($('.post-edit').attr('data-default-ogp-url')) {
                     getPostOGPInfo(ogp, $('.post-edit').attr('data-default-ogp-url'));
                 }
             }
 
-            var onKeyUp = function() {
+            var onKeyUp = function () {
                 getPostOGPInfo(ogp, $('#CommonPostBody').val());
             };
             var timer = null;
@@ -2215,35 +2218,35 @@ function initMemberSelect2() {
 function initCircleSelect2() {
     //noinspection JSUnusedLocalSymbols,JSDuplicatedDeclaration
     $('#select2PostCircleMember').select2({
-            multiple: true,
-            placeholder: cake.word.select_public_circle,
-            minimumInputLength: 1,
-            ajax: {
-                url: cake.url.select2_circle_user,
-                dataType: 'json',
-                quietMillis: 100,
-                cache: true,
-                data: function (term, page) {
-                    return {
-                        term: term, //search term
-                        page_limit: 10, // page size
-                        circle_type: "public"
-                    };
-                },
-                results: function (data, page) {
-                    return {results: data.results};
-                }
+        multiple: true,
+        placeholder: cake.word.select_public_circle,
+        minimumInputLength: 1,
+        ajax: {
+            url: cake.url.select2_circle_user,
+            dataType: 'json',
+            quietMillis: 100,
+            cache: true,
+            data: function (term, page) {
+                return {
+                    term: term, //search term
+                    page_limit: 10, // page size
+                    circle_type: "public"
+                };
             },
-            data: [],
-            initSelection: cake.data.b,
-            formatSelection: format,
-            formatResult: format,
-            dropdownCssClass: 's2-post-dropdown',
-            escapeMarkup: function (m) {
-                return m;
-            },
-            containerCssClass: "select2PostCircleMember"
-        })
+            results: function (data, page) {
+                return {results: data.results};
+            }
+        },
+        data: [],
+        initSelection: cake.data.b,
+        formatSelection: format,
+        formatResult: format,
+        dropdownCssClass: 's2-post-dropdown',
+        escapeMarkup: function (m) {
+            return m;
+        },
+        containerCssClass: "select2PostCircleMember"
+    })
         .on('change', function () {
             var $this = $(this);
             // グループを選択した場合、グループに所属するユーザーを展開して入力済にする
@@ -2437,31 +2440,31 @@ function bindSelect2Members($this) {
 
     //noinspection JSUnusedLocalSymbols
     $select2elem.select2({
-            'val': null,
-            multiple: true,
-            minimumInputLength: 1,
-            placeholder: cake.message.notice.b,
-            ajax: {
-                url: url ? url : cake.url.a,
-                dataType: 'json',
-                quietMillis: 100,
-                cache: true,
-                data: function (term, page) {
-                    return {
-                        term: term, //search term
-                        page_limit: 10 // page size
-                    };
-                },
-                results: function (data, page) {
-                    return {results: data.results};
-                }
+        'val': null,
+        multiple: true,
+        minimumInputLength: 1,
+        placeholder: cake.message.notice.b,
+        ajax: {
+            url: url ? url : cake.url.a,
+            dataType: 'json',
+            quietMillis: 100,
+            cache: true,
+            data: function (term, page) {
+                return {
+                    term: term, //search term
+                    page_limit: 10 // page size
+                };
             },
-            formatSelection: format,
-            formatResult: format,
-            escapeMarkup: function (m) {
-                return m;
+            results: function (data, page) {
+                return {results: data.results};
             }
-        })
+        },
+        formatSelection: format,
+        formatResult: format,
+        escapeMarkup: function (m) {
+            return m;
+        }
+    })
         .on('change', function () {
             var $this = $(this);
             // グループを選択した場合
@@ -2782,10 +2785,12 @@ function updateAddressBar(url) {
 
 function activateMessage() {
     var message_app = $("#message-app");
-    angular.element(message_app).ready(function () { angular.bootstrap(message_app, ['messageApp']); });
+    angular.element(message_app).ready(function () {
+        angular.bootstrap(message_app, ['messageApp']);
+    });
 }
 
-function evMessage(){
+function evMessage() {
     //とりあえずドロップダウンは隠す
     $("#HeaderDropdownNotify").removeClass("open");
     $(".header-dropdown-message").removeClass("open");
@@ -2812,7 +2817,7 @@ function evMessage(){
 
     //アドレスバー書き換え
     var addressbar_url = get_url.replace(/message[#]*/, "message#");
-    if(!updateAddressBar(addressbar_url)){
+    if (!updateAddressBar(addressbar_url)) {
         return false;
     }
 
@@ -2863,7 +2868,7 @@ function evMessage(){
     return false;
 }
 
-function activateMessageList(){
+function activateMessageList() {
     var message_list_app = $("#message-list-app");
     angular.element(message_list_app).ready(function () {
         angular.bootstrap(message_list_app, ['messageListApp']);
@@ -2985,7 +2990,7 @@ function evNotifications(options) {
     }
 
     //アドレスバー書き換え
-    if(!updateAddressBar(get_url)){
+    if (!updateAddressBar(get_url)) {
         return false;
     }
 
@@ -3071,7 +3076,7 @@ function evNotifyPost(options) {
     }
 
     //アドレスバー書き換え
-    if(!updateAddressBar(get_url)){
+    if (!updateAddressBar(get_url)) {
         return false;
     }
 
@@ -3672,13 +3677,13 @@ function getModalFormFromUrl(e) {
 
     $modal_elm.on('shown.bs.modal', function (e) {
         $(this).find('.input-group.date').datepicker({
-                format: "yyyy/mm/dd",
-                todayBtn: 'linked',
-                language: "ja",
-                autoclose: true,
-                todayHighlight: true
-                //endDate:"2015/11/30"
-            })
+            format: "yyyy/mm/dd",
+            todayBtn: 'linked',
+            language: "ja",
+            autoclose: true,
+            todayHighlight: true
+            //endDate:"2015/11/30"
+        })
             .on('hide', function (e) {
                 $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[KeyResult][start_date]");
                 $("#AddGoalFormKeyResult").bootstrapValidator('revalidateField', "data[KeyResult][end_date]");
@@ -4471,7 +4476,7 @@ $(document).ready(function () {
             if (!autoload_more) {
                 autoload_more = true;
 
-                if(network_reachable) {
+                if (network_reachable) {
                     $('#FeedMoreReadLink').trigger('click');
                     $('#GoalPageFollowerMoreLink').trigger('click');
                     $('#GoalPageMemberMoreLink').trigger('click');
@@ -4711,12 +4716,12 @@ $(document).ready(function () {
                 }
                 $removeFileForm.find('input[name="data[AttachedFile][file_id]"]').val($preview.data('file_id'));
                 $.ajax({
-                        url: cake.url.remove_file,
-                        type: 'POST',
-                        dataType: 'json',
-                        processData: false,
-                        data: $removeFileForm.serialize()
-                    })
+                    url: cake.url.remove_file,
+                    type: 'POST',
+                    dataType: 'json',
+                    processData: false,
+                    data: $removeFileForm.serialize()
+                })
                     .done(function (res) {
                         PNotify.removeAll();
                         // エラー
@@ -5100,12 +5105,12 @@ $(document).ready(function () {
                 // サーバ上から削除
                 $removeFileForm.find('input[name="data[AttachedFile][file_id]"]').val(sanitize(old_file.file_id));
                 $.ajax({
-                        url: cake.url.remove_file,
-                        type: 'POST',
-                        dataType: 'json',
-                        processData: false,
-                        data: $removeFileForm.serialize()
-                    })
+                    url: cake.url.remove_file,
+                    type: 'POST',
+                    dataType: 'json',
+                    processData: false,
+                    data: $removeFileForm.serialize()
+                })
                     .done(function (res) {
                         // pass
                     })
@@ -5176,12 +5181,12 @@ $(document).ready(function () {
                 // サーバ上から削除
                 $removeFileForm.find('input[name="data[AttachedFile][file_id]"]').val(sanitize(old_file.file_id));
                 $.ajax({
-                        url: cake.url.remove_file,
-                        type: 'POST',
-                        dataType: 'json',
-                        processData: false,
-                        data: $removeFileForm.serialize()
-                    })
+                    url: cake.url.remove_file,
+                    type: 'POST',
+                    dataType: 'json',
+                    processData: false,
+                    data: $removeFileForm.serialize()
+                })
                     .done(function (res) {
                         // pass
                     })
@@ -5386,12 +5391,12 @@ function evAjaxEditCircleAdminStatus(e) {
     var user_id = $this.attr('data-user-id');
 
     $.ajax({
-            url: $this.attr('action'),
-            type: 'POST',
-            dataType: 'json',
-            processData: false,
-            data: $this.serialize()
-        })
+        url: $this.attr('action'),
+        type: 'POST',
+        dataType: 'json',
+        processData: false,
+        data: $this.serialize()
+    })
         .done(function (data) {
             // 処理失敗時
             if (data.error) {
@@ -5453,12 +5458,12 @@ function evAjaxLeaveCircle(e) {
     var user_id = $this.attr('data-user-id');
 
     $.ajax({
-            url: $this.attr('action'),
-            type: 'POST',
-            dataType: 'json',
-            processData: false,
-            data: $this.serialize()
-        })
+        url: $this.attr('action'),
+        type: 'POST',
+        dataType: 'json',
+        processData: false,
+        data: $this.serialize()
+    })
         .done(function (data) {
             // 処理失敗時
             if (data.error) {
@@ -5579,7 +5584,7 @@ function appendPostOgpInfo(data) {
     var $siteInfoUrl = $('#PostSiteInfoUrl');
     var $siteInfo = $('#PostOgpSiteInfo');
     $siteInfo
-        // プレビュー用 HTML
+    // プレビュー用 HTML
         .html(data.html)
         // プレビュー削除ボタンを重ねて表示
         .append($('<a>').attr('href', '#')
@@ -5600,8 +5605,8 @@ function appendPostOgpInfo(data) {
             }))
         // プレビュー削除ボタンの表示スペースを作る
         .find('.site-info').css({
-            "padding-right": "30px"
-        });
+        "padding-right": "30px"
+    });
 
     // hidden に URL 追加
     $siteInfoUrl.val(data.url);
@@ -5627,11 +5632,11 @@ function isMobile() {
  * @param string
  * @returns string
  */
-function sanitize (string) {
-    if(typeof string !== 'string') {
+function sanitize(string) {
+    if (typeof string !== 'string') {
         return string;
     }
-    return string.replace(/[&'`"<>]/g, function(match) {
+    return string.replace(/[&'`"<>]/g, function (match) {
         return {
             '&': '&amp;',
             "'": '&#x27;',
