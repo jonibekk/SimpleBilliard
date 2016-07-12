@@ -28,12 +28,12 @@ class DevicesController extends AppController
      *
      * @return CakeResponse
      */
-    public function add()
+    public function add($user_id, $installation_id, $current_version)
     {
-        $this->request->allowMethod('post');
-        $user_id = $this->request->data['user_id'];
-        $installation_id = $this->request->data['installation_id'];
-        $current_version = isset($this->request->data['current_version']) ? $this->request->data['current_version'] : null;
+//        $this->request->allowMethod('post');
+//        $user_id = $this->request->data['user_id'];
+//        $installation_id = $this->request->data['installation_id'];
+//        $current_version = isset($this->request->data['current_version']) ? $this->request->data['current_version'] : null;
 
         try {
             $device = $this->NotifyBiz->saveDeviceInfo($user_id, $installation_id, $current_version);
@@ -83,6 +83,6 @@ class DevicesController extends AppController
             ];
         }
 
-        return $this->_ajaxGetResponse($ret_array);
+        return $this->_ajaxGetResponse($ret_array, JSON_UNESCAPED_UNICODE);
     }
 }
