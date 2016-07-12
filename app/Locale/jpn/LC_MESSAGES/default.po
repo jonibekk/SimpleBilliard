@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2016-07-11 16:06+0900\n"
-"PO-Revision-Date: 2016-07-11 16:06+0900\n"
+"POT-Creation-Date: 2016-07-12 00:50+0900\n"
+"PO-Revision-Date: 2016-07-12 00:54+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -194,21 +194,26 @@ msgstr "設定を更新しました。"
 msgid "Error"
 msgstr "エラー"
 
-#: Controller/DevicesController.php:67;73
-msgid "Device Information not exists"
-msgstr ""
-
-#: Controller/DevicesController.php:84
+#: Controller/DevicesController.php:45;120
 msgid "Internal Server Error"
-msgstr ""
+msgstr "サーバー内部のエラーが発生しました。"
 
-#: Controller/DevicesController.php:99
+#: Controller/DevicesController.php:51
+msgid "Version Info not exists"
+msgstr "バージョン情報が存在しません。"
+
+#: Controller/DevicesController.php:54;135
 msgid "This device is latest version."
-msgstr ""
+msgstr "このデバイスは最新バージョンです。"
 
-#: Controller/DevicesController.php:99
+#: Controller/DevicesController.php:56;135
 msgid "This device is not latest version."
-msgstr ""
+msgstr "このデバイスは最新バージョンではありません。"
+
+#: Controller/DevicesController.php:103;109
+#: Controller/Component/NotifyBizComponent.php:1580
+msgid "Device Information not exists"
+msgstr "デバイス情報が見つかりません。"
 
 #: Controller/EmailsController.php:26
 msgid "This email address doesn't exist."
@@ -882,7 +887,7 @@ msgstr "グループビジョンの保存に失敗しました。"
 msgid "Updated group vision."
 msgstr "グループビジョンを更新しました。"
 
-#: Controller/UsersController.php:91;152;196
+#: Controller/UsersController.php:91;168;211
 msgid "Your account is tempolary locked. It will be unlocked after %s mins."
 msgstr "アカウントがロックされています。%s分後に自動的に解除されます。"
 
@@ -890,19 +895,19 @@ msgstr "アカウントがロックされています。%s分後に自動的に�
 msgid "Email address or Password is incorrect."
 msgstr "メールアドレスもしくはパスワードが正しくありません。"
 
-#: Controller/UsersController.php:141;185;237
+#: Controller/UsersController.php:157;200;251
 msgid "Error. Try to login again."
 msgstr "エラーが発生しました。再度ログインをしてください。"
 
-#: Controller/UsersController.php:166
+#: Controller/UsersController.php:181
 msgid "Incorrect 2fa code."
 msgstr "2段階認証コードが正しくありません。"
 
-#: Controller/UsersController.php:205
+#: Controller/UsersController.php:220
 msgid "Incorrect recovery code."
 msgstr "リカバリーコードが正しくありません。"
 
-#: Controller/UsersController.php:232
+#: Controller/UsersController.php:247
 #: View/Emails/text/account_verification.ctp:14
 #: View/Emails/text/change_email.ctp:14 View/Emails/text/invite.ctp:17
 #: View/Emails/text/password_reset.ctp:14
@@ -911,54 +916,54 @@ msgstr "リカバリーコードが正しくありません。"
 msgid "Hello %s."
 msgstr "%sさん、こんにちは。"
 
-#: Controller/UsersController.php:233
+#: Controller/UsersController.php:248
 msgid "Succeeded to login"
 msgstr "ログイン成功"
 
-#: Controller/UsersController.php:258
+#: Controller/UsersController.php:272
 msgid "See you %s"
 msgstr "%sさん、またお会いしましょう"
 
-#: Controller/UsersController.php:259
+#: Controller/UsersController.php:273
 msgid "Logged out"
 msgstr "ログアウトしました"
 
-#: Controller/UsersController.php:374
+#: Controller/UsersController.php:391
 msgid "Code is incorrect."
 msgstr "トークンが正しくありません。"
 
-#: Controller/UsersController.php:388
+#: Controller/UsersController.php:405
 msgid ""
 "Email address is incorrect. Please enter the address from the email you "
 "received."
 msgstr ""
 "メールアドレスが一致しません。招待が届いたメールアドレスを入力してください。"
 
-#: Controller/UsersController.php:509
+#: Controller/UsersController.php:524
 msgid "Succeeded to register!"
 msgstr "本登録が完了しました！"
 
-#: Controller/UsersController.php:519
+#: Controller/UsersController.php:533
 msgid "Authenticated your email address."
 msgstr "メールアドレスの認証が完了しました。"
 
-#: Controller/UsersController.php:546
+#: Controller/UsersController.php:560
 msgid "Please cancel changing email address and try again."
 msgstr "メールアドレス変更を一度キャンセルし、再度変更してください。"
 
-#: Controller/UsersController.php:553
+#: Controller/UsersController.php:567
 msgid "Email address is changed."
 msgstr "メールアドレスの変更が正常に完了しました。"
 
-#: Controller/UsersController.php:583
+#: Controller/UsersController.php:597
 msgid "Password reset email has been sent. Please check your email."
 msgstr "パスワード再設定のメールを送信しました。ご確認ください。"
 
-#: Controller/UsersController.php:584
+#: Controller/UsersController.php:598
 msgid "Email sent."
 msgstr "メールを送信しました"
 
-#: Controller/UsersController.php:593
+#: Controller/UsersController.php:607
 msgid ""
 "Password code incorrect. The validity period may have expired. Please resend "
 "email again."
@@ -966,67 +971,67 @@ msgstr ""
 "パスワードトークンが正しくないか、期限切れの可能性があります。もう一度、再設"
 "定用のメールを送信してください。"
 
-#: Controller/UsersController.php:594
+#: Controller/UsersController.php:608
 msgid "Failed to confirm code."
 msgstr "コードの認証に失敗しました。"
 
-#: Controller/UsersController.php:606
+#: Controller/UsersController.php:620
 msgid "Please login with your new password."
 msgstr "新しいパスワードでログインしてください。"
 
-#: Controller/UsersController.php:607
+#: Controller/UsersController.php:621
 msgid "Password is set."
 msgstr "パスワードを設定しました"
 
-#: Controller/UsersController.php:626;785
+#: Controller/UsersController.php:640;797
 msgid "Confirmation has been sent to your email address."
 msgstr "メールアドレス認証用のメールを送信しました。ご確認ください。"
 
-#: Controller/UsersController.php:627
+#: Controller/UsersController.php:641
 msgid "Send you an email."
 msgstr "メールを送信しました"
 
-#: Controller/UsersController.php:683
+#: Controller/UsersController.php:697
 msgid "Saved user setting."
 msgstr "ユーザ設定を保存しました。"
 
-#: Controller/UsersController.php:686
+#: Controller/UsersController.php:699
 msgid "Failed to save user setting."
 msgstr "ユーザ設定の保存に失敗しました。"
 
-#: Controller/UsersController.php:758
+#: Controller/UsersController.php:770
 msgid "Failed to save password change."
 msgstr "パスワードの変更に失敗しました"
 
-#: Controller/UsersController.php:762
+#: Controller/UsersController.php:774
 msgid "Changed password."
 msgstr "パスワードを変更しました。"
 
-#: Controller/UsersController.php:822
+#: Controller/UsersController.php:834
 msgid "This invitation isn't not for you."
 msgstr "別のユーザ宛のチーム招待です。"
 
-#: Controller/UsersController.php:828
+#: Controller/UsersController.php:840
 msgid "Joined %s."
 msgstr "チーム「%s」に参加しました。"
 
-#: Controller/UsersController.php:896
+#: Controller/UsersController.php:907
 msgid "The code is incorrect."
 msgstr "コードが正しくありません。"
 
-#: Controller/UsersController.php:907
+#: Controller/UsersController.php:918
 msgid "Succeeded to save 2-Step Verification."
 msgstr "2段階認証の登録が完了しました。"
 
-#: Controller/UsersController.php:930
+#: Controller/UsersController.php:941
 msgid "Succeeded to cancel 2-Step Verification."
 msgstr "2段階認証を解除しました。"
 
-#: Controller/UsersController.php:974
+#: Controller/UsersController.php:988
 msgid "Generated new recovery codes."
 msgstr "新しいリカバリコードを生成しました。"
 
-#: Controller/UsersController.php:1211 Model/EvaluateTerm.php:517
+#: Controller/UsersController.php:1223 Model/EvaluateTerm.php:517
 #: Model/Goal.php:69 View/Elements/Team/evaluation_freeze.ctp:31
 #: View/Elements/Team/evaluation_progress.ctp:40
 #: View/Elements/Team/insight_form_input.ctp:54 View/Evaluations/index.ctp:23
@@ -1034,25 +1039,33 @@ msgstr "新しいリカバリコードを生成しました。"
 msgid "Current Term"
 msgstr "今期"
 
-#: Controller/UsersController.php:1212 Model/EvaluateTerm.php:523
+#: Controller/UsersController.php:1224 Model/EvaluateTerm.php:523
 #: Model/Goal.php:70 View/Goals/add.ctp:339
 msgid "Next Term"
 msgstr "来期"
 
-#: Controller/UsersController.php:1213 Model/EvaluateTerm.php:520
+#: Controller/UsersController.php:1225 Model/EvaluateTerm.php:520
 #: Model/Goal.php:71 View/Elements/Team/evaluation_freeze.ctp:48
 #: View/Elements/Team/evaluation_progress.ctp:30
 #: View/Elements/Team/insight_form_input.ctp:57 View/Evaluations/index.ctp:23
 msgid "Previous Term"
 msgstr "前期"
 
-#: Controller/UsersController.php:1364
+#: Controller/UsersController.php:1384
 msgid "Registered email address."
 msgstr "メールアドレスの登録ができました。"
 
 #: Controller/Component/LangComponent.php:32
 msgid "日本語"
 msgstr "日本語"
+
+#: Controller/Component/NotifyBizComponent.php:1571
+msgid "Parameters were wrong"
+msgstr "不正なパラメータです。"
+
+#: Controller/Component/NotifyBizComponent.php:1611
+msgid "Failed to save a Device Information."
+msgstr "デバイス情報の保存に失敗しました。"
 
 #: Controller/Component/OgpComponent.php:200
 #: View/Elements/Feed/post_body.ctp:21;24
@@ -6335,9 +6348,6 @@ msgstr "passwordCheck"
 #: Model/User.php:validation for field password_confirm
 msgid "passwordSameCheck"
 msgstr "passwordSameCheck"
-
-#~ msgid "eg) **"
-#~ msgstr "例) ○○"
 
 #~ msgid "Harry"
 #~ msgstr "Takashi"
