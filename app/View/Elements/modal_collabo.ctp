@@ -27,7 +27,7 @@
                 'label'     => [
                     'class' => 'col col-sm-3 control-label pr_5px'
                 ],
-                'wrapInput' => 'col col-sm-6',
+                'wrapInput' => 'col col-sm-7',
                 'class'     => 'form-control modal_input-design'
             ],
             'class'         => 'form-horizontal',
