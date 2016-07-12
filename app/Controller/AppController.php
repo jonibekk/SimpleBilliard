@@ -50,11 +50,13 @@ class AppController extends Controller
             'csrfExpires' => '+24 hour'
         ],
         'Paginator',
-        'Auth'             => ['flash' => [
-            'element' => 'alert',
-            'key'     => 'auth',
-            'params'  => ['plugin' => 'BoostCake', 'class' => 'alert-error']
-        ]],
+        'Auth'             => [
+            'flash' => [
+                'element' => 'alert',
+                'key'     => 'auth',
+                'params'  => ['plugin' => 'BoostCake', 'class' => 'alert-error']
+            ]
+        ],
         'Lang',
         'Cookie',
         'Timezone',
@@ -160,8 +162,7 @@ class AppController extends Controller
         //全ページ共通のタイトルセット(書き換える場合はこの変数の値を変更の上、再度アクションメソッド側でsetする)
         if (ENV_NAME == "www") {
             $this->title_for_layout = __('Goalous');
-        }
-        else {
+        } else {
             $this->title_for_layout = "[" . ENV_NAME . "]" . __('Goalous');
         }
         $this->set('title_for_layout', $this->title_for_layout);
@@ -221,13 +222,12 @@ class AppController extends Controller
                     $this->_switchTeamBeforeCheck();
                 }
                 $is_isao_user = $this->_isIsaoUser($this->Session->read('Auth.User'),
-                                                   $this->Session->read('current_team_id'));
+                    $this->Session->read('current_team_id'));
                 $this->set(compact('is_isao_user'));
                 //getting notification without hide circle in home.
                 if ($this->request->params['controller'] == 'pages' && $this->request->params['pass'][0] == 'home') {
                     $my_channels_json = $this->User->getMyChannelsJson(true);
-                }
-                else {
+                } else {
                     $my_channels_json = $this->User->getMyChannelsJson();
                 }
                 $this->set(compact('my_channels_json'));
@@ -325,9 +325,9 @@ class AppController extends Controller
             array_push($member_ids, $login_uid);
 
             $unapproved_cnt = $this->Goal->Collaborator->countCollaboGoal($login_user_team_id, $login_uid,
-                                                                          $member_ids, [0, 3]);
+                $member_ids, [0, 3]);
             Cache::write($this->Team->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, null), $unapproved_cnt,
-                         'user_data');
+                'user_data');
         }
         $this->set(compact('unapproved_cnt'));
         $this->unapproved_cnt = $unapproved_cnt;
@@ -342,7 +342,7 @@ class AppController extends Controller
             function () use ($model, $current_term) {
                 $current_term = $model->Team->EvaluateTerm->getCurrentTermData();
                 $res = $model->Goal->ActionResult->getCount('me', $current_term['start_date'],
-                                                            $current_term['end_date']);
+                    $current_term['end_date']);
                 return $res;
             }, 'user_data');
         $this->set(compact('action_count'));
@@ -378,15 +378,13 @@ class AppController extends Controller
     {
         if ($team_id == ISAO_TEAM_ID) {
             return true;
-        }
-        else {
+        } else {
             if (!isset($user['PrimaryEmail']['email'])) {
                 return false;
             }
             if (strstr($user['PrimaryEmail']['email'], ISAO_EMAIL_DOMAIN)) {
                 return true;
-            }
-            else {
+            } else {
                 return false;
             }
         }
@@ -444,20 +442,19 @@ class AppController extends Controller
         $current_circle = null;
         if (isset($this->request->params['named'])) {
             $params = array_merge($this->request->params, $this->request->params['named']);
-        }
-        else {
+        } else {
             $params = $this->request->params;
         }
         if (isset($params['circle_id']) && !empty($params['circle_id'])) {
 
             $is_secret = $this->User->CircleMember->Circle->isSecret($params['circle_id']);
             $is_exists_circle = $this->User->CircleMember->Circle->isBelongCurrentTeam($params['circle_id'],
-                                                                                       $this->Session->read('current_team_id'));
+                $this->Session->read('current_team_id'));
             $is_belong_circle_member = $this->User->CircleMember->isBelong($params['circle_id']);
             if ($is_exists_circle && (!$is_secret || ($is_secret && $is_belong_circle_member))) {
                 $current_circle = $this->User->CircleMember->Circle->findById($params['circle_id']);
                 $this->set('item_created',
-                           isset($current_circle['Circle']['created']) ? $current_circle['Circle']['created'] : null);
+                    isset($current_circle['Circle']['created']) ? $current_circle['Circle']['created'] : null);
             }
         }
         $this->set('current_circle', $current_circle);
@@ -498,8 +495,7 @@ class AppController extends Controller
             Configure::write('Config.language', $this->Auth->user('language'));
             $this
                 ->set('is_not_use_local_name', $this->User->isNotUseLocalName($this->Auth->user('language')));
-        }
-        else {
+        } else {
             $lang = $this->Lang->getLanguage();
             $this->set('is_not_use_local_name', $this->User->isNotUseLocalName($lang));
         }
@@ -537,8 +533,7 @@ class AppController extends Controller
         foreach ($user_buff as $key => $val) {
             if ($key == 'User') {
                 $user[$key] = $val;
-            }
-            else {
+            } else {
                 $associations[$key] = $val;
             }
         }
@@ -572,11 +567,11 @@ class AppController extends Controller
         $this->viewPath = 'Elements';
     }
 
-    public function _ajaxGetResponse($result)
+    public function _ajaxGetResponse($result, $json_option = 0)
     {
         //レスポンスをjsonで生成
         $this->response->type('json');
-        $this->response->body(json_encode($result));
+        $this->response->body(json_encode($result, $json_option));
         return $this->response;
     }
 
@@ -587,8 +582,7 @@ class AppController extends Controller
             header('WWW-Authenticate: Basic realm="Private Page"');
             header('HTTP/1.0 401 Unauthorized');
             die("id / password Required");
-        }
-        else {
+        } else {
             if (env('PHP_AUTH_USER') != BASIC_AUTH_ID || env('PHP_AUTH_PW') != BASIC_AUTH_PASS) {
                 header('WWW-Authenticate: Basic realm="Private Page"');
                 header('HTTP/1.0 401 Unauthorized');
@@ -616,7 +610,7 @@ class AppController extends Controller
         }
         $month_count++;
         $add_date = strtotime("{$symbol}{$month_count} month",
-                              REQUEST_TIMESTAMP + ($this->Auth->user('timezone') * 60 * 60));
+            REQUEST_TIMESTAMP + ($this->Auth->user('timezone') * 60 * 60));
         $year = date("Y", $add_date);
         $month = date("m", $add_date);
         $first_day = $year . "-" . $month . "-01";
@@ -655,8 +649,7 @@ class AppController extends Controller
                 //所属しているチームでは無い場合はエラー表示でtopにリダイレクト
                 $this->Pnotify->outError(__("You don't have access right to this team."));
                 $this->redirect('/');
-            }
-            else {
+            } else {
                 //チームを切り替え
                 $this->_switchTeam($request_team_id);
                 $this->redirect($this->request->here);
@@ -686,8 +679,7 @@ class AppController extends Controller
             if ($id = viaIsSet($request_params['named'][$key])) {
                 $model_name = $model;
                 break;
-            }
-            elseif ($id = viaIsSet($request_params[$key])) {
+            } elseif ($id = viaIsSet($request_params[$key])) {
                 $model_name = $model;
                 break;
             }
@@ -732,18 +724,17 @@ class AppController extends Controller
         if ($cached_my_goal_area_vals !== false) {
             //このキャッシュはviewで利用する複数の変数を格納されているのでここで展開する。
             extract($cached_my_goal_area_vals);
-        }
-        else {
+        } else {
             //今期、来期のゴールを取得する
             $start_date = $this->Team->EvaluateTerm->getCurrentTermData()['start_date'];
             $end_date = $this->Team->EvaluateTerm->getCurrentTermData()['end_date'];
 
             $my_goals = $this->Goal->getMyGoals(MY_GOALS_DISPLAY_NUMBER, 1, 'all', null, $start_date, $end_date,
-                                                MY_GOAL_AREA_FIRST_VIEW_KR_COUNT);
+                MY_GOAL_AREA_FIRST_VIEW_KR_COUNT);
             $my_goals_count = $this->Goal->getMyGoals(null, 1, 'count', null, $start_date, $end_date);
             $collabo_goals = $this->Goal->getMyCollaboGoals(MY_COLLABO_GOALS_DISPLAY_NUMBER, 1, 'all', null,
-                                                            $start_date,
-                                                            $end_date, MY_GOAL_AREA_FIRST_VIEW_KR_COUNT);
+                $start_date,
+                $end_date, MY_GOAL_AREA_FIRST_VIEW_KR_COUNT);
             $collabo_goals_count = $this->Goal->getMyCollaboGoals(null, 1, 'count', null, $start_date, $end_date);
             $my_previous_goals = $this->Goal->getMyPreviousGoals(MY_PREVIOUS_GOALS_DISPLAY_NUMBER);
             $my_previous_goals_count = $this->Goal->getMyPreviousGoals(null, 1, 'count');
@@ -755,16 +746,16 @@ class AppController extends Controller
             $goal_list_for_action_option = [null => __('Select a goal.')] + $current_term_goals_name_list;
             Cache::set('duration', 60 * 15, 'user_data');//15 minutes
             Cache::write($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true),
-                         compact('goal_list_for_action_option', 'my_goals', 'collabo_goals',
-                                 'my_goals_count', 'collabo_goals_count', 'my_previous_goals',
-                                 'my_previous_goals_count'),
-                         'user_data');
+                compact('goal_list_for_action_option', 'my_goals', 'collabo_goals',
+                    'my_goals_count', 'collabo_goals_count', 'my_previous_goals',
+                    'my_previous_goals_count'),
+                'user_data');
         }
         //vision
         $vision = $this->Team->TeamVision->getDisplayVisionRandom();
         $this->set(compact('vision', 'goal_list_for_action_option', 'my_goals', 'collabo_goals',
-                           'my_goals_count', 'collabo_goals_count', 'my_previous_goals',
-                           'my_previous_goals_count'));
+            'my_goals_count', 'collabo_goals_count', 'my_previous_goals',
+            'my_previous_goals_count'));
     }
 
     /**
@@ -863,13 +854,12 @@ class AppController extends Controller
         $browser = $this->getBrowser();
         if ($browser['browser'] == 'Safari') {
             $this->response->header('Content-Disposition',
-                                    sprintf('attachment; filename="%s";', $filename . '.csv'));
-        }
-        else {
+                sprintf('attachment; filename="%s";', $filename . '.csv'));
+        } else {
             $this->response->header('Content-Disposition',
-                                    sprintf('attachment; filename="%s"; filename*=UTF-8\'\'%s',
-                                            $filename . '.csv',
-                                            rawurlencode($filename . '.csv')));
+                sprintf('attachment; filename="%s"; filename*=UTF-8\'\'%s',
+                    $filename . '.csv',
+                    rawurlencode($filename . '.csv')));
         }
         $this->response->type('application/octet-stream');
     }
@@ -946,10 +936,14 @@ class AppController extends Controller
     function calcSetupCompletePercent($status)
     {
         $rest_count = $this->calcSetupRestCount($status);
-        if($rest_count <= 0) return 100;
+        if ($rest_count <= 0) {
+            return 100;
+        }
 
         $complete_count = count(User::$TYPE_SETUP_GUIDE) - $rest_count;
-        if($complete_count === 0) return 0;
+        if ($complete_count === 0) {
+            return 0;
+        }
 
         return 100 - floor(($rest_count / count(User::$TYPE_SETUP_GUIDE) * 100));
     }

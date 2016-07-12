@@ -51,7 +51,12 @@
                     'id'    => 'installation_id',
                     'value' => 'no_value'
                 ]) ?>
+                <?= $this->Form->hidden('app_version', [
+                    'id'    => 'app_version',
+                    'value' => 'no_value'
+                ]) ?>
                 <?php $this->Form->unlockField('User.installation_id') ?>
+                <?php $this->Form->unlockField('User.app_version') ?>
                 <div class="form-group">
                     <div class="col-sm-9 col-sm-offset-3">
                         <?=

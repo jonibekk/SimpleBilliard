@@ -1629,10 +1629,10 @@ class TeamMember extends AppModel
         }
         //Check for evaluator ID registered
         $exists_evaluator_ids = $this->find('all',
-                                            [
-                                                'conditions' => ['team_id' => $this->current_team_id, 'member_no' => $merged_evaluator_ids],
-                                                'fields'     => ['member_no']
-                                            ]
+            [
+                'conditions' => ['team_id' => $this->current_team_id, 'member_no' => $merged_evaluator_ids],
+                'fields'     => ['member_no']
+            ]
         );
         //remove the evaluator ID of the registered
         foreach ($exists_evaluator_ids as $er_k => $er_v) {
@@ -1881,8 +1881,8 @@ class TeamMember extends AppModel
         foreach ($this->all_users as $k => $v) {
             if (isset($this->evaluations[$v['User']['id']])) {
                 $goals = Hash::combine($this->evaluations[$v['User']['id']], '{n}.Evaluation.id',
-                                       '{n}.Evaluation.goal_id',
-                                       '{n}.Evaluation.goal_id');
+                    '{n}.Evaluation.goal_id',
+                    '{n}.Evaluation.goal_id');
                 unset($goals[0]);
                 //set goal_count
                 $this->csv_datas[$k]['goal_count'] = count($goals);
@@ -2302,8 +2302,7 @@ class TeamMember extends AppModel
         ];
         if ($new) {
             $validate = $common_validate + $validateOfNew;
-        }
-        else {
+        } else {
             $validate = $common_validate + $validateOfUpdate;
         }
         $this->validateBackup = $this->validate;
@@ -2514,5 +2513,35 @@ class TeamMember extends AppModel
             return $team_member_id;
         }
         return null;
+    }
+
+    function getAllTeam($user_id, $reformat_for_shell = false)
+    {
+        $options = [
+            'conditions' => [
+                'TeamMember.user_id' => $user_id,
+            ],
+            'fields'     => [
+                'TeamMember.team_id',
+                'TeamMember.user_id',
+                'Team.name',
+                'TeamMember.active_flg',
+                'TeamMember.admin_flg',
+            ],
+            'contain'    => ['Team']
+        ];
+        $teams = $this->findWithoutTeamId('all', $options);
+        foreach ($teams as $k => $v) {
+            if (!$v['Team']['name']) {
+                unset($teams[$k]);
+            }
+        }
+        if ($reformat_for_shell) {
+            $teams = Hash::format($teams,
+                ['{n}.Team.name', '{n}.Team.id', '{n}.TeamMember.active_flg', '{n}.TeamMember.admin_flg'],
+                'TeamName:%s, TeamId:%s, TeamMemberActive:%s, TeamAdmin:%s'
+            );
+        }
+        return $teams;
     }
 }
