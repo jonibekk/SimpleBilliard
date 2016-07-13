@@ -48,14 +48,12 @@ class SignupController extends AppController
      * and sending it by e-mail
      * store 6digit code to session
      * [GET] method only allowed
-     *
      * return value is json encoded
      * e.g.
      * {
      * error: false,//true or false,
      * message:"something is wrong",//if error is true then message exists. if no error, blank text
      * }
-     *
      * verify code can be sent in only not verified.
      * if not verified and record exists, remove and regenerate it.
      *
@@ -65,11 +63,12 @@ class SignupController extends AppController
      */
     public function ajax_generate_email_verify_code($email)
     {
+        $this->_ajaxPreProcess();
         $this->request->allowMethod('get');
         //init response values
         $res = [
-            'error'       => false,
-            'message'     => "",
+            'error'   => false,
+            'message' => "",
         ];
 
         try {
