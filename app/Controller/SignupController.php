@@ -52,7 +52,10 @@ class SignupController extends AppController
      * error: false,//true or false,
      * message:"something is wrong",//if error is true then message exists. if no error, blank text
      * }
-     * 
+     *
+     * TTL is 1 hour
+     * 5 failed then lockout 5mins
+     * compare input field and session stored
      * DB is not updated, it will be updated in final user registration part.
      *
      * @return CakeResponse
