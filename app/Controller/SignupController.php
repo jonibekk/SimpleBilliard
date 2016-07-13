@@ -17,6 +17,11 @@ class SignupController extends AppController
     {
         parent::beforeFilter();
         $this->layout = LAYOUT_ONE_COLUMN;
+        $allowed_actions = ['ajax_verify_code'];
+        //ajaxのPOSTではフォーム改ざんチェック用のハッシュ生成ができない為、ここで改ざんチェックを除外指定
+        if (in_array($this->request->params['action'], $allowed_actions)) {
+            $this->Security->validatePost = false;
+        }
     }
 
     public function auth()
