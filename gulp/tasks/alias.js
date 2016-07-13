@@ -63,13 +63,24 @@ gulp.task('angular_vendor', done => {
   )
 })
 
-// react
+// react setup
 gulp.task('react_setup', done => {
   return runSequence(
     'react_setup:eslint',
     'react_setup:browserify',
     'react_setup:uglify',
     'react_setup:clean',
+    done
+  )
+})
+
+// react signup
+gulp.task('react_signup', done => {
+  return runSequence(
+    'react_signup:eslint',
+    'react_signup:browserify',
+    'react_signup:uglify',
+    'react_signup:clean',
     done
   )
 })
