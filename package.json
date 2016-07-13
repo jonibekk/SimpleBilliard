@@ -32,6 +32,7 @@
     "del": "^2.2.1",
     "eslint": "^3.0.0",
     "eslint-plugin-react": "^5.2.2",
+    "expect": "^1.20.2",
     "gulp": "^3.9.1",
     "gulp-accord": "^0.2.0",
     "gulp-autoprefixer": "^3.1.0",
@@ -52,6 +53,7 @@
     "gulp-uglify": "^1.5.3",
     "gulp-util": "^3.0.7",
     "less": "^2.7.1",
+    "mocha": "^2.5.3",
     "redux-devtools": "^3.1.1",
     "redux-devtools-dock-monitor": "^1.1.1",
     "redux-devtools-log-monitor": "^1.0.11",
@@ -69,7 +71,8 @@
   },
   "scripts": {
     "gulp": "gulp",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --compilers js:babel-register ./app/webroot/js/react/**/__test__/**/*.spec.js --recursive",
+    "test:watch": "npm test -- --watch"
   },
   "repository": {
     "type": "git",
