@@ -46,13 +46,16 @@ class SignupController extends AppController
     /**
      * generating email verify code
      * and sending it by e-mail
-     * [GET] method only
+     * store 6digit code to session
+     * [GET] method only allowed
+     *
      * return value is json encoded
      * e.g.
      * {
      * error: false,//true or false,
      * message:"something is wrong",//if error is true then message exists. if no error, blank text
      * }
+     *
      * verify code can be sent in only not verified.
      * if not verified and record exists, remove and regenerate it.
      *
