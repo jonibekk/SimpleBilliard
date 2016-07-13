@@ -62,6 +62,7 @@ class SignupController extends AppController
      */
     public function ajax_verify_code()
     {
+        $this->_ajaxPreProcess();
         $this->request->allowMethod('post');
         //init response values
         $res = [
