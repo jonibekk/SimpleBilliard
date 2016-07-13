@@ -70,7 +70,6 @@ class SignupController extends AppController
         $res = [
             'error'       => false,
             'message'     => "",
-            'verify_code' => "",
         ];
 
         try {
