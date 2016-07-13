@@ -962,8 +962,7 @@ class TeamMember extends AppModel
 
                 // 意図しないカラムの更新を防ぐために、明示的に更新するカラムを指定する
                 $user_update_fields = array_keys($user['User']);
-
-                $this->User->save($user['User'], true, $user_update_fields);
+                $user = $this->User->save($user['User'], true, $user_update_fields);
             }
             else {
                 //なければ、ユーザ情報(User,Email)を登録。
@@ -1015,7 +1014,7 @@ class TeamMember extends AppModel
                     $this->User->LocalName->delete($exists_local_name['LocalName']['id']);
                 }
             }
-
+            
             //MemberGroupの登録
             if (viaIsSet($row_v['MemberGroup'])) {
                 foreach ($row_v['MemberGroup'] as $k => $v) {
