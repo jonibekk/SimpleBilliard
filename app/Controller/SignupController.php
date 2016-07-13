@@ -21,6 +21,12 @@ class SignupController extends AppController
     {
         parent::beforeFilter();
         $this->layout = LAYOUT_ONE_COLUMN;
+        $allowed_actions = ['ajax_generate_email_verify_code'];
+        //ajaxのPOSTではフォーム改ざんチェック用のハッシュ生成ができない為、ここで改ざんチェックを除外指定
+        if (in_array($this->request->params['action'], $allowed_actions)) {
+            $this->Security->validatePost = false;
+        }
+
     }
 
     public function auth()
@@ -47,7 +53,9 @@ class SignupController extends AppController
      * generating email verify code
      * and sending it by e-mail
      * store 6digit code to session
-     * [GET] method only allowed
+     * [POST] method only allowed
+     * required field is:
+     * $this->request->data['email']
      * return value is json encoded
      * e.g.
      * {
@@ -57,14 +65,12 @@ class SignupController extends AppController
      * verify code can be sent in only not verified.
      * if not verified and record exists, remove and regenerate it.
      *
-     * @param $email
-     *
      * @return CakeResponse
      */
-    public function ajax_generate_email_verify_code($email)
+    public function ajax_generate_email_verify_code()
     {
         $this->_ajaxPreProcess();
-        $this->request->allowMethod('get');
+        $this->request->allowMethod('post');
         //init response values
         $res = [
             'error'   => false,
@@ -72,12 +78,15 @@ class SignupController extends AppController
         ];
 
         try {
+            if (!isset($this->request->data['email'])) {
+                throw new RuntimeException(__('Invalid fields'));
+            }
             //TODO WIP
             /** @noinspection PhpUndefinedMethodInspection */
-            $code = $this->Email->getVerifyCode($email);
+            $code = $this->Email->getVerifyCode($this->request->data['email']);
             $res['verify_code'] = $code;
 
-            //store 6digit code for session
+            $this->Session->write('email_verify_code', $code);
 
         } catch (RuntimeException $e) {
             $res['error'] = true;
