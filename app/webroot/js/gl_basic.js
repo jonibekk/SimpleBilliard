@@ -5638,3 +5638,7 @@ function sanitize(string) {
         }[match]
     });
 }
+
+function isOnline() {
+    return Boolean(network_reachable);
+}
