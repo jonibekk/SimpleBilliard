@@ -65,6 +65,9 @@
 
 - Install
   https://github.com/aws/aws-cli#installation
+- Keys
+  http://bit.ly/29CJqBf
+  ※もしアクセスできない場合は、 @koheikikuchi or @bigplants まで。
 
 ### Opsworks
 
@@ -124,6 +127,36 @@ aws opsworks start-instance --instance-id [id]
 ### Oters
 refer to http://docs.aws.amazon.com/cli/latest/reference/opsworks/index.html#cli-aws-opsworks
 
+
+<hr id="maintenance-mode">
+## Maintenance mode
+### Install AWS CLI
+- Install
+  https://github.com/aws/aws-cli#installation
+- Required Keys
+  http://bit.ly/29CJqBf
+  ※もしアクセスできない場合は、 @koheikikuchi or @bigplants まで。
+
+### Switch ISAO env to maintenance env
+```
+sh etc/server/isao_switch_mente_env.sh
+```
+
+### Switch back ISAO env from maintenance env
+```
+sh etc/server/isao_switch_back_from_mente_env.sh
+```
+
+### Switch production env to maintenance env
+```
+sh etc/server/prod_switch_mente_env.sh
+```
+
+### Switch back production env from maintenance env
+```
+sh etc/server/prod_switch_back_from_mente_env.sh
+```
+ 
 
 <hr id="db-migration">
 ## DB migration
