@@ -134,10 +134,10 @@ refer to http://docs.aws.amazon.com/cli/latest/reference/opsworks/index.html#cli
 - Install
   https://github.com/aws/aws-cli#installation
 - Required Keys
-  http://bit.ly/29CJqBf
+  http://bit.ly/29CJqBf  
   ※もしアクセスできない場合は、 @koheikikuchi or @bigplants まで。
 
-### Switch ISAO env to maintenance env
+### Switch to maintenance env from ISAO env
 ```
 sh etc/server/isao_switch_mente_env.sh
 ```
@@ -147,7 +147,7 @@ sh etc/server/isao_switch_mente_env.sh
 sh etc/server/isao_switch_back_from_mente_env.sh
 ```
 
-### Switch production env to maintenance env
+### Switch to maintenance env from production env
 ```
 sh etc/server/prod_switch_mente_env.sh
 ```
