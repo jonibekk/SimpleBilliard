@@ -2763,7 +2763,6 @@ function evFeedMoreView(options) {
             feed_loading_now = false;
         },
         error: function () {
-            alert(cake.message.notice.c);
             feed_loading_now = false;
         },
     });
@@ -2860,7 +2859,6 @@ function evMessage() {
             do_reload_header_bellList = true;
         },
         error: function () {
-            alert(cake.message.notice.c);
             feed_loading_now = false;
             $loader_html.remove();
         },
@@ -2951,7 +2949,6 @@ function evMessageList(options) {
             do_reload_header_bellList = true;
         },
         error: function () {
-            alert(cake.message.notice.c);
             feed_loading_now = false;
             $loader_html.remove();
         },
@@ -3032,7 +3029,6 @@ function evNotifications(options) {
             do_reload_header_bellList = true;
         },
         error: function () {
-            alert(cake.message.notice.c);
             feed_loading_now = false;
             $loader_html.remove();
         },
@@ -3138,7 +3134,6 @@ function evNotifyPost(options) {
             do_reload_header_bellList = true;
         },
         error: function () {
-            alert(cake.message.notice.c);
             feed_loading_now = false;
             $loader_html.remove();
         },
@@ -3321,7 +3316,6 @@ function evCircleFeed(options) {
             do_reload_header_bellList = true;
         },
         error: function () {
-            alert(cake.message.notice.c);
             feed_loading_now = false;
         },
     });
@@ -3475,7 +3469,6 @@ function evBasicReadMore(options) {
             autoload_more = false;
         },
         error: function () {
-            alert(cake.message.notice.c);
         }
     });
     return false;
@@ -4400,7 +4393,6 @@ function updateListBox() {
             imageLazyOn();
         },
         error: function () {
-            alert(cake.message.notice.c);
         }
     });
     return false;
@@ -4443,7 +4435,6 @@ function updateMessageListBox() {
             imageLazyOn();
         },
         error: function () {
-            alert(cake.message.notice.c);
         }
     });
     return false;
