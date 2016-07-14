@@ -95,10 +95,10 @@ class SignupController extends AppController
                 throw new RuntimeException(__('This email address has already been used. Use another email address.'));
             }
             $code = $this->Email->generateToken(6, '123456789');
-            $formatted_code = number_format($code,0,'.','-');
-            $this->Session->write('email_verify_code', $formatted_code);
+            $formatted_code = number_format($code, 0, '.', '-');
+            $this->Session->write('email_verify_code', $code);
             //send mail
-            $this->GlEmail->sendEmailVerifyDigit($formatted_code,$this->request->data['email']);
+            $this->GlEmail->sendEmailVerifyDigit($formatted_code, $this->request->data['email']);
         } catch (RuntimeException $e) {
             $res['error'] = true;
             $res['message'] = $e->getMessage();
