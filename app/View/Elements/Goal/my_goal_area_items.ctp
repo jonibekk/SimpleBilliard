@@ -81,7 +81,7 @@ $kr_count = 0;
                    id="download">
                     <i class="fa fa-cog goals-column-function-icon"></i>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
+                <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon-goal" role="menu"
                     aria-labelledby="dropdownMenu1">
                     <?php //目的のみの場合とそうでない場合でurlが違う
                     $edit_url = ['controller' => 'goals', 'action' => 'add', 'mode' => 2, 'purpose_id' => $goal['Purpose']['id']];

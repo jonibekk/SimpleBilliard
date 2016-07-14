@@ -64,6 +64,7 @@ GoalousはIsao発の「最強にオープンな社内SNS」です。
   - [DBマイグレーション](docs/guidelines/manuals.md#db-migration)
   - [GitHubとWaffleの運用](docs/guidelines/manuals.md#github-waffle)
   - [CSオペレーション](docs/guidelines/manuals.md#cs-operation)
+  - [メンテナンスモード](docs/guidelines/manuals.md#maintenance-mode)
 
 - [翻訳手順書](docs/guidelines/translation.md)
 
