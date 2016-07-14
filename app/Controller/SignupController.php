@@ -21,12 +21,10 @@ class SignupController extends AppController
     {
         parent::beforeFilter();
         $this->layout = LAYOUT_ONE_COLUMN;
-        $allowed_actions = ['ajax_generate_email_verify_code'];
         //ajaxのPOSTではフォーム改ざんチェック用のハッシュ生成ができない為、ここで改ざんチェックを除外指定
-        if (in_array($this->request->params['action'], $allowed_actions)) {
-            $this->Security->validatePost = false;
-        }
-
+        $this->Security->validatePost = false;
+        //すべてのアクションは認証済みである必要がない
+        $this->Auth->allow();
     }
 
     public function auth()
@@ -64,6 +62,7 @@ class SignupController extends AppController
      * }
      * verify code can be sent in only not verified.
      * if not verified and record exists, remove and regenerate it.
+     * store status to redis
      *
      * @return CakeResponse
      */
@@ -81,11 +80,10 @@ class SignupController extends AppController
             if (!isset($this->request->data['email'])) {
                 throw new RuntimeException(__('Invalid fields'));
             }
-            //TODO WIP
-            /** @noinspection PhpUndefinedMethodInspection */
-            $code = $this->Email->getVerifyCode($this->request->data['email']);
-            $res['verify_code'] = $code;
-
+            if($this->Email->isVerified($this->request->data['email'])){
+                throw new RuntimeException(__('This email address has already been used. Use another email address.'));
+            }
+            $code = $this->Email->generateToken(6,'123456789');
             $this->Session->write('email_verify_code', $code);
 
         } catch (RuntimeException $e) {
