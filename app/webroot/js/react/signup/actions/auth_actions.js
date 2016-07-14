@@ -1,6 +1,18 @@
 import axios from 'axios'
 import * as types from '../constants/ActionTypes'
 
+export function inputCode(code) {
+  return dispatch => {
+    if(typeof code !== "number") {
+      return dispatch({ type: types.INIT_AUTH_CODE })
+    }
+    dispatch({ type: types.INPUT_CODE, inputed_code: code })
+    if(String(code).length == 6) {
+      postVerifyCode(code)
+    }
+  }
+}
+
 export function postVerifyCode(code) {
   return dispatch => {
     dispatch({ type: types.CHECKING_AUTH_CODE })
@@ -22,6 +34,7 @@ export function postVerifyCode(code) {
       dataType: 'json',
     })
     .then(function (response) {
+      dispatch({ type: types.FINISHED_CHECKING_AUTH_CODE })
       if(response.data.is_locked) {
         dispatch({ type: types.AUTH_CODE_IS_LOCKED, locked_message: response.data.message })
       } else if(response.data.is_expired) {
@@ -33,6 +46,7 @@ export function postVerifyCode(code) {
       }
     })
     .catch(function (response) {
+      dispatch({ type: types.FINISHED_CHECKING_AUTH_CODE })
       dispatch({ type: types.AUTH_CODE_IS_INVALID, invalid_message: 'Network error' })
     })
   }

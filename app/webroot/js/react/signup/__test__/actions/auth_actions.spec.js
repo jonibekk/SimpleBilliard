@@ -13,6 +13,33 @@ describe('actions::auth', () => {
     nock.cleanAll()
   })
 
+  it('inputCode digit is less than 6', () => {
+    const expectedActions = [
+      { type: types.INPUT_CODE, inputed_code: 12345 },
+    ]
+    const store = mockStore({ auth: [] })
+    store.dispatch(actions.inputCode(12345))
+    expect(store.getActions()).toEqual(expectedActions)
+  })
+
+  it('inputCode digit is 6', () => {
+    const expectedActions = [
+      { type: types.INPUT_CODE, inputed_code: 123456 }
+    ]
+    const store = mockStore({ auth: [] })
+    store.dispatch(actions.inputCode(123456))
+    expect(store.getActions()).toEqual(expectedActions)
+  })
+
+  it('inputCode code is not digit', () => {
+    const expectedActions = [
+      { type: types.INIT_AUTH_CODE }
+    ]
+    const store = mockStore({ auth: [] })
+    store.dispatch(actions.inputCode('abcdef'))
+    expect(store.getActions()).toEqual(expectedActions)
+  })
+
   it('postVerifyCode code is locked test', () => {
     nock('http://127.0.0.1')
       .post('/signup/ajax_verify_code')
@@ -20,6 +47,7 @@ describe('actions::auth', () => {
 
     const expectedActions = [
       { type: types.CHECKING_AUTH_CODE },
+      { type: types.FINISHED_CHECKING_AUTH_CODE },
       { type: types.AUTH_CODE_IS_LOCKED, locked_message: 'auth code locked message' }
     ]
     const store = mockStore({ auth: [] })
@@ -37,6 +65,7 @@ describe('actions::auth', () => {
 
     const expectedActions = [
       { type: types.CHECKING_AUTH_CODE },
+      { type: types.FINISHED_CHECKING_AUTH_CODE },
       { type: types.AUTH_CODE_IS_EXPIRED, expired_message: 'auth code expired message' }
     ]
     const store = mockStore({ auth: [] })
@@ -54,6 +83,7 @@ describe('actions::auth', () => {
 
     const expectedActions = [
       { type: types.CHECKING_AUTH_CODE },
+      { type: types.FINISHED_CHECKING_AUTH_CODE },
       { type: types.AUTH_CODE_IS_INVALID, invalid_message: 'auth code invalid message' }
     ]
     const store = mockStore({ auth: [] })
@@ -71,6 +101,7 @@ describe('actions::auth', () => {
 
     const expectedActions = [
       { type: types.CHECKING_AUTH_CODE },
+      { type: types.FINISHED_CHECKING_AUTH_CODE },
       { type: types.AUTH_CODE_IS_VALID }
     ]
     const store = mockStore({ auth: [] })
