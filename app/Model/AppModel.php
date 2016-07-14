@@ -250,8 +250,10 @@ class AppModel extends Model
      *
      * @return string
      */
-    public function generateToken($length = 22, $possible = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
-    {
+    public function generateToken(
+        $length = 22,
+        $possible = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    ) {
         $token = "";
         $i = 0;
 
@@ -286,8 +288,7 @@ class AppModel extends Model
     {
         if (!$uid) {
             $this->uid = $this->my_uid;
-        }
-        else {
+        } else {
             $this->uid = $uid;
         }
     }
@@ -301,8 +302,7 @@ class AppModel extends Model
     {
         if (!$team_id) {
             $this->team_id = $this->current_team_id;
-        }
-        else {
+        } else {
             $this->team_id = $team_id;
         }
     }
@@ -402,8 +402,7 @@ class AppModel extends Model
             $value_array = array();
             if (isset($data[0][$this->name])) {
                 $fields = array_keys($data[0][$this->name]);
-            }
-            else {
+            } else {
                 $fields = array_keys($data[0]);
             }
             if ($add_date) {
@@ -414,8 +413,7 @@ class AppModel extends Model
                     if (isset($v[$this->name])) {
                         $data[$k][$this->name]['modified'] = REQUEST_TIMESTAMP;
                         $data[$k][$this->name]['created'] = REQUEST_TIMESTAMP;
-                    }
-                    else {
+                    } else {
                         $data[$k]['modified'] = REQUEST_TIMESTAMP;
                         $data[$k]['created'] = REQUEST_TIMESTAMP;
                     }
@@ -462,6 +460,22 @@ class AppModel extends Model
             $name .= ":user:" . $user_id;
         }
         return $name;
+    }
+
+    function concatValidationErrorMsg($break_line = true)
+    {
+        $concat_error_msg = "";
+        foreach ($this->validationErrors as $field) {
+            foreach ($field as $msg) {
+                $concat_error_msg .= $msg;
+                if ($break_line) {
+                    $concat_error_msg .= "\n";
+                } else {
+                    $concat_error_msg .= " ";
+                }
+            }
+        }
+        return $concat_error_msg;
     }
 
 }

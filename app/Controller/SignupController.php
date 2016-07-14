@@ -80,10 +80,21 @@ class SignupController extends AppController
             if (!isset($this->request->data['email'])) {
                 throw new RuntimeException(__('Invalid fields'));
             }
-            if($this->Email->isVerified($this->request->data['email'])){
+            $this->Email->validate = [
+                'email' => [
+                    'maxLength' => ['rule' => ['maxLength', 200]],
+                    'notEmpty'  => ['rule' => 'notEmpty',],
+                    'email'     => ['rule' => ['email'],],
+                ],
+            ];
+            $this->Email->set($this->request->data);
+            if (!$this->Email->validates()) {
+                throw new RuntimeException($this->Email->concatValidationErrorMsg());
+            }
+            if ($this->Email->isVerified($this->request->data['email'])) {
                 throw new RuntimeException(__('This email address has already been used. Use another email address.'));
             }
-            $code = $this->Email->generateToken(6,'123456789');
+            $code = $this->Email->generateToken(6, '123456789');
             $this->Session->write('email_verify_code', $code);
 
         } catch (RuntimeException $e) {
