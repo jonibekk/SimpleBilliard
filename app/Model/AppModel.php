@@ -464,18 +464,21 @@ class AppModel extends Model
 
     function concatValidationErrorMsg($break_line = true)
     {
-        $concat_error_msg = "";
+        $msg_arr = [];
         foreach ($this->validationErrors as $field) {
             foreach ($field as $msg) {
-                $concat_error_msg .= $msg;
-                if ($break_line) {
-                    $concat_error_msg .= "\n";
-                } else {
-                    $concat_error_msg .= " ";
-                }
+                $msg_arr[] = $msg;
             }
         }
-        return $concat_error_msg;
+        $delimiter = $break_line ? "\n" : " ";
+        $concat_msg = "";
+        foreach ($msg_arr as $msg) {
+            $concat_msg .= $msg;
+            if ($msg !== end($msg_arr)) {
+                $concat_msg .= $delimiter;
+            }
+        }
+        return $concat_msg;
     }
 
 }
