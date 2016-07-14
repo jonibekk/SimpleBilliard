@@ -16,7 +16,8 @@
                         <i class="fa fa-exclamation-circle signup-load-icon mod-error"></i>
                         利用規約に同意してください。
                     </div>
-                    <div class="submit signup-btn"><input class="btn btn-primary signup-btn-submit" type="submit" value="新規登録" disabled="disabled"></div>
+                    <div class="submit signup-btn"><input class="btn btn-primary signup-btn-submit" type="submit" value="次へ→" disabled="disabled"></div>
+                    <div class="submit signup-btn"><input class="btn btn-primary signup-btn-submit" type="submit" value="次へ→"></div>
 
                 </form>
 
