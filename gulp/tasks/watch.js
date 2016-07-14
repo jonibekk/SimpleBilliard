@@ -40,6 +40,13 @@ gulp.task('react_setup:watch', () => {
   })
 })
 
+gulp.task('react_signup:watch', () => {
+  var watcher = gulp.watch(config.react_signup.watch_files, ['react_signup'])
+  watcher.on('change', event => {
+    console.log('File ' + event.path + ' was ' + event.type + ', running tasks...')
+  })
+})
+
 gulp.task('css:watch', () => {
   var watcher = gulp.watch([...config.css.watch_files, ...config.less.watch_files], ['css'])
   watcher.on('change', event => {
