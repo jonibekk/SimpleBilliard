@@ -109,7 +109,7 @@ class GlEmailComponent extends Component
                 $email_token,
             ], true);
         $this->SendMail->saveMailData($to_uid, SendMail::TYPE_TMPL_CHANGE_EMAIL_VERIFY,
-                                      ['url' => $url, 'to' => $email]);
+            ['url' => $url, 'to' => $email]);
         $this->execSendMailById($this->SendMail->id);
     }
 
@@ -175,13 +175,31 @@ class GlEmailComponent extends Component
             'message'   => isset($invite_data['message']) ? $invite_data['message'] : null
         ];
         $this->SendMail->saveMailData(isset($invite_data['to_user_id']) ? $invite_data['to_user_id'] : null,
-                                      SendMail::TYPE_TMPL_INVITE,
-                                      $item,
-                                      $invite_data['from_user_id'],
-                                      $invite_data['team_id']
+            SendMail::TYPE_TMPL_INVITE,
+            $item,
+            $invite_data['from_user_id'],
+            $invite_data['team_id']
         );
         $this->execSendMailById($this->SendMail->id);
         return true;
+    }
+
+    /**
+     * メールにてメアド認証用digit送信
+     *
+     * @param $code
+     *
+     * @return null
+     */
+    public function sendEmailVerifyDigit($code, $to)
+    {
+        $item = [
+            'code'    => $code,
+            'subject' => __('Confirmation Code for Goalous: %s', $code),
+            'to'      => $to,
+        ];
+        $this->SendMail->saveMailData(null, SendMail::TYPE_TMPL_SEND_EMAIL_VERIFY_DIGIT_CODE, $item);
+        $this->execSendMailById($this->SendMail->id);
     }
 
     /**
@@ -199,8 +217,8 @@ class GlEmailComponent extends Component
             'message' => $message
         ];
         $this->SendMail->saveMailData($to_user_id,
-                                      SendMail::TYPE_TMPL_SETUP,
-                                      $item
+            SendMail::TYPE_TMPL_SETUP,
+            $item
         );
         $this->execSendMailById($this->SendMail->id);
     }
@@ -224,7 +242,7 @@ class GlEmailComponent extends Component
             'options'   => $data['options'],
         ];
         $this->SendMail->saveMailData($send_to_users, SendMail::TYPE_TMPL_NOTIFY, $item, $data['from_user_id'],
-                                      $this->SendMail->SendMailToUser->current_team_id);
+            $this->SendMail->SendMailToUser->current_team_id);
         //メール送信を実行
         $this->execSendMailById($this->SendMail->id, "send_notify_mail_by_id");
 

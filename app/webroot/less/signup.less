@@ -1,0 +1,136 @@
+/*
+app/View/Signup/auth.ctp
+app/View/Signup/user.ctp
+app/View/Signup/password.ctp
+app/View/Signup/team.ctp
+app/View/Signup/term.ctp
+用のlessファイル
+*/
+
+/*
+全部もしくは複数箇所で使っているclass
+*/
+.panel-signup {
+  max-width: 480px;
+  margin: 0 auto;
+  padding-bottom: 20px;
+}
+
+.signup-title{
+  font-size: @fontLarge;
+}
+
+.signup-description{
+  padding: 10px 3%;
+}
+
+
+
+
+/*
+auth.ctp、authコード用のclass
+*/
+.signup-auth-split_input {
+    display: table;
+    border-spacing: 0;
+}
+
+.signup-auth-large_margin {
+  margin: 2rem auto;
+}
+
+.signup-auth-design{
+  text-align: center;
+}
+
+.signup-auth-num{
+  width: 30%;
+  height: 50px;
+  margin: 0 auto;
+  display: inline;
+}
+
+.signup-auth-input_wrapper {
+    position: relative;
+}
+
+.signup-auth-split_input_item {
+    display: table-cell;
+    border: 1px solid #ddd;
+}
+
+.signup-auth-split_input_item:first-child {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-right: 0px;
+}
+
+.signup-auth-split_input_item:last-child {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-left: 0px;
+}
+
+.signup-auth-inline_input {
+    height: 5rem;
+    text-align: center;
+    font-size: 2.5rem;
+    border: none;
+    background: 0 0;
+    box-shadow: none;
+    width: 40px;
+    height: 60px;
+}
+@media @small {
+  .signup-auth-inline_input {
+      width: 60px;
+      height: 100px;
+  }
+}
+.signup-auth-confirmation_code_span_cell {
+    display: table-cell;
+    font-weight: 700;
+    font-size: 2rem;
+    text-align: center;
+    padding: 0 .5rem;
+    width: 2rem;
+}
+
+/*
+auth.ctp、Loading、ERRORまわりのclass
+*/
+.signup-load-description{
+  //display: none;
+  width: 83%;
+  margin: 10px auto;
+  padding: 15px 20px 20px;
+  border-radius: 5px;
+  text-align: center;
+  border: 1px solid @aquaBlue;
+  color: @aquaBlue;
+
+}
+.signup-load-description.mod-lock{
+    //display: none;
+    text-align: left;
+    border: 1px solid @acidRed;
+    color: @acidRed;
+}
+.signup-load-description.mod-error{
+    //display: none;
+    text-align: left;
+    border: 1px solid @acidRed;
+    color: @acidRed;
+}
+
+.signup-load-icon{
+  font-size: 0pt;
+  margin-bottom: 10px;
+  display: block;
+  text-align: center;
+}
+.signup-load-icon.mod-error{
+  font-size: 30pt;
+  margin-bottom: 5px;
+  color: @acidRed;
+}

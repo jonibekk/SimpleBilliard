@@ -23,41 +23,47 @@ class SendMail extends AppModel
     const TYPE_TMPL_INVITE = 6;
     const TYPE_TMPL_NOTIFY = 7;
     const TYPE_TMPL_SETUP = 8;
+    const TYPE_TMPL_SEND_EMAIL_VERIFY_DIGIT_CODE = 9;
 
     static public $TYPE_TMPL = [
-        self::TYPE_TMPL_ACCOUNT_VERIFY          => [
+        self::TYPE_TMPL_ACCOUNT_VERIFY               => [
             'subject'  => null,
             'template' => 'account_verification',
             'layout'   => 'default',
         ],
-        self::TYPE_TMPL_PASSWORD_RESET          => [
+        self::TYPE_TMPL_PASSWORD_RESET               => [
             'subject'  => null,
             'template' => 'password_reset',
             'layout'   => 'default',
         ],
-        self::TYPE_TMPL_PASSWORD_RESET_COMPLETE => [
+        self::TYPE_TMPL_PASSWORD_RESET_COMPLETE      => [
             'subject'  => null,
             'template' => 'password_reset_complete',
             'layout'   => 'default',
         ],
-        self::TYPE_TMPL_TOKEN_RESEND            => [
+        self::TYPE_TMPL_TOKEN_RESEND                 => [
             'subject'  => null,
             'template' => 'token_resend',
             'layout'   => 'default',
         ],
-        self::TYPE_TMPL_CHANGE_EMAIL_VERIFY     => [
+        self::TYPE_TMPL_CHANGE_EMAIL_VERIFY          => [
             'subject'  => null,
             'template' => 'change_email',
             'layout'   => 'default',
         ],
-        self::TYPE_TMPL_INVITE                  => [
+        self::TYPE_TMPL_INVITE                       => [
             'subject'  => null,
             'template' => 'invite',
             'layout'   => 'default',
         ],
-        self::TYPE_TMPL_SETUP                  => [
+        self::TYPE_TMPL_SETUP                        => [
             'subject'  => null,
             'template' => 'setup',
+            'layout'   => 'default',
+        ],
+        self::TYPE_TMPL_SEND_EMAIL_VERIFY_DIGIT_CODE => [
+            'subject'  => null,
+            'template' => 'email_verify_digit_code',
             'layout'   => 'default',
         ],
     ];
