@@ -4407,7 +4407,7 @@ function resetBellNum() {
         url: url,
         async: true,
         success: function (data) {
-            // do nothing.
+            updateNotifyCnt();
         },
         error: function () {
             // do nothing.
