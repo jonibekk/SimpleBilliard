@@ -1,44 +1,26 @@
 <!-- START app/View/Signup/user.ctp -->
-<div id="container" class="container">
         <div class="row">
             <div class="panel panel-default panel-signup">
                 <div class="panel-heading signup-title">What's your name?</div>
-                <div class="signup-description">username sample text.username sample text.username sample text.username sample text.username sample text.username sample text.username sample text.</div>
+                <div class="signup-description">username sample text.username sample text.username sample text.username sample text.username sample text.username sample text.</div>
 
+                <div class="panel-heading signup-itemtitle">your name</div>
                 <form action="#" class="form-horizontal validate" novalidate="novalidate" id="" method="post" accept-charset="utf-8">
-                        <div class="signup-auth-split_input signup-auth-large_margin" data-multi-input-code="true">
-            				<div class="confirmation_code_group">
-            					<div class="signup-auth-split_input_item signup-auth-input_wrapper"><input type="text" class="signup-auth-inline_input" maxlength="1" pattern="^[0-9]+$"></div>
-            					<div class="signup-auth-split_input_item signup-auth-input_wrapper"><input type="text" class="signup-auth-inline_input" maxlength="1" pattern="^[0-9]+$"></div>
-            					<div class="signup-auth-split_input_item signup-auth-input_wrapper"><input type="text" class="signup-auth-inline_input" maxlength="1" pattern="^[0-9]+$"></div>
-            				</div>
+                    <input name="data[LocalName][0][last_name]" class="form-control signup_input-design" placeholder="例) 鈴木" data-bv-stringlength="true" data-bv-stringlength-max="128" data-bv-stringlength-message="最大文字数(128)を超えています。" maxlength="128" type="text" value="" id="LocalName0LastName">
+                    <input name="data[LocalName][0][last_name]" class="form-control signup_input-design" placeholder="例) 鈴木" data-bv-stringlength="true" data-bv-stringlength-max="128" data-bv-stringlength-message="最大文字数(128)を超えています。" maxlength="128" type="text" value="" id="LocalName0LastName">
+                    <input name="data[LocalName][0][last_name]" class="form-control signup_input-design" placeholder="例) 鈴木" data-bv-stringlength="true" data-bv-stringlength-max="128" data-bv-stringlength-message="最大文字数(128)を超えています。" maxlength="128" type="text" value="" id="LocalName0LastName">
+                    <input name="data[LocalName][0][last_name]" class="form-control signup_input-design" placeholder="例) 鈴木" data-bv-stringlength="true" data-bv-stringlength-max="128" data-bv-stringlength-message="最大文字数(128)を超えています。" maxlength="128" type="text" value="" id="LocalName0LastName">
 
-				            <div class="signup-auth-confirmation_code_span_cell">—</div>
+                    <div class="checkbox signup-checkbox"><input type="hidden" name="data[User][agree_tos]" id="UserAgreeTos_" value="0"><label for="UserAgreeTos"><input type="checkbox" name="data[User][agree_tos]" class="validate-checkbox" value="1" id="UserAgreeTos" data-bv-field="validate-checkbox"> Goalousの<a href="/terms" target="_blank" onclick="window.open(this.href,'_system');return false;" class="link">利用規約</a>と<a href="/privacy_policy" target="_blank" onclick="window.open(this.href,'_system');return false;" class="link">プライバシーポリシー</a>に同意します。</label></div>
+                    <div class="signup-error-description">
+                        <i class="fa fa-exclamation-circle signup-load-icon mod-error"></i>
+                        利用規約に同意してください。
+                    </div>
+                    <div class="submit signup-btn"><input class="btn btn-primary signup-btn-submit" type="submit" value="新規登録" disabled="disabled"></div>
 
-            				<div class="confirmation_code_group">
-            					<div class="signup-auth-split_input_item signup-auth-input_wrapper"><input type="text" class="signup-auth-inline_input" maxlength="1" pattern="^[0-9]+$"></div>
-            					<div class="signup-auth-split_input_item signup-auth-input_wrapper"><input type="text" class="signup-auth-inline_input" maxlength="1" pattern="^[0-9]+$"></div>
-            					<div class="signup-auth-split_input_item signup-auth-input_wrapper"><input type="text" class="signup-auth-inline_input" maxlength="1" pattern="^[0-9]+$"></div>
-            				</div>
-			            </div>
                 </form>
 
-                <div class="signup-load-description">
-                    <div class="signup-load-icon"><img src="/img/ajax-loader.gif"></div>
-                    loading...原稿の長さによっては中央合わせ
-                </div>
-                <div class="signup-load-description mod-error">
-                    <i class="fa fa-exclamation-circle signup-load-icon mod-error"></i>
-                    Auth code sample text.Auth code sample textAuth code sampleAuth code sample text.Auth code sample text.こちらも原稿の長さによっては中央合わせに変更します。現在は左寄せ。
-                </div>
-                <div class="signup-load-description mod-lock">
-                    <i class="fa fa-lock signup-load-icon mod-error"></i>
-                    Auth code sample text.Auth code sample textAuth code sampleAuth code sample text.Auth code sample text.こちらも原稿の長さによっては中央合わせに変更します。現在は左寄せ。
-                </div>
-
-                <div class="signup-description">Auth code sample text.Auth code sample textAuth code sample textAuth code sample textAuth code sample textAuth code sample text.</div>
             </div>
         </div>
-</div>
-<a href="/signup/user">ページ遷移用リンク</a>
+<a href="/signup/password">ページ遷移用リンク</a>
 <!-- END app/View/Signup/user.ctp -->
