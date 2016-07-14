@@ -237,7 +237,7 @@ if (!isset($goal_list_for_action_option)) {
                             <div class="row form-horizontal form-group post-share-range" id="CommonActionShare">
                                 <?=
                                 $this->Form->submit(__($is_edit_mode ? "保存する" : "アクション登録"),
-                                                    ['class' => 'btn btn-primary pull-right post-submit-button', 'id' => 'CommonActionSubmit', 'disabled' => 'disabled']) ?>
+                                                    ['class' => 'btn btn-primary pull-right post-submit-button', 'id' => 'CommonActionSubmit']) ?>
                             </div>
                         </div>
                     </div>

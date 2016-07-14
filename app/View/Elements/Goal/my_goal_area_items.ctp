@@ -124,7 +124,7 @@ $kr_count = 0;
                    id="download">
                     <i class="fa fa-cog goals-column-function-icon"></i>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon" role="menu"
+                <ul class="dropdown-menu dropdown-menu-right frame-arrow-icon-collabo" role="menu"
                     aria-labelledby="dropdownMenu1">
                     <?php if (isset($goal['Goal']['id']) && !empty($goal['Goal']['id'])): ?>
                         <li role="presentation">
