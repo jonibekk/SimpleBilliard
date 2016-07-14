@@ -17,7 +17,8 @@ class EmailTest extends GoalousTestCase
     public $fixtures = array(
         'app.local_name',
         'app.email',
-        'app.user', 'app.notify_setting',
+        'app.user',
+        'app.notify_setting',
         'app.team_member',
         'app.team',
     );
@@ -135,6 +136,16 @@ class EmailTest extends GoalousTestCase
         $team_id = '1';
         $res = $this->Email->isActiveOnTeamByEmail($email, $team_id);
         $this->assertTrue($res, "[正常]メアドからユーザが既にチームに存在しているかのチェック");
+    }
+
+    function testIsVerified()
+    {
+        $email = 'aaaaa@aaaaaaa.com';
+        $res = $this->Email->isVerified($email);
+        $this->assertFalse($res);
+        $this->Email->save(['email' => $email, 'email_verified' => true]);
+        $res = $this->Email->isVerified($email);
+        $this->assertTrue($res);
     }
 
 }
