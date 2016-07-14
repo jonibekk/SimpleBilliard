@@ -97,6 +97,8 @@ class SignupController extends AppController
             $code = $this->Email->generateToken(6, '123456789');
             $formatted_code = number_format($code, 0, '.', '-');
             $this->Session->write('email_verify_code', $code);
+            $this->Session->write('email_verify_start_time', REQUEST_TIMESTAMP);
+            $this->Session->write('data.Email.email', $this->request->data['email']);
             //send mail
             $this->GlEmail->sendEmailVerifyDigit($formatted_code, $this->request->data['email']);
         } catch (RuntimeException $e) {
@@ -117,6 +119,7 @@ class SignupController extends AppController
      * error: false,//true or false,
      * message:"something is wrong",//if error is true then message exists. if no error, blank text
      * is_locked: false,//true or false,
+     * is_expired: false,//true or false,
      * }
      * TTL is 1 hour
      * 5 failed then lockout 5mins
@@ -131,27 +134,43 @@ class SignupController extends AppController
         $this->request->allowMethod('post');
         //init response values
         $res = [
-            'error'     => false,
-            'message'   => "",
-            'is_locked' => false,
+            'error'      => false,
+            'message'    => "",
+            'is_locked'  => false,
+            'is_expired' => false,
         ];
 
         try {
+            //required session variables
+            if (!$this->Session->read('email_verify_start_time') ||
+                !$this->Session->read('email_verify_code') ||
+                !$this->Session->read('data.Email.email')
+            ) {
+                throw new RuntimeException(__('Invalid screen transition'));
+            }
             if (!isset($this->request->data['code'])) {
                 throw new RuntimeException(__('Param is incorrect'));
             }
-            $input_code = $this->request->data['code'];
-            $stored_code = $this->Session->read('email_verify_code');
-
-            if (!$stored_code) {
-                throw new RuntimeException(__('Invalid screen transition'));
+            //it can be verified within 1 hour from start verification.
+            if ($this->Session->read('email_verify_start_time') < REQUEST_TIMESTAMP - 60 * 60) {
+                $res['is_expired'] = true;
+                throw new RuntimeException(__('Code Verification has expired'));
             }
-            if ($input_code != $stored_code) {
+            //comparing input code and stored code
+            if ($this->request->data['code'] != $this->Session->read('email_verify_code')) {
+                $is_locked = $this->GlRedis->isEmailVerifyCodeLocked(
+                    $this->Session->read('data.Email.email'),
+                    $this->request->clientIp()
+                );
+                if ($is_locked) {
+                    $res['is_locked'] = true;
+                }
                 throw new RuntimeException(__('verification code was wrong'));
             }
 
             //success!
             $this->Session->delete('email_verify_code');
+            $this->Session->delete('email_verify_start_time');
 
         } catch (RuntimeException $e) {
             $res['error'] = true;
