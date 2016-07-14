@@ -99,7 +99,24 @@ $(window).load(function () {
 });
 
 $(document).ready(function () {
-
+    $.ajax({
+        url: '/signup/ajax_validation_fields',
+        type: 'post',
+        dataType: 'json',
+        data: {
+            'data[_Token][key]': cake.data.csrf_token.key,
+            'data[User][first_name]': "aaa",
+            'data[User][last_name]': "bbb",
+            // 'data[Email][email]': "aaa@aaa",
+            'data[LocalName][first_name]': "",
+            'data[LocalName][last_name]': "ああああ"
+            // 'data[Team][name]': "",
+            // 'data[Team][timezone]': "ああああ",
+        },
+        success: function (data) {
+            console.log(data);
+        }
+    });
     //intercomのリンクを非表示にする
     if (enabled_intercom_icon) {
         $('#IntercomLink').hide();

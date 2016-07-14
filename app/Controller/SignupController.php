@@ -179,7 +179,6 @@ class SignupController extends AppController
         return $this->_ajaxGetResponse($res);
     }
 
-
     /**
      * validation fields
      * e.g.
@@ -193,24 +192,92 @@ class SignupController extends AppController
         $this->request->allowMethod('post');
         //init response values
         $res = [
-            'error'   => false,
-            'message' => "",
+            'error'          => false,
+            'message'        => "",
+            'validation_msg' => [],
         ];
-        //TODO WIP
-        $white_list = [
-            'User'  => [
-                'first_name',
-                'last_name'
+        $validations = [
+            'User'      => [
+                'first_name' => [
+                    'maxLength'      => ['rule' => ['maxLength', 128]],
+                    'notEmpty'       => ['rule' => 'notEmpty'],
+                    'isAlphabetOnly' => ['rule' => 'isAlphabetOnly'],
+                ],
+                'last_name'  => [
+                    'maxLength'      => ['rule' => ['maxLength', 128]],
+                    'notEmpty'       => ['rule' => 'notEmpty'],
+                    'isAlphabetOnly' => ['rule' => 'isAlphabetOnly'],
+                ],
+                'password'   => [
+                    'maxLength' => ['rule' => ['maxLength', 50]],
+                    'notEmpty'  => [
+                        'rule' => 'notEmpty',
+                    ],
+                    'minLength' => [
+                        'rule' => ['minLength', 8],
+                    ]
+                ],
             ],
-            'Email' => [
-                'email'
+            'Email'     => [
+                'email' => [
+                    'maxLength' => ['rule' => ['maxLength', 200]],
+                    'notEmpty'  => [
+                        'rule' => 'notEmpty',
+                    ],
+                    'email'     => [
+                        'rule' => ['email'],
+                    ],
+                ],
+            ],
+            'LocalName' => [
+                'first_name' => [
+                    'maxLength' => ['rule' => ['maxLength', 128]],
+                ],
+                'last_name'  => [
+                    'maxLength' => ['rule' => ['maxLength', 128]],
+                ],
+            ],
+            'Team'      => [
+                'start_term_month' => ['numeric' => ['rule' => ['numeric'],],],
+                'border_months'    => ['numeric' => ['rule' => ['numeric'],],],
+                'timezone'         => [
+                    'numeric' => [
+                        'rule'       => ['numeric'],
+                        'allowEmpty' => true,
+                    ],
+                ],
             ]
         ];
         try {
-            if (empty($this->request->data)) {
-                throw new RuntimeException(__('No Datas'));
-            }
             //white list checking
+            //filter Model
+            $data = array_intersect_key($this->request->data, $validations);
+            //filter fields
+            foreach ($data as $model => $fields) {
+                $data[$model] = array_intersect_key($data[$model], $validations[$model]);
+                if (empty($data[$model])) {
+                    unset($data[$model]);
+                }
+            }
+            if (empty($data)) {
+                throw new RuntimeException(__('No Data'));
+            }
+            foreach ($data as $model => $fields) {
+                /**
+                 * @var AppModel $Model
+                 */
+                $Model = ClassRegistry::init($model);
+                $Model->set($fields);
+                $Model->validate = $validations[$model];
+                if (!$Model->validates()) {
+                    $res['validation_msg'][$model] = $Model->validationErrors;
+                }
+            }
+            if (!empty($res['validation_msg'])) {
+                throw new RuntimeException(__('Invalid Data'));
+            }
+            //store session
+            $this->Session->write(['data' => array_merge($this->Session->read('data'), $data)]);
 
         } catch (RuntimeException $e) {
             $res['error'] = true;
