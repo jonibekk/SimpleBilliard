@@ -106,21 +106,18 @@ class SignupController extends AppController
         return $this->_ajaxGetResponse($res);
     }
 
-
     /**
      * verify email by verify code
      * [POST] method only allowed
-     *
      * required field is:
      * $this->request->data['code']
-     *
      * return value is json encoded
      * e.g.
      * {
      * error: false,//true or false,
      * message:"something is wrong",//if error is true then message exists. if no error, blank text
+     * is_locked: false,//true or false,
      * }
-     *
      * TTL is 1 hour
      * 5 failed then lockout 5mins
      * compare input field and session stored
@@ -134,8 +131,9 @@ class SignupController extends AppController
         $this->request->allowMethod('post');
         //init response values
         $res = [
-            'error'       => false,
-            'message'     => "",
+            'error'     => false,
+            'message'   => "",
+            'is_locked' => false,
         ];
 
         try {
@@ -145,12 +143,13 @@ class SignupController extends AppController
             $input_code = $this->request->data['code'];
             $stored_code = $this->Session->read('email_verify_code');
 
-            if(!$stored_code){
+            if (!$stored_code) {
                 throw new RuntimeException(__('Invalid screen transition'));
             }
-            if($input_code != $stored_code){
+            if ($input_code != $stored_code) {
                 throw new RuntimeException(__('verification code was wrong'));
             }
+
             //success!
             $this->Session->delete('email_verify_code');
 
