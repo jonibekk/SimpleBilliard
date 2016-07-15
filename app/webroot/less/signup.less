@@ -24,10 +24,16 @@ app/View/Signup/term.ctp
   font-size: @fontLarge;
   border: none;
   padding-top: 0;
+  font-weight: 700;
 }
 
 .signup-description{
-  padding: 10px 3%;
+  font-size: @fontMedium;
+  padding: 10px 4% 20px;
+}
+.signup-description.mod-small{
+  font-size: @fontSmall;
+  padding: 3px 4%;
 }
 
 .signup_input-design{
@@ -43,7 +49,7 @@ app/View/Signup/term.ctp
 .signup-btn-submit{
   display: block;
   width: 93%;
-  height: 50px;
+  //height: 50px;
   margin: 0 auto;
 }
 
@@ -56,7 +62,7 @@ auth.ctp、authコード用のclass
 }
 
 .signup-auth-large_margin {
-  margin: 2rem auto;
+  margin: 10px auto 20px;
 }
 
 .signup-auth-design{
@@ -172,4 +178,19 @@ user.ctpで使っているclass
   text-align: center;
   border: 1px solid @acidRed;
   color: @acidRed;
+}
+
+/*
+term.ctpで使っているclass
+*/
+.signup-goal-timezone-label{
+  display: inline-block;
+  width: 70%;
+  height: 16px;
+  overflow: hidden;
+}
+@media @small {
+  .signup-goal-timezone-label {
+  width: 80%;
+  }
 }
