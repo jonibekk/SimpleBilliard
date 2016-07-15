@@ -1,48 +1,64 @@
-import { INPUT_CODE, CHECKING_AUTH_CODE, FINISHED_CHECKING_AUTH_CODE, INIT_AUTH_CODE, AUTH_CODE_IS_INVALID, INIT_AUTH_CODE_INVALID, EMAIL_IS_LOCKED, EMAIL_IS_UNLOCKED } from '../constants/ActionTypes'
+import * as types from '../constants/ActionTypes'
 
 const initialState = {
   inputed_code: null,
   checking_auth_code: false,
-  email_is_locked: false,
-  code_is_invalid: false,
-  invalid_message: ''
+  auth_code_is_invalid: false,
+  auth_code_is_locked: false,
+  auth_code_is_expired: false,
+  invalid_message: '',
+  locked_message: '',
+  expired_message: ''
 }
 
 export default function auth(state = initialState, action) {
   switch (action.type) {
-    case INPUT_CODE:
+    case types.INPUT_CODE:
       return Object.assign({}, state, {
         inputed_code: action.inputed_code
       })
-    case CHECKING_AUTH_CODE:
+    case types.CHECKING_AUTH_CODE:
       return Object.assign({}, state, {
         checking_auth_code: true
       })
-    case FINISHED_CHECKING_AUTH_CODE:
+    case types.FINISHED_CHECKING_AUTH_CODE:
       return Object.assign({}, state, {
         checking_auth_code: false
       })
-    case INIT_AUTH_CODE:
+    case types.INIT_AUTH_CODE:
       return Object.assign({}, state, {
         inputed_code: null
       })
-    case AUTH_CODE_IS_INVALID:
+    case types.AUTH_CODE_IS_INVALID:
       return Object.assign({}, state, {
-        code_is_invalid: true,
+        auth_code_is_invalid: true,
         invalid_message: action.invalid_message
       })
-      return INVALID_AUTH_CODE
-    case INIT_AUTH_CODE_INVALID:
+    case types.AUTH_CODE_IS_VALID:
       return Object.assign({}, state, {
-        code_is_invalid: false
+        auth_code_is_invalid: false
       })
-    case EMAIL_IS_LOCKED:
+    case types.INIT_AUTH_CODE_INVALID:
       return Object.assign({}, state, {
-        email_is_locked: true
+        auth_code_is_invalid: false
       })
-    case EMAIL_IS_UNLOCKED:
+    case types.AUTH_CODE_IS_LOCKED:
       return Object.assign({}, state, {
-        email_is_locked: false
+        auth_code_is_locked: true,
+        locked_message: action.locked_message
+      })
+    case types.AUTH_CODE_IS_UNLOCKED:
+      return Object.assign({}, state, {
+        auth_code_is_locked: false
+      })
+    case types.AUTH_CODE_IS_EXPIRED:
+      return Object.assign({}, state, {
+        auth_code_is_expired: true,
+        expired_message: action.expired_message
+      })
+    case types.AUTH_CODE_IS_ENABLED:
+      return Object.assign({}, state, {
+        auth_code_is_expired: false
       })
     default:
       return state;
