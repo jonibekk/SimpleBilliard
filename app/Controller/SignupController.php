@@ -12,6 +12,59 @@ class SignupController extends AppController
         'Email',
     ];
 
+    private $validations = [
+        'User'      => [
+            'first_name' => [
+                'maxLength'      => ['rule' => ['maxLength', 128]],
+                'notEmpty'       => ['rule' => 'notEmpty'],
+                'isAlphabetOnly' => ['rule' => 'isAlphabetOnly'],
+            ],
+            'last_name'  => [
+                'maxLength'      => ['rule' => ['maxLength', 128]],
+                'notEmpty'       => ['rule' => 'notEmpty'],
+                'isAlphabetOnly' => ['rule' => 'isAlphabetOnly'],
+            ],
+            'password'   => [
+                'maxLength' => ['rule' => ['maxLength', 50]],
+                'notEmpty'  => [
+                    'rule' => 'notEmpty',
+                ],
+                'minLength' => [
+                    'rule' => ['minLength', 8],
+                ]
+            ],
+        ],
+        'Email'     => [
+            'email' => [
+                'maxLength' => ['rule' => ['maxLength', 200]],
+                'notEmpty'  => [
+                    'rule' => 'notEmpty',
+                ],
+                'email'     => [
+                    'rule' => ['email'],
+                ],
+            ],
+        ],
+        'LocalName' => [
+            'first_name' => [
+                'maxLength' => ['rule' => ['maxLength', 128]],
+            ],
+            'last_name'  => [
+                'maxLength' => ['rule' => ['maxLength', 128]],
+            ],
+        ],
+        'Team'      => [
+            'start_term_month' => ['numeric' => ['rule' => ['numeric'],],],
+            'border_months'    => ['numeric' => ['rule' => ['numeric'],],],
+            'timezone'         => [
+                'numeric' => [
+                    'rule'       => ['numeric'],
+                    'allowEmpty' => true,
+                ],
+            ],
+        ]
+    ];
+
     /**
      * beforeFilter callback
      *
@@ -196,88 +249,22 @@ class SignupController extends AppController
             'message'        => "",
             'validation_msg' => [],
         ];
-        $validations = [
-            'User'      => [
-                'first_name' => [
-                    'maxLength'      => ['rule' => ['maxLength', 128]],
-                    'notEmpty'       => ['rule' => 'notEmpty'],
-                    'isAlphabetOnly' => ['rule' => 'isAlphabetOnly'],
-                ],
-                'last_name'  => [
-                    'maxLength'      => ['rule' => ['maxLength', 128]],
-                    'notEmpty'       => ['rule' => 'notEmpty'],
-                    'isAlphabetOnly' => ['rule' => 'isAlphabetOnly'],
-                ],
-                'password'   => [
-                    'maxLength' => ['rule' => ['maxLength', 50]],
-                    'notEmpty'  => [
-                        'rule' => 'notEmpty',
-                    ],
-                    'minLength' => [
-                        'rule' => ['minLength', 8],
-                    ]
-                ],
-            ],
-            'Email'     => [
-                'email' => [
-                    'maxLength' => ['rule' => ['maxLength', 200]],
-                    'notEmpty'  => [
-                        'rule' => 'notEmpty',
-                    ],
-                    'email'     => [
-                        'rule' => ['email'],
-                    ],
-                ],
-            ],
-            'LocalName' => [
-                'first_name' => [
-                    'maxLength' => ['rule' => ['maxLength', 128]],
-                ],
-                'last_name'  => [
-                    'maxLength' => ['rule' => ['maxLength', 128]],
-                ],
-            ],
-            'Team'      => [
-                'start_term_month' => ['numeric' => ['rule' => ['numeric'],],],
-                'border_months'    => ['numeric' => ['rule' => ['numeric'],],],
-                'timezone'         => [
-                    'numeric' => [
-                        'rule'       => ['numeric'],
-                        'allowEmpty' => true,
-                    ],
-                ],
-            ]
-        ];
+
         try {
-            //white list checking
-            //filter Model
-            $data = array_intersect_key($this->request->data, $validations);
-            //filter fields
-            foreach ($data as $model => $fields) {
-                $data[$model] = array_intersect_key($data[$model], $validations[$model]);
-                if (empty($data[$model])) {
-                    unset($data[$model]);
-                }
-            }
+            $data = $this->_filterWhiteList($this->request->data);
             if (empty($data)) {
                 throw new RuntimeException(__('No Data'));
             }
-            foreach ($data as $model => $fields) {
-                /**
-                 * @var AppModel $Model
-                 */
-                $Model = ClassRegistry::init($model);
-                $Model->set($fields);
-                $Model->validate = $validations[$model];
-                if (!$Model->validates()) {
-                    $res['validation_msg'][$model] = $Model->validationErrors;
-                }
-            }
-            if (!empty($res['validation_msg'])) {
+            $validation_msg = $this->_getValidationErrorMsg($data);
+            if (!empty($validation_msg)) {
+                $res['validation_msg'] = $validation_msg;
                 throw new RuntimeException(__('Invalid Data'));
             }
             //store session
-            $this->Session->write(['data' => array_merge($this->Session->read('data'), $data)]);
+            if($this->Session->read('data')){
+                $data = array_merge($this->Session->read('data'), $data);
+            }
+            $this->Session->write(['data' => $data]);
 
         } catch (RuntimeException $e) {
             $res['error'] = true;
@@ -285,4 +272,46 @@ class SignupController extends AppController
         }
         return $this->_ajaxGetResponse($res);
     }
+
+    /**
+     * @param $data
+     *
+     * @return array
+     */
+    public function _getValidationErrorMsg($data)
+    {
+        $validation_msg = [];
+        foreach ($data as $model => $fields) {
+            /**
+             * @var AppModel $Model
+             */
+            $Model = ClassRegistry::init($model);
+            $Model->set($fields);
+            $Model->validate = $this->validations[$model];
+            if (!$Model->validates()) {
+                $validation_msg[$model] = $Model->validationErrors;
+            }
+        }
+        return $validation_msg;
+    }
+
+    /**
+     * @param $data
+     *
+     * @return array
+     */
+    public function _filterWhiteList($data)
+    {
+        //filter Model
+        $data = array_intersect_key($data, $this->validations);
+        //filter fields
+        foreach ($data as $model => $fields) {
+            $data[$model] = array_intersect_key($data[$model], $this->validations[$model]);
+            if (empty($data[$model])) {
+                unset($data[$model]);
+            }
+        }
+        return $data;
+    }
+
 }
