@@ -10,6 +10,8 @@ const initialState = {
   checking_user_name: false,
   submit_button_is_enabled: false,
   user_name_is_invalid: false,
+  is_exception: false,
+  exception_message: '',
   invalid_messages: {}
 }
 
@@ -43,6 +45,15 @@ export default function term(state = initialState, action) {
     case types.CAN_NOT_SUBMIT_USER_NAME:
       return Object.assign({}, state, {
         submit_button_is_enabled: false
+      })
+    case types.CAN_NOT_SUBMIT_USER_NAME:
+      return Object.assign({}, state, {
+        submit_button_is_enabled: false
+      })
+    case types.USER_NETWORK_ERROR:
+      return Object.assign({}, state, {
+        is_exception: true,
+        exception_message: action.exception_message
       })
     default:
       return state;

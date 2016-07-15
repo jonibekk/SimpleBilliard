@@ -38,4 +38,9 @@ describe('reducer::user_name', () => {
     const newState = userNameReducer({}, { type: types.CAN_NOT_SUBMIT_USER_NAME});
     expect(newState).toInclude(expect_value)
   })
+  it('NETWORK_ERROR', () => {
+    const expect_value = { is_exception: true, exception_message: 'exception message' }
+    const newState = userNameReducer({}, { type: types.USER_NETWORK_ERROR, exception_message: 'exception message'});
+    expect(newState).toInclude(expect_value)
+  })
 })

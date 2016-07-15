@@ -7,12 +7,15 @@ import * as types from '../constants/ActionTypes'
   }
 }
 
-export function postVerifyUserName(user) {
+export function postUserName(user) {
   return dispatch => {
-    dispatch({ type: types.CHECKING_AUTH_CODE })
+    dispatch({ type: types.CHECKING_USER_NAME })
     const data = {
       'data[_Token][key]': 'csrf_token_key', //cake.data.csrf_token.key,
-      'data[code]': code
+      'data[User][first_name]': user.first_name,
+      'data[User][last_name]': user.last_name,
+      'data[Local][first_name]': user.local_first_name,
+      'data[Local][last_name]': user.local_last_name,
     }
     var base_url
     if(typeof cake === "undefined") {
@@ -28,20 +31,34 @@ export function postVerifyUserName(user) {
       dataType: 'json',
     })
     .then(function (response) {
-      dispatch({ type: types.FINISHED_CHECKING_AUTH_CODE })
-      if(response.data.is_locked) {
-        dispatch({ type: types.AUTH_CODE_IS_LOCKED, locked_message: response.data.message })
-      } else if(response.data.is_expired) {
-        dispatch({ type: types.AUTH_CODE_IS_EXPIRED, expired_message: response.data.message })
-      } else if(response.data.error) {
-        dispatch({ type: types.AUTH_CODE_IS_INVALID, invalid_message: response.data.message })
+      dispatch({ type: types.FINISHED_CHECKING_USER_NAME })
+      const user_name_is_invlalid = response.data.error && Object.keys(response.data.validation_msg).length
+      if(user_name_is_invlalid) {
+        dispatch({ type: types.USER_NAME_IS_INVALID, invalid_messages: mapValidationMsg(response.data.validation_msg) })
       } else {
-        dispatch({ type: types.AUTH_CODE_IS_VALID })
+        dispatch({ type: types.USER_NAME_IS_VALID })
       }
     })
     .catch(function (response) {
-      dispatch({ type: types.FINISHED_CHECKING_AUTH_CODE })
-      dispatch({ type: types.AUTH_CODE_IS_INVALID, invalid_message: 'Network error' })
+      dispatch({ type: types.FINISHED_CHECKING_USER_NAME })
+      dispatch({ type: types.USER_NETWORK_ERROR, exception_message: 'Network error' })
     })
   }
+}
+
+export function mapValidationMsg(before_mapped_message) {
+  let map = {
+    'data[User][first_name]': 'first_name',
+    'data[User][last_name]': 'last_name',
+    'data[Local][first_name]': 'local_first_name',
+    'data[Local][last_name]': 'local_last_name'
+  }
+
+  let result = {}
+  Object.keys(map).forEach(key => {
+    if(before_mapped_message[key]) {
+      result[map[key]] = before_mapped_message[key]
+    }
+  }, map)
+  return result
 }
