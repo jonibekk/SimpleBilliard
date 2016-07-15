@@ -1,5 +1,4 @@
 <!-- START app/View/Signup/auth.ctp -->
-<div id="container" class="container">
         <div class="row">
             <div class="panel panel-default panel-signup">
                 <div class="panel-heading signup-title">Check your email!</div>
@@ -39,6 +38,5 @@
                 <div class="signup-description">Auth code sample text.Auth code sample textAuth code sample textAuth code sample textAuth code sample textAuth code sample text.</div>
             </div>
         </div>
-</div>
 <a href="/signup/user">ページ遷移用リンク</a>
 <!-- END app/View/Signup/auth.ctp -->
