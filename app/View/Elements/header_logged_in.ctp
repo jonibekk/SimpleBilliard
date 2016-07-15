@@ -21,7 +21,7 @@
 <!-- START app/View/Elements/header_logged_in.ctp -->
 
 <!-- setting the current team id for local storage, if team changed by other tab. -->
-<div id="team_id_current" style="display: none;"><?=@$this->Session->read('current_team_id');?></div>
+<div id="team_id_current" style="display: none;"><?=$this->Session->read('current_team_id');?></div>
 
 <header class="header">
     <div class="navbar navbar-fixed-top navbar-default gl-navbar <?= $is_mb_app ? "mb-app-nav" : null ?>"
