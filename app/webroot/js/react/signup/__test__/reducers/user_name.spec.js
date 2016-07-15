@@ -4,8 +4,8 @@ import expect from 'expect'
 
 describe('reducer::user_name', () => {
   it('INPUT_USER_NAME', () => {
-    const expect_value = { inputed: {test: 'test text'} }
-    const newState = userNameReducer({}, { type: types.INPUT_USER_NAME, inputed: {test: 'test text'}});
+    const expect_value = { inputed: {key_name: 'name'} }
+    const newState = userNameReducer({}, { type: types.INPUT_USER_NAME, key: 'key_name', name: 'name' });
     expect(newState).toInclude(expect_value)
   })
   it('CHECKING_USER_NAME', () => {

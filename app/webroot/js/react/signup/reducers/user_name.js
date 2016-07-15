@@ -17,7 +17,7 @@ export default function term(state = initialState, action) {
   switch (action.type) {
     case types.INPUT_USER_NAME:
       return Object.assign({}, state, {
-        inputed: action.inputed
+        inputed: { [action.key]: action.name }
       })
     case types.CHECKING_USER_NAME:
       return Object.assign({}, state, {
