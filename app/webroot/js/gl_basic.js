@@ -98,8 +98,9 @@ $(window).load(function () {
     setDefaultTab();
 
     // for setting the team_id_current in local storage
-    clickCounter();
+    clickToSetCurrentTeamId();
 
+    // if team changed from other tab then don't allow user to proceed without reload
     $('body').click(function(){
         var old_team_id_current = document.getElementById("team_id_current").innerHTML;
         if(old_team_id_current !== localStorage.team_id_current) {
@@ -112,9 +113,10 @@ $(window).load(function () {
             }
         }
     });
+
 });
 
-function clickCounter() {
+function clickToSetCurrentTeamId() {
     if(typeof(Storage) !== "undefined") {
         localStorage.team_id_current = Number(document.getElementById("team_id_current").innerHTML);
     } else {
