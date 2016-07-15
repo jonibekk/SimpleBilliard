@@ -255,13 +255,13 @@ class SignupController extends AppController
             if (empty($data)) {
                 throw new RuntimeException(__('No Data'));
             }
-            $validation_msg = $this->_getValidationErrorMsg($data);
+            $validation_msg = $this->_getValidationErrorMsg($data, true);
             if (!empty($validation_msg)) {
                 $res['validation_msg'] = $validation_msg;
                 throw new RuntimeException(__('Invalid Data'));
             }
             //store session
-            if($this->Session->read('data')){
+            if ($this->Session->read('data')) {
                 $data = array_merge($this->Session->read('data'), $data);
             }
             $this->Session->write(['data' => $data]);
@@ -274,11 +274,12 @@ class SignupController extends AppController
     }
 
     /**
-     * @param $data
+     * @param      $data
+     * @param bool $reformat
      *
      * @return array
      */
-    public function _getValidationErrorMsg($data)
+    public function _getValidationErrorMsg($data, $reformat = false)
     {
         $validation_msg = [];
         foreach ($data as $model => $fields) {
@@ -291,6 +292,15 @@ class SignupController extends AppController
             if (!$Model->validates()) {
                 $validation_msg[$model] = $Model->validationErrors;
             }
+        }
+        if ($reformat) {
+            $formatted_validation_msg = [];
+            foreach ($validation_msg as $model => $fields) {
+                foreach ($fields as $field => $msg) {
+                    $formatted_validation_msg["data[$model][$field]"] = $msg[0];
+                }
+            }
+            return $formatted_validation_msg;
         }
         return $validation_msg;
     }
