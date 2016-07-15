@@ -54,6 +54,13 @@ class SignupController extends AppController
             ],
         ],
         'Team'      => [
+            'name'             => [
+                'isString'  => [
+                    'rule' => ['isString',],
+                ],
+                'maxLength' => ['rule' => ['maxLength', 128]],
+                'notEmpty'  => ['rule' => ['notEmpty'],],
+            ],
             'start_term_month' => ['numeric' => ['rule' => ['numeric'],],],
             'border_months'    => ['numeric' => ['rule' => ['numeric'],],],
             'timezone'         => [
@@ -270,6 +277,76 @@ class SignupController extends AppController
             $res['error'] = true;
             $res['message'] = $e->getMessage();
         }
+        return $this->_ajaxGetResponse($res);
+    }
+
+    /**
+     * register user
+     * POST method only
+     * input fields are the following
+     * $this->request->data['Team']['start_term_month']
+     * $this->request->data['Team']['border_months']
+     * $this->request->data['Team']['timezone']
+     *
+     * @return CakeResponse|null
+     */
+    public function ajax_register_user()
+    {
+        $this->_ajaxPreProcess();
+        $this->request->allowMethod('post');
+        //init response values
+        $res = [
+            'error'            => false,
+            'message'          => "",
+            'validation_msg'   => [],
+            'is_not_available' => false,
+        ];
+
+        try {
+            if (!$session_data = $this->Session->read('data')) {
+                throw new RuntimeException(__('Invalid screen transition.'));
+            }
+
+            $data = $this->_filterWhiteList($this->request->data);
+
+            if (empty($data)) {
+                throw new RuntimeException(__('No Data'));
+            }
+
+            $validation_msg = $this->_getValidationErrorMsg($data, true);
+            if (!empty($validation_msg)) {
+                $res['validation_msg'] = $validation_msg;
+                throw new RuntimeException(__('Invalid Data'));
+            }
+            //merge form data and session data
+            $data = array_merge($session_data, $data);
+            //validation for all datas
+            $validation_msg = $this->_getValidationErrorMsg($data, true);
+            if (!empty($validation_msg)) {
+                $res['is_not_available'] = true;
+                throw new RuntimeException(__('問題が発生しました。最初からやりなおしてください。'));
+            }
+            //required fields check
+            
+
+
+            //saving datas
+            //user with email and local_name
+
+            //team
+
+            //success
+
+            //auto login with team
+
+            //after success
+            $this->Session->delete('data');
+
+        } catch (RuntimeException $e) {
+            $res['error'] = true;
+            $res['message'] = $e->getMessage();
+        }
+
         return $this->_ajaxGetResponse($res);
     }
 
