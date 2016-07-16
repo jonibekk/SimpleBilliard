@@ -4,7 +4,7 @@ const initialState = {
   selected_term: '',
   selected_start_month: '',
   selected_time_zone: '',
-  checking_term: false,
+  checking_term: false
 }
 
 export default function term(state = initialState, action) {

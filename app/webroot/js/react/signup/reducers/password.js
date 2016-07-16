@@ -1,4 +1,8 @@
-import { INPUT_PASSWORD, PASSWORD_IS_INVALID, CHECKING_PASSWORD } from '../constants/ActionTypes'
+import {
+  INPUT_PASSWORD,
+  PASSWORD_IS_INVALID,
+  CHECKING_PASSWORD
+} from '../constants/ActionTypes'
 
 const initialState = {
   inputed_password: '',

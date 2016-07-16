@@ -15,9 +15,10 @@ describe('actions::user_name', () => {
 
   it('inputName', () => {
     const expectedActions = [
-      { type: types.INPUT_USER_NAME, key: 'key_name', name: 'name' },
+      { type: types.INPUT_USER_NAME, key: 'key_name', name: 'name' }
     ]
     const store = mockStore({ auth: [] })
+
     store.dispatch(actions.inputName('key_name', 'name'))
     expect(store.getActions()).toEqual(expectedActions)
   })
@@ -32,7 +33,7 @@ describe('actions::user_name', () => {
           "data[User][first_name]": "first_name message",
           "data[User][last_name]": "last_name message",
           "data[Local][first_name]": "local_first_name message",
-          "data[Local][last_name]": "local_last_name message",
+          "data[Local][last_name]": "local_last_name message"
         }
       })
 
