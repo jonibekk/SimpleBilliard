@@ -23,7 +23,7 @@ export function postUserName(user) {
     } else {
       base_url = cake.url.route_url
     }
-    return axios.post(base_url + '/signup/ajax_verify_user_name', data, {
+    return axios.post(base_url + '/signup/ajax_validation_fields', data, {
       timeout: 10000,
       headers: {
         'X-Requested-With': 'XMLHttpRequest',

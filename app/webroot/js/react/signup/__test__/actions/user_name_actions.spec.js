@@ -24,7 +24,7 @@ describe('actions::user_name', () => {
 
   it('postUserName invalid', () => {
     nock('http://127.0.0.1')
-      .post('/signup/ajax_verify_user_name')
+      .post('/signup/ajax_validation_fields')
       .reply(200, {
         "error": true,
         "message": "Invalid Data",
@@ -51,7 +51,7 @@ describe('actions::user_name', () => {
 
   it('postUserName valid', () => {
     nock('http://127.0.0.1')
-      .post('/signup/ajax_verify_user_name')
+      .post('/signup/ajax_validation_fields')
       .reply(200, {
         "error": false,
         "message": "",
