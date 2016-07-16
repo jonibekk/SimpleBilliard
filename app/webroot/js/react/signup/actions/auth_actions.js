@@ -20,7 +20,7 @@ export function postVerifyCode(code) {
       'data[_Token][key]': 'csrf_token_key', //cake.data.csrf_token.key,
       'data[code]': code
     }
-    var base_url
+    let base_url
     if(typeof cake === "undefined") {
       base_url = 'http://127.0.0.1'
     } else {
@@ -29,9 +29,9 @@ export function postVerifyCode(code) {
     return axios.post(base_url + '/signup/ajax_verify_code', data, {
       timeout: 10000,
       headers: {
-        'X-Requested-With': 'XMLHttpRequest',
+        'X-Requested-With': 'XMLHttpRequest'
       },
-      dataType: 'json',
+      dataType: 'json'
     })
     .then(function (response) {
       dispatch({ type: types.FINISHED_CHECKING_AUTH_CODE })
@@ -48,6 +48,7 @@ export function postVerifyCode(code) {
     .catch(function (response) {
       dispatch({ type: types.FINISHED_CHECKING_AUTH_CODE })
       dispatch({ type: types.AUTH_CODE_IS_INVALID, invalid_message: 'Network error' })
+      console.log(response)
     })
   }
 }

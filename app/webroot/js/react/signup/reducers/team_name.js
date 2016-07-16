@@ -1,4 +1,8 @@
-import { INPUT_TEAM_NAME, TEAM_NAME_IS_INVALID, CHECKING_INPUT_TEAM_NAME } from '../constants/ActionTypes'
+import {
+  INPUT_TEAM_NAME,
+  TEAM_NAME_IS_INVALID,
+  CHECKING_INPUT_TEAM_NAME
+} from '../constants/ActionTypes'
 
 const initialState = {
   inputed_team_name: '',

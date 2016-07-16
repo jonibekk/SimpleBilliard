@@ -15,9 +15,10 @@ describe('actions::auth', () => {
 
   it('inputCode digit is less than 6', () => {
     const expectedActions = [
-      { type: types.INPUT_CODE, inputed_code: 12345 },
+      { type: types.INPUT_CODE, inputed_code: 12345 }
     ]
     const store = mockStore({ auth: [] })
+
     store.dispatch(actions.inputCode(12345))
     expect(store.getActions()).toEqual(expectedActions)
   })
@@ -27,6 +28,7 @@ describe('actions::auth', () => {
       { type: types.INPUT_CODE, inputed_code: 123456 }
     ]
     const store = mockStore({ auth: [] })
+
     store.dispatch(actions.inputCode(123456))
     expect(store.getActions()).toEqual(expectedActions)
   })
@@ -36,6 +38,7 @@ describe('actions::auth', () => {
       { type: types.INIT_AUTH_CODE }
     ]
     const store = mockStore({ auth: [] })
+    
     store.dispatch(actions.inputCode('abcdef'))
     expect(store.getActions()).toEqual(expectedActions)
   })
