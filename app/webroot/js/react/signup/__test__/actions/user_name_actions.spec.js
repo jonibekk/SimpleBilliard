@@ -71,4 +71,22 @@ describe('actions::user_name', () => {
         expect(store.getActions()).toEqual(expectedActions)
       })
   })
+
+  it('postUserName network error', () => {
+    nock('http://network-error')
+      .post('/signup/ajax_validation_fields')
+      .reply(200, {})
+
+    const expectedActions = [
+      { type: types.CHECKING_USER_NAME },
+      { type: types.FINISHED_CHECKING_USER_NAME },
+      { type: types.USER_NETWORK_ERROR, exception_message: 'Network error' }
+    ]
+    const store = mockStore({ auth: [] })
+
+    return store.dispatch(actions.postUserName({first_name: 'a', last_name: 'b', local_first_name: 'c', local_last_name: 'd'}))
+      .then(() => {
+        expect(store.getActions()).toEqual(expectedActions)
+      })
+  })
 })

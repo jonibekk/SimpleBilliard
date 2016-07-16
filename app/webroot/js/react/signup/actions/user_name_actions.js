@@ -54,7 +54,7 @@ export function postUserName(user) {
           })
         }
       })
-      .catch(function(response) {
+      .catch(function() {
         dispatch({
           type: types.FINISHED_CHECKING_USER_NAME
         })
@@ -62,7 +62,6 @@ export function postUserName(user) {
           type: types.USER_NETWORK_ERROR,
           exception_message: 'Network error'
         })
-        console.log(response)
       })
   }
 }

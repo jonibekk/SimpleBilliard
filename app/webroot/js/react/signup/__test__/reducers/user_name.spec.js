@@ -92,7 +92,7 @@ describe('reducer::user_name', () => {
       type: types.USER_NETWORK_ERROR,
       exception_message: 'exception message'
     })
-    
+
     expect(newState).toInclude(expect_value)
   })
 })
