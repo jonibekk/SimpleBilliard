@@ -46,7 +46,7 @@ export function postUserName(user) {
   }
 }
 
-export function mapValidationMsg(before_mapped_message) {
+export function mapValidationMsg(before_mapped_messages) {
   let map = {
     'data[User][first_name]': 'first_name',
     'data[User][last_name]': 'last_name',
@@ -56,8 +56,8 @@ export function mapValidationMsg(before_mapped_message) {
 
   let result = {}
   Object.keys(map).forEach(key => {
-    if(before_mapped_message[key]) {
-      result[map[key]] = before_mapped_message[key]
+    if(before_mapped_messages[key]) {
+      result[map[key]] = before_mapped_messages[key]
     }
   }, map)
   return result
