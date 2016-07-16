@@ -20,12 +20,32 @@ app/View/Signup/term.ctp
   font-size: @fontLarge;
 }
 
+.signup-itemtitle{
+  font-size: @fontLarge;
+  border: none;
+  padding-top: 0;
+}
+
 .signup-description{
   padding: 10px 3%;
 }
 
+.signup_input-design{
+  width: 93%;
+  margin: 0 auto 10px;
+  -webkit-appearance : none
+}
 
+.signup-btn{
+  margin: 20px 0 0;
+}
 
+.signup-btn-submit{
+  display: block;
+  width: 93%;
+  height: 50px;
+  margin: 0 auto;
+}
 
 /*
 auth.ctp、authコード用のclass
@@ -80,6 +100,7 @@ auth.ctp、authコード用のclass
     box-shadow: none;
     width: 40px;
     height: 60px;
+    color: #000;
 }
 @media @small {
   .signup-auth-inline_input {
@@ -108,7 +129,6 @@ auth.ctp、Loading、ERRORまわりのclass
   text-align: center;
   border: 1px solid @aquaBlue;
   color: @aquaBlue;
-
 }
 .signup-load-description.mod-lock{
     //display: none;
@@ -132,5 +152,24 @@ auth.ctp、Loading、ERRORまわりのclass
 .signup-load-icon.mod-error{
   font-size: 30pt;
   margin-bottom: 5px;
+  color: @acidRed;
+}
+
+/*
+user.ctpで使っているclass
+*/
+.signup-checkbox{
+  width: 93%;
+  margin: 0 auto;
+}
+
+.signup-error-description{
+  //display: none;
+  width: 83%;
+  margin: 15px auto;
+  padding: 15px 20px 20px;
+  border-radius: 5px;
+  text-align: center;
+  border: 1px solid @acidRed;
   color: @acidRed;
 }

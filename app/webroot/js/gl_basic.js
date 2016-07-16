@@ -99,7 +99,7 @@ $(window).load(function () {
 });
 
 $(document).ready(function () {
-
+    
     //intercomのリンクを非表示にする
     if (enabled_intercom_icon) {
         $('#IntercomLink').hide();
