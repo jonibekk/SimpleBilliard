@@ -1,5 +1,5 @@
 headerToggleNav = ->
-  headerDropdowns = '.header-dropdown-add, .header-dropdown-message, .header-dropdown-notify, .header-dropdown-functions'
+  headerDropdowns = '.header-dropdown-add, mb-app-header-dropdown-add, .header-dropdown-message, .header-dropdown-notify, .header-dropdown-functions, .mb-app-header-dropdown-functions'
   # varErrMessage = ' is undefined'
   # if !varErrMessage?
   #   console.log 'varErrMessage' +' is undefined'
@@ -26,6 +26,3 @@ headerToggleNav = ->
 
 $ ->
   headerToggleNav()
-  
-  
-  

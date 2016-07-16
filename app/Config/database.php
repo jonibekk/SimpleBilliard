@@ -10,6 +10,7 @@ class DATABASE_CONFIG
         'login'      => 'root',
         'password'   => '',
         'database'   => 'myapp',
+        'encoding'   => 'utf8mb4',
     );
 
     public $test = array(
@@ -17,6 +18,7 @@ class DATABASE_CONFIG
         'persistent' => false,
         'database'   => ':memory:',
         'prefix'     => '',
+        'encoding'   => 'utf8mb4',
 
 //        'datasource' => 'Database/Mysql',
 //        'persistent' => false,
@@ -33,6 +35,7 @@ class DATABASE_CONFIG
         'login'      => 'root',
         'password'   => '',
         'database'   => 'myapp_bench',
+        'encoding'   => 'utf8mb4',
     );
 
     public $redis = array(
