@@ -11,6 +11,14 @@ export function inputName(key, name) {
   }
 }
 
+export function enableSubmitButton() {
+  return { type: types.CAN_SUBMIT_USER_NAME }
+}
+
+export function disableSubmitButton() {
+  return { type: types.CAN_NOT_SUBMIT_USER_NAME }
+}
+
 export function postUserName(user) {
   return dispatch => {
     dispatch({

@@ -23,6 +23,26 @@ describe('actions::user_name', () => {
     expect(store.getActions()).toEqual(expectedActions)
   })
 
+  it('inputName submit button enable', () => {
+    const expectedActions = [
+      { type: types.CAN_SUBMIT_USER_NAME }
+    ]
+    const store = mockStore({ auth: [] })
+
+    store.dispatch(actions.enableSubmitButton())
+    expect(store.getActions()).toEqual(expectedActions)
+  })
+
+  it('inputName submit button disabled', () => {
+    const expectedActions = [
+      { type: types.CAN_NOT_SUBMIT_USER_NAME }
+    ]
+    const store = mockStore({ auth: [] })
+
+    store.dispatch(actions.disableSubmitButton())
+    expect(store.getActions()).toEqual(expectedActions)
+  })
+
   it('postUserName invalid', () => {
     nock('http://127.0.0.1')
       .post('/signup/ajax_validation_fields')
