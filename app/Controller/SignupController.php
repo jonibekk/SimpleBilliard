@@ -72,6 +72,23 @@ class SignupController extends AppController
         ]
     ];
 
+    private $requiredFields = [
+        'User'  => [
+            'first_name',
+            'last_name',
+            'password',
+        ],
+        'Email' => [
+            'email'
+        ],
+        'Team'  => [
+            'name',
+            'start_term_month',
+            'border_months',
+            'timezone',
+        ]
+    ];
+
     /**
      * beforeFilter callback
      *
@@ -320,16 +337,17 @@ class SignupController extends AppController
             }
             //merge form data and session data
             $data = array_merge($session_data, $data);
+            //required fields check
+            if(!$this->_hasAllRequiredFields($data)){
+                $res['is_not_available'] = true;
+                throw new RuntimeException(__('Some error occurred. Please try again from the start.'));
+            }
             //validation for all datas
             $validation_msg = $this->_getValidationErrorMsg($data, true);
             if (!empty($validation_msg)) {
                 $res['is_not_available'] = true;
-                throw new RuntimeException(__('問題が発生しました。最初からやりなおしてください。'));
+                throw new RuntimeException(__('Some error occurred. Please try again from the start.'));
             }
-            //required fields check
-            
-
-
             //saving datas
             //user with email and local_name
 
@@ -399,6 +417,19 @@ class SignupController extends AppController
             }
         }
         return $data;
+    }
+
+    public function _hasAllRequiredFields($data)
+    {
+        foreach ($this->requiredFields as $model => $fields) {
+            foreach($fields as $field){
+                if (!isset($data[$model][$field])) {
+                    return false;
+                }
+
+            }
+        }
+        return true;
     }
 
 }
