@@ -109,7 +109,7 @@ $(document).ready(function () {
             'data[User][first_name]': "first",
             'data[User][last_name]': "last",
             'data[User][password]': "99999999",
-            'data[Email][email]': "daiki@bigplants.net",
+            'data[Email][email]': "goalous.test111@gmail.com",
             'data[LocalName][first_name_xxxxxxx]': "ああああ",
             'data[LocalName][last_name]': "ああああ",
             'data[Team][name]': "team name",

@@ -338,7 +338,7 @@ class SignupController extends AppController
             //merge form data and session data
             $data = array_merge($session_data, $data);
             //required fields check
-            if(!$this->_hasAllRequiredFields($data)){
+            if (!$this->_hasAllRequiredFields($data)) {
                 $res['is_not_available'] = true;
                 throw new RuntimeException(__('Some error occurred. Please try again from the start.'));
             }
@@ -348,17 +348,68 @@ class SignupController extends AppController
                 $res['is_not_available'] = true;
                 throw new RuntimeException(__('Some error occurred. Please try again from the start.'));
             }
-            //saving datas
-            //user with email and local_name
+            //preparing data before saving
+            $data['User']['password'] = $this->User->generateHash($data['User']['password']);
+            $data['User']['password_token'] = null;
+            $data['User']['active_flg'] = true;
+            $data['User']['language'] = $this->Lang->getLanguage();
+            //TODO フロントからタイムゾーン渡してもらう。validationと必須フィールドにも追加する
+            $data['User']['timezone'] = 9;
+            $data['Email']['email_verified'] = true;
+            $data['Email']['email_token'] = null;
+            $data['Email']['email_token_expires'] = null;
+            if (isset($data['LocalName'])) {
+                $data['LocalName']['language'] = $this->Lang->getLanguage();
+            }
 
-            //team
+            //saving datas
+            ///user with email and local_name
+            ////if data exists, update them
+            if ($email = $this->Email->findByEmail($data['Email']['email'])) {
+                //updating Email
+                $data['Email']['id'] = $email['Email']['id'];
+                $this->Email->create();
+                $this->Email->save($data['Email']);
+
+                //Updating User
+                $data['User']['id'] = $email['Email']['user_id'];
+                $this->User->create();
+                $this->User->save($data['User']);
+
+                //Updating LocalName
+                if ($local_name = $this->User->LocalName->findByUserId($data['User']['id'])) {
+                    //Updating Local Name
+                    $data['LocalName']['id'] = $local_name['LocalName']['id'];
+                    $this->User->LocalName->create();
+                    $this->User->LocalName->save($data['LocalName']);
+                }
+            } else {
+                //Saving User
+                $this->User->create();
+                $this->User->save($data['User']);
+                $user_id = $this->User->getLastInsertID();
+                //Saving Email
+                $data['Email']['user_id'] = $user_id;
+                $this->Email->create();
+                $this->Email->save($data['Email']);
+                //Saving LocalName
+                if (isset($data['LocalName'])) {
+                    $data['LocalName']['user_id'] = $user_id;
+                    $this->User->LocalName->create();
+                    $this->User->LocalName->save($data['LocalName']);
+                }
+            }
+
+            ///team
+
+            //update default team id
 
             //success
 
             //auto login with team
 
             //after success
-            $this->Session->delete('data');
+//            $this->Session->delete('data');
 
         } catch (RuntimeException $e) {
             $res['error'] = true;
@@ -422,7 +473,7 @@ class SignupController extends AppController
     public function _hasAllRequiredFields($data)
     {
         foreach ($this->requiredFields as $model => $fields) {
-            foreach($fields as $field){
+            foreach ($fields as $field) {
                 if (!isset($data[$model][$field])) {
                     return false;
                 }
