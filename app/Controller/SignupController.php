@@ -371,13 +371,15 @@ class SignupController extends AppController
                 $this->Email->create();
                 $this->Email->save($data['Email']);
 
+                $user_id = $email['Email']['user_id'];
                 //Updating User
-                $data['User']['id'] = $email['Email']['user_id'];
+                $data['User']['id'] = $user_id;
+                $data['User']['primary_email_id'] = $email['Email']['id'];
                 $this->User->create();
                 $this->User->save($data['User']);
 
                 //Updating LocalName
-                if ($local_name = $this->User->LocalName->findByUserId($data['User']['id'])) {
+                if ($local_name = $this->User->LocalName->findByUserId($user_id)) {
                     //Updating Local Name
                     $data['LocalName']['id'] = $local_name['LocalName']['id'];
                     $this->User->LocalName->create();
@@ -392,6 +394,10 @@ class SignupController extends AppController
                 $data['Email']['user_id'] = $user_id;
                 $this->Email->create();
                 $this->Email->save($data['Email']);
+                //updating primary email
+                $this->User->id = $user_id;
+                $this->User->saveField('primary_email_id', $this->Email->getLastInsertID());
+
                 //Saving LocalName
                 if (isset($data['LocalName'])) {
                     $data['LocalName']['user_id'] = $user_id;
@@ -400,9 +406,8 @@ class SignupController extends AppController
                 }
             }
 
-            ///team
-
-            //update default team id
+            ///save team
+            $this->Team->add(['Team' => $data['Team']], $user_id);
 
             //success
 
