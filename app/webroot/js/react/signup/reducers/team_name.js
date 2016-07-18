@@ -1,30 +1,45 @@
-import {
-  INPUT_TEAM_NAME,
-  TEAM_NAME_IS_INVALID,
-  CHECKING_INPUT_TEAM_NAME
-} from '../constants/ActionTypes'
+import * as types from '../constants/ActionTypes'
 
 const initialState = {
   inputed_team_name: '',
+  submit_button_is_enabled: false,
   checking_team_name: false,
   team_name_is_invalid: false,
-  invalid_message: ''
+  is_exception: false,
+  exception_message: '',
+  invalid_messages: {}
 }
 
 export default function team_name(state = initialState, action) {
   switch (action.type) {
-    case INPUT_TEAM_NAME:
+    case types.INPUT_TEAM_NAME:
       return Object.assign({}, state, {
         inputed_team_name: action.inputed_team_name
       })
-    case TEAM_NAME_IS_INVALID:
+    case types.CAN_SUBMIT_TEAM_NAME:
+      return Object.assign({}, state, {
+        submit_button_is_enabled: true
+      })
+    case types.CAN_NOT_SUBMIT_TEAM_NAME:
+      return Object.assign({}, state, {
+        submit_button_is_enabled: false
+      })
+    case types.TEAM_NAME_IS_VALID:
+      return Object.assign({}, state, {
+        team_name_is_invalid: false
+      })
+    case types.TEAM_NAME_IS_INVALID:
       return Object.assign({}, state, {
         team_name_is_invalid: true,
         invalid_message: action.invalid_message
       })
-    case CHECKING_INPUT_TEAM_NAME:
+    case types.CHECKING_TEAM_NAME:
       return Object.assign({}, state, {
         checking_team_name: true
+      })
+    case types.FINISHED_CHECKING_TEAM_NAME:
+      return Object.assign({}, state, {
+        checking_team_name: false
       })
     default:
       return state;
