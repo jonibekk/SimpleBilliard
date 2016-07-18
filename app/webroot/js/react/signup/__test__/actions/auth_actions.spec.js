@@ -38,13 +38,13 @@ describe('actions::auth', () => {
       { type: types.INIT_AUTH_CODE }
     ]
     const store = mockStore({ auth: [] })
-    
+
     store.dispatch(actions.inputCode('abcdef'))
     expect(store.getActions()).toEqual(expectedActions)
   })
 
   it('postVerifyCode code is locked test', () => {
-    nock('http://127.0.0.1')
+    nock('http://localhost')
       .post('/signup/ajax_verify_code')
       .reply(200, { error: true, message: "auth code locked message", is_locked: true, is_expired: false })
 
@@ -62,7 +62,7 @@ describe('actions::auth', () => {
   })
 
   it('postVerifyCode code is expired test', () => {
-    nock('http://127.0.0.1')
+    nock('http://localhost')
       .post('/signup/ajax_verify_code')
       .reply(200, { error: true, message: "auth code expired message", is_locked: false, is_expired: true })
 
@@ -80,7 +80,7 @@ describe('actions::auth', () => {
   })
 
   it('postVerifyCode code is invalid test', () => {
-    nock('http://127.0.0.1')
+    nock('http://localhost')
       .post('/signup/ajax_verify_code')
       .reply(200, { error: true, message: "auth code invalid message", is_locked: false, is_expired: false })
 
@@ -98,7 +98,7 @@ describe('actions::auth', () => {
   })
 
   it('postVerifyCode code is valid test', () => {
-    nock('http://127.0.0.1')
+    nock('http://localhost')
       .post('/signup/ajax_verify_code')
       .reply(200, { error: false, message: "", is_locked: false, is_expired: false })
 

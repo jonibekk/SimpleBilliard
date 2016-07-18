@@ -21,4 +21,22 @@ describe('reducer::password', () => {
 
     expect(newState).toInclude(expect_value)
   })
+  it('FINISHED_CHECKING_USER_NAME', () => {
+    const expect_value = { checking_password: false }
+    const newState = passwordReducer({}, { type: types.FINISHED_CHECKING_PASSWORD})
+
+    expect(newState).toInclude(expect_value)
+  })
+  it('NETWORK_ERROR', () => {
+    const expect_value = {
+      is_exception: true,
+      exception_message: 'exception message'
+    }
+    const newState = passwordReducer({}, {
+      type: types.PASSWORD_NETWORK_ERROR,
+      exception_message: 'exception message'
+    })
+
+    expect(newState).toInclude(expect_value)
+  })
 })

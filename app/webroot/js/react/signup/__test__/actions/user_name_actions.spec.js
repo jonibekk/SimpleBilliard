@@ -44,7 +44,7 @@ describe('actions::user_name', () => {
   })
 
   it('postUserName invalid', () => {
-    nock('http://127.0.0.1')
+    nock('http://localhost')
       .post('/signup/ajax_validation_fields')
       .reply(200, {
         "error": true,
@@ -71,7 +71,7 @@ describe('actions::user_name', () => {
   })
 
   it('postUserName valid', () => {
-    nock('http://127.0.0.1')
+    nock('http://localhost')
       .post('/signup/ajax_validation_fields')
       .reply(200, {
         "error": false,
