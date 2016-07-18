@@ -29,6 +29,9 @@ export function mapValidationMsg(before_mapped_messages) {
   let result = {}
   const map = {
     'data[Team][name]': 'team_name',
+    'data[Team][timezone]': 'timezone',
+    'data[Team][start_term_month]': 'start_month',
+    'data[Team][border_months]': 'term',
     'data[User][password]': 'password',
     'data[User][first_name]': 'first_name',
     'data[User][last_name]': 'last_name',
