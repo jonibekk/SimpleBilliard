@@ -26,7 +26,6 @@ export function postUserName(user) {
   return dispatch => {
     dispatch({ type: types.CHECKING_USER_NAME })
     const data = {
-      'data[_Token][key]': 'csrf_token_key', //cake.data.csrf_token.key,
       'data[User][first_name]': user.first_name,
       'data[User][last_name]': user.last_name,
       'data[Local][first_name]': user.local_first_name,

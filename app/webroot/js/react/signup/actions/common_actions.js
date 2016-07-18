@@ -28,6 +28,7 @@ export function post(uri, data, success_callback, error_callback) {
 export function mapValidationMsg(before_mapped_messages) {
   let result = {}
   const map = {
+    'data[Team][name]': 'team_name',
     'data[User][password]': 'password',
     'data[User][first_name]': 'first_name',
     'data[User][last_name]': 'last_name',

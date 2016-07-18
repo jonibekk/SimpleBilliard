@@ -45,4 +45,16 @@ describe('reducer::team_name', () => {
 
     expect(newState).toInclude(expect_value)
   })
+  it('NETWORK_ERROR', () => {
+    const expect_value = {
+      is_exception: true,
+      exception_message: 'exception message'
+    }
+    const newState = teamNameReducer({}, {
+      type: types.TEAM_NAME_NETWORK_ERROR,
+      exception_message: 'exception message'
+    })
+
+    expect(newState).toInclude(expect_value)
+  })
 })

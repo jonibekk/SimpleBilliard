@@ -41,6 +41,11 @@ export default function team_name(state = initialState, action) {
       return Object.assign({}, state, {
         checking_team_name: false
       })
+    case types.TEAM_NAME_NETWORK_ERROR:
+      return Object.assign({}, state, {
+        is_exception: true,
+        exception_message: action.exception_message
+      })
     default:
       return state;
   }
