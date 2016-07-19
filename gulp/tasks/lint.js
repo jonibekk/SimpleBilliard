@@ -16,7 +16,7 @@ gulp.task('js:coffeelint', () => {
 gulp.task('js:eslint', () => {
   return gulp.src(config.js.src)
     .pipe(plumber())
-    .pipe(eslint({ useEslintrc: true }))
+    .pipe(eslint({ useEslintrc: false }))
     .pipe(eslint.format())
     .pipe(eslint.failAfterError())
     .pipe(duration('js:eslint'))
