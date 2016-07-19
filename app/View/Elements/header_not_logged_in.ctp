@@ -12,11 +12,15 @@
  */
 ?>
 <!-- START app/View/Elements/header_not_logged_in.ctp -->
-<div class="navbar navbar-default navbar-fixed-top">
+
+<div class="navbar navbar-fixed-top navbar-default gl-navbar h_50px" id="header" style="box-shadow: none;">
     <div class="container">
-        <div class="navbar-header">
-            <a href="/" class="navbar-brand"><?= $title_for_layout ?></a>
+        <div class="nav-container header-container">
+            <a class="logo-title" href="/">
+                <?= $this->Html->image('homepage/Goalous_logo.png', array('alt' => 'Goalous', 'height' => '30')); ?>
+            </a>
         </div>
     </div>
 </div>
+
 <!-- END app/View/Elements/header_not_logged_in.ctp -->
