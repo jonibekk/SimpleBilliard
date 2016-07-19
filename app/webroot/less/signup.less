@@ -24,6 +24,7 @@ app/View/Signup/term.ctp
   font-size: @fontLarge;
   border: none;
   padding-top: 0;
+  font-weight: 700;
 }
 
 .signup-description{
@@ -177,4 +178,19 @@ user.ctpで使っているclass
   text-align: center;
   border: 1px solid @acidRed;
   color: @acidRed;
+}
+
+/*
+term.ctpで使っているclass
+*/
+.signup-goal-timezone-label{
+  display: inline-block;
+  width: 70%;
+  height: 16px;
+  overflow: hidden;
+}
+@media @small {
+  .signup-goal-timezone-label {
+  width: 80%;
+  }
 }
