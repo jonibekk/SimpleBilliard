@@ -105,7 +105,7 @@ const config =  {
       file_name: 'react_signup_app',
       path: assets_dir + '/js'
     },
-    watch_files: assets_dir + '/js/react/singup/**/*.js'
+    watch_files: assets_dir + '/js/react/signup/**/*.js'
   },
   css: {
     src: [
