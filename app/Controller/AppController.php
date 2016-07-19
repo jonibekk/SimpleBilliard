@@ -948,4 +948,87 @@ class AppController extends Controller
         return 100 - floor(($rest_count / count(User::$TYPE_SETUP_GUIDE) * 100));
     }
 
+    public function _setDefaultTeam($team_id)
+    {
+        if (!$team_id) {
+            return false;
+        }
+        try {
+            $this->User->TeamMember->permissionCheck($team_id, $this->Auth->user('id'));
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage());
+            $team_list = $this->User->TeamMember->getActiveTeamList($this->Auth->user('id'));
+            $set_team_id = !empty($team_list) ? key($team_list) : null;
+            $this->Session->write('current_team_id', $set_team_id);
+            $this->User->updateDefaultTeam($set_team_id, true, $this->Auth->user('id'));
+            return false;
+        }
+        $this->Session->write('current_team_id', $team_id);
+    }
+    /**
+     * ログイン後に実行する
+     *
+     * @param null $team_id
+     */
+    public function _setAfterLogin($team_id = null)
+    {
+        $this->User->id = $this->Auth->user('id');
+        $this->User->saveField('last_login', REQUEST_TIMESTAMP);
+        if (!$team_id) {
+            $team_id = $this->Auth->user('default_team_id');
+        }
+        $this->_setDefaultTeam($team_id);
+        if ($this->Session->read('current_team_id')) {
+            $this->User->TeamMember->updateLastLogin($this->Session->read('current_team_id'), $this->Auth->user('id'));
+        }
+        $this->User->_setSessionVariable();
+        $this->Mixpanel->setUser($this->User->id);
+
+        $this->_ifFromUservoiceRedirect();
+    }
+
+    /*
+     * 自動でログインする
+     */
+    public function _autoLogin($user_id, $is_not_change_current_team = false)
+    {
+        //リダイレクト先を退避
+        $redirect = null;
+        if ($this->Session->read('Auth.redirect')) {
+            $redirect = $this->Session->read('Auth.redirect');
+        }
+        $current_team_id = $this->Session->read('current_team_id');
+        //自動ログイン
+        if ($this->_refreshAuth($user_id)) {
+            //リダイレクト先をセッションに保存
+            $this->Session->write('redirect', $redirect);
+            if ($is_not_change_current_team) {
+                $this->_setAfterLogin($current_team_id);
+            } else {
+                $this->_setAfterLogin();
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    public function _ifFromUservoiceRedirect()
+    {
+        $uservoice_token = $this->Uservoice->getToken();
+        //uservoiceのメールから来た場合はリダイレクト
+        if ($this->Session->read('uv_status')) {
+            if ($this->Session->read('uv_status.uv_ssl')) {
+                $protocol = "https://";
+            } else {
+                $protocol = "http://";
+            }
+            $redirect_url = $protocol . USERVOICE_SUBDOMAIN . ".uservoice.com/login_success?sso=" . $uservoice_token;
+            $this->Session->delete('uv_status');
+            $this->redirect($redirect_url);
+        }
+
+    }
+
 }

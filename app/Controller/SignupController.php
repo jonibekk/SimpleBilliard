@@ -409,12 +409,13 @@ class SignupController extends AppController
             ///save team
             $this->Team->add(['Team' => $data['Team']], $user_id);
 
-            //success
-
+            //success!!
             //auto login with team
+            //ログイン
+            $this->_autoLogin($user_id);
 
             //after success
-//            $this->Session->delete('data');
+            $this->Session->delete('data');
 
         } catch (RuntimeException $e) {
             $res['error'] = true;
