@@ -100,8 +100,8 @@ $(window).load(function () {
 
 $(document).ready(function () {
     $.ajax({
-        url: '/signup/ajax_register_user',
-        // url: '/signup/ajax_validation_fields',
+        // url: '/signup/ajax_register_user',
+        url: '/signup/ajax_validation_fields',
         type: 'post',
         dataType: 'json',
         data: {
@@ -109,6 +109,7 @@ $(document).ready(function () {
             'data[User][first_name]': "first",
             'data[User][last_name]': "last",
             'data[User][password]': "99999999",
+            'data[User][local_date]': "2016-7-19 16:44:22",
             'data[Email][email]': "goalous.test11111@gmail.com",
             'data[LocalName][first_name]': "ああああ",
             'data[LocalName][last_name]': "ああああ",

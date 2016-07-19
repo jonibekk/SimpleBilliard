@@ -33,6 +33,9 @@ class SignupController extends AppController
                     'rule' => ['minLength', 8],
                 ]
             ],
+            'local_date' => [
+                'notEmpty' => ['rule' => 'notEmpty',],
+            ]
         ],
         'Email'     => [
             'email' => [
@@ -77,6 +80,7 @@ class SignupController extends AppController
             'first_name',
             'last_name',
             'password',
+            'local_date',
         ],
         'Email' => [
             'email'
@@ -353,8 +357,7 @@ class SignupController extends AppController
             $data['User']['password_token'] = null;
             $data['User']['active_flg'] = true;
             $data['User']['language'] = $this->Lang->getLanguage();
-            //TODO フロントからタイムゾーン渡してもらう。validationと必須フィールドにも追加する
-            $data['User']['timezone'] = 9;
+            $data['User']['timezone'] = $this->Timezone->getLocalTimezone($data['User']['local_date']);
             $data['Email']['email_verified'] = true;
             $data['Email']['email_token'] = null;
             $data['Email']['email_token_expires'] = null;
@@ -411,7 +414,6 @@ class SignupController extends AppController
 
             //success!!
             //auto login with team
-            //ログイン
             $this->_autoLogin($user_id);
 
             //after success
