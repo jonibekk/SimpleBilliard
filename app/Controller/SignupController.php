@@ -324,6 +324,7 @@ class SignupController extends AppController
         ];
 
         try {
+            $this->User->begin();
             if (!$session_data = $this->Session->read('data')) {
                 throw new RuntimeException(__('Invalid screen transition.'));
             }
@@ -353,61 +354,16 @@ class SignupController extends AppController
                 throw new RuntimeException(__('Some error occurred. Please try again from the start.'));
             }
             //preparing data before saving
-            $data['User']['password'] = $this->User->generateHash($data['User']['password']);
-            $data['User']['password_token'] = null;
-            $data['User']['active_flg'] = true;
             $data['User']['language'] = $this->Lang->getLanguage();
             $data['User']['timezone'] = $this->Timezone->getLocalTimezone($data['User']['local_date']);
-            $data['Email']['email_verified'] = true;
-            $data['Email']['email_token'] = null;
-            $data['Email']['email_token_expires'] = null;
+            unset($data['User']['local_date']);
             if (isset($data['LocalName'])) {
                 $data['LocalName']['language'] = $this->Lang->getLanguage();
             }
 
-            //saving datas
-            ///user with email and local_name
-            ////if data exists, update them
-            if ($email = $this->Email->findByEmail($data['Email']['email'])) {
-                //updating Email
-                $data['Email']['id'] = $email['Email']['id'];
-                $this->Email->create();
-                $this->Email->save($data['Email']);
-
-                $user_id = $email['Email']['user_id'];
-                //Updating User
-                $data['User']['id'] = $user_id;
-                $data['User']['primary_email_id'] = $email['Email']['id'];
-                $this->User->create();
-                $this->User->save($data['User']);
-
-                //Updating LocalName
-                if ($local_name = $this->User->LocalName->findByUserId($user_id)) {
-                    //Updating Local Name
-                    $data['LocalName']['id'] = $local_name['LocalName']['id'];
-                    $this->User->LocalName->create();
-                    $this->User->LocalName->save($data['LocalName']);
-                }
-            } else {
-                //Saving User
-                $this->User->create();
-                $this->User->save($data['User']);
-                $user_id = $this->User->getLastInsertID();
-                //Saving Email
-                $data['Email']['user_id'] = $user_id;
-                $this->Email->create();
-                $this->Email->save($data['Email']);
-                //updating primary email
-                $this->User->id = $user_id;
-                $this->User->saveField('primary_email_id', $this->Email->getLastInsertID());
-
-                //Saving LocalName
-                if (isset($data['LocalName'])) {
-                    $data['LocalName']['user_id'] = $user_id;
-                    $this->User->LocalName->create();
-                    $this->User->LocalName->save($data['LocalName']);
-                }
-            }
+            //saving user datas
+            $this->User->userRegistrationNewForm($data);
+            $user_id = $this->User->getLastInsertID();
 
             ///save team
             $this->Team->add(['Team' => $data['Team']], $user_id);
@@ -422,7 +378,9 @@ class SignupController extends AppController
         } catch (RuntimeException $e) {
             $res['error'] = true;
             $res['message'] = $e->getMessage();
+            $this->User->rollback();
         }
+        $this->User->commit();
 
         return $this->_ajaxGetResponse($res);
     }

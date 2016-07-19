@@ -632,6 +632,73 @@ class User extends AppModel
         }
         return true;
     }
+    
+    public function userRegistrationNewForm($data)
+    {
+        $data['User']['password'] = $this->generateHash($data['User']['password']);
+        $data['User']['password_token'] = null;
+        $data['User']['active_flg'] = true;
+        $data['Email']['email_verified'] = true;
+        $data['Email']['email_token'] = null;
+        $data['Email']['email_token_expires'] = null;
+
+        ///user with email and local_name
+        ////if data exists, update them
+        if ($email = $this->Email->findByEmail($data['Email']['email'])) {
+            //updating Email
+            $data['Email']['id'] = $email['Email']['id'];
+            $this->Email->create();
+            if(!$this->Email->save($data['Email'])){
+                throw New RuntimeException(__('Saving Email failed'));
+            }
+
+            $user_id = $email['Email']['user_id'];
+            //Updating User
+            $data['User']['id'] = $user_id;
+            $data['User']['primary_email_id'] = $email['Email']['id'];
+            $this->create();
+            if(!$this->save($data['User'])){
+                throw New RuntimeException(__('Saving User failed'));
+            }
+
+            //Updating LocalName
+            if ($local_name = $this->LocalName->findByUserId($user_id)) {
+                //Updating Local Name
+                $data['LocalName']['id'] = $local_name['LocalName']['id'];
+                $this->LocalName->create();
+                if(!$this->save($this->LocalName->save($data['LocalName']))){
+                    throw New RuntimeException(__('Saving LocalName failed'));
+                }
+            }
+        } else {
+            //Saving User
+            $this->create();
+            if(!$this->save($data['User'])){
+                throw New RuntimeException(__('Saving User failed'));
+            }
+            $user_id = $this->getLastInsertID();
+            //Saving Email
+            $data['Email']['user_id'] = $user_id;
+            $this->Email->create();
+            if(!$this->Email->save($data['Email'])){
+                throw New RuntimeException(__('Saving Email failed'));
+            }
+
+            //updating primary email
+            $this->id = $user_id;
+            $this->saveField('primary_email_id', $this->Email->getLastInsertID());
+
+            //Saving LocalName
+            if (isset($data['LocalName'])) {
+                $data['LocalName']['user_id'] = $user_id;
+                $this->LocalName->create();
+                if(!$this->save($this->LocalName->save($data['LocalName']))){
+                    throw New RuntimeException(__('Saving LocalName failed'));
+                }
+            }
+        }
+        return true;
+    }
 
     /**
      * @param $data

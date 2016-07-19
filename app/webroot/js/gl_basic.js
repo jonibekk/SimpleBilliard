@@ -99,29 +99,6 @@ $(window).load(function () {
 });
 
 $(document).ready(function () {
-    $.ajax({
-        // url: '/signup/ajax_register_user',
-        url: '/signup/ajax_validation_fields',
-        type: 'post',
-        dataType: 'json',
-        data: {
-            'data[_Token][key]': cake.data.csrf_token.key,
-            'data[User][first_name]': "first",
-            'data[User][last_name]': "last",
-            'data[User][password]': "99999999",
-            'data[User][local_date]': "2016-7-19 16:44:22",
-            'data[Email][email]': "goalous.test11111@gmail.com",
-            'data[LocalName][first_name]': "ああああ",
-            'data[LocalName][last_name]': "ああああ",
-            'data[Team][name]': "team name",
-            'data[Team][timezone]': "9",
-            'data[Team][start_term_month]': "4",
-            'data[Team][border_months]': "6"
-        },
-        success: function (data) {
-            console.log(data);
-        }
-    });
     //intercomのリンクを非表示にする
     if (enabled_intercom_icon) {
         $('#IntercomLink').hide();
