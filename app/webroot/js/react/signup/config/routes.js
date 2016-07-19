@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { Provider } from 'react-redux'
-import { createStore } from 'redux'
+import { createStore, applyMiddleware } from 'redux'
 import { Router, Route, IndexRoute,　browserHistory } from 'react-router'
 import { syncHistoryWithStore } from 'react-router-redux'
+import thunk from 'redux-thunk';
 import { createDevTools } from 'redux-devtools'
 import LogMonitor from 'redux-devtools-log-monitor'
 import DockMonitor from 'redux-devtools-dock-monitor'
@@ -24,7 +25,8 @@ const DevTools = createDevTools(
 const reducer = createReducer()
 const store = createStore(
   reducer,
-  DevTools.instrument()
+  DevTools.instrument(),
+  applyMiddleware(thunk)
 )
 const history = syncHistoryWithStore(browserHistory, store)
 

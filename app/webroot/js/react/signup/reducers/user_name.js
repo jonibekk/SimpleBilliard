@@ -15,7 +15,7 @@ const initialState = {
   invalid_messages: {}
 }
 
-export default function term(state = initialState, action) {
+export default function user_name(state = initialState, action) {
   switch (action.type) {
     case types.INPUT_USER_NAME:
       return Object.assign({}, state, {
