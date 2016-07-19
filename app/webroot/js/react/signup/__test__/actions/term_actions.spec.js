@@ -35,11 +35,11 @@ describe('actions::term', () => {
 
   it('selectTimeZone', () => {
     const expectedActions = [
-      { type: types.selectTimeZone, selected_time_zone: 1 }
+      { type: types.SELECT_TIMEZONE, selected_timezone: 1 }
     ]
     const store = mockStore({ auth: [] })
 
-    store.dispatch(actions.selectTimeZone(1))
+    store.dispatch(actions.selectTimezone(1))
     expect(store.getActions()).toEqual(expectedActions)
   })
 
@@ -79,7 +79,7 @@ describe('actions::term', () => {
     const expectedActions = [
       { type: types.CHECKING_TERM },
       { type: types.FINISHED_CHECKING_TERM },
-      { type: types.TERM_IS_INVALID, invalid_messages: { timezone: 'timezone', start_month: 'start_term_month message', term: 'border_months message' }}
+      { type: types.TERM_IS_INVALID, invalid_messages: { timezone: 'timezone message', start_month: 'start_term_month message', term: 'border_months message' }}
     ]
     const store = mockStore({ auth: [] })
 
@@ -117,9 +117,9 @@ describe('actions::term', () => {
       .reply(200, {})
 
     const expectedActions = [
-      { type: types.CHECKING_TEAM_NAME },
-      { type: types.FINISHED_CHECKING_TEAM_NAME },
-      { type: types.TEAM_NAME_NETWORK_ERROR, exception_message: 'Network error' }
+      { type: types.CHECKING_TERM },
+      { type: types.FINISHED_CHECKING_TERM },
+      { type: types.TERM_NETWORK_ERROR, exception_message: 'Network error' }
     ]
     const store = mockStore({ auth: [] })
 

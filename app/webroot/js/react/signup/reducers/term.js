@@ -4,7 +4,7 @@ const initialState = {
   submit_button_is_enabled: false,
   selected_term: '',
   selected_start_month: '',
-  selected_time_zone: '',
+  selected_timezone: '',
   checking_term: false,
   term_is_invalid: false,
   invalid_message: '',
@@ -25,7 +25,7 @@ export default function term(state = initialState, action) {
       })
     case types.SELECT_TIMEZONE:
       return Object.assign({}, state, {
-        selected_time_zone: action.selected_time_zone
+        selected_timezone: action.selected_timezone
       })
     case types.CAN_SUBMIT_TERM:
       return Object.assign({}, state, {

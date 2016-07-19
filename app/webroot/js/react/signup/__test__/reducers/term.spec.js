@@ -16,8 +16,8 @@ describe('reducer::term', () => {
     expect(newState).toInclude(expect_value)
   })
   it('SELECT_TIMEZONE', () => {
-    const expect_value = { selected_time_zone: 1 }
-    const newState = termReducer({}, { type: types.SELECT_TIMEZONE, selected_time_zone: 1 })
+    const expect_value = { selected_timezone: 1 }
+    const newState = termReducer({}, { type: types.SELECT_TIMEZONE, selected_timezone: 1 })
 
     expect(newState).toInclude(expect_value)
   })
