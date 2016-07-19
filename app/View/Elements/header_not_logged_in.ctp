@@ -12,7 +12,6 @@
  */
 ?>
 <!-- START app/View/Elements/header_not_logged_in.ctp -->
-
 <div class="navbar navbar-fixed-top navbar-default gl-navbar h_50px" id="header" style="box-shadow: none;">
     <div class="container">
         <div class="nav-container header-container">
@@ -22,5 +21,4 @@
         </div>
     </div>
 </div>
-
 <!-- END app/View/Elements/header_not_logged_in.ctp -->
