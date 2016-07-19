@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
-import * as actions from '../../actions/password_actions'
-import PasswordComponent from '../../components/password'
+import * as actions from '../actions/password_actions'
+import PasswordComponent from '../components/password'
 
 function mapStateToProps(state) {
   return state
