@@ -353,7 +353,7 @@ class SignupController extends AppController
                 throw new RuntimeException(__('Some error occurred. Please try again from the start.'));
             }
             //if already verified email, display error
-            if(isset($data['Email']['email']) && $this->Email->isVerified($data['Email']['email'])){
+            if (isset($data['Email']['email']) && $this->Email->isVerified($data['Email']['email'])) {
                 throw new RuntimeException(__('This email address has already been used. Use another email address.'));
             }
             //validation for all datas
@@ -372,7 +372,7 @@ class SignupController extends AppController
 
             //saving user datas
             $this->User->userRegistrationNewForm($data);
-            $user_id = $this->User->getLastInsertID();
+            $user_id = $this->User->getLastInsertID() ? $this->User->getLastInsertID() : $this->User->id;
 
             ///save team
             $this->Team->add(['Team' => $data['Team']], $user_id);
