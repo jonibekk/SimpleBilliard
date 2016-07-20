@@ -7,9 +7,6 @@ App::uses('GoalousWebTestCase', 'Test');
  *
  * @package GoalousWebTest
  * @version 2016/03/11
- *
- *
- *
  */
 class MessageWebTest extends GoalousWebTestCase
 {
@@ -49,7 +46,7 @@ class MessageWebTest extends GoalousWebTestCase
      */
     public function testMessageIcon()
     {
-        $this->url($this->url.'/users/login');
+        $this->url($this->url . '/users/login');
         if (strpos($this->url(), '/users/login') === false) {
             $this->logout();
         }
@@ -57,7 +54,7 @@ class MessageWebTest extends GoalousWebTestCase
         sleep(5);
         $this->logout();
 
-        $this->waitUntil(function() {
+        $this->waitUntil(function () {
             $this->login($this->login_url, $this->email, $this->password);
             return true;
         }, 30000);
@@ -67,7 +64,8 @@ class MessageWebTest extends GoalousWebTestCase
         $this->byXPath("//a[@id='click-header-message']/i")->click();
         sleep(3);
         $message = $this->byCssSelector('ul#message-dropdown');
-        $messages = $message->elements($this->using('css selector')->value('li.notify-card-list.notify-card-unread.notify-dropdown-card'));
+        $messages = $message->elements($this->using('css selector')
+                                            ->value('li.notify-card-list.notify-card-unread.notify-dropdown-card'));
         $this->assertTrue(0 < count($messages));
         $this->saveSceenshot('testMessageIcon');
     }
@@ -157,7 +155,7 @@ class MessageWebTest extends GoalousWebTestCase
         $this->execute(['script' => $script, 'args' => []]);
 
         // 画像ファイルをバイナリに変換
-        $path = __DIR__.'/Files/150x150.png';
+        $path = __DIR__ . '/Files/150x150.png';
         $image = base64_encode(file_get_contents($path));
         $image_name = 'testfile.png';
 
@@ -168,7 +166,7 @@ class MessageWebTest extends GoalousWebTestCase
             "blob.name = '" . $image_name . "';";
         $script .= 'var form = $(document).data(\'uploadFileForm\'); form[0].dropzone.addFile(blob);';
         $this->execute(['script' => $script, 'args' => []]);
-        $this->waitUntil(function() {
+        $this->waitUntil(function () {
             if ($this->byCssSelector('div.dz-complete')) {
                 return true;
             }
@@ -203,6 +201,7 @@ class MessageWebTest extends GoalousWebTestCase
 
     /**
      * メッセージテストのためメッセージを送信する
+     *
      * @param $email
      * @param $to_name
      *
@@ -210,7 +209,7 @@ class MessageWebTest extends GoalousWebTestCase
      */
     protected function sendMessage($email, $to_name)
     {
-        $this->waitUntil(function() use ($email) {
+        $this->waitUntil(function () use ($email) {
             $this->login($this->login_url, $email, $this->password);
             if ($this->byXPath("//ul[@id='CommonFormTabs']//a[.='メッセージ']")) {
                 return true;
@@ -222,7 +221,7 @@ class MessageWebTest extends GoalousWebTestCase
         $this->byXPath("//ul[@id='CommonFormTabs']//a[.='メッセージ']")->click();
         $to = $this->byCssSelector('#s2id_autogen1');
         $to->value($to_name);
-        $this->waitUntil(function() {
+        $this->waitUntil(function () {
             if ($this->byId('select2-drop')) {
                 return true;
             }
@@ -238,7 +237,7 @@ class MessageWebTest extends GoalousWebTestCase
         $message = 'メッセージテスト';
         $body = $this->byCssSelector('#CommonMessageBody');
         $body->value($message);
-        $this->waitUntil(function() {
+        $this->waitUntil(function () {
             if ($this->byCssSelector('#MessageSubmit')) {
                 return true;
             }

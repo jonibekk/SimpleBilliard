@@ -172,8 +172,7 @@ class GoalApprovalController extends AppController
             $this->ApprovalHistory->begin();
             if ($this->_saveApprovalData()) {
                 $this->ApprovalHistory->commit();
-            }
-            else {
+            } else {
                 $this->ApprovalHistory->rollback();
             }
             return $this->redirect($this->referer());
@@ -214,8 +213,7 @@ class GoalApprovalController extends AppController
             $this->ApprovalHistory->begin();
             if ($this->_saveApprovalData()) {
                 $this->ApprovalHistory->commit();
-            }
-            else {
+            } else {
                 $this->ApprovalHistory->rollback();
             }
             return $this->redirect($this->referer());
@@ -237,8 +235,7 @@ class GoalApprovalController extends AppController
             if ($val['Collaborator']['valued_flg'] === (string)Collaborator::STATUS_APPROVAL) {
                 $goal_info[$key]['status'] = $this->approval_msg_list[self::APPROVAL_MEMBER_GOAL_MSG];
 
-            }
-            else {
+            } else {
                 if ($val['Collaborator']['valued_flg'] === (string)Collaborator::STATUS_HOLD) {
                     $goal_info[$key]['status'] = $this->approval_msg_list[self::NOT_APPROVAL_MEMBER_GOAL_MSG];
                 }
@@ -286,16 +283,13 @@ class GoalApprovalController extends AppController
         if (isset($this->request->data['comment_btn']) === true) {
             $res = $this->_comment($data);
             $this->Pnotify->outSuccess(__("Commented"));
-        }
-        elseif (isset($this->request->data['wait_btn']) === true) {
+        } elseif (isset($this->request->data['wait_btn']) === true) {
             $res = $this->_wait($data);
             $this->Pnotify->outSuccess(__("Move to Done."));
-        }
-        elseif (isset($this->request->data['approval_btn']) === true) {
+        } elseif (isset($this->request->data['approval_btn']) === true) {
             $res = $this->_approval($data);
             $this->Pnotify->outSuccess(__("Move to Done."));
-        }
-        elseif (isset($this->request->data['modify_btn']) === true) {
+        } elseif (isset($this->request->data['modify_btn']) === true) {
             $res = $this->_modify($data);
             $this->Pnotify->outSuccess(__("Sent amend request."));
         }
@@ -353,7 +347,7 @@ class GoalApprovalController extends AppController
         // 今後はコメントなくてもアクションステータスを格納する必要あり。
         if (empty($cb_id) === false && empty($comment) === false) {
             return $this->ApprovalHistory->add($cb_id, $this->user_id, ApprovalHistory::ACTION_STATUS_ONLY_COMMENT,
-                                               $comment);
+                $comment);
         }
         return true;
     }
@@ -365,16 +359,13 @@ class GoalApprovalController extends AppController
         if (isset($this->request->data['comment_btn']) === true) {
             $approval_type = MixpanelComponent::PROP_APPROVAL_STATUS_APPROVAL_COMMENT_GOAL;
             $approval_member_type = MixpanelComponent::PROP_APPROVAL_MEMBER_MEMBER;
-        }
-        elseif (isset($this->request->data['wait_btn']) === true) {
+        } elseif (isset($this->request->data['wait_btn']) === true) {
             $approval_type = MixpanelComponent::PROP_APPROVAL_STATUS_APPROVAL_INEVALUABLE;
             $approval_member_type = MixpanelComponent::PROP_APPROVAL_MEMBER_COACH;
-        }
-        elseif (isset($this->request->data['approval_btn']) === true) {
+        } elseif (isset($this->request->data['approval_btn']) === true) {
             $approval_type = MixpanelComponent::PROP_APPROVAL_STATUS_APPROVAL_EVALUABLE;
             $approval_member_type = MixpanelComponent::PROP_APPROVAL_MEMBER_COACH;
-        }
-        elseif (isset($this->request->data['modify_btn']) === true) {
+        } elseif (isset($this->request->data['modify_btn']) === true) {
             $approval_type = MixpanelComponent::PROP_APPROVAL_STATUS_APPROVAL_REVISION_REQUESTS;
             $approval_member_type = MixpanelComponent::PROP_APPROVAL_MEMBER_COACH;
         }
@@ -394,11 +385,9 @@ class GoalApprovalController extends AppController
         $goal_user_ids = [];
         if ($this->user_type === self::USER_TYPE_ONLY_COACH) {
             $goal_user_ids = [$this->user_id];
-        }
-        elseif ($this->user_type === self::USER_TYPE_COACH_AND_MEMBER) {
+        } elseif ($this->user_type === self::USER_TYPE_COACH_AND_MEMBER) {
             $goal_user_ids = array_merge([$this->user_id], $this->member_ids);
-        }
-        elseif ($this->user_type === self::USER_TYPE_ONLY_MEMBER) {
+        } elseif ($this->user_type === self::USER_TYPE_ONLY_MEMBER) {
             $goal_user_ids = $this->member_ids;
         }
         return $goal_user_ids;
@@ -414,8 +403,7 @@ class GoalApprovalController extends AppController
             $goal_info = $this->Collaborator->getCollaboGoalDetail(
                 $this->team_id, [$this->user_id], $goal_status, true, EvaluateTerm::TYPE_CURRENT);
 
-        }
-        elseif ($this->user_type === self::USER_TYPE_COACH_AND_MEMBER) {
+        } elseif ($this->user_type === self::USER_TYPE_COACH_AND_MEMBER) {
             $member_goal_info = $this->Collaborator->getCollaboGoalDetail(
                 $this->team_id, $this->member_ids, $goal_status, false, EvaluateTerm::TYPE_CURRENT);
 
@@ -424,8 +412,7 @@ class GoalApprovalController extends AppController
 
             $goal_info = array_merge($member_goal_info, $my_goal_info);
 
-        }
-        elseif ($this->user_type === self::USER_TYPE_ONLY_MEMBER) {
+        } elseif ($this->user_type === self::USER_TYPE_ONLY_MEMBER) {
             $goal_info = $this->Collaborator->getCollaboGoalDetail(
                 $this->team_id, $this->member_ids, $goal_status, false, EvaluateTerm::TYPE_CURRENT);
         }
@@ -495,22 +482,19 @@ class GoalApprovalController extends AppController
         $notify_type = null;
         if (isset($this->request->data['comment_btn']) === true) {
             //TODO コーチ宛に通知出さなくていいのかな？ by Daiki
-        }
-        elseif (isset($this->request->data['wait_btn']) === true) {
+        } elseif (isset($this->request->data['wait_btn']) === true) {
             $notify_type = NotifySetting::TYPE_MY_GOAL_NOT_TARGET_FOR_EVALUATION;
-        }
-        elseif (isset($this->request->data['approval_btn']) === true) {
+        } elseif (isset($this->request->data['approval_btn']) === true) {
             $notify_type = NotifySetting::TYPE_MY_GOAL_TARGET_FOR_EVALUATION;
-        }
-        elseif (isset($this->request->data['modify_btn']) === true) {
+        } elseif (isset($this->request->data['modify_btn']) === true) {
             $notify_type = NotifySetting::TYPE_MY_GOAL_AS_LEADER_REQUEST_TO_CHANGE;
         }
 
         //Notify
         $this->NotifyBiz->execSendNotify($notify_type,
-                                         $collaborator['Collaborator']['goal_id'],
-                                         null,
-                                         $collaborator['Collaborator']['user_id']
+            $collaborator['Collaborator']['goal_id'],
+            null,
+            $collaborator['Collaborator']['user_id']
         );
     }
 

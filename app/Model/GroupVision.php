@@ -47,22 +47,22 @@ class GroupVision extends AppModel
     public $validate = [
         'name'        => [
             'isString'  => [
-                'rule'       => ['isString',],
+                'rule' => ['isString',],
             ],
             'maxLength' => ['rule' => ['maxLength', 200]],
             'notEmpty'  => [
                 'rule' => ['notEmpty'],
             ],
         ],
-        'group_id' => [
-            'numeric'    => [
-                'rule' => ['numeric'],
+        'group_id'    => [
+            'numeric' => [
+                'rule'       => ['numeric'],
                 'allowEmpty' => true,
             ],
         ],
         'description' => [
             'isString'  => [
-                'rule'       => ['isString',],
+                'rule' => ['isString',],
             ],
             'maxLength' => ['rule' => ['maxLength', 2000]],
         ],
@@ -166,18 +166,17 @@ class GroupVision extends AppModel
 
         if (isset($data['GroupVision']) === true) {
             $data['GroupVision']['photo_path'] = $upload->uploadUrl($data['GroupVision'], 'GroupVision.photo',
-                                                                    ['style' => 'original']);
+                ['style' => 'original']);
             $data['GroupVision']['modified'] = $time->elapsedTime(h($data['GroupVision']['modified']));
             if (isset($group_list[$data['GroupVision']['group_id']]) === true) {
                 $data['GroupVision']['group_name'] = $group_list[$data['GroupVision']['group_id']];
             }
 
-        }
-        else {
+        } else {
             foreach ($data as $key => $group) {
                 $data[$key]['GroupVision']['photo_path'] = $upload->uploadUrl($group['GroupVision'],
-                                                                              'GroupVision.photo',
-                                                                              ['style' => 'large']);
+                    'GroupVision.photo',
+                    ['style' => 'large']);
                 $data[$key]['GroupVision']['modified'] = $time->elapsedTime(h($group['GroupVision']['modified']));
                 if (isset($group_list[$group['GroupVision']['group_id']]) === true) {
                     $data[$key]['GroupVision']['group_name'] = $group_list[$group['GroupVision']['group_id']];

@@ -12,24 +12,115 @@ class BadgeFixture extends CakeTestFixtureEx
      * @var array
      */
     public $fields = array(
-        'id'               => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'バッジID'),
-        'user_id'          => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'バッジ作成ユーザID(belongsToでUserモデルに関連)'),
-        'team_id'          => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'チームID(belongsToでTeamモデルに関連)'),
-        'name'             => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 128, 'collate' => 'utf8mb4_general_ci', 'comment' => 'バッジ名', 'charset' => 'utf8mb4'),
-        'description'      => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => 'バッジ詳細', 'charset' => 'utf8mb4'),
-        'photo_file_name'  => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => 'バッジ画像', 'charset' => 'utf8mb4'),
-        'default_badge_no' => array('type' => 'integer', 'null' => true, 'default' => null, 'length' => 3, 'unsigned' => true, 'comment' => 'デフォルトバッジNo(デフォルトで用意されているバッジ)'),
-        'type'             => array('type' => 'integer', 'null' => false, 'default' => '1', 'length' => 3, 'unsigned' => true, 'key' => 'index', 'comment' => 'バッジタイプ(1:賞賛,2:スキル)'),
-        'active_flg'       => array('type' => 'boolean', 'null' => false, 'default' => '1', 'key' => 'index', 'comment' => 'アクティブフラグ(Offの場合は選択が不可能。古いものを無効にする場合に使用)'),
-        'count'            => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => false, 'comment' => '利用されたカウント数(バッジが利用されるとカウントアップ。チーム管理者がリセット可能)'),
-        'max_count'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => false, 'comment' => '利用可能数(カウント数が利用可能数に達した場合、バッジを新たに付与する事ができなくなる。)'),
-        'del_flg'          => array('type' => 'boolean', 'null' => false, 'default' => '0', 'key' => 'index', 'comment' => '削除フラグ'),
-        'deleted'          => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'バッジを削除した日付時刻'),
-        'created'          => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'バッジを追加した日付時刻'),
-        'modified'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'バッジを更新した日付時刻'),
+        'id'               => array(
+            'type'     => 'biginteger',
+            'null'     => false,
+            'default'  => null,
+            'unsigned' => true,
+            'key'      => 'primary',
+            'comment'  => 'バッジID'
+        ),
+        'user_id'          => array(
+            'type'     => 'biginteger',
+            'null'     => false,
+            'default'  => null,
+            'unsigned' => true,
+            'key'      => 'index',
+            'comment'  => 'バッジ作成ユーザID(belongsToでUserモデルに関連)'
+        ),
+        'team_id'          => array(
+            'type'     => 'biginteger',
+            'null'     => false,
+            'default'  => null,
+            'unsigned' => true,
+            'key'      => 'index',
+            'comment'  => 'チームID(belongsToでTeamモデルに関連)'
+        ),
+        'name'             => array(
+            'type'    => 'string',
+            'null'    => false,
+            'default' => null,
+            'length'  => 128,
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => 'バッジ名',
+            'charset' => 'utf8mb4'
+        ),
+        'description'      => array(
+            'type'    => 'text',
+            'null'    => true,
+            'default' => null,
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => 'バッジ詳細',
+            'charset' => 'utf8mb4'
+        ),
+        'photo_file_name'  => array(
+            'type'    => 'string',
+            'null'    => true,
+            'default' => null,
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => 'バッジ画像',
+            'charset' => 'utf8mb4'
+        ),
+        'default_badge_no' => array('type'     => 'integer',
+                                    'null'     => true,
+                                    'default'  => null,
+                                    'length'   => 3,
+                                    'unsigned' => true,
+                                    'comment'  => 'デフォルトバッジNo(デフォルトで用意されているバッジ)'
+        ),
+        'type'             => array('type'     => 'integer',
+                                    'null'     => false,
+                                    'default'  => '1',
+                                    'length'   => 3,
+                                    'unsigned' => true,
+                                    'key'      => 'index',
+                                    'comment'  => 'バッジタイプ(1:賞賛,2:スキル)'
+        ),
+        'active_flg'       => array('type'    => 'boolean',
+                                    'null'    => false,
+                                    'default' => '1',
+                                    'key'     => 'index',
+                                    'comment' => 'アクティブフラグ(Offの場合は選択が不可能。古いものを無効にする場合に使用)'
+        ),
+        'count'            => array('type'     => 'integer',
+                                    'null'     => true,
+                                    'default'  => null,
+                                    'unsigned' => false,
+                                    'comment'  => '利用されたカウント数(バッジが利用されるとカウントアップ。チーム管理者がリセット可能)'
+        ),
+        'max_count'        => array('type'     => 'integer',
+                                    'null'     => true,
+                                    'default'  => null,
+                                    'unsigned' => false,
+                                    'comment'  => '利用可能数(カウント数が利用可能数に達した場合、バッジを新たに付与する事ができなくなる。)'
+        ),
+        'del_flg'          => array('type'    => 'boolean',
+                                    'null'    => false,
+                                    'default' => '0',
+                                    'key'     => 'index',
+                                    'comment' => '削除フラグ'
+        ),
+        'deleted'          => array('type'     => 'integer',
+                                    'null'     => true,
+                                    'default'  => null,
+                                    'unsigned' => true,
+                                    'comment'  => 'バッジを削除した日付時刻'
+        ),
+        'created'          => array('type'     => 'integer',
+                                    'null'     => true,
+                                    'default'  => null,
+                                    'unsigned' => true,
+                                    'comment'  => 'バッジを追加した日付時刻'
+        ),
+        'modified'         => array('type'     => 'integer',
+                                    'null'     => true,
+                                    'default'  => null,
+                                    'unsigned' => true,
+                                    'comment'  => 'バッジを更新した日付時刻'
+        ),
         'indexes'          => array(
-            'PRIMARY' => array('column' => 'id', 'unique' => 1),
-            'user_id' => array('column' => 'user_id', 'unique' => 0),
+            'PRIMARY'    => array('column' => 'id', 'unique' => 1),
+            'user_id'    => array('column' => 'user_id', 'unique' => 0),
             'team_id'    => array('column' => 'team_id', 'unique' => 0),
             'del_flg'    => array('column' => 'del_flg', 'unique' => 0),
             'active_flg' => array('column' => 'active_flg', 'unique' => 0),

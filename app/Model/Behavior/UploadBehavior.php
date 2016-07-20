@@ -86,8 +86,8 @@ class UploadBehavior extends ModelBehavior
                 $model->data[$model->name][$field . '_file_name'] = $this->toWrite[$field]['name'];
                 $model->data[$model->name][$field . '_file_size'] = $this->toWrite[$field]['size'];
                 $model->data[$model->name][$field . '_content_type'] = $this->toWrite[$field]['type'];
-            }
-            elseif (array_key_exists($field, $model->data[$model->name]) && $model->data[$model->name][$field] === null
+            } elseif (array_key_exists($field,
+                    $model->data[$model->name]) && $model->data[$model->name][$field] === null
             ) {
                 if (!empty($model->id)) {
                     $this->_prepareToDeleteFiles($model, $field, true);
@@ -133,8 +133,7 @@ class UploadBehavior extends ModelBehavior
 
                 if ($data != null && !is_array($data)) {
                     $model->data[$model->name][$field] = $this->_fetchFromUrl($data);
-                }
-                elseif (!is_array($data)) {
+                } elseif (!is_array($data)) {
                     $model->data[$model->name][$field] = null;
                 }
             }
@@ -158,8 +157,7 @@ class UploadBehavior extends ModelBehavior
         //サポートしている拡張子かチェック
         if (in_array($urlExplodedByDot, $this->supportedExtensions)) {
             $data['tmp_name'] = tempnam(sys_get_temp_dir(), $data['name']) . '.' . end($urlExplodedByDot);
-        }
-        else {
+        } else {
             $data['name'] .= '.' . self::getImgExtensionFromUrl($url);
             $data['tmp_name'] = tempnam(sys_get_temp_dir(), $data['name']) . '.' . self::getImgExtensionFromUrl($url);
         }
@@ -225,7 +223,7 @@ class UploadBehavior extends ModelBehavior
         // make filename URL friendly by using Cake's Inflector
         $this->toWrite[$field]['name'] =
             Inflector::slug(substr($this->toWrite[$field]['name'], 0,
-                                   strrpos($this->toWrite[$field]['name'], '.'))) . // filename
+                strrpos($this->toWrite[$field]['name'], '.'))) . // filename
             substr($this->toWrite[$field]['name'], strrpos($this->toWrite[$field]['name'], '.')); // extension
     }
 
@@ -253,12 +251,12 @@ class UploadBehavior extends ModelBehavior
 
                         if ($this->maxWidthSize) {
                             $this->_resize($settings['path'], $settings['path'], $this->maxWidthSize . 'w',
-                                           $settings['quality'], $settings['alpha'], $this->toWrite[$field]['type']);
+                                $settings['quality'], $settings['alpha'], $this->toWrite[$field]['type']);
                         }
                         foreach ($settings['styles'] as $style => $geometry) {
                             $newSettings = $this->_interpolate($model, $field, $toWrite['name'], $style);
                             $this->_resize($settings['path'], $newSettings['path'], $geometry, $settings['quality'],
-                                           $settings['alpha'], $this->toWrite[$field]['type']);
+                                $settings['alpha'], $this->toWrite[$field]['type']);
                         }
                     }
                 }
@@ -275,8 +273,7 @@ class UploadBehavior extends ModelBehavior
                 /** @noinspection PhpUnusedLocalVariableInspection */
                 $field .= '_file_name';
             }
-        }
-        else {
+        } else {
             $field .= '_file_name';
             $fields = array($field);
         }
@@ -292,15 +289,17 @@ class UploadBehavior extends ModelBehavior
         }
         if ($needToRead) {
             $data = $model->find('first',
-                                 array('conditions' => array($model->alias . '.' . $model->primaryKey => $model->id), 'fields' => $fields, 'callbacks' => false));
-        }
-        else {
+                array(
+                    'conditions' => array($model->alias . '.' . $model->primaryKey => $model->id),
+                    'fields'     => $fields,
+                    'callbacks'  => false
+                ));
+        } else {
             $data = $model->data;
         }
         if (is_array($this->toDelete)) {
             $this->toDelete = array_merge($this->toDelete, $data[$model->alias]);
-        }
-        else {
+        } else {
             $this->toDelete = $data[$model->alias];
         }
         $this->toDelete['id'] = $model->id;
@@ -328,20 +327,26 @@ class UploadBehavior extends ModelBehavior
         return self::interpolate($model->name, $model->id, $field, $filename, $style);
     }
 
-    static public function interpolate($modelName, $modelId, $field, $filename, $style = 'original', $defaults = array())
-    {
+    static public function interpolate(
+        $modelName,
+        $modelId,
+        $field,
+        $filename,
+        $style = 'original',
+        $defaults = array()
+    ) {
         $pathinfo = UploadBehavior::_pathinfo($filename);
         $interpolations = array_merge(array(
-                                          'app'        => preg_replace('/\/$/', '', APP),
-                                          'webroot'    => preg_replace('/\/$/', '', WWW_ROOT),
-                                          'model'      => Inflector::tableize($modelName),
-                                          'basename'   => !empty($filename) ? $pathinfo['filename'] : null,
-                                          'extension'  => !empty($pathinfo['extension']) ? $pathinfo['extension'] : null,
-                                          'id'         => $modelId,
-                                          'style'      => $style,
-                                          'attachment' => Inflector::pluralize($field),
-                                          'hash'       => md5((!empty($filename) ? $pathinfo['filename'] : "") . Configure::read('Security.salt'))
-                                      ), $defaults);
+            'app'        => preg_replace('/\/$/', '', APP),
+            'webroot'    => preg_replace('/\/$/', '', WWW_ROOT),
+            'model'      => Inflector::tableize($modelName),
+            'basename'   => !empty($filename) ? $pathinfo['filename'] : null,
+            'extension'  => !empty($pathinfo['extension']) ? $pathinfo['extension'] : null,
+            'id'         => $modelId,
+            'style'      => $style,
+            'attachment' => Inflector::pluralize($field),
+            'hash'       => md5((!empty($filename) ? $pathinfo['filename'] : "") . Configure::read('Security.salt'))
+        ), $defaults);
         $settings = self::$__settings[$modelName][$field];
         $keys = array('path', 'url', 'default_url');
         foreach ($interpolations as $k => $v) {
@@ -373,14 +378,11 @@ class UploadBehavior extends ModelBehavior
         $imageType = $pathinfo['extension'];
         if (strpos($imageInfo['mime'], 'jpeg') !== false) {
             $imageType = 'jpeg';
-        }
-        elseif (strpos($imageInfo['mime'], 'png') !== false) {
+        } elseif (strpos($imageInfo['mime'], 'png') !== false) {
             $imageType = 'png';
-        }
-        elseif (strpos($imageInfo['mime'], 'gif') !== false) {
+        } elseif (strpos($imageInfo['mime'], 'gif') !== false) {
             $imageType = 'gif';
-        }
-        else {
+        } else {
             return false;
         }
         copy($srcFile, $destFile);
@@ -416,18 +418,15 @@ class UploadBehavior extends ModelBehavior
                 // resize with banding
                 list($destW, $destH) = explode('x', substr($geometry, 1, strlen($geometry) - 2));
                 $resizeMode = 'band';
-            }
-            elseif (preg_match('/^[\\d]+x[\\d]+$/', $geometry)) {
+            } elseif (preg_match('/^[\\d]+x[\\d]+$/', $geometry)) {
                 // cropped resize (best fit)
                 list($destW, $destH) = explode('x', $geometry);
                 $resizeMode = 'best';
-            }
-            elseif (preg_match('/^[\\d]+w$/', $geometry)) {
+            } elseif (preg_match('/^[\\d]+w$/', $geometry)) {
                 // calculate heigh according to aspect ratio
                 $destW = (int)$geometry - 1;
                 $resizeMode = false;
-            }
-            //wの追加ルールで指定サイズより実際のサイズが小さい場合はリサイズしない
+            } //wの追加ルールで指定サイズより実際のサイズが小さい場合はリサイズしない
             elseif (preg_match('/^[\\d]+W$/', $geometry)) {
                 // calculate heigh according to aspect ratio
                 $destW = (int)$geometry - 1;
@@ -435,13 +434,11 @@ class UploadBehavior extends ModelBehavior
                     $destW = $srcW;
                 }
                 $resizeMode = false;
-            }
-            elseif (preg_match('/^[\\d]+h$/', $geometry)) {
+            } elseif (preg_match('/^[\\d]+h$/', $geometry)) {
                 // calculate width according to aspect ratio
                 $destH = (int)$geometry - 1;
                 $resizeMode = false;
-            }
-            //hの追加ルールで指定サイズより実際のサイズが小さい場合はリサイズしない
+            } //hの追加ルールで指定サイズより実際のサイズが小さい場合はリサイズしない
             elseif (preg_match('/^[\\d]+H$/', $geometry)) {
                 // calculate width according to aspect ratio
                 $destH = (int)$geometry - 1;
@@ -449,18 +446,15 @@ class UploadBehavior extends ModelBehavior
                     $destH = $srcH;
                 }
                 $resizeMode = false;
-            }
-            elseif (preg_match('/^[\\d]+l$/', $geometry)) {
+            } elseif (preg_match('/^[\\d]+l$/', $geometry)) {
                 // calculate shortest side according to aspect ratio
                 if ($srcW > $srcH) {
                     $destW = (int)$geometry - 1;
-                }
-                else {
+                } else {
                     $destH = (int)$geometry - 1;
                 }
                 $resizeMode = false;
-            }
-            //lの追加ルールで指定サイズより実際のサイズが小さい場合はリサイズしない
+            } //lの追加ルールで指定サイズより実際のサイズが小さい場合はリサイズしない
             elseif (preg_match('/^[\\d]+L$/', $geometry)) {
                 // calculate shortest side according to aspect ratio
                 if ($srcW > $srcH) {
@@ -468,8 +462,7 @@ class UploadBehavior extends ModelBehavior
                     if ($destW > $srcW) {
                         $destW = $srcW;
                     }
-                }
-                else {
+                } else {
                     $destH = (int)$geometry - 1;
                     if ($destH > $srcH) {
                         $destH = $srcH;
@@ -493,34 +486,28 @@ class UploadBehavior extends ModelBehavior
                 if ($srcW > $srcH) {
                     if ($srcH / $destH > $srcW / $destW) {
                         $ratio = $destW / $srcW;
-                    }
-                    else {
+                    } else {
                         $ratio = $destH / $srcH;
                     }
-                }
-                else {
+                } else {
                     if ($srcH / $destH < $srcW / $destW) {
                         $ratio = $destH / $srcH;
-                    }
-                    else {
+                    } else {
                         $ratio = $destW / $srcW;
                     }
                 }
                 $resizeW = $srcW * $ratio;
                 $resizeH = $srcH * $ratio;
-            }
-            elseif ($resizeMode == 'band') {
+            } elseif ($resizeMode == 'band') {
                 // "banding" mode
                 if ($srcW > $srcH) {
                     $ratio = $destW / $srcW;
-                }
-                else {
+                } else {
                     $ratio = $destH / $srcH;
                 }
                 $resizeW = $srcW * $ratio;
                 $resizeH = $srcH * $ratio;
-            }
-            else {
+            } else {
                 // no resize ratio
                 $resizeW = $destW;
                 $resizeH = $destH;
@@ -543,12 +530,11 @@ class UploadBehavior extends ModelBehavior
                         imagefill($img, 0, 0, imagecolorallocate($img, 255, 255, 255));
                         break;
                 }
-            }
-            else {
+            } else {
                 imagefill($img, 0, 0, imagecolorallocate($img, 255, 255, 255));
             }
             imagecopyresampled($img, $src, ($destW - $resizeW) / 2, ($destH - $resizeH) / 2, 0, 0, $resizeW, $resizeH,
-                               $srcW, $srcH);
+                $srcW, $srcH);
             $outputHandler($img, $destFile, $quality);
 
             $this->s3Upload($destFile, $type);
@@ -558,9 +544,12 @@ class UploadBehavior extends ModelBehavior
         return false;
     }
 
-    public function attachmentMinSize(/** @noinspection PhpUnusedParameterInspection */
-        Model $model, $value, $min)
-    {
+    public function attachmentMinSize(
+        /** @noinspection PhpUnusedParameterInspection */
+        Model $model,
+        $value,
+        $min
+    ) {
         $value = array_shift($value);
         if (!empty($value['tmp_name'])) {
             return (int)$min <= (int)$value['size'];
@@ -568,9 +557,12 @@ class UploadBehavior extends ModelBehavior
         return true;
     }
 
-    public function attachmentMaxSize(/** @noinspection PhpUnusedParameterInspection */
-        Model $model, $value, $max)
-    {
+    public function attachmentMaxSize(
+        /** @noinspection PhpUnusedParameterInspection */
+        Model $model,
+        $value,
+        $max
+    ) {
         $value = array_shift($value);
         if (!empty($value['tmp_name'])) {
             return (int)$value['size'] <= (int)$max;
@@ -578,9 +570,12 @@ class UploadBehavior extends ModelBehavior
         return true;
     }
 
-    public function attachmentContentType(/** @noinspection PhpUnusedParameterInspection */
-        Model $model, $value, $contentTypes)
-    {
+    public function attachmentContentType(
+        /** @noinspection PhpUnusedParameterInspection */
+        Model $model,
+        $value,
+        $contentTypes
+    ) {
         $value = array_shift($value);
         if (!is_array($contentTypes)) {
             $contentTypes = array($contentTypes);
@@ -591,8 +586,7 @@ class UploadBehavior extends ModelBehavior
                     if (preg_match($contentType, $value['type'])) {
                         return true;
                     }
-                }
-                elseif ($contentType == $value['type']) {
+                } elseif ($contentType == $value['type']) {
                     return true;
                 }
             }
@@ -614,8 +608,7 @@ class UploadBehavior extends ModelBehavior
         if (!empty($model->id)) {
             if (!empty($model->data[$model->alias][$field . '_file_name'])) {
                 return true;
-            }
-            elseif (!isset($model->data[$model->alias][$field . '_file_name'])) {
+            } elseif (!isset($model->data[$model->alias][$field . '_file_name'])) {
                 $existingFile = $model->field($field . '_file_name', array($model->primaryKey => $model->id));
                 if (!empty($existingFile)) {
                     return true;
@@ -625,15 +618,21 @@ class UploadBehavior extends ModelBehavior
         return false;
     }
 
-    public function minWidth(/** @noinspection PhpUnusedParameterInspection */
-        Model $model, $value, $minWidth)
-    {
+    public function minWidth(
+        /** @noinspection PhpUnusedParameterInspection */
+        Model $model,
+        $value,
+        $minWidth
+    ) {
         return $this->_validateDimension($value, 'min', 'x', $minWidth);
     }
 
-    public function minHeight(/** @noinspection PhpUnusedParameterInspection */
-        Model $model, $value, $minHeight)
-    {
+    public function minHeight(
+        /** @noinspection PhpUnusedParameterInspection */
+        Model $model,
+        $value,
+        $minHeight
+    ) {
         return $this->_validateDimension($value, 'min', 'y', $minHeight);
     }
 
@@ -645,15 +644,17 @@ class UploadBehavior extends ModelBehavior
         if ($settings['resizeToMaxWidth'] && !$this->_validateDimension($value, 'max', 'x', $maxWidth)) {
             $this->maxWidthSize = $maxWidth;
             return true;
-        }
-        else {
+        } else {
             return $this->_validateDimension($value, 'max', 'x', $maxWidth);
         }
     }
 
-    public function maxHeight(/** @noinspection PhpUnusedParameterInspection */
-        Model $model, $value, $maxHeight)
-    {
+    public function maxHeight(
+        /** @noinspection PhpUnusedParameterInspection */
+        Model $model,
+        $value,
+        $maxHeight
+    ) {
         return $this->_validateDimension($value, 'max', 'y', $maxHeight);
     }
 
@@ -665,16 +666,13 @@ class UploadBehavior extends ModelBehavior
             $createHandler = null;
             if ($upload['type'] == 'image/jpeg') {
                 $createHandler = 'imagecreatefromjpeg';
-            }
-            else {
+            } else {
                 if ($upload['type'] == 'image/gif') {
                     $createHandler = 'imagecreatefromgif';
-                }
-                else {
+                } else {
                     if ($upload['type'] == 'image/png') {
                         $createHandler = 'imagecreatefrompng';
-                    }
-                    else {
+                    } else {
                         return false;
                     }
                 }
@@ -694,9 +692,20 @@ class UploadBehavior extends ModelBehavior
         return false;
     }
 
-    public function phpUploadError(/** @noinspection PhpUnusedParameterInspection */
-        Model $model, $value, $uploadErrors = array('UPLOAD_ERR_INI_SIZE', 'UPLOAD_ERR_FORM_SIZE', 'UPLOAD_ERR_PARTIAL', 'UPLOAD_ERR_NO_FILE', 'UPLOAD_ERR_NO_TMP_DIR', 'UPLOAD_ERR_CANT_WRITE', 'UPLOAD_ERR_EXTENSION'))
-    {
+    public function phpUploadError(
+        /** @noinspection PhpUnusedParameterInspection */
+        Model $model,
+        $value,
+        $uploadErrors = array(
+            'UPLOAD_ERR_INI_SIZE',
+            'UPLOAD_ERR_FORM_SIZE',
+            'UPLOAD_ERR_PARTIAL',
+            'UPLOAD_ERR_NO_FILE',
+            'UPLOAD_ERR_NO_TMP_DIR',
+            'UPLOAD_ERR_CANT_WRITE',
+            'UPLOAD_ERR_EXTENSION'
+        )
+    ) {
         $value = array_shift($value);
         if (!is_array($uploadErrors)) {
             $uploadErrors = array($uploadErrors);
@@ -757,8 +766,7 @@ class UploadBehavior extends ModelBehavior
         $exif = @exif_read_data($file_path); //　Exif情報読み込み
         if (isset($exif['Orientation'])) {
             $r_data = $exif['Orientation']; //　画像の向き情報を取り出す
-        }
-        else {
+        } else {
             return 0;
         }
         switch ($r_data) {

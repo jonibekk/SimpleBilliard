@@ -98,7 +98,7 @@ class Team extends AppModel
     public $validate = [
         'name'               => [
             'isString'  => [
-                'rule'       => ['isString',],
+                'rule' => ['isString',],
             ],
             'maxLength' => ['rule' => ['maxLength', 128]],
             'notEmpty'  => ['rule' => ['notEmpty'],],
@@ -395,8 +395,8 @@ class Team extends AppModel
     {
         $out_list = [];
         $teamList = $this->find('list');
-        foreach($teamList as $id=>$name){
-            $out_list[$id] = $id.'_'.$name;
+        foreach ($teamList as $id => $name) {
+            $out_list[$id] = $id . '_' . $name;
         }
         return $out_list;
     }

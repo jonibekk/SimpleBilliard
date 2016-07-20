@@ -143,15 +143,15 @@ class MixpanelComponent extends Object
         $user = $this->getUserInfo();
         //ユーザ情報をセット
         $this->MpOrigin->people->set($user['id'],
-                                     [
-                                         '$first_name'      => $user['first_name'],
-                                         '$last_name'       => $user['last_name'],
-                                         '$email'           => $user['PrimaryEmail']['email'],
-                                         '$default_team_id' => $user['default_team_id'],
-                                         '$language'        => $user['language'],
-                                         '$is_admin'        => $user['admin_flg'],
-                                         '$gender_type'     => $this->getGenderName(),
-                                     ]
+            [
+                '$first_name'      => $user['first_name'],
+                '$last_name'       => $user['last_name'],
+                '$email'           => $user['PrimaryEmail']['email'],
+                '$default_team_id' => $user['default_team_id'],
+                '$language'        => $user['language'],
+                '$is_admin'        => $user['admin_flg'],
+                '$gender_type'     => $this->getGenderName(),
+            ]
         );
     }
 
@@ -213,14 +213,14 @@ class MixpanelComponent extends Object
             /** @var AttachedFile $AttachedFile */
             $AttachedFile = ClassRegistry::init('AttachedFile');
             $property['$img_file_count'] = $AttachedFile->getCountOfAttachedFiles($action_id,
-                                                                                  $AttachedFile::TYPE_MODEL_ACTION_RESULT,
-                                                                                  $AttachedFile::TYPE_FILE_IMG);
+                $AttachedFile::TYPE_MODEL_ACTION_RESULT,
+                $AttachedFile::TYPE_FILE_IMG);
             $property['$video_file_count'] = $AttachedFile->getCountOfAttachedFiles($action_id,
-                                                                                    $AttachedFile::TYPE_MODEL_ACTION_RESULT,
-                                                                                    $AttachedFile::TYPE_FILE_VIDEO);
+                $AttachedFile::TYPE_MODEL_ACTION_RESULT,
+                $AttachedFile::TYPE_FILE_VIDEO);
             $property['$doc_file_count'] = $AttachedFile->getCountOfAttachedFiles($action_id,
-                                                                                  $AttachedFile::TYPE_MODEL_ACTION_RESULT,
-                                                                                  $AttachedFile::TYPE_FILE_DOC);
+                $AttachedFile::TYPE_MODEL_ACTION_RESULT,
+                $AttachedFile::TYPE_FILE_DOC);
 
         }
         $this->track($track_type, $property);
@@ -231,14 +231,14 @@ class MixpanelComponent extends Object
         /** @var AttachedFile $AttachedFile */
         $AttachedFile = ClassRegistry::init('AttachedFile');
         $img_file_count = $AttachedFile->getCountOfAttachedFiles($post_id,
-                                                                 $AttachedFile::TYPE_MODEL_POST,
-                                                                 $AttachedFile::TYPE_FILE_IMG);
+            $AttachedFile::TYPE_MODEL_POST,
+            $AttachedFile::TYPE_FILE_IMG);
         $video_file_count = $AttachedFile->getCountOfAttachedFiles($post_id,
-                                                                   $AttachedFile::TYPE_MODEL_POST,
-                                                                   $AttachedFile::TYPE_FILE_VIDEO);
+            $AttachedFile::TYPE_MODEL_POST,
+            $AttachedFile::TYPE_FILE_VIDEO);
         $doc_file_count = $AttachedFile->getCountOfAttachedFiles($post_id,
-                                                                 $AttachedFile::TYPE_MODEL_POST,
-                                                                 $AttachedFile::TYPE_FILE_DOC);
+            $AttachedFile::TYPE_MODEL_POST,
+            $AttachedFile::TYPE_FILE_DOC);
         $this->track(self::TRACK_POST, [
             '$share_type'       => $share_type,
             '$post_id'          => $post_id,
@@ -254,14 +254,14 @@ class MixpanelComponent extends Object
         /** @var AttachedFile $AttachedFile */
         $AttachedFile = ClassRegistry::init('AttachedFile');
         $img_file_count = $AttachedFile->getCountOfAttachedFiles($comment_id,
-                                                                 $AttachedFile::TYPE_MODEL_COMMENT,
-                                                                 $AttachedFile::TYPE_FILE_IMG);
+            $AttachedFile::TYPE_MODEL_COMMENT,
+            $AttachedFile::TYPE_FILE_IMG);
         $video_file_count = $AttachedFile->getCountOfAttachedFiles($comment_id,
-                                                                   $AttachedFile::TYPE_MODEL_COMMENT,
-                                                                   $AttachedFile::TYPE_FILE_VIDEO);
+            $AttachedFile::TYPE_MODEL_COMMENT,
+            $AttachedFile::TYPE_FILE_VIDEO);
         $doc_file_count = $AttachedFile->getCountOfAttachedFiles($comment_id,
-                                                                 $AttachedFile::TYPE_MODEL_COMMENT,
-                                                                 $AttachedFile::TYPE_FILE_DOC);
+            $AttachedFile::TYPE_MODEL_COMMENT,
+            $AttachedFile::TYPE_FILE_DOC);
 
         $this->track(self::TRACK_COMMENT, [
             '$target_type'      => $target_type,

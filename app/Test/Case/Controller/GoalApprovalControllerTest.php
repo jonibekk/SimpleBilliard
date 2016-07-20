@@ -614,11 +614,14 @@ class GoalApprovalControllerTest extends GoalousControllerTestCase
         ]);
 
         $value_map = [
-            [null, [
-                'id'         => '1',
-                'last_first' => true,
-                'language'   => 'jpn'
-            ]],
+            [
+                null,
+                [
+                    'id'         => '1',
+                    'last_first' => true,
+                    'language'   => 'jpn'
+                ]
+            ],
             ['id', '1'],
             ['language', 'jpn'],
             ['auto_language_flg', true],
