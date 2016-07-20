@@ -21,8 +21,7 @@ class Form2Authenticate extends FormAuthenticate
 
         if (is_array($username)) {
             $conditions = $username;
-        }
-        else {
+        } else {
             //TODO ハードコーディングでPrimaryEmailモデルを指定、もし複数アドレスを許可する場合は書き換える必要あり。
             $conditions = array(
                 'PrimaryEmail' . '.' . $fields['username'] => $username,

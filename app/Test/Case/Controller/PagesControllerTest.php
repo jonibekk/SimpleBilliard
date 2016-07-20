@@ -24,7 +24,8 @@ class PagesControllerTest extends GoalousControllerTestCase
         'app.follower',
         'app.cake_session',
         'app.evaluation_setting',
-        'app.user', 'app.notify_setting',
+        'app.user',
+        'app.notify_setting',
         'app.badge',
         'app.team',
         'app.comment_like',
@@ -443,11 +444,14 @@ class PagesControllerTest extends GoalousControllerTestCase
             ]
         ]);
         $value_map = [
-            [null, [
-                'id'         => '1',
-                'last_first' => true,
-                'language'   => 'jpn'
-            ]],
+            [
+                null,
+                [
+                    'id'         => '1',
+                    'last_first' => true,
+                    'language'   => 'jpn'
+                ]
+            ],
             ['id', '1'],
             ['language', 'jpn'],
             ['auto_language_flg', true],

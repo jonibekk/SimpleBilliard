@@ -15,11 +15,19 @@
 
     <div class="dashboardProfileCard-content">
         <a class="dashboardProfileCard-avatarLink"
-           href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $this->Session->read('Auth.User.id')]) ?>">
+           href="<?= $this->Html->url([
+               'controller' => 'users',
+               'action'     => 'view_goals',
+               'user_id'    => $this->Session->read('Auth.User.id')
+           ]) ?>">
             <?= $this->Upload->uploadImage($my_prof, 'User.photo', ['style' => 'medium'],
-                                           ['class' => 'dashboardProfileCard-avatarImage inline-block']) ?>
+                ['class' => 'dashboardProfileCard-avatarImage inline-block']) ?>
         </a>
-        <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $this->Session->read('Auth.User.id')]) ?>">
+        <a href="<?= $this->Html->url([
+            'controller' => 'users',
+            'action'     => 'view_goals',
+            'user_id'    => $this->Session->read('Auth.User.id')
+        ]) ?>">
         <span class="dashboardProfileCard-userField font_bold font_verydark ln_1-f">
             <?= h($this->Session->read('Auth.User.display_first_name')) ?>
         </span>

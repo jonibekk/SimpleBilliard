@@ -73,21 +73,29 @@ class NotifySettingTest extends GoalousTestCase
         $this->NotifySetting->my_uid = 1;
         $res = $this->NotifySetting->getUserNotifySetting($uid, NotifySetting::TYPE_FEED_POST);
         $expected = [
-            $uid => ['app'    => true,
-                     'email'  => in_array('all', NotifySetting::$TYPE[NotifySetting::TYPE_FEED_POST]['groups']),
-                     'mobile' => in_array('all', NotifySetting::$TYPE[NotifySetting::TYPE_FEED_POST]['groups'])]
+            $uid => [
+                'app'    => true,
+                'email'  => in_array('all', NotifySetting::$TYPE[NotifySetting::TYPE_FEED_POST]['groups']),
+                'mobile' => in_array('all', NotifySetting::$TYPE[NotifySetting::TYPE_FEED_POST]['groups'])
+            ]
         ];
         $this->assertEquals($expected, $res, "通知設定なし");
         $res = $this->NotifySetting->getUserNotifySetting($uid, NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST);
         $expected = [
-            $uid => ['app'    => true,
-                     'email'  => in_array('all',
-                                          NotifySetting::$TYPE[NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST]['groups']),
-                     'mobile' => in_array('all',
-                                          NotifySetting::$TYPE[NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST]['groups'])]
+            $uid => [
+                'app'    => true,
+                'email'  => in_array('all',
+                    NotifySetting::$TYPE[NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST]['groups']),
+                'mobile' => in_array('all',
+                    NotifySetting::$TYPE[NotifySetting::TYPE_FEED_COMMENTED_ON_MY_POST]['groups'])
+            ]
         ];
         $this->assertEquals($expected, $res, "通知設定なし 2");
-        $data = ['feed_post_app_flg' => false, 'feed_post_email_flg' => false, 'feed_post_mobile_flg' => true, 'user_id' => $uid];
+        $data = ['feed_post_app_flg'    => false,
+                 'feed_post_email_flg'  => false,
+                 'feed_post_mobile_flg' => true,
+                 'user_id'              => $uid
+        ];
         $this->NotifySetting->save($data);
         $res = $this->NotifySetting->getUserNotifySetting($uid, NotifySetting::TYPE_FEED_POST);
         $expected = [
@@ -101,7 +109,11 @@ class NotifySettingTest extends GoalousTestCase
         $uid = 1000000;
         $uid2 = 9999999;
 
-        $data = ['user_id' => $uid, 'feed_post_app_flg' => true, 'feed_post_email_flg' => true, 'feed_post_mobile_flg' => false];
+        $data = ['user_id'              => $uid,
+                 'feed_post_app_flg'    => true,
+                 'feed_post_email_flg'  => true,
+                 'feed_post_mobile_flg' => false
+        ];
         $this->NotifySetting->save($data);
         $res = $this->NotifySetting->getUserNotifySetting($uid, NotifySetting::TYPE_FEED_POST);
         $expected = [
@@ -111,9 +123,11 @@ class NotifySettingTest extends GoalousTestCase
         $res = $this->NotifySetting->getUserNotifySetting([$uid, $uid2], NotifySetting::TYPE_FEED_POST);
         $expected = [
             $uid  => ['app' => true, 'email' => true, 'mobile' => false],
-            $uid2 => ['app'    => true,
-                      'email'  => in_array('all', NotifySetting::$TYPE[NotifySetting::TYPE_FEED_POST]['groups']),
-                      'mobile' => in_array('all', NotifySetting::$TYPE[NotifySetting::TYPE_FEED_POST]['groups'])]
+            $uid2 => [
+                'app'    => true,
+                'email'  => in_array('all', NotifySetting::$TYPE[NotifySetting::TYPE_FEED_POST]['groups']),
+                'mobile' => in_array('all', NotifySetting::$TYPE[NotifySetting::TYPE_FEED_POST]['groups'])
+            ]
         ];
         $this->assertEquals($expected, $res, "通知設定ありなし混在。複数ユーザ");
 
@@ -157,17 +171,17 @@ class NotifySettingTest extends GoalousTestCase
         // TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST と TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION は
         // post_user_id、from_user_id が必須
         $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_POST, 'aaa', $count_num,
-                                       $item_name,
-                                       [
-                                           'from_user_id' => 1,
-                                           'post_user_id' => 2,
-                                       ]);
+            $item_name,
+            [
+                'from_user_id' => 1,
+                'post_user_id' => 2,
+            ]);
         $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_COMMENTED_ON_MY_COMMENTED_ACTION, 'aaa', $count_num,
-                                       $item_name,
-                                       [
-                                           'from_user_id' => 1,
-                                           'post_user_id' => 2,
-                                       ]);
+            $item_name,
+            [
+                'from_user_id' => 1,
+                'post_user_id' => 2,
+            ]);
     }
 
     function testGetTitleFeedPost()
@@ -229,11 +243,11 @@ class NotifySettingTest extends GoalousTestCase
 
         // HTML入り
         $html = $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_MESSAGE, $from_user_names, $count_num,
-                                               $item_name);
+            $item_name);
         $plain = $this->NotifySetting->getTitle(NotifySetting::TYPE_FEED_MESSAGE, $from_user_names, $count_num,
-                                                $item_name, [
-                                                    'style' => 'plain'
-                                                ]);
+            $item_name, [
+                'style' => 'plain'
+            ]);
         $this->assertNotEquals($html, $plain);
     }
 

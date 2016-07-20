@@ -40,7 +40,7 @@ $this->set('hidden_sidebar_xxs', true);
     <?= $this->element('Team/invite') ?>
 </div>
 <div id="batch_registration">
-<?= $this->element('Team/batch_setup') ?>
+    <?= $this->element('Team/batch_setup') ?>
 </div>
 <div id="goal_category">
     <?= $this->element('Team/goal_category_setting') ?>

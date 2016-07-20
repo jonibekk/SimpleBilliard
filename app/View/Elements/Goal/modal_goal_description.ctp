@@ -17,7 +17,11 @@
                 <span class="close-icon">&times;</span></button>
             <h4 class="modal-title"><?= __("Goal Summary") ?>&nbsp;&nbsp;
                 <a class=""
-                   href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal['Goal']['id']]) ?>">
+                   href="<?= $this->Html->url([
+                       'controller' => 'goals',
+                       'action'     => 'view_info',
+                       'goal_id'    => $goal['Goal']['id']
+                   ]) ?>">
                     <?= __('Go to Goal page') ?>
                 </a>
             </h4>
@@ -25,7 +29,11 @@
         <div class="modal-body modal-circle-body">
             <div class="col col-xxs-12">
                 <div class="col col-xxs-6">
-                    <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal['Goal']['id']]) ?>">
+                    <a href="<?= $this->Html->url([
+                        'controller' => 'goals',
+                        'action'     => 'view_info',
+                        'goal_id'    => $goal['Goal']['id']
+                    ]) ?>">
                         <img src="<?= $this->Upload->uploadUrl($goal, 'Goal.photo', ['style' => 'large']) ?>"
                              width="128"
                              height="128">
@@ -42,11 +50,11 @@
                                data-class="toggle-follow"
                                goal-id="<?= $goal['Goal']['id'] ?>"
                                 <?php if ($follow_opt['disabled'] || $this->Goal->isCoachingUserGoal($goal,
-                                                                                                     viaIsSet($my_coaching_users))
+                                        viaIsSet($my_coaching_users))
                                 ): ?>
                                     disabled="disabled"
                                 <?php endif ?>
-                                >
+                            >
                                 <i class="fa fa-heart font_rougeOrange" style="<?= h($follow_opt['style']) ?>"></i>
                                 <span class="ml_5px"><?= h($follow_opt['text']) ?></span>
                             </a>
@@ -55,7 +63,11 @@
                             <a class="btn btn-white bd-circle_22px mt_16px font_verydark modal-ajax-get-collabo <?= h($collabo_opt['class']) ?>"
                                data-toggle="modal"
                                data-target="#ModalCollabo_<?= $goal['Goal']['id'] ?>"
-                               href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', 'goal_id' => $goal['Goal']['id']]) ?>">
+                               href="<?= $this->Html->url([
+                                   'controller' => 'goals',
+                                   'action'     => 'ajax_get_collabo_change_modal',
+                                   'goal_id'    => $goal['Goal']['id']
+                               ]) ?>">
                                 <i class="fa fa-child font_rougeOrange font_18px"
                                    style="<?= $collabo_opt['style'] ?>"></i>
                                 <span class="ml_5px font_14px"><?= h($collabo_opt['text']) ?></span>
@@ -71,7 +83,11 @@
                 <div class="col col-xxs-12">
                     <p class="font_18px">
                         <a class="font_verydark"
-                           href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal['Goal']['id']]) ?>">
+                           href="<?= $this->Html->url([
+                               'controller' => 'goals',
+                               'action'     => 'view_info',
+                               'goal_id'    => $goal['Goal']['id']
+                           ]) ?>">
                             <?= h($goal['Goal']['name']) ?>
                         </a>
                     </p>
@@ -96,7 +112,7 @@
                     <?php if (isset($goal['Leader'][0]['User'])): ?>
                         <img src="<?=
                         $this->Upload->uploadUrl($goal['Leader'][0]['User'],
-                                                 'User.photo', ['style' => 'small']) ?>"
+                            'User.photo', ['style' => 'small']) ?>"
                              style="width:32px;height: 32px;">
                         <?= h($goal['Leader'][0]['User']['display_username']) ?>
                     <?php endif; ?>
@@ -108,7 +124,7 @@
                         <?php foreach ($goal['Collaborator'] as $collabo): ?>
                             <img src="<?=
                             $this->Upload->uploadUrl($collabo['User'],
-                                                     'User.photo', ['style' => 'small']) ?>"
+                                'User.photo', ['style' => 'small']) ?>"
                                  style="width:32px;height: 32px;" alt="<?= h($collabo['User']['display_username']) ?>"
                                  title="<?= h($collabo['User']['display_username']) ?>">
                         <?php endforeach ?>
@@ -127,7 +143,7 @@
                         <?php foreach ($goal['Follower'] as $follower): ?>
                             <img src="<?=
                             $this->Upload->uploadUrl($follower['User'],
-                                                     'User.photo', ['style' => 'small']) ?>"
+                                'User.photo', ['style' => 'small']) ?>"
                                  style="width:32px;height: 32px;" alt="<?= h($follower['User']['display_username']) ?>"
                                  title="<?= h($follower['User']['display_username']) ?>">
                         <?php endforeach ?>

@@ -86,8 +86,7 @@ class LangComponent extends Object
             }
             //使用可能言語じゃなければ英語を返す
             return 'eng';
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -108,8 +107,7 @@ class LangComponent extends Object
         if ($set_lang) {
             //指定された言語が使用可能な場合
             Configure::write('Config.language', $lang);
-        }
-        else {
+        } else {
             //使用可能でない場合は英語をセット
             Configure::write('Config.language', 'eng');
         }

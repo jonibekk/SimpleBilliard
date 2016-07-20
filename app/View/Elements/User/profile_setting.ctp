@@ -54,13 +54,12 @@
                 if ($me['User']['last_first']) {
                     echo $local_last_name;
                     echo $local_first_name;
-                }
-                else {
+                } else {
                     echo $local_first_name;
                     echo $local_last_name;
                 }
                 echo $this->Form->hidden('LocalName.0.language',
-                                         ['value' => $this->request->data['User']['language']]);
+                    ['value' => $this->request->data['User']['language']]);
                 echo "<hr>";
             }
             ?>
@@ -88,8 +87,7 @@
             if ($last_first) {
                 echo $last_name;
                 echo $first_name;
-            }
-            else {
+            } else {
                 echo $first_name;
                 echo $last_name;
             }
@@ -97,43 +95,43 @@
             <hr>
             <?=
             $this->Form->input('gender_type',
-                               [
-                                   'type'    => 'radio',
-                                   'before'  => '<label class="col col-sm-3 control-label form-label">'
-                                       . __('Gender') . '</label>',
-                                   'legend'  => false,
-                                   'options' => User::$TYPE_GENDER,
-                                   'class'   => 'radio-inline'
-                               ])
+                [
+                    'type'    => 'radio',
+                    'before'  => '<label class="col col-sm-3 control-label form-label">'
+                        . __('Gender') . '</label>',
+                    'legend'  => false,
+                    'options' => User::$TYPE_GENDER,
+                    'class'   => 'radio-inline'
+                ])
             ?>
             <hr>
             <?=
             $this->Form
                 ->input('birth_day',
-                        [
-                            'monthNames' => [
-                                '01' => __('Jan'),
-                                '02' => __('Feb'),
-                                '03' => __('Mar'),
-                                '04' => __('Apr'),
-                                '05' => __('May'),
-                                '06' => __('Jun'),
-                                '07' => __('Jul'),
-                                '08' => __('Aug'),
-                                '09' => __('Sep'),
-                                '10' => __('Oct'),
-                                '11' => __('Nov'),
-                                '12' => __('Dec'),
-                            ],
-                            'class'      => 'form-control inline-fix setting_input-design',
-                            'label'      => __('Birthday'),
-                            'dateFormat' => 'YMD',
-                            'empty'      => true,
-                            'separator'  => ' / ',
-                            'maxYear'    => date('Y'),
-                            'minYear'    => '1910',
-                            'wrapInput'  => 'col col-sm-6 form-inline',
-                        ]);
+                    [
+                        'monthNames' => [
+                            '01' => __('Jan'),
+                            '02' => __('Feb'),
+                            '03' => __('Mar'),
+                            '04' => __('Apr'),
+                            '05' => __('May'),
+                            '06' => __('Jun'),
+                            '07' => __('Jul'),
+                            '08' => __('Aug'),
+                            '09' => __('Sep'),
+                            '10' => __('Oct'),
+                            '11' => __('Nov'),
+                            '12' => __('Dec'),
+                        ],
+                        'class'      => 'form-control inline-fix setting_input-design',
+                        'label'      => __('Birthday'),
+                        'dateFormat' => 'YMD',
+                        'empty'      => true,
+                        'separator'  => ' / ',
+                        'maxYear'    => date('Y'),
+                        'minYear'    => '1910',
+                        'wrapInput'  => 'col col-sm-6 form-inline',
+                    ]);
             ?>
             <?=
             $this->Form->input('hide_year_flg', [
@@ -157,7 +155,7 @@
             <hr>
             <div class="form-group">
                 <label for="" class="col col-sm-3 control-label form-label">
-                <?= __("Profile Image") ?>
+                    <?= __("Profile Image") ?>
                 </label>
 
                 <div class="col col-sm-6">
@@ -166,7 +164,7 @@
                              style="width: 150px; height: 150px;">
                             <?=
                             $this->Upload->uploadImage($this->request->data, 'User.photo',
-                                                       ['style' => 'x_large']) ?>
+                                ['style' => 'x_large']) ?>
                         </div>
                         <div>
                         <span class="btn btn-default btn-file">
@@ -176,14 +174,15 @@
                             <span class="fileinput-exists"><?= __("Reselect an image") ?></span>
                             <?=
                             $this->Form->input('photo',
-                                               ['type'         => 'file',
-                                                'label'        => false,
-                                                'div'          => false,
-                                                'css'          => false,
-                                                'wrapInput'    => false,
-                                                'errorMessage' => false,
-                                                'required'     => false
-                                               ]) ?>
+                                [
+                                    'type'         => 'file',
+                                    'label'        => false,
+                                    'div'          => false,
+                                    'css'          => false,
+                                    'wrapInput'    => false,
+                                    'errorMessage' => false,
+                                    'required'     => false
+                                ]) ?>
                         </span>
                             <span class="help-block inline-block font_11px"><?= __('Smaller than 10MB') ?></span>
                         </div>
@@ -192,9 +191,10 @@
                     <div class="has-error">
                         <?=
                         $this->Form->error('photo', null,
-                                           ['class' => 'help-block text-danger',
-                                            'wrap'  => 'span'
-                                           ]) ?>
+                            [
+                                'class' => 'help-block text-danger',
+                                'wrap'  => 'span'
+                            ]) ?>
                     </div>
                 </div>
 
@@ -209,26 +209,28 @@
                 <div class="col col-sm-6">
                     <?php if (isset($this->request->data['TeamMember'][0]['id'])): ?>
                         <?= $this->Form->hidden('TeamMember.0.id',
-                                                ['value' => $this->request->data['TeamMember'][0]['id']]) ?>
+                            ['value' => $this->request->data['TeamMember'][0]['id']]) ?>
                     <?php endif; ?>
                     <?=
                     $this->Form->input('TeamMember.0.comment',
-                                       ['label'                        => false,
-                                        'div'                          => false,
-                                        'wrapInput'                    => false,
-                                        'css'                          => false,
-                                        'data-bv-stringlength'         => 'true',
-                                        'data-bv-stringlength-max'     => 2000,
-                                        'data-bv-stringlength-message' => __("It's over limit characters (%s).", 2000),
-                                        'value'                        => (isset($this->request->data['TeamMember'][0]['comment']) && !empty($this->request->data['TeamMember'][0]['comment']))
-                                            ? $this->request->data['TeamMember'][0]['comment']
-                                            : __(
-                                                  "[What is that you can contribute to the team?]\n\n[What is the thing you want to achieve in the team?(Specifically)]\n\n[Others]\n\n")]
+                        [
+                            'label'                        => false,
+                            'div'                          => false,
+                            'wrapInput'                    => false,
+                            'css'                          => false,
+                            'data-bv-stringlength'         => 'true',
+                            'data-bv-stringlength-max'     => 2000,
+                            'data-bv-stringlength-message' => __("It's over limit characters (%s).", 2000),
+                            'value'                        => (isset($this->request->data['TeamMember'][0]['comment']) && !empty($this->request->data['TeamMember'][0]['comment']))
+                                ? $this->request->data['TeamMember'][0]['comment']
+                                : __(
+                                    "[What is that you can contribute to the team?]\n\n[What is the thing you want to achieve in the team?(Specifically)]\n\n[Others]\n\n")
+                        ]
                     )
                     ?>
                     <a href="#" class="target-show-this-del link-dark-gray" target-id="CommentHelp"><?= __(
-                                                                                                            "Show Examples") ?></a>
-                <span class="help-block inline-block font_11px" id="CommentHelp" style="display: none">
+                            "Show Examples") ?></a>
+                    <span class="help-block inline-block font_11px" id="CommentHelp" style="display: none">
                     <?= __("[Now, What is that you can contribute to the team?]<br>\n
 Consulting UX of your production.<br>\n
 [What is the thing you want to achieve in the team?(Specifically)]<br>\n
@@ -276,7 +278,7 @@ Need New Customers?<br>\n
                     validators: {
                         stringLength: {
                             min: 8,
-                            message: "<?=__('At least %2$d characters is required.',"",8)?>"
+                            message: "<?=__('At least %2$d characters is required.', "", 8)?>"
                         }
                     }
                 },

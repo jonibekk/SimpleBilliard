@@ -185,7 +185,8 @@ class EvaluationsController extends AppController
             //キャッシュ削除
             $next_evaluator_id = $this->Evaluation->getNextEvaluatorId($evaluateTermId, $evaluateeId);
             Cache::delete($this->Evaluation->getCacheKey(CACHE_KEY_EVALUABLE_COUNT, true), 'team_info');
-            Cache::delete($this->Evaluation->getCacheKey(CACHE_KEY_EVALUABLE_COUNT, true, $next_evaluator_id), 'team_info');
+            Cache::delete($this->Evaluation->getCacheKey(CACHE_KEY_EVALUABLE_COUNT, true, $next_evaluator_id),
+                'team_info');
 
             if ($next_evaluation_id && !$is_final_evaluation) {
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_EVALUATION_CAN_AS_EVALUATOR,

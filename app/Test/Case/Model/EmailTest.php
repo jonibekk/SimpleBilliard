@@ -17,7 +17,8 @@ class EmailTest extends GoalousTestCase
     public $fixtures = array(
         'app.local_name',
         'app.email',
-        'app.user', 'app.notify_setting',
+        'app.user',
+        'app.notify_setting',
         'app.team_member',
         'app.team',
     );

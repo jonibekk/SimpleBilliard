@@ -37,7 +37,7 @@
                     <div class="col-sm-9 col-sm-offset-3">
                         <?=
                         $this->Form->submit(__("Authentication"),
-                                            ['class' => 'btn btn-primary']) ?>
+                            ['class' => 'btn btn-primary']) ?>
                         <span class="help-block">
                             <?= __("In case you can't use authenticator.") ?>
                             <?= $this->Html->link(__("Here"), [

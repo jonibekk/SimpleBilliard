@@ -167,7 +167,7 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
         ];
         $Evaluations->Evaluation->saveAll($records);
         $this->testAction("/evaluations/view/evaluate_term_id:{$termId}/user_id:{$Evaluations->Evaluation->my_uid}",
-                          ['method' => 'GET']);
+            ['method' => 'GET']);
     }
 
     public function testViewNotEnabled()
@@ -203,7 +203,7 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
         $Evaluations->Evaluation->Team->EvaluationSetting->id = $res['EvaluationSetting']['id'];
         $Evaluations->Evaluation->Team->EvaluationSetting->saveField('enable_flg', false);
         $this->testAction("/evaluations/view/evaluate_term_id:{$termId}/user_id:{$Evaluations->Evaluation->my_uid}",
-                          ['method' => 'GET']);
+            ['method' => 'GET']);
     }
 
     public function testViewNotExistTotal()
@@ -236,7 +236,7 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
         ];
         $Evaluations->Evaluation->saveAll($records);
         $this->testAction("/evaluations/view/evaluate_term_id:{$termId}/user_id:{$Evaluations->Evaluation->my_uid}",
-                          ['method' => 'GET']);
+            ['method' => 'GET']);
     }
 
     public function testViewNotMyTern()
@@ -269,7 +269,7 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
         ];
         $Evaluations->Evaluation->saveAll($records);
         $this->testAction("/evaluations/view/evaluate_term_id:{$termId}/user_id:{$Evaluations->Evaluation->my_uid}",
-                          ['method' => 'GET']);
+            ['method' => 'GET']);
     }
 
     public function testViewIncorrectEvaluateeId()
@@ -303,7 +303,7 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
         ];
         $Evaluations->Evaluation->saveAll($records);
         $this->testAction("/evaluations/view/evaluate_term_id:{$termId}/user_id:{$incorrectEvaluateeId}",
-                          ['method' => 'GET']);
+            ['method' => 'GET']);
     }
 
     public function testViewIncorrectTermId()
@@ -337,7 +337,7 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
         ];
         $Evaluations->Evaluation->saveAll($records);
         $this->testAction("/evaluations/view/evaluate_term_id:{$incorrectTermId}/user_id:{$Evaluations->Evaluation->my_uid}",
-                          ['method' => 'GET']);
+            ['method' => 'GET']);
     }
 
     public function testViewNotExistParameter()
@@ -522,7 +522,7 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $term_id = $Evaluations->Evaluation->EvaluateTerm->getLastInsertID();
         $this->testAction("/evaluations/ajax_get_incomplete_evaluatees/evaluate_term_id:{$term_id}",
-                          ['method' => 'GET']);
+            ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -533,7 +533,7 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $term_id = $Evaluations->Evaluation->EvaluateTerm->getLastInsertID();
         $this->testAction("/evaluations/ajax_get_incomplete_evaluators/evaluate_term_id:{$term_id}",
-                          ['method' => 'GET']);
+            ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -545,7 +545,7 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction("/evaluations/ajax_get_evaluators_status/user_id:{$evaluateeId}/evaluate_term_id:{$term_id}",
-                          ['method' => 'GET']);
+            ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -557,7 +557,7 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction("/evaluations/ajax_get_evaluatees_by_evaluator/user_id:{$evaluatorId}/evaluate_term_id:{$term_id}",
-                          ['method' => 'GET']);
+            ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -587,11 +587,14 @@ class EvaluationsControllerTest extends GoalousControllerTestCase
             ],
         ]);
         $value_map = [
-            [null, [
-                'id'         => '1',
-                'last_first' => true,
-                'language'   => 'jpn'
-            ]],
+            [
+                null,
+                [
+                    'id'         => '1',
+                    'last_first' => true,
+                    'language'   => 'jpn'
+                ]
+            ],
             ['id', '1'],
             ['language', 'jpn'],
             ['auto_language_flg', true],

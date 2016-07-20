@@ -47,12 +47,12 @@ if (!isset($id_prefix)) {
                 <?php $delete_style = "display:block" ?>
                 <?=
                 $this->Html->image('ajax-loader.gif',
-                                   [
-                                       'class'         => 'lazy',
-                                       'style'         => 'width: 34px; height: 34px;',
-                                       'data-original' => $this->Upload->uploadUrl($data, "{$model}.photo" . $index,
-                                                                                   ['style' => 'small'])
-                                   ]
+                    [
+                        'class'         => 'lazy',
+                        'style'         => 'width: 34px; height: 34px;',
+                        'data-original' => $this->Upload->uploadUrl($data, "{$model}.photo" . $index,
+                            ['style' => 'small'])
+                    ]
                 )
                 ?>
             <?php endif ?><?php if ($index == 1): ?><i class="fa fa-plus photo-plus-mini"></i><?php endif; ?>
@@ -61,16 +61,16 @@ if (!isset($id_prefix)) {
             <div class="custom-wrapper">
                 <?=
                 $this->Form->input('photo_delete.' . $index,
-                                   [
-                                       'type'         => 'checkbox',
-                                       'label'        => "",
-                                       'div'          => false,
-                                       'class'        => 'custom-radio-check change-target-enabled',
-                                       'target-id'    => $submit_id,
-                                       'wrapInput'    => false,
-                                       'errorMessage' => false,
-                                       'id'           => $id_prefix . $model . "PhotoDelete" . $index
-                                   ]
+                    [
+                        'type'         => 'checkbox',
+                        'label'        => "",
+                        'div'          => false,
+                        'class'        => 'custom-radio-check change-target-enabled',
+                        'target-id'    => $submit_id,
+                        'wrapInput'    => false,
+                        'errorMessage' => false,
+                        'id'           => $id_prefix . $model . "PhotoDelete" . $index
+                    ]
                 ) ?>
             </div>
         <?php endif; ?>
@@ -88,23 +88,24 @@ if (!isset($id_prefix)) {
                     $field_prefix .= ".0";
                 }
                 echo $this->Form->input($field_prefix . '.photo' . $index,
-                                        ['type'                   => 'file',
-                                         'label'                  => false,
-                                         'div'                    => false,
-                                         'class'                  => false,
-                                         'wrapInput'              => false,
-                                         'errorMessage'           => false,
-                                         'required'               => false,
-                                         'accept'                 => 'image/jpeg, image/gif, image/png',
-                                         'id'                     => $id_prefix . $model . "_" . $model_id . '_Photo_' . $index,
-                                         'data-bv-container'      => '#' . $id_prefix . $model . "_" . $model_id . '_Photo_ValidateMessage',
-                                         'data-bv-file'           => 'true',
-                                         'data-bv-file-extension' => 'jpeg,jpg,png,gif',
-                                         'data-bv-file-type'      => 'image/jpeg,image/png,image/gif',
-                                         'data-bv-file-maxsize'   => 10485760,   // 10mb
-                                         'data-bv-message'        => __(
-                                                                         "10MB or less, and Please select one of the formats of JPG or PNG and GIF.")
-                                        ]) ?>
+                    [
+                        'type'                   => 'file',
+                        'label'                  => false,
+                        'div'                    => false,
+                        'class'                  => false,
+                        'wrapInput'              => false,
+                        'errorMessage'           => false,
+                        'required'               => false,
+                        'accept'                 => 'image/jpeg, image/gif, image/png',
+                        'id'                     => $id_prefix . $model . "_" . $model_id . '_Photo_' . $index,
+                        'data-bv-container'      => '#' . $id_prefix . $model . "_" . $model_id . '_Photo_ValidateMessage',
+                        'data-bv-file'           => 'true',
+                        'data-bv-file-extension' => 'jpeg,jpg,png,gif',
+                        'data-bv-file-type'      => 'image/jpeg,image/png,image/gif',
+                        'data-bv-file-maxsize'   => 10485760,   // 10mb
+                        'data-bv-message'        => __(
+                            "10MB or less, and Please select one of the formats of JPG or PNG and GIF.")
+                    ]) ?>
             </span>
         </div>
     </div>

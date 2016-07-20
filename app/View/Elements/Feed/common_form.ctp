@@ -96,7 +96,11 @@ if (!isset($goal_list_for_action_option)) {
             <?php else: ?>
                 <?= $this->Form->create('ActionResult', [
                     'url'           => $is_edit_mode
-                        ? ['controller' => 'goals', 'action' => 'edit_action', 'action_result_id' => $this->request->data['ActionResult']['id']]
+                        ? [
+                            'controller'       => 'goals',
+                            'action'           => 'edit_action',
+                            'action_result_id' => $this->request->data['ActionResult']['id']
+                        ]
                         : ['controller' => 'goals', 'action' => 'add_completed_action'],
                     'inputDefaults' => [
                         'div'       => 'form-group',
@@ -121,7 +125,7 @@ if (!isset($goal_list_for_action_option)) {
                        delete-method="hide">
                         <span class="action-image-add-button-text"><i
                                 class="fa fa-image action-image-add-button-icon"></i> <span><?= __(
-                                                                                                    'Upload an image as your action') ?></span></span>
+                                    'Upload an image as your action') ?></span></span>
                     </a>
                 </div>
 
@@ -166,9 +170,11 @@ if (!isset($goal_list_for_action_option)) {
                                         ? $this->request->data['ActionResult']['key_result_id']
                                         : "",
                                 'ajax-url'                 =>
-                                    $this->Html->url(['controller' => 'goals',
-                                                      'action'     => 'ajax_get_kr_list',
-                                                      'goal_id'    => ""]),
+                                    $this->Html->url([
+                                        'controller' => 'goals',
+                                        'action'     => 'ajax_get_kr_list',
+                                        'goal_id'    => ""
+                                    ]),
                             ])
                             ?>
                         </div>
@@ -215,7 +221,11 @@ if (!isset($goal_list_for_action_option)) {
                                         <div class="form-control">
                                             <?=
                                             $this->Form->hidden('share',
-                                                                ['id' => 'select2ActionCircleMember', 'value' => "", 'style' => "width: 100%",]) ?>
+                                                [
+                                                    'id'    => 'select2ActionCircleMember',
+                                                    'value' => "",
+                                                    'style' => "width: 100%",
+                                                ]) ?>
                                             <?php $this->Form->unlockField('ActionResult.share') ?>
                                         </div>
                                     </div>
@@ -237,7 +247,10 @@ if (!isset($goal_list_for_action_option)) {
                             <div class="row form-horizontal form-group post-share-range" id="CommonActionShare">
                                 <?=
                                 $this->Form->submit(__($is_edit_mode ? "保存する" : "アクション登録"),
-                                                    ['class' => 'btn btn-primary pull-right post-submit-button', 'id' => 'CommonActionSubmit']) ?>
+                                    [
+                                        'class' => 'btn btn-primary pull-right post-submit-button',
+                                        'id'    => 'CommonActionSubmit'
+                                    ]) ?>
                             </div>
                         </div>
                     </div>
@@ -250,7 +263,7 @@ if (!isset($goal_list_for_action_option)) {
                                 'name'      => 'data[file_id][]',
                                 'value'     => $file['AttachedFile']['id'],
                                 'data-url'  => $this->Upload->uploadUrl($file, 'AttachedFile.attached',
-                                                                        ['style' => 'small']),
+                                    ['style' => 'small']),
                                 'data-name' => $file['AttachedFile']['attached_file_name'],
                                 'data-size' => $file['AttachedFile']['file_size'],
                                 'data-ext'  => $file['AttachedFile']['file_ext'],
@@ -271,7 +284,11 @@ if (!isset($goal_list_for_action_option)) {
             <?=
             $this->Form->create('Post', [
                 'url'           => $is_edit_mode && isset($this->request->data['Post']['id'])
-                    ? ['controller' => 'posts', 'action' => 'post_edit', 'post_id' => $this->request->data['Post']['id']]
+                    ? [
+                        'controller' => 'posts',
+                        'action'     => 'post_edit',
+                        'post_id'    => $this->request->data['Post']['id']
+                    ]
                     : ['controller' => 'posts', 'action' => 'add'],
                 'inputDefaults' => [
                     'div'       => 'form-group',
@@ -348,7 +365,8 @@ if (!isset($goal_list_for_action_option)) {
                         $this->Form->hidden('share_secret', [
                             'id'    => 'select2PostSecretCircle',
                             'value' => $secret_share_default,
-                            'style' => "width: 100%;"]) ?>
+                            'style' => "width: 100%;"
+                        ]) ?>
                         <?php $this->Form->unlockField('Post.share_secret') ?>
                     </div>
                     <div class="col col-xxs-2 col-xs-2 text-center post-share-range-toggle-button-container">
@@ -377,9 +395,11 @@ if (!isset($goal_list_for_action_option)) {
                     <div class="row form-horizontal form-group post-share-range" id="PostShare">
                         <?=
                         $this->Form->submit(__($is_edit_mode ? "Save" : "Post"),
-                                            ['class'    => 'btn btn-primary pull-right post-submit-button',
-                                             'id'       => 'PostSubmit',
-                                             'disabled' => $is_edit_mode ? '' : 'disabled']) ?>
+                            [
+                                'class'    => 'btn btn-primary pull-right post-submit-button',
+                                'id'       => 'PostSubmit',
+                                'disabled' => $is_edit_mode ? '' : 'disabled'
+                            ]) ?>
                     </div>
                 </div>
             </div>
@@ -391,7 +411,7 @@ if (!isset($goal_list_for_action_option)) {
                             'name'      => 'data[file_id][]',
                             'value'     => $file['AttachedFile']['id'],
                             'data-url'  => $this->Upload->uploadUrl($file, 'AttachedFile.attached',
-                                                                    ['style' => 'small']),
+                                ['style' => 'small']),
                             'data-name' => $file['AttachedFile']['attached_file_name'],
                             'data-size' => $file['AttachedFile']['file_size'],
                             'data-ext'  => $file['AttachedFile']['file_ext'],
@@ -479,7 +499,11 @@ if (!isset($goal_list_for_action_option)) {
                         <div class="row form-horizontal form-group post-share-range" id="MessageShare">
                             <?=
                             $this->Form->submit(__("Send Message"),
-                                                ['class' => 'btn btn-primary pull-right post-submit-button', 'id' => 'MessageSubmit', 'disabled' => 'disabled']) ?>
+                                [
+                                    'class'    => 'btn btn-primary pull-right post-submit-button',
+                                    'id'       => 'MessageSubmit',
+                                    'disabled' => 'disabled'
+                                ]) ?>
                         </div>
                     </div>
                 </div>

@@ -181,7 +181,7 @@ class InviteTest extends GoalousTestCase
         $this->Invite->id = $id;
         $this->Invite->saveField('email_token_expires', strtotime("+1 day", time()));
         $token = "token_test002";
-        $res = $this->Invite->verify($token,2);
+        $res = $this->Invite->verify($token, 2);
         $this->assertArrayHasKey('id', $res['Invite']);
     }
 

@@ -31,6 +31,7 @@ abstract class GoalousWebTestCase extends CakeTestCase
      * SeleniumNode(仮想環境)は192.168.x.1:4444の情報を持参していてHub(SeleniumServer)に接続を試みる
      * そのためHubのHOSTを192.168.50.1に設定する
      * 上記は仮想環境でSelenium実行時に別の環境に接続する場合のみ必要でローカル環境で全て完結するのであれば'localhost'(127.0.0.1)で問題ない
+     *
      * @link http://gongo.hatenablog.com/entry/2014/10/29/105755
      */
     const HOST = '192.168.50.1';
@@ -46,7 +47,7 @@ abstract class GoalousWebTestCase extends CakeTestCase
 
     public static $browsers = [
 //        ['browser' => '*firefox', 'browserName' => 'firefox', 'sessionStrategy' => 'shared'],
-        ['browser' => '*chrome', 'browserName' => 'chrome', 'sessionStrategy' => 'shared'],
+['browser' => '*chrome', 'browserName' => 'chrome', 'sessionStrategy' => 'shared'],
 //        ['browser' => '*iexplorer', 'browserName' => 'iexplorer', 'sessionStrategy' => 'shared'],
     ];
 
@@ -58,7 +59,7 @@ abstract class GoalousWebTestCase extends CakeTestCase
         $this->setSeleniumServerRequestsTimeout(60);
         $firefox_profile = '/Case/Web/firefox-profile/profile.zip.b64';
         $this->setDesiredCapabilities([
-            'firefox_profile' => file_get_contents(__DIR__.$firefox_profile),
+            'firefox_profile' => file_get_contents(__DIR__ . $firefox_profile),
         ]);
     }
 
@@ -126,6 +127,7 @@ abstract class GoalousWebTestCase extends CakeTestCase
 
     /**
      * スクリーンショットを保存する
+     *
      * @param string $file_name
      */
     public function saveSceenshot($file_name = '')
@@ -160,6 +162,7 @@ abstract class GoalousWebTestCase extends CakeTestCase
 
     /**
      * テスト失敗時にスクリーンショットを取得するため、onNotSuccessfulTest()をオーバーライド
+     *
      * @param Exception $e
      */
     public function onNotSuccessfulTest(Exception $e)

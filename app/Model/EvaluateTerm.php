@@ -134,8 +134,7 @@ class EvaluateTerm extends AppModel
         $isFrozen = $this->checkFrozenEvaluateTerm($id);
         if ($isFrozen) {
             $expect_status = self::STATUS_EVAL_IN_PROGRESS;
-        }
-        else {
+        } else {
             $expect_status = self::STATUS_EVAL_FROZEN;
         }
 
@@ -209,7 +208,7 @@ class EvaluateTerm extends AppModel
             }
             if (isset($this->current_term['start_date']) && !empty($this->current_term['start_date'])) {
                 $this->previous_term = $this->getTermDataByDatetime(strtotime("-1 day",
-                                                                              $this->current_term['start_date']));
+                    $this->current_term['start_date']));
                 if ($this->previous_term && $with_cache) {
                     Cache::set('duration', $this->current_term['end_date'] - REQUEST_TIMESTAMP, 'team_info');
                     Cache::write($this->getCacheKey(CACHE_KEY_TERM_PREVIOUS), $this->previous_term, 'team_info');
@@ -382,10 +381,10 @@ class EvaluateTerm extends AppModel
         $current_term = $this->getCurrentTermData();
         if ($option == Team::OPTION_CHANGE_TERM_FROM_CURRENT) {
             $new_current = $this->_getStartEndWithoutExistsData(REQUEST_TIMESTAMP, $start_term_month, $border_months,
-                                                                $timezone);
+                $timezone);
             $new_next = $this->_getStartEndWithoutExistsData(strtotime('+1 day', $new_current['end']),
-                                                             $start_term_month,
-                                                             $border_months, $timezone);
+                $start_term_month,
+                $border_months, $timezone);
             $data = [
                 $this->getCurrentTermId() =>
                     [
@@ -402,11 +401,10 @@ class EvaluateTerm extends AppModel
                         'timezone'   => $timezone,
                     ]
             ];
-        }
-        else {
+        } else {
             $new_next = $this->_getStartEndWithoutExistsData(strtotime('+1 day', $current_term['end_date']),
-                                                             $start_term_month,
-                                                             $border_months, $timezone);
+                $start_term_month,
+                $border_months, $timezone);
             $data = [
                 $this->getNextTermId() =>
                     [
@@ -436,11 +434,12 @@ class EvaluateTerm extends AppModel
      *
      * @return null|array
      */
-    private function _getStartEndWithoutExistsData($target_date = REQUEST_TIMESTAMP,
-                                                   $start_term_month = null,
-                                                   $border_months = null,
-                                                   $timezone = null)
-    {
+    private function _getStartEndWithoutExistsData(
+        $target_date = REQUEST_TIMESTAMP,
+        $start_term_month = null,
+        $border_months = null,
+        $timezone = null
+    ) {
         $team = $this->Team->getCurrentTeam();
         if (empty($team) && (!$start_term_month || !$border_months || !$timezone)) {
             return null;
@@ -464,8 +463,7 @@ class EvaluateTerm extends AppModel
         if ($start_date <= $target_date && $end_date > $target_date) {
             $term['start'] = $start_date - $timezone * 3600;
             $term['end'] = $end_date - 1 - $timezone * 3600;
-        }
-        //指定日時が開始日より前の場合 in the case of target date is earlier than start date
+        } //指定日時が開始日より前の場合 in the case of target date is earlier than start date
         elseif ($target_date < $start_date) {
             while ($target_date < $start_date) {
                 $start_date_tmp = date("Y-m-1", $start_date);
@@ -474,8 +472,7 @@ class EvaluateTerm extends AppModel
             $term['start'] = $start_date - $timezone * 3600;
             $start_date_tmp = date("Y-m-1", $start_date);
             $term['end'] = strtotime($start_date_tmp . "+ {$border_months} month") - $timezone * 3600 - 1;
-        }
-        //終了日が指定日時より前の場合 in the case of target date is later than end date
+        } //終了日が指定日時より前の場合 in the case of target date is later than end date
         elseif ($target_date > $end_date) {
             while ($target_date > $end_date) {
                 $end_date_tmp = date("Y-m-1", $end_date);
@@ -515,11 +512,9 @@ class EvaluateTerm extends AppModel
         $next = $this->getNextTermData();
         if ($start_date >= $current['start_date'] && $end_date <= $current['end_date']) {
             return __('Current Term');
-        }
-        elseif ($start_date >= $previous['start_date'] && $end_date <= $previous['end_date']) {
+        } elseif ($start_date >= $previous['start_date'] && $end_date <= $previous['end_date']) {
             return __('Previous Term');
-        }
-        elseif ($start_date >= $next['start_date'] && $end_date <= $next['end_date']) {
+        } elseif ($start_date >= $next['start_date'] && $end_date <= $next['end_date']) {
             return __('Next Term');
         }
 

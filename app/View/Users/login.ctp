@@ -61,7 +61,7 @@
                     <div class="col-sm-9 col-sm-offset-3">
                         <?=
                         $this->Form->submit(__("Login"),
-                                            ['class' => 'btn btn-primary' /*, 'disabled'=>'disabled'*/]) ?>
+                            ['class' => 'btn btn-primary' /*, 'disabled'=>'disabled'*/]) ?>
                     </div>
                 </div>
                 <div class="form-group">
@@ -69,7 +69,10 @@
                         <?php
                         $options = ['class' => 'link'];
                         if ($is_mb_app) {
-                            $options = ['class' => 'link', 'target' => '_blank', 'onclick' => "window.open(this.href,'_system');return false;"];
+                            $options = ['class'   => 'link',
+                                        'target'  => '_blank',
+                                        'onclick' => "window.open(this.href,'_system');return false;"
+                            ];
                         }
                         ?>
                         <?=

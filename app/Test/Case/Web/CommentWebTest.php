@@ -7,7 +7,6 @@ App::uses('GoalousWebTestCase', 'Test');
  *
  * @package GoalousWebTest
  * @version 2016/03/11
- *
  */
 class CommentWebTest extends GoalousWebTestCase
 {
@@ -47,7 +46,7 @@ class CommentWebTest extends GoalousWebTestCase
      */
     public function testComment()
     {
-        $this->waitUntil(function() {
+        $this->waitUntil(function () {
             $this->login($this->login_url, $this->email, $this->password);
             return true;
         }, 50000);
@@ -159,11 +158,11 @@ class CommentWebTest extends GoalousWebTestCase
 
         $this->execute([
             'script' => 'window.scrollTo(0, document.documentElement.scrollHeight)',
-            'args' => [],
+            'args'   => [],
         ]);
         sleep(1);
 
-        $this->waitUntil(function() {
+        $this->waitUntil(function () {
             if ($this->byCssSelector('input.btn.btn-primary.submit-btn.comment-submit-button')) {
                 return true;
             }
@@ -184,7 +183,7 @@ class CommentWebTest extends GoalousWebTestCase
         $this->execute(['script' => $script, 'args' => []]);
 
         // 画像ファイルをバイナリに変換
-        $path = __DIR__.'/Files/150x150.png';
+        $path = __DIR__ . '/Files/150x150.png';
         $image = base64_encode(file_get_contents($path));
         $image_name = 'testfile.png';
 
@@ -195,7 +194,7 @@ class CommentWebTest extends GoalousWebTestCase
             "blob.name = '" . $image_name . "';";
         $script .= 'var form = $(document).data(\'uploadFileForm\'); form[0].dropzone.addFile(blob);';
         $this->execute(['script' => $script, 'args' => []]);
-        $this->waitUntil(function() {
+        $this->waitUntil(function () {
             if ($this->byCssSelector('div.dz-complete')) {
                 return true;
             }
@@ -215,9 +214,9 @@ class CommentWebTest extends GoalousWebTestCase
 //            $file_name = $image_area[0]->element($this->using('css selector')->value('a span'));
 //            $this->assertEquals($image_name, $file_name->text());
 //        } else {
-            $thumbnail_area = $latest_comment->element($this->using('css selector')->value('div.feed_img_only_one'));
-            $thumbnail = $thumbnail_area->elements($this->using('css selector')->value('a img'));
-            $this->assertTrue(count($thumbnail) > 0);
+        $thumbnail_area = $latest_comment->element($this->using('css selector')->value('div.feed_img_only_one'));
+        $thumbnail = $thumbnail_area->elements($this->using('css selector')->value('a img'));
+        $this->assertTrue(count($thumbnail) > 0);
 //        }
 
         $this->assertEquals($comment, $post_comment->text());

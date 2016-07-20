@@ -55,7 +55,7 @@ class SendMail extends AppModel
             'template' => 'invite',
             'layout'   => 'default',
         ],
-        self::TYPE_TMPL_SETUP                  => [
+        self::TYPE_TMPL_SETUP                   => [
             'subject'  => null,
             'template' => 'setup',
             'layout'   => 'default',
