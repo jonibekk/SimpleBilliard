@@ -869,9 +869,6 @@ class GlRedis extends AppModel
         return false;
     }
 
-
-
-
     /**
      * @param      $user_id
      * @param null $ip_address

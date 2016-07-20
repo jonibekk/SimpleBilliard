@@ -37,9 +37,10 @@ class User extends AppModel
     const TYPE_GENDER_MALE = '1';
     const TYPE_GENDER_FEMALE = '2';
     const TYPE_GENDER_NEITHER = '3';
-    static public $TYPE_GENDER = [self::TYPE_GENDER_MALE    => "",
-                                  self::TYPE_GENDER_FEMALE  => "",
-                                  self::TYPE_GENDER_NEITHER => ""
+    static public $TYPE_GENDER = [
+        self::TYPE_GENDER_MALE    => "",
+        self::TYPE_GENDER_FEMALE  => "",
+        self::TYPE_GENDER_NEITHER => ""
     ];
 
     /**
@@ -633,7 +634,7 @@ class User extends AppModel
         }
         return true;
     }
-    
+
     public function userRegistrationNewForm($data)
     {
         $data['User']['password'] = $this->generateHash($data['User']['password']);
@@ -649,7 +650,7 @@ class User extends AppModel
             //updating Email
             $data['Email']['id'] = $email['Email']['id'];
             $this->Email->create();
-            if(!$this->Email->save($data['Email'])){
+            if (!$this->Email->save($data['Email'])) {
                 throw New RuntimeException(__('Saving Email failed'));
             }
 
@@ -658,7 +659,7 @@ class User extends AppModel
             $data['User']['id'] = $user_id;
             $data['User']['primary_email_id'] = $email['Email']['id'];
             $this->create();
-            if(!$this->save($data['User'])){
+            if (!$this->save($data['User'])) {
                 throw New RuntimeException(__('Saving User failed'));
             }
 
@@ -667,21 +668,21 @@ class User extends AppModel
                 //Updating Local Name
                 $data['LocalName']['id'] = $local_name['LocalName']['id'];
                 $this->LocalName->create();
-                if(!$this->save($this->LocalName->save($data['LocalName']))){
+                if (!$this->save($this->LocalName->save($data['LocalName']))) {
                     throw New RuntimeException(__('Saving LocalName failed'));
                 }
             }
         } else {
             //Saving User
             $this->create();
-            if(!$this->save($data['User'])){
+            if (!$this->save($data['User'])) {
                 throw New RuntimeException(__('Saving User failed'));
             }
             $user_id = $this->getLastInsertID();
             //Saving Email
             $data['Email']['user_id'] = $user_id;
             $this->Email->create();
-            if(!$this->Email->save($data['Email'])){
+            if (!$this->Email->save($data['Email'])) {
                 throw New RuntimeException(__('Saving Email failed'));
             }
 
@@ -693,7 +694,7 @@ class User extends AppModel
             if (isset($data['LocalName'])) {
                 $data['LocalName']['user_id'] = $user_id;
                 $this->LocalName->create();
-                if(!$this->save($this->LocalName->save($data['LocalName']))){
+                if (!$this->save($this->LocalName->save($data['LocalName']))) {
                     throw New RuntimeException(__('Saving LocalName failed'));
                 }
             }
