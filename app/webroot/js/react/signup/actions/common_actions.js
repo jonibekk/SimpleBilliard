@@ -8,9 +8,19 @@ export function getBaseUrl() {
   }
 }
 
+export function getCsrfTokenKey() {
+  if (typeof cake === "undefined") {
+    return 'csrf_token_key'
+  } else {
+    return cake.data.csrf_token.key
+  }
+}
+
 export function post(uri, data, success_callback, error_callback) {
+
+  const csrf_token_key = getCsrfTokenKey()
   const post_data = Object.assign({
-    'data[_Token][key]': 'csrf_token_key' //cake.data.csrf_token.key,
+    'data[_Token][key]': csrf_token_key
   }, data)
   const base_url = getBaseUrl()
 
@@ -36,8 +46,8 @@ export function mapValidationMsg(before_mapped_messages) {
     'data[User][first_name]': 'first_name',
     'data[User][last_name]': 'last_name',
     'data[User][local_date]': 'local_date',
-    'data[Local][first_name]': 'local_first_name',
-    'data[Local][last_name]': 'local_last_name'
+    'data[LocalName][first_name]': 'local_first_name',
+    'data[LocalName][last_name]': 'local_last_name'
   }
 
   Object.keys(map).forEach(key => {

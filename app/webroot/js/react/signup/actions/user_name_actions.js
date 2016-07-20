@@ -29,9 +29,9 @@ export function postUserName(user) {
     const data = {
       'data[User][first_name]': user.first_name,
       'data[User][last_name]': user.last_name,
-      'data[Local][first_name]': user.local_first_name,
-      'data[Local][last_name]': user.local_last_name,
-      'data[User][local_date]': getLocalDate()
+      'data[LocalName][first_name]': user.local_first_name,
+      'data[LocalName][last_name]': user.local_last_name
+      // 'data[User][local_date]': getLocalDate()
     }
 
     return post('/signup/ajax_validation_fields', data, response => {
