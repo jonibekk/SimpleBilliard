@@ -13,13 +13,13 @@
             <div class="col col-xxs-12 font_12px">
                 <?= $this->Form
                     ->postLink("<i class='fa fa-download'></i> " . __('Export Data'),
-                               [
-                                   'action' => 'download_all_goal_csv',
-                               ],
-                               [
-                                   'class'  => 'pull-right font_verydark',
-                                   'escape' => false,
-                               ]
+                        [
+                            'action' => 'download_all_goal_csv',
+                        ],
+                        [
+                            'class'  => 'pull-right font_verydark',
+                            'escape' => false,
+                        ]
                     );
                 ?>
             </div>
@@ -54,7 +54,7 @@
                     <ul class="dropdown-menu" role="menu">
                         <?php foreach ($search_options['category'] as $key => $val): ?>
                             <li><a href="<?= $this->Html->url(array_merge($search_url,
-                                                                          ['category' => $key])) ?>"><?= h($val) ?></a>
+                                    ['category' => $key])) ?>"><?= h($val) ?></a>
                             </li>
                         <?php endforeach; ?>
                     </ul>
@@ -69,7 +69,7 @@
                     <ul class="dropdown-menu" role="menu">
                         <?php foreach ($search_options['progress'] as $key => $val): ?>
                             <li><a href="<?= $this->Html->url(array_merge($search_url,
-                                                                          ['progress' => $key])) ?>"><?= h($val) ?></a>
+                                    ['progress' => $key])) ?>"><?= h($val) ?></a>
                             </li>
                         <?php endforeach; ?>
                     </ul>
@@ -84,7 +84,7 @@
                     <ul class="dropdown-menu pull-right" role="menu">
                         <?php foreach ($search_options['order'] as $key => $val): ?>
                             <li><a href="<?= $this->Html->url(array_merge($search_url,
-                                                                          ['order' => $key])) ?>"><?= $val ?></a></li>
+                                    ['order' => $key])) ?>"><?= $val ?></a></li>
                         <?php endforeach; ?>
                     </ul>
                 </div>

@@ -57,7 +57,7 @@
             </div>
             <div class="modal-footer modal_pannel-footer">
                 <?= $this->Form->submit(__("Send confirmation email"),
-                                        ['class' => 'btn btn-primary pull-right', 'disabled' => 'disabled']) ?>
+                    ['class' => 'btn btn-primary pull-right', 'disabled' => 'disabled']) ?>
                 <div class="pull-right">
                     <button type="button" class="btn btn-link design-cancel mr_8px bd-radius_4px" data-dismiss="modal">
                         <?= __("Cancel") ?>
@@ -83,7 +83,7 @@
                     validators: {
                         stringLength: {
                             min: 8,
-                            message: "<?=__('At least %2$d characters is required.',"",8)?>"
+                            message: "<?=__('At least %2$d characters is required.', "", 8)?>"
                         },
                         notEmpty: {
                             message: "<?=__("変更する場合はパスワード入力が必要です。")?>"

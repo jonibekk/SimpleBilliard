@@ -102,31 +102,25 @@ class TimeExHelper extends AppHelper
         // "Just now" | 「たった今」 $date > REQUEST_TIMESTAMP - 60sec
         if ($unixtime > strtotime("-1 minute")) {
             $elapsed = __("Just now");
-        }
-        // "1 min" | 「１分前」 $date > REQUEST_TIMESTAMP - 120sec
+        } // "1 min" | 「１分前」 $date > REQUEST_TIMESTAMP - 120sec
         elseif ($unixtime > strtotime("-2 minutes")) {
             $elapsed = __("1 min");
-        }
-        // "from 2 mins to 59 mins" | 「2分前」〜「59分前」 $date > REQUEST_TIMESTAMP - 1h
+        } // "from 2 mins to 59 mins" | 「2分前」〜「59分前」 $date > REQUEST_TIMESTAMP - 1h
         elseif ($unixtime > strtotime("-1 hour")) {
             $elapsed = $this->elapsedMinutes($unixtime);
-        }
-        //「1時間前」〜「23時間前」 $date > REQUEST_TIMESTAMP - 1d
+        } //「1時間前」〜「23時間前」 $date > REQUEST_TIMESTAMP - 1d
         elseif ($unixtime > strtotime("-1 day")) {
             $elapsed = $this->elapsedHours($unixtime);
-        }
-        //「７月１３日 [15:10]」$date > REQUEST_TIMESTAMP - 1y
+        } //「７月１３日 [15:10]」$date > REQUEST_TIMESTAMP - 1y
         elseif ($unixtime > strtotime("-1 year")) {
             //「７月１３日」
             if ($type == 'rough') {
                 $elapsed = $this->dateLocalFormat($unixtime);
-            }
-            //「７月１３日 15:10」
+            } //「７月１３日 15:10」
             else {
                 $elapsed = $this->datetimeLocalFormat($unixtime);
             }
-        }
-        //「2013年７月１３日」 else
+        } //「2013年７月１３日」 else
         else {
             $elapsed = $this->yearDayLocalFormat($unixtime);
         }

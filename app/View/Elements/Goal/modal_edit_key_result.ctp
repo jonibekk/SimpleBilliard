@@ -68,20 +68,21 @@
                 <div class="row">
                     <?=
                     $this->Form->input('KeyResult.name',
-                                       ['before'                       => '<div class="set-goal">' .
-                                           '<h5 class="modal-key-result-headings">' . __(
-                                                                                          "KR name") . '<span class="modal-key-result-headings-description">' . __(
-                                                                                                                                                                "What is set as an indicator of achievement?") . '</span></label></div>',
-                                        'label'                        => false,
-                                        'placeholder'                  => __("Write in details"),
-                                        "data-bv-notempty-message"     => __("Input is required."),
-                                        'data-bv-stringlength'         => 'true',
-                                        'data-bv-stringlength-max'     => 200,
-                                        'data-bv-stringlength-message' => __("It's over limit characters (%s).", 200),
-                                        'rows'                         => 1,
-                                        'afterInput'                   => '<span class="help-block font_12px">' . __(
-                                                                                                                      "eg) Increasing the internal market share of A") . '</span>'
-                                       ]) ?>
+                        [
+                            'before'                       => '<div class="set-goal">' .
+                                '<h5 class="modal-key-result-headings">' . __(
+                                    "KR name") . '<span class="modal-key-result-headings-description">' . __(
+                                    "What is set as an indicator of achievement?") . '</span></label></div>',
+                            'label'                        => false,
+                            'placeholder'                  => __("Write in details"),
+                            "data-bv-notempty-message"     => __("Input is required."),
+                            'data-bv-stringlength'         => 'true',
+                            'data-bv-stringlength-max'     => 200,
+                            'data-bv-stringlength-message' => __("It's over limit characters (%s).", 200),
+                            'rows'                         => 1,
+                            'afterInput'                   => '<span class="help-block font_12px">' . __(
+                                    "eg) Increasing the internal market share of A") . '</span>'
+                        ]) ?>
                 </div>
                 <div class="row">
                     <div class="ddd">
@@ -92,52 +93,55 @@
                         <div class="eee">
                             <?=
                             $this->Form->input('KeyResult.value_unit',
-                                               ['label'               => __("Unit"),
-                                                'wrapInput'           => 'modal-edit-kr-change-unit',
-                                                'type'                => 'select',
-                                                'class'               => 'change-select-target-hidden form-control addteam_input-design',
-                                                'target-id'           => 'KeyResult0ValueInputWrap_' . $kr_id,
-                                                'required'            => true,
-                                                'hidden-option-value' => KeyResult::UNIT_BINARY,
-                                                'options'             => $kr_value_unit_list
-                                               ]) ?>
+                                [
+                                    'label'               => __("Unit"),
+                                    'wrapInput'           => 'modal-edit-kr-change-unit',
+                                    'type'                => 'select',
+                                    'class'               => 'change-select-target-hidden form-control addteam_input-design',
+                                    'target-id'           => 'KeyResult0ValueInputWrap_' . $kr_id,
+                                    'required'            => true,
+                                    'hidden-option-value' => KeyResult::UNIT_BINARY,
+                                    'options'             => $kr_value_unit_list
+                                ]) ?>
                         </div>
                         <div id="KeyResult0ValueInputWrap_<?= $kr_id ?>"
                              style="<?= $this->request->data['KeyResult']['value_unit'] == KeyResult::UNIT_BINARY ? "display:none;" : null ?>">
                             <div class="ggg">
                                 <?=
                                 $this->Form->input('KeyResult.target_value',
-                                                   ['label'                        => __("Achieve point"),
-                                                    'wrapInput'                    => 'hhh',
-                                                    'type'                         => 'number',
-                                                    'step'                         => '0.1',
-                                                    'default'                      => 100,
-                                                    'required'                     => true,
-                                                    'data-bv-stringlength'         => 'true',
-                                                    'data-bv-stringlength-max'     => 15,
-                                                    'data-bv-stringlength-message' => __(
-                                                                                          "It's over limit characters (%s).", 15),
-                                                    "data-bv-notempty-message"     => __("Input is required."),
-                                                    'data-bv-numeric-message'      => __("Please enter a number."),
-                                                   ]) ?>
+                                    [
+                                        'label'                        => __("Achieve point"),
+                                        'wrapInput'                    => 'hhh',
+                                        'type'                         => 'number',
+                                        'step'                         => '0.1',
+                                        'default'                      => 100,
+                                        'required'                     => true,
+                                        'data-bv-stringlength'         => 'true',
+                                        'data-bv-stringlength-max'     => 15,
+                                        'data-bv-stringlength-message' => __(
+                                            "It's over limit characters (%s).", 15),
+                                        "data-bv-notempty-message"     => __("Input is required."),
+                                        'data-bv-numeric-message'      => __("Please enter a number."),
+                                    ]) ?>
                             </div>
                             <div class="iii">
                                 <?=
                                 $this->Form->input('KeyResult.start_value',
-                                                   ['label'                        => __("Initial point"),
-                                                    'wrapInput'                    => 'jjj',
-                                                    'type'                         => 'number',
-                                                    'step'                         => '0.1',
-                                                    'default'                      => 0,
-                                                    'required'                     => true,
-                                                    'maxlength'                    => 14,
-                                                    'data-bv-stringlength'         => 'true',
-                                                    'data-bv-stringlength-max'     => 15,
-                                                    'data-bv-stringlength-message' => __(
-                                                                                          "It's over limit characters (%s).", 15),
-                                                    "data-bv-notempty-message"     => __("Input is required."),
-                                                    'data-bv-numeric-message'      => __("Please enter a number."),
-                                                   ]) ?>
+                                    [
+                                        'label'                        => __("Initial point"),
+                                        'wrapInput'                    => 'jjj',
+                                        'type'                         => 'number',
+                                        'step'                         => '0.1',
+                                        'default'                      => 0,
+                                        'required'                     => true,
+                                        'maxlength'                    => 14,
+                                        'data-bv-stringlength'         => 'true',
+                                        'data-bv-stringlength-max'     => 15,
+                                        'data-bv-stringlength-message' => __(
+                                            "It's over limit characters (%s).", 15),
+                                        "data-bv-notempty-message"     => __("Input is required."),
+                                        'data-bv-numeric-message'      => __("Please enter a number."),
+                                    ]) ?>
                             </div>
                         </div>
                     </div>
@@ -161,21 +165,21 @@
                                  data-date-start-date="<?= $limit_start_date ?>">
                                 <?=
                                 $this->Form->input('KeyResult.end_date',
-                                                   [
-                                                       'value'                        => $kr_end_date_format,
-                                                       'default'                      => $kr_end_date_format,
-                                                       'label'                        => false,
-                                                       'div'                          => false,
-                                                       'class'                        => "form-control",
-                                                       'required'                     => true,
-                                                       "data-bv-notempty-message"     => __("Input is required."),
-                                                       'data-bv-stringlength'         => 'true',
-                                                       'data-bv-stringlength-max'     => 10,
-                                                       'data-bv-stringlength-message' => __(
-                                                                                             "It's over limit characters (%s).", 10),
-                                                       'type'                         => 'text',
-                                                       'wrapInput'                    => null,
-                                                   ]) ?>
+                                    [
+                                        'value'                        => $kr_end_date_format,
+                                        'default'                      => $kr_end_date_format,
+                                        'label'                        => false,
+                                        'div'                          => false,
+                                        'class'                        => "form-control",
+                                        'required'                     => true,
+                                        "data-bv-notempty-message"     => __("Input is required."),
+                                        'data-bv-stringlength'         => 'true',
+                                        'data-bv-stringlength-max'     => 10,
+                                        'data-bv-stringlength-message' => __(
+                                            "It's over limit characters (%s).", 10),
+                                        'type'                         => 'text',
+                                        'wrapInput'                    => null,
+                                    ]) ?>
                                 <span class="input-group-addon bd-r-radius_4px"><i class="fa fa-th"></i></span>
                             </div>
                         </div>
@@ -200,20 +204,20 @@
                                  id="KeyResult0StartDateInputWrap_<?= $kr_id ?>">
                                 <?=
                                 $this->Form->input('KeyResult.start_date',
-                                                   [
-                                                       'value'                        => $kr_start_date_format,
-                                                       'label'                        => false,
-                                                       'div'                          => false,
-                                                       'class'                        => "form-control",
-                                                       'required'                     => true,
-                                                       "data-bv-notempty-message"     => __("Input is required."),
-                                                       'data-bv-stringlength'         => 'true',
-                                                       'data-bv-stringlength-max'     => 10,
-                                                       'data-bv-stringlength-message' => __(
-                                                                                             "It's over limit characters (%s).", 10),
-                                                       'type'                         => 'text',
-                                                       'wrapInput'                    => null
-                                                   ]) ?>
+                                    [
+                                        'value'                        => $kr_start_date_format,
+                                        'label'                        => false,
+                                        'div'                          => false,
+                                        'class'                        => "form-control",
+                                        'required'                     => true,
+                                        "data-bv-notempty-message"     => __("Input is required."),
+                                        'data-bv-stringlength'         => 'true',
+                                        'data-bv-stringlength-max'     => 10,
+                                        'data-bv-stringlength-message' => __(
+                                            "It's over limit characters (%s).", 10),
+                                        'type'                         => 'text',
+                                        'wrapInput'                    => null
+                                    ]) ?>
                                 <span class="input-group-addon bd-r-radius_4px"><i class="fa fa-th"></i></span>
                             </div>
                         </div>
@@ -224,8 +228,8 @@
                 <?=
                 $this->Form->input('priority', [
                     'before'                   => '<h5 class="modal-key-result-headings">' . __(
-                                                                                                 "Weight") . '<span class="modal-key-result-headings-description">' . __(
-                                                                                                                                                                       "Weight of Key Result for the Goal") . '</span></h5>',
+                            "Weight") . '<span class="modal-key-result-headings-description">' . __(
+                            "Weight of Key Result for the Goal") . '</span></h5>',
                     'label'                    => false,
                     'type'                     => 'select',
                     'default'                  => 1,
@@ -240,7 +244,7 @@
         <div class="modal-footer">
             <?=
             $this->Form->submit(__("Update Key Result"),
-                                ['class' => 'btn btn-primary', 'div' => false]) ?>
+                ['class' => 'btn btn-primary', 'div' => false]) ?>
 
             <button type="button" class="btn btn-default" data-dismiss="modal"><?= __("Close") ?></button>
         </div>

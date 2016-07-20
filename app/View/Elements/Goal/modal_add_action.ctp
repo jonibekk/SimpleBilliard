@@ -50,7 +50,7 @@
                         <h5 class="modal-key-result-headings"><?= __('Images') ?>&nbsp;<i
                                 class="fa font_brownRed font_14px">*</i>
                             <span class="modal-key-result-headings-description"><?= __(
-                                                                                        'Add an image to show the result of your action.') ?></span>
+                                    'Add an image to show the result of your action.') ?></span>
                         </h5>
                     </div>
                     <div class="goal-set-input required">
@@ -59,7 +59,11 @@
                                 <?php for ($i = 1; $i <= 5; $i++): ?>
                                     <li id="WrapPhotoForm_Action_<?= $i ?>">
                                         <?= $this->element('Feed/photo_upload',
-                                                           ['type' => 'action_result', 'index' => $i, 'submit_id' => 'AddActionSubmitModal', 'id_prefix' => 'Modal']) ?>
+                                            ['type'      => 'action_result',
+                                             'index'     => $i,
+                                             'submit_id' => 'AddActionSubmitModal',
+                                             'id_prefix' => 'Modal'
+                                            ]) ?>
                                     </li>
                                 <?php endfor ?>
                             </ul>
@@ -71,21 +75,23 @@
             <div class="row">
                 <?=
                 $this->Form->input('name',
-                                   ['before'                   => '<div class="set-goal">' .
-                                       '<h5 class="modal-key-result-headings">' .
-                                       __("Description") .
-                                       '&nbsp;<i class="fa font_brownRed font_14px">*</i><span class="modal-key-result-headings-description">' .
-                                       __("Write what you did.") . '</span></h5></div>',
-                                    'label'                    => false,
-                                    'placeholder'              => __("eg. I completed making the web site."),
-                                    "data-bv-notempty-message" => __("Input is required."),
-                                    'rows'                     => 1,
-                                   ]) ?>
+                    [
+                        'before'                   => '<div class="set-goal">' .
+                            '<h5 class="modal-key-result-headings">' .
+                            __("Description") .
+                            '&nbsp;<i class="fa font_brownRed font_14px">*</i><span class="modal-key-result-headings-description">' .
+                            __("Write what you did.") . '</span></h5></div>',
+                        'label'                    => false,
+                        'placeholder'              => __("eg. I completed making the web site."),
+                        "data-bv-notempty-message" => __("Input is required."),
+                        'rows'                     => 1,
+                    ]) ?>
             </div>
             <div class="row">
                 <div class="form-group">
                     <h5 class="modal-key-result-headings"><?= __('Key Results') ?>
-                        <span class="modal-key-result-headings-description"><?= __('Choose a key result to associate.') ?></span>
+                        <span
+                            class="modal-key-result-headings-description"><?= __('Choose a key result to associate.') ?></span>
                     </h5>
 
                     <div class="goal-set-input">
@@ -119,7 +125,7 @@
                         <div class="bbb" id="">
                             <?=
                             $this->Form->hidden('ActionResult.share',
-                                                ['id' => 'select2ActionCircleMember', 'value' => "", 'style' => "width: 100%",]) ?>
+                                ['id' => 'select2ActionCircleMember', 'value' => "", 'style' => "width: 100%",]) ?>
                             <?php $this->Form->unlockField('ActionResult.share') ?>
                         </div>
                     </div>
@@ -129,7 +135,11 @@
         <div class="modal-footer">
             <?=
             $this->Form->submit(__("Post an action"),
-                                ['id' => 'AddActionSubmitModal', 'class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
+                ['id'       => 'AddActionSubmitModal',
+                 'class'    => 'btn btn-primary',
+                 'div'      => false,
+                 'disabled' => 'disabled'
+                ]) ?>
 
             <button type="button" class="btn btn-default" data-dismiss="modal"><?= __("Close") ?></button>
         </div>

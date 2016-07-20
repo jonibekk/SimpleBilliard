@@ -46,7 +46,11 @@ $this->Form->create('Post', [
             <li>
                 <?=
                 $this->element('Feed/photo_upload',
-                               ['type' => 'post', 'index' => $i, 'data' => $post, 'submit_id' => "PostEditSubmit_{$post['Post']['id']}"]) ?>
+                    ['type'      => 'post',
+                     'index'     => $i,
+                     'data'      => $post,
+                     'submit_id' => "PostEditSubmit_{$post['Post']['id']}"
+                    ]) ?>
             </li>
         <?php endfor ?>
     </ul>
@@ -63,7 +67,10 @@ $this->Form->create('Post', [
 
     <?=
     $this->Form->submit(__("Save changes"),
-                        ['class' => 'btn btn-primary pull-right submit-post-edit', 'id' => "PostEditSubmit_{$post['Post']['id']}", 'disabled' => 'disabled']) ?>
+        ['class'    => 'btn btn-primary pull-right submit-post-edit',
+         'id'       => "PostEditSubmit_{$post['Post']['id']}",
+         'disabled' => 'disabled'
+        ]) ?>
     <div class="clearfix"></div>
 </div>
 <?= $this->Form->end() ?>

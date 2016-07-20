@@ -19,7 +19,7 @@
 ?>
 <!-- START app/View/Elements/Feed/contents.ctp -->
 <?= $this->element('Feed/feed_share_range_filter',
-                   compact('current_circle', 'user_status', 'circle_member_count', 'circle_status', 'feed_filter')) ?>
+    compact('current_circle', 'user_status', 'circle_member_count', 'circle_status', 'feed_filter')) ?>
 <?php
 // 投稿単体ページでは入力フォームを表示しない
 if (!isset($this->request->params['post_id'])) {
@@ -27,8 +27,7 @@ if (!isset($this->request->params['post_id'])) {
         if (viaIsSet($params['controller']) == 'posts' && (viaIsSet($params['action']) == 'feed' || viaIsSet($params['action']) == 'ajax_circle_feed') && ($user_status == 'joined' || $user_status == 'admin')) {
             echo $this->element("Feed/common_form");
         }
-    }
-    else {
+    } else {
         echo $this->element("Feed/common_form");
     }
 }
@@ -104,7 +103,7 @@ if ((count($posts) == POST_FEED_PAGE_ITEMS_NUMBER || (isset($item_created) && $i
                id="FeedMoreReadLink"
                oldest-post-time="<?= $oldest_post_time ?>"
                post-time-before="<?= $post_time_before ?>"
-                >
+            >
                 <?= $more_read_text ?> </a>
         </div>
     </div>

@@ -22,8 +22,7 @@ if (!isset($without_footer)) {
 <?= $this->element('google_tag_manager', ['page_type' => 'app']) ?>
 <?php if ($this->Session->read('Auth.User.id')) {
     echo $this->element('header_logged_in');
-}
-else {
+} else {
     // これも読み込まれる可能性はあるのか。
     echo $this->element('header_not_logged_in');
 }
@@ -31,7 +30,7 @@ else {
 <div id="container" class="container">
     <?= $this->Session->flash(); ?>
     <?= $this->fetch('content'); ?>
-    <?php if($this->App->needDisplayFooter()): ?>
+    <?php if ($this->App->needDisplayFooter()): ?>
         <?= $this->element('footer') ?>
     <?php endif; ?>
 </div>
@@ -43,8 +42,8 @@ else {
 <?= $this->element('gl_common_js') ?>
 
 <!-- START import react code for setup -->
-<?php if(viaIsSet($this->request->params['controller']) === 'setup'): ?>
-<?= $this->Html->script('react_app.min')?>
+<?php if (viaIsSet($this->request->params['controller']) === 'setup'): ?>
+    <?= $this->Html->script('react_app.min') ?>
 <?php endif; ?>
 <!-- END import react code for setup -->
 

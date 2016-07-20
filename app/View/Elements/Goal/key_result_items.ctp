@@ -43,14 +43,23 @@ if ($is_init) {
             <p class="<?= $kr['completed'] ? "dashboard-goals-card-body-krs-title-achieved" : "dashboard-goals-card-body-krs-title-unachieved" ?>"><?= h($kr['name']) ?></p>
         </a>
         <?= $this->element('Goal/key_result_edit_menu_dropdown',
-                           ['kr' => $kr, 'without_dropdown_link' => true, 'incomplete_kr_count' => $incomplete_kr_count]) ?>
+            ['kr' => $kr, 'without_dropdown_link' => true, 'incomplete_kr_count' => $incomplete_kr_count]) ?>
         <?php if (!$kr['completed'] && $kr_can_edit && $can_add_action): ?>
-            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add_action', 'key_result_id' => $kr['id'], 'goal_id' => $kr['goal_id']]) ?>"
+            <a href="<?= $this->Html->url(['controller'    => 'goals',
+                                           'action'        => 'add_action',
+                                           'key_result_id' => $kr['id'],
+                                           'goal_id'       => $kr['goal_id']
+            ]) ?>"
                class="kr_achieve_button fa-check fa dashboard-goals-card-body-krs-action"></a>
         <?php endif; ?>
 
         <div class="dashboard-goals-card-body-krs-aside">
-            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_actions', 'goal_id' => $goal_id, 'key_result_id' => $kr['id'], 'page_type' => 'list']) ?>"
+            <a href="<?= $this->Html->url(['controller'    => 'goals',
+                                           'action'        => 'view_actions',
+                                           'goal_id'       => $goal_id,
+                                           'key_result_id' => $kr['id'],
+                                           'page_type'     => 'list'
+            ]) ?>"
                class="dashboard-goals-card-body-add-krs-past-action">
                 <i class="fa-check fa dashboard-goals-card-body-krs-past-action-icon"></i>
                 <span

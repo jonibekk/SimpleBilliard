@@ -24,7 +24,7 @@ $member_count = isset($member_count) ? $member_count : '';
 <div class="col col-xxs-12 mpTB0 circle-item-row">
     <?=
     $this->Upload->uploadImage($circle, 'Circle.photo', ['style' => 'small'],
-                               ['class' => 'comment-img'])
+        ['class' => 'comment-img'])
     ?>
     <div class="comment-body modal-comment">
         <?php if ($form): ?>
@@ -35,13 +35,15 @@ $member_count = isset($member_count) ? $member_count : '';
                     <?php // チーム全体サークルは変更不可 ?>
                 <?php else: ?>
                     <?= $this->Form->input("$key.join",
-                                           ['label'       => false,
-                                            'div'         => false,
-                                            'type'        => 'checkbox',
-                                            'class'       => 'bt-switch',
-                                            'default'     => $joined ? true : false,
-                                            'data-id'     => $circle['Circle']['id'],
-                                            'data-secret' => $circle['Circle']['public_flg'] ? "0" : "1"]) ?>
+                        [
+                            'label'       => false,
+                            'div'         => false,
+                            'type'        => 'checkbox',
+                            'class'       => 'bt-switch',
+                            'default'     => $joined ? true : false,
+                            'data-id'     => $circle['Circle']['id'],
+                            'data-secret' => $circle['Circle']['public_flg'] ? "0" : "1"
+                        ]) ?>
                 <?php endif; ?>
             </div>
         <?php endif; ?>
@@ -52,13 +54,21 @@ $member_count = isset($member_count) ? $member_count : '';
             <?php if (!$circle['Circle']['public_flg']): ?>
                 <i class="fa fa-lock circle-item-secret-mark"></i>
             <?php endif ?>
-            <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'circle_id' => $circle['Circle']['id']]) ?>"
+            <a href="<?= $this->Html->url([
+                'controller' => 'posts',
+                'action'     => 'feed',
+                'circle_id'  => $circle['Circle']['id']
+            ]) ?>"
                class="link-dark-gray circle-item-circle-link">
                 <p class="circle-item-circle-name"><?= h($circle['Circle']['name']) ?></p>
             </a>
         </div>
         <div class="font_12px font_lightgray modalFeedTextPaddingSmall">
-            <a href="<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_get_circle_members', 'circle_id' => $circle['Circle']['id']]) ?>"
+            <a href="<?= $this->Html->url([
+                'controller' => 'circles',
+                'action'     => 'ajax_get_circle_members',
+                'circle_id'  => $circle['Circle']['id']
+            ]) ?>"
                class="modal-ajax-get remove-on-hide">
                 <?= __("%s members", $member_count) ?>
             </a>
