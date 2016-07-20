@@ -3,7 +3,7 @@ import { inputCode } from '../actions/auth_actions'
 import AuthComponent from '../components/auth'
 
 function mapStateToProps(state) {
-  return state
+  return { auth: state.auth }
 }
 
 function mapDispatchToProps(dispatch) {
