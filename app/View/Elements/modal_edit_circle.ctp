@@ -30,7 +30,11 @@
                 <?=
                 // サークル基本情報変更フォーム
                 $this->Form->create('Circle', [
-                    'url'           => ['controller' => 'circles', 'action' => 'edit', 'circle_id' => $this->request->data['Circle']['id']],
+                    'url'           => [
+                        'controller' => 'circles',
+                        'action'     => 'edit',
+                        'circle_id'  => $this->request->data['Circle']['id']
+                    ],
                     'inputDefaults' => [
                         'div'       => 'form-group',
                         'label'     => [
@@ -47,21 +51,22 @@
                 <?= $this->Form->hidden('id') ?>
                 <?=
                 $this->Form->input('name',
-                                   ['label'                        => __("Circle name"),
-                                    'placeholder'                  => __("eg) the sales division"),
-                                    "data-bv-notempty-message"     => __("Input is required."),
-                                    'data-bv-stringlength'         => 'true',
-                                    'data-bv-stringlength-max'     => 128,
-                                    'data-bv-stringlength-message' => __("It's over limit characters (%s).", 128),
-                                    'required'                     => true,
-                                   ]) ?>
+                    [
+                        'label'                        => __("Circle name"),
+                        'placeholder'                  => __("eg) the sales division"),
+                        "data-bv-notempty-message"     => __("Input is required."),
+                        'data-bv-stringlength'         => 'true',
+                        'data-bv-stringlength-max'     => 128,
+                        'data-bv-stringlength-message' => __("It's over limit characters (%s).", 128),
+                        'required'                     => true,
+                    ]) ?>
                 <?php if (!$this->request->data['Circle']['team_all_flg']): ?>
 
                     <?php $privacy_option = Circle::$TYPE_PUBLIC;
                     $privacy_option[Circle::TYPE_PUBLIC_ON] .= '<span class="help-block font_11px">' . __(
-                                                                                                           "Anyone can see the circle, its members and their posts.") . '</span>';
+                            "Anyone can see the circle, its members and their posts.") . '</span>';
                     $privacy_option[Circle::TYPE_PUBLIC_OFF] .= '<span class="help-block font_11px">' . __(
-                                                                                                            "Only members can find the circle and see posts.") . '</span>';
+                            "Only members can find the circle and see posts.") . '</span>';
                     ?>
                     <div class="form-group">
                         <label class="control-label modal-label"><?= __('Privacy') ?></label>
@@ -78,14 +83,15 @@
                     <label class="control-label modal-label"><?= __('Circle Description') ?></label>
                     <?=
                     $this->Form->input('description',
-                                       ['label'                        => false,
-                                        'placeholder'                  => __("eg) Let's share the latest information."),
-                                        'rows'                         => 1,
-                                        'data-bv-notempty-message'     => __("Input is required."),
-                                        'data-bv-stringlength'         => 'true',
-                                        'data-bv-stringlength-max'     => 2000,
-                                        'data-bv-stringlength-message' => __("It's over limit characters (%s).", 2000),
-                                       ]) ?>
+                        [
+                            'label'                        => false,
+                            'placeholder'                  => __("eg) Let's share the latest information."),
+                            'rows'                         => 1,
+                            'data-bv-notempty-message'     => __("Input is required."),
+                            'data-bv-stringlength'         => 'true',
+                            'data-bv-stringlength-max'     => 2000,
+                            'data-bv-stringlength-message' => __("It's over limit characters (%s).", 2000),
+                        ]) ?>
                 </div>
 
                 <div class="form-group">
@@ -98,26 +104,27 @@
                             >
                                 <?=
                                 $this->Upload->uploadImage($this->request->data, 'Circle.photo',
-                                                           ['style' => 'medium_large']) ?>
+                                    ['style' => 'medium_large']) ?>
                             </div>
                             <div>
                         <span class="btn btn-default btn-file">
                             <span class="fileinput-new">
-                                <?=__("Select an image") ?>
+                                <?= __("Select an image") ?>
                             </span>
                             <span class="fileinput-exists">
                                 <?= __("Reselect an image") ?>
                             </span>
                             <?=
                             $this->Form->input('photo',
-                                               ['type'         => 'file',
-                                                'label'        => false,
-                                                'div'          => false,
-                                                'css'          => false,
-                                                'wrapInput'    => false,
-                                                'errorMessage' => false,
-                                                'required'     => false
-                                               ]) ?>
+                                [
+                                    'type'         => 'file',
+                                    'label'        => false,
+                                    'div'          => false,
+                                    'css'          => false,
+                                    'wrapInput'    => false,
+                                    'errorMessage' => false,
+                                    'required'     => false
+                                ]) ?>
                         </span>
                                 <span class="help-block font_11px inline-block"><?= __('Smaller than 10MB') ?></span>
                             </div>
@@ -126,9 +133,10 @@
                         <div class="has-error">
                             <?=
                             $this->Form->error('photo', null,
-                                               ['class' => 'help-block text-danger',
-                                                'wrap'  => 'span'
-                                               ]) ?>
+                                [
+                                    'class' => 'help-block text-danger',
+                                    'wrap'  => 'span'
+                                ]) ?>
                         </div>
                     </div>
                 </div>
@@ -150,9 +158,11 @@
                                             <?=
                                             // 非管理者 -> 管理者 設定フォーム
                                             $this->Form->create('CircleMember', [
-                                                'url'          => ['controller' => 'circles',
-                                                                   'action'     => 'ajax_edit_admin_status',
-                                                                   'circle_id'  => $this->request->data['Circle']['id']],
+                                                'url'          => [
+                                                    'controller' => 'circles',
+                                                    'action'     => 'ajax_edit_admin_status',
+                                                    'circle_id'  => $this->request->data['Circle']['id']
+                                                ],
                                                 'class'        => 'ajax-edit-circle-admin-status',
                                                 'id'           => 'EditAdminStatusForm1_' . $user['User']['id'],
                                                 'type'         => 'post',
@@ -162,16 +172,20 @@
                                             <?= $this->Form->hidden('admin_flg', ['value' => 1]) ?>
                                             <?= $this->Form->end() ?>
                                             <?= $this->Html->link(__("Set as Admin"), '#',
-                                                                  ['class'   => 'item-for-non-admin',
-                                                                   'style'   => $user['CircleMember']['admin_flg'] ? 'display:none' : '',
-                                                                   'onclick' => "$('#EditAdminStatusForm1_{$user['User']['id']}').submit(); return false;"]) ?>
+                                                [
+                                                    'class'   => 'item-for-non-admin',
+                                                    'style'   => $user['CircleMember']['admin_flg'] ? 'display:none' : '',
+                                                    'onclick' => "$('#EditAdminStatusForm1_{$user['User']['id']}').submit(); return false;"
+                                                ]) ?>
 
                                             <?=
                                             // 管理者 -> 非管理者 設定フォーム
                                             $this->Form->create('CircleMember', [
-                                                'url'          => ['controller' => 'circles',
-                                                                   'action'     => 'ajax_edit_admin_status',
-                                                                   'circle_id'  => $this->request->data['Circle']['id']],
+                                                'url'          => [
+                                                    'controller' => 'circles',
+                                                    'action'     => 'ajax_edit_admin_status',
+                                                    'circle_id'  => $this->request->data['Circle']['id']
+                                                ],
                                                 'class'        => 'ajax-edit-circle-admin-status',
                                                 'id'           => 'EditAdminStatusForm2_' . $user['User']['id'],
                                                 'type'         => 'post',
@@ -193,9 +207,11 @@
                                             }
                                             ?>
                                             <?= $this->Html->link(__("Remove from admin"), '#',
-                                                                  ['class'   => 'item-for-admin',
-                                                                   'style'   => $user['CircleMember']['admin_flg'] ? '' : 'display:none',
-                                                                   'onclick' => $onclick]); ?>
+                                                [
+                                                    'class'   => 'item-for-admin',
+                                                    'style'   => $user['CircleMember']['admin_flg'] ? '' : 'display:none',
+                                                    'onclick' => $onclick
+                                                ]); ?>
 
                                         </li>
                                         <?php if (!$this->request->data['Circle']['team_all_flg']): ?>
@@ -214,9 +230,11 @@
                                                 <?=
                                                 // サークルから外す 設定フォーム
                                                 $this->Form->create('CircleMember', [
-                                                    'url'          => ['controller' => 'circles',
-                                                                       'action'     => 'ajax_leave_circle',
-                                                                       'circle_id'  => $this->request->data['Circle']['id']],
+                                                    'url'          => [
+                                                        'controller' => 'circles',
+                                                        'action'     => 'ajax_leave_circle',
+                                                        'circle_id'  => $this->request->data['Circle']['id']
+                                                    ],
                                                     'class'        => 'ajax-leave-circle',
                                                     'id'           => 'LeaveCircleForm_' . $user['User']['id'],
                                                     'type'         => 'post',
@@ -225,14 +243,14 @@
                                                 <?= $this->Form->hidden('user_id', ['value' => $user['User']['id']]) ?>
                                                 <?= $this->Form->end() ?>
                                                 <?= $this->Html->link(__("Remove from the circle"), '#',
-                                                                      ['onclick' => $onclick]) ?>
+                                                    ['onclick' => $onclick]) ?>
                                             </li>
                                         <?php endif ?>
                                     </ul>
                                 </div>
                                 <?=
                                 $this->Upload->uploadImage($user['User'], 'User.photo', ['style' => 'small'],
-                                                           ['class' => 'comment-img'])
+                                    ['class' => 'comment-img'])
                                 ?>
                                 <div class="comment-body modal-comment">
                                     <div class="font_12px font_bold modalFeedTextPadding">
@@ -243,7 +261,7 @@
                                     <?php if ($user['CircleMember']['modified']): ?>
                                         <div class="font_12px font_lightgray modalFeedTextPaddingSmall">
                                             <?= $this->TimeEx->elapsedTime(h($user['CircleMember']['modified']),
-                                                                           'rough') ?>
+                                                'rough') ?>
                                         </div>
                                     <?php endif; ?>
                                 </div>
@@ -260,9 +278,11 @@
                     <?=
                     // メンバー追加フォーム
                     $this->Form->create('Circle', [
-                        'url'        => ['controller' => 'circles',
-                                         'action'     => 'add_member',
-                                         'circle_id'  => $this->request->data['Circle']['id']],
+                        'url'        => [
+                            'controller' => 'circles',
+                            'action'     => 'add_member',
+                            'circle_id'  => $this->request->data['Circle']['id']
+                        ],
                         'class'      => 'form-horizontal',
                         'novalidate' => true,
                         'id'         => 'AddCircleMemberForm',
@@ -275,14 +295,17 @@
                         <div class="bbb">
                             <?=
                             $this->Form->hidden('members',
-                                                ['class'    => 'ajax_add_select2_members',
-                                                 'value'    => null,
-                                                 'style'    => "width: 100%",
-                                                 'data-url' => $this->Html->url(
-                                                     ['controller' => 'circles',
-                                                      'action'     => 'ajax_select2_non_circle_member',
-                                                      'circle_id'  => $this->request->data['Circle']['id']])
-                                                ]) ?>
+                                [
+                                    'class'    => 'ajax_add_select2_members',
+                                    'value'    => null,
+                                    'style'    => "width: 100%",
+                                    'data-url' => $this->Html->url(
+                                        [
+                                            'controller' => 'circles',
+                                            'action'     => 'ajax_select2_non_circle_member',
+                                            'circle_id'  => $this->request->data['Circle']['id']
+                                        ])
+                                ]) ?>
                             <?php $this->Form->unlockField('Circle.members') ?>
                         </div>
                     </div>
@@ -294,20 +317,24 @@
         <div class="modal-footer tab1-footer">
             <?=
             $this->Form->button(__("Save changes"),
-                                ['id'      => 'EditCircleFormSubmit',
-                                 'class'   => 'btn btn-primary pull-right',
-                                 'onclick' => "$(this).attr('disabled', 'disabled'); document.getElementById('EditCircleForm').submit(); return false;",
-                                 'div'     => false,]) ?>
+                [
+                    'id'      => 'EditCircleFormSubmit',
+                    'class'   => 'btn btn-primary pull-right',
+                    'onclick' => "$(this).attr('disabled', 'disabled'); document.getElementById('EditCircleForm').submit(); return false;",
+                    'div'     => false,
+                ]) ?>
             <button type="button" class="btn btn-link design-cancel pull-right mr_8px bd-radius_4px"
                     data-dismiss="modal"><?= __("Cancel") ?></button>
             <?php if (!$this->request->data['Circle']['team_all_flg']): ?>
                 <?=
                 $this->Form->postLink(__("Delete circle"),
-                                      ['controller' => 'circles',
-                                       'action'     => 'delete',
-                                       'circle_id'  => $this->request->data['Circle']['id']],
-                                      ['class' => 'btn btn-default pull-left'],
-                                      __("Do you really want to delete the circle?")) ?>
+                    [
+                        'controller' => 'circles',
+                        'action'     => 'delete',
+                        'circle_id'  => $this->request->data['Circle']['id']
+                    ],
+                    ['class' => 'btn btn-default pull-left'],
+                    __("Do you really want to delete the circle?")) ?>
             <?php endif ?>
         </div>
 
@@ -318,10 +345,11 @@
             <div class="modal-footer tab3-footer" style="display:none">
                 <?=
                 $this->Form->button(__("Add member(s)"),
-                                    ['class'   => 'btn btn-primary pull-right',
-                                     'onclick' => "$(this).attr('disabled', 'disabled'); document.getElementById('AddCircleMemberForm').submit(); return false;",
-                                     'div'     => false,
-                                    ]) ?>
+                    [
+                        'class'   => 'btn btn-primary pull-right',
+                        'onclick' => "$(this).attr('disabled', 'disabled'); document.getElementById('AddCircleMemberForm').submit(); return false;",
+                        'div'     => false,
+                    ]) ?>
             </div>
         <?php endif ?>
 

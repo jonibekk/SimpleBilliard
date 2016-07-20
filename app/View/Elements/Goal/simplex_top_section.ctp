@@ -18,11 +18,11 @@
     <div class="goal-detail-avatar-wrap">
         <?=
         $this->Html->image('ajax-loader.gif',
-                           [
-                               'class'         => 'goal-detail-avatar lazy',
-                               'data-original' => $this->Upload->uploadUrl($goal['Goal'], 'Goal.photo',
-                                                                           ['style' => 'x_large']),
-                           ]
+            [
+                'class' => 'goal-detail-avatar lazy',
+                'data-original' => $this->Upload->uploadUrl($goal['Goal'], 'Goal.photo',
+                    ['style' => 'x_large']),
+            ]
         )
         ?>
     </div>
@@ -54,15 +54,15 @@
         </div>
         <?php if ($is_leader): ?>
             <?= $this->Html->link(__('Edit a goal'),
-                                  [
-                                      'controller' => 'goals',
-                                      'action'     => 'add',
-                                      'goal_id'    => $goal['Goal']['id'],
-                                      'mode'       => 3,
-                                  ],
-                                  [
-                                      'class' => 'btn-profile-edit'
-                                  ])
+                [
+                    'controller' => 'goals',
+                    'action'     => 'add',
+                    'goal_id'    => $goal['Goal']['id'],
+                    'mode'       => 3,
+                ],
+                [
+                    'class' => 'btn-profile-edit'
+                ])
             ?>
         <? else: ?>
             <div class="col col-xxs-12 mt_18px">
@@ -86,7 +86,11 @@
                     <?= h($collabo_opt['class']) ?>"
                        data-toggle="modal"
                        data-target="#ModalCollabo_<?= $goal['Goal']['id'] ?>"
-                       href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', 'goal_id' => $goal['Goal']['id']]) ?>">
+                       href="<?= $this->Html->url([
+                           'controller' => 'goals',
+                           'action'     => 'ajax_get_collabo_change_modal',
+                           'goal_id'    => $goal['Goal']['id']
+                       ]) ?>">
                         <span class=""><?= __('Collaboration') ?></span>
                     </a>
                 </div>

@@ -22,14 +22,18 @@
 <!-- START app/View/Elements/Feed/comment.ctp -->
 <div class="font_12px comment-box" comment-id="<?= $comment['id'] ?>">
     <div class="col col-xxs-12 pt_4px">
-        <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user['id']]) ?>">
+        <a href="<?= $this->Html->url([
+            'controller' => 'users',
+            'action'     => 'view_goals',
+            'user_id'    => $user['id']
+        ]) ?>">
             <?=
             $this->Html->image('ajax-loader.gif',
-                               [
-                                   'class'         => 'lazy comment-img',
-                                   'data-original' => $this->Upload->uploadUrl($user, 'User.photo',
-                                                                               ['style' => 'small']),
-                               ]
+                [
+                    'class'         => 'lazy comment-img',
+                    'data-original' => $this->Upload->uploadUrl($user, 'User.photo',
+                        ['style' => 'small']),
+                ]
             )
             ?>
         </a>
@@ -46,28 +50,41 @@
                                    target-id="<?= $id_prefix ?>CommentEditForm_<?= $comment['id'] ?>"
                                    opend-text="<?= __("Stop editing") ?>"
                                    closed-text="<?= __("Edit comment") ?>"
-                                   ajax-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_edit_comment_form', 'comment_id' => $comment['id'], $id_prefix]) ?>"
+                                   ajax-url="<?= $this->Html->url([
+                                       'controller' => 'posts',
+                                       'action'     => 'ajax_get_edit_comment_form',
+                                       'comment_id' => $comment['id'],
+                                       $id_prefix
+                                   ]) ?>"
                                    click-target-id="<?= $id_prefix ?>CommentEditFormBody_<?= $comment['id'] ?>"
                                    hidden-target-id="<?= $id_prefix ?>CommentTextBody_<?= $comment['id'] ?>"
 
-                                    ><?= __("Edit comment") ?></a></li>
+                                ><?= __("Edit comment") ?></a></li>
                             <li><?=
                                 $this->Form->postLink(__("Delete comment"),
-                                                      ['controller' => 'posts', 'action' => 'comment_delete', 'comment_id' => $comment['id']],
-                                                      null, __("Do you really want to delete this comment?")) ?></li>
+                                    [
+                                        'controller' => 'posts',
+                                        'action'     => 'comment_delete',
+                                        'comment_id' => $comment['id']
+                                    ],
+                                    null, __("Do you really want to delete this comment?")) ?></li>
                         </ul>
                     </div>
                 <?php elseif ($my_member_status['TeamMember']['admin_flg']): ?>
                     <div class="pull-right develop--link-gray">
                         <?=
                         $this->Form->postLink('<i class="fa fa-times comment-cross"></i>',
-                                              ['controller' => 'posts', 'action' => 'comment_delete', 'comment_id' => $comment['id']],
-                                              ['escape' => false], __("Do you really want to delete this comment?")) ?>
+                            ['controller' => 'posts', 'action' => 'comment_delete', 'comment_id' => $comment['id']],
+                            ['escape' => false], __("Do you really want to delete this comment?")) ?>
                     </div>
                 <?php endif; ?>
                 <div class="mb_2px lh_12px">
                     <a class="font_bold font_verydark"
-                       href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user['id']]) ?>">
+                       href="<?= $this->Html->url([
+                           'controller' => 'users',
+                           'action'     => 'view_goals',
+                           'user_id'    => $user['id']
+                       ]) ?>">
                         <?= h($user['display_username']) ?>
                     </a>
                 </div>
@@ -86,9 +103,9 @@
                     if (isset($post_file['AttachedFile']['id']) && $post_file['AttachedFile']['file_type'] == AttachedFile::TYPE_FILE_IMG) {
                         $img = [];
                         $img['l'] = $this->Upload->uploadUrl($post_file['AttachedFile'], "AttachedFile.attached",
-                                                             ['style' => 'large']);
+                            ['style' => 'large']);
                         $img['s'] = $this->Upload->uploadUrl($post_file['AttachedFile'], "AttachedFile.attached",
-                                                             ['style' => 'small']);
+                            ['style' => 'small']);
                         $imgs[] = $img;
                     }
                 }
@@ -97,9 +114,9 @@
                 if ($comment["photo{$i}_file_name"]) {
                     $img = [];
                     $img['l'] = $this->Upload->uploadUrl($comment, "Comment.photo" . $i,
-                                                         ['style' => 'large']);
+                        ['style' => 'large']);
                     $img['s'] = $this->Upload->uploadUrl($comment, "Comment.photo" . $i,
-                                                         ['style' => 'small']);
+                        ['style' => 'small']);
                     $imgs[] = $img;
                 }
             }
@@ -123,7 +140,7 @@
                     'title_max_length'       => 40,
                     'description_max_length' => 95,
                     'img_src'                => $this->Upload->uploadUrl($comment, "Comment.site_photo",
-                                                                         ['style' => 'small']),
+                        ['style' => 'small']),
                 ]) ?>
             <?php endif; ?>
             <div class="col col-xxs-12 pt_10px">
@@ -134,7 +151,12 @@
                     <div class="panel panel-default file-wrap-on-post">
                         <div class="panel-body pt_10px plr_11px pb_8px">
                             <?= $this->element('Feed/attached_file_item',
-                                               ['data' => $file, 'page_type' => 'feed', 'post_id' => $comment['post_id'], 'comment_id' => $comment['id']]) ?>
+                                [
+                                    'data'       => $file,
+                                    'page_type'  => 'feed',
+                                    'post_id'    => $comment['post_id'],
+                                    'comment_id' => $comment['id']
+                                ]) ?>
                         </div>
                     </div>
                 <?php endforeach ?>
@@ -147,13 +169,21 @@
                    like_type="comment">
                     <?= __("Like!") ?></a><span
                     class="font_lightgray"> ･ </span>
-            <span>
-                            <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_comment_liked_users', 'comment_id' => $comment['id']]) ?>"
+                <span>
+                            <a href="<?= $this->Html->url([
+                                'controller' => 'posts',
+                                'action'     => 'ajax_get_comment_liked_users',
+                                'comment_id' => $comment['id']
+                            ]) ?>"
                                class="modal-ajax-get font_lightgray">
                                 <i class="fa fa-thumbs-o-up"></i>&nbsp;<span
                                     id="<?= $id_prefix ?>CommentLikeCount_<?= $comment['id'] ?>"><?= $comment['comment_like_count'] ?></span></a><span
-                    class="font_lightgray"> ･ </span>
-            <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_comment_red_users', 'comment_id' => $comment['id']]) ?>"
+                        class="font_lightgray"> ･ </span>
+            <a href="<?= $this->Html->url([
+                'controller' => 'posts',
+                'action'     => 'ajax_get_comment_red_users',
+                'comment_id' => $comment['id']
+            ]) ?>"
                class="modal-ajax-get font_lightgray"><i
                     class="fa fa-check"></i>&nbsp;<span><?= $comment['comment_read_count'] ?></span></a>
             </span>

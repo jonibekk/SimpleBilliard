@@ -26,15 +26,23 @@
                                     && $post['Post']['type'] == Post::TYPE_ACTION
                                 ): ?>
                                     <li>
-                                        <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_edit_action_modal', 'action_result_id' => $post['Post']['action_result_id']]) ?>"
+                                        <a href="<?= $this->Html->url([
+                                            'controller'       => 'goals',
+                                            'action'           => 'ajax_get_edit_action_modal',
+                                            'action_result_id' => $post['Post']['action_result_id']
+                                        ]) ?>"
                                            class="modal-ajax-get"
                                         ><?= __("Edit Action") ?></a>
                                     </li>
                                 <?php endif ?>
                                 <li><a href="#" class="copy_me"
                                        data-clipboard-text="<?=
-                                       $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']],
-                                                        true) ?>">
+                                       $this->Html->url([
+                                           'controller' => 'posts',
+                                           'action'     => 'feed',
+                                           'post_id'    => $post['Post']['id']
+                                       ],
+                                           true) ?>">
                                         <?= __("Copy Link") ?></a>
                                 </li>
                             </ul>
@@ -42,7 +50,7 @@
                     </div>
                     <?=
                     $this->Upload->uploadImage($post['User'], 'User.photo', ['style' => 'medium'],
-                                               ['class' => 'feed-img']) ?>
+                        ['class' => 'feed-img']) ?>
                     <div class="font_14px font_bold font_verydark"><?= h($post['User']['display_username']) ?></div>
                     <?= $this->element('Feed/display_share_range', compact('post')) ?>
                 </div>
@@ -56,8 +64,7 @@
                 //タイプ別に切り分け
                 if ($post['Post']['type'] == Post::TYPE_ACTION) {
                     $model_name = 'ActionResult';
-                }
-                else {
+                } else {
                     $model_name = 'Post';
                 }
                 for ($i = 1; $i <= 5; $i++) {
@@ -92,17 +99,17 @@
                                         <div class="item <?= ($index === 0) ? "active" : null ?>">
                                             <a href="<?=
                                             $this->Upload->uploadUrl($post, "{$model_name}.photo" . $i,
-                                                                     ['style' => 'large']) ?>"
+                                                ['style' => 'large']) ?>"
                                                rel="lightbox"
                                                data-lightbox="ActionLightBoxPost_<?= $post['Post']['id'] ?>">
                                                 <?=
                                                 $this->Html->image('ajax-loader.gif',
-                                                                   [
-                                                                       'class'         => 'lazy bd-s',
-                                                                       'data-original' => $this->Upload->uploadUrl($post,
-                                                                                                                   "{$model_name}.photo" . $i,
-                                                                                                                   ['style' => 'small'])
-                                                                   ]
+                                                    [
+                                                        'class'         => 'lazy bd-s',
+                                                        'data-original' => $this->Upload->uploadUrl($post,
+                                                            "{$model_name}.photo" . $i,
+                                                            ['style' => 'small'])
+                                                    ]
                                                 )
                                                 ?>
                                             </a>
@@ -138,22 +145,22 @@
                                     <div class="pull-left">
                                         <?=
                                         $this->Html->image('ajax-loader.gif',
-                                                           [
-                                                               'class'         => 'lazy media-object',
-                                                               'data-original' => $this->Upload->uploadUrl($post,
-                                                                                                           "Post.site_photo",
-                                                                                                           ['style' => 'small']),
-                                                               'width'         => '80px',
-                                                               'error-img'     => "/img/no-image-link.png",
-                                                           ]
+                                            [
+                                                'class'         => 'lazy media-object',
+                                                'data-original' => $this->Upload->uploadUrl($post,
+                                                    "Post.site_photo",
+                                                    ['style' => 'small']),
+                                                'width'         => '80px',
+                                                'error-img'     => "/img/no-image-link.png",
+                                            ]
                                         )
                                         ?>
                                     </div>
                                     <div class="media-body">
                                         <h4 class="media-heading font_18px"><?= isset($site_info['title']) ? mb_strimwidth(h($site_info['title']),
-                                                                                                                           0,
-                                                                                                                           50,
-                                                                                                                           "...") : null ?></h4>
+                                                0,
+                                                50,
+                                                "...") : null ?></h4>
 
                                         <p class="font_11px media-url"><?= isset($site_info['url']) ? h($site_info['url']) : null ?></p>
                                         <?php if (isset($site_info['description'])): ?>
@@ -187,13 +194,21 @@
                        like_type="post">
                         <?= __("Like!") ?></a>
                     <span class="font_lightgray"> ･ </span>
-                                <span>
-                            <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_liked_users', 'post_id' => $post['Post']['id']]) ?>"
+                    <span>
+                            <a href="<?= $this->Html->url([
+                                'controller' => 'posts',
+                                'action'     => 'ajax_get_post_liked_users',
+                                'post_id'    => $post['Post']['id']
+                            ]) ?>"
                                class="modal-ajax-get font_lightgray">
                                 <i class="fa fa-thumbs-o-up"></i>&nbsp;<span
                                     id="ActionPostLikeCount_<?= $post['Post']['id'] ?>"><?= $post['Post']['post_like_count'] ?></span>
                             </a><span class="font_lightgray"> ･ </span>
-            <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_red_users', 'post_id' => $post['Post']['id']]) ?>"
+            <a href="<?= $this->Html->url([
+                'controller' => 'posts',
+                'action'     => 'ajax_get_post_red_users',
+                'post_id'    => $post['Post']['id']
+            ]) ?>"
                class="modal-ajax-get font_lightgray"><i
                     class="fa fa-check"></i>&nbsp;<span><?= $post['Post']['post_read_count'] ?></span>
             </a>
@@ -206,7 +221,12 @@
                     <a href="#" class="btn-link click-comment-all"
                        id="ActionComments_<?= $post['Post']['id'] ?>"
                        parent-id="ActionComments_<?= $post['Post']['id'] ?>"
-                       get-url="<?= $this->Html->url(["controller" => "posts", 'action' => 'ajax_get_old_comment', 'post_id' => $post['Post']['id'], $post['Post']['comment_count'] - 3]) ?>"
+                       get-url="<?= $this->Html->url([
+                           "controller" => "posts",
+                           'action'     => 'ajax_get_old_comment',
+                           'post_id'    => $post['Post']['id'],
+                           $post['Post']['comment_count'] - 3
+                       ]) ?>"
                     >
                         <i class="fa fa-comment-o"></i>&nbsp;<?=
                         __("View %s more comments",
@@ -215,13 +235,23 @@
                 <?php foreach ($post['Comment'] as $comment): ?>
                     <?=
                     $this->element('Feed/comment',
-                                   ['comment' => $comment, 'comment_file' => $comment['CommentFile'], 'user' => $comment['User'], 'like' => $comment['MyCommentLike'], 'id_prefix' => 'Action_']) ?>
+                        [
+                            'comment'      => $comment,
+                            'comment_file' => $comment['CommentFile'],
+                            'user'         => $comment['User'],
+                            'like'         => $comment['MyCommentLike'],
+                            'id_prefix'    => 'Action_'
+                        ]) ?>
                 <?php endforeach ?>
                 <a href="#" class="btn btn-link click-comment-new"
                    id="ActionComments_new_<?= $post['Post']['id'] ?>"
                    style="display:none"
                    post-id="<?= $post['Post']['id'] ?>"
-                   get-url="<?= $this->Html->url(["controller" => "posts", 'action' => 'ajax_get_latest_comment', 'post_id' => $post['Post']['id']]) ?>"
+                   get-url="<?= $this->Html->url([
+                       "controller" => "posts",
+                       'action'     => 'ajax_get_latest_comment',
+                       'post_id'    => $post['Post']['id']
+                   ]) ?>"
                 >
                     <div class="alert alert-danger new-comment-read">
                         <span class="num">0</span>
@@ -235,12 +265,12 @@
                 <div class="col-xxs-12 box-align feed-contents comment-contents">
                     <?=
                     $this->Html->image('ajax-loader.gif',
-                                       [
-                                           'class'         => 'lazy comment-img',
-                                           'data-original' => $this->Upload->uploadUrl($my_prof,
-                                                                                       'User.photo',
-                                                                                       ['style' => 'small']),
-                                       ]
+                        [
+                            'class'         => 'lazy comment-img',
+                            'data-original' => $this->Upload->uploadUrl($my_prof,
+                                'User.photo',
+                                ['style' => 'small']),
+                        ]
                     )
                     ?>
                     <div class="comment-body" id="ActionNewCommentForm_<?= $post['Post']['id'] ?>">
@@ -251,7 +281,12 @@
                                     replace-elm-parent-id="ActionNewCommentForm_<?= $post['Post']['id'] ?>"
                                     click-target-id="ActionCommentFormBody_<?= $post['Post']['id'] ?>"
                                     tmp-target-height="32"
-                                    ajax-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_new_comment_form', 'post_id' => $post['Post']['id'], 'Action']) ?>"
+                                    ajax-url="<?= $this->Html->url([
+                                        'controller' => 'posts',
+                                        'action'     => 'ajax_get_new_comment_form',
+                                        'post_id'    => $post['Post']['id'],
+                                        'Action'
+                                    ]) ?>"
                                     wrap="soft" rows="1"
                                     placeholder="<?= __("Comment") ?>"
                                     cols="30"

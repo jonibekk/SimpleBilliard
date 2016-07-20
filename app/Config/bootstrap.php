@@ -11,8 +11,8 @@
  * @since         CakePHP(tm) v 0.10.8.2117
  */
 Cache::config('default', array(
-                           'engine' => 'Apc',
-                       )
+        'engine' => 'Apc',
+    )
 );
 
 /**
@@ -105,13 +105,13 @@ CakeLog::config('error', array(
 Configure::write('Asset.timestamp', 'force');
 
 App::build(array(
-               'Vendor' => array(
-                   ROOT . '/Vendor/',
-               ),
-               'Plugin' => array(
-                   ROOT . '/Plugin/',
-               ),
-           )
+        'Vendor' => array(
+            ROOT . '/Vendor/',
+        ),
+        'Plugin' => array(
+            ROOT . '/Plugin/',
+        ),
+    )
 );
 CakePlugin::loadAll();
 //HtmlHelper UrlCache

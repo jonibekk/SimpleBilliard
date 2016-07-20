@@ -12,8 +12,10 @@
     <div class="panel panel-default">
         <div class="panel-body">
             <?= $this->Form->create('TeamInsight', [
-                'url'           => ['controller' => 'teams',
-                                    'action'     => 'insight_circle'],
+                'url'           => [
+                    'controller' => 'teams',
+                    'action'     => 'insight_circle'
+                ],
                 'inputDefaults' => [
                     'div'       => 'form-group',
                     'label'     => false,
@@ -23,7 +25,8 @@
                 'id'            => 'InsightForm',
                 'type'          => 'get',
             ]); ?>
-            <?= $this->element('Team/insight_form_input', ['use' => ['team', 'date_range', 'timezone', 'sort_logic']]) ?>
+            <?= $this->element('Team/insight_form_input',
+                ['use' => ['team', 'date_range', 'timezone', 'sort_logic']]) ?>
             <?= $this->Form->end() ?>
 
             <div id="InsightCircleResult" class="mt_18px"></div>

@@ -1,10 +1,8 @@
 <?php
 /**
  * CakeTestCase file
- *
  * CakePHP(tm) Tests <http://book.cakephp.org/2.0/en/development/testing.html>
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice
@@ -27,7 +25,8 @@ App::uses('CakeTestFixture', 'TestSuite/Fixture');
  * @package GoalousWebTest
  * @version 2016/03/11
  */
-abstract class CakeTestCase extends PHPUnit_Extensions_Selenium2TestCase {
+abstract class CakeTestCase extends PHPUnit_Extensions_Selenium2TestCase
+{
 
     /**
      * The class responsible for managing the creation, loading and removing of fixtures
@@ -46,7 +45,6 @@ abstract class CakeTestCase extends PHPUnit_Extensions_Selenium2TestCase {
 
     /**
      * Control table create/drops on each test method.
-     *
      * Set this to false to avoid tables to be dropped if they already exist
      * between each test method. Tables will still be dropped at the
      * end of each test runner execution.
@@ -75,10 +73,12 @@ abstract class CakeTestCase extends PHPUnit_Extensions_Selenium2TestCase {
      * This method is run for each test method in this class
      *
      * @param PHPUnit_Framework_TestResult $result The test result object
+     *
      * @return PHPUnit_Framework_TestResult
      * @throws InvalidArgumentException
      */
-    public function run(PHPUnit_Framework_TestResult $result = null) {
+    public function run(PHPUnit_Framework_TestResult $result = null)
+    {
         if (!empty($this->fixtureManager)) {
             $this->fixtureManager->load($this);
         }
@@ -93,28 +93,34 @@ abstract class CakeTestCase extends PHPUnit_Extensions_Selenium2TestCase {
      * Called when a test case method is about to start (to be overridden when needed.)
      *
      * @param string $method Test method about to get executed.
+     *
      * @return void
      */
-    public function startTest($method) {
+    public function startTest($method)
+    {
     }
 
     /**
      * Called when a test case method has been executed (to be overridden when needed.)
      *
      * @param string $method Test method about that was executed.
+     *
      * @return void
      */
-    public function endTest($method) {
+    public function endTest($method)
+    {
     }
 
     /**
      * Overrides SimpleTestCase::skipIf to provide a boolean return value
      *
-     * @param bool $shouldSkip Whether or not the test should be skipped.
-     * @param string $message The message to display.
+     * @param bool   $shouldSkip Whether or not the test should be skipped.
+     * @param string $message    The message to display.
+     *
      * @return bool
      */
-    public function skipIf($shouldSkip, $message = '') {
+    public function skipIf($shouldSkip, $message = '')
+    {
         if ($shouldSkip) {
             $this->markTestSkipped($message);
         }
@@ -128,7 +134,8 @@ abstract class CakeTestCase extends PHPUnit_Extensions_Selenium2TestCase {
      *
      * @return void
      */
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         if (empty($this->_configure)) {
@@ -147,7 +154,8 @@ abstract class CakeTestCase extends PHPUnit_Extensions_Selenium2TestCase {
      *
      * @return void
      */
-    public function tearDown() {
+    public function tearDown()
+    {
         parent::tearDown();
         App::build($this->_pathRestore, App::RESET);
         if (class_exists('ClassRegistry', false)) {
@@ -166,9 +174,11 @@ abstract class CakeTestCase extends PHPUnit_Extensions_Selenium2TestCase {
      * See CakeTestSuiteDispatcher::date()
      *
      * @param string $format format to be used.
+     *
      * @return string
      */
-    public static function date($format = 'Y-m-d H:i:s') {
+    public static function date($format = 'Y-m-d H:i:s')
+    {
         return CakeTestSuiteDispatcher::date($format);
     }
 
@@ -179,7 +189,8 @@ abstract class CakeTestCase extends PHPUnit_Extensions_Selenium2TestCase {
      *
      * @return void
      */
-    protected function assertPreConditions() {
+    protected function assertPreConditions()
+    {
         parent::assertPreConditions();
         $this->startTest($this->getName());
     }
@@ -189,7 +200,8 @@ abstract class CakeTestCase extends PHPUnit_Extensions_Selenium2TestCase {
      *
      * @return void
      */
-    protected function assertPostConditions() {
+    protected function assertPostConditions()
+    {
         parent::assertPostConditions();
         $this->endTest($this->getName());
     }
@@ -198,14 +210,14 @@ abstract class CakeTestCase extends PHPUnit_Extensions_Selenium2TestCase {
 
     /**
      * Chooses which fixtures to load for a given test
-     *
      * Each parameter is a model name that corresponds to a fixture, i.e. 'Post', 'Author', etc.
      *
      * @return void
      * @see CakeTestCase::$autoFixtures
      * @throws Exception when no fixture manager is available.
      */
-    public function loadFixtures() {
+    public function loadFixtures()
+    {
         if (empty($this->fixtureManager)) {
             throw new Exception(__d('cake_dev', 'No fixture manager to load the test fixture'));
         }
@@ -220,11 +232,13 @@ abstract class CakeTestCase extends PHPUnit_Extensions_Selenium2TestCase {
      * Helpful for doing cross platform tests of blocks of text.
      *
      * @param string $expected The expected value.
-     * @param string $result The actual value.
-     * @param string $message The message to use for failure.
+     * @param string $result   The actual value.
+     * @param string $message  The message to use for failure.
+     *
      * @return bool
      */
-    public function assertTextNotEquals($expected, $result, $message = '') {
+    public function assertTextNotEquals($expected, $result, $message = '')
+    {
         $expected = str_replace(array("\r\n", "\r"), "\n", $expected);
         $result = str_replace(array("\r\n", "\r"), "\n", $result);
         return $this->assertNotEquals($expected, $result, $message);
@@ -235,11 +249,13 @@ abstract class CakeTestCase extends PHPUnit_Extensions_Selenium2TestCase {
      * Helpful for doing cross platform tests of blocks of text.
      *
      * @param string $expected The expected value.
-     * @param string $result The actual value.
-     * @param string $message message The message to use for failure.
+     * @param string $result   The actual value.
+     * @param string $message  message The message to use for failure.
+     *
      * @return bool
      */
-    public function assertTextEquals($expected, $result, $message = '') {
+    public function assertTextEquals($expected, $result, $message = '')
+    {
         $expected = str_replace(array("\r\n", "\r"), "\n", $expected);
         $result = str_replace(array("\r\n", "\r"), "\n", $result);
         return $this->assertEquals($expected, $result, $message);
@@ -249,12 +265,14 @@ abstract class CakeTestCase extends PHPUnit_Extensions_Selenium2TestCase {
      * Asserts that a string starts with a given prefix, ignoring differences in newlines.
      * Helpful for doing cross platform tests of blocks of text.
      *
-     * @param string $prefix The prefix to check for.
-     * @param string $string The string to search in.
+     * @param string $prefix  The prefix to check for.
+     * @param string $string  The string to search in.
      * @param string $message The message to use for failure.
+     *
      * @return bool
      */
-    public function assertTextStartsWith($prefix, $string, $message = '') {
+    public function assertTextStartsWith($prefix, $string, $message = '')
+    {
         $prefix = str_replace(array("\r\n", "\r"), "\n", $prefix);
         $string = str_replace(array("\r\n", "\r"), "\n", $string);
         return $this->assertStringStartsWith($prefix, $string, $message);
@@ -264,12 +282,14 @@ abstract class CakeTestCase extends PHPUnit_Extensions_Selenium2TestCase {
      * Asserts that a string starts not with a given prefix, ignoring differences in newlines.
      * Helpful for doing cross platform tests of blocks of text.
      *
-     * @param string $prefix The prefix to not find.
-     * @param string $string The string to search.
+     * @param string $prefix  The prefix to not find.
+     * @param string $string  The string to search.
      * @param string $message The message to use for failure.
+     *
      * @return bool
      */
-    public function assertTextStartsNotWith($prefix, $string, $message = '') {
+    public function assertTextStartsNotWith($prefix, $string, $message = '')
+    {
         $prefix = str_replace(array("\r\n", "\r"), "\n", $prefix);
         $string = str_replace(array("\r\n", "\r"), "\n", $string);
         return $this->assertStringStartsNotWith($prefix, $string, $message);
@@ -279,12 +299,14 @@ abstract class CakeTestCase extends PHPUnit_Extensions_Selenium2TestCase {
      * Asserts that a string ends with a given prefix, ignoring differences in newlines.
      * Helpful for doing cross platform tests of blocks of text.
      *
-     * @param string $suffix The suffix to find.
-     * @param string $string The string to search.
+     * @param string $suffix  The suffix to find.
+     * @param string $string  The string to search.
      * @param string $message The message to use for failure.
+     *
      * @return bool
      */
-    public function assertTextEndsWith($suffix, $string, $message = '') {
+    public function assertTextEndsWith($suffix, $string, $message = '')
+    {
         $suffix = str_replace(array("\r\n", "\r"), "\n", $suffix);
         $string = str_replace(array("\r\n", "\r"), "\n", $string);
         return $this->assertStringEndsWith($suffix, $string, $message);
@@ -294,12 +316,14 @@ abstract class CakeTestCase extends PHPUnit_Extensions_Selenium2TestCase {
      * Asserts that a string ends not with a given prefix, ignoring differences in newlines.
      * Helpful for doing cross platform tests of blocks of text.
      *
-     * @param string $suffix The suffix to not find.
-     * @param string $string The string to search.
+     * @param string $suffix  The suffix to not find.
+     * @param string $string  The string to search.
      * @param string $message The message to use for failure.
+     *
      * @return bool
      */
-    public function assertTextEndsNotWith($suffix, $string, $message = '') {
+    public function assertTextEndsNotWith($suffix, $string, $message = '')
+    {
         $suffix = str_replace(array("\r\n", "\r"), "\n", $suffix);
         $string = str_replace(array("\r\n", "\r"), "\n", $string);
         return $this->assertStringEndsNotWith($suffix, $string, $message);
@@ -309,13 +333,15 @@ abstract class CakeTestCase extends PHPUnit_Extensions_Selenium2TestCase {
      * Assert that a string contains another string, ignoring differences in newlines.
      * Helpful for doing cross platform tests of blocks of text.
      *
-     * @param string $needle The string to search for.
-     * @param string $haystack The string to search through.
-     * @param string $message The message to display on failure.
-     * @param bool $ignoreCase Whether or not the search should be case-sensitive.
+     * @param string $needle     The string to search for.
+     * @param string $haystack   The string to search through.
+     * @param string $message    The message to display on failure.
+     * @param bool   $ignoreCase Whether or not the search should be case-sensitive.
+     *
      * @return bool
      */
-    public function assertTextContains($needle, $haystack, $message = '', $ignoreCase = false) {
+    public function assertTextContains($needle, $haystack, $message = '', $ignoreCase = false)
+    {
         $needle = str_replace(array("\r\n", "\r"), "\n", $needle);
         $haystack = str_replace(array("\r\n", "\r"), "\n", $haystack);
         return $this->assertContains($needle, $haystack, $message, $ignoreCase);
@@ -325,13 +351,15 @@ abstract class CakeTestCase extends PHPUnit_Extensions_Selenium2TestCase {
      * Assert that a text doesn't contain another text, ignoring differences in newlines.
      * Helpful for doing cross platform tests of blocks of text.
      *
-     * @param string $needle The string to search for.
-     * @param string $haystack The string to search through.
-     * @param string $message The message to display on failure.
-     * @param bool $ignoreCase Whether or not the search should be case-sensitive.
+     * @param string $needle     The string to search for.
+     * @param string $haystack   The string to search through.
+     * @param string $message    The message to display on failure.
+     * @param bool   $ignoreCase Whether or not the search should be case-sensitive.
+     *
      * @return bool
      */
-    public function assertTextNotContains($needle, $haystack, $message = '', $ignoreCase = false) {
+    public function assertTextNotContains($needle, $haystack, $message = '', $ignoreCase = false)
+    {
         $needle = str_replace(array("\r\n", "\r"), "\n", $needle);
         $haystack = str_replace(array("\r\n", "\r"), "\n", $haystack);
         return $this->assertNotContains($needle, $haystack, $message, $ignoreCase);
@@ -340,16 +368,12 @@ abstract class CakeTestCase extends PHPUnit_Extensions_Selenium2TestCase {
     /**
      * Takes an array $expected and generates a regex from it to match the provided $string.
      * Samples for $expected:
-     *
      * Checks for an input tag with a name attribute (contains any non-empty value) and an id
      * attribute that contains 'my-input':
-     *
      * {{{
      * array('input' => array('name', 'id' => 'my-input'))
      * }}}
-     *
      * Checks for two p elements with some text in them:
-     *
      * {{{
      * array(
      *   array('p' => true),
@@ -360,26 +384,25 @@ abstract class CakeTestCase extends PHPUnit_Extensions_Selenium2TestCase {
      *   '/p'
      * )
      * }}}
-     *
      * You can also specify a pattern expression as part of the attribute values, or the tag
      * being defined, if you prepend the value with preg: and enclose it with slashes, like so:
-     *
      * {{{
      * array(
      *   array('input' => array('name', 'id' => 'preg:/FieldName\d+/')),
      *   'preg:/My\s+field/'
      * )
      * }}}
-     *
      * Important: This function is very forgiving about whitespace and also accepts any
      * permutation of attribute order. It will also allow whitespace between specified tags.
      *
-     * @param string $string An HTML/XHTML/XML string
-     * @param array $expected An array, see above
+     * @param string $string    An HTML/XHTML/XML string
+     * @param array  $expected  An array, see above
      * @param string $fullDebug Whether or not more verbose output should be used.
+     *
      * @return bool
      */
-    public function assertTags($string, $expected, $fullDebug = false) {
+    public function assertTags($string, $expected, $fullDebug = false)
+    {
         $regex = array();
         $normalized = array();
         foreach ((array)$expected as $key => $val) {
@@ -470,7 +493,7 @@ abstract class CakeTestCase extends PHPUnit_Extensions_Selenium2TestCase {
                 if ($attrs) {
                     $regex[] = array(
                         'explains' => $explanations,
-                        'attrs' => $attrs,
+                        'attrs'    => $attrs,
                     );
                 }
                 $regex[] = array(
@@ -512,11 +535,13 @@ abstract class CakeTestCase extends PHPUnit_Extensions_Selenium2TestCase {
     /**
      * Check the attributes as part of an assertTags() check.
      *
-     * @param array $assertions Assertions to run.
-     * @param string $string The HTML string to check.
+     * @param array  $assertions Assertions to run.
+     * @param string $string     The HTML string to check.
+     *
      * @return void
      */
-    protected function _assertAttributes($assertions, $string) {
+    protected function _assertAttributes($assertions, $string)
+    {
         $asserts = $assertions['attrs'];
         $explains = $assertions['explains'];
         $len = count($asserts);
@@ -544,78 +569,90 @@ abstract class CakeTestCase extends PHPUnit_Extensions_Selenium2TestCase {
     /**
      * Compatibility wrapper function for assertEquals
      *
-     * @param mixed $result
-     * @param mixed $expected
+     * @param mixed  $result
+     * @param mixed  $expected
      * @param string $message the text to display if the assertion is not correct
+     *
      * @deprecated 3.0.0 This is a compatiblity wrapper for 1.x. It will be removed in 3.0
      * @return void
      */
-    protected static function assertEqual($result, $expected, $message = '') {
+    protected static function assertEqual($result, $expected, $message = '')
+    {
         return self::assertEquals($expected, $result, $message);
     }
 
     /**
      * Compatibility wrapper function for assertNotEquals
      *
-     * @param mixed $result
-     * @param mixed $expected
+     * @param mixed  $result
+     * @param mixed  $expected
      * @param string $message the text to display if the assertion is not correct
+     *
      * @deprecated 3.0.0 This is a compatiblity wrapper for 1.x. It will be removed in 3.0
      * @return void
      */
-    protected static function assertNotEqual($result, $expected, $message = '') {
+    protected static function assertNotEqual($result, $expected, $message = '')
+    {
         return self::assertNotEquals($expected, $result, $message);
     }
 
     /**
      * Compatibility wrapper function for assertRegexp
      *
-     * @param mixed $pattern a regular expression
-     * @param string $string the text to be matched
+     * @param mixed  $pattern a regular expression
+     * @param string $string  the text to be matched
      * @param string $message the text to display if the assertion is not correct
+     *
      * @deprecated 3.0.0 This is a compatiblity wrapper for 1.x. It will be removed in 3.0
      * @return void
      */
-    protected static function assertPattern($pattern, $string, $message = '') {
+    protected static function assertPattern($pattern, $string, $message = '')
+    {
         return self::assertRegExp($pattern, $string, $message);
     }
 
     /**
      * Compatibility wrapper function for assertEquals
      *
-     * @param mixed $actual
-     * @param mixed $expected
+     * @param mixed  $actual
+     * @param mixed  $expected
      * @param string $message the text to display if the assertion is not correct
+     *
      * @deprecated 3.0.0 This is a compatiblity wrapper for 1.x. It will be removed in 3.0
      * @return void
      */
-    protected static function assertIdentical($actual, $expected, $message = '') {
+    protected static function assertIdentical($actual, $expected, $message = '')
+    {
         return self::assertSame($expected, $actual, $message);
     }
 
     /**
      * Compatibility wrapper function for assertNotEquals
      *
-     * @param mixed $actual
-     * @param mixed $expected
+     * @param mixed  $actual
+     * @param mixed  $expected
      * @param string $message the text to display if the assertion is not correct
+     *
      * @deprecated 3.0.0 This is a compatiblity wrapper for 1.x. It will be removed in 3.0
      * @return void
      */
-    protected static function assertNotIdentical($actual, $expected, $message = '') {
+    protected static function assertNotIdentical($actual, $expected, $message = '')
+    {
         return self::assertNotSame($expected, $actual, $message);
     }
 
     /**
      * Compatibility wrapper function for assertNotRegExp
      *
-     * @param mixed $pattern a regular expression
-     * @param string $string the text to be matched
+     * @param mixed  $pattern a regular expression
+     * @param string $string  the text to be matched
      * @param string $message the text to display if the assertion is not correct
+     *
      * @deprecated 3.0.0 This is a compatiblity wrapper for 1.x. It will be removed in 3.0
      * @return void
      */
-    protected static function assertNoPattern($pattern, $string, $message = '') {
+    protected static function assertNoPattern($pattern, $string, $message = '')
+    {
         return self::assertNotRegExp($pattern, $string, $message);
     }
 
@@ -625,18 +662,21 @@ abstract class CakeTestCase extends PHPUnit_Extensions_Selenium2TestCase {
      * @deprecated 3.0.0 This is a compatiblity wrapper for 1.x. It will be removed in 3.0
      * @return void
      */
-    protected function assertNoErrors() {
+    protected function assertNoErrors()
+    {
     }
 
     /**
      * Compatibility wrapper function for setExpectedException
      *
-     * @param mixed $expected the name of the Exception or error
-     * @param string $message the text to display if the assertion is not correct
+     * @param mixed  $expected the name of the Exception or error
+     * @param string $message  the text to display if the assertion is not correct
+     *
      * @deprecated 3.0.0 This is a compatiblity wrapper for 1.x. It will be removed in 3.0
      * @return void
      */
-    protected function expectError($expected = false, $message = '') {
+    protected function expectError($expected = false, $message = '')
+    {
         if (!$expected) {
             $expected = 'Exception';
         }
@@ -646,25 +686,29 @@ abstract class CakeTestCase extends PHPUnit_Extensions_Selenium2TestCase {
     /**
      * Compatibility wrapper function for setExpectedException
      *
-     * @param mixed $expected the name of the Exception
-     * @param string $message the text to display if the assertion is not correct
+     * @param mixed  $expected the name of the Exception
+     * @param string $message  the text to display if the assertion is not correct
+     *
      * @deprecated 3.0.0 This is a compatiblity wrapper for 1.x. It will be removed in 3.0
      * @return void
      */
-    protected function expectException($name = 'Exception', $message = '') {
+    protected function expectException($name = 'Exception', $message = '')
+    {
         $this->setExpectedException($name, $message);
     }
 
     /**
      * Compatibility wrapper function for assertSame
      *
-     * @param mixed $first
-     * @param mixed $second
+     * @param mixed  $first
+     * @param mixed  $second
      * @param string $message the text to display if the assertion is not correct
+     *
      * @deprecated 3.0.0 This is a compatiblity wrapper for 1.x. It will be removed in 3.0
      * @return void
      */
-    protected static function assertReference(&$first, &$second, $message = '') {
+    protected static function assertReference(&$first, &$second, $message = '')
+    {
         return self::assertSame($first, $second, $message);
     }
 
@@ -674,23 +718,27 @@ abstract class CakeTestCase extends PHPUnit_Extensions_Selenium2TestCase {
      * @param string $object
      * @param string $type
      * @param string $message
+     *
      * @deprecated 3.0.0 This is a compatiblity wrapper for 1.x. It will be removed in 3.0
      * @return void
      */
-    protected static function assertIsA($object, $type, $message = '') {
+    protected static function assertIsA($object, $type, $message = '')
+    {
         return self::assertInstanceOf($type, $object, $message);
     }
 
     /**
      * Compatibility function to test if value is between an acceptable range
      *
-     * @param mixed $result
-     * @param mixed $expected
-     * @param mixed $margin the rage of acceptation
+     * @param mixed  $result
+     * @param mixed  $expected
+     * @param mixed  $margin  the rage of acceptation
      * @param string $message the text to display if the assertion is not correct
+     *
      * @return void
      */
-    protected static function assertWithinMargin($result, $expected, $margin, $message = '') {
+    protected static function assertWithinMargin($result, $expected, $margin, $message = '')
+    {
         $upper = $result + $margin;
         $lower = $result - $margin;
         return self::assertTrue((($expected <= $upper) && ($expected >= $lower)), $message);
@@ -699,11 +747,13 @@ abstract class CakeTestCase extends PHPUnit_Extensions_Selenium2TestCase {
     /**
      * Compatibility function for skipping.
      *
-     * @param bool $condition Condition to trigger skipping
-     * @param string $message Message for skip
+     * @param bool   $condition Condition to trigger skipping
+     * @param string $message   Message for skip
+     *
      * @return bool
      */
-    protected function skipUnless($condition, $message = '') {
+    protected function skipUnless($condition, $message = '')
+    {
         if (!$condition) {
             $this->markTestSkipped($message);
         }
@@ -714,13 +764,15 @@ abstract class CakeTestCase extends PHPUnit_Extensions_Selenium2TestCase {
     /**
      * Mock a model, maintain fixtures and table association
      *
-     * @param string $model The model to get a mock for.
-     * @param mixed $methods The list of methods to mock
-     * @param array $config The config data for the mock's constructor.
+     * @param string $model   The model to get a mock for.
+     * @param mixed  $methods The list of methods to mock
+     * @param array  $config  The config data for the mock's constructor.
+     *
      * @throws MissingModelException
      * @return Model
      */
-    public function getMockForModel($model, $methods = array(), $config = array()) {
+    public function getMockForModel($model, $methods = array(), $config = array())
+    {
         $config += ClassRegistry::config('Model');
 
         list($plugin, $name) = pluginSplit($model, true);

@@ -72,7 +72,10 @@ $this->Form->input('body', [
     <div class="pull-right">
         <?=
         $this->Form->submit(__("Comment"),
-                            ['class' => 'btn btn-primary submit-btn comment-submit-button', 'id' => "{$prefix}CommentSubmit_{$post_id}", 'disabled' => 'disabled']) ?>
+            ['class'    => 'btn btn-primary submit-btn comment-submit-button',
+             'id'       => "{$prefix}CommentSubmit_{$post_id}",
+             'disabled' => 'disabled'
+            ]) ?>
     </div>
     <div class="clearfix"></div>
 </div>

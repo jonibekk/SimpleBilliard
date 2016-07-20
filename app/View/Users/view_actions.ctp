@@ -23,17 +23,17 @@
             </span>
             <?=
             $this->Form->input('goal_id', [
-                'label' => false,
-                'div' => false,
-                'required' => true,
+                'label'                    => false,
+                'div'                      => false,
+                'required'                 => true,
                 'data-bv-notempty-message' => __('Input is required.'),
-                'class' => 'users-view-actions-panel-term-select form-control disable-change-warning',
-                'id' => 'SwitchGoalOnMyPage',
-                'options' => $goal_select_options,
-                'disabled' => ['disable_value1', 'disable_value2'],
-                'default' => $goal_id,
-                'redirect-url' => $goal_base_url,
-                'wrapInput' => false,
+                'class'                    => 'users-view-actions-panel-term-select form-control disable-change-warning',
+                'id'                       => 'SwitchGoalOnMyPage',
+                'options'                  => $goal_select_options,
+                'disabled'                 => ['disable_value1', 'disable_value2'],
+                'default'                  => $goal_id,
+                'redirect-url'             => $goal_base_url,
+                'wrapInput'                => false,
             ])
             ?>
         </div>
@@ -41,13 +41,13 @@
         <ul class="profile-user-action-view-switch">
             <li class="profile-user-action-view-switch-img">
                 <a href="<?= $this->Html->url(array_merge($this->request->params['named'],
-                                                          ['page_type' => 'image'])) ?>">
+                    ['page_type' => 'image'])) ?>">
                     <i class="fa fa-th-large link-dark-gray"></i>
                 </a>
             </li>
             <li class="profile-user-action-view-switch-feed">
                 <a href="<?= $this->Html->url(array_merge($this->request->params['named'],
-                                                          ['page_type' => 'list'])) ?>">
+                    ['page_type' => 'list'])) ?>">
                     <i class="fa fa-reorder link-dark-gray"></i>
                 </a>
             </li>
@@ -96,18 +96,19 @@
                            next-page-num="<?= $next_page_num ?>"
                            month-index="<?= $month_index ?>"
                            get-url="<?=
-                           $this->Html->url(['controller' => 'posts',
-                                             'action' => 'ajax_get_user_page_post_feed',
-                                             'user_id' => viaIsSet($this->request->params['named']['user_id']),
-                                             'author_id' => viaIsSet($this->request->params['named']['user_id']),
-                                             'goal_id' => viaIsSet($this->request->params['named']['goal_id']),
-                                             'type' => Post::TYPE_ACTION,
-                                             'page_type' => viaIsSet($this->request->params['named']['page_type']),
-                                            ]) ?>"
+                           $this->Html->url([
+                               'controller' => 'posts',
+                               'action'     => 'ajax_get_user_page_post_feed',
+                               'user_id'    => viaIsSet($this->request->params['named']['user_id']),
+                               'author_id'  => viaIsSet($this->request->params['named']['user_id']),
+                               'goal_id'    => viaIsSet($this->request->params['named']['goal_id']),
+                               'type'       => Post::TYPE_ACTION,
+                               'page_type'  => viaIsSet($this->request->params['named']['page_type']),
+                           ]) ?>"
                            id="FeedMoreReadLink"
                            append-target-id="UserPageContents"
                            oldest-post-time="<?= $oldest_post_time ?>"
-                            >
+                        >
                             <?= h($more_read_text) ?> </a>
                     </div>
                 </div>

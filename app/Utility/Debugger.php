@@ -92,7 +92,6 @@ class Debugger
 
     /**
      * Constructor.
-
      */
     public function __construct()
     {
@@ -224,8 +223,7 @@ class Debugger
         $info = compact('code', 'description', 'file', 'line');
         if (!in_array($info, $self->errors)) {
             $self->errors[] = $info;
-        }
-        else {
+        } else {
             /** @noinspection PhpInconsistentReturnPointsInspection */
             return;
         }
@@ -337,15 +335,12 @@ class Debugger
             }
             if ($options['format'] == 'points' && $trace['file'] != '[internal]') {
                 $back[] = array('file' => $trace['file'], 'line' => $trace['line']);
-            }
-            elseif ($options['format'] == 'array') {
+            } elseif ($options['format'] == 'array') {
                 $back[] = $trace;
-            }
-            else {
+            } else {
                 if (isset($self->_templates[$options['format']]['traceLine'])) {
                     $tpl = $self->_templates[$options['format']]['traceLine'];
-                }
-                else {
+                } else {
                     $tpl = $self->_templates['base']['traceLine'];
                 }
                 $trace['path'] = self::trimPath($trace['file']);
@@ -377,11 +372,9 @@ class Debugger
 
         if (strpos($path, APP) === 0) {
             return str_replace(APP, 'APP' . DS, $path);
-        }
-        elseif (strpos($path, CAKE_CORE_INCLUDE_PATH) === 0) {
+        } elseif (strpos($path, CAKE_CORE_INCLUDE_PATH) === 0) {
             return str_replace(CAKE_CORE_INCLUDE_PATH, 'CORE', $path);
-        }
-        elseif (strpos($path, ROOT) === 0) {
+        } elseif (strpos($path, ROOT) === 0) {
             return str_replace(ROOT, 'ROOT', $path);
         }
 
@@ -428,8 +421,7 @@ class Debugger
             $string = str_replace(array("\r\n", "\n"), "", self::_highlight($data[$i]));
             if ($i == $line) {
                 $lines[] = '<span class="code-highlight">' . $string . '</span>';
-            }
-            else {
+            } else {
                 $lines[] = $string;
             }
         }
@@ -571,8 +563,7 @@ class Debugger
                 // Sniff for globals as !== explodes in < 5.4
                 if ($key === 'GLOBALS' && is_array($val) && isset($val['GLOBALS'])) {
                     $val = '[recursion]';
-                }
-                else {
+                } else {
                     if ($val !== $var) {
                         $val = self::_export($val, $depth, $indent);
                     }
@@ -581,8 +572,7 @@ class Debugger
                     ' => ' .
                     $val;
             }
-        }
-        else {
+        } else {
             $vars[] = $break . '[maximum depth reached]';
         }
         return $out . implode(',', $vars) . $end . ')';
@@ -690,8 +680,7 @@ class Debugger
                 unset($strings['links']);
             }
             $self->_templates[$format] = array_merge($self->_templates[$format], $strings);
-        }
-        else {
+        } else {
             $self->_templates[$format] = $strings;
         }
         return $self->_templates[$format];
@@ -757,8 +746,7 @@ class Debugger
         $file = null;
         if (isset($files[0]['file'])) {
             $file = $files[0];
-        }
-        elseif (isset($files[1]['file'])) {
+        } elseif (isset($files[1]['file'])) {
             $file = $files[1];
         }
         if ($file) {
@@ -862,14 +850,14 @@ class Debugger
     {
         if (Configure::read('Security.salt') == 'DYhG93b0qyJfIxfs2guVoUubWwvniR2G0FgaC9mi') {
             trigger_error(__d('cake_dev',
-                              'Please change the value of \'Security.salt\' in app/Config/core.php to a salt value specific to your application'),
-                          E_USER_NOTICE);
+                'Please change the value of \'Security.salt\' in app/Config/core.php to a salt value specific to your application'),
+                E_USER_NOTICE);
         }
 
         if (Configure::read('Security.cipherSeed') === '76859309657453542496749683645') {
             trigger_error(__d('cake_dev',
-                              'Please change the value of \'Security.cipherSeed\' in app/Config/core.php to a numeric (digits only) seed value specific to your application'),
-                          E_USER_NOTICE);
+                'Please change the value of \'Security.cipherSeed\' in app/Config/core.php to a numeric (digits only) seed value specific to your application'),
+                E_USER_NOTICE);
         }
     }
 

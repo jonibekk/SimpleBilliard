@@ -184,7 +184,7 @@ class KeyResult extends AppModel
         //期限を+1day-1secする
         if (!empty($data['KeyResult']['end_date'])) {
             $data['KeyResult']['end_date'] = strtotime('+1 day -1 sec',
-                                                       strtotime($data['KeyResult']['end_date'])) - $goal_term['timezone'] * HOUR;
+                    strtotime($data['KeyResult']['end_date'])) - $goal_term['timezone'] * HOUR;
         }
         $this->create();
         if (!$this->save($data)) {
@@ -208,13 +208,19 @@ class KeyResult extends AppModel
      *
      * @return array|null
      */
-    function getKeyResults($goal_id, $find_type = "all", $is_complete = false,
-                           array $params = [], $with_action = false, $action_limit = MY_PAGE_ACTION_NUMBER)
-    {
+    function getKeyResults(
+        $goal_id,
+        $find_type = "all",
+        $is_complete = false,
+        array $params = [],
+        $with_action = false,
+        $action_limit = MY_PAGE_ACTION_NUMBER
+    ) {
         // パラメータデフォルト
-        $params = array_merge(['limit' => null,
-                               'page'  => 1,
-                              ], $params);
+        $params = array_merge([
+            'limit' => null,
+            'page'  => 1,
+        ], $params);
 
         $options = [
             'conditions' => [
@@ -357,7 +363,7 @@ class KeyResult extends AppModel
 
         $data['KeyResult']['start_date'] = strtotime($data['KeyResult']['start_date']) - $goal_term['timezone'] * HOUR;
         $data['KeyResult']['end_date'] = strtotime('+1 day -1 sec',
-                                                   strtotime($data['KeyResult']['end_date'])) - $goal_term['timezone'] * HOUR;
+                strtotime($data['KeyResult']['end_date'])) - $goal_term['timezone'] * HOUR;
 //TODO 現在値を使わないため、この計算は行わない
 //        $data['KeyResult']['progress'] = $this->getProgress($data['KeyResult']['start_value'],
 //                                                            $data['KeyResult']['target_value'],

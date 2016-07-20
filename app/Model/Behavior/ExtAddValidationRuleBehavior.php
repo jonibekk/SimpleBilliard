@@ -17,24 +17,23 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
      *
      * @return bool
      */
-    function isAlphabetOnly(/** @noinspection PhpUnusedParameterInspection */
-        Model $Model, $field = [])
-    {
+    function isAlphabetOnly(
+        /** @noinspection PhpUnusedParameterInspection */
+        Model $Model,
+        $field = []
+    ) {
         if (is_array($field)) {
             foreach ($field as $value) {
                 if (preg_match("/^([a-zA-Z])*$/u", $value)) {
                     return true;
-                }
-                else {
+                } else {
                     return false;
                 }
             }
-        }
-        else {
+        } else {
             if (preg_match("/^([a-zA-Z])*$/u", $field)) {
                 return true;
-            }
-            else {
+            } else {
                 return false;
             }
         }
@@ -66,9 +65,11 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
      *
      * @return bool
      */
-    public function emailsCheck(/** @noinspection PhpUnusedParameterInspection */
-        Model $Model, $value)
-    {
+    public function emailsCheck(
+        /** @noinspection PhpUnusedParameterInspection */
+        Model $Model,
+        $value
+    ) {
         App::import('Core', 'Validation');
         foreach ($value as $v) {
             //一行ずつ処理
@@ -113,41 +114,49 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
         return true;
     }
 
-    function isString(/** @noinspection PhpUnusedParameterInspection */
-        Model $Model, $value)
-    {
+    function isString(
+        /** @noinspection PhpUnusedParameterInspection */
+        Model $Model,
+        $value
+    ) {
         $value = array_values($value);
 
         $value = $value[0];
         return is_string($value);
     }
 
-    function isOnOrOff(/** @noinspection PhpUnusedParameterInspection */
-        Model $Model, $check)
-    {
+    function isOnOrOff(
+        /** @noinspection PhpUnusedParameterInspection */
+        Model $Model,
+        $check
+    ) {
         $value = array_values($check);
         $value = $value[0];
         return strtolower($value) == 'on' || strtolower($value) == 'off';
     }
 
-    function phoneNo(/** @noinspection PhpUnusedParameterInspection */
-        Model $Model, $check)
-    {
+    function phoneNo(
+        /** @noinspection PhpUnusedParameterInspection */
+        Model $Model,
+        $check
+    ) {
         $value = array_values($check);
         $value = $value[0];
         return preg_match('/^[0-9-\(\)]+$/', $value);
     }
 
-    function isAllOrNothing(/** @noinspection PhpUnusedParameterInspection */
-        Model $Model, $check, $compare_fields)
-    {
+    function isAllOrNothing(
+        /** @noinspection PhpUnusedParameterInspection */
+        Model $Model,
+        $check,
+        $compare_fields
+    ) {
         $exists = false;
         $not_exists = false;
         foreach ($compare_fields as $field) {
             if (empty($Model->data[$Model->alias][$field])) {
                 $not_exists = true;
-            }
-            else {
+            } else {
                 $exists = true;
             }
 
@@ -155,9 +164,11 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
         return $exists !== $not_exists;
     }
 
-    function isAlignLeft(/** @noinspection PhpUnusedParameterInspection */
-        Model $Model, $array)
-    {
+    function isAlignLeft(
+        /** @noinspection PhpUnusedParameterInspection */
+        Model $Model,
+        $array
+    ) {
         $array = array_values($array);
         $array = $array[0];
         //first remove empty data
@@ -182,9 +193,12 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
         return true;
     }
 
-    function maxLengthArray(/** @noinspection PhpUnusedParameterInspection */
-        Model $Model, $array, $length)
-    {
+    function maxLengthArray(
+        /** @noinspection PhpUnusedParameterInspection */
+        Model $Model,
+        $array,
+        $length
+    ) {
         $array = array_values($array);
         $array = $array[0];
         foreach ($array as $v) {
@@ -195,49 +209,63 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
         return true;
     }
 
-    function isNotDuplicated(/** @noinspection PhpUnusedParameterInspection */
-        Model $Model, $array)
-    {
+    function isNotDuplicated(
+        /** @noinspection PhpUnusedParameterInspection */
+        Model $Model,
+        $array
+    ) {
         $array = array_values($array);
         $array = $array[0];
         $array = array_filter($array, "strlen");
         return count(array_unique($array)) == count($array);
     }
 
-    function isNotExistArray(/** @noinspection PhpUnusedParameterInspection */
-        Model $Model, $check, $compare_fields)
-    {
+    function isNotExistArray(
+        /** @noinspection PhpUnusedParameterInspection */
+        Model $Model,
+        $check,
+        $compare_fields
+    ) {
         $check = current($check);
         return !in_array($check, $Model->data[$Model->alias][$compare_fields]);
     }
 
-    function birthYear(/** @noinspection PhpUnusedParameterInspection */
-        Model $Model, $check)
-    {
+    function birthYear(
+        /** @noinspection PhpUnusedParameterInspection */
+        Model $Model,
+        $check
+    ) {
         $value = array_values($check);
         $value = $value[0];
         return preg_match('/^\d{4}$/', $value);
     }
 
-    function birthMonth(/** @noinspection PhpUnusedParameterInspection */
-        Model $Model, $check)
-    {
+    function birthMonth(
+        /** @noinspection PhpUnusedParameterInspection */
+        Model $Model,
+        $check
+    ) {
         $value = array_values($check);
         $value = $value[0];
         return preg_match('/^(0[1-9]{1}|1[0-2]{1}|[1-9]{1})$/', $value);
     }
 
-    function birthDay(/** @noinspection PhpUnusedParameterInspection */
-        Model $Model, $check)
-    {
+    function birthDay(
+        /** @noinspection PhpUnusedParameterInspection */
+        Model $Model,
+        $check
+    ) {
         $value = array_values($check);
         $value = $value[0];
         return preg_match('/^(0[1-9]{1}|[1-9]{1}|[1-2]{1}[0-9]{1}|3[0-1]{1})$/', $value);
     }
 
-    function isNotEqual(/** @noinspection PhpUnusedParameterInspection */
-        Model $Model, $check, $target)
-    {
+    function isNotEqual(
+        /** @noinspection PhpUnusedParameterInspection */
+        Model $Model,
+        $check,
+        $target
+    ) {
         $value = array_values($check);
         $value = $value[0];
         $target_value = $Model->data[$Model->alias][$target];
@@ -252,9 +280,11 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
      *
      * @return boolean        [description]
      */
-    function isVerifiedEmail(/** @noinspection PhpUnusedParameterInspection */
-        Model $Model, $check)
-    {
+    function isVerifiedEmail(
+        /** @noinspection PhpUnusedParameterInspection */
+        Model $Model,
+        $check
+    ) {
         // This method is for to activate sisuation
         // So it's not needed in to inactivate situation
         if (isset($Model->data['TeamMember']['active_flg'])
@@ -273,7 +303,8 @@ class ExtAddValidationRuleBehavior extends AddValidationRuleBehavior
                     'id' => $team_member_id
                 ],
                 'fields'     => [
-                    'id', 'user_id'
+                    'id',
+                    'user_id'
                 ]
             ]);
             if (!$user_id = viaIsSet($res['TeamMember']['user_id'])) {

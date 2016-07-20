@@ -25,7 +25,7 @@
                     </p>
 
                     <p class="form-control-static">
-                    <?= __("Existing accounts will be updated. Non-registered members will be registered and get an invitation email.") ?>
+                        <?= __("Existing accounts will be updated. Non-registered members will be registered and get an invitation email.") ?>
                     </p>
 
                     <p class="form-control-static"><?= __("") ?></p>

@@ -42,13 +42,13 @@
                     <label class="">1. <?= __("Download template.") ?></label>
 
                     <p>
-                    <?= __("Download CSV template and edit it without any change in header.") ?>
+                        <?= __("Download CSV template and edit it without any change in header.") ?>
                     </p>
 
                     <div class="">
                         <?=
                         $this->Html->link(__("Download template."), ['action' => 'download_add_members_csv_format'],
-                                          ['class' => 'btn btn-default', 'div' => false])
+                            ['class' => 'btn btn-default', 'div' => false])
                         ?>
                     </div>
                 </div>
@@ -65,14 +65,15 @@
                                 <span class="fileinput-exists"><?= __("Change to another file.") ?></span>
                                 <?=
                                 $this->Form->input('csv_file',
-                                                   ['type'         => 'file',
-                                                    'label'        => false,
-                                                    'div'          => false,
-                                                    'css'          => false,
-                                                    'wrapInput'    => false,
-                                                    'errorMessage' => false,
-                                                    'accept'       => ".csv",
-                                                   ]) ?>
+                                    [
+                                        'type'         => 'file',
+                                        'label'        => false,
+                                        'div'          => false,
+                                        'css'          => false,
+                                        'wrapInput'    => false,
+                                        'errorMessage' => false,
+                                        'accept'       => ".csv",
+                                    ]) ?>
                             </span>
                             <span class="fileinput-filename"></span>
                             <a href="#" class="close fileinput-exists" data-dismiss="fileinput"
@@ -96,11 +97,15 @@
                         </div>
                         <button type="button" class="btn btn-link design-cancel bd-radius_4px"
                                 data-dismiss="modal">
-                                <?= __("Cancel") ?>
+                            <?= __("Cancel") ?>
                         </button>
                         <?=
                         $this->Form->submit(__("Add"),
-                                            ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled', 'id' => 'AddMembersSubmit']) ?>
+                            ['class'    => 'btn btn-primary',
+                             'div'      => false,
+                             'disabled' => 'disabled',
+                             'id'       => 'AddMembersSubmit'
+                            ]) ?>
 
                     </div>
                 </div>

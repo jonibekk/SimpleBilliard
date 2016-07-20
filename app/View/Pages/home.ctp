@@ -26,7 +26,7 @@
  */
 $meta_lp = [
     [
-        "name" => "description",
+        "name"    => "description",
         "content" => __('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。スマホアプリ・ブラウザで利用可能です。'),
     ],
     [
@@ -39,11 +39,11 @@ $meta_lp = [
     ],
     [
         "property" => "og:title",
-        "content" => __('Goalous(ゴーラス) | 最強にオープンな社内SNS'),
+        "content"  => __('Goalous(ゴーラス) | 最強にオープンな社内SNS'),
     ],
     [
         "property" => "og:description",
-        "content" =>__('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。スマホアプリ・ブラウザで利用可能です。'),
+        "content"  => __('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。スマホアプリ・ブラウザで利用可能です。'),
     ],
     [
         "property" => "og:url",
@@ -55,7 +55,7 @@ $meta_lp = [
     ],
     [
         "property" => "og:site_name",
-        "content" => __('Goalous │ Enterprise SNS the most ever open for Goal'),
+        "content"  => __('Goalous │ Enterprise SNS the most ever open for Goal'),
     ],
     [
         "property" => "fb:app_id",
@@ -103,10 +103,14 @@ for ($i = 0; $i < $num_ogp; $i++) {
                 <p class="summary"><?= __('It\'s free until 31 Aug 2016! Try it!') ?></p>
             </div>
             <div class="col-md-5 col-sm-12 col-xs-12">
-                <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'register', '?' => ['type' => 'middle']]) ?>"
+                <a href="<?= $this->Html->url([
+                    'controller' => 'users',
+                    'action'     => 'register',
+                    '?'          => ['type' => 'middle']
+                ]) ?>"
                    id="RegisterLinkTopMiddle">
                     <button type="submit" class="btn btn-cta btn-cta-primary btn-block"><?= __(
-                                                                                                'Sign Up') ?></button>
+                            'Sign Up') ?></button>
                 </a>
             </div>
         </div><!--//contianer-->
@@ -159,13 +163,16 @@ for ($i = 0; $i < $num_ogp; $i++) {
                 <h3 class="title"><?= __('Get progress to Vision.') ?></h3>
                 <div class="details">
                     <p><?= __(
-                               'Every one knows Vision and make their Goals. Goalous let them improve themselves.') ?></p>
+                            'Every one knows Vision and make their Goals. Goalous let them improve themselves.') ?></p>
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 col-left">
                 <?= $this->Html->image('homepage/top/top-1.jpg',
-                                       array('alt' => __(
-                                                          'You get to know your team grow by your achievement of goals.'), 'class' => 'img-responsive')); ?>
+                    array(
+                        'alt'   => __(
+                            'You get to know your team grow by your achievement of goals.'),
+                        'class' => 'img-responsive'
+                    )); ?>
             </div><!--//figure-->
         </div><!--//item-->
 
@@ -176,13 +183,16 @@ for ($i = 0; $i < $num_ogp; $i++) {
                 <h3 class="title"><?= __('You can reduce the words, What is that?') ?></h3>
                 <div class="details">
                     <p><?= __(
-                               'What did your colleages did today? Share on Goalous and get to know more and more.') ?></p>
+                            'What did your colleages did today? Share on Goalous and get to know more and more.') ?></p>
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 col-md-offset-1 col-sm-offset-1 col-xs-offset-0 col-right">
                 <?= $this->Html->image('homepage/top/top-2.jpg',
-                                       array('alt' => __(
-                                                          '仕事で大変な事も嬉しい事もオープンにしてお互いを理解しましょう！すべてはそこから始まります。'), 'class' => 'img-responsive')); ?>
+                    array(
+                        'alt'   => __(
+                            '仕事で大変な事も嬉しい事もオープンにしてお互いを理解しましょう！すべてはそこから始まります。'),
+                        'class' => 'img-responsive'
+                    )); ?>
             </div><!--//figure-->
         </div><!--//item-->
 
@@ -194,13 +204,16 @@ for ($i = 0; $i < $num_ogp; $i++) {
                 <h3 class="title"><?= __('Make results by coorporation.') ?></h3>
                 <div class="details">
                     <p><?= __(
-                               'What most important for teams is to know each other. Get to know by Goalous, you can get succeeded efficiently.') ?></p>
+                            'What most important for teams is to know each other. Get to know by Goalous, you can get succeeded efficiently.') ?></p>
                 </div>
             </div><!--//content-->
             <div class="figure col-md-6 col-sm-6 col-xs-12 col-left">
                 <?= $this->Html->image('homepage/top/top-3.jpg',
-                                       array('alt' => __(
-                                                          'Help each other, enjoy with them. How wonderful?'), 'class' => 'img-responsive')); ?>
+                    array(
+                        'alt'   => __(
+                            'Help each other, enjoy with them. How wonderful?'),
+                        'class' => 'img-responsive'
+                    )); ?>
             </div><!--//figure-->
         </div><!--//item-->
     </div><!--//container-->

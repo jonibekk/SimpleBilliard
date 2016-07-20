@@ -52,18 +52,19 @@
             <div class="col col-sm-6">
                 <?=
                 $this->Form->input('change_from',
-                                   [
-                                       'id'      => "EditTermChangeFrom",
-                                       'type'    => 'radio',
-                                       'legend'  => false,
-                                       'options' => Team::$OPTION_CHANGE_TERM,
-                                       'default' => Team::OPTION_CHANGE_TERM_FROM_NEXT,
-                                       'class'   => 'radio-inline',
-                                       $disabled => $disabled,
-                                   ])
+                    [
+                        'id'      => "EditTermChangeFrom",
+                        'type'    => 'radio',
+                        'legend'  => false,
+                        'options' => Team::$OPTION_CHANGE_TERM,
+                        'default' => Team::OPTION_CHANGE_TERM_FROM_NEXT,
+                        'class'   => 'radio-inline',
+                        $disabled => $disabled,
+                    ])
                 ?>
                 <?php if ($disabled): ?>
-                    <span class="help-block font_11px"><?= __("Current term can't be changed during the evaluation period.") ?></span>
+                    <span
+                        class="help-block font_11px"><?= __("Current term can't be changed during the evaluation period.") ?></span>
                 <?php endif; ?>
             </div>
         </div>
@@ -132,7 +133,7 @@
                     <p class="form-control-static" id="">
                         <?= $this->TimeEx->date($next_term_start_date, $next_term_timezone) ?>
                         - <?= $this->TimeEx->date($next_term_end_date,
-                                                  $next_term_timezone) ?> <?= $this->TimeEx->getTimezoneText($next_term_timezone) ?>
+                            $next_term_timezone) ?> <?= $this->TimeEx->getTimezoneText($next_term_timezone) ?>
                     </p>
                 </div>
             </div>
@@ -158,7 +159,7 @@
             <div class="col-sm-9 col-sm-offset-3">
                 <?=
                 $this->Form->submit(__("Change term settings"),
-                                    ['class' => 'btn btn-primary display-inline', 'div' => false, 'disabled' => 'disabled']) ?>
+                    ['class' => 'btn btn-primary display-inline', 'div' => false, 'disabled' => 'disabled']) ?>
             </div>
         </div>
     </div>

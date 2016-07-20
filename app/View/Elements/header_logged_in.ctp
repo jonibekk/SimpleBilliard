@@ -75,17 +75,19 @@
                     <li>
                         <form class="nav-form-group header-team-select-form" role="search">
                             <?php echo $this->Form->input('current_team',
-                                                          array(
-                                                              'type'      => 'select',
-                                                              'options'   => !empty($my_teams) ? $my_teams : [__(
-                                                                                                                  'There is no team.')],
-                                                              'value'     => $this->Session->read('current_team_id'),
-                                                              'id'        => 'SwitchTeam',
-                                                              'label'     => false,
-                                                              'div'       => false,
-                                                              'class'     => 'form-control nav-team-select font_12px disable-change-warning',
-                                                              'wrapInput' => false,
-                                                          ))
+                                array(
+                                    'type'      => 'select',
+                                    'options'   => !empty($my_teams) ? $my_teams : [
+                                        __(
+                                            'There is no team.')
+                                    ],
+                                    'value'     => $this->Session->read('current_team_id'),
+                                    'id'        => 'SwitchTeam',
+                                    'label'     => false,
+                                    'div'       => false,
+                                    'class'     => 'form-control nav-team-select font_12px disable-change-warning',
+                                    'wrapInput' => false,
+                                ))
                             ?>
                         </form>
                     </li>

@@ -45,8 +45,7 @@ class RedisSession extends DatabaseSession implements CakeSessionHandlerInterfac
         $timeout = Configure::read('Session.timeout');
         if (empty($timeout)) {
             $timeout = 60 * 24 * 90;
-        }
-        else {
+        } else {
             $timeout *= 60;
         }
         $this->timeout = $timeout;

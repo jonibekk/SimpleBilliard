@@ -22,7 +22,8 @@
                             <?= $this->Html->link(__('Edit'), [
                                 'controller' => 'users',
                                 'action'     => 'settings',
-                                '#'          => 'profile']) ?>
+                                '#'          => 'profile'
+                            ]) ?>
                         </span>
                     <?php endif ?>
                 </div>
@@ -38,7 +39,7 @@
                 <div class="panel-body" style="border-top: 1px solid #ddd;">
                     <?= __('Birthday') ?>
                     <span class="pull-right"><?= $this->Time->format($user['User']['hide_year_flg'] ? 'm/d' : 'Y/m/d',
-                                                                     $user['User']['birth_day']) ?></span>
+                            $user['User']['birth_day']) ?></span>
                 </div>
                 <div class="panel-body" style="border-top: 1px solid #ddd;">
                     <?= __('Birthplace') ?>
@@ -48,7 +49,7 @@
                     <?= __('Profile Image') ?>
                     <span class="pull-right"><?=
                         $this->Upload->uploadImage($user, 'User.photo',
-                                                   ['style' => 'small']) ?></span>
+                            ['style' => 'small']) ?></span>
                 </div>
             </div>
 

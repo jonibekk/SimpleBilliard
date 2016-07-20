@@ -93,13 +93,12 @@ class WithTeamIdBehavior extends ModelBehavior
                     break;
                 }
             }
-        }
-        else {
+        } else {
 
             $has_field_in_conditions = in_array($this->__settings[$Model->alias]['field'],
-                                                array_keys($queryData['conditions']));
+                array_keys($queryData['conditions']));
             $has_alias_field_in_conditions = in_array($Model->alias . '.' . $this->__settings[$Model->alias]['field'],
-                                                      array_keys($queryData['conditions']));
+                array_keys($queryData['conditions']));
             if (empty($queryData['conditions'])
                 || (!$has_field_in_conditions && !$has_alias_field_in_conditions)
             ) {
@@ -117,8 +116,7 @@ class WithTeamIdBehavior extends ModelBehavior
                 $queryData['conditions'] = $Db->name($Model->alias) . '.'
                     . $Db->name($this->__settings[$Model->alias]['field']) . "= {$Model->current_team_id} AND "
                     . $queryData['conditions'];
-            }
-            else {
+            } else {
                 $queryData['conditions'][$Model->alias . '.' . $this->__settings[$Model->alias]['field']] = $Model->current_team_id;
             }
         }

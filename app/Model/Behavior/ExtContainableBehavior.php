@@ -49,7 +49,12 @@ class ExtContainableBehavior extends ContainableBehavior
     public function setup(Model $Model, $settings = array())
     {
         if (!isset($this->settings[$Model->alias])) {
-            $this->settings[$Model->alias] = array('recursive' => true, 'notices' => true, 'autoFields' => true, 'with_team_id' => true);
+            $this->settings[$Model->alias] = array(
+                'recursive'    => true,
+                'notices'      => true,
+                'autoFields'   => true,
+                'with_team_id' => true
+            );
         }
         $this->settings[$Model->alias] = array_merge($this->settings[$Model->alias], $settings);
     }
@@ -120,8 +125,7 @@ class ExtContainableBehavior extends ContainableBehavior
                 foreach ($this->types as $relation) {
                     if (!empty($instance->__backAssociation[$relation])) {
                         $backupBindings[$relation] = $instance->__backAssociation[$relation];
-                    }
-                    else {
+                    } else {
                         $backupBindings[$relation] = $instance->{$relation};
                     }
                 }
@@ -143,17 +147,16 @@ class ExtContainableBehavior extends ContainableBehavior
                         if (isset($model['keep'][$assoc]) && !empty($model['keep'][$assoc])) {
                             if (isset($model['keep'][$assoc]['fields'])) {
                                 $model['keep'][$assoc]['fields'] = $this->fieldDependencies($containments['models'][$assoc]['instance'],
-                                                                                            $map,
-                                                                                            $model['keep'][$assoc]['fields']);
+                                    $map,
+                                    $model['keep'][$assoc]['fields']);
                             }
                             if (!$reset && empty($instance->__backOriginalAssociation)) {
                                 $instance->__backOriginalAssociation = $backupBindings;
-                            }
-                            elseif ($reset) {
+                            } elseif ($reset) {
                                 $instance->__backAssociation[$type] = $backupBindings[$type];
                             }
                             $instance->{$type}[$assoc] = array_merge($instance->{$type}[$assoc],
-                                                                     $model['keep'][$assoc]);
+                                $model['keep'][$assoc]);
                         }
                         if (!$reset) {
                             $instance->__backInnerAssociation[] = $assoc;
@@ -165,7 +168,7 @@ class ExtContainableBehavior extends ContainableBehavior
 
         if ($this->settings[$Model->alias]['recursive']) {
             $query['recursive'] = (isset($query['recursive'])) ? max($query['recursive'],
-                                                                     $containments['depth']) : $containments['depth'];
+                $containments['depth']) : $containments['depth'];
         }
 
         $autoFields = ($this->settings[$Model->alias]['autoFields']
@@ -193,15 +196,13 @@ class ExtContainableBehavior extends ContainableBehavior
             foreach ($mandatory[$Model->alias] as $field) {
                 if ($field === '--primaryKey--') {
                     $field = $Model->primaryKey;
-                }
-                elseif (preg_match('/^.+\.\-\-[^-]+\-\-$/', $field)) {
+                } elseif (preg_match('/^.+\.\-\-[^-]+\-\-$/', $field)) {
                     list($modelName, $field) = explode('.', $field);
                     if ($Model->useDbConfig === $Model->{$modelName}->useDbConfig) {
                         $field = $modelName . '.' . (
                             ($field === '--primaryKey--') ? $Model->$modelName->primaryKey : $field
                             );
-                    }
-                    else {
+                    } else {
                         $field = null;
                     }
                 }
@@ -267,7 +268,20 @@ class ExtContainableBehavior extends ContainableBehavior
      */
     public function containments(Model $Model, $contain, $containments = array(), $throwErrors = null)
     {
-        $options = array('className', 'joinTable', 'with', 'foreignKey', 'associationForeignKey', 'conditions', 'fields', 'order', 'limit', 'offset', 'unique', 'finderQuery');
+        $options = array(
+            'className',
+            'joinTable',
+            'with',
+            'foreignKey',
+            'associationForeignKey',
+            'conditions',
+            'fields',
+            'order',
+            'limit',
+            'offset',
+            'unique',
+            'finderQuery'
+        );
         $keep = array();
         if ($throwErrors === null) {
             $throwErrors = (empty($this->settings[$Model->alias]) ? true : $this->settings[$Model->alias]['notices']);
@@ -307,19 +321,17 @@ class ExtContainableBehavior extends ContainableBehavior
                 }
                 $optionKey = in_array($key, $options, true);
                 if (!$optionKey && is_string($key) && preg_match('/^[a-z(]/',
-                                                                 $key) && (!isset($Model->{$key}) || !is_object($Model->{$key}))
+                        $key) && (!isset($Model->{$key}) || !is_object($Model->{$key}))
                 ) {
                     $option = 'fields';
                     $val = array($key);
                     if ($key{0} === '(') {
                         $val = preg_split('/\s*,\s*/', substr($key, 1, -1));
-                    }
-                    elseif (preg_match('/ASC|DESC$/', $key)) {
+                    } elseif (preg_match('/ASC|DESC$/', $key)) {
                         $option = 'order';
                         /** @noinspection PhpUndefinedFieldInspection */
                         $val = $Model->{$name}->alias . '.' . $key;
-                    }
-                    elseif (preg_match('/[ =!]/', $key)) {
+                    } elseif (preg_match('/[ =!]/', $key)) {
                         $option = 'conditions';
                         /** @noinspection PhpUndefinedFieldInspection */
                         $val = $Model->{$name}->alias . '.' . $key;
@@ -340,8 +352,7 @@ class ExtContainableBehavior extends ContainableBehavior
                     if (!empty($keep[$name][$key]) && is_array($keep[$name][$key])) {
                         $keep[$name][$key] = array_merge((isset($keep[$name][$key]) ? $keep[$name][$key] : array()),
                             (array)$children[$key]);
-                    }
-                    else {
+                    } else {
                         $keep[$name][$key] = $children[$key];
                     }
                     unset($children[$key]);
@@ -351,7 +362,7 @@ class ExtContainableBehavior extends ContainableBehavior
             if (!isset($Model->{$name}) || !is_object($Model->{$name})) {
                 if ($throwErrors) {
                     trigger_error(__d('cake_dev', 'Model "%s" is not associated with model "%s"', $Model->alias, $name),
-                                  E_USER_WARNING);
+                        E_USER_WARNING);
                 }
                 continue;
             }
@@ -369,7 +380,7 @@ class ExtContainableBehavior extends ContainableBehavior
         }
 
         $containments['models'][$Model->alias]['keep'] = array_merge($containments['models'][$Model->alias]['keep'],
-                                                                     $keep);
+            $keep);
         $containments['depth'] = empty($depths) ? 0 : max($depths);
         return $containments;
     }
@@ -391,8 +402,7 @@ class ExtContainableBehavior extends ContainableBehavior
                     foreach ($bindings as $dependency) {
                         if ($type === 'hasAndBelongsToMany') {
                             $fields[$parent][] = '--primaryKey--';
-                        }
-                        elseif ($type === 'belongsTo') {
+                        } elseif ($type === 'belongsTo') {
                             $fields[$parent][] = $dependency . '.--primaryKey--';
                         }
                     }
@@ -418,7 +428,7 @@ class ExtContainableBehavior extends ContainableBehavior
                 }
                 if (!empty($innerFields) && !empty($Model->{$type}[$dependency]['fields'])) {
                     $Model->{$type}[$dependency]['fields'] = array_unique(array_merge($Model->{$type}[$dependency]['fields'],
-                                                                                      $innerFields));
+                        $innerFields));
                 }
             }
         }
@@ -441,7 +451,7 @@ class ExtContainableBehavior extends ContainableBehavior
                 foreach ($instance->{$type} as $assoc => $options) {
                     if (isset($model['keep'][$assoc])) {
                         $map[$name][$type] = isset($map[$name][$type]) ? array_merge($map[$name][$type],
-                                                                                     (array)$assoc) : (array)$assoc;
+                            (array)$assoc) : (array)$assoc;
                     }
                 }
             }

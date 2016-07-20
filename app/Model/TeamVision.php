@@ -45,7 +45,7 @@ class TeamVision extends AppModel
     public $validate = [
         'name'        => [
             'isString'  => [
-                'rule'       => ['isString',],
+                'rule' => ['isString',],
             ],
             'maxLength' => ['rule' => ['maxLength', 200]],
             'notEmpty'  => [
@@ -142,14 +142,13 @@ class TeamVision extends AppModel
 
         if (isset($data['TeamVision']) === true) {
             $data['TeamVision']['photo_path'] = $upload->uploadUrl($data['TeamVision'], 'TeamVision.photo',
-                                                                   ['style' => 'original']);
+                ['style' => 'original']);
             $data['TeamVision']['modified'] = $time->elapsedTime(h($data['TeamVision']['modified']));
 
-        }
-        else {
+        } else {
             foreach ($data as $key => $team) {
                 $data[$key]['TeamVision']['photo_path'] = $upload->uploadUrl($team['TeamVision'], 'TeamVision.photo',
-                                                                             ['style' => 'original']);
+                    ['style' => 'original']);
                 $data[$key]['TeamVision']['modified'] = $time->elapsedTime(h($team['TeamVision']['modified']));
             }
         }
@@ -190,7 +189,7 @@ class TeamVision extends AppModel
             function () use ($model) {
                 $my_group_list = $model->Team->Group->MemberGroup->getMyGroupList();
                 $group_visions = Hash::extract($model->Team->GroupVision->getGroupVisionsByGroupIds(array_keys($my_group_list)),
-                                               '{n}.GroupVision');
+                    '{n}.GroupVision');
                 foreach ($group_visions as $k => $v) {
                     $group_visions[$k]['target_name'] = isset($my_group_list[$v['group_id']]) ? $my_group_list[$v['group_id']] : null;
                 }

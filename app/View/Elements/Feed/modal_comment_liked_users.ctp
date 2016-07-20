@@ -23,7 +23,7 @@
                     <?php foreach ($liked_users as $user): ?>
                         <?=
                         $this->element('Feed/read_like_user',
-                                       ['user' => $user['User'], 'created' => $user['CommentLike']['created']]) ?>
+                            ['user' => $user['User'], 'created' => $user['CommentLike']['created']]) ?>
                     <?php endforeach ?>
                 </div>
             <?php else: ?>

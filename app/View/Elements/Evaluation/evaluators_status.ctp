@@ -16,7 +16,7 @@
     <?php else: ?>
         <?=
         $this->Upload->uploadImage($user['EvaluatorUser'], 'User.photo', ['style' => 'small'],
-                                   ['class' => 'comment-img'])
+            ['class' => 'comment-img'])
         ?>
     <?php endif; ?>
     <div class="comment-body modal-comment" style="margin-top:5px;">
@@ -29,7 +29,7 @@
             <div class="font_12px font_lightgray modalFeedTextPaddingSmall">
                 <?php if ($user['Evaluation']['status'] == Evaluation::TYPE_STATUS_DONE): ?>
                     <?= __("Completed") ?>(<?= $this->TimeEx->elapsedTime(h($user['Evaluation']['modified']),
-                                                                          viaIsSet($type)) ?>)
+                        viaIsSet($type)) ?>)
                 <?php else: ?>
                     <span style="color:red"><?= __("Incompleted") ?></span>
                 <?php endif; ?>

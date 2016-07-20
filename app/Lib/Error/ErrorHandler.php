@@ -99,9 +99,9 @@ class ErrorHandler
 
         if (!$skip_log && !empty($config['log'])) {
             $message = sprintf("[%s] %s\n%s",
-                               get_class($exception),
-                               $exception->getMessage(),
-                               $exception->getTraceAsString()
+                get_class($exception),
+                $exception->getMessage(),
+                $exception->getTraceAsString()
             );
             CakeLog::write(LOG_ERR, $message);
         }
@@ -119,9 +119,9 @@ class ErrorHandler
             set_error_handler(Configure::read('Error.handler')); // Should be using configured ErrorHandler
             Configure::write('Error.trace', false); // trace is useless here since it's internal
             $message = sprintf("[%s] %s\n%s", // Keeping same message format
-                               get_class($e),
-                               $e->getMessage(),
-                               $e->getTraceAsString()
+                get_class($e),
+                $e->getMessage(),
+                $e->getTraceAsString()
             );
             trigger_error($message, E_USER_ERROR);
         }
@@ -167,8 +167,7 @@ class ErrorHandler
                 'path'        => Debugger::trimPath($file)
             );
             return Debugger::getInstance()->outputError($data);
-        }
-        else {
+        } else {
             $message = $error . ' (' . $code . '): ' . $description . ' in [' . $file . ':' . $line . ']';
             if (!empty($errorConfig['trace'])) {
                 $trace = Debugger::trace(array('start' => 1, 'format' => 'log'));
@@ -204,8 +203,7 @@ class ErrorHandler
 
         if (Configure::read('debug')) {
             call_user_func($exceptionHandler, new FatalErrorException($description, 500, $file, $line));
-        }
-        else {
+        } else {
             call_user_func($exceptionHandler, new InternalErrorException());
         }
         return false;

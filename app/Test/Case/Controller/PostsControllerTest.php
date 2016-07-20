@@ -30,7 +30,8 @@ class PostsControllerTest extends GoalousControllerTestCase
         'app.follower',
         'app.cake_session',
         'app.post',
-        'app.user', 'app.notify_setting',
+        'app.user',
+        'app.notify_setting',
         'app.team',
         'app.badge',
         'app.comment_like',
@@ -119,7 +120,7 @@ class PostsControllerTest extends GoalousControllerTestCase
         $this->_getPostsCommonMock();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/posts/ajax_put_message/1/',
-                          ['method' => 'POST', 'data' => ['body' => 'test', 'file_redis_key' => 'xxx']]);
+            ['method' => 'POST', 'data' => ['body' => 'test', 'file_redis_key' => 'xxx']]);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -142,7 +143,16 @@ class PostsControllerTest extends GoalousControllerTestCase
                        ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
-                   ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
+                   ->will($this->returnValueMap([
+                       [
+                           'test',
+                           [
+                               'title'       => 'test',
+                               'description' => 'test',
+                               'image'       => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png'
+                           ]
+                       ]
+                   ]));
         $data = [
             'Post' => [
                 'body'         => 'test',
@@ -152,7 +162,7 @@ class PostsControllerTest extends GoalousControllerTestCase
             ],
         ];
         $this->testAction('/posts/add',
-                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+            ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
 
     }
 
@@ -167,7 +177,16 @@ class PostsControllerTest extends GoalousControllerTestCase
                        ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
-                   ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
+                   ->will($this->returnValueMap([
+                       [
+                           'test',
+                           [
+                               'title'       => 'test',
+                               'description' => 'test',
+                               'image'       => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png'
+                           ]
+                       ]
+                   ]));
         $data = [
             'Post'      => [
                 'body'         => 'test',
@@ -178,7 +197,7 @@ class PostsControllerTest extends GoalousControllerTestCase
             'socket_id' => 'test',
         ];
         $this->testAction('/posts/add_message',
-                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+            ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
     }
 
     function testAddMessageNoSocketId()
@@ -192,7 +211,16 @@ class PostsControllerTest extends GoalousControllerTestCase
                        ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
-                   ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
+                   ->will($this->returnValueMap([
+                       [
+                           'test',
+                           [
+                               'title'       => 'test',
+                               'description' => 'test',
+                               'image'       => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png'
+                           ]
+                       ]
+                   ]));
         $data = [
             'Post' => [
                 'body'         => 'test',
@@ -202,7 +230,7 @@ class PostsControllerTest extends GoalousControllerTestCase
             ],
         ];
         $this->testAction('/posts/add_message',
-                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+            ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
     }
 
     function testAddSecretCircle()
@@ -216,7 +244,16 @@ class PostsControllerTest extends GoalousControllerTestCase
                        ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
-                   ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
+                   ->will($this->returnValueMap([
+                       [
+                           'test',
+                           [
+                               'title'       => 'test',
+                               'description' => 'test',
+                               'image'       => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png'
+                           ]
+                       ]
+                   ]));
 
         // 秘密サークルへの投稿
         $data = [
@@ -228,7 +265,7 @@ class PostsControllerTest extends GoalousControllerTestCase
             ],
         ];
         $this->testAction('/posts/add',
-                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+            ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
 
     }
 
@@ -243,7 +280,16 @@ class PostsControllerTest extends GoalousControllerTestCase
                        ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
-                   ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
+                   ->will($this->returnValueMap([
+                       [
+                           'test',
+                           [
+                               'title'       => 'test',
+                               'description' => 'test',
+                               'image'       => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png'
+                           ]
+                       ]
+                   ]));
         $data = [
             'Post'      => [
                 'body'         => 'test',
@@ -255,7 +301,7 @@ class PostsControllerTest extends GoalousControllerTestCase
             'socket_id' => 'test',
         ];
         $this->testAction('/posts/add',
-                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+            ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
     }
 
     function testAddOnlyMember()
@@ -269,7 +315,16 @@ class PostsControllerTest extends GoalousControllerTestCase
                        ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
-                   ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
+                   ->will($this->returnValueMap([
+                       [
+                           'test',
+                           [
+                               'title'       => 'test',
+                               'description' => 'test',
+                               'image'       => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png'
+                           ]
+                       ]
+                   ]));
         $data = [
             'Post'      => [
                 'body'         => 'test',
@@ -281,7 +336,7 @@ class PostsControllerTest extends GoalousControllerTestCase
             'socket_id' => 'test',
         ];
         $this->testAction('/posts/add',
-                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+            ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
     }
 
     function testAddNotExistOgp()
@@ -304,7 +359,7 @@ class PostsControllerTest extends GoalousControllerTestCase
             'socket_id' => 'test',
         ];
         $this->testAction('/posts/add',
-                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+            ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
     }
 
     function testAddFailNotPost()
@@ -318,7 +373,7 @@ class PostsControllerTest extends GoalousControllerTestCase
                        ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
         try {
             $this->testAction('/posts/add',
-                              ['method' => 'GET', 'return' => 'contents']);
+                ['method' => 'GET', 'return' => 'contents']);
 
         } catch (RuntimeException $e) {
 
@@ -337,7 +392,7 @@ class PostsControllerTest extends GoalousControllerTestCase
                        ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
         $data = [];
         $this->testAction('/posts/add',
-                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+            ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
     }
 
     function testAddFailValidate()
@@ -351,7 +406,7 @@ class PostsControllerTest extends GoalousControllerTestCase
                        ->will($this->returnValueMap([['add_new_mode', MODE_NEW_PROFILE]]));
         $data = ['Post' => ['comment_count' => 'test']];
         $this->testAction('/posts/add',
-                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+            ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
     }
 
     function testPushCommentToPost()
@@ -391,7 +446,12 @@ class PostsControllerTest extends GoalousControllerTestCase
         $Posts->Post->save($data);
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
-                   ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => null]]]));
+                   ->will($this->returnValueMap([
+                       [
+                           'test',
+                           ['title' => 'test', 'description' => 'test', 'image' => null]
+                       ]
+                   ]));
         $data = [
             'Comment' => [
                 'body'    => 'test',
@@ -401,7 +461,7 @@ class PostsControllerTest extends GoalousControllerTestCase
         ];
 
         $this->testAction('/posts/ajax_add_comment/',
-                          ['method' => 'POST', 'data' => $data]);
+            ['method' => 'POST', 'data' => $data]);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -421,7 +481,16 @@ class PostsControllerTest extends GoalousControllerTestCase
         $Posts->Post->save($data);
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
-                   ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
+                   ->will($this->returnValueMap([
+                       [
+                           'test',
+                           [
+                               'title'       => 'test',
+                               'description' => 'test',
+                               'image'       => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png'
+                           ]
+                       ]
+                   ]));
         $data = [
             'Comment' => [
                 'body'    => 'test',
@@ -431,7 +500,7 @@ class PostsControllerTest extends GoalousControllerTestCase
         ];
 
         $this->testAction('/posts/ajax_add_comment/',
-                          ['method' => 'POST', 'data' => $data]);
+            ['method' => 'POST', 'data' => $data]);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -444,7 +513,16 @@ class PostsControllerTest extends GoalousControllerTestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
-                   ->will($this->returnValueMap([['test', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
+                   ->will($this->returnValueMap([
+                       [
+                           'test',
+                           [
+                               'title'       => 'test',
+                               'description' => 'test',
+                               'image'       => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png'
+                           ]
+                       ]
+                   ]));
         $data = [
             'Comment' => [
                 'body'    => 'test',
@@ -454,7 +532,7 @@ class PostsControllerTest extends GoalousControllerTestCase
         ];
 
         $this->testAction('/posts/ajax_add_comment/',
-                          ['method' => 'POST', 'data' => $data]);
+            ['method' => 'POST', 'data' => $data]);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -463,7 +541,7 @@ class PostsControllerTest extends GoalousControllerTestCase
         $this->_getPostsCommonMock();
         try {
             $this->testAction('/posts/ajax_add_comment',
-                              ['method' => 'GET', 'return' => 'contents']);
+                ['method' => 'GET', 'return' => 'contents']);
 
         } catch (RuntimeException $e) {
 
@@ -477,7 +555,7 @@ class PostsControllerTest extends GoalousControllerTestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $data = [];
         $this->testAction('/posts/ajax_add_comment',
-                          ['method' => 'POST', 'data' => $data]);
+            ['method' => 'POST', 'data' => $data]);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -487,7 +565,7 @@ class PostsControllerTest extends GoalousControllerTestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $data = ['Comment' => ['post_id' => 9999999999]];
         $this->testAction('/posts/ajax_add_comment',
-                          ['method' => 'POST', 'data' => $data]);
+            ['method' => 'POST', 'data' => $data]);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -497,7 +575,7 @@ class PostsControllerTest extends GoalousControllerTestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $data = ['Comment' => ['post_id' => 1, 'comment_like_count' => 'test']];
         $this->testAction('/posts/ajax_add_comment',
-                          ['method' => 'POST', 'data' => $data]);
+            ['method' => 'POST', 'data' => $data]);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -646,7 +724,7 @@ class PostsControllerTest extends GoalousControllerTestCase
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/posts/ajax_get_edit_post_form/post_id:' . $Posts->Post->getLastInsertID(),
-                          ['method' => 'GET']);
+            ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -682,7 +760,7 @@ class PostsControllerTest extends GoalousControllerTestCase
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $this->testAction('/posts/ajax_get_edit_comment_form/comment_id:' . $Posts->Post->Comment->getLastInsertID(),
-                          ['method' => 'GET']);
+            ['method' => 'GET']);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -1002,7 +1080,7 @@ class PostsControllerTest extends GoalousControllerTestCase
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $res = $this->testAction('/posts/ajax_get_user_page_post_feed/user_id:2/month_index:1/page:1',
-                                 ['method' => 'GET']);
+            ['method' => 'GET']);
         $data = json_decode($res, true);
         $this->assertArrayHasKey('html', $data);
         $this->assertArrayHasKey('count', $data);
@@ -1017,7 +1095,7 @@ class PostsControllerTest extends GoalousControllerTestCase
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $res = $this->testAction('/posts/ajax_get_circle_files/circle_id:1/month_index:1/page:1',
-                                 ['method' => 'GET']);
+            ['method' => 'GET']);
         $data = json_decode($res, true);
         $this->assertArrayHasKey('html', $data);
         $this->assertArrayHasKey('count', $data);
@@ -1046,7 +1124,7 @@ class PostsControllerTest extends GoalousControllerTestCase
 
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $res = $this->testAction('/posts/ajax_remove_file/',
-                                 ['method' => 'POST', 'data' => ['AttachedFile' => ['file_id' => 'xxx']]]);
+            ['method' => 'POST', 'data' => ['AttachedFile' => ['file_id' => 'xxx']]]);
         $data = json_decode($res, true);
         $this->assertArrayHasKey('error', $data);
         $this->assertArrayHasKey('msg', $data);
@@ -1172,7 +1250,16 @@ class PostsControllerTest extends GoalousControllerTestCase
         $Posts = $this->_getPostsCommonMock();
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
-                   ->will($this->returnValueMap([['test_aaaa', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
+                   ->will($this->returnValueMap([
+                       [
+                           'test_aaaa',
+                           [
+                               'title'       => 'test',
+                               'description' => 'test',
+                               'image'       => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png'
+                           ]
+                       ]
+                   ]));
 
         $user_id = 1;
         $team_id = 1;
@@ -1352,7 +1439,16 @@ class PostsControllerTest extends GoalousControllerTestCase
         $Posts = $this->_getPostsCommonMock();
         /** @noinspection PhpUndefinedMethodInspection */
         $Posts->Ogp->expects($this->any())->method('getOgpByUrlInText')
-                   ->will($this->returnValueMap([['test_aaaa', ['title' => 'test', 'description' => 'test', 'image' => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png']]]));
+                   ->will($this->returnValueMap([
+                       [
+                           'test_aaaa',
+                           [
+                               'title'       => 'test',
+                               'description' => 'test',
+                               'image'       => 'http://s3-ap-northeast-1.amazonaws.com/goalous-www/external/img/gl_logo_no_str_60x60.png'
+                           ]
+                       ]
+                   ]));
 
         $user_id = 1;
         $team_id = 1;
@@ -1376,7 +1472,7 @@ class PostsControllerTest extends GoalousControllerTestCase
 
         try {
             $this->testAction('posts/comment_edit/comment_id:' . $comment['Comment']['id'],
-                              ['data' => $data, 'method' => 'POST']);
+                ['data' => $data, 'method' => 'POST']);
         } catch (NotFoundException $e) {
         }
         $this->assertFalse(isset($e), "[正常]コメント編集");
@@ -1408,7 +1504,7 @@ class PostsControllerTest extends GoalousControllerTestCase
 
         try {
             $this->testAction('posts/comment_edit/comment_id:' . $comment['Comment']['id'],
-                              ['data' => $data, 'method' => 'POST']);
+                ['data' => $data, 'method' => 'POST']);
         } catch (NotFoundException $e) {
         }
         $this->assertFalse(isset($e), "[異常ValidationError]コメント編集");
@@ -1524,14 +1620,18 @@ class PostsControllerTest extends GoalousControllerTestCase
     {
         $Posts = $this->_getPostsCommonMock();
         $circles = [
-            ['CircleMember' => [
-                ['User' => ['id' => 1]],
-                ['User' => ['id' => 2]],
-            ]],
-            ['CircleMember' => [
-                ['User' => ['id' => 2]],
-                ['User' => ['id' => 3]],
-            ]],
+            [
+                'CircleMember' => [
+                    ['User' => ['id' => 1]],
+                    ['User' => ['id' => 2]],
+                ]
+            ],
+            [
+                'CircleMember' => [
+                    ['User' => ['id' => 2]],
+                    ['User' => ['id' => 3]],
+                ]
+            ],
         ];
         $users = [
             ['User' => ['id' => 1]],
@@ -1642,7 +1742,9 @@ class PostsControllerTest extends GoalousControllerTestCase
         $Posts = $this->_getPostsCommonMock();
         $value_map = [
             [
-                null, true, '/posts/attached_file_list/circle_id:1'
+                null,
+                true,
+                '/posts/attached_file_list/circle_id:1'
             ]
         ];
         /** @noinspection PhpUndefinedMethodInspection */
@@ -1782,12 +1884,15 @@ class PostsControllerTest extends GoalousControllerTestCase
             ],
         ]);
         $value_map = [
-            [null, [
-                'id'              => '1',
-                'last_first'      => true,
-                'language'        => 'jpn',
-                'photo_file_name' => ''
-            ]],
+            [
+                null,
+                [
+                    'id'              => '1',
+                    'last_first'      => true,
+                    'language'        => 'jpn',
+                    'photo_file_name' => ''
+                ]
+            ],
             ['id', '1'],
             ['language', 'jpn'],
             ['auto_language_flg', true]
