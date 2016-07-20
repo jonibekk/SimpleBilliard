@@ -537,11 +537,7 @@ $(document).ready(function () {
                 $editCircleForm.bootstrapValidator({
                     excluded: [':disabled'],
                     live: 'enabled',
-                    feedbackIcons: {
-                        valid: 'fa fa-check',
-                        invalid: 'fa fa-times',
-                        validating: 'fa fa-refresh'
-                    },
+                    feedbackIcons: {},
                     fields: {
                         "data[Circle][photo]": {
                             feedbackIcons: 'false',
@@ -1840,11 +1836,7 @@ $(document).ready(function () {
 
     $('.validate').bootstrapValidator({
         live: 'enabled',
-        feedbackIcons: {
-            valid: 'fa fa-check',
-            invalid: 'fa fa-times',
-            validating: 'fa fa-refresh'
-        },
+        feedbackIcons: {},
         fields: {
             "data[User][password]": {
                 validators: {
