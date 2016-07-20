@@ -352,6 +352,10 @@ class SignupController extends AppController
                 $res['is_not_available'] = true;
                 throw new RuntimeException(__('Some error occurred. Please try again from the start.'));
             }
+            //if already verified email, display error
+            if(isset($data['Email']['email']) && $this->Email->isVerified($data['Email']['email'])){
+                throw new RuntimeException(__('This email address has already been used. Use another email address.'));
+            }
             //validation for all datas
             $validation_msg = $this->_getValidationErrorMsg($data, true);
             if (!empty($validation_msg)) {
