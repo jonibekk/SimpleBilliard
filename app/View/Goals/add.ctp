@@ -524,14 +524,10 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
         <?php endif;?>
     });
     $('#AddGoalFormPurpose').bootstrapValidator({
-        live: 'enabled',
-        feedbackIcons: {}
+        live: 'enabled'
     });
     $('#AddGoalFormKeyResult').bootstrapValidator({
         live: 'enabled',
-        feedbackIcons: {
-
-        },
         fields: {
             "data[Goal][start_date]": {
                 validators: {
@@ -567,10 +563,10 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
     });
     $('#AddGoalFormOther').bootstrapValidator({
         live: 'enabled',
-        feedbackIcons: {},
+
         fields: {
             "data[Goal][photo]": {
-                feedbackIcons: 'false',
+
                 validators: {
                     file: {
                         extension: 'jpeg,jpg,png,gif',

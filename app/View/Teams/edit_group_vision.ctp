@@ -129,10 +129,8 @@
 
         $('#AddGroupVisionForm').bootstrapValidator({
             live: 'enabled',
-            feedbackIcons: {},
             fields: {
                 "data[GroupVision][photo]": {
-                    feedbackIcons: 'false',
                     validators: {
                         file: {
                             extension: 'jpeg,jpg,png,gif',

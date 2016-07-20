@@ -153,7 +153,7 @@
     $(document).ready(function () {
         $('#UserAccountForm').bootstrapValidator({
             live: 'enabled',
-            feedbackIcons: {},
+
             fields: {}
         });
     });

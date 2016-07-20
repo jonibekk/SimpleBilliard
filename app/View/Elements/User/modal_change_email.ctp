@@ -73,7 +73,7 @@
     $(document).ready(function () {
         $('#ChangeEmail').bootstrapValidator({
             live: 'enabled',
-            feedbackIcons: {},
+
             fields: {
                 "data[User][password_request2]": {
                     validators: {

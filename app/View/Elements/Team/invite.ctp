@@ -93,8 +93,7 @@
         $('[rel="tooltip"]').tooltip();
 
         $('#InviteTeamForm').bootstrapValidator({
-            live: 'enabled',
-            feedbackIcons: {}
+            live: 'enabled'
         });
     });
 </script>

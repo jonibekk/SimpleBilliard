@@ -121,10 +121,8 @@
 
         $('#AddTeamVisionForm').bootstrapValidator({
             live: 'enabled',
-            feedbackIcons: {},
             fields: {
                 "data[TeamVision][photo]": {
-                    feedbackIcons: 'false',
                     validators: {
                         file: {
                             extension: 'jpeg,jpg,png,gif',

@@ -272,7 +272,7 @@
         <?php if(isset($goal['Collaborator']['id'])):?>
         $('#GoalApprovalIndexForm_<?= $goal['Collaborator']['id']?>').bootstrapValidator({
             live: 'enabled',
-            feedbackIcons: {},
+
             fields: {}
         });
         <?php endif;?>

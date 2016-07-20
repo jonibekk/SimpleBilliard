@@ -156,10 +156,8 @@
 
         $('#AddTeamForm').bootstrapValidator({
             live: 'enabled',
-            feedbackIcons: {},
             fields: {
                 "data[Team][photo]": {
-                    feedbackIcons: 'false',
                     validators: {
                         file: {
                             extension: 'jpeg,jpg,png,gif',

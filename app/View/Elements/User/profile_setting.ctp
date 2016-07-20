@@ -257,10 +257,10 @@ Need New Customers?<br>\n
     $(document).ready(function () {
         $('#ChangeProfileForm').bootstrapValidator({
             live: 'enabled',
-            feedbackIcons: {},
+
             fields: {
                 "data[User][photo]": {
-                    feedbackIcons: 'false',
+
                     validators: {
                         file: {
                             extension: 'jpeg,jpg,png,gif',

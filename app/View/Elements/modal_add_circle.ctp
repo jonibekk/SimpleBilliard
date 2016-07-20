@@ -162,10 +162,10 @@
         $('#AddCircleForm').bootstrapValidator({
             excluded: [':disabled'],
             live: 'enabled',
-            feedbackIcons: {},
+
             fields: {
                 "data[Circle][photo]": {
-                    feedbackIcons: 'false',
+
                     validators: {
                         file: {
                             extension: 'jpeg,jpg,png,gif',
