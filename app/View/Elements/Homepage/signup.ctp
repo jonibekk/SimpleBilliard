@@ -22,8 +22,8 @@
         <h2 class="title"><?= __('Let\'s go to Goalous!') ?></h2>
         <p class="summary"><?= __('It\'s free until 31 Aug 2016! Try it!') ?></p>
         <a href="<?= $this->Html->url([
-            'controller' => 'users',
-            'action'     => 'register',
+            'controller' => 'signup',
+            'action'     => 'email',
             '?'          => ['type' => 'bottom']
         ]) ?>"
            class="col-md-6 col-md-offset-3" id="RegisterLinkBottom">

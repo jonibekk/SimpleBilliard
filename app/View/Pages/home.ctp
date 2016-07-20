@@ -104,8 +104,8 @@ for ($i = 0; $i < $num_ogp; $i++) {
             </div>
             <div class="col-md-5 col-sm-12 col-xs-12">
                 <a href="<?= $this->Html->url([
-                    'controller' => 'users',
-                    'action'     => 'register',
+                    'controller' => 'signup',
+                    'action'     => 'email',
                     '?'          => ['type' => 'middle']
                 ]) ?>"
                    id="RegisterLinkTopMiddle">
