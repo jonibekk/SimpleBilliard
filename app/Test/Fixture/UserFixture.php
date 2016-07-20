@@ -13,38 +13,238 @@ class UserFixture extends CakeTestFixtureEx
      * @var array
      */
     public $fields = array(
-        'id'                 => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'ユーザID'),
-        'password'           => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 128, 'collate' => 'utf8mb4_general_ci', 'comment' => 'パスワード(暗号化)', 'charset' => 'utf8mb4'),
-        'password_token'     => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 128, 'key' => 'index', 'collate' => 'utf8mb4_general_ci', 'comment' => 'パスワードトークン(パスワード失念時の認証用)', 'charset' => 'utf8mb4'),
-        '2fa_secret'         => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 128, 'collate' => 'utf8mb4_general_ci', 'comment' => '２要素認証シークレットキー', 'charset' => 'utf8mb4'),
-        'password_modified'  => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => false, 'comment' => 'パスワード最終更新日'),
-        'no_pass_flg'        => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => 'パスワード未使用フラグ(ソーシャルログインのみ利用時)'),
-        'photo_file_name'    => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => 'プロフィール画像', 'charset' => 'utf8mb4'),
-        'primary_email_id'   => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'プライマリメールアドレスID(hasOneでEmailモデルに関連)'),
-        'active_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0', 'key' => 'index', 'comment' => 'アクティブフラグ(ユーザ認証済みの場合On)'),
-        'last_login'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '最終ログイン日時'),
-        'admin_flg'          => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '管理者フラグ(管理画面が開ける人)'),
-        'default_team_id'    => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'デフォルトチーム(belongsToでTeamモデルに関連)'),
-        'timezone'           => array('type' => 'float', 'null' => true, 'default' => null, 'unsigned' => false, 'comment' => 'タイムゾーン(UTCを起点とした時差)'),
-        'auto_timezone_flg'  => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '自動タイムゾーンフラグ(Onの場合はOSからタイムゾーンを取得する)'),
-        'language'           => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 128, 'collate' => 'utf8mb4_general_ci', 'comment' => '言語(日本語ならjpn)', 'charset' => 'utf8mb4'),
-        'auto_language_flg'  => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '自動言語設定フラグ(Onの場合はブラウザから言語を取得する)'),
-        'romanize_flg'       => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => 'ローマ字表記フラグ(Onの場合は自分の名前がアプリ内で英語表記になる)。local_first_name,local_last_nameが入力されていても、first_name,last_nameがつかわれる。'),
-        'update_email_flg'   => array('type' => 'boolean', 'null' => false, 'default' => '1', 'comment' => '更新情報メールフラグ(Onの場合はアプリから更新情報がメールで届く)'),
-        'del_flg'            => array('type' => 'boolean', 'null' => false, 'default' => '0', 'key' => 'index', 'comment' => '削除フラグ'),
-        'deleted'            => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'ユーザが退会した日付時刻'),
-        'gender_type'        => array('type' => 'integer', 'null' => true, 'default' => null, 'length' => 3, 'unsigned' => true, 'comment' => '性別(1:男,2:女)'),
+        'id'                 => array(
+            'type'     => 'biginteger',
+            'null'     => false,
+            'default'  => null,
+            'unsigned' => true,
+            'key'      => 'primary',
+            'comment'  => 'ユーザID'
+        ),
+        'password'           => array(
+            'type'    => 'string',
+            'null'    => true,
+            'default' => null,
+            'length'  => 128,
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => 'パスワード(暗号化)',
+            'charset' => 'utf8mb4'
+        ),
+        'password_token'     => array(
+            'type'    => 'string',
+            'null'    => true,
+            'default' => null,
+            'length'  => 128,
+            'key'     => 'index',
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => 'パスワードトークン(パスワード失念時の認証用)',
+            'charset' => 'utf8mb4'
+        ),
+        '2fa_secret'         => array(
+            'type'    => 'string',
+            'null'    => true,
+            'default' => null,
+            'length'  => 128,
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => '２要素認証シークレットキー',
+            'charset' => 'utf8mb4'
+        ),
+        'password_modified'  => array(
+            'type'     => 'integer',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => false,
+            'comment'  => 'パスワード最終更新日'
+        ),
+        'no_pass_flg'        => array(
+            'type'    => 'boolean',
+            'null'    => false,
+            'default' => '0',
+            'comment' => 'パスワード未使用フラグ(ソーシャルログインのみ利用時)'
+        ),
+        'photo_file_name'    => array(
+            'type'    => 'string',
+            'null'    => true,
+            'default' => null,
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => 'プロフィール画像',
+            'charset' => 'utf8mb4'
+        ),
+        'primary_email_id'   => array(
+            'type'     => 'biginteger',
+            'null'     => false,
+            'default'  => null,
+            'unsigned' => true,
+            'key'      => 'index',
+            'comment'  => 'プライマリメールアドレスID(hasOneでEmailモデルに関連)'
+        ),
+        'active_flg'         => array(
+            'type'    => 'boolean',
+            'null'    => false,
+            'default' => '0',
+            'key'     => 'index',
+            'comment' => 'アクティブフラグ(ユーザ認証済みの場合On)'
+        ),
+        'last_login'         => array(
+            'type'     => 'integer',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'comment'  => '最終ログイン日時'
+        ),
+        'admin_flg'          => array(
+            'type'    => 'boolean',
+            'null'    => false,
+            'default' => '0',
+            'comment' => '管理者フラグ(管理画面が開ける人)'
+        ),
+        'default_team_id'    => array(
+            'type'     => 'biginteger',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'key'      => 'index',
+            'comment'  => 'デフォルトチーム(belongsToでTeamモデルに関連)'
+        ),
+        'timezone'           => array(
+            'type'     => 'float',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => false,
+            'comment'  => 'タイムゾーン(UTCを起点とした時差)'
+        ),
+        'auto_timezone_flg'  => array(
+            'type'    => 'boolean',
+            'null'    => false,
+            'default' => '1',
+            'comment' => '自動タイムゾーンフラグ(Onの場合はOSからタイムゾーンを取得する)'
+        ),
+        'language'           => array(
+            'type'    => 'string',
+            'null'    => true,
+            'default' => null,
+            'length'  => 128,
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => '言語(日本語ならjpn)',
+            'charset' => 'utf8mb4'
+        ),
+        'auto_language_flg'  => array(
+            'type'    => 'boolean',
+            'null'    => false,
+            'default' => '0',
+            'comment' => '自動言語設定フラグ(Onの場合はブラウザから言語を取得する)'
+        ),
+        'romanize_flg'       => array(
+            'type'    => 'boolean',
+            'null'    => false,
+            'default' => '0',
+            'comment' => 'ローマ字表記フラグ(Onの場合は自分の名前がアプリ内で英語表記になる)。local_first_name,local_last_nameが入力されていても、first_name,last_nameがつかわれる。'
+        ),
+        'update_email_flg'   => array(
+            'type'    => 'boolean',
+            'null'    => false,
+            'default' => '1',
+            'comment' => '更新情報メールフラグ(Onの場合はアプリから更新情報がメールで届く)'
+        ),
+        'del_flg'            => array(
+            'type'    => 'boolean',
+            'null'    => false,
+            'default' => '0',
+            'key'     => 'index',
+            'comment' => '削除フラグ'
+        ),
+        'deleted'            => array(
+            'type'     => 'integer',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'comment'  => 'ユーザが退会した日付時刻'
+        ),
+        'gender_type'        => array(
+            'type'     => 'integer',
+            'null'     => true,
+            'default'  => null,
+            'length'   => 3,
+            'unsigned' => true,
+            'comment'  => '性別(1:男,2:女)'
+        ),
         'birth_day'          => array('type' => 'date', 'null' => true, 'default' => null, 'comment' => '誕生日'),
-        'hide_year_flg'      => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => '誕生日の年を隠すフラグ'),
-        'phone_no'           => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 20, 'collate' => 'utf8mb4_general_ci', 'comment' => '電話番号', 'charset' => 'utf8mb4'),
-        'hometown'           => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 128, 'collate' => 'utf8mb4_general_ci', 'comment' => '出身地', 'charset' => 'utf8mb4'),
-        'comment'            => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => 'コメント', 'charset' => 'utf8mb4'),
-        'first_name'         => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 128, 'collate' => 'utf8mb4_general_ci', 'comment' => '英名', 'charset' => 'utf8mb4'),
-        'last_name'          => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 128, 'collate' => 'utf8mb4_general_ci', 'comment' => '英姓', 'charset' => 'utf8mb4'),
-        'middle_name'        => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 128, 'collate' => 'utf8mb4_general_ci', 'comment' => '英ミドルネーム', 'charset' => 'utf8mb4'),
-        'setup_complete_flg' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => 'セットアップが完了したかどうか'),
-        'created'            => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'ユーザーデータを登録した日付時刻'),
-        'modified'           => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'ユーザーデータを最後に更新した日付時刻'),
+        'hide_year_flg'      => array(
+            'type'    => 'boolean',
+            'null'    => false,
+            'default' => '0',
+            'comment' => '誕生日の年を隠すフラグ'
+        ),
+        'phone_no'           => array(
+            'type'    => 'string',
+            'null'    => true,
+            'default' => null,
+            'length'  => 20,
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => '電話番号',
+            'charset' => 'utf8mb4'
+        ),
+        'hometown'           => array(
+            'type'    => 'string',
+            'null'    => true,
+            'default' => null,
+            'length'  => 128,
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => '出身地',
+            'charset' => 'utf8mb4'
+        ),
+        'comment'            => array(
+            'type'    => 'text',
+            'null'    => true,
+            'default' => null,
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => 'コメント',
+            'charset' => 'utf8mb4'
+        ),
+        'first_name'         => array(
+            'type'    => 'string',
+            'null'    => false,
+            'default' => null,
+            'length'  => 128,
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => '英名',
+            'charset' => 'utf8mb4'
+        ),
+        'last_name'          => array(
+            'type'    => 'string',
+            'null'    => false,
+            'default' => null,
+            'length'  => 128,
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => '英姓',
+            'charset' => 'utf8mb4'
+        ),
+        'middle_name'        => array(
+            'type'    => 'string',
+            'null'    => true,
+            'default' => null,
+            'length'  => 128,
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => '英ミドルネーム',
+            'charset' => 'utf8mb4'
+        ),
+        'setup_complete_flg' => array('type'    => 'boolean',
+                                      'null'    => false,
+                                      'default' => '0',
+                                      'comment' => 'セットアップが完了したかどうか'
+        ),
+        'created'            => array('type'     => 'integer',
+                                      'null'     => true,
+                                      'default'  => null,
+                                      'unsigned' => true,
+                                      'comment'  => 'ユーザーデータを登録した日付時刻'
+        ),
+        'modified'           => array('type'     => 'integer',
+                                      'null'     => true,
+                                      'default'  => null,
+                                      'unsigned' => true,
+                                      'comment'  => 'ユーザーデータを最後に更新した日付時刻'
+        ),
         'indexes'            => array(
             'PRIMARY'          => array('column' => 'id', 'unique' => 1),
             'primary_email_id' => array('column' => 'primary_email_id', 'unique' => 0),

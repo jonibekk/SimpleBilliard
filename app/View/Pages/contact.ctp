@@ -26,52 +26,52 @@ Page毎に要素が変わるもの
 */
 $meta_contact = [
     [
-        "name" => "description",
+        "name"    => "description",
         "content" => __('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。導入のご相談を受け付けています。'),
     ],
     [
-        "name" => "keywords",
+        "name"    => "keywords",
         "content" => "目標管理,目標達成,社内SNS,評価,MBO",
     ],
     [
         "property" => "og:type",
-        "content" => "website",
+        "content"  => "website",
     ],
     [
         "property" => "og:title",
-        "content" => __('Contact us | Goalous'),
+        "content"  => __('Contact us | Goalous'),
     ],
     [
         "property" => "og:description",
-        "content" =>__('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。導入のご相談を受け付けています。'),
+        "content"  => __('Goalous (ゴーラス) は、ゴール達成への最強にオープンな社内SNS。すべてのメンバーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できます。導入のご相談を受け付けています。'),
     ],
     [
         "property" => "og:url",
-        "content" => "https://www.goalous.com/contact/",
+        "content"  => "https://www.goalous.com/contact/",
     ],
     [
         "property" => "og:image",
-        "content" => "https://www.goalous.com/img/homepage/background/promo-bg.jpg",
+        "content"  => "https://www.goalous.com/img/homepage/background/promo-bg.jpg",
     ],
     [
         "property" => "og:site_name",
-        "content" => __('Goalous │ Enterprise SNS the most ever open for Goal'),
+        "content"  => __('Goalous │ Enterprise SNS the most ever open for Goal'),
     ],
     [
         "property" => "fb:app_id",
-        "content" => "966242223397117",
+        "content"  => "966242223397117",
     ],
     [
-        "name" => "twitter_card",
+        "name"    => "twitter_card",
         "content" => "summary",
     ],
     [
-        "name" => "twitter:site",
+        "name"    => "twitter:site",
         "content" => "@goalous",
     ]
 ];
 $num_ogp = count($meta_contact);
-for($i = 0; $i < $num_ogp; $i++){
+for ($i = 0; $i < $num_ogp; $i++) {
     echo $this->Html->meta($meta_contact[$i]);
 }
 ?>
@@ -215,16 +215,22 @@ for($i = 0; $i < $num_ogp; $i++){
                         <div class="input-group">
                             <span class="input-group-addon">
                                 <?= $this->Form->checkbox('sales_people.',
-                                                          ['value'   => $v['name'], 'hiddenField' => false,
-                                                           'checked' => isset($this->request->data['Email']['sales_people']) &&
-                                                           in_array($v['name'],
-                                                                    $this->request->data['Email']['sales_people']) ? 'checked' : null
-                                                          ]) ?>
+                                    [
+                                        'value'       => $v['name'],
+                                        'hiddenField' => false,
+                                        'checked'     => isset($this->request->data['Email']['sales_people']) &&
+                                        in_array($v['name'],
+                                            $this->request->data['Email']['sales_people']) ? 'checked' : null
+                                    ]) ?>
                             </span>
                             <div class="media">
                                 <div class="media-left media-middle">
                                     <?= $this->Html->image($v['img'],
-                                                           array('alt' => 'photo', 'width' => '60', 'height' => '60', 'class' => 'img-circle')); ?>
+                                        array('alt'    => 'photo',
+                                              'width'  => '60',
+                                              'height' => '60',
+                                              'class'  => 'img-circle'
+                                        )); ?>
                                 </div>
                                 <div class="media-body media-middle">
                                     <?=
@@ -250,9 +256,9 @@ for($i = 0; $i < $num_ogp; $i++){
                         'pagename'   => 'terms',
                         'lang'       => $top_lang,
                     ],
-                                          [
-                                              'target' => '_blank',
-                                          ]
+                        [
+                            'target' => '_blank',
+                        ]
                     ) ?>
                     <?= __('・') ?>
                     <?= $this->Html->link(__('PrivacyPolicy'), [
@@ -261,14 +267,14 @@ for($i = 0; $i < $num_ogp; $i++){
                         'pagename'   => 'privacy_policy',
                         'lang'       => $top_lang,
                     ],
-                                          [
-                                              'target' => '_blank',
-                                          ]
+                        [
+                            'target' => '_blank',
+                        ]
                     ) ?>
                     <?= __(' - Do you agree with them?') ?>
                 </label>
                 <?= $this->Form->error('need', __('Need to agree to terms and policy.'),
-                                       ['class' => 'contact-error-msg-block']) ?>
+                    ['class' => 'contact-error-msg-block']) ?>
             </div>
             <p>
                 <?= $this->Form->submit(__('Go to confirm'), ['class' => 'btn btn-block btn-cta-primary']) ?>

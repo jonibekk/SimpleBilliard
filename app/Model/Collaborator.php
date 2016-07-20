@@ -159,7 +159,8 @@ class Collaborator extends AppModel
                 ],
             ],
             'fields'     => [
-                'goal_id', 'goal_id'
+                'goal_id',
+                'goal_id'
             ],
             'page'       => $page,
             'limit'      => $limit
@@ -217,8 +218,13 @@ class Collaborator extends AppModel
         return false;
     }
 
-    function getCollaboGoalDetail($team_id, $goal_user_id, $approval_flg, $is_include_priority_0 = true, $term_type = null)
-    {
+    function getCollaboGoalDetail(
+        $team_id,
+        $goal_user_id,
+        $approval_flg,
+        $is_include_priority_0 = true,
+        $term_type = null
+    ) {
         $conditions = [
             'Collaborator.team_id'    => $team_id,
             'Collaborator.user_id'    => $goal_user_id,
@@ -235,8 +241,14 @@ class Collaborator extends AppModel
             'contain'    => [
                 'Goal'            => [
                     'fields'       => [
-                        'name', 'goal_category_id', 'end_date', 'photo_file_name',
-                        'value_unit', 'target_value', 'start_value', 'description'
+                        'name',
+                        'goal_category_id',
+                        'end_date',
+                        'photo_file_name',
+                        'value_unit',
+                        'target_value',
+                        'start_value',
+                        'description'
                     ],
                     'Purpose'      => ['fields' => 'name'],
                     'GoalCategory' => ['fields' => 'name'],
@@ -276,9 +288,9 @@ class Collaborator extends AppModel
         $collabo = $this->findById($this->id);
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true), 'user_data');
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $collabo['Collaborator']['user_id']),
-                      'user_data');
+            'user_data');
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true, $collabo['Collaborator']['user_id']),
-                      'user_data');
+            'user_data');
     }
 
     function countCollaboGoal($team_id, $user_id, $goal_user_id, $approval_flg)
@@ -361,10 +373,11 @@ class Collaborator extends AppModel
      */
     function getCollaboratorByGoalId($goal_id, array $params = [])
     {
-        $params = array_merge(['limit' => null,
-                               'page'  => 1,
-                               'order' => ['Collaborator.created' => 'ASC'],
-                              ], $params);
+        $params = array_merge([
+            'limit' => null,
+            'page'  => 1,
+            'order' => ['Collaborator.created' => 'ASC'],
+        ], $params);
         $options = [
             'conditions' => [
                 'goal_id' => $goal_id,
@@ -394,7 +407,8 @@ class Collaborator extends AppModel
                 'team_id' => $this->current_team_id,
             ],
             'fields'     => [
-                'user_id', 'user_id'
+                'user_id',
+                'user_id'
             ],
         ];
         if ($type !== null) {

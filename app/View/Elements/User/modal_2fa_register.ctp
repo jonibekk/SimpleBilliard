@@ -22,6 +22,7 @@
     .two_fa_title {
 
     }
+
     .two_fa_app_download_link {
         color: #6495ED;
     }
@@ -51,45 +52,50 @@
         ]); ?>
         <div class="modal-body" style="max-height: none">
             <div class="two_fa_step_box">
-                <label for="" ><?= __("STEP 1 : ") ?><?= __("Install Application for 2-Step Verification") ?></label>
+                <label for=""><?= __("STEP 1 : ") ?><?= __("Install Application for 2-Step Verification") ?></label>
                 <p><?= __('Download Google Authenticator') ?></p>
                 <div class="modal_two_fa_download">
-                  <div class="btn-frame">
-                    <p><i class="fa fa-android"></i> Android</p>
-                    <a class="two_fa_app_download_link"href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank"><?= __("Download") ?></a>
-                  </div>
-                  <div class="btn-frame">
-                      <p><i class="fa fa-apple"></i> iOS</p>
-                      <a class="two_fa_app_download_link" href="http://itunes.apple.com/us/app/google-authenticator/id388497605" target="_blank"><?= __("Download") ?></a>
-                  </div>
+                    <div class="btn-frame">
+                        <p><i class="fa fa-android"></i> Android</p>
+                        <a class="two_fa_app_download_link"
+                           href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2"
+                           target="_blank"><?= __("Download") ?></a>
+                    </div>
+                    <div class="btn-frame">
+                        <p><i class="fa fa-apple"></i> iOS</p>
+                        <a class="two_fa_app_download_link"
+                           href="http://itunes.apple.com/us/app/google-authenticator/id388497605"
+                           target="_blank"><?= __("Download") ?></a>
+                    </div>
                 </div>
             </div>
 
             <div class="two_fa_step_box">
-                <label for="" ><?= __("STEP 2 : ") ?><?= __("Scan QR") ?></label>
+                <label for=""><?= __("STEP 2 : ") ?><?= __("Scan QR") ?></label>
                 <p><?= __("Start the app and read QR by camera.") ?></p>
-                <?= $this->Html->image($url_2fa,[
-                  'width' => '120',
-                  'height' => '120',
+                <?= $this->Html->image($url_2fa, [
+                    'width'  => '120',
+                    'height' => '120',
                 ]) ?>
             </div>
 
             <div class="two_fa_step_box">
-                <label for="" ><?= __("STEP 3 : ") ?><?= __("Enter confirmation code") ?></label>
+                <label for=""><?= __("STEP 3 : ") ?><?= __("Enter confirmation code") ?></label>
                 <p><?= __("After reading QR, enter the code (6 digits)") ?></p>
-            <?=
-            $this->Form->input('2fa_code',
-                               ['label'                    => false,
-                                'placeholder'              => __("code"),
-                                "data-bv-notempty-message" => __("Input is required."),
-                                'required'                 => true,
-                               ]) ?>
+                <?=
+                $this->Form->input('2fa_code',
+                    [
+                        'label'                    => false,
+                        'placeholder'              => __("code"),
+                        "data-bv-notempty-message" => __("Input is required."),
+                        'required'                 => true,
+                    ]) ?>
             </div>
         </div>
         <div class="modal-footer">
             <?=
             $this->Form->submit(__("Next"),
-                                ['class' => 'btn btn-primary pull-right', 'div' => false,]) ?>
+                ['class' => 'btn btn-primary pull-right', 'div' => false,]) ?>
             <?= $this->Form->end(); ?>
         </div>
     </div>

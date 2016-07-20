@@ -23,22 +23,31 @@
 ]); ?>
 <?=
 $this->Form->input('ActionResult.name', [
-                                          'label'          => false,
-                                          'rows'           => 1,
-                                          'placeholder'    => __("Let's share the actions that you've done today!"),
-                                          'class'          => 'form-control tiny-form-text blank-disable-and-undisable col-xxs-10 goalsCard-actionInput mb_12px add-select-options change-warning',
-                                          'id'             => "ActionFormName_" . $goal_id,
-                                          'target-id'      => "ActionFormSubmit_" . $goal_id,
-                                          'select-id'      => "ActionKeyResultId_" . $goal_id,
-                                          'add-select-url' => $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_kr_list', 'goal_id' => $goal_id])
-                                      ]
+        'label'          => false,
+        'rows'           => 1,
+        'placeholder'    => __("Let's share the actions that you've done today!"),
+        'class'          => 'form-control tiny-form-text blank-disable-and-undisable col-xxs-10 goalsCard-actionInput mb_12px add-select-options change-warning',
+        'id'             => "ActionFormName_" . $goal_id,
+        'target-id'      => "ActionFormSubmit_" . $goal_id,
+        'select-id'      => "ActionKeyResultId_" . $goal_id,
+        'add-select-url' => $this->Html->url([
+            'controller' => 'goals',
+            'action'     => 'ajax_get_kr_list',
+            'goal_id'    => $goal_id
+        ])
+    ]
 )
 ?>
 <div class="goalsCard-activity inline-block col-xxs-2">
     <?php if ($ar_count > 0): ?>
         <a class="click-show-post-modal font_gray-brownRed pointer"
            id="ActionListOpen_<?= $goal_id ?>"
-           href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_goal_action_feed', 'goal_id' => $goal_id, 'type' => Post::TYPE_ACTION]) ?>">
+           href="<?= $this->Html->url([
+               'controller' => 'posts',
+               'action'     => 'ajax_get_goal_action_feed',
+               'goal_id'    => $goal_id,
+               'type'       => Post::TYPE_ACTION
+           ]) ?>">
             <i class="fa fa-check-circle mr_1px"></i><span
                 class="ls_number"><?= $ar_count ?></span>
         </a>
@@ -58,7 +67,13 @@ $this->Form->input('ActionResult.name', [
                 <?php for ($i = 1; $i <= 5; $i++): ?>
                     <li>
                         <?= $this->element('Feed/photo_upload_mini',
-                                           ['type' => 'action_result', 'index' => $i, 'submit_id' => 'PostSubmit', 'has_many' => false, 'id_prefix' => 'Goal_' . $goal_id . '_']) ?>
+                            [
+                                'type'      => 'action_result',
+                                'index'     => $i,
+                                'submit_id' => 'PostSubmit',
+                                'has_many'  => false,
+                                'id_prefix' => 'Goal_' . $goal_id . '_'
+                            ]) ?>
                     </li>
                 <?php endfor ?>
             </ul>
@@ -70,18 +85,18 @@ $this->Form->input('ActionResult.name', [
     </label>
     <?=
     $this->Form->input('ActionResult.key_result_id', [
-                                                       'label'   => false, //__("紐付ける達成要素を選択(オプション)"),
-                                                       'options' => [null => __("Nothing")],
-                                                       'class'   => 'form-control col-xxs-8 selectKrForAction',
-                                                       'id'      => 'ActionKeyResultId_' . $goal_id,
-                                                   ]
+            'label'   => false, //__("紐付ける達成要素を選択(オプション)"),
+            'options' => [null => __("Nothing")],
+            'class'   => 'form-control col-xxs-8 selectKrForAction',
+            'id'      => 'ActionKeyResultId_' . $goal_id,
+        ]
     )
     ?>
     <?php $this->Form->unlockField('socket_id') ?>
     <div class="form-group col-xxs-12 mt_12px">
         <a href="#" target-id="ActionFormName_<?= $goal_id ?>"
            class="btn btn-white tiny-form-text-close font_verydark">
-           <?= __("Cancel") ?>
+            <?= __("Cancel") ?>
         </a>
         <?= $this->Form->submit(__("Post an action"), [
             'div'      => false,

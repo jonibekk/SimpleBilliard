@@ -33,24 +33,26 @@
                 <td>
                     <?php if ($type == 'action_goal_ranking'): ?>
                         <a href="<?= $this->Html->url(
-                            ['controller' => 'goals',
-                             'action'     => 'view_info',
-                             'goal_id'    => $row['Goal']['id']
+                            [
+                                'controller' => 'goals',
+                                'action'     => 'view_info',
+                                'goal_id'    => $row['Goal']['id']
                             ]) ?>"><?= $this->Upload->uploadImage($row['Goal'],
-                                                                  'Goal.photo',
-                                                                  ['style' => 'small'],
-                                                                  ['class' => 'insight-ranking-result-table-images']
-                                                                  ) ?></a>
+                                'Goal.photo',
+                                ['style' => 'small'],
+                                ['class' => 'insight-ranking-result-table-images']
+                            ) ?></a>
                     <?php else: ?>
                         <a href="<?= $this->Html->url(
-                            ['controller' => 'users',
-                             'action'     => 'view_goals',
-                             'user_id'    => $row['User']['id']
+                            [
+                                'controller' => 'users',
+                                'action'     => 'view_goals',
+                                'user_id'    => $row['User']['id']
                             ]) ?>"
                            data-toggle="tooltip"
                            title="<?= h($row['User']['display_username']) ?>"><?= $this->Upload->uploadImage($row['User'],
-                                                                                                          'User.photo',
-                                                                                                          ['style' => 'small']) ?></a>
+                                'User.photo',
+                                ['style' => 'small']) ?></a>
                     <?php endif ?>
                 </td>
                 <td>

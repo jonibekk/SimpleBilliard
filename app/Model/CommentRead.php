@@ -44,12 +44,12 @@ class CommentRead extends AppModel
     public function redAllByPostId($post_id)
     {
         $comment_list = $this->Comment->find('list',
-                                             ['conditions' => ['post_id' => $post_id], 'fields' => ['id', 'id']]);
+            ['conditions' => ['post_id' => $post_id], 'fields' => ['id', 'id']]);
         $res = $this->red($comment_list);
         return $res;
     }
 
-    public function  red($comment_list)
+    public function red($comment_list)
     {
         //既読コメントを除外
         $comment_list = $this->pickUnread($comment_list);

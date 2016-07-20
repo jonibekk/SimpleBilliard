@@ -1053,8 +1053,6 @@ class UsersController extends AppController
         return $this->User->TeamMember->Team->findById($invite['Invite']['team_id']);
     }
 
-
-
     function _uservoiceSetSession()
     {
         if (isset($this->request->query['uv_login'])) {
@@ -1063,8 +1061,6 @@ class UsersController extends AppController
             $this->Session->delete('uv_status');
         }
     }
-
-
 
     public function ajax_get_user_detail($user_id)
     {

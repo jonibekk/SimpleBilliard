@@ -35,7 +35,7 @@ class GoalsController extends AppController
         $my_coaching_users = $this->Goal->User->TeamMember->getMyMembersList($this->my_uid);
 
         $this->set(compact('is_admin', 'goals', 'current_global_menu', 'search_option', 'search_options',
-                           'search_url', 'goal_count', 'my_coaching_users'));
+            'search_url', 'goal_count', 'my_coaching_users'));
     }
 
     /**
@@ -71,8 +71,7 @@ class GoalsController extends AppController
             // ゴールの編集
             if ($id) {
                 $this->request->data = $this->Goal->getAddData($id);
-            }
-            // 基準の登録
+            } // 基準の登録
             elseif ($purpose_id) {
                 $isNotOwner = !$this->Goal->Purpose->isOwner($this->Auth->user('id'), $purpose_id);
                 if ($isNotOwner) {
@@ -109,7 +108,7 @@ class GoalsController extends AppController
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_CHANGED_BY_LEADER, $id);
                 //send notify to coach
                 $my_collabo_status = $this->Goal->Collaborator->getCollaborator($this->current_team_id,
-                                                                                $this->my_uid, $id);
+                    $this->my_uid, $id);
                 if ($my_collabo_status['Collaborator']['valued_flg'] == Collaborator::STATUS_MODIFY) {
                     $this->_sendNotifyToCoach($id, NotifySetting::TYPE_MY_MEMBER_CHANGE_GOAL);
                 }
@@ -126,17 +125,16 @@ class GoalsController extends AppController
                     //case of create new one.
                     if (!$id) {
                         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_CREATE_GOAL,
-                                                   $this->Goal->getLastInsertID());
+                            $this->Goal->getLastInsertID());
                         $this->_sendNotifyToCoach($this->Goal->getLastInsertID(),
-                                                  NotifySetting::TYPE_MY_MEMBER_CREATE_GOAL);
-                    }
-                    else {
+                            NotifySetting::TYPE_MY_MEMBER_CREATE_GOAL);
+                    } else {
                         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_GOAL, $id);
                     }
                     $this->Pnotify->outSuccess(__("Saved a goal."));
                     if ($coach_id) {
                         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coach_id),
-                                      'user_data');
+                            'user_data');
                     }
                     //「情報を追加」に進む
                     $this->redirect(['goal_id' => $this->Goal->id, 'mode' => 3, '#' => 'AddGoalFormOtherWrap']);
@@ -161,11 +159,12 @@ class GoalsController extends AppController
 
                     // 来期ゴールを編集した場合は、マイページの来期ゴール絞り込みページへ遷移
                     if ($this->Goal->getGoalTermData($id)['id'] == $this->Team->EvaluateTerm->getNextTermId()) {
-                        $this->redirect(['controller' => 'users',
-                                         'action'     => 'view_goals',
-                                         'user_id'    => $this->Auth->user('id'),
-                                         'term_id'    => $this->Team->EvaluateTerm->getNextTermId(),
-                                        ]);
+                        $this->redirect([
+                            'controller' => 'users',
+                            'action'     => 'view_goals',
+                            'user_id'    => $this->Auth->user('id'),
+                            'term_id'    => $this->Team->EvaluateTerm->getNextTermId(),
+                        ]);
                     }
 
                     // ゴール作成ユーザーのコーチが存在すればゴール認定ページへ遷移
@@ -189,7 +188,7 @@ class GoalsController extends AppController
     function _sendNotifyToCoach($goal_id, $notify_type)
     {
         $coach_id = $this->Team->TeamMember->getCoachId($this->Auth->user('id'),
-                                                        $this->Session->read('current_team_id'));
+            $this->Session->read('current_team_id'));
         if (!$coach_id) {
             return;
         }
@@ -223,8 +222,7 @@ class GoalsController extends AppController
         $params_referer = Router::parse($this->referer(null, true));
         if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home') {
             $this->redirect('/after_click:SubHeaderMenuGoal');
-        }
-        else {
+        } else {
             return $this->redirect($this->referer());
         }
     }
@@ -372,19 +370,19 @@ class GoalsController extends AppController
         $limit_start_date = date('Y/m/d', $goal['Goal']['start_date'] + $goal_term['timezone'] * HOUR);
 
         $this->set(compact(
-                       'goal',
-                       'goal_id',
-                       'goal_category_list',
-                       'goal_term',
-                       'priority_list',
-                       'kr_priority_list',
-                       'kr_value_unit_list',
-                       'kr_start_date_format',
-                       'kr_end_date_format',
-                       'limit_end_date',
-                       'limit_start_date',
-                       'current_kr_id'
-                   ));
+            'goal',
+            'goal_id',
+            'goal_category_list',
+            'goal_term',
+            'priority_list',
+            'kr_priority_list',
+            'kr_value_unit_list',
+            'kr_start_date_format',
+            'kr_end_date_format',
+            'limit_end_date',
+            'limit_start_date',
+            'current_kr_id'
+        ));
         //htmlレンダリング結果
         $response = $this->render('Goal/modal_add_key_result');
         $html = $response->__toString();
@@ -448,7 +446,7 @@ class GoalsController extends AppController
         if ($coach_id && (isset($collaborator['priority']) && $collaborator['priority'] >= '1')
         ) {
             Cache::delete($this->Goal->getCacheKey(CACHE_KEY_UNAPPROVED_COUNT, true, $coach_id),
-                          'user_data');
+                'user_data');
 
             $this->redirect("/goal_approval");
         }
@@ -480,8 +478,8 @@ class GoalsController extends AppController
                 }
                 $this->Goal->KeyResult->complete($current_kr_id);
                 $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_ACHIEVE_KR,
-                                           $goal_id,
-                                           $current_kr_id
+                    $goal_id,
+                    $current_kr_id
                 );
             }
         } catch (RuntimeException $e) {
@@ -492,14 +490,13 @@ class GoalsController extends AppController
 
         $this->Goal->commit();
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_CREATE_KR, $goal_id,
-                                   $this->Goal->KeyResult->getLastInsertID());
+            $this->Goal->KeyResult->getLastInsertID());
         $this->_flashClickEvent("KRsOpen_" . $goal_id);
         $this->Pnotify->outSuccess(__("Added a key result."));
         $params_referer = Router::parse($this->referer(null, true));
         if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home') {
             $this->redirect('/after_click:SubHeaderMenuGoal');
-        }
-        else {
+        } else {
             return $this->redirect($this->referer());
         }
     }
@@ -534,8 +531,7 @@ class GoalsController extends AppController
         $params_referer = Router::parse($this->referer(null, true));
         if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home') {
             $this->redirect('/after_click:SubHeaderMenuGoal');
-        }
-        else {
+        } else {
             return $this->redirect($this->referer());
         }
     }
@@ -561,14 +557,13 @@ class GoalsController extends AppController
                 $this->Post->addGoalPost(Post::TYPE_GOAL_COMPLETE, $key_result['KeyResult']['goal_id'], null);
                 $this->Goal->complete($goal['Goal']['id']);
                 $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_ACHIEVE_GOAL,
-                                           $key_result['KeyResult']['goal_id'],
-                                           $kr_id);
+                    $key_result['KeyResult']['goal_id'],
+                    $kr_id);
                 $this->Pnotify->outSuccess(__("Completed a goal."));
-            }
-            else {
+            } else {
                 $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_ACHIEVE_KR,
-                                           $key_result['KeyResult']['goal_id'],
-                                           $kr_id);
+                    $key_result['KeyResult']['goal_id'],
+                    $kr_id);
                 $this->Pnotify->outSuccess(__("Completed a key result."));
             }
         } catch (RuntimeException $e) {
@@ -594,8 +589,7 @@ class GoalsController extends AppController
         $params_referer = Router::parse($this->referer(null, true));
         if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home') {
             $this->redirect('/after_click:SubHeaderMenuGoal');
-        }
-        else {
+        } else {
             return $this->redirect($this->referer());
         }
         /** @noinspection PhpVoidFunctionResultUsedInspection */
@@ -628,8 +622,7 @@ class GoalsController extends AppController
         $params_referer = Router::parse($this->referer(null, true));
         if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home') {
             $this->redirect('/after_click:SubHeaderMenuGoal');
-        }
-        else {
+        } else {
             return $this->redirect($this->referer());
         }
     }
@@ -666,8 +659,7 @@ class GoalsController extends AppController
         $params_referer = Router::parse($this->referer(null, true));
         if ($params_referer['controller'] == 'pages' && $params_referer['pass'][0] == 'home') {
             $this->redirect('/after_click:SubHeaderMenuGoal');
-        }
-        else {
+        } else {
             return $this->redirect($this->referer());
         }
     }
@@ -678,7 +670,7 @@ class GoalsController extends AppController
         $this->request->allowMethod('post', 'delete');
         try {
             if (!$action = $this->Goal->ActionResult->find('first',
-                                                           ['conditions' => ['ActionResult.id' => $ar_id],])
+                ['conditions' => ['ActionResult.id' => $ar_id],])
             ) {
                 throw new RuntimeException(__("There is no action."));
             }
@@ -692,12 +684,12 @@ class GoalsController extends AppController
         }
         $this->Goal->ActionResult->id = $ar_id;
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_DELETE_ACTION,
-                                   $action['ActionResult']['goal_id'],
-                                   $action['ActionResult']['key_result_id'],
-                                   $ar_id);
+            $action['ActionResult']['goal_id'],
+            $action['ActionResult']['key_result_id'],
+            $ar_id);
         $this->Goal->ActionResult->delete();
         $this->Goal->ActionResult->ActionResultFile->AttachedFile->deleteAllRelatedFiles($ar_id,
-                                                                                         AttachedFile::TYPE_MODEL_ACTION_RESULT);
+            AttachedFile::TYPE_MODEL_ACTION_RESULT);
         if (isset($action['ActionResult']['goal_id']) && !empty($action['ActionResult']['goal_id'])) {
             $this->_flashClickEvent("ActionListOpen_" . $action['ActionResult']['goal_id']);
         }
@@ -724,7 +716,7 @@ class GoalsController extends AppController
         $collabo = $this->Goal->Collaborator->findById($collabo_id);
         if (!empty($collabo)) {
             $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_WITHDRAW_COLLABORATE,
-                                       $collabo['Collaborator']['goal_id']);
+                $collabo['Collaborator']['goal_id']);
         }
         $this->Goal->Collaborator->delete();
         $this->Pnotify->outSuccess(__("Quitted a collaborator."));
@@ -766,8 +758,7 @@ class GoalsController extends AppController
             $return['msg'] = __("Start to follow.");
             $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_FOLLOW_GOAL, $goal_id);
             $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_MY_GOAL_FOLLOW, $goal_id);
-        }
-        else {
+        } else {
             $this->Goal->Follower->deleteFollower($goal_id);
             $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_FOLLOW_GOAL, $goal_id);
             $return['msg'] = __("Stop following.");
@@ -835,7 +826,7 @@ class GoalsController extends AppController
         //ゴールが今期の場合はアクション追加可能
         $can_add_action = $goal_term['end_date'] === $current_term['end_date'] ? true : false;
         $this->set(compact('key_results', 'incomplete_kr_count', 'kr_can_edit', 'goal_id', 'goal_term',
-                           'can_add_action'));
+            'can_add_action'));
 
         $response = null;
         switch ($view) {
@@ -887,19 +878,19 @@ class GoalsController extends AppController
         $limit_end_date = date('Y/m/d', $goal['Goal']['end_date'] + $goal_term['timezone'] * HOUR);
         $limit_start_date = date('Y/m/d', $goal['Goal']['start_date'] + $goal_term['timezone'] * HOUR);
         $this->set(compact(
-                       'goal',
-                       'goal_id',
-                       'kr_id',
-                       'goal_category_list',
-                       'priority_list',
-                       'kr_priority_list',
-                       'kr_value_unit_list',
-                       'kr_start_date_format',
-                       'kr_end_date_format',
-                       'limit_end_date',
-                       'limit_start_date',
-                       'goal_term'
-                   ));
+            'goal',
+            'goal_id',
+            'kr_id',
+            'goal_category_list',
+            'priority_list',
+            'kr_priority_list',
+            'kr_value_unit_list',
+            'kr_start_date_format',
+            'kr_end_date_format',
+            'limit_end_date',
+            'limit_start_date',
+            'goal_term'
+        ));
         $this->request->data = $key_result;
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
@@ -926,9 +917,9 @@ class GoalsController extends AppController
             return $this->_ajaxGetResponse(null);
         }
         $this->set(compact(
-                       'goal',
-                       'kr_id'
-                   ));
+            'goal',
+            'kr_id'
+        ));
         //エレメントの出力を変数に格納する
         //htmlレンダリング結果
         $response = $this->render('Goal/modal_last_kr_confirm');
@@ -966,10 +957,11 @@ class GoalsController extends AppController
         // HTML出力
         $response = $this->render('Goal/members');
         $html = $response->__toString();
-        return $this->_ajaxGetResponse(['html'          => $html,
-                                        'count'         => count($members),
-                                        'page_item_num' => GOAL_PAGE_MEMBER_NUMBER,
-                                       ]);
+        return $this->_ajaxGetResponse([
+            'html'          => $html,
+            'count'         => count($members),
+            'page_item_num' => GOAL_PAGE_MEMBER_NUMBER,
+        ]);
     }
 
     public function ajax_get_edit_action_modal()
@@ -1016,10 +1008,11 @@ class GoalsController extends AppController
         // HTML出力
         $response = $this->render('Goal/followers');
         $html = $response->__toString();
-        return $this->_ajaxGetResponse(['html'          => $html,
-                                        'count'         => count($followers),
-                                        'page_item_num' => GOAL_PAGE_FOLLOWER_NUMBER,
-                                       ]);
+        return $this->_ajaxGetResponse([
+            'html'          => $html,
+            'count'         => count($followers),
+            'page_item_num' => GOAL_PAGE_FOLLOWER_NUMBER,
+        ]);
     }
 
     /**
@@ -1078,11 +1071,11 @@ class GoalsController extends AppController
             }
             $this->Pnotify->outSuccess(__("Edited the action."));
             $action = $this->Goal->ActionResult->find('first',
-                                                      ['conditions' => ['ActionResult.id' => $ar_id]]);
+                ['conditions' => ['ActionResult.id' => $ar_id]]);
             $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_UPDATE_ACTION,
-                                       $action['ActionResult']['goal_id'],
-                                       $action['ActionResult']['key_result_id'],
-                                       $ar_id);
+                $action['ActionResult']['goal_id'],
+                $action['ActionResult']['key_result_id'],
+                $ar_id);
             if (isset($action['ActionResult']['goal_id']) && !empty($action['ActionResult']['goal_id'])) {
                 $this->_flashClickEvent("ActionListOpen_" . $action['ActionResult']['goal_id']);
             }
@@ -1091,9 +1084,11 @@ class GoalsController extends AppController
             $url = $this->referer();
             $post = $this->Goal->Post->getByActionResultId($ar_id);
             if ($post) {
-                $url = ['controller' => 'posts',
-                        'action'     => 'feed',
-                        'post_id'    => $post['Post']['id']];
+                $url = [
+                    'controller' => 'posts',
+                    'action'     => 'feed',
+                    'post_id'    => $post['Post']['id']
+                ];
             }
             return $this->redirect($url);
         }
@@ -1191,15 +1186,14 @@ class GoalsController extends AppController
                         $record['start_value'] = (double)$c_v['Goal']['start_value'];
                         $record['end_date'] = date("Y/m/d", $c_v['Goal']['end_date'] + $goal_term['timezone'] * HOUR);
                         $record['start_date'] = date("Y/m/d",
-                                                     $c_v['Goal']['start_date'] + $goal_term['timezone'] * HOUR);
+                            $c_v['Goal']['start_date'] + $goal_term['timezone'] * HOUR);
                         $record['description'] = $c_v['Goal']['description'];
                         $record['priority'] = $c_v['priority'];
 
                         $td[] = $record;
                     }
                 }
-            }
-            else {
+            } else {
                 $td[] = $common_record;
             }
         }
@@ -1233,11 +1227,11 @@ class GoalsController extends AppController
             //アクション追加,投稿
             if (!$this->Goal->ActionResult->addCompletedAction($this->request->data, $goal_id)
                 || !$this->Goal->Post->addGoalPost(Post::TYPE_ACTION, $goal_id, $this->Auth->user('id'), false,
-                                                   $this->Goal->ActionResult->getLastInsertID(), $share,
-                                                   PostShareCircle::SHARE_TYPE_ONLY_NOTIFY)
+                    $this->Goal->ActionResult->getLastInsertID(), $share,
+                    PostShareCircle::SHARE_TYPE_ONLY_NOTIFY)
                 || !$this->Goal->Post->PostFile->AttachedFile->saveRelatedFiles($this->Goal->ActionResult->getLastInsertID(),
-                                                                                AttachedFile::TYPE_MODEL_ACTION_RESULT,
-                                                                                $file_ids)
+                    AttachedFile::TYPE_MODEL_ACTION_RESULT,
+                    $file_ids)
             ) {
                 throw new RuntimeException(__("Failed to add an action."));
             }
@@ -1245,7 +1239,7 @@ class GoalsController extends AppController
             $this->Goal->rollback();
             if ($action_result_id = $this->Goal->ActionResult->getLastInsertID()) {
                 $this->Goal->Post->PostFile->AttachedFile->deleteAllRelatedFiles($action_result_id,
-                                                                                 AttachedFile::TYPE_MODEL_ACTION_RESULT);
+                    AttachedFile::TYPE_MODEL_ACTION_RESULT);
             }
             $this->Pnotify->outError($e->getMessage());
             $this->redirect($this->referer());
@@ -1266,9 +1260,9 @@ class GoalsController extends AppController
 
         $kr_id = isset($this->request->data['ActionResult']['key_result_id']) ? $this->request->data['ActionResult']['key_result_id'] : null;
         $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_CREATE_ACTION, $goal_id, $kr_id,
-                                   $this->Goal->ActionResult->getLastInsertID());
+            $this->Goal->ActionResult->getLastInsertID());
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_CAN_SEE_ACTION,
-                                         $this->Goal->ActionResult->getLastInsertID());
+            $this->Goal->ActionResult->getLastInsertID());
 
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_ACTION_COUNT, true), 'user_data');
@@ -1279,9 +1273,11 @@ class GoalsController extends AppController
         $this->updateSetupStatusIfNotCompleted();
 
         $post = $this->Goal->Post->getByActionResultId($this->Goal->ActionResult->getLastInsertID());
-        $url = $post ? ['controller' => 'posts',
-                        'action'     => 'feed',
-                        'post_id'    => $post['Post']['id']] : $this->referer();
+        $url = $post ? [
+            'controller' => 'posts',
+            'action'     => 'feed',
+            'post_id'    => $post['Post']['id']
+        ] : $this->referer();
         return $this->redirect($url);
 
     }
@@ -1315,8 +1311,7 @@ class GoalsController extends AppController
         $this->_ajaxPreProcess();
         if (isset($param_named['page']) && !empty($param_named['page'])) {
             $page_num = $param_named['page'];
-        }
-        else {
+        } else {
             $page_num = 1;
         }
 
@@ -1331,19 +1326,15 @@ class GoalsController extends AppController
 
         if ($type === 'leader') {
             $goals = $this->Goal->getMyGoals(MY_GOALS_DISPLAY_NUMBER, $page_num, 'all', null, $start_date, $end_date);
-        }
-        elseif ($type === 'collabo') {
+        } elseif ($type === 'collabo') {
             $goals = $this->Goal->getMyCollaboGoals(MY_COLLABO_GOALS_DISPLAY_NUMBER, $page_num, 'all', null,
-                                                    $start_date, $end_date);
-        }
-        elseif ($type === 'follow') {
+                $start_date, $end_date);
+        } elseif ($type === 'follow') {
             $goals = $this->Goal->getMyFollowedGoals(MY_FOLLOW_GOALS_DISPLAY_NUMBER, $page_num, 'all', null,
-                                                     $start_date, $end_date);
-        }
-        elseif ($type === 'my_prev') {
+                $start_date, $end_date);
+        } elseif ($type === 'my_prev') {
             $goals = $this->Goal->getMyPreviousGoals(MY_PREVIOUS_GOALS_DISPLAY_NUMBER, $page_num);
-        }
-        else {
+        } else {
             $goals = [];
         }
         $current_term = $this->Goal->Team->EvaluateTerm->getCurrentTermData();
@@ -1391,27 +1382,26 @@ class GoalsController extends AppController
                 $this->request->data['Goal']['term_type'] = 'next';
                 $is_next_term_goal = true;
             }
-        }
-        // ゴール新規登録時
+        } // ゴール新規登録時
         else {
             $goal_start_date_format = $today_format;
             $goal_end_date_format = $current_term_end_date_format;
         }
         $this->set(compact('goal_category_list',
-                           'priority_list',
-                           'kr_priority_list',
-                           'kr_value_unit_list',
-                           'goal_start_date_format',
-                           'goal_end_date_format',
-                           'current_term_start_date_format',
-                           'current_term_end_date_format',
-                           'next_term_start_date_format',
-                           'next_term_end_date_format',
-                           'today_format',
-                           'current_term',
-                           'next_term',
-                           'is_next_term_goal'
-                   ));
+            'priority_list',
+            'kr_priority_list',
+            'kr_value_unit_list',
+            'goal_start_date_format',
+            'goal_end_date_format',
+            'current_term_start_date_format',
+            'current_term_end_date_format',
+            'next_term_start_date_format',
+            'next_term_end_date_format',
+            'today_format',
+            'current_term',
+            'next_term',
+            'is_next_term_goal'
+        ));
     }
 
     /**
@@ -1431,8 +1421,7 @@ class GoalsController extends AppController
             //表示名取得
             if (viaIsSet($res[$type])) {
                 $res[$type][1] = $options[$type][$res[$type][0]];
-            }
-            ///デフォルト表示名取得
+            } ///デフォルト表示名取得
             else {
                 $res[$type][1] = reset($options[$type]);
             }
@@ -1562,7 +1551,12 @@ class GoalsController extends AppController
                 break;
         }
         $kr_select_options = $this->Goal->KeyResult->getKrNameList($goal_id, true, true);
-        $goal_base_url = Router::url(['controller' => 'goals', 'action' => 'view_actions', 'goal_id' => $goal_id, 'page_type' => $page_type]);
+        $goal_base_url = Router::url([
+            'controller' => 'goals',
+            'action'     => 'view_actions',
+            'goal_id'    => $goal_id,
+            'page_type'  => $page_type
+        ]);
         $this->set('long_text', false);
         $this->set(compact('key_result_id', 'goal_id', 'posts', 'kr_select_options', 'goal_base_url'));
 

@@ -35,9 +35,9 @@ Router::connect('/ajax_circle_feed/:circle_id/*', ['controller' => 'posts', 'act
  * 言語指定あり
  */
 Router::connect('/:action/*', ['controller' => 'pages'],
-                ['action' => 'contact|contact_confirm|contact_send']);
+    ['action' => 'contact|contact_confirm|contact_send']);
 Router::connect('/:lang/:action', ['controller' => 'pages'],
-                ['action' => 'contact|contact_confirm|contact_send', 'lang' => 'ja|en']);
+    ['action' => 'contact|contact_confirm|contact_send', 'lang' => 'ja|en']);
 
 /**
  * トップページの言語切り換えの為のルーティング設定。
@@ -46,9 +46,13 @@ Router::connect('/:lang/:action', ['controller' => 'pages'],
  */
 Router::connect('/:lang/', ['controller' => 'pages', 'action' => 'display', 'home'], ['lang' => 'ja|en']);
 Router::connect('/:pagename', ['controller' => 'pages', 'action' => 'display'],
-                ['pagename' => 'features|pricing|terms|privacy_policy|law|contact_thanks', 'pass' => ['pagename']]);
+    ['pagename' => 'features|pricing|terms|privacy_policy|law|contact_thanks', 'pass' => ['pagename']]);
 Router::connect('/:lang/:pagename', ['controller' => 'pages', 'action' => 'display'],
-                ['pagename' => 'features|pricing|terms|privacy_policy|law|contact_thanks', 'lang' => 'ja|en', 'pass' => ['pagename']]);
+    [
+        'pagename' => 'features|pricing|terms|privacy_policy|law|contact_thanks',
+        'lang'     => 'ja|en',
+        'pass'     => ['pagename']
+    ]);
 
 /**
  * Load all plugin routes. See the CakePlugin documentation on

@@ -32,11 +32,11 @@
 
             <div class="col col-sm-6">
                 <p class="form-control-static">
-                <?= __("You can start evaluation with the current settings.") ?>
+                    <?= __("You can start evaluation with the current settings.") ?>
                 </p>
 
                 <p class="form-control-static">
-                <?= __("Notice - These settings can't be canceled.") ?>
+                    <?= __("Notice - These settings can't be canceled.") ?>
                 </p>
             </div>
         </div>
@@ -64,8 +64,9 @@
                 <div class="col-sm-9 col-sm-offset-3">
                     <?=
                     $this->Form->postLink(__("Start current term evaluations"),
-                                          ['controller' => 'teams', 'action' => 'start_evaluation',],
-                                          ['class' => 'btn btn-primary'], __("Unable to cancel. Do you really want to start evaluations?")) ?>
+                        ['controller' => 'teams', 'action' => 'start_evaluation',],
+                        ['class' => 'btn btn-primary'],
+                        __("Unable to cancel. Do you really want to start evaluations?")) ?>
                 </div>
             </div>
         </div>

@@ -117,7 +117,6 @@ class Device extends AppModel
         return $data;
     }
 
-
     /**
      * ユーザーIDでDevice.device_tokenのみを配列で取得する
      * これがメインメソッドで、user_idで取得するのは自明なのでメソッド名は短めにしてみた

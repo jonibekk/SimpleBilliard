@@ -35,7 +35,11 @@
             <?php if ($kr_can_edit): ?>
                 <div>
                     <a class="btn-add-kr modal-ajax-get-add-key-result"
-                       href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id']]) ?>">
+                       href="<?= $this->Html->url([
+                           'controller' => 'goals',
+                           'action'     => 'ajax_get_add_key_result_modal',
+                           'goal_id'    => $goal['Goal']['id']
+                       ]) ?>">
                         <i class="fa fa-plus btn-add-kr-icon"></i>
                         <span><?= __("Add Key Result") ?></span>
                     </a>
@@ -55,7 +59,7 @@
                list-container="#GoalPageKeyResultContainer"
                goal-id="<?= h($goal['Goal']['id']) ?>"
                kr-can-edit="<?= h((int)$kr_can_edit) ?>"
-                >
+            >
                 <?= __('View more') ?></a>
         </div>
     </div>

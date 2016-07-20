@@ -12,8 +12,20 @@ class TeamInsightFixture extends CakeTestFixtureEx
      * @var array
      */
     public $fields = array(
-        'id'              => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary'),
-        'team_id'         => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index'),
+        'id'              => array(
+            'type'     => 'biginteger',
+            'null'     => false,
+            'default'  => null,
+            'unsigned' => true,
+            'key'      => 'primary'
+        ),
+        'team_id'         => array(
+            'type'     => 'biginteger',
+            'null'     => false,
+            'default'  => null,
+            'unsigned' => true,
+            'key'      => 'index'
+        ),
         'target_date'     => array('type' => 'date', 'null' => true, 'default' => null),
         'timezone'        => array('type' => 'float', 'null' => true, 'default' => null, 'unsigned' => false),
         'user_count'      => array('type' => 'integer', 'null' => false, 'default' => '0', 'unsigned' => false),

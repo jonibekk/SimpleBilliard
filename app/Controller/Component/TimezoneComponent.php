@@ -57,8 +57,7 @@ class TimezoneComponent extends Object
                 }
                 if (($hour - $prev_key) >= ($key - $hour)) {
                     return $key;
-                }
-                else {
+                } else {
                     return $prev_key;
                 }
             }

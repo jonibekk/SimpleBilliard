@@ -12,20 +12,103 @@ class InviteFixture extends CakeTestFixtureEx
      * @var array
      */
     public $fields = array(
-        'id'                  => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => '招待ID'),
-        'from_user_id'        => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '招待元ユーザID(belongsToでUserモデルに関連)'),
-        'to_user_id'          => array('type' => 'biginteger', 'null' => true, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => '招待先ユーザID(belongsToでUserモデルに関連)'),
-        'team_id'             => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'チームID(belongsToでTeamモデルに関連)'),
-        'email'               => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 128, 'key' => 'index', 'collate' => 'utf8mb4_general_ci', 'comment' => 'メアド', 'charset' => 'utf8mb4'),
-        'message'             => array('type' => 'text', 'null' => true, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'comment' => '招待メッセージ', 'charset' => 'utf8mb4'),
+        'id'                  => array(
+            'type'     => 'biginteger',
+            'null'     => false,
+            'default'  => null,
+            'unsigned' => true,
+            'key'      => 'primary',
+            'comment'  => '招待ID'
+        ),
+        'from_user_id'        => array(
+            'type'     => 'biginteger',
+            'null'     => false,
+            'default'  => null,
+            'unsigned' => true,
+            'key'      => 'index',
+            'comment'  => '招待元ユーザID(belongsToでUserモデルに関連)'
+        ),
+        'to_user_id'          => array(
+            'type'     => 'biginteger',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'key'      => 'index',
+            'comment'  => '招待先ユーザID(belongsToでUserモデルに関連)'
+        ),
+        'team_id'             => array(
+            'type'     => 'biginteger',
+            'null'     => false,
+            'default'  => null,
+            'unsigned' => true,
+            'key'      => 'index',
+            'comment'  => 'チームID(belongsToでTeamモデルに関連)'
+        ),
+        'email'               => array(
+            'type'    => 'string',
+            'null'    => false,
+            'default' => null,
+            'length'  => 128,
+            'key'     => 'index',
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => 'メアド',
+            'charset' => 'utf8mb4'
+        ),
+        'message'             => array(
+            'type'    => 'text',
+            'null'    => true,
+            'default' => null,
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => '招待メッセージ',
+            'charset' => 'utf8mb4'
+        ),
         'email_verified'      => array('type' => 'boolean', 'null' => false, 'default' => '0', 'comment' => 'メアド認証判定('),
-        'email_token'         => array('type' => 'string', 'null' => true, 'default' => null, 'key' => 'index', 'collate' => 'utf8mb4_general_ci', 'comment' => 'メアドトークン(メアド認証に必要なトークンを管理)', 'charset' => 'utf8mb4'),
-        'email_token_expires' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => false, 'comment' => 'メアドトークン認証期限(メアド未認証でこの期限が切れた場合は再度、トークン発行)'),
-        'type'                => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 3, 'unsigned' => true, 'comment' => '招待タイプ(0:通常招待,1:一括登録)'),
-        'del_flg'             => array('type' => 'boolean', 'null' => false, 'default' => '0', 'key' => 'index', 'comment' => '削除フラグ'),
-        'deleted'             => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '招待を削除した日付時刻'),
-        'created'             => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '招待を追加した日付時刻'),
-        'modified'            => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => '招待を更新した日付時刻'),
+        'email_token'         => array(
+            'type'    => 'string',
+            'null'    => true,
+            'default' => null,
+            'key'     => 'index',
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => 'メアドトークン(メアド認証に必要なトークンを管理)',
+            'charset' => 'utf8mb4'
+        ),
+        'email_token_expires' => array('type'     => 'integer',
+                                       'null'     => true,
+                                       'default'  => null,
+                                       'unsigned' => false,
+                                       'comment'  => 'メアドトークン認証期限(メアド未認証でこの期限が切れた場合は再度、トークン発行)'
+        ),
+        'type'                => array('type'     => 'integer',
+                                       'null'     => false,
+                                       'default'  => '0',
+                                       'length'   => 3,
+                                       'unsigned' => true,
+                                       'comment'  => '招待タイプ(0:通常招待,1:一括登録)'
+        ),
+        'del_flg'             => array('type'    => 'boolean',
+                                       'null'    => false,
+                                       'default' => '0',
+                                       'key'     => 'index',
+                                       'comment' => '削除フラグ'
+        ),
+        'deleted'             => array('type'     => 'integer',
+                                       'null'     => true,
+                                       'default'  => null,
+                                       'unsigned' => true,
+                                       'comment'  => '招待を削除した日付時刻'
+        ),
+        'created'             => array('type'     => 'integer',
+                                       'null'     => true,
+                                       'default'  => null,
+                                       'unsigned' => true,
+                                       'comment'  => '招待を追加した日付時刻'
+        ),
+        'modified'            => array('type'     => 'integer',
+                                       'null'     => true,
+                                       'default'  => null,
+                                       'unsigned' => true,
+                                       'comment'  => '招待を更新した日付時刻'
+        ),
         'indexes'             => array(
             'PRIMARY'      => array('column' => 'id', 'unique' => 1),
             'from_user_id' => array('column' => 'from_user_id', 'unique' => 0),

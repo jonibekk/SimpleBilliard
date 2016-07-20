@@ -7,7 +7,8 @@
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
-            <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span class="close-icon">&times;</span></button>
+            <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
+                    class="close-icon">&times;</span></button>
             <h4 class="modal-title"><?= __("Circle setting") ?></h4>
         </div>
         <?=
@@ -32,12 +33,13 @@
                     <div class="comment-body modal-comment">
                         <div class="pull-right">
                             <?= $this->Form->input("show_for_all_feed_flg",
-                                                   ['label'     => false,
-                                                    'div'       => false,
-                                                    'type'      => 'checkbox',
-                                                    'class'     => 'bt-switch',
-                                                    'checked'     => $circle_member['CircleMember']['show_for_all_feed_flg'],
-                                                   ]) ?>
+                                [
+                                    'label'   => false,
+                                    'div'     => false,
+                                    'type'    => 'checkbox',
+                                    'class'   => 'bt-switch',
+                                    'checked' => $circle_member['CircleMember']['show_for_all_feed_flg'],
+                                ]) ?>
                         </div>
 
                         <div class="ptb_10px font_bold">
@@ -51,13 +53,14 @@
                     <div class="comment-body modal-comment">
                         <div class="pull-right">
                             <?= $this->Form->input("get_notification_flg",
-                                                   ['label'     => false,
-                                                    'div'       => false,
-                                                    'type'      => 'checkbox',
-                                                    'class'     => 'bt-switch',
-                                                    'checked'     => $circle_member['CircleMember']['get_notification_flg'],
+                                [
+                                    'label'   => false,
+                                    'div'     => false,
+                                    'type'    => 'checkbox',
+                                    'class'   => 'bt-switch',
+                                    'checked' => $circle_member['CircleMember']['get_notification_flg'],
 
-                                                   ]) ?>
+                                ]) ?>
                         </div>
 
                         <div class="ptb_10px font_bold">

@@ -1,7 +1,6 @@
 <?php
 /**
  * @var $circle_insights
- *
  */
 ?>
 <?php if (isset($circle_insights)): ?>
@@ -10,7 +9,7 @@
     // this code is for sort arrow, decide the direction and location of the arrow.
     $cls = 'fa-angle-down';
     if (!empty($sort_type)) {
-        if($sort_type == 'asc') {
+        if ($sort_type == 'asc') {
             $cls = 'fa-angle-up';
         }
     }
@@ -19,13 +18,13 @@
     switch ($sort_by) {
         case 'user_count':
             $user_count = true;
-        break;
+            break;
         case 'post_count':
             $post_count = true;
-        break;
+            break;
         case 'engage_percent':
             $engage_percent = true;
-        break;
+            break;
 
         default:
             $post_read_count = true;
@@ -36,26 +35,26 @@
             <th><i class="fa fa-circle-o" data-toggle="tooltip" title="<?= __('Circle name') ?>"></i></th>
             <th id="user_count_header">
                 <i class="fa fa-user" data-toggle="tooltip" title="<?= __('Members') ?>"></i>
-                <?php if($user_count) { ?>
-                    <i class="fa <?=$cls?>" data-toggle="tooltip" title="" data-original-title=""></i>
+                <?php if ($user_count) { ?>
+                    <i class="fa <?= $cls ?>" data-toggle="tooltip" title="" data-original-title=""></i>
                 <?php } ?>
             </th>
             <th id="post_count_header">
                 <i class="fa fa-comment-o" data-toggle="tooltip" title="<?= __('Posts') ?>"></i>
-                <?php if($post_count) { ?>
-                    <i class="fa <?=$cls?>" data-toggle="tooltip" title="" data-original-title=""></i>
+                <?php if ($post_count) { ?>
+                    <i class="fa <?= $cls ?>" data-toggle="tooltip" title="" data-original-title=""></i>
                 <?php } ?>
             </th>
             <th id="post_read_count_header">
                 <i class="fa fa-check" data-toggle="tooltip" title="<?= __('Reach') ?>"></i>
-                <?php if($post_read_count) { ?>
-                    <i class="fa <?=$cls?>" data-toggle="tooltip" title="" data-original-title=""></i>
+                <?php if ($post_read_count) { ?>
+                    <i class="fa <?= $cls ?>" data-toggle="tooltip" title="" data-original-title=""></i>
                 <?php } ?>
             </th>
             <th id="engage_percent_header">
                 <i class="fa fa-heart-o" data-toggle="tooltip" title="<?= __('Engagement') ?>"></i>
-                <?php if($engage_percent) { ?>
-                    <i class="fa <?=$cls?>" data-toggle="tooltip" title="" data-original-title=""></i>
+                <?php if ($engage_percent) { ?>
+                    <i class="fa <?= $cls ?>" data-toggle="tooltip" title="" data-original-title=""></i>
                 <?php } ?>
             </th>
         </tr>

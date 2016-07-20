@@ -965,6 +965,7 @@ class AppController extends Controller
         }
         $this->Session->write('current_team_id', $team_id);
     }
+
     /**
      * ログイン後に実行する
      *
@@ -1012,7 +1013,6 @@ class AppController extends Controller
             return false;
         }
     }
-
 
     public function _ifFromUservoiceRedirect()
     {

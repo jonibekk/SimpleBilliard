@@ -21,7 +21,7 @@
                     <?php foreach ($users as $user): ?>
                         <?=
                         $this->element('Feed/read_like_user',
-                                       ['user' => $user['User'], 'created' => null]) ?>
+                            ['user' => $user['User'], 'created' => null]) ?>
                     <?php endforeach ?>
                 <?php endif; ?>
             </div>

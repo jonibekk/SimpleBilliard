@@ -48,10 +48,12 @@ class Invite extends AppModel
     {
         //既に招待済みの場合は古い招待メールを削除
         $exists = $this->find('first',
-                              ['conditions' => [
-                                  'team_id' => $team_id,
-                                  'email'   => $email
-                              ]]);
+            [
+                'conditions' => [
+                    'team_id' => $team_id,
+                    'email'   => $email
+                ]
+            ]);
         if (!empty($exists)) {
             $this->delete($exists['Invite']['id']);
         }
@@ -122,8 +124,7 @@ class Invite extends AppModel
     {
         if (empty($this->tokenData)) {
             return $this->setInviteByToken($token);
-        }
-        else {
+        } else {
             return $this->tokenData;
         }
     }
@@ -147,8 +148,7 @@ class Invite extends AppModel
         $invite = $this->getByToken($token);
         if (isset($invite['Invite']['to_user_id']) && !empty($invite['Invite']['to_user_id'])) {
             return $invite['Invite']['to_user_id'] === $uid;
-        }
-        //招待先のメアドが既に登録済みユーザの場合で、そのユーザが自分だった場合はtrueを返す
+        } //招待先のメアドが既に登録済みユーザの場合で、そのユーザが自分だった場合はtrueを返す
         elseif (isset($invite['Invite']['email'])) {
             $options = [
                 'conditions' => [
@@ -180,8 +180,7 @@ class Invite extends AppModel
         $invite = $this->getByToken($token);
         if (isset($invite['Invite']['to_user_id']) && !empty($invite['Invite']['to_user_id'])) {
             return true;
-        }
-        elseif (isset($invite['Invite']['email'])) {
+        } elseif (isset($invite['Invite']['email'])) {
             $options = [
                 'conditions' => [
                     'email' => $invite['Invite']['email'],
@@ -224,9 +223,9 @@ class Invite extends AppModel
     {
         $options = [
             'fields'     => ['email', 'created', 'id', 'del_flg', 'email_token_expires'],
-            'order'=>'Invite.created DESC',
+            'order'      => 'Invite.created DESC',
             'conditions' => [
-                'team_id' => $team_id,
+                'team_id'        => $team_id,
                 'email_verified' => 0
             ]
         ];

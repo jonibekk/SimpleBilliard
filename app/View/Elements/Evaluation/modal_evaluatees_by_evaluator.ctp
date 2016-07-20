@@ -24,7 +24,7 @@
                     <?php foreach ($incomplete_evaluatees as $user): ?>
                         <?=
                         $this->element('Evaluation/evaluatee_by_evaluator',
-                                       ['user' => $user, 'evaluate_term_id' => $evaluate_term_id]) ?>
+                            ['user' => $user, 'evaluate_term_id' => $evaluate_term_id]) ?>
                     <?php endforeach ?>
                 </div>
             <?php else: ?>

@@ -40,7 +40,7 @@ class AllWebTests extends PHPUnit_Framework_TestSuite
         ];
         ini_set('memory_limit', '2G');
         $suite = new CakeTestSuite('All Application Web Test');
-        array_map(function($file) use ($suite) {
+        array_map(function ($file) use ($suite) {
             $suite->addTestFile(APP_TEST_CASES . DS . 'Web/' . $file);
         }, $files);
 

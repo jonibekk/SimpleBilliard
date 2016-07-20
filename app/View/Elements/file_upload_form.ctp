@@ -14,7 +14,8 @@ $this->Form->create('AttachedFile', [
     'class' => 'upload-file-form',
     'style' => 'display:none; height:0px; width:0px;',
 ]); ?>
-<span class="upload-file-form-message upload-file-form-content none"><i class="fa fa-cloud-upload upload-file-form-content none"></i></span>
+<span class="upload-file-form-message upload-file-form-content none"><i
+        class="fa fa-cloud-upload upload-file-form-content none"></i></span>
 <?= $this->Form->end() ?>
 <div id="UploadFileAttachButton" style="display:none; height:0; width:0;"></div>
 <?=
