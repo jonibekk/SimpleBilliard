@@ -27,7 +27,7 @@ echo $this->Html->script('ng_app.min');
         env_name: "<?= ENV_NAME ?>",
         message: {
             validate: {
-                a: "<?= __('%1$d or more and %2$d or less characters.',8,50)?>",
+                a: "<?= __('%1$d or more and %2$d or less characters.', 8, 50)?>",
                 b: "<?= __("Both of passwords are not same.")?>",
                 c: "<?= __("10MB or less, and Please select one of the formats of JPG or PNG and GIF.")?>",
                 d: "<?= __("Need to agree our terms.")?>",
@@ -102,55 +102,73 @@ echo $this->Html->script('ng_app.min');
             waiting_message: "<?=__("Ironing your data. Please wait...")?>"
         },
         url: {
-            a: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_users'])?>",
-            b: "<?=$this->Html->url(['controller'=>'circles','action'=>'ajax_select2_init_circle_members'])?>/",
-            c: "<?=$this->Html->url(['controller'=>'goals','action'=>'ajax_toggle_follow','goal_id'=>""])?>",
-            d: "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_post_like','post_id'=>""])?>",
-            e: "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_comment_like','comment_id'=>""])?>",
-            f: "<?=$this->Html->url(['controller'=>'notifications','action'=>'ajax_get_new_notify_count'])?>",
-            g: "<?=$this->Html->url(['controller'=>'notifications','action'=>'ajax_get_latest_notify_items'])?>",
-            h: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_term_start_end'])?>",
-            i: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_team_member'])?>/",
-            j: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_team_member_init'])?>/",
-            k: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_current_team_group_list'])?>/",
-            l: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_current_not_2fa_step_user_list'])?>/",
-            m: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_current_team_admin_list'])?>/",
-            n: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_group_member'])?>/",
-            o: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_set_current_team_active_flag'])?>/",
-            p: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_set_current_team_admin_user_flag'])?>/",
-            q: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_set_current_team_evaluation_flag'])?>/",
-            r: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_term_start_end_by_edit'])?>",
-            t: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_invite_member_list'])?>",
-            u: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_team_vision'])?>/",
-            v: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_set_team_vision_archive'])?>/",
-            w: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_delete_team_vision'])?>/",
-            x: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_team_admin_user_check'])?>/",
-            y: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_group_vision'])?>/",
-            z: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_set_group_vision_archive'])?>/",
-            aa: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_delete_group_vision'])?>/",
-            ab: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_login_user_group_id'])?>/",
-            ac: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_team_vision_detail'])?>/",
-            ad: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_get_group_vision_detail'])?>/",
-            ae: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_get_user_detail'])?>/",
-            af: "<?=$this->Html->url(['controller'=>'notifications','action'=>'ajax_get_new_message_notify_count'])?>",
-            ag: "<?=$this->Html->url(['controller'=>'notifications','action'=>'ajax_get_latest_message_notify_items'])?>",
-            an: "<?=$this->Html->url(['controller'=>'notifications','action'=>'ajax_mark_all_read'])?>",
-            notifications: "<?=$this->Html->url(['controller'=>'notifications','action'=>'ajax_index'])?>",
-            ah: "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_get_message'])?>/",
-            ai: "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_put_message'])?>/",
-            aj: "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_get_message_info'])?>/",
-            ak: "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_put_message_read'])?>/",
-            al: "<?=$this->Html->url(['controller'=>'posts','action'=>'ajax_get_message_list'])?>/",
-            am: "<?=$this->Html->url(['controller'=>'teams','action'=>'ajax_invite_setting'])?>/",
-            add_member_on_message: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select_only_add_users'])?>",
-            select2_secret_circle: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_secret_circles'])?>/",
-            select2_circle_user: "<?=$this->Html->url(['controller'=>'users','action'=>'ajax_select2_get_circles_users'])?>",
-            select2_goals: "<?=$this->Html->url(['controller'=>'goals','action'=>'ajax_select2_goals'])?>",
-            select2_circles: "<?=$this->Html->url(['controller'=>'circles','action'=>'ajax_select2_circles'])?>",
+            a: "<?=$this->Html->url(['controller' => 'users', 'action' => 'ajax_select2_get_users'])?>",
+            b: "<?=$this->Html->url(['controller' => 'circles', 'action' => 'ajax_select2_init_circle_members'])?>/",
+            c: "<?=$this->Html->url(['controller' => 'goals', 'action' => 'ajax_toggle_follow', 'goal_id' => ""])?>",
+            d: "<?=$this->Html->url(['controller' => 'posts', 'action' => 'ajax_post_like', 'post_id' => ""])?>",
+            e: "<?=$this->Html->url(['controller' => 'posts', 'action' => 'ajax_comment_like', 'comment_id' => ""])?>",
+            f: "<?=$this->Html->url(['controller' => 'notifications', 'action' => 'ajax_get_new_notify_count'])?>",
+            g: "<?=$this->Html->url(['controller' => 'notifications', 'action' => 'ajax_get_latest_notify_items'])?>",
+            h: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_term_start_end'])?>",
+            i: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_team_member'])?>/",
+            j: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_team_member_init'])?>/",
+            k: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_current_team_group_list'])?>/",
+            l: "<?=$this->Html->url([
+                'controller' => 'teams',
+                'action'     => 'ajax_get_current_not_2fa_step_user_list'
+            ])?>/",
+            m: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_current_team_admin_list'])?>/",
+            n: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_group_member'])?>/",
+            o: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_set_current_team_active_flag'])?>/",
+            p: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_set_current_team_admin_user_flag'])?>/",
+            q: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_set_current_team_evaluation_flag'])?>/",
+            r: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_term_start_end_by_edit'])?>",
+            t: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_invite_member_list'])?>",
+            u: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_team_vision'])?>/",
+            v: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_set_team_vision_archive'])?>/",
+            w: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_delete_team_vision'])?>/",
+            x: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_team_admin_user_check'])?>/",
+            y: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_group_vision'])?>/",
+            z: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_set_group_vision_archive'])?>/",
+            aa: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_delete_group_vision'])?>/",
+            ab: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_login_user_group_id'])?>/",
+            ac: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_team_vision_detail'])?>/",
+            ad: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_group_vision_detail'])?>/",
+            ae: "<?=$this->Html->url(['controller' => 'users', 'action' => 'ajax_get_user_detail'])?>/",
+            af: "<?=$this->Html->url([
+                'controller' => 'notifications',
+                'action'     => 'ajax_get_new_message_notify_count'
+            ])?>",
+            ag: "<?=$this->Html->url([
+                'controller' => 'notifications',
+                'action'     => 'ajax_get_latest_message_notify_items'
+            ])?>",
+            an: "<?=$this->Html->url(['controller' => 'notifications', 'action' => 'ajax_mark_all_read'])?>",
+            notifications: "<?=$this->Html->url(['controller' => 'notifications', 'action' => 'ajax_index'])?>",
+            ah: "<?=$this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_message'])?>/",
+            ai: "<?=$this->Html->url(['controller' => 'posts', 'action' => 'ajax_put_message'])?>/",
+            aj: "<?=$this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_message_info'])?>/",
+            ak: "<?=$this->Html->url(['controller' => 'posts', 'action' => 'ajax_put_message_read'])?>/",
+            al: "<?=$this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_message_list'])?>/",
+            am: "<?=$this->Html->url(['controller' => 'teams', 'action' => 'ajax_invite_setting'])?>/",
+            add_member_on_message: "<?=$this->Html->url([
+                'controller' => 'users',
+                'action'     => 'ajax_select_only_add_users'
+            ])?>",
+            select2_secret_circle: "<?=$this->Html->url([
+                'controller' => 'users',
+                'action'     => 'ajax_select2_get_secret_circles'
+            ])?>/",
+            select2_circle_user: "<?=$this->Html->url([
+                'controller' => 'users',
+                'action'     => 'ajax_select2_get_circles_users'
+            ])?>",
+            select2_goals: "<?=$this->Html->url(['controller' => 'goals', 'action' => 'ajax_select2_goals'])?>",
+            select2_circles: "<?=$this->Html->url(['controller' => 'circles', 'action' => 'ajax_select2_circles'])?>",
             user_page: "<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => '']) ?>",
             goal_page: "<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_info', 'goal_id' => '']) ?>",
             circle_page: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'circle_id' => '']) ?>/",
-            goal_followers: "<?=$this->Html->url(['controller'=>'goals','action'=>'ajax_get_followers'])?>",
+            goal_followers: "<?=$this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_followers'])?>",
             goal_members: "<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_members']) ?>",
             goal_key_results: "<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_key_results']) ?>",
             upload_file: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_upload_file']) ?>",
@@ -158,20 +176,30 @@ echo $this->Html->script('ng_app.min');
             message_list: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'message_list']) ?>",
             ajax_message_list: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_message_list']) ?>",
             ajax_message: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_message']) ?>",
-            invite_member: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'settings','#'=>'invite_member']) ?>",
+            invite_member: "<?= $this->Html->url([
+                'controller' => 'teams',
+                'action'     => 'settings',
+                '#'          => 'invite_member'
+            ]) ?>",
             insight: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_insight']) ?>",
             insight_circle: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_insight_circle']) ?>",
-            insight_ranking: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_insight_ranking']) ?>",
+            insight_ranking: "<?= $this->Html->url([
+                'controller' => 'teams',
+                'action'     => 'ajax_get_insight_ranking'
+            ]) ?>",
             insight_graph: "<?= $this->Html->url(['controller' => 'teams', 'action' => 'ajax_get_insight_graph']) ?>",
             validate_email: "<?= $this->Html->url(['controller' => 'users', 'action' => 'ajax_validate_email']) ?>",
             join_circle: "<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_join_circle']) ?>",
             ogp_info: "<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_ogp_info']) ?>",
-            regenerate_recovery_code: "<?= $this->Html->url(['controller' => 'users', 'action' => 'ajax_regenerate_recovery_code']) ?>",
+            regenerate_recovery_code: "<?= $this->Html->url([
+                'controller' => 'users',
+                'action'     => 'ajax_regenerate_recovery_code'
+            ]) ?>",
             circle_setting: "<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_change_setting']) ?>",
             route_url: "<?= FULL_BASE_URL ?>"
         },
         data: {
-            a: <?=isset($select2_default)?$select2_default:"[]"?>,
+            a: <?=isset($select2_default) ? $select2_default : "[]"?>,
             b: function (element, callback) {
                 var data = [];
                 var selected_values = element.val().split(',');
@@ -208,13 +236,13 @@ echo $this->Html->script('ng_app.min');
                 }
                 callback(data);
             },
-            c: <?=isset($my_channels_json)?$my_channels_json:"[]"?>,
+            c: <?=isset($my_channels_json) ? $my_channels_json : "[]"?>,
             d: "<?=viaIsSet($feed_filter)?>",
             e: <?=MY_GOALS_DISPLAY_NUMBER?>,
             f: <?=MY_COLLABO_GOALS_DISPLAY_NUMBER?>,
             g: <?=MY_FOLLOW_GOALS_DISPLAY_NUMBER?>,
             h: "<?=viaIsSet($circle_id)?>",
-            j: "<?= isset($posts)?count($posts):null?>",
+            j: "<?= isset($posts) ? count($posts) : null?>",
             k: <?=MY_PREVIOUS_GOALS_DISPLAY_NUMBER?>,
             csrf_token:<?= json_encode($this->Session->read('_Token'))?>,
             l: function (element, callback) {
@@ -358,22 +386,22 @@ echo $this->Html->script('ng_app.min');
             "Including your orgainization improvements": "<?= __("Including your orgainization improvements") ?>"
         },
         notify_auto_update_sec: <?=NOTIFY_AUTO_UPDATE_SEC?>,
-        new_notify_cnt: <?=isset($new_notify_cnt)?$new_notify_cnt:0?>,
-        new_notify_message_cnt: <?=isset($new_notify_message_cnt)?$new_notify_message_cnt:0?>,
-        common_form_type: "<?= isset($common_form_type)?$common_form_type:null?>",
+        new_notify_cnt: <?=isset($new_notify_cnt) ? $new_notify_cnt : 0?>,
+        new_notify_message_cnt: <?=isset($new_notify_message_cnt) ? $new_notify_message_cnt : 0?>,
+        common_form_type: "<?= isset($common_form_type) ? $common_form_type : null?>",
         request_params: <?=json_encode($this->request->params)?>,
         is_mb_app: "<?= $is_mb_app ?>",
         is_mb_app_ios: "<?= $is_mb_app_ios ?>",
         pre_file_ttl: <?= PRE_FILE_TTL ?>,
-        notify_setting: <?= isset($notify_setting)?json_encode($notify_setting):"''" ?>,
-        unread_msg_post_ids: <?=isset($unread_msg_post_ids)?json_encode($unread_msg_post_ids):"''"?>,
+        notify_setting: <?= isset($notify_setting) ? json_encode($notify_setting) : "''" ?>,
+        unread_msg_post_ids: <?=isset($unread_msg_post_ids) ? json_encode($unread_msg_post_ids) : "''"?>,
         select2_query_limit: <?=SELECT2_QUERY_LIMIT?>,
         current_term_start_date_format: "<?= viaIsSet($current_term_start_date_format) ?>",
         current_term_end_date_format: "<?= viaIsSet($current_term_end_date_format) ?>"
     };
 
     function __(text) {
-        if(cake.translation[text] !== undefined) {
+        if (cake.translation[text] !== undefined) {
             return cake.translation[text];
         }
         return text;

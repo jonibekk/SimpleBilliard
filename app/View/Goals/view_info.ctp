@@ -70,21 +70,27 @@
                     ?>
                     <?=
                     $this->Html->link($this->Upload->uploadImage($member['User'], 'User.photo', ['style' => 'medium'],
-                                                                 ['class' => 'goal-detail-info-avatar',]),
-                                      ['controller' => 'users',
-                                       'action'     => 'view_goals',
-                                       'user_id'    => $member['User']['id']],
-                                      ['escape' => false]
+                        ['class' => 'goal-detail-info-avatar',]),
+                        [
+                            'controller' => 'users',
+                            'action'     => 'view_goals',
+                            'user_id'    => $member['User']['id']
+                        ],
+                        ['escape' => false]
                     )
                     ?>
                     <?php $iterator--; ?>
                 <?php endforeach ?>
                 <?php if ($over_num > 1): ?>
-                    <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_members', 'goal_id' => $goal['Goal']['id']]) ?>"
+                    <a href="<?= $this->Html->url([
+                        'controller' => 'goals',
+                        'action'     => 'view_members',
+                        'goal_id'    => $goal['Goal']['id']
+                    ]) ?>"
                        class="goal-detail-members-remaining">
                         <?= $this->Upload->uploadImage($member_all[$member_view_num - 1]['User'], 'User.photo',
-                                                       ['style' => 'medium'],
-                                                       ['class' => 'goal-detail-info-avatar',]) ?>
+                            ['style' => 'medium'],
+                            ['class' => 'goal-detail-info-avatar',]) ?>
                         <span class="goal-detail-member-more-counts">
                                 <i class="fa fa-plus"></i>
                             <?= $over_num ?></span>

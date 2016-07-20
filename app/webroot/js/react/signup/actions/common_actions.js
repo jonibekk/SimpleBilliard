@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export function getBaseUrl() {
-  if(typeof cake === "undefined") {
+  if (typeof cake === "undefined") {
     return 'http://localhost'
   } else {
     return cake.url.route_url
@@ -35,6 +35,7 @@ export function mapValidationMsg(before_mapped_messages) {
     'data[User][password]': 'password',
     'data[User][first_name]': 'first_name',
     'data[User][last_name]': 'last_name',
+    'data[User][local_date]': 'local_date',
     'data[Local][first_name]': 'local_first_name',
     'data[Local][last_name]': 'local_last_name'
   }
@@ -45,4 +46,17 @@ export function mapValidationMsg(before_mapped_messages) {
     }
   }, map)
   return result
+}
+
+export function getLocalDate() {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const seconds = date.getSeconds();
+  const fullDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+
+  return fullDate;
 }

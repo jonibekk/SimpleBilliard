@@ -40,30 +40,49 @@
             <br>
 
             <div class="profile-goals-select-wrap btn-group" role="group">
-                <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user['User']['id'], 'term_id' => $term_id]) ?>"
+                <a href="<?= $this->Html->url([
+                    'controller' => 'users',
+                    'action'     => 'view_goals',
+                    'user_id'    => $user['User']['id'],
+                    'term_id'    => $term_id
+                ]) ?>"
                    class="profile-goals-select btn <?= $page_type == "following" ? "btn-unselected" : "btn-selected" ?>">
                     <?= __("My Goal (%s)", $my_goals_count) ?></a>
-                <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user['User']['id'], 'term_id' => $term_id, 'page_type' => 'following']) ?>"
+                <a href="<?= $this->Html->url([
+                    'controller' => 'users',
+                    'action'     => 'view_goals',
+                    'user_id'    => $user['User']['id'],
+                    'term_id'    => $term_id,
+                    'page_type'  => 'following'
+                ]) ?>"
                    class="profile-goals-select btn <?= $page_type == "following" ? "btn-selected" : "btn-unselected" ?>">
                     <?= __("Following (%s)", $follow_goals_count) ?></a>
             </div>
             <?php foreach ($goals as $goal): ?>
                 <div class="col col-xxs-12 my-goals-item">
                     <div class="col col-xxs-2 col-xs-2">
-                        <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal['Goal']['id']]) ?>">
+                        <a href="<?= $this->Html->url([
+                            'controller' => 'goals',
+                            'action'     => 'view_info',
+                            'goal_id'    => $goal['Goal']['id']
+                        ]) ?>">
                             <?=
                             $this->Html->image('ajax-loader.gif',
-                                               [
-                                                   'class'         => 'lazy img-rounded profile-goals-img',
-                                                   'data-original' => $this->Upload->uploadUrl($goal, 'Goal.photo',
-                                                                                               ['style' => 'x_large'])
-                                               ]
+                                [
+                                    'class'         => 'lazy img-rounded profile-goals-img',
+                                    'data-original' => $this->Upload->uploadUrl($goal, 'Goal.photo',
+                                        ['style' => 'x_large'])
+                                ]
                             )
                             ?></a>
                     </div>
                     <div class="col col-xxs-10 col-xs-10 pl_5px">
                         <div class="col col-md-11 col-xs-10 col-xxs-9 profile-goals-card-title-wrapper">
-                            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal['Goal']['id']]) ?>"
+                            <a href="<?= $this->Html->url([
+                                'controller' => 'goals',
+                                'action'     => 'view_info',
+                                'goal_id'    => $goal['Goal']['id']
+                            ]) ?>"
                                class="profile-goals-card-title">
                                 <p class="font_verydark profile-goals-card-title-text">
                                     <span><?= h($goal['Goal']['name']) ?></span>
@@ -79,17 +98,17 @@
                         <div class="col col-xxs-12 font_lightgray font_12px">
                             <?php if ($page_type === 'following'): ?>
                                 <?= __("Approval Status: %s",
-                                       Collaborator::$STATUS[$goal['Leader'][0]['valued_flg']]) ?>
+                                    Collaborator::$STATUS[$goal['Leader'][0]['valued_flg']]) ?>
                             <?php else: ?>
                                 <?php if ($goal['Leader'][0]['user_id'] == $user['User']['id']): ?>
                                     <?php $valued_flg = $goal['Leader'][0]['valued_flg']; ?>
                                 <?php else: ?>
                                     <?php $my_collabo = Hash::extract($goal['Collaborator'],
-                                                                      "{n}[user_id={$user['User']['id']}]"); ?>
+                                        "{n}[user_id={$user['User']['id']}]"); ?>
                                     <?php $valued_flg = $my_collabo[0]['valued_flg']; ?>
                                 <?php endif; ?>
                                 <?= __("Approval Status: %s",
-                                       Collaborator::$STATUS[$valued_flg]) ?>
+                                    Collaborator::$STATUS[$valued_flg]) ?>
                             <?php endif; ?>
                         </div>
                         <div class="col col-xxs-12">
@@ -113,11 +132,11 @@
                                            data-class="toggle-follow"
                                            goal-id="<?= $goal['Goal']['id'] ?>"
                                             <?php if ($follow_opt['disabled'] || $this->Goal->isCoachingUserGoal($goal,
-                                                                                                                 viaIsSet($my_coaching_users))
+                                                    viaIsSet($my_coaching_users))
                                             ): ?>
                                                 disabled="disabled"
                                             <?php endif ?>
-                                            >
+                                        >
                                             <i class="fa fa-heart font_rougeOrange"
                                                style="<?= h($follow_opt['style']) ?>"></i>
                                             <span class="ml_5px"><?= h($follow_opt['text']) ?></span>
@@ -127,7 +146,11 @@
                                         <a class="btn btn-white bd-circle_22px font_verydark modal-ajax-get-collabo p_8px <?= h($collabo_opt['class']) ?>"
                                            data-toggle="modal"
                                            data-target="#ModalCollabo_<?= $goal['Goal']['id'] ?>"
-                                           href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', 'goal_id' => $goal['Goal']['id']]) ?>">
+                                           href="<?= $this->Html->url([
+                                               'controller' => 'goals',
+                                               'action'     => 'ajax_get_collabo_change_modal',
+                                               'goal_id'    => $goal['Goal']['id']
+                                           ]) ?>">
                                             <i class="fa fa-child font_rougeOrange font_18px"
                                                style="<?= h($collabo_opt['style']) ?>"></i>
                                             <span class="ml_5px font_14px"><?= h($collabo_opt['text']) ?></span>
@@ -140,7 +163,11 @@
                                     <?php if ($is_mine && $goal['Goal']['is_current_term']): ?>
                                         <li class="profile-user-action-list">
                                             <a class="profile-user-add-action"
-                                               href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'add_action', 'goal_id' => $goal['Goal']['id']]) ?>"><i
+                                               href="<?= $this->Html->url([
+                                                   'controller' => 'goals',
+                                                   'action'     => 'add_action',
+                                                   'goal_id'    => $goal['Goal']['id']
+                                               ]) ?>"><i
                                                     class="fa fa-plus"></i>
 
                                                 <p class="profile-user-add-action-text "><?= __("Action") ?></p>
@@ -153,26 +180,36 @@
                                         <?php
                                         $last_many = false;
                                         //urlはアクション単体ページ
-                                        $url = ['controller' => 'posts', 'action' => 'feed', 'post_id' => $action['Post'][0]['id']];
+                                        $url = [
+                                            'controller' => 'posts',
+                                            'action'     => 'feed',
+                                            'post_id'    => $action['Post'][0]['id']
+                                        ];
                                         //最後の場合かつアクション件数合計が表示件数以上の場合
                                         if ($key == count($goal['ActionResult']) - 1 && count($goal['ActionResultCount']) > $display_action_count) {
                                             $last_many = true;
                                             //urlはゴールページの全アクションリスト
-                                            $url = ['controller' => 'users', 'action' => 'view_actions', 'user_id' => $user['User']['id'], 'page_type' => 'image', 'goal_id' => $goal['Goal']['id']];//TODO urlはマイページのアクションリストが完成したら差し替え
+                                            $url = [
+                                                'controller' => 'users',
+                                                'action'     => 'view_actions',
+                                                'user_id'    => $user['User']['id'],
+                                                'page_type'  => 'image',
+                                                'goal_id'    => $goal['Goal']['id']
+                                            ];//TODO urlはマイページのアクションリストが完成したら差し替え
                                         }
                                         ?>
                                         <li class="profile-user-action-list">
                                             <a href="<?= $this->Html->url($url) ?>" class="profile-user-action-pic">
                                                 <?php if (viaIsSet($action['ActionResultFile'][0]['AttachedFile'])): ?>
                                                     <?= $this->Html->image('ajax-loader.gif',
-                                                                           [
-                                                                               'class'         => 'lazy',
-                                                                               'width'         => 48,
-                                                                               'height'        => 48,
-                                                                               'data-original' => $this->Upload->uploadUrl($action['ActionResultFile'][0]['AttachedFile'],
-                                                                                                                           "AttachedFile.attached",
-                                                                                                                           ['style' => 'x_small']),
-                                                                           ]
+                                                        [
+                                                            'class'         => 'lazy',
+                                                            'width'         => 48,
+                                                            'height'        => 48,
+                                                            'data-original' => $this->Upload->uploadUrl($action['ActionResultFile'][0]['AttachedFile'],
+                                                                "AttachedFile.attached",
+                                                                ['style' => 'x_small']),
+                                                        ]
                                                     );
                                                     ?>
 
@@ -182,14 +219,14 @@
                                                         <?php
                                                         if (!empty($action["photo{$i}_file_name"]) || $i == 5) {
                                                             echo $this->Html->image('ajax-loader.gif',
-                                                                                    [
-                                                                                        'class'         => 'lazy',
-                                                                                        'width'         => 48,
-                                                                                        'height'        => 48,
-                                                                                        'data-original' => $this->Upload->uploadUrl($action,
-                                                                                                                                    "ActionResult.photo$i",
-                                                                                                                                    ['style' => 'x_small']),
-                                                                                    ]);
+                                                                [
+                                                                    'class'         => 'lazy',
+                                                                    'width'         => 48,
+                                                                    'height'        => 48,
+                                                                    'data-original' => $this->Upload->uploadUrl($action,
+                                                                        "ActionResult.photo$i",
+                                                                        ['style' => 'x_small']),
+                                                                ]);
                                                             break;
                                                         }
                                                         ?>

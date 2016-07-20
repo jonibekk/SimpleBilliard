@@ -18,18 +18,21 @@
 
         <div class="col col-xxs-12 goals-column-head-vision">
         <span class="font_18px mt_5px font_gargoyleGray goals-column-title right-column-vision-title">
-            <?= __('Vision') ?> <span class="font_14px"><i class="fa fa-caret-right mr_2px"></i><i class="fa fa-caret-right mr_2px"></i><i class="fa fa-caret-right mr_4px"></i></span> <?= h($vision['target_name']) ?>
+            <?= __('Vision') ?> <span class="font_14px"><i class="fa fa-caret-right mr_2px"></i><i
+                    class="fa fa-caret-right mr_2px"></i><i
+                    class="fa fa-caret-right mr_4px"></i></span> <?= h($vision['target_name']) ?>
         </span>
         </div>
-        <div class="col col-xxs-12 mt_5px mb_12px font_gargoyleGray right-column-vision-objective goals-column-teamvision-panel-base">
+        <div
+            class="col col-xxs-12 mt_5px mb_12px font_gargoyleGray right-column-vision-objective goals-column-teamvision-panel-base">
             <?=
             $this->Html->image('ajax-loader.gif',
-                               [
-                                   'class'         => 'lazy feed-img-teamvision pull-left',
-                                   'data-original' => $this->Upload->uploadUrl([$vision['model'] => $vision],
-                                                                               "{$vision['model']}.photo",
-                                                                               ['style' => 'medium'])
-                               ]
+                [
+                    'class' => 'lazy feed-img-teamvision pull-left',
+                    'data-original' => $this->Upload->uploadUrl([$vision['model'] => $vision],
+                        "{$vision['model']}.photo",
+                        ['style' => 'medium'])
+                ]
             )
             ?>
             <span class="goals-column-teamvision-name"><?= h($vision['name']) ?></span>
@@ -38,7 +41,11 @@
             ?>
 
             <a class="vision-more-read"
-               href="<?= $this->Html->url(['controller' => 'teams', 'action' => 'main', '#' => "{$method}/{$vision['id']}/true"]) ?>">
+               href="<?= $this->Html->url([
+                   'controller' => 'teams',
+                   'action'     => 'main',
+                   '#'          => "{$method}/{$vision['id']}/true"
+               ]) ?>">
                 <i class="fa fa-arrow-circle-right mr_5px"></i><?= __('View detail') ?>
             </a>
         </div>

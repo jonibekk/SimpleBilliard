@@ -7,7 +7,6 @@ App::uses('GoalousWebTestCase', 'Test');
  *
  * @package GoalousWebTest
  * @version 2016/03/11
- *
  */
 class HomeWebTest extends GoalousWebTestCase
 {
@@ -121,9 +120,9 @@ class HomeWebTest extends GoalousWebTestCase
         $before_panels = $this->elements($this->using('css selector')->value('div.panel.panel-default'));
         $this->execute([
             'script' => 'window.scrollTo(0, document.documentElement.scrollHeight)',
-            'args' => [],
+            'args'   => [],
         ]);
-        $this->waitUntil(function() use ($before_panels) {
+        $this->waitUntil(function () use ($before_panels) {
             $panels = $this->elements($this->using('css selector')->value('div.panel.panel-default'));
             if (count($before_panels) < count($panels)) {
                 $this->assertTrue(count($before_panels) < count($panels));
@@ -135,7 +134,7 @@ class HomeWebTest extends GoalousWebTestCase
         }, 3000);
         $this->execute([
             'script' => 'window.scrollTo(0, 0)',
-            'args' => [],
+            'args'   => [],
         ]);
         sleep(2);
     }
@@ -210,13 +209,13 @@ class HomeWebTest extends GoalousWebTestCase
         $this->byLinkText("すべて見る")->click();
         sleep(5);
 
-        $post_card= $this->byCssSelector('ul.notify-page-cards');
+        $post_card = $this->byCssSelector('ul.notify-page-cards');
         $posts = $post_card->elements($this->using('css selector')->value('li.notify-card-list'));
         $post_header = $posts[0]->elements($this->using('css selector')->value('span.notify-card-head-target'));
 
         $header_text = $post_header[0]->text();
         $posts[0]->click();
-        $this->waitUntil(function() {
+        $this->waitUntil(function () {
             if ($this->byXPath("//div[@id='container']/div[2]/div[1]/div[1]/div[1]/a/span")) {
                 return true;
             }
@@ -224,7 +223,8 @@ class HomeWebTest extends GoalousWebTestCase
             return false;
         }, 30000);
 
-        $this->assertEquals($this->byXPath("//div[@id='container']/div[2]/div[1]/div[1]/div[1]/a/span")->text(), $header_text);
+        $this->assertEquals($this->byXPath("//div[@id='container']/div[2]/div[1]/div[1]/div[1]/a/span")->text(),
+            $header_text);
         $this->saveSceenshot('testPostListMoveToPost');
     }
 
@@ -236,7 +236,8 @@ class HomeWebTest extends GoalousWebTestCase
     public function testPostLiked()
     {
         $liked_button = $this->byCssSelector('div.feeds-post-btns-wrap-right');
-        $liked_link = $liked_button->elements($this->using('css selector')->value('a.modal-ajax-get.feeds-post-btn-numbers-like'));
+        $liked_link = $liked_button->elements($this->using('css selector')
+                                                   ->value('a.modal-ajax-get.feeds-post-btn-numbers-like'));
         $liked_counter = $liked_link[0]->element($this->using('css selector')->value('span'));
         $like = $this->byCssSelector('a.click-like.feeds-post-like-btn');
         $classes = $like->attribute('class');
@@ -282,7 +283,7 @@ class HomeWebTest extends GoalousWebTestCase
         $this->execute(['script' => $script, 'args' => []]);
 
         // 画像ファイルをバイナリに変換
-        $path = __DIR__.'/Files/150x150.png';
+        $path = __DIR__ . '/Files/150x150.png';
         $image = base64_encode(file_get_contents($path));
         $image_name = 'testfile.png';
 
@@ -295,7 +296,7 @@ class HomeWebTest extends GoalousWebTestCase
         $this->execute(['script' => $script, 'args' => []]);
         sleep(3);
 
-        $this->waitUntil(function() {
+        $this->waitUntil(function () {
             if ($this->byCssSelector('div.dz-complete')) {
                 return true;
             }
@@ -316,6 +317,7 @@ class HomeWebTest extends GoalousWebTestCase
 
     /**
      * 通知のテストのために別のユーザーが投稿する
+     *
      * @param $id
      * @param $password
      */
@@ -353,6 +355,7 @@ class HomeWebTest extends GoalousWebTestCase
 
     /**
      * ログインユーザーを変更する
+     *
      * @param $id
      * @param $password
      */
@@ -360,7 +363,7 @@ class HomeWebTest extends GoalousWebTestCase
     {
         $this->logout();
 
-        $this->waitUntil(function() use($id, $password) {
+        $this->waitUntil(function () use ($id, $password) {
             $this->login($this->login_url, $id, $password);
             if ($this->byXPath("//ul[@id='CommonFormTabs']//a[.='投稿']")) {
                 return true;
@@ -372,6 +375,7 @@ class HomeWebTest extends GoalousWebTestCase
 
     /**
      * 通知テストのセットアップをするか判断
+     *
      * @return bool
      */
     protected function isSetUpNotification()
@@ -389,6 +393,7 @@ class HomeWebTest extends GoalousWebTestCase
 
     /**
      * 通知のカウントがあるかどうかを判断する
+     *
      * @return bool
      */
     protected function isNotificationCountExists()
@@ -410,6 +415,7 @@ class HomeWebTest extends GoalousWebTestCase
     /**
      * 通知リストが存在するか
      * li.notify-card-list要素は通知リストが無い場合でも1つあるため1より大きい場合に存在すると判断
+     *
      * @return bool
      */
     protected function isNotificationCardExists()

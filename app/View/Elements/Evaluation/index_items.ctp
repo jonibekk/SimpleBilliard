@@ -12,13 +12,21 @@
 ?>
 <!-- START app/View/Elements/Evaluation/index_items.ctp -->
 <?php foreach ($evaluatees as $user): ?>
-    <a href="<?= $this->Html->url(['controller' => 'evaluations', 'action' => 'view', 'evaluate_term_id' => $eval_term_id, 'user_id' => $user['User']['id']]) ?>"
+    <a href="<?= $this->Html->url(['controller'       => 'evaluations',
+                                   'action'           => 'view',
+                                   'evaluate_term_id' => $eval_term_id,
+                                   'user_id'          => $user['User']['id']
+    ]) ?>"
        class="font_verydark">
         <div class="col-xxs-12 mb_8px">
             <div class="disp_ib">
                 <?=
                 $this->Upload->uploadImage($user, 'User.photo', ['style' => 'medium'],
-                                           ['width' => '48px', 'height' => '48px', 'alt' => 'icon', 'class' => 'pull-left img-circle mtb_3px']) ?>
+                    ['width'  => '48px',
+                     'height' => '48px',
+                     'alt'    => 'icon',
+                     'class'  => 'pull-left img-circle mtb_3px'
+                    ]) ?>
             </div>
             <div class="disp_ib ml_8px">
                 <p class="font_bold"><?= h($user['User']['display_username']) ?></p>

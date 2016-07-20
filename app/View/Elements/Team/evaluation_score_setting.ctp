@@ -54,15 +54,21 @@
             </tr>
             <?php foreach ($this->request->data['EvaluateScore'] as $es_key => $evaluation_select_value) : ?>
                 <?= $this->element('Team/eval_score_form_elm',
-                                   ['index' => $es_key, 'id' => $evaluation_select_value['id'], 'type' => 'exists']) ?>
+                    ['index' => $es_key, 'id' => $evaluation_select_value['id'], 'type' => 'exists']) ?>
             <?php endforeach; ?>
         </table>
         <div class="form-group">
-            <?= $this->Form->submit(__('Save evaluation score settings'), ['class' => 'btn btn-primary team-setting-add-goal-category']) ?>
+            <?= $this->Form->submit(__('Save evaluation score settings'),
+                ['class' => 'btn btn-primary team-setting-add-goal-category']) ?>
             <?php $index = count($this->request->data['EvaluateScore']);
             $max_index = $index + 9; ?>
             <?= $this->Html->link(__("Add definition"), ['controller' => 'teams', 'action' => 'ajax_get_score_elm'],
-                                  ['id' => 'AddScoreButton', 'target-selector' => '#EvaluateScoreTable > tbody', 'index' => $index, 'max_index' => $max_index, 'class' => 'btn btn-default']) ?>
+                ['id'              => 'AddScoreButton',
+                 'target-selector' => '#EvaluateScoreTable > tbody',
+                 'index'           => $index,
+                 'max_index'       => $max_index,
+                 'class'           => 'btn btn-default'
+                ]) ?>
         </div>
         <?php for ($i = $index; $i <= $max_index; $i++): ?>
             <?php $this->Form->unlockField("EvaluateScore.$i.name") ?>

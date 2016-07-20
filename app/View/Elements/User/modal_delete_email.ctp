@@ -29,12 +29,12 @@
                 <?=
                 $this->Form
                     ->postLink(__("Cancel"),
-                               [
-                                   'controller' => 'emails',
-                                   'action'     => 'delete',
-                                   $email_id
-                               ],
-                               ['class' => 'btn btn-primary']); ?>
+                        [
+                            'controller' => 'emails',
+                            'action'     => 'delete',
+                            $email_id
+                        ],
+                        ['class' => 'btn btn-primary']); ?>
             </div>
         </div>
     </div>

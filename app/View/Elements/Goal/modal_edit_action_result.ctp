@@ -25,7 +25,11 @@
                 'wrapInput' => false,
                 'class'     => 'form-control',
             ],
-            'url'           => ['controller' => 'goals', 'action' => 'edit_action', 'action_result_id' => $action['ActionResult']['id']],
+            'url'           => [
+                'controller'       => 'goals',
+                'action'           => 'edit_action',
+                'action_result_id' => $action['ActionResult']['id']
+            ],
             'type'          => 'file',
         ]); ?>
         <?= $this->Form->hidden('ActionResult.id') ?>
@@ -33,13 +37,13 @@
             <div class="aaa">
                 <?=
                 $this->Form->input('ActionResult.name', [
-                                                          'label'       => false,
-                                                          'rows'        => 1,
-                                                          'placeholder' => __("Let's share the actions that you've done today!"),
-                                                          'class'       => 'form-control tiny-form-text blank-disable-and-undisable goalsCard-actionInput mb_12px',
-                                                          'id'          => "ActionEditFormName_" . $action['ActionResult']['id'],
-                                                          'target-id'   => "ActionEditFormSubmit_" . $action['ActionResult']['id'],
-                                                      ]
+                        'label'       => false,
+                        'rows'        => 1,
+                        'placeholder' => __("Let's share the actions that you've done today!"),
+                        'class'       => 'form-control tiny-form-text blank-disable-and-undisable goalsCard-actionInput mb_12px',
+                        'id'          => "ActionEditFormName_" . $action['ActionResult']['id'],
+                        'target-id'   => "ActionEditFormSubmit_" . $action['ActionResult']['id'],
+                    ]
                 )
                 ?>
                 <div class="form-group">
@@ -52,7 +56,13 @@
                             <?php for ($i = 1; $i <= 5; $i++): ?>
                                 <li>
                                     <?= $this->element('Feed/photo_upload_mini',
-                                                       ['data' => $action, 'type' => 'action_result', 'index' => $i, 'submit_id' => "ActionEditFormSubmit_" . $action['ActionResult']['id'], 'has_many' => false]) ?>
+                                        [
+                                            'data'      => $action,
+                                            'type'      => 'action_result',
+                                            'index'     => $i,
+                                            'submit_id' => "ActionEditFormSubmit_" . $action['ActionResult']['id'],
+                                            'has_many'  => false
+                                        ]) ?>
                                 </li>
                             <?php endfor ?>
                         </ul>
@@ -65,11 +75,11 @@
                 </label>
                 <?=
                 $this->Form->input('ActionResult.key_result_id', [
-                                                                   'label'   => false, //__("紐付ける達成要素を選択(オプション)"),
-                                                                   'options' => [null => __("Nothing")] + $kr_list,
-                                                                   'class'   => 'form-control selectKrForAction',
-                                                                   'id'      => 'ActionKeyResultId_' . $action['ActionResult']['id'],
-                                                               ]
+                        'label'   => false, //__("紐付ける達成要素を選択(オプション)"),
+                        'options' => [null => __("Nothing")] + $kr_list,
+                        'class'   => 'form-control selectKrForAction',
+                        'id'      => 'ActionKeyResultId_' . $action['ActionResult']['id'],
+                    ]
                 )
                 ?>
 
@@ -78,14 +88,22 @@
         <div class="modal-footer">
             <?=
             $this->Form->submit(__("Edit Action"),
-                                ['class' => 'btn btn-primary', 'div' => false, 'id' => "ActionEditFormSubmit_" . $action['ActionResult']['id']]) ?>
+                [
+                    'class' => 'btn btn-primary',
+                    'div'   => false,
+                    'id'    => "ActionEditFormSubmit_" . $action['ActionResult']['id']
+                ]) ?>
             <?= $this->Form->end() ?>
 
             <button type="button" class="btn btn-default" data-dismiss="modal"><?= __("Close") ?></button>
             <?=
             $this->Form->postLink(__("Delete the action"),
-                                  ['controller' => 'goals', 'action' => 'delete_action', 'action_result_id' => $action['ActionResult']['id']],
-                                  ['class' => 'btn btn-default pull-left'], __("Do you really want to delete this action?")) ?>
+                [
+                    'controller'       => 'goals',
+                    'action'           => 'delete_action',
+                    'action_result_id' => $action['ActionResult']['id']
+                ],
+                ['class' => 'btn btn-default pull-left'], __("Do you really want to delete this action?")) ?>
 
 
         </div>

@@ -12,18 +12,81 @@ class LocalNameFixture extends CakeTestFixtureEx
      * @var array
      */
     public $fields = array(
-        'id'              => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'primary', 'comment' => 'ローカル名ID'),
-        'user_id'         => array('type' => 'biginteger', 'null' => false, 'default' => null, 'unsigned' => true, 'key' => 'index', 'comment' => 'ユーザID(belongsToでUserモデルに関連)'),
-        'language'        => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 3, 'key' => 'index', 'collate' => 'utf8mb4_general_ci', 'comment' => '言語(日本語ならjpn)', 'charset' => 'utf8mb4'),
-        'first_name'      => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 128, 'collate' => 'utf8mb4_general_ci', 'comment' => '名', 'charset' => 'utf8mb4'),
-        'last_name'       => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 128, 'collate' => 'utf8mb4_general_ci', 'comment' => '姓', 'charset' => 'utf8mb4'),
-        'del_flg'         => array('type' => 'boolean', 'null' => false, 'default' => '0', 'key' => 'index', 'comment' => '削除フラグ'),
-        'deleted'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'メアドを削除した日付時刻'),
-        'created'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'メアドを登録した日付時刻'),
-        'modified'        => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => true, 'comment' => 'メアドを最後に更新した日付時刻'),
+        'id'              => array(
+            'type'     => 'biginteger',
+            'null'     => false,
+            'default'  => null,
+            'unsigned' => true,
+            'key'      => 'primary',
+            'comment'  => 'ローカル名ID'
+        ),
+        'user_id'         => array(
+            'type'     => 'biginteger',
+            'null'     => false,
+            'default'  => null,
+            'unsigned' => true,
+            'key'      => 'index',
+            'comment'  => 'ユーザID(belongsToでUserモデルに関連)'
+        ),
+        'language'        => array(
+            'type'    => 'string',
+            'null'    => false,
+            'default' => null,
+            'length'  => 3,
+            'key'     => 'index',
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => '言語(日本語ならjpn)',
+            'charset' => 'utf8mb4'
+        ),
+        'first_name'      => array(
+            'type'    => 'string',
+            'null'    => false,
+            'default' => null,
+            'length'  => 128,
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => '名',
+            'charset' => 'utf8mb4'
+        ),
+        'last_name'       => array(
+            'type'    => 'string',
+            'null'    => false,
+            'default' => null,
+            'length'  => 128,
+            'collate' => 'utf8mb4_general_ci',
+            'comment' => '姓',
+            'charset' => 'utf8mb4'
+        ),
+        'del_flg'         => array(
+            'type'    => 'boolean',
+            'null'    => false,
+            'default' => '0',
+            'key'     => 'index',
+            'comment' => '削除フラグ'
+        ),
+        'deleted'         => array(
+            'type'     => 'integer',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'comment'  => 'メアドを削除した日付時刻'
+        ),
+        'created'         => array(
+            'type'     => 'integer',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'comment'  => 'メアドを登録した日付時刻'
+        ),
+        'modified'        => array(
+            'type'     => 'integer',
+            'null'     => true,
+            'default'  => null,
+            'unsigned' => true,
+            'comment'  => 'メアドを最後に更新した日付時刻'
+        ),
         'indexes'         => array(
-            'PRIMARY'    => array('column' => 'id', 'unique' => 1),
-            'user_id'    => array('column' => 'user_id', 'unique' => 0),
+            'PRIMARY'  => array('column' => 'id', 'unique' => 1),
+            'user_id'  => array('column' => 'user_id', 'unique' => 0),
             'del_flg'  => array('column' => 'del_flg', 'unique' => 0),
             'language' => array('column' => 'language', 'unique' => 0)
         ),

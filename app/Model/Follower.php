@@ -80,7 +80,8 @@ class Follower extends AppModel
                 'team_id' => $this->current_team_id,
             ],
             'fields'     => [
-                'goal_id', 'goal_id'
+                'goal_id',
+                'goal_id'
             ],
             'page'       => $page,
             'limit'      => $limit
@@ -124,11 +125,12 @@ class Follower extends AppModel
     public function getFollowerByGoalId($goal_id, array $params = [])
     {
         // パラメータデフォルト
-        $params = array_merge(['limit'      => null,
-                               'page'       => 1,
-                               'order'      => ['Follower.created' => 'DESC'],
-                               'with_group' => false,
-                              ], $params);
+        $params = array_merge([
+            'limit'      => null,
+            'page'       => 1,
+            'order'      => ['Follower.created' => 'DESC'],
+            'with_group' => false,
+        ], $params);
 
         $options = [
             'conditions' => [
@@ -182,7 +184,8 @@ class Follower extends AppModel
                 'team_id' => $this->current_team_id,
             ],
             'fields'     => [
-                'user_id', 'user_id'
+                'user_id',
+                'user_id'
             ],
         ];
         $res = $this->find('list', $options);

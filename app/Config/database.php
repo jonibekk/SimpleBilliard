@@ -20,12 +20,12 @@ class DATABASE_CONFIG
         'prefix'     => '',
         'encoding'   => 'utf8mb4',
 
-//        'datasource' => 'Database/Mysql',
-//        'persistent' => false,
-//        'host'       => 'localhost',
-//        'login'      => 'root',
-//        'password'   => '',
-//        'database'   => 'myapp_test',
+        //        'datasource' => 'Database/Mysql',
+        //        'persistent' => false,
+        //        'host'       => 'localhost',
+        //        'login'      => 'root',
+        //        'password'   => '',
+        //        'database'   => 'myapp_test',
     );
 
     public $bench = array(

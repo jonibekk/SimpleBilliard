@@ -21,19 +21,19 @@
         <div class="modal-body modal-circle-body">
             <ul class="add-key-result-goal-info">
                 <li>
-                  <i class="fa fa-flag"></i><?= __("Goal Name") ?>:<?= h($goal['Goal']['name']) ?>
+                    <i class="fa fa-flag"></i><?= __("Goal Name") ?>:<?= h($goal['Goal']['name']) ?>
                 </li>
                 <li>
-                  <?= __("Unit") ?>:<?= KeyResult::$UNIT[$goal['Goal']['value_unit']] ?>
+                    <?= __("Unit") ?>:<?= KeyResult::$UNIT[$goal['Goal']['value_unit']] ?>
                 </li>
                 <li>
-                  <?= __("Current point") ?>:<?= h($goal['Goal']['current_value']) ?>
+                    <?= __("Current point") ?>:<?= h($goal['Goal']['current_value']) ?>
                 </li>
                 <li>
-                  <?= __("Initial point") ?>:<?= h($goal['Goal']['start_value']) ?>
+                    <?= __("Initial point") ?>:<?= h($goal['Goal']['start_value']) ?>
                 </li>
                 <li>
-                  <?= __("Achieve point") ?>:<?= h($goal['Goal']['target_value']) ?>
+                    <?= __("Achieve point") ?>:<?= h($goal['Goal']['target_value']) ?>
                 </li>
             </ul>
         </div>
@@ -43,7 +43,11 @@
             </div>
             <?=
             $this->Form->create('Post', [
-                'url'           => ['controller' => 'goals', 'action' => 'complete_kr', 'key_result_id' => $kr_id, true],
+                'url'           => ['controller'    => 'goals',
+                                    'action'        => 'complete_kr',
+                                    'key_result_id' => $kr_id,
+                                    true
+                ],
                 'inputDefaults' => [
                     'div'       => 'form-group',
                     'label'     => false,
@@ -52,12 +56,16 @@
                 'class'         => 'form-feed-notify'
             ]); ?>
             <?php $this->Form->unlockField('socket_id') ?>
-            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_add_key_result_modal', 'goal_id' => $goal['Goal']['id'], 'key_result_id' => $kr_id]) ?>"
+            <a href="<?= $this->Html->url(['controller'    => 'goals',
+                                           'action'        => 'ajax_get_add_key_result_modal',
+                                           'goal_id'       => $goal['Goal']['id'],
+                                           'key_result_id' => $kr_id
+            ]) ?>"
                class="btn btn-default modal-ajax-get-add-key-result" data-dismiss="modal"><?= __(
-                                                                                                  "Add Key Result") ?></a>
+                    "Add Key Result") ?></a>
             <?=
             $this->Form->submit(__("Achieve the goal"),
-                                ['class' => 'btn btn-primary', 'div' => false]) ?>
+                ['class' => 'btn btn-primary', 'div' => false]) ?>
             <?= $this->Form->end() ?>
         </div>
     </div>

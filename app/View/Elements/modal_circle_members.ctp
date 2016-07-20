@@ -25,11 +25,11 @@ $admin_circle_members = array_filter($circle_members, function ($v) {
         </div>
         <ul class="nav nav-tabs">
             <li class="active"><a href="#ModalCircleMemberTab1_<?= $circle_id ?>" data-toggle="tab"><?= __(
-                                                                                                            "Member(%s)",
-                                                                                                            count($circle_members)) ?></a>
+                        "Member(%s)",
+                        count($circle_members)) ?></a>
             </li>
             <li><a href="#ModalCircleMemberTab2_<?= $circle_id ?>" data-toggle="tab"><?= __("Admin(%s)",
-                                                                                             count($admin_circle_members)) ?></a>
+                        count($admin_circle_members)) ?></a>
             </li>
         </ul>
         <div class="modal-body modal-feed-body tab-content">
@@ -39,10 +39,12 @@ $admin_circle_members = array_filter($circle_members, function ($v) {
                         <?php foreach ($circle_members as $user): ?>
                             <?=
                             $this->element('Feed/read_like_user',
-                                           ['user'     => $user['User'],
-                                            'created'  => $user['CircleMember']['modified'],
-                                            'is_admin' => $user['CircleMember']['admin_flg'],
-                                            'type'     => 'rough']) ?>
+                                [
+                                    'user'     => $user['User'],
+                                    'created'  => $user['CircleMember']['modified'],
+                                    'is_admin' => $user['CircleMember']['admin_flg'],
+                                    'type'     => 'rough'
+                                ]) ?>
                         <?php endforeach ?>
                     </div>
                 <?php else: ?>
@@ -54,10 +56,12 @@ $admin_circle_members = array_filter($circle_members, function ($v) {
                     <?php foreach ($admin_circle_members as $user): ?>
                         <?=
                         $this->element('Feed/read_like_user',
-                                       ['user'     => $user['User'],
-                                        'created'  => $user['CircleMember']['modified'],
-                                        'is_admin' => $user['CircleMember']['admin_flg'],
-                                        'type'     => 'rough']) ?>
+                            [
+                                'user'     => $user['User'],
+                                'created'  => $user['CircleMember']['modified'],
+                                'is_admin' => $user['CircleMember']['admin_flg'],
+                                'type'     => 'rough'
+                            ]) ?>
                     <?php endforeach ?>
                 </div>
             </div>

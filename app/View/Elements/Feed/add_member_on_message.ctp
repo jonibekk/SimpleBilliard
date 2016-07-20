@@ -56,7 +56,10 @@
                 <div class="row form-horizontal form-group post-share-range" id="MessageShare">
                     <?=
                     $this->Form->submit(__("Add"),
-                                        ['class' => 'btn btn-primary pull-right post-submit-button', 'id' => 'MessageSubmit', 'disabled' => 'disabled']) ?>
+                        ['class'    => 'btn btn-primary pull-right post-submit-button',
+                         'id'       => 'MessageSubmit',
+                         'disabled' => 'disabled'
+                        ]) ?>
                 </div>
             </div>
         </div>

@@ -28,7 +28,10 @@ if (!isset($incomplete_kr_count)) {
         aria-labelledby="dropdownMenu1">
         <?php if (!$kr['completed']): ?>
             <li role="presentation">
-                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_edit_key_result_modal', 'key_result_id' => $kr['id']]) ?>"
+                <a href="<?= $this->Html->url(['controller'    => 'goals',
+                                               'action'        => 'ajax_get_edit_key_result_modal',
+                                               'key_result_id' => $kr['id']
+                ]) ?>"
                    class="modal-ajax-get-add-key-result">
                     <i class="fa fa-pencil"></i><span class="ml_2px"><?= __("Edit Key Result") ?></span></a>
             </li>
@@ -36,21 +39,27 @@ if (!isset($incomplete_kr_count)) {
         <li role="presentation">
             <?php if ($kr['completed']): ?>
                 <?= $this->Form->postLink('<i class="fa fa-reply"></i><span class="ml_2px">' .
-                                          __("Uncompete Key Result") . '</span>',
-                                          ['controller' => 'goals', 'action' => 'incomplete_kr', 'key_result_id' => $kr['id']],
-                                          ['escape' => false]) ?>
+                    __("Uncompete Key Result") . '</span>',
+                    ['controller' => 'goals', 'action' => 'incomplete_kr', 'key_result_id' => $kr['id']],
+                    ['escape' => false]) ?>
             <?php else: ?>
                 <?php //最後のKRの場合
                 if ($incomplete_kr_count === 1):?>
-                    <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_last_kr_confirm', 'key_result_id' => $kr['id']]) ?>"
+                    <a href="<?= $this->Html->url(['controller'    => 'goals',
+                                                   'action'        => 'ajax_get_last_kr_confirm',
+                                                   'key_result_id' => $kr['id']
+                    ]) ?>"
                        class="modal-ajax-get">
                         <i class="fa fa-check"></i><span class="ml_2px"><?= __(
-                                                                                "Complete Key Result") ?></span>
+                                "Complete Key Result") ?></span>
                     </a>
                 <?php else: ?>
                     <?=
                     $this->Form->create('Goal', [
-                        'url'           => ['controller' => 'goals', 'action' => 'complete_kr', 'key_result_id' => $kr['id']],
+                        'url'           => ['controller'    => 'goals',
+                                            'action'        => 'complete_kr',
+                                            'key_result_id' => $kr['id']
+                        ],
                         'inputDefaults' => [
                             'div'       => 'form-group',
                             'label'     => false,
@@ -76,9 +85,9 @@ if (!isset($incomplete_kr_count)) {
             <li role="presentation">
                 <?=
                 $this->Form->postLink('<i class="fa fa-trash"></i><span class="ml_5px">' .
-                                      __("Delete Key Result") . '</span>',
-                                      ['controller' => 'goals', 'action' => 'delete_key_result', 'key_result_id' => $kr['id']],
-                                      ['escape' => false], __("Do you really want to delete this Key Result?")) ?>
+                    __("Delete Key Result") . '</span>',
+                    ['controller' => 'goals', 'action' => 'delete_key_result', 'key_result_id' => $kr['id']],
+                    ['escape' => false], __("Do you really want to delete this Key Result?")) ?>
             </li>
         <?php endif ?>
     </ul>

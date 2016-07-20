@@ -60,8 +60,7 @@ class CircleMember extends AppModel
                 ],
                 'fields'     => ['circle_id'],
             ];
-        }
-        else {
+        } else {
             $options = [
                 'conditions' => [
                     'user_id' => $this->my_uid,
@@ -101,14 +100,15 @@ class CircleMember extends AppModel
                 return $circle_list;
             }
         }
-        $params = array_merge(['circle_created_start' => null,
-                               'circle_created_end'   => null,
-                               'order'                => [
-                                   'Circle.team_all_flg desc',
-                                   'Circle.modified desc'
-                               ],
-                              ],
-                              $params);
+        $params = array_merge([
+            'circle_created_start' => null,
+            'circle_created_end'   => null,
+            'order'                => [
+                'Circle.team_all_flg desc',
+                'Circle.modified desc'
+            ],
+        ],
+            $params);
 
         $options = [
             'conditions' => [
@@ -198,8 +198,12 @@ class CircleMember extends AppModel
         return $res;
     }
 
-    public function getMembers($circle_id, $with_admin = false, $order = 'CircleMember.modified', $order_direction = "desc")
-    {
+    public function getMembers(
+        $circle_id,
+        $with_admin = false,
+        $order = 'CircleMember.modified',
+        $order_direction = "desc"
+    ) {
         $active_user_ids = $this->User->TeamMember->getActiveTeamMembersList();
 
         $options = [
@@ -280,7 +284,7 @@ class CircleMember extends AppModel
         if ($with_group) {
             $group_res = $this->User->getGroupsSelect2($keyword, $limit);
             $user_res = array_merge($user_res,
-                                    $this->User->excludeGroupMemberSelect2($group_res['results'], $member_list));
+                $this->User->excludeGroupMemberSelect2($group_res['results'], $member_list));
         }
 
         return ['results' => $user_res];
@@ -373,8 +377,7 @@ class CircleMember extends AppModel
                 if (!$joined && !$this->Circle->isSecret($val['circle_id'])) {
                     $join_circles[] = $val['circle_id'];
                 }
-            }
-            else {
+            } else {
                 //既に参加しているサークルを追加
                 if ($joined) {
                     $un_join_circles[] = $val['circle_id'];
@@ -562,7 +565,8 @@ class CircleMember extends AppModel
                 'CircleMember.get_notification_flg' => 1,
             ],
             'fields'     => [
-                'CircleMember.user_id', 'CircleMember.user_id',
+                'CircleMember.user_id',
+                'CircleMember.user_id',
             ],
             'group'      => ['CircleMember.user_id']
         ];
@@ -572,9 +576,8 @@ class CircleMember extends AppModel
     /**
      * return active member count of circle
      *
-     * @param $circle_id
+     * @param           $circle_id
      * @param bool|true $use_cache
-     *
      *
      * @return array|null
      */

@@ -22,21 +22,22 @@
                     'id'            => 'ChangeProfileForm'
                 ]); ?>
                 <div class="panel-body profile-setting-panel-body">
-<!--                    <div class="form-group">-->
-                        <label for="" class="col control-label setup-profile-add-picture-title">
-                            <?= __("Your profile picture") ?>
-                        </label>
+                    <!--                    <div class="form-group">-->
+                    <label for="" class="col control-label setup-profile-add-picture-title">
+                        <?= __("Your profile picture") ?>
+                    </label>
 
-                        <div class="col setup-profile-add-picture-container">
-                            <div class="fileinput fileinput-new" data-provides="fileinput">
-                                <div class="fileinput-preview thumbnail nailthumb-container setup-profile-add-picture-thumbnail"
-                                     data-trigger="fileinput"
-                                     style="width: 150px; height: 150px;">
-                                    <?=
-                                    $this->Upload->uploadImage($this->request->data, 'User.photo',
-                                                               ['style' => 'x_large']) ?>
-                                </div>
-                                <div>
+                    <div class="col setup-profile-add-picture-container">
+                        <div class="fileinput fileinput-new" data-provides="fileinput">
+                            <div
+                                class="fileinput-preview thumbnail nailthumb-container setup-profile-add-picture-thumbnail"
+                                data-trigger="fileinput"
+                                style="width: 150px; height: 150px;">
+                                <?=
+                                $this->Upload->uploadImage($this->request->data, 'User.photo',
+                                    ['style' => 'x_large']) ?>
+                            </div>
+                            <div>
                         <span class="btn btn-default btn-file setup-profile-add-picture-upload-btn">
                             <span class="fileinput-new">
                                 <?= __("Select an image") ?>
@@ -44,28 +45,30 @@
                             <span class="fileinput-exists"><?= __("Reselect an image") ?></span>
                             <?=
                             $this->Form->input('photo',
-                                               ['type'         => 'file',
-                                                'label'        => false,
-                                                'div'          => false,
-                                                'css'          => false,
-                                                'wrapInput'    => false,
-                                                'errorMessage' => false,
-                                                'required'     => false
-                                               ]) ?>
+                                [
+                                    'type'         => 'file',
+                                    'label'        => false,
+                                    'div'          => false,
+                                    'css'          => false,
+                                    'wrapInput'    => false,
+                                    'errorMessage' => false,
+                                    'required'     => false
+                                ]) ?>
                         </span>
-                                </div>
-                            </div>
-
-                            <div class="has-error">
-                                <?=
-                                $this->Form->error('photo', null,
-                                                   ['class' => 'help-block text-danger',
-                                                    'wrap'  => 'span'
-                                                   ]) ?>
                             </div>
                         </div>
 
-<!--                    </div>-->
+                        <div class="has-error">
+                            <?=
+                            $this->Form->error('photo', null,
+                                [
+                                    'class' => 'help-block text-danger',
+                                    'wrap'  => 'span'
+                                ]) ?>
+                        </div>
+                    </div>
+
+                    <!--                    </div>-->
                     <div class="form-group">
                         <div class="col col-sm-3 control-label">
                             <label for="UserComment" class=""><?= __("Your self-info.") ?></label>
@@ -73,22 +76,24 @@
                         <div class="col">
                             <?php if (isset($this->request->data['TeamMember'][0]['id'])): ?>
                                 <?= $this->Form->hidden('TeamMember.0.id',
-                                                        ['value' => $this->request->data['TeamMember'][0]['id']]) ?>
+                                    ['value' => $this->request->data['TeamMember'][0]['id']]) ?>
                             <?php endif; ?>
                             <?=
                             $this->Form->input('TeamMember.0.comment',
-                                               ['label'                        => false,
-                                                'div'                          => false,
-                                                'wrapInput'                    => false,
-                                                'css'                          => false,
-                                                'data-bv-stringlength'         => 'true',
-                                                'data-bv-stringlength-max'     => 2000,
-                                                'data-bv-stringlength-message' => __("It's over limit characters (%s).",
-                                                                                     2000),
-                                                'value'                        => (isset($this->request->data['TeamMember'][0]['comment']) && !empty($this->request->data['TeamMember'][0]['comment']))
-                                                    ? $this->request->data['TeamMember'][0]['comment']
-                                                    : __(
-                                                        "[What is that you can contribute to the team?]\n\n[What is the thing you want to achieve in the team?(Specifically)]\n\n[Others]\n\n")]
+                                [
+                                    'label'                        => false,
+                                    'div'                          => false,
+                                    'wrapInput'                    => false,
+                                    'css'                          => false,
+                                    'data-bv-stringlength'         => 'true',
+                                    'data-bv-stringlength-max'     => 2000,
+                                    'data-bv-stringlength-message' => __("It's over limit characters (%s).",
+                                        2000),
+                                    'value'                        => (isset($this->request->data['TeamMember'][0]['comment']) && !empty($this->request->data['TeamMember'][0]['comment']))
+                                        ? $this->request->data['TeamMember'][0]['comment']
+                                        : __(
+                                            "[What is that you can contribute to the team?]\n\n[What is the thing you want to achieve in the team?(Specifically)]\n\n[Others]\n\n")
+                                ]
                             )
                             ?>
                             <span class="help-block inline-block font_11px" id="CommentHelp" style="display: none">

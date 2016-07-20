@@ -18,8 +18,8 @@ class Group extends AppModel
      */
     public $validate = [
         'name'       => [
-            'isString'  => [
-                'rule'       => ['isString',],
+            'isString' => [
+                'rule' => ['isString',],
             ],
             'notEmpty' => ['rule' => ['notEmpty']]
         ],

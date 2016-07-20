@@ -24,10 +24,11 @@
                 <?php if (!empty($circles)): ?>
                     <?php foreach ($circles as $key => $circle): ?>
                         <?=
-                        $this->element('public_circle_item', ['circle'       => $circle,
-                                                              'key'          => $key,
-                                                              'form'         => false,
-                                                              'member_count' => count($circle['CircleMember']),
+                        $this->element('public_circle_item', [
+                            'circle'       => $circle,
+                            'key'          => $key,
+                            'form'         => false,
+                            'member_count' => count($circle['CircleMember']),
                         ]) ?>
                     <?php endforeach ?>
                 <?php endif ?>
@@ -35,7 +36,7 @@
                     <?php foreach ($users as $user): ?>
                         <?=
                         $this->element('Feed/read_like_user',
-                                       ['user' => $user['User'], 'created' => null]) ?>
+                            ['user' => $user['User'], 'created' => null]) ?>
                     <?php endforeach ?>
                 <?php endif; ?>
             </div>
