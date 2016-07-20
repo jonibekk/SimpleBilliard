@@ -1,0 +1,196 @@
+/*
+app/View/Signup/auth.ctp
+app/View/Signup/user.ctp
+app/View/Signup/password.ctp
+app/View/Signup/team.ctp
+app/View/Signup/term.ctp
+用のlessファイル
+*/
+
+/*
+全部もしくは複数箇所で使っているclass
+*/
+.panel-signup {
+  max-width: 480px;
+  margin: 0 auto;
+  padding-bottom: 40px;
+}
+
+.signup-title{
+  font-size: @fontLarge;
+}
+
+.signup-itemtitle{
+  font-size: @fontLarge;
+  border: none;
+  padding: 5px 4%;
+  font-weight: 400;
+}
+
+.signup-description{
+  font-size: @fontMedium;
+  padding: 10px 4% 20px;
+}
+.signup-description.mod-small{
+  font-size: @fontSmall;
+  padding: 3px 4%;
+}
+
+.signup_input-design{
+  width: 93%;
+  margin: 0 auto 10px;
+  -webkit-appearance : none;
+  border: 1px solid @cGray;
+}
+
+.signup-btn{
+  margin: 20px 0 0;
+}
+
+.signup-btn-submit{
+  display: block;
+  width: 93%;
+  margin: 0 auto;
+}
+
+/*
+auth.ctp、authコード用のclass
+*/
+.signup-auth-split_input {
+    display: table;
+    border-spacing: 0;
+}
+
+.signup-auth-large_margin {
+  margin: 10px auto 20px;
+}
+
+.signup-auth-design{
+  text-align: center;
+}
+
+.signup-auth-num{
+  width: 30%;
+  height: 50px;
+  margin: 0 auto;
+  display: inline;
+}
+
+.signup-auth-input_wrapper {
+    position: relative;
+}
+
+.signup-auth-split_input_item {
+    display: table-cell;
+    border: 1px solid #ddd;
+}
+
+.signup-auth-split_input_item:first-child {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-right: 0px;
+}
+
+.signup-auth-split_input_item:last-child {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-left: 0px;
+}
+
+.signup-auth-inline_input {
+    height: 5rem;
+    text-align: center;
+    font-size: 2.5rem;
+    border: none;
+    background: 0 0;
+    box-shadow: none;
+    width: 40px;
+    height: 60px;
+    color: #000;
+}
+@media @small {
+  .signup-auth-inline_input {
+      width: 60px;
+      height: 100px;
+  }
+}
+.signup-auth-confirmation_code_span_cell {
+    display: table-cell;
+    font-weight: 700;
+    font-size: 2rem;
+    text-align: center;
+    padding: 0 .5rem;
+    width: 2rem;
+}
+
+/*
+auth.ctp、Loading、ERRORまわりのclass
+*/
+.signup-load-description{
+  //display: none;
+  width: 83%;
+  margin: 10px auto;
+  padding: 15px 20px 20px;
+  border-radius: 5px;
+  text-align: center;
+  border: 1px solid @aquaBlue;
+  color: @aquaBlue;
+}
+.signup-load-description.mod-lock{
+    //display: none;
+    text-align: left;
+    border: 1px solid @acidRed;
+    color: @acidRed;
+}
+.signup-load-description.mod-error{
+    //display: none;
+    text-align: left;
+    border: 1px solid @acidRed;
+    color: @acidRed;
+}
+
+.signup-load-icon{
+  font-size: 0pt;
+  margin-bottom: 10px;
+  display: block;
+  text-align: center;
+}
+.signup-load-icon.mod-error{
+  font-size: 30pt;
+  margin-bottom: 5px;
+  color: @acidRed;
+}
+
+/*
+user.ctpで使っているclass
+*/
+.signup-checkbox{
+  width: 93%;
+  margin: 0 auto;
+}
+
+.signup-error-description{
+  //display: none;
+  width: 83%;
+  margin: 15px auto;
+  padding: 15px 20px 20px;
+  border-radius: 5px;
+  text-align: center;
+  border: 1px solid @acidRed;
+  color: @acidRed;
+}
+
+/*
+term.ctpで使っているclass
+*/
+.signup-goal-timezone-label{
+  display: inline-block;
+  width: 70%;
+  height: 16px;
+  overflow: hidden;
+}
+@media @small {
+  .signup-goal-timezone-label {
+  width: 80%;
+  }
+}

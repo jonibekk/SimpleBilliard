@@ -3,7 +3,7 @@ import config from '../config.js'
 import duration from 'gulp-duration'
 import runSequence from 'run-sequence'
 
-gulp.task('watch', ['css:watch', 'js:watch',  'angular_app:watch', 'react_setup:watch'])
+gulp.task('watch', ['css:watch', 'js:watch',  'angular_app:watch', 'react_setup:watch', 'react_signup:watch'])
 
 gulp.task('js:watch', () => {
   var watcher = gulp.watch(config.js.watch_files, ['js_app'])
@@ -35,6 +35,13 @@ gulp.task('angular_app:watch', () => {
 
 gulp.task('react_setup:watch', () => {
   var watcher = gulp.watch(config.react_setup.watch_files, ['react_setup'])
+  watcher.on('change', event => {
+    console.log('File ' + event.path + ' was ' + event.type + ', running tasks...')
+  })
+})
+
+gulp.task('react_signup:watch', () => {
+  var watcher = gulp.watch(config.react_signup.watch_files, ['react_signup'])
   watcher.on('change', event => {
     console.log('File ' + event.path + ' was ' + event.type + ', running tasks...')
   })

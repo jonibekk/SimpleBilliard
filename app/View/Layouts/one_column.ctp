@@ -47,6 +47,12 @@ else {
 <?= $this->Html->script('react_app.min')?>
 <?php endif; ?>
 <!-- END import react code for setup -->
+<!-- START import react code for signup -->
+<?php if(viaIsSet($this->request->params['controller']) === 'signup'): ?>
+<?= $this->Html->script('react_signup_app.min')?>
+<?php endif; ?>
+<!-- END import react code for signup -->
+
 
 <!-- START fetch script -->
 <?= $this->fetch('script') ?>

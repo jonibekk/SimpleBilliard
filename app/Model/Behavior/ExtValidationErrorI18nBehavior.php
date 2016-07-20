@@ -14,6 +14,7 @@ class ExtValidationErrorI18nBehavior extends ValidationErrorI18nBehavior
         //ここに全てのエラーメッセージを記載する
         $error_messages = array(
             'notEmpty'          => __("Input is required."),
+            'numeric'           => __("Only Numeric characters are allowed."),
             'isAlphabetOnly'    => __("Only alphabet characters are allowed."),
             'isString'          => __("Invalid value"),
             'email'             => __("Email address is incorrect."),
@@ -57,8 +58,7 @@ class ExtValidationErrorI18nBehavior extends ValidationErrorI18nBehavior
                     (!isset($model->validate[$fieldname][$rule]['message']) || empty($model->validate[$fieldname][$rule]['message']))
                 ) {
                     $model->validate[$fieldname][$rule]['message'] = vsprintf($error_message, $rule_option);
-                }
-                elseif (!empty($model->validate[$fieldname][$rule]['message'])) {
+                } elseif (!empty($model->validate[$fieldname][$rule]['message'])) {
                     $model->validate[$fieldname][$rule]['message'] = __($model->validate[$fieldname][$rule]['message']);
                 }
 
