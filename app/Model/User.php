@@ -663,13 +663,22 @@ class User extends AppModel
                 throw New RuntimeException(__('Saving User failed'));
             }
 
-            //Updating LocalName
-            if ($local_name = $this->LocalName->findByUserId($user_id)) {
-                //Updating Local Name
-                $data['LocalName']['id'] = $local_name['LocalName']['id'];
-                $this->LocalName->create();
-                if (!$this->save($this->LocalName->save($data['LocalName']))) {
-                    throw New RuntimeException(__('Saving LocalName failed'));
+            //Saving LocalName
+            if (isset($data['LocalName'])) {
+                if ($local_name = $this->LocalName->findByUserId($user_id)) {
+                    //Updating Local Name
+                    $data['LocalName']['id'] = $local_name['LocalName']['id'];
+                    $this->LocalName->create();
+                    if (!$this->save($this->LocalName->save($data['LocalName']))) {
+                        throw New RuntimeException(__('Saving LocalName failed'));
+                    }
+                } else {
+                    //Saving new local name
+                    $data['LocalName']['user_id'] = $user_id;
+                    $this->LocalName->create();
+                    if (!$this->save($this->LocalName->save($data['LocalName']))) {
+                        throw New RuntimeException(__('Saving LocalName failed'));
+                    }
                 }
             }
         } else {
