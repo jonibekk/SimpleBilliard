@@ -18,31 +18,31 @@
             <ul class="list-unstyled">
                 <li><?=
                     $this->Html->link(__('Blog'), 'http://blog.isao.co.jp/tag/goalous/',
-                                      ['target' => '_blank']) ?></li>
+                        ['target' => '_blank']) ?></li>
                 <li><?=
                     $this->Html->link(__('Privacy Policy'),
-                                      [
-                                          'controller' => 'pages',
-                                          'action'     => 'display',
-                                          'pagename'   => 'privacy_policy',
-                                      ],
-                                      [
-                                          'target'  => "blank",
-                                          'onclick' => "window.open(this.href,'_system');return false;",
-                                      ]
+                        [
+                            'controller' => 'pages',
+                            'action'     => 'display',
+                            'pagename'   => 'privacy_policy',
+                        ],
+                        [
+                            'target'  => "blank",
+                            'onclick' => "window.open(this.href,'_system');return false;",
+                        ]
                     )
                     ?></li>
                 <li><?=
                     $this->Html->link(__('Terms of Service'),
-                                      [
-                                          'controller' => 'pages',
-                                          'action'     => 'display',
-                                          'pagename'   => 'terms',
-                                      ],
-                                      [
-                                          'target'  => "blank",
-                                          'onclick' => "window.open(this.href,'_system');return false;",
-                                      ]
+                        [
+                            'controller' => 'pages',
+                            'action'     => 'display',
+                            'pagename'   => 'terms',
+                        ],
+                        [
+                            'target'  => "blank",
+                            'onclick' => "window.open(this.href,'_system');return false;",
+                        ]
                     )
                     ?></li>
             </ul>

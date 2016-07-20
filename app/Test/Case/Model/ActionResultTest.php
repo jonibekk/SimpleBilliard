@@ -138,7 +138,7 @@ class ActionResultTest extends GoalousTestCase
 
         // 添付ファイルあり
         $this->ActionResult->ActionResultFile->AttachedFile = $this->getMockForModel('AttachedFile',
-                                                                                     array('updateRelatedFiles'));
+            array('updateRelatedFiles'));
         /** @noinspection PhpUndefinedMethodInspection */
         $this->ActionResult->ActionResultFile->AttachedFile->expects($this->any())
                                                            ->method('updateRelatedFiles')
@@ -157,7 +157,7 @@ class ActionResultTest extends GoalousTestCase
 
         // rollback
         $this->ActionResult->ActionResultFile->AttachedFile = $this->getMockForModel('AttachedFile',
-                                                                                     array('updateRelatedFiles'));
+            array('updateRelatedFiles'));
         /** @noinspection PhpUndefinedMethodInspection */
         $this->ActionResult->ActionResultFile->AttachedFile->expects($this->any())
                                                            ->method('updateRelatedFiles')
@@ -203,8 +203,11 @@ class ActionResultTest extends GoalousTestCase
         $count = $this->ActionResult->getUniqueUserCount(['start' => $now - HOUR, 'end' => $now + HOUR]);
         $this->assertEquals(2, $count);
 
-        $count = $this->ActionResult->getUniqueUserCount(['start'   => $now - HOUR, 'end' => $now + HOUR,
-                                                          'user_id' => 1]);
+        $count = $this->ActionResult->getUniqueUserCount([
+            'start'   => $now - HOUR,
+            'end'     => $now + HOUR,
+            'user_id' => 1
+        ]);
         $this->assertEquals(1, $count);
 
         $count = $this->ActionResult->getUniqueUserCount(['start' => $now + HOUR]);
@@ -236,18 +239,24 @@ class ActionResultTest extends GoalousTestCase
             }
         }
 
-        $ranking = $this->ActionResult->getGoalRanking(['start' => $now - HOUR,
-                                                        'end'   => $now + HOUR]);
+        $ranking = $this->ActionResult->getGoalRanking([
+            'start' => $now - HOUR,
+            'end'   => $now + HOUR
+        ]);
         $this->assertEquals([20 => 3, 100 => 2, 10 => 1], $ranking);
 
-        $ranking = $this->ActionResult->getGoalRanking(['start' => $now - HOUR,
-                                                        'end'   => $now + HOUR,
-                                                        'limit' => 2]);
+        $ranking = $this->ActionResult->getGoalRanking([
+            'start' => $now - HOUR,
+            'end'   => $now + HOUR,
+            'limit' => 2
+        ]);
         $this->assertEquals([20 => 3, 100 => 2], $ranking);
 
-        $ranking = $this->ActionResult->getGoalRanking(['start'        => $now - HOUR,
-                                                        'end'          => $now + HOUR,
-                                                        'goal_user_id' => 100]);
+        $ranking = $this->ActionResult->getGoalRanking([
+            'start'        => $now - HOUR,
+            'end'          => $now + HOUR,
+            'goal_user_id' => 100
+        ]);
         $this->assertEquals([100 => 2], $ranking);
 
         $count = $this->ActionResult->getGoalRanking(['start' => $now + HOUR]);
@@ -279,18 +288,24 @@ class ActionResultTest extends GoalousTestCase
             }
         }
 
-        $ranking = $this->ActionResult->getUserRanking(['start' => $now - HOUR,
-                                                        'end'   => $now + HOUR]);
+        $ranking = $this->ActionResult->getUserRanking([
+            'start' => $now - HOUR,
+            'end'   => $now + HOUR
+        ]);
         $this->assertEquals([2 => 3, 3 => 2, 1 => 1], $ranking);
 
-        $ranking = $this->ActionResult->getUserRanking(['start' => $now - HOUR,
-                                                        'end'   => $now + HOUR,
-                                                        'limit' => 2]);
+        $ranking = $this->ActionResult->getUserRanking([
+            'start' => $now - HOUR,
+            'end'   => $now + HOUR,
+            'limit' => 2
+        ]);
         $this->assertEquals([2 => 3, 3 => 2], $ranking);
 
-        $ranking = $this->ActionResult->getUserRanking(['start'   => $now - HOUR,
-                                                        'end'     => $now + HOUR,
-                                                        'user_id' => 3]);
+        $ranking = $this->ActionResult->getUserRanking([
+            'start'   => $now - HOUR,
+            'end'     => $now + HOUR,
+            'user_id' => 3
+        ]);
         $this->assertEquals([3 => 2], $ranking);
 
         $count = $this->ActionResult->getUserRanking(['start' => $now + HOUR]);
@@ -322,13 +337,17 @@ class ActionResultTest extends GoalousTestCase
             }
         }
 
-        $count = $this->ActionResult->getCollaboGoalActionCount(['start' => $now - HOUR,
-                                                                 'end'   => $now + HOUR]);
+        $count = $this->ActionResult->getCollaboGoalActionCount([
+            'start' => $now - HOUR,
+            'end'   => $now + HOUR
+        ]);
         $this->assertEquals(5, $count);
 
-        $count = $this->ActionResult->getCollaboGoalActionCount(['start'   => $now - HOUR,
-                                                                 'end'     => $now + HOUR,
-                                                                 'user_id' => 1]);
+        $count = $this->ActionResult->getCollaboGoalActionCount([
+            'start'   => $now - HOUR,
+            'end'     => $now + HOUR,
+            'user_id' => 1
+        ]);
         $this->assertEquals(2, $count);
 
         $count = $this->ActionResult->getCollaboGoalActionCount(['start' => $now + HOUR]);

@@ -53,8 +53,7 @@ class PostLike extends AppModel
         if (isset($exists['PostLike']['id'])) {
             $this->delete($exists['PostLike']['id']);
             $this->updateCounterCache(['post_id' => $exists['PostLike']['id']]);
-        }
-        else {
+        } else {
             $data = [
                 'user_id' => $this->my_uid,
                 'team_id' => $this->current_team_id,
@@ -108,10 +107,11 @@ class PostLike extends AppModel
      */
     public function getCount(array $params = [])
     {
-        $params = array_merge(['user_id' => null,
-                               'start'   => null,
-                               'end'     => null,
-                              ], $params);
+        $params = array_merge([
+            'user_id' => null,
+            'start'   => null,
+            'end'     => null,
+        ], $params);
 
         $options = [
             'conditions' => [
@@ -140,10 +140,11 @@ class PostLike extends AppModel
      */
     public function getUniqueUserList(array $params = [])
     {
-        $params = array_merge(['user_id' => null,
-                               'start'   => null,
-                               'end'     => null,
-                              ], $params);
+        $params = array_merge([
+            'user_id' => null,
+            'start'   => null,
+            'end'     => null,
+        ], $params);
 
         $options = [
             'fields'     => [
@@ -175,13 +176,14 @@ class PostLike extends AppModel
      */
     public function getRanking($params = [])
     {
-        $params = array_merge(['limit'           => null,
-                               'start'           => null,
-                               'end'             => null,
-                               'post_type'       => null,
-                               'post_user_id'    => null,
-                               'share_circle_id' => null,
-                              ], $params);
+        $params = array_merge([
+            'limit'           => null,
+            'start'           => null,
+            'end'             => null,
+            'post_type'       => null,
+            'post_user_id'    => null,
+            'share_circle_id' => null,
+        ], $params);
 
         $options = [
             'fields'     => [

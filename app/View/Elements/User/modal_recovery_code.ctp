@@ -17,9 +17,10 @@
             </div>
             <ol id="RecoveryCodeList">
                 <?php foreach ($recovery_codes as $v): ?>
-                    <?php $_code =  wordwrap($v['RecoveryCode']['code'], 4, ' ', true); ?>
+                    <?php $_code = wordwrap($v['RecoveryCode']['code'], 4, ' ', true); ?>
                     <?php if ($v['RecoveryCode']['used']): ?>
-                        <li><span class="font_lightgray"><s><?= h($_code) ?></s>&nbsp;&nbsp;<span class="font_10px"><?= __("Used") ?></span></span></li>
+                        <li><span class="font_lightgray"><s><?= h($_code) ?></s>&nbsp;&nbsp;<span
+                                    class="font_10px"><?= __("Used") ?></span></span></li>
                     <?php else: ?>
                         <li><?= h($_code) ?></li>
                     <?php endif ?>

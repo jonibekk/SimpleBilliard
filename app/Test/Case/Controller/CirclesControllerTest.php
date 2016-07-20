@@ -64,7 +64,7 @@ class CirclesControllerTest extends GoalousControllerTestCase
             ],
         ];
         $this->testAction('/circles/add',
-                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+            ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
 
     }
 
@@ -73,7 +73,7 @@ class CirclesControllerTest extends GoalousControllerTestCase
         $this->_getCirclesCommonMock();
         $data = [];
         $this->testAction('/circles/add',
-                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+            ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
 
     }
 
@@ -160,7 +160,7 @@ class CirclesControllerTest extends GoalousControllerTestCase
         $this->_getCirclesCommonMock();
         $data = [];
         $this->testAction('/circles/edit/circle_id:99999',
-                          ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
+            ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
     }
 
     function testEditNotAdmin()
@@ -181,7 +181,7 @@ class CirclesControllerTest extends GoalousControllerTestCase
             ],
         ];
         $this->testAction('/circles/add_member/circle_id:1',
-                          ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
+            ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
     }
 
     function testAddMemberNotExists()
@@ -195,7 +195,7 @@ class CirclesControllerTest extends GoalousControllerTestCase
             ],
         ];
         $this->testAction('/circles/add_member/circle_id:99999',
-                          ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
+            ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
     }
 
     function testAddMemberNotAdmin()
@@ -209,7 +209,7 @@ class CirclesControllerTest extends GoalousControllerTestCase
             ],
         ];
         $this->testAction('/circles/add_member/circle_id:2',
-                          ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
+            ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
     }
 
     function testAddMemberTeamAll()
@@ -223,7 +223,7 @@ class CirclesControllerTest extends GoalousControllerTestCase
             ],
         ];
         $this->testAction('/circles/add_member/circle_id:3',
-                          ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
+            ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
     }
 
     function testAddMemberEmptyData()
@@ -237,7 +237,7 @@ class CirclesControllerTest extends GoalousControllerTestCase
             ],
         ];
         $this->testAction('/circles/add_member/circle_id:1',
-                          ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
+            ['method' => 'PUT', 'data' => $data, 'return' => 'contents']);
     }
 
     function testDeleteSuccess()
@@ -303,7 +303,7 @@ class CirclesControllerTest extends GoalousControllerTestCase
             ],
         ];
         $this->testAction('/circles/join',
-                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+            ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
 
     }
 
@@ -319,7 +319,7 @@ class CirclesControllerTest extends GoalousControllerTestCase
             ],
         ];
         $this->testAction('/circles/join',
-                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+            ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
 
     }
 
@@ -328,7 +328,7 @@ class CirclesControllerTest extends GoalousControllerTestCase
         $this->_getCirclesCommonMock();
         $data = [];
         $this->testAction('/circles/join',
-                          ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
+            ['method' => 'POST', 'data' => $data, 'return' => 'contents']);
 
     }
 
@@ -382,7 +382,7 @@ class CirclesControllerTest extends GoalousControllerTestCase
             ]
         ];
         $ret = $this->testAction('/circles/ajax_edit_admin_status/circle_id:999999',
-                                 ['data' => $data, 'method' => 'POST']);
+            ['data' => $data, 'method' => 'POST']);
         $json_data = json_decode($ret, true);
         $this->assertEquals($json_data['error'], true);
         $this->assertEquals([], $json_data['result']);
@@ -526,7 +526,7 @@ class CirclesControllerTest extends GoalousControllerTestCase
             ]
         ];
         $ret = $this->testAction('/circles/ajax_leave_circle/circle_id:999999',
-                                 ['data' => $data, 'method' => 'POST']);
+            ['data' => $data, 'method' => 'POST']);
         $json_data = json_decode($ret, true);
         $this->assertEquals($json_data['error'], true);
         $this->assertEquals([], $json_data['result']);
@@ -641,7 +641,7 @@ class CirclesControllerTest extends GoalousControllerTestCase
         $this->_getCirclesCommonMock();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $ret = $this->testAction('/circles/ajax_select2_non_circle_member/circle_id:1',
-                                 ['data' => ['term' => 'name', 'page_limit' => 10], 'method' => 'GET']);
+            ['data' => ['term' => 'name', 'page_limit' => 10], 'method' => 'GET']);
         $json_data = json_decode($ret, true);
         $this->assertArrayHasKey('results', $json_data);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
@@ -652,7 +652,7 @@ class CirclesControllerTest extends GoalousControllerTestCase
         $this->_getCirclesCommonMock();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         $ret = $this->testAction('/circles/ajax_select2_non_circle_member/circle_id:1',
-                                 ['data' => ['term' => 'aa bb', 'page_limit' => 10], 'method' => 'GET']);
+            ['data' => ['term' => 'aa bb', 'page_limit' => 10], 'method' => 'GET']);
         $json_data = json_decode($ret, true);
         $this->assertArrayHasKey('results', $json_data);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
@@ -672,11 +672,14 @@ class CirclesControllerTest extends GoalousControllerTestCase
             ]
         ]);
         $value_map = [
-            [null, [
-                'id'         => '1',
-                'last_first' => true,
-                'language'   => 'jpn'
-            ]],
+            [
+                null,
+                [
+                    'id'         => '1',
+                    'last_first' => true,
+                    'language'   => 'jpn'
+                ]
+            ],
             ['id', '1'],
             ['language', 'jpn'],
             ['auto_language_flg', true],

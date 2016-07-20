@@ -28,8 +28,8 @@
         <div class="modal-footer">
             <?=
             $this->Form->postLink(__("Delete"),
-                                  ['controller' => 'teams', 'action' => 'to_inactive_score', 'team_id' => $id],
-                                  ['class' => 'btn btn-primary']) ?>
+                ['controller' => 'teams', 'action' => 'to_inactive_score', 'team_id' => $id],
+                ['class' => 'btn btn-primary']) ?>
         </div>
     </div>
 </div>

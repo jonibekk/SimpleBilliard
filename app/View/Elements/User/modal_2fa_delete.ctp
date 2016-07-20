@@ -29,7 +29,7 @@
         </div>
         <div class="modal-footer">
             <?= $this->Form->postButton(__("Disable"), ['controller' => 'users', 'action' => 'delete_2fa'],
-                                        ['class' => 'btn btn-primary pull-right', 'div' => false,]) ?>
+                ['class' => 'btn btn-primary pull-right', 'div' => false,]) ?>
         </div>
     </div>
 </div>

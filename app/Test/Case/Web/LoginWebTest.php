@@ -7,7 +7,6 @@ App::uses('GoalousWebTestCase', 'Test');
  *
  * @package GoalousWebTest
  * @version 2016/03/11
- *
  */
 class LoginWebTest extends GoalousWebTestCase
 {

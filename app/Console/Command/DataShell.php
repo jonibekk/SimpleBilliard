@@ -16,8 +16,7 @@ class DataShell extends AppShell
 
         if (!empty($this->params['directory'])) {
             $this->directory = $this->params['directory'];
-        }
-        else {
+        } else {
             $this->directory = APP . 'Config' . DS . 'Schema' . DS . 'data';
         }
         $this->directory .= DS;
@@ -80,8 +79,7 @@ TEXT;
     {
         if (!empty($this->params['name'])) {
             $modelNames = array(Inflector::camelize(Inflector::singularize($this->params['name'])));
-        }
-        else {
+        } else {
             $modelNames = App::objects('model');
         }
 
@@ -105,11 +103,9 @@ TEXT;
                 foreach ($record[$Model->alias] as $field => $value) {
                     if (is_null($value)) {
                         $values[] = "\t'$field' => null,";
-                    }
-                    elseif (is_numeric($value)) {
+                    } elseif (is_numeric($value)) {
                         $values[] = "\t'$field' => $value,";
-                    }
-                    else {
+                    } else {
                         $values[] = "\t'$field' => '$value',";
                     }
                 }
@@ -132,8 +128,7 @@ TEXT;
     {
         if (isset($this->params['name'])) {
             $dataObjects = array(Inflector::camelize(Inflector::singularize($this->params['name'])) . 'Data');
-        }
-        else {
+        } else {
             $dataObjects = App::objects('class', $this->directory);
         }
 
@@ -194,8 +189,7 @@ TEXT;
 
         if (isset($this->params['name'])) {
             $dataObjects = array(Inflector::camelize(Inflector::singularize($this->params['name'])) . 'Data');
-        }
-        else {
+        } else {
             $dataObjects = App::objects('class', $this->directory);
         }
 

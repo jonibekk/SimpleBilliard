@@ -37,7 +37,10 @@ class User extends AppModel
     const TYPE_GENDER_MALE = '1';
     const TYPE_GENDER_FEMALE = '2';
     const TYPE_GENDER_NEITHER = '3';
-    static public $TYPE_GENDER = [self::TYPE_GENDER_MALE => "", self::TYPE_GENDER_FEMALE => "", self::TYPE_GENDER_NEITHER => ""];
+    static public $TYPE_GENDER = [self::TYPE_GENDER_MALE    => "",
+                                  self::TYPE_GENDER_FEMALE  => "",
+                                  self::TYPE_GENDER_NEITHER => ""
+    ];
 
     /**
      * 性別タイプの名前をセット
@@ -415,7 +418,8 @@ class User extends AppModel
                         'TeamMember.active_flg' => true
                     ],
                     'fields'     => [
-                        'TeamMember.id', 'TeamMember.team_id'
+                        'TeamMember.id',
+                        'TeamMember.team_id'
                     ],
                     'Team'       => [
                         'conditions' => [
@@ -505,8 +509,7 @@ class User extends AppModel
         if (!$local_names) {
             //ローカル名が存在しない場合はローマ字で
             $display_username = $row[$this->alias]['first_name'] . " " . $row[$this->alias]['last_name'];
-        }
-        else {
+        } else {
             //それ以外は
             $local_name = $local_names['local_username'];
             $row[$this->alias]['display_first_name'] = $local_names['first_name'];
@@ -545,8 +548,7 @@ class User extends AppModel
             if (empty($res['first_name']) || empty($res['last_name'])) {
                 return null;
             }
-        }
-        else {
+        } else {
             return null;
         }
         //ローカルユーザ名が存在し、言語設定がある場合は国毎の表示を設定する
@@ -613,8 +615,7 @@ class User extends AppModel
             $data['Email'][0]['Email']['email_token'] = $email_token;
             //メールアドレスの認証トークンの期限をセット
             $data['Email'][0]['Email']['email_token_expires'] = $this->getTokenExpire(3600);
-        }
-        //本登録なら
+        } //本登録なら
         else {
             $data['Email'][0]['Email']['email_verified'] = true;
             $data['User']['active_flg'] = true;
@@ -744,8 +745,7 @@ class User extends AppModel
         $email_user['Email']['email_token_expires'] = $this->getTokenExpire();
         if ($this->Email->saveAll($email_user)) {
             return $email_user;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -1110,7 +1110,7 @@ class User extends AppModel
             }
             $group_res = $this->getGroupsSelect2($keyword, $limit);
             $user_res = array_merge($user_res,
-                                    $this->excludeGroupMemberSelect2($group_res['results'], $shared_user_list));
+                $this->excludeGroupMemberSelect2($group_res['results'], $shared_user_list));
         }
         return ['results' => $user_res];
     }
@@ -1404,8 +1404,7 @@ class User extends AppModel
                 'CONCAT(`User.first_name`," ",`User.last_name`) Like'                       => $keyword . "%",
                 'CONCAT(`SearchLocalName.first_name`," ",`SearchLocalName.last_name`) Like' => $keyword . "%",
             ];
-        }
-        else {
+        } else {
             $keyword_conditions = [
                 'User.first_name LIKE'            => $keyword . "%",
                 'User.last_name LIKE'             => $keyword . "%",
@@ -1494,7 +1493,8 @@ class User extends AppModel
             'contain'    => [
                 'TeamMember' => [
                     'fields' => [
-                        'TeamMember.id', 'TeamMember.comment'
+                        'TeamMember.id',
+                        'TeamMember.comment'
                     ]
                 ]
             ]
@@ -1545,7 +1545,8 @@ class User extends AppModel
                 'active_flg' => true,
             ],
             'fields'     => [
-                'id', 'id'
+                'id',
+                'id'
             ]
         ];
         $res = $this->find('list', $options);

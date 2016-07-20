@@ -30,7 +30,7 @@
             <?= $this->fetch('content'); ?>
         </div>
     </div>
-    <?php if($this->App->needDisplayFooter()): ?>
+    <?php if ($this->App->needDisplayFooter()): ?>
         <?= $this->element('footer') ?>
     <?php endif; ?>
 </div>

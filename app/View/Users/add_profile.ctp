@@ -43,13 +43,12 @@
                     if ($me['last_first']) {
                         echo $local_last_name;
                         echo $local_first_name;
-                    }
-                    else {
+                    } else {
                         echo $local_first_name;
                         echo $local_last_name;
                     }
                     echo $this->Form->hidden('LocalName.0.language',
-                                             ['value' => $this->Session->read('Auth.User.language')]);
+                        ['value' => $this->Session->read('Auth.User.language')]);
                 }
                 ?>
                 <?php //姓と名は言語によって表示順を変える
@@ -70,8 +69,7 @@
                 if ($me['last_first']) {
                     echo $last_name;
                     echo $first_name;
-                }
-                else {
+                } else {
                     echo $first_name;
                     echo $last_name;
                 }
@@ -79,43 +77,43 @@
                 <hr>
                 <?=
                 $this->Form->input('gender_type',
-                                   [
-                                       'type'    => 'radio',
-                                       'before'  => '<label class="col col-sm-3 control-label mr_5px profile-radio-label">'
-                                           . __('Gender') . '</label>',
-                                       'legend'  => false,
-                                       'options' => User::$TYPE_GENDER,
-                                       'class'   => 'radio-inline profile-radio-inline'
-                                   ])
+                    [
+                        'type'    => 'radio',
+                        'before'  => '<label class="col col-sm-3 control-label mr_5px profile-radio-label">'
+                            . __('Gender') . '</label>',
+                        'legend'  => false,
+                        'options' => User::$TYPE_GENDER,
+                        'class'   => 'radio-inline profile-radio-inline'
+                    ])
                 ?>
                 <hr>
                 <?=
                 $this->Form
                     ->input('birth_day',
-                            [
-                                'monthNames' => [
-                                    '01' => __('Jan'),
-                                    '02' => __('Feb'),
-                                    '03' => __('Mar'),
-                                    '04' => __('Apr'),
-                                    '05' => __('May'),
-                                    '06' => __('Jun'),
-                                    '07' => __('Jul'),
-                                    '08' => __('Aug'),
-                                    '09' => __('Sep'),
-                                    '10' => __('Oct'),
-                                    '11' => __('Nov'),
-                                    '12' => __('Dec'),
-                                ],
-                                'class'      => 'form-control inline-fix',
-                                'label'      => __('Birthday'),
-                                'dateFormat' => 'YMD',
-                                'empty'      => true,
-                                'separator'  => ' / ',
-                                'maxYear'    => date('Y'),
-                                'minYear'    => '1910',
-                                'wrapInput'  => 'col col-sm-6 form-inline',
-                            ]);
+                        [
+                            'monthNames' => [
+                                '01' => __('Jan'),
+                                '02' => __('Feb'),
+                                '03' => __('Mar'),
+                                '04' => __('Apr'),
+                                '05' => __('May'),
+                                '06' => __('Jun'),
+                                '07' => __('Jul'),
+                                '08' => __('Aug'),
+                                '09' => __('Sep'),
+                                '10' => __('Oct'),
+                                '11' => __('Nov'),
+                                '12' => __('Dec'),
+                            ],
+                            'class'      => 'form-control inline-fix',
+                            'label'      => __('Birthday'),
+                            'dateFormat' => 'YMD',
+                            'empty'      => true,
+                            'separator'  => ' / ',
+                            'maxYear'    => date('Y'),
+                            'minYear'    => '1910',
+                            'wrapInput'  => 'col col-sm-6 form-inline',
+                        ]);
                 ?>
                 <?=
                 $this->Form->input('hide_year_flg', [
@@ -136,7 +134,7 @@
                 <hr>
                 <div class="form-group">
                     <label for="" class="col col-sm-3 control-label mr_5px">
-                    <?= __("Profile Image") ?>
+                        <?= __("Profile Image") ?>
                     </label>
 
                     <div class="col col-sm-6">
@@ -154,15 +152,16 @@
                             <span class="fileinput-exists"><?= __("Reselect an image") ?></span>
                             <?=
                             $this->Form->input('photo',
-                                               ['type'         => 'file',
-                                                'label'        => false,
-                                                'div'          => false,
-                                                'css'          => false,
-                                                'style'        => 'x_large',
-                                                'wrapInput'    => false,
-                                                'errorMessage' => false,
-                                                'required'     => false
-                                               ]) ?>
+                                [
+                                    'type'         => 'file',
+                                    'label'        => false,
+                                    'div'          => false,
+                                    'css'          => false,
+                                    'style'        => 'x_large',
+                                    'wrapInput'    => false,
+                                    'errorMessage' => false,
+                                    'required'     => false
+                                ]) ?>
                         </span>
                             </div>
                         </div>
@@ -171,9 +170,10 @@
                         <div class="has-error">
                             <?=
                             $this->Form->error('photo', null,
-                                               ['class' => 'help-block text-danger',
-                                                'wrap'  => 'span'
-                                               ]) ?>
+                                [
+                                    'class' => 'help-block text-danger',
+                                    'wrap'  => 'span'
+                                ]) ?>
                         </div>
                     </div>
 
@@ -185,11 +185,14 @@
                         <?= $this->Form->hidden('id', ['value' => $this->Session->read('Auth.User.id')]) ?>
                         <?=
                         $this->Form->submit(__("Register the profile"),
-                                            ['class' => 'btn btn-primary', 'div' => false]) ?>
+                            ['class' => 'btn btn-primary', 'div' => false]) ?>
                         <?php //招待の場合のスキップはホーム、そうじゃない場合はチーム作成
-                        $skip_link = isset($this->request->params['named']['invite_token']) ? "/" : ['controller' => 'teams', 'action' => 'add'];
+                        $skip_link = isset($this->request->params['named']['invite_token']) ? "/" : [
+                            'controller' => 'teams',
+                            'action'     => 'add'
+                        ];
                         echo $this->Html->link(__("Skip"), $skip_link,
-                                               ['class' => 'btn btn-default', 'div' => false]);
+                            ['class' => 'btn btn-default', 'div' => false]);
                         ?>
                     </div>
                 </div>

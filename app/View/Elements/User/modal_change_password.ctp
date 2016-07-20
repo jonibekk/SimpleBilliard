@@ -59,7 +59,7 @@
             </div>
             <div class="modal-footer modal_pannel-footer">
                 <?= $this->Form->submit(__("Save changes"),
-                                        ['class' => 'btn btn-primary pull-right', 'disabled' => 'disabled']) ?>
+                    ['class' => 'btn btn-primary pull-right', 'disabled' => 'disabled']) ?>
                 <button type="button" class="btn btn-link design-cancel mr_8px bd-radius_4px" data-dismiss="modal">
                     <?= __("Cancel") ?>
                 </button>
@@ -90,7 +90,7 @@
                     validators: {
                         stringLength: {
                             min: 8,
-                            message: "<?=__('%1$d文字以上で%2$d文字以下で入力してください。',8,50)?>"
+                            message: "<?=__('%1$d文字以上で%2$d文字以下で入力してください。', 8, 50)?>"
                         },
                         notEmpty: {
                             message: "<?=__("Input is required.")?>"

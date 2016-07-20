@@ -43,7 +43,7 @@
                 <div class="form-group">
                     <div class="col-sm-9 col-sm-offset-3">
                         <?= $this->Form->submit(__("Send"),
-                                                ['class' => 'btn btn-primary', 'disabled' => 'disabled']) ?>
+                            ['class' => 'btn btn-primary', 'disabled' => 'disabled']) ?>
                     </div>
                 </div>
             </div>

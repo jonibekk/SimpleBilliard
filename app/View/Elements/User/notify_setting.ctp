@@ -19,11 +19,11 @@
         <?=
         $this->Form->create('User', [
             'inputDefaults' => [
-                'div'       => 'form-group',
-                'label'     => [
+                'div'   => 'form-group',
+                'label' => [
                     'class' => 'col col-sm-3 control-label form-label'
                 ],
-                'class'     => 'form-control setting_input-design'
+                'class' => 'form-control setting_input-design'
             ],
             'class'         => 'form-horizontal',
             'novalidate'    => true,
@@ -33,7 +33,7 @@
         <?= $this->Form->hidden('NotifySetting.user_id', ['value' => $this->Session->read('Auth.User.id')]) ?>
         <?=
         $this->Form->hidden('NotifySetting.id',
-                            ['value' => isset($this->request->data['NotifySetting']['id']) ? $this->request->data['NotifySetting']['id'] : null]) ?>
+            ['value' => isset($this->request->data['NotifySetting']['id']) ? $this->request->data['NotifySetting']['id'] : null]) ?>
         <div class="panel-body notify-setting-panel-body">
             <div class="form-group">
                 <label class="col col-sm-3 col-xxs-12 control-label form-label">
@@ -56,12 +56,12 @@
                 </label>
                 <?=
                 $this->Form->input("NotifySetting.email", [
-                    'id'      => 'NotifySettingEmail',
-                    'label'   => false,
-                    'div'     => false,
-                    'type'    => 'select',
-                    'class'   => 'form-control',
-                    'options' => NotifySetting::$TYPE_GROUP,
+                    'id'        => 'NotifySettingEmail',
+                    'label'     => false,
+                    'div'       => false,
+                    'type'      => 'select',
+                    'class'     => 'form-control',
+                    'options'   => NotifySetting::$TYPE_GROUP,
                     'wrapInput' => 'user-setting-notify-email-select col col-xxs-5 col-sm-3',
                 ])
                 ?>
@@ -75,12 +75,12 @@
                 </label>
                 <?=
                 $this->Form->input("NotifySetting.mobile", [
-                    'id'      => 'NotifySettingMobile',
-                    'label'   => false,
-                    'div'     => false,
-                    'type'    => 'select',
-                    'class'   => 'form-control',
-                    'options' => NotifySetting::$TYPE_GROUP,
+                    'id'        => 'NotifySettingMobile',
+                    'label'     => false,
+                    'div'       => false,
+                    'type'      => 'select',
+                    'class'     => 'form-control',
+                    'options'   => NotifySetting::$TYPE_GROUP,
                     'wrapInput' => 'user-setting-notify-mobile-select col col-xxs-5 col-sm-3',
                 ])
                 ?>
@@ -103,7 +103,7 @@
             'none': '<?= __("Nothing will be deliverd.") ?>'
         };
 
-        var onSelectChange =  function () {
+        var onSelectChange = function () {
             var $select = $(this);
             var selected = $select.val();
             var $helpMessage = $('#' + $select.attr('id') + 'Help');

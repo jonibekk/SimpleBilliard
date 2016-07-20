@@ -27,7 +27,11 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                     <div class="post-heading-goal-area panel-body pt_10px plr_11px pb_8px bd-b">
                         <div class="col col-xxs-12">
                             <div class="post-heading-goal-wrapper pull-left">
-                                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_description_modal', 'goal_id' => $post['Goal']['id']]) ?>"
+                                <a href="<?= $this->Html->url([
+                                    'controller' => 'goals',
+                                    'action'     => 'ajax_get_goal_description_modal',
+                                    'goal_id'    => $post['Goal']['id']
+                                ]) ?>"
                                    class="post-heading-goal
                                     no-line font_verydark modal-ajax-get">
                                     <p class="post-heading-goal-title">
@@ -38,18 +42,22 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                             </div>
 
                             <div class="pull-right">
-                                <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_goal_description_modal', 'goal_id' => $post['Goal']['id']]) ?>"
+                                <a href="<?= $this->Html->url([
+                                    'controller' => 'goals',
+                                    'action'     => 'ajax_get_goal_description_modal',
+                                    'goal_id'    => $post['Goal']['id']
+                                ]) ?>"
                                    class="no-line font_verydark modal-ajax-get">
                                     <?=
                                     $this->Html->image('ajax-loader.gif',
-                                                       [
-                                                           'class'         => 'post-heading-goal-avatar  lazy media-object',
-                                                           'data-original' => $this->Upload->uploadUrl($post,
-                                                                                                       "Goal.photo",
-                                                                                                       ['style' => 'small']),
-                                                           'width'         => '32px',
-                                                           'error-img'     => "/img/no-image-link.png",
-                                                       ]
+                                        [
+                                            'class'         => 'post-heading-goal-avatar  lazy media-object',
+                                            'data-original' => $this->Upload->uploadUrl($post,
+                                                "Goal.photo",
+                                                ['style' => 'small']),
+                                            'width'         => '32px',
+                                            'error-img'     => "/img/no-image-link.png",
+                                        ]
                                     )
                                     ?>
                                 </a>
@@ -62,7 +70,11 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                     <div class="post-heading-circle-area panel-body pt_10px plr_11px pb_8px bd-b">
                         <div class="col col-xxs-12">
                             <div class="post-heading-circle-wrapper pull-left">
-                                <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'circle_id' => $post['Circle']['id']]) ?>"
+                                <a href="<?= $this->Html->url([
+                                    'controller' => 'posts',
+                                    'action'     => 'feed',
+                                    'circle_id'  => $post['Circle']['id']
+                                ]) ?>"
                                    class="post-heading-cirlce no-line font_verydark">
                                     <p class="post-heading-circle-title">
                                         <i class="fa fa-circle-o font_gray"></i>
@@ -71,18 +83,22 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                 </a>
                             </div>
                             <div class="pull-right">
-                                <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'circle_id' => $post['Circle']['id']]) ?>"
+                                <a href="<?= $this->Html->url([
+                                    'controller' => 'posts',
+                                    'action'     => 'feed',
+                                    'circle_id'  => $post['Circle']['id']
+                                ]) ?>"
                                    class="no-line font_verydark">
                                     <?=
                                     $this->Html->image('ajax-loader.gif',
-                                                       [
-                                                           'class'         => 'post-heading-circle-avatar lazy media-object',
-                                                           'data-original' => $this->Upload->uploadUrl($post,
-                                                                                                       "Circle.photo",
-                                                                                                       ['style' => 'small']),
-                                                           'width'         => '32px',
-                                                           'error-img'     => "/img/no-image-link.png",
-                                                       ]
+                                        [
+                                            'class'         => 'post-heading-circle-avatar lazy media-object',
+                                            'data-original' => $this->Upload->uploadUrl($post,
+                                                "Circle.photo",
+                                                ['style' => 'small']),
+                                            'width'         => '32px',
+                                            'error-img'     => "/img/no-image-link.png",
+                                        ]
                                     )
                                     ?>
                                 </a>
@@ -106,12 +122,20 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                 <?php if ($post['User']['id'] === $this->Session->read('Auth.User.id')): ?>
                                     <?php if ($post['Post']['type'] == Post::TYPE_NORMAL): ?>
                                         <li>
-                                            <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'post_edit', 'post_id' => $post['Post']['id']]) ?>"
+                                            <a href="<?= $this->Html->url([
+                                                'controller' => 'posts',
+                                                'action'     => 'post_edit',
+                                                'post_id'    => $post['Post']['id']
+                                            ]) ?>"
                                             ><?= __("Edit post") ?></a>
                                         </li>
                                     <?php elseif ($post['Post']['type'] == Post::TYPE_ACTION): ?>
                                         <li>
-                                            <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'edit_action', 'action_result_id' => $post['Post']['action_result_id']]) ?>"
+                                            <a href="<?= $this->Html->url([
+                                                'controller'       => 'goals',
+                                                'action'           => 'edit_action',
+                                                'action_result_id' => $post['Post']['action_result_id']
+                                            ]) ?>"
                                             ><?= __("Edit Action") ?></a>
                                         </li>
                                     <?php endif; ?>
@@ -120,39 +144,51 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                     <?php if ($post['Post']['type'] == Post::TYPE_ACTION): ?>
                                         <li><?=
                                             $this->Form->postLink(__("Delete the action"),
-                                                                  ['controller'       => 'goals',
-                                                                   'action'           => 'delete_action',
-                                                                   'action_result_id' => $post['Post']['action_result_id']],
-                                                                  null,
-                                                                  __("Do you really want to delete this action?")) ?></li>
+                                                [
+                                                    'controller'       => 'goals',
+                                                    'action'           => 'delete_action',
+                                                    'action_result_id' => $post['Post']['action_result_id']
+                                                ],
+                                                null,
+                                                __("Do you really want to delete this action?")) ?></li>
                                     <?php else: ?>
                                         <li><?=
                                             $this->Form->postLink(__("Delete post"),
-                                                                  ['controller' => 'posts',
-                                                                   'action'     => 'post_delete',
-                                                                   'post_id'    => $post['Post']['id']],
-                                                                  null,
-                                                                  __("Do you really want to delete this post?")) ?></li>
+                                                [
+                                                    'controller' => 'posts',
+                                                    'action'     => 'post_delete',
+                                                    'post_id'    => $post['Post']['id']
+                                                ],
+                                                null,
+                                                __("Do you really want to delete this post?")) ?></li>
                                     <?php endif; ?>
                                 <?php endif ?>
                                 <li>
                                     <a href="#" class="copy_me"
                                        onclick="copyToClipboard('<?=
-                                       $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'post_id' => $post['Post']['id']],
-                                                        true) ?>'); return false;">
+                                       $this->Html->url([
+                                           'controller' => 'posts',
+                                           'action'     => 'feed',
+                                           'post_id'    => $post['Post']['id']
+                                       ],
+                                           true) ?>'); return false;">
                                         <?= __("Copy Link") ?></a>
                                 </li>
                             </ul>
                         </div>
                     </div>
-                    <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $post['User']['id']]) ?>">
+                    <a href="<?= $this->Html->url([
+                        'controller' => 'users',
+                        'action'     => 'view_goals',
+                        'user_id'    => $post['User']['id']
+                    ]) ?>">
                         <?=
                         $this->Html->image('ajax-loader.gif',
-                                           [
-                                               'class'         => 'lazy feed-img',
-                                               'data-original' => $this->Upload->uploadUrl($post['User'], 'User.photo',
-                                                                                           ['style' => 'medium']),
-                                           ]
+                            [
+                                'class'         => 'lazy feed-img',
+                                'data-original' => $this->Upload->uploadUrl($post['User'], 'User.photo',
+                                    ['style' => 'medium']),
+                            ]
                         )
                         ?>
                         <span class="font_14px font_bold font_verydark">
@@ -172,8 +208,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                 //タイプ別に切り分け
                 if ($post['Post']['type'] == Post::TYPE_ACTION) {
                     $model_name = 'ActionResult';
-                }
-                else {
+                } else {
                     $model_name = 'Post';
                 }
 
@@ -184,35 +219,33 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                         $img = [];
                         $img['l'] = $this->Upload->attachedFileUrl($ar_img, "preview");
                         $img['s'] = $this->Upload->uploadUrl($ar_img, "AttachedFile.attached",
-                                                             ['style' => 'small']);
+                            ['style' => 'small']);
                         $imgs[] = $img;
-                    }
-                    else {
+                    } else {
                         //新ファイルが無ければ旧ファイルを確認
                         for ($i = 1; $i <= 5; $i++) {
                             if ($post[$model_name]["photo{$i}_file_name"]) {
                                 $img = [];
                                 $img['l'] = $this->Upload->uploadUrl($post, "{$model_name}.photo" . $i,
-                                                                     ['style' => 'large']);
+                                    ['style' => 'large']);
                                 $img['s'] = $this->Upload->uploadUrl($post, "{$model_name}.photo" . $i,
-                                                                     ['style' => 'small']);
+                                    ['style' => 'small']);
                                 $imgs[] = $img;
                             }
                         }
                     }
-                }
-                //アクション以外の場合は、新ファイル、旧ファイルの両方から集める
+                } //アクション以外の場合は、新ファイル、旧ファイルの両方から集める
                 else {
                     if (!empty($post['PostFile'])) {
                         foreach ($post['PostFile'] as $post_file) {
                             if (isset($post_file['AttachedFile']['id']) && $post_file['AttachedFile']['file_type'] == AttachedFile::TYPE_FILE_IMG) {
                                 $img = [];
                                 $img['l'] = $this->Upload->uploadUrl($post_file['AttachedFile'],
-                                                                     "AttachedFile.attached",
-                                                                     ['style' => 'large']);
+                                    "AttachedFile.attached",
+                                    ['style' => 'large']);
                                 $img['s'] = $this->Upload->uploadUrl($post_file['AttachedFile'],
-                                                                     "AttachedFile.attached",
-                                                                     ['style' => 'small']);
+                                    "AttachedFile.attached",
+                                    ['style' => 'small']);
                                 $imgs[] = $img;
                             }
                         }
@@ -221,9 +254,9 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                         if ($post[$model_name]["photo{$i}_file_name"]) {
                             $img = [];
                             $img['l'] = $this->Upload->uploadUrl($post, "{$model_name}.photo" . $i,
-                                                                 ['style' => 'large']);
+                                ['style' => 'large']);
                             $img['s'] = $this->Upload->uploadUrl($post, "{$model_name}.photo" . $i,
-                                                                 ['style' => 'small']);
+                                ['style' => 'small']);
                             $imgs[] = $img;
                         }
                     }
@@ -256,27 +289,31 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                     <?= $this->element('Feed/goal_sharing_block', compact('post')) ?>
                 <?php elseif ($post['Post']['type'] == Post::TYPE_CREATE_CIRCLE && isset($post['Circle']['id']) && $post['Circle']['id']): ?>
                     <div class="col col-xxs-12 pt_10px">
-                        <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'circle_id' => $post['Circle']['id']]) ?>"
+                        <a href="<?= $this->Html->url([
+                            'controller' => 'posts',
+                            'action'     => 'feed',
+                            'circle_id'  => $post['Circle']['id']
+                        ]) ?>"
                            class="no-line font_verydark">
                             <div class="site-info bd-radius_4px">
                                 <div class="media">
                                     <div class="pull-left">
                                         <?=
                                         $this->Html->image('ajax-loader.gif',
-                                                           [
-                                                               'class'         => 'lazy media-object',
-                                                               'data-original' => $this->Upload->uploadUrl($post,
-                                                                                                           "Circle.photo",
-                                                                                                           ['style' => 'medium_large']),
-                                                               'width'         => '80px',
-                                                           ]
+                                            [
+                                                'class'         => 'lazy media-object',
+                                                'data-original' => $this->Upload->uploadUrl($post,
+                                                    "Circle.photo",
+                                                    ['style' => 'medium_large']),
+                                                'width'         => '80px',
+                                            ]
                                         )
                                         ?>
                                     </div>
                                     <div class="media-body">
                                         <h4 class="media-heading font_18px"><?= mb_strimwidth(h($post['Circle']['name']),
-                                                                                              0, 50,
-                                                                                              "...") ?></h4>
+                                                0, 50,
+                                                "...") ?></h4>
                                         <?php if (isset($post['Circle']['description'])): ?>
                                             <div class="font_12px site-info-txt">
                                                 <?= mb_strimwidth(h($post['Circle']['description']), 0, 110, "...") ?>
@@ -303,7 +340,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                             <div class="panel panel-default file-wrap-on-post">
                                 <div class="panel-body pt_10px plr_11px pb_8px">
                                     <?= $this->element('Feed/attached_file_item',
-                                                       ['data' => $file, 'page_type' => 'feed', 'post_id' => $post['Post']['id']]) ?>
+                                        ['data' => $file, 'page_type' => 'feed', 'post_id' => $post['Post']['id']]) ?>
                                 </div>
                             </div>
                         <?php endforeach ?>
@@ -317,7 +354,7 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                             <div class="panel panel-default file-wrap-on-post">
                                 <div class="panel-body pt_10px plr_11px pb_8px">
                                     <?= $this->element('Feed/attached_file_item',
-                                                       ['data' => $file, 'page_type' => 'feed', 'post_id' => $post['Post']['id']]) ?>
+                                        ['data' => $file, 'page_type' => 'feed', 'post_id' => $post['Post']['id']]) ?>
                                 </div>
                             </div>
                         <?php endforeach ?>
@@ -336,7 +373,11 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                     </a>
                                 </div>
                                 <div class="col col-xxs-5 col-xs-4">
-                                    <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_collabo_change_modal', 'goal_id' => $post['Goal']['id']]) ?>"
+                                    <a href="<?= $this->Html->url([
+                                        'controller' => 'goals',
+                                        'action'     => 'ajax_get_collabo_change_modal',
+                                        'goal_id'    => $post['Goal']['id']
+                                    ]) ?>"
                                        data-target="#ModalCollabo_<?= $post['Goal']['id'] ?>" data-toggle="modal"
                                        class="btn btn-white bd-circle_22px font_verydark modal-ajax-get-collabo p_8px <?= h($collabo_opt['class']) ?>">
                                         <i style="" class="fa fa-child font_rougeOrange font_18px"></i>
@@ -367,17 +408,25 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                         <?php endif; ?>
                     </div>
                     <div class="feeds-post-btns-wrap-right">
-                        <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_liked_users', 'post_id' => $post['Post']['id']]) ?>"
+                        <a href="<?= $this->Html->url([
+                            'controller' => 'posts',
+                            'action'     => 'ajax_get_post_liked_users',
+                            'post_id'    => $post['Post']['id']
+                        ]) ?>"
                            class="modal-ajax-get feeds-post-btn-numbers-like">
                             <i class="fa fa-thumbs-o-up"></i>&nbsp;
                             <span id="PostLikeCount_<?= $post['Post']['id'] ?>">
                                 <?= $post['Post']['post_like_count'] ?>
                             </span>
                         </a>
-                        <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_post_red_users', 'post_id' => $post['Post']['id']]) ?>"
+                        <a href="<?= $this->Html->url([
+                            'controller' => 'posts',
+                            'action'     => 'ajax_get_post_red_users',
+                            'post_id'    => $post['Post']['id']
+                        ]) ?>"
                            class="modal-ajax-get feeds-post-btn-numbers-read">
                             <i class="fa fa-check"></i>
-                           <span>
+                            <span>
                                <?= $post['Post']['post_read_count'] ?>
                            </span>
                         </a>
@@ -392,7 +441,13 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                     <a href="#" class="btn-link click-comment-all"
                        id="Comments_<?= $post['Post']['id'] ?>"
                        parent-id="Comments_<?= $post['Post']['id'] ?>"
-                       get-url="<?= $this->Html->url(["controller" => "posts", 'action' => 'ajax_get_old_comment', 'post_id' => $post['Post']['id'], $post['Post']['comment_count'] - 3, 'long_text' => $long_text]) ?>"
+                       get-url="<?= $this->Html->url([
+                           "controller" => "posts",
+                           'action'     => 'ajax_get_old_comment',
+                           'post_id'    => $post['Post']['id'],
+                           $post['Post']['comment_count'] - 3,
+                           'long_text'  => $long_text
+                       ]) ?>"
                     >
                         <?php if ($post['unread_count'] > 0): ?>
                             <i class="fa fa-comment-o font_brownRed"></i>&nbsp;<?=
@@ -415,14 +470,23 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                 <?php foreach ($post['Comment'] as $comment): ?>
                     <?=
                     $this->element('Feed/comment',
-                                   ['comment' => $comment, 'comment_file' => $comment['CommentFile'], 'user' => $comment['User'], 'like' => $comment['MyCommentLike']]) ?>
+                        [
+                            'comment'      => $comment,
+                            'comment_file' => $comment['CommentFile'],
+                            'user'         => $comment['User'],
+                            'like'         => $comment['MyCommentLike']
+                        ]) ?>
                 <?php endforeach ?>
 
                 <a href="#" class="btn-link click-comment-new"
                    id="Comments_new_<?= $post['Post']['id'] ?>"
                    style="display:none"
                    post-id="<?= $post['Post']['id'] ?>"
-                   get-url="<?= $this->Html->url(["controller" => "posts", 'action' => 'ajax_get_latest_comment', 'post_id' => $post['Post']['id']]) ?>"
+                   get-url="<?= $this->Html->url([
+                       "controller" => "posts",
+                       'action'     => 'ajax_get_latest_comment',
+                       'post_id'    => $post['Post']['id']
+                   ]) ?>"
                 >
                     <div class="alert alert-danger new-comment-read">
                         <span class="num">0</span>
@@ -437,12 +501,12 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                     <div class="col-xxs-12 box-align feed-contents comment-contents">
                         <?=
                         $this->Html->image('ajax-loader.gif',
-                                           [
-                                               'class'         => 'lazy comment-img',
-                                               'data-original' => $this->Upload->uploadUrl($my_prof,
-                                                                                           'User.photo',
-                                                                                           ['style' => 'small']),
-                                           ]
+                            [
+                                'class'         => 'lazy comment-img',
+                                'data-original' => $this->Upload->uploadUrl($my_prof,
+                                    'User.photo',
+                                    ['style' => 'small']),
+                            ]
                         )
                         ?>
                         <div class="comment-body" id="NewCommentForm_<?= $post['Post']['id'] ?>">
@@ -454,7 +518,11 @@ $without_add_comment = isset($without_add_comment) ? $without_add_comment : fals
                                     click-target-id="CommentFormBody_<?= $post['Post']['id'] ?>"
                                     post-id="<?= $post['Post']['id'] ?>"
                                     tmp-target-height="32"
-                                    ajax-url="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_new_comment_form', 'post_id' => $post['Post']['id']]) ?>"
+                                    ajax-url="<?= $this->Html->url([
+                                        'controller' => 'posts',
+                                        'action'     => 'ajax_get_new_comment_form',
+                                        'post_id'    => $post['Post']['id']
+                                    ]) ?>"
                                     wrap="soft" rows="1"
                                     placeholder="<?= __("Comment") ?>"
                                     cols="30"

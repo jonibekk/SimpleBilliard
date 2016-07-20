@@ -193,12 +193,10 @@ class Evaluation extends AppModel
 
         if ($evaluate_type == self::TYPE_ONESELF) {
             $evaluator_type_name = __("Self");
-        }
-        else {
+        } else {
             if ($evaluate_type == self::TYPE_FINAL_EVALUATOR) {
                 $evaluator_type_name = __("Final Evaluator");
-            }
-            else {
+            } else {
                 if ($evaluate_type == self::TYPE_EVALUATOR) {
                     $evaluator_type_name = __("評価者{$index_num}");
                 }
@@ -267,8 +265,7 @@ class Evaluation extends AppModel
         if ($saveType == self::TYPE_STATUS_DRAFT) {
             $data = Hash::insert($data, '{n}.Evaluation.status', self::TYPE_STATUS_DRAFT);
             $this->setDraftValidation();
-        }
-        else {
+        } else {
             $data = Hash::insert($data, '{n}.Evaluation.status', self::TYPE_STATUS_DONE);
             $this->setNotAllowEmptyToComment();
             $this->setNotAllowEmptyToEvaluateScoreId();
@@ -278,8 +275,7 @@ class Evaluation extends AppModel
             if (!$this->save($law)) {
                 if (!empty($this->validationErrors)) {
                     throw new RuntimeException(__("There is something you can't leave empty."));
-                }
-                else {
+                } else {
                     throw new RuntimeException(__("Failed to save."));
                 }
             }
@@ -348,7 +344,8 @@ class Evaluation extends AppModel
                     ],
                     'Collaborator' => [
                         'fields' => [
-                            'user_id', 'user_id'
+                            'user_id',
+                            'user_id'
                         ]
                     ]
                 ],
@@ -489,16 +486,17 @@ class Evaluation extends AppModel
         //一人ずつデータを生成
         foreach ($team_members_list as $uid) {
             $all_evaluations = array_merge($all_evaluations,
-                                           $this->getAddRecordsOfEvaluatee($uid, $term_id, $evaluators));
+                $this->getAddRecordsOfEvaluatee($uid, $term_id, $evaluators));
         }
         if (!empty($all_evaluations)) {
             $res = $this->saveAll($all_evaluations);
             //set my_turn
             $this->updateAll(['Evaluation.my_turn_flg' => true],
-                             ['Evaluation.team_id'          => $this->current_team_id,
-                              'Evaluation.evaluate_term_id' => $term_id,
-                              'Evaluation.index_num'        => 0,
-                             ]
+                [
+                    'Evaluation.team_id'          => $this->current_team_id,
+                    'Evaluation.evaluate_term_id' => $term_id,
+                    'Evaluation.index_num'        => 0,
+                ]
             );
             $this->EvaluateTerm->changeToInProgress($term_id);
 
@@ -532,11 +530,11 @@ class Evaluation extends AppModel
         //final total
         if ($this->Team->EvaluationSetting->isEnabledFinal() && $admin_uid = $this->Team->TeamMember->getTeamAdminUid()) {
             $evaluations[] = $this->getAddRecord($uid, $admin_uid, $term_id, $index++,
-                                                 self::TYPE_FINAL_EVALUATOR);
+                self::TYPE_FINAL_EVALUATOR);
         }
 
         $evaluations = array_merge($evaluations,
-                                   $this->getAddRecordsOfGoalEvaluation($uid, $term_id, $evaluators, $index));
+            $this->getAddRecordsOfGoalEvaluation($uid, $term_id, $evaluators, $index));
 
         return $evaluations;
     }
@@ -568,7 +566,7 @@ class Evaluation extends AppModel
                 $evals = $evaluators[$uid];
                 foreach ($evals as $eval_uid) {
                     $goal_evaluations[] = $this->getAddRecord($uid, $eval_uid, $term_id, $index++,
-                                                              self::TYPE_EVALUATOR, $gid);
+                        self::TYPE_EVALUATOR, $gid);
                 }
             }
             //leader
@@ -576,7 +574,7 @@ class Evaluation extends AppModel
                 $leader_uid = $this->Goal->Collaborator->getLeaderUid($gid);
                 if ($uid !== $leader_uid) {
                     $goal_evaluations[] = $this->getAddRecord($uid, $leader_uid, $term_id, $index++,
-                                                              self::TYPE_LEADER, $gid);
+                        self::TYPE_LEADER, $gid);
                 }
             }
         }
@@ -637,13 +635,11 @@ class Evaluation extends AppModel
             if ($val['evaluate_type'] == self::TYPE_EVALUATOR) {
                 if ($val['evaluator_user_id'] == $this->my_uid) {
                     $name = __("You");
-                }
-                else {
+                } else {
                     $name .= $evaluator_index;
                 }
                 $evaluator_index++;
-            }
-            //自己評価で被評価者が自分以外の場合は「メンバー」
+            } //自己評価で被評価者が自分以外の場合は「メンバー」
             elseif ($val['evaluate_type'] == self::TYPE_ONESELF && $val['evaluatee_user_id'] != $this->my_uid) {
                 $name = __('Members');
             }
@@ -922,9 +918,9 @@ class Evaluation extends AppModel
         $evaluationList = $this->getEvaluations($evaluateTermId, $evaluateeId);
         $nextEvaluatorId = $this->getNextEvaluatorId($evaluateTermId, $evaluateeId);
         $isMyTurn = !empty(Hash::extract($evaluationList,
-                                         "{n}.{n}.Evaluation[my_turn_flg=true][evaluator_user_id={$this->my_uid}]"));
+            "{n}.{n}.Evaluation[my_turn_flg=true][evaluator_user_id={$this->my_uid}]"));
         $isNextTurn = !empty(Hash::extract($evaluationList,
-                                           "{n}.{n}.Evaluation[my_turn_flg=true][evaluator_user_id={$nextEvaluatorId}]"));
+            "{n}.{n}.Evaluation[my_turn_flg=true][evaluator_user_id={$nextEvaluatorId}]"));
         if ($isMyTurn || $isNextTurn) {
             return true;
         }
@@ -956,7 +952,8 @@ class Evaluation extends AppModel
                 'evaluate_type'    => self::TYPE_ONESELF,
             ],
             'group'      => [
-                'evaluatee_user_id', 'evaluator_user_id'
+                'evaluatee_user_id',
+                'evaluator_user_id'
             ]
         ];
         $res = $this->find("all", $own_evaluation_options);
@@ -974,7 +971,8 @@ class Evaluation extends AppModel
                 'evaluate_type'    => self::TYPE_EVALUATOR
             ],
             'group'      => [
-                'evaluatee_user_id', 'evaluator_user_id'
+                'evaluatee_user_id',
+                'evaluator_user_id'
             ]
         ];
         $res = $this->find("all", $evaluator_options);
@@ -1005,7 +1003,8 @@ class Evaluation extends AppModel
                 ]
             ],
             'group'      => [
-                'evaluatee_user_id', 'evaluator_user_id'
+                'evaluatee_user_id',
+                'evaluator_user_id'
             ],
             'contain'    => [
                 'EvaluateeUser'
@@ -1035,7 +1034,8 @@ class Evaluation extends AppModel
                 ]
             ],
             'group'      => [
-                'evaluatee_user_id', 'evaluator_user_id'
+                'evaluatee_user_id',
+                'evaluator_user_id'
             ],
             'contain'    => [
                 'EvaluatorUser'
@@ -1147,11 +1147,12 @@ class Evaluation extends AppModel
     function isThisEvaluateType($id, $type)
     {
         return $this->find('first',
-                           [
-                               'conditions' => [
-                                   'id' => $id, 'evaluate_type' => $type
-                               ]
-                           ]
+            [
+                'conditions' => [
+                    'id'            => $id,
+                    'evaluate_type' => $type
+                ]
+            ]
         );
     }
 

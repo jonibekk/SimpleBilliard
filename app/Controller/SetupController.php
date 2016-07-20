@@ -10,7 +10,14 @@ App::uses('Post', 'Model');
 class SetupController extends AppController
 {
     var $uses = [
-        'Circle', 'User', 'Goal', 'Team', 'KeyResult', 'Post', 'Device', 'ActionResult'
+        'Circle',
+        'User',
+        'Goal',
+        'Team',
+        'KeyResult',
+        'Post',
+        'Device',
+        'ActionResult'
     ];
     var $components = ['RequestHandler'];
 
@@ -74,7 +81,7 @@ class SetupController extends AppController
 
         $setup_guide_is_completed = $this->Auth->user('setup_complete_flg');
         if ($setup_guide_is_completed == User::SETUP_GUIDE_IS_COMPLETED) {
-            $status =  [
+            $status = [
                 1 => true,
                 2 => true,
                 3 => true,
@@ -109,8 +116,7 @@ class SetupController extends AppController
         if ($res) {
             $this->Pnotify->outSuccess($msg = __("Created a goal."));
             $error = false;
-        }
-        else {
+        } else {
             $msg = __("Failed to save a goal.");
             $error = true;
         }
@@ -140,13 +146,12 @@ class SetupController extends AppController
         if ($res = $this->Circle->add($this->request->data)) {
             if (!empty($this->Circle->add_new_member_list)) {
                 $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_CIRCLE_ADD_USER, $this->Circle->id,
-                                                 null, $this->Circle->add_new_member_list);
+                    null, $this->Circle->add_new_member_list);
             }
             $this->updateSetupStatusIfNotCompleted();
             $error = false;
             $this->Pnotify->outSuccess($msg = __("Created a circle."));
-        }
-        else {
+        } else {
             $msg = __("Failed to create a circle.");
             $error = true;
         }
@@ -171,14 +176,12 @@ class SetupController extends AppController
                 }
                 $this->updateSetupStatusIfNotCompleted();
                 $msg = __("Join a circle.");
-            }
-            else {
+            } else {
                 $msg = __("Leave a circle.");
             }
             $this->Pnotify->outSuccess($msg);
             $error = false;
-        }
-        else {
+        } else {
             $msg = __("Failed to change circle belonging status.");
             $error = true;
         }
@@ -215,15 +218,14 @@ class SetupController extends AppController
 
         if ($this->Device->isInstalledMobileApp($this->my_uid)) {
             $res = false;
-        }
-        else {
+        } else {
             $res = $this->Device->add([
-                                          'Device' => [
-                                              'user_id'      => $this->my_uid,
-                                              'os_type'      => 99,
-                                              'device_token' => 'No devices.'
-                                          ]
-                                      ]);
+                'Device' => [
+                    'user_id'      => $this->my_uid,
+                    'os_type'      => 99,
+                    'device_token' => 'No devices.'
+                ]
+            ]);
         }
         $this->updateSetupStatusIfNotCompleted();
 
@@ -258,7 +260,7 @@ class SetupController extends AppController
         $goals = $this->Goal->getGoalsForSetupBy($this->Auth->user('id'));
         foreach ($goals as $key => $goal) {
             $goals[$key]['Goal']['photo_file_path'] = $this->Upload->uploadUrl($goal, 'Goal.photo',
-                                                                               ['style' => 'medium']);
+                ['style' => 'medium']);
         }
         $res = [
             'goals' => $goals,
@@ -287,11 +289,11 @@ class SetupController extends AppController
             //アクション追加,投稿
             if (!$this->Goal->ActionResult->addCompletedAction($this->request->data, $goal_id)
                 || !$this->Goal->Post->addGoalPost(Post::TYPE_ACTION, $goal_id, $this->Auth->user('id'), false,
-                                                   $this->Goal->ActionResult->getLastInsertID(), $share,
-                                                   PostShareCircle::SHARE_TYPE_ONLY_NOTIFY)
+                    $this->Goal->ActionResult->getLastInsertID(), $share,
+                    PostShareCircle::SHARE_TYPE_ONLY_NOTIFY)
                 || !$this->Goal->Post->PostFile->AttachedFile->saveRelatedFiles($this->Goal->ActionResult->getLastInsertID(),
-                                                                                AttachedFile::TYPE_MODEL_ACTION_RESULT,
-                                                                                $file_ids)
+                    AttachedFile::TYPE_MODEL_ACTION_RESULT,
+                    $file_ids)
             ) {
                 throw new RuntimeException(__("Failed to add an action."));
             }
@@ -299,7 +301,7 @@ class SetupController extends AppController
             $this->Goal->rollback();
             if ($action_result_id = $this->Goal->ActionResult->getLastInsertID()) {
                 $this->Goal->Post->PostFile->AttachedFile->deleteAllRelatedFiles($action_result_id,
-                                                                                 AttachedFile::TYPE_MODEL_ACTION_RESULT);
+                    AttachedFile::TYPE_MODEL_ACTION_RESULT);
             }
             $msg = $e->getMessage();
             $res = [
@@ -323,7 +325,7 @@ class SetupController extends AppController
         // $this->Mixpanel->trackGoal(MixpanelComponent::TRACK_CREATE_ACTION, $goal_id, $kr_id,
         //                            $this->Goal->ActionResult->getLastInsertID());
         $this->NotifyBiz->execSendNotify(NotifySetting::TYPE_FEED_CAN_SEE_ACTION,
-                                         $this->Goal->ActionResult->getLastInsertID());
+            $this->Goal->ActionResult->getLastInsertID());
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_MY_GOAL_AREA, true), 'user_data');
         Cache::delete($this->Goal->getCacheKey(CACHE_KEY_ACTION_COUNT, true), 'user_data');
         // push

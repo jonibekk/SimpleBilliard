@@ -77,8 +77,7 @@ class SlackLog extends BaseLog
             $channel = null;
             if ($this->_config['file'] === "debug") {
                 $channel = LOG_SLACK_DEBUG_CHANNEL;
-            }
-            elseif ($this->_config['file'] === "error") {
+            } elseif ($this->_config['file'] === "error") {
                 $channel = LOG_SLACK_ERROR_CHANNEL;
             }
             Configure::write('Slack.channel', $channel);

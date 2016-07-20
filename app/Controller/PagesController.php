@@ -60,8 +60,7 @@ class PagesController extends AppController
                 $out = $this->render(implode('/', $path));
                 Cache::write($url, $out, 'homepage');
             }
-        }
-        else {
+        } else {
             $out = $this->render(implode('/', $path));
         }
         return $out;
@@ -90,14 +89,15 @@ class PagesController extends AppController
         $this->set('long_text', false);
         if ($form_type = viaIsSet($this->request->params['common_form_type'])) {
             $this->set('common_form_type', $form_type);
-        }
-        else {
+        } else {
             $this->set('common_form_type', 'action');
         }
 
         try {
-            $this->set(['posts' => $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null,
-                                                    $this->request->params)]);
+            $this->set([
+                'posts' => $this->Post->get(1, POST_FEED_PAGE_ITEMS_NUMBER, null, null,
+                    $this->request->params)
+            ]);
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
             $this->redirect($this->referer());
@@ -143,8 +143,7 @@ class PagesController extends AppController
         $lang = null;
         if (isset($this->request->params['lang'])) {
             $lang = $this->request->params['lang'];
-        }
-        elseif (isset($this->request->params['named']['lang'])) {
+        } elseif (isset($this->request->params['named']['lang'])) {
             $lang = $this->request->params['named']['lang'];
         }
         return $lang;
@@ -186,8 +185,7 @@ class PagesController extends AppController
         if ($Email->validates()) {
             if (empty($data['sales_people'])) {
                 $data['sales_people_text'] = __('Anyone');
-            }
-            else {
+            } else {
                 $data['sales_people_text'] = implode(', ', $data['sales_people']);
             }
             $data['want_text'] = $this->_getContactTypeOption()[$data['want']];
@@ -235,8 +233,7 @@ class PagesController extends AppController
         App::uses('CakeEmail', 'Network/Email');
         if (ENV_NAME === "local") {
             $config = 'default';
-        }
-        else {
+        } else {
             $config = 'amazon_contact';
         }
 
@@ -251,13 +248,19 @@ class PagesController extends AppController
             ->subject(__('Goalous - Thanks for your contact.'))
             ->send();
         $lang = $this->_getLangFromParam();
-        return $this->redirect(['controller' => 'pages', 'action' => 'display', 'pagename' => 'contact_thanks', 'lang' => $lang,]);
+        return $this->redirect([
+            'controller' => 'pages',
+            'action'     => 'display',
+            'pagename'   => 'contact_thanks',
+            'lang'       => $lang,
+        ]);
     }
 
-    public function _setUrlParams() {
+    public function _setUrlParams()
+    {
         $url_params = $this->params['url'];
 
-        if($this->Auth->user()) {
+        if ($this->Auth->user()) {
             $parsed_referer_url = Router::parse($this->referer('/', true));
             $request_status = viaIsSet($url_params['st']);
             $status_from_referer = $this->_defineStatusFromReferer();
@@ -265,26 +268,27 @@ class PagesController extends AppController
             // When parametes separated from google analitics already exists,
             // ignore redirect for google analitics.
             $reserved_params = ['notify_id', 'after_click', 'common_form', 'team_id', 'from'];
-            foreach($reserved_params as $param) {
-                if(viaIsSet($this->request->params[$param]) || viaIsSet($this->request->params['named'][$param])) {
+            foreach ($reserved_params as $param) {
+                if (viaIsSet($this->request->params[$param]) || viaIsSet($this->request->params['named'][$param])) {
                     return true;
                 }
             }
 
-            if($request_status !== $status_from_referer) {
+            if ($request_status !== $status_from_referer) {
                 return $this->redirect("/?st={$status_from_referer}");
             }
             $this->Session->delete('referer_status');
             return true;
         }
 
-        if($url_params) {
+        if ($url_params) {
             return $this->redirect('/');
         }
         return true;
     }
 
-    public function _defineStatusFromReferer() {
+    public function _defineStatusFromReferer()
+    {
         switch ($this->Session->read('referer_status')) {
             // New Registration(Not invite)
             case REFERER_STATUS_SIGNUP:

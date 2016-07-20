@@ -341,8 +341,21 @@ class GlRedis extends AppModel
      *
      * @return string
      */
-    private function getKeyName($key_type, $team_id = null, $user_id = null, $notify_id = null, $unread = null, $email = null, $device = null, $unique_id = null, $date = null, $timezone = null, $start = null, $end = null, $group = null)
-    {
+    private function getKeyName(
+        $key_type,
+        $team_id = null,
+        $user_id = null,
+        $notify_id = null,
+        $unread = null,
+        $email = null,
+        $device = null,
+        $unique_id = null,
+        $date = null,
+        $timezone = null,
+        $start = null,
+        $end = null,
+        $group = null
+    ) {
         if (!in_array($key_type, self::$KEY_TYPES)) {
             throw new RuntimeException('this is unavailable type!');
         }
@@ -424,8 +437,17 @@ class GlRedis extends AppModel
      *
      * @return bool
      */
-    public function setNotifications($type, $team_id, $to_user_ids = [], $my_id, $body, $url, $date, $post_id = null, $options = [])
-    {
+    public function setNotifications(
+        $type,
+        $team_id,
+        $to_user_ids = [],
+        $my_id,
+        $body,
+        $url,
+        $date,
+        $post_id = null,
+        $options = []
+    ) {
         $notify_id = $this->generateId();
         if ($post_id) {
             // $post_idが渡ってきている場合はメッセージ
@@ -451,12 +473,11 @@ class GlRedis extends AppModel
         if ($type == NotifySetting::TYPE_FEED_MESSAGE) {
             $pipe->hMset($this->getKeyName(self::KEY_TYPE_MESSAGE, $team_id, null, $notify_id), $data);
             $pipe->expire($this->getKeyName(self::KEY_TYPE_MESSAGE, $team_id, null, $notify_id),
-                          60 * 60 * 24 * self::EXPIRE_DAY_OF_NOTIFICATION);
-        }
-        else {
+                60 * 60 * 24 * self::EXPIRE_DAY_OF_NOTIFICATION);
+        } else {
             $pipe->hMset($this->getKeyName(self::KEY_TYPE_NOTIFICATION, $team_id, null, $notify_id), $data);
             $pipe->expire($this->getKeyName(self::KEY_TYPE_NOTIFICATION, $team_id, null, $notify_id),
-                          60 * 60 * 24 * self::EXPIRE_DAY_OF_NOTIFICATION);
+                60 * 60 * 24 * self::EXPIRE_DAY_OF_NOTIFICATION);
         }
 
         $score = substr_replace((string)(microtime(true) * 10000), '1', -1, 1);
@@ -466,16 +487,15 @@ class GlRedis extends AppModel
             if ($type == NotifySetting::TYPE_FEED_MESSAGE) {
                 $pipe->zAdd($this->getKeyName(self::KEY_TYPE_MESSAGE_USER, $team_id, $uid, null), $score, $notify_id);
                 $pipe->zAdd($this->getKeyName(self::KEY_TYPE_MESSAGE_USER, $team_id, $uid, null, 0), $score,
-                            $notify_id);
-            }
-            else {
+                    $notify_id);
+            } else {
                 $pipe->zAdd($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $uid, null), $score,
-                            $notify_id);
+                    $notify_id);
                 $pipe->zAdd($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $uid, null, 0), $score,
-                            $notify_id);
+                    $notify_id);
                 //increment
                 $pipe->hIncrBy($this->getKeyName(self::KEY_TYPE_COUNT_BY_USER, $team_id, $uid),
-                               self::FIELD_COUNT_NEW_NOTIFY, 1);
+                    self::FIELD_COUNT_NEW_NOTIFY, 1);
             }
 
         }
@@ -510,8 +530,7 @@ class GlRedis extends AppModel
             $pipe->hSet(
                 $this->getKeyName(self::KEY_TYPE_COUNT_MESSAGE_BY_USER, $team_id, $uid),
                 self::FIELD_COUNT_NEW_NOTIFY, $message_notify_count);
-        }
-        else {
+        } else {
             $this->Db->hSet(
                 $this->getKeyName(self::KEY_TYPE_COUNT_MESSAGE_BY_USER, $team_id, $uid),
                 self::FIELD_COUNT_NEW_NOTIFY, $message_notify_count);
@@ -528,7 +547,7 @@ class GlRedis extends AppModel
     function getCountOfNewNotification($team_id, $user_id)
     {
         $count = $this->Db->hGet($this->getKeyName(self::KEY_TYPE_COUNT_BY_USER, $team_id, $user_id),
-                                 self::FIELD_COUNT_NEW_NOTIFY);
+            self::FIELD_COUNT_NEW_NOTIFY);
         return ($count === false) ? 0 : (int)$count;
     }
 
@@ -541,7 +560,7 @@ class GlRedis extends AppModel
     function getCountOfNewMessageNotification($team_id, $user_id)
     {
         $count = $this->Db->hGet($this->getKeyName(self::KEY_TYPE_COUNT_MESSAGE_BY_USER, $team_id, $user_id),
-                                 self::FIELD_COUNT_NEW_NOTIFY);
+            self::FIELD_COUNT_NEW_NOTIFY);
         return ($count === false) ? 0 : (int)$count;
     }
 
@@ -554,7 +573,7 @@ class GlRedis extends AppModel
     function deleteCountOfNewNotification($team_id, $user_id)
     {
         $res = $this->Db->hDel($this->getKeyName(self::KEY_TYPE_COUNT_BY_USER, $team_id, $user_id),
-                               self::FIELD_COUNT_NEW_NOTIFY);
+            self::FIELD_COUNT_NEW_NOTIFY);
         return (bool)$res;
     }
 
@@ -567,7 +586,7 @@ class GlRedis extends AppModel
     function deleteCountOfNewMessageNotification($team_id, $user_id)
     {
         $res = $this->Db->hDel($this->getKeyName(self::KEY_TYPE_COUNT_MESSAGE_BY_USER, $team_id, $user_id),
-                               self::FIELD_COUNT_NEW_NOTIFY);
+            self::FIELD_COUNT_NEW_NOTIFY);
         return (bool)$res;
     }
 
@@ -582,7 +601,7 @@ class GlRedis extends AppModel
     function changeReadStatusOfNotification($team_id, $user_id, $notify_id, $unread = 0)
     {
         $notify_date = $this->Db->hGet($this->getKeyName(self::KEY_TYPE_NOTIFICATION, $team_id, null, $notify_id),
-                                       'created');
+            'created');
         if ($notify_date === false) {
             return false;
         }
@@ -594,17 +613,17 @@ class GlRedis extends AppModel
 
         //delete set
         $pipe->zDelete($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id),
-                       $notify_id);
+            $notify_id);
         $pipe->zDelete($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id, null, 0), $notify_id);
         $pipe->zDelete($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id, null, 1), $notify_id);
 
         //add set for unread status
         $pipe->zAdd($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id, null, $unread),
-                    $notify_date,
-                    $notify_id);
+            $notify_date,
+            $notify_id);
         //add set for all
         $pipe->zAdd($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id), $notify_date,
-                    $notify_id);
+            $notify_id);
 
         $pipe->exec();
 
@@ -624,7 +643,7 @@ class GlRedis extends AppModel
         $delete_time_from = (string)((microtime(true) - (60 * 60 * 24 * self::EXPIRE_DAY_OF_NOTIFICATION)) * 10000);
         //delete from notification user
         $this->Db->zRemRangeByScore($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id), 0,
-                                    $delete_time_from);
+            $delete_time_from);
 
         if ($limit === null) {
             $limit = -1;
@@ -634,13 +653,12 @@ class GlRedis extends AppModel
                 $limit--;
             }
             $notify_list = $this->Db->zRevRange($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id),
-                                                0, $limit, true);
-        }
-        else {
+                0, $limit, true);
+        } else {
             $notify_list = $this->Db->zRevRangeByScore($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id,
-                                                                         $user_id),
-                                                       $from_date, -1,
-                                                       ['limit' => [1, $limit], 'withscores' => true]);
+                $user_id),
+                $from_date, -1,
+                ['limit' => [1, $limit], 'withscores' => true]);
         }
         if (empty($notify_list)) {
             return $notify_list;
@@ -656,8 +674,7 @@ class GlRedis extends AppModel
             $pipe_res[$k]['score'] = $score;
             if (substr_compare((string)$score, "1", -1, 1) === 0) {
                 $pipe_res[$k]['unread_flg'] = true;
-            }
-            else {
+            } else {
                 $pipe_res[$k]['unread_flg'] = false;
 
             }
@@ -670,7 +687,7 @@ class GlRedis extends AppModel
         $delete_time_from = (string)((microtime(true) - (60 * 60 * 24 * self::EXPIRE_DAY_OF_NOTIFICATION)) * 10000);
         //delete from notification user
         $this->Db->zRemRangeByScore($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id), 0,
-                                    $delete_time_from);
+            $delete_time_from);
 
         if ($limit === null) {
             $limit = -1;
@@ -680,13 +697,12 @@ class GlRedis extends AppModel
                 $limit--;
             }
             $notify_list = $this->Db->zRevRange($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id, $user_id),
-                                                0, $limit, true);
-        }
-        else {
+                0, $limit, true);
+        } else {
             $notify_list = $this->Db->zRevRangeByScore($this->getKeyName(self::KEY_TYPE_NOTIFICATION_USER, $team_id,
-                                                                         $user_id),
-                                                       $from_date, -1,
-                                                       ['limit' => [1, $limit], 'withscores' => true]);
+                $user_id),
+                $from_date, -1,
+                ['limit' => [1, $limit], 'withscores' => true]);
         }
         return $notify_list;
     }
@@ -704,7 +720,7 @@ class GlRedis extends AppModel
         $delete_time_from = (string)((microtime(true) - (60 * 60 * 24 * self::EXPIRE_DAY_OF_NOTIFICATION)) * 10000);
         //delete from notification user
         $this->Db->zRemRangeByScore($this->getKeyName(self::KEY_TYPE_MESSAGE_USER, $team_id, $user_id), 0,
-                                    $delete_time_from);
+            $delete_time_from);
 
         if ($limit === null) {
             $limit = -1;
@@ -714,13 +730,12 @@ class GlRedis extends AppModel
                 $limit--;
             }
             $notify_list = $this->Db->zRevRange($this->getKeyName(self::KEY_TYPE_MESSAGE_USER, $team_id, $user_id),
-                                                0, $limit, true);
-        }
-        else {
+                0, $limit, true);
+        } else {
             $notify_list = $this->Db->zRevRangeByScore($this->getKeyName(self::KEY_TYPE_MESSAGE_USER, $team_id,
-                                                                         $user_id),
-                                                       $from_date, -1,
-                                                       ['limit' => [1, $limit], 'withscores' => true]);
+                $user_id),
+                $from_date, -1,
+                ['limit' => [1, $limit], 'withscores' => true]);
         }
         if (empty($notify_list)) {
             return $notify_list;
@@ -736,8 +751,7 @@ class GlRedis extends AppModel
             $pipe_res[$k]['score'] = $score;
             if (substr_compare((string)$score, "1", -1, 1) === 0) {
                 $pipe_res[$k]['unread_flg'] = true;
-            }
-            else {
+            } else {
                 $pipe_res[$k]['unread_flg'] = false;
 
             }
@@ -936,7 +950,7 @@ class GlRedis extends AppModel
         foreach ($timezones as $timezone) {
             $access_date = date('Y-m-d', $access_time + intval($timezone * HOUR));
             $pipe->sAdd($this->getKeyName(self::KEY_TYPE_ACCESS_USER, $team_id, null, null, null, null, null,
-                                          null, $access_date, $timezone), $user_id);
+                null, $access_date, $timezone), $user_id);
         }
         $pipe->exec();
         return true;
@@ -984,7 +998,7 @@ class GlRedis extends AppModel
     function getAccessUsers($team_id, $access_date, $timezone)
     {
         return $this->Db->sMembers($this->getKeyName(self::KEY_TYPE_ACCESS_USER, $team_id, null, null, null,
-                                                     null, null, null, $access_date, $timezone));
+            null, null, null, $access_date, $timezone));
     }
 
     /**
@@ -999,7 +1013,7 @@ class GlRedis extends AppModel
     function delAccessUsers($team_id, $access_date, $timezone)
     {
         return $this->Db->del($this->getKeyName(self::KEY_TYPE_ACCESS_USER, $team_id, null, null, null,
-                                                null, null, null, $access_date, $timezone));
+            null, null, null, $access_date, $timezone));
     }
 
     /**
@@ -1017,7 +1031,7 @@ class GlRedis extends AppModel
     function saveTeamInsight($team_id, $start_date, $end_date, $timezone, $insight, $expire = WEEK)
     {
         $key = $this->getKeyName(self::KEY_TYPE_TEAM_INSIGHT, $team_id, null, null, null, null, null, null, null,
-                                 $timezone, $start_date, $end_date);
+            $timezone, $start_date, $end_date);
         $this->Db->set($key, json_encode($insight));
         return $this->Db->setTimeout($key, $expire);
     }
@@ -1035,8 +1049,8 @@ class GlRedis extends AppModel
     function getTeamInsight($team_id, $start_date, $end_date, $timezone)
     {
         $insight_str = $this->Db->get($this->getKeyName(self::KEY_TYPE_TEAM_INSIGHT, $team_id,
-                                                        null, null, null, null, null, null, null,
-                                                        $timezone, $start_date, $end_date));
+            null, null, null, null, null, null, null,
+            $timezone, $start_date, $end_date));
         return json_decode($insight_str, true);
 
     }
@@ -1057,7 +1071,7 @@ class GlRedis extends AppModel
     function saveGroupInsight($team_id, $start_date, $end_date, $timezone, $group_id, $insight, $expire = WEEK)
     {
         $key = $this->getKeyName(self::KEY_TYPE_GROUP_INSIGHT, $team_id, null, null, null, null, null, null, null,
-                                 $timezone, $start_date, $end_date, $group_id);
+            $timezone, $start_date, $end_date, $group_id);
         $this->Db->set($key, json_encode($insight));
         return $this->Db->setTimeout($key, $expire);
     }
@@ -1076,8 +1090,8 @@ class GlRedis extends AppModel
     function getGroupInsight($team_id, $start_date, $end_date, $timezone, $group_id)
     {
         $insight_str = $this->Db->get($this->getKeyName(self::KEY_TYPE_GROUP_INSIGHT, $team_id,
-                                                        null, null, null, null, null, null, null,
-                                                        $timezone, $start_date, $end_date, $group_id));
+            null, null, null, null, null, null, null,
+            $timezone, $start_date, $end_date, $group_id));
         return json_decode($insight_str, true);
 
     }
@@ -1097,7 +1111,7 @@ class GlRedis extends AppModel
     function saveCircleInsight($team_id, $start_date, $end_date, $timezone, $insight, $expire = WEEK)
     {
         $key = $this->getKeyName(self::KEY_TYPE_CIRCLE_INSIGHT, $team_id, null, null, null, null, null, null, null,
-                                 $timezone, $start_date, $end_date);
+            $timezone, $start_date, $end_date);
         $this->Db->set($key, json_encode($insight));
         return $this->Db->setTimeout($key, $expire);
     }
@@ -1115,8 +1129,8 @@ class GlRedis extends AppModel
     function getCircleInsight($team_id, $start_date, $end_date, $timezone)
     {
         $insight_str = $this->Db->get($this->getKeyName(self::KEY_TYPE_CIRCLE_INSIGHT, $team_id,
-                                                        null, null, null, null, null, null, null,
-                                                        $timezone, $start_date, $end_date));
+            null, null, null, null, null, null, null,
+            $timezone, $start_date, $end_date));
         return json_decode($insight_str, true);
     }
 
@@ -1136,7 +1150,7 @@ class GlRedis extends AppModel
     function saveTeamRanking($team_id, $start_date, $end_date, $timezone, $type, $ranking, $expire = WEEK)
     {
         $key = $this->getKeyName(self::KEY_TYPE_TEAM_RANKING, $team_id, null, null, null, null, null, null, null,
-                                 $timezone, $start_date, $end_date);
+            $timezone, $start_date, $end_date);
         $this->Db->hSet($key, $type, json_encode($ranking));
         return $this->Db->setTimeout($key, $expire);
     }
@@ -1155,8 +1169,8 @@ class GlRedis extends AppModel
     function getTeamRanking($team_id, $start_date, $end_date, $timezone, $type)
     {
         $ranking_str = $this->Db->hGet($this->getKeyName(self::KEY_TYPE_TEAM_RANKING, $team_id,
-                                                         null, null, null, null, null, null, null,
-                                                         $timezone, $start_date, $end_date), $type);
+            null, null, null, null, null, null, null,
+            $timezone, $start_date, $end_date), $type);
         return json_decode($ranking_str, true);
 
     }
@@ -1178,7 +1192,7 @@ class GlRedis extends AppModel
     function saveGroupRanking($team_id, $start_date, $end_date, $timezone, $group_id, $type, $ranking, $expire = WEEK)
     {
         $key = $this->getKeyName(self::KEY_TYPE_GROUP_RANKING, $team_id, null, null, null, null, null, null, null,
-                                 $timezone, $start_date, $end_date, $group_id);
+            $timezone, $start_date, $end_date, $group_id);
         $this->Db->hSet($key, $type, json_encode($ranking));
         return $this->Db->setTimeout($key, $expire);
 
@@ -1199,8 +1213,8 @@ class GlRedis extends AppModel
     function getGroupRanking($team_id, $start_date, $end_date, $timezone, $group_id, $type)
     {
         $ranking_str = $this->Db->hGet($this->getKeyName(self::KEY_TYPE_GROUP_RANKING, $team_id,
-                                                         null, null, null, null, null, null, null,
-                                                         $timezone, $start_date, $end_date, $group_id), $type);
+            null, null, null, null, null, null, null,
+            $timezone, $start_date, $end_date, $group_id), $type);
         return json_decode($ranking_str, true);
     }
 
@@ -1216,7 +1230,7 @@ class GlRedis extends AppModel
     function saveSetupGuideStatus($user_id, $status, $expire = SETUP_GUIDE_EXIPIRE_SEC_BY_REDIS)
     {
         $this->Db->set($key = $this->getKeyName(self::KEY_TYPE_SETUP_GUIDE_STATUS, null, $user_id),
-                       json_encode($status));
+            json_encode($status));
         return $this->Db->setTimeout($key, $expire);
     }
 

@@ -28,7 +28,12 @@
     ],
     'class'         => 'form-horizontal',
     'id'            => 'evaluation-form',
-    'url'           => ['controller' => 'evaluations', 'action' => 'add', 'user_id' => $evaluateeId, 'evaluate_term_id' => $evaluateTermId],
+    'url'           => [
+        'controller'       => 'evaluations',
+        'action'           => 'add',
+        'user_id'          => $evaluateeId,
+        'evaluate_term_id' => $evaluateTermId
+    ],
     'data-bv-live'  => "disabled"
 ]) ?>
 
@@ -49,12 +54,12 @@
                             <?php else: ?>
                                 <?=
                                 $this->Html->image('ajax-loader.gif',
-                                                   [
-                                                       'class'         => 'lazy eval-view-img',
-                                                       'data-original' => $this->Upload->uploadUrl($total['EvaluatorUser'],
-                                                                                                   'User.photo',
-                                                                                                   ['style' => 'medium']),
-                                                   ]
+                                    [
+                                        'class'         => 'lazy eval-view-img',
+                                        'data-original' => $this->Upload->uploadUrl($total['EvaluatorUser'],
+                                            'User.photo',
+                                            ['style' => 'medium']),
+                                    ]
                                 )
                                 ?>
                             <?php endif; ?>
@@ -86,7 +91,7 @@
                                     'rows'                         => 2,
                                     'default'                      => $total['Evaluation']['comment'],
                                     'label'                        => __(
-                                                                          "<i class='fa fa-comment-o mr_2px'></i>Evaluation comment"),
+                                        "<i class='fa fa-comment-o mr_2px'></i>Evaluation comment"),
                                     'placeholder'                  => __("Write a comment."),
                                     'required'                     => false,
                                     'data-bv-notempty'             => "true",
@@ -124,12 +129,12 @@
                             <?php else: ?>
                                 <?=
                                 $this->Html->image('ajax-loader.gif',
-                                                   [
-                                                       'class'         => 'lazy eval-view-img',
-                                                       'data-original' => $this->Upload->uploadUrl($total['EvaluatorUser'],
-                                                                                                   'User.photo',
-                                                                                                   ['style' => 'medium']),
-                                                   ]
+                                    [
+                                        'class'         => 'lazy eval-view-img',
+                                        'data-original' => $this->Upload->uploadUrl($total['EvaluatorUser'],
+                                            'User.photo',
+                                            ['style' => 'medium']),
+                                    ]
                                 )
                                 ?>
                             <?php endif ?>
@@ -223,11 +228,11 @@
                 'value' => Evaluation::TYPE_STATUS_DRAFT,
             ]) ?>
                 <?= $this->Form->button(__("Submit"), [
-                'div'      => false,
-                'class'    => 'btn btn-primary eval-view-btn-submit',
-                'id'       => 'evaluation-register-submit',
-                'name'     => 'status',
-                'value'    => Evaluation::TYPE_STATUS_DONE,
+                'div'   => false,
+                'class' => 'btn btn-primary eval-view-btn-submit',
+                'id'    => 'evaluation-register-submit',
+                'name'  => 'status',
+                'value' => Evaluation::TYPE_STATUS_DONE,
             ]) ?>
             <?php endif;
             ?>
@@ -245,25 +250,33 @@
         <div class="panel-body eval-view-panel-body">
             <div class="form-group col-xxs-12 eval-view-panel-section">
                 <div class="col col-xxs-6 col-sm-4">
-                    <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal[0]['Goal']['id']]) ?>"
+                    <a href="<?= $this->Html->url([
+                        'controller' => 'goals',
+                        'action'     => 'view_info',
+                        'goal_id'    => $goal[0]['Goal']['id']
+                    ]) ?>"
                        target="_blank">
                         <?=
                         $this->Html->image('ajax-loader.gif',
-                                           [
-                                               'class'         => 'lazy img-rounded eval-view-panel-goal-pic',
-                                               'width'         => "128",
-                                               'height'        => "128",
-                                               'alt'           => __("Goal Image"),
-                                               'data-original' => $this->Upload->uploadUrl($goal[0], 'Goal.photo',
-                                                                                           ['style' => 'large']),
-                                           ]
+                            [
+                                'class'         => 'lazy img-rounded eval-view-panel-goal-pic',
+                                'width'         => "128",
+                                'height'        => "128",
+                                'alt'           => __("Goal Image"),
+                                'data-original' => $this->Upload->uploadUrl($goal[0], 'Goal.photo',
+                                    ['style' => 'large']),
+                            ]
                         )
                         ?></a>
                 </div>
                 <div class="col-xxs-6">
                     <div><?= h($goal[0]['Goal']['GoalCategory']['name']) ?></div>
                     <div>
-                        <a href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'view_info', 'goal_id' => $goal[0]['Goal']['id']]) ?>"
+                        <a href="<?= $this->Html->url([
+                            'controller' => 'goals',
+                            'action'     => 'view_info',
+                            'goal_id'    => $goal[0]['Goal']['id']
+                        ]) ?>"
                            target="_blank">
                             <p class="font_bold font_verydark"><?= h($goal[0]['Goal']['name']) ?></p>
                         </a>
@@ -276,7 +289,12 @@
                         <div class="eval-view-result-number">
                             <div style="margin:0 auto;width:100px;">
                                 <a class="modal-ajax-get"
-                                   href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_related_kr_list_modal', 'user_id' => $evaluateeId, 'goal_id' => $goal[0]['Goal']['id']]) ?>">
+                                   href="<?= $this->Html->url([
+                                       'controller' => 'goals',
+                                       'action'     => 'ajax_get_related_kr_list_modal',
+                                       'user_id'    => $evaluateeId,
+                                       'goal_id'    => $goal[0]['Goal']['id']
+                                   ]) ?>">
                                     <?= count(Hash::extract($goal, "0.Goal.KeyResult.{n}[progress=100]")) ?>
                                 </a>
                             </div>
@@ -284,7 +302,12 @@
                         <div class="eval-view-result-text">
                             <div style="margin:0 auto;width:100px;">
                                 <a class="modal-ajax-get"
-                                   href="<?= $this->Html->url(['controller' => 'goals', 'action' => 'ajax_get_related_kr_list_modal', 'user_id' => $evaluateeId, 'goal_id' => $goal[0]['Goal']['id']]) ?>">
+                                   href="<?= $this->Html->url([
+                                       'controller' => 'goals',
+                                       'action'     => 'ajax_get_related_kr_list_modal',
+                                       'user_id'    => $evaluateeId,
+                                       'goal_id'    => $goal[0]['Goal']['id']
+                                   ]) ?>">
                                     <?= __("Results") ?>
                                 </a>
                             </div>
@@ -294,14 +317,28 @@
                         <div class="eval-view-action-number">
                             <a class="click-show-post-modal pointer"
                                id="ActionListOpen_<?= $goal[0]['Goal']['id'] ?>"
-                               href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_goal_action_feed', 'goal_id' => $goal[0]['Goal']['id'], 'type' => Post::TYPE_ACTION, 'author_id' => $evaluateeId, 'evaluate_term_id' => $evaluateTermId]) ?>">
+                               href="<?= $this->Html->url([
+                                   'controller'       => 'posts',
+                                   'action'           => 'ajax_get_goal_action_feed',
+                                   'goal_id'          => $goal[0]['Goal']['id'],
+                                   'type'             => Post::TYPE_ACTION,
+                                   'author_id'        => $evaluateeId,
+                                   'evaluate_term_id' => $evaluateTermId
+                               ]) ?>">
                                 <?= count($goal[0]['Goal']['ActionResult']) ?>
                             </a>
                         </div>
                         <div class="eval-view-action-text">
                             <a class="click-show-post-modal pointer"
                                id="ActionListOpen_<?= $goal[0]['Goal']['id'] ?>"
-                               href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'ajax_get_goal_action_feed', 'goal_id' => $goal[0]['Goal']['id'], 'type' => Post::TYPE_ACTION, 'author_id' => $evaluateeId, 'evaluate_term_id' => $evaluateTermId]) ?>">
+                               href="<?= $this->Html->url([
+                                   'controller'       => 'posts',
+                                   'action'           => 'ajax_get_goal_action_feed',
+                                   'goal_id'          => $goal[0]['Goal']['id'],
+                                   'type'             => Post::TYPE_ACTION,
+                                   'author_id'        => $evaluateeId,
+                                   'evaluate_term_id' => $evaluateTermId
+                               ]) ?>">
                                 <?= __("Action") ?>
                             </a>
                         </div>
@@ -335,9 +372,9 @@
                 <div for="#" class="col col-xxs-12 eval-view-panel-title">
                     <?= __("Weight") ?>:
                     <?php $collaboPriority = viaIsSet(Hash::extract($goal[0],
-                                                                    "Goal.MyCollabo.{n}[role]")[0]["priority"]) ?>
+                        "Goal.MyCollabo.{n}[role]")[0]["priority"]) ?>
                     <?php $priority = ($collaboPriority) ? $collaboPriority : viaIsSet(Hash::extract($goal[0],
-                                                                                                     "Goal.MyCollabo.{n}[!role]")[0]["priority"]) ?>
+                        "Goal.MyCollabo.{n}[!role]")[0]["priority"]) ?>
                     <?= h($priority) ?>
                 </div>
             </div>
@@ -347,12 +384,12 @@
                         <div class="col-xxs-3 col-xs-2 col-md-1">
                             <?=
                             $this->Html->image('ajax-loader.gif',
-                                               [
-                                                   'class'         => 'lazy eval-view-img',
-                                                   'data-original' => $this->Upload->uploadUrl($eval['EvaluatorUser'],
-                                                                                               'User.photo',
-                                                                                               ['style' => 'medium'])
-                                               ]
+                                [
+                                    'class'         => 'lazy eval-view-img',
+                                    'data-original' => $this->Upload->uploadUrl($eval['EvaluatorUser'],
+                                        'User.photo',
+                                        ['style' => 'medium'])
+                                ]
                             )
                             ?>
                         </div>
@@ -379,7 +416,7 @@
                                     'rows'                         => 2,
                                     'default'                      => $eval['Evaluation']['comment'],
                                     'label'                        => __(
-                                                                          "<i class='fa fa-comment-o mr_2px'></i>Evaluation comment"),
+                                        "<i class='fa fa-comment-o mr_2px'></i>Evaluation comment"),
                                     'placeholder'                  => __("Write a comment."),
                                     'required'                     => false,
                                     'class'                        => 'form-control eva-val',
@@ -414,12 +451,12 @@
                         <div class="col-xxs-3 col-xs-2 col-md-1">
                             <?=
                             $this->Html->image('ajax-loader.gif',
-                                               [
-                                                   'class'         => 'lazy eval-view-img',
-                                                   'data-original' => $this->Upload->uploadUrl($eval['EvaluatorUser'],
-                                                                                               'User.photo',
-                                                                                               ['style' => 'medium']),
-                                               ]
+                                [
+                                    'class'         => 'lazy eval-view-img',
+                                    'data-original' => $this->Upload->uploadUrl($eval['EvaluatorUser'],
+                                        'User.photo',
+                                        ['style' => 'medium']),
+                                ]
                             )
                             ?>
                         </div>
@@ -509,11 +546,11 @@
                 'value' => Evaluation::TYPE_STATUS_DRAFT
             ]) ?>
                 <?= $this->Form->button(__("Submit"), [
-                'div'      => false,
-                'class'    => 'btn btn-primary eval-view-btn-submit',
-                'id'       => 'evaluation-register-submit',
-                'name'     => 'status',
-                'value'    => Evaluation::TYPE_STATUS_DONE,
+                'div'   => false,
+                'class' => 'btn btn-primary eval-view-btn-submit',
+                'id'    => 'evaluation-register-submit',
+                'name'  => 'status',
+                'value' => Evaluation::TYPE_STATUS_DONE,
             ]) ?>
             <?php endif;
             ?>
@@ -537,7 +574,7 @@ $this->Form->input("evaluate_type", [
             live: 'enabled',
             feedbackIcons: {},
             fields: {},
-        }).on('click','button[value="<?= Evaluation::TYPE_STATUS_DRAFT ?>"]',function(){
+        }).on('click', 'button[value="<?= Evaluation::TYPE_STATUS_DRAFT ?>"]', function () {
             $('#evaluation-form').bootstrapValidator('destroy');
         });
     });

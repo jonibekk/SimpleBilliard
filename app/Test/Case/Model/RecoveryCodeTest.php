@@ -182,11 +182,11 @@ class RecoveryCodeTest extends GoalousTestCase
         $this->RecoveryCode = $this->getMockForModel('RecoveryCode', array('generateToken'));
         /** @noinspection PhpUndefinedMethodInspection */
         $this->RecoveryCode->expects($this->any())
-            ->method('generateToken')
-            ->will($this->onConsecutiveCalls(
-                'aaaabbbb', 'aaaa1111', 'aaaacccc', 'aaaa2222', 'aaaa3333',
-                'aaaa4444', 'aaaa5555', 'aaaa6666', 'aaaa7777', 'aaaa8888',
-                'aaaa9999', 'aaaa0000'));
+                           ->method('generateToken')
+                           ->will($this->onConsecutiveCalls(
+                               'aaaabbbb', 'aaaa1111', 'aaaacccc', 'aaaa2222', 'aaaa3333',
+                               'aaaa4444', 'aaaa5555', 'aaaa6666', 'aaaa7777', 'aaaa8888',
+                               'aaaa9999', 'aaaa0000'));
         $res = $this->RecoveryCode->regenerate(1);
         $this->assertTrue($res);
 

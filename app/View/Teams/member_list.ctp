@@ -11,7 +11,6 @@
         border-radius: 5px;
     }
 
-
     .team_member_setting_btn {
         color: #ffffff;
         background-color: #ffffff;
@@ -33,5 +32,7 @@ echo $this->Html->script('ng_controller');
 ?>
 
 <div ng-app="myApp">
-    <div ng-controller="TeamMemberMainController" ng-view class="col-md-6 col-xs-8 col-xxs-12 col-md-offset-3 col-xs-offset-2  layout-main"> ロード中....</div>
+    <div ng-controller="TeamMemberMainController" ng-view
+         class="col-md-6 col-xs-8 col-xxs-12 col-md-offset-3 col-xs-offset-2  layout-main"> ロード中....
+    </div>
 </div>
