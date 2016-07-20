@@ -1,7 +1,8 @@
 import * as types from '../constants/ActionTypes'
 import {
   post,
-  mapValidationMsg
+  mapValidationMsg,
+  getLocalDate
 } from './common_actions'
 
 export function inputName(key, name) {
@@ -29,7 +30,8 @@ export function postUserName(user) {
       'data[User][first_name]': user.first_name,
       'data[User][last_name]': user.last_name,
       'data[Local][first_name]': user.local_first_name,
-      'data[Local][last_name]': user.local_last_name
+      'data[Local][last_name]': user.local_last_name,
+      'data[User][local_date]': getLocalDate()
     }
 
     return post('/signup/ajax_validation_fields', data, response => {
