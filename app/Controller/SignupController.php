@@ -33,6 +33,9 @@ class SignupController extends AppController
                     'rule' => ['minLength', 8],
                 ]
             ],
+            'local_date' => [
+                'notEmpty' => ['rule' => 'notEmpty',],
+            ]
         ],
         'Email'     => [
             'email' => [
@@ -54,6 +57,13 @@ class SignupController extends AppController
             ],
         ],
         'Team'      => [
+            'name'             => [
+                'isString'  => [
+                    'rule' => ['isString',],
+                ],
+                'maxLength' => ['rule' => ['maxLength', 128]],
+                'notEmpty'  => ['rule' => ['notEmpty'],],
+            ],
             'start_term_month' => ['numeric' => ['rule' => ['numeric'],],],
             'border_months'    => ['numeric' => ['rule' => ['numeric'],],],
             'timezone'         => [
@@ -62,6 +72,24 @@ class SignupController extends AppController
                     'allowEmpty' => true,
                 ],
             ],
+        ]
+    ];
+
+    private $requiredFields = [
+        'User'  => [
+            'first_name',
+            'last_name',
+            'password',
+            'local_date',
+        ],
+        'Email' => [
+            'email'
+        ],
+        'Team'  => [
+            'name',
+            'start_term_month',
+            'border_months',
+            'timezone',
         ]
     ];
 
@@ -279,6 +307,90 @@ class SignupController extends AppController
     }
 
     /**
+     * register user
+     * POST method only
+     * input fields are the following
+     * $this->request->data['Team']['start_term_month']
+     * $this->request->data['Team']['border_months']
+     * $this->request->data['Team']['timezone']
+     *
+     * @return CakeResponse|null
+     */
+    public function ajax_register_user()
+    {
+        $this->_ajaxPreProcess();
+        $this->request->allowMethod('post');
+        //init response values
+        $res = [
+            'error'            => false,
+            'message'          => "",
+            'validation_msg'   => [],
+            'is_not_available' => false,
+        ];
+
+        try {
+            $this->User->begin();
+            if (!$session_data = $this->Session->read('data')) {
+                throw new RuntimeException(__('Invalid screen transition.'));
+            }
+
+            $data = $this->_filterWhiteList($this->request->data);
+
+            if (empty($data)) {
+                throw new RuntimeException(__('No Data'));
+            }
+
+            $validation_msg = $this->_getValidationErrorMsg($data, true);
+            if (!empty($validation_msg)) {
+                $res['validation_msg'] = $validation_msg;
+                throw new RuntimeException(__('Invalid Data'));
+            }
+            //merge form data and session data
+            $data = array_merge($session_data, $data);
+            //required fields check
+            if (!$this->_hasAllRequiredFields($data)) {
+                $res['is_not_available'] = true;
+                throw new RuntimeException(__('Some error occurred. Please try again from the start.'));
+            }
+            //validation for all datas
+            $validation_msg = $this->_getValidationErrorMsg($data, true);
+            if (!empty($validation_msg)) {
+                $res['is_not_available'] = true;
+                throw new RuntimeException(__('Some error occurred. Please try again from the start.'));
+            }
+            //preparing data before saving
+            $data['User']['language'] = $this->Lang->getLanguage();
+            $data['User']['timezone'] = $this->Timezone->getLocalTimezone($data['User']['local_date']);
+            unset($data['User']['local_date']);
+            if (isset($data['LocalName'])) {
+                $data['LocalName']['language'] = $this->Lang->getLanguage();
+            }
+
+            //saving user datas
+            $this->User->userRegistrationNewForm($data);
+            $user_id = $this->User->getLastInsertID();
+
+            ///save team
+            $this->Team->add(['Team' => $data['Team']], $user_id);
+
+            //success!!
+            //auto login with team
+            $this->_autoLogin($user_id);
+
+            //after success
+            $this->Session->delete('data');
+
+        } catch (RuntimeException $e) {
+            $res['error'] = true;
+            $res['message'] = $e->getMessage();
+            $this->User->rollback();
+        }
+        $this->User->commit();
+
+        return $this->_ajaxGetResponse($res);
+    }
+
+    /**
      * @param      $data
      * @param bool $reformat
      *
@@ -327,6 +439,19 @@ class SignupController extends AppController
             }
         }
         return $data;
+    }
+
+    public function _hasAllRequiredFields($data)
+    {
+        foreach ($this->requiredFields as $model => $fields) {
+            foreach ($fields as $field) {
+                if (!isset($data[$model][$field])) {
+                    return false;
+                }
+
+            }
+        }
+        return true;
     }
 
 }
