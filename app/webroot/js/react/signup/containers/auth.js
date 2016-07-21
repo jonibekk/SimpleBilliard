@@ -1,13 +1,15 @@
 import { connect } from 'react-redux'
-import * as actions from '../actions/auth_actions'
+import { inputCode } from '../actions/auth_actions'
 import AuthComponent from '../components/auth'
 
 function mapStateToProps(state) {
-  return state
+  return { auth: state.auth }
 }
 
 function mapDispatchToProps(dispatch) {
-  return {}
+  return {
+    inputCode: (index, code) => { dispatch(inputCode(index, code)) }
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AuthComponent)

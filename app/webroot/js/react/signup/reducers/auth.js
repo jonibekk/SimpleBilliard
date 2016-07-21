@@ -1,7 +1,14 @@
 import * as types from '../constants/ActionTypes'
 
 const initialState = {
-  inputed_code: null,
+  code_list: {
+    code1: '',
+    code2: '',
+    code3: '',
+    code4: '',
+    code5: '',
+    code6: ''
+  },
   checking_auth_code: false,
   auth_code_is_invalid: false,
   auth_code_is_locked: false,
@@ -15,7 +22,7 @@ export default function auth(state = initialState, action) {
   switch (action.type) {
     case types.INPUT_CODE:
       return Object.assign({}, state, {
-        inputed_code: action.inputed_code
+        code_list: action.code_list
       })
     case types.CHECKING_AUTH_CODE:
       return Object.assign({}, state, {
@@ -27,7 +34,20 @@ export default function auth(state = initialState, action) {
       })
     case types.INIT_AUTH_CODE:
       return Object.assign({}, state, {
-        inputed_code: null
+        code_list: {
+          code1: '',
+          code2: '',
+          code3: '',
+          code4: '',
+          code5: '',
+          code6: ''
+        }
+      })
+    case types.INIT_ALL_STATUS:
+      return Object.assign({}, state, {
+        auth_code_is_invalid: false,
+        auth_code_is_locked: false,
+        auth_code_is_expired: false
       })
     case types.AUTH_CODE_IS_INVALID:
       return Object.assign({}, state, {
@@ -35,10 +55,6 @@ export default function auth(state = initialState, action) {
         invalid_message: action.invalid_message
       })
     case types.AUTH_CODE_IS_VALID:
-      return Object.assign({}, state, {
-        auth_code_is_invalid: false
-      })
-    case types.INIT_AUTH_CODE_INVALID:
       return Object.assign({}, state, {
         auth_code_is_invalid: false
       })
