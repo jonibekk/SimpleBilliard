@@ -196,6 +196,10 @@ echo $this->Html->script('ng_app.min');
                 'action'     => 'ajax_regenerate_recovery_code'
             ]) ?>",
             circle_setting: "<?= $this->Html->url(['controller' => 'circles', 'action' => 'ajax_change_setting']) ?>",
+            signup_ajax_validate_email: "<?= $this->Html->url([
+                'controller' => 'signup',
+                'action'     => 'ajax_validate_email'
+            ]) ?>",
             route_url: "<?= FULL_BASE_URL ?>"
         },
         data: {
