@@ -102,7 +102,7 @@ $(window).load(function () {
 
     // if team changed from other tab then don't allow user to proceed without reload
     $('body').click(function(){
-        if(cake.data.team_id !== localStorage.team_id_current) {
+        if(Number(cake.data.team_id) !== Number(localStorage.team_id_current)) {
             var r = confirm("Team has been changed, press ok to reload!");
             if (r == true) {
                 document.location.reload(true);
