@@ -458,7 +458,7 @@ $(document).ready(function () {
             $addActionResultForm.bootstrapValidator({
                 excluded: [':hidden'],
                 live: 'enabled',
-                feedbackIcons: {},
+
                 fields: {
                     "data[ActionResult][photo1]": {
                         validators: {
@@ -563,14 +563,10 @@ $(document).ready(function () {
                 $editCircleForm.bootstrapValidator({
                     excluded: [':disabled'],
                     live: 'enabled',
-                    feedbackIcons: {
-                        valid: 'fa fa-check',
-                        invalid: 'fa fa-times',
-                        validating: 'fa fa-refresh'
-                    },
+
                     fields: {
                         "data[Circle][photo]": {
-                            feedbackIcons: 'false',
+
                             validators: {
                                 file: {
                                     extension: 'jpeg,jpg,png,gif',
@@ -1866,11 +1862,6 @@ $(document).ready(function () {
 
     $('.validate').bootstrapValidator({
         live: 'enabled',
-        feedbackIcons: {
-            valid: 'fa fa-check',
-            invalid: 'fa fa-times',
-            validating: 'fa fa-refresh'
-        },
         fields: {
             "data[User][password]": {
                 validators: {
@@ -1910,17 +1901,17 @@ $(document).ready(function () {
     });
     $('#PostDisplayForm').bootstrapValidator({
         live: 'enabled',
-        feedbackIcons: {},
+
         fields: {}
     });
     $('#MessageDisplayForm').bootstrapValidator({
         live: 'enabled',
-        feedbackIcons: {},
+
         fields: {}
     });
     $('#CommonActionDisplayForm').bootstrapValidator({
         live: 'enabled',
-        feedbackIcons: {},
+
         fields: {
             photo: {
                 // All the email address field have emailAddress class
@@ -2961,7 +2952,7 @@ function evMessageList(options) {
                 //メッセージフォームのvalidateを有効化
                 $('#MessageDisplayForm').bootstrapValidator({
                     live: 'enabled',
-                    feedbackIcons: {},
+
                     fields: {}
                 });
             }
@@ -3720,7 +3711,7 @@ function getModalFormFromUrl(e) {
             $modal_elm.append(data);
             $modal_elm.find('form').bootstrapValidator({
                 live: 'enabled',
-                feedbackIcons: {},
+
                 fields: {
                     "data[KeyResult][start_date]": {
                         validators: {
