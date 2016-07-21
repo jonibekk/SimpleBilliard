@@ -108,6 +108,31 @@ class SignupController extends AppController
         $this->Auth->allow();
     }
 
+    public function email()
+    {
+        if(!$this->request->is('post')){
+            return $this->render();
+        }
+        try {
+            if (!isset($this->request->data['Email']['email'])) {
+                throw new RuntimeException(__('Invalid fields'));
+            }
+            $email = $this->request->data['Email']['email'];
+            $this->_emailValidate($email);
+            $code = $this->Email->generateToken(6, '123456789');
+            $formatted_code = number_format($code, 0, '.', '-');
+            $this->Session->write('email_verify_code', $code);
+            $this->Session->write('email_verify_start_time', REQUEST_TIMESTAMP);
+            $this->Session->write('data.Email.email', $email);
+            //send mail
+            $this->GlEmail->sendEmailVerifyDigit($formatted_code, $email);
+            return $this->redirect(['action'=>'auth']);
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage());
+        }
+        return $this->render();
+    }
+
     public function auth()
     {
         $this->render('index');
@@ -134,65 +159,51 @@ class SignupController extends AppController
     }
 
     /**
-     * generating email verify code
-     * and sending it by e-mail
-     * store 6digit code to session
-     * [POST] method only allowed
-     * required field is:
-     * $this->request->data['email']
-     * return value is json encoded
-     * e.g.
-     * {
-     * error: false,//true or false,
-     * message:"something is wrong",//if error is true then message exists. if no error, blank text
-     * }
-     * verify code can be sent in only not verified.
-     * if not verified and record exists, remove and regenerate it.
-     * store status to redis
+     * メールアドレスが登録可能なものか確認
      *
      * @return CakeResponse
      */
-    public function ajax_generate_email_verify_code()
+    public function ajax_validate_email()
     {
         $this->_ajaxPreProcess();
-        $this->request->allowMethod('post');
-        //init response values
-        $res = [
-            'error'   => false,
-            'message' => "",
-        ];
-
-        try {
-            if (!isset($this->request->data['email'])) {
+        $email = $this->request->query('email');
+        $valid = true;
+        $message = '';
+        try{
+            if(!$email){
                 throw new RuntimeException(__('Invalid fields'));
             }
-            $this->Email->validate = [
-                'email' => [
-                    'maxLength' => ['rule' => ['maxLength', 200]],
-                    'notEmpty'  => ['rule' => 'notEmpty',],
-                    'email'     => ['rule' => ['email'],],
-                ],
-            ];
-            $this->Email->set($this->request->data);
-            if (!$this->Email->validates()) {
-                throw new RuntimeException($this->Email->concatValidationErrorMsg());
-            }
-            if ($this->Email->isVerified($this->request->data['email'])) {
-                throw new RuntimeException(__('This email address has already been used. Use another email address.'));
-            }
-            $code = $this->Email->generateToken(6, '123456789');
-            $formatted_code = number_format($code, 0, '.', '-');
-            $this->Session->write('email_verify_code', $code);
-            $this->Session->write('email_verify_start_time', REQUEST_TIMESTAMP);
-            $this->Session->write('data.Email.email', $this->request->data['email']);
-            //send mail
-            $this->GlEmail->sendEmailVerifyDigit($formatted_code, $this->request->data['email']);
-        } catch (RuntimeException $e) {
-            $res['error'] = true;
-            $res['message'] = $e->getMessage();
+            $this->_emailValidate($email);
+        }catch(RuntimeException $e){
+            $message = $e->getMessage();
+            $valid = false;
         }
-        return $this->_ajaxGetResponse($res);
+        return $this->_ajaxGetResponse([
+            'valid'   => $valid,
+            'message' => $message
+        ]);
     }
+
+    function _emailValidate($email)
+    {
+        // メールアドレスだけ validate
+        $this->User->Email->create(['email' => $email]);
+        $this->Email->validate = [
+            'email' => [
+                'maxLength' => ['rule' => ['maxLength', 200]],
+                'notEmpty'  => ['rule' => 'notEmpty',],
+                'email'     => ['rule' => ['email'],],
+            ],
+        ];
+        if (!$this->Email->validates(['fieldList' => ['email']])) {
+            throw new RuntimeException($this->Email->concatValidationErrorMsg());
+        }
+        if ($this->Email->isVerified($email)) {
+            throw new RuntimeException(__('This email address has already been used. Use another email address.'));
+        }
+        return true;
+    }
+
 
     /**
      * verify email by verify code
