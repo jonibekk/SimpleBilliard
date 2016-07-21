@@ -102,8 +102,7 @@ $(window).load(function () {
 
     // if team changed from other tab then don't allow user to proceed without reload
     $('body').click(function(){
-        var old_team_id_current = document.getElementById("team_id_current").innerHTML;
-        if(old_team_id_current !== localStorage.team_id_current) {
+        if(cake.data.team_id !== localStorage.team_id_current) {
             var r = confirm("Team has been changed, press ok to reload!");
             if (r == true) {
                 document.location.reload(true);
@@ -118,7 +117,7 @@ $(window).load(function () {
 
 function clickToSetCurrentTeamId() {
     if(typeof(Storage) !== "undefined") {
-        localStorage.team_id_current = Number(document.getElementById("team_id_current").innerHTML);
+        localStorage.team_id_current = Number(cake.data.team_id);
     } else {
         console.log("Sorry, your browser does not support web storage...");
     }
