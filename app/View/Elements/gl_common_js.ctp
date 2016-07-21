@@ -383,7 +383,8 @@ echo $this->Html->script('ng_app.min');
             "Writing your insistence": "<?= __("Writing your insistence") ?>",
             "Embodying the orgainization motto": "<?= __("Embodying the orgainization motto") ?>",
             "Prasing someone": "<?= __("Prasing someone") ?>",
-            "Including your orgainization improvements": "<?= __("Including your orgainization improvements") ?>"
+            "Including your orgainization improvements": "<?= __("Including your orgainization improvements") ?>",
+            "Team has been changed, press ok to reload!": "<?=__("Team has been changed, press ok to reload!")?>"
         },
         notify_auto_update_sec: <?=NOTIFY_AUTO_UPDATE_SEC?>,
         new_notify_cnt: <?=isset($new_notify_cnt) ? $new_notify_cnt : 0?>,

@@ -96,7 +96,33 @@ $(window).load(function () {
     bindCommentBalancedGallery($('.comment_gallery'));
     changeSizeFeedImageOnlyOne($('.feed_img_only_one'));
     setDefaultTab();
+
+    // for setting the team_id_current in local storage
+    clickToSetCurrentTeamId();
+
+    // if team changed from other tab then don't allow user to proceed without reload
+    $('body').click(function(){
+        if(Number(cake.data.team_id) !== Number(localStorage.team_id_current)) {
+            var r = confirm(cake.translation["Team has been changed, press ok to reload!"]);
+            if (r == true) {
+                document.location.reload(true);
+                return false;
+            } else {
+                return false;
+            }
+        }
+    });
+
 });
+
+function clickToSetCurrentTeamId() {
+    if(typeof(Storage) !== "undefined") {
+        localStorage.team_id_current = Number(cake.data.team_id);
+    } else {
+        console.log("Sorry, your browser does not support web storage...");
+    }
+};
+
 
 $(document).ready(function () {
 
