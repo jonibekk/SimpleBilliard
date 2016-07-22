@@ -218,13 +218,13 @@ class EvaluationTest extends GoalousTestCase
         $res = $this->Evaluation->add($draftData, Evaluation::TYPE_STATUS_DRAFT);
         $this->assertNotEmpty($res, "[正常]下書き保存");
         $res = $this->Evaluation->find('all',
-                                       [
-                                           'conditions' => [
-                                               'evaluatee_user_id' => 1,
-                                               'evaluate_term_id'  => 1,
-                                               'status'            => Evaluation::TYPE_STATUS_DRAFT
-                                           ]
-                                       ]
+            [
+                'conditions' => [
+                    'evaluatee_user_id' => 1,
+                    'evaluate_term_id'  => 1,
+                    'status'            => Evaluation::TYPE_STATUS_DRAFT
+                ]
+            ]
         );
         $this->assertEquals(count($res), count($draftData));
     }
@@ -586,15 +586,15 @@ class EvaluationTest extends GoalousTestCase
     {
         $this->_setDefault();
         $this->Evaluation->validate['comment'] = [
-            'isString'   => [
-                'rule' => ['isString'],
+            'isString'  => [
+                'rule'       => ['isString'],
                 'allowEmpty' => true,
             ],
             'maxLength' => ['rule' => ['maxLength', 5000]],
         ];
         $required = [
-            'isString'   => [
-                'rule' => ['isString'],
+            'isString'  => [
+                'rule'       => ['isString'],
                 'allowEmpty' => true,
             ],
             'maxLength' => ['rule' => ['maxLength', 5000]],
@@ -608,15 +608,15 @@ class EvaluationTest extends GoalousTestCase
     {
         $this->_setDefault();
         $this->Evaluation->validate['comment'] = [
-            'isString'   => [
+            'isString'  => [
                 'rule' => ['isString'],
             ],
             'maxLength' => ['rule' => ['maxLength', 5000]],
             'notEmpty'  => ['rule' => 'notEmpty']
         ];
         $required = [
-            'isString'   => [
-                'rule' => ['isString'],
+            'isString'  => [
+                'rule'       => ['isString'],
                 'allowEmpty' => true,
             ],
             'maxLength' => ['rule' => ['maxLength', 5000]],
@@ -634,14 +634,14 @@ class EvaluationTest extends GoalousTestCase
     {
         $this->_setDefault();
         $this->Evaluation->validate['comment'] = [
-            'isString'   => [
-                'rule' => ['isString'],
+            'isString'  => [
+                'rule'       => ['isString'],
                 'allowEmpty' => true,
             ],
             'maxLength' => ['rule' => ['maxLength', 5000]],
         ];
         $required = [
-            'isString'   => [
+            'isString'  => [
                 'rule' => ['isString'],
             ],
             'maxLength' => ['rule' => ['maxLength', 5000]],
@@ -656,14 +656,14 @@ class EvaluationTest extends GoalousTestCase
     {
         $this->_setDefault();
         $this->Evaluation->validate['comment'] = [
-            'isString'   => [
+            'isString'  => [
                 'rule' => ['isString'],
             ],
             'maxLength' => ['rule' => ['maxLength', 5000]],
             'notEmpty'  => ['rule' => 'notEmpty']
         ];
         $required = [
-            'isString'   => [
+            'isString'  => [
                 'rule' => ['isString'],
             ],
             'maxLength' => ['rule' => ['maxLength', 5000]],
@@ -682,14 +682,14 @@ class EvaluationTest extends GoalousTestCase
     {
         $this->_setDefault();
         $this->Evaluation->validate['evaluate_score_id'] = [
-            'numeric'  => [
-                'rule' => ['numeric'],
+            'numeric' => [
+                'rule'       => ['numeric'],
                 'allowEmpty' => true,
             ],
         ];
         $required = [
-            'numeric'   => [
-                'rule' => ['numeric'],
+            'numeric' => [
+                'rule'       => ['numeric'],
                 'allowEmpty' => true,
             ],
         ];
@@ -704,12 +704,12 @@ class EvaluationTest extends GoalousTestCase
             'numeric'  => [
                 'rule' => ['numeric'],
             ],
-            'notEmpty'  => ['rule' => 'notEmpty'],
+            'notEmpty' => ['rule' => 'notEmpty'],
 
         ];
         $required = [
-            'numeric'   => [
-                'rule' => ['numeric'],
+            'numeric' => [
+                'rule'       => ['numeric'],
                 'allowEmpty' => true,
             ],
         ];
@@ -726,16 +726,16 @@ class EvaluationTest extends GoalousTestCase
     {
         $this->_setDefault();
         $this->Evaluation->validate['evaluate_score_id'] = [
-            'numeric'  => [
-                'rule' => ['numeric'],
+            'numeric' => [
+                'rule'       => ['numeric'],
                 'allowEmpty' => true,
             ],
         ];
         $required = [
-            'numeric'   => [
+            'numeric'  => [
                 'rule' => ['numeric'],
             ],
-            'notEmpty'  => ['rule' => 'notEmpty'],
+            'notEmpty' => ['rule' => 'notEmpty'],
         ];
         $this->Evaluation->setNotAllowEmptyToEvaluateScoreId();
         $this->assertEquals($this->Evaluation->validate['evaluate_score_id'], $required);
@@ -745,16 +745,16 @@ class EvaluationTest extends GoalousTestCase
     {
         $this->_setDefault();
         $this->Evaluation->validate['evaluate_score_id'] = [
-            'numeric'   => [
+            'numeric'  => [
                 'rule' => ['numeric'],
             ],
-            'notEmpty'  => ['rule' => 'notEmpty'],
+            'notEmpty' => ['rule' => 'notEmpty'],
         ];
         $required = [
-            'numeric'   => [
+            'numeric'  => [
                 'rule' => ['numeric'],
             ],
-            'notEmpty'  => ['rule' => 'notEmpty'],
+            'notEmpty' => ['rule' => 'notEmpty'],
         ];
         $this->Evaluation->setNotAllowEmptyToEvaluateScoreId();
         $this->assertEquals($this->Evaluation->validate['evaluate_score_id'], $required);
@@ -867,15 +867,43 @@ class EvaluationTest extends GoalousTestCase
         $term_id = $this->Evaluation->Team->EvaluateTerm->getLastInsertID();
         $eval = [
             //自分の番
-            ['team_id'       => 1, 'evaluatee_user_id' => 2, 'evaluator_user_id' => 2, 'evaluate_term_id' => $term_id,
-             'evaluate_type' => Evaluation::TYPE_ONESELF, 'index_num' => 0, 'my_turn_flg' => false,],
-            ['team_id'       => 1, 'evaluatee_user_id' => 2, 'evaluator_user_id' => 1, 'evaluate_term_id' => $term_id,
-             'evaluate_type' => Evaluation::TYPE_EVALUATOR, 'index_num' => 1, 'my_turn_flg' => true,],
+            [
+                'team_id'           => 1,
+                'evaluatee_user_id' => 2,
+                'evaluator_user_id' => 2,
+                'evaluate_term_id'  => $term_id,
+                'evaluate_type'     => Evaluation::TYPE_ONESELF,
+                'index_num'         => 0,
+                'my_turn_flg'       => false,
+            ],
+            [
+                'team_id'           => 1,
+                'evaluatee_user_id' => 2,
+                'evaluator_user_id' => 1,
+                'evaluate_term_id'  => $term_id,
+                'evaluate_type'     => Evaluation::TYPE_EVALUATOR,
+                'index_num'         => 1,
+                'my_turn_flg'       => true,
+            ],
             //他人の番
-            ['team_id'       => 1, 'evaluatee_user_id' => 3, 'evaluator_user_id' => 3, 'evaluate_term_id' => $term_id,
-             'evaluate_type' => Evaluation::TYPE_ONESELF, 'index_num' => 0, 'my_turn_flg' => true,],
-            ['team_id'       => 1, 'evaluatee_user_id' => 3, 'evaluator_user_id' => 1, 'evaluate_term_id' => $term_id,
-             'evaluate_type' => Evaluation::TYPE_EVALUATOR, 'index_num' => 1, 'my_turn_flg' => false,],
+            [
+                'team_id'           => 1,
+                'evaluatee_user_id' => 3,
+                'evaluator_user_id' => 3,
+                'evaluate_term_id'  => $term_id,
+                'evaluate_type'     => Evaluation::TYPE_ONESELF,
+                'index_num'         => 0,
+                'my_turn_flg'       => true,
+            ],
+            [
+                'team_id'           => 1,
+                'evaluatee_user_id' => 3,
+                'evaluator_user_id' => 1,
+                'evaluate_term_id'  => $term_id,
+                'evaluate_type'     => Evaluation::TYPE_EVALUATOR,
+                'index_num'         => 1,
+                'my_turn_flg'       => false,
+            ],
         ];
         $this->Evaluation->saveAll($eval);
         $actual = $this->Evaluation->getEvaluateeEvalStatusAsEvaluator($term_id);
@@ -939,7 +967,10 @@ class EvaluationTest extends GoalousTestCase
         $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $previousTermId = $this->Evaluation->Team->EvaluateTerm->getLastInsertID();
         $previous = $this->Evaluation->EvaluateTerm->getTermData(EvaluateTerm::TYPE_PREVIOUS);
-        $this->Evaluation->Team->EvaluateTerm->save(['id' => $previousTermId, 'start_date' => $previous['start_date'], 'end_date' => $previous['end_date']]);
+        $this->Evaluation->Team->EvaluateTerm->save(['id'         => $previousTermId,
+                                                     'start_date' => $previous['start_date'],
+                                                     'end_date'   => $previous['end_date']
+        ]);
         $this->Evaluation->Team->EvaluateTerm->addTermData(EvaluateTerm::TYPE_CURRENT);
         $this->Evaluation->Team->EvaluateTerm->changeFreezeStatus($previousTermId);
         $this->Evaluation->getMyTurnCount();
@@ -973,7 +1004,7 @@ class EvaluationTest extends GoalousTestCase
         $expectedEvaluatorId = 2;
 
         $nextEvaluatorId = $this->Evaluation->getNextEvaluatorId($this->Evaluation->EvaluateTerm->getCurrentTermData(),
-                                                                 1);
+            1);
         $this->assertEquals($nextEvaluatorId, $expectedEvaluatorId);
     }
 
@@ -998,7 +1029,7 @@ class EvaluationTest extends GoalousTestCase
         $lastEvaluator = $res['Evaluation']['evaluator_user_id'];
 
         $nextEvaluatorId = $this->Evaluation->getNextEvaluatorId($this->Evaluation->EvaluateTerm->getCurrentTermData(),
-                                                                 $lastEvaluator);
+            $lastEvaluator);
         $this->assertEquals($nextEvaluatorId, null);
     }
 
@@ -1063,7 +1094,7 @@ class EvaluationTest extends GoalousTestCase
         $this->_saveEvaluations();
         $evaluatorId = 2;
         $this->Evaluation->getEvaluateesByEvaluator($this->Evaluation->EvaluateTerm->getCurrentTermData(),
-                                                    $evaluatorId);
+            $evaluatorId);
     }
 
     function testGetIncompleteOneselfEvaluators()

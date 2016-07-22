@@ -727,10 +727,10 @@ class UserTest extends GoalousTestCase
 
         $this->User->TeamMember->create();
         $this->User->TeamMember->save([
-                                          'user_id'    => '14',
-                                          'team_id'    => '1',
-                                          'active_flg' => 1,
-                                      ]);
+            'user_id'    => '14',
+            'team_id'    => '1',
+            'active_flg' => 1,
+        ]);
 
         $users = $this->User->getUsersSelectOnly('first', 10, $post_id, true);
         $this->assertArrayHasKey('results', $users);
@@ -864,41 +864,52 @@ class UserTest extends GoalousTestCase
     function testExcludeGroupMemberSelect2()
     {
         $test_data = [
-            ['id'    => 'group_1',
-             'users' => [
-                 ['id' => 'user_1', 'text' => 'user1'],
-                 ['id' => 'user_2', 'text' => 'user2'],
-                 ['id' => 'user_3', 'text' => 'user3'],
-                 ['id' => 'user_4', 'text' => 'user4'],
-             ]],
-            ['id'    => 'group_2',
-             'users' => [
-                 ['id' => 'user_1', 'text' => 'user1'],
-                 ['id' => 'user_4', 'text' => 'user4'],
-                 ['id' => 'user_5', 'text' => 'user5'],
-             ]],
+            [
+                'id'    => 'group_1',
+                'users' => [
+                    ['id' => 'user_1', 'text' => 'user1'],
+                    ['id' => 'user_2', 'text' => 'user2'],
+                    ['id' => 'user_3', 'text' => 'user3'],
+                    ['id' => 'user_4', 'text' => 'user4'],
+                ]
+            ],
+            [
+                'id'    => 'group_2',
+                'users' => [
+                    ['id' => 'user_1', 'text' => 'user1'],
+                    ['id' => 'user_4', 'text' => 'user4'],
+                    ['id' => 'user_5', 'text' => 'user5'],
+                ]
+            ],
         ];
 
         $res = $this->User->excludeGroupMemberSelect2($test_data, [2 => 2, 4 => 4]);
         $this->assertEquals([
-                                ['id'    => 'group_1',
-                                 'users' => [
-                                     ['id' => 'user_1', 'text' => 'user1'],
-                                     ['id' => 'user_3', 'text' => 'user3'],
-                                 ]],
-                                ['id'    => 'group_2',
-                                 'users' => [
-                                     ['id' => 'user_1', 'text' => 'user1'],
-                                     ['id' => 'user_5', 'text' => 'user5'],
-                                 ]],
-                            ], $res);
+            [
+                'id'    => 'group_1',
+                'users' => [
+                    ['id' => 'user_1', 'text' => 'user1'],
+                    ['id' => 'user_3', 'text' => 'user3'],
+                ]
+            ],
+            [
+                'id'    => 'group_2',
+                'users' => [
+                    ['id' => 'user_1', 'text' => 'user1'],
+                    ['id' => 'user_5', 'text' => 'user5'],
+                ]
+            ],
+        ], $res);
 
         $res = $this->User->excludeGroupMemberSelect2($test_data, [1 => 1, 2 => 2, 3 => 3, 4 => 4]);
-        $this->assertEquals([['id'    => 'group_2',
-                              'users' => [
-                                  ['id' => 'user_5', 'text' => 'user5'],
-                              ]],
-                            ], $res);
+        $this->assertEquals([
+            [
+                'id'    => 'group_2',
+                'users' => [
+                    ['id' => 'user_5', 'text' => 'user5'],
+                ]
+            ],
+        ], $res);
 
         $res = $this->User->excludeGroupMemberSelect2($test_data, [1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5]);
         $this->assertEquals([], $res);
@@ -987,18 +998,22 @@ class UserTest extends GoalousTestCase
     function testMakeSelect2UserList()
     {
         $users = [
-            ['User' => [
-                'id'               => 1,
-                'display_username' => '表示名 1',
-                'roman_username'   => 'display name 1',
-                'photo_file_name'  => 'test1.jpg',
-            ]],
-            ['User' => [
-                'id'               => 2,
-                'display_username' => '表示名 2',
-                'roman_username'   => 'display name 2',
-                'photo_file_name'  => 'test2.jpg',
-            ]],
+            [
+                'User' => [
+                    'id'               => 1,
+                    'display_username' => '表示名 1',
+                    'roman_username'   => 'display name 1',
+                    'photo_file_name'  => 'test1.jpg',
+                ]
+            ],
+            [
+                'User' => [
+                    'id'               => 2,
+                    'display_username' => '表示名 2',
+                    'roman_username'   => 'display name 2',
+                    'photo_file_name'  => 'test2.jpg',
+                ]
+            ],
         ];
         $user_res = $this->User->makeSelect2UserList($users);
         foreach ($user_res as $k => $v) {
@@ -1027,7 +1042,11 @@ class UserTest extends GoalousTestCase
 
         // In case that profile register is complete
         $this->User->save(['id' => 1, 'photo_file_name' => 'photo_file_name.png']);
-        $this->User->TeamMember->save(['id' => 1, 'team_id' => 1, 'user_id' => 1, 'comment' => 'This is amazing comment']);
+        $this->User->TeamMember->save(['id'      => 1,
+                                       'team_id' => 1,
+                                       'user_id' => 1,
+                                       'comment' => 'This is amazing comment'
+        ]);
         $res = $this->User->isCompletedProfileForSetup($this->User->my_uid);
         $this->assertTrue($res);
 
@@ -1068,32 +1087,42 @@ class UserTest extends GoalousTestCase
     function testGetUsersSetupNotCompleted()
     {
         // user: active, team: active, team_member: active
-        $this->_saveUserRecords(['id' => $user_id = 1, 'setup_complete_flg' => false, 'active_flg' => true], $exec_delete_all = true);
+        $this->_saveUserRecords(['id' => $user_id = 1, 'setup_complete_flg' => false, 'active_flg' => true],
+            $exec_delete_all = true);
         $this->_saveTeamRecords(['id' => $team_id = 1, 'del_flg' => false], $exec_delete_all = true);
-        $this->_saveTeamMemberRecords(['user_id' => $user_id, 'team_id' => $team_id, 'active_flg' => true], $exec_delete_all = true);
+        $this->_saveTeamMemberRecords(['user_id' => $user_id, 'team_id' => $team_id, 'active_flg' => true],
+            $exec_delete_all = true);
         $this->assertTrue((bool)$this->User->getUsersSetupNotCompleted());
         // assign team_id
-        $this->_saveUserRecords(['id' => $user_id = 1, 'setup_complete_flg' => false, 'active_flg' => true], $exec_delete_all = true);
+        $this->_saveUserRecords(['id' => $user_id = 1, 'setup_complete_flg' => false, 'active_flg' => true],
+            $exec_delete_all = true);
         $this->_saveTeamRecords(['id' => $team_id = 1, 'del_flg' => false], $exec_delete_all = true);
-        $this->_saveTeamMemberRecords(['user_id' => $user_id, 'team_id' => $team_id, 'active_flg' => true], $exec_delete_all = true);
+        $this->_saveTeamMemberRecords(['user_id' => $user_id, 'team_id' => $team_id, 'active_flg' => true],
+            $exec_delete_all = true);
         $this->assertTrue((bool)$this->User->getUsersSetupNotCompleted($team_id));
 
         // user: active, team: INACTIVE, team_member: active
-        $this->_saveUserRecords(['id' => $user_id = 1, 'setup_complete_flg' => false, 'active_flg' => true], $exec_delete_all = true);
+        $this->_saveUserRecords(['id' => $user_id = 1, 'setup_complete_flg' => false, 'active_flg' => true],
+            $exec_delete_all = true);
         $this->_saveTeamRecords(['id' => $team_id = 1, 'del_flg' => true], $exec_delete_all = true);
-        $this->_saveTeamMemberRecords(['user_id' => $user_id, 'team_id' => $team_id, 'active_flg' => true], $exec_delete_all = true);
+        $this->_saveTeamMemberRecords(['user_id' => $user_id, 'team_id' => $team_id, 'active_flg' => true],
+            $exec_delete_all = true);
         $this->assertFalse((bool)$this->User->getUsersSetupNotCompleted());
 
         // user: active, team: active, team_member: INACTIVE
-        $this->_saveUserRecords(['id' => $user_id = 1, 'setup_complete_flg' => false, 'active_flg' => true], $exec_delete_all = true);
+        $this->_saveUserRecords(['id' => $user_id = 1, 'setup_complete_flg' => false, 'active_flg' => true],
+            $exec_delete_all = true);
         $this->_saveTeamRecords(['id' => $team_id = 1, 'del_flg' => false], $exec_delete_all = true);
-        $this->_saveTeamMemberRecords(['user_id' => $user_id, 'team_id' => $team_id, 'active_flg' => false], $exec_delete_all = true);
+        $this->_saveTeamMemberRecords(['user_id' => $user_id, 'team_id' => $team_id, 'active_flg' => false],
+            $exec_delete_all = true);
         $this->assertFalse((bool)$this->User->getUsersSetupNotCompleted());
 
         // user: INACTIVE, team: active, team_member: active
-        $this->_saveUserRecords(['id' => $user_id = 1, 'setup_complete_flg' => false, 'active_flg' => false], $exec_delete_all = true);
+        $this->_saveUserRecords(['id' => $user_id = 1, 'setup_complete_flg' => false, 'active_flg' => false],
+            $exec_delete_all = true);
         $this->_saveTeamRecords(['id' => $team_id = 1, 'del_flg' => false], $exec_delete_all = true);
-        $this->_saveTeamMemberRecords(['user_id' => $user_id, 'team_id' => $team_id, 'active_flg' => true], $exec_delete_all = true);
+        $this->_saveTeamMemberRecords(['user_id' => $user_id, 'team_id' => $team_id, 'active_flg' => true],
+            $exec_delete_all = true);
         $this->assertFalse((bool)$this->User->getUsersSetupNotCompleted());
     }
 

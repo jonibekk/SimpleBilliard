@@ -42,40 +42,43 @@
         <div class="modal-body">
             <?=
             $this->Form->input('role',
-                               ['label'                    => __("Role"),
-                                'placeholder'              => __("eg) Increasing the number of users"),
-                                "data-bv-notempty-message" => __("Input is required."),
-                                'data-bv-stringlength'         => 'true',
-                                'data-bv-stringlength-max'     => 200,
-                                'data-bv-stringlength-message' => __("It's over limit characters (%s).",200),
-                                'required'                 => true,
-                                'rows'                     => 1,
-                                'value'                    => isset($goal['MyCollabo'][0]['role']) ? $goal['MyCollabo'][0]['role'] : null,
-                               ]) ?>
+                [
+                    'label'                        => __("Role"),
+                    'placeholder'                  => __("eg) Increasing the number of users"),
+                    "data-bv-notempty-message"     => __("Input is required."),
+                    'data-bv-stringlength'         => 'true',
+                    'data-bv-stringlength-max'     => 200,
+                    'data-bv-stringlength-message' => __("It's over limit characters (%s).", 200),
+                    'required'                     => true,
+                    'rows'                         => 1,
+                    'value'                        => isset($goal['MyCollabo'][0]['role']) ? $goal['MyCollabo'][0]['role'] : null,
+                ]) ?>
             <hr>
             <?=
             $this->Form->input('description',
-                               ['label'                    => __("Description"),
-                                'placeholder'              => __("eg) I will get the users by advertising."),
-                                "data-bv-notempty-message" => __("Input is required."),
-                                'data-bv-stringlength'         => 'true',
-                                'data-bv-stringlength-max'     => 2000,
-                                'data-bv-stringlength-message' => __("It's over limit characters (%s).",2000),
-                                'required'                 => true,
-                                'rows'                     => 1,
-                                'value'                    => isset($goal['MyCollabo'][0]['description']) ? $goal['MyCollabo'][0]['description'] : null,
-                               ]) ?>
+                [
+                    'label'                        => __("Description"),
+                    'placeholder'                  => __("eg) I will get the users by advertising."),
+                    "data-bv-notempty-message"     => __("Input is required."),
+                    'data-bv-stringlength'         => 'true',
+                    'data-bv-stringlength-max'     => 2000,
+                    'data-bv-stringlength-message' => __("It's over limit characters (%s).", 2000),
+                    'required'                     => true,
+                    'rows'                         => 1,
+                    'value'                        => isset($goal['MyCollabo'][0]['description']) ? $goal['MyCollabo'][0]['description'] : null,
+                ]) ?>
             <hr>
             <?=
             $this->Form->input('priority',
-                               ['label'                    => __("Weight"),
-                                "data-bv-notempty-message" => __("Input is required."),
-                                'required'                 => true,
-                                'type'                     => 'select',
-                                'default'                  => 3,
-                                'options'                  => $priority_list,
-                                'value'                    => isset($goal['MyCollabo'][0]['priority']) ? $goal['MyCollabo'][0]['priority'] : null,
-                               ]) ?>
+                [
+                    'label'                    => __("Weight"),
+                    "data-bv-notempty-message" => __("Input is required."),
+                    'required'                 => true,
+                    'type'                     => 'select',
+                    'default'                  => 3,
+                    'options'                  => $priority_list,
+                    'value'                    => isset($goal['MyCollabo'][0]['priority']) ? $goal['MyCollabo'][0]['priority'] : null,
+                ]) ?>
 
         </div>
         <div class="modal-footer">
@@ -86,14 +89,17 @@
                     </button>
                     <?=
                     $this->Form->submit(empty($goal['MyCollabo']) ? __("Collaborate") : __("Edit Collaborate"),
-                                        ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
+                        ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
                     <?= $this->Form->end(); ?>
                     <?php if (!empty($goal['MyCollabo'])): ?>
                         <?=
                         $this->Form->postLink(__("Quit the collaboration"),
-                                              ['controller' => 'goals', 'action' => 'delete_collabo', 'collaborator_id' => $goal['MyCollabo'][0]['id']],
-                                              ['class' => 'pull-left btn btn-link'],
-                                              __("Do you really want to quit the collaboration?")) ?>
+                            ['controller'      => 'goals',
+                             'action'          => 'delete_collabo',
+                             'collaborator_id' => $goal['MyCollabo'][0]['id']
+                            ],
+                            ['class' => 'pull-left btn btn-link'],
+                            __("Do you really want to quit the collaboration?")) ?>
                     <?php endif; ?>
 
                 </div>

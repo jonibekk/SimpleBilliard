@@ -22,7 +22,7 @@
 $url = isset($this->request->data['Goal']['id']) ? ['goal_id' => $this->request->data['Goal']['id']] : [];
 
 $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
-                                                                          ['purpose_id' => $this->request->params['named']['purpose_id']]) : $url;
+    ['purpose_id' => $this->request->params['named']['purpose_id']]) : $url;
 ?>
 <!-- START app/View/Goals/add.ctp -->
 <div class="row">
@@ -37,12 +37,12 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                 </div>
                 <?=
                 $this->Html->link(__("Change"), "#",
-                                  [
-                                      'class'     => 'btn btn-link btn_white goal-add-edit-button pull-right bd-radius_4px',
-                                      'div'       => false,
-                                      'style'     => 'display:none',
-                                      'target-id' => "AddGoalFormPurposeWrap",
-                                  ]) ?>
+                    [
+                        'class'     => 'btn btn-link btn_white goal-add-edit-button pull-right bd-radius_4px',
+                        'div'       => false,
+                        'style'     => 'display:none',
+                        'target-id' => "AddGoalFormPurposeWrap",
+                    ]) ?>
             </div>
             <div class="panel-container">
                 <?=
@@ -68,19 +68,20 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                 <div class="panel-body add-team-panel-body goal-set-body">
                     <?=
                     $this->Form->input('Purpose.name',
-                                       ['before'                       => '<div class="col col-sm-3 control-label goal-edit-labels">' .
-                                           '<label class="no-asterisk">' . __("Purpose") . '</label>' .
-                                           '<div class="label-addiction">' . __("What do you want to achieve?") . '</div></div>',
-                                        'label'                        => false,
-                                        'placeholder'                  => __("Describe it roughly."),
-                                        'rows'                         => 1,
-                                        "data-bv-notempty-message"     => __("Input is required."),
-                                        'afterInput'                   => '<span class="help-block goal-form-addiction">' . __(
-                                                                                                                                "eg. Provide a new value to people.") . '</span>',
-                                        'data-bv-stringlength'         => 'true',
-                                        'data-bv-stringlength-max'     => 200,
-                                        'data-bv-stringlength-message' => __("It's over limit characters (%s).", 200),
-                                       ]) ?>
+                        [
+                            'before'                       => '<div class="col col-sm-3 control-label goal-edit-labels">' .
+                                '<label class="no-asterisk">' . __("Purpose") . '</label>' .
+                                '<div class="label-addiction">' . __("What do you want to achieve?") . '</div></div>',
+                            'label'                        => false,
+                            'placeholder'                  => __("Describe it roughly."),
+                            'rows'                         => 1,
+                            "data-bv-notempty-message"     => __("Input is required."),
+                            'afterInput'                   => '<span class="help-block goal-form-addiction">' . __(
+                                    "eg. Provide a new value to people.") . '</span>',
+                            'data-bv-stringlength'         => 'true',
+                            'data-bv-stringlength-max'     => 200,
+                            'data-bv-stringlength-message' => __("It's over limit characters (%s).", 200),
+                        ]) ?>
                 </div>
 
                 <div class="panel-footer addteam_pannel-footer goalset_pannel-footer">
@@ -88,7 +89,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                         <div class="pull-right">
                             <?=
                             $this->Form->submit(__("Next Step"),
-                                                ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
+                                ['class' => 'btn btn-primary', 'div' => false, 'disabled' => 'disabled']) ?>
 
                         </div>
                     </div>
@@ -105,12 +106,12 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                 </div>
                 <?=
                 $this->Html->link(__("Change"), "#",
-                                  [
-                                      'class'     => 'btn btn-link btn_white goal-add-edit-button pull-right bd-radius_4px',
-                                      'div'       => false,
-                                      'style'     => 'display:none',
-                                      'target-id' => "AddGoalFormKeyResultWrap",
-                                  ]) ?>
+                    [
+                        'class'     => 'btn btn-link btn_white goal-add-edit-button pull-right bd-radius_4px',
+                        'div'       => false,
+                        'style'     => 'display:none',
+                        'target-id' => "AddGoalFormKeyResultWrap",
+                    ]) ?>
             </div>
             <div class="panel-container hidden">
                 <?=
@@ -147,21 +148,22 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                     ]) ?>
                     <?=
                     $this->Form->input('name',
-                                       ['before'                       => '<div class="col col-sm-3 control-label set-goal goal-edit-labels">' .
-                                           '<label class="no-asterisk">' . __("Goal Name") . '</label>' .
-                                           '<div class="label-addiction">' . __(
-                                                                                 "What is the measurable point?") . '</div></div>',
-                                        'label'                        => false,
-                                        'placeholder'                  => __("Write in details."),
-                                        "data-bv-notempty-message"     => __("Input is required."),
-                                        'required'                     => true,
-                                        'rows'                         => 1,
-                                        'afterInput'                   => '<span class="help-block font_12px">' . __(
-                                                                                                                      "eg) Increasing the internal market share of A") . '</span>',
-                                        'data-bv-stringlength'         => 'true',
-                                        'data-bv-stringlength-max'     => 200,
-                                        'data-bv-stringlength-message' => __("It's over limit characters (%s).", 200),
-                                       ]) ?>
+                        [
+                            'before'                       => '<div class="col col-sm-3 control-label set-goal goal-edit-labels">' .
+                                '<label class="no-asterisk">' . __("Goal Name") . '</label>' .
+                                '<div class="label-addiction">' . __(
+                                    "What is the measurable point?") . '</div></div>',
+                            'label'                        => false,
+                            'placeholder'                  => __("Write in details."),
+                            "data-bv-notempty-message"     => __("Input is required."),
+                            'required'                     => true,
+                            'rows'                         => 1,
+                            'afterInput'                   => '<span class="help-block font_12px">' . __(
+                                    "eg) Increasing the internal market share of A") . '</span>',
+                            'data-bv-stringlength'         => 'true',
+                            'data-bv-stringlength-max'     => 200,
+                            'data-bv-stringlength-message' => __("It's over limit characters (%s).", 200),
+                        ]) ?>
                     <div class="row">
                         <div class="col col-sm-3 goal-edit-labels">
                             <label class="control-label width100_per text-right"><?= __("Measurement") ?></label>
@@ -172,15 +174,16 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
 
                             <?=
                             $this->Form->input('value_unit',
-                                               ['label'               => __("Unit"),
-                                                'wrapInput'           => 'col col-sm-9 pl_5px',
-                                                'type'                => 'select',
-                                                'class'               => 'change-select-target-hidden form-control addteam_input-design',
-                                                'target-id'           => 'KeyResult0ValueInputWrap',
-                                                'required'            => true,
-                                                'hidden-option-value' => KeyResult::UNIT_BINARY,
-                                                'options'             => $kr_value_unit_list
-                                               ]) ?>
+                                [
+                                    'label'               => __("Unit"),
+                                    'wrapInput'           => 'col col-sm-9 pl_5px',
+                                    'type'                => 'select',
+                                    'class'               => 'change-select-target-hidden form-control addteam_input-design',
+                                    'target-id'           => 'KeyResult0ValueInputWrap',
+                                    'required'            => true,
+                                    'hidden-option-value' => KeyResult::UNIT_BINARY,
+                                    'options'             => $kr_value_unit_list
+                                ]) ?>
                             <div id="KeyResult0ValueInputWrap"
                                  style="<?=
                                  isset($this->request->data['Goal']['value_unit'])
@@ -188,34 +191,36 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
 
                                 <?=
                                 $this->Form->input('target_value',
-                                                   ['label'                        => __("Achieve point"),
-                                                    'wrapInput'                    => 'col col-sm-9 pl_5px',
-                                                    'type'                         => 'number',
-                                                    'step'                         => '0.1',
-                                                    'default'                      => 100,
-                                                    'required'                     => true,
-                                                    'data-bv-stringlength'         => 'true',
-                                                    'data-bv-stringlength-max'     => 15,
-                                                    'data-bv-stringlength-message' => __(
-                                                                                          "It's over limit characters (%s).", 15),
-                                                    "data-bv-notempty-message"     => __("Input is required."),
-                                                    'data-bv-numeric-message'      => __("Please enter a number."),
-                                                   ]) ?>
+                                    [
+                                        'label'                        => __("Achieve point"),
+                                        'wrapInput'                    => 'col col-sm-9 pl_5px',
+                                        'type'                         => 'number',
+                                        'step'                         => '0.1',
+                                        'default'                      => 100,
+                                        'required'                     => true,
+                                        'data-bv-stringlength'         => 'true',
+                                        'data-bv-stringlength-max'     => 15,
+                                        'data-bv-stringlength-message' => __(
+                                            "It's over limit characters (%s).", 15),
+                                        "data-bv-notempty-message"     => __("Input is required."),
+                                        'data-bv-numeric-message'      => __("Please enter a number."),
+                                    ]) ?>
                                 <?=
                                 $this->Form->input('start_value',
-                                                   ['label'                        => __("Initial point"),
-                                                    'wrapInput'                    => 'col col-sm-9 pl_5px',
-                                                    'type'                         => 'number',
-                                                    'step'                         => '0.1',
-                                                    'default'                      => 0,
-                                                    'required'                     => true,
-                                                    'data-bv-stringlength'         => 'true',
-                                                    'data-bv-stringlength-max'     => 15,
-                                                    'data-bv-stringlength-message' => __(
-                                                                                          "It's over limit characters (%s).", 15),
-                                                    "data-bv-notempty-message"     => __("Input is required."),
-                                                    'data-bv-numeric-message'      => __("Please enter a number."),
-                                                   ]) ?>
+                                    [
+                                        'label'                        => __("Initial point"),
+                                        'wrapInput'                    => 'col col-sm-9 pl_5px',
+                                        'type'                         => 'number',
+                                        'step'                         => '0.1',
+                                        'default'                      => 0,
+                                        'required'                     => true,
+                                        'data-bv-stringlength'         => 'true',
+                                        'data-bv-stringlength-max'     => 15,
+                                        'data-bv-stringlength-message' => __(
+                                            "It's over limit characters (%s).", 15),
+                                        "data-bv-notempty-message"     => __("Input is required."),
+                                        'data-bv-numeric-message'      => __("Please enter a number."),
+                                    ]) ?>
                             </div>
                         </div>
                     </div>
@@ -235,23 +240,23 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                 <div class="input-group date pl_5px goal-set-date">
                                     <?=
                                     $this->Form->input('end_date',
-                                                       [
-                                                           'value'                        => $goal_end_date_format,
-                                                           'default'                      => $goal_end_date_format,
-                                                           'label'                        => false,
-                                                           'div'                          => false,
-                                                           'class'                        => "form-control",
-                                                           'required'                     => true,
-                                                           "data-bv-notempty-message"     => __(
-                                                                                                 "Input is required."),
-                                                           'data-bv-stringlength'         => 'true',
-                                                           'data-bv-stringlength-max'     => 10,
-                                                           'data-bv-stringlength-message' => __(
-                                                                                                 "It's over limit characters (%s).",
-                                                                                                 10),
-                                                           'type'                         => 'text',
-                                                           'wrapInput'                    => null
-                                                       ]) ?>
+                                        [
+                                            'value'                        => $goal_end_date_format,
+                                            'default'                      => $goal_end_date_format,
+                                            'label'                        => false,
+                                            'div'                          => false,
+                                            'class'                        => "form-control",
+                                            'required'                     => true,
+                                            "data-bv-notempty-message"     => __(
+                                                "Input is required."),
+                                            'data-bv-stringlength'         => 'true',
+                                            'data-bv-stringlength-max'     => 10,
+                                            'data-bv-stringlength-message' => __(
+                                                "It's over limit characters (%s).",
+                                                10),
+                                            'type'                         => 'text',
+                                            'wrapInput'                    => null
+                                        ]) ?>
                                     <span class="input-group-addon"><i class="fa fa-th"></i></span>
                                 </div>
                             </div>
@@ -281,27 +286,28 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                      id="KeyResult0StartDateInputWrap">
                                     <?=
                                     $this->Form->input('start_date',
-                                                       [
-                                                           'value'                        => $goal_start_date_format,
-                                                           'label'                        => false,
-                                                           'div'                          => false,
-                                                           'class'                        => "form-control",
-                                                           'required'                     => true,
-                                                           "data-bv-notempty-message"     => __(
-                                                                                                 "Input is required."),
-                                                           'data-bv-stringlength'         => 'true',
-                                                           'data-bv-stringlength-max'     => 10,
-                                                           'data-bv-stringlength-message' => __(
-                                                                                                 "It's over limit characters (%s).",
-                                                                                                 10),
-                                                           'type'                         => 'text',
-                                                           'wrapInput'                    => null
-                                                       ]) ?>
+                                        [
+                                            'value'                        => $goal_start_date_format,
+                                            'label'                        => false,
+                                            'div'                          => false,
+                                            'class'                        => "form-control",
+                                            'required'                     => true,
+                                            "data-bv-notempty-message"     => __(
+                                                "Input is required."),
+                                            'data-bv-stringlength'         => 'true',
+                                            'data-bv-stringlength-max'     => 10,
+                                            'data-bv-stringlength-message' => __(
+                                                "It's over limit characters (%s).",
+                                                10),
+                                            'type'                         => 'text',
+                                            'wrapInput'                    => null
+                                        ]) ?>
                                     <span class="input-group-addon"><i class="fa fa-th"></i></span>
                                 </div>
                             </div>
                             <div class="form-group" id="KeyResult0EvaluateTermContainer">
-                                <label for="KeyResult0EvaluateTerm" class="col col-sm-3 control-label goal-set-mid-label">
+                                <label for="KeyResult0EvaluateTerm"
+                                       class="col col-sm-3 control-label goal-set-mid-label">
                                     <?= __("Evaluation terms") ?>
                                 </label>
 
@@ -329,16 +335,17 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                     <div class="plr_5px none" id="KeyResult0EvaluateTermInputWrap">
                                         <?php
                                         if (!isset($this->request->data['Goal'])) {
-                                            $input_option = ['label'     => false,
-                                                             'wrapInput' => null,
-                                                             'type'      => 'select',
-                                                             'class'     => 'form-control',
-                                                             'required'  => true,
-                                                             'options'   => [
-                                                                 'current' => __('Current Term'),
-                                                                 'next'    => __('Next Term'),
-                                                             ],
-                                                             'id'        => 'KeyResult0EvaluateTermSelect',
+                                            $input_option = [
+                                                'label'     => false,
+                                                'wrapInput' => null,
+                                                'type'      => 'select',
+                                                'class'     => 'form-control',
+                                                'required'  => true,
+                                                'options'   => [
+                                                    'current' => __('Current Term'),
+                                                    'next'    => __('Next Term'),
+                                                ],
+                                                'id'        => 'KeyResult0EvaluateTermSelect',
                                             ];
                                             echo $this->Form->input('term_type', $input_option);
                                         } ?>
@@ -359,15 +366,14 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                         <div class="pull-right">
                             <?php if (isset($this->request->data['KeyResult'][0])) {
                                 $disabled = false;
-                            }
-                            else {
+                            } else {
                                 $disabled = true;
                             }
                             ?>
                             <?=
                             $this->Form->submit(__("Next Step"),
-                                                array_merge(['class' => 'btn btn-primary', 'div' => false],
-                                                            $disabled ? ['disabled' => 'disabled'] : [])) ?>
+                                array_merge(['class' => 'btn btn-primary', 'div' => false],
+                                    $disabled ? ['disabled' => 'disabled'] : [])) ?>
                         </div>
                     </div>
                 </div>
@@ -385,12 +391,12 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                 </div>
                 <?=
                 $this->Html->link(__("Change"), "#",
-                                  [
-                                      'class'     => 'btn btn-link btn_white goal-add-edit-button pull-right bd-radius_4px',
-                                      'div'       => false,
-                                      'style'     => 'display:none',
-                                      'target-id' => "AddGoalFormOtherWrap",
-                                  ]) ?>
+                    [
+                        'class'     => 'btn btn-link btn_white goal-add-edit-button pull-right bd-radius_4px',
+                        'div'       => false,
+                        'style'     => 'display:none',
+                        'target-id' => "AddGoalFormOtherWrap",
+                    ]) ?>
             </div>
             <div class="panel-container hidden">
                 <?=
@@ -412,20 +418,21 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                 <div class="panel-body add-team-panel-body">
                     <?=
                     $this->Form->input('description',
-                                       ['before'                       => '<div class="col col-sm-3 control-label set-detail goal-edit-labels">' .
-                                           '<label>' . __("Description") . '</label>' .
-                                           '<div class="label-addiction">' . __("Add complements") . '</div></div>',
-                                        'label'                        => false,
-                                        'placeholder'                  => __("Explain this goal in detail."),
-                                        'rows'                         => 1,
-                                        'required'                     => false,
-                                        'data-bv-stringlength'         => 'true',
-                                        'data-bv-stringlength-max'     => 2000,
-                                        'data-bv-stringlength-message' => __("It's over limit characters (%s).", 2000),
-                                       ]) ?>
+                        [
+                            'before'                       => '<div class="col col-sm-3 control-label set-detail goal-edit-labels">' .
+                                '<label>' . __("Description") . '</label>' .
+                                '<div class="label-addiction">' . __("Add complements") . '</div></div>',
+                            'label'                        => false,
+                            'placeholder'                  => __("Explain this goal in detail."),
+                            'rows'                         => 1,
+                            'required'                     => false,
+                            'data-bv-stringlength'         => 'true',
+                            'data-bv-stringlength-max'     => 2000,
+                            'data-bv-stringlength-message' => __("It's over limit characters (%s).", 2000),
+                        ]) ?>
                     <?php if (isset($this->request->data['Collaborator'][0]['id'])) {
                         echo $this->Form->hidden('Collaborator.0.id',
-                                                 ['value' => $this->request->data['Collaborator'][0]['id']]);
+                            ['value' => $this->request->data['Collaborator'][0]['id']]);
                     }
                     ?>
                     <?=
@@ -445,7 +452,8 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                         <div class="col col-sm-3 control-label goal-edit-labels">
                             <label for=""><?= __("Goal Image") ?></label>
 
-                            <div class="label-addiction pull-sm-right"><?= __("Let's add an image that motivated yourself.") ?></div>
+                            <div
+                                class="label-addiction pull-sm-right"><?= __("Let's add an image that motivated yourself.") ?></div>
                         </div>
                         <div class="col col-sm-6  goal-set-input">
                             <div class="fileinput_small fileinput-new" data-provides="fileinput">
@@ -454,7 +462,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                      style="width: 96px; height: 96px;">
                                     <?php if (isset($this->request->data['Goal']['photo_file_name']) && !empty($this->request->data['Goal']['photo_file_name'])) {
                                         echo $this->Upload->uploadImage($this->request->data, 'Goal.photo',
-                                                                        ['style' => 'x_large']);
+                                            ['style' => 'x_large']);
                                     }
                                     ?>
                                     <i class="fa fa-plus photo-plus-large"></i>
@@ -467,25 +475,28 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                                     <span class="fileinput-exists"><?= __("Reselect an image") ?></span>
                                     <?=
                                     $this->Form->input('photo',
-                                                       ['type'         => 'file',
-                                                        'label'        => false,
-                                                        'div'          => false,
-                                                        'css'          => false,
-                                                        'wrapInput'    => false,
-                                                        'errorMessage' => false,
-                                                        'required'     => false
-                                                       ]) ?>
+                                        [
+                                            'type'         => 'file',
+                                            'label'        => false,
+                                            'div'          => false,
+                                            'css'          => false,
+                                            'wrapInput'    => false,
+                                            'errorMessage' => false,
+                                            'required'     => false
+                                        ]) ?>
                                 </span>
-                                    <span class="help-block inline-block font_11px"><?= __('Smaller than 10MB') ?></span>
+                                    <span
+                                        class="help-block inline-block font_11px"><?= __('Smaller than 10MB') ?></span>
                                 </div>
                             </div>
 
                             <div class="has-error">
                                 <?=
                                 $this->Form->error('photo', null,
-                                                   ['class' => 'help-block text-danger',
-                                                    'wrap'  => 'span'
-                                                   ]) ?>
+                                    [
+                                        'class' => 'help-block text-danger',
+                                        'wrap'  => 'span'
+                                    ]) ?>
                             </div>
                         </div>
 
@@ -496,7 +507,7 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
                         <div class="pull-right">
                             <?=
                             $this->Form->submit(__("Save Goal"),
-                                                ['class' => 'btn btn-primary', 'div' => false]) ?>
+                                ['class' => 'btn btn-primary', 'div' => false]) ?>
                         </div>
                     </div>
                 </div>
@@ -513,20 +524,10 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
         <?php endif;?>
     });
     $('#AddGoalFormPurpose').bootstrapValidator({
-        live: 'enabled',
-        feedbackIcons: {
-            valid: 'fa fa-check',
-            invalid: 'fa fa-times',
-            validating: 'fa fa-refresh'
-        }
+        live: 'enabled'
     });
     $('#AddGoalFormKeyResult').bootstrapValidator({
         live: 'enabled',
-        feedbackIcons: {
-            valid: 'fa fa-check',
-            invalid: 'fa fa-times',
-            validating: 'fa fa-refresh'
-        },
         fields: {
             "data[Goal][start_date]": {
                 validators: {
@@ -562,14 +563,10 @@ $url = isset($this->request->params['named']['purpose_id']) ? array_merge($url,
     });
     $('#AddGoalFormOther').bootstrapValidator({
         live: 'enabled',
-        feedbackIcons: {
-            valid: 'fa fa-check',
-            invalid: 'fa fa-times',
-            validating: 'fa fa-refresh'
-        },
+
         fields: {
             "data[Goal][photo]": {
-                feedbackIcons: 'false',
+
                 validators: {
                     file: {
                         extension: 'jpeg,jpg,png,gif',

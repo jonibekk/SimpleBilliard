@@ -164,11 +164,11 @@ class EvaluateTermTest extends GoalousTestCase
         $this->assertNotEmpty($next_3);
         $this->EvaluateTerm->create();
         $this->EvaluateTerm->save([
-                                      'start_date' => $current_2['start_date'] - 2678400,
-                                      'end_date'   => $current_2['start_date'] - 1,
-                                      'team_id'    => 1,
-                                      'timezone'   => 9
-                                  ]);
+            'start_date' => $current_2['start_date'] - 2678400,
+            'end_date'   => $current_2['start_date'] - 1,
+            'team_id'    => 1,
+            'timezone'   => 9
+        ]);
 
         $previous1 = $this->EvaluateTerm->getTermData(EvaluateTerm::TYPE_PREVIOUS);
         $this->assertNotEmpty($previous1);

@@ -14,17 +14,19 @@
 <div class="modal-dialog modal-public-circles-dialog">
     <div class="modal-content modal-public-circles-contents">
         <div class="modal-header none-border">
-            <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span class="close-icon">&times;</span></button>
+            <button type="button" class="close font_33px close-design" data-dismiss="modal" aria-hidden="true"><span
+                    class="close-icon">&times;</span></button>
             <?php
-            $count_joined=count($joined_circles);
-            $count_non_joined=count($non_joined_circles);
-            $count_all=$count_joined+$count_non_joined;
+            $count_joined = count($joined_circles);
+            $count_non_joined = count($non_joined_circles);
+            $count_all = $count_joined + $count_non_joined;
             ?>
-            <h4 class="modal-title"><?= __("Circles")." (".$count_all.")"?></h4>
+            <h4 class="modal-title"><?= __("Circles") . " (" . $count_all . ")" ?></h4>
         </div>
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#tab1" data-toggle="tab"><?= __("Unjoined")." (".$count_non_joined.")" ?></a></li>
-            <li><a href="#tab2" data-toggle="tab"><?= __("Joined")." (".$count_joined.")" ?></a></li>
+            <li class="active"><a href="#tab1"
+                                  data-toggle="tab"><?= __("Unjoined") . " (" . $count_non_joined . ")" ?></a></li>
+            <li><a href="#tab2" data-toggle="tab"><?= __("Joined") . " (" . $count_joined . ")" ?></a></li>
         </ul>
         <?=
         $this->Form->create('Circle', [
@@ -53,12 +55,13 @@
                     <div class="row borderBottom">
                         <?php foreach ($non_joined_circles as $key => $circle): ?>
                             <?= $this->element('public_circle_item',
-                                               ['circle'       => $circle,
-                                                'key'          => $key,
-                                                'admin'        => false,
-                                                'joined'       => false,
-                                                'member_count' => count($circle['CircleMember']),
-                                               ]) ?>
+                                [
+                                    'circle'       => $circle,
+                                    'key'          => $key,
+                                    'admin'        => false,
+                                    'joined'       => false,
+                                    'member_count' => count($circle['CircleMember']),
+                                ]) ?>
                         <?php endforeach ?>
                     </div>
                 <?php else: ?>
@@ -71,12 +74,13 @@
                         <?php foreach ($joined_circles as $circle): ?>
                             <?php ++$key ?>
                             <?= $this->element('public_circle_item',
-                                               ['circle'       => $circle,
-                                                'key'          => $key,
-                                                'admin'        => $circle['CircleMember']['admin_flg'],
-                                                'joined'       => true,
-                                                'member_count' => $joined_circle_count_list[$circle['Circle']['id']],
-                                               ]) ?>
+                                [
+                                    'circle'       => $circle,
+                                    'key'          => $key,
+                                    'admin'        => $circle['CircleMember']['admin_flg'],
+                                    'joined'       => true,
+                                    'member_count' => $joined_circle_count_list[$circle['Circle']['id']],
+                                ]) ?>
                         <?php endforeach ?>
                     </div>
                 <?php else: ?>

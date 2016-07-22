@@ -21,8 +21,7 @@
 <?= $this->element('google_tag_manager', ['page_type' => 'app']) ?>
 <?php if ($this->Session->read('Auth.User.id')) {
     echo $this->element('header_logged_in');
-}
-else {
+} else {
     // ToDo - これが読み込まれる可能性があるのか。
     echo $this->element('header_not_logged_in');
 }

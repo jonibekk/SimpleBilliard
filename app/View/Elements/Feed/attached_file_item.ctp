@@ -22,8 +22,7 @@ if (!isset($page_type)) {
 $user = null;
 if (isset($data['User'])) {
     $user = $data['User'];
-}
-elseif (isset($data['AttachedFile']['User'])) {
+} elseif (isset($data['AttachedFile']['User'])) {
     $user = $data['AttachedFile']['User'];
 };
 
@@ -64,7 +63,11 @@ if (!isset($message_page_image)) {
                         </li>
                     <?php endif; ?>
                     <li>
-                        <a href="<?= $this->Html->url(['controller' => 'posts', 'action' => 'feed', 'post_id' => $post_id]) ?>">
+                        <a href="<?= $this->Html->url([
+                            'controller' => 'posts',
+                            'action'     => 'feed',
+                            'post_id'    => $post_id
+                        ]) ?>">
                             <i class="fa fa-eye"></i><?= __("See the post") ?></a>
                     </li>
                 </ul>
@@ -93,16 +96,16 @@ if (!isset($message_page_image)) {
                     <?php if ($data['file_type'] == AttachedFile::TYPE_FILE_IMG): ?>
                         <?=
                         $this->Html->image('ajax-loader.gif',
-                                           [
-                                               'class'         => 'lazy',
-                                               'data-original' => $this->Upload->uploadUrl($data,
-                                                                                           "AttachedFile.attached",
-                                                                                           ['style' => 'x_small']),
-                                               'width'         => '25px',
-                                               'height'        => '25px',
-                                               'error-img'     => "/img/no-image-link.png",
-                                               'style'         => []
-                                           ]
+                            [
+                                'class'         => 'lazy',
+                                'data-original' => $this->Upload->uploadUrl($data,
+                                    "AttachedFile.attached",
+                                    ['style' => 'x_small']),
+                                'width'         => '25px',
+                                'height'        => '25px',
+                                'error-img'     => "/img/no-image-link.png",
+                                'style'         => []
+                            ]
                         )
                         ?>
                     <?php else: ?>
@@ -139,18 +142,22 @@ if (!isset($message_page_image)) {
             <?php endif; ?>
             <span class=""><?= h($data['file_ext']) ?></span>
             <?php if ($page_type == 'file_list'): ?>
-                <a href="<?= $this->Html->url(['controller' => 'users', 'action' => 'view_goals', 'user_id' => $user['id']]) ?>"
+                <a href="<?= $this->Html->url([
+                    'controller' => 'users',
+                    'action'     => 'view_goals',
+                    'user_id'    => $user['id']
+                ]) ?>"
                    class="link-dark-gray">
                     <div>
                         <?=
                         $this->Html->image('ajax-loader.gif',
-                                           [
-                                               'class'         => 'lazy',
-                                               'data-original' => $this->Upload->uploadUrl($user, 'User.photo',
-                                                                                           ['style' => 'small']),
-                                               'width'         => '16px',
-                                               'error-img'     => "/img/no-image-user.png",
-                                           ]
+                            [
+                                'class'         => 'lazy',
+                                'data-original' => $this->Upload->uploadUrl($user, 'User.photo',
+                                    ['style' => 'small']),
+                                'width'         => '16px',
+                                'error-img'     => "/img/no-image-user.png",
+                            ]
                         )
                         ?>
                         <?= h($user['display_username']) ?>

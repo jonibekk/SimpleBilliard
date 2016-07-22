@@ -28,12 +28,12 @@
 <head>
     <?= $this->Html->charset(); ?>
     <?php
-        echo $this->Html->meta('icon');
-        echo $this->Html->meta([
-            'name'    => 'viewport',
-            'content' => "width=device-width, initial-scale=1, maximum-scale=1"
-        ]);
-        echo $this->fetch('meta');
+    echo $this->Html->meta('icon');
+    echo $this->Html->meta([
+        'name'    => 'viewport',
+        'content' => "width=device-width, initial-scale=1, maximum-scale=1"
+    ]);
+    echo $this->fetch('meta');
     ?>
 
     <!-- START CSS -->

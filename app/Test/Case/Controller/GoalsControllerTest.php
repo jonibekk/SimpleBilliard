@@ -283,7 +283,7 @@ class GoalsControllerTest extends GoalousControllerTestCase
             ]
         ];
         $this->testAction("/goals/add/goal_id:{$this->goal_id}/mode:2/purpose_id:{$this->purpose_id}",
-                          ['method' => 'POST', 'data' => $data]);
+            ['method' => 'POST', 'data' => $data]);
     }
 
     function testAddPostMode3()
@@ -467,7 +467,7 @@ class GoalsControllerTest extends GoalousControllerTestCase
             ]
         ];
         $this->testAction('/goals/edit_collabo/collaborator_id:' . $this->collabo_id,
-                          ['method' => 'POST', 'data' => $data]);
+            ['method' => 'POST', 'data' => $data]);
     }
 
     function testEditCollaboFail()
@@ -797,30 +797,32 @@ class GoalsControllerTest extends GoalousControllerTestCase
     {
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
-        $data = ['KeyResult' =>
-                     [
-                         'name'        => 'test',
-                         'value_unit'  => 0,
-                         'start_value' => 1
-                     ]
+        $data = [
+            'KeyResult' =>
+                [
+                    'name'        => 'test',
+                    'value_unit'  => 0,
+                    'start_value' => 1
+                ]
         ];
         $this->testAction("/goals/add_key_result/goal_id:{$this->goal_id}/key_result_id:{$this->kr_id}",
-                          ['method' => 'POST', 'data' => $data]);
+            ['method' => 'POST', 'data' => $data]);
     }
 
     function testAddKeyResultFailPermit()
     {
         $Goals = $this->_getGoalsCommonMock();
         $this->_setDefault($Goals);
-        $data = ['KeyResult' =>
-                     [
-                         'name'        => 'test',
-                         'value_unit'  => 0,
-                         'start_value' => 1
-                     ]
+        $data = [
+            'KeyResult' =>
+                [
+                    'name'        => 'test',
+                    'value_unit'  => 0,
+                    'start_value' => 1
+                ]
         ];
         $this->testAction("/goals/add_key_result/goal_id:{$this->goal_id}/key_result_id:99999",
-                          ['method' => 'POST', 'data' => $data]);
+            ['method' => 'POST', 'data' => $data]);
     }
 
     function testAjaxGetEditActionModalSuccess()
@@ -1449,11 +1451,14 @@ class GoalsControllerTest extends GoalousControllerTestCase
             ]
         ]);
         $value_map = [
-            [null, [
-                'id'         => '1',
-                'last_first' => true,
-                'language'   => 'jpn'
-            ]],
+            [
+                null,
+                [
+                    'id'         => '1',
+                    'last_first' => true,
+                    'language'   => 'jpn'
+                ]
+            ],
             ['id', '1'],
             ['language', 'jpn'],
             ['auto_language_flg', true],

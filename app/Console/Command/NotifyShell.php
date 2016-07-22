@@ -8,10 +8,10 @@ App::uses('NotifyBizComponent', 'Controller/Component');
 /**
  * SendMailShell
  *
- * @property Team                                $Team
- * @property User                                $User
- * @property SessionComponent                    $Session
- * @property NotifyBizComponent                  $NotifyBiz
+ * @property Team               $Team
+ * @property User               $User
+ * @property SessionComponent   $Session
+ * @property NotifyBizComponent $NotifyBiz
  */
 class NotifyShell extends AppShell
 {
@@ -77,11 +77,11 @@ class NotifyShell extends AppShell
             $to_user_list = json_decode(base64_decode($this->params['user_list']), true);
         }
         $this->NotifyBiz->sendNotify($this->params['type'],
-                                     isset($this->params['model_id']) ? $this->params['model_id'] : null,
-                                     isset($this->params['sub_model_id']) ? $this->params['sub_model_id'] : null,
-                                     $to_user_list,
-                                     $this->params['user_id'],
-                                     $this->params['team_id']
+            isset($this->params['model_id']) ? $this->params['model_id'] : null,
+            isset($this->params['sub_model_id']) ? $this->params['sub_model_id'] : null,
+            $to_user_list,
+            $this->params['user_id'],
+            $this->params['team_id']
         );
     }
 

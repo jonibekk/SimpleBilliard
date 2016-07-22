@@ -31,7 +31,7 @@
                 <a id="FeedMoreReadLink" href="#" class="btn btn-link font_bold click-notify-read-more-page"
                    get-url="<?=
                    $this->Html->url(['controller' => 'notifications', 'action' => 'ajax_get_old_notify_more']) ?>"
-                    >
+                >
                     <?= __("View more") ?>▼</a>
             </div>
         <?php endif; ?>

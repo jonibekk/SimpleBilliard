@@ -7,12 +7,11 @@ echo "\n";
 echo "->";
 if (isset($vol) && !empty($vol)) {
     echo Router::url('/users/login/?g=' . $vol, true);
-}
-else {
+} else {
     echo Router::url(array(
-                         'controller' => 'users',
-                         'action'     => 'login'
-                     ), true);
+        'controller' => 'users',
+        'action'     => 'login'
+    ), true);
 }
 echo "\n";
 echo "\n";

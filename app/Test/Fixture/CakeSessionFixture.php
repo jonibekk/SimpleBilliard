@@ -14,8 +14,21 @@ class CakeSessionFixture extends CakeTestFixtureEx
      * @var array
      */
     public $fields = array(
-        'id'              => array('type' => 'string', 'null' => false, 'default' => null, 'key' => 'primary', 'collate' => 'utf8mb4_general_ci', 'charset' => 'utf8mb4'),
-        'data'            => array('type' => 'text', 'null' => false, 'default' => null, 'collate' => 'utf8mb4_general_ci', 'charset' => 'utf8mb4'),
+        'id'              => array(
+            'type'    => 'string',
+            'null'    => false,
+            'default' => null,
+            'key'     => 'primary',
+            'collate' => 'utf8mb4_general_ci',
+            'charset' => 'utf8mb4'
+        ),
+        'data'            => array(
+            'type'    => 'text',
+            'null'    => false,
+            'default' => null,
+            'collate' => 'utf8mb4_general_ci',
+            'charset' => 'utf8mb4'
+        ),
         'expires'         => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => false),
         'indexes'         => array(
             'PRIMARY' => array('column' => 'id', 'unique' => 1)

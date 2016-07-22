@@ -29,7 +29,8 @@ class TeamsControllerTest extends GoalousControllerTestCase
         'app.local_name',
         'app.cake_session',
         'app.team',
-        'app.user', 'app.notify_setting',
+        'app.user',
+        'app.notify_setting',
         'app.email',
         'app.badge',
         'app.comment_like',
@@ -165,11 +166,14 @@ class TeamsControllerTest extends GoalousControllerTestCase
     function testInvitePostAllReadyInTeam()
     {
         $value_map = [
-            [null, [
-                'id'         => '1',
-                'last_first' => true,
-                'language'   => 'jpn'
-            ]],
+            [
+                null,
+                [
+                    'id'         => '1',
+                    'last_first' => true,
+                    'language'   => 'jpn'
+                ]
+            ],
             ['id', 2],
         ];
 
@@ -210,11 +214,14 @@ class TeamsControllerTest extends GoalousControllerTestCase
     function testInvitePostAllReadyInTeamAndNot()
     {
         $value_map = [
-            [null, [
-                'id'         => 2,
-                'last_first' => true,
-                'language'   => 'jpn'
-            ]],
+            [
+                null,
+                [
+                    'id'         => 2,
+                    'last_first' => true,
+                    'language'   => 'jpn'
+                ]
+            ],
             ['id', 2],
         ];
 
@@ -271,7 +278,7 @@ class TeamsControllerTest extends GoalousControllerTestCase
     {
         $Teams = $this->_getTeamsCommonMock(null, true, false);
         $Teams->Team->TeamMember->updateAll(['admin_flg' => false],
-                                            ['TeamMember.user_id' => 1, 'TeamMember.team_id' => 1]);
+            ['TeamMember.user_id' => 1, 'TeamMember.team_id' => 1]);
         $this->testAction('/teams/settings', ['method' => 'GET']);
     }
 
@@ -362,7 +369,7 @@ class TeamsControllerTest extends GoalousControllerTestCase
         $data['Team']['csv_file']['tmp_name'] = APP . 'Test' . DS . 'csv_upload_data' . DS . 'final_evaluations_csv_format_only_title.csv';
         /** @noinspection PhpUndefinedFieldInspection */
         $this->testAction('/teams/ajax_upload_final_evaluations_csv/evaluate_term_id:1',
-                          ['method' => 'POST', 'data' => $data]);
+            ['method' => 'POST', 'data' => $data]);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -373,7 +380,7 @@ class TeamsControllerTest extends GoalousControllerTestCase
         $data['Team']['csv_file']['tmp_name'] = APP . 'Test' . DS . 'csv_upload_data' . DS . 'final_evaluations_csv_format_error.csv';
         /** @noinspection PhpUndefinedFieldInspection */
         $this->testAction('/teams/ajax_upload_final_evaluations_csv/evaluate_term_id:1',
-                          ['method' => 'POST', 'data' => $data]);
+            ['method' => 'POST', 'data' => $data]);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -398,7 +405,7 @@ class TeamsControllerTest extends GoalousControllerTestCase
         $data['Team']['csv_file']['tmp_name'] = APP . 'Test' . DS . 'csv_upload_data' . DS . 'final_evaluations_csv_format_no_error.csv';
         /** @noinspection PhpUndefinedFieldInspection */
         $this->testAction('/teams/ajax_upload_final_evaluations_csv/evaluate_term_id:1',
-                          ['method' => 'POST', 'data' => $data]);
+            ['method' => 'POST', 'data' => $data]);
         unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
@@ -529,9 +536,11 @@ class TeamsControllerTest extends GoalousControllerTestCase
     function testEditTeamFail()
     {
         $this->_getTeamsCommonMock(null, true);
-        $data = ['Team' => [
-            'name' => null
-        ]];
+        $data = [
+            'Team' => [
+                'name' => null
+            ]
+        ];
         $this->testAction('/teams/edit_team', ['method' => 'POST', 'data' => $data]);
     }
 
@@ -551,9 +560,11 @@ class TeamsControllerTest extends GoalousControllerTestCase
     function testEditTermFail()
     {
         $this->_getTeamsCommonMock(null, true);
-        $data = ['Team' => [
-            'start_term_month' => null
-        ]];
+        $data = [
+            'Team' => [
+                'start_term_month' => null
+            ]
+        ];
         $this->testAction('/teams/edit_term', ['method' => 'POST', 'data' => $data]);
     }
 
@@ -820,7 +831,7 @@ class TeamsControllerTest extends GoalousControllerTestCase
     {
         $Teams = $this->_getTeamsCommonMock();
         $Teams->Team->TeamMember->updateAll(['admin_flg' => false],
-                                            ['TeamMember.user_id' => 1, 'TeamMember.team_id' => 1]);
+            ['TeamMember.user_id' => 1, 'TeamMember.team_id' => 1]);
         /** @noinspection PhpUndefinedMethodInspection */
         $Teams->Session->expects($this->any())->method('read')
                        ->will($this->returnValueMap([['current_team_id', 1]]));
@@ -870,7 +881,7 @@ class TeamsControllerTest extends GoalousControllerTestCase
         $Teams->Session->expects($this->any())->method('read')
                        ->will($this->returnValueMap([['current_team_id', 1]]));
         $this->testAction('/teams/add_team_vision',
-                          ['method' => 'POST', 'data' => ['TeamVision' => ['name' => null]]]);
+            ['method' => 'POST', 'data' => ['TeamVision' => ['name' => null]]]);
     }
 
     function testAddTeamVisionPostSuccess()
@@ -886,14 +897,14 @@ class TeamsControllerTest extends GoalousControllerTestCase
             ]
         ];
         $this->testAction('/teams/add_team_vision',
-                          ['method' => 'POST', 'data' => $data]);
+            ['method' => 'POST', 'data' => $data]);
     }
 
     function testEditTeamVisionNotAdmin()
     {
         $Teams = $this->_getTeamsCommonMock();
         $Teams->Team->TeamMember->updateAll(['admin_flg' => false],
-                                            ['TeamMember.user_id' => 1, 'TeamMember.team_id' => 1]);
+            ['TeamMember.user_id' => 1, 'TeamMember.team_id' => 1]);
         $this->testAction('/teams/edit_team_vision', ['method' => 'GET']);
     }
 
@@ -935,7 +946,7 @@ class TeamsControllerTest extends GoalousControllerTestCase
         $Teams->Team->TeamVision->save($data);
         $team_vision_id = $Teams->Team->TeamVision->getLastInsertID();
         $this->testAction("/teams/edit_team_vision/team_vision_id:{$team_vision_id}",
-                          ['method' => 'POST', 'data' => []]);
+            ['method' => 'POST', 'data' => []]);
     }
 
     function testEditTeamVisionPostEmpty()
@@ -950,7 +961,7 @@ class TeamsControllerTest extends GoalousControllerTestCase
         $Teams->Team->TeamVision->save($data);
         $team_vision_id = $Teams->Team->TeamVision->getLastInsertID();
         $this->testAction("/teams/edit_team_vision/team_vision_id:{$team_vision_id}",
-                          ['method' => 'POST', 'data' => ['TeamVision' => ['name' => null]]]);
+            ['method' => 'POST', 'data' => ['TeamVision' => ['name' => null]]]);
     }
 
     function testEditTeamVisionPostSuccess()
@@ -972,7 +983,7 @@ class TeamsControllerTest extends GoalousControllerTestCase
             ]
         ];
         $this->testAction("/teams/edit_team_vision/team_vision_id:{$team_vision_id}",
-                          ['method' => 'POST', 'data' => $data]);
+            ['method' => 'POST', 'data' => $data]);
     }
 
     function _addMemberGroup($Teams)
@@ -1018,7 +1029,7 @@ class TeamsControllerTest extends GoalousControllerTestCase
         $Teams = $this->_getTeamsCommonMock();
         $this->_addMemberGroup($Teams);
         $this->testAction('/teams/add_group_vision',
-                          ['method' => 'POST', 'data' => ['GroupVision' => ['name' => null]]]);
+            ['method' => 'POST', 'data' => ['GroupVision' => ['name' => null]]]);
     }
 
     function testAddGroupVisionPostSuccess()
@@ -1032,7 +1043,7 @@ class TeamsControllerTest extends GoalousControllerTestCase
             ]
         ];
         $this->testAction('/teams/add_group_vision',
-                          ['method' => 'POST', 'data' => $data]);
+            ['method' => 'POST', 'data' => $data]);
     }
 
     function testEditGroupVisionNotFound()
@@ -1075,7 +1086,7 @@ class TeamsControllerTest extends GoalousControllerTestCase
         $Teams->Team->GroupVision->save($data);
         $group_vision_id = $Teams->Team->GroupVision->getLastInsertID();
         $this->testAction("/teams/edit_group_vision/group_vision_id:{$group_vision_id}",
-                          ['method' => 'POST', 'data' => []]);
+            ['method' => 'POST', 'data' => []]);
     }
 
     function testEditGroupVisionPostEmpty()
@@ -1091,7 +1102,7 @@ class TeamsControllerTest extends GoalousControllerTestCase
         $Teams->Team->GroupVision->save($data);
         $group_vision_id = $Teams->Team->GroupVision->getLastInsertID();
         $this->testAction("/teams/edit_group_vision/group_vision_id:{$group_vision_id}",
-                          ['method' => 'POST', 'data' => ['GroupVision' => ['name' => null]]]);
+            ['method' => 'POST', 'data' => ['GroupVision' => ['name' => null]]]);
     }
 
     function testEditGroupVisionPostSuccess()
@@ -1114,11 +1125,16 @@ class TeamsControllerTest extends GoalousControllerTestCase
             ]
         ];
         $this->testAction("/teams/edit_group_vision/group_vision_id:{$group_vision_id}",
-                          ['method' => 'POST', 'data' => $data]);
+            ['method' => 'POST', 'data' => $data]);
     }
 
-    function _getTeamsCommonMock($value_map = null, $insert_team_data = false, $is_active = true, $is_admin = true, $referer = '/')
-    {
+    function _getTeamsCommonMock(
+        $value_map = null,
+        $insert_team_data = false,
+        $is_active = true,
+        $is_admin = true,
+        $referer = '/'
+    ) {
         Configure::write('Config.language', 'jpn');
 
         /**
@@ -1159,11 +1175,14 @@ class TeamsControllerTest extends GoalousControllerTestCase
         $Teams->expects($this->any())->method('referer')->will($this->returnValue($referer));
         if (!$value_map) {
             $value_map = [
-                [null, [
-                    'id'         => '1',
-                    'last_first' => true,
-                    'language'   => 'jpn'
-                ]],
+                [
+                    null,
+                    [
+                        'id'         => '1',
+                        'last_first' => true,
+                        'language'   => 'jpn'
+                    ]
+                ],
                 ['id', 1],
             ];
         }
