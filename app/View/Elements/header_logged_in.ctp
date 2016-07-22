@@ -19,6 +19,7 @@
  */
 ?>
 <!-- START app/View/Elements/header_logged_in.ctp -->
+
 <header class="header">
     <div class="navbar navbar-fixed-top navbar-default gl-navbar <?= $is_mb_app ? "mb-app-nav" : null ?>"
          id="header">
