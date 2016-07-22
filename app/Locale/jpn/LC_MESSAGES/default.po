@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2016-07-12 00:50+0900\n"
-"PO-Revision-Date: 2016-07-12 00:54+0900\n"
+"POT-Creation-Date: 2016-07-22 01:37+0900\n"
+"PO-Revision-Date: 2016-07-22 01:38+0900\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "Language: ja\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Poedit 1.8.8\n"
+"X-Generator: Poedit 1.8.7\n"
 
 #: Config/Migration/1435197386_data_migration_for_all_team_0625.php:76;77
 #: Model/Team.php:225;226 Model/User.php:1148
@@ -54,11 +54,11 @@ msgstr "Goalousでサークルに投稿してみよう。"
 msgid "Click the below link to setup Goalous."
 msgstr "以下のリンクをクリックしてGoalousのセットアップをしてください。"
 
-#: Controller/AppController.php:162;165 View/Elements/Email/goalous_web.ctp:7
+#: Controller/AppController.php:164;166 View/Elements/Email/goalous_web.ctp:7
 msgid "Goalous"
 msgstr "Goalous(ゴーラス)"
 
-#: Controller/AppController.php:169
+#: Controller/AppController.php:170
 msgid ""
 "Goalous is one of the best team communication tools. Let your team open. "
 "Your action will be share with your collegues. You can use Goalous on Web "
@@ -68,26 +68,26 @@ msgstr ""
 "バーのゴールをオープンにし、ゴールへのアクションを写真でたのしく共有できま"
 "す。スマホアプリ・ブラウザで利用可能です。"
 
-#: Controller/AppController.php:214
+#: Controller/AppController.php:215
 msgid "Logged out because the team you logged in is deleted."
 msgstr "ログイン中のチームが削除されたため、ログアウトされました。"
 
-#: Controller/AppController.php:568
+#: Controller/AppController.php:563
 msgid "Invalid access"
 msgstr "不正なアクセスです。"
 
-#: Controller/AppController.php:656
+#: Controller/AppController.php:650
 msgid "You don't have access right to this team."
 msgstr "このチームへのアクセス権限がありません。"
 
-#: Controller/AppController.php:755
+#: Controller/AppController.php:746
 msgid "Select a goal."
 msgstr "ゴールを選択する"
 
-#: Controller/AppController.php:795
+#: Controller/AppController.php:786
 #: Controller/GoalsController.php:1464;1486;1507;1540;1546;1578
 #: Controller/TeamsController.php:1018;1077
-#: Controller/UsersController.php:1182;1278;1300;1320;1345
+#: Controller/UsersController.php:1194;1293;1315;1335;1365
 msgid "Invalid screen transition."
 msgstr "不正な画面遷移です。"
 
@@ -179,7 +179,7 @@ msgstr "サークルから外しました。"
 
 #: Controller/CirclesController.php:421 Controller/GoalsController.php:1294
 #: Controller/PostsController.php:832;856;879
-#: Controller/UsersController.php:212;890;893;967
+#: Controller/UsersController.php:227;901;904;979
 #: View/Elements/gl_common_js.ctp:53
 msgid "An error has occurred."
 msgstr "エラーが発生しました。"
@@ -194,7 +194,7 @@ msgstr "設定を更新しました。"
 msgid "Error"
 msgstr "エラー"
 
-#: Controller/DevicesController.php:45;120
+#: Controller/DevicesController.php:45
 msgid "Internal Server Error"
 msgstr "サーバー内部のエラーが発生しました。"
 
@@ -202,18 +202,13 @@ msgstr "サーバー内部のエラーが発生しました。"
 msgid "Version Info not exists"
 msgstr "バージョン情報が存在しません。"
 
-#: Controller/DevicesController.php:54;135
+#: Controller/DevicesController.php:54
 msgid "This device is latest version."
 msgstr "このデバイスは最新バージョンです。"
 
-#: Controller/DevicesController.php:56;135
+#: Controller/DevicesController.php:56
 msgid "This device is not latest version."
 msgstr "このデバイスは最新バージョンではありません。"
-
-#: Controller/DevicesController.php:103;109
-#: Controller/Component/NotifyBizComponent.php:1580
-msgid "Device Information not exists"
-msgstr "デバイス情報が見つかりません。"
 
 #: Controller/EmailsController.php:26
 msgid "This email address doesn't exist."
@@ -432,7 +427,7 @@ msgstr "被評価者"
 msgid "Approval Status"
 msgstr "承認ステータス"
 
-#: Controller/GoalsController.php:1125 View/Elements/gl_common_js.ctp:305
+#: Controller/GoalsController.php:1125 View/Elements/gl_common_js.ctp:333
 #: View/Evaluations/view.ctp:313 View/GoalApproval/done.ctp:126
 #: View/GoalApproval/index.ctp:129 View/Goals/add.ctp:72
 #: View/Goals/view_info.ctp:24
@@ -447,14 +442,14 @@ msgstr "ゴールカテゴリ"
 msgid "Goal Owner Type"
 msgstr "ゴールオーナー種別"
 
-#: Controller/GoalsController.php:1128 View/Elements/gl_common_js.ctp:306
+#: Controller/GoalsController.php:1128 View/Elements/gl_common_js.ctp:334
 #: View/Elements/Goal/modal_last_kr_confirm.ctp:24
 #: View/GoalApproval/done.ctp:103 View/GoalApproval/index.ctp:105
 #: View/Goals/add.ctp:151
 msgid "Goal Name"
 msgstr "ゴール名"
 
-#: Controller/GoalsController.php:1129 View/Elements/gl_common_js.ctp:307
+#: Controller/GoalsController.php:1129 View/Elements/gl_common_js.ctp:335
 #: View/Elements/Goal/modal_add_key_result.ctp:93
 #: View/Elements/Goal/modal_edit_key_result.ctp:95
 #: View/Elements/Goal/modal_last_kr_confirm.ctp:27
@@ -471,7 +466,7 @@ msgstr "程度(達成時)"
 msgid "Measurement(Initial)"
 msgstr "程度(開始時)"
 
-#: Controller/GoalsController.php:1132 View/Elements/gl_common_js.ctp:310
+#: Controller/GoalsController.php:1132 View/Elements/gl_common_js.ctp:338
 #: View/Elements/Goal/modal_add_key_result.ctp:153
 #: View/Elements/Goal/modal_edit_key_result.ctp:157 View/Goals/add.ctp:232
 msgid "Due Date"
@@ -518,7 +513,7 @@ msgid "C"
 msgstr "C"
 
 #: Controller/GoalsController.php:1221;1242 Controller/SetupController.php:296
-#: View/Elements/gl_common_js.ctp:273
+#: View/Elements/gl_common_js.ctp:301
 msgid "Failed to add an action."
 msgstr "アクションの追加に失敗しました。"
 
@@ -581,7 +576,7 @@ msgid "Changed members list."
 msgstr "メンバーを変更しました。"
 
 #: Controller/PostsController.php:191;194;1463
-#: View/Elements/gl_common_js.ctp:274
+#: View/Elements/gl_common_js.ctp:302
 msgid "Failed to post."
 msgstr "投稿に失敗しました。"
 
@@ -1063,6 +1058,10 @@ msgstr "日本語"
 msgid "Parameters were wrong"
 msgstr "不正なパラメータです。"
 
+#: Controller/Component/NotifyBizComponent.php:1580
+msgid "Device Information not exists"
+msgstr "デバイス情報が見つかりません。"
+
 #: Controller/Component/NotifyBizComponent.php:1611
 msgid "Failed to save a Device Information."
 msgstr "デバイス情報の保存に失敗しました。"
@@ -1105,7 +1104,7 @@ msgstr "ドキュメント"
 msgid "All"
 msgstr "すべて"
 
-#: Model/Circle.php:27 View/Elements/gl_common_js.ctp:88;295
+#: Model/Circle.php:27 View/Elements/gl_common_js.ctp:88;323
 msgid "Public"
 msgstr "公開"
 
@@ -1113,8 +1112,8 @@ msgstr "公開"
 msgid "Secret"
 msgstr "秘密"
 
-#: Model/Collaborator.php:41 View/Elements/gl_common_js.ctp:236
-#: View/Elements/my_goals_area.ctp:83
+#: Model/Collaborator.php:41 View/Elements/gl_common_js.ctp:264
+#: View/Elements/my_goals_area.ctp:84
 #: View/Elements/Goal/modal_goal_description.ctp:105
 #: View/Evaluations/view.ctp:328 View/GoalApproval/done.ctp:106
 #: View/GoalApproval/index.ctp:109
@@ -1142,7 +1141,7 @@ msgstr "評価者"
 msgid "Final Evaluator"
 msgstr "最終評価者"
 
-#: Model/Evaluation.php:147;151 View/Elements/my_goals_area.ctp:59
+#: Model/Evaluation.php:147;151 View/Elements/my_goals_area.ctp:60
 #: View/Elements/Goal/modal_goal_description.ctp:95
 #: View/Evaluations/view.ctp:319 View/GoalApproval/done.ctp:106
 #: View/GoalApproval/index.ctp:109
@@ -1173,8 +1172,8 @@ msgstr "入力内容に不足があります。"
 msgid "Failed to save."
 msgstr "保存処理に失敗しました。"
 
-#: Model/Evaluation.php:648 View/Elements/gl_common_js.ctp:293
-#: View/Elements/header_logged_in.ctp:112 View/Elements/modal_add_circle.ctp:48
+#: Model/Evaluation.php:648 View/Elements/gl_common_js.ctp:321
+#: View/Elements/header_logged_in.ctp:113 View/Elements/modal_add_circle.ctp:48
 #: View/Elements/modal_edit_circle.ctp:273
 #: View/Elements/Feed/site_info_block.ctp:115
 #: View/Elements/Goal/simplex_top_section.ctp:44;156
@@ -1206,7 +1205,7 @@ msgstr "進行中"
 msgid "Interruption"
 msgstr "中断"
 
-#: Model/Goal.php:37 View/Elements/gl_common_js.ctp:344
+#: Model/Goal.php:37 View/Elements/gl_common_js.ctp:372
 #: View/Elements/Evaluation/evaluators_status.ctp:31
 #: View/Elements/Goal/modal_goal_description.ctp:151
 #: View/Elements/User/modal_recovery_code.ctp:45
@@ -1684,7 +1683,7 @@ msgstr "１２月"
 msgid "If you want to access this page, please switch to the team."
 msgstr "このページにアクセスするには、チームを切り換えてください。"
 
-#: Model/TeamMember.php:218 View/Elements/header_logged_in.ctp:80
+#: Model/TeamMember.php:218 View/Elements/header_logged_in.ctp:81
 msgid "There is no team."
 msgstr "チームが存在しません。"
 
@@ -1982,7 +1981,7 @@ msgstr "評価者ID"
 msgid "%s should be entered in alphabet characters."
 msgstr "%sはアルファベットのみで入力してください。"
 
-#: Model/TeamMember.php:1984;1988 View/Elements/gl_common_js.ctp:294
+#: Model/TeamMember.php:1984;1988 View/Elements/gl_common_js.ctp:322
 #: View/Elements/modal_add_circle.ctp:63
 #: View/Elements/public_circle_item.ctp:33
 msgid "Administrators"
@@ -2035,9 +2034,9 @@ msgstr "誕生日を記入する場合は年月日のすべての項目を記入
 msgid "Active status"
 msgstr "メンバーアクティブ状態"
 
-#: Model/Thread.php:29 View/Elements/gl_common_js.ctp:279;304;334
+#: Model/Thread.php:29 View/Elements/gl_common_js.ctp:307;332;362
 #: View/Elements/header_logged_in_right.ctp:47
-#: View/Elements/my_goals_area.ctp:54 View/Elements/Feed/common_form.ctp:93
+#: View/Elements/my_goals_area.ctp:55 View/Elements/Feed/common_form.ctp:93
 msgid "Create a goal"
 msgstr "ゴールを作成する"
 
@@ -2201,7 +2200,7 @@ msgstr "サークルを見る"
 
 #: View/Elements/circle_list.ctp:79
 #: View/Elements/circle_list_in_hamburger.ctp:73
-#: View/Elements/gl_common_js.ctp:343
+#: View/Elements/gl_common_js.ctp:371
 #: View/Elements/header_logged_in_right.ctp:55
 #: View/Elements/modal_add_circle.ctp:19;143
 msgid "Create a circle"
@@ -2212,7 +2211,7 @@ msgid "View All"
 msgstr "すべて表示"
 
 #: View/Elements/dashboard_profile_card.ctp:36
-#: View/Elements/gl_common_js.ctp:276 View/Elements/Feed/common_form.ctp:57
+#: View/Elements/gl_common_js.ctp:304 View/Elements/Feed/common_form.ctp:57
 #: View/Elements/Feed/site_info_block.ctp:105
 #: View/Elements/Goal/key_results.ctp:83
 #: View/Elements/Goal/simplex_top_section.ctp:36;143
@@ -2421,7 +2420,7 @@ msgstr "検索中･･･"
 msgid "Following"
 msgstr "フォロー中"
 
-#: View/Elements/gl_common_js.ctp:67 View/Elements/my_goals_area.ctp:78;91;108
+#: View/Elements/gl_common_js.ctp:67 View/Elements/my_goals_area.ctp:79;92;109
 msgid "More"
 msgstr "もっと見る"
 
@@ -2562,110 +2561,110 @@ msgstr "設定"
 msgid "Ironing your data. Please wait..."
 msgstr ""
 
-#: View/Elements/gl_common_js.ctp:224 View/Pages/features.ctp:229
+#: View/Elements/gl_common_js.ctp:252 View/Pages/features.ctp:229
 msgid "Coach"
 msgstr "コーチ"
 
-#: View/Elements/gl_common_js.ctp:230
+#: View/Elements/gl_common_js.ctp:258
 #: View/Elements/Goal/modal_goal_description.ctp:123
 #: View/Elements/Goal/simplex_top_section.ctp:52;169
 msgid "Follower"
 msgstr "フォロワー"
 
-#: View/Elements/gl_common_js.ctp:275;283;336
+#: View/Elements/gl_common_js.ctp:303;311;364
 msgid "Do an action"
 msgstr "アクションする"
 
-#: View/Elements/gl_common_js.ctp:277 View/Elements/Feed/common_form.ctp:123
+#: View/Elements/gl_common_js.ctp:305 View/Elements/Feed/common_form.ctp:123
 msgid "Upload an image as your action"
 msgstr "アクション画像をアップロード"
 
-#: View/Elements/gl_common_js.ctp:278 View/Elements/Feed/common_form.ctp:139
+#: View/Elements/gl_common_js.ctp:306 View/Elements/Feed/common_form.ctp:139
 msgid "Write an action..."
 msgstr "アクションを説明しよう"
 
-#: View/Elements/gl_common_js.ctp:280
+#: View/Elements/gl_common_js.ctp:308
 msgid "Create another goal"
 msgstr "別のゴールを作成する"
 
-#: View/Elements/gl_common_js.ctp:281 View/Pages/contact_confirm.ctp:134
+#: View/Elements/gl_common_js.ctp:309 View/Pages/contact_confirm.ctp:134
 #: View/Setup/profile_add.ctp:109
 msgid "Back"
 msgstr "戻る"
 
-#: View/Elements/gl_common_js.ctp:282 View/Setup/profile_add.ctp:6
+#: View/Elements/gl_common_js.ctp:310 View/Setup/profile_add.ctp:6
 msgid "Set up Goalous"
 msgstr "セットアップ"
 
-#: View/Elements/gl_common_js.ctp:284
+#: View/Elements/gl_common_js.ctp:312
 #: View/Elements/User/modal_2fa_register.ctp:91 View/Setup/profile_image.ctp:16
 msgid "Next"
 msgstr "次へ"
 
-#: View/Elements/gl_common_js.ctp:285;332
+#: View/Elements/gl_common_js.ctp:313;360
 msgid "Login from mobile app"
 msgstr "スマホアプリでログイン"
 
-#: View/Elements/gl_common_js.ctp:286
+#: View/Elements/gl_common_js.ctp:314
 msgid "Install Android app"
 msgstr "Androidアプリ"
 
-#: View/Elements/gl_common_js.ctp:287
+#: View/Elements/gl_common_js.ctp:315
 msgid "Requires Android 4.4 or later."
 msgstr "4.4以上のOSバージョンの方"
 
-#: View/Elements/gl_common_js.ctp:288
+#: View/Elements/gl_common_js.ctp:316
 msgid "Install iOS app"
 msgstr "iOSアプリ"
 
-#: View/Elements/gl_common_js.ctp:289
+#: View/Elements/gl_common_js.ctp:317
 msgid "Requires iOS 8.4 or later."
 msgstr "8.4以上のOSバージョンの方"
 
-#: View/Elements/gl_common_js.ctp:290
+#: View/Elements/gl_common_js.ctp:318
 msgid "If you don't have a mobile device."
 msgstr "該当するスマホを持っていない方"
 
-#: View/Elements/gl_common_js.ctp:291;338
+#: View/Elements/gl_common_js.ctp:319;366
 msgid "Join a circle"
 msgstr "サークルに参加する"
 
-#: View/Elements/gl_common_js.ctp:292 View/Elements/modal_add_circle.ctp:40
+#: View/Elements/gl_common_js.ctp:320 View/Elements/modal_add_circle.ctp:40
 #: View/Elements/modal_edit_circle.ctp:50
 #: View/Elements/Team/insight_circle_result.ctp:36
 msgid "Circle name"
 msgstr "サークル名"
 
-#: View/Elements/gl_common_js.ctp:296 View/Elements/modal_add_circle.ctp:68
+#: View/Elements/gl_common_js.ctp:324 View/Elements/modal_add_circle.ctp:68
 #: View/Elements/modal_edit_circle.ctp:61
 msgid "Anyone can see the circle, its members and their posts."
 msgstr ""
 "サークル名と参加メンバー、投稿がチーム内に公開されます。チームメンバーは誰で"
 "も自由に参加できます。"
 
-#: View/Elements/gl_common_js.ctp:297 View/Elements/modal_add_circle.ctp:75
+#: View/Elements/gl_common_js.ctp:325 View/Elements/modal_add_circle.ctp:75
 #: View/Elements/modal_edit_circle.ctp:67
 msgid "Privacy"
 msgstr "プライバシー"
 
-#: View/Elements/gl_common_js.ctp:298 View/Elements/modal_add_circle.ctp:70
+#: View/Elements/gl_common_js.ctp:326 View/Elements/modal_add_circle.ctp:70
 #: View/Elements/modal_edit_circle.ctp:63
 msgid "Only members can find the circle and see posts."
 msgstr ""
 "サークル名と参加メンバー、投稿はこのサークルの参加メンバーだけに表示されま"
 "す。サークル管理者だけがメンバーを追加できます。"
 
-#: View/Elements/gl_common_js.ctp:299 View/Elements/modal_add_circle.ctp:88
+#: View/Elements/gl_common_js.ctp:327 View/Elements/modal_add_circle.ctp:88
 #: View/Elements/modal_edit_circle.ctp:78
 msgid "Circle Description"
 msgstr "サークルの説明"
 
-#: View/Elements/gl_common_js.ctp:300 View/Elements/modal_add_circle.ctp:96
+#: View/Elements/gl_common_js.ctp:328 View/Elements/modal_add_circle.ctp:96
 #: View/Elements/modal_edit_circle.ctp:92
 msgid "Circle Image"
 msgstr "サークル画像"
 
-#: View/Elements/gl_common_js.ctp:301;312
+#: View/Elements/gl_common_js.ctp:329;340
 #: View/Elements/modal_add_circle.ctp:106
 #: View/Elements/modal_edit_circle.ctp:106
 #: View/Elements/Team/edit_basic_setting.ctp:62
@@ -2677,7 +2676,7 @@ msgstr "サークル画像"
 msgid "Select an image"
 msgstr "画像を選択"
 
-#: View/Elements/gl_common_js.ctp:302 View/Elements/modal_add_circle.ctp:108
+#: View/Elements/gl_common_js.ctp:330 View/Elements/modal_add_circle.ctp:108
 #: View/Elements/modal_edit_circle.ctp:109
 #: View/Elements/Team/edit_basic_setting.ctp:64
 #: View/Elements/User/profile_setting.ctp:176 View/Goals/add.ctp:467
@@ -2688,11 +2687,11 @@ msgstr "画像を選択"
 msgid "Reselect an image"
 msgstr "画像を再選択"
 
-#: View/Elements/gl_common_js.ctp:303
+#: View/Elements/gl_common_js.ctp:331
 msgid "Create"
 msgstr "作成する"
 
-#: View/Elements/gl_common_js.ctp:308
+#: View/Elements/gl_common_js.ctp:336
 #: View/Elements/Goal/modal_add_key_result.ctp:124
 #: View/Elements/Goal/modal_edit_key_result.ctp:127
 #: View/Elements/Goal/modal_last_kr_confirm.ctp:33
@@ -2701,7 +2700,7 @@ msgstr "作成する"
 msgid "Initial point"
 msgstr "開始時"
 
-#: View/Elements/gl_common_js.ctp:309
+#: View/Elements/gl_common_js.ctp:337
 #: View/Elements/Goal/modal_add_key_result.ctp:107
 #: View/Elements/Goal/modal_edit_key_result.ctp:110
 #: View/Elements/Goal/modal_last_kr_confirm.ctp:36
@@ -2710,163 +2709,167 @@ msgstr "開始時"
 msgid "Achieve point"
 msgstr "達成時"
 
-#: View/Elements/gl_common_js.ctp:311 View/Evaluations/view.ctp:256
+#: View/Elements/gl_common_js.ctp:339 View/Evaluations/view.ctp:256
 #: View/Goals/add.ctp:446
 msgid "Goal Image"
 msgstr "ゴール画像"
 
-#: View/Elements/gl_common_js.ctp:313
+#: View/Elements/gl_common_js.ctp:341
 msgid "Talk with team members"
 msgstr "社員とはなしをする"
 
-#: View/Elements/gl_common_js.ctp:314
+#: View/Elements/gl_common_js.ctp:342
 msgid "Lunch with team members"
 msgstr "社員とランチに行く"
 
-#: View/Elements/gl_common_js.ctp:315
+#: View/Elements/gl_common_js.ctp:343
 msgid "Hear complaints of team members"
 msgstr "社員の不満を聞く"
 
-#: View/Elements/gl_common_js.ctp:316
+#: View/Elements/gl_common_js.ctp:344
 msgid "Create your own"
 msgstr "自分でつくってみる"
 
-#: View/Elements/gl_common_js.ctp:317
+#: View/Elements/gl_common_js.ctp:345
 msgid "Do something with team members"
 msgstr "社員と ◯ ◯ ◯"
 
-#: View/Elements/gl_common_js.ctp:318
+#: View/Elements/gl_common_js.ctp:346
 msgid "You do something worthwhile."
 msgstr "社員となんかしよう"
 
-#: View/Elements/gl_common_js.ctp:319
+#: View/Elements/gl_common_js.ctp:347
 msgid "Open yourself"
 msgstr "あなたのことを ◯ ◯ ◯"
 
-#: View/Elements/gl_common_js.ctp:320
+#: View/Elements/gl_common_js.ctp:348
 msgid "Increasing people who know you."
 msgstr "みんなに理解してもらおう"
 
-#: View/Elements/gl_common_js.ctp:321
+#: View/Elements/gl_common_js.ctp:349
 msgid "Give something to team members"
 msgstr "社員に対して ◯ ◯ ◯"
 
-#: View/Elements/gl_common_js.ctp:322
+#: View/Elements/gl_common_js.ctp:350
 msgid "Be happy everyone."
 msgstr "社員になにかを与えよう"
 
-#: View/Elements/gl_common_js.ctp:323;325;340
+#: View/Elements/gl_common_js.ctp:351;353;368
 msgid "Post to a circle"
 msgstr "投稿する"
 
-#: View/Elements/gl_common_js.ctp:324
+#: View/Elements/gl_common_js.ctp:352
 msgid "Create another circle"
 msgstr "自分でつくってみる"
 
-#: View/Elements/gl_common_js.ctp:326 View/Elements/Feed/common_form.ctp:295
+#: View/Elements/gl_common_js.ctp:354 View/Elements/Feed/common_form.ctp:295
 msgid "Write something..."
 msgstr "何か投稿しよう"
 
-#: View/Elements/gl_common_js.ctp:327 View/Setup/profile_add.ctp:6
+#: View/Elements/gl_common_js.ctp:355 View/Setup/profile_add.ctp:6
 msgid "Input your profile"
 msgstr "プロフィールを入力する"
 
-#: View/Elements/gl_common_js.ctp:328 View/Setup/profile_add.ctp:27
+#: View/Elements/gl_common_js.ctp:356 View/Setup/profile_add.ctp:27
 msgid "Your profile picture"
 msgstr "あなたの顔写真"
 
-#: View/Elements/gl_common_js.ctp:329
+#: View/Elements/gl_common_js.ctp:357
 msgid "Your self-info"
 msgstr "あなたの自己紹介"
 
-#: View/Elements/gl_common_js.ctp:330 View/Evaluations/view.ctp:225;511
+#: View/Elements/gl_common_js.ctp:358 View/Evaluations/view.ctp:225;511
 #: View/Setup/profile_add.ctp:110
 msgid "Submit"
 msgstr "送信"
 
-#: View/Elements/gl_common_js.ctp:331
+#: View/Elements/gl_common_js.ctp:359
 msgid "Set your profile picture and self-info."
 msgstr "顔写真と自己紹介を登録しよう"
 
-#: View/Elements/gl_common_js.ctp:333
+#: View/Elements/gl_common_js.ctp:361
 msgid "Install Goalous's iOS and Android apps."
 msgstr "iOS/Androidアプリをインストール"
 
-#: View/Elements/gl_common_js.ctp:335
+#: View/Elements/gl_common_js.ctp:363
 msgid "Create or collaborate with a goal."
 msgstr "達成したいゴールを作成しよう"
 
-#: View/Elements/gl_common_js.ctp:337
+#: View/Elements/gl_common_js.ctp:365
 msgid "Add an Action for your Goal."
 msgstr "ゴールにアクションを登録しよう"
 
-#: View/Elements/gl_common_js.ctp:339
+#: View/Elements/gl_common_js.ctp:367
 msgid "Create a circle or join."
 msgstr "サークル作成するか参加しよう"
 
-#: View/Elements/gl_common_js.ctp:341
+#: View/Elements/gl_common_js.ctp:369
 msgid "Share your topic with a circle."
 msgstr "サークルに投稿してみよう"
 
-#: View/Elements/gl_common_js.ctp:342
+#: View/Elements/gl_common_js.ctp:370
 msgid "STEPS LEFT"
 msgstr "残りのSTEP"
 
-#: View/Elements/gl_common_js.ctp:345
+#: View/Elements/gl_common_js.ctp:373
 msgid "Excellent!"
 msgstr "スバらしい"
 
-#: View/Elements/gl_common_js.ctp:346
+#: View/Elements/gl_common_js.ctp:374
 msgid "I have no iOS/Android devices"
 msgstr "スマホを持っていない"
 
-#: View/Elements/gl_common_js.ctp:347 View/Elements/modal_tutorial.ctp:48
+#: View/Elements/gl_common_js.ctp:375 View/Elements/modal_tutorial.ctp:48
 msgid "Make a good goal to discuss with your project members."
 msgstr "メンバーとともに価値あるゴールを作ろう。"
 
-#: View/Elements/gl_common_js.ctp:348 View/Elements/modal_tutorial.ctp:52
+#: View/Elements/gl_common_js.ctp:376 View/Elements/modal_tutorial.ctp:52
 msgid "Have a common goal"
 msgstr "ゴールを共有する"
 
-#: View/Elements/gl_common_js.ctp:349 View/Elements/modal_tutorial.ctp:57
+#: View/Elements/gl_common_js.ctp:377 View/Elements/modal_tutorial.ctp:57
 msgid "Action for your goal"
 msgstr "ゴールにアクションする"
 
-#: View/Elements/gl_common_js.ctp:350 View/Elements/modal_tutorial.ctp:58
+#: View/Elements/gl_common_js.ctp:378 View/Elements/modal_tutorial.ctp:58
 msgid "Let's action to show your activity."
 msgstr "活動内容を写真でみんなにシェアしよう。"
 
-#: View/Elements/gl_common_js.ctp:351
+#: View/Elements/gl_common_js.ctp:379
 msgid "Improve your orgainization"
 msgstr "組織に〇〇〇"
 
-#: View/Elements/gl_common_js.ctp:352
+#: View/Elements/gl_common_js.ctp:380
 msgid "Please choose one."
 msgstr "どれかを選ぼう。"
 
-#: View/Elements/gl_common_js.ctp:353
+#: View/Elements/gl_common_js.ctp:381
 msgid "Writing working columns"
 msgstr "シゴトのポリシーを書く"
 
-#: View/Elements/gl_common_js.ctp:354
+#: View/Elements/gl_common_js.ctp:382
 msgid "Sharing your lovely foods"
 msgstr "好きな食べ物を共有する"
 
-#: View/Elements/gl_common_js.ctp:355
+#: View/Elements/gl_common_js.ctp:383
 msgid "Writing your insistence"
 msgstr "自分の改善点を共有する"
 
-#: View/Elements/gl_common_js.ctp:356
+#: View/Elements/gl_common_js.ctp:384
 msgid "Embodying the orgainization motto"
 msgstr "組織の行動指針を体現する"
 
-#: View/Elements/gl_common_js.ctp:357
+#: View/Elements/gl_common_js.ctp:385
 msgid "Prasing someone"
 msgstr "誰かをホメる"
 
-#: View/Elements/gl_common_js.ctp:358
+#: View/Elements/gl_common_js.ctp:386
 msgid "Including your orgainization improvements"
 msgstr "組織改善案を共有する"
+
+#: View/Elements/gl_common_js.ctp:387
+msgid "Team has been changed, press ok to reload!"
+msgstr "チームが切り替えられました。「OK」を押して再読み込みしてください。"
 
 #: View/Elements/header_home.ctp:25
 msgid "Enterprise SNS the most ever open for Goal"
@@ -2893,22 +2896,22 @@ msgstr "ログイン"
 msgid "Sign Up"
 msgstr "新規登録"
 
-#: View/Elements/header_logged_in.ctp:42;44
+#: View/Elements/header_logged_in.ctp:43;45
 #: View/Elements/header_logged_in_right.ctp:19
 msgid "Home"
 msgstr "ホーム"
 
-#: View/Elements/header_logged_in.ctp:55;57;117
+#: View/Elements/header_logged_in.ctp:56;58;118
 #: View/Elements/Feed/site_info_block.ctp:109
 #: View/Elements/User/simplex_top_section.ctp:99
 msgid "Goal"
 msgstr "ゴール"
 
-#: View/Elements/header_logged_in.ctp:69;71
+#: View/Elements/header_logged_in.ctp:70;72
 msgid "Team"
 msgstr "チーム"
 
-#: View/Elements/header_logged_in.ctp:122
+#: View/Elements/header_logged_in.ctp:123
 #: View/Elements/Feed/site_info_block.ctp:107
 msgid "Circle"
 msgstr "サークル"
@@ -3270,7 +3273,7 @@ msgstr "ゴール達成のために共有しよう。"
 msgid "Make your team better by Goalous."
 msgstr "チーム力を向上させよう。Goalousをさっそく使ってみましょう"
 
-#: View/Elements/my_goals_area.ctp:20 View/Pages/features.ctp:247
+#: View/Elements/my_goals_area.ctp:21 View/Pages/features.ctp:247
 msgid "Vision"
 msgstr "ビジョン"
 
@@ -3278,15 +3281,15 @@ msgstr "ビジョン"
 msgid "View detail"
 msgstr "ビジョンを詳しく見る"
 
-#: View/Elements/my_goals_area.ctp:48
+#: View/Elements/my_goals_area.ctp:49
 msgid "Your goals"
 msgstr "あなたのゴール"
 
-#: View/Elements/my_goals_area.ctp:67 View/Goals/add.ctp:32
+#: View/Elements/my_goals_area.ctp:68 View/Goals/add.ctp:32
 msgid "Create a new goal"
 msgstr "あたらしいゴールをつくる"
 
-#: View/Elements/my_goals_area.ctp:97
+#: View/Elements/my_goals_area.ctp:98
 msgid "Unevaluated in the previous term"
 msgstr "前期の未評価のあなたのゴール"
 
