@@ -1,9 +1,15 @@
+import { browserHistory } from 'react-router'
 import * as types from '../constants/ActionTypes'
 import { post, mapValidationMsg } from './common_actions'
 
 export function inputPassword(password) {
   return dispatch => {
     dispatch({ type: types.INPUT_PASSWORD, inputed_password: password })
+    if(String(password).length >= 4) {
+      dispatch(enableSubmitButton())
+    } else {
+      dispatch(disableSubmitButton())
+    }
   }
 }
 
@@ -17,6 +23,7 @@ export function disableSubmitButton() {
 
 export function postPassword(password) {
   return dispatch => {
+    dispatch(disableSubmitButton())
     dispatch({ type: types.CHECKING_PASSWORD })
 
     return post('/signup/ajax_validation_fields', {'data[User][password]': password}, response => {
@@ -28,8 +35,10 @@ export function postPassword(password) {
           type: types.PASSWORD_IS_INVALID,
           invalid_messages: mapValidationMsg(response.data.validation_msg)
         })
+        dispatch(enableSubmitButton())
       } else {
         dispatch({ type: types.PASSWORD_IS_VALID })
+        browserHistory.push('/signup/team')
       }
     }, () => {
       dispatch({ type: types.FINISHED_CHECKING_PASSWORD })
@@ -37,6 +46,7 @@ export function postPassword(password) {
         type: types.PASSWORD_NETWORK_ERROR,
         exception_message: 'Network error'
       })
+      dispatch(enableSubmitButton())
     })
   }
 }
