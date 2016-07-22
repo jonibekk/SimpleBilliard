@@ -47,7 +47,7 @@ if (!isset($without_footer)) {
 <?php endif; ?>
 <!-- END import react code for setup -->
 <!-- START import react code for signup -->
-<?php if(viaIsSet($this->request->params['controller']) === 'signup'): ?>
+<?php if(viaIsSet($this->request->params['controller']) === 'signup' && viaIsSet($this->request->params['action']) !== 'email'): ?>
 <?= $this->Html->script('react_signup_app.min')?>
 <?php endif; ?>
 <!-- END import react code for signup -->

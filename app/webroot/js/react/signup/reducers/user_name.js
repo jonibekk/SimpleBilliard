@@ -4,24 +4,24 @@ const initialState = {
   inputed: {
     first_name: '',
     last_name: '',
-    local_first_name: '',
-    local_last_name: ''
+    privacy: ''
+  },
+  invalid_messages: {
+    first_name: '',
+    last_name: ''
   },
   checking_user_name: false,
   submit_button_is_enabled: false,
   user_name_is_invalid: false,
   is_exception: false,
-  exception_message: '',
-  invalid_messages: {}
+  exception_message: ''
 }
 
 export default function user_name(state = initialState, action) {
   switch (action.type) {
     case types.INPUT_USER_NAME:
       return Object.assign({}, state, {
-        inputed: {
-          [action.key]: action.name
-        }
+        inputed: action.inputed
       })
     case types.CHECKING_USER_NAME:
       return Object.assign({}, state, {
@@ -30,6 +30,11 @@ export default function user_name(state = initialState, action) {
     case types.FINISHED_CHECKING_USER_NAME:
       return Object.assign({}, state, {
         checking_user_name: false
+      })
+    case types.INIT_USER_STATUS:
+      return Object.assign({}, state, {
+        user_name_is_invalid: false,
+        is_exception: false
       })
     case types.USER_NAME_IS_INVALID:
       return Object.assign({}, state, {

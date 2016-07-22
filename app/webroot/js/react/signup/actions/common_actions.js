@@ -45,9 +45,7 @@ export function mapValidationMsg(before_mapped_messages) {
     'data[User][password]': 'password',
     'data[User][first_name]': 'first_name',
     'data[User][last_name]': 'last_name',
-    'data[User][local_date]': 'local_date',
-    'data[LocalName][first_name]': 'local_first_name',
-    'data[LocalName][last_name]': 'local_last_name'
+    'data[User][local_date]': 'local_date'
   }
 
   Object.keys(map).forEach(key => {
