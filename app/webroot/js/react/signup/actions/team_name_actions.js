@@ -10,6 +10,11 @@ export function inputTeamName(team_name) {
       type: types.INPUT_TEAM_NAME,
       inputed_team_name: team_name
     })
+    if(String(team_name).length > 0) {
+      dispatch(enableSubmitButton())
+    } else {
+      dispatch(disableSubmitButton())
+    }
   }
 }
 
