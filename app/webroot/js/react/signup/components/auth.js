@@ -27,8 +27,12 @@ export default class Auth extends React.Component {
       const key_name = `code${index + i}`
       const target_index = index + i
 
+      if(code === '-') {
+        return
+      }
+
       if(target_index > 7) {
-        return ''
+        return
       }
 
       this.setState({[key_name]: code}, () => {
@@ -75,7 +79,7 @@ export default class Auth extends React.Component {
     const locked_box = () => {
       return (
         <div className="signup-load-description mod-lock">
-            <i className="fa fa-lock signup-load-icon mod-error"></i> Auth code sample text.こちらも原稿の長さによっては中央合わせに変更します。現在は左寄せ。
+            <i className="fa fa-lock signup-load-icon mod-error"></i> {this.props.auth.locked_message}
         </div>
       )
     }

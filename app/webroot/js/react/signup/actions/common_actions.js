@@ -8,13 +8,27 @@ export function getBaseUrl() {
   }
 }
 
+export function getCsrfTokenKey() {
+  if (typeof cake === "undefined") {
+    return 'csrf_token_key'
+  } else {
+    return cake.data.csrf_token.key
+  }
+}
+
 export function post(uri, data, success_callback, error_callback) {
+
+  const csrf_token_key = getCsrfTokenKey()
   const post_data = Object.assign({
-    'data[_Token][key]': 'csrf_token_key' //cake.data.csrf_token.key,
+    'data[_Token][key]': csrf_token_key
   }, data)
   const base_url = getBaseUrl()
+  let form_data = new FormData()
 
-  return axios.post(base_url + uri, post_data, {
+  for (const key in post_data) {
+    form_data.append(key, post_data[key])
+  }
+  return axios.post(base_url + uri, form_data, {
     timeout: 10000,
     headers: {
       'X-Requested-With': 'XMLHttpRequest'
@@ -35,16 +49,12 @@ export function mapValidationMsg(before_mapped_messages) {
     'data[User][password]': 'password',
     'data[User][first_name]': 'first_name',
     'data[User][last_name]': 'last_name',
-    'data[User][local_date]': 'local_date',
-    'data[Local][first_name]': 'local_first_name',
-    'data[Local][last_name]': 'local_last_name'
+    'data[User][local_date]': 'local_date'
   }
 
-  Object.keys(map).forEach(key => {
-    if (before_mapped_messages[key]) {
-      result[map[key]] = before_mapped_messages[key]
-    }
-  }, map)
+  for (key in map) {
+    result[map[key]] = before_mapped_messages[key]
+  }
   return result
 }
 

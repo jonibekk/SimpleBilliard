@@ -1,3 +1,4 @@
+import { browserHistory } from 'react-router'
 import * as types from '../constants/ActionTypes'
 import { post } from './common_actions'
 
@@ -15,8 +16,13 @@ export function inputCode(index, code) {
 
     dispatch({ type: types.INPUT_CODE, code_list: new_code_list })
 
-    if(new_code_list['code1'] !== '' && new_code_list['code2'] !== '' && new_code_list['code3'] !== '' && new_code_list['code4'] !== '' && new_code_list['code5'] !== '' && new_code_list['code6'] !== '') {
-      dispatch(postVerifyCode(code))
+    // 6文字のコードを生成
+    let full_code = ''
+    for(const key in new_code_list) {
+      full_code += String(new_code_list[key])
+    }
+    if(full_code.length === 6) {
+      dispatch(postVerifyCode(full_code))
     }
   }
 }
@@ -35,6 +41,7 @@ export function postVerifyCode(code) {
       } else if(response.data.error) {
         dispatch({ type: types.AUTH_CODE_IS_INVALID, invalid_message: response.data.message })
       } else {
+        browserHistory.push('/signup/user')
         dispatch({ type: types.AUTH_CODE_IS_VALID })
       }
       dispatch({ type: types.INIT_AUTH_CODE })
