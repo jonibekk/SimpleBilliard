@@ -3321,7 +3321,7 @@ function evCircleFeed(options) {
                 $('.dropdown-menu.dropdown-menu-right.frame-arrow-icon')
                     .append('<li><a href="/posts/unjoin_circle/circle_id:' + circle_id + '">' + cake.word.leave_circle + '</a></li>');
             }
-            if (data.user_status == "joined" || data.user_status == "admin") {
+            if ((data.user_status == "joined" || data.user_status == "admin") && cake.data.env_name != "isao") {
                 $('.dropdown-menu.dropdown-menu-right.frame-arrow-icon')
                     .append('<li><a href="/circles/ajax_setting/circle_id:' + circle_id + '" class="modal-circle-setting">' + cake.word.config + '</a></li></ul>');
             }
