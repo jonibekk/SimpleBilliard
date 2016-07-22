@@ -291,7 +291,8 @@ echo $this->Html->script('ng_app.min');
             team_id: "<?=$this->Session->read('current_team_id')?>",
             user_id: "<?= $this->Session->read('Auth.User.id')?>",
             kr_value_unit_list: <?= json_encode(KeyResult::$UNIT)?>,
-            google_tag_manager_id: "<?= GOOGLE_TAG_MANAGER_ID ?>"
+            google_tag_manager_id: "<?= GOOGLE_TAG_MANAGER_ID ?>",
+            env_name: "<?= ENV_NAME ?>"
         },
         pusher: {
             key: "<?=PUSHER_KEY?>",
