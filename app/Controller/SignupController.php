@@ -253,6 +253,7 @@ class SignupController extends AppController
                 $res['is_expired'] = true;
                 throw new RuntimeException(__('Code Verification has expired'));
             }
+
             //comparing input code and stored code
             if ($this->request->data['code'] != $this->Session->read('email_verify_code')) {
                 $is_locked = $this->GlRedis->isEmailVerifyCodeLocked(
