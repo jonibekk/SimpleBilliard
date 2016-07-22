@@ -106,6 +106,11 @@ class SignupController extends AppController
         $this->Security->validatePost = false;
         //すべてのアクションは認証済みである必要がない
         $this->Auth->allow();
+        //ログインしている場合はこのコントローラの全てのアクションにアクセスできない。
+        if($this->Auth->user()){
+            $this->Pnotify->outError(__('Invalid screen transition.'));
+            $this->redirect('/');
+        }
     }
 
     public function email()
