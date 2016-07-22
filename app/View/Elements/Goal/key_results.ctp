@@ -67,7 +67,7 @@
                     <?php
                     $unit_name_display = '';
                     // in other unit case, skipping showing unit name
-                    if ($kr['KeyResult']['value_unit'] != 1) {
+                    if ($kr['KeyResult']['value_unit'] != KeyResult::UNIT_NUMBER) {
                             $unit_name_display = KeyResult::$UNIT[$kr['KeyResult']['value_unit']];
                         }
                     ?>
