@@ -84,8 +84,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('#EvaluationSettingForm').bootstrapValidator({
-            live: 'enabled',
-            feedbackIcons: {}
+            live: 'enabled'
         })
             .on('click', '#AddScoreButton', function (e) {
                 e.preventDefault();

@@ -81,8 +81,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('#GoalCategorySettingForm').bootstrapValidator({
-            live: 'enabled',
-            feedbackIcons: {}
+            live: 'enabled'
         })
             .on('click', '#AddCategoryButton', function (e) {
                 e.preventDefault();

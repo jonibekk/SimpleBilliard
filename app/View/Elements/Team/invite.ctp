@@ -93,12 +93,7 @@
         $('[rel="tooltip"]').tooltip();
 
         $('#InviteTeamForm').bootstrapValidator({
-            live: 'enabled',
-            feedbackIcons: {
-                valid: 'fa fa-check',
-                invalid: 'fa fa-times',
-                validating: 'fa fa-refresh'
-            }
+            live: 'enabled'
         });
     });
 </script>
