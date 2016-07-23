@@ -185,6 +185,10 @@
                 'controller' => 'signup',
                 'action'     => 'ajax_validate_email'
             ]) ?>",
+            team_ajax_validate_email_can_invite: "<?= $this->Html->url([
+                'controller' => 'teams',
+                'action'     => 'ajax_validate_email_can_invite'
+            ]) ?>",
             route_url: "<?= FULL_BASE_URL ?>"
         },
         data: {

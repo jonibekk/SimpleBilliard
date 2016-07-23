@@ -1085,9 +1085,46 @@ class TeamsController extends AppController
     }
 
     /**
+     * メールアドレスが招待可能なものか判定
+     *
+     * @return CakeResponse
+     */
+    public function ajax_validate_email_can_invite()
+    {
+        $this->_ajaxPreProcess();
+        $email = $this->request->query('email');
+        $valid = false;
+        $message = '';
+        if ($email) {
+            // メールアドレスだけ validate
+            $this->User->Email->create(['email' => $email]);
+            $this->User->Email->validate = [
+                'email' => [
+                    'maxLength' => ['rule' => ['maxLength', 200]],
+                    'notEmpty'  => ['rule' => 'notEmpty',],
+                    'email'     => ['rule' => ['email'],],
+                ],
+            ];
+            $this->User->Email->validates(['fieldList' => ['email']]);
+            if ($this->User->Email->validationErrors) {
+                $message = $this->User->Email->validationErrors['email'][0];
+            } elseif ($this->User->Email->getEmailsBelongTeamByEmail($email)) {
+                $message = __('This email address has already been joined.');
+            } else {
+                $valid = true;
+            }
+        }
+        return $this->_ajaxGetResponse([
+            'valid'   => $valid,
+            'message' => $message
+        ]);
+    }
+
+    /**
      * インサイト
      */
-    public function insight()
+    public
+    function insight()
     {
         $this->layout = LAYOUT_TWO_COLUMN;
         $this->set('current_global_menu', 'team');
@@ -1115,7 +1152,8 @@ class TeamsController extends AppController
      *
      * @return CakeResponse
      */
-    public function ajax_get_insight()
+    public
+    function ajax_get_insight()
     {
         $this->_ajaxPreProcess();
 
@@ -1235,7 +1273,8 @@ class TeamsController extends AppController
     /**
      * インサイトのグラフデータ
      */
-    public function ajax_get_insight_graph()
+    public
+    function ajax_get_insight_graph()
     {
         $this->_ajaxPreProcess();
 
@@ -1436,7 +1475,8 @@ class TeamsController extends AppController
     /**
      * サークル利用状況
      */
-    public function insight_circle()
+    public
+    function insight_circle()
     {
         $this->layout = LAYOUT_TWO_COLUMN;
         $this->set('current_global_menu', 'team');
@@ -1460,7 +1500,8 @@ class TeamsController extends AppController
      *
      * @return CakeResponse
      */
-    public function ajax_get_insight_circle()
+    public
+    function ajax_get_insight_circle()
     {
         $this->_ajaxPreProcess();
 
@@ -1597,7 +1638,8 @@ class TeamsController extends AppController
     /**
      * ランキング
      */
-    public function insight_ranking()
+    public
+    function insight_ranking()
     {
         $this->layout = LAYOUT_TWO_COLUMN;
         $this->set('current_global_menu', 'team');
@@ -1625,7 +1667,8 @@ class TeamsController extends AppController
      *
      * @return CakeResponse
      */
-    public function ajax_get_insight_ranking()
+    public
+    function ajax_get_insight_ranking()
     {
         $this->_ajaxPreProcess();
 
@@ -1780,8 +1823,10 @@ class TeamsController extends AppController
      *
      * @return array
      */
-    protected function _getInsightDateInfo($timezone)
-    {
+    protected
+    function _getInsightDateInfo(
+        $timezone
+    ) {
         // 指定タイムゾーンの UTC からの差分秒数
         $time_adjust = intval($timezone * HOUR);
         // タイムゾーンを考慮した「本日」
@@ -1818,8 +1863,11 @@ class TeamsController extends AppController
      *
      * @return string
      */
-    protected function _insightAdjustEndDate($end_date, $today)
-    {
+    protected
+    function _insightAdjustEndDate(
+        $end_date,
+        $today
+    ) {
         $t1 = strtotime($end_date);
         $t2 = strtotime($today);
         if ($t1 < $t2) {
@@ -1835,8 +1883,10 @@ class TeamsController extends AppController
      *
      * @return bool
      */
-    protected function _insightIsCurrentDateRange($date_range)
-    {
+    protected
+    function _insightIsCurrentDateRange(
+        $date_range
+    ) {
         return strpos($date_range, 'current_') === 0;
     }
 
@@ -1847,8 +1897,10 @@ class TeamsController extends AppController
      *
      * @return string 'week' or 'month' or 'term'
      */
-    protected function _insightGetDateRangeType($date_range)
-    {
+    protected
+    function _insightGetDateRangeType(
+        $date_range
+    ) {
         // array_pop()は引数に参照渡しを要求するので、
         // 一旦date_rangeを変数に格納した後、コールする
         $exploded_date_range = explode('_', $date_range);
@@ -1866,8 +1918,14 @@ class TeamsController extends AppController
      *
      * @return array
      */
-    protected function _getInsightData($start_date, $end_date, $timezone, $group_id = null, $cache_expire = null)
-    {
+    protected
+    function _getInsightData(
+        $start_date,
+        $end_date,
+        $timezone,
+        $group_id = null,
+        $cache_expire = null
+    ) {
         // キャッシュにデータがあればそれを返す
         $insight = null;
         if ($group_id) {
@@ -2051,8 +2109,13 @@ class TeamsController extends AppController
      *
      * @return array
      */
-    protected function _getCircleInsightData($start_date, $end_date, $timezone, $cache_expire = null)
-    {
+    protected
+    function _getCircleInsightData(
+        $start_date,
+        $end_date,
+        $timezone,
+        $cache_expire = null
+    ) {
         // キャッシュにデータがあればそれを返す
         $insight = $this->GlRedis->getCircleInsight($this->current_team_id, $start_date, $end_date, $timezone);
         if ($insight) {
@@ -2133,8 +2196,14 @@ class TeamsController extends AppController
      *
      * @return array|mixed|null
      */
-    protected function _getPostRankingData($start_date, $end_date, $timezone, $group_id = null, $cache_expire = null)
-    {
+    protected
+    function _getPostRankingData(
+        $start_date,
+        $end_date,
+        $timezone,
+        $group_id = null,
+        $cache_expire = null
+    ) {
         // キャッシュにデータがあればそれを返す
         $ranking = null;
         $type = 'post_ranking';
@@ -2235,8 +2304,14 @@ class TeamsController extends AppController
      *
      * @return array|mixed|null
      */
-    protected function _getGoalRankingData($start_date, $end_date, $timezone, $group_id = null, $cache_expire = null)
-    {
+    protected
+    function _getGoalRankingData(
+        $start_date,
+        $end_date,
+        $timezone,
+        $group_id = null,
+        $cache_expire = null
+    ) {
         // キャッシュを調べる
         $ranking = null;
         $type = 'goal_ranking';
@@ -2298,8 +2373,14 @@ class TeamsController extends AppController
      *
      * @return array|mixed|null
      */
-    protected function _getUserRankingData($start_date, $end_date, $timezone, $group_id = null, $cache_expire = null)
-    {
+    protected
+    function _getUserRankingData(
+        $start_date,
+        $end_date,
+        $timezone,
+        $group_id = null,
+        $cache_expire = null
+    ) {
         // キャッシュを調べる
         $ranking = null;
         $type = 'user_ranking';
@@ -2363,7 +2444,8 @@ class TeamsController extends AppController
     /**
      * Insight ページのシステム管理者用のセットアップ
      */
-    protected function _setupForSystemAdminInsight()
+    protected
+    function _setupForSystemAdminInsight()
     {
         // システム管理者でない場合は何もしない
         if (!$this->Auth->user('admin_flg')) {
@@ -2393,7 +2475,8 @@ class TeamsController extends AppController
     /**
      * Insight ページのシステム管理者用のクリーンアップ
      */
-    protected function _cleanupForSystemAdminInsight()
+    protected
+    function _cleanupForSystemAdminInsight()
     {
         // システム管理者でない場合は何もしない
         if (!$this->Auth->user('admin_flg')) {

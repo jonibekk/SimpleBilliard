@@ -51,7 +51,7 @@
                     'data-bv-emailaddress'         => "false",
                     "data-bv-callback"             => "true",
                     "data-bv-callback-message"     => " ",
-                    "data-bv-callback-callback"    => "bvCallbackAvailableEmailNotVerified",
+                    "data-bv-callback-callback"    => "bvCallbackAvailableEmailCanInvite",
                     'data-bv-stringlength'         => 'true',
                     'data-bv-stringlength-max'     => 200,
                     'data-bv-stringlength-message' => __("It's over limit characters (%s).", 200),
@@ -86,7 +86,7 @@
 
                 // 登録可能な email の validate
                 require(['validate'], function (validate) {
-                    window.bvCallbackAvailableEmailNotVerified = validate.bvCallbackAvailableEmailNotVerified;
+                    window.bvCallbackAvailableEmailCanInvite = validate.bvCallbackAvailableEmailCanInvite;
                 });
 
 

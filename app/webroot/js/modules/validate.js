@@ -74,17 +74,19 @@ define(function () {
         return validation;
 
     })();
-
-    // bootstrapValidator callback 用
-    // 登録可能な email の validation
     var bvCallbackAvailableEmailNotVerified = (function () {
         setUrl(cake.url.signup_ajax_validate_email);
+        return validation;
+    })();
+    var bvCallbackAvailableEmailCanInvite = (function () {
+        setUrl(cake.url.team_ajax_validate_email_can_invite);
         return validation;
     })();
 
     return {
         bvCallbackAvailableEmail: bvCallbackAvailableEmail,
-        bvCallbackAvailableEmailNotVerified: bvCallbackAvailableEmailNotVerified
+        bvCallbackAvailableEmailNotVerified: bvCallbackAvailableEmailNotVerified,
+        bvCallbackAvailableEmailCanInvite: bvCallbackAvailableEmailCanInvite
     };
 });
 
