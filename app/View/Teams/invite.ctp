@@ -31,15 +31,31 @@
                 'method'        => 'post'
             ]); ?>
             <div class="panel-body">
+                <div class="form-group">
+                    <?= __('good. Know your coworker.') ?>
+                </div>
+                <div class="form-group">
+                    <label for="TeamEmails"
+                           class="col col-xxs-8 col-sm-3 control-label form-label"><?= __("Email address") ?></label>
+                    <div class="col col-xxs-4 col-sm-6">
+                        <a href="#" class="form-control-static pull-right"><i
+                                class="fa fa-plus"></i> <?= __('Add email') ?></a>
+                    </div>
+                </div>
                 <?=
-                $this->Form->input('emails', [
-                    'label'                        => __("Email address"),
-                    'type'                         => 'text',
-                    'rows'                         => 3,
+                $this->Form->input('Team.0.email', [
+                    'label'                        => "",
+                    'type'                         => 'string',
+                    'placeholder'                  => 'you@yourdomain.com',
+                    "data-bv-notempty"             => "false",
+                    'data-bv-emailaddress'         => "false",
+                    "data-bv-callback"             => "true",
+                    "data-bv-callback-message"     => " ",
+                    "data-bv-callback-callback"    => "bvCallbackAvailableEmailNotVerified",
                     'data-bv-stringlength'         => 'true',
-                    'data-bv-stringlength-max'     => 2000,
-                    'data-bv-stringlength-message' => __("It's over limit characters (%s).", 2000),
-                    "data-bv-notempty-message"     => __("Input is required."),
+                    'data-bv-stringlength-max'     => 200,
+                    'data-bv-stringlength-message' => __("It's over limit characters (%s).", 200),
+                    'required'                     => false,
                 ]) ?>
             </div>
             <div class="panel-footer">
@@ -67,6 +83,12 @@
             $(document).ready(function () {
 
                 $('[rel="tooltip"]').tooltip();
+
+                // 登録可能な email の validate
+                require(['validate'], function (validate) {
+                    window.bvCallbackAvailableEmailNotVerified = validate.bvCallbackAvailableEmailNotVerified;
+                });
+
 
                 $('#InviteTeamForm').bootstrapValidator({
                     live: 'enabled'
