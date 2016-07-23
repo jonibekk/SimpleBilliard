@@ -17,7 +17,9 @@
             <?=
             $this->Form->create('Team', [
                 'inputDefaults' => [
-                    'div'       => 'form-group',
+                    'div'       => [
+                        'class' => 'form-group',
+                    ],
                     'label'     => [
                         'class' => 'col col-sm-3 control-label form-label'
                     ],
@@ -38,15 +40,15 @@
                     <label for="TeamEmails"
                            class="col col-xxs-8 col-sm-3 control-label form-label"><?= __("Email address") ?></label>
                     <div class="col col-xxs-4 col-sm-6">
-                        <a href="#" class="form-control-static pull-right"><i
+                        <a href="#" class="form-control-static pull-right" id="AddEmail" index="1" max_index="9"><i
                                 class="fa fa-plus"></i> <?= __('Add email') ?></a>
                     </div>
                 </div>
                 <?=
-                $this->Form->input('Team.0.email', [
+                $this->Form->input('Team.emails.0', [
                     'label'                        => "",
                     'type'                         => 'string',
-                    'placeholder'                  => 'you@yourdomain.com',
+                    'placeholder'                  => 'name@domain.com',
                     "data-bv-notempty"             => "false",
                     'data-bv-emailaddress'         => "false",
                     "data-bv-callback"             => "true",
@@ -57,6 +59,29 @@
                     'data-bv-stringlength-message' => __("It's over limit characters (%s).", 200),
                     'required'                     => false,
                 ]) ?>
+
+                <div class="hidden">
+                    <div class="form-group" id="EmailFormGroup">
+                        <label for="" class="col col-sm-3 control-label form-label"></label>
+                        <?=
+                        $this->Form->input('Team.emails.100', [
+                            'label'                        => false,
+                            'div'                          => false,
+                            'type'                         => 'string',
+                            'placeholder'                  => 'name@domain.com',
+                            "data-bv-notempty"             => "false",
+                            'data-bv-emailaddress'         => "false",
+                            "data-bv-callback"             => "true",
+                            "data-bv-callback-message"     => " ",
+                            "data-bv-callback-callback"    => "bvCallbackAvailableEmailCanInvite",
+                            'data-bv-stringlength'         => 'true',
+                            'data-bv-stringlength-max'     => 200,
+                            'data-bv-stringlength-message' => __("It's over limit characters (%s).", 200),
+                            'required'                     => false,
+                        ]) ?>
+                    </div>
+                </div>
+
             </div>
             <div class="panel-footer">
                 <div class="row">
@@ -76,6 +101,10 @@
                     </div>
                 </div>
             </div>
+            <?php for ($i = 0; $i <= 9; $i++): ?>
+                <?php $this->Form->unlockField("Team.emails.$i") ?>
+            <?php endfor ?>
+            <?php $this->Form->unlockField("Team.emails.100") ?>
             <?= $this->Form->end(); ?>
         </div>
         <?php $this->append('script') ?>
@@ -89,10 +118,25 @@
                     window.bvCallbackAvailableEmailCanInvite = validate.bvCallbackAvailableEmailCanInvite;
                 });
 
-
                 $('#InviteTeamForm').bootstrapValidator({
                     live: 'enabled'
-                });
+                })
+                    .on('click', '#AddEmail', function (e) {
+                        e.preventDefault();
+                        var $obj = $(this);
+                        var index = parseInt($obj.attr("index"));
+                        //clone
+                        var $email_form_group = $('#EmailFormGroup').clone();
+                        $email_form_group.find('input').attr('name', 'data[Team][emails][' + index + ']');
+                        $email_form_group.appendTo('.panel-body');
+                        $('#InviteTeamForm').bootstrapValidator('addField', 'data[Team][emails][' + index + ']');
+                        if ($obj.attr('max_index') != undefined && index >= parseInt($obj.attr('max_index'))) {
+                            $obj.remove();
+                        }
+                        //increment
+                        $obj.attr('index', index + 1);
+
+                    });
             });
         </script>
         <?php $this->end() ?>
