@@ -3844,6 +3844,8 @@ $(document).ready(function () {
                 var unread_count = $unread_count.text().trim();
                 if (unread_count == ""){
                     $unread_count.text(1);
+                }else if(Number(unread_count) == 9){
+                    $unread_count.text("9+");
                 }else if(unread_count != "9+"){
                     $unread_count.text(Number(unread_count)+1);
                 }
