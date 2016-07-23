@@ -23,6 +23,7 @@ echo $this->Html->script('ng_app.min');
 
 <!--suppress JSDuplicatedDeclaration -->
 <?= $this->element('cake_variables') ?>
+
 <?= $this->Session->flash('click_event') ?>
 <?php echo $this->Session->flash('pnotify');
 //環境を識別できるようにリボンを表示
