@@ -58,7 +58,7 @@
                     <?php } ?>
                 </li>
             <?php endif; ?>
-            <?php if ($user_status == 'joined' || $user_status == 'admin'): ?>
+            <?php if (($user_status == 'joined' || $user_status == 'admin') && ENV_NAME != 'isao'): ?>
                 <li><a href="<?= $this->Html->url([
                         'controller' => 'circles',
                         'action'     => 'ajax_setting',
