@@ -3832,25 +3832,27 @@ $(document).ready(function () {
         setNotifyCntToMessageAndTitle(getMessageNotifyCnt() + 1);
     });
 
-    pusher.subscribe('team_' + cake.data.team_id).bind('circle_list_update', function (data) {
-        var $circle_list = $('#jsDashboardCircleListBody');
-        $.each(data.circle_ids, function (i, circle_id) {
-            var $circle = $circle_list.children('[circle_id=' + circle_id + ']');
-            if ($circle[0] === undefined) {
-                return true;
-            }
-            var $unread_count = $circle.find('.dashboard-circle-count-box');
-            var unread_count = $unread_count.text().trim();
-            if (unread_count == ""){
-                $unread_count.text(1);
-            }else if(unread_count != "9+"){
-                $unread_count.text(Number(unread_count)+1);
-            }
-            $unread_count.css('color','red');
-            $circle.prependTo('#jsDashboardCircleListBody');
-        });
+    if($('#jsDashboardCircleListBody')[0] !== undefined){
+        pusher.subscribe('team_' + cake.data.team_id).bind('circle_list_update', function (data) {
+            var $circle_list = $('#jsDashboardCircleListBody');
+            $.each(data.circle_ids, function (i, circle_id) {
+                var $circle = $circle_list.children('[circle_id=' + circle_id + ']');
+                if ($circle[0] === undefined) {
+                    return true;
+                }
+                var $unread_count = $circle.find('.dashboard-circle-count-box');
+                var unread_count = $unread_count.text().trim();
+                if (unread_count == ""){
+                    $unread_count.text(1);
+                }else if(unread_count != "9+"){
+                    $unread_count.text(Number(unread_count)+1);
+                }
+                $unread_count.css('color','red');
+                $circle.prependTo('#jsDashboardCircleListBody');
+            });
 
-    });
+        });
+    }
 
 });
 
