@@ -31,12 +31,15 @@ export function selectTimezone(timezone) {
   }
 }
 
-export function inputTeamName(team_name) {
+export function changeToTimezoneSelectMode() {
   return dispatch => {
-    dispatch({
-      type: types.INPUT_TEAM_NAME,
-      inputed_team_name: team_name
-    })
+    dispatch({ type: types.CHANGE_TO_TIMEZONE_EDIT_MODE })
+  }
+}
+
+export function changeToTimezoneNotSelectMode() {
+  return dispatch => {
+    dispatch({ type: types.CHANGE_TO_TIMEZONE_NOT_EDIT_MODE })
   }
 }
 
