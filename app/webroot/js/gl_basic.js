@@ -3849,7 +3849,6 @@ $(document).ready(function () {
                 }else if(unread_count != "9+"){
                     $unread_count.text(Number(unread_count)+1);
                 }
-                $unread_count.css('color','red');
                 $circle.prependTo('#jsDashboardCircleListBody');
             });
 
