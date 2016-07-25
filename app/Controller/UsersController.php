@@ -375,18 +375,21 @@ class UsersController extends AppController
 
     public function register_with_invite()
     {
+        //現状、ローカルと本番環境以外でbasic認証を有効にする
+        if (!(ENV_NAME == "local" || ENV_NAME == "www") && !isset($this->request->params['named']['invite_token'])) {
+            $this->_setBasicAuth();
+        }
+
         $step = isset($this->request->params['named']['step']) ? (int)$this->request->params['named']['step'] : 1;
         if (!($step === 1 or $step === 2)) {
             $this->Pnotify->outError(__('Invalid access'));
             return $this->redirect('/');
         }
+
         $profile_template = 'register_prof_with_invite';
         $password_template = 'register_password_with_invite';
 
-        //現状、ローカルと本番環境以外でbasic認証を有効にする
-        if (!(ENV_NAME == "local" || ENV_NAME == "www") && !isset($this->request->params['named']['invite_token'])) {
-            $this->_setBasicAuth();
-        }
+        $this->layout = LAYOUT_ONE_COLUMN;
 
         try {
             if (!isset($this->request->params['named']['invite_token'])) {
@@ -398,6 +401,10 @@ class UsersController extends AppController
             $this->Pnotify->outError($e->getMessage());
             return $this->redirect('/');
         }
+        $invite = $this->Invite->getByToken($this->request->params['named']['invite_token']);
+        $team = $this->Team->findById($invite['Invite']['team_id']);
+        $this->set('team_name', $team['Team']['name']);
+
         if (!$this->request->is('post')) {
             if ($step === 2) {
                 return $this->render($password_template);
@@ -436,7 +443,19 @@ class UsersController extends AppController
         }
 
         //sessionデータとpostのデータとマージ
-        $data = array_merge($this->Session->read('data'), $this->request->data);
+        $data = Hash::merge($this->Session->read('data'), $this->request->data);
+        //email
+        $data['Email'][0]['Email']['email'] = $invite['Invite']['email'];
+        //タイムゾーンをセット
+        if (isset($data['User']['local_date'])) {
+            //ユーザのローカル環境から取得したタイムゾーンをセット
+            $timezone = $this->Timezone->getLocalTimezone($data['User']['local_date']);
+            $data['User']['timezone'] = $timezone;
+            //自動タイムゾーン設定フラグをoff
+            $data['User']['auto_timezone_flg'] = false;
+        }
+        //言語を保存
+        $data['User']['language'] = $this->Lang->getLanguage();
         // ユーザ本登録
         if (!$this->User->userRegistration($data, false)) {
             //姓名の並び順をセット

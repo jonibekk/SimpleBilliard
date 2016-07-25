@@ -4,13 +4,14 @@
  * @var CodeCompletionView $this
  * @var                    $last_first
  * @var                    $email
+ * @var                    $team_name
  */
 ?>
 <!-- START app/View/Users/register_prof_with_invite.ctp -->
 <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default">
-            <div class="panel-heading"><?= __("Create a new account") ?></div>
+            <div class="panel-heading"><?= __('Join the Goalous team for "%s"?', $team_name) ?></div>
             <?=
             $this->Form->create('User', [
                 'inputDefaults' => [
@@ -25,26 +26,33 @@
                 'novalidate'    => true
             ]); ?>
             <div class="panel-body register-panel-body">
+                <div class="form-group">
+                    <?= __('Your name will displayed along with your goals and posts in Goalous') ?>
+                </div>
                 <?php //姓と名は言語によって表示順を変える
                 $last_name = $this->Form->input('last_name', [
                     'label'                        => __("Last Name"),
                     'placeholder'                  => __("eg. Armstrong"),
                     "pattern"                      => '^[a-zA-Z]+$',
                     "data-bv-regexp-message"       => __("Only alphabet characters are allowed."),
+                    "data-bv-notempty"             => "true",
                     "data-bv-notempty-message"     => __("Input is required."),
                     'data-bv-stringlength'         => 'true',
                     'data-bv-stringlength-max'     => 128,
                     'data-bv-stringlength-message' => __("It's over limit characters (%s).", 128),
+                    'required'                     => false,
                 ]);
                 $first_name = $this->Form->input('first_name', [
                     'label'                        => __("First Name"),
                     'placeholder'                  => __("eg. Harry"),
                     "pattern"                      => '^[a-zA-Z]+$',
                     "data-bv-regexp-message"       => __("Only alphabet characters are allowed."),
+                    "data-bv-notempty"             => "true",
                     "data-bv-notempty-message"     => __("Input is required."),
                     'data-bv-stringlength'         => 'true',
                     'data-bv-stringlength-max'     => 128,
                     'data-bv-stringlength-message' => __("It's over limit characters (%s).", 128),
+                    'required'                     => false,
                 ]);
                 if ($last_first) {
                     echo $last_name;
@@ -87,7 +95,8 @@
                         'class' => null,
                         'text'  => __("I agree to %s and %s of Goalous.", $tosLink, $ppLink)
                     ],
-                    'class'     => 'validate-checkbox'
+                    'class'     => 'validate-checkbox',
+                    'required'  => false,
                 ]);
                 //タイムゾーン設定の為のローカル時刻をセット
                 echo $this->Form->input('local_date', [
@@ -101,8 +110,8 @@
             <div class="panel-footer">
                 <div class="row">
                     <div class="col-sm-9 col-sm-offset-3">
-                        <?= $this->Form->submit(__("New registration"),
-                            ['class' => 'btn btn-primary', 'disabled' => 'disabled']) ?>
+                        <?= $this->Form->button(__('Next') . ' <i class="fa fa-angle-right"></i>',
+                            ['type' => 'submit', 'class' => 'btn btn-primary', 'disabled' => 'disabled']) ?>
                     </div>
                 </div>
             </div>

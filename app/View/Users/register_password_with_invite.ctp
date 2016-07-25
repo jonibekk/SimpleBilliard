@@ -10,7 +10,7 @@
 <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
         <div class="panel panel-default">
-            <div class="panel-heading"><?= __("Create a new account") ?></div>
+            <div class="panel-heading"><?= __("Set your password") ?></div>
             <?=
             $this->Form->create('User', [
                 'inputDefaults' => [
@@ -25,27 +25,30 @@
                 'novalidate'    => true
             ]); ?>
             <div class="panel-body register-panel-body">
+                <div class="form-group">
+                    <?= __('Choose a password for login to Goalous') ?>
+                </div>
                 <?=
                 $this->Form->input('password', [
-                    'label'                    => __("Create a password"),
+                    'label'                    => __("Password"),
                     'placeholder'              => __('Use at least 8 characters and use a mix of capital characters, small characters and numbers. Symbols are not allowed.'),
                     "data-bv-notempty-message" => __("Input is required."),
                     'type'                     => 'password',
                     'maxlength'                => 50,
                 ]) ?>
-                <?=
-                $this->Form->input('password_confirm', [
-                    'label'                    => __("Confirm your password"),
-                    "data-bv-notempty-message" => __("Input is required."),
-                    'type'                     => 'password',
-                    'maxlength'                => 50,
-                ]) ?>
+                <!--                --><? //=
+                //                $this->Form->input('password_confirm', [
+                //                    'label'                    => __("Confirm your password"),
+                //                    "data-bv-notempty-message" => __("Input is required."),
+                //                    'type'                     => 'password',
+                //                    'maxlength'                => 50,
+                //                ]) ?>
             </div>
             <div class="panel-footer">
                 <div class="row">
                     <div class="col-sm-9 col-sm-offset-3">
-                        <?= $this->Form->submit(__("New registration"),
-                            ['class' => 'btn btn-primary', 'disabled' => 'disabled']) ?>
+                        <?= $this->Form->button(__('Join Team') . ' <i class="fa fa-angle-right"></i>',
+                            ['type' => 'submit', 'class' => 'btn btn-primary', 'disabled' => 'disabled']) ?>
                     </div>
                 </div>
             </div>

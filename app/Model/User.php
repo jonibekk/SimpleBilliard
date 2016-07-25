@@ -189,7 +189,8 @@ class User extends AppModel
         ],
         'agree_tos'          => [
             'notBlankCheckbox' => [
-                'rule' => ['custom', '[1]'],
+                'rule'       => ['custom', '[1]'],
+                'allowEmpty' => true,
             ]
         ],
         'del_flg'            => ['boolean' => ['rule' => ['boolean'],],],
