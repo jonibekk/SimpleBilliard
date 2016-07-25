@@ -36,13 +36,6 @@
                     'type'                     => 'password',
                     'maxlength'                => 50,
                 ]) ?>
-                <!--                --><? //=
-                //                $this->Form->input('password_confirm', [
-                //                    'label'                    => __("Confirm your password"),
-                //                    "data-bv-notempty-message" => __("Input is required."),
-                //                    'type'                     => 'password',
-                //                    'maxlength'                => 50,
-                //                ]) ?>
             </div>
             <div class="panel-footer">
                 <div class="row">
