@@ -35,7 +35,8 @@ class UsersController extends AppController
     protected function _setupAuth()
     {
         $this->Auth->allow('register', 'login', 'verify', 'logout', 'password_reset', 'token_resend', 'sent_mail',
-            'accept_invite', 'registration_with_set_password', 'two_fa_auth', 'two_fa_auth_recovery',
+            'accept_invite', 'register_with_invite', 'registration_with_set_password', 'two_fa_auth',
+            'two_fa_auth_recovery',
             'add_subscribe_email', 'ajax_validate_email');
 
         $this->Auth->authenticate = array(
@@ -370,6 +371,87 @@ class UsersController extends AppController
             'invite_token' => $this->request->params['named']['invite_token']
         ]);
 
+    }
+
+    public function register_with_invite()
+    {
+        $step = isset($this->request->params['named']['step']) ? (int)$this->request->params['named']['step'] : 1;
+        if (!($step === 1 or $step === 2)) {
+            $this->Pnotify->outError(__('Invalid access'));
+            return $this->redirect('/');
+        }
+        $profile_template = 'register_prof_with_invite';
+        $password_template = 'register_password_with_invite';
+
+        //現状、ローカルと本番環境以外でbasic認証を有効にする
+        if (!(ENV_NAME == "local" || ENV_NAME == "www") && !isset($this->request->params['named']['invite_token'])) {
+            $this->_setBasicAuth();
+        }
+
+        try {
+            if (!isset($this->request->params['named']['invite_token'])) {
+                throw new RuntimeException(__("The invitation token is incorrect. Check your email again."));
+            }
+            //トークンが有効かチェック
+            $this->Invite->confirmToken($this->request->params['named']['invite_token']);
+        } catch (RuntimeException $e) {
+            $this->Pnotify->outError($e->getMessage());
+            return $this->redirect('/');
+        }
+        if (!$this->request->is('post')) {
+            if ($step === 2) {
+                return $this->render($password_template);
+            }
+            $last_first = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
+            $this->set(compact('last_first'));
+            return $this->render($profile_template);
+        }
+
+        //Sessionに保存してパスワード入力画面に遷移
+        if ($step === 1) {
+            //プロフィール入力画面の場合
+            //validation
+            if ($this->User->validates($this->request->data)) {
+                //store to session
+                $this->Session->write('data', $this->request->data);
+                //パスワード入力画面にリダイレクト
+                return $this->redirect(
+                    [
+                        'action'       => 'register_with_invite',
+                        'step'         => 2,
+                        'invite_token' => $this->request->params['named']['invite_token']
+                    ]);
+            } else {
+                //エラーメッセージ
+                $this->Pnotify->outError(__('Failed to save data.'));
+                return $this->render($profile_template);
+            }
+        }
+        //パスワード入力画面の場合
+
+        //session存在チェック
+        if (!$this->Session->read('data')) {
+            $this->Pnotify->outError(__('Invalid access'));
+            return $this->redirect('/');
+        }
+
+        //sessionデータとpostのデータとマージ
+        $data = array_merge($this->Session->read('data'), $this->request->data);
+        // ユーザ本登録
+        if (!$this->User->userRegistration($data, false)) {
+            //姓名の並び順をセット
+            $last_first = in_array($this->Lang->getLanguage(), $this->User->langCodeOfLastFirst);
+            $this->set(compact('last_first'));
+            return $this->render($password_template);
+        }
+        //ログイン
+        $this->_autoLogin($this->User->getLastInsertID(), true);
+        //チーム参加
+        $this->_joinTeam($this->request->params['named']['invite_token']);
+        //ホーム画面でモーダル表示
+        $this->Session->write('add_new_mode', MODE_NEW_PROFILE);
+        //top画面に遷移
+        return $this->redirect('/');
     }
 
     /**
@@ -814,9 +896,8 @@ class UsersController extends AppController
         try {
             // Check token available
             $this->Invite->confirmToken($token);
-
             if (!$this->Invite->isUser($token)) {
-                return $this->redirect(['action' => 'register', 'invite_token' => $token]);
+                return $this->redirect(['action' => 'register_with_invite', 'invite_token' => $token]);
             }
 
             //By batch setup
