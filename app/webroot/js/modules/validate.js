@@ -11,6 +11,11 @@ define(function () {
         return function (email, validator, $field) {
             var field = $field.attr('name');
 
+            //notemptyのチェックはbootstrapValidatorの別のルールを使う。ここではスルーする。
+            if (email.length == 0) {
+                return true;
+            }
+
             // 簡易チェックをして通ったものだけサーバ側で確認する
             var parts = email.split('@');
             if (!(parts.length >= 2 && parts[parts.length - 1].indexOf('.') != -1)) {

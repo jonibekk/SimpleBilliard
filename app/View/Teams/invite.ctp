@@ -52,7 +52,7 @@
                         'label'                        => "",
                         'type'                         => 'string',
                         'placeholder'                  => 'name@domain.com',
-                        "data-bv-notempty"             => "false",
+                        "data-bv-notempty"             => $i == 0 ? "true" : "false",//１行目のみ必須
                         'data-bv-emailaddress'         => "false",
                         "data-bv-callback"             => "true",
                         "data-bv-callback-message"     => " ",
