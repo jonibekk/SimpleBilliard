@@ -70,7 +70,7 @@
                     $this->Form->input('Email.0.email', [
                         'label'                        => __("Email"),
                         'placeholder'                  => __("tom@example.com"),
-                        "data-bv-notempty"             => "false",
+                        "data-bv-notempty"             => "true",
                         'data-bv-emailaddress'         => "false",
                         "data-bv-callback"             => "true",
                         "data-bv-callback-message"     => " ",
