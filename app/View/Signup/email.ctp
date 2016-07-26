@@ -28,7 +28,7 @@
                 $this->Form->input('email', [
                     'label'                        => __("Your email address"),
                     'placeholder'                  => 'you@yourdomain.com',
-                    "data-bv-notempty"             => "false",
+                    "data-bv-notempty"             => "true",
                     'data-bv-emailaddress'         => "false",
                     "data-bv-callback"             => "true",
                     "data-bv-callback-message"     => " ",

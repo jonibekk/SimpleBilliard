@@ -119,7 +119,7 @@ for ($i = 0; $i < $num_ogp; $i++) {
                 <?=
                 $this->Form->input('email', [
                     'placeholder'                  => 'you@yourdomain.com',
-                    "data-bv-notempty"             => "false",
+                    "data-bv-notempty"             => "true",
                     'data-bv-emailaddress'         => "false",
                     "data-bv-callback"             => "true",
                     "data-bv-callback-message"     => " ",
