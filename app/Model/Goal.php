@@ -499,6 +499,7 @@ class Goal extends AppModel
                 'Goal.team_id'     => $this->current_team_id,
                 'Goal.end_date >=' => $start_date,
                 'Goal.end_date <=' => $end_date,
+                'Goal.completed' => null,
             ],
             'contain'    => [
                 'MyCollabo'           => [
@@ -575,15 +576,6 @@ class Goal extends AppModel
          * ソート
          * ソートは優先順位が低いものから処理する
          */
-        //・第４優先ソート【進捗更新日】
-        //　進捗更新日が近→遠。
-        //　つまり、「進捗更新日」をデータ登録すること。
-        //　目的作成や基準作成時は、0%としての更新があったとする。
-        $res = $this->sortModified($res);
-
-        //・第３優先ソート【期限】
-        //　期限が近→遠
-        $res = $this->sortEndDate($res);
 
         //・第２優先ソート【重要度】
         //　重要度が高→低
@@ -864,8 +856,6 @@ class Goal extends AppModel
             return $this->getByGoalId($goal_ids, $limit, $page, $type, $start_date, $end_date);
         }
         $res = $this->getByGoalId($goal_ids, $limit, $page, $type, $start_date, $end_date, $kr_limit);
-        $res = $this->sortModified($res);
-        $res = $this->sortEndDate($res);
         $res = $this->sortPriority($res);
 
         return $res;
@@ -1072,6 +1062,7 @@ class Goal extends AppModel
                 'Goal.team_id'     => $this->current_team_id,
                 'Goal.end_date >=' => $start_date,
                 'Goal.end_date <=' => $end_date,
+                'Goal.completed' => null,
             ],
             'page'       => $page,
             'limit'      => $limit,
