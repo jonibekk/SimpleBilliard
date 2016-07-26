@@ -101,8 +101,8 @@ $(window).load(function () {
     clickToSetCurrentTeamId();
 
     // if team changed from other tab then don't allow user to proceed without reload
-    $('body').click(function(){
-        if(Number(cake.data.team_id) !== Number(localStorage.team_id_current)) {
+    $('body').click(function () {
+        if (Number(cake.data.team_id) !== Number(localStorage.team_id_current)) {
             var r = confirm(cake.translation["Team has been changed, press ok to reload!"]);
             if (r == true) {
                 document.location.reload(true);
@@ -116,7 +116,7 @@ $(window).load(function () {
 });
 
 function clickToSetCurrentTeamId() {
-    if(typeof(Storage) !== "undefined") {
+    if (typeof(Storage) !== "undefined") {
         localStorage.team_id_current = Number(cake.data.team_id);
     } else {
         console.log("Sorry, your browser does not support web storage...");
@@ -1704,14 +1704,14 @@ $(function () {
     var current_slide_id = 1;
 
     // インジケータークリック時
-    $(document).on('click', '.setup-tutorial-indicator', function() {
+    $(document).on('click', '.setup-tutorial-indicator', function () {
         resetDisplayStatus();
         changeTutorialContent($(this).attr('data-id'));
     });
 
     // ネクストボタンクリック時
-    $(document).on('click', '.tutorial-next-btn', function() {
-        if(current_slide_id == 3) {
+    $(document).on('click', '.tutorial-next-btn', function () {
+        if (current_slide_id == 3) {
             location.href = "/setup/";
             return;
         }
@@ -1919,7 +1919,7 @@ $(document).ready(function () {
                     callback: {
                         callback: function (value, validator, $field) {
                             var isEmpty = true,
-                            // Get the list of fields
+                                // Get the list of fields
                                 $fields = validator.getFieldElements('photo');
                             for (var i = 0; i < $fields.length; i++) {
                                 if ($fields.eq(i).val() != '') {
@@ -3831,6 +3831,29 @@ $(document).ready(function () {
         setNotifyCntToMessageAndTitle(getMessageNotifyCnt() + 1);
     });
 
+    if($('#jsDashboardCircleListBody')[0] !== undefined){
+        pusher.subscribe('team_' + cake.data.team_id).bind('circle_list_update', function (data) {
+            var $circle_list = $('#jsDashboardCircleListBody');
+            $.each(data.circle_ids, function (i, circle_id) {
+                var $circle = $circle_list.children('[circle_id=' + circle_id + ']');
+                if ($circle[0] === undefined) {
+                    return true;
+                }
+                var $unread_count = $circle.find('.dashboard-circle-count-box');
+                var unread_count = $unread_count.text().trim();
+                if (unread_count == ""){
+                    $unread_count.text(1);
+                }else if(Number(unread_count) == 9){
+                    $unread_count.text("9+");
+                }else if(unread_count != "9+"){
+                    $unread_count.text(Number(unread_count)+1);
+                }
+                $circle.prependTo('#jsDashboardCircleListBody');
+            });
+
+        });
+    }
+
 });
 
 function getCurrentUnreadNotifyCnt() {
@@ -4539,7 +4562,7 @@ $(document).ready(function () {
      *   $uploadFileForm.registerAttachFileButton('#UploadButton', postParams);
      *
      */
-    // ファイルアップロード用フォーム
+        // ファイルアップロード用フォーム
     var $uploadFileForm = $('#UploadFileForm');
 
     // ファイル削除用フォーム
