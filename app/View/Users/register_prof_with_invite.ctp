@@ -29,9 +29,10 @@
                 <div class="form-group">
                     <?= __('Your name will displayed along with your goals and posts in Goalous') ?>
                 </div>
+                <legend><?= __('Your name') ?></legend>
                 <?php //姓と名は言語によって表示順を変える
                 $last_name = $this->Form->input('last_name', [
-                    'label'                        => __("Last Name"),
+                    'label'                        => false,
                     'placeholder'                  => __("eg. Armstrong"),
                     "pattern"                      => '^[a-zA-Z]+$',
                     "data-bv-regexp-message"       => __("Only alphabet characters are allowed."),
@@ -43,7 +44,7 @@
                     'required'                     => false,
                 ]);
                 $first_name = $this->Form->input('first_name', [
-                    'label'                        => __("First Name"),
+                    'label'                        => false,
                     'placeholder'                  => __("eg. Harry"),
                     "pattern"                      => '^[a-zA-Z]+$',
                     "data-bv-regexp-message"       => __("Only alphabet characters are allowed."),
@@ -62,7 +63,38 @@
                     echo $last_name;
                 }
                 ?>
-                <hr>
+                <legend><?= __('Your date of birth') ?></legend>
+                <?=
+                $this->Form
+                    ->input('birth_day',
+                        [
+                            'monthNames'               => [
+                                '01' => __('Jan'),
+                                '02' => __('Feb'),
+                                '03' => __('Mar'),
+                                '04' => __('Apr'),
+                                '05' => __('May'),
+                                '06' => __('Jun'),
+                                '07' => __('Jul'),
+                                '08' => __('Aug'),
+                                '09' => __('Sep'),
+                                '10' => __('Oct'),
+                                '11' => __('Nov'),
+                                '12' => __('Dec'),
+                            ],
+                            'class'                    => 'form-control inline-fix setting_input-design',
+                            'label'                    => false,
+                            'dateFormat'               => 'YMD',
+                            'empty'                    => true,
+                            'separator'                => ' / ',
+                            'maxYear'                  => date('Y'),
+                            'minYear'                  => '1910',
+                            'wrapInput'                => 'col col-xxs-12 form-inline',
+                            "data-bv-notempty"         => "true",
+                            "data-bv-notempty-message" => __("Input is required."),
+
+                        ]);
+                ?>
                 <?php $tosLink = $this->Html->link(__('Terms of Use'),
                     [
                         'controller' => 'pages',
@@ -89,7 +121,7 @@
                     ]
                 );
                 echo $this->Form->input('agree_tos', [
-                    'wrapInput' => 'col col-sm-9 col-sm-offset-3',
+                    'wrapInput' => 'col col-sm-12',
                     'type'      => 'checkbox',
                     'label'     => [
                         'class' => null,
@@ -109,9 +141,13 @@
             </div>
             <div class="panel-footer">
                 <div class="row">
-                    <div class="col-sm-9 col-sm-offset-3">
+                    <div class="col col-xxs-12">
                         <?= $this->Form->button(__('Next') . ' <i class="fa fa-angle-right"></i>',
-                            ['type' => 'submit', 'class' => 'btn btn-primary', 'disabled' => 'disabled']) ?>
+                            [
+                                'type'     => 'submit',
+                                'class'    => 'col col-xxs-12 btn btn-primary',
+                                'disabled' => 'disabled'
+                            ]) ?>
                     </div>
                 </div>
             </div>

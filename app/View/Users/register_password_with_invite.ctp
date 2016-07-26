@@ -33,6 +33,8 @@
                     'label'                    => __("Password"),
                     'placeholder'              => __('Use at least 8 characters and use a mix of capital characters, small characters and numbers. Symbols are not allowed.'),
                     "data-bv-notempty-message" => __("Input is required."),
+                    "data-bv-notempty"         => "true",
+                    'required'                 => false,
                     'type'                     => 'password',
                     'maxlength'                => 50,
                 ]) ?>
@@ -41,7 +43,11 @@
                 <div class="row">
                     <div class="col-sm-9 col-sm-offset-3">
                         <?= $this->Form->button(__('Join Team') . ' <i class="fa fa-angle-right"></i>',
-                            ['type' => 'submit', 'class' => 'btn btn-primary', 'disabled' => 'disabled']) ?>
+                            [
+                                'type'     => 'submit',
+                                'class'    => 'col col-xxs-12 col-sm-8 btn btn-primary',
+                                'disabled' => 'disabled'
+                            ]) ?>
                     </div>
                 </div>
             </div>
