@@ -19,7 +19,7 @@
         <div class="dashboard-circle-list-body" id="jsDashboardCircleListBody">
             <?php if (!empty($my_circles)): ?>
                 <?php foreach ($my_circles as $circle): ?>
-                    <div class="dashboard-circle-list-row-wrap">
+                    <div class="dashboard-circle-list-row-wrap" circle_id="<?= $circle['Circle']['id'] ?>">
                         <a class="dashboard-circle-list-row"
                            get-url="<?= $this->Html->url([
                                'controller' => 'posts',
@@ -36,12 +36,12 @@
                             <?=
                             $this->Html->image('ajax-loader.gif',
                                 [
-                                    'class' => 'lazy dashboard-circle-list-pic',
+                                    'class'         => 'lazy dashboard-circle-list-pic',
                                     'data-original' => $this->Upload->uploadUrl($circle, 'Circle.photo',
                                         ['style' => 'small']),
-                                    'width' => '16px',
-                                    'height' => '16px',
-                                    'error-img' => "/img/no-image-circle.jpg",
+                                    'width'         => '16px',
+                                    'height'        => '16px',
+                                    'error-img'     => "/img/no-image-circle.jpg",
                                 ]
                             )
                             ?>
