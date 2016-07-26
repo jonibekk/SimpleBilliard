@@ -1,11 +1,6 @@
 define(function () {
-    var ajax_url = "";
 
-    var setUrl = (function (url) {
-        ajax_url = url;
-    });
-
-    var validation = (function () {
+    var validation = function (url) {
         var bvCallbackAvailableEmailTimer = null;
         var bvCallbackAvailableEmailResults = {};
         return function (email, validator, $field) {
@@ -39,7 +34,7 @@ define(function () {
 
                 $.ajax({
                     type: 'GET',
-                    url: ajax_url,
+                    url: url,
                     data: {
                         email: email
                     }
@@ -71,21 +66,17 @@ define(function () {
             }, 300);
             return false;
         };
-    })();
+    };
     // bootstrapValidator callback 用
     // 登録可能な email の validation
     var bvCallbackAvailableEmail = (function () {
-        setUrl(cake.url.validate_email);
-        return validation;
-
+        return validation(cake.url.validate_email);
     })();
     var bvCallbackAvailableEmailNotVerified = (function () {
-        setUrl(cake.url.signup_ajax_validate_email);
-        return validation;
+        return validation(cake.url.signup_ajax_validate_email);
     })();
     var bvCallbackAvailableEmailCanInvite = (function () {
-        setUrl(cake.url.team_ajax_validate_email_can_invite);
-        return validation;
+        return validation(cake.url.team_ajax_validate_email_can_invite);
     })();
 
     return {
