@@ -233,7 +233,7 @@ class User extends AppModel
             ],
             'minLength' => [
                 'rule' => ['minLength', 8],
-            ]
+            ],
         ],
         'password_confirm'   => [
             'notEmpty'          => [

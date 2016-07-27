@@ -25,15 +25,13 @@
         ]); ?>
         <?=
         $this->Form->input('password', [
-            'placeholder'              => __('Use at least 8 characters and use a mix of capital characters, small characters and numbers. Symbols are not allowed.'),
+            'placeholder'              => __('Use at least 8 characters and use a mix of numbers, alphanumeric and special characters.'),
             "data-bv-notempty-message" => __("Input is required."),
             "data-bv-notempty"         => "true",
             'required'                 => false,
             'type'                     => 'password',
             'maxlength'                => 50,
         ]) ?>
-
-        <div class="signup-description mod-small">8文字以上。 アルファベット大文字、小文字、数字が混在している必要があります。記号は使えません。</div>
         <div class="submit signup-btn">
             <?= $this->Form->button(__('Join Team') . ' <i class="fa fa-angle-right"></i>',
                 [
@@ -57,7 +55,7 @@
                             message: cake.message.validate.a
                         },
                         regexp: {
-                            regexp: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{0,}$/,
+                            regexp: /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[\!\@\#\$\%\^\&\*\(\)\_\-\+\=\{\}\[\]\|\:\;\<\>\,\.\?\/])[0-9a-zA-Z\!\@\#\$\%\^\&\*\(\)\_\-\+\=\{\}\[\]\|\:\;\<\>\,\.\?\/]{0,}$/,
                             message: cake.message.validate.e
                         }
                     }

@@ -16,7 +16,7 @@
                 b: "<?= __("Both of passwords are not same.")?>",
                 c: "<?= __("10MB or less, and Please select one of the formats of JPG or PNG and GIF.")?>",
                 d: "<?= __("Need to agree our terms.")?>",
-                e: "<?= __("Please mix of numbers, lower case letters and upper case letters.")?>",
+                e: "<?= __('Please mix of numbers, alphanumeric and special characters like (  ! @ # $ % ^ & * ( ) _ - + = { } [ ] | : ; < > , . ? /  )')?>",
                 f: "<?= __("It is not possible to use the same as the email address as the password.")?>",
                 g: "<?= __("Input is required.")?>",
                 invalid_email: "<?= __("Email address is incorrect.") ?>",

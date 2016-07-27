@@ -25,12 +25,18 @@ class SignupController extends AppController
                 'isAlphabetOnly' => ['rule' => 'isAlphabetOnly'],
             ],
             'password'   => [
-                'maxLength' => ['rule' => ['maxLength', 50]],
-                'notEmpty'  => [
+                'maxLength'      => ['rule' => ['maxLength', 50]],
+                'notEmpty'       => [
                     'rule' => 'notEmpty',
                 ],
-                'minLength' => [
+                'minLength'      => [
                     'rule' => ['minLength', 8],
+                ],
+                'passwordPolicy' => [
+                    'rule' => [
+                        'custom',
+                        '/^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[\!\@\#\$\%\^\&\*\(\)\_\-\+\=\{\}\[\]\|\:\;\<\>\,\.\?\/])[0-9a-zA-Z\!\@\#\$\%\^\&\*\(\)\_\-\+\=\{\}\[\]\|\:\;\<\>\,\.\?\/]{0,}$/i',
+                    ]
                 ]
             ],
             'local_date' => [
@@ -107,7 +113,7 @@ class SignupController extends AppController
         //すべてのアクションは認証済みである必要がない
         $this->Auth->allow();
         //ログインしている場合はこのコントローラの全てのアクションにアクセスできない。
-        if($this->Auth->user()){
+        if ($this->Auth->user()) {
             $this->Pnotify->outError(__('Invalid screen transition.'));
             $this->redirect('/');
         }
@@ -115,7 +121,7 @@ class SignupController extends AppController
 
     public function email()
     {
-        if(!$this->request->is('post')){
+        if (!$this->request->is('post')) {
             return $this->render();
         }
         try {
@@ -131,7 +137,7 @@ class SignupController extends AppController
             $this->Session->write('data.Email.email', $email);
             //send mail
             $this->GlEmail->sendEmailVerifyDigit($formatted_code, $email);
-            return $this->redirect(['action'=>'auth']);
+            return $this->redirect(['action' => 'auth']);
         } catch (RuntimeException $e) {
             $this->Pnotify->outError($e->getMessage());
         }
@@ -174,12 +180,12 @@ class SignupController extends AppController
         $email = $this->request->query('email');
         $valid = true;
         $message = '';
-        try{
-            if(!$email){
+        try {
+            if (!$email) {
                 throw new RuntimeException(__('Invalid fields'));
             }
             $this->_emailValidate($email);
-        }catch(RuntimeException $e){
+        } catch (RuntimeException $e) {
             $message = $e->getMessage();
             $valid = false;
         }
@@ -208,7 +214,6 @@ class SignupController extends AppController
         }
         return true;
     }
-
 
     /**
      * verify email by verify code
