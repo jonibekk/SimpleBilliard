@@ -679,7 +679,7 @@ msgstr "プロフィールが保存されました。"
 
 #: Controller/SignupController.php:129;185
 msgid "Invalid fields"
-msgstr ""
+msgstr "入力項目が正しくありません。"
 
 #: Controller/SignupController.php:213;378
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:26
@@ -690,31 +690,31 @@ msgstr ""
 
 #: Controller/SignupController.php:256
 msgid "Invalid screen transition"
-msgstr ""
+msgstr "不正な画面遷移です。"
 
 #: Controller/SignupController.php:259
 msgid "Param is incorrect"
-msgstr ""
+msgstr "パラメータがただしくありません。"
 
 #: Controller/SignupController.php:264
 msgid "Code Verification has expired"
-msgstr ""
+msgstr "コードの有効期限が切れています。"
 
 #: Controller/SignupController.php:275
 msgid "verification code was wrong"
-msgstr ""
+msgstr "コードが正しくありません。"
 
 #: Controller/SignupController.php:310;361
 msgid "No Data"
-msgstr ""
+msgstr "データがありません。"
 
 #: Controller/SignupController.php:315;367
 msgid "Invalid Data"
-msgstr ""
+msgstr "不正なデータです。"
 
 #: Controller/SignupController.php:374;384
 msgid "Some error occurred. Please try again from the start."
-msgstr ""
+msgstr "エラーが発生しました。もう一度最初から登録してください。"
 
 #: Controller/TeamsController.php:31
 msgid "Failed to create a team."
@@ -924,7 +924,7 @@ msgstr "グループビジョンを更新しました。"
 
 #: Controller/TeamsController.php:1112
 msgid "This email address has already been joined."
-msgstr ""
+msgstr "このメールアドレスのユーザは既にチームに参加しています。"
 
 #: Controller/UsersController.php:92;169;212
 msgid "Your account is tempolary locked. It will be unlocked after %s mins."
@@ -1100,7 +1100,7 @@ msgstr "メールアドレスの登録ができました。"
 
 #: Controller/Component/GlEmailComponent.php:198
 msgid "Confirmation Code for Goalous: %s"
-msgstr ""
+msgstr "Goalousの認証コード: %s"
 
 #: Controller/Component/LangComponent.php:32
 msgid "日本語"
@@ -2114,15 +2114,15 @@ msgstr "どちらでもない"
 
 #: Model/User.php:655;696
 msgid "Saving Email failed"
-msgstr ""
+msgstr "メールアドレスの保存に失敗しました。"
 
 #: Model/User.php:664;689
 msgid "Saving User failed"
-msgstr ""
+msgstr "ユーザ情報の保存に失敗しました。"
 
 #: Model/User.php:674;681;708
 msgid "Saving LocalName failed"
-msgstr ""
+msgstr "ローカル名の保存に失敗しました。"
 
 #: Model/User.php:734
 msgid "Current Password is incorrect."
@@ -2201,7 +2201,7 @@ msgstr "入力必須項目です。"
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:17
 msgid "Only Numeric characters are allowed."
-msgstr ""
+msgstr "許可されているのは数字のみです。"
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:18
 #: View/Elements/User/profile_setting.ctp:71;81
@@ -2259,7 +2259,7 @@ msgstr "メールアドレスが正しくないものがあります。"
 msgid ""
 "Please mix of numbers, alphanumeric and special characters like (  ! @ # $ % "
 "^ & * ( ) _ - + = { } [ ] | : ; < > , . ? /  )"
-msgstr ""
+msgstr "数字と英字と記号を組み合わせて下さい。使える記号は、 ! @ # $ % ^ & * ( ) _ - + = { } [ ] | : ; < > , . ? /"
 
 #: View/Elements/cake_variables.ctp:15
 msgid "%1$d or more and %2$d or less characters."
@@ -5079,12 +5079,14 @@ msgstr "ご希望の営業担当者"
 msgid ""
 "Thank you for signing up for Goalous.We are happy that we could meet you."
 msgstr ""
+"Goalousにサインナップしていただきありがとうございます。私達はあなたと会える事を楽しみにしています。"
 
 #: View/Emails/text/email_verify_digit_code.ctp:14
 msgid ""
 "Enter the following code in the window where you began creating your new "
 "Goalous team:"
 msgstr ""
+"新しいチームを作成する為に以下のコードをGoalousの画面で入力してください。:"
 
 #: View/Emails/text/invite.ctp:19 View/Emails/text/setup.ctp:19
 msgid "Hello."
@@ -6014,15 +6016,15 @@ msgstr "プロフィールを入力する"
 
 #: View/Signup/email.ctp:12
 msgid "Create a new team"
-msgstr ""
+msgstr "新しいチームを作成"
 
 #: View/Signup/email.ctp:29
 msgid "Your email address"
-msgstr ""
+msgstr "あなたのメールアドレス"
 
 #: View/Teams/add.ctp:115
 msgid " "
-msgstr ""
+msgstr " "
 
 #: View/Teams/add_group_vision.ctp:17
 msgid "Create a group vision."
@@ -6067,19 +6069,19 @@ msgstr "チームビジョンを更新する"
 
 #: View/Teams/invite.ctp:16
 msgid "Send Invitations"
-msgstr ""
+msgstr "招待を送信"
 
 #: View/Teams/invite.ctp:37
 msgid "good. Know your coworker."
-msgstr ""
+msgstr "素晴らしい！あなたの同僚に知らせよう！"
 
 #: View/Teams/invite.ctp:46
 msgid "Add email"
-msgstr ""
+msgstr "メールアドレスを追加"
 
 #: View/Teams/invite.ctp:102
 msgid "Skip for Now"
-msgstr ""
+msgstr "今はスキップする"
 
 #: View/Teams/settings.ctp:21
 msgid "Invitation"
@@ -6152,33 +6154,33 @@ msgstr "新規登録"
 
 #: View/Users/register_password_with_invite.ctp:12
 msgid "Set your password"
-msgstr ""
+msgstr "パスワードを設定"
 
 #: View/Users/register_password_with_invite.ctp:13
 msgid "Choose a password for login to Goalous"
-msgstr ""
+msgstr "Goalousのログインパスワードを作成してください。"
 
 #: View/Users/register_password_with_invite.ctp:28
 msgid ""
 "Use at least 8 characters and use a mix of numbers, alphanumeric and special "
 "characters."
-msgstr ""
+msgstr "８文字以上で、数字、英語、記号を組み合わせて下さい。"
 
 #: View/Users/register_password_with_invite.ctp:36
 msgid "Join Team"
-msgstr ""
+msgstr "チームに参加"
 
 #: View/Users/register_prof_with_invite.ctp:13
 msgid "Join the Goalous team for \"%s\"?"
-msgstr ""
+msgstr "チーム「%s」に参加しますか?"
 
 #: View/Users/register_prof_with_invite.ctp:15
 msgid "Your name will displayed along with your goals and posts in Goalous"
-msgstr ""
+msgstr "あなたの名前はGoalous内のあなたのゴール、あなたの投稿に表示されます。"
 
 #: View/Users/register_prof_with_invite.ctp:61
 msgid "Your date of birth"
-msgstr ""
+msgstr "あなたの誕生日"
 
 #: View/Users/registration_with_set_password.ctp:16
 msgid "User Authentication"
