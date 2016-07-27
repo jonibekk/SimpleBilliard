@@ -8,9 +8,15 @@
  * @var CodeCompletionView $this
  * @var                    $post
  */
+//echo json_encode($post);
 ?>
 <!-- START app/View/Elements/Feed/display_share_range.ctp -->
 <div class="font_11px font_lightgray">
+    <!-- only show if created within 1hr -->
+    <?php if ($post['Post']['created'] > REQUEST_TIMESTAMP_ONE_HR_AGO) { ?>
+            <span class="label label-primary">New</span>
+    <?php } ?>
+
     <?= $this->TimeEx->elapsedTime(h($post['Post']['created'])) ?>
     <?php if ($post['Post']['type'] != Post::TYPE_KR_COMPLETE &&
         $post['Post']['type'] != Post::TYPE_ACTION
