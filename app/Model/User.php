@@ -234,12 +234,6 @@ class User extends AppModel
             'minLength' => [
                 'rule' => ['minLength', 8],
             ],
-            'passwordPolicy' => [
-                'rule' => [
-                    'custom',
-                    '/^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[\!\@\#\$\%\^\&\*\(\)\_\-\+\=\{\}\[\]\|\:\;\<\>\,\.\?\/])[0-9a-zA-Z\!\@\#\$\%\^\&\*\(\)\_\-\+\=\{\}\[\]\|\:\;\<\>\,\.\?\/]{0,}$/i'
-                ]
-            ]
         ],
         'password_confirm'   => [
             'notEmpty'          => [
