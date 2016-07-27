@@ -1,5 +1,16 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
+import { DisabledNextButton } from './elements/disabled_next_btn'
+import { EnabledNextButton } from './elements/enabled_next_btn'
+import { AlertMessageBox } from './elements/alert_message_box'
 export default class Term extends React.Component {
+  getInputDomData() {
+    return {
+      term: ReactDOM.findDOMNode(this.refs.term).value.trim(),
+      start_month: ReactDOM.findDOMNode(this.refs.start_month).value.trim(),
+      timzone: ReactDOM.findDOMNode(this.refs.timezone).value.trim()
+    }
+  }
   render() {
     return (
       <div className="row">
@@ -8,9 +19,9 @@ export default class Term extends React.Component {
               <div className="panel-heading signup-title">Finaly, Teams Term?</div>
               <div className="signup-description">Teams Term sample text Teams Term sample text Teams Term sample text Teams Term sample text.</div>
 
-              <form action="#" className="form-horizontal validate" novalidate="novalidate" id="" method="post" accept-charset="utf-8">
+              <form action="#" className="form-horizontal" acceptCharset="utf-8">
                   <div className="panel-heading signup-itemtitle">Start month</div>
-                  <select className="form-control signup_input-design" data-bv-notempty-message=" " id="TeamStartTermMonth" required="required">
+                  <select className="form-control signup_input-design">
                       <option value="">選択してください</option>
                       <option value="1">１月</option>
                       <option value="2">２月</option>
@@ -37,13 +48,13 @@ export default class Term extends React.Component {
                   </div>
 
                   <div className="panel-heading signup-itemtitle">Timezone</div>
-                  <p id="SignupTeamsTermTimezoneDefault">
+                  <p>
                       <span className="plr_18px">
                         <span className="signup-goal-timezone-label">(GMT+9:00) Tokyo, Seoul, Osaka, Sapporo, Yakutsk</span>
-                        <a href="#">変更する</a>
+                        <a onClick={console.log(1)}>変更する</a>
                       </span>
                   </p>
-                  <div className="none" id="SignupTeamsTermTimezoneInputWrap">
+                  <div className="none">
                       <div className="has-feedback">
                           <select className="form-control signup_input-design" defaultValue="+9.0">
                               <option value="-12.0">(GMT-12:00) Eniwetok, Kwajalein</option>
@@ -81,15 +92,15 @@ export default class Term extends React.Component {
                   </div>
 
                   {/* Alert message */}
-                  { (() => { if(this.props.team_name.is_exception) {
-                    return <AlertMessageBox message={ this.props.team_name.exception_message } />;
+                  { (() => { if(this.props.term.is_exception) {
+                    return <AlertMessageBox message={ this.props.term.exception_message } />;
                   }})() }
 
                   {/* Submit button */}
-                  { (() => { if(this.props.team_name.submit_button_is_enabled) {
-                    return <EnabledNextButton onSubmit={ () => this.props.postTeamName(this.getInputDomData()) } />;
+                  { (() => { if(this.props.term.submit_button_is_enabled) {
+                    return <EnabledNextButton onSubmit={ () => this.props.postTerm(this.getInputDomData()) } />;
                   } else {
-                    return <DisabledNextButton loader={ this.props.team_name.checking_team_name } />;
+                    return <DisabledNextButton loader={ this.props.term.checking_term } />;
                   }})() }
 
               </form>
