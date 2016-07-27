@@ -15,16 +15,21 @@ export default class UserName extends React.Component {
     }
   }
 
+  handleSubmit(e) {
+    e.preventDefault()
+    this.props.postUserName(this.getInputDomData())
+  }
+
   render() {
     return (
       <div>
         <div className="row">
-            {/*<!-- START app/View/Signup/user.ctp -->*/}
             <div className="panel panel-default panel-signup">
                 <div className="panel-heading signup-title">{"What's your name?"}</div>
                 <div className="signup-description">username sample textusername sample text username sample text username sample text username sample text username sample text.</div>
 
-                <form action="#" className="form-horizontal" id="" acceptCharset="utf-8">
+                <form className="form-horizontal" acceptCharset="utf-8"
+                      onSubmit={ (e) => this.handleSubmit(e) }>
                     <div className="panel-heading signup-itemtitle">your name</div>
                     <input ref="first_name" className="form-control signup_input-design" placeholder="例) Suzuki" type="text"
                            onChange={ () => { this.props.inputUserName(this.getInputDomData()) }} />
@@ -44,7 +49,7 @@ export default class UserName extends React.Component {
 
                     {/* Submit button */}
                     { (() => { if(this.props.user_name.submit_button_is_enabled) {
-                      return <EnabledNextButton onSubmit={() => this.props.postUserName(this.getInputDomData()) } />;
+                      return <EnabledNextButton />;
                     } else {
                       return <DisabledNextButton loader={ this.props.user_name.checking_user_name } />;
                     }})() }
@@ -52,7 +57,6 @@ export default class UserName extends React.Component {
                 </form>
             </div>
         </div>
-        {/*<!-- END app/View/Signup/user.ctp -->*/}
       </div>
     )
   }

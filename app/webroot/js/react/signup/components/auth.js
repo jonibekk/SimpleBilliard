@@ -87,58 +87,55 @@ export default class Auth extends React.Component {
     return (
       <div>
       <div className="row">
-        { /* <!-- START app/webroot/js/react/signup/components/auth.js --> */}
           <div className="panel panel-default panel-signup">
               <div className="panel-heading signup-title">Check your email!</div>
               <div className="signup-description">Auth code sample text.Auth code sample textAuth code sample textAuth code sample textAuth code sample textAuth code sample text.</div>
 
-              <form action="#" className="form-horizontal validate" id="" method="post" acceptCharset="utf-8">
-                  <div className="signup-auth-split_input signup-auth-large_margin" data-multi-input-code="true">
-                      <div className="confirmation_code_group">
-                          <div className="signup-auth-split_input_item signup-auth-input_wrapper">
-                              <input type="text" className="signup-auth-inline_input" ref="code1" maxLength="1" type="text"
-                                     value={this.state.code1}
-                                     onKeyPress={ (event) => {this.inputCode(event.nativeEvent.key, 1)}}
-                                     onPaste={ (event) => this.inputCode(event.clipboardData.getData('Text'), 1) } />
-                          </div>
-                          <div className="signup-auth-split_input_item signup-auth-input_wrapper">
-                              <input type="text" className="signup-auth-inline_input" ref="code2" maxLength="1" type="text"
-                                     value={this.state.code2}
-                                     onKeyPress={ (event) => this.inputCode(event.nativeEvent.key, 2)}
-                                     onPaste={ (event) => this.inputCode(event.clipboardData.getData('Text'), 2) } />
-                          </div>
-                          <div className="signup-auth-split_input_item signup-auth-input_wrapper">
-                              <input type="text" className="signup-auth-inline_input" ref="code3" maxLength="1" type="text"
-                              value={this.state.code3}
-                              onKeyPress={ (event) => this.inputCode(event.nativeEvent.key, 3)}
-                              onPaste={ (event) => this.inputCode(event.clipboardData.getData('Text'), 3) } />
-                          </div>
+              <div className="signup-auth-split_input signup-auth-large_margin" data-multi-input-code="true">
+                  <div className="confirmation_code_group">
+                      <div className="signup-auth-split_input_item signup-auth-input_wrapper">
+                          <input type="text" className="signup-auth-inline_input" ref="code1" maxLength="1" type="text"
+                                 value={this.state.code1}
+                                 onKeyPress={ (event) => {this.inputCode(event.nativeEvent.key, 1)}}
+                                 onPaste={ (event) => this.inputCode(event.clipboardData.getData('Text'), 1) } />
                       </div>
-
-                      <div className="signup-auth-confirmation_code_span_cell">—</div>
-
-                      <div className="confirmation_code_group">
-                          <div className="signup-auth-split_input_item signup-auth-input_wrapper">
-                              <input type="text" className="signup-auth-inline_input" ref="code4" maxLength="1" type="text"
-                              value={this.state.code4}
-                              onKeyPress={ (event) => this.inputCode(event.nativeEvent.key, 4)}
-                              onPaste={ (event) => this.inputCode(event.clipboardData.getData('Text'), 4) } />
-                          </div>
-                          <div className="signup-auth-split_input_item signup-auth-input_wrapper">
-                              <input type="text" className="signup-auth-inline_input" ref="code5" maxLength="1" type="text"
-                              value={this.state.code5}
-                              onKeyPress={ (event) => this.inputCode(event.nativeEvent.key, 5)}
-                              onPaste={ (event) => this.inputCode(event.clipboardData.getData('Text'), 5) } />
-                          </div>
-                          <div className="signup-auth-split_input_item signup-auth-input_wrapper">
-                              <input type="text" className="signup-auth-inline_input" ref="code6" maxLength="1" type="text"
-                              value={this.state.code6}
-                              onKeyPress={ (event) => this.inputCode(event.nativeEvent.key, 6)}
-                              onPaste={ (event) => this.inputCode(event.clipboardData.getData('Text'), 6) } />
-                          </div>
+                      <div className="signup-auth-split_input_item signup-auth-input_wrapper">
+                          <input type="text" className="signup-auth-inline_input" ref="code2" maxLength="1" type="text"
+                                 value={this.state.code2}
+                                 onKeyPress={ (event) => this.inputCode(event.nativeEvent.key, 2)}
+                                 onPaste={ (event) => this.inputCode(event.clipboardData.getData('Text'), 2) } />
+                      </div>
+                      <div className="signup-auth-split_input_item signup-auth-input_wrapper">
+                          <input type="text" className="signup-auth-inline_input" ref="code3" maxLength="1" type="text"
+                          value={this.state.code3}
+                          onKeyPress={ (event) => this.inputCode(event.nativeEvent.key, 3)}
+                          onPaste={ (event) => this.inputCode(event.clipboardData.getData('Text'), 3) } />
                       </div>
                   </div>
-              </form>
+
+                  <div className="signup-auth-confirmation_code_span_cell">—</div>
+
+                  <div className="confirmation_code_group">
+                      <div className="signup-auth-split_input_item signup-auth-input_wrapper">
+                          <input type="text" className="signup-auth-inline_input" ref="code4" maxLength="1" type="text"
+                          value={this.state.code4}
+                          onKeyPress={ (event) => this.inputCode(event.nativeEvent.key, 4)}
+                          onPaste={ (event) => this.inputCode(event.clipboardData.getData('Text'), 4) } />
+                      </div>
+                      <div className="signup-auth-split_input_item signup-auth-input_wrapper">
+                          <input type="text" className="signup-auth-inline_input" ref="code5" maxLength="1" type="text"
+                          value={this.state.code5}
+                          onKeyPress={ (event) => this.inputCode(event.nativeEvent.key, 5)}
+                          onPaste={ (event) => this.inputCode(event.clipboardData.getData('Text'), 5) } />
+                      </div>
+                      <div className="signup-auth-split_input_item signup-auth-input_wrapper">
+                          <input type="text" className="signup-auth-inline_input" ref="code6" maxLength="1" type="text"
+                          value={this.state.code6}
+                          onKeyPress={ (event) => this.inputCode(event.nativeEvent.key, 6)}
+                          onPaste={ (event) => this.inputCode(event.clipboardData.getData('Text'), 6) } />
+                      </div>
+                  </div>
+              </div>
 
               {this.props.auth.checking_auth_code ? checking_box() : ''}
               {this.props.auth.auth_code_is_invalid ? alert_box() : ''}
@@ -148,7 +145,6 @@ export default class Auth extends React.Component {
           </div>
       </div>
       <Link to="/signup/user">ページ遷移用リンク</Link>
-      {/* <!-- END app/webroot/js/react/signup/components/auth.js --> */ }
       </div>
     )
   }
