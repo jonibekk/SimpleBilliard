@@ -1,6 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Link } from 'react-router'
+import { DisabledNextButton } from './elements/disabled_next_btn'
+import { EnabledNextButton } from './elements/enabled_next_btn'
 
 export default class UserName extends React.Component {
 
@@ -13,27 +15,14 @@ export default class UserName extends React.Component {
   }
 
   render() {
-    const ajax_loader = () => {
-      return (
-        <img src="/img/ajax-loader.gif" className="signup-img-loader" />
-      )
-    }
     const disabled_btn = () => {
       return (
-        <div className="submit signup-btn">
-            { this.props.user_name.checking_user_name ? ajax_loader() : '' }
-            <input className="btn btn-lightGray signup-btn-submit" type="submit" value="Next→" disabled="disabled" />
-        </div>
+        <DisabledNextButton loader={this.props.user_name.checking_user_name} />
       )
     }
     const enabled_btn = () => {
       return (
-        <div className="submit signup-btn">
-            <input className="btn btn-primary signup-btn-submit" type="button" value="Next→"
-                   onClick={ () => {
-                     this.props.postUserName(this.getInputDomData())
-                   }} />
-        </div>
+        <EnabledNextButton onSubmit={() => this.props.postUserName(this.getInputDomData()) } />
       )
     }
     const exception_message_box = () => {
