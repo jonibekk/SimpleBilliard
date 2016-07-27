@@ -43,7 +43,7 @@
                     'data-bv-stringlength'         => 'true',
                     'data-bv-stringlength-max'     => 200,
                     'data-bv-stringlength-message' => __("It's over limit characters (%s).", 200),
-                    "data-bv-notempty"             => "false",
+                    "data-bv-notempty"             => "true",
                     'data-bv-emailaddress'         => "false",
                     "data-bv-callback"             => "true",
                     "data-bv-callback-message"     => " ",

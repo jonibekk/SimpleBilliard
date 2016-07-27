@@ -228,6 +228,11 @@ class PostsController extends AppController
             }
         }
 
+        //push for updating circle list
+        if (viaIsSet($this->request->data['Post']['type']) != Post::TYPE_MESSAGE) {
+            $this->NotifyBiz->pushUpdateCircleList($socketId, $share);
+        }
+
         //publish an event to Mixpanel
         $mixpanel_prop_name = null;
         if (viaIsSet($this->request->data['Post']['type']) == Post::TYPE_MESSAGE) {
