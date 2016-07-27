@@ -1,3 +1,4 @@
+import { browserHistory } from 'react-router'
 import * as types from '../constants/ActionTypes'
 import {
   post,
@@ -10,6 +11,11 @@ export function inputTeamName(team_name) {
       type: types.INPUT_TEAM_NAME,
       inputed_team_name: team_name
     })
+    if(String(team_name).length > 0) {
+      dispatch(enableSubmitButton())
+    } else {
+      dispatch(disableSubmitButton())
+    }
   }
 }
 
@@ -23,6 +29,7 @@ export function disableSubmitButton() {
 
 export function postTeamName(team_name) {
   return dispatch => {
+    dispatch(disableSubmitButton())
     dispatch({ type: types.CHECKING_TEAM_NAME })
     const data = {
       'data[Team][name]': team_name
@@ -37,7 +44,9 @@ export function postTeamName(team_name) {
           type: types.TEAM_NAME_IS_INVALID,
           invalid_messages: mapValidationMsg(response.data.validation_msg)
         })
+        dispatch(enableSubmitButton())
       } else {
+        browserHistory.push('/signup/term')
         dispatch({ type: types.TEAM_NAME_IS_VALID })
       }
     }, () => {
@@ -46,6 +55,7 @@ export function postTeamName(team_name) {
         type: types.TEAM_NAME_NETWORK_ERROR,
         exception_message: 'Network error'
       })
+      dispatch(enableSubmitButton())
     })
   }
 }

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import { Link } from 'react-router'
 import { DisabledNextButton } from './elements/disabled_next_btn'
 import { EnabledNextButton } from './elements/enabled_next_btn'
+import { AlertMessageBox } from './elements/alert_message_box'
 
 export default class UserName extends React.Component {
 
@@ -15,24 +16,6 @@ export default class UserName extends React.Component {
   }
 
   render() {
-    const disabled_btn = () => {
-      return (
-        <DisabledNextButton loader={this.props.user_name.checking_user_name} />
-      )
-    }
-    const enabled_btn = () => {
-      return (
-        <EnabledNextButton onSubmit={() => this.props.postUserName(this.getInputDomData()) } />
-      )
-    }
-    const exception_message_box = () => {
-      return (
-        <div className="signup-error-description">
-            <i className="fa fa-exclamation-circle signup-load-icon mod-error"></i> {this.props.user_name.exception_message}
-        </div>
-      )
-    }
-
     return (
       <div>
         <div className="row">
@@ -53,8 +36,19 @@ export default class UserName extends React.Component {
                             <input type="checkbox" value="1" id="UserAgreeTos" ref="privacy"
                                    onChange={ () => { this.props.inputUserName(this.getInputDomData()) } } /> Goalousの<Link to="/terms" target="_blank" className="link">利用規約</Link>と<Link to="/privacy_policy" target="_blank" className="link">プライバシーポリシー</Link>に同意します。</label>
                     </div>
-                    { this.props.user_name.is_exception ? exception_message_box() : '' }
-                    { this.props.user_name.submit_button_is_enabled ? enabled_btn() : disabled_btn() }
+
+                    {/* Alert message */}
+                    { (() => { if(this.props.user_name.is_exception) {
+                      return <AlertMessageBox message={ this.props.user_name.exception_message } />;
+                    }})() }
+
+                    {/* Submit button */}
+                    { (() => { if(this.props.user_name.submit_button_is_enabled) {
+                      return <EnabledNextButton onSubmit={() => this.props.postUserName(this.getInputDomData()) } />;
+                    } else {
+                      return <DisabledNextButton loader={ this.props.user_name.checking_user_name } />;
+                    }})() }
+
                 </form>
             </div>
         </div>

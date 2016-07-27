@@ -9,22 +9,6 @@ export default class Password extends React.Component {
     return ReactDOM.findDOMNode(this.refs.password).value.trim()
   }
   render() {
-    const disabled_btn = () => {
-      return (
-        <DisabledNextButton loader={this.props.password.checking_password} />
-      )
-    }
-    const enabled_btn = () => {
-      return (
-        <EnabledNextButton onSubmit={() => this.props.postPassword(this.getInputDomData()) } />
-      )
-    }
-    const exception_message_box = () => {
-      return (
-        <AlertMessageBox message={this.props.password.exception_message} />
-      )
-    }
-
     return (
       <div className="row">
           {/* <!-- START app/View/Signup/password.ctp --> */}
@@ -38,8 +22,18 @@ export default class Password extends React.Component {
                          onChange={ () => { this.props.inputPassword(this.getInputDomData()) }} />
                   <div className="signup-description mod-small">8文字以上。 アルファベット大文字、小文字、数字が混在している必要があります。記号は使えません。</div>
 
-                  { this.props.password.is_exception ? exception_message_box() : '' }
-                  { this.props.password.submit_button_is_enabled ? enabled_btn() : disabled_btn() }
+                  {/* Alert message */}
+                  { (() => { if(this.props.password.is_exception) {
+                    return <AlertMessageBox message={ this.props.password.exception_message } />;
+                  }})() }
+
+                  {/* Submit button */}
+                  { (() => { if(this.props.password.submit_button_is_enabled) {
+                    return <EnabledNextButton onSubmit={() => this.props.postPassword(this.getInputDomData()) } />;
+                  } else {
+                    return <DisabledNextButton loader={ this.props.password.checking_password } />;
+                  }})() }
+
               </form>
           </div>
           {/* <!-- END app/View/Signup/password.ctp --> */}
