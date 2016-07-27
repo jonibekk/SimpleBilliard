@@ -1085,6 +1085,42 @@ class TeamsController extends AppController
     }
 
     /**
+     * メールアドレスが招待可能なものか判定
+     *
+     * @return CakeResponse
+     */
+    public function ajax_validate_email_can_invite()
+    {
+        $this->_ajaxPreProcess();
+        $email = $this->request->query('email');
+        $valid = false;
+        $message = '';
+        if ($email) {
+            // メールアドレスだけ validate
+            $this->User->Email->create(['email' => $email]);
+            $this->User->Email->validate = [
+                'email' => [
+                    'maxLength' => ['rule' => ['maxLength', 200]],
+                    'notEmpty'  => ['rule' => 'notEmpty',],
+                    'email'     => ['rule' => ['email'],],
+                ],
+            ];
+            $this->User->Email->validates(['fieldList' => ['email']]);
+            if ($this->User->Email->validationErrors) {
+                $message = $this->User->Email->validationErrors['email'][0];
+            } elseif ($this->User->Email->getEmailsBelongTeamByEmail($email)) {
+                $message = __('This email address has already been joined.');
+            } else {
+                $valid = true;
+            }
+        }
+        return $this->_ajaxGetResponse([
+            'valid'   => $valid,
+            'message' => $message
+        ]);
+    }
+
+    /**
      * インサイト
      */
     public function insight()
