@@ -18,7 +18,6 @@ export default class Password extends React.Component {
   render() {
     return (
       <div className="row">
-          {/* <!-- START app/View/Signup/password.ctp --> */}
           <div className="panel panel-default panel-signup">
               <div className="panel-heading signup-title">Set your password</div>
               <div className="signup-description">password sample text password sample text password sample text.</div>
@@ -44,7 +43,6 @@ export default class Password extends React.Component {
 
               </form>
           </div>
-          {/* <!-- END app/View/Signup/password.ctp --> */}
       </div>
     )
   }

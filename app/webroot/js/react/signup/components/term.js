@@ -17,7 +17,6 @@ export default class Term extends React.Component {
   render() {
     return (
       <div className="row">
-          {/* <!-- START app/View/Signup/user.ctp --> */}
           <div className="panel panel-default panel-signup">
               <div className="panel-heading signup-title">Finaly, Teams Term?</div>
               <div className="signup-description">Teams Term sample text Teams Term sample text Teams Term sample text Teams Term sample text.</div>
@@ -114,7 +113,6 @@ export default class Term extends React.Component {
               </form>
 
           </div>
-          {/* <!-- END app/View/Signup/user.ctp --> */}
       </div>
     )
   }

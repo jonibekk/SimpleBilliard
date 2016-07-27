@@ -87,7 +87,6 @@ export default class Auth extends React.Component {
     return (
       <div>
       <div className="row">
-        { /* <!-- START app/webroot/js/react/signup/components/auth.js --> */}
           <div className="panel panel-default panel-signup">
               <div className="panel-heading signup-title">Check your email!</div>
               <div className="signup-description">Auth code sample text.Auth code sample textAuth code sample textAuth code sample textAuth code sample textAuth code sample text.</div>
@@ -146,7 +145,6 @@ export default class Auth extends React.Component {
           </div>
       </div>
       <Link to="/signup/user">ページ遷移用リンク</Link>
-      {/* <!-- END app/webroot/js/react/signup/components/auth.js --> */ }
       </div>
     )
   }

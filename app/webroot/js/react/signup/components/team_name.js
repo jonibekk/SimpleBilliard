@@ -18,7 +18,6 @@ export default class TeamName extends React.Component {
   render() {
     return (
       <div className="row">
-          {/* <!-- START app/View/Signup/team.ctp --> */}
           <div className="panel panel-default panel-signup">
               <div className="panel-heading signup-title">What do you want to call your Goalous team?</div>
               <div className="signup-description">Goalous team name sample text Goalous team name sample text Goalous team name sample text Goalous team  name sample text Goalous team name sample text.
@@ -43,7 +42,6 @@ export default class TeamName extends React.Component {
                   }})() }
               </form>
           </div>
-          {/* <!-- END app/View/Signup/team.ctp --> */}
       </div>
     )
   }
