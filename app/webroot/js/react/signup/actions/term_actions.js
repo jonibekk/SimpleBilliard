@@ -66,7 +66,8 @@ export function disableSubmitButton() {
 }
 
 export function postTerms(terms) {
-  return dispatch => {
+  return (dispatch, getState) => {
+    dispatch(disableSubmitButton())
     dispatch({ type: types.CHECKING_TERM })
 
     const state = getState()
