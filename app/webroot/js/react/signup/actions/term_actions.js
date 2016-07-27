@@ -5,20 +5,34 @@ import {
 } from './common_actions'
 
 export function selectTerm(term) {
-  return dispatch => {
+  return (dispatch, getState) => {
     dispatch({
       type: types.SELECT_TERM,
       selected_term: term
     })
+    const state = getState()
+
+    if(state.term.selected_term && state.term.selected_start_month) {
+      dispatch(enableSubmitButton())
+    } else {
+      dispatch(disableSubmitButton())
+    }
   }
 }
 
 export function selectStartMonth(start_month) {
-  return dispatch => {
+  return (dispatch, getState) => {
     dispatch({
       type: types.SELECT_START_MONTH,
       selected_start_month: start_month
     })
+    const state = getState()
+
+    if(state.term.selected_term && state.term.selected_start_month) {
+      dispatch(enableSubmitButton())
+    } else {
+      dispatch(disableSubmitButton())
+    }
   }
 }
 
@@ -54,13 +68,18 @@ export function disableSubmitButton() {
 export function postTerms(terms) {
   return dispatch => {
     dispatch({ type: types.CHECKING_TERM })
-    const data = {
-      'data[Team][border_months]': terms.term,
-      'data[Team][timezone]': terms.timezone,
-      'data[Team][start_term_month]': terms.start_month
+
+    const state = getState()
+    let data = {
+      'data[Team][border_months]': state.term.term,
+      'data[Team][start_term_month]': state.term.start_month
     }
 
-    return post('/signup/ajax_validation_fields', data, response => {
+    if(state.term.timezone) {
+      data['data[Team][timezone]'] = state.term.timezone
+    }
+
+    return post('/signup/ajax_register_user', data, response => {
       const term_is_invlalid = response.data.error && Object.keys(response.data.validation_msg).length
 
       dispatch({ type: types.FINISHED_CHECKING_TERM })
@@ -78,6 +97,7 @@ export function postTerms(terms) {
         type: types.TERM_NETWORK_ERROR,
         exception_message: 'Network error'
       })
+      dispatch(enableSubmitButton())
     })
   }
 }
