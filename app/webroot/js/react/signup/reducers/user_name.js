@@ -4,11 +4,17 @@ const initialState = {
   inputed: {
     first_name: '',
     last_name: '',
+    birth_year: '',
+    birth_month: '',
+    birth_day: '',
     privacy: ''
   },
   invalid_messages: {
     first_name: '',
-    last_name: ''
+    last_name: '',
+    birth_year: '',
+    birth_month: '',
+    birth_day: ''
   },
   checking_user_name: false,
   submit_button_is_enabled: false,

@@ -7,7 +7,7 @@ import config from '../config.js'
 
 gulp.task('react_setup:browserify', () => {
   return browserify({entries: [config.react_setup.src]})
-    .transform(babelify, {presets: ["es2015", "react"], plugins: ["babel-plugin-transform-object-assign"]})
+    .transform(babelify)
     .bundle()
     .pipe(source(config.react_setup.output.file_name + '.js'))
     .pipe(gulp.dest(config.dest + '/react_setup'))

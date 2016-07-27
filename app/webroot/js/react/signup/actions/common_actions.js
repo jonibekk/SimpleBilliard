@@ -49,7 +49,8 @@ export function mapValidationMsg(before_mapped_messages) {
     'data[User][password]': 'password',
     'data[User][first_name]': 'first_name',
     'data[User][last_name]': 'last_name',
-    'data[User][local_date]': 'local_date'
+    'data[User][local_date]': 'local_date',
+    'data[User][birth_day]': 'birth_day'
   }
 
   for (key in map) {
@@ -69,4 +70,12 @@ export function getLocalDate() {
   const fullDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
 
   return fullDate;
+}
+
+export function range(start, end) {
+  const len = end - start
+  let a = new Array(len)
+
+  for (let i=0, c=start; i<len; i++, c++) a[i] = c
+  return a
 }

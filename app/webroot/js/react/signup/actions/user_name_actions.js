@@ -14,7 +14,7 @@ export function inputUserName(user) {
     })
     const state = getState()
 
-    if(state.user_name.inputed.first_name && state.user_name.inputed.last_name && state.user_name.inputed.privacy) {
+    if(state.user_name.inputed.first_name && state.user_name.inputed.last_name && state.user_name.inputed.privacy && state.user_name.inputed.birth_day && state.user_name.inputed.birth_month && state.user_name.inputed.birth_year) {
       dispatch(enableSubmitButton())
     } else {
       dispatch(disableSubmitButton())
@@ -38,6 +38,7 @@ export function postUserName(user) {
     const data = {
       'data[User][first_name]': user.first_name,
       'data[User][last_name]': user.last_name,
+      'data[User][birth_day]': `${user.birth_year}-${user.birth_month}-${user.birth_day}`,
       'data[User][local_date]': getLocalDate()
     }
 
