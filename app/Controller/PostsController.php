@@ -1150,9 +1150,7 @@ class PostsController extends AppController
         $this->_setCurrentCircle();
         $this->_setFeedMoreReadUrl();
 
-        if (isset($params['circle_id']) ||
-            isset($params['post_id'])
-        ) {
+        if (isset($params['post_id'])) {
             $this->set('long_text', true);
         } else {
             $this->set('long_text', false);
