@@ -49,6 +49,10 @@ class SendMailShell extends AppShell
             CakeSession::id($this->params['session_id']);
             CakeSession::start();
         }
+        if (isset($this->params['language']) && $this->params['language']) {
+            Configure::write('Config.language', $this->params['language']);
+        }
+
         $this->components = new ComponentCollection();
         $this->Lang = new LangComponent($this->components);
         $this->AppController = new AppController();
@@ -72,6 +76,7 @@ class SendMailShell extends AppShell
                     'options' => [
                         'id'         => ['short' => 'i', 'help' => 'SendMailのid', 'required' => true,],
                         'session_id' => ['short' => 's', 'help' => 'Session ID', 'required' => true,],
+                        'language'   => ['short' => 'l', 'help' => 'Language code', 'required' => false,],
                     ]
                 ]
             ],
@@ -81,6 +86,7 @@ class SendMailShell extends AppShell
                     'options' => [
                         'id'         => ['short' => 'i', 'help' => 'SendMailのid', 'required' => true,],
                         'session_id' => ['short' => 's', 'help' => 'Session ID', 'required' => true,],
+                        'language'   => ['short' => 'l', 'help' => 'Language code', 'required' => false,],
                     ]
                 ]
             ],
