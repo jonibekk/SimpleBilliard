@@ -189,7 +189,7 @@
                 'controller' => 'teams',
                 'action'     => 'ajax_validate_email_can_invite'
             ]) ?>",
-            route_url: "<?= FULL_BASE_URL ?>"
+            route_url: "<?= Router::fullbaseUrl() ?>"
         },
         data: {
             a: <?=isset($select2_default) ? $select2_default : "[]"?>,
