@@ -7,7 +7,7 @@ const initialState = {
   selected_timezone: '',
   checking_term: false,
   term_is_invalid: false,
-  invalid_message: '',
+  invalid_messages: {},
   is_exception: false,
   exception_message: '',
   is_timezone_edit_mode: false
@@ -50,7 +50,7 @@ export default function term(state = initialState, action) {
     case types.TERM_IS_INVALID:
       return Object.assign({}, state, {
         term_is_invalid: true,
-        invalid_message: action.invalid_message
+        invalid_messages: action.invalid_messages
       })
     case types.TERM_NETWORK_ERROR:
       return Object.assign({}, state, {

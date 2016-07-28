@@ -58,7 +58,7 @@ export function postUserName(user) {
         browserHistory.push('/signup/password')
         return
       }
-    }, error => {
+    }, () => {
       dispatch({ type: types.FINISHED_CHECKING_USER_NAME })
       dispatch(enableSubmitButton())
       dispatch({

@@ -468,6 +468,7 @@ class SignupController extends AppController
 
     public function _hasAllRequiredFields($data)
     {
+        $this->log($data);
         foreach ($this->requiredFields as $model => $fields) {
             foreach ($fields as $field) {
                 if (!isset($data[$model][$field])) {
