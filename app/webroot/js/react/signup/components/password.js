@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import { DisabledNextButton } from './elements/disabled_next_btn'
 import { EnabledNextButton } from './elements/enabled_next_btn'
 import { AlertMessageBox } from './elements/alert_message_box'
+import { InvalidMessageBox } from './elements/invalid_message_box'
 
 export default class Password extends React.Component {
 
@@ -24,10 +25,15 @@ export default class Password extends React.Component {
 
               <form className="form-horizontal" method="post" acceptCharset="utf-8"
                     onSubmit={(e) => this.handleSubmit(e) } >
+
+                  {/* Password */}
                   <div className="panel-heading signup-itemtitle">Password</div>
-                  <input className="form-control signup_input-design" placeholder="********" maxLength="50" type="password" ref="password"
-                         onChange={ () => { this.props.inputPassword(this.getInputDomData()) }} />
-                  <div className="signup-description mod-small">8文字以上。 アルファベット大文字、小文字、数字が混在している必要があります。記号は使えません。</div>
+                  <div className={(this.props.password.invalid_messages.password) ? 'has-error' : ''}>
+                    <input className="form-control signup_input-design" placeholder="8文字以上。 アルファベット文字、数字が混在している必要があります。" maxLength="50" type="password" ref="password"
+                           onChange={ () => { this.props.inputPassword(this.getInputDomData()) }} />
+                  </div>
+                  <InvalidMessageBox is_invalid={this.props.password.password_is_invalid}
+                                     message={this.props.password.invalid_messages.password} />
 
                   {/* Alert message */}
                   { (() => { if(this.props.password.is_exception) {

@@ -1,3 +1,4 @@
+import { browserHistory } from 'react-router'
 import * as types from '../constants/ActionTypes'
 import {
   post,
@@ -72,25 +73,37 @@ export function postTerms(terms) {
 
     const state = getState()
     let data = {
-      'data[Team][border_months]': state.term.term,
-      'data[Team][start_term_month]': state.term.start_month
+      'data[Team][border_months]': state.term.selected_term,
+      'data[Team][start_term_month]': state.term.selected_start_month
     }
 
-    if(state.term.timezone) {
-      data['data[Team][timezone]'] = state.term.timezone
+    if(state.term.selected_timezone) {
+      data['data[Team][timezone]'] = state.term.selected_timezone
     }
 
     return post('/signup/ajax_register_user', data, response => {
-      const term_is_invlalid = response.data.error && Object.keys(response.data.validation_msg).length
-
       dispatch({ type: types.FINISHED_CHECKING_TERM })
+
+      const is_not_available = response.data.is_not_available
+      const term_is_invlalid = Boolean(response.data.error && Object.keys(response.data.validation_msg).length)
+
+      if(is_not_available) {
+        dispatch({
+          type: types.TERM_NETWORK_ERROR,
+          exception_message: response.data.message
+        })
+        // document.location.href = "/signup/email"
+        return
+      }
       if (term_is_invlalid) {
         dispatch({
           type: types.TERM_IS_INVALID,
           invalid_messages: mapValidationMsg(response.data.validation_msg)
         })
+        dispatch(enableSubmitButton())
       } else {
         dispatch({ type: types.TERM_IS_VALID })
+        document.location.href = "/teams/invite"
       }
     }, () => {
       dispatch({ type: types.FINISHED_CHECKING_TERM })

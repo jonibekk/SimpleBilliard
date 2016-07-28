@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom'
 import { DisabledNextButton } from './elements/disabled_next_btn'
 import { EnabledNextButton } from './elements/enabled_next_btn'
 import { AlertMessageBox } from './elements/alert_message_box'
+import { InvalidMessageBox } from './elements/invalid_message_box'
+
 export default class Term extends React.Component {
 
   getInputDomData(ref_name) {
@@ -39,16 +41,18 @@ export default class Term extends React.Component {
                       <option value="11">１１月</option>
                       <option value="12">１２月</option>
                   </select>
+                  <InvalidMessageBox is_invalid={this.props.term.term_is_invalid}
+                                     message={this.props.term.invalid_messages.start_month} />
 
                   <div className="panel-heading signup-itemtitle">Term</div>
-                  <div className="required">
-                      <select className="form-control signup_input-design" ref="term" onChange={ () => { this.props.selectTerm(this.getInputDomData('term')) } }>
-                          <option value="">選択してください</option>
-                          <option value="3">四半期</option>
-                          <option value="6">半年</option>
-                          <option value="12">年</option>
-                      </select>
-                  </div>
+                  <select className="form-control signup_input-design" ref="term" onChange={ () => { this.props.selectTerm(this.getInputDomData('term')) } }>
+                      <option value="">選択してください</option>
+                      <option value="3">四半期</option>
+                      <option value="6">半年</option>
+                      <option value="12">年</option>
+                  </select>
+                  <InvalidMessageBox is_invalid={this.props.term.term_is_invalid}
+                                     message={this.props.term.invalid_messages.term} />
 
                   {/* Timezone */}
                   <div className="panel-heading signup-itemtitle">Timezone</div>
@@ -97,6 +101,8 @@ export default class Term extends React.Component {
                       </p>
                     )
                   }})() }
+                  <InvalidMessageBox is_invalid={this.props.term.term_is_invalid}
+                                     message={this.props.term.invalid_messages.timezone} />
 
                   {/* Alert message */}
                   { (() => { if(this.props.term.is_exception) {

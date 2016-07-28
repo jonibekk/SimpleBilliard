@@ -5,7 +5,7 @@ import { post, mapValidationMsg } from './common_actions'
 export function inputPassword(password) {
   return dispatch => {
     dispatch({ type: types.INPUT_PASSWORD, inputed_password: password })
-    if(String(password).length >= 4) {
+    if(String(password).length >= 8) {
       dispatch(enableSubmitButton())
     } else {
       dispatch(disableSubmitButton())

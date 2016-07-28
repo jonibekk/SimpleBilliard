@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import { DisabledNextButton } from './elements/disabled_next_btn'
 import { EnabledNextButton } from './elements/enabled_next_btn'
 import { AlertMessageBox } from './elements/alert_message_box'
+import { InvalidMessageBox } from './elements/invalid_message_box'
 
 export default class TeamName extends React.Component {
 
@@ -25,9 +26,15 @@ export default class TeamName extends React.Component {
 
               <form className="form-horizontal" method="post" acceptCharset="utf-8"
                     onSubmit={(e) => this.handleSubmit(e) } >
+
+                  {/* Team name */}
                   <div className="panel-heading signup-itemtitle">Goalous team name</div>
-                  <input className="form-control signup_input-design" ref="team_name" placeholder="例) チームGoalous" maxLength="128" type="text"
-                         onChange={ () => this.props.inputTeamName(this.getInputDomData()) } />
+                  <div className={(this.props.team_name.invalid_messages.team_name) ? 'has-error' : ''}>
+                    <input className="form-control signup_input-design" ref="team_name" placeholder="例) チームGoalous" type="text"
+                           onChange={ () => this.props.inputTeamName(this.getInputDomData()) } />
+                    <InvalidMessageBox is_invalid={this.props.team_name.team_name_is_invalid}
+                                       message={this.props.team_name.invalid_messages.team_name} />
+                  </div>
 
                   {/* Alert message */}
                   { (() => { if(this.props.team_name.is_exception) {
