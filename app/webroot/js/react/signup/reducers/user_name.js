@@ -12,8 +12,6 @@ const initialState = {
   invalid_messages: {
     first_name: '',
     last_name: '',
-    birth_year: '',
-    birth_month: '',
     birth_day: ''
   },
   checking_user_name: false,

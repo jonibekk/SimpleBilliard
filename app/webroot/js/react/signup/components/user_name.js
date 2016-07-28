@@ -4,6 +4,7 @@ import { Link } from 'react-router'
 import { DisabledNextButton } from './elements/disabled_next_btn'
 import { EnabledNextButton } from './elements/enabled_next_btn'
 import { AlertMessageBox } from './elements/alert_message_box'
+import { InvalidMessageBox } from './elements/invalid_message_box'
 import {range} from '../actions/common_actions'
 
 export default class UserName extends React.Component {
@@ -34,12 +35,21 @@ export default class UserName extends React.Component {
 
                 <form className="form-horizontal" acceptCharset="utf-8"
                       onSubmit={ (e) => this.handleSubmit(e) }>
-                    <div className="panel-heading signup-itemtitle">your name</div>
-                    <input ref="first_name" className="form-control signup_input-design" placeholder="例) Suzuki" type="text"
-                           onChange={ () => { this.props.inputUserName(this.getInputDomData()) }} />
-                    <input ref="last_name" className="form-control signup_input-design" placeholder="例) Hanako" type="text"
-                           onChange={ () => { this.props.inputUserName(this.getInputDomData()) }} />
 
+                    {/* First name */}
+                    <div className="panel-heading signup-itemtitle">your name</div>
+                    <input ref="first_name" className="form-control signup_input-design" placeholder="例) Hanako" type="text"
+                           onChange={ () => { this.props.inputUserName(this.getInputDomData()) }} />
+                    <InvalidMessageBox is_invalid={this.props.user_name.user_name_is_invalid}
+                                       message={this.props.user_name.invalid_messages.first_name} />
+
+                    {/* Last name */}
+                    <input ref="last_name" className="form-control signup_input-design" placeholder="例) Suzuki" type="text"
+                           onChange={ () => { this.props.inputUserName(this.getInputDomData()) }} />
+                    <InvalidMessageBox is_invalid={this.props.user_name.user_name_is_invalid}
+                                       message={this.props.user_name.invalid_messages.last_name} />
+
+                    {/* Birthday*/}
                     <div className="panel-heading signup-itemtitle">Birthday</div>
                     <div className="form-inline signup_inputs-inline">
                         {/* Birthday year */}
@@ -53,6 +63,7 @@ export default class UserName extends React.Component {
                            }
                         </select>
                         &nbsp;/&nbsp;
+
                         {/* Birthday month */}
                         <select className="form-control inline-fix" ref="birth_month"
                                 onChange={ () => { this.props.inputUserName(this.getInputDomData()) }} >
@@ -71,6 +82,7 @@ export default class UserName extends React.Component {
                            <option value="12">Dec</option>
                         </select>
                         &nbsp;/&nbsp;
+
                         {/* Birthday day */}
                         <select className="form-control inline-fix" ref="birth_day"
                                 onChange={ () => { this.props.inputUserName(this.getInputDomData()) }} >
@@ -81,7 +93,12 @@ export default class UserName extends React.Component {
                              })
                            }
                         </select>
+
+                        <InvalidMessageBox is_invalid={this.props.user_name.user_name_is_invalid}
+                                           message={this.props.user_name.invalid_messages.birth_day} />
                     </div>
+
+                    {/* Privacy policy check */}
                     <div className="checkbox signup-checkbox">
                         <label>
                             <input type="checkbox" value="1" id="UserAgreeTos" ref="privacy"
