@@ -409,10 +409,7 @@ class PostsController extends AppController
         $param_named = $this->request->params['named'];
         $this->_ajaxPreProcess();
 
-        if (isset($this->request->params['named']['circle_id'])
-            || isset($this->request->params['named']['notify_id'])
-            || isset($this->request->params['circle_id'])
-        ) {
+        if (isset($this->request->params['named']['notify_id'])) {
             $this->set('long_text', true);
         } else {
             $this->set('long_text', false);
