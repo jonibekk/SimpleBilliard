@@ -2256,10 +2256,8 @@ msgstr "メールアドレスが正しくないものがあります。"
 
 #: Model/Behavior/ExtValidationErrorI18nBehavior.php:30
 #: View/Elements/cake_variables.ctp:19
-msgid ""
-"Please mix of numbers, alphanumeric and special characters like (  ! @ # $ % "
-"^ & * ( ) _ - + = { } [ ] | : ; < > , . ? /  )"
-msgstr "数字と英字と記号を組み合わせて下さい。使える記号は、 ! @ # $ % ^ & * ( ) _ - + = { } [ ] | : ; < > , . ? /"
+msgid "Please mix of numbers and alphanumeric."
+msgstr "パスワードは数字と英字を組み合わせて下さい。"
 
 #: View/Elements/cake_variables.ctp:15
 msgid "%1$d or more and %2$d or less characters."
