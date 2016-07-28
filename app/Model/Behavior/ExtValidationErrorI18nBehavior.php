@@ -27,7 +27,7 @@ class ExtValidationErrorI18nBehavior extends ValidationErrorI18nBehavior
             'image_max_size'    => __("The file is over limit size."),
             'image_type'        => __("Failed to upload. jpg, png and gif are allowed."),
             'emailsCheck'       => __("Some email addresses are incorrect."),
-            'passwordPolicy'    => __('Please mix of numbers, alphanumeric and special characters like (  ! @ # $ % ^ & * ( ) _ - + = { } [ ] | : ; < > , . ? /  )'),
+            'passwordPolicy'    => __('Please mix of numbers and alphanumeric.'),
         );
         $this->setErrorMessageI18n($model, $error_messages, false);
         $this->replaceValidationErrorMessagesI18n($model);
