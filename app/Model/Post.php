@@ -639,7 +639,7 @@ class Post extends AppModel
                 'limit'      => $limit,
                 'page'       => $page,
                 'order'      => [
-                    'Post.modified' => 'desc'
+                    'Post.created' => 'desc'
                 ],
             ];
             if ($this->orgParams['type'] == self::TYPE_ACTION) {
@@ -814,9 +814,11 @@ class Post extends AppModel
             $options['conditions'][] = ['Post.modified BETWEEN ? AND ?' => [$start, $end]];
         }
 
+        // note: changed sorting from Post.modified to created DESC, so that only latest posts can be shown on top
+        // if someone comment on post will not effect
         if ($this->orgParams['circle_id']) {
             $options['order'] = [
-                'Post.modified' => 'desc'
+                'Post.created' => 'desc'
             ];
         }
 
