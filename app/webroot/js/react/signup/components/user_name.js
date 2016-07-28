@@ -38,14 +38,22 @@ export default class UserName extends React.Component {
 
                     {/* First name */}
                     <div className="panel-heading signup-itemtitle">your name</div>
-                    <input ref="first_name" className="form-control signup_input-design" placeholder="例) Hanako" type="text"
-                           onChange={ () => { this.props.inputUserName(this.getInputDomData()) }} />
+                    <div className={(this.props.user_name.invalid_messages.first_name) ? 'has-error' : ''}>
+                      <input ref="first_name" className="form-control signup_input-design" type="text"
+                             placeholder="例) Hanako"
+                             required
+                             onChange={ () => { this.props.inputUserName(this.getInputDomData()) }} />
+                    </div>
                     <InvalidMessageBox is_invalid={this.props.user_name.user_name_is_invalid}
                                        message={this.props.user_name.invalid_messages.first_name} />
 
                     {/* Last name */}
-                    <input ref="last_name" className="form-control signup_input-design" placeholder="例) Suzuki" type="text"
-                           onChange={ () => { this.props.inputUserName(this.getInputDomData()) }} />
+                    <div className={(this.props.user_name.invalid_messages.last_name) ? 'has-error' : ''}>
+                      <input ref="last_name" className="form-control signup_input-design"
+                             placeholder="例) Suzuki" type="text"
+                             required
+                             onChange={ () => { this.props.inputUserName(this.getInputDomData()) }} />
+                    </div>
                     <InvalidMessageBox is_invalid={this.props.user_name.user_name_is_invalid}
                                        message={this.props.user_name.invalid_messages.last_name} />
 
@@ -54,6 +62,7 @@ export default class UserName extends React.Component {
                     <div className="form-inline signup_inputs-inline">
                         {/* Birthday year */}
                         <select className="form-control inline-fix" ref="birth_year"
+                                required
                                 onChange={ () => { this.props.inputUserName(this.getInputDomData()) }} >
                            <option value=""></option>
                            {
@@ -66,6 +75,7 @@ export default class UserName extends React.Component {
 
                         {/* Birthday month */}
                         <select className="form-control inline-fix" ref="birth_month"
+                                required
                                 onChange={ () => { this.props.inputUserName(this.getInputDomData()) }} >
                            <option value=""></option>
                            <option value="01">Jan</option>
@@ -85,6 +95,7 @@ export default class UserName extends React.Component {
 
                         {/* Birthday day */}
                         <select className="form-control inline-fix" ref="birth_day"
+                                required
                                 onChange={ () => { this.props.inputUserName(this.getInputDomData()) }} >
                            <option value=""></option>
                            {

@@ -3,7 +3,8 @@ import * as types from '../constants/ActionTypes'
 import {
   post,
   mapValidationMsg,
-  getLocalDate
+  getLocalDate,
+  validate
 } from './common_actions'
 
 export function inputUserName(user) {
@@ -33,7 +34,6 @@ export function disableSubmitButton() {
 export function postUserName(user) {
   return dispatch => {
     dispatch(disableSubmitButton())
-    dispatch({ type: types.INIT_USER_STATUS })
     dispatch({ type: types.CHECKING_USER_NAME })
     const data = {
       'data[User][first_name]': user.first_name,
@@ -43,8 +43,9 @@ export function postUserName(user) {
     }
 
     return post('/signup/ajax_validation_fields', data, response => {
-      const user_name_is_invlalid = response.data.error && Object.keys(response.data.validation_msg).length
+      const user_name_is_invlalid = Boolean(response.data.error && Object.keys(response.data.validation_msg).length)
 
+      dispatch({ type: types.INIT_USER_STATUS })
       dispatch({ type: types.FINISHED_CHECKING_USER_NAME })
       if (user_name_is_invlalid) {
         dispatch(enableSubmitButton())
@@ -55,8 +56,9 @@ export function postUserName(user) {
       } else {
         dispatch({ type: types.USER_NAME_IS_VALID })
         browserHistory.push('/signup/password')
+        return
       }
-    }, () => {
+    }, error => {
       dispatch({ type: types.FINISHED_CHECKING_USER_NAME })
       dispatch(enableSubmitButton())
       dispatch({

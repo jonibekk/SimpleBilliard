@@ -53,7 +53,7 @@ export function mapValidationMsg(before_mapped_messages) {
     'data[User][birth_day]': 'birth_day'
   }
 
-  for (key in map) {
+  for (const key in map) {
     result[map[key]] = before_mapped_messages[key]
   }
   return result

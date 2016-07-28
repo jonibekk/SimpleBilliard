@@ -7,7 +7,9 @@ const initialState = {
   password_is_invalid: false,
   is_exception: false,
   exception_message: '',
-  invalid_messages: {}
+  invalid_messages: {
+    password: ''
+  }
 }
 
 export default function password(state = initialState, action) {
@@ -31,7 +33,7 @@ export default function password(state = initialState, action) {
     case types.PASSWORD_IS_INVALID:
       return Object.assign({}, state, {
         password_is_invalid: true,
-        invalid_messages: action.invalid_message
+        invalid_messages: action.invalid_messages
       })
     case types.CHECKING_PASSWORD:
       return Object.assign({}, state, {
