@@ -179,9 +179,65 @@ class Collaborator extends AppModel
         return $res;
     }
 
+    // for getting incomplete goal ids for collaborator right column
+    function getIncompleteCollaboGoalIds($user_id, $start_date, $end_date, $limit = null, $page = 1, $with_owner = false, $approval_status = null)
+    {
+        $is_default = false;
+        if ($user_id == $this->my_uid && $with_owner === true && $limit === null && $page === 1 && $approval_status === null) {
+            $is_default = true;
+            $res = Cache::read($this->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true, $user_id), 'user_data');
+            if ($res !== false) {
+                return $res;
+            }
+        }
+        $options = [
+            'joins' => [
+                [
+                    'table' => 'goals',
+                    'alias' => 'Goal',
+                    'type' => 'INNER',
+                    'conditions' => [
+                        'Goal.id = Collaborator.goal_id',
+                        'Goal.end_date >=' => $start_date,
+                        'Goal.end_date <=' => $end_date,
+                        'Goal.completed' => null,
+                    ]
+                ]
+            ],
+            'conditions' => [
+                'Collaborator.user_id' => $user_id,
+                'Collaborator.team_id' => $this->current_team_id,
+                'Collaborator.type'    => [
+                    Collaborator::TYPE_COLLABORATOR,
+                ],
+            ],
+            'fields'     => [
+                'goal_id',
+                'goal_id'
+            ],
+            'order' => [
+                'Collaborator.priority DESC'
+            ],
+            'page'       => $page,
+            'limit'      => $limit
+        ];
+        if ($with_owner) {
+            unset($options['conditions']['type']);
+        }
+        if ($approval_status) {
+            $options['conditions']['valued_flg'] = $approval_status;
+        }
+        $res = $this->find('list', $options);
 
-    // getting goalids for owner, for right side leader goal column
-    function getGoalIdsForRightColumn($limit, $page, $user_id, $start_date, $end_date)
+        if ($is_default) {
+            Cache::write($this->getCacheKey(CACHE_KEY_CHANNEL_COLLABO_GOALS, true, $user_id), $res, 'user_data');
+        }
+        return $res;
+    }
+
+
+    // getting incomplete goal ids for owner, for right side leader goal column
+    function getIncompleteGoalIdsForRightColumn($limit, $page, $user_id, $start_date, $end_date)
     {
         $options = [
             'joins' => [

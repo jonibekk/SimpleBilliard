@@ -495,7 +495,7 @@ class Goal extends AppModel
         $end_date = !$end_date ? $this->Team->EvaluateTerm->getCurrentTermData()['end_date'] : $end_date;
 
         // get goal ids for right column
-        $goal_ids = $this->Collaborator->getGoalIdsForRightColumn($limit, $page, $user_id, $start_date, $end_date);
+        $goal_ids = $this->Collaborator->getIncompleteGoalIdsForRightColumn($limit, $page, $user_id, $start_date, $end_date);
 
         $options = [
             'conditions' => [
@@ -849,11 +849,13 @@ class Goal extends AppModel
         $start_date = !$start_date ? $this->Team->EvaluateTerm->getCurrentTermData()['start_date'] : $start_date;
         $end_date = !$end_date ? $this->Team->EvaluateTerm->getCurrentTermData()['end_date'] : $end_date;
 
-        $goal_ids = $this->Collaborator->getCollaboGoalList($user_id);
+        // get goal ids for right column
+        $goal_ids = $this->Collaborator->getIncompleteCollaboGoalIds($user_id, $start_date, $end_date, $limit, $page);
+
         if ($type == "count") {
-            return $this->getByGoalId($goal_ids, $limit, $page, $type, $start_date, $end_date);
+            return $this->getCollaboGoalsByGoalId($goal_ids, $limit, $page, $type, $start_date, $end_date);
         }
-        $res = $this->getByGoalId($goal_ids, $limit, $page, $type, $start_date, $end_date, $kr_limit);
+        $res = $this->getCollaboGoalsByGoalId($goal_ids, $limit, $page, $type, $start_date, $end_date, $kr_limit);
         $res = $this->sortPriority($res);
 
         return $res;
@@ -1064,6 +1066,101 @@ class Goal extends AppModel
             ],
             'page'       => $page,
             'limit'      => $limit,
+            'contain'    => [
+                'Purpose',
+                'KeyResult'           => [
+                    //KeyResultは期限が今期内
+                    'conditions' => [
+                        'KeyResult.end_date >=' => $start_date,
+                        'KeyResult.end_date <=' => $end_date,
+                    ],
+                    'fields'     => [
+                        'KeyResult.id',
+                        'KeyResult.name',
+                        'KeyResult.end_date',
+                        'KeyResult.action_result_count',
+                        'KeyResult.progress',
+                        'KeyResult.priority',
+                        'KeyResult.completed',
+                    ],
+                    'order'      => [
+                        'KeyResult.progress ASC',
+                        'KeyResult.start_date ASC',
+                        'KeyResult.end_date ASC',
+                        'KeyResult.priority DESC',
+                    ],
+                ],
+                'IncompleteKeyResult' => [
+                    'conditions' => [
+                        'IncompleteKeyResult.completed'   => null,
+                        'IncompleteKeyResult.end_date >=' => $start_date,
+                        'IncompleteKeyResult.end_date <=' => $end_date,
+                    ],
+                    'fields'     => [
+                        'IncompleteKeyResult.id'
+                    ]
+                ],
+                'CompleteKeyResult'   => [
+                    'conditions' => [
+                        'NOT'                           => [
+                            'CompleteKeyResult.completed' => null,
+                        ],
+                        'CompleteKeyResult.end_date >=' => $start_date,
+                        'CompleteKeyResult.end_date <=' => $end_date,
+                    ],
+                    'fields'     => [
+                        'CompleteKeyResult.id'
+                    ]
+                ],
+                'MyCollabo'           => [
+                    'conditions' => [
+                        'MyCollabo.user_id' => $this->my_uid
+                    ]
+                ],
+                'Leader'              => [
+                    'conditions' => ['Leader.type' => Collaborator::TYPE_OWNER],
+                    'fields'     => ['Leader.id', 'Leader.user_id', 'Leader.valued_flg'],
+                ],
+            ]
+        ];
+
+        if ($type == "count") {
+            unset($options['contain']);
+            return $this->find($type, $options);
+        }
+        if ($kr_limit) {
+            $options['contain']['KeyResult']['limit'] = $kr_limit;
+        }
+
+        $res = $this->find('all', $options);
+        //進捗を計算
+        foreach ($res as $key => $goal) {
+            $res[$key]['Goal']['progress'] = $this->getProgress($goal);
+            foreach ($goal['MyCollabo'] as $cb_info) {
+                if ($goal['Goal']['id'] === $cb_info['goal_id']) {
+                    $res[$key]['Goal']['owner_approval_flag'] = $cb_info['valued_flg'];
+                }
+            }
+        }
+        return $res;
+    }
+
+    // for getting collaborator's goals for showing on right column
+    function getCollaboGoalsByGoalId(
+        $goal_ids,
+        $limit = null,
+        $page = 1,
+        $type = "all",
+        $start_date = null,
+        $end_date = null,
+        $kr_limit = null
+    ) {
+        $start_date = !$start_date ? $this->Team->EvaluateTerm->getCurrentTermData()['start_date'] : $start_date;
+        $end_date = !$end_date ? $this->Team->EvaluateTerm->getCurrentTermData()['end_date'] : $end_date;
+        $options = [
+            'conditions' => [
+                'Goal.id'          => $goal_ids,
+            ],
             'contain'    => [
                 'Purpose',
                 'KeyResult'           => [
