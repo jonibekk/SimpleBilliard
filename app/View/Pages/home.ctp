@@ -103,15 +103,42 @@ for ($i = 0; $i < $num_ogp; $i++) {
                 <p class="summary"><?= __('It\'s free until 31 Aug 2016! Try it!') ?></p>
             </div>
             <div class="col-md-5 col-sm-12 col-xs-12">
-                <a href="<?= $this->Html->url([
-                    'controller' => 'users',
-                    'action'     => 'register',
-                    '?'          => ['type' => 'middle']
-                ]) ?>"
-                   id="RegisterLinkTopMiddle">
-                    <button type="submit" class="btn btn-cta btn-cta-primary btn-block"><?= __(
-                            'Sign Up') ?></button>
-                </a>
+                <?=
+                $this->Form->create('Email', [
+                    'inputDefaults' => array(
+                        'div'       => 'form-group',
+                        'label'     => false,
+                        'wrapInput' => false,
+                        'class'     => 'form-control'
+                    ),
+                    'url'           => ['controller' => 'signup', 'action' => 'email'],
+                    'class'         => 'form-inline',
+                    'novalidate'    => true,
+                    'id'            => 'HomeSignupEmail'
+                ]); ?>
+                <?=
+                $this->Form->input('email', [
+                    'placeholder'                  => 'you@yourdomain.com',
+                    "data-bv-notempty"             => "true",
+                    'data-bv-emailaddress'         => "false",
+                    "data-bv-callback"             => "true",
+                    "data-bv-callback-message"     => " ",
+                    "data-bv-callback-callback"    => "bvCallbackAvailableEmailNotVerified",
+                    'data-bv-stringlength'         => 'true',
+                    'data-bv-stringlength-max'     => 200,
+                    'data-bv-stringlength-message' => __("It's over limit characters (%s).", 200),
+                    'required'                     => false,
+                ]) ?>
+                <?= $this->Form->button(__('Sign Up'),
+                    [
+                        'type'     => 'submit',
+                        'div'      => 'form-group',
+                        'class'    => 'btn btn-cta btn-cta-primary',
+                        'disabled' => 'disabled',
+                        'id'       => 'RegisterLinkTopMiddle',
+                    ]) ?>
+                <div id="HomeEmailErrorContainer" style="font-size:15px;"></div>
+                <?= $this->Form->end(); ?>
             </div>
         </div><!--//contianer-->
     </div><!--//signup-->
@@ -334,4 +361,21 @@ for ($i = 0; $i < $num_ogp; $i++) {
         </dl>
     </div>
 </section>
+<?php $this->append('script'); ?>
+<script type="text/javascript">
+    require.config({
+        baseUrl: '/js/modules/'
+    });
+    $(document).ready(function () {
+        // 登録可能な email の validate
+        require(['validate'], function (validate) {
+            window.bvCallbackAvailableEmailNotVerified = validate.bvCallbackAvailableEmailNotVerified;
+        });
+        $('#HomeSignupEmail').bootstrapValidator({
+            container: "#HomeEmailErrorContainer"
+        });
+    });
+</script>
+<?php $this->end(); ?>
+
 <!-- END app/View/Pages/home.ctp -->

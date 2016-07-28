@@ -117,8 +117,8 @@ for ($i = 0; $i < $num_ogp; $i++) {
                 </ul>
                 <a class="pricing-signup btn btn-cta btn-cta-primary" id="RegisterLinkPricingPlus"
                    href="<?= $this->Html->url([
-                       'controller' => 'users',
-                       'action'     => 'register',
+                       'controller' => 'signup',
+                       'action'     => 'email',
                        '?'          => ['type' => 'pricing_plus']
                    ]) ?>">
                     <?= __('Start now') ?>
