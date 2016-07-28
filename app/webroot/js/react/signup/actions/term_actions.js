@@ -103,7 +103,7 @@ export function postTerms(terms) {
         dispatch(enableSubmitButton())
       } else {
         dispatch({ type: types.TERM_IS_VALID })
-        // document.location.href = "/teams/invite"
+        document.location.href = "/teams/invite"
       }
     }, () => {
       dispatch({ type: types.FINISHED_CHECKING_TERM })

@@ -316,8 +316,9 @@ class SignupController extends AppController
             }
             //store session
             if ($this->Session->read('data')) {
-                $data = array_merge($this->Session->read('data'), $data);
+                $data = Hash::merge($this->Session->read('data'), $data);
             }
+
             $this->Session->write(['data' => $data]);
 
         } catch (RuntimeException $e) {
@@ -367,7 +368,7 @@ class SignupController extends AppController
                 throw new RuntimeException(__('Invalid Data'));
             }
             //merge form data and session data
-            $data = array_merge($session_data, $data);
+            $data = Hash::merge($session_data, $data);
             //required fields check
             if (!$this->_hasAllRequiredFields($data)) {
                 $res['is_not_available'] = true;
