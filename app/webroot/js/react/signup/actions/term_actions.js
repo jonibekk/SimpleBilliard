@@ -79,6 +79,9 @@ export function postTerms(terms) {
 
     if(state.term.selected_timezone) {
       data['data[Team][timezone]'] = state.term.selected_timezone
+    } else {
+      // timezoneの選択が無い場合はデフォルトのtimezoneを登録する
+      data['data[Team][timezone]'] = "+9.0"
     }
 
     return post('/signup/ajax_register_user', data, response => {
@@ -92,7 +95,12 @@ export function postTerms(terms) {
           type: types.TERM_NETWORK_ERROR,
           exception_message: response.data.message
         })
-        // document.location.href = "/signup/email"
+
+        // もう一回やり直す必要があるというメッセージをユーザに読んでもらうために
+        // 3秒間スリープさせる
+        setTimeout(() => {
+          document.location.href = "/signup/email"
+        }, 3000)
         return
       }
       if (term_is_invlalid) {
