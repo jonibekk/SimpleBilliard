@@ -639,7 +639,7 @@ class Post extends AppModel
                 'limit'      => $limit,
                 'page'       => $page,
                 'order'      => [
-                    'Post.modified' => 'desc'
+                    'Post.created' => 'desc'
                 ],
             ];
             if ($this->orgParams['type'] == self::TYPE_ACTION) {
