@@ -179,6 +179,47 @@ class Collaborator extends AppModel
         return $res;
     }
 
+
+    // getting goalids for owner, for right side leader goal column
+    function getGoalIdsForRightColumn($limit, $page, $user_id, $start_date, $end_date)
+    {
+        $options = [
+            'joins' => [
+                [
+                    'table' => 'goals',
+                    'alias' => 'Goal',
+                    'type' => 'INNER',
+                    'conditions' => [
+                        'Goal.id = Collaborator.goal_id',
+                        'Goal.end_date >=' => $start_date,
+                        'Goal.end_date <=' => $end_date,
+                        'Goal.completed' => null,
+                    ]
+                ]
+            ],
+            'conditions' => [
+                'Collaborator.user_id' => $user_id,
+                'Collaborator.team_id' => $this->current_team_id,
+                'type'    => [
+                    Collaborator::TYPE_OWNER,
+                ],
+            ],
+            'fields'     => [
+                'goal_id',
+                'goal_id'
+            ],
+            'order' => [
+                'Collaborator.priority DESC'
+            ],
+            'page'       => $page,
+            'limit'      => $limit
+        ];
+
+        $res = $this->find('list', $options);
+
+        return $res;
+    }
+
     /**
      * @param integer $user_id
      * @param array   $gids

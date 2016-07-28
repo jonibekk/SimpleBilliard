@@ -493,13 +493,13 @@ class Goal extends AppModel
         $user_id = !$user_id ? $this->my_uid : $user_id;
         $start_date = !$start_date ? $this->Team->EvaluateTerm->getCurrentTermData()['start_date'] : $start_date;
         $end_date = !$end_date ? $this->Team->EvaluateTerm->getCurrentTermData()['end_date'] : $end_date;
+
+        // get goal ids for right column
+        $goal_ids = $this->Collaborator->getGoalIdsForRightColumn($limit, $page, $user_id, $start_date, $end_date);
+
         $options = [
             'conditions' => [
-                'Goal.user_id'     => $user_id,
-                'Goal.team_id'     => $this->current_team_id,
-                'Goal.end_date >=' => $start_date,
-                'Goal.end_date <=' => $end_date,
-                'Goal.completed' => null,
+                'Goal.id' => $goal_ids,
             ],
             'contain'    => [
                 'MyCollabo'           => [
@@ -551,8 +551,6 @@ class Goal extends AppModel
                     'limit'      => 1,
                 ]
             ],
-            'limit'      => $limit,
-            'page'       => $page
         ];
         if ($kr_limit) {
             $options['contain']['KeyResult']['limit'] = $kr_limit;
@@ -562,6 +560,7 @@ class Goal extends AppModel
             return $this->find($type, $options);
         }
         $res = $this->find('all', $options);
+
         //進捗を計算
         foreach ($res as $key => $goal) {
             $res[$key]['Goal']['progress'] = $this->getProgress($goal);
@@ -589,7 +588,6 @@ class Goal extends AppModel
             /** @noinspection PhpParamsInspection */
             $res = array_merge($purposes, $res);
         }
-
         return $res;
     }
 
